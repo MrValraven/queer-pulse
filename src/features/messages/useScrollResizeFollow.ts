@@ -1,7 +1,6 @@
 // src/features/messages/useScrollResizeFollow.ts
 import { useLayoutEffect, type RefObject } from "react";
 import type { Virtualizer } from "@tanstack/react-virtual";
-import { isNearBottom } from "./useStickToBottom";
 import type { PendingScrollAnchor, ScrollAnchor } from "./scrollAnchor";
 // TEMPORARY — see scrollTrace.ts's revert instructions.
 import { traceScrollEvent } from "./scrollTrace";
@@ -26,6 +25,14 @@ import { traceScrollEvent } from "./scrollTrace";
  * scrolled up is left exactly where they are. ResizeObserver callbacks run after
  * layout and before paint, so the re-pin lands in the same frame as the resize.
  *
+ * iOS Safari can leave the log scrolled PAST its end. When `.area` GROWS (the
+ * keyboard closing), the composited scroller may keep its old offset instead of
+ * clamping to the new maximum, so the distance from the bottom turns negative.
+ * A negative distance never counts as flush and gets the re-pin. WebKit's DOM
+ * `scrollTop` can also read clamped while the on-screen scroll view is not, so
+ * a pinned reader whose scroller height just changed always gets one re-pin
+ * write, even when the DOM reads flush.
+ *
  * An anchor that is RESTORING (a just-landed older page, or the unread landing)
  * wins over the bottom-stick for its settle window. An anchor that is only
  * armed (its page still in flight) moves nothing: re-snapping to it would pull
@@ -45,7 +52,10 @@ export function useScrollResizeFollow(
     const area = areaRef.current;
     const content = contentRef.current;
     if (!area || !content || typeof ResizeObserver === "undefined") return;
+    let lastAreaClientHeight = area.clientHeight;
     const observer = new ResizeObserver(() => {
+      const hasAreaHeightChanged = area.clientHeight !== lastAreaClientHeight;
+      lastAreaClientHeight = area.clientHeight;
       const pendingAnchor = pendingAnchorRef.current;
       if (pendingAnchor?.isRestoring) {
         traceScrollEvent(
@@ -66,7 +76,13 @@ export function useScrollResizeFollow(
         );
         return;
       }
-      if (isNearBottom(area, 1)) {
+      const distanceFromBottom =
+        area.scrollHeight - area.scrollTop - area.clientHeight;
+      // Flush means a distance of 0 to 1px. A negative distance is an
+      // overshoot (scrolled past the end) and falls through to the re-pin.
+      const isFlushToBottom =
+        distanceFromBottom >= 0 && distanceFromBottom <= 1;
+      if (isFlushToBottom && !hasAreaHeightChanged) {
         traceScrollEvent(
           "contentResize:earlyReturn:alreadyFlush",
           area,
@@ -80,6 +96,7 @@ export function useScrollResizeFollow(
         area,
         rowVirtualizer,
         atBottomRef,
+        { distanceFromBottom, hasAreaHeightChanged },
       );
       scrollToBottom(false);
     });

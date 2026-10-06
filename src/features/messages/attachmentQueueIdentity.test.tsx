@@ -62,4 +62,26 @@ describe("the attachment queue", () => {
       sendAsIdentityId: undefined,
     });
   });
+
+  it("PRD-423: encodes a matched chat caption's typed mentions at Send", () => {
+    const onSendGif = vi.fn();
+    const { result } = renderHook(() => useAttachmentSendQueue({ onSendGif }));
+
+    act(() => result.current.stageGif(CAFE_THREAD_ID, gif));
+    const stagedId =
+      result.current.stagedByConversation[CAFE_THREAD_ID]![0]!.id;
+    act(() =>
+      result.current.setCaption(CAFE_THREAD_ID, stagedId, "for @Sofia"),
+    );
+    act(() =>
+      result.current.sendStaged(CAFE_THREAD_ID, {
+        encodeCaption: (caption) =>
+          caption.replace("@Sofia", "@m-2f8b6d1a4c93e75b0d6a2f19"),
+      }),
+    );
+
+    expect(onSendGif.mock.calls[0]![0]).toMatchObject({
+      caption: "for @m-2f8b6d1a4c93e75b0d6a2f19",
+    });
+  });
 });

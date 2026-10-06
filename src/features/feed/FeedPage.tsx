@@ -236,7 +236,10 @@ export function FeedListBody({
               {entry.kind === "item" ? (
                 renderLiveFeedCard(entry.item, fmt)
               ) : (
-                <LiveNewMembersGroupCard items={entry.members} />
+                <LiveNewMembersGroupCard
+                  items={entry.members}
+                  weekStart={entry.weekStart}
+                />
               )}
             </div>
           ),
@@ -267,7 +270,10 @@ export function FeedListBody({
             {entry.kind === "static" ? (
               <entry.entry.Card />
             ) : (
-              <LiveNewMembersGroupCard items={entry.members} />
+              <LiveNewMembersGroupCard
+                items={entry.members}
+                weekStart={entry.weekStart}
+              />
             )}
           </div>
         ),

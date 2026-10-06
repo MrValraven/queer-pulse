@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { UseMutationResult } from "@tanstack/react-query";
 import { ApiError } from "../../../../shared/api/client";
 import { useToast } from "../../../../shared/components/feedback/useToast";
@@ -37,28 +37,59 @@ import type { PublishStatus } from "./PublishRail";
  */
 export function useArticlePublishHandler(
   publish: UseMutationResult<ArticleDraftDto | null, Error, PublishArticleDto>,
-  saveNow: () => Promise<void>,
+  {
+    saveNow,
+    saveBeforeLeaving: flushLatestDraft,
+  }: {
+    saveNow: () => Promise<void>;
+    /** The draft hook's settle-then-send flush: awaits any write on the
+     *  wire, then sends what is on screen from the newest confirmed version.
+     *  Used for the resend after an unpublish. */
+    saveBeforeLeaving: () => Promise<boolean>;
+  },
 ) {
   const { t } = useTranslation();
   const { showToast } = useToast();
   const [gateFailure, setGateFailure] = useState<PublishGateFailure | null>(
     null,
   );
+  // Latest-value ref: the resend runs after the unpublish resolves, by when
+  // the writer may have typed and an autosave may have landed, so it has to
+  // flush the draft as it stands THEN. The click-time closure would resend
+  // an older snapshot on an older version and 409 into a false conflict.
+  const flushLatestDraftRef = useRef(flushLatestDraft);
+  useEffect(() => {
+    flushLatestDraftRef.current = flushLatestDraft;
+  });
 
   async function handlePublish(
     published: boolean,
     publishStatus: PublishStatus,
     scheduledAt: string | null,
     onPublished: () => void,
+    isSaveHeldBySchedule = false,
   ): Promise<void> {
     // Each attempt starts clean: leaving the previous refusal on screen while
     // a new one is in flight would describe items the desk may have closed.
     setGateFailure(null);
-    try {
-      await saveNow();
-    } catch {
-      showToast(t("magazine:write.header.savedError"), "error");
-      return;
+    // ENG-460. A scheduled article refuses a save that would reopen its
+    // readiness check, and unpublishing is one way out of that refusal
+    // (`ArticleScheduledSaveBanner` points at it). So an unpublish goes ahead
+    // past that refusal and resends the held change once the article is off
+    // the schedule. When the page already holds that refusal the pre-publish
+    // flush is skipped outright: it can only be refused again, and its error
+    // toast would sit on top of the "Unpublished" one.
+    let isResendDue = published && isSaveHeldBySchedule;
+    if (!isResendDue) {
+      try {
+        await saveNow();
+      } catch (error) {
+        isResendDue = published && readPublishGateFailure(error) !== null;
+        if (!isResendDue) {
+          showToast(t("magazine:write.header.savedError"), "error");
+          return;
+        }
+      }
     }
     try {
       await publish.mutateAsync(
@@ -66,6 +97,7 @@ export function useArticlePublishHandler(
       );
       showToast(t(publishSuccessToastKey(published, publishStatus)), "success");
       if (!published) onPublished();
+      if (isResendDue) void flushLatestDraftRef.current();
     } catch (error) {
       const failure = readPublishGateFailure(error);
       if (failure) {

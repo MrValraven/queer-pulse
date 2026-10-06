@@ -9,6 +9,7 @@ import { GroupInfoLeftNotice } from "./GroupInfoLeftNotice";
 import { GroupInviteLinkSection } from "./GroupInviteLinkSection";
 import { GroupRosterList } from "./GroupRosterList";
 import type { GroupMemberPick } from "./NewGroupModal";
+import type { InviteLinkMaxUses } from "./inviteLinkUses";
 import type { Conversation, GroupMemberView } from "./data";
 import sharedStyles from "./NewMessageModal.module.css";
 
@@ -41,8 +42,8 @@ interface GroupInfoBodyProps {
   /** The pending invite currently being revoked, or null; see
    *  `GroupInviteLinkSection`'s own doc. */
   busyInviteId: string | null;
-  onCreateInviteLink: () => void;
-  onResetInviteLink: () => void;
+  onCreateInviteLink: (maxUses: InviteLinkMaxUses) => void;
+  onResetInviteLink: (maxUses: InviteLinkMaxUses) => void;
   onDisableInviteLink: () => void;
   onRevokeInvite: (inviteId: string) => void;
 }

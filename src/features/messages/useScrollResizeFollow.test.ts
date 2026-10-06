@@ -159,6 +159,48 @@ describe("useScrollResizeFollow", () => {
     expect(scrollToBottom).not.toHaveBeenCalled();
   });
 
+  it("re-pins when the log is scrolled past its end (negative distance), as iOS leaves it after the scroller grows", () => {
+    const { fireResize, scrollToBottom } = setup({
+      scrollHeight: 700,
+      scrollTop: 750,
+      clientHeight: 300, // 700 - 750 - 300 = -350, overshot
+      isAtBottom: true,
+    });
+
+    fireResize();
+
+    expect(scrollToBottom).toHaveBeenCalledWith(false);
+  });
+
+  it("re-pins a flush log only when the scroller height changed", () => {
+    const { area, fireResize, scrollToBottom } = setup({
+      scrollHeight: 700,
+      scrollTop: 400,
+      clientHeight: 300, // 700 - 400 - 300 = 0, flush
+      isAtBottom: true,
+    });
+
+    fireResize(); // same clientHeight as at observer creation
+    expect(scrollToBottom).not.toHaveBeenCalled();
+
+    // The scroller height changes to 200 and the DOM still reads flush
+    // (700 - 500 - 200 = 0).
+    Object.defineProperty(area, "clientHeight", {
+      value: 200,
+      configurable: true,
+    });
+    Object.defineProperty(area, "scrollTop", {
+      value: 500,
+      configurable: true,
+    });
+    fireResize();
+    expect(scrollToBottom).toHaveBeenCalledTimes(1);
+    expect(scrollToBottom).toHaveBeenCalledWith(false);
+
+    fireResize(); // height unchanged since the last callback and still flush
+    expect(scrollToBottom).toHaveBeenCalledTimes(1);
+  });
+
   it("restores a settling anchor instead of re-pinning, even when the reader was at the bottom", () => {
     const anchor = {
       rowKey: "row-1",

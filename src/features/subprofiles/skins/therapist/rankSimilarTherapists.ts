@@ -1,5 +1,6 @@
 import type { TherapistCardVM } from "../../../resources/therapistPersonaCard";
 import type { PublicSubprofileView } from "../../api/subprofiles.adapters";
+import { isTherapistStatusFresh } from "./therapistStatusFreshness";
 
 /** Folds a topic for comparison: trimmed, lower-case, accents removed. */
 function foldTopic(topic: string): string {
@@ -61,11 +62,14 @@ interface RankSimilarInput {
   /** A stable key for the page on screen; seeds the tie-break rotation. */
   currentSlug: string;
   limit: number;
+  /** The clock the status freshness is read against; defaults to now. */
+  now?: number;
 }
 
 /**
  * Orders the "Also worth a look" cards: most shared topics first, then
- * therapists taking new clients, then a rotation seeded by the page on
+ * therapists taking new clients (only when that status was confirmed within
+ * `STATUS_CONFIRMED_WITHIN_DAYS`), then a rotation seeded by the page on
  * screen. The rotation hashes the page key with each card's address, so
  * each therapist page shows its own neighbours and every therapist gets a
  * turn across the directory. Pure: the same input always gives the same
@@ -76,11 +80,12 @@ export function rankSimilarTherapists({
   topics,
   currentSlug,
   limit,
+  now = Date.now(),
 }: RankSimilarInput): TherapistCardVM[] {
   const scored = cards.map((card) => ({
     card,
     shared: sharedTopicCount(card, topics),
-    isOpen: card.availability === "open",
+    isOpen: card.availability === "open" && isTherapistStatusFresh(card, now),
     rotation: stableHash(`${currentSlug}|${card.href}`),
   }));
   scored.sort(

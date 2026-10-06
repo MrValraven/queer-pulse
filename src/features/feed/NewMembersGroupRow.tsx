@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { Link } from "react-router-dom";
 import { Avatar } from "../../shared/components/ui";
 import { useFormat } from "../../shared/i18n/format";
@@ -19,8 +20,18 @@ import styles from "./NewMembersGroupCard.module.css";
  * the strongest context and the compact join time, and the contact button on
  * the right. In a narrow card the button moves under the text (a container
  * query on the list), so the name keeps the full text column.
+ *
+ * `foldStep` marks a row past the first three, one the "Show all" fold
+ * reveals and hides: its place in the fold's fade-in cascade.
  */
-export function NewMembersGroupRow({ member }: { member: NewMemberRowModel }) {
+export function NewMembersGroupRow({
+  member,
+  foldStep,
+}: {
+  member: NewMemberRowModel;
+  foldStep?: number;
+}) {
+  const isFoldedRow = foldStep !== undefined;
   const { t } = useTranslation();
   const fmt = useFormat();
   const { connected } = useMemberContact(member.slug);
@@ -51,7 +62,14 @@ export function NewMembersGroupRow({ member }: { member: NewMemberRowModel }) {
   );
 
   return (
-    <li className={styles.row}>
+    <li
+      className={isFoldedRow ? `${styles.row} ${styles.folded}` : styles.row}
+      style={
+        isFoldedRow
+          ? ({ "--new-members-fold-step": foldStep } as CSSProperties)
+          : undefined
+      }
+    >
       {hasProfile ? (
         // A mouse target only: the name link is the row's one tab stop.
         <Link

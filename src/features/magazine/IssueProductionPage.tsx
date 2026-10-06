@@ -6,6 +6,7 @@ import { MagazineDeskShell } from "../../shared/components/layout/MagazineDeskSh
 import { EmptyState, SkeletonLine } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { intlLocale } from "../../shared/i18n/locale";
 import { formatDate } from "../../shared/lib/date";
 import { routes } from "../../app/routeMap";
 import { useIssueProduction } from "./api/useIssueProduction";
@@ -19,6 +20,7 @@ import { CoverContentsTab } from "./desk/issue/CoverContentsTab";
 import { DigestSocialTab } from "./desk/issue/DigestSocialTab";
 import { ArchiveTab } from "./desk/issue/ArchiveTab";
 import { ShipIssueModal } from "./desk/issue/ShipIssueModal";
+import { issueAnnounceState } from "./desk/issue/issueAnnounceRule";
 import { IssueTabsNav, type IssueTabId } from "./desk/issue/IssueTabsNav";
 import { IssueProductionHeader } from "./desk/issue/IssueProductionHeader";
 import { IssueRail } from "./desk/issue/IssueRail";
@@ -45,7 +47,7 @@ export function IssueProductionPage() {
     ship,
   } = useIssueMutations(number!);
   const { showToast } = useToast();
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const queryClient = useQueryClient();
   const [tab, setTab] = useState<IssueTabId>("runningOrder");
   const [shipModalOpen, setShipModalOpen] = useState(false);
@@ -106,6 +108,7 @@ export function IssueProductionPage() {
   ).length;
   const totalCount = production.runOrder.length;
   const contentsPieces = production.runOrder.map((entry) => entry.piece);
+  const announce = issueAnnounceState(production);
 
   function renderTabBody() {
     switch (tab) {
@@ -187,6 +190,7 @@ export function IssueProductionPage() {
             issueNumber={production.number}
             digestSendOnPublish={production.digestSendOnPublish}
             digestSentAt={production.digestSentAt}
+            hasShippedQuietly={announce.hasShippedQuietly}
             onSaveDigest={(items) => saveDigest.mutate({ items })}
             onToggleSendOnPublish={(sendOnPublish) =>
               saveDigest.mutate({ items: production.digest, sendOnPublish })
@@ -235,11 +239,13 @@ export function IssueProductionPage() {
         issueNumber={production.number}
         publishesLabel={
           production.publishedOn
-            ? formatDate(production.publishedOn)
+            ? formatDate(production.publishedOn, intlLocale(language))
             : undefined
         }
         publishesOn={production.publishedOn}
         lastShip={production.lastShip}
+        isAnnouncePending={announce.isAnnouncePending}
+        hasShippedQuietly={announce.hasShippedQuietly}
         onClose={() => setShipModalOpen(false)}
         onShip={() => ship.mutate()}
       />

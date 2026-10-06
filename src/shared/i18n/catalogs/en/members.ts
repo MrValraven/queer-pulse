@@ -1805,6 +1805,7 @@ export const members: Catalog = {
   "places.empty.description":
     "Run a studio, shop, clinic or space in Lisbon? List it in the directory. Once it's live, it'll show up here too.",
   "places.empty.action": "List my business",
+  "places.empty.titleWithSuggestions": "You don't run any places yet",
   "places.loadError.title": "We couldn't load <em>these places</em>",
   "places.loadError.body":
     "The list didn't come back. This is on our side. Try again in a moment.",
@@ -1825,6 +1826,35 @@ export const members: Catalog = {
   "places.quickEdit.errorToast": "Couldn't save your changes. Try again.",
   "places.quickEdit.moreLink":
     "Need to change categories, address, or photos? <a>Open the full editor.</a>",
+  "places.suggestions.title": "Places you <em>suggested</em>",
+  "places.suggestions.subtitle":
+    "Places you suggested for the directory. QueerPulse holds each one until its business claims it, and the team reviews it before it goes live.",
+  "places.suggestions.state.in_review": "In review",
+  "places.suggestions.state.needs_info": "Question for you",
+  "places.suggestions.state.published": "Published",
+  "places.suggestions.state.with_business": "With its business",
+  "places.suggestions.state.closed": "Closed",
+  "places.suggestions.meta":
+    "{city} · Ref. {ref} · <when>Suggested {date}</when>",
+  "places.suggestions.note.in_review":
+    "The team reads every suggestion before it goes live in the directory.",
+  "places.suggestions.note.needs_info":
+    "The team asked you something about this place. Their question is in your notifications, and you can answer by sending a correction.",
+  "places.suggestions.note.published":
+    "It is live in the directory. QueerPulse holds it until its business claims it.",
+  "places.suggestions.note.claimed":
+    "Its business has claimed it and looks after the listing now.",
+  "places.suggestions.note.claimedByYou":
+    "You claimed it, so you run its listing now.",
+  "places.suggestions.note.closed":
+    "The business has told us it closed for good. Its page stays up so people can see what happened.",
+  "places.suggestions.correctionCta": "Send a correction",
+  "places.suggestions.loadError":
+    "Your suggestions did not load. Try again in a moment.",
+  "places.suggestions.loadMoreError":
+    "More suggestions did not load. Try again.",
+  "places.suggestions.loadMore": "Show more suggestions",
+  "places.suggestions.loadingMore": "Loading more…",
 
   // ── Badges page chrome (BadgesPage, BadgesSections) ─────────────────────────
   // Badge names, categories, rarity and level names are recognition-domain

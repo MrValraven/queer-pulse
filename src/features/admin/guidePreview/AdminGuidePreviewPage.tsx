@@ -7,6 +7,10 @@ import {
   ManagedGuideBody,
   ManagedGuideSkeleton,
 } from "../../resources/ManagedGuide";
+import {
+  ManagedGuideRowContext,
+  SECTION_COMPOSED_GUIDE_SLUGS,
+} from "../../resources/sectionComposedGuides";
 import { AdminResourceGuideReviewModal } from "../AdminResourceGuideReviewModal";
 import type { AdminResourceGuideDTO } from "../api/adminResourceGuides.api";
 import { useAdminResourceGuide } from "../api/useAdminResourceGuides";
@@ -53,7 +57,12 @@ export function AdminGuidePreviewPage() {
   const hardcodedPageElement = HardcodedPage
     ? createElement(HardcodedPage)
     : null;
-  const hasManagedBody = guide.sections.length > 0;
+  // A section-composed guide (sexual health) never takes its page over: its
+  // page reads each section by anchor. The row goes to that page through
+  // `ManagedGuideRowContext`, so the preview shows sections the public
+  // endpoint does not serve yet.
+  const hasManagedBody =
+    !SECTION_COMPOSED_GUIDE_SLUGS.has(guide.slug) && guide.sections.length > 0;
   if (!hasManagedBody && !hardcodedPageElement) {
     return <GuidePreviewNoPage guideId={guide.id} title={guide.title} />;
   }
@@ -68,10 +77,12 @@ export function AdminGuidePreviewPage() {
         {hasManagedBody ? (
           <ManagedGuideBody slug={guide.slug} guide={guide} />
         ) : (
-          <Suspense fallback={<ManagedGuideSkeleton />}>
-            {hardcodedPageElement}
-            <PreviewReviewFooter guide={guide} />
-          </Suspense>
+          <ManagedGuideRowContext.Provider value={guide}>
+            <Suspense fallback={<ManagedGuideSkeleton />}>
+              {hardcodedPageElement}
+              <PreviewReviewFooter guide={guide} />
+            </Suspense>
+          </ManagedGuideRowContext.Provider>
         )}
       </PageShellLeadContext.Provider>
       {isReviewOpen && (

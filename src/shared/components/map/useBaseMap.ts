@@ -5,6 +5,7 @@ import maplibregl, {
   type LngLatBoundsLike,
   type Map as MapLibreMap,
 } from "maplibre-gl";
+import { collapseCompactCreditOnNarrowMap } from "./collapseCompactCredit";
 import { buildWarmStyle } from "./siteMapStyle";
 
 interface UseBaseMapOptions {
@@ -137,6 +138,8 @@ export function useBaseMap({
         revealTimer = setTimeout(reveal, 3000);
 
         map.on("load", () => {
+          // LOC-F14: phone-width maps start with the credit folded.
+          collapseCompactCreditOnNarrowMap(container);
           onLoadRef.current?.(map);
           if (revealOn === "idle") {
             void map.once("idle", reveal);

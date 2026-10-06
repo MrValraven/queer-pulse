@@ -45,6 +45,7 @@ const EXPECTED_CAPABILITIES: Record<string, string[]> = {
   roadmap_ideas: ["product_manager"],
   guide_reviews: ["resource_curator"],
   housing_group_join_requests: ["housing_moderator"],
+  safety_inquiries: [],
 };
 
 /**
@@ -80,8 +81,12 @@ const navItemsByPath = new Map(
 );
 
 describe("admin queue routes", () => {
-  it("covers thirty queues", () => {
-    expect(ADMIN_QUEUE_KEYS).toHaveLength(30);
+  it("covers thirty-one queues", () => {
+    expect(ADMIN_QUEUE_KEYS).toHaveLength(31);
+  });
+
+  it("files safety inquiries under their own key on the inquiry inbox", () => {
+    expect(adminQueueRoute("safety_inquiries")).toBe(routes.adminIntakes);
   });
 
   it("points every queue at a real admin route", () => {

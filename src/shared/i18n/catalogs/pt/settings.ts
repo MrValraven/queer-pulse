@@ -229,6 +229,10 @@ export const settings: Catalog = {
 
   // ── Notification volume (SOC-10) ──────────────────────────────────────────
   "notifications.section.phonePush": "No teu telemóvel",
+  "notifications.section.inApp": "Na app",
+  "notifications.messageSound.title": "Som das mensagens",
+  "notifications.messageSound.desc":
+    "Toca um som suave quando chega uma mensagem com a QueerPulse aberta. As conversas silenciadas ficam caladas.",
   "notifications.section.yourWork": "O teu trabalho e os teus anúncios",
   "notifications.volume.eventInvites.title": "Novo convívio anunciado",
   "notifications.volume.eventInvites.desc":

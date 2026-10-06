@@ -9,6 +9,7 @@ import {
 } from "../../../shared/components/ui/plainDate";
 import { useMediaQuery } from "../../../shared/hooks/useMediaQuery";
 import { useOutsideDismiss } from "../../../shared/hooks/useOutsideDismiss";
+import { intlLocale } from "../../../shared/i18n/locale";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { formatDate } from "../../../shared/lib/date";
 import { mediaMax } from "../../../shared/theme/breakpoints";
@@ -110,7 +111,7 @@ export function IssueCloseDatePopover({
       await saveClosesOn(iso);
       showToast(
         t("magazine:desk.pulse.closeDateSavedToast", {
-          date: formatDate(iso),
+          date: formatDate(iso, intlLocale(language)),
         }),
         "success",
       );

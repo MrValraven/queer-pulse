@@ -2,7 +2,13 @@ import { routes } from "../../app/routeMap";
 
 export interface Guide {
   title: string;
+  /** The editor's Portuguese title, when the live row has one. Demo guides
+   *  carry none and read `title` in both languages. */
+  titlePt?: string | null;
   description: string;
+  /** The editor's Portuguese description, when the live row has one. Demo
+   *  guides carry none and read `description` in both languages. */
+  descriptionPt?: string | null;
   category: string;
   categoryLabel: string;
   meta: string;

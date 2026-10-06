@@ -12,6 +12,16 @@ import {
   stableHash,
   therapistTopicSet,
 } from "./rankSimilarTherapists";
+import {
+  isTherapistStatusFresh,
+  STATUS_CONFIRMED_WITHIN_DAYS,
+} from "./therapistStatusFreshness";
+
+/** The fixed clock every ranking below reads freshness against. */
+const NOW = Date.parse("2026-10-06T12:00:00.000Z");
+const DAY_IN_MILLISECONDS = 24 * 60 * 60 * 1000;
+const isoDaysBeforeNow = (days: number) =>
+  new Date(NOW - days * DAY_IN_MILLISECONDS).toISOString();
 
 function makeCard(
   slug: string,
@@ -29,6 +39,7 @@ function makeCard(
     creds: null,
     acceptingNew: false,
     availability: null,
+    availabilityUpdatedAt: isoDaysBeforeNow(5),
     specs: [],
     langs: [],
     note: null,
@@ -171,6 +182,7 @@ describe("rankSimilarTherapists", () => {
       makeCard("two", { specs: ["Gender identity", "TRAUMA"] }),
     ];
     const ranked = rankSimilarTherapists({
+      now: NOW,
       cards,
       topics,
       currentSlug: "sofia",
@@ -186,6 +198,7 @@ describe("rankSimilarTherapists", () => {
       makeCard("open", { availability: "open", specs: ["Trauma"] }),
     ];
     const ranked = rankSimilarTherapists({
+      now: NOW,
       cards,
       topics,
       currentSlug: "sofia",
@@ -199,7 +212,15 @@ describe("rankSimilarTherapists", () => {
       makeCard(`therapist-${index}`),
     );
     const rankFor = (currentSlug: string) =>
-      slugsOf(rankSimilarTherapists({ cards, topics, currentSlug, limit: 3 }));
+      slugsOf(
+        rankSimilarTherapists({
+          now: NOW,
+          cards,
+          topics,
+          currentSlug,
+          limit: 3,
+        }),
+      );
     const expected = [...cards]
       .sort(
         (first, second) =>
@@ -224,12 +245,14 @@ describe("rankSimilarTherapists", () => {
       makeCard("delta", { availability: "open", specs: ["Trauma"] }),
     ];
     const forward = rankSimilarTherapists({
+      now: NOW,
       cards,
       topics,
       currentSlug: "sofia",
       limit: 4,
     });
     const reversed = rankSimilarTherapists({
+      now: NOW,
       cards: [...cards].reverse(),
       topics,
       currentSlug: "sofia",
@@ -243,6 +266,7 @@ describe("rankSimilarTherapists", () => {
     const cards = [makeCard("a1"), makeCard("b2"), makeCard("c3")];
     const before = slugsOf(cards);
     const ranked = rankSimilarTherapists({
+      now: NOW,
       cards,
       topics,
       currentSlug: "sofia",
@@ -252,14 +276,106 @@ describe("rankSimilarTherapists", () => {
     expect(slugsOf(cards)).toEqual(before);
   });
 
+  it("gives a stale open status no boost over a closed one", () => {
+    const staleOpen = makeCard("stale", {
+      availability: "open",
+      availabilityUpdatedAt: isoDaysBeforeNow(STATUS_CONFIRMED_WITHIN_DAYS + 1),
+      specs: ["Trauma"],
+    });
+    const closed = makeCard("closed", {
+      availability: "closed",
+      specs: ["Trauma"],
+    });
+    const rankWith = (card: TherapistCardVM) =>
+      slugsOf(
+        rankSimilarTherapists({
+          now: NOW,
+          cards: [card, closed],
+          topics,
+          currentSlug: "sofia",
+          limit: 2,
+        }),
+      );
+    // Ranked exactly as if it had said "closed": the rotation alone decides.
+    expect(rankWith(staleOpen)).toEqual(
+      rankWith({ ...staleOpen, availability: "closed" }),
+    );
+  });
+
+  it("puts a fresh open status ahead of a stale or undated one", () => {
+    const cards = [
+      makeCard("stale", {
+        availability: "open",
+        availabilityUpdatedAt: isoDaysBeforeNow(140),
+        specs: ["Trauma"],
+      }),
+      makeCard("undated", {
+        availability: "open",
+        availabilityUpdatedAt: null,
+        specs: ["Trauma"],
+      }),
+      makeCard("fresh", {
+        availability: "open",
+        availabilityUpdatedAt: isoDaysBeforeNow(3),
+        specs: ["Trauma"],
+      }),
+    ];
+    for (const currentSlug of ["sofia", "ana", "rui"]) {
+      const ranked = rankSimilarTherapists({
+        now: NOW,
+        cards,
+        topics,
+        currentSlug,
+        limit: 3,
+      });
+      expect(ranked[0]?.slug).toBe("fresh");
+    }
+  });
+
   it("returns nothing for an empty directory", () => {
     expect(
       rankSimilarTherapists({
+        now: NOW,
         cards: [],
         topics,
         currentSlug: "sofia",
         limit: 3,
       }),
     ).toEqual([]);
+  });
+});
+
+describe("isTherapistStatusFresh", () => {
+  it("trusts a status changed within the window, the last day included", () => {
+    expect(
+      isTherapistStatusFresh(
+        {
+          availabilityUpdatedAt: isoDaysBeforeNow(STATUS_CONFIRMED_WITHIN_DAYS),
+        },
+        NOW,
+      ),
+    ).toBe(true);
+  });
+
+  it("stops trusting a status once the window has passed", () => {
+    expect(
+      isTherapistStatusFresh(
+        {
+          availabilityUpdatedAt: isoDaysBeforeNow(
+            STATUS_CONFIRMED_WITHIN_DAYS + 1,
+          ),
+        },
+        NOW,
+      ),
+    ).toBe(false);
+  });
+
+  it("treats a missing or unreadable date as unconfirmed", () => {
+    expect(isTherapistStatusFresh({ availabilityUpdatedAt: null }, NOW)).toBe(
+      false,
+    );
+    expect(
+      isTherapistStatusFresh({ availabilityUpdatedAt: "not a date" }, NOW),
+    ).toBe(false);
   });
 });

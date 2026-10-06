@@ -30,6 +30,10 @@ interface MentionTextareaProps {
    *  plain text insertion (DES-204). A paste that carries no file is left
    *  entirely alone: this never changes ordinary text-paste behaviour. */
   onPaste?: (event: React.ClipboardEvent<HTMLTextAreaElement>) => void;
+  /** PRD-423: the text inserted for a picked member. A matched Go together
+   *  chat inserts `@FirstName` here and maps it back to the member key on
+   *  send. Absent keeps `@slug`. */
+  formatInsertedMember?: (item: Suggestion) => string;
   /** Focus of the field itself. The chat composer uses it to dismiss whichever
    *  attach/shortcut panel is open once someone starts typing — those panels
    *  now live INSIDE the input pill, so an outside-click never fires for them. */
@@ -56,6 +60,17 @@ const SIGIL_BY_KIND: Record<Suggestion["kind"], string> = {
   event: "e/",
   thread: "t/",
 };
+
+/** The text a picked suggestion inserts: `sigil + slug`, or a member as
+ *  `formatMember` spells it (PRD-423, a matched Go together chat). */
+function insertedText(
+  item: Suggestion,
+  formatMember?: (item: Suggestion) => string,
+): string {
+  return item.kind === "member" && formatMember
+    ? formatMember(item)
+    : `${SIGIL_BY_KIND[item.kind]}${item.slug}`;
+}
 
 export function MentionTextarea(props: MentionTextareaProps) {
   const { value, onChange, textareaRef } = props;
@@ -118,10 +133,9 @@ export function MentionTextarea(props: MentionTextareaProps) {
   function insert(item: Suggestion) {
     if (!trigger) return;
     const caret = ref.current?.selectionStart ?? value.length;
-    const sigil = SIGIL_BY_KIND[item.kind];
     const before = value.slice(0, trigger.start);
     const after = value.slice(caret);
-    const token = `${sigil}${item.slug} `;
+    const token = `${insertedText(item, props.formatInsertedMember)} `;
     const next = `${before}${token}${after}`;
     onChange(next);
     setTrigger(null);

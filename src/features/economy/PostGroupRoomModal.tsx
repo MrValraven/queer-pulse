@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FiClock } from "react-icons/fi";
+import { FiClock, FiUser } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { describeError } from "../../shared/api/errorMessage";
@@ -127,10 +127,20 @@ export function PostGroupRoomModal({
 
           <ScamSafetyBanner />
 
-          <p className={styles.reviewWarning}>
-            <FiClock aria-hidden />
-            {t("economy:groupListing.post.reviewNotice")}
-          </p>
+          <div className={styles.reviewNotice}>
+            <p className={styles.reviewNoticeRow}>
+              <FiClock aria-hidden />
+              {t("economy:groupListing.post.reviewNotice")}
+            </p>
+            {/* LOC-F2: the consent line. Rooms posted from this form name
+                their poster on the group page (`isPosterNamed`), so the poster
+                reads that before they send. It shares the review notice's
+                surface so it reads as one notice. */}
+            <p className={styles.reviewNoticeRow}>
+              <FiUser aria-hidden />
+              {t("economy:groupListing.post.posterNamedNotice")}
+            </p>
+          </div>
 
           <GroupListingFields form={form} />
 

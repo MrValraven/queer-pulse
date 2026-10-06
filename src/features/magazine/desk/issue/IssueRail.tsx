@@ -1,4 +1,5 @@
 import { useToast } from "../../../../shared/components/feedback/useToast";
+import { intlLocale } from "../../../../shared/i18n/locale";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { formatDate } from "../../../../shared/lib/date";
 import type { IssueProductionDto } from "../../api/issueProduction.api";
@@ -27,7 +28,7 @@ export function IssueRail({
   onShip,
   onSaveSchedule,
 }: IssueRailProps) {
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const { showToast } = useToast();
 
   return (
@@ -51,7 +52,7 @@ export function IssueRail({
             showToast(
               publishedOn
                 ? t("magazine:issue.publishDate.savedToast", {
-                    date: formatDate(publishedOn),
+                    date: formatDate(publishedOn, intlLocale(language)),
                   })
                 : t("magazine:issue.publishDate.clearedToast"),
               "success",

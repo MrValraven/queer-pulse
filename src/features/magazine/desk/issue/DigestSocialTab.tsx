@@ -1,12 +1,16 @@
 import { useState } from "react";
-import { FiCheck, FiExternalLink } from "react-icons/fi";
+import { FiBellOff, FiCheck, FiExternalLink } from "react-icons/fi";
 import { Button, ImageSlot } from "../../../../shared/components/ui";
 import { useToast } from "../../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
+import { intlLocale } from "../../../../shared/i18n/locale";
+import { cx } from "../../../../shared/lib/cx";
 import { formatDate } from "../../../../shared/lib/date";
 import { routes } from "../../../../app/routeMap";
 import type { IssueDigestItemDto } from "../../api/issueProduction.api";
 import type { PieceListItemDto } from "../../api/pieces.api";
+import { isIssueAnnouncePending } from "./issueAnnounceRule";
+import noteStyles from "../pieceTabs.module.css";
 import styles from "./issueTabs.module.css";
 
 export interface DigestSocialTabProps {
@@ -17,6 +21,10 @@ export interface DigestSocialTabProps {
   /** "Announce with the issue" toggle + the announcement watermark. */
   digestSendOnPublish: boolean;
   digestSentAt: string | null;
+  /** An earlier ship already stamped pieces without ringing the bell
+   *  (`hasShippedWithoutAnnouncement`, computed once by the page), so the tab
+   *  tells that issue apart from one still waiting for its first ship. */
+  hasShippedQuietly?: boolean;
   onSaveDigest: (nextDigest: IssueDigestItemDto[]) => void;
   onToggleSendOnPublish: (next: boolean) => void;
 }
@@ -34,8 +42,10 @@ export interface DigestSocialTabProps {
  * no email, so the send path is gone and the same curated order and blurbs now
  * render on the issue's own public page. "Announce with the issue" toggles
  * `digestSendOnPublish`, which the real ship action reads to decide whether to
- * put ONE in-app notification in every member's bell the moment the issue
- * publishes. Once `digestSentAt` is set the toggle locks, since the
+ * put ONE in-app notification in every member's bell. It rings only for a
+ * ship made from 09:00 Lisbon time on the issue date (PRD-438): there is no
+ * scheduled job to ring it later, so while the toggle is on the tab says
+ * that rule out loud. Once `digestSentAt` is set the toggle locks, since the
  * announcement has already gone out. This tab holds no other server state of
  * its own.
  */
@@ -45,6 +55,7 @@ export function DigestSocialTab({
   issueNumber,
   digestSendOnPublish,
   digestSentAt,
+  hasShippedQuietly = false,
   onSaveDigest,
   onToggleSendOnPublish,
 }: DigestSocialTabProps) {
@@ -52,6 +63,17 @@ export function DigestSocialTab({
   const { t } = useTranslation();
   const [editingPieceId, setEditingPieceId] = useState<string | null>(null);
   const [draftBlurb, setDraftBlurb] = useState("");
+  const isAnnouncePending = isIssueAnnouncePending(
+    digestSendOnPublish,
+    digestSentAt,
+  );
+  // A toggle button keeps one label across its pressed states, so the fill
+  // and `aria-pressed` carry on/off. After a quiet ship the label narrows to
+  // what the toggle can still do: announce a piece going live for the first
+  // time.
+  const announceToggleLabel = hasShippedQuietly
+    ? t("magazine:issue.digest.announceNewPieceLive")
+    : t("magazine:issue.digest.announceWithIssue");
 
   function findPieceTitle(pieceId: string): string {
     return pieces.find((piece) => piece.id === pieceId)?.title ?? pieceId;
@@ -158,6 +180,8 @@ export function DigestSocialTab({
           <Button
             size="sm"
             variant={digestSendOnPublish ? "plum" : "ghost"}
+            className={styles.announceToggle}
+            aria-pressed={digestSendOnPublish}
             onClick={() => {
               const next = !digestSendOnPublish;
               onToggleSendOnPublish(next);
@@ -172,18 +196,14 @@ export function DigestSocialTab({
             }}
             disabled={digestSentAt !== null}
           >
-            {digestSendOnPublish
-              ? t("magazine:issue.digest.announceScheduled")
-              : t("magazine:issue.digest.announceWithIssue")}
+            {announceToggleLabel}
           </Button>
         </div>
-        {digestSentAt && (
-          <p className={styles.hint}>
-            {t("magazine:issue.digest.alreadyAnnounced", {
-              date: formatDate(digestSentAt),
-            })}
-          </p>
-        )}
+        <DigestAnnounceStatus
+          isAnnouncePending={isAnnouncePending}
+          hasShippedQuietly={hasShippedQuietly}
+          digestSentAt={digestSentAt}
+        />
       </div>
 
       <div className={styles.card}>
@@ -210,5 +230,50 @@ export function DigestSocialTab({
         </p>
       </div>
     </div>
+  );
+}
+
+/**
+ * What the announcement will do, under the toggle. After a quiet ship it is a
+ * warn note matching `ShipIssueModal`'s, since the next ship can only announce
+ * a piece going live for the first time; while the first ship is still ahead
+ * it states the 09:00 Lisbon rule; once sent it names the date.
+ */
+function DigestAnnounceStatus({
+  isAnnouncePending,
+  hasShippedQuietly,
+  digestSentAt,
+}: {
+  isAnnouncePending: boolean;
+  hasShippedQuietly: boolean;
+  digestSentAt: string | null;
+}) {
+  const { t, language } = useTranslation();
+  return (
+    <>
+      {isAnnouncePending && hasShippedQuietly && (
+        <div
+          className={cx(noteStyles.note, noteStyles.warn, noteStyles.noteStack)}
+        >
+          <b>
+            <FiBellOff aria-hidden />
+            {t("magazine:issue.ship.shippedQuietlyLead")}
+          </b>
+          <span>{t("magazine:issue.ship.shippedQuietlyBody")}</span>
+        </div>
+      )}
+      {isAnnouncePending && !hasShippedQuietly && (
+        <p className={styles.hint}>
+          {t("magazine:issue.digest.announceRuleHint")}
+        </p>
+      )}
+      {digestSentAt && (
+        <p className={styles.hint}>
+          {t("magazine:issue.digest.alreadyAnnounced", {
+            date: formatDate(digestSentAt, intlLocale(language)),
+          })}
+        </p>
+      )}
+    </>
   );
 }

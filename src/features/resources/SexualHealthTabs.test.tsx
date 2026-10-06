@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { render, screen, waitFor } from "@testing-library/react";
+import { act, render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import type { ReactNode } from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
@@ -34,9 +34,38 @@ function renderTab(node: ReactNode) {
   );
 }
 
+/** The sexual-health guide row, with whatever sections the test gives it. */
+function guideRow(
+  sections: resourcesApi.GuideSection[],
+): resourcesApi.ResourceResponseDTO {
+  return {
+    slug: "sexual-health",
+    category: "health",
+    title: "Sexual health",
+    description: "Testing, PrEP and HIV resources.",
+    body: "",
+    meta: null,
+    externalUrl: null,
+    lastVerifiedAt: null,
+    titlePt: null,
+    descriptionPt: null,
+    sections,
+    sectionsPt: null,
+    routePath: "/resources/sexual-health",
+    lastReviewedOn: null,
+    reviewedBy: null,
+    reviewDueOn: null,
+  };
+}
+
 beforeEach(() => {
   mockDemoMode = true;
   vi.restoreAllMocks();
+  // Live tabs look up the managed guide; by default the lookup fails, which
+  // leaves every tab on its catalog copy.
+  vi.spyOn(resourcesApi, "getResourceGuide").mockRejectedValue(
+    new Error("offline"),
+  );
 });
 
 describe("SexualHealth TestingTab dual-mode", () => {
@@ -85,5 +114,59 @@ describe("SexualHealth TestingTab dual-mode", () => {
         screen.queryByText("The clinic directory is coming soon."),
       ).not.toBeInTheDocument(),
     );
+  });
+});
+
+describe("SexualHealth TestingTab managed sections (RES-F5)", () => {
+  it("renders the editor's testing section and keeps the directory below it", async () => {
+    mockDemoMode = false;
+    vi.spyOn(resourcesApi, "getResourceListings").mockResolvedValue([]);
+    vi.spyOn(resourcesApi, "getResourceGuide").mockResolvedValue(
+      guideRow([
+        {
+          id: "testing",
+          heading: "Testing, as our editors put it",
+          blocks: [{ kind: "paragraph", text: "Updated clinic advice." }],
+        },
+      ]),
+    );
+    renderTab(<TestingTab />);
+
+    expect(
+      await screen.findByText("Testing, as our editors put it"),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Updated clinic advice.")).toBeInTheDocument();
+    expect(screen.queryByText("How often?")).not.toBeInTheDocument();
+    expect(
+      await screen.findByText("The clinic directory is coming soon."),
+    ).toBeInTheDocument();
+  });
+
+  it("keeps the catalog copy when the guide has no section at the testing anchor", async () => {
+    mockDemoMode = false;
+    vi.spyOn(resourcesApi, "getResourceListings").mockResolvedValue([]);
+    const guideResponse = Promise.resolve(
+      guideRow([
+        {
+          id: "prep",
+          heading: "PrEP, rewritten",
+          blocks: [{ kind: "paragraph", text: "New PrEP advice." }],
+        },
+      ]),
+    );
+    const guideSpy = vi
+      .spyOn(resourcesApi, "getResourceGuide")
+      .mockReturnValue(guideResponse);
+    renderTab(<TestingTab />);
+
+    await waitFor(() => expect(guideSpy).toHaveBeenCalled());
+    // Lets the lookup settle into the query and the tab re-render, so the
+    // assertions below read the tab after the guide row has arrived.
+    await act(async () => {
+      await guideResponse;
+      await Promise.resolve();
+    });
+    expect(screen.getByText("How often?")).toBeInTheDocument();
+    expect(screen.queryByText("PrEP, rewritten")).not.toBeInTheDocument();
   });
 });

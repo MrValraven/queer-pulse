@@ -25,8 +25,9 @@ export interface PieceGoLiveStatusProps {
 
 /**
  * The non-interactive line a row's action slot (and a calendar chip's meta
- * line) shows for a piece with a publish date and no next action: "Goes live {date}" while scheduled, "Live on the
- * site" once the date has passed below Published, with the clock and globe
+ * line) shows for a piece with a publish date and no next action: "Goes live {date}" while scheduled, "Live since
+ * {date}. Publish it to tell the writer." once the date has passed below
+ * Published (PRD-437), with the clock and globe
  * marks the board card's locked stage line uses. Renders nothing otherwise.
  */
 export function PieceGoLiveStatus({
@@ -44,12 +45,58 @@ export function PieceGoLiveStatus({
       ? t("magazine:desk.board.goesLive", {
           date: format.date(status.publishesAt, GOES_LIVE_FORMAT),
         })
-      : t("magazine:desk.board.liveOnSite");
+      : t("magazine:desk.goLive.liveSinceTellWriter", {
+          date: format.date(status.liveSince, GOES_LIVE_FORMAT),
+        });
 
   return (
     <span className={styles.status} data-align={align} data-compact={isCompact}>
       <StatusIcon aria-hidden="true" className={styles.icon} />
       {text}
+    </span>
+  );
+}
+
+export interface PieceLiveSinceNoteProps {
+  /** The passed instant the piece went live at. */
+  publishedAt: string;
+  /** So the Publish button beside the note can name it as its description. */
+  id?: string;
+  align?: "start" | "end";
+}
+
+/**
+ * PRD-437: the line a pipeline row shows above its Publish verb when a
+ * piece's scheduled instant has passed and its stage is still short of
+ * Published. Readers can already open it; the writer has not been told,
+ * because no job advances the stage and only an editor's Publish rings the
+ * writer's bell. So the line says both: when it went live, and what to do.
+ *
+ * Both forms render: the full sentence, and a one-line "Live since {date}"
+ * that the compact desk density shows in its place
+ * (`PieceGoLiveStatus.module.css`). The full sentence stays in the
+ * accessibility tree in either density (only visually hidden in compact), so
+ * the Publish button pointing at `id` is always described by all of it; the
+ * short form is hidden from assistive tech, since it repeats the start.
+ */
+export function PieceLiveSinceNote({
+  publishedAt,
+  id,
+  align = "start",
+}: PieceLiveSinceNoteProps) {
+  const { t } = useTranslation();
+  const format = useFormat();
+  const date = format.date(new Date(publishedAt), GOES_LIVE_FORMAT);
+
+  return (
+    <span id={id} className={styles.status} data-align={align}>
+      <FiGlobe aria-hidden="true" className={styles.icon} />
+      <span className={styles.liveNoteFull}>
+        {t("magazine:desk.goLive.liveSinceTellWriter", { date })}
+      </span>
+      <span className={styles.liveNoteShort} aria-hidden="true">
+        {t("magazine:desk.goLive.liveSinceShort", { date })}
+      </span>
     </span>
   );
 }

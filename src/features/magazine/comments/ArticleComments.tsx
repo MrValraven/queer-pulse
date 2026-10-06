@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import {
   ConfirmDialog,
+  LoadErrorState,
   LoadMoreFooter,
   SkeletonLine,
 } from "../../../shared/components/ui";
@@ -29,6 +30,9 @@ export function ArticleComments({ articleSlug }: { articleSlug: string }) {
     isLoading,
     isLoadingMore,
     isFetchNextPageError,
+    hasFailedWithoutData,
+    isRetrying,
+    retry,
   } = useReaderComments(articleSlug);
   const { create, edit, remove } = useReaderCommentMutations(articleSlug);
   const [reportTarget, setReportTarget] = useState<ReaderCommentDTO | null>(
@@ -61,10 +65,29 @@ export function ArticleComments({ articleSlug }: { articleSlug: string }) {
       <div className="wrap">
         {/* PRD-108: the server's `total` counts top-level THREADS, so the
             heading names conversations. It used to say "34 comments" while
-            counting nothing a reply added. */}
+            counting nothing a reply added. Until the count is known (first
+            load, or a first page that failed) the heading names the section
+            without a number, so it never claims "0 conversations". */}
         <h2 id="article-comments-heading" className={styles.heading}>
-          {t("magazine:comments.headingThreads", { count: totalThreads })}
+          {isLoading || hasFailedWithoutData
+            ? t("magazine:comments.headingNeutral")
+            : t("magazine:comments.headingThreads", { count: totalThreads })}
         </h2>
+
+        {/* ENG-501b: a first page that failed used to read "No comments yet",
+            which tells a reader the article has no conversation when we just
+            could not fetch it. A failed LATER page keeps the threads above
+            and retries from the footer, so this only covers nothing loaded. */}
+        {hasFailedWithoutData && (
+          <LoadErrorState
+            compact
+            className={styles.loadError}
+            title={t("magazine:comments.loadError.title")}
+            description={t("magazine:comments.loadError.body")}
+            onRetry={retry}
+            isRetrying={isRetrying}
+          />
+        )}
 
         <div className={styles.topComposer}>
           <ArticleCommentComposer
@@ -74,7 +97,7 @@ export function ArticleComments({ articleSlug }: { articleSlug: string }) {
           />
         </div>
 
-        {isLoading ? (
+        {hasFailedWithoutData ? null : isLoading ? (
           <div className={styles.skeletonList} aria-hidden>
             <SkeletonLine width="60%" height={16} />
             <SkeletonLine width="90%" height={14} style={{ marginTop: 8 }} />

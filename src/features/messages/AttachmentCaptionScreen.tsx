@@ -16,6 +16,8 @@ import { AttachmentDocumentPreview } from "./AttachmentDocumentPreview";
 import { AttachmentUploadProgress } from "./AttachmentUploadProgress";
 import type { StagedAttachmentItem } from "./AttachmentStagingTypes";
 import styles from "./AttachmentCaptionScreen.module.css";
+import { useDisplayMaxLength } from "./matchedChatComposerMentions";
+import { ATTACHMENT_CAPTION_MAX_LENGTH } from "./messageEditKinds";
 
 /** Fallback intrinsic size for a staged image/GIF whose own width/height are
  *  still 0 (the async dimension read hasn't resolved, or failed), mirrors
@@ -71,6 +73,11 @@ export function AttachmentCaptionScreen({
   const selectedItem = items.find((item) => item.id === selectedId) ?? items[0];
 
   useComposerAutoGrow(textareaRef, selectedItem?.caption ?? "");
+  // PRD-423: a matched chat stores mentions as longer key tokens.
+  const captionMaxLength = useDisplayMaxLength(
+    selectedItem?.caption ?? "",
+    ATTACHMENT_CAPTION_MAX_LENGTH,
+  );
 
   // `useDismiss` lands initial focus on the first focusable element in the
   // dialog (the close button); the caption field is the more useful place to
@@ -207,7 +214,7 @@ export function AttachmentCaptionScreen({
               ref={textareaRef}
               className={styles.captionField}
               rows={1}
-              maxLength={1000}
+              maxLength={captionMaxLength}
               value={selectedItem.caption}
               placeholder={t("messages:attachments.captionPlaceholder")}
               aria-label={t("messages:attachments.captionPlaceholder")}

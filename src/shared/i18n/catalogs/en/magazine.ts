@@ -1273,6 +1273,13 @@ export const magazine: Catalog = {
   "desk.views.deleteBody":
     "The view goes for good. Your pieces and the desk stay as they are.",
   "desk.views.deleteConfirm": "Delete view",
+  "desk.goLive.liveSinceTellWriter":
+    "Live since {date}. Publish it to tell the writer.",
+  "desk.goLive.writerHearsOnPublish":
+    "The writer hears about it when an editor publishes it after it goes live.",
+  "desk.goLive.liveSinceShort": "Live since {date}",
+  "desk.goLive.liveSinceCloseCare":
+    "Live since {date}. Close the care items, then publish to tell the writer.",
 
   // ── DeskView ─────────────────────────────────────────────────────────────
 
@@ -1300,6 +1307,7 @@ export const magazine: Catalog = {
   "piece.header.notFoundTitle": "We couldn't open this piece",
   "piece.header.notFoundDescription":
     "It may have been removed, or the link is out of date.",
+  "piece.header.liveWriterNotTold": "Live, writer not told",
 
   // ── PieceTabsNav ─────────────────────────────────────────────────────────
   "piece.tabs.ariaLabel": "Piece record sections",
@@ -1815,7 +1823,7 @@ export const magazine: Catalog = {
   "write.header.backAria": "Back to the piece record",
   "write.header.untitled": "Untitled draft",
   "write.header.unsectioned": "Unsectioned",
-  "write.header.subtitle": "Article · {section} · {issue} · {saved}",
+  "write.header.subtitle": "Article · {section} · {issue}",
   "write.header.viewLabel": "View",
   "write.header.sendOn": "Send on",
   "write.header.sendOnTo": "Send to {stage}",
@@ -2068,9 +2076,9 @@ export const magazine: Catalog = {
   "issue.ship.checklistHeading": "Ship checklist",
   "issue.ship.modalTitle": "Ship issue {number}?",
   "issue.ship.modalSubWithDate":
-    "Pieces publish together at 09:00 on {date}, in the running order you set. The digest goes at the same moment.",
+    "Issue dated {date}. Pieces go live together, in the running order you set.",
   "issue.ship.modalSubNoDate":
-    "Pieces publish together at 09:00, in the running order you set. The digest goes at the same moment.",
+    "No date set yet, so shipping dates the issue today. Pieces go live together, in the running order you set.",
   "issue.ship.notYet": "Not yet",
   "issue.ship.shipIt": "Ship it",
   "issue.ship.warnNote":
@@ -2090,6 +2098,14 @@ export const magazine: Catalog = {
   "issue.ship.heldHeading_other": "{count} pieces were held",
   "issue.ship.heldLastTimeHeading_one": "The last ship held {count} piece",
   "issue.ship.heldLastTimeHeading_other": "The last ship held {count} pieces",
+  "issue.ship.quietNoteOnDate":
+    "If you ship now, members get no announcement, and none follows later. To announce it, ship on {date} from 09:00 Lisbon time.",
+  "issue.ship.quietNoteToday":
+    "If you ship now, members get no announcement, and none follows later. To announce it, ship today from 09:00 Lisbon time.",
+  "issue.ship.quietLead": "Goes out quietly.",
+  "issue.ship.shippedQuietlyLead": "Already went out quietly.",
+  "issue.ship.shippedQuietlyBody":
+    "A new ship announces this issue only if it puts a piece live for the first time.",
 
   // ── Issue production toasts ──────────────────────────────────────────────
   // `issuePanelSaved` deliberately renames the old hardcoded "Digest saved":
@@ -2214,15 +2230,17 @@ export const magazine: Catalog = {
   "issue.digest.edit": "Edit",
   "issue.digest.previewPanel": "See the reader's page",
   "issue.digest.announceWithIssue": "Announce with the issue",
-  "issue.digest.announceScheduled": "Announcing with the issue",
   "issue.digest.announceOnToast":
-    "Members get a notification when this issue ships.",
+    "Members get a notification if you ship this issue from 09:00 Lisbon time on its date.",
   "issue.digest.announceOffToast":
     "Shipping this issue will no longer notify members.",
   "issue.digest.alreadyAnnounced": "Announced to members on {date}",
   "issue.digest.socialHeading": "Social out",
   "issue.digest.socialAltHint":
     "Alt text is copied from the image, so it's always filled in.",
+  "issue.digest.announceRuleHint":
+    "The announcement goes out when you ship from 09:00 Lisbon time on the issue date. A ship before then goes out quietly, and the announcement does not follow on its own.",
+  "issue.digest.announceNewPieceLive": "Announce if a new piece goes live",
 
   // ── ArchiveTab ───────────────────────────────────────────────────────────
   "issue.archive.heading": "Archive",
@@ -2513,6 +2531,9 @@ export const magazine: Catalog = {
   // ── Article editor: block removal undo ───────────────────────────────────
   "write.block.removedToast": "Block removed.",
   "write.block.undoRemove": "Undo",
+  "write.scheduledSave.heading": "This change didn't save",
+  "write.scheduledSave.body":
+    "This piece is scheduled to publish, so it has to stay ready to go live. Put back what's missing, or press Unpublish at the top to take it off the schedule and save this change.",
 
   // ── Reader comments: delete confirmation (FE-CNT-11) ─────────────────────
   "comments.deleteConfirm.title": "Delete this comment?",
@@ -2595,12 +2616,18 @@ export const magazine: Catalog = {
   "lifecycle.languages.localePlaceholder": "Pick a language",
   "lifecycle.languages.translatorLabel": "Who is translating it",
   "lifecycle.languages.translatorHelper":
-    "Their name as it should read in the credit. Leave it blank and credit them later.",
+    "They hear about the job as soon as you open it. Leave it empty and assign someone from the desk later.",
   "lifecycle.languages.open": "Open translation",
   "lifecycle.languages.opened": "Translation opened at {slug}.",
   "lifecycle.languages.openFailed": "That didn't open. Try again.",
   "lifecycle.languages.allDone":
     "This piece already exists in every language we publish.",
+  "lifecycle.languages.translatorNone": "No translator yet",
+  "lifecycle.languages.translatorsUnavailable":
+    "The member list has not loaded. You can open the translation now and assign a translator from the desk later.",
+  "lifecycle.languages.bylineLabel": "Credit line",
+  "lifecycle.languages.bylineHelper":
+    "How their name reads in the credit. Leave it blank to use their member name.",
 
   // ── Reader: the decks index (PRD-105) ───────────────────────────────────
   // The front showed only the newest deck, and neither search, the section
@@ -2664,6 +2691,10 @@ export const magazine: Catalog = {
   "comments.report.subUnknown": "Tell us what's wrong with this comment.",
   "comments.report.confirmBodyUnknown":
     "Thanks. A moderator will review this comment.",
+  "comments.loadError.title": "We couldn't load the comments.",
+  "comments.loadError.body":
+    "The conversation is still here. Give it another try in a moment.",
+  "comments.headingNeutral": "Conversations",
 
   // ── Submit a story: the real open issue (PRD-106) ───────────────────────
   // Replaces a hardcoded issue number and a deadline that had already passed.

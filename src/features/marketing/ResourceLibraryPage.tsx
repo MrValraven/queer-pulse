@@ -35,6 +35,7 @@ export function ResourceLibraryPage() {
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
+    isFetchNextPageError,
     hasFailedWithoutData,
     isRetrying,
     refetch,
@@ -51,7 +52,7 @@ export function ResourceLibraryPage() {
       if (cat !== "all" && guide.category !== cat) return false;
       if (
         normalizedQuery &&
-        !`${guide.title} ${guide.description} ${guide.categoryLabel}`
+        !`${guide.title} ${guide.titlePt ?? ""} ${guide.description} ${guide.descriptionPt ?? ""} ${guide.categoryLabel}`
           .toLowerCase()
           .includes(normalizedQuery)
       ) {
@@ -114,6 +115,7 @@ export function ResourceLibraryPage() {
             onRetry={refetch}
             hasNextPage={hasNextPage}
             isFetchingNextPage={isFetchingNextPage}
+            isFetchNextPageError={isFetchNextPageError}
             onFetchNextPage={fetchNextPage}
           />
         </div>

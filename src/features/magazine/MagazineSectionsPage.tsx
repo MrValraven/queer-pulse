@@ -1,5 +1,5 @@
 import { PageShell } from "../../shared/components/layout";
-import { EmptyState } from "../../shared/components/ui";
+import { EmptyState, LoadErrorState } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { MagazineMasthead } from "./MagazineMasthead";
 import { MagazineSectionGrid } from "./MagazineSectionGrid";
@@ -18,8 +18,11 @@ import styles from "./MagazineSectionsPage.module.css";
  */
 export function MagazineSectionsPage() {
   const { t } = useTranslation();
-  const { sections, isLoading, isError } = useMagazineSections();
-  const showEmpty = !isLoading && (isError || sections.length === 0);
+  const { sections, isLoading, hasFailedWithoutData, isRetrying, refetch } =
+    useMagazineSections();
+  // ENG-501b: a failed read gets the error panel with Retry, which stays
+  // mounted (and keeps focus on its button) while the retry runs.
+  const showEmpty = !isLoading && sections.length === 0;
 
   return (
     <PageShell>
@@ -40,18 +43,18 @@ export function MagazineSectionsPage() {
             <p className={styles.sub}>{t("magazine:sections.sub")}</p>
           </div>
 
-          {showEmpty ? (
+          {hasFailedWithoutData ? (
+            <LoadErrorState
+              headingLevel={2}
+              title={t("magazine:sections.errorTitle")}
+              description={t("magazine:sections.errorBody")}
+              onRetry={refetch}
+              isRetrying={isRetrying}
+            />
+          ) : showEmpty ? (
             <EmptyState
-              title={
-                isError
-                  ? t("magazine:sections.errorTitle")
-                  : t("magazine:sections.emptyTitle")
-              }
-              description={
-                isError
-                  ? t("magazine:sections.errorBody")
-                  : t("magazine:sections.emptyBody")
-              }
+              title={t("magazine:sections.emptyTitle")}
+              description={t("magazine:sections.emptyBody")}
             />
           ) : (
             <MagazineSectionGrid sections={sections} isLoading={isLoading} />

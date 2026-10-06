@@ -3,6 +3,7 @@ import { useEffect, useId, useRef, useState, type KeyboardEvent } from "react";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { MentionTextarea } from "../../shared/mentions/MentionTextarea";
+import { useMatchedChatComposerMentions } from "./matchedChatComposerMentions";
 import {
   MESSAGE_BODY_MAX_LENGTH,
   getMessageBodyLength,
@@ -69,7 +70,11 @@ export function InlineEditField({
   const maxLength = isCaption
     ? ATTACHMENT_CAPTION_MAX_LENGTH
     : MESSAGE_BODY_MAX_LENGTH;
-  const [value, setValue] = useState(initialValue);
+  // Minor 6 (PRD-423): a matched chat edits `@FirstName`, stores the key.
+  const composerMentions = useMatchedChatComposerMentions();
+  const [value, setValue] = useState(
+    () => composerMentions?.decode(initialValue) ?? initialValue,
+  );
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const counterId = useId();
   // Tracks the previous over-limit reading so the live region below only
@@ -84,10 +89,12 @@ export function InlineEditField({
     textarea.setSelectionRange(textarea.value.length, textarea.value.length);
   }, []);
 
-  const trimmedLength = getMessageBodyLength(value);
+  // PRD-423: limits measure the stored text, key tokens included.
+  const storedValue = composerMentions ? composerMentions.encode(value) : value;
+  const trimmedLength = getMessageBodyLength(storedValue);
   const isEmpty = trimmedLength === 0;
-  const isOverLimit = isMessageBodyOverLimit(value, maxLength);
-  const showCounter = shouldShowMessageLengthCounter(value, maxLength);
+  const isOverLimit = isMessageBodyOverLimit(storedValue, maxLength);
+  const showCounter = shouldShowMessageLengthCounter(storedValue, maxLength);
   // ENG-405: emptying a caption the message already had removes it, so an
   // empty Save is allowed there; a caption edit that starts empty still
   // needs text, like any message edit.
@@ -106,7 +113,7 @@ export function InlineEditField({
 
   function attemptSubmit() {
     if (!canSave) return;
-    onSubmit(value);
+    onSubmit(storedValue);
   }
 
   function handleKeyDown(event: KeyboardEvent<HTMLTextAreaElement>) {
@@ -144,6 +151,7 @@ export function InlineEditField({
         aria-describedby={showCounter || isEmpty ? counterId : undefined}
         aria-invalid={isOverLimit || undefined}
         placement="above"
+        formatInsertedMember={composerMentions?.formatInsertedMember}
         onChange={setValue}
         onKeyDown={handleKeyDown}
       />

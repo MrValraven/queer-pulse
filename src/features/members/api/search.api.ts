@@ -39,6 +39,9 @@ export interface SearchResultDTO {
   sub: string;
   /** Member avatar URL (member rows only); absent for other result types. */
   avatarUrl?: string | null;
+  /** The topic's post count (topic rows only), so the subline can be phrased
+   *  in the member's language. Older responses carry only the English `sub`. */
+  postCount?: number;
 }
 
 export interface SearchResponseDTO {

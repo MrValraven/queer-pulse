@@ -1,7 +1,8 @@
 import { apiPost } from "../../../shared/api/client";
 
-/** Which public marketing form produced the inquiry. */
-export type InquiryKind = "contact" | "partner";
+/** Which public marketing form produced the inquiry. `listing_correction`
+ *  (PRD-434) is a Contact message sent under the listing-correction topic. */
+export type InquiryKind = "contact" | "partner" | "listing_correction";
 
 /** Body for `POST /inquiries` — mirrors the backend `CreateInquiryDto`. */
 export interface CreateInquiryDto {
@@ -19,6 +20,12 @@ export interface CreateInquiryDto {
   body: string;
   /** Organisation name — partner form only. */
   orgName?: string;
+  /**
+   * PRD-434. The listing a `listing_correction` is about, as the ref the
+   * "Suggest a correction" link carried. The backend stores it only on that
+   * kind, and the admin inbox links to the listing from it.
+   */
+  listingRef?: string;
 }
 
 /** The backend's acknowledgement for a stored inquiry. */

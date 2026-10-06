@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { Piece } from "../data/desk.data";
+import { pieceHolder } from "./deskWaitingOn";
 import {
   pieceNextAction,
   pieceNextActionShortLabelKey,
@@ -156,6 +157,17 @@ describe("pieceNextAction", () => {
         "unassigned",
       )?.kind,
     ).toBe("publish");
+  });
+
+  it("offers Publish on a live piece at any stage below Published, whoever holds it", () => {
+    const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+    for (const stage of ["Drafting", "Edit", "Layout"] as const) {
+      for (const wait of ["writer", "you", undefined] as const) {
+        const piece = makePiece({ stage, wait, publishedAt: yesterday });
+        expect(pieceNextAction(piece, "issue")?.kind).toBe("publish");
+        expect(pieceHolder(piece)).toBe("editor");
+      }
+    }
   });
 
   it("a published piece has no next action", () => {

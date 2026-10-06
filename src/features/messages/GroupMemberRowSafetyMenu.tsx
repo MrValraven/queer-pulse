@@ -5,6 +5,8 @@ import { BlockMemberModal } from "../members/BlockMemberModal";
 import { ConversationReportModal } from "./ConversationReportModal";
 import { useConversationBlockAction } from "./useConversationBlockAction";
 import { useKebabMenuA11y } from "./useKebabMenuA11y";
+import { useMatchedChat } from "./matchedChatContext";
+import { useMatchedChatMemberBlockAction } from "./useMatchedChatMemberBlockAction";
 import type { GroupMemberView } from "./data";
 import menuStyles from "./MessagesPage.module.css";
 
@@ -36,8 +38,20 @@ export function GroupMemberRowSafetyMenu({
 }: GroupMemberRowSafetyMenuProps) {
   const { t } = useTranslation();
   const [isReporting, setIsReporting] = useState(false);
+  // PRD-423: a matched Go together chat names the member by their per-chat
+  // key in `slug` and `id`, so Block and Report go through the key routes.
+  const matchedChat = useMatchedChat();
+  const slugBlockAction = useConversationBlockAction(
+    member.slug ?? "",
+    member.name,
+  );
+  const matchedChatBlockAction = useMatchedChatMemberBlockAction(
+    matchedChat?.conversationId ?? null,
+    member.slug ?? "",
+    member.name,
+  );
   const { blocked, confirmingBlock, beginBlock, cancelBlock, confirmBlock } =
-    useConversationBlockAction(member.slug ?? "", member.name);
+    matchedChat ? matchedChatBlockAction : slugBlockAction;
   const menuAriaLabel = t("messages:group.memberSafetyMenuAriaLabel", {
     name: member.name,
   });

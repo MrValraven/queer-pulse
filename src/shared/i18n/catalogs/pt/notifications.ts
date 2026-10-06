@@ -1349,4 +1349,10 @@ export const notifications: Catalog = {
     "Não foi possível juntar-te a um grupo para {eventTitle}",
   "type.go_together_unmatched.textHostOff":
     "Quem organiza desligou o Vamos juntes para {eventTitle}",
+  "type.forum_co_author_credit.text":
+    "O teu nome está na coautoria de “{threadTitle}”.",
+  "type.forum_co_author_credit.textNamed":
+    "<profile>{name}</profile> pôs o teu nome na coautoria de “{threadTitle}”.",
+  "type.forum_co_author_credit.meta": "Coautoria",
+  "type.forum_co_author_credit.threadTitleFallback": "um tópico",
 };

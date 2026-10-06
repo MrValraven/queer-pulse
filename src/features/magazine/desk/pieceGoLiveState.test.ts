@@ -21,7 +21,7 @@ describe("pieceGoLiveState", () => {
         { stage: "Ready", publishedAt: "2026-08-10T09:00:00Z" },
         NOW,
       ),
-    ).toEqual({ kind: "live" });
+    ).toEqual({ kind: "live", liveSince: new Date("2026-08-10T09:00:00Z") });
   });
 
   it("says nothing for a Published piece whose date has passed", () => {

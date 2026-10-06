@@ -2463,6 +2463,8 @@ export const subprofiles: Catalog = {
   "therapist.side.contact.body.openNoCall":
     "Envia uma mensagem a {name} com uma pergunta, ou para encontrar um horário para a primeira sessão.",
   "therapist.side.similar.wait": "Lista de espera",
+  "therapist.side.similar.updated": "Atualizado {when}",
+  "therapist.side.similar.unconfirmed": "Por confirmar",
 
   // Therapist profile (g2b)
   "therapist.hero.facts.feesFrom": "a partir de {amount}€",
@@ -2766,6 +2768,11 @@ export const subprofiles: Catalog = {
   "therapist.owner.capacityShort.open": "A aceitar",
   "therapist.owner.capacityShort.closed": "Sem vagas",
   "therapist.owner.capacityShort.wait": "Em espera",
+  "therapist.owner.statusUpdated": "Atualizado {when}",
+  "therapist.owner.statusNotConfirmed": "Ainda não confirmado",
+  "therapist.owner.statusStaleHint":
+    "Confirma-o para os membros saberem que se mantém.",
+  "therapist.owner.confirmStatus": "Confirmar estado",
   // Therapist profile (m2)
   "therapist.side.edit.waitNote": "Editar a nota da lista de espera",
   "therapist.side.edit.email": "Editar o endereço de email",

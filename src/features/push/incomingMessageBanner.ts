@@ -194,6 +194,9 @@ function readAttachmentCaption(
 export function incomingMessagePreviewText(
   message: Pick<MessageResponse, "kind" | "body" | "attachment">,
   t: TFunction,
+  // PRD-423: spells a matched chat's `@<member key>` mentions by name,
+  // applied BEFORE the preview is cut so no token is split.
+  readable: (text: string) => string = (text) => text,
 ): string {
   if (
     message.kind === "image" ||
@@ -202,10 +205,10 @@ export function incomingMessagePreviewText(
   ) {
     const caption = readAttachmentCaption(message.attachment);
     return caption
-      ? toOneLinePreview(caption)
+      ? toOneLinePreview(readable(caption))
       : t(ATTACHMENT_KIND_KEYS[message.kind]);
   }
-  return toOneLinePreview(message.body);
+  return toOneLinePreview(readable(message.body));
 }
 
 export interface IncomingMessageCopyInput {

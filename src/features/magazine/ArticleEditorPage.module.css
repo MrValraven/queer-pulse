@@ -14,8 +14,13 @@
   top: 0;
   z-index: var(--z-sticky);
   display: flex;
+  /* Wraps at every width: back, title, retry and status tag hold the first
+     line (the title keeps a 14rem floor), and the view seg and the actions
+     drop to a second line when the row cannot fit them. Unwrapped, between
+     701px and ~1250px the title collapsed to nothing and Publish clipped. */
+  flex-wrap: wrap;
   align-items: center;
-  gap: 12px;
+  gap: 8px 12px;
   padding: 12px 26px;
   background: var(--cream-translucent);
   backdrop-filter: var(--blur-nav);
@@ -32,12 +37,19 @@
   }
 }
 
+/* The live-status tag ("Agendado") sits beside the flexible title; as a
+   shrinkable flex item it was squeezed to one letter per line at 1024 PT. */
+.statusTag {
+  flex: none;
+  white-space: nowrap;
+}
+
 .title {
   display: flex;
   flex-direction: column;
   gap: 2px;
-  min-width: 0;
-  flex: 1 1 auto;
+  min-width: min(14rem, 100%);
+  flex: 1 1 14rem;
 }
 
 .title b {
@@ -50,17 +62,42 @@
   text-overflow: ellipsis;
 }
 
+/* One line: the meta ("Article · section · issue") truncates first, and the
+   save status keeps its words, since it is the part the writer checks. */
 .titleSub {
+  display: flex;
+  min-width: 0;
   font-size: var(--text-12-5);
   color: var(--ink-40);
   white-space: nowrap;
+}
+
+.titleMeta {
+  flex: 0 1 auto;
+  min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* `max-width` lets a long status (PT "Não foi possível guardar, …") clip
+   with an ellipsis inside a phone-width title. */
+.titleSaved {
+  flex: none;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .right {
   margin-left: auto;
   display: flex;
+  /* At 375 PT "Enviar para Sensitivity read" + "Despublicar" run ~330px in
+     a 323px row, so the pair wraps onto two lines inside the row. */
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  max-width: 100%;
   gap: 8px;
   align-items: center;
   flex: none;
@@ -98,8 +135,13 @@
 }
 
 @media (max-width: 700px) {
+  /* Scrolls with the page here, as on the piece record: wrapped into title,
+     seg and action lines under the shell's own pinned bar, a sticky header
+     covered a third or more of a phone screen. Nothing in the composer
+     reads the bar's position (the selection toolbar and slash menu place
+     themselves from the block's own rect). */
   .ebar {
-    flex-wrap: wrap;
+    position: static;
   }
 
   .erail {

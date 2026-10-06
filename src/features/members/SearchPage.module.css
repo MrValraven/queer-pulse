@@ -113,17 +113,25 @@
 }
 /* Phones: one scrolling row keeps the 14 category pills from stacking into
    five rows that push the results below the fold. The row bleeds to the
-   viewport edges and pads back by the page gutter; the block padding leaves
-   room for the focus ring. */
+   viewport edges and pads back by the page gutter.
+
+   PRD-329b: `overflow-x: auto` clips on both axes, so the block padding has to
+   hold the whole focus ring: the offset gap plus the 3px outline in
+   --focus-ring (tokens/effects.css), plus 1px spare for subpixel rounding.
+   4px used to clip about 2px of it top and bottom. The negative block margins
+   give back what the extra padding adds, so the pills sit exactly where they
+   did. */
 @media (--md) {
   .tabs {
+    --tabs-ring-room: calc(var(--focus-ring-offset) + 3px + 1px);
     flex-wrap: nowrap;
     overflow-x: auto;
     scrollbar-width: none;
     overscroll-behavior-inline: contain;
     margin-inline: calc(-1 * var(--wrap-px));
-    padding: 4px var(--wrap-px);
-    margin-bottom: 30px;
+    padding: var(--tabs-ring-room) var(--wrap-px);
+    margin-top: calc(4px - var(--tabs-ring-room));
+    margin-bottom: calc(34px - var(--tabs-ring-room));
   }
   .tabs::-webkit-scrollbar {
     display: none;

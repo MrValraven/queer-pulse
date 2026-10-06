@@ -12,8 +12,11 @@
   grid-template-columns: minmax(260px, 300px) minmax(0, 1fr) minmax(0, 1fr);
 }
 
+/* One track that may shrink below its cards' min-content, so a long card
+   line wraps inside the rail at 375px. */
 .rail {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 14px;
   min-width: 0;
 }

@@ -137,3 +137,41 @@ describe("useThreadRowPreview: a reply sent as the business", () => {
     );
   });
 });
+
+describe("useThreadRowPreview: matched Go together chats (PRD-423)", () => {
+  const viewerKey = "m-9a4e1c7b2d58f0a36e2b1c84";
+  const sofiaKey = "m-2f8b6d1a4c93e75b0d6a2f19";
+
+  it("prefixes You: on the viewer's own last message, named by their per-chat key", () => {
+    const thread = baseThread({
+      isGroup: true,
+      isGoTogetherChat: true,
+      viewerMemberKey: viewerKey,
+      lastMessageSenderHandle: viewerKey,
+      lastMessageBody: "bringing snacks",
+      preview: "Tiago: bringing snacks",
+    });
+    const { result } = renderHook(() => useThreadRowPreview(thread, false), {
+      wrapper: TestProviders,
+    });
+    expect(result.current.previewText).toBe("You: bringing snacks");
+  });
+
+  it("names a stored member key mention by first name in the preview", () => {
+    const thread = baseThread({
+      isGroup: true,
+      isGoTogetherChat: true,
+      viewerMemberKey: viewerKey,
+      lastMessageSenderHandle: sofiaKey,
+      preview: `Sofia: see you @${viewerKey}`,
+      memberPreview: [
+        { id: viewerKey, handle: viewerKey, name: "Tiago", avatarUrl: null },
+        { id: sofiaKey, handle: sofiaKey, name: "Sofia", avatarUrl: null },
+      ],
+    });
+    const { result } = renderHook(() => useThreadRowPreview(thread, false), {
+      wrapper: TestProviders,
+    });
+    expect(result.current.previewText).toBe("Sofia: see you @Tiago");
+  });
+});

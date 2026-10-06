@@ -10,6 +10,9 @@
   color: var(--text-strong);
   margin-bottom: 20px;
 }
+.loadError {
+  margin-bottom: var(--gap-grid);
+}
 .topComposer {
   margin-bottom: 28px;
 }

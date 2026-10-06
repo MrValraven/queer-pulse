@@ -360,11 +360,20 @@ export function useSubprofileMutations() {
       // cannot write the old values back. The editor seeds its drafts once
       // on mount, so an open editor only sees a fresher `subprofile` here,
       // as it already does after the refetch below.
+      const savedView = subprofileToView(data);
       queryClient.setQueryData(
-        subprofileQueryKey(demoMode, id),
-        subprofileToView(data),
+        subprofileQueryKey(demoMode, data.id),
+        savedView,
       );
-      invalidateOwned(id);
+      // ENG-447: an unlink answers under a fresh id, and the old one now
+      // answers 404. The open editor reads its persona under the id in its
+      // route until it moves to the new address
+      // (`usePersonaRekeyRedirect`), so that entry carries the saved persona
+      // too and is never refetched.
+      if (data.id !== id) {
+        queryClient.setQueryData(subprofileQueryKey(demoMode, id), savedView);
+      }
+      invalidateOwned(data.id);
     },
   });
 

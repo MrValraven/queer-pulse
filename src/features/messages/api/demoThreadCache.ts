@@ -117,8 +117,13 @@ function senderOf(
   message: ChatMessage,
   conversation: Conversation,
 ): AuthorSummary {
+  // PRD-423: a matched Go together chat names the viewer by their per-chat
+  // member key, as the live server does.
+  const viewer = conversation.viewerMemberKey
+    ? { ...DEMO_VIEWER, handle: conversation.viewerMemberKey }
+    : DEMO_VIEWER;
   if (message.kind === "system") {
-    if (message.systemEvent?.actorIsMe === true) return DEMO_VIEWER;
+    if (message.systemEvent?.actorIsMe === true) return viewer;
     const actorName = message.systemEvent?.actorName ?? "";
     return { handle: "", displayName: actorName, avatarUrl: null };
   }
@@ -136,7 +141,7 @@ function senderOf(
       isFormerIdentity: true,
     };
   }
-  if (message.from === "me") return DEMO_VIEWER;
+  if (message.from === "me") return viewer;
   // ENG-243: the demo's erased sender, in the shape the server sends one.
   if (message.isSenderFormerMember) {
     return {

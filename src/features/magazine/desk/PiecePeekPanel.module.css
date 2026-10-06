@@ -151,16 +151,36 @@
    in the same clock-and-date form as the record's publish gate. */
 .scheduled {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 6px;
   margin: 0;
   font-size: var(--text-13-5);
+  line-height: 1.4;
   font-weight: 500;
   color: var(--ink-60);
 }
 
+/* Kept to the first line, so the wrapping "Live since" line reads as one
+   block: half the leading above the 1em mark. */
 .scheduledIcon {
   flex: none;
+  margin-top: 0.2em;
+}
+
+/* PRD-437: the scheduled line with its quieter follow-up underneath, saying
+   when the writer hears about it. */
+.goLive {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.goLiveHint {
+  margin: 0;
+  font-size: var(--text-12-5);
+  line-height: 1.45;
+  color: var(--ink-60);
 }
 
 .facts {

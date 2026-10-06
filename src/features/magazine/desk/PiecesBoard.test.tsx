@@ -156,9 +156,10 @@ describe("PiecesBoard", () => {
       "Unpublish from the piece record to move it",
     );
     expect(line).toHaveTextContent(/^Live on the site/);
-    expect(line).toHaveAccessibleDescription(
+    expect(line).toHaveTextContent(
       "Unpublish from the piece record to move it",
     );
+    expect(line).not.toHaveAttribute("aria-describedby");
     expect(screen.queryByRole("button", { name: "Move stage" })).toBeNull();
   });
 
@@ -199,10 +200,13 @@ describe("PiecesBoard", () => {
     const line = await lockedStageLine(
       "Unpublish from the piece record to move it",
     );
-    expect(line).toHaveTextContent(/^Live on the site/);
-    expect(line).toHaveAccessibleDescription(
+    expect(line).toHaveTextContent(
+      /^Live since \S.*Publish it to tell the writer\./,
+    );
+    expect(line).toHaveTextContent(
       "Unpublish from the piece record to move it",
     );
+    expect(line).not.toHaveAttribute("aria-describedby");
     expect(screen.queryByRole("button", { name: "Move stage" })).toBeNull();
   });
 
@@ -222,7 +226,8 @@ describe("PiecesBoard", () => {
       "Scheduled to publish. Unschedule it from the piece record to move it";
     const line = await lockedStageLine(reason);
     expect(line).toHaveTextContent(/^Goes live \S/);
-    expect(line).toHaveAccessibleDescription(reason);
+    expect(line).toHaveTextContent(reason);
+    expect(line).not.toHaveAttribute("aria-describedby");
     expect(screen.queryByRole("button", { name: "Move stage" })).toBeNull();
   });
 

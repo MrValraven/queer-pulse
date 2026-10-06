@@ -193,7 +193,7 @@
 }
 @media (hover: hover) {
   .danger:hover:not(:disabled):not([aria-disabled="true"]) {
-    background: var(--danger-ink);
+    background: var(--danger-pressed);
     transform: translateY(-1px);
     box-shadow: 0 12px 26px -10px rgba(var(--danger-rgb), 0.85);
   }

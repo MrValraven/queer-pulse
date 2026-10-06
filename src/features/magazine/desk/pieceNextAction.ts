@@ -7,6 +7,7 @@
 import type { Piece } from "../data/desk.data";
 import { pieceHolder } from "./deskWaitingOn";
 import { hasPublishDate, isPieceScheduled } from "./pieceSchedule";
+import { pieceGoLiveState } from "./pieceGoLiveState";
 import type { DeskTrack } from "./deskTrack";
 
 export type PieceNextActionKind =
@@ -77,7 +78,7 @@ function hasWriter(piece: Piece): boolean {
  * flip a passed date to Published, a Ready piece whose date already passed
  * is live already; Publish is still its move (settling it: the stage
  * advances and the writer hears about it), whether or not it sits on an
- * issue.
+ * issue. The same holds for a live piece at any earlier stage.
  *
  * The track is part of the signature so a later rule can tell issue work from
  * unfiled work. Today the piece's own `issueId` already answers "is it on an
@@ -88,6 +89,10 @@ export function pieceNextAction(
   _track: DeskTrack,
 ): PieceNextAction | null {
   if (piece.stage === "Published") return null;
+  // Live on the site below Published, at any stage (PRD-437): readers can
+  // open it already, so the move is settling it, which tells the writer.
+  // `pieceHolder` puts the same piece with its editor.
+  if (pieceGoLiveState(piece)?.kind === "live") return actionOf("publish");
   if (piece.stage === "Ready") {
     if (isPieceScheduled(piece)) return null;
     if (hasPublishDate(piece)) return actionOf("publish");

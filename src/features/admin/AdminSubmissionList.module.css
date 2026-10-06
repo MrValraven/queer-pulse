@@ -121,6 +121,22 @@
   box-shadow: var(--ring-cream);
 }
 
+/* Narrow rows: the actions drop below the content at full width. */
+@media (max-width: 480px) {
+  .row {
+    flex-wrap: wrap;
+  }
+
+  .rowActions {
+    flex-basis: 100%;
+    align-items: flex-start;
+  }
+
+  .rowActionButtons {
+    justify-content: flex-start;
+  }
+}
+
 .loadMore {
   display: flex;
   justify-content: center;
@@ -330,6 +346,12 @@
   outline-offset: var(--focus-ring-offset);
   box-shadow: var(--ring-cream);
   border-radius: var(--radius-6);
+}
+
+/* The listing link on an inquiry row reads at the size of the meta line
+   around it. */
+.rowListingLink {
+  font-size: var(--text-14);
 }
 
 /* Kind + status selects above a browse list. */

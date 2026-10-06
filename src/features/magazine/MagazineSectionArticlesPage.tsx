@@ -2,7 +2,7 @@ import { Link, useParams } from "react-router-dom";
 import { FiArrowLeft } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { PageMeta } from "../../shared/seo";
-import { EmptyState } from "../../shared/components/ui";
+import { EmptyState, LoadErrorState } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { MagazineMasthead } from "./MagazineMasthead";
@@ -34,16 +34,18 @@ export function MagazineSectionArticlesPage() {
   const {
     articles,
     isLoading,
-    isError,
+    hasFailedWithoutData,
+    isRetrying,
+    refetch,
     hasMore,
     loadMore,
     isLoadingMore,
     isFetchNextPageError,
   } = useSectionArticles(section);
   // ENG-501: react-query also sets `isError` when only the next page failed.
-  // The error copy is for a section with nothing loaded; pieces already loaded
-  // stay, and the footer under them retries the page that failed.
-  const hasNothingLoadedError = isError && articles.length === 0;
+  // The error panel is for a section with nothing loaded; pieces already
+  // loaded stay, and the footer under them retries the page that failed.
+  // ENG-501b: the panel offers Retry, and stays mounted while it runs.
   const showEmpty = !isLoading && articles.length === 0;
 
   return (
@@ -71,18 +73,22 @@ export function MagazineSectionArticlesPage() {
             <h1 className={styles.h1}>{section}</h1>
           </div>
 
-          {showEmpty ? (
+          {hasFailedWithoutData ? (
+            <LoadErrorState
+              headingLevel={2}
+              title={t("magazine:sectionArticles.errorTitle")}
+              description={t("magazine:sectionArticles.errorBody")}
+              onRetry={refetch}
+              isRetrying={isRetrying}
+            />
+          ) : showEmpty ? (
             <EmptyState
-              title={
-                hasNothingLoadedError
-                  ? t("magazine:sectionArticles.errorTitle")
-                  : t("magazine:sectionArticles.emptyTitle")
-              }
-              description={
-                hasNothingLoadedError
-                  ? t("magazine:sectionArticles.errorBody")
-                  : t("magazine:sectionArticles.emptyBody")
-              }
+              title={t("magazine:sectionArticles.emptyTitle")}
+              description={t("magazine:sectionArticles.emptyBody")}
+              action={{
+                label: t("magazine:sectionArticles.backCta"),
+                to: routes.magazineSections,
+              }}
             />
           ) : (
             <MagazineArticleRows

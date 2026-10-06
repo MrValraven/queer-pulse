@@ -7,6 +7,10 @@ import {
   type ReaderCommentsPage,
 } from "./readerComments.api";
 import { DEMO_READER_COMMENTS } from "./readerComments.data";
+import {
+  hasFailedWithoutData,
+  isRetryingFailedRead,
+} from "../../admin/queryLoadFailure";
 
 /** Mirrors the backend's `PAGE_SIZE` for this endpoint. Only used to shape the
  *  demo fixture's envelope and the empty fallback the mutations write. */
@@ -37,6 +41,14 @@ export interface ReaderCommentsResult {
    *  footer retries that page under the threads already loaded. Always false
    *  in demo mode, which answers in one page. */
   isFetchNextPageError: boolean;
+  /** ENG-501b: the first page failed and nothing ever loaded, including while
+   *  a Retry of that failure runs (react-query clears `isError` the moment it
+   *  refetches). The list shows its error state with Retry. */
+  hasFailedWithoutData: boolean;
+  /** A Retry of that failed first page is in flight. */
+  isRetrying: boolean;
+  /** Re-runs the failed first page. Wire it to `LoadErrorState`'s `onRetry`. */
+  retry: () => void;
 }
 
 /**
@@ -93,5 +105,10 @@ export function useReaderComments(articleSlug: string): ReaderCommentsResult {
     isLoadingMore: query.isFetchingNextPage,
     isError: query.isError,
     isFetchNextPageError: query.isFetchNextPageError,
+    hasFailedWithoutData: hasFailedWithoutData(query),
+    isRetrying: isRetryingFailedRead(query),
+    retry: () => {
+      void query.refetch();
+    },
   };
 }

@@ -19,6 +19,7 @@ import type { StagedAttachmentItem } from "./AttachmentStagingTypes";
 import type { ChatMessage, Conversation } from "./data";
 import type { GifAttachment } from "../../shared/api/gifs";
 import type { DocumentAttachment } from "../../shared/api/documentAttachment";
+import { useMatchedChatComposerMentions } from "./matchedChatComposerMentions";
 
 /** Reused whenever no `AttachmentQueueProvider` is mounted above this hook,
  *  so a render with no queue never allocates a fresh object every pass. */
@@ -100,6 +101,7 @@ export function useAttachmentStaging({
   // level, so this should always read a real queue here (see the assertion).
   const queue = useAttachmentQueue();
   assertAttachmentQueueMounted(queue);
+  const composerMentions = useMatchedChatComposerMentions();
   const stagedByConversation =
     queue?.stagedByConversation ?? EMPTY_ITEMS_BY_CONVERSATION;
   const pendingByConversation =
@@ -168,6 +170,8 @@ export function useAttachmentStaging({
     const snapshot = {
       ...buildReplySnapshot(replyDraft, active, t),
       sendAsIdentityId: active.mailboxSeatIdentityId,
+      // PRD-423: a matched chat's captions store mentions as key tokens.
+      encodeCaption: composerMentions?.encode,
     };
     if (replyDraft) onCancelReply?.();
     queueSendStaged?.(conversationId, snapshot);
@@ -179,6 +183,7 @@ export function useAttachmentStaging({
     active,
     t,
     onCancelReply,
+    composerMentions,
   ]);
   const cancelPending = useCallback(
     (id: string) => queueCancelPending?.(conversationId, id),

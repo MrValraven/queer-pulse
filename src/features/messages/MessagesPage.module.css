@@ -21,13 +21,19 @@
    an open keyboard already covers/replaces the tab bar (they can't both be
    visible at once), so summing them lifted the composer by the tab bar's
    height even while the keyboard was up. Taking the larger of the two is
-   what's actually on screen at the bottom edge in either state. */
+   what's actually on screen at the bottom edge in either state.
+   The height starts from `--layout-viewport-height` (useVisualViewportKeyboard,
+   `window.innerHeight`) instead of `100svh`: iOS standalone web apps can report
+   `100svh` short of the real viewport (~45px on iOS 26), which left a dead strip
+   under the composer, and `--keyboard-inset` is itself measured against
+   `innerHeight`, so both terms of the subtraction share one measure. The
+   `100svh` fallback covers first paint and engines without visualViewport. */
 .app {
   display: flex;
   --messages-top-offset: 0px;
   margin-top: var(--messages-top-offset);
   height: calc(
-    100svh - var(--messages-top-offset) -
+    var(--layout-viewport-height, 100svh) - var(--messages-top-offset) -
       max(var(--bottom-inset), var(--keyboard-inset, 0px))
   );
 }

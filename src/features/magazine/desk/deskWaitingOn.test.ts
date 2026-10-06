@@ -9,6 +9,12 @@ import {
 } from "./deskWaitingOn";
 import { pieceNextAction } from "./pieceNextAction";
 
+const HOUR_MS = 60 * 60 * 1000;
+
+function hoursFromNow(hours: number): string {
+  return new Date(Date.now() + hours * HOUR_MS).toISOString();
+}
+
 const editors: Editor[] = [
   { id: "marta", name: "Marta Cruz", initials: "MC", tint: "coral", cap: 7 },
   { id: "sara", name: "Sara Pinheiro", initials: "SP", tint: "jade", cap: 7 },
@@ -30,6 +36,49 @@ function makePiece(overrides: Partial<Piece> = {}): Piece {
     ...overrides,
   };
 }
+
+describe("pieceHolder", () => {
+  it("hands a live piece below Published back to its editor", () => {
+    for (const wait of ["writer", "you", "nobody", undefined] as const) {
+      expect(
+        pieceHolder(
+          makePiece({ stage: "Ready", publishedAt: hoursFromNow(-2), wait }),
+        ),
+      ).toBe("editor");
+    }
+  });
+
+  it("keeps the usual holder while the piece is only scheduled", () => {
+    expect(
+      pieceHolder(
+        makePiece({
+          stage: "Ready",
+          publishedAt: hoursFromNow(40),
+          wait: "writer",
+        }),
+      ),
+    ).toBe("writer");
+    expect(
+      pieceHolder(makePiece({ stage: "Ready", publishedAt: hoursFromNow(40) })),
+    ).toBe("nobody");
+  });
+
+  it("leaves a Published piece with nobody, whatever its date", () => {
+    expect(
+      pieceHolder(
+        makePiece({ stage: "Published", publishedAt: hoursFromNow(-2) }),
+      ),
+    ).toBe("nobody");
+  });
+
+  it("puts a live piece in the editor's own turn, so the row joins Your turn", () => {
+    const live = makePiece({ stage: "Ready", publishedAt: hoursFromNow(-2) });
+    expect(isWaitingOnViewer(live, "marta")).toBe(true);
+    expect(describeWaitingOn(live, "marta", editors).tone).toBe("you");
+    expect(matchesAllFocus(live, "marta", ["your-turn"])).toBe(true);
+    expect(pieceNextAction(live, "issue")?.kind).toBe("publish");
+  });
+});
 
 describe("describeWaitingOn", () => {
   it("says You in the plum tone only for the viewer's own piece", () => {

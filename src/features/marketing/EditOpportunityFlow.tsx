@@ -51,9 +51,10 @@ function pinnedOrganizationsFor(
 export function EditOpportunityFlow({ slug }: { slug: string }) {
   const { t } = useTranslation();
   const detailPath = `${routes.volunteer}/opportunity/${slug}`;
-  const { data, isLoading } = useOpportunity(slug);
+  const { data, isPending } = useOpportunity(slug);
 
-  if (isLoading) return <SkeletonCard />;
+  // `isPending` also covers the query parked on the session check.
+  if (isPending) return <SkeletonCard />;
 
   // Poster-only: `canEditOpportunity` is the API's own edit capability, which
   // (unlike `canReviewApplicants`) never widens to the attributed community's

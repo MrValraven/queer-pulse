@@ -53,6 +53,56 @@ export const homepage: Catalog = {
   "manifesto.assurance.moderation.title": "Moderated around the clock",
   "manifesto.assurance.moderation.description":
     "When something goes wrong, you should not have to shout into the void. Reports are reviewed by real people and responded to as quickly as possible.",
+  // Digests shown when "Where we stand" or "How we keep this safe" opens
+  // <ReferenceDigestModal> in place. Written for someone who has just read the
+  // section above, so they add what the full page says and skip what the
+  // assurance list already claims. Registry: manifestoDigests.data.ts.
+  "manifesto.digest.stand.eyebrow": "Where we stand",
+  "manifesto.digest.stand.label": "Where QueerPulse stands",
+  "manifesto.digest.stand.title": "A belief that <em>costs us something.</em>",
+  "manifesto.digest.stand.lead":
+    "The positions behind that sentence, with the commitments we attach to each one.",
+  "manifesto.digest.stand.p1":
+    "Race, class, disability, migration status and gender all shape who gets safety and who gets asked to wait for it. So the belief has to cost us something: it shapes who we invite, who moderates, and whose complaints get taken seriously.",
+  "manifesto.digest.stand.p2":
+    "Israel is committing a genocide against Palestinians in Gaza, and we say it plainly. We also refuse pinkwashing, which holds LGBTQ+ rights up as proof that a state is civilised while that same state bombs, starves and displaces.",
+  "manifesto.digest.stand.point.trans.title": "Trans membership is settled.",
+  "manifesto.digest.stand.point.trans.body":
+    "Self-identification is the standard here, and campaigning to remove trans members is a Code of Conduct violation.",
+  "manifesto.digest.stand.point.money.title": "We take no complicit money.",
+  "manifesto.digest.stand.point.money.body":
+    "No sponsorship, funding or partnership from companies or institutions materially complicit in the occupation.",
+  "manifesto.digest.stand.point.positions.title":
+    "Sex work, migration and HIV.",
+  "manifesto.digest.stand.point.positions.body":
+    "Sex work is work, migration is a queer issue, and treating someone's HIV status as grounds to exclude them is discrimination.",
+  "manifesto.digest.stand.point.principle.title": "One test for when we speak.",
+  "manifesto.digest.stand.point.principle.body":
+    "We speak where our community is directly implicated, and where queer identity is being used as cover for harm.",
+  "manifesto.digest.stand.cta": "Read the full position",
+  "manifesto.digest.safety.eyebrow": "Safety & privacy",
+  "manifesto.digest.safety.label": "How QueerPulse keeps members safe",
+  "manifesto.digest.safety.title": "Your visibility, <em>your call.</em>",
+  "manifesto.digest.safety.lead":
+    "What the safety guide adds: how visibility, vouching, your data, reports and leaving actually work.",
+  "manifesto.digest.safety.p1":
+    "Visibility works like a dimmer you can turn whenever you want, with no penalty for stepping back. On Network only, direct contact needs a shared connection. On Private, only the team and whoever vouched you in can see your profile.",
+  "manifesto.digest.safety.p2":
+    "A vouch says: I know this person, and I think they belong here. Vouchers are accountable in a real way, so if someone they vouched for causes harm, they are part of the conversation about what happens next.",
+  "manifesto.digest.safety.point.data.title": "Your data is never for sale.",
+  "manifesto.digest.safety.point.data.body":
+    "We don't sell it, train models on it, share it with third parties or run advertising.",
+  "manifesto.digest.safety.point.reports.title": "Reports stay discreet.",
+  "manifesto.digest.safety.point.reports.body":
+    "You are never identified to the person you report unless you choose to be, and we follow up.",
+  "manifesto.digest.safety.point.access.title":
+    "Everything we hold, on request.",
+  "manifesto.digest.safety.point.access.body":
+    "Ask for everything we hold about you, or for your account to be deleted, at any time.",
+  "manifesto.digest.safety.point.leaving.title": "Leaving takes one step.",
+  "manifesto.digest.safety.point.leaving.body":
+    "Your profile leaves the directory at once, your board posts are removed, and your data is deleted within 30 days.",
+  "manifesto.digest.safety.cta": "Read the full safety guide",
 
   // ── TrustStrip ─────────────────────────────────────────────────────────────
 

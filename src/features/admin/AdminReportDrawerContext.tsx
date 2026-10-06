@@ -144,6 +144,7 @@ export function ReportContext({
         <ReportEvidenceSnapshots
           reportId={reportId}
           snapshots={detail.evidenceSnapshots}
+          excerpt={detail.excerpt}
         />
       )}
 
@@ -180,46 +181,53 @@ export function ReportContext({
         </section>
       )}
 
-      <section className={styles.dSec}>
-        <h3 className={styles.dSecLabel}>
-          {t("admin:moderation.reportDrawer.threadTitle")}
-        </h3>
-        <div className={styles.dThread}>
-          {detail.thread.map((m, i) => (
-            <div
-              key={i}
-              className={[styles.dMsg, m.flagged && styles.dMsgFlag]
-                .filter(Boolean)
-                .join(" ")}
-            >
-              <AdminAvatar
-                initials={m.initials}
-                tone={m.tone}
-                size="sm"
-                src={demoPortrait(m.author)}
-              />
-              <div className={styles.dMsgBody}>
-                <div className={styles.dMsgMeta}>
-                  <span className={styles.dMsgAuthor}>{m.author}</span>
-                  <span className={styles.dMsgTime}>{m.time}</span>
-                  {m.flagged && (
-                    <span className={styles.dMsgFlagTag}>
-                      <FiAlertTriangle aria-hidden />{" "}
-                      {t("admin:moderation.reportDrawer.flaggedTag")}
-                    </span>
-                  )}
+      {/* Only content that sits in a thread has one to show: a home or a
+          group room arrives with no messages and no conversation to open, and
+          an empty heading there reads as if the thread failed to load. */}
+      {(detail.thread.length > 0 || detail.conversationContextAvailable) && (
+        <section className={styles.dSec}>
+          <h3 className={styles.dSecLabel}>
+            {t("admin:moderation.reportDrawer.threadTitle")}
+          </h3>
+          {detail.thread.length > 0 && (
+            <div className={styles.dThread}>
+              {detail.thread.map((m, i) => (
+                <div
+                  key={i}
+                  className={[styles.dMsg, m.flagged && styles.dMsgFlag]
+                    .filter(Boolean)
+                    .join(" ")}
+                >
+                  <AdminAvatar
+                    initials={m.initials}
+                    tone={m.tone}
+                    size="sm"
+                    src={demoPortrait(m.author)}
+                  />
+                  <div className={styles.dMsgBody}>
+                    <div className={styles.dMsgMeta}>
+                      <span className={styles.dMsgAuthor}>{m.author}</span>
+                      <span className={styles.dMsgTime}>{m.time}</span>
+                      {m.flagged && (
+                        <span className={styles.dMsgFlagTag}>
+                          <FiAlertTriangle aria-hidden />{" "}
+                          {t("admin:moderation.reportDrawer.flaggedTag")}
+                        </span>
+                      )}
+                    </div>
+                    <p className={styles.dMsgText}>{m.body}</p>
+                  </div>
                 </div>
-                <p className={styles.dMsgText}>{m.body}</p>
-              </div>
+              ))}
             </div>
-          ))}
-        </div>
-        {/* PRD-360: a message report's surrounding conversation, opened only
-            on request because every opening is audited. */}
-        {detail.conversationContextAvailable && (
-          <ReportConversationContext reportId={reportId} />
-        )}
-      </section>
+          )}
+          {/* PRD-360: a message report's surrounding conversation, opened
+              only on request because every opening is audited. */}
+          {detail.conversationContextAvailable && (
+            <ReportConversationContext reportId={reportId} />
+          )}
+        </section>
+      )}
 
       <section className={styles.dSec}>
         <h3 className={styles.dSecLabel}>

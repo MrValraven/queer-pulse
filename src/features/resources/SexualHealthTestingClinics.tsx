@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { FiCheck, FiMapPin, FiStar } from "react-icons/fi";
 import { EmptyState, FilterChips } from "../../shared/components/ui";
+import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   CLINICS,
@@ -23,19 +24,20 @@ export function TestingClinicCard({
   onToggle: () => void;
 }) {
   const { t } = useTranslation();
+  const fmt = useFormat();
 
   return (
     <div className={styles.clinicCard}>
       <div>
         <div className={`${styles.ccType} ${styles[TYPE_CLASS[clinic.type]]}`}>
-          {clinic.typeLabel}
+          {t(clinic.typeLabelKey)}
         </div>
         <div className={styles.ccName}>{clinic.name}</div>
-        <div className={styles.ccDesc}>{clinic.description}</div>
+        <div className={styles.ccDesc}>{t(clinic.descriptionKey)}</div>
         <div className={styles.ccMeta}>
           {clinic.meta.map((meta) => (
-            <span key={meta.text}>
-              <meta.icon /> {meta.text}
+            <span key={meta.textKey}>
+              <meta.icon aria-hidden /> {t(meta.textKey)}
             </span>
           ))}
         </div>
@@ -44,7 +46,7 @@ export function TestingClinicCard({
         {clinic.verified && (
           <div className={styles.ccBadge}>
             {t("resources:sexualHealth.testing.clinicCard.verifiedBadge")}{" "}
-            <FiCheck />
+            <FiCheck aria-hidden />
           </div>
         )}
         <button
@@ -61,7 +63,13 @@ export function TestingClinicCard({
         </button>
         {clinic.review && (
           <div className={styles.ccReview}>
-            <FiStar /> {clinic.review}
+            <FiStar aria-hidden />{" "}
+            {t("resources:sexualHealth.testing.clinicCard.review", {
+              count: clinic.review.count,
+              rating: fmt.number(clinic.review.rating, {
+                minimumFractionDigits: 1,
+              }),
+            })}
           </div>
         )}
       </div>
@@ -71,25 +79,33 @@ export function TestingClinicCard({
             <div className={styles.ccDetailLabel}>
               {t("resources:sexualHealth.testing.clinicCard.testsLabel")}
             </div>
-            <div className={styles.ccDetailVal}>{clinic.details.tests}</div>
+            <div className={styles.ccDetailVal}>
+              {t(clinic.details.testsKey)}
+            </div>
           </div>
           <div className={styles.ccDetailRow}>
             <div className={styles.ccDetailLabel}>
               {t("resources:sexualHealth.testing.clinicCard.bringLabel")}
             </div>
-            <div className={styles.ccDetailVal}>{clinic.details.bring}</div>
+            <div className={styles.ccDetailVal}>
+              {t(clinic.details.bringKey)}
+            </div>
           </div>
           <div className={styles.ccDetailRow}>
             <div className={styles.ccDetailLabel}>
               {t("resources:sexualHealth.testing.clinicCard.accessLabel")}
             </div>
-            <div className={styles.ccDetailVal}>{clinic.details.access}</div>
+            <div className={styles.ccDetailVal}>
+              {t(clinic.details.accessKey)}
+            </div>
           </div>
           <div className={styles.ccDetailRow}>
             <div className={styles.ccDetailLabel}>
               {t("resources:sexualHealth.testing.clinicCard.noteLabel")}
             </div>
-            <div className={styles.ccDetailVal}>{clinic.details.note}</div>
+            <div className={styles.ccDetailVal}>
+              {t(clinic.details.noteKey)}
+            </div>
           </div>
         </div>
       )}

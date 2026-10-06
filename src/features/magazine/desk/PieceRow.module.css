@@ -354,6 +354,17 @@
   max-width: 136px;
 }
 
+/* PRD-437: a live Ready piece stacks its "Live since" note over Publish,
+   both kept to the cell's end edge. The wider cap holds the EN note in two
+   lines and the longer PT one in about three; at 136px either ran to four
+   or more. */
+.actionCell[data-live-note] {
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  max-width: 184px;
+}
+
 /* A quiet text button: the title leads the row, the verb follows it. The
    column grows to the longest verb on screen; a label past the cell's cap
    wraps inside the button, which stays within its column and clear of the
@@ -430,6 +441,15 @@
 
 [data-density="compact"] .meta {
   margin-inline-start: var(--gap-xs);
+}
+
+/* A compact row grows by one line only: the note's short form ("Live
+   since {date}", PieceLiveSinceNote) holds to a single line over the verb,
+   so the cell drops the comfortable cap that wrapped the full sentence and
+   the two sit tight against each other. */
+[data-density="compact"] .actionCell[data-live-note] {
+  gap: 2px;
+  max-width: none;
 }
 
 /* ── Middle width: stage named under its dots, tighter gutters ── */
@@ -538,6 +558,27 @@
   }
 
   .row .actionCell[data-status] > * {
+    text-align: start;
+  }
+
+  /* A live Ready piece's note (PRD-437) leaves the verb on the title's line
+     and takes the same row of its own as a go-live line: the cell dissolves
+     into the row's grid, so the verb keeps the action area and its
+     tap-target offset while the note spans the piece's edge through More. */
+  .actionCell[data-live-note] {
+    display: contents;
+  }
+
+  .row .actionCell[data-live-note] .nextAction {
+    grid-area: action;
+    justify-self: end;
+    margin-top: calc((18px - var(--tap-min)) / 2);
+  }
+
+  .row .actionCell[data-live-note] > :first-child {
+    grid-row: -1 / span 1;
+    grid-column: piece-start / more-end;
+    justify-self: start;
     text-align: start;
   }
 

@@ -53,6 +53,12 @@ export function mailboxesQueryKey(demoMode: boolean) {
 export interface MessageViewer {
   myHandle: string | null;
   staffedIdentityIds: ReadonlySet<string>;
+  /** PRD-423: the member's own per-chat keys, one per matched Go together
+   *  chat they hold a seat in (`Conversation.viewerMemberKey`). Inside a
+   *  matched chat every member reference is such a key, so a sender or
+   *  frame carrying one of these is the member themself. Absent reads as
+   *  none. */
+  ownMemberKeys?: ReadonlySet<string>;
 }
 
 export function staffedIdentityIdsOf(
@@ -88,7 +94,49 @@ export function isFromViewerSide(
 ): boolean {
   const identityId = sender?.identityId;
   if (identityId && viewer.staffedIdentityIds.has(identityId)) return true;
-  return !!viewer.myHandle && sender?.handle === viewer.myHandle;
+  return isViewerHandle(sender?.handle, viewer);
+}
+
+/** Whether a member reference names the viewer: their own handle, or one of
+ *  their per-chat keys in a matched Go together chat (PRD-423). */
+export function isViewerHandle(
+  handle: string | null | undefined,
+  viewer: MessageViewer,
+): boolean {
+  if (!handle) return false;
+  if (viewer.myHandle && handle === viewer.myHandle) return true;
+  return viewer.ownMemberKeys?.has(handle) ?? false;
+}
+
+/** The cached conversation rows (inbox lists and single-conversation
+ *  reads) that may carry a `viewerMemberKey`, keyed by these prefixes. */
+const MEMBER_KEY_CONVERSATION_QUERY_PREFIXES = [
+  ["conversations"],
+  ["conversation-detail"],
+] as const;
+
+/** PRD-423: the member's own per-chat keys, read from whatever conversation
+ *  rows are cached, for code that runs outside React (the realtime client).
+ *  Empty before the first load, which only means the member's own frame in
+ *  a matched chat may briefly read as another member's until the inbox
+ *  arrives. Sorted, so equal sets compare equal as strings. */
+export function readOwnMemberKeys(queryClient: QueryClient): string[] {
+  const memberKeys = new Set<string>();
+  const collect = (row: unknown) => {
+    if (row && typeof row === "object" && "viewerMemberKey" in row) {
+      const memberKey = (row as { viewerMemberKey?: unknown }).viewerMemberKey;
+      if (typeof memberKey === "string" && memberKey) {
+        memberKeys.add(memberKey);
+      }
+    }
+  };
+  for (const queryKey of MEMBER_KEY_CONVERSATION_QUERY_PREFIXES) {
+    for (const [, data] of queryClient.getQueriesData<unknown>({ queryKey })) {
+      if (Array.isArray(data)) data.forEach(collect);
+      else collect(data);
+    }
+  }
+  return [...memberKeys].sort();
 }
 
 /** Staffed identity ids from whatever mailbox lists are cached, for code that
@@ -107,4 +155,84 @@ export function readStaffedIdentityIds(
     }
   }
   return identityIds;
+}
+
+/** One QueryClient's live set of the member's own matched-chat keys. */
+interface OwnMemberKeysMemo {
+  snapshot: string;
+  keys: ReadonlySet<string>;
+  listeners: Set<() => void>;
+}
+
+const ownMemberKeysMemoByClient = new WeakMap<QueryClient, OwnMemberKeysMemo>();
+
+const MEMBER_KEY_SNAPSHOT_SEPARATOR = ",";
+
+/** Whether a cache event can change the member's own keys: a conversation
+ *  list or detail entry added, removed or updated. */
+function isConversationQueryKey(queryKey: readonly unknown[]): boolean {
+  const head = queryKey[0];
+  return MEMBER_KEY_CONVERSATION_QUERY_PREFIXES.some(
+    ([prefix]) => head === prefix,
+  );
+}
+
+/**
+ * PRD-423: the memo behind {@link ownMemberKeysOf}, one per QueryClient,
+ * kept current by a single query-cache subscription that recomputes only
+ * when a conversation list or detail entry changes, so a busy cache (typing,
+ * presence, message pages) costs one key comparison per event and every
+ * reader shares one scan.
+ */
+function ownMemberKeysMemoFor(queryClient: QueryClient): OwnMemberKeysMemo {
+  const existing = ownMemberKeysMemoByClient.get(queryClient);
+  if (existing) return existing;
+  const keys = readOwnMemberKeys(queryClient);
+  const memo: OwnMemberKeysMemo = {
+    snapshot: keys.join(MEMBER_KEY_SNAPSHOT_SEPARATOR),
+    keys: new Set(keys),
+    listeners: new Set(),
+  };
+  ownMemberKeysMemoByClient.set(queryClient, memo);
+  queryClient.getQueryCache().subscribe((event) => {
+    if (
+      event.type !== "added" &&
+      event.type !== "removed" &&
+      event.type !== "updated"
+    ) {
+      return;
+    }
+    const { queryKey } = event.query as { queryKey: readonly unknown[] };
+    if (!isConversationQueryKey(queryKey)) return;
+    const nextKeys = readOwnMemberKeys(queryClient);
+    const nextSnapshot = nextKeys.join(MEMBER_KEY_SNAPSHOT_SEPARATOR);
+    if (nextSnapshot === memo.snapshot) return;
+    memo.snapshot = nextSnapshot;
+    memo.keys = new Set(nextKeys);
+    for (const listener of memo.listeners) listener();
+  });
+  return memo;
+}
+
+/** PRD-423: the member's own matched-chat keys, from the shared memo. */
+export function ownMemberKeysOf(queryClient: QueryClient): ReadonlySet<string> {
+  return ownMemberKeysMemoFor(queryClient).keys;
+}
+
+/** The memo's sorted, joined snapshot, stable until the set changes, for
+ *  `useSyncExternalStore`. */
+export function ownMemberKeysSnapshotOf(queryClient: QueryClient): string {
+  return ownMemberKeysMemoFor(queryClient).snapshot;
+}
+
+/** Calls `listener` whenever the member's own matched-chat keys change. */
+export function subscribeOwnMemberKeys(
+  queryClient: QueryClient,
+  listener: () => void,
+): () => void {
+  const memo = ownMemberKeysMemoFor(queryClient);
+  memo.listeners.add(listener);
+  return () => {
+    memo.listeners.delete(listener);
+  };
 }

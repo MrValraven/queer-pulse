@@ -13,12 +13,13 @@ import { routes } from "../../../app/routeMap";
  * row reaches this file it has already been addressed to somebody. What this
  * file owns is only the destination.
  *
- * 30 keys map onto 25 distinct routes: /admin/moderation carries two
+ * 31 keys map onto 25 distinct routes: /admin/moderation carries two
  * (`appeals`, `ban_ratifications`), /admin/safe-spaces two
  * (`safe_space_nominations`, `safe_space_flags`), /admin/landlords two
- * (`landlord_intro_requests`, `landlord_suggestions`), and /admin/listings
- * three (`listing_submissions`, `listing_claims`,
- * `listing_edit_suggestions`). Repeats are expected, not a mistake.
+ * (`landlord_intro_requests`, `landlord_suggestions`), /admin/intakes two
+ * (`intakes`, `safety_inquiries`), and /admin/listings three
+ * (`listing_submissions`, `listing_claims`, `listing_edit_suggestions`).
+ * Repeats are expected.
  */
 export const ADMIN_QUEUE_ROUTES: Record<string, string> = {
   invite_requests: routes.adminJoinRequests,
@@ -63,6 +64,10 @@ export const ADMIN_QUEUE_ROUTES: Record<string, string> = {
   // announcing it. Moderator tier plus the `housing_moderator` grant, the
   // same `HousingModerationGuard` union as the two housing queues above.
   housing_group_join_requests: routes.adminHousingGroups,
+  // RES-F6. A safety concern sent through the Contact form. It used to ring
+  // as `intakes`, so the bell named it an intake form; its own key gives it
+  // its own label and counter. Same inbox, same admin-only reach.
+  safety_inquiries: routes.adminIntakes,
 };
 
 /** Every queue key, for catalog-coverage tests. */

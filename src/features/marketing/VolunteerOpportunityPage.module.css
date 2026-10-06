@@ -253,6 +253,13 @@
   font-size: var(--text-13);
   color: var(--ink);
   text-decoration: none;
+  transition: border-color 0.2s var(--ease);
+}
+@media (hover: hover) {
+  button.teamPill:hover,
+  a.teamPill:hover {
+    border-color: rgba(var(--line-rgb), 0.3);
+  }
 }
 .teamPill .av {
   width: 2.316em;

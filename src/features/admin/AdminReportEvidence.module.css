@@ -39,16 +39,113 @@
 .evidenceFact {
   display: flex;
   gap: 6px;
+  min-width: 0;
   font-size: var(--text-12);
 }
 
+/* The label keeps its words whole: only the value gives way when the line is
+   short. */
 .evidenceFact dt {
+  flex: none;
+  overflow-wrap: normal;
   color: var(--ink-40);
 }
 
 .evidenceFact dd {
+  min-width: 0;
   margin: 0;
   color: var(--ink-60);
+  /* A housing snapshot's account id or accessibility note is one long run of
+     text; it wraps inside a phone-width drawer. */
+  overflow-wrap: anywhere;
+}
+
+/* On a phone each fact stacks its label over its value, so a long value
+   (an account id, an accessibility note) gets the full drawer width. */
+@media (--xs) {
+  .evidenceFact {
+    flex-direction: column;
+    gap: 2px;
+  }
+}
+
+/* A listing's title and body share one quote: the title leads in bold, the
+   body follows in the quote's own colour. */
+.evidenceQuoteTitle {
+  margin: 0;
+  font-weight: 600;
+  color: var(--text-strong);
+}
+
+.evidenceQuoteBody {
+  margin: 0;
+}
+
+.evidenceQuoteTitle + .evidenceQuoteBody {
+  margin-top: 4px;
+}
+
+[data-theme="dark"] .evidenceQuoteTitle {
+  color: var(--ink);
+}
+
+/* The account id on record and its copy button. */
+.evidenceAccount {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+  min-width: 0;
+}
+
+.evidenceAccountId {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+/* Small to look at, with a full-size hit area drawn around the icon. */
+.evidenceCopy {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-7);
+  background: transparent;
+  color: var(--ink-60);
+  cursor: pointer;
+}
+
+.evidenceCopy::before {
+  content: "";
+  position: absolute;
+  inset: -10px;
+}
+
+.evidenceCopy svg {
+  width: 13px;
+  height: 13px;
+}
+
+.evidenceCopy:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+@media (hover: hover) {
+  .evidenceCopy:hover {
+    background: rgba(var(--line-rgb), 0.06);
+    color: var(--text-strong);
+  }
+
+  [data-theme="dark"] .evidenceCopy:hover {
+    color: var(--ink);
+  }
 }
 
 .evidenceNote {

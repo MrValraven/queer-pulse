@@ -1194,11 +1194,11 @@ export const safety: Catalog = {
   "moderationStance.digest.guidelines.label": "The hard lines",
   "moderationStance.digest.guidelines.title": "Know the <em>hard lines</em>",
   "moderationStance.digest.guidelines.lead":
-    "The conduct that is always a Code of Conduct matter, and the clause that separates political speech from it.",
+    "The conduct that is always a Code of Conduct violation, and the clause that separates political speech from it.",
   "moderationStance.digest.guidelines.p1":
     "The guidelines describe the culture. The hard lines are the enforceable part of them: harassment or targeted personal attacks, doxxing, outing someone without their consent, threats or intimidation, sharing private conversations or photos without consent, and discrimination on any protected basis.",
   "moderationStance.digest.guidelines.p2":
-    "The political-speech clause sits beside them. Criticising a state, its government, its military, or its ideology is political speech and is moderated as political speech, advocacy for Palestinian liberation included. It becomes a Code of Conduct matter when it lands on a person: holding a member answerable for a state's actions because of their ethnicity, religion, or nationality, or campaigning for the exclusion of a class of member, whatever vocabulary it borrows.",
+    "The political-speech clause sits beside them. Criticising a state, its government, its military, or its ideology is political speech and is moderated as political speech, advocacy for Palestinian liberation included. It becomes a Code of Conduct violation when it lands on a person: holding a member answerable for a state's actions because of their ethnicity, religion, or nationality, or campaigning for the exclusion of a class of member, whatever vocabulary it borrows.",
   "moderationStance.digest.guidelines.point.oneTest.title":
     "One test decides it.",
   "moderationStance.digest.guidelines.point.oneTest.body":
@@ -1227,7 +1227,7 @@ export const safety: Catalog = {
   "moderationStance.digest.stand.point.notADebate.body":
     "There is no both-sides discussion about whether a member deserves rights, and no report is dismissed for the sake of balance.",
   "moderationStance.digest.stand.point.speechVsExclusion.title":
-    "Criticising a state is speech; campaigning against a class of member is a Code of Conduct matter.",
+    "Criticising a state is speech; campaigning against a class of member is a Code of Conduct violation.",
   "moderationStance.digest.stand.point.speechVsExclusion.body":
     "Calling it gender-critical leaves it exactly what it was.",
   "moderationStance.digest.stand.point.whenWeSpeak.title":

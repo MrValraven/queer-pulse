@@ -4089,6 +4089,8 @@ export const economy: Catalog = {
   "groupListing.post.success.titleEm": "with a moderator",
   "groupListing.post.success.body":
     "A moderator in <strong>{group}</strong> reads it next and it goes on the group page once they clear it. You will find it under your rooms here either way.",
+  "groupListing.post.posterNamedNotice":
+    "Members who can see the group page will see your name on this room and can message you about it.",
 
   "groupListing.mine.title": "Your rooms",
   "groupListing.mine.titleEm": "in this group",
@@ -4146,6 +4148,14 @@ export const economy: Catalog = {
     "Answer it by editing the room. Saving puts it back in front of a moderator.",
   "groupListing.mine.decision.editHint":
     "Edit the room to fix what is named here. Saving puts it back in front of a moderator.",
+  "groupListing.mine.reportTakedown.title": "Taken down after a report",
+  "groupListing.mine.reportTakedown.body":
+    "A moderator took this room down after someone reported it. Nobody else can see it on the group page now.",
+  "groupListing.mine.reportTakedown.appealHint":
+    "If you think this was a mistake, a different moderator can look at it again.",
+  "groupListing.mine.reportTakedown.appealButton": "Appeal",
+  "groupListing.mine.reportTakedown.appealAria":
+    "Appeal the takedown of {title}",
 
   // ── Landlord recommendations: withdraw your own (BE-HSG-18) ──
   "landlordPage.recommendation.yoursBadge": "Yours",

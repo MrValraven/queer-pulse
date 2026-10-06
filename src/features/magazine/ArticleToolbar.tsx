@@ -10,6 +10,7 @@ import {
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useShareLink } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { getDocumentBaseTitle } from "../../shared/seo/documentTitleBadge";
 import { useSaved } from "../../app/providers/useSaved";
 import { routes } from "../../app/routeMap";
 import { useShareToChat } from "../messages/share/useShareToChat";
@@ -84,7 +85,7 @@ export function ArticleToolbar({
   const resolvedTitle =
     articleTitle ??
     (typeof document !== "undefined"
-      ? document.title
+      ? getDocumentBaseTitle()
       : t("magazine:toolbar.fallbackTitle"));
 
   const sizeIndex = SIZES.indexOf(textSize);
@@ -96,7 +97,7 @@ export function ArticleToolbar({
     const title =
       articleTitle ??
       (typeof document !== "undefined"
-        ? document.title
+        ? getDocumentBaseTitle()
         : t("magazine:toolbar.fallbackTitle"));
     const next = toggleSaved({
       id,
@@ -128,7 +129,9 @@ export function ArticleToolbar({
         await navigator.share({
           title:
             articleTitle ??
-            (typeof document !== "undefined" ? document.title : undefined),
+            (typeof document !== "undefined"
+              ? getDocumentBaseTitle()
+              : undefined),
           text: articleDescription,
           url,
         });

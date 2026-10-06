@@ -19,7 +19,7 @@ import {
 } from "../search.data";
 import { searchApi, type LiveResultType } from "./search.api";
 import { getTopics } from "../../topics/api/topics.api";
-import { resultToSearchItem } from "./search.adapters";
+import { localizedResultToSearchItem } from "./search.adapters";
 import { readRecents } from "../searchRecents";
 
 export interface SearchDataResult {
@@ -73,15 +73,13 @@ const isPageLaunched = (href: string, demoMode: boolean) =>
   !isBeingBuiltLink(href, demoMode);
 
 /**
- * The quick-destination rows and the topic sub line, both in the member's
- * language (PRD-327). Page names and subs are catalog keys in
- * `PAGE_SEARCH_ENTRIES`; resolving them here, before any filtering, lets a
- * member find "Eventos" by typing in Portuguese.
+ * A topic's post-count subline in the member's language (PRD-327), shared by
+ * the curated topic rows and the server's topic hits.
  */
-function useLocalizedStaticRows(demoMode: boolean) {
+export function useDescribeTopicPosts() {
   const { t } = useTranslation();
   const format = useFormat();
-  const describeTopicPosts = useCallback(
+  return useCallback(
     (totalPosts: number) =>
       t("members:search.topicPosts", {
         count: totalPosts,
@@ -89,6 +87,17 @@ function useLocalizedStaticRows(demoMode: boolean) {
       }),
     [t, format],
   );
+}
+
+/**
+ * The quick-destination rows and the topic sub line, both in the member's
+ * language (PRD-327). Page names and subs are catalog keys in
+ * `PAGE_SEARCH_ENTRIES`; resolving them here, before any filtering, lets a
+ * member find "Eventos" by typing in Portuguese.
+ */
+function useLocalizedStaticRows(demoMode: boolean) {
+  const { t } = useTranslation();
+  const describeTopicPosts = useDescribeTopicPosts();
   const pageItems = useMemo<SearchItem[]>(
     () =>
       PAGE_SEARCH_ENTRIES.filter((entry) =>
@@ -151,9 +160,11 @@ export function useSearchData(
         signal,
         liveType ? SEE_ALL_LIMIT : undefined,
       );
+      // Raw rows: they are mapped at render, so a topic hit's subline follows
+      // the member's language even when it changes after the fetch.
       return {
         query: debounced,
-        items: response.results.map(resultToSearchItem),
+        results: response.results,
       };
     },
     // Keep the previous query's rows on screen while the next key fetches, so
@@ -227,10 +238,12 @@ export function useSearchData(
   // server answers the new query.
   const answeredQuery = searchQuery.data?.query ?? "";
   const serverHits = needle
-    ? (searchQuery.data?.items ?? []).map((item) => ({
-        ...item,
-        kw: `${item.kw} ${answeredQuery}`,
-      }))
+    ? (searchQuery.data?.results ?? [])
+        .map(localizedResultToSearchItem(describeTopicPosts))
+        .map((item) => ({
+          ...item,
+          kw: `${item.kw} ${answeredQuery}`,
+        }))
     : [];
   const isAwaitingDebounce = needle !== debounced;
 

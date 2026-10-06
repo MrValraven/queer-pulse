@@ -9,6 +9,7 @@ import { MessagesThreadList } from "./MessagesThreadList";
 import { useForwardPicker } from "./useForwardPicker";
 import { useHideBottomTabBarInThread } from "./useHideBottomTabBarInThread";
 import { useIsDesktopMessagesChrome } from "./useIsDesktopMessagesChrome";
+import { useKeepThreadDocumentAtTop } from "./useKeepThreadDocumentAtTop";
 import { useMessagesController } from "./useMessagesController";
 import { useMobileThreadHistoryEntry } from "./useMobileThreadHistoryEntry";
 import styles from "./MessagesPage.module.css";
@@ -104,6 +105,7 @@ export function MessagesPage() {
 
   // See useHideBottomTabBarInThread's own doc.
   useHideBottomTabBarInThread(isMobile, view);
+  useKeepThreadDocumentAtTop(isMobile && view === "thread");
   // See useMobileThreadHistoryEntry's own doc.
   useMobileThreadHistoryEntry(isMobile, view, setView);
 

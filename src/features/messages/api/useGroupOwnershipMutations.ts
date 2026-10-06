@@ -12,10 +12,12 @@ import {
   dissolveGroup,
   transferGroupOwnership,
   type ConversationResponse,
+  type GroupInviteLinkResponse,
 } from "./messages.api";
 import { conversationToView } from "./messages.adapters";
 import { patchConversationInList } from "./useMessageMutations";
 import type { Conversation } from "../data";
+import type { InviteLinkMaxUses } from "../inviteLinkUses";
 
 /**
  * Section 8 (Groups): ownership transfer, dissolve, and the invite-link
@@ -111,20 +113,21 @@ export function useDissolveGroup() {
  *  directly (null in demo) so the consuming screen can show/copy it with no
  *  extra cache read, and also patches both straight into the cached row's
  *  own `inviteToken`/`inviteTokenExpiresAt` (there is no full DTO in the
- *  response to patch from otherwise). */
+ *  response to patch from otherwise). PRD-400 (use cap): takes the chosen
+ *  `maxUses` (null for unlimited) and patches the cap and uses left too. */
 export function useCreateGroupInviteLink() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
   return useMutation<
-    { inviteToken: string; inviteTokenExpiresAt: string } | null,
+    GroupInviteLinkResponse | null,
     Error,
-    string
+    { conversationId: string; maxUses: InviteLinkMaxUses }
   >({
-    mutationFn: async (conversationId) => {
+    mutationFn: async ({ conversationId, maxUses }) => {
       if (demoMode) return null;
-      return createGroupInviteLink(conversationId);
+      return createGroupInviteLink(conversationId, maxUses);
     },
-    onSuccess: (link, conversationId) => {
+    onSuccess: (link, { conversationId }) => {
       if (demoMode || !link) return;
       patchGroupField(
         queryClient,
@@ -139,6 +142,20 @@ export function useCreateGroupInviteLink() {
         conversationId,
         "inviteTokenExpiresAt",
         link.inviteTokenExpiresAt,
+      );
+      // PRD-400 (use cap): a fresh link's cap and full count of uses land
+      // with it, so "uses left" never shows the previous link's count.
+      patchGroupField(
+        queryClient,
+        conversationId,
+        "inviteTokenMaxUses",
+        link.inviteTokenMaxUses ?? null,
+      );
+      patchGroupField(
+        queryClient,
+        conversationId,
+        "inviteTokenUsesLeft",
+        link.inviteTokenUsesLeft ?? null,
       );
     },
     meta: { silentError: true },
@@ -165,6 +182,8 @@ export function useDisableGroupInviteLink() {
         "inviteTokenExpiresAt",
         null,
       );
+      patchGroupField(queryClient, conversationId, "inviteTokenMaxUses", null);
+      patchGroupField(queryClient, conversationId, "inviteTokenUsesLeft", null);
     },
     meta: { silentError: true },
   });

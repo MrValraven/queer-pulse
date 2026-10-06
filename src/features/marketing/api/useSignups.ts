@@ -1,5 +1,7 @@
+import { useCallback } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { getSignups } from "./volunteering.api";
 import { opportunityKeys } from "./opportunityKeys";
 import { signupToRow, type SignupRow } from "./volunteering.adapters";
@@ -20,6 +22,19 @@ export function useSignups(
   canReviewApplicants: boolean,
 ) {
   const { demoMode } = useDemoMode();
+  const { t } = useTranslation();
+  // The cache keeps an empty name for a nulled-out member, and `select` names
+  // them at read time: the query key carries no language, so a translated
+  // placeholder stored in the cache would outlive a language switch.
+  const nameUnknownMembers = useCallback(
+    (rows: SignupRow[]) =>
+      rows.map((row) =>
+        row.person
+          ? row
+          : { ...row, name: t("marketing:volunteer.signups.memberFallback") },
+      ),
+    [t],
+  );
   return useQuery<SignupRow[]>({
     queryKey: opportunityKeys.signups(slug, demoMode),
     enabled: Boolean(slug) && canReviewApplicants,
@@ -32,5 +47,6 @@ export function useSignups(
       const rows = await getSignups(slug);
       return rows.map(signupToRow);
     },
+    select: nameUnknownMembers,
   });
 }

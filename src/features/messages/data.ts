@@ -490,6 +490,12 @@ export interface Conversation {
    *  the person's plain first name and no-profile-link roster never come
    *  back once a group is gone. */
   isGoTogetherChat?: boolean;
+  /** GROUP only (Go together, PRD-423): the signed-in member's own per-chat
+   *  member key in a matched chat. Every member reference inside one (a
+   *  sender's handle, a roster row's `id`/`slug`, a live frame's `userId`)
+   *  is an opaque per-chat key, so the viewer's own messages, frames and
+   *  roster row are recognised by this value. Absent everywhere else. */
+  viewerMemberKey?: string;
   /** GROUP only, THIS member (DES-227): why the composer is severed:
    *  `"left"` (voluntary), `"removed"` (an owner/admin removed them), or
    *  `"dissolved"` (the owner ended the group). Absent/null while an active
@@ -504,6 +510,13 @@ export interface Conversation {
   /** GROUP only (PRD-400): ISO instant `inviteToken` stops working, 7 days
    *  from its last issue or reset. Present exactly when `inviteToken` is. */
   inviteTokenExpiresAt?: string | null;
+  /** GROUP only (PRD-400, use cap): how many people may join with
+   *  `inviteToken` (1, 5 or 25), null or absent for unlimited. Surfaced under
+   *  the same rule as `inviteToken`. */
+  inviteTokenMaxUses?: number | null;
+  /** GROUP only (PRD-400, use cap): how many more people can still join with
+   *  `inviteToken`; 0 once used up, null or absent for an unlimited link. */
+  inviteTokenUsesLeft?: number | null;
   /** Whether THIS member may create/rotate/disable the invite link, gated on
    *  being owner/admin with the group active and not dissolved. Absent/false
    *  for DMs and a member who has left. */

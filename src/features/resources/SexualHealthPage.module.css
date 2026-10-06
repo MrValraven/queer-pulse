@@ -170,6 +170,7 @@
   color: var(--ink-60);
   line-height: 1.6;
   margin-bottom: 10px;
+  max-width: 70ch;
 }
 .ccMeta {
   display: flex;
@@ -212,6 +213,11 @@
   .ccBtn:hover {
     background: var(--plum);
     color: rgba(var(--cream-rgb), 1);
+  }
+}
+@media (pointer: coarse) {
+  .ccBtn {
+    min-height: 44px;
   }
 }
 .ccBtnOpen {

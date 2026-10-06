@@ -4,6 +4,7 @@ import {
   FiCheck,
   FiClock,
   FiExternalLink,
+  FiGlobe,
   FiX,
 } from "react-icons/fi";
 import { Button } from "../../../shared/components/ui";
@@ -38,6 +39,14 @@ export interface PublishGateCardProps {
  *
  * Unpublishing is never gated. Pulling a live piece back down has to stay
  * available whatever state the gate is in.
+ *
+ * PRD-437: there is no scheduled job, so a scheduled piece's writer hears
+ * about it only when an editor presses Publish after its instant has passed.
+ * The card says so on both sides of that instant: while scheduled, under the
+ * date; once live but still short of Published, as the status line, with
+ * Publish offered beside Unpublish. While care items are still open that
+ * line names them as the first step, so it never asks for a Publish the
+ * gate above would block.
  */
 export function PublishGateCard({
   publishGate,
@@ -45,10 +54,15 @@ export function PublishGateCard({
   onOpenCare,
 }: PublishGateCardProps) {
   const { t, language } = useTranslation();
-  const reasonId = useId();
-  const { isPublished, isScheduled, publishedAtLabel, publicHref, refusal } =
-    action;
-  const isLiveOrScheduled = isPublished || isScheduled;
+  const {
+    isPublished,
+    isScheduled,
+    isAlreadyLive,
+    publishedAtLabel,
+    publicHref,
+    refusal,
+  } = action;
+  const isLiveOrScheduled = isPublished || isScheduled || isAlreadyLive;
 
   return (
     <div className={styles.card}>
@@ -74,6 +88,8 @@ export function PublishGateCard({
           <p className={styles.publishStatus}>
             {isScheduled ? (
               <FiClock aria-hidden />
+            ) : isAlreadyLive ? (
+              <FiGlobe aria-hidden />
             ) : (
               <FiCheck className={styles.doneIcon} aria-hidden />
             )}
@@ -82,16 +98,31 @@ export function PublishGateCard({
                 ? t("magazine:piece.publish.scheduledFor", {
                     date: publishedAtLabel ?? "",
                   })
-                : t("magazine:piece.publish.liveSince", {
-                    date: publishedAtLabel ?? "",
-                  })}
+                : isAlreadyLive
+                  ? t(
+                      action.hasOpenGateItems
+                        ? "magazine:desk.goLive.liveSinceCloseCare"
+                        : "magazine:desk.goLive.liveSinceTellWriter",
+                      { date: publishedAtLabel ?? "" },
+                    )
+                  : t("magazine:piece.publish.liveSince", {
+                      date: publishedAtLabel ?? "",
+                    })}
             </span>
           </p>
+          {isScheduled && (
+            <p className={styles.tiny}>
+              {t("magazine:desk.goLive.writerHearsOnPublish")}
+            </p>
+          )}
           {isPublished && publicHref && (
             <Button variant="ghost" size="sm" to={publicHref}>
               <FiExternalLink aria-hidden />
               {t("magazine:piece.publish.viewLive")}
             </Button>
+          )}
+          {isAlreadyLive && (
+            <PublishGateControls action={action} onOpenCare={onOpenCare} />
           )}
           <Button
             variant="danger"
@@ -106,32 +137,7 @@ export function PublishGateCard({
       ) : (
         <>
           <p className={styles.tiny}>{t("magazine:piece.gate.notAdvisory")}</p>
-          {action.hasOpenGateItems && (
-            <>
-              {/* The reason the Publish button below reads as blocked, and the
-                  way out of it. `id` is what that button points its
-                  `aria-describedby` at, so the reason is announced rather than
-                  left as a silent disabled control. */}
-              <p className={cx(styles.note, styles.warn)} id={reasonId}>
-                <span>
-                  {t("magazine:piece.publish.blockedByGate", {
-                    count: action.openGateItems.length,
-                  })}
-                </span>
-              </p>
-              <Button variant="ghost" size="sm" onClick={onOpenCare}>
-                {t("magazine:piece.publish.openCareTab")}
-              </Button>
-            </>
-          )}
-          <Button
-            variant="plum"
-            onClick={action.askToPublish}
-            aria-disabled={action.hasOpenGateItems || action.isPending}
-            aria-describedby={action.hasOpenGateItems ? reasonId : undefined}
-          >
-            {t("magazine:piece.gate.publish")}
-          </Button>
+          <PublishGateControls action={action} onOpenCare={onOpenCare} />
         </>
       )}
 
@@ -169,5 +175,51 @@ export function PublishGateCard({
         </div>
       )}
     </div>
+  );
+}
+
+interface PublishGateControlsProps {
+  action: PiecePublishAction;
+  onOpenCare: () => void;
+}
+
+/**
+ * The gated Publish button with its blocked reason and the way to the Care
+ * tab. Shared by a draft and by a live piece still short of Published
+ * (PRD-437), since settling that piece answers to the same gate.
+ */
+function PublishGateControls({ action, onOpenCare }: PublishGateControlsProps) {
+  const { t } = useTranslation();
+  const reasonId = useId();
+
+  return (
+    <>
+      {action.hasOpenGateItems && (
+        <>
+          {/* The reason the Publish button below reads as blocked, and the
+              way out of it. `id` is what that button points its
+              `aria-describedby` at, so a screen reader announces the reason
+              with the control. */}
+          <p className={cx(styles.note, styles.warn)} id={reasonId}>
+            <span>
+              {t("magazine:piece.publish.blockedByGate", {
+                count: action.openGateItems.length,
+              })}
+            </span>
+          </p>
+          <Button variant="ghost" size="sm" onClick={onOpenCare}>
+            {t("magazine:piece.publish.openCareTab")}
+          </Button>
+        </>
+      )}
+      <Button
+        variant="plum"
+        onClick={action.askToPublish}
+        aria-disabled={action.hasOpenGateItems || action.isPending}
+        aria-describedby={action.hasOpenGateItems ? reasonId : undefined}
+      >
+        {t("magazine:piece.gate.publish")}
+      </Button>
+    </>
   );
 }

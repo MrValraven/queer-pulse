@@ -21,6 +21,7 @@ import { useFormat } from "../../shared/i18n/format";
 import { profilePath } from "../connect/connections.data";
 import { UNREAD_COUNT_KEY } from "../messages/api/useConversations";
 import {
+  unblockBlockById,
   unblockMember,
   unmuteMember,
   type BlockDTO,
@@ -133,8 +134,11 @@ function BlockedSection() {
     // Optimistic; revert on failure so we never imply an unblock that didn't happen.
     setUnblockedIds((prev) => new Set(prev).add(entry.id));
     try {
+      // PRD-423: a block placed in a matched Go together chat has no slug.
       await simulateOr(demoMode, undefined, () =>
-        unblockMember(entry.member.slug),
+        entry.isMatchedChatBlock
+          ? unblockBlockById(entry.id)
+          : unblockMember(entry.member.slug),
       );
       showToast(
         t("settings:blockedUsers.toast.unblocked", {

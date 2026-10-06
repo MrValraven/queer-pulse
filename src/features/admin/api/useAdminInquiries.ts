@@ -20,6 +20,23 @@ export interface AdminInquiryFilters {
  *  patches and invalidates every filter tab at once. */
 export const ADMIN_INQUIRIES_QUERY_KEY = ["admin-inquiries"] as const;
 
+/** A safety concern still waiting comes first, then newest first: the order
+ *  `InquiriesService.list` gives the live list (RES-F6), so the demo inbox
+ *  reads the same way. */
+function isWaitingPriority(inquiry: AdminInquiryDTO): boolean {
+  return inquiry.isPriority && inquiry.status === "new";
+}
+
+function compareInquiriesForTriage(
+  first: AdminInquiryDTO,
+  second: AdminInquiryDTO,
+): number {
+  const priorityOrder =
+    Number(isWaitingPriority(second)) - Number(isWaitingPriority(first));
+  if (priorityOrder !== 0) return priorityOrder;
+  return second.createdAt.localeCompare(first.createdAt);
+}
+
 /**
  * The public contact + partnership inbox behind `/admin/intakes`, paginated and
  * optionally narrowed by kind and status (both server-side).
@@ -49,9 +66,11 @@ export function useAdminInquiries(filters: AdminInquiryFilters) {
         const ofKind = ADMIN_INQUIRIES.filter(
           (inquiry) => !kindArgument || inquiry.kind === kindArgument,
         );
-        const filtered = ofKind.filter(
-          (inquiry) => !statusArgument || inquiry.status === statusArgument,
-        );
+        const filtered = ofKind
+          .filter(
+            (inquiry) => !statusArgument || inquiry.status === statusArgument,
+          )
+          .sort(compareInquiriesForTriage);
         return {
           items: filtered,
           total: filtered.length,

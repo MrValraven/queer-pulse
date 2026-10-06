@@ -1,6 +1,6 @@
 import { useEffect, useRef, type ReactNode } from "react";
 import { useTranslation } from "../../i18n/useTranslation";
-import { Button, type ButtonSize } from "./Button";
+import { Button, type ButtonSize, type ButtonVariant } from "./Button";
 import styles from "./LoadMoreFooter.module.css";
 
 interface LoadMoreState {
@@ -53,6 +53,9 @@ export interface LoadMoreButtonProps extends LoadMoreState {
   size?: ButtonSize;
   /** Class on the button, e.g. a larger coarse-pointer target. */
   className?: string;
+  /** Variant once a page failed, so Retry can read stronger than the idle
+   *  "Load more" (default: the same ghost). */
+  retryVariant?: ButtonVariant;
 }
 
 /**
@@ -68,6 +71,7 @@ export function LoadMoreButton({
   loadingLabel,
   size,
   className,
+  retryVariant = "ghost",
 }: LoadMoreButtonProps) {
   const { t } = useTranslation();
   // The `isFetchingNextPage` prop only turns true on the re-render after a
@@ -82,7 +86,7 @@ export function LoadMoreButton({
   return (
     <Button
       type="button"
-      variant="ghost"
+      variant={isFetchNextPageError ? retryVariant : "ghost"}
       size={size}
       className={className}
       // `aria-disabled` keeps focus on the button while a page (or its retry)

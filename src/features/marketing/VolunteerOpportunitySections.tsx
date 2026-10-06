@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { FiCheck } from "react-icons/fi";
+import { FiCheck, FiUsers } from "react-icons/fi";
 import type {
   TeamMember,
   VolunteerOpportunity,
@@ -17,7 +17,8 @@ import styles from "./VolunteerOpportunityPage.module.css";
  * signed-out visitor would only meet the sign-in wall there, so each pill
  * opens the members explainer. A live read names nobody to a signed-out
  * visitor (ENG-474), so for them an empty team becomes one pill that opens the
- * same explainer under the team intro.
+ * same explainer. The caller renders this only when the opportunity has a team
+ * (`hasTeam`), so that pill always points at a real team.
  */
 function TeamPills({
   team,
@@ -36,6 +37,9 @@ function TeamPills({
           className={styles.teamPill}
           onClick={() => setIsExplainerOpen(true)}
         >
+          <span aria-hidden className={styles.av}>
+            <FiUsers />
+          </span>
           {t("marketing:volunteerDetail.main.teamSignedOutCta")}
         </button>
       )}
@@ -84,10 +88,16 @@ function TeamPills({
 export function VolunteerOpportunityMain({
   opp,
   isSignedIn,
+  hasTeam,
 }: {
   opp: VolunteerOpportunity;
   isSignedIn: boolean;
+  /** The opportunity has a team on record. A signed-out reader is named
+   *  nobody, so this alone decides whether they get the "see who's in" pill,
+   *  with or without a team intro. */
+  hasTeam: boolean;
 }) {
+  const shouldShowTeamPills = opp.team.length > 0 || (!isSignedIn && hasTeam);
   return (
     <div>
       <section className={styles.sec}>
@@ -157,7 +167,7 @@ export function VolunteerOpportunityMain({
         </section>
       )}
 
-      {(opp.teamIntro || opp.team.length > 0) && (
+      {(opp.teamIntro || shouldShowTeamPills) && (
         <section className={styles.sec}>
           <h2>
             <Translation
@@ -166,7 +176,7 @@ export function VolunteerOpportunityMain({
             />
           </h2>
           {opp.teamIntro && <p className={styles.teamIntro}>{opp.teamIntro}</p>}
-          {(opp.team.length > 0 || !isSignedIn) && (
+          {shouldShowTeamPills && (
             <TeamPills team={opp.team} isSignedIn={isSignedIn} />
           )}
         </section>

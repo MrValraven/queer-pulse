@@ -212,6 +212,9 @@
 :global([data-theme="dark"]) .seg {
   background: rgba(var(--cream-rgb), 0.08);
 }
+:global([data-theme="dark"]) .segOn {
+  background: rgba(var(--cream-rgb), 0.16);
+}
 :global([data-theme="dark"]) .toggle:not(.toggleOn) {
   background: rgba(var(--cream-rgb), 0.22);
 }

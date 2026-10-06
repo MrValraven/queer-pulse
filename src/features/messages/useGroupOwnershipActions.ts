@@ -8,6 +8,7 @@ import {
   simulateTransferOwnership,
 } from "./groupOwnershipDemo";
 import { INVITE_LINK_TTL_MS } from "./inviteLinkExpiry";
+import type { InviteLinkMaxUses } from "./inviteLinkUses";
 import type {
   useCreateGroupInviteLink,
   useDisableGroupInviteLink,
@@ -45,8 +46,13 @@ export interface GroupOwnershipActions {
   /** PRD-357: the owner ends the group for everyone. */
   dissolveGroupThread: (conversationId: string) => void;
   dissolvePending: boolean;
-  /** PRD-358: create (or rotate) the group's revocable invite link. */
-  createGroupInviteLink: (conversationId: string) => void;
+  /** PRD-358: create (or rotate) the group's revocable invite link.
+   *  PRD-400 (use cap): `maxUses` caps how many people can join with it
+   *  (null for unlimited). */
+  createGroupInviteLink: (
+    conversationId: string,
+    maxUses: InviteLinkMaxUses,
+  ) => void;
   disableGroupInviteLink: (conversationId: string) => void;
   inviteLinkPending: boolean;
   revokeGroupInvite: (conversationId: string, inviteId: string) => void;
@@ -145,21 +151,32 @@ export function useGroupOwnershipActions({
 
   /** Create OR rotate the group's revocable invite link (same endpoint
    *  either way per the REST contract: `POST :id/invite-link`). */
-  function createGroupInviteLink(conversationId: string) {
+  function createGroupInviteLink(
+    conversationId: string,
+    maxUses: InviteLinkMaxUses,
+  ) {
     const group = findGroup(conversationId);
     if (!group) return;
     if (demoMode) {
       const token = `demo-invite-${Math.random().toString(36).slice(2, 10)}`;
-      // PRD-400: a fresh link runs for 7 days, as the server grants.
+      // PRD-400: a fresh link runs for 7 days, as the server grants, and
+      // starts with every one of its uses left.
       const inviteTokenExpiresAt = new Date(
         Date.now() + INVITE_LINK_TTL_MS,
       ).toISOString();
-      patchGroupThread({ ...group, inviteToken: token, inviteTokenExpiresAt });
+      patchGroupThread({
+        ...group,
+        inviteToken: token,
+        inviteTokenExpiresAt,
+        inviteTokenMaxUses: maxUses,
+        inviteTokenUsesLeft: maxUses,
+      });
       return;
     }
-    createInviteLinkMutation.mutate(conversationId, {
-      onError: onGroupMutationError,
-    });
+    createInviteLinkMutation.mutate(
+      { conversationId, maxUses },
+      { onError: onGroupMutationError },
+    );
   }
 
   function disableGroupInviteLink(conversationId: string) {
@@ -170,6 +187,8 @@ export function useGroupOwnershipActions({
         ...group,
         inviteToken: null,
         inviteTokenExpiresAt: null,
+        inviteTokenMaxUses: null,
+        inviteTokenUsesLeft: null,
       });
       return;
     }

@@ -4,12 +4,13 @@ import { hasPublishDate, isPieceScheduled } from "./pieceSchedule";
 /**
  * What a piece's publish date says in the desk's action slot when there is
  * no next action to show: `scheduled` while its `publishedAt` is still ahead
- * (it goes live on its own), `live` once that date has passed while the stage
- * sits below Published (no job advances it), and null otherwise. The row and
+ * (it goes live on its own), `live` with the instant once that date has
+ * passed while the stage sits below Published (no job advances it, and only
+ * an editor's Publish tells the writer, PRD-437), and null otherwise. The row and
  * the board card read this so a scheduled piece never shows an empty slot.
  */
 export type PieceGoLiveState =
-  { kind: "scheduled"; publishesAt: Date } | { kind: "live" };
+  { kind: "scheduled"; publishesAt: Date } | { kind: "live"; liveSince: Date };
 
 export function pieceGoLiveState(
   piece: Pick<Piece, "publishedAt" | "stage">,
@@ -19,5 +20,7 @@ export function pieceGoLiveState(
   if (isPieceScheduled(piece, now)) {
     return { kind: "scheduled", publishesAt: new Date(piece.publishedAt) };
   }
-  return piece.stage === "Published" ? null : { kind: "live" };
+  return piece.stage === "Published"
+    ? null
+    : { kind: "live", liveSince: new Date(piece.publishedAt) };
 }

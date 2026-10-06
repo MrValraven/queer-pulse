@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useTranslation } from "../shared/i18n/useTranslation";
+import { getDocumentBaseTitle } from "../shared/seo/documentTitleBadge";
 import { defaultMeta } from "../shared/seo/seo.data";
 import { findMainLandmark, watchForReplacedMain } from "./mainLandmarkFocus";
 
@@ -17,15 +18,16 @@ const TITLE_SETTLE_TIMEOUT_MS = 1500;
  * Best available human name for the page currently on screen, in priority
  * order:
  *
- * 1. `document.title`: the route's own `<PageMeta>` title, which is written
- *    for humans and already localised.
+ * 1. The document title without its unread count (`getDocumentBaseTitle()`):
+ *    the route's own `<PageMeta>` title, which is written for humans and
+ *    already localised.
  * 2. The main landmark's `<h1>`: gated routes (the feed, the local directory)
  *    deliberately render no `<PageMeta>`, so their title is still the neutral
  *    site default and the heading is the only thing that names the page.
  * 3. The generic fallback string, for a route with neither.
  */
 function resolvePageName(genericFallback: string): string {
-  const title = document.title.trim();
+  const title = getDocumentBaseTitle().trim();
   if (title.length > 0 && title !== defaultMeta.title) return title;
 
   const heading = findMainLandmark()
@@ -56,7 +58,10 @@ function resolvePageName(genericFallback: string): string {
  * announces the instant the new title lands, a post-paint frame catches the
  * already-warm case where the write beat the observer, and a deadline
  * (`TITLE_SETTLE_TIMEOUT_MS`) guarantees an announcement even for a route that
- * never sets a title of its own.
+ * never sets a title of its own. The observer also fires when the unread count
+ * in front of the title changes (a message arriving mid-navigation), but every
+ * compare reads `getDocumentBaseTitle()`, so a count change leaves the page's
+ * own title equal to the outgoing one and cannot settle early with its name.
  *
  * **Ordering against `ScrollManager`.** Mounted immediately after it, so its
  * scroll work (top-of-page on a fresh navigation, the remembered offset on a
@@ -97,7 +102,7 @@ export function RouteAnnouncer() {
   useEffect(() => {
     if (!hasNavigatedRef.current) {
       hasNavigatedRef.current = true;
-      titleBeforeNavigationRef.current = document.title;
+      titleBeforeNavigationRef.current = getDocumentBaseTitle();
       return;
     }
 
@@ -154,7 +159,7 @@ export function RouteAnnouncer() {
       if (isSettled) return;
       isSettled = true;
       stopWatching();
-      titleBeforeNavigationRef.current = document.title;
+      titleBeforeNavigationRef.current = getDocumentBaseTitle();
       setAnnouncement(
         resolvePageName(
           translateRef.current("shared:routeAnnouncer.pageLoaded"),
@@ -164,7 +169,7 @@ export function RouteAnnouncer() {
     };
 
     const settleIfTitleChanged = (): void => {
-      if (document.title !== titleAtNavigationStart) settle();
+      if (getDocumentBaseTitle() !== titleAtNavigationStart) settle();
     };
 
     // `document.title` writes mutate the text inside the existing <title>, and

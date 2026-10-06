@@ -51,26 +51,35 @@ const noah = {
   senderHandle: "noah-reyes",
   senderTint: "plum",
 } as const;
-const queerpulse = {
+// The Go together picnic group's members. A matched chat names every member
+// by first name only (PRD-423), as the backend's `displayNameFor` does live,
+// and refers to each by an opaque per-chat member key shaped like the
+// backend's (`matched-member-key.ts`).
+const PICNIC_MEMBER_KEYS = {
+  house: "m-5d0c7a2e9b14f63a8c1e0b47",
+  viewer: "m-9a4e1c7b2d58f0a36e2b1c84",
+  sofia: "m-2f8b6d1a4c93e75b0d6a2f19",
+  rui: "m-7c3a9e5b1f06d28c4a7e3b52",
+  mariana: "m-0e6d2b8f4a71c39e5b0d8a63",
+} as const;
+const picnicHouse = {
   senderName: "QueerPulse",
-  senderHandle: "queerpulse",
+  senderHandle: PICNIC_MEMBER_KEYS.house,
   senderTint: "coral",
 } as const;
-// The Go together picnic group's members. A matched chat names every member
-// by first name only (PRD-423), as the backend's `displayNameFor` does live.
 const sofia = {
   senderName: "Sofia",
-  senderHandle: "sofia",
+  senderHandle: PICNIC_MEMBER_KEYS.sofia,
   senderTint: "jade",
 } as const;
 const rui = {
   senderName: "Rui",
-  senderHandle: "rui",
+  senderHandle: PICNIC_MEMBER_KEYS.rui,
   senderTint: "plum",
 } as const;
 const mariana = {
   senderName: "Mariana",
-  senderHandle: "mariana",
+  senderHandle: PICNIC_MEMBER_KEYS.mariana,
   senderTint: "plum",
 } as const;
 
@@ -119,6 +128,10 @@ export const brunchCrewConversation: Conversation = demoConversation({
   inviteToken: "brunch-crew-7hq2m9",
   // PRD-400: a link reset two days ago, so the panel reads "Expires in 5 days".
   inviteTokenExpiresAt: hoursAfterAnchor(5 * 24),
+  // PRD-400 (use cap): capped at 25 with 7 joins so far, so the panel reads
+  // "18 uses left".
+  inviteTokenMaxUses: 25,
+  inviteTokenUsesLeft: 18,
   pendingInvites: [
     {
       id: "demo-invite-brunch-maria",
@@ -682,7 +695,7 @@ export const transJoyPicnicConversation: Conversation = demoConversation({
   name: "Trans Joy Picnic",
   pronouns: "",
   preview: `Sofia: ${picnicLastLine}`,
-  lastMessageSenderHandle: "sofia",
+  lastMessageSenderHandle: PICNIC_MEMBER_KEYS.sofia,
   lastMessageBody: picnicLastLine,
   unread: false,
   isGroup: true,
@@ -697,44 +710,53 @@ export const transJoyPicnicConversation: Conversation = demoConversation({
   canManageInviteLink: false,
   eventMatchGroupId: demoGroupIdFor("trans-joy-picnic"),
   isGoTogetherChat: true,
+  // PRD-423: the viewer's own per-chat key, which their own roster row and
+  // messages carry (`demoThreadCache`'s `senderOf`).
+  viewerMemberKey: PICNIC_MEMBER_KEYS.viewer,
+  // First names and one-letter initials, as the live adapter renders a
+  // matched chat roster (PRD-423), each row keyed by its per-chat member key
+  // in `id` and `slug` alike.
   members: [
     {
+      id: PICNIC_MEMBER_KEYS.house,
       name: "QueerPulse",
       initials: "QP",
       tint: "coral",
       role: "owner",
-      slug: "queerpulse",
+      slug: PICNIC_MEMBER_KEYS.house,
     },
-    // First names and one-letter initials, as the live adapter renders a
-    // matched chat roster (PRD-423).
     {
+      id: PICNIC_MEMBER_KEYS.viewer,
       name: "Tiago",
       initials: "T",
       tint: "plum",
       role: "member",
-      slug: "tiago",
+      slug: PICNIC_MEMBER_KEYS.viewer,
     },
     {
+      id: PICNIC_MEMBER_KEYS.sofia,
       name: "Sofia",
       initials: "S",
       tint: "jade",
       role: "member",
-      slug: "sofia",
+      slug: PICNIC_MEMBER_KEYS.sofia,
       lastReadAt: minutesAgo(25),
     },
     {
+      id: PICNIC_MEMBER_KEYS.rui,
       name: "Rui",
       initials: "R",
       tint: "plum",
       role: "member",
-      slug: "rui",
+      slug: PICNIC_MEMBER_KEYS.rui,
     },
     {
+      id: PICNIC_MEMBER_KEYS.mariana,
       name: "Mariana",
       initials: "M",
       tint: "plum",
       role: "member",
-      slug: "mariana",
+      slug: PICNIC_MEMBER_KEYS.mariana,
     },
   ],
   messages: demoThread([
@@ -745,7 +767,7 @@ export const transJoyPicnicConversation: Conversation = demoConversation({
       kind: "system",
       systemEvent: { type: "group_created", actorName: "QueerPulse" },
       at: daysAgoAt(2, 9, 0),
-      ...queerpulse,
+      ...picnicHouse,
     },
     {
       id: "demo-msg-picnic-002",

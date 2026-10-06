@@ -1,7 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
+import { useAuth } from "../../../app/providers/authContext";
 import { getOpportunity } from "./volunteering.api";
-import { opportunityKeys } from "./opportunityKeys";
+import {
+  OPPORTUNITY_ANONYMOUS_VIEWER,
+  opportunityKeys,
+} from "./opportunityKeys";
 import { detailToOpportunity } from "./volunteering.adapters";
 import { memberRefToPerson, type Person } from "../../../shared/api/refs";
 import type { VolunteerOpportunity } from "../volunteerOpportunities";
@@ -26,6 +30,10 @@ export interface OpportunityResult {
   poster: Person | null;
   /** The viewer already signed up → the "you're on the list" state shows. */
   mySignup: boolean;
+  /** True when the opportunity has a team on record. A signed-out reader is
+   *  named nobody (`team` is empty), so this is what offers them the "see
+   *  who's in" prompt. */
+  hasTeam: boolean;
 }
 
 /** Parse a mock "18 / 24" spots string into its two numbers. */
@@ -43,9 +51,15 @@ function parseSpots(s: string): { filled: number; total: number } {
  */
 export function useOpportunity(slug: string | undefined) {
   const { demoMode } = useDemoMode();
+  const { user, checking } = useAuth();
+  const viewer = user?.id ?? OPPORTUNITY_ANONYMOUS_VIEWER;
   return useQuery<OpportunityResult>({
-    queryKey: opportunityKeys.detail(slug, demoMode),
-    enabled: Boolean(slug),
+    queryKey: opportunityKeys.detail(slug, viewer, demoMode),
+    // Parked while the live session is still resolving: the request carries
+    // the session cookie, so a fetch now would file the member's flags under
+    // the anonymous key and then fetch again once `user` lands. Callers read
+    // `isPending`, so the page holds its skeleton through this window.
+    enabled: Boolean(slug) && !checking,
     queryFn: async () => {
       if (demoMode) {
         const { getOpportunity: getMockOpportunity } =
@@ -64,6 +78,7 @@ export function useOpportunity(slug: string | undefined) {
           // `volunteerDemoPoster.ts`), so there is nobody to address.
           poster: null,
           mySignup: false,
+          hasTeam: (opp?.team.length ?? 0) > 0,
         };
       }
       const dto = await getOpportunity(slug!);
@@ -77,6 +92,9 @@ export function useOpportunity(slug: string | undefined) {
         canEditOpportunity: dto.canEditOpportunity,
         poster: memberRefToPerson(dto.poster),
         mySignup: dto.mySignup,
+        // A backend without `hasTeam` yet keeps the earlier rule: the prompt
+        // showed under any team intro.
+        hasTeam: dto.hasTeam ?? (dto.team.length > 0 || Boolean(dto.teamIntro)),
       };
     },
   });

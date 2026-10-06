@@ -12,6 +12,7 @@ import { ApiError } from "../../shared/api/client";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { TFunction } from "../../shared/i18n/types";
 import { useAuth } from "../../app/providers/authContext";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { routes } from "../../app/routeMap";
 import { PageMeta } from "../../shared/seo";
 import { ReportSubjectControl } from "../safety/ReportSubjectControl";
@@ -25,7 +26,10 @@ import {
 } from "./api/useOpportunityMutations";
 import { VolunteerOpportunityMain } from "./VolunteerOpportunitySections";
 import { VolunteerOpportunitySidebar } from "./VolunteerOpportunitySidebar";
-import { editedOpportunityFor } from "./editedOpportunityHandoff";
+import {
+  editedOpportunityFor,
+  isEditedOpportunityCurrent,
+} from "./editedOpportunityHandoff";
 import { causeLabelKey } from "./causes.data";
 import styles from "./VolunteerOpportunityPage.module.css";
 
@@ -52,7 +56,8 @@ export function VolunteerOpportunityPage() {
   // a logged-out visitor; the session only decides whether the sidebar offers
   // to apply or offers to sign in.
   const { loggedIn } = useAuth();
-  const { data, isLoading } = useOpportunity(slug);
+  const { demoMode } = useDemoMode();
+  const { data, isPending, dataUpdatedAt } = useOpportunity(slug);
   const { items: allOpportunities } = useOpportunities();
 
   // `null` means "defer to the server's mySignup"; set explicitly after a
@@ -71,13 +76,19 @@ export function VolunteerOpportunityPage() {
   // refetch from). Router state carries only `{ editedSlug }`; the view comes
   // from `editedOpportunityHandoff`, read once on mount. Guarded by slug here
   // and below, so a stale edit from a previously viewed opportunity can never
-  // bleed into this one.
-  const [editedOpportunity] = useState(() =>
+  // bleed into this one. In live mode it yields to the first server copy
+  // fetched after the save, so a history-back never pins the remembered save.
+  const [editedEntry] = useState(() =>
     editedOpportunityFor(slug, location.state),
   );
   const opp =
-    editedOpportunity && baseOpp && editedOpportunity.slug === baseOpp.slug
-      ? editedOpportunity
+    isEditedOpportunityCurrent(editedEntry, {
+      isDemoMode: demoMode,
+      dataUpdatedAt,
+    }) &&
+    baseOpp &&
+    editedEntry.opportunity.slug === baseOpp.slug
+      ? editedEntry.opportunity
       : baseOpp;
   const applied = signedUp ?? data?.mySignup ?? false;
 
@@ -96,7 +107,8 @@ export function VolunteerOpportunityPage() {
     withdraw.mutate(undefined, { onSuccess: () => setSignedUp(false) });
   };
 
-  if (isLoading) {
+  // isPending holds the skeleton through the session check too (useOpportunity).
+  if (isPending) {
     return (
       <PageShell>
         {/* Transient skeleton: name the tab honestly and keep the placeholder
@@ -167,7 +179,11 @@ export function VolunteerOpportunityPage() {
         </header>
 
         <div className={styles.grid}>
-          <VolunteerOpportunityMain opp={opp} isSignedIn={loggedIn} />
+          <VolunteerOpportunityMain
+            opp={opp}
+            isSignedIn={loggedIn}
+            hasTeam={data?.hasTeam ?? false}
+          />
           <VolunteerOpportunitySidebar
             opp={opp}
             applied={applied}

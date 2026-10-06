@@ -30,6 +30,8 @@ export interface GuideDocumentProps {
   onSectionsChange: (update: SectionsUpdate) => void;
   onActiveSectionChange: (sectionKey: string) => void;
   onCopyEnglishStructure: () => void;
+  /** The anchors a section-composed guide's page reads, or null. */
+  pageAnchors: readonly string[] | null;
 }
 
 interface SlashState {
@@ -51,6 +53,7 @@ export function GuideDocument({
   onSectionsChange,
   onActiveSectionChange,
   onCopyEnglishStructure,
+  pageAnchors,
 }: GuideDocumentProps) {
   const { t } = useTranslation();
   const documentRef = useRef<HTMLDivElement | null>(null);
@@ -138,6 +141,7 @@ export function GuideDocument({
             onSlashOpen={(blockKey, element) =>
               openSlash(section.key, blockKey, element)
             }
+            pageAnchors={pageAnchors}
           />
         ))}
       </div>

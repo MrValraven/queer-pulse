@@ -20,6 +20,8 @@ import {
   NotificationCategorySections,
   QuietHoursSection,
 } from "./NotificationVolumeSections";
+import { setMessageSoundPref, useMessageSoundPref } from "./messageSoundPref";
+import { previewMessageChime } from "../../shared/lib/messageChime";
 import { useLoginAlerts } from "./api/useLoginAlerts";
 import { useActivityVisibility } from "./api/useActivityVisibility";
 import { useSuggestionVisibility } from "./api/useSuggestionVisibility";
@@ -48,6 +50,7 @@ import styles from "./SettingsPage.module.css";
 export function NotificationsPane() {
   const { t } = useTranslation();
   const { delivery, setDelivery } = useNotificationDelivery();
+  const isMessageSoundOn = useMessageSoundPref();
   return (
     <Pane
       title={
@@ -61,6 +64,19 @@ export function NotificationsPane() {
       {/* Every category switch, grouped. All of them are genuinely persisted
           and save on flip. */}
       <NotificationCategorySections />
+      <Section label={t("settings:notifications.section.inApp")}>
+        <ToggleList>
+          <ConsentToggleRow
+            title={t("settings:notifications.messageSound.title")}
+            description={t("settings:notifications.messageSound.desc")}
+            checked={isMessageSoundOn}
+            onChange={(isOn) => {
+              setMessageSoundPref(isOn);
+              if (isOn) previewMessageChime();
+            }}
+          />
+        </ToggleList>
+      </Section>
       <Section label={t("settings:notifications.section.phonePush")}>
         <ToggleList>
           {/* Permission and device registration only. WHAT gets pushed is

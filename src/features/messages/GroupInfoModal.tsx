@@ -8,6 +8,7 @@ import { computeGroupSuccessor } from "./groupSuccession";
 import { GroupInfoBody } from "./GroupInfoBody";
 import { GroupInfoConfirms } from "./GroupInfoConfirms";
 import type { GroupMemberPick } from "./NewGroupModal";
+import type { InviteLinkMaxUses } from "./inviteLinkUses";
 import type { Conversation, GroupMemberView } from "./data";
 
 interface GroupInfoModalProps {
@@ -39,9 +40,10 @@ interface GroupInfoModalProps {
   /** PRD-357: the owner ends the group for everyone. */
   onDissolve: () => void;
   dissolvePending: boolean;
-  /** PRD-358: the group's revocable invite link. */
-  onCreateInviteLink: () => void;
-  onResetInviteLink: () => void;
+  /** PRD-358: the group's revocable invite link. PRD-400 (use cap): create
+   *  and reset carry the chosen max uses (null for unlimited). */
+  onCreateInviteLink: (maxUses: InviteLinkMaxUses) => void;
+  onResetInviteLink: (maxUses: InviteLinkMaxUses) => void;
   onDisableInviteLink: () => void;
   inviteLinkPending: boolean;
   onRevokeInvite: (inviteId: string) => void;
@@ -95,9 +97,12 @@ export function GroupInfoModal({
   const [confirmingDissolve, setConfirmingDissolve] = useState(false);
 
   const callerIsOwner = active.myRole === "owner";
+  // PRD-423: a matched Go together chat names the viewer's own row by their
+  // per-chat key (`viewerMemberKey`), in `id` and `slug` alike.
   const isSelf = (member: GroupMemberView) =>
     (!!myUserId && member.id === myUserId) ||
-    (!member.id && member.role === "owner");
+    (!!active.viewerMemberKey && member.slug === active.viewerMemberKey) ||
+    (!member.id && member.role === "owner" && !active.viewerMemberKey);
   const myMember = members.find(isSelf) ?? null;
   // DES-228: display-only preview of who the server will hand ownership to
   // if this owner leaves; see `computeGroupSuccessor`'s own doc.

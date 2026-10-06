@@ -155,7 +155,11 @@ export function useSocialStore(): SocialContextValue {
     setState((prev) => ({
       following: prev.following,
       blocked: blocksData
-        ? blocksData.items.map((b) => b.member.slug)
+        ? // PRD-423: a block placed in a matched Go together chat carries no
+          // slug, so it never marks an empty slug as blocked.
+          blocksData.items.flatMap((b) =>
+            b.member.slug ? [b.member.slug] : [],
+          )
         : prev.blocked,
       muted: mutesData ? mutesData.items.map((m) => m.member.slug) : prev.muted,
     }));

@@ -10,7 +10,9 @@ import { routes } from "../../app/routeMap";
 import { EmptyState, LoadErrorState } from "../../shared/components/ui";
 import { submittedToPlace } from "../marketing/api/directory.adapters";
 import { useMemberListings } from "./api/useMemberListings";
+import { useMySuggestedListings } from "./api/useMySuggestedListings";
 import { PlacesGrid } from "./PlacesGrid";
+import { SuggestedPlacesSection } from "./SuggestedPlacesSection";
 import {
   mergePlaces,
   registryPlacesForMember,
@@ -66,6 +68,11 @@ export function PlacesSection({
   // renders as "you have no places" over a "list your business" CTA, telling an
   // owner their listing is gone when the request merely failed (DES-22).
   const hasOwnFetchFailed = isSelf && hasOwnListingsFetchFailed;
+  // An owner who runs nothing but has suggested places sees those rows just
+  // below, so the empty state shrinks and says only that they run nothing
+  // yet. Same query key as `SuggestedPlacesSection`, so this is one request.
+  const { suggestions } = useMySuggestedListings({ isEnabled: isSelf });
+  const hasSuggestions = isSelf && suggestions.length > 0;
   // Owner source: this member's own submissions from GET /listings/mine, which
   // also returns the listings they were invited to help run. A co-managed one
   // belongs to somebody else, so it matches neither the submitter test nor the
@@ -162,8 +169,16 @@ export function PlacesSection({
           description={t("members:places.loadError.body")}
         />
       ) : places.length === 0 ? (
+        // Level 2: with no places the empty state is this section's heading,
+        // a sibling of "Places you suggested" below it.
         <EmptyState
-          title={t("members:places.empty.title")}
+          compact={hasSuggestions}
+          headingLevel={2}
+          title={t(
+            hasSuggestions
+              ? "members:places.empty.titleWithSuggestions"
+              : "members:places.empty.title",
+          )}
           description={t("members:places.empty.description")}
           action={{
             label: t("members:places.empty.action"),
@@ -199,6 +214,10 @@ export function PlacesSection({
           />
         </>
       )}
+
+      {/* PRD-434. The places this member suggested, which the platform holds
+          and `GET /listings/mine` therefore never returns. Owner view only. */}
+      {isSelf && <SuggestedPlacesSection />}
     </section>
   );
 }

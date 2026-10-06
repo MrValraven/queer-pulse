@@ -1,3 +1,4 @@
+import { useId } from "react";
 import { Button } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { Piece } from "../data/desk.data";
@@ -5,7 +6,7 @@ import {
   pieceNextActionShortLabelKey,
   type PieceNextAction,
 } from "./pieceNextAction";
-import { PieceGoLiveStatus } from "./PieceGoLiveStatus";
+import { PieceGoLiveStatus, PieceLiveSinceNote } from "./PieceGoLiveStatus";
 import { pieceGoLiveState } from "./pieceGoLiveState";
 import styles from "./PieceRow.module.css";
 
@@ -30,6 +31,12 @@ export interface PieceRowNextActionProps {
  * With no verb, a piece with a publish date shows its quiet go-live line,
  * and the cell carries `data-status` so a phone card gives the line a row
  * of its own (`PieceRow.module.css`).
+ *
+ * A Ready piece whose scheduled instant has passed leads with Publish, and
+ * PRD-437 puts a note above it: live since when, and that publishing it is
+ * what tells the writer. The note is also the button's description. The
+ * compact density shows the note's one-line short form ("Live since
+ * {date}"), and the button's description stays the full sentence.
  */
 export function PieceRowNextAction({
   action,
@@ -38,6 +45,7 @@ export function PieceRowNextAction({
   onRun,
 }: PieceRowNextActionProps) {
   const { t } = useTranslation();
+  const liveNoteId = useId();
   if (!action) {
     const hasStatus = piece !== undefined && pieceGoLiveState(piece) !== null;
     return (
@@ -48,14 +56,32 @@ export function PieceRowNextAction({
   }
   const label = t(action.labelKey);
   const shortLabel = t(pieceNextActionShortLabelKey(action));
+  const liveSince =
+    action.kind === "publish" &&
+    piece?.publishedAt &&
+    pieceGoLiveState(piece)?.kind === "live"
+      ? piece.publishedAt
+      : null;
 
   return (
-    <div className={styles.actionCell}>
+    <div
+      className={styles.actionCell}
+      data-live-note={liveSince !== null || undefined}
+    >
+      {liveSince !== null && (
+        <PieceLiveSinceNote
+          publishedAt={liveSince}
+          id={liveNoteId}
+          align="end"
+        />
+      )}
       <Button
         variant="ghost"
         size="sm"
         className={styles.nextAction}
-        aria-describedby={titleId}
+        aria-describedby={
+          liveSince !== null ? `${titleId} ${liveNoteId}` : titleId
+        }
         aria-label={shortLabel === label ? undefined : label}
         onClick={() => onRun(action)}
       >

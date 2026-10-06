@@ -1,5 +1,9 @@
 import { routes } from "../../app/routeMap";
-import { Button, LoadErrorState } from "../../shared/components/ui";
+import {
+  Button,
+  LoadErrorState,
+  LoadMoreFooter,
+} from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { Guide } from "../resources/library.data";
 import { SuggestEditTrigger } from "../resources/SuggestEditTrigger";
@@ -17,6 +21,9 @@ export interface ResourceLibraryGuidesProps {
   onRetry: () => void;
   hasNextPage: boolean;
   isFetchingNextPage: boolean;
+  /** ENG-501: the latest next page failed. The loaded guides stay on screen
+   *  and the footer says so under them, its button retrying that page. */
+  isFetchNextPageError: boolean;
   onFetchNextPage: () => void;
 }
 
@@ -31,6 +38,7 @@ export function ResourceLibraryGuides({
   onRetry,
   hasNextPage,
   isFetchingNextPage,
+  isFetchNextPageError,
   onFetchNextPage,
 }: ResourceLibraryGuidesProps) {
   const { t } = useTranslation();
@@ -67,19 +75,17 @@ export function ResourceLibraryGuides({
           ))}
       </div>
 
-      {!loading && hasNextPage && (
-        <div className={s.loadMore}>
-          <Button
-            type="button"
-            variant="ghost"
-            disabled={isFetchingNextPage}
-            onClick={onFetchNextPage}
-          >
-            {isFetchingNextPage
-              ? t("resources:library.loadingMore")
-              : t("resources:library.loadMoreCta")}
-          </Button>
-        </div>
+      {!loading && (hasNextPage || isFetchNextPageError) && (
+        <LoadMoreFooter
+          className={s.loadMore}
+          isFetchingNextPage={isFetchingNextPage}
+          isFetchNextPageError={isFetchNextPageError}
+          retryVariant="primary"
+          onLoadMore={onFetchNextPage}
+          errorMessage={t("resources:library.loadMoreError")}
+          label={t("resources:library.loadMoreCta")}
+          loadingLabel={t("resources:library.loadingMore")}
+        />
       )}
 
       {/* CON-10: the library grid only ever linked the guides whose

@@ -28,6 +28,7 @@ import { claimStateFromFrame } from "./conversationClaim";
 import {
   isFromViewerSide,
   MAILBOXES_QUERY_KEY_PREFIX,
+  ownMemberKeysOf,
   readStaffedIdentityIds,
   type MessageViewer,
 } from "./mailboxViewer";
@@ -535,6 +536,9 @@ class RealtimeClient {
     return {
       myHandle: this.myHandle,
       staffedIdentityIds: readStaffedIdentityIds(this.qc),
+      // PRD-423: the member's own keys in matched Go together chats, from
+      // the shared memo one filtered cache subscription keeps current.
+      ownMemberKeys: ownMemberKeysOf(this.qc),
     };
   }
   onPresence(handler: (online: ReadonlySet<string>) => void): () => void {
@@ -1334,6 +1338,9 @@ class RealtimeClient {
         // A business's reaction reaches its customer as an `identityId`
         // frame with no `userId`, so it is applied as the counterpart's.
         if (this.myUserId && userId === this.myUserId) return;
+        // PRD-423: a matched Go together chat names the reactor by their
+        // per-chat key, so our own echo there carries one of ours.
+        if (userId && ownMemberKeysOf(this.qc).has(userId)) return;
         patchMessageReactionCounts(
           this.qc,
           conversationId,
@@ -1411,6 +1418,9 @@ class RealtimeClient {
       // reports presence, so no identity frame is ever added to
       // `onlineUserIds`.
       if (this.myUserId && frame.userId === this.myUserId) return;
+      // PRD-423: a matched Go together chat names the typist by their
+      // per-chat key, so our own echo there carries one of ours.
+      if (frame.userId && ownMemberKeysOf(this.qc).has(frame.userId)) return;
       for (const handler of this.typingHandlers) handler(frame);
     });
     socket.on("read", (frame) => {

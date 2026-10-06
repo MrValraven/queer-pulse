@@ -75,6 +75,10 @@ export interface OpportunityDetailDTO extends OpportunityCardDTO {
   goodFor: string[];
   teamIntro: string | null;
   team: MemberRefDTO[];
+  /** True when the opportunity has a team on record, for every reader (an
+   *  anonymous reader's `team` is empty). Optional until every backend
+   *  sends it. */
+  hasTeam?: boolean;
   applyRole: string;
   poster: MemberRefDTO | null;
   /**

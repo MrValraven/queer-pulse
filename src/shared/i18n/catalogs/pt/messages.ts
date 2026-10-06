@@ -641,6 +641,13 @@ export const messages: Catalog = {
   "group.inviteLink.expiresSoon": "Expira em menos de uma hora",
   "group.inviteLink.expired":
     "Este link expirou. Repõe-no para partilhares um novo.",
+  "group.inviteLink.maxUses": "Máximo de utilizações",
+  "group.inviteLink.maxUsesUnlimited": "Ilimitado",
+  "group.inviteLink.unlimitedUses": "Utilizações ilimitadas",
+  "group.inviteLink.usesLeft_one": "Resta {count} utilização",
+  "group.inviteLink.usesLeft_other": "Restam {count} utilizações",
+  "group.inviteLink.usedUp":
+    "Este link já chegou ao limite de utilizações. Repõe-no para partilhares um novo.",
   // Título com contagem de convites pendentes (plural CLDR: _one / _other).
   "group.pendingInvites.title_one": "{count} convite pendente",
   "group.pendingInvites.title_other": "{count} convites pendentes",
@@ -663,6 +670,8 @@ export const messages: Catalog = {
     "Esta conversa já tem o número máximo de mensagens fixadas.",
   "group.error.generic":
     "Algo correu mal com essa ação de grupo. Tenta outra vez.",
+  "group.error.inviteLinkUsedUp":
+    "Este link de convite já chegou ao limite de utilizações. Pede um novo a alguém do grupo.",
   "group.matchedMemberSafetyAriaLabel": "Bloquear ou denunciar {name}",
   "mention.member": "@membro",
 
@@ -1171,4 +1180,7 @@ export const messages: Catalog = {
   "join.errorTitle": "Algo correu mal",
   "join.errorBody": "Não foi possível carregar este convite. Tenta outra vez.",
   "join.backToMessages": "Voltar às mensagens",
+  "join.usedUpLinkTitle": "Este link de convite já chegou ao limite",
+  "join.usedUpLinkBody":
+    "Já deixou entrar o número máximo de pessoas. Pede a alguém do grupo que te envie um novo.",
 };

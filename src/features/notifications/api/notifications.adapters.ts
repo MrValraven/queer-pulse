@@ -303,6 +303,12 @@ const PERSONALIZED_KINDS = new Set<NotificationKind>([
   "event_announcement",
   "subprofile_invite",
   "subprofile_co_owner_joined",
+  // PRD-408. The author who credited the member as co-author. The actor is
+  // CONDITIONAL, like `review_replied`: an anonymous or QueerPulse Official
+  // thread omits `payload.actorId`, resolves no `dto.actor`, and keeps the
+  // generic `.text` ("You were credited as co-author on …"). The named copy
+  // keeps `{threadTitle}`, which rides in on `actor.textValues`.
+  "forum_co_author_credit",
 ]);
 
 export function notificationDtoToView(

@@ -78,7 +78,12 @@ export function MessageInfoSurface({
     const entries = groupSeenByForMessage(
       context.active.members,
       message,
-      { id: context.myUserId ?? null, slug: user?.profile?.slug },
+      // PRD-423: a matched Go together chat names the viewer by their
+      // per-chat key.
+      {
+        id: context.active.viewerMemberKey ?? context.myUserId ?? null,
+        slug: context.active.viewerMemberKey ?? user?.profile?.slug,
+      },
       context.groupSeenBy,
     );
     return <GroupSeenBySheet entries={entries} onClose={onClose} />;

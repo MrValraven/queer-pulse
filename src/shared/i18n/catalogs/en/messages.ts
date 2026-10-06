@@ -640,6 +640,13 @@ export const messages: Catalog = {
   "group.inviteLink.expiresSoon": "Expires in under an hour",
   "group.inviteLink.expired":
     "This link has expired. Reset it to share a fresh one.",
+  "group.inviteLink.maxUses": "Max uses",
+  "group.inviteLink.maxUsesUnlimited": "Unlimited",
+  "group.inviteLink.unlimitedUses": "Unlimited uses",
+  "group.inviteLink.usesLeft_one": "{count} use left",
+  "group.inviteLink.usesLeft_other": "{count} uses left",
+  "group.inviteLink.usedUp":
+    "This link has been used up. Reset it to share a fresh one.",
   // Pending-invites count heading (CLDR plural: _one / _other).
   "group.pendingInvites.title_one": "{count} pending invite",
   "group.pendingInvites.title_other": "{count} pending invites",
@@ -661,6 +668,8 @@ export const messages: Catalog = {
     "This chat already has the maximum number of pinned messages.",
   "group.error.generic":
     "Something went wrong with that group action. Please try again.",
+  "group.error.inviteLinkUsedUp":
+    "This invite link has been used up. Ask someone in the group for a new one.",
   "group.matchedMemberSafetyAriaLabel": "Block or report {name}",
   "mention.member": "@member",
 
@@ -1170,4 +1179,7 @@ export const messages: Catalog = {
   "join.errorTitle": "Something went wrong",
   "join.errorBody": "We couldn't load this invite. Try again.",
   "join.backToMessages": "Back to messages",
+  "join.usedUpLinkTitle": "This invite link has been used up",
+  "join.usedUpLinkBody":
+    "It has already let in as many people as it allows. Ask someone in the group to send you a fresh one.",
 };

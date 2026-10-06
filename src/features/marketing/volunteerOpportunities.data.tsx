@@ -666,12 +666,7 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
       },
       { label: "Next show", value: <b>Group show · 28 Jun</b> },
     ],
-    applyConfirm: (
-      <>
-        You're on the crew list for <strong>Rainbow Arts Collective</strong>.
-        You'll get the crew chat invite. Claim whichever shifts suit you.
-      </>
-    ),
+    applyConfirm: applyConfirmation("Production Crew · Rainbow Arts"),
     partner: null,
     community: null,
   },
@@ -793,12 +788,7 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
       },
       { label: "Next gathering", value: <b>Welcome dinner · 14 Jun</b> },
     ],
-    applyConfirm: (
-      <>
-        You're on the gatherings crew for <strong>QueerPulse</strong>. You'll
-        get the crew calendar. Shadow one event, then claim whatever fits.
-      </>
-    ),
+    applyConfirm: applyConfirmation("Gatherings Crew · QueerPulse"),
     partner: null,
     community: null,
   },

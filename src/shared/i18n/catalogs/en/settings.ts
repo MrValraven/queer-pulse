@@ -233,6 +233,10 @@ export const settings: Catalog = {
 
   // ── Notification volume (SOC-10) ──────────────────────────────────────────
   "notifications.section.phonePush": "On your phone",
+  "notifications.section.inApp": "In the app",
+  "notifications.messageSound.title": "Message sound",
+  "notifications.messageSound.desc":
+    "Play a soft chime when a message arrives while QueerPulse is open. Muted chats stay silent.",
   "notifications.section.yourWork": "Your work and your listings",
   "notifications.volume.eventInvites.title": "New gathering announced",
   "notifications.volume.eventInvites.desc":

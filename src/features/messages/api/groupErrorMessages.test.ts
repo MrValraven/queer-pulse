@@ -44,6 +44,7 @@ describe("groupErrorCodeOf", () => {
       "INVITE_NOT_FOUND",
       "INVITE_LINK_INVALID",
       "INVITE_LINK_EXPIRED",
+      "INVITE_LINK_USED_UP",
       "REMOVED_FROM_GROUP",
       "PIN_LIMIT_REACHED",
     ] as const;
@@ -57,6 +58,12 @@ describe("groupErrorToastKey", () => {
   it("maps INVITE_LINK_EXPIRED (PRD-400, 410) to its own toast key", () => {
     expect(groupErrorToastKey(coded(410, "INVITE_LINK_EXPIRED"))).toBe(
       "messages:group.error.inviteLinkExpired",
+    );
+  });
+
+  it("maps INVITE_LINK_USED_UP (PRD-400 use cap, 410) to its own toast key", () => {
+    expect(groupErrorToastKey(coded(410, "INVITE_LINK_USED_UP"))).toBe(
+      "messages:group.error.inviteLinkUsedUp",
     );
   });
 

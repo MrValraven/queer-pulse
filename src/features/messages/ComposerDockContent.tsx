@@ -9,6 +9,7 @@ import { Composer } from "./Composer";
 import { useDemoReplyClaim } from "./api/useConversationClaim";
 import { ComposerMailboxBar } from "./mailboxes/ComposerMailboxBar";
 import { useAttachmentStaging } from "./useAttachmentStaging";
+import { useMatchedChatComposerMentions } from "./matchedChatComposerMentions";
 import type { ChatMessage, Conversation } from "./data";
 import type { GifAttachment } from "../../shared/api/gifs";
 import type { DocumentAttachment } from "../../shared/api/documentAttachment";
@@ -98,12 +99,15 @@ export function ComposerDockContent({
     textareaRef,
   });
   const markDemoReplyClaim = useDemoReplyClaim(active);
+  // Minor 6 (PRD-423): a matched chat's composer shows `@FirstName`; the
+  // stored message carries the member key token.
+  const composerMentions = useMatchedChatComposerMentions();
   const handleSend = useCallback(
     (body: string) => {
-      onSend(body);
+      onSend(composerMentions ? composerMentions.encode(body) : body);
       markDemoReplyClaim();
     },
-    [onSend, markDemoReplyClaim],
+    [onSend, markDemoReplyClaim, composerMentions],
   );
   const handleSendSticker = useCallback(
     (sticker: StickerResponse) => {

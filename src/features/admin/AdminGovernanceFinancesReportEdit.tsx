@@ -39,7 +39,8 @@ export function AdminGovernanceFinancesReportEdit({
   const { showToast } = useToast();
   const update = useUpdateAdminFinances();
   // A partner seeded before PRD-447 carries an i18n key; the editor shows its
-  // words in the admin's language and saves them as typed text.
+  // words in the admin's language. Left as shown, the key goes back with the
+  // save; edited, the typed words replace it (`buildReportBody`).
   const resolveScope: ScopeResolver = (partner) =>
     partner.scope ?? (partner.scopeKey ? t(partner.scopeKey) : "");
   const [drafts, setDrafts] = useState<ReportDrafts>(() =>

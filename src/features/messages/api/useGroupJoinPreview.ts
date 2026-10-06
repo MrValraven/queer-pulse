@@ -10,6 +10,10 @@ import { ApiError } from "../../../shared/api/client";
  *  the fixed preview below. */
 export const DEMO_EXPIRED_INVITE_TOKEN = "demo-expired-link";
 
+/** PRD-400 (use cap): the demo token that previews as a used-up link
+ *  (`/messages/join/demo-used-up-link`). */
+export const DEMO_USED_UP_INVITE_TOKEN = "demo-used-up-link";
+
 /** Any token in demo mode resolves to the SAME fixed preview: the group the
  *  viewer already left (`bookSwapConversation`, PRD-358: previewing an
  *  invite link is exactly the flow a former member follows to rejoin). No
@@ -56,6 +60,13 @@ export function useGroupJoinPreview(token: string | undefined) {
         if (token === DEMO_EXPIRED_INVITE_TOKEN) {
           throw new ApiError(410, "This invite link has expired", {
             code: "INVITE_LINK_EXPIRED",
+          });
+        }
+        // PRD-400 (use cap): likewise for a link that has seated as many
+        // people as its max uses allow.
+        if (token === DEMO_USED_UP_INVITE_TOKEN) {
+          throw new ApiError(410, "This invite link has been used up", {
+            code: "INVITE_LINK_USED_UP",
           });
         }
         return demoGroupJoinPreview();

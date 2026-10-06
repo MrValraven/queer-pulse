@@ -51,6 +51,9 @@ export function ManagedGuide({ slug, fallback }: ManagedGuideProps) {
 
   if (isLoading) return <ManagedGuideSkeleton />;
   if (isGated) return <GuideUnderReview />;
+  // A guide in SECTION_COMPOSED_GUIDE_SLUGS (sectionComposedGuides.ts) never
+  // reports a managed body: its page reads each section by anchor and keeps
+  // its own copy elsewhere.
   if (guide && hasManagedBody) {
     return <ManagedGuideBody slug={slug} guide={guide} />;
   }

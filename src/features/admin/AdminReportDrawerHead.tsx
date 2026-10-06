@@ -36,8 +36,24 @@ export function AdminReportDrawerHead({
           </AdminChip>
         ))}
       </div>
+      {/* The report's own title, split the way the queue card splits it (a
+          coral-emphasised middle and a plain tail). The catalog title is only
+          for a report that arrives with none. */}
       <h2 className={styles.dTitle}>
-        {t("admin:moderation.reportDrawer.title")}
+        {report.title ? (
+          <>
+            {report.title}
+            {report.titleEm && (
+              <>
+                {" "}
+                <em>{report.titleEm}</em>
+              </>
+            )}
+            {report.titleAfter && ` ${report.titleAfter}`}
+          </>
+        ) : (
+          t("admin:moderation.reportDrawer.title")
+        )}
       </h2>
       {(onAssignToMe || onUnassign) && (
         <div className={styles.dAssignment}>

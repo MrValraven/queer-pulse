@@ -1,5 +1,6 @@
 import { useAppBadge } from "./useAppBadge";
 import { useCloseReadNotifications } from "./useCloseReadNotifications";
+import { useDocumentTitleBadge } from "./useDocumentTitleBadge";
 import { useIncomingMessageBanner } from "./useIncomingMessageBanner";
 import { usePushSubscriptionSync } from "./usePushSubscriptionSync";
 import { useServiceWorkerBridge } from "./useServiceWorkerBridge";
@@ -14,6 +15,7 @@ import { useServiceWorkerBridge } from "./useServiceWorkerBridge";
 export function PushAppEffects() {
   usePushSubscriptionSync();
   useAppBadge();
+  useDocumentTitleBadge();
   useCloseReadNotifications();
   useServiceWorkerBridge();
   useIncomingMessageBanner();

@@ -168,7 +168,7 @@ export const feed: Catalog = {
   "sidebar.upcomingHeading": "Em breve",
   "sidebar.upcomingEmpty": "Ainda não tens convívios marcados.",
   "sidebar.seeCalendar": "Ver calendário completo",
-  "sidebar.newThisWeekHeading": "Novidades esta semana",
+  "sidebar.newThisWeekHeading": "Pessoas novas",
   "sidebar.newMembersEmpty": "Ainda não há pessoas novas para mostrar.",
   "sidebar.browseMembers": "Ver todas as pessoas",
   "sidebar.connectionsHeading": "As tuas conexões",
@@ -273,8 +273,14 @@ export const feed: Catalog = {
     "Acabou de chegar. Um olá rápido faz toda a diferença.",
   "memberCard.emptyPromptConnected":
     "Já são conexões. Diz olá e dá-lhe as boas-vindas.",
-  "memberCard.group.title_one": "{count} pessoa juntou-se recentemente",
-  "memberCard.group.title_other": "{count} pessoas juntaram-se recentemente",
+  "memberCard.group.thisWeek_one": "{count} pessoa juntou-se esta semana",
+  "memberCard.group.thisWeek_other": "{count} pessoas juntaram-se esta semana",
+  "memberCard.group.lastWeek_one": "{count} pessoa juntou-se na semana passada",
+  "memberCard.group.lastWeek_other":
+    "{count} pessoas juntaram-se na semana passada",
+  "memberCard.group.weekOf_one": "{count} pessoa juntou-se na semana de {date}",
+  "memberCard.group.weekOf_other":
+    "{count} pessoas juntaram-se na semana de {date}",
   "memberCard.group.showAll": "Ver todas as {count}",
   "memberCard.group.showFewer": "Ver menos",
   "memberCard.tags.inCommon": "em comum",

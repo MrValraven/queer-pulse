@@ -237,6 +237,19 @@
   align-items: center;
 }
 
+/* The announce toggle's label runs long in PT ("Anunciar se uma peça nova
+   ficar disponível"), and the button's own `nowrap` pushed it past the card
+   at 375. Two classes so this outranks `Button.module.css` whatever the load
+   order; the 40px floor matches `.sm`. */
+.row .announceToggle {
+  white-space: normal;
+  max-width: 100%;
+  height: auto;
+  min-height: 40px;
+  line-height: 1.3;
+  text-align: start;
+}
+
 .digrow {
   display: flex;
   gap: 12px;

@@ -126,6 +126,9 @@ export function useAttachmentQueueLifecycle({
         replyToId?: string;
         replyTo?: ChatMessage["replyTo"];
         sendAsIdentityId?: string;
+        /** PRD-423: a matched Go together chat's caption mapping, which
+         *  turns typed `@FirstName` mentions into stored key tokens. */
+        encodeCaption?: (caption: string) => string;
       },
     ) => {
       const items = stagedRef.current?.[conversationId] ?? [];
@@ -144,6 +147,9 @@ export function useAttachmentQueueLifecycle({
         replyTo:
           index === 0 && carriesReply ? replySnapshot?.replyTo : item.replyTo,
         sendAsIdentityId: replySnapshot?.sendAsIdentityId,
+        caption: replySnapshot?.encodeCaption
+          ? replySnapshot.encodeCaption(item.caption)
+          : item.caption,
       }));
       setStaged(conversationId, []);
       flushPendingHead(conversationId, [

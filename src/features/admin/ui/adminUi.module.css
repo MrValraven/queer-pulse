@@ -302,6 +302,11 @@
   background: rgba(var(--violet-rgb), 0.18);
   color: var(--violet);
 }
+/* Dark danger text on its own wash is 4.11:1 at 12px; mixing in ink lifts it
+   to 4.97:1 (same move as the violet chip below). */
+[data-theme="dark"] .chip_danger {
+  color: color-mix(in srgb, var(--danger) 80%, var(--ink));
+}
 /* Dark violet text on its own violet wash sits too close in tone; mixing in
    ink lifts it clear of the tint. */
 [data-theme="dark"] .chip_violet,

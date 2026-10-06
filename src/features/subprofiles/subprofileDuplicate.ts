@@ -107,7 +107,7 @@ export interface DuplicateMutations {
     mutateAsync: (vars: {
       id: string;
       dto: UpdateSubprofileDTO;
-    }) => Promise<unknown>;
+    }) => Promise<{ id: string }>;
   };
   replaceSocials: {
     mutateAsync: (vars: {
@@ -134,8 +134,12 @@ export interface DuplicateMutations {
   listAffiliationOptions?: (id: string) => Promise<AffiliationOptionDTO[]>;
 }
 
-/** What a copy could not carry over, so the caller can tell the owner. */
+/** What a copy could not carry over, so the caller can tell the owner, and
+ *  the id the copy ended under. */
 export interface DuplicateOutcome {
+  /** The draft's id once the copy is applied. Copying an unlinked persona
+   *  unlinks the draft, which gives it a fresh id (ENG-447). */
+  subprofileId: string;
   /** Source links the copier can't make (a co-owner's community or event),
    *  left off before the save. Zero when the options couldn't load, since
    *  then every link is sent and the replace decides. */
@@ -174,15 +178,24 @@ async function linkableAffiliations(
  *  failure (taken slug already handled by caller, a bad section, affiliations)
  *  never strands the draft; the owner lands in the editor and finishes there.
  *  Resolves with how many source links were skipped and whether the link
- *  save failed, so the caller can tell the owner which one happened. */
+ *  save failed, so the caller can tell the owner which one happened, and
+ *  with the id the draft ended under, which the caller opens. */
 export async function applyDuplicatePlan(
   createdId: string,
   plan: DuplicatePlan,
   mutations: DuplicateMutations,
 ): Promise<DuplicateOutcome> {
+  // The draft every step writes to. Copying an unlinked persona unlinks the
+  // draft in the meta step, which gives it a fresh id (ENG-447), so every
+  // later step writes to the id that step answers with.
+  let subprofileId = createdId;
   if (plan.meta) {
     try {
-      await mutations.update.mutateAsync({ id: createdId, dto: plan.meta });
+      const saved = await mutations.update.mutateAsync({
+        id: subprofileId,
+        dto: plan.meta,
+      });
+      subprofileId = saved.id;
     } catch {
       /* meta stays default; editable in the editor */
     }
@@ -190,7 +203,7 @@ export async function applyDuplicatePlan(
   if (plan.socialLinks.length) {
     try {
       await mutations.replaceSocials.mutateAsync({
-        id: createdId,
+        id: subprofileId,
         items: plan.socialLinks,
       });
     } catch {
@@ -200,7 +213,7 @@ export async function applyDuplicatePlan(
   for (const { section, items } of plan.sections) {
     try {
       await mutations.replaceSection.mutateAsync({
-        id: createdId,
+        id: subprofileId,
         section,
         items,
       });
@@ -209,25 +222,41 @@ export async function applyDuplicatePlan(
     }
   }
   if (!plan.affiliations || plan.affiliations.length === 0) {
-    return { skippedAffiliationCount: 0, hasAffiliationSaveFailed: false };
+    return {
+      subprofileId,
+      skippedAffiliationCount: 0,
+      hasAffiliationSaveFailed: false,
+    };
   }
   const linkable = await linkableAffiliations(
-    createdId,
+    subprofileId,
     plan.affiliations,
     mutations.listAffiliationOptions,
   );
   const skippedAffiliationCount = plan.affiliations.length - linkable.length;
   if (linkable.length === 0) {
-    return { skippedAffiliationCount, hasAffiliationSaveFailed: false };
+    return {
+      subprofileId,
+      skippedAffiliationCount,
+      hasAffiliationSaveFailed: false,
+    };
   }
   try {
     await mutations.replaceAffiliations.mutateAsync({
-      id: createdId,
+      id: subprofileId,
       items: linkable,
     });
   } catch {
     /* affiliations stay empty; editable in the editor */
-    return { skippedAffiliationCount, hasAffiliationSaveFailed: true };
+    return {
+      subprofileId,
+      skippedAffiliationCount,
+      hasAffiliationSaveFailed: true,
+    };
   }
-  return { skippedAffiliationCount, hasAffiliationSaveFailed: false };
+  return {
+    subprofileId,
+    skippedAffiliationCount,
+    hasAffiliationSaveFailed: false,
+  };
 }

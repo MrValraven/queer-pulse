@@ -10,6 +10,7 @@
   color: rgba(var(--cream-rgb), 1);
   background: var(--plum);
   border-radius: var(--radius-card);
+  container: therapist-owner-bar / inline-size;
 }
 
 /* Decorative jade orb. */
@@ -113,6 +114,68 @@
   cursor: progress;
 }
 
+/* ── Status freshness (PRD-435): under the capacity segment ── */
+.capacityColumn {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  max-width: 100%;
+}
+
+.freshness {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px 12px;
+  max-width: 340px;
+}
+
+.freshnessText {
+  margin: 0;
+  font-size: var(--text-12-5);
+  line-height: 1.5;
+  text-align: right;
+  color: rgba(var(--cream-rgb), 0.8);
+}
+
+.freshnessHint {
+  display: block;
+}
+
+/* Past the trust window members see it as not confirmed. It reads a notch
+   brighter than the fresh line, led by an alert icon. */
+.freshnessStale {
+  color: rgba(var(--cream-rgb), 0.92);
+}
+
+.freshnessIcon {
+  width: 14px;
+  height: 14px;
+  margin-inline-end: 6px;
+  vertical-align: -2px;
+  color: var(--accent-soft);
+}
+
+/* Narrower than the heading and the segment side by side (about 56rem of
+   content in both languages): the segment column takes its own row and
+   reads from the start edge. */
+@container therapist-owner-bar (max-width: 56rem) {
+  .capacityColumn {
+    flex-basis: 100%;
+    align-items: flex-start;
+  }
+
+  .freshness {
+    justify-content: flex-start;
+  }
+
+  .freshnessText {
+    text-align: start;
+  }
+}
+
 .capacityButton:focus-visible {
   outline: var(--focus-ring);
   outline-offset: var(--focus-ring-offset);
@@ -202,9 +265,11 @@
 
 /* A thumb needs a 44px target. */
 @media (pointer: coarse) {
-  /* `.card` lifts this over the shared Button's own small-size floor. */
+  /* `.card` and `.freshness` lift these over the shared Button's own
+     small-size floor. */
   .capacityButton,
-  .card .cardAction {
+  .card .cardAction,
+  .freshness .confirmButton {
     min-height: 44px;
   }
 

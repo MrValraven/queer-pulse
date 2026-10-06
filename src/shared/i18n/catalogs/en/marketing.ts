@@ -83,7 +83,7 @@ export const marketing: Catalog = {
   "about.stand.trans.commitment.notADebate.body":
     "We host no \u201cboth sides\u201d discussion about whether members deserve rights, and we will not run one for the sake of balance.",
   "about.stand.trans.commitment.exclusion.title":
-    "Trans-exclusionary advocacy is a Code of Conduct matter.",
+    "Trans-exclusionary advocacy is a Code of Conduct violation.",
   "about.stand.trans.commitment.exclusion.body":
     "Criticising a state is political speech. Campaigning to remove a class of member is something else, and calling it gender-critical leaves it exactly what it was.",
   "about.stand.trans.commitment.exclusion.link": "Read the guidelines",
@@ -156,11 +156,11 @@ export const marketing: Catalog = {
   "about.linkModal.guidelinesExclusion.lead":
     "The guidelines clause this commitment rests on, and the hard lines it sits next to.",
   "about.linkModal.guidelinesExclusion.p1":
-    "Criticising a state, its government, its military, or its ideology is political speech, and moderators handle it as political speech. It becomes a Code of Conduct matter when it lands on a person.",
+    "Criticising a state, its government, its military, or its ideology is political speech, and moderators handle it as political speech. It becomes a Code of Conduct violation when it lands on a person.",
   "about.linkModal.guidelinesExclusion.p2":
     "Advocacy aimed at a class of member sits on the far side of that line. Campaigning for the exclusion of trans members from this community is a Code of Conduct breach, whatever vocabulary it borrows.",
   "about.linkModal.guidelinesExclusion.point.hardLines.title":
-    "Always a Code of Conduct matter.",
+    "Always a Code of Conduct violation.",
   "about.linkModal.guidelinesExclusion.point.hardLines.body":
     "Harassment, doxxing, outing someone without their consent, threats, sharing private conversations or photos, and discrimination on any protected basis.",
   "about.linkModal.guidelinesExclusion.point.bothDirections.title":
@@ -207,7 +207,7 @@ export const marketing: Catalog = {
   "about.linkModal.guidelinesSpeech.p1":
     "Advocacy for Palestinian liberation is welcome here and will not be removed for making people uncomfortable. Criticising a state, its government, its military, or its ideology is political speech, and moderators handle it as political speech.",
   "about.linkModal.guidelinesSpeech.p2":
-    "It becomes a Code of Conduct matter when it lands on a person. Holding a member answerable for a state's actions because of their ethnicity, religion, or nationality is discrimination under the hard lines.",
+    "It becomes a Code of Conduct violation when it lands on a person. Holding a member answerable for a state's actions because of their ethnicity, religion, or nationality is discrimination under the hard lines.",
   "about.linkModal.guidelinesSpeech.point.antisemitism.title":
     "Antisemitism is a breach.",
   "about.linkModal.guidelinesSpeech.point.antisemitism.body":
@@ -762,7 +762,7 @@ export const marketing: Catalog = {
   "guidelines.clause07.titleEm": "hard lines",
   "guidelines.clause07.p1":
     "Guidelines describe culture. Some things cross into the Code of Conduct, enforceable territory:",
-  "guidelines.clause07.hardLinesHead": "Always a Code of Conduct matter",
+  "guidelines.clause07.hardLinesHead": "Always a Code of Conduct violation",
   "guidelines.clause07.li1": "Harassment or targeted personal attacks",
   "guidelines.clause07.li2":
     "Doxxing or sharing someone's identifying information",
@@ -779,10 +779,10 @@ export const marketing: Catalog = {
   "guidelines.clause08.p1":
     "Criticising a state, its government, its military, or its ideology is political speech, and we moderate it as political speech. That includes advocacy for Palestinian liberation, which is welcome here and will not be removed for making people uncomfortable.",
   "guidelines.clause08.p2":
-    "It becomes a Code of Conduct matter when it lands on a person. Holding a member answerable for a state's actions because of their ethnicity, religion, or nationality is discrimination under the hard lines above. The same goes for advocacy aimed at a class of member rather than at a state: criticism of a government is political speech, and campaigning to remove trans members is not, however it is labelled.",
+    "It becomes a Code of Conduct violation when it lands on a person. Holding a member answerable for a state's actions because of their ethnicity, religion, or nationality is discrimination under the hard lines above. The same goes for advocacy aimed at a class of member rather than at a state: criticism of a government is political speech, and campaigning to remove trans members is not, however it is labelled.",
   "guidelines.clause08.li4":
     "Campaigning for the exclusion of trans members from this community, whatever vocabulary it borrows",
-  "guidelines.clause08.hardLinesHead": "Still a Code of Conduct matter",
+  "guidelines.clause08.hardLinesHead": "Still a Code of Conduct violation",
   "guidelines.clause08.li1":
     "Antisemitism, including conspiracy framing and holding Jewish members answerable for a state's actions",
   "guidelines.clause08.li2":
@@ -2993,6 +2993,18 @@ export const marketing: Catalog = {
     "QueerPulse goes live with its core pages and community navigation.",
   "changelog.tag.report": "Open the report form",
   "changelog.tag.changelog": "See the changelog",
+  "changelog.entries.chat-stays-with-the-newest-message.title":
+    "Messages stay on screen while you type on iPhone",
+  "changelog.entries.chat-stays-with-the-newest-message.body":
+    "Typing keeps your newest message in view, the header on screen and the message box resting on the keyboard.",
+  "changelog.entries.manifesto-links-open-in-place.title":
+    "Read where we stand without leaving the homepage",
+  "changelog.entries.manifesto-links-open-in-place.body":
+    "Where we stand and How we keep this safe now open as short summaries, each linking to the full page.",
+  "changelog.entries.unread-count-in-browser-tab.title":
+    "Unread count in the browser tab",
+  "changelog.entries.unread-count-in-browser-tab.body":
+    "The tab title reads like (3) QueerPulse, counting your unread chats and notifications together.",
   "changelog.entries.tags-and-snippets-type-normally.title":
     "Item tags take a comma, and code snippets a new line",
   "changelog.entries.tags-and-snippets-type-normally.body":
@@ -3173,6 +3185,14 @@ export const marketing: Catalog = {
     "See what someone wrote before answering their request",
   "changelog.entries.connect-request-note-when-answering.body":
     'The "asked you first" panel now quotes their message and reason, with all three answers on one row.',
+  "changelog.entries.message-arrival-chime.title":
+    "A soft chime when a message arrives",
+  "changelog.entries.message-arrival-chime.body":
+    "Plays with the new-message banner, skips muted chats, and turns off under Settings, Notifications.",
+  "changelog.entries.new-members-grouped-by-week.title":
+    "Newcomers grouped by the week they joined",
+  "changelog.entries.new-members-grouped-by-week.body":
+    "Each week gets its own card on the All tab, and Show all now unfolds smoothly.",
   "changelog.entries.dropdown-escape-keeps-dialog-open.title":
     "Escape in a dropdown closes just the dropdown",
   "changelog.entries.dropdown-escape-keeps-dialog-open.body":
@@ -8378,6 +8398,7 @@ export const marketing: Catalog = {
   "volunteer.signups.closing": "Closing…",
   "volunteer.signups.closeCta": "Close opportunity",
   "volunteer.signups.reviewCta": "{count} to review",
+  "volunteer.signups.memberFallback": "A member",
 
   // ── The volunteer's own confirmed contribution (SUS-05). Sessions and hours
   // a poster confirmed, never self-declared.
@@ -11568,4 +11589,47 @@ export const marketing: Catalog = {
     "Leaving a group actually leaves it behind",
   "changelog.entries.leaving-a-group-actually-leaves-it-behind.body":
     "Leavers lose the roster and read receipts, pickers stop at the size limit, and old mentions stop arriving.",
+  "changelog.entries.co-author-credit-notice.title":
+    "Co-authors hear when you credit them",
+  "changelog.entries.co-author-credit-notice.body":
+    "A credited member gets a notice and can remove their name, and a later block drops the credit.",
+  "changelog.entries.unlinked-persona-fresh-start.title":
+    "Unlinking a persona gives it a fresh start",
+  "changelog.entries.unlinked-persona-fresh-start.body":
+    "It gets a new id, new image addresses and a new mailbox, so nothing on its page points back to you.",
+  "changelog.entries.matched-chats-keep-surnames-private.title":
+    "Go together chats keep surnames private",
+  "changelog.entries.matched-chats-keep-surnames-private.body":
+    "Members appear by first name across a matched chat, including mentions, photos and notifications.",
+  "changelog.entries.invite-link-use-limit.title":
+    "Limit how many people an invite link lets in",
+  "changelog.entries.invite-link-use-limit.body":
+    "Pick 1, 5, 25 or unlimited uses when you create or reset a group invite link.",
+  "changelog.entries.your-suggested-places.title":
+    "See the places you suggested",
+  "changelog.entries.your-suggested-places.body":
+    "Your profile lists each place you suggested and where it stands, with a quick way to send a correction.",
+  "changelog.entries.therapist-status-confirmed.title":
+    "Therapist availability shows when it was confirmed",
+  "changelog.entries.therapist-status-confirmed.body":
+    "Statuses older than 60 days read as not confirmed, and therapists can confirm theirs in one tap.",
+  "changelog.entries.housing-blocks-and-takedowns.title":
+    "Housing respects blocks and explains takedowns",
+  "changelog.entries.housing-blocks-and-takedowns.body":
+    "Blocked members see a listing as gone, and a room taken down after a report says why and how to appeal.",
+  "changelog.entries.desk-scheduling-clarity.title":
+    "The magazine desk is clear about scheduled pieces",
+  "changelog.entries.desk-scheduling-clarity.body":
+    "Editors pick translators from the team, and the desk says when a writer or the community will hear.",
+  "changelog.entries.more-in-portuguese.title":
+    "More of QueerPulse speaks Portuguese",
+  "changelog.entries.more-in-portuguese.body":
+    "Push notifications, search topic counts, clinic details and library cards now follow your language.",
+  "changelog.entries.retry-when-loading-fails.title":
+    "Retry when a page fails to load",
+  "changelog.entries.retry-when-loading-fails.body":
+    "Comments, magazine sections, the library and employer reviews offer Retry and keep what already loaded.",
+  "changelog.entries.sharper-staff-tools.title": "Sharper tools for the team",
+  "changelog.entries.sharper-staff-tools.body":
+    "Moderators see housing evidence, safety inquiries get their own queue, and guides edit section by section.",
 };

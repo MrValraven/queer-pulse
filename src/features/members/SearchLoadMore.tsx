@@ -3,7 +3,8 @@ import { Button } from "../../shared/components/ui";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { searchApi, type LiveResultType } from "./api/search.api";
-import { resultToSearchItem } from "./api/search.adapters";
+import { localizedResultToSearchItem } from "./api/search.adapters";
+import { useDescribeTopicPosts } from "./api/useSearchData";
 import { SEARCH_TAB_PAGE_SIZE, type SearchItem } from "./search.data";
 import { ResultGrid } from "./SearchResultCard";
 import styles from "./SearchLoadMore.module.css";
@@ -46,6 +47,7 @@ export function SearchLoadMore({
 }) {
   const { demoMode } = useDemoMode();
   const { t } = useTranslation();
+  const describeTopicPosts = useDescribeTopicPosts();
   const pageKey = `${type}::${query}`;
   const [paged, setPaged] = useState<PagedState>(() => emptyState(pageKey));
   const [isLoading, setIsLoading] = useState(false);
@@ -73,7 +75,9 @@ export function SearchLoadMore({
                 ...previous,
                 items: [
                   ...previous.items,
-                  ...response.results.map(resultToSearchItem),
+                  ...response.results.map(
+                    localizedResultToSearchItem(describeTopicPosts),
+                  ),
                 ],
                 hasMore: response.hasMore,
                 hasFailed: false,

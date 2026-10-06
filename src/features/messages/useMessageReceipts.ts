@@ -2,6 +2,7 @@ import { useCallback, useState } from "react";
 import { useDeliveredFrames, useReadFrames } from "../../shared/api/realtime";
 import type { ServerToClientEvents } from "../../shared/contracts/realtime";
 import type { Conversation } from "./data";
+import { useMessageViewer } from "./useMessageViewer";
 
 export interface MessageReceipts {
   /** Effective "Seen" watermark for the open thread (null in demo mode). */
@@ -21,6 +22,9 @@ export function useMessageReceipts(
 ): MessageReceipts {
   /** Live "Seen" watermark per conversation, from the counterpart's `read`
    *  frames — the max lastReadAt observed so far, keyed by conversation id. */
+  // PRD-423: in a matched Go together chat the frames name members by their
+  // per-chat key, so the member's own frames there carry one of these.
+  const { ownMemberKeys } = useMessageViewer();
   const [readWatermarks, setReadWatermarks] = useState<Record<string, string>>(
     {},
   );
@@ -40,13 +44,14 @@ export function useMessageReceipts(
   const onRead = useCallback(
     (frame: ServerToClientEvents["read"]) => {
       if (myUserId && frame.userId === myUserId) return;
+      if (frame.userId && ownMemberKeys?.has(frame.userId)) return;
       setReadWatermarks((prev) => {
         const existing = prev[frame.conversationId];
         if (existing && existing >= frame.lastReadAt) return prev; // ISO strings compare lexicographically
         return { ...prev, [frame.conversationId]: frame.lastReadAt };
       });
     },
-    [myUserId],
+    [myUserId, ownMemberKeys],
   );
   useReadFrames(onRead);
 
@@ -57,13 +62,14 @@ export function useMessageReceipts(
   const onDelivered = useCallback(
     (frame: ServerToClientEvents["message:delivered"]) => {
       if (myUserId && frame.userId === myUserId) return;
+      if (frame.userId && ownMemberKeys?.has(frame.userId)) return;
       setDeliveredWatermarks((prev) => {
         const existing = prev[frame.conversationId];
         if (existing && existing >= frame.deliveredAt) return prev; // ISO lexicographic
         return { ...prev, [frame.conversationId]: frame.deliveredAt };
       });
     },
-    [myUserId],
+    [myUserId, ownMemberKeys],
   );
   useDeliveredFrames(onDelivered);
 

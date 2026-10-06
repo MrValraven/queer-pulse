@@ -362,11 +362,13 @@
 }
 
 /* A piece with a publish date cannot change stage here: a static line takes
-   the picker's slot and says when it goes live, or that it is live. */
+   the picker's slot and says when it goes live, or that it is live. The mark
+   keeps to the first line, so a line that wraps (PRD-437's "Live since ...
+   Publish it to tell the writer.") reads as one block after it. */
 .stageLocked {
   display: flex;
   flex: 1 1 120px;
-  align-items: center;
+  align-items: flex-start;
   gap: 6px;
   min-width: 0;
   margin: 0;
@@ -375,10 +377,12 @@
   color: var(--ink-60);
 }
 
+/* Half the leading above the mark centres it on the first line. */
 .stageLockedIcon {
   flex: none;
   width: 12px;
   height: 12px;
+  margin-top: 0.15em;
 }
 
 /* Phones: a column is nearly the full width, the next one peeks in, and the

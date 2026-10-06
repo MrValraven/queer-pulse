@@ -5,6 +5,7 @@ import {
   FormField,
 } from "../../../../shared/components/ui";
 import { useToast } from "../../../../shared/components/feedback/useToast";
+import { intlLocale } from "../../../../shared/i18n/locale";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { formatDate } from "../../../../shared/lib/date";
 import { useIssueCloseDate } from "../../api/useIssueCloseDate";
@@ -45,7 +46,7 @@ export function PublishDateCard({
   onSave,
   issueNumber,
 }: PublishDateCardProps) {
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const { showToast } = useToast();
   const [draft, setDraft] = useState<string | null>(publishedOn);
   const isChanged = draft !== publishedOn;
@@ -58,7 +59,7 @@ export function PublishDateCard({
         showToast(
           closesOn
             ? t("magazine:issue.closeDate.savedToast", {
-                date: formatDate(closesOn),
+                date: formatDate(closesOn, intlLocale(language)),
               })
             : t("magazine:issue.closeDate.clearedToast"),
           "success",
@@ -75,7 +76,7 @@ export function PublishDateCard({
       <p className={styles.tiny}>
         {publishedOn
           ? t("magazine:issue.publishDate.set", {
-              date: formatDate(publishedOn),
+              date: formatDate(publishedOn, intlLocale(language)),
             })
           : t("magazine:issue.publishDate.unset")}
       </p>
@@ -134,7 +135,7 @@ function IssueCloseDateRow({
   isSaving,
   onSave,
 }: IssueCloseDateRowProps) {
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const [draft, setDraft] = useState<string | null>(closesOn);
   const [error, setError] = useState<string | null>(null);
   const isChanged = draft !== closesOn;
@@ -153,7 +154,9 @@ function IssueCloseDateRow({
       <h3>{t("magazine:issue.closeDate.heading")}</h3>
       <p className={styles.tiny}>
         {closesOn
-          ? t("magazine:issue.closeDate.set", { date: formatDate(closesOn) })
+          ? t("magazine:issue.closeDate.set", {
+              date: formatDate(closesOn, intlLocale(language)),
+            })
           : t("magazine:issue.closeDate.unset")}
       </p>
       <FormField error={error ?? undefined}>

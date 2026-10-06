@@ -220,6 +220,49 @@ export interface ReportedGroupSnapshot {
 }
 
 /**
+ * LOC-F12: the reported home as the server snapshotted it when the report was
+ * filed (`HousingSnapshotEvidence` in queerpulse-backend
+ * `reports/report-evidence.ts`, `type: 'housing-snapshot'`). The snapshot
+ * stores no photos, so the drawer shows the words and the facts.
+ */
+export interface ReportedHomeSnapshot {
+  title: string;
+  blurb: string | null;
+  /** Monthly rent in euros; null when the snapshot lacks it. */
+  rentEuros: number | null;
+  city: string | null;
+  area: string | null;
+  /** The lister's account id; null once that account was erased. */
+  listerId: string | null;
+  /** When the home was first listed (ISO). */
+  listedAt: string;
+  /** When the snapshot was taken, i.e. the report was filed (ISO). */
+  capturedAt: string;
+}
+
+/**
+ * LOC-F12: ONE room shared inside a housing group, as the server snapshotted
+ * it when the report was filed (`GroupListingSnapshotEvidence`,
+ * `type: 'group-listing-snapshot'`). This one matters most: removing a group
+ * room hard-deletes the row, so the snapshot can be all that is left of it.
+ */
+export interface ReportedGroupRoomSnapshot {
+  title: string;
+  description: string | null;
+  groupName: string | null;
+  neighbourhood: string | null;
+  /** Monthly rent in euros. */
+  priceEuros: number | null;
+  accessibilityInfo: string | null;
+  /** The poster's account id; null for an unattributed or erased poster. */
+  posterId: string | null;
+  /** When the room was shared in the group (ISO). */
+  listedAt: string;
+  /** When the snapshot was taken, i.e. the report was filed (ISO). */
+  capturedAt: string;
+}
+
+/**
  * One evidence block the drawer renders, discriminated by `kind`. A new
  * snapshot shape joins as a new member here, a parse branch in
  * `evidenceSnapshotsFrom` (`api/moderation.adapters.ts`) and a `case` in
@@ -233,6 +276,14 @@ export type ReportEvidenceSnapshot =
   | {
       kind: "group";
       group: ReportedGroupSnapshot;
+    }
+  | {
+      kind: "home";
+      home: ReportedHomeSnapshot;
+    }
+  | {
+      kind: "groupRoom";
+      room: ReportedGroupRoomSnapshot;
     };
 
 /** Real per-member counts, resolved via `admin:moderation.priorReports.*` at
@@ -804,6 +855,122 @@ export const OTHER_REPORTS: ModReport[] = [
           initials: "LR",
           tone: "coral",
           meta: "Created the listing 3 weeks ago · former staff member.",
+        },
+      ],
+    },
+  },
+  // LOC-F12: one report on a home and one on a room shared in a housing
+  // group, so demo mode shows both housing snapshot blocks in the drawer.
+  {
+    id: "r-housing-scam",
+    subjectType: "housing",
+    subjectId: "bright-room-arroios",
+    severity: "high",
+    category: "Report",
+    chips: [{ tone: "coral", labelKey: "admin:moderation.category.report" }],
+    title: "Home asks for a deposit before any viewing",
+    preview:
+      "Member says the lister wants two months' rent by bank transfer before showing the room, and stopped replying once asked for a video call.",
+    reporterName: "Marta P.",
+    reportedName: "@casa-arroios",
+    priorReports: { kind: "count", count: 1 },
+    reporterCredibility: { kind: "history", filed: 2, dismissed: 0 },
+    age: "3h",
+    risk: { tone: "coral", key: "admin:moderation.risk.high" },
+    slaDueAt: new Date(Date.now() + 90 * 60_000).toISOString(),
+    detail: {
+      contentAuthor: "@casa-arroios · home listing",
+      excerpt: "Bright double room in Arroios, bills included",
+      thread: [],
+      evidenceSnapshots: [
+        {
+          kind: "home",
+          home: {
+            title: "Bright double room in Arroios, bills included",
+            blurb:
+              "Queer-run flat, two flatmates, cat on site. Deposit of two months by transfer to hold the room, keys sent by post.",
+            rentEuros: 520,
+            city: "Lisbon",
+            area: "Arroios",
+            listerId: "8c2f4e71-3b6a-4d0e-9f15-2a7c9d4b6e10",
+            listedAt: new Date(Date.now() - 6 * 24 * 60 * 60_000).toISOString(),
+            capturedAt: new Date(Date.now() - 180 * 60_000).toISOString(),
+          },
+        },
+      ],
+      people: [
+        {
+          role: "Reporter",
+          name: "Marta P.",
+          initials: "MP",
+          tone: "jade",
+          meta: "Member since 2024 · enquired about the room.",
+        },
+        {
+          role: "Reported",
+          name: "@casa-arroios",
+          initials: "CA",
+          tone: "coral",
+          meta: "Listed 6 days ago · 1 prior report.",
+        },
+      ],
+    },
+  },
+  {
+    id: "r-group-room",
+    subjectType: "group_listing",
+    subjectId: "5d9a0c3e-7f21-4b8d-a6e4-0c1b2f3d4e5a",
+    severity: "medium",
+    category: "Discrimination",
+    chips: [
+      { tone: "amber", labelKey: "admin:moderation.category.discrimination" },
+    ],
+    title: "Room in a housing group turns away trans flatmates",
+    preview:
+      "Member says the room's poster told them in a message that the flat is for cis women only, against the group's affirming pledge.",
+    reporterName: "Leo R.",
+    reportedName: "@joana-m",
+    priorReports: { kind: "count", count: 0 },
+    reporterCredibility: { kind: "new" },
+    age: "5h",
+    risk: { tone: "amber", key: "admin:moderation.risk.medium" },
+    slaDueAt: new Date(Date.now() + 240 * 60_000).toISOString(),
+    detail: {
+      contentAuthor: "@joana-m · room in Porto Housing Circle",
+      excerpt: "Single room near Bolhão, quiet flat",
+      thread: [],
+      evidenceSnapshots: [
+        {
+          kind: "groupRoom",
+          room: {
+            title: "Single room near Bolhão, quiet flat",
+            description:
+              "Single room in a three-bedroom flat. Looking for someone tidy who works from home now and then.",
+            groupName: "Porto Housing Circle",
+            neighbourhood: "Bonfim",
+            priceEuros: 410,
+            accessibilityInfo:
+              "Second floor, stairs only. Bathroom door is 70 cm wide.",
+            posterId: "f3a81b2c-6d4e-4f07-8b9a-1c2d3e4f5a6b",
+            listedAt: new Date(Date.now() - 2 * 24 * 60 * 60_000).toISOString(),
+            capturedAt: new Date(Date.now() - 300 * 60_000).toISOString(),
+          },
+        },
+      ],
+      people: [
+        {
+          role: "Reporter",
+          name: "Leo R.",
+          initials: "LR",
+          tone: "jade",
+          meta: "Member of Porto Housing Circle · asked about the room.",
+        },
+        {
+          role: "Reported",
+          name: "@joana-m",
+          initials: "JM",
+          tone: "coral",
+          meta: "Shared the room 2 days ago · no prior reports.",
         },
       ],
     },

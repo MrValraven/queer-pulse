@@ -104,6 +104,24 @@
   font-weight: 600;
   color: var(--text-strong);
 }
+/* PRD-400 (use cap): the "Max uses" choice beside Create and inside the
+   Reset confirmation. */
+.inviteMaxUses {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 10px;
+}
+/* Inside the reset dialog the picker follows the dialog body copy. */
+.inviteResetPicker {
+  margin-top: 12px;
+}
+.inviteMaxUsesLabel {
+  font-size: var(--text-12-5);
+  font-weight: 600;
+  color: var(--ink-60);
+}
 
 .pendingInviteList {
   list-style: none;

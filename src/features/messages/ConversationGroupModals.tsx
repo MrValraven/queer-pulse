@@ -2,6 +2,7 @@ import { GroupInfoModal } from "./GroupInfoModal";
 import { GroupSeenBySheet } from "./GroupSeenBySheet";
 import type { GroupMemberPick } from "./NewGroupModal";
 import type { SeenByEntry } from "./groupReceipts";
+import type { InviteLinkMaxUses } from "./inviteLinkUses";
 import type { Conversation, GroupMemberView } from "./data";
 
 export interface ConversationGroupModalsProps {
@@ -51,8 +52,13 @@ export interface ConversationGroupModalsProps {
   /** PRD-357: the owner ends the group for everyone. */
   onDissolveGroup?: (conversationId: string) => void;
   dissolvePending?: boolean;
-  /** PRD-358: create/rotate/disable the group's revocable invite link. */
-  onCreateGroupInviteLink?: (conversationId: string) => void;
+  /** PRD-358: create/rotate/disable the group's revocable invite link.
+   *  PRD-400 (use cap): create/rotate carries the chosen max uses (null for
+   *  unlimited). */
+  onCreateGroupInviteLink?: (
+    conversationId: string,
+    maxUses: InviteLinkMaxUses,
+  ) => void;
   onDisableGroupInviteLink?: (conversationId: string) => void;
   inviteLinkPending?: boolean;
   onRevokeGroupInvite?: (conversationId: string, inviteId: string) => void;
@@ -121,8 +127,12 @@ export function ConversationGroupModals({
             onCloseGroupInfo();
           }}
           dissolvePending={dissolvePending}
-          onCreateInviteLink={() => onCreateGroupInviteLink?.(active.id)}
-          onResetInviteLink={() => onCreateGroupInviteLink?.(active.id)}
+          onCreateInviteLink={(maxUses) =>
+            onCreateGroupInviteLink?.(active.id, maxUses)
+          }
+          onResetInviteLink={(maxUses) =>
+            onCreateGroupInviteLink?.(active.id, maxUses)
+          }
           onDisableInviteLink={() => onDisableGroupInviteLink?.(active.id)}
           inviteLinkPending={inviteLinkPending}
           onRevokeInvite={(inviteId) =>

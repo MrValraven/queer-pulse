@@ -134,14 +134,15 @@ export function SubprofileEditorPage() {
 
           <div className={styles.shellWrap}>
             <div className="ed-shell">
-              {/* Keyed on the persona id so the shell's `useSubprofileMetaEditor`
-                  instance (shared between the form panes and the preview) and
-                  its `activePane`/`previewOpen` state re-initialize when the
-                  route lands on a DIFFERENT persona without a full page remount. */}
-              <SubprofileEditorShell
-                key={subprofile.id}
-                subprofile={subprofile}
-              />
+              {/* Keyed on the persona id in the route so the shell's
+                  `useSubprofileMetaEditor` instance (shared between the form
+                  panes and the preview) and its `activePane`/`previewOpen`
+                  state re-initialize when the route lands on a DIFFERENT
+                  persona without a full page remount. The route's id, so an
+                  unlink that gives this persona a fresh id mid-save (ENG-447)
+                  keeps the editor mounted until the save is done and
+                  `usePersonaRekeyRedirect` moves it to the new address. */}
+              <SubprofileEditorShell key={id} subprofile={subprofile} />
             </div>
           </div>
         </div>

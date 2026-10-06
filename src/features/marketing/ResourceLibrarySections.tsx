@@ -113,6 +113,12 @@ export function ResourceFilterBar({
 /** A single editorial guide, real backend data via `useLibraryData`. */
 export function GuideCard({ guide, index }: { guide: Guide; index: number }) {
   const { t, language } = useTranslation();
+  // The Portuguese title and description when the editor wrote them, the
+  // English ones otherwise, as `ManagedGuideBody` reads them.
+  const isPortuguese = language === "pt";
+  const title = (isPortuguese && guide.titlePt) || guide.title;
+  const description =
+    (isPortuguese && guide.descriptionPt) || guide.description;
   return (
     <FadeIn delay={Math.min(index, 8) * 60} style={{ height: "100%" }}>
       <Link to={guide.to} className={s.card} style={{ height: "100%" }}>
@@ -128,8 +134,8 @@ export function GuideCard({ guide, index }: { guide: Guide; index: number }) {
             {guide.categoryLabel}
           </span>
         </div>
-        <div className={s.name}>{guide.title}</div>
-        <div className={s.desc}>{guide.description}</div>
+        <div className={s.name}>{title}</div>
+        <div className={s.desc}>{description}</div>
         <div className={s.verified}>
           {guide.lastVerifiedAt ? (
             <>

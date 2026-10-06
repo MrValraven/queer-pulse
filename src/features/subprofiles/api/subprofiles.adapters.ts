@@ -144,6 +144,10 @@ export interface PublicSubprofileView {
   coverCrop?: CropRect;
   accent: AccentKey | null;
   availability: AvailabilityKey | null;
+  /** PRD-435: when the availability or the therapist status last changed
+   *  (ISO), for the owner bar's "Updated 3 days ago". Optional so views
+   *  built from the owner DTO (editor previews, tests) need not carry it. */
+  availabilityUpdatedAt?: string | null;
   ctaLabel: string;
   ctaUrl: string;
   socialLinks: SocialLinkDTO[];
@@ -300,6 +304,7 @@ export function publicSubprofileToView(
     coverCrop: dto.coverCrop ?? undefined,
     accent: isAccentKey(dto.accent) ? dto.accent : null,
     availability: isAvailabilityKey(dto.availability) ? dto.availability : null,
+    availabilityUpdatedAt: dto.availabilityUpdatedAt ?? null,
     ctaLabel: dto.ctaLabel ?? "",
     ctaUrl: dto.ctaUrl ?? "",
     socialLinks: dto.socialLinks,

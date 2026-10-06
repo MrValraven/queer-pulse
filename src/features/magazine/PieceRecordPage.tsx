@@ -1,6 +1,6 @@
 import { useId, useState } from "react";
 import { useParams } from "react-router-dom";
-import { FiArrowLeft, FiExternalLink } from "react-icons/fi";
+import { FiArrowLeft, FiExternalLink, FiGlobe } from "react-icons/fi";
 import { MagazineDeskShell } from "../../shared/components/layout/MagazineDeskShell";
 import { Button, EmptyState, SkeletonLine } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
@@ -50,6 +50,10 @@ function PieceRecordActions({
   const { t } = useTranslation();
   const publishReasonId = useId();
   const hasOpenGateItems = openGateCount > 0;
+  // PRD-437: a piece live past its scheduled instant but still short of
+  // Published offers both. Publish settles it and tells the writer.
+  const isDraft =
+    !action.isPublished && !action.isScheduled && !action.isAlreadyLive;
 
   return (
     <div className={styles.right}>
@@ -75,7 +79,21 @@ function PieceRecordActions({
           {t("magazine:piece.publish.viewLive")}
         </Button>
       )}
-      {action.isPublished || action.isScheduled ? (
+      {(isDraft || action.isAlreadyLive) && (
+        <Button
+          variant="plum"
+          size="sm"
+          // `aria-disabled` keeps the button in the tab order, so a screen
+          // reader can reach the reason below; the server is the gate that
+          // actually counts.
+          aria-disabled={hasOpenGateItems || action.isPending}
+          aria-describedby={hasOpenGateItems ? publishReasonId : undefined}
+          onClick={action.askToPublish}
+        >
+          {t("magazine:piece.header.publish")}
+        </Button>
+      )}
+      {!isDraft && (
         <Button
           variant="ghost"
           size="sm"
@@ -85,19 +103,6 @@ function PieceRecordActions({
           {action.isScheduled
             ? t("magazine:piece.header.unschedule")
             : t("magazine:piece.publish.unpublish")}
-        </Button>
-      ) : (
-        <Button
-          variant="plum"
-          size="sm"
-          // `aria-disabled`, never `disabled`: the button keeps its place in
-          // the tab order so a screen reader can reach the reason below, and
-          // the server is the gate that actually counts.
-          aria-disabled={hasOpenGateItems || action.isPending}
-          aria-describedby={hasOpenGateItems ? publishReasonId : undefined}
-          onClick={action.askToPublish}
-        >
-          {t("magazine:piece.header.publish")}
         </Button>
       )}
       {hasOpenGateItems && (
@@ -242,11 +247,17 @@ export function PieceRecordPage() {
             <FiArrowLeft aria-hidden />
           </Button>
           <div className={styles.title}>
-            <b>{pieceRecord.title}</b>
+            <b title={pieceRecord.title}>{pieceRecord.title}</b>
             <span className={styles.titleSub}>
               {formatLabel} · {pieceRecord.section} · {issueLabel} ·{" "}
               {pieceRecord.byline}
             </span>
+            {publishAction.isAlreadyLive && (
+              <span className={styles.liveChip}>
+                <FiGlobe aria-hidden />
+                {t("magazine:piece.header.liveWriterNotTold")}
+              </span>
+            )}
           </div>
           <StagePill stage={displayStage} />
           <PieceRecordActions

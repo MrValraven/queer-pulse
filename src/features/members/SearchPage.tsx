@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { FiSearch } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
@@ -69,6 +69,36 @@ export function SearchPage() {
     setQuery("");
     searchInputRef.current?.focus();
   };
+  // PRD-329b: the results switch tabs too ("Search everything" in the zero
+  // results state, "See all" under a capped group), and the pressed button
+  // unmounts with the view it sat in, which dropped focus to the page body.
+  // Focus moves to the chosen pill in the strip once it renders as pressed.
+  // The strip stays mounted across the switch, while the results heading
+  // gives way to skeletons as the new tab loads. A screen reader announces
+  // the pill's name and its pressed state, so the member hears where they
+  // landed, and the next Tab press enters the results.
+  const tabStripRef = useRef<HTMLDivElement>(null);
+  const pendingTabFocusRef = useRef<ResultType | "all" | null>(null);
+  const selectTabFromResults = (nextTab: ResultType | "all") => {
+    pendingTabFocusRef.current = nextTab;
+    setTab(nextTab);
+  };
+  useEffect(() => {
+    const pendingTab = pendingTabFocusRef.current;
+    if (pendingTab === null) return;
+    pendingTabFocusRef.current = null;
+    const tabButton = tabStripRef.current?.querySelector<HTMLButtonElement>(
+      `[data-tab-id="${pendingTab}"]`,
+    );
+    if (!tabButton) {
+      // The strip is still loading or failed: the search bar is the next
+      // stable control above the results.
+      searchInputRef.current?.focus();
+      return;
+    }
+    tabButton.focus();
+    tabButton.scrollIntoView({ inline: "nearest", block: "nearest" });
+  });
 
   return (
     <PageShell>
@@ -109,7 +139,7 @@ export function SearchPage() {
         <div className="wrap">
           {!signInRequired && (
             <>
-              <div className={styles.tabs}>
+              <div className={styles.tabs} ref={tabStripRef}>
                 {isLoadingTabs ? (
                   <SkeletonLine width={320} height={34} />
                 ) : (
@@ -117,6 +147,8 @@ export function SearchPage() {
                     <button
                       key={tabOption.id}
                       type="button"
+                      data-tab-id={tabOption.id}
+                      aria-pressed={tab === tabOption.id}
                       className={[
                         styles.tab,
                         tab === tabOption.id && styles.tabActive,
@@ -162,7 +194,7 @@ export function SearchPage() {
             tab={tab}
             setQuery={setQuery}
             onClearQuery={clearQuery}
-            onSelectTab={setTab}
+            onSelectTab={selectTabFromResults}
             signInRequired={signInRequired}
             loading={showLoading}
             hasFailed={hasSearchFailed}

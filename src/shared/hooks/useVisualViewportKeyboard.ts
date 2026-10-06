@@ -37,6 +37,14 @@ import { useEffect } from "react";
  * returns before touching a style. Writes only happen when the overlap really
  * moves. Every recompute is also coalesced through `requestAnimationFrame`, so
  * at most one write lands per frame either way.
+ *
+ * The same pass publishes `--layout-viewport-height` (`window.innerHeight`).
+ * The messages `.app` reads it instead of `100svh`: iOS standalone web apps can
+ * report viewport units that fall short of the real viewport, and the keyboard
+ * overlap above is measured against `innerHeight`, so both sides of the
+ * subtraction (`height - overlap`) must use the same measure. With that, `.app`'s
+ * bottom edge lands exactly on the keyboard's top edge. A `window` `resize`
+ * listener covers engines that change `innerHeight` with no visualViewport event.
  */
 export function useVisualViewportKeyboard(): void {
   useEffect(() => {
@@ -46,9 +54,18 @@ export function useVisualViewportKeyboard(): void {
     const documentElement = document.documentElement;
     let pendingAnimationFrameId: number | null = null;
     let lastWrittenKeyboardOverlapPx = -1;
+    let lastWrittenLayoutViewportHeightPx = -1;
 
-    const applyKeyboardInset = () => {
+    const applyViewportVariables = () => {
       pendingAnimationFrameId = null;
+      const layoutViewportHeightPx = window.innerHeight;
+      if (layoutViewportHeightPx !== lastWrittenLayoutViewportHeightPx) {
+        lastWrittenLayoutViewportHeightPx = layoutViewportHeightPx;
+        documentElement.style.setProperty(
+          "--layout-viewport-height",
+          `${layoutViewportHeightPx}px`,
+        );
+      }
       const keyboardOverlapPx = Math.max(
         0,
         window.innerHeight - visualViewport.height - visualViewport.offsetTop,
@@ -61,22 +78,32 @@ export function useVisualViewportKeyboard(): void {
       );
     };
 
-    const scheduleKeyboardInsetUpdate = () => {
+    const scheduleViewportVariablesUpdate = () => {
       if (pendingAnimationFrameId !== null) return;
-      pendingAnimationFrameId =
-        window.requestAnimationFrame(applyKeyboardInset);
+      pendingAnimationFrameId = window.requestAnimationFrame(
+        applyViewportVariables,
+      );
     };
 
-    applyKeyboardInset();
-    visualViewport.addEventListener("resize", scheduleKeyboardInsetUpdate);
-    visualViewport.addEventListener("scroll", scheduleKeyboardInsetUpdate);
+    applyViewportVariables();
+    visualViewport.addEventListener("resize", scheduleViewportVariablesUpdate);
+    visualViewport.addEventListener("scroll", scheduleViewportVariablesUpdate);
+    window.addEventListener("resize", scheduleViewportVariablesUpdate);
     return () => {
-      visualViewport.removeEventListener("resize", scheduleKeyboardInsetUpdate);
-      visualViewport.removeEventListener("scroll", scheduleKeyboardInsetUpdate);
+      visualViewport.removeEventListener(
+        "resize",
+        scheduleViewportVariablesUpdate,
+      );
+      visualViewport.removeEventListener(
+        "scroll",
+        scheduleViewportVariablesUpdate,
+      );
+      window.removeEventListener("resize", scheduleViewportVariablesUpdate);
       if (pendingAnimationFrameId !== null) {
         window.cancelAnimationFrame(pendingAnimationFrameId);
       }
       documentElement.style.removeProperty("--keyboard-inset");
+      documentElement.style.removeProperty("--layout-viewport-height");
     };
   }, []);
 }

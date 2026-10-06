@@ -128,7 +128,10 @@ function groupBlocks(section: GuideSection): BlockGroup[] {
   return groups;
 }
 
-function GuideBlocks({
+/** One section's blocks without its heading or section frame. Exported for a
+ *  hardcoded page that drops one editor-written section into its own layout
+ *  (`SexualHealthTabs`). */
+export function GuideBlocks({
   section,
   isStatic,
 }: {

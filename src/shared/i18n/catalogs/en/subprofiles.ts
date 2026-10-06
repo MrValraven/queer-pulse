@@ -2406,6 +2406,8 @@ export const subprofiles: Catalog = {
   "therapist.side.contact.body.openNoCall":
     "Send {name} a message with a question, or to find a time for a first session.",
   "therapist.side.similar.wait": "Waitlist",
+  "therapist.side.similar.updated": "Updated {when}",
+  "therapist.side.similar.unconfirmed": "Not confirmed",
 
   // Therapist profile (g2b)
   "therapist.hero.facts.feesFrom": "from {amount}€",
@@ -2704,6 +2706,11 @@ export const subprofiles: Catalog = {
   "therapist.owner.capacityShort.open": "Accepting",
   "therapist.owner.capacityShort.closed": "Not taking",
   "therapist.owner.capacityShort.wait": "Waitlist",
+  "therapist.owner.statusUpdated": "Updated {when}",
+  "therapist.owner.statusNotConfirmed": "Not confirmed yet",
+  "therapist.owner.statusStaleHint":
+    "Confirm it so members know it still holds.",
+  "therapist.owner.confirmStatus": "Confirm status",
   // Therapist profile (m2)
   "therapist.side.edit.waitNote": "Edit waitlist note",
   "therapist.side.edit.email": "Edit email address",

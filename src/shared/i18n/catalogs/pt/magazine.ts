@@ -1282,6 +1282,13 @@ export const magazine: Catalog = {
   "desk.views.deleteBody":
     "A vista desaparece de vez. As tuas peças e a redação ficam como estão.",
   "desk.views.deleteConfirm": "Apagar vista",
+  "desk.goLive.liveSinceTellWriter":
+    "No site desde {date}. Publica-a para avisar quem escreveu.",
+  "desk.goLive.writerHearsOnPublish":
+    "Quem escreveu recebe o aviso quando alguém da redação a publicar, depois de a peça estar no site.",
+  "desk.goLive.liveSinceShort": "No site desde {date}",
+  "desk.goLive.liveSinceCloseCare":
+    "No site desde {date}. Resolve os itens de cuidado e depois publica-a para avisar quem escreveu.",
 
   // ── DeskView ─────────────────────────────────────────────────────────────
 
@@ -1311,6 +1318,7 @@ export const magazine: Catalog = {
   "piece.header.notFoundTitle": "Não conseguimos abrir esta peça",
   "piece.header.notFoundDescription":
     "Pode ter sido removida, ou a ligação está desatualizada.",
+  "piece.header.liveWriterNotTold": "No site, falta avisar quem escreveu",
 
   // ── PieceTabsNav ─────────────────────────────────────────────────────────
   "piece.tabs.ariaLabel": "Secções da ficha da peça",
@@ -1823,7 +1831,7 @@ export const magazine: Catalog = {
   "write.header.backAria": "Voltar à ficha da peça",
   "write.header.untitled": "Rascunho sem título",
   "write.header.unsectioned": "Sem secção",
-  "write.header.subtitle": "Artigo · {section} · {issue} · {saved}",
+  "write.header.subtitle": "Artigo · {section} · {issue}",
   "write.header.viewLabel": "Vista",
   "write.header.sendOn": "Enviar",
   "write.header.sendOnTo": "Enviar para {stage}",
@@ -2077,9 +2085,9 @@ export const magazine: Catalog = {
   "issue.ship.checklistHeading": "Lista de lançamento",
   "issue.ship.modalTitle": "Lançar a edição {number}?",
   "issue.ship.modalSubWithDate":
-    "As peças publicam-se todas juntas às 09:00 de {date}, pela ordem que definiste. O digest sai no mesmo momento.",
+    "Edição com data de {date}. As peças ficam disponíveis todas juntas, pela ordem que definiste.",
   "issue.ship.modalSubNoDate":
-    "As peças publicam-se todas juntas às 09:00, pela ordem que definiste. O digest sai no mesmo momento.",
+    "Ainda sem data, por isso lançar marca a edição com a data de hoje. As peças ficam disponíveis todas juntas, pela ordem que definiste.",
   "issue.ship.notYet": "Ainda não",
   "issue.ship.shipIt": "Lançar",
   "issue.ship.warnNote":
@@ -2102,6 +2110,14 @@ export const magazine: Catalog = {
     "O último lançamento reteve {count} peça",
   "issue.ship.heldLastTimeHeading_other":
     "O último lançamento reteve {count} peças",
+  "issue.ship.quietNoteOnDate":
+    "Se lançares agora, a comunidade não recebe aviso, e nenhum chega mais tarde. Para a anunciar, lança-a a {date} a partir das 09:00, hora de Lisboa.",
+  "issue.ship.quietNoteToday":
+    "Se lançares agora, a comunidade não recebe aviso, e nenhum chega mais tarde. Para a anunciar, lança-a hoje a partir das 09:00, hora de Lisboa.",
+  "issue.ship.quietLead": "Sai em silêncio.",
+  "issue.ship.shippedQuietlyLead": "Já saiu em silêncio.",
+  "issue.ship.shippedQuietlyBody":
+    "Um novo lançamento só anuncia esta edição se puser uma peça disponível pela primeira vez.",
 
   // ── Issue production toasts ──────────────────────────────────────────────
   // O `issuePanelSaved` renomeia de propósito o antigo "Digest guardado": a
@@ -2228,16 +2244,19 @@ export const magazine: Catalog = {
   "issue.digest.cancel": "Cancelar",
   "issue.digest.edit": "Editar",
   "issue.digest.previewPanel": "Ver a página de quem lê",
-  "issue.digest.announceScheduled": "A anunciar com a edição",
   "issue.digest.announceOffToast":
     "Publicar esta edição deixa de avisar a comunidade.",
   "issue.digest.alreadyAnnounced": "Anunciado à comunidade a {date}",
   "issue.digest.announceWithIssue": "Anunciar com a edição",
   "issue.digest.announceOnToast":
-    "A comunidade recebe um aviso quando esta edição sair.",
+    "A comunidade recebe um aviso se lançares esta edição a partir das 09:00 (hora de Lisboa) do dia da edição.",
   "issue.digest.socialHeading": "Redes sociais",
   "issue.digest.socialAltHint":
     "O texto alternativo é copiado da imagem, por isso está sempre preenchido.",
+  "issue.digest.announceRuleHint":
+    "O aviso sai quando lanças a edição a partir das 09:00 (hora de Lisboa) do dia da edição. Um lançamento antes disso sai em silêncio, e o aviso não chega mais tarde por si só.",
+  "issue.digest.announceNewPieceLive":
+    "Anunciar se uma peça nova ficar disponível",
 
   // ── ArchiveTab ───────────────────────────────────────────────────────────
   "issue.archive.heading": "Arquivo",
@@ -2530,6 +2549,9 @@ export const magazine: Catalog = {
   // ── Editor de artigos: anulação da remoção de bloco ──────────────────────
   "write.block.removedToast": "Bloco removido.",
   "write.block.undoRemove": "Anular",
+  "write.scheduledSave.heading": "Esta alteração não foi gravada",
+  "write.scheduledSave.body":
+    "Esta peça tem publicação agendada, por isso tem de continuar pronta para sair. Repõe o que falta, ou carrega em Despublicar lá em cima para a tirar da agenda e gravar esta alteração.",
 
   // ── Comentários: confirmação de eliminação (FE-CNT-11) ───────────────────
   "comments.deleteConfirm.title": "Eliminar este comentário?",
@@ -2612,12 +2634,18 @@ export const magazine: Catalog = {
   "lifecycle.languages.localePlaceholder": "Escolhe um idioma",
   "lifecycle.languages.translatorLabel": "Quem vai traduzir",
   "lifecycle.languages.translatorHelper":
-    "O nome tal como deve aparecer nos créditos. Podes deixar em branco e creditar depois.",
+    "A pessoa recebe o aviso assim que abrires a tradução. Podes deixar em branco e escolher alguém mais tarde, na redação.",
   "lifecycle.languages.open": "Abrir tradução",
   "lifecycle.languages.opened": "Tradução aberta em {slug}.",
   "lifecycle.languages.openFailed": "Não foi possível abrir. Tenta outra vez.",
   "lifecycle.languages.allDone":
     "Este texto já existe em todos os idiomas em que publicamos.",
+  "lifecycle.languages.translatorNone": "Ainda sem ninguém",
+  "lifecycle.languages.translatorsUnavailable":
+    "A lista de membros ainda não carregou. Podes abrir já a tradução e escolher quem traduz mais tarde, na redação.",
+  "lifecycle.languages.bylineLabel": "Crédito",
+  "lifecycle.languages.bylineHelper":
+    "O nome tal como deve aparecer nos créditos. Deixa em branco para usar o nome de membro.",
 
   // ── Reader: the decks index (PRD-105) ───────────────────────────────────
   "decks.metaTitle": "Decks interativos",
@@ -2671,6 +2699,10 @@ export const magazine: Catalog = {
     "Diz-nos o que está errado com este comentário.",
   "comments.report.confirmBodyUnknown":
     "Obrigade. Um moderador vai rever este comentário.",
+  "comments.loadError.title": "Não conseguimos carregar os comentários.",
+  "comments.loadError.body":
+    "A conversa continua aqui. Tenta outra vez daqui a um instante.",
+  "comments.headingNeutral": "Conversas",
 
   // ── Submit a story: the real open issue (PRD-106) ───────────────────────
   "submitStory.issue.nameUndated": "Aberta a propostas",

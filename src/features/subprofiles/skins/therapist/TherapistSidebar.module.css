@@ -237,35 +237,67 @@
 
 .similarText {
   display: flex;
+  flex: 1;
   flex-direction: column;
   gap: 2px;
   min-width: 0;
 }
 
+/* The name with its status chip at the end, so the credentials below get
+   the text column's full width. */
+.similarNameRow {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+}
+
 .similarName {
+  min-width: 0;
   font-size: var(--text-14);
   font-weight: 600;
   color: var(--text-strong);
+  overflow-wrap: anywhere;
 }
 
+/* Up to two lines of credentials; a longer list ends in an ellipsis. */
 .similarLine {
-  font-size: var(--text-12);
-  color: var(--ink-40);
+  display: -webkit-box;
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  font-size: var(--text-12);
+  line-height: 1.45;
+  color: var(--ink-40);
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
 }
 
 a.similarRow:hover .similarName {
   color: var(--accent-ink);
 }
 
+/* The status chip at the end of the name line. Its "Updated 3 days ago"
+   line sits under the credentials. */
 .similarStatus {
-  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   flex: none;
+  margin-inline-start: auto;
   font-size: var(--text-11);
   font-weight: 700;
   white-space: nowrap;
+}
+
+.similarStatusIcon {
+  flex: none;
+  width: 12px;
+  height: 12px;
+}
+
+.similarUpdated {
+  font-size: var(--text-11);
+  color: var(--ink-40);
 }
 
 .statusOpen {
@@ -274,6 +306,13 @@ a.similarRow:hover .similarName {
 
 .statusFull {
   color: var(--accent-ink);
+}
+
+/* A status nobody has confirmed recently: a notch above the quiet meta
+   lines, with its alert icon. */
+.statusStale {
+  font-weight: 600;
+  color: var(--ink-60);
 }
 
 /* ── Report / share rows ── */

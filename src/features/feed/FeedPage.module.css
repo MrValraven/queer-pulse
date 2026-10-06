@@ -92,6 +92,18 @@
   flex-direction: column;
   gap: var(--feed-grid-gap);
 }
+/* The masonry's inline `top`/`left`/`width` must land in the frame they are
+   written. Reduced motion (base.css) forces every element's
+   `transition-duration` to 0.01ms, and a wrapper's `transition-property`
+   is still the initial `all`, so without this rule each position change
+   became a 0.01ms transition: the frame it was written in painted the old
+   spot, and a card that grew overlapped the one below for a frame. The
+   wrappers have no transitions of their own; a card class that sets one
+   (the loading skeleton's `.card`) comes later in this file and keeps it.
+   The release glide runs through the Web Animations API, unaffected. */
+.grid > * {
+  transition-property: none;
+}
 /* The feed's true end (FeedPager marks its footer `data-feed-end`): the
    pager row is empty and zero-height, so in the one-column flex layout it
    pulls the grid gap back and adds no room under the last card. Once the

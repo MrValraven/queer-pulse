@@ -5,6 +5,7 @@ import { routes } from "../../app/routeMap";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
 import { ManagedGuide } from "./ManagedGuide";
+import { useManagedGuide } from "./api/useManagedGuide";
 
 /**
  * The slug-addressable guide renderer (`/resources/guide/:slug`).
@@ -17,11 +18,30 @@ import { ManagedGuide } from "./ManagedGuide";
  * itself, which looked like a broken click for no stated reason. Landing on
  * the guide's own address, with an explicit "no page for this yet" state when
  * there is genuinely nothing to show, makes the miss visible.
+ *
+ * A guide with no managed body whose row names a hand-written route (the
+ * sexual health guide, say) redirects there, so the slug address opens the
+ * real page.
  */
 export function ResourceGuidePage() {
   const { slug } = useParams<{ slug: string }>();
   if (!slug) return <Navigate to={routes.guideIndex} replace />;
-  return <ManagedGuide slug={slug} fallback={<GuideHasNoPage />} />;
+  return <ManagedGuide slug={slug} fallback={<GuideFallback slug={slug} />} />;
+}
+
+/** What renders when the guide has no managed body: its hand-written page
+ *  when the row names one, the "no page for this yet" state otherwise.
+ *  `ManagedGuide` has already resolved the lookup by now, so this reads the
+ *  cached row. */
+function GuideFallback({ slug }: { slug: string }) {
+  const { guide } = useManagedGuide(slug);
+  const routePath = guide?.routePath;
+  // A routePath under `/resources/guide/` points back at this renderer, so
+  // following it would loop.
+  if (routePath && !routePath.startsWith(`${routes.resourceGuide}/`)) {
+    return <Navigate to={routePath} replace />;
+  }
+  return <GuideHasNoPage />;
 }
 
 /** The honest end of the line: this slug has no managed body and no

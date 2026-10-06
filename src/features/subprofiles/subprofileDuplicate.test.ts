@@ -150,7 +150,7 @@ describe("applyDuplicatePlan", () => {
     replaceAffiliations: { mutateAsync: ReturnType<typeof vi.fn> };
   } {
     return {
-      update: { mutateAsync: vi.fn().mockResolvedValue({}) },
+      update: { mutateAsync: vi.fn().mockResolvedValue({ id: "new-id" }) },
       replaceSocials: { mutateAsync: vi.fn().mockResolvedValue({}) },
       replaceSection: { mutateAsync: vi.fn().mockResolvedValue({}) },
       replaceAffiliations: { mutateAsync: vi.fn().mockResolvedValue({}) },
@@ -189,6 +189,7 @@ describe("applyDuplicatePlan", () => {
     await expect(
       applyDuplicatePlan("new-id", plan, mutations),
     ).resolves.toEqual({
+      subprofileId: "new-id",
       skippedAffiliationCount: 0,
       hasAffiliationSaveFailed: false,
     });
@@ -212,6 +213,7 @@ describe("applyDuplicatePlan", () => {
     expect(listAffiliationOptions).toHaveBeenCalledWith("new-id");
     expect(mutations.replaceAffiliations.mutateAsync).not.toHaveBeenCalled();
     expect(outcome).toEqual({
+      subprofileId: "new-id",
       skippedAffiliationCount: 1,
       hasAffiliationSaveFailed: false,
     });
@@ -262,6 +264,7 @@ describe("applyDuplicatePlan", () => {
       ],
     });
     expect(outcome).toEqual({
+      subprofileId: "new-id",
       skippedAffiliationCount: 1,
       hasAffiliationSaveFailed: false,
     });
@@ -284,6 +287,7 @@ describe("applyDuplicatePlan", () => {
       items: plan.affiliations,
     });
     expect(outcome).toEqual({
+      subprofileId: "new-id",
       skippedAffiliationCount: 0,
       hasAffiliationSaveFailed: false,
     });
@@ -307,9 +311,47 @@ describe("applyDuplicatePlan", () => {
 
     expect(mutations.replaceAffiliations.mutateAsync).toHaveBeenCalledTimes(1);
     expect(outcome).toEqual({
+      subprofileId: "new-id",
       skippedAffiliationCount: 0,
       hasAffiliationSaveFailed: true,
     });
+  });
+
+  // ENG-447: copying an unlinked persona unlinks the draft, and an unlink
+  // answers under a fresh id. The old one no longer resolves, so every step
+  // after the meta step writes to the new one.
+  it("writes every step after an unlink to the fresh id it answers with", async () => {
+    // The source persona is unlinked, so the copied meta unlinks the draft.
+    const plan = buildDuplicatePlan(makeSourceView(), "full");
+    expect(plan.meta?.linkVisibility).toBe("unlinked");
+    const mutations = makeMutations();
+    mutations.update.mutateAsync.mockResolvedValueOnce({ id: "fresh-id" });
+    const listAffiliationOptions = vi
+      .fn()
+      .mockRejectedValue(new Error("network down"));
+
+    const outcome = await applyDuplicatePlan("new-id", plan, {
+      ...mutations,
+      listAffiliationOptions,
+    });
+
+    expect(mutations.update.mutateAsync).toHaveBeenCalledWith({
+      id: "new-id",
+      dto: plan.meta,
+    });
+    expect(mutations.replaceSocials.mutateAsync).toHaveBeenCalledWith({
+      id: "fresh-id",
+      items: plan.socialLinks,
+    });
+    expect(mutations.replaceSection.mutateAsync).toHaveBeenCalledWith(
+      expect.objectContaining({ id: "fresh-id" }),
+    );
+    expect(listAffiliationOptions).toHaveBeenCalledWith("fresh-id");
+    expect(mutations.replaceAffiliations.mutateAsync).toHaveBeenCalledWith({
+      id: "fresh-id",
+      items: plan.affiliations,
+    });
+    expect(outcome.subprofileId).toBe("fresh-id");
   });
 
   it("skips the meta + affiliations steps entirely for a content-only plan", async () => {

@@ -821,6 +821,10 @@ export interface SubprofilePublicDTO {
   coverCrop?: CropRect | null;
   accent: string | null;
   availability: string | null;
+  /** PRD-435: when `availability` or the therapist status last changed (ISO
+   *  string). Null when the persona never stated either; optional so demo
+   *  fixtures and older payloads keep compiling. */
+  availabilityUpdatedAt?: string | null;
   ctaLabel: string | null;
   ctaUrl: string | null;
   socialLinks: SocialLinkDTO[];
@@ -880,6 +884,8 @@ export interface SubprofileCardDTO {
   tagline: string | null;
   accent: string | null;
   availability: string | null;
+  /** PRD-435: see `SubprofilePublicDTO.availabilityUpdatedAt`. */
+  availabilityUpdatedAt?: string | null;
   socialCount: number;
   tags: string[];
   // Personas redesign Phase 4 (design plan Decision §3): batched from the
@@ -922,6 +928,10 @@ export interface UpdateSubprofileDTO {
   position?: number;
   /** ENG-451 save precondition: the `editVersion` this save was built on. */
   expectedEditVersion?: number;
+  /** PRD-435, request-only: the owner confirms the availability and the
+   *  therapist status as they stand, so the server stamps
+   *  `availabilityUpdatedAt` even when neither changes. */
+  confirmAvailability?: boolean;
 }
 
 /** ENG-451: the precondition the three full-replace PUTs carry beside their

@@ -6,7 +6,7 @@
   padding: clamp(84px, 10vw, 128px) 0;
 }
 
-/* Warm glow, upper-right — decorative only */
+/* Warm glow, upper-right, decorative only */
 .manifesto::before {
   content: "";
   position: absolute;
@@ -76,6 +76,19 @@
 }
 .bodyLink:hover {
   text-decoration-thickness: 2px;
+}
+/* "Where we stand" opens a dialog, so it is a real <button>; this strips the
+   UA button chrome so it still reads as a link inside the sentence, with the
+   colour and underline coming from .bodyLink. */
+.bodyLinkButton {
+  appearance: none;
+  background: none;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  font: inherit;
+  text-align: inherit;
+  cursor: pointer;
 }
 .highlight {
   margin-top: 30px;

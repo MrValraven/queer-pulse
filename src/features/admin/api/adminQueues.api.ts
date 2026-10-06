@@ -10,10 +10,11 @@ import { apiGet } from "../../../shared/api/client";
  * "overdue" once somebody happened to open `/admin/dsar`.
  *
  * The wire vocabulary is the same `queue` string the bell carries in
- * `payload.queue`: the 28 keys of the backend's `ADMIN_QUEUE_REGISTRY` plus
- * three that live outside it because each already has a notification type of
- * its own (`reports`, `ban_evasion_escalations`,
- * `community_owner_review_requests`).
+ * `payload.queue`: the 31 keys of the backend's `ADMIN_QUEUE_REGISTRY` plus
+ * four that live outside it: three because each already has a notification
+ * type of its own (`reports`, `ban_evasion_escalations`,
+ * `community_owner_review_requests`), and `forum_thread_reviews`, which
+ * announces nothing to staff.
  */
 
 export interface AdminQueueSummaryDTO {
@@ -27,9 +28,9 @@ export interface AdminQueueSummaryDTO {
    * The frontend path this queue is worked on, e.g. `/admin/dsar`.
    *
    * ALWAYS use this rather than resolving the key through the frontend's own
-   * `ADMIN_QUEUE_ROUTES`: that map mirrors the registry's 28 keys only, so the
-   * three extra keys would resolve to `undefined` and lose their deep link.
-   * For the 28 they overlap on, the two strings are identical.
+   * `ADMIN_QUEUE_ROUTES`: that map mirrors the registry's 31 keys only, so the
+   * four extra keys would resolve to `undefined` and lose their deep link.
+   * For the 31 they overlap on, the two strings are identical.
    */
   route: string;
   /**
@@ -53,8 +54,8 @@ export interface AdminQueueSummaryDTO {
    *
    * `null` and `0` are DIFFERENT ANSWERS and must not render alike. `null`
    * means this queue has no deadline at all, so calling it "on time" would
-   * claim a promise the platform never made; 11 of the 31 queues have a real
-   * clock and the other 20 return null. `0` means the queue has a deadline and
+   * claim a promise the platform never made; 11 of the 35 queues have a real
+   * clock and the other 24 return null. `0` means the queue has a deadline and
    * nothing has missed it.
    */
   overdueCount: number | null;
@@ -85,7 +86,7 @@ export interface AdminQueuesDTO {
    * ACCESS FILTERING HAPPENS HERE, IN THE BODY. A queue the caller cannot work
    * is ABSENT from this array rather than present with nulls, because a row of
    * nulls would still disclose that the queue exists and is tracked. An admin
-   * sees 31, a moderator 11, a member holding one grant as few as 3. So never
+   * sees 35, a moderator 11, a member holding one grant as few as 3. So never
    * assume a fixed set and never render a placeholder for a queue that did not
    * come back. `totals` is scoped to the same set, so the header figures and
    * the sum of the visible rows always agree.

@@ -560,7 +560,6 @@
   line-height: 1.5;
   color: var(--ink-60);
 }
-
 /* ── Local copies of shared keyframes ──
    CSS Modules rewrites every animation NAME it sees here into a file-scoped
    hash, including names whose @keyframes lives in global effects.css. The

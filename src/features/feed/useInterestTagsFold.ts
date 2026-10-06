@@ -15,7 +15,7 @@ const FOLD_MAX_MS = 620;
  *  `transitionend`, and without it the row would stay pinned mid-fold. */
 const SETTLE_GRACE_MS = 300;
 
-function foldDurationMs(distancePx: number) {
+export function foldDurationMs(distancePx: number) {
   return Math.round(
     Math.min(FOLD_MAX_MS, Math.max(FOLD_MIN_MS, distancePx * FOLD_MS_PER_PX)),
   );

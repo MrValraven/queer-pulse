@@ -7,6 +7,8 @@ import {
 import { routes } from "../../../../app/routeMap";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { ArticleDraftConflictBanner } from "./ArticleDraftConflictBanner";
+import { ArticleScheduledSaveBanner } from "./ArticleScheduledSaveBanner";
+import { readPublishGateFailure } from "./articlePublishAction";
 import { savedLabelKey } from "./articleSavedLabel";
 import type { EditorMode } from "./editorMode";
 import type { PublishStatus } from "./PublishRail";
@@ -27,6 +29,10 @@ export interface ArticleEditorHeaderProps {
   isSaveError: boolean;
   isDirty: boolean;
   hasSaveConflict: boolean;
+  /** The failed save's error, read for the one refusal retrying cannot fix:
+   *  a scheduled article's save that would reopen its readiness check
+   *  (ENG-460, 400 `magazine_publish_not_ready`). */
+  saveError?: Error | null;
   /** Retries the last failed autosave. A failed save leaves that content only
    *  in the browser until something else changes. */
   onRetrySave: () => void;
@@ -78,6 +84,7 @@ export function ArticleEditorHeader({
   isSaveError,
   isDirty,
   hasSaveConflict,
+  saveError,
   onRetrySave,
   isReloadingDraft,
   onReloadDraft,
@@ -96,6 +103,8 @@ export function ArticleEditorHeader({
   const savedLabel = t(
     savedLabelKey({ isSavePending, isSaveError, isDirty, hasSaveConflict }),
   );
+  const scheduledSaveRefusal =
+    isSaveError && !hasSaveConflict ? readPublishGateFailure(saveError) : null;
   const publishLabel =
     liveStatus !== "draft"
       ? t("magazine:write.header.unpublish")
@@ -116,20 +125,29 @@ export function ArticleEditorHeader({
         <div className={styles.title}>
           <b>{title.trim() || t("magazine:write.header.untitled")}</b>
           <span className={styles.titleSub}>
-            {t("magazine:write.header.subtitle", {
-              section: section || t("magazine:write.header.unsectioned"),
-              issue: issueLabel,
-              saved: savedLabel,
-            })}
+            <span className={styles.titleMeta}>
+              {t("magazine:write.header.subtitle", {
+                section: section || t("magazine:write.header.unsectioned"),
+                issue: issueLabel,
+              })}
+            </span>
+            {/* Its own span so the ellipsis takes the meta first. The leading
+                no-break space survives the flex item's line-start trim. */}
+            <span className={styles.titleSaved}>
+              {"\u00a0· "}
+              {savedLabel}
+            </span>
           </span>
         </div>
-        {isSaveError && (
+        {/* A refused scheduled save fails the same way on every retry, so
+            its banner owns the way forward (put it back, or Unpublish). */}
+        {isSaveError && !scheduledSaveRefusal && (
           <Button variant="ghost" size="sm" onClick={onRetrySave}>
             <FiRefreshCw aria-hidden />
             {t("magazine:write.header.retrySave")}
           </Button>
         )}
-        <Tag>
+        <Tag className={styles.statusTag}>
           {liveStatus === "published"
             ? t("magazine:write.header.statusPublished")
             : liveStatus === "scheduled"
@@ -173,6 +191,11 @@ export function ArticleEditorHeader({
         <ArticleDraftConflictBanner
           onReload={onReloadDraft}
           isReloading={isReloadingDraft}
+        />
+      )}
+      {scheduledSaveRefusal && (
+        <ArticleScheduledSaveBanner
+          openGateItems={scheduledSaveRefusal.openGateItems}
         />
       )}
     </>

@@ -63,6 +63,7 @@ function MapCardSlot({
 
   return (
     <div
+      className={s.cardSlot}
       ref={(node) => {
         if (node) cardRefs.current.set(placeId, node);
         else cardRefs.current.delete(placeId);

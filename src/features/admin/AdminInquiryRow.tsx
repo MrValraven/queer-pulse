@@ -1,10 +1,17 @@
+import { Link } from "react-router-dom";
+import { FiAlertTriangle } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat, type Formatters } from "../../shared/i18n/format";
-import { AdminChip } from "./ui";
+import { AdminChip, type AdminTone } from "./ui";
 import { AdminWaitingChip } from "./AdminSubmissionQueue";
 import { ADMIN_SUBMISSION_STATUS_TONE } from "./adminSubmissionMeta";
-import type { AdminInquiryDTO } from "./api/adminInquiries.api";
+import { businessPath, routes } from "../../app/routeMap";
+import type {
+  AdminInquiryDTO,
+  InquiryKind,
+  InquiryListingDTO,
+} from "./api/adminInquiries.api";
 import styles from "./AdminSubmissionList.module.css";
 
 function shortDate(fmt: Formatters, iso: string): string {
@@ -13,6 +20,54 @@ function shortDate(fmt: Formatters, iso: string): string {
     month: "short",
     year: "numeric",
   });
+}
+
+/** Each kind's chip tone. A `Record`, so a new kind cannot compile without
+ *  one. */
+const INQUIRY_KIND_TONE: Record<InquiryKind, AdminTone> = {
+  contact: "plum",
+  partner: "violet",
+  listing_correction: "ghost",
+};
+
+/**
+ * PRD-434. The listing a correction is about. A listing whose public page
+ * opens links there; one that is not public (in review, sent back, hidden by
+ * its owner) links to the staff editor instead. A ref no listing has any more
+ * is printed as it arrived, with a note that the listing is gone.
+ */
+function InquiryListingLine({
+  listingRef,
+  listing,
+}: {
+  listingRef: string;
+  listing: InquiryListingDTO | null;
+}) {
+  const { t } = useTranslation();
+  if (!listing) {
+    return (
+      <div className={styles.rowMeta}>
+        {t("admin:adminIntakes.row.listingGone", { ref: listingRef })}
+      </div>
+    );
+  }
+  const destination = listing.isPublic
+    ? businessPath(listing.slug)
+    : routes.adminListingEdit.replace(":ref", listing.ref);
+  return (
+    <div className={styles.rowMeta}>
+      {t("admin:adminIntakes.row.listingLabel")}{" "}
+      <Link
+        className={`${styles.rowCrossLink} ${styles.rowListingLink}`}
+        to={destination}
+      >
+        {t("admin:adminIntakes.row.listingLink", {
+          name: listing.name,
+          ref: listing.ref,
+        })}
+      </Link>
+    </div>
+  );
 }
 
 /**
@@ -43,7 +98,15 @@ export function AdminInquiryRow({
       <div className={styles.rowMain}>
         <div className={styles.rowTop}>
           <span className={styles.rowName}>{inquiry.name}</span>
-          <AdminChip tone={inquiry.kind === "partner" ? "violet" : "plum"}>
+          {/* RES-F6. The word carries the meaning; the icon and the tone
+              only reinforce it. */}
+          {inquiry.isPriority && (
+            <AdminChip tone="danger">
+              <FiAlertTriangle aria-hidden />{" "}
+              {t("admin:adminIntakes.row.priority")}
+            </AdminChip>
+          )}
+          <AdminChip tone={INQUIRY_KIND_TONE[inquiry.kind] ?? "plum"}>
             {t(`admin:adminIntakes.inquiryKind.${inquiry.kind}`)}
           </AdminChip>
           <AdminChip
@@ -65,6 +128,12 @@ export function AdminInquiryRow({
         )}
         {inquiry.subject && (
           <div className={styles.rowSubject}>{inquiry.subject}</div>
+        )}
+        {inquiry.listingRef && (
+          <InquiryListingLine
+            listingRef={inquiry.listingRef}
+            listing={inquiry.listing}
+          />
         )}
         <p className={styles.rowNote}>{inquiry.body}</p>
 

@@ -42,7 +42,9 @@ export interface GroupListing {
   priceEuros: number;
   accessibilityInfo: string;
   /** Who posted the room. Absent for an anonymous reader, an older backend,
-   *  or a room whose poster's account is gone; no poster means no "Message". */
+   *  a room whose poster's account is gone, or a room posted through the old
+   *  anonymous form (LOC-F2, decided on the backend); no poster means no
+   *  "Message". */
   poster?: GroupListingPoster;
   /** True on the reader's own room, which offers no "Message" to themselves. */
   isOwnListing?: boolean;
@@ -151,6 +153,19 @@ export const VETTED_GROUPS: VettedGroup[] = [
           initials: "ID",
           tint: "jade",
         },
+      },
+      // Posted through the old anonymous form (LOC-F2, `isPosterNamed` false on
+      // the backend), so the live read carries no poster for it: the card
+      // names nobody and offers Report only.
+      {
+        id: "l-4",
+        title: "Box room in a quiet flat, long-term",
+        description:
+          "A small, bright room in a flat shared by two of us who work from home. Long-term only, and we keep the evenings calm.",
+        neighbourhood: "Penha de França, Lisbon",
+        priceEuros: 360,
+        accessibilityInfo:
+          "Ground floor, one low step at the door. Bathroom is step-free.",
       },
     ],
   },

@@ -105,17 +105,20 @@ export interface UpdateAdminFinancesBody {
   note?: string;
 }
 
-/** A partner as the editor sends it: always the admin's own `scope` words. */
-export interface FinancePartnerEdit {
-  name: string;
-  amount: number;
-  scope: string;
-}
+/** A partner as the editor sends it: the admin's own `scope` words, or, for a
+ *  partner whose translated restriction the admin left untouched, its
+ *  `scopeKey` alone (the backend keeps the key). */
+export type FinancePartnerEdit =
+  | { name: string; amount: number; scope: string; scopeKey?: never }
+  | { name: string; amount: number; scopeKey: string; scope?: never };
 
 /** One audit-trail row: who changed which figure, from what, to what, and why. */
 export interface AdminFinanceChangeDTO {
   id: string;
   actor: MemberRefDTO | null;
+  /** The report the change was made on; null on rows from before it was
+   *  recorded. Optional until every backend sends it. */
+  reportId?: string | null;
   field: string;
   oldValue: string | null;
   newValue: string | null;

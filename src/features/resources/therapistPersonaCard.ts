@@ -36,6 +36,9 @@ export interface TherapistCardVM {
   creds: string | null;
   acceptingNew: boolean;
   availability: TherapistCardCapacity | null;
+  /** When the availability or the therapist status last changed (ISO), so
+   *  the card can say how fresh it is. null = not known. */
+  availabilityUpdatedAt: string | null;
   specs: string[];
   langs: string[];
   note: string | null;
@@ -83,6 +86,7 @@ export function vmFromPublic(dto: SubprofilePublicDTO): TherapistCardVM {
     creds: dto.tagline,
     acceptingNew: dto.availability === "open_to_collabs",
     availability: capacityOf(dto.availability),
+    availabilityUpdatedAt: dto.availabilityUpdatedAt ?? null,
     specs: specialisms.map((item) => item.title).slice(0, 4),
     langs,
     note: dto.bio,
@@ -107,6 +111,7 @@ export function vmFromCard(dto: SubprofileCardDTO): TherapistCardVM {
     creds: dto.tagline,
     acceptingNew: dto.availability === "open_to_collabs",
     availability: capacityOf(dto.availability),
+    availabilityUpdatedAt: dto.availabilityUpdatedAt ?? null,
     specs: dto.tags.slice(0, 4),
     langs: [],
     note: null,

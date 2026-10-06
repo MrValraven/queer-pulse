@@ -634,6 +634,14 @@ export interface ConversationResponse {
    *  rules on this flag. False/absent for DMs, every other group, and an
    *  older response. */
   isGoTogetherChat?: boolean;
+  /** GROUP only (Go together, PRD-423): THIS caller's own per-chat member
+   *  key in a matched chat. Inside one, every member reference the server
+   *  sends (`AuthorSummary.handle`, a roster row's `id` and `handle`, a
+   *  system event's `actorHandle`/`targetHandle`, the `userId` of a
+   *  `typing`/`read`/`message:delivered`/`reaction` frame) is a member's
+   *  opaque per-chat key, and this is the caller's own. Absent everywhere
+   *  else. */
+  viewerMemberKey?: string;
   /** GROUP only, THIS caller (DES-227): why the composer is severed:
    *  `"left"` (voluntary), `"removed"` (an owner/admin removed them), or
    *  `"dissolved"` (the owner ended the group). Null while the caller is an
@@ -647,6 +655,13 @@ export interface ConversationResponse {
    *  from its last issue or rotation. Surfaced under the same rule as
    *  `inviteToken`; null whenever that is. */
   inviteTokenExpiresAt?: string | null;
+  /** GROUP only (PRD-400, use cap): how many people may join with the
+   *  invite-link token (1, 5 or 25), null for unlimited. Surfaced under the
+   *  same rule as `inviteToken`; null whenever that is. */
+  inviteTokenMaxUses?: number | null;
+  /** GROUP only (PRD-400, use cap): how many more people can still join with
+   *  the token; 0 once used up, null for an unlimited link. Same rule. */
+  inviteTokenUsesLeft?: number | null;
   /** GROUP only: whether THIS caller may create/rotate/disable the invite
    *  link, gated on being owner/admin with the group active and not
    *  dissolved. Absent/false for DMs and a member who has left. */
@@ -721,6 +736,10 @@ export interface MessageSearchHit {
   /** Mirrors `MessageResponse.attachment` for this hit's message, null for a
    *  plain-text hit. */
   attachment: MessageResponse["attachment"];
+  /** PRD-423: whether the signed-in member sent this hit, present only for a
+   *  hit in a matched Go together chat, whose sender handle is a per-chat
+   *  key. Absent everywhere else. */
+  isSentByViewer?: boolean;
 }
 
 /** Per-conversation grouping metadata for search hits: the counterpart (null for

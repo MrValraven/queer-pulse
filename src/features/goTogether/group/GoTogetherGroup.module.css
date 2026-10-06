@@ -69,7 +69,7 @@
 
 /* Leave keeps the shared ghost Button's shape, states and 44px target, and
    takes the danger colour on top, so it reads as the destructive choice
-   below "Share plans". --danger flips in dark mode (--danger-ink does not). The row prefix
+   below "Share plans". --danger and --danger-ink both flip in dark mode. The row prefix
    and :not(:disabled) out-rank the ghost variant's own colour rules, dark
    mode's included, whatever order the two modules load in. */
 .leaveRow .leaveButton:not(:disabled) {

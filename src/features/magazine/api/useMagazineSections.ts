@@ -2,6 +2,10 @@ import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { DEMO_SECTIONS } from "../magazineSections.data";
 import { getSections } from "./magazine.api";
+import {
+  hasFailedWithoutData,
+  isRetryingFailedRead,
+} from "../../admin/queryLoadFailure";
 
 export interface MagazineSectionTile {
   id: string;
@@ -77,6 +81,11 @@ export function useMagazineSections() {
     sections: query.data ?? [],
     isLoading: query.isLoading,
     isError: query.isError,
+    /** ENG-501b: the read failed and nothing ever loaded, including while a
+     *  Retry of that failure runs (react-query clears `isError` then). */
+    hasFailedWithoutData: hasFailedWithoutData(query),
+    /** A Retry of that failed read is in flight. */
+    isRetrying: isRetryingFailedRead(query),
     refetch: () => void query.refetch(),
   };
 }

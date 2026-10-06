@@ -28,11 +28,17 @@ export interface NoteDraft {
   body: string;
 }
 
-/** `amount` stays the raw typed string until it parses. */
+/** `amount` stays the raw typed string until it parses. A partner whose
+ *  restriction is a translated `scopeKey` keeps that key, with the words it
+ *  showed in, so an untouched restriction goes back as the key. */
 export interface PartnerDraft {
   name: string;
   amount: string;
   scope: string;
+  scopeKey?: string;
+  /** `scope` as first shown for the key; the key survives while `scope`
+   *  still reads exactly this. */
+  scopeKeyWords?: string;
 }
 
 /** Both blank means "no reserve to show". */
@@ -59,11 +65,20 @@ export function toReportDrafts(
   return {
     stats: latest.stats.map((stat) => ({ ...stat })),
     eventNotes: latest.eventNotes.map((note) => ({ ...note })),
-    partners: latest.partners.map((partner) => ({
-      name: partner.name,
-      amount: String(partner.amount),
-      scope: resolveScope(partner),
-    })),
+    partners: latest.partners.map((partner) => {
+      const scope = resolveScope(partner);
+      // Only a keyed partner with no typed words carries its key: a typed
+      // `scope` already wins on every page.
+      return partner.scopeKey && partner.scope === undefined
+        ? {
+            name: partner.name,
+            amount: String(partner.amount),
+            scope,
+            scopeKey: partner.scopeKey,
+            scopeKeyWords: scope,
+          }
+        : { name: partner.name, amount: String(partner.amount), scope };
+    }),
     reserve: latest.reserve
       ? {
           current: String(latest.reserve.current),
@@ -113,6 +128,41 @@ export function reportBlockedReason(
   return null;
 }
 
+/**
+ * A draft partner as the editor sends it. A partner whose translated
+ * restriction the admin left as shown goes back as its `scopeKey`, so every
+ * reader keeps seeing it in their own language; edited words go back as
+ * `scope` and the key is dropped.
+ */
+function toPartnerEdit(partner: PartnerDraft): FinancePartnerEdit {
+  const name = partner.name.trim();
+  const amount = parsedAmount(partner.amount) ?? 0;
+  const scope = partner.scope.trim();
+  if (partner.scopeKey && scope === partner.scopeKeyWords?.trim()) {
+    return { name, amount, scopeKey: partner.scopeKey };
+  }
+  return { name, amount, scope };
+}
+
+/** A stored partner in the same shape, so an untouched list compares equal. */
+function storedPartnerEdit(
+  partner: FinancePartnerDTO,
+  resolveScope: ScopeResolver,
+): FinancePartnerEdit {
+  if (partner.scopeKey && partner.scope === undefined) {
+    return {
+      name: partner.name,
+      amount: partner.amount,
+      scopeKey: partner.scopeKey,
+    };
+  }
+  return {
+    name: partner.name,
+    amount: partner.amount,
+    scope: resolveScope(partner),
+  };
+}
+
 /** Only the sections that changed. Empty when nothing did. Call it only when
  *  {@link reportBlockedReason} is null. */
 export function buildReportBody(
@@ -136,16 +186,10 @@ export function buildReportBody(
   }));
   if (!isSame(eventNotes, latest.eventNotes)) body.eventNotes = eventNotes;
 
-  const partners: FinancePartnerEdit[] = drafts.partners.map((partner) => ({
-    name: partner.name.trim(),
-    amount: parsedAmount(partner.amount) ?? 0,
-    scope: partner.scope.trim(),
-  }));
-  const storedPartners = latest.partners.map((partner) => ({
-    name: partner.name,
-    amount: partner.amount,
-    scope: resolveScope(partner),
-  }));
+  const partners = drafts.partners.map(toPartnerEdit);
+  const storedPartners = latest.partners.map((partner) =>
+    storedPartnerEdit(partner, resolveScope),
+  );
   if (!isSame(partners, storedPartners)) body.partners = partners;
 
   const current = parsedAmount(drafts.reserve.current);

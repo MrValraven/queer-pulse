@@ -9,7 +9,9 @@ import type {
   Ratification,
   ReportDetail,
   ReportEvidenceSnapshot,
+  ReportedGroupRoomSnapshot,
   ReportedGroupSnapshot,
+  ReportedHomeSnapshot,
   ReportedMessageSnapshot,
   ReportedPhoto,
   ReporterCredibility,
@@ -312,7 +314,9 @@ function stringOrNull(value: unknown): string | null {
  *
  * Insertion point for another snapshot kind: a `kind: "group"` entry
  * (`GroupSnapshotEvidence`, discriminated on `kind` rather than `type`) parses
- * here into its own `ReportEvidenceSnapshot` member.
+ * here into its own `ReportEvidenceSnapshot` member. LOC-F12: the housing
+ * snapshots (`housing-snapshot` for a home, `group-listing-snapshot` for a
+ * room shared in a housing group) parse here too.
  */
 export function evidenceSnapshotsFrom(
   evidence: unknown[] | undefined,
@@ -330,8 +334,70 @@ export function evidenceSnapshotsFrom(
       const group = reportedGroupFrom(candidate);
       if (group) snapshots.push({ kind: "group", group });
     }
+    if (candidate.type === "housing-snapshot") {
+      const home = reportedHomeFrom(candidate);
+      if (home) snapshots.push({ kind: "home", home });
+    }
+    if (candidate.type === "group-listing-snapshot") {
+      const room = reportedGroupRoomFrom(candidate);
+      if (room) snapshots.push({ kind: "groupRoom", room });
+    }
   }
   return snapshots;
+}
+
+function numberOrNull(value: unknown): number | null {
+  return typeof value === "number" && Number.isFinite(value) ? value : null;
+}
+
+/** A timestamp string the drawer can format: a non-string or an unparseable
+ *  one would render "Invalid Date" in the snapshot block. */
+function isParseableTimestamp(value: unknown): value is string {
+  return typeof value === "string" && !Number.isNaN(Date.parse(value));
+}
+
+/** One `housing-snapshot` entry (`HousingSnapshotEvidence`), or null when the
+ *  fields the block keys on (title and both timestamps) are missing, or a
+ *  timestamp does not parse. */
+function reportedHomeFrom(
+  candidate: Record<string, unknown>,
+): ReportedHomeSnapshot | null {
+  if (typeof candidate.title !== "string" || !candidate.title) return null;
+  if (!isParseableTimestamp(candidate.listedAt)) return null;
+  if (!isParseableTimestamp(candidate.snapshotAt)) return null;
+  return {
+    title: candidate.title,
+    blurb: stringOrNull(candidate.blurb),
+    rentEuros: numberOrNull(candidate.rentEuros),
+    city: stringOrNull(candidate.city),
+    area: stringOrNull(candidate.area),
+    listerId: stringOrNull(candidate.listerId),
+    listedAt: candidate.listedAt,
+    capturedAt: candidate.snapshotAt,
+  };
+}
+
+/** One `group-listing-snapshot` entry (`GroupListingSnapshotEvidence`), or
+ *  null when the fields the block keys on are missing (or a timestamp does
+ *  not parse). Every other field
+ *  reads null when absent, so a malformed one never crashes the drawer. */
+function reportedGroupRoomFrom(
+  candidate: Record<string, unknown>,
+): ReportedGroupRoomSnapshot | null {
+  if (typeof candidate.title !== "string" || !candidate.title) return null;
+  if (!isParseableTimestamp(candidate.listedAt)) return null;
+  if (!isParseableTimestamp(candidate.snapshotAt)) return null;
+  return {
+    title: candidate.title,
+    description: stringOrNull(candidate.description),
+    groupName: stringOrNull(candidate.groupName),
+    neighbourhood: stringOrNull(candidate.neighbourhood),
+    priceEuros: numberOrNull(candidate.priceEuros),
+    accessibilityInfo: stringOrNull(candidate.accessibilityInfo),
+    posterId: stringOrNull(candidate.posterId),
+    listedAt: candidate.listedAt,
+    capturedAt: candidate.snapshotAt,
+  };
 }
 
 /** One `GroupSnapshotEvidence` entry (PRD-356), or null when its required

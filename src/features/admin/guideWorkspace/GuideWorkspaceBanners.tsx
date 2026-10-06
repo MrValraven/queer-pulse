@@ -1,4 +1,4 @@
-import { FiAlertTriangle, FiRotateCcw } from "react-icons/fi";
+import { FiAlertTriangle, FiInfo, FiRotateCcw } from "react-icons/fi";
 import { Button } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { formatGuideDateTime, formatGuideTime } from "./guideFormat";
@@ -39,6 +39,33 @@ export function GuideRecoveryBanner({
         <Button variant="primary" size="sm" onClick={onRestore}>
           {t("admin:guideWorkspace.recovery.restoreCta")}
         </Button>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * For a section-composed guide (sexual health): its page stays, and each
+ * section replaces the tab its anchor names.
+ */
+export function GuideComposedPageHint({
+  anchors,
+}: {
+  anchors: readonly string[];
+}) {
+  const { t } = useTranslation();
+  return (
+    <div className={styles.banner}>
+      <FiInfo aria-hidden className={styles.bannerIcon} />
+      <div className={styles.bannerText}>
+        <p className={styles.bannerTitle}>
+          {t("admin:guideWorkspace.composedPage.title", {
+            anchors: anchors.join(", "),
+          })}
+        </p>
+        <p className={styles.bannerDetail}>
+          {t("admin:guideWorkspace.composedPage.guidesDetail")}
+        </p>
       </div>
     </div>
   );

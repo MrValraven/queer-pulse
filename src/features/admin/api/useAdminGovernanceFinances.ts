@@ -159,11 +159,25 @@ function isEnteredByPeople(sources: AdminFinanceLatest["sources"]): boolean {
   return SCALAR_KEYS.every((key) => sources[key] !== "seeded");
 }
 
+/** Mirrors the backend's ledger `isFigureChanged`: an amount that moved, or a
+ *  row appended. A label, note or on/off switch is words. */
+function hasLedgerFigureEdit(
+  lines: AdminFinLine[],
+  edits: UpdateAdminFinancesBody["income"],
+): boolean {
+  return (edits ?? []).some(
+    (edit) =>
+      edit.index >= lines.length ||
+      (edit.amount !== undefined && edit.amount !== lines[edit.index]?.amount),
+  );
+}
+
 /**
  * Applies an edit body to a cached response — the demo mode's source of truth
  * (live mode replaces the whole payload from the server). Flips each changed
  * scalar's provenance to `manual`, recomputes `surplus` when a total moves, and
- * stamps the editor.
+ * stamps the editor only when a figure moved, as the backend does: a save that
+ * only touches words leaves the "figures entered on" date alone.
  */
 export function applyFinanceEdits(
   current: AdminFinanceResponseDTO,
@@ -178,7 +192,9 @@ export function applyFinanceEdits(
     ...latest,
     sources: { ...latest.sources },
   };
-  let touched = false;
+  let isFigureTouched =
+    hasLedgerFigureEdit(latest.income, body.income) ||
+    hasLedgerFigureEdit(latest.expense, body.expense);
 
   for (const key of SCALAR_KEYS) {
     const value = body[key];
@@ -188,17 +204,13 @@ export function applyFinanceEdits(
     ) {
       next[key] = value;
       next.sources[key] = "manual";
-      touched = true;
+      isFigureTouched = true;
     }
   }
 
-  if (body.income) {
-    next.income = applyLedgerEdits(latest.income, body.income);
-    touched = true;
-  }
+  if (body.income) next.income = applyLedgerEdits(latest.income, body.income);
   if (body.expense) {
     next.expense = applyLedgerEdits(latest.expense, body.expense);
-    touched = true;
   }
   if (body.incomeTotal !== undefined || body.expenseTotal !== undefined) {
     next.surplus = (next.incomeTotal ?? 0) - (next.expenseTotal ?? 0);
@@ -207,17 +219,9 @@ export function applyFinanceEdits(
   if (body.eventNotes) next.eventNotes = body.eventNotes;
   if (body.partners) next.partners = body.partners;
   if (body.reserve !== undefined) next.reserve = body.reserve;
-  if (
-    body.stats ||
-    body.eventNotes ||
-    body.partners ||
-    body.reserve !== undefined
-  ) {
-    touched = true;
-  }
   next.isPublic = isEnteredByPeople(next.sources);
 
-  if (touched) {
+  if (isFigureTouched) {
     next.editor = editor;
     next.editedAt = editedAt;
   }

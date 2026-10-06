@@ -2,22 +2,16 @@ import { useState } from "react";
 import { PageShell } from "../../shared/components/layout";
 import { routes } from "../../app/routeMap";
 import { requestInvitePath } from "../auth/api/joinRequestSource";
-import {
-  Button,
-  EmptyState,
-  FadeIn,
-  LoadErrorState,
-  Outro,
-} from "../../shared/components/ui";
+import { Button, FadeIn, Outro } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
-import { FiArrowRight, FiShield } from "react-icons/fi";
+import { FiArrowRight } from "react-icons/fi";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { COMPANIES, HOW, type Company } from "./employerReviews.data";
 import { EmployerReviewCard } from "./EmployerReviewCard";
 import { EmployerReviewSkeleton } from "./EmployerReviewSkeleton";
-import { EmployerGrid } from "./EmployerGrid";
+import { EmployerReviewsLiveList } from "./EmployerReviewsLiveList";
 import { EmployerVerifyBox, EmployerWriteBox } from "./EmployerReviewsSections";
 import { WriteReviewModal, type SubmittedReview } from "./WriteReviewModal";
 import { LiveWriteReviewModal } from "./LiveWriteReviewModal";
@@ -37,9 +31,6 @@ export function EmployerReviewsPage() {
     demoMode ? COMPANIES : [],
   );
   const liveEmployers = useCompanies();
-  // ENG-501: a failed "Load more" also sets `isError`; the grid keeps its rows.
-  const hasNothingLoadedError =
-    liveEmployers.isError && liveEmployers.items.length === 0;
   // null = closed; string = open, pre-selecting that company; '' = open, no preselect.
   const [writeFor, setWriteFor] = useState<string | null>(null);
 
@@ -147,36 +138,11 @@ export function EmployerReviewsPage() {
                     </FadeIn>
                   ))}
             </div>
-          ) : hasNothingLoadedError ? (
-            // The employer grid is this section's whole content, so a failed
-            // fetch says so instead of "no employers reviewed yet" (DES-22).
-            <LoadErrorState
-              title={t("economy:employerReviews.loadError.title")}
-              description={t("economy:employerReviews.loadError.description")}
-              onRetry={liveEmployers.refetch}
-            />
-          ) : liveEmployers.items.length === 0 ? (
-            <EmptyState
-              icon={<FiShield />}
-              title={t("economy:employerReviews.emptyLive.title")}
-              description={t("economy:employerReviews.emptyLive.description")}
-              action={{
-                label: (
-                  <>
-                    {t("economy:employerReviews.recent.writeCta")}{" "}
-                    <FiArrowRight aria-hidden />
-                  </>
-                ),
-                onClick: () => setWriteFor(""),
-              }}
-            />
           ) : (
-            <EmployerGrid
-              employers={liveEmployers.items}
-              hasNextPage={liveEmployers.hasNextPage}
-              fetchNextPage={liveEmployers.fetchNextPage}
-              isFetchingNextPage={liveEmployers.isFetchingNextPage}
-              isFetchNextPageError={liveEmployers.isFetchNextPageError}
+            // Loading, failed, empty and loaded states live in the list.
+            <EmployerReviewsLiveList
+              liveEmployers={liveEmployers}
+              onWrite={() => setWriteFor("")}
             />
           )}
 

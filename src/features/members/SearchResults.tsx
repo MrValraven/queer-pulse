@@ -340,8 +340,11 @@ export function SearchResults({
   /** Empties the query and hands focus back to the search bar: the zero
    *  results state's first way out (PRD-329). */
   onClearQuery: () => void;
-  /** Switches the active tab — wired to the "see all in [category]" links in
-   *  the "all" view once a type is at its per-type cap (DISC-10). */
+  /** Switches the active tab: wired to the "see all in [category]" links in
+   *  the "all" view once a type is at its per-type cap (DISC-10), and to the
+   *  zero results state's "Search everything". Both buttons unmount with the
+   *  switch, so the page moves focus to the chosen pill in the tab strip
+   *  (PRD-329b). */
   onSelectTab: (type: ResultType | "all") => void;
   signInRequired: boolean;
   loading: boolean;

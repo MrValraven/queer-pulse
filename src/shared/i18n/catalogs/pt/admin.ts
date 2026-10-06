@@ -1733,6 +1733,7 @@ export const admin: Catalog = {
 
   "adminIntakes.inquiryKind.contact": "Contacto",
   "adminIntakes.inquiryKind.partner": "Parceria",
+  "adminIntakes.inquiryKind.listing_correction": "Correção de anúncio",
   "adminIntakes.inquiryStatus.new": "À espera",
   "adminIntakes.inquiryStatus.handled": "Tratada",
 
@@ -1748,6 +1749,10 @@ export const admin: Catalog = {
   "adminIntakes.row.handledBy": "Tratada a {date} por {name}",
   "adminIntakes.row.handledNoOne":
     "Tratada a {date}. Não ficou registado quem a tratou.",
+  "adminIntakes.row.priority": "Segurança: ler primeiro",
+  "adminIntakes.row.listingLabel": "Anúncio:",
+  "adminIntakes.row.listingLink": "{name} ({ref})",
+  "adminIntakes.row.listingGone": "Anúncio {ref}, que já não está no diretório",
 
   "adminIntakes.confidential.body":
     "Chegou uma preocupação de governação. O conteúdo fica na página de preocupações, onde pode ser tratado por inteiro.",
@@ -5608,6 +5613,9 @@ export const admin: Catalog = {
   "guideWorkspace.section.moveDown": "Mover secção para baixo",
   "guideWorkspace.section.remove": "Remover secção",
   "guideWorkspace.section.removedToast": "Secção removida.",
+  "guideWorkspace.section.unreadAnchor":
+    "A página só lê secções com as âncoras {anchors}, por isso quem lê não vai ver esta ({anchor}).",
+  "guideWorkspace.section.changeAnchor": "Mudar a âncora",
   "guideWorkspace.translation.referenceLabel": "Versão em inglês desta secção",
   "guideWorkspace.translation.englishEyebrow": "Inglês",
   "guideWorkspace.translation.noEnglishMatch":
@@ -5617,6 +5625,8 @@ export const admin: Catalog = {
     "Quem lê em português vê a versão em inglês até existir uma secção em português.",
   "guideWorkspace.preview.empty": "Ainda não há nada para pré-visualizar.",
   "guideWorkspace.preview.editSection": "Editar esta secção",
+  "guideWorkspace.preview.composedPageNotice":
+    "Este painel mostra só as secções; Pré-visualizar, na lista de guias, mostra-as dentro da página.",
   "guideWorkspace.issue.titleRequired": "Adiciona um título.",
   "guideWorkspace.issue.titleTooLong":
     "Mantém o título abaixo de 300 caracteres.",
@@ -5641,6 +5651,10 @@ export const admin: Catalog = {
   "guideWorkspace.issue.tooManyBlocks": "Uma secção pode ter até 60 blocos.",
   "guideWorkspace.issue.blockTooLong":
     "Este bloco passa o limite de 4000 caracteres.",
+  "guideWorkspace.composedPage.title":
+    "Este guia mantém a sua própria página com separadores. Cada secção substitui o separador com o nome da sua âncora: {anchors}. Os separadores sem secção mantêm o texto original.",
+  "guideWorkspace.composedPage.guidesDetail":
+    'Uma secção "guides" substitui os cartões dos guias e as respetivas avaliações.',
 
   // ── AdminHousingListingsPage — consola de revisão de habitação (LOC-01) ──
   "housingListings.title": "Revisão de <em>habitação.</em>",
@@ -6298,6 +6312,7 @@ export const admin: Catalog = {
     "Pedidos de revisão de dono",
   "moderationHealth.queue.forum_thread_reviews":
     "Conversas do fórum à espera de revisão",
+  "moderationHealth.queue.safety_inquiries": "Mensagens de segurança",
   "adminForumReview.title": "Revisão do <em>fórum</em>",
   "adminForumReview.header.eyebrow": "Fórum",
   "adminForumReview.header.title": "Conversas à espera de <em>leitura</em>",
@@ -6829,6 +6844,28 @@ export const admin: Catalog = {
   "moderation.reportDrawer.groupEvidence.title": "Grupo reportado",
   "moderation.reportDrawer.groupEvidence.memberCountLabel": "Membros",
   "moderation.reportDrawer.groupEvidence.capturedLabel": "Captado",
+  "moderation.reportDrawer.homeEvidence.title":
+    "Casa denunciada, tal como estava no momento da denúncia",
+  "moderation.reportDrawer.homeEvidence.locationLabel": "Localização",
+  "moderation.reportDrawer.homeEvidence.listerLabel": "Conta de quem anunciou",
+  "moderation.reportDrawer.groupRoomEvidence.title":
+    "Quarto denunciado, tal como estava no momento da denúncia",
+  "moderation.reportDrawer.groupRoomEvidence.groupLabel": "Grupo de habitação",
+  "moderation.reportDrawer.groupRoomEvidence.neighbourhoodLabel": "Bairro",
+  "moderation.reportDrawer.groupRoomEvidence.accessibilityLabel":
+    "Acessibilidade",
+  "moderation.reportDrawer.groupRoomEvidence.posterLabel":
+    "Conta de quem publicou",
+  "moderation.reportDrawer.housingEvidence.rentLabel": "Renda mensal",
+  "moderation.reportDrawer.housingEvidence.listedLabel": "Publicação",
+  "moderation.reportDrawer.housingEvidence.capturedLabel": "Captado",
+  "moderation.reportDrawer.housingEvidence.noAccount": "Sem conta registada",
+  "moderation.reportDrawer.housingEvidence.copyAccountId":
+    "Copiar o ID da conta",
+  "moderation.reportDrawer.housingEvidence.accountIdCopied":
+    "ID da conta copiado",
+  "moderation.reportDrawer.housingEvidence.copyFailed":
+    "Não foi possível copiar o ID da conta. Seleciona-o e copia-o à mão.",
 
   // ── PRD-282, the staff triage console (`AdminQueuesPage`) ──────────────
   // The three "null" cells below are three different sentences on purpose and

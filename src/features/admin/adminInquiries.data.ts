@@ -5,12 +5,66 @@ import type { AdminInquiryDTO } from "./api/adminInquiries.api";
  * messages standing in for what `/about/contact` collects. Never surfaces in
  * live mode — the hook only reads this when `demoMode` is on.
  *
- * Covers both kinds (a plain contact message and a partnership one, which
- * carries an organisation), both statuses, a message with no subject, and a
- * handled row with no recorded handler (rows handled before ACQ-03 shipped
- * were never backfilled).
+ * Covers every kind (a plain contact message, a partnership one, which
+ * carries an organisation, and listing corrections, one whose listing resolves
+ * and one whose listing is gone), both statuses, a waiting safety concern
+ * (RES-F6, which the hook sorts first, as the server does), a message with no
+ * subject, and a handled row with no recorded handler (rows handled before
+ * ACQ-03 shipped were never backfilled).
  */
 export const ADMIN_INQUIRIES: AdminInquiryDTO[] = [
+  {
+    id: "inquiry-demo-6",
+    kind: "contact",
+    name: "Rui Matos",
+    email: "rui@example.com",
+    subject: "Safety concern",
+    body: "Someone from last week's walking group keeps messaging me from a new account after I blocked them. I do not feel safe going on Saturday.",
+    status: "new",
+    isPriority: true,
+    listingRef: null,
+    listing: null,
+    createdAt: "2026-08-24T07:50:00.000Z",
+    handledAt: null,
+    handledBy: null,
+  },
+  {
+    id: "inquiry-demo-7",
+    kind: "listing_correction",
+    name: "Inês Calado",
+    email: "ines@example.com",
+    subject: "Correction to a directory listing",
+    body: "The café closes at 18:00 on Sundays now, and the step-free entrance moved round the side.",
+    status: "new",
+    isPriority: false,
+    listingRef: "QPL-2026-0007",
+    listing: {
+      ref: "QPL-2026-0007",
+      name: "Café Mouraria Velha",
+      slug: "cafe-mouraria-velha",
+      isPublic: true,
+    },
+    createdAt: "2026-08-22T16:05:00.000Z",
+    handledAt: null,
+    handledBy: null,
+  },
+  {
+    id: "inquiry-demo-8",
+    kind: "listing_correction",
+    name: "Tomás Leal",
+    email: "tomas@example.com",
+    subject: "Correction to a directory listing",
+    body: "This bookshop shut in July. The owners said they would let you know but I am not sure they did.",
+    // The listing was deleted after the correction arrived: the ref stays, and
+    // the row says the listing is gone.
+    status: "handled",
+    isPriority: false,
+    listingRef: "QPL-2026-0031",
+    listing: null,
+    createdAt: "2026-07-29T12:40:00.000Z",
+    handledAt: "2026-07-30T09:15:00.000Z",
+    handledBy: { id: "admin-1", name: "Mira Lopes" },
+  },
   {
     id: "inquiry-demo-1",
     kind: "contact",
@@ -19,6 +73,9 @@ export const ADMIN_INQUIRIES: AdminInquiryDTO[] = [
     subject: "Locked out after changing my email",
     body: "I changed my email in settings, then the sign-in page told me the code had expired and now neither address works. I have been trying for three days.",
     status: "new",
+    isPriority: false,
+    listingRef: null,
+    listing: null,
     createdAt: "2026-08-23T18:40:00.000Z",
     handledAt: null,
     handledBy: null,
@@ -32,6 +89,9 @@ export const ADMIN_INQUIRIES: AdminInquiryDTO[] = [
     subject: "Room for community events in Marvila",
     body: "We run a neighbourhood centre with a hall that sits empty on weeknights and would like to offer it for gatherings.",
     status: "new",
+    isPriority: false,
+    listingRef: null,
+    listing: null,
     createdAt: "2026-08-25T11:15:00.000Z",
     handledAt: null,
     handledBy: null,
@@ -43,6 +103,9 @@ export const ADMIN_INQUIRIES: AdminInquiryDTO[] = [
     email: "alex@example.com",
     body: "I am 17 and the notice said to write here. Is there anything I can join before my birthday in November?",
     status: "new",
+    isPriority: false,
+    listingRef: null,
+    listing: null,
     createdAt: "2026-08-12T08:05:00.000Z",
     handledAt: null,
     handledBy: null,
@@ -55,6 +118,9 @@ export const ADMIN_INQUIRIES: AdminInquiryDTO[] = [
     subject: "My invite request never came back",
     body: "I asked for an invite in June and the confirmation page said someone would look at it. I have heard nothing since.",
     status: "handled",
+    isPriority: false,
+    listingRef: null,
+    listing: null,
     createdAt: "2026-07-08T09:30:00.000Z",
     handledAt: "2026-07-10T15:00:00.000Z",
     handledBy: { id: "admin-1", name: "Mira Lopes" },
@@ -69,6 +135,9 @@ export const ADMIN_INQUIRIES: AdminInquiryDTO[] = [
     body: "We have two GPs taking new patients on informed consent and would like to be listed.",
     // Handled before ACQ-03 shipped: no handler was ever recorded.
     status: "handled",
+    isPriority: false,
+    listingRef: null,
+    listing: null,
     createdAt: "2026-06-19T13:20:00.000Z",
     handledAt: "2026-06-24T10:10:00.000Z",
     handledBy: null,

@@ -11,6 +11,7 @@
 import type { TFunction } from "../../../shared/i18n/types";
 import type { Editor, Piece } from "../data/desk.data";
 import type { DeskTone } from "./deskTones";
+import { pieceGoLiveState } from "./pieceGoLiveState";
 
 /**
  * Who holds the piece, whoever is looking at it:
@@ -22,12 +23,16 @@ import type { DeskTone } from "./deskTones";
 export type DeskPieceHolder = "writer" | "reader" | "editor" | "nobody";
 
 /**
- * The writer wins whatever the stage, since they hold the copy. Otherwise a
- * piece at Sensitivity read is with its reader: that stage exists for the
- * read, and its next action is to chase the reader.
+ * A piece live on the site below Published (its date passed, PRD-437) is
+ * back with its editor whatever else the data says: readers can open it, and
+ * only an editor's Publish settles it and tells the writer. Otherwise the
+ * writer wins whatever the stage, since they hold the copy, and a piece at
+ * Sensitivity read is with its reader: that stage exists for the read, and
+ * its next action is to chase the reader.
  */
 export function pieceHolder(piece: Piece): DeskPieceHolder {
   if (piece.stage === "Published") return "nobody";
+  if (pieceGoLiveState(piece)?.kind === "live") return "editor";
   if (piece.wait === "writer") return "writer";
   if (piece.stage === "Sensitivity read") return "reader";
   if (piece.wait === "you") return "editor";

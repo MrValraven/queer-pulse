@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { routes } from "../../app/routeMap";
 import {
   LISTING_CORRECTION_TOPIC,
+  contactInquiryRouting,
   listingCorrectionContactPath,
   listingRefFromParam,
 } from "./contactPrefill";
@@ -25,5 +26,26 @@ describe("contactPrefill (PRD-434)", () => {
     expect(listingRefFromParam("")).toBeUndefined();
     expect(listingRefFromParam("<script>")).toBeUndefined();
     expect(listingRefFromParam("QPL 2026 0007")).toBeUndefined();
+  });
+
+  it("files a listing correction as its own kind, with the ref", () => {
+    expect(
+      contactInquiryRouting(LISTING_CORRECTION_TOPIC, "QPL-2026-0007"),
+    ).toEqual({ kind: "listing_correction", listingRef: "QPL-2026-0007" });
+  });
+
+  it("files a listing correction without a ref when the link carried none", () => {
+    expect(contactInquiryRouting(LISTING_CORRECTION_TOPIC, undefined)).toEqual({
+      kind: "listing_correction",
+    });
+  });
+
+  it("files every other topic as a plain contact message, ref or not", () => {
+    expect(contactInquiryRouting("safety", "QPL-2026-0007")).toEqual({
+      kind: "contact",
+    });
+    expect(contactInquiryRouting("general", undefined)).toEqual({
+      kind: "contact",
+    });
   });
 });

@@ -460,7 +460,7 @@ export const resources: Catalog = {
   "pronounsGuide.pronouns.body2":
     "Podes definir vários conjuntos de pronomes (ex.: ela/elu) e adicionar uma string personalizada se nenhuma das opções predefinidas encaixar. As alterações têm efeito imediato e não há limite de quantas vezes as podes atualizar.",
   "pronounsGuide.pronouns.body3":
-    "Se outra pessoa usar os pronomes errados para ti no fórum ou nas mensagens, podes denunciar através da função de denúncia em qualquer publicação ou mensagem. A nossa equipa de moderação trata o uso repetido de pronomes errados como uma questão de código de conduta.",
+    "Se outra pessoa usar os pronomes errados para ti no fórum ou nas mensagens, podes denunciar através da função de denúncia em qualquer publicação ou mensagem. A nossa equipa de moderação trata o uso repetido de pronomes errados como uma violação do Código de Conduta.",
 
   "pronounsGuide.faq.eyebrow": "Perguntas frequentes",
   "pronounsGuide.faq.title": "Coisas que nos <em>perguntam.</em>",
@@ -1323,12 +1323,13 @@ export const resources: Catalog = {
   // Sinal de atualidade da CNT-13, mostrado em cada cartão de guia.
   "library.card.verifiedOn": "Verificado a {date}",
   "library.card.notYetVerified": "Ainda não verificado",
+  "library.loadMoreError": "Não conseguimos carregar mais guias.",
 
   // ── SexualHealthPage (+ SexualHealthTabs.tsx + sexualHealth.data.ts) ────
   // Assinalado para revisão nativa: informação sobre saúde sexual/VIH/PrEP.
   // Desde 6 de outubro de 2026 (DES-421), TESTING_INFO, PREP_STEPS, PREP_FAQ,
-  // HIV_INFO e GUIDES estão traduzidos abaixo; as entradas de CLINICS, só
-  // de demonstração (desc/details/horários/meta), ficam em inglês.
+  // HIV_INFO e GUIDES estão traduzidos abaixo, tal como o diretório CLINICS,
+  // só de demonstração (sexualHealth.testing.clinic.*).
   "sexualHealth.meta.title":
     "Saúde sexual em Lisboa: testes, PrEP e recursos sobre VIH",
   "sexualHealth.meta.description":
@@ -1370,6 +1371,10 @@ export const resources: Catalog = {
   "sexualHealth.testing.clinicCard.bringLabel": "O que levar",
   "sexualHealth.testing.clinicCard.accessLabel": "Acesso",
   "sexualHealth.testing.clinicCard.noteLabel": "Bom saber",
+  "sexualHealth.testing.clinicCard.review_one":
+    "{rating} · {count} avaliação de membros",
+  "sexualHealth.testing.clinicCard.review_other":
+    "{rating} · {count} avaliações de membros",
   "sexualHealth.testing.nominate.doneTitle": "Obrigade. <em>Anotado.</em>",
   "sexualHealth.testing.nominate.doneBody":
     "Vamos verificar e rever com a comunidade antes de entrar no ar. O quadro mantém-se de confiança porque pessoas como tu o mantêm atualizado.",
@@ -2743,6 +2748,75 @@ export const resources: Catalog = {
   "sexualHealth.testing.info.cost.title": "Custo",
   "sexualHealth.testing.info.cost.body":
     "Os CAD do SNS são gratuitos. Os testes rápidos de VIH nas farmácias custam 15–25 €. Os serviços das ONG (CheckpointLx, GAT) são gratuitos e anónimos.",
+  "sexualHealth.testing.clinic.typeLabel.ngoFree": "ONG · Gratuito",
+  "sexualHealth.testing.clinic.typeLabel.snsFree": "SNS · Gratuito",
+  "sexualHealth.testing.clinic.typeLabel.pharmacyPaid": "Farmácia · 15–25 €",
+  "sexualHealth.testing.clinic.typeLabel.privatePaid": "Privado · Pago",
+  "sexualHealth.testing.clinic.checkpointLx.description":
+    "O principal serviço de saúde sexual de Lisboa pensado para pessoas queer. Testes gratuitos e anónimos ao VIH, sífilis, hepatites B e C e gonorreia. Aconselhamento sobre PrEP. A equipa tem experiência com pessoas queer e trans. Nos dias de atendimento livre não precisas de marcação.",
+  "sexualHealth.testing.clinic.checkpointLx.location":
+    "Rua de São Lázaro, Intendente",
+  "sexualHealth.testing.clinic.checkpointLx.hours":
+    "Ter. e qui. 18:00–21:00, sáb. 14:00–18:00",
+  "sexualHealth.testing.clinic.checkpointLx.details.tests":
+    "VIH, sífilis, hepatites B e C, gonorreia. Resultados rápidos na mesma noite.",
+  "sexualHealth.testing.clinic.checkpointLx.details.bring":
+    "Não precisas de nada: nos dias de atendimento livre podes vir sem identificação, sem número de utente do SNS e sem marcação.",
+  "sexualHealth.testing.clinic.checkpointLx.details.access":
+    "Entrada no rés-do-chão, sem degraus. Equipa com experiência com pessoas trans. Atendimento em PT e EN.",
+  "sexualHealth.testing.clinic.checkpointLx.details.note":
+    "A primeira hora é a mais movimentada. Se chegares mais tarde, costumas esperar menos.",
+  "sexualHealth.testing.clinic.gatLisboa.description":
+    "Redução de riscos e saúde sexual de base comunitária. Testes rápidos ao VIH gratuitos, aconselhamento entre pares, apoio no acesso à PrEP e um serviço anónimo de encaminhamento para IST. Com um trabalho particularmente forte junto de pessoas migrantes e de pessoas que fazem trabalho sexual.",
+  "sexualHealth.testing.clinic.gatLisboa.location":
+    "Rua do Século, Bairro Alto",
+  "sexualHealth.testing.clinic.gatLisboa.hours": "Seg.–sex. 10:00–18:00",
+  "sexualHealth.testing.clinic.gatLisboa.details.tests":
+    "Teste rápido ao VIH no local; encaminhamento para o painel completo de IST. Apoio no acesso à PrEP.",
+  "sexualHealth.testing.clinic.gatLisboa.details.bring":
+    "Para um teste rápido não precisas de nada. Para encaminhamentos, o número de utente do SNS ajuda, mas a equipa pode aconselhar-te sem ele.",
+  "sexualHealth.testing.clinic.gatLisboa.details.access":
+    "Aconselhamento entre pares em PT, EN e FR. Com especial experiência junto de pessoas migrantes e de pessoas que fazem trabalho sexual.",
+  "sexualHealth.testing.clinic.gatLisboa.details.note":
+    "Para testes rápidos basta apareceres; para o apoio à PrEP, o melhor é marcar primeiro por telefone.",
+  "sexualHealth.testing.clinic.cad.description":
+    "O serviço público do SNS de teste e aconselhamento para o VIH. Gratuito, confidencial e com um conselheiro presente. Também faz vacinação contra a hepatite B e encaminhamento para PrEP. Precisas de inscrição no SNS, mas não precisas de seguro.",
+  "sexualHealth.testing.clinic.cad.location": "Vários locais em Lisboa",
+  "sexualHealth.testing.clinic.cad.hours": "Com marcação",
+  "sexualHealth.testing.clinic.cad.details.tests":
+    "Teste ao VIH com um conselheiro, vacinação contra a hepatite B e encaminhamento para PrEP.",
+  "sexualHealth.testing.clinic.cad.details.bring":
+    "O teu número de utente do SNS. Não precisas de seguro privado; cidadãos da UE podem usar o Cartão Europeu de Seguro de Doença.",
+  "sexualHealth.testing.clinic.cad.details.access":
+    "Vários locais do SNS pela cidade. Quando marcares, escolhe o mais perto de ti.",
+  "sexualHealth.testing.clinic.cad.details.note":
+    "Confidencial: os resultados só são partilhados com o teu consentimento, e isto inclui o teu médico de família.",
+  "sexualHealth.testing.clinic.pharmacyRapidTest.description":
+    "À venda sem receita na maioria das farmácias. Resultado em 15 minutos. Deteta o VIH a partir de 3 meses após uma possível exposição. Pede um teste rápido de VIH. Não precisas de receita e não fica registo.",
+  "sexualHealth.testing.clinic.pharmacyRapidTest.location": "Qualquer farmácia",
+  "sexualHealth.testing.clinic.pharmacyRapidTest.hours":
+    "Basta ires durante o horário de abertura",
+  "sexualHealth.testing.clinic.pharmacyRapidTest.details.tests":
+    "Teste rápido ao VIH com uma picada no dedo, resultado em cerca de 15 minutos.",
+  "sexualHealth.testing.clinic.pharmacyRapidTest.details.bring":
+    "15–25 € em dinheiro ou cartão. Não precisas de receita nem de identificação, e não fica registo.",
+  "sexualHealth.testing.clinic.pharmacyRapidTest.details.access":
+    "Disponível na maioria das farmácias. É mais provável encontrá-lo nas maiores.",
+  "sexualHealth.testing.clinic.pharmacyRapidTest.details.note":
+    "Deteta o VIH a partir de cerca de 3 meses após uma possível exposição; se foi há menos tempo, volta a fazer o teste mais tarde.",
+  "sexualHealth.testing.clinic.clinicaDaTravessa.description":
+    "Clínica privada com uma equipa que acolhe pessoas queer. Painel completo de IST (VIH, sífilis, gonorreia, clamídia, HSV, hepatites B e C, HPV). Resultados em 48 horas. Passa receitas de PrEP fora do circuito do SNS para quem preferir.",
+  "sexualHealth.testing.clinic.clinicaDaTravessa.location": "Príncipe Real",
+  "sexualHealth.testing.clinic.clinicaDaTravessa.hours":
+    "Seg.–sáb., com marcação",
+  "sexualHealth.testing.clinic.clinicaDaTravessa.details.tests":
+    "Painel completo de IST: VIH, sífilis, gonorreia, clamídia, HSV, hepatites B e C, HPV. Resultados em 48 horas.",
+  "sexualHealth.testing.clinic.clinicaDaTravessa.details.bring":
+    "Uma marcação e um meio de pagamento. Receitas de PrEP disponíveis fora do circuito do SNS.",
+  "sexualHealth.testing.clinic.clinicaDaTravessa.details.access":
+    "Equipa que acolhe pessoas queer; espaço privado e discreto. Consultas em PT e EN.",
+  "sexualHealth.testing.clinic.clinicaDaTravessa.details.note":
+    "Serviço pago, útil quando queres um painel rápido e completo sem a espera do SNS.",
 
   "legal.lawyers.loadError.title":
     "Não conseguimos carregar o <em>diretório jurídico.</em>",

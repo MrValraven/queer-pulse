@@ -1,7 +1,10 @@
 /* The guide workspace's left rail: paper panels on the cream console. */
 
+/* One track that may shrink below its rows' min-content, so a long outline
+   row fits the panel at 375px. */
 .panel {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 10px;
   padding: 16px 18px;
   border: 1px solid rgba(var(--line-rgb), 0.09);
@@ -134,10 +137,15 @@
   list-style: none;
 }
 
+/* Handle, name, move up, move down on one line; a translation flag takes a
+   second line under the name. Inline, the widest PT flag ("Sem secção em
+   inglês") needs about 368px of row, and the rail's panel gives at most 274. */
 .outlineRow {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
   align-items: center;
   gap: 4px;
+  min-width: 0;
   padding: 2px 4px;
   border-radius: var(--radius-10);
 }
@@ -157,14 +165,16 @@
 }
 
 .outlineJump {
-  flex: 1;
   min-width: 0;
   justify-content: space-between;
   gap: 8px;
   text-align: left;
 }
 
+/* The Button renders this span as a flex item, which needs min-width: 0 to
+   shrink below its text and take the ellipsis. */
 .outlineName {
+  min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -177,7 +187,9 @@
 }
 
 .outlineFlag {
-  flex: none;
+  grid-row: 2;
+  grid-column: 2 / -1;
+  justify-self: start;
   padding: 1px 7px;
   border: 1px solid rgba(var(--accent-rgb), 0.35);
   border-radius: var(--radius-pill);

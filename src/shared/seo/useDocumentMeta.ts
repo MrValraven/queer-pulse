@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import { writeDocumentTitle } from "./documentTitleBadge";
 import { defaultMeta, toAbsoluteUrl } from "./seo.data";
 
 export interface DocumentMeta {
@@ -87,7 +88,7 @@ export function applyDefaultDocumentMeta(): void {
   const image = toAbsoluteUrl(defaultMeta.image);
   const url = toAbsoluteUrl(window.location.pathname);
 
-  document.title = defaultMeta.title;
+  writeDocumentTitle(defaultMeta.title);
   setMeta("name", "description", defaultMeta.description);
   setCanonical(url);
   setMeta("property", "og:type", "website");
@@ -112,7 +113,9 @@ export function applyDefaultDocumentMeta(): void {
  * change (see `applyDefaultDocumentMeta`).
  *
  * React-19-native and dependency-free: it manages tags via a single effect so
- * it composes cleanly with the static defaults baked into `index.html`.
+ * it composes cleanly with the static defaults baked into `index.html`. The
+ * title goes through `documentTitleBadge`, so the unread count in front of it
+ * survives navigation; the og/twitter title tags keep the plain title.
  *
  * Meta is applied client-side, so non-JS crawlers would see only the static
  * shell — which is why `scripts/prerender.mjs` renders every public page to real
@@ -139,7 +142,7 @@ export function useDocumentMeta(meta: DocumentMeta): void {
     const url = toAbsoluteUrl(canonical ?? pathname);
     const resolvedImage = toAbsoluteUrl(image ?? defaultMeta.image);
 
-    document.title = title;
+    writeDocumentTitle(title);
     setMeta("name", "description", resolvedDescription);
     setCanonical(url);
     setMeta("property", "og:title", title);

@@ -138,9 +138,11 @@ export function useMessageLogState(
   // `TypingIndicatorRow` instead — mounted by `MessageArea` itself, driven by
   // its own `useTypingIndicator` subscription — so a typing frame never
   // reaches this hook or the panel above it).
+  // PRD-423: a matched Go together chat names the viewer by their per-chat
+  // key in its roster and its live `read` frames.
   const { groupSeenBy } = useGroupIndicators(active, lastOutbound, {
-    id: myUserId ?? null,
-    slug: mySlug,
+    id: active.viewerMemberKey ?? myUserId ?? null,
+    slug: active.viewerMemberKey ?? mySlug,
   });
 
   // The flattened, virtualizer-keyed row list + the `@tanstack/react-virtual`

@@ -25,10 +25,10 @@ export function useAffiliations(subprofileId: string) {
   // (`["subprofile", demoMode, subprofileId]`), and the public reads
   // (`["subprofile","public"]`) — never the bare `["subprofile"]` prefix that
   // would refetch every persona query app-wide.
-  const invalidateOwned = () => {
+  const invalidateOwned = (targetId: string) => {
     void queryClient.invalidateQueries({ queryKey: ["subprofiles"] });
     void queryClient.invalidateQueries({
-      queryKey: ["subprofile", demoMode, subprofileId],
+      queryKey: ["subprofile", demoMode, targetId],
     });
     void queryClient.invalidateQueries({ queryKey: ["subprofile", "public"] });
   };
@@ -36,23 +36,35 @@ export function useAffiliations(subprofileId: string) {
   const replace = useMutation<
     SubprofileDTO,
     Error,
-    { items: AffiliationInputDTO[]; expectedEditVersion?: number }
+    {
+      items: AffiliationInputDTO[];
+      expectedEditVersion?: number;
+      /** The persona to write to, when it differs from the hook's: the
+       *  editor's save sends the fresh id an unlink earlier in the same save
+       *  gave the persona (ENG-447). */
+      subprofileId?: string;
+    }
   >({
     // SubprofileAffiliationsEditor toasts its own error, so silence the global
     // duplicate.
     meta: { silentError: true },
-    mutationFn: async ({ items, expectedEditVersion }) => {
+    mutationFn: async ({
+      items,
+      expectedEditVersion,
+      subprofileId: requestedId,
+    }) => {
+      const targetId = requestedId ?? subprofileId;
       if (!demoMode) {
-        return replaceAffiliations(subprofileId, items, expectedEditVersion);
+        return replaceAffiliations(targetId, items, expectedEditVersion);
       }
       const { mockBumpEditVersion, mockSubprofileById } =
         await import("../data/subprofiles.data");
-      const current = mockSubprofileById(subprofileId);
+      const current = mockSubprofileById(targetId);
       if (!current) throw new Error("Subprofile not found");
       // Prefix match: the options key's 4th element (demo community key) varies.
       const pickerOptions = queryClient
         .getQueriesData<AffiliationOptionDTO[]>({
-          queryKey: ["subprofileAffiliationOptions", true, subprofileId],
+          queryKey: ["subprofileAffiliationOptions", true, targetId],
         })
         .flatMap(([, cachedOptions]) => cachedOptions ?? []);
       return {
@@ -60,7 +72,7 @@ export function useAffiliations(subprofileId: string) {
         affiliations: items.map((item) =>
           resolveAffiliation(item, pickerOptions, current.affiliations ?? []),
         ),
-        editVersion: mockBumpEditVersion(subprofileId),
+        editVersion: mockBumpEditVersion(targetId),
       };
     },
     // The response is the whole owner view, so seed the owner-editor query
@@ -69,12 +81,13 @@ export function useAffiliations(subprofileId: string) {
     // before the refetch below lands; without this write it would seed its
     // `editVersion` from a stale pre-write read and conflict on its own first
     // save (I2).
-    onSuccess: (data) => {
+    onSuccess: (data, variables) => {
+      const targetId = variables.subprofileId ?? subprofileId;
       queryClient.setQueryData(
-        ["subprofile", demoMode, subprofileId],
+        ["subprofile", demoMode, targetId],
         subprofileToView(data),
       );
-      invalidateOwned();
+      invalidateOwned(targetId);
     },
   });
 

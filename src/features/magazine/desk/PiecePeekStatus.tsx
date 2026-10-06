@@ -1,4 +1,4 @@
-import { FiClock } from "react-icons/fi";
+import { FiClock, FiGlobe } from "react-icons/fi";
 import { Button } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useFormat } from "../../../shared/i18n/format";
@@ -11,8 +11,8 @@ import { describeDue, type DeskDueDescription } from "./deskDue";
 import { stageAge } from "./deskStageAge";
 import { describeWaitingOn, waitingOnLabel } from "./deskWaitingOn";
 import { DeskToneDot } from "./DeskToneDot";
+import { pieceGoLiveState } from "./pieceGoLiveState";
 import { pieceNextAction, type PieceNextAction } from "./pieceNextAction";
-import { isPieceScheduled } from "./pieceSchedule";
 import { StageProgress } from "./StageProgress";
 import { viewStageLabelKey } from "./stageLabels";
 import { useDeskViewerId } from "./useDeskViewerId";
@@ -83,11 +83,20 @@ export function PiecePeekStatus({
         { count: age.days, stage: t(viewStageLabelKey(piece.stage)) },
       )
     : null;
+  // PRD-437: no job settles a scheduled piece. Before its instant the writer
+  // has not heard; after it, readers can open it but the writer still has
+  // not, until an editor presses Publish (the next action above).
+  const goLive = pieceGoLiveState(piece);
+  const goLiveDate = piece.publishedAt
+    ? format.date(new Date(piece.publishedAt), SCHEDULED_FOR_FORMAT)
+    : "";
   const scheduledLine =
-    piece.publishedAt && isPieceScheduled(piece)
-      ? t("magazine:desk.peek.scheduledFor", {
-          date: format.date(new Date(piece.publishedAt), SCHEDULED_FOR_FORMAT),
-        })
+    goLive?.kind === "scheduled"
+      ? t("magazine:desk.peek.scheduledFor", { date: goLiveDate })
+      : null;
+  const liveSinceLine =
+    goLive?.kind === "live"
+      ? t("magazine:desk.goLive.liveSinceTellWriter", { date: goLiveDate })
       : null;
 
   return (
@@ -104,9 +113,20 @@ export function PiecePeekStatus({
           </Button>
         )}
         {scheduledLine !== null && (
+          <div className={styles.goLive}>
+            <p className={styles.scheduled}>
+              <FiClock aria-hidden="true" className={styles.scheduledIcon} />
+              {scheduledLine}
+            </p>
+            <p className={styles.goLiveHint}>
+              {t("magazine:desk.goLive.writerHearsOnPublish")}
+            </p>
+          </div>
+        )}
+        {liveSinceLine !== null && (
           <p className={styles.scheduled}>
-            <FiClock aria-hidden="true" className={styles.scheduledIcon} />
-            {scheduledLine}
+            <FiGlobe aria-hidden="true" className={styles.scheduledIcon} />
+            {liveSinceLine}
           </p>
         )}
       </div>

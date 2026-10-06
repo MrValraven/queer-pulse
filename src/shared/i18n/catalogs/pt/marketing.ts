@@ -90,7 +90,7 @@ export const marketing: Catalog = {
   "about.stand.trans.commitment.notADebate.body":
     "N\u00e3o acolhemos discuss\u00f5es dos \u201cdois lados\u201d sobre se as pessoas membras merecem direitos, nem as abrimos em nome do equil\u00edbrio.",
   "about.stand.trans.commitment.exclusion.title":
-    "A defesa da exclus\u00e3o de pessoas trans \u00e9 um assunto do C\u00f3digo de Conduta.",
+    "A defesa da exclus\u00e3o de pessoas trans \u00e9 uma violação do C\u00f3digo de Conduta.",
   "about.stand.trans.commitment.exclusion.body":
     "Criticar um Estado \u00e9 discurso pol\u00edtico. Fazer campanha para retirar uma classe inteira de pessoas membras \u00e9 outra coisa, e chamar-lhe cr\u00edtica de g\u00e9nero deixa-a exatamente como estava.",
   "about.stand.trans.commitment.exclusion.link": "L\u00ea as diretrizes",
@@ -170,11 +170,11 @@ export const marketing: Catalog = {
   "about.linkModal.guidelinesExclusion.lead":
     "A cláusula das diretrizes em que este compromisso assenta, e as linhas vermelhas ao lado dela.",
   "about.linkModal.guidelinesExclusion.p1":
-    "Criticar um Estado, o seu governo, o seu exército ou a sua ideologia é discurso político, e a moderação trata-o como discurso político. Passa a ser um assunto do Código de Conduta quando aterra numa pessoa.",
+    "Criticar um Estado, o seu governo, o seu exército ou a sua ideologia é discurso político, e a moderação trata-o como discurso político. Passa a ser uma violação do Código de Conduta quando aterra numa pessoa.",
   "about.linkModal.guidelinesExclusion.p2":
     "A defesa dirigida a uma classe inteira de pessoas membras fica do outro lado dessa linha. Fazer campanha pela exclusão de pessoas trans desta comunidade é uma violação do Código de Conduta, seja qual for o vocabulário que pede emprestado.",
   "about.linkModal.guidelinesExclusion.point.hardLines.title":
-    "Sempre um assunto do Código de Conduta.",
+    "Sempre uma violação do Código de Conduta.",
   "about.linkModal.guidelinesExclusion.point.hardLines.body":
     "Assédio, divulgação de dados pessoais, expor a orientação ou identidade de alguém sem consentimento, ameaças, partilhar conversas ou fotografias privadas, e discriminação em qualquer base protegida.",
   "about.linkModal.guidelinesExclusion.point.bothDirections.title":
@@ -221,7 +221,7 @@ export const marketing: Catalog = {
   "about.linkModal.guidelinesSpeech.p1":
     "A defesa da libertação da Palestina é bem-vinda aqui e não será removida por incomodar. Criticar um Estado, o seu governo, o seu exército ou a sua ideologia é discurso político, e a moderação trata-o como discurso político.",
   "about.linkModal.guidelinesSpeech.p2":
-    "Passa a ser um assunto do Código de Conduta quando aterra numa pessoa. Responsabilizar uma pessoa membra pelos atos de um Estado por causa da sua etnia, religião ou nacionalidade é discriminação ao abrigo das linhas vermelhas.",
+    "Passa a ser uma violação do Código de Conduta quando aterra numa pessoa. Responsabilizar uma pessoa membra pelos atos de um Estado por causa da sua etnia, religião ou nacionalidade é discriminação ao abrigo das linhas vermelhas.",
   "about.linkModal.guidelinesSpeech.point.antisemitism.title":
     "O antissemitismo é uma violação.",
   "about.linkModal.guidelinesSpeech.point.antisemitism.body":
@@ -786,7 +786,7 @@ export const marketing: Catalog = {
   "guidelines.clause07.p1":
     "As Diretrizes descrevem cultura. Algumas coisas cruzam para o Código de Conduta, território de cumprimento obrigatório:",
   "guidelines.clause07.hardLinesHead":
-    "Sempre uma questão do Código de Conduta",
+    "Sempre uma violação do Código de Conduta",
   "guidelines.clause07.li1": "Assédio ou ataques pessoais dirigidos",
   "guidelines.clause07.li2":
     "Doxxing ou partilha da informação identificativa de alguém",
@@ -805,11 +805,11 @@ export const marketing: Catalog = {
   "guidelines.clause08.p1":
     "Criticar um Estado, o seu governo, o seu ex\u00e9rcito ou a sua ideologia \u00e9 discurso pol\u00edtico, e \u00e9 assim que o moderamos. Isso inclui a defesa da liberta\u00e7\u00e3o da Palestina, que \u00e9 bem-vinda aqui e n\u00e3o ser\u00e1 removida por incomodar.",
   "guidelines.clause08.p2":
-    "Passa a ser um assunto do C\u00f3digo de Conduta quando recai sobre uma pessoa. Responsabilizar algu\u00e9m pelos atos de um Estado por causa da sua etnia, religi\u00e3o ou nacionalidade \u00e9 discrimina\u00e7\u00e3o, e cai nas linhas vermelhas acima. O mesmo vale para a defesa dirigida a uma classe de pessoas membras em vez de a um Estado: criticar um governo \u00e9 discurso pol\u00edtico, fazer campanha para retirar pessoas trans n\u00e3o \u00e9, seja qual for o r\u00f3tulo.",
+    "Passa a ser uma violação do C\u00f3digo de Conduta quando recai sobre uma pessoa. Responsabilizar algu\u00e9m pelos atos de um Estado por causa da sua etnia, religi\u00e3o ou nacionalidade \u00e9 discrimina\u00e7\u00e3o, e cai nas linhas vermelhas acima. O mesmo vale para a defesa dirigida a uma classe de pessoas membras em vez de a um Estado: criticar um governo \u00e9 discurso pol\u00edtico, fazer campanha para retirar pessoas trans n\u00e3o \u00e9, seja qual for o r\u00f3tulo.",
   "guidelines.clause08.li4":
     "Fazer campanha pela exclus\u00e3o de pessoas trans desta comunidade, seja qual for o vocabul\u00e1rio que use",
   "guidelines.clause08.hardLinesHead":
-    "Continua a ser um assunto do C\u00f3digo de Conduta",
+    "Continua a ser uma violação do C\u00f3digo de Conduta",
   "guidelines.clause08.li1":
     "Antissemitismo, incluindo enquadramentos conspirativos e responsabilizar pessoas judias pelos atos de um Estado",
   "guidelines.clause08.li2":
@@ -3068,6 +3068,18 @@ export const marketing: Catalog = {
     "A QueerPulse arranca com as suas páginas principais e a navegação da comunidade.",
   "changelog.tag.report": "Abrir o formulário de denúncia",
   "changelog.tag.changelog": "Ver o registo de alterações",
+  "changelog.entries.chat-stays-with-the-newest-message.title":
+    "As mensagens ficam no ecrã enquanto escreves no iPhone",
+  "changelog.entries.chat-stays-with-the-newest-message.body":
+    "Ao escrever, a mensagem mais recente fica à vista, o cabeçalho no ecrã e a caixa de mensagem assente no teclado.",
+  "changelog.entries.manifesto-links-open-in-place.title":
+    "Lê onde nos posicionamos sem sair da página inicial",
+  "changelog.entries.manifesto-links-open-in-place.body":
+    "Onde nos posicionamos e Como mantemos isto seguro abrem agora como resumos, cada um com ligação à página completa.",
+  "changelog.entries.unread-count-in-browser-tab.title":
+    "Contagem de não lidas no separador do browser",
+  "changelog.entries.unread-count-in-browser-tab.body":
+    "O título do separador mostra algo como (3) QueerPulse, somando as tuas conversas e notificações por ler.",
   "changelog.entries.tags-and-snippets-type-normally.title":
     "As tags de um item aceitam vírgulas, e os trechos de código uma nova linha",
   "changelog.entries.tags-and-snippets-type-normally.body":
@@ -3249,6 +3261,14 @@ export const marketing: Catalog = {
     "Vê o que te escreveram antes de responder ao pedido",
   "changelog.entries.connect-request-note-when-answering.body":
     'O painel "pediu-te primeiro" mostra a mensagem e o motivo, com as três respostas na mesma linha.',
+  "changelog.entries.message-arrival-chime.title":
+    "Um som suave quando chega uma mensagem",
+  "changelog.entries.message-arrival-chime.body":
+    "Toca com o aviso de nova mensagem, ignora conversas silenciadas e desliga-se em Definições, Notificações.",
+  "changelog.entries.new-members-grouped-by-week.title":
+    "Quem chegou, agrupado pela semana em que se juntou",
+  "changelog.entries.new-members-grouped-by-week.body":
+    "Cada semana tem o seu cartão no separador Tudo, e Ver todas abre-se com suavidade.",
   "changelog.entries.dropdown-escape-keeps-dialog-open.title":
     "Escape numa lista fecha só a lista",
   "changelog.entries.dropdown-escape-keeps-dialog-open.body":
@@ -8497,6 +8517,7 @@ export const marketing: Catalog = {
   "volunteer.signups.closing": "A encerrar…",
   "volunteer.signups.closeCta": "Encerrar oportunidade",
   "volunteer.signups.reviewCta": "{count} para rever",
+  "volunteer.signups.memberFallback": "Um membro",
 
   // ── A contribuição confirmada da própria pessoa (SUS-05). Sessões e horas
   // confirmadas por quem publicou, nunca autodeclaradas.
@@ -9449,8 +9470,7 @@ export const marketing: Catalog = {
   "directory.detail.suggestEdit.value.optional": "(opcional)",
   "directory.detail.suggestEdit.value.hint":
     "Deixa em branco se só sabes que algo está errado. A nota por si só já ajuda.",
-  "directory.detail.suggestEdit.value.rejected":
-    "Esse valor não foi aceite: {reason}",
+  "directory.detail.suggestEdit.value.rejected": "{reason}",
   "directory.detail.suggestEdit.value.proseOnly":
     "Para o resto, descreve a correção na nota acima. Este balde não aceita um valor de substituição.",
   "directory.detail.suggestEdit.value.hours.label":
@@ -11708,4 +11728,48 @@ export const marketing: Catalog = {
     "Sair de um grupo agora deixa-o mesmo para trás",
   "changelog.entries.leaving-a-group-actually-leaves-it-behind.body":
     "Quem sai perde a lista de membros e quem leu o quê, os seletores param no limite, e as menções antigas deixam de chegar.",
+  "changelog.entries.co-author-credit-notice.title":
+    "Coautores sabem quando os creditas",
+  "changelog.entries.co-author-credit-notice.body":
+    "Quem é creditado recebe um aviso e pode tirar o nome, e um bloqueio posterior retira o crédito.",
+  "changelog.entries.unlinked-persona-fresh-start.title":
+    "Desligar uma persona dá-lhe um novo começo",
+  "changelog.entries.unlinked-persona-fresh-start.body":
+    "Ganha um novo id, novos endereços de imagem e uma nova caixa de mensagens, por isso nada na página aponta para ti.",
+  "changelog.entries.matched-chats-keep-surnames-private.title":
+    "Os chats do Go together mantêm os apelidos privados",
+  "changelog.entries.matched-chats-keep-surnames-private.body":
+    "Cada membro aparece pelo primeiro nome em todo o chat combinado, incluindo menções, fotos e notificações.",
+  "changelog.entries.invite-link-use-limit.title":
+    "Limita quantas pessoas um link de convite deixa entrar",
+  "changelog.entries.invite-link-use-limit.body":
+    "Escolhe 1, 5, 25 ou utilizações ilimitadas ao criar ou repor o link de convite de um grupo.",
+  "changelog.entries.your-suggested-places.title":
+    "Vê os espaços que sugeriste",
+  "changelog.entries.your-suggested-places.body":
+    "O teu perfil mostra cada espaço que sugeriste e em que ponto está, com uma forma rápida de enviar uma correção.",
+  "changelog.entries.therapist-status-confirmed.title":
+    "A disponibilidade de terapeutas mostra quando foi confirmada",
+  "changelog.entries.therapist-status-confirmed.body":
+    "Estados com mais de 60 dias aparecem por confirmar, e cada terapeuta pode confirmar o seu com um toque.",
+  "changelog.entries.housing-blocks-and-takedowns.title":
+    "A habitação respeita bloqueios e explica retiradas",
+  "changelog.entries.housing-blocks-and-takedowns.body":
+    "Membros bloqueados veem o anúncio como indisponível, e um quarto retirado após denúncia explica porquê e como recorrer.",
+  "changelog.entries.desk-scheduling-clarity.title":
+    "A redação da revista é clara sobre peças agendadas",
+  "changelog.entries.desk-scheduling-clarity.body":
+    "Quem edita escolhe tradutores na equipa, e a redação diz quando quem escreve ou a comunidade vão ser avisados.",
+  "changelog.entries.more-in-portuguese.title":
+    "Mais partes do QueerPulse falam português",
+  "changelog.entries.more-in-portuguese.body":
+    "Notificações push, contagens de temas na pesquisa, detalhes de clínicas e fichas da biblioteca seguem o teu idioma.",
+  "changelog.entries.retry-when-loading-fails.title":
+    "Tenta outra vez quando uma página não carrega",
+  "changelog.entries.retry-when-loading-fails.body":
+    "Comentários, secções da revista, biblioteca e avaliações de empregadores oferecem Tentar de novo e mantêm o que já carregou.",
+  "changelog.entries.sharper-staff-tools.title":
+    "Ferramentas mais afinadas para a equipa",
+  "changelog.entries.sharper-staff-tools.body":
+    "A moderação vê provas de habitação, pedidos de segurança têm fila própria e os guias editam-se secção a secção.",
 };

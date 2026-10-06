@@ -26,6 +26,7 @@ import { useArticleEditorDraftState } from "./desk/editor/useArticleEditorDraftS
 import { useBlockRemovalUndo } from "./desk/editor/useBlockRemovalUndo";
 import { useArticleEditorLeaveGuard } from "./desk/editor/useArticleEditorLeaveGuard";
 import { useArticlePublishHandler } from "./desk/editor/useArticlePublishHandler";
+import { readPublishGateFailure } from "./desk/editor/articlePublishAction";
 import {
   countArticleWords,
   estimateReadMinutes,
@@ -89,7 +90,7 @@ export function ArticleEditorPage() {
   const { moveStage } = usePieceMutations();
   const docRef = useRef<HTMLDivElement | null>(null);
   const draft = useArticleEditorDraftState(pieceId, article, save, reload);
-  const publishAction = useArticlePublishHandler(publish, draft.saveNow);
+  const publishAction = useArticlePublishHandler(publish, draft);
 
   const [mode, setMode] = useState<EditorMode>("draft");
   const [publishStatus, setPublishStatus] = useState<PublishStatus>("now");
@@ -152,6 +153,7 @@ export function ArticleEditorPage() {
       publishStatus,
       scheduledAt,
       () => setScheduledAt(null),
+      save.isError && readPublishGateFailure(save.error) !== null,
     );
 
   const nextStage = record ? nextPieceStage(record.stage) : null;
@@ -190,6 +192,7 @@ export function ArticleEditorPage() {
           issueLabel={issueLabel}
           isSavePending={save.isPending}
           isSaveError={save.isError}
+          saveError={save.error}
           isDirty={draft.isDirty}
           hasSaveConflict={draft.hasSaveConflict}
           onRetrySave={() => void draft.saveNow().catch(() => undefined)}

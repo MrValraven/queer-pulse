@@ -18,6 +18,12 @@ import type {
   StarredMessagesResponse,
 } from "../../../shared/contracts/contracts";
 import type { GifAttachment } from "../../../shared/api/gifs";
+import type { InviteLinkMaxUses } from "../inviteLinkUses";
+import type { BlockOptions } from "../../social/api/social.api";
+import type {
+  CreateReportInput,
+  ReportDTO,
+} from "../../safety/api/reports.api";
 
 // ── Messages DTOs + raw calls ────────────────────────────────────────────────
 // Shapes come straight from src/shared/contracts/contracts.ts (the SDK target).
@@ -496,14 +502,60 @@ export const dissolveGroup = (conversationId: string) =>
     {},
   );
 
+function matchedChatMemberPath(conversationId: string, memberKey: string) {
+  return `/conversations/${encodeURIComponent(conversationId)}/members/${encodeURIComponent(memberKey)}`;
+}
+
+/** POST /conversations/:id/members/:memberKey/block (PRD-423): blocks the
+ *  member of a matched Go together chat behind their per-chat member key,
+ *  which the server resolves inside that conversation alone. Same effects
+ *  and options as `POST /blocks/:slug`; names nobody back. */
+export const blockMatchedChatMember = (
+  conversationId: string,
+  memberKey: string,
+  options: BlockOptions = {},
+) =>
+  apiPost<{ blocking: true }>(
+    `${matchedChatMemberPath(conversationId, memberKey)}/block`,
+    options,
+  );
+
+/** POST /conversations/:id/members/:memberKey/report (PRD-423): the
+ *  `POST /reports` member body without its subject, which the route resolves
+ *  from the key. 201 with the report minus `subjectId`; a flood cap answers
+ *  429 `REPORT_FLOOD_CAP` with member-facing copy. */
+export const reportMatchedChatMember = (
+  conversationId: string,
+  memberKey: string,
+  body: Omit<CreateReportInput, "subjectType" | "subjectId" | "contactEmail">,
+) =>
+  apiPost<Omit<ReportDTO, "subjectId">>(
+    `${matchedChatMemberPath(conversationId, memberKey)}/report`,
+    body,
+  );
+
+/** POST /conversations/:id/invite-link response (PRD-400): the live token,
+ *  when it expires, its use cap (null for unlimited) and the uses left. */
+export interface GroupInviteLinkResponse {
+  inviteToken: string;
+  inviteTokenExpiresAt: string;
+  inviteTokenMaxUses?: number | null;
+  inviteTokenUsesLeft?: number | null;
+}
+
 /** POST /conversations/:id/invite-link: owner/admin creates (or rotates) the
  *  group's revocable invite link (PRD-358, no QR). Rotating invalidates any
  *  previously shared link. PRD-400: every issue or rotation is valid for 7
- *  days, and `inviteTokenExpiresAt` says until when. */
-export const createGroupInviteLink = (conversationId: string) =>
-  apiPost<{ inviteToken: string; inviteTokenExpiresAt: string }>(
+ *  days, and `inviteTokenExpiresAt` says until when. PRD-400 (use cap):
+ *  `maxUses` (1, 5 or 25; null for unlimited) caps how many people can join
+ *  with the new link, which starts with every use left. */
+export const createGroupInviteLink = (
+  conversationId: string,
+  maxUses: InviteLinkMaxUses = null,
+) =>
+  apiPost<GroupInviteLinkResponse>(
     `/conversations/${conversationId}/invite-link`,
-    {},
+    { maxUses },
   );
 
 /** DELETE /conversations/:id/invite-link: owner/admin disables the group's

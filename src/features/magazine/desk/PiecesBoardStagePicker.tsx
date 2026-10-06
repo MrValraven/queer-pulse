@@ -1,4 +1,3 @@
-import { useId } from "react";
 import { FiClock, FiGlobe } from "react-icons/fi";
 import { Select } from "../../../shared/components/ui";
 import { viewStageLabelKey } from "./stageLabels";
@@ -46,10 +45,12 @@ const GOES_LIVE_FORMAT: Intl.DateTimeFormatOptions = {
  * - A piece with a publish date (`hasPublishDate`) gets the same line,
  *   whatever its stage. A scheduled one waits at Ready for its date ("Goes
  *   live {date}"); a live one (date passed, stage not yet Published) is
- *   public already ("Live on the site").
+ *   public already, and its writer has not heard (PRD-437): "Live since
+ *   {date}. Publish it to tell the writer."
  * The line is plain text, so sighted readers see it and screen readers reach
- * it in reading order. Its accessible description is the way out: unschedule
- * or unpublish on the piece record.
+ * it in reading order. The way out (unschedule or unpublish on the piece
+ * record) is part of that same paragraph, visually hidden: a static <p> is
+ * no control, so an `aria-describedby` on it would never be announced.
  * Dragging follows the same rule (`canDropOnStage` in `useBoardDrag.ts`).
  */
 export function PiecesBoardStagePicker({
@@ -60,23 +61,28 @@ export function PiecesBoardStagePicker({
 }: PiecesBoardStagePickerProps) {
   const { t } = useTranslation();
   const format = useFormat();
-  const lockedReasonId = useId();
   const isLocked = piece.stage === "Published" || hasPublishDate(piece);
 
   if (isLocked) {
     const isScheduled = isPieceScheduled(piece);
     const StatusIcon = isScheduled ? FiClock : FiGlobe;
+    const publishedAtDate = piece.publishedAt
+      ? format.date(new Date(piece.publishedAt), GOES_LIVE_FORMAT)
+      : null;
     const statusText =
-      isScheduled && piece.publishedAt
-        ? t("magazine:desk.board.goesLive", {
-            date: format.date(new Date(piece.publishedAt), GOES_LIVE_FORMAT),
-          })
-        : t("magazine:desk.board.liveOnSite");
+      isScheduled && publishedAtDate
+        ? t("magazine:desk.board.goesLive", { date: publishedAtDate })
+        : piece.stage !== "Published" && publishedAtDate
+          ? t("magazine:desk.goLive.liveSinceTellWriter", {
+              date: publishedAtDate,
+            })
+          : t("magazine:desk.board.liveOnSite");
     return (
-      <p className={styles.stageLocked} aria-describedby={lockedReasonId}>
+      <p className={styles.stageLocked}>
         <StatusIcon aria-hidden="true" className={styles.stageLockedIcon} />
         <span>{statusText}</span>
-        <span id={lockedReasonId} className="visuallyHidden">
+        <span className="visuallyHidden">
+          {" "}
           {t(
             isScheduled
               ? "magazine:desk.board.unscheduleToMove"

@@ -1,5 +1,5 @@
 import { useEffect, useMemo } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useDeletedConversations } from "../../../app/providers/useDeletedConversations";
 import { initialsOf, tintForSlug } from "../../../shared/api/refs";
@@ -27,6 +27,10 @@ import { useMessageViewer } from "../useMessageViewer";
 import { OFFICIAL_AVATAR_URL } from "../officialAvatar";
 import { colleagueSenderLabel, isTypedByViewer } from "../viewerSideSender";
 import { groupInitials } from "./messages.adapters";
+import {
+  cachedMatchedChatNames,
+  withMatchedChatMentionNames,
+} from "../matchedChatMentionText";
 import { searchMessages } from "./messages.api";
 
 /** Least query length that fans out — a single character matches too much to be
@@ -104,6 +108,11 @@ function toGroups(
   response: MessageSearchResponse,
   viewer: MessageViewer,
   t: TFunction,
+  // PRD-423: the first names a cached matched chat row knows, keyed by
+  // member key, or null outside a matched chat.
+  matchedChatNamesFor: (
+    conversationId: string,
+  ) => ReadonlyMap<string, string> | null = () => null,
 ): MessageSearchGroupView[] {
   const metaByConversation = new Map(
     response.conversations.map((group) => [group.conversationId, group]),
@@ -159,11 +168,21 @@ function toGroups(
       order.push(hit.conversationId);
     }
     // A reply sent as a business the viewer staffs is on the viewer's side.
-    const isViewerSide = isFromViewerSide(hit.sender, viewer);
+    // PRD-423: a matched chat hit says so itself (`isSentByViewer`), since
+    // its sender handle is a per-chat key no cached row may name yet.
+    const isViewerSide =
+      isFromViewerSide(hit.sender, viewer) || hit.isSentByViewer === true;
+    const matchedChatNames = matchedChatNamesFor(hit.conversationId);
     group.hits.push({
       id: hit.id,
       conversationId: hit.conversationId,
-      snippet: hit.snippet,
+      snippet: matchedChatNames
+        ? withMatchedChatMentionNames(
+            hit.snippet,
+            matchedChatNames,
+            t("messages:mention.member"),
+          )
+        : hit.snippet,
       time: shortTime(hit.createdAt),
       from: isViewerSide ? "me" : "them",
       // ENG-243: an erased sender's hit is labelled in the viewer's language.
@@ -375,9 +394,15 @@ export function useMessageSearch(
     ],
   );
 
+  const queryClient = useQueryClient();
   const liveGroups = useMemo(
-    () => (liveQuery.data ? toGroups(liveQuery.data, viewer, t) : []),
-    [liveQuery.data, viewer, t],
+    () =>
+      liveQuery.data
+        ? toGroups(liveQuery.data, viewer, t, (conversationId) =>
+            cachedMatchedChatNames(queryClient, conversationId),
+          )
+        : [],
+    [liveQuery.data, viewer, t, queryClient],
   );
 
   const groups = demoMode ? demoGroups : liveGroups;

@@ -458,7 +458,7 @@ export const resources: Catalog = {
   "pronounsGuide.pronouns.body2":
     "You can set multiple pronoun sets (e.g. she/they) and add a custom string if none of the presets fit. Changes take effect immediately and there's no limit to how often you can update them.",
   "pronounsGuide.pronouns.body3":
-    "If another member uses the wrong pronouns for you in the forum or messages, you can report it using the report function on any post or message. Our moderation team treats repeated misgendering as a code of conduct issue.",
+    "If another member uses the wrong pronouns for you in the forum or messages, you can report it using the report function on any post or message. Our moderation team treats repeated misgendering as a Code of Conduct violation.",
 
   "pronounsGuide.faq.eyebrow": "Common questions",
   "pronounsGuide.faq.title": "Things people <em>ask us.</em>",
@@ -1320,12 +1320,13 @@ export const resources: Catalog = {
   // CNT-13 freshness signal, shown on every guide card.
   "library.card.verifiedOn": "Verified {date}",
   "library.card.notYetVerified": "Not yet verified",
+  "library.loadMoreError": "We couldn't load more guides.",
 
   // ── SexualHealthPage (+ SexualHealthTabs.tsx + sexualHealth.data.ts) ────
   // Flagged for native review: sexual-health/HIV/PrEP information. Since
   // 6 Oct 2026 (DES-421) the TESTING_INFO, PREP_STEPS, PREP_FAQ, HIV_INFO and
-  // GUIDES copy is translated below; the demo-only CLINICS entries
-  // (desc/details/hours/meta) stay English.
+  // GUIDES copy is translated below, and so is the demo-only CLINICS
+  // directory (sexualHealth.testing.clinic.*).
   "sexualHealth.meta.title":
     "Sexual health in Lisbon: testing, PrEP and HIV resources",
   "sexualHealth.meta.description":
@@ -1366,6 +1367,10 @@ export const resources: Catalog = {
   "sexualHealth.testing.clinicCard.bringLabel": "What to bring",
   "sexualHealth.testing.clinicCard.accessLabel": "Access",
   "sexualHealth.testing.clinicCard.noteLabel": "Good to know",
+  "sexualHealth.testing.clinicCard.review_one":
+    "{rating} · {count} member review",
+  "sexualHealth.testing.clinicCard.review_other":
+    "{rating} · {count} member reviews",
   "sexualHealth.testing.nominate.doneTitle": "Thank you. <em>Noted.</em>",
   "sexualHealth.testing.nominate.doneBody":
     "We'll check it out and review it with the community before it goes live. The board stays trustworthy because members like you keep it current.",
@@ -2728,6 +2733,76 @@ export const resources: Catalog = {
   "sexualHealth.testing.info.cost.title": "Cost",
   "sexualHealth.testing.info.cost.body":
     "SNS CAD centres are free. Rapid HIV tests at pharmacies cost €15–25. NGO services (CheckpointLx, GAT) are free and anonymous.",
+  "sexualHealth.testing.clinic.typeLabel.ngoFree": "NGO · Free",
+  "sexualHealth.testing.clinic.typeLabel.snsFree": "SNS · Free",
+  "sexualHealth.testing.clinic.typeLabel.pharmacyPaid": "Pharmacy · €15–25",
+  "sexualHealth.testing.clinic.typeLabel.privatePaid": "Private · Paid",
+  "sexualHealth.testing.clinic.checkpointLx.description":
+    "Lisbon's leading queer-specific sexual health service. Free, anonymous testing for HIV, syphilis, hepatitis B & C, and gonorrhoea. PrEP counselling. Staff are experienced with queer and trans clients. No appointment needed on drop-in days.",
+  "sexualHealth.testing.clinic.checkpointLx.location":
+    "Rua de São Lázaro, Intendente",
+  "sexualHealth.testing.clinic.checkpointLx.hours":
+    "Tue & Thu 18:00–21:00, Sat 14:00–18:00",
+  "sexualHealth.testing.clinic.checkpointLx.details.tests":
+    "HIV, syphilis, hepatitis B & C, gonorrhoea. Rapid results the same evening.",
+  "sexualHealth.testing.clinic.checkpointLx.details.bring":
+    "Nothing required: you can come without ID, an SNS number or an appointment on drop-in days.",
+  "sexualHealth.testing.clinic.checkpointLx.details.access":
+    "Ground-floor entrance, step-free. Trans-experienced staff. Service available in PT and EN.",
+  "sexualHealth.testing.clinic.checkpointLx.details.note":
+    "Busiest in the first hour. Arriving later in the session usually means a shorter wait.",
+  "sexualHealth.testing.clinic.gatLisboa.description":
+    "Community-based harm reduction and sexual health. Free HIV rapid tests, peer counselling, PrEP navigation support, and an anonymous STI referral service. Particularly strong on outreach to migrants and people in sex work.",
+  "sexualHealth.testing.clinic.gatLisboa.location":
+    "Rua do Século, Bairro Alto",
+  "sexualHealth.testing.clinic.gatLisboa.hours": "Mon–Fri 10:00–18:00",
+  "sexualHealth.testing.clinic.gatLisboa.details.tests":
+    "HIV rapid test on site; referrals for the full STI panel. PrEP navigation support.",
+  "sexualHealth.testing.clinic.gatLisboa.details.bring":
+    "Nothing required for a rapid test. For referrals, an SNS number helps but staff can advise without one.",
+  "sexualHealth.testing.clinic.gatLisboa.details.access":
+    "Peer counsellors who speak PT, EN, and FR. Especially experienced with migrants and people in sex work.",
+  "sexualHealth.testing.clinic.gatLisboa.details.note":
+    "Walk-in for rapid tests; PrEP navigation is best booked by phone first.",
+  "sexualHealth.testing.clinic.cad.description":
+    "The public SNS HIV testing and counselling service. Free, confidential, with a counsellor present. Also provides hepatitis B vaccination and referrals to PrEP. You need to register with the SNS but no insurance required.",
+  "sexualHealth.testing.clinic.cad.location":
+    "Multiple locations across Lisbon",
+  "sexualHealth.testing.clinic.cad.hours": "By appointment",
+  "sexualHealth.testing.clinic.cad.details.tests":
+    "HIV testing with a counsellor, hepatitis B vaccination, and PrEP referrals.",
+  "sexualHealth.testing.clinic.cad.details.bring":
+    "Your SNS number. No private insurance needed; EU citizens can use an EHIC card.",
+  "sexualHealth.testing.clinic.cad.details.access":
+    "Multiple SNS sites across the city. Pick the one nearest you when booking.",
+  "sexualHealth.testing.clinic.cad.details.note":
+    "Confidential: results are never shared without your consent, including with your GP.",
+  "sexualHealth.testing.clinic.pharmacyRapidTest.description":
+    "Available over the counter at most pharmacies. Result in 15 minutes. Detects HIV from 3 months after potential exposure. Ask for a teste rápido de VIH. No prescription needed and no record is kept.",
+  "sexualHealth.testing.clinic.pharmacyRapidTest.location": "Any farmácia",
+  "sexualHealth.testing.clinic.pharmacyRapidTest.hours":
+    "Walk in during opening hours",
+  "sexualHealth.testing.clinic.pharmacyRapidTest.details.tests":
+    "Rapid finger-prick HIV test, result in about 15 minutes.",
+  "sexualHealth.testing.clinic.pharmacyRapidTest.details.bring":
+    "€15–25 in cash or card. You need no prescription or ID, and no record is kept.",
+  "sexualHealth.testing.clinic.pharmacyRapidTest.details.access":
+    "Available at most pharmacies. Larger ones are more likely to stock it.",
+  "sexualHealth.testing.clinic.pharmacyRapidTest.details.note":
+    "Detects HIV from roughly 3 months after a potential exposure; test again if it was more recent.",
+  "sexualHealth.testing.clinic.clinicaDaTravessa.description":
+    "Private clinic with queer-affirming staff. Full STI panel (HIV, syphilis, gonorrhoea, chlamydia, HSV, hepatitis B & C, HPV). Results within 48 hours. Offers PrEP prescription outside the SNS pathway for those who prefer it.",
+  "sexualHealth.testing.clinic.clinicaDaTravessa.location": "Príncipe Real",
+  "sexualHealth.testing.clinic.clinicaDaTravessa.hours":
+    "Mon–Sat, by appointment",
+  "sexualHealth.testing.clinic.clinicaDaTravessa.details.tests":
+    "Full STI panel: HIV, syphilis, gonorrhoea, chlamydia, HSV, hepatitis B & C, HPV. Results within 48 hours.",
+  "sexualHealth.testing.clinic.clinicaDaTravessa.details.bring":
+    "A booking and a payment method. PrEP prescriptions available outside the SNS pathway.",
+  "sexualHealth.testing.clinic.clinicaDaTravessa.details.access":
+    "Queer-affirming staff; private, discreet setting. Appointments PT and EN.",
+  "sexualHealth.testing.clinic.clinicaDaTravessa.details.note":
+    "Paid service, useful when you want a fast, comprehensive panel without the SNS wait.",
 
   "legal.lawyers.loadError.title":
     "We couldn't load the <em>lawyer directory.</em>",

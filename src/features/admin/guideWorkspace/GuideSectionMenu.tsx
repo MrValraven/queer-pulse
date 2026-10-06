@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   FiArrowDown,
   FiArrowUp,
@@ -16,7 +15,8 @@ import styles from "./GuideDocument.module.css";
 /**
  * The section's options: its anchor, move and remove. Rendered inline under
  * the heading row (no popover to clip), and forced open while the anchor has
- * a validation issue so the field it points at is on screen.
+ * a validation issue so the field it points at is on screen. The section
+ * editor owns `isOpen`, so its unread-anchor warning can open the panel too.
  */
 export function GuideSectionMenu({
   section,
@@ -24,15 +24,18 @@ export function GuideSectionMenu({
   sectionCount,
   hasAnchorIssue,
   structure,
+  isOpen,
+  onToggle,
 }: {
   section: DraftSection;
   sectionIndex: number;
   sectionCount: number;
   hasAnchorIssue: boolean;
   structure: GuideStructureEditing;
+  isOpen: boolean;
+  onToggle: () => void;
 }) {
   const { t } = useTranslation();
-  const [isOpen, setIsOpen] = useState(false);
   const isPanelOpen = isOpen || hasAnchorIssue;
   const panelId = `guide-section-menu-${section.key}`;
   const anchorId = guideSectionAnchorId(section.key);
@@ -45,7 +48,7 @@ export function GuideSectionMenu({
         aria-label={t("admin:guideWorkspace.section.menuLabel")}
         aria-expanded={isPanelOpen}
         aria-controls={panelId}
-        onClick={() => setIsOpen((current) => !current)}
+        onClick={onToggle}
       >
         <FiMoreHorizontal aria-hidden />
       </Button>

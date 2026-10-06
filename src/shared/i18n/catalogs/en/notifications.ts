@@ -1385,4 +1385,10 @@ export const notifications: Catalog = {
     "We weren't able to place you in a group for {eventTitle}",
   "type.go_together_unmatched.textHostOff":
     "The host switched Go together off for {eventTitle}",
+  "type.forum_co_author_credit.text":
+    "You were credited as co-author on “{threadTitle}”.",
+  "type.forum_co_author_credit.textNamed":
+    "<profile>{name}</profile> credited you as co-author on “{threadTitle}”.",
+  "type.forum_co_author_credit.meta": "Co-author credit",
+  "type.forum_co_author_credit.threadTitleFallback": "a thread",
 };

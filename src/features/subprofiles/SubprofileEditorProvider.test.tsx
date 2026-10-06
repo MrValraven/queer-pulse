@@ -452,3 +452,40 @@ describe("typed refusals on Save show translated copy (ENG-448, PRD-427)", () =>
     ).not.toBeInTheDocument();
   });
 });
+
+// ENG-447: an unlink answers under a fresh id, and the old one no longer
+// resolves, so the rest of the same save writes to the new one.
+describe("SubprofileEditorProvider save after an unlink (ENG-447)", () => {
+  it("writes every step after the unlink to the fresh id the PATCH answers with", async () => {
+    writes.update.mockResolvedValue(
+      ownerDto({ id: "sp-fresh", linkVisibility: "unlinked", editVersion: 4 }),
+    );
+    writes.replaceSocials.mockResolvedValue(
+      ownerDto({ id: "sp-fresh", linkVisibility: "unlinked", editVersion: 5 }),
+    );
+    const { result } = renderEditor(subprofileToView(ownerDto()));
+
+    act(() => {
+      result.current.meta.setLink("unlinked");
+      result.current.setSocialRows([
+        ...result.current.socialRows,
+        { platform: "site", urlOrHandle: "tiago.dev", _uid: "social-added" },
+      ]);
+    });
+    let isSaved = false;
+    await act(async () => {
+      isSaved = await result.current.saveAll();
+    });
+
+    expect(isSaved).toBe(true);
+    expect(writes.update).toHaveBeenCalledWith(
+      expect.objectContaining({
+        id: "sp-conflict",
+        dto: expect.objectContaining({ linkVisibility: "unlinked" }),
+      }),
+    );
+    expect(writes.replaceSocials).toHaveBeenCalledWith(
+      expect.objectContaining({ id: "sp-fresh", expectedEditVersion: 4 }),
+    );
+  });
+});

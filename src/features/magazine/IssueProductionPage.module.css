@@ -77,8 +77,10 @@
 }
 
 @media (max-width: 1100px) {
+  /* `minmax(0, …)`: a bare `1fr` keeps the track's min-content floor, so a
+     wide child (the social-out row) stretched it past a 375px screen. */
   .ework {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 

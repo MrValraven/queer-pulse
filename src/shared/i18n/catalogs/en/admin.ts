@@ -1707,6 +1707,7 @@ export const admin: Catalog = {
 
   "adminIntakes.inquiryKind.contact": "Contact",
   "adminIntakes.inquiryKind.partner": "Partnership",
+  "adminIntakes.inquiryKind.listing_correction": "Listing correction",
   "adminIntakes.inquiryStatus.new": "Waiting",
   "adminIntakes.inquiryStatus.handled": "Handled",
 
@@ -1720,6 +1721,11 @@ export const admin: Catalog = {
   "adminIntakes.row.reviewedNoOne": "Read {date}. No reviewer was recorded.",
   "adminIntakes.row.handledBy": "Handled {date} by {name}",
   "adminIntakes.row.handledNoOne": "Handled {date}. No handler was recorded.",
+  "adminIntakes.row.priority": "Safety: read first",
+  "adminIntakes.row.listingLabel": "Listing:",
+  "adminIntakes.row.listingLink": "{name} ({ref})",
+  "adminIntakes.row.listingGone":
+    "Listing {ref}, which is no longer in the directory",
 
   "adminIntakes.confidential.body":
     "A governance concern arrived. What it says stays on the concerns page, where it can be triaged in full.",
@@ -5584,6 +5590,9 @@ export const admin: Catalog = {
   "guideWorkspace.section.moveDown": "Move section down",
   "guideWorkspace.section.remove": "Remove section",
   "guideWorkspace.section.removedToast": "Section removed.",
+  "guideWorkspace.section.unreadAnchor":
+    "The page only reads sections anchored {anchors}, so readers won't see this one ({anchor}).",
+  "guideWorkspace.section.changeAnchor": "Change anchor",
   "guideWorkspace.translation.referenceLabel":
     "English version of this section",
   "guideWorkspace.translation.englishEyebrow": "English",
@@ -5594,6 +5603,8 @@ export const admin: Catalog = {
     "Readers in Portuguese see the English version until a Portuguese section exists.",
   "guideWorkspace.preview.empty": "Nothing to preview yet.",
   "guideWorkspace.preview.editSection": "Edit this section",
+  "guideWorkspace.preview.composedPageNotice":
+    "This pane shows the sections alone; Preview in the guide list shows them in the page.",
   "guideWorkspace.issue.titleRequired": "Add a title.",
   "guideWorkspace.issue.titleTooLong": "Keep the title under 300 characters.",
   "guideWorkspace.issue.descriptionRequired": "Add a description.",
@@ -5617,6 +5628,10 @@ export const admin: Catalog = {
   "guideWorkspace.issue.tooManyBlocks": "A section can have up to 60 blocks.",
   "guideWorkspace.issue.blockTooLong":
     "This block is over the 4000 character limit.",
+  "guideWorkspace.composedPage.title":
+    "This guide keeps its own tabbed page. Each section replaces the tab its anchor names: {anchors}. Tabs without a section keep their built-in copy.",
+  "guideWorkspace.composedPage.guidesDetail":
+    'A "guides" section replaces the guide cards and their rating widgets.',
 
   // ── AdminHousingListingsPage — the housing review console (LOC-01) ──────
   // Every member listing lands in `review` and public browse serves `live`
@@ -6258,6 +6273,7 @@ export const admin: Catalog = {
     "Owner review requests",
   "moderationHealth.queue.forum_thread_reviews":
     "Forum threads awaiting review",
+  "moderationHealth.queue.safety_inquiries": "Safety messages",
   "adminForumReview.title": "Forum <em>review</em>",
   "adminForumReview.header.eyebrow": "Forum",
   "adminForumReview.header.title": "Threads waiting on <em>a read</em>",
@@ -6790,6 +6806,27 @@ export const admin: Catalog = {
   "moderation.reportDrawer.groupEvidence.title": "Reported group",
   "moderation.reportDrawer.groupEvidence.memberCountLabel": "Members",
   "moderation.reportDrawer.groupEvidence.capturedLabel": "Captured",
+  "moderation.reportDrawer.homeEvidence.title":
+    "Reported home, as it was when reported",
+  "moderation.reportDrawer.homeEvidence.locationLabel": "Location",
+  "moderation.reportDrawer.homeEvidence.listerLabel": "Lister's account",
+  "moderation.reportDrawer.groupRoomEvidence.title":
+    "Reported room, as it was when reported",
+  "moderation.reportDrawer.groupRoomEvidence.groupLabel": "Housing group",
+  "moderation.reportDrawer.groupRoomEvidence.neighbourhoodLabel":
+    "Neighbourhood",
+  "moderation.reportDrawer.groupRoomEvidence.accessibilityLabel":
+    "Accessibility",
+  "moderation.reportDrawer.groupRoomEvidence.posterLabel": "Poster's account",
+  "moderation.reportDrawer.housingEvidence.rentLabel": "Rent per month",
+  "moderation.reportDrawer.housingEvidence.listedLabel": "Listed",
+  "moderation.reportDrawer.housingEvidence.capturedLabel": "Captured",
+  "moderation.reportDrawer.housingEvidence.noAccount": "No account on record",
+  "moderation.reportDrawer.housingEvidence.copyAccountId": "Copy account id",
+  "moderation.reportDrawer.housingEvidence.accountIdCopied":
+    "Account id copied",
+  "moderation.reportDrawer.housingEvidence.copyFailed":
+    "Couldn't copy the account id. Select it and copy it by hand.",
 
   // ── PRD-282, the staff triage console (`AdminQueuesPage`) ──────────────
   // The three "null" cells below are three different sentences on purpose and

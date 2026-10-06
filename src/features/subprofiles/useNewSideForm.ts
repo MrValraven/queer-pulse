@@ -96,6 +96,9 @@ async function createAndSeedSubprofile(args: {
       (method === "copy" ? copyDefaultName : KIND_LABELS[kind]),
   });
 
+  // The draft every later write goes to. Unlinking it gives it a fresh id
+  // (ENG-447), so the writes after the unlink use the id it answers with.
+  let subprofileId = created.id;
   let handleClaimFailed = false;
   if (linkVisibility === "unlinked") {
     // A failure here (e.g. a handle that turns out to be taken) shouldn't
@@ -104,10 +107,11 @@ async function createAndSeedSubprofile(args: {
     // checklist. We DO report the failure so the caller can tell the member
     // their handle wasn't claimed, rather than silently swallowing it.
     try {
-      await update.mutateAsync({
-        id: created.id,
+      const unlinked = await update.mutateAsync({
+        id: subprofileId,
         dto: { linkVisibility: "unlinked", handle },
       });
+      subprofileId = unlinked.id;
     } catch {
       handleClaimFailed = true; // stays linked; editable in the editor
     }
@@ -121,7 +125,7 @@ async function createAndSeedSubprofile(args: {
     // filters the links to the ones this member may make (a co-owner's
     // community would sink the whole replace); demo accepts any target.
     const plan = buildDuplicatePlan(source, copyMode);
-    const outcome = await applyDuplicatePlan(created.id, plan, {
+    const outcome = await applyDuplicatePlan(subprofileId, plan, {
       update,
       replaceSocials,
       replaceSection,
@@ -130,6 +134,7 @@ async function createAndSeedSubprofile(args: {
         ? undefined
         : (id) => getAffiliationOptions(id),
     });
+    subprofileId = outcome.subprofileId;
     skippedAffiliationCount = outcome.skippedAffiliationCount;
     hasAffiliationSaveFailed = outcome.hasAffiliationSaveFailed;
   } else if (method === "template") {
@@ -140,7 +145,7 @@ async function createAndSeedSubprofile(args: {
     for (const { section, items } of buildTemplateSections(kind, t)) {
       try {
         await replaceSection.mutateAsync({
-          id: created.id,
+          id: subprofileId,
           section,
           items: itemsToInputDto(items),
         });
@@ -151,14 +156,14 @@ async function createAndSeedSubprofile(args: {
     const tagline = templateTaglineFor(kind, t);
     if (tagline) {
       try {
-        await update.mutateAsync({ id: created.id, dto: { tagline } });
+        await update.mutateAsync({ id: subprofileId, dto: { tagline } });
       } catch {
         /* tagline stays blank; editable in the editor */
       }
     }
   }
   return {
-    id: created.id,
+    id: subprofileId,
     handleClaimFailed,
     skippedAffiliationCount,
     hasAffiliationSaveFailed,

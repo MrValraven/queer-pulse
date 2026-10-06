@@ -47,7 +47,9 @@ export function guideRouteFor(
 export function resourceToGuide(dto: ResourceResponseDTO): Guide {
   return {
     title: dto.title,
+    titlePt: dto.titlePt,
     description: dto.description,
+    descriptionPt: dto.descriptionPt,
     category: dto.category,
     categoryLabel: CATEGORY_LABELS[dto.category] ?? dto.category,
     meta: dto.meta ?? "",

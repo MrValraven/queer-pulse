@@ -1,9 +1,11 @@
 /* The quiet go-live line in the pipeline row's action cell and a calendar
    chip's meta line: muted ink at the small text size, a clock or globe mark ahead of
    it, and no control chrome, so it reads as a status beside the verbs. */
+/* The mark keeps to the first line, so a note that wraps (PRD-437's "Live
+   since ... Publish it to tell the writer.") reads as one block after it. */
 .status {
   display: inline-flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 4px;
   min-width: 0;
   font-size: var(--text-12);
@@ -11,10 +13,12 @@
   color: var(--ink-60);
 }
 
-/* In the table's right-aligned action cell a wrapped line keeps to the
-   cell's edge. */
+/* In the table's right-aligned action cell the block keeps to the cell's
+   end edge (the cell's own `justify-content`/`align-items` place it), while
+   its lines read from the start, so the mark stays beside the text on every
+   line length. */
 .status[data-align="end"] {
-  text-align: end;
+  text-align: start;
 }
 
 /* Inside a calendar chip's meta line: the line's own size and ink. */
@@ -23,6 +27,34 @@
   color: inherit;
 }
 
+/* Half the leading above the 1em mark centres it on the first line. */
 .icon {
   flex: none;
+  margin-top: 0.15em;
+}
+
+/* PRD-437's live note carries two forms (`PieceLiveSinceNote`): the full
+   sentence everywhere, and a one-line "Live since {date}" for the compact
+   desk density, whose rows have no room for the sentence's two or three
+   lines. */
+.liveNoteShort {
+  display: none;
+}
+
+:global([data-density="compact"]) .liveNoteShort {
+  display: inline;
+  white-space: nowrap;
+}
+
+/* Compact keeps the full sentence for assistive tech (it is the Publish
+   button's description, and display: none would drop it from that), so it
+   is clipped out of view the way the global .visuallyHidden helper does. */
+:global([data-density="compact"]) .liveNoteFull {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }

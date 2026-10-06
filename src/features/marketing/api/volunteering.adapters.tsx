@@ -395,7 +395,9 @@ export interface SignupRow {
   isAwaitingCompletion: boolean;
 }
 
-/** A signup DTO → a render-ready row for the poster's roster / manage-applicants views. */
+/** A signup DTO → a render-ready row for the poster's roster / manage-applicants views.
+ *  A nulled-out member ref gets an empty `name`; `useSignups` fills it with
+ *  the translated placeholder at read time, so a language switch updates it. */
 export function signupToRow(dto: VolunteerSignupDTO, i: number): SignupRow {
   const person = memberRefToPerson(dto.member);
   const tint = TEAM_TINTS[i % TEAM_TINTS.length]!;
@@ -414,7 +416,7 @@ export function signupToRow(dto: VolunteerSignupDTO, i: number): SignupRow {
   return {
     id: dto.id,
     person,
-    name: person?.name ?? "A member",
+    name: person?.name ?? "",
     initials: person?.initials ?? "··",
     background: tint.bg,
     color: tint.color,

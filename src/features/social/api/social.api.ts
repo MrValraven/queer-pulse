@@ -23,6 +23,10 @@ export interface BlockDTO {
   /** ISO creation time. */
   createdAt: string;
   reason?: string;
+  /** PRD-423: a block placed from inside a matched Go together chat.
+   *  `member` then carries the first name and pronouns alone, and the
+   *  block is lifted by its `id` (`unblockBlockById`). */
+  isMatchedChatBlock?: true;
 }
 
 /** A member the actor has muted. */
@@ -83,6 +87,13 @@ export interface UnblockResultDTO {
  *  any (see `UnblockResultDTO`). */
 export const unblockMember = (slug: string) =>
   apiDelete<UnblockResultDTO | void>(`/blocks/${encodeURIComponent(slug)}`);
+
+/** DELETE /blocks/by-id/:id (PRD-423): unblock by the block's own id, the one
+ *  handle a block placed in a matched Go together chat carries. */
+export const unblockBlockById = (blockId: string) =>
+  apiDelete<UnblockResultDTO | void>(
+    `/blocks/by-id/${encodeURIComponent(blockId)}`,
+  );
 
 /** GET /mutes — members the actor has muted, newest first. */
 export async function getMutes(page?: number) {

@@ -29,11 +29,9 @@ import { useComposerSendHandlers } from "./useComposerSendHandlers";
 import { useComposerTyping } from "./useComposerTyping";
 import { useDraftSync } from "./useDraftSync";
 import { useInsertMentionShortcut } from "./useInsertMentionShortcut";
-import {
-  loadDraftOrServerFallback,
-  saveDraft,
-  shouldSeedLateServerDraft,
-} from "./drafts";
+import { saveDraft, shouldSeedLateServerDraft } from "./drafts";
+import { useComposerDraftSeed } from "./useComposerDraftSeed";
+import { useStoredMessageBody } from "./matchedChatComposerMentions";
 import type { ChatMessage, Conversation } from "./data";
 import type { StickerResponse } from "../../shared/contracts/contracts";
 import styles from "./MessagesPage.module.css";
@@ -103,9 +101,8 @@ export function Composer({
   const { scheduleSync, syncNow } = useDraftSync(conversationId);
   // Seeded local-first, server-fallback (SOC-16); see `loadDraftOrServerFallback`.
   // Remounted (via `key={active.id}`) on thread switch, so this re-seeds per thread.
-  const [draft, setDraft] = useState(() =>
-    loadDraftOrServerFallback(conversationId, active.draft),
-  );
+  const draftSeed = useComposerDraftSeed(conversationId, active.draft);
+  const [draft, setDraft] = useState(draftSeed.seed);
   const { demoMode } = useDemoMode();
   // SOC-16/ENG-253: `active.draft` (the server's cross-device copy) can
   // resolve AFTER this composer has already mounted, via a separate detail
@@ -138,7 +135,7 @@ export function Composer({
       return;
     }
     hasSeededLateServerDraftRef.current = true;
-    const seeded = active.draft ?? "";
+    const seeded = draftSeed.decode(active.draft ?? "");
     setDraft(seeded);
     saveDraft(conversationId, seeded);
     // Reposition the caret only when the field is already focused (untyped
@@ -151,7 +148,7 @@ export function Composer({
         node.setSelectionRange(node.value.length, node.value.length),
       );
     }
-  }, [active.draft, conversationId, demoMode, draft, textareaRef]);
+  }, [active.draft, conversationId, demoMode, draft, draftSeed, textareaRef]);
   // Advisory-only, recomputed per keystroke; see `ComposerSafetyNotice`.
   const safetySignals = useMemo(
     () => detectContactSafetySignals(draft),
@@ -184,7 +181,8 @@ export function Composer({
   // DES-202: mirrors the server's own `MESSAGE_BODY_MAX_LENGTH` rejection so
   // `handleSend`/Enter-to-send can no-op before that round-trip; the same
   // helper backs `ComposerLengthCounter` below, so the two never disagree.
-  const isOverLimit = isMessageBodyOverLimit(draft);
+  const storedDraft = useStoredMessageBody(draft); // PRD-423: key tokens
+  const isOverLimit = isMessageBodyOverLimit(storedDraft);
   // DES-204: paste/drop stage through the SAME `onImagePicked`/
   // `onDocumentPicked` entry points the attach menu's rows call.
   const { isDraggingFiles, containerRef, dropHandlers, onPaste } =
@@ -279,7 +277,7 @@ export function Composer({
         isOverLimit={isOverLimit}
         counterId={counterId}
       />
-      <ComposerLengthCounter body={draft} counterId={counterId} />
+      <ComposerLengthCounter body={storedDraft} counterId={counterId} />
       {staging.screen}
     </div>
   );

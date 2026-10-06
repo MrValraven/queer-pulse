@@ -118,12 +118,14 @@
   background: var(--cream);
 }
 
+/* Neutral context about the pane, so it reads as information. Text over the
+   wash is 12.93:1 in light and 13.60:1 in dark. */
 .previewNotice {
   margin: 0;
   padding: 10px 16px;
   font-size: var(--text-13);
   color: var(--text-strong);
-  background: rgba(var(--accent-rgb), 0.08);
+  background: var(--wash);
 }
 
 .previewEmpty {

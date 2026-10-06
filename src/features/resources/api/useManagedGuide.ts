@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { ApiError } from "../../../shared/api/client";
 import { getResourceGuide, type ResourceResponseDTO } from "./resources.api";
+import { SECTION_COMPOSED_GUIDE_SLUGS } from "../sectionComposedGuides";
 
 /**
  * The three answers this lookup can get, kept apart because two of them used
@@ -23,7 +24,9 @@ export interface ManagedGuideResult {
    *  no sections is still worth having: it carries the review dates the
    *  footer prints under the hardcoded page. Null means no visible row. */
   guide: ResourceResponseDTO | null;
-  /** True when the row carries prose, so the renderer takes the page over. */
+  /** True when the row carries prose, so the renderer takes the page over.
+   *  Always false for a guide in `SECTION_COMPOSED_GUIDE_SLUGS`, whose page
+   *  reads its sections itself. */
   hasManagedBody: boolean;
   /** True when the backend definitively has no publicly visible guide at this
    *  slug, so the page must not render at all. */
@@ -58,12 +61,17 @@ export interface ManagedGuideResult {
  * asking the backend would either 401 or contradict the fixture — and demo is
  * never gated, or a reviewer browsing it would find the shelves empty.
  */
-export function useManagedGuide(slug: string): ManagedGuideResult {
+export function useManagedGuide(
+  slug: string,
+  { isEnabled = true }: { isEnabled?: boolean } = {},
+): ManagedGuideResult {
   const { demoMode } = useDemoMode();
 
   const query = useQuery<ManagedGuideLookup>({
     queryKey: ["resources", "managed-guide", slug],
-    enabled: !demoMode,
+    // `isEnabled: false` skips the lookup for a caller that already holds the
+    // row (the admin preview, through `ManagedGuideRowContext`).
+    enabled: !demoMode && isEnabled,
     retry: false,
     queryFn: async () => {
       try {
@@ -92,7 +100,9 @@ export function useManagedGuide(slug: string): ManagedGuideResult {
   const guide = lookup?.kind === "guide" ? lookup.guide : null;
   return {
     guide,
-    hasManagedBody: (guide?.sections.length ?? 0) > 0,
+    hasManagedBody:
+      !SECTION_COMPOSED_GUIDE_SLUGS.has(slug) &&
+      (guide?.sections.length ?? 0) > 0,
     isGated: lookup?.kind === "gated",
     isLoading: query.isPending,
   };

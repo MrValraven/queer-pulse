@@ -10,7 +10,9 @@ export interface MessageRun {
 /**
  * Who sent a received group message: the handle, falling back to the display
  * name when the handle is absent. DM messages carry neither, so every DM
- * message resolves to `undefined` and they all count as one sender.
+ * message resolves to `undefined` and they all count as one sender. In a
+ * matched Go together chat the handle is the sender's per-chat member key
+ * (PRD-423), so two members who share a first name still break the run.
  */
 function senderIdentity(message: ChatMessage): string | undefined {
   return message.senderHandle || message.senderName || undefined;

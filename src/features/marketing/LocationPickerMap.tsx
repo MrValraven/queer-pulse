@@ -2,6 +2,7 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import maplibregl, { type StyleSpecification } from "maplibre-gl";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { collapseCompactCreditOnNarrowMap } from "../../shared/components/map/collapseCompactCredit";
 import { MapLoading } from "./MapLoading";
 import {
   buildWarmStyle,
@@ -68,7 +69,11 @@ export function LocationPickerMap({
         "top-right",
       );
       map.on("load", () => {
-        if (!cancelled) setReady(true);
+        if (cancelled) return;
+        // LOC-F14: on a phone the open credit covers the bottom of the
+        // picker, so a narrow map starts on the "i" button.
+        collapseCompactCreditOnNarrowMap(container);
+        setReady(true);
       });
     }
 

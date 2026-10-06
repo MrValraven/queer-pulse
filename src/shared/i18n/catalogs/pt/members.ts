@@ -1798,6 +1798,7 @@ export const members: Catalog = {
   "places.empty.description":
     "Gere um estúdio, loja, clínica ou espaço em Lisboa? Regista-o no diretório. Assim que ficar ativo, aparece aqui também.",
   "places.empty.action": "Registar o meu espaço",
+  "places.empty.titleWithSuggestions": "Ainda não geres nenhum espaço",
   "places.loadError.title": "Não conseguimos carregar <em>estes espaços</em>",
   "places.loadError.body":
     "A lista não voltou. A falha é do nosso lado. Tenta outra vez daqui a um momento.",
@@ -1819,6 +1820,35 @@ export const members: Catalog = {
     "Não foi possível guardar as alterações. Tenta novamente.",
   "places.quickEdit.moreLink":
     "Precisas de alterar categorias, morada ou fotos? <a>Abrir o editor completo.</a>",
+  "places.suggestions.title": "Espaços que <em>sugeriste</em>",
+  "places.suggestions.subtitle":
+    "Espaços que sugeriste para o diretório. A QueerPulse cuida de cada um até o negócio o reclamar, e a equipa revê-o antes de ficar ativo.",
+  "places.suggestions.state.in_review": "Em análise",
+  "places.suggestions.state.needs_info": "Pergunta para ti",
+  "places.suggestions.state.published": "Publicado",
+  "places.suggestions.state.with_business": "Com o negócio",
+  "places.suggestions.state.closed": "Fechado",
+  "places.suggestions.meta":
+    "{city} · Ref. {ref} · <when>Sugerido a {date}</when>",
+  "places.suggestions.note.in_review":
+    "A equipa lê cada sugestão antes de ficar ativa no diretório.",
+  "places.suggestions.note.needs_info":
+    "A equipa perguntou-te algo sobre este espaço. A pergunta está nas tuas notificações, e podes responder enviando uma correção.",
+  "places.suggestions.note.published":
+    "Está ativo no diretório. A QueerPulse cuida dele até o negócio o reclamar.",
+  "places.suggestions.note.claimed":
+    "O negócio reclamou-o e agora é quem cuida do anúncio.",
+  "places.suggestions.note.claimedByYou":
+    "Reclamaste-o, por isso agora és tu quem gere o anúncio.",
+  "places.suggestions.note.closed":
+    "O negócio avisou-nos que fechou de vez. A página continua disponível para quem quiser saber o que aconteceu.",
+  "places.suggestions.correctionCta": "Enviar uma correção",
+  "places.suggestions.loadError":
+    "As tuas sugestões não carregaram. Tenta outra vez daqui a pouco.",
+  "places.suggestions.loadMoreError":
+    "Não conseguimos carregar mais sugestões. Tenta outra vez.",
+  "places.suggestions.loadMore": "Mostrar mais sugestões",
+  "places.suggestions.loadingMore": "A carregar mais…",
 
   // ── Chrome da página de emblemas (BadgesPage, BadgesSections) ──────────────
   "badges.backToProfile": "Voltar ao perfil",

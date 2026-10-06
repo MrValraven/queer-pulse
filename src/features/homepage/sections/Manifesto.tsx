@@ -1,15 +1,26 @@
-import { Link } from "react-router-dom";
-import { Button, Reveal } from "../../../shared/components/ui";
+import { useState } from "react";
+import {
+  Button,
+  ReferenceDigestModal,
+  Reveal,
+} from "../../../shared/components/ui";
 import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import { routes } from "../../../app/routeMap";
 import { manifestoAssurances } from "./Manifesto.data";
+import {
+  MANIFESTO_DIGESTS,
+  type ManifestoDigestId,
+} from "./manifestoDigests.data";
 import styles from "./Manifesto.module.css";
-
-const standPath = `${routes.about}#stand`;
 
 export function Manifesto() {
   const { t } = useTranslation();
+  // "Where we stand" and "How we keep this safe" open a digest of their page in
+  // place, so a visitor reading the landing page keeps their spot; the dialog's
+  // footer button is the way out to the full page.
+  const [openDigestId, setOpenDigestId] = useState<ManifestoDigestId | null>(
+    null,
+  );
 
   return (
     <section className={styles.manifesto} id="about">
@@ -38,7 +49,14 @@ export function Manifesto() {
               <Translation
                 i18nKey="homepage:manifesto.body4"
                 components={{
-                  a: <Link className={styles.bodyLink} to={standPath} />,
+                  a: (
+                    // eslint-disable-next-line jsx-a11y/control-has-associated-label -- <button> is an element template; <Translation> clones it with the link text at render time.
+                    <button
+                      type="button"
+                      className={`${styles.bodyLinkButton} ${styles.bodyLink}`}
+                      onClick={() => setOpenDigestId("stand")}
+                    />
+                  ),
                 }}
               />
             </Reveal>
@@ -46,7 +64,10 @@ export function Manifesto() {
               {t("homepage:manifesto.highlight")}
             </Reveal>
             <Reveal className={styles.actions} delay={280}>
-              <Button variant="ghost-dark" to={routes.safety}>
+              <Button
+                variant="ghost-dark"
+                onClick={() => setOpenDigestId("safety")}
+              >
                 {t("homepage:manifesto.safetyCta")}
               </Button>
             </Reveal>
@@ -72,6 +93,12 @@ export function Manifesto() {
           </ul>
         </div>
       </div>
+      {openDigestId && (
+        <ReferenceDigestModal
+          topic={MANIFESTO_DIGESTS[openDigestId]}
+          onClose={() => setOpenDigestId(null)}
+        />
+      )}
     </section>
   );
 }

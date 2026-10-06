@@ -13,6 +13,10 @@ import { mentionNameKey } from "../../shared/mentions/mentionNameKey";
 import { mentionRefsIn } from "../../shared/mentions/mentionRefs";
 import type { Suggestion } from "../../shared/mentions/useMentionSuggestions";
 import { MatchedChatContext, type MatchedChat } from "./matchedChatContext";
+import {
+  buildMatchedChatComposerMentions,
+  MatchedChatComposerMentionsContext,
+} from "./matchedChatComposerMentions";
 import { realConversationId } from "./useMessagesController.helpers";
 import { useMessageViewer } from "./useMessageViewer";
 import type { ChatMessage, Conversation } from "./data";
@@ -61,6 +65,9 @@ function MatchedChatMentionScopeActive({
   const parentNames = useMentionNameMap();
   const serverNames = useMatchedChatServerNames(active, messageGroups);
   const { myHandle } = useMessageViewer();
+  // PRD-423: every roster row here carries a per-chat member key in `slug`,
+  // and the viewer's own row carries `viewerMemberKey`.
+  const viewerMemberKey = active.viewerMemberKey;
   const members = active.members;
 
   const nameMap = useMemo(() => {
@@ -79,7 +86,9 @@ function MatchedChatMentionScopeActive({
   const memberSuggestions = useMemo<Suggestion[]>(
     () =>
       (members ?? []).flatMap((member) =>
-        member.slug && member.slug !== myHandle
+        member.slug &&
+        member.slug !== myHandle &&
+        member.slug !== viewerMemberKey
           ? [
               {
                 kind: "member" as const,
@@ -91,7 +100,7 @@ function MatchedChatMentionScopeActive({
             ]
           : [],
       ),
-    [members, myHandle],
+    [members, myHandle, viewerMemberKey],
   );
 
   // `groupId` is only for the paths that need a real group to act on (the
@@ -104,18 +113,25 @@ function MatchedChatMentionScopeActive({
     () => ({ groupId, conversationId }),
     [groupId, conversationId],
   );
+  // Minor 6: the composers show `@FirstName` and send the key token.
+  const composerMentions = useMemo(
+    () => buildMatchedChatComposerMentions(members ?? []),
+    [members],
+  );
 
   // Round 1b: the chat also opens no member's profile, from a mention chip
   // or the group info roster, since the profile carries the full name.
   return (
     <MatchedChatContext.Provider value={matchedChat}>
-      <InertMemberMentionsContext.Provider value={true}>
-        <MentionNamesContext.Provider value={nameMap}>
-          <MentionMemberScopeContext.Provider value={memberSuggestions}>
-            {children}
-          </MentionMemberScopeContext.Provider>
-        </MentionNamesContext.Provider>
-      </InertMemberMentionsContext.Provider>
+      <MatchedChatComposerMentionsContext.Provider value={composerMentions}>
+        <InertMemberMentionsContext.Provider value={true}>
+          <MentionNamesContext.Provider value={nameMap}>
+            <MentionMemberScopeContext.Provider value={memberSuggestions}>
+              {children}
+            </MentionMemberScopeContext.Provider>
+          </MentionNamesContext.Provider>
+        </InertMemberMentionsContext.Provider>
+      </MatchedChatComposerMentionsContext.Provider>
     </MatchedChatContext.Provider>
   );
 }

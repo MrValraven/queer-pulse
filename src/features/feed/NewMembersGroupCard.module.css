@@ -1,33 +1,53 @@
-/* "People joined recently": every recent joiner in one feed card. The shell
+/* "People joined": one calendar week's joiners in one feed card. The shell
    (padding, border, 12px gap between head, list and toggle) comes from
    FeedCardShell. Rhythm runs on two values: 12px between groups and rows,
    4px inside a group. */
 
 /* ── Head ── */
+/* The title takes the room and wraps, balanced; the face stack always sits
+   top right, centred on the title's first line, so every group's head has
+   the same shape whatever the title's length or the card's width. */
 .head {
+  container: new-members-head / inline-size;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 4px 12px;
+  align-items: flex-start;
+  gap: 12px;
 }
 .title {
-  margin: 0;
+  flex: 1 1 auto;
   min-width: 0;
+  margin: 0;
   font-family: var(--serif);
   font-weight: 600;
   font-size: var(--text-20);
   line-height: 1.2;
   color: var(--ink);
+  text-wrap: balance;
 }
 .stack {
   flex: none;
+  /* Half the difference between a 28px face and the title's 24px line. */
+  margin-top: -2px;
+}
+/* A narrow card shows three faces, which leaves the title room to stay on
+   two lines. The stack is decorative, so nothing is lost. */
+@container new-members-head (max-width: 360px) {
+  .stack > :nth-child(n + 4) {
+    display: none;
+  }
 }
 
 /* ── Rows ── */
 /* The rows size against the list's own width, so a narrow card stacks them
    whatever the viewport. */
 .list {
+  /* The fold's row motion: how far a revealed row rises into place, and how
+     far apart the cascade starts each one. */
+  --new-members-rise: 6px;
+  --new-members-stagger: 24ms;
+  /* How long a closing fold waits before its height moves, so the rows it
+     hides have all but faded when the clip edge reaches them. */
+  --new-members-close-lead: 60ms;
   container-type: inline-size;
   display: flex;
   flex-direction: column;
@@ -35,6 +55,61 @@
   margin: 0;
   padding: 0;
   list-style: none;
+}
+
+/* The fold, timed like the interest row's (MemberInterestTags.module.css):
+   the list's height travels between its first three rows and the whole list
+   while every row is laid out, and the list clips. It only carries a
+   transition while `data-folding` is set, so at rest there is nothing to
+   recalculate, and the duration comes from the component, scaled to the
+   distance (`--dur-slow` is the fallback for an unmeasured fold). Opening
+   decelerates; closing waits the short lead while the rows fade, then eases
+   at both ends so the list settles gently onto its first three rows. The
+   masonry observes the card, so the cards below follow the height as it
+   moves.
+
+   Reduced motion never reaches these rules: the component swaps state
+   instantly and `data-folding` never appears. */
+.list[data-folding] {
+  overflow: hidden;
+  transition: height var(--new-members-fold-dur, var(--dur-slow))
+    var(--ease-out);
+}
+.list[data-folding="closing"] {
+  transition-timing-function: var(--ease-in-out);
+  transition-delay: var(--new-members-close-lead);
+}
+
+/* The rows the fold reveals: hidden and a touch low until the component
+   sets `data-fold-shown`, after it has measured. On the way in each one
+   starts a step after the last (capped by the component, so a long list does
+   not trail) and all of them land with the height; on the way out they fade
+   together in place, fast from the first frame and mostly inside the close
+   lead, so the clip edge only ever crosses rows that are already nearly
+   gone. They unmount once the fold settles. */
+.list[data-folding] .folded {
+  opacity: 0;
+  transform: translateY(var(--new-members-rise));
+  transition-property: opacity, transform;
+  transition-duration: calc(
+    var(--new-members-fold-dur, var(--dur-slow)) -
+      var(--new-members-fold-step, 0) * var(--new-members-stagger)
+  );
+  transition-delay: calc(
+    var(--new-members-fold-step, 0) * var(--new-members-stagger)
+  );
+  transition-timing-function: var(--ease-out);
+}
+.list[data-folding][data-fold-shown] .folded {
+  opacity: 1;
+  transform: none;
+}
+.list[data-folding="closing"] .folded {
+  /* In place: sinking would push the last row into the clip edge. */
+  transform: none;
+  transition-duration: calc(var(--new-members-close-lead) * 2);
+  transition-delay: 0s;
+  transition-timing-function: var(--ease-out);
 }
 /* Wide: avatar, text and contact button on one line. */
 .row {
@@ -118,7 +193,12 @@
 }
 
 /* ── Show all / Show fewer ── */
+/* The scroll margins are the clearances the card is brought back within
+   when a long list folding shut leaves the toggle off screen: clear of the
+   fixed nav above and any bottom bar below, with a little air. */
 .toggle {
+  scroll-margin-block: calc(var(--sticky-top) + 12px)
+    calc(var(--bottom-inset) + 12px);
   align-self: flex-start;
   min-height: 32px;
   padding: 0;

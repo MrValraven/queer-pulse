@@ -1,4 +1,11 @@
-import { FiEdit3, FiMessageSquare, FiTrash2 } from "react-icons/fi";
+import {
+  FiEdit3,
+  FiEyeOff,
+  FiMessageSquare,
+  FiRotateCcw,
+  FiTrash2,
+} from "react-icons/fi";
+import { routes } from "../../app/routeMap";
 import { Badge, Button, type BadgeTone } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { formatDate } from "../../shared/lib/date";
@@ -52,7 +59,15 @@ function StatusPill({ listing }: { listing: MyGroupListing }) {
  * was refused or has a question against it saw a pill and had no way to learn
  * what to answer or what to fix.
  */
-function DecisionNote({ listing }: { listing: MyGroupListing }) {
+function DecisionNote({
+  listing,
+  isEditable,
+}: {
+  listing: MyGroupListing;
+  /** False on a room taken down from a report, whose Edit is hidden, so the
+   *  hint never points at a control the card does not show. */
+  isEditable: boolean;
+}) {
   const { t } = useTranslation();
   const reason = (
     listing.hidden ? listing.hiddenReason : listing.decisionReason
@@ -72,12 +87,39 @@ function DecisionNote({ listing }: { listing: MyGroupListing }) {
         {t(headingKey)}
       </p>
       <p className={styles.decisionBody}>{reason}</p>
+      {isEditable && (
+        <p className={styles.decisionHint}>
+          {t(
+            listing.status === "question" && !listing.hidden
+              ? "economy:groupListing.mine.decision.questionHint"
+              : "economy:groupListing.mine.decision.editHint",
+          )}
+        </p>
+      )}
+    </div>
+  );
+}
+
+/**
+ * LOC-F13. A room taken down from a report carries no moderator reason on the
+ * row, so before this the poster saw a bare "Taken down" pill and an Edit
+ * button that could never bring the room back (an edit lifts no report
+ * takedown). This says what happened and who can see the room now; the
+ * card's action row carries the appeal button where Edit would sit.
+ */
+function ReportTakedownNote() {
+  const { t } = useTranslation();
+  return (
+    <div className={styles.decision}>
+      <p className={styles.decisionHead}>
+        <FiEyeOff aria-hidden />
+        {t("economy:groupListing.mine.reportTakedown.title")}
+      </p>
+      <p className={styles.decisionBody}>
+        {t("economy:groupListing.mine.reportTakedown.body")}
+      </p>
       <p className={styles.decisionHint}>
-        {t(
-          listing.status === "question" && !listing.hidden
-            ? "economy:groupListing.mine.decision.questionHint"
-            : "economy:groupListing.mine.decision.editHint",
-        )}
+        {t("economy:groupListing.mine.reportTakedown.appealHint")}
       </p>
     </div>
   );
@@ -103,6 +145,9 @@ export function MyGroupListingCard({
   const hasNote = listing.hidden
     ? Boolean(listing.hiddenReason)
     : listing.status === "question" || listing.status === "declined";
+  // LOC-F13: an edit lifts no report takedown, so Edit stays hidden while one
+  // stands. Withdraw stays: taking the room away is always the poster's call.
+  const isReportTakedown = Boolean(listing.moderationState);
 
   return (
     <article className={styles.mineCard}>
@@ -124,21 +169,45 @@ export function MyGroupListingCard({
         </span>
       </div>
 
-      {hasNote && <DecisionNote listing={listing} />}
+      {isReportTakedown && <ReportTakedownNote />}
+      {hasNote && (
+        <DecisionNote listing={listing} isEditable={!isReportTakedown} />
+      )}
 
       <div className={styles.listingManage}>
-        <Button
-          variant="ghost"
-          size="md"
-          onClick={onEdit}
-          disabled={isBusy}
-          aria-label={t("economy:groupListing.manage.editAriaLabel", {
-            title: listing.title,
-          })}
-        >
-          <FiEdit3 aria-hidden />
-          {t("economy:groupListing.manage.editCta")}
-        </Button>
+        {/* LOC-F13: the appeal takes Edit's place on a report takedown. The
+            bare appeal route files against the member's most recent
+            appealable decision, which is usually this takedown; the appeal
+            form lets them say which room they mean. */}
+        {isReportTakedown ? (
+          <Button
+            variant="ghost"
+            size="md"
+            to={routes.appealSubmit}
+            aria-label={t(
+              "economy:groupListing.mine.reportTakedown.appealAria",
+              {
+                title: listing.title,
+              },
+            )}
+          >
+            <FiRotateCcw aria-hidden />
+            {t("economy:groupListing.mine.reportTakedown.appealButton")}
+          </Button>
+        ) : (
+          <Button
+            variant="ghost"
+            size="md"
+            onClick={onEdit}
+            disabled={isBusy}
+            aria-label={t("economy:groupListing.manage.editAriaLabel", {
+              title: listing.title,
+            })}
+          >
+            <FiEdit3 aria-hidden />
+            {t("economy:groupListing.manage.editCta")}
+          </Button>
+        )}
         <Button
           variant="ghost"
           size="md"

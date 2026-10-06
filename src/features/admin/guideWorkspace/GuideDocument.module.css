@@ -132,6 +132,34 @@
   color: var(--danger-ink);
 }
 
+/* A saved section no reader reaches: a warning, so it reads apart from the
+   blocking errors above. --amber-ink is 5.48:1 on paper in light and flips to
+   --amber in dark, 9.53:1 on dark paper. The icon carries the meaning too, so
+   colour is never the only signal. */
+.anchorWarning {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
+  margin: 4px 0 0;
+  font-size: var(--text-12-5);
+  color: var(--amber-ink);
+}
+
+.anchorWarningText {
+  display: inline-flex;
+  margin: 0;
+  flex: 1 1 240px;
+  align-items: flex-start;
+  gap: 6px;
+  min-width: 0;
+}
+
+.anchorWarningIcon {
+  flex: none;
+  margin-top: 0.15em;
+}
+
 .translationRow {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);

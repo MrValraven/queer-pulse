@@ -419,12 +419,17 @@
 }
 
 /* The published/scheduled block that replaces the Publish button once a piece
-   is live: the state line, the reader link, and Unpublish, stacked. */
+   is live: the state line, the reader link, and Unpublish, stacked. A
+   hairline and its own top space part it from the checklist above, so the
+   live line reads as the piece's own state, apart from the gate items. */
 .publishState {
   display: flex;
   flex-direction: column;
   gap: 10px;
   align-items: stretch;
+  margin-top: 2px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.1);
 }
 
 .publishStatus {

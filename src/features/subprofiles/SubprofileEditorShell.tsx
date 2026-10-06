@@ -48,8 +48,10 @@ function isBoolean(value: unknown): value is boolean {
 
 /**
  * The `.ed` grid interior: rail, routed pane + savebar, and docked preview,
- * for ONE persona. Mounted with `key={subprofile.id}` by `SubprofileEditorPage`
- * so it fully re-initializes when the route lands on a different persona.
+ * for ONE persona. Mounted by `SubprofileEditorPage` keyed on the id in the
+ * route, so it fully re-initializes when the route lands on a different
+ * persona, and stays mounted while a save in which an unlink gives the
+ * persona a fresh id (ENG-447) runs to the end.
  *
  * Everything below the rail is wrapped in `SubprofileEditorProvider`, which
  * owns the ONE shared editor state (meta fields + every section/social/

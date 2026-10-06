@@ -42,14 +42,21 @@
   flex: 1 1 auto;
 }
 
+/* Two lines before it trims: between 720 and 1024px (PT, three actions)
+   the column is only 166-256px wide, and one line held a few words of a
+   real headline. The full title is the element's `title` tooltip. */
 .title b {
+  display: -webkit-box;
   font-family: var(--serif);
   font-size: var(--text-16);
   font-weight: 400;
+  line-height: 1.25;
   color: var(--text-strong);
-  white-space: nowrap;
+  white-space: normal;
   overflow: hidden;
-  text-overflow: ellipsis;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
 }
 
 .titleSub {
@@ -60,11 +67,42 @@
   text-overflow: ellipsis;
 }
 
+/* One row beside the title above 700px: the title column gives way (two
+   lines, then trimmed), the actions keep their widths. Below, the header wraps and
+   the actions take their own wrapping line (see the media query). */
 .right {
   margin-left: auto;
   display: flex;
+  flex-wrap: nowrap;
   gap: 8px;
   align-items: center;
+  flex: none;
+}
+
+/* A piece live on the site below Published (PRD-437): a third line in the
+   title column, under the sub-line, says the writer has not been told, so
+   the state shows without scrolling to the rail. In that column it never
+   competes with the actions for the header's one row; where the column is
+   narrower than the chip (PT at 720 and 800px) its text wraps inside the
+   pill. Amber text over its own 20% tint, the pair the desk's badges use
+   (AA in both themes). */
+.liveChip {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  gap: 6px;
+  max-width: 100%;
+  margin-top: 4px;
+  padding: 5px 11px;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--amber-rgb), 0.2);
+  color: var(--amber-ink);
+  font-size: var(--text-12-5);
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.liveChip svg {
   flex: none;
 }
 
@@ -158,8 +196,35 @@
 }
 
 @media (max-width: 700px) {
+  /* Scrolls with the page here: wrapped into title, stage and action lines
+     under the shell's own pinned bar, a sticky header covered about 366px,
+     half a phone screen. The shell bar stays pinned (menu and Write), the
+     header's actions are one scroll up, and the rail's Publish and
+     Unpublish sit in the page flow below the tabs. */
   .ebar {
+    position: static;
     flex-wrap: wrap;
+  }
+
+  /* Keeps the title beside the back button: its basis was the headline's
+     whole one-line width, which always wrapped it under the button. 13rem
+     fits next to it from 320px up (the 48px button and its 12px gap leave
+     208px of 268px there). */
+  .title {
+    flex: 1 1 13rem;
+  }
+
+  /* Once the header wraps, the actions take a line of their own under the
+     title and stage, start at the same edge as both, and wrap: three PT
+     buttons ("Abrir o rascunho" 140px, "Publicar" 86px, "Despublicar"
+     112px, two 8px gaps) need 354px where a 375px header has 323px between
+     its 26px gutters, so the third button takes a second line. */
+  .right {
+    flex: 1 1 100%;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    min-width: 0;
+    margin-left: 0;
   }
 
   .erail {

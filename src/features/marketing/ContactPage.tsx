@@ -24,6 +24,7 @@ import { PageMeta, JsonLd, buildBreadcrumbSchema } from "../../shared/seo";
 import { useSubmitInquiry } from "./api/useSubmitInquiry";
 import {
   LISTING_CORRECTION_TOPIC,
+  contactInquiryRouting,
   listingRefFromParam,
 } from "./contactPrefill";
 import { ContactSentPanel } from "./ContactSentPanel";
@@ -115,28 +116,34 @@ const CONTACT_FORM_ID = "contact-form";
 const CORRECTION_NOTE_ID = "contact-correction-note";
 
 /**
- * PRD-434. A `?ref=` that looks like a listing reference, as the line that
- * names it ("About listing QPL-2026-0007"), or "" without one. The ref is kept
- * in state and translated at render time, since the `marketing` namespace may
- * still be loading on the first render. The page shows it as a note above the
- * message and prepends it to the body on submit, so staff know which listing
- * a correction is about while the member's own words stay required.
+ * PRD-434. A `?ref=` that looks like a listing reference, while the topic is
+ * a listing correction: the ref itself, which the submit sends as the
+ * correction's `listingRef`, and the line that names it ("About listing
+ * QPL-2026-0007"), shown as a note above the message. Both are empty without
+ * a ref. The ref is kept in state and the note translated at render time,
+ * since the `marketing` namespace may still be loading on the first render.
  *
  * Only while the topic is still a listing correction: a member who switches
  * to another topic is writing about something else, so the note goes away
- * and nothing is prepended. Switching back brings it back.
+ * and no ref is sent. Switching back brings both back.
  */
 function useCorrectionNote(
   searchParams: URLSearchParams,
   topic: ContactTopic | "",
-): string {
+): { correctionNote: string; correctionListingRef: string | undefined } {
   const { t } = useTranslation();
   const [listingRef] = useState(() =>
     listingRefFromParam(searchParams.get("ref")),
   );
-  return listingRef && topic === LISTING_CORRECTION_TOPIC
-    ? t("marketing:contact.form.correctionNote", { ref: listingRef })
-    : "";
+  if (!listingRef || topic !== LISTING_CORRECTION_TOPIC) {
+    return { correctionNote: "", correctionListingRef: undefined };
+  }
+  return {
+    correctionNote: t("marketing:contact.form.correctionNote", {
+      ref: listingRef,
+    }),
+    correctionListingRef: listingRef,
+  };
 }
 
 /** The message field, with the correction note above it when there is one. */
@@ -222,7 +229,10 @@ export function ContactPage() {
     topic: toTopic(searchParams.get("topic")),
     message: "",
   });
-  const correctionNote = useCorrectionNote(searchParams, form.topic);
+  const { correctionNote, correctionListingRef } = useCorrectionNote(
+    searchParams,
+    form.topic,
+  );
   const valid =
     form.name.trim() &&
     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email) &&
@@ -242,16 +252,16 @@ export function ContactPage() {
     if (!valid || submitInquiry.isPending) return;
     submitInquiry.mutate(
       {
-        kind: "contact",
+        // PRD-434: a listing correction is filed as its own kind, with the
+        // listing's ref as data, so the admin inbox links to the listing.
+        ...contactInquiryRouting(form.topic, correctionListingRef),
         name: form.name.trim(),
         email: form.email.trim(),
         subject: t(`marketing:contact.form.topic.${form.topic}`),
         // PRD-452: the topic id beside its translated label, so the backend
         // can raise a safety concern to priority in any locale.
         topic: form.topic,
-        body: correctionNote
-          ? `${correctionNote}\n\n${form.message.trim()}`
-          : form.message.trim(),
+        body: form.message.trim(),
       },
       {
         onSuccess: () => setSent(true),

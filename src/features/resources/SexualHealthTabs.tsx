@@ -11,13 +11,37 @@ import {
   HIV_INFO,
   PREP_FAQ,
   PREP_STEPS,
+  SEXUAL_HEALTH_GUIDE_SLUG,
   TESTING_INFO,
+  type TabId,
 } from "./sexualHealth.data";
+import type { GuideSection } from "./api/resources.api";
+import { useManagedGuideSection } from "./api/useManagedGuideSection";
+import { GuideBlocks } from "./GuideBody";
 import { TestingClinics } from "./SexualHealthTestingClinics";
 import { TestingListings } from "./SexualHealthTestingListings";
 import { SuggestResourceModal } from "./SuggestResourceModal";
 import { GuideRatingWidget } from "./GuideRatingWidget";
 import styles from "./SexualHealthPage.module.css";
+
+/** The editor-written section at a tab's anchor, or null for catalog copy. */
+function useTabSection(tabId: TabId): GuideSection | null {
+  return useManagedGuideSection(SEXUAL_HEALTH_GUIDE_SLUG, tabId);
+}
+
+/**
+ * A tab's prose as an editor wrote it in the guide workspace: the section's
+ * heading in the tab's title style, then its blocks. Each tab keeps its own
+ * interactive parts (the directory, the question box) around it.
+ */
+function ManagedTabSection({ section }: { section: GuideSection }) {
+  return (
+    <>
+      {section.heading && <h2 className={styles.h}>{section.heading}</h2>}
+      <GuideBlocks section={section} isStatic={false} />
+    </>
+  );
+}
 
 /** The "what to expect" info cards sitting above the testing directory. */
 function TestingInfoCards() {
@@ -47,17 +71,26 @@ export function TestingTab() {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
   const [isSuggestOpen, setIsSuggestOpen] = useState(false);
+  const managedSection = useTabSection("testing");
 
   return (
     <>
-      <h2 className={styles.h}>
-        <Translation
-          i18nKey="resources:sexualHealth.testing.title"
-          components={{ em: <em /> }}
-        />
-      </h2>
-      <p className={styles.sub}>{t("resources:sexualHealth.testing.lead")}</p>
-      <TestingInfoCards />
+      {managedSection ? (
+        <ManagedTabSection section={managedSection} />
+      ) : (
+        <>
+          <h2 className={styles.h}>
+            <Translation
+              i18nKey="resources:sexualHealth.testing.title"
+              components={{ em: <em /> }}
+            />
+          </h2>
+          <p className={styles.sub}>
+            {t("resources:sexualHealth.testing.lead")}
+          </p>
+          <TestingInfoCards />
+        </>
+      )}
       {demoMode ? (
         <TestingClinics />
       ) : (
@@ -76,6 +109,8 @@ export function TestingTab() {
 export function PrepTab() {
   const { t } = useTranslation();
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const managedSection = useTabSection("prep");
+  if (managedSection) return <ManagedTabSection section={managedSection} />;
   return (
     <>
       <h2 className={styles.h}>
@@ -146,6 +181,8 @@ export function PrepTab() {
 
 export function HivTab() {
   const { t } = useTranslation();
+  const managedSection = useTabSection("hiv");
+  if (managedSection) return <ManagedTabSection section={managedSection} />;
   return (
     <>
       <h2 className={styles.h}>
@@ -216,11 +253,9 @@ export function HivTab() {
   );
 }
 
-export function GuidesTab() {
+/** The guides tab's catalog copy: its title, lead and rated guide cards. */
+function GuideCards() {
   const { t } = useTranslation();
-  const { demoMode } = useDemoMode();
-  const [question, setQuestion] = useState("");
-  const [asked, setAsked] = useState(false);
   return (
     <>
       <h2 className={styles.h}>
@@ -247,6 +282,23 @@ export function GuidesTab() {
           </div>
         ))}
       </div>
+    </>
+  );
+}
+
+export function GuidesTab() {
+  const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
+  const [question, setQuestion] = useState("");
+  const [asked, setAsked] = useState(false);
+  const managedSection = useTabSection("guides");
+  return (
+    <>
+      {managedSection ? (
+        <ManagedTabSection section={managedSection} />
+      ) : (
+        <GuideCards />
+      )}
       {!demoMode ? (
         <div className={styles.anonBox}>
           <h3>{t("resources:sexualHealth.guides.ask.title")}</h3>

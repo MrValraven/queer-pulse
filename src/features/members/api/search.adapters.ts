@@ -44,17 +44,37 @@ const hrefFor = (result: SearchResultDTO): string => {
   }
 };
 
+const toSearchItem = (result: SearchResultDTO, sub: string): SearchItem => ({
+  t: result.type,
+  name: result.name,
+  sub,
+  href: hrefFor(result),
+  kw: `${result.name} ${sub} ${result.slug}`.toLowerCase(),
+  slug: result.type === "member" ? result.slug : undefined,
+  avatarUrl:
+    result.type === "member" ? (result.avatarUrl ?? undefined) : undefined,
+});
+
 export function resultToSearchItem(result: SearchResultDTO): SearchItem {
-  return {
-    t: result.type,
-    name: result.name,
-    sub: result.sub,
-    href: hrefFor(result),
-    kw: `${result.name} ${result.sub} ${result.slug}`.toLowerCase(),
-    slug: result.type === "member" ? result.slug : undefined,
-    avatarUrl:
-      result.type === "member" ? (result.avatarUrl ?? undefined) : undefined,
-  };
+  return toSearchItem(result, result.sub);
+}
+
+/**
+ * A mapper that phrases a topic hit's subline in the member's language from
+ * its `postCount`, with the same `members:search.topicPosts` copy the curated
+ * topic rows use (PRD-327). A response without `postCount` keeps the server's
+ * English `sub`; every other result type maps as `resultToSearchItem` does.
+ */
+export function localizedResultToSearchItem(
+  describeTopicPosts: (totalPosts: number) => string,
+): (result: SearchResultDTO) => SearchItem {
+  return (result) =>
+    toSearchItem(
+      result,
+      result.type === "topic" && typeof result.postCount === "number"
+        ? describeTopicPosts(result.postCount)
+        : result.sub,
+    );
 }
 
 export type { LiveResultType };

@@ -12,6 +12,8 @@ import { asReasonCode, useReportReasons } from "../safety/api/useReportReasons";
 import { logError } from "../../shared/observability/logger";
 import { focusControl } from "../../shared/lib/focusFirstError";
 import { MessageReportForm } from "./MessageReportForm";
+import { useBlockMatchedChatMember } from "./api/useBlockMatchedChatMember";
+import { useMatchedChat } from "./matchedChatContext";
 import styles from "./MessageReportModal.module.css";
 
 export interface MessageReportModalProps {
@@ -48,6 +50,11 @@ export function MessageReportModal({
   const { t } = useTranslation();
   const { showToast } = useToast();
   const { isBlocked, toggleBlock } = useSocial();
+  // PRD-423: inside a matched Go together chat a sender carries a per-chat
+  // member key in `counterpartSlug`, so "also block" blocks by that key,
+  // resolved server-side inside this conversation.
+  const matchedChatConversationId = useMatchedChat()?.conversationId;
+  const blockMatchedChatMember = useBlockMatchedChatMember();
   // Server-owned taxonomy when it answers, the local one instantly and
   // silently when it does not. Never a spinner, never an empty list.
   const reasons = useReportReasons("message");
@@ -99,11 +106,20 @@ export function MessageReportModal({
       {
         onSuccess: () => {
           if (canOfferBlock && alsoBlock && counterpartSlug) {
-            toggleBlock(counterpartSlug, undefined, (didSucceed) => {
+            const onBlockSettled = (didSucceed: boolean) => {
               setDidBlock(didSucceed);
               setBlockFailed(!didSucceed);
               setDone(true);
-            });
+            };
+            if (matchedChatConversationId) {
+              blockMatchedChatMember(
+                matchedChatConversationId,
+                counterpartSlug,
+                onBlockSettled,
+              );
+            } else {
+              toggleBlock(counterpartSlug, undefined, onBlockSettled);
+            }
             return;
           }
           setDone(true);

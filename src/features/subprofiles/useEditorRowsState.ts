@@ -76,7 +76,7 @@ export interface EditorRowsState {
  * social links, and the affiliations — plus each area's own baseline (advanced
  * to the just-saved draft on that area's save success, so a partial failure
  * keeps only the failed areas dirty). Seeded ONCE per mount via lazy `useState`
- * (the shell remounts this subtree per persona via `key={subprofile.id}`), so a
+ * (the shell remounts this subtree per persona, keyed on the route's id), so a
  * post-save refetch never re-seeds and clobbers an in-progress draft. The one
  * exception is `reseedSection`, an explicit opt-in reseed of a single section
  * used after a revision restore (see its doc on `EditorRowsState`) — every

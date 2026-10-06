@@ -1,4 +1,5 @@
 import { useLayoutEffect, type RefObject } from "react";
+import { prefersReducedMotionNow } from "../../shared/hooks/usePrefersReducedMotion";
 import { planMasonry } from "./masonryPlan";
 
 // ── Feed masonry ────────────────────────────────────────────────────────────
@@ -20,14 +21,39 @@ import { planMasonry } from "./masonryPlan";
 // Placement: every relayout repacks every direct child from scratch with
 // plain shortest-column placement (`planMasonry` in `masonryPlan.ts`), so a
 // card always goes to whichever column currently has the least content
-// queued in it. There is no memory of where a card sat on a previous pass,
-// so a removed card's neighbours slide straight into its old slot, closing
-// the space it left, and a height change anywhere simply repacks around it.
+// queued in it. A removed card's neighbours slide straight into its old
+// slot, closing the space it left, and a height change anywhere simply
+// repacks around it.
 //
 // Order guarantee: this placement also keeps every card's top at or after
 // the top of the card before it in DOM order (WCAG 2.4.3, focus order
 // matches reading order). See the comment on `planMasonry` for why that
 // holds by construction.
+//
+// Hold: a card that animates its own height (the people-joined "Show all"
+// fold, the interest-tag "+N" fold, a bio's "Read more") marks the moving
+// part with `data-masonry-hold` for as long as the animation runs. Plain
+// repacking would let the cards after it hop between columns mid-animation,
+// in one frame, the moment its bottom crosses the other column's bottom. So
+// while any hold mark is inside the grid, each pass keeps every card in the
+// column it had on the last pass without a hold, and only restacks the tops
+// within those columns: the cards below the moving one slide with it. The
+// only memory kept between passes is that last resting pass. A change to
+// the card list or to the column count drops the hold for that pass and
+// repacks normally, since the remembered columns no longer fit.
+//
+// Release: when the last hold mark goes, one plain repack restores the
+// order guarantee, and every card it moves glides from where it was painted
+// to its new spot (`glideFrom`), using the independent `translate`
+// property through the Web Animations API. That leaves `transform` to the
+// reveal and the exit fade, and leaves no inline style behind once the
+// glide finishes. A relayout that lands while a glide is still running
+// retargets that card's glide from where it is. Every other relayout
+// (resize, appends, tab swaps, first paint) stays instant, and under
+// reduced motion so does the release. "Instant" also needs the
+// `.grid > *` rule in FeedPage.module.css, which keeps reduced motion's
+// forced 0.01ms transitions off the inline `top`/`left`/`width`, so a
+// position lands in the frame it is written.
 
 /** Narrowest a column may get before the layout drops to fewer columns. Same
  *  floor the old `auto-fill` / `minmax(320px, 1fr)` grid used. */
@@ -42,6 +68,20 @@ const COLUMN_GAP = 14;
  *  infinite-scroll pager). It sits below the tallest column, and every column
  *  continues underneath it. */
 const FULL_WIDTH_ATTRIBUTE = "data-masonry-full";
+
+/** Set, anywhere inside a card, by a part of it that is animating its own
+ *  height. While one is present, relayouts keep every card's column (see
+ *  "Hold" at the top). */
+const HOLD_ATTRIBUTE = "data-masonry-hold";
+
+/** Token and fallback for how long a released card takes to glide to its
+ *  new spot, and the easing it glides with. */
+const GLIDE_DURATION_TOKEN = "--dur-slow";
+const GLIDE_DURATION_FALLBACK_MS = 400;
+const GLIDE_EASING_TOKEN = "--ease";
+
+/** A glide shorter than this (in pixels, either axis) is not worth playing. */
+const GLIDE_MIN_DISTANCE = 0.5;
 
 const CONTAINER_STYLE_PROPERTIES = ["position", "height"] as const;
 const CHILD_STYLE_PROPERTIES = ["position", "width", "left", "top"] as const;
@@ -78,32 +118,244 @@ function directChildrenOf(container: HTMLElement): HTMLElement[] {
   );
 }
 
+/** The glide each card is currently playing, if any. An entry leaves as soon
+ *  as its glide finishes or is cancelled, so presence means "still moving". */
+const runningGlides = new WeakMap<HTMLElement, Animation>();
+
+function cancelGlide(element: HTMLElement) {
+  runningGlides.get(element)?.cancel();
+  runningGlides.delete(element);
+}
+
 function clearMasonryStyles(container: HTMLElement) {
   CONTAINER_STYLE_PROPERTIES.forEach((property) =>
     container.style.removeProperty(property),
   );
-  directChildrenOf(container).forEach((childElement) =>
+  directChildrenOf(container).forEach((childElement) => {
+    cancelGlide(childElement);
     CHILD_STYLE_PROPERTIES.forEach((property) =>
       childElement.style.removeProperty(property),
-    ),
+    );
+  });
+}
+
+/** What one pass leaves for the next: the last pass that placed every card
+ *  freely (the columns a hold keeps to), and whether the latest pass held. */
+interface MasonryMemory {
+  restingChildren: HTMLElement[];
+  restingColumns: number[];
+  restingColumnCount: number;
+  wasHolding: boolean;
+}
+
+function createMasonryMemory(): MasonryMemory {
+  return {
+    restingChildren: [],
+    restingColumns: [],
+    restingColumnCount: 0,
+    wasHolding: false,
+  };
+}
+
+function isSameChildList(
+  previousChildren: HTMLElement[],
+  childElements: HTMLElement[],
+): boolean {
+  return (
+    previousChildren.length === childElements.length &&
+    previousChildren.every(
+      (previousChild, index) => previousChild === childElements[index],
+    )
   );
+}
+
+/** The columns this pass must keep to, or undefined to pack freely: no hold
+ *  is asked for, or the cards or the column count changed since the resting
+ *  pass, so the remembered columns no longer describe this feed. */
+function heldColumnsFor(
+  memory: MasonryMemory,
+  childElements: HTMLElement[],
+  columnCount: number,
+  isHoldRequested: boolean,
+): number[] | undefined {
+  const canHold =
+    isHoldRequested &&
+    memory.restingColumnCount === columnCount &&
+    isSameChildList(memory.restingChildren, childElements);
+  return canHold ? memory.restingColumns : undefined;
+}
+
+/** A time token such as "400ms" or "0.4s", in milliseconds. */
+function durationTokenMs(styleSource: Element, token: string): number {
+  const value = getComputedStyle(styleSource).getPropertyValue(token).trim();
+  const amount = parseFloat(value);
+  if (!Number.isFinite(amount)) return GLIDE_DURATION_FALLBACK_MS;
+  return value.endsWith("ms") ? amount : amount * 1000;
+}
+
+/** The cards whose painted spot must be kept for a glide this pass: every
+ *  card on a release, otherwise only the cards still gliding, so a relayout
+ *  mid-glide carries on from where they are. Nothing under reduced motion,
+ *  where a glide still running (the setting flipped mid-glide) stops too. */
+function elementsToGlide(
+  childElements: HTMLElement[],
+  isRelease: boolean,
+): HTMLElement[] {
+  if (prefersReducedMotionNow()) {
+    childElements.forEach(cancelGlide);
+    return [];
+  }
+  if (isRelease) return childElements;
+  return childElements.filter((childElement) =>
+    runningGlides.has(childElement),
+  );
+}
+
+/** Where a card was painted before a pass, and the `top`/`left` it had. */
+interface PaintedSpot {
+  box: DOMRect;
+  position: string;
+}
+
+function positionOf(element: HTMLElement): string {
+  return `${element.style.left} ${element.style.top}`;
+}
+
+function paintedSpotOf(element: HTMLElement): PaintedSpot {
+  return {
+    box: element.getBoundingClientRect(),
+    position: positionOf(element),
+  };
+}
+
+/**
+ * FLIP: each card has already been written to its new `top`/`left`, so it is
+ * offset by `translate` back to where it was painted and eased to nothing.
+ * A card already gliding to a spot the pass did not change keeps its glide.
+ * Reads every new box before starting any glide, so the browser lays out
+ * once. The glide uses the Web Animations API, which applies no inline style
+ * and drops its effect when it finishes, so nothing is left on the card.
+ */
+function glideFrom(candidates: HTMLElement[], paintedSpots: PaintedSpot[]) {
+  const paintedBoxes: DOMRect[] = [];
+  const elements = candidates.filter((element, index) => {
+    const paintedSpot = paintedSpots[index];
+    const isUnchangedGlide =
+      runningGlides.has(element) &&
+      paintedSpot?.position === positionOf(element);
+    if (!paintedSpot || isUnchangedGlide) return false;
+    paintedBoxes.push(paintedSpot.box);
+    return true;
+  });
+  if (elements.length === 0) return;
+  elements.forEach(cancelGlide);
+  const settledBoxes = elements.map((element) =>
+    element.getBoundingClientRect(),
+  );
+  const timing = glideTiming();
+  elements.forEach((element, index) => {
+    const paintedBox = paintedBoxes[index];
+    const settledBox = settledBoxes[index];
+    if (paintedBox && settledBox) {
+      startGlide(element, paintedBox, settledBox, timing);
+    }
+  });
+}
+
+/** The glide's duration and easing, read from the motion tokens. */
+function glideTiming(): KeyframeAnimationOptions {
+  const rootElement = document.documentElement;
+  const easing = getComputedStyle(rootElement)
+    .getPropertyValue(GLIDE_EASING_TOKEN)
+    .trim();
+  return {
+    duration: durationTokenMs(rootElement, GLIDE_DURATION_TOKEN),
+    easing: easing || "ease",
+  };
+}
+
+/** Offsets one card back to its painted box and eases it home. */
+function startGlide(
+  element: HTMLElement,
+  paintedBox: DOMRect,
+  settledBox: DOMRect,
+  timing: KeyframeAnimationOptions,
+) {
+  const offsetX = paintedBox.left - settledBox.left;
+  const offsetY = paintedBox.top - settledBox.top;
+  const isTooShort =
+    Math.abs(offsetX) < GLIDE_MIN_DISTANCE &&
+    Math.abs(offsetY) < GLIDE_MIN_DISTANCE;
+  if (isTooShort) return;
+
+  const glide = element.animate(
+    [{ translate: `${offsetX}px ${offsetY}px` }, { translate: "0px 0px" }],
+    timing,
+  );
+  runningGlides.set(element, glide);
+  glide.addEventListener("finish", () => {
+    if (runningGlides.get(element) === glide) runningGlides.delete(element);
+  });
 }
 
 /** One full layout pass, batched as write widths, read heights, write
  *  positions, so the browser lays out at most twice however many cards there
- *  are. Repacks every direct child from scratch each time (see the block
- *  comment at the top), so it needs no memory between passes. */
-function layoutMasonry(container: HTMLElement) {
+ *  are (a release reads every card's box once more, before and after).
+ *  Repacks every direct child from scratch each time, unless a hold keeps
+ *  the columns of the last resting pass in `memory` (see the block comment
+ *  at the top). */
+function layoutMasonry(container: HTMLElement, memory: MasonryMemory) {
   const containerWidth = container.clientWidth;
   const columnCount = columnCountFor(containerWidth);
   if (columnCount < 2) {
     clearMasonryStyles(container);
+    Object.assign(memory, createMasonryMemory());
     return;
   }
 
   const childElements = directChildrenOf(container);
+  const isHoldRequested =
+    container.querySelector(`[${HOLD_ATTRIBUTE}]`) !== null;
+  const heldColumns = heldColumnsFor(
+    memory,
+    childElements,
+    columnCount,
+    isHoldRequested,
+  );
+  const isRelease = memory.wasHolding && !isHoldRequested;
+  const glidingElements = elementsToGlide(childElements, isRelease);
+  // Read: where each card that may glide is painted right now, before
+  // anything moves (mid-glide, that includes its current `translate`).
+  const paintedSpots = glidingElements.map(paintedSpotOf);
+
   const columnWidth =
     (containerWidth - COLUMN_GAP * (columnCount - 1)) / columnCount;
+  const columns = placeChildren(
+    container,
+    childElements,
+    columnCount,
+    columnWidth,
+    heldColumns,
+  );
+
+  if (!heldColumns) {
+    memory.restingChildren = childElements;
+    memory.restingColumns = columns;
+    memory.restingColumnCount = columnCount;
+  }
+  memory.wasHolding = heldColumns !== undefined;
+  glideFrom(glidingElements, paintedSpots);
+}
+
+/** Writes every child's width, reads every height, plans, then writes every
+ *  position and the container's height. Returns the column each child got. */
+function placeChildren(
+  container: HTMLElement,
+  childElements: HTMLElement[],
+  columnCount: number,
+  columnWidth: number,
+  heldColumns: number[] | undefined,
+): number[] {
   const columnWidthValue = toPixels(columnWidth);
 
   // Write: take every child out of flow at its final width, so the heights
@@ -134,6 +386,7 @@ function layoutMasonry(container: HTMLElement) {
     fullWidth: fullWidthFlags,
     columnCount,
     gap: COLUMN_GAP,
+    heldColumns,
   });
 
   childElements.forEach((childElement, index) => {
@@ -151,13 +404,14 @@ function layoutMasonry(container: HTMLElement) {
   // the real one before paint: useSequencedTabSwap reads it to ease the tab
   // viewport, and the page below must not collapse over the cards.
   setStyleIfChanged(container, "height", toPixels(contentBottom));
+  return columns;
 }
 
 /**
  * Lays the direct children of `containerRef` out as a masonry of
  * `MIN_COLUMN_WIDTH`-wide columns (see the block comment at the top). Every
- * relayout repacks every card from its currently measured height, so a
- * removal or a resize never leaves a stale slot behind.
+ * relayout outside a hold repacks every card from its currently measured
+ * height, so a removal or a resize never leaves a stale slot behind.
  *
  * `widthProbeRef` is a zero-height element in normal flow beside the
  * container, with the container's width. Width changes are observed on the
@@ -178,6 +432,9 @@ function layoutMasonry(container: HTMLElement) {
  * - a MutationObserver on the container's child list, so cards appended by
  *   pagination, or swapped in by the loading and empty states, are observed
  *   and placed.
+ * - a MutationObserver on `data-masonry-hold` anywhere inside the cards, so
+ *   the pass after the last hold mark goes is the release, even when the
+ *   fold's final height landed earlier and no size changes with it.
  *
  * Without ResizeObserver (jsdom) the hook does nothing and the CSS fallback
  * renders.
@@ -197,7 +454,8 @@ export function useMasonryLayout(
       return;
     }
 
-    const relayout = () => layoutMasonry(container);
+    const memory = createMasonryMemory();
+    const relayout = () => layoutMasonry(container, memory);
     relayout();
 
     const sizeObserver = new ResizeObserver(relayout);
@@ -221,7 +479,15 @@ export function useMasonryLayout(
     });
     childListObserver.observe(container, { childList: true });
 
+    const holdObserver = new MutationObserver(relayout);
+    holdObserver.observe(container, {
+      subtree: true,
+      attributes: true,
+      attributeFilter: [HOLD_ATTRIBUTE],
+    });
+
     return () => {
+      holdObserver.disconnect();
       childListObserver.disconnect();
       sizeObserver.disconnect();
       clearMasonryStyles(container);

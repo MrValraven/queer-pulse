@@ -495,6 +495,11 @@ describe("request budget (live mode)", () => {
       http.get(`${API_V1}/listings/co-manager-invites`, () =>
         HttpResponse.json([]),
       ),
+      // PRD-434: PlacesSection also mounts SuggestedPlacesSection on the self
+      // view, which reads the places this member suggested for the directory.
+      http.get(`${API_V1}/listings/suggestions/mine`, () =>
+        HttpResponse.json(EMPTY_PAGE),
+      ),
       // ProfileWritingSection (CON-11) asks whether this member has a
       // magazine byline. `null` is the honest answer for the overwhelming
       // majority of members, and it short-circuits the section: no byline
@@ -619,6 +624,10 @@ describe("request budget (live mode)", () => {
     //     GET /listings/co-manager-invites (self view only: the invitations
     //     waiting on this member to help run somebody else's listing,
     //     answered where an accepted one lands)
+    //   - PlacesSection → SuggestedPlacesSection (isSelf) →
+    //     useMySuggestedListings() → GET /listings/suggestions/mine (PRD-434:
+    //     the places this member suggested, which the platform holds and
+    //     /listings/mine therefore never returns; self view only)
     expect(seen).toEqual(
       [
         ...SESSION_REQUEST_BUDGET,
@@ -641,6 +650,9 @@ describe("request budget (live mode)", () => {
         "/v1/invites/quota",
         "/v1/listings/co-manager-invites",
         "/v1/listings/mine",
+        // PlacesSection → SuggestedPlacesSection (isSelf) →
+        // useMySuggestedListings() → GET /listings/suggestions/mine (PRD-434).
+        "/v1/listings/suggestions/mine",
         // ProfileBelowHeroSections → ProfileWritingSection →
         // useMemberWriting(slug) → GET /magazine/authors/by-member/{slug}
         // (CON-11's "Writing" credit). Nullable, so it goes through

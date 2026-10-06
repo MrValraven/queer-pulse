@@ -4,6 +4,10 @@ import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { getCompanies } from "./companies.api";
 import { companyCardToEmployer, type EmployerCard } from "./companies.adapters";
 import { economyKeys } from "./economyKeys";
+import {
+  hasFailedWithoutData,
+  isRetryingFailedRead,
+} from "../../admin/queryLoadFailure";
 
 /**
  * The mock employers grid, with each row's profile slug resolved by name.
@@ -34,6 +38,12 @@ export interface CompaniesResult {
   /** True while the first page is in flight. */
   isLoading: boolean;
   /**
+   * True until the first page has loaded or failed, including while the
+   * request waits offline (react-query pauses it, and `isLoading` reads false
+   * then). Gate a first-load skeleton on this one.
+   */
+  isPending: boolean;
+  /**
    * True when the fetch failed, so a consumer can tell an outage apart from a
    * genuinely empty employer list rather than rendering both as nothing.
    */
@@ -45,6 +55,14 @@ export interface CompaniesResult {
    * (ENG-501). Always false in demo, which never offers another page.
    */
   isFetchNextPageError: boolean;
+  /**
+   * ENG-501b: the first page failed and nothing ever loaded, including while a
+   * Retry of that failure runs (react-query clears `isError` the moment it
+   * refetches, which would otherwise swap the error panel for a skeleton).
+   */
+  hasFailedWithoutData: boolean;
+  /** A Retry of that failed first page is in flight. */
+  isRetrying: boolean;
   /** Re-runs the failed fetch. Wire it to the error state's retry. */
   refetch: () => void;
   /** True when another page is available (always false in demo). */
@@ -106,8 +124,11 @@ export function useCompanies(): CompaniesResult {
     items: pages.flatMap((p) => p.items),
     total: pages[0]?.total ?? 0,
     isLoading: query.isLoading,
+    isPending: query.isPending,
     isError: query.isError,
     isFetchNextPageError: query.isFetchNextPageError,
+    hasFailedWithoutData: hasFailedWithoutData(query),
+    isRetrying: isRetryingFailedRead(query),
     refetch: () => void query.refetch(),
     hasNextPage: query.hasNextPage,
     fetchNextPage: () => void query.fetchNextPage(),

@@ -153,6 +153,10 @@
   --danger: #b91c1c;
   --danger-rgb: 185, 28, 28;
   --danger-ink: #a01818; /* pressed/hover on danger */
+  /* The danger Button's hover fill under its fixed light cream label (7.20:1).
+     Fixed in both themes: --danger-ink lifts in dark for text, which would
+     wash this fill out under the label. */
+  --danger-pressed: #a01818;
 
   /* ── Soft accent (light coral — text/icons on accent-tinted surfaces) ── */
   --accent-soft: #ffc4af;
@@ -274,6 +278,11 @@
   --danger: #e34646; /* was #B91C1C → 2.80:1. Now 4.51 paper / 4.87 cream. */
   --violet: #906fc4; /* was #7A52B8 → 3.21:1. Now 4.53 / 4.89. */
   --rose-ink: #d79cbb; /* on dark surfaces a lighter rose reads as "ink" */
+  /* Danger as TEXT (validation errors, destructive hovers). The light-mode
+     #A01818 was 2.27:1 on dark paper. This lifted red keeps hue 0, clear of
+     the coral accent (hue 12) and desk late (hue 349): 6.82:1 on dark paper,
+     7.36:1 on the dark page, 6.11:1 over --wash on paper. */
+  --danger-ink: #f47a7a;
   /* The FormField error colour. On dark, plain --accent is already 6.22:1 on
      paper / 6.72:1 on cream — no new colour needed. */
   --accent-ink: var(--accent);

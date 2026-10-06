@@ -8,6 +8,8 @@ export interface IncomingMessageNotification {
   conversationPath: string;
   title: string;
   body: string;
+  /** True when the in-app chime already played, so the OS stays quiet. */
+  isSilent?: boolean;
 }
 
 /**
@@ -32,6 +34,7 @@ export async function showIncomingMessageNotification(
       },
       icon: INCOMING_MESSAGE_NOTIFICATION_ICON,
       badge: INCOMING_MESSAGE_NOTIFICATION_BADGE,
+      silent: notification.isSilent,
     });
   } catch {
     // Best-effort: the inbox badge and unread row still carry the message.

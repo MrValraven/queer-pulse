@@ -13,6 +13,7 @@ import type { ConversationResponse, MessageResponse } from "./messages.api";
 import type { ConversationMemberPreview } from "../../../shared/contracts/contracts";
 import {
   isFromViewerSide,
+  isViewerHandle,
   type MessageViewer,
 } from "../../../shared/api/mailboxViewer";
 import { toConversationClaimant } from "../../../shared/api/conversationClaim";
@@ -403,11 +404,16 @@ function groupConversationToView(
     // Stays true for the life of the chat, unlike `eventMatchGroupId` above,
     // which goes null once the group row is deleted.
     isGoTogetherChat: dto.isGoTogetherChat ?? false,
+    // PRD-423: how a matched chat names the viewer, see `MessageViewer`.
+    viewerMemberKey: dto.viewerMemberKey ?? undefined,
     leftReason: dto.leftReason ?? undefined,
     // Only ever populated for the owner/admin who may manage it, see the
     // field's own doc on `ConversationResponse`.
     inviteToken: dto.inviteToken ?? undefined,
     inviteTokenExpiresAt: dto.inviteTokenExpiresAt ?? undefined,
+    // PRD-400 (use cap): same owner/admin-only rule as the token.
+    inviteTokenMaxUses: dto.inviteTokenMaxUses ?? null,
+    inviteTokenUsesLeft: dto.inviteTokenUsesLeft ?? null,
     canManageInviteLink: dto.canManageInviteLink ?? false,
     canTransferOwnership: dto.canTransferOwnership ?? false,
     canDissolve: dto.canDissolve ?? false,
@@ -632,12 +638,12 @@ export function messageToChat(
           actorIsMe:
             dto.systemEvent.actorIsMe ??
             (dto.systemEvent.actorHandle != null
-              ? dto.systemEvent.actorHandle === viewer.myHandle
+              ? isViewerHandle(dto.systemEvent.actorHandle, viewer)
               : isMe),
           targetIsMe:
             dto.systemEvent.targetIsMe ??
             (dto.systemEvent.targetHandle != null &&
-              dto.systemEvent.targetHandle === viewer.myHandle),
+              isViewerHandle(dto.systemEvent.targetHandle, viewer)),
           mailboxName: movedNoteMailboxName(dto.systemEvent),
         }
       : undefined,
@@ -731,7 +737,10 @@ export function groupMessages(
   // The staffed identities are part of the context: gaining or losing a
   // mailbox moves a business reply between sides, so every bubble rebuilds.
   const staffedIdentitiesKey = [...viewer.staffedIdentityIds].sort().join(",");
-  const contextKey = `${activeLocale()}|${viewer.myHandle ?? ""}|${staffedIdentitiesKey}`;
+  // PRD-423: so is a matched chat's own member key arriving, which moves the
+  // viewer's own bubbles there to their side.
+  const ownMemberKeysKey = [...(viewer.ownMemberKeys ?? [])].sort().join(",");
+  const contextKey = `${activeLocale()}|${viewer.myHandle ?? ""}|${staffedIdentitiesKey}|${ownMemberKeysKey}`;
   for (const message of messages) {
     const parsed = new Date(message.createdAt);
     const dayKey = Number.isNaN(parsed.getTime())

@@ -189,6 +189,9 @@ function buildSaveSteps(
     mutations;
   const topicSections = sectionsNormalizedOnSave(subprofile.kind);
   const steps: EditorSaveStep[] = [];
+  // The persona every step writes to. An unlink in the PATCH below gives the
+  // persona a fresh id (ENG-447), and the steps after it write to that one.
+  let personaId = subprofile.id;
 
   // The persona PATCH carries meta fields AND the whole `skinData` column
   // (coverBleed + every editable skin block). The backend REPLACES `skin_data`
@@ -221,11 +224,14 @@ function buildSaveSteps(
     }
     steps.push({
       labelKey: "subprofiles:pending.area.meta",
-      run: (expectedEditVersion) =>
-        update.mutateAsync({
-          id: subprofile.id,
+      run: async (expectedEditVersion) => {
+        const saved = await update.mutateAsync({
+          id: personaId,
           dto: { ...dto, expectedEditVersion },
-        }),
+        });
+        personaId = saved.id;
+        return saved;
+      },
       commit: () => {
         commitMeta();
         if (skinDirty) skinBlocks.markSaved();
@@ -245,7 +251,7 @@ function buildSaveSteps(
       // co-owner's items in the same section from being dropped.
       run: (expectedEditVersion) =>
         replaceSection.mutateAsync({
-          id: subprofile.id,
+          id: personaId,
           section: section as SubprofileSection,
           items,
           expectedEditVersion,
@@ -280,7 +286,7 @@ function buildSaveSteps(
       labelKey: "subprofiles:pending.area.socials",
       run: (expectedEditVersion) =>
         replaceSocials.mutateAsync({
-          id: subprofile.id,
+          id: personaId,
           items,
           expectedEditVersion,
         }),
@@ -306,7 +312,11 @@ function buildSaveSteps(
     steps.push({
       labelKey: "subprofiles:pending.area.affiliations",
       run: (expectedEditVersion) =>
-        replaceAffiliations.mutateAsync({ items, expectedEditVersion }),
+        replaceAffiliations.mutateAsync({
+          items,
+          expectedEditVersion,
+          subprofileId: personaId,
+        }),
       commit: () => rows.setAffiliationBaseline(affiliationRows),
     });
   }

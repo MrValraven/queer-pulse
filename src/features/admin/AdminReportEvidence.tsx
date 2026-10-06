@@ -17,6 +17,10 @@ import type {
   ReportedMessageSnapshot,
 } from "./adminModeration.data";
 import { ReportedGroupEvidence } from "./AdminReportGroupEvidence";
+import {
+  ReportedGroupRoomEvidence,
+  ReportedHomeEvidence,
+} from "./AdminReportHousingEvidence";
 import styles from "./AdminReportEvidence.module.css";
 import photoStyles from "./AdminReportPhotoEvidence.module.css";
 
@@ -37,9 +41,13 @@ import photoStyles from "./AdminReportPhotoEvidence.module.css";
 export function ReportEvidenceSnapshots({
   reportId,
   snapshots,
+  excerpt,
 }: {
   reportId: string;
   snapshots: ReportEvidenceSnapshot[];
+  /** The reported-content excerpt the drawer shows above, so a housing block
+   *  can leave out a title that repeats it word for word. */
+  excerpt?: string;
 }) {
   return (
     <>
@@ -48,6 +56,7 @@ export function ReportEvidenceSnapshots({
           key={`${snapshot.kind}-${index}`}
           reportId={reportId}
           snapshot={snapshot}
+          excerpt={excerpt}
         />
       ))}
     </>
@@ -57,9 +66,11 @@ export function ReportEvidenceSnapshots({
 function EvidenceSnapshotBlock({
   reportId,
   snapshot,
+  excerpt,
 }: {
   reportId: string;
   snapshot: ReportEvidenceSnapshot;
+  excerpt?: string;
 }) {
   switch (snapshot.kind) {
     case "message":
@@ -71,6 +82,12 @@ function EvidenceSnapshotBlock({
       );
     case "group":
       return <ReportedGroupEvidence group={snapshot.group} />;
+    case "home":
+      return <ReportedHomeEvidence home={snapshot.home} excerpt={excerpt} />;
+    case "groupRoom":
+      return (
+        <ReportedGroupRoomEvidence room={snapshot.room} excerpt={excerpt} />
+      );
   }
 }
 

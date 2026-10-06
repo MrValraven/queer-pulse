@@ -12,10 +12,18 @@ import type { Cause, Commit } from "./volunteering.api";
  * Use `.detail` / `.list` / `.signups` where a query is DEFINED; use the `*Root`
  * prefixes to INVALIDATE every matching query after a mutation.
  */
+/** The `viewer` segment of `opportunityKeys.detail` for a signed-out reader. */
+export const OPPORTUNITY_ANONYMOUS_VIEWER = "anonymous";
+
 export const opportunityKeys = {
   detailRoot: ["opportunity"] as const,
-  detail: (slug: string | undefined, demoMode: boolean) =>
-    ["opportunity", slug, demoMode] as const,
+  /** The detail carries viewer flags (`mySignup`, `canReviewApplicants`,
+   *  `poster`, the named team), so the viewer is part of the key: the signed-in
+   *  member's id, or `OPPORTUNITY_ANONYMOUS_VIEWER`. A copy fetched signed out
+   *  can then never stand in for the member after they sign in. Invalidation
+   *  still goes through `detailRoot`, which matches every viewer. */
+  detail: (slug: string | undefined, viewer: string, demoMode: boolean) =>
+    ["opportunity", slug, viewer, demoMode] as const,
 
   listRoot: ["opportunities"] as const,
   list: (params: { cause?: Cause; commit?: Commit }, demoMode: boolean) =>

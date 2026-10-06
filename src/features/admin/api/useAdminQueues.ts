@@ -13,7 +13,7 @@ const ADMIN_QUEUES_KEY = "admin-queues";
 /**
  * How often the console re-reads while it is the visible tab.
  *
- * One request is up to 30 aggregates for an admin and there is no server-side
+ * One request is up to 34 aggregates for an admin and there is no server-side
  * cache, so 60s is the floor the backend contract sets. If the console ever
  * needs to feel fresher, the answer is a cache on the server rather than this
  * number going down.
@@ -45,7 +45,7 @@ function demoQueue(
 }
 
 /**
- * The demo answer: eleven of the thirty-one queues, chosen so every render
+ * The demo answer: twelve of the thirty-five queues, chosen so every render
  * path this console has is on screen at once: a breached statutory clock, a
  * queue on a deadline that is inside it, several with no deadline at all, one
  * that cannot be counted, and a handful that are simply clear.
@@ -77,6 +77,7 @@ function buildDemoQueues(): AdminQueuesDTO {
       null,
       generatedAtMs,
     ),
+    demoQueue("safety_inquiries", "/admin/intakes", 1, 4, null, generatedAtMs),
     demoQueue(
       "invite_requests",
       "/admin/join-requests",
@@ -114,9 +115,9 @@ function buildDemoQueues(): AdminQueuesDTO {
   return {
     generatedAt: new Date(generatedAtMs).toISOString(),
     totals: {
-      waitingCount: 41,
+      waitingCount: 42,
       overdueCount: 4,
-      queuesWithWorkCount: 7,
+      queuesWithWorkCount: 8,
       uncountableQueueCount: 1,
     },
     queues,
@@ -133,7 +134,7 @@ function buildDemoQueues(): AdminQueuesDTO {
  * here may assume a fixed set of rows.
  *
  * `refetchIntervalInBackground` stays off: a console nobody is looking at has
- * no reason to keep asking a thirty-aggregate question.
+ * no reason to keep asking a thirty-four-aggregate question.
  */
 export function useAdminQueues() {
   const { demoMode } = useDemoMode();

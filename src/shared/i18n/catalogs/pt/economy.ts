@@ -4069,6 +4069,8 @@ export const economy: Catalog = {
   "groupListing.post.success.titleEm": "com um moderador",
   "groupListing.post.success.body":
     "Um moderador de <strong>{group}</strong> lê-o a seguir e ele vai para a página do grupo assim que for aprovado. De uma forma ou de outra, encontra-lo aqui nos teus quartos.",
+  "groupListing.post.posterNamedNotice":
+    "Quem consegue ver a página do grupo vai ver o teu nome neste quarto e pode enviar-te mensagem sobre ele.",
 
   "groupListing.mine.title": "Os teus quartos",
   "groupListing.mine.titleEm": "neste grupo",
@@ -4118,6 +4120,14 @@ export const economy: Catalog = {
     "Responde a editar o quarto. Ao guardares, ele volta para as mãos de um moderador.",
   "groupListing.mine.decision.editHint":
     "Edita o quarto para corrigir o que está indicado aqui. Ao guardares, ele volta para as mãos de um moderador.",
+  "groupListing.mine.reportTakedown.title": "Retirado depois de uma denúncia",
+  "groupListing.mine.reportTakedown.body":
+    "Um moderador retirou este quarto depois de alguém o denunciar. Agora já ninguém o vê na página do grupo.",
+  "groupListing.mine.reportTakedown.appealHint":
+    "Se achas que foi um engano, outro moderador pode voltar a analisá-lo.",
+  "groupListing.mine.reportTakedown.appealButton": "Recorrer",
+  "groupListing.mine.reportTakedown.appealAria":
+    "Recorrer da retirada de {title}",
 
   // ── Recomendações de senhorios: retirar a tua (BE-HSG-18) ──
   "landlordPage.recommendation.yoursBadge": "Tua",

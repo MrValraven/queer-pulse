@@ -1,4 +1,4 @@
-import { useId } from "react";
+import { useId, useState } from "react";
 import { FiEye } from "react-icons/fi";
 import { Button } from "../../../../shared/components/ui";
 import { useToast } from "../../../../shared/components/feedback/useToast";
@@ -17,6 +17,7 @@ import type { TherapistView } from "./therapistView";
 import { renderEmphasis } from "./renderEmphasis";
 import { CAPACITY_OPTIONS, EMPTY_THERAPIST_FACTS } from "./therapistHero.data";
 import { TherapistOwnerCompleteness } from "./TherapistOwnerCompleteness";
+import { TherapistOwnerStatusFreshness } from "./TherapistOwnerStatusFreshness";
 import styles from "./TherapistOwnerBar.module.css";
 
 /** Starting facts for a persona that has no `therapist` block yet. An older
@@ -91,7 +92,8 @@ interface TherapistOwnerBarProps {
 }
 
 /**
- * The owner's plum panel above the hero: capacity switch, profile
+ * The owner's plum panel above the hero: capacity switch with how long ago
+ * the status was confirmed (and a way to confirm it unchanged), profile
  * completeness with a way into the editor, and "View as visitor". Owner
  * mode only. No views or demand numbers: the product does not track them.
  */
@@ -106,22 +108,38 @@ export function TherapistOwnerBar({
   const { patchSkin, isSaving } = useOwnerSkinPatch(data.id);
   const headingId = useId();
   const name = view.firstName || data.displayName;
+  // Set by this page's own saves, so the line updates before any refetch.
+  const [savedAt, setSavedAt] = useState<string | null>(null);
+  const updatedAt = savedAt ?? data.availabilityUpdatedAt ?? null;
+
+  // The status lands on the persona's freshly read `skinData`, so a block a
+  // co-owner saved after this page loaded rides along. The persona-wide
+  // availability says the same thing, and the directory's "similar
+  // therapists" reads it. `confirmAvailability` stamps the status as
+  // confirmed even when it is unchanged (PRD-435).
+  const saveStatus = (option: (typeof CAPACITY_OPTIONS)[number]) =>
+    patchSkin((freshSkinData) => withStatus(freshSkinData, option.status), {
+      availability: option.availability,
+      confirmAvailability: true,
+    }).then(() => setSavedAt(new Date().toISOString()));
+
+  const showSaveError = () =>
+    showToast(t("subprofiles:therapist.owner.capacityError"), "error");
 
   const saveCapacity = (option: (typeof CAPACITY_OPTIONS)[number]) => {
     if (option.status === view.status || isSaving) return;
-    // The status lands on the persona's freshly read `skinData`, so a block a
-    // co-owner saved after this page loaded rides along.
-    patchSkin((freshSkinData) => withStatus(freshSkinData, option.status), {
-      // The persona-wide availability says the same thing, and the
-      // directory's "similar therapists" reads it.
-      availability: option.availability,
-    }).then(
-      () => {
-        onCapacitySaved(option.status);
-        showToast(t(option.savedKey), "success");
-      },
-      () => showToast(t("subprofiles:therapist.owner.capacityError"), "error"),
+    saveStatus(option).then(() => {
+      onCapacitySaved(option.status);
+      showToast(t(option.savedKey), "success");
+    }, showSaveError);
+  };
+
+  const confirmStatus = () => {
+    const current = CAPACITY_OPTIONS.find(
+      (option) => option.status === view.status,
     );
+    if (!current || isSaving) return;
+    saveStatus(current).then(undefined, showSaveError);
   };
 
   return (
@@ -136,26 +154,33 @@ export function TherapistOwnerBar({
             {renderEmphasis(t("subprofiles:therapist.owner.heading"))}
           </p>
         </div>
-        <div
-          className={styles.capacity}
-          role="group"
-          aria-label={t("subprofiles:therapist.owner.capacityLabel")}
-          aria-busy={isSaving || undefined}
-        >
-          {CAPACITY_OPTIONS.map((option) => (
-            <button
-              key={option.status}
-              type="button"
-              className={styles.capacityButton}
-              aria-pressed={view.status === option.status}
-              // aria-disabled, so a keyboard user keeps focus on the button
-              // while it saves; `saveCapacity` ignores clicks meanwhile.
-              aria-disabled={isSaving || undefined}
-              onClick={() => saveCapacity(option)}
-            >
-              {t(option.labelKey)}
-            </button>
-          ))}
+        <div className={styles.capacityColumn}>
+          <div
+            className={styles.capacity}
+            role="group"
+            aria-label={t("subprofiles:therapist.owner.capacityLabel")}
+            aria-busy={isSaving || undefined}
+          >
+            {CAPACITY_OPTIONS.map((option) => (
+              <button
+                key={option.status}
+                type="button"
+                className={styles.capacityButton}
+                aria-pressed={view.status === option.status}
+                // aria-disabled, so a keyboard user keeps focus on the button
+                // while it saves; `saveCapacity` ignores clicks meanwhile.
+                aria-disabled={isSaving || undefined}
+                onClick={() => saveCapacity(option)}
+              >
+                {t(option.labelKey)}
+              </button>
+            ))}
+          </div>
+          <TherapistOwnerStatusFreshness
+            updatedAt={updatedAt}
+            isSaving={isSaving}
+            onConfirm={confirmStatus}
+          />
         </div>
       </div>
 

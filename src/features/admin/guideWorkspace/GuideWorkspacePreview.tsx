@@ -21,11 +21,16 @@ export function GuideWorkspacePreview({
   language,
   activeSectionKey,
   onEditSection,
+  isSectionComposed,
 }: {
   draft: GuideDraft;
   language: GuideLanguage;
   activeSectionKey: string | null;
   onEditSection: (sectionKey: string) => void;
+  /** The guide keeps its own page and drops each section into the tab its
+   *  anchor names (sexual health). This pane shows the sections themselves;
+   *  the guide list's Preview shows them inside that page. */
+  isSectionComposed: boolean;
 }) {
   const { t } = useTranslation();
   const paneRef = useRef<HTMLElement | null>(null);
@@ -94,6 +99,11 @@ export function GuideWorkspacePreview({
       aria-label={t("admin:guideWorkspace.preview.label")}
       lang={language}
     >
+      {isSectionComposed && (
+        <p className={styles.previewNotice}>
+          {t("admin:guideWorkspace.preview.composedPageNotice")}
+        </p>
+      )}
       {isEnglishFallback && (
         <p className={styles.previewNotice}>
           {t("admin:guideWorkspace.preview.englishFallback")}

@@ -37,6 +37,10 @@ export type LifecycleNotificationKind =
   | "event_announcement"
   // The verdict on a forum thread its author sent to review.
   | "forum_thread_reviewed"
+  // PRD-408. A thread's author credited the member as its co-author. Carries
+  // the author as `actorId` unless the byline is masked (anonymous or
+  // QueerPulse Official), plus `threadSlug` and `threadTitle`.
+  | "forum_co_author_credit"
   // A member motion screened by platform staff, and the staff alert for one.
   | "governance_motion_approved"
   | "governance_motion_rejected"
@@ -100,6 +104,9 @@ export const LIFECYCLE_KIND_CATEGORY: Record<
   // A gathering listed at the member's venue is gathering news.
   venue_event_attachment: "events",
   forum_thread_reviewed: "platform",
+  // A fellow member putting your name on their thread is activity between
+  // members, the same tab as subprofile_credit.
+  forum_co_author_credit: "community",
   governance_motion_approved: "platform",
   governance_motion_rejected: "platform",
   governance_motion_ready_for_review: "platform",
@@ -285,6 +292,9 @@ const TOKEN_FIELDS: Partial<Record<LifecycleNotificationKind, string[]>> = {
   // reads "one of your gatherings" there.
   event_announcement: ["title"],
   forum_thread_reviewed: ["title"],
+  // The thread's title sits at the end of both `.text` and `.textNamed`, so a
+  // row missing it reads "a thread" there.
+  forum_co_author_credit: ["threadTitle"],
   group_listing_decided: ["listingTitle", "groupName"],
   landlord_suggestion_decided: ["landlordName"],
   landlord_intro_request_decided: ["landlordName"],

@@ -1177,11 +1177,11 @@ export const safety: Catalog = {
   "moderationStance.digest.guidelines.title":
     "Conhece as <em>linhas vermelhas</em>",
   "moderationStance.digest.guidelines.lead":
-    "A conduta que é sempre assunto do Código de Conduta, e a cláusula que separa dela o discurso político.",
+    "A conduta que é sempre uma violação do Código de Conduta, e a cláusula que separa dela o discurso político.",
   "moderationStance.digest.guidelines.p1":
     "As diretrizes descrevem a cultura. As linhas vermelhas são a parte delas que se aplica: assédio ou ataques pessoais dirigidos, divulgar dados identificativos de alguém, expor a identidade de alguém sem consentimento, ameaças ou intimidação, partilhar conversas ou fotografias privadas sem consentimento, e discriminação com base em qualquer característica protegida.",
   "moderationStance.digest.guidelines.p2":
-    "A cláusula do discurso político fica ao lado delas. Criticar um Estado, o seu governo, o seu exército ou a sua ideologia é discurso político e é moderado como discurso político, incluindo a defesa da libertação da Palestina. Passa a ser assunto do Código de Conduta quando recai sobre uma pessoa: responsabilizar uma pessoa membra pelos atos de um Estado por causa da sua etnia, religião ou nacionalidade, ou fazer campanha pela exclusão de uma classe de pessoas membras, seja qual for o vocabulário que use.",
+    "A cláusula do discurso político fica ao lado delas. Criticar um Estado, o seu governo, o seu exército ou a sua ideologia é discurso político e é moderado como discurso político, incluindo a defesa da libertação da Palestina. Passa a ser uma violação do Código de Conduta quando recai sobre uma pessoa: responsabilizar uma pessoa membra pelos atos de um Estado por causa da sua etnia, religião ou nacionalidade, ou fazer campanha pela exclusão de uma classe de pessoas membras, seja qual for o vocabulário que use.",
   "moderationStance.digest.guidelines.point.oneTest.title":
     "Um único teste decide.",
   "moderationStance.digest.guidelines.point.oneTest.body":
@@ -1210,7 +1210,7 @@ export const safety: Catalog = {
   "moderationStance.digest.stand.point.notADebate.body":
     "Não há discussão dos dois lados sobre se uma pessoa membra merece direitos, e nenhuma denúncia é arquivada em nome do equilíbrio.",
   "moderationStance.digest.stand.point.speechVsExclusion.title":
-    "Criticar um Estado é discurso; fazer campanha contra uma classe de pessoas membras é assunto do Código de Conduta.",
+    "Criticar um Estado é discurso; fazer campanha contra uma classe de pessoas membras é uma violação do Código de Conduta.",
   "moderationStance.digest.stand.point.speechVsExclusion.body":
     "Chamar-lhe crítica de género deixa-o exatamente aquilo que era.",
   "moderationStance.digest.stand.point.whenWeSpeak.title":

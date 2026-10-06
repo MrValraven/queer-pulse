@@ -11,6 +11,10 @@ import { isContentSection } from "../subprofile-kinds";
 import { kindsMatchingSearch } from "../kindSearch";
 import { toCardTableSummary } from "../questTable.data";
 import { QUEST_DEMO_SUBPROFILES } from "./questDemoSubprofiles.data";
+import {
+  demoDaysAgoIso,
+  THERAPIST_DEMO_SUBPROFILES,
+} from "./therapistDemoSubprofiles.data";
 import { LATE_BLOOMERS } from "./podcastDemoSubprofile.data";
 import type {
   CollaboratorDTO,
@@ -103,6 +107,10 @@ export interface DemoSubprofile extends SubprofileDTO {
   viewerEndorsementNote?: string | null;
   endorsers: EndorserDTO[];
   viewerFollowing: boolean;
+  /** When the availability or the therapist status last changed (PRD-435),
+   *  carried onto the public and card DTOs. Optional so personas that never
+   *  stated a status need not declare it. */
+  availabilityUpdatedAt?: string | null;
 }
 
 const NIGHTFORM: DemoSubprofile = {
@@ -833,8 +841,8 @@ const CASA_CORVO: DemoSubprofile = {
  *  (`skins/therapist/`), so every therapist `skinData` key is filled here,
  *  plus the older `practical` block the layout reads as a fallback. Owned by
  *  Maria Ferreira, whose member profile already lists therapy-adjacent
- *  community offerings. Status "open"; the waitlist state has no second
- *  therapist persona to show it yet. */
+ *  community offerings. Status "open"; the waitlist state lives on Inês
+ *  Lobo in `therapistDemoSubprofiles.data.ts`. */
 const SOFIA_NEVES: DemoSubprofile = {
   ownerSlug: "maria",
   ownerName: "Maria Ferreira",
@@ -850,6 +858,7 @@ const SOFIA_NEVES: DemoSubprofile = {
   coverUrl: null,
   accent: "jade",
   availability: "open_to_collabs",
+  availabilityUpdatedAt: demoDaysAgoIso(12),
   ctaLabel: "Book a first session",
   ctaUrl: "https://example.com/sofia-neves/book",
   socialLinks: [],
@@ -2867,6 +2876,7 @@ export const DEMO_SUBPROFILES: DemoSubprofile[] = [
   CASA_CORVO_ANTIGA,
   LATE_BLOOMERS,
   ...QUEST_DEMO_SUBPROFILES,
+  ...THERAPIST_DEMO_SUBPROFILES,
 ];
 
 /** Demo-only edit counters (ENG-451), keyed by persona id. A persona with no
@@ -2992,6 +3002,7 @@ export function toPublicDto(
     coverUrl: sp.coverUrl,
     accent: sp.accent,
     availability: sp.availability,
+    availabilityUpdatedAt: sp.availabilityUpdatedAt ?? null,
     ctaLabel: sp.ctaLabel,
     ctaUrl: sp.ctaUrl,
     socialLinks: sp.socialLinks,
@@ -3062,6 +3073,7 @@ export function toCardDto(sp: DemoSubprofile): SubprofileCardDTO {
     tagline: sp.tagline,
     accent: sp.accent,
     availability: sp.availability,
+    availabilityUpdatedAt: sp.availabilityUpdatedAt ?? null,
     socialCount: sp.socialLinks.length,
     tags: contentItemTags(sp),
     // Mirrors the backend's directory `followerCount` (Personas redesign

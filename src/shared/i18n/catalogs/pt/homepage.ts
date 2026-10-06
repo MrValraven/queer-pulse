@@ -60,6 +60,63 @@ export const homepage: Catalog = {
   "manifesto.assurance.moderation.title": "Moderação 24 horas por dia",
   "manifesto.assurance.moderation.description":
     "Quando algo corre mal, não devias ter de gritar para o vazio. As denúncias são revistas por pessoas reais e respondidas o mais depressa possível.",
+  // Resumos mostrados quando "Onde nos posicionamos" ou "Como mantemos isto
+  // seguro" abrem o <ReferenceDigestModal> no próprio sítio. Escritos para quem
+  // acabou de ler a secção acima, por isso acrescentam o que a página completa
+  // diz e deixam de fora o que a lista de garantias já afirma. Registo:
+  // manifestoDigests.data.ts.
+  "manifesto.digest.stand.eyebrow": "Onde nos posicionamos",
+  "manifesto.digest.stand.label": "Onde a QueerPulse se posiciona",
+  "manifesto.digest.stand.title":
+    "Uma convicção que <em>nos custa alguma coisa.</em>",
+  "manifesto.digest.stand.lead":
+    "As posições por trás dessa frase, com os compromissos que associamos a cada uma.",
+  "manifesto.digest.stand.p1":
+    "Raça, classe, deficiência, estatuto migratório e género determinam quem tem segurança e a quem se pede que espere por ela. Por isso, esta convicção tem de nos custar alguma coisa: molda quem convidamos, quem modera e que queixas são levadas a sério.",
+  "manifesto.digest.stand.p2":
+    "Israel está a cometer um genocídio contra o povo palestiniano em Gaza, e dizemo-lo com todas as letras. Recusamos também o pinkwashing, que ergue os direitos LGBTQ+ como prova de que um Estado é civilizado enquanto esse mesmo Estado bombardeia, esfomeia e desloca populações.",
+  "manifesto.digest.stand.point.trans.title":
+    "A presença de pessoas trans é assunto fechado.",
+  "manifesto.digest.stand.point.trans.body":
+    "A autodeterminação é a norma aqui, e fazer campanha para retirar pessoas membras trans é uma violação do Código de Conduta.",
+  "manifesto.digest.stand.point.money.title":
+    "Não aceitamos dinheiro cúmplice.",
+  "manifesto.digest.stand.point.money.body":
+    "Sem patrocínio, financiamento ou parceria de empresas ou instituições materialmente cúmplices da ocupação.",
+  "manifesto.digest.stand.point.positions.title":
+    "Trabalho sexual, migração e VIH.",
+  "manifesto.digest.stand.point.positions.body":
+    "Trabalho sexual é trabalho, a migração é uma questão queer, e tratar o estado serológico de alguém como motivo de exclusão é discriminação.",
+  "manifesto.digest.stand.point.principle.title":
+    "Um teste para quando falamos.",
+  "manifesto.digest.stand.point.principle.body":
+    "Falamos onde a nossa comunidade está diretamente implicada, e onde a identidade queer está a ser usada como cobertura para fazer mal.",
+  "manifesto.digest.stand.cta": "Lê a posição completa",
+  "manifesto.digest.safety.eyebrow": "Segurança e privacidade",
+  "manifesto.digest.safety.label":
+    "Como a QueerPulse mantém a comunidade segura",
+  "manifesto.digest.safety.title":
+    "A tua visibilidade, <em>a tua decisão.</em>",
+  "manifesto.digest.safety.lead":
+    "O que o guia de segurança acrescenta: como funcionam a visibilidade, os votos de confiança, os teus dados, as denúncias e a saída.",
+  "manifesto.digest.safety.p1":
+    "A visibilidade funciona como um regulador gradual que podes ajustar quando quiseres, sem qualquer penalização por dares um passo atrás. Em Só rede, o contacto direto exige uma conexão partilhada. Em Privado, o teu perfil só é visível à equipa e a quem te deu um voto de confiança.",
+  "manifesto.digest.safety.p2":
+    "Um voto de confiança diz: conheço esta pessoa e acho que pertence aqui. Quem o dá presta contas de forma real, por isso, se alguém a quem deu esse voto tiver um comportamento prejudicial, faz parte da conversa sobre o que acontece a seguir.",
+  "manifesto.digest.safety.point.data.title":
+    "Os teus dados nunca estão à venda.",
+  "manifesto.digest.safety.point.data.body":
+    "Não os vendemos, não treinamos modelos com eles, não os partilhamos com terceiros e não fazemos publicidade.",
+  "manifesto.digest.safety.point.reports.title": "Denúncias com discrição.",
+  "manifesto.digest.safety.point.reports.body":
+    "Nunca és identificade à pessoa que denuncias a menos que escolhas sê-lo, e nós damos seguimento.",
+  "manifesto.digest.safety.point.access.title": "Tudo o que temos, a pedido.",
+  "manifesto.digest.safety.point.access.body":
+    "Podes pedir tudo o que temos sobre ti, ou a eliminação da tua conta, a qualquer momento.",
+  "manifesto.digest.safety.point.leaving.title": "Sair é um passo só.",
+  "manifesto.digest.safety.point.leaving.body":
+    "O teu perfil sai do diretório de imediato, as tuas publicações no quadro são removidas e os teus dados são eliminados dentro de 30 dias.",
+  "manifesto.digest.safety.cta": "Lê o guia de segurança completo",
 
   // ── TrustStrip ─────────────────────────────────────────────────────────────
 

@@ -14,6 +14,7 @@ import { GuideDocument } from "./GuideDocument";
 import { GuideOutline } from "./GuideOutline";
 import { GuideStatusCard } from "./GuideStatusCard";
 import {
+  GuideComposedPageHint,
   GuideConflictBanner,
   GuideRecoveryBanner,
 } from "./GuideWorkspaceBanners";
@@ -21,6 +22,7 @@ import {
   GuideWorkspaceHeader,
   type GuideSaveStatus,
 } from "./GuideWorkspaceHeader";
+import { sectionComposedAnchors } from "../../resources/sectionComposedGuides";
 import { GuideWorkspaceLinks } from "./GuideWorkspaceLinks";
 import { GuideWorkspacePreview } from "./GuideWorkspacePreview";
 import { useGuideDraftRecovery } from "./useGuideDraftRecovery";
@@ -82,7 +84,10 @@ export function GuideWorkspaceScreen({
   const storedMeta = baseline?.meta ?? null;
   // Mirrors which sections the backend serves (`servedSections` in
   // guideTranslation.ts): a heading alone is enough to take over the page.
+  // A section-composed guide keeps its page, so it has nothing to take over.
+  const pageAnchors = sectionComposedAnchors(draft.slug);
   const isTakingOverPage =
+    pageAnchors === null &&
     baseline !== null &&
     baseline.sections.length === 0 &&
     draft.sections.some(
@@ -127,6 +132,7 @@ export function GuideWorkspaceScreen({
           onDiscard={recovery.discard}
         />
       )}
+      {pageAnchors && <GuideComposedPageHint anchors={pageAnchors} />}
       {saving.conflict && (
         <GuideConflictBanner
           savedAt={saving.conflict.serverGuide.updatedAt}
@@ -188,6 +194,7 @@ export function GuideWorkspaceScreen({
                   copyEnglishStructure(draft.sections, current),
                 )
               }
+              pageAnchors={pageAnchors}
             />
           </div>
         )}
@@ -198,6 +205,7 @@ export function GuideWorkspaceScreen({
               language={language}
               activeSectionKey={view.activeSectionKey}
               onEditSection={view.jumpToSection}
+              isSectionComposed={pageAnchors !== null}
             />
           </div>
         )}

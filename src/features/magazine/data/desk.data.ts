@@ -532,6 +532,27 @@ export const DEMO_PIECES: Piece[] = [
     words: 1400,
     art: "in",
   },
+  {
+    // PRD-437: scheduled for this morning, so readers can already open it,
+    // but still Ready. No job settles it: the desk says "Live since" and
+    // leads with Publish, which is what tells the writer. Last in the list so
+    // the index-based fixtures in the desk specs keep their pieces.
+    id: "p15",
+    stageEnteredAt: demoHoursAgo(30),
+    paymentStatus: "none",
+    title: "Saturday at the Trindade baths",
+    issueId: null,
+    publishedAt: demoHoursAgo(3),
+    format: "article",
+    section: "Features",
+    kind: "Report",
+    byline: "Inês Cardoso",
+    editorId: "marta",
+    stage: "Ready",
+    due: "ready",
+    words: 1300,
+    art: "in",
+  },
 ];
 
 export const DEMO_PITCHES: Pitch[] = [

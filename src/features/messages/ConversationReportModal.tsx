@@ -5,7 +5,7 @@ import { Modal } from "../../shared/components/ui/Modal";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
-import { useCreateReport } from "../safety/api/useCreateReport";
+import { useConversationReportMutation } from "./api/useConversationReportMutation";
 import { useReportSubmissionError } from "../safety/api/reportSubmissionError";
 import { asReasonCode, useReportReasons } from "../safety/api/useReportReasons";
 import { logError } from "../../shared/observability/logger";
@@ -61,7 +61,7 @@ export function ConversationReportModal(props: ConversationReportModalProps) {
   const detailRef = useRef<HTMLTextAreaElement>(null);
   const [detail, setDetail] = useState("");
   const [done, setDone] = useState(false);
-  const createReport = useCreateReport();
+  const createReport = useConversationReportMutation(isGroupReport);
   const describeReportError = useReportSubmissionError();
 
   const copy = isGroupReport

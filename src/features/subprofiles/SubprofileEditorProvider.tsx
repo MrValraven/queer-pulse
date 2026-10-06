@@ -1,4 +1,5 @@
 import { useCallback, useState, type ReactNode } from "react";
+import { useParams } from "react-router-dom";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useUnsavedChangesGuard } from "../../shared/hooks";
 import { useToast } from "../../shared/components/feedback/useToast";
@@ -8,6 +9,7 @@ import { useSubprofileMetaEditor } from "./useSubprofileMetaEditor";
 import { useSubprofileSkinBlocksEditor } from "./useSubprofileSkinBlocksEditor";
 import { useEditorRowsState } from "./useEditorRowsState";
 import { useEditorSaveGraph } from "./useEditorSaveGraph";
+import { usePersonaRekeyRedirect } from "./usePersonaRekeyRedirect";
 import {
   SubprofileEditorContext,
   type SubprofileEditorContextValue,
@@ -15,8 +17,10 @@ import {
 
 /**
  * Owns every editable area of ONE persona's editor and the single global save.
- * Mounted per persona by `SubprofileEditorShell` (keyed on `subprofile.id`), so
- * all working state re-seeds when the route lands on a different persona.
+ * Mounted per persona by `SubprofileEditorShell` (keyed on the id in the
+ * editor's route), so all working state re-seeds when the route lands on a
+ * different persona, and stays through a save in which an unlink gives the
+ * persona a fresh id (ENG-447).
  *
  * Thin wiring: the list working-state + baselines live in `useEditorRowsState`,
  * the live diff / dirty flags / `saveAll` fan-out in `useEditorSaveGraph`, and
@@ -44,7 +48,11 @@ export function SubprofileEditorProvider({
 }) {
   const { t } = useTranslation();
   const { showToast } = useToast();
-  const refetchSubprofile = useSubprofileReload(subprofile.id);
+  // The page reads the persona under the id in its route, which an unlink
+  // retires until the editor moves to the new address (ENG-447), so the
+  // reload writes there as well.
+  const { id: routeId } = useParams();
+  const refetchSubprofile = useSubprofileReload(subprofile.id, routeId);
   const [seedGeneration, setSeedGeneration] = useState(0);
   const [reloadedSubprofile, setReloadedSubprofile] =
     useState<SubprofileView | null>(null);
@@ -143,6 +151,9 @@ function SubprofileEditorState({
     // `?pane=` switches keep this provider (and the whole draft) mounted.
     shouldAllowQueryChanges: true,
   });
+  // After the guard, so on the render the save settles the guard has already
+  // stood down when the move to an unlinked persona's new id runs.
+  usePersonaRekeyRedirect(subprofile.id, !dirty && !saving);
 
   const discardAll = useCallback(() => {
     meta.reset();

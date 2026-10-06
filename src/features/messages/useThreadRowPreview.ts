@@ -1,6 +1,10 @@
 import { useAuth } from "../../app/providers/authContext";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { loadDraftOrServerFallback } from "./drafts";
+import {
+  matchedChatNamesByKey,
+  withMatchedChatMentionNames,
+} from "./matchedChatMentionText";
 import type { MetaStatus } from "./MessageSendStatus";
 import type { Conversation } from "./data";
 import type { ConversationWithPreview } from "./api/messages.adapters";
@@ -78,14 +82,28 @@ export function useThreadRowPreview(
       : thread.hasDraft
         ? thread.draftPreview
         : null;
+  // PRD-423: a matched Go together chat stores mentions as opaque
+  // `@<member key>` tokens; the row spells them by first name.
+  const readable = (text: string) =>
+    thread.isGoTogetherChat
+      ? withMatchedChatMentionNames(
+          text,
+          matchedChatNamesByKey(thread),
+          t("messages:mention.member"),
+        )
+      : text;
   const draftText = isCurrentlyOpen
     ? ""
-    : loadDraftOrServerFallback(thread.id, serverDraftFallback).trim();
+    : readable(
+        loadDraftOrServerFallback(thread.id, serverDraftFallback).trim(),
+      );
 
+  // PRD-423: a matched Go together chat names the sender by their per-chat
+  // key, so the viewer's own last message there carries `viewerMemberKey`.
   const isLastMessageMine =
-    !!myHandle &&
     !!thread.lastMessageSenderHandle &&
-    thread.lastMessageSenderHandle === myHandle &&
+    (thread.lastMessageSenderHandle === myHandle ||
+      thread.lastMessageSenderHandle === thread.viewerMemberKey) &&
     !thread.lastMessageIsSystem;
   // A reply sent as the business this member answers for on this thread.
   // The server's `isSentByViewer` says who typed it; staff always receive
@@ -110,11 +128,13 @@ export function useThreadRowPreview(
   const bodyForOwnPreview = thread.isGroup
     ? (thread.lastMessageBody ?? thread.preview)
     : thread.preview;
-  const previewText = isLastMessageTypedByViewer
-    ? `${t("messages:thread.previewYou")} ${bodyForOwnPreview}`
-    : colleagueFirstName
-      ? `${colleagueFirstName}: ${bodyForOwnPreview}`
-      : thread.preview;
+  const previewText = readable(
+    isLastMessageTypedByViewer
+      ? `${t("messages:thread.previewYou")} ${bodyForOwnPreview}`
+      : colleagueFirstName
+        ? `${colleagueFirstName}: ${bodyForOwnPreview}`
+        : thread.preview,
+  );
 
   // The tick follows our side's reply, whichever staff member typed it.
   const metaStatus: MetaStatus =

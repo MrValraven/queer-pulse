@@ -1,0 +1,109 @@
+/* PRD-434. "Places you suggested", below the places a member runs. A record
+   of what they sent in, so the rows are compact text cards on paper. */
+/* The profile's section rhythm: the same space that sits between the other
+   sections on the page, so "Places you suggested" reads as its own section. */
+.section {
+  margin-top: var(--section-y-56);
+}
+.title {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: var(--text-heading);
+  color: var(--text-strong);
+  letter-spacing: -0.015em;
+}
+.title em {
+  font-style: italic;
+  color: var(--accent);
+}
+.sub {
+  font-size: var(--text-14);
+  color: var(--ink-60);
+  line-height: 1.6;
+  margin-top: 6px;
+  margin-bottom: var(--gap-grid);
+  max-width: 56ch;
+}
+.list {
+  list-style: none;
+  margin: 0 0 var(--gap-sm);
+  padding: 0;
+  display: grid;
+  gap: var(--gap-sm);
+}
+.row {
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-badge);
+  /* The bottom is trimmed: the action links below are 44px tap boxes around
+     13px text, and their own slack supplies the rest of the bottom space, so
+     the row's ink sits evenly between its top and bottom edges. */
+  padding: 16px 18px 4px;
+}
+.rowTop {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-xs);
+  flex-wrap: wrap;
+}
+.name,
+.nameLink {
+  font-size: var(--text-16);
+  font-weight: 700;
+  color: var(--text-strong);
+}
+.nameLink {
+  text-decoration: none;
+}
+@media (hover: hover) {
+  .nameLink:hover {
+    color: var(--accent-ink);
+  }
+}
+.meta {
+  margin-top: 4px;
+  font-size: var(--text-12-5);
+  color: var(--ink-40);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+.nowrap {
+  white-space: nowrap;
+}
+.note {
+  margin-top: 8px;
+  font-size: var(--text-14);
+  line-height: 1.55;
+  color: var(--ink-60);
+}
+.actions {
+  display: flex;
+  align-items: baseline;
+  column-gap: var(--gap-sm);
+  flex-wrap: wrap;
+  /* No top margin: the 44px tap box already centres its text with room above
+     it, which keeps the note and the actions one visual group. */
+}
+.action {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: var(--text-13);
+  font-weight: 700;
+  color: var(--text-strong);
+  text-decoration: none;
+  /* A comfortable tap target on a phone without changing the row's rhythm. */
+  min-height: 44px;
+}
+@media (hover: hover) {
+  .action:hover {
+    color: var(--accent-ink);
+  }
+}
+.nameLink:focus-visible,
+.action:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-radius: var(--radius-6);
+}

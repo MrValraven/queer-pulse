@@ -14,6 +14,15 @@ import { LuDna, LuLeaf, LuMicroscope, LuScale } from "react-icons/lu";
 import { routes } from "../../app/routeMap";
 
 export type TabId = "testing" | "prep" | "hiv" | "guides";
+
+/**
+ * The guide's `resources.slug`. Each tab reads the managed section whose
+ * anchor is its `TabId` ("testing", "prep", "hiv", "guides"), so an editor can
+ * rewrite one tab's prose in the guide workspace while the other tabs keep
+ * their catalog copy (RES-F5). `SECTION_COMPOSED_GUIDE_ANCHORS` in
+ * `sectionComposedGuides.ts` lists the same four for the admin workspace.
+ */
+export const SEXUAL_HEALTH_GUIDE_SLUG = "sexual-health";
 export type ClinicType = "public" | "ngo" | "private" | "pharmacy";
 
 /** i18n Pattern A — `id` is the stored tab value; `labelKey` resolves via `t()`. */
@@ -26,134 +35,171 @@ export const TABS: { id: TabId; labelKey: string }[] = [
 
 export interface ClinicMeta {
   icon: IconType;
-  text: string;
+  textKey: string;
 }
 export interface ClinicDetail {
-  tests: string;
-  bring: string;
-  access: string;
-  note: string;
+  testsKey: string;
+  bringKey: string;
+  accessKey: string;
+  noteKey: string;
 }
+/** A member rating, formatted per locale on the card. */
+export interface ClinicReview {
+  rating: number;
+  count: number;
+}
+/**
+ * One demo-mode clinic. `name` is the clinic's own name and stays as written;
+ * every other line is an i18n key, so the directory reads in Portuguese too.
+ */
 export interface Clinic {
   type: ClinicType;
-  typeLabel: string;
+  typeLabelKey: string;
   name: string;
-  description: string;
+  descriptionKey: string;
   meta: ClinicMeta[];
   verified?: boolean;
-  button: string;
-  review?: string;
+  review?: ClinicReview;
   details: ClinicDetail;
 }
 export const CLINICS: Clinic[] = [
   {
     type: "ngo",
-    typeLabel: "NGO · Free",
+    typeLabelKey: "resources:sexualHealth.testing.clinic.typeLabel.ngoFree",
     name: "CheckpointLx",
-    description:
-      "Lisbon's leading queer-specific sexual health service. Free, anonymous testing for HIV, syphilis, hepatitis B & C, and gonorrhoea. PrEP counselling. Staff are experienced with queer and trans clients. No appointment needed on drop-in days.",
+    descriptionKey:
+      "resources:sexualHealth.testing.clinic.checkpointLx.description",
     meta: [
-      { icon: FiMapPin, text: "Rua de São Lázaro, Intendente" },
-      { icon: FiClock, text: "Tue & Thu 18:00–21:00, Sat 14:00–18:00" },
+      {
+        icon: FiMapPin,
+        textKey: "resources:sexualHealth.testing.clinic.checkpointLx.location",
+      },
+      {
+        icon: FiClock,
+        textKey: "resources:sexualHealth.testing.clinic.checkpointLx.hours",
+      },
     ],
     verified: true,
-    button: "View details",
-    review: "4.9 · 84 member reviews",
+    review: { rating: 4.9, count: 84 },
     details: {
-      tests:
-        "HIV, syphilis, hepatitis B & C, gonorrhoea. Rapid results the same evening.",
-      bring:
-        "Nothing required. No ID, no SNS number, no appointment on drop-in days.",
-      access:
-        "Ground-floor entrance, step-free. Trans-experienced staff. Service available in PT and EN.",
-      note: "Busiest in the first hour. Arriving later in the session usually means a shorter wait.",
+      testsKey:
+        "resources:sexualHealth.testing.clinic.checkpointLx.details.tests",
+      bringKey:
+        "resources:sexualHealth.testing.clinic.checkpointLx.details.bring",
+      accessKey:
+        "resources:sexualHealth.testing.clinic.checkpointLx.details.access",
+      noteKey:
+        "resources:sexualHealth.testing.clinic.checkpointLx.details.note",
     },
   },
   {
     type: "ngo",
-    typeLabel: "NGO · Free",
+    typeLabelKey: "resources:sexualHealth.testing.clinic.typeLabel.ngoFree",
     name: "GAT Lisboa",
-    description:
-      "Community-based harm reduction and sexual health. Free HIV rapid tests, peer counselling, PrEP navigation support, and an anonymous STI referral service. Particularly strong on outreach to migrants and people in sex work.",
+    descriptionKey:
+      "resources:sexualHealth.testing.clinic.gatLisboa.description",
     meta: [
-      { icon: FiMapPin, text: "Rua do Século, Bairro Alto" },
-      { icon: FiClock, text: "Mon–Fri 10:00–18:00" },
+      {
+        icon: FiMapPin,
+        textKey: "resources:sexualHealth.testing.clinic.gatLisboa.location",
+      },
+      {
+        icon: FiClock,
+        textKey: "resources:sexualHealth.testing.clinic.gatLisboa.hours",
+      },
     ],
     verified: true,
-    button: "View details",
-    review: "4.8 · 61 member reviews",
+    review: { rating: 4.8, count: 61 },
     details: {
-      tests:
-        "HIV rapid test on site; referrals for the full STI panel. PrEP navigation support.",
-      bring:
-        "Nothing required for a rapid test. For referrals, an SNS number helps but staff can advise without one.",
-      access:
-        "Peer counsellors who speak PT, EN, and FR. Especially experienced with migrants and people in sex work.",
-      note: "Walk-in for rapid tests; PrEP navigation is best booked by phone first.",
+      testsKey: "resources:sexualHealth.testing.clinic.gatLisboa.details.tests",
+      bringKey: "resources:sexualHealth.testing.clinic.gatLisboa.details.bring",
+      accessKey:
+        "resources:sexualHealth.testing.clinic.gatLisboa.details.access",
+      noteKey: "resources:sexualHealth.testing.clinic.gatLisboa.details.note",
     },
   },
   {
     type: "public",
-    typeLabel: "SNS · Free",
+    typeLabelKey: "resources:sexualHealth.testing.clinic.typeLabel.snsFree",
     name: "CAD: Centro de Aconselhamento e Deteção",
-    description:
-      "The public SNS HIV testing and counselling service. Free, confidential, with a counsellor present. Also provides hepatitis B vaccination and referrals to PrEP. You need to register with the SNS but no insurance required.",
+    descriptionKey: "resources:sexualHealth.testing.clinic.cad.description",
     meta: [
-      { icon: FiMapPin, text: "Multiple locations across Lisbon" },
-      { icon: FiClock, text: "By appointment" },
+      {
+        icon: FiMapPin,
+        textKey: "resources:sexualHealth.testing.clinic.cad.location",
+      },
+      {
+        icon: FiClock,
+        textKey: "resources:sexualHealth.testing.clinic.cad.hours",
+      },
     ],
-    button: "View details",
-    review: "4.3 · 29 member reviews",
+    review: { rating: 4.3, count: 29 },
     details: {
-      tests:
-        "HIV testing with a counsellor, hepatitis B vaccination, and PrEP referrals.",
-      bring:
-        "Your SNS number. No private insurance needed; EU citizens can use an EHIC card.",
-      access:
-        "Multiple SNS sites across the city. Pick the one nearest you when booking.",
-      note: "Confidential: results are never shared without your consent, including with your GP.",
+      testsKey: "resources:sexualHealth.testing.clinic.cad.details.tests",
+      bringKey: "resources:sexualHealth.testing.clinic.cad.details.bring",
+      accessKey: "resources:sexualHealth.testing.clinic.cad.details.access",
+      noteKey: "resources:sexualHealth.testing.clinic.cad.details.note",
     },
   },
   {
     type: "pharmacy",
-    typeLabel: "Pharmacy · €15–25",
+    typeLabelKey:
+      "resources:sexualHealth.testing.clinic.typeLabel.pharmacyPaid",
     name: "Rapid HIV test: any pharmacy",
-    description:
-      "Available over the counter at most pharmacies. Result in 15 minutes. Detects HIV from 3 months after potential exposure. Ask for a teste rápido de VIH. No prescription needed, no record kept.",
+    descriptionKey:
+      "resources:sexualHealth.testing.clinic.pharmacyRapidTest.description",
     meta: [
-      { icon: FiMapPin, text: "Any farmácia" },
-      { icon: FiClock, text: "Walk-in, no appointment" },
+      {
+        icon: FiMapPin,
+        textKey:
+          "resources:sexualHealth.testing.clinic.pharmacyRapidTest.location",
+      },
+      {
+        icon: FiClock,
+        textKey:
+          "resources:sexualHealth.testing.clinic.pharmacyRapidTest.hours",
+      },
     ],
-    button: "View details",
     details: {
-      tests: "Rapid finger-prick HIV test, result in about 15 minutes.",
-      bring: "€15–25 in cash or card. No prescription, no ID, no record kept.",
-      access:
-        "Available at most pharmacies. Larger ones are more likely to stock it.",
-      note: "Detects HIV from roughly 3 months after a potential exposure; test again if it was more recent.",
+      testsKey:
+        "resources:sexualHealth.testing.clinic.pharmacyRapidTest.details.tests",
+      bringKey:
+        "resources:sexualHealth.testing.clinic.pharmacyRapidTest.details.bring",
+      accessKey:
+        "resources:sexualHealth.testing.clinic.pharmacyRapidTest.details.access",
+      noteKey:
+        "resources:sexualHealth.testing.clinic.pharmacyRapidTest.details.note",
     },
   },
   {
     type: "private",
-    typeLabel: "Private · Paid",
+    typeLabelKey: "resources:sexualHealth.testing.clinic.typeLabel.privatePaid",
     name: "Clínica da Travessa: Sexual Health",
-    description:
-      "Private clinic with queer-affirming staff. Full STI panel (HIV, syphilis, gonorrhoea, chlamydia, HSV, hepatitis B & C, HPV). Results within 48 hours. Offers PrEP prescription outside the SNS pathway for those who prefer it.",
+    descriptionKey:
+      "resources:sexualHealth.testing.clinic.clinicaDaTravessa.description",
     meta: [
-      { icon: FiMapPin, text: "Príncipe Real" },
-      { icon: FiClock, text: "Mon–Sat, by appointment" },
+      {
+        icon: FiMapPin,
+        textKey:
+          "resources:sexualHealth.testing.clinic.clinicaDaTravessa.location",
+      },
+      {
+        icon: FiClock,
+        textKey:
+          "resources:sexualHealth.testing.clinic.clinicaDaTravessa.hours",
+      },
     ],
     verified: true,
-    button: "View details",
-    review: "4.7 · 38 member reviews",
+    review: { rating: 4.7, count: 38 },
     details: {
-      tests:
-        "Full STI panel: HIV, syphilis, gonorrhoea, chlamydia, HSV, hepatitis B & C, HPV. Results within 48 hours.",
-      bring:
-        "A booking and a payment method. PrEP prescriptions available outside the SNS pathway.",
-      access:
-        "Queer-affirming staff; private, discreet setting. Appointments PT and EN.",
-      note: "Paid service, useful when you want a fast, comprehensive panel without the SNS wait.",
+      testsKey:
+        "resources:sexualHealth.testing.clinic.clinicaDaTravessa.details.tests",
+      bringKey:
+        "resources:sexualHealth.testing.clinic.clinicaDaTravessa.details.bring",
+      accessKey:
+        "resources:sexualHealth.testing.clinic.clinicaDaTravessa.details.access",
+      noteKey:
+        "resources:sexualHealth.testing.clinic.clinicaDaTravessa.details.note",
     },
   },
 ];
@@ -177,9 +223,9 @@ export const CLINIC_FILTERS: { id: ClinicType | "all"; labelKey: string }[] = [
 
 /**
  * The guide's own prose below renders in both modes, so every string is an
- * i18n key (DES-421). This guide is a metadata-only row in the database
- * (`sections: []` in the CON-08 backfill), so its words live in the
- * `resources` catalogs, like every other hardcoded guide page.
+ * i18n key (DES-421). It is the catalog copy for each tab: a managed section
+ * at that tab's anchor replaces it in live mode (see
+ * `SEXUAL_HEALTH_GUIDE_SLUG`), and demo mode always reads it.
  */
 export interface TestingInfoCard {
   icon: IconType;

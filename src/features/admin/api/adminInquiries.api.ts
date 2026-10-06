@@ -2,6 +2,8 @@ import { apiGet, apiPatch } from "../../../shared/api/client";
 
 /**
  * The public contact + partnership inbox (`/admin/intakes`, Inquiries section).
+ * Read straight off the wire: the server hand-maps every field this console
+ * renders, so there is no adapter between the DTO and the row.
  * `POST /inquiries` is open to anyone and stores every message sent through
  * `/about/contact` — which is the escape hatch the sign-in page, the under-18
  * notice and the request-invite confirmation all point at. Until ACQ-03 nothing
@@ -11,10 +13,16 @@ import { apiGet, apiPatch } from "../../../shared/api/client";
  * answered from their own inbox. Nothing on this surface sends anything.
  */
 
-export type InquiryKind = "contact" | "partner";
+/** `listing_correction` (PRD-434) is a Contact message about one directory
+ *  listing, sent under the form's listing-correction topic. */
+export type InquiryKind = "contact" | "partner" | "listing_correction";
 export type InquiryStatus = "new" | "handled";
 
-export const INQUIRY_KINDS: readonly InquiryKind[] = ["contact", "partner"];
+export const INQUIRY_KINDS: readonly InquiryKind[] = [
+  "contact",
+  "partner",
+  "listing_correction",
+];
 export const INQUIRY_STATUSES: readonly InquiryStatus[] = ["new", "handled"];
 
 /** The admin who marked it handled. Null on rows handled before ACQ-03 shipped
@@ -22,6 +30,19 @@ export const INQUIRY_STATUSES: readonly InquiryStatus[] = ["new", "handled"];
 export interface InquiryHandler {
   id: string;
   name: string;
+}
+
+/**
+ * PRD-434. The directory listing a correction is about, resolved by the
+ * server from the stored ref. `isPublic` is true while the public page opens
+ * (live and not hidden by its owner); otherwise the row links to the staff
+ * editor.
+ */
+export interface InquiryListingDTO {
+  ref: string;
+  name: string;
+  slug: string;
+  isPublic: boolean;
 }
 
 export interface AdminInquiryDTO {
@@ -35,6 +56,15 @@ export interface AdminInquiryDTO {
   /** Absent for a plain contact message; the organisation on a partner one. */
   orgName?: string;
   status: InquiryStatus;
+  /** RES-F6 (PRD-452). A safety concern: the server sorts it first while it
+   *  is `new`, and the row wears a priority badge. */
+  isPriority: boolean;
+  /** PRD-434. The ref a `listing_correction` was sent about; null on every
+   *  other kind and on a correction sent without one. */
+  listingRef: string | null;
+  /** PRD-434. `listingRef` resolved to the listing, or null when no listing
+   *  has that ref any more. */
+  listing: InquiryListingDTO | null;
   createdAt: string;
   handledAt: string | null;
   handledBy: InquiryHandler | null;

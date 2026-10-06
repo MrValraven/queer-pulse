@@ -15,6 +15,7 @@ import type {
   CreateArticleTranslationDto,
 } from "../../api/lifecycle.api";
 import { useArticleTranslations } from "../../api/useLifecycleDesk";
+import { useMagazineWriters } from "../../api/useMagazineWriters";
 import type { ContentLocale } from "../../api/magazine.api";
 import { CONTENT_LOCALE_LABEL } from "./lifecycleLabels";
 import styles from "./LifecycleBoard.module.css";
@@ -38,8 +39,11 @@ const LOCALES: ContentLocale[] = ["en", "pt"];
  * the translator works over the piece's structure. It ships when the
  * translator is done, which is rarely the day the original ships.
  *
- * The translator's name is optional here: an editor can open the work before
- * deciding who will do it, and credit them from the article editor later.
+ * The translator is picked from the same roster the desk commissions writers
+ * from (PRD-440), so the new piece lands on them and they hear about the job.
+ * Both are optional: an editor can open the work before deciding who will do
+ * it. The credit line defaults to the picked member's name, and the free-text
+ * field overrides how it reads (a pen name, a co-translator).
  */
 export function LifecycleTranslationsModal({
   record,
@@ -50,7 +54,17 @@ export function LifecycleTranslationsModal({
   const { t } = useTranslation();
   const { data: family, isLoading } = useArticleTranslations(record.pieceId);
   const [locale, setLocale] = useState<ContentLocale | null>(null);
+  const [translatorUserId, setTranslatorUserId] = useState("");
   const [translatorByline, setTranslatorByline] = useState("");
+  const writerList = useMagazineWriters();
+  const { writers } = writerList;
+  // Mirrors the commission modal: an empty roster while loading or after a
+  // failure disables the picker, which says why.
+  const isWriterListUnavailable =
+    writers.length === 0 && (writerList.isLoading || writerList.isError);
+  const pickedTranslator = writers.find(
+    (writer) => writer.id === translatorUserId,
+  );
 
   const existingLocales = new Set((family ?? []).map((row) => row.locale));
   const availableLocales = LOCALES.filter(
@@ -75,7 +89,9 @@ export function LifecycleTranslationsModal({
               if (!locale) return;
               onOpenTranslation({
                 locale,
-                translatorByline: translatorByline.trim() || undefined,
+                translatorUserId: pickedTranslator?.id,
+                translatorByline:
+                  translatorByline.trim() || pickedTranslator?.name,
               });
             }}
           >
@@ -139,11 +155,36 @@ export function LifecycleTranslationsModal({
           </FormField>
           <FormField
             label={t("magazine:lifecycle.languages.translatorLabel")}
-            helper={t("magazine:lifecycle.languages.translatorHelper")}
+            helper={
+              isWriterListUnavailable
+                ? t("magazine:lifecycle.languages.translatorsUnavailable")
+                : t("magazine:lifecycle.languages.translatorHelper")
+            }
+          >
+            <Select
+              value={translatorUserId}
+              disabled={isWriterListUnavailable}
+              onChange={(value) => setTranslatorUserId(value ?? "")}
+              options={[
+                {
+                  value: "",
+                  label: t("magazine:lifecycle.languages.translatorNone"),
+                },
+                ...writers.map((writer) => ({
+                  value: writer.id,
+                  label: writer.name,
+                })),
+              ]}
+            />
+          </FormField>
+          <FormField
+            label={t("magazine:lifecycle.languages.bylineLabel")}
+            helper={t("magazine:lifecycle.languages.bylineHelper")}
           >
             <input
               type="text"
               value={translatorByline}
+              placeholder={pickedTranslator?.name}
               onChange={(event) => setTranslatorByline(event.target.value)}
             />
           </FormField>

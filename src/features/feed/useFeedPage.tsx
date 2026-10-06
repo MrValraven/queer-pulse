@@ -32,6 +32,7 @@ import {
 } from "./FeedCards";
 import { DEMO_BANNER } from "./feedCards.data";
 import { DEMO_NEW_MEMBER_ITEMS } from "./demoNewMembers.data";
+import { weekStartKey } from "./groupNewMembers";
 import { useFeed } from "./api/useFeed";
 import { useNewMembersThisWeek } from "./api/useNewMembersThisWeek";
 import type { FeedItem } from "./api/feed.api";
@@ -49,26 +50,46 @@ interface DemoFeedItem {
 
 /** One entry per demo new member, rendered from a live-shaped `FeedItem`, so
  *  the demo runs the same `MemberCard` path as live and block/mute filters
- *  each person on their own. Built once, so every `Card` keeps its identity. */
-const DEMO_NEW_MEMBER_ENTRIES: DemoFeedItem[] = DEMO_NEW_MEMBER_ITEMS.map(
-  (newMemberItem): DemoFeedItem => {
-    const slug = newMemberItem.actor?.handle ?? newMemberItem.id;
-    return {
-      key: `new-member-${slug}`,
-      tab: "People",
-      Card: () => <MemberCard item={newMemberItem} />,
-      authorSlug: slug,
-      newMemberItem,
-    };
-  },
-);
+ *  each person on their own. */
+function demoNewMemberEntry(newMemberItem: FeedItem): DemoFeedItem {
+  const slug = newMemberItem.actor?.handle ?? newMemberItem.id;
+  return {
+    key: `new-member-${slug}`,
+    tab: "People",
+    Card: () => <MemberCard item={newMemberItem} />,
+    authorSlug: slug,
+    newMemberItem,
+  };
+}
 
-/** Each feed item tagged with the tabs it belongs to (besides "All"). Cards with
- *  an identifiable author carry `authorSlug` so blocked/muted authors filter out. */
-const FEED_ITEMS: DemoFeedItem[] = [
+/** The demo's new members newest first, as live sends them, cut into one run
+ *  per calendar week (the same `weekStartKey` the grouping uses), the newest
+ *  week first. */
+function demoNewMemberWeekRuns(): DemoFeedItem[][] {
+  const newestFirst = [...DEMO_NEW_MEMBER_ITEMS].sort(
+    (first, second) =>
+      Date.parse(second.createdAt) - Date.parse(first.createdAt),
+  );
+  const weekRuns: DemoFeedItem[][] = [];
+  let previousWeekStart: string | null = null;
+  for (const newMemberItem of newestFirst) {
+    const weekStart = weekStartKey(new Date(newMemberItem.createdAt));
+    const currentRun = weekRuns.at(-1);
+    if (currentRun && weekStart === previousWeekStart) {
+      currentRun.push(demoNewMemberEntry(newMemberItem));
+    } else {
+      weekRuns.push([demoNewMemberEntry(newMemberItem)]);
+    }
+    previousWeekStart = weekStart;
+  }
+  return weekRuns;
+}
+
+/** The scripted cards, in feed order, that the weeks of new members are
+ *  spread between. */
+const DEMO_STATIC_ITEMS: DemoFeedItem[] = [
   { key: "community", tab: "Communities", Card: CommunityCard },
   { key: "gathering", tab: "Gatherings", Card: GatheringCard },
-  ...DEMO_NEW_MEMBER_ENTRIES,
   {
     key: "post",
     tab: "Posts",
@@ -78,6 +99,31 @@ const FEED_ITEMS: DemoFeedItem[] = [
   { key: "saved-article", tab: "Posts", Card: SavedArticleCard },
   { key: "recap", tab: "Gatherings", Card: RecapCard },
 ];
+
+/** Scripted cards between two weeks of new members on the "All" tab. */
+const STATIC_ITEMS_BETWEEN_WEEKS = 2;
+
+/** Each feed item tagged with the tabs it belongs to (besides "All"). Cards with
+ *  an identifiable author carry `authorSlug` so blocked/muted authors filter out.
+ *
+ *  The All tab folds each week's new members into one group card placed where
+ *  the week's first member sits (`demoFeedRenderEntries`), so the weeks are
+ *  spread out: one scripted card, the newest week, two more cards, the next
+ *  week, and so on, with any cards left over at the end. Back to back, the
+ *  groups would read as the run of near-identical cards they replace. The
+ *  People tab keeps only the members, newest first.
+ *  Built once, so every `Card` keeps its identity. */
+const FEED_ITEMS: DemoFeedItem[] = (() => {
+  const remainingStaticItems = [...DEMO_STATIC_ITEMS];
+  const feedItems = remainingStaticItems.splice(0, 1);
+  for (const weekRun of demoNewMemberWeekRuns()) {
+    feedItems.push(
+      ...weekRun,
+      ...remainingStaticItems.splice(0, STATIC_ITEMS_BETWEEN_WEEKS),
+    );
+  }
+  return [...feedItems, ...remainingStaticItems];
+})();
 
 /** Greeting + formatted date from the user's local machine clock. */
 function useNowGreeting() {

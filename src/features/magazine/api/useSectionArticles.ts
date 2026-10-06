@@ -7,6 +7,10 @@ import type { Article } from "../data/articles";
 import { articleListItemToArticle } from "./magazine.adapters";
 import { getArticles } from "./magazine.api";
 import { useReaderLanguage } from "./useReaderLanguage";
+import {
+  hasFailedWithoutData,
+  isRetryingFailedRead,
+} from "../../admin/queryLoadFailure";
 
 /** One loaded page of a section. `page` is the server's own echo, so the next
  *  page number comes off the response rather than a client-side counter. */
@@ -98,10 +102,27 @@ export function useSectionArticles(section: string) {
     [query.data],
   );
 
+  // `keepPreviousData` hands a new section or language the previous rows as
+  // placeholder data, so a Retry of its failed first page would read as
+  // "has data" and unmount the error panel. Placeholder rows count as nothing
+  // loaded for this key. The four fields are named one by one: spreading the
+  // result would read every tracked property and re-render on all of them.
+  const ownLoadState = {
+    data: query.isPlaceholderData ? undefined : query.data,
+    isError: query.isError,
+    fetchStatus: query.fetchStatus,
+    errorUpdateCount: query.errorUpdateCount,
+  };
+
   return {
     articles,
     isLoading: query.isLoading,
     isError: query.isError,
+    /** ENG-501b: the first page failed and nothing ever loaded, including
+     *  while a Retry of that failure runs (react-query clears `isError` then). */
+    hasFailedWithoutData: hasFailedWithoutData(ownLoadState),
+    /** A Retry of that failed first page is in flight. */
+    isRetrying: isRetryingFailedRead(ownLoadState),
     refetch: () => void query.refetch(),
     /** PRD-103: more pieces exist in this section than are on screen. */
     hasMore: Boolean(query.hasNextPage),

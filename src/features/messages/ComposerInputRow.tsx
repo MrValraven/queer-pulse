@@ -5,6 +5,7 @@ import { MentionTextarea } from "../../shared/mentions/MentionTextarea";
 import { ComposerAttachButton } from "./ComposerAttachButton";
 import { EmojiComposerButton } from "./EmojiComposerButton";
 import { MentionHintButton } from "./MentionHintButton";
+import { useMatchedChatComposerMentions } from "./matchedChatComposerMentions";
 import type { ComposerPopover } from "./useComposerPopovers";
 import type { GifAttachment } from "../../shared/api/gifs";
 import type { StickerResponse } from "../../shared/contracts/contracts";
@@ -103,6 +104,7 @@ export function ComposerInputRow({
   isOverLimit,
   counterId,
 }: ComposerInputRowProps) {
+  const composerMentions = useMatchedChatComposerMentions();
   const hasDraft = draft.trim().length > 0;
 
   return (
@@ -141,6 +143,7 @@ export function ComposerInputRow({
           rows={1}
           textareaRef={textareaRef}
           placement="above"
+          formatInsertedMember={composerMentions?.formatInsertedMember}
           onChange={onChange}
           onBlur={onBlur}
           onFocus={onClosePopover}

@@ -6,9 +6,14 @@ import { useAuth } from "../../app/providers/authContext";
 import { canMirrorHidePushPreviews } from "../../pushPrivacy";
 import {
   isFromViewerSide,
+  ownMemberKeysOf,
   readStaffedIdentityIds,
   type MessageViewer,
 } from "../../shared/api/mailboxViewer";
+import {
+  cachedMatchedChatNames,
+  withMatchedChatMentionNames,
+} from "../messages/matchedChatMentionText";
 import {
   useConversationMessageFrames,
   useRealtime,
@@ -32,6 +37,11 @@ import {
   resolveIncomingConversationRow,
   type CachedConversationRow,
 } from "./incomingMessageBanner";
+import { isMessageSoundEnabled } from "../settings/messageSoundPref";
+import {
+  playMessageChime,
+  primeMessageChime,
+} from "../../shared/lib/messageChime";
 import { showIncomingMessageNotification } from "./showIncomingMessageNotification";
 
 type ConversationMessageFrame = ServerToClientEvents["conversation:message"];
@@ -43,7 +53,22 @@ type ConversationMessageFrame = ServerToClientEvents["conversation:message"];
  * locally in this file to keep `incomingMessageBanner.ts` untouched.
  */
 type ConversationRowWithMailboxState = CachedConversationRow &
-  Pick<Conversation, "mailboxIdentityId" | "claimedByUserId">;
+  Pick<
+    Conversation,
+    "mailboxIdentityId" | "claimedByUserId" | "viewerMemberKey"
+  >;
+
+/** PRD-423: `text` with a matched chat's `@<member key>` mentions named,
+ *  unchanged when the row is no matched chat. */
+function readableMatchedChatMentions(
+  text: string,
+  nameByKey: ReadonlyMap<string, string> | null,
+  unnamedLabel: string,
+): string {
+  return nameByKey
+    ? withMatchedChatMentionNames(text, nameByKey, unnamedLabel)
+    : text;
+}
 
 /**
  * Final review I1. A banner must never fire for a message already on the
@@ -198,6 +223,12 @@ export function useIncomingMessageBanner(): void {
   ]);
 
   const lastToastAtByConversationRef = useRef(new Map<string, number>());
+  const lastChimeAtByConversationRef = useRef(new Map<string, number>());
+
+  // Browsers keep audio locked until a gesture, so arm the unlock once.
+  useEffect(() => {
+    primeMessageChime();
+  }, []);
 
   const presentIncomingMessage = useCallback(
     async ({ conversationId, message }: ConversationMessageFrame) => {
@@ -241,6 +272,14 @@ export function useIncomingMessageBanner(): void {
           viewer: {
             myHandle: latest.myHandle,
             staffedIdentityIds: readStaffedIdentityIds(queryClient),
+            // PRD-423: the member's own keys in matched Go together chats,
+            // this row's own included even before the shared memo has it.
+            ownMemberKeys: new Set([
+              ...ownMemberKeysOf(queryClient),
+              ...(mailboxRow.viewerMemberKey
+                ? [mailboxRow.viewerMemberKey]
+                : []),
+            ]),
           },
           mailboxIdentityId: mailboxRow.mailboxIdentityId,
           claimedByUserId: mailboxRow.claimedByUserId,
@@ -253,7 +292,15 @@ export function useIncomingMessageBanner(): void {
       const copy = buildIncomingMessageCopy({
         senderName: message.sender.displayName,
         groupTitle: conversationRow.isGroup ? conversationRow.name : null,
-        previewText: incomingMessagePreviewText(message, latest.t),
+        // PRD-423: a matched chat's `@<member key>` mentions read by first
+        // name, from the cached row's roster.
+        previewText: incomingMessagePreviewText(message, latest.t, (text) =>
+          readableMatchedChatMentions(
+            text,
+            cachedMatchedChatNames(queryClient, conversationId),
+            latest.t("messages:mention.member"),
+          ),
+        ),
         isHidingPreviews: latest.isHidingPreviews,
         t: latest.t,
       });
@@ -273,14 +320,27 @@ export function useIncomingMessageBanner(): void {
           label: latest.t("messages:incomingBanner.open"),
           onClick: () => void latestRef.current.navigate(conversationPath),
         });
+        if (isMessageSoundEnabled()) playMessageChime();
         return;
       }
+
+      // Decide the chime first so the OS notification can stay silent when it
+      // played, and keep its default sound when it did not.
+      const hasChimed =
+        isMessageSoundEnabled() &&
+        claimToastSlot(
+          lastChimeAtByConversationRef.current,
+          conversationId,
+          now,
+        ) &&
+        playMessageChime();
 
       void showIncomingMessageNotification({
         conversationId,
         conversationPath,
         title: copy.notificationTitle,
         body: copy.notificationBody,
+        isSilent: hasChimed,
       });
     },
     [getActiveConversationId, queryClient],
