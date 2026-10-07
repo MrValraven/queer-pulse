@@ -1,7 +1,7 @@
 import { useLayoutEffect, useRef, type Ref } from "react";
+import { filmSizeStyle } from "./filmSizeStyle";
+import { FILM_FORMATS, type FilmSize } from "./marketingVideos.data";
 import styles from "./MarketingVideos.module.css";
-
-const FILM_WIDTH = 1920;
 
 interface FilmFrameProps {
   src: string;
@@ -10,12 +10,14 @@ interface FilmFrameProps {
   iframeRef?: Ref<HTMLIFrameElement>;
   onLoad?: () => void;
   loading?: "lazy" | "eager";
+  /** The film's native size; the box takes its aspect. Landscape by default. */
+  size?: FilmSize;
 }
 
 /**
- * A film at its native 1920x1080, scaled down to fill its box. Films are laid
- * out in absolute pixels, so they are never resized, only scaled, which keeps
- * the preview identical to the rendered file.
+ * A film at its native size (1920x1080 for 16:9), scaled down to fill its
+ * box. Films are laid out in absolute pixels, so they are never resized, only
+ * scaled, which keeps the preview identical to the rendered file.
  */
 export function FilmFrame({
   src,
@@ -23,6 +25,7 @@ export function FilmFrame({
   iframeRef,
   onLoad,
   loading = "lazy",
+  size = FILM_FORMATS.landscape,
 }: FilmFrameProps) {
   const boxRef = useRef<HTMLDivElement>(null);
 
@@ -36,21 +39,21 @@ export function FilmFrame({
     const observer = new ResizeObserver((entries) => {
       const width = entries[0]?.contentRect.width ?? 0;
       const iframe = box.querySelector("iframe");
-      if (iframe) iframe.style.transform = `scale(${width / FILM_WIDTH})`;
+      if (iframe) iframe.style.transform = `scale(${width / size.width})`;
     });
     observer.observe(box);
     return () => observer.disconnect();
-  }, []);
+  }, [size.width]);
 
   return (
-    <div ref={boxRef} className={styles.filmBox}>
+    <div ref={boxRef} className={styles.filmBox} style={filmSizeStyle(size)}>
       <iframe
         ref={iframeRef}
         className={styles.filmIframe}
         src={src}
         title={title}
-        width={FILM_WIDTH}
-        height={1080}
+        width={size.width}
+        height={size.height}
         loading={loading}
         tabIndex={-1}
         onLoad={onLoad}

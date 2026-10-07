@@ -692,7 +692,7 @@ export const members: Catalog = {
   "publicBySlug.workHeading": "Trabalho",
   "publicBySlug.activityHeading": "Atividade recente",
   "publicBySlug.activityEmpty": "Ainda nada público por aqui.",
-  "publicBySlug.joinTitle": "O QueerPulse é só por convite",
+  "publicBySlug.joinTitle": "Entra pela mão de um membro",
   "publicBySlug.joinBody":
     "Um sítio onde a Lisboa queer se junta: sem anúncios, sem algoritmo. Precisas de alguém que te traga, ou podes pedir-nos diretamente.",
   "publicBySlug.notFound.metaTitle": "Não encontrado · QueerPulse",
@@ -722,7 +722,7 @@ export const members: Catalog = {
     "Para proteger as redes das pessoas da comunidade, não mostramos listas de conexões publicamente. Entra para veres os teus contactos em comum com {first}.",
   "publicProfile.bottomCta.title": "Queres <em>ver tudo?</em>",
   "publicProfile.bottomCta.body":
-    "A QueerPulse funciona por convite. {firstName} pode dar-te um voto de confiança se já se conheceram pessoalmente. Ou pede um convite diretamente a nós.",
+    "A QueerPulse cresce por votos de confiança. {firstName} pode dar-te um voto de confiança se já se conheceram pessoalmente. Ou pede um convite diretamente a nós.",
 
   // ── Secções de perfil público (PublicProfileSections) ──────────────────────
   "publicProfile.preview.ownerLabel":
@@ -1616,7 +1616,7 @@ export const members: Catalog = {
   "vouch.modal.form.eyebrow": "Adicionar o teu voto de confiança",
   "vouch.modal.form.title": "Dá um voto de confiança a <em>{first}</em>",
   "vouch.modal.form.sub":
-    "Um voto de confiança é tu, publicamente, a dizeres que conheces {first} e confias nesta pessoa em espaços da comunidade. Tem peso aqui. A QueerPulse funciona por convite e voto de confiança, e o teu nome fica no perfil desta pessoa ao lado de quem mais a apoiou.",
+    "Um voto de confiança é tu, publicamente, a dizeres que conheces {first} e confias nesta pessoa em espaços da comunidade. Tem peso aqui. A QueerPulse cresce por votos de confiança, e o teu nome fica no perfil desta pessoa ao lado de quem mais a apoiou.",
   "vouch.modal.form.relationshipLabel": "Como conheces {first}?",
   "vouch.modal.form.relationshipHint": "seleciona todas as que se aplicam",
   // A linha de chips de competências foi removida (nada guardava as escolhas),

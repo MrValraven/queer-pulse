@@ -1,4 +1,8 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  useMutation,
+  useQueryClient,
+  type InfiniteData,
+} from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import {
   checkInAttendee,
@@ -9,6 +13,15 @@ import { eventKeys } from "./eventKeys";
 import { attendeeToRow } from "./events.adapters";
 import { isAttendanceWindowClosed } from "./checkInError";
 import type { AttendeesResult } from "./useAttendees";
+import { checkInMutationKey, scheduleDoorRefresh } from "./doorRefresh";
+import { patchPagesArrival } from "./attendeePagesPatch";
+import {
+  attendeePagesRoot,
+  tintIndexForSlug,
+  type AttendeePage,
+} from "./useAttendeePages";
+import type { AttendeeArrival } from "./events.api";
+import type { AttendeeRow } from "./events.adapters";
 
 /** What the door is asking for: a name the host tapped, or a card they read. */
 export type CheckInInput = { memberSlug: string } | { cardToken: string };
@@ -39,17 +52,18 @@ export function useCheckIn(slug: string) {
     CheckInResultDTO | void,
     Error,
     CheckInInput,
-    { previous: AttendeesResult | undefined }
+    { previous: AttendeesResult | undefined; previousPages?: PagesSnapshot }
   >({
     // The dashboard shows its own failure in place, next to the name that did
     // not go through, so the global duplicate toast stays quiet.
     meta: { silentError: true },
+    mutationKey: checkInMutationKey(slug),
     mutationFn: async (input) => {
       if (demoMode) return;
       return checkInAttendee(slug, input);
     },
     onMutate: async (input) => {
-      await queryClient.cancelQueries({ queryKey: key });
+      await cancelDoorQueries(queryClient, key, slug, demoMode);
       const previous = queryClient.getQueryData<AttendeesResult>(key);
       if (previous && "memberSlug" in input) {
         queryClient.setQueryData<AttendeesResult>(
@@ -57,10 +71,26 @@ export function useCheckIn(slug: string) {
           patchArrival(previous, input.memberSlug, new Date()),
         );
       }
-      return { previous };
+      // The door's paged groups move with the roster. A card names nobody
+      // yet, so its groups wait for the server's row in onSuccess.
+      const rosterRow =
+        "memberSlug" in input
+          ? findRosterRow(
+              queryClient,
+              slug,
+              demoMode,
+              previous,
+              input.memberSlug,
+            )
+          : undefined;
+      const previousPages = rosterRow
+        ? patchDoorGroups(queryClient, slug, demoMode, rosterRow, new Date())
+        : undefined;
+      return { previous, previousPages };
     },
     onError: (error, _input, context) => {
       if (context) queryClient.setQueryData(key, context.previous);
+      restoreDoorGroups(queryClient, context?.previousPages);
       // A closed attendance window means this tab is looking at a stale
       // roster: the gathering crossed its retention boundary while the page
       // sat open, or it was opened for a gathering that was already past it.
@@ -72,10 +102,24 @@ export function useCheckIn(slug: string) {
         void queryClient.invalidateQueries({ queryKey: key });
       }
     },
-    onSuccess: (result) => {
+    onSuccess: (result, input) => {
       if (!result) return;
       applyServerResult(queryClient, key, result);
+      if ("cardToken" in input) {
+        const serverRow = attendeeToRow(
+          result.attendee,
+          tintIndexForSlug(result.attendee.slug),
+        );
+        patchDoorGroups(
+          queryClient,
+          slug,
+          demoMode,
+          serverRow,
+          serverRow.checkedInAt ?? new Date(),
+        );
+      }
     },
+    onSettled: () => refreshDoorGroupsSoon(queryClient, slug, demoMode),
   });
 }
 
@@ -90,15 +134,16 @@ export function useUndoCheckIn(slug: string) {
     CheckInResultDTO | void,
     Error,
     string,
-    { previous: AttendeesResult | undefined }
+    { previous: AttendeesResult | undefined; previousPages?: PagesSnapshot }
   >({
     meta: { silentError: true },
+    mutationKey: checkInMutationKey(slug),
     mutationFn: async (memberSlug) => {
       if (demoMode) return;
       return undoCheckIn(slug, memberSlug);
     },
     onMutate: async (memberSlug) => {
-      await queryClient.cancelQueries({ queryKey: key });
+      await cancelDoorQueries(queryClient, key, slug, demoMode);
       const previous = queryClient.getQueryData<AttendeesResult>(key);
       if (previous) {
         queryClient.setQueryData<AttendeesResult>(
@@ -106,15 +151,27 @@ export function useUndoCheckIn(slug: string) {
           patchArrival(previous, memberSlug, null),
         );
       }
-      return { previous };
+      const rosterRow = findRosterRow(
+        queryClient,
+        slug,
+        demoMode,
+        previous,
+        memberSlug,
+      );
+      const previousPages = rosterRow
+        ? patchDoorGroups(queryClient, slug, demoMode, rosterRow, null)
+        : undefined;
+      return { previous, previousPages };
     },
     onError: (_error, _memberSlug, context) => {
       if (context) queryClient.setQueryData(key, context.previous);
+      restoreDoorGroups(queryClient, context?.previousPages);
     },
     onSuccess: (result) => {
       if (!result) return;
       applyServerResult(queryClient, key, result);
     },
+    onSettled: () => refreshDoorGroupsSoon(queryClient, slug, demoMode),
   });
 }
 
@@ -159,9 +216,12 @@ function applyServerResult(
     );
     const going = [...current.going];
     if (index >= 0) {
-      // Keep the row's existing avatar tint (it is derived from its position
-      // in the list) and take everything else from the server.
-      const row = attendeeToRow(result.attendee, index);
+      // Keep the row's existing avatar tint (it is derived from the member's
+      // slug, see tintIndexForSlug) and take everything else from the server.
+      const row = attendeeToRow(
+        result.attendee,
+        tintIndexForSlug(result.attendee.slug),
+      );
       going[index] = {
         ...row,
         background: going[index]!.background,
@@ -179,4 +239,109 @@ function applyServerResult(
       checkedInCount: result.checkedInCount,
     };
   });
+}
+
+type PagesSnapshot = [
+  readonly unknown[],
+  InfiniteData<AttendeePage> | undefined,
+][];
+
+/** Restamp one guest across every cached door group of this gathering. */
+function patchDoorGroups(
+  queryClient: ReturnType<typeof useQueryClient>,
+  slug: string,
+  demoMode: boolean,
+  attendee: AttendeeRow,
+  checkedInAt: Date | null,
+): PagesSnapshot {
+  const root = attendeePagesRoot(slug, demoMode);
+  const snapshot = queryClient.getQueriesData<InfiniteData<AttendeePage>>({
+    queryKey: root,
+  });
+  for (const [queryKey, data] of snapshot) {
+    // See attendeePagesKey: index 5 is the arrival filter, 7 the search term.
+    const arrival =
+      queryKey[5] === "any" ? undefined : (queryKey[5] as AttendeeArrival);
+    queryClient.setQueryData(
+      queryKey,
+      patchPagesArrival(
+        data,
+        arrival,
+        attendee,
+        checkedInAt,
+        typeof queryKey[7] === "string" ? queryKey[7] : "",
+      ),
+    );
+  }
+  return snapshot;
+}
+
+function restoreDoorGroups(
+  queryClient: ReturnType<typeof useQueryClient>,
+  snapshot: PagesSnapshot | undefined,
+): void {
+  for (const [queryKey, data] of snapshot ?? []) {
+    queryClient.setQueryData(queryKey, data);
+  }
+}
+
+/**
+ * Stops in-flight reads that would overwrite the optimistic patch. The roster
+ * is matched exactly, because its key prefixes every door group's key. Door
+ * groups are cancelled only once they hold data: cancelling a group's first
+ * load would revert it to empty.
+ */
+async function cancelDoorQueries(
+  queryClient: ReturnType<typeof useQueryClient>,
+  rosterKey: readonly unknown[],
+  slug: string,
+  demoMode: boolean,
+): Promise<void> {
+  await Promise.all([
+    queryClient.cancelQueries({ queryKey: rosterKey, exact: true }),
+    queryClient.cancelQueries({
+      queryKey: attendeePagesRoot(slug, demoMode),
+      predicate: (query) => query.state.data !== undefined,
+    }),
+  ]);
+}
+
+/**
+ * Let the moved row linger, then take the server's own roster and groups
+ * through the shared door scheduler, which also folds in the frame this
+ * device hears for its own tap.
+ */
+function refreshDoorGroupsSoon(
+  queryClient: ReturnType<typeof useQueryClient>,
+  slug: string,
+  demoMode: boolean,
+): void {
+  if (demoMode) return;
+  scheduleDoorRefresh(queryClient, slug);
+}
+
+/**
+ * The guest's row, from the cached door groups first, so the row inserted
+ * into Arrived keeps the avatar tint the host just tapped. Failing that, from
+ * the roster's first page of going guests.
+ */
+function findRosterRow(
+  queryClient: ReturnType<typeof useQueryClient>,
+  slug: string,
+  demoMode: boolean,
+  roster: AttendeesResult | undefined,
+  memberSlug: string,
+): AttendeeRow | undefined {
+  const cachedGroups = queryClient.getQueriesData<InfiniteData<AttendeePage>>({
+    queryKey: attendeePagesRoot(slug, demoMode),
+  });
+  for (const [, data] of cachedGroups) {
+    for (const page of data?.pages ?? []) {
+      const pageRow = page.rows.find(
+        (attendee) => attendee.slug === memberSlug,
+      );
+      if (pageRow) return pageRow;
+    }
+  }
+  return roster?.going.find((attendee) => attendee.slug === memberSlug);
 }

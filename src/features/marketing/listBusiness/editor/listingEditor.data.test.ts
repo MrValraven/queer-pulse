@@ -1,8 +1,10 @@
 import { describe, expect, it } from "vitest";
+import { ANCHOR } from "../listBusiness.data";
 import {
   editorSectionByKeyFor,
   editorSectionsFor,
   LISTING_EDITOR_SECTIONS,
+  withListingKindLabels,
   withPricingModeLabel,
 } from "./listingEditor.data";
 
@@ -52,5 +54,60 @@ describe("editorSectionsFor", () => {
   it("keeps the trading section id the hash landing links to", () => {
     expect(editorSectionByKeyFor(false).trading.id).toBe("lb-editor-trading");
     expect(editorSectionByKeyFor(true).trading.id).toBe("lb-editor-trading");
+  });
+});
+
+describe("sections for an online listing", () => {
+  it("brings Accessibility back for an online listing", () => {
+    const keys = editorSectionsFor(false, true).map((section) => section.key);
+    expect(keys).toContain("accessibility");
+  });
+
+  it("names the practical and access sections for selling online", () => {
+    const sections = withListingKindLabels(
+      LISTING_EDITOR_SECTIONS,
+      "services",
+      true,
+    );
+    const byKey = Object.fromEntries(
+      sections.map((section) => [section.key, section]),
+    );
+    expect(byKey.practical?.labelKey).toBe(
+      "marketing:listBusiness.editor.section.practicalOnline",
+    );
+    expect(byKey.accessibility?.labelKey).toBe(
+      "marketing:listBusiness.editor.section.accessibilityOnline",
+    );
+    expect(byKey.practical?.id).toBe("lb-editor-practical");
+  });
+
+  it("names the pricing section In the shop in shop mode", () => {
+    const pricing = withListingKindLabels(
+      LISTING_EDITOR_SECTIONS,
+      "shop",
+      false,
+    ).find((section) => section.key === "services");
+    expect(pricing?.labelKey).toBe(
+      "marketing:listBusiness.editor.section.shop",
+    );
+  });
+
+  it("returns the same array for a place in services mode", () => {
+    expect(
+      withListingKindLabels(LISTING_EDITOR_SECTIONS, "services", false),
+    ).toBe(LISTING_EDITOR_SECTIONS);
+  });
+
+  it("lets the practical section count the online fields as outstanding", () => {
+    const practical = LISTING_EDITOR_SECTIONS.find(
+      (section) => section.key === "practical",
+    );
+    expect(practical?.anchors).toEqual(
+      expect.arrayContaining([
+        ANCHOR.mainLink,
+        ANCHOR.fulfilment,
+        ANCHOR.hasOnlineShop,
+      ]),
+    );
   });
 });

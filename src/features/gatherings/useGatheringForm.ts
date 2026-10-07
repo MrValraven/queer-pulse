@@ -1013,6 +1013,15 @@ function useGatheringWhereState(initialCommunitySlug: string) {
     slug: string;
     name: string;
   } | null>(null);
+  // The listing the server last refused to attach on publish (it went
+  // online-only, 18+, paused, closed or out of the directory after the link
+  // was made). The venue field shows its error while that same listing is
+  // still the one linked, so picking another place or unlinking clears it.
+  const [refusedVenueListingId, setRefusedVenueListingId] = useState<
+    string | null
+  >(null);
+  const isVenueListingRefused =
+    venueListingId !== null && venueListingId === refusedVenueListingId;
   // The community this gathering is hosted with, or "" for none (the wizard's
   // default). Independent of `audienceScope`: a Public gathering can still be
   // hosted with a community; only the "Community members" tier needs one.
@@ -1106,6 +1115,8 @@ function useGatheringWhereState(initialCommunitySlug: string) {
     setVenueListingId,
     venueListing,
     setVenueListing,
+    setRefusedVenueListingId,
+    isVenueListingRefused,
     address,
     setAddress,
     directions,
@@ -1462,8 +1473,9 @@ export function useGatheringForm(initial: GatheringFormInitial = {}) {
     // and `recurrenceValid`.
     ...recurrenceState,
     // `hood`, `communitySlug`, `audienceScope`, `venue`, `venueListingId`,
-    // `venueListing`, `address`, `directions`, `onlineUrl`, their setters and
-    // `onlineUrlValid`.
+    // `venueListing`, `address`, `directions`, `onlineUrl`, their setters,
+    // `onlineUrlValid`, `setRefusedVenueListingId` and
+    // `isVenueListingRefused`.
     ...whereState,
     // `lang`, `cost`, `costKind`, `accessNotes` and their setters, plus
     // `accessibilityAnswers`, `setAccessibilityAnswer` and

@@ -32,7 +32,7 @@ export const homepage: Catalog = {
   "manifesto.body2":
     "We believe community works differently when there is trust behind it. When you know who you are connecting with, when you have control over what you share, and when there are people looking out for the spaces you use.",
   "manifesto.body3":
-    "That is why QueerPulse is invite-only, why members are vouched for, and why safety and privacy are built into the foundation of the platform.",
+    "That is why every member is vouched for by someone already here, and why safety and privacy are built into the foundation of the platform.",
   "manifesto.body4":
     "Queer liberation is indivisible from every other struggle for safety and self-determination, Palestinian liberation among them. <a>Where we stand</a>.",
   "manifesto.highlight":
@@ -438,7 +438,7 @@ export const homepage: Catalog = {
   "membersExplainer.pillars.inside.title": "The good stuff opens from inside",
   "membersExplainer.pillars.inside.body":
     "Full profiles, communities and gatherings unlock the moment you become a member.",
-  "membersExplainer.pillars.safe.title": "Invite-only keeps it a safe space",
+  "membersExplainer.pillars.safe.title": "Vouching keeps it a safe space",
   "membersExplainer.pillars.safe.body":
     "Keeping the directory members-only is how people here get to be fully themselves.",
   "membersExplainer.requestInviteCta": "Request an invite",
@@ -717,7 +717,7 @@ export const homepage: Catalog = {
   "personasExplainer.pillars.behindTheDoor.title":
     "Discretion needs a closed door",
   "personasExplainer.pillars.behindTheDoor.body":
-    "Set a persona to members-only and anyone signed out meets a wall where the page would be. That only holds up while the whole directory is invite-only.",
+    "Set a persona to members-only and anyone signed out meets a wall where the page would be. That holds up because everyone in the directory was vouched in.",
   "personasExplainer.note":
     "Recommendations and followers land on a single persona, so what one side of you builds up stays with that side.",
   "personasExplainer.requestInviteCta": "Request an invite",
@@ -821,7 +821,7 @@ export const homepage: Catalog = {
   // ── Outro (final CTA) ──────────────────────────────────────────────────────
   "outro.title": "Walk in where you <em>already belong.</em>",
   "outro.sub":
-    "QueerPulse is an invite-only community built on trust, curiosity, and the belief that meaningful connections can change lives and cities.",
+    "QueerPulse is a community where every member is brought in by another, built on trust, curiosity, and the belief that meaningful connections can change lives and cities.",
   "outro.memberSub": "Good to see you back. Your feed is waiting for you.",
   "outro.cta": "Request an invite",
   "outro.memberCta": "Go to your feed",

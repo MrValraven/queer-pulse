@@ -1,4 +1,11 @@
-import { useId, useRef, type KeyboardEvent, type ReactNode } from "react";
+import {
+  useId,
+  useLayoutEffect,
+  useRef,
+  type KeyboardEvent,
+  type ReactNode,
+  type RefObject,
+} from "react";
 import { useFormat } from "../../i18n/format";
 import { useTranslation } from "../../i18n/useTranslation";
 import { RollingNumber } from "./RollingNumber";
@@ -21,11 +28,138 @@ export interface Tab {
   hideLabel?: boolean;
 }
 
+type IndicatorPlacement = {
+  tabId: string;
+  left: number;
+  bottomEdge: number;
+  width: number;
+};
+
+/**
+ * Fractional geometry of a tab in its tablist's padding-box coordinates, the
+ * box the absolute indicator is laid out in. Integer offset* values left the
+ * line up to a pixel short of the tab's real bottom edge, a visible gap on a
+ * high-density screen. Bounding rects come back in zoomed screen pixels on a
+ * CSS-zoomed (or scaled) preview page, so they are scaled back by the ratio
+ * of the tablist's layout width to its rendered width. The border is
+ * subtracted and the scroll offset added, so the line still sits under its
+ * tab inside a scrolled row.
+ */
+function measureTabInTablist(
+  tabButton: HTMLElement,
+  tablist: HTMLElement,
+): Omit<IndicatorPlacement, "tabId"> {
+  const tablistRect = tablist.getBoundingClientRect();
+  const buttonRect = tabButton.getBoundingClientRect();
+  const zoomScale =
+    tablistRect.width > 0 ? tablist.offsetWidth / tablistRect.width : 1;
+  return {
+    left:
+      (buttonRect.left - tablistRect.left) * zoomScale -
+      tablist.clientLeft +
+      tablist.scrollLeft,
+    bottomEdge:
+      (buttonRect.bottom - tablistRect.top) * zoomScale -
+      tablist.clientTop +
+      tablist.scrollTop,
+    width: buttonRect.width * zoomScale,
+  };
+}
+
+/**
+ * Underline variant: one indicator shared by every tab glides to each newly
+ * selected tab. The ResizeObserver keeps it glued to the tab when geometry
+ * changes later: a web font landing, a count badge rolling, a label swap, the
+ * row wrapping at a new container width.
+ */
+function useSlidingIndicator({
+  isUnderline,
+  tabRefs,
+  activeIndex,
+  activeTabId,
+  tabIdsKey,
+}: {
+  isUnderline: boolean;
+  tabRefs: RefObject<(HTMLButtonElement | null)[]>;
+  activeIndex: number;
+  activeTabId: string | null;
+  /** Changes whenever the set of tab buttons does, so new ones get observed. */
+  tabIdsKey: string;
+}) {
+  const tablistRef = useRef<HTMLDivElement>(null);
+  const indicatorRef = useRef<HTMLSpanElement>(null);
+  // Where the underline indicator was last put, and for which tab. Lets the
+  // placement below tell a switch to another tab (which may glide) from a
+  // re-measure of the same tab (which snaps).
+  const placedIndicatorRef = useRef<IndicatorPlacement | null>(null);
+
+  useLayoutEffect(() => {
+    const tablist = tablistRef.current;
+    const indicator = indicatorRef.current;
+    if (!isUnderline || !tablist || !indicator || activeTabId === null) {
+      placedIndicatorRef.current = null;
+      return;
+    }
+
+    // Only a switch to another tab on the same row glides. Everything else
+    // snaps: the first placement (so the line never slides in from the row's
+    // start), a re-measure of the same tab, and a switch across wrapped rows,
+    // where moving x and y together would drag the line diagonally through
+    // the labels between. A snap drops `data-glide` and flushes the new
+    // position into the computed style, so the next glide starts from it.
+    const placeIndicator = () => {
+      const activeButton = tabRefs.current[activeIndex];
+      if (!activeButton) return;
+      const position = {
+        tabId: activeTabId,
+        ...measureTabInTablist(activeButton, tablist),
+      };
+      const placed = placedIndicatorRef.current;
+      const isUnchanged =
+        placed !== null &&
+        placed.tabId === position.tabId &&
+        Math.abs(placed.left - position.left) < 0.01 &&
+        Math.abs(placed.bottomEdge - position.bottomEdge) < 0.01 &&
+        Math.abs(placed.width - position.width) < 0.01;
+      // Also what keeps the observer's first callback from cutting a glide
+      // short: it re-measures the tab the glide is already heading for.
+      if (isUnchanged) return;
+      const shouldGlide =
+        placed !== null &&
+        placed.tabId !== position.tabId &&
+        Math.abs(placed.bottomEdge - position.bottomEdge) < 1;
+      if (shouldGlide) {
+        indicator.dataset.glide = "true";
+      } else {
+        delete indicator.dataset.glide;
+      }
+      indicator.style.setProperty("--indicator-x", `${position.left}px`);
+      indicator.style.setProperty("--indicator-y", `${position.bottomEdge}px`);
+      indicator.style.setProperty("--indicator-w", `${position.width}px`);
+      if (!shouldGlide) indicator.getBoundingClientRect();
+      placedIndicatorRef.current = position;
+    };
+    placeIndicator();
+
+    if (typeof ResizeObserver === "undefined") return;
+    const resizeObserver = new ResizeObserver(placeIndicator);
+    resizeObserver.observe(tablist);
+    // A removed tab's ref slot is reset to null, so this observes exactly
+    // the buttons on screen.
+    for (const tabButton of tabRefs.current) {
+      if (tabButton) resizeObserver.observe(tabButton);
+    }
+    return () => resizeObserver.disconnect();
+  }, [isUnderline, tabRefs, activeIndex, activeTabId, tabIdsKey]);
+
+  return { tablistRef, indicatorRef };
+}
+
 /**
  * Tab row with `role="tablist"` semantics and optional count badges.
  * `variant="pill"` (default) is the filled-pill style; `variant="underline"`
- * is the bottom-border style. Use `tint="dark"` for underline tabs on a
- * dark/plum hero.
+ * marks the active tab with a line that slides between tabs. Use
+ * `tint="dark"` for underline tabs on a dark/plum hero.
  */
 export function Tabs({
   tabs,
@@ -65,6 +199,20 @@ export function Tabs({
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const fallbackId = useId();
   const prefix = idPrefix ?? fallbackId;
+  const isUnderline = variant === "underline";
+  const activeIndex = tabs.findIndex((tab) => tab.id === active);
+  const activeTabId = activeIndex >= 0 ? active : null;
+  // A stable dependency for "the set of tab buttons changed": callers rebuild
+  // the `tabs` array every render, so the array itself would re-run the effect.
+  const tabIdsKey = tabs.map((tab) => tab.id).join("\n");
+
+  const { tablistRef, indicatorRef } = useSlidingIndicator({
+    isUnderline,
+    tabRefs,
+    activeIndex,
+    activeTabId,
+    tabIdsKey,
+  });
 
   // APG tablist keyboard contract (automatic activation): roving tabIndex plus
   // Arrow/Home/End move focus AND select, so keyboard users can traverse tabs.
@@ -73,7 +221,12 @@ export function Tabs({
     const nextTab = tabs[nextIndex];
     if (!nextTab) return;
     onChange(nextTab.id);
-    tabRefs.current[nextIndex]?.focus();
+    const nextButton = tabRefs.current[nextIndex];
+    nextButton?.focus();
+    // focus() only scrolls a tab that is fully out of view, so in a scrolling
+    // row a tab peeking in from the edge would take focus with its ring
+    // hidden. "nearest" leaves an already visible tab where it is.
+    nextButton?.scrollIntoView({ block: "nearest", inline: "nearest" });
   };
 
   const handleKeyDown = (
@@ -106,7 +259,7 @@ export function Tabs({
     <div
       className={[
         styles.tabs,
-        variant === "underline" && styles.underline,
+        isUnderline && styles.underline,
         tint === "dark" && styles.dark,
         density === "compact" && styles.compact,
         shouldAlignIconTabsEnd && styles.iconsEnd,
@@ -114,6 +267,7 @@ export function Tabs({
       ]
         .filter(Boolean)
         .join(" ")}
+      ref={tablistRef}
       role="tablist"
       aria-label={label}
     >
@@ -183,6 +337,17 @@ export function Tabs({
           </button>
         );
       })}
+      {/* Decorative: a tablist may only own role="tab" children, so the
+          indicator is taken out of the accessibility tree entirely. */}
+      {isUnderline && (
+        <span
+          ref={indicatorRef}
+          role="presentation"
+          aria-hidden
+          hidden={activeIndex < 0}
+          className={styles.indicator}
+        />
+      )}
     </div>
   );
 }

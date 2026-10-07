@@ -29,12 +29,16 @@ import styles from "./AttendeeNeeds.module.css";
 export function AttendeeNeeds({
   attendee,
   customQuestion,
+  shouldShowGuestCount = true,
 }: {
   attendee: AttendeeRow;
   /** The host's own RSVP question, which labels the attendee's answer to it.
    *  A caller without the gathering at hand leaves it out, and a generic
    *  label stands in. */
   customQuestion?: string | null;
+  /** False when the caller already prints the guest count on its own row,
+   *  such as the Check-in tab's guest row. */
+  shouldShowGuestCount?: boolean;
 }) {
   const { t } = useTranslation();
   // `undefined` means the viewer is not an organiser and was never sent these
@@ -46,11 +50,12 @@ export function AttendeeNeeds({
   const accessNeeds = attendee.accessNeeds?.trim();
   const dietaryNeeds = attendee.dietaryNeeds?.trim();
   // Pronouns have no row here: both organiser lists already print them in
-  // the attendee's meta line (`attendeeMeta`, `DoorGuestRow`).
+  // the attendee's meta line (`attendeeMeta`, `CheckinGuestRow`).
   const customAnswer = attendee.customAnswer?.trim();
   const isHiddenFromGuests = attendee.detailsVisibility === "justMe";
   const hasAnswers = Boolean(accessNeeds || dietaryNeeds || customAnswer);
-  if (!guestCount && !hasAnswers && !isHiddenFromGuests) return null;
+  const isGuestCountShown = shouldShowGuestCount && guestCount > 0;
+  if (!isGuestCountShown && !hasAnswers && !isHiddenFromGuests) return null;
   const customAnswerLabel =
     customQuestion?.trim() ||
     t("gatherings:manage.attendees.needs.customAnswerLabel");
@@ -69,7 +74,7 @@ export function AttendeeNeeds({
             </span>
           </li>
         )}
-        {guestCount > 0 && (
+        {isGuestCountShown && (
           <li className={styles.item}>
             <FiUsers aria-hidden />
             <span>

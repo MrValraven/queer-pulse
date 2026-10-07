@@ -25,13 +25,13 @@ export const auth: Catalog = {
     "Come back to your people and let's discover what's possible, together.",
   "signIn.newHere": "New to QueerPulse?",
   "signIn.trust":
-    "Invite-only. Your feed, messages and communities are for members only.",
+    "Every member is vouched for. Your feed, messages and communities stay among members.",
   "signIn.artCaption": "A queer network, <em>rooted in Lisbon.</em>",
   "signIn.connecting": "Connecting…",
   "signIn.googleCta": "Continue with Google",
-  "signIn.notice.inviteRequired.title": "You'll need an invite",
+  "signIn.notice.inviteRequired.title": "Come in with someone you know",
   "signIn.notice.inviteRequired.body":
-    "QueerPulse is invite-only. Ask a member you know, or request an invite and we'll take it from there.",
+    "Members bring new people in. Ask a member you know for an invite, or request one and we'll take it from there.",
   "signIn.notice.accountSuppressed.title": "This account was deleted",
   "signIn.notice.accountSuppressed.body":
     "You asked us to erase this account, so we won't quietly re-create it. If you'd like to come back, contact us below. We can lift the block on this address, and then your invite will bring you in, or a fresh one if it has lapsed.",
@@ -199,8 +199,8 @@ export const auth: Catalog = {
   "sharePreview.heroTitle.line1": "Walk into a room",
   "sharePreview.heroTitle.line2": "<em>where you already belong</em>",
   "sharePreview.heroExplainer": "A queer network. Rooted in Lisbon.",
-  "sharePreview.heroSub_one": "Invite-only · {count} member",
-  "sharePreview.heroSub_other": "Invite-only · {count} members",
+  "sharePreview.heroSub_one": "{count} member, vouched for",
+  "sharePreview.heroSub_other": "{count} members, each vouched for",
   "sharePreview.title": "{senderName} invited you to QueerPulse",
 
   // ── 18+ self-attestation (shared by onboarding + request-invite) ──

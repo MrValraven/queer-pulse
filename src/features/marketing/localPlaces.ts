@@ -1,5 +1,10 @@
 import { routes } from "../../app/routeMap";
-import { normalizeCategory, VENUE_TYPE_TO_CATEGORY } from "./localCategories";
+import {
+  asOnlineCategory,
+  asPlaceCategory,
+  normalizeCategory,
+  VENUE_TYPE_TO_CATEGORY,
+} from "./localCategories";
 import {
   isPlaceOperating,
   openStatus,
@@ -7,6 +12,7 @@ import {
   type DirectoryPlace,
 } from "./directoryPlaces";
 import type { AccessibilitySlug } from "./listBusiness/listingAccessibility.data";
+import { isSellingOnline } from "./listBusiness/listingOnline.data";
 import type { ListingOwnedBy } from "./listBusiness/listingOwnedBy.data";
 import type { Venue } from "./map.data";
 import { BUSINESS_COORDS } from "./businessCoords";
@@ -218,6 +224,51 @@ export function isOnlinePlace(place: LocalPlace): boolean {
   );
 }
 
+/** Whether a business sells online: online only, or a place with a shop. The
+ *  Online tab's pool, and what the server's `online=true` returns. */
+export function isSellingOnlinePlace(place: LocalPlace): boolean {
+  return (
+    place.kind === "business" && isSellingOnline(place.source as DirectoryPlace)
+  );
+}
+
+/**
+ * A place's category as the current tab's chips read it. The Online tab's
+ * chips are the online vocabulary, so a place that sells online matches
+ * through its online counterpart ("Culture" is "Books, zines & music" there).
+ * The list and the map read the place vocabulary, so an online-only listing
+ * matches through its place counterpart ("Handmade" is "Design" there). One
+ * with no counterpart (apparel, services) keeps its own id and sits under
+ * no place chip, only under "All" and in search.
+ */
+export function categoryForScope(
+  place: LocalPlace,
+  isOnlineScope: boolean,
+): string {
+  return isOnlineScope
+    ? asOnlineCategory(place.category)
+    : asPlaceCategory(place.category);
+}
+
+/** `extra` appended to `base`, leaving out any place `base` already has. The
+ *  Online tab merges the member-only 18+ list this way. */
+export function appendUniquePlaces(
+  base: LocalPlace[],
+  extra: LocalPlace[],
+): LocalPlace[] {
+  const seen = new Set(base.map((place) => place.id));
+  return [...base, ...extra.filter((place) => !seen.has(place.id))];
+}
+
+/** Neighbourhood order with an empty one last: an online listing has none,
+ *  and it must not lead a list grouped by area. */
+export function compareNeighbourhoods(first: string, second: string): number {
+  if (first === second) return 0;
+  if (first === "") return 1;
+  if (second === "") return -1;
+  return first.localeCompare(second);
+}
+
 /**
  * Demo-only merge: businesses are canonical. A venue whose normalized name
  * matches a business folds its coords/vibe/beenHere into that business and is
@@ -266,6 +317,9 @@ export interface LocalFilters {
   /** Ownership tags, ANY of which a place must carry. Empty/absent = no
    *  restriction. */
   owned?: ListingOwnedBy[];
+  /** True on the Online tab. Categories always match through
+   *  `categoryForScope`, which reads the vocabulary of the tab. */
+  isOnlineScope?: boolean;
 }
 
 /**
@@ -290,7 +344,7 @@ export function placeMatchesOwnedBy(
 /**
  * Whether a place is trading RIGHT NOW, on its own wall clock.
  *
- * Three states collapse to `false` here, and each of them is a deliberate no:
+ * Four states collapse to `false` here, and each of them is a deliberate no:
  *
  * - a listing that has never published hours answers `"unknown"`, which is not
  *   the same as open. Someone filtering for "open now" is asking to be able to
@@ -298,6 +352,7 @@ export function placeMatchesOwnedBy(
  * - a business that is temporarily closed, permanently closed or has moved is
  *   not open however healthy its weekday grid looks.
  * - a demo-only venue carries no hours field at all.
+ * - an online-only listing, which has no hours to be open in.
  *
  * Computed client-side on purpose: the grid is CDN-cached, so a server-baked
  * open state would go stale in the dangerous direction, saying open when shut.
@@ -305,6 +360,9 @@ export function placeMatchesOwnedBy(
 export function isPlaceOpenNow(place: LocalPlace): boolean {
   if (place.kind !== "business") return false;
   const business = place.source as DirectoryPlace;
+  // An online-only business has no doors and no hours, so it is never "open
+  // now", whatever an older row still stores.
+  if (business.online === true) return false;
   if (!isPlaceOperating(business)) return false;
   const status = openStatus(
     business.hours,
@@ -365,7 +423,12 @@ export function filterLocalPlaces(
   const normalizedQuery = filters.query.trim().toLowerCase();
   const wantedCategories = new Set(filters.categories);
   return places.filter((place) => {
-    if (wantedCategories.size > 0 && !wantedCategories.has(place.category)) {
+    if (
+      wantedCategories.size > 0 &&
+      !wantedCategories.has(
+        categoryForScope(place, filters.isOnlineScope === true),
+      )
+    ) {
       return false;
     }
     if (normalizedQuery && !place.searchText.includes(normalizedQuery)) {
@@ -413,7 +476,7 @@ export function sortLocalPlaces(
   } else {
     sorted.sort(
       (first, second) =>
-        first.neighbourhood.localeCompare(second.neighbourhood) ||
+        compareNeighbourhoods(first.neighbourhood, second.neighbourhood) ||
         first.name.localeCompare(second.name),
     );
   }

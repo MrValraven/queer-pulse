@@ -1,0 +1,83 @@
+/* The "Arrived" chip in a guest row's slot, and the check that draws
+   itself in. */
+
+.arrived {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-inline-size: 0;
+}
+
+.chip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-inline-size: 0;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--jade-rgb), 0.12);
+  color: var(--jade-ink);
+  font-size: var(--text-12);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.chip svg {
+  flex: none;
+}
+
+.chipLabel {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.chipTime {
+  display: none;
+}
+
+/* A phone-width list: the chip shows the check and the time, about as wide
+   as the "Check in" pill. The full "Arrived {time}" stays for screen
+   readers. The slot keeps that width and the name ellipsizes to make room. */
+@container checkin-list (max-width: 30rem) {
+  .chipLabel {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    border: 0;
+  }
+
+  .chipTime {
+    display: inline;
+    min-inline-size: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+/* The check draws itself in when the chip appears. */
+.checkDraw polyline {
+  stroke-dasharray: 24;
+  stroke-dashoffset: 24;
+  animation: checkDraw 220ms var(--ease-out) forwards;
+}
+@keyframes checkDraw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .checkDraw polyline {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+}
+:global(html[data-reduce-motion="true"]) .checkDraw polyline {
+  animation: none;
+  stroke-dashoffset: 0;
+}

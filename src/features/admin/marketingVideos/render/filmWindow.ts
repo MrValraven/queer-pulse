@@ -13,12 +13,50 @@ export interface FilmWindow extends Window {
   CAPTURE?: string;
   /** Sub-frames to average per frame, for motion blur. */
   SHUTTER?: number;
+  /**
+   * The shape the page laid itself out in, read from its `?format=` param.
+   * Films with a single 1920x1080 shape may leave it out.
+   */
+  FORMAT?: { id: string; width: number; height: number };
   /** Added by <id>.score.js: the score as a base64 16-bit WAV. */
   renderScore?: () => Promise<string>;
 }
 
 export class FilmLoadError extends Error {
   override name = "FilmLoadError";
+}
+
+/** The film loaded in a different shape from the one being rendered. */
+export class FilmFormatError extends FilmLoadError {
+  override name = "FilmFormatError";
+}
+
+/**
+ * Fails fast when the loaded film did not lay itself out as `expected`, so a
+ * render never records a 16:9 film squeezed into a 4:5 file. A film that
+ * reports no window.FORMAT passes only when that is allowed (the older
+ * 1920x1080 films predate it).
+ */
+export function assertFilmFormat(
+  film: FilmWindow,
+  expected: { id: string; width: number; height: number },
+  { isMissingAllowed }: { isMissingAllowed: boolean },
+): void {
+  const reported = film.FORMAT;
+  if (!reported) {
+    if (isMissingAllowed) return;
+    throw new FilmFormatError(
+      `The film reports no window.FORMAT, so it has no ${expected.id} layout.`,
+    );
+  }
+  if (
+    reported.width !== expected.width ||
+    reported.height !== expected.height
+  ) {
+    throw new FilmFormatError(
+      `The film laid itself out at ${reported.width}x${reported.height} (${reported.id}), expected ${expected.width}x${expected.height} (${expected.id}).`,
+    );
+  }
 }
 
 function hasFilmContract(win: Window | null): win is FilmWindow {
@@ -85,8 +123,13 @@ export async function composeScore(
   for (let byteIndex = 0; byteIndex < binary.length; byteIndex++) {
     bytes[byteIndex] = binary.charCodeAt(byteIndex);
   }
+  return decodeScore(bytes.buffer);
+}
+
+/** Decodes an encoded score (WAV, or the preview's AAC file) to an AudioBuffer. */
+export function decodeScore(encoded: ArrayBuffer): Promise<AudioBuffer> {
   // An offline context decodes without starting audio output, and keeps the
-  // score at its own 48 kHz instead of the device's rate.
+  // score at its own 48 kHz whatever the device's rate.
   const decoder = new OfflineAudioContext(2, 1, SAMPLE_RATE);
-  return decoder.decodeAudioData(bytes.buffer);
+  return decoder.decodeAudioData(encoded);
 }

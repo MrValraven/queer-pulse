@@ -130,13 +130,16 @@ const ICON = {
   clock:
     '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>',
   pin: '<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>',
-  userPlus:
-    '<path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/>',
-  lock: '<rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
   eyeOff:
     '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>',
   users:
     '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
+  checkSquare:
+    '<polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>',
+  image:
+    '<rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>',
+  award:
+    '<circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.89"/>',
 };
 const sticker = (ic, text, parent, cls = "sticker") =>
   el(
@@ -692,16 +695,20 @@ function net(t) {
 $("#band-a-text").textContent = "No ads · No algorithm · ".repeat(8);
 $("#band-b-text").textContent = "No ads · No algorithm · ".repeat(8);
 const PROMISES = [
-  ["userPlus", "Invite-only"],
-  ["lock", "End-to-end encrypted"],
+  ["users", "Communities and collectives"],
+  ["checkSquare", "Run by its members"],
   ["eyeOff", "You choose who sees what"],
-  ["users", "Moderated by real people"],
-  ["pin", "Venues we’ve visited"],
+  ["image", "Queer art front and center"],
+  ["award", "Stories of queer changemakers"],
 ];
+/* Two centred rows under the headline: the first three promises on top and
+   the last two below, each row its own flex line so the split never reflows.
+   The bottom row tilts gently so its corners stay clear of the row above. */
+const promiseRows = [0, 1].map(() => el("div", "row", $("#promise-pills")));
 const promisePills = PROMISES.map(([ic, h], i) => ({
-  node: sticker(ic, h, $("#promise-pills")),
+  node: sticker(ic, h, promiseRows[i < 3 ? 0 : 1]),
   at: 29.5 + i * 0.25,
-  rot: [-3, 2, -2, 3, -1][i],
+  rot: [-3, 2, -2, -1, 1][i],
 }));
 const promiseWords = $$("#promise .w");
 function promise(t) {

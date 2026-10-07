@@ -1,0 +1,52 @@
+/* One group's list of guests, its loading rows, its load error and the
+   load-more row. */
+
+.list {
+  /* Rows read their width from here to pick the compact arrival chip. */
+  container: checkin-list / inline-size;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  position: relative;
+}
+
+.skeletonRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+}
+
+.skeletonLines {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.loadError {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 12px;
+  padding: 10px 12px;
+}
+
+.loadErrorText {
+  margin: 0;
+  font-size: var(--text-14);
+  color: var(--ink-60);
+}
+
+.loadMoreRow {
+  display: flex;
+  justify-content: center;
+  padding-block: 8px;
+}

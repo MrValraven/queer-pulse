@@ -1,7 +1,9 @@
 import type { PendingListing, PhotoKey } from "../listBusiness.data";
 import { normalizeAccessibilityDraft } from "../listingAccessibility.data";
 import { pricingModeOf, toMenuDraft } from "../listingMenu.data";
+import { normalizeOnlineDetails } from "../listingOnline.data";
 import { toServiceRows } from "../listingServices.data";
+import { toShopItemRows } from "../listingShop.data";
 import { ownerPersonalFieldsFrom } from "../ownerPersonalFields";
 import type { ManagedListingDTO } from "./listings.api";
 
@@ -45,8 +47,18 @@ export function listingDtoToPending(dto: ManagedListingDTO): PendingListing {
     pricingMode: pricingModeOf({
       pricingMode: dto.pricingMode,
       cats: dto.cats,
+      online: dto.online ?? false,
     }),
     menu: toMenuDraft(dto.menu),
+    // The online block, the shop and "Based in" arrive in their wire shapes
+    // through the spread above; these replace them with the editable ones.
+    // A place's stored city never seeds "Based in".
+    city: dto.online ? (dto.city ?? "") : "",
+    hasOnlineShop: dto.hasOnlineShop ?? false,
+    onlineDetails: normalizeOnlineDetails(dto.onlineDetails),
+    shopItems: toShopItemRows(dto.shopItems),
+    // Stamped by the server once accepted, and never asked again.
+    adultTermsAccepted: Boolean(dto.onlineDetails?.adultTermsAcceptedAt),
     // The listing exists, so its submitter agreed. Nothing can un-agree.
     affirmingBaselineAccepted: true,
   };

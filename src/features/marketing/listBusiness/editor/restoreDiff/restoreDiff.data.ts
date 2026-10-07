@@ -40,6 +40,8 @@ export const RESTORE_FIELD_AREAS: RestoreFieldAreaMap = {
   // The online-only toggle renders with the basics, just above the
   // neighbourhood it decides on, so it is restored with them too.
   online: "basics",
+  city: "basics",
+  adultTermsAccepted: "basics",
   hood: "basics",
   badge: "basics",
   evidence: "basics",
@@ -53,6 +55,7 @@ export const RESTORE_FIELD_AREAS: RestoreFieldAreaMap = {
   services: "services",
   pricingMode: "services",
   menu: "services",
+  shopItems: "services",
   address: "practical",
   geocoded: "practical",
   latitude: "practical",
@@ -61,6 +64,8 @@ export const RESTORE_FIELD_AREAS: RestoreFieldAreaMap = {
   hoursNote: "practical",
   hoursExceptions: "practical",
   social: "practical",
+  hasOnlineShop: "practical",
+  onlineDetails: "practical",
   accessibility: "accessibility",
   photos: "photos",
   alt: "photos",
@@ -79,6 +84,10 @@ export const RESTORE_FIELD_AREAS: RestoreFieldAreaMap = {
   affirmingBaselineAccepted: "notRestorable",
   managementRole: "notRestorable",
   isStaffAuthored: "notRestorable",
+  // Draft-only state of the create flow and of a kind switch: an edit never
+  // shows either.
+  isWhereFoundAnswered: "notRestorable",
+  inactiveModeCats: "notRestorable",
 };
 
 const RESTORE_AREA_KEYS: ReadonlySet<ListingEditorSectionKey> =

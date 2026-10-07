@@ -33,7 +33,7 @@ import { GatheringHostMenu } from "./GatheringHostMenu";
  * editing or calling the evening off was a link buried in My Events. Edit,
  * cancel and delete now act IN PLACE, on the page the host is already looking
  * at, and Manage carries them through to attendees, announcements and the
- * day-of dashboard when they want the rest of it.
+ * Check-in tab when they want the rest of it.
  *
  * They first shipped as a strip of four full-size buttons that competed with
  * the RSVP for attention; one icon button in the header keeps them a tap away.
@@ -64,7 +64,7 @@ export function GatheringHostBar({
       routeParam,
     });
   // The cancel confirm has to say how many people it actually tells, and the
-  // detail DTO's `spots` line is seats LEFT rather than a head count. This is
+  // detail DTO's `spots` line counts the seats LEFT. This is
   // the manage dashboard's own query under the same key, so a host who goes on
   // to Manage pays for it once, and it only runs for an organizer because the
   // whole host menu only mounts for one.
@@ -74,19 +74,21 @@ export function GatheringHostBar({
   const [isEditOpen, setEditOpen] = useState(false);
   const [isCancelConfirmOpen, setCancelConfirmOpen] = useState(false);
   // MSG-10, exactly as the manage dashboard does it: a repeating gathering
-  // asks this-vs-future, and a saved edit's patch waits in `pendingEditPatch`
-  // until the host answers.
+  // asks this-vs-future, and a saved edit's patch waits in `pendingEdit` until
+  // the host answers, beside the pre-edit state a dismissed prompt restores.
   const [seriesScopeModal, setSeriesScopeModal] =
     useState<SeriesScopeModalMode>(null);
-  const [pendingEditPatch, setPendingEditPatch] =
-    useState<UpdateEventDto | null>(null);
+  const [pendingEdit, setPendingEdit] = useState<{
+    patch: UpdateEventDto;
+    snapshot: GatheringState;
+  } | null>(null);
 
   // The PRE-edit snapshot `buildEditPatch` compares against (read its doc: the
   // community comparison depends on this being the PERSISTED value). Re-seeded
   // during render whenever the fetched gathering changes, so a second edit
-  // after a save reads what the server now holds instead of a snapshot frozen
-  // at mount. Render-time reset rather than an effect, so it lands in the same
-  // commit, the pattern `useGatheringRsvp` already uses on this page.
+  // after a save reads what the server now holds. A render-time reset lands
+  // in the same commit as the new gathering, the pattern `useGatheringRsvp`
+  // already uses on this page.
   const [previousGathering, setPreviousGathering] = useState(gathering);
   const [gatheringState, setGatheringState] = useState<GatheringState>(() =>
     liveInitialState(gathering, fmt, t),
@@ -99,7 +101,7 @@ export function GatheringHostBar({
   const saveEditDraft = (draft: GatheringDetailsDraft) => {
     setGatheringState((current) => applyEditDraft(current, draft, fmt, t));
     const patch = buildEditPatch(gatheringState, draft);
-    if (gathering.series) setPendingEditPatch(patch);
+    if (gathering.series) setPendingEdit({ patch, snapshot: gatheringState });
     else updateEvent.mutate(patch);
   };
 
@@ -111,14 +113,31 @@ export function GatheringHostBar({
     if (mode === "cancel") {
       cancelEvent.mutate(scope);
       void navigate(gatheringCancelledPath(gathering.slug));
-    } else if (mode === "edit" && pendingEditPatch) {
-      updateEvent.mutate({ ...pendingEditPatch, seriesScope: scope });
-      setPendingEditPatch(null);
+    } else if (mode === "edit" && pendingEdit) {
+      updateEvent.mutate({ ...pendingEdit.patch, seriesScope: scope });
+      setPendingEdit(null);
     }
   };
 
-  // A repeating gathering asks which dates instead of the plain confirm, the
-  // same swap the manage dashboard makes.
+  // Dismissed without an answer: nothing was sent, so the edit already folded
+  // into `gatheringState` comes back off it (`buildEditPatch` sends the venue
+  // only when it changed, so a folded venue would never reach the server).
+  // Restored over the latest state, keeping a cover saved meanwhile unless
+  // this edit is the one that changed it, as `useGatheringEditSave` does.
+  const closeSeriesScope = () => {
+    setSeriesScopeModal(null);
+    if (!pendingEdit) return;
+    const { patch, snapshot } = pendingEdit;
+    setGatheringState((current) =>
+      patch.coverImageUrl === undefined
+        ? { ...snapshot, coverImageUrl: current.coverImageUrl }
+        : snapshot,
+    );
+    setPendingEdit(null);
+  };
+
+  // A repeating gathering asks which dates through the series prompt, the
+  // same swap the manage dashboard makes; a single date gets the plain confirm.
   const askToCancel = () => {
     if (gathering.series) setSeriesScopeModal("cancel");
     else setCancelConfirmOpen(true);
@@ -166,10 +185,9 @@ export function GatheringHostBar({
           }}
           onClose={() => {
             setEditOpen(false);
-            // MSG-10. A save on a repeating gathering stashed its patch
-            // instead of sending it; closing the modal is the cue to ask
-            // this-vs-future.
-            if (pendingEditPatch) setSeriesScopeModal("edit");
+            // MSG-10. A save on a repeating gathering stashed its patch to
+            // send later; closing the modal is the cue to ask this-vs-future.
+            if (pendingEdit) setSeriesScopeModal("edit");
           }}
           onSave={saveEditDraft}
         />
@@ -179,10 +197,7 @@ export function GatheringHostBar({
         <SeriesEditScopeModal
           mode={seriesScopeModal}
           onChoose={chooseSeriesScope}
-          onClose={() => {
-            setSeriesScopeModal(null);
-            setPendingEditPatch(null);
-          }}
+          onClose={closeSeriesScope}
         />
       )}
 

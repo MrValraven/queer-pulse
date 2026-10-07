@@ -184,6 +184,19 @@ export interface ServerToClientEvents {
    *  `user:` room only, after the seat change commits; the client refreshes
    *  its mailbox switcher on it. */
   "mailbox:staffing": MailboxStaffingFrame;
+  /** `GatheringDoorRelayListener` → `user:<id>` room: a check-in or an undo
+   *  changed state at a gathering's door. Sent to the host and co-hosts only;
+   *  a door device refetches its roster and groups on it. */
+  "gathering:checkin": GatheringCheckInFrame;
+}
+
+/** Payload of `gathering:checkin`, mirroring the backend's
+ *  `GatheringCheckInFrame` (`src/events/event.events.ts`). It names no guest
+ *  beyond their slug and carries no names or arrival stamps. */
+export interface GatheringCheckInFrame {
+  eventSlug: string;
+  memberSlug: string;
+  change: "checked_in" | "undone";
 }
 
 /** The three writes that change a claim. */

@@ -19,7 +19,7 @@ export function StepPhotosYou({
   const { t } = useTranslation();
   // A suggestion and a staff-authored draft both leave off the owner block
   // below, and both are photos-only from here: the header switches to copy
-  // that describes photos alone rather than "photos, and a little about you".
+  // about the photos alone, with no "and a little about you".
   const isPhotosOnlyHeader = isOwnerBlockHidden(form.draft);
   return (
     <div className={styles.stepBody}>
@@ -36,8 +36,12 @@ export function StepPhotosYou({
         )}
         sub={t(
           isPhotosOnlyHeader
-            ? "marketing:listBusiness.step4.suggest.sub"
-            : "marketing:listBusiness.step4.sub",
+            ? form.draft.online
+              ? "marketing:listBusiness.step4.suggest.subOnline"
+              : "marketing:listBusiness.step4.suggest.sub"
+            : form.draft.online
+              ? "marketing:listBusiness.step4.subOnline"
+              : "marketing:listBusiness.step4.sub",
         )}
       />
 

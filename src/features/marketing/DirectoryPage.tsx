@@ -26,6 +26,10 @@ export function DirectoryPage() {
     isMobile,
     nearMe,
     onlineTotal,
+    onlineLoadedCount,
+    isAdultError,
+    isAdultLoading,
+    onRetryAdult,
     filtered,
     mappableCount,
     activeFilters,
@@ -62,7 +66,7 @@ export function DirectoryPage() {
         loadedCount={places.length}
         hasMoreFromServer={hasNextPage}
         mappableCount={mappableCount}
-        loading={loading}
+        loading={loading || isAdultLoading}
         isError={hasPlacesError}
         view={view}
         nearMeSlot={isMobile ? nearMe : undefined}
@@ -75,6 +79,10 @@ export function DirectoryPage() {
         distanceById={distanceById}
         serverTotal={serverTotal}
         onlineTotal={onlineTotal}
+        onlineLoadedCount={onlineLoadedCount}
+        isAdultError={isAdultError}
+        isAdultLoading={isAdultLoading}
+        onRetryAdult={onRetryAdult}
         loadedCount={places.length}
         loading={loading}
         hasPlacesError={hasPlacesError}

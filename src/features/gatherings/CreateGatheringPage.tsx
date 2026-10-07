@@ -17,8 +17,10 @@ import {
   COMPACT_LAYOUT_QUERY,
   CREATE_GATHERING_CHAPTERS,
   PLEDGE_TEXT_KEYS,
+  GATE_ANCHOR,
   REVIEW_CHAPTER_INDEX,
   chapterHeadId,
+  chapterIndexOf,
   chapterSectionId,
   confirmAnchor,
   type CreateGatheringChapterId,
@@ -161,7 +163,7 @@ export function CreateGatheringPage() {
   const [searchParams] = useSearchParams();
   const communitySlugParam =
     searchParams.get(CREATE_GATHERING_COMMUNITY_PARAM) ?? "";
-  // "Run this again" (PRD-190): `?duplicate=<slug>` fetches that gathering and
+  // "Duplicate gathering" (PRD-190): `?duplicate=<slug>` fetches that gathering and
   // seeds the wizard from it whenever the fetch lands. `useMemo` keeps the
   // seed's identity stable so it is applied exactly once.
   const duplicateSlug = searchParams.get(DUPLICATE_GATHERING_PARAM);
@@ -183,6 +185,11 @@ export function CreateGatheringPage() {
   const publishing = usePublishGathering({
     form,
     onPublished: () => removeStoredDraft(draftKey),
+    onVenueRefused: () =>
+      chapterFlow.openChapterAtField(
+        chapterIndexOf("whenWhere"),
+        GATE_ANCHOR.venue,
+      ),
   });
   const draft = useCreateGatheringDraft({
     form,

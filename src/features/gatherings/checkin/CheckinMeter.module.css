@@ -1,0 +1,123 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  padding: var(--card-pad);
+}
+
+.topRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 24px;
+}
+
+.badge,
+.badgeLive {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--text-13);
+  font-weight: 600;
+  color: var(--ink-60);
+}
+
+.badgeLive {
+  color: var(--ink);
+}
+
+.liveDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--jade);
+  animation: livePulse 1.8s var(--ease-std, ease-in-out) infinite;
+}
+
+@keyframes livePulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.45;
+    transform: scale(0.8);
+  }
+}
+
+.muted {
+  margin: 0;
+  color: var(--ink-60);
+  font-size: var(--text-13);
+}
+
+.headline {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-title);
+  line-height: var(--lh-title);
+}
+
+.headline em {
+  font-family: var(--serif);
+  font-style: italic;
+  color: var(--accent-text);
+}
+
+.track {
+  height: 8px;
+  background: var(--wash);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+}
+
+.fill {
+  width: 100%;
+  height: 100%;
+  background: var(--jade);
+  border-radius: var(--radius-pill);
+}
+
+.fillShimmer {
+  background: linear-gradient(
+      100deg,
+      transparent 30%,
+      color-mix(in srgb, var(--accent) 45%, transparent) 50%,
+      transparent 70%
+    )
+    0 0 / 250% 100% no-repeat,
+    var(--jade);
+  animation: fillShimmer 900ms var(--ease-out) 1 both;
+}
+
+@keyframes fillShimmer {
+  from {
+    background-position: 150% 0, 0 0;
+  }
+  to {
+    background-position: -50% 0, 0 0;
+  }
+}
+
+.everyoneHere {
+  margin: 0;
+  font-size: var(--text-13);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .liveDot {
+    animation: none;
+  }
+
+  .fillShimmer {
+    animation: none;
+    background: var(--jade);
+  }
+}

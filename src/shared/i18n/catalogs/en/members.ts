@@ -705,7 +705,7 @@ export const members: Catalog = {
   "publicBySlug.workHeading": "Work",
   "publicBySlug.activityHeading": "Recent activity",
   "publicBySlug.activityEmpty": "Nothing public just yet.",
-  "publicBySlug.joinTitle": "QueerPulse is invite-only",
+  "publicBySlug.joinTitle": "Come in through a member",
   "publicBySlug.joinBody":
     "A place queer Lisbon gathers: no ads, no algorithm. You need someone to bring you in, or you can ask us directly.",
   "publicBySlug.notFound.metaTitle": "Not found · QueerPulse",
@@ -735,7 +735,7 @@ export const members: Catalog = {
     "To protect members' networks, we don't show connection lists publicly. Sign in to see your mutuals with {first}.",
   "publicProfile.bottomCta.title": "Want the <em>full picture?</em>",
   "publicProfile.bottomCta.body":
-    "QueerPulse is invite-based. {firstName} can vouch for you if you've met in person. Or request an invite from us directly.",
+    "QueerPulse grows by vouching. {firstName} can vouch for you if you've met in person. Or request an invite from us directly.",
 
   // ── Public profile sections (PublicProfileSections) ─────────────────────────
   "publicProfile.preview.ownerLabel":
@@ -1627,7 +1627,7 @@ export const members: Catalog = {
   "vouch.modal.form.eyebrow": "Add your vouch",
   "vouch.modal.form.title": "Stand behind <em>{first}</em>",
   "vouch.modal.form.sub":
-    "A vouch is you, publicly, saying you know {first} and trust them in community spaces. It carries weight here. QueerPulse is invite-and-vouch, and your name goes on their profile beside the others who've backed them.",
+    "A vouch is you, publicly, saying you know {first} and trust them in community spaces. It carries weight here. QueerPulse grows by vouching, and your name goes on their profile beside the others who've backed them.",
   "vouch.modal.form.relationshipLabel": "How do you know {first}?",
   "vouch.modal.form.relationshipHint": "select all that apply",
   // The skill-endorsement chip row was removed (nothing recorded the picks),

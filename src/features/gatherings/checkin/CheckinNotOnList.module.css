@@ -1,0 +1,94 @@
+/* ── Not on the list ─────────────────────────────────────────────────────── */
+
+/* The same soft panel as the shared EmptyState, built here so the RSVP code
+   button can carry its disclosure state and the code opens inside it. */
+.notOnList {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 36px 24px;
+  border: 1px dashed rgba(var(--line-rgb), 0.16);
+  border-radius: var(--radius-card);
+  background: linear-gradient(
+    180deg,
+    rgba(var(--accent-rgb), 0.05),
+    rgba(var(--plum-rgb), 0.02)
+  );
+  text-align: center;
+}
+
+.notOnListIcon {
+  display: grid;
+  place-items: center;
+  /* 56 / 24, in em so the disc scales with the icon it centres. */
+  inline-size: 2.333em;
+  block-size: 2.333em;
+  margin-block-end: 4px;
+  border-radius: 50%;
+  background: rgba(var(--jade-rgb), 0.14);
+  color: var(--jade);
+  font-size: var(--text-24);
+}
+
+.notOnListText {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.notOnListTitle {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-22);
+  font-weight: 400;
+  color: var(--ink);
+}
+
+.notOnListDescription {
+  max-inline-size: 42ch;
+  margin: 0;
+  line-height: 1.55;
+  color: var(--ink-60);
+}
+
+.notOnListActions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-block-start: 8px;
+}
+
+.codePanel {
+  align-self: stretch;
+  overflow: hidden;
+  /* Scrolled into view on open: clear the sticky scan dock and tab bar. */
+  scroll-margin-block-end: calc(
+    var(--consent-inset, 0px) +
+      max(var(--bottom-inset), env(safe-area-inset-bottom)) + 5rem
+  );
+}
+
+.codeInner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding-block: 4px 8px;
+}
+
+.codeTitle {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-18);
+  color: var(--text-strong);
+}
+
+.code {
+  inline-size: min(13.75rem, 100%);
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-14);
+}

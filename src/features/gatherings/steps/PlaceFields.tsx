@@ -151,6 +151,12 @@ export function PlaceFields({ form }: { form: GatheringForm }) {
             label={t("gatherings:create.step2.venueLabel")}
             htmlFor={venueId}
             labelId={`${venueId}-label`}
+            anchorId={GATE_ANCHOR.venue}
+            error={
+              form.isVenueListingRefused
+                ? t("gatherings:venuePicker.refusedError")
+                : undefined
+            }
           >
             <VenuePicker
               id={venueId}

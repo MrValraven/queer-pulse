@@ -1,4 +1,3 @@
-import { type ReactNode } from "react";
 import { FiShield } from "react-icons/fi";
 import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
@@ -6,16 +5,23 @@ import { toPlainText } from "../../../shared/markdown";
 import type { TFunction } from "../../../shared/i18n/types";
 import {
   catLabel,
-  DAYS,
   goodForLabel,
   langLabel,
   PRICES,
   slugify,
   type ListingDraft,
 } from "./listBusiness.data";
+import { isAdultCategoryPicked } from "../localCategories";
 import { listingTagLabel } from "./listingTags.data";
+import { canAcceptAdultTerms } from "./listingOnline.data";
 import { normalizeOwnedBy, OWNED_BY_TAG_KEYS } from "./listingOwnedBy.data";
 import type { ListingForm } from "./useListingForm";
+import { WHERE_FOUND_TITLE_KEYS, whereFoundChoiceOf } from "./listingKind";
+import {
+  Group,
+  ReviewPracticalGroup,
+  Row,
+} from "./ListBusinessReviewPractical";
 import { PaneHeader } from "./ListBusinessChrome";
 import { ConsentChecks } from "./fields/ConsentChecks";
 import { AffirmingBaselineAgreement } from "./fields/AffirmingBaselineAgreement";
@@ -29,14 +35,6 @@ function optionLabel(
 ): string {
   const found = list.find((x) => x.id === id);
   return found ? t(found.labelKey) : id;
-}
-
-function hoursSummary(draft: ListingDraft): string {
-  const open = DAYS.filter((d) => draft.hours[d.id]?.open);
-  if (!open.length) return "";
-  // Day ids are the stable three-letter English keys; the summary is a
-  // compact glance, so it reuses them rather than the long localized names.
-  return open.map((d) => d.id).join(", ");
 }
 
 /** The description as plain text, keeping the line breaks the owner typed
@@ -60,80 +58,6 @@ function ownedBySummary(t: TFunction, draft: ListingDraft): string {
   return normalizeOwnedBy(draft.ownedBy)
     .map((value) => t(OWNED_BY_TAG_KEYS[value]))
     .join(", ");
-}
-
-function onlineSummary(t: TFunction, draft: ListingDraft): string {
-  const bits: string[] = [];
-  if (draft.social.instagram)
-    bits.push(t("marketing:listBusiness.step5.online.instagram"));
-  if (draft.social.website)
-    bits.push(t("marketing:listBusiness.step5.online.website"));
-  if (draft.social.email)
-    bits.push(t("marketing:listBusiness.step5.online.email"));
-  if (draft.social.phone)
-    bits.push(t("marketing:listBusiness.step5.online.phone"));
-  return bits.join(" · ");
-}
-
-function Row({
-  k,
-  children,
-  quote,
-  isMultiline,
-}: {
-  k: string;
-  children: ReactNode;
-  quote?: boolean;
-  /** Keeps the value's line breaks instead of running them together. */
-  isMultiline?: boolean;
-}) {
-  const { t } = useTranslation();
-  const empty = children === "" || children === null || children === undefined;
-  return (
-    <div className={styles.recapRow}>
-      <span className={styles.rk}>{k}</span>
-      <span
-        className={[
-          styles.rv,
-          quote && styles.rvQuote,
-          isMultiline && styles.rvMultiline,
-        ]
-          .filter(Boolean)
-          .join(" ")}
-      >
-        {empty ? (
-          <span className={styles.rvMiss}>
-            {t("marketing:listBusiness.step5.notAdded")}
-          </span>
-        ) : (
-          children
-        )}
-      </span>
-    </div>
-  );
-}
-
-function Group({
-  title,
-  onEdit,
-  children,
-}: {
-  title: string;
-  onEdit: () => void;
-  children: ReactNode;
-}) {
-  const { t } = useTranslation();
-  return (
-    <div className={styles.recapGroup}>
-      <div className={styles.recapHead}>
-        <span>{title}</span>
-        <button type="button" className={styles.recapEdit} onClick={onEdit}>
-          {t("marketing:listBusiness.step5.editCta")}
-        </button>
-      </div>
-      {children}
-    </div>
-  );
 }
 
 /** Stands in for the withheld consent block on a member's own suggestion:
@@ -171,15 +95,18 @@ function SlugBox({ name }: { name: string }) {
   );
 }
 
-/** Recaps the step 0 path choice; its edit link jumps back to that step. */
+/** Recaps the step 0 path choice and where people find the business; its
+ *  edit link jumps back to that step. */
 function PathPlaceGroup({
-  path,
+  draft,
   onEdit,
 }: {
-  path: ListingDraft["path"];
+  draft: ListingDraft;
   onEdit: () => void;
 }) {
   const { t } = useTranslation();
+  const { path } = draft;
+  const whereFound = whereFoundChoiceOf(draft);
   return (
     <Group
       title={t("marketing:listBusiness.step5.group.pathPlace")}
@@ -191,6 +118,9 @@ function PathPlaceGroup({
           : path === "suggest"
             ? t("marketing:listBusiness.step5.listingAs.suggest")
             : ""}
+      </Row>
+      <Row k={t("marketing:listBusiness.step5.row.whereFound")}>
+        {whereFound === "" ? "" : t(WHERE_FOUND_TITLE_KEYS[whereFound])}
       </Row>
     </Group>
   );
@@ -242,7 +172,7 @@ export function StepReview({
 
       {!isEdit && <SlugBox name={draft.name} />}
 
-      {!isEdit && <PathPlaceGroup path={draft.path} onEdit={() => onEdit(0)} />}
+      {!isEdit && <PathPlaceGroup draft={draft} onEdit={() => onEdit(0)} />}
 
       <Group
         title={t("marketing:listBusiness.step5.group.basics")}
@@ -253,10 +183,24 @@ export function StepReview({
           {draft.cats.map((c) => catLabel(t, c)).join(", ")}
         </Row>
         {/* An online-only listing has no neighbourhood: the field is hidden
-            and the payload sends it blank. */}
-        {!draft.online && (
+            and the payload sends it blank. It gives the city it works from. */}
+        {draft.online ? (
+          <Row k={t("marketing:listBusiness.step5.row.basedIn")}>
+            {draft.city?.trim() ?? ""}
+          </Row>
+        ) : (
           <Row k={t("marketing:listBusiness.step5.row.neighbourhood")}>
             {draft.hood}
+          </Row>
+        )}
+        {/* Staff and a member suggesting a business are never asked for the
+            18+ rules, so their drafts skip the row the same way the
+            missing-fields bar skips them. */}
+        {isAdultCategoryPicked(draft.cats) && canAcceptAdultTerms(draft) && (
+          <Row k={t("marketing:listBusiness.step5.row.adultTerms")}>
+            {draft.adultTermsAccepted === true
+              ? t("marketing:listBusiness.step5.adultTermsAccepted")
+              : ""}
           </Row>
         )}
         <Row k={t("marketing:listBusiness.step5.row.ownership")}>
@@ -295,24 +239,7 @@ export function StepReview({
         </Row>
       </Group>
 
-      <Group
-        title={t("marketing:listBusiness.step5.group.practical")}
-        onEdit={() => onEdit(3)}
-      >
-        <Row k={t("marketing:listBusiness.step5.row.address")}>
-          {draft.online
-            ? t("marketing:listBusiness.step5.onlineBusiness")
-            : draft.address}
-        </Row>
-        {!draft.online && (
-          <Row k={t("marketing:listBusiness.step5.row.hours")}>
-            {hoursSummary(draft)}
-          </Row>
-        )}
-        <Row k={t("marketing:listBusiness.step5.row.online")}>
-          {onlineSummary(t, draft)}
-        </Row>
-      </Group>
+      <ReviewPracticalGroup draft={draft} onEdit={() => onEdit(3)} />
 
       {/* Both rows in this group are the submitter's own: who they are, and
           how much of that the listing shows. With both withheld the group

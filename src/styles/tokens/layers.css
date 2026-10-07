@@ -33,12 +33,20 @@
   /* Anchored popovers: dropdown menus, comboboxes, tooltips. Above nav so a
      menu opened from the nav is not clipped by it. */
   --z-popover: 200;
-  /* The cookie consent banner (ConsentBanner). Over app chrome and anchored
-     popovers as before, and under every modal tier: the banner never blocks
-     the app, while a modal does, so a modal opened while the banner waits (the
-     policy re-acceptance sheet above all, which a member must act on) paints
-     over it and stays fully usable. Lightboxes and the safety quick exit clear
-     it too. */
+  /* The Check-in focus layer: a full-screen door view over the page chrome and
+     anchored popovers, and under the consent banner and every modal tier. A
+     host who opens the door view straight from a link on a first visit still
+     answers the banner on top of it (the layer pads its scroll area by
+     `--consent-inset` and joins the banner to its Tab cycle), and the scanner
+     and confirms still open above both. */
+  --z-focus-layer: 205;
+  /* The cookie consent banner (ConsentBanner). Over app chrome, anchored
+     popovers and the Check-in focus layer, so it stays answerable on every
+     screen, and under every modal tier: the banner never blocks the app,
+     while a modal does, so a modal opened while the banner waits (the policy
+     re-acceptance sheet above all, which a member must act on) paints over it
+     and stays fully usable. Lightboxes and the safety quick exit clear it
+     too. */
   --z-consent-banner: 210;
   /* The shared Modal and ModalSheet scrim + dialog. */
   --z-modal: 220;

@@ -82,6 +82,8 @@
 .body [data-preview-region="desc"],
 .body [data-preview-region="pills"],
 .body [data-preview-region="access"],
+.body [data-preview-region="ordering"],
+.body [data-preview-region="visit"],
 .body [data-preview-region="status"],
 .body [data-preview-region="host"],
 .body [data-preview-region="whatItIs"],
@@ -107,6 +109,8 @@
 .body[data-highlight~="desc"] [data-preview-region="desc"],
 .body[data-highlight~="pills"] [data-preview-region="pills"],
 .body[data-highlight~="access"] [data-preview-region="access"],
+.body[data-highlight~="ordering"] [data-preview-region="ordering"],
+.body[data-highlight~="visit"] [data-preview-region="visit"],
 .body[data-highlight~="status"] [data-preview-region="status"],
 .body[data-highlight~="host"] [data-preview-region="host"],
 .body[data-highlight~="tagline"] [data-preview-region="tagline"],
@@ -124,8 +128,8 @@
 }
 
 /* Regions can nest (the badge, bookmark and "Add cover photo" button sit
-   inside the photo). A nested region takes its parent's dim once instead of
-   compounding it, and a highlighted badge keeps the photo around it at full
+   inside the photo). A nested region takes its parent's dim once, with no
+   compounding, and a highlighted badge keeps the photo around it at full
    strength so the badge is not dimmed through its parent. The "chrome" parts
    inside the photo (never a field's spot) then dim on their own. */
 .body[data-highlight] [data-preview-region] [data-preview-region] {
@@ -138,6 +142,37 @@
   [data-preview-region="photo"]
   [data-preview-region="chrome"] {
   opacity: 0.5;
+}
+
+/* The ordering block's lines: one fact a line, in the excerpt's body type. */
+.orderingLines {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: var(--text-13);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+/* Each line's label, as the detail page names the fact. */
+.orderingLabel {
+  font-weight: 600;
+  color: var(--text-strong);
+}
+/* The VAT sentence under "Shipping": led by the info icon, like the detail
+   page's note, with the icon centred on the first line of text. */
+.orderingNote {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.orderingNote svg {
+  flex: none;
+  margin-top: calc((1lh - 1em) / 2);
+  width: 1em;
+  height: 1em;
 }
 
 /* An empty excerpt block drawn only while its field is highlighted. */

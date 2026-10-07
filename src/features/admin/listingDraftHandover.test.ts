@@ -6,6 +6,7 @@ import {
   teamListingFromDraftPath,
 } from "./listingDraftHandover";
 import { adminDraftToDto } from "./api/adminListingCreate.api";
+import { adminDraftToUpdateDto } from "./api/adminListingEdit.api";
 
 /** A member's draft as a server that forgot to strip it might send it: every
  *  answer about the member filled in. None of it may reach a team listing. */
@@ -46,6 +47,17 @@ describe("teamDraftFromMemberDraft", () => {
     expect(draft.managementRole).toBeUndefined();
   });
 
+  it("reads a member draft from before the Path question as answered", () => {
+    const legacy = teamDraftFromMemberDraft({ ...LEAKY_PAYLOAD, online: true });
+    expect(legacy.isWhereFoundAnswered).toBe(true);
+    expect(legacy.online).toBe(true);
+    const unanswered = teamDraftFromMemberDraft({
+      ...LEAKY_PAYLOAD,
+      isWhereFoundAnswered: false,
+    });
+    expect(unanswered.isWhereFoundAnswered).toBe(false);
+  });
+
   it("blanks every answer that belongs to the member", () => {
     const draft = teamDraftFromMemberDraft(LEAKY_PAYLOAD);
     expect(draft).toMatchObject({
@@ -75,6 +87,19 @@ describe("teamDraftFromMemberDraft", () => {
     expect(JSON.stringify(body)).not.toMatch(/Marta|trans\.|dyke/);
   });
 
+  it("drops the 18+ category from both kinds' categories", () => {
+    const draft = teamDraftFromMemberDraft({
+      ...LEAKY_PAYLOAD,
+      online: true,
+      cats: ["intimacy", "apparel"],
+      inactiveModeCats: ["food", "intimacy"],
+      adultTermsAccepted: true,
+    });
+    expect(draft.cats).toEqual(["apparel"]);
+    expect(draft.inactiveModeCats).toEqual(["food"]);
+    expect(draft.adultTermsAccepted).toBe(false);
+  });
+
   it("opens a payload from an older wizard as a complete draft", () => {
     const draft = teamDraftFromMemberDraft({ name: "Barbearia Norte" });
     expect(draft.name).toBe("Barbearia Norte");
@@ -93,5 +118,25 @@ describe("teamListingFromDraftPath", () => {
     expect(teamListingFromDraftPath("listing-draft-0004")).toBe(
       "/admin/listings/new?fromDraft=listing-draft-0004",
     );
+  });
+});
+
+describe("adminDraftToUpdateDto", () => {
+  it("never carries the 18+ acknowledgement, even when the draft holds it", () => {
+    const stampedDraft = {
+      ...teamDraftFromMemberDraft(LEAKY_PAYLOAD),
+      online: true,
+      cats: ["intimacy"],
+      adultTermsAccepted: true,
+      managementRole: "co_manager" as const,
+      // Off on purpose: the strip by name is what must keep the key out.
+      isStaffAuthored: false,
+    };
+    const body = adminDraftToUpdateDto(stampedDraft) as unknown as Record<
+      string,
+      unknown
+    >;
+    expect(body).not.toHaveProperty("adultTermsAccepted");
+    expect(body.cats).toEqual(["intimacy"]);
   });
 });

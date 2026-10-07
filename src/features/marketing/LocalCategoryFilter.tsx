@@ -8,7 +8,8 @@ import { CATEGORY_ICON } from "./map.data";
 import s from "./LocalFilterBar.module.css";
 
 /**
- * The place-type chips, multi-select.
+ * The category chips, multi-select: the place types on the list and the map,
+ * and what businesses sell on the Online tab (`categoryIds`).
  *
  * Several types can be on at once and combine as an OR: picking "Food" and
  * "Nightlife" shows both kinds of place. "All" is on while none is chosen, and
@@ -17,7 +18,8 @@ import s from "./LocalFilterBar.module.css";
  * Each chip leads with a colour swatch that mirrors its map pin (category fill
  * plus a white icon), so the filter group doubles as a live legend for the map
  * view, and carries the live count of how many of the LOADED places it would
- * add right now.
+ * add right now. The online categories have no map pin, so their chips carry
+ * no swatch (`hasSwatches`).
  */
 export function LocalCategoryFilter({
   categories,
@@ -25,6 +27,9 @@ export function LocalCategoryFilter({
   onClearCategories,
   categoryCounts,
   isLoadedSetComplete,
+  categoryIds = LOCAL_CATEGORIES,
+  labelKey = "marketing:local.filter.categoryLabel",
+  hasSwatches = true,
 }: {
   /** The chosen place types. Empty means every type. */
   categories: string[];
@@ -34,6 +39,14 @@ export function LocalCategoryFilter({
   categoryCounts: Record<string, number>;
   /** True once every page of places has loaded, so a zero count is final. */
   isLoadedSetComplete: boolean;
+  /** The category ids offered as chips, in chip order. Defaults to the place
+   *  types. */
+  categoryIds?: readonly string[];
+  /** The catalog key of the group's label. */
+  labelKey?: string;
+  /** Leads each chip with its map-pin swatch. Off for the online categories,
+   *  which have no pin on the map. */
+  hasSwatches?: boolean;
 }) {
   const { t } = useTranslation();
   const fmt = useFormat();
@@ -52,7 +65,7 @@ export function LocalCategoryFilter({
   };
 
   const categoryChip = (categoryId: string, label: string) => {
-    const Icon = CATEGORY_ICON[categoryId];
+    const Icon = hasSwatches ? CATEGORY_ICON[categoryId] : undefined;
     return {
       value: categoryId,
       isUnavailable:
@@ -85,8 +98,11 @@ export function LocalCategoryFilter({
         </>
       ),
     },
-    ...LOCAL_CATEGORIES.map((categoryId) =>
-      categoryChip(categoryId, t(LOCAL_CATEGORY_LABEL_KEYS[categoryId]!)),
+    ...categoryIds.map((categoryId) =>
+      categoryChip(
+        categoryId,
+        t(LOCAL_CATEGORY_LABEL_KEYS[categoryId] ?? categoryId),
+      ),
     ),
   ];
 
@@ -105,7 +121,7 @@ export function LocalCategoryFilter({
   return (
     <div className={s.group}>
       <span className={s.groupLabel} id={categoryLabelId}>
-        {t("marketing:local.filter.categoryLabel")}
+        {t(labelKey)}
       </span>
       <ChipSelect
         labelledBy={categoryLabelId}

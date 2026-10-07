@@ -14,6 +14,13 @@ export const CHANGELOG_RELEASE_NOTES: Record<
   string,
   { highlights: string[]; pushes?: number }
 > = {
+  "7 Oct 2026": {
+    highlights: [
+      "online-listings-own-fields",
+      "checkin-tab",
+      "manage-field-editors",
+    ],
+  },
   "6 Oct 2026": {
     // 70 entries, so three highlights, features first: Funding &
     // Grants leads as the largest build, then real gatherings for visitors,

@@ -3,7 +3,7 @@ import type { ListingDraft } from "./listBusiness.data";
 import {
   normalizeAccessibilityDraft,
   type AccessibilityAnswer,
-  type AccessibilitySlug,
+  type ListingAccessibilitySlug,
 } from "./listingAccessibility.data";
 
 /**
@@ -13,19 +13,20 @@ import {
  * other field's.
  *
  * Answers MERGE per question. An owner correcting one answer never blanks the
- * other five, and "no" is written as a real stored answer rather than as the
- * absence of a "yes", which is the whole reason this model replaced the flat
- * amenity tags.
+ * others, and "no" is written as a real stored answer of its own, which is
+ * the whole reason this model replaced the flat amenity tags (where a "no"
+ * could only be the absence of a "yes").
  *
  * Every read goes through `normalizeAccessibilityDraft`, so a draft resumed
- * from before these questions existed is healed to the full six-question map
- * on first edit instead of throwing on a missing key.
+ * from before these questions existed is healed on first edit to a full map
+ * holding every question the listing's kind asks, and a missing key never
+ * throws.
  */
 export function useAccessibilitySetters(
   setDraft: Dispatch<SetStateAction<ListingDraft>>,
 ) {
   const setAccessibilityAnswer = useCallback(
-    (slug: AccessibilitySlug, answer: AccessibilityAnswer) => {
+    (slug: ListingAccessibilitySlug, answer: AccessibilityAnswer) => {
       setDraft((draft) => {
         const current = normalizeAccessibilityDraft(draft.accessibility);
         return {

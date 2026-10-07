@@ -217,7 +217,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   return (
     <ToastContext.Provider value={value}>
       {children}
-      <div className={styles.container}>
+      <div className={styles.container} data-toast-region="">
         <ToastRegion
           politeness="polite"
           toasts={toasts.filter((toast) => toast.type !== "error")}

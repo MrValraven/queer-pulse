@@ -1,0 +1,305 @@
+/* Admin › Logo concepts: today's mark for reference, then one card per
+   candidate mark with its colourway switch, avatar size ladder and
+   downloads. The marks carry their own literal colours (they are files in
+   public/), so the page only frames them. */
+
+/* The one-colour mark and today's mark are plum on a transparent ground.
+   They sit on cream in both themes (--cream-rgb stays light; --cream flips),
+   the way a light social feed or browser tab would show them. */
+.ladderCrop[data-colorway="mono"],
+.currentFrame,
+.currentAvatar {
+  background: rgba(var(--cream-rgb), 1);
+}
+
+.heroFrame[data-colorway="mono"] {
+  background:
+    repeating-conic-gradient(
+        rgba(var(--plum-rgb), 0.06) 0% 25%,
+        transparent 0% 50%
+      )
+      0 0 / 16px 16px,
+    rgba(var(--cream-rgb), 1);
+}
+
+/* ── Today's mark ────────────────────────────────────────────────────────────
+   A quiet reference strip on the page ground, lighter than the concept
+   cards it is there to be compared with. */
+.current {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px 22px;
+  padding: 18px 22px;
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-card);
+  background: transparent;
+}
+
+.currentPreviews {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 12px;
+}
+
+.currentFrame {
+  overflow: hidden;
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-14);
+}
+
+.currentFrame img {
+  display: block;
+}
+
+.currentAvatar {
+  display: block;
+  flex: none;
+  border-radius: var(--radius-avatar);
+  outline: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+.currentText {
+  display: flex;
+  flex: 1 1 220px;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.currentTitle {
+  font-family: var(--serif);
+  font-size: var(--text-18);
+  font-weight: 420;
+  line-height: var(--lh-title);
+  color: var(--ink);
+}
+
+.currentBody {
+  max-width: 560px;
+  font-size: var(--text-body-sm);
+  line-height: var(--lh-body);
+  color: var(--ink-60);
+}
+
+/* ── Grid of concepts ──────────────────────────────────────────────────────
+   One column on phones, up to three (there are three concepts) on wide
+   screens. min() keeps a track from outgrowing a phone-width container. */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-card);
+  background: var(--paper);
+  box-shadow: var(--shadow-e1);
+}
+
+/* The hero sits on the page ground, so the plum and cream files read the
+   way they will against an app or a feed in each theme. */
+.heroStage {
+  display: grid;
+  place-items: center;
+  padding: 28px 22px;
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.09);
+  background: var(--cream);
+}
+
+.heroFrame {
+  width: min(220px, 100%);
+  overflow: hidden;
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-card);
+}
+
+/* Cream on the cream stage needs a firmer edge in light mode. */
+.heroFrame[data-colorway="cream"] {
+  border-color: rgba(var(--line-rgb), 0.16);
+}
+
+.heroImage {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.cardBody {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px 22px 22px;
+}
+
+.cardTitle {
+  font-family: var(--serif);
+  font-size: var(--text-22);
+  font-weight: 420;
+  line-height: var(--lh-title);
+  color: var(--ink);
+}
+
+.cardSummary {
+  font-size: var(--text-body-sm);
+  line-height: var(--lh-body);
+  color: var(--ink);
+}
+
+/* The shared segmented control, stretched across the card. It takes the
+   card's slack above it, so the switch, ladder and downloads line up across
+   a row of cards whose summaries wrap to different lengths. Segments get a
+   narrower side padding so "One colour" fits a 360px phone. */
+.colorwaySwitch {
+  margin-top: auto;
+}
+
+.colorwaySwitch > button {
+  padding-inline: 10px;
+}
+
+.sectionLabel {
+  font-size: var(--text-caption);
+  font-weight: 600;
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+
+/* ── Avatar size ladder ────────────────────────────────────────────────────── */
+.ladder {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* The four sizes share one row, spread across it. */
+.ladderList {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0;
+  padding: 14px 16px;
+  border-radius: var(--radius-14);
+  background: var(--cream);
+  list-style: none;
+}
+
+.ladderItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+/* The hairline keeps each crop's edge visible where its ground meets a
+   ground of the same colour (cream on the light page, plum on the dark). */
+.ladderCrop {
+  display: block;
+  flex: none;
+  border-radius: var(--radius-avatar);
+  outline: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+.ladderCrop[data-colorway="cream"],
+.ladderCrop[data-colorway="mono"] {
+  outline-color: rgba(var(--line-rgb), 0.16);
+}
+
+.ladderSize {
+  font-size: var(--text-caption);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-60);
+}
+
+/* ── Thread variants ───────────────────────────────────────────────────────
+   A second grid of cards under its own heading, set apart from the original
+   concepts by space alone. The heading is the card title type one step up,
+   so it outranks the card titles under it, and the sub follows the reference
+   strip's body copy. */
+.variants {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 40px;
+}
+
+.variantsTitle {
+  font-family: var(--serif);
+  font-size: var(--text-28);
+  font-weight: 420;
+  line-height: var(--lh-title);
+  color: var(--ink);
+}
+
+.variantsSub {
+  max-width: 560px;
+  font-size: var(--text-body-sm);
+  line-height: var(--lh-body);
+  color: var(--ink-60);
+}
+
+.variants > .grid {
+  margin-top: 14px;
+}
+
+/* ── Downloads ─────────────────────────────────────────────────────────────── */
+.cardFoot {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 4px;
+}
+
+/* Side by side the two buttons share the row; wrapped, each fills it. */
+.cardActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.cardActions > * {
+  flex: 1 1 auto;
+  justify-content: center;
+}
+
+.error {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 9px 12px;
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-left: 3px solid var(--accent-ink);
+  border-radius: var(--radius-10);
+  background: rgba(var(--accent-rgb), 0.08);
+  font-size: var(--text-13);
+  line-height: var(--lh-body);
+  color: var(--ink);
+}
+
+.error svg {
+  flex: none;
+  margin-top: 3px;
+  color: var(--accent-ink);
+}
+
+/* Phones: a little more room for the card's contents. */
+@media (--xs) {
+  .current,
+  .cardBody {
+    padding-inline: 18px;
+  }
+
+  .heroStage {
+    padding: 22px 18px;
+  }
+}

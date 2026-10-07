@@ -1,6 +1,7 @@
 import { emptyHours, type ListingDraft } from "./listBusiness.data";
 import { normalizeAccessibilityDraft } from "./listingAccessibility.data";
 import { emptyMenuDraft } from "./listingMenu.data";
+import { emptyOnlineDetailsDraft } from "./listingOnline.data";
 
 /** A brand-new draft's accessibility block: all six questions unanswered and
  *  no note. Unanswered is a real state, never a hidden "no". */
@@ -39,6 +40,15 @@ export function blankDraft(seed?: ListingSeed): ListingDraft {
     menu: emptyMenuDraft(),
     langs: [],
     online: false,
+    // A new draft has not answered "Where do people find it?" yet. Drafts
+    // saved before the question existed leave the key out, which reads as
+    // answered (see `whereFoundChoiceOf`).
+    isWhereFoundAnswered: false,
+    city: "",
+    hasOnlineShop: false,
+    onlineDetails: emptyOnlineDetailsDraft(),
+    shopItems: [],
+    adultTermsAccepted: false,
     address: "",
     geocoded: false,
     latitude: null,

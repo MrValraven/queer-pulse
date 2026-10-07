@@ -9,13 +9,10 @@ import {
   type ListingDraft,
   type MissingField,
 } from "./listBusiness.data";
-import {
-  emptyMenuDraft,
-  isMenuLinkValid,
-  menuValid,
-  pricingModeOf,
-} from "./listingMenu.data";
+import { emptyMenuDraft, isMenuLinkValid, menuValid } from "./listingMenu.data";
+import { onlineMissingFields } from "./listingOnlineMissing";
 import { servicesValid } from "./listingServices.data";
+import { effectivePricingMode } from "./listingShop.data";
 import { isOwnerBlockHidden } from "./ownerBlock";
 
 /** A still-missing item + the DOM anchor its chip jumps to. Holds the
@@ -35,11 +32,15 @@ function add(list: MissingField[], labelKey: string, anchor: string) {
  * category, neighbourhood, where it is, and a one-line why. The owner
  * detail, hours, price, tagline and photos never block the submit. The
  * outing/guide consents gate both paths regardless.
+ *
+ * An online-only listing swaps the neighbourhood, address, pin and hours for
+ * a main link and, on a claim, how people get it (`onlineMissingFields`).
  */
 export function useListingFormMissing(
   draft: ListingDraft,
 ): Record<number, MissingField[]> {
   return useMemo(() => {
+    const online = onlineMissingFields(draft);
     const isClaim = draft.path === "claim";
     /* A CO-MANAGER never sees the owner's own fields and never sends them, so
        they can never fill them in either. Requiring them would leave the save
@@ -60,12 +61,14 @@ export function useListingFormMissing(
     const s0: MissingField[] = [];
     if (!draft.path)
       add(s0, "marketing:listBusiness.missing.path", ANCHOR.path);
+    s0.push(...online.step0);
 
     const s1: MissingField[] = [];
     if (!draft.name.trim())
       add(s1, "marketing:listBusiness.missing.name", ANCHOR.name);
     if (!draft.cats.length)
       add(s1, "marketing:listBusiness.missing.cats", ANCHOR.cats);
+    s1.push(...online.step1);
     // Neighbourhood is optional for an online-only business (no physical area).
     if (!draft.online && !draft.hood)
       add(s1, "marketing:listBusiness.missing.hood", ANCHOR.hood);
@@ -77,7 +80,9 @@ export function useListingFormMissing(
       add(s1, "marketing:listBusiness.missing.blurb", ANCHOR.blurb);
     // Only the VISIBLE priced list can hold the save back. Both are optional,
     // so these fire only for something the owner started and left half done.
-    const pricingMode = pricingModeOf(draft);
+    // The effective mode is the one a save sends: a stored "shop" on a place
+    // that no longer sells online falls back to its category's list.
+    const pricingMode = effectivePricingMode(draft);
     if (pricingMode === "services" && !servicesValid(draft.services ?? []))
       add(s1, "marketing:listBusiness.missing.services", ANCHOR.services);
     if (pricingMode === "menu" && !menuValid(draft.menu ?? emptyMenuDraft()))
@@ -108,13 +113,15 @@ export function useListingFormMissing(
     if (!draft.online && !hoursValid(draft.hours))
       add(s3, "marketing:listBusiness.missing.hoursInvalid", ANCHOR.hours);
     // Dated overrides are optional, so this only fires when one that EXISTS is
-    // malformed, the same "fix the format" shape the socials chip has.
-    if (!hoursExceptionsValid(draft.hoursExceptions ?? []))
+    // malformed, the same "fix the format" shape the socials chip has. An
+    // online listing shows no dated overrides and sends none.
+    if (!draft.online && !hoursExceptionsValid(draft.hoursExceptions ?? []))
       add(
         s3,
         "marketing:listBusiness.missing.hoursExceptionsInvalid",
         ANCHOR.hoursExceptions,
       );
+    s3.push(...online.step3);
     // Socials are optional; this only fires when a filled one is malformed, so
     // the chip always reads "fix the format" (item #10).
     if (!allSocialsValid(draft.social))

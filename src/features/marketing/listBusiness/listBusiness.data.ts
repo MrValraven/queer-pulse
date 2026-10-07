@@ -24,6 +24,8 @@ import type { ListingAccessibilityDraft } from "./listingAccessibility.data";
 import type { ListingMenuDraft, ListingPricingMode } from "./listingMenu.data";
 import type { ListingServiceRow } from "./listingServices.data";
 import type { ListingOwnedBy } from "./listingOwnedBy.data";
+import type { ListingOnlineDetailsDraft } from "./listingOnline.data";
+import type { ListingShopItemRow } from "./listingShop.data";
 
 export const TOTAL_STEPS = 6;
 
@@ -81,6 +83,19 @@ export const ANCHOR = {
   langs: "lb-langs",
   address: "lb-address",
   online: "lb-online",
+  whereFound: "lb-where-found",
+  city: "lb-city",
+  adultTerms: "lb-adult-terms",
+  hasOnlineShop: "lb-has-online-shop",
+  mainLink: "lb-main-link",
+  moreLinks: "lb-more-links",
+  fulfilment: "lb-fulfilment",
+  pickupNote: "lb-pickup-note",
+  shipsFrom: "lb-ships-from",
+  payments: "lb-payments",
+  sessionFormats: "lb-session-formats",
+  registration: "lb-registration",
+  replyNote: "lb-reply-note",
   hours: "lb-hours",
   hoursTools: "lb-hours-tools",
   hoursNote: "lb-hours-note",
@@ -192,6 +207,7 @@ export function goodForLabel(t: TFunction, id: string): string {
 
 export const LANGS = [
   "Português",
+  "Português (Brasil)",
   "English",
   "Español",
   "Français",
@@ -201,6 +217,7 @@ export const LANGS = [
 
 export const LANG_LABEL_KEYS: Record<string, string> = {
   Português: "marketing:listBusiness.lang.portugues",
+  "Português (Brasil)": "marketing:listBusiness.lang.portuguesBrasil",
   English: "marketing:listBusiness.lang.english",
   Español: "marketing:listBusiness.lang.espanol",
   Français: "marketing:listBusiness.lang.francais",
@@ -599,10 +616,32 @@ export interface ListingDraft {
   /** The menu in its editable shape (client ids on every row). */
   menu?: ListingMenuDraft;
   langs: string[];
-  /** Online-only business — no physical location. When true the wizard skips
-   *  the address/pin (and neighbourhood) requirements and the listing carries
-   *  no coordinates. */
+  /** Online-only business with no physical location. When true the listing
+   *  uses the online categories, a "Based in" city and the "How people buy
+   *  from you" fields, and carries no address, pin, neighbourhood or hours. */
   online: boolean;
+  /** Draft-only: whether the create wizard's "Where do people find it?" has
+   *  been answered. `false` only on a brand-new draft (`blankDraft`). Absent
+   *  on drafts saved before the question existed and on every edit, and
+   *  absent reads as answered, so their `online` value stands. Never sent. */
+  isWhereFoundAnswered?: boolean;
+  /** Draft-only: the categories picked under the OTHER kind (place or online
+   *  only), kept so switching back brings them back. Never sent. */
+  inactiveModeCats?: string[];
+  /** "Based in": the city an online-only business works from. Optional, sent
+   *  only for an online listing. */
+  city?: string;
+  /** A place that also sells online. Sent false for an online-only listing. */
+  hasOnlineShop?: boolean;
+  /** "How people buy from you". Optional so older drafts stay valid; read it
+   *  through `normalizeOnlineDetails`. */
+  onlineDetails?: ListingOnlineDetailsDraft;
+  /** "In the shop" items, max 6. Optional like `services`. */
+  shopItems?: ListingShopItemRow[];
+  /** The 18+ acknowledgement. Sent as the write-only `adultTermsAccepted`
+   *  only while `intimacy` is picked; an edit loads it true when the server
+   *  holds an acceptance stamp. */
+  adultTermsAccepted?: boolean;
   address: string;
   geocoded: boolean;
   latitude: number | null;

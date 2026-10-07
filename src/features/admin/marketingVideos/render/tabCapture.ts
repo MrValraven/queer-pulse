@@ -1,6 +1,7 @@
+import type { FilmSize } from "../marketingVideos.data";
 import { captureApis, type ElementCaptureTrack } from "./captureApis";
 import {
-  CALIBRATION_PATCHES,
+  calibrationPatches,
   pickCaptureMatrix,
   withMatrix,
   type Rgb,
@@ -20,9 +21,8 @@ export class CaptureError extends Error {
   }
 }
 
-/** The film is 1920x1080; the marker strip sits right below it. */
-const FILM_HEIGHT = 1080;
-const BOX_HEIGHT = FILM_HEIGHT + MARKER_HEIGHT;
+/** The captured box: the film, with the marker strip right below it. */
+const boxHeightOf = (film: FilmSize) => film.height + MARKER_HEIGHT;
 /** How long to wait for a frame that shows the expected marker. */
 const STALL_MS = 5000;
 const SAMPLE_WIDTH = 256;
@@ -79,13 +79,16 @@ export interface FilmCapture {
 
 /**
  * Limits a shared-tab stream to `box` (the film plus its marker strip) and
- * returns a reader for its frames. Fails with "wrong-tab" when the admin
- * shared a different tab or a window, which can't be limited to an element.
+ * returns a reader for its frames. `film` is the film's own size in film
+ * pixels. Fails with "wrong-tab" when the admin shared a different tab or a
+ * window, which can't be limited to an element.
  */
 export async function captureFilmBox(
   stream: MediaStream,
   box: HTMLElement,
+  film: FilmSize,
 ): Promise<FilmCapture> {
+  const boxHeight = boxHeightOf(film);
   const [track] = stream.getVideoTracks() as ElementCaptureTrack[];
   const apis = captureApis();
   if (!track || !apis.TrackProcessor) {
@@ -125,10 +128,9 @@ export async function captureFilmBox(
   }
 
   const patchColours = (frame: VideoFrame): Rgb[] => {
-    const scaleX = frame.displayWidth / 1920;
-    const scaleY =
-      (frame.displayHeight * (FILM_HEIGHT / BOX_HEIGHT)) / FILM_HEIGHT;
-    return CALIBRATION_PATCHES.map(({ x, y }) => {
+    const scaleX = frame.displayWidth / film.width;
+    const scaleY = frame.displayHeight / boxHeight;
+    return calibrationPatches(film).map(({ x, y }) => {
       pixelContext.drawImage(frame, x * scaleX, y * scaleY, 1, 1, 0, 0, 1, 1);
       const [red = 0, green = 0, blue = 0] = pixelContext.getImageData(
         0,
@@ -142,7 +144,7 @@ export async function captureFilmBox(
 
   const markerOf = (frame: VideoFrame): number | null => {
     const markerRow = Math.floor(
-      frame.displayHeight * ((FILM_HEIGHT + MARKER_HEIGHT / 2) / BOX_HEIGHT),
+      frame.displayHeight * ((film.height + MARKER_HEIGHT / 2) / boxHeight),
     );
     sampleContext.drawImage(
       frame,
@@ -202,9 +204,9 @@ export async function captureFilmBox(
 }
 
 /** The film's part of a captured frame, in the frame's own pixels. */
-export function filmRect(frame: VideoFrame) {
+export function filmRect(frame: VideoFrame, film: FilmSize) {
   return {
     width: frame.displayWidth,
-    height: frame.displayHeight * (FILM_HEIGHT / BOX_HEIGHT),
+    height: frame.displayHeight * (film.height / boxHeightOf(film)),
   };
 }

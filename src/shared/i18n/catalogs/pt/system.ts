@@ -199,9 +199,9 @@ export const system: Catalog = {
   "inviteLanding.sealed.eyebrow": "Recebeste um convite pessoal",
   "inviteLanding.sealed.title": "<em>{name}</em> convidou-te.",
   "inviteLanding.sealed.sub_one":
-    "Só por convite · {count} pessoa. Esta ligação foi criada só para ti e só pode ser aberta uma vez.",
+    "{count} pessoa, com voto de confiança. Esta ligação foi criada só para ti e só pode ser aberta uma vez.",
   "inviteLanding.sealed.sub_other":
-    "Só por convite · {count} pessoas. Esta ligação foi criada só para ti e só pode ser aberta uma vez.",
+    "{count} pessoas, cada uma com voto de confiança. Esta ligação foi criada só para ti e só pode ser aberta uma vez.",
   "inviteLanding.sealed.openCta": "Abrir convite",
   "inviteLanding.opening.title": "Um convite de <em>{name}.</em>",
   "inviteLanding.card.inviterNoteWithSince":
@@ -451,7 +451,7 @@ export const system: Catalog = {
   "status.subscribe.toast": "Vais receber um aviso durante incidentes.",
   "status.outro.line1": "Uma rede queer.",
   "status.outro.line2": "<em>Enraizada em Lisboa.</em>",
-  "status.outro.sub": "Só por convite. Da comunidade. Feita para durar.",
+  "status.outro.sub": "Com voto de confiança. Da comunidade. Feita para durar.",
   "status.outro.cta": "Pedir um convite",
 
   // ── VerificationNeededPage.tsx / VerificationNeededSections.tsx ──────────

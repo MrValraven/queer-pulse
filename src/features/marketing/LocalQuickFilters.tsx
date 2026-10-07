@@ -1,15 +1,16 @@
 import { useId } from "react";
 import { m } from "motion/react";
-import { FiClock, FiShield } from "react-icons/fi";
+import { FiClock, FiEye, FiShield } from "react-icons/fi";
 import { RefineGroup, useRefineGlide } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { LocalChipCounts } from "./useDirectoryFilters";
 import s from "./LocalFilterBar.module.css";
 
 /**
- * The two one-tap narrowings, side by side: is it open right now, and has it
- * been verified as a safe space. Each chip names itself, so the group only
- * needs a name for the set as a whole.
+ * The one-tap narrowings, side by side: is it open right now, has it been
+ * verified as a safe space and, on the Online tab for a signed-in member, Show
+ * 18+ shops. Each chip names itself, so the group only needs a name for the
+ * set as a whole.
  */
 export function LocalQuickFilters({
   showOpenNow = true,
@@ -19,8 +20,12 @@ export function LocalQuickFilters({
   onToggleSafeOnly,
   chipCounts,
   isLoadedSetComplete,
+  showAdult = false,
+  isAdultShown,
+  onToggleAdult,
 }: {
-  /** Off on the Online tab, where no business keeps opening hours. */
+  /** Off on the Online tab, which lists businesses by how they sell online,
+   *  so opening hours are no filter there. */
   showOpenNow?: boolean;
   openNow: boolean;
   onToggleOpenNow: () => void;
@@ -30,6 +35,11 @@ export function LocalQuickFilters({
   chipCounts: LocalChipCounts;
   /** True once every page of places has loaded, so a zero count is final. */
   isLoadedSetComplete: boolean;
+  /** Offers "Show 18+ shops": the Online tab, for a signed-in member only. */
+  showAdult?: boolean;
+  /** Whether "Show 18+ shops" is on. */
+  isAdultShown?: boolean;
+  onToggleAdult?: () => void;
 }) {
   const { t } = useTranslation();
   const quickLabelId = useId();
@@ -76,6 +86,20 @@ export function LocalQuickFilters({
           <FiShield aria-hidden />
           {t("marketing:local.filter.verifiedSafeSpaces")}
         </m.button>
+        {showAdult && onToggleAdult && (
+          <m.button
+            {...glide.chip}
+            type="button"
+            aria-pressed={isAdultShown === true}
+            className={[s.chip, isAdultShown && s.chipOn]
+              .filter(Boolean)
+              .join(" ")}
+            onClick={onToggleAdult}
+          >
+            <FiEye aria-hidden />
+            {t("marketing:local.filter.adult")}
+          </m.button>
+        )}
       </m.div>
     </RefineGroup>
   );

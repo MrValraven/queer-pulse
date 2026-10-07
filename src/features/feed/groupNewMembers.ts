@@ -43,7 +43,10 @@ export function feedItemToNewMemberRow(item: FeedItem): NewMemberRowModel {
 
 /** One masonry child in the "All" tab: a plain feed item, or the new members
  *  of one calendar week folded into a "people joined" card. `weekStart` is
- *  that week's `weekStartKey`, which the card turns into its heading. */
+ *  that week's `weekStartKey`, which the card turns into its heading.
+ *  `isContinuation` marks a later card for a week that already has a group
+ *  card on an earlier page (see `groupNewMemberPages`), which the heading
+ *  words as "more people joined". */
 export type FeedRenderEntry =
   | { kind: "item"; item: FeedItem }
   | {
@@ -51,6 +54,7 @@ export type FeedRenderEntry =
       key: string;
       weekStart: string;
       members: FeedItem[];
+      isContinuation: boolean;
     };
 
 /** Two digits for a month or day in a "YYYY-MM-DD" key. */
@@ -85,12 +89,22 @@ export function weekStartKey(date: Date): string {
   return `${monday.getFullYear()}-${padTwoDigits(monday.getMonth() + 1)}-${padTwoDigits(monday.getDate())}`;
 }
 
-/** React key for one week's group. Constant per week on purpose: when
- *  infinite scroll appends more people who joined in a week already shown,
- *  that group keeps its key, so React keeps its DOM node (and its expanded
- *  state) and the masonry only relayouts the one card that grew. */
+/** React key for the first group card a week gets. Live, a week has at most
+ *  one such card (see `groupNewMemberPages`); the demo folds its whole list at
+ *  once, so every demo group uses this key. */
 function newMembersGroupKey(weekStart: string): string {
   return `new-members-${weekStart}`;
+}
+
+/** React key for a continuation card: a group formed on a later page for a
+ *  week that already has a group card. Named after the week and the
+ *  continuation's first member in feed order, so it stays the same as more
+ *  pages are appended and two continuations of one week never share it. */
+function newMembersContinuationKey(
+  weekStart: string,
+  firstMemberId: string,
+): string {
+  return `new-members-${weekStart}-more-${firstMemberId}`;
 }
 
 /** Weeks with fewer new members than this stay plain cards: a group of one
@@ -114,79 +128,121 @@ function sortNewestFirst(items: FeedItem[]): FeedItem[] {
  * at least `MIN_NEW_MEMBERS_TO_GROUP` people becomes ONE group, placed where
  * the first of its members sat in the list, with its members sorted newest
  * first. A week with a single person keeps that person as a plain entry, and
- * every other entry keeps its place and order.
+ * every other entry keeps its place and order. `asGroup` also receives the
+ * week's first member in list order, the member whose spot the group takes.
  */
 function foldNewMembersByWeek<Entry, Rendered>(
   entries: Entry[],
   newMemberOf: (entry: Entry) => FeedItem | undefined,
   asPlain: (entry: Entry) => Rendered,
-  asGroup: (weekStart: string, members: FeedItem[]) => Rendered,
+  asGroup: (
+    weekStart: string,
+    members: FeedItem[],
+    firstMemberInListOrder: FeedItem,
+  ) => Rendered,
 ): Rendered[] {
   const membersByWeek = new Map<string, FeedItem[]>();
-  const weekStartByIndex = entries.map((entry) => {
+  const memberWeekByIndex = entries.map((entry) => {
     const newMember = newMemberOf(entry);
     if (!newMember) return null;
     const weekStart = weekStartKey(new Date(newMember.createdAt));
     const weekMembers = membersByWeek.get(weekStart) ?? [];
     weekMembers.push(newMember);
     membersByWeek.set(weekStart, weekMembers);
-    return weekStart;
+    return { weekStart, newMember };
   });
 
   const rendered: Rendered[] = [];
   const placedWeeks = new Set<string>();
   entries.forEach((entry, index) => {
-    const weekStart = weekStartByIndex[index] ?? null;
+    const memberWeek = memberWeekByIndex[index] ?? null;
     const weekMembers =
-      weekStart === null ? undefined : membersByWeek.get(weekStart);
+      memberWeek === null ? undefined : membersByWeek.get(memberWeek.weekStart);
     if (
-      weekStart === null ||
+      memberWeek === null ||
       !weekMembers ||
       weekMembers.length < MIN_NEW_MEMBERS_TO_GROUP
     ) {
       rendered.push(asPlain(entry));
       return;
     }
-    if (placedWeeks.has(weekStart)) return;
-    placedWeeks.add(weekStart);
-    rendered.push(asGroup(weekStart, sortNewestFirst(weekMembers)));
+    if (placedWeeks.has(memberWeek.weekStart)) return;
+    placedWeeks.add(memberWeek.weekStart);
+    // The first entry of a week to reach this point is the one the group
+    // replaces, so its member is the week's first in list order.
+    rendered.push(
+      asGroup(
+        memberWeek.weekStart,
+        sortNewestFirst(weekMembers),
+        memberWeek.newMember,
+      ),
+    );
   });
   return rendered;
 }
 
 /**
- * Fold the `new_member` items into one group entry per calendar week (see
- * `foldNewMembersByWeek`): each group sits where the first of that week's
- * members sat in the feed, its members newest first, and a week with a
- * single new member keeps that person as a plain item.
+ * The live "All" tab's render entries, folded one loaded page at a time so
+ * a card already on screen never changes when the next page lands.
+ *
+ * The backend ranks the All tab in windows larger than a page, so the people
+ * who joined in one week can arrive across several pages. Folding the whole
+ * flattened list would make a group the reader has already seen grow when a
+ * later page brings more of its week, or swap a lone member's card for a
+ * group card, and the masonry would then shift every card under it. Folding
+ * page by page keeps the result append-only: each page's entries depend on
+ * that page alone (plus which weeks earlier pages grouped), so a new page only
+ * adds entries after the ones already rendered.
+ *
+ * Within a page the `foldNewMembersByWeek` rule applies: two or more members
+ * of one week become one group at the first member's position, newest first,
+ * and a lone member stays a plain item. A group for a week that already got
+ * a GROUP card on an earlier page is a continuation (`isContinuation`), keyed
+ * by `newMembersContinuationKey` and headed as "more people joined". A week
+ * shown earlier only as a lone plain card has no group yet, so its first
+ * group on a later page takes the usual heading and key.
  */
-export function groupNewMemberItems(items: FeedItem[]): FeedRenderEntry[] {
-  return foldNewMembersByWeek<FeedItem, FeedRenderEntry>(
-    items,
-    (item) => (item.type === "new_member" ? item : undefined),
-    (item) => ({ kind: "item", item }),
-    (weekStart, members) => ({
-      kind: "newMembersGroup",
-      key: newMembersGroupKey(weekStart),
-      weekStart,
-      members,
-    }),
-  );
+export function groupNewMemberPages(pages: FeedItem[][]): FeedRenderEntry[] {
+  const groupedWeeks = new Set<string>();
+  return pages.flatMap((pageItems) => {
+    const pageEntries = foldNewMembersByWeek<FeedItem, FeedRenderEntry>(
+      pageItems,
+      (item) => (item.type === "new_member" ? item : undefined),
+      (item) => ({ kind: "item", item }),
+      (weekStart, members, firstMemberInListOrder) => {
+        const isContinuation = groupedWeeks.has(weekStart);
+        return {
+          kind: "newMembersGroup",
+          key: isContinuation
+            ? newMembersContinuationKey(weekStart, firstMemberInListOrder.id)
+            : newMembersGroupKey(weekStart),
+          weekStart,
+          members,
+          isContinuation,
+        };
+      },
+    );
+    pageEntries.forEach((entry) => {
+      if (entry.kind === "newMembersGroup") groupedWeeks.add(entry.weekStart);
+    });
+    return pageEntries;
+  });
 }
 
-/** The live list as render entries: grouped when the page asks for it (the
- *  "All" tab), otherwise one plain entry per item (the People tab keeps one
- *  card per member). */
+/** The live list as render entries: grouped page by page when the page asks
+ *  for it (the "All" tab, see `groupNewMemberPages`), otherwise one plain
+ *  entry per item in feed order (the People tab keeps one card per member). */
 export function liveFeedRenderEntries(
-  items: FeedItem[],
+  pages: FeedItem[][],
   isGroupingNewMembers: boolean,
 ): FeedRenderEntry[] {
   return isGroupingNewMembers
-    ? groupNewMemberItems(items)
-    : items.map((item) => ({ kind: "item", item }));
+    ? groupNewMemberPages(pages)
+    : pages.flat().map((item) => ({ kind: "item", item }));
 }
 
-/** React key for an entry: the item id, or the group's per-week key. */
+/** React key for an entry: the item id, or the group's week key (with its
+ *  first member's id for a continuation). */
 export function feedRenderEntryKey(entry: FeedRenderEntry): string {
   return entry.kind === "item" ? entry.item.id : entry.key;
 }
@@ -210,10 +266,11 @@ export type DemoRenderEntry<Entry extends DemoFeedEntry> =
     };
 
 /**
- * The demo list as render entries, under the same rule as
- * `groupNewMemberItems`: when grouping, the entries carrying a new member fold
+ * The demo list as render entries, under the `foldNewMembersByWeek` rule live
+ * applies to each page: when grouping, the entries carrying a new member fold
  * into one group per calendar week, each at the position of the first of its
  * members, newest first, and a week with a single new member stays plain.
+ * The demo list is one fixed page, so its groups are never continuations.
  */
 export function demoFeedRenderEntries<Entry extends DemoFeedEntry>(
   entries: Entry[],

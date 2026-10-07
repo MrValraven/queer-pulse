@@ -7,6 +7,11 @@
  * `GET /directory/tags` serves the same groups and rejects any other tag on
  * save (a listing keeps the older tags it already carries).
  *
+ * The online delivery, payment and session tags became structured fields on
+ * 2026-10-07 (`listingOnline.data.ts`). The backend's `listing-tags.ts`
+ * changes in step. Their label keys stay below, so a stored tag or a server
+ * copy from before the change still renders.
+ *
  * Each group holds two lists: `tags` for place listings and `onlineTags` for
  * online-only ones. The picker shows one audience at a time through
  * `tagGroupsForAudience`.
@@ -15,13 +20,7 @@
 import type { TFunction } from "../../../shared/i18n/types";
 
 export type ListingTagGroupId =
-  | "visiting"
-  | "happening"
-  | "foodDrink"
-  | "pricing"
-  | "ordering"
-  | "payment"
-  | "sessions";
+  "visiting" | "happening" | "foodDrink" | "pricing" | "ordering" | "sessions";
 
 /** A group narrowed to one audience: the tags that audience is offered. */
 export interface ListingTagAudienceGroup {
@@ -113,26 +112,12 @@ export const LISTING_TAG_GROUPS: readonly ListingTagGroup[] = [
   {
     id: "ordering",
     tags: [],
-    onlineTags: [
-      "Ships to Portugal",
-      "Ships across the EU",
-      "Ships worldwide",
-      "Pick-up in Lisbon",
-      "Made to order",
-      "Custom commissions",
-      "Digital downloads",
-      "Gift cards",
-    ],
-  },
-  {
-    id: "payment",
-    tags: [],
-    onlineTags: ["MB WAY", "Multibanco", "PayPal"],
+    onlineTags: ["Made to order", "Custom commissions", "Gift cards"],
   },
   {
     id: "sessions",
     tags: [],
-    onlineTags: ["Video sessions", "Phone sessions", "Free first call"],
+    onlineTags: ["Free first call"],
   },
 ];
 

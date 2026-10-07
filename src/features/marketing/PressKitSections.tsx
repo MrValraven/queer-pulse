@@ -23,7 +23,7 @@ const FACTS_AS_OF = new Date(2026, 4, 14);
 // noun (see docs/i18n/glossary-pt.md: "QueerPulse — Brand name. Never
 // translated."), rendered from constants rather than a literal JSX string so
 // the i18n sweep's no-literal-string lint stays satisfied without a catalog
-// key. Same precedent as `GatheringDashboardPage.tsx`.
+// key.
 const BRAND_QUEER = "Queer";
 const BRAND_PULSE = "Pulse";
 

@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Button, FormField, Modal } from "../../shared/components/ui";
+import { useRef, useState } from "react";
+import { FormField, Modal } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { EditDetailsAudience } from "./EditDetailsAudience";
@@ -11,16 +11,46 @@ import { EditDetailsFormat } from "./EditDetailsFormat";
 import { EditDetailsRsvp } from "./EditDetailsRsvp";
 import { EditDetailsSchedule } from "./EditDetailsSchedule";
 import { EditDetailsSection } from "./EditDetailsSection";
+import { FieldEditorFooter } from "./FieldEditorShell";
 import { sanitizeThemes } from "./gatheringExtras";
 import { GatheringSuccessPanel } from "./GatheringSuccessPanel";
 import { canSaveEditDraft } from "./manageGatheringState";
 import { ATTENDEE_COUNT } from "./manageGathering.data";
 import { MAX_DESCRIPTION_STORAGE_LENGTH } from "./steps/whatChapter.data";
+import { useAutoGrowTextarea } from "./useAutoGrowTextarea";
+import fieldEditorStyles from "./FieldEditor.module.css";
 import styles from "./GatheringModals.module.css";
 
 // The draft's shape lives in `editDetailsDraft.ts`. Re-exported so the
 // sections that read it from the modal keep doing so.
 export type { GatheringDetailsDraft };
+
+function isPlainObject(value: unknown): value is Record<string, unknown> {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    Object.getPrototypeOf(value) === Object.prototype
+  );
+}
+
+/** Whether two draft values hold the same answer: equal primitives, or
+ *  arrays and plain objects (themes, content notes, format details, RSVP
+ *  questions) with equal entries all the way down. A key missing on one side
+ *  reads as `undefined`, so `{ a: undefined }` and `{}` count as the same. */
+function isSameDraftValue(left: unknown, right: unknown): boolean {
+  if (Object.is(left, right)) return true;
+  if (Array.isArray(left) && Array.isArray(right)) {
+    return (
+      left.length === right.length &&
+      left.every((item, index) => isSameDraftValue(item, right[index]))
+    );
+  }
+  if (isPlainObject(left) && isPlainObject(right)) {
+    const keys = new Set([...Object.keys(left), ...Object.keys(right)]);
+    return [...keys].every((key) => isSameDraftValue(left[key], right[key]));
+  }
+  return false;
+}
 
 /**
  * Edit a published gathering in five titled sections: the gathering, when and
@@ -39,6 +69,10 @@ export function EditDetailsModal({
 }) {
   const { t } = useTranslation();
   const [draft, setDraft] = useState<GatheringDetailsDraft>(initial);
+  // The baseline the modal opened on, frozen for its whole life. Parents
+  // rebuild `initial` on every render, and one re-seeded while the modal is
+  // open would otherwise light Save with no edit made.
+  const [openedDraft] = useState<GatheringDetailsDraft>(initial);
   const [done, setDone] = useState(false);
 
   const set = <FieldName extends keyof GatheringDetailsDraft>(
@@ -65,12 +99,18 @@ export function EditDetailsModal({
   // on the wire cannot drift apart. `EditDetailsSchedule` reads the schedule
   // half of the same rule through `editScheduleProblem`, and
   // `EditDetailsAudience` the capacity half through `editCapacityProblem`.
-  // `initial` is seeded from the saved gathering, so `initial.capacity` is the
-  // capacity the gathering holds now.
-  const canSave = canSaveEditDraft(draft, initial.capacity);
+  // `openedDraft` is seeded from the saved gathering, so `openedDraft.capacity`
+  // is the capacity the gathering held when the modal opened.
+  const canSave = canSaveEditDraft(draft, openedDraft.capacity);
+  // Save lights up once something differs from what the modal opened on, the
+  // way the one-field editors behave. An edit typed and then undone puts Save
+  // back to its quiet "not yet" chip.
+  const hasDraftChanged = !isSameDraftValue(draft, openedDraft);
+  const descriptionRef = useRef<HTMLTextAreaElement>(null);
+  useAutoGrowTextarea(descriptionRef, draft.description);
 
   const save = () => {
-    if (!canSave) return;
+    if (!canSave || !hasDraftChanged) return;
     onSave(draft);
     setDone(true);
   };
@@ -101,19 +141,17 @@ export function EditDetailsModal({
 
   return (
     <Modal
-      eyebrow={t("gatherings:manage.editModal.eyebrow")}
       title={t("gatherings:manage.editModal.title")}
       sub={t("gatherings:manage.editModal.sub")}
       onClose={onClose}
+      // The shared editor footer puts Cancel before Save, the order the
+      // focused field editors and most modal footers in the app use.
       footer={
-        <>
-          <Button variant="primary" onClick={save} disabled={!canSave}>
-            {t("gatherings:manage.editModal.saveCta")}
-          </Button>
-          <Button variant="ghost" onClick={onClose}>
-            {t("gatherings:manage.cancelCta")}
-          </Button>
-        </>
+        <FieldEditorFooter
+          isSaveEnabled={canSave && hasDraftChanged}
+          onSave={save}
+          onCancel={onClose}
+        />
       }
     >
       <div className={styles.fields}>
@@ -133,6 +171,8 @@ export function EditDetailsModal({
           <EditDetailsFormat draft={draft} onChange={mergeFormat} />
           <FormField label={t("gatherings:manage.editModal.fieldDescription")}>
             <textarea
+              ref={descriptionRef}
+              className={fieldEditorStyles.detailsDescriptionInput}
               maxLength={MAX_DESCRIPTION_STORAGE_LENGTH}
               value={draft.description}
               onChange={(event) => set("description", event.target.value)}
@@ -169,8 +209,8 @@ export function EditDetailsModal({
         </EditDetailsSection>
         <EditDetailsAudience
           draft={draft}
-          openedWithCapacity={initial.capacity}
-          savedCommunitySlug={initial.communitySlug}
+          openedWithCapacity={openedDraft.capacity}
+          savedCommunitySlug={openedDraft.communitySlug}
           onChange={merge}
         />
         <EditDetailsCare draft={draft} onChange={merge} />

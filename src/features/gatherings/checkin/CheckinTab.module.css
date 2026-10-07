@@ -1,0 +1,135 @@
+.tab {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+}
+
+/* The server refused a check-in because the attendance window has passed.
+   A statement of what the platform did, toned as information on paper, and
+   it stays: the refusal is final and there is nothing to retry. */
+.closedNotice {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--gap-xs);
+  padding: var(--gap-xs) var(--gap-sm);
+  border: 1.5px solid rgba(var(--line-rgb), 0.14);
+  border-radius: var(--radius-12);
+  background: var(--paper);
+  color: var(--ink);
+  font-size: var(--text-14);
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+.closedNotice svg {
+  flex: none;
+  margin-top: 2px;
+  width: 18px;
+  height: 18px;
+  color: var(--accent);
+}
+
+/* Search stays in reach at every width while the list scrolls under it. The
+   wrapper is the sticky box and the scroll-state container; the row inside
+   draws the edge once it is stuck. */
+.toolbarSticky {
+  position: sticky;
+  top: var(--sticky-top);
+  z-index: var(--z-sticky);
+  container-type: scroll-state;
+}
+/* The focus layer is its own scroller, starting under no page chrome. */
+.tabFocus .toolbarSticky {
+  top: env(safe-area-inset-top, 0px);
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm);
+  padding-block: var(--gap-xs);
+  background: var(--cream);
+}
+
+@container scroll-state(stuck: top) {
+  .toolbar {
+    box-shadow:
+      var(--shadow-e2),
+      0 1px 0 var(--line);
+  }
+}
+
+/* An engine that cannot tell when the bar is stuck keeps a hairline under
+   it, so rows never slide under a bar with no edge. */
+@supports not (container-type: scroll-state) {
+  .toolbar {
+    box-shadow: 0 1px 0 var(--line);
+  }
+}
+
+/* The polite live region, heard by screen readers and hidden from sight. */
+.announcer {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.search {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.focusLabel {
+  white-space: nowrap;
+}
+
+.footer {
+  margin: 0;
+  font-size: var(--text-12);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+/* The thumb-reach scan button, shown only on small screens. */
+.scanDock {
+  display: none;
+}
+
+@media (max-width: 639.98px) {
+  .toolbar .scanInRow {
+    display: none;
+  }
+
+  /* Icon only on a phone; the label stays as the accessible name. */
+  .focusLabel {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .scanDock {
+    display: flex;
+    position: sticky;
+    /* Clears the installed app's tab bar, which --bottom-inset carries. */
+    bottom: calc(
+      var(--consent-inset, 0px) +
+        max(var(--bottom-inset), env(safe-area-inset-bottom)) + var(--gap-sm)
+    );
+    z-index: var(--z-sticky);
+  }
+  /* The focus layer covers the tab bar. The dock's sticky edge sits inside
+     the layer's bottom padding, which already clears the home indicator and,
+     while it shows, the consent banner (CheckinFocusLayer.module.css), so the
+     dock adds only its own gap. */
+  .tabFocus .scanDock {
+    bottom: var(--gap-sm);
+  }
+  .scanDockButton {
+    width: 100%;
+  }
+}

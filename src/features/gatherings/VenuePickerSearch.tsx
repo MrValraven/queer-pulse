@@ -1,4 +1,6 @@
 import {
+  useEffect,
+  useRef,
   type Dispatch,
   type KeyboardEvent,
   type SetStateAction,
@@ -31,6 +33,7 @@ export function VenuePickerSearch({
   onKeyDown,
   onSelectPlace,
   onSwitchToFreeText,
+  shouldFocusOnMount = false,
 }: {
   id?: string;
   labelledBy?: string;
@@ -46,8 +49,18 @@ export function VenuePickerSearch({
   onKeyDown: (event: KeyboardEvent<HTMLInputElement>) => void;
   onSelectPlace: (place: DirectoryPlace) => void;
   onSwitchToFreeText: () => void;
+  /** Focus the input on mount, for when the control that opened the search
+   *  (the linked chip's "Change") has just unmounted. */
+  shouldFocusOnMount?: boolean;
 }) {
   const { t } = useTranslation();
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (shouldFocusOnMount) inputRef.current?.focus();
+    // Mount-only: later prop changes must not pull focus back.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const listboxId = `${baseId}-listbox`;
   const optionId = (index: number) => `${baseId}-opt-${index}`;
 
@@ -56,6 +69,7 @@ export function VenuePickerSearch({
       <div className={styles.searchRow}>
         <FiSearch aria-hidden className={styles.searchIcon} />
         <input
+          ref={inputRef}
           id={id}
           aria-labelledby={labelledBy}
           role="combobox"

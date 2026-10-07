@@ -49,6 +49,9 @@ export interface LocalPlacesResult {
  * far (see `useDirectoryFilters`) — `category` so its chip counts stay
  * correct against the loaded set, `vibe` because it's a demo-only concept
  * (see `LocalFilterFields`'s `useDemoMode` gate).
+ *
+ * The Online tab passes `online`, so its pool comes narrowed (server live,
+ * demo fixture in demo) and no venue joins it.
  */
 export function useLocalPlaces(
   filters: DirectoryPlacesPageFilters = {},
@@ -66,14 +69,16 @@ export function useLocalPlaces(
     isFetchingNextPage,
   } = useDirectoryPlacesPage(filters);
 
+  const isOnlineOnly = filters.online === true;
   const places = useMemo(() => {
     const businessLocals = businesses.map((business) =>
       businessToLocal(business, demoMode),
     );
-    if (!demoMode) return businessLocals;
+    // The demo venues all have a door, so the Online tab never merges them.
+    if (!demoMode || isOnlineOnly) return businessLocals;
     const venueLocals = VENUES.map(venueToLocal);
     return mergeLocalPlaces(businessLocals, venueLocals);
-  }, [businesses, demoMode]);
+  }, [businesses, demoMode, isOnlineOnly]);
 
   return {
     places,

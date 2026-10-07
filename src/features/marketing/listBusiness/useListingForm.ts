@@ -15,7 +15,9 @@ import { blankDraft, type ListingSeed } from "./listingFormDraft";
 import { applyCategoryPricingDefault } from "./listingMenu.data";
 import { useAccessibilitySetters } from "./useAccessibilitySetters";
 import { useMenuSetters } from "./useMenuSetters";
+import { useOnlineSetters } from "./useOnlineSetters";
 import { useServiceSetters } from "./useServiceSetters";
+import { useShopItemSetters } from "./useShopItemSetters";
 
 export type { ListingSeed } from "./listingFormDraft";
 
@@ -55,6 +57,9 @@ export function useListingForm(initial?: ListingDraft, seed?: ListingSeed) {
   const serviceSetters = useServiceSetters(setDraft);
   const menuSetters = useMenuSetters(setDraft);
   const hoursSetters = useListingHoursSetters(setDraft);
+  const onlineSetters = useOnlineSetters(setDraft);
+  const shopItemSetters = useShopItemSetters(setDraft);
+  const { clearShopPhotoPreviews } = shopItemSetters;
 
   /** Patch one or more top-level fields. A categories change can re-default
    *  the priced list (see `applyCategoryPricingDefault`). */
@@ -67,8 +72,9 @@ export function useListingForm(initial?: ListingDraft, seed?: ListingSeed) {
       setDraft(next ?? blankDraft(seed));
       setPhotoPreviews({ wide: "", d1: "", d2: "", vibe: "" });
       setRejectedPhotoSlots([]);
+      clearShopPhotoPreviews();
     },
-    [seed],
+    [seed, clearShopPhotoPreviews],
   );
 
   const pickPath = useCallback((path: ListingPath) => {
@@ -173,6 +179,8 @@ export function useListingForm(initial?: ListingDraft, seed?: ListingSeed) {
     ...serviceSetters,
     ...menuSetters,
     ...hoursExceptionSetters,
+    ...onlineSetters,
+    ...shopItemSetters,
     setSocial,
     setPhoto,
     setAlt,

@@ -28,7 +28,7 @@ export const storyCards: StoryCard[] = [
   },
   {
     category: "On Building",
-    title: "Why we stayed invite-only: safety as a built-in feature",
+    title: "Why we grow by vouching: safety as a built-in feature",
     bylineInitials: "QP",
     byline: "The QueerPulse team · 3 min read",
     href: routes.storySafety,

@@ -601,7 +601,7 @@ export const articles: Record<string, Article> = {
     section: "On Building",
     title: (
       <>
-        Why we stayed <em>invite-only:</em> safety as a feature, not a gate.
+        Why we grow by <em>vouching:</em> safety as a built-in feature.
       </>
     ),
     byline: "The QueerPulse Team",
@@ -680,7 +680,7 @@ export const articles: Record<string, Article> = {
         ),
       },
       "It means we build safety in at the structural level, not the policy level. Policies are things you write and hope people read. Structure is what shapes behaviour whether or not anyone reads anything.",
-      "The invite-only structure means the person who introduced you is accountable, in a mild but real way, for your presence in the room. The visibility settings mean you can participate at the level you're comfortable with, not just \"public or private\" but a genuine spectrum. The absence of follower counts and public metrics means there's no incentive to perform rather than participate.",
+      "Vouching means the person who introduced you is accountable, in a mild but real way, for your presence in the room. The visibility settings mean you can participate at the level you're comfortable with, not just \"public or private\" but a genuine spectrum. The absence of follower counts and public metrics means there's no incentive to perform rather than participate.",
       "None of this is unprecedented. Some of the best communities in the world operate this way. It just isn't the default in tech, because the default in tech is designed to maximise engagement, and engaged users generate data, and data generates revenue. We're not optimising for that.",
       {
         kind: "heading",

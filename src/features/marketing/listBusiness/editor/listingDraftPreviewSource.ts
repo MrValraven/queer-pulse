@@ -6,6 +6,8 @@ import {
   type ListingDraft,
   type PhotoKey,
 } from "../listBusiness.data";
+import { onlineDetailsForPayload } from "../listingOnline.data";
+import { shopItemsForPayload } from "../listingShop.data";
 
 /**
  * A menu file uploaded THIS session holds a bare storage key (e.g.
@@ -29,12 +31,14 @@ function resolveMenuFileUrl(url: string): string {
  * `photoPreviews` (the just-uploaded blob URL) wins over the persisted
  * `draft.photos` value, mirroring the display convention every other preview
  * in this flow uses. An empty slot becomes `null`, which is what the backend
- * response emits and what the gallery treats as "no photo here".
+ * response emits and what the gallery treats as "no photo here". A shop
+ * item's photo does the same through `shopPhotoPreviews`, keyed by item id.
  */
 export function listingDraftToPreviewSource(
   draft: ListingDraft,
   slug: string,
   photoPreviews: Record<PhotoKey, string>,
+  shopPhotoPreviews: Record<string, string> = {},
 ): ListingPreviewSource {
   const photos = PHOTO_KEYS.reduce(
     (accumulator, photoKey) => {
@@ -59,5 +63,16 @@ export function listingDraftToPreviewSource(
     slug: slug || slugify(draft.name),
     photos,
     menu,
+    // The draft's editable shapes, as the save would send them: link row ids
+    // gone, hidden answers blanked, blank shop rows dropped.
+    onlineDetails: onlineDetailsForPayload(draft.onlineDetails, draft),
+    shopItems: shopItemsForPayload(draft.shopItems ?? [], {
+      shouldDropIncomplete: false,
+    }).map((item) => {
+      const preview = shopPhotoPreviews[item.id];
+      return preview && item.photo
+        ? { ...item, photo: { ...item.photo, image: preview } }
+        : item;
+    }),
   };
 }

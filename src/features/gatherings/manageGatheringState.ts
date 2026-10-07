@@ -3,6 +3,7 @@ import type { TFunction } from "../../shared/i18n/types";
 import type { EventVisibility, UpdateEventDto } from "./api/events.api";
 import type { AttendeesResult } from "./api/useAttendees";
 import type { GatheringDetailsDraft } from "./editDetailsDraft";
+import type { GatheringEditableField } from "./GatheringFieldEditor";
 import type { VenueSelection } from "./VenuePicker";
 import type { GatheringDetail } from "./data";
 import { MAX_GATHERING_SPAN_DAYS } from "./createGathering.data";
@@ -24,7 +25,7 @@ import {
   type GatheringFamily,
 } from "./gatheringCatalog";
 import { gatheringWhen } from "./gatheringSchedule";
-import { daysUntil } from "./manageGatheringDates";
+import { dateToDatetimeValue, daysUntil } from "./manageGatheringDates";
 import { MAX_CAPACITY, MIN_CAPACITY } from "./steps/whoChapter.data";
 import {
   ATTENDEE_COUNT,
@@ -49,20 +50,24 @@ export interface GatheringDetailRow {
 
 export interface GatheringState {
   title: string;
-  /** Formatted display string for the "date" details row — derived, never
-   *  edited directly. See `startAt` for the real editable moment. */
+  /** Formatted display string for the "date" details row, derived from
+   *  `startAt` and `endAt` on every change. See `startAt` for the real editable moment. */
   date: string;
-  /** The gathering's real scheduled start — what actually gets sent to the
+  /** The gathering's real scheduled start: what actually gets sent to the
    *  backend on save. Kept in step with `date`/`details` (the display copy)
    *  whenever either changes. */
   startAt: Date;
   /** The gathering's stated end, or `null` when it has none. An end is
    *  optional on a gathering and always has been, so `null` is a real saved
-   *  answer the host can choose rather than a value still to be filled in.
+   *  answer the host can choose, the same as any filled-in value.
    *  Editable in the edit modal, which is what stops a host who moves the
    *  start past a stored end from meeting a 400 with nothing on screen to
    *  change (see `buildEditPatch`). */
   endAt: Date | null;
+  /** The venue as the host wrote it, the value the edit modal's location
+   *  field and the venue row open on. A live gathering with no venue (an
+   *  online one) holds its neighbourhood line, "Online" for most. See
+   *  `liveInitialState`. */
   location: string;
   description: string;
   details: GatheringDetailRow[];
@@ -72,7 +77,7 @@ export interface GatheringState {
   venueListing: { slug: string; name: string } | null;
   /** Who can find and RSVP to this gathering. See `AudienceScopeField`. */
   visibility: EventVisibility;
-  /** The community this gathering is filed to, or `""` for none — settable
+  /** The community this gathering is filed to, or `""` for none, settable
    *  in the edit modal now, same "" sentinel `useGatheringForm` uses. Absent
    *  (`""`) in the demo prototype. */
   communitySlug: string;
@@ -139,7 +144,34 @@ function dateDisplay(
   return gatheringWhen(startAt, endAt, fmt, t, DASHBOARD_DATE_OPTIONS).dateText;
 }
 
-/** The demo dashboard's starting state — the static Pride-Brunch prototype. */
+/**
+ * How the "time" details row renders a schedule: "11:00 – 14:00", the start
+ * alone when there is no stated end, and "(next day)" after an end that falls
+ * on the following morning. Read off the same `gatheringWhen` call shape as
+ * `dateDisplay`, so the two rows always describe one schedule.
+ */
+function timeDisplay(
+  startAt: Date,
+  endAt: Date | null,
+  fmt: Formatters,
+  t: TFunction,
+): string {
+  const when = gatheringWhen(startAt, endAt, fmt, t, DASHBOARD_DATE_OPTIONS);
+  return when.nextDayNote
+    ? `${when.timeText} ${when.nextDayNote}`
+    : when.timeText;
+}
+
+/** The demo prototype's brunch runs 11:00 to 14:00 on `GATHERING_DATE`, the
+ *  hours its "time" details row prints, so the schedule editor opens on the
+ *  times the row shows. */
+function demoScheduleAt(hour: number): Date {
+  const at = new Date(GATHERING_DATE);
+  at.setHours(hour, 0, 0, 0);
+  return at;
+}
+
+/** The demo dashboard's starting state: the static Pride-Brunch prototype. */
 export function demoInitialState(): GatheringState {
   const dateDetail =
     GATHERING_DETAILS.find((detail) => detail.id === "date")?.value ?? "";
@@ -148,9 +180,8 @@ export function demoInitialState(): GatheringState {
   return {
     title: GATHERING_TITLE,
     date: dateDetail,
-    startAt: GATHERING_DATE,
-    // The static prototype runs one afternoon and states no end.
-    endAt: null,
+    startAt: demoScheduleAt(11),
+    endAt: demoScheduleAt(14),
     location: venueDetail,
     description: GATHERING_DESCRIPTION,
     details: GATHERING_DETAILS,
@@ -197,10 +228,18 @@ function persistedCostKind(gathering: GatheringDetail): CostKind {
     : "free";
 }
 
-/** The live dashboard's starting state, seeded from the fetched event. Only the
- *  date and venue become details rows here; the capacity the view-model
- *  carries is kept as `capacity`, which the edit modal opens on and the
- *  attendees bar reads from its own query. */
+/** The live dashboard's starting state, seeded from the fetched event. Its
+ *  details rows are the ones the demo prototype shows: date, time, venue and
+ *  capacity, each the row a focused Overview editor opens from. The time row
+ *  is left out when the schedule reads no time at all, so the row never sits
+ *  empty. The capacity is also kept as `capacity`, which the editors open on
+ *  and the attendees bar reads from its own query.
+ *
+ *  The location and the venue row hold the venue the host wrote. `hood` is
+ *  the neighbourhood line the public cards print (the neighbourhood first,
+ *  then "Online", then the venue), so seeding from it opened the edit modal
+ *  and the venue editor on "Intendente" for a gathering held at a named bar.
+ *  `hood` stays the fallback for a gathering with no venue at all. */
 export function liveInitialState(
   gathering: GatheringDetail,
   fmt: Formatters,
@@ -208,12 +247,15 @@ export function liveInitialState(
 ): GatheringState {
   const endAt = gathering.endAt ?? null;
   const dateValue = dateDisplay(gathering.date, endAt, fmt, t);
+  const timeValue = timeDisplay(gathering.date, endAt, fmt, t);
+  const capacity = gathering.capacity ?? null;
+  const location = gathering.venue || gathering.hood;
   return {
     title: gathering.title,
     date: dateValue,
     startAt: gathering.date,
     endAt,
-    location: gathering.hood,
+    location,
     description: gathering.body,
     details: [
       {
@@ -221,17 +263,31 @@ export function liveInitialState(
         labelKey: "gatherings:manage.details.date",
         value: dateValue,
       },
+      ...(timeValue
+        ? [
+            {
+              id: "time",
+              labelKey: "gatherings:manage.details.time",
+              value: timeValue,
+            },
+          ]
+        : []),
       {
         id: "venue",
         labelKey: "gatherings:manage.details.venue",
-        value: gathering.hood,
+        value: location,
+      },
+      {
+        id: "capacity",
+        labelKey: "gatherings:manage.details.capacity",
+        value: capacityDisplay(capacity, t),
       },
     ],
     venueListingId: gathering.venueListingId ?? null,
     venueListing: gathering.venueListing ?? null,
     visibility: gathering.visibility ?? "members",
     communitySlug: gathering.communitySlug ?? "",
-    capacity: gathering.capacity ?? null,
+    capacity,
     gatheringFamily: gathering.gatheringFamily ?? null,
     eventType: gathering.type || null,
     formatDetails: gathering.formatDetails ?? null,
@@ -253,8 +309,8 @@ export function liveInitialState(
  * The family/format half of an edit draft, read off the persisted state.
  *
  * A stored format that is not a catalog key is the host's own words, so the
- * modal opens on "Something else" with the words in the box rather than on a
- * blank select that would silently drop them on the next save.
+ * modal opens on "Something else" with the words in the box. A blank select
+ * there would silently drop them on the next save.
  *
  * Shared by both surfaces that open the edit modal (the manage dashboard and
  * the detail page's host bar), so the two cannot drift into different readings
@@ -329,7 +385,7 @@ export interface ManageGatheringCounts {
   overviewCounts?: { going: number; waitlist: number; spotsLeft: number };
 }
 
-/** Real in live, static in demo — so the demo prototype reads exactly as it
+/** Real in live, static in demo, so the demo prototype reads exactly as it
  *  always did while a live dashboard shows its own gathering's numbers. */
 export function manageGatheringCounts(
   demoMode: boolean,
@@ -347,7 +403,7 @@ export function manageGatheringCounts(
           overviewCounts: {
             going: attendees.goingCount,
             waitlist: attendees.waitlistCount,
-            // Seats, never rows (LOC-07): a going member who declared two
+            // Counted in seats (LOC-07): a going member who declared two
             // guests occupies three of them.
             spotsLeft: attendees.capacity
               ? Math.max(0, attendees.capacity - attendees.seatsTaken)
@@ -357,22 +413,7 @@ export function manageGatheringCounts(
   };
 }
 
-/** One inline-edited details row. */
-export function applyDetailValue(
-  current: GatheringState,
-  id: string,
-  value: string,
-): GatheringState {
-  return {
-    ...current,
-    details: current.details.map((detail) =>
-      detail.id === id ? { ...detail, value } : detail,
-    ),
-    ...(id === "date" ? { date: value } : {}),
-  };
-}
-
-/** A venue pick from `VenuePicker` — free text, or a real directory listing. */
+/** A venue pick from `VenuePicker`: free text, or a real directory listing. */
 export function applyVenueSelection(
   current: GatheringState,
   selection: VenueSelection,
@@ -389,7 +430,7 @@ export function applyVenueSelection(
 }
 
 /** `draft.startAt` is the modal's local `"yyyy-mm-ddThh:mm"` wire value (no
- *  timezone suffix), which `new Date(...)` parses as local time — the same
+ *  timezone suffix), which `new Date(...)` parses as local time, the same
  *  convention the create-gathering wizard uses for its own date+time fields. */
 function draftStartAt(draft: GatheringDetailsDraft): Date {
   return new Date(draft.startAt);
@@ -439,7 +480,7 @@ export type EditScheduleProblem = "endBeforeStart" | "spanTooLong";
  * A host who moved a 23:00 start to 06:00 used to send a start that landed
  * after the stored end, get `400 endAt must be after startAt` back, and find
  * nothing on the form to change. The end is editable now, so this answers WHY
- * a save is being held rather than letting the API answer it.
+ * a save is being held, before the API gets to answer it.
  *
  * The two rules mirror the wizard's `evaluateSchedule` (useGatheringForm.ts)
  * and, through it, the backend's `assertScheduleValid` exactly. The cap is
@@ -564,10 +605,10 @@ export function canSaveEditDraft(
 }
 
 /**
- * The edit modal only offers a plain-text location field — it can't specify
+ * The edit modal only offers a plain-text location field. It can't specify
  * (or preserve) a directory link, so any change to the location text
- * implicitly detaches an existing one rather than leaving it silently pointing
- * at stale text. An untouched location (only the title/date/etc. changed)
+ * implicitly detaches an existing one, so the link never silently points at
+ * stale text. An untouched location (only the title/date/etc. changed)
  * leaves the link exactly as it was.
  */
 function hasLocationChanged(
@@ -634,6 +675,23 @@ function capacityDisplay(capacity: number | null, t: TFunction): string {
     : t("gatherings:manage.details.capacityValue", { count: capacity });
 }
 
+/**
+ * Whether the draft moves the start or the end. Compared in the draft's own
+ * minute-precision wire values (the ones `editDraftFor` seeds it with), so an
+ * untouched schedule reads as unchanged even when the stored instant carries
+ * seconds.
+ */
+function hasScheduleChanged(
+  current: GatheringState,
+  draft: GatheringDetailsDraft,
+): boolean {
+  const currentEnd = current.endAt ? dateToDatetimeValue(current.endAt) : "";
+  return (
+    draft.startAt !== dateToDatetimeValue(current.startAt) ||
+    draft.endAt !== currentEnd
+  );
+}
+
 /** The saved edit, folded into the dashboard's own state. */
 export function applyEditDraft(
   current: GatheringState,
@@ -646,6 +704,7 @@ export function applyEditDraft(
   const newDateDisplay = dateDisplay(newStartAt, newEndAt, fmt, t);
   const newCapacity = draftCapacity(draft);
   const isCapacityChanged = hasCapacityChanged(current, draft);
+  const isScheduleChanged = hasScheduleChanged(current, draft);
   return {
     ...current,
     title: draft.title,
@@ -657,8 +716,8 @@ export function applyEditDraft(
     visibility: draft.visibility,
     communitySlug: draft.communitySlug,
     // Folded in exactly as they go on the wire, so a second edit in the same
-    // session opens on the family and format the first one saved rather than
-    // on the values the page was seeded with.
+    // session opens on the family and format the first one saved, over the
+    // values the page was seeded with.
     gatheringFamily: draft.gatheringFamily || null,
     eventType: draftEventType(draft),
     formatDetails: draftFormatDetails(draft),
@@ -684,7 +743,13 @@ export function applyEditDraft(
     details: current.details.map((detail) => {
       if (detail.id === "date") return { ...detail, value: newDateDisplay };
       if (detail.id === "venue") return { ...detail, value: draft.location };
-      // Only the demo prototype has this row. It is rewritten only when the
+      // Rewritten only when the schedule moved, so an edit to anything else
+      // keeps the text it has. A live gathering whose schedule read no time
+      // when the page loaded has no such row to rewrite.
+      if (detail.id === "time" && isScheduleChanged) {
+        return { ...detail, value: timeDisplay(newStartAt, newEndAt, fmt, t) };
+      }
+      // Demo and live both carry this row. It is rewritten only when the
       // number changed, so an untouched row keeps the text it arrived with.
       if (detail.id === "capacity" && isCapacityChanged) {
         return { ...detail, value: capacityDisplay(newCapacity, t) };
@@ -695,22 +760,23 @@ export function applyEditDraft(
 }
 
 /**
- * The PATCH body for a saved edit. `current` must be the PRE-edit snapshot —
- * the community comparison below depends on it.
+ * The PATCH body for a saved edit. `current` must be the PRE-edit snapshot:
+ * the location, cover, cost, capacity and community comparisons below
+ * depend on it.
  */
 export function buildEditPatch(
   current: GatheringState,
   draft: GatheringDetailsDraft,
 ): UpdateEventDto {
-  const locationChanged = hasLocationChanged(current, draft);
+  const isLocationChanged = hasLocationChanged(current, draft);
   return {
     title: draft.title,
     description: draft.description,
-    // Reschedules the real event — the backend applies `startAt` on PATCH and
+    // Reschedules the real event. The backend applies `startAt` on PATCH and
     // fans out an "event updated" notice to every attendee/invitee when it
     // actually changes (events.service.ts `update()`'s `materialChanges`
     // check). Never propagated to future series siblings even under
-    // `scope: "future"` — each occurrence keeps its own date (see the
+    // `scope: "future"`: each occurrence keeps its own date (see the
     // backend's `update()` doc).
     startAt: draftStartAt(draft).toISOString(),
     // Sent on EVERY save, as an explicit `null` when the host cleared the end,
@@ -728,8 +794,16 @@ export function buildEditPatch(
     // edit strips `startAt`/`endAt` before touching the siblings, so an
     // absolute end never lands on an occurrence held on another date.
     endAt: draftEndAt(draft)?.toISOString() ?? null,
-    venue: draft.location,
-    ...(locationChanged ? { listingId: null } : {}),
+    // The venue, only when the host changed the location text (see
+    // `hasLocationChanged`), and with it the directory link the plain text
+    // detaches. The server stores any `venue` it receives, and one that
+    // differs from the stored venue counts in `update()`'s `materialChanges`,
+    // which notifies everyone going. The dashboard once seeded the location
+    // from the neighbourhood line, so a title typo fix wrote "Intendente"
+    // over the bar's name and belled the whole guest list. Change-only also
+    // keeps a `scope: "future"` edit from copying this date's venue onto
+    // every later one when the host never touched it.
+    ...(isLocationChanged ? { venue: draft.location, listingId: null } : {}),
     visibility: draft.visibility,
     // Family, format and the details bag, all three unconditional. Unlike
     // `communitySlug` below, none of them re-runs an authorization check on
@@ -776,16 +850,119 @@ export function buildEditPatch(
       ? { capacity: draftCapacity(draft) }
       : {}),
     // Only include `communitySlug` when it actually changed from the PERSISTED
-    // value (`current.communitySlug`, the pre-edit snapshot — never compare
-    // against `draft` itself). The backend re-runs community-membership
+    // value (`current.communitySlug`, the pre-edit snapshot, read before
+    // `applyEditDraft` folds the draft in). The backend re-runs community-membership
     // authorization (`assertMemberBySlug`, 403/404) whenever this key is
     // present at all, so sending it unconditionally would spuriously reject an
     // unrelated edit (e.g. just the title) on an event whose host has since
-    // left the community's roster. "" (no community) sends explicit `null` —
+    // left the community's roster. "" (no community) sends explicit `null`,
     // the edit modal's only way to CLEAR a gathering's community. See
     // `UpdateEventDto` (events.api.ts) for why this is `| null`.
     ...(draft.communitySlug !== current.communitySlug
       ? { communitySlug: draft.communitySlug || null }
       : {}),
   };
+}
+
+/**
+ * Which of the Overview's focused editors a draft changed, compared against
+ * the saved state in the same terms the page's `editDraftFor` seeds a draft
+ * with: the schedule in its minute-precision wire values, the capacity as a
+ * parsed number ("045" reads as 45, "" as no limit), the description as
+ * trimmed text. Each editor touches only its own field, so a field save lists
+ * exactly one.
+ */
+export function changedEditableFields(
+  current: GatheringState,
+  draft: GatheringDetailsDraft,
+): GatheringEditableField[] {
+  const fields: GatheringEditableField[] = [];
+  if (hasScheduleChanged(current, draft)) fields.push("schedule");
+  if (hasCapacityChanged(current, draft)) fields.push("capacity");
+  if (draft.description.trim() !== current.description.trim()) {
+    fields.push("description");
+  }
+  return fields;
+}
+
+/**
+ * The PATCH body for one focused editor's save: that field's keys and
+ * nothing else. The full `buildEditPatch` resends the title, the themes, the
+ * care settings and the start on every save. Under a series
+ * `scope: "future"` edit the server copies whatever the patch carries onto
+ * every later date, so a field save carries its own field only.
+ *
+ * The schedule pair is built exactly as `buildEditPatch` builds it (the end
+ * sent as an explicit `null` when cleared). The capacity goes on the wire
+ * only when the number changed, as `null` for no limit. The description goes
+ * trimmed, the text the dashboard folds in.
+ */
+export function buildFieldPatch(
+  field: GatheringEditableField,
+  current: GatheringState,
+  draft: GatheringDetailsDraft,
+): UpdateEventDto {
+  if (field === "schedule") {
+    return {
+      startAt: draftStartAt(draft).toISOString(),
+      endAt: draftEndAt(draft)?.toISOString() ?? null,
+    };
+  }
+  if (field === "capacity") {
+    return hasCapacityChanged(current, draft)
+      ? { capacity: draftCapacity(draft) }
+      : {};
+  }
+  return { description: draft.description.trim() };
+}
+
+/**
+ * The PATCH body for a focused editor's save when the caller holds only the
+ * draft: every field the draft changed (see `changedEditableFields`), each
+ * through `buildFieldPatch`. `current` must be the PRE-edit snapshot. A draft
+ * that changed nothing gives `{}`.
+ */
+export function buildFieldEditPatch(
+  current: GatheringState,
+  draft: GatheringDetailsDraft,
+): UpdateEventDto {
+  return changedEditableFields(current, draft).reduce<UpdateEventDto>(
+    (patch, field) => ({ ...patch, ...buildFieldPatch(field, current, draft) }),
+    {},
+  );
+}
+
+/**
+ * A focused editor's save gate, checking only the field it edits. The full
+ * `canSaveEditDraft` also checks the title and the venue, which a field
+ * editor never shows, so a draft it refuses would leave Save off with
+ * nothing on screen to fix.
+ *
+ * Save lights only for a real change that the server will take: a readable
+ * start and a schedule `editScheduleProblem` allows; a capacity the stepper
+ * allows (see `editCapacityProblem`) whose number differs from the one the
+ * editor opened on; a description with words in it (the server refuses an
+ * empty one) that differs from the saved text once both are trimmed.
+ * `initial` is the draft the editor opened with.
+ */
+export function canSaveFieldEdit(
+  field: GatheringEditableField,
+  draft: GatheringDetailsDraft,
+  initial: GatheringDetailsDraft,
+): boolean {
+  if (field === "schedule") {
+    return (
+      !Number.isNaN(draftStartAt(draft).getTime()) &&
+      editScheduleProblem(draft) === null &&
+      (draft.startAt !== initial.startAt || draft.endAt !== initial.endAt)
+    );
+  }
+  if (field === "capacity") {
+    return (
+      editCapacityProblem(draft, initial.capacity) === null &&
+      parsedCapacity(draft.capacity) !== parsedCapacity(initial.capacity)
+    );
+  }
+  const description = draft.description.trim();
+  return description.length > 0 && description !== initial.description.trim();
 }

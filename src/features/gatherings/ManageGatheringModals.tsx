@@ -1,16 +1,20 @@
 import { EditDetailsModal } from "./EditDetailsModal";
 import type { GatheringDetailsDraft } from "./editDetailsDraft";
 import { MessageAttendeesModal } from "./MessageAttendeesModal";
-import { SeriesEditScopeModal } from "./SeriesEditScopeModal";
+import {
+  SeriesEditScopeModal,
+  type SeriesScopePromptMode,
+} from "./SeriesEditScopeModal";
 import type { SeriesScope } from "./api/events.api";
 
-/** Which this-vs-future prompt is open, if any (MSG-10). */
-export type SeriesScopeModalMode = "edit" | "cancel" | null;
+/** Which this-vs-future prompt is open, if any (MSG-10). See
+ *  `SeriesScopePromptMode` for what each mode asks. */
+export type SeriesScopeModalMode = SeriesScopePromptMode | null;
 
 /**
  * Every modal the manage dashboard can raise, in one place: edit details, the
  * recurring-series this-vs-future prompt, and the announcement composer.
- * Purely a shell — each modal owns its own state, and every decision about
+ * Purely a shell: each modal owns its own state, and every decision about
  * what to do with the result stays on the page.
  */
 export function ManageGatheringModals({

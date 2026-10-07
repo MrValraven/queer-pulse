@@ -34,6 +34,8 @@ export type AdminUpdateListingDto = Omit<
  * there because the create builder requires one; `path` is dropped because
  * the draft carries the staff path the wizard needs to render, which is not
  * the listing's stored path. No `ownerOffer` is passed, so none is added.
+ * The tags go as the draft holds them: an update keeps the older tags a
+ * listing already carries, which the create body's vocabulary filter drops.
  */
 export function adminDraftToUpdateDto(
   draft: ListingDraft,
@@ -43,7 +45,7 @@ export function adminDraftToUpdateDto(
     path: _path,
     ...business
   } = adminDraftToDto(draft, { publishState: "review" });
-  return business;
+  return { ...business, tags: draft.tags };
 }
 
 /** `GET /admin/listings/:ref/editable`. Admin only. Owner-personal fields

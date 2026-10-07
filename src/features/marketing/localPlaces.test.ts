@@ -2,11 +2,17 @@ import { describe, expect, it } from "vitest";
 import { DIRECTORY_PLACES } from "./directoryPlaces";
 import { VENUES } from "./map.data";
 import {
+  appendUniquePlaces,
   businessToLocal,
+  categoryForScope,
   filterLocalPlaces,
+  isOnlinePlace,
+  isPlaceOpenNow,
+  isSellingOnlinePlace,
   mergeLocalPlaces,
   placeMatchesOwnedBy,
   normalizeName,
+  sortLocalPlaces,
   venueToLocal,
 } from "./localPlaces";
 
@@ -296,5 +302,133 @@ describe("placeMatchesOwnedBy", () => {
     expect(placeMatchesOwnedBy(local, ["bipoc"])).toBe(true);
     expect(placeMatchesOwnedBy(local, ["women", "bipoc"])).toBe(true);
     expect(placeMatchesOwnedBy(local, ["women"])).toBe(false);
+  });
+});
+
+describe("selling online", () => {
+  const locals = DIRECTORY_PLACES.map((place) => businessToLocal(place, true));
+  const bookshop = locals.find(
+    (place) => place.id === "business:livraria-bertha",
+  )!;
+
+  it("counts a place with an online shop as selling online", () => {
+    expect(isSellingOnlinePlace(bookshop)).toBe(true);
+    expect(locals.filter(isSellingOnlinePlace).length).toBeGreaterThan(
+      locals.filter(isOnlinePlace).length,
+    );
+  });
+
+  it("matches a place's category to the online chips in the Online tab", () => {
+    expect(categoryForScope(bookshop, true)).toBe("books-music");
+    expect(categoryForScope(bookshop, false)).toBe("culture");
+    const result = filterLocalPlaces([bookshop], {
+      categories: ["books-music"],
+      query: "",
+      vibes: [],
+      isOnlineScope: true,
+    });
+    expect(result).toEqual([bookshop]);
+  });
+});
+
+describe("online-only listings on the List tab", () => {
+  const handmadeShop = businessToLocal(
+    {
+      ...DIRECTORY_PLACES[0]!,
+      slug: "test-handmade-shop",
+      cat: "handmade",
+      online: true,
+    },
+    true,
+  );
+  const apparelShop = businessToLocal(
+    {
+      ...DIRECTORY_PLACES[0]!,
+      slug: "test-apparel-shop",
+      cat: "apparel",
+      online: true,
+    },
+    true,
+  );
+  const filtersFor = (categories: string[], isOnlineScope: boolean) => ({
+    categories,
+    query: "",
+    vibes: [],
+    isOnlineScope,
+  });
+
+  it("reads a migrated online category through its place counterpart", () => {
+    expect(categoryForScope(handmadeShop, false)).toBe("design");
+    expect(
+      filterLocalPlaces([handmadeShop], filtersFor(["design"], false)),
+    ).toEqual([handmadeShop]);
+  });
+
+  it("leaves an online category with no place counterpart under no chip", () => {
+    expect(categoryForScope(apparelShop, false)).toBe("apparel");
+    for (const placeCategory of ["food", "design", "culture", "health"]) {
+      expect(
+        filterLocalPlaces([apparelShop], filtersFor([placeCategory], false)),
+      ).toEqual([]);
+    }
+    expect(filterLocalPlaces([apparelShop], filtersFor([], false))).toEqual([
+      apparelShop,
+    ]);
+  });
+
+  it("keeps the Online tab reading the online vocabulary", () => {
+    expect(categoryForScope(handmadeShop, true)).toBe("handmade");
+    expect(categoryForScope(apparelShop, true)).toBe("apparel");
+    expect(
+      filterLocalPlaces(
+        [handmadeShop, apparelShop],
+        filtersFor(["handmade"], true),
+      ),
+    ).toEqual([handmadeShop]);
+    expect(
+      filterLocalPlaces([handmadeShop], filtersFor(["design"], true)),
+    ).toEqual([]);
+  });
+});
+
+describe("isPlaceOpenNow", () => {
+  it("never counts an online-only listing as open, whatever hours it kept", () => {
+    const allWeek = Object.fromEntries(
+      ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((day) => [
+        day,
+        { open: true, intervals: [{ from: "00:00", to: "23:59" }] },
+      ]),
+    );
+    const onlinePlace = businessToLocal(
+      { ...DIRECTORY_PLACES[0]!, online: true, hours: allWeek },
+      true,
+    );
+    expect(isPlaceOpenNow(onlinePlace)).toBe(false);
+  });
+});
+
+describe("sortLocalPlaces by neighbourhood", () => {
+  it("puts places with no neighbourhood last", () => {
+    const [first, second] = DIRECTORY_PLACES.map((place) =>
+      businessToLocal(place, true),
+    );
+    const noHood = { ...first!, neighbourhood: "", name: "A first by name" };
+    const withHood = { ...second!, neighbourhood: "Graça" };
+    expect(sortLocalPlaces([noHood, withHood], "hood")).toEqual([
+      withHood,
+      noHood,
+    ]);
+  });
+});
+
+describe("appendUniquePlaces", () => {
+  it("adds only the places not already there", () => {
+    const [first, second] = DIRECTORY_PLACES.map((place) =>
+      businessToLocal(place, true),
+    );
+    expect(appendUniquePlaces([first!], [first!, second!])).toEqual([
+      first,
+      second,
+    ]);
   });
 });

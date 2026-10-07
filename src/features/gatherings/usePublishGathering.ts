@@ -15,6 +15,7 @@ import {
   COHOST_INVITE_DEFAULT_ROLE,
 } from "./createGathering.data";
 import type { GatheringForm } from "./useGatheringForm";
+import { isRefusedVenueListingError } from "./venueListingErrors";
 
 /**
  * Publishing a gathering: the real create mutation, its toasts, and the
@@ -22,15 +23,21 @@ import type { GatheringForm } from "./useGatheringForm";
  *
  * The success screen, the toast and `onPublished` fire only from the
  * mutation's own success, so a rejected create keeps the host on the form
- * with an error toast and nothing celebrated.
+ * with an error toast and nothing celebrated. A create refused for its
+ * linked venue marks that listing on the form, so the venue field can say
+ * what to fix, and hands the host to it through `onVenueRefused`.
  */
 export function usePublishGathering({
   form,
   onPublished,
+  onVenueRefused,
 }: {
   form: GatheringForm;
   /** Runs once the create succeeds (the page clears the stored draft). */
   onPublished: () => void;
+  /** Runs when the server refuses the linked venue (the page opens the venue
+   *  field). */
+  onVenueRefused: () => void;
 }) {
   const { t } = useTranslation();
   const { showToast } = useToast();
@@ -126,8 +133,15 @@ export function usePublishGathering({
           }
         }
       },
-      onError: () =>
-        showToast(t("gatherings:create.toast.publishError"), "error"),
+      onError: (error) => {
+        if (isRefusedVenueListingError(error) && payload.listingId) {
+          form.setRefusedVenueListingId(payload.listingId);
+          showToast(t("gatherings:create.toast.venueRefused"), "error");
+          onVenueRefused();
+          return;
+        }
+        showToast(t("gatherings:create.toast.publishError"), "error");
+      },
       onSettled: () => {
         isPublishInFlightRef.current = false;
       },

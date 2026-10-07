@@ -638,6 +638,8 @@ export const gatherings: Catalog = {
   "create.eyebrow": "List your gathering",
   "create.title": "Create your <em>gathering.</em>",
   "create.toast.publishError": "Couldn't publish your gathering. Try again.",
+  "create.toast.venueRefused":
+    "Your gathering isn't live yet. The venue you picked can't be linked any more, so choose another one.",
   "create.toast.published": "Your gathering is live",
   "create.success.title": "Your gathering <em>is live.</em>",
   "create.success.viewCta": "View on board",
@@ -1167,80 +1169,6 @@ export const gatherings: Catalog = {
   "host.sidebar.capacity": "up to {max}",
 
   // ── Host dashboard, manage, cohosts, QR, album ────────────────────────────
-  // ── Day-of dashboard (GatheringDashboardPage / GatheringDashboardCards) ────
-  "dashboard.backToManage": "Manage gathering",
-  "dashboard.inProgress": "In progress",
-  "dashboard.checkedIn": "Checked in",
-  "dashboard.expected": "Expected",
-  "dashboard.waitlist": "Waitlist",
-  "dashboard.dataRetentionNotice":
-    "Gathering data is deleted 30 days after the event",
-  "dashboard.attendanceRecordsNotice":
-    "Attendance records are never shared publicly",
-  "dashboard.checkedInToast": "{name} checked in",
-
-  // ── Dashboard: check-in column ─────────────────────────────────────────────
-  "dashboard.checkin.heading": "Check-in",
-  "dashboard.checkin.qrAreaLine1": "QR scanner area",
-  "dashboard.checkin.qrAreaLine2": "tap to open camera",
-  "dashboard.checkin.scanCta": "Scan member QR",
-  "dashboard.checkin.orDivider": "or search by name",
-  "dashboard.checkin.searchPlaceholder": "Search guest list…",
-  "dashboard.checkin.matchCount_one": "{count} match",
-  "dashboard.checkin.matchCount_other": "{count} matches",
-  "dashboard.checkin.noMatch": "Not on guest list",
-  "dashboard.checkin.recentHeading": "Recent check-ins",
-  "dashboard.checkin.justNow": "Just now",
-
-  // ── Dashboard: guest list card ─────────────────────────────────────────────
-  "dashboard.guestList.heading": "Guests",
-  "dashboard.guestList.filterAll_one": "All ({count})",
-  "dashboard.guestList.filterAll_other": "All ({count})",
-  "dashboard.guestList.filterCheckedIn_one": "Checked in ({count})",
-  "dashboard.guestList.filterCheckedIn_other": "Checked in ({count})",
-  "dashboard.guestList.filterPending_one": "Not yet ({count})",
-  "dashboard.guestList.filterPending_other": "Not yet ({count})",
-  "dashboard.guestList.searchPlaceholder": "Search guests…",
-  "dashboard.guestList.emptyAllTitle": "No one's on the guest list yet",
-  "dashboard.guestList.emptyAllDescription":
-    "As people reserve their spot, they'll appear here ready to check in. Share your gathering to bring the first guests in.",
-  "dashboard.guestList.emptyFilterTitle": "No guests in this view",
-  "dashboard.guestList.emptyFilterDescription":
-    "No one matches your current filter or search. Try widening it to see everyone expected.",
-  "dashboard.guestList.clearFiltersCta": "Clear filters",
-  "dashboard.guestList.checkInManuallyCta": "Check in manually",
-  "dashboard.guestList.checkedInChip": "Checked in {time}",
-  "dashboard.guestList.expectedChip": "Expected",
-  "dashboard.guestList.waitlistToggle_one": "{count} on waitlist. Promote",
-  "dashboard.guestList.waitlistToggle_other": "{count} on waitlist. Promote",
-  "dashboard.guestList.promoteCta": "Promote",
-  "dashboard.guestList.promotedToast": "{name} promoted to guest list",
-  "dashboard.waitlist.position": "#{position} on waitlist",
-
-  // ── Dashboard: stats column ─────────────────────────────────────────────────
-  "dashboard.stats.arrivalRateHeading": "Arrival rate",
-  "dashboard.stats.now": "Now",
-  "dashboard.stats.attendanceRateLabel": "Attendance rate so far",
-  "dashboard.stats.peakArrivalLabel": "Peak arrival",
-  "dashboard.stats.quickActionsHeading": "Quick actions",
-  "dashboard.stats.messageAllCta": "Message all attendees",
-  "dashboard.stats.messageSentToast_one": "Message sent to {count} guest",
-  "dashboard.stats.messageSentToast_other": "Message sent to {count} guests",
-  "dashboard.stats.startingCta": 'Send "We\'re starting"',
-  "dashboard.stats.startingSentToast": "We're starting. Sent to all guests",
-  "dashboard.stats.wrappedTitle": "Event <em>wrapped</em>",
-  "dashboard.stats.wrappedText_one":
-    "Check-in is closed and a follow-up has been sent to all {count} attendee with the recap and photo link.",
-  "dashboard.stats.wrappedText_other":
-    "Check-in is closed and a follow-up has been sent to all {count} attendees with the recap and photo link.",
-  "dashboard.stats.endOfEventLabel": "End of event",
-  "dashboard.stats.endOfEventText":
-    "When the gathering wraps up, send a follow-up and close the check-in window.",
-  "dashboard.stats.wrappedCheckbox": "The gathering has wrapped up",
-  "dashboard.stats.endEventCta": "End event & send follow-up",
-  "dashboard.stats.readyNote": "Ready to send the follow-up",
-  "dashboard.stats.notReadyNote": "Mark the gathering as wrapped to enable",
-  "dashboard.stats.followUpToast": "Follow-up sent. Check-in closed",
 
   // ── Manage page header (ManageGatheringPage) ────────────────────────────────
   "manage.eyebrow": "Hosting",
@@ -1248,7 +1176,7 @@ export const gatherings: Catalog = {
   "manage.status.approvedDaysToGo_other": "Approved · {count} days to go",
   "manage.actions.editDetails": "Edit details",
   "manage.actions.messageAttendees": "Message attendees",
-  "manage.actions.dayOfDashboard": "Day-of dashboard",
+  "manage.actions.openCheckin": "Open check-in",
   "manage.linkCopiedToast": "Link copied!",
   "manage.linkCopyFailedToast":
     "We couldn't reach your clipboard. Copy the link from the share card instead.",
@@ -1269,7 +1197,8 @@ export const gatherings: Catalog = {
   "manage.details.capacityUnlimited": "No limit",
   "manage.overview.editCta": "Edit",
   "manage.overview.descriptionLabel": "Description",
-  "manage.overview.descriptionNoun": "description",
+  "manage.overview.editAria": "Edit {label}",
+  "manage.overview.savedToast": "Saved. It's live on the listing.",
   "manage.overview.lastEdited": "Last edited {time}",
 
   // ── Manage: attendees tab ────────────────────────────────────────────────────
@@ -1341,12 +1270,12 @@ export const gatherings: Catalog = {
   "manage.tabs.attendees": "Attendees",
   "manage.tabs.messages": "Messages",
   "manage.tabs.settings": "Settings",
+  "manage.tabs.checkin": "Check-in",
 
   // ── Manage: shared modal chrome ───────────────────────────────────────────────
   "manage.cancelCta": "Cancel",
 
   // ── Manage: edit-details modal ────────────────────────────────────────────────
-  "manage.editModal.eyebrow": "Edit details",
   "manage.editModal.title": "Update your gathering",
   "manage.editModal.sub":
     "Changes go live on the public listing. Attendees are notified of date or venue changes.",
@@ -1382,7 +1311,9 @@ export const gatherings: Catalog = {
   "manage.seriesScope.eyebrow": "Recurring gathering",
   "manage.seriesScope.edit.title": "Apply this <em>change</em> to…",
   "manage.seriesScope.edit.sub":
-    "This gathering repeats. Choose whether your edit covers just this date or every date still to come. Every future date takes this date's title, description, place, audience, format, care and RSVP settings, replacing what it had. Its cover, cost and community change only when you changed them here.",
+    "This gathering repeats. Choose whether your edit covers just this date or every date still to come. Every future date takes this date's title, description, audience, format, care and RSVP settings, replacing what it had. Its place, cover, cost, capacity and community change only when you changed them here.",
+  "manage.seriesScope.editField.sub":
+    "This gathering repeats. Choose whether this change covers just this date or every date still to come.",
   "manage.seriesScope.edit.thisCta": "Just this date",
   "manage.seriesScope.edit.futureCta": "This and every future date",
   "manage.seriesScope.cancel.title": "Cancel <em>which dates?</em>",
@@ -1436,10 +1367,22 @@ export const gatherings: Catalog = {
   "manage.invite.successMeta_one": "Sent just now · {count} invited",
   "manage.invite.successMeta_other": "Sent just now · {count} invited",
 
-  // ── Manage: inline-edit modal ──────────────────────────────────────────────────
-  "manage.inlineEdit.eyebrow": "Edit",
-  "manage.inlineEdit.title": "Edit {label}",
-  "manage.inlineEdit.saveCta": "Save",
+  // ── Manage: single-field editors (GatheringFieldEditor) ──────────────────────
+  "manage.fieldEditor.scheduleTitle": "Date and time",
+  "manage.fieldEditor.scheduleSub":
+    "Everyone who RSVP'd or was invited is notified when the start date or time changes.",
+  "manage.fieldEditor.venueSub":
+    "Everyone who RSVP'd or was invited is notified when the venue changes.",
+  "manage.fieldEditor.capacitySub":
+    "Sets how many people can say they're going.",
+  "manage.fieldEditor.descriptionSub": "Shows on the public listing.",
+  "manage.fieldEditor.descriptionLeft_one": "{count} character left",
+  "manage.fieldEditor.descriptionLeft_other": "{count} characters left",
+  "manage.fieldEditor.capacityUnlimitedHint":
+    "Anyone can RSVP. There's no cap.",
+  "manage.fieldEditor.descriptionCount_one": "{length} character",
+  "manage.fieldEditor.descriptionCount_other": "{length} characters",
+  "manage.fieldEditor.saveShortcut": "<kbd>{keys}</kbd> to save",
 
   // ── Venue picker (VenuePicker) — used by the manage venue modal and the
   //    create-gathering wizard's place fields (steps/PlaceFields.tsx) ──────
@@ -1450,6 +1393,8 @@ export const gatherings: Catalog = {
   "venuePicker.freeTextPlaceholder": "Venue name",
   "venuePicker.fromDirectory": "From the local directory",
   "venuePicker.change": "Change",
+  "venuePicker.refusedError":
+    "This venue can't be linked to a gathering any more. Tap Change to pick another or type the name in yourself.",
 
   // ── Cohosts (CohostManager / AddCohostModal) ─────────────────────
   "cohost.panelTitle": "Cohosts",
@@ -1491,22 +1436,6 @@ export const gatherings: Catalog = {
     "Optional. They see this date on the invite and can still answer sooner.",
   "cohost.addModal.sendCta": "Send invite",
   "cohost.addModal.backCta": "Pick someone else",
-
-  // ── QR check-in scanner (QrScanModal) ──────────────────────────────────────────
-  "qr.eyebrow": "Check-in",
-  "qr.title": "Scan member QR",
-  "qr.readingHint": "Reading QR code…",
-  "qr.pointHint": "Point the camera at a member QR code",
-  "qr.scanningCta": "Scanning…",
-  "qr.allCheckedInCta": "Everyone is checked in",
-  "qr.simulateCta": "Simulate scan",
-  "qr.demoNote": "Demo mode. No real camera is used.",
-  "qr.closeAria": "Close",
-  "qr.success.ariaLabel": "Checked in",
-  "qr.success.title": "Checked <em>in.</em>",
-  "qr.success.scannedMeta": "{pronouns} · QR scanned",
-  "qr.success.scanNextCta": "Scan next",
-  "qr.success.doneCta": "Done",
 
   // ── Photo album download (DownloadAlbumModal) ──────────────────────────────────
   "album.loading.title": "Preparing album…",
@@ -1650,7 +1579,6 @@ export const gatherings: Catalog = {
   "events.freeTag": "Free",
 
   // ── LOC-03: the door ──────────────────────────────────────────────────────
-  "door.expectedSeats": "Seats expected",
   "door.checkInCta": "Check in",
   "door.checkInAria": "Check in {name}",
   "door.arrivedAt": "Arrived {time}",
@@ -1667,9 +1595,6 @@ export const gatherings: Catalog = {
   "door.emptyTitle": "Nobody on the list yet",
   "door.emptyDescription":
     "As people RSVP they show up here, ready to check in at the door.",
-  "door.notYoursTitle": "This door isn't yours to open",
-  "door.notYoursDescription":
-    "Only the host and co-hosts of a gathering can see who's coming to it.",
   // Shown in place of the arrived count once a gathering is past its
   // attendance retention window. A deliberate privacy choice, so it reads as
   // something the platform does rather than something that went wrong. Zero
@@ -1681,17 +1606,11 @@ export const gatherings: Catalog = {
   // used to be. Deliberately different wording from the note above it: the
   // two sit on one screen, so repeating that sentence verbatim would read as
   // a rendering fault rather than an explanation.
-  "door.checkInsNotKeptFilters":
-    "The arrival filters are gone because we cleared this gathering's check-ins, so everyone on the list shows below.",
   // Shown in place when the server refuses a check-in on a gathering past its
   // attendance window. The host did nothing wrong, so it states what the
   // platform did rather than reading as a failure, and it offers no retry.
   "door.checkInClosedNotice":
     "Check-in is closed for this gathering. We cleared its arrival records once the check-in window passed, so no new ones can be added.",
-  "door.scan.heading": "At the door",
-  "door.scan.lead":
-    "Read someone's membership card, or find them on the list below.",
-  "door.scan.openCta": "Read a card",
   "door.scan.eyebrow": "Check in",
   "door.scan.title": "Read a membership card",
   "door.scan.viewfinderAria": "Camera view for reading a membership card",
@@ -1715,8 +1634,55 @@ export const gatherings: Catalog = {
     "Every membership card carries this under its code. Paste or type it and it works the same way.",
   "door.scan.codePlaceholder": "Paste or type the code",
   "door.scan.checkInCta": "Check in",
-  "door.scan.checkingCta": "Checking in…",
   "door.scan.doneCta": "Done",
+
+  // ── Check-in tab (2026-10-07) ─────────────────────────────────────────────
+  "checkin.meter.arrived_one": "{count} of {total} arrived",
+  "checkin.meter.arrived_other": "{count} of {total} arrived",
+  "checkin.meter.seats_one": "{count} seat",
+  "checkin.meter.seats_other": "{count} seats",
+  "checkin.meter.people_one": "{count} person",
+  "checkin.meter.people_other": "{count} people",
+  "checkin.meter.guests_one": "+ {count} guest",
+  "checkin.meter.guests_other": "+ {count} guests",
+  "checkin.meter.waitlist": "Waitlist",
+  "checkin.meter.progressAria": "Arrivals so far",
+  "checkin.meter.everyoneHere": "Everyone's here",
+  "checkin.state.upcoming": "Starts {date}",
+  "checkin.state.startsInHours": "Starts in {hours}h {minutes}m",
+  "checkin.state.startsInMinutes_one": "Starts in {count} minute",
+  "checkin.state.startsInMinutes_other": "Starts in {count} minutes",
+  "checkin.state.live": "Live now",
+  "checkin.state.ended": "Ended",
+  "checkin.toolbar.searchLabel": "Search guests",
+  "checkin.toolbar.searchPlaceholder": "Search guests…",
+  "checkin.toolbar.clearSearch": "Clear search",
+  "checkin.toolbar.scanCta": "Scan card",
+  "checkin.toolbar.focusCta": "Focus mode",
+  "checkin.toolbar.exitFocusCta": "Exit focus mode",
+  "checkin.focus.regionLabel": "Check-in, focus mode",
+  "checkin.groups.expected_one": "Still to arrive ({count})",
+  "checkin.groups.expected_other": "Still to arrive ({count})",
+  "checkin.groups.arrived_one": "Arrived ({count})",
+  "checkin.groups.arrived_other": "Arrived ({count})",
+  "checkin.groups.nobodyLeft": "Nobody left to arrive.",
+  "checkin.row.guests_one": "+{count} guest",
+  "checkin.row.guests_other": "+{count} guests",
+  "checkin.row.accessNeeds": "Access needs",
+  "checkin.row.checkedInToast": "{name} checked in",
+  "checkin.notOnList.title": 'No one called "{query}" is going',
+  "checkin.notOnList.description":
+    "If they haven't RSVPed yet, they can do it now on their own phone.",
+  "checkin.notOnList.showCodeCta": "Show RSVP code",
+  "checkin.notOnList.codeTitle": "Scan to RSVP",
+  "checkin.notOnList.codeLabel": "Code that opens this gathering's page",
+  "checkin.scan.welcome": "Welcome, {name}",
+  "checkin.scan.repeat": "{name} arrived at {time}",
+  "checkin.scan.refusedTitle": "Can't check in",
+  "checkin.scan.ready": "Ready for the next card",
+  "checkin.scan.dismiss": "Dismiss",
+  "checkin.footer.retention":
+    "Gathering data is deleted 30 days after the event. Attendance records are never shared publicly.",
 
   // ── LOC-04: where it is, and who can get in ───────────────────────────────
   "gathering.where.heading": "Getting there",
@@ -1778,7 +1744,7 @@ export const gatherings: Catalog = {
 
   // ── LOC-08: the host's own door ───────────────────────────────────────────
   "manage.bans.eyebrow": "This gathering only",
-  "manage.bans.title": "Bar {name} from this gathering",
+  "manage.bans.title": "Ban {name} from this gathering",
   "manage.bans.sub":
     "They won't be told, and they won't be able to RSVP again.",
   "manage.bans.explainer":
@@ -1787,20 +1753,20 @@ export const gatherings: Catalog = {
   "manage.bans.reasonHelper":
     "Only the organisers ever see this. It is never sent to them.",
   "manage.bans.reasonPlaceholder": "What happened, in your own words",
-  "manage.bans.barCta": "Bar them",
-  "manage.bans.barringCta": "Barring…",
-  "manage.bans.barShortCta": "Bar",
-  "manage.bans.barAria": "Bar {name} from this gathering",
-  "manage.bans.barredToast": "{name} is barred from this gathering",
+  "manage.bans.barCta": "Ban them",
+  "manage.bans.barringCta": "Banning…",
+  "manage.bans.barShortCta": "Ban",
+  "manage.bans.barAria": "Ban {name} from this gathering",
+  "manage.bans.barredToast": "{name} is banned from this gathering",
   "manage.bans.errorToast": "That didn't go through. Try again in a moment.",
-  "manage.bans.listHeading_one": "Barred (1)",
-  "manage.bans.listHeading_other": "Barred ({count})",
-  "manage.bans.emptyTitle": "Nobody is barred",
+  "manage.bans.listHeading_one": "Banned (1)",
+  "manage.bans.listHeading_other": "Banned ({count})",
+  "manage.bans.emptyTitle": "Nobody is banned",
   "manage.bans.emptyDescription":
     "If you ever need to keep someone away from this one gathering, you can do it from their row above.",
-  "manage.bans.barredOn": "Barred {date}",
-  "manage.bans.liftCta": "Lift",
-  "manage.bans.liftAria": "Lift the bar on {name}",
+  "manage.bans.barredOn": "Banned {date}",
+  "manage.bans.liftCta": "Unban",
+  "manage.bans.liftAria": "Unban {name}",
   "manage.bans.liftedToast": "{name} can RSVP again",
   "rsvpControl.refusedToast": "The host has removed you from this gathering.",
   "rsvpControl.goneToast": "This gathering isn't there any more.",
@@ -2005,7 +1971,7 @@ export const gatherings: Catalog = {
 
   // PRD-190 — host tooling: run a gathering again, and take the door list
   // offline. The export button used to raise a toast and produce no file.
-  "manage.overview.duplicateCta": "Run this again",
+  "manage.overview.duplicateCta": "Duplicate gathering",
   "manage.attendees.exportingCta": "Exporting…",
   "manage.attendees.exportDemoToast":
     "There's no real guest list to export in the demo.",

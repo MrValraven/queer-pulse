@@ -5,13 +5,16 @@ import { ANCHOR, validateSocials } from "../listBusiness.data";
 import type { ListingForm } from "../useListingForm";
 import { ListBusinessLocationField } from "../ListBusinessLocationField";
 import { ListingHoursEditor } from "../ListingHoursEditor";
+import { AlsoSellsOnlineField } from "./AlsoSellsOnlineField";
+import { OnlineSellingFields } from "./OnlineSellingFields";
 import { SOCIAL_FIELDS } from "./practicalFields.data";
 import styles from "../ListBusinessPage.module.css";
 
 /**
- * The practical field body: where the place is, when it is open, and how to
- * reach it online. An online-only business (the toggle sits with the basics)
- * gets a short note in place of the address and no hours at all.
+ * The practical field body. A place: where it is, when it is open, and its
+ * optional "We also sell online" section. An online-only business: "How
+ * people buy from you" (main link through the reply note), which replaces the
+ * address and the hours. Both end with the contact rows.
  *
  * Shared by the create wizard's step 3 pane (`StepPractical`) and the owner
  * editor's Practical section. Fragment, so each field stays a direct child of
@@ -36,17 +39,23 @@ export function PracticalFields({
 
   return (
     <>
-      <ListBusinessLocationField draft={draft} set={set} />
-
-      {!draft.online && (
+      {draft.online ? (
+        <OnlineSellingFields form={form} variant="online" />
+      ) : (
         <>
+          <ListBusinessLocationField draft={draft} set={set} />
           <ListingHoursEditor form={form} />
           {hoursExtras}
+          <AlsoSellsOnlineField form={form} />
         </>
       )}
 
       <h3 className={styles.groupH}>
-        {t("marketing:listBusiness.step3.onlineHeading")}
+        {t(
+          draft.online
+            ? "marketing:listBusiness.step3.onlineHeadingOnline"
+            : "marketing:listBusiness.step3.onlineHeading",
+        )}
       </h3>
       <p className={styles.onlineHint}>
         {t("marketing:listBusiness.step3.onlineHint")}

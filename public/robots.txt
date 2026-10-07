@@ -28,6 +28,7 @@ Disallow: /work
 Disallow: /economy
 Disallow: /admin
 Disallow: /marketing-videos/
+Disallow: /brand/logo-concepts/
 Disallow: /mod
 Disallow: /feed
 Disallow: /search

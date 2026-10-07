@@ -3,6 +3,7 @@ import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { listingDtoToPending } from "../../marketing/listBusiness/api/listings.adapters";
 import { BLANK_OWNER_PERSONAL_FIELDS } from "../../marketing/listBusiness/ownerPersonalFields";
 import { toMenuDraft } from "../../marketing/listBusiness/listingMenu.data";
+import { normalizeOnlineDetails } from "../../marketing/listBusiness/listingOnline.data";
 import { toServiceRows } from "../../marketing/listBusiness/listingServices.data";
 import {
   slugify,
@@ -45,6 +46,7 @@ function demoCreatedListing({
     // same way `listingDtoToPending` does on the live path.
     services: toServiceRows(business.services),
     menu: toMenuDraft(business.menu),
+    onlineDetails: normalizeOnlineDetails(business.onlineDetails),
     // The listing exists, so the affirming baseline applies to it. Whoever
     // accepts the handover agrees to it in their own name.
     affirmingBaselineAccepted: true,

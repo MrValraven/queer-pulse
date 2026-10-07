@@ -1,7 +1,6 @@
 import { FiArrowRight } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { gatheringDashboardPath } from "./data";
 import styles from "./ManageGatheringPage.module.css";
 
 /** Split a `"Title: subtitle"` heading so the half after the colon renders as
@@ -20,20 +19,28 @@ function renderTitle(title: string) {
  * The manage dashboard's page header: status line and the host's three primary
  * actions. "Message attendees" posts a real announcement in both modes now
  * (LOC-06); it used to be hidden in live, because the only send behind it was
- * a local boolean.
+ * a local boolean. "Open check-in" switches to the Check-in tab, and leads as
+ * the primary action while the door is open.
  */
 export function ManageGatheringHeader({
   title,
   daysToGo,
-  slug,
   onEditDetails,
   onMessageAttendees,
+  isCheckinLive,
+  isCheckinActive,
+  onOpenCheckin,
 }: {
   title: string;
   daysToGo: number;
-  slug: string;
   onEditDetails: () => void;
   onMessageAttendees: () => void;
+  /** The door window is open now, so Check-in leads as the primary action. */
+  isCheckinLive: boolean;
+  /** Check-in is the tab on show, so its button steps back to ghost. */
+  isCheckinActive: boolean;
+  /** Switches the page to its Check-in tab. */
+  onOpenCheckin: () => void;
 }) {
   const { t } = useTranslation();
   return (
@@ -44,8 +51,15 @@ export function ManageGatheringHeader({
       <div className={styles.title}>{renderTitle(title)}</div>
       <div className={styles.phRow}>
         <div className={styles.status}>
-          <div className={styles.statusDot} />{" "}
-          {t("gatherings:manage.status.approvedDaysToGo", { count: daysToGo })}
+          <div
+            className={isCheckinLive ? styles.liveDot : styles.statusDot}
+            aria-hidden
+          />{" "}
+          {isCheckinLive
+            ? t("gatherings:checkin.state.live")
+            : t("gatherings:manage.status.approvedDaysToGo", {
+                count: daysToGo,
+              })}
         </div>
         <div className={styles.actions}>
           <Button
@@ -63,11 +77,11 @@ export function ManageGatheringHeader({
             {t("gatherings:manage.actions.messageAttendees")}
           </Button>
           <Button
-            variant="primary"
+            variant={isCheckinLive && !isCheckinActive ? "primary" : "ghost"}
             className={styles.actionBtn}
-            to={gatheringDashboardPath(slug)}
+            onClick={onOpenCheckin}
           >
-            {t("gatherings:manage.actions.dayOfDashboard")}{" "}
+            {t("gatherings:manage.actions.openCheckin")}{" "}
             <FiArrowRight aria-hidden />
           </Button>
         </div>

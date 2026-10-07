@@ -1,0 +1,117 @@
+/* The IOSS box sits under "ships from". The CheckLine card is its only
+   frame, so the copy keeps the full column width at 360. */
+.vatRow {
+  margin-top: -4px;
+}
+
+/* "Ships from": content-sized chips that wrap, with a tick on the picked one
+   like the ChipSelect groups above it. On a touch screen an invisible band
+   brings each chip's target to 44px without moving the layout. */
+.shipsChip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.shipsChip svg {
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+}
+
+@media (pointer: coarse) {
+  .shipsChip::before {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    top: 50%;
+    height: 44px;
+    transform: translateY(-50%);
+  }
+}
+
+/* One extra link: platform, address, remove. On a phone each row is its own
+   small paper card, the platform on a line above the address and the remove
+   button, so the pairs read as pairs. From 521px the three sit on one line
+   and the card falls away. */
+.linkRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: center;
+  padding: 12px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-12);
+}
+
+.platform {
+  grid-column: 1 / -1;
+  min-width: 0;
+}
+
+.linkRows {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+@media (min-width: 521px) {
+  .linkRow {
+    grid-template-columns: minmax(0, 11rem) minmax(0, 1fr) auto;
+    padding: 0;
+    background: none;
+    border: 0;
+    border-radius: 0;
+  }
+
+  .platform {
+    grid-column: auto;
+  }
+
+  .linkRows {
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+}
+
+.addRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.hint {
+  font-size: var(--text-12-5);
+  color: var(--ink-40);
+}
+
+.rowError {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-size: var(--text-12-5);
+  color: var(--accent-text);
+}
+
+/* The review step's VAT sentence under "Ships from": a quieter note on its
+   own line, so the long sentence does not outweigh the answer above it. */
+.recapNote {
+  display: block;
+  margin-top: 4px;
+  font-size: var(--text-12-5);
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+/* The inner labels of a two-control field (registration body and number) in
+   sentence case, so they read as parts of the uppercase group label above
+   them. */
+.subField > label {
+  font-size: var(--text-12-5);
+  letter-spacing: 0;
+  text-transform: none;
+}

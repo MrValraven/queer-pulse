@@ -515,3 +515,84 @@ describe("conversation detail entry", () => {
     });
   });
 });
+
+// A host or co-host at another device of the same door checked a guest in or
+// undid one. The frame names the gathering, the guest's slug and the change,
+// and the door queries refetch.
+describe("gathering:checkin door refresh", () => {
+  const frame = {
+    eventSlug: "rooftop-supper",
+    memberSlug: "mara",
+    change: "checked_in",
+  };
+
+  async function wireDoor() {
+    const realtimeModule = await loadRealtime();
+    const { queryClient } = await import("./queryClient");
+    const { DOOR_LINGER_MS } =
+      await import("../../features/gatherings/checkin/checkinLinger");
+    const invalidateSpy = vi.spyOn(queryClient, "invalidateQueries");
+    await mount(realtimeModule);
+    const frameCall = socket.on.mock.calls.find(
+      (registration) => registration[0] === "gathering:checkin",
+    );
+    return {
+      handler: frameCall?.[1] as (data: unknown) => void,
+      invalidateSpy,
+      queryClient,
+      lingerMs: DOOR_LINGER_MS,
+    };
+  }
+
+  it("refetches the roster and door groups once the linger has passed", async () => {
+    const { handler, invalidateSpy, lingerMs } = await wireDoor();
+    vi.useFakeTimers();
+    try {
+      handler(frame);
+      expect(invalidateSpy).not.toHaveBeenCalled();
+      vi.advanceTimersByTime(lingerMs);
+      expect(invalidateSpy).toHaveBeenCalledTimes(1);
+      expect(invalidateSpy).toHaveBeenCalledWith({
+        queryKey: ["attendees", "rooftop-supper", false],
+      });
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it("coalesces a burst of frames into one refetch", async () => {
+    const { handler, invalidateSpy, lingerMs } = await wireDoor();
+    vi.useFakeTimers();
+    try {
+      handler(frame);
+      handler({ ...frame, memberSlug: "ines" });
+      handler({ ...frame, change: "undone" });
+      vi.advanceTimersByTime(lingerMs);
+      expect(invalidateSpy).toHaveBeenCalledTimes(1);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it("re-arms while a check-in is in flight, then refreshes once it settles", async () => {
+    const { handler, invalidateSpy, queryClient, lingerMs } = await wireDoor();
+    const isMutatingSpy = vi
+      .spyOn(queryClient, "isMutating")
+      .mockReturnValue(1);
+    vi.useFakeTimers();
+    try {
+      handler(frame);
+      vi.advanceTimersByTime(lingerMs * 2);
+      expect(isMutatingSpy).toHaveBeenCalledWith({
+        mutationKey: ["check-in", "rooftop-supper"],
+      });
+      expect(invalidateSpy).not.toHaveBeenCalled();
+      isMutatingSpy.mockReturnValue(0);
+      vi.advanceTimersByTime(lingerMs);
+      expect(invalidateSpy).toHaveBeenCalledTimes(1);
+    } finally {
+      vi.useRealTimers();
+      isMutatingSpy.mockRestore();
+    }
+  });
+});

@@ -1,0 +1,30 @@
+.layer {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-focus-layer);
+  background: var(--cream);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  /* The consent banner paints over the layer on a first visit and publishes
+     its height as `--consent-inset` (ConsentBanner). That height already holds
+     the home indicator inset, so the larger of the two keeps the last guest
+     rows scrolling clear of the banner. The padding also insets the edge a
+     sticky child pins to, which lifts the phone Scan dock above the banner. */
+  padding: var(--gap-lg) var(--wrap-px)
+    calc(
+      var(--gap-lg) +
+        max(var(--consent-inset, 0px), env(safe-area-inset-bottom))
+    );
+  padding-top: max(var(--gap-lg), env(safe-area-inset-top));
+}
+
+/* The inline slot. flow-root keeps the panel's margins inside it, so the
+   measured height the placeholder copies is the space the panel really took. */
+.slot {
+  display: flow-root;
+}
+
+.panel {
+  max-width: var(--maxw-page);
+  margin: 0 auto;
+}

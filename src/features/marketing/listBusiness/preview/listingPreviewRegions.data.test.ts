@@ -5,6 +5,7 @@ import {
   type OwnerVisibility,
 } from "../listBusiness.data";
 import { blankDraft } from "../listingFormDraft";
+import { normalizeOnlineDetails } from "../listingOnline.data";
 import { emptyAccessibilityAnswers } from "../listingAccessibility.data";
 import { BLANK_OWNER_PERSONAL_FIELDS } from "../ownerPersonalFields";
 import {
@@ -292,32 +293,23 @@ describe("online listings", () => {
     ).toBe(true);
   });
 
-  it("points the hours and their tools at the card's status line alone", () => {
+  it("says an online listing shows no hours or special dates", () => {
     for (const anchor of [ANCHOR.hours, ANCHOR.hoursTools]) {
       expect(placementForAnchor(anchor, onlineNamed), anchor).toEqual({
-        kind: "preview",
-        regions: ["status"],
+        kind: "notShown",
         captionKey: `${CAPTION_PREFIX}hoursOnline`,
       });
-      expect(
-        highlightedRegionsFor(
-          placementForAnchor(anchor, onlineNamed),
-          onlineNamed,
-        ),
-        anchor,
-      ).toEqual(["status"]);
     }
+    expect(placementForAnchor(ANCHOR.hoursExceptions, onlineNamed)).toEqual({
+      kind: "notShown",
+      captionKey: `${CAPTION_PREFIX}hoursExceptionsOnline`,
+    });
   });
 
-  it("says the hours note and special dates leave the page", () => {
+  it("says the hours note leaves the page", () => {
     expect(placementForAnchor(ANCHOR.hoursNote, onlineNamed)).toEqual({
       kind: "notShown",
       captionKey: `${CAPTION_PREFIX}hoursNoteOnline`,
-    });
-    expect(placementForAnchor(ANCHOR.hoursExceptions, onlineNamed)).toEqual({
-      kind: "preview",
-      regions: ["status"],
-      captionKey: `${CAPTION_PREFIX}hoursExceptionsOnline`,
     });
     expect(
       placementForAnchor(ANCHOR.hoursNote, { ...onlineNamed, online: false })
@@ -327,7 +319,7 @@ describe("online listings", () => {
 
   it("outlines no stand-in meta line for Online on the placeholder card", () => {
     // The placeholder card's meta line never says Online, so the caption
-    // falls back to the "once it has a name" line instead of "here".
+    // falls back to the "once it has a name" line and never says "here".
     for (const anchor of [ANCHOR.online, ANCHOR.hood]) {
       expect(
         highlightedRegionsFor(
@@ -356,7 +348,99 @@ describe("online listings", () => {
   });
 });
 
+describe("selling online", () => {
+  const sellingDetails = normalizeOnlineDetails({
+    mainLink: { url: "fiosolto.pt", kind: "shop" },
+    fulfilment: ["shipsEu"],
+  });
+  const onlineSeller = draftWith({
+    name: "Fio Solto",
+    online: true,
+    onlineDetails: sellingDetails,
+  });
+  const placeWithShop = draftWith({
+    name: "Livraria Rosa",
+    hasOnlineShop: true,
+    onlineDetails: sellingDetails,
+  });
+  const plainPlace = draftWith({ name: "Livraria Rosa" });
+
+  it("outlines the card's Visit and the ordering block for the main link", () => {
+    expect(
+      highlightedRegionsFor(
+        placementForAnchor(ANCHOR.mainLink, onlineSeller),
+        onlineSeller,
+      ),
+    ).toEqual(["visit", "ordering"]);
+    expect(
+      highlightedRegionsFor(
+        placementForAnchor(ANCHOR.mainLink, placeWithShop),
+        placeWithShop,
+      ),
+    ).toEqual(["ordering"]);
+  });
+
+  it("puts how people get it on an online card's status line", () => {
+    expect(renderedPreviewRegions(onlineSeller).has("status")).toBe(true);
+    const silent = {
+      ...onlineSeller,
+      onlineDetails: normalizeOnlineDetails({}),
+    };
+    expect(renderedPreviewRegions(silent).has("status")).toBe(false);
+  });
+
+  it("says a place that sells nothing online shows none of the online fields", () => {
+    for (const anchor of [ANCHOR.mainLink, ANCHOR.payments, ANCHOR.replyNote]) {
+      expect(placementForAnchor(anchor, plainPlace)?.kind, anchor).toBe(
+        "notShown",
+      );
+    }
+  });
+
+  it("keeps the 18+ acknowledgement private", () => {
+    expect(placementForAnchor(ANCHOR.adultTerms, onlineSeller)?.kind).toBe(
+      "private",
+    );
+  });
+
+  it("draws the ordering block only for a listing that sells online", () => {
+    expect(renderedPreviewRegions(placeWithShop).has("ordering")).toBe(true);
+    expect(renderedPreviewRegions(plainPlace).has("ordering")).toBe(false);
+  });
+
+  it("draws the Visit spot once an online listing has a main link", () => {
+    expect(renderedPreviewRegions(onlineSeller).has("visit")).toBe(true);
+    expect(
+      renderedPreviewRegions(
+        draftWith({ name: "Fio Solto", online: true }),
+      ).has("visit"),
+    ).toBe(false);
+  });
+});
+
 describe("other draft-aware placements", () => {
+  it("keeps the trading-state placement of an unnamed place", () => {
+    expect(
+      placementForAnchor(ANCHOR.operatingState, draftWith({ name: "" })),
+    ).toEqual({
+      kind: "preview",
+      regions: ["status"],
+      captionKey: `${CAPTION_PREFIX}operatingState`,
+    });
+  });
+
+  it("gives an unnamed online listing with no status line the online caption", () => {
+    expect(
+      placementForAnchor(
+        ANCHOR.operatingState,
+        draftWith({ name: "", online: true }),
+      ),
+    ).toEqual({
+      kind: "fullPage",
+      captionKey: `${CAPTION_PREFIX}operatingStateOnline`,
+    });
+  });
+
   it("reads the neighbourhood of an online listing as the online toggle", () => {
     expect(
       placementForAnchor(ANCHOR.hood, draftWith({ online: true }))?.captionKey,

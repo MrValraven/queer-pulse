@@ -10,11 +10,13 @@ import {
   getPlace,
   type DirectoryPlace,
 } from "../directoryPlaces";
+import { ADULT_ONLINE_DIRECTORY_PLACES } from "../directoryOnlinePlaces.data";
 import type { AccessibilitySlug } from "../listBusiness/listingAccessibility.data";
 import {
   normalizeOwnedBy,
   type ListingOwnedBy,
 } from "../listBusiness/listingOwnedBy.data";
+import { isSellingOnline } from "../listBusiness/listingOnline.data";
 import {
   cardDtoToPlace,
   detailDtoToPlace,
@@ -103,6 +105,9 @@ export interface DirectoryPlacesPageFilters {
   /** Ownership tags, ANY of which a listing must carry — sent server-side as
    * `owned`. Empty/absent = no restriction. */
   owned?: ListingOwnedBy[];
+  /** Only listings that sell online: sent as `online=true` live, where the
+   *  server narrows and counts them; the demo fixture is narrowed here. */
+  online?: boolean;
 }
 
 export interface DirectoryPlacesPageResult {
@@ -143,6 +148,14 @@ interface DirectoryPageVM {
   page: number;
 }
 
+/** The demo registry as one page, narrowed to listings that sell online for
+ *  the Online tab. The 18+ fixture is never part of it. */
+export function demoDirectoryPlaces(isOnlineOnly: boolean): DirectoryPlace[] {
+  return isOnlineOnly
+    ? DIRECTORY_PLACES.filter((place) => isSellingOnline(place))
+    : DIRECTORY_PLACES;
+}
+
 /**
  * Paginated, server-filtered source for the `/local/directory` grid
  * (gap-audit HSG-5): sends the active `query`/`safe` filters to the backend
@@ -159,6 +172,9 @@ interface DirectoryPageVM {
  * page (`hasNextPage: false`), so demo renders exactly as before with no
  * "Load more" ever offered. Mirrors `useCompanies`'s identical
  * `useInfiniteQuery` shape.
+ *
+ * `online` is sent server-side too, so the Online tab's pool, totals and
+ * paging come from the server.
  */
 export function useDirectoryPlacesPage(
   filters: DirectoryPlacesPageFilters = {},
@@ -174,6 +190,7 @@ export function useDirectoryPlacesPage(
   // picked in.
   const owned = normalizeOwnedBy(filters.owned);
   const ownedKey = owned.join(",");
+  const isOnlineOnly = filters.online === true;
 
   const query = useInfiniteQuery<DirectoryPageVM>({
     queryKey: [
@@ -184,15 +201,13 @@ export function useDirectoryPlacesPage(
       safe,
       accessKey,
       ownedKey,
+      isOnlineOnly,
     ],
     initialPageParam: 1,
     queryFn: async ({ pageParam }) => {
       if (demoMode) {
-        return {
-          items: DIRECTORY_PLACES,
-          total: DIRECTORY_PLACES.length,
-          page: 1,
-        };
+        const demoItems = demoDirectoryPlaces(isOnlineOnly);
+        return { items: demoItems, total: demoItems.length, page: 1 };
       }
       const res = toItemsPage(
         await getDirectoryPage({
@@ -200,6 +215,7 @@ export function useDirectoryPlacesPage(
           safe,
           access: access.length > 0 ? access : undefined,
           owned: owned.length > 0 ? owned : undefined,
+          online: isOnlineOnly || undefined,
           page: pageParam as number,
         }),
       );
@@ -266,7 +282,7 @@ export function useDirectoryPlace(slug: string | undefined): {
   const { demoMode } = useDemoMode();
   const { language } = useTranslation();
   const fmt = useFormat();
-  const { user } = useAuth();
+  const { user, loggedIn } = useAuth();
   // Hook-safe: read the demo/session listings overlay at the hook's top
   // level (never inside queryFn). `local` is the whole demo store — same
   // source `useDirectoryListings`' `submitted` reads in demo mode — and, in
@@ -280,7 +296,13 @@ export function useDirectoryPlace(slug: string | undefined): {
   // profile photo (not a mock registry lookup) is the right "who runs it"
   // avatar — mirrors the live detail's resolved `owner.avatarUrl`.
   const demoPlace = (): DirectoryPlace | null => {
-    const fixture = getPlace(slug);
+    // The 18+ fixture answers only a signed-in member, as the live detail
+    // read 404s for everybody else.
+    const fixture =
+      getPlace(slug) ??
+      (loggedIn
+        ? ADULT_ONLINE_DIRECTORY_PLACES.find((place) => place.slug === slug)
+        : undefined);
     if (fixture) return fixture;
     const submitted = submittedListings.find(
       (listing) => listing.slug === slug,
@@ -291,7 +313,20 @@ export function useDirectoryPlace(slug: string | undefined): {
   };
 
   const query = useQuery<DirectoryPlace | null>({
-    queryKey: [DIRECTORY_KEY, "detail", slug, demoMode, language],
+    // Demo keys on `loggedIn`, so signing in re-reads an 18+ fixture page that
+    // answered nothing while signed out. Live leaves it out: the request
+    // carries the session cookie anyway, live sign-in is a full reload and
+    // sign-out clears the cache, so keying on it would only fetch every
+    // detail twice on a signed-in hard load (`loggedIn` settles after
+    // `/auth/me`) and flash the loader.
+    queryKey: [
+      DIRECTORY_KEY,
+      "detail",
+      slug,
+      demoMode,
+      language,
+      demoMode ? loggedIn : null,
+    ],
     enabled: slug !== undefined,
     // `null` rather than `undefined` for a demo slug that names nothing:
     // `undefined` reads as "no initial data" and would put the query into a

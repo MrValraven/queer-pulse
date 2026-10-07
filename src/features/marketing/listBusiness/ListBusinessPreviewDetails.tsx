@@ -10,12 +10,19 @@ import {
   type ListingDraft,
 } from "./listBusiness.data";
 import { listingTagLabel } from "./listingTags.data";
+import { isSellingOnline, onlineDetailsForPayload } from "./listingOnline.data";
+import { effectivePricingMode, shopItemsForPayload } from "./listingShop.data";
+import { DirectoryOrderingBody } from "../DirectoryOrderingBody";
+import { hasOrderingContent } from "../directoryOrdering.data";
 import styles from "./ListBusinessPage.module.css";
 
 /**
  * The stacked detail sections of the full-page listing preview: description,
- * good-for, good-to-know, hours, find-it, and who-runs-it. Split out of
- * `ListBusinessFullPreview` so each component stays under the line limit.
+ * good-for, good-to-know, hours (a place only), ordering and delivery (when it
+ * sells online), the shop (when that is the priced list), find-it, and
+ * who-runs-it. Split out of `ListBusinessFullPreview` so each component stays
+ * under the line limit. The online block and the shop are cleaned the way a
+ * save sends them, so the preview never shows a hidden sub-answer.
  */
 export function ListBusinessPreviewDetails({
   draft,
@@ -30,7 +37,15 @@ export function ListBusinessPreviewDetails({
     .filter((text) => text.trim())
     .join("\n\n");
   const openDays = DAYS.filter((day) => draft.hours[day.id]?.open);
+  const shopItems = shopItemsForPayload(draft.shopItems ?? [], {
+    shouldDropIncomplete: true,
+  });
+  const orderingDetails = isSellingOnline(draft)
+    ? onlineDetailsForPayload(draft.onlineDetails, draft)
+    : null;
   const showName = draft.visibility !== "anon" && draft.ownerName.trim();
+  // An online-only listing has no address to show (`draftToDto` sends none).
+  const address = draft.online ? "" : draft.address;
   const social = [
     draft.social.instagram &&
       t("marketing:listBusiness.fullPreview.instagramPrefix", {
@@ -79,7 +94,7 @@ export function ListBusinessPreviewDetails({
         </section>
       )}
 
-      {openDays.length > 0 && (
+      {!draft.online && openDays.length > 0 && (
         <section className={styles.fpSec}>
           <h4>{t("marketing:listBusiness.fullPreview.hours")}</h4>
           <div className={styles.fpHours}>
@@ -101,10 +116,30 @@ export function ListBusinessPreviewDetails({
         </section>
       )}
 
-      {(draft.address || social.length > 0) && (
+      {orderingDetails && hasOrderingContent(orderingDetails) && (
+        <section className={styles.fpSec}>
+          <h4>{t("marketing:listBusiness.fullPreview.ordering")}</h4>
+          <DirectoryOrderingBody details={orderingDetails} />
+        </section>
+      )}
+
+      {effectivePricingMode(draft) === "shop" && shopItems.length > 0 && (
+        <section className={styles.fpSec}>
+          <h4>{t("marketing:listBusiness.fullPreview.shop")}</h4>
+          <div className={styles.pdChips}>
+            {shopItems.map((item) => (
+              <span key={item.id}>
+                {[item.name, item.price].filter(Boolean).join(" · ")}
+              </span>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {(address || social.length > 0) && (
         <section className={styles.fpSec}>
           <h4>{t("marketing:listBusiness.fullPreview.findIt")}</h4>
-          {draft.address && <p className={styles.fpAddr}>{draft.address}</p>}
+          {address && <p className={styles.fpAddr}>{address}</p>}
           {social.length > 0 && (
             <div className={styles.pdChips}>
               {social.map((entry) => (

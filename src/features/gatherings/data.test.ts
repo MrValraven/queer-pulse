@@ -39,7 +39,6 @@ const SLUG_HELPERS = [
   "gatheringPath",
   "gatheringRecapPath",
   "gatheringCancelledPath",
-  "gatheringDashboardPath",
   "manageGatheringPath",
   "gatheringPhotosPath",
   "coHostInvitePath",

@@ -133,7 +133,11 @@ export function LocalFilterBar({
                     sentence around the rolling number. */}
                 <span>
                   <Translation
-                    i18nKey="marketing:local.filter.showResults"
+                    i18nKey={
+                      view === "online"
+                        ? "marketing:local.filter.showResultsOnline"
+                        : "marketing:local.filter.showResults"
+                    }
                     values={{ count: resultCount }}
                     slots={{
                       count: (

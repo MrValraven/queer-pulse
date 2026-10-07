@@ -10,7 +10,8 @@ import { DirectoryStaffBand } from "./DirectoryStaffBand";
 import { DirectoryOwnerBand } from "./DirectoryOwnerBand";
 import { DirectoryNearbyPlaces } from "./DirectoryNearbyPlaces";
 import { DirectoryRelatedPlaces } from "./DirectoryRelatedPlaces";
-import { categoryLabel, normalizeCategory } from "./localCategories";
+import { categoryLabel } from "./localCategories";
+import { directoryCategoryPath } from "./directoryBreadcrumb";
 import s from "./DirectorySpacePage.module.css";
 
 /** Truncate a listing's tagline/description to a sensible social-meta length. */
@@ -28,26 +29,31 @@ interface Props {
 /**
  * The resolved directory detail page. Split out of `DirectorySpacePage` so that
  * page is left holding only the read, its loading/error/not-found branches, and
- * the staged loader that covers them — and so `place` arrives here already
+ * the staged loader that covers them, and so `place` arrives here already
  * narrowed to a real listing.
  */
 export function DirectorySpaceDetail({ place, ownerRef }: Props) {
   const { t } = useTranslation();
-  // Canonical slug for the filter link so the directory chip matches, plus the
-  // resolved label (heals legacy display-string categories too).
-  const categorySlug = normalizeCategory(place.cat);
+  // The resolved label (heals legacy display-string categories too) and the
+  // filter link whose chip matches it, on the tab the listing lives in.
   const categoryText = categoryLabel(t, place.cat);
+  const categoryPath = directoryCategoryPath(place);
+  const isAdultsOnly = place.isAdultsOnly === true;
 
   return (
     <PageShell>
       {/* This route is permanently member-gated (see authGate.ts) and excluded
           from the sitemap/prerender allowlist, so canonical/OG/structured-data
           tags can never reach a crawler or an unauthenticated link-preview
-          bot — only `title`/`description` (browser tab, in-app value) are
+          bot. Only `title`/`description` (browser tab, in-app value) are
           worth setting here. */}
+      {/* An 18+ listing is member-only and never indexed. Its path shares the
+          directory prefix, so no robots change applies (contract amendment
+          2). */}
       <PageMeta
         title={`${place.name} | QueerPulse`}
         description={clampDescription(place.tagline || place.desc)}
+        noIndex={isAdultsOnly}
       />
       {/* The moderator band sits above everything the listing says about
           itself, full bleed and in plum, so it reads as platform chrome that
@@ -69,9 +75,7 @@ export function DirectorySpaceDetail({ place, ownerRef }: Props) {
                   <FiChevronRight className={s.crumbSep} aria-hidden />
                 </li>
                 <li>
-                  <Link to={`${routes.directory}?cat=${categorySlug}`}>
-                    {categoryText}
-                  </Link>
+                  <Link to={categoryPath}>{categoryText}</Link>
                   <FiChevronRight className={s.crumbSep} aria-hidden />
                 </li>
                 <li aria-current="page">{place.name}</li>

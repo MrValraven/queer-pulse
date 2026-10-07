@@ -57,6 +57,9 @@ export const HISTORY_FIELD_LABEL_KEYS: Readonly<Record<string, string>> = {
   visibility: `${KEY_PREFIX}.field.visibility`,
   linkToProfile: `${KEY_PREFIX}.field.linkToProfile`,
   ownedBy: `${KEY_PREFIX}.field.ownedBy`,
+  hasOnlineShop: `${KEY_PREFIX}.field.hasOnlineShop`,
+  onlineDetails: `${KEY_PREFIX}.field.onlineDetails`,
+  shopItems: `${KEY_PREFIX}.field.shopItems`,
   // No longer collected, but history rows from past edits still name it.
   contactEmail: `${KEY_PREFIX}.field.contactEmail`,
   consentOuting: `${KEY_PREFIX}.field.consentOuting`,

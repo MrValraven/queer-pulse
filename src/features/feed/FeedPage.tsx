@@ -187,6 +187,7 @@ export function FeedListBody({
   emptyPanel,
   errorPanel,
   liveItems,
+  liveItemPages,
   pulse,
   staticItems,
   revealDelay,
@@ -199,6 +200,10 @@ export function FeedListBody({
   emptyPanel: React.ReactNode;
   errorPanel: React.ReactNode;
   liveItems: FeedItem[];
+  /** `liveItems` split by loaded page, so the "All" tab groups new members
+   *  page by page and a landing page leaves the cards above it alone. Without
+   *  it, `liveItems` counts as one page. */
+  liveItemPages?: FeedItem[][];
   pulse: HubPost[];
   staticItems: {
     key: string;
@@ -206,10 +211,11 @@ export function FeedListBody({
     newMemberItem?: FeedItem;
   }[];
   revealDelay: (index: number) => string;
-  /** The "All" tab: every new member in one group card. */
+  /** The "All" tab: new members of one week share a group card. */
   isGroupingNewMembers?: boolean;
 }) {
   const fmt = useFormat();
+  const livePages = liveItemPages ?? [liveItems];
 
   if (loading) {
     return (
@@ -226,7 +232,7 @@ export function FeedListBody({
     if (empty) return <div data-masonry-full>{emptyPanel}</div>;
     return (
       <>
-        {liveFeedRenderEntries(liveItems, isGroupingNewMembers).map(
+        {liveFeedRenderEntries(livePages, isGroupingNewMembers).map(
           (entry, index) => (
             <div
               key={feedRenderEntryKey(entry)}
@@ -239,6 +245,7 @@ export function FeedListBody({
                 <LiveNewMembersGroupCard
                   items={entry.members}
                   weekStart={entry.weekStart}
+                  isContinuation={entry.isContinuation}
                 />
               )}
             </div>
@@ -302,6 +309,7 @@ export function FeedPage() {
     refetch,
     empty,
     liveItems,
+    liveItemPages,
     pulse,
     staticItems,
     banner,
@@ -448,6 +456,7 @@ export function FeedPage() {
                           emptyPanel={emptyPanel}
                           errorPanel={errorPanel}
                           liveItems={liveItems}
+                          liveItemPages={liveItemPages}
                           pulse={pulse}
                           staticItems={staticItems}
                           revealDelay={revealDelay}

@@ -5,7 +5,6 @@ import { PageShell } from "../../shared/components/layout";
 import { EmptyState, SkeletonLine } from "../../shared/components/ui";
 import { useShareLink } from "../../shared/hooks/useClipboard";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useFormat } from "../../shared/i18n/format";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { routes } from "../../app/routeMap";
 import {
@@ -14,16 +13,8 @@ import {
 } from "./ManageGatheringTabs";
 import { ManageGatheringHeader } from "./ManageGatheringHeader";
 import type { GatheringDetailsDraft } from "./editDetailsDraft";
+import { ManageGatheringModals } from "./ManageGatheringModals";
 import {
-  ManageGatheringModals,
-  type SeriesScopeModalMode,
-} from "./ManageGatheringModals";
-import type { SeriesScope, UpdateEventDto } from "./api/events.api";
-import {
-  applyDetailValue,
-  applyEditDraft,
-  applyVenueSelection,
-  buildEditPatch,
   editDraftCareFields,
   editDraftFormatFields,
   manageGatheringCounts,
@@ -40,12 +31,18 @@ import { useAttendees } from "./api/useAttendees";
 import { useUpdateEvent, useCancelEvent } from "./api/useEventMutations";
 import { dateToDatetimeValue } from "./manageGatheringDates";
 import {
+  CHECKIN_FOCUS_PARAM,
   MANAGE_GATHERING_TAB_PARAM,
   manageGatheringTabFromParam,
+  type ManageGatheringTab,
 } from "./gatheringPaths";
+import { isDoorWindow } from "./checkin/doorWindow";
+import { useNow } from "./checkin/useNow";
+import { useOpenCheckinScroll } from "./useOpenCheckinScroll";
 import { useCancelGatheringFlow } from "./useCancelGatheringFlow";
 import { useDeleteGatheringFlow } from "./useDeleteGatheringFlow";
 import { useManageGatheringState } from "./useManageGatheringState";
+import { useGatheringEditSave } from "./useGatheringEditSave";
 import styles from "./ManageGatheringPage.module.css";
 
 /**
@@ -150,17 +147,10 @@ function ManageGatheringMain({
   routeParam: string | undefined;
 }) {
   const { t } = useTranslation();
-  const fmt = useFormat();
   const navigate = useNavigate();
-  // `?tab=attendees` (a lineup reply notification) opens that tab, also when
-  // it arrives while mounted (the tabs remount on it); other values open the
-  // default.
-  const [searchParams] = useSearchParams();
-  const initialTab = manageGatheringTabFromParam(
-    searchParams.get(MANAGE_GATHERING_TAB_PARAM),
-  );
+  const [searchParams, setSearchParams] = useSearchParams();
   // The share card's Copy button writes the real public link to the clipboard
-  // — it used to only raise the "Link copied!" toast without copying anything.
+  // (it used to only raise the "Link copied!" toast and copy nothing).
   const { share } = useShareLink({
     copied: t("gatherings:manage.linkCopiedToast"),
     failed: t("gatherings:manage.linkCopyFailedToast"),
@@ -172,18 +162,53 @@ function ManageGatheringMain({
   const { data: attendees } = useAttendees(slug);
   const [editOpen, setEditOpen] = useState(false);
   const [messageOpen, setMessageOpen] = useState(false);
-  // MSG-10 — a repeating gathering's edit/cancel offers a this-vs-future
-  // choice. `seriesScopeModal` is which prompt (if any) is open;
-  // `pendingEditPatch` holds an already-saved edit's patch until the host
-  // picks a scope for it (see the `EditDetailsModal` wiring below).
-  const [seriesScopeModal, setSeriesScopeModal] =
-    useState<SeriesScopeModalMode>(null);
-  const [pendingEditPatch, setPendingEditPatch] =
-    useState<UpdateEventDto | null>(null);
 
   const [gatheringState, setGatheringState] = useManageGatheringState({
     demoMode,
     gathering,
+  });
+  // The URL drives the tab: `?tab=attendees` (a lineup reply notification)
+  // opens that tab, also when it arrives while mounted, and every switch
+  // writes `?tab=` back. With no valid `?tab=`, the page opens on Check-in
+  // if the door is open at mount and on Overview otherwise. That opening tab
+  // is pinned, so the door opening or closing later (or a start-time edit)
+  // never swaps the panel under the host; the live dot and the header button
+  // follow `isCheckinLive` as it changes.
+  const now = useNow(60_000);
+  const isCheckinLive = isDoorWindow(
+    gatheringState.startAt,
+    gatheringState.endAt,
+    now,
+  );
+  const [openingTab] = useState<ManageGatheringTab>(() =>
+    isCheckinLive ? "checkin" : "overview",
+  );
+  const requestedTab = manageGatheringTabFromParam(
+    searchParams.get(MANAGE_GATHERING_TAB_PARAM),
+  );
+  const activeTab = requestedTab ?? openingTab;
+  const selectTab = (tab: ManageGatheringTab) =>
+    setSearchParams(
+      (current) => {
+        const next = new URLSearchParams(current);
+        next.set(MANAGE_GATHERING_TAB_PARAM, tab);
+        next.delete(CHECKIN_FOCUS_PARAM);
+        return next;
+      },
+      { replace: true },
+    );
+  const openCheckin = useOpenCheckinScroll(activeTab, selectTab);
+  // Every edit save, and MSG-10's this-vs-future prompt for a repeating
+  // gathering's edit or cancel. See `useGatheringEditSave`.
+  const editSave = useGatheringEditSave({
+    isSeries: Boolean(gathering?.series),
+    gatheringState,
+    setGatheringState,
+    updateEvent,
+    onChooseCancelScope: (scope) => {
+      cancelEvent.mutate(scope);
+      void navigate(gatheringCancelledPath(slug));
+    },
   });
   // Demo runs it too: `useDeleteEvent` resolves without a request there.
   const { requestDelete, isDeletePending, deleteDialog } =
@@ -203,40 +228,12 @@ function ManageGatheringMain({
   });
 
   // MSG-10: a gathering that's part of a series (real, live only, since
-  // `gathering?.series` is always undefined in demo mode) asks this-vs-future
-  // instead of the plain confirm; a standalone gathering opens the same
-  // `ConfirmDialog` the public page's host menu does (`useCancelGatheringFlow`).
+  // `gathering?.series` is always undefined in demo mode) asks this-vs-future;
+  // a standalone gathering opens the plain confirm, the same `ConfirmDialog`
+  // the public page's host menu opens (`useCancelGatheringFlow`).
   const cancelGathering = () => {
-    if (gathering?.series) setSeriesScopeModal("cancel");
+    if (gathering?.series) editSave.openCancelScope();
     else requestCancel();
-  };
-
-  // The host's answer to the `SeriesEditScopeModal` prompt — fires the
-  // deferred cancel/edit mutation with the chosen `SeriesScope`.
-  const chooseSeriesScope = (scope: SeriesScope) => {
-    const mode = seriesScopeModal;
-    setSeriesScopeModal(null);
-    if (mode === "cancel") {
-      cancelEvent.mutate(scope);
-      void navigate(gatheringCancelledPath(slug));
-    } else if (mode === "edit" && pendingEditPatch) {
-      updateEvent.mutate({ ...pendingEditPatch, seriesScope: scope });
-      setPendingEditPatch(null);
-    }
-  };
-
-  // A saved edit: fold it into local state, then either send the PATCH now or
-  // (MSG-10, a repeating gathering) stash it until the host answers
-  // `SeriesEditScopeModal`. `buildEditPatch` reads the PRE-edit snapshot from
-  // this closure's `gatheringState` — see its doc for why that matters.
-  const saveEditDraft = (draft: GatheringDetailsDraft) => {
-    setGatheringState((current) => applyEditDraft(current, draft, fmt, t));
-    const patch = buildEditPatch(gatheringState, draft);
-    if (gathering?.series) {
-      setPendingEditPatch(patch);
-    } else {
-      updateEvent.mutate(patch);
-    }
   };
 
   return (
@@ -246,15 +243,20 @@ function ManageGatheringMain({
           <ManageGatheringHeader
             title={gatheringState.title}
             daysToGo={daysToGo}
-            slug={slug}
             onEditDetails={() => setEditOpen(true)}
             onMessageAttendees={() => setMessageOpen(true)}
+            isCheckinLive={isCheckinLive}
+            isCheckinActive={activeTab === "checkin"}
+            onOpenCheckin={openCheckin}
           />
 
           <div className={styles.layout}>
             <ManageGatheringTabs
-              key={initialTab ?? "default"}
-              initialTab={initialTab}
+              activeTab={activeTab}
+              onTabChange={selectTab}
+              isCheckinLive={isCheckinLive}
+              startAt={gatheringState.startAt}
+              endAt={gatheringState.endAt}
               slug={slug}
               onCancel={cancelGathering}
               onDelete={requestDelete}
@@ -273,28 +275,9 @@ function ManageGatheringMain({
               onUpdateSettings={(patch) => {
                 if (!demoMode) updateEvent.mutate(patch);
               }}
-              onUpdateDetail={(id, value) =>
-                setGatheringState((current) =>
-                  applyDetailValue(current, id, value),
-                )
-              }
-              onUpdateVenue={(selection) => {
-                setGatheringState((current) =>
-                  applyVenueSelection(current, selection),
-                );
-                updateEvent.mutate({
-                  venue: selection.text,
-                  listingId: selection.listingId,
-                  ...(selection.address ? { address: selection.address } : {}),
-                });
-              }}
-              onUpdateDescription={(value) => {
-                setGatheringState((current) => ({
-                  ...current,
-                  description: value,
-                }));
-                if (!demoMode) updateEvent.mutate({ description: value });
-              }}
+              buildEditDraft={() => editDraftFor(gatheringState)}
+              onSaveEdit={editSave.saveFieldEdit}
+              onUpdateVenue={editSave.saveVenue}
             />
             <ManageGatheringSidebar
               slug={slug}
@@ -313,18 +296,15 @@ function ManageGatheringMain({
         editInitial={editOpen ? editDraftFor(gatheringState) : null}
         onCloseEdit={() => {
           setEditOpen(false);
-          // MSG-10 — a save on a repeating gathering stashes its patch
-          // instead of sending it immediately (see `saveEditDraft`); closing
-          // the modal is the cue to ask this-vs-future.
-          if (pendingEditPatch) setSeriesScopeModal("edit");
+          // MSG-10: a save on a repeating gathering stashes its patch until
+          // the host picks a scope; closing the modal is the cue to ask
+          // this-vs-future.
+          editSave.askScopeForPendingEdit();
         }}
-        onSaveEdit={saveEditDraft}
-        seriesScopeMode={seriesScopeModal}
-        onChooseSeriesScope={chooseSeriesScope}
-        onCloseSeriesScope={() => {
-          setSeriesScopeModal(null);
-          setPendingEditPatch(null);
-        }}
+        onSaveEdit={editSave.saveEditDraft}
+        seriesScopeMode={editSave.seriesScopeModal}
+        onChooseSeriesScope={editSave.chooseSeriesScope}
+        onCloseSeriesScope={editSave.closeSeriesScope}
         isMessageOpen={messageOpen}
         attendeeCount={attendeeCount}
         onCloseMessage={() => setMessageOpen(false)}

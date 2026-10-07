@@ -259,6 +259,9 @@ export function useFeedPage() {
   // (community_post/forum_thread/gathering/new_member interleaved). `useFeed`
   // already applies the block/mute filter, so no re-filtering needed here.
   const liveItems: FeedItem[] = demoMode ? [] : feed.items;
+  // The same items split by loaded page, which the "All" tab folds one page
+  // at a time so a new page never reshapes cards already on screen.
+  const liveItemPages: FeedItem[][] = demoMode ? [] : feed.itemPages;
   // Feed hero banner: the scripted DEMO copy only. It used to be derived in
   // live from the `new_member` items in whatever feed pages happened to be
   // loaded, so "N people joined near you this week" grew every time you hit
@@ -350,6 +353,7 @@ export function useFeedPage() {
     refetch: feed.refetch,
     empty,
     liveItems,
+    liveItemPages,
     pulse,
     staticItems,
     banner,

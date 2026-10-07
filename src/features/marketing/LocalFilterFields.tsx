@@ -14,6 +14,11 @@ import { LocalQuickFilters } from "./LocalQuickFilters";
 import { LocalSortFilter } from "./LocalSortFilter";
 import { LocalVibeFilter } from "./LocalVibeFilter";
 import type { LocalSort } from "./localPlaces";
+import {
+  ADULT_LISTING_CATEGORY_SLUG,
+  LOCAL_CATEGORIES,
+  ONLINE_LISTING_CATEGORY_SLUGS,
+} from "./localCategories";
 import type { LocalChipCounts } from "./useDirectoryFilters";
 import type { AccessibilitySlug } from "./listBusiness/listingAccessibility.data";
 import type { ListingOwnedBy } from "./listBusiness/listingOwnedBy.data";
@@ -72,11 +77,19 @@ export interface LocalFilterFieldsProps {
    *  variant only: on phones the switcher lives in the sticky toolbar, where it
    *  stays reachable while scrolled deep into the list. */
   viewSlot?: ReactNode;
-  /** True on the Online tab. Every business there has no door, so the
-   *  questions that only a door can answer (is it open right now, is the
-   *  entrance step-free, what's the room like) are left out rather than
-   *  offered as filters that could only ever empty the results. */
+  /** True on the Online tab, which lists every business that sells online.
+   *  Its category chips are what they sell; the questions about a visit (is
+   *  it open right now, is the entrance step-free, the vibe) are left out,
+   *  since they say nothing about buying online. */
   isOnlineScope?: boolean;
+  /** Whether "Show 18+ shops" (`?adult=1`) is on and read. Show 18+ shops is
+   *  offered on the Online tab to a signed-in member only. */
+  isAdultShown?: boolean;
+  /** True when "Show 18+ shops" may be offered: the Online tab, for a
+   *  signed-in member only. */
+  canShowAdult?: boolean;
+  /** Turns "Show 18+ shops" on or off. */
+  onToggleAdult?: () => void;
 }
 
 interface LocalFilterFieldsVariantProps extends LocalFilterFieldsProps {
@@ -98,11 +111,12 @@ interface LocalFilterFieldsVariantProps extends LocalFilterFieldsProps {
 }
 
 /**
- * The filter set itself: search, then the groups. Place type, the two one-tap
- * narrowings (open now, verified safe spaces), "who runs it", access needs,
- * and (demo-only) vibe. Rendered inline in the desktop bar behind the
- * "Refine" toggle, or flat inside the mobile "Filters" sheet; one markup
- * source so the two layouts never diverge in behaviour.
+ * The filter set itself: search, then the groups. Place type (what they
+ * sell, on the Online tab), the one-tap narrowings (open now, verified safe
+ * spaces and, on the Online tab for a signed-in member, Show 18+ shops), "who
+ * runs it", access needs, and (demo-only) vibe. Rendered inline in the
+ * desktop bar behind the "Refine" toggle, or flat inside the mobile "Filters"
+ * sheet; one markup source so the two layouts never diverge in behaviour.
  */
 export function LocalFilterFields({
   categories,
@@ -129,6 +143,9 @@ export function LocalFilterFields({
   nearMeSlot,
   viewSlot,
   isOnlineScope = false,
+  isAdultShown,
+  canShowAdult,
+  onToggleAdult,
   variant = "bar",
   activeFiltersSlot,
 }: LocalFilterFieldsVariantProps) {
@@ -159,7 +176,8 @@ export function LocalFilterFields({
     categories.length +
     (safeOnly ? 1 : 0) +
     owned.length +
-    (openNow ? 1 : 0);
+    (openNow ? 1 : 0) +
+    (isOnlineScope && isAdultShown ? 1 : 0);
   // The field holds its own text. `query` lives in the URL, and the router
   // commits a URL change inside a transition, so a field bound straight to it
   // was reset to a stale value between fast keystrokes and dropped letters.
@@ -220,6 +238,19 @@ export function LocalFilterFields({
         onClearCategories={onClearCategories}
         categoryCounts={categoryCounts}
         isLoadedSetComplete={isLoadedSetComplete}
+        categoryIds={
+          isOnlineScope
+            ? ONLINE_LISTING_CATEGORY_SLUGS.filter(
+                (slug) => slug !== ADULT_LISTING_CATEGORY_SLUG || isAdultShown,
+              )
+            : LOCAL_CATEGORIES
+        }
+        labelKey={
+          isOnlineScope
+            ? "marketing:local.filter.categoryLabelOnline"
+            : undefined
+        }
+        hasSwatches={!isOnlineScope}
       />
       {/* Ordering and the two one-tap narrowings share a band: all three are
           short controls, and side by side they fill a line the place-type chips
@@ -238,6 +269,9 @@ export function LocalFilterFields({
           onToggleSafeOnly={onToggleSafeOnly}
           chipCounts={chipCounts}
           isLoadedSetComplete={isLoadedSetComplete}
+          showAdult={isOnlineScope && canShowAdult === true}
+          isAdultShown={isAdultShown}
+          onToggleAdult={onToggleAdult}
         />
       </RefineSplit>
       <LocalOwnedByFilter owned={owned} onToggleOwned={onToggleOwned} />

@@ -13,6 +13,7 @@ import { type LocalPlace } from "./localPlaces";
 import { DirectoryOnlineCard } from "./DirectoryOnlineCard";
 import { DirectoryOnlineConstellation } from "./DirectoryOnlineConstellation";
 import { DirectoryServerPageFooter } from "./DirectoryServerPageFooter";
+import { DirectoryAdultLoadNote } from "./DirectoryAdultLoadNote";
 import card from "./DirectoryPage.module.css";
 import s from "./DirectoryOnline.module.css";
 
@@ -42,13 +43,14 @@ function DirectoryOnlineSkeleton() {
 }
 
 /**
- * The directory's Online tab: queer-owned businesses with no door to pin. A
+ * The directory's Online tab: queer-owned businesses that sell online. A
  * plum constellation leads, with every business orbiting the community's
  * pulse, then the businesses themselves as storefront cards. A node and its
  * card light up together, the way a pin and its card do on the map.
  *
- * `places` arrives already narrowed to online-only businesses and filtered
- * (see `useDirectoryPageState`), so this only decides which state to show.
+ * `places` is the server's selling-online pool plus, for a member with the
+ * chip on, the 18+ shops, already filtered (see `useDirectoryPageState`), so
+ * this only decides which state to show.
  */
 export function DirectoryOnlineView({
   places,
@@ -56,6 +58,8 @@ export function DirectoryOnlineView({
   loading,
   isError,
   onRetry,
+  isAdultError,
+  onRetryAdult,
   hasActiveFilters,
   onClearFilters,
   hasMoreFromServer,
@@ -64,12 +68,16 @@ export function DirectoryOnlineView({
   onLoadMoreFromServer,
 }: {
   places: LocalPlace[];
-  /** Every online-only business loaded, before filters. */
+  /** Every business that sells online, before filters. */
   total: number;
   loading: boolean;
   /** Nothing to show because the read failed (ENG-501). */
   isError: boolean;
   onRetry: () => void;
+  /** The member-only 18+ list failed; said in place above the results. */
+  isAdultError: boolean;
+  /** Asks for the 18+ list again. */
+  onRetryAdult: () => void;
   hasActiveFilters: boolean;
   onClearFilters: () => void;
   /** The server holds more pages; they are pulled in one after another. */
@@ -109,7 +117,7 @@ export function DirectoryOnlineView({
       />
     );
   } else if (businesses.length === 0) {
-    content =
+    const emptyState =
       hasActiveFilters && total > 0 ? (
         <EmptyState
           icon={<FiSearch />}
@@ -128,6 +136,7 @@ export function DirectoryOnlineView({
           action={listBusinessAction}
         />
       );
+    content = emptyState;
   } else {
     content = (
       <>
@@ -154,6 +163,12 @@ export function DirectoryOnlineView({
   return (
     <section className={s.view}>
       <div className="wrap">
+        {/* Mounted in every state so its live region is in place before the
+            18+ list can fail; it shows only above the results. */}
+        <DirectoryAdultLoadNote
+          isShown={isAdultError && !loading && !isError}
+          onRetry={onRetryAdult}
+        />
         {content}
         {hasMoreFromServer && !loading && !isError && (
           <DirectoryServerPageFooter

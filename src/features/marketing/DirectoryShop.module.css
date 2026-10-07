@@ -1,0 +1,57 @@
+/* ── "In the shop" ──────────────────────────────────────────────────────────
+   Up to six things, each a small paper card: the photo (or its tinted
+   placeholder, so the row of cards stays even), the name, the owner's own
+   price, and a link out when the item has one. The grid fills the column at
+   whatever width it gets, the moderation drawer included. */
+.grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+  gap: 14px;
+}
+.item {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+  padding: 10px 10px 14px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-12);
+}
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 0 4px;
+  min-width: 0;
+}
+.name {
+  font-size: var(--text-15);
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+.price {
+  font-size: var(--text-14);
+  color: var(--ink-60);
+}
+/* Pinned to the card's foot and spanning its width, so every link in a row
+   sits on the same baseline at the same width and a long name wraps in fewer
+   rows. It
+   may wrap: the label carries the item's name, which can run to 60
+   characters, so it gets a reading line-height. */
+/* Two classes so it outranks `Button`'s own single-class rules whatever the
+   stylesheet order. */
+.item .view {
+  margin-top: auto;
+  align-self: stretch;
+  justify-content: space-between;
+  max-width: 100%;
+  white-space: normal;
+  text-align: start;
+  line-height: 1.35;
+}

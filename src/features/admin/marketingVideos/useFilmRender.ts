@@ -1,5 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { filmUrl, scoreUrl, type MarketingVideo } from "./marketingVideos.data";
+import {
+  FILM_FORMATS,
+  filmFileName,
+  filmUrl,
+  scoreUrl,
+  type FilmFormatId,
+  type MarketingVideo,
+} from "./marketingVideos.data";
+import { FilmFormatError } from "./render/filmWindow";
 import {
   EncoderUnavailableError,
   renderFilm,
@@ -10,7 +18,13 @@ import {
 import { CaptureError, requestTabShare } from "./render/tabCapture";
 
 export type RenderFailure =
-  "denied" | "wrongTab" | "stopped" | "stalled" | "encoder" | "failed";
+  | "denied"
+  | "wrongTab"
+  | "stopped"
+  | "stalled"
+  | "encoder"
+  | "format"
+  | "failed";
 
 export type RenderState =
   | { status: "idle" }
@@ -40,15 +54,16 @@ function failureOf(error: unknown): RenderFailure {
     }
   }
   if (error instanceof EncoderUnavailableError) return "encoder";
+  if (error instanceof FilmFormatError) return "format";
   return "failed";
 }
 
 /**
- * Renders one film to a downloadable file. `start` must be called from the
- * click that starts the render: it opens the browser's share picker, which
- * only appears in response to a user gesture.
+ * Renders one film in one shape to a downloadable file. `start` must be
+ * called from the click that starts the render: it opens the browser's share
+ * picker, which only appears in response to a user gesture.
  */
-export function useFilmRender(video: MarketingVideo) {
+export function useFilmRender(video: MarketingVideo, format: FilmFormatId) {
   const [state, setState] = useState<RenderState>({ status: "idle" });
   const abortRef = useRef<AbortController | null>(null);
   const urlRef = useRef<string | null>(null);
@@ -81,7 +96,9 @@ export function useFilmRender(video: MarketingVideo) {
           // First call, still inside the click: the picker needs the gesture.
           stream = await requestTabShare();
           const film = await renderFilm({
-            id: video.id,
+            format: { id: format, size: FILM_FORMATS[format] },
+            fileName: (extension) => filmFileName(video.id, format, extension),
+            // Every shape shares one score, composed from the plain page.
             filmUrl: filmUrl(video.id),
             scoreUrl: scoreUrl(video.id),
             stream,
@@ -115,7 +132,7 @@ export function useFilmRender(video: MarketingVideo) {
       };
       void run();
     },
-    [releaseFile, video.id],
+    [releaseFile, video.id, format],
   );
 
   const stop = useCallback(() => {

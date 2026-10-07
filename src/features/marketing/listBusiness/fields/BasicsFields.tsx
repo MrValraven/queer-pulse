@@ -2,35 +2,24 @@ import {
   CheckLine,
   FormField,
   RadioCardGroup,
-  Select,
 } from "../../../../shared/components/ui";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
-import {
-  ANCHOR,
-  CATS,
-  catLabel,
-  hoodLabel,
-  NEIGHBOURHOODS,
-  PRICES,
-} from "../listBusiness.data";
+import { ANCHOR, PRICES } from "../listBusiness.data";
 import { useSimilarListings } from "../api/useSimilarListings";
 import type { ListingForm } from "../useListingForm";
 import { DuplicateNotice } from "../DuplicateNotice";
 import { StepBasicsBadgeField } from "../StepBasicsBadgeField";
+import { BasicsCategoryField } from "./BasicsCategoryField";
+import { BasicsLocationField } from "./BasicsLocationField";
 import styles from "../ListBusinessPage.module.css";
 
 /**
- * The basics field body: name, categories, the online-only toggle and the
- * neighbourhood, ownership badge, price band and the one-line blurb.
- *
- * The online-only toggle sits here, directly above the neighbourhood, because
- * it decides whether a neighbourhood is asked for at all. It used to live on
- * the practical step, two steps later, so an online business met a
- * required-looking neighbourhood first and picked one it does not have. With
- * the toggle on, the neighbourhood field is gone: no public view shows a
- * neighbourhood for an online listing, and `draftToDto` sends it blank. The
- * picked value stays in the draft, so switching the toggle back off brings
- * it back.
+ * The basics field body: on an edit the online-only switch first (above the
+ * categories it decides; a new listing answers it on step 0), then the name,
+ * the categories for the listing's kind with the 18+ acknowledgement, the
+ * neighbourhood or "Based in", the ownership badge, the price band and the
+ * one-line blurb. Switching kind keeps the other kind's categories,
+ * neighbourhood, address and hours in the draft (`withListingKind`).
  *
  * Rendered by BOTH the create wizard's step 1 pane (`StepBasics`, which adds
  * the pane header around it) and the single-screen owner editor's Basics
@@ -53,7 +42,8 @@ export function BasicsFields({
   duplicateCheckBaselineName?: string;
 }) {
   const { t } = useTranslation();
-  const { draft, set, toggleCat } = form;
+  const { draft, set, setOnline } = form;
+  const isEdit = editRef !== undefined;
   // Live duplicate detection against the real directory: by name, and by
   // proximity once a pin exists (item #5). An empty name disables the read.
   const coords =
@@ -71,6 +61,18 @@ export function BasicsFields({
 
   return (
     <>
+      {/* An edit has no Path step, so the kind switch sits first, above the
+          categories it decides. The create flow asks on step 0. */}
+      {isEdit && (
+        <div id={ANCHOR.online} className={styles.onlineToggleRow}>
+          <CheckLine
+            checked={draft.online}
+            onChange={setOnline}
+            title={t("marketing:listBusiness.step3.onlineOnly.title")}
+            sub={t("marketing:listBusiness.step1.onlineToggle.sub")}
+          />
+        </div>
+      )}
       <FormField
         className={styles.lbField}
         id={ANCHOR.name}
@@ -87,67 +89,8 @@ export function BasicsFields({
         />
       </FormField>
       {duplicates.length > 0 && <DuplicateNotice dups={duplicates} />}
-
-      <FormField
-        className={styles.lbField}
-        id={ANCHOR.cats}
-        label={t("marketing:listBusiness.step1.catsLabel")}
-        required
-      >
-        <div
-          className={styles.chipRow}
-          role="group"
-          aria-label={t("marketing:listBusiness.step1.catsAria")}
-        >
-          {CATS.map((c) => {
-            const on = draft.cats.includes(c);
-            const full = draft.cats.length >= 2 && !on;
-            return (
-              <button
-                key={c}
-                type="button"
-                aria-pressed={on}
-                disabled={full}
-                className={[styles.chip, on && styles.chipOn]
-                  .filter(Boolean)
-                  .join(" ")}
-                onClick={() => toggleCat(c)}
-              >
-                {catLabel(t, c)}
-              </button>
-            );
-          })}
-        </div>
-      </FormField>
-
-      <div id={ANCHOR.online} className={styles.onlineToggleRow}>
-        <CheckLine
-          checked={draft.online}
-          onChange={(online) => set({ online })}
-          title={t("marketing:listBusiness.step3.onlineOnly.title")}
-          sub={t("marketing:listBusiness.step3.onlineOnly.sub")}
-        />
-      </div>
-
-      {!draft.online && (
-        <FormField
-          className={styles.lbField}
-          id={ANCHOR.hood}
-          label={t("marketing:listBusiness.step1.hoodLabel")}
-          required
-        >
-          <Select
-            placeholder={t("marketing:listBusiness.step1.hoodPlaceholder")}
-            options={NEIGHBOURHOODS.map((hood) => ({
-              value: hood,
-              label: hoodLabel(t, hood),
-            }))}
-            value={draft.hood || null}
-            onChange={(value) => set({ hood: value ?? "" })}
-          />
-        </FormField>
-      )}
-
+      <BasicsCategoryField form={form} />
+      <BasicsLocationField form={form} />
       <StepBasicsBadgeField form={form} />
 
       <FormField

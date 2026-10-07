@@ -1,0 +1,19 @@
+/* The continuous check-in scanner: the ready line under the viewfinder
+   and the full-width typed-code action. */
+.ready {
+  font-size: var(--text-13);
+  color: var(--ink-60);
+  text-align: center;
+  margin-bottom: 16px;
+}
+/* Live camera: keeps its space so the sheet height stays steady between scans. */
+.readyHidden {
+  visibility: hidden;
+}
+/* Camera off: no line, so it reserves nothing. */
+.readyOff {
+  display: none;
+}
+.full {
+  width: 100%;
+}

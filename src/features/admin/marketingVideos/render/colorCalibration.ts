@@ -9,15 +9,29 @@
  * shows a few known colour patches over the film, captures one frame, and
  * keeps whichever matrix label reproduces them best.
  */
+import type { FilmSize } from "../marketingVideos.data";
 
 export type Rgb = readonly [number, number, number];
 
-/** Patch centres in film pixels (the film is 1920x1080). */
-export const CALIBRATION_PATCHES = [
-  { x: 560, y: 540 },
-  { x: 960, y: 540 },
-  { x: 1360, y: 540 },
-] as const;
+/** Where the patches sit across the film's width, left to right. */
+const PATCH_FRACTIONS = [7 / 24, 1 / 2, 17 / 24] as const;
+const LARGEST_PATCH = 240;
+
+/**
+ * Patch centres in film pixels, on the film's middle row. For the 1920x1080
+ * film they land on x 560, 960 and 1360.
+ */
+export function calibrationPatches(size: FilmSize) {
+  return PATCH_FRACTIONS.map((fraction) => ({
+    x: Math.round(size.width * fraction),
+    y: Math.round(size.height / 2),
+  }));
+}
+
+/** Patch side in film pixels: 240 on a wide film, smaller on a narrow one. */
+export function calibrationPatchSize(size: FilmSize) {
+  return Math.min(LARGEST_PATCH, Math.round(size.width / 6));
+}
 
 /** Matrix labels to try, besides the one the frame arrived with. */
 const CANDIDATE_MATRICES: VideoMatrixCoefficients[] = [

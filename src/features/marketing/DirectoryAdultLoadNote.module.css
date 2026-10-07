@@ -1,0 +1,16 @@
+.note {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 16px;
+  padding: 12px 14px;
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-12);
+  background: rgba(var(--plum-rgb), 0.04);
+  font-size: var(--text-13);
+  color: var(--text-strong);
+}
+.note svg {
+  flex-shrink: 0;
+}

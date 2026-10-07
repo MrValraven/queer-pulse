@@ -47,7 +47,7 @@ export function useListingEditorSave({
   const showSaveFailure = (error: unknown) => {
     // A validation error (400/422) names the offending field: surface the
     // server's message and flash that field, all the routing one screen needs.
-    const target = resolveListing422(error, { t, language });
+    const target = resolveListing422(error, { t, language }, { isEdit: true });
     if (target) {
       setServerError(target.message);
       form.setRejectedPhotoSlots(target.photoSlots);

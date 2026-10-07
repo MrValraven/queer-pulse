@@ -13,8 +13,8 @@ import type {
 export interface MoreMenuState {
   open: boolean;
   eventId: string | null;
-  x: number;
-  y: number;
+  /** The "More" trigger the menu is anchored to; re-measured on scroll. */
+  anchor: HTMLElement | null;
 }
 
 export interface MyEventsValue {
@@ -99,7 +99,7 @@ export interface MyEventsValue {
 
   // more menu
   moreMenu: MoreMenuState;
-  openMore: (eventId: string, x: number, y: number) => void;
+  openMore: (eventId: string, anchor: HTMLElement) => void;
   closeMore: () => void;
 
   // safety flows

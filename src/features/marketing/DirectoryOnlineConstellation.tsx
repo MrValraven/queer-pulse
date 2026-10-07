@@ -1,4 +1,12 @@
-import { useId, useMemo, type CSSProperties } from "react";
+import {
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+  useState,
+  type CSSProperties,
+  type RefObject,
+} from "react";
 import { Link } from "react-router-dom";
 import { FiCheck } from "react-icons/fi";
 import { RollingNumber } from "../../shared/components/ui/RollingNumber";
@@ -19,6 +27,33 @@ import s from "./DirectoryOnline.module.css";
  *  dip, flat again. In the core's own 0–48 box. */
 const HEARTBEAT_PATH = "M4 26h9l3-5 4 12 5-24 4 17 3-5h12";
 
+/** The band's narrow layout starts here, the same width as the
+ *  `online-view` container query in DirectoryOnline.module.css. */
+const NARROW_PANEL_MAX = 560;
+
+/**
+ * True while the band is in its narrow layout, measured on the band itself so
+ * it switches with the container query. Until a real width is known (first
+ * paint, tests) it reports false, so the nodes start out as links.
+ */
+function useIsNarrowPanel(panelRef: RefObject<HTMLElement | null>): boolean {
+  const [isNarrow, setIsNarrow] = useState(false);
+  useEffect(() => {
+    const panel = panelRef.current;
+    if (!panel) return undefined;
+    const measure = () => {
+      const width = panel.offsetWidth;
+      if (width > 0) setIsNarrow(width <= NARROW_PANEL_MAX);
+    };
+    measure();
+    if (typeof ResizeObserver === "undefined") return undefined;
+    const observer = new ResizeObserver(measure);
+    observer.observe(panel);
+    return () => observer.disconnect();
+  }, [panelRef]);
+  return isNarrow;
+}
+
 /**
  * The Online tab's lead-in: a compact band, on the same plum-tinted surface as
  * the map's frame, where the community's pulse sits at the centre of a small
@@ -29,8 +64,11 @@ const HEARTBEAT_PATH = "M4 26h9l3-5 4 12 5-24 4 17 3-5h12";
  *
  * Nodes stay still on purpose. Only decoration moves (the pulse rings and the
  * outer orbit's slow turn), so nothing clickable ever drifts from under a
- * pointer, and all of it stops under reduced motion. Hovering or focusing a
- * node lights its card in the grid below, and the other way round.
+ * pointer, and all of it stops under reduced motion. Hovering a node lights
+ * its card in the grid below, and the other way round. The cards are the real
+ * links, so the nodes stay out of the tab order; in the narrow layout, where
+ * they shrink to unlabelled dots, they turn purely decorative (hidden from
+ * assistive tech and the pointer).
  */
 export function DirectoryOnlineConstellation({
   places,
@@ -44,6 +82,8 @@ export function DirectoryOnlineConstellation({
   const { t } = useTranslation();
   const fmt = useFormat();
   const titleId = useId();
+  const panelRef = useRef<HTMLElement>(null);
+  const isDecorative = useIsNarrowPanel(panelRef);
   const nodes = useMemo(() => layoutConstellation(places), [places]);
   const overflow = Math.max(0, places.length - CONSTELLATION_LIMIT);
   const verifiedCount = places.filter(
@@ -61,7 +101,7 @@ export function DirectoryOnlineConstellation({
   ];
 
   return (
-    <section className={s.panel} aria-labelledby={titleId}>
+    <section ref={panelRef} className={s.panel} aria-labelledby={titleId}>
       <div className={s.panelCopy}>
         <p className={s.eyebrow}>
           <span className={s.eyebrowDot} aria-hidden />
@@ -99,7 +139,10 @@ export function DirectoryOnlineConstellation({
         </div>
       </div>
 
-      <div className={s.stage}>
+      <div
+        className={s.stage}
+        data-decorative={isDecorative ? "true" : undefined}
+      >
         <svg
           className={s.orbits}
           viewBox="0 0 100 100"
@@ -140,6 +183,7 @@ export function DirectoryOnlineConstellation({
         <ul
           className={s.nodes}
           aria-label={t("marketing:directory.online.constellationLabel")}
+          aria-hidden={isDecorative || undefined}
         >
           {nodes.map((node, index) => {
             const place = node.item;
@@ -153,6 +197,7 @@ export function DirectoryOnlineConstellation({
                 <Link
                   to={`${routes.directory}/${place.slug}`}
                   className={s.node}
+                  tabIndex={-1}
                   data-tint={place.tint}
                   data-active={place.slug === activeSlug ? "true" : undefined}
                   aria-label={t("marketing:directory.online.nodeLabel", {

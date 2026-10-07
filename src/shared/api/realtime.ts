@@ -23,6 +23,10 @@ import {
   reconcileConversationHistory,
   upsertMessage,
 } from "./messageCache";
+import {
+  refreshDoorsAfterReconnect,
+  scheduleDoorRefresh,
+} from "../../features/gatherings/api/doorRefresh";
 import { patchConversationClaim, recordClaimFrame } from "./claimCache";
 import { claimStateFromFrame } from "./conversationClaim";
 import {
@@ -1500,6 +1504,14 @@ class RealtimeClient {
       // turn it unavailable there too, exactly as the list drops the row.
       void this.qc.invalidateQueries({ queryKey: ["conversation-detail"] });
     });
+    // A host or co-host checked a guest in, or undid one, on another device
+    // (or this one). The frame names the gathering, the guest's slug and the
+    // change, and nothing else; the door queries refetch from the server
+    // after the linger, folded into any refresh already pending and held back
+    // while this device has a check-in in flight.
+    socket.on("gathering:checkin", (frame) => {
+      scheduleDoorRefresh(this.qc, frame.eventSlug);
+    });
   }
 
   /**
@@ -1585,6 +1597,9 @@ class RealtimeClient {
       // the Mentions tab would otherwise stay stale until a reload.
       void this.qc.invalidateQueries({ queryKey: ["notifications"] });
       void this.qc.invalidateQueries({ queryKey: ["mentions", false] });
+      // A gap can also hide door frames. Gatherings with a cached door view
+      // refresh; member-facing guest lists are left alone.
+      refreshDoorsAfterReconnect(this.qc);
     }
     // Deliberately NOT also invalidating every closed thread's own
     // `["messages", id]` cache here: `ensureInactiveThreadTrim`

@@ -9,15 +9,26 @@ import {
 } from "../listBusiness/listBusiness.data";
 import {
   normalizeAccessibilityAnswers,
+  normalizeListingAccessibilityAnswers,
   type AccessibilityAnswerMap,
 } from "../listBusiness/listingAccessibility.data";
+import { emptyMenu, menuForDisplay } from "../listBusiness/listingMenu.data";
 import {
-  emptyMenu,
-  menuForDisplay,
-  pricingModeOf,
-} from "../listBusiness/listingMenu.data";
+  isSellingOnline,
+  normalizeOnlineSummary,
+  normalizePublicOnlineDetails,
+  onlineDetailsForPayload,
+  summaryFromDetails,
+} from "../listBusiness/listingOnline.data";
+import {
+  effectivePricingMode,
+  shopItemsForPayload,
+  shopPhotoDisplayUrl,
+  toDirectoryShopItems,
+} from "../listBusiness/listingShop.data";
 import { servicesForPayload } from "../listBusiness/listingServices.data";
 import { normalizeOwnedBy } from "../listBusiness/listingOwnedBy.data";
+import { isAdultCategoryPicked } from "../localCategories";
 import type {
   CoverPhotoView,
   DirectoryCardDTO,
@@ -105,6 +116,14 @@ export function cardDtoToPlace(dto: DirectoryCardDTO): DirectoryPlace {
     tint: dto.tint,
     desc: dto.blurb,
     online: dto.online ?? false,
+    // "Based in" (an online listing) or the directory's city. Only the online
+    // card prints it, after "Online".
+    city: dto.city || undefined,
+    hasOnlineShop: dto.hasOnlineShop ?? false,
+    isAdultsOnly: dto.isAdultsOnly ?? false,
+    // The status slot and Visit read this slice; null for a listing that
+    // sells nothing online and for an older payload.
+    onlineSummary: normalizeOnlineSummary(dto.onlineSummary),
     latitude: dto.latitude,
     longitude: dto.longitude,
     // Both safe-space fields come across DERIVED, never raw: `"suspended"` is
@@ -165,7 +184,10 @@ export function cardDtoToPlace(dto: DirectoryCardDTO): DirectoryPlace {
       // redacted server-side. Absent on an older payload → initials.
       avatarUrl: dto.memberAvatarUrl ?? null,
     },
-    social: {},
+    // Online-only businesses carry their website and Instagram on the card,
+    // which the Online tab's browser bar prints as the site's address. Every
+    // other channel stays detail-only.
+    social: dto.onlineLinks ?? {},
     address: "",
     reviews: [],
   };
@@ -196,6 +218,16 @@ export function detailDtoToPlace(
     tint: dto.tint,
     desc: dto.blurb,
     online: dto.online ?? false,
+    hasOnlineShop: dto.hasOnlineShop ?? false,
+    isAdultsOnly: dto.isAdultsOnly ?? false,
+    onlineDetails: normalizePublicOnlineDetails(dto.onlineDetails),
+    // A detail payload carries the card slice too; one that does not gets it
+    // from the full block, so the page's own card bits agree with it.
+    onlineSummary:
+      dto.onlineSummary !== undefined
+        ? normalizeOnlineSummary(dto.onlineSummary)
+        : summaryFromDetails(normalizePublicOnlineDetails(dto.onlineDetails)),
+    shopItems: toDirectoryShopItems(dto.shopItems),
     latitude: dto.latitude,
     longitude: dto.longitude,
     safeSpaceStatus: dto.safeSpaceStatus ?? "none",
@@ -208,7 +240,7 @@ export function detailDtoToPlace(
     safeSpaceVouches: dto.safeSpaceVouches,
     safeSpaceRemoval: dto.safeSpaceRemoval,
     tagline: dto.tagline,
-    city: dto.city ?? undefined,
+    city: dto.city || undefined,
     timezone: dto.timezone ?? undefined,
     pills: dto.pills,
     rating: dto.rating,
@@ -338,6 +370,32 @@ function submittedOwnerIdentity(
 
 const PLACE_PHOTO_KEYS: PhotoKey[] = ["wide", "d1", "d2", "vibe"];
 
+/** The online block and shop a submitted draft shows, cleaned for its kind
+ *  the way a save would send them. */
+function submittedOnlineBlock(
+  listing: PendingListing,
+): Pick<DirectoryPlace, "onlineDetails" | "onlineSummary" | "shopItems"> {
+  if (!isSellingOnline(listing)) {
+    return { onlineDetails: null, onlineSummary: null, shopItems: [] };
+  }
+  const onlineDetails = onlineDetailsForPayload(listing.onlineDetails, listing);
+  const isShopShown = effectivePricingMode(listing) === "shop";
+  return {
+    onlineDetails,
+    onlineSummary: summaryFromDetails(onlineDetails),
+    shopItems: isShopShown
+      ? shopItemsForPayload(listing.shopItems ?? [], {
+          shouldDropIncomplete: true,
+        }).map((item) => ({
+          ...item,
+          photo: item.photo
+            ? { ...item.photo, image: shopPhotoDisplayUrl(item.photo.image) }
+            : null,
+        }))
+      : [],
+  };
+}
+
 /**
  * Map a member's own submitted listing (the wizard draft + submission
  * metadata kept in `useDirectoryListings`' `submitted` overlay) onto
@@ -394,6 +452,12 @@ export function submittedToPlace(
     tint,
     desc: listing.blurb,
     online: listing.online,
+    // Mirrors the backend's card and detail fields, so a demo listing's own
+    // card and page read like a live one, and the editor preview matches.
+    city: listing.online ? (listing.city ?? "").trim() || undefined : undefined,
+    hasOnlineShop: !listing.online && listing.hasOnlineShop === true,
+    isAdultsOnly: isAdultCategoryPicked(listing.cats),
+    ...submittedOnlineBlock(listing),
     latitude: listing.latitude,
     longitude: listing.longitude,
     tagline: listing.tagline,
@@ -408,14 +472,16 @@ export function submittedToPlace(
     whatItIs: listing.whatItIs.map((line) => line.text),
     goodFor: listing.goodFor.map((id) => ({ label: id, yes: true })),
     // A draft saved before these fields existed carries neither, so both are
-    // healed rather than read straight: the answer map is filled up to all six
+    // healed on the way through: the answer map is filled up to all ten
     // questions and the service rows lose their client-only keys.
     accessibility: {
-      answers: normalizeAccessibilityAnswers(listing.accessibility?.answers),
+      answers: normalizeListingAccessibilityAnswers(
+        listing.accessibility?.answers,
+      ),
       note: listing.accessibility?.note?.trim() || null,
     },
     services: servicesForPayload(listing.services ?? []),
-    pricingMode: pricingModeOf(listing),
+    pricingMode: effectivePricingMode(listing),
     menu: menuForDisplay(listing.menu),
     // Every listing agrees to the baseline in order to exist, this one
     // included; the wizard's own agreement is what created it.

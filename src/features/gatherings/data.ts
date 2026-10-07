@@ -985,7 +985,6 @@ export {
   duplicateGatheringPath,
   gatheringRecapPath,
   gatheringCancelledPath,
-  gatheringDashboardPath,
   manageGatheringPath,
   gatheringPhotosPath,
   coHostInvitePath,

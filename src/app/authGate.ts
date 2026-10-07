@@ -525,15 +525,18 @@ const CAPABILITY_ELEVATED_PATTERNS: {
   },
   {
     // The public-face content surfaces (press kit, landing slots, marketing
-    // films), shared by `editorial` and `cultural_producer`. A separate entry
-    // from the editorial queues above because `elevatingCapabilities` stops at
-    // the first match: folded into that entry, a cultural producer would
-    // either be bounced from these or let into the submission queues too.
+    // films, logo concepts), shared by `editorial` and `cultural_producer`. A
+    // separate entry from the editorial queues above because
+    // `elevatingCapabilities` stops at the first match: folded into that entry,
+    // a cultural producer would either be bounced from these or let into the
+    // submission queues too.
     patterns: [
       routes.adminPressKit,
       `${routes.adminPressKit}/*`,
       routes.adminMarketingVideos,
       `${routes.adminMarketingVideos}/*`,
+      routes.adminLogoConcepts,
+      `${routes.adminLogoConcepts}/*`,
       routes.adminLanding,
       `${routes.adminLanding}/*`,
     ],

@@ -9,7 +9,7 @@ export type ChatCameraStreamState = "starting" | "live" | "denied" | "failed";
  * previous stream down first whenever `facingMode` flips (front/back), and
  * stops every track on unmount so the camera light goes out the moment the
  * sheet closes. Mirrors `useCameraScan`'s own start/cleanup shape (see
- * `features/gatherings/door/useCameraScan.ts`) without its barcode-detection
+ * `features/gatherings/checkin/useCameraScan.ts`) without its barcode-detection
  * loop: this sheet only needs a live viewfinder plus an on-demand single-frame
  * capture, which the caller does itself with its own canvas and shutter
  * button once `state` is `"live"`.

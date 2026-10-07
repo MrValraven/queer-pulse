@@ -123,8 +123,8 @@ export function GatheringHostMenu({
     else if (moveMenuFocus(panelRef.current, event.key)) event.preventDefault();
   };
 
-  // Manage is the way through to attendees, announcements and the day-of
-  // dashboard. A gathering already called off has nothing left to cancel.
+  // Manage is the way through to attendees, announcements and the
+  // Check-in tab. A gathering already called off has nothing left to cancel.
   // The line sits between the everyday tools and the two ways of ending it.
   const items: HostMenuItem[] = [
     {

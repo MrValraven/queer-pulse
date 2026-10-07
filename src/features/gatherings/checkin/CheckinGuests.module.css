@@ -1,0 +1,26 @@
+/* Check-in guest list: the two groups and the line shown once every guest
+   has arrived. The heading, list, row and "not on the list" state each
+   keep their own module beside their component. */
+
+/* ── Groups ──────────────────────────────────────────────────────────────── */
+
+.groups {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-grid);
+  min-width: 0;
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.nobodyLeft {
+  margin: 0;
+  padding: 10px 12px;
+  font-size: var(--text-14);
+  color: var(--ink-60);
+}

@@ -9,7 +9,7 @@ export interface MyEventsModals {
   openTicket: (id: string) => void;
   closeTicket: () => void;
   moreMenu: MoreMenuState;
-  openMore: (eventId: string, x: number, y: number) => void;
+  openMore: (eventId: string, anchor: HTMLElement) => void;
   closeMore: () => void;
 }
 
@@ -26,8 +26,7 @@ export function useMyEventsModals(): MyEventsModals {
   const [moreMenu, setMoreMenu] = useState<MoreMenuState>({
     open: false,
     eventId: null,
-    x: 0,
-    y: 0,
+    anchor: null,
   });
 
   // ── details + ticket ──────────────────────────────
@@ -50,8 +49,8 @@ export function useMyEventsModals(): MyEventsModals {
 
   // ── more menu ─────────────────────────────────────
   const openMore = useCallback(
-    (eventId: string, x: number, y: number) =>
-      setMoreMenu({ open: true, eventId, x, y }),
+    (eventId: string, anchor: HTMLElement) =>
+      setMoreMenu({ open: true, eventId, anchor }),
     [],
   );
   const closeMore = useCallback(

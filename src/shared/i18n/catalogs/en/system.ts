@@ -198,9 +198,9 @@ export const system: Catalog = {
   "inviteLanding.sealed.eyebrow": "You've been personally invited",
   "inviteLanding.sealed.title": "<em>{name}</em> invited you.",
   "inviteLanding.sealed.sub_one":
-    "Invite-only · {count} member. This link was created for you and can only be opened once.",
+    "{count} member, vouched for. This link was created for you and can only be opened once.",
   "inviteLanding.sealed.sub_other":
-    "Invite-only · {count} members. This link was created for you and can only be opened once.",
+    "{count} members, each vouched for. This link was created for you and can only be opened once.",
   "inviteLanding.sealed.openCta": "Open invitation",
   "inviteLanding.opening.title": "An invitation from <em>{name}.</em>",
   "inviteLanding.card.inviterNoteWithSince":
@@ -453,7 +453,7 @@ export const system: Catalog = {
   "status.subscribe.toast": "You'll be notified during incidents.",
   "status.outro.line1": "A queer network.",
   "status.outro.line2": "<em>Rooted in Lisbon.</em>",
-  "status.outro.sub": "Invite-only. Community-owned. Built to last.",
+  "status.outro.sub": "Vouched for. Community-owned. Built to last.",
   "status.outro.cta": "Request an invite",
 
   // ── VerificationNeededPage.tsx / VerificationNeededSections.tsx ──────────

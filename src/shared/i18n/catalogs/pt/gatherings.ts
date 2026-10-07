@@ -641,6 +641,8 @@ export const gatherings: Catalog = {
   "create.title": "Cria o teu <em>convívio.</em>",
   "create.toast.publishError":
     "Não foi possível publicar o teu convívio. Tenta novamente.",
+  "create.toast.venueRefused":
+    "O teu convívio ainda não está no ar. Já não dá para associar o local que escolheste, por isso escolhe outro.",
   "create.toast.published": "O teu convívio está no ar",
   "create.success.title": "O teu convívio <em>está no ar.</em>",
   "create.success.viewCta": "Ver no quadro",
@@ -1175,88 +1177,6 @@ export const gatherings: Catalog = {
   "host.sidebar.capacity": "até {max}",
 
   // ── Host dashboard, manage, cohosts, QR, album ────────────────────────────
-  // ── Day-of dashboard (GatheringDashboardPage / GatheringDashboardCards) ────
-  "dashboard.backToManage": "Gerir convívio",
-  "dashboard.inProgress": "A decorrer",
-  "dashboard.checkedIn": "Já chegaram",
-  "dashboard.expected": "Previsto",
-  "dashboard.waitlist": "Lista de espera",
-  "dashboard.dataRetentionNotice":
-    "Os dados do convívio são eliminados 30 dias depois do evento",
-  "dashboard.attendanceRecordsNotice":
-    "Os registos de presença nunca são partilhados publicamente",
-  "dashboard.checkedInToast": "{name} fez o check-in",
-
-  // ── Dashboard: check-in column ─────────────────────────────────────────────
-  "dashboard.checkin.heading": "Check-in",
-  "dashboard.checkin.qrAreaLine1": "Área do leitor de QR",
-  "dashboard.checkin.qrAreaLine2": "toca para abrir a câmara",
-  "dashboard.checkin.scanCta": "Ler QR code de uma pessoa",
-  "dashboard.checkin.orDivider": "ou procura pelo nome",
-  "dashboard.checkin.searchPlaceholder":
-    "Procurar na lista de pessoas convidadas…",
-  "dashboard.checkin.matchCount_one": "{count} resultado",
-  "dashboard.checkin.matchCount_other": "{count} resultados",
-  "dashboard.checkin.noMatch": "Não consta da lista de pessoas convidadas",
-  "dashboard.checkin.recentHeading": "Check-ins recentes",
-  "dashboard.checkin.justNow": "Agora mesmo",
-
-  // ── Dashboard: guest list card ─────────────────────────────────────────────
-  "dashboard.guestList.heading": "Pessoas convidadas",
-  "dashboard.guestList.filterAll_one": "Todas ({count})",
-  "dashboard.guestList.filterAll_other": "Todas ({count})",
-  "dashboard.guestList.filterCheckedIn_one": "Já chegaram ({count})",
-  "dashboard.guestList.filterCheckedIn_other": "Já chegaram ({count})",
-  "dashboard.guestList.filterPending_one": "Ainda não ({count})",
-  "dashboard.guestList.filterPending_other": "Ainda não ({count})",
-  "dashboard.guestList.searchPlaceholder": "Procurar pessoas convidadas…",
-  "dashboard.guestList.emptyAllTitle":
-    "Ainda não há ninguém na lista de pessoas convidadas",
-  "dashboard.guestList.emptyAllDescription":
-    "À medida que as pessoas reservam o lugar, vão aparecer aqui prontas para o check-in. Partilha o teu convívio para trazeres as primeiras pessoas convidadas.",
-  "dashboard.guestList.emptyFilterTitle": "Sem pessoas convidadas nesta vista",
-  "dashboard.guestList.emptyFilterDescription":
-    "Ninguém corresponde ao filtro ou pesquisa atual. Tenta alargar para veres todas as pessoas esperadas.",
-  "dashboard.guestList.clearFiltersCta": "Limpar filtros",
-  "dashboard.guestList.checkInManuallyCta": "Fazer check-in manual",
-  "dashboard.guestList.checkedInChip": "Check-in às {time}",
-  "dashboard.guestList.expectedChip": "Por chegar",
-  "dashboard.guestList.waitlistToggle_one":
-    "{count} na lista de espera. Promover",
-  "dashboard.guestList.waitlistToggle_other":
-    "{count} na lista de espera. Promover",
-  "dashboard.guestList.promoteCta": "Promover",
-  "dashboard.guestList.promotedToast":
-    "{name} entrou na lista de pessoas convidadas",
-  "dashboard.waitlist.position": "#{position} na lista de espera",
-
-  // ── Dashboard: stats column ─────────────────────────────────────────────────
-  "dashboard.stats.arrivalRateHeading": "Taxa de chegada",
-  "dashboard.stats.now": "Agora",
-  "dashboard.stats.attendanceRateLabel": "Taxa de presença até agora",
-  "dashboard.stats.peakArrivalLabel": "Pico de chegadas",
-  "dashboard.stats.quickActionsHeading": "Ações rápidas",
-  "dashboard.stats.messageAllCta": "Enviar mensagem a todas as pessoas",
-  "dashboard.stats.messageSentToast_one":
-    "Mensagem enviada a {count} pessoa convidada",
-  "dashboard.stats.messageSentToast_other":
-    "Mensagem enviada a {count} pessoas convidadas",
-  "dashboard.stats.startingCta": 'Enviar "Estamos a começar"',
-  "dashboard.stats.startingSentToast":
-    "Estamos a começar. Enviado a todas as pessoas convidadas",
-  "dashboard.stats.wrappedTitle": "Convívio <em>terminado</em>",
-  "dashboard.stats.wrappedText_one":
-    "O check-in está fechado e foi enviado um acompanhamento a {count} pessoa convidada, com a retrospetiva e o link para as fotografias.",
-  "dashboard.stats.wrappedText_other":
-    "O check-in está fechado e foi enviado um acompanhamento a {count} pessoas convidadas, com a retrospetiva e o link para as fotografias.",
-  "dashboard.stats.endOfEventLabel": "Fim do convívio",
-  "dashboard.stats.endOfEventText":
-    "Quando o convívio terminar, envia um acompanhamento e fecha a janela de check-in.",
-  "dashboard.stats.wrappedCheckbox": "O convívio já terminou",
-  "dashboard.stats.endEventCta": "Terminar convívio e enviar acompanhamento",
-  "dashboard.stats.readyNote": "Já podes enviar o acompanhamento",
-  "dashboard.stats.notReadyNote": "Marca o convívio como terminado para ativar",
-  "dashboard.stats.followUpToast": "Acompanhamento enviado. Check-in fechado",
 
   // ── Manage page header (ManageGatheringPage) ────────────────────────────────
   "manage.eyebrow": "A organizar",
@@ -1266,7 +1186,7 @@ export const gatherings: Catalog = {
     "Aprovação concluída · faltam {count} dias",
   "manage.actions.editDetails": "Editar detalhes",
   "manage.actions.messageAttendees": "Enviar mensagem às pessoas",
-  "manage.actions.dayOfDashboard": "Painel do dia",
+  "manage.actions.openCheckin": "Abrir check-in",
   "manage.linkCopiedToast": "Link copiado!",
   "manage.linkCopyFailedToast":
     "Não conseguimos aceder à área de transferência. Copia o link a partir do cartão de partilha.",
@@ -1287,7 +1207,8 @@ export const gatherings: Catalog = {
   "manage.details.capacityUnlimited": "Sem limite",
   "manage.overview.editCta": "Editar",
   "manage.overview.descriptionLabel": "Descrição",
-  "manage.overview.descriptionNoun": "descrição",
+  "manage.overview.editAria": "Editar {label}",
+  "manage.overview.savedToast": "Guardado. Já está visível na página.",
   "manage.overview.lastEdited": "Última edição {time}",
 
   // ── Manage: attendees tab ────────────────────────────────────────────────────
@@ -1366,12 +1287,12 @@ export const gatherings: Catalog = {
   "manage.tabs.attendees": "Pessoas",
   "manage.tabs.messages": "Mensagens",
   "manage.tabs.settings": "Definições",
+  "manage.tabs.checkin": "Check-in",
 
   // ── Manage: shared modal chrome ───────────────────────────────────────────────
   "manage.cancelCta": "Cancelar",
 
   // ── Manage: edit-details modal ────────────────────────────────────────────────
-  "manage.editModal.eyebrow": "Editar detalhes",
   "manage.editModal.title": "Atualiza o teu convívio",
   "manage.editModal.sub":
     "As alterações ficam logo visíveis na página pública. As pessoas são avisadas de mudanças de data ou local.",
@@ -1407,7 +1328,9 @@ export const gatherings: Catalog = {
   "manage.seriesScope.eyebrow": "Convívio recorrente",
   "manage.seriesScope.edit.title": "Aplicar esta <em>alteração</em> a…",
   "manage.seriesScope.edit.sub":
-    "Este convívio repete-se. Escolhe se a tua alteração se aplica só a esta data ou a todas as datas seguintes. Cada data futura recebe o título, a descrição, o local, o público, o formato, os cuidados e as definições de confirmações desta data, no lugar do que tinha. A capa, o custo e a comunidade só mudam se os mudaste aqui.",
+    "Este convívio repete-se. Escolhe se a tua alteração se aplica só a esta data ou a todas as datas seguintes. Cada data futura recebe o título, a descrição, o público, o formato, os cuidados e as definições de confirmações desta data, no lugar do que tinha. O local, a capa, o custo, a capacidade e a comunidade só mudam se os mudaste aqui.",
+  "manage.seriesScope.editField.sub":
+    "Este convívio repete-se. Escolhe se esta alteração vale só para esta data ou para todas as que ainda faltam.",
   "manage.seriesScope.edit.thisCta": "Só a esta data",
   "manage.seriesScope.edit.futureCta": "A esta e a todas as datas futuras",
   "manage.seriesScope.cancel.title": "Cancelar <em>que datas?</em>",
@@ -1463,10 +1386,22 @@ export const gatherings: Catalog = {
   "manage.invite.successMeta_one": "Enviado agora mesmo · {count} convite",
   "manage.invite.successMeta_other": "Enviado agora mesmo · {count} convites",
 
-  // ── Manage: inline-edit modal ──────────────────────────────────────────────────
-  "manage.inlineEdit.eyebrow": "Editar",
-  "manage.inlineEdit.title": "Editar {label}",
-  "manage.inlineEdit.saveCta": "Guardar",
+  // ── Manage: single-field editors (GatheringFieldEditor) ──────────────────────
+  "manage.fieldEditor.scheduleTitle": "Data e hora",
+  "manage.fieldEditor.scheduleSub":
+    "Todas as pessoas que confirmaram presença ou foram convidadas são avisadas quando a data ou a hora de início mudam.",
+  "manage.fieldEditor.venueSub":
+    "Todas as pessoas que confirmaram presença ou foram convidadas são avisadas quando o local muda.",
+  "manage.fieldEditor.capacitySub":
+    "Define quantas pessoas podem dizer que vão.",
+  "manage.fieldEditor.descriptionSub": "Aparece na página pública.",
+  "manage.fieldEditor.descriptionLeft_one": "Falta {count} carácter",
+  "manage.fieldEditor.descriptionLeft_other": "Faltam {count} caracteres",
+  "manage.fieldEditor.capacityUnlimitedHint":
+    "Qualquer pessoa pode confirmar presença.",
+  "manage.fieldEditor.descriptionCount_one": "{length} carácter",
+  "manage.fieldEditor.descriptionCount_other": "{length} caracteres",
+  "manage.fieldEditor.saveShortcut": "<kbd>{keys}</kbd> para guardar",
 
   // ── Venue picker (VenuePicker) — used by the manage venue modal and the
   //    create-gathering wizard's place fields (steps/PlaceFields.tsx) ──────
@@ -1477,6 +1412,8 @@ export const gatherings: Catalog = {
   "venuePicker.freeTextPlaceholder": "Nome do local",
   "venuePicker.fromDirectory": "Do diretório local",
   "venuePicker.change": "Alterar",
+  "venuePicker.refusedError":
+    "Já não dá para associar este local a um convívio. Toca em Alterar para escolher outro ou escrever tu o nome.",
 
   // ── Cohosts (CohostManager / AddCohostModal) ─────────────────────
   "cohost.panelTitle": "Pessoas coanfitriãs",
@@ -1519,22 +1456,6 @@ export const gatherings: Catalog = {
     "Opcional. A pessoa vê esta data no convite e pode responder antes.",
   "cohost.addModal.sendCta": "Enviar convite",
   "cohost.addModal.backCta": "Escolher outra pessoa",
-
-  // ── QR check-in scanner (QrScanModal) ──────────────────────────────────────────
-  "qr.eyebrow": "Check-in",
-  "qr.title": "Ler QR code de uma pessoa",
-  "qr.readingHint": "A ler o código QR…",
-  "qr.pointHint": "Aponta a câmara ao código QR de uma pessoa",
-  "qr.scanningCta": "A ler…",
-  "qr.allCheckedInCta": "Toda a gente já fez check-in",
-  "qr.simulateCta": "Simular leitura",
-  "qr.demoNote": "Modo de demonstração. Não é usada nenhuma câmara real.",
-  "qr.closeAria": "Fechar",
-  "qr.success.ariaLabel": "Check-in feito",
-  "qr.success.title": "Check-in <em>feito.</em>",
-  "qr.success.scannedMeta": "{pronouns} · QR lido",
-  "qr.success.scanNextCta": "Ler seguinte",
-  "qr.success.doneCta": "Concluído",
 
   // ── Photo album download (DownloadAlbumModal) ──────────────────────────────────
   "album.loading.title": "A preparar o álbum…",
@@ -1679,7 +1600,6 @@ export const gatherings: Catalog = {
   "events.freeTag": "Gratuito",
 
   // ── LOC-03: a porta ───────────────────────────────────────────────────────
-  "door.expectedSeats": "Lugares esperados",
   "door.checkInCta": "Registar entrada",
   "door.checkInAria": "Registar a entrada de {name}",
   "door.arrivedAt": "Chegou às {time}",
@@ -1699,9 +1619,6 @@ export const gatherings: Catalog = {
   "door.emptyTitle": "Ainda ninguém na lista",
   "door.emptyDescription":
     "À medida que as pessoas confirmam presença aparecem aqui, prontas para registar a entrada.",
-  "door.notYoursTitle": "Esta porta não é tua",
-  "door.notYoursDescription":
-    "Só quem organiza ou co-organiza um convívio pode ver quem vai lá.",
   // Ver a nota em EN: substitui o número de chegadas quando o convívio já
   // passou o prazo de conservação das presenças.
   "door.checkInsNotKept": "Já não guardamos",
@@ -1709,16 +1626,10 @@ export const gatherings: Catalog = {
     "As entradas já não são guardadas em convívios passados. Apagamo-las 30 dias depois de o convívio terminar.",
   // Ver a nota em EN: a mesma ausência, dita onde estavam os filtros de
   // chegada da lista de convidados, com outras palavras.
-  "door.checkInsNotKeptFilters":
-    "Os filtros de chegada desapareceram porque apagámos as entradas deste convívio, por isso a lista mostra toda a gente.",
   // Ver a nota em EN: mostrado quando o servidor recusa um check-in num
   // convívio que já passou a janela de presenças.
   "door.checkInClosedNotice":
     "Este convívio já não aceita check-in. Apagámos os registos de chegada quando a janela de check-in terminou, por isso já não é possível adicionar novos.",
-  "door.scan.heading": "À porta",
-  "door.scan.lead":
-    "Lê o cartão de quem chega, ou procura a pessoa na lista abaixo.",
-  "door.scan.openCta": "Ler um cartão",
   "door.scan.eyebrow": "Registar entrada",
   "door.scan.title": "Ler um cartão de membro",
   "door.scan.viewfinderAria": "Vista da câmara para ler um cartão de membro",
@@ -1743,8 +1654,55 @@ export const gatherings: Catalog = {
     "Todos os cartões de membro têm este código por baixo. Colar ou escrever funciona da mesma maneira.",
   "door.scan.codePlaceholder": "Cola ou escreve o código",
   "door.scan.checkInCta": "Registar entrada",
-  "door.scan.checkingCta": "A registar…",
   "door.scan.doneCta": "Pronto",
+
+  // ── Check-in tab (2026-10-07) ─────────────────────────────────────────────
+  "checkin.meter.arrived_one": "{count} de {total} chegou",
+  "checkin.meter.arrived_other": "{count} de {total} chegaram",
+  "checkin.meter.seats_one": "{count} lugar",
+  "checkin.meter.seats_other": "{count} lugares",
+  "checkin.meter.people_one": "{count} pessoa",
+  "checkin.meter.people_other": "{count} pessoas",
+  "checkin.meter.guests_one": "+ {count} acompanhante",
+  "checkin.meter.guests_other": "+ {count} acompanhantes",
+  "checkin.meter.waitlist": "Lista de espera",
+  "checkin.meter.progressAria": "Chegadas até agora",
+  "checkin.meter.everyoneHere": "Já chegou toda a gente",
+  "checkin.state.upcoming": "Começa {date}",
+  "checkin.state.startsInHours": "Começa daqui a {hours}h {minutes}m",
+  "checkin.state.startsInMinutes_one": "Começa daqui a {count} minuto",
+  "checkin.state.startsInMinutes_other": "Começa daqui a {count} minutos",
+  "checkin.state.live": "A decorrer",
+  "checkin.state.ended": "Terminou",
+  "checkin.toolbar.searchLabel": "Procurar pessoas convidadas",
+  "checkin.toolbar.searchPlaceholder": "Procurar pessoas convidadas…",
+  "checkin.toolbar.clearSearch": "Limpar pesquisa",
+  "checkin.toolbar.scanCta": "Ler cartão",
+  "checkin.toolbar.focusCta": "Modo foco",
+  "checkin.toolbar.exitFocusCta": "Sair do modo foco",
+  "checkin.focus.regionLabel": "Check-in, modo foco",
+  "checkin.groups.expected_one": "Ainda por chegar ({count})",
+  "checkin.groups.expected_other": "Ainda por chegar ({count})",
+  "checkin.groups.arrived_one": "Chegaram ({count})",
+  "checkin.groups.arrived_other": "Chegaram ({count})",
+  "checkin.groups.nobodyLeft": "Já não falta ninguém.",
+  "checkin.row.guests_one": "+{count} acompanhante",
+  "checkin.row.guests_other": "+{count} acompanhantes",
+  "checkin.row.accessNeeds": "Necessidades de acessibilidade",
+  "checkin.row.checkedInToast": "{name} fez o check-in",
+  "checkin.notOnList.title": 'Ninguém com o nome "{query}" vai',
+  "checkin.notOnList.description":
+    "Se ainda não confirmaram, podem fazê-lo agora no telemóvel.",
+  "checkin.notOnList.showCodeCta": "Mostrar código para confirmar",
+  "checkin.notOnList.codeTitle": "Lê para confirmar",
+  "checkin.notOnList.codeLabel": "Código que abre a página deste encontro",
+  "checkin.scan.welcome": "Bem-vinde, {name}",
+  "checkin.scan.repeat": "{name} chegou às {time}",
+  "checkin.scan.refusedTitle": "Não dá para fazer check-in",
+  "checkin.scan.ready": "A postos para o próximo cartão",
+  "checkin.scan.dismiss": "Fechar",
+  "checkin.footer.retention":
+    "Os dados do encontro são apagados 30 dias depois do evento. Os registos de presença nunca são partilhados publicamente.",
 
   // ── LOC-04: onde é, e quem consegue entrar ────────────────────────────────
   "gathering.where.heading": "Como chegar",
@@ -2022,7 +1980,7 @@ export const gatherings: Catalog = {
   "calendar.loadingMore": "A carregar…",
 
   // PRD-190
-  "manage.overview.duplicateCta": "Repetir este convívio",
+  "manage.overview.duplicateCta": "Duplicar convívio",
   "manage.attendees.exportingCta": "A exportar…",
   "manage.attendees.exportDemoToast":
     "Na demonstração não há uma lista real para exportar.",

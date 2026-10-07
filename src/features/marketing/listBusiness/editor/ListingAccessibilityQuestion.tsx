@@ -5,6 +5,7 @@ import {
   ACCESSIBILITY_ANSWER_OPTIONS,
   type AccessibilityAnswer,
   type AccessibilityQuestionDefinition,
+  type ListingAccessibilitySlug,
 } from "../listingAccessibility.data";
 import styles from "./ListingAccessibility.module.css";
 
@@ -26,12 +27,9 @@ export function ListingAccessibilityQuestion({
   answer,
   onChange,
 }: {
-  question: AccessibilityQuestionDefinition;
+  question: AccessibilityQuestionDefinition<ListingAccessibilitySlug>;
   answer: AccessibilityAnswer;
-  onChange: (
-    slug: AccessibilityQuestionDefinition["slug"],
-    next: AccessibilityAnswer,
-  ) => void;
+  onChange: (slug: ListingAccessibilitySlug, next: AccessibilityAnswer) => void;
 }) {
   const { t } = useTranslation();
   const fieldId = useId();

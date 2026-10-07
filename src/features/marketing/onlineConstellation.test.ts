@@ -5,6 +5,7 @@ import {
   ORBIT_RADII,
   layoutConstellation,
   onlineAddressOf,
+  outerTurnFor,
 } from "./onlineConstellation";
 
 const distanceOf = (node: { x: number; y: number }) =>
@@ -53,6 +54,32 @@ describe("layoutConstellation", () => {
       Math.sin(-Math.PI / 6) * ORBIT_RADII[1],
       1,
     );
+  });
+
+  it("keeps every inner and outer node clear of each other at any count", () => {
+    // A node is 18% of the stage wide, so two centres closer than that touch.
+    for (let count = 6; count <= CONSTELLATION_LIMIT; count += 1) {
+      const nodes = layoutConstellation(
+        Array.from({ length: count }, (_, i) => i),
+      );
+      const inner = nodes.filter((node) => node.orbit === 0);
+      const outer = nodes.filter((node) => node.orbit === 1);
+      for (const outerNode of outer) {
+        for (const innerNode of inner) {
+          const apart = Math.hypot(
+            outerNode.x - innerNode.x,
+            outerNode.y - innerNode.y,
+          );
+          expect(apart).toBeGreaterThan(19);
+        }
+      }
+    }
+  });
+
+  it("turns the outer orbit off the inner spokes for nine businesses", () => {
+    // Four inner and five outer: half a step put one outer node on a spoke.
+    const turn = outerTurnFor(4, 5);
+    expect(turn).toBeCloseTo((Math.PI * 2 * 27) / 360, 5);
   });
 
   it("seats at most CONSTELLATION_LIMIT, keeping the order it was given", () => {

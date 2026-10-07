@@ -291,6 +291,7 @@ export const shared: Catalog = {
   "adminNav.items.landing": "Landing page",
   "adminNav.items.pressKit": "Press kit",
   "adminNav.items.marketingVideos": "Marketing videos",
+  "adminNav.items.logoConcepts": "Logo concepts",
   "adminNav.items.queues": "All queues",
   "adminNav.items.moderation": "Moderation",
   "adminNav.items.forumReview": "Forum review",

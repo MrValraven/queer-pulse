@@ -1035,7 +1035,7 @@ export const economy: Catalog = {
   "landlordReply.eyebrow": "Right of reply",
   "landlordReply.title": "Answer what was written about you",
   "landlordReply.intro":
-    "Someone sent you this because a member of QueerPulse wrote about renting from you. QueerPulse is invite-only, so you cannot read that page, and this form is how you answer it.",
+    "Someone sent you this because a member of QueerPulse wrote about renting from you. QueerPulse pages are for its vouched-for members, so you cannot read that page, and this form is how you answer it.",
   "landlordReply.checkNotice":
     "Nothing you write here is published straight away. Somebody on the team reads it first and works out that you are the person named. That step is why this form exists at all.",
   "landlordReply.nameLabel": "Your name",

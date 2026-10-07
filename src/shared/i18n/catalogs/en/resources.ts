@@ -766,7 +766,7 @@ export const resources: Catalog = {
 
   "transHub.outro.title": "You're seen <em>here.</em>",
   "transHub.outro.sub":
-    "QueerPulse is a vouched-for, invite-only network. If someone you trust is already here, ask them to vouch for you.",
+    "Everyone on QueerPulse was vouched for by a member. If someone you trust is already here, ask them to vouch for you.",
   "transHub.outro.cta": "Request an invite",
 
   // ── TransHealthcarePage (+ TransHealthcareSections.tsx + transHealthcare.data.ts) ──

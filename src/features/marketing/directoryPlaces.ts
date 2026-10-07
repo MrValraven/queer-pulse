@@ -15,6 +15,14 @@ import type {
 } from "./listBusiness/listingMenu.data";
 import type { ListingServiceOffering } from "./listBusiness/listingServices.data";
 import type { ListingOwnedBy } from "./listBusiness/listingOwnedBy.data";
+import {
+  normalizeOnlineDetails,
+  summaryFromDetails,
+  toPublicOnlineDetails,
+  type DirectoryOnlineSummary,
+  type ListingPublicOnlineDetails,
+} from "./listBusiness/listingOnline.data";
+import type { DirectoryShopItem } from "./listBusiness/listingShop.data";
 import { ONLINE_DIRECTORY_PLACES } from "./directoryOnlinePlaces.data";
 
 export type Tint = "coral" | "jade" | "plum";
@@ -275,9 +283,9 @@ export interface DirectoryPlace {
     phone?: string;
   };
   address: string;
-  /** City the venue sits in — drives the location eyebrow and the JSON-LD
-   * `addressRegion`. Absent on demo places (all Lisbon) → callers default to
-   * Lisbon rather than mislabel a listing. */
+  /** City the venue sits in, or the city an online-only listing is based in
+   * ("Based in"). Drives the location eyebrow and the JSON-LD
+   * `addressRegion`. Absent on most demo places, which read as Lisbon. */
   city?: string;
   /** IANA timezone the venue's `hours` are expressed in, so "Open now" is
    * correct regardless of the visitor's own timezone. Absent → Europe/Lisbon. */
@@ -285,6 +293,19 @@ export interface DirectoryPlace {
   /** Online-only business (no physical location). When true the card shows an
    * "Online" badge instead of a neighbourhood and the place never pins the map. */
   online?: boolean;
+  /** A place that also sells online. It keeps its door, categories and hours,
+   *  and gains the "Also online" pill and the ordering block. Absent means no. */
+  hasOnlineShop?: boolean;
+  /** Carries the 18+ category. Only member reads return one; its page is
+   *  `noindex`. Absent means no. */
+  isAdultsOnly?: boolean;
+  /** The card's slice of the online block (status slot, Visit). Null or
+   *  absent when the listing sells nothing online. */
+  onlineSummary?: DirectoryOnlineSummary | null;
+  /** The full "Ordering & delivery" block, on the detail page. */
+  onlineDetails?: ListingPublicOnlineDetails | null;
+  /** "In the shop" items, shown when `pricingMode` is "shop". */
+  shopItems?: DirectoryShopItem[];
   /** Map pin from the listing; absent for demo places (they use BUSINESS_COORDS). */
   latitude?: number | null;
   longitude?: number | null;
@@ -384,6 +405,13 @@ export interface DirectoryPlace {
 const C: Tint = "coral";
 const J: Tint = "jade";
 const P: Tint = "plum";
+
+/** A demo online block in its public shape, built through the same
+ *  normaliser a live payload goes through. */
+function demoOnlineBlock(raw: unknown) {
+  const details = toPublicOnlineDetails(normalizeOnlineDetails(raw));
+  return { onlineDetails: details, onlineSummary: summaryFromDetails(details) };
+}
 
 export const DIRECTORY_PLACES: DirectoryPlace[] = [
   {
@@ -545,14 +573,21 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
   {
     slug: "estudio-beatriz-pinto",
     name: "Estúdio Beatriz Pinto",
-    cat: "design",
-    // An online-only listing shaped exactly the way the live API sends one:
-    // the wizard's "Elsewhere in" catch-all for a hood, an empty address, and
-    // no pin (so no BUSINESS_COORDS entry either). Keeps the online paths on
-    // the detail page (eyebrow, visit card, access section, action bar,
-    // suggest-an-edit picker) exercised in demo, alongside the Online tab's
-    // own fixtures in `directoryOnlinePlaces.data.ts`.
-    hood: "Elsewhere in Lisbon",
+    cat: "handmade",
+    // An online-only listing shaped the way the live API sends one: no
+    // neighbourhood, no address and no pin (so no BUSINESS_COORDS entry), a
+    // "Based in" city and an online block. Keeps the online paths on the
+    // detail page exercised in demo, alongside the Online tab's own fixtures
+    // in `directoryOnlinePlaces.data.ts`.
+    hood: "",
+    city: "Lisbon",
+    ...demoOnlineBlock({
+      mainLink: { url: "beatrizpinto.pt/loja", kind: "shop" },
+      fulfilment: ["shipsPortugal"],
+      shipsFrom: "portugal",
+      payments: ["mbway", "card"],
+      replyNote: "A new batch every month. Commissions by email.",
+    }),
     owned: true,
     member: "beatriz",
     av: "BP",
@@ -750,6 +785,45 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
       email: "ola@livrariabertha.pt",
     },
     address: "R. da Imprensa Nacional 48 · Príncipe Real",
+    // The demo place that also sells online: its shop is the priced list.
+    hasOnlineShop: true,
+    pricingMode: "shop",
+    ...demoOnlineBlock({
+      mainLink: { url: "livrariabertha.pt/loja", kind: "shop" },
+      moreLinks: [{ url: "bookshop.org/shop/bertha", platform: "other" }],
+      fulfilment: ["shipsPortugal", "shipsEu"],
+      shipsFrom: "portugal",
+      payments: ["mbway", "multibanco", "card"],
+      replyNote: "Orders packed every weekday. Messages answered the same day.",
+    }),
+    shopItems: [
+      {
+        id: "bertha-item-1",
+        name: "Stone Butch Blues",
+        price: "18 EUR",
+        link: "livrariabertha.pt/loja/stone-butch-blues",
+        photo: {
+          image:
+            "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=800&auto=format&fit=crop",
+          alt: "A paperback lying open on a table",
+          caption: "",
+        },
+      },
+      {
+        id: "bertha-item-2",
+        name: "Queer poetry gift box",
+        price: "35 EUR",
+        link: "",
+        photo: null,
+      },
+      {
+        id: "bertha-item-3",
+        name: "Tote bag",
+        price: "12 EUR",
+        link: "livrariabertha.pt/loja/tote",
+        photo: null,
+      },
+    ],
     photos: {
       wide: "https://images.unsplash.com/photo-1521123845560-14093637aa7d?q=80&w=1600&auto=format&fit=crop",
       d1: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=1200&auto=format&fit=crop",

@@ -195,8 +195,7 @@ export function EventTools({
   const c = useMyEvents();
   const [calOpen, setCalOpen] = useState(false);
   const onMore = (e: MouseEvent<HTMLButtonElement>) => {
-    const r = e.currentTarget.getBoundingClientRect();
-    c.openMore(ev.id, r.left, r.bottom + 6);
+    c.openMore(ev.id, e.currentTarget);
   };
   // Purely informational — NOT a per-event toggle. The real reminder cron
   // (`EventRemindersService`) reminds every going/maybe attendee

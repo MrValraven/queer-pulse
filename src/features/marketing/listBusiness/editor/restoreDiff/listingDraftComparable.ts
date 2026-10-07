@@ -10,6 +10,11 @@ import {
   pricingModeOf,
   type ListingMenuDraft,
 } from "../../listingMenu.data";
+import {
+  normalizeOnlineDetails,
+  toPublicOnlineDetails,
+} from "../../listingOnline.data";
+import { isAdultCategoryPicked } from "../../../localCategories";
 import { healListingDraft } from "./healListingDraft";
 
 /**
@@ -94,6 +99,20 @@ const COMPARABLE_NORMALISERS: Partial<
   hoursExceptions: (draft) => comparableExceptions(draft.hoursExceptions),
   accessibility: (draft) => normalizeAccessibilityDraft(draft.accessibility),
   pricingMode: (draft) => pricingModeOf(draft),
+  // Absent on a copy from before the online fields, which reads exactly like
+  // the empty value, so neither counts as a change.
+  city: (draft) => draft.city ?? "",
+  // Read as a save sends them: an online listing never has an online shop,
+  // and the 18+ acknowledgement only counts while `intimacy` is picked.
+  hasOnlineShop: (draft) => !draft.online && draft.hasOnlineShop === true,
+  adultTermsAccepted: (draft) =>
+    isAdultCategoryPicked(draft.cats) && draft.adultTermsAccepted === true,
+  onlineDetails: (draft) =>
+    toPublicOnlineDetails(normalizeOnlineDetails(draft.onlineDetails)),
+  shopItems: (draft) => draft.shopItems ?? [],
+  // Draft-only state nobody reads on the page.
+  isWhereFoundAnswered: () => null,
+  inactiveModeCats: () => null,
 };
 
 function comparableValue<Key extends keyof ListingDraft>(

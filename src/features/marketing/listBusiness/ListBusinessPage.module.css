@@ -465,6 +465,18 @@
 .chipOn .priceLbl {
   color: rgba(var(--cream-rgb), 0.82);
 }
+/* Dark theme: plum is the dark page's own paper, so a plum fill barely parts
+   a picked chip from an unpicked one. Same selected treatment as ChipSelect:
+   a cream tint with a cream border and full cream type. */
+:global([data-theme="dark"]) .chipOn,
+:global([data-theme="dark"]) .chipOn:hover {
+  background: rgba(var(--cream-rgb), 0.14);
+  border-color: rgba(var(--cream-rgb), 0.4);
+  color: rgba(var(--cream-rgb), 1);
+}
+:global([data-theme="dark"]) .chipOn .priceLbl {
+  color: rgba(var(--cream-rgb), 0.82);
+}
 
 /* ===== Path-choice cards (step 0) ===== */
 .pathGrid {
@@ -1161,10 +1173,14 @@
   color: var(--ink-40);
 }
 .rv {
+  min-width: 0;
   font-size: var(--text-14);
   color: var(--text-strong);
   font-weight: 500;
   line-height: 1.55;
+  /* Fallback only: a single word too long for the column (a long hostname)
+     breaks to fit; ordinary text still wraps at spaces. */
+  overflow-wrap: anywhere;
 }
 .rvQuote {
   font-family: var(--serif);

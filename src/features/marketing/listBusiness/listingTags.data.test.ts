@@ -28,18 +28,17 @@ const ALL_TAGS = [...new Set([...PLACE_TAGS, ...ONLINE_TAGS])];
 const PLACE_GROUPS = tagGroupsForAudience(LISTING_TAG_GROUPS, false);
 
 describe("LISTING_TAG_GROUPS", () => {
-  it("holds the seven groups in display order", () => {
+  it("holds the six groups in display order", () => {
     expect(LISTING_TAG_GROUPS.map((group) => group.id)).toEqual([
       "visiting",
       "happening",
       "foodDrink",
       "pricing",
       "ordering",
-      "payment",
       "sessions",
     ]);
     expect(PLACE_TAGS).toHaveLength(27);
-    expect(ONLINE_TAGS).toHaveLength(29);
+    expect(ONLINE_TAGS).toHaveLength(19);
   });
 
   it("gives every tag an i18n key", () => {
@@ -78,6 +77,27 @@ describe("LISTING_TAG_GROUPS", () => {
       }),
     );
     expect(misplaced).toEqual([]);
+  });
+});
+
+describe("online tags that became structured fields", () => {
+  it("moves the delivery, payment and session tags to structured fields", () => {
+    for (const tag of [
+      "Ships to Portugal",
+      "Ships across the EU",
+      "Ships worldwide",
+      "Pick-up in Lisbon",
+      "Digital downloads",
+      "MB WAY",
+      "Multibanco",
+      "PayPal",
+      "Video sessions",
+      "Phone sessions",
+    ]) {
+      expect(ONLINE_TAGS, tag).not.toContain(tag);
+      // An older listing that still carries one keeps its label.
+      expect(LISTING_TAG_LABEL_KEYS[tag], tag).toBeDefined();
+    }
   });
 });
 
@@ -168,11 +188,11 @@ describe("splitLegacyTags", () => {
     ).toEqual([]);
   });
 
-  it("keeps a place tag on a listing since made online-only", () => {
+  it("keeps a place tag and a tag that became a field on an online listing", () => {
     const onlineGroups = tagGroupsForAudience(LISTING_TAG_GROUPS, true);
     expect(
       splitLegacyTags(["Terrace", "Workshops", "MB WAY"], onlineGroups),
-    ).toEqual(["Terrace"]);
+    ).toEqual(["Terrace", "MB WAY"]);
   });
 });
 
@@ -182,7 +202,8 @@ describe("tagGroupsForAudience", () => {
     const onlineTags = onlineGroups.flatMap((group) => group.tags);
     expect(onlineTags).not.toContain("Terrace");
     expect(onlineTags).not.toContain("DJ nights");
-    expect(onlineTags).toContain("MB WAY");
+    expect(onlineTags).toContain("Gift cards");
+    expect(onlineTags).not.toContain("MB WAY");
     expect(onlineGroups[0]).toEqual({
       id: "visiting",
       tags: ["By appointment", "Memberships"],

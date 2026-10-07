@@ -6,19 +6,27 @@ import styles from "./ListBusinessPage.module.css";
 
 /* ===== Step 3: Practical =====
    Wizard chrome only: the fields live in `PracticalFields`, shared with the
-   single-screen owner editor. An online-only business has no street address
-   or opening hours to give here, so its pane sub speaks only of being found
-   online and reached. */
+   single-screen owner editor. A place gives its address and opening hours
+   here; an online-only business gets "How people buy from you". */
 export function StepPractical({ form }: { form: ListingForm }) {
   const { t } = useTranslation();
+  const isOnline = form.draft.online;
   return (
     <div className={styles.stepBody}>
       <PaneHeader
-        title={t("marketing:listBusiness.step3.title")}
-        em={t("marketing:listBusiness.step3.em")}
+        title={
+          isOnline
+            ? t("marketing:listBusiness.step3.titleOnline")
+            : t("marketing:listBusiness.step3.title")
+        }
+        em={
+          isOnline
+            ? t("marketing:listBusiness.step3.emOnline")
+            : t("marketing:listBusiness.step3.em")
+        }
         sub={
-          form.draft.online
-            ? t("marketing:listBusiness.step3.subOnline")
+          isOnline
+            ? t("marketing:listBusiness.step3.subBuy")
             : t("marketing:listBusiness.step3.sub")
         }
       />

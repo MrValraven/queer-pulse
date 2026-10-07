@@ -26,6 +26,10 @@ function keepHyphenatedWordsWhole(title: string): string {
  * from local calendar dates (seven days back is the same weekday, whatever a
  * clock change did in between), keyed by the same `weekStartKey` the grouping
  * uses, so a card's week and its title always agree.
+ *
+ * `isContinuation` picks the "more people joined" wording for a later card of
+ * a week whose first group card sits higher in the feed (see
+ * `groupNewMemberPages`), with the same week and date logic.
  */
 export function newMembersWeekTitle(
   weekStart: string,
@@ -33,8 +37,22 @@ export function newMembersWeekTitle(
   now: Date,
   t: TFunction,
   fmt: Formatters,
+  isContinuation = false,
 ): string {
-  return keepHyphenatedWordsWhole(weekTitleText(weekStart, count, now, t, fmt));
+  return keepHyphenatedWordsWhole(
+    weekTitleText(weekStart, count, now, t, fmt, isContinuation),
+  );
+}
+
+/** "This week" in the card's wording: the first card's or a continuation's. */
+function thisWeekText(
+  count: number,
+  t: TFunction,
+  isContinuation: boolean,
+): string {
+  return isContinuation
+    ? t("feed:memberCard.group.thisWeekMore", { count })
+    : t("feed:memberCard.group.thisWeek", { count });
 }
 
 /** The title's words, picked by week as described above. */
@@ -44,9 +62,10 @@ function weekTitleText(
   now: Date,
   t: TFunction,
   fmt: Formatters,
+  isContinuation: boolean,
 ): string {
   if (weekStart === weekStartKey(now)) {
-    return t("feed:memberCard.group.thisWeek", { count });
+    return thisWeekText(count, t, isContinuation);
   }
   const sameDayLastWeek = new Date(
     now.getFullYear(),
@@ -54,13 +73,15 @@ function weekTitleText(
     now.getDate() - 7,
   );
   if (weekStart === weekStartKey(sameDayLastWeek)) {
-    return t("feed:memberCard.group.lastWeek", { count });
+    return isContinuation
+      ? t("feed:memberCard.group.lastWeekMore", { count })
+      : t("feed:memberCard.group.lastWeek", { count });
   }
   const weekStartDate = localDateFromKey(weekStart);
   // `Intl` throws on an invalid date, so a malformed key keeps the card up
   // under the plain "this week" title.
   if (Number.isNaN(weekStartDate.getTime())) {
-    return t("feed:memberCard.group.thisWeek", { count });
+    return thisWeekText(count, t, isContinuation);
   }
   const isOtherYear = weekStartDate.getFullYear() !== now.getFullYear();
   // No-break spaces keep the date in one piece, so a narrow card never
@@ -72,5 +93,7 @@ function weekTitleText(
       ...(isOtherYear && { year: "numeric" }),
     })
     .replace(/\s/g, "\u00a0");
-  return t("feed:memberCard.group.weekOf", { count, date });
+  return isContinuation
+    ? t("feed:memberCard.group.weekOfMore", { count, date })
+    : t("feed:memberCard.group.weekOf", { count, date });
 }

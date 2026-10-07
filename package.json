@@ -29,6 +29,7 @@
     "press:assets": "node scripts/generate-press-assets.mjs",
     "chat-wallpapers": "node scripts/generate-chat-wallpapers.mjs",
     "stickers": "node scripts/generate-sticker-packs.mjs",
+    "film-scores": "node scripts/launch-video/render.mjs --video all --score-only",
     "typecheck": "tsc -b --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",

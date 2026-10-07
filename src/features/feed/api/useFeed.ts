@@ -56,18 +56,23 @@ export function useFeed(tab: FeedTab) {
     [blocked, muted],
   );
 
-  // The merged feed, flattened across pages and block/mute filtered, in the
-  // backend's merge order — no type partitioning, no per-card adaptation.
-  const items = useMemo<FeedItem[]>(() => {
+  // The merged feed as one array per loaded page, each block/mute filtered and
+  // kept in the backend's merge order, with every type mixed together and
+  // each item exactly as the server sent it. The page boundaries let the "All"
+  // tab fold new members page by page (`groupNewMemberPages`), so a card
+  // already on screen stays as it is when the next page arrives.
+  const itemPages = useMemo<FeedItem[][]>(() => {
     if (demoMode) return [];
-    const flattenedItems = (query.data?.pages ?? []).flatMap(
-      (page) => page.items,
-    );
-    return flattenedItems.filter(
-      (item) =>
-        !item.actor?.handle || !hiddenAuthorHandles.has(item.actor.handle),
+    return (query.data?.pages ?? []).map((page) =>
+      page.items.filter(
+        (item) =>
+          !item.actor?.handle || !hiddenAuthorHandles.has(item.actor.handle),
+      ),
     );
   }, [demoMode, query.data, hiddenAuthorHandles]);
 
-  return { ...query, items };
+  // The same feed flattened across pages, for callers that read one list.
+  const items = useMemo<FeedItem[]>(() => itemPages.flat(), [itemPages]);
+
+  return { ...query, items, itemPages };
 }

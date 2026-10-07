@@ -1,10 +1,47 @@
+import type { ReactNode } from "react";
 import { DatePicker, FormField } from "../../shared/components/ui";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { MAX_GATHERING_SPAN_DAYS } from "./createGathering.data";
 import type { GatheringDetailsDraft } from "./EditDetailsModal";
 import { gatheringWhen } from "./gatheringSchedule";
+import { dateToDatetimeValue } from "./manageGatheringDates";
 import { editScheduleProblem } from "./manageGatheringState";
+
+/**
+ * The end a start move carries along, as a local `"yyyy-mm-ddThh:mm"` wire
+ * value, or `null` to leave the end where it is.
+ *
+ * The end moves by the same elapsed time the start did, so the length holds
+ * (a 3-hour brunch stays 3 hours). It moves only while it sits after the
+ * start: an end already at or before the start keeps its place, so moving
+ * the start earlier still clears the "end needs to come after the start"
+ * message the way that message suggests. A gathering with no end, or a start
+ * that does not read as a time on either side of the move, leaves it alone.
+ */
+function endShiftedWithStart(
+  draft: GatheringDetailsDraft,
+  nextStartAt: string,
+): string | null {
+  if (draft.endAt === "" || draft.startAt === "" || nextStartAt === "") {
+    return null;
+  }
+  const previousStartTime = new Date(draft.startAt).getTime();
+  const nextStartTime = new Date(nextStartAt).getTime();
+  const endTime = new Date(draft.endAt).getTime();
+  if (
+    Number.isNaN(previousStartTime) ||
+    Number.isNaN(nextStartTime) ||
+    Number.isNaN(endTime) ||
+    endTime <= previousStartTime ||
+    nextStartTime === previousStartTime
+  ) {
+    return null;
+  }
+  return dateToDatetimeValue(
+    new Date(endTime + (nextStartTime - previousStartTime)),
+  );
+}
 
 /**
  * The start and end fields of the edit-details modal, together with the two
@@ -19,12 +56,17 @@ export function EditDetailsSchedule({
   draft,
   onChangeStartAt,
   onChangeEndAt,
+  startLabel,
 }: {
   /** The whole draft, since `editScheduleProblem` gates on a draft object and
    *  reads both schedule fields against each other. */
   draft: GatheringDetailsDraft;
   onChangeStartAt: (value: string) => void;
   onChangeEndAt: (value: string) => void;
+  /** The start field's label. Defaults to "Date & time", which suits the
+   *  full edit modal. The one-field "Date and time" editor already says that
+   *  in its title, so it names the field "Starts" beside "Ends (optional)". */
+  startLabel?: ReactNode;
 }) {
   const { t } = useTranslation();
   const fmt = useFormat();
@@ -39,12 +81,12 @@ export function EditDetailsSchedule({
   // field's `aria-describedby`, so a screen reader hears it on a control that
   // can resolve it.
   //
-  // It hangs off the END field alone even though the edit that usually causes
-  // it is moving the START, which is why the copy names BOTH moves ("move the
-  // start earlier, the end later, or clear the end"). Repeating the same
-  // sentence under both fields would put one complaint on screen twice and
-  // read it out twice, and a host who has just dragged their start is looking
-  // at the two fields together.
+  // It hangs off the END field alone, and the copy names BOTH moves ("move
+  // the start earlier, the end later, or clear the end"), since a start moved
+  // while the end is already out of place can cause it too. Repeating the
+  // same sentence under both fields would put one complaint on screen twice
+  // and read it out twice, and a host who has just moved their start is
+  // looking at the two fields together.
   const scheduleErrorMessage =
     scheduleProblem === "endBeforeStart"
       ? t("gatherings:manage.editModal.endBeforeStartError")
@@ -66,7 +108,7 @@ export function EditDetailsSchedule({
   // GATHERING's zone. A host editing a Lisbon gathering from São Paulo sees a
   // summary here that can differ by a day from the one attendees see there.
   //
-  // That is the honest reading for this surface rather than an oversight. The
+  // That is the honest reading for this surface, and a deliberate one. The
   // two `DatePicker`s above already speak the host's own zone: their
   // `"yyyy-mm-ddThh:mm"` wire values are local wall-clock times that
   // `buildEditPatch` turns into instants with `new Date(...)`. A summary in
@@ -95,16 +137,26 @@ export function EditDetailsSchedule({
         .join(" ")
     : undefined;
 
+  // Moving the start carries a valid end along by the same amount, so the
+  // gathering keeps its length, as a calendar app does. Both callbacks merge
+  // into the parent's draft through functional updates, so the pair lands
+  // as one change.
+  const changeStart = (nextStartAt: string) => {
+    const shiftedEndAt = endShiftedWithStart(draft, nextStartAt);
+    onChangeStartAt(nextStartAt);
+    if (shiftedEndAt !== null) onChangeEndAt(shiftedEndAt);
+  };
+
   return (
     <>
       <FormField
-        label={t("gatherings:manage.editModal.fieldDateTime")}
+        label={startLabel ?? t("gatherings:manage.editModal.fieldDateTime")}
         required
       >
         <DatePicker
           mode="datetime"
           value={draft.startAt || null}
-          onChange={(value) => onChangeStartAt(value ?? "")}
+          onChange={(value) => changeStart(value ?? "")}
         />
       </FormField>
       {/* Optional, and clearable: `DatePicker`'s own `clearable` control
@@ -120,14 +172,14 @@ export function EditDetailsSchedule({
           04:00 on the start's own day still needs the message above, and the
           gate in `editScheduleProblem` stays the real authority.
 
-          It composes with the clear control rather than fighting it.
-          `canClear` reads `clearable && value != null`, never the bounds,
-          and clearing calls `onChange(null)` directly, so `min` cannot hold
-          a value in the field. Nor can it quietly rewrite one the host
-          already set: `DateField` clamps on keystrokes (arrow-step and digit
-          entry) and never in response to the bound moving, so pushing the
-          start past the end leaves the end exactly as the host left it and
-          says so, instead of editing it behind their back. */}
+          It composes cleanly with the clear control. `canClear` reads
+          `clearable && value != null` and leaves the bounds out of it, and
+          clearing calls `onChange(null)` directly, so `min` cannot hold a
+          value in the field. `DateField` clamps on keystrokes alone (arrow
+          steps and digit entry), so the bound moving leaves the end's value
+          to `changeStart` above, which carries it along with the start. An
+          end the host types or picks themselves stays exactly where they
+          put it, and the message says when it lands before the start. */}
       <FormField
         label={t("gatherings:manage.editModal.fieldEndAt")}
         helper={scheduleSummaryMessage}

@@ -10,14 +10,13 @@ import {
   canEncodeAudio,
   canEncodeVideo,
 } from "mediabunny";
+import type { FilmSize } from "../marketingVideos.data";
 import { filmScore } from "./filmScore";
-import { filmIn } from "./filmWindow";
+import { assertFilmFormat, filmIn } from "./filmWindow";
 import type { Rgb } from "./colorCalibration";
 import { MARKER_HEIGHT, MAX_MARKER_INDEX } from "./frameMarker";
 import { captureFilmBox, filmRect } from "./tabCapture";
 
-const WIDTH = 1920;
-const HEIGHT = 1080;
 const FPS = 30;
 
 export interface RenderStage {
@@ -27,7 +26,7 @@ export interface RenderStage {
   showMarker(index: number): void;
   /** Shows or hides the colour patches over the film. */
   showCalibration(isShown: boolean): void;
-  /** The patches' true colours, in CALIBRATION_PATCHES order. */
+  /** The patches' true colours, in calibrationPatches() order. */
   calibrationColours(): Rgb[];
 }
 
@@ -42,7 +41,7 @@ export type RenderProgress =
 export interface RenderedFilm {
   blob: Blob;
   fileName: string;
-  /** Size the film was captured at, before scaling to 1920x1080. */
+  /** Size the film was captured at, before scaling to the film's own size. */
   capturedWidth: number;
   capturedHeight: number;
 }
@@ -51,7 +50,8 @@ export class EncoderUnavailableError extends Error {
   override name = "EncoderUnavailableError";
 }
 
-interface FilmFormat {
+/** The file's container and codecs; separate from the film's shape. */
+export interface EncodingFormat {
   container: "mp4" | "webm";
   video: "avc" | "vp9";
   audio: "aac" | "opus";
@@ -62,8 +62,8 @@ interface FilmFormat {
  * encoder, so Opus in MP4 comes next (fine for browsers, VLC and social
  * uploads), then WebM as the last resort.
  */
-async function pickFormat(): Promise<FilmFormat> {
-  const video = { width: WIDTH, height: HEIGHT, frameRate: FPS };
+async function pickEncoding(size: FilmSize): Promise<EncodingFormat> {
+  const video = { width: size.width, height: size.height, frameRate: FPS };
   const audio = { numberOfChannels: 2, sampleRate: 48000 };
   const [avc, vp9, aac, opus] = await Promise.all([
     canEncodeVideo("avc", video),
@@ -83,12 +83,14 @@ async function pickFormat(): Promise<FilmFormat> {
  * `stream` is a shared-tab capture (see requestTabShare), `stage` the film's
  * iframe mounted at full resolution with a marker strip under it. Every
  * frame is drawn by seeking the film, waiting for the captured frame that
- * shows the step's marker, and copying the film's part onto a 1920x1080
- * canvas. Films that ask for motion blur (window.SHUTTER) get several
- * sub-frames across half a frame, averaged, like the CLI renderer.
+ * shows the step's marker, and copying the film's part onto a canvas at the
+ * film's own size (1920x1080, or 1080x1350 for the 4:5 post). Films that ask
+ * for motion blur (window.SHUTTER) get several sub-frames across half a
+ * frame, averaged, like the CLI renderer.
  */
 export async function renderFilm({
-  id,
+  format,
+  fileName,
   filmUrl,
   scoreUrl,
   stream,
@@ -96,8 +98,14 @@ export async function renderFilm({
   signal,
   onProgress,
 }: {
-  id: string;
-  /** The film's page, loaded again in a hidden frame to compose the score. */
+  /** The shape being rendered; the film in the stage must report the same. */
+  format: { id: string; size: FilmSize };
+  /** The file's name for a container extension ("mp4" or "webm"). */
+  fileName: (extension: EncodingFormat["container"]) => string;
+  /**
+   * The film's page, loaded again in a hidden frame to compose the score.
+   * The score is the same in every shape, so this is the plain page.
+   */
   filmUrl: string;
   scoreUrl: string;
   stream: MediaStream;
@@ -105,8 +113,15 @@ export async function renderFilm({
   signal: AbortSignal;
   onProgress: (progress: RenderProgress) => void;
 }): Promise<RenderedFilm> {
+  const { size } = format;
   const film = await filmIn(stage.iframe);
-  const capture = await captureFilmBox(stream, stage.box);
+  // The 16:9 shape is every film's default, older films included.
+  assertFilmFormat(
+    film,
+    { id: format.id, ...size },
+    { isMissingAllowed: format.id === "landscape" },
+  );
+  const capture = await captureFilmBox(stream, stage.box, size);
   let output: Output<Mp4OutputFormat | WebMOutputFormat, BufferTarget> | null =
     null;
   try {
@@ -126,25 +141,25 @@ export async function renderFilm({
     }
     const score = await filmScore(filmUrl, scoreUrl);
     signal.throwIfAborted();
-    const format = await pickFormat();
+    const encoding = await pickEncoding(size);
 
-    const canvas = new OffscreenCanvas(WIDTH, HEIGHT);
+    const canvas = new OffscreenCanvas(size.width, size.height);
     const context = canvas.getContext("2d", { alpha: false });
     if (!context) throw new EncoderUnavailableError("No 2D canvas.");
     output = new Output({
       format:
-        format.container === "mp4"
+        encoding.container === "mp4"
           ? new Mp4OutputFormat({ fastStart: "in-memory" })
           : new WebMOutputFormat(),
       target: new BufferTarget(),
     });
     const videoSource = new CanvasSource(canvas, {
-      codec: format.video,
+      codec: encoding.video,
       quality: QUALITY_VERY_HIGH,
     });
     output.addVideoTrack(videoSource, { frameRate: FPS });
     const audioSource = new AudioBufferSource({
-      codec: format.audio,
+      codec: encoding.audio,
       quality: QUALITY_HIGH,
     });
     output.addAudioTrack(audioSource);
@@ -165,7 +180,7 @@ export async function renderFilm({
         const captured = await capture.frameWithMarker(step, signal);
         const frame = await capture.correct(captured);
         try {
-          const source = filmRect(frame);
+          const source = filmRect(frame, size);
           // A running average: sub-frame k weighs 1/(k+1) over the blend so far.
           context.globalAlpha = 1 / (subFrame + 1);
           context.drawImage(
@@ -176,8 +191,8 @@ export async function renderFilm({
             source.height,
             0,
             0,
-            WIDTH,
-            HEIGHT,
+            size.width,
+            size.height,
           );
         } finally {
           if (frame !== captured) frame.close();
@@ -197,12 +212,12 @@ export async function renderFilm({
     if (!buffer) throw new EncoderUnavailableError("The muxer wrote nothing.");
     return {
       blob: new Blob([buffer], {
-        type: format.container === "mp4" ? "video/mp4" : "video/webm",
+        type: encoding.container === "mp4" ? "video/mp4" : "video/webm",
       }),
-      fileName: `queerpulse-${id}.${format.container}`,
+      fileName: fileName(encoding.container),
       capturedWidth: capture.width,
       capturedHeight: Math.round(
-        capture.height * (HEIGHT / (HEIGHT + MARKER_HEIGHT)),
+        capture.height * (size.height / (size.height + MARKER_HEIGHT)),
       ),
     };
   } catch (error) {

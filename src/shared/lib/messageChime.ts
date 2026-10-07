@@ -2,8 +2,10 @@
  * A soft low marimba "do-sol" for an arriving message, synthesized with the Web
  * Audio API so there is no audio file to ship. Best-effort throughout: browsers
  * keep an AudioContext suspended until a real gesture, so `primeMessageChime`
- * unlocks it on the member's first tap or key press, and every function here
- * swallows failures so a missing or blocked audio stack never surfaces.
+ * keeps listening for taps, clicks and key presses for the whole session and
+ * resumes the context on each one until it runs. A toast chime may also resume
+ * the context itself and play once it is running. Every function here swallows
+ * failures so a missing or blocked audio stack never surfaces.
  *
  * The voice goes through one output chain built once per context: a master
  * gain, a compressor and a gentle lowpass, plus a short quiet echo send that
@@ -11,6 +13,16 @@
  */
 
 const MIN_GAP_BETWEEN_CHIMES_MS = 1000;
+/** A resume slower than this would play a chime long after its message. */
+const MAX_RESUME_WAIT_MS = 1000;
+/** Events that can grant user activation, on desktop, Android and iOS alike. */
+const GESTURE_EVENT_NAMES = [
+  "pointerdown",
+  "pointerup",
+  "touchend",
+  "click",
+  "keydown",
+] as const;
 const SILENT_GAIN = 0.0001;
 const MASTER_GAIN = 0.32;
 const OUTPUT_LOWPASS_HZ = 7000;
@@ -153,41 +165,81 @@ function schedule(context: AudioContext): void {
 }
 
 /**
- * Installs one-time pointerdown and keydown listeners that create and resume
- * the context inside a real gesture, then remove themselves. Safe to call
- * repeatedly.
+ * Installs gesture listeners once for the whole session and keeps them. Each
+ * gesture creates the context when missing and resumes it whenever it is not
+ * running, so a first touch that the browser did not count as user activation
+ * (a touch pointerdown, an iOS touch before touchend) is retried by the next
+ * event, and a context the browser later suspended or interrupted is unlocked
+ * again. A no-op when the context is already running. Safe to call repeatedly.
  */
 export function primeMessageChime(): void {
   if (isPrimed || typeof window === "undefined") return;
   isPrimed = true;
   const unlock = () => {
-    window.removeEventListener("pointerdown", unlock, true);
-    window.removeEventListener("keydown", unlock, true);
     try {
       const context = ensureContext();
-      if (context && context.state === "suspended") void context.resume();
+      if (context && context.state !== "running") {
+        context.resume().catch(() => undefined);
+      }
     } catch {
       // Best-effort: no audio is better than a thrown error.
     }
   };
-  window.addEventListener("pointerdown", unlock, {
-    capture: true,
-    passive: true,
+  GESTURE_EVENT_NAMES.forEach((eventName) => {
+    window.addEventListener(eventName, unlock, {
+      capture: true,
+      passive: true,
+    });
   });
-  window.addEventListener("keydown", unlock, { capture: true, passive: true });
+}
+
+interface PlayMessageChimeOptions {
+  /**
+   * When the context is missing or suspended, try to bring it up and play the
+   * chime if it resumes within `MAX_RESUME_WAIT_MS`. The return value still
+   * reports only whether the chime played synchronously.
+   */
+  shouldPlayOnceResumed?: boolean;
 }
 
 /**
  * Plays the chime when the context is already running and the minimum gap since
- * the last chime has passed. Returns whether it actually played, so a caller
+ * the last chime has passed. Returns whether it played right now, so a caller
  * can leave the OS notification sound on when it did not.
+ *
+ * With `shouldPlayOnceResumed`, a missing context is created when the page has
+ * had sticky user activation, and a suspended one is resumed; the chime then
+ * plays only if the context is running within `MAX_RESUME_WAIT_MS` and the
+ * minimum gap has passed, so a resume that stays pending never plays a stale
+ * chime. The return value is still false in those cases.
  */
-export function playMessageChime(): boolean {
+export function playMessageChime(
+  options: PlayMessageChimeOptions = {},
+): boolean {
+  const { shouldPlayOnceResumed = false } = options;
   try {
-    const context = sharedContext;
+    let context = sharedContext;
+    if (!context && shouldPlayOnceResumed) {
+      const hasStickyActivation =
+        typeof navigator !== "undefined" &&
+        navigator.userActivation?.hasBeenActive === true;
+      if (hasStickyActivation) context = ensureContext();
+    }
     if (!context) return false;
     if (context.state !== "running") {
-      void context.resume().catch(() => undefined);
+      const resumingContext = context;
+      const requestedAtMs = Date.now();
+      resumingContext
+        .resume()
+        .then(() => {
+          if (!shouldPlayOnceResumed) return;
+          const waitedMs = Date.now() - requestedAtMs;
+          if (waitedMs > MAX_RESUME_WAIT_MS) return;
+          if (resumingContext.state !== "running") return;
+          if (Date.now() - lastChimeAtMs < MIN_GAP_BETWEEN_CHIMES_MS) return;
+          schedule(resumingContext);
+        })
+        .catch(() => undefined);
       return false;
     }
     if (Date.now() - lastChimeAtMs < MIN_GAP_BETWEEN_CHIMES_MS) return false;

@@ -1,0 +1,145 @@
+/* Camera viewfinder for the continuous check-in scanner. */
+.viewfinder {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  width: min(100%, 32svh);
+  margin-inline: auto;
+  border-radius: var(--radius-18);
+  overflow: hidden;
+  background:
+    radial-gradient(
+      120% 120% at 30% 20%,
+      rgba(var(--jade-rgb), 0.22),
+      transparent 60%
+    ),
+    radial-gradient(
+      120% 120% at 80% 90%,
+      rgba(var(--accent-rgb), 0.22),
+      transparent 60%
+    ),
+    var(--plum);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+/* Camera off: a compact notice row so the typed code leads. The box
+   reserves the result card's height and the card takes the notice's place
+   while shown, so nothing below moves. The height fits the tallest card
+   (welcome: name, pronouns, guests, two access-needs lines, Undo) so no card
+   or swap between cards changes it. */
+.viewfinderOff {
+  aspect-ratio: auto;
+  width: 100%;
+  display: grid;
+  min-height: 208px;
+}
+.viewfinderOff > * {
+  grid-area: 1 / 1;
+}
+.viewfinderOff .vfStackCovered {
+  visibility: hidden;
+}
+.viewfinderOff .vfStack {
+  align-self: center;
+  flex-direction: row;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px 16px;
+}
+.viewfinderOff .vfIcon {
+  margin-bottom: 0;
+  font-size: var(--text-22);
+  display: flex;
+  flex-shrink: 0;
+}
+.viewfinderOff .vfHint {
+  padding: 0;
+  text-align: start;
+}
+.viewfinderOff .resultLive {
+  position: static;
+  align-self: end;
+}
+/* CheckinScanResult adds this module's .result class to its card. */
+.viewfinderOff .result {
+  position: relative;
+  inset-inline: auto;
+  bottom: auto;
+  margin: 10px;
+}
+.video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.corners {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+.corner {
+  position: absolute;
+  width: 34px;
+  height: 34px;
+  border: 3px solid rgba(var(--cream-rgb), 0.85);
+}
+.tl {
+  top: 26px;
+  left: 26px;
+  border-right: none;
+  border-bottom: none;
+  border-radius: var(--radius-8) 0 0 0;
+}
+.tr {
+  top: 26px;
+  right: 26px;
+  border-left: none;
+  border-bottom: none;
+  border-radius: 0 var(--radius-8) 0 0;
+}
+.bl {
+  bottom: 26px;
+  left: 26px;
+  border-right: none;
+  border-top: none;
+  border-radius: 0 0 0 var(--radius-8);
+}
+.br {
+  bottom: 26px;
+  right: 26px;
+  border-left: none;
+  border-top: none;
+  border-radius: 0 0 var(--radius-8) 0;
+}
+.vfStack {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.vfIcon {
+  font-size: var(--text-30);
+  color: rgba(var(--cream-rgb), 0.85);
+  margin-bottom: 8px;
+}
+.vfHint {
+  color: rgba(var(--cream-rgb), 0.7);
+  font-size: var(--text-13);
+  font-weight: 600;
+  text-align: center;
+  padding: 0 24px;
+}
+
+/* Always-mounted live region over the viewfinder; the card inside is
+   announced when it appears. */
+.resultLive {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}

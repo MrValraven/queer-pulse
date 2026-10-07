@@ -9,6 +9,7 @@ import {
   stripOwnerPersonalFields,
 } from "../../marketing/listBusiness/ownerPersonalFields";
 import { toMenuDraft } from "../../marketing/listBusiness/listingMenu.data";
+import { normalizeOnlineDetails } from "../../marketing/listBusiness/listingOnline.data";
 import { toServiceRows } from "../../marketing/listBusiness/listingServices.data";
 import {
   slugify,
@@ -87,6 +88,7 @@ function demoUpdatedListing({
     // Wire shape back to editable shape, as `listingDtoToPending` does live.
     services: toServiceRows(business.services),
     menu: toMenuDraft(business.menu),
+    onlineDetails: normalizeOnlineDetails(business.onlineDetails),
     affirmingBaselineAccepted: true,
     isStaffAuthored: true,
     ref,

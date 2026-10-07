@@ -66,7 +66,7 @@ export function createGatheringPath(communitySlug?: string): string {
 export const DUPLICATE_GATHERING_PARAM = "duplicate";
 
 /**
- * "Run this again": the create wizard, pre-filled from an existing gathering.
+ * "Duplicate gathering": the create wizard, pre-filled from an existing gathering.
  *
  * A host running a monthly one-off used to retype the whole wizard each time.
  * The slug travels in the URL so the prefill survives a refresh and a shared
@@ -87,12 +87,11 @@ export const gatheringRecapPath = (slug: string): string =>
   `${gatheringPath(slug)}/recap`;
 export const gatheringCancelledPath = (slug: string): string =>
   `${gatheringPath(slug)}/cancelled`;
-export const gatheringDashboardPath = (slug: string): string =>
-  `${gatheringPath(slug)}/dashboard`;
 
 /** The Manage page's tabs, in the order the tab bar shows them. */
 export const MANAGE_GATHERING_TABS = [
   "overview",
+  "checkin",
   "attendees",
   "messages",
   "settings",
@@ -138,3 +137,9 @@ export const gatheringShareUrl = (slug: string): string =>
   `${appOrigin()}${gatheringPath(slug)}`;
 export const gatheringShareDisplayUrl = (slug: string): string =>
   `${appHost()}${gatheringPath(slug)}`;
+
+/** Query param that opens the Check-in tab in focus mode. */
+export const CHECKIN_FOCUS_PARAM = "focus";
+
+/** DOM id of the manage page's tab panel, so it can be scrolled to and focused. */
+export const MANAGE_TAB_PANEL_ID = "manage-tab-panel";

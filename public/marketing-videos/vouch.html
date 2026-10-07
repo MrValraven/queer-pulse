@@ -1,0 +1,829 @@
+<!doctype html>
+<!--
+  QueerPulse film, "Vouched": how people get vouched into QueerPulse.
+
+  Filmed like the pro cut: a dark stage with a hairline grid and grain,
+  sentence-case type that rises line by line out of a mask, product cards
+  recreated in the app's own design language. Bilal invites Inês and walks
+  her in; the team says hello; she arrives already knowing people; she
+  brings Sam; their branch becomes part of the whole vouch tree. 56s at
+  120 BPM, cuts on bar lines.
+
+  Every frame is a pure function of time (`window.seek(t)`), and
+  `window.CUES` lists the moments vouch.score.js plays to. Helpers are
+  copied from pro.html so each film stays standalone.
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>QueerPulse film (vouched)</title>
+    <style>
+      @font-face {
+        font-family: "Fraunces";
+        font-style: normal;
+        font-weight: 100 900;
+        src: url("./fonts/fraunces.woff2") format("woff2");
+      }
+      @font-face {
+        font-family: "Fraunces";
+        font-style: italic;
+        font-weight: 100 900;
+        src: url("./fonts/fraunces-italic.woff2") format("woff2");
+      }
+      @font-face {
+        font-family: "DM Sans";
+        font-style: normal;
+        font-weight: 100 1000;
+        src: url("./fonts/dm-sans.woff2") format("woff2");
+      }
+
+      :root {
+        --plum: #2d1b3d;
+        --night: #150b1d;
+        --coral: #e8775a;
+        --coral-ink: #c85a40;
+        --coral-fill: #d5431e;
+        --cream: #f7f3ee;
+        --paper: #ffffff;
+        --ink: #1a1a1f;
+        --ink-60: rgba(26, 26, 31, 0.6);
+        --line: rgba(45, 27, 61, 0.1);
+        --hair: rgba(247, 243, 238, 0.14);
+        --muted: rgba(247, 243, 238, 0.6);
+        --jade: #4a8c6f;
+        --jade-ink: #3c7159;
+        --jade-tint: #dcefe5;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html,
+      body {
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: var(--night);
+      }
+      body {
+        font-family: "DM Sans", sans-serif;
+        color: var(--cream);
+        -webkit-font-smoothing: antialiased;
+      }
+      .serif {
+        font-family: "Fraunces", serif;
+        font-variation-settings:
+          "opsz" 144,
+          "SOFT" 30;
+      }
+      em {
+        font-style: italic;
+      }
+      #stage {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+        background: var(--night);
+      }
+      .scene,
+      .layer {
+        position: absolute;
+        inset: 0;
+        display: none;
+      }
+      .av {
+        display: block;
+        border-radius: 50%;
+      }
+
+      /* ── The stage: glow, hairline grid, grain ── */
+      .glow {
+        position: absolute;
+        left: 0;
+        top: 0;
+        border-radius: 50%;
+      }
+      #glow-a {
+        width: 1300px;
+        height: 1000px;
+        background: radial-gradient(
+          closest-side,
+          rgba(232, 119, 90, 0.2),
+          rgba(232, 119, 90, 0)
+        );
+      }
+      #glow-b {
+        width: 1500px;
+        height: 1200px;
+        background: radial-gradient(
+          closest-side,
+          rgba(98, 62, 140, 0.55),
+          rgba(98, 62, 140, 0)
+        );
+      }
+      #glow-c {
+        width: 1400px;
+        height: 900px;
+        background: radial-gradient(
+          closest-side,
+          rgba(232, 119, 90, 0.26),
+          rgba(232, 119, 90, 0)
+        );
+      }
+      #grid {
+        position: absolute;
+        inset: 0;
+      }
+      #grain {
+        position: absolute;
+        inset: 0;
+        opacity: 0.025;
+        pointer-events: none;
+      }
+
+      /* ── Type: one sentence-case grotesk, the serif italic for the turn ── */
+      .hl {
+        position: absolute;
+        font-weight: 600;
+        letter-spacing: -0.045em;
+        line-height: 1.02;
+        color: var(--cream);
+        white-space: nowrap;
+      }
+      .hl em {
+        font-family: "Fraunces", serif;
+        font-weight: 380;
+        font-size: 1.06em;
+        letter-spacing: -0.02em;
+        color: var(--coral);
+        font-variation-settings:
+          "opsz" 144,
+          "SOFT" 50;
+      }
+      .hl.center {
+        left: 0;
+        right: 0;
+        text-align: center;
+      }
+      /* Board headlines: left, centred on the frame's middle. */
+      .hl.side {
+        left: 130px;
+      }
+      /* Each line is a mask; its words rise into it. The padding keeps
+         italic overhangs and descenders inside the mask. */
+      .ln {
+        display: block;
+        overflow: hidden;
+        padding: 0.06em 0.1em 0.16em;
+        margin: -0.06em -0.1em -0.16em;
+      }
+      .wd {
+        display: inline-block;
+        will-change: transform;
+      }
+
+      /* ── HUD ── */
+      #hud {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+      }
+      #hud-mark {
+        position: absolute;
+        left: 64px;
+        top: 50px;
+        display: flex;
+        align-items: baseline;
+        gap: 18px;
+        white-space: nowrap;
+      }
+      #hud-mark .wm {
+        font-size: 30px;
+        font-weight: 500;
+        letter-spacing: -0.01em;
+      }
+      #hud-mark .wm i {
+        font-style: italic;
+      }
+      #hud-mark .sl {
+        padding-left: 18px;
+        border-left: 1px solid var(--hair);
+        font-size: 17px;
+        color: var(--muted);
+      }
+      #hud-geo {
+        position: absolute;
+        right: 64px;
+        top: 58px;
+        font-size: 15px;
+        font-weight: 600;
+        letter-spacing: 0.22em;
+        color: var(--muted);
+      }
+      #hud-bar {
+        position: absolute;
+        left: 64px;
+        right: 64px;
+        bottom: 52px;
+        height: 2px;
+        background: rgba(247, 243, 238, 0.1);
+      }
+      #hud-fill {
+        height: 100%;
+        background: var(--coral);
+        transform-origin: left;
+      }
+
+      /* ── Open: the cast, each of them invited by someone ── */
+      #open .hl {
+        top: 410px;
+        font-size: 128px;
+      }
+      .face {
+        position: absolute;
+        left: 0;
+        top: 0;
+        border-radius: 50%;
+        box-shadow:
+          0 0 0 4px rgba(247, 243, 238, 0.07),
+          0 30px 60px -24px rgba(0, 0, 0, 0.7);
+      }
+      .face .av {
+        width: 100%;
+        height: 100%;
+      }
+
+      /* ── Product cards on the stage ── */
+      .vis {
+        position: absolute;
+        left: 0;
+        top: 0;
+      }
+      .vis > .card {
+        box-shadow:
+          0 80px 140px -40px rgba(0, 0, 0, 0.75),
+          0 0 0 1px rgba(45, 27, 61, 0.06);
+      }
+      .card.auto {
+        position: relative;
+        inset: auto;
+      }
+
+      /* The invite: who it's from, who it's for, the note, the button. */
+      .invite {
+        width: 680px;
+      }
+      .note {
+        position: relative;
+        margin-top: 14px;
+        min-height: 116px;
+        padding: 20px 24px;
+        border-radius: 22px;
+        background: var(--cream);
+      }
+      .note-ring {
+        position: absolute;
+        inset: 0;
+        border-radius: 22px;
+        box-shadow: inset 0 0 0 2px var(--coral);
+      }
+      /* Narrower than the field, so both notes break into even lines. */
+      .note p {
+        position: relative;
+        max-width: 470px;
+        font-size: 24px;
+        line-height: 1.42;
+        color: var(--ink);
+      }
+      .caret {
+        display: inline-block;
+        width: 2px;
+        height: 1.15em;
+        margin-left: 2px;
+        vertical-align: -0.2em;
+        background: var(--coral-fill);
+      }
+      .sendwrap {
+        position: relative;
+        height: 64px;
+        margin-top: 30px;
+      }
+      .sendwrap .btn {
+        position: absolute;
+        inset: 0;
+        height: 64px;
+        font-size: 22px;
+      }
+      .tap {
+        position: absolute;
+        inset: 0;
+        border-radius: 999px;
+        box-shadow: 0 0 0 2px var(--coral-fill);
+      }
+      .btn .tick {
+        background: #fff;
+      }
+      .btn .tick svg {
+        stroke: var(--jade-ink);
+      }
+
+      /* The welcome: two things to do before you're in. */
+      .welcome {
+        width: 680px;
+      }
+      .check {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        padding: 20px 22px;
+        border-radius: 22px;
+        background: var(--cream);
+      }
+      .check + .check {
+        margin-top: 14px;
+      }
+      .box {
+        position: relative;
+        flex: none;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        box-shadow: inset 0 0 0 2px rgba(26, 26, 31, 0.2);
+      }
+      .box i {
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        background: var(--jade);
+      }
+      .box svg {
+        position: absolute;
+        left: 8px;
+        top: 8px;
+        width: 20px;
+        height: 20px;
+        stroke: #fff;
+        fill: none;
+        stroke-width: 3;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      .check .txt {
+        font-size: 23px;
+      }
+
+      /* The profile: who vouched her in, and who she already knows. */
+      .profile {
+        width: 580px;
+        padding: 44px 40px 40px;
+      }
+      .profile .hr {
+        margin: 28px 0;
+      }
+      .vline {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        height: 30px;
+        margin: 16px 0 0 4px;
+        font-size: 19px;
+        font-weight: 650;
+        color: var(--coral-ink);
+      }
+      .profile .foot {
+        margin-top: 30px;
+      }
+      .hl-ring {
+        position: absolute;
+        inset: 0;
+        border-radius: 22px;
+        pointer-events: none;
+      }
+      .bloom {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+      }
+      .bloom-rim {
+        position: absolute;
+        border: 11px solid var(--coral);
+        pointer-events: none;
+      }
+      #bloom-portal {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 1920px;
+        height: 1080px;
+        overflow: visible;
+      }
+
+      /* ── The portal: two friends walk into QueerPulse ── */
+      .card.p0 {
+        width: 760px;
+        height: 640px;
+        background: var(--cream);
+      }
+      .p0 > * {
+        position: absolute;
+        left: 0;
+        top: 0;
+      }
+      .p0-svg,
+      .p0-figs {
+        width: 760px;
+        height: 640px;
+      }
+      .p0-svg,
+      .p0-fig svg {
+        overflow: visible;
+      }
+      .p0-fig,
+      .p0-fig svg,
+      .p0-fig .av {
+        position: absolute;
+        left: 0;
+        top: 0;
+      }
+      .p0-fig {
+        width: 160px;
+        height: 270px;
+      }
+      .p0-fig .av {
+        left: 39px;
+        top: 41px;
+        width: 82px;
+        height: 82px;
+        box-shadow: 0 0 0 4px #fff;
+      }
+      .p0-mark {
+        font-size: 38px;
+        font-weight: 500;
+        letter-spacing: -0.01em;
+        color: var(--plum);
+        white-space: nowrap;
+      }
+      .p0-mark i {
+        font-style: italic;
+      }
+
+      /* ── The vouch tree: Bilal, Inês, Sam, then everyone ── */
+      #tree-lines {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 1920px;
+        height: 1080px;
+        overflow: visible;
+      }
+      .node {
+        position: absolute;
+        left: 0;
+        top: 0;
+        border-radius: 50%;
+      }
+      .node .av {
+        width: 100%;
+        height: 100%;
+        box-shadow: 0 0 0 3px var(--night);
+      }
+      .node.root {
+        background: var(--coral);
+        box-shadow:
+          0 0 0 12px rgba(232, 119, 90, 0.18),
+          0 0 60px 6px rgba(232, 119, 90, 0.45);
+      }
+      .node .halo {
+        position: absolute;
+        inset: -7px;
+        border-radius: 50%;
+        border: 3px solid var(--coral);
+      }
+      .node-name {
+        position: absolute;
+        left: 0;
+        top: 0;
+        font-size: 26px;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        color: var(--cream);
+        white-space: nowrap;
+      }
+      #network .hl {
+        top: 296px;
+        font-size: 92px;
+      }
+
+      /* ── End ── */
+      .lock {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 276px;
+        height: 250px;
+        overflow: hidden;
+      }
+      .word {
+        position: absolute;
+        top: 10px;
+        left: 0;
+        font-weight: 560;
+        line-height: 1;
+        white-space: nowrap;
+        color: var(--cream);
+        font-variation-settings:
+          "opsz" 144,
+          "SOFT" 0,
+          "WONK" 1;
+        font-size: 196px;
+      }
+      .word .p {
+        font-style: italic;
+      }
+      .slogan {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 542px;
+        text-align: center;
+        font-family: "Fraunces", serif;
+        font-size: 58px;
+        font-weight: 330;
+        letter-spacing: -0.01em;
+        color: var(--cream);
+      }
+      .slogan em {
+        color: var(--coral);
+      }
+      #end-cta {
+        top: 686px;
+        font-size: 46px;
+        letter-spacing: -0.03em;
+      }
+      #end-url {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 776px;
+        text-align: center;
+        font-size: 24px;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+        color: var(--muted);
+      }
+      #credit {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 34px;
+        text-align: center;
+        font-size: 15px;
+        color: rgba(247, 243, 238, 0.4);
+      }
+
+      /* ── Product card type (copied from pro.html) ── */
+      .card {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        padding: 48px;
+        overflow: hidden;
+        border-radius: 32px;
+        background: var(--paper);
+        color: var(--ink);
+      }
+      .card.flush {
+        padding: 0;
+      }
+      .foot {
+        margin-top: auto;
+      }
+      .ttl {
+        font-family: "Fraunces", serif;
+        font-weight: 420;
+        font-size: 44px;
+        line-height: 1.1;
+        letter-spacing: -0.01em;
+        color: var(--plum);
+        font-variation-settings: "opsz" 72;
+        text-wrap: balance;
+      }
+      .sub {
+        font-family: "Fraunces", serif;
+        font-style: italic;
+        font-weight: 340;
+        font-size: 28px;
+        line-height: 1.2;
+        color: rgba(26, 26, 31, 0.62);
+      }
+      .meta {
+        font-size: 22px;
+        line-height: 1.35;
+        color: var(--ink-60);
+      }
+      .meta.s {
+        font-size: 20px;
+      }
+      .txt {
+        font-size: 24px;
+        line-height: 1.4;
+        color: var(--ink);
+      }
+      .label {
+        font-size: 16px;
+        font-weight: 650;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: rgba(26, 26, 31, 0.5);
+      }
+      .name {
+        font-size: 24px;
+        font-weight: 650;
+        color: var(--plum);
+      }
+      .row {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+      .col {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        min-width: 0;
+      }
+      .hr {
+        flex: none;
+        height: 1px;
+        margin: 32px 0;
+        background: var(--line);
+      }
+      .tile {
+        position: relative;
+        padding: 18px 20px;
+        border-radius: 22px;
+        background: var(--cream);
+      }
+      .tick {
+        flex: none;
+        display: grid;
+        place-items: center;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: var(--jade);
+      }
+      .tick svg {
+        width: 16px;
+        height: 16px;
+        stroke: #fff;
+        fill: none;
+        stroke-width: 3;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        height: 60px;
+        padding: 0 30px;
+        border-radius: 999px;
+        font-size: 21px;
+        font-weight: 650;
+        white-space: nowrap;
+      }
+      .btn.coral {
+        background: var(--coral-fill);
+        color: #fff;
+      }
+      .btn.jadeb {
+        background: var(--jade-ink);
+        color: #fff;
+      }
+      .stack {
+        display: flex;
+      }
+      .ic18 {
+        width: 20px;
+        height: 20px;
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 2.2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        flex: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="stage">
+      <div class="glow" id="glow-b"></div>
+      <div class="glow" id="glow-a"></div>
+      <div class="glow" id="glow-c"></div>
+      <svg id="grid" viewBox="0 0 1920 1080"></svg>
+
+      <section class="scene" id="open">
+        <div id="open-faces"></div>
+        <div class="hl center" id="open-type">
+          <span class="ln">Everyone here</span
+          ><span class="ln"><em>came in through a friend.</em></span>
+        </div>
+      </section>
+
+      <section class="scene" id="invite">
+        <div class="vis" id="invite-card"></div>
+        <div class="hl side" id="invite-type">
+          <span class="ln">A friend</span
+          ><span class="ln"><em>invites you.</em></span>
+        </div>
+      </section>
+
+      <section class="scene" id="portal">
+        <div class="vis" id="portal-card"></div>
+        <div class="hl side" id="portal-type">
+          <span class="ln">And walks you</span
+          ><span class="ln"><em>in.</em></span>
+        </div>
+      </section>
+
+      <section class="scene" id="welcome">
+        <div class="vis" id="welcome-card"></div>
+        <div class="hl side" id="welcome-type">
+          <span class="ln">A quick hello</span
+          ><span class="ln"><em>from the team.</em></span>
+        </div>
+      </section>
+
+      <!-- Inês's profile spans two scenes: it opens, then the camera pushes in. -->
+      <div class="layer" id="profile-layer">
+        <svg id="bloom-portal" viewBox="0 0 1920 1080"></svg>
+        <div class="vis" id="profile-card"></div>
+      </div>
+      <section class="scene" id="profile">
+        <div class="hl side" id="profile-type">
+          <span class="ln">You arrive</span
+          ><span class="ln"><em>already knowing people.</em></span>
+        </div>
+      </section>
+      <section class="scene" id="weight">
+        <div class="hl side" id="weight-type">
+          <span class="ln">A vouch means</span
+          ><span class="ln"><em>someone stands behind you.</em></span>
+        </div>
+      </section>
+
+      <section class="scene" id="forward">
+        <div class="vis" id="forward-card"></div>
+        <div class="hl side" id="forward-type">
+          <span class="ln">Then you</span
+          ><span class="ln"><em>bring a friend.</em></span>
+        </div>
+      </section>
+
+      <!-- The tree spans two scenes: three people, then everyone. -->
+      <div class="layer" id="tree-layer">
+        <svg id="tree-lines" viewBox="0 0 1920 1080"></svg>
+        <div id="tree-nodes"></div>
+      </div>
+      <section class="scene" id="network">
+        <div class="hl side" id="network-type">
+          <span class="ln">Everyone here</span
+          ><span class="ln">is <em>vouched for.</em></span
+          ><span class="ln">So there’s always</span
+          ><span class="ln"><em>someone in common.</em></span>
+        </div>
+      </section>
+
+      <section class="scene" id="end">
+        <div class="lock"><div class="word serif" id="end-word"></div></div>
+        <p class="slogan" id="end-slogan">
+          <span class="ln">A queer network, <em>rooted in Lisbon.</em></span>
+        </p>
+        <div class="hl center" id="end-cta">
+          <span class="ln"
+            >Know someone here? <em>Ask them to invite you.</em></span
+          >
+        </div>
+        <p id="end-url">queerpulse.com</p>
+        <p id="credit">Illustrations: Micah by Micah Lanier, CC BY 4.0</p>
+      </section>
+
+      <div id="hud">
+        <div id="hud-mark">
+          <span class="wm serif">Queer<i>Pulse</i></span
+          ><span class="sl">A queer network, rooted in Lisbon</span>
+        </div>
+        <div id="hud-geo">LISBOA · 38.72° N · 9.14° W</div>
+        <div id="hud-bar"><div id="hud-fill"></div></div>
+      </div>
+
+      <div id="grain"></div>
+    </div>
+
+    <script src="./vouch.scene.js"></script>
+  </body>
+</html>

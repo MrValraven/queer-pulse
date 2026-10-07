@@ -282,6 +282,14 @@ export const feed: Catalog = {
   "memberCard.group.lastWeek_other": "{count} people joined last week",
   "memberCard.group.weekOf_one": "{count} person joined the week of {date}",
   "memberCard.group.weekOf_other": "{count} people joined the week of {date}",
+  "memberCard.group.thisWeekMore_one": "{count} more person joined this week",
+  "memberCard.group.thisWeekMore_other": "{count} more people joined this week",
+  "memberCard.group.lastWeekMore_one": "{count} more person joined last week",
+  "memberCard.group.lastWeekMore_other": "{count} more people joined last week",
+  "memberCard.group.weekOfMore_one":
+    "{count} more person joined the week of {date}",
+  "memberCard.group.weekOfMore_other":
+    "{count} more people joined the week of {date}",
   "memberCard.group.showAll": "Show all {count}",
   "memberCard.group.showFewer": "Show fewer",
   "memberCard.tags.inCommon": "in common",

@@ -22,13 +22,13 @@ export const auth: Catalog = {
     "Volta para junto das tuas pessoas e vamos descobrir o que é possível, em conjunto.",
   "signIn.newHere": "Primeira vez no QueerPulse?",
   "signIn.trust":
-    "Só por convite. O teu feed, mensagens e comunidades são só para membros.",
+    "Cada pessoa entra com um voto de confiança. O teu feed, mensagens e comunidades ficam entre membros.",
   "signIn.artCaption": "Uma rede queer, <em>enraizada em Lisboa.</em>",
   "signIn.connecting": "A ligar…",
   "signIn.googleCta": "Continuar com o Google",
-  "signIn.notice.inviteRequired.title": "Vais precisar de um convite",
+  "signIn.notice.inviteRequired.title": "Entra com alguém que conheças",
   "signIn.notice.inviteRequired.body":
-    "O QueerPulse funciona só por convite. Pede a alguém que já conheças, ou pede um convite e tratamos do resto.",
+    "Quem já é membro traz pessoas novas. Pede um convite a alguém que conheças, ou pede-nos um e tratamos do resto.",
   "signIn.notice.accountSuppressed.title": "Esta conta foi eliminada",
   "signIn.notice.accountSuppressed.body":
     "Pediste-nos para eliminar esta conta, por isso não a vamos recriar em silêncio. Se quiseres voltar, fala connosco aqui em baixo. Podemos levantar o bloqueio deste endereço e, a partir daí, o teu convite traz-te de volta, ou um novo, se já tiver expirado.",
@@ -197,8 +197,9 @@ export const auth: Catalog = {
   "sharePreview.heroTitle.line1": "Entra numa sala",
   "sharePreview.heroTitle.line2": "<em>onde já pertences</em>",
   "sharePreview.heroExplainer": "Uma rede queer. Enraizada em Lisboa.",
-  "sharePreview.heroSub_one": "Só por convite · {count} pessoa",
-  "sharePreview.heroSub_other": "Só por convite · {count} pessoas",
+  "sharePreview.heroSub_one": "{count} pessoa, com voto de confiança",
+  "sharePreview.heroSub_other":
+    "{count} pessoas, cada uma com voto de confiança",
   "sharePreview.title": "{senderName} convidou-te para o QueerPulse",
 
   // ── Autoatestação 18+ (partilhada por onboarding + pedir convite) ──

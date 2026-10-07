@@ -1,4 +1,16 @@
 import type { DirectoryPlace } from "./directoryPlaces";
+import {
+  normalizeOnlineDetails,
+  summaryFromDetails,
+  toPublicOnlineDetails,
+} from "./listBusiness/listingOnline.data";
+
+/** A demo online block in its public shape, built through the same
+ *  normaliser a live payload goes through. */
+function demoOnlineBlock(raw: unknown) {
+  const details = toPublicOnlineDetails(normalizeOnlineDetails(raw));
+  return { onlineDetails: details, onlineSummary: summaryFromDetails(details) };
+}
 
 /**
  * Demo-only: queer-owned businesses that live online, with no door to pin.
@@ -11,14 +23,18 @@ import type { DirectoryPlace } from "./directoryPlaces";
  *
  * Every field an online listing leaves empty in the wizard (address, hours,
  * coordinates, neighbourhood) is left empty here too, so demo exercises the
- * same "nothing to show" paths a real online listing does.
+ * same "nothing to show" paths a real online listing does. Each one carries
+ * a "Based in" city (Código Arco leaves it blank, as a migrated listing
+ * does) and an online block, so the card's status slot, Visit and the
+ * detail page's "Ordering & delivery" all run in demo.
  */
 export const ONLINE_DIRECTORY_PLACES: DirectoryPlace[] = [
   {
     slug: "fio-solto",
     name: "Fio Solto",
-    cat: "culture",
+    cat: "books-music",
     hood: "",
+    city: "Lisbon",
     owned: true,
     queerOwnedVerified: true,
     ownedBy: ["nonbinary"],
@@ -46,8 +62,7 @@ export const ONLINE_DIRECTORY_PLACES: DirectoryPlace[] = [
       { label: "Same-day delivery", yes: false },
     ],
     hoursType: "appointment",
-    hoursNote:
-      "Orders packed Tuesdays and Fridays. Messages answered within a day.",
+    hoursNote: "",
     owner: {
       name: "Sam Ferreira",
       initials: "SF",
@@ -64,6 +79,48 @@ export const ONLINE_DIRECTORY_PLACES: DirectoryPlace[] = [
     },
     address: "",
     online: true,
+    ...demoOnlineBlock({
+      mainLink: { url: "fiosolto.pt", kind: "shop" },
+      moreLinks: [
+        { url: "etsy.com/shop/fiosolto", platform: "etsy" },
+        { url: "ko-fi.com/fiosolto", platform: "kofi" },
+      ],
+      fulfilment: ["shipsPortugal", "pickupLisbon"],
+      pickupNote: "At Livraria Rosa, Intendente, on Saturdays",
+      shipsFrom: "portugal",
+      payments: ["mbway", "multibanco", "paypal"],
+      replyNote:
+        "Orders packed Tuesdays and Fridays. Messages answered within a day.",
+    }),
+    pricingMode: "shop",
+    shopItems: [
+      {
+        id: "fio-solto-item-1",
+        name: "Trans poetry anthology",
+        price: "9 EUR",
+        link: "fiosolto.pt/loja/antologia",
+        photo: {
+          image:
+            "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=800&auto=format&fit=crop",
+          alt: "A slim printed book lying open on a table",
+          caption: "",
+        },
+      },
+      {
+        id: "fio-solto-item-2",
+        name: "Riso comic, first edition",
+        price: "6 EUR",
+        link: "",
+        photo: null,
+      },
+      {
+        id: "fio-solto-item-3",
+        name: "Five-zine sampler",
+        price: "20 EUR",
+        link: "fiosolto.pt/loja/sampler",
+        photo: null,
+      },
+    ],
     reviews: [
       {
         id: "fio-solto-review-1",
@@ -80,8 +137,9 @@ export const ONLINE_DIRECTORY_PLACES: DirectoryPlace[] = [
   {
     slug: "corpo-inteiro-terapia",
     name: "Corpo Inteiro",
-    cat: "health",
+    cat: "therapy",
     hood: "",
+    city: "Lisbon",
     owned: true,
     queerOwnedVerified: true,
     ownedBy: ["trans"],
@@ -98,7 +156,7 @@ export const ONLINE_DIRECTORY_PLACES: DirectoryPlace[] = [
       "Notebook and tea",
     ],
     whatItIs: [
-      "Corpo Inteiro is a small online practice of two psychologists, both registered with the Ordem, both queer, one of them trans. Sessions run by video, so it works from Porto, the Algarve, or a flat share in Arroios.",
+      "Corpo Inteiro is a small online practice of two psychologists, both registered with the Ordem, both queer, one of them trans. Sessions run by video, so it works from Porto, the Algarve, or a flat share in Arroios, and in person in Lisbon for anyone who prefers to meet.",
       "A handful of sliding-scale places open every month, prioritised for people who have just arrived in Portugal or are mid-transition and waiting on the public system.",
     ],
     goodFor: [
@@ -108,7 +166,7 @@ export const ONLINE_DIRECTORY_PLACES: DirectoryPlace[] = [
       { label: "Crisis or emergency care", yes: false },
     ],
     hoursType: "appointment",
-    hoursNote: "Sessions by appointment, weekdays and two evenings a week.",
+    hoursNote: "",
     owner: {
       name: "Rafa Lopes",
       initials: "RL",
@@ -124,6 +182,30 @@ export const ONLINE_DIRECTORY_PLACES: DirectoryPlace[] = [
     },
     address: "",
     online: true,
+    // The six place answers stay unknown: an online practice is never asked
+    // them. The four online ones are mixed, so "Online access" runs in demo.
+    accessibility: {
+      answers: {
+        "step-free-entrance": "unknown",
+        "wheelchair-accessible-interior": "unknown",
+        "accessible-toilet": "unknown",
+        "gender-neutral-toilet": "unknown",
+        "quiet-hours": "unknown",
+        "assistance-animals-welcome": "unknown",
+        "image-descriptions": "no",
+        "video-captions": "yes",
+        "size-inclusive": "unknown",
+        "plain-language": "yes",
+      },
+      note: "Video sessions can run with live captions in Portuguese or English. Mention it when you book.",
+    },
+    ...demoOnlineBlock({
+      mainLink: { url: "corpointeiro.pt/marcar", kind: "booking" },
+      sessionFormats: ["video", "inPerson"],
+      registration: { body: "opp", number: "26741" },
+      payments: ["mbway", "bankTransfer"],
+      replyNote: "Sessions by appointment, weekdays and two evenings a week.",
+    }),
     reviews: [
       {
         id: "corpo-inteiro-terapia-review-1",
@@ -140,8 +222,9 @@ export const ONLINE_DIRECTORY_PLACES: DirectoryPlace[] = [
   {
     slug: "peito-livre",
     name: "Peito Livre",
-    cat: "design",
+    cat: "apparel",
     hood: "",
+    city: "Guimarães",
     owned: true,
     ownedBy: ["trans", "nonbinary"],
     av: "PL",
@@ -173,8 +256,7 @@ export const ONLINE_DIRECTORY_PLACES: DirectoryPlace[] = [
       { label: "Trying on in person", yes: false },
     ],
     hoursType: "shop",
-    hoursNote:
-      "Orders ship within two working days. Fit questions answered by message.",
+    hoursNote: "",
     owner: {
       name: "Alex & Noa",
       initials: "PL",
@@ -191,6 +273,15 @@ export const ONLINE_DIRECTORY_PLACES: DirectoryPlace[] = [
     },
     address: "",
     online: true,
+    ...demoOnlineBlock({
+      mainLink: { url: "peitolivre.pt", kind: "shop" },
+      moreLinks: [{ url: "vinted.pt/member/peitolivre", platform: "vinted" }],
+      fulfilment: ["shipsPortugal", "shipsEu"],
+      shipsFrom: "portugal",
+      payments: ["card", "paypal", "mbway"],
+      replyNote:
+        "Orders ship within two working days. Fit questions answered by message.",
+    }),
     reviews: [
       {
         id: "peito-livre-review-1",
@@ -207,8 +298,9 @@ export const ONLINE_DIRECTORY_PLACES: DirectoryPlace[] = [
   {
     slug: "codigo-arco",
     name: "Código Arco",
-    cat: "tech",
+    cat: "digital",
     hood: "",
+    city: "",
     owned: true,
     queerOwnedVerified: true,
     ownedBy: ["women"],
@@ -225,7 +317,7 @@ export const ONLINE_DIRECTORY_PLACES: DirectoryPlace[] = [
       "Launch day",
     ],
     whatItIs: [
-      "Código Arco is three developers and a designer, working remotely from Lisbon, Porto and Coimbra. They build sites for collectives, associations and queer-owned businesses, with accessibility treated as part of the job, not an upsell.",
+      "Código Arco is three developers and a designer, working remotely from Lisbon, Porto and Coimbra. They build sites for collectives, associations and queer-owned businesses, with accessibility built into every job from the first sketch.",
       "Collectives with no budget can apply for one pro-bono build a quarter. Everything else is quoted up front, in plain language.",
     ],
     goodFor: [
@@ -235,7 +327,7 @@ export const ONLINE_DIRECTORY_PLACES: DirectoryPlace[] = [
       { label: "Crypto or ad-tech projects", yes: false },
     ],
     hoursType: "appointment",
-    hoursNote: "Calls by appointment, Monday to Thursday.",
+    hoursNote: "",
     owner: {
       name: "Helena Matos",
       initials: "HM",
@@ -251,6 +343,12 @@ export const ONLINE_DIRECTORY_PLACES: DirectoryPlace[] = [
     },
     address: "",
     online: true,
+    ...demoOnlineBlock({
+      mainLink: { url: "codigoarco.pt", kind: "website" },
+      fulfilment: ["digital"],
+      payments: ["bankTransfer", "card"],
+      replyNote: "Calls by appointment, Monday to Thursday.",
+    }),
     reviews: [
       {
         id: "codigo-arco-review-1",
@@ -269,6 +367,7 @@ export const ONLINE_DIRECTORY_PLACES: DirectoryPlace[] = [
     name: "Molho Bravo",
     cat: "food",
     hood: "",
+    city: "Setúbal",
     owned: true,
     av: "MB",
     tint: "coral",
@@ -284,7 +383,7 @@ export const ONLINE_DIRECTORY_PLACES: DirectoryPlace[] = [
     ],
     whatItIs: [
       "Molho Bravo started as a grandmother's piri-piri recipe and a queer kitchen's refusal to keep it to themselves. It now runs to six sauces, all fermented for at least a month, all vegan.",
-      "Bottled in a shared kitchen in Marvila and posted twice a week. A cut of every bottle goes to a Lisbon queer food bank.",
+      "Bottled in a shared kitchen in Setúbal and posted twice a week. A cut of every bottle goes to a Lisbon queer food bank.",
     ],
     goodFor: [
       { label: "Gifts that travel well", yes: true },
@@ -293,7 +392,7 @@ export const ONLINE_DIRECTORY_PLACES: DirectoryPlace[] = [
       { label: "People who can't take heat", yes: false },
     ],
     hoursType: "shop",
-    hoursNote: "Orders posted Mondays and Thursdays.",
+    hoursNote: "",
     owner: {
       name: "André Sousa",
       initials: "AS",
@@ -309,6 +408,13 @@ export const ONLINE_DIRECTORY_PLACES: DirectoryPlace[] = [
     },
     address: "",
     online: true,
+    ...demoOnlineBlock({
+      mainLink: { url: "molhobravo.pt", kind: "shop" },
+      fulfilment: ["shipsPortugal", "shipsEu"],
+      shipsFrom: "portugal",
+      payments: ["mbway", "card"],
+      replyNote: "Orders posted Mondays and Thursdays.",
+    }),
     reviews: [
       {
         id: "molho-bravo-review-1",
@@ -325,8 +431,9 @@ export const ONLINE_DIRECTORY_PLACES: DirectoryPlace[] = [
   {
     slug: "aulas-kiki",
     name: "Aulas Kiki",
-    cat: "culture",
+    cat: "classes",
     hood: "",
+    city: "Lisbon",
     owned: true,
     queerOwnedVerified: true,
     ownedBy: ["women", "trans"],
@@ -344,7 +451,7 @@ export const ONLINE_DIRECTORY_PLACES: DirectoryPlace[] = [
     ],
     whatItIs: [
       "Aulas Kiki teaches European Portuguese online, in small groups of queer and trans newcomers. Lessons cover the things you need first: talking to a GP, filling in forms with the right pronouns, and holding your own at a bar.",
-      "Groups cap at six. A monthly free conversation night is open to anyone, whatever their level.",
+      "Groups cap at six. Questions between lessons are answered by chat, and a monthly free conversation night is open to anyone, whatever their level.",
     ],
     goodFor: [
       { label: "Newcomers to Lisbon", yes: true },
@@ -353,8 +460,7 @@ export const ONLINE_DIRECTORY_PLACES: DirectoryPlace[] = [
       { label: "Brazilian Portuguese", yes: false },
     ],
     hoursType: "appointment",
-    hoursNote:
-      "Group classes on weekday evenings. Private lessons by appointment.",
+    hoursNote: "",
     owner: {
       name: "Beatriz Nunes",
       initials: "BN",
@@ -371,6 +477,14 @@ export const ONLINE_DIRECTORY_PLACES: DirectoryPlace[] = [
     },
     address: "",
     online: true,
+    ...demoOnlineBlock({
+      mainLink: { url: "aulaskiki.pt/marcar", kind: "booking" },
+      moreLinks: [{ url: "aulaskiki.substack.com", platform: "substack" }],
+      sessionFormats: ["video", "chat"],
+      payments: ["mbway", "paypal"],
+      replyNote:
+        "Group classes on weekday evenings. Private lessons by appointment.",
+    }),
     reviews: [
       {
         id: "aulas-kiki-review-1",
@@ -383,5 +497,64 @@ export const ONLINE_DIRECTORY_PLACES: DirectoryPlace[] = [
         helpful: 17,
       },
     ],
+  },
+];
+
+/**
+ * Demo-only: one 18+ listing, so the "Show 18+ shops" chip, the 18+ detail
+ * page and its `noindex` all run in demo. Kept out of `DIRECTORY_PLACES` (and
+ * so out of every whole-catalogue reader) because no public read ever returns
+ * one; `useAdultDirectoryPlaces` and the signed-in detail read are its only
+ * ways in. Its copy is safe for work, as the category's rules require.
+ */
+export const ADULT_ONLINE_DIRECTORY_PLACES: DirectoryPlace[] = [
+  {
+    slug: "toque-macio",
+    name: "Toque Macio",
+    cat: "intimacy",
+    hood: "",
+    city: "London",
+    owned: true,
+    isAdultsOnly: true,
+    av: "TM",
+    tint: "plum",
+    desc: "Body-safe intimacy products and small-press zines about pleasure and consent, posted in plain packaging.",
+    tagline: "Pleasure, consent and good materials, posted discreetly.",
+    pills: ["Plain packaging", "€€"],
+    // No reviews yet, so no score: a rating with nothing behind it would
+    // claim feedback the page cannot show.
+    rating: { score: "0", count: 0 },
+    gallery: ["Product shelf", "Zine stack", "Packing table", "Plain parcel"],
+    whatItIs: [
+      "Toque Macio stocks body-safe products from small makers and publishes zines on pleasure, consent and bodies that rarely get written about.",
+      "Everything ships in plain packaging with a neutral sender name. Questions about materials and sizes are answered by message.",
+    ],
+    goodFor: [
+      { label: "Body-safe materials", yes: true },
+      { label: "Discreet delivery", yes: true },
+    ],
+    hoursType: "appointment",
+    hoursNote: "",
+    owner: {
+      name: "Toque Macio",
+      initials: "TM",
+      tint: "plum",
+      role: "Founder",
+      bio: "",
+      inQueerPulse: false,
+      first: "",
+    },
+    social: { website: "toquemacio.example" },
+    address: "",
+    online: true,
+    ...demoOnlineBlock({
+      mainLink: { url: "toquemacio.example/shop", kind: "shop" },
+      fulfilment: ["shipsPortugal", "shipsEu"],
+      shipsFrom: "outsideEu",
+      isVatIncluded: false,
+      payments: ["card", "paypal"],
+      replyNote: "Orders posted within two working days.",
+    }),
+    reviews: [],
   },
 ];

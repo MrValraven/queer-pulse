@@ -39,7 +39,8 @@ export const ATTENDEE_COUNT = 14;
 /** Static demo timestamp for the overview tab's "Last edited …" line. */
 export const LAST_EDITED_AT = new Date(2026, 6, 14);
 
-/** The gathering's date, for the sidebar's `fmt.date()`-formatted summary. */
+/** The demo gathering's day. `demoScheduleAt` (manageGatheringState.ts) sets
+ *  the brunch's start and end hours on it, the times the "time" row prints. */
 export const GATHERING_DATE = new Date(2026, 5, 21);
 
 // i18n note: `pronouns` are each person's own words and stay untranslated;

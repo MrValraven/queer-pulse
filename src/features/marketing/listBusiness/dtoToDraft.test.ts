@@ -236,3 +236,71 @@ describe("menu round trip", () => {
     ]);
   });
 });
+
+describe("dtoToDraft round trips for the three kinds", () => {
+  const onlineDetails = {
+    mainLink: { url: "fiosolto.pt", kind: "shop" as const },
+    moreLinks: [{ url: "etsy.com/shop/fiosolto", platform: "etsy" as const }],
+    fulfilment: ["shipsPortugal" as const],
+    pickupNote: "",
+    shipsFrom: "portugal" as const,
+    isVatIncluded: false,
+    payments: ["mbway" as const],
+    sessionFormats: [],
+    registration: { body: "" as const, number: "" },
+    replyNote: "Packed Tuesdays",
+    adultTermsAcceptedAt: null,
+  };
+
+  it("brings an online listing back unchanged through the save body", () => {
+    const dto = makeDto({
+      online: true,
+      cats: ["books-music"],
+      hood: "",
+      address: "",
+      city: "Porto",
+      onlineDetails,
+      shopItems: [
+        { id: "item-1", name: "Zine", price: "6 EUR", link: "", photo: null },
+      ],
+      pricingMode: "shop",
+    });
+    const body = draftToDto(dtoToDraft(dto)) as unknown as Record<
+      string,
+      unknown
+    >;
+    const { adultTermsAcceptedAt: _stamp, ...publicDetails } = onlineDetails;
+    expect(body.onlineDetails).toEqual(publicDetails);
+    expect(body.shopItems).toEqual(dto.shopItems);
+    expect(body.city).toBe("Porto");
+    expect(body.pricingMode).toBe("shop");
+  });
+
+  it("brings a place that also sells online back with its shop flag", () => {
+    const dto = makeDto({ hasOnlineShop: true, onlineDetails });
+    const draft = dtoToDraft(dto);
+    expect(draft.hasOnlineShop).toBe(true);
+    expect(draftToDto(draft)).toHaveProperty("hasOnlineShop", true);
+  });
+
+  it("reads a payload from before the fields as a plain place", () => {
+    const draft = dtoToDraft(makeDto());
+    expect(draft.hasOnlineShop).toBe(false);
+    expect(draft.shopItems).toEqual([]);
+    expect(draft.onlineDetails?.mainLink.url).toBe("");
+    expect(draft.city).toBe("");
+    expect(draft.isWhereFoundAnswered).toBeUndefined();
+  });
+
+  it("loads the 18+ acknowledgement from the server's stamp", () => {
+    const dto = makeDto({
+      online: true,
+      cats: ["intimacy"],
+      onlineDetails: {
+        ...onlineDetails,
+        adultTermsAcceptedAt: "2026-10-07T10:00:00.000Z",
+      },
+    });
+    expect(dtoToDraft(dto).adultTermsAccepted).toBe(true);
+  });
+});

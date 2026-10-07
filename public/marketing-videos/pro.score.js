@@ -458,7 +458,7 @@
       );
 
     // Pads under everything; the filter opens across the opening.
-    for (let n = 0; n < 23; n++)
+    for (let n = 0; n < 30; n++)
       pad(
         bar(n),
         bar(n + 1),
@@ -496,8 +496,13 @@
     groove(5, { clapOn: false, arpV: 0.03 });
     whoosh(11.2, 0.9, 0.14);
 
-    // Board (bars 6-13): full groove; air on every camera move, a note on every close-up.
-    for (let n = 6; n < 14; n++) groove(n);
+    // Board (bars 6-19): full groove, two bars per card. The arp sits back a
+    // little in each bar where a headline types, so the words lead.
+    const headlineBars = CUES.focus.map((focusTime) =>
+      Math.floor(focusTime / BAR),
+    );
+    for (let n = 6; n < 20; n++)
+      groove(n, { arpV: headlineBars.includes(n) ? 0.028 : 0.035 });
     CUES.moves.forEach((t, i) =>
       whoosh(t, 0.8, 0.13, i % 2 ? 0.6 : -0.6, i % 2 ? -0.6 : 0.6),
     );
@@ -508,20 +513,20 @@
     bell(CUES.all, 84, 0.05, -0.2);
     bell(CUES.all + 0.12, 89, 0.04, 0.2);
 
-    // Network (bars 14-15): people join in a run of glassy notes.
-    groove(14);
-    groove(15);
+    // Network (bars 20-22): the vouch tree grows in glassy notes; one branch
+    // rings on bar 21's Db (Ab and Eb from the chord).
+    groove(20);
+    groove(21);
+    groove(22);
     blips(CUES.netPops, 0.022, 1);
-    // Promise (bars 16-17): the word rolls over on a click.
-    groove(16);
-    groove(17);
-    tick(CUES.roll, 0.06, 2800);
-    whoosh(CUES.roll - 0.1, 0.4, 0.07);
-    blips(CUES.promiseChips, 0.04, 3);
-    // City (bars 18-19): the map shimmers in; the beat lifts out at the end.
-    groove(18);
-    groove(19, { kickOn: false, clapOn: false });
-    swell(37.0, 1.0, 0.08);
+    bell(CUES.vouch, 80, 0.045, 0.2);
+    bell(CUES.vouch + 0.12, 87, 0.035, -0.2);
+    // The people leave the tree for the map.
+    whoosh(CUES.handoff, 0.9, 0.14, -0.5, 0.5);
+    // City (bars 23-24): the map shimmers in under the full groove.
+    groove(23);
+    groove(24);
+    swell(CUES.dots + 0.95, 1.0, 0.08);
     blips(CUES.pins, 0.035, 4);
     CUES.arcs.forEach((t, i) =>
       blip(
@@ -531,27 +536,35 @@
         i % 2 ? 0.4 : -0.4,
       ),
     );
-    riser(39.0, 40.0, 0.16);
+    // Promise (bars 25-26): the word rolls over on a click; the beat lifts out at the end.
+    groove(25);
+    groove(26, { kickOn: false, clapOn: false });
+    tick(CUES.roll, 0.06, 2800);
+    whoosh(CUES.roll - 0.1, 0.4, 0.07);
+    blips(CUES.promiseChips, 0.04, 3);
+    riser(53.0, 54.0, 0.16);
 
-    // Belong (bar 20): a breath. Pad and bass only, then up into the name.
-    bass(bar(20), 1.9, CH(20).bass, 0.2);
+    // Belong (bar 27): a breath. Pad and bass only, then up into the name.
+    // The bells (F, C, F) are the 9th and 6th of bar 27's Eb6/9.
+    bass(bar(27), 1.9, CH(27).bass, 0.2);
     [65, 72, 77].forEach((m, i) =>
-      bell(40.05 + i * 0.08, m + 12, 0.04, -0.3 + i * 0.3),
+      bell(54.05 + i * 0.08, m + 12, 0.04, -0.3 + i * 0.3),
     );
-    riser(41.0, 42.0, 0.22);
-    // End (bars 21-23): the name again, the groove once more, then it rings out.
-    impact(42.0, 0.85);
+    riser(55.0, 56.0, 0.22);
+    // End (bars 28-30): the name again on Fm9, as at the reveal, the groove
+    // once more, then it rings out on Ab (Db to Ab, a plagal close).
+    impact(56.0, 0.85);
     [65, 68, 72, 75, 79].forEach((m, i) =>
-      bell(42.05 + i * 0.06, m + 12, 0.05, -0.4 + i * 0.2),
+      bell(56.05 + i * 0.06, m + 12, 0.05, -0.4 + i * 0.2),
     );
     for (let i = 0; i < 10; i++)
       tick(CUES.names[1] + 0.05 + i * 0.045, 0.02, 1800 + i * 160);
-    groove(21, { clapOn: false });
-    groove(22, { arpV: 0.028 });
-    pad(bar(23), bar(24), CHORDS.Db.pad, 2000, 0.045);
-    bass(bar(23), 1.6, CHORDS.Db.bass, 0.22);
+    groove(28, { clapOn: false });
+    groove(29, { arpV: 0.028 });
+    pad(bar(30), bar(31), CH(30).pad, 2000, 0.045);
+    bass(bar(30), 1.6, CH(30).bass, 0.22);
     [72, 75, 77, 80].forEach((m, i) =>
-      bell(bar(23) + i * 0.09, m + 12, 0.04, -0.3 + i * 0.2),
+      bell(bar(30) + i * 0.09, m + 12, 0.04, -0.3 + i * 0.2),
     );
 
     // Duck the pads/bass under every kick.

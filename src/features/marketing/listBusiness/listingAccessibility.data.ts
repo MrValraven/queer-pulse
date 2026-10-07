@@ -26,6 +26,24 @@ export const ACCESSIBILITY_QUESTION_SLUGS = [
 export type AccessibilitySlug = (typeof ACCESSIBILITY_QUESTION_SLUGS)[number];
 
 /**
+ * Four questions for an online-only listing, asked in place of the six about
+ * a building. Same answer model. The backend's answer map carries all ten
+ * slugs on every listing (contract amendment 3); a place never asks these.
+ */
+export const ONLINE_ACCESSIBILITY_QUESTION_SLUGS = [
+  "image-descriptions",
+  "video-captions",
+  "size-inclusive",
+  "plain-language",
+] as const;
+
+export type OnlineAccessibilitySlug =
+  (typeof ONLINE_ACCESSIBILITY_QUESTION_SLUGS)[number];
+
+export type ListingAccessibilitySlug =
+  AccessibilitySlug | OnlineAccessibilitySlug;
+
+/**
  * The three answers a venue can give.
  *
  * `unknown` is a REAL answer, never an absent key. "Nobody has told us" is a
@@ -40,24 +58,32 @@ export type AccessibilityAnswerMap = Record<
   AccessibilityAnswer
 >;
 
+/** A listing's answers: the six place answers always, the four online ones
+ *  when known. Optional so a fixture or an older payload with six still
+ *  type-checks; read an online answer through `listingAnswerOf`. */
+export type ListingAccessibilityAnswerMap = AccessibilityAnswerMap &
+  Partial<Record<OnlineAccessibilitySlug, AccessibilityAnswer>>;
+
 /** The accessibility block every listing response carries. `answers` always
  *  holds all six questions; `note` is the owner's free-text caveat. */
 export interface ListingAccessibilityView {
-  answers: AccessibilityAnswerMap;
+  answers: ListingAccessibilityAnswerMap;
   note: string | null;
 }
 
 /** The editable shape the owner's draft holds. Same answers, with the note as
  *  a plain string because a form field has no null. */
 export interface ListingAccessibilityDraft {
-  answers: AccessibilityAnswerMap;
+  answers: ListingAccessibilityAnswerMap;
   note: string;
 }
 
 /** One question as the UI renders it: the wire slug plus the catalog keys for
  *  its short label and the one-line explanation of what it actually means. */
-export interface AccessibilityQuestionDefinition {
-  slug: AccessibilitySlug;
+export interface AccessibilityQuestionDefinition<
+  Slug extends ListingAccessibilitySlug = AccessibilitySlug,
+> {
+  slug: Slug;
   labelKey: string;
   helpKey: string;
 }
@@ -102,6 +128,48 @@ export const ACCESSIBILITY_QUESTIONS: AccessibilityQuestionDefinition[] = [
       "marketing:listBusiness.accessibility.question.assistanceAnimals.help",
   },
 ];
+
+const QUESTION_KEY = "marketing:listBusiness.accessibility.question";
+
+/** The online set, in the order a buyer meets them. */
+export const ONLINE_ACCESSIBILITY_QUESTIONS: AccessibilityQuestionDefinition<OnlineAccessibilitySlug>[] =
+  [
+    {
+      slug: "image-descriptions",
+      labelKey: `${QUESTION_KEY}.imageDescriptions.label`,
+      helpKey: `${QUESTION_KEY}.imageDescriptions.help`,
+    },
+    {
+      slug: "video-captions",
+      labelKey: `${QUESTION_KEY}.videoCaptions.label`,
+      helpKey: `${QUESTION_KEY}.videoCaptions.help`,
+    },
+    {
+      slug: "size-inclusive",
+      labelKey: `${QUESTION_KEY}.sizeInclusive.label`,
+      helpKey: `${QUESTION_KEY}.sizeInclusive.help`,
+    },
+    {
+      slug: "plain-language",
+      labelKey: `${QUESTION_KEY}.plainLanguage.label`,
+      helpKey: `${QUESTION_KEY}.plainLanguage.help`,
+    },
+  ];
+
+/** The question set a listing of this kind is asked and shows. */
+export function accessibilityQuestionsFor(
+  isOnline: boolean,
+): readonly AccessibilityQuestionDefinition<ListingAccessibilitySlug>[] {
+  return isOnline ? ONLINE_ACCESSIBILITY_QUESTIONS : ACCESSIBILITY_QUESTIONS;
+}
+
+/** One answer, with an absent online answer read as `unknown`. */
+export function listingAnswerOf(
+  answers: ListingAccessibilityAnswerMap,
+  slug: ListingAccessibilitySlug,
+): AccessibilityAnswer {
+  return answers[slug] ?? "unknown";
+}
 
 /**
  * How each answer presents itself.
@@ -181,13 +249,28 @@ export function normalizeAccessibilityAnswers(
   return answers;
 }
 
+/** All ten answers, filled up from a partial or absent map. Listing paths
+ *  only: gatherings keep the six-answer `normalizeAccessibilityAnswers`. */
+export function normalizeListingAccessibilityAnswers(
+  input?: Partial<Record<string, unknown>> | null,
+): Required<ListingAccessibilityAnswerMap> {
+  const answers = {
+    ...normalizeAccessibilityAnswers(input),
+  } as Required<ListingAccessibilityAnswerMap>;
+  for (const slug of ONLINE_ACCESSIBILITY_QUESTION_SLUGS) {
+    const value = input?.[slug];
+    answers[slug] = isAccessibilityAnswer(value) ? value : "unknown";
+  }
+  return answers;
+}
+
 /** Heal a whole accessibility block (answers plus note) into the editable
- *  draft shape. An absent block becomes six `unknown`s and an empty note. */
+ *  draft shape. An absent block becomes ten `unknown`s and an empty note. */
 export function normalizeAccessibilityDraft(
   input?: Partial<ListingAccessibilityView> | null,
 ): ListingAccessibilityDraft {
   return {
-    answers: normalizeAccessibilityAnswers(input?.answers),
+    answers: normalizeListingAccessibilityAnswers(input?.answers),
     note: input?.note ?? "",
   };
 }

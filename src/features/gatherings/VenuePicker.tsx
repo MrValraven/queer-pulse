@@ -5,6 +5,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDirectoryPlaces } from "../marketing/api/useDirectory";
 import type { DirectoryPlace } from "../marketing/directoryPlaces";
 import { VenuePickerSearch } from "./VenuePickerSearch";
+import { venuePickerResults } from "./venuePickerResults";
 import styles from "./VenuePicker.module.css";
 
 /** A gathering's venue: either free text, or a structured link to a real
@@ -17,18 +18,6 @@ export interface VenueSelection {
   /** The linked listing's street address. Set only by the manage page's
    *  "Edit venue" modal, and only when the listing has one. */
   address?: string;
-}
-
-const MAX_RESULTS = 8;
-
-function matchesQuery(place: DirectoryPlace, query: string): boolean {
-  const q = query.trim().toLowerCase();
-  if (!q) return true;
-  return (
-    place.name.toLowerCase().includes(q) ||
-    place.hood.toLowerCase().includes(q) ||
-    place.cat.toLowerCase().includes(q)
-  );
 }
 
 /**
@@ -61,12 +50,10 @@ export function VenuePicker({
   const [query, setQuery] = useState(value.venueListing ? "" : value.text);
   const [open, setOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [shouldFocusSearch, setShouldFocusSearch] = useState(false);
 
   const results = useMemo(
-    () =>
-      places
-        .filter((place) => matchesQuery(place, query))
-        .slice(0, MAX_RESULTS),
+    () => venuePickerResults(places, query),
     [places, query],
   );
 
@@ -97,11 +84,16 @@ export function VenuePicker({
     setActiveIndex(0);
   };
 
+  // The linked chip renders off `value.venueListing`, so "Change" has to
+  // clear the selection itself; flipping local mode alone keeps the chip up.
+  // The Change button unmounts with the chip, so focus moves to the search.
   const startChange = () => {
     setMode("search");
     setQuery("");
     setActiveIndex(0);
     setOpen(true);
+    setShouldFocusSearch(true);
+    onChange({ text: "", listingId: null, venueListing: null });
   };
 
   const onKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
@@ -199,6 +191,7 @@ export function VenuePicker({
       onKeyDown={onKeyDown}
       onSelectPlace={selectPlace}
       onSwitchToFreeText={switchToFreeText}
+      shouldFocusOnMount={shouldFocusSearch}
     />
   );
 }

@@ -2,8 +2,10 @@ import { useState } from "react";
 import { Tabs } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { EventHostDTO } from "./api/events.api";
+import type { GatheringDetailsDraft } from "./editDetailsDraft";
 import {
   MANAGE_GATHERING_TABS,
+  MANAGE_TAB_PANEL_ID,
   type ManageGatheringTab,
 } from "./gatheringPaths";
 import { OverviewTab } from "./ManageOverviewTab";
@@ -11,15 +13,23 @@ import type { GatheringDetail, OverviewCounts } from "./ManageOverviewTab";
 import { AttendeesTab } from "./ManageAttendeesTab";
 import { MessagesTab } from "./ManageMessagesTab";
 import { SettingsTab } from "./ManageSettingsTab";
+import { CheckinTab } from "./checkin/CheckinTab";
 import type { VenueSelection } from "./VenuePicker";
 import styles from "./ManageGatheringPage.module.css";
 
 export { ManageGatheringSidebar } from "./ManageGatheringSidebar";
-
 type Tab = ManageGatheringTab;
 
 interface ManageGatheringTabsProps {
-  initialTab?: Tab;
+  /** The tab on show, read off the URL (`?tab=`) by the page. */
+  activeTab: Tab;
+  /** Asks the page to switch tabs (it writes the URL). */
+  onTabChange: (tab: Tab) => void;
+  /** The door window is open now, so the Check-in tab wears a live dot. */
+  isCheckinLive: boolean;
+  /** The gathering's schedule, for the Check-in tab's meter and door state. */
+  startAt: Date;
+  endAt: Date | null;
   /** Event slug the attendee list is fetched for. */
   slug: string;
   onCancel: () => void;
@@ -36,12 +46,14 @@ interface ManageGatheringTabsProps {
   updatedAt?: Date;
   venueListingId: string | null;
   venueListing: { slug: string; name: string } | null;
-  onUpdateDetail: (id: string, value: string) => void;
+  /** The overview's field editors open on this draft and save through
+   *  `onSaveEdit`. See `OverviewTab`. */
+  buildEditDraft: () => GatheringDetailsDraft;
+  onSaveEdit: (draft: GatheringDetailsDraft) => void;
   onUpdateVenue: (value: VenueSelection) => void;
-  onUpdateDescription: (value: string) => void;
-  /** The event's real accepted co-hosts — see `CohostManager`. */
+  /** The event's real accepted co-hosts. See `CohostManager`. */
   cohosts?: EventHostDTO[];
-  /** The "Options" toggles' real current values + persist callback — see
+  /** The "Options" toggles' real current values + persist callback. See
    *  `SettingsTab`. `undefined` in demo mode (the tab keeps its own local
    *  starting state). */
   allowWaitlist?: boolean;
@@ -62,13 +74,18 @@ const TAB_ORDER: readonly Tab[] = MANAGE_GATHERING_TABS;
 
 const TAB_LABEL_KEYS: Record<Tab, string> = {
   overview: "gatherings:manage.tabs.overview",
+  checkin: "gatherings:manage.tabs.checkin",
   attendees: "gatherings:manage.tabs.attendees",
   messages: "gatherings:manage.tabs.messages",
   settings: "gatherings:manage.tabs.settings",
 };
 
 export function ManageGatheringTabs({
-  initialTab = "overview",
+  activeTab: tab,
+  onTabChange,
+  isCheckinLive,
+  startAt,
+  endAt,
   slug,
   onCancel,
   onDelete,
@@ -79,9 +96,9 @@ export function ManageGatheringTabs({
   updatedAt,
   venueListingId,
   venueListing,
-  onUpdateDetail,
+  buildEditDraft,
+  onSaveEdit,
   onUpdateVenue,
-  onUpdateDescription,
   cohosts,
   allowWaitlist,
   showAttendeeCount,
@@ -90,7 +107,26 @@ export function ManageGatheringTabs({
   onUpdateSettings,
 }: ManageGatheringTabsProps) {
   const { t } = useTranslation();
-  const [tab, setTab] = useState<Tab>(initialTab);
+  // Which way the last switch went, so the incoming panel drifts in from the
+  // side its tab sits on (a later tab from the right). Null until the first
+  // switch: the panel the page opens on just appears. The tab lives in the
+  // URL, so a switch can come from the header's Check-in button or a link
+  // too; comparing against the tab shown last render catches them all.
+  const [shownTab, setShownTab] = useState<Tab>(tab);
+  const [switchDirection, setSwitchDirection] = useState<
+    "forward" | "backward" | null
+  >(null);
+  if (tab !== shownTab) {
+    setShownTab(tab);
+    setSwitchDirection(
+      TAB_ORDER.indexOf(tab) > TAB_ORDER.indexOf(shownTab)
+        ? "forward"
+        : "backward",
+    );
+  }
+  const changeTab = (nextTab: Tab) => {
+    onTabChange(nextTab);
+  };
   return (
     <div>
       <Tabs
@@ -99,44 +135,65 @@ export function ManageGatheringTabs({
         tabs={TAB_ORDER.map((tabId) => ({
           id: tabId,
           label: t(TAB_LABEL_KEYS[tabId]),
+          icon:
+            tabId === "checkin" && isCheckinLive ? (
+              <span className={styles.liveDot} aria-hidden />
+            ) : undefined,
         }))}
         active={tab}
-        onChange={(id) => setTab(id as Tab)}
+        onChange={(id) => changeTab(id as Tab)}
       />
-      {tab === "overview" && (
-        <OverviewTab
-          slug={slug}
-          details={details}
-          description={description}
-          counts={overviewCounts}
-          updatedAt={updatedAt}
-          venueListingId={venueListingId}
-          venueListing={venueListing}
-          onUpdateDetail={onUpdateDetail}
-          onUpdateVenue={onUpdateVenue}
-          onUpdateDescription={onUpdateDescription}
-        />
-      )}
-      {tab === "attendees" && (
-        <AttendeesTab
-          slug={slug}
-          customRsvpQuestion={customRsvpQuestion}
-          hostSlug={hostSlug}
-        />
-      )}
-      {tab === "messages" && <MessagesTab slug={slug} />}
-      {tab === "settings" && (
-        <SettingsTab
-          slug={slug}
-          onCancel={onCancel}
-          onDelete={onDelete}
-          isDeletePending={isDeletePending}
-          cohosts={cohosts}
-          allowWaitlist={allowWaitlist}
-          showAttendeeCount={showAttendeeCount}
-          onUpdateSettings={onUpdateSettings}
-        />
-      )}
+      {/* Keyed by tab: each switch remounts it and replays the animation. */}
+      <div
+        key={tab}
+        id={MANAGE_TAB_PANEL_ID}
+        className={styles.tabPanel}
+        tabIndex={-1}
+        data-direction={switchDirection ?? undefined}
+      >
+        {tab === "overview" && (
+          <OverviewTab
+            slug={slug}
+            details={details}
+            description={description}
+            counts={overviewCounts}
+            updatedAt={updatedAt}
+            venueListingId={venueListingId}
+            venueListing={venueListing}
+            buildEditDraft={buildEditDraft}
+            onSaveEdit={onSaveEdit}
+            onUpdateVenue={onUpdateVenue}
+          />
+        )}
+        {tab === "checkin" && (
+          <CheckinTab
+            slug={slug}
+            startAt={startAt}
+            endAt={endAt}
+            customRsvpQuestion={customRsvpQuestion}
+          />
+        )}
+        {tab === "attendees" && (
+          <AttendeesTab
+            slug={slug}
+            customRsvpQuestion={customRsvpQuestion}
+            hostSlug={hostSlug}
+          />
+        )}
+        {tab === "messages" && <MessagesTab slug={slug} />}
+        {tab === "settings" && (
+          <SettingsTab
+            slug={slug}
+            onCancel={onCancel}
+            onDelete={onDelete}
+            isDeletePending={isDeletePending}
+            cohosts={cohosts}
+            allowWaitlist={allowWaitlist}
+            showAttendeeCount={showAttendeeCount}
+            onUpdateSettings={onUpdateSettings}
+          />
+        )}
+      </div>
     </div>
   );
 }

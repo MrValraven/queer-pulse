@@ -34,6 +34,11 @@ import type {
 } from "../listBusiness/listingMenu.data";
 import type { ListingServiceOffering } from "../listBusiness/listingServices.data";
 import type { ListingOwnedBy } from "../listBusiness/listingOwnedBy.data";
+import type {
+  DirectoryOnlineSummary,
+  ListingPublicOnlineDetails,
+} from "../listBusiness/listingOnline.data";
+import type { DirectoryShopItem } from "../listBusiness/listingShop.data";
 
 /** Photos as the detail endpoint returns them — each slot resolved to a URL or null. */
 export type PhotoSetView = Record<PhotoKey, string | null>;
@@ -91,6 +96,22 @@ export interface DirectoryCardDTO {
   memberAvatarUrl?: string | null;
   /** Online-only business (no physical location). Absent on older payloads. */
   online?: boolean;
+  /** "Based in" for an online-only listing (possibly ""); the directory's
+   *  city otherwise. Inherited by the detail payload (backend delta 2).
+   *  Optional: absent on older payloads. */
+  city?: string;
+  /** A place that also sells online. Absent on older payloads. */
+  hasOnlineShop?: boolean;
+  /** Carries the 18+ category. Only `GET /directory/adult` and the signed-in
+   *  detail read return one. Absent on older payloads. */
+  isAdultsOnly?: boolean;
+  /** The card's slice of the online block; null when it sells nothing online.
+   *  Absent on older payloads. */
+  onlineSummary?: DirectoryOnlineSummary | null;
+  /** An online-only business's website and Instagram (`''` when left out), so
+   *  the Online tab's card can name the site in its browser bar. `null` on a
+   *  place; absent on older payloads, where the bar falls back to "Online". */
+  onlineLinks?: { website: string; instagram: string } | null;
   // Map pin the owner placed while listing. null ⇒ list-only (no pin).
   latitude: number | null;
   longitude: number | null;
@@ -226,6 +247,28 @@ export function getDirectory(params?: {
 }
 
 /**
+ * GET /directory/adult: the live 18+ listings, for a signed-in active member
+ * only (`ActiveMemberGuard`, `Cache-Control: private, no-store`). A bare card
+ * array, capped at 100 by the server, in the default order. The public
+ * `/directory` reads never return these, so the Online tab merges this list
+ * in when a member turns on "Show 18+ shops".
+ */
+export function getAdultDirectory(params?: {
+  q?: string;
+  cat?: string;
+}): Promise<DirectoryCardDTO[]> {
+  const search = new URLSearchParams();
+  if (params?.q) search.set("q", params.q);
+  if (params?.cat) search.set("cat", params.cat);
+  const query = search.toString();
+  return apiGet<DirectoryCardDTO[]>(
+    `/directory/adult${query ? `?${query}` : ""}`,
+    undefined,
+    validateDirectoryList,
+  );
+}
+
+/**
  * GET /directory?page=N — the paginated variant backing the `/local/directory`
  * grid (gap-audit HSG-5): sends `q`/`safe` server-side, so the network payload
  * matches what's actually being searched for instead of dragging down every
@@ -247,11 +290,14 @@ export function getDirectoryPage(params: {
   access?: AccessibilitySlug[];
   /** Ownership tags, any of which a listing must carry (see `setOwnedParam`). */
   owned?: ListingOwnedBy[];
+  /** Only listings that sell online (online only, or a place with a shop). */
+  online?: boolean;
   page: number;
 }): Promise<DirectoryCardDTO[] | ItemsPage<DirectoryCardDTO>> {
   const search = new URLSearchParams();
   if (params.q) search.set("q", params.q);
   if (params.safe) search.set("safe", params.safe);
+  if (params.online) search.set("online", "true");
   setOwnedParam(search, params.owned);
   setAccessParam(search, params.access);
   search.set("page", String(params.page));
@@ -312,8 +358,6 @@ export interface DirectoryDetailDTO extends DirectoryCardDTO {
    * Absent ⇒ the FE hides the live dispute action. */
   ref?: string;
   tagline: string;
-  /** City the venue sits in; `null` ⇒ the FE defaults to Lisbon. */
-  city: string | null;
   /** IANA timezone the hours run on; `null` ⇒ the FE defaults to Europe/Lisbon. */
   timezone: string | null;
   pills: string[];
@@ -335,6 +379,10 @@ export interface DirectoryDetailDTO extends DirectoryCardDTO {
   /** The menu, with `file.url` already resolved to a fetchable URL. Absent
    * when the listing has none. */
   menu?: ListingMenu;
+  /** "Ordering & delivery"; null when the listing sells nothing online. */
+  onlineDetails?: ListingPublicOnlineDetails | null;
+  /** "In the shop" items, photo resolved like the gallery's. */
+  shopItems?: DirectoryShopItem[];
   /** The listing's agreement to the affirming baseline. True on every listing
    * by definition, so it is never a distinguishing badge and never a filter. */
   affirmingBaseline?: AffirmingBaselineView;

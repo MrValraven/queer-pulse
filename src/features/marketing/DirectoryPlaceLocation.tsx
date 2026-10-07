@@ -130,7 +130,13 @@ export function DirectoryPlaceOnline({ place }: { place: DirectoryPlace }) {
       <FiGlobe aria-hidden />
       <div>
         <strong className={s.addrName}>{place.name}</strong>
-        <span>{t("marketing:directory.detail.onlineBusiness")}</span>
+        <span>
+          {place.city
+            ? t("marketing:directory.detail.onlineBusinessIn", {
+                city: place.city,
+              })
+            : t("marketing:directory.detail.onlineBusiness")}
+        </span>
       </div>
     </div>
   );

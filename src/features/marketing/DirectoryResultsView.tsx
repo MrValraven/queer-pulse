@@ -24,8 +24,17 @@ interface DirectoryResultsViewProps {
   filtered: LocalPlace[];
   distanceById: ReadonlyMap<string, number> | null;
   serverTotal: number;
-  /** How many online-only businesses are loaded, before any filter. */
+  /** How many businesses sell online in all: the server's total, plus the 18+
+   *  shops a member has asked for. */
   onlineTotal: number;
+  /** How many of those are loaded so far, before any filter. */
+  onlineLoadedCount: number;
+  /** The member-only 18+ list failed; every other business stays. */
+  isAdultError: boolean;
+  /** The member-only 18+ list is still loading. */
+  isAdultLoading: boolean;
+  /** Asks for the 18+ list again. */
+  onRetryAdult: () => void;
   loadedCount: number;
   loading: boolean;
   /** The read failed with no place loaded (ENG-501). */
@@ -48,13 +57,17 @@ interface DirectoryResultsViewProps {
 /** The directory's main results area: the incremental-reveal list; on the
  *  map tab, the code-split map view (with its own loading stage that hands
  *  off to the real view mid-animation); or, on the online tab, the
- *  constellation of businesses that have no door to pin. */
+ *  constellation of businesses that sell online. */
 export function DirectoryResultsView({
   view,
   filtered,
   distanceById,
   serverTotal,
   onlineTotal,
+  onlineLoadedCount,
+  isAdultError,
+  isAdultLoading,
+  onRetryAdult,
   loadedCount,
   loading,
   hasPlacesError,
@@ -72,19 +85,24 @@ export function DirectoryResultsView({
   activeFilterChips,
 }: DirectoryResultsViewProps) {
   if (view === "online") {
-    // Online businesses can sit on any page, so a failed page before the first
-    // one arrives leaves this tab with nothing to show: that reads as the
-    // error state, and its retry fetches the failed page.
-    const hasNoOnlinePlacesError = isFetchNextPageError && onlineTotal === 0;
+    // A failed page before any business arrives leaves this tab with nothing
+    // to show: that reads as the error state, and its retry fetches the
+    // failed page.
+    const hasNoOnlinePlacesError =
+      isFetchNextPageError && onlineLoadedCount === 0;
     return (
       <DirectoryOnlineView
         places={filtered}
         total={onlineTotal}
         loading={
-          loading || (hasNextPage && !isFetchNextPageError && onlineTotal === 0)
+          loading ||
+          isAdultLoading ||
+          (hasNextPage && !isFetchNextPageError && onlineLoadedCount === 0)
         }
         isError={hasPlacesError || hasNoOnlinePlacesError}
         onRetry={hasPlacesError ? refetchPlaces : fetchNextPage}
+        isAdultError={isAdultError}
+        onRetryAdult={onRetryAdult}
         hasActiveFilters={hasActiveFilters}
         onClearFilters={clearFilters}
         hasMoreFromServer={hasNextPage}

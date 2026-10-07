@@ -15,7 +15,9 @@ const SECTION_IDS_WITHOUT_DANGER_ZONE = LISTING_EDITOR_SECTION_IDS.filter(
   (sectionId) => sectionId !== DANGER_ZONE_SECTION_ID,
 );
 
-/** The section ids an online-only listing renders (no accessibility). */
+/** The section ids an online-only listing renders. Today that is every
+ *  section (it answers its own accessibility questions); the list stays so a
+ *  section hidden by kind in `listingEditor.data` drops out of the spy too. */
 const ONLINE_SECTION_IDS = LISTING_EDITOR_SECTIONS.filter((section) =>
   isSectionShownForListing(section.key, true),
 ).map((section) => section.id);
@@ -38,11 +40,12 @@ const ONLINE_SECTION_IDS_WITHOUT_DANGER_ZONE = ONLINE_SECTION_IDS.filter(
  * returned section ids feed the scroll-spy, which only observes elements that
  * exist when it registers, so it re-registers each time the section appears.
  *
- * The same goes for the accessibility section, which an online-only listing
- * does not render: `isOnline` picks a list without it, so switching the
- * toggle back off hands the spy a new list and the section is observed again
- * once it is back on the page. All four lists are module-level, so the spy
- * only re-registers when one of the two answers actually changes.
+ * The same goes for any section an online-only listing does not render
+ * (`isSectionShownForListing`; none today): `isOnline` picks a list without
+ * it, so switching the toggle hands the spy a new list and the section is
+ * observed again once it is back on the page. All four lists are
+ * module-level, so the spy only re-registers when one of the two answers
+ * actually changes.
  */
 export function useDangerZoneReveal(
   prefersReducedMotion: boolean,

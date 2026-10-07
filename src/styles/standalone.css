@@ -64,6 +64,17 @@
     --bottom-inset: env(safe-area-inset-bottom, 0px);
   }
 
+  /* The Check-in focus layer (CheckinFocusLayer.tsx stamps this attribute)
+     covers the bottom tab bar, so the token drops to its no-bar value (0, as
+     on desktop). Every consumer that paints over the layer (the consent
+     banner, the quick exit, the update card) adds its own
+     `env(safe-area-inset-bottom)` clearance, so the home indicator stays
+     cleared once, with no blank band where the bar would sit. More specific
+     than the `:root` rule above, so it wins. */
+  html[data-checkin-focus="true"] {
+    --bottom-inset: 0px;
+  }
+
   /* A signed-out visitor on the landing page gets no bottom tab bar
      (BottomTabBar returns nothing there; AppChrome stamps this attribute), so
      nothing may reserve its height: floating UI clears only the home indicator

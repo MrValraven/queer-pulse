@@ -1,5 +1,6 @@
 import { apiPost } from "../../../shared/api/client";
 import { businessPayload } from "../../marketing/listBusiness/draftToDto";
+import { knownListingTags } from "../../marketing/listBusiness/listingRetiredTags";
 import {
   OWNER_PERSONAL_FIELDS,
   type ListingDraft,
@@ -23,16 +24,17 @@ export interface AdminListingOwnerOfferInput {
 /**
  * The admin create body, mirroring `AdminCreateListingDto` on the server.
  *
- * EIGHT keys are absent by construction, the same eight the server drops with
+ * NINE keys are absent by construction, the same nine the server drops with
  * `OmitType`: `affirmingBaselineAccepted`, `ownerName`, `ownerRole`,
- * `ownerBio`, `visibility`, `linkToProfile`, `consentOuting` and
- * `consentGuide`. Each belongs to whoever ends up holding the listing, and
- * an admin cannot answer any of them on a business's behalf. The server also
- * omits the retired `contactEmail`, which this client type no longer has.
+ * `ownerBio`, `visibility`, `linkToProfile`, `consentOuting`, `consentGuide`
+ * and `adultTermsAccepted` (the 18+ acknowledgement). Each belongs to
+ * whoever ends up holding the listing, and an admin cannot answer any of them
+ * on a business's behalf. The server also omits the retired `contactEmail`,
+ * which this client type no longer has.
  *
  * Omission is the enforcement. The global ValidationPipe runs `whitelist:
- * true` with `forbidNonWhitelisted: true`, so a body carrying one of the eight
- * is answered 400. A staff-authored draft still CARRIES all eight (the wizard
+ * true` with `forbidNonWhitelisted: true`, so a body carrying one of the nine
+ * is answered 400. A staff-authored draft still CARRIES all nine (the wizard
  * suppresses the inputs without changing the draft shape, and `blankDraft()`
  * fills `visibility` and `linkToProfile` regardless), which is why the body is
  * built by the allow-list in `adminDraftToDto` below and then run through a
@@ -59,6 +61,7 @@ export type AdminCreateListingDto = Omit<
   | "consentGuide"
   | "rel"
   | "isStaffAuthored"
+  | "adultTermsAccepted"
 > & {
   publishState: ListingPublishState;
   ownerOffer?: AdminListingOwnerOfferInput;
@@ -81,17 +84,20 @@ type AdminListingBusinessPayload = Omit<
  * Every key this body may not carry, named so it can be deleted by name.
  *
  * The eight owner-personal ones come from the canonical list, so this stays in
- * step with it. Three more are named here: `affirmingBaselineAccepted`, which
+ * step with it. Four more are named here: `affirmingBaselineAccepted`, which
  * `draftToDto` adds on the member create; `ownerRole`, which belongs to the
  * business (hence its absence from `OWNER_PERSONAL_FIELDS`) while the server's
- * admin DTO still omits it; and `isStaffAuthored`, draft-only state that
- * `UpdateListingDto` inherits from `ListingDraft`.
+ * admin DTO still omits it; `isStaffAuthored`, draft-only state that
+ * `UpdateListingDto` inherits from `ListingDraft`; and `adultTermsAccepted`,
+ * the 18+ acknowledgement only the business itself can give.
  */
 const ADMIN_CREATE_EXCLUDED_KEYS: readonly string[] = [
   ...OWNER_PERSONAL_FIELDS,
   "affirmingBaselineAccepted",
   "ownerRole",
   "isStaffAuthored",
+  // Staff cannot accept the 18+ terms for a business; the admin bodies refuse it.
+  "adultTermsAccepted",
 ];
 
 /**
@@ -121,6 +127,9 @@ function stripAdminExcludedKeys(payload: object): AdminListingBusinessPayload {
  * all behave identically here. `ownerRole` is the one key that half carries
  * which this body may not: it is printed on the public listing, so it belongs
  * to the business, while the server's admin DTO omits it and answers 400.
+ * A create carries only the vocabulary's tags (`knownListingTags`): the
+ * server refuses any other tag on a create, such as one a draft from before
+ * the online fields still holds.
  */
 export function adminDraftToDto(
   draft: ListingDraft,
@@ -128,6 +137,7 @@ export function adminDraftToDto(
 ): AdminCreateListingDto {
   return {
     ...stripAdminExcludedKeys(businessPayload(draft)),
+    tags: knownListingTags(draft.tags),
     publishState,
     ...(ownerOffer ? { ownerOffer } : {}),
   };

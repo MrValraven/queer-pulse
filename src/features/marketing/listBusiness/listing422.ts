@@ -49,9 +49,8 @@ const FIELD_TO_STEP: Record<string, FieldLocation> = {
   // Step 1 — basics
   name: { step: 1, anchor: ANCHOR.name },
   cats: { step: 1, anchor: ANCHOR.cats },
-  // The online-only toggle sits with the basics, just above the neighbourhood
-  // it decides on.
-  online: { step: 1, anchor: ANCHOR.online },
+  // `online` is routed in `locationOf`: a create answers it on step 0 ("Where
+  // do people find it?"), an edit with the toggle at the top of the basics.
   hood: { step: 1, anchor: ANCHOR.hood },
   badge: { step: 1, anchor: ANCHOR.badge },
   price: { step: 1, anchor: ANCHOR.price },
@@ -75,7 +74,50 @@ const FIELD_TO_STEP: Record<string, FieldLocation> = {
   // Step 5 — review / consents
   consentOuting: { step: 5, anchor: ANCHOR.consent },
   consentGuide: { step: 5, anchor: ANCHOR.consent },
+  // Step 1: the basics an online listing adds.
+  city: { step: 1, anchor: ANCHOR.city },
+  adultTermsAccepted: { step: 1, anchor: ANCHOR.adultTerms },
+  // The priced lists are the editor's own section; step 1 is where their
+  // missing-field chips sit too.
+  pricingMode: { step: 1, anchor: ANCHOR.pricingMode },
+  shopItems: { step: 1, anchor: ANCHOR.services },
+  // Step 3: selling online.
+  hasOnlineShop: { step: 3, anchor: ANCHOR.hasOnlineShop },
 };
+
+/** `onlineDetails.<field>` routes by its SECOND segment to that field. */
+const ONLINE_DETAIL_ANCHORS: Record<string, string> = {
+  mainLink: ANCHOR.mainLink,
+  moreLinks: ANCHOR.moreLinks,
+  fulfilment: ANCHOR.fulfilment,
+  pickupNote: ANCHOR.pickupNote,
+  shipsFrom: ANCHOR.shipsFrom,
+  isVatIncluded: ANCHOR.shipsFrom,
+  payments: ANCHOR.payments,
+  sessionFormats: ANCHOR.sessionFormats,
+  registration: ANCHOR.registration,
+  replyNote: ANCHOR.replyNote,
+};
+
+const ADULT_TERMS_CODE = "adult_terms_required";
+
+/** The category check names no property ("Category "x" is not offered to
+ *  online listings"), so it is matched by its opening words. */
+const CATEGORY_MESSAGE_PATTERN = /^Category "/;
+
+/** Backend rule 5's sentence, joined with the other claim-path gaps and
+ *  carrying no property path. */
+const CLAIM_FULFILMENT_MESSAGE_PATTERN = /requires a way people get it/;
+
+/** The tag check names no property path ("Unknown listing tags: "x". Pick
+ *  tags from GET /directory/tags."), so it is matched by its opening words. */
+const UNKNOWN_TAGS_MESSAGE_PATTERN = /^Unknown listing tags/;
+
+/** Whether the form is editing a listing that exists, which moves the
+ *  online-only answer from step 0 to the basics. */
+export interface Listing422Options {
+  isEdit?: boolean;
+}
 
 /** HTTP statuses whose body carries per-field validation errors. */
 const VALIDATION_STATUSES = new Set([400, 422]);
@@ -126,6 +168,57 @@ function pathFromMessage(message: string): string {
 
 function toFieldError(path: string, message: string): RawFieldError {
   return { path, field: firstPathSegment(path), message };
+}
+
+function secondPathSegment(path: string): string {
+  return (
+    path
+      .split(/[.[\]]/)
+      .filter(Boolean)[1]
+      ?.trim() ?? ""
+  );
+}
+
+function locationOf(
+  fieldError: RawFieldError,
+  options: Listing422Options,
+): FieldLocation | undefined {
+  if (CATEGORY_MESSAGE_PATTERN.test(fieldError.message.trim())) {
+    return { step: 1, anchor: ANCHOR.cats };
+  }
+  if (UNKNOWN_TAGS_MESSAGE_PATTERN.test(fieldError.message.trim())) {
+    return { step: 2, anchor: ANCHOR.tags };
+  }
+  if (fieldError.field === "online") {
+    return options.isEdit === true
+      ? { step: 1, anchor: ANCHOR.online }
+      : { step: 0, anchor: ANCHOR.whereFound };
+  }
+  if (CLAIM_FULFILMENT_MESSAGE_PATTERN.test(fieldError.message)) {
+    return { step: 3, anchor: ANCHOR.fulfilment };
+  }
+  if (fieldError.field === "onlineDetails") {
+    return {
+      step: 3,
+      anchor:
+        ONLINE_DETAIL_ANCHORS[secondPathSegment(fieldError.path)] ??
+        ANCHOR.mainLink,
+    };
+  }
+  return FIELD_TO_STEP[fieldError.field];
+}
+
+/** True when the body says the 18+ acknowledgement is missing, in whichever
+ *  of the shapes a NestJS error body carries it. */
+function isAdultTermsError(data: unknown): boolean {
+  if (!data || typeof data !== "object") return false;
+  const body = data as Record<string, unknown>;
+  const messages: unknown[] = Array.isArray(body.message)
+    ? (body.message as unknown[])
+    : [body.message];
+  return [body.code, body.error, ...messages].some(
+    (value) => typeof value === "string" && value.trim() === ADULT_TERMS_CODE,
+  );
 }
 
 /**
@@ -214,9 +307,20 @@ function memberFacingMessage(
 export function resolveListing422(
   error: unknown,
   translation: Listing422Translation,
+  options: Listing422Options = {},
 ): Listing422Target | null {
   if (!(error instanceof ApiError) || !VALIDATION_STATUSES.has(error.status))
     return null;
+  if (isAdultTermsError(error.data)) {
+    return {
+      step: 1,
+      anchor: ANCHOR.adultTerms,
+      message: translation.t(
+        "marketing:listBusiness.server.adultTermsRequired",
+      ),
+      photoSlots: [],
+    };
+  }
   const fieldErrors = extractFieldErrors(error.data);
   const photoSlots = [
     ...new Set(
@@ -226,13 +330,13 @@ export function resolveListing422(
       }),
     ),
   ];
-  for (const { field, message } of fieldErrors) {
-    const location = FIELD_TO_STEP[field];
+  for (const fieldError of fieldErrors) {
+    const location = locationOf(fieldError, options);
     if (location) {
       return {
         step: location.step,
         anchor: location.anchor,
-        message: memberFacingMessage(error, message, translation),
+        message: memberFacingMessage(error, fieldError.message, translation),
         photoSlots,
       };
     }

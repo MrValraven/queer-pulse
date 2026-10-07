@@ -1206,7 +1206,7 @@ export const THREADS: Thread[] = [
     category: "general",
     title: "Should QueerPulse be more accessible to non-professionals?",
     excerpt:
-      "The invite-only + 'professional network' framing might be excluding people who need community most. Thoughts?",
+      "The vouching model + 'professional network' framing might be excluding people who need community most. Thoughts?",
     author: author("catarina-vaz"),
     posted: "1 week ago",
     views: 1120,
@@ -1214,7 +1214,7 @@ export const THREADS: Thread[] = [
     comments: 23,
     tags: ["platform", "inclusion"],
     body: [
-      'I want to raise something carefully. The invite-only model and the "professional network" language keep the quality high, but I worry they quietly select for people who already have stability, and screen out the ones who need community most.',
+      'I want to raise something carefully. The vouching model and the "professional network" language keep the quality high, but I worry they quietly select for people who already have stability, and screen out the ones who need community most.',
       "I am not arguing for throwing the doors open overnight. I am asking whether there is a middle path: a sponsored-membership route, an open resources tier, something. What would we lose, and what would we gain?",
     ],
     replies: [

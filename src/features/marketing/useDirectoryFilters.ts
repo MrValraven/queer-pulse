@@ -2,8 +2,15 @@ import { useCallback, useEffect, useMemo, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import type { MyLocationCoordinates } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { LOCAL_CATEGORIES, LOCAL_CATEGORY_LABEL_KEYS } from "./localCategories";
 import {
+  ADULT_LISTING_CATEGORY_SLUG,
+  DIRECTORY_CATEGORY_IDS,
+  LOCAL_CATEGORIES,
+  LOCAL_CATEGORY_LABEL_KEYS,
+  ONLINE_LISTING_CATEGORY_SLUGS,
+} from "./localCategories";
+import {
+  categoryForScope,
   filterLocalPlaces,
   sortLocalPlaces,
   type LocalPlace,
@@ -81,10 +88,10 @@ function toAccess(raw: string | null): AccessibilitySlug[] {
   return ACCESSIBILITY_QUESTION_SLUGS.filter((slug) => wanted.has(slug));
 }
 
-const CATEGORY_ID_SET: ReadonlySet<string> = new Set(LOCAL_CATEGORIES);
+const CATEGORY_ID_SET: ReadonlySet<string> = new Set(DIRECTORY_CATEGORY_IDS);
 
 /**
- * Read `?cat=` into the chosen place types.
+ * Read `?cat=` into the chosen categories, place and online ids alike.
  *
  * Same rules as `toAccess`: an unknown id is dropped so a stale link falls
  * back to every type, duplicates collapse, and the ids follow the chip order
@@ -92,12 +99,12 @@ const CATEGORY_ID_SET: ReadonlySet<string> = new Set(LOCAL_CATEGORIES);
  * `?cat=food,design` are one state. A single id (the detail page's
  * `?cat=food` link) is simply a list of one.
  */
-function toCategories(raw: string | null): string[] {
+export function toCategories(raw: string | null): string[] {
   if (!raw) return [];
   const wanted = new Set(
     raw.split(",").filter((categoryId) => CATEGORY_ID_SET.has(categoryId)),
   );
-  return LOCAL_CATEGORIES.filter((categoryId) => wanted.has(categoryId));
+  return DIRECTORY_CATEGORY_IDS.filter((categoryId) => wanted.has(categoryId));
 }
 
 /**
@@ -125,9 +132,18 @@ function setListParam(
   else params.set(key, list.join(","));
 }
 
+/** Read `?view=` into one of the three lenses; anything else is the list. */
+function toView(raw: string | null): DirectoryView {
+  return raw === "map" || raw === "online" ? raw : "list";
+}
+
+/** No filter values, shared so a hidden group reads as one stable list. */
+const NO_VALUES: never[] = [];
+
 /**
  * The accessibility needs currently being filtered on, read straight from the
- * URL.
+ * URL. Empty on the Online tab, which offers no access group: a stale or
+ * hand-written `?view=online&access=` link must not narrow it.
  *
  * Exported on its own so a card deep in the grid can lead with the need the
  * member actually asked for without four levels of prop drilling: the filter
@@ -137,17 +153,35 @@ function setListParam(
 export function useAccessFilter(): AccessibilitySlug[] {
   const [searchParams] = useSearchParams();
   const raw = searchParams.get("access");
-  return useMemo(() => toAccess(raw), [raw]);
+  const isOnlineView = toView(searchParams.get("view")) === "online";
+  return useMemo(
+    () => (isOnlineView ? NO_VALUES : toAccess(raw)),
+    [raw, isOnlineView],
+  );
 }
 
 /** The directory's three lenses. `list` is everything, `map` is every place
- *  with a door to pin, and `online` is every business that has none. */
+ *  with a door to pin, and `online` is every business that sells online. */
 export type DirectoryView = "list" | "map" | "online";
+
+/** The category chips a tab offers: the online vocabulary on the Online tab,
+ *  the place vocabulary on the list and the map. */
+export function categoriesForView(view: DirectoryView): readonly string[] {
+  return view === "online" ? ONLINE_LISTING_CATEGORY_SLUGS : LOCAL_CATEGORIES;
+}
+
+/** `?cat=` as the given tab reads it: only the ids that tab offers as chips. */
+function categoriesInView(raw: string | null, view: DirectoryView): string[] {
+  const offered = new Set(categoriesForView(view));
+  return toCategories(raw).filter((categoryId) => offered.has(categoryId));
+}
 
 export interface DirectoryFilterParams {
   view: DirectoryView;
-  /** Place types to show, in chip order. Empty means every type; otherwise a
-   *  place matches when its type is any one of them. */
+  /** Categories to show, in chip order, from the vocabulary the current tab
+   *  offers (place types on the list and the map, what they sell on the
+   *  Online tab). Empty means every category; otherwise a place matches when
+   *  its category is any one of them. */
   categories: string[];
   query: string;
   sort: LocalSort;
@@ -156,10 +190,15 @@ export interface DirectoryFilterParams {
   /** Ownership tags (`?owned=`), ANY of which a place must carry, in
    *  canonical order. Empty means no restriction. */
   owned: ListingOwnedBy[];
-  /** Only places open right now, on their own clock. */
+  /** Only places open right now, on their own clock. Always false on the
+   *  Online tab, which offers no "Open now". */
   openNow: boolean;
-  /** Accessibility needs that must ALL be met, in canonical question order. */
+  /** Accessibility needs that must ALL be met, in canonical question order.
+   *  Empty on the Online tab, which offers no access group. */
   access: AccessibilitySlug[];
+  /** "Show 18+ shops" (`?adult=1`): asks for the member-only 18+ list on the
+   *  Online tab. Read only for a signed-in member; nothing is stored. */
+  adult: boolean;
   selectView: (next: string) => void;
   toggleCategory: (categoryId: string) => void;
   clearCategories: () => void;
@@ -170,6 +209,7 @@ export interface DirectoryFilterParams {
   toggleOwned: (value: ListingOwnedBy) => void;
   setOpenNow: (next: boolean) => void;
   toggleAccess: (slug: AccessibilitySlug) => void;
+  setAdult: (next: boolean) => void;
   clearFilters: () => void;
 }
 
@@ -185,23 +225,30 @@ export interface DirectoryFilterParams {
 export function useDirectoryFilterParams(): DirectoryFilterParams {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const rawView = searchParams.get("view");
-  const view: DirectoryView =
-    rawView === "map" || rawView === "online" ? rawView : "list";
+  // Normalised on read as well as on the tab switch: a direct or older link
+  // (`?view=online&open=now`, `?view=online&cat=culture`) keeps only the
+  // filters the tab offers, so it never empties the Online tab.
+  const view = toView(searchParams.get("view"));
+  const isOnlineView = view === "online";
   const rawCategories = searchParams.get("cat");
   const categories = useMemo(
-    () => toCategories(rawCategories),
-    [rawCategories],
+    () => categoriesInView(rawCategories, view),
+    [rawCategories, view],
   );
   const query = searchParams.get("q") ?? "";
   const sort = toSort(searchParams.get("sort"));
   const rawVibes = searchParams.get("vibe");
-  const vibes = useMemo(() => toVibes(rawVibes), [rawVibes]);
+  // Vibe is a place-only group, hidden on the Online tab.
+  const vibes = useMemo(
+    () => (isOnlineView ? NO_VALUES : toVibes(rawVibes)),
+    [rawVibes, isOnlineView],
+  );
   const safe = searchParams.get("safe") === "verified" ? "verified" : null;
   const rawOwned = searchParams.get("owned");
   const owned = useMemo(() => toOwned(rawOwned), [rawOwned]);
-  const openNow = searchParams.get("open") === "now";
+  const openNow = !isOnlineView && searchParams.get("open") === "now";
   const access = useAccessFilter();
+  const adult = searchParams.get("adult") === "1";
 
   // The params the last edit wrote, until a render reflects them. React
   // Router's functional `setSearchParams` starts from the params of the last
@@ -237,8 +284,17 @@ export function useDirectoryFilterParams(): DirectoryFilterParams {
   const selectView = useCallback(
     (next: string) =>
       mutateParams((params) => {
-        if (next === "map" || next === "online") params.set("view", next);
-        else params.delete("view");
+        const nextView = toView(next);
+        if (nextView === "list") params.delete("view");
+        else params.set("view", nextView);
+        // A tab keeps only the chips it offers (`food` is in both), and the
+        // Online tab drops "Open now", which it does not offer.
+        setListParam(
+          params,
+          "cat",
+          categoriesInView(params.get("cat"), nextView),
+        );
+        if (nextView === "online") params.delete("open");
       }, true),
     [mutateParams],
   );
@@ -247,10 +303,13 @@ export function useDirectoryFilterParams(): DirectoryFilterParams {
   const toggleCategory = useCallback(
     (categoryId: string) =>
       mutateParams((params) => {
-        const current = toCategories(params.get("cat"));
+        const current = categoriesInView(
+          params.get("cat"),
+          toView(params.get("view")),
+        );
         const next = current.includes(categoryId)
           ? current.filter((entry) => entry !== categoryId)
-          : LOCAL_CATEGORIES.filter(
+          : DIRECTORY_CATEGORY_IDS.filter(
               (entry) => entry === categoryId || current.includes(entry),
             );
         setListParam(params, "cat", next);
@@ -309,6 +368,25 @@ export function useDirectoryFilterParams(): DirectoryFilterParams {
       }),
     [mutateParams],
   );
+  // Turning the 18+ shops off also drops their chip, which goes away with them.
+  const setAdult = useCallback(
+    (next: boolean) =>
+      mutateParams((params) => {
+        if (next) {
+          params.set("adult", "1");
+          return;
+        }
+        params.delete("adult");
+        setListParam(
+          params,
+          "cat",
+          toCategories(params.get("cat")).filter(
+            (categoryId) => categoryId !== ADULT_LISTING_CATEGORY_SLUG,
+          ),
+        );
+      }),
+    [mutateParams],
+  );
   const clearFilters = useCallback(
     () =>
       mutateParams((params) => {
@@ -319,6 +397,7 @@ export function useDirectoryFilterParams(): DirectoryFilterParams {
         params.delete("owned");
         params.delete("open");
         params.delete("access");
+        params.delete("adult");
       }),
     [mutateParams],
   );
@@ -333,6 +412,7 @@ export function useDirectoryFilterParams(): DirectoryFilterParams {
     owned,
     openNow,
     access,
+    adult,
     selectView,
     toggleCategory,
     clearCategories,
@@ -343,33 +423,29 @@ export function useDirectoryFilterParams(): DirectoryFilterParams {
     toggleOwned,
     setOpenNow,
     toggleAccess,
+    setAdult,
     clearFilters,
   };
 }
 
-/**
- * Derives the displayed list, chip counts, and active-filter pills from an
- * already-fetched `places` array plus the URL state from
- * `useDirectoryFilterParams`. `query`/`safe`/`access`/`owned` are ALSO applied
- * here (even though the network fetch already filtered by them server-side)
- * purely as a cheap, harmless no-op safety net, and so the demo fixture
- * answers the same filters with no backend at all. `cat`/`vibe`/`open` are the three
- * that genuinely only ever apply here client-side: the first two for the
- * reasons in that hook's doc comment, and `open` because the grid is CDN-cached
- * and a server-computed open state would go stale in the dangerous direction.
- */
-export function useDirectoryFilterResults(
+/** How many places sit under each category chip (+ "all"), counted the way
+ *  the current tab's chips read a place (see `categoryForScope`), so a chip
+ *  that shows N lists N. */
+export function countByCategory(
   places: LocalPlace[],
-  params: DirectoryFilterParams,
-  /**
-   * The member's own position, when they have opted in to "near me". It comes
-   * from `useMyLocation`, lives in React state only, and is used here for one
-   * thing: ordering the already-loaded places and labelling each card with a
-   * walking time. Passing `null` (the default, and what turning the control
-   * off produces) restores the previous ordering exactly.
-   */
-  origin: MyLocationCoordinates | null = null,
-) {
+  isOnlineScope: boolean,
+): Record<string, number> {
+  const counts: Record<string, number> = { all: places.length };
+  for (const place of places) {
+    const categoryId = categoryForScope(place, isOnlineScope);
+    counts[categoryId] = (counts[categoryId] ?? 0) + 1;
+  }
+  return counts;
+}
+
+/** What is narrowing the list right now, as removable chips, in the order the
+ *  drawer shows its groups. */
+function useActiveFilters(params: DirectoryFilterParams): ActiveFilter[] {
   const { t } = useTranslation();
   const {
     categories,
@@ -379,7 +455,6 @@ export function useDirectoryFilterResults(
     owned,
     openNow,
     access,
-    sort,
     toggleCategory,
     toggleVibe,
     setSafe,
@@ -388,115 +463,7 @@ export function useDirectoryFilterResults(
     toggleAccess,
     setQuery,
   } = params;
-
-  const matched = useMemo(
-    () =>
-      sortLocalPlaces(
-        filterLocalPlaces(places, {
-          categories,
-          query,
-          vibes,
-          safe,
-          owned,
-          openNow,
-          access,
-        }),
-        sort,
-      ),
-    [places, categories, query, vibes, safe, owned, openNow, access, sort],
-  );
-
-  // Distances are measured only over what is already on screen, and only once
-  // the member has opted in. A place with no coordinates never appears in this
-  // map, so it never gets a walking time and never sorts as if it were here.
-  const distanceById = useMemo(
-    () => (origin ? distancesFrom(origin, matched) : null),
-    [origin, matched],
-  );
-
-  // The chosen sort and "use my location" BOTH stay in force, rather than one
-  // quietly replacing the other. What that means depends on what the sort has
-  // an opinion about:
-  //
-  // - "By neighbourhood" groups the list, and says nothing about the order of
-  //   the groups or of what is inside them — so distance decides both, and the
-  //   member gets the shape they asked for with the ordering they turned on.
-  // - "A to Z" is a lookup order: every position is already taken, and there is
-  //   nothing for distance to refine. It is kept exactly as chosen, and the
-  //   position still feeds the walking time on every card.
-  // - No sort chosen (the curated "Featured" order) is the one place with no
-  //   member preference to protect, so distance takes the list. The picker
-  //   names that state "Nearest first" while the location is on, so the control
-  //   always says what the list is actually doing.
-  //
-  // Turning the location off hands every ordering straight back.
-  const filtered = useMemo(() => {
-    if (!distanceById) return matched;
-    if (sort === "hood") {
-      return sortByNeighbourhoodDistance(matched, distanceById);
-    }
-    if (sort === "name") return matched;
-    return sortByDistance(matched, distanceById);
-  }, [matched, distanceById, sort]);
-
-  // Chip counts reflect every other filter and leave the chosen place types
-  // out, so each chip shows how many of the LOADED places it would add right
-  // now. That is an honest count against what has been fetched so far, which
-  // can sit below the platform-wide grand total (see `useLocalPlaces`'s doc
-  // comment on why category stays client-side over the loaded pages).
-  const categoryCounts = useMemo(() => {
-    const base = filterLocalPlaces(places, {
-      categories: [],
-      query,
-      vibes,
-      safe,
-      owned,
-      openNow,
-      access,
-    });
-    const counts: Record<string, number> = { all: base.length };
-    for (const place of base) {
-      counts[place.category] = (counts[place.category] ?? 0) + 1;
-    }
-    return counts;
-  }, [places, query, vibes, safe, owned, openNow, access]);
-
-  // The same "what would this chip leave" question for the other chips: each
-  // count runs the full filter over the loaded places with that one chip
-  // turned on and everything else as it stands, chosen place types included.
-  const chipCounts = useMemo<LocalChipCounts>(() => {
-    const current = {
-      categories,
-      query,
-      vibes,
-      safe,
-      owned,
-      openNow,
-      access,
-    };
-    const countWith = (overrides: Partial<typeof current>) =>
-      filterLocalPlaces(places, { ...current, ...overrides }).length;
-    return {
-      openNow: countWith({ openNow: true }),
-      safe: countWith({ safe: "verified" }),
-      access: Object.fromEntries(
-        ACCESSIBILITY_QUESTION_SLUGS.map((slug) => [
-          slug,
-          countWith({ access: [...access, slug] }),
-        ]),
-      ) as Record<AccessibilitySlug, number>,
-      vibes: Object.fromEntries(
-        VIBES.map((vibe) => [vibe, countWith({ vibes: [...vibes, vibe] })]),
-      ),
-    };
-  }, [places, categories, query, vibes, safe, owned, openNow, access]);
-
-  const mappableCount = useMemo(
-    () => filtered.filter((place) => place.coords !== null).length,
-    [filtered],
-  );
-
-  const activeFilters = useMemo<ActiveFilter[]>(() => {
+  return useMemo<ActiveFilter[]>(() => {
     const list: ActiveFilter[] = [];
     categories.forEach((categoryId) => {
       list.push({
@@ -565,6 +532,170 @@ export function useDirectoryFilterResults(
     toggleAccess,
     setQuery,
   ]);
+}
+
+/**
+ * Derives the displayed list, chip counts, and active-filter pills from an
+ * already-fetched `places` array plus the URL state from
+ * `useDirectoryFilterParams`. `query`/`safe`/`access`/`owned` are ALSO applied
+ * here (even though the network fetch already filtered by them server-side)
+ * purely as a cheap, harmless no-op safety net, and so the demo fixture
+ * answers the same filters with no backend at all. `cat`/`vibe`/`open` are the three
+ * that genuinely only ever apply here client-side: the first two for the
+ * reasons in that hook's doc comment, and `open` because the grid is CDN-cached
+ * and a server-computed open state would go stale in the dangerous direction.
+ */
+export function useDirectoryFilterResults(
+  places: LocalPlace[],
+  params: DirectoryFilterParams,
+  /**
+   * The member's own position, when they have opted in to "near me". It comes
+   * from `useMyLocation`, lives in React state only, and is used here for one
+   * thing: ordering the already-loaded places and labelling each card with a
+   * walking time. Passing `null` (the default, and what turning the control
+   * off produces) restores the previous ordering exactly.
+   */
+  origin: MyLocationCoordinates | null = null,
+) {
+  const { view, categories, query, vibes, safe, owned, openNow, access, sort } =
+    params;
+  // Each tab's chips read one vocabulary, so places match and count through
+  // `categoryForScope`: online counterparts on the Online tab, place
+  // counterparts on the list and the map.
+  const isOnlineScope = view === "online";
+
+  const matched = useMemo(
+    () =>
+      sortLocalPlaces(
+        filterLocalPlaces(places, {
+          categories,
+          query,
+          vibes,
+          safe,
+          owned,
+          openNow,
+          access,
+          isOnlineScope,
+        }),
+        sort,
+      ),
+    [
+      places,
+      categories,
+      query,
+      vibes,
+      safe,
+      owned,
+      openNow,
+      access,
+      isOnlineScope,
+      sort,
+    ],
+  );
+
+  // Distances are measured only over what is already on screen, and only once
+  // the member has opted in. A place with no coordinates never appears in this
+  // map, so it never gets a walking time and never sorts as if it were here.
+  const distanceById = useMemo(
+    () => (origin ? distancesFrom(origin, matched) : null),
+    [origin, matched],
+  );
+
+  // The chosen sort and "use my location" BOTH stay in force, rather than one
+  // quietly replacing the other. What that means depends on what the sort has
+  // an opinion about:
+  //
+  // - "By neighbourhood" groups the list, and says nothing about the order of
+  //   the groups or of what is inside them — so distance decides both, and the
+  //   member gets the shape they asked for with the ordering they turned on.
+  // - "A to Z" is a lookup order: every position is already taken, and there is
+  //   nothing for distance to refine. It is kept exactly as chosen, and the
+  //   position still feeds the walking time on every card.
+  // - No sort chosen (the curated "Featured" order) is the one place with no
+  //   member preference to protect, so distance takes the list. The picker
+  //   names that state "Nearest first" while the location is on, so the control
+  //   always says what the list is actually doing.
+  //
+  // Turning the location off hands every ordering straight back.
+  const filtered = useMemo(() => {
+    if (!distanceById) return matched;
+    if (sort === "hood") {
+      return sortByNeighbourhoodDistance(matched, distanceById);
+    }
+    if (sort === "name") return matched;
+    return sortByDistance(matched, distanceById);
+  }, [matched, distanceById, sort]);
+
+  // Chip counts reflect every other filter and leave the chosen place types
+  // out, so each chip shows how many of the LOADED places it would add right
+  // now. That is an honest count against what has been fetched so far, which
+  // can sit below the platform-wide grand total (see `useLocalPlaces`'s doc
+  // comment on why category stays client-side over the loaded pages).
+  const categoryCounts = useMemo(
+    () =>
+      countByCategory(
+        filterLocalPlaces(places, {
+          categories: [],
+          query,
+          vibes,
+          safe,
+          owned,
+          openNow,
+          access,
+          isOnlineScope,
+        }),
+        isOnlineScope,
+      ),
+    [places, query, vibes, safe, owned, openNow, access, isOnlineScope],
+  );
+
+  // The same "what would this chip leave" question for the other chips: each
+  // count runs the full filter over the loaded places with that one chip
+  // turned on and everything else as it stands, chosen place types included.
+  const chipCounts = useMemo<LocalChipCounts>(() => {
+    const current = {
+      categories,
+      query,
+      vibes,
+      safe,
+      owned,
+      openNow,
+      access,
+      isOnlineScope,
+    };
+    const countWith = (overrides: Partial<typeof current>) =>
+      filterLocalPlaces(places, { ...current, ...overrides }).length;
+    return {
+      openNow: countWith({ openNow: true }),
+      safe: countWith({ safe: "verified" }),
+      access: Object.fromEntries(
+        ACCESSIBILITY_QUESTION_SLUGS.map((slug) => [
+          slug,
+          countWith({ access: [...access, slug] }),
+        ]),
+      ) as Record<AccessibilitySlug, number>,
+      vibes: Object.fromEntries(
+        VIBES.map((vibe) => [vibe, countWith({ vibes: [...vibes, vibe] })]),
+      ),
+    };
+  }, [
+    places,
+    categories,
+    query,
+    vibes,
+    safe,
+    owned,
+    openNow,
+    access,
+    isOnlineScope,
+  ]);
+
+  const mappableCount = useMemo(
+    () => filtered.filter((place) => place.coords !== null).length,
+    [filtered],
+  );
+
+  const activeFilters = useActiveFilters(params);
 
   return {
     filtered,

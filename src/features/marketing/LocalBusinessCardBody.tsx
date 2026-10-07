@@ -1,88 +1,22 @@
 import type { ReactNode, SyntheticEvent } from "react";
-import { FiArrowRight, FiBookmark, FiCheck } from "react-icons/fi";
+import { FiBookmark, FiCheck } from "react-icons/fi";
 import { Avatar, ImageSlot } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { activateOnKey } from "../../shared/lib/activateOnKey";
 import { DirectoryCardAccess } from "./DirectoryCardAccess";
+import { DirectoryCardMeta } from "./DirectoryCardMeta";
 import { DirectoryCardRating } from "./DirectoryCardRating";
+import { DirectoryCardStatus } from "./DirectoryCardStatus";
+import { DirectoryCardVisit } from "./DirectoryCardVisit";
 import { SafeSpaceCardMark } from "./SafeSpaceCardMark";
-import { categoryLabel } from "./localCategories";
 import { listingTagLabel } from "./listBusiness/listingTags.data";
 import { OWNED_BY_TAG_KEYS } from "./listBusiness/listingOwnedBy.data";
 import {
-  openStatus,
-  operatingStateOf,
   ownershipBadgeOf,
-  zonedNow,
   OWNERSHIP_BADGE_KEYS,
   type DirectoryPlace,
 } from "./directoryPlaces";
 import s from "./DirectoryPage.module.css";
-
-/**
- * The card's one-line trading status.
- *
- * A business that is temporarily closed, permanently closed or has moved still
- * turns up in results, so the card has to say so rather than showing an "Open
- * till 23:00" line computed from hours that no longer describe anything. The
- * operating state therefore replaces the live calculation outright instead of
- * sitting beside it.
- *
- * For an open business the live status comes from `openStatus`, which resolves
- * the venue's own timezone and lets a one-off date exception override the
- * weekday grid, and which reports the window it is actually inside, so
- * "closes at" is the real closing time and not merely the last interval of the
- * day. Renders nothing when there are no hours to reason about.
- */
-function DirectoryCardStatus({ place }: { place: DirectoryPlace }) {
-  const { t } = useTranslation();
-  const operatingState = operatingStateOf(place);
-
-  if (operatingState !== "open") {
-    return (
-      <span
-        className={`${s.status} ${s.statusFlag}`}
-        data-preview-region="status"
-      >
-        <span className={s.statusDot} />
-        {t(`marketing:directory.card.state.${operatingState}`)}
-      </span>
-    );
-  }
-
-  const status = openStatus(
-    place.hours,
-    zonedNow(place.timezone),
-    place.hoursExceptions,
-  );
-  if (status.state === "unknown") return null;
-
-  if (status.state === "closed") {
-    return (
-      <span className={s.status} data-preview-region="status">
-        <span className={s.statusDot} />
-        {t("marketing:directory.card.closedNow")}
-      </span>
-    );
-  }
-
-  // `closesAt` is always set alongside an "open" state; the null branch below
-  // exists so the copy stays honest rather than because it is expected.
-  const closesAt = status.closesAt;
-  const isClosingSoon = status.isClosingSoon && closesAt !== null;
-  return (
-    <span className={s.status} data-preview-region="status">
-      <span
-        className={`${s.statusDot} ${isClosingSoon ? s.statusClosingSoon : s.statusOpen}`}
-      />
-      {closesAt === null
-        ? t("marketing:directory.card.openNow")
-        : isClosingSoon
-          ? t("marketing:directory.card.closingSoon", { time: closesAt })
-          : t("marketing:directory.card.openTill", { time: closesAt })}
-    </span>
-  );
-}
 
 /**
  * The two things the photo's bottom-left corner says about a place: how it is
@@ -237,12 +171,7 @@ export function LocalBusinessCardBody({
         </div>
         {showRating && <DirectoryCardRating place={place} />}
       </div>
-      <div className={s.metaRow} data-preview-region="meta">
-        <span className={s.catPill}>{categoryLabel(t, place.cat)}</span>
-        <span className={s.hoodText}>
-          {place.online ? t("marketing:directory.card.online") : place.hood}
-        </span>
-      </div>
+      <DirectoryCardMeta place={place} />
       <div className={s.desc} data-preview-region="desc">
         {place.desc}
       </div>
@@ -268,14 +197,18 @@ export function LocalBusinessCardBody({
         ))}
       </div>
       <DirectoryCardAccess place={place} />
-      <div className={s.foot}>
+      <div className={`${s.foot} ${s.listFoot}`}>
         <DirectoryCardStatus place={place} />
         {/* No name means nobody to show: a listing submitted anonymously (or
             under a role alone) used to print a bare initials bubble with no
             one beside it, which read as a person the card was refusing to
             name. */}
         {showHost && place.owner.first !== "" && (
-          <span className={s.host} data-preview-region="host">
+          <span
+            className={s.host}
+            data-preview-region="host"
+            title={place.owner.first}
+          >
             {/* The member's real photo when they have one and chose to show
                 it (the server redacts it exactly as it redacts the name);
                 initials over their tint otherwise. No `name`/`alt`: their
@@ -290,11 +223,7 @@ export function LocalBusinessCardBody({
             <span className={s.hostName}>{place.owner.first}</span>
           </span>
         )}
-        {visitSlot ?? (
-          <span className={s.visit} data-preview-region="chrome">
-            {t("marketing:directory.card.visit")} <FiArrowRight aria-hidden />
-          </span>
-        )}
+        {visitSlot ?? <DirectoryCardVisit place={place} />}
       </div>
     </>
   );

@@ -7893,11 +7893,23 @@ export const admin: Catalog = {
   "marketingVideos.films.pro.title": "Pro",
   "marketingVideos.films.pro.summary":
     "Filmed like a product launch: a dark stage, one camera across all six cards and a dot map of Lisbon.",
-  "marketingVideos.card.meta": "{duration} · 1080p · 30 fps",
+  "marketingVideos.films.vouch.title": "Vouched",
+  "marketingVideos.films.vouch.summary":
+    "A friend's invite, start to finish: the vouch, the walk in and arriving already knowing people.",
+  "marketingVideos.format.landscape.ratio": "16:9",
+  "marketingVideos.format.landscape.resolution": "1080p",
+  "marketingVideos.format.landscape.output": "video (16:9)",
+  "marketingVideos.format.portrait.ratio": "4:5",
+  "marketingVideos.format.portrait.resolution": "1080×1350",
+  "marketingVideos.format.portrait.output": "Instagram post (4:5)",
+  "marketingVideos.card.meta": "{duration} · {resolution} · 30 fps",
   "marketingVideos.card.motionBlur": "Motion blur, so it renders more slowly",
   "marketingVideos.card.preview": "Preview",
   "marketingVideos.card.render": "Render video",
+  "marketingVideos.card.renderFormat.landscape": "Render video (16:9)",
+  "marketingVideos.card.renderFormat.portrait": "Render Instagram post (4:5)",
   "marketingVideos.card.frameTitle": "{title}, still frame",
+  "marketingVideos.preview.format": "Format",
   "marketingVideos.preview.eyebrow": "Preview",
   "marketingVideos.preview.frameTitle": "{title}, playing",
   "marketingVideos.preview.play": "Play",
@@ -7914,11 +7926,12 @@ export const admin: Catalog = {
     "The preview plays live in your browser. Rendering makes the frame-perfect file.",
   "marketingVideos.studio.eyebrow": "Render",
   "marketingVideos.studio.title": "{title} to video",
+  "marketingVideos.studio.titleFormat": "{title} to {format}",
   "marketingVideos.studio.frameTitle": "{title}, rendering",
   "marketingVideos.studio.intro":
-    "Your browser plays the film frame by frame and records a 1080p video with sound. When it asks, share this tab. Keep the tab open and in front until it's done, about {minutes} minutes.",
+    "Your browser plays the film frame by frame and records a {resolution} video with sound. When it asks, share this tab. Keep the tab open and in front until it's done, about {minutes} minutes.",
   "marketingVideos.studio.soft":
-    "Your window shows the film smaller than 1080p, so the file would be a little soft. Go full screen or enlarge the window for a sharp one.",
+    "Your window shows the film smaller than {resolution}, so the file would be a little soft. Go full screen or enlarge the window for a sharp one.",
   "marketingVideos.studio.fullScreen": "Full screen",
   "marketingVideos.studio.start": "Start rendering",
   "marketingVideos.studio.stop": "Stop",
@@ -7945,10 +7958,58 @@ export const admin: Catalog = {
     "The recording stalled, usually because this tab went to the background. Keep it in front and start again.",
   "marketingVideos.studio.error.encoder":
     "This browser can't encode video. Try Chrome or Edge on a computer.",
+  "marketingVideos.studio.error.format":
+    "This film has no {format} version yet, so nothing can be recorded.",
   "marketingVideos.studio.error.failed":
     "Something went wrong while rendering. Start again, and if it keeps happening, tell the tech team.",
   "marketingVideos.studio.unsupported":
     "Rendering needs Chrome or Edge on a computer. You can still preview every film here.",
+  // ── Logo concepts (/admin/logo-concepts) ─────────────────────────────────
+  "logoConcepts.header.eyebrow": "Brand",
+  "logoConcepts.header.sub":
+    "Candidate marks for our social avatars, built from the sign-in Q: compare them in each colourway and size, then download the files.",
+  "logoConcepts.current.title": "Current mark",
+  "logoConcepts.current.body":
+    "The pulse dots we use today, at 96px and as a 40px avatar, to judge each concept against.",
+  "logoConcepts.current.alt": "The current QueerPulse mark",
+  "logoConcepts.colorways.plum": "Plum",
+  "logoConcepts.colorways.cream": "Cream",
+  "logoConcepts.colorways.mono": "One colour",
+  "logoConcepts.card.heroAlt": "{title} logo, {colorway}",
+  "logoConcepts.card.colorwayLabel": "Colourway for {title}",
+  "logoConcepts.card.sizesLabel": "Avatar sizes",
+  "logoConcepts.card.sizePx": "{size}px",
+  "logoConcepts.card.downloadSvg": "Download SVG",
+  "logoConcepts.card.downloadPng": "Download PNG",
+  "logoConcepts.card.pngError": "The PNG export failed. Try again.",
+  "logoConcepts.card.svgError": "The SVG download failed. Try again.",
+  "logoConcepts.concepts.constellation.title": "Constellation",
+  "logoConcepts.concepts.constellation.summary":
+    "People traced along the Q, threaded like the sign-in art. Shines large: covers, press, the website.",
+  "logoConcepts.concepts.thread.title": "Thread",
+  "logoConcepts.concepts.thread.summary":
+    "One bold Q line with people strung on it as beads. Stays crisp from favicon to billboard.",
+  "logoConcepts.concepts.hearth.title": "Hearth",
+  "logoConcepts.concepts.hearth.summary":
+    "A ring of big dots round a coral hearth, the tail stepping out. The boldest for small avatars.",
+  "logoConcepts.variants.title": "Thread variants",
+  "logoConcepts.variants.sub":
+    "Five ways to give Thread depth. At 32px and below each one switches to a simpler small cut.",
+  "logoConcepts.concepts.threadSignature.title": "Signature",
+  "logoConcepts.concepts.threadSignature.summary":
+    "The swelling line, the tail laid over the bowl and three different people, together in one mark.",
+  "logoConcepts.concepts.threadWoven.title": "Woven",
+  "logoConcepts.concepts.threadWoven.summary":
+    "The thread passes over and under itself, so the Q reads as something knotted by hand.",
+  "logoConcepts.concepts.threadSwell.title": "Swell",
+  "logoConcepts.concepts.threadSwell.summary":
+    "The line swells and thins like the Fraunces Q, with one person tied on at the thin top like a knot.",
+  "logoConcepts.concepts.threadTrio.title": "Trio",
+  "logoConcepts.concepts.threadTrio.summary":
+    "Three people, each one different, walking the line together. The clearest at avatar sizes.",
+  "logoConcepts.concepts.threadRibbon.title": "Ribbon",
+  "logoConcepts.concepts.threadRibbon.summary":
+    "The line becomes a flat ribbon that shows its back where it folds behind, like folded paper.",
   // ── Unfinished listing drafts (Admin only, a tab of /admin/listings) ─────
   "listingDrafts.intro":
     "Listings members started but haven't sent yet. You see the name and how far they got. Offer a hand if someone looks stuck, or finish the business details as a team listing they can accept.",

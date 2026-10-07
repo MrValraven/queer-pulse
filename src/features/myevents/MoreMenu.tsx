@@ -1,5 +1,6 @@
 import {
   useEffect,
+  useLayoutEffect,
   useRef,
   useState,
   type KeyboardEvent as ReactKeyboardEvent,
@@ -162,6 +163,10 @@ function buildItems(
   return items;
 }
 
+/** Gap between the trigger and the menu, and from the viewport edges. */
+const ANCHOR_GAP = 6;
+const VIEWPORT_MARGIN = 8;
+
 /** Fixed-position overflow menu for an event card. */
 export function MoreMenu() {
   const { t } = useTranslation();
@@ -171,13 +176,58 @@ export function MoreMenu() {
   // The "⋯" trigger that opened the menu lives on the event card (outside this
   // component), so we capture it on open and restore focus to it on close.
   const openerRef = useRef<HTMLElement | null>(null);
-  const { open, eventId, x, y } = c.moreMenu;
+  const { open, eventId, anchor } = c.moreMenu;
   const { closeMore } = c;
   // "Invite a friend" picks a connection here, then hands off to the messages
   // feature's own deep-link (`location.state.to`) to open/start that thread
   // with the event's link pre-filled — never sent silently, so the inviter can
   // still add a note before hitting send.
   const [invitingEvent, setInvitingEvent] = useState<MyEvent | null>(null);
+  const [position, setPosition] = useState({ left: 0, top: 0 });
+
+  // The menu is fixed to the viewport, so it re-measures its trigger on every
+  // scroll (capture phase catches nested scroll containers too) and resize;
+  // otherwise it stays where the button was when it opened. It opens below the
+  // trigger and flips above it when the viewport has no room underneath.
+  useLayoutEffect(() => {
+    if (!open || !anchor) return;
+    let frame = 0;
+    const place = () => {
+      const anchorRect = anchor.getBoundingClientRect();
+      const menuWidth = ref.current?.offsetWidth ?? 0;
+      const menuHeight = ref.current?.offsetHeight ?? 0;
+      const below = anchorRect.bottom + ANCHOR_GAP;
+      const above = anchorRect.top - ANCHOR_GAP - menuHeight;
+      const isFlippedAbove =
+        below + menuHeight > window.innerHeight - VIEWPORT_MARGIN &&
+        above >= VIEWPORT_MARGIN;
+      setPosition({
+        left: Math.max(
+          VIEWPORT_MARGIN,
+          Math.min(
+            anchorRect.left,
+            window.innerWidth - menuWidth - VIEWPORT_MARGIN,
+          ),
+        ),
+        top: isFlippedAbove ? above : below,
+      });
+    };
+    const schedulePlace = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(place);
+    };
+    place();
+    window.addEventListener("scroll", schedulePlace, {
+      capture: true,
+      passive: true,
+    });
+    window.addEventListener("resize", schedulePlace);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", schedulePlace, { capture: true });
+      window.removeEventListener("resize", schedulePlace);
+    };
+  }, [open, anchor, eventId]);
 
   useEffect(() => {
     if (!open) return;
@@ -199,20 +249,19 @@ export function MoreMenu() {
   // the first item; on close, restore focus to the trigger.
   useEffect(() => {
     if (open) {
-      openerRef.current = document.activeElement as HTMLElement | null;
+      // Safari never focuses a clicked button, so the anchor is the reliable
+      // trigger; activeElement covers a keyboard-opened menu either way.
+      openerRef.current =
+        anchor ?? (document.activeElement as HTMLElement | null);
       ref.current
         ?.querySelector<HTMLButtonElement>('[role="menuitem"]')
         ?.focus();
     } else {
       openerRef.current?.focus();
     }
-  }, [open]);
+  }, [open, anchor]);
 
   const ev = eventId ? c.byId(eventId) : undefined;
-  const left = Math.min(
-    x,
-    (typeof window !== "undefined" ? window.innerWidth : 1200) - 220,
-  );
 
   // Up/Down roving between items, Home/End to the ends. (Escape close +
   // focus-restore is handled by the document listener + the effect above.)
@@ -258,7 +307,7 @@ export function MoreMenu() {
           className={`${sx("more-menu")} ${open ? sx("show") : ""}`}
           role="menu"
           tabIndex={-1}
-          style={{ left, top: y }}
+          style={position}
           onKeyDown={onMenuKeyDown}
         >
           {open &&

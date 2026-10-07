@@ -13,11 +13,16 @@ import type {
   PhotoKey,
 } from "../listBusiness.data";
 import type {
-  AccessibilityAnswerMap,
+  ListingAccessibilityAnswerMap,
   ListingAccessibilityView,
 } from "../listingAccessibility.data";
 import type { ListingMenu, ListingMenuPayload } from "../listingMenu.data";
+import type {
+  ListingOnlineDetails,
+  ListingPublicOnlineDetails,
+} from "../listingOnline.data";
 import type { ListingServiceOffering } from "../listingServices.data";
+import type { DirectoryShopItem, ListingShopItem } from "../listingShop.data";
 import type {
   AffirmingBaselineView,
   QueerOwnedVerificationView,
@@ -47,13 +52,27 @@ export interface UpdateListingDto extends Omit<
   // Draft-only: who the signed-in member is to this listing. It decides
   // which payload is built, and is never part of one.
   | "managementRole"
+  // Draft-only: the Path step's answer state and the other kind's stashed
+  // categories. They shape the draft and are never part of a body.
+  | "isWhereFoundAnswered"
+  | "inactiveModeCats"
+  // The editable shapes below go out in their wire shapes.
+  | "onlineDetails"
+  | "shopItems"
+  | "adultTermsAccepted"
 > {
-  accessibility?: { answers: AccessibilityAnswerMap; note: string };
+  accessibility?: { answers: ListingAccessibilityAnswerMap; note: string };
   services?: ListingServiceOffering[];
   // `contentType` is server-authoritative (see `ListingMenuPayload`): the
   // request body's file carries only `url`/`fileName`, or the strict
   // `forbidNonWhitelisted` pipe 400s the whole save.
   menu?: ListingMenuPayload;
+  /** "How people buy from you", cleaned for the listing's kind
+   *  (`onlineDetailsForPayload`). Never carries the server's stamp. */
+  onlineDetails?: ListingPublicOnlineDetails;
+  shopItems?: ListingShopItem[];
+  /** Write-only: the 18+ acknowledgement, sent only with `intimacy`. */
+  adultTermsAccepted?: boolean;
 }
 
 /**
@@ -77,11 +96,15 @@ export interface CreateListingDto extends UpdateListingDto {
  * about the suggester. The platform holds the listing until someone
  * claims it, so the create body carries none of the owner's eight personal
  * keys, no `ownerRole` (there is no owner yet to hold one), and no
- * `affirmingBaselineAccepted` (nobody has agreed to anything).
+ * `affirmingBaselineAccepted` (nobody has agreed to anything). No
+ * `adultTermsAccepted` either: only the business accepts the 18+ rules.
  */
 export type SuggestListingDto = Omit<
   CreateListingDto,
-  OwnerPersonalField | "ownerRole" | "affirmingBaselineAccepted"
+  | OwnerPersonalField
+  | "ownerRole"
+  | "affirmingBaselineAccepted"
+  | "adultTermsAccepted"
 >;
 
 /**
@@ -100,10 +123,23 @@ export type SuggestListingDto = Omit<
  */
 export interface ListingDTO extends Omit<
   UpdateListingDto,
-  "photos" | "accessibility" | "menu"
+  | "photos"
+  | "accessibility"
+  | "menu"
+  | "onlineDetails"
+  | "adultTermsAccepted"
+  | "shopItems"
 > {
   ref: string;
   slug: string;
+  /** The owner wire's online block, with the server-set 18+ stamp. Absent on
+   *  a payload from before the feature. */
+  onlineDetails?: ListingOnlineDetails;
+  /** The owner wire sends the VIEW shape (backend delta 3): each photo is
+   *  resolved like the gallery's, `image` a fetchable URL or null, and may
+   *  carry a `crop`. `toShopItemRows` turns it back into request rows (no
+   *  crop: the request refuses one). */
+  shopItems?: DirectoryShopItem[];
   // Unlike the request body's `ListingMenuPayload`, the response carries the
   // full `ListingMenuFile` (`contentType` included): the server reads it back
   // from storage and the page uses it to label a PDF apart from a photo.

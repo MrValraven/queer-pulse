@@ -62,9 +62,11 @@ export function DirectoryResultsHeader({
   // and `total` were measured over the same places. When nothing is narrowing,
   // or everything is loaded, the plain sentence is already true: keep it.
   //
-  // The Online tab counts a pool that is already narrowed to online-only
-  // businesses (`total` is that pool's size) and pulls every page while it is
-  // open, so it gets its own noun and never the loaded-so-far sentence.
+  // The Online tab counts a pool the server already narrowed to businesses
+  // that sell online, online-only or a place with a shop (`total` is that
+  // pool's size, plus any 18+ shops a member asked for), and pulls every page
+  // while it is open, so it gets its own noun and never the loaded-so-far
+  // sentence.
   const isOnlineView = view === "online";
   const isCountingLoadedOnly =
     !isOnlineView && hasMoreFromServer && shown < loadedCount;

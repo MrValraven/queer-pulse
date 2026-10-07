@@ -10,6 +10,10 @@ const AdminMarketingVideosPage = lazyNamed(
   () => import("./marketingVideos/AdminMarketingVideosPage"),
   "AdminMarketingVideosPage",
 );
+const AdminLogoConceptsPage = lazyNamed(
+  () => import("./logoConcepts/AdminLogoConceptsPage"),
+  "AdminLogoConceptsPage",
+);
 const AdminDashboardPage = lazyNamed(
   () => import("./AdminDashboardPage"),
   "AdminDashboardPage",
@@ -254,7 +258,8 @@ const AdminStatusIncidentsPage = lazyNamed(
 
 /**
  * What the public sees of QueerPulse, curated from admin: the landing page,
- * the press kit and the marketing films (the "editorial" group in authGate).
+ * the press kit, the marketing films and the logo concepts (the "editorial"
+ * group in authGate).
  */
 function publicFaceRoutes() {
   return (
@@ -264,6 +269,10 @@ function publicFaceRoutes() {
       <Route
         path={routes.adminMarketingVideos}
         element={<AdminMarketingVideosPage />}
+      />
+      <Route
+        path={routes.adminLogoConcepts}
+        element={<AdminLogoConceptsPage />}
       />
     </>
   );

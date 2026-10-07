@@ -71,6 +71,9 @@ export function ConsentBanner() {
     <div
       ref={bannerRef}
       className={styles.banner}
+      // Lets an overlay that traps Tab (the Check-in focus layer) keep the
+      // banner in its cycle while it waits for an answer.
+      data-consent-region=""
       role="region"
       aria-label={t("shared:consent.banner.ariaLabel")}
     >

@@ -1,0 +1,58 @@
+/* A guest group's heading, and the disclosure toggle that folds it. */
+
+.groupTitle {
+  margin: 0;
+  border-radius: var(--radius-12);
+}
+/* Focus lands here after a keyboard check-in empties the group. */
+.groupTitle:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.groupHeading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-block-size: 44px;
+  padding-inline: 12px;
+  font-family: var(--sans);
+  font-size: var(--text-13);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--ink-60);
+}
+
+.groupToggle {
+  inline-size: 100%;
+  justify-content: space-between;
+  margin: 0;
+  border: 0;
+  border-radius: var(--radius-12);
+  background: transparent;
+  cursor: pointer;
+  text-align: start;
+  transition:
+    background-color var(--dur-fast) var(--ease),
+    color var(--dur-fast) var(--ease);
+}
+@media (hover: hover) {
+  .groupToggle:hover {
+    background-color: var(--wash);
+    color: var(--text-strong);
+  }
+}
+.groupToggle:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.chevron {
+  flex: none;
+  transition: transform var(--dur-base) var(--ease);
+}
+.groupToggle[aria-expanded="true"] .chevron {
+  transform: rotate(180deg);
+}

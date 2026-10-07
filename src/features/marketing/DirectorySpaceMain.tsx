@@ -5,6 +5,8 @@ import { DirectoryVisitSection } from "./DirectoryVisitSection";
 import { DirectoryAboutSection } from "./DirectoryAboutSection";
 import { DirectoryServicesSection } from "./DirectoryServicesSection";
 import { DirectoryMenuSection } from "./DirectoryMenuSection";
+import { DirectoryShopSection } from "./DirectoryShopSection";
+import { DirectoryOrderingSection } from "./DirectoryOrderingSection";
 import { DirectoryAccessSection } from "./DirectoryAccessSection";
 import { DirectoryQuestionsSection } from "./DirectoryQuestionsSection";
 import { DirectoryReviewsSection } from "./DirectoryReviewsSection";
@@ -36,13 +38,14 @@ interface Props {
  * 1. What is it? The owner's amenity list, "What this place offers". Their
  *    description sits in the header right above the gallery, and this list
  *    is its continuation, so nothing comes between the two.
- * 2. Is it open? The live status chip, the weekly grid, the dated
- *    exceptions and the freshness stamp.
+ * 2. Is it open, or how do I buy? The hours for a place (the live status
+ *    chip, the weekly grid, the dated exceptions and the freshness stamp),
+ *    "Ordering & delivery" for anything that sells online.
  * 3. Where is it, and how do I reach it? The map, address, every contact
  *    route and the primary call to action. Here only while the grid is one
  *    column (phones, the moderation drawer); beside a two-column grid the same
  *    card opens the rail instead (see `DirectorySpaceAside`).
- * 4. What does it cost? The itemised services or the menu behind the
+ * 4. What does it cost? The services, the menu, or the shop behind the
  *    header's price band.
  * 5. Can I get in? Accessibility and languages, promoted out of two grey
  *    rows at the bottom of a sidebar card into a section of their own.
@@ -65,7 +68,17 @@ export function DirectorySpaceMain({
   return (
     <div>
       <DirectoryAboutSection place={place} />
-      <DirectoryHoursSection place={place} />
+      {/* An online-only business has no hours: its ordering block takes the
+          spot. A place that also sells online keeps its hours and follows
+          them with the block. */}
+      {place.online ? (
+        <DirectoryOrderingSection place={place} />
+      ) : (
+        <>
+          <DirectoryHoursSection place={place} />
+          {place.hasOnlineShop && <DirectoryOrderingSection place={place} />}
+        </>
+      )}
       {visitPlacement === "main" && (
         <DirectoryVisitSection
           place={place}
@@ -75,6 +88,8 @@ export function DirectorySpaceMain({
       )}
       {place.pricingMode === "menu" ? (
         <DirectoryMenuSection place={place} />
+      ) : place.pricingMode === "shop" ? (
+        <DirectoryShopSection place={place} />
       ) : (
         <DirectoryServicesSection place={place} />
       )}

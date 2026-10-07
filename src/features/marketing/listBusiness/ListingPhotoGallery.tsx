@@ -17,7 +17,9 @@ const GALLERY: {
   aspectRatio?: string;
   wide?: boolean;
   captionKey: string;
-  /** Standing note above the frame — only the cover slot carries one. */
+  /** The caption an online-only listing reads: a product, a workspace. */
+  onlineCaptionKey: string;
+  /** Standing note above the frame; only the cover slot carries one. */
   noteKey?: string;
 }[] = [
   {
@@ -26,6 +28,7 @@ const GALLERY: {
     aspectRatio: CARD_COVER_ASPECT,
     wide: true,
     captionKey: "marketing:listBusiness.step4.gallery.wide",
+    onlineCaptionKey: "marketing:listBusiness.step4.gallery.wideOnline",
     // The wide shot IS the directory cover: the backend's `coverPhoto` is the
     // first entry of the ordered gallery, and this slot writes it. Say so here
     // rather than leaving owners to discover it from the live grid.
@@ -35,16 +38,19 @@ const GALLERY: {
     key: "d1",
     height: 110,
     captionKey: "marketing:listBusiness.step4.gallery.detail",
+    onlineCaptionKey: "marketing:listBusiness.step4.gallery.detailOnline",
   },
   {
     key: "d2",
     height: 110,
     captionKey: "marketing:listBusiness.step4.gallery.detail",
+    onlineCaptionKey: "marketing:listBusiness.step4.gallery.detailOnline",
   },
   {
     key: "vibe",
     height: 110,
     captionKey: "marketing:listBusiness.step4.gallery.vibe",
+    onlineCaptionKey: "marketing:listBusiness.step4.gallery.vibeOnline",
   },
 ];
 
@@ -77,7 +83,9 @@ export function ListingPhotoGallery({ form }: { form: ListingForm }) {
             height={slot.height}
             aspectRatio={slot.aspectRatio}
             wide={slot.wide}
-            placeholder={t(slot.captionKey)}
+            placeholder={t(
+              draft.online ? slot.onlineCaptionKey : slot.captionKey,
+            )}
             note={slot.noteKey ? t(slot.noteKey) : undefined}
             displayValue={photoPreviews[slot.key] || draft.photos[slot.key]}
             persistedValue={draft.photos[slot.key]}

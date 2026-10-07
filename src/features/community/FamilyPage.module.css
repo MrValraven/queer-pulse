@@ -222,18 +222,19 @@
    These rules only restore this page's original chrome: the sticky bar already
    draws its own full-bleed hairline, the tabs are taller here, and the active
    tab is marked in coral. Two-class selectors so they win over Tabs.module.css
-   without touching the shared primitive. */
+   without touching the shared primitive. The coral line is the primitive's
+   sliding indicator, restyled through its custom properties; each tab's
+   transparent 2.5px border reserves the strip it slides along. */
 .tabNav .familyTabs {
   border-bottom: none;
+  --tab-indicator-color: var(--accent);
+  --tab-indicator-height: 2.5px;
 }
 .tabNav .familyTabs button {
   font-size: var(--text-14-5);
   padding: 18px 20px;
   border-bottom-width: 2.5px;
   white-space: nowrap;
-}
-.tabNav .familyTabs button[aria-selected="true"] {
-  border-bottom-color: var(--accent);
 }
 
 .tabContent {

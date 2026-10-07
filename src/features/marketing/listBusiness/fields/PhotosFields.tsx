@@ -19,7 +19,11 @@ export function PhotosFields({ form }: { form: ListingForm }) {
       className={styles.lbField}
       id={ANCHOR.photos}
       label={t("marketing:listBusiness.step4.photosLabel")}
-      helper={t("marketing:listBusiness.step4.photosHelper")}
+      helper={t(
+        form.draft.online
+          ? "marketing:listBusiness.step4.photosHelperOnline"
+          : "marketing:listBusiness.step4.photosHelper",
+      )}
     >
       <ListingPhotoGallery form={form} />
     </FormField>

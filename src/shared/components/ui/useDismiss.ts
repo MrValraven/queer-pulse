@@ -78,7 +78,7 @@ function returnFocusOnClose(
  * rule (which is ordinarily the head's close button, since it renders before
  * the body/footer in DOM order): a caller that needs a SPECIFIC control to
  * open with focus (e.g. the safer of two footer actions) passes a ref to it
- * here instead of fighting the default afterwards. Omit it and nothing
+ * here, so nothing has to move focus again afterwards. Omit it and nothing
  * changes: the existing "first focusable, else the dialog itself" rule still
  * applies exactly as before.
  */
@@ -126,11 +126,18 @@ export function useDismiss<ElementType extends HTMLElement = HTMLDivElement>(
 
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
-        // Only the topmost dialog dismisses — a lone dialog is always
+        // Only the topmost dialog dismisses. A lone dialog is always
         // topmost, so single-modal behavior is unchanged; a dialog opened
         // from inside another (e.g. a confirm dialog in a drawer's footer)
         // no longer closes both on one Escape press.
-        if (isTopmostModal(modalId)) onCloseRef.current();
+        if (isTopmostModal(modalId)) {
+          // Marks the key as spent for every listener after this one (a page
+          // layer on `window`, such as check-in focus mode). By the time they
+          // run, React may already have unmounted this dialog, so they cannot
+          // tell from the DOM that a dialog took this press.
+          e.preventDefault();
+          onCloseRef.current();
+        }
         return;
       }
       if (e.key !== "Tab" || !dialog) return;

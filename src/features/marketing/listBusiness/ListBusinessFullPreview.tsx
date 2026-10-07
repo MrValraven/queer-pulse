@@ -25,6 +25,12 @@ export function ListBusinessFullPreview({
 }) {
   const { t } = useTranslation();
   const price = PRICES.find((p) => p.id === draft.price);
+  // An online-only listing reads "Online" or "Online · {city}" where a place
+  // names its neighbourhood, the same way its card will.
+  const basedIn = (draft.city ?? "").trim();
+  const onlineLocation = basedIn
+    ? t("marketing:directory.card.onlineIn", { city: basedIn })
+    : t("marketing:directory.card.online");
 
   return (
     <Modal
@@ -43,8 +49,7 @@ export function ListBusinessFullPreview({
             <div className={styles.fpMeta}>
               {[
                 draft.cats.map((c) => catLabel(t, c)).join(", "),
-                // Saved blank for an online-only listing (`draftToDto`).
-                draft.online ? "" : draft.hood,
+                draft.online ? onlineLocation : draft.hood,
                 price ? t(price.labelKey) : "",
               ]
                 .filter(Boolean)

@@ -26,6 +26,7 @@ import {
   FiMap,
   FiMapPin,
   FiMessageSquare,
+  FiPenTool,
   FiPhoneCall,
   FiPlusSquare,
   FiFilm,
@@ -510,6 +511,12 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
         to: routes.adminMarketingVideos,
         capabilities: ["editorial", "cultural_producer"],
         icon: FiFilm,
+      },
+      {
+        labelKey: "shared:adminNav.items.logoConcepts",
+        to: routes.adminLogoConcepts,
+        capabilities: ["editorial", "cultural_producer"],
+        icon: FiPenTool,
       },
       {
         labelKey: "shared:adminNav.items.roadmap",

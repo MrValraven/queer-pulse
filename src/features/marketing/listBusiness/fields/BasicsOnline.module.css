@@ -1,0 +1,33 @@
+/* The 18+ acknowledgement under the category chips. The checkbox line is its
+   own card, so the group carries no frame of its own: a second box around it
+   squeezed the copy at phone width. */
+.adultTerms {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* The category label and its required asterisk stay on one line: the label's
+   wrapper never breaks, and the words inside it wrap as usual, so the
+   asterisk travels with the last word. */
+.catsField label > span:first-child {
+  white-space: nowrap;
+}
+.catsLabelText {
+  white-space: normal;
+}
+
+.adultNote {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0;
+  font-size: var(--text-12-5);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+.adultNote svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+}

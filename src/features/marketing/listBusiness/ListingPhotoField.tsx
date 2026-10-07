@@ -1,4 +1,4 @@
-import { useId, useState } from "react";
+import { useId, useState, type ReactNode } from "react";
 import { FiCamera, FiTrash2 } from "react-icons/fi";
 import { ConfirmDialog, ImageSlot } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
@@ -30,6 +30,15 @@ interface ListingPhotoFieldProps {
   isRejectedByServer: boolean;
   onResolved: (persist: string, preview: string) => void;
   onRemove: () => void;
+  /** Names the slot when several sit side by side (a shop item's photo):
+   *  the slot becomes a labelled group, so its Upload, Change and Remove
+   *  buttons are announced with the item they act on while keeping their
+   *  visible words as their names. Left out, the slot is no group. */
+  accessibleName?: string;
+  /** The Remove button's icon. Defaults to a trash can; a slot that sits
+   *  inside a card with its own trash button (a shop item) passes an X so
+   *  the two removals look different. */
+  removeIcon?: ReactNode;
 }
 
 /**
@@ -59,6 +68,8 @@ export function ListingPhotoField({
   isRejectedByServer,
   onResolved,
   onRemove,
+  accessibleName,
+  removeIcon = <FiTrash2 size={14} aria-hidden />,
 }: ListingPhotoFieldProps) {
   const { t } = useTranslation();
   const errorId = useId();
@@ -86,6 +97,8 @@ export function ListingPhotoField({
         .filter(Boolean)
         .join(" ")}
       aria-busy={pickerOpen || undefined}
+      role={accessibleName ? "group" : undefined}
+      aria-label={accessibleName}
     >
       {note && <p className={styles.photoNote}>{note}</p>}
       <ImageSlot
@@ -117,7 +130,7 @@ export function ListingPhotoField({
             aria-label={t("marketing:listBusiness.step4.photo.remove")}
             onClick={() => setConfirmRemoveOpen(true)}
           >
-            <FiTrash2 size={14} aria-hidden />
+            {removeIcon}
           </button>
         )}
       </div>

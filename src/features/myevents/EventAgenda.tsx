@@ -109,7 +109,10 @@ export function EventAgenda() {
   return (
     <div className={sx("agenda")}>
       {result.groups.map((g) => (
-        <div key={g.isEnded ? "ended" : (g.label ?? "all")}>
+        <div
+          key={g.isEnded ? "ended" : (g.label ?? "all")}
+          className={sx("grp")}
+        >
           {g.label && <div className={sx("grp-label")}>{g.label}</div>}
           {g.subtitle && <p className={sx("grp-sub")}>{g.subtitle}</p>}
           <div className={sx("ev-list")}>

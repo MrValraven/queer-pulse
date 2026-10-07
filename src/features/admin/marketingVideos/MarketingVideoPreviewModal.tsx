@@ -8,12 +8,20 @@ import {
   FiVolume2,
   FiVolumeX,
 } from "react-icons/fi";
+import { useState } from "react";
 import { IconButton } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { AdminModal } from "../ui";
+import { FilmFormatSwitch } from "./FilmFormatSwitch";
 import { FilmFrame } from "./FilmFrame";
 import { formatClock } from "./filmTime";
-import { filmUrl, type MarketingVideo } from "./marketingVideos.data";
+import { filmSizeStyle } from "./filmSizeStyle";
+import {
+  FILM_FORMATS,
+  filmUrl,
+  type FilmFormatId,
+  type MarketingVideo,
+} from "./marketingVideos.data";
 import { useFilmFullscreen } from "./useFilmFullscreen";
 import { useFilmPlayback, type SoundState } from "./useFilmPlayback";
 import styles from "./MarketingVideos.module.css";
@@ -30,7 +38,10 @@ const SOUND_KEY: Record<SoundState, string> = {
   failed: "admin:marketingVideos.preview.soundFailed",
 };
 
-/** Plays a film live, with transport controls and its score when ready. */
+/**
+ * Plays a film live, with transport controls and its score when ready. A
+ * film with several shapes gets a switch that reloads it in the other one.
+ */
 export function MarketingVideoPreviewModal({
   video,
   onClose,
@@ -40,10 +51,13 @@ export function MarketingVideoPreviewModal({
 }) {
   const { t } = useTranslation();
   const title = t(`admin:marketingVideos.films.${video.id}.title`);
+  const [format, setFormat] = useState<FilmFormatId>(
+    video.formats[0] ?? "landscape",
+  );
+  const size = FILM_FORMATS[format];
   const playback = useFilmPlayback(video);
   const SoundIcon = SOUND_ICON[playback.sound];
   const {
-    isSupported: canFullscreen,
     isFullscreen,
     areControlsHidden,
     toggle: toggleFullscreen,
@@ -56,9 +70,16 @@ export function MarketingVideoPreviewModal({
   } = useFilmFullscreen({ isPlaying: playback.isPlaying });
   const tone = isFullscreen ? "dark" : "light";
 
-  // Escape in full screen belongs to the browser: it only leaves full screen.
+  const handleFormatChange = (next: FilmFormatId) => {
+    if (next === format) return;
+    playback.reload();
+    setFormat(next);
+  };
+
+  // Escape in full screen only leaves full screen.
   const handleClose = () => {
-    if (!document.fullscreenElement) onClose();
+    if (isFullscreen) toggleFullscreen();
+    else onClose();
   };
 
   return (
@@ -68,7 +89,18 @@ export function MarketingVideoPreviewModal({
       onClose={handleClose}
       wide
     >
-      <div ref={slotRef}>
+      {video.formats.length > 1 && (
+        <FilmFormatSwitch
+          formats={video.formats}
+          value={format}
+          onChange={handleFormatChange}
+        />
+      )}
+      <div
+        ref={slotRef}
+        className={styles.slot}
+        data-expanded={isFullscreen || undefined}
+      >
         <div ref={veilRef} className={styles.veil} aria-hidden />
         <div
           ref={stageRef}
@@ -79,10 +111,13 @@ export function MarketingVideoPreviewModal({
           <div
             ref={filmRef}
             className={styles.previewFrame}
-            onDoubleClick={canFullscreen ? toggleFullscreen : undefined}
+            data-tall={size.height > size.width || undefined}
+            style={filmSizeStyle(size)}
+            onDoubleClick={toggleFullscreen}
           >
             <FilmFrame
-              src={filmUrl(video.id)}
+              src={filmUrl(video.id, { format })}
+              size={size}
               title={t("admin:marketingVideos.preview.frameTitle", { title })}
               iframeRef={playback.iframeRef}
               onLoad={playback.handleLoad}
@@ -130,23 +165,21 @@ export function MarketingVideoPreviewModal({
               {formatClock(playback.time)} /{" "}
               {formatClock(video.durationSeconds)}
             </span>
-            {canFullscreen && (
-              <IconButton
-                tone={tone}
-                aria-label={t(
-                  isFullscreen
-                    ? "admin:marketingVideos.preview.exitFullScreen"
-                    : "admin:marketingVideos.preview.fullScreen",
-                )}
-                onClick={toggleFullscreen}
-              >
-                {isFullscreen ? (
-                  <FiMinimize aria-hidden />
-                ) : (
-                  <FiMaximize aria-hidden />
-                )}
-              </IconButton>
-            )}
+            <IconButton
+              tone={tone}
+              aria-label={t(
+                isFullscreen
+                  ? "admin:marketingVideos.preview.exitFullScreen"
+                  : "admin:marketingVideos.preview.fullScreen",
+              )}
+              onClick={toggleFullscreen}
+            >
+              {isFullscreen ? (
+                <FiMinimize aria-hidden />
+              ) : (
+                <FiMaximize aria-hidden />
+              )}
+            </IconButton>
           </div>
         </div>
       </div>

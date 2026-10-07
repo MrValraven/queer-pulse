@@ -1,44 +1,52 @@
-import { useEffect, useId, useMemo, useRef, useState } from "react";
+import {
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+  useState,
+  type CSSProperties,
+} from "react";
 import { createPortal } from "react-dom";
 import { useDismiss } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import { filmUrl, type MarketingVideo } from "./marketingVideos.data";
+import { filmSizeStyle } from "./filmSizeStyle";
+import {
+  FILM_FORMATS,
+  filmUrl,
+  type FilmFormatId,
+  type MarketingVideo,
+} from "./marketingVideos.data";
+import { MarketingVideoCaptureBox } from "./MarketingVideoCaptureBox";
 import { MarketingVideoRenderBar } from "./MarketingVideoRenderSteps";
 import { detectRenderSupport } from "./render/captureApis";
+import { parseCssRgb, type Rgb } from "./render/colorCalibration";
 import {
-  CALIBRATION_PATCHES,
-  parseCssRgb,
-  type Rgb,
-} from "./render/colorCalibration";
-import { filmIn, iframeLoaded } from "./render/filmWindow";
-import {
-  MARKER_HEIGHT,
-  MAX_MARKER_INDEX,
-  markerPattern,
-} from "./render/frameMarker";
-import { useFilmRender } from "./useFilmRender";
-import { useStudioScale } from "./useStudioScale";
+  assertFilmFormat,
+  filmIn,
+  FilmFormatError,
+  iframeLoaded,
+} from "./render/filmWindow";
+import { markerPattern } from "./render/frameMarker";
+import { useFilmRender, type RenderState } from "./useFilmRender";
+import { BAR_WIDTH, useStudioScale } from "./useStudioScale";
 import styles from "./MarketingVideos.module.css";
 
-// Every step code the render can paint is below MAX_MARKER_INDEX, so the
-// strip's resting code can never be mistaken for a real step.
-const RESTING_MARKER = markerPattern(MAX_MARKER_INDEX);
-
-// Saturated brand colours: a wrong colour matrix shifts these the most.
-const PATCH_CLASSES = [styles.patchCoral, styles.patchJade, styles.patchViolet];
-const PATCH_SIZE = 240;
-
 /**
- * Full-screen render surface. The film plays at 1920x1080 (scaled so one film
- * pixel lands on one device pixel where the window allows) with the frame-sync
- * marker strip under it; that box is what gets captured. The status bar sits
- * outside the box, so it never ends up in the video.
+ * Full-screen render surface. The film plays at its native size (1920x1080,
+ * or 1080x1350 for the 4:5 post), scaled so one film pixel lands on one
+ * device pixel where the window allows, with the frame-sync marker strip
+ * under it; that box is what gets captured. The status bar sits outside the
+ * box (below a wide film, beside a tall one unless the window is narrow), so
+ * it never ends up in the video. A film that lacks the requested shape opens
+ * on the failure message, with Start never offered.
  */
 export function MarketingVideoRenderStudio({
   video,
+  format,
   onClose,
 }: {
   video: MarketingVideo;
+  format: FilmFormatId;
   onClose: () => void;
 }) {
   const { t } = useTranslation();
@@ -50,10 +58,15 @@ export function MarketingVideoRenderStudio({
   const calibrationRef = useRef<HTMLDivElement>(null);
   const patchRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const [isFilmReady, setIsFilmReady] = useState(false);
+  const [isFormatMissing, setIsFormatMissing] = useState(false);
   const support = useMemo(() => detectRenderSupport(), []);
-  const { scale, isSoft } = useStudioScale();
-  const render = useFilmRender(video);
+  const size = FILM_FORMATS[format];
+  const { scale, isSoft, isBarBeside } = useStudioScale(size);
+  const render = useFilmRender(video, format);
   const title = t(`admin:marketingVideos.films.${video.id}.title`);
+  const barState: RenderState = isFormatMissing
+    ? { status: "failed", reason: "format" }
+    : render.state;
 
   useEffect(() => {
     const iframe = iframeRef.current;
@@ -61,14 +74,25 @@ export function MarketingVideoRenderStudio({
     let isCurrent = true;
     iframeLoaded(iframe)
       .then(() => filmIn(iframe))
-      .then(() => {
+      .then((film) => {
+        // The film must offer the shape before Start does; renderFilm checks
+        // again after the share picker. The 16:9 shape is every film's default.
+        assertFilmFormat(
+          film,
+          { id: format, ...size },
+          { isMissingAllowed: format === "landscape" },
+        );
         if (isCurrent) setIsFilmReady(true);
       })
-      .catch(() => undefined);
+      .catch((error: unknown) => {
+        if (isCurrent && error instanceof FilmFormatError) {
+          setIsFormatMissing(true);
+        }
+      });
     return () => {
       isCurrent = false;
     };
-  }, []);
+  }, [format, size]);
 
   // Leaving the studio leaves full screen too.
   useEffect(
@@ -121,70 +145,33 @@ export function MarketingVideoRenderStudio({
       role="dialog"
       aria-modal="true"
       aria-labelledby={titleId}
+      data-bar-beside={isBarBeside || undefined}
+      style={
+        {
+          ...filmSizeStyle(size),
+          "--studio-bar-width": `${BAR_WIDTH}px`,
+        } as CSSProperties
+      }
     >
       <div className={styles.studioStage}>
-        <div
-          ref={boxRef}
-          className={styles.captureBox}
-          style={{
-            width: 1920 * scale,
-            height: (1080 + MARKER_HEIGHT) * scale,
-          }}
-        >
-          <div
-            className={styles.captureInner}
-            style={{ transform: `scale(${scale})` }}
-          >
-            <iframe
-              ref={iframeRef}
-              className={styles.captureIframe}
-              src={filmUrl(video.id)}
-              title={t("admin:marketingVideos.studio.frameTitle", { title })}
-              width={1920}
-              height={1080}
-              tabIndex={-1}
-            />
-            <div
-              ref={calibrationRef}
-              className={styles.calibration}
-              hidden
-              aria-hidden
-            >
-              {CALIBRATION_PATCHES.map(({ x, y }, patch) => (
-                <span
-                  key={`${x}-${y}`}
-                  ref={(node) => {
-                    patchRefs.current[patch] = node;
-                  }}
-                  className={PATCH_CLASSES[patch]}
-                  style={{
-                    left: x - PATCH_SIZE / 2,
-                    top: y - PATCH_SIZE / 2,
-                    width: PATCH_SIZE,
-                    height: PATCH_SIZE,
-                  }}
-                />
-              ))}
-            </div>
-            <div className={styles.marker} aria-hidden>
-              {RESTING_MARKER.map((isLight, cell) => (
-                <span
-                  key={cell}
-                  ref={(node) => {
-                    cellRefs.current[cell] = node;
-                  }}
-                  className={isLight ? styles.markerLight : styles.markerDark}
-                />
-              ))}
-            </div>
-          </div>
-        </div>
+        <MarketingVideoCaptureBox
+          size={size}
+          scale={scale}
+          src={filmUrl(video.id, { format })}
+          frameTitle={t("admin:marketingVideos.studio.frameTitle", { title })}
+          boxRef={boxRef}
+          iframeRef={iframeRef}
+          calibrationRef={calibrationRef}
+          patchRefs={patchRefs}
+          cellRefs={cellRefs}
+        />
       </div>
       <MarketingVideoRenderBar
         video={video}
+        format={format}
         title={title}
         titleId={titleId}
-        state={render.state}
+        state={barState}
         support={support}
         isSoft={isSoft}
         canStart={isFilmReady}

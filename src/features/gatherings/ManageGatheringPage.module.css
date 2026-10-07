@@ -85,16 +85,105 @@
   }
 }
 
-.tabBar {
+/* One row that scrolls sideways on a phone. A scroller clips at its padding
+   box, and the focus ring reaches 6px past a tab (3px offset + 3px outline),
+   so the row is padded by that much on every side and pulled back by the same
+   negative margin. The hairline is a background drawn just under the tabs,
+   where the old border sat: a real border would sit below the bottom padding
+   and leave a gap under the tab indicator. `local` makes it scroll with the
+   tabs and span the whole scrolled width. The attribute selector outranks the
+   shared `.tabs { flex-wrap: wrap }`. */
+.tabBar[role="tablist"] {
+  --tab-bar-ring-room: 6px;
+  --tab-bar-hairline: 2px;
   display: flex;
+  flex-wrap: nowrap;
   gap: 2px;
-  border-bottom: 2px solid rgba(var(--line-rgb), 0.08);
-  margin-bottom: 28px;
+  border-bottom: none;
+  padding: var(--tab-bar-ring-room);
+  margin: calc(-1 * var(--tab-bar-ring-room))
+    calc(-1 * var(--tab-bar-ring-room))
+    calc(28px - var(--tab-bar-ring-room) + var(--tab-bar-hairline));
+  background: linear-gradient(
+      rgba(var(--line-rgb), 0.08),
+      rgba(var(--line-rgb), 0.08)
+    )
+    left var(--tab-bar-ring-room) bottom
+    calc(var(--tab-bar-ring-room) - var(--tab-bar-hairline)) /
+    calc(100% - 2 * var(--tab-bar-ring-room)) var(--tab-bar-hairline) no-repeat
+    local;
   overflow-x: auto;
+  scroll-padding-inline: var(--tab-bar-ring-room);
   scrollbar-width: none;
+}
+.tabBar[role="tablist"] > [role="tab"] {
+  flex: none;
+  white-space: nowrap;
 }
 .tabBar::-webkit-scrollbar {
   display: none;
+}
+
+/* The panel a tab switch brings in fades up and drifts a few pixels in from the
+   side its tab sits on. Fill mode is `backwards` only: once the
+   animation ends no transform or opacity is left on the wrapper, because a
+   lingering transform would make it a stacking context and clip the venue
+   picker and attendee menus that open out of these panels. No direction (the
+   panel the page opens on) means no animation. */
+.tabPanel {
+  /* "Open check-in" scrolls the panel to the top; clear the fixed app bar. */
+  scroll-margin-top: var(--sticky-top);
+}
+/* The panel takes programmatic focus after that scroll; it is not a control. */
+.tabPanel:focus {
+  outline: none;
+  box-shadow: none;
+}
+.tabPanel[data-direction] {
+  animation: tabPanelEnter var(--dur-base) var(--ease-out) backwards;
+}
+.tabPanel[data-direction="forward"] {
+  --tab-panel-from-x: 8px;
+}
+.tabPanel[data-direction="backward"] {
+  --tab-panel-from-x: -8px;
+}
+@keyframes tabPanelEnter {
+  from {
+    opacity: 0;
+    transform: translateX(var(--tab-panel-from-x, 0));
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tabPanel[data-direction] {
+    animation: none;
+  }
+}
+
+/* The Check-in tab's live dot: shown while the door window is open, with a slow
+   breathing pulse that reduced motion holds still. */
+.liveDot {
+  display: inline-block;
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--jade);
+  animation: checkinLivePulse 2.4s var(--ease) infinite;
+}
+@keyframes checkinLivePulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .liveDot {
+    animation: none;
+  }
 }
 
 .statsRow {
@@ -124,23 +213,62 @@
   margin-top: 3px;
 }
 
+/* The details card is one grid and every row is a subgrid of it, so the label
+   column is as wide as the longest label in the current language (Portuguese
+   "Capacidade" is the widest today) and every value starts on the same line.
+   An engine without subgrid drops the row's second declaration and keeps the
+   first: the same tracks (the custom property inherits from `.detailBlock`),
+   sized per row, so the values still line up closely. */
 .detailBlock {
+  --detail-columns: max-content minmax(0, 1fr) auto;
+  display: grid;
+  grid-template-columns: var(--detail-columns);
+  column-gap: 12px;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-16);
-  padding: 4px 20px;
+  /* 8px here plus each row's 12px keeps the text on the old 20px inset while
+     the hover tint gets room to show around it. */
+  padding: 4px 8px;
   margin-bottom: 20px;
 }
 .detailRow {
-  display: flex;
+  position: relative;
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: var(--detail-columns);
+  grid-template-columns: subgrid;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 15px 0;
-  border-bottom: 1px solid rgba(var(--line-rgb), 0.07);
+  column-gap: 12px;
+  padding: 8px 12px;
+  min-height: 56px;
+  border-radius: var(--radius-10);
+  transition-property: background-color;
+  transition-duration: var(--dur-base);
+  transition-timing-function: var(--ease);
 }
-.detailRow:last-child {
-  border-bottom: none;
+/* The hairline between rows, drawn inset to the text so a tinted row keeps
+   clean rounded corners. */
+.detailRow:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 0;
+  height: 1px;
+  background: rgba(var(--line-rgb), 0.07);
+  pointer-events: none;
+}
+/* The whole row tints while it is pointed at or its Edit has focus, so the
+   row reads as the thing being edited. The row itself stays a plain container
+   because the venue row holds a link. */
+@media (hover: hover) {
+  .detailRow:hover {
+    background: var(--wash);
+  }
+}
+.detailRow:focus-within {
+  background: var(--wash);
 }
 .drLabel {
   font-size: var(--text-12);
@@ -148,13 +276,37 @@
   letter-spacing: 0.07em;
   text-transform: uppercase;
   color: var(--ink-40);
-  flex: none;
-  width: 80px;
 }
 .drVal {
   font-size: var(--text-15);
   color: var(--ink);
-  flex: 1;
+  /* A long venue wraps inside the row on a phone and leaves Edit in reach. */
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+/* A small phone stacks each row: the label on a short line of its own, the
+   value under it with the full width to itself, and Edit on the right,
+   centred across both lines. A full date ("Sunday 21 June 2026") then stays
+   on one line at 375px. */
+@media (--xs) {
+  .detailBlock {
+    --detail-columns: minmax(0, 1fr) auto;
+  }
+  .detailRow {
+    row-gap: 2px;
+  }
+  .drLabel {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .drVal {
+    grid-column: 1;
+    grid-row: 2;
+  }
+  .detailRow .drEdit {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+  }
 }
 .venueLink {
   color: var(--text-strong);
@@ -166,24 +318,41 @@
     text-decoration: underline;
   }
 }
+/* The Edit pill is a `soft` sm `<Button>`. These rules only tune it for the
+   row: it never shrinks, and it ignores the uppercase label it sits beside in
+   the description card. Scoped under its parent so they outrank the Button's
+   own padding whatever order the two stylesheets load in. */
 .drEdit {
-  font-size: var(--text-12-5);
-  font-weight: 600;
-  color: var(--accent-ink);
-  cursor: pointer;
   flex: none;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  background: none;
-  border: none;
-  font-family: var(--sans);
-  transition: opacity 0.2s var(--ease);
+  justify-self: end;
+  text-transform: none;
+  letter-spacing: normal;
 }
-@media (hover: hover) {
-  .drEdit:hover {
-    opacity: 0.7;
+.detailRow .drEdit,
+.descLabel .drEdit {
+  gap: 6px;
+  padding-inline: 12px;
+}
+/* On a mouse-driven screen the Edit pills rest in quiet ink, so a column of
+   five of them stays below the page's coral "Day-of dashboard" action. The
+   coral comes back while the row (or the description card) is pointed at or
+   holds focus, which is the moment the pill is about to be used. Tabbing to a
+   pill focuses its row, so a keyboard user always meets the coral. A touch
+   screen has no hover to
+   bring the coral back, so it keeps the coral tint at rest and every pill
+   still reads as a button under a thumb. The `:not()` pair also lifts these
+   rules above the Button's own dark-theme `.soft` tint. */
+@media (hover: hover) and (pointer: fine) {
+  .detailRow:not(:hover):not(:focus-within) .drEdit,
+  .descCard:not(:hover):not(:focus-within) .drEdit {
+    background: rgba(var(--ink-rgb), 0.06);
+    color: var(--ink-60);
   }
+}
+.drEditIcon {
+  flex: none;
+  width: 14px;
+  height: 14px;
 }
 .descCard {
   background: var(--paper);
@@ -207,6 +376,9 @@
   font-size: var(--text-14-5);
   color: var(--ink-60);
   line-height: 1.75;
+  /* Same as the public page: keep the host's line breaks and spacing. */
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 /* "Duplicate" on one side, the edit age on the other. Wraps to two rows on a
    phone, where a right-aligned timestamp next to a button reads as cramped. */
@@ -232,23 +404,6 @@
   margin-bottom: 18px;
   flex-wrap: wrap;
 }
-.attSearch {
-  flex: 1;
-  min-width: 180px;
-  border: 1.5px solid rgba(var(--line-rgb), 0.14);
-  border-radius: var(--radius-11);
-  padding: 8px 14px;
-  font-family: var(--sans);
-  font-size: var(--text-16);
-  color: var(--ink);
-  background: var(--paper);
-  outline: none;
-  transition: border-color 0.2s var(--ease);
-  box-sizing: border-box;
-}
-.attSearch:focus {
-  border-color: var(--line-strong);
-}
 .capWrap {
   margin-bottom: 22px;
 }
@@ -264,7 +419,7 @@
   font-weight: 700;
 }
 /* "10 people going" under a seat count that reads higher, so a host can see
-   at a glance that the difference is declared guests rather than a bug. */
+   at a glance that the difference is declared guests and the count is right. */
 .capNote {
   display: block;
   color: var(--ink-40);

@@ -3,6 +3,13 @@ import {
   ACCESSIBILITY_QUESTIONS,
   normalizeAccessibilityAnswers,
 } from "../listingAccessibility.data";
+import {
+  isSellingOnline,
+  normalizeOnlineDetails,
+  onlineDetailsForPayload,
+  onlineStatusOf,
+  summaryFromDetails,
+} from "../listingOnline.data";
 import { isCoManaged } from "../ownerPersonalFields";
 
 /**
@@ -30,7 +37,9 @@ export type ListingPreviewRegion =
   | "goodFor"
   | "languages"
   | "hours"
-  | "owner";
+  | "owner"
+  | "visit"
+  | "ordering";
 
 export type ListingFieldPlacement =
   | {
@@ -70,6 +79,8 @@ export const LISTING_PREVIEW_RENDERED_REGIONS: readonly ListingPreviewRegion[] =
     "languages",
     "hours",
     "owner",
+    "visit",
+    "ordering",
   ];
 
 const CAPTION = "marketing:listBusiness.livePreview.caption";
@@ -168,15 +179,58 @@ function linkProfilePlacement(draft: ListingDraft): ListingFieldPlacement {
 }
 
 /**
- * The detail page drops its whole hours section for an online listing
- * (`DirectoryHoursSection`), note and special dates included, and the editor
- * hides the hours fields then. The card keeps its open or closed line, which
- * `DirectoryCardStatus` still works out from the saved hours.
+ * An online listing has no hours editor and no hours anywhere: its card's
+ * status line names how people get what it sells.
  */
 function hoursPlacement(draft: ListingDraft): ListingFieldPlacement {
   return draft.online
-    ? preview("hoursOnline", "status")
+    ? notShown("hoursOnline")
     : preview("hours", "status", "hours");
+}
+
+/** What the online card's status slot would say for this draft, if anything
+ *  (`DirectoryCardStatus` reads the same summary). */
+function hasOnlineStatusLine(draft: ListingDraft): boolean {
+  return (
+    onlineStatusOf(
+      summaryFromDetails(onlineDetailsForPayload(draft.onlineDetails, draft)),
+    ) !== null
+  );
+}
+
+/** An online selling field: on the page while the listing sells online, and
+ *  nowhere while it does not (a place with the box unticked). */
+function sellingPlacement(
+  captionName: string,
+  ...regions: ListingPreviewRegion[]
+): (draft: ListingDraft) => ListingFieldPlacement {
+  return (draft) =>
+    isSellingOnline(draft)
+      ? preview(captionName, ...regions)
+      : notShown("sellingOff");
+}
+
+/** The card's Visit opens the main link of an online-only listing only. */
+function mainLinkPlacement(draft: ListingDraft): ListingFieldPlacement {
+  if (!isSellingOnline(draft)) return notShown("sellingOff");
+  return draft.online
+    ? preview("mainLink", "visit", "ordering")
+    : preview("mainLink", "ordering");
+}
+
+/** An online card names how people get it on its status line. */
+function fulfilmentPlacement(draft: ListingDraft): ListingFieldPlacement {
+  if (!isSellingOnline(draft)) return notShown("sellingOff");
+  return draft.online
+    ? preview("fulfilment", "status", "ordering")
+    : preview("ordering", "ordering");
+}
+
+function sessionFormatsPlacement(draft: ListingDraft): ListingFieldPlacement {
+  if (!isSellingOnline(draft)) return notShown("sellingOff");
+  return draft.online
+    ? preview("sessionFormats", "status", "ordering")
+    : preview("ordering", "ordering");
 }
 
 /**
@@ -209,6 +263,19 @@ export const LISTING_FIELD_PLACEMENTS: Record<AnchorId, ListingPlacementRule> =
     [ANCHOR.langs]: preview("langs", "languages"),
     [ANCHOR.address]: fullPage("address"),
     [ANCHOR.online]: namedCardPreview("online", "meta"),
+    [ANCHOR.whereFound]: namedCardPreview("whereFound", "meta"),
+    [ANCHOR.city]: namedCardPreview("city", "meta"),
+    [ANCHOR.adultTerms]: hidden("adultTerms"),
+    [ANCHOR.hasOnlineShop]: namedCardPreview("hasOnlineShop", "meta"),
+    [ANCHOR.mainLink]: mainLinkPlacement,
+    [ANCHOR.moreLinks]: sellingPlacement("ordering", "ordering"),
+    [ANCHOR.fulfilment]: fulfilmentPlacement,
+    [ANCHOR.pickupNote]: sellingPlacement("ordering", "ordering"),
+    [ANCHOR.shipsFrom]: sellingPlacement("ordering", "ordering"),
+    [ANCHOR.payments]: sellingPlacement("ordering", "ordering"),
+    [ANCHOR.sessionFormats]: sessionFormatsPlacement,
+    [ANCHOR.registration]: sellingPlacement("ordering", "ordering"),
+    [ANCHOR.replyNote]: sellingPlacement("ordering", "ordering"),
     [ANCHOR.hours]: hoursPlacement,
     // "Copy Monday to all days" and "Mark all closed" sit above the grid
     // that carries `ANCHOR.hours`, and they fill the same spots.
@@ -219,7 +286,7 @@ export const LISTING_FIELD_PLACEMENTS: Record<AnchorId, ListingPlacementRule> =
     // The card's status line follows a special date on the day.
     [ANCHOR.hoursExceptions]: (draft) =>
       draft.online
-        ? preview("hoursExceptionsOnline", "status")
+        ? notShown("hoursExceptionsOnline")
         : fullPage("hoursExceptions"),
     [ANCHOR.social]: fullPage("social"),
     [ANCHOR.photos]: preview("photos", "photo"),
@@ -246,7 +313,10 @@ export const LISTING_FIELD_PLACEMENTS: Record<AnchorId, ListingPlacementRule> =
     // the live card prints it (in place of the open or closed line). A
     // permanently closed listing also leaves the directory's lists
     // (`excludeHiddenFromDirectory` in the backend), and its page stays up.
-    [ANCHOR.operatingState]: preview("operatingState", "status"),
+    [ANCHOR.operatingState]: (draft) =>
+      !draft.online || hasOnlineStatusLine(draft)
+        ? preview("operatingState", "status")
+        : fullPage("operatingStateOnline"),
     // A pause withdraws the card from every directory read and 404s the page.
     [ANCHOR.directoryVisibility]: setting("directoryVisibility"),
     [ANCHOR.accessibility]: (draft) =>
@@ -274,7 +344,8 @@ export function placementForAnchor(
 
 /** Excerpt blocks that always render: filled, or as a placeholder line while
  *  highlighted. The hours block is left out for an online listing, as the
- *  detail page leaves out its hours section. */
+ *  detail page leaves out its hours section, and the ordering block is drawn
+ *  only for a listing that sells online. */
 const ALWAYS_DRAWN_EXCERPT: readonly ListingPreviewRegion[] = [
   "tagline",
   "whatItIs",
@@ -315,6 +386,7 @@ export function renderedPreviewRegions(
 ): ReadonlySet<ListingPreviewRegion> {
   const regions = new Set<ListingPreviewRegion>(ALWAYS_DRAWN_EXCERPT);
   if (!draft.online) regions.add("hours");
+  if (isSellingOnline(draft)) regions.add("ordering");
   // An anonymous owner shows nowhere, so the owner block stays out. Any other
   // owner block is drawn: filled from `shownOwnerName`, or as a placeholder.
   if (draft.visibility !== "anon") regions.add("owner");
@@ -334,8 +406,19 @@ export function renderedPreviewRegions(
     .add("meta")
     .add("desc")
     .add("pills");
-  // Every draft carries a weekday grid, so the card always has a status line.
-  if (Object.keys(draft.hours).length > 0) regions.add("status");
+  // A place's card always has a status line (it carries a weekday grid). An
+  // online-only card has one only when it can name how people get it.
+  const hasStatusLine = draft.online
+    ? hasOnlineStatusLine(draft)
+    : Object.keys(draft.hours).length > 0;
+  if (hasStatusLine) regions.add("status");
+  // The Visit action opens the main link once an online listing has one.
+  if (
+    draft.online &&
+    normalizeOnlineDetails(draft.onlineDetails).mainLink.url.trim()
+  ) {
+    regions.add("visit");
+  }
   if (hasCardAccessAnswers(draft)) regions.add("access");
   // The real card names the owner only for a public, profile-linked listing.
   if (

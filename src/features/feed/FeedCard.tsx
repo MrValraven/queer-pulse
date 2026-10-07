@@ -127,8 +127,18 @@ export function FeedDateBlock({ day, month }: { day: string; month: string }) {
   );
 }
 
-export function FeedQuote({ children }: { children: ReactNode }) {
-  return <p className={styles.quote}>{children}</p>;
+export function FeedQuote({
+  children,
+  className,
+}: {
+  children: ReactNode;
+  className?: string;
+}) {
+  return (
+    <p className={[styles.quote, className].filter(Boolean).join(" ")}>
+      {children}
+    </p>
+  );
 }
 
 export function FeedTagRow({

@@ -1028,7 +1028,7 @@ export const economy: Catalog = {
   "landlordReply.eyebrow": "Direito de resposta",
   "landlordReply.title": "Responde ao que escreveram sobre ti",
   "landlordReply.intro":
-    "Alguém te enviou isto porque um membro da QueerPulse escreveu sobre ter arrendado a ti. A QueerPulse é só por convite, por isso não consegues ler essa página, e este formulário é a forma de responderes.",
+    "Alguém te enviou isto porque um membro da QueerPulse escreveu sobre ter arrendado a ti. As páginas da QueerPulse são só para membros com voto de confiança, por isso não consegues ler essa página, e este formulário é a forma de responderes.",
   "landlordReply.checkNotice":
     "Nada do que escreves aqui é publicado logo. Alguém da equipa lê primeiro e confirma que és a pessoa nomeada. É esse passo que faz este formulário existir.",
   "landlordReply.nameLabel": "O teu nome",

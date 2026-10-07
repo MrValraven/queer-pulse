@@ -70,10 +70,15 @@
 }
 
 /* ── variant: underline (bottom-border tabs) ─────────────────────────────── */
+/* Positioned so the sliding `.indicator` measures and sits in this row's own
+   coordinates (and scrolls with it when a caller makes the row scroll). */
 .underline {
+  position: relative;
   gap: 0;
   border-bottom: 1.5px solid rgba(var(--line-rgb), 0.1);
 }
+/* Each tab keeps a transparent bottom border: it reserves the strip the
+   indicator is drawn over, so selecting a tab never shifts the row. */
 .underline .tab {
   border-radius: 0;
   border: none;
@@ -91,7 +96,6 @@
 .underline .tabOn {
   background: transparent;
   color: var(--text-strong);
-  border-bottom-color: var(--line-strong);
 }
 .underline .tabCount {
   background: transparent;
@@ -115,11 +119,41 @@
 }
 .underline.dark .tabOn {
   color: rgba(var(--cream-rgb), 1);
-  border-bottom-color: var(--accent);
+}
+
+/* ── underline indicator ──────────────────────────────────────────────────────
+   One line shared by every tab, moved under the active one by Tabs.tsx through
+   --indicator-x / --indicator-y (the tab's bottom edge) / --indicator-w.
+   Callers restyle it with --tab-indicator-color and --tab-indicator-height on
+   their tablist class, without reaching into this module. The transition only
+   applies under `data-glide`, which Tabs.tsx sets for a switch between tabs on
+   the same row; every other placement snaps. The y goes through `top` so it
+   gets the same layout pixel snapping as the border it sits on; only x is
+   transformed, because only x glides. */
+.indicator {
+  position: absolute;
+  top: calc(var(--indicator-y, 0px) - var(--tab-indicator-height, 2px));
+  left: 0;
+  width: var(--indicator-w, 0);
+  height: var(--tab-indicator-height, 2px);
+  background: var(--tab-indicator-color, var(--line-strong));
+  transform: translateX(var(--indicator-x, 0));
+  pointer-events: none;
+}
+/* A standard curve: the decelerating --ease-out covers most of the distance
+   in the first frames, so the slide read as a jump. */
+.indicator[data-glide] {
+  transition-property: transform, width;
+  transition-duration: 0.3s;
+  transition-timing-function: var(--ease-std);
+}
+.dark .indicator {
+  background: var(--tab-indicator-color, var(--accent));
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .tab {
+  .tab,
+  .indicator[data-glide] {
     transition: none;
   }
 }

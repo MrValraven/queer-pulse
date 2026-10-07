@@ -266,6 +266,32 @@
   font-size: var(--text-12-5);
   color: var(--ink-40);
 }
+/* The globe in an online card's meta row, sized to the text it leads. */
+.metaIcon {
+  width: 13px;
+  height: 13px;
+  margin-inline-end: 4px;
+  vertical-align: -2px;
+}
+/* A place that also sells online: a quiet pill after its neighbourhood.
+   `--text-strong` flips in dark mode, where `--plum` would read dark on dark. */
+.alsoOnlinePill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--text-11-5);
+  line-height: 16px;
+  font-weight: 600;
+  color: var(--text-strong);
+  background: rgba(var(--plum-rgb), 0.08);
+  border-radius: var(--radius-pill);
+  padding: 2px 8px;
+}
+.alsoOnlineIcon {
+  flex: none;
+  width: 11px;
+  height: 11px;
+}
 /* Clamped to exactly 2 lines (min-height reserves the same space even when
    the text is shorter) so a short vs. long description never changes the
    card's overall height. */
@@ -378,6 +404,23 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+/* The List card's footer measures itself, like the Online card's: in a
+   narrow card the host's first name would ellipsize to a letter or two, so
+   below that width only the avatar shows, the name stays in the card's
+   accessible text, and the host's title attribute carries it on hover. */
+.listFoot {
+  container: list-card-foot / inline-size;
+}
+@container list-card-foot (max-width: 300px) {
+  .hostName {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
 .visit {
   flex: none;
   white-space: nowrap;
@@ -386,6 +429,30 @@
   gap: 4px;
   color: var(--text-strong);
   margin-inline-start: auto;
+}
+/* Visit that leaves for the business's own site: keyboard focus shows the
+   standard ring on the label itself. The label is only one line tall, so an
+   invisible layer stretches its tap area to 44px high (and a little wider)
+   without moving anything in the footer. */
+.visitExternal {
+  position: relative;
+  cursor: pointer;
+  border-radius: var(--radius-6);
+}
+.visitExternal::before {
+  content: "";
+  position: absolute;
+  inset: -13px -8px;
+}
+.visitExternal:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+.statusIcon {
+  width: 13px;
+  height: 13px;
+  flex: none;
 }
 .empty {
   grid-column: 1 / -1;
@@ -442,6 +509,10 @@
 /* The plum wash disappears on the dark card, so plain pills take a cream one.
    "Member-run" keeps its jade ground. */
 :global([data-theme="dark"]) .pill:not(.pillMember) {
+  background: rgba(var(--cream-rgb), 0.07);
+}
+/* The "Also online" pill takes the same cream wash on the dark card. */
+:global([data-theme="dark"]) .alsoOnlinePill {
   background: rgba(var(--cream-rgb), 0.07);
 }
 

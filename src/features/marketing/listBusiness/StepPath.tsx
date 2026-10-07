@@ -8,9 +8,10 @@ import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { ANCHOR, type ListingPath } from "./listBusiness.data";
 import type { ListingForm } from "./useListingForm";
 import { PaneHeader } from "./ListBusinessChrome";
+import { WhereFoundField } from "./fields/WhereFoundField";
 import styles from "./ListBusinessPage.module.css";
 
-/* ===== Step 0: You & the place ===== */
+/* ===== Step 0: how you know the place, and where people find it ===== */
 export function StepPath({
   form,
   userName,
@@ -74,6 +75,7 @@ export function StepPath({
         onChange={pickPath}
         options={pathOptions}
       />
+      <WhereFoundField form={form} />
 
       {/* "Signed in as {name}" tells the member which account the listing
           will hang off. A staff-authored draft belongs to the business it

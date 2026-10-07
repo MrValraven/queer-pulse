@@ -15,7 +15,12 @@ import {
  * are real menu prices.
  */
 
-export type ListingPricingMode = "services" | "menu";
+export type ListingPricingMode = "services" | "menu" | "shop";
+const PRICING_MODES: readonly ListingPricingMode[] = [
+  "services",
+  "menu",
+  "shop",
+];
 
 export const LISTING_MENU_DIETARY = [
   "vegan",
@@ -281,9 +286,12 @@ export function menuForDisplay(menu?: unknown): ListingMenu {
   };
 }
 
+/** An online-only listing defaults to services: Menu is not offered to it. */
 export function defaultPricingMode(
   cats: readonly string[],
+  isOnline = false,
 ): ListingPricingMode {
+  if (isOnline) return "services";
   const isMenuCategory = cats.some((category) =>
     MENU_CATEGORIES.has(normalizeCategory(category)),
   );
@@ -295,16 +303,23 @@ export function defaultPricingMode(
 export function pricingModeOf(source: {
   pricingMode?: unknown;
   cats: readonly string[];
+  online?: boolean;
 }): ListingPricingMode {
-  return source.pricingMode === "menu" || source.pricingMode === "services"
-    ? source.pricingMode
-    : defaultPricingMode(source.cats);
+  return PRICING_MODES.includes(source.pricingMode as ListingPricingMode)
+    ? (source.pricingMode as ListingPricingMode)
+    : defaultPricingMode(source.cats, source.online === true);
 }
 
-/** True once the owner has typed anything into either list. */
+/** True once the owner has typed anything into any of the three lists. */
 export function hasPricingContent(draft: {
   services?: ListingServiceRow[];
   menu?: ListingMenuDraft;
+  shopItems?: ReadonlyArray<{
+    name: string;
+    price: string;
+    link: string;
+    photo: unknown;
+  }>;
 }): boolean {
   const hasServices = (draft.services ?? []).some(
     (row) => !isBlankServiceRow(row),
@@ -318,21 +333,30 @@ export function hasPricingContent(draft: {
         section.title.trim() !== "" ||
         section.items.some((item) => !isBlankMenuItem(item)),
     );
-  return hasServices || hasMenu;
+  const hasShop = (draft.shopItems ?? []).some(
+    (item) =>
+      item.name.trim() !== "" ||
+      item.price.trim() !== "" ||
+      item.link.trim() !== "" ||
+      item.photo !== null,
+  );
+  return hasServices || hasMenu || hasShop;
 }
 
 /**
- * Re-default the mode from the categories when they change, but only while
- * both lists are still empty. Once the owner has typed anything, their choice
- * stands.
+ * Re-default the mode when the categories or the listing's kind change, but
+ * only while every list is still empty. Once the owner has typed anything,
+ * their choice stands.
  */
 export function applyCategoryPricingDefault(
   previous: ListingDraft,
   next: ListingDraft,
 ): ListingDraft {
-  if (next.cats === previous.cats) return next;
+  if (next.cats === previous.cats && next.online === previous.online) {
+    return next;
+  }
   if (hasPricingContent(next)) return next;
-  return { ...next, pricingMode: defaultPricingMode(next.cats) };
+  return { ...next, pricingMode: defaultPricingMode(next.cats, next.online) };
 }
 
 /** Swap the row with `id` and its neighbour. Returns the SAME array when the

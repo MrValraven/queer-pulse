@@ -524,7 +524,7 @@ function buildBuildingItemsPartTwo(): AdminRoadmapItemDTO[] {
           from: "Q2 2026",
           to: "Q3 2026",
           reason:
-            "App Store review flagged the invite-only flow twice. We rebuilt onboarding rather than open the doors.",
+            "App Store review flagged the invitation flow twice. We rebuilt onboarding rather than open the doors.",
           movedByName: "Jo Silva",
           movedAt: "2026-05-02T00:00:00.000Z",
         },

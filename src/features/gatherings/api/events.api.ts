@@ -681,13 +681,18 @@ export const cancelEvent = (slug: string, scope?: SeriesScope) =>
 export const deleteEvent = (slug: string) =>
   apiDelete<{ ok: true }>(`/events/${slug}`);
 
+export type AttendeeArrival = "arrived" | "expected";
+
 export const getAttendees = (
   slug: string,
   status: "going" | "waitlisted",
   page?: number,
+  filters: { arrival?: AttendeeArrival; q?: string } = {},
 ) => {
   const q = new URLSearchParams({ status });
   if (page) q.set("page", String(page));
+  if (filters.arrival) q.set("arrival", filters.arrival);
+  if (filters.q) q.set("q", filters.q);
   return apiGet<AttendeesPageDTO>(`/events/${slug}/attendees?${q.toString()}`);
 };
 

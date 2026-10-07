@@ -37,7 +37,8 @@ export function DirectoryAboutSection({ place }: { place: DirectoryPlace }) {
               by the owner at submission and no review ever touches them, so a
               "what members say" heading would claim a consensus that does not
               exist. The sub-line underneath names the owner for the same
-              reason (see goodForSub). */}
+              reason (see goodForSub), or the business when the listing
+              names no first name. */}
           <h2>
             <Translation
               i18nKey={
@@ -49,9 +50,11 @@ export function DirectoryAboutSection({ place }: { place: DirectoryPlace }) {
             />
           </h2>
           <p className={s.subLine}>
-            {t("marketing:directory.detail.goodForSub", {
-              name: place.owner.first,
-            })}
+            {place.owner.first.trim() === ""
+              ? t("marketing:directory.detail.goodForSubBusiness")
+              : t("marketing:directory.detail.goodForSub", {
+                  name: place.owner.first,
+                })}
           </p>
           <div className={s.features}>
             {place.goodFor.map((feature) => (

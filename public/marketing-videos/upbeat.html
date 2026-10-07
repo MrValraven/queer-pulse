@@ -411,16 +411,23 @@
         color: var(--coral);
         font-size: 190px;
       }
+      /* Five promises in two centred rows (3 on top, 2 below); upbeat.scene.js
+         builds one .row per line. The row gap carries 4px over the pill gap
+         to absorb the tilt and bob, so both gaps read the same on screen. */
       #promise .pills {
         position: absolute;
-        left: 50%;
+        left: 0;
+        right: 0;
         top: 610px;
-        width: 1240px;
-        margin-left: -620px;
         display: flex;
-        flex-wrap: wrap;
+        flex-direction: column;
+        align-items: center;
+        gap: 24px;
+      }
+      #promise .pills .row {
+        display: flex;
         justify-content: center;
-        gap: 18px 20px;
+        gap: 20px;
       }
       #promise .sticker {
         position: relative;

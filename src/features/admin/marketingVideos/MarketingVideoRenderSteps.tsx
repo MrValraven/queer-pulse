@@ -1,19 +1,20 @@
-import { FiAlertCircle, FiCheck, FiDownload, FiMaximize } from "react-icons/fi";
+import { FiMaximize } from "react-icons/fi";
 import { Button } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import { Translation } from "../../../shared/i18n/Translation";
-import { useFormat } from "../../../shared/i18n/format";
 import { formatClock, secondsLeft } from "./filmTime";
 import {
   estimatedRenderMinutes,
+  type FilmFormatId,
   type MarketingVideo,
 } from "./marketingVideos.data";
+import { RenderDone, RenderFailed } from "./MarketingVideoRenderResult";
 import type { RenderSupport } from "./render/captureApis";
 import type { RenderState } from "./useFilmRender";
 import styles from "./MarketingVideos.module.css";
 
 interface RenderBarProps {
   video: MarketingVideo;
+  format: FilmFormatId;
   title: string;
   titleId: string;
   state: RenderState;
@@ -30,7 +31,15 @@ interface RenderBarProps {
 /** The studio's status bar: what's happening, and what you can do next. */
 export function MarketingVideoRenderBar(props: RenderBarProps) {
   const { t } = useTranslation();
-  const { state, title, titleId } = props;
+  const { state, title, titleId, video, format } = props;
+  // A film with one shape keeps the plain "Pro to video" heading.
+  const heading =
+    video.formats.length > 1
+      ? t("admin:marketingVideos.studio.titleFormat", {
+          title,
+          format: t(`admin:marketingVideos.format.${format}.output`),
+        })
+      : t("admin:marketingVideos.studio.title", { title });
   return (
     <div className={styles.bar}>
       <div className={styles.barHead}>
@@ -38,7 +47,7 @@ export function MarketingVideoRenderBar(props: RenderBarProps) {
           {t("admin:marketingVideos.studio.eyebrow")}
         </p>
         <h2 id={titleId} className={styles.barTitle}>
-          {t("admin:marketingVideos.studio.title", { title })}
+          {heading}
         </h2>
       </div>
       {state.status === "idle" && <RenderReady {...props} />}
@@ -52,10 +61,12 @@ export function MarketingVideoRenderBar(props: RenderBarProps) {
           onClose={props.onClose}
         />
       )}
+      {/* A film without this shape keeps Start off, so it offers no retry. */}
       {state.status === "failed" && (
         <RenderFailed
           state={state}
-          onReset={props.onReset}
+          format={format}
+          onReset={props.canStart ? props.onReset : undefined}
           onClose={props.onClose}
         />
       )}
@@ -65,6 +76,7 @@ export function MarketingVideoRenderBar(props: RenderBarProps) {
 
 function RenderReady({
   video,
+  format,
   support,
   isSoft,
   canStart,
@@ -73,6 +85,7 @@ function RenderReady({
   onClose,
 }: RenderBarProps) {
   const { t } = useTranslation();
+  const resolution = t(`admin:marketingVideos.format.${format}.resolution`);
   if (!support.isSupported) {
     return (
       <div className={styles.barBody}>
@@ -92,11 +105,12 @@ function RenderReady({
       <p className={styles.barText}>
         {t("admin:marketingVideos.studio.intro", {
           minutes: estimatedRenderMinutes(video),
+          resolution,
         })}
       </p>
       {isSoft && (
         <p className={styles.barHint}>
-          {t("admin:marketingVideos.studio.soft")}
+          {t("admin:marketingVideos.studio.soft", { resolution })}
         </p>
       )}
       <div className={styles.barActions}>
@@ -175,90 +189,6 @@ function RenderRunning({
       <div className={styles.barActions}>
         <Button variant="ghost-dark" onClick={onStop}>
           {t("admin:marketingVideos.studio.stop")}
-        </Button>
-      </div>
-    </div>
-  );
-}
-
-function RenderDone({
-  state,
-  onReset,
-  onClose,
-}: {
-  state: Extract<RenderState, { status: "done" }>;
-  onReset: () => void;
-  onClose: () => void;
-}) {
-  const { t } = useTranslation();
-  const format = useFormat();
-  const { film, url } = state;
-  const megabytes = format.number(film.blob.size / 1_000_000, {
-    maximumFractionDigits: 1,
-  });
-  return (
-    <div className={styles.barBody}>
-      <p className={styles.doneTitle} role="status">
-        <span className={styles.doneIcon}>
-          <FiCheck aria-hidden />
-        </span>
-        <Translation
-          i18nKey="admin:marketingVideos.studio.done.title"
-          components={{ em: <em /> }}
-        />
-      </p>
-      <p className={styles.barMeta}>
-        {t("admin:marketingVideos.studio.done.meta", {
-          size: `${megabytes} MB`,
-          width: film.capturedWidth,
-          height: film.capturedHeight,
-        })}
-      </p>
-      {film.fileName.endsWith(".webm") && (
-        <p className={styles.barHint}>
-          {t("admin:marketingVideos.studio.done.notMp4")}
-        </p>
-      )}
-      <div className={styles.barActions}>
-        <Button href={url} download={film.fileName}>
-          <FiDownload aria-hidden />
-          {t("admin:marketingVideos.studio.done.download", {
-            fileName: film.fileName,
-          })}
-        </Button>
-        <Button variant="ghost-dark" onClick={onReset}>
-          {t("admin:marketingVideos.studio.again")}
-        </Button>
-        <Button variant="ghost-dark" onClick={onClose}>
-          {t("admin:marketingVideos.studio.close")}
-        </Button>
-      </div>
-    </div>
-  );
-}
-
-function RenderFailed({
-  state,
-  onReset,
-  onClose,
-}: {
-  state: Extract<RenderState, { status: "failed" }>;
-  onReset: () => void;
-  onClose: () => void;
-}) {
-  const { t } = useTranslation();
-  return (
-    <div className={styles.barBody}>
-      <p className={styles.barError} role="alert">
-        <FiAlertCircle aria-hidden />
-        {t(`admin:marketingVideos.studio.error.${state.reason}`)}
-      </p>
-      <div className={styles.barActions}>
-        <Button onClick={onReset}>
-          {t("admin:marketingVideos.studio.again")}
-        </Button>
-        <Button variant="ghost-dark" onClick={onClose}>
-          {t("admin:marketingVideos.studio.close")}
         </Button>
       </div>
     </div>

@@ -30,7 +30,9 @@
     "stage .";
   column-gap: 36px;
   padding: 20px 32px 20px 24px;
-  background: color-mix(in srgb, var(--cream) 88%, var(--plum));
+  /* Cream warmed by a breath of coral: the plum mix read grey on the light
+     page. Dark mode keeps its plum mix (below). */
+  background: color-mix(in srgb, var(--cream) 95%, var(--accent));
   border: 1px solid rgba(var(--line-rgb), 0.12);
   border-radius: var(--radius-18);
   animation: qpOnlineIn var(--dur-slow) var(--ease-out) both;
@@ -52,6 +54,9 @@
   );
   transform: translate(-50%, -50%);
   pointer-events: none;
+}
+:global([data-theme="dark"]) .panel {
+  background: color-mix(in srgb, var(--cream) 88%, var(--plum));
 }
 .panelSkeleton {
   min-height: 240px;
@@ -245,6 +250,10 @@
   margin: 0;
   padding: 0;
   list-style: none;
+}
+/* The narrow layout's dots are decoration only: the cards carry the links. */
+.stage[data-decorative="true"] .nodes {
+  pointer-events: none;
 }
 /* Each node is a fixed share of the stage, so the whole constellation scales
    as one picture. */
@@ -463,28 +472,15 @@
   text-wrap: balance;
 }
 
-.onlineTag {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: var(--text-12-5);
-  color: var(--ink-60);
-}
-.onlineDot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--jade);
-  box-shadow: var(--ring-jade);
-}
-
 /* Where to find them. Not links: the whole card already is one, and the
-   detail page carries the real contact buttons. */
+   detail page carries the real contact buttons. So they read as a quiet line
+   of words ("Website · Instagram · Email"), with nothing that looks
+   pressable. */
 .channels {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 6px;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 8px;
 }
 .channelsLabel {
   font-size: var(--text-11);
@@ -496,25 +492,36 @@
 .channelList {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
   margin: 0;
   padding: 0;
   list-style: none;
+  font-size: var(--text-12-5);
+  color: var(--ink-60);
 }
-.channel {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  padding: 3px 9px;
-  font-size: var(--text-12);
-  font-weight: 600;
-  color: var(--jade-ink);
-  background: rgba(var(--jade-rgb), 0.1);
-  border-radius: var(--radius-pill);
+/* The separator is decoration: its alt text is empty, so a screen reader
+   hears the list items alone. */
+.channel + .channel::before {
+  content: "\00B7";
+  content: "\00B7" / "";
+  padding-inline: 6px;
+  color: var(--ink-40);
 }
-.channel svg {
-  width: 12px;
-  height: 12px;
+
+/* The footer measures itself: in a narrow card the host's first name would
+   ellipsize to a letter or two, so below that width only the avatar shows and
+   the name stays in the card's accessible text. */
+.foot {
+  container: online-card-foot / inline-size;
+}
+@container online-card-foot (max-width: 300px) {
+  .hostName {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
 }
 
 /* ── Narrow containers ───────────────────────────────────────────────────────
@@ -545,6 +552,10 @@
   }
   .eyebrow {
     align-self: end;
+    /* Kept on one line: "VENDEM ONLINE" broke after its first word beside
+       the stage. */
+    white-space: nowrap;
+    letter-spacing: 0.1em;
   }
   .title {
     align-self: start;

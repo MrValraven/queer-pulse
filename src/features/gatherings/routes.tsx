@@ -1,6 +1,7 @@
 import { Navigate, Route } from "react-router-dom";
 import { routes } from "../../app/routeMap";
 import { lazyNamed } from "../../app/routeHelpers";
+import { DashboardRedirect } from "./DashboardRedirect";
 
 const GatheringPage = lazyNamed(
   () => import("./GatheringPage"),
@@ -14,10 +15,6 @@ const GatheringRecapPage = lazyNamed(
 const GatheringCancelledPage = lazyNamed(
   () => import("./GatheringCancelledPage"),
   "GatheringCancelledPage",
-);
-const GatheringDashboardPage = lazyNamed(
-  () => import("./GatheringDashboardPage"),
-  "GatheringDashboardPage",
 );
 const ManageGatheringPage = lazyNamed(
   () => import("./ManageGatheringPage"),
@@ -68,7 +65,7 @@ export function gatheringRoutes(demoMode: boolean) {
         }
       />
       {/* `/gathering/:slug` (singular) and the flat `/gathering-*` routes were
-          unified under `/gatherings/:slug/...`. Hard cutover — no redirect shims. */}
+          unified under `/gatherings/:slug/...`. Hard cutover with no redirect shims. */}
       <Route path={`${routes.gatherings}/:slug`} element={<GatheringPage />} />
       {/* Really wired: the recap resolves the real event off `:slug` and, in
           live mode, attaches uploads to it + lists its real photos. Demo keeps
@@ -83,7 +80,7 @@ export function gatheringRoutes(demoMode: boolean) {
       />
       <Route
         path={`${routes.gatherings}/:slug/dashboard`}
-        element={<GatheringDashboardPage />}
+        element={<DashboardRedirect />}
       />
       {/* Really wired: manage resolves the real event off `:slug` and drives
           update / cancel / attendees / cohost / invite against it (organizer-
@@ -112,7 +109,7 @@ export function gatheringRoutes(demoMode: boolean) {
           so the standalone confirmation page is retired in LIVE: `/rsvp`
           redirects to the originating gathering (`?event=<slug>`) or the
           events board. Demo keeps the static reading-group confirmation. The
-          ticket itself lives in EventTicketModal (My Events), not a route. */}
+          ticket itself lives in EventTicketModal (My Events), which has no route. */}
       <Route
         path={routes.rsvp}
         element={demoMode ? <RsvpPage /> : <RsvpRedirect />}

@@ -26,17 +26,22 @@ const FOLD_STAGGER_MAX_STEPS = 6;
  * One calendar week's joiners in one card for the "All" tab (two or more of
  * them), so a wave of sign-ups reads as one piece of news instead of a run of
  * near-identical cards. The title names the week ("This week", "Last week",
- * "The week of 28 Sep"). Shows the first three people with a toggle for the
- * rest, which folds the list open and shut (see `useNewMembersFold`); the
- * list is labelled by the card's title.
+ * "The week of 28 Sep"), and a continuation card says more people joined
+ * that week. Shows the first three people with a toggle for the rest, which
+ * folds the list open and shut (see `useNewMembersFold`); the list is
+ * labelled by the card's title.
  */
 export function NewMembersGroupCard({
   members,
   weekStart,
+  isContinuation = false,
 }: {
   members: NewMemberRowModel[];
   /** "YYYY-MM-DD": the local Monday of the week these people joined in. */
   weekStart: string;
+  /** A later card for a week whose first group card sits higher in the feed
+   *  (see `groupNewMemberPages`); its title reads as "more people joined". */
+  isContinuation?: boolean;
 }) {
   const { t } = useTranslation();
   const fmt = useFormat();
@@ -58,7 +63,14 @@ export function NewMembersGroupCard({
     <FeedCardShell accent="ink">
       <div className={styles.head}>
         <h2 id={titleId} className={styles.title}>
-          {newMembersWeekTitle(weekStart, count, new Date(), t, fmt)}
+          {newMembersWeekTitle(
+            weekStart,
+            count,
+            new Date(),
+            t,
+            fmt,
+            isContinuation,
+          )}
         </h2>
         {/* Decorative: every face here is named in the list below. */}
         <AvatarStack
@@ -116,14 +128,17 @@ export function NewMembersGroupCard({
 export function LiveNewMembersGroupCard({
   items,
   weekStart,
+  isContinuation = false,
 }: {
   items: FeedItem[];
   weekStart: string;
+  isContinuation?: boolean;
 }) {
   return (
     <NewMembersGroupCard
       members={items.map(feedItemToNewMemberRow)}
       weekStart={weekStart}
+      isContinuation={isContinuation}
     />
   );
 }

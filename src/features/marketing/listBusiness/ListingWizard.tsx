@@ -12,6 +12,7 @@ import {
   type PendingListing,
 } from "./listBusiness.data";
 import { useListingForm, type ListingSeed } from "./useListingForm";
+import { healRetiredOnlineTags } from "./listingRetiredTags";
 import { useListingDraft } from "./useListingDraft";
 import { DraftBanner, SendingPanel } from "./ListBusinessChrome";
 import { WizardFormPane } from "./WizardFormPane";
@@ -112,6 +113,21 @@ export interface ListingWizardProps {
   successToast?: string | null;
 }
 
+/** Module-level, so its identity is stable for every hook that takes it. */
+const scrollUp = () => window.scrollTo({ top: 0, behavior: "smooth" });
+
+/** A resumed create draft from before the online fields moves its retired
+ *  tags into them; the server would refuse the create otherwise. An edit's
+ *  draft comes from the stored listing, which the migration already moved. */
+function createDraftOnLoad(
+  initialDraft: ListingDraft | undefined,
+  editRef: string | undefined,
+): ListingDraft | undefined {
+  return initialDraft && editRef === undefined
+    ? healRetiredOnlineTags(initialDraft)
+    : initialDraft;
+}
+
 export function ListingWizard({
   initialDraft,
   initialStep,
@@ -155,7 +171,8 @@ export function ListingWizard({
       },
     [seed, resolvedUserName, profile.bio],
   );
-  const form = useListingForm(initialDraft, resolvedSeed);
+  const loadedDraft = createDraftOnLoad(initialDraft, editRef);
+  const form = useListingForm(loadedDraft, resolvedSeed);
   const { draft } = form;
   // A draft resumed from the landing list / a `?draft` deep link.
   const isResumed = Boolean(initialDraft);
@@ -186,7 +203,7 @@ export function ListingWizard({
     saved,
     clearDraft,
     (resumed) => {
-      form.reset(resumed.draft);
+      form.reset(healRetiredOnlineTags(resumed.draft));
       setStep(resumed.step);
     },
   );
@@ -202,11 +219,8 @@ export function ListingWizard({
     saveAndExit,
     flashClass: styles.fieldFlash,
     onPhotosRejected: form.setRejectedPhotoSlots,
+    isEdit: editRef !== undefined,
   });
-  const scrollUp = useCallback(
-    () => window.scrollTo({ top: 0, behavior: "smooth" }),
-    [],
-  );
   const submitListing = useCallback(
     (finished: ListingDraft) =>
       submit ? submit(finished) : addListing(finished, profile.slug),

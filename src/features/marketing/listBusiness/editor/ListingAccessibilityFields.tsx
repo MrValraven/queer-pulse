@@ -4,7 +4,8 @@ import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { ANCHOR } from "../listBusiness.data";
 import {
   ACCESSIBILITY_NOTE_MAX,
-  ACCESSIBILITY_QUESTIONS,
+  accessibilityQuestionsFor,
+  listingAnswerOf,
   normalizeAccessibilityDraft,
 } from "../listingAccessibility.data";
 import type { ListingForm } from "../useListingForm";
@@ -13,7 +14,9 @@ import styles from "./ListingAccessibility.module.css";
 
 /**
  * The owner's accessibility answers: six fixed questions, three answers each,
- * plus the free-text note that carries what a checklist cannot.
+ * plus the free-text note that carries what a checklist cannot. An online-only
+ * listing answers four questions about using it online in place of the six
+ * about a building.
  *
  * Two things this editor is built to do.
  *
@@ -31,28 +34,42 @@ import styles from "./ListingAccessibility.module.css";
 export function ListingAccessibilityFields({ form }: { form: ListingForm }) {
   const { t } = useTranslation();
   const { draft, setAccessibilityAnswer, setAccessibilityNote } = form;
-  // Healed on read, so a listing saved before these questions existed edits as
-  // six unanswered questions rather than crashing on a missing map.
+  // Healed on read, so a listing saved before these questions existed edits
+  // with every question unanswered, and never crashes on a missing map.
   const accessibility = normalizeAccessibilityDraft(draft.accessibility);
+  const questions = accessibilityQuestionsFor(draft.online);
+  // An online listing reads its own copy: there is no building to describe.
+  const copy = draft.online
+    ? {
+        intro: "marketing:listBusiness.accessibility.introOnline",
+        reassurance: "marketing:listBusiness.accessibility.reassuranceOnline",
+        noteHint: "marketing:listBusiness.accessibility.noteHintOnline",
+        notePlaceholder:
+          "marketing:listBusiness.accessibility.notePlaceholderOnline",
+      }
+    : {
+        intro: "marketing:listBusiness.accessibility.intro",
+        reassurance: "marketing:listBusiness.accessibility.reassurance",
+        noteHint: "marketing:listBusiness.accessibility.noteHint",
+        notePlaceholder: "marketing:listBusiness.accessibility.notePlaceholder",
+      };
 
   return (
     <div id={ANCHOR.accessibility}>
-      <p className={styles.intro}>
-        {t("marketing:listBusiness.accessibility.intro")}
-      </p>
+      <p className={styles.intro}>{t(copy.intro)}</p>
       <p className={styles.reassurance}>
         <span className={styles.reassuranceIcon} aria-hidden>
           <FiHeart />
         </span>
-        <span>{t("marketing:listBusiness.accessibility.reassurance")}</span>
+        <span>{t(copy.reassurance)}</span>
       </p>
 
       <div className={styles.questions}>
-        {ACCESSIBILITY_QUESTIONS.map((question) => (
+        {questions.map((question) => (
           <ListingAccessibilityQuestion
             key={question.slug}
             question={question}
-            answer={accessibility.answers[question.slug]}
+            answer={listingAnswerOf(accessibility.answers, question.slug)}
             onChange={setAccessibilityAnswer}
           />
         ))}
@@ -61,7 +78,7 @@ export function ListingAccessibilityFields({ form }: { form: ListingForm }) {
       <FormField
         className={styles.noteField}
         label={t("marketing:listBusiness.accessibility.noteLabel")}
-        helper={t("marketing:listBusiness.accessibility.noteHint")}
+        helper={t(copy.noteHint)}
         labelAside={
           <span aria-hidden>
             {accessibility.note.length}/{ACCESSIBILITY_NOTE_MAX}
@@ -71,9 +88,7 @@ export function ListingAccessibilityFields({ form }: { form: ListingForm }) {
         <textarea
           rows={3}
           maxLength={ACCESSIBILITY_NOTE_MAX}
-          placeholder={t(
-            "marketing:listBusiness.accessibility.notePlaceholder",
-          )}
+          placeholder={t(copy.notePlaceholder)}
           value={accessibility.note}
           onChange={(event) => setAccessibilityNote(event.target.value)}
         />

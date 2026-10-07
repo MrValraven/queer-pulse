@@ -2,7 +2,7 @@ import { VerifiedBadgeEditNotice } from "../../EditListingStatusHeader";
 import type { ManagedListingDTO } from "../api/listings.api";
 import { CoManagerRoleFields } from "../coManagers/CoManagerRoleFields";
 import { ListingCoManagersSection } from "../coManagers/ListingCoManagersSection";
-import { pricingModeOf } from "../listingMenu.data";
+import { effectivePricingMode } from "../listingShop.data";
 import type { ListingForm } from "../useListingForm";
 import { BasicsFields } from "../fields/BasicsFields";
 import { StoryFields } from "../fields/StoryFields";
@@ -20,8 +20,10 @@ import { ListingDirectoryVisibilitySection } from "./ListingDirectoryVisibilityS
 import { ListingOperatingStateSection } from "./ListingOperatingStateSection";
 import { ListingHistorySection } from "./history/ListingHistorySection";
 import {
+  accessibilitySectionDefinition,
   editorSectionByKeyFor,
   isSectionShownForListing,
+  practicalSectionDefinition,
   pricingSectionDefinition,
 } from "./listingEditor.data";
 
@@ -47,11 +49,9 @@ import {
  * it renders only once its jump-nav entry is pressed.
  * Everything else about the business is identical for both roles.
  *
- * An online-only listing skips the Accessibility block: its six questions
- * are about entrances and toilets, which an online business does not have.
- * The answers are left alone in the draft, so they come back as they were
- * if the listing is switched back to a physical one. The jump nav drops the
- * entry by the same rule (`editorSectionsFor`).
+ * An online-only listing gets its own four accessibility questions, its
+ * practical section reads "How people buy from you", and its priced list can
+ * be "In the shop".
  *
  * Trading state and directory visibility share ONE section on purpose. They
  * are different questions with similar-sounding answers ("we are shut for
@@ -100,13 +100,18 @@ export function ListingEditorSections({
       <ListingEditorSection
         section={pricingSectionDefinition(
           section.services,
-          pricingModeOf(form.draft),
+          effectivePricingMode(form.draft),
         )}
       >
         <ListingPricingFields form={form} />
       </ListingEditorSection>
 
-      <ListingEditorSection section={section.practical}>
+      <ListingEditorSection
+        section={practicalSectionDefinition(
+          section.practical,
+          form.draft.online,
+        )}
+      >
         <PracticalFields
           form={form}
           hoursExtras={<ListingHoursExceptions form={form} />}
@@ -114,7 +119,12 @@ export function ListingEditorSections({
       </ListingEditorSection>
 
       {isAccessibilityShown && (
-        <ListingEditorSection section={section.accessibility}>
+        <ListingEditorSection
+          section={accessibilitySectionDefinition(
+            section.accessibility,
+            form.draft.online,
+          )}
+        >
           <ListingAccessibilityFields form={form} />
         </ListingEditorSection>
       )}

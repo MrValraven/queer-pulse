@@ -25,7 +25,11 @@ export function StepBasics({
       <PaneHeader
         title={t("marketing:listBusiness.step1.title")}
         em={t("marketing:listBusiness.step1.em")}
-        sub={t("marketing:listBusiness.step1.sub")}
+        sub={t(
+          form.draft.online
+            ? "marketing:listBusiness.step1.subOnline"
+            : "marketing:listBusiness.step1.sub",
+        )}
       />
       <BasicsFields
         form={form}

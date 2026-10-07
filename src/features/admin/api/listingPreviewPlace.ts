@@ -4,12 +4,24 @@ import type {
   HoursType,
   Tint,
 } from "../../marketing/directoryPlaces";
-import { normalizeAccessibilityAnswers } from "../../marketing/listBusiness/listingAccessibility.data";
+import { normalizeListingAccessibilityAnswers } from "../../marketing/listBusiness/listingAccessibility.data";
 import { normalizeOwnedBy } from "../../marketing/listBusiness/listingOwnedBy.data";
+import { menuForDisplay } from "../../marketing/listBusiness/listingMenu.data";
 import {
-  menuForDisplay,
-  pricingModeOf,
-} from "../../marketing/listBusiness/listingMenu.data";
+  isSellingOnline,
+  normalizePublicOnlineDetails,
+  summaryFromDetails,
+  type ListingOnlineDetails,
+  type ListingPublicOnlineDetails,
+} from "../../marketing/listBusiness/listingOnline.data";
+import {
+  effectivePricingMode,
+  shopPhotoDisplayUrl,
+  toDirectoryShopItems,
+  type DirectoryShopItem,
+  type ListingShopItem,
+} from "../../marketing/listBusiness/listingShop.data";
+import { isAdultCategoryPicked } from "../../marketing/localCategories";
 
 // ── Ported from backend `listing-response.ts` so the moderator preview renders
 //    exactly what `GET /directory/:slug` would once the listing is live. Keep
@@ -74,7 +86,15 @@ export type ListingPreviewSource = Omit<
   // requiring them here would make the narrowed queue row unpreviewable.
   | "consentOuting"
   | "consentGuide"
->;
+  // Re-added below, widened: both shapes reach this mapper.
+  | "onlineDetails"
+  | "shopItems"
+> & {
+  // The queue's DTO carries the owner wire (with its 18+ stamp) and view
+  // rows; the editor's cleaned draft carries the request block and rows.
+  onlineDetails?: ListingPublicOnlineDetails | ListingOnlineDetails;
+  shopItems?: ReadonlyArray<ListingShopItem | DirectoryShopItem>;
+};
 
 interface OwnerIdentityView {
   name: string;
@@ -124,6 +144,53 @@ function hoursTypeForCategory(category: string): HoursType {
 }
 
 /**
+ * The online fields of the preview. The mapper set no `online` before, so an
+ * online listing's preview showed hours and a map; this sets it too. Two shop
+ * shapes reach here: the queue's view rows (image already a URL or null) and
+ * the editor's request rows (image a key or a URL).
+ */
+function previewOnlineFields(
+  dto: ListingPreviewSource,
+): Pick<
+  DirectoryPlace,
+  | "online"
+  | "city"
+  | "hasOnlineShop"
+  | "isAdultsOnly"
+  | "onlineDetails"
+  | "onlineSummary"
+  | "shopItems"
+> {
+  const onlineDetails = isSellingOnline({
+    online: dto.online,
+    hasOnlineShop: dto.hasOnlineShop,
+  })
+    ? normalizePublicOnlineDetails(dto.onlineDetails)
+    : null;
+  return {
+    online: dto.online ?? false,
+    city: dto.online ? dto.city || undefined : undefined,
+    hasOnlineShop: !dto.online && dto.hasOnlineShop === true,
+    isAdultsOnly: isAdultCategoryPicked(dto.cats),
+    onlineDetails,
+    onlineSummary: summaryFromDetails(onlineDetails),
+    shopItems: toDirectoryShopItems(
+      (dto.shopItems ?? []).map((item) => ({
+        ...item,
+        photo: item.photo
+          ? {
+              ...item.photo,
+              image: item.photo.image
+                ? shopPhotoDisplayUrl(item.photo.image)
+                : null,
+            }
+          : null,
+      })),
+    ),
+  };
+}
+
+/**
  * Map a listing onto the `DirectoryPlace` view model the public detail
  * components render. Faithful to the live page: same tint, initials,
  * redaction, pills, gallery, hours template. Rating/reviews/upcoming are empty:
@@ -156,6 +223,10 @@ export function listingDtoToPreviewPlace(
     desc: dto.blurb,
     latitude: dto.latitude,
     longitude: dto.longitude,
+    // The moderator and the owner see the online page exactly as it will
+    // read: no map or hours for an online listing, the ordering block for
+    // anything that sells online, the shop when it is the priced list.
+    ...previewOnlineFields(dto),
     tagline: dto.tagline,
     // Price tier first (when set), then the listing's own tags — as detail pills.
     pills: [...(dto.price ? [dto.price] : []), ...dto.tags],
@@ -177,10 +248,10 @@ export function listingDtoToPreviewPlace(
     goodFor: dto.goodFor.map((label) => ({ label, yes: true })),
     // Both structured blocks are part of what a moderator reviews and what an
     // owner previews, so they render exactly as the public page would. Healed
-    // on the way through: a draft written before these existed answers all six
-    // questions as "not answered" rather than as nothing at all.
+    // on the way through: a draft written before these existed answers all ten
+    // questions as "not answered".
     accessibility: {
-      answers: normalizeAccessibilityAnswers(dto.accessibility?.answers),
+      answers: normalizeListingAccessibilityAnswers(dto.accessibility?.answers),
       note: dto.accessibility?.note?.trim() || null,
     },
     services: (dto.services ?? [])
@@ -190,7 +261,7 @@ export function listingDtoToPreviewPlace(
         price: service.price.trim(),
         note: service.note.trim(),
       })),
-    pricingMode: pricingModeOf(dto),
+    pricingMode: effectivePricingMode({ ...dto, online: dto.online ?? false }),
     menu: menuForDisplay(dto.menu),
     hoursType: hoursTypeForCategory(category),
     hoursNote: dto.hoursNote,

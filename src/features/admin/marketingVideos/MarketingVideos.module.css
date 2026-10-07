@@ -70,9 +70,12 @@
 }
 
 /* ── A film, scaled into its box ───────────────────────────────────────────── */
+/* Boxes that hold a film read its size from custom properties set inline
+   (filmSizeStyle.ts): --film-width and --film-height in pixels, --film-aspect
+   as a ratio. Unset, they fall back to the 1920x1080 film. */
 .filmBox {
   position: relative;
-  aspect-ratio: 16 / 9;
+  aspect-ratio: var(--film-aspect, 16 / 9);
   overflow: hidden;
   background: var(--plum-deep);
 }
@@ -96,11 +99,24 @@
   border-radius: var(--radius-panel);
 }
 
-/* Leaving full screen, the whole dialog shrinks from the full-screen film
-   back into place (useFilmFullscreen). The dialog's transform makes it this
-   fixed layer's containing block, so the veil covers exactly the dialog, under
-   the film, and fades out as it lands. At rest it is invisible. Same ground
-   as the full-screen stage below. */
+/* A tall film (the 4:5 post) at the modal's full width would run off the
+   screen, so it takes the height the dialog leaves and centres. */
+.previewFrame[data-tall] {
+  width: min(100%, (100dvh - 460px) * var(--film-aspect, 4 / 5));
+  min-width: 240px;
+  margin-inline: auto;
+}
+
+.previewFormats {
+  margin-bottom: 14px;
+}
+
+/* The film ground behind the full-screen stage. useFilmFullscreen fades it
+   in as the film grows and out as it shrinks back, so the dialog shows
+   through while the film travels. It covers the viewport, under the film
+   (positioned, so painted above it) and over the rest of the dialog. At rest
+   it is invisible. --film-ground is sampled from the films' vignetted edges,
+   so letterbox bands read as part of the frame. */
 .veil {
   position: fixed;
   inset: 0;
@@ -139,36 +155,26 @@
 }
 
 /* ── Preview in full screen ──────────────────────────────────────────────────
-   The stage (film and transport) is what goes full screen. Its ground lives
-   on ::before so useFilmFullscreen can fade it in under the growing film; the
-   backdrop stays clear, so the dialog shows until it does. The ground is
-   --film-ground, sampled from the films' vignetted edges, so letterbox bands
-   read as part of the frame. */
-.stage:fullscreen {
+   The stage (film and transport) fills the viewport in place, over the veil.
+   The dialog's scrim is fixed to the viewport, so fixed here means the whole
+   window. */
+.slot[data-expanded] .veil {
+  opacity: 1;
+}
+
+.slot[data-expanded] .stage {
+  position: fixed;
+  inset: 0;
   display: grid;
   place-items: center;
-  isolation: isolate;
-  background: transparent;
 }
 
-.stage:fullscreen::backdrop {
-  background: transparent;
-}
-
-.stage:fullscreen::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background: var(--film-ground);
-}
-
-.stage:fullscreen .previewFrame {
-  width: min(100vw, 100dvh * 16 / 9);
+.slot[data-expanded] .previewFrame {
+  width: min(100vw, 100dvh * var(--film-aspect, 16 / 9));
   border-radius: 0;
 }
 
-.stage:fullscreen .transport {
+.slot[data-expanded] .transport {
   position: absolute;
   right: 0;
   bottom: 0;
@@ -187,7 +193,7 @@
   transition-timing-function: var(--ease);
 }
 
-.stage:fullscreen .clock {
+.slot[data-expanded] .clock {
   color: rgba(var(--cream-rgb), 0.8);
 }
 
@@ -224,8 +230,25 @@
   flex: 1;
   align-items: center;
   justify-content: center;
+  min-width: 0;
   min-height: 0;
   padding: 24px;
+}
+
+/* A tall film in a wide enough window takes the full height, with the status
+   bar beside it (useStudioScale picks the layout and budgets its width). */
+.studio[data-bar-beside] {
+  flex-direction: row;
+}
+
+.studio[data-bar-beside] .bar {
+  flex: none;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: center;
+  width: var(--studio-bar-width, 400px);
+  overflow-y: auto;
+  border-top: 0;
+  border-left: 1px solid rgba(var(--cream-rgb), 0.12);
 }
 
 /* What gets captured. Element Capture only delivers frames for an element
@@ -242,7 +265,7 @@
   position: absolute;
   top: 0;
   left: 0;
-  width: 1920px;
+  width: var(--film-width, 1920px);
   transform-origin: 0 0;
 }
 
@@ -258,8 +281,8 @@
   position: absolute;
   top: 0;
   left: 0;
-  width: 1920px;
-  height: 1080px;
+  width: var(--film-width, 1920px);
+  height: var(--film-height, 1080px);
   background: var(--plum-deep);
 }
 

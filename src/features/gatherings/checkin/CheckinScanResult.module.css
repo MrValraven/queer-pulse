@@ -1,0 +1,87 @@
+/* The result card, anchored to the bottom of the viewfinder. */
+.result {
+  position: absolute;
+  inset-inline: 10px;
+  bottom: 10px;
+  pointer-events: auto;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 44px 14px 14px;
+  border-radius: var(--radius-14);
+  box-shadow: var(--shadow-toast);
+}
+.toneJade {
+  background: color-mix(in srgb, var(--jade) 12%, var(--paper));
+  color: var(--jade-ink);
+}
+.toneAmber {
+  background: color-mix(in srgb, var(--amber) 12%, var(--paper));
+  color: var(--amber-ink);
+}
+.toneDanger {
+  background: color-mix(in srgb, var(--danger) 12%, var(--paper));
+  color: var(--danger-ink);
+}
+.resultIcon {
+  display: flex;
+  font-size: var(--text-22);
+  flex-shrink: 0;
+}
+.resultBody {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.resultTitle {
+  font-weight: 700;
+  font-size: var(--text-15);
+}
+.resultLine {
+  font-size: var(--text-13);
+  overflow-wrap: anywhere;
+}
+.resultLineClamped {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+}
+.resultUndo {
+  align-self: flex-start;
+  margin-top: 6px;
+  padding: 4px 0;
+  min-height: 44px;
+  background: none;
+  border: none;
+  color: inherit;
+  font: inherit;
+  font-size: var(--text-13);
+  font-weight: 700;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.resultClose {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  border-radius: 50%;
+  color: inherit;
+  font-size: var(--text-18);
+  cursor: pointer;
+}
+@media (hover: hover) {
+  .resultClose:hover,
+  .resultUndo:hover {
+    background: color-mix(in srgb, currentColor 10%, transparent);
+  }
+}

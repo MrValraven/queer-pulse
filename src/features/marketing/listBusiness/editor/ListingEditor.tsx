@@ -3,11 +3,11 @@ import { useProfileData } from "../../../../app/providers/useProfile";
 import { usePrefersReducedMotion } from "../../../../shared/hooks/usePrefersReducedMotion";
 import type { ManagedListingDTO } from "../api/listings.api";
 import { dtoToDraft } from "../dtoToDraft";
-import { pricingModeOf } from "../listingMenu.data";
+import { effectivePricingMode } from "../listingShop.data";
 import { SendingPanel } from "../ListBusinessChrome";
 import { useEditUnsavedGuard } from "../useEditListingSave";
 import { useListingForm } from "../useListingForm";
-import { editorSectionsFor, withPricingModeLabel } from "./listingEditor.data";
+import { editorSectionsFor, withListingKindLabels } from "./listingEditor.data";
 import { flattenEditorMissing } from "./listingEditorMissing";
 import { useActiveEditorSection } from "./useActiveEditorSection";
 import { useDangerZoneReveal } from "./useDangerZoneReveal";
@@ -37,9 +37,9 @@ import styles from "./ListingEditor.module.css";
  * personal fields and the owner-only Danger zone. The role is said plainly at
  * the top, because otherwise somebody else's business reads exactly like yours.
  *
- * An online-only listing also loses the Accessibility section, whose questions
- * are all about a physical place. The answers stay in the draft, so turning
- * the toggle back off shows them again unchanged.
+ * An online-only listing keeps every section: its Accessibility asks four
+ * questions about using it online, and its practical section reads "How
+ * people buy from you".
  */
 export function ListingEditor({ listing }: { listing: ManagedListingDTO }) {
   const { profile } = useProfileData();
@@ -50,15 +50,19 @@ export function ListingEditor({ listing }: { listing: ManagedListingDTO }) {
   const initialDraft = useMemo(() => dtoToDraft(listing), [listing]);
   const form = useListingForm(initialDraft);
   const { draft } = form;
-  const pricingMode = pricingModeOf(draft);
-  // Read from the draft, so flipping the online-only toggle in Basics drops
-  // or restores the accessibility section and its nav entry straight away.
+  // The mode a save sends: a stored "shop" on a place that no longer sells
+  // online reads as its category's list, so the nav titles that list.
+  const pricingMode = effectivePricingMode(draft);
+  // Read from the draft, so flipping the online-only toggle in Basics retitles
+  // the practical and accessibility sections and their nav entries straight
+  // away.
   const isOnline = draft.online;
   const sections = useMemo(
     () =>
-      withPricingModeLabel(
+      withListingKindLabels(
         editorSectionsFor(listing.managementRole === "co_manager", isOnline),
         pricingMode,
+        isOnline,
       ),
     [listing.managementRole, isOnline, pricingMode],
   );
@@ -176,6 +180,7 @@ export function ListingEditor({ listing }: { listing: ManagedListingDTO }) {
         <ListingEditorPreviewModal
           draft={draft}
           photoPreviews={form.photoPreviews}
+          shopPhotoPreviews={form.shopPhotoPreviews}
           slug={listing.slug}
           isCoManagerView={listing.managementRole === "co_manager"}
           missing={missing}

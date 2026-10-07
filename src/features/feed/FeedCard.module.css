@@ -131,6 +131,12 @@
   line-height: 1.45;
   color: var(--ink);
 }
+/* A gathering's description, shown as the host typed it: their line breaks
+   and spacing stay, same as on the gathering page. */
+.quoteAsTyped {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
 
 /* ── Tags ── */
 .tagRow {

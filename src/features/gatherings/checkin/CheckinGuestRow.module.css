@@ -1,0 +1,173 @@
+/* ── Guest row ───────────────────────────────────────────────────────────── */
+
+.row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: var(--radius-14);
+}
+
+/* A guest who just arrived: one soft jade wash that fades out. */
+.flash {
+  animation: arrivalFlash 300ms var(--ease-out);
+}
+@keyframes arrivalFlash {
+  from {
+    background-color: rgba(var(--jade-rgb), 0.16);
+  }
+  to {
+    background-color: transparent;
+  }
+}
+/* The global reduced-motion rule cuts this to 0.01ms, which still paints the
+   wash for one frame. Reduced motion leaves the chip as the confirmation. */
+@media (prefers-reduced-motion: reduce) {
+  .flash {
+    animation: none;
+  }
+}
+:global(html[data-reduce-motion="true"]) .flash {
+  animation: none;
+}
+
+/* The whole row is the check-in target: this button covers it, so a tap
+   anywhere on the guest checks them in. */
+.rowHit {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: inherit;
+  background: transparent;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color var(--dur-fast) var(--ease);
+}
+@media (hover: hover) {
+  .rowHit:hover:not(:disabled) {
+    background-color: var(--wash);
+  }
+}
+.rowHit:active:not(:disabled) {
+  background-color: rgba(var(--line-rgb), 0.08);
+}
+.rowHit:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+.rowHit:disabled {
+  cursor: progress;
+}
+
+.avatar {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 2.923em; /* 38 / 13 */
+  height: 2.923em;
+  border-radius: var(--radius-avatar);
+  font-family: var(--serif);
+  font-size: var(--text-13);
+  font-weight: 500;
+}
+
+/* The name keeps at least this much room; the slot gives way first. */
+.info {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  gap: 2px;
+  min-inline-size: min(7rem, 100%);
+}
+
+/* One line, so a row keeps its height when the pill turns into the chip. */
+.name {
+  overflow: hidden;
+  font-size: var(--text-15);
+  font-weight: 600;
+  color: var(--text-strong);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 8px;
+  font-size: var(--text-12-5);
+  color: var(--ink-60);
+}
+
+.accessTag {
+  display: inline-flex;
+  align-self: flex-start;
+  align-items: center;
+  gap: 4px;
+  margin-block-start: 2px;
+  padding: 2px 8px;
+  border-radius: var(--radius-tag);
+  background: rgba(var(--line-rgb), 0.07);
+  color: var(--text-strong);
+  font-size: var(--text-11-5);
+  font-weight: 600;
+}
+
+/* Pill and chip stack in one cell while they crossfade, so the slot holds
+   the wider of the two and never spills past the row. */
+.slot {
+  display: grid;
+  flex: 0 1 auto;
+  grid-template-columns: minmax(0, auto);
+  align-items: center;
+  justify-items: end;
+  min-inline-size: 0;
+}
+
+.slot > * {
+  grid-area: 1 / 1;
+  max-inline-size: 100%;
+}
+
+.swapItem {
+  display: inline-flex;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: 36px;
+  padding-inline: 16px;
+  border: 1.5px solid var(--accent);
+  border-radius: var(--radius-pill);
+  color: var(--accent-ink);
+  font-size: var(--text-13);
+  font-weight: 600;
+  white-space: nowrap;
+  transition: background-color var(--dur-fast) var(--ease);
+}
+@media (hover: hover) {
+  .rowHit:hover:not(:disabled) ~ .slot .pill {
+    background-color: rgba(var(--accent-rgb), 0.1);
+  }
+}
+.row[data-pending] .pill {
+  opacity: 0.55;
+}
+
+/* A phone-width list: the chip shows the check and the time (see
+   CheckinGuestRowChip.module.css). The slot keeps that width and the
+   name ellipsizes to make room. */
+@container checkin-list (max-width: 30rem) {
+  .info {
+    min-inline-size: 0;
+  }
+
+  .slot {
+    flex-shrink: 0;
+  }
+}

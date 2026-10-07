@@ -39,7 +39,7 @@ export const homepage: Catalog = {
   "manifesto.body2":
     "Acreditamos que a comunidade funciona de outra forma quando há confiança por trás. Quando sabes com quem estás a ligar-te, quando tens controlo sobre o que partilhas, e quando há pessoas a zelar pelos espaços que usas.",
   "manifesto.body3":
-    "É por isso que a QueerPulse é só por convite, que as pessoas têm voto de confiança, e que a segurança e a privacidade fazem parte da base da plataforma.",
+    "É por isso que cada pessoa entra com o voto de confiança de alguém que já cá está, e que a segurança e a privacidade fazem parte da base da plataforma.",
   "manifesto.body4":
     "A libertação queer é indivisível de todas as outras lutas por segurança e autodeterminação, incluindo a libertação da Palestina. <a>Onde nos posicionamos</a>.",
   "manifesto.highlight":
@@ -460,7 +460,7 @@ export const homepage: Catalog = {
   "membersExplainer.pillars.inside.body":
     "Perfis completos, comunidades e encontros abrem-se no momento em que te juntas.",
   "membersExplainer.pillars.safe.title":
-    "Só por convite mantém um espaço seguro",
+    "Os votos de confiança mantêm o espaço seguro",
   "membersExplainer.pillars.safe.body":
     "Manter o diretório só para a comunidade é como quem cá está consegue ser plenamente quem é.",
   "membersExplainer.requestInviteCta": "Pedir um convite",
@@ -739,7 +739,7 @@ export const homepage: Catalog = {
   "personasExplainer.pillars.behindTheDoor.title":
     "A discrição precisa de uma porta fechada",
   "personasExplainer.pillars.behindTheDoor.body":
-    "Define um perfil alternativo como só para a comunidade e quem estiver de fora encontra um aviso onde estaria a página. Isso só se aguenta enquanto o diretório inteiro for só por convite.",
+    "Define um perfil alternativo como só para a comunidade e quem estiver de fora encontra um aviso onde estaria a página. Isso aguenta-se porque toda a gente no diretório entrou com voto de confiança.",
   "personasExplainer.note":
     "As recomendações e quem te segue ficam num único perfil alternativo, por isso o que um lado de ti constrói fica com esse lado.",
   "personasExplainer.requestInviteCta": "Pedir um convite",
@@ -843,7 +843,7 @@ export const homepage: Catalog = {
   // ── Outro (chamada final) ──────────────────────────────────────────────────
   "outro.title": "Entra onde <em>já pertences.</em>",
   "outro.sub":
-    "A QueerPulse é uma comunidade só por convite, construída sobre confiança, curiosidade e a crença de que ligações genuínas podem mudar vidas e cidades.",
+    "A QueerPulse é uma comunidade onde cada pessoa entra pela mão de outra, construída sobre confiança, curiosidade e a crença de que ligações genuínas podem mudar vidas e cidades.",
   "outro.memberSub": "Ainda bem que voltaste. O teu feed está à tua espera.",
   "outro.cta": "Pedir um convite",
   "outro.memberCta": "Ir para o teu feed",

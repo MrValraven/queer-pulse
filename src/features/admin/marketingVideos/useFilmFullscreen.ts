@@ -1,6 +1,7 @@
 import {
   useCallback,
   useEffect,
+  useLayoutEffect,
   useRef,
   useState,
   type KeyboardEvent as ReactKeyboardEvent,
@@ -9,21 +10,14 @@ import { prefersReducedMotionNow } from "../../../shared/hooks/usePrefersReduced
 
 const MORPH_MS = 450;
 const MORPH_EASING = "cubic-bezier(0.2, 0, 0, 1)";
-/** The overlaid controls arrive once the film has started to grow. */
+/** The controls arrive once the film is on its way, in either direction. */
 const CONTROLS_DELAY_MS = 150;
 /** Pointer stillness, while playing, after which the controls step aside. */
 const IDLE_MS = 2500;
 const STAGE_CONTROLS = "button:not([disabled]), input:not([disabled])";
 
-/** The film box's place in full screen, read from layout (transforms ignored). */
-function laidOutRect(film: HTMLElement): DOMRect {
-  return new DOMRect(
-    film.offsetLeft,
-    film.offsetTop,
-    film.offsetWidth,
-    film.offsetHeight,
-  );
-}
+/** Where the film shows on screen, and how round its corners look there. */
+type FilmPlace = { rect: DOMRect; radius: number };
 
 /** A transform that lays a box at `from` over the place `to`, with its own top-left as origin. */
 function flipFrom(from: DOMRect, to: DOMRect): string {
@@ -34,10 +28,11 @@ function flipFrom(from: DOMRect, to: DOMRect): string {
 
 /**
  * Full screen for the preview stage (the film and its transport). The stage
- * itself goes full screen, so the iframe never reloads and playback carries
- * on. Both ways morph with FLIP: going in, the film grows from its place in
- * the dialog; coming out (by any route, Escape included), the whole dialog
- * shrinks from the full-screen film back to its resting place.
+ * fills the viewport in place (fixed, inside the dialog), so the iframe never
+ * reloads, playback carries on, and the page owns every frame of the morph.
+ * Both ways morph with FLIP:
+ * the film travels between its place in the dialog and the whole viewport
+ * while the veil fades the film ground in or out behind it.
  */
 export function useFilmFullscreen({ isPlaying }: { isPlaying: boolean }) {
   const slotRef = useRef<HTMLDivElement>(null);
@@ -45,61 +40,124 @@ export function useFilmFullscreen({ isPlaying }: { isPlaying: boolean }) {
   const filmRef = useRef<HTMLDivElement>(null);
   const controlsRef = useRef<HTMLDivElement>(null);
   const veilRef = useRef<HTMLDivElement>(null);
-  const filmRectBeforeRef = useRef<DOMRect | null>(null);
-  const fullscreenRectRef = useRef<DOMRect | null>(null);
-  const isStageFullscreenRef = useRef(false);
+  const firstPlaceRef = useRef<FilmPlace | null>(null);
+  const firstVeilOpacityRef = useRef(0);
+  const isFullscreenRef = useRef(false);
   const animationsRef = useRef<Animation[]>([]);
-  const frameRef = useRef(0);
   const idleTimerRef = useRef(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isIdle, setIsIdle] = useState(false);
-  const isSupported =
-    typeof document !== "undefined" && document.fullscreenEnabled === true;
 
   const cancelMorph = useCallback(() => {
-    cancelAnimationFrame(frameRef.current);
     animationsRef.current.forEach((animation) => animation.cancel());
     animationsRef.current = [];
+  }, []);
+
+  // On the way back the stage stays fixed over its place in the dialog
+  // (see the layout effect). This lets it back into the dialog's flow.
+  const releaseStage = useCallback(() => {
+    const stage = stageRef.current;
+    if (!stage) return;
+    for (const property of ["position", "top", "left", "width"])
+      stage.style.removeProperty(property);
+  }, []);
+
+  // Any pointer or key activity shows the controls and restarts the
+  // countdown to hiding them (they only hide while the film plays).
+  const wake = useCallback(() => {
+    setIsIdle(false);
+    window.clearTimeout(idleTimerRef.current);
+    idleTimerRef.current = window.setTimeout(() => setIsIdle(true), IDLE_MS);
   }, []);
 
   const toggle = useCallback(() => {
     const stage = stageRef.current;
     const film = filmRef.current;
-    if (!stage || !film || !document.fullscreenEnabled) return;
-    if (document.fullscreenElement === stage) {
-      void document.exitFullscreen().catch(() => undefined);
+    if (!stage || !film) return;
+    const isEntering = !isFullscreenRef.current;
+    // FIRST: where the film shows right now, mid-morph included.
+    const rect = film.getBoundingClientRect();
+    const visualScale = film.offsetWidth ? rect.width / film.offsetWidth : 1;
+    firstPlaceRef.current = {
+      rect,
+      radius:
+        parseFloat(getComputedStyle(film).borderTopLeftRadius) * visualScale,
+    };
+    const veil = veilRef.current;
+    firstVeilOpacityRef.current = veil
+      ? Number(getComputedStyle(veil).opacity)
+      : 0;
+    cancelMorph();
+    releaseStage();
+    // Hold the stage's place so the dialog behind keeps its shape.
+    if (isEntering && slotRef.current)
+      slotRef.current.style.minHeight = `${stage.offsetHeight}px`;
+    isFullscreenRef.current = isEntering;
+    setIsFullscreen(isEntering);
+    if (isEntering) wake();
+  }, [cancelMorph, releaseStage, wake]);
+
+  // LAST is read after the new layout commits and before it paints, so the
+  // film never shows a frame in its new place without the morph.
+  useLayoutEffect(() => {
+    const first = firstPlaceRef.current;
+    const film = filmRef.current;
+    const stage = stageRef.current;
+    if (!first || !film || !stage) return;
+    firstPlaceRef.current = null;
+    // Back in the dialog, the stage is fully laid out again.
+    const land = () => {
+      releaseStage();
+      if (slotRef.current) slotRef.current.style.minHeight = "";
+    };
+    if (prefersReducedMotionNow()) {
+      if (!isFullscreen) land();
       return;
     }
-    // FIRST: where the film sits right now, mid-morph included.
-    filmRectBeforeRef.current = film.getBoundingClientRect();
-    cancelMorph();
-    // Hold the stage's place so the dialog behind keeps its shape.
-    if (slotRef.current)
-      slotRef.current.style.minHeight = `${stage.offsetHeight}px`;
-    void stage.requestFullscreen().catch(() => {
-      if (slotRef.current) slotRef.current.style.minHeight = "";
-    });
-  }, [cancelMorph]);
-
-  const morphIn = useCallback((stage: HTMLElement, film: HTMLElement) => {
-    const first = filmRectBeforeRef.current;
+    // The dialog clips its overflow, so a film still growing out of its
+    // place there would show cropped. The stage stays fixed over that place
+    // (the slot holds the room) until the film lands.
+    if (!isFullscreen) {
+      const place = stage.getBoundingClientRect();
+      Object.assign(stage.style, {
+        position: "fixed",
+        top: `${place.top}px`,
+        left: `${place.left}px`,
+        width: `${place.width}px`,
+      });
+    }
     const last = film.getBoundingClientRect();
-    fullscreenRectRef.current = last;
-    if (!first || !last.width) return;
+    if (!last.width) {
+      if (!isFullscreen) land();
+      return;
+    }
+    const scale = first.rect.width / last.width;
     const timing = { duration: MORPH_MS, easing: MORPH_EASING };
-    const morphs = [
-      film.animate(
-        [
-          { transformOrigin: "0 0", transform: flipFrom(first, last) },
-          { transformOrigin: "0 0", transform: "none" },
-        ],
-        timing,
-      ),
-      stage.animate(
-        { opacity: [0, 1] },
-        { ...timing, pseudoElement: "::before" },
-      ),
-    ];
+    const filmMorph = film.animate(
+      [
+        {
+          transformOrigin: "0 0",
+          transform: flipFrom(first.rect, last),
+          borderRadius: `${first.radius / scale}px`,
+        },
+        {
+          transformOrigin: "0 0",
+          transform: "none",
+          borderRadius: getComputedStyle(film).borderTopLeftRadius,
+        },
+      ],
+      timing,
+    );
+    if (!isFullscreen) filmMorph.onfinish = land;
+    const morphs = [filmMorph];
+    const veil = veilRef.current;
+    if (veil)
+      morphs.push(
+        veil.animate(
+          { opacity: [firstVeilOpacityRef.current, isFullscreen ? 1 : 0] },
+          timing,
+        ),
+      );
     const controls = controlsRef.current;
     if (controls)
       morphs.push(
@@ -114,85 +172,12 @@ export function useFilmFullscreen({ isPlaying }: { isPlaying: boolean }) {
         ),
       );
     animationsRef.current = morphs;
-  }, []);
+  }, [isFullscreen, releaseStage]);
 
-  const morphOut = useCallback((film: HTMLElement) => {
-    const dialog = film.closest<HTMLElement>('[role="dialog"]');
-    const fullscreenRect = fullscreenRectRef.current;
-    if (!dialog || !fullscreenRect) return;
-    const filmRect = film.getBoundingClientRect();
-    const dialogRect = dialog.getBoundingClientRect();
-    if (!filmRect.width) return;
-    // Scale the dialog about its film's top-left corner, so the film lands
-    // exactly on the full-screen place it just left.
-    const origin = `${filmRect.left - dialogRect.left}px ${filmRect.top - dialogRect.top}px`;
-    const timing = { duration: MORPH_MS, easing: MORPH_EASING };
-    const morphs = [
-      dialog.animate(
-        [
-          {
-            transformOrigin: origin,
-            transform: flipFrom(fullscreenRect, filmRect),
-          },
-          { transformOrigin: origin, transform: "none" },
-        ],
-        timing,
-      ),
-    ];
-    // The veil stands in for the full-screen ground around the film, so the
-    // dialog's chrome fades up as it shrinks into place.
-    const veil = veilRef.current;
-    if (veil) morphs.push(veil.animate({ opacity: [1, 0] }, timing));
-    animationsRef.current = morphs;
-  }, []);
-
-  // Any pointer or key activity shows the controls and restarts the
-  // countdown to hiding them (they only hide while the film plays).
-  const wake = useCallback(() => {
-    setIsIdle(false);
-    window.clearTimeout(idleTimerRef.current);
-    idleTimerRef.current = window.setTimeout(() => setIsIdle(true), IDLE_MS);
-  }, []);
-
-  useEffect(() => {
-    const handleChange = () => {
-      const stage = stageRef.current;
-      const film = filmRef.current;
-      if (!stage || !film) return;
-      const isEntering = document.fullscreenElement === stage;
-      if (!isEntering && !isStageFullscreenRef.current) return;
-      isStageFullscreenRef.current = isEntering;
-      setIsFullscreen(isEntering);
-      if (isEntering) wake();
-      cancelMorph();
-      if (!isEntering && slotRef.current) slotRef.current.style.minHeight = "";
-      if (prefersReducedMotionNow()) return;
-      // LAST is read one frame on, once the new layout has settled.
-      frameRef.current = requestAnimationFrame(() => {
-        if (isEntering) morphIn(stage, film);
-        else morphOut(film);
-      });
-    };
-    // A window resized while in full screen moves the film: keep its place.
-    const handleResize = () => {
-      if (isStageFullscreenRef.current && filmRef.current)
-        fullscreenRectRef.current = laidOutRect(filmRef.current);
-    };
-    document.addEventListener("fullscreenchange", handleChange);
-    window.addEventListener("resize", handleResize);
-    return () => {
-      document.removeEventListener("fullscreenchange", handleChange);
-      window.removeEventListener("resize", handleResize);
-    };
-  }, [cancelMorph, morphIn, morphOut, wake]);
-
-  // Closing the preview leaves full screen too.
   useEffect(
     () => () => {
       cancelMorph();
       window.clearTimeout(idleTimerRef.current);
-      if (document.fullscreenElement)
-        void document.exitFullscreen().catch(() => undefined);
     },
     [cancelMorph],
   );
@@ -222,7 +207,6 @@ export function useFilmFullscreen({ isPlaying }: { isPlaying: boolean }) {
   };
 
   return {
-    isSupported,
     isFullscreen,
     areControlsHidden: isFullscreen && isPlaying && isIdle,
     toggle,

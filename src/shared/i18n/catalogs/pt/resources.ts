@@ -771,7 +771,7 @@ export const resources: Catalog = {
 
   "transHub.outro.title": "És viste <em>aqui.</em>",
   "transHub.outro.sub":
-    "A QueerPulse é uma rede por convite, com voto de confiança necessário. Se alguém em quem confias já está cá, pede-lhe um voto de confiança.",
+    "Cada pessoa na QueerPulse entrou com o voto de confiança de um membro. Se alguém em quem confias já está cá, pede-lhe um voto de confiança.",
   "transHub.outro.cta": "Pedir um convite",
 
   // ── TransHealthcarePage ──────────────────────────────────────────────────

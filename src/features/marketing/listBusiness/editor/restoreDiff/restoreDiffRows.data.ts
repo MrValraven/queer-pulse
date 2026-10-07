@@ -2,7 +2,8 @@ import { API_BASE_URL } from "../../../../../shared/api/config";
 import { PHOTO_KEYS } from "../../listBusiness.data";
 import {
   ACCESSIBILITY_ANSWER_BY_ID,
-  ACCESSIBILITY_QUESTIONS,
+  accessibilityQuestionsFor,
+  listingAnswerOf,
   normalizeAccessibilityDraft,
   type AccessibilityAnswer,
 } from "../../listingAccessibility.data";
@@ -37,9 +38,22 @@ export function accessibilityRows(
   const after = normalizeAccessibilityDraft(context.saved.accessibility);
   const answerLabel = (answer: AccessibilityAnswer) =>
     t(ACCESSIBILITY_ANSWER_BY_ID[answer].ownerKey);
-  const rows = ACCESSIBILITY_QUESTIONS.flatMap((question) => {
-    const beforeAnswer = before.answers[question.slug];
-    const afterAnswer = after.answers[question.slug];
+  const isOnlineBefore = context.current.online;
+  const isOnlineAfter = context.saved.online;
+  // A kind switch between the two sides lists both sets, so no changed answer
+  // goes unlisted.
+  const questions =
+    isOnlineBefore && isOnlineAfter
+      ? accessibilityQuestionsFor(true)
+      : isOnlineBefore || isOnlineAfter
+        ? [
+            ...accessibilityQuestionsFor(false),
+            ...accessibilityQuestionsFor(true),
+          ]
+        : accessibilityQuestionsFor(false);
+  const rows = questions.flatMap((question) => {
+    const beforeAnswer = listingAnswerOf(before.answers, question.slug);
+    const afterAnswer = listingAnswerOf(after.answers, question.slug);
     if (beforeAnswer === afterAnswer) return [];
     return [
       changedRow(

@@ -1,7 +1,7 @@
 import { useRef, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { useDismiss } from "./useDismiss";
 
 /** A bare dialog on the shared hook: portalled, labelled, aria-modal. */
@@ -9,14 +9,16 @@ function TestDialog({
   label,
   children,
   shouldFocusField = false,
+  onClose = () => undefined,
 }: {
   label: string;
   children?: ReactNode;
   shouldFocusField?: boolean;
+  onClose?: () => void;
 }) {
   const fieldRef = useRef<HTMLInputElement>(null);
   const dialogRef = useDismiss(
-    () => undefined,
+    onClose,
     shouldFocusField ? fieldRef : undefined,
   );
   return createPortal(
@@ -96,5 +98,71 @@ describe("useDismiss focus return", () => {
     expect(document.activeElement).toBe(
       screen.getByRole("button", { name: "Open photo" }),
     );
+  });
+});
+
+function pressEscapeOnDocument(): KeyboardEvent {
+  const escapeEvent = new KeyboardEvent("keydown", {
+    key: "Escape",
+    bubbles: true,
+    cancelable: true,
+  });
+  document.dispatchEvent(escapeEvent);
+  return escapeEvent;
+}
+
+describe("useDismiss Escape", () => {
+  it("closes the topmost dialog and marks the key as spent", () => {
+    const onClose = vi.fn();
+    const view = render(<TestDialog label="Scanner" onClose={onClose} />);
+    const escapeEvent = pressEscapeOnDocument();
+    expect(onClose).toHaveBeenCalledTimes(1);
+    expect(escapeEvent.defaultPrevented).toBe(true);
+    view.unmount();
+  });
+
+  it("leaves the key alone in a dialog covered by another one", () => {
+    const onCloseUnderneath = vi.fn();
+    const onCloseOnTop = vi.fn();
+    function Stack({ isConfirmOpen }: { isConfirmOpen: boolean }) {
+      return (
+        <>
+          <TestDialog label="Drawer" onClose={onCloseUnderneath} />
+          {isConfirmOpen && (
+            <TestDialog label="Confirm" onClose={onCloseOnTop} />
+          )}
+        </>
+      );
+    }
+    const view = render(<Stack isConfirmOpen={false} />);
+    // Registered between the two dialogs' listeners, so it sees the press
+    // after the covered dialog has had its turn and before the top one does.
+    const spentStatesBeforeTopDialog: boolean[] = [];
+    const recordSpentState = (event: KeyboardEvent) => {
+      spentStatesBeforeTopDialog.push(event.defaultPrevented);
+    };
+    document.addEventListener("keydown", recordSpentState);
+    view.rerender(<Stack isConfirmOpen />);
+    const escapeEvent = pressEscapeOnDocument();
+    document.removeEventListener("keydown", recordSpentState);
+    expect(spentStatesBeforeTopDialog).toEqual([false]);
+    expect(onCloseUnderneath).not.toHaveBeenCalled();
+    expect(onCloseOnTop).toHaveBeenCalledTimes(1);
+    expect(escapeEvent.defaultPrevented).toBe(true);
+    view.unmount();
+  });
+
+  it("leaves keys other than Escape and Tab alone", () => {
+    const onClose = vi.fn();
+    const view = render(<TestDialog label="Scanner" onClose={onClose} />);
+    const enterEvent = new KeyboardEvent("keydown", {
+      key: "Enter",
+      bubbles: true,
+      cancelable: true,
+    });
+    document.dispatchEvent(enterEvent);
+    expect(onClose).not.toHaveBeenCalled();
+    expect(enterEvent.defaultPrevented).toBe(false);
+    view.unmount();
   });
 });

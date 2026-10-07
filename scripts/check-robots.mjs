@@ -93,6 +93,10 @@ const ACCEPTED_EXTRA_DISALLOWS = new Map([
     "Not a route: the HTML marketing films the admin Marketing videos page previews and renders. They carry unreleased copy, so they stay out of an index (vercel.json also sends X-Robots-Tag: noindex).",
   ],
   [
+    "/brand/logo-concepts/",
+    "Not a route: the candidate logo SVGs the admin Logo concepts page shows. Unreleased marks, so they stay out of an index (vercel.json also sends X-Robots-Tag: noindex).",
+  ],
+  [
     "/spa.html",
     "Not a route: the contentless SPA shell scripts/prerender.mjs writes for vercel.json's catch-all rewrite. It returns 200 with an empty #root, so it is worth keeping out of an index even though nothing links to it.",
   ],

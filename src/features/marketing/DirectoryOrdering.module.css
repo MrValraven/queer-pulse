@@ -1,0 +1,113 @@
+/* ── "Ordering & delivery" ──────────────────────────────────────────────────
+   The one action first (the main link), the other places the business sells
+   second, then the facts a buyer plans around. The facts sit in one bordered
+   list like "What it costs", each with its label above its answer, so a long
+   sentence (the VAT line) wraps in its own row at any width, the editor's
+   full preview included. */
+.body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 22px;
+}
+
+.alsoOn {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.alsoOnLabel {
+  font-size: var(--text-label);
+  font-weight: 600;
+  color: var(--ink-60);
+}
+.links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  /* The same 44px tap floor `Button` keeps. */
+  min-height: 44px;
+  padding: 8px 14px;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  background: var(--paper);
+  color: var(--ink);
+  font-size: var(--text-14);
+  text-decoration: none;
+  transition:
+    border-color var(--dur-base) var(--ease),
+    color var(--dur-base) var(--ease);
+}
+.link svg {
+  flex: none;
+  color: var(--ink-60);
+}
+.link:hover {
+  border-color: rgba(var(--accent-rgb), 0.4);
+  color: var(--accent-ink);
+}
+.link:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.facts {
+  align-self: stretch;
+  margin: 0;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-badge);
+  overflow: hidden;
+}
+.fact {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 18px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.07);
+}
+.fact:first-child {
+  border-top: none;
+}
+.factLabel {
+  font-size: var(--text-13);
+  font-weight: 600;
+  color: var(--ink-60);
+}
+.factLine {
+  margin: 0;
+  font-size: var(--text-15);
+  color: var(--ink);
+  line-height: 1.5;
+  max-width: 62ch;
+  text-wrap: pretty;
+}
+/* A note that qualifies the line above it (the VAT sentence): one step
+   quieter and smaller than an answer, led by an info icon. */
+.factNote {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 2px 0 0;
+  font-size: var(--text-13);
+  color: var(--ink-60);
+  line-height: 1.5;
+  max-width: 62ch;
+  text-wrap: pretty;
+}
+.factNote svg {
+  flex: none;
+  /* Centres the icon on the first line of text. */
+  margin-top: calc((1lh - 1em) / 2);
+  width: 1em;
+  height: 1em;
+}

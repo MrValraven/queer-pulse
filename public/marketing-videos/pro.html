@@ -5,8 +5,8 @@
   The same story told the way product launches are filmed now: a dark stage
   with a hairline grid, film grain and a slow glow; sentence-case type that
   rises line by line out of a mask; one camera that flies across a board of
-  all six product cards; a vouch network in orbit; a dot-matrix Lisbon with
-  real neighbourhood positions. 48s at 120 BPM.
+  all six product cards; a vouch tree whose people fly out onto a dot-matrix
+  Lisbon with real neighbourhood positions. 62s at 120 BPM.
 
   Like the other cuts, every frame is a pure function of time
   (`window.seek(t)`), and `window.CUES` lists the moments pro.score.js plays
@@ -195,13 +195,6 @@
         color: var(--coral);
         font-weight: 650;
       }
-      .subline {
-        position: absolute;
-        font-size: 34px;
-        font-weight: 400;
-        letter-spacing: -0.01em;
-        color: var(--muted);
-      }
 
       /* Glass chips: the fragments, the promises, the neighbourhoods. */
       .chip {
@@ -314,6 +307,10 @@
         top: 404px;
         font-size: 132px;
       }
+      /* One line, centred where the two-line headlines centre. */
+      #open #open-c {
+        top: 471px;
+      }
       #ping {
         position: absolute;
         left: 960px;
@@ -369,6 +366,14 @@
         border-radius: 50%;
         border: 2px solid var(--coral);
       }
+      /* Centred over the name; the left pad balances the trailing tracking. */
+      #reveal-eyebrow {
+        left: 0;
+        right: 0;
+        top: 318px;
+        padding-left: 0.24em;
+        text-align: center;
+      }
 
       /* ── Board: one camera over all six cards ── */
       #cam {
@@ -398,9 +403,11 @@
           rgba(21, 11, 29, 0) 54%
         );
       }
+      /* The eyebrow and headline sit as one block, centred on the card. */
       #board-eyebrow {
         left: 130px;
-        top: 392px;
+        top: 378px;
+        font-size: 20px;
       }
       #board .card {
         box-shadow:
@@ -409,39 +416,54 @@
       }
       .fh {
         left: 130px;
-        top: 444px;
-        font-size: 104px;
-        width: 800px;
+        top: 442px;
+        font-size: 128px;
+        white-space: nowrap;
       }
       #board-all {
         top: 120px;
         font-size: 104px;
       }
 
-      /* ── Network ── */
-      #net-svg,
+      /* ── Network: the vouch tree; its faces fly on into the city ── */
+      #net-tree,
+      #net-lines,
       #city-canvas {
         position: absolute;
         inset: 0;
       }
-      .orb {
+      #net-tree {
+        transform-origin: 1360px 560px;
+      }
+      #net-lines {
+        width: 1920px;
+        height: 1080px;
+        overflow: visible;
+      }
+      .node {
         position: absolute;
         left: 0;
         top: 0;
+        border-radius: 50%;
       }
-      .orb .av {
+      .node .av {
         width: 100%;
         height: 100%;
         box-shadow: 0 0 0 3px var(--night);
       }
+      .node.root {
+        background: var(--coral);
+        box-shadow:
+          0 0 0 12px rgba(232, 119, 90, 0.18),
+          0 0 60px 6px rgba(232, 119, 90, 0.45);
+      }
       #net .hl {
         left: 130px;
-        top: 404px;
-        font-size: 104px;
+        top: 296px;
+        font-size: 92px;
       }
-      #net .subline {
-        left: 130px;
-        top: 650px;
+      .chip.vouch {
+        padding-left: 14px;
       }
 
       /* ── Promise ── */
@@ -470,6 +492,12 @@
         right: 0;
         top: 676px;
         display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 18px;
+      }
+      .promise-row {
+        display: flex;
         justify-content: center;
         gap: 18px;
       }
@@ -477,7 +505,7 @@
       /* ── City ── */
       #city .hl {
         left: 130px;
-        top: 352px;
+        top: 438px;
         font-size: 100px;
       }
       #tejo {
@@ -751,6 +779,13 @@
         background: var(--cream);
         color: var(--ink);
       }
+      .bubble .from {
+        display: block;
+        margin-bottom: 2px;
+        font-size: 17px;
+        font-weight: 650;
+        color: var(--plum);
+      }
       .bubble.me {
         justify-self: end;
         border-bottom-right-radius: 8px;
@@ -862,7 +897,7 @@
         flex: none;
       }
 
-      /* Venue badge: level, with a checkmark over the label. */
+      /* Directory badge: level, with a checkmark over the label. */
       .stamp {
         display: flex;
         flex-direction: column;
@@ -883,6 +918,173 @@
         stroke-linecap: round;
         stroke-linejoin: round;
       }
+
+      /* ── Portrait cut (4:5, 1080x1350): pro.html?format=portrait ──
+         pro.scene.js sets data-format on <html>. Everything above is the
+         16:9 film; these rules only re-lay it out for the tall frame,
+         centred on (540, 675) with 64px clear of every edge. */
+      html[data-format="portrait"],
+      html[data-format="portrait"] body {
+        width: 1080px;
+        height: 1350px;
+      }
+      /* A split line is one mask in 16:9 and one mask per part in portrait. */
+      html[data-format="portrait"] .ln-split {
+        display: contents;
+      }
+      html[data-format="portrait"] .ln-part {
+        display: block;
+        overflow: hidden;
+        padding: 0.06em 0.1em 0.16em;
+        margin: -0.06em -0.1em -0.16em;
+      }
+      html[data-format="portrait"] #net-lines {
+        width: 1080px;
+        height: 1350px;
+      }
+
+      /* HUD: inside the 3:4 grid crop, the wordmark on its own. */
+      html[data-format="portrait"] #hud-mark {
+        left: 96px;
+      }
+      html[data-format="portrait"] #hud-mark .sl {
+        display: none;
+      }
+      html[data-format="portrait"] #hud-geo {
+        right: 96px;
+      }
+      html[data-format="portrait"] #hud-bar {
+        left: 96px;
+        right: 96px;
+      }
+
+      /* Open: three-line headlines centred on y 675. */
+      html[data-format="portrait"] #open .hl {
+        top: 510px;
+        font-size: 108px;
+      }
+      html[data-format="portrait"] #open #open-c {
+        top: 620px;
+      }
+      html[data-format="portrait"] #ping {
+        left: 540px;
+        top: 675px;
+      }
+
+      /* Reveal + end: the name and its two-line slogan centred on y 675. */
+      html[data-format="portrait"] .lock {
+        top: 505px;
+        height: 192px;
+      }
+      html[data-format="portrait"] .word {
+        font-size: 150px;
+      }
+      html[data-format="portrait"] .slogan {
+        top: 709px;
+        font-size: 50px;
+      }
+      html[data-format="portrait"] #ring {
+        left: 540px;
+        top: 675px;
+      }
+      html[data-format="portrait"] #reveal-eyebrow {
+        top: 462px;
+        font-size: 24px;
+      }
+      /* The end lockup sits higher than the Reveal's, so the name, slogan
+         and invite row centre on y 675 as one group. */
+      html[data-format="portrait"] #end .lock {
+        top: 445px;
+      }
+      html[data-format="portrait"] #end .slogan {
+        top: 649px;
+      }
+      html[data-format="portrait"] #end-cta {
+        top: 830px;
+      }
+      /* Sized for a phone feed, where the frame shows at about a third. */
+      html[data-format="portrait"] #end-cta .btn {
+        height: 84px;
+        padding: 0 44px;
+        font-size: 30px;
+      }
+      html[data-format="portrait"] #end-cta .url {
+        font-size: 30px;
+        color: rgba(247, 243, 238, 0.75);
+      }
+      html[data-format="portrait"] #credit {
+        bottom: 64px;
+      }
+
+      /* Board: text in the top of the frame, the card in focus below it.
+         Headline size and top come from LAYOUT.board in pro.scene.js. */
+      html[data-format="portrait"] #scrim {
+        background: linear-gradient(
+          180deg,
+          rgba(21, 11, 29, 0.985) 0%,
+          rgba(21, 11, 29, 0.97) 37%,
+          rgba(21, 11, 29, 0) 43%
+        );
+      }
+      html[data-format="portrait"] #board-eyebrow {
+        left: 0;
+        right: 0;
+        padding-left: 0.24em;
+        text-align: center;
+        font-size: 26px;
+      }
+      html[data-format="portrait"] .fh {
+        left: 0;
+        right: 0;
+        text-align: center;
+      }
+      html[data-format="portrait"] #board-all {
+        top: 128px;
+        font-size: 88px;
+      }
+
+      /* Net and city: the headline on top, the tree or the map below it.
+         The tree's centre, size and chip spot come from LAYOUT.net, the
+         map's anchor from LAYOUT.city in pro.scene.js. */
+      html[data-format="portrait"] #net .hl,
+      html[data-format="portrait"] #city .hl {
+        left: 0;
+        right: 0;
+        top: 170px;
+        text-align: center;
+      }
+      html[data-format="portrait"] #net .hl {
+        font-size: 76px;
+      }
+      html[data-format="portrait"] #city .hl {
+        font-size: 84px;
+      }
+      html[data-format="portrait"] #tejo {
+        left: 822px;
+        top: 1200px;
+      }
+      /* Larger pills; LAYOUT.city.pillHeight matches the height, and the
+         left pad keeps the face's centre half a pill height in. */
+      html[data-format="portrait"] .chip.pin {
+        height: 52px;
+        padding: 0 20px 0 8px;
+        font-size: 21px;
+      }
+
+      /* Promise: headline over three rows of pills. */
+      html[data-format="portrait"] #promise .hl {
+        top: 520px;
+        font-size: 110px;
+      }
+      html[data-format="portrait"] #promise-chips {
+        top: 730px;
+      }
+
+      /* Belong */
+      html[data-format="portrait"] #belong .hl {
+        top: 573px;
+        font-size: 100px;
+      }
     </style>
   </head>
   <body>
@@ -896,24 +1098,31 @@
         <div id="open-chips"></div>
         <div id="ping"></div>
         <div class="hl center" id="open-a">
-          <span class="ln">Queer Lisbon</span
-          ><span class="ln">is <em>everywhere.</em></span>
+          <span class="ln ln-split"
+            ><span class="ln-part">There’s so much</span>
+            <span class="ln-part">queer life</span></span
+          ><span class="ln"><em>all over Lisbon.</em></span>
         </div>
         <div class="hl center" id="open-b">
-          <span class="ln">Just never</span
-          ><span class="ln"><em>in one place.</em></span>
+          <span class="ln ln-split"
+            ><span class="ln-part">Ever wish</span>
+            <span class="ln-part">you knew</span></span
+          ><span class="ln"><em>more of it?</em></span>
         </div>
         <div class="hl center" id="open-c">
-          <span class="ln">So we gathered it</span
-          ><span class="ln"><em>in one place.</em></span>
+          <span class="ln">Now <em>you can.</em></span>
         </div>
       </section>
 
       <section class="scene" id="reveal">
         <div id="ring"></div>
+        <div class="eyebrow" id="reveal-eyebrow">Introducing</div>
         <div class="lock"><div class="word serif" id="reveal-word"></div></div>
         <p class="slogan" id="reveal-slogan">
-          <span class="ln">A queer network, <em>rooted in Lisbon.</em></span>
+          <span class="ln ln-split"
+            ><span class="ln-part">A queer network,</span>
+            <span class="ln-part"><em>rooted in Lisbon.</em></span></span
+          >
         </p>
       </section>
 
@@ -923,20 +1132,35 @@
         <div class="eyebrow" id="board-eyebrow"></div>
         <div id="board-heads"></div>
         <div class="hl center" id="board-all">
-          <span class="ln">All of it, <em>in one place.</em></span>
+          <span class="ln ln-split"
+            ><span class="ln-part">All of it,</span>
+            <span class="ln-part"><em>in one place.</em></span></span
+          >
         </div>
       </section>
 
       <section class="scene" id="net">
-        <svg id="net-svg" viewBox="0 0 1920 1080"></svg>
-        <div id="net-avs"></div>
+        <div id="net-tree">
+          <svg id="net-lines" viewBox="0 0 1920 1080"></svg>
+        </div>
+        <div id="net-nodes"></div>
         <div class="hl" id="net-type">
           <span class="ln">Everyone here</span
-          ><span class="ln">is <em>vouched for.</em></span>
+          ><span class="ln">is <em>vouched for.</em></span
+          ><span class="ln">So there’s always</span
+          ><span class="ln"><em>someone in common.</em></span>
         </div>
-        <p class="subline" id="net-sub">
-          <span class="ln">So there’s always someone in common.</span>
-        </p>
+      </section>
+
+      <section class="scene" id="city">
+        <canvas id="city-canvas" width="1920" height="1080"></canvas>
+        <div id="tejo">Tejo</div>
+        <div id="city-pins"></div>
+        <div id="city-faces"></div>
+        <div class="hl" id="city-type">
+          <span class="ln">And they’re</span
+          ><span class="ln"><em>all over the city.</em></span>
+        </div>
       </section>
 
       <section class="scene" id="promise">
@@ -951,16 +1175,9 @@
         <div class="hl center" id="promise-b">
           <span class="ln">Just <em>your people.</em></span>
         </div>
-        <div id="promise-chips"></div>
-      </section>
-
-      <section class="scene" id="city">
-        <canvas id="city-canvas" width="1920" height="1080"></canvas>
-        <div id="tejo">Tejo</div>
-        <div id="city-pins"></div>
-        <div class="hl" id="city-type">
-          <span class="ln">Find your</span><span class="ln">community</span
-          ><span class="ln"><em>all over the city.</em></span>
+        <div id="promise-chips">
+          <div class="promise-row"></div>
+          <div class="promise-row"></div>
         </div>
       </section>
 
@@ -974,7 +1191,10 @@
       <section class="scene" id="end">
         <div class="lock"><div class="word serif" id="end-word"></div></div>
         <p class="slogan" id="end-slogan">
-          <span class="ln">A queer network, <em>rooted in Lisbon.</em></span>
+          <span class="ln ln-split"
+            ><span class="ln-part">A queer network,</span>
+            <span class="ln-part"><em>rooted in Lisbon.</em></span></span
+          >
         </p>
         <div id="end-cta">
           <span class="btn">Request an invite</span

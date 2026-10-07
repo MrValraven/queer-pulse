@@ -1,0 +1,73 @@
+/* The item list is what the rows answer to: the editor pane is narrower than
+   the viewport, so a viewport query would guess the space wrong. */
+.list {
+  container: shop-items / inline-size;
+}
+
+/* One shop item: the services row's card, on its own grid so a long name gets
+   the space and the price only the width of a few words. Mobile first: one
+   column, with the reorder and remove buttons on a header line at the top
+   right. */
+.item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 10px 12px;
+  align-items: start;
+  padding: 14px 15px;
+  border-radius: var(--radius-14);
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+.controls {
+  order: -1;
+  grid-column: 1 / -1;
+  justify-self: end;
+  display: flex;
+  gap: 2px;
+  align-items: center;
+  /* The 44px buttons tuck into the card's top padding and line their glyphs
+     up with the inputs' end edge, so the header line costs little height. */
+  margin-block: -6px -4px;
+  margin-inline-end: -8px;
+}
+
+/* The photo and its description span the whole row under the text fields,
+   like the services row's note cell. */
+.photoCell {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
+}
+
+/* Room for the photo beside its description. */
+@container shop-items (min-width: 480px) {
+  .photoCell {
+    grid-template-columns: minmax(0, 10rem) minmax(0, 1fr);
+  }
+}
+
+/* Room for name and price side by side. Below this the name takes the full
+   row, so a long item name stays readable, and the price sits under it. */
+@container shop-items (min-width: 600px) {
+  .item {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 8rem);
+  }
+}
+
+/* Room for the buttons on the name's own line too, at its end. */
+@container shop-items (min-width: 704px) {
+  .item {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 8rem) auto;
+  }
+  .controls {
+    order: 0;
+    grid-column: auto;
+    justify-self: start;
+    /* Line the buttons up with the inputs below the labels. */
+    align-self: end;
+    margin: 0;
+  }
+}

@@ -1,4 +1,6 @@
+import { isAdultCategoryPicked } from "../localCategories";
 import {
+  emptyHours,
   hoursForPayload,
   normalizeHoursExceptions,
   type ListingDraft,
@@ -6,15 +8,14 @@ import {
 } from "./listBusiness.data";
 import { normalizeAccessibilityDraft } from "./listingAccessibility.data";
 import { normalizeOwnedBy } from "./listingOwnedBy.data";
-import {
-  emptyMenuDraft,
-  menuForPayload,
-  pricingModeOf,
-} from "./listingMenu.data";
+import { emptyMenuDraft, menuForPayload } from "./listingMenu.data";
+import { isSellingOnline, onlineDetailsForPayload } from "./listingOnline.data";
 import {
   completeServiceRows,
   servicesForPayload,
 } from "./listingServices.data";
+import { knownListingTags } from "./listingRetiredTags";
+import { effectivePricingMode, shopItemsForPayload } from "./listingShop.data";
 import { stripOwnerPersonalFields } from "./ownerPersonalFields";
 import type {
   CoManagerUpdateListingDto,
@@ -39,25 +40,36 @@ import type {
  * legacy draft can never POST the old `{ open, from, to }` form, and empties a
  * closed day's intervals (`hoursForPayload`), which the API requires and the
  * editor's own state deliberately does not. Services get the same treatment:
- * blank rows are dropped and the client-only React key is stripped.
+ * blank rows are dropped and the client-only React key is stripped. And it
+ * sends only the active kind's fields (see `withListingKind`): an online-only
+ * listing ships no neighbourhood, address, pin or hours, and a place ships no
+ * "Based in" city.
  */
 
 /**
- * Both priced lists. The visible one goes as typed (its problems block the
- * save through the missing-fields list). The hidden one loses any half-filled
- * rows, which the owner cannot see and so cannot fix.
+ * The three priced lists. The visible one goes as typed (its problems block
+ * the save through the missing-fields list). A hidden one loses any
+ * half-filled rows, which the owner cannot see and so cannot fix. The shop
+ * goes only while the listing sells online; the backend resets it otherwise.
  */
 function pricingPayload(draft: ListingDraft) {
-  const pricingMode = pricingModeOf(draft);
+  const pricingMode = effectivePricingMode(draft);
   const serviceRows = draft.services ?? [];
   return {
     pricingMode,
     services: servicesForPayload(
-      pricingMode === "menu" ? completeServiceRows(serviceRows) : serviceRows,
+      pricingMode === "services"
+        ? serviceRows
+        : completeServiceRows(serviceRows),
     ),
     menu: menuForPayload(draft.menu ?? emptyMenuDraft(), {
       shouldDropIncomplete: pricingMode !== "menu",
     }),
+    shopItems: isSellingOnline(draft)
+      ? shopItemsForPayload(draft.shopItems ?? [], {
+          shouldDropIncomplete: pricingMode !== "shop",
+        })
+      : [],
   };
 }
 
@@ -84,10 +96,12 @@ export function businessPayload(
     path: draft.path,
     name: draft.name.trim(),
     cats: draft.cats,
-    // Blank for an online-only listing, like the address below: the field is
-    // hidden once the toggle is on, so a neighbourhood picked before then
-    // must not ship. The API accepts an empty one for an online listing.
+    // Blank for an online-only listing, like the address below. The field is
+    // hidden then, so a neighbourhood picked before the switch must not ship.
     hood: draft.online ? "" : draft.hood,
+    // "Based in" belongs to an online listing alone. A place sends "", which
+    // the backend resolves to the directory's city as it always has.
+    city: draft.online ? (draft.city ?? "").trim() : "",
     badge: draft.badge,
     evidence: draft.evidence.trim(),
     price: draft.price,
@@ -105,6 +119,7 @@ export function businessPayload(
     ...pricingPayload(draft),
     langs: draft.langs,
     online: draft.online,
+    hasOnlineShop: !draft.online && draft.hasOnlineShop === true,
     // An online-only listing carries no location: never ship a stale address,
     // pin or neighbourhood (above) the member set before switching the toggle
     // on.
@@ -112,9 +127,24 @@ export function businessPayload(
     geocoded: draft.online ? false : draft.geocoded,
     latitude: draft.online ? null : draft.latitude,
     longitude: draft.online ? null : draft.longitude,
-    hours: hoursForPayload(draft.hours),
-    hoursNote: draft.hoursNote.trim(),
-    hoursExceptions: normalizeHoursExceptions(draft.hoursExceptions),
+    // An online listing keeps no opening hours: a closed week, no note (its
+    // reply note replaces it) and no dated overrides. The draft keeps what was
+    // typed, so switching back to a place brings it back.
+    hours: hoursForPayload(draft.online ? emptyHours() : draft.hours),
+    hoursNote: draft.online ? "" : draft.hoursNote.trim(),
+    hoursExceptions: draft.online
+      ? []
+      : normalizeHoursExceptions(draft.hoursExceptions),
+    // Always sent, the empty block included: the backend checks the main
+    // link on an update only when the body carries `onlineDetails`.
+    onlineDetails: onlineDetailsForPayload(draft.onlineDetails, draft),
+    // Write-only, and a member's alone: the admin bodies refuse the key, and
+    // staff can never accept the 18+ rules for a business.
+    ...(isAdultCategoryPicked(draft.cats) &&
+    draft.adultTermsAccepted === true &&
+    draft.isStaffAuthored !== true
+      ? { adultTermsAccepted: true }
+      : {}),
     social: draft.social,
     photos: draft.photos,
     alt: draft.alt,
@@ -158,17 +188,28 @@ function listingPayload(draft: ListingDraft): UpdateListingDto {
  * suggester and no affirming promise: the business makes that promise when it
  * takes the listing over. The API stores no owner-personal field on a
  * suggestion either way, which is what its narrower `SuggestListingDto`
- * return type enforces.
+ * return type enforces. Nor does it carry the 18+ acknowledgement: a
+ * suggester does not speak for the business, as staff do not.
+ *
+ * Either path carries only the vocabulary's tags (`knownListingTags`): the
+ * server refuses any other tag on a create, such as one a draft from before
+ * the online fields still holds.
  */
 export function draftToDto(
   draft: ListingDraft,
 ): CreateListingDto | SuggestListingDto {
+  const tags = knownListingTags(draft.tags);
   if (draft.path === "suggest") {
-    const { ownerRole: _ownerRole, ...business } = businessPayload(draft);
-    return business;
+    const {
+      ownerRole: _ownerRole,
+      adultTermsAccepted: _adultTermsAccepted,
+      ...business
+    } = businessPayload(draft);
+    return { ...business, tags };
   }
   return {
     ...listingPayload(draft),
+    tags,
     affirmingBaselineAccepted: draft.affirmingBaselineAccepted,
   };
 }

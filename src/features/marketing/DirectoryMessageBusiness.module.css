@@ -12,8 +12,15 @@
   border-top: 1px solid rgba(var(--line-rgb), 0.06);
 }
 
-.messageBtn {
+/* Allowed to wrap inside the card: the Portuguese label is wider than the
+   visit card at 360px. Two classes so it outranks `Button`'s own nowrap
+   whatever the stylesheet order. */
+.block > .messageBtn {
   width: auto;
+  max-width: 100%;
+  white-space: normal;
+  text-align: start;
+  line-height: 1.35;
 }
 
 /* What happens when they press it: the message becomes a direct message from

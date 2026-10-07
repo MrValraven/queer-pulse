@@ -4,6 +4,11 @@ import { DirectoryAccess } from "./DirectoryAccess";
 import { accessibilityLabelIds } from "./directoryAccessibilityLabels";
 import { DirectoryAccessibilityAnswers } from "./DirectoryAccessibilityAnswers";
 import { DirectoryLanguages } from "./DirectoryLanguages";
+import {
+  accessibilityQuestionsFor,
+  listingAnswerOf,
+  ONLINE_ACCESSIBILITY_QUESTION_SLUGS,
+} from "./listBusiness/listingAccessibility.data";
 import s from "./DirectorySpacePage.module.css";
 
 /**
@@ -24,26 +29,40 @@ import s from "./DirectorySpacePage.module.css";
  * claim. `DirectoryAccess` below is the legacy row, still rendered for a row
  * written before the structured answers existed.
  *
- * An online-only business (`place.online`) keeps the languages and drops
- * both accessibility parts. Every one of the six questions is about a
- * building (an entrance, a toilet, a room's noise). A listing with no building
- * has nothing to answer them about, and the wizard stores all six as
- * "unknown", so the page would show six "not yet told" rows that read as gaps
- * the owner left. Its heading narrows to match, asking only whether you will
- * be understood.
+ * An online-only business (`place.online`) answers the four online questions
+ * (image descriptions, captions, size-inclusive ranges, plain language),
+ * since the six above are all about a building, and it never shows the
+ * legacy row. Once it has answered any of the four, or written a note, the
+ * section shows those four answers under an "online access" heading. Until
+ * then it shows its languages alone under a languages heading: four "not yet
+ * told" rows would read as gaps the owner left.
  *
  * Renders nothing at all when the listing declares none of the three, which is
- * most demo fixtures, and nothing for an online listing that names no
- * languages, whatever accessibility data it carries. An empty heading would
- * read as "we checked and there is nothing", which is a different and untrue
- * claim.
+ * most demo fixtures, and nothing for an online listing that has answered no
+ * online question and names no languages. An empty heading would read as "we
+ * checked and there is nothing", which is a different and untrue claim.
  */
 export function DirectoryAccessSection({ place }: { place: DirectoryPlace }) {
   const { t } = useTranslation();
   const isOnline = place.online === true;
-  // Read only for a physical listing, so an online one's stored answers (the
-  // wizard saves all six as "unknown") can never hold the section open.
-  const accessibility = isOnline ? undefined : place.accessibility;
+  // An online listing shows its four online answers once it has given any of
+  // them (or a note); four "not told yet" rows would read as gaps the owner
+  // left, so a silent one shows its languages alone.
+  const onlineAnswers = ONLINE_ACCESSIBILITY_QUESTION_SLUGS.map((slug) =>
+    place.accessibility
+      ? listingAnswerOf(place.accessibility.answers, slug)
+      : "unknown",
+  );
+  const hasOnlineAccessibility =
+    isOnline &&
+    place.accessibility !== undefined &&
+    (onlineAnswers.some((answer) => answer !== "unknown") ||
+      (place.accessibility.note ?? "").trim() !== "");
+  const accessibility = isOnline
+    ? hasOnlineAccessibility
+      ? place.accessibility
+      : undefined
+    : place.accessibility;
   const hasAccessHighlights =
     !isOnline && accessibilityLabelIds(place).length > 0;
   const hasLanguages = (place.langs?.length ?? 0) > 0;
@@ -53,7 +72,9 @@ export function DirectoryAccessSection({ place }: { place: DirectoryPlace }) {
     <section className={s.sec}>
       <h2>
         {isOnline
-          ? t("marketing:directory.detail.languagesTitle")
+          ? hasOnlineAccessibility
+            ? t("marketing:directory.detail.accessTitleOnline")
+            : t("marketing:directory.detail.languagesTitle")
           : t("marketing:directory.detail.accessTitle")}
       </h2>
       <p className={s.subLine}>
@@ -63,6 +84,7 @@ export function DirectoryAccessSection({ place }: { place: DirectoryPlace }) {
         <DirectoryAccessibilityAnswers
           accessibility={accessibility}
           ownerFirstName={place.owner.first}
+          questions={accessibilityQuestionsFor(isOnline)}
         />
       )}
       <div className={s.accessRows}>

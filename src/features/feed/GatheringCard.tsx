@@ -100,7 +100,7 @@ export function GatheringCard({ item }: { item?: FeedItem } = {}) {
             </FeedStat>
           }
         />
-        <FeedQuote>{item.summary}</FeedQuote>
+        <FeedQuote className={styles.quoteAsTyped}>{item.summary}</FeedQuote>
         <FeedReasonLine reason={item.reason} subject={item.reasonSubject} />
         <FeedActions
           primary={
@@ -124,7 +124,7 @@ export function GatheringCard({ item }: { item?: FeedItem } = {}) {
         name={g.title}
         meta={`${g.venue} · ${g.host}`}
       />
-      <FeedQuote>{g.quote}</FeedQuote>
+      <FeedQuote className={styles.quoteAsTyped}>{g.quote}</FeedQuote>
       <FeedMeter
         ratio={g.going / g.capacity}
         label={

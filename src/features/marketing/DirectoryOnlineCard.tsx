@@ -1,22 +1,15 @@
 import { type ReactNode } from "react";
 import { Link } from "react-router-dom";
-import {
-  FiArrowRight,
-  FiBookmark,
-  FiCheck,
-  FiGlobe,
-  FiInstagram,
-  FiLock,
-  FiMail,
-  FiPhone,
-} from "react-icons/fi";
+import { FiBookmark, FiCheck, FiLock } from "react-icons/fi";
 import { Avatar, FadeIn, ImageSlot } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { activateOnKey } from "../../shared/lib/activateOnKey";
 import { routes } from "../../app/routeMap";
+import { DirectoryCardMeta } from "./DirectoryCardMeta";
 import { DirectoryCardRating } from "./DirectoryCardRating";
+import { DirectoryCardStatus } from "./DirectoryCardStatus";
+import { DirectoryCardVisit } from "./DirectoryCardVisit";
 import { SafeSpaceCardMark } from "./SafeSpaceCardMark";
-import { categoryLabel } from "./localCategories";
 import { OWNED_BY_TAG_KEYS } from "./listBusiness/listingOwnedBy.data";
 import {
   ownershipBadgeOf,
@@ -32,29 +25,15 @@ import s from "./DirectoryOnline.module.css";
  *  them. Labels reuse the listing wizard's own words for the same fields. */
 const CHANNELS: {
   key: "website" | "instagram" | "email" | "phone";
-  icon: ReactNode;
   labelKey: string;
 }[] = [
-  {
-    key: "website",
-    icon: <FiGlobe />,
-    labelKey: "marketing:listBusiness.step5.online.website",
-  },
+  { key: "website", labelKey: "marketing:listBusiness.step5.online.website" },
   {
     key: "instagram",
-    icon: <FiInstagram />,
     labelKey: "marketing:listBusiness.step5.online.instagram",
   },
-  {
-    key: "email",
-    icon: <FiMail />,
-    labelKey: "marketing:listBusiness.step5.online.email",
-  },
-  {
-    key: "phone",
-    icon: <FiPhone />,
-    labelKey: "marketing:listBusiness.step5.online.phone",
-  },
+  { key: "email", labelKey: "marketing:listBusiness.step5.online.email" },
+  { key: "phone", labelKey: "marketing:listBusiness.step5.online.phone" },
 ];
 
 /**
@@ -71,7 +50,12 @@ function OnlineCardWindow({
   corner: ReactNode;
 }) {
   const { t } = useTranslation();
-  const address = onlineAddressOf(place.social);
+  // The main link leads the bar when the listing has one, since it is where
+  // people buy.
+  const address = onlineAddressOf({
+    website: place.onlineSummary?.mainLink?.url ?? place.social.website,
+    instagram: place.social.instagram,
+  });
   const ownership = ownershipBadgeOf(place);
   const photo = place.photos?.wide ?? null;
 
@@ -119,10 +103,12 @@ function OnlineCardWindow({
 }
 
 /**
- * One online-only business on the Online tab. Shares the grid card's surface,
- * type and footer so the two tabs read as one directory, and swaps the parts
- * that only make sense for a door (neighbourhood, opening hours, walking time)
- * for the ones that matter online: where to find them.
+ * One business on the Online tab: an online-only one, or a place that also
+ * sells online. Shares the grid card's surface, type and footer so the tabs
+ * read as one directory. Its window, meta line and status slot read the
+ * listing's kind (`DirectoryCardMeta`, `DirectoryCardStatus`), and it adds
+ * the channels that matter online: where to find them. No walking time: the
+ * Online tab never orders by distance.
  */
 export function DirectoryOnlineCard({
   place,
@@ -180,13 +166,7 @@ export function DirectoryOnlineCard({
         </div>
         <DirectoryCardRating place={place} />
       </div>
-      <div className={card.metaRow}>
-        <span className={card.catPill}>{categoryLabel(t, place.cat)}</span>
-        <span className={s.onlineTag}>
-          <span className={s.onlineDot} aria-hidden />
-          {t("marketing:directory.detail.onlineBusiness")}
-        </span>
-      </div>
+      <DirectoryCardMeta place={place} isOnOnlineTab />
       <div className={card.desc}>{place.desc}</div>
 
       {(place.ownedBy ?? []).length > 0 && (
@@ -207,7 +187,6 @@ export function DirectoryOnlineCard({
           <ul className={s.channelList}>
             {channels.map((channel) => (
               <li key={channel.key} className={s.channel}>
-                <span aria-hidden>{channel.icon}</span>
                 {t(channel.labelKey)}
               </li>
             ))}
@@ -215,23 +194,24 @@ export function DirectoryOnlineCard({
         </div>
       )}
 
-      <div className={card.foot}>
+      <div className={`${card.foot} ${s.foot}`}>
+        <DirectoryCardStatus place={place} />
         {place.owner.first !== "" ? (
-          <span className={card.host}>
+          <span className={card.host} title={place.owner.first}>
             <Avatar
               initials={place.owner.initials}
               tint={place.owner.tint}
               src={place.owner.avatarUrl ?? undefined}
               size={20}
             />
-            <span className={card.hostName}>{place.owner.first}</span>
+            <span className={`${card.hostName} ${s.hostName}`}>
+              {place.owner.first}
+            </span>
           </span>
         ) : (
           <span />
         )}
-        <span className={card.visit}>
-          {t("marketing:directory.card.visit")} <FiArrowRight aria-hidden />
-        </span>
+        <DirectoryCardVisit place={place} />
       </div>
     </FadeIn>
   );

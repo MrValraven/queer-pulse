@@ -128,7 +128,7 @@ export const PRESS_DATA: YearGroup[] = [
         sourceMuted: true,
         source: "Diário de Notícias",
         sourceKind: "op-ed",
-        title: <>"A invite-only network · who's left out?"</>,
+        title: <>"A vouched-for network · who's left out?"</>,
         meta: (
           <>
             Critical op-ed by António Marreiros · we replied publicly ·{" "}

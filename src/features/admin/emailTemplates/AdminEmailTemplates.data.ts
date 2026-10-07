@@ -46,7 +46,7 @@ export const EMAIL_TEMPLATES_DEMO: EmailTemplateAdminDTO[] = [
           {
             id: "welcome-en-about",
             type: "paragraph",
-            text: "QueerPulse is an invite-only community for queer and trans folks, rooted in Lisbon. It's a place to find your people and share what matters, with no ads and no algorithm deciding what you see.",
+            text: "QueerPulse is a vouched-for community for queer and trans folks, rooted in Lisbon. It's a place to find your people and share what matters, with no ads and no algorithm deciding what you see.",
           },
           {
             id: "welcome-en-inside",
@@ -120,7 +120,7 @@ export const EMAIL_TEMPLATES_DEMO: EmailTemplateAdminDTO[] = [
           {
             id: "welcome-pt-about",
             type: "paragraph",
-            text: "O QueerPulse é uma comunidade só por convite para pessoas queer e trans, com raízes em Lisboa. É um sítio para encontrares a tua gente e partilhares o que importa, sem anúncios e sem nenhum algoritmo a decidir o que vês.",
+            text: "O QueerPulse é uma comunidade de votos de confiança para pessoas queer e trans, com raízes em Lisboa. É um sítio para encontrares a tua gente e partilhares o que importa, sem anúncios e sem nenhum algoritmo a decidir o que vês.",
           },
           {
             id: "welcome-pt-inside",

@@ -29,6 +29,7 @@ export function useListingSubmit({
   saveAndExit,
   flashClass,
   onPhotosRejected,
+  isEdit = false,
 }: {
   setStep: Dispatch<SetStateAction<number>>;
   saveAndExit: () => Promise<boolean>;
@@ -36,6 +37,8 @@ export function useListingSubmit({
   flashClass?: string;
   /** Receives the photo slots the server refused (empty when none were). */
   onPhotosRejected: (slots: PhotoKey[]) => void;
+  /** An edit has no step 0, so an `online` error routes to the basics. */
+  isEdit?: boolean;
 }) {
   const navigate = useNavigate();
   const { t, language } = useTranslation();
@@ -45,7 +48,7 @@ export function useListingSubmit({
 
   const routeSubmitError = useCallback(
     (error: unknown, showGenericError: () => void) => {
-      const target = resolveListing422(error, { t, language });
+      const target = resolveListing422(error, { t, language }, { isEdit });
       if (target) {
         setStep(target.step);
         setServerError(target.message);
@@ -59,7 +62,7 @@ export function useListingSubmit({
       showGenericError();
       scrollToTop();
     },
-    [setStep, flashClass, onPhotosRejected, t, language],
+    [setStep, flashClass, onPhotosRejected, t, language, isEdit],
   );
 
   const saveAndFinishLater = useCallback(async () => {

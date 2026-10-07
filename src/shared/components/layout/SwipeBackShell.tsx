@@ -1,10 +1,11 @@
 import {
   useCallback,
+  useEffect,
   type PointerEvent as ReactPointerEvent,
   type ReactNode,
 } from "react";
 import { useNavigate } from "react-router-dom";
-import { m, useDragControls, type PanInfo } from "motion/react";
+import { m, useDragControls, useMotionValue, type PanInfo } from "motion/react";
 import { useMediaQuery } from "../../hooks/useMediaQuery";
 import { mediaMax } from "../../theme/breakpoints";
 import { useMotionPrefs } from "../../../app/providers/motionPrefs";
@@ -24,9 +25,18 @@ const COMMIT_FRACTION = 0.35;
  * secondary to the COMMIT_FRACTION distance check above. */
 const FLICK_VELOCITY = 500;
 
+/** Desktop's transform template: an empty string, so motion never writes an
+ * inline `transform` there (see `SwipeBackShell`). Module-level so the prop
+ * keeps one identity across renders. */
+const withoutTransform = () => "";
+
 /**
  * iOS-style edge-swipe-to-go-back for the routed content plane. Desktop has
- * no touch surface to swipe, so it renders `children` unwrapped.
+ * no touch surface to swipe, so there the wrapper carries no gesture, no
+ * class and no transform. The wrapper itself is rendered at every width,
+ * because swapping it for a bare fragment at the breakpoint changed the
+ * element type above the routed page, and React remounted the whole page and
+ * dropped its state (the selected tab, a half-filled form).
  *
  * On mobile, `children` sit inside a draggable surface that only *arms* when
  * a pointer goes down within `EDGE_ZONE_PX` of the left edge: `dragListener`
@@ -52,6 +62,17 @@ export function SwipeBackShell({ children }: { children: ReactNode }) {
   const { reducedMotion } = useMotionPrefs();
   const navigate = useNavigate();
   const dragControls = useDragControls();
+  // The drag writes to this value (motion's drag reads `x` from the element's
+  // bound values). Bound at every width so a reset below always re-renders.
+  const swipeOffsetX = useMotionValue(0);
+
+  // Crossing to desktop mid-drag (a rotated tablet) would otherwise strand
+  // the surface at the finger's offset: with `drag` now off, motion ignores
+  // the rest of the gesture and never springs it back. `jump` also stops a
+  // spring-back already in flight.
+  useEffect(() => {
+    if (!isMobile) swipeOffsetX.jump(0);
+  }, [isMobile, swipeOffsetX]);
 
   const armIfEdgeStart = useCallback(
     (event: ReactPointerEvent<HTMLDivElement>) => {
@@ -75,23 +96,29 @@ export function SwipeBackShell({ children }: { children: ReactNode }) {
     [navigate],
   );
 
-  if (!isMobile) return <>{children}</>;
+  // Desktop passes `drag={false}` and no `dragControls`, which keeps motion's
+  // drag feature from ever starting there; the transform template keeps even
+  // a `transform: none` off the element, so a fixed-position descendant is
+  // never re-anchored to this wrapper (see MoreMenu).
+  const gestureProps = isMobile
+    ? {
+        className: styles.surface,
+        onPointerDown: armIfEdgeStart,
+        drag: "x" as const,
+        dragListener: false,
+        dragControls,
+        dragConstraints: { left: 0, right: 0 },
+        dragElastic: { left: 0, right: 0.9 },
+        dragMomentum: false,
+        dragTransition: reducedMotion
+          ? { bounceStiffness: 700, bounceDamping: 60 }
+          : undefined,
+        onDragEnd,
+      }
+    : { drag: false, transformTemplate: withoutTransform };
 
   return (
-    <m.div
-      className={styles.surface}
-      onPointerDown={armIfEdgeStart}
-      drag="x"
-      dragListener={false}
-      dragControls={dragControls}
-      dragConstraints={{ left: 0, right: 0 }}
-      dragElastic={{ left: 0, right: 0.9 }}
-      dragMomentum={false}
-      dragTransition={
-        reducedMotion ? { bounceStiffness: 700, bounceDamping: 60 } : undefined
-      }
-      onDragEnd={onDragEnd}
-    >
+    <m.div style={{ x: swipeOffsetX }} {...gestureProps}>
       {children}
     </m.div>
   );

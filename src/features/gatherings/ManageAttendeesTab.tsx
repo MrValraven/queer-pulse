@@ -1,7 +1,6 @@
 import { useMemo, useState } from "react";
 import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { BarFromGatheringModal } from "./BarFromGatheringModal";
@@ -13,6 +12,12 @@ import {
   WaitlistAttendeeActions,
 } from "./ManageAttendeeActions";
 import { useAttendees } from "./api/useAttendees";
+import { ManageAttendeesCapacity } from "./ManageAttendeesCapacity";
+import { useAttendeeSearch } from "./useAttendeeSearch";
+import {
+  ManageAttendeesSearch,
+  ManageAttendeesSearchFailure,
+} from "./ManageAttendeesSearch";
 import { getAttendeesCsv } from "./api/events.api";
 import { downloadBlob } from "../../shared/lib/downloadBlob";
 import { AttendeeSection } from "./ManageGatheringAttendees";
@@ -36,7 +41,6 @@ export function AttendeesTab({
   hostSlug?: string;
 }) {
   const { t } = useTranslation();
-  const fmt = useFormat();
   const { showToast } = useToast();
   const { demoMode } = useDemoMode();
   const [inviteOpen, setInviteOpen] = useState(false);
@@ -45,20 +49,39 @@ export function AttendeesTab({
   const [loadingMoreWaitlist, setLoadingMoreWaitlist] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
   const { data, loadMoreGoing, loadMoreWaitlist } = useAttendees(slug);
-  const going = data?.going ?? [];
-  const waitlist = data?.waitlist ?? [];
-  const goingCount = data?.goingCount ?? going.length;
-  const waitlistCount = data?.waitlistCount ?? waitlist.length;
+  const onLoadMoreGoing = async () => {
+    setLoadingMoreGoing(true);
+    await loadMoreGoing();
+    setLoadingMoreGoing(false);
+  };
+  const onLoadMoreWaitlist = async () => {
+    setLoadingMoreWaitlist(true);
+    await loadMoreWaitlist();
+    setLoadingMoreWaitlist(false);
+  };
+  const goingCount = data?.goingCount ?? data?.going.length ?? 0;
+  const waitlistCount = data?.waitlistCount ?? data?.waitlist.length ?? 0;
   const capacity = data?.capacity ?? 20;
   // The bar counts seats (LOC-07). "Ten going" on a twenty-seat gathering can
   // mean thirty people once the declared plus-ones are counted, so the bar
   // measures what capacity actually measures.
   const seatsTaken = data?.seatsTaken ?? goingCount;
-  const percentFilled = capacity
-    ? Math.min(100, Math.round((seatsTaken / capacity) * 100))
-    : 0;
-  const hasMoreGoing = data?.hasMoreGoing ?? false;
-  const hasMoreWaitlist = data?.hasMoreWaitlist ?? false;
+  const search = useAttendeeSearch(slug, {
+    going: {
+      attendees: data?.going ?? [],
+      hasMore: data?.hasMoreGoing ?? false,
+      loadingMore: loadingMoreGoing,
+      onLoadMore: () => void onLoadMoreGoing(),
+      headingCount: goingCount,
+    },
+    waitlist: {
+      attendees: data?.waitlist ?? [],
+      hasMore: data?.hasMoreWaitlist ?? false,
+      loadingMore: loadingMoreWaitlist,
+      onLoadMore: () => void onLoadMoreWaitlist(),
+      headingCount: waitlistCount,
+    },
+  });
   // Everyone already going is hidden from the invite picker. The attendee
   // list carries no invited status, so only the going rows loaded so far
   // are known here.
@@ -84,31 +107,16 @@ export function AttendeesTab({
     }
   };
 
-  const onLoadMoreGoing = async () => {
-    setLoadingMoreGoing(true);
-    await loadMoreGoing();
-    setLoadingMoreGoing(false);
-  };
-  const onLoadMoreWaitlist = async () => {
-    setLoadingMoreWaitlist(true);
-    await loadMoreWaitlist();
-    setLoadingMoreWaitlist(false);
-  };
-
   return (
     <div>
       <div className={styles.attToolbar}>
-        <input
-          className={styles.attSearch}
-          type="text"
-          aria-label={t("gatherings:manage.attendees.searchPlaceholder")}
-          placeholder={t("gatherings:manage.attendees.searchPlaceholder")}
+        <ManageAttendeesSearch
+          query={search.query}
+          onQueryChange={search.setQuery}
         />
-        {/* A real download (PRD-190). This button used to raise a "Exported"
-            toast and produce no file, so a host who needed the door list
-            offline had to read it off their phone. Demo has no roster behind
-            it, so it keeps the toast and leaves the mock guest list off the
-            host's disk. */}
+        {/* A real download (PRD-190). Demo has no roster behind it, so it
+            keeps the toast and leaves the mock guest list off the host's
+            disk. */}
         <Button
           variant="ghost"
           className={styles.actionBtn}
@@ -130,46 +138,22 @@ export function AttendeesTab({
         </Button>
       </div>
 
-      <div className={styles.capWrap}>
-        <div className={styles.capLabel}>
-          <span>
-            {t("gatherings:manage.attendees.seatsFilled", {
-              seats: seatsTaken,
-              capacity,
-            })}
-            {seatsTaken !== goingCount && (
-              <span className={styles.capNote}>
-                {t("gatherings:manage.attendees.seatsFromGuests", {
-                  count: goingCount,
-                })}
-              </span>
-            )}
-          </span>
-          <span className={styles.capPct}>
-            {fmt.number(percentFilled / 100, {
-              style: "percent",
-              maximumFractionDigits: 0,
-            })}
-          </span>
-        </div>
-        <div className={styles.capBar}>
-          <div
-            className={styles.capFill}
-            style={{ width: `${percentFilled}%` }}
-          />
-        </div>
-      </div>
+      <ManageAttendeesCapacity
+        seatsTaken={seatsTaken}
+        capacity={capacity}
+        goingCount={goingCount}
+      />
+      {search.hasFailed && (
+        <ManageAttendeesSearchFailure onRetry={search.retry} />
+      )}
 
       <AttendeeSection
+        {...search.going}
         heading={t("gatherings:manage.attendees.goingHeading", {
-          count: goingCount,
+          count: search.going.headingCount,
         })}
-        attendees={going}
         hostSlug={hostSlug}
         customRsvpQuestion={customRsvpQuestion}
-        hasMore={hasMoreGoing}
-        loadingMore={loadingMoreGoing}
-        onLoadMore={() => void onLoadMoreGoing()}
         renderAction={(attendee) => (
           <GoingAttendeeActions
             slug={slug}
@@ -180,15 +164,12 @@ export function AttendeesTab({
         )}
       />
       <AttendeeSection
+        {...search.waitlist}
         heading={t("gatherings:manage.attendees.waitlistHeading", {
-          count: waitlistCount,
+          count: search.waitlist.headingCount,
         })}
         headingStyle={{ marginTop: 20 }}
-        attendees={waitlist}
         customRsvpQuestion={customRsvpQuestion}
-        hasMore={hasMoreWaitlist}
-        loadingMore={loadingMoreWaitlist}
-        onLoadMore={() => void onLoadMoreWaitlist()}
         renderAction={(attendee) => (
           <WaitlistAttendeeActions slug={slug} attendee={attendee} />
         )}

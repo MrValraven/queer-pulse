@@ -1,4 +1,4 @@
-/* Segmented spinbutton date input — the typeable half of DatePicker. Tokens
+/* Segmented spinbutton date input: the typeable half of DatePicker. Tokens
    only, mirroring Calendar.module.css / Select.module.css conventions. */
 
 .field {
@@ -12,13 +12,18 @@
   background: var(--paper);
   font-family: var(--sans);
   font-variant-numeric: tabular-nums;
-  transition:
-    border-color 0.16s var(--ease),
-    box-shadow 0.16s var(--ease);
+  transition: border-color 0.16s var(--ease);
 }
+/* The field-wide halo while any segment has focus. It was `--ring-plum`, whose
+   plum channels never flip, so on the dark page it vanished. Drawn as an
+   outline on `--line-rgb` at the same 3px and 16%: identical to the old ring
+   in light (`--line-rgb` is `--plum-rgb` there) and a cream halo in dark.
+   Outlines follow `border-radius`, and the offset of 0 puts it exactly where
+   the spread shadow sat. */
 .field:focus-within {
   border-color: var(--line-strong);
-  box-shadow: var(--ring-plum);
+  outline: 3px solid rgba(var(--line-rgb), 0.16);
+  outline-offset: 0;
 }
 .field.invalid {
   border-color: var(--danger);
@@ -49,9 +54,15 @@
     background 0.16s var(--ease),
     color 0.16s var(--ease);
 }
+/* The house keyboard ring (see `--focus-ring` in tokens/effects.css): this
+   class-scoped rule outranks the global `:focus-visible`, so it restates the
+   two-tone ring that clears both themes. The wash still marks the segment
+   being typed into. */
 .segment:focus-visible {
   background: var(--wash);
-  box-shadow: var(--ring-plum);
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }
 .segmentEmpty {
   color: var(--ink-40);

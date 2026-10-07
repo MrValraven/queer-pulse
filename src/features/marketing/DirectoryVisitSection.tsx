@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { FiArrowRight, FiHeart } from "react-icons/fi";
+import { FiArrowRight, FiExternalLink, FiHeart } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
@@ -105,11 +105,27 @@ function DirectoryVisitCard({
   // A closed business's inbox is not somewhere to write to (see
   // `DirectoryContactRows` for the same distinction on the rows themselves), so
   // the email fallback disappears with it and the card may have no action left.
-  const primaryAction = place.social.website
-    ? "website"
-    : place.social.email && !isPermanentlyClosed
-      ? "email"
+  //
+  // A business that sells online already has its one primary action, the
+  // main link in "Ordering & delivery". The card's action then steps down to
+  // a ghost button, and a website that IS that main link is not repeated.
+  // Only where the page shows that block (see `DirectorySpaceMain`).
+  const orderingLink =
+    place.online || place.hasOnlineShop
+      ? (place.onlineDetails?.mainLink ?? place.onlineSummary?.mainLink ?? null)
       : null;
+  const isWebsiteTheOrderingLink =
+    orderingLink !== null &&
+    place.social.website !== undefined &&
+    isSameWebsite(place.social.website, orderingLink.url);
+  const primaryAction = isWebsiteTheOrderingLink
+    ? null
+    : place.social.website
+      ? "website"
+      : place.social.email && !isPermanentlyClosed
+        ? "email"
+        : null;
+  const ctaVariant = orderingLink ? "ghost" : "primary";
   const hasSavedSignal = place.savedCount != null && place.savedCount > 0;
   const areaLine = place.online ? "" : placeAreaParts(place).join(" · ");
 
@@ -175,7 +191,22 @@ function DirectoryVisitCard({
                 )}
                 {primaryAction && (
                   <div className={s.cta}>
-                    {primaryAction === "website" ? (
+                    {primaryAction === "website" && orderingLink ? (
+                      <Button
+                        variant="ghost"
+                        className={s.ctaBtn}
+                        href={websiteHref(place.social.website!)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {t("marketing:directory.detail.visitWebsite")}{" "}
+                        <FiExternalLink aria-hidden />
+                        <span className="visuallyHidden">
+                          {" "}
+                          {t("marketing:directory.detail.ordering.newTab")}
+                        </span>
+                      </Button>
+                    ) : primaryAction === "website" ? (
                       <Button
                         variant="primary"
                         className={s.ctaBtn}
@@ -186,7 +217,7 @@ function DirectoryVisitCard({
                       </Button>
                     ) : (
                       <Button
-                        variant="primary"
+                        variant={ctaVariant}
                         className={s.ctaBtn}
                         href={`mailto:${place.social.email}`}
                       >
@@ -203,4 +234,15 @@ function DirectoryVisitCard({
       </div>
     </section>
   );
+}
+
+/** Whether two typed web addresses point at the same page: scheme, `www.`
+ *  and a trailing slash aside, case-insensitive. */
+function isSameWebsite(first: string, second: string): boolean {
+  const normalize = (raw: string) =>
+    websiteHref(raw)
+      .toLowerCase()
+      .replace(/^https?:\/\/(www\.)?/, "")
+      .replace(/\/+$/, "");
+  return normalize(first) === normalize(second);
 }

@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024" role="img" aria-label="QueerPulse">
+  <rect width="1024" height="1024" fill="#2D1B3D"/>
+  <path d="M687 435.8 A207 258.7 -11.4 1 1 281.3 517.6 A207 258.7 -11.4 1 1 687 435.8Z" fill="none" stroke="#F7F3EE" stroke-width="19.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M523.3 634.4 L561.3 722.8 L621 785.1 L694.7 804.2 L763 765.7" fill="none" stroke="#F7F3EE" stroke-width="19.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="561.3" cy="722.8" r="35.6" fill="#F7F3EE"/>
+  <circle cx="450.6" cy="725.7" r="29.1" fill="#F7F3EE"/>
+  <circle cx="356.4" cy="665.7" r="35.6" fill="#F7F3EE"/>
+  <circle cx="296.8" cy="570.7" r="43.1" fill="#E8775A"/>
+  <circle cx="275" cy="460.5" r="43.1" fill="#F7F3EE"/>
+  <circle cx="293.9" cy="349.9" r="35.6" fill="#4A8C6F"/>
+  <circle cx="358.4" cy="258.8" r="29.1" fill="#F7F3EE"/>
+  <circle cx="462.1" cy="219.8" r="29.1" fill="#F7F3EE"/>
+  <circle cx="568.7" cy="251.6" r="35.6" fill="#E8775A"/>
+  <circle cx="646.3" cy="332.3" r="43.1" fill="#F7F3EE"/>
+  <circle cx="687.3" cy="436.8" r="43.1" fill="#F7F3EE"/>
+  <circle cx="689.3" cy="549.1" r="35.6" fill="#F7F3EE"/>
+  <circle cx="648.1" cy="653.2" r="29.1" fill="#F7F3EE"/>
+  <circle cx="523.3" cy="634.4" r="35.6" fill="#4A8C6F"/>
+  <circle cx="621" cy="785.1" r="29.1" fill="#F7F3EE"/>
+  <circle cx="694.7" cy="804.2" r="29.1" fill="#F7F3EE"/>
+  <circle cx="763" cy="765.7" r="29.1" fill="#E8775A"/>
+  <circle cx="484.2" cy="468.1" r="71.1" fill="none" stroke="#E8775A" stroke-width="12.9" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="484.2" cy="468.1" r="45.3" fill="#E8775A"/>
+</svg>

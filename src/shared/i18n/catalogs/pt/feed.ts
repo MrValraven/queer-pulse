@@ -281,6 +281,18 @@ export const feed: Catalog = {
   "memberCard.group.weekOf_one": "{count} pessoa juntou-se na semana de {date}",
   "memberCard.group.weekOf_other":
     "{count} pessoas juntaram-se na semana de {date}",
+  "memberCard.group.thisWeekMore_one":
+    "Mais {count} pessoa juntou-se esta semana",
+  "memberCard.group.thisWeekMore_other":
+    "Mais {count} pessoas juntaram-se esta semana",
+  "memberCard.group.lastWeekMore_one":
+    "Mais {count} pessoa juntou-se na semana passada",
+  "memberCard.group.lastWeekMore_other":
+    "Mais {count} pessoas juntaram-se na semana passada",
+  "memberCard.group.weekOfMore_one":
+    "Mais {count} pessoa juntou-se na semana de {date}",
+  "memberCard.group.weekOfMore_other":
+    "Mais {count} pessoas juntaram-se na semana de {date}",
   "memberCard.group.showAll": "Ver todas as {count}",
   "memberCard.group.showFewer": "Ver menos",
   "memberCard.tags.inCommon": "em comum",

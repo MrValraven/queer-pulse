@@ -45,9 +45,12 @@ export const LISTING_EDITOR_SECTIONS: ListingEditorSectionDefinition[] = [
     id: "lb-editor-basics",
     labelKey: "marketing:listBusiness.wizard.pill.basics",
     anchors: [
+      ANCHOR.online,
       ANCHOR.name,
       ANCHOR.cats,
+      ANCHOR.adultTerms,
       ANCHOR.hood,
+      ANCHOR.city,
       ANCHOR.badge,
       ANCHOR.price,
       ANCHOR.blurb,
@@ -73,6 +76,16 @@ export const LISTING_EDITOR_SECTIONS: ListingEditorSectionDefinition[] = [
       ANCHOR.address,
       ANCHOR.hours,
       ANCHOR.hoursExceptions,
+      ANCHOR.hasOnlineShop,
+      ANCHOR.mainLink,
+      ANCHOR.moreLinks,
+      ANCHOR.fulfilment,
+      ANCHOR.pickupNote,
+      ANCHOR.shipsFrom,
+      ANCHOR.payments,
+      ANCHOR.sessionFormats,
+      ANCHOR.registration,
+      ANCHOR.replyNote,
       ANCHOR.social,
     ],
   },
@@ -195,14 +208,12 @@ const CO_MANAGER_EDITOR_SECTION_BY_KEY = Object.fromEntries(
 ) as Record<ListingEditorSectionKey, ListingEditorSectionDefinition>;
 
 /**
- * The accessibility questions are all about a physical place (step-free
- * entrance, toilets, a quiet corner), so an online-only listing has nothing
- * to answer there and the section leaves the page with its jump-nav entry.
- * Its stored answers stay in the draft untouched, so switching the listing
- * back to a physical one brings them back as they were.
+ * An online listing answers its own four accessibility questions
+ * (`ONLINE_ACCESSIBILITY_QUESTIONS`), so no section leaves the page for it.
+ * Kept as the one place a section could be hidden by kind.
  */
 const ONLINE_HIDDEN_SECTION_KEYS: ReadonlySet<ListingEditorSectionKey> =
-  new Set(["accessibility"]);
+  new Set<ListingEditorSectionKey>();
 
 function withoutOnlineHiddenSections(
   sections: ListingEditorSectionDefinition[],
@@ -256,16 +267,70 @@ export function editorSectionByKeyFor(
 }
 
 const MENU_SECTION_LABEL_KEY = "marketing:listBusiness.editor.section.menu";
+const SHOP_SECTION_LABEL_KEY = "marketing:listBusiness.editor.section.shop";
+const PRACTICAL_ONLINE_LABEL_KEY =
+  "marketing:listBusiness.editor.section.practicalOnline";
+const ACCESSIBILITY_ONLINE_LABEL_KEY =
+  "marketing:listBusiness.editor.section.accessibilityOnline";
 
-/** The pricing section as this listing shows it: titled "Menu" in menu mode.
- *  Same id and anchors either way, so jump links and missing badges hold. */
+/** The pricing section as this listing shows it: titled "Menu" in menu mode
+ *  and "In the shop" in shop mode. Same id and anchors in every mode, so jump
+ *  links and missing badges hold. */
 export function pricingSectionDefinition(
   section: ListingEditorSectionDefinition,
   pricingMode: ListingPricingMode,
 ): ListingEditorSectionDefinition {
-  return pricingMode === "menu"
-    ? { ...section, labelKey: MENU_SECTION_LABEL_KEY }
+  if (pricingMode === "menu") {
+    return { ...section, labelKey: MENU_SECTION_LABEL_KEY };
+  }
+  if (pricingMode === "shop") {
+    return { ...section, labelKey: SHOP_SECTION_LABEL_KEY };
+  }
+  return section;
+}
+
+/** The practical section as an online listing shows it: "How people buy
+ *  from you". Same id and anchors, so jump links and counts hold. */
+export function practicalSectionDefinition(
+  section: ListingEditorSectionDefinition,
+  isOnline: boolean,
+): ListingEditorSectionDefinition {
+  return isOnline
+    ? { ...section, labelKey: PRACTICAL_ONLINE_LABEL_KEY }
     : section;
+}
+
+/** The accessibility section as an online listing shows it: "Online access". */
+export function accessibilitySectionDefinition(
+  section: ListingEditorSectionDefinition,
+  isOnline: boolean,
+): ListingEditorSectionDefinition {
+  return isOnline
+    ? { ...section, labelKey: ACCESSIBILITY_ONLINE_LABEL_KEY }
+    : section;
+}
+
+/** The nav's section list titled for the pricing mode and the listing's
+ *  kind. Returns the same array when nothing is retitled, which keeps the
+ *  scroll-spy's dependency stable. */
+export function withListingKindLabels(
+  sections: ListingEditorSectionDefinition[],
+  pricingMode: ListingPricingMode,
+  isOnline: boolean,
+): ListingEditorSectionDefinition[] {
+  if (pricingMode === "services" && !isOnline) return sections;
+  return sections.map((section) => {
+    if (section.key === "services") {
+      return pricingSectionDefinition(section, pricingMode);
+    }
+    if (section.key === "practical") {
+      return practicalSectionDefinition(section, isOnline);
+    }
+    if (section.key === "accessibility") {
+      return accessibilitySectionDefinition(section, isOnline);
+    }
+    return section;
+  });
 }
 
 /** The nav's section list with the pricing section titled for the mode.
@@ -274,7 +339,7 @@ export function withPricingModeLabel(
   sections: ListingEditorSectionDefinition[],
   pricingMode: ListingPricingMode,
 ): ListingEditorSectionDefinition[] {
-  if (pricingMode !== "menu") return sections;
+  if (pricingMode === "services") return sections;
   return sections.map((section) =>
     section.key === "services"
       ? pricingSectionDefinition(section, pricingMode)

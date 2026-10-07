@@ -119,6 +119,9 @@ export const GATE_ANCHOR = {
   cover: "cg-gate-cover",
   /** Chapter 2's neighbourhood field (a soft readiness row). */
   hood: "cg-gate-hood",
+  /** Chapter 2's venue field, where a publish the server refused for its
+   *  linked venue sends the host. */
+  venue: "cg-gate-venue",
   /** Chapter 4's six accessibility questions (a soft readiness row). */
   accessibility: "cg-gate-accessibility",
 } as const;

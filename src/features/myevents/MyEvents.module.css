@@ -809,28 +809,34 @@ button.cal-cell.has {
 .agenda {
   margin-top: 26px;
 }
+/* One agenda group (label, optional subtitle, cards). The gap between groups
+   lives here: each label is the first child of its own group, so a
+   label-level first-child rule would collapse every seam. */
+.grp + .grp {
+  margin-top: 40px;
+}
 .grp-label {
   font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--ink-40);
-  margin: 28px 0 14px;
+  margin: 6px 0 14px;
 }
-.grp-label:first-child {
-  margin-top: 6px;
+.grp + .grp .grp-label {
+  margin-top: 0;
 }
 /* A quieter line under a group label (the ended group says what it holds).
    It tucks up under the label, which keeps its own bottom margin. */
 .grp-sub {
   font-size: var(--text-12-5);
   color: var(--ink-60);
-  margin: -8px 0 14px;
+  margin: -6px 0 18px;
 }
 .ev-list {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
 }
 
 /* ---------- Event card ---------- */
@@ -847,9 +853,9 @@ button.cal-cell.has {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-18);
-  padding: 18px 20px;
+  padding: 20px 22px;
   display: flex;
-  gap: 18px;
+  gap: 20px;
   align-items: flex-start;
   transition:
     box-shadow 0.22s var(--ease),
@@ -1204,7 +1210,7 @@ button.cal-cell.has {
 .ev-actions {
   display: flex;
   flex-direction: column;
-  gap: 7px;
+  gap: 10px;
   align-items: flex-end;
 }
 .ev-actions .btn {

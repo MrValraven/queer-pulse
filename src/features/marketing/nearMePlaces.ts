@@ -1,5 +1,5 @@
 import { distanceInMetres, type Coordinates } from "./geoDistance";
-import type { LocalPlace } from "./localPlaces";
+import { compareNeighbourhoods, type LocalPlace } from "./localPlaces";
 
 /**
  * Ordering the Local list by how far each place is from the member, and the
@@ -80,7 +80,9 @@ export function sortByDistance(
  * The same rule as `sortByDistance` covers what cannot be measured: a place
  * with no coordinates sits at the end of its own neighbourhood, and a
  * neighbourhood where nothing could be measured sits at the end of the list,
- * alphabetically among its like. Nothing is given a fabricated distance.
+ * alphabetically among its like. Nothing is given a fabricated distance. A
+ * place with no neighbourhood at all (an online listing) sits after every
+ * named neighbourhood, however near its group's nearest place is.
  */
 export function sortByNeighbourhoodDistance(
   places: LocalPlace[],
@@ -98,16 +100,19 @@ export function sortByNeighbourhoodDistance(
 
   return [...places].sort((first, second) => {
     if (first.neighbourhood !== second.neighbourhood) {
+      if (first.neighbourhood === "" || second.neighbourhood === "") {
+        return compareNeighbourhoods(first.neighbourhood, second.neighbourhood);
+      }
       const firstNearest = nearestByNeighbourhood.get(first.neighbourhood);
       const secondNearest = nearestByNeighbourhood.get(second.neighbourhood);
       if (firstNearest === undefined && secondNearest === undefined) {
-        return first.neighbourhood.localeCompare(second.neighbourhood);
+        return compareNeighbourhoods(first.neighbourhood, second.neighbourhood);
       }
       if (firstNearest === undefined) return 1;
       if (secondNearest === undefined) return -1;
       return (
         firstNearest - secondNearest ||
-        first.neighbourhood.localeCompare(second.neighbourhood)
+        compareNeighbourhoods(first.neighbourhood, second.neighbourhood)
       );
     }
     const firstMetres = metresById.get(first.id);

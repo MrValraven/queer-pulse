@@ -7959,12 +7959,25 @@ export const admin: Catalog = {
   "marketingVideos.films.pro.title": "Pro",
   "marketingVideos.films.pro.summary":
     "Filmado como um lançamento de produto: palco escuro, uma câmara a percorrer os seis cartões e um mapa de Lisboa em pontos.",
-  "marketingVideos.card.meta": "{duration} · 1080p · 30 fps",
+  "marketingVideos.films.vouch.title": "Voto de confiança",
+  "marketingVideos.films.vouch.summary":
+    "O convite de uma pessoa amiga, do princípio ao fim: o voto de confiança, a entrada lado a lado e a chegada já a conhecer pessoas.",
+  "marketingVideos.format.landscape.ratio": "16:9",
+  "marketingVideos.format.landscape.resolution": "1080p",
+  "marketingVideos.format.landscape.output": "vídeo (16:9)",
+  "marketingVideos.format.portrait.ratio": "4:5",
+  "marketingVideos.format.portrait.resolution": "1080×1350",
+  "marketingVideos.format.portrait.output": "publicação de Instagram (4:5)",
+  "marketingVideos.card.meta": "{duration} · {resolution} · 30 fps",
   "marketingVideos.card.motionBlur":
     "Com desfoque de movimento, por isso demora mais a gerar",
   "marketingVideos.card.preview": "Pré-visualizar",
   "marketingVideos.card.render": "Gerar vídeo",
+  "marketingVideos.card.renderFormat.landscape": "Gerar vídeo (16:9)",
+  "marketingVideos.card.renderFormat.portrait":
+    "Gerar publicação de Instagram (4:5)",
   "marketingVideos.card.frameTitle": "{title}, imagem fixa",
+  "marketingVideos.preview.format": "Formato",
   "marketingVideos.preview.eyebrow": "Pré-visualização",
   "marketingVideos.preview.frameTitle": "{title}, a reproduzir",
   "marketingVideos.preview.play": "Reproduzir",
@@ -7981,11 +7994,12 @@ export const admin: Catalog = {
     "A pré-visualização corre ao vivo no teu navegador. Gerar o vídeo cria o ficheiro perfeito, imagem a imagem.",
   "marketingVideos.studio.eyebrow": "Gerar",
   "marketingVideos.studio.title": "{title} em vídeo",
+  "marketingVideos.studio.titleFormat": "{title} como {format}",
   "marketingVideos.studio.frameTitle": "{title}, a gerar",
   "marketingVideos.studio.intro":
-    "O teu navegador reproduz o filme imagem a imagem e grava um vídeo em 1080p com som. Quando to pedir, partilha este separador. Mantém-no aberto e à frente até terminar, cerca de {minutes} minutos.",
+    "O teu navegador reproduz o filme imagem a imagem e grava um vídeo em {resolution} com som. Quando to pedir, partilha este separador. Mantém-no aberto e à frente até terminar, cerca de {minutes} minutos.",
   "marketingVideos.studio.soft":
-    "A tua janela mostra o filme abaixo de 1080p, por isso o ficheiro ficaria um pouco desfocado. Passa a ecrã inteiro ou aumenta a janela para um resultado nítido.",
+    "A tua janela mostra o filme abaixo de {resolution}, por isso o ficheiro ficaria um pouco desfocado. Passa a ecrã inteiro ou aumenta a janela para um resultado nítido.",
   "marketingVideos.studio.fullScreen": "Ecrã inteiro",
   "marketingVideos.studio.start": "Começar a gerar",
   "marketingVideos.studio.stop": "Parar",
@@ -8013,10 +8027,60 @@ export const admin: Catalog = {
     "A gravação parou, normalmente porque este separador passou para segundo plano. Mantém-no à frente e começa de novo.",
   "marketingVideos.studio.error.encoder":
     "Este navegador não consegue codificar vídeo. Experimenta o Chrome ou o Edge num computador.",
+  "marketingVideos.studio.error.format":
+    "Este filme ainda não existe como {format}, por isso não há nada para gravar.",
   "marketingVideos.studio.error.failed":
     "Algo correu mal ao gerar o vídeo. Começa de novo e, se continuar a acontecer, avisa a equipa técnica.",
   "marketingVideos.studio.unsupported":
     "Para gerar vídeos precisas do Chrome ou do Edge num computador. Podes pré-visualizar todos os filmes aqui na mesma.",
+  // ── Conceitos de logótipo (/admin/logo-concepts) ─────────────────────────
+  "logoConcepts.header.eyebrow": "Marca",
+  "logoConcepts.header.sub":
+    "Marcas candidatas para os avatares nas redes sociais, feitas a partir do Q do início de sessão: compara-as em cada esquema de cores e tamanho e descarrega os ficheiros.",
+  "logoConcepts.current.title": "Marca atual",
+  "logoConcepts.current.body":
+    "Os pontos de pulso que usamos hoje, a 96px e como avatar de 40px, para comparares cada conceito.",
+  "logoConcepts.current.alt": "A marca atual da QueerPulse",
+  "logoConcepts.colorways.plum": "Ameixa",
+  "logoConcepts.colorways.cream": "Creme",
+  "logoConcepts.colorways.mono": "Uma cor",
+  "logoConcepts.card.heroAlt": "Logótipo {title}, {colorway}",
+  "logoConcepts.card.colorwayLabel": "Esquema de cores de {title}",
+  "logoConcepts.card.sizesLabel": "Tamanhos de avatar",
+  "logoConcepts.card.sizePx": "{size}px",
+  "logoConcepts.card.downloadSvg": "Descarregar SVG",
+  "logoConcepts.card.downloadPng": "Descarregar PNG",
+  "logoConcepts.card.pngError":
+    "Não foi possível exportar o PNG. Tenta outra vez.",
+  "logoConcepts.card.svgError":
+    "Não foi possível descarregar o SVG. Tenta outra vez.",
+  "logoConcepts.concepts.constellation.title": "Constelação",
+  "logoConcepts.concepts.constellation.summary":
+    "Pessoas ao longo do Q, ligadas por fios como na arte da página de entrada. Brilha em grande: capas, imprensa, site.",
+  "logoConcepts.concepts.thread.title": "Fio",
+  "logoConcepts.concepts.thread.summary":
+    "Uma linha forte em Q com pessoas enfiadas como contas. Fica nítida do favicon ao cartaz.",
+  "logoConcepts.concepts.hearth.title": "Lareira",
+  "logoConcepts.concepts.hearth.summary":
+    "Um anel de pontos grandes à volta de uma lareira coral, com a cauda a sair. O mais forte para avatares pequenos.",
+  "logoConcepts.variants.title": "Variantes do Fio",
+  "logoConcepts.variants.sub":
+    "Cinco maneiras de dar profundidade ao Fio. A 32px ou menos, cada uma passa para um corte pequeno mais simples.",
+  "logoConcepts.concepts.threadSignature.title": "Assinatura",
+  "logoConcepts.concepts.threadSignature.summary":
+    "A linha que engrossa, a cauda pousada sobre o Q e três pessoas diferentes, juntas numa só marca.",
+  "logoConcepts.concepts.threadWoven.title": "Entrelaçado",
+  "logoConcepts.concepts.threadWoven.summary":
+    "O fio passa por cima e por baixo de si mesmo, e o Q parece atado à mão.",
+  "logoConcepts.concepts.threadSwell.title": "Traço",
+  "logoConcepts.concepts.threadSwell.summary":
+    "A linha engrossa e afina como o Q da Fraunces, com uma pessoa atada no topo fino como um nó.",
+  "logoConcepts.concepts.threadTrio.title": "Trio",
+  "logoConcepts.concepts.threadTrio.summary":
+    "Três pessoas, cada uma diferente, a percorrer a linha juntas. A mais legível em tamanho de avatar.",
+  "logoConcepts.concepts.threadRibbon.title": "Fita",
+  "logoConcepts.concepts.threadRibbon.summary":
+    "A linha torna-se uma fita plana que mostra o verso onde dobra para trás, como papel dobrado.",
   // ── Rascunhos de espaços por acabar (só Admin, separador de /admin/listings)
   "listingDrafts.intro":
     "Espaços que as pessoas começaram a registar mas ainda não enviaram. Vês o nome e até onde chegaram. Oferece ajuda se uma pessoa parecer ter encontrado alguma dificuldade, ou termina os dados do negócio como um espaço da equipa que ela pode aceitar.",

@@ -35,6 +35,7 @@ import styles from "./ListingEditor.module.css";
 export function ListingEditorPreviewModal({
   draft,
   photoPreviews,
+  shopPhotoPreviews,
   slug,
   isCoManagerView,
   missing,
@@ -45,6 +46,8 @@ export function ListingEditorPreviewModal({
 }: {
   draft: ListingDraft;
   photoPreviews: Record<PhotoKey, string>;
+  /** Shop item photos uploaded this session, by item id. */
+  shopPhotoPreviews?: Record<string, string>;
   /** The listing's existing public slug. */
   slug: string;
   /** The viewer only co-manages this listing, so the owner block is blank. */
@@ -59,9 +62,14 @@ export function ListingEditorPreviewModal({
   const place = useMemo(
     () =>
       listingDtoToPreviewPlace(
-        listingDraftToPreviewSource(draft, slug, photoPreviews),
+        listingDraftToPreviewSource(
+          draft,
+          slug,
+          photoPreviews,
+          shopPhotoPreviews,
+        ),
       ),
-    [draft, slug, photoPreviews],
+    [draft, slug, photoPreviews, shopPhotoPreviews],
   );
 
   return (

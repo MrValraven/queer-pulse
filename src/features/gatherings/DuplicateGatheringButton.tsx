@@ -4,7 +4,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { duplicateGatheringPath } from "./data";
 
 /**
- * "Run this again" — open the create wizard pre-filled from this gathering
+ * "Duplicate gathering" — open the create wizard pre-filled from this gathering
  * (PRD-190).
  *
  * A plain link rather than a mutation: nothing is created until the host

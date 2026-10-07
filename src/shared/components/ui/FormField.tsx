@@ -28,6 +28,12 @@ interface FormFieldProps {
   className?: string;
   /** Optional id on the field wrapper — e.g. a scroll/anchor target. */
   id?: string;
+  /**
+   * Optional id on the helper text. For a field holding more than one control
+   * (which this component leaves unwired): each control names this id in its
+   * own `aria-describedby`, so the helper is announced with every one.
+   */
+  helperId?: string;
   /** The control: an `<input>`, `<textarea>`, `<select>`, or custom node. */
   children: ReactNode;
 }
@@ -88,11 +94,12 @@ export function FormField({
   labelAside,
   className,
   id,
+  helperId: helperIdProp,
   children,
 }: FormFieldProps) {
   const uid = useId();
   const controlId = `${uid}-control`;
-  const helperId = `${uid}-helper`;
+  const helperId = helperIdProp ?? `${uid}-helper`;
   const errorId = `${uid}-error`;
   const okId = `${uid}-ok`;
 

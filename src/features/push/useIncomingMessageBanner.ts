@@ -320,7 +320,9 @@ export function useIncomingMessageBanner(): void {
           label: latest.t("messages:incomingBanner.open"),
           onClick: () => void latestRef.current.navigate(conversationPath),
         });
-        if (isMessageSoundEnabled()) playMessageChime();
+        if (isMessageSoundEnabled()) {
+          playMessageChime({ shouldPlayOnceResumed: true });
+        }
         return;
       }
 

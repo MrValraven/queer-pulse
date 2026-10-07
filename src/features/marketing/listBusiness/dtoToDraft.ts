@@ -7,7 +7,9 @@ import {
 } from "./listBusiness.data";
 import { normalizeAccessibilityDraft } from "./listingAccessibility.data";
 import { pricingModeOf, toMenuDraft } from "./listingMenu.data";
+import { normalizeOnlineDetails } from "./listingOnline.data";
 import { toServiceRows } from "./listingServices.data";
+import { toShopItemRows } from "./listingShop.data";
 import type { ManagedListingDTO } from "./api/listings.api";
 import { ownerPersonalFieldsFrom } from "./ownerPersonalFields";
 import { normalizeCategory } from "../localCategories";
@@ -53,11 +55,21 @@ export function dtoToDraft(dto: ManagedListingDTO): ListingDraft {
     pricingMode: pricingModeOf({
       pricingMode: dto.pricingMode,
       cats: dto.cats,
+      online: dto.online ?? false,
     }),
     menu: toMenuDraft(dto.menu),
     langs: dto.langs,
     // Legacy rows predate the flag; treat a missing value as a physical listing.
     online: dto.online ?? false,
+    // "Based in" is an online listing's alone. A place's stored city (the
+    // directory's own) never seeds the field, so switching a place to
+    // online starts with it empty.
+    city: dto.online ? (dto.city ?? "") : "",
+    hasOnlineShop: dto.hasOnlineShop ?? false,
+    onlineDetails: normalizeOnlineDetails(dto.onlineDetails),
+    shopItems: toShopItemRows(dto.shopItems),
+    // Accepted once, stamped by the server, and never asked again.
+    adultTermsAccepted: Boolean(dto.onlineDetails?.adultTermsAcceptedAt),
     address: dto.address,
     geocoded: dto.geocoded,
     latitude: dto.latitude,

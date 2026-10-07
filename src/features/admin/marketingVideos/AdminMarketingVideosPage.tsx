@@ -7,7 +7,11 @@ import { AdminPageHeader } from "../ui";
 import { MarketingVideoCard } from "./MarketingVideoCard";
 import { MarketingVideoPreviewModal } from "./MarketingVideoPreviewModal";
 import { MarketingVideoRenderStudio } from "./MarketingVideoRenderStudio";
-import { MARKETING_VIDEOS, type MarketingVideo } from "./marketingVideos.data";
+import {
+  MARKETING_VIDEOS,
+  type FilmFormatId,
+  type MarketingVideo,
+} from "./marketingVideos.data";
 import styles from "./MarketingVideos.module.css";
 
 /**
@@ -18,7 +22,10 @@ import styles from "./MarketingVideos.module.css";
 export function AdminMarketingVideosPage() {
   const { t } = useTranslation();
   const [previewing, setPreviewing] = useState<MarketingVideo | null>(null);
-  const [rendering, setRendering] = useState<MarketingVideo | null>(null);
+  const [rendering, setRendering] = useState<{
+    video: MarketingVideo;
+    format: FilmFormatId;
+  } | null>(null);
 
   return (
     <AdminShell
@@ -42,7 +49,7 @@ export function AdminMarketingVideosPage() {
               key={video.id}
               video={video}
               onPreview={setPreviewing}
-              onRender={setRendering}
+              onRender={(video, format) => setRendering({ video, format })}
             />
           ))}
         </div>
@@ -56,8 +63,9 @@ export function AdminMarketingVideosPage() {
       )}
       {rendering && (
         <MarketingVideoRenderStudio
-          key={rendering.id}
-          video={rendering}
+          key={`${rendering.video.id}-${rendering.format}`}
+          video={rendering.video}
+          format={rendering.format}
           onClose={() => setRendering(null)}
         />
       )}

@@ -28,7 +28,7 @@ describe("AdminMarketingVideosPage", () => {
     const cinematic = within(
       await screen.findByRole("article", { name: "Cinematic" }),
     );
-    expect(screen.getAllByRole("article")).toHaveLength(3);
+    expect(screen.getAllByRole("article")).toHaveLength(4);
     expect(cinematic.getByText(/1:05 · 1080p/)).toBeInTheDocument();
     expect(cinematic.getByTitle("Cinematic, still frame")).toHaveAttribute(
       "src",
@@ -38,6 +38,12 @@ describe("AdminMarketingVideosPage", () => {
     expect(
       cinematic.getByRole("button", { name: "Render video" }),
     ).toBeEnabled();
+    const vouched = within(screen.getByRole("article", { name: "Vouched" }));
+    expect(vouched.getByText(/0:56 · 1080p/)).toBeInTheDocument();
+    expect(vouched.getByTitle("Vouched, still frame")).toHaveAttribute(
+      "src",
+      "/marketing-videos/vouch.html?t=15",
+    );
   });
 
   it("flags the film that renders with motion blur", async () => {
@@ -70,6 +76,35 @@ describe("AdminMarketingVideosPage", () => {
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
 
+  it("offers the pro film as a 16:9 video and a 4:5 Instagram post", async () => {
+    renderPage();
+    const pro = within(await screen.findByRole("article", { name: "Pro" }));
+    expect(
+      pro.getByRole("button", { name: "Render video (16:9)" }),
+    ).toBeEnabled();
+    expect(
+      pro.getByRole("button", { name: "Render Instagram post (4:5)" }),
+    ).toBeEnabled();
+    expect(
+      pro.queryByRole("button", { name: "Render video" }),
+    ).not.toBeInTheDocument();
+    const upbeat = within(screen.getByRole("article", { name: "Upbeat" }));
+    expect(
+      upbeat.queryByRole("button", { name: "Render Instagram post (4:5)" }),
+    ).not.toBeInTheDocument();
+
+    await userEvent.click(
+      pro.getByRole("button", { name: "Render Instagram post (4:5)" }),
+    );
+    const studio = screen.getByRole("dialog", {
+      name: "Pro to Instagram post (4:5)",
+    });
+    expect(within(studio).getByTitle("Pro, rendering")).toHaveAttribute(
+      "src",
+      "/marketing-videos/pro.html?format=portrait",
+    );
+  });
+
   it("opens a preview with transport controls", async () => {
     renderPage();
     await userEvent.click(
@@ -92,5 +127,30 @@ describe("AdminMarketingVideosPage", () => {
     expect(
       within(preview).getByRole("slider", { name: "Position in the film" }),
     ).toBeInTheDocument();
+
+    // The pro film switches to its 4:5 shape in place.
+    const formats = within(preview).getByRole("group", { name: "Format" });
+    expect(
+      within(formats).getByRole("button", { name: "16:9" }),
+    ).toHaveAttribute("aria-pressed", "true");
+    await userEvent.click(within(formats).getByRole("button", { name: "4:5" }));
+    expect(within(preview).getByTitle("Pro, playing")).toHaveAttribute(
+      "src",
+      "/marketing-videos/pro.html?format=portrait",
+    );
+  });
+
+  it("shows no format switch for a film with one shape", async () => {
+    renderPage();
+    await userEvent.click(
+      within(await screen.findByRole("article", { name: "Upbeat" })).getByRole(
+        "button",
+        { name: "Preview" },
+      ),
+    );
+    const preview = screen.getByRole("dialog");
+    expect(
+      within(preview).queryByRole("group", { name: "Format" }),
+    ).not.toBeInTheDocument();
   });
 });

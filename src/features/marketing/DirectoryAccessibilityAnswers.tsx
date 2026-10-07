@@ -3,6 +3,9 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   ACCESSIBILITY_ANSWER_BY_ID,
   ACCESSIBILITY_QUESTIONS,
+  listingAnswerOf,
+  type AccessibilityQuestionDefinition,
+  type ListingAccessibilitySlug,
   type ListingAccessibilityView,
 } from "./listBusiness/listingAccessibility.data";
 import s from "./DirectoryAccessibility.module.css";
@@ -25,20 +28,28 @@ import s from "./DirectoryAccessibility.module.css";
  * The owner's free-text note leads, above the answers, because a sentence like
  * "two steps at the door, staff will help with the ramp" carries more than six
  * ticks can.
+ *
+ * `questions` picks the set: the six about a building by default, or the four
+ * online ones (`accessibilityQuestionsFor`). An online answer a payload does
+ * not carry reads as `unknown` through `listingAnswerOf`.
  */
 export function DirectoryAccessibilityAnswers({
   accessibility,
   ownerFirstName,
+  questions = ACCESSIBILITY_QUESTIONS,
 }: {
   accessibility: ListingAccessibilityView;
+  /** The questions to show, in order. Defaults to the six place questions. */
+  questions?: readonly AccessibilityQuestionDefinition<ListingAccessibilitySlug>[];
   /** The owner's first name, for attributing the note. Empty for an anonymous
    *  or role-only listing, which falls back to unattributed wording. */
   ownerFirstName: string;
 }) {
   const { t } = useTranslation();
   const note = accessibility.note?.trim() ?? "";
-  const unansweredCount = ACCESSIBILITY_QUESTIONS.filter(
-    (question) => accessibility.answers[question.slug] === "unknown",
+  const unansweredCount = questions.filter(
+    (question) =>
+      listingAnswerOf(accessibility.answers, question.slug) === "unknown",
   ).length;
 
   return (
@@ -63,8 +74,8 @@ export function DirectoryAccessibilityAnswers({
       )}
 
       <ul className={s.list}>
-        {ACCESSIBILITY_QUESTIONS.map((question) => {
-          const answer = accessibility.answers[question.slug];
+        {questions.map((question) => {
+          const answer = listingAnswerOf(accessibility.answers, question.slug);
           const definition = ACCESSIBILITY_ANSWER_BY_ID[answer];
           const AnswerIcon = definition.icon;
           return (

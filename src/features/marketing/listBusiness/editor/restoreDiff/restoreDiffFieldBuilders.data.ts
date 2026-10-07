@@ -29,6 +29,10 @@ import {
 import { hoursExceptionRows, hoursRows } from "./restoreDiffHoursRows.data";
 import { menuRows } from "./restoreDiffMenuRows.data";
 import {
+  onlineDetailsFields,
+  shopItemRows,
+} from "./restoreDiffOnlineFields.data";
+import {
   accessibilityRows,
   photoRows,
   serviceRows,
@@ -167,4 +171,24 @@ export const FIELD_BUILDERS: Record<keyof ListingDraft, FieldBuilder> = {
   affirmingBaselineAccepted: SHOWN_ELSEWHERE,
   managementRole: SHOWN_ELSEWHERE,
   isStaffAuthored: SHOWN_ELSEWHERE,
+  city: (context) => choiceField(context, "city", (draft) => draft.city ?? ""),
+  hasOnlineShop: (context) =>
+    choiceField(context, "hasOnlineShop", (draft) =>
+      yesNoLabel(context.t, draft.hasOnlineShop === true),
+    ),
+  onlineDetails: onlineDetailsFields,
+  shopItems: (context) =>
+    isFieldChanged(context, "shopItems")
+      ? rowsField(
+          "shopItems",
+          fieldLabelKey("shopItems"),
+          shopItemRows(context),
+        )
+      : [],
+  adultTermsAccepted: (context) =>
+    choiceField(context, "adultTermsAccepted", (draft) =>
+      yesNoLabel(context.t, draft.adultTermsAccepted === true),
+    ),
+  isWhereFoundAnswered: SHOWN_ELSEWHERE,
+  inactiveModeCats: SHOWN_ELSEWHERE,
 };

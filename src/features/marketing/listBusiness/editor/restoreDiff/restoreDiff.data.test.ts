@@ -9,7 +9,12 @@ import {
   type ListingDraft,
 } from "../../listBusiness.data";
 import { blankDraft } from "../../listingFormDraft";
+import {
+  emptyAccessibilityAnswers,
+  normalizeListingAccessibilityAnswers,
+} from "../../listingAccessibility.data";
 import { toMenuDraft } from "../../listingMenu.data";
+import { normalizeOnlineDetails } from "../../listingOnline.data";
 import { toServiceRows } from "../../listingServices.data";
 import {
   CO_MANAGER_EDITOR_SECTIONS,
@@ -597,5 +602,138 @@ describe("buildRestoreDiff safety net", () => {
     });
     expect(merged.whatItIs).toEqual([]);
     expect(merged.social.phone).toBe("");
+  });
+});
+
+describe("restore review for the online fields", () => {
+  it("reports no change for a copy saved before the online fields existed", () => {
+    const current = listingDraft();
+    const {
+      city: _city,
+      hasOnlineShop: _hasOnlineShop,
+      onlineDetails: _onlineDetails,
+      shopItems: _shopItems,
+      adultTermsAccepted: _adultTermsAccepted,
+      isWhereFoundAnswered: _isWhereFoundAnswered,
+      ...legacy
+    } = current;
+    const sixAnswerAccessibility = {
+      answers: emptyAccessibilityAnswers(),
+      note: current.accessibility?.note ?? "",
+    };
+    const saved = {
+      ...legacy,
+      accessibility: sixAnswerAccessibility,
+    } as ListingDraft;
+    expect(isSameListingContent(current, saved)).toBe(true);
+    expect(
+      buildRestoreDiff({
+        current,
+        saved,
+        sections: LISTING_EDITOR_SECTIONS,
+        t,
+      }),
+    ).toEqual([]);
+  });
+
+  it("ignores the draft-only answer state and the stashed categories", () => {
+    const current = listingDraft({ isWhereFoundAnswered: true });
+    const saved = listingDraft({
+      isWhereFoundAnswered: false,
+      inactiveModeCats: ["books-music"],
+    });
+    expect(isSameListingContent(current, saved)).toBe(true);
+  });
+
+  it("lists a changed main link and a new payment method by name", () => {
+    const current = listingDraft({
+      hasOnlineShop: true,
+      onlineDetails: normalizeOnlineDetails({
+        mainLink: { url: "a.pt", kind: "shop" },
+      }),
+    });
+    const saved = listingDraft({
+      hasOnlineShop: true,
+      onlineDetails: normalizeOnlineDetails({
+        mainLink: { url: "b.pt", kind: "shop" },
+        payments: ["mbway"],
+      }),
+    });
+    const practical = buildRestoreDiff({
+      current,
+      saved,
+      sections: LISTING_EDITOR_SECTIONS,
+      t,
+    }).find((area) => area.key === "practical");
+    expect(practical?.fields.map((field) => field.key)).toEqual([
+      "onlineDetails.mainLink",
+      "onlineDetails.payments",
+    ]);
+  });
+
+  it("restores the online block with the practical area", () => {
+    const current = listingDraft();
+    const saved = listingDraft({
+      hasOnlineShop: true,
+      onlineDetails: normalizeOnlineDetails({ replyNote: "Packed Tuesdays" }),
+    });
+    const merged = mergeRestoredAreas({
+      current,
+      saved,
+      areaKeys: new Set<RestoreAreaKey>(["practical"]),
+    });
+    expect(merged.hasOnlineShop).toBe(true);
+    expect(merged.onlineDetails?.replyNote).toBe("Packed Tuesdays");
+  });
+
+  it("lists a changed online accessibility answer on an online listing", () => {
+    const answers = normalizeListingAccessibilityAnswers({});
+    const current = listingDraft({
+      online: true,
+      accessibility: { answers, note: "" },
+    });
+    const saved = listingDraft({
+      online: true,
+      accessibility: {
+        answers: { ...answers, "image-descriptions": "yes" },
+        note: "",
+      },
+    });
+    const accessibility = diff(current, saved).find(
+      (area) => area.key === "accessibility",
+    );
+    const rows = fieldOfKind(accessibility?.fields[0], "rows").rows;
+    expect(rows.map((row) => row.key)).toEqual([
+      "accessibility.image-descriptions",
+    ]);
+  });
+
+  it("puts every new draft key in an area", () => {
+    for (const key of [
+      "city",
+      "hasOnlineShop",
+      "onlineDetails",
+      "shopItems",
+      "adultTermsAccepted",
+      "isWhereFoundAnswered",
+      "inactiveModeCats",
+    ] as const) {
+      expect(RESTORE_FIELD_AREAS[key], key).toBeDefined();
+    }
+  });
+});
+
+describe("isSameListingContent on the online flags", () => {
+  it("ignores an online shop flag on an online listing and an acknowledgement without intimacy", () => {
+    const current = listingDraft({ online: true, hasOnlineShop: false });
+    const saved = listingDraft({
+      online: true,
+      hasOnlineShop: true,
+      adultTermsAccepted: true,
+    });
+    expect(isSameListingContent(current, saved)).toBe(true);
+    const adultCurrent = listingDraft({ online: true, cats: ["intimacy"] });
+    const adultSaved = { ...adultCurrent, adultTermsAccepted: true };
+    expect(isSameListingContent(adultCurrent, adultSaved)).toBe(false);
   });
 });

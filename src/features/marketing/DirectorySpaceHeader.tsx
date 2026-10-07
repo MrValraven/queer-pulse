@@ -61,10 +61,9 @@ export function DirectorySpaceHeader({ place, preview = false }: Props) {
       <div className={s.coverInner}>
         <header className={s.spaceHead}>
           <div className={s.spaceHeadIdentity}>
-            {/* An online-only business has no neighbourhood or city to name
-                (its hood arrives as the wizard's "Elsewhere in" catch-all),
-                and printing them left a bare "· ·" in the line, so the
-                eyebrow says where it does trade instead. */}
+            {/* An online-only business has no neighbourhood (its hood
+                arrives blank), and printing it left a bare "· ·" in the
+                line, so the eyebrow says where it does trade instead. */}
             <div className={s.eyebrow}>
               {categoryLabel(t, place.cat)} ·{" "}
               {place.online

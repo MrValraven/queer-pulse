@@ -61,6 +61,7 @@ export const routes = {
   adminLanding: "/admin/landing",
   adminPressKit: "/admin/press-kit",
   adminMarketingVideos: "/admin/marketing-videos",
+  adminLogoConcepts: "/admin/logo-concepts",
   adminMembers: "/admin/members",
   // The join-request queue as a route of its own. It also renders as the
   // "pending" tab of /admin/members, but that page is admin-only while the
