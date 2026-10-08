@@ -4,6 +4,7 @@ import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useFormat } from "../../../shared/i18n/format";
 import { getNotificationsPage } from "./notifications.api";
 import { notificationDtoToView } from "./notifications.adapters";
+import { demoHiddenFromBellIds } from "./demoHiddenFromBellIds";
 import type { Notification } from "../notifications.types";
 
 export interface NotificationsResult {
@@ -22,7 +23,10 @@ export interface NotificationsResult {
   refetch: () => void;
 }
 
-interface NotificationsPageVM {
+/** One page of the feed as cached under `["notifications", demoMode,
+ *  unreadOnly, language]`. Exported so `useHideNotification` can patch a row
+ *  inside the cached pages. */
+export interface NotificationsPageVM {
   items: Notification[];
   total: number;
   page: number;
@@ -53,7 +57,13 @@ export function useNotifications(unreadOnly = false): NotificationsResult {
         // Code-split: the demo mock is only pulled into the bundle in demo mode.
         const { buildNotifications } =
           await import("../notificationsList.data");
-        const list = buildNotifications(t, fmt);
+        // A row hidden from the bell this session stays hidden (and read)
+        // across this rebuild of the mock. See `demoHiddenFromBellIds`.
+        const list = buildNotifications(t, fmt).map((notification) =>
+          demoHiddenFromBellIds.has(notification.id)
+            ? { ...notification, isHiddenFromBell: true, unread: false }
+            : notification,
+        );
         const items = unreadOnly ? list.filter((n) => n.unread) : list;
         return { items, total: items.length, page: 1 };
       }

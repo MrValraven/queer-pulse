@@ -244,6 +244,11 @@ export function useSocialStore(): SocialContextValue {
               // so the composer re-enables and the log's own flags catch up
               // without a reload.
               void queryClient.invalidateQueries({ queryKey: ["messages"] });
+              // A block hides the pair's names from each other's mentions, so
+              // a mention lookup cached before it would keep naming them.
+              void queryClient.invalidateQueries({
+                queryKey: ["mention-names"],
+              });
             }
             onSettled?.(true, result);
           })

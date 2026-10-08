@@ -47,6 +47,7 @@ export function useBlockMatchedChatMember(): (
             ["conversation-detail"],
             [UNREAD_COUNT_KEY],
             ["messages", conversationId],
+            ["mention-names"],
           ]) {
             void queryClient.invalidateQueries({ queryKey });
           }

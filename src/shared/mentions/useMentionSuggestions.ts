@@ -1,10 +1,11 @@
 import { useMemo } from "react";
 import { useCommunities } from "../../features/communities/api/useCommunities";
 import { useTopics } from "../../features/topics/api/useTopics";
-import { useDirectoryPlaces } from "../../features/marketing/api/useDirectory";
-import { useEventMentionOptions } from "../../features/gatherings/api/useEventMentionOptions";
-import { useThreadMentionOptions } from "../../features/forum/api/useThreadMentionOptions";
+import { useDirectoryPlacesQuery } from "../../features/marketing/api/useDirectory";
+import { useEventMentionOptionsQuery } from "../../features/gatherings/api/useEventMentionOptions";
+import { useThreadMentionOptionsQuery } from "../../features/forum/api/useThreadMentionOptions";
 import { initialsOf } from "../api/refs";
+import { useMembers } from "../../features/members/api/useMembers";
 import { useMemberSuggestions } from "./useMemberSuggestions";
 
 /** A pick-able mention target, uniform across members, communities, topics, businesses, events, and threads. */
@@ -31,13 +32,22 @@ export function useMentionSuggestions(): {
   businesses: Suggestion[];
   events: Suggestion[];
   threads: Suggestion[];
+  /** False while any corpus the name map is built from is still on its first
+   *  load. Lets a caller that treats the map as complete wait for it. */
+  isSettled: boolean;
 } {
   const members = useMemberSuggestions();
+  // Same default-params key as `useMemberSuggestions`, so this shares its cache
+  // entry and only reads the loading state.
+  const memberList = useMembers();
   const communityList = useCommunities();
   const topicList = useTopics();
-  const directoryPlaces = useDirectoryPlaces();
-  const eventOptions = useEventMentionOptions();
-  const threadOptions = useThreadMentionOptions();
+  const { places: directoryPlaces, isLoading: isDirectoryLoading } =
+    useDirectoryPlacesQuery();
+  const { options: eventOptions, isLoading: isEventsLoading } =
+    useEventMentionOptionsQuery();
+  const { options: threadOptions, isLoading: isThreadsLoading } =
+    useThreadMentionOptionsQuery();
 
   const communities = useMemo<Suggestion[]>(
     () =>
@@ -96,5 +106,20 @@ export function useMentionSuggestions(): {
     [threadOptions],
   );
 
-  return { members, communities, topics, businesses, events, threads };
+  const isSettled =
+    !memberList.isLoading &&
+    !communityList.isLoading &&
+    !isEventsLoading &&
+    !isThreadsLoading &&
+    !isDirectoryLoading;
+
+  return {
+    members,
+    communities,
+    topics,
+    businesses,
+    events,
+    threads,
+    isSettled,
+  };
 }

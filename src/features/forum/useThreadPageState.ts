@@ -389,6 +389,7 @@ export function useThreadPageState() {
     voteReply,
     catMeta,
     replyTree,
+    visibleReplies,
     likedReplies,
     addReply,
     answerAndTags,

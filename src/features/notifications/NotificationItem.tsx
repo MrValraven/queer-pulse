@@ -13,6 +13,15 @@ import styles from "./NotificationsPage.module.css";
 /** Opaque row id: a uuid in live mode, a number in the demo mock. */
 type NotificationId = Notification["id"];
 
+/** The X's accessible name per surface: the bell's hides, the page's deletes. */
+const DISMISS_LABEL_KEYS = {
+  hideFromBell: "notifications:actions.hideFromBell",
+  delete: "notifications:actions.delete",
+} as const;
+
+/** What the row's X does, which sets its accessible name. */
+export type NotificationDismissAction = keyof typeof DISMISS_LABEL_KEYS;
+
 /** Closes a spoken phrase with a full stop unless it already ends a sentence. */
 function asSentence(phrase: string): string {
   return /[.!?…]$/.test(phrase) ? phrase : `${phrase}.`;
@@ -25,6 +34,7 @@ export function NotificationItem({
   onMarkRead,
   onResolve,
   onDismiss,
+  dismissAction,
   isCompact = false,
 }: {
   notification: Notification;
@@ -32,8 +42,10 @@ export function NotificationItem({
   isUnread: boolean;
   onMarkRead: (id: NotificationId) => void;
   onResolve: (id: NotificationId, toast: string) => void;
-  /** PRD-224. Clear this row for good, here and on the member's other devices. */
+  /** The X: hide the row from the bell, or ask to delete it (page). */
   onDismiss: (id: NotificationId) => void;
+  /** Names what the X does: `hideFromBell` in the bell, `delete` on the page. */
+  dismissAction: NotificationDismissAction;
   /** Tighter row for the nav bell's popover, where the panel is 400px wide. */
   isCompact?: boolean;
 }) {
@@ -178,14 +190,14 @@ export function NotificationItem({
         )}
       </div>
       <div className={styles.time}>{notification.time}</div>
-      {/* PRD-224. Every row can be cleared, so a member is never stuck looking
-          at something they have already dealt with. Sits above the overlay row
-          link and stops the click there, so clearing a row never also
-          navigates into it. */}
+      {/* PRD-224. Every row has an X, so a member is never stuck looking at
+          something they have already dealt with. Sits above the overlay row
+          link and stops the click there, so the X never also navigates into
+          the row. */}
       <IconButton
         size="sm"
         className={styles.dismiss}
-        aria-label={t("notifications:actions.dismiss")}
+        aria-label={t(DISMISS_LABEL_KEYS[dismissAction])}
         onClick={(event) => {
           event.stopPropagation();
           onDismiss(notification.id);

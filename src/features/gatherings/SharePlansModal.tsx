@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useId, useMemo, useState } from "react";
 import {
   Button,
   FormField,
@@ -15,7 +15,7 @@ import { GatheringSuccessPanel } from "./GatheringSuccessPanel";
 import { useSharePlans } from "./api/useSharePlans";
 import { buildSharePlansMessage } from "./sharePlans";
 import type { GatheringDetail } from "./data";
-import styles from "./GatheringModals.module.css";
+import styles from "./SharePlansModal.module.css";
 
 /**
  * "Tell someone where I'm going" (LOC-08).
@@ -46,6 +46,7 @@ export function SharePlansModal({
     buildSharePlansMessage(gathering, t, fmt),
   );
   const [sent, setSent] = useState(false);
+  const recipientLabelId = useId();
 
   const people = useMemo<MemberSelectPerson[]>(
     () =>
@@ -97,6 +98,8 @@ export function SharePlansModal({
 
   return (
     <Modal
+      wide
+      className={styles.dialog}
       eyebrow={t("gatherings:sharePlans.eyebrow")}
       title={
         <Translation
@@ -119,33 +122,48 @@ export function SharePlansModal({
         </>
       }
     >
-      <MemberSelectList
-        people={people}
-        selected={selected}
-        multiSelect={false}
-        onToggle={(slug) =>
-          setSelected((previous) =>
-            previous.has(slug) ? new Set() : new Set([slug]),
-          )
-        }
-        searchPlaceholder={t("gatherings:sharePlans.searchLabel")}
-        emptyHint={
-          loading
-            ? t("gatherings:sharePlans.loadingConnections")
-            : t("gatherings:sharePlans.noConnections")
-        }
-      />
-      <div className={styles.fields}>
-        <FormField
-          label={t("gatherings:sharePlans.messageLabel")}
-          helper={t("gatherings:sharePlans.messageHint")}
+      <div className={styles.layout}>
+        {/* The search field carries its own label, so the group name only
+            says what the picked row is for. */}
+        <div
+          className={styles.picker}
+          role="group"
+          aria-labelledby={recipientLabelId}
         >
-          <textarea
-            value={body}
-            rows={6}
-            onChange={(event) => setBody(event.target.value)}
+          <p id={recipientLabelId} className={styles.pickerLabel}>
+            {t("gatherings:sharePlans.recipientLabel")}
+          </p>
+          <MemberSelectList
+            people={people}
+            selected={selected}
+            multiSelect={false}
+            selectedIndicator="radio"
+            onToggle={(slug) =>
+              setSelected((previous) =>
+                previous.has(slug) ? new Set() : new Set([slug]),
+              )
+            }
+            searchPlaceholder={t("gatherings:sharePlans.searchLabel")}
+            emptyHint={
+              loading
+                ? t("gatherings:sharePlans.loadingConnections")
+                : t("gatherings:sharePlans.noConnections")
+            }
           />
-        </FormField>
+        </div>
+        <div className={styles.messageColumn}>
+          <FormField
+            className={styles.messageField}
+            label={t("gatherings:sharePlans.messageLabel")}
+            helper={t("gatherings:sharePlans.messageHint")}
+          >
+            <textarea
+              value={body}
+              rows={6}
+              onChange={(event) => setBody(event.target.value)}
+            />
+          </FormField>
+        </div>
       </div>
     </Modal>
   );

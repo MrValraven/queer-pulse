@@ -1,9 +1,10 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { FiBell, FiAlertCircle } from "react-icons/fi";
 import { AppShell } from "../../shared/components/layout";
 import {
   Button,
+  ConfirmDialog,
   LoadMoreFooter,
   Tabs,
   PullToRefresh,
@@ -19,6 +20,7 @@ import { useNotifications } from "./api/useNotifications";
 import { useMentions } from "./api/useMentions";
 import { useUnreadCount } from "./api/useUnreadCount";
 import { useNotificationsReadState } from "./useNotificationsReadState";
+import { usePendingNotificationDelete } from "./usePendingNotificationDelete";
 import { bucketNotificationsByDay } from "./notificationDayBuckets";
 import { notificationTabs, type NotifType, type Notification } from "./data";
 import styles from "./NotificationsPage.module.css";
@@ -45,6 +47,48 @@ function NotificationsLoadError({ onRetry }: { onRetry: () => void }) {
   );
 }
 
+/** Nothing to list under the active tab. */
+function NotificationsEmptyState() {
+  const { t } = useTranslation();
+  return (
+    <div className={styles.empty}>
+      <div style={{ fontSize: 40 }}>
+        <FiBell />
+      </div>
+      <div className={styles.emptyTitle}>
+        {t("notifications:page.empty.title")}
+      </div>
+      <div>{t("notifications:page.empty.description")}</div>
+    </div>
+  );
+}
+
+/** The page X's confirmation: deleting a row reaches every device and cannot
+ *  be undone, so the member says yes first. */
+function NotificationDeleteConfirmDialog({
+  isOpen,
+  onCancel,
+  onConfirm,
+}: {
+  isOpen: boolean;
+  onCancel: () => void;
+  onConfirm: () => void;
+}) {
+  const { t } = useTranslation();
+  return (
+    <ConfirmDialog
+      open={isOpen}
+      onClose={onCancel}
+      onConfirm={onConfirm}
+      tone="destructive"
+      title={t("notifications:page.deleteConfirm.title")}
+      description={t("notifications:page.deleteConfirm.description")}
+      confirmLabel={t("notifications:page.deleteConfirm.confirm")}
+      cancelLabel={t("notifications:page.deleteConfirm.cancel")}
+    />
+  );
+}
+
 export function NotificationsPage() {
   const { t } = useTranslation();
   const fmt = useFormat();
@@ -64,14 +108,24 @@ export function NotificationsPage() {
   // loaded; loaded rows stay and the footer below retries the failed page.
   const hasNothingLoadedError = isError && notifications.length === 0;
   const { data: mentionDays = [] } = useMentions();
-  const { readIds, resolvedIds, markRead, markAllRead, resolve, dismiss } =
-    useNotificationsReadState(notifications);
+  const {
+    readIds,
+    resolvedIds,
+    markRead,
+    markAllRead,
+    resolve,
+    deleteNotification,
+  } = useNotificationsReadState(notifications);
+  // The page's X asks first; see the hook for where focus goes afterwards.
+  const titleRef = useRef<HTMLDivElement>(null);
+  const { pendingDeleteId, requestDelete, cancelDelete, confirmDelete } =
+    usePendingNotificationDelete(deleteNotification, titleRef);
   const { demoMode } = useDemoMode();
   // PRD-223. The same server-wide count the nav bell reads, from the same query
   // key, so the two can never disagree: the header used to count the unread
   // rows among the PAGES LOADED SO FAR, which said "12" beside a bell saying
   // "37" the moment a member had more than one page of unread. Both refresh
-  // together, because every read/dismiss mutation invalidates `["notifications"]`.
+  // together, because every read/delete mutation invalidates `["notifications"]`.
   const serverUnreadCount = useUnreadCount();
   const [filter, setFilter] = useState<"all" | NotifType | "mentions">("all");
   const onMentions = filter === "mentions";
@@ -120,7 +174,8 @@ export function NotificationsPage() {
       isUnread={notification.unread && !readIds.has(notification.id)}
       onMarkRead={markRead}
       onResolve={resolve}
-      onDismiss={dismiss}
+      onDismiss={requestDelete}
+      dismissAction="delete"
     />
   );
 
@@ -129,7 +184,7 @@ export function NotificationsPage() {
       <div className={styles.page}>
         <div className={styles.inner}>
           <div className={styles.header}>
-            <div className={styles.title}>
+            <div ref={titleRef} tabIndex={-1} className={styles.title}>
               {t("notifications:page.title")}
               {unreadCount > 0 && (
                 <span className={styles.badge}>
@@ -183,15 +238,7 @@ export function NotificationsPage() {
           ) : hasNothingLoadedError ? (
             <NotificationsLoadError onRetry={refetch} />
           ) : visible.length === 0 ? (
-            <div className={styles.empty}>
-              <div style={{ fontSize: 40 }}>
-                <FiBell />
-              </div>
-              <div className={styles.emptyTitle}>
-                {t("notifications:page.empty.title")}
-              </div>
-              <div>{t("notifications:page.empty.description")}</div>
-            </div>
+            <NotificationsEmptyState />
           ) : (
             // `queryKey: ["notifications"]` matches useNotifications' inline
             // `["notifications", demoMode, unreadOnly, language]` as a prefix —
@@ -232,6 +279,11 @@ export function NotificationsPage() {
           )}
         </div>
       </div>
+      <NotificationDeleteConfirmDialog
+        isOpen={pendingDeleteId !== null}
+        onCancel={cancelDelete}
+        onConfirm={confirmDelete}
+      />
     </AppShell>
   );
 }

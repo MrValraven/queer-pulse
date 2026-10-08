@@ -19,13 +19,14 @@ function isAttachableVenue(place: DirectoryPlace): boolean {
   return place.online !== true && place.isAdultsOnly !== true;
 }
 
-/** The directory places `VenuePicker` offers for `query`, capped for the
- *  dropdown. */
+/** The directory places `VenuePicker` offers for `query`, capped at `limit`:
+ *  eight for the dropdown's popover, more for the inline layout's tall list. */
 export function venuePickerResults(
   places: readonly DirectoryPlace[],
   query: string,
+  limit: number = MAX_RESULTS,
 ): DirectoryPlace[] {
   return places
     .filter((place) => isAttachableVenue(place) && matchesQuery(place, query))
-    .slice(0, MAX_RESULTS);
+    .slice(0, limit);
 }

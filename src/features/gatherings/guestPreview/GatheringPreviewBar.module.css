@@ -1,0 +1,140 @@
+/* The sticky strip. Its container width picks the layout below, and the
+   caption sits outside it so the stuck strip stays short on a phone. */
+.bar {
+  position: sticky;
+  top: var(--sticky-top);
+  z-index: var(--z-preview-bar);
+  transition: top var(--dur-base) var(--ease);
+  container-type: inline-size;
+  padding: 6px 12px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-card);
+  /* `--cream` is the page ground in both themes, so the halo is invisible at
+     rest. When stuck it closes the `--nav-seam` above and fills the rounded
+     corners' cut-outs (a spread of at least 0.42 x the 22px radius covers them). */
+  box-shadow: 0 0 0 var(--gap-sm) var(--cream);
+}
+
+/* Narrow: the label and Exit share the first line, the switch takes the
+   whole second line. */
+.row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "label exit"
+    "switch switch";
+  align-items: center;
+  gap: 4px 12px;
+}
+
+/* With room for everything: one line, Exit at the end. */
+@container (min-width: 42rem) {
+  .row {
+    grid-template-columns: auto auto minmax(0, 1fr) auto;
+    grid-template-areas: "label switch . exit";
+  }
+}
+
+.label {
+  grid-area: label;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  font-size: var(--text-13-5);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+/* Takes focus once when the preview opens (tabIndex -1). The ring shows for
+   keyboard members only. */
+.label:focus {
+  outline: none;
+}
+
+.label:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-radius: var(--radius-badge);
+}
+
+/* One pill holding the three options; the pressed one fills with the accent. */
+.switch {
+  grid-area: switch;
+  display: flex;
+  min-width: 0;
+  padding: 2px;
+  gap: 2px;
+  background: var(--wash);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+}
+
+.option {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 44px;
+  padding: 0 12px;
+  border: none;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--ink-60);
+  font-family: var(--sans);
+  font-size: var(--text-13-5);
+  font-weight: 600;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition:
+    background var(--dur-base) var(--ease),
+    color var(--dur-base) var(--ease);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .option[aria-pressed="false"]:hover {
+    color: var(--ink);
+  }
+}
+
+/* The same fill and label pair the primary Button uses: AA against the label
+   in both themes. */
+.option[aria-pressed="true"] {
+  background: var(--accent-fill);
+  color: rgba(var(--cream-rgb), 1);
+}
+
+.option:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+@container (min-width: 42rem) {
+  .option {
+    flex: none;
+    padding: 0 14px;
+  }
+}
+
+/* A shorter pill than the Button's own floor keeps the strip compact; the
+   invisible layer around it keeps the tap target at 44px. The two-class
+   selector outranks the Button's own size class. */
+.bar .exit {
+  grid-area: exit;
+  position: relative;
+  min-height: 36px;
+}
+
+.exit::before {
+  content: "";
+  position: absolute;
+  inset: -4px 0;
+}
+
+.caption {
+  margin: 8px 13px 16px;
+  font-size: var(--text-12-5);
+  line-height: 1.4;
+  color: var(--ink-60);
+}

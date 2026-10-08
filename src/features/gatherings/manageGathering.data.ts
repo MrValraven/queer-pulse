@@ -32,7 +32,7 @@ export const GATHERING_DETAILS = [
 export const GATHERING_TITLE = "Pride Brunch: June Edition";
 
 export const GATHERING_DESCRIPTION =
-  "A slow, joyful Pride-week brunch for queer Lisbon. Good food, no agenda, no strangers for long. We'll have the terrace to ourselves from 11am. Bring your people, or come solo. You'll leave with new ones.";
+  "A slow, joyful Pride-week brunch for queer Lisbon. Good food, no agenda, no strangers for long. We'll have the terrace to ourselves from 11am, @tomas is on the eggs and the pastéis come from b/cafe-mouraria-velha. Bring your people, or come solo. You'll leave with new ones.";
 
 export const ATTENDEE_COUNT = 14;
 

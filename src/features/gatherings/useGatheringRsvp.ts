@@ -6,6 +6,7 @@ import { gatheringHasEnded, type GatheringDetail } from "./data";
 import { useRsvp, useUnrsvp } from "./api/useEventMutations";
 import { rsvpErrorMessage } from "./rsvpErrors";
 import { useHasRsvpCutoffPassed } from "./rsvpCutoff";
+import { useGatheringPreview } from "./guestPreview/gatheringPreviewContext";
 
 export type RsvpStatus = GatheringDetail["myRsvpStatus"];
 
@@ -83,6 +84,7 @@ export function useGatheringRsvp(
   const { t, language } = useTranslation();
   const { showToast } = useToast();
   const { demoMode } = useDemoMode();
+  const { viewAs, runGuestAction } = useGatheringPreview();
   const rsvp = useRsvp(gathering.slug);
   const unrsvp = useUnrsvp(gathering.slug);
 
@@ -185,7 +187,7 @@ export function useGatheringRsvp(
     });
   };
 
-  return {
+  const state: GatheringRsvpState = {
     status,
     isConfirmed: status === "going" || status === "waitlisted",
     isWaitlisted: status === "waitlisted",
@@ -200,4 +202,15 @@ export function useGatheringRsvp(
     markMaybe,
     cancelRsvp,
   };
+  // A second lock behind the preview's click catcher: a host previewing as a
+  // guest can never RSVP to, or cancel on, their own gathering from here.
+  if (viewAs !== null) {
+    return {
+      ...state,
+      goOrWaitlist: runGuestAction,
+      markMaybe: runGuestAction,
+      cancelRsvp: runGuestAction,
+    };
+  }
+  return state;
 }

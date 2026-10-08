@@ -1,9 +1,10 @@
 import { act, renderHook } from "@testing-library/react";
 import type { ReactNode } from "react";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
 import { useGatheringRsvp } from "./useGatheringRsvp";
 import type { GatheringDetail } from "./data";
+import { GatheringPreviewContext } from "./guestPreview/gatheringPreviewContext";
 
 /**
  * Design review S4: in demo mode, `useRsvp`/`useUnrsvp` never reach a
@@ -68,5 +69,33 @@ describe("useGatheringRsvp demo persistence", () => {
       demoGathering("s4-independent-untouched"),
     );
     expect(untouchedGathering.result.current.status).toBeNull();
+  });
+});
+
+describe("useGatheringRsvp in a host's guest preview", () => {
+  function renderPreviewRsvp(runGuestAction: () => void) {
+    return renderHook(() => useGatheringRsvp(demoGathering("preview-inert")), {
+      wrapper: ({ children }: { children: ReactNode }) => (
+        <TestProviders>
+          <GatheringPreviewContext.Provider
+            value={{ viewAs: "member", runGuestAction }}
+          >
+            {children}
+          </GatheringPreviewContext.Provider>
+        </TestProviders>
+      ),
+    });
+  }
+
+  it("answers every RSVP action with the preview action and changes nothing", () => {
+    const runGuestAction = vi.fn();
+    const { result } = renderPreviewRsvp(runGuestAction);
+
+    act(() => result.current.goOrWaitlist());
+    act(() => result.current.markMaybe());
+    act(() => result.current.cancelRsvp());
+
+    expect(runGuestAction).toHaveBeenCalledTimes(3);
+    expect(result.current.status).toBeNull();
   });
 });

@@ -130,8 +130,15 @@ export interface GatheringDetail {
    *  gathering is linked to a real listing). */
   venueListingId?: string | null;
   /** Live mode only: the linked listing's display name + public slug, when
-   *  `venueListingId` is set. Absent/null otherwise. */
-  venueListing?: { slug: string; name: string } | null;
+   *  `venueListingId` is set. Absent/null otherwise. `latitude`/`longitude`
+   *  are the listing's own public point, null when it has none, which is what
+   *  the Where panel pins (see `gatheringLocation.ts`). */
+  venueListing?: {
+    slug: string;
+    name: string;
+    latitude?: number | null;
+    longitude?: number | null;
+  } | null;
   /** Live mode only: the gathering's accepted co-hosts, so the manage
    *  dashboard's Settings tab can show who's co-hosting without a second
    *  request. Absent in the demo registry, where `CohostManager` keeps its
@@ -370,7 +377,7 @@ export const gatheringDetails: Record<string, GatheringDetail> = {
     hostSlug: "tomas",
     spots: { key: "gatherings:spots.seatsLeft", values: { count: 8 } },
     ctaKey: "gatherings:cta.reserveSeat",
-    body: "Twelve seats, no menu, whatever came in that week. Tomás cooks with whatever is seasonal and beautiful. Guests bring wine. The conversation takes care of itself. Doors open at 7:30pm, dinner at 8. The address is shared on the morning of the event.",
+    body: "Twelve seats, no menu, whatever came in that week. Tomás cooks with whatever is seasonal and beautiful, and the bread comes from b/cafe-mouraria-velha round the corner. Guests bring wine. @rita is drawing the place cards this time. The conversation takes care of itself. Doors open at 7:30pm, dinner at 8. The address is shared on the morning of the event.",
     coverImageUrl:
       "https://images.unsplash.com/photo-1531058020387-3be344556be6?q=80&w=1200&auto=format&fit=crop",
   },

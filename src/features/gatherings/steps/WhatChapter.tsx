@@ -1,6 +1,9 @@
 import { useId, useState } from "react";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import { Field, TextArea } from "../CreateGatheringFields";
+import { cx } from "../../../shared/lib/cx";
+import { MentionTextarea } from "../../../shared/mentions/MentionTextarea";
+import { Field } from "../CreateGatheringFields";
+import fieldStyles from "../CreateGatheringFields.module.css";
 import { ThemeChips } from "../fields/ThemeChips";
 import { allowedDetailKeys } from "../gatheringCatalog";
 import type { GatheringForm } from "../useGatheringForm";
@@ -68,14 +71,20 @@ function DescriptionField({ form }: { form: GatheringForm }) {
       }
       hint={isOverBudget ? overBudgetHint : undefined}
     >
-      <TextArea
+      {/* Mentions (@member, b/business and the other sigils) suggest as in
+          chat. The list goes on `document.body`, clear of the wizard's
+          animated sections that would paint over an absolute one. */}
+      <MentionTextarea
         id={textareaId}
+        className={cx(fieldStyles.input, fieldStyles.textarea)}
         maxLength={MAX_DESCRIPTION_STORAGE_LENGTH}
+        aria-label={t("gatherings:create.step1.descLabel")}
         aria-describedby={isOverBudget ? `${textareaId}-hint` : undefined}
         placeholder={t("gatherings:create.step1.descPlaceholder")}
         value={form.description}
-        onChange={(event) => {
-          const nextDescription = event.target.value;
+        shouldPortalMenu
+        shouldSubmitOnModifierEnter
+        onChange={(nextDescription) => {
           const isNextOverBudget =
             nextDescription.length > DESCRIPTION_CARD_BUDGET;
           // Only a crossing changes the status text: upward it carries the

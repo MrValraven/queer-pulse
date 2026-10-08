@@ -6,6 +6,7 @@ import {
   apiDelete,
 } from "../../../shared/api/client";
 import { toItemsPage } from "../../../shared/api/pagination";
+import type { GuestPreviewRole } from "../guestPreview/guestPreview";
 import type { AccessTier } from "../../communities/membership.types";
 import type { FormatDetails, GatheringFamily } from "../gatheringCatalog";
 import type {
@@ -318,8 +319,15 @@ export interface EventDetailDTO extends EventCardDTO {
   listingId?: string | null;
   /** The linked listing's display name + public slug, when `listingId` is
    *  set and the listing is still live. `null` otherwise. The frontend builds
-   *  the `/local/directory/:slug` link itself via `businessPath()`. */
-  venueListing?: { slug: string; name: string } | null;
+   *  the `/local/directory/:slug` link itself via `businessPath()`.
+   *  `latitude`/`longitude` are the listing's public point, null when it has
+   *  none, and absent from an older server. */
+  venueListing?: {
+    slug: string;
+    name: string;
+    latitude?: number | null;
+    longitude?: number | null;
+  } | null;
   /** The event's accepted co-hosts (never pending invites — those live under
    *  `event-cohost-invites`). Rides free on `GET /events/:slug` (backend
    *  `EventDetail.cohosts`), so the manage dashboard's cohost roster never
@@ -633,8 +641,8 @@ export async function getEvents(
   return toItemsPage(res);
 }
 
-export const getEvent = (slug: string) =>
-  apiGet<EventDetailDTO>(`/events/${slug}`);
+export const getEvent = (slug: string, viewAs?: GuestPreviewRole) =>
+  apiGet<EventDetailDTO>(`/events/${slug}${viewAs ? `?viewAs=${viewAs}` : ""}`);
 
 /** The create answers with the first occurrence's detail plus
  *  `occurrenceSlugs`: every saved occurrence's slug in series order, and
@@ -859,8 +867,10 @@ export interface LineupInviteDTO {
   inviter: CohostInviteInviterDTO | null;
 }
 
-export const getEventLineup = (slug: string) =>
-  apiGet<EventLineupDTO>(`/events/${slug}/lineup`);
+export const getEventLineup = (slug: string, viewAs?: GuestPreviewRole) =>
+  apiGet<EventLineupDTO>(
+    `/events/${slug}/lineup${viewAs ? `?viewAs=${viewAs}` : ""}`,
+  );
 
 export const inviteToLineup = (
   slug: string,

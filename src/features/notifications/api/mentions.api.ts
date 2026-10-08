@@ -28,7 +28,7 @@ export interface MentionDTO {
   createdAt: string;
   read: boolean;
   actor?: MentionActorDTO | null;
-  /** `"forum"` | `"community"` | null. */
+  /** `"forum"` | `"community"` | `"event"` | null. */
   source: string | null;
   /** `member` | `community` | `business` | `event` | `thread` | null. */
   entityKind: string | null;
@@ -36,6 +36,8 @@ export interface MentionDTO {
   threadSlug: string | null;
   communitySlug: string | null;
   postId: string | null;
+  /** The gathering slug when `source` is `"event"`, otherwise null. */
+  eventSlug: string | null;
   sourceLabel: string | null;
 }
 

@@ -11,6 +11,7 @@ import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
 import {
   FiEdit2,
+  FiEye,
   FiMoreHorizontal,
   FiSettings,
   FiSlash,
@@ -21,6 +22,7 @@ import { useAnchoredPopover } from "../../shared/components/ui/useAnchoredPopove
 import { useOutsideDismiss } from "../../shared/hooks/useOutsideDismiss";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { manageGatheringPath } from "./data";
+import { useGuestPreviewNavigation } from "./guestPreview/useGuestPreviewNavigation";
 import styles from "./GatheringHostMenu.module.css";
 
 const MENU_ITEM_SELECTOR = '[role="menuitem"]';
@@ -90,6 +92,7 @@ export function GatheringHostMenu({
 }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { enterPreview } = useGuestPreviewNavigation();
   const [isOpen, setIsOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
@@ -138,6 +141,13 @@ export function GatheringHostMenu({
       icon: <FiSettings />,
       label: t("gatherings:hostBar.manageCta"),
       onSelect: () => void navigate(manageGatheringPath(slug)),
+    },
+    {
+      key: "preview",
+      icon: <FiEye />,
+      label: t("gatherings:preview.menuCta"),
+      // Pushes a history entry, so Back returns to the host view.
+      onSelect: enterPreview,
     },
     {
       key: "cancel",

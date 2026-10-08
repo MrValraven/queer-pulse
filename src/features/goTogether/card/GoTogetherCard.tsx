@@ -130,7 +130,7 @@ export function GoTogetherCard({ gathering }: { gathering: GatheringDetail }) {
 /** The heading and the paper card around every state's panel, the group
  *  entry included. The section carries the anchor the questionnaire's return
  *  path points at. */
-function GoTogetherCardFrame({
+export function GoTogetherCardFrame({
   sectionRef,
   headingRef,
   children,

@@ -1393,6 +1393,16 @@ export const gatherings: Catalog = {
   "venuePicker.freeTextPlaceholder": "Venue name",
   "venuePicker.fromDirectory": "From the local directory",
   "venuePicker.change": "Change",
+  "venuePicker.selectedLabel": "Selected venue",
+  "venuePicker.typedByHand": "Typed in by hand",
+  "venuePicker.selectedOption": "Selected",
+  "venuePicker.useTyped": "Use “{query}” as the venue",
+  "venuePicker.typeAnyHint":
+    "Not listed? Type any venue name to use it as written.",
+  "venuePicker.noDirectoryMatch":
+    "Nothing in the local directory matches “{query}”",
+  "venuePicker.resultCount_one": "{count} venue found",
+  "venuePicker.resultCount_other": "{count} venues found",
   "venuePicker.refusedError":
     "This venue can't be linked to a gathering any more. Tap Change to pick another or type the name in yourself.",
 
@@ -1698,6 +1708,9 @@ export const gatherings: Catalog = {
   "gathering.where.costFree": "Free",
   "gathering.where.costNote":
     "Whatever you pay happens between you and the host. QueerPulse takes no money.",
+  "gathering.where.takeMeThere": "Take me there",
+  "gathering.where.mapAriaExact": "Map showing the exact location of {name}",
+  "gathering.where.mapAriaArea": "Map showing the approximate area of {area}",
   "gathering.access.heading": "Access",
   "gathering.access.lead":
     "What the host has told us about getting in and being comfortable. An unanswered question means nobody has said, so ask if you need to know.",
@@ -1783,6 +1796,7 @@ export const gatherings: Catalog = {
   "sharePlans.loadingConnections": "Finding your connections…",
   "sharePlans.noConnections":
     "You have no connections yet. Connect with someone first and they'll show up here.",
+  "sharePlans.recipientLabel": "Who gets it",
   "sharePlans.messageLabel": "What they'll get",
   "sharePlans.messageHint": "Edit this however you like before it goes.",
   "sharePlans.sendCta": "Send it",
@@ -2052,4 +2066,18 @@ export const gatherings: Catalog = {
     "This ends before it starts. Move the end date or time later.",
   "create.step2.spanTooLong":
     "A gathering can run for up to {days} days. Bring the end closer to the start.",
+
+  // ── Host guest preview (GatheringPreviewBar) ────────────────────────────────
+  "preview.menuCta": "Preview as guest",
+  "preview.barLabel": "Previewing as",
+  "preview.role.member": "Member",
+  "preview.role.going": "Going",
+  "preview.role.waitlisted": "Waitlisted",
+  "preview.exitCta": "Exit preview",
+  "preview.caption":
+    "Faces and counts are what a member you're not connected to sees.",
+  "preview.inertToast": "This is a preview. Guests can tap this.",
+  "preview.errorTitle": "The preview didn't load",
+  "preview.errorBody":
+    "Your gathering is fine. Try again in a moment, or go back to your host view.",
 };

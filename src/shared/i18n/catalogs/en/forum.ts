@@ -381,6 +381,7 @@ export const forum: Catalog = {
 
   // ── Edited mark / deleted-post tombstone ─────────────────────────────────
   "edited.mark": "(edited)",
+  "edited.inline": "edited",
   "tombstone.body": "This post was deleted.",
   "tombstone.author": "[deleted]",
   "tombstone.removedByModerator": "This post was removed by a moderator.",

@@ -2,7 +2,10 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
-import { NotificationItem } from "./NotificationItem";
+import {
+  NotificationItem,
+  type NotificationDismissAction,
+} from "./NotificationItem";
 import type { Notification } from "./data";
 
 function makeNotification(overrides: Partial<Notification> = {}): Notification {
@@ -10,6 +13,7 @@ function makeNotification(overrides: Partial<Notification> = {}): Notification {
     id: 1,
     type: "community",
     unread: true,
+    isHiddenFromBell: false,
     text: "Ana replied to your thread",
     meta: "Community",
     time: "2m",
@@ -20,7 +24,10 @@ function makeNotification(overrides: Partial<Notification> = {}): Notification {
 
 function renderItem(
   notification: Notification,
-  { isUnread = notification.unread } = {},
+  {
+    isUnread = notification.unread,
+    dismissAction = "delete",
+  }: { isUnread?: boolean; dismissAction?: NotificationDismissAction } = {},
 ) {
   const handlers = {
     onMarkRead: vi.fn(),
@@ -33,6 +40,7 @@ function renderItem(
         notification={notification}
         index={0}
         isUnread={isUnread}
+        dismissAction={dismissAction}
         {...handlers}
       />
     </TestProviders>,
@@ -68,14 +76,28 @@ describe("NotificationItem: unread state for screen readers (DES-400)", () => {
 });
 
 describe("NotificationItem: shared buttons (DES-401)", () => {
-  it("clears the row from the named dismiss button without marking it read", async () => {
+  it("names the page's X as a delete and hands it the row without marking it read", async () => {
     const user = userEvent.setup();
     const handlers = renderItem(makeNotification());
     await user.click(
-      await screen.findByRole("button", { name: "Clear this notification" }),
+      await screen.findByRole("button", { name: "Delete notification" }),
     );
     expect(handlers.onDismiss).toHaveBeenCalledWith(1);
     expect(handlers.onMarkRead).not.toHaveBeenCalled();
+  });
+
+  it("names the bell's X as a hide from this menu", async () => {
+    const user = userEvent.setup();
+    const handlers = renderItem(makeNotification(), {
+      dismissAction: "hideFromBell",
+    });
+    await user.click(
+      await screen.findByRole("button", { name: "Hide from this menu" }),
+    );
+    expect(handlers.onDismiss).toHaveBeenCalledWith(1);
+    expect(
+      screen.queryByRole("button", { name: "Delete notification" }),
+    ).not.toBeInTheDocument();
   });
 
   it("resolves the row from an action button without marking it read", async () => {
@@ -237,6 +259,7 @@ describe("NotificationItem: compact avatar size (design N2)", () => {
           onMarkRead={vi.fn()}
           onResolve={vi.fn()}
           onDismiss={vi.fn()}
+          dismissAction="hideFromBell"
           isCompact
         />
       </TestProviders>,

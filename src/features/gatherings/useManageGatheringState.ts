@@ -24,7 +24,7 @@ export function useManageGatheringState({
   const fmt = useFormat();
   const [gatheringState, setGatheringState] = useState<GatheringState>(() =>
     demoMode || !gathering
-      ? demoInitialState()
+      ? demoInitialState(fmt, t)
       : liveInitialState(gathering, fmt, t),
   );
 

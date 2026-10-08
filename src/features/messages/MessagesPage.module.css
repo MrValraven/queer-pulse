@@ -771,6 +771,17 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+/* The header's name row stays ONE line, unlike the wrapping `.nameRow` the
+   lists use: the bar has room for two lines (name, meta), so on a phone a
+   staff or ambassador pill that wrapped under the name pushed the stack to
+   four or five lines. The pills never shrink (nowrap, min-width auto), so the
+   name is what gives way. */
+.ctbNameRow {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+}
 /* The name truncates on its own so a long name ellipsizes instead of shoving
    the staff badge onto a second line. */
 .ctbNameText {
@@ -779,16 +790,21 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+/* One line that ellipsizes: "he/him · Connected since Oct 2026" wrapped to
+   three lines in a narrow phone header. Block rather than flex so the text
+   node itself can carry the ellipsis. */
 .ctbMeta {
   font-size: var(--text-12);
   color: var(--ink-40);
-  display: flex;
-  align-items: center;
-  gap: 5px;
   min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .activeNowDot {
-  flex: none;
+  display: inline-block;
+  vertical-align: middle;
+  margin-inline-end: 5px;
   width: 7px;
   height: 7px;
   border-radius: 50%;

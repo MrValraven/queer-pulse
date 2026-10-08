@@ -1,12 +1,6 @@
-import { useId, useMemo, useRef, useState, type KeyboardEvent } from "react";
-import { FiMapPin } from "react-icons/fi";
-import { useOutsideDismiss } from "../../shared/hooks/useOutsideDismiss";
-import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useDirectoryPlaces } from "../marketing/api/useDirectory";
-import type { DirectoryPlace } from "../marketing/directoryPlaces";
-import { VenuePickerSearch } from "./VenuePickerSearch";
-import { venuePickerResults } from "./venuePickerResults";
-import styles from "./VenuePicker.module.css";
+import type { ReactNode } from "react";
+import { VenuePickerDropdown } from "./VenuePickerDropdown";
+import { VenuePickerInline } from "./VenuePickerInline";
 
 /** A gathering's venue: either free text, or a structured link to a real
  *  directory listing (name mirrors the listing's own, so display never
@@ -22,176 +16,47 @@ export interface VenueSelection {
 
 /**
  * Pick a gathering's venue from the local business directory, or type one in
- * by hand. Three states: a linked-listing chip (with a "Change" escape
- * hatch), a search combobox over `useDirectoryPlaces()`, and a plain
- * free-text field — toggled via "Can't find it? Type it in instead" /
- * "Search the directory instead". Used by both the manage dashboard's Edit
- * venue modal and the create-gathering wizard's `steps/PlaceFields.tsx`.
+ * by hand. Two layouts share one value shape. `dropdown` (the default, drawn
+ * by the create-gathering wizard's `steps/PlaceFields.tsx`) floats its
+ * results in a popover under the search field. `inline` (the manage page's
+ * Edit venue modal) keeps the selected venue, the search and a tall results
+ * list on the page together, because a popover inside a dialog's scrolling
+ * body is clipped to a sliver.
  */
 export function VenuePicker({
   value,
   onChange,
   id,
   labelledBy,
+  layout = "dropdown",
+  selectionDetail,
 }: {
   value: VenueSelection;
   onChange: (value: VenueSelection) => void;
   id?: string;
   labelledBy?: string;
+  layout?: "dropdown" | "inline";
+  /** Inline layout only: extra detail about the chosen venue, drawn inside
+   *  its card (the Edit venue modal passes the listing's street address). */
+  selectionDetail?: ReactNode;
 }) {
-  const { t } = useTranslation();
-  const places = useDirectoryPlaces();
-  const baseId = useId();
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  const [mode, setMode] = useState<"search" | "freetext">(
-    value.venueListing || !value.text ? "search" : "freetext",
-  );
-  const [query, setQuery] = useState(value.venueListing ? "" : value.text);
-  const [open, setOpen] = useState(false);
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [shouldFocusSearch, setShouldFocusSearch] = useState(false);
-
-  const results = useMemo(
-    () => venuePickerResults(places, query),
-    [places, query],
-  );
-
-  useOutsideDismiss(open, containerRef, () => setOpen(false));
-
-  const selectPlace = (place: DirectoryPlace) => {
-    onChange({
-      text: place.name,
-      listingId: place.id ?? null,
-      venueListing: { slug: place.slug, name: place.name },
-    });
-    setOpen(false);
-  };
-
-  const switchToFreeText = () => {
-    setMode("freetext");
-    setOpen(false);
-    onChange({
-      text: query || value.text,
-      listingId: null,
-      venueListing: null,
-    });
-  };
-
-  const switchToSearch = () => {
-    setMode("search");
-    setQuery("");
-    setActiveIndex(0);
-  };
-
-  // The linked chip renders off `value.venueListing`, so "Change" has to
-  // clear the selection itself; flipping local mode alone keeps the chip up.
-  // The Change button unmounts with the chip, so focus moves to the search.
-  const startChange = () => {
-    setMode("search");
-    setQuery("");
-    setActiveIndex(0);
-    setOpen(true);
-    setShouldFocusSearch(true);
-    onChange({ text: "", listingId: null, venueListing: null });
-  };
-
-  const onKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
-    if (!open) {
-      if (event.key === "ArrowDown" || event.key === "Enter") setOpen(true);
-      return;
-    }
-    switch (event.key) {
-      case "ArrowDown":
-        event.preventDefault();
-        setActiveIndex((index) => Math.min(index + 1, results.length - 1));
-        break;
-      case "ArrowUp":
-        event.preventDefault();
-        setActiveIndex((index) => Math.max(index - 1, 0));
-        break;
-      case "Enter": {
-        event.preventDefault();
-        const target = results[activeIndex];
-        if (target) selectPlace(target);
-        break;
-      }
-      case "Escape":
-        event.preventDefault();
-        setOpen(false);
-        break;
-      default:
-        break;
-    }
-  };
-
-  if (value.venueListing) {
+  if (layout === "inline") {
     return (
-      <div className={styles.linked}>
-        <FiMapPin aria-hidden className={styles.linkedIcon} />
-        <div className={styles.linkedBody}>
-          <div className={styles.linkedName}>{value.venueListing.name}</div>
-          <div className={styles.linkedMeta}>
-            {t("gatherings:venuePicker.fromDirectory")}
-          </div>
-        </div>
-        <button
-          type="button"
-          className={styles.changeBtn}
-          onClick={startChange}
-        >
-          {t("gatherings:venuePicker.change")}
-        </button>
-      </div>
+      <VenuePickerInline
+        value={value}
+        onChange={onChange}
+        id={id}
+        labelledBy={labelledBy}
+        selectionDetail={selectionDetail}
+      />
     );
   }
-
-  if (mode === "freetext") {
-    return (
-      <div>
-        <input
-          id={id}
-          aria-labelledby={labelledBy}
-          type="text"
-          className={styles.freeInput}
-          placeholder={t("gatherings:venuePicker.freeTextPlaceholder")}
-          value={value.text}
-          onChange={(event) =>
-            onChange({
-              text: event.target.value,
-              listingId: null,
-              venueListing: null,
-            })
-          }
-        />
-        <button
-          type="button"
-          className={styles.toggleLink}
-          onClick={switchToSearch}
-        >
-          {t("gatherings:venuePicker.searchInstead")}
-        </button>
-      </div>
-    );
-  }
-
   return (
-    <VenuePickerSearch
+    <VenuePickerDropdown
+      value={value}
+      onChange={onChange}
       id={id}
       labelledBy={labelledBy}
-      baseId={baseId}
-      containerRef={containerRef}
-      query={query}
-      setQuery={setQuery}
-      open={open}
-      setOpen={setOpen}
-      activeIndex={activeIndex}
-      setActiveIndex={setActiveIndex}
-      results={results}
-      onKeyDown={onKeyDown}
-      onSelectPlace={selectPlace}
-      onSwitchToFreeText={switchToFreeText}
-      shouldFocusOnMount={shouldFocusSearch}
     />
   );
 }

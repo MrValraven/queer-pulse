@@ -11,7 +11,11 @@ import { gatheringPath } from "../../features/gatherings/gatheringPaths";
 import { parseMentions, type MentionSegment } from "./parseMentions";
 import { mentionNameKey } from "./mentionNameKey";
 import { useIsMemberMentionInert } from "./MentionLinkPolicyContext";
-import { useMentionNameMap } from "./MentionNamesContext";
+import {
+  isMentionRefKnownUnresolved,
+  useMentionNameAuthority,
+  useMentionNameMap,
+} from "./MentionNamesContext";
 import { useTranslation } from "../i18n/useTranslation";
 import styles from "./MentionText.module.css";
 
@@ -45,15 +49,21 @@ function UnnamedMemberMention() {
  *  mention shows the target's display name with no sigil, and the underlying
  *  `sigil+slug` becomes the link's `title` so same-named targets stay
  *  distinguishable on hover. Topics always keep their `#tag`. Without a provider
- *  — or when a slug can't be resolved — it renders `sigil+slug` exactly as
+ *  or when a slug can't be resolved it renders `sigil+slug` exactly as
  *  before, so it stays lookup-free and 404s gracefully on unknown slugs.
+ *
+ *  A non-topic mention the name map vouches for as unresolved
+ *  (`ResolvedMentionNamesProvider` once a lookup that asked about it settled,
+ *  or demo mode) points at nothing, for example a half-typed `b/caf`, and
+ *  renders as plain text: `sigil+slug`, no link, no mention styling, no title.
+ *  Topics always link.
  *
  *  `linkify={false}` keeps every mention's styling but renders it as inert
  *  text. The public profile and persona pages pass `loggedIn` here: those two
  *  are the only mention surfaces reachable signed out, and almost everything a
  *  bio can point at (`/members/*`, `/communities/*`) sits behind the auth gate,
- *  so a visitor following one would land on a wall instead of the person or
- *  place named. Auth is read at those call sites rather than here, so this
+ *  so a visitor following one would land on a wall where the person or
+ *  place named should be. Auth is read at those call sites and this
  *  renderer stays a pure function of its props. */
 export function MentionText({
   text,
@@ -66,6 +76,7 @@ export function MentionText({
 }) {
   const nameMap = useMentionNameMap();
   const isMemberMentionInert = useIsMemberMentionInert();
+  const nameAuthority = useMentionNameAuthority();
   const segments = parseMentions(text);
   return (
     <>
@@ -80,10 +91,9 @@ export function MentionText({
         const config = MENTION_CONFIG[segment.kind];
         const sigilSlug = `${config.sigil}${segment.slug}`;
         // Topics keep their #tag; every other kind resolves to a name if known.
+        const refKey = mentionNameKey(segment.kind, segment.slug);
         const resolvedName =
-          segment.kind === "topic"
-            ? undefined
-            : nameMap.get(mentionNameKey(segment.kind, segment.slug));
+          segment.kind === "topic" ? undefined : nameMap.get(refKey);
         const label = resolvedName ?? sigilSlug;
         const title = resolvedName ? sigilSlug : undefined;
         // PRD-423: a matched Go together chat names a member by first name
@@ -100,6 +110,13 @@ export function MentionText({
               {resolvedName ?? <UnnamedMemberMention />}
             </span>
           );
+        }
+        if (
+          segment.kind !== "topic" &&
+          !resolvedName &&
+          isMentionRefKnownUnresolved(nameAuthority, refKey)
+        ) {
+          return <span key={index}>{sigilSlug}</span>;
         }
         if (!linkify) {
           return (

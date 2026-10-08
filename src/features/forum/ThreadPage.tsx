@@ -13,7 +13,8 @@ import { isMaskedByline } from "./forumAuthor.helpers";
 import { isFundingAuthor } from "./funding/fundingPermissions";
 import { deriveOpView } from "./useThreadModeration";
 import { useThreadPageState } from "./useThreadPageState";
-import { MentionNamesProvider } from "../../shared/mentions/MentionNames";
+import { useThreadMentionTexts } from "./useThreadMentionTexts";
+import { ResolvedMentionNamesProvider } from "../../shared/mentions/ResolvedMentionText";
 import styles from "./ThreadPage.module.css";
 
 export function ThreadPage() {
@@ -39,11 +40,19 @@ export function ThreadPage() {
     voteReply,
     catMeta,
     replyTree,
+    visibleReplies,
     likedReplies,
     addReply,
     answerAndTags,
     quoteReply,
   } = useThreadPageState();
+  // Called ahead of the not-found guard below, so the hook order never
+  // changes as the thread loads.
+  const mentionTexts = useThreadMentionTexts(
+    threadData,
+    moderation.opOverride,
+    visibleReplies,
+  );
 
   // Live mode has no thread until the fetch resolves — skeleton, then a real
   // "not found" state. Demo always has a thread, so this branch is live-only. A
@@ -88,7 +97,7 @@ export function ThreadPage() {
 
   return (
     <PageShell>
-      <MentionNamesProvider>
+      <ResolvedMentionNamesProvider texts={mentionTexts}>
         <ThreadTopbar
           categoryName={catMeta ? t(catMeta.nameKey) : undefined}
           thread={thread}
@@ -198,7 +207,7 @@ export function ThreadPage() {
             thread.kind === "ask" && isFundingAuthor(thread, demoMode)
           }
         />
-      </MentionNamesProvider>
+      </ResolvedMentionNamesProvider>
     </PageShell>
   );
 }

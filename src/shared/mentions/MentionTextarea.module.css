@@ -16,7 +16,7 @@
   box-shadow: var(--shadow-e3);
   max-height: 260px;
   overflow-y: auto;
-  /* Grow gently down from the anchored top edge rather than popping in. */
+  /* Grow gently down from the anchored top edge as it appears. */
   transform-origin: top center;
   animation: mentionMenuIn var(--dur-fast) var(--ease-out);
 }
@@ -44,8 +44,13 @@
   font: inherit;
   color: var(--ink);
 }
+/* --line-rgb is plum in light and cream in dark, so the keyboard cursor reads
+   on the dark list surface too. */
 .optionOn {
-  background: rgba(var(--plum-rgb), 0.06);
+  background: rgba(var(--line-rgb), 0.06);
+}
+:global([data-theme="dark"]) .optionOn {
+  background: rgba(var(--line-rgb), 0.12);
 }
 .avatar {
   display: inline-flex;
@@ -60,6 +65,12 @@
   font-size: var(--text-11);
   font-weight: 600;
   flex: 0 0 auto;
+}
+/* --plum is close to the dark --paper, so the letter disc takes Avatar's dark
+   plum treatment: a cream tint under strong text. */
+:global([data-theme="dark"]) .avatar {
+  background: rgba(var(--cream-rgb), 0.14);
+  color: var(--text-strong);
 }
 .name {
   font-weight: 600;
@@ -87,9 +98,27 @@
     transform: translateY(0) scale(1);
   }
 }
+/* The portalled list (`shouldPortalMenu`). `position`, the offsets, the
+   field's width and any tighter height cap come inline from
+   `usePortalMenuPlacement`. On `document.body` it sits beside
+   any open dialog's scrim, hence the portal tier above the modal ones. */
+.menuPortalled {
+  left: auto;
+  z-index: var(--z-popover-portal);
+}
+/* The one commit before the first measurement. */
+.menuUnplaced {
+  visibility: hidden;
+}
+/* Flipped above the field when the viewport has no room below it. */
+.menuFlipped {
+  transform-origin: bottom center;
+  animation-name: mentionMenuInUp;
+}
 @media (prefers-reduced-motion: reduce) {
   .menu,
-  .menuAbove {
+  .menuAbove,
+  .menuFlipped {
     animation: none;
   }
 }

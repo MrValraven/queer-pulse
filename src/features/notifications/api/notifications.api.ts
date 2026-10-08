@@ -43,6 +43,12 @@ export interface NotificationDTO {
    * absent on an ordinary row. `actor` is always the most recent of them.
    */
   otherActorCount?: number;
+  /**
+   * The member hid this row from the nav bell's dropdown (`POST
+   * /notifications/:id/hide`). Optional because an older backend does not send
+   * it; the adapter reads a missing value as `false`.
+   */
+  isHiddenFromBell?: boolean;
 }
 
 /**
@@ -123,3 +129,12 @@ export const markAllNotificationsRead = () =>
  */
 export const dismissNotification = (id: number | string) =>
   apiDelete<{ ok: true }>(`/notifications/${id}`);
+
+/**
+ * POST /notifications/:id/hide: take one row out of the member's nav bell
+ * dropdown and mark it read. The row stays on the notifications page. Scoped
+ * server-side to the caller's own notifications, so a row that is not theirs
+ * is a 404.
+ */
+export const hideNotificationFromBell = (id: number | string) =>
+  apiPost<{ ok: true }>(`/notifications/${id}/hide`);

@@ -1,0 +1,5 @@
+/* The click-catching wrapper adds no box of its own, so the page's grid
+   lays out exactly as it does outside a preview. */
+.region {
+  display: contents;
+}

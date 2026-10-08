@@ -1,0 +1,134 @@
+/* "Tell someone where you'll be": recipient picker beside the message.
+   Stacked, the picker's own scrolling list plus a six-row textarea ran past
+   the dialog body, so the body scrolled too and carried the search box away
+   under the header. Side by side, both fit and only the rows scroll. */
+
+/* Wider than `wide` (680px) on desktop, so each column keeps room for a
+   member row and a readable message. Doubled up with the role so it wins over
+   the shared `.modalWide` whichever stylesheet loads last. Below 720px the
+   dialog is a full-width bottom sheet and this leaves it alone. */
+@media (min-width: 720px) {
+  [role="dialog"].dialog {
+    max-width: 760px;
+  }
+}
+
+.layout {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.picker {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 0;
+}
+
+/* Same values as FormField's label, so the two column headings read as one
+   pair. */
+.pickerLabel {
+  margin: 0;
+  font-size: var(--text-11-5);
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+
+.messageColumn {
+  min-width: 0;
+}
+
+/* The column already spaces itself; FormField's trailing margin would only
+   push the helper line below the bottom of the list. */
+.layout .messageField {
+  margin-bottom: 0;
+}
+
+@media (min-width: 720px) {
+  .layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+    gap: 24px;
+    align-items: stretch;
+  }
+
+  /* The message column stretches to the picker's height. A grid with the
+     control row on `1fr` hands that height to the control wrapper, and a
+     stretched grid item counts as a definite height, so the textarea can fill
+     it with `height: 100%` and end level with the bottom of the list. */
+  .messageColumn {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .layout .messageField {
+    flex: 1;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+  }
+
+  /* Resize stays off (FormField's default): the box already fills its column,
+     and a dragged height would break the line it shares with the list. */
+  .messageColumn .messageField textarea {
+    height: 100%;
+    min-height: 160px;
+  }
+}
+
+/* The rows scroll under a hard edge, so a row the list cuts through read as a
+   broken crop. Both edges fade, driven by the list's own scroll: the top fade
+   arrives once the list has moved, the bottom one leaves at the end so the
+   last row lands whole. A list too short to scroll has no active timeline,
+   the animation never applies, and both fades stay at 0. */
+@property --list-fade-top {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+@property --list-fade-bottom {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+@keyframes listEdgeFade {
+  0% {
+    --list-fade-top: 0px;
+    --list-fade-bottom: 32px;
+  }
+  8% {
+    --list-fade-top: 32px;
+  }
+  92% {
+    --list-fade-bottom: 32px;
+  }
+  100% {
+    --list-fade-top: 32px;
+    --list-fade-bottom: 0px;
+  }
+}
+@supports (animation-timeline: scroll()) {
+  .picker [role="listbox"] {
+    mask-image: linear-gradient(
+      to bottom,
+      transparent 0,
+      var(--cream) var(--list-fade-top),
+      var(--cream) calc(100% - var(--list-fade-bottom)),
+      transparent 100%
+    );
+    animation: listEdgeFade linear both;
+    animation-timeline: scroll(self);
+  }
+}
+
+/* Bottom sheet: one column, picker first. A shorter list leaves the message
+   on screen under it, so the sheet scrolls as one surface with only a few
+   rows scrolling inside the list. Without a list footer the listbox is the
+   element that scrolls. */
+@media (max-width: 719.98px) {
+  .picker [role="listbox"] {
+    max-height: 220px;
+  }
+}

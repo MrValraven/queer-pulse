@@ -2,6 +2,8 @@ import {
   escapeIcsText,
   icsTimestamp,
 } from "../../../shared/lib/calendarExport";
+import { mentionNameKey } from "../../../shared/mentions/mentionNameKey";
+import { parseMentions } from "../../../shared/mentions/parseMentions";
 import {
   gatheringOccurrences,
   type GatheringOccurrenceInput,
@@ -30,6 +32,9 @@ export interface ShareCalendarEvent {
   description: string;
   url: string;
 }
+
+/** No resolved names: every mention reads as its bare slug. */
+const NO_MENTION_NAMES: ReadonlyMap<string, string> = new Map();
 
 /** The start time the payload builder falls back to. */
 const FALLBACK_START_TIME = "19:00";
@@ -74,6 +79,29 @@ export function gatheringDurationMs(
 }
 
 /**
+ * A description's mention tokens as words a calendar app can show. Each one
+ * reads as the name it points at when `mentionNames` holds it (keyed
+ * `kind:slug`, as the mention renderers key theirs), and as its slug with the
+ * sigil dropped otherwise, so `@ana-lopes` reads `ana-lopes`. A `#topic` keeps
+ * its hash, the way the gathering page shows it.
+ */
+export function readableMentionText(
+  text: string,
+  mentionNames: ReadonlyMap<string, string> = NO_MENTION_NAMES,
+): string {
+  return parseMentions(text)
+    .map((segment) => {
+      if (segment.kind === "text") return segment.value;
+      if (segment.kind === "topic") return `#${segment.slug}`;
+      return (
+        mentionNames.get(mentionNameKey(segment.kind, segment.slug)) ??
+        segment.slug
+      );
+    })
+    .join("");
+}
+
+/**
  * Every date of the gathering as a calendar event, earliest first.
  *
  * `slug` is the first date's slug, and every UID is built on it with the
@@ -81,6 +109,9 @@ export function gatheringDurationMs(
  * date's slug in series order, as the backend returns them. When it holds one
  * slug per date listed here, each event links to its own date's page. Any
  * other length links every event to the first date.
+ *
+ * `mentionNames` is optional: a caller holding resolved mention names passes
+ * them so the description names people and places in full.
  */
 export function buildGatheringCalendarEvents({
   form,
@@ -88,17 +119,22 @@ export function buildGatheringCalendarEvents({
   occurrenceSlugs,
   urlForSlug,
   location,
+  mentionNames,
 }: {
   form: GatheringCalendarInput;
   slug: string;
   occurrenceSlugs: readonly string[];
   urlForSlug: (occurrenceSlug: string) => string;
   location: string;
+  mentionNames?: ReadonlyMap<string, string>;
 }): ShareCalendarEvent[] {
   const occurrences = gatheringOccurrences(form);
   const hasSlugPerDate = occurrenceSlugs.length === occurrences.length;
   const durationMs = gatheringDurationMs(form);
-  const trimmedDescription = form.description.trim();
+  const trimmedDescription = readableMentionText(
+    form.description.trim(),
+    mentionNames,
+  );
   return occurrences.map((start, index) => {
     const occurrenceSlug = hasSlugPerDate
       ? (occurrenceSlugs[index] ?? slug)

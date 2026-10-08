@@ -3471,6 +3471,38 @@ export const marketing: Catalog = {
     "The feed holds still as more cards load",
   "changelog.entries.feed-holds-still-while-loading.body":
     "New-member cards you can already see stay the same as you scroll, and later joiners get their own card.",
+  "changelog.entries.tag-people-in-gathering-descriptions.title":
+    "Tag members and businesses in gathering descriptions",
+  "changelog.entries.tag-people-in-gathering-descriptions.body":
+    "Type @ or b/ as you write, and tagged members and business owners get a mention notification.",
+  "changelog.entries.gathering-guest-preview.title":
+    "Preview your gathering as a guest",
+  "changelog.entries.gathering-guest-preview.body":
+    "Hosts can see their gathering page as a member, a guest who's going, or someone on the waitlist.",
+  "changelog.entries.roomier-venue-editor.title":
+    "Pick a gathering's venue from a full list",
+  "changelog.entries.roomier-venue-editor.body":
+    "The venue editor opens wide, with nearby places in view and a row to use any name you type.",
+  "changelog.entries.bell-hide-keeps-notifications.title":
+    "Hide notifications from the bell and keep them on the page",
+  "changelog.entries.bell-hide-keeps-notifications.body":
+    "Deleting one from the Notifications page now asks first, then removes it on every device.",
+  "changelog.entries.share-plans-side-by-side.title":
+    "Share your plans picks and writes side by side",
+  "changelog.entries.share-plans-side-by-side.body":
+    "The connection list and your message sit in two columns, and the search stays in view as you scroll.",
+  "changelog.entries.forum-replies-read-as-one-conversation.title":
+    "Forum replies read as one conversation",
+  "changelog.entries.forum-replies-read-as-one-conversation.body":
+    "Replies are grouped by space and thread lines, Report sits in the reply menu, and edits show beside the date.",
+  "changelog.entries.gathering-where-map.title":
+    "Gatherings show where they are on a map",
+  "changelog.entries.gathering-where-map.body":
+    "On a computer the venue sits on a map beside the details, with a button that opens directions in Google Maps.",
+  "changelog.entries.thread-mentions-read-as-names.title":
+    "Thread mentions read as names",
+  "changelog.entries.thread-mentions-read-as-names.body":
+    "Someone you tag in a forum or community thread now shows up by name, wherever they sit in the directory.",
   "changelog.entries.online-listings-own-fields.title":
     "Online businesses get their own listing form",
   "changelog.entries.online-listings-own-fields.body":

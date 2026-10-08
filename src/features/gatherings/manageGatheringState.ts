@@ -171,20 +171,31 @@ function demoScheduleAt(hour: number): Date {
   return at;
 }
 
-/** The demo dashboard's starting state: the static Pride-Brunch prototype. */
-export function demoInitialState(): GatheringState {
-  const dateDetail =
-    GATHERING_DETAILS.find((detail) => detail.id === "date")?.value ?? "";
+/** The demo dashboard's starting state: the static Pride-Brunch prototype.
+ *  Its date and time rows read through `dateDisplay` and `timeDisplay`, the
+ *  same functions a save uses, so a row keeps one format before and after. */
+export function demoInitialState(
+  fmt: Formatters,
+  t: TFunction,
+): GatheringState {
+  const startAt = demoScheduleAt(11);
+  const endAt = demoScheduleAt(14);
+  const dateDetail = dateDisplay(startAt, endAt, fmt, t);
+  const timeDetail = timeDisplay(startAt, endAt, fmt, t);
   const venueDetail =
     GATHERING_DETAILS.find((detail) => detail.id === "venue")?.value ?? "";
   return {
     title: GATHERING_TITLE,
     date: dateDetail,
-    startAt: demoScheduleAt(11),
-    endAt: demoScheduleAt(14),
+    startAt,
+    endAt,
     location: venueDetail,
     description: GATHERING_DESCRIPTION,
-    details: GATHERING_DETAILS,
+    details: GATHERING_DETAILS.map((detail) => {
+      if (detail.id === "date") return { ...detail, value: dateDetail };
+      if (detail.id === "time") return { ...detail, value: timeDetail };
+      return detail;
+    }),
     // The static prototype has no gathering linked to a real directory
     // listing.
     venueListingId: null,

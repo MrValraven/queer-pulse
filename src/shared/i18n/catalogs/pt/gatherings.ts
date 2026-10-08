@@ -1412,6 +1412,16 @@ export const gatherings: Catalog = {
   "venuePicker.freeTextPlaceholder": "Nome do local",
   "venuePicker.fromDirectory": "Do diretório local",
   "venuePicker.change": "Alterar",
+  "venuePicker.selectedLabel": "Local escolhido",
+  "venuePicker.typedByHand": "Escrito por ti",
+  "venuePicker.selectedOption": "Escolhido",
+  "venuePicker.useTyped": "Usar “{query}” como local",
+  "venuePicker.typeAnyHint":
+    "Não aparece? Escreve o nome de qualquer local para o usares tal como está.",
+  "venuePicker.noDirectoryMatch":
+    "Nada no diretório local corresponde a “{query}”",
+  "venuePicker.resultCount_one": "{count} local encontrado",
+  "venuePicker.resultCount_other": "{count} locais encontrados",
   "venuePicker.refusedError":
     "Já não dá para associar este local a um convívio. Toca em Alterar para escolher outro ou escrever tu o nome.",
 
@@ -1718,6 +1728,10 @@ export const gatherings: Catalog = {
   "gathering.where.costFree": "Gratuito",
   "gathering.where.costNote":
     "O que pagares fica entre ti e quem organiza. A QueerPulse não recebe dinheiro.",
+  "gathering.where.takeMeThere": "Leva-me lá",
+  "gathering.where.mapAriaExact":
+    "Mapa que mostra a localização exata de {name}",
+  "gathering.where.mapAriaArea": "Mapa que mostra a área aproximada de {area}",
   "gathering.access.heading": "Acessibilidade",
   "gathering.access.lead":
     "O que quem organiza nos disse sobre entrar e estar à vontade. Uma pergunta sem resposta quer dizer que ninguém nos disse, por isso pergunta se precisares de saber.",
@@ -1806,6 +1820,7 @@ export const gatherings: Catalog = {
   "sharePlans.loadingConnections": "A procurar as tuas conexões…",
   "sharePlans.noConnections":
     "Ainda não tens conexões. Conecta-te a alguém e essa pessoa aparece aqui.",
+  "sharePlans.recipientLabel": "Quem recebe",
   "sharePlans.messageLabel": "O que essa pessoa vai receber",
   "sharePlans.messageHint": "Muda o texto como quiseres antes de enviar.",
   "sharePlans.sendCta": "Enviar",
@@ -2061,4 +2076,19 @@ export const gatherings: Catalog = {
     "Isto acaba antes de começar. Passa a data ou a hora de fim para depois.",
   "create.step2.spanTooLong":
     "Um convívio pode durar até {days} dias. Aproxima o fim do início.",
+
+  // ── Host guest preview (GatheringPreviewBar) ────────────────────────────────
+  "preview.menuCta": "Ver como convidado",
+  "preview.barLabel": "A ver como",
+  "preview.role.member": "Membro",
+  "preview.role.going": "Vai",
+  "preview.role.waitlisted": "Em lista de espera",
+  "preview.exitCta": "Sair da pré-visualização",
+  "preview.caption":
+    "Rostos e números são o que vê um membro com quem não tens conexão.",
+  "preview.inertToast":
+    "Isto é uma pré-visualização. Os convidados podem tocar aqui.",
+  "preview.errorTitle": "A pré-visualização não carregou",
+  "preview.errorBody":
+    "O teu convívio está bem. Tenta outra vez daqui a pouco, ou volta à tua vista de anfitrião.",
 };

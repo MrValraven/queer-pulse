@@ -38,7 +38,7 @@ export function AnnouncementBanner() {
   if (dismissed) return null;
 
   return (
-    <div className={styles.banner} role="status">
+    <div className={styles.banner} role="status" data-preview-allow="">
       <p className={styles.message}>{status.announcementMessage}</p>
       <button
         type="button"

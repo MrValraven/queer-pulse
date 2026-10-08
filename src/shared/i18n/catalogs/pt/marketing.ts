@@ -3549,6 +3549,38 @@ export const marketing: Catalog = {
     "O feed fica quieto enquanto carregam mais cartões",
   "changelog.entries.feed-holds-still-while-loading.body":
     "Os cartões semanais de novos membros que já vês ficam iguais ao fazer scroll, e quem aparece depois tem cartão próprio.",
+  "changelog.entries.tag-people-in-gathering-descriptions.title":
+    "Marca membros e negócios na descrição dos convívios",
+  "changelog.entries.tag-people-in-gathering-descriptions.body":
+    "Usa @ ou b/ ao escrever, e os membros e donos de negócios marcados recebem uma notificação de menção.",
+  "changelog.entries.gathering-guest-preview.title":
+    "Vê o teu convívio como um convidado",
+  "changelog.entries.gathering-guest-preview.body":
+    "Os anfitriões podem ver a página do convívio como um membro, alguém que vai ou alguém em lista de espera.",
+  "changelog.entries.roomier-venue-editor.title":
+    "Escolhe o local de um encontro numa lista completa",
+  "changelog.entries.roomier-venue-editor.body":
+    "O editor de local abre largo, com os locais por perto à vista e uma linha para usares qualquer nome que escrevas.",
+  "changelog.entries.bell-hide-keeps-notifications.title":
+    "Esconde notificações do sino e mantém-nas na página",
+  "changelog.entries.bell-hide-keeps-notifications.body":
+    "Apagar uma na página de Notificações agora pede confirmação e remove-a em todos os teus dispositivos.",
+  "changelog.entries.share-plans-side-by-side.title":
+    "Partilhar planos com escolha e mensagem lado a lado",
+  "changelog.entries.share-plans-side-by-side.body":
+    "A lista de conexões e a tua mensagem ficam em duas colunas, e a pesquisa fica à vista enquanto deslizas.",
+  "changelog.entries.forum-replies-read-as-one-conversation.title":
+    "As respostas do fórum leem-se como uma conversa",
+  "changelog.entries.forum-replies-read-as-one-conversation.body":
+    "As respostas agrupam-se pelo espaço e pelas linhas, Denunciar fica no menu e o editado aparece junto à data.",
+  "changelog.entries.gathering-where-map.title":
+    "Os encontros mostram no mapa onde acontecem",
+  "changelog.entries.gathering-where-map.body":
+    "No computador, o local aparece num mapa ao lado dos detalhes, com um botão que abre o caminho no Google Maps.",
+  "changelog.entries.thread-mentions-read-as-names.title":
+    "As menções nos tópicos leem-se como nomes",
+  "changelog.entries.thread-mentions-read-as-names.body":
+    "Quem mencionas num tópico do fórum ou de uma comunidade aparece pelo nome, esteja onde estiver no diretório.",
   "changelog.entries.online-listings-own-fields.title":
     "Negócios online têm o seu próprio formulário",
   "changelog.entries.online-listings-own-fields.body":

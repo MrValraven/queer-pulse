@@ -72,8 +72,8 @@ export function ThreadReplyItem({
   /** Nested-replies feature: renders a "Reply" action next to the like button
    *  when provided. Omitted call sites (none left) keep today's behaviour. */
   onReply?: (reply: Reply) => void;
-  /** Renders a "Report" action for this reply, carrying its real `postId` as
-   *  the report subject. Omitted keeps the actions row report-free. */
+  /** Adds "Report" to this reply's "..." menu, carrying its real `postId` as
+   *  the report subject. Omitted leaves the menu without it. */
   onReport?: (reply: Reply) => void;
   /** Renders "Mark as answer" / "Unmark answer" (SOC-13). Omitted for a viewer
    *  who is neither the thread's author nor a moderator, so the row only ever
@@ -113,12 +113,15 @@ export function ThreadReplyItem({
   const { ref: bodyRef, isInView } = useInViewOnce<HTMLDivElement>();
   const firstLink = firstLinkIn(reply.body);
   const isBranchHidden = useIsReplyBranchHidden();
-  // On a phone Quote, the answer mark and Report move from the actions row
-  // into the "..." menu; one set renders at a time, never a hidden duplicate.
+  // Report always lives in the "..." menu. On a phone Quote and the answer
+  // mark move there too; one set renders at a time, never a hidden duplicate.
   const isCompact = useMediaQuery(mediaMax("md"));
   const hasActionsRow = !reply.deleted && !isEditing;
-  const overflow =
-    isCompact && hasActionsRow ? { onQuote, onAcceptAnswer, onReport } : {};
+  const overflow = hasActionsRow
+    ? isCompact
+      ? { onQuote, onAcceptAnswer, onReport }
+      : { onReport }
+    : {};
   return (
     <FadeIn
       delay={Math.min(index, 8) * 60}
@@ -200,18 +203,12 @@ export function ThreadReplyItem({
                 url={firstLink}
                 isEnabled={isInView && !isBranchHidden}
               />
-              {reply.editedAt && (
-                <span className={styles.editedMark}>
-                  {t("forum:edited.mark")}
-                </span>
-              )}
             </div>
             <ReplyActionsRow
               reply={reply}
               isLiked={isLiked}
               toggleReplyLike={toggleReplyLike}
               onReply={onReply}
-              onReport={isCompact ? undefined : onReport}
               onAcceptAnswer={isCompact ? undefined : onAcceptAnswer}
               onQuote={isCompact ? undefined : onQuote}
             />
@@ -231,8 +228,8 @@ export function ThreadReplyItem({
   );
 }
 
-/** The reply's "..." menu: edit, history, restore, delete and Mute / Block,
- *  plus, on a phone, the Quote / answer / Report actions the compact actions
+/** The reply's "..." menu: edit, history, restore, delete, Mute / Block and
+ *  Report, plus, on a phone, the Quote / answer actions the compact actions
  *  row leaves out (passed only then). */
 function ReplyMenu({
   reply,
@@ -311,6 +308,8 @@ function ReplyMenu({
  *  a narrow deep reply the badges and time drop to a second line while the
  *  actions menu stays pinned at the right of the row. */
 function ReplyAuthorLine({ reply }: { reply: Reply }) {
+  const { t } = useTranslation();
+  const shouldShowEdited = !!reply.editedAt && !reply.deleted;
   return (
     <span className={styles.replyMeta}>
       <span className={styles.replyName}>
@@ -326,7 +325,19 @@ function ReplyAuthorLine({ reply }: { reply: Reply }) {
       <MemberStaffBadge slug={reply.slug} />
       {reply.official && <OfficialBadge />}
       <ReplyBadges reply={reply} />
-      <span className={styles.replyTime}>{reply.time}</span>
+      {/* An edited reply says so right after its time, grouped with it so
+          the pair wraps as one unit. */}
+      {shouldShowEdited ? (
+        <span className={styles.replyTimeGroup}>
+          <span className={styles.replyTime}>{reply.time}</span>
+          <span className={styles.replyTime} aria-hidden="true">
+            {"·"}
+          </span>
+          <span className={styles.replyTime}>{t("forum:edited.inline")}</span>
+        </span>
+      ) : (
+        <span className={styles.replyTime}>{reply.time}</span>
+      )}
     </span>
   );
 }
@@ -357,13 +368,13 @@ function ReplyBadges({ reply }: { reply: Reply }) {
   );
 }
 
-/** The like / reply / quote / answer / report row under a reply body. */
+/** The like / reply / quote / answer row under a reply body. Report lives in
+ *  the "..." menu. */
 function ReplyActionsRow({
   reply,
   isLiked,
   toggleReplyLike,
   onReply,
-  onReport,
   onAcceptAnswer,
   onQuote,
 }: {
@@ -371,7 +382,6 @@ function ReplyActionsRow({
   isLiked: boolean;
   toggleReplyLike: (reply: Reply) => void;
   onReply?: (reply: Reply) => void;
-  onReport?: (reply: Reply) => void;
   onAcceptAnswer?: (reply: Reply) => void;
   onQuote?: (reply: Reply) => void;
 }) {
@@ -433,15 +443,6 @@ function ReplyActionsRow({
               ? "forum:replies.unmarkAnswer"
               : "forum:replies.markAnswer",
           )}
-        </button>
-      )}
-      {onReport && (
-        <button
-          type="button"
-          className={styles.replyReplyBtn}
-          onClick={() => onReport(reply)}
-        >
-          {t("forum:threadOp.report")}
         </button>
       )}
     </div>

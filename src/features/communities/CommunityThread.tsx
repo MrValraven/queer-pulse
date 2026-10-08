@@ -12,7 +12,7 @@ import { CommunityHistoryModal } from "./CommunityHistoryModal";
 import { CommunityTakedownDialog } from "./CommunityTakedownDialog";
 import { MentionText } from "../../shared/mentions/MentionText";
 import { MentionTextarea } from "../../shared/mentions/MentionTextarea";
-import { MentionNamesProvider } from "../../shared/mentions/MentionNames";
+import { ResolvedMentionNamesProvider } from "../../shared/mentions/ResolvedMentionText";
 import { useCommunityThreadState } from "./useCommunityThreadState";
 import type {
   DeleteTarget,
@@ -76,6 +76,7 @@ export function CommunityThread({
     opCanPin,
     opCanReport,
     replies,
+    mentionTexts,
     repliesPaging,
     toggleVote,
     postReply,
@@ -118,7 +119,7 @@ export function CommunityThread({
         onReportOp={onReportOp}
       />
       {open && (
-        <MentionNamesProvider>
+        <ResolvedMentionNamesProvider texts={mentionTexts}>
           <div className={styles.thBody}>
             {opDeleted ? (
               <p className={styles.tombstone}>
@@ -204,7 +205,7 @@ export function CommunityThread({
                 />
               ))}
           </div>
-        </MentionNamesProvider>
+        </ResolvedMentionNamesProvider>
       )}
       <ThreadModals
         slug={slug}

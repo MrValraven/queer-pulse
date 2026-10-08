@@ -1,3 +1,4 @@
+import type { GuestPreviewRole } from "../guestPreview/guestPreview";
 import type { EventBrowseFilters, EventFilter } from "./events.api";
 
 /**
@@ -19,6 +20,17 @@ export const eventKeys = {
   detailRoot: ["event"] as const,
   detail: (param: string | undefined, demoMode: boolean) =>
     ["event", param, demoMode] as const,
+  /**
+   * A host's guest preview (`?viewAs=`). Its own root on purpose: an RSVP
+   * patch or invalidation aimed at the host's real detail (`detailRoot`)
+   * reaches no preview, and a preview never stands in for the real one.
+   */
+  detailPreviewRoot: ["event-preview"] as const,
+  detailPreview: (
+    param: string | undefined,
+    viewAs: GuestPreviewRole,
+    demoMode: boolean,
+  ) => ["event-preview", param, viewAs, demoMode] as const,
 
   /** Prefix matching every events-list query (any filter, any mode). */
   listRoot: ["events"] as const,
@@ -61,6 +73,13 @@ export const eventKeys = {
   lineupRoot: ["event-lineup"] as const,
   lineup: (slug: string | undefined, demoMode: boolean) =>
     ["event-lineup", slug, demoMode] as const,
+  /** The lineup as a guest preview reads it. Its own root, as above. */
+  lineupPreviewRoot: ["event-lineup-preview"] as const,
+  lineupPreview: (
+    slug: string | undefined,
+    viewAs: GuestPreviewRole,
+    demoMode: boolean,
+  ) => ["event-lineup-preview", slug, viewAs, demoMode] as const,
   /** Prefix matching every lineup-invite query (any id, any mode). */
   lineupInviteRoot: ["lineup-invite"] as const,
   lineupInvite: (id: string | undefined, demoMode: boolean) =>

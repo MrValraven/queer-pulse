@@ -40,6 +40,7 @@ export function useThreadMentionOptionsQuery() {
   return {
     options: query.data ?? [],
     isError: query.isError,
+    isLoading: query.isLoading,
     refetch: () => void query.refetch(),
   };
 }

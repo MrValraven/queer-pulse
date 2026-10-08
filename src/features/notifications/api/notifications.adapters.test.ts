@@ -279,6 +279,28 @@ describe("notificationDtoToView", () => {
 // A sibling top-level describe rather than a nested one: the block above had
 // grown past the 200-line `max-lines-per-function` cap, which is an ESLint
 // ERROR here and so blocks the build.
+// A sibling top-level describe: the main `notificationDtoToView` block sits at
+// the 200-line `max-lines-per-function` cap.
+describe("notificationDtoToView: hidden from the bell", () => {
+  it("carries isHiddenFromBell: true through", () => {
+    expect(
+      notificationDtoToView(dto({ isHiddenFromBell: true }), t, fmt)
+        .isHiddenFromBell,
+    ).toBe(true);
+  });
+
+  it("carries isHiddenFromBell: false through", () => {
+    expect(
+      notificationDtoToView(dto({ isHiddenFromBell: false }), t, fmt)
+        .isHiddenFromBell,
+    ).toBe(false);
+  });
+
+  it("keeps the row in the bell when an older backend omits the field", () => {
+    expect(notificationDtoToView(dto(), t, fmt).isHiddenFromBell).toBe(false);
+  });
+});
+
 describe("notificationDtoToView: message mention source href", () => {
   it("opens the conversation at the mentioning message", () => {
     const view = notificationDtoToView(

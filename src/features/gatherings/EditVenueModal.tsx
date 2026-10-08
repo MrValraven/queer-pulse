@@ -2,18 +2,20 @@ import { useId, useState } from "react";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { FieldEditorShell } from "./FieldEditorShell";
 import { VenuePicker, type VenueSelection } from "./VenuePicker";
-import { LinkedVenueAddress } from "./steps/LinkedVenueAddress";
+import { VenueAddressDetail } from "./VenueSelectedCard";
 import { useListingAddress } from "./steps/useVenueAddress";
-import fieldStyles from "./CreateGatheringFields.module.css";
-import whenStyles from "./steps/WhenWhereChapter.module.css";
 
-/** The gathering-manage venue editor: a `VenuePicker` (search the local
- *  directory, or type a venue by hand) in the `FieldEditorShell` the other
- *  detail rows' editors share. Venue keeps its own component because its
- *  value is structured (text plus an optional listing link) and it saves
- *  through its own callback that keeps the listing id. A linked listing also
- *  supplies the street address, shown read-only under the picker and saved
- *  with the venue, the same way the create wizard fills it. */
+/** The gathering-manage venue editor: a `VenuePicker` in its inline layout
+ *  (the chosen venue, a search over the local directory and a tall results
+ *  list, with any typed name usable as is) in the `FieldEditorShell` the
+ *  other detail rows' editors share, at the wide size so the list has room.
+ *  Venue keeps its own component because its value is structured (text plus
+ *  an optional listing link) and it saves through its own callback that
+ *  keeps the listing id. A linked listing also supplies the street address,
+ *  shown read-only inside the chosen venue's card and saved with the venue,
+ *  the same way the create wizard fills it. On a phone with the keyboard up
+ *  the sheet folds its sub line away, so the results list keeps a few rows
+ *  above the keyboard. */
 export function EditVenueModal({
   initial,
   onClose,
@@ -25,7 +27,6 @@ export function EditVenueModal({
 }) {
   const { t } = useTranslation();
   const [value, setValue] = useState<VenueSelection>(initial);
-  const addressLabelId = useId();
   const pickerLabelId = useId();
   const linkedVenue = value.venueListing;
   const { venueAddress, isLoading } = useListingAddress(linkedVenue?.slug);
@@ -54,6 +55,8 @@ export function EditVenueModal({
       isSaveEnabled={canSave}
       onSave={save}
       onClose={onClose}
+      wide
+      shouldCollapseSubWithKeyboard
     >
       {/* The dialog's title names the field on screen, so the picker's
           label is for screen readers alone. */}
@@ -64,22 +67,13 @@ export function EditVenueModal({
         value={value}
         onChange={setValue}
         labelledBy={pickerLabelId}
+        layout="inline"
+        selectionDetail={
+          linkedVenue && venueAddress ? (
+            <VenueAddressDetail address={venueAddress} />
+          ) : undefined
+        }
       />
-      {linkedVenue && venueAddress && (
-        <div>
-          <div id={addressLabelId} className={fieldStyles.label}>
-            {t("gatherings:create.v2.when.addressLabel")}
-            <span className={whenStyles.labelNote}>
-              {t("gatherings:create.v2.when.addressNote")}
-            </span>
-          </div>
-          <LinkedVenueAddress
-            labelId={addressLabelId}
-            address={venueAddress}
-            venueName={linkedVenue.name}
-          />
-        </div>
-      )}
     </FieldEditorShell>
   );
 }

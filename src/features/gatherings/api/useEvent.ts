@@ -6,6 +6,7 @@ import { detailToGathering } from "./events.adapters";
 import { resolveGathering, type GatheringDetail } from "../data";
 import { gatheringSlugFromParam } from "../gatheringPaths";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
+import type { GuestPreviewRole } from "../guestPreview/guestPreview";
 
 export interface EventResult {
   gathering: GatheringDetail;
@@ -38,6 +39,35 @@ export function useEvent(param: string | undefined) {
     queryFn: async () => {
       if (demoMode) return { gathering: resolveGathering(param) };
       const dto = await getEvent(slug);
+      return { gathering: detailToGathering(dto, t) };
+    },
+  });
+}
+
+/**
+ * The detail as a guest would read it, for a host previewing their own
+ * gathering (`GET /events/:slug?viewAs=`). Live only, and only while a
+ * perspective is chosen; the server refuses anyone who is not an organiser.
+ * The previous perspective stays on screen while the next one loads, so
+ * switching views does not flash the skeleton. Always stale: an edit
+ * invalidates only the host's own detail, so a preview opened after one
+ * refetches and shows the gathering as it now stands.
+ */
+export function useEventPreview(
+  param: string | undefined,
+  viewAs: GuestPreviewRole | null,
+) {
+  const { demoMode } = useDemoMode();
+  const { t } = useTranslation();
+  const slug = gatheringSlugFromParam(param ?? "");
+  return useQuery<EventResult>({
+    queryKey: eventKeys.detailPreview(param, viewAs ?? "member", demoMode),
+    enabled: !demoMode && slug !== "" && viewAs !== null,
+    retry: false,
+    staleTime: 0,
+    placeholderData: (previous) => previous,
+    queryFn: async () => {
+      const dto = await getEvent(slug, viewAs ?? undefined);
       return { gathering: detailToGathering(dto, t) };
     },
   });

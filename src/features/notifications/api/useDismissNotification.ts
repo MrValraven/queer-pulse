@@ -21,6 +21,9 @@ export function useDismissNotification() {
       if (demoMode) return;
       await dismissNotification(id);
     },
+    // `useNotificationsReadState` toasts this write's failure with its own
+    // copy, so the app-wide mutation toast stays quiet for it.
+    meta: { silentError: true },
     onSettled: () => {
       void queryClient.invalidateQueries({ queryKey: ["notifications"] });
     },

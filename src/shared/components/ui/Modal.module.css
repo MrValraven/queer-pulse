@@ -185,6 +185,43 @@
   }
 }
 
+/* Opt-in through Modal's `shouldCollapseSubWithKeyboard`: a phone sheet whose
+   body is a search over a results list. With the keyboard up (the attribute
+   comes from useVisualViewportKeyboard) a 320x640 sheet kept about 28px of
+   the list visible, because the head's sub line, its paddings and the footer
+   took most of what was left above the keyboard. So the sheet grows towards
+   the top of the visible viewport, the sub line leaves the layout and stays
+   readable to assistive tech, the head and footer tighten (the footer's
+   home-indicator padding sits under the keyboard anyway), and the buttons
+   keep their 44px. With no keyboard nothing here applies. */
+@media (max-width: 719.98px) {
+  :global(html[data-keyboard-open]) .modalCollapsesWithKeyboard {
+    max-height: calc(100svh - var(--keyboard-inset, 0px) - 24px);
+  }
+  :global(html[data-keyboard-open]) .modalCollapsesWithKeyboard::before {
+    top: 6px;
+  }
+  :global(html[data-keyboard-open]) .modalCollapsesWithKeyboard .modalHead {
+    padding-top: 18px;
+    padding-bottom: 10px;
+  }
+  :global(html[data-keyboard-open]) .modalCollapsesWithKeyboard .modalSub {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+  :global(html[data-keyboard-open]) .modalCollapsesWithKeyboard .modalFoot {
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+}
+
 /* ── Bottom-sheet content modal ──────────────────────────────────────────── */
 .overlay {
   position: fixed;

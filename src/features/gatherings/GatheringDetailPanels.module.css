@@ -345,3 +345,47 @@
   width: 13px;
   height: 13px;
 }
+
+/* ── Getting there: the map beside the rows (GatheringWhereLayout) ───────── */
+/* The grid answers to the panel's own width: at the page's narrowest desktop
+   the main column is too slim for two columns, so the map sits above. */
+.whereSplit {
+  container-type: inline-size;
+}
+
+.whereGrid {
+  display: grid;
+  gap: 14px;
+}
+
+/* The map cell, framed like the rows beside it. The maplibre canvas and its
+   loader are absolutely positioned inside, so the cell sets the size and the
+   map fills whatever height the rows give it. */
+.whereMap {
+  position: relative;
+  min-height: 220px;
+  border-radius: var(--radius-12);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  background: var(--cream);
+  overflow: hidden;
+}
+
+@container (min-width: 600px) {
+  .whereGrid {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  }
+
+  .whereMap {
+    min-height: 300px;
+  }
+}
+
+.whereInfo {
+  display: grid;
+  gap: 14px;
+  align-content: start;
+}
+
+.whereDirections {
+  justify-self: start;
+}

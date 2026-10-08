@@ -6,6 +6,13 @@ import type { Formatters } from "../../shared/i18n/format";
 import type { TFunction } from "../../shared/i18n/types";
 import type { Notification } from "./notifications.types";
 
+/**
+ * A demo row as the builders write it. `buildNotifications` in
+ * `notificationsList.data.tsx` adds the per-session flags (`isHiddenFromBell:
+ * false`) to every row in one place, so no row literal has to repeat them.
+ */
+export type DemoNotificationRow = Omit<Notification, "isHiddenFromBell">;
+
 /** Milliseconds in each unit the demo rows express their age in. Mirrors the
  * copy in `notificationsList.data.tsx` (kept local here rather than imported,
  * to avoid a circular import between the two demo-data modules). */
@@ -31,7 +38,7 @@ function agoIso(amount: number, unit: keyof typeof UNIT_MS): string {
 export function buildUnreadActivityNotifications(
   t: TFunction,
   fmt: Formatters,
-): Notification[] {
+): DemoNotificationRow[] {
   const meetingTime = new Date();
   meetingTime.setHours(19, 0, 0, 0);
 

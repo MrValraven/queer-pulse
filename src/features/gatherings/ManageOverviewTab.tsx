@@ -16,6 +16,7 @@ import {
   type GatheringDetail,
 } from "./OverviewDetailRows";
 import type { VenueSelection } from "./VenuePicker";
+import { GatheringDescriptionText } from "./GatheringDescriptionText";
 import styles from "./ManageGatheringPage.module.css";
 
 export type { GatheringDetail } from "./OverviewDetailRows";
@@ -165,7 +166,9 @@ export function OverviewTab({
             onClick={() => openField("description")}
           />
         </div>
-        <div className={styles.descText}>{description}</div>
+        <div className={styles.descText}>
+          <GatheringDescriptionText text={description} />
+        </div>
       </div>
       <div className={styles.overviewFooter}>
         <div className={styles.lastEdit}>

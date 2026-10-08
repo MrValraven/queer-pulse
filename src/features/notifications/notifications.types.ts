@@ -44,6 +44,12 @@ export interface Notification {
   id: string | number;
   type: NotifType;
   unread: boolean;
+  /**
+   * The member hid this row from the nav bell's dropdown with its X. The bell
+   * leaves it out; the notifications page still lists it, read. `false` when
+   * an older backend omits the field.
+   */
+  isHiddenFromBell: boolean;
   /** Either an avatar (initials + tint, optionally a real photo) or an emoji
    *  icon with a background. */
   avatar?: { initials: string; tint: AvatarTint; src?: string };

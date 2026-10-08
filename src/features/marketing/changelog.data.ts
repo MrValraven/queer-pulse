@@ -63,6 +63,75 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "gathering-guest-preview",
+        category: "feature",
+        date: "7 Oct 2026",
+        ...entryKeys("gathering-guest-preview"),
+        tag: {
+          labelKey: "marketing:changelog.tag.gatherings",
+          to: routes.gatherings,
+        },
+      },
+      {
+        id: "roomier-venue-editor",
+        category: "improvement",
+        date: "7 Oct 2026",
+        ...entryKeys("roomier-venue-editor"),
+        tag: {
+          labelKey: "marketing:changelog.tag.gatherings",
+          to: routes.gatherings,
+        },
+      },
+      {
+        id: "tag-people-in-gathering-descriptions",
+        category: "feature",
+        date: "7 Oct 2026",
+        ...entryKeys("tag-people-in-gathering-descriptions"),
+        tag: {
+          labelKey: "marketing:changelog.tag.gatherings",
+          to: routes.gatherings,
+        },
+      },
+      {
+        id: "bell-hide-keeps-notifications",
+        category: "improvement",
+        date: "7 Oct 2026",
+        ...entryKeys("bell-hide-keeps-notifications"),
+      },
+      {
+        id: "share-plans-side-by-side",
+        category: "improvement",
+        date: "7 Oct 2026",
+        ...entryKeys("share-plans-side-by-side"),
+        tag: {
+          labelKey: "marketing:changelog.tag.gatherings",
+          to: routes.gatherings,
+        },
+      },
+      {
+        id: "forum-replies-read-as-one-conversation",
+        category: "improvement",
+        date: "7 Oct 2026",
+        ...entryKeys("forum-replies-read-as-one-conversation"),
+        tag: { labelKey: "marketing:changelog.tag.forum", to: routes.forum },
+      },
+      {
+        id: "gathering-where-map",
+        category: "improvement",
+        date: "7 Oct 2026",
+        ...entryKeys("gathering-where-map"),
+        tag: {
+          labelKey: "marketing:changelog.tag.gatherings",
+          to: routes.gatherings,
+        },
+      },
+      {
+        id: "thread-mentions-read-as-names",
+        category: "fix",
+        date: "7 Oct 2026",
+        ...entryKeys("thread-mentions-read-as-names"),
+      },
+      {
         id: "online-listings-own-fields",
         category: "feature",
         date: "7 Oct 2026",

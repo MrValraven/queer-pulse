@@ -8,6 +8,7 @@ import { GatheringAnnouncements } from "./GatheringAnnouncements";
 import { GatheringWherePanel } from "./GatheringWherePanel";
 import { SharePlansModal } from "./SharePlansModal";
 import type { GatheringDetail } from "./data";
+import { useGatheringPreview } from "./guestPreview/gatheringPreviewContext";
 import styles from "./GatheringDetailPanels.module.css";
 
 /**
@@ -30,6 +31,7 @@ export function GatheringDetailPanels({
   const { t } = useTranslation();
   const [isSharePlansOpenLocally, setIsSharePlansOpenLocally] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
+  const { viewAs } = useGatheringPreview();
   if (demoMode) return null;
 
   const isGoing =
@@ -39,7 +41,7 @@ export function GatheringDetailPanels({
   // links here). Derived from the URL on every render, so it also opens when
   // the member is already on this page and only the query changes.
   const isSharePlansRequested =
-    isGoing && searchParams.get("share") === "plans";
+    viewAs === null && isGoing && searchParams.get("share") === "plans";
   const isSharePlansOpen = isSharePlansOpenLocally || isSharePlansRequested;
   const closeSharePlans = () => {
     setIsSharePlansOpenLocally(false);

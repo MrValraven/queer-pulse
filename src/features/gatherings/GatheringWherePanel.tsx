@@ -14,6 +14,7 @@ import type { IconType } from "react-icons";
 import { businessPath } from "../../app/routeMap";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { GatheringDetail } from "./data";
+import { GatheringWhereLayout } from "./GatheringWhereLayout";
 import styles from "./GatheringDetailPanels.module.css";
 
 /** One labelled fact about getting there. `withheld` draws the dashed
@@ -116,6 +117,10 @@ function WhereVenueRow({
  * (PRD-182). This panel used to render the locked "the exact address is shared
  * with the people going" row for an online gathering too, which promised a
  * confirmed attendee a street that was never going to exist.
+ *
+ * THE MAP AND "TAKE ME THERE" live in `GatheringWhereLayout`, and the address
+ * rule above holds there too: the pin marks a linked listing or the
+ * neighbourhood, never the street (`gatheringLocation.ts`).
  */
 export function GatheringWherePanel({
   gathering,
@@ -148,113 +153,115 @@ export function GatheringWherePanel({
       <h2 className={styles.heading}>
         {t("gatherings:gathering.where.heading")}
       </h2>
-      <div className={styles.rows}>
-        {hasPlace && (
-          <WhereVenueRow
-            label={t("gatherings:gathering.where.placeLabel")}
-            venueName={venueName}
-            neighbourhood={venueHood}
-            listingSlug={gathering.venueListing?.slug ?? null}
-          />
-        )}
+      <GatheringWhereLayout gathering={gathering}>
+        <div className={styles.rows}>
+          {hasPlace && (
+            <WhereVenueRow
+              label={t("gatherings:gathering.where.placeLabel")}
+              venueName={venueName}
+              neighbourhood={venueHood}
+              listingSlug={gathering.venueListing?.slug ?? null}
+            />
+          )}
 
-        {isOnline ? (
-          joinLink ? (
-            <WhereRow
-              icon={FiVideo}
-              label={t("gatherings:gathering.where.joinLinkLabel")}
-            >
-              {/* An external video room, so it opens in a new tab and carries
+          {isOnline ? (
+            joinLink ? (
+              <WhereRow
+                icon={FiVideo}
+                label={t("gatherings:gathering.where.joinLinkLabel")}
+              >
+                {/* An external video room, so it opens in a new tab and carries
                   `noreferrer`: the host's meeting URL should not learn which
                   QueerPulse page an attendee came from. */}
-              <a
-                className={styles.joinLink}
-                href={joinLink}
-                target="_blank"
-                rel="noopener noreferrer"
+                <a
+                  className={styles.joinLink}
+                  href={joinLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {joinLink}
+                </a>
+              </WhereRow>
+            ) : (
+              <WhereRow
+                icon={FiLock}
+                withheld
+                label={t("gatherings:gathering.where.joinLinkLabel")}
               >
-                {joinLink}
-              </a>
+                {/* Two different absences, said differently. An organiser reading
+                  this knows there is no link because they never added one; a
+                  passer-by knows there is one and that it comes with a seat. */}
+                {t(
+                  gathering.viewerIsOrganizer
+                    ? "gatherings:gathering.where.joinLinkMissing"
+                    : "gatherings:gathering.where.joinLinkWithheld",
+                )}
+              </WhereRow>
+            )
+          ) : address ? (
+            <WhereRow
+              icon={FiMapPin}
+              label={t("gatherings:gathering.where.addressLabel")}
+            >
+              {address}
+            </WhereRow>
+          ) : gathering.viewerIsOrganizer ? (
+            // The same two absences as the join link. An organiser always
+            // receives the address, so an empty one here means nobody added it:
+            // a fact about their own gathering, drawn as an ordinary row. The
+            // locked, dashed treatment is for a reader who has not earned it.
+            <WhereRow
+              icon={FiMapPin}
+              label={t("gatherings:gathering.where.addressLabel")}
+            >
+              {t("gatherings:gathering.where.addressMissing")}
             </WhereRow>
           ) : (
             <WhereRow
               icon={FiLock}
               withheld
-              label={t("gatherings:gathering.where.joinLinkLabel")}
+              label={t("gatherings:gathering.where.addressLabel")}
             >
-              {/* Two different absences, said differently. An organiser reading
-                  this knows there is no link because they never added one; a
-                  passer-by knows there is one and that it comes with a seat. */}
-              {t(
-                gathering.viewerIsOrganizer
-                  ? "gatherings:gathering.where.joinLinkMissing"
-                  : "gatherings:gathering.where.joinLinkWithheld",
-              )}
+              {t("gatherings:gathering.where.addressWithheld")}
             </WhereRow>
-          )
-        ) : address ? (
-          <WhereRow
-            icon={FiMapPin}
-            label={t("gatherings:gathering.where.addressLabel")}
-          >
-            {address}
-          </WhereRow>
-        ) : gathering.viewerIsOrganizer ? (
-          // The same two absences as the join link. An organiser always
-          // receives the address, so an empty one here means nobody added it:
-          // a fact about their own gathering, drawn as an ordinary row. The
-          // locked, dashed treatment is for a reader who has not earned it.
-          <WhereRow
-            icon={FiMapPin}
-            label={t("gatherings:gathering.where.addressLabel")}
-          >
-            {t("gatherings:gathering.where.addressMissing")}
-          </WhereRow>
-        ) : (
-          <WhereRow
-            icon={FiLock}
-            withheld
-            label={t("gatherings:gathering.where.addressLabel")}
-          >
-            {t("gatherings:gathering.where.addressWithheld")}
-          </WhereRow>
-        )}
-
-        {!isOnline && arrivalNotes && (
-          <WhereRow
-            icon={FiCompass}
-            label={t("gatherings:gathering.where.arrivalLabel")}
-          >
-            {arrivalNotes}
-          </WhereRow>
-        )}
-
-        {gathering.language && (
-          <WhereRow
-            icon={FiGlobe}
-            label={t("gatherings:gathering.where.languageLabel")}
-          >
-            {gathering.language}
-          </WhereRow>
-        )}
-
-        <WhereRow
-          icon={cost ? FiTag : FiGift}
-          label={t("gatherings:gathering.where.costLabel")}
-        >
-          {cost ? (
-            cost
-          ) : (
-            <span className={styles.freeChip}>
-              <FiGift aria-hidden />
-              {t("gatherings:gathering.where.costFree")}
-            </span>
           )}
-          <span className={styles.costNote}>
-            {t("gatherings:gathering.where.costNote")}
-          </span>
-        </WhereRow>
-      </div>
+
+          {!isOnline && arrivalNotes && (
+            <WhereRow
+              icon={FiCompass}
+              label={t("gatherings:gathering.where.arrivalLabel")}
+            >
+              {arrivalNotes}
+            </WhereRow>
+          )}
+
+          {gathering.language && (
+            <WhereRow
+              icon={FiGlobe}
+              label={t("gatherings:gathering.where.languageLabel")}
+            >
+              {gathering.language}
+            </WhereRow>
+          )}
+
+          <WhereRow
+            icon={cost ? FiTag : FiGift}
+            label={t("gatherings:gathering.where.costLabel")}
+          >
+            {cost ? (
+              cost
+            ) : (
+              <span className={styles.freeChip}>
+                <FiGift aria-hidden />
+                {t("gatherings:gathering.where.costFree")}
+              </span>
+            )}
+            <span className={styles.costNote}>
+              {t("gatherings:gathering.where.costNote")}
+            </span>
+          </WhereRow>
+        </div>
+      </GatheringWhereLayout>
     </section>
   );
 }

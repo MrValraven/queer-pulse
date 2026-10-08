@@ -22,7 +22,7 @@ import { type ReplyNode } from "./buildReplyTree";
 import styles from "./ThreadPage.module.css";
 
 /** Names the moderator who published an official QueerPulse post, linking to
- * their member profile — so the platform voice stays accountable to a person.
+ * their member profile, so the platform voice stays accountable to a person.
  *
  * DEMO ONLY. `mod` is a slug resolved through the mock member registry
  * (`memberName`), and the live adapters never set it (`ForumThreadResponse`
@@ -51,7 +51,7 @@ export function ModeratorByline({ mod }: { mod?: string }) {
 /**
  * The reply count plus the three ordering buttons.
  *
- * DES-121: the ordering buttons are ONE control, and it says so — the same
+ * DES-121: the ordering buttons are ONE control, and it says so: the same
  * `role="group"` + group label + `aria-pressed` pattern the thread-list sort
  * has carried all along (see `ForumThreadList`). Without it the three read as
  * three unrelated buttons and nothing announced which order was active, so a
@@ -141,14 +141,14 @@ export function ThreadReplies({
   /** When true, replies are closed: no reply affordance or inline composer
    *  renders on any node in the tree. */
   isLocked: boolean;
-  /** Reply tree, already sorted (see buildReplyTree) — top-level nodes only;
+  /** Reply tree, already sorted (see buildReplyTree): top-level nodes only;
    *  each node recurses into its own children. */
   nodes: ReplyNode[];
   replyKey: (r: Reply) => string;
   likedReplies: Record<string, boolean>;
   toggleReplyLike: (r: Reply) => void;
   onFocusComposer: () => void;
-  /** Live mode only — demo passes `false`, so no "Load more" ever renders. */
+  /** Live mode only: demo passes `false`, so no "Load more" ever renders. */
   hasNextPage: boolean;
   fetchNextPage: () => void;
   isFetchingNextPage: boolean;
@@ -167,7 +167,7 @@ export function ThreadReplies({
   onStartReply: (reply: Reply) => void;
   onCancelReply: () => void;
   onPostReply: (body: string, image?: StagedPostImage) => void;
-  /** Report a specific reply — opens the report modal targeting its `postId`. */
+  /** Report a specific reply: opens the report modal targeting its `postId`. */
   onReport: (reply: Reply) => void;
   /** Mark this reply as the thread's answer, or clear the mark. Omitted for a
    *  viewer who may not, which is what hides the action. */

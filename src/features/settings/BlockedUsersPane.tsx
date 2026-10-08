@@ -166,6 +166,7 @@ function BlockedSection() {
           queryKey: ["conversation-detail"],
         });
         void queryClient.invalidateQueries({ queryKey: [UNREAD_COUNT_KEY] });
+        void queryClient.invalidateQueries({ queryKey: ["mention-names"] });
       }
     } catch (err) {
       logError(err, { where: "BlockedUsersPane.unblock" });

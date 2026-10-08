@@ -380,6 +380,7 @@ export const forum: Catalog = {
 
   // ── Edited mark / deleted-post tombstone ─────────────────────────────────
   "edited.mark": "(editado)",
+  "edited.inline": "editado",
   "tombstone.body": "Esta publicação foi eliminada.",
   "tombstone.author": "[eliminado]",
   "tombstone.removedByModerator":

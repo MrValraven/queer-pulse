@@ -148,6 +148,10 @@ export const notifications: Catalog = {
   "type.mention.textNamed":
     "<profile>{name}</profile> mencionou-te numa discussão.",
   "type.mention.meta": "Menção",
+  "type.mention.gathering.text": "Foste mencionado num convívio.",
+  "type.mention.gathering.textNamed":
+    "<profile>{name}</profile> mencionou-te num convívio.",
+  "type.mention.gathering.meta": "Menção",
 
   // As notificações "mention" ramificam consoante `payload.entityKind` — o
   // que foi mencionado, não quem. O "type.mention.*" acima cobre uma pessoa
@@ -1053,11 +1057,25 @@ export const notifications: Catalog = {
     "Não conseguimos marcar como lido. Continua à tua espera. Tenta novamente daqui a pouco.",
   "page.markAllReadError":
     "Não conseguimos marcar como lido. Continuam à tua espera. Tenta novamente daqui a pouco.",
-  // PRD-224: limpar uma linha apaga-a no servidor, por isso desaparece em todos
-  // os teus dispositivos. Em caso de erro, a linha volta à lista e dizemos isso.
-  "page.dismissedToast": "Notificação limpa",
+  // PRD-224: uma ação na linha (aceitar, recusar) apaga-a no servidor, por isso
+  // desaparece em todos os teus dispositivos. Em caso de erro, a linha volta à
+  // lista e dizemos isso.
   "page.dismissError":
     "Não conseguimos limpar essa notificação. Continua na tua lista. Tenta novamente daqui a pouco.",
+  // O X do sino só esconde a linha do sino (continua na página, marcada como
+  // lida). O X da página pergunta primeiro e depois apaga em todos os dispositivos.
+  "page.hiddenFromBellToast":
+    "Escondida deste menu. Continua na tua página de Notificações.",
+  "page.hideError":
+    "Não conseguimos esconder essa notificação. Tenta novamente daqui a pouco.",
+  "page.deletedToast": "Notificação apagada",
+  "page.deleteError":
+    "Não conseguimos apagar essa notificação. Continua na tua lista. Tenta novamente daqui a pouco.",
+  "page.deleteConfirm.title": "Apagar esta notificação?",
+  "page.deleteConfirm.description":
+    "Vai ser removida das tuas notificações em todos os teus dispositivos. Não dá para desfazer.",
+  "page.deleteConfirm.confirm": "Apagar notificação",
+  "page.deleteConfirm.cancel": "Manter",
   "page.dayRecent": "Hoje e recentes",
   "page.dayEarlier": "Anteriores",
   "page.empty.title": "Tudo em dia",
@@ -1089,9 +1107,9 @@ export const notifications: Catalog = {
   "tabs.mentions": "Menções",
 
   // Rótulos de ação partilhados pela lista de notificações de demonstração
-  // PRD-224: nome acessível do botão de limpar, que só tem ícone. Nunca aparece
-  // como texto visível, por isso diz o que está a ser limpo.
-  "actions.dismiss": "Limpar esta notificação",
+  // Nomes acessíveis do X só com ícone: o do sino esconde, o da página apaga.
+  "actions.hideFromBell": "Esconder deste menu",
+  "actions.delete": "Apagar notificação",
   "row.unread": "Não lida",
   "row.reasonLead": "Motivo indicado pela moderação:",
   "row.reasonLeadMember": "Motivo indicado por quem pediu:",
@@ -1202,6 +1220,7 @@ export const notifications: Catalog = {
   "mentions.context.namedInvite": "num convite de {name}",
   "mentions.context.communityPost": "num post da comunidade {community}",
   "mentions.context.thread": "numa conversa",
+  "mentions.context.gathering": "num convívio",
   "mentions.context.eventInvite": "num convite para um encontro",
   "mentions.context.communityReply": "numa resposta na comunidade {community}",
   // Caixa de menções em direto (GET /mentions) — grupo do dia + alternativas
@@ -1210,6 +1229,7 @@ export const notifications: Catalog = {
   "mentions.liveContext.community": "num post da comunidade",
   "mentions.liveContext.generic": "mencionou-te",
   "mentions.liveWhere.fallback": "a conversa",
+  "mentions.liveWhere.gathering": "o convívio",
   "mentions.liveActor.unknown": "Alguém",
 
   // Pré-visualização de notificação (NotificationDeepLinkPage.tsx / Cards.tsx)

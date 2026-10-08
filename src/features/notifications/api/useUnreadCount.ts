@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { getUnreadCount } from "./notifications.api";
+import { demoHiddenFromBellIds } from "./demoHiddenFromBellIds";
 
 /**
  * Unread notification count for the nav bell badge.
@@ -11,6 +12,10 @@ import { getUnreadCount } from "./notifications.api";
  * moment someone has more than a page of unread. Demo mode counts the mock
  * list. In live mode the query only resolves once authenticated; until then it
  * stays at 0.
+ *
+ * Hiding a row from the bell marks it read, so the demo count leaves out the
+ * rows hidden this session (`demoHiddenFromBellIds`), and agrees with the
+ * optimistic decrement `useHideNotification` makes to this same cache entry.
  */
 export function useUnreadCount(): number {
   const { demoMode } = useDemoMode();
@@ -20,7 +25,9 @@ export function useUnreadCount(): number {
       if (demoMode) {
         // Code-split: the demo mock is only pulled into the bundle in demo mode.
         const { DEMO_UNREAD_IDS } = await import("../notificationsList.data");
-        return DEMO_UNREAD_IDS.length;
+        return DEMO_UNREAD_IDS.filter(
+          (unreadId) => !demoHiddenFromBellIds.has(unreadId),
+        ).length;
       }
       return getUnreadCount();
     },

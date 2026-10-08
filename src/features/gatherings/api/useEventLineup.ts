@@ -12,6 +12,7 @@ import {
 } from "./events.api";
 import { eventKeys } from "./eventKeys";
 import { demoEventLineup } from "./eventLineup.mock";
+import { useGatheringPreview } from "../guestPreview/gatheringPreviewContext";
 
 /** Who the host is inviting, as the picker knows them. */
 export interface LineupPerson {
@@ -25,21 +26,27 @@ export interface LineupPerson {
  * row with its status, everyone else accepted rows only, and `viewerEntry`
  * is the caller's own row in any status. Fires only for an active session
  * (the route sits behind `ActiveMemberGuard`). Demo serves a mock and never
- * goes stale, so the host's demo edits survive a remount.
+ * goes stale, so the host's demo edits survive a remount. Inside a host's
+ * guest preview it reads the lineup a guest gets, under its own key.
  */
 export function useEventLineup(slug: string | undefined) {
   const { demoMode } = useDemoMode();
+  const { viewAs } = useGatheringPreview();
   const { loggedIn, checking, status } = useAuth();
   const isActiveSession = !checking && loggedIn && status === "active";
 
   return useQuery<EventLineupDTO>({
-    queryKey: eventKeys.lineup(slug, demoMode),
+    queryKey: viewAs
+      ? eventKeys.lineupPreview(slug, viewAs, demoMode)
+      : eventKeys.lineup(slug, demoMode),
     enabled: Boolean(slug) && (demoMode || isActiveSession),
     retry: false,
-    ...(demoMode ? { staleTime: Infinity } : {}),
+    // A guest preview always refetches: lineup edits invalidate only the
+    // host's own lineup, so a cached preview could show it as it was.
+    ...(demoMode ? { staleTime: Infinity } : viewAs ? { staleTime: 0 } : {}),
     queryFn: async () => {
       if (demoMode || !slug) return demoEventLineup(slug);
-      return getEventLineup(slug);
+      return getEventLineup(slug, viewAs ?? undefined);
     },
   });
 }

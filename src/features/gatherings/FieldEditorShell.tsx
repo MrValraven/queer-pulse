@@ -76,6 +76,7 @@ export function FieldEditorShell({
   onClose,
   wide = false,
   initialFocusRef,
+  shouldCollapseSubWithKeyboard = false,
   children,
 }: {
   title: ReactNode;
@@ -85,11 +86,14 @@ export function FieldEditorShell({
   isSaveEnabled: boolean;
   onSave: () => void;
   onClose: () => void;
-  /** The description's roomier dialog. */
+  /** The roomier dialog, for the description and the venue's results list. */
   wide?: boolean;
   /** Where focus lands on open, when it is a particular control. Defaults to
    *  the first control in the body. */
   initialFocusRef?: RefObject<HTMLElement | null>;
+  /** Passed to `Modal`: on a phone with the keyboard up the sub line steps
+   *  aside so a search's results list keeps its rows above the keyboard. */
+  shouldCollapseSubWithKeyboard?: boolean;
   children: ReactNode;
 }) {
   const bodyRef = useRef<HTMLDivElement>(null);
@@ -110,6 +114,7 @@ export function FieldEditorShell({
       title={title}
       sub={sub}
       wide={wide}
+      shouldCollapseSubWithKeyboard={shouldCollapseSubWithKeyboard}
       onClose={onClose}
       initialFocusRef={initialFocusRef ?? firstFieldRef}
       footer={

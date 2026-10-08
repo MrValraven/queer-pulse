@@ -87,6 +87,16 @@ export function useCommunityThreadState(
     replyOverrides: replyModeration.replyOverrides,
   });
 
+  // Every body the open thread renders through `MentionText`, which the
+  // thread's `ResolvedMentionNamesProvider` asks the server to name. A
+  // tombstone renders no body, so it names nobody. `replies` is rebuilt each
+  // render, so this is too; the provider keys its query on the sorted refs,
+  // which keeps one request per distinct set of names.
+  const mentionTexts = [
+    ...(opModeration.opDeleted ? [] : [opModeration.opBody]),
+    ...replies.filter((reply) => !reply.deleted).map((reply) => reply.text),
+  ];
+
   // The confirm-delete dialog targets either the OP post or a reply; dispatch
   // to whichever moderation slice owns that kind of content. `takedown` is
   // present only on a MODERATOR'S delete of somebody else's content (PRD-147)
@@ -152,6 +162,7 @@ export function useCommunityThreadState(
     opCanPin: opModeration.opCanPin,
     opCanReport: opModeration.opCanReport,
     replies,
+    mentionTexts,
     repliesPaging,
     toggleVote,
     postReply: composer.postReply,

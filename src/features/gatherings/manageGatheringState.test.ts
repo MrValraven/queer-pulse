@@ -3,11 +3,13 @@ import {
   applyEditDraft,
   buildEditPatch,
   canSaveEditDraft,
+  demoInitialState,
   editDraftCareFields,
   editDraftFormatFields,
   editScheduleProblem,
   type GatheringState,
 } from "./manageGatheringState";
+import { dateToDatetimeValue } from "./manageGatheringDates";
 import type { GatheringDetailsDraft } from "./editDetailsDraft";
 import { createFormatters } from "../../shared/i18n/format";
 import { catalogs, loadNamespace } from "../../shared/i18n/catalogs";
@@ -183,6 +185,26 @@ describe("buildEditPatch", () => {
     expect("gatheringFamily" in patch).toBe(true);
     expect(patch.eventType).toBeNull();
     expect(patch.formatDetails).toBeNull();
+  });
+});
+
+describe("demoInitialState", () => {
+  it("renders the date and time rows in the format a save produces", () => {
+    const seeded = demoInitialState(fmt, t);
+    const saved = applyEditDraft(
+      seeded,
+      draftOf({
+        title: "Renamed",
+        startAt: dateToDatetimeValue(seeded.startAt),
+        endAt: seeded.endAt ? dateToDatetimeValue(seeded.endAt) : "",
+      }),
+      fmt,
+      t,
+    );
+    const rowValue = (state: GatheringState, id: string) =>
+      state.details.find((detail) => detail.id === id)?.value;
+    expect(rowValue(seeded, "date")).toBe(rowValue(saved, "date"));
+    expect(rowValue(seeded, "time")).toBe(rowValue(saved, "time"));
   });
 });
 

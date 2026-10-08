@@ -174,6 +174,10 @@ export const notifications: Catalog = {
   "type.mention.textNamed":
     "<profile>{name}</profile> mentioned you in a discussion.",
   "type.mention.meta": "Mention",
+  "type.mention.gathering.text": "You were mentioned in a gathering.",
+  "type.mention.gathering.textNamed":
+    "<profile>{name}</profile> mentioned you in a gathering.",
+  "type.mention.gathering.meta": "Mention",
 
   // `mention` rows branch by `payload.entityKind` — what was actually
   // @-mentioned, not who. The plain `type.mention.*` above covers a member
@@ -1087,11 +1091,24 @@ export const notifications: Catalog = {
     "We couldn't mark that as read. It's still waiting for you. Try again in a moment.",
   "page.markAllReadError":
     "We couldn't mark those as read. They're still waiting for you. Try again in a moment.",
-  // PRD-224: clearing a row deletes it server-side, so it stays gone on every
-  // device. The error puts the row back, and says so.
-  "page.dismissedToast": "Notification cleared",
+  // PRD-224: an inline action (accept, decline) deletes its row server-side,
+  // so it stays gone on every device. The error puts the row back, and says so.
   "page.dismissError":
     "We couldn't clear that notification. It's still in your list. Try again in a moment.",
+  // The bell's X only hides a row from the bell (it stays on the page, marked
+  // read). The page's X asks first, then deletes the row on every device.
+  "page.hiddenFromBellToast":
+    "Hidden from this menu. It's still on your Notifications page.",
+  "page.hideError":
+    "We couldn't hide that notification. Try again in a moment.",
+  "page.deletedToast": "Notification deleted",
+  "page.deleteError":
+    "We couldn't delete that notification. It's still in your list. Try again in a moment.",
+  "page.deleteConfirm.title": "Delete this notification?",
+  "page.deleteConfirm.description":
+    "It will be removed from your notifications on every device. This can't be undone.",
+  "page.deleteConfirm.confirm": "Delete notification",
+  "page.deleteConfirm.cancel": "Keep it",
   "page.dayRecent": "Today & recent",
   "page.dayEarlier": "Earlier",
   "page.empty.title": "All caught up",
@@ -1123,9 +1140,9 @@ export const notifications: Catalog = {
   "tabs.mentions": "Mentions",
 
   // Shared action-button labels across the demo notification list
-  // PRD-224: accessible name for the icon-only clear button on every row. Never
-  // rendered as visible text, so it names what is being cleared.
-  "actions.dismiss": "Clear this notification",
+  // Accessible names for the icon-only X: the bell's hides, the page's deletes.
+  "actions.hideFromBell": "Hide from this menu",
+  "actions.delete": "Delete notification",
   "row.unread": "Unread",
   "row.reasonLead": "Reason from the moderators:",
   "row.reasonLeadMember": "Reason from the member who asked:",
@@ -1240,6 +1257,7 @@ export const notifications: Catalog = {
   "mentions.context.namedInvite": "in {name} invite",
   "mentions.context.communityPost": "in a {community} post",
   "mentions.context.thread": "in a thread",
+  "mentions.context.gathering": "in a gathering",
   "mentions.context.eventInvite": "in an event invite",
   "mentions.context.communityReply": "in a {community} reply",
   // Live inbox (GET /mentions) — day bucket + fallbacks when the backend row
@@ -1248,6 +1266,7 @@ export const notifications: Catalog = {
   "mentions.liveContext.community": "in a community post",
   "mentions.liveContext.generic": "mentioned you",
   "mentions.liveWhere.fallback": "the conversation",
+  "mentions.liveWhere.gathering": "the gathering",
   "mentions.liveActor.unknown": "Someone",
 
   // Notification deep-link preview (NotificationDeepLinkPage.tsx / Cards.tsx)

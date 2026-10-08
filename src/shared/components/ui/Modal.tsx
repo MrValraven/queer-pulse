@@ -31,6 +31,14 @@ interface ModalProps {
    *  (see `useDismiss`'s own doc), for the rare dialog where a SPECIFIC
    *  footer action, not the head's close button, must be where focus lands. */
   initialFocusRef?: RefObject<HTMLElement | null>;
+  /** For a phone sheet whose body needs every row above the on-screen
+   *  keyboard (a search with its results list under it): while the keyboard
+   *  is up (`data-keyboard-open`, see useVisualViewportKeyboard) the sub line
+   *  leaves the layout, the head and footer tighten, and the sheet grows
+   *  towards the top of the visible viewport. The sub stays readable to
+   *  assistive tech, and the title, close button and footer stay put. Off by
+   *  default, so every other dialog keeps its layout with the keyboard up. */
+  shouldCollapseSubWithKeyboard?: boolean;
 }
 
 /**
@@ -48,6 +56,7 @@ export function Modal({
   className,
   children,
   initialFocusRef,
+  shouldCollapseSubWithKeyboard = false,
 }: ModalProps) {
   const { t } = useTranslation();
   // Plays the exit when an AnimatePresence parent removes this dialog; a
@@ -87,6 +96,7 @@ export function Modal({
           styles.modal,
           wide && styles.modalWide,
           full && styles.modalFull,
+          shouldCollapseSubWithKeyboard && styles.modalCollapsesWithKeyboard,
           exit.isClosing && styles.modalClosing,
           className,
         ]

@@ -1,5 +1,6 @@
 import { communityPath, thread } from "../../../app/routeMap";
 import { communityPostPath } from "../../communities/communityPostPath";
+import { gatheringPath } from "../../gatherings/gatheringPaths";
 import type { Formatters } from "../../../shared/i18n/format";
 import type { TFunction } from "../../../shared/i18n/types";
 import type { Mention, MentionAction, MentionCategory } from "../mentions.data";
@@ -32,6 +33,7 @@ function actorInitials(actor: MentionActorDTO): string {
 /** What the mention is "about", for the tab filter. */
 function categoryFor(dto: MentionDTO): MentionCategory {
   if (dto.entityKind === "event") return "event";
+  if (dto.source === "event") return "event";
   if (dto.source === "forum" || dto.source === "community") return "post";
   return "other";
 }
@@ -48,12 +50,18 @@ function contextFor(dto: MentionDTO, t: TFunction): string {
         })
       : t("notifications:mentions.liveContext.community");
   }
+  if (dto.source === "event") {
+    return t("notifications:mentions.context.gathering");
+  }
   return t("notifications:mentions.liveContext.generic");
 }
 
 /** The label after the "In" prefix — the resolved source, or a generic fallback. */
 function whereTextFor(dto: MentionDTO, t: TFunction): string {
-  return dto.sourceLabel ?? t("notifications:mentions.liveWhere.fallback");
+  if (dto.sourceLabel) return dto.sourceLabel;
+  return dto.source === "event"
+    ? t("notifications:mentions.liveWhere.gathering")
+    : t("notifications:mentions.liveWhere.fallback");
 }
 
 /**
@@ -73,6 +81,9 @@ function whereToFor(dto: MentionDTO): string | undefined {
       ? communityPostPath(dto.communitySlug, dto.postId)
       : communityPath(dto.communitySlug);
   }
+  if (dto.source === "event" && dto.eventSlug) {
+    return gatheringPath(dto.eventSlug);
+  }
   return undefined;
 }
 
@@ -86,7 +97,9 @@ function actionsFor(
   whereTo: string | undefined,
 ): MentionAction[] {
   const actions: MentionAction[] = [];
-  if (whereTo) {
+  // A gathering opens from the row's "In <gathering>" link: the open actions
+  // the panel has name a thread or a post.
+  if (whereTo && dto.source !== "event") {
     actions.push({
       type: dto.source === "forum" ? "openThread" : "openPost",
       primary: true,

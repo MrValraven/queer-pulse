@@ -16,6 +16,8 @@
   background: var(--plum);
   color: rgba(var(--cream-rgb), 1);
   border-bottom: 2px solid var(--accent);
+  /* The plum reaches up to meet the pill. */
+  box-shadow: 0 calc(-1 * var(--nav-seam)) 0 var(--plum);
 }
 
 .inner {

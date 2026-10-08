@@ -1,4 +1,5 @@
-import { Link, useParams } from "react-router-dom";
+import { useEffect, useRef, type Ref } from "react";
+import { Link, useParams, useSearchParams } from "react-router-dom";
 import { FiArrowLeft, FiCalendar } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
 import { EmptyState, SkeletonLine, Tag } from "../../shared/components/ui";
@@ -20,6 +21,8 @@ import { GatheringLineup } from "./GatheringLineup";
 import { GatheringPerformerNudge } from "./GatheringPerformerNudge";
 import { GoingAttendeesPreview } from "./GoingAttendeesPreview";
 import { GoTogetherCard } from "../goTogether/card/GoTogetherCard";
+import { GoTogetherCardPreview } from "../goTogether/card/GoTogetherCardPreview";
+import { moveFocusTo } from "../goTogether/card/goTogetherCardFocus";
 import { GatheringDetailPanels } from "./GatheringDetailPanels";
 import { GatheringGoodToKnow } from "./GatheringGoodToKnow";
 import { GatheringTakingCare } from "./GatheringTakingCare";
@@ -35,6 +38,14 @@ import { eventZoneFormat } from "./eventTimezone";
 import { gatheringWhen } from "./gatheringSchedule";
 import { useEvent } from "./api/useEvent";
 import { GatheringHeroCommunity } from "./GatheringCommunity";
+import { GatheringDescriptionText } from "./GatheringDescriptionText";
+import { GatheringGuestPreview } from "./guestPreview/GatheringGuestPreview";
+import { GatheringPreviewBar } from "./guestPreview/GatheringPreviewBar";
+import { useGatheringPreview } from "./guestPreview/gatheringPreviewContext";
+import {
+  GUEST_PREVIEW_PARAM,
+  resolveGuestPreviewRole,
+} from "./guestPreview/guestPreview";
 
 import styles from "./GatheringPage.module.css";
 
@@ -85,6 +96,7 @@ function GatheringUnavailable({ loading }: { loading: boolean }) {
 
 export function GatheringPage() {
   const { slug: param } = useParams();
+  const [searchParams] = useSearchParams();
   const { demoMode } = useDemoMode();
   const simLoading = useSimulatedLoad();
   const { data, isLoading } = useEvent(param);
@@ -95,9 +107,46 @@ export function GatheringPage() {
     ? resolveGathering(param)
     : (data?.gathering ?? null);
   const loading = demoMode ? simLoading : isLoading;
+  const previewRole = resolveGuestPreviewRole({
+    isDemoMode: demoMode,
+    isViewerOrganizer: gathering?.viewerIsOrganizer === true,
+    requestedViewAs: searchParams.get(GUEST_PREVIEW_PARAM),
+  });
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const previousPreviewRoleRef = useRef(previewRole);
+
+  // Leaving a preview unmounts the bar whose Exit held focus. Focus lands on
+  // the gathering's title instead, on that change only: a first page load
+  // never moves it.
+  useEffect(() => {
+    const wasPreviewing = previousPreviewRoleRef.current !== null;
+    previousPreviewRoleRef.current = previewRole;
+    if (wasPreviewing && previewRole === null) moveFocusTo(titleRef.current);
+  }, [previewRole]);
 
   if (!gathering) return <GatheringUnavailable loading={loading} />;
-  return <GatheringDetailBody gathering={gathering} routeParam={param} />;
+  if (previewRole) {
+    return (
+      <GatheringGuestPreview
+        param={param}
+        viewAs={previewRole}
+        loadingFallback={<GatheringUnavailable loading />}
+        renderBody={(previewGathering) => (
+          <GatheringDetailBody
+            gathering={previewGathering}
+            routeParam={param}
+          />
+        )}
+      />
+    );
+  }
+  return (
+    <GatheringDetailBody
+      gathering={gathering}
+      routeParam={param}
+      titleRef={titleRef}
+    />
+  );
 }
 
 /**
@@ -113,15 +162,24 @@ export function GatheringPage() {
 function GatheringDetailBody({
   gathering,
   routeParam,
+  titleRef,
 }: {
   gathering: GatheringDetail;
   routeParam: string | undefined;
+  /** The title, for the focus move after leaving a guest preview. */
+  titleRef?: Ref<HTMLHeadingElement>;
 }) {
   const { t } = useTranslation();
   const fmt = useFormat();
   const { demoMode } = useDemoMode();
   const { connected, isSelf, contact } = useMemberContact(gathering.hostSlug);
   const rsvp = useGatheringRsvp(gathering);
+  const { viewAs } = useGatheringPreview();
+  const isPreview = viewAs !== null;
+  // In a preview the host reads the page as a stranger would: nobody's own
+  // gathering, nobody they are connected to.
+  const isViewerHost = !isPreview && isSelf;
+  const isViewerConnected = !isPreview && connected;
 
   const kind = gatheringKind(gathering);
   // Date + start time read in the gathering's own zone, with the short zone
@@ -155,6 +213,7 @@ function GatheringDetailBody({
     <PageShell>
       <div className={styles.page}>
         <div className="wrap">
+          <GatheringPreviewBar />
           <div className={styles.grid}>
             <div>
               {/* The main column's header bar: the way back on the left, the
@@ -175,7 +234,8 @@ function GatheringDetailBody({
                     // Live-only by construction: `viewerIsOrganizer` comes
                     // from the server's `isOrganizer` and the demo registry
                     // never sets it, so no demo persona ever sees edit,
-                    // cancel or delete.
+                    // cancel or delete. A guest preview is no exception: its
+                    // detail reads `viewerIsOrganizer: false`, so no menu.
                     gathering.viewerIsOrganizer ? (
                       <GatheringHostBar
                         gathering={gathering}
@@ -206,7 +266,9 @@ function GatheringDetailBody({
                   )}
                 </Tag>
               </div>
-              <h1 className={styles.title}>{gathering.title}</h1>
+              <h1 ref={titleRef} className={styles.title} tabIndex={-1}>
+                {gathering.title}
+              </h1>
               <div className={styles.meta}>
                 <span className={styles.metaItem}>
                   <span className={styles.metaDot} />
@@ -231,19 +293,25 @@ function GatheringDetailBody({
                 </span>
                 <GatheringHeroCommunity gathering={gathering} />
               </div>
-              <p className={styles.body}>{gathering.body}</p>
+              <p className={styles.body}>
+                <GatheringDescriptionText text={gathering.body} />
+              </p>
               <GatheringHeroActions
                 gathering={gathering}
                 rsvp={rsvp}
-                isViewerHost={isSelf}
+                isViewerHost={isViewerHost}
               />
 
               <GoingAttendeesPreview gathering={gathering} />
               {/* Go together reads the optimistic RSVP, so the card shows the
                   moment a member says they're going (demo has no server). */}
-              <GoTogetherCard
-                gathering={{ ...gathering, myRsvpStatus: rsvp.status }}
-              />
+              {isPreview ? (
+                <GoTogetherCardPreview gathering={gathering} />
+              ) : (
+                <GoTogetherCard
+                  gathering={{ ...gathering, myRsvpStatus: rsvp.status }}
+                />
+              )}
 
               {/* LOC-04/06/08: announcements, where it actually is, the six
                   accessibility answers, and "tell someone where I'm going".
@@ -282,7 +350,7 @@ function GatheringDetailBody({
               {/* Post-gathering persona nudge for a member who accepted their
                   lineup invite. The host's lineup editor lives on the Manage
                   page's Attendees tab, so an empty lineup adds nothing here. */}
-              <GatheringPerformerNudge gathering={gathering} />
+              {!isPreview && <GatheringPerformerNudge gathering={gathering} />}
 
               {/* PRD-284. Reporting a gathering used to live only in the
                   member's own "My events" list, so raising a suspicious event
@@ -316,8 +384,8 @@ function GatheringDetailBody({
 
             <GatheringSidebar
               gathering={gathering}
-              connected={connected}
-              isViewerHost={isSelf}
+              connected={isViewerConnected}
+              isViewerHost={isViewerHost}
               contact={contact}
               rsvp={rsvp}
             />

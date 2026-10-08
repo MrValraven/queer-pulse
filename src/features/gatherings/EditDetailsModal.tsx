@@ -1,7 +1,8 @@
-import { useRef, useState } from "react";
+import { useRef, useState, type KeyboardEvent } from "react";
 import { FormField, Modal } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { MentionTextarea } from "../../shared/mentions/MentionTextarea";
 import { EditDetailsAudience } from "./EditDetailsAudience";
 import { EditDetailsCare } from "./EditDetailsCare";
 import { EditDetailsCost } from "./EditDetailsCost";
@@ -115,6 +116,20 @@ export function EditDetailsModal({
     setDone(true);
   };
 
+  // Cmd/Ctrl + Enter in the description saves the modal, as in the one-field
+  // description editor. It goes through `save`, so it does nothing while Save
+  // is off, and the success panel replaces the field once it has saved.
+  const handleDescriptionKeyDown = (
+    event: KeyboardEvent<HTMLTextAreaElement>,
+  ) => {
+    // An Enter that confirms an IME composition (Japanese, Chinese, Korean
+    // input) belongs to the composition, so it never saves.
+    if (event.nativeEvent.isComposing) return;
+    if (event.key !== "Enter" || !(event.metaKey || event.ctrlKey)) return;
+    event.preventDefault();
+    save();
+  };
+
   if (done) {
     return (
       <GatheringSuccessPanel
@@ -169,13 +184,21 @@ export function EditDetailsModal({
             />
           </FormField>
           <EditDetailsFormat draft={draft} onChange={mergeFormat} />
+          {/* Mentions suggest as in chat, the list on `document.body` so the
+              dialog body's scroll edge never cuts it off. */}
           <FormField label={t("gatherings:manage.editModal.fieldDescription")}>
-            <textarea
-              ref={descriptionRef}
+            <MentionTextarea
+              textareaRef={descriptionRef}
               className={fieldEditorStyles.detailsDescriptionInput}
               maxLength={MAX_DESCRIPTION_STORAGE_LENGTH}
+              aria-label={t("gatherings:manage.editModal.fieldDescription")}
               value={draft.description}
-              onChange={(event) => set("description", event.target.value)}
+              onChange={(nextDescription) =>
+                set("description", nextDescription)
+              }
+              onKeyDown={handleDescriptionKeyDown}
+              shouldPortalMenu
+              shouldSubmitOnModifierEnter
             />
           </FormField>
           <EditDetailsCover

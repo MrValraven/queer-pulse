@@ -15,6 +15,7 @@ export const CHANGELOG_RELEASE_NOTES: Record<
   { highlights: string[]; pushes?: number }
 > = {
   "7 Oct 2026": {
+    pushes: 2,
     highlights: [
       "online-listings-own-fields",
       "checkin-tab",

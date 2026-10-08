@@ -527,7 +527,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
       first: "Tomás",
     },
     social: { instagram: "@queersupperclub", email: "table@queersupper.pt" },
-    address: "Address shared with ticket · Mouraria",
+    address: "R. das Farinhas 12 · Mouraria",
     upcoming: [
       {
         when: "Sun 21 Jun · 20:00",

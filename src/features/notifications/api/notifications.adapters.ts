@@ -345,6 +345,9 @@ export function notificationDtoToView(
     // The backend sends `read`; the view-model is phrased the other way round.
     // Missing/!boolean degrades to unread so a row is never silently swallowed.
     unread: dto.read !== true,
+    // Only an explicit `true` hides a row from the bell. An older backend
+    // that never sends the field keeps every row in the bell, as before.
+    isHiddenFromBell: dto.isHiddenFromBell === true,
     icon: {
       Glyph: KIND_ICONS[category] ?? FiBell,
       background: KIND_ICON_BACKGROUND[category],
@@ -382,12 +385,18 @@ export function notificationDtoToView(
     // `entityKind` (older rows) or `entityKind === "member"` keeps the flat
     // `mention.textNamed` key; every other kind, mirrors
     // `formatNotification`'s `mentionKeyFor`.
-    const entityKind = (dto.payload as { entityKind?: string } | null)
-      ?.entityKind;
+    // A member tagged in a gathering's description reads "in a gathering".
+    const { entityKind, source } =
+      (dto.payload as { entityKind?: string; source?: string } | null) ?? {};
+    const isMemberMention = !entityKind || entityKind === "member";
     const namedKey =
-      kind === "mention" && entityKind && entityKind !== "member"
-        ? `mention.${entityKind}`
-        : kind;
+      kind !== "mention"
+        ? kind
+        : !isMemberMention
+          ? `mention.${entityKind}`
+          : source === "event"
+            ? "mention.gathering"
+            : kind;
     view.actorSlug = hasProfile ? dto.actor.slug : undefined;
     const isPersonalized = Boolean(kind && PERSONALIZED_KINDS.has(kind));
     view.actor = {

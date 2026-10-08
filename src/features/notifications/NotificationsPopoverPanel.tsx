@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useRef } from "react";
 import { FiAlertCircle, FiBell } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -17,8 +17,9 @@ const RECENT_NOTIFICATION_LIMIT = 20;
 /**
  * The inside of the bell's popover: a header with "Mark all as read", the
  * newest notifications in a scrolling list, and a footer button to the full
- * page. Rows are the page's own `NotificationItem`, so reading, answering a
- * connection request and clearing a row all behave exactly as they do there.
+ * page. Rows are the page's own `NotificationItem`, so reading and answering a
+ * connection request behave exactly as they do there. The X differs: here it
+ * hides the row from the bell and marks it read, and the page keeps the row.
  */
 export function NotificationsPopoverPanel({ titleId }: { titleId: string }) {
   const { t } = useTranslation();
@@ -28,19 +29,32 @@ export function NotificationsPopoverPanel({ titleId }: { titleId: string }) {
     isError,
     refetch,
   } = useNotifications();
-  const { readIds, resolvedIds, markRead, markAllRead, resolve, dismiss } =
+  const { readIds, resolvedIds, markRead, markAllRead, resolve, hideFromBell } =
     useNotificationsReadState(notifications);
+  const titleRef = useRef<HTMLHeadingElement>(null);
 
+  // Hidden rows leave before the slice, so the bell still shows up to the
+  // limit of rows the member has not hidden.
   const recent = useMemo(
     () =>
       notifications
-        .filter((notification) => !resolvedIds.has(notification.id))
+        .filter(
+          (notification) =>
+            !resolvedIds.has(notification.id) && !notification.isHiddenFromBell,
+        )
         .slice(0, RECENT_NOTIFICATION_LIMIT),
     [notifications, resolvedIds],
   );
   const isNotificationUnread = (notification: Notification) =>
     notification.unread && !readIds.has(notification.id);
   const hasUnread = recent.some(isNotificationUnread);
+
+  // The X that was pressed leaves with its row, so focus moves to the panel's
+  // title, where a keyboard member can carry on from the top of the list.
+  function hideRowFromBell(id: Notification["id"]) {
+    titleRef.current?.focus();
+    hideFromBell(id);
+  }
 
   function renderBody() {
     if (isLoading) return <NotificationsListSkeleton count={4} />;
@@ -89,7 +103,8 @@ export function NotificationsPopoverPanel({ titleId }: { titleId: string }) {
             isUnread={isNotificationUnread(notification)}
             onMarkRead={markRead}
             onResolve={resolve}
-            onDismiss={dismiss}
+            onDismiss={hideRowFromBell}
+            dismissAction="hideFromBell"
             isCompact
           />
         ))}
@@ -100,7 +115,7 @@ export function NotificationsPopoverPanel({ titleId }: { titleId: string }) {
   return (
     <>
       <div className={styles.header}>
-        <h2 id={titleId} className={styles.title}>
+        <h2 id={titleId} ref={titleRef} tabIndex={-1} className={styles.title}>
           {t("notifications:page.title")}
         </h2>
         {hasUnread && (

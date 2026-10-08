@@ -83,7 +83,7 @@ export function ConversationHeader({
       />
       <div className={styles.ctbInfo}>
         <div className={styles.ctbName}>
-          <span className={styles.nameRow}>
+          <span className={styles.ctbNameRow}>
             <span className={styles.ctbNameText}>
               {isFormerBusiness
                 ? t("messages:mailbox.formerBusiness")

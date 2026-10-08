@@ -5,6 +5,7 @@ import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { InertMemberMentionsContext } from "../../shared/mentions/MentionLinkPolicyContext";
 import { MentionMemberScopeContext } from "../../shared/mentions/MentionMemberScopeContext";
 import {
+  MentionNamesAuthorityContext,
   MentionNamesContext,
   useMentionNameMap,
 } from "../../shared/mentions/MentionNamesContext";
@@ -125,11 +126,13 @@ function MatchedChatMentionScopeActive({
     <MatchedChatContext.Provider value={matchedChat}>
       <MatchedChatComposerMentionsContext.Provider value={composerMentions}>
         <InertMemberMentionsContext.Provider value={true}>
-          <MentionNamesContext.Provider value={nameMap}>
-            <MentionMemberScopeContext.Provider value={memberSuggestions}>
-              {children}
-            </MentionMemberScopeContext.Provider>
-          </MentionNamesContext.Provider>
+          <MentionNamesAuthorityContext.Provider value={false}>
+            <MentionNamesContext.Provider value={nameMap}>
+              <MentionMemberScopeContext.Provider value={memberSuggestions}>
+                {children}
+              </MentionMemberScopeContext.Provider>
+            </MentionNamesContext.Provider>
+          </MentionNamesAuthorityContext.Provider>
         </InertMemberMentionsContext.Provider>
       </MatchedChatComposerMentionsContext.Provider>
     </MatchedChatContext.Provider>

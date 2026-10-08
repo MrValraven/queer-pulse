@@ -1,5 +1,7 @@
+import { useDebouncedValue } from "../../shared/hooks/useDebouncedValue";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { cx } from "../../shared/lib/cx";
 import { GATE_ANCHOR } from "./createGathering.data";
 import {
   AccessReviewGroup,
@@ -15,6 +17,7 @@ import {
 import { hasAnyDetail } from "./gatheringCatalog";
 import { gatheringOccurrences } from "./gatheringOccurrences";
 import { GatheringGoodToKnowRows } from "./GatheringGoodToKnow";
+import { GatheringDescriptionText } from "./GatheringDescriptionText";
 import {
   isOnlineGathering,
   previewKind,
@@ -84,11 +87,7 @@ function WhatReviewGroup(props: ReviewGroupProps) {
           value={form.title}
           onJumpToNeeded={neededJump(props, [GATE_ANCHOR.title])}
         />
-        <ReviewRow
-          label={t("gatherings:create.v2.review.row.description")}
-          value={form.description}
-          isMultiline
-        />
+        <DescriptionReviewRow description={form.description} />
         <ReviewRow
           label={t("gatherings:create.v2.review.row.cover")}
           value={
@@ -107,6 +106,36 @@ function WhatReviewGroup(props: ReviewGroupProps) {
         </div>
       )}
     </ReviewGroup>
+  );
+}
+
+/**
+ * The description row. `ReviewRow` shows a plain string, and the description
+ * shows the host's mentions as names, so a filled description builds the same
+ * row around them. The mentions stay inert here, as on the preview card: the
+ * host is still mid-flow and a link would take them away from the draft.
+ *
+ * The review chapter stays mounted (hidden) while the host writes in the
+ * other chapters, so the row follows the description once the typing pauses,
+ * which keeps name lookups to one per settled set of mentions.
+ */
+function DescriptionReviewRow({ description }: { description: string }) {
+  const { t } = useTranslation();
+  const label = t("gatherings:create.v2.review.row.description");
+  const trimmedDescription = useDebouncedValue(description).trim();
+  if (!trimmedDescription) {
+    return <ReviewRow label={label} value="" isMultiline />;
+  }
+  return (
+    <div className={styles.row}>
+      <dt className={styles.rowLabel}>{label}</dt>
+      <dd className={cx(styles.rowValue, styles.rowMultiline)}>
+        <GatheringDescriptionText
+          text={trimmedDescription}
+          isLinkified={false}
+        />
+      </dd>
+    </div>
   );
 }
 

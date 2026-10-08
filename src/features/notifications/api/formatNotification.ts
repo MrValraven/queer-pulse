@@ -996,10 +996,11 @@ function interpolationTokens(payload: unknown): TranslateOptions {
  */
 function mentionKeyFor(type: string, payload: unknown): string {
   if (type !== "mention") return type;
-  const entityKind = (payload as { entityKind?: string } | null)?.entityKind;
-  return entityKind && entityKind !== "member"
-    ? `mention.${entityKind}`
-    : "mention";
+  const { entityKind, source } =
+    (payload as { entityKind?: string; source?: string } | null) ?? {};
+  if (entityKind && entityKind !== "member") return `mention.${entityKind}`;
+  // A member tagged in a gathering's description reads "in a gathering".
+  return source === "event" ? "mention.gathering" : "mention";
 }
 
 /**

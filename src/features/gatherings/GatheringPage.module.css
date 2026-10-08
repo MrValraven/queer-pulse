@@ -75,6 +75,21 @@
   letter-spacing: -0.025em;
   line-height: 1.02;
   max-width: 16ch;
+  /* Clears the sticky nav when it takes focus after a guest preview. */
+  scroll-margin-block-start: var(--sticky-top);
+}
+
+/* Takes focus when a guest preview closes (tabIndex -1). The ring shows for
+   keyboard members only. */
+.title:focus {
+  outline: none;
+}
+
+.title:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-radius: var(--radius-badge);
 }
 .meta {
   display: flex;
@@ -158,13 +173,16 @@
   font-size: var(--text-17);
 }
 
+/* A guest preview pins its bar under the nav. The bar measures itself and
+   writes `--preview-bar-offset` onto the page's wrap, so the sticky sidebar
+   starts below it instead of sliding underneath. */
 .sidebar {
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-card);
   padding: 30px;
   position: sticky;
-  top: 110px;
+  top: calc(110px + var(--preview-bar-offset, 0px));
   display: flex;
   flex-direction: column;
   gap: 0;

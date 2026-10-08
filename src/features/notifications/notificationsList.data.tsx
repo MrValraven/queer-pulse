@@ -14,7 +14,10 @@ import { Translation } from "../../shared/i18n/Translation";
 import type { Formatters } from "../../shared/i18n/format";
 import type { TFunction } from "../../shared/i18n/types";
 import type { Notification } from "./notifications.types";
-import { buildUnreadActivityNotifications } from "./notificationsListActivity.data";
+import {
+  buildUnreadActivityNotifications,
+  type DemoNotificationRow,
+} from "./notificationsListActivity.data";
 
 /** Milliseconds in each unit the demo rows express their age in. */
 const UNIT_MS = {
@@ -52,7 +55,7 @@ function agoIso(amount: number, unit: keyof typeof UNIT_MS): string {
 function buildUnreadNotifications(
   t: TFunction,
   fmt: Formatters,
-): Notification[] {
+): DemoNotificationRow[] {
   const dinnerDate = new Date(2026, 5, 14);
 
   return [
@@ -289,7 +292,10 @@ function buildUnreadNotifications(
   ];
 }
 
-function buildReadNotifications(t: TFunction, fmt: Formatters): Notification[] {
+function buildReadNotifications(
+  t: TFunction,
+  fmt: Formatters,
+): DemoNotificationRow[] {
   const reportDate = new Date(2026, 5, 20);
 
   return [
@@ -393,7 +399,8 @@ function buildReadNotifications(t: TFunction, fmt: Formatters): Notification[] {
  * rows (ids 2-7, 13, 14, 15, 16, 18) followed by the already-read rows (ids 8,
  * 9, 11, 12). Splitting the builder by read-state keeps each section small.
  * (Ids 1 and 10 were private-message rows, removed when the "messages"
- * category was retired.)
+ * category was retired.) Every row starts in the bell; `useNotifications`
+ * flags the rows hidden from it this session.
  */
 export function buildNotifications(
   t: TFunction,
@@ -402,7 +409,7 @@ export function buildNotifications(
   return [
     ...buildUnreadNotifications(t, fmt),
     ...buildReadNotifications(t, fmt),
-  ];
+  ].map((row) => ({ ...row, isHiddenFromBell: false }));
 }
 
 /** Ids of demo rows that start unread — used for the bell badge count without

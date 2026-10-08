@@ -1,5 +1,9 @@
 import { useEffect } from "react";
 
+/** Below this the overlap is a toolbar or an accessory bar, too short to be
+ *  a soft keyboard, so `data-keyboard-open` stays off. */
+const KEYBOARD_OPEN_MIN_OVERLAP_PX = 100;
+
 /**
  * Keeps a bottom-anchored composer above the on-screen keyboard on engines
  * where the keyboard overlays the layout viewport instead of shrinking it —
@@ -45,6 +49,14 @@ import { useEffect } from "react";
  * subtraction (`height - overlap`) must use the same measure. With that, `.app`'s
  * bottom edge lands exactly on the keyboard's top edge. A `window` `resize`
  * listener covers engines that change `innerHeight` with no visualViewport event.
+ *
+ * Alongside the variable, `<html>` carries a `data-keyboard-open` attribute
+ * while the overlap is at least `KEYBOARD_OPEN_MIN_OVERLAP_PX`. CSS cannot
+ * branch on a custom property's value, and a few dialogs lay themselves out
+ * differently with the keyboard up (a `Modal` with
+ * `shouldCollapseSubWithKeyboard` drops its sub line), so they key on the
+ * attribute. On engines where the overlap stays ~0 (see above) the attribute
+ * never appears, and those dialogs keep their resting layout.
  */
 export function useVisualViewportKeyboard(): void {
   useEffect(() => {
@@ -76,6 +88,10 @@ export function useVisualViewportKeyboard(): void {
         "--keyboard-inset",
         `${keyboardOverlapPx}px`,
       );
+      documentElement.toggleAttribute(
+        "data-keyboard-open",
+        keyboardOverlapPx >= KEYBOARD_OPEN_MIN_OVERLAP_PX,
+      );
     };
 
     const scheduleViewportVariablesUpdate = () => {
@@ -104,6 +120,7 @@ export function useVisualViewportKeyboard(): void {
       }
       documentElement.style.removeProperty("--keyboard-inset");
       documentElement.style.removeProperty("--layout-viewport-height");
+      documentElement.removeAttribute("data-keyboard-open");
     };
   }, []);
 }

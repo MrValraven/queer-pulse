@@ -3,6 +3,7 @@ import { FormField } from "../../shared/components/ui";
 import { useFormat } from "../../shared/i18n/format";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { MentionTextarea } from "../../shared/mentions/MentionTextarea";
 import { FieldEditorShell } from "./FieldEditorShell";
 import {
   DESCRIPTION_CARD_BUDGET,
@@ -164,18 +165,24 @@ export function FieldEditorDescription({
       <label htmlFor={textareaId} className="visuallyHidden">
         {t("gatherings:manage.editModal.fieldDescription")}
       </label>
+      {/* Mentions (@member, b/business and the other sigils) suggest as in
+          chat. The list goes on `document.body`, since the dialog body's
+          scroll edge would cut it off just under the field. */}
       <FormField className={styles.descriptionField}>
-        <textarea
-          ref={textareaRef}
+        <MentionTextarea
+          textareaRef={textareaRef}
           id={textareaId}
           className={styles.descriptionInput}
           maxLength={MAX_DESCRIPTION_STORAGE_LENGTH}
           placeholder={t("gatherings:create.step1.descPlaceholder")}
+          aria-label={t("gatherings:manage.editModal.fieldDescription")}
           aria-describedby={isOverBudget ? budgetNoteId : undefined}
           value={value}
-          onChange={(event) => handleChange(event.target.value)}
+          onChange={handleChange}
           onFocus={placeCaretAtEnd}
           onKeyDown={handleKeyDown}
+          shouldPortalMenu
+          shouldSubmitOnModifierEnter
         />
       </FormField>
       <div className={styles.descriptionMeta}>

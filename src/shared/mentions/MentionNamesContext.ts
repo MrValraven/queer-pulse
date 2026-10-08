@@ -12,3 +12,31 @@ export const MentionNamesContext =
 export function useMentionNameMap(): ReadonlyMap<string, string> {
   return useContext(MentionNamesContext);
 }
+
+/** Which mentions the current name map can vouch for as pointing at nothing.
+ *  `true`: the map lists every ref that exists and that the viewer may see (the
+ *  demo registries once loaded), so any ref missing from it is unresolved.
+ *  A set: the `kind:slug` refs a settled server lookup was asked about and did
+ *  not name; every other ref is still unknown. `false`: nothing is known, so
+ *  the corpus provider (first page typeahead lists in live mode) and no
+ *  provider at all never un-link. A non-topic mention known to be unresolved
+ *  renders as plain text. */
+export type MentionNameAuthority = boolean | ReadonlySet<string>;
+
+export const MentionNamesAuthorityContext =
+  createContext<MentionNameAuthority>(false);
+
+/** Read which refs the current name map vouches for. */
+export function useMentionNameAuthority(): MentionNameAuthority {
+  return useContext(MentionNamesAuthorityContext);
+}
+
+/** Whether `refKey` (`kind:slug`) is known to point at nothing under
+ *  `authority`. The caller still checks the name map first: a named ref is
+ *  never unresolved. */
+export function isMentionRefKnownUnresolved(
+  authority: MentionNameAuthority,
+  refKey: string,
+): boolean {
+  return typeof authority === "boolean" ? authority : authority.has(refKey);
+}

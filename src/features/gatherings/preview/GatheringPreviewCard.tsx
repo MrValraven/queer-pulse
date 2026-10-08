@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { useDebouncedValue } from "../../../shared/hooks/useDebouncedValue";
 import { usePrefersReducedMotion } from "../../../shared/hooks/usePrefersReducedMotion";
 import { useFormat } from "../../../shared/i18n/format";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
@@ -19,6 +20,7 @@ import {
   PreviewTagRows,
   PreviewTopRow,
 } from "./PreviewCardSections";
+import { GatheringDescriptionText } from "../GatheringDescriptionText";
 import { PreviewHostRow } from "./PreviewHostRow";
 import styles from "./GatheringPreviewPanel.module.css";
 
@@ -68,7 +70,10 @@ export function GatheringPreviewCard({
   const schedule = previewSchedule(form, startAt, fmt, t);
   const cardRef = usePreviewBump(previewSignature(form));
   const title = form.title.trim();
-  const description = form.description.trim();
+  // The description resolves its mentions to names through one request per
+  // set of refs, so it follows the host's typing once they pause. Every
+  // keystroke of "@ana-lopes" would otherwise ask for `@a`, `@an` and so on.
+  const description = useDebouncedValue(form.description).trim();
   return (
     <article
       ref={cardRef}
@@ -82,7 +87,13 @@ export function GatheringPreviewCard({
       <h3 className={cx(styles.title, !title && styles.titleEmpty)}>
         {title || t("gatherings:create.v2.preview.titlePlaceholder")}
       </h3>
-      {description && <p className={styles.description}>{description}</p>}
+      {description && (
+        // Inert mentions: the card previews a draft, and following a link
+        // from it would leave the create flow mid-sentence.
+        <p className={styles.description}>
+          <GatheringDescriptionText text={description} isLinkified={false} />
+        </p>
+      )}
       <PreviewMetaRow form={form} />
       <PreviewTagRows form={form} occurrenceCount={occurrences.length} />
       <PreviewHostRow form={form} />
