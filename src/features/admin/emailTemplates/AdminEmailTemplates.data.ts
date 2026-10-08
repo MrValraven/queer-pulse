@@ -78,7 +78,7 @@ export const EMAIL_TEMPLATES_DEMO: EmailTemplateAdminDTO[] = [
           {
             id: "welcome-en-reply",
             type: "paragraph",
-            text: "Questions, nerves, or just want to say hi? Reply to this email. It comes straight to a real person on our team.",
+            text: "Questions, nerves, or just want to say hi? Reply to this email. It comes straight to our team.",
           },
           {
             id: "welcome-en-signature",

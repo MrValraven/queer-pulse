@@ -321,7 +321,7 @@ export const marketing: Catalog = {
     "We're not backed by venture capital chasing a return. We're backed by memberships, donations, and grants that keep the platform independent.",
   "about.contactStrip.title": "Questions? <em>We're reachable.</em>",
   "about.contactStrip.body":
-    "No support tickets vanishing into a queue. A real person reads what you send.",
+    "No support tickets vanishing into a queue. Our team reads what you send.",
   "about.contactStrip.contactCta": "Contact us",
   "about.contactStrip.governanceCta": "Read our governance",
   "about.outro.title": "Come see for <em>yourself.</em>",
@@ -822,7 +822,7 @@ export const marketing: Catalog = {
   "help.search.resultsHead": "Matching <em>answers</em>",
   "help.search.emptyTitle": "Nothing here matches \u201c{query}\u201d",
   "help.search.emptyBody":
-    "Try a shorter word or a different spelling. Or ask us directly: a real person reads every message.",
+    "Try a shorter word or a different spelling. Or ask us directly: our team reads every message.",
   "help.category.gettingStarted.label": "Getting started",
   "help.category.gettingStarted.head": "Getting <em>started</em>",
   "help.category.account.label": "Account",
@@ -876,7 +876,7 @@ export const marketing: Catalog = {
     "You're notified automatically the moment a spot opens, with a short window to claim it before it moves to the next person.",
   "help.qa.reportMember.q": "How do I report another member?",
   "help.qa.reportMember.a":
-    "From their profile, a post, or a message, use the report option. Every report goes to a human moderator.",
+    "From their profile, a post, or a message, use the report option. Every report goes to a moderator on our team.",
   "help.qa.afterReport.q": "What happens after I file a report?",
   "help.qa.afterReport.a":
     "We aim to respond within 48 hours. <strong>You'll hear back either way</strong>, even if we decide no action is needed.",
@@ -906,7 +906,7 @@ export const marketing: Catalog = {
     "Try refreshing first. If it persists, <contactLink>let us know</contactLink> with as much detail as you can.",
   "help.stillStuck.title": "Still stuck?",
   "help.stillStuck.body":
-    "A real person reads every message that comes through here.",
+    "Our team reads every message that comes through here.",
   "help.stillStuck.cta": "Contact us",
 
   // ── Shared legal-doc chrome (Terms / Privacy) ─────────────────────────
@@ -963,7 +963,7 @@ export const marketing: Catalog = {
   "pressKit.hero.dek":
     "Boilerplate, marks, colour, and facts, <b>pre-cleared</b> for direct use, no sign-off required.",
   "pressKit.hero.downloadKitCta": "Download the full kit",
-  "pressKit.hero.askPersonCta": "Ask a real person",
+  "pressKit.hero.askPersonCta": "Ask our team",
   "pressKit.contact.deskLabel": "<b>Press desk:</b>",
   "pressKit.contact.phoneLabel": "<b>By phone</b>, on request",
   "pressKit.contact.responseLabel": "We respond within <b>48 hours</b>",
@@ -1242,7 +1242,7 @@ export const marketing: Catalog = {
     "Minor clarifications may be published without notice. The version number and date at the top of this page always reflect the current text.",
   "privacy.contactSection.title": "Contact",
   "privacy.contactSection.body":
-    "Questions about this policy or your data? Email <a>hello@queerpulse.com</a> and a real person will respond.",
+    "Questions about this policy or your data? Email <a>hello@queerpulse.com</a> and someone from our team will respond.",
 
   // ── Terms of Service ───────────────────────────────────────────────────
   "terms.meta.title": "QueerPulse Terms of Service",
@@ -1334,14 +1334,14 @@ export const marketing: Catalog = {
     "Any disputes will be resolved in the courts of Lisbon, Portugal, unless local consumer-protection law requires otherwise.",
   "terms.contactSection.title": "Contact",
   "terms.contactSection.body":
-    "Questions about these terms? Email <a>hello@queerpulse.com</a> and a real person will respond.",
+    "Questions about these terms? Email <a>hello@queerpulse.com</a> and someone from our team will respond.",
 
   // ── Imprint / Legal Notice ────────────────────────────────────────────
   // QueerPulse is run by volunteers with no registered legal entity yet.
   // If that changes, add the confirmed registration details here.
   "imprint.meta.title": "Legal notice · QueerPulse",
   "imprint.meta.description":
-    "Who runs QueerPulse: the volunteers behind the platform, how to reach a real person, and the law we answer to.",
+    "Who runs QueerPulse: the volunteers behind the platform, how to reach our team, and the law we answer to.",
   "imprint.meta.lastReviewed": "Last reviewed 1 June 2026",
   "imprint.title": "Legal <em>notice</em>",
   "imprint.plain.text":
@@ -1351,12 +1351,12 @@ export const marketing: Catalog = {
     "QueerPulse is built and run by a group of volunteers. There's no company or registered organisation behind it yet. If that changes, we'll publish the registration details here.",
   "imprint.contact.title": "How to reach us",
   "imprint.contact.p1":
-    "For anything on this page, or anything at all, email <a>{email}</a> and a real person will answer.",
+    "For anything on this page, or anything at all, email <a>{email}</a> and someone from our team will answer.",
   "imprint.contact.p2":
     "We reply in English or Portuguese, usually within two working days.",
   "imprint.representation.title": "Responsible for content",
   "imprint.representation.p1":
-    "The volunteers who run QueerPulse are responsible for the pages QueerPulse publishes itself: this site's own writing, the magazine and the guides. Members are responsible for what they post. If something a member posted needs attention, report it in the app or email us, and a real person will look at it.",
+    "The volunteers who run QueerPulse are responsible for the pages QueerPulse publishes itself: this site's own writing, the magazine and the guides. Members are responsible for what they post. If something a member posted needs attention, report it in the app or email us, and someone from our team will look at it.",
   "imprint.hosting.title": "Hosting",
   "imprint.hosting.p1":
     "The platform runs on cloud hosting and storage. Your session and data are handled as described in our Privacy Policy.",
@@ -1458,7 +1458,7 @@ export const marketing: Catalog = {
   "listBusiness.hero.title":
     "Add a business to <em>the people's directory.</em>",
   "listBusiness.hero.lead":
-    "Queer-owned or queer-friendly, big or tiny, with a door on the street or a shop online: if it's good to our people, it belongs here. Tell us about it and the community team will take it from there. <b>Every listing is read by a human before it goes live.</b>",
+    "Queer-owned or queer-friendly, big or tiny, with a door on the street or a shop online: if it's good to our people, it belongs here. Tell us about it and the community team will take it from there. <b>Our team reads every listing before it goes live.</b>",
   "listBusiness.wizard.stepAria": "Step {number}: {label}",
   "listBusiness.wizard.stepAriaDone": "Step {number}: {label} (done)",
   "listBusiness.wizard.stepAriaCurrent": "Step {number}: {label} (current)",
@@ -2094,9 +2094,9 @@ export const marketing: Catalog = {
   "listBusiness.step5.consentGuide.sub":
     "I've read the community guidelines and how my data is used.",
   "listBusiness.step5.submitNote":
-    "<b>A human reviews every listing.</b> This keeps the directory community-verified. Nothing auto-publishes. We'll read it within a few days, and QueerPulse tells you when it's live (or the team messages you if we have a question). You can edit or withdraw it any time before then.",
+    "<b>Our team reviews every listing.</b> This keeps the directory community-verified. Nothing auto-publishes. We'll read it within a few days, and QueerPulse tells you when it's live (or the team messages you if we have a question). You can edit or withdraw it any time before then.",
   "listBusiness.step5.suggestNote":
-    "<b>A real person reviews every listing.</b> QueerPulse holds this one until the business claims it, and your name stays off it. You'll get a notification when it's live.",
+    "<b>Our team reviews every listing.</b> QueerPulse holds this one until the business claims it, and your name stays off it. You'll get a notification when it's live.",
   // Success panel
   "listBusiness.success.stage.review": "In review",
   "listBusiness.success.stage.question": "Quick question",
@@ -2110,13 +2110,13 @@ export const marketing: Catalog = {
   "listBusiness.success.title.suggestLive.text": "It's",
   "listBusiness.success.title.suggestLive.em": "on the map.",
   "listBusiness.success.note.review":
-    "Thank you for adding to the directory. <b>A real person on the community team reads every listing</b> before it goes live. That's the promise behind our community-verified badge. We'll review within <b>a few days</b>, and a QueerPulse notification reaches you the moment it's live.",
+    "Thank you for adding to the directory. <b>Our community team reads every listing</b> before it goes live. That's the promise behind our community-verified badge. We'll review within <b>a few days</b>, and a QueerPulse notification reaches you the moment it's live.",
   "listBusiness.success.note.question":
     "<b>The team has a small question</b> before it goes live. It's waiting in your QueerPulse messages. Nothing's wrong; a quick reply is all it takes and you're back on track.",
   "listBusiness.success.note.live":
     "<b>It's live in the directory.</b> Your listing can now be found by the community. Thank you for making the directory a little fuller.",
   "listBusiness.success.note.suggestReview":
-    "Thank you for the suggestion. <b>A real person on the community team reads every listing</b> before it goes live. QueerPulse looks after it until the business claims it, and your name stays off it. You'll get a notification the moment it's live.",
+    "Thank you for the suggestion. <b>Our community team reads every listing</b> before it goes live. QueerPulse looks after it until the business claims it, and your name stays off it. You'll get a notification the moment it's live.",
   "listBusiness.success.note.suggestLive":
     "<b>It's live in the directory.</b> Thank you for making the directory a little fuller. If you run this business after all, you can claim it from its page.",
   "listBusiness.success.fallbackName": "Your business",
@@ -3578,6 +3578,26 @@ export const marketing: Catalog = {
     "See how many guests an edit really notified",
   "changelog.entries.edit-notified-count.body":
     "The count after saving shows who was told about a new time or place, and it's hidden for other edits.",
+  "changelog.entries.forum-post-menu-opens-smoothly.title":
+    "The menu on forum posts and replies opens smoothly",
+  "changelog.entries.forum-post-menu-opens-smoothly.body":
+    "It fades in and grows out of the three-dot button, and appears instantly with reduced motion on.",
+  "changelog.entries.social-profile-link-shows-destination.title":
+    "Applicant links show where they really go",
+  "changelog.entries.social-profile-link-shows-destination.body":
+    "Reviewers see a new-tab icon on every social profile link, and the real address whenever the spelling looks unusual.",
+  "changelog.entries.invite-social-profile.title":
+    "Share a social profile when you ask to join",
+  "changelog.entries.invite-social-profile.body":
+    "It's optional and only our review team sees it, and it helps us welcome new people faster.",
+  "changelog.entries.other-approval-note.title":
+    "Explain an Other approval in your own words",
+  "changelog.entries.other-approval-note.body":
+    "Picking Other when welcoming someone in now asks for a short note, shown on the decided request.",
+  "changelog.entries.tidier-applicant-card.title":
+    "A tidier header on join requests",
+  "changelog.entries.tidier-applicant-card.body":
+    "The select box moves to the corner, and a request shows a red chip only once it is past due.",
   "changelog.entries.copy-applicant-email.title":
     "Copy an applicant's email in one click",
   "changelog.entries.copy-applicant-email.body":

@@ -4,6 +4,7 @@ import { useJoinRequests } from "./api/useJoinRequests";
 import { useJoinRequestAssignment } from "./useJoinRequestAssignment";
 import { useJoinRequestQueueDecisions } from "./useJoinRequestQueueDecisions";
 import { QueueAssignmentFilter } from "./QueueAssignmentFilter";
+import { JoinRequestReviewGuide } from "./JoinRequestReviewGuide";
 import {
   assignedToParam,
   type QueueAssignmentScope,
@@ -107,6 +108,9 @@ export function AdminVerifyQueue() {
         <AdminJoinRequestSamplePage />
       ) : activeTab === "waiting" ? (
         <>
+          {/* The guide frames every decision on this tab, so it sits above the
+              filter and the cards. */}
+          <JoinRequestReviewGuide />
           {/* Above the queue rather than inside it: "Assigned to me" can
               legitimately match nothing, and a control that vanished with the
               rows would leave a reviewer no way back to "everything". */}

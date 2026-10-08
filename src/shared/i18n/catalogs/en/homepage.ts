@@ -52,7 +52,7 @@ export const homepage: Catalog = {
     "Choose what you share and who gets to see it. Your profile, photos, and activity can be public, members-only, or private.",
   "manifesto.assurance.moderation.title": "Moderated around the clock",
   "manifesto.assurance.moderation.description":
-    "When something goes wrong, you should not have to shout into the void. Reports are reviewed by real people and responded to as quickly as possible.",
+    "When something goes wrong, you should not have to shout into the void. Our team reviews every report and responds as quickly as possible.",
   // Digests shown when "Where we stand" or "How we keep this safe" opens
   // <ReferenceDigestModal> in place. Written for someone who has just read the
   // section above, so they add what the full page says and skip what the

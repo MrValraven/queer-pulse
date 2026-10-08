@@ -2,7 +2,9 @@ import { FiCheckCircle, FiClock, FiFlag } from "react-icons/fi";
 import { AdminBanEvasionFlag } from "./AdminBanEvasionFlag";
 import { JoinRequestDecisionActions } from "./JoinRequestDecisionActions";
 import { JoinRequestFacts } from "./JoinRequestFacts";
+import { JoinRequestFollowUp } from "./JoinRequestFollowUp";
 import { JoinRequestSelectCheckbox } from "./JoinRequestSelectCheckbox";
+import { JoinRequestUnvouchedPrompt } from "./JoinRequestUnvouchedPrompt";
 import type { BanEvasionAssessmentDTO } from "./api/adminInvites.api";
 import {
   QueueAssignmentControl,
@@ -16,8 +18,11 @@ import styles from "./AdminMembersPage.module.css";
 
 /**
  * One pending applicant in the mod review queue: everything a reviewer needs to
- * make the call — their name, the email we'd reach them on, their city, their
- * own words, and the 18+ attestation record — plus the two decisions.
+ * make the call (their name, the email we'd reach them on, their city, their
+ * own words, and the 18+ attestation record) plus the decisions. When nobody
+ * here vouches for the applicant, a quiet prompt says what to look at, and an
+ * "Email {name} for more details" action opens a ready-made follow-up email
+ * the reviewer sends from their own mail app.
  */
 export function JoinRequestCard({
   item,
@@ -39,7 +44,7 @@ export function JoinRequestCard({
   item: JoinRequestView;
   leaving: boolean;
   stage: "pending" | "waitlisted";
-  /** Bulk-selection checkbox state — only meaningful (and only rendered)
+  /** Bulk-selection checkbox state, only meaningful (and only rendered)
    *  while `stage === "pending"`; waitlisted rows aren't part of the same
    *  bulk batch (Task 6). */
   selected: boolean;
@@ -67,11 +72,43 @@ export function JoinRequestCard({
   onRelease: () => void;
 }) {
   const { t } = useTranslation();
+  const urgency = queueRowUrgency(item.dueAt);
+  const isSelectedPending = stage === "pending" && selected;
   return (
     <div
-      className={`${styles.queueCard} ${leaving ? styles.queueCardLeaving : ""}`}
+      className={`${styles.queueCard} ${leaving ? styles.queueCardLeaving : ""} ${isSelectedPending ? styles.queueCardSelected : ""}`}
     >
       <div className={styles.queueHead}>
+        {/* Initials only, never a photo: an applicant has no account and so
+            no avatar of their own, and the demo portrait registry is keyed by
+            name, so it would put a stranger's face on the record a reviewer is
+            deciding about. */}
+        <AdminAvatar initials={item.initials} tone={item.tone} size="md" />
+        <div className={styles.queueHeadText}>
+          <div className={styles.queueName}>{item.name}</div>
+          <div className={styles.queueApplied}>{item.appliedLine}</div>
+          {/* OPS-04. The stored due date speaks only once it matters: a row
+              past due shows the red chip alone, since it already says how
+              late; a row in its last day shows the amber wait; any other row
+              lets the "Applied" line above carry the age. A request with no
+              stored clock reads neutral and shows nothing here. */}
+          {urgency !== "neutral" && (
+            <div className={styles.queueStatusRow}>
+              {urgency === "overdue" ? (
+                <QueueOverdueChip dueAt={item.dueAt} />
+              ) : (
+                <span
+                  className={`${styles.queueWaiting} ${styles["queueWaiting--approaching"]}`}
+                >
+                  <FiClock aria-hidden />
+                  {t("admin:members.verify.waitingDays", {
+                    count: item.daysWaiting,
+                  })}
+                </span>
+              )}
+            </div>
+          )}
+        </div>
         {stage === "pending" && (
           <JoinRequestSelectCheckbox
             applicantName={item.name}
@@ -81,26 +118,6 @@ export function JoinRequestCard({
             onToggleSelect={onToggleSelect}
           />
         )}
-        {/* Initials only, never a photo: an applicant has no account and so
-            no avatar of their own, and the demo portrait registry is keyed by
-            name — it would put a stranger's face on the record a reviewer is
-            deciding about. */}
-        <AdminAvatar initials={item.initials} tone={item.tone} size="md" />
-        <div>
-          <div className={styles.queueName}>{item.name}</div>
-          <div className={styles.queueApplied}>{item.appliedLine}</div>
-          <span
-            className={`${styles.queueWaiting} ${styles[`queueWaiting--${queueRowUrgency(item.dueAt)}`]}`}
-          >
-            <FiClock aria-hidden />
-            {t("admin:members.verify.waitingDays", { count: item.daysWaiting })}
-          </span>
-          {/* OPS-04. The stored due date, distinct from the wait length beside
-              it: one is how long they have waited, the other is the promise
-              this queue made. A request with no stored clock renders nothing
-              here rather than an "on time" nobody committed to. */}
-          <QueueOverdueChip dueAt={item.dueAt} />
-        </div>
       </div>
 
       {/* OPS-04. Sits directly under the applicant's name, above the triage
@@ -127,11 +144,18 @@ export function JoinRequestCard({
         <div className={styles.queueHistory}>{item.priorDeclineLine}</div>
       )}
       {/* Sits with the other triage signals, above the facts a reviewer reads
-          to make the call — so it frames the reading rather than arriving
+          to make the call, so it frames the reading rather than arriving
           after it as a verdict. */}
       <AdminBanEvasionFlag assessment={banEvasion} />
 
       <JoinRequestFacts item={item} />
+      {!item.hasResolvedReference && (
+        <JoinRequestUnvouchedPrompt
+          applicantName={item.name}
+          hasApplicantName={item.hasName}
+          hasSocialProfile={item.socialProfile !== null}
+        />
+      )}
 
       <p className={styles.queueMsg}>“{item.message}”</p>
 
@@ -143,6 +167,14 @@ export function JoinRequestCard({
       <p className={styles.queueReminder}>
         {t("admin:members.verify.identityReminder")}
       </p>
+
+      <JoinRequestFollowUp
+        applicantName={item.name}
+        hasApplicantName={item.hasName}
+        applicantEmail={item.email}
+        isDisabled={isBusy}
+        onWaitlist={stage === "pending" ? onWaitlist : undefined}
+      />
 
       <JoinRequestDecisionActions
         stage={stage}

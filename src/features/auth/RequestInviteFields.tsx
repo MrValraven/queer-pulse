@@ -2,6 +2,7 @@ import { FormField } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./auth.module.css";
+import { RequestInviteSocialField } from "./RequestInviteSocialField";
 
 export interface RequestInviteFieldsProps {
   first: string;
@@ -19,6 +20,8 @@ export interface RequestInviteFieldsProps {
    *  `heardFrom` so reviewers can see how people find the platform. */
   heardFrom: string;
   setHeardFrom: (v: string) => void;
+  socialProfile: string;
+  setSocialProfile: (v: string) => void;
   /** Required-but-empty "heard from", only ever true after a submit attempt. */
   heardFromMissing: boolean;
   /** Required-but-empty name, only ever true after a submit attempt. */
@@ -58,6 +61,8 @@ export function RequestInviteFields({
   onEmailBlur,
   heardFrom,
   setHeardFrom,
+  socialProfile,
+  setSocialProfile,
   heardFromMissing,
   firstMissing,
   whyMissing,
@@ -143,6 +148,10 @@ export function RequestInviteFields({
           aria-invalid={heardFromMissing}
         />
       </FormField>
+      <RequestInviteSocialField
+        socialProfile={socialProfile}
+        setSocialProfile={setSocialProfile}
+      />
 
       <FormField
         label={

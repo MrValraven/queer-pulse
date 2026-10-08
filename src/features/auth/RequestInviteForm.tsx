@@ -51,6 +51,7 @@ export function RequestInviteForm({
   const [touched, setTouched] = useState(false);
   const [why, setWhy] = useState("");
   const [heardFrom, setHeardFrom] = useState("");
+  const [socialProfile, setSocialProfile] = useState("");
   const [mutual, setMutual] = useState("");
   const [mutualTouched, setMutualTouched] = useState(false);
   const [agreed, setAgreed] = useState(false);
@@ -109,6 +110,7 @@ export function RequestInviteForm({
         message: why.trim(),
         mutualMemberEmail: mutual.trim() || undefined,
         heardFrom: heardFrom.trim(),
+        socialProfile: socialProfile.trim() || undefined,
         source: source ?? undefined,
       });
       onSent("sent", created.statusToken);
@@ -170,6 +172,8 @@ export function RequestInviteForm({
         onEmailBlur={() => setTouched(true)}
         heardFrom={heardFrom}
         setHeardFrom={setHeardFrom}
+        socialProfile={socialProfile}
+        setSocialProfile={setSocialProfile}
         heardFromMissing={heardFromMissing}
         firstMissing={firstMissing}
         whyMissing={whyMissing}

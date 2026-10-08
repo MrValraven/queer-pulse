@@ -806,7 +806,7 @@ export const cinema: Catalog = {
   "submit.success.em": "in the queue.",
   "submit.success.closeLabel": "Back to the cinema",
   "submit.success.step1":
-    "A human watches it within 10–14 days, every submission, no exceptions.",
+    "Our team watches it within 10–14 days, every submission, no exceptions.",
   "submit.success.step2":
     "We write back either way, with specific notes if it's a no.",
   "submit.success.step3":
@@ -824,7 +824,7 @@ export const cinema: Catalog = {
   "submit.aside.applyCta": "Apply for the commission",
   "submit.aside.next.point1.strong": "We watch it.",
   "submit.aside.next.point1.rest":
-    "Every submission is screened by a human, within 10–14 days.",
+    "Our team screens every submission within 10–14 days.",
   "submit.aside.next.point2.strong": "We write back either way.",
   "submit.aside.next.point2.rest":
     "If we don't accept it, we say why specifically, in our own words.",

@@ -1,5 +1,7 @@
 import {
+  FiAtSign,
   FiCompass,
+  FiExternalLink,
   FiMail,
   FiMapPin,
   FiRadio,
@@ -7,17 +9,21 @@ import {
   FiUsers,
 } from "react-icons/fi";
 import { Link } from "react-router-dom";
+import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { JoinRequestView } from "./api/useJoinRequests";
 import styles from "./AdminMembersPage.module.css";
+import { encodedHostOf } from "./socialProfileLink";
 
 /**
  * The applicant facts a reviewer reads to make the call: how to reach them,
- * where they are, how they found us, and whoever already vouches for them.
+ * where they are, how they found us, the social profile they shared, and
+ * whoever already vouches for them.
  *
  * Extracted from `JoinRequestCard` so that card stays under the repo's
  * 200-line component limit. Same `<dl>`, same rows, same order, same
- * conditions on the two optional rows.
+ * conditions on the optional rows (heard from, social profile, mutual member
+ * and reference).
  */
 export function JoinRequestFacts({
   item,
@@ -29,6 +35,7 @@ export function JoinRequestFacts({
   shouldShowEmail?: boolean;
 }) {
   const { t } = useTranslation();
+  const encodedHost = encodedHostOf(item.socialProfileHref);
   return (
     <dl className={styles.queueFacts}>
       {shouldShowEmail && (
@@ -65,6 +72,54 @@ export function JoinRequestFacts({
             {t("admin:members.verify.heardFromLabel")}
           </dt>
           <dd className={styles.queueFactValue}>{item.heardFrom}</dd>
+        </div>
+      )}
+      {item.socialProfile !== null && (
+        <div className={styles.queueFact}>
+          <dt className={styles.queueFactLabel}>
+            <FiAtSign aria-hidden />
+            {t("admin:members.verify.socialProfileLabel")}
+          </dt>
+          <dd className={styles.queueFactValue}>
+            {item.socialProfileHref ? (
+              // Applicant-typed URL: opens in a new tab that cannot reach this
+              // window, sends no referrer (the admin URL stays private) and
+              // passes on no endorsement.
+              <a
+                href={item.socialProfileHref}
+                target="_blank"
+                rel="noopener noreferrer nofollow"
+              >
+                {item.socialProfile}
+                <span className={styles.queueFactLinkTail}>
+                  {"\u2060"}
+                  <FiExternalLink
+                    aria-hidden
+                    className={styles.queueFactLinkIcon}
+                  />
+                </span>
+                <span className="visuallyHidden">
+                  {t("admin:members.verify.opensInNewTab")}
+                </span>
+              </a>
+            ) : (
+              item.socialProfile
+            )}
+            {encodedHost !== null && (
+              <span className={styles.queueFactNote}>
+                <Translation
+                  i18nKey="admin:members.verify.socialProfileGoesTo"
+                  slots={{
+                    host: (
+                      <span className={styles.queueFactNoteHost}>
+                        {encodedHost}
+                      </span>
+                    ),
+                  }}
+                />
+              </span>
+            )}
+          </dd>
         </div>
       )}
       {item.mutualMemberEmail && (

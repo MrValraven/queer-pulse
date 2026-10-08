@@ -12,14 +12,13 @@
   font-size: var(--text-13-5);
   line-height: 1.5;
 }
-/* 16px is the gap from the STATUS, which is the note's neighbour on a normal
-   card. On a card whose only field is the note there is no status, the note
-   follows the eyebrow row instead, and 16px reads tight against the 28px the
-   card gives that row elsewhere. Child 2 is exactly that case and only that
-   case: the status paragraph is the single optional element between the
-   eyebrow row (always child 1) and this note. */
-.bounds:nth-child(2) {
-  margin-top: 28px;
+/* 16px is the gap from the STATUS, or from the owner's prompt that holds the
+   status's place when it is empty, so the note always has one of the two above
+   it while the eyebrow row is on the card. A visitor's card with no status
+   drops the eyebrow row, and the note then leads: as the first child it starts
+   flush with the card's top padding, exactly where the eyebrow would sit. */
+.bounds:first-child {
+  margin-top: 0;
 }
 /* Optically centred on the first line's x-height; `vertical-align` keeps the
    icon inline so the text after it wraps as one continuous run. */

@@ -32,6 +32,8 @@
   border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-12);
   box-shadow: var(--shadow-e3);
+  transform-origin: top right;
+  animation: qpMenuIn var(--dur-fast) var(--ease);
 }
 .item {
   display: flex;
@@ -59,5 +61,22 @@
 @media (prefers-reduced-motion: reduce) {
   .trigger {
     transition: none;
+  }
+  .menu {
+    animation: none;
+  }
+}
+
+/* Local copy of the shared keyframe in src/styles/tokens/effects.css. CSS
+   Modules hashes every animation name it sees here, so a keyframe used from a
+   module has to be declared in that module (see Select.module.css). */
+@keyframes qpMenuIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: none;
   }
 }

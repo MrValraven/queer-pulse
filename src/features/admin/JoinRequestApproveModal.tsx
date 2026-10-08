@@ -1,10 +1,17 @@
 import { useId, useState } from "react";
-import { Button, Modal, RadioCardGroup } from "../../shared/components/ui";
+import {
+  Button,
+  FormField,
+  Modal,
+  RadioCardGroup,
+} from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
+  APPROVAL_NOTE_MAX_LENGTH,
   APPROVAL_REASONS,
   approvalReasonDetailKey,
   approvalReasonLabelKey,
+  approvalReasonNeedsNote,
   type ApprovalReason,
 } from "../auth/api/joinRequestApprovalReason";
 import styles from "./JoinRequestDeclineModal.module.css";
@@ -15,6 +22,9 @@ import styles from "./JoinRequestDeclineModal.module.css";
  * card opens this step and the reviewer records why before anything is sent.
  * The reason is staff-only: it lets the people working the queue read each
  * other's calls against one bar, the same job the decline reason does.
+ * "Other" on its own says nothing, so picking it opens a required note under
+ * the cards where the reviewer writes what the reason was; it is sent with
+ * the reason, and a draft survives switching to another card and back.
  *
  * Same visual contract as the decline confirm (title, Cancel/Confirm footer,
  * Confirm disabled until a reason is picked, the one-column `RadioCardGroup`
@@ -29,12 +39,23 @@ export function JoinRequestApproveModal({
 }: {
   applicantName: string;
   pending: boolean;
-  onConfirm: (reason: string) => void;
+  onConfirm: (reason: string, note?: string) => void;
   onClose: () => void;
 }) {
   const { t } = useTranslation();
   const [reason, setReason] = useState<ApprovalReason | "">("");
+  const [note, setNote] = useState("");
   const legendId = useId();
+  const isNoteNeeded = approvalReasonNeedsNote(reason);
+  const isConfirmDisabled =
+    pending || !reason || (isNoteNeeded && !note.trim());
+
+  function confirm() {
+    if (!reason || isConfirmDisabled) return;
+    // A single argument for every other reason: only "Other" carries a note.
+    if (isNoteNeeded) onConfirm(reason, note.trim());
+    else onConfirm(reason);
+  }
 
   return (
     <Modal
@@ -49,11 +70,7 @@ export function JoinRequestApproveModal({
           <Button variant="ghost" onClick={onClose} disabled={pending}>
             {t("admin:common.cancel")}
           </Button>
-          <Button
-            variant="jade"
-            onClick={() => reason && onConfirm(reason)}
-            disabled={pending || !reason}
-          >
+          <Button variant="jade" onClick={confirm} disabled={isConfirmDisabled}>
             {t("admin:members.verify.approveModal.confirmCta")}
           </Button>
         </>
@@ -95,6 +112,22 @@ export function JoinRequestApproveModal({
           ),
         }))}
       />
+      {isNoteNeeded && (
+        <FormField
+          className={styles.noteField}
+          label={t("admin:members.verify.approveModal.noteLabel")}
+          required
+          labelAside={`${note.length}/${APPROVAL_NOTE_MAX_LENGTH}`}
+          helper={t("admin:members.verify.approveModal.noteHelper")}
+        >
+          <textarea
+            value={note}
+            rows={3}
+            maxLength={APPROVAL_NOTE_MAX_LENGTH}
+            onChange={(event) => setNote(event.target.value)}
+          />
+        </FormField>
+      )}
     </Modal>
   );
 }

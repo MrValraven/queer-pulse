@@ -85,3 +85,12 @@
   font-size: var(--text-14);
   color: var(--ink);
 }
+
+/* An "Other" approval's note, under its reason: kept in the lines the
+   reviewer wrote it in, and a pasted link or address wraps inside the card. */
+.factNote {
+  display: block;
+  margin-top: 4px;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}

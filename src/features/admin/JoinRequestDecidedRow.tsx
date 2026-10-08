@@ -1,14 +1,13 @@
 import { useEffect, useId, useRef, useState, type FocusEvent } from "react";
-import { FiCheck, FiChevronDown, FiCopy } from "react-icons/fi";
-import { useToast } from "../../shared/components/feedback/useToast";
-import { Collapse, IconButton } from "../../shared/components/ui";
-import { useClipboard } from "../../shared/hooks/useClipboard";
+import { FiChevronDown } from "react-icons/fi";
+import { Collapse } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { approvalReasonLabelKey } from "../auth/api/joinRequestApprovalReason";
 import { declineReasonLabelKey } from "../auth/api/joinRequestDeclineReason";
 import type { JoinRequestView } from "./api/useJoinRequests";
 import { joinRequestInviteState } from "./joinRequestInviteState";
+import { JoinRequestCopyEmailButton } from "./JoinRequestCopyEmailButton";
 import { JoinRequestDecidedApplication } from "./JoinRequestDecidedApplication";
+import { JoinRequestDecidedApprovalReason } from "./JoinRequestDecidedApprovalReason";
 import { JoinRequestDecidedDates } from "./JoinRequestDecidedDates";
 import { JoinRequestDecidedInvitePanel } from "./JoinRequestDecidedInvitePanel";
 import { JoinRequestDeclineNote } from "./JoinRequestDeclineNote";
@@ -26,8 +25,9 @@ import styles from "./AdminVerifyDecided.module.css";
  * over is the reviewer's job, and until this row existed the link lived only in
  * a card held in React state that a refresh threw away. A lapsed link gets a
  * reissue action, and a live one can be revoked. Above the link sits the
- * reason the reviewer approved on, so the people working the queue can read
- * each other's calls against one bar. A decline shows its reason and, under
+ * reason the reviewer approved on, and the note they wrote when that reason
+ * was "Other", so the people working the queue can read each other's calls
+ * against one bar. A decline shows its reason and, under
  * it, the note staff keep for each other on it.
  *
  * The row opens collapsed to a one-glance summary (who, the decision, and
@@ -88,7 +88,6 @@ export function JoinRequestDecidedRow({
 
   const isApproved = item.status === "approved";
   const inviteState = joinRequestInviteState(item, t);
-  const approvalReasonKey = approvalReasonLabelKey(item.approvalReason);
 
   return (
     <div className={rowStyles.row}>
@@ -131,7 +130,7 @@ export function JoinRequestDecidedRow({
               <span id={emailId} className={styles.emailText}>
                 {item.email}
               </span>
-              <CopyEmailButton name={item.name} email={item.email} />
+              <JoinRequestCopyEmailButton name={item.name} email={item.email} />
             </div>
             <JoinRequestDecidedDates
               id={datesId}
@@ -162,18 +161,7 @@ export function JoinRequestDecidedRow({
                 <JoinRequestDeclineNote item={item} />
               </>
             )}
-            {isApproved && approvalReasonKey && (
-              <div className={rowStyles.rowNote}>
-                {t("admin:members.verify.decided.approvalReasonLine", {
-                  reason: t(approvalReasonKey),
-                })}
-              </div>
-            )}
-            {isApproved && !approvalReasonKey && (
-              <div className={`${rowStyles.rowNote} ${styles.reasonMissing}`}>
-                {t("admin:members.verify.decided.approvalReasonMissing")}
-              </div>
-            )}
+            {isApproved && <JoinRequestDecidedApprovalReason item={item} />}
             {isApproved && inviteState && (
               <JoinRequestDecidedInvitePanel
                 item={item}
@@ -189,39 +177,5 @@ export function JoinRequestDecidedRow({
         </div>
       </div>
     </div>
-  );
-}
-
-/**
- * Copies the applicant's email in one click, so reaching them never starts
- * with selecting the address by hand. The check mark stands in for the
- * copy icon for a moment after a copy, and a toast says how it went either way.
- */
-function CopyEmailButton({ name, email }: { name: string; email: string }) {
-  const { t } = useTranslation();
-  const { showToast } = useToast();
-  const { copy, copied: isCopied } = useClipboard();
-
-  async function copyEmail() {
-    const didCopy = await copy(email);
-    showToast(
-      t(
-        didCopy
-          ? "admin:members.verify.decided.emailCopied"
-          : "admin:members.verify.decided.emailCopyFailed",
-      ),
-      didCopy ? "success" : "error",
-    );
-  }
-
-  return (
-    <IconButton
-      size="sm"
-      className={styles.copyEmail}
-      aria-label={t("admin:members.verify.decided.copyEmail", { name })}
-      onClick={() => void copyEmail()}
-    >
-      {isCopied ? <FiCheck aria-hidden /> : <FiCopy aria-hidden />}
-    </IconButton>
   );
 }

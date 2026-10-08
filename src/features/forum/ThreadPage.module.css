@@ -4,8 +4,9 @@
 }
 .topbarInner {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 14px;
+  gap: 10px 14px;
   padding: 14px 0 18px;
   border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
   font-size: var(--text-13);
@@ -31,10 +32,14 @@
   height: 14px;
   flex: none;
 }
-/* Moderator/admin controls at the end of the breadcrumb bar. */
+/* Follow plus moderator/admin controls at the end of the breadcrumb bar. On a
+   narrow screen the group drops under the breadcrumb, then the buttons wrap
+   inside it, so none of them run off the edge. */
 .topbarActions {
   margin-left: auto;
   display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
   gap: 8px;
 }
 .sep {

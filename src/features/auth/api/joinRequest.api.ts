@@ -39,6 +39,9 @@ export interface JoinRequestDTO {
   /** The applicant's own answer to "Where did you hear about QueerPulse?",
    *  shown to reviewers. Null on legacy rows that predate the question. */
   heardFrom: string | null;
+  /** Optional handle or link the applicant shared. Staff-only on the wire.
+   *  Optional here so a backend that predates the column still type-checks. */
+  socialProfile?: string | null;
   /** ISO timestamp the request was submitted. */
   createdAt: string;
   reviewedAt: string | null;
@@ -73,6 +76,9 @@ export interface JoinRequestDTO {
    *  `joinRequestApprovalReason.ts`). Staff-only. Null on every other status
    *  and on approvals that predate this field. */
   approvalReason: string | null;
+  /** Staff-only free text the reviewer wrote with an `other` approval. Null on
+   *  every other approval reason and every other status. */
+  approvalNote: string | null;
   /** Confidence-tiered triage signals — surfaced to a human reviewer, never
    *  acted on automatically. See the backend's `join-request-flags.ts`. */
   flags: string[];
@@ -135,6 +141,8 @@ export interface CreateJoinRequestInput {
   /** Required: where the applicant heard about QueerPulse, in their own
    *  words (1 to 200 chars). */
   heardFrom: string;
+  /** Optional handle or link (any platform), already trimmed. Omit when blank. */
+  socialProfile?: string;
   /** The 18+ self-attestation (spec 06). Must be true; the backend re-validates. */
   ageAttested: true;
   /** Which Terms version's eligibility clause was affirmed. */
@@ -464,11 +472,13 @@ export const reviewJoinRequest = (
   status: "approved" | "declined" | "waitlisted",
   declineReason?: string,
   approvalReason?: string,
+  approvalNote?: string,
 ) =>
   apiPatch<JoinRequestDTO>(`/join-requests/${encodeURIComponent(id)}`, {
     status,
     declineReason,
     approvalReason,
+    approvalNote,
   });
 
 export const JOIN_REQUEST_BULK_ACTION_CAP = 50;
@@ -486,12 +496,14 @@ export const bulkReviewJoinRequests = (
   status: "approved" | "declined" | "waitlisted",
   declineReason?: string,
   approvalReason?: string,
+  approvalNote?: string,
 ) =>
   apiPost<BulkReviewResult>("/join-requests/bulk", {
     ids,
     status,
     declineReason,
     approvalReason,
+    approvalNote,
   });
 
 /**

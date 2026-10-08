@@ -43,11 +43,19 @@ export function NowSection({
     !profile.notHereFor?.trim()
   )
     return null;
+  // "What Sara is in the middle of" promises a status. When there is none but
+  // the doors are open, the doors are what the card leads with, so the
+  // subtitle names them instead. Owner and visitor read the same head.
+  const hasOpenToWithoutStatus =
+    !profile.now?.trim() && profile.openTo.length > 0;
+  const subtitleKey = hasOpenToWithoutStatus
+    ? "members:content.now.subtitleOpenTo"
+    : "members:content.now.subtitle";
   return (
     <Section
       id="now"
       title={t("members:content.now.title")}
-      subtitle={t("members:content.now.subtitle", { first: profile.first })}
+      subtitle={t(subtitleKey, { first: profile.first })}
       aside={
         isSelf ? (
           <VisibilityBadge

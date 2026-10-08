@@ -11,6 +11,9 @@ import styles from "./NowBoundaryNote.module.css";
  * phrase. Renders nothing when unset, for the owner too: the nudge to write one
  * belongs in the edit form, not on the card.
  *
+ * On a visitor's card with no status this note leads, above the hairline and
+ * the doors; its stylesheet zeroes the top margin when it is the first child.
+ *
  * This is the hero's `ProfileBoundaryNote` restyled for the card's dark ground.
  * Task 13 removes the hero copy, at which point this is the only one left.
  */

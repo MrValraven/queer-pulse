@@ -59,7 +59,7 @@ export const homepage: Catalog = {
     "Escolhe o que partilhas e quem pode ver. O teu perfil, fotografias e atividade podem ser públicos, só para a comunidade, ou privados.",
   "manifesto.assurance.moderation.title": "Moderação 24 horas por dia",
   "manifesto.assurance.moderation.description":
-    "Quando algo corre mal, não devias ter de gritar para o vazio. As denúncias são revistas por pessoas reais e respondidas o mais depressa possível.",
+    "Quando algo corre mal, não devias ter de gritar para o vazio. A nossa equipa revê cada denúncia e responde o mais depressa possível.",
   // Resumos mostrados quando "Onde nos posicionamos" ou "Como mantemos isto
   // seguro" abrem o <ReferenceDigestModal> no próprio sítio. Escritos para quem
   // acabou de ler a secção acima, por isso acrescentam o que a página completa

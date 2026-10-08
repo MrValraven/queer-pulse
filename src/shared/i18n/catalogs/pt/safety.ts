@@ -100,7 +100,7 @@ export const safety: Catalog = {
     "Através do botão em qualquer perfil, mensagem ou publicação do fórum, ou diretamente por esta página. Podes denunciar de forma anónima, se precisares.",
   "report.flow.step2.title": "Confirmação imediata",
   "report.flow.step2.desc":
-    "Uma confirmação chega às tuas notificações do QueerPulse no prazo de 1 hora e uma pessoa real fica responsável pela tua denúncia. Uma denúncia feita sem conta salta este passo: não há aqui uma caixa de entrada para alcançar.",
+    "Uma confirmação chega às tuas notificações do QueerPulse no prazo de 1 hora e alguém da nossa equipa fica responsável pela tua denúncia. Uma denúncia feita sem conta salta este passo: não há aqui uma caixa de entrada para alcançar.",
   "report.flow.step3.title": "Revisão no prazo de 24 horas",
   "report.flow.step3.desc":
     "Analisamos as provas, o contexto e o histórico. Em casos graves, o acesso da pessoa denunciada é suspenso temporariamente durante a análise.",

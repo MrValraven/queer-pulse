@@ -37,6 +37,7 @@ export const JOIN_REQUESTS: JoinRequestDTO[] = [
     termsVersion: "2.4",
     source: "homepage_hero",
     heardFrom: "A friend at Porto Pride",
+    socialProfile: "https://instagram.com/marco.vieira",
     reviewedAt: null,
     reviewedBy: null,
     inviteCode: null,
@@ -44,13 +45,14 @@ export const JOIN_REQUESTS: JoinRequestDTO[] = [
     inviteExpiresAt: null,
     message:
       "I run a small queer zine in Porto and keep hearing this is where the good people are. I'd love a quieter place to actually talk.",
-    mutualMemberEmail: null,
+    mutualMemberEmail: "devon@example.com",
     declineReason: null,
     approvalReason: null,
+    approvalNote: null,
     flags: [],
     priorDeclineCount: 0,
-    referenceMemberName: null,
-    referenceMemberSlug: null,
+    referenceMemberName: "Devon Okoro",
+    referenceMemberSlug: "devon",
     assignedStaffId: null,
     dueAt: dueDaysFromNow(-2),
     internalNote: null,
@@ -68,6 +70,7 @@ export const JOIN_REQUESTS: JoinRequestDTO[] = [
     termsVersion: "2.4",
     source: "skills",
     heardFrom: "Instagram",
+    socialProfile: null,
     reviewedAt: null,
     reviewedBy: null,
     inviteCode: null,
@@ -80,6 +83,7 @@ export const JOIN_REQUESTS: JoinRequestDTO[] = [
     mutualMemberEmail: "devon@example.com",
     declineReason: null,
     approvalReason: null,
+    approvalNote: null,
     flags: [],
     priorDeclineCount: 0,
     referenceMemberName: null,
@@ -105,6 +109,7 @@ export const JOIN_REQUESTS: JoinRequestDTO[] = [
     // "Opened the invite page directly" fallback.
     source: null,
     heardFrom: "My therapist mentioned it",
+    socialProfile: "bsky.app/profile/nadia.bsky.social",
     reviewedAt: null,
     reviewedBy: null,
     inviteCode: null,
@@ -115,6 +120,7 @@ export const JOIN_REQUESTS: JoinRequestDTO[] = [
     mutualMemberEmail: null,
     declineReason: null,
     approvalReason: null,
+    approvalNote: null,
     flags: [],
     priorDeclineCount: 0,
     referenceMemberName: null,
@@ -138,6 +144,7 @@ export const JOIN_REQUESTS: JoinRequestDTO[] = [
     termsVersion: "2.4",
     source: "skills",
     heardFrom: "Saw a flyer at a bookshop",
+    socialProfile: "@alex.pending",
     reviewedAt: null,
     reviewedBy: null,
     inviteCode: null,
@@ -147,6 +154,7 @@ export const JOIN_REQUESTS: JoinRequestDTO[] = [
     mutualMemberEmail: null,
     declineReason: null,
     approvalReason: null,
+    approvalNote: null,
     flags: ["disposable_email"],
     priorDeclineCount: 1,
     referenceMemberName: null,
@@ -174,6 +182,7 @@ export const JOIN_REQUESTS: JoinRequestDTO[] = [
     termsVersion: "2.4",
     source: "directory",
     heardFrom: "Someone in my reading group",
+    socialProfile: "@priya.reads",
     reviewedAt: "2026-06-21T08:30:00.000Z",
     reviewedBy: "demo-moderator",
     reviewedByName: "Inês Duarte",
@@ -188,6 +197,7 @@ export const JOIN_REQUESTS: JoinRequestDTO[] = [
     // Approved on the strength of the vouch: the reference resolved to a
     // real member, which is the call this reason records.
     approvalReason: "member_vouched",
+    approvalNote: null,
     flags: [],
     priorDeclineCount: 0,
     referenceMemberName: "Devon Okoro",
@@ -209,6 +219,7 @@ export const JOIN_REQUESTS: JoinRequestDTO[] = [
     termsVersion: "2.4",
     source: null,
     heardFrom: "google",
+    socialProfile: null,
     reviewedAt: "2026-06-16T09:00:00.000Z",
     reviewedBy: "demo-moderator",
     reviewedByName: "Inês Duarte",
@@ -219,6 +230,7 @@ export const JOIN_REQUESTS: JoinRequestDTO[] = [
     mutualMemberEmail: null,
     declineReason: "spam_pattern",
     approvalReason: null,
+    approvalNote: null,
     flags: ["disposable_email"],
     priorDeclineCount: 0,
     referenceMemberName: null,
@@ -248,6 +260,7 @@ export const JOIN_REQUESTS: JoinRequestDTO[] = [
     termsVersion: "2.4",
     source: "magazine",
     heardFrom: "The housing co-ops piece in the magazine",
+    socialProfile: "https://www.tiktok.com/@helena.coops",
     reviewedAt: "2026-05-31T17:45:00.000Z",
     // The demo session's own id (`DEMO_USER.id` in AuthProvider), so the
     // decided tab and the quality sample both show a call read as "you".
@@ -262,7 +275,11 @@ export const JOIN_REQUESTS: JoinRequestDTO[] = [
       "I read the piece on housing co-ops and would like to meet the people behind it.",
     mutualMemberEmail: null,
     declineReason: null,
-    approvalReason: "clear_request",
+    // None of the set reasons fit, so the reviewer wrote down why. The note
+    // stays with staff like the reason does.
+    approvalReason: "other",
+    approvalNote:
+      "Met them at the Porto Pride picnic with two members, they asked to join on the day",
     flags: [],
     priorDeclineCount: 0,
     referenceMemberName: null,
@@ -284,6 +301,7 @@ export const JOIN_REQUESTS: JoinRequestDTO[] = [
     termsVersion: "2.4",
     source: "public_profile",
     heardFrom: "A friend at Lisbon Pride",
+    socialProfile: null,
     reviewedAt: "2026-05-13T09:20:00.000Z",
     reviewedBy: "mod-ana",
     reviewedByName: "Ana Reis",
@@ -299,6 +317,7 @@ export const JOIN_REQUESTS: JoinRequestDTO[] = [
     // Approved before reasons were asked for, so demo mode covers the
     // legacy "no reason on record" line as well as a recorded reason.
     approvalReason: null,
+    approvalNote: null,
     flags: [],
     priorDeclineCount: 0,
     referenceMemberName: "Devon Okoro",
@@ -321,6 +340,7 @@ export const JOIN_REQUESTS: JoinRequestDTO[] = [
     termsVersion: "2.4",
     source: "sign_in",
     heardFrom: "Around",
+    socialProfile: "my insta is private, happy to share",
     reviewedAt: "2026-05-09T10:05:00.000Z",
     // Decided, but the row carries no reviewer. This is also exactly what an
     // erased reviewer's past decisions look like: `join_requests.reviewed_by`
@@ -334,6 +354,7 @@ export const JOIN_REQUESTS: JoinRequestDTO[] = [
     mutualMemberEmail: null,
     declineReason: "safety_concern",
     approvalReason: null,
+    approvalNote: null,
     flags: [],
     priorDeclineCount: 1,
     referenceMemberName: null,
@@ -361,6 +382,7 @@ export const JOIN_REQUESTS: JoinRequestDTO[] = [
     // Predates the "where did you hear" question, so demo covers the
     // legacy null branch (the queue hides the row).
     heardFrom: null,
+    socialProfile: null,
     reviewedAt: "2026-04-28T11:00:00.000Z",
     // An id the server could not put a name to (no profile row behind the
     // account). Covers the card's short-reference fallback, which still groups
@@ -373,6 +395,7 @@ export const JOIN_REQUESTS: JoinRequestDTO[] = [
     mutualMemberEmail: "nobody@example.com",
     declineReason: "implausible",
     approvalReason: null,
+    approvalNote: null,
     flags: [],
     priorDeclineCount: 0,
     referenceMemberName: null,

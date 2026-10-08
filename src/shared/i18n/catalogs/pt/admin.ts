@@ -21,7 +21,7 @@ export const admin: Catalog = {
   // verificação, formulários e candidaturas de parceria. A fila de moderação
   // mantém a redação própria em `moderation.*`, anterior a estas chaves.
   "queueClock.overdue": "Fora do prazo",
-  "queueClock.overdueBy": "Fora do prazo há {age}",
+  "queueClock.overdueBy": "Prazo terminou {age}",
   "queueAssignment.unassigned": "Ainda ninguém ficou com isto",
   "queueAssignment.assignedToYou": "Ficaste com isto",
   "queueAssignment.assignedTo": "{name} ficou com isto",
@@ -712,6 +712,9 @@ export const admin: Catalog = {
   // Por que página a pessoa passou até ao formulário de pedido.
   "members.verify.sourceLabel": "Veio de",
   "members.verify.heardFromLabel": "Ouviu falar de nós",
+  "members.verify.socialProfileLabel": "Rede social",
+  "members.verify.opensInNewTab": "(abre num novo separador)",
+  "members.verify.socialProfileGoesTo": "Vai para {host}",
   "members.verify.source.homepage_hero": "Destaque da página inicial",
   "members.verify.source.homepage_outro": "Convite final da página inicial",
   "members.verify.source.homepage_built":
@@ -804,6 +807,8 @@ export const admin: Catalog = {
   "members.verify.approvalReason.known_to_team": "Alguém da equipa conhece",
   "members.verify.approvalReason.partner_or_event":
     "Chegou por um parceiro ou evento",
+  "members.verify.approvalReason.social_profile_checked":
+    "Perfil na rede social verificado",
   "members.verify.approvalReason.other": "Outro",
   "members.verify.approvalReasonDetail.member_vouched":
     "Um membro indicado no pedido confirma quem é.",
@@ -813,6 +818,8 @@ export const admin: Catalog = {
     "Alguém da equipa conhece esta pessoa ou já esteve com ela.",
   "members.verify.approvalReasonDetail.partner_or_event":
     "Chegou até nós por um grupo parceiro, um encontro ou um evento.",
+  "members.verify.approvalReasonDetail.social_profile_checked":
+    "O perfil mostrava uma pessoa real e nada de hostil.",
   "members.verify.approvalReasonDetail.other":
     "Uma aprovação por um motivo que as outras opções não cobrem.",
   "members.verify.approveModal.eyebrow": "Pedido de adesão",
@@ -821,11 +828,69 @@ export const admin: Catalog = {
     "Escolhe o motivo mais próximo. Só a equipa o vê. Aprovar cria uma ligação de convite que copias e envias tu a essa pessoa.",
   "members.verify.approveModal.reasonLabel": "Motivo",
   "members.verify.approveModal.confirmCta": "Acolher",
+  "members.verify.approveModal.noteLabel": "Diz qual foi o motivo",
+  "members.verify.approveModal.noteHelper":
+    "Uma ou duas linhas para o resto da equipa perceber a tua decisão.",
   "members.verify.waitlistCta": "Lista de espera",
   "members.verify.waitlistedToast": "{name} passou para a lista de espera",
   "members.verify.waitlistedSectionTitle": "Lista de espera",
   "members.verify.identityReminder":
     "Um nome, foto ou pronomes não são, por si só, motivo para recusar.",
+  "members.verify.unvouched.withSocial":
+    "Ninguém aqui dá um voto de confiança a {name}. Vê o perfil e a mensagem antes de decidir.",
+  "members.verify.unvouched.withoutSocial":
+    "Ninguém aqui dá um voto de confiança a {name} e não partilhou nenhum perfil. Lê a mensagem e, se tiveres dúvidas, envia um email a pedir mais detalhes.",
+  "members.verify.unvouched.withSocialNoName":
+    "Ninguém aqui dá um voto de confiança a quem fez este pedido. Vê o perfil e a mensagem antes de decidir.",
+  "members.verify.unvouched.withoutSocialNoName":
+    "Ninguém aqui dá um voto de confiança a quem fez este pedido, e não partilhou nenhum perfil. Lê a mensagem e, se tiveres dúvidas, envia um email a pedir mais detalhes.",
+  "members.verify.guide.summary": "Como rever alguém que ninguém aqui conhece",
+  "members.verify.guide.step1Title":
+    "Vê o perfil na rede social, se o partilhou.",
+  "members.verify.guide.step1Body":
+    "Confirma que há uma pessoa real por trás e que não mostra hostilidade contra pessoas queer ou trans. Uma conta privada não tem problema.",
+  "members.verify.guide.step2Title": "Lê a mensagem e onde ouviu falar de nós.",
+  "members.verify.guide.step2Body":
+    "Respostas específicas e pessoais são bom sinal. Texto genérico, copiado ou uma história que não bate certo merecem um olhar mais atento.",
+  "members.verify.guide.step3Title": "Vê os alertas no cartão.",
+  "members.verify.guide.step3Body":
+    "Email descartável, mensagem duplicada, pico de pedidos, recusa anterior e evasão de banimento dizem-te onde olhar, e nenhum deles é um veredicto.",
+  "members.verify.guide.step4Title": "Ainda com dúvidas? Pergunta.",
+  "members.verify.guide.step4Body":
+    'Usa "Pedir mais detalhes" no cartão para enviar uma nota simpática a pedir um perfil ou umas linhas sobre a pessoa, e põe-na na lista de espera enquanto aguardas.',
+  "members.verify.guide.step5Title": "Recusa por um motivo concreto.",
+  "members.verify.guide.step5Body":
+    "Conteúdo hostil ou de ódio, um perfil falso ou de outra pessoa, uma conta de spam ou comercial, ter menos de 18 anos, ou uma correspondência de evasão de banimento.",
+  "members.verify.guide.neverTitle": "Nunca é motivo para recusar",
+  "members.verify.guide.neverBody":
+    'Não ter link de rede social, ter uma conta privada, ou não "parecer" ou "publicar" de forma queer o suficiente. Muitas pessoas aqui ainda não saíram do armário, e um perfil discreto pode ser a forma de se manterem seguras.',
+  "members.verify.guide.rubricVersion": "Rubrica completa: versão 1.1",
+  "members.verify.followUp.action": "Pedir mais detalhes a {name}",
+  "members.verify.followUp.actionNoName": "Pedir mais detalhes",
+  "members.verify.followUp.eyebrow": "Pedir mais",
+  "members.verify.followUp.title": "Email para {name}",
+  "members.verify.followUp.titleNoName": "Email para quem fez o pedido",
+  "members.verify.followUp.languageLabel": "Idioma do email",
+  "members.verify.followUp.languageEn": "English",
+  "members.verify.followUp.languagePt": "Português",
+  "members.verify.followUp.toLabel": "Para",
+  "members.verify.followUp.subjectLabel": "Assunto",
+  "members.verify.followUp.bodyLabel": "Mensagem",
+  "members.verify.followUp.open": "Abrir na app de email",
+  "members.verify.followUp.copy": "Copiar email",
+  "members.verify.followUp.copied": "Email copiado",
+  "members.verify.followUp.copyFailed":
+    "Não foi possível copiar. Seleciona o texto e copia-o tu.",
+  "members.verify.followUp.waitlistHint": "À espera de resposta?",
+  "members.verify.followUp.waitlistAction": "Pôr {name} na lista de espera",
+  "members.verify.followUp.waitlistActionNoName":
+    "Pôr o pedido na lista de espera",
+  "members.verify.followUp.subject":
+    "O teu pedido de convite para a QueerPulse",
+  "members.verify.followUp.greeting": "Olá {name},",
+  "members.verify.followUp.greetingNoName": "Olá,",
+  "members.verify.followUp.body":
+    "Agradecemos o teu pedido para entrar na QueerPulse. A nossa equipa lê cada pedido, e gostávamos de te conhecer um pouco antes de enviar um convite.\n\nA QueerPulse é um espaço para pessoas LGBTQIA+ e aliadas, e mantê-lo seguro é muito importante para toda a gente que cá está. Como acabaste de chegar à nossa comunidade, adorávamos saber um pouco mais sobre ti. Isto ajuda-nos a garantir que quem entra é quem diz ser e vem por bem. Pedimos isto a todas as pessoas que ainda não conhecem ninguém cá.\n\nPodes responder com uma destas coisas?\n\n- Um link para um perfil numa rede social (Instagram, TikTok, Bluesky ou parecido). Se for privado, uma captura de ecrã da página do teu perfil também serve.\n- O nome ou email de alguém que já está na QueerPulse e te conhece.\n- Umas linhas sobre ti e sobre como gostavas de usar a QueerPulse.\n\nSó a equipa de revisão vê o que enviares, e usamos isso apenas para este pedido. Se ainda não saíste do armário, ou preferes guardar as tuas redes para ti, não há problema nenhum. Conta-nos um pouco mais por palavras tuas e nós tratamos do resto.\n\nO teu pedido fica em aberto enquanto esperamos por notícias tuas.\n\nUm abraço,\nA equipa QueerPulse",
   "members.verify.selectAria": "Selecionar o pedido de {name}",
   "members.verify.bulk.ariaLabel": "Ações em lote",
   "members.verify.bulk.selectedCount_one": "{count} selecionado",
@@ -963,6 +1028,7 @@ export const admin: Catalog = {
     "Decidido por {name}, data não registada",
   "members.verify.decided.reviewerYou": "ti",
   "members.verify.decided.approvalReasonLine": "Motivo: {reason}",
+  "members.verify.decided.approvalNoteLine": "Porquê: {note}",
   "members.verify.decided.approvalReasonMissing":
     "Sem motivo registado. Foi aprovado antes de se pedirem motivos.",
   "members.verify.decided.showDetails": "Mostrar detalhes de {name}",

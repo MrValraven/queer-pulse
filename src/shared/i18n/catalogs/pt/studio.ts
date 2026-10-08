@@ -478,10 +478,10 @@ export const studio: Catalog = {
     "Última auditoria: 2 jun. 2026 · WCAG 2.2 AA · NVDA, VoiceOver, TalkBack · próxima auditoria: set. 2026",
 
   // ── Ajuda e perguntas frequentes (StudioHelpPage + StudioHelpFaq) ─────────
-  "help.hero.eyebrow": "Ajuda · pessoas reais, respostas reais",
+  "help.hero.eyebrow": "Ajuda · respostas da nossa equipa",
   "help.hero.title": "Como podemos <em>ajudar</em>?",
   "help.hero.dek":
-    "A maioria das respostas está abaixo. Se não estiver, uma pessoa lê cada mensagem. Não temos um labirinto de bots, nem existe um nível de apoio que tenhas de pagar.",
+    "A maioria das respostas está abaixo. Se não estiver, a nossa equipa lê cada mensagem. Não temos um labirinto de bots, nem existe um nível de apoio que tenhas de pagar.",
   "help.searchPlaceholder":
     "Pesquisar ajuda: gorjetas, pagamentos, qualidade de áudio…",
   "help.searchAria": "Pesquisar ajuda",
@@ -532,7 +532,7 @@ export const studio: Catalog = {
   "help.stillStuck.title": "Ainda com <em>dúvidas</em>?",
   "help.statusOperational": "Todos os sistemas operacionais ·",
 
-  "help.contact.email.title": "<em>Email</em> a uma pessoa",
+  "help.contact.email.title": "<em>Email</em> para a nossa equipa",
   "help.contact.email.replyLine": "resposta dentro de um dia",
   "help.contact.email.action": "Enviar mensagem",
   "help.contact.email.toast": "A abrir o teu cliente de email…",

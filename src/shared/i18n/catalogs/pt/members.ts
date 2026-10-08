@@ -313,8 +313,10 @@ export const members: Catalog = {
   // ── Secções de conteúdo do perfil (ProfileContentSections, WorkEditor) ────
   "content.now.title": "Agora",
   "content.now.subtitle": "O que ocupa {first} agora",
+  "content.now.subtitleOpenTo": "Ao que {first} está disponível",
   "content.now.openLabel": "Disponível para",
   "content.now.eyebrow": "Agora mesmo",
+  "content.now.emptyPrompt": "Em que andas agora?",
   "content.now.updated": "Atualizado {relative}",
   "content.now.update": "Atualizar",
   // Tem de começar exatamente por "Atualizar", o rótulo visível do botão:

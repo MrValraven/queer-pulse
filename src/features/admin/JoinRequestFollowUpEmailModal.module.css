@@ -1,0 +1,61 @@
+.languageLabel {
+  margin: 0 0 6px;
+  font-size: var(--text-12);
+  color: var(--ink-60);
+}
+
+.envelope {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 6px 12px;
+  margin: 16px 0 12px;
+  font-size: var(--text-13);
+}
+
+.envelope dt {
+  color: var(--ink-60);
+}
+
+.envelope dd {
+  margin: 0;
+  min-width: 0;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+/* The textarea and its loading placeholder share one box, so the modal holds
+   its height when the email text lands. The height is the textarea's 12 rows
+   at its line-height plus vertical padding and border. */
+.preview,
+.previewPlaceholder {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  height: calc(var(--text-14) * 1.6 * 12 + 30px);
+  max-height: 320px;
+  padding: 14px 16px;
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-14);
+  background: var(--paper);
+}
+
+.preview {
+  resize: none;
+  overflow-y: auto;
+  font: inherit;
+  font-size: var(--text-14);
+  line-height: 1.6;
+  color: var(--ink);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.waitlist {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  margin: 14px 0 0;
+  font-size: var(--text-13);
+  color: var(--ink-60);
+}

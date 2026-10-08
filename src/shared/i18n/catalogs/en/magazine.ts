@@ -888,7 +888,7 @@ export const magazine: Catalog = {
   "desk.modals.pass.title": "Pass on “{title}”",
   "desk.modals.pass.send": "Send it",
   "desk.modals.pass.body":
-    "A pass lands easier with a real reason. Pick a starting point below, or write your own. Either way, the writer hears from a real person.",
+    "A pass lands easier with a real reason. Pick a starting point below, or write your own. Either way, the writer hears it from you.",
   "desk.modals.pass.startingPoints": "Starting points",
   // Each `label` names a chip; each `body` is seeded into the editable note the
   // writer eventually reads, so it has to stand as real prose from an editor.

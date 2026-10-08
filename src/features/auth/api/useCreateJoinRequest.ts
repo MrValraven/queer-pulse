@@ -23,6 +23,8 @@ export interface JoinRequestVars {
   mutualMemberEmail?: string;
   /** Required: where they heard about QueerPulse, already trimmed. */
   heardFrom: string;
+  /** Optional social profile, a handle or a link. Omit when blank. */
+  socialProfile?: string;
   /** The CTA the applicant came through, when the form could resolve one. */
   source?: JoinRequestSource;
 }
@@ -58,6 +60,7 @@ export function useCreateJoinRequest() {
       message,
       mutualMemberEmail,
       heardFrom,
+      socialProfile,
       source,
     }) => {
       if (demoMode) {
@@ -80,6 +83,7 @@ export function useCreateJoinRequest() {
         message,
         mutualMemberEmail: mutualMemberEmail?.trim() || undefined,
         heardFrom,
+        socialProfile: socialProfile?.trim() || undefined,
         ageAttested: true,
         termsVersion,
         source,

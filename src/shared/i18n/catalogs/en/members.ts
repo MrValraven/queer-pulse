@@ -319,8 +319,10 @@ export const members: Catalog = {
   // ── Profile content sections (ProfileContentSections, WorkEditor) ─────────
   "content.now.title": "Now",
   "content.now.subtitle": "What {first} is in the middle of",
+  "content.now.subtitleOpenTo": "What {first} is open to",
   "content.now.openLabel": "Open to",
   "content.now.eyebrow": "Right now",
+  "content.now.emptyPrompt": "What are you in the middle of?",
   "content.now.updated": "Updated {relative}",
   "content.now.update": "Update",
   // The Update button's accessible name. Deliberately NOT reusing

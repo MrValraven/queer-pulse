@@ -15,7 +15,7 @@ export const admin: Catalog = {
   // intakes and partner applications. The moderation queue keeps its own
   // `moderation.*` wording, which predates these and is already translated.
   "queueClock.overdue": "Overdue",
-  "queueClock.overdueBy": "Overdue by {age}",
+  "queueClock.overdueBy": "Due {age}",
   "queueAssignment.unassigned": "Nobody has this yet",
   "queueAssignment.assignedToYou": "You have this",
   "queueAssignment.assignedTo": "{name} has this",
@@ -682,6 +682,9 @@ export const admin: Catalog = {
   // Which page the applicant came through on their way to the request form.
   "members.verify.sourceLabel": "Came from",
   "members.verify.heardFromLabel": "Heard about us",
+  "members.verify.socialProfileLabel": "Social profile",
+  "members.verify.opensInNewTab": "(opens in a new tab)",
+  "members.verify.socialProfileGoesTo": "Goes to {host}",
   "members.verify.source.homepage_hero": "Homepage hero",
   "members.verify.source.homepage_outro": "Homepage closing invite",
   "members.verify.source.homepage_built":
@@ -772,6 +775,8 @@ export const admin: Catalog = {
   "members.verify.approvalReason.known_to_team": "Known to the team",
   "members.verify.approvalReason.partner_or_event":
     "Came through a partner or event",
+  "members.verify.approvalReason.social_profile_checked":
+    "Checked their social profile",
   "members.verify.approvalReason.other": "Other",
   "members.verify.approvalReasonDetail.member_vouched":
     "A member they named backs them up.",
@@ -781,6 +786,8 @@ export const admin: Catalog = {
     "Someone on the team knows them or has met them.",
   "members.verify.approvalReasonDetail.partner_or_event":
     "They found us through a partner group, a gathering or an event.",
+  "members.verify.approvalReasonDetail.social_profile_checked":
+    "Their profile showed a real person and nothing hostile.",
   "members.verify.approvalReasonDetail.other":
     "An approval for a reason the other options don't capture.",
   "members.verify.approveModal.eyebrow": "Membership request",
@@ -789,11 +796,68 @@ export const admin: Catalog = {
     "Pick the closest reason. Only staff see it. Approving mints an invite link that you copy and send to them yourself.",
   "members.verify.approveModal.reasonLabel": "Reason",
   "members.verify.approveModal.confirmCta": "Welcome in",
+  "members.verify.approveModal.noteLabel": "Say what the reason was",
+  "members.verify.approveModal.noteHelper":
+    "A line or two so the rest of the team can follow your call.",
   "members.verify.waitlistCta": "Waitlist",
   "members.verify.waitlistedToast": "{name} moved to the waitlist",
   "members.verify.waitlistedSectionTitle": "Waitlisted",
   "members.verify.identityReminder":
     "A name, photo, or pronouns aren't grounds to decline on their own.",
+  "members.verify.unvouched.withSocial":
+    "Nobody here vouches for {name}. Look at their social profile and message before deciding.",
+  "members.verify.unvouched.withoutSocial":
+    "Nobody here vouches for {name} and they didn't share a social profile. Read their message, and if you're unsure, email them for more details.",
+  "members.verify.unvouched.withSocialNoName":
+    "Nobody here vouches for this applicant. Look at their social profile and message before deciding.",
+  "members.verify.unvouched.withoutSocialNoName":
+    "Nobody here vouches for this applicant and they didn't share a social profile. Read their message, and if you're unsure, email them for more details.",
+  "members.verify.guide.summary": "How to review someone nobody here knows",
+  "members.verify.guide.step1Title":
+    "Look at their social profile, if they shared one.",
+  "members.verify.guide.step1Body":
+    "Check that a real person is behind it and that it shows no hostility toward queer or trans people. A private account is fine.",
+  "members.verify.guide.step2Title":
+    "Read their message and how they heard about us.",
+  "members.verify.guide.step2Body":
+    "Specific, personal answers are a good sign. Generic wording, copy-pasted text or a story that doesn't hold together deserves a closer look.",
+  "members.verify.guide.step3Title": "Check the flags on the card.",
+  "members.verify.guide.step3Body":
+    "Disposable email, duplicate message, burst, prior decline and ban evasion each tell you where to look, and none of them is a verdict.",
+  "members.verify.guide.step4Title": "Still unsure? Ask them.",
+  "members.verify.guide.step4Body":
+    'Use "for more details" on the card to send a friendly note asking for a profile or a few lines about themselves, and waitlist them while you wait.',
+  "members.verify.guide.step5Title": "Decline for a concrete reason.",
+  "members.verify.guide.step5Body":
+    "Hostile or hateful content, a fake or impersonated profile, a spam or commercial account, being under 18, or a ban-evasion match.",
+  "members.verify.guide.neverTitle": "Never a reason to decline",
+  "members.verify.guide.neverBody":
+    'No social link, a private account, or not "looking" or "posting" queer enough. Many people here aren\'t out, and a quiet profile can be how they stay safe.',
+  "members.verify.guide.rubricVersion": "Full rubric: version 1.1",
+  "members.verify.followUp.action": "Email {name} for more details",
+  "members.verify.followUp.actionNoName": "Email them for more details",
+  "members.verify.followUp.eyebrow": "Ask for more",
+  "members.verify.followUp.title": "Email {name}",
+  "members.verify.followUp.titleNoName": "Email this applicant",
+  "members.verify.followUp.languageLabel": "Email language",
+  "members.verify.followUp.languageEn": "English",
+  "members.verify.followUp.languagePt": "Português",
+  "members.verify.followUp.toLabel": "To",
+  "members.verify.followUp.subjectLabel": "Subject",
+  "members.verify.followUp.bodyLabel": "Message",
+  "members.verify.followUp.open": "Open in email app",
+  "members.verify.followUp.copy": "Copy email",
+  "members.verify.followUp.copied": "Email copied",
+  "members.verify.followUp.copyFailed":
+    "Couldn't copy. Select the text and copy it yourself.",
+  "members.verify.followUp.waitlistHint": "Waiting on a reply?",
+  "members.verify.followUp.waitlistAction": "Waitlist {name}",
+  "members.verify.followUp.waitlistActionNoName": "Waitlist this request",
+  "members.verify.followUp.subject": "Your QueerPulse invite request",
+  "members.verify.followUp.greeting": "Hi {name},",
+  "members.verify.followUp.greetingNoName": "Hi there,",
+  "members.verify.followUp.body":
+    "Thanks for asking to join QueerPulse. Our team reads every request, and we'd like to get to know you a little before we send an invite.\n\nQueerPulse is a space for LGBTQIA+ people and allies, and keeping it safe matters a lot to everyone here. Since you're new to our community, we'd love to hear a little more about you. It helps us make sure everyone who joins is who they say they are and is here in good faith. We ask this of everyone who doesn't have a friend here yet.\n\nCould you reply with any one of these?\n\n- A link to a social profile (Instagram, TikTok, Bluesky or similar). If it's private, a screenshot of your profile page works too.\n- The name or email of someone already on QueerPulse who knows you.\n- A few lines about yourself and how you'd like to use QueerPulse.\n\nOnly the review team sees what you send, and we use it for this request alone. If you're not out, or you'd rather keep your socials to yourself, that's completely fine. Tell us a bit more in your own words and we'll take it from there.\n\nYour request stays open while we wait to hear from you.\n\nWarmly,\nThe QueerPulse team",
   "members.verify.selectAria": "Select {name}'s request",
   "members.verify.bulk.ariaLabel": "Bulk actions",
   "members.verify.bulk.selectedCount_one": "{count} selected",
@@ -927,6 +991,7 @@ export const admin: Catalog = {
     "Decided by {name}, date not recorded",
   "members.verify.decided.reviewerYou": "you",
   "members.verify.decided.approvalReasonLine": "Reason: {reason}",
+  "members.verify.decided.approvalNoteLine": "Why: {note}",
   "members.verify.decided.approvalReasonMissing":
     "No reason on record. This was approved before reasons were asked for.",
   "members.verify.decided.showDetails": "Show details for {name}",

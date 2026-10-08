@@ -30,6 +30,7 @@ export function SegmentedControl({
   className,
   disabledOptions,
   label,
+  labelledBy,
 }: {
   options: readonly (string | SegmentOption)[];
   value: string;
@@ -43,6 +44,9 @@ export function SegmentedControl({
   /** Accessible name for the group — a bare `role="group"` is announced without
    *  a purpose. Omit only when a visible heading already names the control. */
   label?: string;
+  /** Id of a visible element that already names the group. Renders
+   *  `aria-labelledby` and omits `aria-label`, so the name is announced once. */
+  labelledBy?: string;
 }) {
   const segments = normalizeSegments(options);
   return (
@@ -51,7 +55,8 @@ export function SegmentedControl({
         .filter(Boolean)
         .join(" ")}
       role="group"
-      aria-label={label}
+      aria-label={labelledBy ? undefined : label}
+      aria-labelledby={labelledBy}
     >
       {segments.map((segment) => {
         const isDisabled = disabledOptions?.includes(segment.value) ?? false;

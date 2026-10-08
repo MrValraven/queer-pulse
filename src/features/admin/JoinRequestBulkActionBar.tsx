@@ -136,8 +136,8 @@ export function JoinRequestBulkActionBar({
         <JoinRequestBulkApproveModal
           count={count}
           pending={decision.pending}
-          onConfirm={(reason) =>
-            void decision.run("approved", undefined, reason)
+          onConfirm={(reason, note) =>
+            void decision.run("approved", undefined, reason, note)
           }
           onClose={decision.cancel}
         />

@@ -1,0 +1,115 @@
+.guide {
+  margin: 12px 0 20px;
+  padding: 0 20px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-16);
+}
+
+.summary {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 0;
+  cursor: pointer;
+  list-style: none;
+  font-family: var(--serif);
+  font-size: var(--text-16);
+  color: var(--ink);
+}
+
+.summary::-webkit-details-marker {
+  display: none;
+}
+
+.summaryIcon {
+  flex: none;
+  color: var(--ink-60);
+}
+
+.summaryText {
+  flex: 1;
+  min-width: 0;
+}
+
+.chevron {
+  flex: none;
+  color: var(--ink-60);
+  transition-property: transform;
+  transition-duration: 200ms;
+  transition-timing-function: var(--ease);
+}
+
+.guide[open] .chevron {
+  transform: rotate(180deg);
+}
+
+.steps {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  max-width: 72ch;
+  padding: 0 0 16px;
+  list-style: none;
+}
+
+.step {
+  display: grid;
+  grid-template-columns: 24px 1fr;
+  gap: 10px;
+  align-items: baseline;
+}
+
+.stepNumber {
+  font-family: var(--serif);
+  font-size: var(--text-16);
+  color: var(--ink-40);
+  text-align: right;
+}
+
+.stepText {
+  margin: 0;
+  font-size: var(--text-14);
+  line-height: 1.55;
+  color: var(--ink-60);
+}
+
+.stepTitle {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.never {
+  padding: 14px 0;
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+.neverTitle {
+  margin: 0 0 4px;
+  padding-inline-start: 34px;
+  font-size: var(--text-13);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.neverBody {
+  max-width: 72ch;
+  margin: 0;
+  padding-inline-start: 34px;
+  font-size: var(--text-14);
+  line-height: 1.55;
+  color: var(--ink-60);
+}
+
+.rubric {
+  margin: 0;
+  padding: 0 0 16px 34px;
+  font-size: var(--text-12);
+  color: var(--ink-40);
+}
+
+@media (max-width: 480px) {
+  .guide {
+    padding: 0 16px;
+  }
+}

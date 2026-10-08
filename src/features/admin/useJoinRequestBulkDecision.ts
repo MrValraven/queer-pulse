@@ -77,6 +77,7 @@ export function useJoinRequestBulkDecision({
     status: BulkDecisionStatus,
     declineReason?: string,
     approvalReason?: string,
+    approvalNote?: string,
   ) {
     if (pending || ids.length === 0) return;
     const batch = [...ids];
@@ -86,6 +87,7 @@ export function useJoinRequestBulkDecision({
         status,
         declineReason,
         approvalReason,
+        approvalNote,
       );
       setConfirming(null);
       const failedIds = result.failed.map((failure) => failure.id);

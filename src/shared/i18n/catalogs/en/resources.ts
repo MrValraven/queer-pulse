@@ -389,7 +389,7 @@ export const resources: Catalog = {
   "queer101.talk.therapy.cta": "Find a therapist",
   "queer101.talk.askAnon.title": "Ask anonymously",
   "queer101.talk.askAnon.desc":
-    "Submit a question anonymously to the community forum. Answered by real people, one at a time.",
+    "Submit a question anonymously to the community forum. Answered by members of the community, one at a time.",
   "queer101.talk.askAnon.cta": "Ask the forum",
 
   "queer101.outro.title": "You're welcome <em>here.</em>",

@@ -15,6 +15,10 @@ export interface NowOpenToChipsProps {
    *  and the swap nudge underneath. Null for a visitor, so those never render
    *  for anyone but the owner even if a caller passed data in by mistake. */
   insights: NowInsights | null;
+  /** True when this row opens the card: a visitor's view with no status and
+   *  no boundary note above it. The "Open to" label then stands on its own
+   *  line as the card's eyebrow, with the chips on the row beneath it. */
+  isLead?: boolean;
 }
 
 /** The owner-only count pill: a bare visible numeral plus a hidden "{count}
@@ -62,11 +66,16 @@ function chipInsightFor(
  * it) a nudge to swap the door out when it has stayed at zero long enough.
  * `reasonValue()` is the single encoder both this row and the connect form's
  * `<select>` share, so a chip's value preselects there byte for byte.
+ *
+ * As the lead row (`isLead`) the label takes the eyebrow's place at the top of
+ * the card, so it stacks above the chips the way "Right now" stacks above a
+ * status. Inline beside the first chip it would read as a caption to nothing.
  */
 export function NowOpenToChips({
   profile,
   isSelf,
   insights,
+  isLead = false,
 }: NowOpenToChipsProps) {
   const { t } = useTranslation();
   const { contact } = useMemberContact(profile.slug);
@@ -74,7 +83,13 @@ export function NowOpenToChips({
   const ownerInsights = isSelf ? insights : null;
   return (
     <div className={styles.openRow}>
-      <span className={styles.openLabel}>
+      <span
+        className={
+          isLead
+            ? `${styles.openLabel} ${styles.openLabelLead}`
+            : styles.openLabel
+        }
+      >
         {t("members:content.now.openLabel")}
       </span>
       {profile.openTo.map((entry) => {

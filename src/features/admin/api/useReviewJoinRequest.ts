@@ -12,6 +12,7 @@ export interface ReviewJoinRequestVars {
   status: "approved" | "declined" | "waitlisted";
   declineReason?: string;
   approvalReason?: string;
+  approvalNote?: string;
 }
 
 /** The stand-in row demo mode reviews when an id isn't in the mock queue. */
@@ -31,6 +32,7 @@ function demoRow(id: string): JoinRequestDTO {
     termsVersion: "2.4",
     source: null,
     heardFrom: null,
+    socialProfile: null,
     createdAt: now,
     reviewedAt: null,
     reviewedBy: null,
@@ -39,6 +41,7 @@ function demoRow(id: string): JoinRequestDTO {
     inviteExpiresAt: null,
     declineReason: null,
     approvalReason: null,
+    approvalNote: null,
     flags: [],
     priorDeclineCount: 0,
     referenceMemberName: null,
@@ -73,11 +76,21 @@ export function useReviewJoinRequest() {
     demoLatencyMs: 0,
     // AdminVerifyQueue toasts its own error, so silence the global duplicate.
     meta: { silentError: true },
-    demoResult: ({ id, status, declineReason, approvalReason }) => ({
+    demoResult: ({
+      id,
+      status,
+      declineReason,
+      approvalReason,
+      approvalNote,
+    }) => ({
       ...demoRow(id),
       status,
       declineReason: status === "declined" ? (declineReason ?? null) : null,
       approvalReason: status === "approved" ? (approvalReason ?? null) : null,
+      approvalNote:
+        status === "approved" && approvalReason === "other"
+          ? (approvalNote ?? null)
+          : null,
       reviewedAt: new Date().toISOString(),
       reviewedBy: "demo-moderator",
       // The name the live backend resolves from `reviewedBy`, so a decision
@@ -94,8 +107,14 @@ export function useReviewJoinRequest() {
           ? new Date(Date.now() + 7 * 86_400_000).toISOString()
           : null,
     }),
-    live: ({ id, status, declineReason, approvalReason }) =>
-      reviewJoinRequest(id, status, declineReason, approvalReason),
+    live: ({ id, status, declineReason, approvalReason, approvalNote }) =>
+      reviewJoinRequest(
+        id,
+        status,
+        declineReason,
+        approvalReason,
+        approvalNote,
+      ),
     // Invalidates in BOTH modes: the demo queue is served by a mock queryFn that
     // re-derives from the (now updated) registry on refetch, so the reviewed row
     // must drop there too — hence onSuccess, not onLiveSuccess.

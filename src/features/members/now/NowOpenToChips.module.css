@@ -27,6 +27,16 @@
   color: var(--now-ink-muted);
   margin-right: 2px;
 }
+/* The label as the card's eyebrow, when no status and no boundary note sit
+   above the doors. A full-width flex item takes its own line, and its 8px
+   bottom margin adds to the row's 8px gap for the 16px the card already puts
+   between a boundary note and the status. The typography stays exactly the
+   inline label's, which is already the eyebrow's. */
+.openLabelLead {
+  flex-basis: 100%;
+  margin-right: 0;
+  margin-bottom: 8px;
+}
 .chip {
   display: inline-flex;
   align-items: center;

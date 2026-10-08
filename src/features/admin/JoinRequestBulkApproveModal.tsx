@@ -1,10 +1,17 @@
 import { useEffect, useId, useRef, useState } from "react";
-import { Button, Modal, RadioCardGroup } from "../../shared/components/ui";
+import {
+  Button,
+  FormField,
+  Modal,
+  RadioCardGroup,
+} from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
+  APPROVAL_NOTE_MAX_LENGTH,
   APPROVAL_REASONS,
   approvalReasonDetailKey,
   approvalReasonLabelKey,
+  approvalReasonNeedsNote,
   type ApprovalReason,
 } from "../auth/api/joinRequestApprovalReason";
 import bulkStyles from "./JoinRequestBulk.module.css";
@@ -24,6 +31,8 @@ function reasonLabelKey(reason: string): string {
  * the same reason `JoinRequestBulkDeclineModal` is one: the single-row and the
  * batch confirm are free to evolve independently. One reason is picked for the
  * whole batch and recorded against every selected request, staff-only.
+ * Picking "Other" opens the same required note the single-request modal asks
+ * for, and that one note is recorded with the reason on every request.
  *
  * The reasons render as the same one-column `RadioCardGroup` stack the
  * single-request modal uses, so all five are visible at once. A dropdown here
@@ -38,13 +47,17 @@ export function JoinRequestBulkApproveModal({
 }: {
   count: number;
   pending: boolean;
-  onConfirm: (reason: string) => void;
+  onConfirm: (reason: string, note?: string) => void;
   onClose: () => void;
 }) {
   const { t } = useTranslation();
   const [reason, setReason] = useState<ApprovalReason | "">("");
+  const [note, setNote] = useState("");
   const legendId = useId();
   const statusLineRef = useRef<HTMLParagraphElement>(null);
+  const isNoteNeeded = approvalReasonNeedsNote(reason);
+  const isConfirmDisabled =
+    pending || !reason || (isNoteNeeded && !note.trim());
 
   // The line the reviewer confirms against must not open half hidden behind
   // the footer on a short screen. `nearest` scrolls only the minimum, and
@@ -52,6 +65,13 @@ export function JoinRequestBulkApproveModal({
   useEffect(() => {
     if (reason) statusLineRef.current?.scrollIntoView?.({ block: "nearest" });
   }, [reason]);
+
+  function confirm() {
+    if (!reason || isConfirmDisabled) return;
+    // A single argument for every other reason: only "Other" carries a note.
+    if (isNoteNeeded) onConfirm(reason, note.trim());
+    else onConfirm(reason);
+  }
 
   return (
     <Modal
@@ -63,11 +83,7 @@ export function JoinRequestBulkApproveModal({
           <Button variant="ghost" onClick={onClose} disabled={pending}>
             {t("admin:common.cancel")}
           </Button>
-          <Button
-            variant="jade"
-            onClick={() => reason && onConfirm(reason)}
-            disabled={pending || !reason}
-          >
+          <Button variant="jade" onClick={confirm} disabled={isConfirmDisabled}>
             {t("admin:members.verify.bulk.confirmApprove.confirmCta")}
           </Button>
         </>
@@ -104,6 +120,22 @@ export function JoinRequestBulkApproveModal({
           ),
         }))}
       />
+      {isNoteNeeded && (
+        <FormField
+          className={styles.noteField}
+          label={t("admin:members.verify.approveModal.noteLabel")}
+          required
+          labelAside={`${note.length}/${APPROVAL_NOTE_MAX_LENGTH}`}
+          helper={t("admin:members.verify.approveModal.noteHelper")}
+        >
+          <textarea
+            value={note}
+            rows={3}
+            maxLength={APPROVAL_NOTE_MAX_LENGTH}
+            onChange={(event) => setNote(event.target.value)}
+          />
+        </FormField>
+      )}
       {/* The same confirmation line the bulk decline shows: the reviewer
           confirms against the reason about to be recorded on every selected
           request. Announced, since it appears only once a reason is chosen. */}

@@ -297,6 +297,11 @@ export const auth: Catalog = {
     "Um amigo, uma publicação, um evento, uma pesquisa...",
   "requestInvite.field.heardFrom.error":
     "Diz-nos onde ouviste falar de nós, nem que seja numa palavra ou duas.",
+  "requestInvite.field.social.label":
+    "Um perfil numa rede social <optional>(opcional)</optional>",
+  "requestInvite.field.social.placeholder": "@oteunome ou um link",
+  "requestInvite.field.social.helper":
+    "Instagram, TikTok, Bluesky ou qualquer sítio que nos ajude a conhecer-te. Usamo-lo para manter a comunidade segura, e só a equipa de revisão o vê. Deixa em branco se preferires não partilhar. Isso nunca conta contra ti.",
   "requestInvite.field.mutual.label":
     "Email de um membro <optional>(opcional)</optional>",
   "requestInvite.field.mutual.helper":
@@ -336,9 +341,9 @@ export const auth: Catalog = {
     "Já nos tinhas pedido, {name}. O teu pedido continua connosco e continua a ser lido. Não é preciso enviar outro.",
   "requestInvite.already.sub_noName":
     "Já nos tinhas pedido. O teu pedido continua connosco e continua a ser lido. Não é preciso enviar outro.",
-  "requestInvite.whatNext.readsIt.title": "Uma pessoa real lê-o",
+  "requestInvite.whatNext.readsIt.title": "A nossa equipa lê-o",
   "requestInvite.whatNext.readsIt.body":
-    "Uma pessoa da comunidade vê cada pedido, à mão. É por isso que pode demorar alguns dias.",
+    "A nossa equipa vê cada pedido, à mão. É por isso que pode demorar alguns dias.",
   "requestInvite.whatNext.connection.title":
     "Procuramos quem te dê um voto de confiança",
   "requestInvite.whatNext.connection.body":
@@ -417,11 +422,11 @@ export const auth: Catalog = {
   "joinRequestStatus.underReview.title":
     "O teu pedido está a <em>ser lido.</em>",
   "joinRequestStatus.underReview.lead":
-    "Enviaste-o {ago}, a {date}. Uma pessoa da comunidade lê cada pedido à mão, e isso pode demorar alguns dias.",
+    "Enviaste-o {ago}, a {date}. A nossa equipa lê cada pedido à mão, e isso pode demorar alguns dias.",
   "joinRequestStatus.underReview.leadNoDate":
-    "O teu pedido está com uma pessoa da comunidade. Cada pedido é lido à mão, e isso pode demorar alguns dias.",
+    "O teu pedido está com a nossa equipa. Lemos cada pedido à mão, e isso pode demorar alguns dias.",
   "joinRequestStatus.underReview.leadDateOnly":
-    "Enviaste-o a {date}. Uma pessoa da comunidade lê cada pedido à mão, e isso pode demorar alguns dias.",
+    "Enviaste-o a {date}. A nossa equipa lê cada pedido à mão, e isso pode demorar alguns dias.",
   "joinRequestStatus.underReview.note":
     "Não tens de fazer nada enquanto esperas. Volta a esta página quando quiseres, o teu código continua a funcionar.",
   "joinRequestStatus.underReview.foot":
@@ -506,9 +511,9 @@ export const auth: Catalog = {
   "joinRequestStatus.approvedSpent.revoked.title":
     "Este convite <em>já não está aberto.</em>",
   "joinRequestStatus.approvedSpent.revoked.lead":
-    "Foste aprovade a {date}, mas este convite foi entretanto retirado. Não conseguimos reativá-lo daqui, e preferimos que ouças o motivo de uma pessoa.",
+    "Foste aprovade a {date}, mas este convite foi entretanto retirado. Não conseguimos reativá-lo daqui, e preferimos que ouças o motivo de alguém da nossa equipa.",
   "joinRequestStatus.approvedSpent.revoked.leadNoDate":
-    "Foste aprovade, mas este convite foi entretanto retirado. Não conseguimos reativá-lo daqui, e preferimos que ouças o motivo de uma pessoa.",
+    "Foste aprovade, mas este convite foi entretanto retirado. Não conseguimos reativá-lo daqui, e preferimos que ouças o motivo de alguém da nossa equipa.",
   "joinRequestStatus.approvedSpent.revoked.foot":
     "Escreve-nos e alguém vai ler.",
 
@@ -519,9 +524,9 @@ export const auth: Catalog = {
   "joinRequestStatus.approvedSpent.refusal.INVITE_REVOKED":
     "Este convite foi retirado, por isso não o conseguimos renovar daqui.",
   "joinRequestStatus.approvedSpent.refusal.INVITE_REFRESH_LIMIT":
-    "Este link já foi renovado as vezes que podia. Fala connosco e uma pessoa trata disto.",
+    "Este link já foi renovado as vezes que podia. Fala connosco e alguém da nossa equipa trata disto.",
   "joinRequestStatus.approvedSpent.refusal.INVITE_REFRESH_UNAVAILABLE":
-    "Não há nenhum convite neste pedido para renovar. Fala connosco e uma pessoa trata disto.",
+    "Não há nenhum convite neste pedido para renovar. Fala connosco e alguém da nossa equipa trata disto.",
   "joinRequestStatus.approvedSpent.refusal.unknown":
     "Isso não passou. Tenta mais uma vez, e fala connosco se continuar a não dar.",
 
@@ -531,18 +536,18 @@ export const auth: Catalog = {
   "joinRequestStatus.declined.eyebrow": "Já o lemos",
   "joinRequestStatus.declined.title": "Desta vez <em>não.</em>",
   "joinRequestStatus.declined.lead":
-    "Uma pessoa da comunidade leu o teu pedido a {date}, e desta vez não conseguimos receber-te.",
+    "A nossa equipa leu o teu pedido a {date}, e desta vez não conseguimos receber-te.",
   "joinRequestStatus.declined.leadNoDate":
-    "Uma pessoa da comunidade leu o teu pedido, e desta vez não conseguimos receber-te.",
+    "A nossa equipa leu o teu pedido, e desta vez não conseguimos receber-te.",
   // `underage` tem título e entrada próprios, e mostra o aviso 18+ de apoio que
   // a plataforma já tem em vez de um motivo: uma pessoa jovem tem de encontrar
   // uma porta aberta com uma data, nunca um veredicto sobre quem é.
   "joinRequestStatus.declined.titleUnderage":
     "Estamos cá <em>quando fizeres 18.</em>",
   "joinRequestStatus.declined.leadUnderage":
-    "Uma pessoa da comunidade leu o teu pedido a {date}. O QueerPulse é 18+ por agora, por isso ainda não te podemos receber.",
+    "A nossa equipa leu o teu pedido a {date}. O QueerPulse é 18+ por agora, por isso ainda não te podemos receber.",
   "joinRequestStatus.declined.leadUnderageNoDate":
-    "Uma pessoa da comunidade leu o teu pedido. O QueerPulse é 18+ por agora, por isso ainda não te podemos receber.",
+    "A nossa equipa leu o teu pedido. O QueerPulse é 18+ por agora, por isso ainda não te podemos receber.",
   "joinRequestStatus.declined.reasonTitle": "O que te podemos dizer",
   "joinRequestStatus.declined.contactCta": "Falar connosco",
 
@@ -557,16 +562,16 @@ export const auth: Catalog = {
   "joinRequestStatus.declineReason.implausible":
     "Quem reviu não conseguiu situar o suficiente do que escreveste para ficar segure, e um formulário curto dá muito pouco por onde pegar. Se alguém que já cá está te conhece, pede-lhe que te dê um voto de confiança, e podes escrever-nos entretanto.",
   "joinRequestStatus.declineReason.safety_concern":
-    "Algo no pedido levantou uma questão de segurança para as pessoas que já cá estão, por isso travámos. Se quiseres falar sobre isso, escreve-nos e uma pessoa vai ler.",
+    "Algo no pedido levantou uma questão de segurança para as pessoas que já cá estão, por isso travámos. Se quiseres falar sobre isso, escreve-nos e alguém da nossa equipa vai ler.",
   "joinRequestStatus.declineReason.other":
-    "Quem reviu não deixou um motivo que possamos mostrar aqui. Se quiseres perceber, escreve-nos e uma pessoa responde.",
+    "Quem reviu não deixou um motivo que possamos mostrar aqui. Se quiseres perceber, escreve-nos e alguém da nossa equipa responde.",
 
   // Uma só resposta para o 400 (código malformado) e para o 404 (pedido
   // inexistente), para que testar códigos não revele quais existem.
   "joinRequestStatus.notFound.eyebrow": "Sem correspondência",
   "joinRequestStatus.notFound.title": "Não <em>encontrámos isso.</em>",
   "joinRequestStatus.notFound.lead":
-    "Não encontrámos nenhum pedido para esse código. Vê se falta um carácter ou se ficou um espaço a mais e tenta outra vez. Se mesmo assim não resultar, fala connosco e uma pessoa ajuda-te.",
+    "Não encontrámos nenhum pedido para esse código. Vê se falta um carácter ou se ficou um espaço a mais e tenta outra vez. Se mesmo assim não resultar, fala connosco e alguém da nossa equipa ajuda-te.",
   "joinRequestStatus.notFound.retryCta": "Tentar outro código",
 
   // O servidor não respondeu. Diferente de "sem correspondência": não se sabe

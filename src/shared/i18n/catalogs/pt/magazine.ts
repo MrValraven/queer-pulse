@@ -897,7 +897,7 @@ export const magazine: Catalog = {
   "desk.modals.pass.title": "Recusar “{title}”",
   "desk.modals.pass.send": "Enviar",
   "desk.modals.pass.body":
-    "Uma recusa cai melhor com um motivo genuíno. Escolhe um ponto de partida abaixo, ou escreve o teu próprio. De qualquer forma, quem escreveu ouve de uma pessoa real.",
+    "Uma recusa cai melhor com um motivo genuíno. Escolhe um ponto de partida abaixo, ou escreve o teu próprio. De qualquer forma, quem escreveu ouve isso de ti.",
   "desk.modals.pass.startingPoints": "Pontos de partida",
   // Cada `label` dá nome a um chip; cada `body` é semeado na nota editável que
   // quem escreveu acaba por ler, por isso tem de funcionar como prosa real de

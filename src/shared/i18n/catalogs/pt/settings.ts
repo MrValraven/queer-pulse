@@ -860,7 +860,7 @@ export const settings: Catalog = {
   "dataExport.toast.selectType": "Seleciona pelo menos um tipo de dados.",
   "dataExport.outro.titleLine1": "Perguntas sobre",
   "dataExport.outro.titleLine2": "os teus dados?",
-  "dataExport.outro.sub": "Escreve-nos e uma pessoa real responde-te.",
+  "dataExport.outro.sub": "Escreve-nos e alguém da nossa equipa responde-te.",
   "dataExport.outro.cta": "Contacta-nos",
 
   // ── DataExportSections.tsx — DataExportSteps ─────────────────────────────

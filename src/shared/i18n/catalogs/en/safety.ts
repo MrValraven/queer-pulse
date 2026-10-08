@@ -98,7 +98,7 @@ export const safety: Catalog = {
     "Via the button on any profile, message, or forum post, or directly through this page. You can report anonymously if needed.",
   "report.flow.step2.title": "Immediate acknowledgement",
   "report.flow.step2.desc":
-    "A confirmation reaches your QueerPulse notifications within 1 hour, and a real person is assigned to your report. A report filed without an account skips this step: there is no inbox here to reach.",
+    "A confirmation reaches your QueerPulse notifications within 1 hour, and someone from our team is assigned to your report. A report filed without an account skips this step: there is no inbox here to reach.",
   "report.flow.step3.title": "Review within 24 hours",
   "report.flow.step3.desc":
     "We review the evidence, context, and history. For serious cases, the reported member's access is temporarily suspended during review.",

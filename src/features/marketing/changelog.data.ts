@@ -63,6 +63,44 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "forum-post-menu-opens-smoothly",
+        category: "improvement",
+        date: "8 Oct 2026",
+        ...entryKeys("forum-post-menu-opens-smoothly"),
+        tag: {
+          labelKey: "marketing:changelog.tag.forum",
+          to: routes.forum,
+        },
+      },
+      {
+        id: "social-profile-link-shows-destination",
+        category: "improvement",
+        date: "8 Oct 2026",
+        ...entryKeys("social-profile-link-shows-destination"),
+      },
+      {
+        id: "tidier-applicant-card",
+        category: "improvement",
+        date: "8 Oct 2026",
+        ...entryKeys("tidier-applicant-card"),
+      },
+      {
+        id: "invite-social-profile",
+        category: "feature",
+        date: "8 Oct 2026",
+        ...entryKeys("invite-social-profile"),
+        tag: {
+          labelKey: "marketing:changelog.tag.requestInvite",
+          to: routes.requestInvite,
+        },
+      },
+      {
+        id: "other-approval-note",
+        category: "improvement",
+        date: "8 Oct 2026",
+        ...entryKeys("other-approval-note"),
+      },
+      {
         id: "copy-applicant-email",
         category: "improvement",
         date: "8 Oct 2026",

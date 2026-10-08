@@ -78,6 +78,11 @@
   line-height: 1.45;
 }
 
+/* The approve modals' note for "Other", opened directly under the cards. */
+.noteField {
+  margin-top: 14px;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .reason {
     transition: none;

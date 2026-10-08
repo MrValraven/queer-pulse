@@ -301,6 +301,11 @@ export const auth: Catalog = {
     "A friend, a post, an event, a search...",
   "requestInvite.field.heardFrom.error":
     "Tell us where you heard about us, even in a word or two.",
+  "requestInvite.field.social.label":
+    "A social profile <optional>(optional)</optional>",
+  "requestInvite.field.social.placeholder": "@yourname or a link",
+  "requestInvite.field.social.helper":
+    "Instagram, TikTok, Bluesky or anywhere that helps us get to know you. We use it to keep the community safe, and only the review team sees it. Leave it blank if you'd rather not share one. That never counts against you.",
   "requestInvite.field.mutual.label":
     "A member's email <optional>(optional)</optional>",
   "requestInvite.field.mutual.helper":
@@ -341,9 +346,9 @@ export const auth: Catalog = {
     "You've asked us before, {name}. Your request is still with us and still being read, so there's no need to send another.",
   "requestInvite.already.sub_noName":
     "You've asked us before. Your request is still with us and still being read, so there's no need to send another.",
-  "requestInvite.whatNext.readsIt.title": "A real person reads it",
+  "requestInvite.whatNext.readsIt.title": "Our team reads it",
   "requestInvite.whatNext.readsIt.body":
-    "A member of the community looks at every request, by hand. That's why it can take a few days.",
+    "Our team looks at every request, by hand. That's why it can take a few days.",
   "requestInvite.whatNext.connection.title": "We look for a connection",
   "requestInvite.whatNext.connection.body":
     "If someone already here can vouch for you, that's the surest way in. Sharing their email helps us match them.",
@@ -417,11 +422,11 @@ export const auth: Catalog = {
   "joinRequestStatus.underReview.eyebrow": "Still with us",
   "joinRequestStatus.underReview.title": "Your request is <em>being read.</em>",
   "joinRequestStatus.underReview.lead":
-    "You sent it {ago}, on {date}. A member of the community reads every request by hand, and that can take a few days.",
+    "You sent it {ago}, on {date}. Our team reads every request by hand, and that can take a few days.",
   "joinRequestStatus.underReview.leadNoDate":
-    "Your request is with a member of the community. They read every request by hand, and that can take a few days.",
+    "Your request is with our team. We read every request by hand, and that can take a few days.",
   "joinRequestStatus.underReview.leadDateOnly":
-    "You sent it on {date}. A member of the community reads every request by hand, and that can take a few days.",
+    "You sent it on {date}. Our team reads every request by hand, and that can take a few days.",
   "joinRequestStatus.underReview.note":
     "There's nothing for you to do while you wait. Come back to this page whenever you like, your code keeps working.",
   "joinRequestStatus.underReview.foot":
@@ -505,9 +510,9 @@ export const auth: Catalog = {
   "joinRequestStatus.approvedSpent.revoked.title":
     "This invite <em>is no longer open.</em>",
   "joinRequestStatus.approvedSpent.revoked.lead":
-    "You were approved on {date}, but this invite has since been withdrawn. We can't turn it back on from here, and we'd rather you heard why from a person.",
+    "You were approved on {date}, but this invite has since been withdrawn. We can't turn it back on from here, and we'd rather you heard why from someone from our team.",
   "joinRequestStatus.approvedSpent.revoked.leadNoDate":
-    "You were approved, but this invite has since been withdrawn. We can't turn it back on from here, and we'd rather you heard why from a person.",
+    "You were approved, but this invite has since been withdrawn. We can't turn it back on from here, and we'd rather you heard why from someone from our team.",
   "joinRequestStatus.approvedSpent.revoked.foot":
     "Write to us and someone will read it.",
 
@@ -517,9 +522,9 @@ export const auth: Catalog = {
   "joinRequestStatus.approvedSpent.refusal.INVITE_REVOKED":
     "This invite has been withdrawn, so we can't refresh it from here.",
   "joinRequestStatus.approvedSpent.refusal.INVITE_REFRESH_LIMIT":
-    "This link has been refreshed as many times as it can be. Get in touch and a person will sort it out.",
+    "This link has been refreshed as many times as it can be. Get in touch and someone from our team will sort it out.",
   "joinRequestStatus.approvedSpent.refusal.INVITE_REFRESH_UNAVAILABLE":
-    "There's no invite on this request to refresh. Get in touch and a person will sort it out.",
+    "There's no invite on this request to refresh. Get in touch and someone from our team will sort it out.",
   "joinRequestStatus.approvedSpent.refusal.unknown":
     "That didn't go through. Try once more, and get in touch if it still won't.",
 
@@ -529,18 +534,18 @@ export const auth: Catalog = {
   "joinRequestStatus.declined.eyebrow": "We've read it",
   "joinRequestStatus.declined.title": "Not this <em>time.</em>",
   "joinRequestStatus.declined.lead":
-    "A member read your request on {date}, and we couldn't bring you in this time.",
+    "Our team read your request on {date}, and we couldn't bring you in this time.",
   "joinRequestStatus.declined.leadNoDate":
-    "A member read your request, and we couldn't bring you in this time.",
+    "Our team read your request, and we couldn't bring you in this time.",
   // `underage` gets its own heading and lead, and renders the platform's
   // existing supportive 18+ notice in place of a reason: a young person must
   // meet an open door with a date on it, never a verdict on who they are.
   "joinRequestStatus.declined.titleUnderage":
     "We'll be here <em>when you're 18.</em>",
   "joinRequestStatus.declined.leadUnderage":
-    "A member read your request on {date}. QueerPulse is 18+ for now, so we can't bring you in yet.",
+    "Our team read your request on {date}. QueerPulse is 18+ for now, so we can't bring you in yet.",
   "joinRequestStatus.declined.leadUnderageNoDate":
-    "A member read your request. QueerPulse is 18+ for now, so we can't bring you in yet.",
+    "Our team read your request. QueerPulse is 18+ for now, so we can't bring you in yet.",
   "joinRequestStatus.declined.reasonTitle": "What we can tell you",
   "joinRequestStatus.declined.contactCta": "Get in touch",
 
@@ -555,16 +560,16 @@ export const auth: Catalog = {
   "joinRequestStatus.declineReason.implausible":
     "The reviewer couldn't place enough of what you wrote to feel sure, and a short form gives them very little to go on. If someone already here knows you, ask them to vouch for you, and you're welcome to write to us in the meantime.",
   "joinRequestStatus.declineReason.safety_concern":
-    "Something in the request raised a safety question for the people already here, so we held back. If you'd like to talk it through, write to us and a person will read it.",
+    "Something in the request raised a safety question for the people already here, so we held back. If you'd like to talk it through, write to us and someone from our team will read it.",
   "joinRequestStatus.declineReason.other":
-    "The reviewer didn't leave a reason we can show you here. If you'd like to understand it, write to us and a person will reply.",
+    "The reviewer didn't leave a reason we can show you here. If you'd like to understand it, write to us and someone from our team will reply.",
 
   // One answer for both the 400 (malformed code) and the 404 (no such
   // request), so probing codes reveals nothing about which ones exist.
   "joinRequestStatus.notFound.eyebrow": "No match",
   "joinRequestStatus.notFound.title": "We couldn't <em>find that.</em>",
   "joinRequestStatus.notFound.lead":
-    "We couldn't find a request for that code. Check it for a missing character or a stray space and try again. If it still doesn't work, get in touch and a person will help.",
+    "We couldn't find a request for that code. Check it for a missing character or a stray space and try again. If it still doesn't work, get in touch and someone from our team will help.",
   "joinRequestStatus.notFound.retryCta": "Try another code",
 
   // The server did not answer. Distinct from "no match": nothing is known

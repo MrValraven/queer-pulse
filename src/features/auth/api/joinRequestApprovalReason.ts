@@ -14,6 +14,7 @@ export const APPROVAL_REASONS = [
   "clear_request",
   "known_to_team",
   "partner_or_event",
+  "social_profile_checked",
   "other",
 ] as const;
 
@@ -43,4 +44,21 @@ export function approvalReasonLabelKey(reason: string | null): string | null {
 /** The one-line detail shown under each label in the approve picker. */
 export function approvalReasonDetailKey(reason: ApprovalReason): string {
   return `admin:members.verify.approvalReasonDetail.${reason}`;
+}
+
+/**
+ * Longest staff note a reviewer can attach to an approval, in characters.
+ * Mirrors `@MaxLength(500)` on `approvalNote` in the backend review DTOs.
+ */
+export const APPROVAL_NOTE_MAX_LENGTH = 500;
+
+/**
+ * Whether picking this reason also asks the reviewer to write why. Only
+ * "other" does: the other keys already say what the reason was, and "other"
+ * on its own says nothing. The backend enforces the same rule.
+ */
+export function approvalReasonNeedsNote(
+  reason: ApprovalReason | "" | null,
+): reason is "other" {
+  return reason === "other";
 }

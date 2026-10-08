@@ -375,8 +375,19 @@
 
 .queueHead {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 12px;
+}
+
+.queueHeadText {
+  flex: 1;
+  min-width: 0;
+}
+
+/* The pending card a reviewer has ticked for a bulk decision. */
+.queueCardSelected {
+  border-color: var(--jade);
+  box-shadow: inset 0 0 0 1px var(--jade);
 }
 
 .queueName {
@@ -401,29 +412,25 @@
   color: var(--ink-40);
 }
 
+.queueStatusRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+
 .queueWaiting {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  margin-top: 6px;
   font-size: var(--text-12);
   padding: 2px 8px;
   border-radius: var(--radius-pill);
 }
 
-.queueWaiting--neutral {
-  color: var(--ink-40);
-  background: transparent;
-}
-
 .queueWaiting--approaching {
   color: var(--amber-ink);
   background: rgba(var(--amber-rgb), 0.12);
-}
-
-.queueWaiting--overdue {
-  color: var(--accent-text);
-  background: rgba(var(--accent-rgb), 0.12);
 }
 
 .queueFlags {
@@ -527,6 +534,29 @@
 
 .queueFactValue a:hover {
   text-decoration: underline;
+}
+
+.queueFactLinkIcon {
+  display: inline;
+  vertical-align: -1px;
+  margin-inline-start: 4px;
+  font-size: var(--text-12);
+}
+
+.queueFactLinkTail {
+  white-space: nowrap;
+}
+
+.queueFactNote {
+  display: block;
+  margin-top: 4px;
+  font-size: var(--text-12);
+  color: var(--amber-ink);
+  overflow-wrap: anywhere;
+}
+
+.queueFactNoteHost {
+  white-space: nowrap;
 }
 
 /* The 18+ self-attestation record — quiet, but always visible before deciding. */
@@ -1360,7 +1390,7 @@
   color: var(--ink-60);
 }
 
-/* ── Bulk selection (Task 6) — the pending join-request queue's own
+/* ── Bulk selection (Task 6): the pending join-request queue's own
    multi-select checkbox and floating bar, styled to match this file's
    existing custom checkbox + bulk-bar rules on the other admin queues
    (`.rowCheckbox`/`.bulkBar` in AdminListingsPage.module.css /
@@ -1376,6 +1406,11 @@
   background: var(--paper);
   cursor: pointer;
   position: relative;
+}
+/* In the card header the box sits top-right; the nudge centres it on the
+   17px serif name line. */
+.queueHead .queueSelect {
+  margin-top: 2px;
 }
 .queueSelect:hover {
   border-color: var(--jade);

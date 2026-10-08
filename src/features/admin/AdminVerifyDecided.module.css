@@ -151,6 +151,13 @@
   color: var(--ink-60);
 }
 
+/* The note an "Other" approval carries: kept in the lines the reviewer wrote
+   it in, and a pasted link or address wraps inside the row. */
+.approvalNote {
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+
 /* Rotation only, named explicitly: base.css's reduced-motion rule shortens
    every transition, and a transition on `all` would drag other properties
    along with it. */

@@ -337,7 +337,7 @@ export const marketing: Catalog = {
     "Não temos capital de risco à procura de retorno. Temos quotas, doações e apoios que mantêm a plataforma independente.",
   "about.contactStrip.title": "Perguntas? <em>Estamos contactáveis.</em>",
   "about.contactStrip.body":
-    "Sem pedidos de suporte perdidos numa fila. Uma pessoa a sério lê o que envias.",
+    "Sem pedidos de suporte perdidos numa fila. A nossa equipa lê o que envias.",
   "about.contactStrip.contactCta": "Contacta-nos",
   "about.contactStrip.governanceCta": "Lê a nossa governação",
   "about.outro.title": "Vem ver <em>com os teus próprios olhos.</em>",
@@ -847,7 +847,7 @@ export const marketing: Catalog = {
   "help.search.resultsHead": "Respostas <em>encontradas</em>",
   "help.search.emptyTitle": "Nada aqui corresponde a \u201c{query}\u201d",
   "help.search.emptyBody":
-    "Tenta uma palavra mais curta ou outra grafia. Ou fala connosco: uma pessoa real lê todas as mensagens.",
+    "Tenta uma palavra mais curta ou outra grafia. Ou fala connosco: a nossa equipa lê todas as mensagens.",
   "help.category.gettingStarted.label": "Começar",
   "help.category.gettingStarted.head": "Para <em>começar</em>",
   "help.category.account.label": "Conta",
@@ -903,7 +903,7 @@ export const marketing: Catalog = {
     "És avisade automaticamente assim que surge uma vaga, com uma janela curta para a garantires antes de passar para a pessoa seguinte.",
   "help.qa.reportMember.q": "Como denuncio outra pessoa da comunidade?",
   "help.qa.reportMember.a":
-    "No perfil da pessoa, numa publicação ou numa mensagem, usa a opção de denúncia. Toda a denúncia vai para uma pessoa moderadora.",
+    "No perfil da pessoa, numa publicação ou numa mensagem, usa a opção de denúncia. Cada denúncia vai para a moderação da nossa equipa.",
   "help.qa.afterReport.q": "O que acontece depois de eu fazer uma denúncia?",
   "help.qa.afterReport.a":
     "Procuramos responder em 48 horas. <strong>Tens sempre resposta</strong>, mesmo que decidamos que não é necessária qualquer ação.",
@@ -934,7 +934,7 @@ export const marketing: Catalog = {
     "Tenta atualizar a página primeiro. Se continuar, <contactLink>avisa-nos</contactLink> com o máximo de detalhe possível.",
   "help.stillStuck.title": "Continuas com dúvidas?",
   "help.stillStuck.body":
-    "Uma pessoa a sério lê todas as mensagens que chegam por aqui.",
+    "A nossa equipa lê todas as mensagens que chegam por aqui.",
   "help.stillStuck.cta": "Contacta-nos",
 
   // ── Chrome partilhado (Termos / Privacidade) ──────────────────────────
@@ -995,7 +995,7 @@ export const marketing: Catalog = {
   "pressKit.hero.dek":
     "Texto institucional, marcas, cor e factos, <b>já autorizados</b> para uso direto, sem necessidade de aprovação.",
   "pressKit.hero.downloadKitCta": "Descarregar o kit completo",
-  "pressKit.hero.askPersonCta": "Falar com uma pessoa",
+  "pressKit.hero.askPersonCta": "Falar com a nossa equipa",
   "pressKit.contact.deskLabel": "<b>Contacto de imprensa:</b>",
   "pressKit.contact.phoneLabel": "<b>Por telefone</b>, a pedido",
   "pressKit.contact.responseLabel": "Respondemos em <b>48 horas</b>",
@@ -1277,7 +1277,7 @@ export const marketing: Catalog = {
     "Clarificações menores podem ser publicadas sem aviso prévio. O número de versão e a data no topo desta página refletem sempre o texto atual.",
   "privacy.contactSection.title": "Contacto",
   "privacy.contactSection.body":
-    "Perguntas sobre esta política ou sobre os teus dados? Envia um email para <a>hello@queerpulse.com</a> e uma pessoa a sério responde.",
+    "Perguntas sobre esta política ou sobre os teus dados? Envia um email para <a>hello@queerpulse.com</a> e alguém da nossa equipa responde.",
 
   // ── Termos de Serviço ──────────────────────────────────────────────────
   "terms.meta.title": "Termos de Serviço da QueerPulse",
@@ -1371,14 +1371,14 @@ export const marketing: Catalog = {
     "Quaisquer litígios serão resolvidos nos tribunais de Lisboa, Portugal, salvo se a lei local de proteção do consumidor exigir o contrário.",
   "terms.contactSection.title": "Contacto",
   "terms.contactSection.body":
-    "Perguntas sobre estes termos? Envia um email para <a>hello@queerpulse.com</a> e uma pessoa a sério responde.",
+    "Perguntas sobre estes termos? Envia um email para <a>hello@queerpulse.com</a> e alguém da nossa equipa responde.",
 
   // ── Informação legal / Imprint ────────────────────────────────────────
   // A QueerPulse é mantida por voluntários e ainda não tem entidade legal
   // registada. Quando isso mudar, acrescenta aqui os dados de registo confirmados.
   "imprint.meta.title": "Informação legal · QueerPulse",
   "imprint.meta.description":
-    "Quem gere a QueerPulse: os voluntários por trás da plataforma, como falar com uma pessoa a sério, e a lei que nos rege.",
+    "Quem gere a QueerPulse: os voluntários por trás da plataforma, como falar com a nossa equipa, e a lei que nos rege.",
   "imprint.meta.lastReviewed": "Revisto pela última vez a 1 de junho de 2026",
   "imprint.title": "Informação <em>legal</em>",
   "imprint.plain.text":
@@ -1388,12 +1388,12 @@ export const marketing: Catalog = {
     "A QueerPulse é construída e mantida por um grupo de voluntários. Ainda não existe nenhuma empresa ou organização registada por trás dela. Quando isso mudar, publicaremos aqui os dados de registo.",
   "imprint.contact.title": "Como nos contactar",
   "imprint.contact.p1":
-    "Para qualquer coisa nesta página, ou para o que for, envia um email para <a>{email}</a> e uma pessoa a sério responde.",
+    "Para qualquer coisa nesta página, ou para o que for, envia um email para <a>{email}</a> e alguém da nossa equipa responde.",
   "imprint.contact.p2":
     "Respondemos em inglês ou português, normalmente dentro de dois dias úteis.",
   "imprint.representation.title": "Responsável pelo conteúdo",
   "imprint.representation.p1":
-    "Os voluntários que gerem a QueerPulse são responsáveis pelas páginas que a própria QueerPulse publica: os textos deste site, a revista e os guias. Cada membro é responsável pelo que publica. Se algo publicado por um membro precisar de atenção, denuncia na aplicação ou envia-nos um email, e uma pessoa a sério vai ver.",
+    "Os voluntários que gerem a QueerPulse são responsáveis pelas páginas que a própria QueerPulse publica: os textos deste site, a revista e os guias. Cada membro é responsável pelo que publica. Se algo publicado por um membro precisar de atenção, denuncia na aplicação ou envia-nos um email, e alguém da nossa equipa vai ver.",
   "imprint.hosting.title": "Alojamento",
   "imprint.hosting.p1":
     "A plataforma corre em alojamento e armazenamento na cloud. A tua sessão e os teus dados são tratados como descrito na nossa Política de Privacidade.",
@@ -1499,7 +1499,7 @@ export const marketing: Catalog = {
   "listBusiness.hero.title":
     "Adiciona um negócio ao <em>diretório das pessoas.</em>",
   "listBusiness.hero.lead":
-    "Queer-owned ou queer-friendly, grande ou pequenino, com porta na rua ou loja online: se é bom para a nossa gente, pertence aqui. Conta-nos e a equipa da comunidade trata do resto. <b>Cada anúncio é lido por uma pessoa antes de ficar no ar.</b>",
+    "Queer-owned ou queer-friendly, grande ou pequenino, com porta na rua ou loja online: se é bom para a nossa gente, pertence aqui. Conta-nos e a equipa da comunidade trata do resto. <b>A nossa equipa lê cada anúncio antes de ficar no ar.</b>",
   "listBusiness.wizard.stepAria": "Passo {number}: {label}",
   "listBusiness.wizard.stepAriaDone": "Passo {number}: {label} (concluído)",
   "listBusiness.wizard.stepAriaCurrent": "Passo {number}: {label} (atual)",
@@ -2152,9 +2152,9 @@ export const marketing: Catalog = {
   "listBusiness.step5.consentGuide.sub":
     "Li as diretrizes da comunidade e como os meus dados são usados.",
   "listBusiness.step5.submitNote":
-    "<b>Uma pessoa revê cada anúncio.</b> É isto que mantém o diretório verificado pela comunidade. Nada é publicado automaticamente. Lemo-lo em poucos dias, e a QueerPulse avisa-te quando ficar no ar (ou a equipa manda-te mensagem se tivermos uma pergunta). Podes editá-lo ou retirá-lo a qualquer momento até lá.",
+    "<b>A nossa equipa revê cada anúncio.</b> É isto que mantém o diretório verificado pela comunidade. Nada é publicado automaticamente. Lemo-lo em poucos dias, e a QueerPulse avisa-te quando ficar no ar (ou a equipa manda-te mensagem se tivermos uma pergunta). Podes editá-lo ou retirá-lo a qualquer momento até lá.",
   "listBusiness.step5.suggestNote":
-    "<b>Uma pessoa a sério revê cada anúncio.</b> A QueerPulse cuida deste até o negócio o reclamar, e o teu nome fica de fora. Recebes uma notificação quando estiver no ar.",
+    "<b>A nossa equipa revê cada anúncio.</b> A QueerPulse cuida deste até o negócio o reclamar, e o teu nome fica de fora. Recebes uma notificação quando estiver no ar.",
   // Painel de sucesso
   "listBusiness.success.stage.review": "Em revisão",
   "listBusiness.success.stage.question": "Pergunta rápida",
@@ -2168,13 +2168,13 @@ export const marketing: Catalog = {
   "listBusiness.success.title.suggestLive.text": "Está",
   "listBusiness.success.title.suggestLive.em": "no mapa.",
   "listBusiness.success.note.review":
-    "Agradecemos o contributo para o diretório. <b>Uma pessoa a sério da equipa da comunidade lê cada anúncio</b> antes de ficar no ar. É essa a promessa por trás do nosso distintivo de verificação pela comunidade. Revemos em <b>poucos dias</b> e recebes uma notificação da QueerPulse assim que estiver no ar.",
+    "Agradecemos o contributo para o diretório. <b>A nossa equipa da comunidade lê cada anúncio</b> antes de ficar no ar. É essa a promessa por trás do nosso distintivo de verificação pela comunidade. Revemos em <b>poucos dias</b> e recebes uma notificação da QueerPulse assim que estiver no ar.",
   "listBusiness.success.note.question":
     "<b>A equipa tem uma pequena pergunta</b> antes de ficar no ar. Está à tua espera nas mensagens da QueerPulse. Não se passa nada de errado; basta uma resposta rápida e segue tudo em frente.",
   "listBusiness.success.note.live":
     "<b>Já está no ar no diretório.</b> O teu anúncio já pode ser encontrado pela comunidade. Agradecemos por tornares o diretório um bocadinho mais completo.",
   "listBusiness.success.note.suggestReview":
-    "Agradecemos a sugestão. <b>Uma pessoa a sério da equipa da comunidade lê cada anúncio</b> antes de ficar no ar. A QueerPulse cuida dele até o negócio o reclamar, e o teu nome fica de fora. Recebes uma notificação assim que estiver no ar.",
+    "Agradecemos a sugestão. <b>A nossa equipa da comunidade lê cada anúncio</b> antes de ficar no ar. A QueerPulse cuida dele até o negócio o reclamar, e o teu nome fica de fora. Recebes uma notificação assim que estiver no ar.",
   "listBusiness.success.note.suggestLive":
     "<b>Já está no ar no diretório.</b> Agradecemos por tornares o diretório um bocadinho mais completo. Se afinal és tu que geres este negócio, podes reclamá-lo a partir da página dele.",
   "listBusiness.success.fallbackName": "O teu negócio",
@@ -3659,6 +3659,26 @@ export const marketing: Catalog = {
     "Vê quantas pessoas uma edição avisou mesmo",
   "changelog.entries.edit-notified-count.body":
     "Depois de guardares, o número mostra quem foi avisado de uma nova hora ou local, e não aparece nas outras edições.",
+  "changelog.entries.forum-post-menu-opens-smoothly.title":
+    "O menu dos tópicos e respostas do fórum abre com suavidade",
+  "changelog.entries.forum-post-menu-opens-smoothly.body":
+    "Surge aos poucos a partir do botão de três pontos, e aparece logo com o movimento reduzido ligado.",
+  "changelog.entries.social-profile-link-shows-destination.title":
+    "Os links de quem pede para entrar mostram para onde vão",
+  "changelog.entries.social-profile-link-shows-destination.body":
+    "Na revisão, cada link de rede social tem um ícone de novo separador e mostra o endereço real sempre que a grafia parece estranha.",
+  "changelog.entries.invite-social-profile.title":
+    "Partilha um perfil numa rede social ao pedir para entrar",
+  "changelog.entries.invite-social-profile.body":
+    "É opcional e só a nossa equipa de revisão o vê, e ajuda-nos a receber novas pessoas mais depressa.",
+  "changelog.entries.other-approval-note.title":
+    "Explica por palavras tuas uma aprovação por Outro motivo",
+  "changelog.entries.other-approval-note.body":
+    "Escolher Outro ao acolher alguém pede agora uma nota curta, que aparece no pedido decidido.",
+  "changelog.entries.tidier-applicant-card.title":
+    "Um cabeçalho mais arrumado nos pedidos para entrar",
+  "changelog.entries.tidier-applicant-card.body":
+    "A caixa de seleção passa para o canto e um pedido só mostra um selo vermelho quando passa do prazo.",
   "changelog.entries.copy-applicant-email.title":
     "Copia o email de quem pediu para entrar num clique",
   "changelog.entries.copy-applicant-email.body":

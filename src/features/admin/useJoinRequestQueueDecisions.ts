@@ -158,12 +158,17 @@ export function useJoinRequestQueueDecisions(pendingRows: JoinRequestView[]) {
     setApprovingItem(item);
   }
 
-  function confirmApprove(reason: string) {
+  function confirmApprove(reason: string, note?: string) {
     const item = approvingItem;
     if (!item || reviewJoinRequest.isPending) return;
     setDecidingId(item.id);
     reviewJoinRequest.mutate(
-      { id: item.id, status: "approved", approvalReason: reason },
+      {
+        id: item.id,
+        status: "approved",
+        approvalReason: reason,
+        approvalNote: note,
+      },
       {
         onSuccess: (dto) => {
           // The server's own decision fields, read off the response: the
@@ -176,6 +181,7 @@ export function useJoinRequestQueueDecisions(pendingRows: JoinRequestView[]) {
             status: dto.status,
             ...reviewerFieldsFrom(dto),
             approvalReason: dto.approvalReason,
+            approvalNote: dto.approvalNote,
             inviteCode: dto.inviteCode,
             inviteStatus: dto.inviteStatus,
             inviteExpiresAt: dto.inviteExpiresAt,

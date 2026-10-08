@@ -21,6 +21,7 @@ import {
 } from "../../auth/api/joinRequest.api";
 import { sourceLabelKey } from "../../auth/api/joinRequestSource";
 import type { AvatarTone } from "../ui";
+import { socialProfileHref } from "../socialProfileLink";
 
 /** Presentation-normalized join request for the mod review queue. */
 export interface JoinRequestView {
@@ -48,6 +49,18 @@ export interface JoinRequestView {
   /** The applicant's own answer to "Where did you hear about QueerPulse?",
    *  as plain text. Null on legacy rows that predate the question. */
   heardFrom: string | null;
+  /** The handle or link the applicant chose to share, as typed. Null when
+   *  they shared none. */
+  socialProfile: string | null;
+  /** `socialProfile` as a safe http(s) href, or null when it is a handle,
+   *  free text, or anything that is not a web link. See `socialProfileLink.ts`. */
+  socialProfileHref: string | null;
+  /** True when the vouching-member email resolved to a real member. Drives the
+   *  "nobody here vouches for them" prompt on the card. */
+  hasResolvedReference: boolean;
+  /** False when the applicant left the name blank and `name` holds the
+   *  placeholder. */
+  hasName: boolean;
   /** Pre-formatted "Applied 2 days ago". */
   appliedLine: string;
   /** Whole days since the request was submitted. */
@@ -86,6 +99,8 @@ export interface JoinRequestView {
    *  approvals made before reasons were asked for. Rendered through
    *  `approvalReasonLabelKey`. */
   approvalReason: string | null;
+  /** STAFF-ONLY free text written with an `other` approval. Null otherwise. */
+  approvalNote: string | null;
   /** Confidence-tiered triage flags, already localized labels — computed here
    *  so the card never has to know the raw flag keys. */
   flagLabels: string[];
@@ -229,6 +244,10 @@ export function dtoToView(
     ageLine: ageLine(dto, t, locale),
     sourceLabel: t(sourceLabelKey(dto.source)),
     heardFrom: dto.heardFrom ?? null,
+    socialProfile: dto.socialProfile ?? null,
+    socialProfileHref: socialProfileHref(dto.socialProfile ?? null),
+    hasResolvedReference: Boolean(dto.referenceMemberName),
+    hasName: dto.name.trim().length > 0,
     appliedLine: appliedLine(dto.createdAt, t),
     daysWaiting,
     inviteCode: dto.inviteCode,
@@ -240,6 +259,7 @@ export function dtoToView(
     ...(dto.reviewedByName ? { reviewedByName: dto.reviewedByName } : {}),
     declineReason: dto.declineReason,
     approvalReason: dto.approvalReason ?? null,
+    approvalNote: dto.approvalNote ?? null,
     flagLabels,
     priorDeclineLine,
     referenceLine,

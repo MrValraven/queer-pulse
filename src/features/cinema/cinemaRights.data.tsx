@@ -373,8 +373,8 @@ export const sections: RightsSection[] = [
           <>
             Email <strong>hello@queerpulse.com</strong> or raise it from your
             Studio dashboard. Whether it's described audio, a specific caption
-            format, or an alternative statement layout, a human will sort it out
-            with you.
+            format, or an alternative statement layout, someone from our team
+            will sort it out with you.
           </>
         ),
       },
@@ -393,9 +393,9 @@ export const contact = {
   ),
   body: (
     <>
-      Write to <strong>hello@queerpulse.com</strong>. A human will reply within
-      48 hours, in English or Portuguese. We don't use template responses for
-      legal questions.
+      Write to <strong>hello@queerpulse.com</strong>. Someone from our team will
+      reply within 48 hours, in English or Portuguese. We don't use template
+      responses for legal questions.
     </>
   ),
 };

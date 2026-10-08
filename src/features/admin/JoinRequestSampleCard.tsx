@@ -11,7 +11,8 @@ import styles from "./JoinRequestSample.module.css";
  * One past decision in the quality sample. READ-ONLY by construction: no
  * decision handler is passed in and none exists on this surface, so nothing
  * here can be re-decided. The point is to read how the call was made and
- * compare it with your own.
+ * compare it with your own. An "Other" approval shows the note the reviewer
+ * wrote under its reason, since "Other" alone says nothing about the call.
  *
  * "Decided by" names the reviewer, because reading a run of decisions for a
  * consistent bar means knowing which of them one person read. It is an
@@ -105,6 +106,13 @@ export function JoinRequestSampleCard({
           </dt>
           <dd className={styles.factValue}>
             {t(reasonKey ?? "admin:members.sample.noReason")}
+            {isApproved && item.approvalNote && (
+              <span className={styles.factNote}>
+                {t("admin:members.verify.decided.approvalNoteLine", {
+                  note: item.approvalNote,
+                })}
+              </span>
+            )}
           </dd>
         </div>
       </dl>

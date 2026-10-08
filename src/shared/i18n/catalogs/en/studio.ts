@@ -474,10 +474,10 @@ export const studio: Catalog = {
     "Last audited 2 Jun 2026 · WCAG 2.2 AA · NVDA, VoiceOver, TalkBack · next audit Sep 2026",
 
   // ── Help & FAQ (StudioHelpPage + StudioHelpFaq) ───────────────────────────
-  "help.hero.eyebrow": "Help · real people, real answers",
+  "help.hero.eyebrow": "Help · answers from our team",
   "help.hero.title": "How can we <em>help</em>?",
   "help.hero.dek":
-    "Most answers are below. If they're not, a human reads every message. We don't run a bot maze, and there's no tier of support you have to pay for.",
+    "Most answers are below. If they're not, our team reads every message. We don't run a bot maze, and there's no tier of support you have to pay for.",
   "help.searchPlaceholder": "Search help: tipping, payouts, audio quality…",
   "help.searchAria": "Search help",
   "help.searchCta": "Search",
@@ -526,7 +526,7 @@ export const studio: Catalog = {
   "help.stillStuck.title": "Still <em>stuck</em>?",
   "help.statusOperational": "All systems operational ·",
 
-  "help.contact.email.title": "<em>Email</em> a human",
+  "help.contact.email.title": "<em>Email</em> our team",
   "help.contact.email.replyLine": "replies within a day",
   "help.contact.email.action": "Send a message",
   "help.contact.email.toast": "Opening your mail client…",
