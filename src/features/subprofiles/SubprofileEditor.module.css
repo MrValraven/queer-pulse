@@ -221,6 +221,25 @@
   gap: 8px;
   flex-wrap: wrap;
 }
+/* On touch the add, change and remove chips keep their look and take a hit
+   area at least --tap-min tall. The pseudo-element is measured from the
+   padding box, so the block offsets are worked out from the chip's own
+   height. Its inline reach is half the 8px gap, so two chips never share a
+   tap, and a wrapped second row moves down far enough to keep them apart. */
+@media (pointer: coarse) {
+  .imgActions {
+    row-gap: 12px;
+  }
+  .imgActions .smallBtn {
+    position: relative;
+  }
+  .imgActions .smallBtn::before {
+    content: "";
+    position: absolute;
+    inset-block: calc((100% - var(--tap-min)) / 2);
+    inset-inline: -4px;
+  }
+}
 .headActions {
   display: flex;
   align-items: center;

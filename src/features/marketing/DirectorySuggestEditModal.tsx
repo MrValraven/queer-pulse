@@ -7,31 +7,19 @@ import { ApiError } from "../../shared/api/client";
 import { reasonFor } from "../../shared/api/errorMessage";
 import { useSuggestEdit, type SuggestEditField } from "./api/useSuggestEdit";
 import { DirectorySuggestEditValueField } from "./DirectorySuggestEditValueField";
-import { suggestEditValueShape } from "./directorySuggestEditFields.data";
+import {
+  suggestEditFieldOptions,
+  suggestEditValueShape,
+} from "./directorySuggestEditFields.data";
 import styles from "./DirectorySuggestEditModal.module.css";
-
-const FIELDS: SuggestEditField[] = [
-  "hours",
-  "address",
-  "phone",
-  "website",
-  "description",
-  "other",
-];
-
-/** The buckets that describe a physical place. An online-only listing shows
- *  neither (no hours card, no street address), so offering them would invite
- *  a correction to something the page never claimed. */
-const PLACE_ONLY_FIELDS: ReadonlySet<SuggestEditField> =
-  new Set<SuggestEditField>(["hours", "address"]);
-const ONLINE_FIELDS = FIELDS.filter((option) => !PLACE_ONLY_FIELDS.has(option));
 
 const MESSAGE_MAX_LENGTH = 2000;
 
 /**
  * The "Suggest an edit" form itself, opened by `DirectorySuggestEditControl`.
  * A non-owner member picks which of the 6 backend-recognized fields is off
- * (4 for an online-only listing, which has no hours or address to correct),
+ * (4 for an online-only listing, which has no hours or address to correct,
+ * and 5 for a business with no meeting point, which has no address),
  * writes a note, and may also hand over the actual corrected value; submits
  * through `useSuggestEdit`, which POSTs in live mode and just resolves in demo
  * (there's no owner inbox to patch here).
@@ -46,6 +34,7 @@ export function DirectorySuggestEditModal({
   slug,
   placeName,
   isOnline = false,
+  hasNoAddress = false,
   onClose,
 }: {
   slug: string;
@@ -53,12 +42,15 @@ export function DirectorySuggestEditModal({
   /** The listing is online-only (`place.online`): hours and address leave the
    *  picker, and the first remaining bucket opens selected. */
   isOnline?: boolean;
+  /** An out-and-about listing with no meeting point: the address bucket
+   *  leaves the picker (the server refuses a correction to it). */
+  hasNoAddress?: boolean;
   onClose: () => void;
 }) {
   const { t } = useTranslation();
   const { showToast } = useToast();
   const suggestEdit = useSuggestEdit(slug);
-  const fieldOptions = isOnline ? ONLINE_FIELDS : FIELDS;
+  const fieldOptions = suggestEditFieldOptions({ isOnline, hasNoAddress });
   const [field, setField] = useState<SuggestEditField>(fieldOptions[0]!);
   const [message, setMessage] = useState("");
   const [proposedValue, setProposedValue] = useState("");

@@ -125,6 +125,14 @@ export interface MarkerLabels {
   cluster: (count: number) => string;
 }
 
+// A pin's visible secondary line (an out-and-about "Meeting point") is hidden
+// from assistive tech, so the button's label carries it.
+function venuePinLabel(labels: MarkerLabels, anchor: VenueMarkerData): string {
+  return [labels.venuePin(anchor.name, anchor.type), anchor.secondaryLabel]
+    .filter(Boolean)
+    .join(", ");
+}
+
 // maplibre-gl sets its positioning transform on the wrapper element we pass it.
 // We nest the interactive button inside a wrapper so our hover/selected
 // transforms animate the button without disturbing the map's positioning. The
@@ -642,7 +650,7 @@ export function createVenueMarkerManager(
     entranceOrder: number | null,
   ): Marker {
     const { wrapper, button } = createMarkerButton(
-      getLabels().venuePin(anchor.name, anchor.type),
+      venuePinLabel(getLabels(), anchor),
       () => onSelectVenue(anchor.id),
     );
     renderer.buildPin(button, anchor);
@@ -715,7 +723,7 @@ export function createVenueMarkerManager(
         nextKeys.add(key);
         const existing = markers.get(key);
         if (existing) {
-          const ariaLabel = getLabels().venuePin(anchor.name, anchor.type);
+          const ariaLabel = venuePinLabel(getLabels(), anchor);
           const button = refreshAriaLabel(existing.getElement(), ariaLabel);
           if (button) renderer.refreshPin(button, anchor);
         } else {

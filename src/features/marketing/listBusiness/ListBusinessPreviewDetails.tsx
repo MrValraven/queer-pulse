@@ -1,4 +1,5 @@
 import { FiCheck } from "react-icons/fi";
+import { intlLocale } from "../../../shared/i18n/locale";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { MarkdownLite } from "../../../shared/markdown";
 import {
@@ -10,6 +11,13 @@ import {
   type ListingDraft,
 } from "./listBusiness.data";
 import { listingTagLabel } from "./listingTags.data";
+import {
+  isByAppointmentListing,
+  isMobileWithoutMeetingPoint,
+  joinedPlaceNames,
+  listingKindOf,
+  normalizeMobileDetails,
+} from "./listingMobile.data";
 import { isSellingOnline, onlineDetailsForPayload } from "./listingOnline.data";
 import { effectivePricingMode, shopItemsForPayload } from "./listingShop.data";
 import { DirectoryOrderingBody } from "../DirectoryOrderingBody";
@@ -31,7 +39,12 @@ export function ListBusinessPreviewDetails({
   draft: ListingDraft;
   userName: string;
 }) {
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
+  const isMobile = listingKindOf(draft) === "mobile";
+  const isByAppointment = isByAppointmentListing(draft);
+  const mobileDetails = normalizeMobileDetails(draft.mobileDetails);
+  const isAllOfCity =
+    mobileDetails.allOfCity || mobileDetails.parishes.length === 0;
   const description = draft.whatItIs
     .map((paragraph) => paragraph.text)
     .filter((text) => text.trim())
@@ -44,8 +57,10 @@ export function ListBusinessPreviewDetails({
     ? onlineDetailsForPayload(draft.onlineDetails, draft)
     : null;
   const showName = draft.visibility !== "anon" && draft.ownerName.trim();
-  // An online-only listing has no address to show (`draftToDto` sends none).
-  const address = draft.online ? "" : draft.address;
+  // An online-only listing, or an out-and-about one with no meeting point,
+  // has no address to show (`draftToDto` sends none).
+  const address =
+    draft.online || isMobileWithoutMeetingPoint(draft) ? "" : draft.address;
   const social = [
     draft.social.instagram &&
       t("marketing:listBusiness.fullPreview.instagramPrefix", {
@@ -94,7 +109,46 @@ export function ListBusinessPreviewDetails({
         </section>
       )}
 
-      {!draft.online && openDays.length > 0 && (
+      {isMobile && (
+        <section className={styles.fpSec}>
+          <h4>{t("marketing:directory.detail.visitTitleMobile")}</h4>
+          {isAllOfCity ? (
+            <p className={styles.fpAddr}>
+              {t("marketing:directory.detail.mobile.allOfLisbon")}
+            </p>
+          ) : (
+            <ul
+              className={styles.pdChips}
+              aria-label={t("marketing:directory.detail.mobile.parishesAria")}
+            >
+              {mobileDetails.parishes.map((parish) => (
+                <li key={parish}>{parish}</li>
+              ))}
+            </ul>
+          )}
+          {mobileDetails.alsoTravelsTo.length > 0 && (
+            <p className={styles.fpHoursNote}>
+              {t("marketing:directory.detail.mobile.alsoTravelsTo", {
+                places: joinedPlaceNames(
+                  mobileDetails.alsoTravelsTo,
+                  intlLocale(language),
+                ),
+              })}
+            </p>
+          )}
+        </section>
+      )}
+
+      {isByAppointment && (
+        <section className={styles.fpSec}>
+          <h4>{t("marketing:listBusiness.fullPreview.hours")}</h4>
+          <p className={styles.fpAddr}>
+            {t("marketing:directory.detail.byAppointmentOnly")}
+          </p>
+        </section>
+      )}
+
+      {!draft.online && !isByAppointment && openDays.length > 0 && (
         <section className={styles.fpSec}>
           <h4>{t("marketing:listBusiness.fullPreview.hours")}</h4>
           <div className={styles.fpHours}>

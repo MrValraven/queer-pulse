@@ -11,11 +11,18 @@ import {
   canAcceptAdultTerms,
   isAdultCategoryOffered,
 } from "../listingOnline.data";
+import { listingKindOf, type ListingKind } from "../listingMobile.data";
 import type { ListingForm } from "../useListingForm";
 import styles from "../ListBusinessPage.module.css";
 import onlineStyles from "./BasicsOnline.module.css";
 
 const STEP_KEY = "marketing:listBusiness.step1";
+
+const CATS_LABEL_KEYS: Record<ListingKind, string> = {
+  place: `${STEP_KEY}.catsLabel`,
+  online: `${STEP_KEY}.catsLabelOnline`,
+  mobile: `${STEP_KEY}.catsLabelMobile`,
+};
 
 /**
  * The category chips for the listing's kind, up to two. A stored category the
@@ -49,11 +56,7 @@ export function BasicsCategoryField({ form }: { form: ListingForm }) {
         id={ANCHOR.cats}
         label={
           <span className={onlineStyles.catsLabelText}>
-            {t(
-              draft.online
-                ? `${STEP_KEY}.catsLabelOnline`
-                : `${STEP_KEY}.catsLabel`,
-            )}
+            {t(CATS_LABEL_KEYS[listingKindOf(draft)])}
           </span>
         }
         required

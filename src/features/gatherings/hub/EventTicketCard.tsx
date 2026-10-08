@@ -13,6 +13,7 @@ import {
   KindTag,
   MetaRow,
   PricePill,
+  RunByLine,
   ThemeTags,
   WhenRibbon,
 } from "./eventCardParts";
@@ -130,6 +131,7 @@ export function EventTicketCard({
         <span className={styles.body}>
           <FormatLine event={event} className={`${posterStyles.formatLine}`} />
           <h3 className={styles.title}>{event.title}</h3>
+          <RunByLine event={event} className={posterStyles.runByLine} />
           <span className={styles.meta}>
             <MetaRow event={event}>
               <EventTime event={event} fmt={formatters} />

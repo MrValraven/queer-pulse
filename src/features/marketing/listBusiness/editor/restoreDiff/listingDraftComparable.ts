@@ -6,6 +6,10 @@ import {
 } from "../../listBusiness.data";
 import { normalizeAccessibilityDraft } from "../../listingAccessibility.data";
 import {
+  listingKindOf,
+  mobileDetailsForPayload,
+} from "../../listingMobile.data";
+import {
   emptyMenuDraft,
   pricingModeOf,
   type ListingMenuDraft,
@@ -110,6 +114,12 @@ const COMPARABLE_NORMALISERS: Partial<
   onlineDetails: (draft) =>
     toPublicOnlineDetails(normalizeOnlineDetails(draft.onlineDetails)),
   shopItems: (draft) => draft.shopItems ?? [],
+  // Read as a save sends them: absent on an older copy reads as a place with
+  // the empty block, and the meeting point box only counts on a mobile draft.
+  mobile: (draft) => listingKindOf(draft) === "mobile",
+  mobileDetails: (draft) => mobileDetailsForPayload(draft),
+  hasMeetingPoint: (draft) =>
+    listingKindOf(draft) === "mobile" && draft.hasMeetingPoint === true,
   // Draft-only state nobody reads on the page.
   isWhereFoundAnswered: () => null,
   inactiveModeCats: () => null,

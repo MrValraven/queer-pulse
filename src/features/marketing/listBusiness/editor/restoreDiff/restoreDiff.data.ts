@@ -37,9 +37,11 @@ import {
 export const RESTORE_FIELD_AREAS: RestoreFieldAreaMap = {
   name: "basics",
   cats: "basics",
-  // The online-only toggle renders with the basics, just above the
-  // neighbourhood it decides on, so it is restored with them too.
+  // The kind switch (online only, out and about) renders with the basics,
+  // just above the fields it decides on, so it is restored with them too.
   online: "basics",
+  mobile: "basics",
+  mobileDetails: "basics",
   city: "basics",
   adultTermsAccepted: "basics",
   hood: "basics",
@@ -60,6 +62,9 @@ export const RESTORE_FIELD_AREAS: RestoreFieldAreaMap = {
   geocoded: "practical",
   latitude: "practical",
   longitude: "practical",
+  // The meeting point box decides whether the address and pin show at all,
+  // so it is restored with them.
+  hasMeetingPoint: "practical",
   hours: "practical",
   hoursNote: "practical",
   hoursExceptions: "practical",

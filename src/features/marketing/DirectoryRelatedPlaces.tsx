@@ -1,12 +1,11 @@
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDirectoryPlaces } from "./api/useDirectory";
 import { LocalBusinessCard } from "./LocalBusinessCard";
-import { categoryLabel, normalizeCategory } from "./localCategories";
+import { categoryLabel } from "./localCategories";
 import { type DirectoryPlace } from "./directoryPlaces";
+import { relatedPlacesFor } from "./relatedPlaces";
 import s from "./DirectorySpacePage.module.css";
 
-/** Below this many same-category matches, broaden to same-hood (any category) too. */
-const MIN_SAME_CATEGORY = 2;
 const MAX_RELATED = 4;
 
 /**
@@ -24,39 +23,7 @@ export function DirectoryRelatedPlaces({ place }: { place: DirectoryPlace }) {
   const { t } = useTranslation();
   const places = useDirectoryPlaces();
 
-  const placeCategory = normalizeCategory(place.cat);
-  const sameCategory = places.filter(
-    (candidate) =>
-      candidate.slug !== place.slug &&
-      normalizeCategory(candidate.cat) === placeCategory,
-  );
-
-  // Too few peers in the same category to fill a row — widen the pool to
-  // the same neighbourhood regardless of category, de-duped against what
-  // we already have.
-  let pool = sameCategory;
-  if (sameCategory.length < MIN_SAME_CATEGORY) {
-    const sameHood = places.filter(
-      (candidate) =>
-        candidate.slug !== place.slug && candidate.hood === place.hood,
-    );
-    pool = [...sameCategory];
-    for (const candidate of sameHood) {
-      if (!pool.some((existing) => existing.slug === candidate.slug)) {
-        pool.push(candidate);
-      }
-    }
-  }
-
-  // Same-hood matches surface first (most locally relevant), stable sort
-  // otherwise preserves the directory's own ordering.
-  const sorted = [...pool].sort((a, b) => {
-    const aSameHood = a.hood === place.hood ? 0 : 1;
-    const bSameHood = b.hood === place.hood ? 0 : 1;
-    return aSameHood - bSameHood;
-  });
-
-  const shortlist = sorted.slice(0, MAX_RELATED);
+  const shortlist = relatedPlacesFor(place, places).slice(0, MAX_RELATED);
   if (shortlist.length < 1) return null;
 
   const categoryText = categoryLabel(t, place.cat);

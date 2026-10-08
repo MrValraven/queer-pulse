@@ -23,6 +23,7 @@ import type {
   Tint,
 } from "../directoryPlaces";
 import type { DayHours, PhotoKey } from "../listBusiness/listBusiness.data";
+import type { ListingMobileDetails } from "../listBusiness/listingMobile.data";
 import type {
   AccessibilityAnswerMap,
   AccessibilitySlug,
@@ -112,6 +113,10 @@ export interface DirectoryCardDTO {
    *  the Online tab's card can name the site in its browser bar. `null` on a
    *  place; absent on older payloads, where the bar falls back to "Online". */
   onlineLinks?: { website: string; instagram: string } | null;
+  /** Out and about. Absent on older payloads. */
+  mobile?: boolean;
+  /** Always the complete block on a current payload; absent on older ones. */
+  mobileDetails?: ListingMobileDetails | null;
   // Map pin the owner placed while listing. null ⇒ list-only (no pin).
   latitude: number | null;
   longitude: number | null;
@@ -413,8 +418,16 @@ export interface DirectoryDetailDTO extends DirectoryCardDTO {
    * work carries none, and the Q&A section then reads as "no questions yet". */
   questions?: ListingPublicQuestionDTO[];
   /** Upcoming events at this venue. `startAt` is ISO; the FE composes `when`.
-   * `id`/`slug` deep-link into the Events Hub (`/events/:slug`). */
-  upcoming: { id: string; slug: string; startAt: string; title: string }[];
+   * `id`/`slug` deep-link into the Events Hub (`/events/:slug`). `role` is
+   * `runBy` when this listing runs the gathering; absent from an older
+   * server. */
+  upcoming: {
+    id: string;
+    slug: string;
+    startAt: string;
+    title: string;
+    role?: "venue" | "runBy";
+  }[];
   photos: PhotoSetView;
   alt: Record<PhotoKey, string>;
   hours: Record<string, DayHours>;

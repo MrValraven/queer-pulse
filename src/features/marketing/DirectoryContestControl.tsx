@@ -7,6 +7,10 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Modal } from "../../shared/components/ui/Modal";
 import { routes } from "../../app/routeMap";
 import { type DirectoryPlace } from "./directoryPlaces";
+import {
+  hasMeetingPoint,
+  listingKindOf,
+} from "./listBusiness/listingMobile.data";
 import { DirectorySuggestEditModal } from "./DirectorySuggestEditModal";
 import { DirectoryDisputeModal } from "./DirectoryDisputeModal";
 import { DirectoryClaimModal } from "./DirectoryClaimModal";
@@ -152,6 +156,9 @@ export function DirectoryContestControl({ place, ownerRef }: Props) {
           slug={place.slug}
           placeName={place.name}
           isOnline={place.online === true}
+          hasNoAddress={
+            listingKindOf(place) === "mobile" && !hasMeetingPoint(place)
+          }
           onClose={close}
         />
       )}

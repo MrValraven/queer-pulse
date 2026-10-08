@@ -112,6 +112,7 @@ export function DirectoryMapView({
             hoveredVenueId={state.hoveredId}
             pinStyle="portrait"
             counts={state.counts}
+            highlightedFreguesias={state.highlightedFreguesias}
             onSelectFreguesia={state.toggleFreguesia}
             onSelectVenue={state.selectPlace}
             panelRef={state.sidebarRef}

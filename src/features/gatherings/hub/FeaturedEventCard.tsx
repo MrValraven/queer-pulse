@@ -7,7 +7,7 @@ import { eventZoneFormat } from "../eventTimezone";
 import { gatheringWhen } from "../gatheringSchedule";
 import { GatheringBookmarkButton } from "../GatheringBookmarkButton";
 import { EventDateStamp } from "./EventDateStamp";
-import { FormatLine, PricePill, ThemeTags } from "./eventCardParts";
+import { FormatLine, PricePill, RunByLine, ThemeTags } from "./eventCardParts";
 import { FeaturedEventGlow, FeaturedEventMedia } from "./FeaturedEventMedia";
 import { GoingCount } from "./GoingCount";
 import { timeBucketOf } from "./pickHighlights";
@@ -89,6 +89,7 @@ function FeaturedEventHero({
               <h2 id={titleId} className={styles.title}>
                 {lead.title}
               </h2>
+              <RunByLine event={lead} className={posterStyles.runByLine} />
             </div>
             <p className={styles.when}>
               <span className={isDateRange ? undefined : styles.whenDate}>

@@ -2,7 +2,6 @@
   position: fixed;
   inset: 0;
   z-index: var(--z-focus-layer);
-  background: var(--cream);
   overflow-y: auto;
   overscroll-behavior: contain;
   /* The consent banner paints over the layer on a first visit and publishes
@@ -24,7 +23,21 @@
   display: flow-root;
 }
 
+/* The layer's cream, on its own element so it can fade over the page chrome
+   while the panel glides (focusLayerMotion.ts). Fixed, so it stays put while
+   the layer scrolls. */
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: var(--cream);
+}
+
+/* Positioned, so it paints above the backdrop. The cream matches the page
+   and the backdrop, and keeps the sidebar it glides over from showing
+   between the guest rows. */
 .panel {
+  position: relative;
+  background: var(--cream);
   max-width: var(--maxw-page);
   margin: 0 auto;
 }

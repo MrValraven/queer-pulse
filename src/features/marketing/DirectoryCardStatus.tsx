@@ -1,5 +1,6 @@
-import { FiPackage, FiVideo } from "react-icons/fi";
+import { FiCalendar, FiPackage, FiVideo } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { isByAppointmentListing } from "./listBusiness/listingMobile.data";
 import { onlineStatusOf } from "./listBusiness/listingOnline.data";
 import {
   openStatus,
@@ -24,7 +25,8 @@ import s from "./DirectoryPage.module.css";
  * "closes at" is the real closing time of the window it is inside. Renders
  * nothing when there are no hours to reason about.
  *
- * An online-only listing never shows Closed.
+ * An online-only listing never shows Closed. An out-and-about listing that
+ * works by appointment says so.
  */
 export function DirectoryCardStatus({ place }: { place: DirectoryPlace }) {
   const { t } = useTranslation();
@@ -38,6 +40,16 @@ export function DirectoryCardStatus({ place }: { place: DirectoryPlace }) {
       >
         <span className={s.statusDot} />
         {t(`marketing:directory.card.state.${operatingState}`)}
+      </span>
+    );
+  }
+
+  // "By appointment only" keeps no hours, so the slot says how to book.
+  if (isByAppointmentListing(place)) {
+    return (
+      <span className={s.status} data-preview-region="status">
+        <FiCalendar className={s.statusIcon} aria-hidden />
+        {t("marketing:directory.card.byAppointment")}
       </span>
     );
   }

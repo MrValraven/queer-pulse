@@ -7,6 +7,7 @@ import {
   COST_PLACEHOLDER_KEYS,
   MAX_COST_TEXT_LENGTH,
 } from "./steps/whoChapter.data";
+import fieldStyles from "./EditDetailsFields.module.css";
 import styles from "./EditDetailsModal.module.css";
 
 /**
@@ -16,6 +17,10 @@ import styles from "./EditDetailsModal.module.css";
  * typed before switching to free stay in the draft, so switching back brings
  * them back; `buildEditPatch` sends `cost: null` for a free gathering, the
  * server's own rule (ruling F11).
+ *
+ * The segment takes a full row of the section's grid: at half width it ran
+ * onto a second line in Portuguese at every size, and in English once the
+ * form drops under 624px. The words take the left half under it.
  */
 export function EditDetailsCost({
   costKind,
@@ -33,7 +38,7 @@ export function EditDetailsCost({
   const paidCostKind = costKind === "free" ? null : costKind;
   return (
     <>
-      <EditDetailsGroup label={costLabel}>
+      <EditDetailsGroup className={fieldStyles.fullRow} label={costLabel}>
         {() => (
           <CostKindSegment
             className={styles.costSegment}

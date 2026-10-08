@@ -1,0 +1,62 @@
+/* "Where it works": the area, then the towns it also travels to. */
+.area {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.areaRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.icon {
+  flex-shrink: 0;
+  margin-top: 3px;
+  color: var(--accent-ink);
+}
+
+.areaText {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-inline-size: 0;
+}
+
+.areaLead {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.parishList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.parishList li {
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--plum-rgb), 0.06);
+  font-size: var(--text-12-5);
+  color: var(--ink);
+}
+
+.travels {
+  font-size: var(--text-13);
+  color: var(--ink-60);
+}
+
+/* Heads the address and directions that follow in the details column. */
+.meetingPointHead {
+  margin: 4px 0 0;
+  font-size: var(--text-11-5);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}

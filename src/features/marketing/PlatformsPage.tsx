@@ -186,13 +186,13 @@ const PLATFORMS: Platform[] = [
   },
   {
     cat: "Portugal",
-    name: "Opus Diversus",
+    name: "Opus Diversidades",
     icon: "OD",
     ic: "rgba(232,119,90,.1)",
     it: "var(--accent-ink)",
     description:
-      "Mental health and peer support for LGBTQ+ people in Portugal. Training for allied professionals.",
-    url: "opusdiversus.org",
+      "Lisbon association, formerly Opus Gay, offering psychological, social, and legal support to LGBTQ+ people, with a focus on migrants, trans people, and older people.",
+    url: "opusdiversidades.org",
   },
   {
     cat: "Portugal",

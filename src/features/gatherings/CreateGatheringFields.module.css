@@ -360,6 +360,14 @@
     font-size: var(--text-16);
   }
 }
+/* Touch screens: a chip is a full tap target. It is an inline flex row
+   centred on its cross axis, so the label stays in the middle of the taller
+   pill. */
+@media (pointer: coarse) {
+  .chip {
+    min-height: var(--tap-min);
+  }
+}
 @media (prefers-reduced-motion: reduce) {
   .switchPanel {
     animation: none;

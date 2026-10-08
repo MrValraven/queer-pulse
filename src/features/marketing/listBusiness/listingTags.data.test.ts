@@ -110,14 +110,20 @@ describe("listingTagLabel and listingTagGroupLabel", () => {
   });
 
   it("use the online heading for an online listing where one exists", () => {
-    expect(listingTagGroupLabel(translate, "visiting", true)).toBe(
+    expect(listingTagGroupLabel(translate, "visiting", "online")).toBe(
       "Como marcar",
     );
-    expect(listingTagGroupLabel(translate, "visiting", false)).toBe(
+    expect(listingTagGroupLabel(translate, "visiting", "place")).toBe(
       "Como visitar",
     );
-    expect(listingTagGroupLabel(translate, "foodDrink", true)).toBe(
+    expect(listingTagGroupLabel(translate, "foodDrink", "online")).toBe(
       "Comida e bebida",
+    );
+  });
+
+  it("use the booking heading for an out-and-about listing too", () => {
+    expect(listingTagGroupLabel(translate, "visiting", "mobile")).toBe(
+      "Como marcar",
     );
   });
 

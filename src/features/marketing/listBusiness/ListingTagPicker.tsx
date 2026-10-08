@@ -3,6 +3,7 @@ import { ChipList, Collapse } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useListingTagVocabulary } from "./api/useListingTagVocabulary";
 import { ListingTagGroupList } from "./ListingTagGroupList";
+import type { ListingKind } from "./listingMobile.data";
 import {
   filterTagGroups,
   LISTING_TAG_CAP,
@@ -14,9 +15,9 @@ import styles from "./ListingTagPicker.module.css";
 
 interface ListingTagPickerProps {
   tags: string[];
-  /** The listing's online-only flag: picks the audience the vocabulary is
-   *  narrowed to. */
-  isOnline: boolean;
+  /** The listing's kind: online picks the online vocabulary, and online and
+   *  out-and-about both read the booking group heading. */
+  kind: ListingKind;
   onAdd: (tag: string) => void;
   onRemove: (tag: string) => void;
 }
@@ -30,12 +31,12 @@ interface ListingTagPickerProps {
  */
 export function ListingTagPicker({
   tags,
-  isOnline,
+  kind,
   onAdd,
   onRemove,
 }: ListingTagPickerProps) {
   const { t } = useTranslation();
-  const vocabulary = useListingTagVocabulary(isOnline);
+  const vocabulary = useListingTagVocabulary(kind === "online");
   const listId = useId();
   const availableLabelId = useId();
   const [query, setQuery] = useState("");
@@ -107,7 +108,7 @@ export function ListingTagPicker({
         id={listId}
         labelledBy={availableLabelId}
         groups={visibleGroups}
-        isOnline={isOnline}
+        kind={kind}
         selectedTags={tags}
         isAtCap={isAtCap}
         query={query.trim()}

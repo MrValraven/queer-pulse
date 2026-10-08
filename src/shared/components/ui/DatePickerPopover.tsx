@@ -17,10 +17,17 @@
  * host owns `popoverRef` so its outside-press dismiss can still tell that a
  * press landing in this portalled subtree is "inside" the picker.
  *
- * Escape is caught via a `document` `keydown` listener (like `Modal.tsx`),
- * not an inline `onKeyDown` on the dialog `<div>` itself — `role="dialog"`
- * is a non-interactive role, so a direct handler there trips
- * `jsx-a11y/no-noninteractive-element-interactions`. The actual mode content
+ * Escape is caught by a `document` `keydown` listener in the capture phase:
+ * an inline `onKeyDown` on the dialog `<div>` would trip
+ * `jsx-a11y/no-noninteractive-element-interactions` (`role="dialog"` is a
+ * non-interactive role) and would miss a press while focus sits in the
+ * trigger's date segments. Capture runs ahead of every bubble listener, and
+ * `stopPropagation` keeps the press from the host dialog's `useDismiss`
+ * listener and any page shortcut layer, so Escape closes the calendar alone
+ * (the same contract `SelectPanel` keeps). The popover stays off the modal
+ * stack because `hasOpenModal`/`isTopmostModal` also gate Tab traps and
+ * shortcut layers, and a close that pops it mid-dispatch would hand the same
+ * press to the dialog underneath. The actual mode content
  * (`date`/`datetime` show the `Calendar` grid; `month` shows
  * `MonthGridPopover`; `time` shows `TimeOptionsList`, a listbox of selectable
  * times and deliberately no date grid, per spec §6's "mode=time renders a
@@ -100,14 +107,20 @@ export function DatePickerPopover({
   });
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        event.preventDefault();
-        savedOnClose.current();
-      }
+      if (event.key !== "Escape") return;
+      // A modal dialog opened above the picker, one that does not hold its
+      // trigger, owns this press.
+      const focusedDialog =
+        document.activeElement?.closest('[aria-modal="true"]') ?? null;
+      const anchor = anchorRef.current;
+      if (focusedDialog && anchor && !focusedDialog.contains(anchor)) return;
+      event.preventDefault();
+      event.stopPropagation();
+      savedOnClose.current();
     };
-    document.addEventListener("keydown", onKeyDown);
-    return () => document.removeEventListener("keydown", onKeyDown);
-  }, []);
+    document.addEventListener("keydown", onKeyDown, true);
+    return () => document.removeEventListener("keydown", onKeyDown, true);
+  }, [anchorRef]);
 
   return createPortal(
     <div

@@ -74,6 +74,26 @@
   user-select: none;
 }
 
+/* The picker's clear chip (`Calendar.module.css` `.clear`, drawn at 30px)
+   takes this class too. On touch its hit area grows to --tap-min without
+   growing the ink. The trigger button sits 6px to the left (the `.container`
+   gap). Touching edges at a fractional x handed the trigger's last half pixel
+   to the clear chip, so the left edge stops 1px short of the trigger and the
+   right side takes the other 9px. */
+.clearHitArea {
+  position: relative;
+}
+@media (pointer: coarse) {
+  .clearHitArea::before {
+    content: "";
+    position: absolute;
+    top: calc((100% - var(--tap-min)) / 2);
+    left: -5px;
+    width: var(--tap-min);
+    height: var(--tap-min);
+  }
+}
+
 /* ── Compact density ── */
 .sm.field {
   height: 34px;

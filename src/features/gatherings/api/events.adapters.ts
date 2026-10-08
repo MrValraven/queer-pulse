@@ -179,6 +179,9 @@ export function cardToCalendarEvent(
     ...(dto.eventType ? { eventType: dto.eventType } : {}),
     ...(dto.gatheringFamily ? { gatheringFamily: dto.gatheringFamily } : {}),
     ...(dto.formatDetails ? { formatDetails: dto.formatDetails } : {}),
+    // The business that runs it. The card names it as plain text: the
+    // whole card is already one link.
+    ...(dto.runByListing ? { runByName: dto.runByListing.name } : {}),
     // LOC-18 — the host's own words about what it costs, plus the server's
     // own "does this read as free" verdict. DISPLAY ONLY: there is no payment
     // anywhere behind this, so no card may offer to take one.
@@ -251,6 +254,7 @@ export function detailToGathering(
     community: dto.community ?? undefined,
     venueListingId: dto.listingId ?? null,
     venueListing: dto.venueListing ?? null,
+    runByListing: dto.runByListing ?? null,
     cohosts: dto.cohosts,
     myRsvpDetails: dto.myRsvpDetails ?? null,
     showAttendeeCount: dto.showAttendeeCount,
@@ -386,6 +390,9 @@ export interface AttendeeRow {
   background: string;
   color: string;
   name: string;
+  /** Their profile photo, when their photo visibility lets this viewer see
+   *  it. Absent means the initials stand in. */
+  avatarUrl?: string;
   /** The person's own pronouns — content, never translated. */
   pronouns?: string;
   /** When they RSVP'd. Formatted at render via `useFormat()`. */
@@ -454,6 +461,8 @@ export function attendeeToRow(dto: AttendeeDTO, index: number): AttendeeRow {
     background: tint.background,
     color: tint.color,
     name: `${dto.firstName} ${dto.lastName}`.trim(),
+    // `null` when their photo visibility hides it from this viewer.
+    avatarUrl: dto.avatarUrl ?? undefined,
     // The pronouns the attendee gave on their RSVP (Create Gathering v2).
     // Organisers only, and `null` when the attendee gave none, which reads here
     // as "none to show" so the meta line prints only the slots it has.
@@ -572,6 +581,8 @@ export function formToCreateEventDto(form: GatheringForm): CreateEventDto {
     ...(!isOnline && form.venueListingId
       ? { listingId: form.venueListingId }
       : {}),
+    // "Run by one of your businesses", only when the host picked one.
+    ...(form.runByListingId ? { runByListingId: form.runByListingId } : {}),
     isOnline,
     // Where it actually is. An online gathering has no door, so neither the
     // address nor the arrival notes are sent for one.

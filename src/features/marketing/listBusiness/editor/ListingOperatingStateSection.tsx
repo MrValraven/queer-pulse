@@ -11,6 +11,7 @@ import type {
 } from "../api/listings.api";
 import { useSetOperatingState } from "../api/useListingOwnerState";
 import { ANCHOR } from "../listBusiness.data";
+import { listingKindOf } from "../listingMobile.data";
 import { ListingOperatingStateFields } from "./ListingOperatingStateFields";
 import { ListingPermanentClosureDialog } from "./ListingPermanentClosureDialog";
 import { OPERATING_STATE_LABEL_KEYS } from "./listingOperatingState.data";
@@ -25,8 +26,8 @@ import styles from "./ListingTrading.module.css";
  * so choosing "permanently closed" can open a confirmation that spells out what
  * that does before it does it (see `ListingPermanentClosureDialog`).
  *
- * An online-only listing has no street address to move from, so it is not
- * offered "moved". The card stays when "moved" is already the saved state
+ * An online-only or out-and-about listing has no premises to move from (a new
+ * meeting point is an ordinary edit), so only a place is offered "moved". The card stays when "moved" is already the saved state
  * (or the staged one), so the owner can see what is set and change it.
  * Read from the SAVED listing, like the rest of this section, which applies
  * on its own and reports on the listing as it stands.
@@ -77,7 +78,7 @@ export function ListingOperatingStateSection({
   // server refuses it, so the button stays out of reach until there is one.
   const isMissingAddress = chosenState === "moved" && trimmedAddress === "";
   const isMovedOffered =
-    listing.online !== true ||
+    listingKindOf(listing) === "place" ||
     current.state === "moved" ||
     chosenState === "moved";
   const canApply =

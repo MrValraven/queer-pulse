@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ConfirmDialog } from "../../shared/components/ui";
+import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { EditDetailsModal } from "./EditDetailsModal";
@@ -54,6 +55,7 @@ export function GatheringHostBar({
   const { t } = useTranslation();
   const fmt = useFormat();
   const navigate = useNavigate();
+  const { showToast } = useToast();
 
   const updateEvent = useUpdateEvent(gathering.slug);
   const cancelEvent = useCancelEvent(gathering.slug);
@@ -98,15 +100,24 @@ export function GatheringHostBar({
     setGatheringState(liveInitialState(gathering, fmt, t));
   }
 
+  // Resolves with the notified count, `null` for a series (it sends after
+  // the modal closes) or a failure, which the app-wide MutationCache
+  // `onError` already toasts.
   const saveEditDraft = (draft: GatheringDetailsDraft) => {
     setGatheringState((current) => applyEditDraft(current, draft, fmt, t));
     const patch = buildEditPatch(gatheringState, draft);
-    if (gathering.series) setPendingEdit({ patch, snapshot: gatheringState });
-    else updateEvent.mutate(patch);
+    if (gathering.series) {
+      setPendingEdit({ patch, snapshot: gatheringState });
+      return Promise.resolve(null);
+    }
+    return updateEvent
+      .mutateAsync(patch)
+      .then((result) => result.notifiedCount)
+      .catch(() => null);
   };
 
   // The host's answer to `SeriesEditScopeModal`: fires the deferred cancel or
-  // edit with the scope they picked.
+  // edit with the scope they picked. An edit toasts who it notified.
   const chooseSeriesScope = (scope: SeriesScope) => {
     const mode = seriesScopeModal;
     setSeriesScopeModal(null);
@@ -114,7 +125,21 @@ export function GatheringHostBar({
       cancelEvent.mutate(scope);
       void navigate(gatheringCancelledPath(gathering.slug));
     } else if (mode === "edit" && pendingEdit) {
-      updateEvent.mutate({ ...pendingEdit.patch, seriesScope: scope });
+      void updateEvent
+        .mutateAsync({ ...pendingEdit.patch, seriesScope: scope })
+        .then(({ notifiedCount }) => {
+          if (notifiedCount !== null && notifiedCount > 0) {
+            showToast(
+              t("gatherings:manage.editModal.notifiedToast", {
+                count: notifiedCount,
+              }),
+              "success",
+            );
+          }
+        })
+        .catch(() => {
+          // Already toasted by the app-wide MutationCache `onError`.
+        });
       setPendingEdit(null);
     }
   };

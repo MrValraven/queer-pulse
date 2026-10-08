@@ -14,6 +14,7 @@ import {
   type GatheringFamily,
 } from "./gatheringCatalog";
 import { FormatDetailsFields } from "./steps/FormatDetailsFields";
+import fieldStyles from "./EditDetailsFields.module.css";
 
 /**
  * The family, format and format-details fields of the edit-details modal, so
@@ -29,14 +30,26 @@ import { FormatDetailsFields } from "./steps/FormatDetailsFields";
  * The whole draft comes in and a partial draft goes back out, the same shape
  * `EditDetailsSchedule` uses, since a family change writes three fields at
  * once and the modal owns the draft.
+ *
+ * Every field here is a direct child of the section's grid (the fragment and
+ * the questions' own fragment both flatten into it). The family keeps its
+ * half while no family is picked, so the format opens beside it in the
+ * other half and the family field never jumps in width.
+ *
+ * "Something else" with no words of its own holds Save (`canSaveEditDraft`),
+ * so the words field is required and says so under itself while empty.
  */
 export function EditDetailsFormat({
   draft,
   onChange,
+  otherTextFieldId,
 }: {
   draft: GatheringDetailsDraft;
   /** Merged into the draft by the modal. */
   onChange: (patch: Partial<GatheringDetailsDraft>) => void;
+  /** The id of the "Name your format" field's wrapper, so the modal's
+   *  "Show the field" can reach it while its empty words hold Save. */
+  otherTextFieldId?: string;
 }) {
   const { t } = useTranslation();
 
@@ -109,7 +122,17 @@ export function EditDetailsFormat({
         </FormField>
       )}
       {draft.format === OTHER_FORMAT_KEY && (
-        <FormField label={t("gatherings:manage.editModal.fieldFormatOther")}>
+        <FormField
+          id={otherTextFieldId}
+          className={fieldStyles.fullRow}
+          label={t("gatherings:manage.editModal.fieldFormatOther")}
+          required
+          error={
+            draft.otherText.trim() === ""
+              ? t("gatherings:manage.editModal.otherFormatRequiredError")
+              : undefined
+          }
+        >
           <input
             type="text"
             maxLength={MAX_OTHER_FORMAT_LENGTH}

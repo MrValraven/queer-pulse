@@ -15,6 +15,7 @@ import {
   COHOST_INVITE_DEFAULT_ROLE,
 } from "./createGathering.data";
 import type { GatheringForm } from "./useGatheringForm";
+import { isRefusedRunByListingError } from "./runByListingErrors";
 import { isRefusedVenueListingError } from "./venueListingErrors";
 
 /**
@@ -25,12 +26,15 @@ import { isRefusedVenueListingError } from "./venueListingErrors";
  * mutation's own success, so a rejected create keeps the host on the form
  * with an error toast and nothing celebrated. A create refused for its
  * linked venue marks that listing on the form, so the venue field can say
- * what to fix, and hands the host to it through `onVenueRefused`.
+ * what to fix, and hands the host to it through `onVenueRefused`. A create
+ * refused for its "Run by" business marks it the same way and hands the host
+ * to that field through `onRunByRefused`.
  */
 export function usePublishGathering({
   form,
   onPublished,
   onVenueRefused,
+  onRunByRefused,
 }: {
   form: GatheringForm;
   /** Runs once the create succeeds (the page clears the stored draft). */
@@ -38,6 +42,9 @@ export function usePublishGathering({
   /** Runs when the server refuses the linked venue (the page opens the venue
    *  field). */
   onVenueRefused: () => void;
+  /** Runs when the server refuses the "Run by" business (the page opens
+   *  that field). */
+  onRunByRefused?: () => void;
 }) {
   const { t } = useTranslation();
   const { showToast } = useToast();
@@ -134,6 +141,15 @@ export function usePublishGathering({
         }
       },
       onError: (error) => {
+        // 400 "Run by listing not found" (paused, closed, hidden since it was
+        // picked) or 403 RUN_BY_NOT_MANAGER: the field says so, and the host
+        // is taken to it.
+        if (isRefusedRunByListingError(error) && payload.runByListingId) {
+          form.setRefusedRunByListingId(payload.runByListingId);
+          showToast(t("gatherings:create.toast.runByRefused"), "error");
+          onRunByRefused?.();
+          return;
+        }
         if (isRefusedVenueListingError(error) && payload.listingId) {
           form.setRefusedVenueListingId(payload.listingId);
           showToast(t("gatherings:create.toast.venueRefused"), "error");

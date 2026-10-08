@@ -16,6 +16,7 @@ import type {
   RsvpCutoff,
   RsvpQuestions,
 } from "../gatheringExtras";
+import type { RunByListingView } from "../runByListing";
 
 // ── Backend DTOs ───────────────────────────────────────────────────────────
 // Shapes the NestJS events domain returns. Only the fields the prototype pages
@@ -211,6 +212,10 @@ export interface EventCardDTO {
    *  standalone event. Rides on every summary/card (MSG-10), not just the
    *  detail view. */
   series?: EventSeriesDTO | null;
+  /** The business that runs this gathering, apart from its venue. `null`
+   *  when unset, or when the listing is no longer live. Absent from an
+   *  older server. */
+  runByListing?: RunByListingView | null;
 }
 
 export interface EventsPage {
@@ -327,6 +332,10 @@ export interface EventDetailDTO extends EventCardDTO {
     name: string;
     latitude?: number | null;
     longitude?: number | null;
+    /** The listing's public directory street address, sent to every reader.
+     *  Null when the listing's public page would not show one, and absent
+     *  from an older server. */
+    address?: string | null;
   } | null;
   /** The event's accepted co-hosts (never pending invites — those live under
    *  `event-cohost-invites`). Rides free on `GET /events/:slug` (backend
@@ -494,6 +503,9 @@ export interface CreateEventDto {
   /** Link the venue to a real directory listing (its uuid). Omitted keeps a
    *  plain free-text `venue`, as before. */
   listingId?: string;
+  /** "Run by one of your businesses": a listing uuid the host owns or
+   *  co-manages. Omitted means none. */
+  runByListingId?: string;
   /** Manage-dashboard "Options" toggles (`SettingsTab`). Omitted keeps the
    *  backend default (`true` — unlimited waitlist, counts shown). */
   allowWaitlist?: boolean;
@@ -558,11 +570,18 @@ export interface CreateEventDto {
 export type UpdateEventDto = Partial<
   Omit<
     CreateEventDto,
-    "communitySlug" | "listingId" | "recurrence" | "endAt" | "capacity"
+    | "communitySlug"
+    | "listingId"
+    | "runByListingId"
+    | "recurrence"
+    | "endAt"
+    | "capacity"
   >
 > & {
   communitySlug?: string | null;
   listingId?: string | null;
+  /** Absent leaves the link as it is; `null` clears it. */
+  runByListingId?: string | null;
   /** `null` explicitly CLEARS a gathering's stated end, the way the edit
    *  modal's end field does when a host empties it (`buildEditPatch`). The
    *  backend reads `dto.endAt !== undefined` as "change it" and stores `null`
@@ -651,6 +670,10 @@ export const getEvent = (slug: string, viewAs?: GuestPreviewRole) =>
 export const createEvent = (dto: CreateEventDto) =>
   apiPost<EventDetailDTO & { occurrenceSlugs?: string[] }>("/events", dto);
 
+/** The edit answers with the detail plus `notifiedCount`: how many distinct
+ *  people this edit notified. Optional, so an older backend still reads. */
+export type UpdatedEventDetailDTO = EventDetailDTO & { notifiedCount?: number };
+
 /** `scope` (MSG-10) — `"future"` also applies to every later occurrence in
  *  this event's series (never its own `startAt`/`endAt`); omitted (or
  *  `"this"`) touches only this occurrence. See `SeriesScope`'s doc. */
@@ -659,7 +682,7 @@ export const updateEvent = (
   dto: UpdateEventDto,
   scope?: SeriesScope,
 ) =>
-  apiPatch<EventDetailDTO>(
+  apiPatch<UpdatedEventDetailDTO>(
     `/events/${slug}${scope ? `?scope=${scope}` : ""}`,
     dto,
   );

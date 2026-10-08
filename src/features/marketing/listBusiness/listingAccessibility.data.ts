@@ -1,5 +1,6 @@
 import type { IconType } from "react-icons";
 import { FiCheck, FiHelpCircle, FiX } from "react-icons/fi";
+import type { ListingKind } from "./listingMobile.data";
 
 /**
  * The accessibility question vocabulary, mirroring the backend's
@@ -156,11 +157,99 @@ export const ONLINE_ACCESSIBILITY_QUESTIONS: AccessibilityQuestionDefinition<Onl
     },
   ];
 
+/**
+ * The out-and-about set: four of the place slugs, worded for a business
+ * that meets people somewhere or goes to them. The toilet questions drop
+ * out, since there is no building of its own to ask about. Same slugs and
+ * same stored answers, so the directory's access filter matches them as it
+ * matches a place.
+ */
+export const MOBILE_ACCESSIBILITY_QUESTIONS: AccessibilityQuestionDefinition[] =
+  [
+    {
+      slug: "step-free-entrance",
+      labelKey: `${QUESTION_KEY}.stepFree.labelMobile`,
+      helpKey: `${QUESTION_KEY}.stepFree.helpMobile`,
+    },
+    {
+      slug: "wheelchair-accessible-interior",
+      labelKey: `${QUESTION_KEY}.interior.labelMobile`,
+      helpKey: `${QUESTION_KEY}.interior.helpMobile`,
+    },
+    {
+      slug: "quiet-hours",
+      labelKey: `${QUESTION_KEY}.quietHours.labelMobile`,
+      helpKey: `${QUESTION_KEY}.quietHours.helpMobile`,
+    },
+    {
+      slug: "assistance-animals-welcome",
+      labelKey: `${QUESTION_KEY}.assistanceAnimals.label`,
+      helpKey: `${QUESTION_KEY}.assistanceAnimals.helpMobile`,
+    },
+  ];
+
+const QUESTIONS_BY_KIND: Record<
+  ListingKind,
+  readonly AccessibilityQuestionDefinition<ListingAccessibilitySlug>[]
+> = {
+  place: ACCESSIBILITY_QUESTIONS,
+  online: ONLINE_ACCESSIBILITY_QUESTIONS,
+  mobile: MOBILE_ACCESSIBILITY_QUESTIONS,
+};
+
 /** The question set a listing of this kind is asked and shows. */
 export function accessibilityQuestionsFor(
-  isOnline: boolean,
+  kind: ListingKind,
 ): readonly AccessibilityQuestionDefinition<ListingAccessibilitySlug>[] {
-  return isOnline ? ONLINE_ACCESSIBILITY_QUESTIONS : ACCESSIBILITY_QUESTIONS;
+  return QUESTIONS_BY_KIND[kind];
+}
+
+/** The questions a directory card's yes pills come from. An online listing
+ *  shows the place set there, as it always has; an out-and-about one shows
+ *  its own four, so a stored toilet answer never becomes a pill. */
+export function cardAccessibilityQuestionsFor(
+  kind: ListingKind,
+): readonly AccessibilityQuestionDefinition[] {
+  return kind === "mobile"
+    ? MOBILE_ACCESSIBILITY_QUESTIONS
+    : ACCESSIBILITY_QUESTIONS;
+}
+
+/** The owner's intro, reassurance and note copy for each kind. */
+export interface AccessibilityCopyKeys {
+  intro: string;
+  reassurance: string;
+  noteHint: string;
+  notePlaceholder: string;
+}
+
+const COPY_KEY = "marketing:listBusiness.accessibility";
+
+const ACCESSIBILITY_COPY_BY_KIND: Record<ListingKind, AccessibilityCopyKeys> = {
+  place: {
+    intro: `${COPY_KEY}.intro`,
+    reassurance: `${COPY_KEY}.reassurance`,
+    noteHint: `${COPY_KEY}.noteHint`,
+    notePlaceholder: `${COPY_KEY}.notePlaceholder`,
+  },
+  online: {
+    intro: `${COPY_KEY}.introOnline`,
+    reassurance: `${COPY_KEY}.reassuranceOnline`,
+    noteHint: `${COPY_KEY}.noteHintOnline`,
+    notePlaceholder: `${COPY_KEY}.notePlaceholderOnline`,
+  },
+  mobile: {
+    intro: `${COPY_KEY}.introMobile`,
+    reassurance: `${COPY_KEY}.reassuranceMobile`,
+    noteHint: `${COPY_KEY}.noteHintMobile`,
+    notePlaceholder: `${COPY_KEY}.notePlaceholderMobile`,
+  },
+};
+
+/** The copy around the questions, worded for what a listing of this kind
+ *  has: a door, an online shop, or a route and a meeting spot. */
+export function accessibilityCopyFor(kind: ListingKind): AccessibilityCopyKeys {
+  return ACCESSIBILITY_COPY_BY_KIND[kind];
 }
 
 /** One answer, with an absent online answer read as `unknown`. */

@@ -1,8 +1,13 @@
 import { ANCHOR, type ListingDraft } from "../listBusiness.data";
 import {
-  ACCESSIBILITY_QUESTIONS,
+  cardAccessibilityQuestionsFor,
   normalizeAccessibilityAnswers,
 } from "../listingAccessibility.data";
+import {
+  isByAppointmentListing,
+  isMobileWithoutMeetingPoint,
+  listingKindOf,
+} from "../listingMobile.data";
 import {
   isSellingOnline,
   normalizeOnlineDetails,
@@ -139,10 +144,10 @@ export type ListingPlacementRule =
   ListingFieldPlacement | ((draft: ListingDraft) => ListingFieldPlacement);
 
 /** Whether the card's accessibility row renders: `DirectoryCardAccess` shows
- *  it only when at least one answer is yes. */
+ *  it only when at least one of the kind's card questions is yes. */
 export function hasCardAccessAnswers(draft: ListingDraft): boolean {
   const answers = normalizeAccessibilityAnswers(draft.accessibility?.answers);
-  return ACCESSIBILITY_QUESTIONS.some(
+  return cardAccessibilityQuestionsFor(listingKindOf(draft)).some(
     (question) => answers[question.slug] === "yes",
   );
 }
@@ -180,13 +185,18 @@ function linkProfilePlacement(draft: ListingDraft): ListingFieldPlacement {
 
 /**
  * An online listing has no hours editor and no hours anywhere: its card's
- * status line names how people get what it sells.
+ * status line names how people get what it sells. A "By appointment only"
+ * listing sends no hours either: its card and page say "By appointment".
  */
 function hoursPlacement(draft: ListingDraft): ListingFieldPlacement {
-  return draft.online
-    ? notShown("hoursOnline")
-    : preview("hours", "status", "hours");
+  if (draft.online) return notShown("hoursOnline");
+  if (isByAppointmentListing(draft)) return notShown("hoursByAppointment");
+  return preview("hours", "status", "hours");
 }
+
+/** An out-and-about listing with the meeting point unticked shows no
+ *  location anywhere: no address, no neighbourhood, no map. */
+const meetingPointOff = (): ListingFieldPlacement => setting("meetingPointOff");
 
 /** What the online card's status slot would say for this draft, if anything
  *  (`DirectoryCardStatus` reads the same summary). */
@@ -250,7 +260,9 @@ export const LISTING_FIELD_PLACEMENTS: Record<AnchorId, ListingPlacementRule> =
     [ANCHOR.hood]: (draft) =>
       draft.online
         ? namedCardPreview("online", "meta")
-        : preview("hood", "meta"),
+        : isMobileWithoutMeetingPoint(draft)
+          ? meetingPointOff()
+          : preview("hood", "meta"),
     [ANCHOR.badge]: preview("badge", "badge"),
     // Co-managers receive the evidence too: it is no owner-personal field.
     [ANCHOR.evidence]: hidden("evidence"),
@@ -261,8 +273,11 @@ export const LISTING_FIELD_PLACEMENTS: Record<AnchorId, ListingPlacementRule> =
     [ANCHOR.tags]: preview("tags", "pills"),
     [ANCHOR.goodFor]: preview("goodFor", "goodFor"),
     [ANCHOR.langs]: preview("langs", "languages"),
-    [ANCHOR.address]: fullPage("address"),
-    [ANCHOR.online]: namedCardPreview("online", "meta"),
+    [ANCHOR.address]: (draft) =>
+      isMobileWithoutMeetingPoint(draft)
+        ? meetingPointOff()
+        : fullPage("address"),
+    [ANCHOR.online]: namedCardPreview("whereFound", "meta"),
     [ANCHOR.whereFound]: namedCardPreview("whereFound", "meta"),
     [ANCHOR.city]: namedCardPreview("city", "meta"),
     [ANCHOR.adultTerms]: hidden("adultTerms"),
@@ -276,18 +291,36 @@ export const LISTING_FIELD_PLACEMENTS: Record<AnchorId, ListingPlacementRule> =
     [ANCHOR.sessionFormats]: sessionFormatsPlacement,
     [ANCHOR.registration]: sellingPlacement("ordering", "ordering"),
     [ANCHOR.replyNote]: sellingPlacement("ordering", "ordering"),
+    // Out and about. Without a meeting point the card's location line is
+    // the area; with one it names the meeting point and the area lives on
+    // the page's "Where it works".
+    [ANCHOR.whereYouWork]: (draft) =>
+      isMobileWithoutMeetingPoint(draft)
+        ? namedCardPreview("whereYouWork", "meta")
+        : fullPage("whereYouWorkPage"),
+    [ANCHOR.meetingPoint]: (draft) =>
+      isMobileWithoutMeetingPoint(draft)
+        ? meetingPointOff()
+        : namedCardPreview("meetingPoint", "meta"),
+    [ANCHOR.byAppointment]: preview("byAppointment", "status", "hours"),
     [ANCHOR.hours]: hoursPlacement,
     // "Copy Monday to all days" and "Mark all closed" sit above the grid
     // that carries `ANCHOR.hours`, and they fill the same spots.
     [ANCHOR.hoursTools]: hoursPlacement,
     // `DirectoryHoursSection` prints the note; the preview excerpt does not.
     [ANCHOR.hoursNote]: (draft) =>
-      draft.online ? notShown("hoursNoteOnline") : fullPage("hoursNote"),
+      draft.online
+        ? notShown("hoursNoteOnline")
+        : isByAppointmentListing(draft)
+          ? notShown("hoursByAppointment")
+          : fullPage("hoursNote"),
     // The card's status line follows a special date on the day.
     [ANCHOR.hoursExceptions]: (draft) =>
       draft.online
         ? notShown("hoursExceptionsOnline")
-        : fullPage("hoursExceptions"),
+        : isByAppointmentListing(draft)
+          ? notShown("hoursByAppointment")
+          : fullPage("hoursExceptions"),
     [ANCHOR.social]: fullPage("social"),
     [ANCHOR.photos]: preview("photos", "photo"),
     [ANCHOR.rel]: hidden("rel"),
@@ -410,7 +443,7 @@ export function renderedPreviewRegions(
   // online-only card has one only when it can name how people get it.
   const hasStatusLine = draft.online
     ? hasOnlineStatusLine(draft)
-    : Object.keys(draft.hours).length > 0;
+    : Object.keys(draft.hours).length > 0 || isByAppointmentListing(draft);
   if (hasStatusLine) regions.add("status");
   // The Visit action opens the main link once an online listing has one.
   if (

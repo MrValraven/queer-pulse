@@ -5,6 +5,7 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useListingQuestions } from "./api/useListingQuestions";
 import type { DirectoryPlace } from "./directoryPlaces";
+import { listingKindOf } from "./listBusiness/listingMobile.data";
 import { DirectoryQuestionAskForm } from "./DirectoryQuestionAskForm";
 import { DirectoryQuestionCard } from "./DirectoryQuestionCard";
 import q from "./DirectoryQuestions.module.css";
@@ -93,7 +94,9 @@ export function DirectoryQuestionsSection({
           {t(
             place.online
               ? "marketing:directory.detail.questions.emptyBodyOnline"
-              : "marketing:directory.detail.questions.emptyBody",
+              : listingKindOf(place) === "mobile"
+                ? "marketing:directory.detail.questions.emptyBodyMobile"
+                : "marketing:directory.detail.questions.emptyBody",
           )}
         </p>
       ) : (

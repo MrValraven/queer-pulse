@@ -7,7 +7,14 @@ import {
   type ListingDraft,
   type PhotoKey,
 } from "./listBusiness.data";
+import {
+  isMobileWithoutMeetingPoint,
+  listingKindOf,
+  mobileCardAreaLine,
+  normalizeMobileDetails,
+} from "./listingMobile.data";
 import { normalizeOwnedBy, OWNED_BY_TAG_KEYS } from "./listingOwnedBy.data";
+import { PHOTO_CAPTION_KEYS } from "./listingPhotoCaptions.data";
 import { ListBusinessPreviewDetails } from "./ListBusinessPreviewDetails";
 import styles from "./ListBusinessPage.module.css";
 
@@ -31,6 +38,23 @@ export function ListBusinessFullPreview({
   const onlineLocation = basedIn
     ? t("marketing:directory.card.onlineIn", { city: basedIn })
     : t("marketing:directory.card.online");
+  // An out-and-about listing reads its area line, and a stale hood from a
+  // place answer never shows while there is no meeting point.
+  const kind = listingKindOf(draft);
+  const isMobile = kind === "mobile";
+  const hood = isMobileWithoutMeetingPoint(draft) ? "" : draft.hood;
+  const areaLine = isMobile
+    ? mobileCardAreaLine({
+        hood,
+        isAtMeetingPoint: !isMobileWithoutMeetingPoint(draft),
+        details: normalizeMobileDetails(draft.mobileDetails),
+      })
+    : null;
+  const locationText = areaLine
+    ? t(areaLine.key, areaLine.values)
+    : draft.online
+      ? onlineLocation
+      : hood;
 
   return (
     <Modal
@@ -49,7 +73,7 @@ export function ListBusinessFullPreview({
             <div className={styles.fpMeta}>
               {[
                 draft.cats.map((c) => catLabel(t, c)).join(", "),
-                draft.online ? onlineLocation : draft.hood,
+                locationText,
                 price ? t(price.labelKey) : "",
               ]
                 .filter(Boolean)
@@ -93,7 +117,7 @@ export function ListBusinessFullPreview({
             radius={16}
             height={200}
             src={photoPreviews.wide || draft.photos.wide || undefined}
-            placeholder={t("marketing:listBusiness.step4.gallery.wide")}
+            placeholder={t(PHOTO_CAPTION_KEYS.wide[kind])}
             alt={draft.alt.wide}
           />
           <ImageSlot
@@ -101,7 +125,7 @@ export function ListBusinessFullPreview({
             radius={16}
             height={120}
             src={photoPreviews.d1 || draft.photos.d1 || undefined}
-            placeholder={t("marketing:listBusiness.step4.gallery.detail")}
+            placeholder={t(PHOTO_CAPTION_KEYS.d1[kind])}
             alt={draft.alt.d1}
           />
           <ImageSlot
@@ -109,7 +133,7 @@ export function ListBusinessFullPreview({
             radius={16}
             height={120}
             src={photoPreviews.d2 || draft.photos.d2 || undefined}
-            placeholder={t("marketing:listBusiness.step4.gallery.detail")}
+            placeholder={t(PHOTO_CAPTION_KEYS.d2[kind])}
             alt={draft.alt.d2}
           />
           <ImageSlot
@@ -117,7 +141,7 @@ export function ListBusinessFullPreview({
             radius={16}
             height={120}
             src={photoPreviews.vibe || draft.photos.vibe || undefined}
-            placeholder={t("marketing:listBusiness.step4.gallery.vibe")}
+            placeholder={t(PHOTO_CAPTION_KEYS.vibe[kind])}
             alt={draft.alt.vibe}
           />
         </div>

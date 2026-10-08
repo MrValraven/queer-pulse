@@ -25,6 +25,7 @@ import {
   type UpdateRsvpDetailsDto,
 } from "./events.api";
 import { goTogetherKeys } from "../../goTogether/api/goTogetherKeys";
+import { ATTENDEE_COUNT } from "../manageGathering.data";
 import { eventKeys } from "./eventKeys";
 import type { AttendeesResult } from "./useAttendees";
 import type { EventResult } from "./useEvent";
@@ -71,6 +72,12 @@ export function useCreateEvent() {
   });
 }
 
+/** What an edit resolves to: how many people the server notified about it,
+ *  or `null` when an older backend leaves that out. */
+export interface UpdateEventResult {
+  notifiedCount: number | null;
+}
+
 /** PATCH /events/:slug — edit details / inline edits / manage page.
  *  `seriesScope` (MSG-10, optional) rides on the mutation variables rather
  *  than as a separate hook argument, so every existing plain-`UpdateEventDto`
@@ -80,13 +87,15 @@ export function useUpdateEvent(slug: string) {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
   return useMutation<
-    void,
+    UpdateEventResult,
     Error,
     UpdateEventDto & { seriesScope?: SeriesScope }
   >({
     mutationFn: async ({ seriesScope, ...dto }) => {
-      if (demoMode) return;
-      await updateEvent(slug, dto, seriesScope);
+      // Demo keeps the dashboard's sample attendee count.
+      if (demoMode) return { notifiedCount: ATTENDEE_COUNT };
+      const response = await updateEvent(slug, dto, seriesScope);
+      return { notifiedCount: response.notifiedCount ?? null };
     },
     // The detail query is keyed on the raw route param (`<slug>-<shortId>`),
     // which may differ from this mutation's `slug`, so invalidate the whole

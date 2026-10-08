@@ -1,0 +1,32 @@
+/* "Where do people find it?": three answers side by side where they fit.
+   The grid wraps by the width it has, so the wizard and the owner editor's
+   narrower fields column both get cards wide enough to read. The cards keep
+   the path step's own look. */
+.kindGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+
+/* The field's own width decides: one column, or all three side by side. */
+.kindField {
+  container-type: inline-size;
+}
+
+@container (min-width: 40rem) {
+  .kindGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* The third answer's icon tile, tinted from the line colour beside the jade
+   and coral ones. */
+.pcIcMobile {
+  background: rgba(var(--line-rgb), 0.1);
+  color: var(--text-strong);
+}
+
+/* The parish picker sits under the two area chips, inside the same field. */
+.parishPicker {
+  margin-top: 12px;
+}

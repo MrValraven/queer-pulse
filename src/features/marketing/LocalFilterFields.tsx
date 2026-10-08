@@ -48,6 +48,10 @@ export interface LocalFilterFieldsProps {
   /** Whether the "Open now" filter (`?open=now`) is active. */
   openNow: boolean;
   onToggleOpenNow: () => void;
+  /** Whether "Out and about" (`?mobile=1`) is on. Offered on the List and
+   *  Map tabs, where a business with no premises sits beside the rest. */
+  isOutAndAbout?: boolean;
+  onToggleOutAndAbout?: () => void;
   /** Accessibility needs currently filtered on (`?access=`), all of which a
    *  place must meet to appear. */
   access: AccessibilitySlug[];
@@ -113,7 +117,8 @@ interface LocalFilterFieldsVariantProps extends LocalFilterFieldsProps {
 /**
  * The filter set itself: search, then the groups. Place type (what they
  * sell, on the Online tab), the one-tap narrowings (open now, verified safe
- * spaces and, on the Online tab for a signed-in member, Show 18+ shops), "who
+ * spaces, out and about and, on the Online tab for a signed-in member, Show
+ * 18+ shops), "who
  * runs it", access needs, and (demo-only) vibe. Rendered inline in the
  * desktop bar behind the "Refine" toggle, or flat inside the mobile "Filters"
  * sheet; one markup source so the two layouts never diverge in behaviour.
@@ -133,6 +138,8 @@ export function LocalFilterFields({
   onToggleSafeOnly,
   openNow,
   onToggleOpenNow,
+  isOutAndAbout,
+  onToggleOutAndAbout,
   access,
   onToggleAccess,
   owned,
@@ -177,6 +184,7 @@ export function LocalFilterFields({
     (safeOnly ? 1 : 0) +
     owned.length +
     (openNow ? 1 : 0) +
+    (!isOnlineScope && isOutAndAbout ? 1 : 0) +
     (isOnlineScope && isAdultShown ? 1 : 0);
   // The field holds its own text. `query` lives in the URL, and the router
   // commits a URL change inside a transition, so a field bound straight to it
@@ -265,6 +273,9 @@ export function LocalFilterFields({
           showOpenNow={!isOnlineScope}
           openNow={openNow}
           onToggleOpenNow={onToggleOpenNow}
+          showOutAndAbout={!isOnlineScope && onToggleOutAndAbout !== undefined}
+          isOutAndAbout={isOutAndAbout === true}
+          onToggleOutAndAbout={onToggleOutAndAbout}
           safeOnly={safeOnly}
           onToggleSafeOnly={onToggleSafeOnly}
           chipCounts={chipCounts}

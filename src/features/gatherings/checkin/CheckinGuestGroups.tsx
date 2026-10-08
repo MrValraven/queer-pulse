@@ -1,5 +1,5 @@
 import { useId, useMemo } from "react";
-import { AnimatePresence, LayoutGroup, m } from "motion/react";
+import { AnimatePresence, m } from "motion/react";
 import { FiUsers } from "react-icons/fi";
 import { useMotionPrefs } from "../../../app/providers/motionPrefs";
 import { EmptyState } from "../../../shared/components/ui";
@@ -29,10 +29,11 @@ interface CheckinGuestGroupsProps {
   pendingSlugs: ReadonlySet<string>;
   /** Rows just checked in, held in "still to arrive" for the linger. */
   lingeringRows: ReadonlyMap<string, AttendeeRow>;
-  customRsvpQuestion?: string | null;
   gatheringSlug: string;
   onCheckIn: (memberSlug: string) => void;
   onUndo: (memberSlug: string) => void;
+  /** Opens a guest's details (see CheckinGuestDetails). */
+  onShowDetails: (memberSlug: string) => void;
   onClearSearch: () => void;
 }
 
@@ -64,10 +65,10 @@ export function CheckinGuestGroups({
   canCheckIn,
   pendingSlugs,
   lingeringRows,
-  customRsvpQuestion,
   gatheringSlug,
   onCheckIn,
   onUndo,
+  onShowDetails,
   onClearSearch,
 }: CheckinGuestGroupsProps) {
   const { t } = useTranslation();
@@ -123,9 +124,9 @@ export function CheckinGuestGroups({
   const rowContext: CheckinRowContext = {
     canCheckIn,
     pendingSlugs,
-    customRsvpQuestion,
     onCheckIn: handleCheckIn,
     onUndo: handleUndo,
+    onShowDetails,
   };
   const nobodyLeft = (
     <p className={styles.nobodyLeft}>
@@ -138,62 +139,60 @@ export function CheckinGuestGroups({
     hasArrivedGroup && (!isSearching || !isArrivedUnmatched);
 
   return (
-    <LayoutGroup id="checkin-guests">
-      <div ref={containerRef} className={styles.groups}>
-        {isExpectedShown && (
-          <section
-            ref={expectedSectionRef}
-            aria-labelledby={expectedHeadingId}
-            className={styles.group}
-          >
-            <CheckinGroupHeading
-              id={expectedHeadingId}
-              headingRef={expectedHeadingRef}
-              labelKey="gatherings:checkin.groups.expected"
-              count={isSearching ? expected.total : expectedCount}
-            />
-            <CheckinGuestList
-              rows={split.expected}
-              pages={expected}
-              rowContext={rowContext}
-              emptyMessage={isSearching ? undefined : nobodyLeft}
-            />
-          </section>
-        )}
-        {isArrivedShown && (
-          <section aria-labelledby={arrivedHeadingId} className={styles.group}>
-            <CheckinGroupHeading
-              id={arrivedHeadingId}
-              labelKey="gatherings:checkin.groups.arrived"
-              count={isSearching ? arrived.total : (arrivedCount ?? 0)}
-              toggle={
-                isSearching
-                  ? undefined
-                  : {
-                      isOpen: isArrivedOpen,
-                      controlsId: arrivedBodyId,
-                      onToggle: () => onArrivedOpenChange(!isArrivedOpen),
-                    }
-              }
-            />
-            <AnimatePresence initial={false}>
-              {isArrivedExpanded && (
-                <m.div
-                  key="arrived-body"
-                  id={arrivedBodyId}
-                  {...collapseMotion(reducedMotion)}
-                >
-                  <CheckinGuestList
-                    rows={split.arrived}
-                    pages={arrived}
-                    rowContext={rowContext}
-                  />
-                </m.div>
-              )}
-            </AnimatePresence>
-          </section>
-        )}
-      </div>
-    </LayoutGroup>
+    <div ref={containerRef} className={styles.groups}>
+      {isExpectedShown && (
+        <section
+          ref={expectedSectionRef}
+          aria-labelledby={expectedHeadingId}
+          className={styles.group}
+        >
+          <CheckinGroupHeading
+            id={expectedHeadingId}
+            headingRef={expectedHeadingRef}
+            labelKey="gatherings:checkin.groups.expected"
+            count={isSearching ? expected.total : expectedCount}
+          />
+          <CheckinGuestList
+            rows={split.expected}
+            pages={expected}
+            rowContext={rowContext}
+            emptyMessage={isSearching ? undefined : nobodyLeft}
+          />
+        </section>
+      )}
+      {isArrivedShown && (
+        <section aria-labelledby={arrivedHeadingId} className={styles.group}>
+          <CheckinGroupHeading
+            id={arrivedHeadingId}
+            labelKey="gatherings:checkin.groups.arrived"
+            count={isSearching ? arrived.total : (arrivedCount ?? 0)}
+            toggle={
+              isSearching
+                ? undefined
+                : {
+                    isOpen: isArrivedOpen,
+                    controlsId: arrivedBodyId,
+                    onToggle: () => onArrivedOpenChange(!isArrivedOpen),
+                  }
+            }
+          />
+          <AnimatePresence initial={false}>
+            {isArrivedExpanded && (
+              <m.div
+                key="arrived-body"
+                id={arrivedBodyId}
+                {...collapseMotion(reducedMotion)}
+              >
+                <CheckinGuestList
+                  rows={split.arrived}
+                  pages={arrived}
+                  rowContext={rowContext}
+                />
+              </m.div>
+            )}
+          </AnimatePresence>
+        </section>
+      )}
+    </div>
   );
 }

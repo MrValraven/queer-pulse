@@ -33,7 +33,7 @@ export const EMPLOYER_SAFETY: Record<string, SafetySignals> = {
     transFriendly: true,
     safeToBeOut: 9.0,
   },
-  "Opus Diversus": {
+  "Maré Lilás": {
     verifiedSafe: true,
     transFriendly: false,
     safeToBeOut: 7.8,

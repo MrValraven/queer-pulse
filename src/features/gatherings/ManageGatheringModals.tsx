@@ -34,7 +34,7 @@ export function ManageGatheringModals({
   /** The edit modal's starting draft, or null when it isn't open. */
   editInitial: GatheringDetailsDraft | null;
   onCloseEdit: () => void;
-  onSaveEdit: (draft: GatheringDetailsDraft) => void;
+  onSaveEdit: (draft: GatheringDetailsDraft) => Promise<number | null>;
   seriesScopeMode: SeriesScopeModalMode;
   onChooseSeriesScope: (scope: SeriesScope) => void;
   onCloseSeriesScope: () => void;

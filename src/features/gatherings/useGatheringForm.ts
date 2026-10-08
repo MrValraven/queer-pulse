@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { useGatheringRunByState } from "./useGatheringRunByState";
 import {
   emptyAccessibilityAnswers,
   normalizeAccessibilityAnswers,
@@ -173,6 +174,9 @@ export interface GatheringDraftSnapshot {
   allowWaitlist: boolean;
   /** Absent in a draft saved before the switch existed; restores as off. */
   goTogetherEnabled?: boolean;
+  /** "Run by one of your businesses". Absent in a draft saved before the
+   *  field existed; restores as none. */
+  runByListingId?: string | null;
 }
 
 /** What the wizard may start out with, rather than empty.
@@ -1275,6 +1279,7 @@ function pickDraftSnapshot(
     customRsvpQuestion: form.customRsvpQuestion,
     allowWaitlist: form.allowWaitlist,
     goTogetherEnabled: form.goTogetherEnabled,
+    runByListingId: form.runByListingId,
   };
 }
 
@@ -1298,6 +1303,7 @@ export function useGatheringForm(initial: GatheringFormInitial = {}) {
     isCareDirty,
     ...careState
   } = useGatheringCareState();
+  const { restoreRunBy, ...runByState } = useGatheringRunByState();
   // The family, the format, and the two fields a family sets a starting value
   // for. `applyFormatSeed`, `applyCapacitySeed` and `restoreFormatState` are
   // pulled out of the spread below because they are the duplicate, "same as
@@ -1455,6 +1461,7 @@ export function useGatheringForm(initial: GatheringFormInitial = {}) {
     restoreWhereState(snapshot);
     restoreAccessState(snapshot);
     restoreCareState(snapshot);
+    restoreRunBy(snapshot.runByListingId);
   };
 
   const form = {
@@ -1488,6 +1495,9 @@ export function useGatheringForm(initial: GatheringFormInitial = {}) {
     // `allowWaitlist`, `setAllowWaitlist`, `goTogetherEnabled` and
     // `setGoTogetherEnabled`.
     ...careState,
+    // `runByListingId`, `setRunByListingId`, `isRunByListingRefused` and
+    // `setRefusedRunByListingId`.
+    ...runByState,
     checks,
     allChecked,
     checkedCount,

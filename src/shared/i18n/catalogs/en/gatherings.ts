@@ -121,6 +121,7 @@ export const gatherings: Catalog = {
   "common.hostedBy": "Hosted by",
   // GatheringCommunity.tsx: the hero line reads "With Queer Runners Lisboa".
   "common.hostedWith": "With",
+  "common.runBy": "Run by",
   "common.hostRemoved": "A former member",
   "common.connectCta": "Connect",
   "common.timeRangeTo": "to",
@@ -572,6 +573,60 @@ export const gatherings: Catalog = {
   "extras.theme.newcomersToLisbon": "Newcomers to Lisbon",
   "extras.theme.familyFriendly": "Family friendly",
   "extras.theme.sapphic": "Sapphic",
+  "extras.theme.transAndNonbinary": "Trans and nonbinary",
+  "extras.theme.gayAndBiMen": "Gay and bi men",
+  "extras.theme.biAndPan": "Bi and pan",
+  "extras.theme.aceAndAro": "Ace and aro",
+  "extras.theme.intersex": "Intersex",
+  "extras.theme.qtpoc": "QTPOC",
+  "extras.theme.blackQueer": "Black queer",
+  "extras.theme.polyamorous": "Polyamorous",
+  "extras.theme.neurodivergent": "Neurodivergent",
+  "extras.theme.disabledLed": "Disabled-led",
+  "extras.theme.ages18To25": "18 to 25",
+  "extras.theme.over40": "Over 40",
+  "extras.theme.queerParents": "Queer parents",
+  "extras.theme.migrantsAndRefugees": "Migrants and refugees",
+  "extras.theme.questioningWelcome": "Questioning welcome",
+  "extras.theme.alliesWelcome": "Allies welcome",
+  "extras.theme.inPortuguese": "In Portuguese",
+  "extras.theme.inEnglish": "In English",
+  "extras.theme.portugueseAndEnglish": "Portuguese and English",
+  "extras.theme.inSpanish": "In Spanish",
+  "extras.theme.inFrench": "In French",
+  "extras.theme.languageExchange": "Language exchange",
+  "extras.theme.signLanguageInterpreted": "Sign language interpreted",
+  "extras.theme.lowSensory": "Low sensory",
+  "extras.theme.quietRoom": "Quiet room on site",
+  "extras.theme.mostlySeated": "Mostly seated",
+  "extras.theme.captioned": "Captioned",
+  "extras.theme.masksRequested": "Masks requested",
+  "extras.theme.childcareOnSite": "Childcare on site",
+  "extras.theme.greeterAtTheDoor": "Greeter at the door",
+  "extras.theme.phoneFree": "Phone-free",
+  "extras.theme.noPhotos": "No photos",
+  "extras.theme.smokeFree": "Smoke-free",
+  "extras.theme.dogsWelcome": "Dogs welcome",
+  "extras.theme.goodToComeSolo": "Good to come solo",
+  "extras.theme.makingFriends": "Making friends",
+  "extras.theme.flirtingWelcome": "Flirting welcome",
+  "extras.theme.lowKey": "Low-key",
+  "extras.theme.highEnergy": "High energy",
+  "extras.theme.dressUp": "Dress up",
+  "extras.theme.kinkFriendly": "Kink-friendly",
+  "extras.theme.drag": "Drag",
+  "extras.theme.ballroom": "Ballroom",
+  "extras.theme.pride": "Pride",
+  "extras.theme.fundraiser": "Fundraiser",
+  "extras.theme.mutualAid": "Mutual aid",
+  "extras.theme.activism": "Activism",
+  "extras.theme.queerProfessionals": "Queer professionals",
+  "extras.theme.faithAndSpirituality": "Faith and spirituality",
+  "extras.theme.outdoors": "Outdoors",
+  "extras.themeGroup.whoItsFor": "Who it's for",
+  "extras.themeGroup.language": "Language",
+  "extras.themeGroup.accessAndComfort": "Access and comfort",
+  "extras.themeGroup.moodAndPurpose": "Mood and purpose",
   "extras.contentNote.sexualContent": "Sexual content",
   "extras.contentNote.violence": "Violence",
   "extras.contentNote.transphobiaDiscussion": "Discussion of transphobia",
@@ -640,6 +695,8 @@ export const gatherings: Catalog = {
   "create.toast.publishError": "Couldn't publish your gathering. Try again.",
   "create.toast.venueRefused":
     "Your gathering isn't live yet. The venue you picked can't be linked any more, so choose another one.",
+  "create.toast.runByRefused":
+    "That business can't be named as running this gathering. Pick another, or none.",
   "create.toast.published": "Your gathering is live",
   "create.success.title": "Your gathering <em>is live.</em>",
   "create.success.viewCta": "View on board",
@@ -954,6 +1011,14 @@ export const gatherings: Catalog = {
     "People queue for a spot and get told the moment one opens.",
   "create.v2.who.rsvpCutoffLabel": "RSVPs close",
   "create.v2.who.communityLabel": "Host it with a community",
+  "create.v2.who.runByLabel": "Run by one of your businesses",
+  "create.v2.who.runByHint":
+    "Your gathering page links to the business you pick.",
+  "create.v2.who.runByNone": "No business",
+  "create.v2.who.runByPrefilled":
+    "We filled in the meeting point from {name}. You can change it.",
+  "create.v2.who.runByRefused":
+    "This business can't run this gathering. Pick another, or none.",
 
   // steps/AccessChapter.tsx: chapter 4
   "create.v2.access.questionsLabel": "Six questions",
@@ -962,8 +1027,7 @@ export const gatherings: Catalog = {
 
   // steps/CareChapter.tsx / careChapter.data.ts: chapter 5
   "create.v2.care.houseRulesLabel": "House rules",
-  "create.v2.care.houseRulesPlaceholder":
-    "e.g. No phones at the table. Ask before hugging.",
+  "create.v2.care.houseRulesPlaceholder": "e.g. No phones at the table",
   "create.v2.care.contentNotesLabel": "Content notes",
   "create.v2.care.askOnRsvpLabel": "Ask on RSVP",
   "create.v2.care.question.dietary.title": "Dietary needs",
@@ -975,8 +1039,7 @@ export const gatherings: Catalog = {
   "create.v2.care.question.access.alwaysAsked":
     "Always asked, so nobody has to explain their needs twice.",
   "create.v2.care.customQuestionLabel": "Your own question",
-  "create.v2.care.customQuestionPlaceholder":
-    "e.g. What would you like to cook or bring?",
+  "create.v2.care.customQuestionPlaceholder": "e.g. What will you bring?",
 
   // CreateGatheringSuccess.tsx / shareKit/*: the published screen and the share kit
   "create.v2.success.lead":
@@ -1057,7 +1120,7 @@ export const gatherings: Catalog = {
   // steps/CapacityStepperField.tsx, WhoChapter.tsx, AccessChapter.tsx and
   // EditDetailsModal.tsx: chapters 3 and 4
   "create.step3.capLabel": "Capacity",
-  "create.step3.capPlaceholder": "Max attendees",
+  "create.step3.capPlaceholder": "No limit",
   "create.step3.langLabel": "Language",
   "create.step3.notesPlaceholder":
     "Anything else attendees should know: steps, parking, sound level…",
@@ -1191,6 +1254,8 @@ export const gatherings: Catalog = {
   "manage.details.date": "Date",
   "manage.details.time": "Time",
   "manage.details.venue": "Venue",
+  "manage.details.runBy": "Run by",
+  "manage.details.runByNone": "No business",
   "manage.details.capacity": "Capacity",
   "manage.details.capacityValue_one": "{count} person",
   "manage.details.capacityValue_other": "{count} people",
@@ -1278,7 +1343,7 @@ export const gatherings: Catalog = {
   // ── Manage: edit-details modal ────────────────────────────────────────────────
   "manage.editModal.title": "Update your gathering",
   "manage.editModal.sub":
-    "Changes go live on the public listing. Attendees are notified of date or venue changes.",
+    "Changes go live on the public listing. Attendees are told when the start time or place changes.",
   "manage.editModal.section.gathering": "The gathering",
   "manage.editModal.section.whenWhere": "When and where",
   "manage.editModal.section.audience": "Who it's for",
@@ -1306,6 +1371,43 @@ export const gatherings: Catalog = {
     "Saved just now · {count} attendee notified",
   "manage.editModal.successMeta_other":
     "Saved just now · {count} attendees notified",
+  "manage.editModal.successMetaSaved": "Saved just now",
+  "manage.editModal.notifiedToast_one": "Saved · {count} attendee notified",
+  "manage.editModal.notifiedToast_other": "Saved · {count} attendees notified",
+  "manage.editModal.navLabel": "Sections",
+  "manage.editModal.sectionHint.gathering":
+    "What people see first on the listing and the card.",
+  "manage.editModal.sectionHint.whenWhere":
+    "Attendees are told when the start time or the place changes.",
+  "manage.editModal.sectionHint.audience":
+    "Who can find it, and how many people can go.",
+  "manage.editModal.sectionHint.care":
+    "Help people know what to expect before they arrive.",
+  "manage.editModal.sectionHint.rsvp":
+    "When RSVPs close and what you ask people who say yes.",
+  "manage.editModal.sectionEdited": "Edited",
+  "manage.editModal.sectionNeedsFix": "Needs a fix",
+  "manage.editModal.resetSection": "Undo section changes",
+  "manage.editModal.status.clean": "No changes yet",
+  "manage.editModal.status.changed_one": "{count} section changed",
+  "manage.editModal.status.changed_other": "{count} sections changed",
+  "manage.editModal.status.notify": "Attendees will be told",
+  "manage.editModal.status.blocked": "Fix one field to save",
+  "manage.editModal.titleRequiredError": "Add a title",
+  "manage.editModal.startRequiredError": "Pick when it starts",
+  "manage.editModal.locationRequiredError": "Add where it happens",
+  "manage.editModal.otherFormatRequiredError":
+    "Add a few words about your format",
+  "manage.editModal.status.showField": "Show the field",
+  "manage.editModal.discard.title": "Discard your changes?",
+  "manage.editModal.discard.body_one":
+    "You changed {count} section. Closing now loses those edits.",
+  "manage.editModal.discard.body_other":
+    "You changed {count} sections. Closing now loses those edits.",
+  "manage.editModal.discard.keepCta": "Keep editing",
+  "manage.editModal.discard.discardCta": "Discard changes",
+  "manage.editModal.themesPicked": "{count} of {max} picked",
+  "manage.editModal.preview.label": "On your card",
 
   // ── Manage: this-vs-future series scope prompt (MSG-10) ────────────────────
   "manage.seriesScope.eyebrow": "Recurring gathering",
@@ -1373,6 +1475,9 @@ export const gatherings: Catalog = {
     "Everyone who RSVP'd or was invited is notified when the start date or time changes.",
   "manage.fieldEditor.venueSub":
     "Everyone who RSVP'd or was invited is notified when the venue changes.",
+  "manage.fieldEditor.runBySub": "Pick one of your businesses, or none.",
+  "manage.fieldEditor.runByReadOnly":
+    "{name} runs this gathering. Only someone who runs that business can change it.",
   "manage.fieldEditor.capacitySub":
     "Sets how many people can say they're going.",
   "manage.fieldEditor.descriptionSub": "Shows on the public listing.",
@@ -1405,6 +1510,8 @@ export const gatherings: Catalog = {
   "venuePicker.resultCount_other": "{count} venues found",
   "venuePicker.refusedError":
     "This venue can't be linked to a gathering any more. Tap Change to pick another or type the name in yourself.",
+  "venuePicker.runByHint":
+    "Running this as a tour or a visiting service? Pick your business under “Run by one of your businesses” instead.",
 
   // ── Cohosts (CohostManager / AddCohostModal) ─────────────────────
   "cohost.panelTitle": "Cohosts",
@@ -1506,6 +1613,7 @@ export const gatherings: Catalog = {
     "New gatherings turn up here all the time. You could host the first.",
   "hub.card.cta": "See it",
   "hub.card.moreThemes": "+{count}",
+  "hub.card.runBy": "Run by {name}",
   "hub.loading": "Finding what's on…",
 
   // ── Lineup (GatheringLineupEditor, LineupInviteComposerModal,
@@ -1680,6 +1788,12 @@ export const gatherings: Catalog = {
   "checkin.row.guests_other": "+{count} guests",
   "checkin.row.accessNeeds": "Access needs",
   "checkin.row.checkedInToast": "{name} checked in",
+  "checkin.row.detailsAria": "Show details for {name}",
+  "checkin.details.eyebrow": "Guest",
+  "checkin.details.photoAlt": "Profile photo of {name}",
+  "checkin.details.stillToArrive": "Still to arrive",
+  "checkin.details.backCta": "Back",
+  "checkin.details.checkInCta": "Check in",
   "checkin.notOnList.title": 'No one called "{query}" is going',
   "checkin.notOnList.description":
     "If they haven't RSVPed yet, they can do it now on their own phone.",

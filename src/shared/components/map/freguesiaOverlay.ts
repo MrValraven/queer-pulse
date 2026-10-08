@@ -12,6 +12,11 @@ import { BRAND } from "./siteMapStyle";
 export interface FreguesiaOverlay {
   setCounts: (counts: Record<string, number>) => void;
   setSelected: (selected: Set<string>) => void;
+  /** Shades a set of parishes apart from the selection: the parishes a
+   *  listing with no fixed spot covers, while its card is hovered or
+   *  focused. An empty set clears the shading. Never touches the selection
+   *  or the counts. */
+  setHighlighted: (highlighted: ReadonlySet<string>) => void;
   detach: () => void;
 }
 
@@ -125,6 +130,19 @@ function pushSelected(map: MapLibreMap, selected: Set<string>): void {
   }
 }
 
+function pushHighlighted(
+  map: MapLibreMap,
+  highlighted: ReadonlySet<string>,
+): void {
+  for (const feature of FREGUESIAS.features) {
+    const name = feature.properties.name;
+    map.setFeatureState(
+      { source: "freguesias", id: name },
+      { highlighted: highlighted.has(name) },
+    );
+  }
+}
+
 function setHover(map: MapLibreMap, name: string | null, hover: boolean): void {
   if (!name) return;
   map.setFeatureState({ source: "freguesias", id: name }, { hover });
@@ -135,6 +153,8 @@ function setHover(map: MapLibreMap, name: string | null, hover: boolean): void {
 // caller replaces it wholesale on each click, a multi-select caller toggles
 // membership: this module only reports which parish was clicked (via
 // `onSelect`) and paints whatever `Set` it's given (via `setSelected`).
+// `setHighlighted` paints a second, independent set (the parishes a card
+// covers), so a multi-parish shading never reads as a selection.
 export function createFreguesiaOverlay(
   map: MapLibreMap,
   {
@@ -176,6 +196,8 @@ export function createFreguesiaOverlay(
           "case",
           ["boolean", ["feature-state", "selected"], false],
           0.26,
+          ["boolean", ["feature-state", "highlighted"], false],
+          0.32,
           ["boolean", ["feature-state", "hover"], false],
           0.16,
           0.07,
@@ -185,6 +207,8 @@ export function createFreguesiaOverlay(
           "case",
           ["boolean", ["feature-state", "selected"], false],
           0.04,
+          ["boolean", ["feature-state", "highlighted"], false],
+          0.12,
           ["boolean", ["feature-state", "hover"], false],
           0.024,
           0.01,
@@ -200,8 +224,30 @@ export function createFreguesiaOverlay(
     // street zoom, where it was being mistaken for a road.
     paint: {
       "line-color": BRAND.accentInk,
-      "line-width": 1,
-      "line-opacity": ["interpolate", ["linear"], ["zoom"], 11, 0.5, 14, 0],
+      // A highlighted parish gets a 2px edge that stays visible through
+      // street zoom, so the shading reads where the fill has faded.
+      "line-width": [
+        "case",
+        ["boolean", ["feature-state", "highlighted"], false],
+        2,
+        1,
+      ],
+      "line-opacity": [
+        "interpolate",
+        ["linear"],
+        ["zoom"],
+        11,
+        [
+          "case",
+          ["boolean", ["feature-state", "highlighted"], false],
+          0.9,
+          0.5,
+        ],
+        14,
+        ["case", ["boolean", ["feature-state", "highlighted"], false], 0.7, 0],
+        16,
+        ["case", ["boolean", ["feature-state", "highlighted"], false], 0.6, 0],
+      ],
     },
   });
 
@@ -293,6 +339,9 @@ export function createFreguesiaOverlay(
       currentSelected = nextSelected;
       pushSelected(map, nextSelected);
       if (hideSelectedCount) paintLabels();
+    },
+    setHighlighted: (nextHighlighted) => {
+      pushHighlighted(map, nextHighlighted);
     },
     detach: () => {
       map.off("click", "freguesia-fill", handleClick);

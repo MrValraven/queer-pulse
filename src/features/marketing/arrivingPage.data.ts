@@ -87,12 +87,12 @@ export const ORGS: Org[] = [
     domain: "ilga-portugal.pt",
   },
   {
-    id: "opusDiversus",
-    name: "Opus Diversus",
+    id: "opusDiversidades",
+    name: "Opus Diversidades",
     initials: "OD",
     tone: "coral",
-    website: "https://opusdiversus.org",
-    domain: "opusdiversus.org",
+    website: "https://opusdiversidades.org",
+    domain: "opusdiversidades.org",
   },
   {
     id: "redeExAequo",

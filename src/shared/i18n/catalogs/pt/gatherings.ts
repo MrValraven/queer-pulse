@@ -122,6 +122,7 @@ export const gatherings: Catalog = {
   "common.hostedBy": "Organização de",
   // GatheringCommunity.tsx: the hero line reads "Com Queer Runners Lisboa".
   "common.hostedWith": "Com",
+  "common.runBy": "Dinamizado por",
   "common.hostRemoved": "Uma pessoa que já não está por cá",
   "common.timeRangeTo": "às",
   "common.connectCta": "Conectar",
@@ -573,6 +574,60 @@ export const gatherings: Catalog = {
   "extras.theme.newcomersToLisbon": "Para quem chegou a Lisboa",
   "extras.theme.familyFriendly": "Para famílias",
   "extras.theme.sapphic": "Sáfico",
+  "extras.theme.transAndNonbinary": "Pessoas trans e não binárias",
+  "extras.theme.gayAndBiMen": "Homens gays e bi",
+  "extras.theme.biAndPan": "Bi e pan",
+  "extras.theme.aceAndAro": "Ace e aro",
+  "extras.theme.intersex": "Intersexo",
+  "extras.theme.qtpoc": "Pessoas queer racializadas",
+  "extras.theme.blackQueer": "Pessoas queer negras",
+  "extras.theme.polyamorous": "Poliamor",
+  "extras.theme.neurodivergent": "Neurodivergente",
+  "extras.theme.disabledLed": "Liderado por pessoas com deficiência",
+  "extras.theme.ages18To25": "Dos 18 aos 25",
+  "extras.theme.over40": "Mais de 40",
+  "extras.theme.queerParents": "Parentalidade queer",
+  "extras.theme.migrantsAndRefugees": "Pessoas migrantes e refugiadas",
+  "extras.theme.questioningWelcome": "Para quem se está a questionar",
+  "extras.theme.alliesWelcome": "Aliades bem-vindes",
+  "extras.theme.inPortuguese": "Em português",
+  "extras.theme.inEnglish": "Em inglês",
+  "extras.theme.portugueseAndEnglish": "Português e inglês",
+  "extras.theme.inSpanish": "Em espanhol",
+  "extras.theme.inFrench": "Em francês",
+  "extras.theme.languageExchange": "Troca de línguas",
+  "extras.theme.signLanguageInterpreted": "Com intérprete de LGP",
+  "extras.theme.lowSensory": "Pouca estimulação sensorial",
+  "extras.theme.quietRoom": "Sala tranquila no local",
+  "extras.theme.mostlySeated": "Quase tudo sentado",
+  "extras.theme.captioned": "Com legendas",
+  "extras.theme.masksRequested": "Pede-se máscara",
+  "extras.theme.childcareOnSite": "Cuidado de crianças no local",
+  "extras.theme.greeterAtTheDoor": "Alguém te recebe à porta",
+  "extras.theme.phoneFree": "Sem telemóveis",
+  "extras.theme.noPhotos": "Sem fotografias",
+  "extras.theme.smokeFree": "Sem fumo",
+  "extras.theme.dogsWelcome": "Cães bem-vindos",
+  "extras.theme.goodToComeSolo": "Bom para vir a solo",
+  "extras.theme.makingFriends": "Fazer amizades",
+  "extras.theme.flirtingWelcome": "Flirt à vontade",
+  "extras.theme.lowKey": "Descontraído",
+  "extras.theme.highEnergy": "Muita energia",
+  "extras.theme.dressUp": "Vem produzide",
+  "extras.theme.kinkFriendly": "Aberto a kink",
+  "extras.theme.drag": "Drag",
+  "extras.theme.ballroom": "Ballroom",
+  "extras.theme.pride": "Pride",
+  "extras.theme.fundraiser": "Angariação de fundos",
+  "extras.theme.mutualAid": "Apoio mútuo",
+  "extras.theme.activism": "Ativismo",
+  "extras.theme.queerProfessionals": "Profissionais queer",
+  "extras.theme.faithAndSpirituality": "Fé e espiritualidade",
+  "extras.theme.outdoors": "Ao ar livre",
+  "extras.themeGroup.whoItsFor": "Para quem é",
+  "extras.themeGroup.language": "Língua",
+  "extras.themeGroup.accessAndComfort": "Acesso e conforto",
+  "extras.themeGroup.moodAndPurpose": "Ambiente e propósito",
   "extras.contentNote.sexualContent": "Conteúdo sexual",
   "extras.contentNote.violence": "Violência",
   "extras.contentNote.transphobiaDiscussion": "Conversa sobre transfobia",
@@ -643,6 +698,8 @@ export const gatherings: Catalog = {
     "Não foi possível publicar o teu convívio. Tenta novamente.",
   "create.toast.venueRefused":
     "O teu convívio ainda não está no ar. Já não dá para associar o local que escolheste, por isso escolhe outro.",
+  "create.toast.runByRefused":
+    "Esse negócio não pode aparecer como organizador deste encontro. Escolhe outro, ou nenhum.",
   "create.toast.published": "O teu convívio está no ar",
   "create.success.title": "O teu convívio <em>está no ar.</em>",
   "create.success.viewCta": "Ver no quadro",
@@ -963,6 +1020,14 @@ export const gatherings: Catalog = {
     "As pessoas ficam em fila e são avisadas assim que abre um lugar.",
   "create.v2.who.rsvpCutoffLabel": "As confirmações fecham",
   "create.v2.who.communityLabel": "Organizar com uma comunidade",
+  "create.v2.who.runByLabel": "Dinamizado por um dos teus negócios",
+  "create.v2.who.runByHint":
+    "A página do encontro liga ao negócio que escolheres.",
+  "create.v2.who.runByNone": "Nenhum negócio",
+  "create.v2.who.runByPrefilled":
+    "Preenchemos o ponto de encontro de {name}. Podes mudá-lo.",
+  "create.v2.who.runByRefused":
+    "Este negócio não pode organizar este encontro. Escolhe outro, ou nenhum.",
 
   // steps/AccessChapter.tsx: chapter 4
   "create.v2.access.questionsLabel": "Seis perguntas",
@@ -971,8 +1036,7 @@ export const gatherings: Catalog = {
 
   // steps/CareChapter.tsx / careChapter.data.ts: chapter 5
   "create.v2.care.houseRulesLabel": "Regras da casa",
-  "create.v2.care.houseRulesPlaceholder":
-    "ex. Sem telemóveis à mesa. Pergunta antes de abraçar.",
+  "create.v2.care.houseRulesPlaceholder": "ex. Sem telemóveis à mesa",
   "create.v2.care.contentNotesLabel": "Avisos de conteúdo",
   "create.v2.care.askOnRsvpLabel": "Perguntar ao confirmar presença",
   "create.v2.care.question.dietary.title": "Restrições alimentares",
@@ -984,8 +1048,7 @@ export const gatherings: Catalog = {
   "create.v2.care.question.access.alwaysAsked":
     "Perguntamos sempre, para ninguém ter de explicar o que precisa duas vezes.",
   "create.v2.care.customQuestionLabel": "A tua pergunta",
-  "create.v2.care.customQuestionPlaceholder":
-    "ex. O que gostavas de cozinhar ou trazer?",
+  "create.v2.care.customQuestionPlaceholder": "ex. O que vais trazer?",
 
   // CreateGatheringSuccess.tsx / shareKit/*: the published screen and the share kit
   "create.v2.success.lead":
@@ -1065,7 +1128,7 @@ export const gatherings: Catalog = {
   // steps/CapacityStepperField.tsx, WhoChapter.tsx, AccessChapter.tsx e
   // EditDetailsModal.tsx: capítulos 3 e 4
   "create.step3.capLabel": "Capacidade",
-  "create.step3.capPlaceholder": "Máximo de participantes",
+  "create.step3.capPlaceholder": "Sem limite",
   "create.step3.langLabel": "Idioma",
   "create.step3.notesPlaceholder":
     "Mais alguma coisa que as pessoas devam saber: degraus, estacionamento, nível de som…",
@@ -1201,6 +1264,8 @@ export const gatherings: Catalog = {
   "manage.details.date": "Data",
   "manage.details.time": "Hora",
   "manage.details.venue": "Local",
+  "manage.details.runBy": "Dinamizado por",
+  "manage.details.runByNone": "Nenhum negócio",
   "manage.details.capacity": "Capacidade",
   "manage.details.capacityValue_one": "{count} pessoa",
   "manage.details.capacityValue_other": "{count} pessoas",
@@ -1295,7 +1360,7 @@ export const gatherings: Catalog = {
   // ── Manage: edit-details modal ────────────────────────────────────────────────
   "manage.editModal.title": "Atualiza o teu convívio",
   "manage.editModal.sub":
-    "As alterações ficam logo visíveis na página pública. As pessoas são avisadas de mudanças de data ou local.",
+    "As alterações ficam logo visíveis na página pública. Quem vai é avisado quando mudas a hora de início ou o local.",
   "manage.editModal.section.gathering": "O convívio",
   "manage.editModal.section.whenWhere": "Quando e onde",
   "manage.editModal.section.audience": "Para quem é",
@@ -1323,6 +1388,43 @@ export const gatherings: Catalog = {
     "Guardado agora mesmo · {count} pessoa avisada",
   "manage.editModal.successMeta_other":
     "Guardado agora mesmo · {count} pessoas avisadas",
+  "manage.editModal.successMetaSaved": "Guardado agora mesmo",
+  "manage.editModal.notifiedToast_one": "Guardado · {count} pessoa avisada",
+  "manage.editModal.notifiedToast_other": "Guardado · {count} pessoas avisadas",
+  "manage.editModal.navLabel": "Secções",
+  "manage.editModal.sectionHint.gathering":
+    "O que as pessoas veem primeiro na listagem e no cartão.",
+  "manage.editModal.sectionHint.whenWhere":
+    "Quem vai é avisado quando mudas a hora de início ou o local.",
+  "manage.editModal.sectionHint.audience":
+    "Quem o pode encontrar e quantas pessoas podem ir.",
+  "manage.editModal.sectionHint.care":
+    "Ajuda as pessoas a saber o que esperar antes de chegarem.",
+  "manage.editModal.sectionHint.rsvp":
+    "Quando fecham as confirmações e o que perguntas a quem diz que vai.",
+  "manage.editModal.sectionEdited": "Alterada",
+  "manage.editModal.sectionNeedsFix": "Precisa de correção",
+  "manage.editModal.resetSection": "Desfazer alterações da secção",
+  "manage.editModal.status.clean": "Ainda sem alterações",
+  "manage.editModal.status.changed_one": "{count} secção alterada",
+  "manage.editModal.status.changed_other": "{count} secções alteradas",
+  "manage.editModal.status.notify": "Quem vai é avisado",
+  "manage.editModal.status.blocked": "Corrige um campo para guardar",
+  "manage.editModal.titleRequiredError": "Dá um título ao convívio",
+  "manage.editModal.startRequiredError": "Escolhe quando começa",
+  "manage.editModal.locationRequiredError": "Diz onde acontece",
+  "manage.editModal.otherFormatRequiredError":
+    "Escreve umas palavras sobre o teu formato",
+  "manage.editModal.status.showField": "Mostrar o campo",
+  "manage.editModal.discard.title": "Descartar as tuas alterações?",
+  "manage.editModal.discard.body_one":
+    "Alteraste {count} secção. Se fechares agora, perdes essas alterações.",
+  "manage.editModal.discard.body_other":
+    "Alteraste {count} secções. Se fechares agora, perdes essas alterações.",
+  "manage.editModal.discard.keepCta": "Continuar a editar",
+  "manage.editModal.discard.discardCta": "Descartar alterações",
+  "manage.editModal.themesPicked": "{count} de {max} escolhidos",
+  "manage.editModal.preview.label": "No teu cartão",
 
   // ── Manage: pedido de âmbito this-vs-future para séries (MSG-10) ───────────
   "manage.seriesScope.eyebrow": "Convívio recorrente",
@@ -1392,6 +1494,9 @@ export const gatherings: Catalog = {
     "Todas as pessoas que confirmaram presença ou foram convidadas são avisadas quando a data ou a hora de início mudam.",
   "manage.fieldEditor.venueSub":
     "Todas as pessoas que confirmaram presença ou foram convidadas são avisadas quando o local muda.",
+  "manage.fieldEditor.runBySub": "Escolhe um dos teus negócios, ou nenhum.",
+  "manage.fieldEditor.runByReadOnly":
+    "{name} organiza este encontro. Só quem gere esse negócio o pode mudar.",
   "manage.fieldEditor.capacitySub":
     "Define quantas pessoas podem dizer que vão.",
   "manage.fieldEditor.descriptionSub": "Aparece na página pública.",
@@ -1424,6 +1529,8 @@ export const gatherings: Catalog = {
   "venuePicker.resultCount_other": "{count} locais encontrados",
   "venuePicker.refusedError":
     "Já não dá para associar este local a um convívio. Toca em Alterar para escolher outro ou escrever tu o nome.",
+  "venuePicker.runByHint":
+    "Vais fazer isto como visita ou serviço ao domicílio? Escolhe o teu negócio em “Dinamizado por um dos teus negócios”.",
 
   // ── Cohosts (CohostManager / AddCohostModal) ─────────────────────
   "cohost.panelTitle": "Pessoas coanfitriãs",
@@ -1526,6 +1633,7 @@ export const gatherings: Catalog = {
     "Aparecem coisas novas por aqui a toda a hora. Podias organizar a primeira.",
   "hub.card.cta": "Vê",
   "hub.card.moreThemes": "+{count}",
+  "hub.card.runBy": "Dinamizado por {name}",
   "hub.loading": "A ver o que há…",
 
   // ── Lineup (GatheringLineupEditor, LineupInviteComposerModal,
@@ -1700,6 +1808,12 @@ export const gatherings: Catalog = {
   "checkin.row.guests_other": "+{count} acompanhantes",
   "checkin.row.accessNeeds": "Necessidades de acessibilidade",
   "checkin.row.checkedInToast": "{name} fez o check-in",
+  "checkin.row.detailsAria": "Ver os detalhes de {name}",
+  "checkin.details.eyebrow": "Pessoa convidada",
+  "checkin.details.photoAlt": "Foto de perfil de {name}",
+  "checkin.details.stillToArrive": "Ainda por chegar",
+  "checkin.details.backCta": "Voltar",
+  "checkin.details.checkInCta": "Registar entrada",
   "checkin.notOnList.title": 'Ninguém com o nome "{query}" vai',
   "checkin.notOnList.description":
     "Se ainda não confirmaram, podem fazê-lo agora no telemóvel.",

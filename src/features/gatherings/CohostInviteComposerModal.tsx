@@ -115,15 +115,15 @@ export function CohostInviteComposerModal({
       onClose={onClose}
       footer={
         <>
+          <Button variant="ghost" onClick={onClose}>
+            {t("gatherings:manage.cancelCta")}
+          </Button>
           <Button
             variant="primary"
             onClick={send}
             disabled={!role || !commitment || sendInvite.isPending}
           >
             {t("gatherings:cohost.addModal.sendCta")}
-          </Button>
-          <Button variant="ghost" onClick={onClose}>
-            {t("gatherings:manage.cancelCta")}
           </Button>
         </>
       }

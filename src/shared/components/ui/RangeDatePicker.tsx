@@ -1,30 +1,32 @@
 /**
  * Range-mode counterpart to `SingleDatePicker` (in `DatePicker.tsx`): two
- * `DateField`s (start/end) in the trigger row plus a `RangeCalendar` popover,
- * instead of one field + a single-month `Calendar`. Split into its own file
- * to keep each component under the line budget. Wires up Task 7's runtime for
- * `DatePicker`'s `mode="range"`, previously a throwing stub.
+ * `DateField`s (start/end) in the trigger row plus a two-month
+ * `RangeCalendar` popover. Split into its own file to keep each component
+ * under the line budget. Wires up Task 7's runtime for `DatePicker`'s
+ * `mode="range"`, previously a throwing stub.
  *
  * Task 8's mobile bottom sheet applies here too (same `RangeCalendar` content,
  * swapped into `ModalSheet` below `--mobile`). `presets` and the "Today"
- * button are deliberately NOT wired up for range: `presets`' `onChange(value:
+ * button stay unwired for range on purpose: `presets`' `onChange(value:
  * string)` contract doesn't fit `onChange(value: DateRange)`, and
  * `RangeCalendar` has no "move focus to today" seam (it would need new
- * props threaded through `useCalendarState`) — both stay documented gaps
- * rather than a half-built affordance.
+ * props threaded through `useCalendarState`). Both stay documented gaps
+ * until each can ship whole.
  */
 
 import { useEffect, useId, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { FiCalendar, FiX } from "react-icons/fi";
+import { FiCalendar } from "react-icons/fi";
 import { useMediaQuery } from "../../hooks/useMediaQuery";
 import { useOutsideDismiss } from "../../hooks/useOutsideDismiss";
 import { useTranslation } from "../../i18n/useTranslation";
 import { mediaMax } from "../../theme/breakpoints";
 import { DateField } from "./DateField";
+import { DatePickerTriggerButtons } from "./DatePickerTriggerButtons";
 import { ModalSheet } from "./Modal";
 import { RangeCalendar } from "./RangeCalendar";
 import { useAnchoredPopover } from "./useAnchoredPopover";
+import { useDismissCalendarOnEscape } from "./useDismissCalendarOnEscape";
 import type { DatePickerBaseProps, DateRange } from "./DatePicker";
 import styles from "./Calendar.module.css";
 
@@ -91,27 +93,10 @@ export function RangeDatePicker({
     popoverRef.current?.focus();
   }, [isDesktopOpen]);
 
-  // Escape-to-close, matching `DatePickerPopover`'s non-modal dialog contract
-  // (no focus trap, no `aria-modal`): closed via Escape, an outside press, or
-  // (below) once both endpoints of the range are picked. `close` is read
-  // through a ref (mirrors `DatePickerPopover`) so this effect subscribes
-  // once per open/close, not on every render. Skipped on mobile: `ModalSheet`
-  // already owns its own Escape handling there.
-  const savedClose = useRef(close);
-  useEffect(() => {
-    savedClose.current = close;
-  });
-  useEffect(() => {
-    if (!isDesktopOpen) return;
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        event.preventDefault();
-        savedClose.current();
-      }
-    };
-    document.addEventListener("keydown", onKeyDown);
-    return () => document.removeEventListener("keydown", onKeyDown);
-  }, [isDesktopOpen]);
+  // Escape closes the desktop panel alone, ahead of any host dialog; the
+  // panel also closes on an outside press or (below) once both endpoints of
+  // the range are picked. Mobile leaves Escape to `ModalSheet`.
+  useDismissCalendarOnEscape(isDesktopOpen, containerRef, close);
 
   const triggerLabel = t("shared:calendar.chooseRange");
   const startLabel = t("shared:calendar.startDate");
@@ -170,30 +155,18 @@ export function RangeDatePicker({
           size={size}
         />
       </div>
-      <button
-        ref={triggerRef}
+      <DatePickerTriggerButtons
+        triggerRef={triggerRef}
         id={id}
-        type="button"
-        className={styles.trigger}
         disabled={disabled}
-        aria-haspopup="dialog"
-        aria-expanded={open}
-        aria-controls={open ? popoverId : undefined}
-        aria-label={triggerLabel}
-        onClick={() => setOpen((wasOpen) => !wasOpen)}
-      >
-        <FiCalendar aria-hidden />
-      </button>
-      {canClear && (
-        <button
-          type="button"
-          className={styles.clear}
-          aria-label={t("shared:calendar.clear")}
-          onClick={() => onChange({ start: null, end: null })}
-        >
-          <FiX aria-hidden />
-        </button>
-      )}
+        isOpen={open}
+        popoverId={popoverId}
+        triggerLabel={triggerLabel}
+        icon={FiCalendar}
+        onToggle={() => setOpen((wasOpen) => !wasOpen)}
+        canClear={canClear}
+        onClear={() => onChange({ start: null, end: null })}
+      />
       {open && isMobile && (
         <ModalSheet onClose={close} ariaLabel={triggerLabel}>
           <RangeCalendar

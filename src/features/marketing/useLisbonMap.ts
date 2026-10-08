@@ -65,6 +65,9 @@ interface UseLisbonMapOptions {
   /** Which pin style the markers draw in. Read once, when the marker manager
    *  is created, so a later change needs a remount. Defaults to "teardrop". */
   pinStyle?: PinStyle;
+  /** Parishes to shade apart from the selection (the ones a hovered
+   *  "Across Lisbon" card covers). Defaults to none. */
+  highlightedFreguesias?: readonly string[];
 }
 
 export type MapPanelEdge = "right" | "bottom";
@@ -251,6 +254,8 @@ function useCameraPadding({
   ]);
 }
 
+const NO_HIGHLIGHTED_FREGUESIAS: readonly string[] = [];
+
 export function useLisbonMap({
   venues,
   selectedFreguesia,
@@ -268,6 +273,7 @@ export function useLisbonMap({
   redrawHandleRef,
   parishLabelAnchor = "center",
   pinStyle = "teardrop",
+  highlightedFreguesias = NO_HIGHLIGHTED_FREGUESIAS,
 }: UseLisbonMapOptions) {
   const overlayRef = useRef<FreguesiaOverlay | null>(null);
   const markerManagerRef = useRef<VenueMarkerManager | null>(null);
@@ -397,6 +403,16 @@ export function useLisbonMap({
     if (!ready) return;
     overlayRef.current?.setCounts(counts);
   }, [counts, ready]);
+
+  // Shade the parishes a hovered "Across Lisbon" card covers. Keyed on the
+  // names alone, so a new array with the same parishes repaints nothing.
+  const highlightSignature = highlightedFreguesias.join("|");
+  useEffect(() => {
+    if (!ready) return;
+    overlayRef.current?.setHighlighted(
+      new Set(highlightSignature ? highlightSignature.split("|") : []),
+    );
+  }, [highlightSignature, ready]);
 
   // Reflect the selected parish highlight and ease the camera to it (back to
   // the full city when cleared).

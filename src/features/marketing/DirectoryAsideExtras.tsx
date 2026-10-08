@@ -28,7 +28,13 @@ export function DirectoryAsideExtras({ place, preview }: Props) {
     <>
       {place.upcoming && place.upcoming.length > 0 && (
         <div className={s.sideCard}>
-          <h4>{t("marketing:directory.detail.upcomingHere")}</h4>
+          <h4>
+            {t(
+              place.upcoming.every((event) => event.role === "runBy")
+                ? "marketing:directory.detail.upcomingRunBy"
+                : "marketing:directory.detail.upcomingHere",
+            )}
+          </h4>
           <DirectoryUpcoming
             upcoming={place.upcoming}
             placeName={place.name}

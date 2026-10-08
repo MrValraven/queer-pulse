@@ -273,8 +273,8 @@ export const JOBS: Job[] = [
     seniority: "anyLevel",
     qr: true,
     qrLabel: "Community org",
-    organization: "Opus Diversus",
-    logo: "OD",
+    organization: "Maré Lilás",
+    logo: "ML",
     logoBg: "rgba(var(--jade-rgb),.12)",
     logoText: "var(--jade)",
     title: "Peer Support Facilitator",
@@ -289,7 +289,7 @@ export const JOBS: Job[] = [
       category: "Care",
       posted: new Date(2026, 5, 2),
       about: [
-        "Opus Diversus runs peer support groups for LGBTQ+ people across Lisbon, and we are looking for a part-time facilitator to hold a regular weekly group and a few one-off sessions. This is care work, and we treat it as such: with supervision, boundaries, and support for you.",
+        "Maré Lilás runs peer support groups for LGBTQ+ people across Lisbon, and we are looking for a part-time facilitator to hold a regular weekly group and a few one-off sessions. This is care work, and we treat it as such: with supervision, boundaries, and support for you.",
         "We hire for lived experience and the ability to hold a room, above a clinical CV. Training is provided, and you will never run a group alone before you are ready.",
       ],
       dayToDay: [
@@ -311,7 +311,7 @@ export const JOBS: Job[] = [
         "Flexible scheduling around fixed group times",
       ],
       aboutCompany:
-        "Opus Diversus is a Lisbon community organisation providing peer support, mental-health navigation, and advocacy for LGBTQ+ people.",
+        "Maré Lilás is a Lisbon community organisation providing peer support, mental-health navigation, and advocacy for LGBTQ+ people.",
       reviewerNote:
         "We read every application ourselves and reply to all of them, usually within a week.",
     },
@@ -404,10 +404,10 @@ export const EMPLOYERS = [
     badgeText: "var(--violet)",
   },
   {
-    logo: "OD",
+    logo: "ML",
     background: "rgba(var(--plum-rgb),.08)",
     text: "var(--plum)",
-    name: "Opus Diversus",
+    name: "Maré Lilás",
     type: "Mental health · Lisbon",
     qr: false,
     badge: "Community org",

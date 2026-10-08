@@ -1,6 +1,8 @@
 import { useId } from "react";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { type PhotoKey } from "./listBusiness.data";
+import { listingKindOf } from "./listingMobile.data";
+import { PHOTO_CAPTION_KEYS } from "./listingPhotoCaptions.data";
 import type { ListingForm } from "./useListingForm";
 import { ListingPhotoField } from "./ListingPhotoField";
 import styles from "./ListBusinessPage.module.css";
@@ -16,9 +18,6 @@ const GALLERY: {
   /** Overrides `height` with a fluid frame of this ratio. */
   aspectRatio?: string;
   wide?: boolean;
-  captionKey: string;
-  /** The caption an online-only listing reads: a product, a workspace. */
-  onlineCaptionKey: string;
   /** Standing note above the frame; only the cover slot carries one. */
   noteKey?: string;
 }[] = [
@@ -27,8 +26,6 @@ const GALLERY: {
     height: 150,
     aspectRatio: CARD_COVER_ASPECT,
     wide: true,
-    captionKey: "marketing:listBusiness.step4.gallery.wide",
-    onlineCaptionKey: "marketing:listBusiness.step4.gallery.wideOnline",
     // The wide shot IS the directory cover: the backend's `coverPhoto` is the
     // first entry of the ordered gallery, and this slot writes it. Say so here
     // rather than leaving owners to discover it from the live grid.
@@ -37,20 +34,14 @@ const GALLERY: {
   {
     key: "d1",
     height: 110,
-    captionKey: "marketing:listBusiness.step4.gallery.detail",
-    onlineCaptionKey: "marketing:listBusiness.step4.gallery.detailOnline",
   },
   {
     key: "d2",
     height: 110,
-    captionKey: "marketing:listBusiness.step4.gallery.detail",
-    onlineCaptionKey: "marketing:listBusiness.step4.gallery.detailOnline",
   },
   {
     key: "vibe",
     height: 110,
-    captionKey: "marketing:listBusiness.step4.gallery.vibe",
-    onlineCaptionKey: "marketing:listBusiness.step4.gallery.vibeOnline",
   },
 ];
 
@@ -73,6 +64,7 @@ export function ListingPhotoGallery({ form }: { form: ListingForm }) {
     setPhotoPreview,
     setAlt,
   } = form;
+  const kind = listingKindOf(draft);
 
   return (
     <>
@@ -83,9 +75,7 @@ export function ListingPhotoGallery({ form }: { form: ListingForm }) {
             height={slot.height}
             aspectRatio={slot.aspectRatio}
             wide={slot.wide}
-            placeholder={t(
-              draft.online ? slot.onlineCaptionKey : slot.captionKey,
-            )}
+            placeholder={t(PHOTO_CAPTION_KEYS[slot.key][kind])}
             note={slot.noteKey ? t(slot.noteKey) : undefined}
             displayValue={photoPreviews[slot.key] || draft.photos[slot.key]}
             persistedValue={draft.photos[slot.key]}
@@ -113,7 +103,11 @@ export function ListingPhotoGallery({ form }: { form: ListingForm }) {
           return (
             <div key={slot.key} className={styles.altRow}>
               <label className={styles.altK} htmlFor={`${fieldId}-${slot.key}`}>
-                {t(ALT_LABEL_KEYS[slot.key])}
+                {kind === "mobile"
+                  ? t("marketing:listBusiness.step4.alt.forCaption", {
+                      caption: t(PHOTO_CAPTION_KEYS[slot.key][kind]),
+                    })
+                  : t(ALT_LABEL_KEYS[slot.key])}
                 {hasPhoto && (
                   <span className={styles.altReq} aria-hidden>
                     {" *"}

@@ -6,50 +6,56 @@ import { IconButton } from "../../../shared/components/ui";
 import { useFormat } from "../../../shared/i18n/format";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { AttendeeRow } from "../api/events.adapters";
-import { AttendeeNeeds } from "../AttendeeNeeds";
 import { EASE, keepOnFrameLoop } from "./checkinMotion";
 import styles from "./CheckinGuestRow.module.css";
 import chipStyles from "./CheckinGuestRowChip.module.css";
+import { CheckinGuestPhoto } from "./CheckinGuestPhoto";
 import { useArrivalFlash } from "./useArrivalFlash";
+
+/** The avatar's size in the row, in CSS pixels (see `.avatar`). */
+const ROW_PHOTO_SIZE = 38;
 
 interface CheckinGuestRowProps {
   attendee: AttendeeRow;
   isPending: boolean;
   /** False once this gathering is past its attendance window. */
   canCheckIn: boolean;
-  /** The host's own RSVP question, which labels this guest's answer. */
-  customRsvpQuestion?: string | null;
   onCheckIn: (memberSlug: string) => void;
   onUndo: (memberSlug: string) => void;
+  /** Opens the guest's details, where the host confirms who they are. */
+  onShowDetails: (memberSlug: string) => void;
 }
 
 /**
  * One guest on the Check-in tab.
  *
- * Before arrival the whole row is the check-in target: a full-size button
- * sits over it, so a host with a queue in front of them can hit the name, the
- * avatar or the pill. The DOM under that button stays the same before and
- * after the tap, which is what lets the right-hand slot crossfade from the
- * "Check in" pill to the "Arrived" chip in place.
+ * The whole row opens the guest's details: a full-size button sits over it,
+ * so a tap on the photo or the name brings up the larger photo and their
+ * answers, where the host confirms it is them before checking them in. The
+ * "Check in" pill and the undo button sit above that row button, so a host
+ * who already knows the guest checks them in straight from the list. The DOM
+ * under the row button stays the same before and after a check-in, which is
+ * what lets the right-hand slot crossfade from the pill to the "Arrived" chip
+ * in place.
  *
- * Once the attendance window has closed the row stops being a button and the
- * pill goes away, because the server refuses the write. Undo stays on an
- * arrived row: it removes a stamp and the endpoint keeps honouring it.
+ * Once the attendance window has closed the pill goes away, because the
+ * server refuses the write, and the row still opens the details. Undo stays
+ * on an arrived row: it removes a stamp and the endpoint keeps honouring it.
  */
 export function CheckinGuestRow({
   attendee,
   isPending,
   canCheckIn,
-  customRsvpQuestion,
   onCheckIn,
   onUndo,
+  onShowDetails,
 }: CheckinGuestRowProps) {
   const { t } = useTranslation();
   const format = useFormat();
   const { reducedMotion } = useMotionPrefs();
   const arrivedAt = attendee.checkedInAt ?? null;
   const isFlashing = useArrivalFlash(arrivedAt ? arrivedAt.getTime() : null);
-  const isTappable = !arrivedAt && canCheckIn;
+  const canCheckInHere = !arrivedAt && canCheckIn;
   const guestCount = attendee.guestCount ?? 0;
   const hasAccessNeeds = Boolean(attendee.accessNeeds?.trim());
   const hasMeta = Boolean(attendee.pronouns) || guestCount > 0;
@@ -68,23 +74,20 @@ export function CheckinGuestRow({
 
   return (
     <div className={rowClassName} data-pending={isPending || undefined}>
-      {isTappable && (
-        <button
-          type="button"
-          className={styles.rowHit}
-          data-checkin-slug={attendee.slug}
-          aria-label={t("gatherings:door.checkInAria", { name: attendee.name })}
-          disabled={isPending}
-          onClick={() => onCheckIn(attendee.slug)}
-        />
-      )}
-      <span
+      <button
+        type="button"
+        className={styles.rowHit}
+        data-guest-details-slug={attendee.slug}
+        aria-label={t("gatherings:checkin.row.detailsAria", {
+          name: attendee.name,
+        })}
+        onClick={() => onShowDetails(attendee.slug)}
+      />
+      <CheckinGuestPhoto
+        attendee={attendee}
+        size={ROW_PHOTO_SIZE}
         className={styles.avatar}
-        style={{ background: attendee.background, color: attendee.color }}
-        aria-hidden
-      >
-        {attendee.initials}
-      </span>
+      />
       <div className={styles.info}>
         <span className={styles.name}>{attendee.name}</span>
         {hasMeta && (
@@ -103,11 +106,6 @@ export function CheckinGuestRow({
             {t("gatherings:checkin.row.accessNeeds")}
           </span>
         )}
-        <AttendeeNeeds
-          attendee={attendee}
-          customQuestion={customRsvpQuestion}
-          shouldShowGuestCount={false}
-        />
       </div>
       {/* Pill and chip share one grid cell and crossfade in place, so the
           row's height never changes and nothing moves past its edge. */}
@@ -153,22 +151,30 @@ export function CheckinGuestRow({
                 <FiRotateCcw aria-hidden />
               </IconButton>
             </m.span>
-          ) : isTappable ? (
+          ) : canCheckInHere ? (
             <m.span
               key="pill"
               className={styles.swapItem}
               onUpdate={keepOnFrameLoop}
-              aria-hidden
               initial={swapInitial}
               animate={{ opacity: 1 }}
               exit={swapExit}
               transition={swapTransition}
             >
-              {/* The visible pill sits inside the motion wrapper, so its
-                  pending dim is not overridden by the swap's opacity. */}
-              <span className={styles.pill}>
+              {/* The pill sits inside the motion wrapper, so its pending dim
+                  is not overridden by the swap's opacity. */}
+              <button
+                type="button"
+                className={styles.pill}
+                data-checkin-slug={attendee.slug}
+                aria-label={t("gatherings:door.checkInAria", {
+                  name: attendee.name,
+                })}
+                disabled={isPending}
+                onClick={() => onCheckIn(attendee.slug)}
+              >
                 {t("gatherings:door.checkInCta")}
-              </span>
+              </button>
             </m.span>
           ) : null}
         </AnimatePresence>

@@ -7,6 +7,7 @@ import {
   normalizeAccessibilityDraft,
   type AccessibilityAnswer,
 } from "../../listingAccessibility.data";
+import { listingKindOf } from "../../listingMobile.data";
 import type { ListingServiceOffering } from "../../listingServices.data";
 import {
   DIFF_KEY_PREFIX,
@@ -38,19 +39,19 @@ export function accessibilityRows(
   const after = normalizeAccessibilityDraft(context.saved.accessibility);
   const answerLabel = (answer: AccessibilityAnswer) =>
     t(ACCESSIBILITY_ANSWER_BY_ID[answer].ownerKey);
-  const isOnlineBefore = context.current.online;
-  const isOnlineAfter = context.saved.online;
   // A kind switch between the two sides lists both sets, so no changed answer
-  // goes unlisted.
-  const questions =
-    isOnlineBefore && isOnlineAfter
-      ? accessibilityQuestionsFor(true)
-      : isOnlineBefore || isOnlineAfter
-        ? [
-            ...accessibilityQuestionsFor(false),
-            ...accessibilityQuestionsFor(true),
-          ]
-        : accessibilityQuestionsFor(false);
+  // goes unlisted. Place and out-and-about share slugs, so a slug both sets
+  // ask keeps one row, worded as the screen's kind words it.
+  const questionsBefore = accessibilityQuestionsFor(
+    listingKindOf(context.current),
+  );
+  const slugsBefore = new Set(questionsBefore.map((question) => question.slug));
+  const questions = [
+    ...questionsBefore,
+    ...accessibilityQuestionsFor(listingKindOf(context.saved)).filter(
+      (question) => !slugsBefore.has(question.slug),
+    ),
+  ];
   const rows = questions.flatMap((question) => {
     const beforeAnswer = listingAnswerOf(before.answers, question.slug);
     const afterAnswer = listingAnswerOf(after.answers, question.slug);

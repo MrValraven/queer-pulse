@@ -53,17 +53,22 @@
   min-width: 0;
 }
 
-/* The summary is the disclosure button itself: a bare, full-width button that
-   keeps the row's avatar-and-text layout, so the whole header is the target. */
+/* The summary keeps the row's avatar-and-text layout. It is the positioning
+   box for the toggle's overlay below, so the whole header stays the target. */
 .summary {
+  position: relative;
   display: flex;
   align-items: flex-start;
   gap: 16px;
-  width: 100%;
+}
+
+/* The disclosure button wraps only the applicant's name, stripped of button
+   chrome so the name reads as before. Its overlay stretches across the whole
+   summary, so a click anywhere in the header opens the row. */
+.summaryToggle {
   margin: 0;
   padding: 0;
   border: 0;
-  border-radius: var(--radius-14);
   background: none;
   font: inherit;
   color: inherit;
@@ -71,7 +76,22 @@
   cursor: pointer;
 }
 
-.summary:focus-visible {
+.summaryToggle::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-14);
+}
+
+/* The focus ring draws on the overlay, so it frames the whole header the way
+   it did when the header was the button. The name itself drops base.css's
+   global ring and its cream halo, or a second ring would box the name. */
+.summaryToggle:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+.summaryToggle:focus-visible::after {
   outline: var(--focus-ring);
   outline-offset: var(--focus-ring-offset);
   box-shadow: var(--ring-cream);
@@ -85,10 +105,44 @@
   gap: 8px;
 }
 
-/* Spans inside a button are inline by default, which would drop the row
-   family's top margins on the email and dates lines. */
+/* The dates line is a span, inline by default, which would drop the row
+   family's top margin on it. */
 .summaryLine {
   display: block;
+}
+
+/* The email and its copy button on one line. A long address wraps anywhere,
+   so it stays inside the row on a phone. */
+.emailLine {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+}
+
+.emailText {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+/* The one control in the summary sits above the toggle's overlay, so a press
+   on it copies and leaves the row as it was. It keeps IconButton's 44px tap
+   target, and the negative block margins stop that box from making the email
+   line taller. The inline-start pull brings the glyph close to the address. */
+.emailLine .copyEmail {
+  position: relative;
+  z-index: 1;
+  flex: none;
+  margin-block: -12px;
+  margin-inline-start: -10px;
+  color: var(--ink-60);
+}
+
+@media (hover: hover) {
+  .emailLine .copyEmail:hover:not(:disabled):not([aria-disabled="true"]) {
+    background: none;
+    color: var(--text-strong);
+  }
 }
 
 /* An approval from before reasons were asked for: an absence, so it reads
@@ -111,12 +165,14 @@
   transition-timing-function: var(--ease);
 }
 
-.summary[aria-expanded="true"] .chevron {
+.summary[data-open="true"] .chevron {
   transform: rotate(180deg);
 }
 
 @media (hover: hover) {
-  .summary:hover .chevron {
+  /* The copy button sits inside the header, so hovering it would otherwise
+     light the chevron as though the press would open the row. */
+  .summary:hover:not(:has(.copyEmail:hover)) .chevron {
     color: var(--text-strong);
   }
 }

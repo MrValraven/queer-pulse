@@ -1582,6 +1582,9 @@ export const marketing: Catalog = {
   "listBusiness.step0.whereFound.online.title": "Só online",
   "listBusiness.step0.whereFound.online.desc":
     "As pessoas compram, marcam ou acompanham através de um site, de uma loja online ou das redes.",
+  "listBusiness.step0.whereFound.mobile.title": "Itinerante",
+  "listBusiness.step0.whereFound.mobile.desc":
+    "Visitas guiadas, cabeleireiros ao domicílio, fotógrafos, mudanças: encontras as pessoas num sítio ou vais ter com elas.",
   // Passo 1 — básico
   "listBusiness.step1.title": "Começa com",
   "listBusiness.step1.em": "o básico.",
@@ -1600,12 +1603,31 @@ export const marketing: Catalog = {
   "listBusiness.step1.hoodPlaceholder": "Escolhe um bairro de Lisboa…",
   "listBusiness.step1.catsLabelOnline":
     "O que vendes ou ofereces? Escolhe até 2",
+  "listBusiness.step1.catsLabelMobile": "O que fazes? Escolhe até 2",
   "listBusiness.step1.cityLabel": "Com base em",
   "listBusiness.step1.cityHelper":
     "Opcional. A cidade a partir da qual trabalhas. O teu cartão mostra-a a seguir a Online.",
   "listBusiness.step1.cityPlaceholder": "p. ex. Porto",
   "listBusiness.step1.onlineToggle.sub":
     "Sem morada nem horário. As pessoas compram ou marcam através dos teus links.",
+  "listBusiness.step1.kindChoice.helper":
+    "Mudar guarda o que escreveste para as outras respostas, por isso podes voltar atrás.",
+  "listBusiness.step1.whereYouWork.label": "Onde trabalhas",
+  "listBusiness.step1.whereYouWork.helper":
+    "Toda a Lisboa, ou só as freguesias onde trabalhas.",
+  "listBusiness.step1.whereYouWork.aria": "Que parte de Lisboa cobres",
+  "listBusiness.step1.whereYouWork.allOfCity": "Toda a Lisboa",
+  "listBusiness.step1.whereYouWork.someParishes": "Algumas freguesias",
+  "listBusiness.step1.whereYouWork.parishesLabel": "Freguesias onde trabalhas",
+  "listBusiness.step1.whereYouWork.parishesPlaceholder":
+    "Escreve uma freguesia",
+  "listBusiness.step1.whereYouWork.parishRemove": "Remover {tag}",
+  "listBusiness.step1.whereYouWork.parishNoMatch":
+    "Nenhuma freguesia chamada {query}",
+  "listBusiness.step1.alsoTravelsTo.label": "Também te deslocas a",
+  "listBusiness.step1.alsoTravelsTo.helper":
+    "Opcional. Concelhos perto de Lisboa onde também vais.",
+  "listBusiness.step1.alsoTravelsTo.aria": "Concelhos onde também vais",
   "listBusiness.step1.adultTerms.title": "Aceito as regras para 18+",
   "listBusiness.step1.adultTerms.sub":
     "O QueerPulse lista produtos e conteúdos. Não são permitidos serviços sexuais, e as fotos da tua página têm de ser seguras para ver em público.",
@@ -1636,6 +1658,8 @@ export const marketing: Catalog = {
     "É o texto do teu cartão no diretório. Uma frase, simples e calorosa.",
   "listBusiness.step1.blurbPlaceholder":
     "Uma pastelaria queer de dia, espaço da comunidade à noite.",
+  "listBusiness.step1.blurbPlaceholderMobile":
+    "Passeios a pé, sem pressa, pela Lisboa queer, em português e inglês.",
   // Categorias
   // Escalões de preço
   "listBusiness.price.free": "Gratuito",
@@ -1652,11 +1676,17 @@ export const marketing: Catalog = {
     "Uma única linha, mostrada em grande e em itálico no topo da tua página. <em>Faz dela o coração do que fazes.</em>",
   "listBusiness.step2.taglinePlaceholder":
     "Ninguém é tratado no género errado. A sala das traseiras é sempre tua.",
+  "listBusiness.step2.taglinePlaceholderMobile":
+    "Ninguém é tratado no género errado. Vem como és e anda ao teu ritmo.",
   "listBusiness.step2.descriptionLabel": "Descrição",
   "listBusiness.step2.descriptionHelper":
     "O que alguém de fora devia saber antes de entrar ou encomendar. Usa a barra de ferramentas para negrito, listas e links.",
+  "listBusiness.step2.descriptionHelperMobile":
+    "O que alguém de fora devia saber antes de marcar ou participar. Usa a barra de ferramentas para negrito, listas e links.",
   "listBusiness.step2.descriptionPlaceholder":
     "ex.: Um café de bairro com galão, pastéis e dois pratos do dia.",
+  "listBusiness.step2.descriptionPlaceholderMobile":
+    "ex.: Passeios de duas horas pela Mouraria e por Alfama, com histórias de quem as viveu.",
   "listBusiness.step2.descriptionHint":
     "Deixa uma linha em branco para começar um novo parágrafo.",
   "listBusiness.step2.tagsLabel":
@@ -1803,6 +1833,8 @@ export const marketing: Catalog = {
     "Uma nota curta sobre o horário (opcional)",
   "listBusiness.step3.hoursNotePlaceholder":
     "Fechado à segunda. A sala das traseiras reserva-se à parte.",
+  "listBusiness.step3.hoursNotePlaceholderMobile":
+    "Folga à segunda. Os grupos privados marcam-se à parte.",
   "listBusiness.step3.onlineHeading": "Encontrar-te online",
   "listBusiness.step3.onlineHeadingOnline": "Outras formas de te contactar",
   "listBusiness.step3.onlineHint":
@@ -1904,6 +1936,15 @@ export const marketing: Catalog = {
   "listBusiness.online.alsoSells.sub":
     "Acrescenta o link da loja e como se encomenda. O teu cartão ganha a etiqueta Também online.",
   "listBusiness.online.alsoSells.heading": "Vender online",
+  "listBusiness.step3.meetingPoint.title":
+    "As pessoas encontram-nos num sítio combinado",
+  "listBusiness.step3.meetingPoint.sub":
+    "Deixa desligado se vais ter com as pessoas. A tua página não mostra mapa nem morada.",
+  "listBusiness.step3.meetingPoint.note":
+    "Fica visível para toda a gente. Escolhe um sítio público, como uma praça ou a porta de um café.",
+  "listBusiness.step3.byAppointment.title": "Só por marcação",
+  "listBusiness.step3.byAppointment.sub":
+    "Sem horário fixo. As pessoas contactam-te para marcar.",
   "listBusiness.social.instagram.placeholder": "Instagram · @nome",
   "listBusiness.social.website.placeholder": "Site · oteulugar.pt",
   "listBusiness.social.website.err": "Isso não parece um endereço web.",
@@ -1934,16 +1975,26 @@ export const marketing: Catalog = {
   "listBusiness.step4.gallery.vibe": "Pessoas / ambiente",
   "listBusiness.step4.subOnline":
     "As fotos ajudam as pessoas a ver o que fazes antes de comprarem. E gostamos de saber quem está por trás.",
+  "listBusiness.step4.subMobile":
+    "As fotos ajudam as pessoas a imaginar o que fazes e quem vão conhecer. E gostamos de saber quem está por trás.",
   "listBusiness.step4.photosHelperOnline":
     "A primeira foto é a capa do teu cartão no diretório. Os teus produtos, o teu espaço de trabalho ou o teu logótipo, tudo serve. O formato horizontal resulta melhor, até 5MB cada.",
+  "listBusiness.step4.photosHelperMobile":
+    "A primeira foto é a capa do teu cartão no diretório. Tu a trabalhar ou o ponto de encontro, qualquer um serve. O formato horizontal resulta melhor, até 5MB cada.",
   "listBusiness.step4.gallery.wideOnline":
     "Os teus produtos, o teu espaço de trabalho ou o teu logótipo",
+  "listBusiness.step4.gallery.wideMobile":
+    "Tu a trabalhar, ou o ponto de encontro",
   "listBusiness.step4.gallery.detailOnline": "Um produto de perto",
+  "listBusiness.step4.gallery.detailMobile": "O teu trabalho de perto",
+  "listBusiness.step4.gallery.detail2Mobile": "Outro momento do teu trabalho",
   "listBusiness.step4.gallery.vibeOnline": "Tu a trabalhar",
+  "listBusiness.step4.gallery.vibeMobile": "As pessoas no dia",
   "listBusiness.step4.alt.wide": "Plano geral · texto alternativo",
   "listBusiness.step4.alt.d1": "Detalhe 1 · texto alternativo",
   "listBusiness.step4.alt.d2": "Detalhe 2 · texto alternativo",
   "listBusiness.step4.alt.vibe": "Ambiente · texto alternativo",
+  "listBusiness.step4.alt.forCaption": "{caption} · texto alternativo",
   "listBusiness.step4.altPlaceholder":
     "Descreve para quem é cega ou tem baixa visão",
   "listBusiness.step4.altPlaceholderRequired":
@@ -2003,6 +2054,8 @@ export const marketing: Catalog = {
     "As fotos ajudam as pessoas a imaginar o sítio antes de irem. Partilha as que tiveres, e o negócio pode juntar as suas mais tarde.",
   "listBusiness.step4.suggest.subOnline":
     "As fotos ajudam as pessoas a imaginar o que vão receber. Partilha as que tiveres, e o negócio pode juntar as suas mais tarde.",
+  "listBusiness.step4.suggest.subMobile":
+    "As fotos ajudam as pessoas a imaginar o trabalho e quem vão conhecer. Partilha as que tiveres, e o negócio pode juntar as suas mais tarde.",
   // Opções de ligação
   "listBusiness.ownerRole.owner": "Dono/a",
   "listBusiness.ownerRole.coOwner": "Codono/a",
@@ -2073,6 +2126,9 @@ export const marketing: Catalog = {
   "listBusiness.step5.row.sessions": "Formatos das sessões",
   "listBusiness.step5.row.replyNote": "Respostas e envios",
   "listBusiness.step5.row.alsoOnline": "Também vende online",
+  "listBusiness.step5.row.whereYouWork": "Onde trabalhas",
+  "listBusiness.step5.row.meetingPoint": "Ponto de encontro",
+  "listBusiness.step5.meetingPoint.none": "Sem sítio fixo",
   "listBusiness.step5.row.you": "Tu",
   "listBusiness.step5.row.nameShown": "Nome mostrado",
   "listBusiness.step5.listingAs.claim": "Sou eu que giro este negócio",
@@ -2165,6 +2221,8 @@ export const marketing: Catalog = {
     "um endereço web que funcione no link do teu menu",
   "listBusiness.missing.affirmingBaseline": "o compromisso afirmativo",
   "listBusiness.missing.whereFound": "onde as pessoas o encontram",
+  "listBusiness.missing.parishes": "as freguesias onde trabalhas",
+  "listBusiness.missing.hoursOrAppointment": 'o horário ou "só por marcação"',
   "listBusiness.missing.catsOffered": "uma categoria desta lista",
   "listBusiness.missing.adultTerms": "as regras 18+ aceites",
   "listBusiness.missing.mainLink": "um link principal",
@@ -2333,6 +2391,18 @@ export const marketing: Catalog = {
     "Online, a página deixa o horário de fora, por isso esta nota não aparece por agora.",
   "listBusiness.livePreview.caption.hoursExceptionsOnline":
     "As listagens online não mostram datas especiais.",
+  "listBusiness.livePreview.caption.whereYouWork":
+    "O teu cartão diz onde trabalhas. A tua página mostra-o em Onde trabalha.",
+  "listBusiness.livePreview.caption.whereYouWorkPage":
+    "A tua página mostra onde trabalhas em Onde trabalha. O teu cartão indica o ponto de encontro.",
+  "listBusiness.livePreview.caption.meetingPoint":
+    "O teu cartão diz onde as pessoas te encontram, e a tua página mostra o sítio num mapa.",
+  "listBusiness.livePreview.caption.meetingPointOff":
+    "Sem ponto de encontro, a tua página não mostra mapa nem morada.",
+  "listBusiness.livePreview.caption.byAppointment":
+    "O teu cartão diz Por marcação, e a tua página mostra-o onde ficaria o horário.",
+  "listBusiness.livePreview.caption.hoursByAppointment":
+    "Só por marcação está ligado, por isso a tua página não mostra horário.",
   "listBusiness.livePreview.placeholder.ownerRoleMode":
     "O teu papel vai aparecer aqui.",
   // Modal de pré-visualização da página completa
@@ -2395,6 +2465,7 @@ export const marketing: Catalog = {
   "listBusiness.editor.section.practicalOnline": "Como te compram",
   "listBusiness.editor.section.accessibilityOnline": "Acesso online",
   "listBusiness.editor.section.accessibility": "Como se entra",
+  "listBusiness.editor.section.accessibilityMobile": "Como se participa",
   "listBusiness.editor.section.tradingAndVisibility":
     "Atividade e visibilidade",
   "listBusiness.editor.section.whoCanEdit": "Quem pode editar",
@@ -2487,6 +2558,8 @@ export const marketing: Catalog = {
     "a opção de também vender online",
   "listBusiness.editor.history.field.onlineDetails": "como te compram",
   "listBusiness.editor.history.field.shopItems": "os artigos da loja",
+  "listBusiness.editor.history.field.mobile": "o modo itinerante",
+  "listBusiness.editor.history.field.mobileDetails": "onde trabalha",
   "listBusiness.editor.history.field.contactEmail": "o email de contacto",
   "listBusiness.editor.history.field.consentOuting":
     "a confirmação de anúncio público",
@@ -2662,10 +2735,18 @@ export const marketing: Catalog = {
   "listBusiness.accessibility.question.stepFree.label": "Entrada sem degraus",
   "listBusiness.accessibility.question.stepFree.help":
     "Dá para chegar da rua à porta sem subir degraus.",
+  "listBusiness.accessibility.question.stepFree.labelMobile":
+    "Sem degraus do início ao fim",
+  "listBusiness.accessibility.question.stepFree.helpMobile":
+    "Sem degraus no ponto de encontro, no local de trabalho ou ao longo do percurso.",
   "listBusiness.accessibility.question.interior.label":
     "Interior acessível em cadeira de rodas",
   "listBusiness.accessibility.question.interior.help":
     "Há espaço para circular e chegar à zona principal em cadeira de rodas.",
+  "listBusiness.accessibility.question.interior.labelMobile":
+    "Pessoas em cadeira de rodas podem participar em tudo",
+  "listBusiness.accessibility.question.interior.helpMobile":
+    "Alguém em cadeira de rodas pode participar do início ao fim.",
   "listBusiness.accessibility.question.accessibleToilet.label":
     "Casa de banho acessível",
   "listBusiness.accessibility.question.accessibleToilet.help":
@@ -2678,12 +2759,20 @@ export const marketing: Catalog = {
     "Horas calmas, de baixo estímulo",
   "listBusiness.accessibility.question.quietHours.help":
     "Horários regulares com a música baixa e as luzes suaves.",
+  "listBusiness.accessibility.question.quietHours.labelMobile":
+    "Opção calma, de baixo estímulo",
+  "listBusiness.accessibility.question.quietHours.helpMobile":
+    "Um horário mais calmo ou uma versão mais sossegada que se pode pedir.",
   "listBusiness.accessibility.question.assistanceAnimals.label":
     "Animais de assistência bem-vindos",
   "listBusiness.accessibility.question.assistanceAnimals.help":
     "Cães-guia e outros animais de assistência podem entrar. A política sobre animais de companhia é uma pergunta à parte.",
+  "listBusiness.accessibility.question.assistanceAnimals.helpMobile":
+    "Cães-guia e outros animais de assistência podem vir também.",
   "listBusiness.accessibility.introOnline":
     "Quatro perguntas sobre a facilidade de te comprar ou participar. Responde ao que souberes.",
+  "listBusiness.accessibility.introMobile":
+    "Quatro perguntas que alguém pode precisar de ver respondidas antes de decidir se consegue participar. Responde ao que souberes.",
   "listBusiness.accessibility.question.imageDescriptions.label":
     "Descrições das imagens dos produtos",
   "listBusiness.accessibility.question.imageDescriptions.help":
@@ -2715,16 +2804,22 @@ export const marketing: Catalog = {
     "Um não honesto é útil. Quem anda em cadeira de rodas prefere muito mais ler que há dois degraus à tua porta do que aparecer e descobrir na hora. Nada disto conta contra o teu anúncio.",
   "listBusiness.accessibility.reassuranceOnline":
     "Um não honesto é útil. Quem depende de legendas prefere muito mais ler que uma aula não as tem do que se inscrever e descobrir na hora. Nada disto conta contra o teu anúncio.",
+  "listBusiness.accessibility.reassuranceMobile":
+    "Um não honesto é útil. Quem anda em cadeira de rodas prefere muito mais ler que o percurso tem degraus do que aparecer e descobrir na hora. Nada disto conta contra o teu anúncio.",
   "listBusiness.accessibility.noteLabel":
     "Mais alguma coisa que valha a pena saber",
   "listBusiness.accessibility.noteHint":
     "Os detalhes que uma lista de verificação não segura. Diz o que uma pessoa vai mesmo encontrar à porta.",
   "listBusiness.accessibility.noteHintOnline":
     "Os detalhes que uma lista de verificação não segura. Diz o que uma pessoa vai mesmo encontrar quando te compra algo ou participa.",
+  "listBusiness.accessibility.noteHintMobile":
+    "Os detalhes que uma lista de verificação não segura. Diz o que uma pessoa vai mesmo encontrar no dia.",
   "listBusiness.accessibility.notePlaceholder":
     "Dois degraus à porta da frente e a equipa ajuda com a rampa. Toca à campainha da esquerda.",
   "listBusiness.accessibility.notePlaceholderOnline":
     "Todas as fotos dos produtos têm descrição e as aulas ao vivo têm legendas. Os tamanhos vão do XS ao 4XL.",
+  "listBusiness.accessibility.notePlaceholderMobile":
+    "O passeio sobe duas colinas íngremes e fazemos uma pausa para sentar a meio. O ponto de encontro não tem degraus.",
 
   // ── Serviços com preço, do lado de quem gere.
   "listBusiness.services.intro":
@@ -3007,6 +3102,11 @@ export const marketing: Catalog = {
   "listBusiness.editor.restore.diff.field.registration": "Registo profissional",
   "listBusiness.editor.restore.diff.field.replyNote": "Respostas e envios",
   "listBusiness.editor.restore.diff.field.shopItems": "Artigos da loja",
+  "listBusiness.editor.restore.diff.field.mobile": "Itinerante",
+  "listBusiness.editor.restore.diff.field.hasMeetingPoint": "Ponto de encontro",
+  "listBusiness.editor.restore.diff.field.whereYouWork": "Onde trabalhas",
+  "listBusiness.editor.restore.diff.field.alsoTravelsTo": "Também se desloca a",
+  "listBusiness.editor.restore.diff.field.byAppointment": "Só por marcação",
   "listBusiness.editor.restore.diff.field.consentOuting":
     "Confirmação de anúncio público",
   "listBusiness.editor.restore.diff.field.consentGuide":
@@ -3175,6 +3275,8 @@ export const marketing: Catalog = {
   "changelog.release.count.infrastructure_other":
     "{count} alterações de infraestrutura",
   // Release headlines, one per shipping day (see changelogReleases.ts).
+  "changelog.releases.2026-10-08.headline":
+    "Negócios sem loja já se podem listar, e editar um convívio ganhou um editor amplo e guiado.",
   "changelog.releases.2026-10-07.headline":
     "Os negócios online têm o seu próprio formulário, e fazes o check-in das pessoas na gestão.",
   "changelog.releases.2026-10-06.headline":
@@ -3553,6 +3655,50 @@ export const marketing: Catalog = {
     "Marca membros e negócios na descrição dos convívios",
   "changelog.entries.tag-people-in-gathering-descriptions.body":
     "Usa @ ou b/ ao escrever, e os membros e donos de negócios marcados recebem uma notificação de menção.",
+  "changelog.entries.edit-notified-count.title":
+    "Vê quantas pessoas uma edição avisou mesmo",
+  "changelog.entries.edit-notified-count.body":
+    "Depois de guardares, o número mostra quem foi avisado de uma nova hora ou local, e não aparece nas outras edições.",
+  "changelog.entries.copy-applicant-email.title":
+    "Copia o email de quem pediu para entrar num clique",
+  "changelog.entries.copy-applicant-email.body":
+    "Os pedidos decididos têm um botão de copiar ao lado do email, pronto a colar na mensagem com o convite.",
+  "changelog.entries.out-and-about-access-questions.title":
+    "Os negócios itinerantes têm as suas próprias perguntas de acesso",
+  "changelog.entries.out-and-about-access-questions.body":
+    "Visitas e serviços ao domicílio respondem sobre o percurso, e os cartões dos convívios mostram quem os dinamiza.",
+  "changelog.entries.no-fixed-premises-listings.title":
+    "Lista um negócio sem loja",
+  "changelog.entries.no-fixed-premises-listings.body":
+    "Visitas guiadas e serviços ao domicílio dizem onde trabalham em Lisboa, e os convívios nomeiam o negócio que os dinamiza.",
+  "changelog.entries.wider-gathering-editor.title":
+    "Edita o teu convívio num editor mais amplo e guiado",
+  "changelog.entries.wider-gathering-editor.body":
+    "Salta entre secções, vê o que mudou numa pré-visualização do cartão e recebe um aviso antes de perder alterações.",
+  "changelog.entries.date-fields-keep-your-hour.title":
+    "Os campos de data acertam as horas",
+  "changelog.entries.date-fields-keep-your-hour.body":
+    "As setas passam das 11 da manhã ao meio-dia, escrever 12 mantém os dois dígitos e o Escape fecha só o calendário.",
+  "changelog.entries.more-gathering-themes.title":
+    "Escolhe entre muitos mais temas para o teu convívio",
+  "changelog.entries.more-gathering-themes.body":
+    "Os temas cobrem agora para quem é, a língua, o acesso e o ambiente, agrupados para encontrares os três certos.",
+  "changelog.entries.checkin-guest-details.title":
+    "Vê a foto e os detalhes de cada pessoa à porta",
+  "changelog.entries.checkin-guest-details.body":
+    "Toca numa pessoa para veres a foto e as respostas ao RSVP antes de registares a entrada.",
+  "changelog.entries.listed-venue-address-open.title":
+    "Vê a morada de um espaço listado antes de confirmares",
+  "changelog.entries.listed-venue-address-open.body":
+    "Os convívios num negócio do diretório mostram a morada a toda a gente, tal como a página do negócio.",
+  "changelog.entries.smoother-checkin-moves.title":
+    "Fazer ou desfazer um check-in mexe a pessoa com suavidade",
+  "changelog.entries.smoother-checkin-moves.body":
+    "A pessoa sai de uma lista e entra na outra a dobrar, sem linhas a passar por cima umas das outras.",
+  "changelog.entries.smoother-focus-mode.title":
+    "O modo foco abre e fecha com suavidade",
+  "changelog.entries.smoother-focus-mode.body":
+    "A lista de convidados desliza entre o seu lugar na página e o ecrã inteiro, enquanto a página se esbate atrás.",
   "changelog.entries.gathering-guest-preview.title":
     "Vê o teu convívio como um convidado",
   "changelog.entries.gathering-guest-preview.body":
@@ -9438,6 +9584,8 @@ export const marketing: Catalog = {
   "directory.cat.therapy": "Saúde e terapia",
   "directory.cat.classes": "Aulas e cursos",
   "directory.cat.services": "Serviços criativos",
+  "directory.cat.tours": "Visitas e experiências",
+  "directory.cat.homeServices": "Casa e mudanças",
   "directory.cat.digital": "Tecnologia e digital",
   "directory.cat.intimacy": "Sexo e intimidade (18+)",
   "directory.loading": "A carregar lugares…",
@@ -9532,6 +9680,12 @@ export const marketing: Catalog = {
   "directory.card.visit": "Visitar",
   "directory.card.onlineIn": "Online · {city}",
   "directory.card.alsoOnline": "Também online",
+  "directory.card.meetsIn": "Ponto de encontro: {hood}",
+  "directory.card.worksAcrossLisbon": "Trabalha em toda a Lisboa",
+  "directory.card.worksInOne": "Trabalha em {first}",
+  "directory.card.worksInTwo": "Trabalha em {first}, {second}",
+  "directory.card.worksInMore": "Trabalha em {first}, {second} +{count}",
+  "directory.card.byAppointment": "Por marcação",
   "directory.card.visitLinkAria": "Visitar {name}, abre num novo separador",
   "directory.card.status.session.video": "Sessões por vídeo",
   "directory.card.status.session.phone": "Sessões por telefone",
@@ -9552,12 +9706,16 @@ export const marketing: Catalog = {
   "directory.card.state.temporarily_closed": "Temporariamente fechado",
   "directory.card.state.permanently_closed": "Fechado definitivamente",
   "directory.card.state.moved": "Mudou de morada",
+  // The city name on listing pages, for a stored "Lisbon" or no city.
+  "directory.city.lisbon": "Lisboa",
   "directory.card.saveAriaLabel": "Guardar {name}",
   "directory.card.unsaveAriaLabel": "Remover {name} das guardadas",
   // As necessidades a que um local respondeu SIM, no cartão da grelha. Nunca
   // uma lista completa: um "não" e um "ninguém nos disse" são respostas
   // diferentes e ambas precisam do espaço que a página do local lhes dá.
   "directory.card.access": "Acessibilidade confirmada por este local",
+  "directory.card.accessMobile":
+    "O que este negócio confirmou sobre participar",
   "directory.card.moreCount": "+{count}",
   "directory.card.savedToast": "Guardaste {name}",
   "directory.card.unsavedToast": "Removeste {name} dos guardados",
@@ -9593,6 +9751,7 @@ export const marketing: Catalog = {
   "directory.detail.onlineBusinessIn": "Só online · com base em {city}",
   "directory.detail.offersTitleOnline": "O que <em>oferece</em>",
   "directory.detail.offersTitle": "O que este espaço <em>oferece</em>",
+  "directory.detail.offersTitleMobile": "O que <em>oferece</em>",
   "directory.detail.goodForSub": "Como {name} descreve.",
   "directory.detail.goodForSubBusiness": "Como o negócio o descreve.",
   "directory.detail.hoursTitle": "Horário",
@@ -9730,7 +9889,14 @@ export const marketing: Catalog = {
   "directory.detail.reviews.showLess": "Mostrar menos",
   "directory.detail.visitTitle": "Onde fica",
   "directory.detail.visitTitleOnline": "Onde encontrar online",
+  "directory.detail.visitTitleMobile": "Onde trabalha",
+  "directory.detail.mobile.allOfLisbon": "Toda a Lisboa",
+  "directory.detail.mobile.parishesAria": "Freguesias onde trabalha",
+  "directory.detail.mobile.alsoTravelsTo": "Também se desloca a {places}",
+  "directory.detail.mobile.meetingPoint": "Ponto de encontro",
+  "directory.detail.byAppointmentOnly": "Só por marcação",
   "directory.detail.accessTitle": "Entrar e ser compreendido",
+  "directory.detail.accessTitleMobile": "Participar e ser compreendido",
   "directory.detail.languagesTitle": "Ser compreendido",
   "directory.detail.accessTitleOnline": "Acesso online e línguas",
   "directory.detail.accessSub":
@@ -9753,6 +9919,7 @@ export const marketing: Catalog = {
   "directory.detail.services.subNamed":
     "Preços tal como {name} os escreveu. Pergunta se precisares de um orçamento para algo específico.",
   "directory.detail.ordering.title": "Encomendas e <em>entregas</em>",
+  "directory.detail.ordering.titleMobile": "Como <em>marcar</em>",
   "directory.detail.ordering.sub": "Como comprar a {name} e como te chega.",
   "directory.detail.ordering.titleSessions": "Marcações e <em>sessões</em>",
   "directory.detail.ordering.subSessions": "Como marcar com {name}.",
@@ -9874,6 +10041,8 @@ export const marketing: Catalog = {
     "Faz a primeira pergunta. Tudo o que quiseres saber antes de comprar ou marcar: como te chega, quanto tempo demora, como podes pagar.",
   "directory.detail.questions.emptyBody":
     "Faz a primeira pergunta. Tudo o que quiseres saber antes de ir: como se entra, como é o espaço, se a cozinha ainda serve às dez.",
+  "directory.detail.questions.emptyBodyMobile":
+    "Faz a primeira pergunta. Tudo o que quiseres saber antes de ires: o ponto de encontro, o ritmo, o que levar.",
   "directory.detail.questions.askLabel": "Pergunta em público",
   "directory.detail.questions.askPlaceholder":
     "O que gostarias de saber antes de ir?",
@@ -10100,9 +10269,11 @@ export const marketing: Catalog = {
   "directory.detail.savedByMembers_other": "Guardado por {count} membros",
   "directory.detail.membersHereLately": "Pessoas por aqui recentemente",
   "directory.detail.upcomingHere": "Próximos eventos aqui",
+  "directory.detail.upcomingRunBy": "Em breve",
   "directory.detail.upcoming.addToCalendar": "Adicionar ao calendário:",
   "directory.detail.upcoming.googleCalendar": "Google Calendário",
   "directory.detail.upcoming.downloadIcs": ".ics",
+  "directory.detail.upcoming.runBy": "Dinamizado por {name}",
   "directory.detail.galleryAria": "Fotos de {name}",
   "directory.detail.viewPhoto": "Ver foto",
   "directory.detail.lightboxClose": "Fechar",
@@ -10336,8 +10507,8 @@ export const marketing: Catalog = {
     "Estas três são as mais úteis nas tuas primeiras semanas: para apoio jurídico, saúde mental, ou simplesmente para te ligares à comunidade. Cada uma abre o site da própria organização.",
   "arriving.orgs.items.ilga.body":
     "A principal organização de direitos LGBTQ+ em Portugal. Apoio jurídico, aconselhamento contra discriminação, encaminhamento para habitação, linha de apoio, e programação comunitária. A primeira chamada para qualquer coisa séria.",
-  "arriving.orgs.items.opusDiversus.body":
-    "Saúde mental e apoio entre pares para pessoas LGBTQ+, e formação para profissionais de saúde aliades. Um bom sítio para começar se a mudança ou a nova visibilidade estiverem a pesar.",
+  "arriving.orgs.items.opusDiversidades.body":
+    "Apoio psicológico, social e jurídico para pessoas LGBTQ+, com atenção especial a pessoas migrantes, pessoas trans e a quem está numa situação vulnerável. Um bom sítio para começar se a mudança ou a nova visibilidade estiverem a pesar.",
   "arriving.orgs.items.redeExAequo.body":
     "Associação LGBTQ+ focada em juventude, com grupos ativos em Lisboa. Apoio entre pares, ativismo, e um espaço tranquilo para quem é mais jovem ou ainda está a descobrir-se.",
 
@@ -10625,6 +10796,7 @@ export const marketing: Catalog = {
   "map.filter.vibe.transCentred": "centrado em pessoas trans",
   "map.filter.vibe.soberFriendly": "acolhedor para sóbries",
   "map.sidebar.allVenues": "Todos os espaços",
+  "map.sidebar.acrossLisbon": "Por toda a Lisboa · {count}",
   "map.sidebar.venueCount_one": "<b>{count}</b> espaço",
   "map.sidebar.venueCount_other": "<b>{count}</b> espaços",
   "map.sidebar.clear": "Limpar",
@@ -10642,6 +10814,7 @@ export const marketing: Catalog = {
     "Não foi possível carregar o mapa. A lista de espaços abaixo continua a funcionar.",
   "map.mapLoading": "A dar <em>vida</em> ao mapa…",
   "map.pinAria": "{name}, {type}",
+  "map.pin.meetingPoint": "Ponto de encontro",
   "map.clusterAria_one": "{count} espaço aqui, ampliar",
   "map.clusterAria_other": "{count} espaços aqui, ampliar",
 
@@ -10664,6 +10837,7 @@ export const marketing: Catalog = {
   "local.filter.filters": "Filtros",
   "local.filter.quickFiltersLabel": "Filtros rápidos",
   "local.filter.openNow": "Aberto agora",
+  "local.filter.outAndAbout": "Itinerante",
   "local.filter.adult": "Mostrar lojas 18+",
   "local.filter.adultActive": "Lojas 18+ visíveis",
   "local.filter.categoryLabelOnline": "O que vendem",

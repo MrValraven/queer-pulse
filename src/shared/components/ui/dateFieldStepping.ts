@@ -108,9 +108,28 @@ export function stepSegment(
       ...parts,
       day: wrap((parts.day ?? todayPlain().day) + direction, min, max),
     };
-  if (type === "hour")
-    return { ...parts, hour: wrap((parts.hour ?? min) + direction, min, max) };
+  if (type === "hour") return stepHour(parts, direction, is12Hour, min, max);
   return { ...parts, minute: wrap((parts.minute ?? 0) + direction, min, max) };
+}
+
+/** Steps the hour through real time. A 12h field with an hour and meridiem
+ *  set walks the 24h clock, so 11 AM -> 12 PM and 11 PM -> 12 AM with the
+ *  meridiem following. Like the day and month segments it wraps within its
+ *  own day, matching native `datetime-local` and React Aria. */
+function stepHour(
+  parts: WorkingParts,
+  direction: 1 | -1,
+  is12Hour: boolean,
+  min: number,
+  max: number,
+): WorkingParts {
+  if (!is12Hour || parts.hour === null || parts.meridiem === null)
+    return { ...parts, hour: wrap((parts.hour ?? min) + direction, min, max) };
+  const hour24 = hourToInternal(parts.hour, parts.meridiem, is12Hour);
+  return {
+    ...parts,
+    ...hourFromInternal(wrap(hour24 + direction, 0, 23), is12Hour),
+  };
 }
 
 /** Clamp a fully-typed hour:minute into `[minTime, maxTime]` (either bound
@@ -225,6 +244,8 @@ export function enterDigit(
   }
   const noRoomForMoreDigits = nextValue * 10 > max;
   const advance = nextBufferLength >= maxDigits || noRoomForMoreDigits;
+  // A 12h clock has no hour 00: a typed "00" reads as 12, as native inputs do.
+  if (type === "hour" && is12Hour && advance && nextValue === 0) nextValue = 12;
   return {
     parts: setValue(type, parts, nextValue),
     bufferLength: advance ? 0 : nextBufferLength,

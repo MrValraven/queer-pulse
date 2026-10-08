@@ -116,10 +116,10 @@
 }
 
 /* Pushes the two footer buttons to the right edge, leaving the running count
-   on the left. `margin-right: auto` rather than a spacer so the footer's own
-   flex-wrap still drops the buttons cleanly on a narrow sheet. */
+   at the start. A `margin-inline-end: auto` keeps the footer's own flex-wrap
+   dropping the buttons cleanly on a narrow sheet, and it flips for RTL. */
 .count {
-  margin-right: auto;
+  margin-inline-end: auto;
   font-size: var(--text-13);
   color: var(--ink-60);
 }

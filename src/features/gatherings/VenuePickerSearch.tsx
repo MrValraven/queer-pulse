@@ -30,6 +30,7 @@ export function VenuePickerSearch({
   activeIndex,
   setActiveIndex,
   results,
+  shouldPointToRunBy,
   onKeyDown,
   onSelectPlace,
   onSwitchToFreeText,
@@ -46,6 +47,9 @@ export function VenuePickerSearch({
   activeIndex: number;
   setActiveIndex: Dispatch<SetStateAction<number>>;
   results: DirectoryPlace[];
+  /** The query names a hidden online or out-and-about listing: point the
+   *  host to the "Run by" field. */
+  shouldPointToRunBy: boolean;
   onKeyDown: (event: KeyboardEvent<HTMLInputElement>) => void;
   onSelectPlace: (place: DirectoryPlace) => void;
   onSwitchToFreeText: () => void;
@@ -122,6 +126,11 @@ export function VenuePickerSearch({
             ))
           )}
         </div>
+      )}
+      {shouldPointToRunBy && (
+        <p className={styles.runByHint}>
+          {t("gatherings:venuePicker.runByHint")}
+        </p>
       )}
       <button
         type="button"

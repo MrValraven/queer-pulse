@@ -6,6 +6,11 @@ import {
   type ListingDraft,
   type PhotoKey,
 } from "../listBusiness.data";
+import {
+  isMobileWithoutMeetingPoint,
+  listingKindOf,
+  mobileDetailsForPayload,
+} from "../listingMobile.data";
 import { onlineDetailsForPayload } from "../listingOnline.data";
 import { shopItemsForPayload } from "../listingShop.data";
 
@@ -60,6 +65,20 @@ export function listingDraftToPreviewSource(
 
   return {
     ...draft,
+    // As a save would send it: an out-and-about listing with no meeting
+    // point previews with no address, neighbourhood or pin, so the editor
+    // never shows a map the public page will not have.
+    ...(isMobileWithoutMeetingPoint(draft)
+      ? {
+          address: "",
+          hood: "",
+          geocoded: false,
+          latitude: null,
+          longitude: null,
+        }
+      : {}),
+    mobile: listingKindOf(draft) === "mobile",
+    mobileDetails: mobileDetailsForPayload(draft),
     slug: slug || slugify(draft.name),
     photos,
     menu,

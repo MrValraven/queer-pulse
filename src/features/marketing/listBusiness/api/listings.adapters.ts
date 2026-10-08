@@ -1,6 +1,7 @@
 import type { PendingListing, PhotoKey } from "../listBusiness.data";
 import { normalizeAccessibilityDraft } from "../listingAccessibility.data";
 import { pricingModeOf, toMenuDraft } from "../listingMenu.data";
+import { hasMeetingPoint, normalizeMobileDetails } from "../listingMobile.data";
 import { normalizeOnlineDetails } from "../listingOnline.data";
 import { toServiceRows } from "../listingServices.data";
 import { toShopItemRows } from "../listingShop.data";
@@ -59,6 +60,12 @@ export function listingDtoToPending(dto: ManagedListingDTO): PendingListing {
     shopItems: toShopItemRows(dto.shopItems),
     // Stamped by the server once accepted, and never asked again.
     adultTermsAccepted: Boolean(dto.onlineDetails?.adultTermsAcceptedAt),
+    // Out and about. The meeting point box reads as ticked exactly when the
+    // listing stores both coordinates: a mobile listing without one stores
+    // them blank (contract).
+    mobile: dto.mobile === true && dto.online !== true,
+    mobileDetails: normalizeMobileDetails(dto.mobileDetails),
+    hasMeetingPoint: hasMeetingPoint(dto),
     // The listing exists, so its submitter agreed. Nothing can un-agree.
     affirmingBaselineAccepted: true,
   };

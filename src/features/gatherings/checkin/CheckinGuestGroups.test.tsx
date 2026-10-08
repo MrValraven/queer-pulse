@@ -45,6 +45,7 @@ const baseProps = {
   gatheringSlug: "supper-club",
   onCheckIn: vi.fn(),
   onUndo: vi.fn(),
+  onShowDetails: vi.fn(),
   onClearSearch: vi.fn(),
 };
 

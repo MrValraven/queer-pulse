@@ -16,11 +16,13 @@ import { listingTagLabel } from "./listingTags.data";
 import { canAcceptAdultTerms } from "./listingOnline.data";
 import { normalizeOwnedBy, OWNED_BY_TAG_KEYS } from "./listingOwnedBy.data";
 import type { ListingForm } from "./useListingForm";
+import { listingKindOf } from "./listingMobile.data";
 import { WHERE_FOUND_TITLE_KEYS, whereFoundChoiceOf } from "./listingKind";
 import {
   Group,
   ReviewPracticalGroup,
   Row,
+  WhereYouWorkRow,
 } from "./ListBusinessReviewPractical";
 import { PaneHeader } from "./ListBusinessChrome";
 import { ConsentChecks } from "./fields/ConsentChecks";
@@ -189,10 +191,13 @@ export function StepReview({
             {draft.city?.trim() ?? ""}
           </Row>
         ) : (
-          <Row k={t("marketing:listBusiness.step5.row.neighbourhood")}>
-            {draft.hood}
-          </Row>
+          listingKindOf(draft) !== "mobile" && (
+            <Row k={t("marketing:listBusiness.step5.row.neighbourhood")}>
+              {draft.hood}
+            </Row>
+          )
         )}
+        {listingKindOf(draft) === "mobile" && <WhereYouWorkRow draft={draft} />}
         {/* Staff and a member suggesting a business are never asked for the
             18+ rules, so their drafts skip the row the same way the
             missing-fields bar skips them. */}

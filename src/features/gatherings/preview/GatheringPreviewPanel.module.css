@@ -255,6 +255,12 @@
   color: var(--text-strong);
   overflow-wrap: anywhere;
 }
+.runByLine {
+  margin: 0;
+  font-size: var(--text-12-5);
+  font-weight: 500;
+  color: var(--ink-60);
+}
 .titleEmpty {
   font-style: italic;
   font-weight: 400;

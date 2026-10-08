@@ -1,0 +1,195 @@
+/* The field arrangement inside each edit-details section (EditDetailsBasics,
+   EditDetailsWhenWhere, EditDetailsAudience, EditDetailsCare, EditDetailsRsvp).
+
+   Each section's fields sit in one grid: two columns once the form's content
+   box (the `editForm` container, EditDetailsLayout.module.css) is 552px wide,
+   one column under. 552px is a 600px form column less its two 24px gutters,
+   so the switch lands where the column itself reaches 600px. Beside the rail
+   the column never drops under 668px, so a wide dialog always gets the two
+   columns, and a phone sheet always gets one.
+
+   A field fills one cell unless it carries `.fullRow`. Fields that come in a
+   pair (family and format, start and end, community and capacity) simply
+   follow each other. */
+
+.fieldGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+@container editForm (min-width: 552px) {
+  .fieldGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* The grid's row gap is the only space between two fields. FormField, the
+   wizard's `Field` (the capacity stepper) and the modal's groups each bring a
+   margin of their own for a stacked form; doubled classes outrank them
+   whatever order the stylesheets load in. The format questions' inputs and
+   the terrain select end their cell with a 16px margin too. */
+.fieldGrid.fieldGrid > * {
+  min-width: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.fieldGrid.fieldGrid > * > :last-child {
+  margin-bottom: 0;
+}
+
+.fullRow {
+  grid-column: 1 / -1;
+}
+
+/* Every control in the editor reads as one family with FormField's text
+   inputs: 48px tall, the cream fill, a 1.5px edge at half strength and the
+   12px corner. Each edge colour below waits on focus and on an invalid value,
+   so the control's own focus and invalid edges still show. */
+
+/* The start and end pickers (EditDetailsSchedule's `pickerClassName`) fill
+   their cell. The typeable field grows and the calendar button keeps the
+   right edge, the edge the calendar opens under.
+
+   The digits take the inputs' 16px in a cell of 324px and up, where the
+   end's whole row (field, calendar button, clear button) fits at that size
+   in English, the longest of the two languages. A tighter cell keeps the
+   picker's own 14px, which fits from 300px. Under that (a two-column form
+   narrower than 620px) the start and the end stack, one full row each. */
+.fieldGrid > :has(> * > .schedulePicker) {
+  container-type: inline-size;
+}
+@container editForm (min-width: 552px) and (max-width: 619px) {
+  .fieldGrid > :has(> * > .schedulePicker) {
+    grid-column: 1 / -1;
+  }
+}
+.schedulePicker.schedulePicker {
+  width: 100%;
+}
+.schedulePicker.schedulePicker > :first-child {
+  flex: 1;
+  height: 48px;
+  padding: 0 14px;
+  background: var(--cream);
+  border-width: 1.5px;
+  border-radius: var(--radius-12);
+}
+.schedulePicker.schedulePicker
+  > :first-child:not(:focus-within):not(:has([aria-invalid="true"])) {
+  border-color: rgba(var(--line-rgb), 0.5);
+}
+.schedulePicker.schedulePicker > :first-child:focus-within {
+  background: var(--paper);
+}
+@container (min-width: 324px) {
+  .schedulePicker.schedulePicker > :first-child [role="spinbutton"] {
+    font-size: var(--text-16);
+  }
+}
+.schedulePicker.schedulePicker > button[aria-haspopup] {
+  width: 48px;
+  height: 48px;
+}
+
+/* The capacity stepper's tray (CapacityStepper's `stepperClassName`) and its
+   number, in the inputs' sans type. */
+.capacityStepper.capacityStepper {
+  height: 48px;
+  border-width: 1.5px;
+  background: var(--cream);
+}
+.capacityStepper.capacityStepper:not(:focus-within):not(
+    :has([aria-invalid="true"])
+  ) {
+  border-color: rgba(var(--line-rgb), 0.5);
+}
+.capacityStepper.capacityStepper input {
+  padding-block: 0;
+  font-family: var(--sans);
+  font-size: var(--text-16);
+  font-weight: 400;
+  background: var(--cream);
+}
+.capacityStepper.capacityStepper input::placeholder {
+  font-size: var(--text-16);
+}
+.capacityStepper.capacityStepper:focus-within input {
+  background: var(--paper);
+}
+
+/* The format questions' text inputs, the one input that follows its hint. */
+.fieldGrid > * > p + input {
+  padding: 13px 15px;
+  border-width: 1.5px;
+  border-radius: var(--radius-12);
+}
+.fieldGrid > * > p + input:not(:focus) {
+  border-color: rgba(var(--line-rgb), 0.5);
+}
+
+/* Two format questions drawn as cards (a `CheckLine`, alone in its cell)
+   share a row at one height. */
+.fieldGrid > :has(> button:only-child) {
+  align-self: stretch;
+}
+.fieldGrid > :has(> button:only-child) > button {
+  height: 100%;
+}
+
+/* The description gets eight lines at rest on a wide form. The phone sheet
+   keeps FieldEditor.module.css's own cap, so this waits for the 720px the
+   sheet gives way at. Three classes outrank its doubled class. */
+@media (min-width: 720px) {
+  @container editForm (min-width: 552px) {
+    .fieldGrid .descriptionInput.descriptionInput {
+      min-height: calc(1.65em * 8 + 31px);
+    }
+  }
+}
+
+/* A group's label with a live note on the right (the themes' count). The
+   label keeps its own look; the row takes over its bottom margin. */
+.groupLabelRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+.groupLabelRow > :first-child {
+  margin-bottom: 0;
+}
+.pickedCount {
+  flex: none;
+  font-size: var(--text-12);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-60);
+  white-space: nowrap;
+}
+
+/* The RSVP switches in two columns on a wide form: dietary needs beside
+   pronouns, the locked access row across the bottom. The list keeps its one
+   outer border; a hairline splits the two columns and the second row loses
+   the top hairline it carries in a single column. */
+@container editForm (min-width: 552px) {
+  .rsvpSwitchGrid > [role="group"] {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .rsvpSwitchGrid > [role="group"] > :last-child {
+    grid-column: 1 / -1;
+  }
+  .rsvpSwitchGrid > [role="group"] > :nth-child(2) {
+    border-left: 1px solid rgba(var(--line-rgb), 0.07);
+  }
+  .rsvpSwitchGrid > [role="group"] > * > [role="switch"] {
+    height: 100%;
+  }
+  .rsvpSwitchGrid.rsvpSwitchGrid
+    > [role="group"]
+    > :nth-child(2)
+    > [role="switch"] {
+    border-top: 0;
+  }
+}

@@ -13,6 +13,7 @@ import {
   FormatLine,
   MetaRow,
   PricePill,
+  RunByLine,
   ThemeTags,
 } from "./eventCardParts";
 import { GoingCount } from "./GoingCount";
@@ -104,6 +105,7 @@ export function EventAgendaRow({
       <span className={styles.body}>
         <FormatLine event={event} className={`${posterStyles.formatLine}`} />
         <h3 className={styles.title}>{event.title}</h3>
+        <RunByLine event={event} className={posterStyles.runByLine} />
         <span className={styles.meta}>
           <MetaRow event={event}>
             <EventSpan event={event} fmt={formatters} t={t} />

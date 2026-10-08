@@ -19,6 +19,12 @@ import {
   type ListingPublicOnlineDetails,
   type OnlineMainLink,
 } from "./listingOnline.data";
+import {
+  joinedPlaceNames,
+  listingKindOf,
+  normalizeMobileDetails,
+} from "./listingMobile.data";
+import { intlLocale } from "../../../shared/i18n/locale";
 import styles from "./ListBusinessPage.module.css";
 import sellingStyles from "./fields/OnlineSelling.module.css";
 
@@ -217,8 +223,51 @@ function OnlineSellingRows({ draft }: { draft: ListingDraft }) {
   );
 }
 
-/** Recaps the practical step: where and when for a place, how people buy
- *  for anything that sells online, then the contact links. */
+/** The out-and-about area row (with the towns it also goes to). It belongs to
+ *  Basics, whose edit link jumps to the step that asks it. */
+export function WhereYouWorkRow({ draft }: { draft: ListingDraft }) {
+  const { t, language } = useTranslation();
+  const details = normalizeMobileDetails(draft.mobileDetails);
+  const area = details.allOfCity
+    ? t("marketing:listBusiness.step1.whereYouWork.allOfCity")
+    : details.parishes.join(", ");
+  const travels =
+    details.alsoTravelsTo.length > 0
+      ? t("marketing:directory.detail.mobile.alsoTravelsTo", {
+          places: joinedPlaceNames(details.alsoTravelsTo, intlLocale(language)),
+        })
+      : "";
+  return (
+    <Row k={t("marketing:listBusiness.step5.row.whereYouWork")}>
+      {[area, travels].filter(Boolean).join(" · ")}
+    </Row>
+  );
+}
+
+/** The out-and-about rows: the meeting point or "No set spot", and the hours
+ *  or "By appointment only". The area row lives in Basics. */
+function MobileRecapRows({ draft }: { draft: ListingDraft }) {
+  const { t } = useTranslation();
+  const details = normalizeMobileDetails(draft.mobileDetails);
+  return (
+    <>
+      <Row k={t("marketing:listBusiness.step5.row.meetingPoint")}>
+        {draft.hasMeetingPoint === true
+          ? [draft.address, draft.hood.trim()].filter(Boolean).join(" · ")
+          : t("marketing:listBusiness.step5.meetingPoint.none")}
+      </Row>
+      <Row k={t("marketing:listBusiness.step5.row.hours")}>
+        {details.byAppointment
+          ? t("marketing:directory.detail.byAppointmentOnly")
+          : hoursSummary(draft)}
+      </Row>
+    </>
+  );
+}
+
+/** Recaps the practical step: where and when for a place, the area, meeting
+ *  point and hours for an out-and-about business, how people buy for anything
+ *  that sells online, then the contact links. */
 export function ReviewPracticalGroup({
   draft,
   onEdit,
@@ -227,13 +276,15 @@ export function ReviewPracticalGroup({
   onEdit: () => void;
 }) {
   const { t } = useTranslation();
+  const kind = listingKindOf(draft);
   const mainLink = onlineDetailsForPayload(draft.onlineDetails, draft).mainLink;
   return (
     <Group
       title={t("marketing:listBusiness.step5.group.practical")}
       onEdit={onEdit}
     >
-      {!draft.online && (
+      {kind === "mobile" && <MobileRecapRows draft={draft} />}
+      {kind === "place" && (
         <>
           <Row k={t("marketing:listBusiness.step5.row.address")}>
             {draft.address}
@@ -241,12 +292,12 @@ export function ReviewPracticalGroup({
           <Row k={t("marketing:listBusiness.step5.row.hours")}>
             {hoursSummary(draft)}
           </Row>
-          {draft.hasOnlineShop === true && (
-            <Row k={t("marketing:listBusiness.step5.row.alsoOnline")}>
-              {mainLinkSummary(t, mainLink)}
-            </Row>
-          )}
         </>
+      )}
+      {kind !== "online" && draft.hasOnlineShop === true && (
+        <Row k={t("marketing:listBusiness.step5.row.alsoOnline")}>
+          {mainLinkSummary(t, mainLink)}
+        </Row>
       )}
       {isSellingOnline(draft) && <OnlineSellingRows draft={draft} />}
       <Row k={t("marketing:listBusiness.step5.row.online")}>

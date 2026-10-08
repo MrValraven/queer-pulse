@@ -9,6 +9,7 @@ import {
 } from "./directoryPlaces";
 import { DirectoryFreshnessStamp } from "./DirectoryFreshnessStamp";
 import { DirectoryHoursExceptions } from "./DirectoryHoursExceptions";
+import { isByAppointmentListing } from "./listBusiness/listingMobile.data";
 import s from "./DirectorySpacePage.module.css";
 
 const ClockIcon = () => (
@@ -87,6 +88,7 @@ export function DirectoryHoursSection({ place }: { place: DirectoryPlace }) {
   }
 
   const isTemporarilyClosed = operatingState === "temporarily_closed";
+  const isByAppointment = isByAppointmentListing(place);
   const hasRealHours =
     place.hours != null && Object.keys(place.hours).length > 0;
   const rows = hasRealHours
@@ -94,7 +96,10 @@ export function DirectoryHoursSection({ place }: { place: DirectoryPlace }) {
     : hoursRows(place.hoursType);
   const venueNow = zonedNow(place.timezone);
   const todayIndex = (venueNow.getDay() + 6) % 7;
-  const isAppointmentOnly = !hasRealHours && place.hoursType === "appointment";
+  // An out-and-about listing that works by appointment keeps no hours at
+  // all; the card says so where the week would be.
+  const isAppointmentOnly =
+    isByAppointment || (!hasRealHours && place.hoursType === "appointment");
 
   return (
     <section className={s.sec}>
@@ -105,7 +110,7 @@ export function DirectoryHoursSection({ place }: { place: DirectoryPlace }) {
           hours to evaluate, so it shows either way. */}
       <div className={s.secHead}>
         <h2>{t("marketing:directory.detail.hoursTitle")}</h2>
-        {(hasRealHours || isTemporarilyClosed) && (
+        {((hasRealHours && !isByAppointment) || isTemporarilyClosed) && (
           <HoursStatusChip place={place} venueNow={venueNow} />
         )}
       </div>
@@ -136,7 +141,9 @@ export function DirectoryHoursSection({ place }: { place: DirectoryPlace }) {
             <div className={s.featureIc}>
               <ClockIcon />
             </div>
-            {place.hoursNote}
+            {isByAppointment
+              ? t("marketing:directory.detail.byAppointmentOnly")
+              : place.hoursNote}
           </div>
         ) : (
           <div

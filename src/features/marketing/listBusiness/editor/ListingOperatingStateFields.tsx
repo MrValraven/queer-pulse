@@ -11,7 +11,7 @@ import styles from "./ListingTrading.module.css";
 /**
  * The choice itself: four state cards, the owner's public explanation, and the
  * forwarding address a moved business owes its readers. With
- * `isMovedOffered` false (an online-only listing that has not already moved)
+ * `isMovedOffered` false (a listing without premises that has not already moved)
  * the "moved" card is left out, leaving three.
  *
  * Nothing here commits anything. The parent section holds the staged choice and

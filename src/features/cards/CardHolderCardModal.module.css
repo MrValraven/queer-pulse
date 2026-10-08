@@ -97,7 +97,7 @@
 .footerActions {
   display: flex;
   gap: var(--gap-xs);
-  margin-left: auto;
+  margin-inline-start: auto;
 }
 
 /* A membership card is an object you look at, and at the shared `wide` width

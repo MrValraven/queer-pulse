@@ -2123,6 +2123,14 @@
 .visitBody > .onlinePlace {
   margin-bottom: 14px;
 }
+/* An out-and-about listing's meeting-point map sits inside the padded body, so
+   it takes its own radius, hairline and gap. The place card's full-bleed map is
+   a direct child of the card and keeps its own styling. */
+.visitBody > .visitMap {
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-12);
+  margin: 12px 0 14px;
+}
 /* Saved-count and the primary action close the column, pinned to its foot so
    a listing with no contact rows doesn't leave them floating mid-card. */
 .visitFoot {

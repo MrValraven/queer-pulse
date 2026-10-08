@@ -1,9 +1,16 @@
 import { FormField } from "../../../../shared/components/ui";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { ANCHOR } from "../listBusiness.data";
+import { listingKindOf, type ListingKind } from "../listingMobile.data";
 import type { ListingForm } from "../useListingForm";
 import { ListingPhotoGallery } from "../ListingPhotoGallery";
 import styles from "../ListBusinessPage.module.css";
+
+const HELPER_KEYS: Record<ListingKind, string> = {
+  place: "marketing:listBusiness.step4.photosHelper",
+  online: "marketing:listBusiness.step4.photosHelperOnline",
+  mobile: "marketing:listBusiness.step4.photosHelperMobile",
+};
 
 /**
  * The photo field body: the four-slot gallery with its per-slot alt text.
@@ -19,11 +26,7 @@ export function PhotosFields({ form }: { form: ListingForm }) {
       className={styles.lbField}
       id={ANCHOR.photos}
       label={t("marketing:listBusiness.step4.photosLabel")}
-      helper={t(
-        form.draft.online
-          ? "marketing:listBusiness.step4.photosHelperOnline"
-          : "marketing:listBusiness.step4.photosHelper",
-      )}
+      helper={t(HELPER_KEYS[listingKindOf(form.draft)])}
     >
       <ListingPhotoGallery form={form} />
     </FormField>

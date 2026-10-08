@@ -26,6 +26,8 @@ export function CapacityStepper({
   hint,
   error,
   className,
+  stepperClassName,
+  inputId: inputIdProp,
 }: {
   /** The capacity as typed, or `""` for no cap. */
   value: string;
@@ -37,10 +39,16 @@ export function CapacityStepper({
   error?: ReactNode;
   /** Passed to the `Field` wrapper, so a surface can restyle its label. */
   className?: string;
+  /** Added to the stepper's tray, so a surface can draw it like its own
+   *  inputs (the edit modal's cream fill and sans number). */
+  stepperClassName?: string;
+  /** The number input's id, for a surface that has to reach it by id (the
+   *  edit modal's "Show the field"). Defaults to one of its own. */
+  inputId?: string;
 }) {
   const { t } = useTranslation();
   const fieldId = useId();
-  const inputId = `${fieldId}-capacity`;
+  const inputId = inputIdProp ?? `${fieldId}-capacity`;
   const currentCapacity = Number.parseInt(value, 10);
   const hasCapacity = Number.isFinite(currentCapacity);
   const isAtMinimum = hasCapacity && currentCapacity <= MIN_CAPACITY;
@@ -71,7 +79,9 @@ export function CapacityStepper({
       error={error}
       className={className}
     >
-      <div className={styles.stepper}>
+      <div
+        className={[styles.stepper, stepperClassName].filter(Boolean).join(" ")}
+      >
         {/* aria-disabled keeps a pressed button focusable at the bound, so
             keyboard focus stays put when the number reaches its limit. */}
         <button

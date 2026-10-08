@@ -11,6 +11,13 @@ import {
   zonedNow,
   type DirectoryPlace,
 } from "./directoryPlaces";
+import {
+  coveredParishes,
+  hasMeetingPoint,
+  isByAppointmentListing,
+  listingKindOf,
+  normalizeMobileDetails,
+} from "./listBusiness/listingMobile.data";
 import type { AccessibilitySlug } from "./listBusiness/listingAccessibility.data";
 import { isSellingOnline } from "./listBusiness/listingOnline.data";
 import type { ListingOwnedBy } from "./listBusiness/listingOwnedBy.data";
@@ -151,15 +158,18 @@ export function businessToLocal(
   // Prefer the pin the owner placed when listing. The hand-placed BUSINESS_COORDS
   // table is demo-only seed data — consulting it in live mode would give a real
   // listing without stored coordinates fake coords on a slug collision.
-  // An online-only business has no door to pin. Its stored coordinates are
-  // ignored even when an old payload still carries some, so it can never
-  // surface on the map under a stale address.
+  // A door to pin: a place, or an out-and-about listing at its meeting
+  // point. An online-only business has none, and a come-to-you one has none
+  // either: stored coordinates are ignored for both, so neither can surface
+  // on the map under a stale address. The demo table is a place's alone.
+  const kind = listingKindOf(place);
+  const hasDoor = kind === "place" || hasMeetingPoint(place);
   const listedCoords =
-    !place.online && place.latitude != null && place.longitude != null
+    hasDoor && place.latitude != null && place.longitude != null
       ? { latitude: place.latitude, longitude: place.longitude }
       : null;
   const fallbackCoords =
-    demoMode && !place.online ? (BUSINESS_COORDS[place.slug] ?? null) : null;
+    demoMode && kind === "place" ? (BUSINESS_COORDS[place.slug] ?? null) : null;
   const coords = listedCoords ?? fallbackCoords;
   return {
     id: `business:${place.slug}`,
@@ -168,8 +178,8 @@ export function businessToLocal(
     category: normalizeCategory(place.cat),
     neighbourhood: place.hood,
     // No parish to count it under, and no warning either: an empty parish is
-    // the truth for an online-only business, not a typo to surface.
-    freguesia: place.online
+    // the truth for an online-only business and for one that goes to people.
+    freguesia: !hasDoor
       ? ""
       : placeFreguesia(
           coords,
@@ -232,6 +242,29 @@ export function isSellingOnlinePlace(place: LocalPlace): boolean {
   );
 }
 
+/** Out and about: a business with no premises. Venues are always places. */
+export function isMobilePlace(place: LocalPlace): boolean {
+  return (
+    place.kind === "business" &&
+    listingKindOf(place.source as DirectoryPlace) === "mobile"
+  );
+}
+
+/** Out and about with no meeting point to pin: the map lists it under
+ *  "Across Lisbon". */
+export function isAcrossLisbonPlace(place: LocalPlace): boolean {
+  return isMobilePlace(place) && place.coords === null;
+}
+
+/** The parishes an out-and-about listing covers (all 24 for the whole
+ *  city), for the map's shading. Empty for anything else. */
+export function coveredParishesOfPlace(place: LocalPlace): readonly string[] {
+  if (!isMobilePlace(place)) return [];
+  return coveredParishes(
+    normalizeMobileDetails((place.source as DirectoryPlace).mobileDetails),
+  );
+}
+
 /**
  * A place's category as the current tab's chips read it. The Online tab's
  * chips are the online vocabulary, so a place that sells online matches
@@ -285,7 +318,7 @@ export function mergeLocalPlaces(
   const mergedBusinesses = businesses.map((business) => {
     const key = normalizeName(business.name);
     const twin = venueByName.get(key);
-    if (!twin) return business;
+    if (!twin || isAcrossLisbonPlace(business)) return business;
     venueByName.delete(key);
     // A business that borrows its twin's pin takes the twin's parish with it.
     const isBorrowingPin = business.coords === null;
@@ -320,6 +353,9 @@ export interface LocalFilters {
   /** True on the Online tab. Categories always match through
    *  `categoryForScope`, which reads the vocabulary of the tab. */
   isOnlineScope?: boolean;
+  /** "Out and about": keep only businesses with no premises. Offered on the
+   *  List and Map tabs. */
+  isOutAndAboutOnly?: boolean;
 }
 
 /**
@@ -353,6 +389,7 @@ export function placeMatchesOwnedBy(
  *   not open however healthy its weekday grid looks.
  * - a demo-only venue carries no hours field at all.
  * - an online-only listing, which has no hours to be open in.
+ * - a "By appointment only" listing, which keeps no hours.
  *
  * Computed client-side on purpose: the grid is CDN-cached, so a server-baked
  * open state would go stale in the dangerous direction, saying open when shut.
@@ -363,6 +400,8 @@ export function isPlaceOpenNow(place: LocalPlace): boolean {
   // An online-only business has no doors and no hours, so it is never "open
   // now", whatever an older row still stores.
   if (business.online === true) return false;
+  // "By appointment only" has no hours to be open in either.
+  if (isByAppointmentListing(business)) return false;
   if (!isPlaceOperating(business)) return false;
   const status = openStatus(
     business.hours,
@@ -415,6 +454,7 @@ export function placeMeetsAccess(
  * place with no published hours is never "open now", and a need nobody has
  * answered is never "met". See `isPlaceOpenNow` / `placeMeetsAccess`. `owned`
  * is a hard filter too, an OR across its tags (see `placeMatchesOwnedBy`).
+ * `isOutAndAboutOnly` is a hard filter too.
  */
 export function filterLocalPlaces(
   places: LocalPlace[],
@@ -449,6 +489,9 @@ export function filterLocalPlaces(
       return false;
     }
     if (filters.openNow && !isPlaceOpenNow(place)) {
+      return false;
+    }
+    if (filters.isOutAndAboutOnly && !isMobilePlace(place)) {
       return false;
     }
     if (!placeMeetsAccess(place, filters.access ?? [])) {

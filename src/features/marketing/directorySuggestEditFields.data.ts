@@ -1,5 +1,34 @@
 import type { SuggestEditField } from "./api/useSuggestEdit";
 
+/** Every bucket a member can report, in picker order. */
+export const SUGGEST_EDIT_FIELDS: SuggestEditField[] = [
+  "hours",
+  "address",
+  "phone",
+  "website",
+  "description",
+  "other",
+];
+
+/**
+ * The buckets the picker offers. An online-only listing shows neither hours
+ * nor a street address, and an out-and-about one with no meeting point shows
+ * no address (the server refuses a correction to it), so neither is offered
+ * what the page never claimed.
+ */
+export function suggestEditFieldOptions({
+  isOnline,
+  hasNoAddress,
+}: {
+  isOnline: boolean;
+  hasNoAddress: boolean;
+}): SuggestEditField[] {
+  return SUGGEST_EDIT_FIELDS.filter((field) => {
+    if (isOnline) return field !== "hours" && field !== "address";
+    return !(hasNoAddress && field === "address");
+  });
+}
+
 /**
  * What a member can actually offer as a replacement value, per field bucket.
  *

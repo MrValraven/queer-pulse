@@ -6,6 +6,7 @@ import {
   listingTagLabel,
   type ListingTagAudienceGroup,
 } from "./listingTags.data";
+import type { ListingKind } from "./listingMobile.data";
 import pageStyles from "./ListBusinessPage.module.css";
 import styles from "./ListingTagPicker.module.css";
 
@@ -14,8 +15,9 @@ interface ListingTagGroupListProps {
   id: string;
   labelledBy: string;
   groups: readonly ListingTagAudienceGroup[];
-  /** Online listings read the online heading where a group has one. */
-  isOnline: boolean;
+  /** Online and out-and-about listings read the booking heading where a
+   *  group has one. */
+  kind: ListingKind;
   selectedTags: readonly string[];
   isAtCap: boolean;
   /** The trimmed search text, for the no-match line. */
@@ -32,7 +34,7 @@ export function ListingTagGroupList({
   id,
   labelledBy,
   groups,
-  isOnline,
+  kind,
   selectedTags,
   isAtCap,
   query,
@@ -63,7 +65,7 @@ export function ListingTagGroupList({
                 className={styles.group}
               >
                 <span id={headingId} className={styles.groupHeading}>
-                  {listingTagGroupLabel(t, group.id, isOnline)}
+                  {listingTagGroupLabel(t, group.id, kind)}
                 </span>
                 <div className={styles.chipWrap}>
                   {group.tags.map((tag) => {

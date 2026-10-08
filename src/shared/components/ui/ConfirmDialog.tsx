@@ -105,7 +105,7 @@ export function ConfirmDialog({
       onClose={onClose}
       initialFocusRef={initialFocus === "cancel" ? cancelButtonRef : undefined}
       footer={
-        <>
+        <div className={styles.actions}>
           <Button
             ref={cancelButtonRef}
             variant="ghost"
@@ -130,7 +130,7 @@ export function ConfirmDialog({
               {extraAction.label}
             </Button>
           )}
-        </>
+        </div>
       }
     >
       {description && <p className={styles.description}>{description}</p>}

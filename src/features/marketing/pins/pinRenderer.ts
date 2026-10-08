@@ -20,6 +20,11 @@ export interface VenueMarkerData {
   isVerified?: boolean;
   /** The localized category name, for the selected pin's callout. */
   categoryLabel?: string;
+  /** The pin stands for a meeting point: a public spot where a business
+   *  with no premises meets people. */
+  isMeetingPoint?: boolean;
+  /** A second label line under the category, such as "Meeting point". */
+  secondaryLabel?: string;
 }
 
 export interface PinRenderer {

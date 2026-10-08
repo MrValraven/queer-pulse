@@ -23,7 +23,9 @@ import {
   type ListingPublicOnlineDetails,
 } from "./listBusiness/listingOnline.data";
 import type { DirectoryShopItem } from "./listBusiness/listingShop.data";
+import type { ListingMobileDetails } from "./listBusiness/listingMobile.data";
 import { ONLINE_DIRECTORY_PLACES } from "./directoryOnlinePlaces.data";
+import { MOBILE_DIRECTORY_PLACES } from "./directoryMobilePlaces.data";
 
 export type Tint = "coral" | "jade" | "plum";
 
@@ -299,6 +301,12 @@ export interface DirectoryPlace {
   /** Carries the 18+ category. Only member reads return one; its page is
    *  `noindex`. Absent means no. */
   isAdultsOnly?: boolean;
+  /** Out and about: no premises (a tour, a mobile hairdresser, movers).
+   *  Read the kind through `listingKindOf`. Absent means no. */
+  mobile?: boolean;
+  /** Where an out-and-about business works. Null or absent for any other
+   *  kind; read it through `normalizeMobileDetails`. */
+  mobileDetails?: ListingMobileDetails | null;
   /** The card's slice of the online block (status slot, Visit). Null or
    *  absent when the listing sells nothing online. */
   onlineSummary?: DirectoryOnlineSummary | null;
@@ -360,6 +368,9 @@ export interface DirectoryPlace {
     slug: string;
     id?: string;
     startAt?: string;
+    /** "runBy" when the listing runs the gathering (it may be held
+     *  elsewhere), "venue" when it is held here. Absent reads as venue. */
+    role?: "venue" | "runBy";
   }[];
   reviews: Review[];
   /**
@@ -650,12 +661,12 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     ],
   },
   {
-    slug: "opus-diversus",
-    name: "Opus Diversus",
+    slug: "mare-lilas",
+    name: "Maré Lilás",
     cat: "health",
     hood: "Intendente",
     owned: false,
-    av: "OD",
+    av: "ML",
     tint: J,
     desc: "LGBTQ+-affirming mental health support: therapy, peer groups, crisis support. Sliding scale fees. Portuguese and English.",
     tagline:
@@ -669,7 +680,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     rating: { score: "4.9", count: 88 },
     gallery: ["Reception", "Therapy room", "Group room", "Intendente entrance"],
     whatItIs: [
-      "Opus Diversus is an LGBTQ+-affirming mental health practice offering individual therapy, peer-support groups, and crisis support, with clinicians who are trained in, and many of whom share, queer and trans experience.",
+      "Maré Lilás is an LGBTQ+-affirming mental health practice offering individual therapy, peer-support groups, and crisis support, with clinicians who are trained in, and many of whom share, queer and trans experience.",
       "Fees are sliding-scale and nobody is turned away for money. Sessions run in Portuguese and English, and the trans-care pathway is genuinely competent rather than improvised.",
     ],
     goodFor: [
@@ -681,8 +692,8 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     hoursType: "clinic",
     hoursNote: "Mon–Sat by appointment. Crisis line outside hours.",
     owner: {
-      name: "The Opus Diversus team",
-      initials: "OD",
+      name: "The Maré Lilás team",
+      initials: "ML",
       tint: J,
       role: "Partner organisation",
       bio: "A collective practice and a QueerPulse health partner. They also train our peer-support volunteers.",
@@ -690,9 +701,9 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
       first: "the team",
     },
     social: {
-      instagram: "@opusdiversus",
-      website: "opusdiversus.pt",
-      email: "ola@opusdiversus.pt",
+      instagram: "@marelilas",
+      website: "marelilas.pt",
+      email: "ola@marelilas.pt",
       phone: "+351 21 888 0000",
     },
     address: "R. do Benformoso 140 · Intendente",
@@ -707,7 +718,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     ],
     reviews: [
       {
-        id: "opus-diversus-review-1",
+        id: "mare-lilas-review-1",
         initials: MEMBERS.anika!.initials,
         name: memberName("anika"),
         tint: C,
@@ -717,7 +728,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
         helpful: 33,
       },
       {
-        id: "opus-diversus-review-2",
+        id: "mare-lilas-review-2",
         initials: MEMBERS.jonas!.initials,
         name: memberName("jonas"),
         tint: J,
@@ -2094,6 +2105,8 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
   },
   // Businesses with no door: the directory's Online tab.
   ...ONLINE_DIRECTORY_PLACES,
+  // Businesses with no premises: out and about.
+  ...MOBILE_DIRECTORY_PLACES,
 ];
 
 // Enrich every member-authored review with its author's profile slug + photo so

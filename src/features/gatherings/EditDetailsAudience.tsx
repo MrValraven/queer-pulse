@@ -4,7 +4,9 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useMyCommunityOptions } from "../communities/api/useMyCommunityOptions";
 import { AudienceScopeField } from "./AudienceScopeField";
 import type { GatheringDetailsDraft } from "./editDetailsDraft";
+import { editFieldDomId } from "./editDetailsChanges";
 import { EditDetailsSection } from "./EditDetailsSection";
+import { useEditDetailsSections } from "./editDetailsSectionsContext";
 import { CapacityStepper } from "./fields/CapacityStepper";
 import {
   editCapacityProblem,
@@ -12,6 +14,7 @@ import {
 } from "./manageGatheringState";
 import { MAX_CAPACITY, MIN_CAPACITY } from "./steps/whoChapter.data";
 import { useHostableCommunities } from "./useHostableCommunities";
+import fieldStyles from "./EditDetailsFields.module.css";
 import styles from "./EditDetailsModal.module.css";
 
 /**
@@ -23,6 +26,10 @@ import styles from "./EditDetailsModal.module.css";
  * "Community members" tier exists only while a community is attached, but
  * attaching one never narrows who can see the gathering. The capacity is the
  * wizard's own stepper, in the same chapter the wizard asks it.
+ *
+ * The community and the capacity share a row, the audience cards run across
+ * the full width under them. The capacity input carries the field id the
+ * footer's "Show the field" looks up, so an out-of-range number gets focus.
  */
 export function EditDetailsAudience({
   draft,
@@ -42,6 +49,7 @@ export function EditDetailsAudience({
 }) {
   const { t } = useTranslation();
   const fieldId = useId();
+  const sections = useEditDetailsSections();
   const { options: hostableOptions } = useHostableCommunities();
   const myCommunityOptions = useMyCommunityOptions();
   // Only communities the editor runs or moderates can be picked. The one the
@@ -95,56 +103,63 @@ export function EditDetailsAudience({
     });
 
   return (
-    <EditDetailsSection
-      title={t("gatherings:manage.editModal.section.audience")}
-    >
-      {communityOptions.length > 0 && (
-        <FormField
-          label={t("gatherings:create.step3.communityLabel")}
-          helper={t("gatherings:create.step3.communityHint")}
-        >
-          <Select
-            options={[
-              {
-                value: "",
-                label: t("gatherings:create.step3.communityNone"),
-              },
-              ...communityOptions.map((community) => ({
-                value: community.slug,
-                label: community.name,
-              })),
-            ]}
-            value={draft.communitySlug}
-            onChange={(value) => setCommunitySlug(value ?? "")}
-          />
-        </FormField>
-      )}
-      {/* Reads the IN-PROGRESS draft, so picking or clearing a community in
+    <EditDetailsSection sectionKey="audience">
+      <div className={fieldStyles.fieldGrid}>
+        {communityOptions.length > 0 && (
+          <FormField
+            label={t("gatherings:create.step3.communityLabel")}
+            helper={t("gatherings:create.step3.communityHint")}
+          >
+            <Select
+              options={[
+                {
+                  value: "",
+                  label: t("gatherings:create.step3.communityNone"),
+                },
+                ...communityOptions.map((community) => ({
+                  value: community.slug,
+                  label: community.name,
+                })),
+              ]}
+              value={draft.communitySlug}
+              onChange={(value) => setCommunitySlug(value ?? "")}
+            />
+          </FormField>
+        )}
+        <CapacityStepper
+          className={styles.capacityField}
+          stepperClassName={fieldStyles.capacityStepper}
+          inputId={
+            sections ? editFieldDomId(sections.editorId, "capacity") : undefined
+          }
+          label={t("gatherings:create.step3.capLabel")}
+          value={draft.capacity}
+          onChange={(value) => onChange({ capacity: value })}
+          hint={
+            capacityHintLines.length > 0
+              ? capacityHintLines.join(" ")
+              : undefined
+          }
+          error={
+            isCapacityOutOfRange
+              ? t("gatherings:manage.editModal.capacityRangeError", {
+                  min: MIN_CAPACITY,
+                  max: MAX_CAPACITY,
+                })
+              : undefined
+          }
+        />
+        {/* Reads the IN-PROGRESS draft, so picking or clearing a community in
           this same edit shows or hides the "Community members" tier straight
           away, exactly like the create wizard's `form.communitySlug !== ""`. */}
-      <AudienceScopeField
-        fieldId={`${fieldId}-audience`}
-        value={draft.visibility}
-        onChange={(value) => onChange({ visibility: value })}
-        communityAvailable={draft.communitySlug !== ""}
-      />
-      <CapacityStepper
-        className={styles.capacityField}
-        label={t("gatherings:create.step3.capLabel")}
-        value={draft.capacity}
-        onChange={(value) => onChange({ capacity: value })}
-        hint={
-          capacityHintLines.length > 0 ? capacityHintLines.join(" ") : undefined
-        }
-        error={
-          isCapacityOutOfRange
-            ? t("gatherings:manage.editModal.capacityRangeError", {
-                min: MIN_CAPACITY,
-                max: MAX_CAPACITY,
-              })
-            : undefined
-        }
-      />
+        <AudienceScopeField
+          className={fieldStyles.fullRow}
+          fieldId={`${fieldId}-audience`}
+          value={draft.visibility}
+          onChange={(value) => onChange({ visibility: value })}
+          communityAvailable={draft.communitySlug !== ""}
+        />
+      </div>
     </EditDetailsSection>
   );
 }

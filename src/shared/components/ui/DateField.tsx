@@ -106,11 +106,20 @@ export function DateField({
     length: 0,
   });
   const elementsRef = useRef<Map<number, HTMLDivElement>>(new Map());
+  // The `seedKey` of the value this field last emitted. A controlled parent
+  // echoes it straight back, and that echo keeps the parts and the digit
+  // buffer, so typing "12" into a filled hour reads 12 and a cleared segment
+  // leaves its neighbours alone.
+  const [emittedSeedKey, setEmittedSeedKey] = useState<string | null>(null);
+  const isOwnEcho = seedKey === emittedSeedKey;
 
   // Reflect an incoming value/mode/is12Hour change into parts during render.
   if (seedKey !== lastSeedKey) {
     setLastSeedKey(seedKey);
-    setParts(partsFromValue(mode, value, is12Hour));
+    if (!isOwnEcho) {
+      setParts(partsFromValue(mode, value, is12Hour));
+      setEmittedSeedKey(null);
+    }
   }
 
   const bounds = useMemo(
@@ -128,8 +137,10 @@ export function DateField({
   const showInvalid = invalid || ariaInvalid === true || unavailable;
 
   const commit = (nextParts: WorkingParts) => {
+    const nextValue = isoFromParts(mode, nextParts, is12Hour);
     setParts(nextParts);
-    onChange(isoFromParts(mode, nextParts, is12Hour));
+    setEmittedSeedKey(`${mode}|${nextValue ?? ""}|${is12Hour}`);
+    onChange(nextValue);
   };
 
   const focusSegment = (index: number) =>
@@ -177,7 +188,8 @@ export function DateField({
     if (type !== "meridiem" && /^[0-9]$/.test(event.key)) {
       event.preventDefault();
       const bufferLength =
-        bufferRef.current.seedKey === seedKey && bufferRef.current.type === type
+        (bufferRef.current.seedKey === seedKey || isOwnEcho) &&
+        bufferRef.current.type === type
           ? bufferRef.current.length
           : 0;
       const entry = enterDigit(

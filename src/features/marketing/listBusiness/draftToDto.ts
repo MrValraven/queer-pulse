@@ -9,6 +9,12 @@ import {
 import { normalizeAccessibilityDraft } from "./listingAccessibility.data";
 import { normalizeOwnedBy } from "./listingOwnedBy.data";
 import { emptyMenuDraft, menuForPayload } from "./listingMenu.data";
+import {
+  isByAppointmentListing,
+  isMobileWithoutMeetingPoint,
+  listingKindOf,
+  mobileDetailsForPayload,
+} from "./listingMobile.data";
 import { isSellingOnline, onlineDetailsForPayload } from "./listingOnline.data";
 import {
   completeServiceRows,
@@ -43,7 +49,8 @@ import type {
  * blank rows are dropped and the client-only React key is stripped. And it
  * sends only the active kind's fields (see `withListingKind`): an online-only
  * listing ships no neighbourhood, address, pin or hours, and a place ships no
- * "Based in" city.
+ * "Based in" city. An out-and-about listing ships its meeting point only
+ * while the box is ticked, and no hours by appointment.
  */
 
 /**
@@ -92,13 +99,18 @@ export function businessPayload(
   draft: ListingDraft,
 ): CoManagerUpdateListingDto {
   const accessibility = normalizeAccessibilityDraft(draft.accessibility);
+  // An online listing, and an out-and-about one with the meeting point
+  // unticked, keep no location at all, whatever the draft still holds from
+  // before. An online listing and a "By appointment only" one keep no hours.
+  const hasNoLocation = draft.online || isMobileWithoutMeetingPoint(draft);
+  const hasNoHours = draft.online || isByAppointmentListing(draft);
   return {
     path: draft.path,
     name: draft.name.trim(),
     cats: draft.cats,
-    // Blank for an online-only listing, like the address below. The field is
-    // hidden then, so a neighbourhood picked before the switch must not ship.
-    hood: draft.online ? "" : draft.hood,
+    // Blank for an online listing and for an out-and-about one with no meeting
+    // point, like the address below.
+    hood: hasNoLocation ? "" : draft.hood,
     // "Based in" belongs to an online listing alone. A place sends "", which
     // the backend resolves to the directory's city as it always has.
     city: draft.online ? (draft.city ?? "").trim() : "",
@@ -119,20 +131,24 @@ export function businessPayload(
     ...pricingPayload(draft),
     langs: draft.langs,
     online: draft.online,
+    // Out and about. Derived from the kind, so it is never sent alongside
+    // `online` (a 400), and the block goes in the shape the server stores.
+    mobile: listingKindOf(draft) === "mobile",
+    mobileDetails: mobileDetailsForPayload(draft),
     hasOnlineShop: !draft.online && draft.hasOnlineShop === true,
-    // An online-only listing carries no location: never ship a stale address,
-    // pin or neighbourhood (above) the member set before switching the toggle
-    // on.
-    address: draft.online ? "" : draft.address.trim(),
-    geocoded: draft.online ? false : draft.geocoded,
-    latitude: draft.online ? null : draft.latitude,
-    longitude: draft.online ? null : draft.longitude,
-    // An online listing keeps no opening hours: a closed week, no note (its
-    // reply note replaces it) and no dated overrides. The draft keeps what was
-    // typed, so switching back to a place brings it back.
-    hours: hoursForPayload(draft.online ? emptyHours() : draft.hours),
-    hoursNote: draft.online ? "" : draft.hoursNote.trim(),
-    hoursExceptions: draft.online
+    // An online listing, and an out-and-about one with no meeting point,
+    // carry no location: never ship a stale address, pin or neighbourhood
+    // (above) the member set before switching kind.
+    address: hasNoLocation ? "" : draft.address.trim(),
+    geocoded: hasNoLocation ? false : draft.geocoded,
+    latitude: hasNoLocation ? null : draft.latitude,
+    longitude: hasNoLocation ? null : draft.longitude,
+    // An online listing and a "By appointment only" one keep no opening
+    // hours: a closed week, no note and no dated overrides. The draft keeps
+    // what was typed, so switching back brings it back.
+    hours: hoursForPayload(hasNoHours ? emptyHours() : draft.hours),
+    hoursNote: hasNoHours ? "" : draft.hoursNote.trim(),
+    hoursExceptions: hasNoHours
       ? []
       : normalizeHoursExceptions(draft.hoursExceptions),
     // Always sent, the empty block included: the backend checks the main

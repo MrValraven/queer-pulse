@@ -1,5 +1,6 @@
 import { ANCHOR } from "../listBusiness.data";
 import type { ListingPricingMode } from "../listingMenu.data";
+import type { ListingKind } from "../listingMobile.data";
 
 /**
  * One section of the single-screen owner editor: the DOM id its jump link
@@ -51,6 +52,7 @@ export const LISTING_EDITOR_SECTIONS: ListingEditorSectionDefinition[] = [
       ANCHOR.adultTerms,
       ANCHOR.hood,
       ANCHOR.city,
+      ANCHOR.whereYouWork,
       ANCHOR.badge,
       ANCHOR.price,
       ANCHOR.blurb,
@@ -73,6 +75,8 @@ export const LISTING_EDITOR_SECTIONS: ListingEditorSectionDefinition[] = [
     id: "lb-editor-practical",
     labelKey: "marketing:listBusiness.wizard.pill.practical",
     anchors: [
+      ANCHOR.meetingPoint,
+      ANCHOR.byAppointment,
       ANCHOR.address,
       ANCHOR.hours,
       ANCHOR.hoursExceptions,
@@ -272,6 +276,8 @@ const PRACTICAL_ONLINE_LABEL_KEY =
   "marketing:listBusiness.editor.section.practicalOnline";
 const ACCESSIBILITY_ONLINE_LABEL_KEY =
   "marketing:listBusiness.editor.section.accessibilityOnline";
+const ACCESSIBILITY_MOBILE_LABEL_KEY =
+  "marketing:listBusiness.editor.section.accessibilityMobile";
 
 /** The pricing section as this listing shows it: titled "Menu" in menu mode
  *  and "In the shop" in shop mode. Same id and anchors in every mode, so jump
@@ -300,14 +306,19 @@ export function practicalSectionDefinition(
     : section;
 }
 
-/** The accessibility section as an online listing shows it: "Online access". */
+/** The accessibility section as an online listing shows it ("Online
+ *  access") and as an out-and-about one shows it ("Joining in"). */
 export function accessibilitySectionDefinition(
   section: ListingEditorSectionDefinition,
-  isOnline: boolean,
+  kind: ListingKind,
 ): ListingEditorSectionDefinition {
-  return isOnline
-    ? { ...section, labelKey: ACCESSIBILITY_ONLINE_LABEL_KEY }
-    : section;
+  if (kind === "online") {
+    return { ...section, labelKey: ACCESSIBILITY_ONLINE_LABEL_KEY };
+  }
+  if (kind === "mobile") {
+    return { ...section, labelKey: ACCESSIBILITY_MOBILE_LABEL_KEY };
+  }
+  return section;
 }
 
 /** The nav's section list titled for the pricing mode and the listing's
@@ -316,9 +327,10 @@ export function accessibilitySectionDefinition(
 export function withListingKindLabels(
   sections: ListingEditorSectionDefinition[],
   pricingMode: ListingPricingMode,
-  isOnline: boolean,
+  kind: ListingKind,
 ): ListingEditorSectionDefinition[] {
-  if (pricingMode === "services" && !isOnline) return sections;
+  if (pricingMode === "services" && kind === "place") return sections;
+  const isOnline = kind === "online";
   return sections.map((section) => {
     if (section.key === "services") {
       return pricingSectionDefinition(section, pricingMode);
@@ -327,7 +339,7 @@ export function withListingKindLabels(
       return practicalSectionDefinition(section, isOnline);
     }
     if (section.key === "accessibility") {
-      return accessibilitySectionDefinition(section, isOnline);
+      return accessibilitySectionDefinition(section, kind);
     }
     return section;
   });

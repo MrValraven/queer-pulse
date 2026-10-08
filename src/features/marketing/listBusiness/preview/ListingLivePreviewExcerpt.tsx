@@ -8,6 +8,7 @@ import {
 import { ListingLivePreviewOrdering } from "./ListingLivePreviewOrdering";
 import { ListingLivePreviewOwner } from "./ListingLivePreviewOwner";
 import { ExcerptSection } from "./ListingLivePreviewSection";
+import { isByAppointmentListing } from "../listingMobile.data";
 import { listingHoursSummary } from "./listingPreviewHours.data";
 import type { ListingPreviewRegion } from "./listingPreviewRegions.data";
 import styles from "../ListBusinessPage.module.css";
@@ -36,7 +37,10 @@ export function ListingLivePreviewExcerpt({
     .map((paragraph) => paragraph.text)
     .filter((text) => text.trim())
     .join("\n\n");
-  const hours = listingHoursSummary(draft.hours, t, language);
+  // "By appointment only" keeps no hours; the block says so, as the page does.
+  const hours = isByAppointmentListing(draft)
+    ? t("marketing:directory.detail.byAppointmentOnly")
+    : listingHoursSummary(draft.hours, t, language);
 
   return (
     <div className={styles.pvDetail}>

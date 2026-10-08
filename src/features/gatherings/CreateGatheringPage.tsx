@@ -45,6 +45,7 @@ import { AccessChapter } from "./steps/AccessChapter";
 import { CareChapter } from "./steps/CareChapter";
 import { WhatChapter } from "./steps/WhatChapter";
 import { WhenWhereChapter } from "./steps/WhenWhereChapter";
+import { RUN_BY_FIELD_ANCHOR } from "./steps/RunByField";
 import { WhoChapter } from "./steps/WhoChapter";
 import {
   useCreateGatheringChapterFlow,
@@ -189,6 +190,11 @@ export function CreateGatheringPage() {
       chapterFlow.openChapterAtField(
         chapterIndexOf("whenWhere"),
         GATE_ANCHOR.venue,
+      ),
+    onRunByRefused: () =>
+      chapterFlow.openChapterAtField(
+        chapterIndexOf("who"),
+        RUN_BY_FIELD_ANCHOR,
       ),
   });
   const draft = useCreateGatheringDraft({

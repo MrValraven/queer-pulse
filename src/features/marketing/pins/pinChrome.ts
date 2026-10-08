@@ -281,6 +281,7 @@ function signatureOf(venue: VenueMarkerData): string {
     venue.address,
     venue.photo ?? "",
     venue.categoryLabel ?? "",
+    venue.secondaryLabel ?? "",
     venue.isVerified ? "verified" : "",
   ].join("\u0000");
 }

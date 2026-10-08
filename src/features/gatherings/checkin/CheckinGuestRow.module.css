@@ -1,9 +1,14 @@
 /* ── Guest row ───────────────────────────────────────────────────────────── */
 
+/* Top-aligned, so a meta line or the access tag grows the row downward and
+   the photo and the pill stay level with the name. The full RSVP answers
+   live in the details modal. `--row-avatar-size` is the
+   avatar's 38px box, so the name and the slot centre on the same height. */
 .row {
+  --row-avatar-size: calc(2.923 * var(--text-13));
   position: relative;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 12px;
   padding: 10px 12px;
   border-radius: var(--radius-14);
@@ -32,8 +37,8 @@
   animation: none;
 }
 
-/* The whole row is the check-in target: this button covers it, so a tap
-   anywhere on the guest checks them in. */
+/* The whole row opens the guest's details: this button covers it, so a tap
+   anywhere on the guest brings them up. The slot's buttons sit above it. */
 .rowHit {
   position: absolute;
   inset: 0;
@@ -47,21 +52,20 @@
   -webkit-tap-highlight-color: transparent;
   transition: background-color var(--dur-fast) var(--ease);
 }
+/* The wash follows the pointer anywhere on the row, the pill and the undo
+   button included, so the row reads as one target under them. */
 @media (hover: hover) {
-  .rowHit:hover:not(:disabled) {
+  .row:hover > .rowHit {
     background-color: var(--wash);
   }
 }
-.rowHit:active:not(:disabled) {
+.rowHit:active {
   background-color: rgba(var(--line-rgb), 0.08);
 }
 .rowHit:focus-visible {
   outline: var(--focus-ring);
   outline-offset: var(--focus-ring-offset);
   box-shadow: var(--ring-cream);
-}
-.rowHit:disabled {
-  cursor: progress;
 }
 
 .avatar {
@@ -71,18 +75,30 @@
   width: 2.923em; /* 38 / 13 */
   height: 2.923em;
   border-radius: var(--radius-avatar);
+  overflow: hidden;
   font-family: var(--serif);
   font-size: var(--text-13);
   font-weight: 500;
 }
 
-/* The name keeps at least this much room; the slot gives way first. */
+.avatar img {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+
+/* The name keeps at least this much room; the slot gives way first. At
+   least the avatar's height, with the content centred in it, so a lone
+   name line still sits level with the photo. */
 .info {
   display: flex;
   flex: 1 1 0;
   flex-direction: column;
+  justify-content: center;
   gap: 2px;
   min-inline-size: min(7rem, 100%);
+  min-block-size: var(--row-avatar-size);
 }
 
 /* One line, so a row keeps its height when the pill turns into the chip. */
@@ -118,10 +134,18 @@
 }
 
 /* Pill and chip stack in one cell while they crossfade, so the slot holds
-   the wider of the two and never spills past the row. */
+   the wider of the two and never spills past the row. The slot sits above
+   the row button and lets taps through to it, except on its own buttons.
+   It is the avatar's height and top-aligned, so the pill and the chip centre
+   on the photo however tall the row grows. */
 .slot {
+  position: relative;
+  z-index: 2;
+  pointer-events: none;
   display: grid;
   flex: 0 1 auto;
+  align-self: flex-start;
+  min-block-size: var(--row-avatar-size);
   grid-template-columns: minmax(0, auto);
   align-items: center;
   justify-items: end;
@@ -133,6 +157,10 @@
   max-inline-size: 100%;
 }
 
+.slot button {
+  pointer-events: auto;
+}
+
 .swapItem {
   display: inline-flex;
 }
@@ -141,19 +169,36 @@
   display: inline-flex;
   align-items: center;
   min-block-size: 36px;
+  margin: 0;
+  padding-block: 0;
   padding-inline: 16px;
   border: 1.5px solid var(--accent);
   border-radius: var(--radius-pill);
+  background: transparent;
   color: var(--accent-ink);
+  font: inherit;
   font-size: var(--text-13);
   font-weight: 600;
   white-space: nowrap;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
   transition: background-color var(--dur-fast) var(--ease);
 }
 @media (hover: hover) {
-  .rowHit:hover:not(:disabled) ~ .slot .pill {
+  .pill:hover:not(:disabled) {
     background-color: rgba(var(--accent-rgb), 0.1);
   }
+}
+.pill:active:not(:disabled) {
+  background-color: rgba(var(--accent-rgb), 0.16);
+}
+.pill:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+.pill:disabled {
+  cursor: progress;
 }
 .row[data-pending] .pill {
   opacity: 0.55;

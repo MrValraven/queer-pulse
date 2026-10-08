@@ -1,4 +1,5 @@
 import { useTranslation } from "../../../shared/i18n/useTranslation";
+import { listingKindOf } from "./listingMobile.data";
 import type { ListingForm } from "./useListingForm";
 import { PaneHeader } from "./ListBusinessChrome";
 import { BasicsFields } from "./fields/BasicsFields";
@@ -26,9 +27,11 @@ export function StepBasics({
         title={t("marketing:listBusiness.step1.title")}
         em={t("marketing:listBusiness.step1.em")}
         sub={t(
-          form.draft.online
-            ? "marketing:listBusiness.step1.subOnline"
-            : "marketing:listBusiness.step1.sub",
+          // "Put your place on the map" reads for a place alone: online and
+          // out-and-about listings share the "find you" line.
+          listingKindOf(form.draft) === "place"
+            ? "marketing:listBusiness.step1.sub"
+            : "marketing:listBusiness.step1.subOnline",
         )}
       />
       <BasicsFields

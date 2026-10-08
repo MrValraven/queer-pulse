@@ -18,6 +18,7 @@
  */
 
 import type { TFunction } from "../../../shared/i18n/types";
+import type { ListingKind } from "./listingMobile.data";
 
 export type ListingTagGroupId =
   "visiting" | "happening" | "foodDrink" | "pricing" | "ordering" | "sessions";
@@ -132,7 +133,8 @@ export const LISTING_TAG_GROUP_LABEL_KEYS: Record<string, string> = {
   ordering: "marketing:listBusiness.tagGroup.ordering",
   payment: "marketing:listBusiness.tagGroup.payment",
   sessions: "marketing:listBusiness.tagGroup.sessions",
-  /** The 'visiting' heading on an online listing (see listingTagGroupLabel). */
+  /** The 'visiting' heading on an online or out-and-about listing (see
+   *  listingTagGroupLabel). */
   visitingOnline: "marketing:listBusiness.tagGroup.visitingOnline",
 };
 
@@ -186,17 +188,19 @@ export function listingTagLabel(translate: TFunction, tag: string): string {
   return key ? translate(key) : tag;
 }
 
-/** Display heading for a group id. An online listing reads the group's
- *  `<id>Online` heading when one exists. Falls back to the id itself. */
+/** Display heading for a group id. An online or out-and-about listing reads
+ *  the group's `<id>Online` heading when one exists: neither has a door to
+ *  visit, so both read "How to book". Falls back to the id itself. */
 export function listingTagGroupLabel(
   translate: TFunction,
   groupId: string,
-  isOnline = false,
+  kind: ListingKind = "place",
 ): string {
-  const onlineKey = isOnline
-    ? LISTING_TAG_GROUP_LABEL_KEYS[`${groupId}Online`]
-    : undefined;
-  const key = onlineKey ?? LISTING_TAG_GROUP_LABEL_KEYS[groupId];
+  const bookingKey =
+    kind === "place"
+      ? undefined
+      : LISTING_TAG_GROUP_LABEL_KEYS[`${groupId}Online`];
+  const key = bookingKey ?? LISTING_TAG_GROUP_LABEL_KEYS[groupId];
   return key ? translate(key) : groupId;
 }
 

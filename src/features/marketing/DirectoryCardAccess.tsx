@@ -8,7 +8,8 @@ import {
   type DirectoryCardRowItem,
 } from "./DirectoryCardOverflow";
 import type { DirectoryPlace } from "./directoryPlaces";
-import { ACCESSIBILITY_QUESTIONS } from "./listBusiness/listingAccessibility.data";
+import { cardAccessibilityQuestionsFor } from "./listBusiness/listingAccessibility.data";
+import { listingKindOf } from "./listBusiness/listingMobile.data";
 import { useAccessFilter } from "./useDirectoryFilters";
 import s from "./DirectoryPage.module.css";
 
@@ -60,7 +61,7 @@ export function DirectoryCardAccess({ place }: { place: DirectoryPlace }) {
   const answers = place.accessibility?.answers;
 
   const met = answers
-    ? ACCESSIBILITY_QUESTIONS.filter(
+    ? cardAccessibilityQuestionsFor(listingKindOf(place)).filter(
         (question) => answers[question.slug] === "yes",
       )
     : [];
@@ -83,7 +84,11 @@ export function DirectoryCardAccess({ place }: { place: DirectoryPlace }) {
     <ul
       ref={rowRef}
       className={s.accessRow}
-      aria-label={t("marketing:directory.card.access")}
+      aria-label={t(
+        listingKindOf(place) === "mobile"
+          ? "marketing:directory.card.accessMobile"
+          : "marketing:directory.card.access",
+      )}
       data-preview-region="access"
     >
       {orderedItems.slice(0, visibleCount).map((item) => (

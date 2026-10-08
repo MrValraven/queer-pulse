@@ -63,6 +63,108 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "copy-applicant-email",
+        category: "improvement",
+        date: "8 Oct 2026",
+        ...entryKeys("copy-applicant-email"),
+      },
+      {
+        id: "out-and-about-access-questions",
+        category: "improvement",
+        date: "8 Oct 2026",
+        ...entryKeys("out-and-about-access-questions"),
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
+      },
+      {
+        id: "edit-notified-count",
+        category: "fix",
+        date: "8 Oct 2026",
+        ...entryKeys("edit-notified-count"),
+        tag: {
+          labelKey: "marketing:changelog.tag.gatherings",
+          to: routes.gatherings,
+        },
+      },
+      {
+        id: "no-fixed-premises-listings",
+        category: "feature",
+        date: "8 Oct 2026",
+        ...entryKeys("no-fixed-premises-listings"),
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
+      },
+      {
+        id: "wider-gathering-editor",
+        category: "improvement",
+        date: "8 Oct 2026",
+        ...entryKeys("wider-gathering-editor"),
+        tag: {
+          labelKey: "marketing:changelog.tag.gatherings",
+          to: routes.gatherings,
+        },
+      },
+      {
+        id: "date-fields-keep-your-hour",
+        category: "fix",
+        date: "8 Oct 2026",
+        ...entryKeys("date-fields-keep-your-hour"),
+      },
+      {
+        id: "more-gathering-themes",
+        category: "improvement",
+        date: "8 Oct 2026",
+        ...entryKeys("more-gathering-themes"),
+        tag: {
+          labelKey: "marketing:changelog.tag.gatherings",
+          to: routes.gatherings,
+        },
+      },
+      {
+        id: "checkin-guest-details",
+        category: "feature",
+        date: "8 Oct 2026",
+        ...entryKeys("checkin-guest-details"),
+        tag: {
+          labelKey: "marketing:changelog.tag.gatherings",
+          to: routes.gatherings,
+        },
+      },
+      {
+        id: "listed-venue-address-open",
+        category: "improvement",
+        date: "8 Oct 2026",
+        ...entryKeys("listed-venue-address-open"),
+        tag: {
+          labelKey: "marketing:changelog.tag.gatherings",
+          to: routes.gatherings,
+        },
+      },
+      {
+        id: "smoother-checkin-moves",
+        category: "fix",
+        date: "8 Oct 2026",
+        ...entryKeys("smoother-checkin-moves"),
+        tag: {
+          labelKey: "marketing:changelog.tag.gatherings",
+          to: routes.gatherings,
+        },
+      },
+      {
+        id: "smoother-focus-mode",
+        category: "fix",
+        date: "8 Oct 2026",
+        ...entryKeys("smoother-focus-mode"),
+        tag: {
+          labelKey: "marketing:changelog.tag.gatherings",
+          to: routes.gatherings,
+        },
+      },
+      {
         id: "gathering-guest-preview",
         category: "feature",
         date: "7 Oct 2026",

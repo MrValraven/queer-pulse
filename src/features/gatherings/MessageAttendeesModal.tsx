@@ -90,15 +90,15 @@ export function MessageAttendeesModal({
       onClose={onClose}
       footer={
         <>
+          <Button variant="ghost" onClick={onClose}>
+            {t("gatherings:manage.cancelCta")}
+          </Button>
           <Button variant="primary" onClick={send} disabled={!canSend}>
             {sendAnnouncement.isPending
               ? t("gatherings:manage.messageModal.sendingCta")
               : t("gatherings:manage.messageModal.sendCta", {
                   count: attendeeCount,
                 })}
-          </Button>
-          <Button variant="ghost" onClick={onClose}>
-            {t("gatherings:manage.cancelCta")}
           </Button>
         </>
       }

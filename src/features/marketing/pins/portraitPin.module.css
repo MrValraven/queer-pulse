@@ -265,7 +265,8 @@
    inside the clip that the ellipsis needs, so descenders keep their cream
    edge. */
 .name,
-.category {
+.category,
+.secondary {
   min-inline-size: 0;
   margin: -2px -3px;
   padding: 2px 3px;
@@ -286,6 +287,14 @@
   color: var(--pin-color, var(--plum));
   font-size: var(--text-11);
   font-weight: 600;
+}
+/* A meeting point's "Meeting point" line, under the category. Fixed plum on
+   the fixed cream halo, like the name.
+   css-scale-allow: non-flipping-text */
+.secondary {
+  color: var(--plum);
+  font-size: var(--text-11);
+  font-weight: 500;
 }
 
 /* ── Which labels show ───────────────────────────────────────────────────

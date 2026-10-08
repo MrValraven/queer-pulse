@@ -1,10 +1,26 @@
 import { useTranslation } from "../../../shared/i18n/useTranslation";
+import { listingKindOf, type ListingKind } from "./listingMobile.data";
 import type { ListingForm } from "./useListingForm";
 import { PaneHeader } from "./ListBusinessChrome";
 import { PhotosFields } from "./fields/PhotosFields";
 import { OwnerFields } from "./fields/OwnerFields";
 import { isOwnerBlockHidden } from "./ownerBlock";
 import styles from "./ListBusinessPage.module.css";
+
+const STEP_KEY = "marketing:listBusiness.step4";
+
+/** The pane's sub line for each kind: one set for the full step, one for the
+ *  photos-only step a suggestion or a staff draft gets. */
+const SUB_KEYS: Record<ListingKind, string> = {
+  place: `${STEP_KEY}.sub`,
+  online: `${STEP_KEY}.subOnline`,
+  mobile: `${STEP_KEY}.subMobile`,
+};
+const PHOTOS_ONLY_SUB_KEYS: Record<ListingKind, string> = {
+  place: `${STEP_KEY}.suggest.sub`,
+  online: `${STEP_KEY}.suggest.subOnline`,
+  mobile: `${STEP_KEY}.suggest.subMobile`,
+};
 
 /* ===== Step 4: photos, and a little about you =====
    Wizard chrome only: both halves live in `PhotosFields` and `OwnerFields`,
@@ -21,6 +37,7 @@ export function StepPhotosYou({
   // below, and both are photos-only from here: the header switches to copy
   // about the photos alone, with no "and a little about you".
   const isPhotosOnlyHeader = isOwnerBlockHidden(form.draft);
+  const kind = listingKindOf(form.draft);
   return (
     <div className={styles.stepBody}>
       <PaneHeader
@@ -35,13 +52,7 @@ export function StepPhotosYou({
             : "marketing:listBusiness.step4.em",
         )}
         sub={t(
-          isPhotosOnlyHeader
-            ? form.draft.online
-              ? "marketing:listBusiness.step4.suggest.subOnline"
-              : "marketing:listBusiness.step4.suggest.sub"
-            : form.draft.online
-              ? "marketing:listBusiness.step4.subOnline"
-              : "marketing:listBusiness.step4.sub",
+          isPhotosOnlyHeader ? PHOTOS_ONLY_SUB_KEYS[kind] : SUB_KEYS[kind],
         )}
       />
 

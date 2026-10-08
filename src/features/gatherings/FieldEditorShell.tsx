@@ -26,16 +26,22 @@ export function FieldEditorFooter({
   onSave,
   onCancel,
   saveLabel,
+  status,
 }: {
   isSaveEnabled: boolean;
   onSave: () => void;
   onCancel: () => void;
   /** Defaults to t("gatherings:manage.editModal.saveCta"). */
   saveLabel?: ReactNode;
+  /** A line on the footer's left saying where the edit stands (the full
+   *  `EditDetailsModal` says what changed and what holds Save). Cancel and
+   *  Save then sit together on the right. The one-field editors pass none
+   *  and keep their Cancel-left, Save-right footer exactly as it was. */
+  status?: ReactNode;
 }) {
   const { t } = useTranslation();
-  return (
-    <div className={styles.footer}>
+  const buttons = (
+    <>
       <Button variant="ghost" onClick={onCancel}>
         {t("gatherings:manage.cancelCta")}
       </Button>
@@ -47,6 +53,15 @@ export function FieldEditorFooter({
       >
         {saveLabel ?? t("gatherings:manage.editModal.saveCta")}
       </Button>
+    </>
+  );
+  if (status === undefined) {
+    return <div className={styles.footer}>{buttons}</div>;
+  }
+  return (
+    <div className={`${styles.footer} ${styles.footerWithStatus}`}>
+      <div className={styles.footerStatus}>{status}</div>
+      <div className={styles.footerActions}>{buttons}</div>
     </div>
   );
 }

@@ -108,6 +108,11 @@ function WhereVenueRow({
  * would read as a gathering with no address, which is a different and wrong
  * fact, and a house party would be unlistable without this rule.
  *
+ * A gathering at a listed public venue (`venueListing`) shows that venue's
+ * public directory address to everyone, since its directory page already
+ * does. The host's own address, which may add detail like a floor, still goes
+ * only to people going, and it wins whenever the viewer holds it.
+ *
  * COST is free text the host wrote, rendered and nothing more (LOC-18). There
  * is no payment integration on this platform, so no button, link or sentence
  * on this panel may imply one.
@@ -130,7 +135,10 @@ export function GatheringWherePanel({
   const { t } = useTranslation();
   const isOnline = gathering.isOnline === true;
   const joinLink = gathering.onlineUrl?.trim() ?? "";
-  const address = gathering.address?.trim() ?? "";
+  // The host's own address when the viewer holds it, else the linked public
+  // venue's directory address, which every reader may see.
+  const displayedAddress =
+    gathering.address?.trim() || gathering.venueListing?.address?.trim() || "";
   const arrivalNotes = gathering.arrivalNotes?.trim() ?? "";
   const cost = gathering.cost?.trim() ?? "";
   const neighbourhood = gathering.neighbourhood?.trim() ?? gathering.hood;
@@ -198,12 +206,12 @@ export function GatheringWherePanel({
                 )}
               </WhereRow>
             )
-          ) : address ? (
+          ) : displayedAddress ? (
             <WhereRow
               icon={FiMapPin}
               label={t("gatherings:gathering.where.addressLabel")}
             >
-              {address}
+              {displayedAddress}
             </WhereRow>
           ) : gathering.viewerIsOrganizer ? (
             // The same two absences as the join link. An organiser always

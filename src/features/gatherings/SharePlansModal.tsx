@@ -111,13 +111,13 @@ export function SharePlansModal({
       onClose={onClose}
       footer={
         <>
+          <Button variant="ghost" onClick={onClose}>
+            {t("gatherings:manage.cancelCta")}
+          </Button>
           <Button variant="primary" onClick={send} disabled={!canSend}>
             {sharePlans.isPending
               ? t("gatherings:sharePlans.sendingCta")
               : t("gatherings:sharePlans.sendCta")}
-          </Button>
-          <Button variant="ghost" onClick={onClose}>
-            {t("gatherings:manage.cancelCta")}
           </Button>
         </>
       }

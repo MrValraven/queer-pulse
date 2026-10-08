@@ -67,7 +67,7 @@ export function DirectoryPlaceAddress({ place }: { place: DirectoryPlace }) {
   const hasStreet = address !== "";
 
   // The copied address still carries the area, so it pastes complete.
-  const fullAddress = [hasStreet ? address : null, ...placeAreaParts(place)]
+  const fullAddress = [hasStreet ? address : null, ...placeAreaParts(place, t)]
     .filter(Boolean)
     .join(", ");
 

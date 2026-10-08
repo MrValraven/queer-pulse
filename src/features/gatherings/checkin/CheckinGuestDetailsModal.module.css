@@ -1,0 +1,152 @@
+/* A guest's details on the Check-in tab: the photo large on the left, what
+   they told the host on the right. On a phone the photo shrinks beside the
+   details and the needs run full width underneath. */
+
+.layout {
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+  align-items: start;
+  gap: 24px;
+  padding-block: 4px 12px;
+}
+
+/* With needs, the photo spans both rows so the needs sit straight under the
+   details in the right column. */
+.layout[data-has-needs="true"] {
+  grid-template-rows: auto 1fr;
+  row-gap: 10px;
+}
+
+.layout[data-has-needs="true"] .photo {
+  grid-row: 1 / span 2;
+}
+
+/* With nothing under them, the details sit level with the photo's middle. */
+.layout[data-has-needs="false"] .details {
+  align-self: center;
+}
+
+/* Square, so a face reads the same whatever shape the upload was. The row's
+   tint stays under the photo while it loads and carries the initials when
+   there is none. */
+.photo {
+  display: grid;
+  place-items: center;
+  inline-size: 100%;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: var(--radius-panel);
+  font-family: var(--serif);
+  font-size: var(--text-64);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+.photo img {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  min-inline-size: 0;
+}
+
+.pronouns {
+  margin: 0;
+  font-size: var(--text-body-lg);
+  color: var(--ink);
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--line-rgb), 0.07);
+  color: var(--text-strong);
+  font-size: var(--text-13);
+  font-weight: 700;
+}
+
+.status svg {
+  flex: none;
+}
+
+.statusArrived {
+  background: rgba(var(--jade-rgb), 0.12);
+  color: var(--jade-ink);
+}
+
+.facts {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.fact {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--text-14);
+  color: var(--ink);
+}
+
+.fact svg {
+  flex: none;
+  color: var(--ink-60);
+}
+
+/* The needs block sits in the details column, under the details. Its own
+   top margin is for the guest row; here the layout's row gap spaces it. */
+.needs {
+  grid-column: 2;
+  min-inline-size: 0;
+}
+
+.needs > * {
+  margin-top: 0;
+}
+
+/* A phone. This mirrors the shared Modal's sheet breakpoint, so the dialog
+   switches layout as it becomes a bottom sheet. The photo shrinks beside the
+   details, the needs take the full width under both, and the two actions
+   share the footer's width for the thumb. */
+@media (max-width: 719.98px) {
+  .layout,
+  .layout[data-has-needs="true"] {
+    grid-template-columns: min(128px, 34vw) minmax(0, 1fr);
+    grid-template-rows: none;
+    align-items: start;
+    gap: 16px;
+  }
+
+  .layout[data-has-needs="true"] .photo {
+    grid-row: auto;
+  }
+
+  .layout[data-has-needs="false"] .details {
+    align-self: start;
+  }
+
+  .photo {
+    font-size: var(--text-48);
+  }
+
+  .needs {
+    grid-column: 1 / -1;
+  }
+
+  .action {
+    flex: 1 1 0;
+  }
+}

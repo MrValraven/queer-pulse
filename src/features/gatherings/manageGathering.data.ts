@@ -1,3 +1,5 @@
+import { MEMBERS } from "../members/data/members";
+
 /** How many people the demo prototype lets go. Seeds `GatheringState.capacity`
  *  and the "capacity" details row below, so the edit modal opens on the number
  *  the row shows. */
@@ -51,6 +53,8 @@ export const GATHERING_DATE = new Date(2026, 5, 21);
 // A going row's `id` doubles as its member slug in demo (`mockRows()` in
 // `api/useAttendees.ts`), so rows for registry members carry the registry
 // slug and the invite picker can hide them.
+// Registry members show their registry photo, and the rest keep their
+// initials, so the door list shows both kinds of avatar.
 export const GOING_ATTENDEES = [
   {
     id: "going-sr",
@@ -67,6 +71,7 @@ export const GOING_ATTENDEES = [
     background: "rgba(232,119,90,.12)",
     color: "var(--accent-ink)",
     name: "Anika Kovač",
+    avatarUrl: MEMBERS.anika?.photo,
     pronouns: "she/they",
     rsvpAt: new Date(2026, 5, 1),
   },
@@ -76,6 +81,7 @@ export const GOING_ATTENDEES = [
     background: "rgba(var(--line-rgb),.1)",
     color: "var(--text-strong)",
     name: "Jordan Park",
+    avatarUrl: MEMBERS.jordan?.photo,
     pronouns: "they/them",
     rsvpAt: new Date(2026, 4, 31),
   },

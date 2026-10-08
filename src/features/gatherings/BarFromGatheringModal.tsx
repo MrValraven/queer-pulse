@@ -62,6 +62,9 @@ export function BarFromGatheringModal({
       onClose={onClose}
       footer={
         <>
+          <Button variant="ghost" onClick={onClose}>
+            {t("gatherings:manage.cancelCta")}
+          </Button>
           <Button
             variant="primary"
             onClick={bar}
@@ -70,9 +73,6 @@ export function BarFromGatheringModal({
             {banFromEvent.isPending
               ? t("gatherings:manage.bans.barringCta")
               : t("gatherings:manage.bans.barCta")}
-          </Button>
-          <Button variant="ghost" onClick={onClose}>
-            {t("gatherings:manage.cancelCta")}
           </Button>
         </>
       }

@@ -131,6 +131,11 @@
      dialog's right edge instead of moving down. Wrapping keeps every action
      reachable at any width. */
   flex-wrap: wrap;
+  /* Actions sit at the end of the row, Cancel and then the primary, the
+     same as the field editor and ConfirmDialog. A caller with start-side
+     content (a status line, a counter, a destructive action kept apart)
+     holds it there with `flex: 1` or `margin-inline-end: auto`. */
+  justify-content: flex-end;
   gap: 10px;
   padding: 16px 24px;
   border-top: 1px solid rgba(var(--line-rgb), 0.09);
@@ -179,6 +184,19 @@
   /* Clear the iOS home indicator on whichever element ends the sheet. */
   .modalFoot {
     padding-bottom: max(16px, env(safe-area-inset-bottom));
+  }
+  /* A footer made only of two buttons shares the row width, so both sit
+     under the thumb, as in the field editor and ConfirmDialog. Each button
+     keeps its own label width as a floor, so a long label wraps the row
+     before it overflows. Three or more buttons stack one per row in source
+     order, which keeps the primary last and nearest the thumb. A footer
+     with any other child (a status line, a spacer, a wrapper) keeps its own
+     layout, and a single button stays at the end. */
+  .modalFoot:has(> :nth-child(2)):not(:has(> :not(button, a))) > * {
+    flex: 1 1 0;
+  }
+  .modalFoot:has(> :nth-child(3)):not(:has(> :not(button, a))) > * {
+    flex-basis: 100%;
   }
   .modalBody:last-child {
     padding-bottom: max(8px, env(safe-area-inset-bottom));

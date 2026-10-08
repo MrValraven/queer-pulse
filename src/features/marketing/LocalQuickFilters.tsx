@@ -1,6 +1,6 @@
 import { useId } from "react";
 import { m } from "motion/react";
-import { FiClock, FiEye, FiShield } from "react-icons/fi";
+import { FiClock, FiEye, FiNavigation, FiShield } from "react-icons/fi";
 import { RefineGroup, useRefineGlide } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { LocalChipCounts } from "./useDirectoryFilters";
@@ -8,8 +8,8 @@ import s from "./LocalFilterBar.module.css";
 
 /**
  * The one-tap narrowings, side by side: is it open right now, has it been
- * verified as a safe space and, on the Online tab for a signed-in member, Show
- * 18+ shops. Each chip names itself, so the group only needs a name for the
+ * verified as a safe space, is it out and about (List and Map) and, on the Online
+ * tab for a signed-in member, Show 18+ shops. Each chip names itself, so the group only needs a name for the
  * set as a whole.
  */
 export function LocalQuickFilters({
@@ -23,6 +23,9 @@ export function LocalQuickFilters({
   showAdult = false,
   isAdultShown,
   onToggleAdult,
+  showOutAndAbout = false,
+  isOutAndAbout,
+  onToggleOutAndAbout,
 }: {
   /** Off on the Online tab, which lists businesses by how they sell online,
    *  so opening hours are no filter there. */
@@ -40,6 +43,10 @@ export function LocalQuickFilters({
   /** Whether "Show 18+ shops" is on. */
   isAdultShown?: boolean;
   onToggleAdult?: () => void;
+  /** Offers "Out and about": the List and Map tabs. */
+  showOutAndAbout?: boolean;
+  isOutAndAbout?: boolean;
+  onToggleOutAndAbout?: () => void;
 }) {
   const { t } = useTranslation();
   const quickLabelId = useId();
@@ -53,6 +60,11 @@ export function LocalQuickFilters({
     isLoadedSetComplete && !openNow && chipCounts.openNow === 0;
   const isSafeOnlyDisabled =
     isLoadedSetComplete && !safeOnly && chipCounts.safe === 0;
+  const isOutAndAboutDisabled =
+    isLoadedSetComplete &&
+    !isOutAndAbout &&
+    chipCounts.outAndAbout !== undefined &&
+    chipCounts.outAndAbout === 0;
 
   return (
     <RefineGroup
@@ -86,6 +98,21 @@ export function LocalQuickFilters({
           <FiShield aria-hidden />
           {t("marketing:local.filter.verifiedSafeSpaces")}
         </m.button>
+        {showOutAndAbout && onToggleOutAndAbout && (
+          <m.button
+            {...glide.chip}
+            type="button"
+            aria-pressed={isOutAndAbout === true}
+            disabled={isOutAndAboutDisabled}
+            className={[s.chip, isOutAndAbout && s.chipOn]
+              .filter(Boolean)
+              .join(" ")}
+            onClick={onToggleOutAndAbout}
+          >
+            <FiNavigation aria-hidden />
+            {t("marketing:local.filter.outAndAbout")}
+          </m.button>
+        )}
         {showAdult && onToggleAdult && (
           <m.button
             {...glide.chip}

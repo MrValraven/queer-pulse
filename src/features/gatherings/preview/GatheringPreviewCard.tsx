@@ -6,6 +6,8 @@ import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { cx } from "../../../shared/lib/cx";
 import { replayAnimationClass } from "../createGatheringChapters";
 import { gatheringOccurrences } from "../gatheringOccurrences";
+import { RunByLine } from "../hub/eventCardParts";
+import { useManagedListings } from "../../marketing/listBusiness/api/useManagedListings";
 import type { GatheringForm } from "../useGatheringForm";
 import {
   PREVIEW_BUMP_DURATION_MS,
@@ -70,6 +72,10 @@ export function GatheringPreviewCard({
   const schedule = previewSchedule(form, startAt, fmt, t);
   const cardRef = usePreviewBump(previewSignature(form));
   const title = form.title.trim();
+  const { items: managedListings } = useManagedListings();
+  const runByName = managedListings.find(
+    (item) => item.id === form.runByListingId,
+  )?.name;
   // The description resolves its mentions to names through one request per
   // set of refs, so it follows the host's typing once they pause. Every
   // keystroke of "@ana-lopes" would otherwise ask for `@a`, `@an` and so on.
@@ -87,6 +93,10 @@ export function GatheringPreviewCard({
       <h3 className={cx(styles.title, !title && styles.titleEmpty)}>
         {title || t("gatherings:create.v2.preview.titlePlaceholder")}
       </h3>
+      <RunByLine
+        event={runByName ? { runByName } : {}}
+        className={styles.runByLine}
+      />
       {description && (
         // Inert mentions: the card previews a draft, and following a link
         // from it would leave the create flow mid-sentence.

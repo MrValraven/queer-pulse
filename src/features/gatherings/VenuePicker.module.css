@@ -138,6 +138,12 @@
   color: var(--ink-60);
 }
 
+.runByHint {
+  margin: 8px 0 0;
+  font-size: var(--text-13);
+  color: var(--ink-60);
+}
+
 /* ── Linked chip ── */
 .linked {
   display: flex;

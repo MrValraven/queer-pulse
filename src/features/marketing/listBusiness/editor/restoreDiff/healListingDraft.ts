@@ -7,6 +7,7 @@ import {
   type ListingDraft,
 } from "../../listBusiness.data";
 import { toMenuDraft } from "../../listingMenu.data";
+import { normalizeMobileDetails } from "../../listingMobile.data";
 import { normalizeOnlineDetails } from "../../listingOnline.data";
 import { normalizeOwnedBy } from "../../listingOwnedBy.data";
 import { toShopItemRows } from "../../listingShop.data";
@@ -158,13 +159,21 @@ export function healListingDraft(draft: ListingDraft): ListingDraft {
   if (draft.city !== undefined && typeof draft.city !== "string") {
     healed.city = "";
   }
-  for (const key of ["hasOnlineShop", "adultTermsAccepted"] as const) {
+  for (const key of [
+    "hasOnlineShop",
+    "adultTermsAccepted",
+    "mobile",
+    "hasMeetingPoint",
+  ] as const) {
     if (draft[key] !== undefined && typeof draft[key] !== "boolean") {
       healed[key] = false;
     }
   }
   if (draft.onlineDetails !== undefined) {
     healed.onlineDetails = normalizeOnlineDetails(draft.onlineDetails);
+  }
+  if (draft.mobileDetails !== undefined) {
+    healed.mobileDetails = normalizeMobileDetails(draft.mobileDetails);
   }
   if (draft.shopItems !== undefined) {
     healed.shopItems = toShopItemRows(draft.shopItems);

@@ -10,6 +10,8 @@ import {
   type MissingField,
 } from "./listBusiness.data";
 import { emptyMenuDraft, isMenuLinkValid, menuValid } from "./listingMenu.data";
+import { listingKindOf } from "./listingMobile.data";
+import { mobileMissingFields } from "./listingMobileMissing";
 import { onlineMissingFields } from "./listingOnlineMissing";
 import { servicesValid } from "./listingServices.data";
 import { effectivePricingMode } from "./listingShop.data";
@@ -35,12 +37,19 @@ function add(list: MissingField[], labelKey: string, anchor: string) {
  *
  * An online-only listing swaps the neighbourhood, address, pin and hours for
  * a main link and, on a claim, how people get it (`onlineMissingFields`).
+ * An out-and-about listing swaps them for its area, its meeting point when
+ * ticked, and an open day or "By appointment only" on a claim
+ * (`mobileMissingFields`).
  */
 export function useListingFormMissing(
   draft: ListingDraft,
 ): Record<number, MissingField[]> {
   return useMemo(() => {
     const online = onlineMissingFields(draft);
+    const mobile = mobileMissingFields(draft);
+    // The location and hours rules below are a place's. An online listing has
+    // its own (above) and an out-and-about one its own (`mobileMissingFields`).
+    const isPlace = listingKindOf(draft) === "place";
     const isClaim = draft.path === "claim";
     /* A CO-MANAGER never sees the owner's own fields and never sends them, so
        they can never fill them in either. Requiring them would leave the save
@@ -69,8 +78,9 @@ export function useListingFormMissing(
     if (!draft.cats.length)
       add(s1, "marketing:listBusiness.missing.cats", ANCHOR.cats);
     s1.push(...online.step1);
-    // Neighbourhood is optional for an online-only business (no physical area).
-    if (!draft.online && !draft.hood)
+    s1.push(...mobile.step1);
+    // Neighbourhood: a place's in Basics. Online has none; out and about asks it with the meeting point.
+    if (isPlace && !draft.hood)
       add(s1, "marketing:listBusiness.missing.hood", ANCHOR.hood);
     if (isClaim && !draft.badge)
       add(s1, "marketing:listBusiness.missing.badge", ANCHOR.badge);
@@ -102,26 +112,27 @@ export function useListingFormMissing(
     const s3: MissingField[] = [];
     // An online-only business has no physical location, so neither an address
     // nor a resolved pin is required. Both paths still need them otherwise.
-    if (!draft.online && !draft.address.trim())
+    if (isPlace && !draft.address.trim())
       add(s3, "marketing:listBusiness.missing.address", ANCHOR.address);
-    if (!draft.online && (draft.latitude === null || draft.longitude === null))
+    if (isPlace && (draft.latitude === null || draft.longitude === null))
       add(s3, "marketing:listBusiness.missing.pin", ANCHOR.address);
     // An online-only business has no hours editor to fill in, so neither an
     // open day nor a well-formed interval is required.
-    if (!draft.online && isClaim && !anyDayOpen(draft.hours))
+    if (isPlace && isClaim && !anyDayOpen(draft.hours))
       add(s3, "marketing:listBusiness.missing.hours", ANCHOR.hours);
-    if (!draft.online && !hoursValid(draft.hours))
+    if (isPlace && !hoursValid(draft.hours))
       add(s3, "marketing:listBusiness.missing.hoursInvalid", ANCHOR.hours);
     // Dated overrides are optional, so this only fires when one that EXISTS is
     // malformed, the same "fix the format" shape the socials chip has. An
     // online listing shows no dated overrides and sends none.
-    if (!draft.online && !hoursExceptionsValid(draft.hoursExceptions ?? []))
+    if (isPlace && !hoursExceptionsValid(draft.hoursExceptions ?? []))
       add(
         s3,
         "marketing:listBusiness.missing.hoursExceptionsInvalid",
         ANCHOR.hoursExceptions,
       );
     s3.push(...online.step3);
+    s3.push(...mobile.step3);
     // Socials are optional; this only fires when a filled one is malformed, so
     // the chip always reads "fix the format" (item #10).
     if (!allSocialsValid(draft.social))

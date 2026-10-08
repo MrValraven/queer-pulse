@@ -31,15 +31,34 @@ const ROW_EXIT = {
     height: { delay: 0.1, duration: 0.22, ease: EASE },
   },
 } as const;
+/**
+ * `ROW_EXIT` run backwards: an arriving row opens its space first, then fades
+ * in, so the rows around it move down once in flow. The fold timing matches
+ * the exit fold, so a row leaving one group and its twin arriving in the other
+ * close and open in step. Overflow is clipped only while the row opens, so
+ * focus rings and the hover wash show at rest.
+ */
+const ROW_ENTER = {
+  initial: { opacity: 0, height: 0, overflow: "hidden" },
+  animate: {
+    opacity: 1,
+    height: "auto",
+    transitionEnd: { overflow: "visible" },
+    transition: {
+      height: { duration: 0.22, ease: EASE },
+      opacity: { delay: 0.1, duration: 0.18, ease: EASE },
+    },
+  },
+} as const;
 const SKELETON_ROW_KEYS = ["first", "second", "third"] as const;
 
 /** What every row in either group needs from the page. */
 export interface CheckinRowContext {
   canCheckIn: boolean;
   pendingSlugs: ReadonlySet<string>;
-  customRsvpQuestion?: string | null;
   onCheckIn: (memberSlug: string) => void;
   onUndo: (memberSlug: string) => void;
+  onShowDetails: (memberSlug: string) => void;
 }
 
 interface CheckinGuestListProps {
@@ -69,9 +88,10 @@ function GuestListSkeleton() {
 }
 
 /**
- * One group's rows. Each row glides to its new place when the list changes,
- * and shares a `layoutId` with its twin in the other group so a guest moving
- * from "Still to arrive" to "Arrived" travels there.
+ * One group's rows. A row leaving the group fades where it stands and then
+ * folds shut; a row arriving folds open and then fades in. Heights change
+ * continuously, so neighbours and the other group's heading move in normal
+ * flow and nothing passes over another row.
  */
 export function CheckinGuestList({
   rows,
@@ -89,33 +109,26 @@ export function CheckinGuestList({
     <>
       <ul className={styles.list}>
         <AnimatePresence initial={false}>
-          {rows.map((attendee, index) => (
+          {rows.map((attendee) => (
             <m.li
               key={attendee.slug}
               className={styles.item}
               onUpdate={keepOnFrameLoop}
-              layout={!reducedMotion}
-              layoutId={reducedMotion ? undefined : `guest-${attendee.slug}`}
-              initial={reducedMotion ? { opacity: 0 } : { opacity: 0, y: 6 }}
+              initial={reducedMotion ? { opacity: 0 } : ROW_ENTER.initial}
               animate={
                 reducedMotion
                   ? { opacity: 1, transition: REDUCED_FADE }
-                  : {
-                      opacity: 1,
-                      y: 0,
-                      transition: { delay: Math.min(index, 8) * 0.02 },
-                    }
+                  : ROW_ENTER.animate
               }
               exit={reducedMotion ? REDUCED_ROW_EXIT : ROW_EXIT}
-              transition={{ layout: { duration: 0.26, ease: EASE } }}
             >
               <CheckinGuestRow
                 attendee={attendee}
                 isPending={rowContext.pendingSlugs.has(attendee.slug)}
                 canCheckIn={rowContext.canCheckIn}
-                customRsvpQuestion={rowContext.customRsvpQuestion}
                 onCheckIn={rowContext.onCheckIn}
                 onUndo={rowContext.onUndo}
+                onShowDetails={rowContext.onShowDetails}
               />
             </m.li>
           ))}

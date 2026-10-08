@@ -8,10 +8,12 @@ import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useAttendeePages } from "../api/useAttendeePages";
 import { useAttendees } from "../api/useAttendees";
 import { CheckinFocusLayer } from "./CheckinFocusLayer";
+import { CheckinGuestDetails } from "./CheckinGuestDetails";
 import { CheckinGuestGroups } from "./CheckinGuestGroups";
 import { CheckinMeter } from "./CheckinMeter";
 import { CheckinScanner } from "./CheckinScanner";
 import { CheckinToolbar } from "./CheckinToolbar";
+import { findGuestRow } from "./findGuestRow";
 import { useCheckinActions } from "./useCheckinActions";
 import { useFocusMode } from "./useFocusMode";
 import { useNow } from "./useNow";
@@ -47,6 +49,7 @@ export function CheckinTab({
   const searchTerm = useDebouncedValue(query.trim(), SEARCH_DEBOUNCE_MS);
   const [isArrivedOpen, setIsArrivedOpen] = useState(false);
   const [isScanOpen, setIsScanOpen] = useState(false);
+  const [detailsSlug, setDetailsSlug] = useState<string | null>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const {
     pendingSlugs,
@@ -85,6 +88,18 @@ export function CheckinTab({
     !arrived.isLoading &&
     !expected.isLoadError &&
     !arrived.isLoadError;
+
+  const detailsRow = detailsSlug
+    ? findGuestRow(detailsSlug, {
+        lingeringRows,
+        expectedRows: expected.rows,
+        arrivedRows: arrived.rows,
+        rosterRows: roster?.going ?? [],
+      })
+    : undefined;
+  // A guest whose row has left every list takes their open details with them,
+  // and the slug is dropped so the dialog never comes back on its own.
+  if (detailsSlug && !detailsRow) setDetailsSlug(null);
 
   const handleCheckIn = (memberSlug: string) => {
     const attendee = expected.rows.find((row) => row.slug === memberSlug);
@@ -146,10 +161,10 @@ export function CheckinTab({
             canCheckIn={canCheckIn}
             pendingSlugs={pendingSlugs}
             lingeringRows={lingeringRows}
-            customRsvpQuestion={customRsvpQuestion}
             gatheringSlug={slug}
             onCheckIn={handleCheckIn}
             onUndo={(memberSlug) => void undoByName(memberSlug)}
+            onShowDetails={setDetailsSlug}
             onClearSearch={clearSearch}
           />
           <p className={styles.footer}>
@@ -179,6 +194,14 @@ export function CheckinTab({
           </span>
         )}
       </div>
+      <CheckinGuestDetails
+        attendee={detailsRow}
+        canCheckIn={canCheckIn}
+        pendingSlugs={pendingSlugs}
+        customRsvpQuestion={customRsvpQuestion}
+        onCheckIn={handleCheckIn}
+        onClose={() => setDetailsSlug(null)}
+      />
       {isScanOpen && canCheckIn && (
         <CheckinScanner
           onCardToken={checkInByCard}

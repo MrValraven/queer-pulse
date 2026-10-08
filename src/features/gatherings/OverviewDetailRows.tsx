@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { businessPath } from "../../app/routeMap";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { RUN_BY_DETAIL_ROW_ID } from "./runByListing";
 import styles from "./ManageGatheringPage.module.css";
 
 export interface GatheringDetail {
@@ -53,7 +54,7 @@ export function OverviewEditButton({
  * The Overview tab's details card: one row per fact, each with its own Edit.
  *
  * The row itself stays a plain container: the venue row holds a link to the
- * venue's directory page, and a row-sized button around it would nest one
+ * venue's directory page and the "Run by" row one to its business's page, and a row-sized button around it would nest one
  * interactive element inside another. The row tints on hover and while its
  * Edit has focus, so it still reads as one editable unit.
  *
@@ -63,11 +64,13 @@ export function OverviewEditButton({
 export function OverviewDetailRows({
   details,
   venueListing,
+  runByListing = null,
   isEditable,
   onEdit,
 }: {
   details: GatheringDetail[];
   venueListing: { slug: string; name: string } | null;
+  runByListing?: { slug: string; name: string } | null;
   isEditable: (detail: GatheringDetail) => boolean;
   onEdit: (detail: GatheringDetail) => void;
 }) {
@@ -81,6 +84,13 @@ export function OverviewDetailRows({
             {detail.id === "venue" && venueListing ? (
               <Link
                 to={businessPath(venueListing.slug)}
+                className={styles.venueLink}
+              >
+                {detail.value}
+              </Link>
+            ) : detail.id === RUN_BY_DETAIL_ROW_ID && runByListing ? (
+              <Link
+                to={businessPath(runByListing.slug)}
                 className={styles.venueLink}
               >
                 {detail.value}

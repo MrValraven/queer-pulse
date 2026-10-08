@@ -142,8 +142,8 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
 
   {
     slug: "mental-health-peer-support",
-    org: "Opus Diversus",
-    avatar: "OD",
+    org: "Maré Lilás",
+    avatar: "ML",
     background: "rgba(232,119,90,.12)",
     color: "var(--accent-ink)",
     role: "Mental Health Peer Support",
@@ -154,16 +154,16 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
     skills: ["Active listening", "Empathy", "Confidentiality"],
     description:
       "Support people through peer-led mental health conversations. Training provided. You don't need to be a professional. You need to care and to listen well.",
-    eyebrow: volunteerEyebrow("Opus Diversus"),
+    eyebrow: volunteerEyebrow("Maré Lilás"),
     urgent: "Recruiting · next cohort starts 1 Jul",
     titleLead: "Peer support · ",
     titleEm: "mental health drop-in.",
     sub: (
       <>
-        Opus Diversus runs a weekly peer-support drop-in for queer people who
-        need to talk and don't want a clinic. <b>You're not a therapist</b>.
-        You're a trained peer who listens well, holds confidentiality, and knows
-        when to escalate.{" "}
+        Maré Lilás runs a weekly peer-support drop-in for queer people who need
+        to talk and don't want a clinic. <b>You're not a therapist</b>. You're a
+        trained peer who listens well, holds confidentiality, and knows when to
+        escalate.{" "}
         <em>The training is real and so is the support around you.</em>
       </>
     ),
@@ -239,14 +239,14 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
         yourself, this isn't the right moment, and that's okay.
       </>,
       <>
-        Vetting includes a longer conversation with the Opus Diversus team and a
+        Vetting includes a longer conversation with the Maré Lilás team and a
         safeguarding check. <em>This one is careful on purpose.</em>
       </>,
     ],
     teamIntro:
       "A small, tight cohort: 8 peers and 2 clinicians. Some of the team:",
     team: TEAM_POOL.slice(1, 5),
-    applyRole: "Peer Support · Opus Diversus",
+    applyRole: "Peer Support · Maré Lilás",
     spotsFilled: "8 / 12",
     spotsPct: 66,
     spots: [
@@ -265,12 +265,12 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
         value: <b style={{ color: "var(--jade)" }}>Monthly · provided</b>,
       },
     ],
-    applyConfirm: applyConfirmation("Peer Support · Opus Diversus"),
+    applyConfirm: applyConfirmation("Peer Support · Maré Lilás"),
     partner: {
-      name: "Opus Diversus · health partner",
+      name: "Maré Lilás · health partner",
       text: (
         <>
-          Training and clinical supervision are delivered by Opus Diversus.{" "}
+          Training and clinical supervision are delivered by Maré Lilás.{" "}
           <em>
             Safeguarding records are kept by them, separately from your
             QueerPulse profile.

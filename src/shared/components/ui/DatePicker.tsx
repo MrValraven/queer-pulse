@@ -1,6 +1,6 @@
 /**
  * The public single-value date/time picker: a `DateField` (the typeable half)
- * plus a trigger button that opens a mode-specific popover (the browse half —
+ * plus a trigger button that opens a mode-specific popover (the browse half:
  * `Calendar` for date/datetime, a month grid for month, a `TimeOptionsList`
  * of selectable times for time). Composes Tasks 3-5; see spec §6 for the full
  * contract.
@@ -13,11 +13,11 @@
  * Task 8 adds the mobile bottom sheet, `presets`, and the "Today" shortcut:
  * below the `--mobile` breakpoint the same `DatePickerPopoverContent` renders
  * inside the shared `ModalSheet` primitive (portal + focus trap + scrim
- * already built there) instead of the desktop absolute `DatePickerPopover`.
+ * already built there). Wider screens get the desktop `DatePickerPopover`.
  */
 
 import { useId, useRef, useState } from "react";
-import { FiCalendar, FiClock, FiX } from "react-icons/fi";
+import { FiCalendar, FiClock } from "react-icons/fi";
 import { useMediaQuery } from "../../hooks/useMediaQuery";
 import { useOutsideDismiss } from "../../hooks/useOutsideDismiss";
 import { useTranslation } from "../../i18n/useTranslation";
@@ -25,10 +25,10 @@ import { mediaMax } from "../../theme/breakpoints";
 import { DateField, type FieldMode } from "./DateField";
 import { DatePickerPopover } from "./DatePickerPopover";
 import { DatePickerPopoverContent } from "./DatePickerPopoverContent";
+import { DatePickerTriggerButtons } from "./DatePickerTriggerButtons";
 import { ModalSheet } from "./Modal";
 import { RangeDatePicker } from "./RangeDatePicker";
-import { combineDatetimeValue } from "./datePickerValue";
-import { formatIsoDate, formatIsoMonth, todayPlain } from "./plainDate";
+import { useSingleDatePickerSelection } from "./useSingleDatePickerSelection";
 import styles from "./Calendar.module.css";
 
 export interface DateRange {
@@ -41,8 +41,9 @@ export interface DatePickerBaseProps {
    * Accessible name for the whole composite (the `role="group"` wrapping the
    * field + trigger). Prefer `labelledBy` pointing at a visible heading.
    * `FormField` injects `id`/`aria-describedby`/`aria-invalid`/`aria-required`
-   * (see `formFieldControl` below) but NOT `label` — its own `<label>` has no
-   * referenceable `id` to point `aria-labelledby` at (see `FormField.tsx`).
+   * (see `formFieldControl` below) and leaves `label` alone: its own `<label>`
+   * has no referenceable `id` to point `aria-labelledby` at (see
+   * `FormField.tsx`).
    * So `<FormField label="Event date"><DatePicker mode="date" .../></FormField>`
    * leaves this group unnamed unless the caller ALSO passes `label`/
    * `labelledBy` here. The trigger button is always named regardless (its
@@ -59,18 +60,18 @@ export interface DatePickerBaseProps {
   size?: "md" | "sm";
   className?: string;
   clearable?: boolean;
-  /** Unused in this task (DateField's segments show their own per-segment
-   *  placeholder tokens, not a single field-level placeholder). Kept typed
-   *  as a seam for Task 8's mobile sheet / any future single-line preview. */
+  /** Unused for now: DateField's segments each show their own placeholder
+   *  token. Kept typed as a seam for Task 8's mobile sheet / any future
+   *  single-line preview. */
   placeholder?: string;
   min?: string;
   max?: string;
   /**
    * Disables matching dates in the calendar grid (`Calendar`/`RangeCalendar`).
    * The typeable `DateField` also consults this predicate, but only against
-   * its current COMPLETE value: it marks the field invalid (`aria-invalid`
-   * on the segments) rather than blocking the keystroke, matching React
-   * Aria's own scope for this split. A user can still type a date this
+   * its current COMPLETE value: it accepts the keystroke and marks the field
+   * invalid (`aria-invalid` on the segments), matching React Aria's own
+   * scope for this split. A user can still type a date this
    * predicate would reject and see it flagged invalid; pair with `min`/
    * `max` and/or downstream (submit-time) validation if a hard block matters.
    */
@@ -85,15 +86,15 @@ export interface DatePickerBaseProps {
    * `mode="time"` only: a start time (`"HH:mm"`) each row is measured
    * against, so the list reads "9:00 PM +2h". Pass the START field's value on
    * an END field; leave unset for a plain list. Spans wrap past midnight, so
-   * an end before the start reads as a real length rather than a negative
-   * one (see `durationMinutes`).
+   * an end before the start reads as a real, positive length (see
+   * `durationMinutes`).
    */
   relativeTo?: string | null;
   /**
-   * Locale for month/weekday names and 12h/24h formatting. Not in the
-   * original spec's prop list, but every composed primitive (`DateField`,
-   * `Calendar`) takes one and defaults to the active app language — every
-   * caller/test that wants a fixed locale needs the same override here.
+   * Locale for month/weekday names and 12h/24h formatting. Added beyond the
+   * original spec's prop list: every composed primitive (`DateField`,
+   * `Calendar`) takes one and defaults to the active app language, so a
+   * caller or test that wants a fixed locale sets the same override here.
    */
   locale?: string;
   // FormField injects these when DatePicker opts in via `formFieldControl`.
@@ -156,9 +157,9 @@ function SingleDatePicker({
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
-  // Held here rather than inside `DatePickerPopover`: that panel is portalled
-  // to `document.body`, so the outside-press dismiss below needs its own
-  // handle on it to tell a press inside the calendar from a press on the page.
+  // Held here in the host: `DatePickerPopover`'s panel is portalled to
+  // `document.body`, so the outside-press dismiss below needs its own handle
+  // on it to tell a press inside the calendar from a press on the page.
   const popoverRef = useRef<HTMLDivElement>(null);
   const baseId = useId();
   const popoverId = `${baseId}-popover`;
@@ -185,65 +186,14 @@ function SingleDatePicker({
         ? "chooseMonth"
         : "chooseDate";
   const triggerLabel = t(`shared:calendar.${chooseKey}`);
-  const TriggerIcon = mode === "time" ? FiClock : FiCalendar;
-
-  const handleSelectDay = (isoDate: string) => {
-    if (mode === "date") {
-      onChange(isoDate);
-      close();
-      return;
-    }
-    // datetime: keep whatever time was already there (or default midnight)
-    // and stay open, so the day and the segmented time can both be set from
-    // the same popover visit.
-    onChange(combineDatetimeValue(isoDate, value));
-  };
-
-  const handleSelectMonth = (isoMonth: string) => {
-    onChange(isoMonth);
-    close();
-  };
-
-  // Reuses `handleSelectDay`/`handleSelectMonth` rather than duplicating
-  // their close/stay-open behavior: `date` and `month` close on pick, and
-  // `datetime` stays open so the segmented time field is still reachable
-  // (mirrors picking a day from the grid). No case for `time` — there's no
-  // "today" concept for a bare time-of-day value, and the button never
-  // renders for that mode (see `DatePickerPopoverContent`).
-  const handleToday = () => {
-    if (mode === "month") {
-      handleSelectMonth(formatIsoMonth(todayPlain()));
-    } else if (mode === "date" || mode === "datetime") {
-      handleSelectDay(formatIsoDate(todayPlain()));
-    }
-  };
-
-  // Picking a row from the time list commits and closes, exactly as picking a
-  // day from the calendar grid does. The popover used to hold a second copy of
-  // the segmented field, which had no "picked" moment to close on; a list row
-  // does, and leaving it open after a click would strand the popover over the
-  // field the host is trying to read back.
-  const handleSelectTime = (isoTime: string | null) => {
-    onChange(isoTime);
-    close();
-  };
-
-  const handlePresetSelect = (presetValue: string) => {
-    onChange(presetValue);
-    close();
-  };
-
-  // Suppress the Today footer button only when a preset's value actually
-  // collides with today's ISO value for this mode (not merely "presets were
-  // passed" — a `[tomorrow, nextWeek]` preset list must not remove Today).
-  // `mode="time"` has no today ISO shape; `DatePickerPopoverContent` never
-  // shows Today for it regardless, so the comparison there is moot.
-  const todayIsoValue =
-    mode === "month"
-      ? formatIsoMonth(todayPlain())
-      : formatIsoDate(todayPlain());
-  const presetHasToday =
-    presets?.some((preset) => preset.value === todayIsoValue) ?? false;
+  const {
+    handleSelectDay,
+    handleSelectMonth,
+    handleToday,
+    handleSelectTime,
+    handlePresetSelect,
+    presetHasToday,
+  } = useSingleDatePickerSelection({ mode, value, onChange, presets, close });
 
   const canClear = clearable && value != null && !disabled;
 
@@ -272,37 +222,18 @@ function SingleDatePicker({
         size={size}
         isDateUnavailable={isDateUnavailable}
       />
-      <button
-        ref={triggerRef}
-        // FormField's injected `id` lands here, not on DateField's `<div>`
-        // (not a labelable element): a `<label htmlFor>` only ever
-        // associates with a labelable/focusable control. `aria-label` below
-        // still wins this button's own accessible name either way (ARIA
-        // name computation: aria-label beats a native `<label for>`), so
-        // moving `id` here only fixes the label's target, not this button's
-        // own name.
+      <DatePickerTriggerButtons
+        triggerRef={triggerRef}
         id={id}
-        type="button"
-        className={styles.trigger}
         disabled={disabled}
-        aria-haspopup="dialog"
-        aria-expanded={open}
-        aria-controls={open ? popoverId : undefined}
-        aria-label={triggerLabel}
-        onClick={() => setOpen((wasOpen) => !wasOpen)}
-      >
-        <TriggerIcon aria-hidden />
-      </button>
-      {canClear && (
-        <button
-          type="button"
-          className={styles.clear}
-          aria-label={t("shared:calendar.clear")}
-          onClick={() => onChange(null)}
-        >
-          <FiX aria-hidden />
-        </button>
-      )}
+        isOpen={open}
+        popoverId={popoverId}
+        triggerLabel={triggerLabel}
+        icon={mode === "time" ? FiClock : FiCalendar}
+        onToggle={() => setOpen((wasOpen) => !wasOpen)}
+        canClear={canClear}
+        onClear={() => onChange(null)}
+      />
       {open && isMobile && (
         <ModalSheet onClose={close} ariaLabel={triggerLabel}>
           <DatePickerPopoverContent

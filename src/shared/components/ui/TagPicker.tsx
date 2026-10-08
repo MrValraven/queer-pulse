@@ -51,6 +51,8 @@ export interface TagPickerProps {
   hint?: ReactNode;
   inputDescribedBy?: string;
   className?: string;
+  /** Closed mode: match typed text with accents ignored. Off by default. */
+  shouldFoldAccents?: boolean;
   labels: TagPickerLabels;
 }
 
@@ -95,6 +97,7 @@ export function TagPicker({
   hint,
   inputDescribedBy,
   className,
+  shouldFoldAccents,
   labels,
 }: TagPickerProps) {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -106,7 +109,12 @@ export function TagPicker({
     onAdd,
   });
   const isBoxed = frame === "boxed";
-  const entry = useTagEntry({ tags, options, onAdd: add });
+  const entry = useTagEntry({
+    tags,
+    options,
+    onAdd: add,
+    shouldFoldAccents,
+  });
   const chipKeys = chipKeysFor(tags);
 
   const chosen = new Set(tags.map((tag) => tag.toLowerCase()));

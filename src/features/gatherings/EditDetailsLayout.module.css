@@ -1,0 +1,148 @@
+/* The edit-details modal's frame and body (EditDetailsModal, EditDetailsLayout).
+
+   The dialog is a named size container, `editDetails`, and every breakpoint
+   inside it reads the dialog's own width through `@container`. The rail, the
+   strip, the form's gutters and the footer's status line (FieldEditor.module.css)
+   all switch on the same box, so they can never disagree the way a viewport
+   query and a capped dialog would. */
+
+/* The wide editor: the shared `full` dialog, capped narrower and shorter.
+   Two classes, so these outrank Modal's own `.modalFull` (and its phone
+   rule) whatever order the stylesheets load in. At 1000px the form column
+   beside the 232px rail is about 766px, so the 760px form fills it and no
+   dead band opens on the right. */
+.editorDialog.editorDialog {
+  container: editDetails / inline-size;
+  max-width: 1000px;
+  height: calc(100svh - 48px);
+  max-height: 900px;
+}
+/* On a phone Modal makes every dialog a bottom sheet that is only as tall as
+   its content. This one keeps the full sheet height, so the strip, the form
+   and the footer have their room however short the section in view is. */
+@media (max-width: 719.98px) {
+  .editorDialog.editorDialog {
+    height: calc(92svh - var(--keyboard-inset, 0px));
+    max-height: calc(92svh - var(--keyboard-inset, 0px));
+  }
+  /* With the keyboard up (Modal's `shouldCollapseSubWithKeyboard` tightens
+     the head and footer) the sheet grows to Modal's own keyboard height, the
+     section strip leaves, and the form takes the strip's row. At 375x812
+     with a 336px keyboard about 290px of form stays above the keys. The
+     footer's status line leaves too (FieldEditor.module.css). */
+  :global(html[data-keyboard-open]) .editorDialog.editorDialog {
+    height: calc(100svh - var(--keyboard-inset, 0px) - 24px);
+    max-height: calc(100svh - var(--keyboard-inset, 0px) - 24px);
+  }
+  :global(html[data-keyboard-open]) .layout {
+    grid-template-rows: minmax(0, 1fr);
+  }
+  :global(html[data-keyboard-open]) .strip {
+    display: none;
+  }
+}
+
+/* A narrow dialog drops the head's sub line: there it repeats the When and
+   where hint and the footer's bell, and the form needs the height. */
+@container editDetails (max-width: 599.98px) {
+  .editorSub {
+    display: none;
+  }
+}
+
+/* The saved title above the dialog's title, held to one line. */
+.eyebrowTitle {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Modal's body, through `bodyClassName`: no padding and no scroll of its own.
+   The form column inside scrolls instead, beside a rail that stays put. */
+.editorBody.editorBody {
+  display: grid;
+  grid-template: minmax(0, 1fr) / minmax(0, 1fr);
+  min-height: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.layout {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr);
+  min-height: 0;
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+.rail {
+  display: none;
+}
+.strip {
+  min-width: 0;
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+/* The form column, the one scroll container. Over-scroll stays in it, as
+   Modal's own body does, so a swipe past its end never moves the page. */
+.column {
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+/* Centred while the form stands alone; beside the rail it keeps to the
+   rail's side (below). A size container of its own, `editForm`, so the field
+   grid (EditDetailsFields.module.css) reads the width its fields actually
+   get: the content box, after the rail and the gutters. */
+.columnInner {
+  container: editForm / inline-size;
+  max-width: 760px;
+  margin-inline: auto;
+  padding: 24px 24px 40px;
+}
+/* What the scroll spy watches to know the form is scrolled to its end. */
+.bottomSentinel {
+  height: 1px;
+}
+
+@container editDetails (max-width: 599.98px) {
+  .columnInner {
+    padding: 20px 16px 32px;
+  }
+}
+
+/* A wide dialog: the rail on the left, its own scroll, a hairline on its
+   right; the strip goes. */
+@container editDetails (min-width: 900px) {
+  .layout {
+    grid-template-rows: minmax(0, 1fr);
+    grid-template-columns: 232px minmax(0, 1fr);
+  }
+  .rail {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    min-height: 0;
+    padding: 20px 14px 24px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    border-right: 1px solid rgba(var(--line-rgb), 0.09);
+    background: var(--paper);
+  }
+  .strip {
+    display: none;
+  }
+  .columnInner {
+    margin-inline: 0;
+    padding: 28px 40px var(--section-y-48);
+  }
+}
+
+/* The card preview needs height to be worth its room: on a short screen the
+   rail keeps only the section map. */
+@media (max-height: 799.98px) {
+  .railPreview {
+    display: none;
+  }
+}

@@ -1,6 +1,11 @@
 import { listingCategoriesFor, normalizeCategory } from "../localCategories";
 import type { ListingDraft } from "./listBusiness.data";
 import { applyCategoryPricingDefault } from "./listingMenu.data";
+import {
+  listingKindOf,
+  normalizeMobileDetails,
+  type ListingKind,
+} from "./listingMobile.data";
 import { isBlankShopItem } from "./listingShop.data";
 
 /**
@@ -18,6 +23,8 @@ import { isBlankShopItem } from "./listingShop.data";
  * Leaving online for a place keeps the selling block: when the draft holds a
  * main link or a started shop item, "We also sell online" is ticked, so a
  * save keeps the online answers. The owner can untick it on purpose.
+ *
+ * Going online also clears `mobile`, so the two flags are never on together.
  */
 export function withListingKind(
   draft: ListingDraft,
@@ -37,6 +44,7 @@ export function withListingKind(
     online: isOnline,
     cats: restored,
     inactiveModeCats: draft.cats,
+    ...(isOnline ? { mobile: false } : {}),
     ...(shouldKeepSellingOnline ? { hasOnlineShop: true } : {}),
   });
 }
@@ -51,28 +59,47 @@ function hasOnlineSellingContent(draft: ListingDraft): boolean {
   return hasMainLink || hasShopItem;
 }
 
-/** The Path step's "Where do people find it?" answer. */
-export type WhereFoundChoice = "place" | "online";
+/** The Path step's "Where do people find it?" answer: one per kind. */
+export type WhereFoundChoice = ListingKind;
 
 /** Each answer's title, as the review step's recap names it. */
 export const WHERE_FOUND_TITLE_KEYS: Record<WhereFoundChoice, string> = {
   place: "marketing:listBusiness.step0.whereFound.place.title",
   online: "marketing:listBusiness.step0.whereFound.online.title",
+  mobile: "marketing:listBusiness.step0.whereFound.mobile.title",
 };
 
 /** `""` only for a brand-new draft; a draft from before the question (no
- *  key at all) reads as answered by its `online` flag. */
+ *  key at all) reads as answered by its flags. */
 export function whereFoundChoiceOf(draft: ListingDraft): WhereFoundChoice | "" {
   if (draft.isWhereFoundAnswered === false) return "";
-  return draft.online ? "online" : "place";
+  return listingKindOf(draft);
+}
+
+/**
+ * Switch a draft to any of the three kinds. Online goes through
+ * `withListingKind`, which stashes the categories of the kind being left. A
+ * place and an out-and-about listing share one category list, so between
+ * the two the categories stay as they are. Becoming out and about never
+ * ticks the meeting point: an address typed for a shop stays in the draft
+ * and stays private until the owner ticks "People meet us at a set spot".
+ */
+export function withKind(draft: ListingDraft, kind: ListingKind): ListingDraft {
+  const currentKind = listingKindOf(draft);
+  if (currentKind === kind) return draft;
+  if (kind === "online") return withListingKind(draft, true);
+  const asPlace =
+    currentKind === "online" ? withListingKind(draft, false) : draft;
+  return {
+    ...asPlace,
+    mobile: kind === "mobile",
+    mobileDetails: normalizeMobileDetails(asPlace.mobileDetails),
+  };
 }
 
 export function withWhereFoundChoice(
   draft: ListingDraft,
   choice: WhereFoundChoice,
 ): ListingDraft {
-  return {
-    ...withListingKind(draft, choice === "online"),
-    isWhereFoundAnswered: true,
-  };
+  return { ...withKind(draft, choice), isWhereFoundAnswered: true };
 }

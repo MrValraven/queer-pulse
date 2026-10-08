@@ -3,6 +3,7 @@ import { FormField } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { ANCHOR, DAYS } from "./listBusiness.data";
 import { ListingHoursDayRow } from "./ListingHoursDayRow";
+import { listingKindOf } from "./listingMobile.data";
 import type { ListingForm } from "./useListingForm";
 import pageStyles from "./ListBusinessPage.module.css";
 import styles from "./ListingHoursEditor.module.css";
@@ -20,15 +21,25 @@ import styles from "./ListingHoursEditor.module.css";
  * direct children (and staggered entrance) it had when this block was inline
  * in the practical step.
  */
-export function ListingHoursEditor({ form }: { form: ListingForm }) {
+export function ListingHoursEditor({
+  form,
+  hasHeading = true,
+}: {
+  form: ListingForm;
+  /** Off when the caller already heads the block (the out-and-about step
+   *  puts "By appointment only" between the heading and the grid). */
+  hasHeading?: boolean;
+}) {
   const { t } = useTranslation();
   const { draft, copyMonToAll, clearHours, set } = form;
 
   return (
     <>
-      <h3 className={pageStyles.groupH}>
-        {t("marketing:listBusiness.step3.hoursHeading")}
-      </h3>
+      {hasHeading && (
+        <h3 className={pageStyles.groupH}>
+          {t("marketing:listBusiness.step3.hoursHeading")}
+        </h3>
+      )}
       <div className={pageStyles.hoursSection}>
         {/* Its own anchor for the live preview: `ANCHOR.hours` stays on the
             day card, so a "still needed" chip keeps landing on the days. */}
@@ -80,7 +91,12 @@ export function ListingHoursEditor({ form }: { form: ListingForm }) {
         <input
           type="text"
           maxLength={80}
-          placeholder={t("marketing:listBusiness.step3.hoursNotePlaceholder")}
+          placeholder={t(
+            // An out-and-about listing has no back room to book.
+            listingKindOf(draft) === "mobile"
+              ? "marketing:listBusiness.step3.hoursNotePlaceholderMobile"
+              : "marketing:listBusiness.step3.hoursNotePlaceholder",
+          )}
           value={draft.hoursNote}
           onChange={(event) => set({ hoursNote: event.target.value })}
         />

@@ -18,8 +18,8 @@ export function keepOnFrameLoop() {
 
 /**
  * Props for an `m.div` that folds open and shut by height. The clip is on
- * only while it moves, so a row flying in by a shared layoutId is never cut
- * off. Reduced motion keeps a short fade.
+ * only while it moves, so focus rings and a row's hover wash show in full at
+ * rest. Reduced motion keeps a short fade.
  */
 export function collapseMotion(isReducedMotion: boolean) {
   return isReducedMotion

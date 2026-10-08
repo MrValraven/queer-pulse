@@ -26,6 +26,15 @@ interface ModalProps {
    *  same bottom sheet every other <Modal> becomes. */
   full?: boolean;
   className?: string;
+  /** Extra class on the scrolling body, for an editor that lays its body out
+   *  itself (a pinned side rail beside its own scrolling column, say) and so
+   *  needs the body's padding and overflow changed. Off by default, so every
+   *  other dialog keeps the shared body exactly as it is. */
+  bodyClassName?: string;
+  /** Extra class on the head's sub line, for an editor that hides or restyles
+   *  it at some sizes (a sub that repeats the body's own hints on a phone,
+   *  say). Off by default, so every other dialog keeps the shared sub. */
+  subClassName?: string;
   children: ReactNode;
   /** Overrides the default "focus the first focusable element" rule on open
    *  (see `useDismiss`'s own doc), for the rare dialog where a SPECIFIC
@@ -54,6 +63,8 @@ export function Modal({
   wide = false,
   full = false,
   className,
+  bodyClassName,
+  subClassName,
   children,
   initialFocusRef,
   shouldCollapseSubWithKeyboard = false,
@@ -112,7 +123,15 @@ export function Modal({
             <h3 id={titleId} className={styles.modalTitle}>
               {title}
             </h3>
-            {sub && <p className={styles.modalSub}>{sub}</p>}
+            {sub && (
+              <p
+                className={[styles.modalSub, subClassName]
+                  .filter(Boolean)
+                  .join(" ")}
+              >
+                {sub}
+              </p>
+            )}
           </div>
           <button
             type="button"
@@ -123,7 +142,11 @@ export function Modal({
             <FiX />
           </button>
         </div>
-        <div className={styles.modalBody}>
+        <div
+          className={[styles.modalBody, bodyClassName]
+            .filter(Boolean)
+            .join(" ")}
+        >
           <IsInsideModalContext.Provider value={true}>
             {children}
           </IsInsideModalContext.Provider>

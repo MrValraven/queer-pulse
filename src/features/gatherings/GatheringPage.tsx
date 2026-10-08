@@ -38,6 +38,7 @@ import { eventZoneFormat } from "./eventTimezone";
 import { gatheringWhen } from "./gatheringSchedule";
 import { useEvent } from "./api/useEvent";
 import { GatheringHeroCommunity } from "./GatheringCommunity";
+import { GatheringHeroRunBy } from "./GatheringRunBy";
 import { GatheringDescriptionText } from "./GatheringDescriptionText";
 import { GatheringGuestPreview } from "./guestPreview/GatheringGuestPreview";
 import { GatheringPreviewBar } from "./guestPreview/GatheringPreviewBar";
@@ -292,6 +293,7 @@ function GatheringDetailBody({
                   {t("gatherings:common.hostedBy")} {gathering.host}
                 </span>
                 <GatheringHeroCommunity gathering={gathering} />
+                <GatheringHeroRunBy gathering={gathering} />
               </div>
               <p className={styles.body}>
                 <GatheringDescriptionText text={gathering.body} />

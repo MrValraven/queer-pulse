@@ -1,4 +1,4 @@
-import { FiGlobe, FiMapPin } from "react-icons/fi";
+import { FiGlobe, FiMapPin, FiNavigation } from "react-icons/fi";
 import {
   FormField,
   RadioCardGroup,
@@ -9,18 +9,29 @@ import { ANCHOR } from "../listBusiness.data";
 import { whereFoundChoiceOf, type WhereFoundChoice } from "../listingKind";
 import type { ListingForm } from "../useListingForm";
 import styles from "../ListBusinessPage.module.css";
+import mobileStyles from "./MobileFields.module.css";
 
 const KEY = "marketing:listBusiness.step0.whereFound";
 
 /**
- * Step 0's second question: a place people visit, or online only. Required
- * before Next, for staff drafts too (staff record online businesses as well).
- * The answer picks the category list in Basics and the practical step's
- * fields. Switching later keeps the other kind's answers in the draft
- * (`withListingKind`). An edit never shows this step; its Basics carry the
- * online toggle at the top.
+ * "Where do people find it?": a place people visit, online only, or out and
+ * about. Required before Next on step 0, for staff drafts too. The answer
+ * picks the category list in Basics and the practical step's fields.
+ * Switching later keeps the other kinds' answers in the draft (`withKind`).
+ *
+ * An edit has no step 0, so Basics renders this same field at its top with
+ * `anchorId={ANCHOR.online}` and the edit helper, so a listing can move
+ * between all three kinds after creation.
  */
-export function WhereFoundField({ form }: { form: ListingForm }) {
+export function WhereFoundField({
+  form,
+  anchorId = ANCHOR.whereFound,
+  helperKey = `${KEY}.helper`,
+}: {
+  form: ListingForm;
+  anchorId?: string;
+  helperKey?: string;
+}) {
   const { t } = useTranslation();
   const { draft, chooseWhereFound } = form;
   const options: RadioCardOption<WhereFoundChoice>[] = [
@@ -48,17 +59,29 @@ export function WhereFoundField({ form }: { form: ListingForm }) {
         </>
       ),
     },
+    {
+      id: "mobile",
+      render: (
+        <>
+          <span className={`${styles.pcIc} ${mobileStyles.pcIcMobile}`}>
+            <FiNavigation />
+          </span>
+          <b>{t(`${KEY}.mobile.title`)}</b>
+          <span>{t(`${KEY}.mobile.desc`)}</span>
+        </>
+      ),
+    },
   ];
   return (
     <FormField
-      className={styles.lbField}
-      id={ANCHOR.whereFound}
+      className={`${styles.lbField} ${mobileStyles.kindField}`}
+      id={anchorId}
       label={t(`${KEY}.label`)}
       required
-      helper={t(`${KEY}.helper`)}
+      helper={t(helperKey)}
     >
       <RadioCardGroup<WhereFoundChoice>
-        className={styles.pathGrid}
+        className={mobileStyles.kindGrid}
         optionClassName={styles.pathCard}
         checkedClassName={styles.pathCardOn}
         ariaLabel={t(`${KEY}.aria`)}

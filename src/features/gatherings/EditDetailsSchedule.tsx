@@ -57,16 +57,29 @@ export function EditDetailsSchedule({
   onChangeStartAt,
   onChangeEndAt,
   startLabel,
+  fieldIds,
+  startError,
+  pickerClassName,
 }: {
   /** The whole draft, since `editScheduleProblem` gates on a draft object and
    *  reads both schedule fields against each other. */
   draft: GatheringDetailsDraft;
   onChangeStartAt: (value: string) => void;
   onChangeEndAt: (value: string) => void;
+  /** Ids for the two field wrappers, so the full edit modal's "Show the
+   *  field" can scroll to the one holding Save. The one-field editor passes
+   *  none. */
+  fieldIds?: { startAt?: string; endAt?: string };
   /** The start field's label. Defaults to "Date & time", which suits the
    *  full edit modal. The one-field "Date and time" editor already says that
    *  in its title, so it names the field "Starts" beside "Ends (optional)". */
   startLabel?: ReactNode;
+  /** Why the start holds Save, under the start field. The full edit modal
+   *  says it once the start is emptied; the one-field editor passes none. */
+  startError?: string;
+  /** A class for both pickers, so the full edit modal can draw them like its
+   *  text inputs. The one-field editor passes none. */
+  pickerClassName?: string;
 }) {
   const { t } = useTranslation();
   const fmt = useFormat();
@@ -150,11 +163,14 @@ export function EditDetailsSchedule({
   return (
     <>
       <FormField
+        id={fieldIds?.startAt}
         label={startLabel ?? t("gatherings:manage.editModal.fieldDateTime")}
         required
+        error={startError}
       >
         <DatePicker
           mode="datetime"
+          className={pickerClassName}
           value={draft.startAt || null}
           onChange={(value) => changeStart(value ?? "")}
         />
@@ -181,12 +197,14 @@ export function EditDetailsSchedule({
           end the host types or picks themselves stays exactly where they
           put it, and the message says when it lands before the start. */}
       <FormField
+        id={fieldIds?.endAt}
         label={t("gatherings:manage.editModal.fieldEndAt")}
         helper={scheduleSummaryMessage}
         error={scheduleErrorMessage}
       >
         <DatePicker
           mode="datetime"
+          className={pickerClassName}
           clearable
           min={draft.startAt || undefined}
           value={draft.endAt || null}

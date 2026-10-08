@@ -7,6 +7,7 @@ import {
 } from "./listBusiness.data";
 import { normalizeAccessibilityDraft } from "./listingAccessibility.data";
 import { pricingModeOf, toMenuDraft } from "./listingMenu.data";
+import { hasMeetingPoint, normalizeMobileDetails } from "./listingMobile.data";
 import { normalizeOnlineDetails } from "./listingOnline.data";
 import { toServiceRows } from "./listingServices.data";
 import { toShopItemRows } from "./listingShop.data";
@@ -70,6 +71,12 @@ export function dtoToDraft(dto: ManagedListingDTO): ListingDraft {
     shopItems: toShopItemRows(dto.shopItems),
     // Accepted once, stamped by the server, and never asked again.
     adultTermsAccepted: Boolean(dto.onlineDetails?.adultTermsAcceptedAt),
+    // Out and about. The meeting point box reads as ticked exactly when the
+    // listing stores both coordinates: a mobile listing without one stores
+    // them blank (contract).
+    mobile: dto.mobile === true && dto.online !== true,
+    mobileDetails: normalizeMobileDetails(dto.mobileDetails),
+    hasMeetingPoint: hasMeetingPoint(dto),
     address: dto.address,
     geocoded: dto.geocoded,
     latitude: dto.latitude,

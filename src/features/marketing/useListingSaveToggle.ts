@@ -4,6 +4,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useSaved } from "../../app/providers/useSaved";
 import { routes } from "../../app/routeMap";
 import type { DirectoryPlace } from "./directoryPlaces";
+import { mobileAreaLineText } from "./directoryShareMessage";
 
 /**
  * The bookmark on a directory card: whether this listing is saved, and the
@@ -28,7 +29,9 @@ export function useListingSaveToggle(place: DirectoryPlace): {
       kind: "listing",
       title: place.name,
       href: `${routes.directory}/${place.slug}`,
-      meta: place.online ? t("marketing:directory.card.online") : place.hood,
+      meta: place.online
+        ? t("marketing:directory.card.online")
+        : (mobileAreaLineText(place, t) ?? place.hood),
     });
     showToast(
       t(

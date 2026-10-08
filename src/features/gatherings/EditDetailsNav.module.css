@@ -1,0 +1,153 @@
+/* The edit-details modal's section map (EditDetailsNav). The rail is a column
+   of quiet rows in the left pane; the strip is a row of chips above the form
+   on a narrow dialog. Which one shows is the layout's call (see
+   EditDetailsLayout.module.css), read off the dialog's own width. */
+
+.list {
+  position: relative;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.item {
+  min-width: 0;
+}
+
+.entry {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 40px;
+  padding: 8px 12px;
+  border: 0;
+  border-radius: var(--radius-12);
+  background: transparent;
+  font-family: var(--sans);
+  font-size: var(--text-14);
+  font-weight: 500;
+  line-height: 1.3;
+  color: var(--ink-60);
+  text-align: start;
+  cursor: pointer;
+  transition:
+    background 0.16s var(--ease),
+    color 0.16s var(--ease);
+}
+@media (hover: hover) {
+  .entry:hover {
+    background: var(--wash);
+    color: var(--text-strong);
+  }
+}
+/* The section being read: a cream chip with a hairline, a coral icon, the
+   title in full ink. */
+.entry[aria-current="true"] {
+  background: var(--cream);
+  box-shadow: inset 0 0 0 1px rgba(var(--line-rgb), 0.12);
+  color: var(--text-strong);
+}
+.entry[aria-current="true"] .icon {
+  color: var(--accent-text);
+}
+@media (pointer: coarse) {
+  .entry {
+    min-height: var(--tap-min);
+  }
+}
+
+.icon {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  color: var(--ink-40);
+}
+.title {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Edited: a small coral dot at the row's end. */
+.editedDot {
+  flex: none;
+  width: 7px;
+  height: 7px;
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+}
+/* Holds Save: the danger tone, ahead of the dot. */
+.needsFix {
+  display: inline-flex;
+  flex: none;
+  color: var(--danger);
+}
+.needsFix svg {
+  width: 15px;
+  height: 15px;
+}
+
+/* ── Rail ─────────────────────────────────────────────────────────────────── */
+.rail .list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+/* A long title (Portuguese, with a marker beside it) wraps onto a second
+   line, and the icon and markers stay centred on the row. Only the strip's
+   chips hold to one line. */
+.rail .title {
+  overflow: visible;
+  text-overflow: clip;
+  white-space: normal;
+}
+
+/* ── Strip ────────────────────────────────────────────────────────────────── */
+/* A sideways row of chips. It scrolls with no bar drawn: the chips are tab
+   stops, so the keyboard reaches every one, and the active chip is brought
+   into view as the form scrolls. */
+.strip .list {
+  display: flex;
+  gap: 6px;
+  padding: 10px 16px;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+}
+.strip .list::-webkit-scrollbar {
+  display: none;
+}
+.strip .item {
+  flex: none;
+}
+.strip .entry {
+  width: auto;
+  min-height: 36px;
+  padding: 6px 12px;
+  border-radius: var(--radius-pill);
+  box-shadow: inset 0 0 0 1px rgba(var(--line-rgb), 0.12);
+  font-size: var(--text-13);
+}
+.strip .entry[aria-current="true"] {
+  background: var(--paper);
+  box-shadow: inset 0 0 0 1px rgba(var(--line-rgb), 0.22);
+  font-weight: 600;
+}
+.strip .title {
+  overflow: visible;
+}
+@media (pointer: coarse) {
+  .strip .entry {
+    min-height: var(--tap-min);
+  }
+}
+
+/* Last, and at the strip's own weight, so the ring outranks the active
+   chip's hairline in either layout. */
+.list .entry:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}

@@ -102,6 +102,12 @@
 .pin[data-category="fitness"] .pinHead {
   background: var(--cat-fitness);
 }
+.pin[data-category="tours"] .pinHead {
+  background: var(--cat-tours);
+}
+.pin[data-category="home-services"] .pinHead {
+  background: var(--cat-home-services);
+}
 /* Housing map neighbourhood pins. --accent-deep is a fixed brand coral that
    does not flip in dark mode and carries the cream icon at 5.38:1. */
 .pin[data-category="housing"] .pinHead {

@@ -67,11 +67,11 @@ export function PhotoUploadModal({ onClose, onSubmit }: PhotoUploadModalProps) {
       onClose={onClose}
       footer={
         <>
-          <Button variant="primary" onClick={submit}>
-            {t("gatherings:recap.upload.addPhotoCta")}
-          </Button>
           <Button variant="ghost" onClick={onClose}>
             {t("gatherings:recap.upload.cancelCta")}
+          </Button>
+          <Button variant="primary" onClick={submit}>
+            {t("gatherings:recap.upload.addPhotoCta")}
           </Button>
         </>
       }

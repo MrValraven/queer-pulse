@@ -364,12 +364,12 @@ const PROFILES: CompanyProfile[] = [
     owner: null,
   },
   {
-    slug: "opus-diversus",
-    logo: "OD",
+    slug: "mare-lilas",
+    logo: "ML",
     logoBg: "rgba(247,243,238,.10)",
     logoText: "rgb(var(--cream-rgb))",
-    name: <>Opus Diversus</>,
-    nameText: "Opus Diversus",
+    name: <>Maré Lilás</>,
+    nameText: "Maré Lilás",
     tagline:
       "A Lisbon community organisation providing peer support, mental-health navigation, and advocacy for LGBTQ+ people.",
     badges: [
@@ -386,8 +386,8 @@ const PROFILES: CompanyProfile[] = [
     about: (
       <>
         <p>
-          Opus Diversus runs peer support groups, a mental-health navigation
-          line, and advocacy work for LGBTQ+ people across Lisbon. This is{" "}
+          Maré Lilás runs peer support groups, a mental-health navigation line,
+          and advocacy work for LGBTQ+ people across Lisbon. This is{" "}
           <em>care work</em>, and we treat it as such: with supervision,
           boundaries, and real support for the people who hold the room.
         </p>
@@ -473,7 +473,7 @@ const PROFILES: CompanyProfile[] = [
     teamCount: 4,
     membersLabel: "View all 4 members",
     hiringContact: {
-      name: "The Opus Diversus team",
+      name: "The Maré Lilás team",
       role: "We read every application ourselves and reply to all of them.",
     },
     owner: null,

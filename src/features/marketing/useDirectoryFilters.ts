@@ -44,6 +44,8 @@ import {
 export interface LocalChipCounts {
   /** Matches with "Open now" turned on. */
   openNow: number;
+  /** Matches with "Out and about" turned on. Optional so older literals compile. */
+  outAndAbout?: number;
   /** Matches with "Verified safe spaces" turned on. */
   safe: number;
   /** Matches with each access need added to the ones already ticked. */
@@ -193,6 +195,9 @@ export interface DirectoryFilterParams {
   /** Only places open right now, on their own clock. Always false on the
    *  Online tab, which offers no "Open now". */
   openNow: boolean;
+  /** Only businesses with no premises ("Out and about", `?mobile=1`).
+   *  Always false on the Online tab, which does not offer it. */
+  isOutAndAbout: boolean;
   /** Accessibility needs that must ALL be met, in canonical question order.
    *  Empty on the Online tab, which offers no access group. */
   access: AccessibilitySlug[];
@@ -208,6 +213,7 @@ export interface DirectoryFilterParams {
   setSafe: (next: boolean) => void;
   toggleOwned: (value: ListingOwnedBy) => void;
   setOpenNow: (next: boolean) => void;
+  setOutAndAbout: (next: boolean) => void;
   toggleAccess: (slug: AccessibilitySlug) => void;
   setAdult: (next: boolean) => void;
   clearFilters: () => void;
@@ -247,6 +253,7 @@ export function useDirectoryFilterParams(): DirectoryFilterParams {
   const rawOwned = searchParams.get("owned");
   const owned = useMemo(() => toOwned(rawOwned), [rawOwned]);
   const openNow = !isOnlineView && searchParams.get("open") === "now";
+  const isOutAndAbout = !isOnlineView && searchParams.get("mobile") === "1";
   const access = useAccessFilter();
   const adult = searchParams.get("adult") === "1";
 
@@ -288,13 +295,16 @@ export function useDirectoryFilterParams(): DirectoryFilterParams {
         if (nextView === "list") params.delete("view");
         else params.set("view", nextView);
         // A tab keeps only the chips it offers (`food` is in both), and the
-        // Online tab drops "Open now", which it does not offer.
+        // Online tab drops "Open now" and "Out and about", which it does not offer.
         setListParam(
           params,
           "cat",
           categoriesInView(params.get("cat"), nextView),
         );
-        if (nextView === "online") params.delete("open");
+        if (nextView === "online") {
+          params.delete("open");
+          params.delete("mobile");
+        }
       }, true),
     [mutateParams],
   );
@@ -355,6 +365,10 @@ export function useDirectoryFilterParams(): DirectoryFilterParams {
     (next: boolean) => setParam("open", "now", !next),
     [setParam],
   );
+  const setOutAndAbout = useCallback(
+    (next: boolean) => setParam("mobile", "1", !next),
+    [setParam],
+  );
   const toggleAccess = useCallback(
     (slug: AccessibilitySlug) =>
       mutateParams((params) => {
@@ -396,6 +410,7 @@ export function useDirectoryFilterParams(): DirectoryFilterParams {
         params.delete("safe");
         params.delete("owned");
         params.delete("open");
+        params.delete("mobile");
         params.delete("access");
         params.delete("adult");
       }),
@@ -411,6 +426,7 @@ export function useDirectoryFilterParams(): DirectoryFilterParams {
     safe,
     owned,
     openNow,
+    isOutAndAbout,
     access,
     adult,
     selectView,
@@ -422,6 +438,7 @@ export function useDirectoryFilterParams(): DirectoryFilterParams {
     setSafe,
     toggleOwned,
     setOpenNow,
+    setOutAndAbout,
     toggleAccess,
     setAdult,
     clearFilters,
@@ -454,12 +471,14 @@ function useActiveFilters(params: DirectoryFilterParams): ActiveFilter[] {
     safe,
     owned,
     openNow,
+    isOutAndAbout,
     access,
     toggleCategory,
     toggleVibe,
     setSafe,
     toggleOwned,
     setOpenNow,
+    setOutAndAbout,
     toggleAccess,
     setQuery,
   } = params;
@@ -500,6 +519,13 @@ function useActiveFilters(params: DirectoryFilterParams): ActiveFilter[] {
         onRemove: () => setOpenNow(false),
       });
     }
+    if (isOutAndAbout) {
+      list.push({
+        key: "mobile",
+        label: t("marketing:local.filter.outAndAbout"),
+        onRemove: () => setOutAndAbout(false),
+      });
+    }
     access.forEach((slug) => {
       list.push({
         key: `access:${slug}`,
@@ -521,6 +547,7 @@ function useActiveFilters(params: DirectoryFilterParams): ActiveFilter[] {
     safe,
     owned,
     openNow,
+    isOutAndAbout,
     access,
     query,
     t,
@@ -529,6 +556,7 @@ function useActiveFilters(params: DirectoryFilterParams): ActiveFilter[] {
     setSafe,
     toggleOwned,
     setOpenNow,
+    setOutAndAbout,
     toggleAccess,
     setQuery,
   ]);
@@ -557,8 +585,18 @@ export function useDirectoryFilterResults(
    */
   origin: MyLocationCoordinates | null = null,
 ) {
-  const { view, categories, query, vibes, safe, owned, openNow, access, sort } =
-    params;
+  const {
+    view,
+    categories,
+    query,
+    vibes,
+    safe,
+    owned,
+    openNow,
+    isOutAndAbout,
+    access,
+    sort,
+  } = params;
   // Each tab's chips read one vocabulary, so places match and count through
   // `categoryForScope`: online counterparts on the Online tab, place
   // counterparts on the list and the map.
@@ -574,6 +612,7 @@ export function useDirectoryFilterResults(
           safe,
           owned,
           openNow,
+          isOutAndAboutOnly: isOutAndAbout,
           access,
           isOnlineScope,
         }),
@@ -587,6 +626,7 @@ export function useDirectoryFilterResults(
       safe,
       owned,
       openNow,
+      isOutAndAbout,
       access,
       isOnlineScope,
       sort,
@@ -641,12 +681,23 @@ export function useDirectoryFilterResults(
           safe,
           owned,
           openNow,
+          isOutAndAboutOnly: isOutAndAbout,
           access,
           isOnlineScope,
         }),
         isOnlineScope,
       ),
-    [places, query, vibes, safe, owned, openNow, access, isOnlineScope],
+    [
+      places,
+      query,
+      vibes,
+      safe,
+      owned,
+      openNow,
+      isOutAndAbout,
+      access,
+      isOnlineScope,
+    ],
   );
 
   // The same "what would this chip leave" question for the other chips: each
@@ -660,6 +711,7 @@ export function useDirectoryFilterResults(
       safe,
       owned,
       openNow,
+      isOutAndAboutOnly: isOutAndAbout,
       access,
       isOnlineScope,
     };
@@ -667,6 +719,7 @@ export function useDirectoryFilterResults(
       filterLocalPlaces(places, { ...current, ...overrides }).length;
     return {
       openNow: countWith({ openNow: true }),
+      outAndAbout: countWith({ isOutAndAboutOnly: true }),
       safe: countWith({ safe: "verified" }),
       access: Object.fromEntries(
         ACCESSIBILITY_QUESTION_SLUGS.map((slug) => [
@@ -686,6 +739,7 @@ export function useDirectoryFilterResults(
     safe,
     owned,
     openNow,
+    isOutAndAbout,
     access,
     isOnlineScope,
   ]);

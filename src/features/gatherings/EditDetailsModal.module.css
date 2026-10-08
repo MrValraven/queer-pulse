@@ -4,42 +4,126 @@
    The labels match the modal's other uppercase labels (AudienceScopeField,
    the format details). */
 
+/* Each section pads 32px above and below, with a hairline between two. The
+   first starts at the column's own top padding. A jump from the rail stops a
+   later section 1px past the column's top edge, so its hairline tucks under
+   that edge and the heading sits 32px below it. */
 .section {
   display: flex;
   flex-direction: column;
   gap: 14px;
   min-width: 0;
+  padding-block: 32px;
 }
-/* The hairline sits evenly between two sections: the last field drops its own
-   bottom margin, so the list gap plus the top margin above the line matches
-   the padding below it. */
-.section > :last-child {
-  margin-bottom: 0;
+.section:first-child {
+  padding-top: 0;
 }
 .section + .section {
-  margin-top: 4px;
-  padding-top: 18px;
   border-top: 1px solid rgba(var(--line-rgb), 0.09);
+  scroll-margin-top: -1px;
+}
+
+/* The title and its hint on the left, "Undo section changes" on the right
+   while the section holds edits. */
+.sectionHead {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 4px;
+}
+.sectionHeadText {
+  min-width: 0;
 }
 .sectionTitle {
   margin: 0;
   font-family: var(--serif);
-  font-size: var(--text-18);
+  font-size: var(--text-20);
   font-weight: 500;
   line-height: 1.25;
   letter-spacing: -0.01em;
   color: var(--text-strong);
 }
+/* Focused by the rail (`tabIndex={-1}`): the ring only for a keyboard jump. */
+.sectionTitle:focus {
+  outline: none;
+}
+.sectionTitle:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-radius: var(--radius-4);
+}
+.sectionHint {
+  margin: 4px 0 0;
+  font-size: var(--text-14);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
 
+/* A quiet text button: muted ink, coral on hover, a 44px hit area on touch. */
+.sectionReset {
+  position: relative;
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+  padding: 4px 2px;
+  border: 0;
+  background: transparent;
+  font-family: var(--sans);
+  font-size: var(--text-13);
+  font-weight: 600;
+  color: var(--ink-60);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color 0.16s var(--ease);
+}
+.sectionReset svg {
+  width: 14px;
+  height: 14px;
+}
+@media (hover: hover) {
+  .sectionReset:hover {
+    color: var(--accent-text);
+  }
+}
+.sectionReset:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-radius: var(--radius-4);
+}
+@media (pointer: coarse) {
+  .sectionReset::before {
+    content: "";
+    position: absolute;
+    inset: -10px -8px;
+  }
+}
+/* On a narrow form the undo drops under the hint, so a long title and its
+   hint keep the full width. */
+@container editDetails (max-width: 599.98px) {
+  .sectionHead {
+    flex-direction: column;
+    gap: 6px;
+  }
+  .sectionReset {
+    margin-top: 0;
+  }
+}
+
+/* No margin of its own: the section's field grid (EditDetailsFields.module.css)
+   spaces every field. */
 .group {
   min-width: 0;
-  margin-bottom: 16px;
 }
 .groupLabel {
   display: block;
   margin-bottom: 6px;
   font-size: var(--text-11-5);
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: 0.07em;
   text-transform: uppercase;
   color: var(--ink-40);
@@ -59,15 +143,12 @@
 
 /* The capacity stepper draws the wizard's `Field`, whose real `<label for>`
    names the number input. Here its label takes the modal's uppercase look
-   and the section's gap spaces it, so it reads as one of this form's fields.
-   The hint and error stay under the stepper. */
-.section .capacityField {
-  margin-top: 0;
-}
+   and the section's field grid spaces it, so it reads as one of this form's
+   fields. The hint and error stay under the stepper. */
 .capacityField > label {
   margin-bottom: 6px;
   font-size: var(--text-11-5);
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: 0.07em;
   text-transform: uppercase;
   color: var(--ink-40);

@@ -1,0 +1,8 @@
+/* The meeting point's fields, opened under its checkbox: the public-spot
+   note, the neighbourhood, then the address and pin. */
+.meetingPointBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 12px;
+}

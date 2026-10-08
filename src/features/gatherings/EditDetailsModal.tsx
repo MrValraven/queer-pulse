@@ -1,63 +1,44 @@
-import { useRef, useState, type KeyboardEvent } from "react";
-import { FormField, Modal } from "../../shared/components/ui";
+import { useId, useState } from "react";
+import { ConfirmDialog, Modal } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { MentionTextarea } from "../../shared/mentions/MentionTextarea";
 import { EditDetailsAudience } from "./EditDetailsAudience";
+import { EditDetailsBasics } from "./EditDetailsBasics";
 import { EditDetailsCare } from "./EditDetailsCare";
-import { EditDetailsCost } from "./EditDetailsCost";
-import { EditDetailsCover } from "./EditDetailsCover";
+import {
+  editedSectionKeys,
+  editSaveProblem,
+  hasAttendeeNotifyingChange,
+} from "./editDetailsChanges";
 import type { GatheringDetailsDraft } from "./editDetailsDraft";
-import { EditDetailsFormat } from "./EditDetailsFormat";
+import { EditDetailsFooterStatus } from "./EditDetailsFooterStatus";
+import { EditDetailsLayout } from "./EditDetailsLayout";
 import { EditDetailsRsvp } from "./EditDetailsRsvp";
-import { EditDetailsSchedule } from "./EditDetailsSchedule";
-import { EditDetailsSection } from "./EditDetailsSection";
+import {
+  EditDetailsSectionsContext,
+  type EditDetailsSectionsValue,
+} from "./editDetailsSectionsContext";
+import { EditDetailsWhenWhere } from "./EditDetailsWhenWhere";
 import { FieldEditorFooter } from "./FieldEditorShell";
-import { sanitizeThemes } from "./gatheringExtras";
 import { GatheringSuccessPanel } from "./GatheringSuccessPanel";
 import { canSaveEditDraft } from "./manageGatheringState";
-import { ATTENDEE_COUNT } from "./manageGathering.data";
-import { MAX_DESCRIPTION_STORAGE_LENGTH } from "./steps/whatChapter.data";
-import { useAutoGrowTextarea } from "./useAutoGrowTextarea";
-import fieldEditorStyles from "./FieldEditor.module.css";
-import styles from "./GatheringModals.module.css";
+import { useEditDetailsDraft } from "./useEditDetailsDraft";
+import { useEditDetailsNavigation } from "./useEditDetailsNavigation";
+import layoutStyles from "./EditDetailsLayout.module.css";
 
 // The draft's shape lives in `editDetailsDraft.ts`. Re-exported so the
 // sections that read it from the modal keep doing so.
 export type { GatheringDetailsDraft };
-
-function isPlainObject(value: unknown): value is Record<string, unknown> {
-  return (
-    typeof value === "object" &&
-    value !== null &&
-    Object.getPrototypeOf(value) === Object.prototype
-  );
-}
-
-/** Whether two draft values hold the same answer: equal primitives, or
- *  arrays and plain objects (themes, content notes, format details, RSVP
- *  questions) with equal entries all the way down. A key missing on one side
- *  reads as `undefined`, so `{ a: undefined }` and `{}` count as the same. */
-function isSameDraftValue(left: unknown, right: unknown): boolean {
-  if (Object.is(left, right)) return true;
-  if (Array.isArray(left) && Array.isArray(right)) {
-    return (
-      left.length === right.length &&
-      left.every((item, index) => isSameDraftValue(item, right[index]))
-    );
-  }
-  if (isPlainObject(left) && isPlainObject(right)) {
-    const keys = new Set([...Object.keys(left), ...Object.keys(right)]);
-    return [...keys].every((key) => isSameDraftValue(left[key], right[key]));
-  }
-  return false;
-}
 
 /**
  * Edit a published gathering in five titled sections: the gathering, when and
  * where, who it is for, taking care, and RSVPs. Each section hands back a
  * partial draft that is merged here, so the modal owns one draft and
  * `buildEditPatch` reads all of it.
+ *
+ * A wide editor: a rail maps the sections (which one is in view, which hold
+ * edits, which holds Save) beside the scrolling form, and the footer says
+ * where the edit stands. Closing with edits asks first.
  */
 export function EditDetailsModal({
   initial,
@@ -66,35 +47,21 @@ export function EditDetailsModal({
 }: {
   initial: GatheringDetailsDraft;
   onClose: () => void;
-  onSave: (draft: GatheringDetailsDraft) => void;
+  /** Resolves with how many people the server notified, or `null` when that
+   *  is unknown: a repeating gathering sends only once the host picks a
+   *  scope, after this modal has closed, or the request failed. It never
+   *  rejects; callers catch. */
+  onSave: (draft: GatheringDetailsDraft) => Promise<number | null>;
 }) {
   const { t } = useTranslation();
-  const [draft, setDraft] = useState<GatheringDetailsDraft>(initial);
-  // The baseline the modal opened on, frozen for its whole life. Parents
-  // rebuild `initial` on every render, and one re-seeded while the modal is
-  // open would otherwise light Save with no edit made.
-  const [openedDraft] = useState<GatheringDetailsDraft>(initial);
-  const [done, setDone] = useState(false);
+  const { draft, openedDraft, setField, merge, mergeFormat, resetSectionKey } =
+    useEditDetailsDraft(initial);
+  const [isDone, setIsDone] = useState(false);
+  const [notifiedCount, setNotifiedCount] = useState<number | null>(null);
+  const [isDiscardOpen, setIsDiscardOpen] = useState(false);
+  const editorId = useId();
+  const navigation = useEditDetailsNavigation(editorId);
 
-  const set = <FieldName extends keyof GatheringDetailsDraft>(
-    key: FieldName,
-    value: GatheringDetailsDraft[FieldName],
-  ) => setDraft((current) => ({ ...current, [key]: value }));
-  const merge = (patch: Partial<GatheringDetailsDraft>) =>
-    setDraft((current) => ({ ...current, ...patch }));
-  // Family, format, the host's own words and the family's own questions move
-  // together when the family changes. A new family also drops the themes its
-  // own questions already ask (ruling R6), the rule the wizard applies.
-  const mergeFormat = (patch: Partial<GatheringDetailsDraft>) =>
-    setDraft((current) => {
-      const next = { ...current, ...patch };
-      return patch.gatheringFamily === undefined
-        ? next
-        : {
-            ...next,
-            themes: sanitizeThemes(next.themes, next.gatheringFamily),
-          };
-    });
   // Lives in `manageGatheringState` beside the patch builder it gates, so the
   // rule that decides whether a draft may be saved and the code that puts it
   // on the wire cannot drift apart. `EditDetailsSchedule` reads the schedule
@@ -106,31 +73,38 @@ export function EditDetailsModal({
   // Save lights up once something differs from what the modal opened on, the
   // way the one-field editors behave. An edit typed and then undone puts Save
   // back to its quiet "not yet" chip.
-  const hasDraftChanged = !isSameDraftValue(draft, openedDraft);
-  const descriptionRef = useRef<HTMLTextAreaElement>(null);
-  useAutoGrowTextarea(descriptionRef, draft.description);
+  // Every draft field belongs to one section, so the draft differs exactly
+  // when some section does, and the discard count can never read zero.
+  const editedKeys = editedSectionKeys(draft, openedDraft);
+  const hasDraftChanged = editedKeys.length > 0;
+  // Where the rule holding Save points, for the rail's marker and the
+  // footer's "Show the field". `null` while the draft saves.
+  const saveProblem = editSaveProblem(draft, openedDraft.capacity);
 
+  // Save, Cmd/Ctrl + Enter from any field, all through this one gate. It does
+  // nothing while Save is off, and the success panel replaces the form once
+  // it has saved.
   const save = () => {
     if (!canSave || !hasDraftChanged) return;
-    onSave(draft);
-    setDone(true);
+    void onSave(draft).then(setNotifiedCount);
+    setIsDone(true);
   };
 
-  // Cmd/Ctrl + Enter in the description saves the modal, as in the one-field
-  // description editor. It goes through `save`, so it does nothing while Save
-  // is off, and the success panel replaces the field once it has saved.
-  const handleDescriptionKeyDown = (
-    event: KeyboardEvent<HTMLTextAreaElement>,
-  ) => {
-    // An Enter that confirms an IME composition (Japanese, Chinese, Korean
-    // input) belongs to the composition, so it never saves.
-    if (event.nativeEvent.isComposing) return;
-    if (event.key !== "Enter" || !(event.metaKey || event.ctrlKey)) return;
-    event.preventDefault();
-    save();
+  // The close button, Escape, the scrim and Cancel all come here. With no
+  // edits the modal closes at once; with edits a confirm opens on top, and
+  // Escape there closes only the confirm (the shared modal stack).
+  const requestClose = () => {
+    if (hasDraftChanged) setIsDiscardOpen(true);
+    else onClose();
   };
 
-  if (done) {
+  if (isDone) {
+    // The server tells attendees only about a new start or place, so the
+    // count shows for those edits once it has come back above zero.
+    const shouldShowNotifiedCount =
+      hasAttendeeNotifyingChange(draft, openedDraft) &&
+      notifiedCount !== null &&
+      notifiedCount > 0;
     return (
       <GatheringSuccessPanel
         title={
@@ -146,99 +120,117 @@ export function EditDetailsModal({
             components={{ b: <b /> }}
           />
         }
-        meta={t("gatherings:manage.editModal.successMeta", {
-          count: ATTENDEE_COUNT,
-        })}
+        meta={
+          shouldShowNotifiedCount
+            ? t("gatherings:manage.editModal.successMeta", {
+                count: notifiedCount,
+              })
+            : t("gatherings:manage.editModal.successMetaSaved")
+        }
         onClose={onClose}
       />
     );
   }
 
+  const sectionsValue: EditDetailsSectionsValue = {
+    editorId,
+    editedKeys,
+    needsFixKey: saveProblem?.sectionKey ?? null,
+    onReset: resetSectionKey,
+    registerSection: navigation.registerSection,
+  };
+
   return (
-    <Modal
-      title={t("gatherings:manage.editModal.title")}
-      sub={t("gatherings:manage.editModal.sub")}
-      onClose={onClose}
-      // The shared editor footer puts Cancel before Save, the order the
-      // focused field editors and most modal footers in the app use.
-      footer={
-        <FieldEditorFooter
-          isSaveEnabled={canSave && hasDraftChanged}
-          onSave={save}
-          onCancel={onClose}
-        />
-      }
-    >
-      <div className={styles.fields}>
-        <EditDetailsSection
-          title={t("gatherings:manage.editModal.section.gathering")}
-        >
-          <FormField
-            label={t("gatherings:manage.editModal.fieldTitle")}
-            required
-          >
-            <input
-              type="text"
-              value={draft.title}
-              onChange={(event) => set("title", event.target.value)}
-            />
-          </FormField>
-          <EditDetailsFormat draft={draft} onChange={mergeFormat} />
-          {/* Mentions suggest as in chat, the list on `document.body` so the
-              dialog body's scroll edge never cuts it off. */}
-          <FormField label={t("gatherings:manage.editModal.fieldDescription")}>
-            <MentionTextarea
-              textareaRef={descriptionRef}
-              className={fieldEditorStyles.detailsDescriptionInput}
-              maxLength={MAX_DESCRIPTION_STORAGE_LENGTH}
-              aria-label={t("gatherings:manage.editModal.fieldDescription")}
-              value={draft.description}
-              onChange={(nextDescription) =>
-                set("description", nextDescription)
-              }
-              onKeyDown={handleDescriptionKeyDown}
-              shouldPortalMenu
-              shouldSubmitOnModifierEnter
-            />
-          </FormField>
-          <EditDetailsCover
-            coverImageUrl={draft.coverImageUrl}
-            onChange={(value) => set("coverImageUrl", value)}
+    <>
+      <Modal
+        full
+        className={layoutStyles.editorDialog}
+        bodyClassName={layoutStyles.editorBody}
+        subClassName={layoutStyles.editorSub}
+        // On a phone with the keyboard up the head and footer tighten and the
+        // sheet grows towards the top, so the field being typed in keeps its
+        // room (EditDetailsLayout.module.css drops the strip and the status).
+        shouldCollapseSubWithKeyboard
+        eyebrow={
+          openedDraft.title ? (
+            <span className={layoutStyles.eyebrowTitle}>
+              {openedDraft.title}
+            </span>
+          ) : undefined
+        }
+        title={t("gatherings:manage.editModal.title")}
+        sub={t("gatherings:manage.editModal.sub")}
+        onClose={requestClose}
+        // The shared editor footer puts Cancel before Save, the order the
+        // focused field editors and most modal footers in the app use.
+        footer={
+          <FieldEditorFooter
+            isSaveEnabled={canSave && hasDraftChanged}
+            onSave={save}
+            onCancel={requestClose}
+            status={
+              <EditDetailsFooterStatus
+                editedCount={editedKeys.length}
+                isNotifyingAttendees={hasAttendeeNotifyingChange(
+                  draft,
+                  openedDraft,
+                )}
+                saveProblem={saveProblem}
+                onShowField={navigation.showField}
+              />
+            }
           />
-        </EditDetailsSection>
-        <EditDetailsSection
-          title={t("gatherings:manage.editModal.section.whenWhere")}
-        >
-          <EditDetailsSchedule
+        }
+      >
+        <EditDetailsSectionsContext.Provider value={sectionsValue}>
+          <EditDetailsLayout
             draft={draft}
-            onChangeStartAt={(value) => set("startAt", value)}
-            onChangeEndAt={(value) => set("endAt", value)}
-          />
-          <FormField
-            label={t("gatherings:manage.editModal.fieldLocation")}
-            required
+            activeKey={navigation.activeKey}
+            editedKeys={editedKeys}
+            needsFixKey={sectionsValue.needsFixKey}
+            onSelectSection={navigation.goToSection}
+            onSaveShortcut={save}
+            columnRef={navigation.columnRef}
+            bottomSentinelRef={navigation.bottomSentinelRef}
           >
-            <input
-              type="text"
-              value={draft.location}
-              onChange={(event) => set("location", event.target.value)}
+            <EditDetailsBasics
+              draft={draft}
+              editorId={editorId}
+              onSetField={setField}
+              onChangeFormat={mergeFormat}
             />
-          </FormField>
-          <EditDetailsCost
-            costKind={draft.costKind}
-            cost={draft.cost}
-            onChange={merge}
-          />
-        </EditDetailsSection>
-        <EditDetailsAudience
-          draft={draft}
-          openedWithCapacity={openedDraft.capacity}
-          savedCommunitySlug={openedDraft.communitySlug}
-          onChange={merge}
-        />
-        <EditDetailsCare draft={draft} onChange={merge} />
-        <EditDetailsRsvp draft={draft} onChange={merge} />
-      </div>
-    </Modal>
+            <EditDetailsWhenWhere
+              draft={draft}
+              editorId={editorId}
+              onSetField={setField}
+              onChange={merge}
+            />
+            <EditDetailsAudience
+              draft={draft}
+              openedWithCapacity={openedDraft.capacity}
+              savedCommunitySlug={openedDraft.communitySlug}
+              onChange={merge}
+            />
+            <EditDetailsCare draft={draft} onChange={merge} />
+            <EditDetailsRsvp draft={draft} onChange={merge} />
+          </EditDetailsLayout>
+        </EditDetailsSectionsContext.Provider>
+      </Modal>
+      {/* A sibling of the editor, so its keys and clicks never bubble through
+          the editor's own handlers on their way up the React tree. */}
+      <ConfirmDialog
+        open={isDiscardOpen}
+        onClose={() => setIsDiscardOpen(false)}
+        onConfirm={onClose}
+        title={t("gatherings:manage.editModal.discard.title")}
+        description={t("gatherings:manage.editModal.discard.body", {
+          count: editedKeys.length,
+        })}
+        cancelLabel={t("gatherings:manage.editModal.discard.keepCta")}
+        confirmLabel={t("gatherings:manage.editModal.discard.discardCta")}
+        tone="destructive"
+        initialFocus="cancel"
+      />
+    </>
   );
 }

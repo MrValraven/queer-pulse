@@ -2,14 +2,39 @@ import type { TFunction } from "../../shared/i18n/types";
 import { operatingStateOf, type DirectoryPlace } from "./directoryPlaces";
 import { categoryLabel } from "./localCategories";
 import { placeAreaParts, placeStreetLine } from "./placeArea";
+import {
+  hasMeetingPoint,
+  listingKindOf,
+  mobileCardAreaLine,
+  normalizeMobileDetails,
+} from "./listBusiness/listingMobile.data";
+
+/**
+ * The card's area line as text ("Works across Lisbon", "Works in Arroios,
+ * Estrela +1") for an out-and-about listing with no meeting point, and null
+ * for every other listing. Places, online businesses and out-and-about
+ * listings with a meeting point have a real neighbourhood of their own.
+ */
+export function mobileAreaLineText(
+  place: DirectoryPlace,
+  t: TFunction,
+): string | null {
+  if (listingKindOf(place) !== "mobile" || hasMeetingPoint(place)) return null;
+  const areaLine = mobileCardAreaLine({
+    hood: place.hood,
+    isAtMeetingPoint: false,
+    details: normalizeMobileDetails(place.mobileDetails),
+  });
+  return t(areaLine.key, areaLine.values);
+}
 
 /**
  * The street address as the page's "Copy address" pastes it: the street
  * line, then the neighbourhood and city it does not already carry. A listing
  * on the directory is public, so its address travels with the message.
  */
-function fullAddress(place: DirectoryPlace): string {
-  return [placeStreetLine(place), ...placeAreaParts(place)]
+function fullAddress(place: DirectoryPlace, t: TFunction): string {
+  return [placeStreetLine(place), ...placeAreaParts(place, t)]
     .filter(Boolean)
     .join(", ");
 }
@@ -40,7 +65,7 @@ function whereLines(place: DirectoryPlace, t: TFunction): string[] {
   }
   const placeLine = place.online
     ? t("marketing:directory.detail.onlineBusiness")
-    : fullAddress(place);
+    : (mobileAreaLineText(place, t) ?? fullAddress(place, t));
   return [stateLine, placeLine];
 }
 

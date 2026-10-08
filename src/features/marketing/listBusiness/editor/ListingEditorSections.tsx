@@ -2,6 +2,7 @@ import { VerifiedBadgeEditNotice } from "../../EditListingStatusHeader";
 import type { ManagedListingDTO } from "../api/listings.api";
 import { CoManagerRoleFields } from "../coManagers/CoManagerRoleFields";
 import { ListingCoManagersSection } from "../coManagers/ListingCoManagersSection";
+import { listingKindOf } from "../listingMobile.data";
 import { effectivePricingMode } from "../listingShop.data";
 import type { ListingForm } from "../useListingForm";
 import { BasicsFields } from "../fields/BasicsFields";
@@ -51,7 +52,8 @@ import {
  *
  * An online-only listing gets its own four accessibility questions, its
  * practical section reads "How people buy from you", and its priced list can
- * be "In the shop".
+ * be "In the shop". An out-and-about listing gets four questions about its
+ * route and meeting spot, under "Joining in".
  *
  * Trading state and directory visibility share ONE section on purpose. They
  * are different questions with similar-sounding answers ("we are shut for
@@ -122,7 +124,7 @@ export function ListingEditorSections({
         <ListingEditorSection
           section={accessibilitySectionDefinition(
             section.accessibility,
-            form.draft.online,
+            listingKindOf(form.draft),
           )}
         >
           <ListingAccessibilityFields form={form} />

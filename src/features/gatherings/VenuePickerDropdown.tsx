@@ -6,7 +6,7 @@ import { useDirectoryPlaces } from "../marketing/api/useDirectory";
 import type { DirectoryPlace } from "../marketing/directoryPlaces";
 import type { VenueSelection } from "./VenuePicker";
 import { VenuePickerSearch } from "./VenuePickerSearch";
-import { venuePickerResults } from "./venuePickerResults";
+import { hasHiddenRunByMatch, venuePickerResults } from "./venuePickerResults";
 import styles from "./VenuePicker.module.css";
 
 /**
@@ -45,6 +45,11 @@ export function VenuePickerDropdown({
 
   const results = useMemo(
     () => venuePickerResults(places, query),
+    [places, query],
+  );
+
+  const shouldPointToRunBy = useMemo(
+    () => hasHiddenRunByMatch(places, query),
     [places, query],
   );
 
@@ -179,6 +184,7 @@ export function VenuePickerDropdown({
       activeIndex={activeIndex}
       setActiveIndex={setActiveIndex}
       results={results}
+      shouldPointToRunBy={shouldPointToRunBy}
       onKeyDown={onKeyDown}
       onSelectPlace={selectPlace}
       onSwitchToFreeText={switchToFreeText}

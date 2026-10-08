@@ -3,6 +3,7 @@ import { useProfileData } from "../../../../app/providers/useProfile";
 import { usePrefersReducedMotion } from "../../../../shared/hooks/usePrefersReducedMotion";
 import type { ManagedListingDTO } from "../api/listings.api";
 import { dtoToDraft } from "../dtoToDraft";
+import { listingKindOf } from "../listingMobile.data";
 import { effectivePricingMode } from "../listingShop.data";
 import { SendingPanel } from "../ListBusinessChrome";
 import { useEditUnsavedGuard } from "../useEditListingSave";
@@ -53,18 +54,18 @@ export function ListingEditor({ listing }: { listing: ManagedListingDTO }) {
   // The mode a save sends: a stored "shop" on a place that no longer sells
   // online reads as its category's list, so the nav titles that list.
   const pricingMode = effectivePricingMode(draft);
-  // Read from the draft, so flipping the online-only toggle in Basics retitles
-  // the practical and accessibility sections and their nav entries straight
-  // away.
-  const isOnline = draft.online;
+  // Read from the draft, so switching the kind in Basics retitles the
+  // practical and accessibility sections and their nav entries straight away.
+  const kind = listingKindOf(draft);
+  const isOnline = kind === "online";
   const sections = useMemo(
     () =>
       withListingKindLabels(
         editorSectionsFor(listing.managementRole === "co_manager", isOnline),
         pricingMode,
-        isOnline,
+        kind,
       ),
-    [listing.managementRole, isOnline, pricingMode],
+    [listing.managementRole, isOnline, kind, pricingMode],
   );
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const { isDangerZoneOpen, spySectionIds, jumpToSection } =

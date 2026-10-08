@@ -12,6 +12,8 @@ import { Stars } from "./DirectoryStars";
 import { DirectoryActionBar } from "./DirectoryActionBar";
 import { DirectoryQueerOwnedProvenance } from "./DirectoryQueerOwnedProvenance";
 import { DirectoryOwnerByline } from "./DirectoryOwnerByline";
+import { mobileAreaLineText } from "./directoryShareMessage";
+import { cityLabelOf } from "./placeArea";
 import s from "./DirectorySpacePage.module.css";
 
 interface Props {
@@ -55,6 +57,11 @@ export function DirectorySpaceHeader({ place, preview = false }: Props) {
   const last = words.pop();
   const lead = words.join(" ");
   const hasReviews = place.rating.count > 0;
+  // An out-and-about listing with no meeting point has no neighbourhood, so
+  // its eyebrow carries where it works; every other line drops blank parts.
+  const whereLine =
+    mobileAreaLineText(place, t) ??
+    [place.hood, cityLabelOf(t, place.city)].filter(Boolean).join(" · ");
 
   return (
     <div className={s.identity}>
@@ -68,7 +75,7 @@ export function DirectorySpaceHeader({ place, preview = false }: Props) {
               {categoryLabel(t, place.cat)} ·{" "}
               {place.online
                 ? t("marketing:directory.detail.onlineBusiness")
-                : `${place.hood} · ${place.city ?? "Lisbon"}`}
+                : whereLine}
             </div>
             <h1 className={s.h1}>
               {lead && `${lead} `}

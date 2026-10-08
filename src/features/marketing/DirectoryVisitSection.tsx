@@ -14,6 +14,11 @@ import {
   DirectoryPlaceOnline,
 } from "./DirectoryPlaceLocation";
 import { placeAreaParts } from "./placeArea";
+import { DirectoryMobileArea } from "./DirectoryMobileArea";
+import {
+  hasMeetingPoint,
+  listingKindOf,
+} from "./listBusiness/listingMobile.data";
 import { DirectoryContactRows } from "./DirectoryContactRows";
 import { DirectoryFreshnessStamp } from "./DirectoryFreshnessStamp";
 import { DirectoryMessageBusiness } from "./DirectoryMessageBusiness";
@@ -76,6 +81,11 @@ interface Props {
  * card, which an online listing never renders, so without this home the page
  * would lose its only word on how current the contact details are. The stamp
  * reads the venue's own clock, exactly as the hours card passes it.
+ *
+ * An out-and-about business keeps the card as "Where it works": its area and
+ * the towns it also travels to, then, only when it meets people at a set spot,
+ * the map band, a "Meeting point" subhead and the address with its
+ * directions. Without a meeting point there is no map at all.
  */
 export function DirectoryVisitSection(props: Props) {
   // `DirectorySpaceView` provides the state owner for the whole page. A caller
@@ -101,6 +111,11 @@ function DirectoryVisitCard({
   useCarryVisitCardFocus(cardRef, headingRef, `.${s.visitMap}`);
   useVisitMapReach(cardRef, shouldReachHoursEnd);
   const isPermanentlyClosed = operatingStateOf(place) === "permanently_closed";
+  const kind = listingKindOf(place);
+  // A place always has premises to show; an out-and-about business only
+  // when it meets people at a set spot. Without one there is no map, no
+  // address and no area subline (its area is the "Where it works" text).
+  const hasPremises = kind === "place" || hasMeetingPoint(place);
 
   // A closed business's inbox is not somewhere to write to (see
   // `DirectoryContactRows` for the same distinction on the rows themselves), so
@@ -127,15 +142,24 @@ function DirectoryVisitCard({
         : null;
   const ctaVariant = orderingLink ? "ghost" : "primary";
   const hasSavedSignal = place.savedCount != null && place.savedCount > 0;
-  const areaLine = place.online ? "" : placeAreaParts(place).join(" · ");
+  // A mobile listing's area is the "Where it works" text in the body, so the
+  // hood and city subline would contradict it.
+  const areaLine =
+    hasPremises && kind !== "mobile"
+      ? placeAreaParts(place, t).join(" · ")
+      : "";
 
   const heading = (
     // Focusable from script only: the fallback target when focus sat in the
     // map as the card changed column (see visitCardFocusCarry).
     <h2 ref={headingRef} tabIndex={-1}>
-      {place.online
-        ? t("marketing:directory.detail.visitTitleOnline")
-        : t("marketing:directory.detail.visitTitle")}
+      {t(
+        kind === "online"
+          ? "marketing:directory.detail.visitTitleOnline"
+          : kind === "mobile"
+            ? "marketing:directory.detail.visitTitleMobile"
+            : "marketing:directory.detail.visitTitle",
+      )}
     </h2>
   );
 
@@ -151,10 +175,22 @@ function DirectoryVisitCard({
       )}
       <div className={s.visitShell}>
         <div className={s.visitCard}>
-          {!place.online && <DirectoryPlaceMap place={place} />}
+          {hasPremises && kind !== "mobile" && (
+            <DirectoryPlaceMap place={place} />
+          )}
           <div className={s.visitBody}>
-            {place.online ? (
+            {kind === "online" ? (
               <DirectoryPlaceOnline place={place} />
+            ) : kind === "mobile" ? (
+              <>
+                <DirectoryMobileArea place={place} />
+                {hasPremises && (
+                  <>
+                    <DirectoryPlaceMap place={place} />
+                    <DirectoryPlaceAddress place={place} />
+                  </>
+                )}
+              </>
             ) : (
               <DirectoryPlaceAddress place={place} />
             )}

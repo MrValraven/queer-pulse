@@ -152,6 +152,9 @@ export function InviteMembersModal({
       onClose={onClose}
       footer={
         <>
+          <Button variant="ghost" onClick={onClose}>
+            {t("gatherings:manage.cancelCta")}
+          </Button>
           <Button
             variant="primary"
             onClick={send}
@@ -176,9 +179,6 @@ export function InviteMembersModal({
                 />
               </span>
             )}
-          </Button>
-          <Button variant="ghost" onClick={onClose}>
-            {t("gatherings:manage.cancelCta")}
           </Button>
         </>
       }

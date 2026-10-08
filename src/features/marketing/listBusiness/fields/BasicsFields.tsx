@@ -1,23 +1,24 @@
-import {
-  CheckLine,
-  FormField,
-  RadioCardGroup,
-} from "../../../../shared/components/ui";
+import { FormField, RadioCardGroup } from "../../../../shared/components/ui";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { ANCHOR, PRICES } from "../listBusiness.data";
+import {
+  isMobileWithoutMeetingPoint,
+  listingKindOf,
+} from "../listingMobile.data";
 import { useSimilarListings } from "../api/useSimilarListings";
 import type { ListingForm } from "../useListingForm";
 import { DuplicateNotice } from "../DuplicateNotice";
 import { StepBasicsBadgeField } from "../StepBasicsBadgeField";
 import { BasicsCategoryField } from "./BasicsCategoryField";
 import { BasicsLocationField } from "./BasicsLocationField";
+import { WhereFoundField } from "./WhereFoundField";
 import styles from "../ListBusinessPage.module.css";
 
 /**
- * The basics field body: on an edit the online-only switch first (above the
+ * The basics field body: on an edit the three-answer kind choice first (above the
  * categories it decides; a new listing answers it on step 0), then the name,
  * the categories for the listing's kind with the 18+ acknowledgement, the
- * neighbourhood or "Based in", the ownership badge, the price band and the
+ * neighbourhood, "Based in" or "Where you work", the ownership badge, the price band and the
  * one-line blurb. Switching kind keeps the other kind's categories,
  * neighbourhood, address and hours in the draft (`withListingKind`).
  *
@@ -42,12 +43,16 @@ export function BasicsFields({
   duplicateCheckBaselineName?: string;
 }) {
   const { t } = useTranslation();
-  const { draft, set, setOnline } = form;
+  const { draft, set } = form;
   const isEdit = editRef !== undefined;
   // Live duplicate detection against the real directory: by name, and by
   // proximity once a pin exists (item #5). An empty name disables the read.
+  // A mobile listing without a meeting point keeps a stale pin in the draft;
+  // it is never public, so it must not feed the proximity check.
   const coords =
-    draft.latitude !== null && draft.longitude !== null
+    !isMobileWithoutMeetingPoint(draft) &&
+    draft.latitude !== null &&
+    draft.longitude !== null
       ? { latitude: draft.latitude, longitude: draft.longitude }
       : null;
   const isNameUnchanged =
@@ -61,17 +66,15 @@ export function BasicsFields({
 
   return (
     <>
-      {/* An edit has no Path step, so the kind switch sits first, above the
-          categories it decides. The create flow asks on step 0. */}
+      {/* An edit has no Path step, so "Where do people find it?" sits first,
+          above the categories it decides, with all three answers. The
+          create flow asks on step 0. */}
       {isEdit && (
-        <div id={ANCHOR.online} className={styles.onlineToggleRow}>
-          <CheckLine
-            checked={draft.online}
-            onChange={setOnline}
-            title={t("marketing:listBusiness.step3.onlineOnly.title")}
-            sub={t("marketing:listBusiness.step1.onlineToggle.sub")}
-          />
-        </div>
+        <WhereFoundField
+          form={form}
+          anchorId={ANCHOR.online}
+          helperKey="marketing:listBusiness.step1.kindChoice.helper"
+        />
       )}
       <FormField
         className={styles.lbField}
@@ -128,7 +131,11 @@ export function BasicsFields({
       >
         <textarea
           maxLength={140}
-          placeholder={t("marketing:listBusiness.step1.blurbPlaceholder")}
+          placeholder={t(
+            listingKindOf(draft) === "mobile"
+              ? "marketing:listBusiness.step1.blurbPlaceholderMobile"
+              : "marketing:listBusiness.step1.blurbPlaceholder",
+          )}
           value={draft.blurb}
           onChange={(e) => set({ blurb: e.target.value })}
         />

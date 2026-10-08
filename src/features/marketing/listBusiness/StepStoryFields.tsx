@@ -3,6 +3,7 @@ import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { ANCHOR } from "./listBusiness.data";
 import { ListingDescriptionEditor } from "./ListingDescriptionEditor";
 import { ListingTagPicker } from "./ListingTagPicker";
+import { listingKindOf } from "./listingMobile.data";
 import type { ListingForm } from "./useListingForm";
 import styles from "./ListBusinessPage.module.css";
 
@@ -17,11 +18,20 @@ export function StepStoryDescriptionField({ form }: { form: ListingForm }) {
       id={ANCHOR.whatItIs}
       label={t("marketing:listBusiness.step2.descriptionLabel")}
       required
-      helper={t("marketing:listBusiness.step2.descriptionHelper")}
+      helper={t(
+        // An out-and-about listing has no door to walk in at.
+        listingKindOf(draft) === "mobile"
+          ? "marketing:listBusiness.step2.descriptionHelperMobile"
+          : "marketing:listBusiness.step2.descriptionHelper",
+      )}
     >
       <ListingDescriptionEditor
         paragraphs={draft.whatItIs}
-        placeholder={t("marketing:listBusiness.step2.descriptionPlaceholder")}
+        placeholder={t(
+          listingKindOf(draft) === "mobile"
+            ? "marketing:listBusiness.step2.descriptionPlaceholderMobile"
+            : "marketing:listBusiness.step2.descriptionPlaceholder",
+        )}
         onChange={setDescription}
       />
     </FormField>
@@ -29,7 +39,7 @@ export function StepStoryDescriptionField({ form }: { form: ListingForm }) {
 }
 
 /** The tag field: pick up to six tags from the curated vocabulary for the
- *  listing's audience, place or online-only (see ListingTagPicker). */
+ *  listing's kind (see ListingTagPicker). */
 export function StepStoryTagsField({ form }: { form: ListingForm }) {
   const { t } = useTranslation();
   const { draft, addTag, removeTag } = form;
@@ -41,7 +51,7 @@ export function StepStoryTagsField({ form }: { form: ListingForm }) {
     >
       <ListingTagPicker
         tags={draft.tags}
-        isOnline={draft.online}
+        kind={listingKindOf(draft)}
         onAdd={addTag}
         onRemove={removeTag}
       />

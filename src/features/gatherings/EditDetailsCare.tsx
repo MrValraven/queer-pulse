@@ -11,6 +11,7 @@ import {
   type ContentNoteKey,
   type GatheringThemeKey,
 } from "./gatheringExtras";
+import fieldStyles from "./EditDetailsFields.module.css";
 
 /**
  * "Taking care" in the edit-details modal: themes, content notes and house
@@ -18,7 +19,8 @@ import {
  *
  * The themes read against the draft's family as it stands, so a family
  * changed in this same edit hides the themes its own questions already ask
- * (ruling R6), and only the themes on show count toward the three.
+ * (ruling R6), and only the themes on show count toward the three. The
+ * count sits on the themes' label row and is read out as it changes.
  */
 export function EditDetailsCare({
   draft,
@@ -49,41 +51,56 @@ export function EditDetailsCare({
     });
 
   return (
-    <EditDetailsSection title={t("gatherings:manage.editModal.section.care")}>
-      <EditDetailsGroup
-        label={t("gatherings:create.v2.what.themesLabel")}
-        hint={t("gatherings:create.v2.what.themesHint")}
-      >
-        {({ labelId, hintId }) => (
-          <ThemeChips
-            family={draft.gatheringFamily}
-            selectedThemes={selectedThemes}
-            onToggle={toggleTheme}
-            labelledBy={labelId}
-            describedBy={hintId}
+    <EditDetailsSection sectionKey="care">
+      <div className={fieldStyles.fieldGrid}>
+        <EditDetailsGroup
+          className={fieldStyles.fullRow}
+          label={t("gatherings:create.v2.what.themesLabel")}
+          hint={t("gatherings:create.v2.what.themesHint")}
+          aside={
+            <span className={fieldStyles.pickedCount} aria-live="polite">
+              {t("gatherings:manage.editModal.themesPicked", {
+                count: selectedThemes.length,
+                max: MAX_GATHERING_THEMES,
+              })}
+            </span>
+          }
+        >
+          {({ labelId, hintId }) => (
+            <ThemeChips
+              family={draft.gatheringFamily}
+              selectedThemes={selectedThemes}
+              onToggle={toggleTheme}
+              labelledBy={labelId}
+              describedBy={hintId}
+            />
+          )}
+        </EditDetailsGroup>
+        <EditDetailsGroup
+          className={fieldStyles.fullRow}
+          label={t("gatherings:create.v2.care.contentNotesLabel")}
+        >
+          {({ labelId }) => (
+            <ContentNoteChips
+              selectedNotes={draft.contentNotes}
+              onToggle={toggleContentNote}
+              labelledBy={labelId}
+            />
+          )}
+        </EditDetailsGroup>
+        <FormField
+          className={fieldStyles.fullRow}
+          label={t("gatherings:create.v2.care.houseRulesLabel")}
+        >
+          <input
+            type="text"
+            maxLength={MAX_HOUSE_RULES_LENGTH}
+            placeholder={t("gatherings:create.v2.care.houseRulesPlaceholder")}
+            value={draft.houseRules}
+            onChange={(event) => onChange({ houseRules: event.target.value })}
           />
-        )}
-      </EditDetailsGroup>
-      <EditDetailsGroup
-        label={t("gatherings:create.v2.care.contentNotesLabel")}
-      >
-        {({ labelId }) => (
-          <ContentNoteChips
-            selectedNotes={draft.contentNotes}
-            onToggle={toggleContentNote}
-            labelledBy={labelId}
-          />
-        )}
-      </EditDetailsGroup>
-      <FormField label={t("gatherings:create.v2.care.houseRulesLabel")}>
-        <input
-          type="text"
-          maxLength={MAX_HOUSE_RULES_LENGTH}
-          placeholder={t("gatherings:create.v2.care.houseRulesPlaceholder")}
-          value={draft.houseRules}
-          onChange={(event) => onChange({ houseRules: event.target.value })}
-        />
-      </FormField>
+        </FormField>
+      </div>
     </EditDetailsSection>
   );
 }

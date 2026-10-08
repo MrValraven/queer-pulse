@@ -24,7 +24,7 @@ export const VENUE_TYPE_TO_CATEGORY: Record<string, string> = {
   sauna: "nightlife",
 };
 
-/** Unified category ids, in chip order. "nightlife" is new; the rest mirror the directory. */
+/** Unified category ids, in chip order. Places and out-and-about listings pick from these. */
 export const LOCAL_CATEGORIES = [
   "food",
   "design",
@@ -35,6 +35,8 @@ export const LOCAL_CATEGORIES = [
   "grooming",
   "fitness",
   "nightlife",
+  "tours",
+  "home-services",
 ] as const;
 
 /**
@@ -85,8 +87,12 @@ export function isAdultCategoryPicked(cats: readonly string[]): boolean {
  * The online category a place category reads as, where the two vocabularies
  * meet: the Online tab's chips (which also match places that sell online) and
  * the session and registration questions a place that sells online is asked.
- * The same pairs as the 2026-10-07 data migration; `space` and `nightlife`
- * have no online counterpart.
+ * The same pairs as the 2026-10-07 data migration, plus `home-services`
+ * (movers, cleaners, handypeople) reading as Creative services. `space`,
+ * `nightlife` and `tours` have no online counterpart. Every online slug
+ * appears on the right at most once: the reverse map below is built by
+ * inverting this one, so a second place slug on the same online slug would
+ * overwrite the reverse entry (pinned by `localCategories.test.ts`).
  */
 export const ONLINE_CATEGORY_FOR_PLACE_CATEGORY: Readonly<
   Record<string, string>
@@ -98,6 +104,7 @@ export const ONLINE_CATEGORY_FOR_PLACE_CATEGORY: Readonly<
   tech: "digital",
   grooming: "body-care",
   fitness: "classes",
+  "home-services": "services",
 };
 
 /** A category id as the online vocabulary reads it. */
@@ -110,7 +117,8 @@ export function asOnlineCategory(category: string): string {
  * The place category an online category reads as: the same pairs turned
  * around, so the List tab's place chips also find the online-only listings
  * filed under their online counterpart (`handmade` sits under Design).
- * `apparel`, `services` and `intimacy` have no place counterpart.
+ * `apparel` and `intimacy` have no place counterpart; `services` reads as
+ * Home & moving.
  */
 export const PLACE_CATEGORY_FOR_ONLINE_CATEGORY: Readonly<
   Record<string, string>
@@ -142,6 +150,8 @@ const CATEGORY_LABEL_TO_SLUG: Record<string, string> = {
   "barbershop & salon": "grooming",
   "gym & fitness": "fitness",
   nightlife: "nightlife",
+  "tours & experiences": "tours",
+  "home & moving": "home-services",
 };
 
 const CANONICAL_CATEGORIES: ReadonlySet<string> = new Set(
@@ -172,6 +182,8 @@ export const LOCAL_CATEGORY_LABEL_KEYS: Record<string, string> = {
   grooming: "marketing:directory.cat.grooming",
   fitness: "marketing:directory.cat.fitness",
   nightlife: "marketing:local.cat.nightlife",
+  tours: "marketing:directory.cat.tours",
+  "home-services": "marketing:directory.cat.homeServices",
   apparel: "marketing:directory.cat.apparel",
   handmade: "marketing:directory.cat.handmade",
   "books-music": "marketing:directory.cat.booksMusic",

@@ -2,6 +2,7 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { type DirectoryPlace } from "./directoryPlaces";
 import { DirectoryOrderingBody } from "./DirectoryOrderingBody";
+import { listingKindOf } from "./listBusiness/listingMobile.data";
 import { hasOrderingContent, isSessionsOnly } from "./directoryOrdering.data";
 import s from "./DirectorySpacePage.module.css";
 
@@ -24,7 +25,9 @@ export function DirectoryOrderingSection({ place }: { place: DirectoryPlace }) {
           i18nKey={
             isSessions
               ? "marketing:directory.detail.ordering.titleSessions"
-              : "marketing:directory.detail.ordering.title"
+              : listingKindOf(place) === "mobile"
+                ? "marketing:directory.detail.ordering.titleMobile"
+                : "marketing:directory.detail.ordering.title"
           }
           components={{ em: <em /> }}
         />

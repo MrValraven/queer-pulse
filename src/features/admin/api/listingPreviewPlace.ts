@@ -5,6 +5,10 @@ import type {
   Tint,
 } from "../../marketing/directoryPlaces";
 import { normalizeListingAccessibilityAnswers } from "../../marketing/listBusiness/listingAccessibility.data";
+import {
+  listingKindOf,
+  normalizeMobileDetails,
+} from "../../marketing/listBusiness/listingMobile.data";
 import { normalizeOwnedBy } from "../../marketing/listBusiness/listingOwnedBy.data";
 import { menuForDisplay } from "../../marketing/listBusiness/listingMenu.data";
 import {
@@ -227,6 +231,14 @@ export function listingDtoToPreviewPlace(
     // read: no map or hours for an online listing, the ordering block for
     // anything that sells online, the shop when it is the priced list.
     ...previewOnlineFields(dto),
+    // Out and about, as the public page reads it. The location fields above
+    // are already blank for one with no meeting point: the server stores
+    // them so, and the editor's draft source blanks them.
+    mobile: listingKindOf(dto) === "mobile",
+    mobileDetails:
+      listingKindOf(dto) === "mobile"
+        ? normalizeMobileDetails(dto.mobileDetails)
+        : null,
     tagline: dto.tagline,
     // Price tier first (when set), then the listing's own tags — as detail pills.
     pills: [...(dto.price ? [dto.price] : []), ...dto.tags],

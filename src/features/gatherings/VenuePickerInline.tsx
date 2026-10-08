@@ -13,7 +13,7 @@ import type { DirectoryPlace } from "../marketing/directoryPlaces";
 import type { VenueSelection } from "./VenuePicker";
 import { VenuePickerList } from "./VenuePickerList";
 import { VenueSelectedCard } from "./VenueSelectedCard";
-import { venuePickerResults } from "./venuePickerResults";
+import { hasHiddenRunByMatch, venuePickerResults } from "./venuePickerResults";
 import styles from "./VenuePickerInline.module.css";
 
 /** Enough rows to browse a neighbourhood's worth of places in the tall list. */
@@ -67,6 +67,7 @@ export function VenuePickerInline({
     [places, query],
   );
   const typedText = query.trim();
+  const shouldPointToRunBy = hasHiddenRunByMatch(places, query);
   const optionCount = results.length + (typedText ? 1 : 0);
   const linkedSlug = value.venueListing?.slug ?? null;
   const linkedPlace = linkedSlug
@@ -174,6 +175,9 @@ export function VenuePickerInline({
         onSelectPlace={selectPlace}
         onSelectTyped={selectTyped}
       />
+      {shouldPointToRunBy && (
+        <p className={styles.hint}>{t("gatherings:venuePicker.runByHint")}</p>
+      )}
       {/* Always mounted, so the dialog keeps its height while the host types. */}
       <p
         className={styles.hint}

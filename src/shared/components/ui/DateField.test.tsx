@@ -1,6 +1,7 @@
+import { useState } from "react";
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
-import { DateField } from "./DateField";
+import { DateField, type FieldMode } from "./DateField";
 import { TestProviders } from "../../../test/TestProviders";
 
 function renderWithProviders(ui: React.ReactElement) {
@@ -274,5 +275,165 @@ describe("DateField clamping and availability", () => {
     for (const segment of screen.getAllByRole("spinbutton")) {
       expect(segment).not.toHaveAttribute("aria-invalid");
     }
+  });
+});
+
+describe("DateField 12h hour stepping and entry", () => {
+  function renderDatetime(value: string, locale: string) {
+    const onChange = vi.fn();
+    renderWithProviders(
+      <DateField
+        mode="datetime"
+        value={value}
+        onChange={onChange}
+        locale={locale}
+      />,
+    );
+    return onChange;
+  }
+
+  it("ArrowUp at 11 AM moves to 12 PM (noon) and flips the meridiem", () => {
+    const onChange = renderDatetime("2026-03-05T11:00", "en-US");
+    const hour = screen.getByRole("spinbutton", { name: "Hour" });
+    fireEvent.keyDown(hour, { key: "ArrowUp" });
+    expect(onChange).toHaveBeenCalledWith("2026-03-05T12:00");
+    expect(hour).toHaveTextContent("12");
+    expect(screen.getByRole("spinbutton", { name: "AM/PM" })).toHaveTextContent(
+      "PM",
+    );
+  });
+
+  it("ArrowUp at 11 PM wraps to 12 AM (midnight) on the same day", () => {
+    const onChange = renderDatetime("2026-03-05T23:00", "en-US");
+    const hour = screen.getByRole("spinbutton", { name: "Hour" });
+    fireEvent.keyDown(hour, { key: "ArrowUp" });
+    expect(onChange).toHaveBeenCalledWith("2026-03-05T00:00");
+    expect(screen.getByRole("spinbutton", { name: "AM/PM" })).toHaveTextContent(
+      "AM",
+    );
+  });
+
+  it("ArrowDown at 12 PM moves to 11 AM", () => {
+    const onChange = renderDatetime("2026-03-05T12:00", "en-US");
+    const hour = screen.getByRole("spinbutton", { name: "Hour" });
+    fireEvent.keyDown(hour, { key: "ArrowDown" });
+    expect(onChange).toHaveBeenCalledWith("2026-03-05T11:00");
+    expect(screen.getByRole("spinbutton", { name: "AM/PM" })).toHaveTextContent(
+      "AM",
+    );
+  });
+
+  it("ArrowDown at 12 AM wraps to 11 PM on the same day", () => {
+    const onChange = renderDatetime("2026-03-05T00:00", "en-US");
+    const hour = screen.getByRole("spinbutton", { name: "Hour" });
+    fireEvent.keyDown(hour, { key: "ArrowDown" });
+    expect(onChange).toHaveBeenCalledWith("2026-03-05T23:00");
+    expect(hour).toHaveTextContent("11");
+    expect(screen.getByRole("spinbutton", { name: "AM/PM" })).toHaveTextContent(
+      "PM",
+    );
+  });
+
+  it("typing 12 then A emits midnight and 12 then P emits noon", () => {
+    const onChange = vi.fn();
+    renderWithProviders(
+      <DateField mode="time" value={null} onChange={onChange} locale="en-US" />,
+    );
+    const hour = screen.getByRole("spinbutton", { name: "Hour" });
+    const minute = screen.getByRole("spinbutton", { name: "Minute" });
+    const meridiem = screen.getByRole("spinbutton", { name: "AM/PM" });
+    fireEvent.keyDown(hour, { key: "1" });
+    fireEvent.keyDown(hour, { key: "2" });
+    fireEvent.keyDown(minute, { key: "0" });
+    fireEvent.keyDown(minute, { key: "0" });
+    fireEvent.keyDown(meridiem, { key: "a" });
+    expect(onChange).toHaveBeenLastCalledWith("00:00");
+    fireEvent.keyDown(meridiem, { key: "p" });
+    expect(onChange).toHaveBeenLastCalledWith("12:00");
+  });
+
+  it("typing 00 into a 12h hour reads as 12", () => {
+    renderWithProviders(
+      <DateField mode="time" value={null} onChange={() => {}} locale="en-US" />,
+    );
+    const hour = screen.getByRole("spinbutton", { name: "Hour" });
+    fireEvent.keyDown(hour, { key: "0" });
+    fireEvent.keyDown(hour, { key: "0" });
+    expect(hour).toHaveTextContent("12");
+  });
+
+  it("a 24h locale steps hour 11 to 12", () => {
+    const onChange = renderDatetime("2026-03-05T11:00", "pt");
+    fireEvent.keyDown(screen.getByRole("spinbutton", { name: "Hora" }), {
+      key: "ArrowUp",
+    });
+    expect(onChange).toHaveBeenCalledWith("2026-03-05T12:00");
+  });
+
+  it("a 24h locale wraps hour 23 to 00 without touching the date", () => {
+    const onChange = renderDatetime("2026-03-05T23:00", "pt");
+    const hour = screen.getByRole("spinbutton", { name: "Hora" });
+    fireEvent.keyDown(hour, { key: "ArrowUp" });
+    expect(onChange).toHaveBeenCalledWith("2026-03-05T00:00");
+    expect(hour).toHaveTextContent("00");
+  });
+});
+
+/** Holds the value the way every real caller does, echoing each change back. */
+function ControlledField({
+  mode,
+  initialValue,
+  onChange,
+}: {
+  mode: FieldMode;
+  initialValue: string;
+  onChange: (value: string | null) => void;
+}) {
+  const [value, setValue] = useState<string | null>(initialValue);
+  return (
+    <DateField
+      mode={mode}
+      value={value}
+      onChange={(nextValue) => {
+        setValue(nextValue);
+        onChange(nextValue);
+      }}
+      locale="en-US"
+    />
+  );
+}
+
+describe("DateField under a controlled parent", () => {
+  it("typing 12 into a filled 12h hour keeps both digits", () => {
+    const onChange = vi.fn();
+    renderWithProviders(
+      <ControlledField mode="time" initialValue="21:00" onChange={onChange} />,
+    );
+    const hour = screen.getByRole("spinbutton", { name: "Hour" });
+    fireEvent.keyDown(hour, { key: "1" });
+    fireEvent.keyDown(hour, { key: "2" });
+    expect(hour).toHaveTextContent("12");
+    expect(onChange).toHaveBeenLastCalledWith("12:00");
+  });
+
+  it("clearing one segment keeps the other segments", () => {
+    const onChange = vi.fn();
+    renderWithProviders(
+      <ControlledField
+        mode="date"
+        initialValue="2026-03-05"
+        onChange={onChange}
+      />,
+    );
+    fireEvent.keyDown(screen.getByRole("spinbutton", { name: "Day" }), {
+      key: "Backspace",
+    });
+    expect(onChange).toHaveBeenLastCalledWith(null);
+    expect(screen.getByRole("spinbutton", { name: "Month" })).toHaveTextContent(
+      "03",
+    );
+    expect(screen.getByRole("spinbutton", { name: "Year" })).toHaveTextContent(
+      "2026",
+    );
   });
 });

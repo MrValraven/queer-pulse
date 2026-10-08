@@ -5,14 +5,18 @@ import { ANCHOR, validateSocials } from "../listBusiness.data";
 import type { ListingForm } from "../useListingForm";
 import { ListBusinessLocationField } from "../ListBusinessLocationField";
 import { ListingHoursEditor } from "../ListingHoursEditor";
+import { listingKindOf } from "../listingMobile.data";
 import { AlsoSellsOnlineField } from "./AlsoSellsOnlineField";
+import { MobilePracticalFields } from "./MobilePracticalFields";
 import { OnlineSellingFields } from "./OnlineSellingFields";
 import { SOCIAL_FIELDS } from "./practicalFields.data";
 import styles from "../ListBusinessPage.module.css";
 
 /**
  * The practical field body. A place: where it is, when it is open, and its
- * optional "We also sell online" section. An online-only business: "How
+ * optional "We also sell online" section. An out-and-about business: its
+ * optional meeting point, hours or "By appointment only", and "We also sell
+ * online". An online-only business: "How
  * people buy from you" (main link through the reply note), which replaces the
  * address and the hours. Both end with the contact rows.
  *
@@ -36,11 +40,14 @@ export function PracticalFields({
   const { t } = useTranslation();
   const { draft, set, setSocial } = form;
   const socialOk = validateSocials(draft.social);
+  const kind = listingKindOf(draft);
 
   return (
     <>
-      {draft.online ? (
+      {kind === "online" ? (
         <OnlineSellingFields form={form} variant="online" />
+      ) : kind === "mobile" ? (
+        <MobilePracticalFields form={form} hoursExtras={hoursExtras} />
       ) : (
         <>
           <ListBusinessLocationField draft={draft} set={set} />

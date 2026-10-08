@@ -67,7 +67,7 @@ describe("sections for an online listing", () => {
     const sections = withListingKindLabels(
       LISTING_EDITOR_SECTIONS,
       "services",
-      true,
+      "online",
     );
     const byKey = Object.fromEntries(
       sections.map((section) => [section.key, section]),
@@ -81,11 +81,22 @@ describe("sections for an online listing", () => {
     expect(byKey.practical?.id).toBe("lb-editor-practical");
   });
 
+  it("names the access section for joining in on an out-and-about listing", () => {
+    const accessibility = withListingKindLabels(
+      LISTING_EDITOR_SECTIONS,
+      "services",
+      "mobile",
+    ).find((section) => section.key === "accessibility");
+    expect(accessibility?.labelKey).toBe(
+      "marketing:listBusiness.editor.section.accessibilityMobile",
+    );
+  });
+
   it("names the pricing section In the shop in shop mode", () => {
     const pricing = withListingKindLabels(
       LISTING_EDITOR_SECTIONS,
       "shop",
-      false,
+      "place",
     ).find((section) => section.key === "services");
     expect(pricing?.labelKey).toBe(
       "marketing:listBusiness.editor.section.shop",
@@ -94,7 +105,7 @@ describe("sections for an online listing", () => {
 
   it("returns the same array for a place in services mode", () => {
     expect(
-      withListingKindLabels(LISTING_EDITOR_SECTIONS, "services", false),
+      withListingKindLabels(LISTING_EDITOR_SECTIONS, "services", "place"),
     ).toBe(LISTING_EDITOR_SECTIONS);
   });
 

@@ -159,6 +159,12 @@
 .catSwatch[data-category="fitness"] {
   background: var(--cat-fitness);
 }
+.catSwatch[data-category="tours"] {
+  background: var(--cat-tours);
+}
+.catSwatch[data-category="home-services"] {
+  background: var(--cat-home-services);
+}
 
 /* Live count inside each category chip — dimmed so the label stays primary. */
 .count {

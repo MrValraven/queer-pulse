@@ -10,6 +10,8 @@ import {
   FiActivity,
   FiPenTool,
   FiCpu,
+  FiCompass,
+  FiTruck,
 } from "react-icons/fi";
 import {
   FaWineGlass,
@@ -571,6 +573,8 @@ export const CATEGORY_ICON: Record<string, IconType> = {
   tech: FiCpu,
   grooming: FiScissors,
   fitness: FaDumbbell,
+  tours: FiCompass,
+  "home-services": FiTruck,
 };
 /** The pin type the housing map draws, one pin per neighbourhood. */
 export const HOUSING_PIN_TYPE = "housing";

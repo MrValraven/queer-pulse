@@ -5,6 +5,7 @@ import type { AttendeesResult } from "./api/useAttendees";
 import type { GatheringDetailsDraft } from "./editDetailsDraft";
 import type { GatheringEditableField } from "./GatheringFieldEditor";
 import type { VenueSelection } from "./VenuePicker";
+import type { RunByListingView, RunBySelection } from "./runByListing";
 import type { GatheringDetail } from "./data";
 import { MAX_GATHERING_SPAN_DAYS } from "./createGathering.data";
 import {
@@ -75,6 +76,9 @@ export interface GatheringState {
    *  `VenuePicker`/`EditVenueModal`. */
   venueListingId: string | null;
   venueListing: { slug: string; name: string } | null;
+  /** The business that runs this gathering, or null for none. Optional so
+   *  every existing state literal stays valid; absent reads as none. */
+  runByListing?: RunByListingView | null;
   /** Who can find and RSVP to this gathering. See `AudienceScopeField`. */
   visibility: EventVisibility;
   /** The community this gathering is filed to, or `""` for none, settable
@@ -296,6 +300,7 @@ export function liveInitialState(
     ],
     venueListingId: gathering.venueListingId ?? null,
     venueListing: gathering.venueListing ?? null,
+    runByListing: gathering.runByListing ?? null,
     visibility: gathering.visibility ?? "members",
     communitySlug: gathering.communitySlug ?? "",
     capacity,
@@ -438,6 +443,14 @@ export function applyVenueSelection(
       detail.id === "venue" ? { ...detail, value: selection.text } : detail,
     ),
   };
+}
+
+/** A "Run by" pick from `EditRunByModal`: a business, or none. */
+export function applyRunBySelection(
+  current: GatheringState,
+  selection: RunBySelection,
+): GatheringState {
+  return { ...current, runByListing: selection.listing };
 }
 
 /** `draft.startAt` is the modal's local `"yyyy-mm-ddThh:mm"` wire value (no

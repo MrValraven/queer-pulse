@@ -15,6 +15,7 @@ import { blankDraft, type ListingSeed } from "./listingFormDraft";
 import { applyCategoryPricingDefault } from "./listingMenu.data";
 import { useAccessibilitySetters } from "./useAccessibilitySetters";
 import { useMenuSetters } from "./useMenuSetters";
+import { useMobileSetters } from "./useMobileSetters";
 import { useOnlineSetters } from "./useOnlineSetters";
 import { useServiceSetters } from "./useServiceSetters";
 import { useShopItemSetters } from "./useShopItemSetters";
@@ -58,6 +59,7 @@ export function useListingForm(initial?: ListingDraft, seed?: ListingSeed) {
   const menuSetters = useMenuSetters(setDraft);
   const hoursSetters = useListingHoursSetters(setDraft);
   const onlineSetters = useOnlineSetters(setDraft);
+  const mobileSetters = useMobileSetters(setDraft);
   const shopItemSetters = useShopItemSetters(setDraft);
   const { clearShopPhotoPreviews } = shopItemSetters;
 
@@ -180,6 +182,7 @@ export function useListingForm(initial?: ListingDraft, seed?: ListingSeed) {
     ...menuSetters,
     ...hoursExceptionSetters,
     ...onlineSetters,
+    ...mobileSetters,
     ...shopItemSetters,
     setSocial,
     setPhoto,

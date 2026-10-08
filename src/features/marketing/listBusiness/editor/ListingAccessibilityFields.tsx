@@ -4,10 +4,12 @@ import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { ANCHOR } from "../listBusiness.data";
 import {
   ACCESSIBILITY_NOTE_MAX,
+  accessibilityCopyFor,
   accessibilityQuestionsFor,
   listingAnswerOf,
   normalizeAccessibilityDraft,
 } from "../listingAccessibility.data";
+import { listingKindOf } from "../listingMobile.data";
 import type { ListingForm } from "../useListingForm";
 import { ListingAccessibilityQuestion } from "./ListingAccessibilityQuestion";
 import styles from "./ListingAccessibility.module.css";
@@ -16,7 +18,8 @@ import styles from "./ListingAccessibility.module.css";
  * The owner's accessibility answers: six fixed questions, three answers each,
  * plus the free-text note that carries what a checklist cannot. An online-only
  * listing answers four questions about using it online in place of the six
- * about a building.
+ * about a building, and an out-and-about one answers four about its route,
+ * its meeting spot and taking part.
  *
  * Two things this editor is built to do.
  *
@@ -37,22 +40,11 @@ export function ListingAccessibilityFields({ form }: { form: ListingForm }) {
   // Healed on read, so a listing saved before these questions existed edits
   // with every question unanswered, and never crashes on a missing map.
   const accessibility = normalizeAccessibilityDraft(draft.accessibility);
-  const questions = accessibilityQuestionsFor(draft.online);
-  // An online listing reads its own copy: there is no building to describe.
-  const copy = draft.online
-    ? {
-        intro: "marketing:listBusiness.accessibility.introOnline",
-        reassurance: "marketing:listBusiness.accessibility.reassuranceOnline",
-        noteHint: "marketing:listBusiness.accessibility.noteHintOnline",
-        notePlaceholder:
-          "marketing:listBusiness.accessibility.notePlaceholderOnline",
-      }
-    : {
-        intro: "marketing:listBusiness.accessibility.intro",
-        reassurance: "marketing:listBusiness.accessibility.reassurance",
-        noteHint: "marketing:listBusiness.accessibility.noteHint",
-        notePlaceholder: "marketing:listBusiness.accessibility.notePlaceholder",
-      };
+  const kind = listingKindOf(draft);
+  const questions = accessibilityQuestionsFor(kind);
+  // Online and out-and-about listings read their own copy: neither has a
+  // building of its own to describe.
+  const copy = accessibilityCopyFor(kind);
 
   return (
     <div id={ANCHOR.accessibility}>

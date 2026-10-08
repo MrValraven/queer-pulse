@@ -5,17 +5,27 @@
  * (see mergeLocalPlaces), and location-less listings (e.g. queer-supper-club,
  * and the online-only estudio-beatriz-pinto) are omitted so they stay
  * list-only. Values are hand-placed from the real street addresses; refine
- * against the rendered map in slice 3.
+ * against the rendered map in slice 3. Out-and-about listings appear here
+ * only for a meeting point; one that goes to people has no row, so it never
+ * pins.
  */
 import type { Coordinates } from "./geoDistance";
 import type { DirectoryPlace } from "./directoryPlaces";
+
+/** Where the demo walking tour (`lisboa-arco-iris-walks`) meets people:
+ *  Largo da Severa, Mouraria, in the parish of Santa Maria Maior. Shared by
+ *  its fixture and by the table below. */
+export const WALKING_TOUR_MEETING_POINT = {
+  latitude: 38.7153,
+  longitude: -9.1352,
+};
 
 export const BUSINESS_COORDS: Record<
   string,
   { latitude: number; longitude: number }
 > = {
   "atelier-pulso": { latitude: 38.7167, longitude: -9.149 },
-  "opus-diversus": { latitude: 38.7195, longitude: -9.136 },
+  "mare-lilas": { latitude: 38.7195, longitude: -9.136 },
   "livraria-bertha": { latitude: 38.7148, longitude: -9.15 },
   "cafe-mouraria-velha": { latitude: 38.7156, longitude: -9.136 },
   "bairro-alto-studio": { latitude: 38.7128, longitude: -9.146 },
@@ -24,6 +34,7 @@ export const BUSINESS_COORDS: Record<
   "studio-andre-quintela": { latitude: 38.707, longitude: -9.145 },
   "clinica-da-estrela": { latitude: 38.713, longitude: -9.16 },
   "galeria-lume": { latitude: 38.736, longitude: -9.105 },
+  "lisboa-arco-iris-walks": WALKING_TOUR_MEETING_POINT,
 };
 
 /**

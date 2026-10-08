@@ -1,0 +1,17 @@
+/* A business the acting organiser does not run: named, never editable. */
+.readOnly {
+  margin: 0;
+  font-size: var(--text-14);
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+/* The server's refusal, under the picker. */
+.error {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 8px 0 0;
+  font-size: var(--text-13);
+  color: var(--danger);
+}

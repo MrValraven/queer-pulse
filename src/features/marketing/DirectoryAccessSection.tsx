@@ -9,7 +9,21 @@ import {
   listingAnswerOf,
   ONLINE_ACCESSIBILITY_QUESTION_SLUGS,
 } from "./listBusiness/listingAccessibility.data";
+import { listingKindOf } from "./listBusiness/listingMobile.data";
 import s from "./DirectorySpacePage.module.css";
+
+// A listing that switched from place to out-and-about keeps its stored toilet
+// chips; they stay stored and stay out of the legacy row.
+const TOILET_CHIP_IDS = ["Gender-neutral toilets", "Accessible bathroom"];
+
+function withoutToiletChips(place: DirectoryPlace): DirectoryPlace {
+  return {
+    ...place,
+    goodFor: place.goodFor.filter(
+      (item) => !TOILET_CHIP_IDS.includes(item.label),
+    ),
+  };
+}
 
 /**
  * "Can I get in, and can I be understood": the venue's accessibility answers,
@@ -37,6 +51,11 @@ import s from "./DirectorySpacePage.module.css";
  * then it shows its languages alone under a languages heading: four "not yet
  * told" rows would read as gaps the owner left.
  *
+ * An out-and-about business (`place.mobile`) has no building either, so it
+ * shows four of the place answers worded for a route and a meeting spot
+ * (`MOBILE_ACCESSIBILITY_QUESTIONS`), under a "joining in" heading. The
+ * toilet answers stay stored and stay out of view.
+ *
  * Renders nothing at all when the listing declares none of the three, which is
  * most demo fixtures, and nothing for an online listing that has answered no
  * online question and names no languages. An empty heading would read as "we
@@ -44,7 +63,8 @@ import s from "./DirectorySpacePage.module.css";
  */
 export function DirectoryAccessSection({ place }: { place: DirectoryPlace }) {
   const { t } = useTranslation();
-  const isOnline = place.online === true;
+  const kind = listingKindOf(place);
+  const isOnline = kind === "online";
   // An online listing shows its four online answers once it has given any of
   // them (or a note); four "not told yet" rows would read as gaps the owner
   // left, so a silent one shows its languages alone.
@@ -67,16 +87,17 @@ export function DirectoryAccessSection({ place }: { place: DirectoryPlace }) {
     !isOnline && accessibilityLabelIds(place).length > 0;
   const hasLanguages = (place.langs?.length ?? 0) > 0;
   if (!accessibility && !hasAccessHighlights && !hasLanguages) return null;
+  const headingKey = isOnline
+    ? hasOnlineAccessibility
+      ? "marketing:directory.detail.accessTitleOnline"
+      : "marketing:directory.detail.languagesTitle"
+    : kind === "mobile"
+      ? "marketing:directory.detail.accessTitleMobile"
+      : "marketing:directory.detail.accessTitle";
 
   return (
     <section className={s.sec}>
-      <h2>
-        {isOnline
-          ? hasOnlineAccessibility
-            ? t("marketing:directory.detail.accessTitleOnline")
-            : t("marketing:directory.detail.languagesTitle")
-          : t("marketing:directory.detail.accessTitle")}
-      </h2>
+      <h2>{t(headingKey)}</h2>
       <p className={s.subLine}>
         {t("marketing:directory.detail.accessSub", { name: place.owner.first })}
       </p>
@@ -84,11 +105,15 @@ export function DirectoryAccessSection({ place }: { place: DirectoryPlace }) {
         <DirectoryAccessibilityAnswers
           accessibility={accessibility}
           ownerFirstName={place.owner.first}
-          questions={accessibilityQuestionsFor(isOnline)}
+          questions={accessibilityQuestionsFor(kind)}
         />
       )}
       <div className={s.accessRows}>
-        {!isOnline && <DirectoryAccess place={place} />}
+        {!isOnline && (
+          <DirectoryAccess
+            place={kind === "mobile" ? withoutToiletChips(place) : place}
+          />
+        )}
         <DirectoryLanguages langs={place.langs} />
       </div>
     </section>

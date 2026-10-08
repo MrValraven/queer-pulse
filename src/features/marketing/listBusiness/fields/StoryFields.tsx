@@ -9,6 +9,7 @@ import {
   LANGS,
   langLabel,
 } from "../listBusiness.data";
+import { listingKindOf } from "../listingMobile.data";
 import type { ListingForm } from "../useListingForm";
 import {
   StepStoryDescriptionField,
@@ -27,9 +28,9 @@ import styles from "../ListBusinessPage.module.css";
 export function StoryFields({ form }: { form: ListingForm }) {
   const { t } = useTranslation();
   const { draft, set, toggleIn } = form;
-  // The list for this audience, then any stored value it lacks (a flipped
-  // online toggle, or an older access claim) so the owner can untick it.
-  const offeredGoodFor = goodForOptions(draft.online);
+  // The list for this kind, then any stored value it lacks (a switched kind,
+  // or an older access claim) so the owner can untick it.
+  const offeredGoodFor = goodForOptions(listingKindOf(draft));
   const goodForChoices = [
     ...offeredGoodFor,
     ...draft.goodFor.filter((value) => !offeredGoodFor.includes(value)),
@@ -52,7 +53,11 @@ export function StoryFields({ form }: { form: ListingForm }) {
         <input
           type="text"
           maxLength={120}
-          placeholder={t("marketing:listBusiness.step2.taglinePlaceholder")}
+          placeholder={t(
+            listingKindOf(draft) === "mobile"
+              ? "marketing:listBusiness.step2.taglinePlaceholderMobile"
+              : "marketing:listBusiness.step2.taglinePlaceholder",
+          )}
           value={draft.tagline}
           onChange={(e) => set({ tagline: e.target.value })}
         />

@@ -13,11 +13,12 @@ import { useHostableCommunities } from "../useHostableCommunities";
 import { CapacityStepperField } from "./CapacityStepperField";
 import { CohostPickerField } from "./CohostPickerField";
 import { CostKindField } from "./CostKindField";
+import { RunByField } from "./RunByField";
 import { RSVP_CUTOFF_OPTIONS } from "./whoChapter.data";
 import styles from "./WhoChapter.module.css";
 
 /**
- * Chapter 3, "Who is it for?": capacity, language, cost, co-hosts, the
+ * Chapter 3, "Who is it for?": capacity, language, cost, co-hosts, the business that runs it, the
  * waitlist, attendee-count and Go together switches, when RSVPs close, the
  * community it is posted to and who can see it. Nothing here is required.
  */
@@ -49,6 +50,7 @@ export function WhoChapter({ form }: { form: GatheringForm }) {
       </Field>
       <CostKindField form={form} />
       <CohostPickerField form={form} />
+      <RunByField form={form} />
       <SwitchRow
         variant="compact"
         title={t("gatherings:create.v2.who.waitlistTitle")}

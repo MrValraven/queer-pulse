@@ -1,7 +1,12 @@
 import { useCallback, useMemo, useRef, useState } from "react";
 import { useMediaQuery, usePrefersReducedMotion } from "../../shared/hooks";
 import { mediaMax } from "../../shared/theme/breakpoints";
-import { type LocalPlace } from "./localPlaces";
+import {
+  coveredParishesOfPlace,
+  isAcrossLisbonPlace,
+  isMobilePlace,
+  type LocalPlace,
+} from "./localPlaces";
 import { type DirectoryPlace } from "./directoryPlaces";
 import { galleryShotsOf } from "./directoryGalleryShots";
 import { type Venue } from "./map.data";
@@ -42,12 +47,17 @@ function localPlaceToMarker(place: LocalPlace): VenueMarkerData {
     longitude: coords.longitude,
     photo: placePhoto(place),
     isVerified: isPlaceVerified(place),
+    // An out-and-about listing on the map is always at its meeting point.
+    isMeetingPoint: isMobilePlace(place),
   };
 }
 
+const NO_PARISHES: readonly string[] = [];
+
 /** All the derived data + interaction state behind `DirectoryMapView`: the
  * map/sidebar split, parish (freguesia) grouping/filtering, pin↔card
- * selection sync, and the "I've been here" tally. Kept out of the component
+ * selection sync, the "Across Lisbon" group and its parish shading, and the
+ * "I've been here" tally. Kept out of the component
  * so its JSX stays focused. */
 export function useDirectoryMapView(
   places: LocalPlace[],
@@ -129,6 +139,25 @@ export function useDirectoryMapView(
     return grouped;
   }, [items, selectedFreguesia, focusedPlace]);
 
+  // Out-and-about listings with no meeting point have no pin. They close the
+  // sidebar as "Across Lisbon", narrowed to the selected parish when there is
+  // one, and step aside while a pin has the sidebar.
+  const acrossLisbon = useMemo(() => {
+    if (focusedPlace) return [];
+    return places.filter(
+      (place) =>
+        isAcrossLisbonPlace(place) &&
+        (!selectedFreguesia ||
+          coveredParishesOfPlace(place).includes(selectedFreguesia)),
+    );
+  }, [places, selectedFreguesia, focusedPlace]);
+
+  // Hovering or focusing one of those cards shades the parishes it covers.
+  const highlightedFreguesias = useMemo(() => {
+    const hovered = acrossLisbon.find((place) => place.id === hoveredId);
+    return hovered ? coveredParishesOfPlace(hovered) : NO_PARISHES;
+  }, [acrossLisbon, hoveredId]);
+
   const scrollBehavior: ScrollBehavior = reducedMotion ? "auto" : "smooth";
 
   function selectFreguesia(name: string | null) {
@@ -195,6 +224,8 @@ export function useDirectoryMapView(
     counts,
     items,
     groups,
+    acrossLisbon,
+    highlightedFreguesias,
     selectFreguesia,
     toggleFreguesia,
     selectPlace,

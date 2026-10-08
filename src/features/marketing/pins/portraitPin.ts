@@ -35,6 +35,7 @@ const CLASS = {
   nameRow: s.nameRow ?? "",
   name: s.name ?? "",
   category: s.category ?? "",
+  secondary: s.secondary ?? "",
 };
 
 // The photo circle is 44px across, so 96px covers a 2x screen and keeps each
@@ -148,12 +149,16 @@ function portraitBodyMarkup(venue: VenueMarkerData): string {
  * follows the lift and stays out of the body's scale, which keeps its text
  * crisp. It sits inside the button, so a click on a shown name selects the
  * place just as a click on the disc does, and it repeats the button's
- * aria-label, so it is hidden from assistive tech.
+ * aria-label, so it is hidden from assistive tech. A meeting point adds a
+ * third line under the category.
  */
 function labelMarkup(venue: VenueMarkerData): string {
   const verifiedMarkup = venue.isVerified ? verifiedBadgeMarkup() : "";
   const categoryMarkup = venue.categoryLabel
     ? `<span class="${CLASS.category}">${escapeHtml(venue.categoryLabel)}</span>`
+    : "";
+  const secondaryMarkup = venue.secondaryLabel
+    ? `<span class="${CLASS.secondary}">${escapeHtml(venue.secondaryLabel)}</span>`
     : "";
   return (
     `<span class="${CLASS.label}" aria-hidden="true">` +
@@ -162,6 +167,7 @@ function labelMarkup(venue: VenueMarkerData): string {
     verifiedMarkup +
     `</span>` +
     categoryMarkup +
+    secondaryMarkup +
     `</span>`
   );
 }

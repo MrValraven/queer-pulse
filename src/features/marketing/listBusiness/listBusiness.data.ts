@@ -26,6 +26,7 @@ import type { ListingServiceRow } from "./listingServices.data";
 import type { ListingOwnedBy } from "./listingOwnedBy.data";
 import type { ListingOnlineDetailsDraft } from "./listingOnline.data";
 import type { ListingShopItemRow } from "./listingShop.data";
+import type { ListingKind, ListingMobileDetails } from "./listingMobile.data";
 
 export const TOTAL_STEPS = 6;
 
@@ -96,6 +97,9 @@ export const ANCHOR = {
   sessionFormats: "lb-session-formats",
   registration: "lb-registration",
   replyNote: "lb-reply-note",
+  whereYouWork: "lb-where-you-work",
+  meetingPoint: "lb-meeting-point",
+  byAppointment: "lb-by-appointment",
   hours: "lb-hours",
   hoursTools: "lb-hours-tools",
   hoursNote: "lb-hours-note",
@@ -174,9 +178,16 @@ export const GOODFOR_ONLINE = [
   "Good for gifts",
 ];
 
-/** The chips offered to a listing of this audience. */
-export function goodForOptions(isOnline: boolean): readonly string[] {
-  return isOnline ? GOODFOR_ONLINE : GOODFOR_PLACE;
+/** The "Good for" chips offered to an out-and-about listing: the place
+ *  list, less "Walk-ins welcome", since there is no door to walk in at. */
+export const GOODFOR_MOBILE = GOODFOR_PLACE.filter(
+  (value) => value !== "Walk-ins welcome",
+);
+
+/** The chips offered to a listing of this kind. */
+export function goodForOptions(kind: ListingKind): readonly string[] {
+  if (kind === "online") return GOODFOR_ONLINE;
+  return kind === "mobile" ? GOODFOR_MOBILE : GOODFOR_PLACE;
 }
 
 /* The five accessibility ids stay keyed below so a value a listing still
@@ -618,7 +629,8 @@ export interface ListingDraft {
   langs: string[];
   /** Online-only business with no physical location. When true the listing
    *  uses the online categories, a "Based in" city and the "How people buy
-   *  from you" fields, and carries no address, pin, neighbourhood or hours. */
+   *  from you" fields, and carries no address, pin, neighbourhood or hours.
+   *  Never true alongside `mobile`. */
   online: boolean;
   /** Draft-only: whether the create wizard's "Where do people find it?" has
    *  been answered. `false` only on a brand-new draft (`blankDraft`). Absent
@@ -642,6 +654,21 @@ export interface ListingDraft {
    *  only while `intimacy` is picked; an edit loads it true when the server
    *  holds an acceptance stamp. */
   adultTermsAccepted?: boolean;
+  /** "Out and about": no premises of its own (a walking tour, a mobile
+   *  hairdresser, a mover). Never true alongside `online`. Optional so older
+   *  drafts stay valid; absent reads as false. Read the kind through
+   *  `listingKindOf`. */
+  mobile?: boolean;
+  /** Where an out-and-about business works. Optional; read it through
+   *  `normalizeMobileDetails`. Keeps the picked parishes while "All of
+   *  Lisbon" is on, so switching back brings them back; the payload empties
+   *  them (`mobileDetailsForPayload`). */
+  mobileDetails?: ListingMobileDetails;
+  /** Draft-only: "People meet us at a set spot". While false, an
+   *  out-and-about listing sends, previews and shows no address,
+   *  neighbourhood or pin, whatever the draft still holds. Read from a stored
+   *  listing as "both coordinates present" (`hasMeetingPoint`). Never sent. */
+  hasMeetingPoint?: boolean;
   address: string;
   geocoded: boolean;
   latitude: number | null;

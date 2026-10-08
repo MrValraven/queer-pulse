@@ -60,6 +60,8 @@ export const HISTORY_FIELD_LABEL_KEYS: Readonly<Record<string, string>> = {
   hasOnlineShop: `${KEY_PREFIX}.field.hasOnlineShop`,
   onlineDetails: `${KEY_PREFIX}.field.onlineDetails`,
   shopItems: `${KEY_PREFIX}.field.shopItems`,
+  mobile: `${KEY_PREFIX}.field.mobile`,
+  mobileDetails: `${KEY_PREFIX}.field.mobileDetails`,
   // No longer collected, but history rows from past edits still name it.
   contactEmail: `${KEY_PREFIX}.field.contactEmail`,
   consentOuting: `${KEY_PREFIX}.field.consentOuting`,

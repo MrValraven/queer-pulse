@@ -19,6 +19,7 @@ import type {
   RsvpCutoff,
   RsvpQuestions,
 } from "./gatheringExtras";
+import type { RunByListingView } from "./runByListing";
 
 /**
  * The "spots" line on an event card — "8 seats left", "32 going", "Open to all".
@@ -132,13 +133,20 @@ export interface GatheringDetail {
   /** Live mode only: the linked listing's display name + public slug, when
    *  `venueListingId` is set. Absent/null otherwise. `latitude`/`longitude`
    *  are the listing's own public point, null when it has none, which is what
-   *  the Where panel pins (see `gatheringLocation.ts`). */
+   *  the Where panel pins (see `gatheringLocation.ts`). `address` is the
+   *  listing's public directory street address, shown to every reader since
+   *  its directory page already shows it. It is unrelated to the
+   *  attendee-only `address` below. */
   venueListing?: {
     slug: string;
     name: string;
     latitude?: number | null;
     longitude?: number | null;
+    address?: string | null;
   } | null;
+  /** The business that runs this gathering, apart from its venue: its name
+   *  links to the listing on the page. Null or absent for none. */
+  runByListing?: RunByListingView | null;
   /** Live mode only: the gathering's accepted co-hosts, so the manage
    *  dashboard's Settings tab can show who's co-hosting without a second
    *  request. Absent in the demo registry, where `CohostManager` keeps its
@@ -316,6 +324,7 @@ const DEMO_START_TIMES = {
   "trans-hub-meetup": { dayOffset: 4, hour: 18, minute: 30 },
   "skills-exchange-intro": { dayOffset: 6, hour: 18, minute: 0 },
   "portfolio-night": { dayOffset: 8, hour: 19, minute: 0 },
+  "queer-history-walk": { dayOffset: 9, hour: 10, minute: 0 },
   "queer-parent-network": { dayOffset: 11, hour: 10, minute: 30 },
   "lgbtq-support-circle": { dayOffset: 12, hour: 18, minute: 30 },
   "trans-mutual-aid": { dayOffset: 14, hour: 18, minute: 0 },
@@ -410,6 +419,24 @@ export const gatheringDetails: Record<string, GatheringDetail> = {
     body: "A slow Sunday afternoon in Beatriz's studio in Graça. She'll talk through her practice, show the kiln, and there will be clay to touch. Limited to 10 people. Tea provided. The studio is at the top of a steep hill and worth every step.",
     coverImageUrl:
       "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?q=80&w=1200&auto=format&fit=crop",
+  },
+  "queer-history-walk": {
+    slug: "queer-history-walk",
+    type: "walk-or-hike",
+    gatheringFamily: "move",
+    date: demoStartOf("queer-history-walk"),
+    title: "Queer history walk: Mouraria",
+    hood: "Mouraria",
+    host: memberName("ines"),
+    hostSlug: "ines",
+    spots: { key: "gatherings:spots.spotsLeft", values: { count: 6 } },
+    ctaKey: "gatherings:cta.rsvp",
+    body: "Two hours on foot through Mouraria with Inês: the fado houses, the old bathhouse, the corner where the first Pride march gathered. We meet at Largo da Severa and walk slowly, with stops to sit. Bring water and comfortable shoes.",
+    runByListing: {
+      ref: "QPL-DEMO-0101",
+      slug: "lisboa-arco-iris-walks",
+      name: "Lisboa Arco-Íris Walks",
+    },
   },
   "founders-breakfast": {
     slug: "founders-breakfast",
@@ -1173,6 +1200,9 @@ export interface CalendarEvent {
   /** Whether the viewer has saved (bookmarked) this gathering. Absent reads
    *  as unsaved. */
   isBookmarked?: boolean;
+  /** The name of the business that runs this gathering, for the card's
+   *  "Run by" line. Absent for none. */
+  runByName?: string;
 }
 
 const ACCENT = "var(--accent)";
@@ -1267,6 +1297,20 @@ export const calendarEvents: CalendarEvent[] = [
     coverImageUrl:
       "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=1200&auto=format&fit=crop",
     attendeeCount: 61,
+  },
+  {
+    date: demoStartOf("queer-history-walk"),
+    org: "Community",
+    orgColor: COMMUNITY,
+    title: "Queer history walk: Mouraria",
+    hood: "Mouraria",
+    slug: "queer-history-walk",
+    to: gatheringPath("queer-history-walk"),
+    kind: "gathering",
+    eventType: "walk-or-hike",
+    gatheringFamily: "move",
+    attendeeCount: 9,
+    runByName: "Lisboa Arco-Íris Walks",
   },
   {
     date: demoStartOf("queer-parent-network"),

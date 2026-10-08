@@ -278,6 +278,8 @@ function ManageGatheringMain({
               buildEditDraft={() => editDraftFor(gatheringState)}
               onSaveEdit={editSave.saveFieldEdit}
               onUpdateVenue={editSave.saveVenue}
+              runByListing={gatheringState.runByListing ?? null}
+              onUpdateRunBy={editSave.saveRunBy}
             />
             <ManageGatheringSidebar
               slug={slug}

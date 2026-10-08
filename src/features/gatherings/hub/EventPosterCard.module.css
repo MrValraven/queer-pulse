@@ -549,6 +549,24 @@
   color: rgba(var(--cream-rgb), 0.85);
 }
 
+/* "Run by <business>": one quiet line under the title, plain text since the
+   whole card is one link. */
+.runByLine,
+.runByLineScrim {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--text-12-5);
+  font-weight: 500;
+}
+.runByLine {
+  color: var(--ink-60);
+}
+.runByLineScrim {
+  color: rgba(var(--cream-rgb), 0.85);
+}
+
 /* Theme tags (Create Gathering v2): up to three, in the kind badge's fills so
    the card keeps one tag language. Sentence case, since a theme is a phrase. */
 .themeRow {

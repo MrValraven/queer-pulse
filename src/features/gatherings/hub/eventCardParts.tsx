@@ -216,6 +216,26 @@ export function FormatLine({
   return <span className={className}>{formatLabel(t, event.eventType)}</span>;
 }
 
+/** "Run by <business>", under the title. Plain text: the whole card is one
+ *  link already, and a link inside a link is invalid, so the business's own
+ *  link lives on the gathering page. */
+export function RunByLine({
+  event,
+  className,
+}: {
+  event: Pick<CalendarEvent, "runByName">;
+  className?: string | undefined;
+}) {
+  const { t } = useTranslation();
+  const name = event.runByName?.trim();
+  if (!name) return null;
+  return (
+    <span className={className}>
+      {t("gatherings:hub.card.runBy", { name })}
+    </span>
+  );
+}
+
 /** Up to three theme tags the host pinned to the gathering (Create Gathering
  *  v2). Labels only: the whole card is one link named by its title, so these
  *  are a glance at what kind of evening it is. `onScrim` takes the cream

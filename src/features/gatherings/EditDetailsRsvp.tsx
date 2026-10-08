@@ -10,6 +10,7 @@ import {
   type RsvpQuestionKey,
 } from "./gatheringExtras";
 import { RSVP_CUTOFF_OPTIONS } from "./steps/whoChapter.data";
+import fieldStyles from "./EditDetailsFields.module.css";
 
 /**
  * "RSVPs" in the edit-details modal: when they close, which questions the
@@ -18,6 +19,9 @@ import { RSVP_CUTOFF_OPTIONS } from "./steps/whoChapter.data";
  * "When it ends" is a cutoff of `null`, which the patch sends as an explicit
  * `null`; "When it starts" is the `at-start` cutoff. Access needs stay asked (ruling R8): the switch is locked
  * on and the draft keeps `access: true` through every toggle.
+ *
+ * The cutoff and the host's own question share a row; the switches run
+ * across the full width under them, in two columns on a wide form.
  */
 export function EditDetailsRsvp({
   draft,
@@ -40,41 +44,50 @@ export function EditDetailsRsvp({
     });
 
   return (
-    <EditDetailsSection title={t("gatherings:manage.editModal.section.rsvp")}>
-      <FormField label={cutoffLabel}>
-        <Select
-          label={cutoffLabel}
-          options={RSVP_CUTOFF_OPTIONS.map((option) => ({
-            value: option.value,
-            label: t(option.labelKey),
-          }))}
-          value={rsvpCutoffToOptionValue(draft.rsvpCutoff)}
-          onChange={(value) => {
-            const cutoff = optionValueToRsvpCutoff(value);
-            if (cutoff !== undefined) onChange({ rsvpCutoff: cutoff });
-          }}
-        />
-      </FormField>
-      <EditDetailsGroup label={t("gatherings:create.v2.care.askOnRsvpLabel")}>
-        {({ labelId }) => (
-          <RsvpQuestionSwitches
-            questions={draft.rsvpQuestions}
-            onToggle={toggleQuestion}
-            labelledBy={labelId}
+    <EditDetailsSection sectionKey="rsvp">
+      <div className={fieldStyles.fieldGrid}>
+        <FormField label={cutoffLabel}>
+          <Select
+            label={cutoffLabel}
+            options={RSVP_CUTOFF_OPTIONS.map((option) => ({
+              value: option.value,
+              label: t(option.labelKey),
+            }))}
+            value={rsvpCutoffToOptionValue(draft.rsvpCutoff)}
+            onChange={(value) => {
+              const cutoff = optionValueToRsvpCutoff(value);
+              if (cutoff !== undefined) onChange({ rsvpCutoff: cutoff });
+            }}
           />
-        )}
-      </EditDetailsGroup>
-      <FormField label={t("gatherings:create.v2.care.customQuestionLabel")}>
-        <input
-          type="text"
-          maxLength={MAX_CUSTOM_RSVP_QUESTION_LENGTH}
-          placeholder={t("gatherings:create.v2.care.customQuestionPlaceholder")}
-          value={draft.customRsvpQuestion}
-          onChange={(event) =>
-            onChange({ customRsvpQuestion: event.target.value })
-          }
-        />
-      </FormField>
+        </FormField>
+        <FormField label={t("gatherings:create.v2.care.customQuestionLabel")}>
+          <input
+            type="text"
+            maxLength={MAX_CUSTOM_RSVP_QUESTION_LENGTH}
+            placeholder={t(
+              "gatherings:create.v2.care.customQuestionPlaceholder",
+            )}
+            value={draft.customRsvpQuestion}
+            onChange={(event) =>
+              onChange({ customRsvpQuestion: event.target.value })
+            }
+          />
+        </FormField>
+        <EditDetailsGroup
+          className={fieldStyles.fullRow}
+          label={t("gatherings:create.v2.care.askOnRsvpLabel")}
+        >
+          {({ labelId }) => (
+            <div className={fieldStyles.rsvpSwitchGrid}>
+              <RsvpQuestionSwitches
+                questions={draft.rsvpQuestions}
+                onToggle={toggleQuestion}
+                labelledBy={labelId}
+              />
+            </div>
+          )}
+        </EditDetailsGroup>
+      </div>
     </EditDetailsSection>
   );
 }

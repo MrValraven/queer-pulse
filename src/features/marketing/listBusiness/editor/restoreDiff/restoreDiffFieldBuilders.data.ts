@@ -10,6 +10,7 @@ import {
   type ListingDraft,
 } from "../../listBusiness.data";
 import { pricingModeOf } from "../../listingMenu.data";
+import { listingKindOf } from "../../listingMobile.data";
 import { normalizeOwnedBy, OWNED_BY_TAG_KEYS } from "../../listingOwnedBy.data";
 import type { RestoreFieldChange } from "./restoreDiff.types";
 import {
@@ -28,6 +29,7 @@ import {
 } from "./restoreDiffFields.data";
 import { hoursExceptionRows, hoursRows } from "./restoreDiffHoursRows.data";
 import { menuRows } from "./restoreDiffMenuRows.data";
+import { mobileDetailsFields } from "./restoreDiffMobileFields.data";
 import {
   onlineDetailsFields,
   shopItemRows,
@@ -191,4 +193,16 @@ export const FIELD_BUILDERS: Record<keyof ListingDraft, FieldBuilder> = {
     ),
   isWhereFoundAnswered: SHOWN_ELSEWHERE,
   inactiveModeCats: SHOWN_ELSEWHERE,
+  mobile: (context) =>
+    choiceField(context, "mobile", (draft) =>
+      yesNoLabel(context.t, listingKindOf(draft) === "mobile"),
+    ),
+  mobileDetails: mobileDetailsFields,
+  hasMeetingPoint: (context) =>
+    choiceField(context, "hasMeetingPoint", (draft) =>
+      yesNoLabel(
+        context.t,
+        listingKindOf(draft) === "mobile" && draft.hasMeetingPoint === true,
+      ),
+    ),
 };

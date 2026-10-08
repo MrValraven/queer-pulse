@@ -21,3 +21,26 @@
   font-size: var(--text-12);
   color: var(--ink-40);
 }
+
+/* The footer pair follows the gathering editor's footer (FieldEditorFooter):
+   Cancel then the confirm action, together at the inline end of the dialog.
+   Modal's footer is a wrapping flex row, so this group takes its full width.
+   A third action (the leave dialog's "Save and leave") joins the row and
+   moves down when the labels do not fit. */
+.actions {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/* Under 720px Modal is a bottom sheet, and the buttons share the row width
+   so both sit under the thumb. Each still keeps its own label width, so a
+   long label wraps the row before it overflows. */
+@media (max-width: 719.98px) {
+  .actions > * {
+    flex: 1 1 0;
+  }
+}

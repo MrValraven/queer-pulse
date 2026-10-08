@@ -27,6 +27,11 @@ import {
   toDirectoryShopItems,
 } from "../listBusiness/listingShop.data";
 import { servicesForPayload } from "../listBusiness/listingServices.data";
+import {
+  isMobileWithoutMeetingPoint,
+  listingKindOf,
+  normalizeMobileDetails,
+} from "../listBusiness/listingMobile.data";
 import { normalizeOwnedBy } from "../listBusiness/listingOwnedBy.data";
 import { isAdultCategoryPicked } from "../localCategories";
 import type {
@@ -92,6 +97,19 @@ function cardAccessibility(
   return { answers: normalizeAccessibilityAnswers(answers), note: null };
 }
 
+/** An out-and-about listing with no meeting point has no location to print. */
+function hasNoPublicLocation(
+  dto: Parameters<typeof listingKindOf>[0] & {
+    latitude: number | null;
+    longitude: number | null;
+  },
+): boolean {
+  return (
+    listingKindOf(dto) === "mobile" &&
+    (dto.latitude === null || dto.longitude === null)
+  );
+}
+
 /**
  * Map a public `DirectoryCardDTO` onto the `DirectoryPlace` view model the grid
  * renders. The grid reads only card-level fields (name, cat, hood, desc, tint,
@@ -107,7 +125,7 @@ export function cardDtoToPlace(dto: DirectoryCardDTO): DirectoryPlace {
     slug: dto.slug,
     name: dto.name,
     cat: dto.cat,
-    hood: dto.hood,
+    hood: hasNoPublicLocation(dto) ? "" : dto.hood,
     owned: dto.owned,
     queerOwnedVerified: dto.queerOwnedVerified,
     ownedBy: normalizeOwnedBy(dto.ownedBy),
@@ -120,6 +138,11 @@ export function cardDtoToPlace(dto: DirectoryCardDTO): DirectoryPlace {
     // card prints it, after "Online".
     city: dto.city || undefined,
     hasOnlineShop: dto.hasOnlineShop ?? false,
+    mobile: listingKindOf(dto) === "mobile",
+    mobileDetails:
+      listingKindOf(dto) === "mobile"
+        ? normalizeMobileDetails(dto.mobileDetails)
+        : null,
     isAdultsOnly: dto.isAdultsOnly ?? false,
     // The status slot and Visit read this slice; null for a listing that
     // sells nothing online and for an older payload.
@@ -209,7 +232,7 @@ export function detailDtoToPlace(
     ref: dto.ref ?? null,
     name: dto.name,
     cat: dto.cat,
-    hood: dto.hood,
+    hood: hasNoPublicLocation(dto) ? "" : dto.hood,
     owned: dto.owned,
     queerOwnedVerified: dto.queerOwnedVerified,
     ownedBy: normalizeOwnedBy(dto.ownedBy),
@@ -219,6 +242,11 @@ export function detailDtoToPlace(
     desc: dto.blurb,
     online: dto.online ?? false,
     hasOnlineShop: dto.hasOnlineShop ?? false,
+    mobile: listingKindOf(dto) === "mobile",
+    mobileDetails:
+      listingKindOf(dto) === "mobile"
+        ? normalizeMobileDetails(dto.mobileDetails)
+        : null,
     isAdultsOnly: dto.isAdultsOnly ?? false,
     onlineDetails: normalizePublicOnlineDetails(dto.onlineDetails),
     // A detail payload carries the card slice too; one that does not gets it
@@ -265,7 +293,7 @@ export function detailDtoToPlace(
     // which is the safe default.
     isUnclaimed: dto.isUnclaimed ?? false,
     social: dto.social,
-    address: dto.address,
+    address: hasNoPublicLocation(dto) ? "" : dto.address,
     photos: dto.photos,
     alt: dto.alt,
     hours: dto.hours ? normalizeHours(dto.hours) : dto.hours,
@@ -297,6 +325,7 @@ export function detailDtoToPlace(
         // add-to-calendar links (Google Calendar URL + .ics) without
         // re-parsing the localized display string.
         startAt: event.startAt,
+        role: event.role ?? "venue",
       };
     }),
   };
@@ -434,12 +463,15 @@ export function submittedToPlace(
   const photos = Object.fromEntries(
     PLACE_PHOTO_KEYS.map((key) => [key, listing.photos[key] || null]),
   ) as Record<PhotoKey, string | null>;
+  // An out-and-about draft with no meeting point previews with no location
+  // at all, exactly as it will be stored (contract).
+  const hasNoLocation = isMobileWithoutMeetingPoint(listing);
 
   return {
     slug: listing.slug,
     name: listing.name,
     cat: listing.cats[0] ?? "",
-    hood: listing.hood,
+    hood: hasNoLocation ? "" : listing.hood,
     // The badge follows the submitter's badge choice, as the backend card does;
     // `linkToProfile` only says whether their member profile is linked.
     owned: listing.badge === "owned",
@@ -456,10 +488,15 @@ export function submittedToPlace(
     // card and page read like a live one, and the editor preview matches.
     city: listing.online ? (listing.city ?? "").trim() || undefined : undefined,
     hasOnlineShop: !listing.online && listing.hasOnlineShop === true,
+    mobile: listingKindOf(listing) === "mobile",
+    mobileDetails:
+      listingKindOf(listing) === "mobile"
+        ? normalizeMobileDetails(listing.mobileDetails)
+        : null,
     isAdultsOnly: isAdultCategoryPicked(listing.cats),
     ...submittedOnlineBlock(listing),
-    latitude: listing.latitude,
-    longitude: listing.longitude,
+    latitude: hasNoLocation ? null : listing.latitude,
+    longitude: hasNoLocation ? null : listing.longitude,
     tagline: listing.tagline,
     pills: [...(listing.price ? [listing.price] : []), ...listing.tags],
     rating: { score: "0", count: 0 },
@@ -499,7 +536,7 @@ export function submittedToPlace(
       avatarUrl: identity.inQueerPulse ? submitterAvatarUrl : null,
     },
     social: listing.social,
-    address: listing.address,
+    address: hasNoLocation ? "" : listing.address,
     photos,
     alt: listing.alt,
     hours: normalizeHours(listing.hours),

@@ -10,6 +10,12 @@ function tagMatchKey(value: string): string {
   return value.trim().replace(/^#+/, "").toLowerCase();
 }
 
+/** Lower case with accents removed: NFD splits "é" into "e" plus a combining
+ *  mark, and the marks (\p{M}) are dropped. */
+export function foldAccents(value: string): string {
+  return value.normalize("NFD").replace(/\p{M}/gu, "").toLowerCase();
+}
+
 /**
  * The entry input's state and keys for `TagPicker`.
  *
@@ -23,10 +29,14 @@ export function useTagEntry({
   tags,
   options,
   onAdd,
+  shouldFoldAccents = false,
 }: {
   tags: readonly string[];
   options?: readonly string[];
   onAdd: (tag: string) => void;
+  /** Off by default. On, typed text and options match with accents ignored,
+   *  so "Belem" finds "Belém". */
+  shouldFoldAccents?: boolean;
 }) {
   const [draft, setDraft] = useState("");
   // `draft` mirrored into a ref so `commitDraft` always reads the latest
@@ -43,15 +53,19 @@ export function useTagEntry({
   const matches = useMemo(() => {
     const query = tagMatchKey(draft);
     if (!options || !query) return [];
-    const chosen = new Set(tags.map((tag) => tag.toLowerCase()));
+    const compareKey = shouldFoldAccents
+      ? foldAccents
+      : (value: string) => value.toLowerCase();
+    const foldedQuery = compareKey(query);
+    const chosen = new Set(tags.map((tag) => compareKey(tag)));
     return options
       .filter(
         (option) =>
-          option.toLowerCase().includes(query) &&
-          !chosen.has(option.toLowerCase()),
+          compareKey(option).includes(foldedQuery) &&
+          !chosen.has(compareKey(option)),
       )
       .slice(0, MAX_MATCHES);
-  }, [draft, options, tags]);
+  }, [draft, options, tags, shouldFoldAccents]);
 
   const isListOpen = isClosed && isFocused && tagMatchKey(draft).length > 0;
 

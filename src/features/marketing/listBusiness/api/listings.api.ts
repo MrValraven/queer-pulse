@@ -56,6 +56,9 @@ export interface UpdateListingDto extends Omit<
   // categories. They shape the draft and are never part of a body.
   | "isWhereFoundAnswered"
   | "inactiveModeCats"
+  // Draft-only: whether the out-and-about meeting point box is ticked. The
+  // wire reads "has a meeting point" from the coordinates.
+  | "hasMeetingPoint"
   // The editable shapes below go out in their wire shapes.
   | "onlineDetails"
   | "shopItems"

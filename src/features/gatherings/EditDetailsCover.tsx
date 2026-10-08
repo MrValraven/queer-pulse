@@ -13,13 +13,17 @@ import { CoverUpload } from "./fields/CoverUpload";
 export function EditDetailsCover({
   coverImageUrl,
   onChange,
+  className,
 }: {
   coverImageUrl: string;
   onChange: (coverImageUrl: string) => void;
+  /** Added to the group's wrapper, so the section can place it. */
+  className?: string;
 }) {
   const { t } = useTranslation();
   return (
     <EditDetailsGroup
+      className={className}
       label={t("gatherings:create.v2.what.coverLabel")}
       hint={t("gatherings:create.v2.what.coverHint")}
     >

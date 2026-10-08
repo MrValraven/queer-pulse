@@ -1,13 +1,15 @@
+import { useId } from "react";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { ChipToggleGroup } from "../CreateGatheringFields";
 import type { GatheringFamily } from "../gatheringCatalog";
 import {
-  GATHERING_THEME_KEYS,
+  GATHERING_THEME_GROUPS,
   hiddenThemeKeysForFamily,
   MAX_GATHERING_THEMES,
   THEME_LABEL_KEYS,
   type GatheringThemeKey,
 } from "../gatheringExtras";
+import styles from "./ThemeChips.module.css";
 
 export interface ThemeChipsProps {
   /** The family the gathering is filed under. A theme its own details
@@ -27,6 +29,11 @@ export interface ThemeChipsProps {
  * Shared by the create wizard and the edit-details modal. The label and hint
  * stay with each surface (the wizard's v2 `Field`, the modal's uppercase
  * label), so each keeps its own look around the same chips.
+ *
+ * The chips sit in groups, each under a small sub-label that names its inner
+ * group for a screen reader. Every group gets the full selection and the same
+ * cap, so the three-theme limit counts across all of them. The outer group
+ * carries the field's label and hint, announced once.
  */
 export function ThemeChips({
   family,
@@ -36,18 +43,39 @@ export function ThemeChips({
   describedBy,
 }: ThemeChipsProps) {
   const { t } = useTranslation();
+  const headingIdPrefix = useId();
+  const hiddenThemeKeys = hiddenThemeKeysForFamily(family);
+  const visibleGroups = GATHERING_THEME_GROUPS.filter((group) =>
+    group.themes.some((themeKey) => !hiddenThemeKeys.includes(themeKey)),
+  );
   return (
-    <ChipToggleGroup
-      options={GATHERING_THEME_KEYS.map((themeKey) => ({
-        key: themeKey,
-        label: t(THEME_LABEL_KEYS[themeKey]),
-      }))}
-      selectedKeys={selectedThemes}
-      onToggle={onToggle}
-      maxSelected={MAX_GATHERING_THEMES}
-      hiddenKeys={hiddenThemeKeysForFamily(family)}
-      labelledBy={labelledBy}
-      describedBy={describedBy}
-    />
+    <div
+      role="group"
+      aria-labelledby={labelledBy}
+      aria-describedby={describedBy}
+      className={styles.groups}
+    >
+      {visibleGroups.map((group) => {
+        const headingId = `${headingIdPrefix}-${group.key}`;
+        return (
+          <div key={group.key} className={styles.group}>
+            <p id={headingId} className={styles.groupHeading}>
+              {t(group.labelKey)}
+            </p>
+            <ChipToggleGroup
+              options={group.themes.map((themeKey) => ({
+                key: themeKey,
+                label: t(THEME_LABEL_KEYS[themeKey]),
+              }))}
+              selectedKeys={selectedThemes}
+              onToggle={onToggle}
+              maxSelected={MAX_GATHERING_THEMES}
+              hiddenKeys={hiddenThemeKeys}
+              labelledBy={headingId}
+            />
+          </div>
+        );
+      })}
+    </div>
   );
 }

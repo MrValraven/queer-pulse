@@ -97,7 +97,7 @@ interface Props extends DirectoryMapViewState {
 
 /** The map view's parish-grouped sidebar: heading + count, a clear-filter
  * chip, an empty state, loading skeletons, or the (optionally
- * freguesia-grouped) list of place cards. When a pin is tapped the whole
+ * freguesia-grouped) list of place cards, then the "Across Lisbon" group. When a pin is tapped the whole
  * panel narrows to that one place's details. Pin↔card selection and the
  * "I've been here" tally live in `useDirectoryMapView`. */
 export function DirectoryMapSidebar({
@@ -109,6 +109,7 @@ export function DirectoryMapSidebar({
   been,
   items,
   groups,
+  acrossLisbon,
   selectFreguesia,
   clearFocus,
   toggleExpand,
@@ -156,7 +157,7 @@ export function DirectoryMapSidebar({
             ) : (
               <Translation
                 i18nKey="marketing:map.sidebar.venueCount"
-                values={{ count: items.length }}
+                values={{ count: items.length + acrossLisbon.length }}
                 components={{ b: <b /> }}
               />
             )}
@@ -190,21 +191,24 @@ export function DirectoryMapSidebar({
         />
       )}
 
-      {!loading && !isError && items.length === 0 && (
-        <EmptyState
-          compact
-          icon={<FiSearch />}
-          title={t("marketing:map.sidebar.empty")}
-          action={
-            hasActiveFilters
-              ? {
-                  label: t("marketing:directory.clearFilters"),
-                  onClick: onClearFilters,
-                }
-              : undefined
-          }
-        />
-      )}
+      {!loading &&
+        !isError &&
+        items.length === 0 &&
+        acrossLisbon.length === 0 && (
+          <EmptyState
+            compact
+            icon={<FiSearch />}
+            title={t("marketing:map.sidebar.empty")}
+            action={
+              hasActiveFilters
+                ? {
+                    label: t("marketing:directory.clearFilters"),
+                    onClick: onClearFilters,
+                  }
+                : undefined
+            }
+          />
+        )}
 
       {loading
         ? Array.from({ length: 6 }).map((_, index) => (
@@ -218,6 +222,21 @@ export function DirectoryMapSidebar({
               </div>
             ))
           : items.map(renderCard)}
+
+      {/* Businesses with no fixed spot close the list: no pin, so no parish
+          group. Hovering a card shades the parishes it covers on the map. */}
+      {!loading && !isError && acrossLisbon.length > 0 && (
+        <div>
+          <div className={s.groupHead}>
+            {t("marketing:map.sidebar.acrossLisbon", {
+              count: acrossLisbon.length,
+            })}
+          </div>
+          {acrossLisbon.map((place, index) =>
+            renderCard(place, items.length + index),
+          )}
+        </div>
+      )}
     </aside>
   );
 }

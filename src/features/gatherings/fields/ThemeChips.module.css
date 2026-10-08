@@ -1,0 +1,21 @@
+/* The theme picker's four groups, each a quiet sentence-case sub-label over
+   its chips. The sub-label sits a step under the field label above it
+   (`CreateGatheringFields.module.css` .label, the edit modal's uppercase
+   .groupLabel): smaller, lighter weight, muted ink. */
+.groups {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+}
+.group {
+  min-width: 0;
+}
+.groupHeading {
+  margin: 0 0 7px;
+  font-family: var(--sans);
+  font-size: var(--text-12);
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--ink-60);
+}

@@ -1,6 +1,7 @@
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { type DirectoryPlace } from "./directoryPlaces";
+import { listingKindOf } from "./listBusiness/listingMobile.data";
 import s from "./DirectorySpacePage.module.css";
 
 const Check = () => (
@@ -44,7 +45,9 @@ export function DirectoryAboutSection({ place }: { place: DirectoryPlace }) {
               i18nKey={
                 place.online
                   ? "marketing:directory.detail.offersTitleOnline"
-                  : "marketing:directory.detail.offersTitle"
+                  : listingKindOf(place) === "mobile"
+                    ? "marketing:directory.detail.offersTitleMobile"
+                    : "marketing:directory.detail.offersTitle"
               }
               components={{ em: <em /> }}
             />

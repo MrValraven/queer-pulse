@@ -56,6 +56,8 @@ interface LisbonMapProps {
    *  the housing map keeps the default "teardrop". Read once, when the map
    *  loads. */
   pinStyle?: PinStyle;
+  /** Parishes to shade apart from the selection (see useLisbonMap). */
+  highlightedFreguesias?: readonly string[];
 }
 
 export function LisbonMap({
@@ -74,8 +76,10 @@ export function LisbonMap({
   markerLabels: customMarkerLabels,
   parishLabelAnchor,
   pinStyle = "teardrop",
+  highlightedFreguesias,
 }: LisbonMapProps) {
   const { t } = useTranslation();
+  const meetingPointLabel = t("marketing:map.pin.meetingPoint");
   const defaultMarkerLabels = useMemo<MarkerLabels>(
     () => ({
       venuePin: (name, type) => {
@@ -104,12 +108,18 @@ export function LisbonMap({
   const categoryLabelSignature = JSON.stringify(categoryLabelByType);
   const labelledVenues = useMemo(() => {
     const labels = JSON.parse(categoryLabelSignature) as Record<string, string>;
-    return venues.map((venue) =>
-      venue.categoryLabel !== undefined
-        ? venue
-        : { ...venue, categoryLabel: labels[venue.type] },
-    );
-  }, [venues, categoryLabelSignature]);
+    return venues.map((venue) => {
+      const withCategory =
+        venue.categoryLabel !== undefined
+          ? venue
+          : { ...venue, categoryLabel: labels[venue.type] };
+      // A meeting point is a public spot, never premises: the pin says so
+      // on a second label line.
+      return venue.isMeetingPoint
+        ? { ...withCategory, secondaryLabel: meetingPointLabel }
+        : withCategory;
+    });
+  }, [venues, categoryLabelSignature, meetingPointLabel]);
 
   const { containerRef, failed, ready, fullscreenControlHost } = useLisbonMap({
     venues: labelledVenues,
@@ -128,6 +138,7 @@ export function LisbonMap({
     redrawHandleRef: fullscreen?.redrawHandleRef,
     parishLabelAnchor,
     pinStyle,
+    highlightedFreguesias,
   });
 
   const fullscreenButtonRef = fullscreen?.toggleButtonRef;

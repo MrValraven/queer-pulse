@@ -11,7 +11,14 @@ import {
   type DirectoryPlace,
 } from "./directoryPlaces";
 import { directionsHref } from "./businessCoords";
-import { buildDirectoryShareMessage } from "./directoryShareMessage";
+import {
+  buildDirectoryShareMessage,
+  mobileAreaLineText,
+} from "./directoryShareMessage";
+import {
+  hasMeetingPoint,
+  listingKindOf,
+} from "./listBusiness/listingMobile.data";
 import { ShareMenu } from "../messages/share/ShareMenu";
 import s from "./DirectorySpacePage.module.css";
 
@@ -76,7 +83,8 @@ export function DirectoryActionBar({ place, preview = false }: Props) {
   // "Gone" = permanently closed or moved: whatever else is still true, the
   // address on this page is no longer where the business is.
   const isGone = isPlaceGone(place);
-  const hasPlaceToGo = !isGone && !place.online;
+  const hasPlaceToGo =
+    !isGone && (listingKindOf(place) === "place" || hasMeetingPoint(place));
   const isPermanentlyClosed = operatingStateOf(place) === "permanently_closed";
   const savedId = `listing:${place.slug}`;
   const saved = isSaved(savedId);
@@ -95,7 +103,9 @@ export function DirectoryActionBar({ place, preview = false }: Props) {
       href: businessPath(place.slug),
       // The saved list's subline, matching the directory card: an online-only
       // business's hood is the "Elsewhere in" catch-all, which says nothing.
-      meta: place.online ? t("marketing:directory.card.online") : place.hood,
+      meta: place.online
+        ? t("marketing:directory.card.online")
+        : (mobileAreaLineText(place, t) ?? place.hood),
     });
   }
 

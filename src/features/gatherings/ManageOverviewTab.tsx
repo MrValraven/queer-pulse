@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { GatheringDetailsDraft } from "./editDetailsDraft";
+import { EditRunByModal } from "./EditRunByModal";
 import { EditVenueModal } from "./EditVenueModal";
 import {
   GatheringFieldEditor,
@@ -16,6 +17,14 @@ import {
   type GatheringDetail,
 } from "./OverviewDetailRows";
 import type { VenueSelection } from "./VenuePicker";
+import { useAuth } from "../../app/providers/authContext";
+import { useManagedListings } from "../marketing/listBusiness/api/useManagedListings";
+import {
+  RUN_BY_DETAIL_ROW_ID,
+  type RunByListingView,
+  type RunBySelection,
+} from "./runByListing";
+import type { RunBySaveOutcome } from "./useGatheringEditSave";
 import { GatheringDescriptionText } from "./GatheringDescriptionText";
 import styles from "./ManageGatheringPage.module.css";
 
@@ -48,6 +57,7 @@ type OverviewEditing =
       initial: GatheringDetailsDraft;
     }
   | { kind: "venue"; selection: VenueSelection }
+  | { kind: "runBy" }
   | null;
 
 interface OverviewTabProps {
@@ -79,6 +89,14 @@ interface OverviewTabProps {
   /** The venue keeps its own save: the draft holds only the venue text, and
    *  the directory listing id would be lost on the way through it. */
   onUpdateVenue: (value: VenueSelection) => void;
+  /** The business that runs this gathering, or null for none. */
+  runByListing?: RunByListingView | null;
+  /** Saves a "Run by" pick through the page's edit path. Left out, the row
+   *  does not show. */
+  onUpdateRunBy?: (selection: RunBySelection) => Promise<RunBySaveOutcome>;
+  /** The host's member slug, so the "Run by" editor can tell the host from
+   *  a co-host. */
+  hostSlug?: string;
 }
 
 export function OverviewTab({
@@ -92,15 +110,43 @@ export function OverviewTab({
   buildEditDraft,
   onSaveEdit,
   onUpdateVenue,
+  runByListing = null,
+  onUpdateRunBy,
+  hostSlug,
 }: OverviewTabProps) {
   const { t } = useTranslation();
   const fmt = useFormat();
   const [editing, setEditing] = useState<OverviewEditing>(null);
+  const { items: managedListings, isResolving } = useManagedListings();
+  const { checking: isAuthChecking, user } = useAuth();
+  const isViewerHost = Boolean(hostSlug) && user?.profile.slug === hostSlug;
+  // An empty list means "not known yet" while auth or the read is pending,
+  // so the editor never decides read-only from it until both settle.
+  const isManagedListPending = isAuthChecking || isResolving;
+  // The "Run by" row shows for an organiser who runs a business, or while
+  // the gathering already names one (read-only when it is not theirs).
+  const hasRunByRow =
+    onUpdateRunBy !== undefined &&
+    (runByListing !== null || managedListings.length > 0);
+  const detailRows = hasRunByRow
+    ? [
+        ...details,
+        {
+          id: RUN_BY_DETAIL_ROW_ID,
+          labelKey: "gatherings:manage.details.runBy",
+          value: runByListing?.name ?? t("gatherings:manage.details.runByNone"),
+        },
+      ]
+    : details;
 
   const openField = (field: GatheringEditableField) =>
     setEditing({ kind: "field", field, initial: buildEditDraft() });
 
   const editDetail = (detail: GatheringDetail) => {
+    if (detail.id === RUN_BY_DETAIL_ROW_ID) {
+      setEditing({ kind: "runBy" });
+      return;
+    }
     if (detail.id === "venue") {
       setEditing({
         kind: "venue",
@@ -149,10 +195,13 @@ export function OverviewTab({
         ))}
       </div>
       <OverviewDetailRows
-        details={details}
+        details={detailRows}
         venueListing={venueListing}
+        runByListing={runByListing}
         isEditable={(detail) =>
-          detail.id === "venue" || DETAIL_ROW_FIELDS[detail.id] !== undefined
+          detail.id === "venue" ||
+          detail.id === RUN_BY_DETAIL_ROW_ID ||
+          DETAIL_ROW_FIELDS[detail.id] !== undefined
         }
         onEdit={editDetail}
       />
@@ -194,6 +243,16 @@ export function OverviewTab({
           initial={editing.selection}
           onClose={() => setEditing(null)}
           onSave={onUpdateVenue}
+        />
+      )}
+      {editing?.kind === "runBy" && onUpdateRunBy && (
+        <EditRunByModal
+          initial={runByListing}
+          items={managedListings}
+          isResolving={isManagedListPending}
+          isHost={isViewerHost}
+          onClose={() => setEditing(null)}
+          onSave={onUpdateRunBy}
         />
       )}
     </div>

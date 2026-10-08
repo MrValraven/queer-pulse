@@ -15,6 +15,8 @@ import { MessagesTab } from "./ManageMessagesTab";
 import { SettingsTab } from "./ManageSettingsTab";
 import { CheckinTab } from "./checkin/CheckinTab";
 import type { VenueSelection } from "./VenuePicker";
+import type { RunByListingView, RunBySelection } from "./runByListing";
+import type { RunBySaveOutcome } from "./useGatheringEditSave";
 import styles from "./ManageGatheringPage.module.css";
 
 export { ManageGatheringSidebar } from "./ManageGatheringSidebar";
@@ -51,6 +53,8 @@ interface ManageGatheringTabsProps {
   buildEditDraft: () => GatheringDetailsDraft;
   onSaveEdit: (draft: GatheringDetailsDraft) => void;
   onUpdateVenue: (value: VenueSelection) => void;
+  runByListing?: RunByListingView | null;
+  onUpdateRunBy?: (selection: RunBySelection) => Promise<RunBySaveOutcome>;
   /** The event's real accepted co-hosts. See `CohostManager`. */
   cohosts?: EventHostDTO[];
   /** The "Options" toggles' real current values + persist callback. See
@@ -99,6 +103,8 @@ export function ManageGatheringTabs({
   buildEditDraft,
   onSaveEdit,
   onUpdateVenue,
+  runByListing,
+  onUpdateRunBy,
   cohosts,
   allowWaitlist,
   showAttendeeCount,
@@ -163,6 +169,9 @@ export function ManageGatheringTabs({
             buildEditDraft={buildEditDraft}
             onSaveEdit={onSaveEdit}
             onUpdateVenue={onUpdateVenue}
+            runByListing={runByListing}
+            onUpdateRunBy={onUpdateRunBy}
+            hostSlug={hostSlug}
           />
         )}
         {tab === "checkin" && (
