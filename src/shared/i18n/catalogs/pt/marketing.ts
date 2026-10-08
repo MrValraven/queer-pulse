@@ -3659,6 +3659,10 @@ export const marketing: Catalog = {
     "Vê quantas pessoas uma edição avisou mesmo",
   "changelog.entries.edit-notified-count.body":
     "Depois de guardares, o número mostra quem foi avisado de uma nova hora ou local, e não aparece nas outras edições.",
+  "changelog.entries.empty-now-card-leads-with-doors.title":
+    "Um cartão Agora sem estado abre com aquilo para que estás disponível",
+  "changelog.entries.empty-now-card-leads-with-doors.body":
+    "Quem visita vê as portas logo no topo sem um título vazio, e tu tens uma pergunta que abre o editor.",
   "changelog.entries.forum-post-menu-opens-smoothly.title":
     "O menu dos tópicos e respostas do fórum abre com suavidade",
   "changelog.entries.forum-post-menu-opens-smoothly.body":

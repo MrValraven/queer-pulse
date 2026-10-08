@@ -3578,6 +3578,10 @@ export const marketing: Catalog = {
     "See how many guests an edit really notified",
   "changelog.entries.edit-notified-count.body":
     "The count after saving shows who was told about a new time or place, and it's hidden for other edits.",
+  "changelog.entries.empty-now-card-leads-with-doors.title":
+    "A Now card with no status leads with what you are open to",
+  "changelog.entries.empty-now-card-leads-with-doors.body":
+    "Visitors see the doors up top with no empty heading, and you get a prompt that opens the editor.",
   "changelog.entries.forum-post-menu-opens-smoothly.title":
     "The menu on forum posts and replies opens smoothly",
   "changelog.entries.forum-post-menu-opens-smoothly.body":

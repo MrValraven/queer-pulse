@@ -89,12 +89,12 @@ export function NowCard({ profile, isSelf, insights, onUpdate }: NowCardProps) {
               className={styles.updateButton}
               onClick={onUpdate}
               /* "Update" alone is the whole visible label, which reads as an
-               orphan out of context in a screen-reader's control list. This is
-               a DEDICATED key, not the modal's `edit.title`: the accessible
-               name has to contain the visible label (WCAG 2.5.3 Label in Name)
-               and the PT heading "Atualiza o teu Agora" does not contain the PT
-               label "Atualizar", so a voice-control user saying the word on
-               screen could not activate the button. */
+                 orphan out of context in a screen-reader's control list. This is
+                 a DEDICATED key, not the modal's `edit.title`: the accessible
+                 name has to contain the visible label (WCAG 2.5.3 Label in Name)
+                 and the PT heading "Atualiza o teu Agora" does not contain the PT
+                 label "Atualizar", so a voice-control user saying the word on
+                 screen could not activate the button. */
               aria-label={t("members:content.now.updateAction")}
             >
               {t("members:content.now.update")}
