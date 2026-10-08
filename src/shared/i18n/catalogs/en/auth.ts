@@ -305,7 +305,7 @@ export const auth: Catalog = {
     "A social profile <optional>(optional)</optional>",
   "requestInvite.field.social.placeholder": "@yourname or a link",
   "requestInvite.field.social.helper":
-    "Instagram, TikTok, Bluesky or anywhere that helps us get to know you. We use it to keep the community safe, and only the review team sees it. Leave it blank if you'd rather not share one. That never counts against you.",
+    "Instagram, TikTok, Bluesky or wherever you hang out online, so we get a little sense of who you are. Only our review team sees it and it helps us keep everyone safe, and if you'd rather skip it that's completely fine, we'll get to know you through the rest of your answers.",
   "requestInvite.field.mutual.label":
     "A member's email <optional>(optional)</optional>",
   "requestInvite.field.mutual.helper":
