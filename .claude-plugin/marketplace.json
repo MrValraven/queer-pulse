@@ -1,0 +1,14 @@
+{
+  "name": "queer-pulse",
+  "owner": { "name": "MrValraven", "url": "https://github.com/MrValraven" },
+  "metadata": { "description": "Claude Code mods for working on QueerPulse." },
+  "plugins": [
+    {
+      "name": "pulse-progress",
+      "source": "./claude-mods/pulse-progress",
+      "description": "Cosmetic mod: a progress band above the prompt and a /pulse panel of subagents. It only watches.",
+      "version": "0.1.0",
+      "category": "mod"
+    }
+  ]
+}

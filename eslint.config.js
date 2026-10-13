@@ -450,7 +450,7 @@ const localPlugin = {
 };
 
 export default defineConfig([
-  globalIgnores(["dist", "coverage", ".superpowers"]),
+  globalIgnores(["dist", "coverage", ".superpowers", "claude-mods"]),
   {
     files: ["**/*.{ts,tsx}"],
     plugins: { local: localPlugin, "jsx-a11y": jsxA11y },
