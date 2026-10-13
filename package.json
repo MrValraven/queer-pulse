@@ -30,6 +30,8 @@
     "chat-wallpapers": "node scripts/generate-chat-wallpapers.mjs",
     "stickers": "node scripts/generate-sticker-packs.mjs",
     "film-scores": "node scripts/launch-video/render.mjs --video all --score-only",
+    "flyers": "node scripts/launch-flyer/render.mjs",
+    "merch": "node scripts/launch-merch/render.mjs",
     "typecheck": "tsc -b --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
