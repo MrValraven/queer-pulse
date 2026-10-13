@@ -50,7 +50,7 @@
   border: none;
   border-radius: var(--radius-pill);
   background: none;
-  color: rgba(var(--cream-rgb), 0.62);
+  color: var(--studio-text-muted);
   cursor: pointer;
 }
 
@@ -120,7 +120,7 @@ li[aria-current] > .rowPlay .rowNumber {
   font-size: var(--text-11);
   font-weight: 700;
   color: var(--text);
-  background: rgba(var(--cream-rgb), 0.22);
+  background: rgba(var(--studio-ink-rgb), 0.22);
 }
 
 .explicit {
@@ -130,7 +130,7 @@ li[aria-current] > .rowPlay .rowNumber {
   font-size: var(--text-10);
   font-weight: 700;
   text-decoration: none;
-  background: rgba(var(--cream-rgb), 0.16);
+  background: rgba(var(--studio-ink-rgb), 0.16);
 }
 
 .overflow {
@@ -145,8 +145,8 @@ li[aria-current] > .rowPlay .rowNumber {
   min-width: 180px;
   padding: 6px;
   border-radius: var(--radius-10);
-  background: var(--studio-rail);
-  border: 1px solid rgba(var(--cream-rgb), 0.12);
+  background: var(--studio-surface-rail);
+  border: 1px solid rgba(var(--studio-ink-rgb), 0.12);
   box-shadow: var(--shadow-panel);
 }
 
@@ -164,7 +164,7 @@ li[aria-current] > .rowPlay .rowNumber {
 
 @media (hover: hover) {
   .menuItem:hover {
-    background: rgba(var(--cream-rgb), 0.08);
+    background: rgba(var(--studio-ink-rgb), 0.08);
   }
 }
 
@@ -195,7 +195,7 @@ li[aria-current] > .rowPlay .rowNumber {
 
 @media (hover: hover) {
   .rowAdd:hover {
-    background: rgba(var(--cream-rgb), 0.08);
+    background: rgba(var(--studio-ink-rgb), 0.08);
   }
 }
 

@@ -3,12 +3,14 @@ import { Link } from "react-router-dom";
 import { FiArrowRight } from "react-icons/fi";
 import { ImageSlot, FadeIn } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
+import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
 import { StudioShell } from "./StudioShell";
 import { StudioLine } from "./StudioSkeletons";
 import { routes } from "../../app/routeMap";
 import { buildFacts, MEMBERS } from "./studioCouncil.data";
+import { DAY_MONTH, fixtureDate } from "./studioFixtureDate";
 import s from "./council.module.css";
 
 /** Mirrors the council .cur card: avatar row + bio + note + footer. */
@@ -42,6 +44,7 @@ function CouncilCardSkeleton() {
 
 export function StudioCouncilPage() {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const loading = useSimulatedLoad();
   const facts = useMemo(() => buildFacts(t), [t]);
   return (
@@ -143,7 +146,8 @@ export function StudioCouncilPage() {
                   </p>
                   <div className={s.curNote}>
                     <div className={s.nl}>
-                      {t("studio:council.notebookLabel")} · {mem.noteDate}
+                      {t("studio:council.notebookLabel")} ·{" "}
+                      {fmt.date(fixtureDate(mem.noteDateIso), DAY_MONTH)}
                     </div>
                     <p>
                       <Translation
@@ -168,7 +172,7 @@ export function StudioCouncilPage() {
                         </div>
                         <div className={s.sd}>
                           {t("studioShowcase:council.member.slate.meta", {
-                            date: sl.date,
+                            date: fmt.date(fixtureDate(sl.dateIso), DAY_MONTH),
                             count: sl.trackCount,
                           })}
                         </div>

@@ -8,17 +8,24 @@
 }
 
 /* ---- Toolbar row --------------------------------------------------------- */
+/* The seven tools plus Write | Preview need about 410px in English and 470px
+   in Portuguese. On a phone the switch wraps to its own line, still pushed to
+   the right by its auto margin, so the row never runs past the screen edge. */
 .toolsRow {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 8px;
   margin-bottom: 10px;
 }
 
+/* The tools wrap too, so a very narrow screen keeps every button reachable. */
 .tools {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 2px;
+  min-width: 0;
 }
 
 .tool {

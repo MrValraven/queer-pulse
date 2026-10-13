@@ -11,6 +11,7 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
 import { StudioShell } from "./StudioShell";
 import { ROWS, SET, coverImage } from "./studioSet.data";
+import { DAY_MONTH_YEAR, fixtureDate } from "./studioFixtureDate";
 import ss from "./studio.module.css";
 import s from "./studioPages.module.css";
 
@@ -84,7 +85,11 @@ export function StudioSetPage() {
             <em>{SET.em}</em>
           </h1>
           <div className={s.collMeta}>
-            {t(SET.recordedKey, { venue: SET.venue, date: SET.recordedOn })} ·{" "}
+            {t(SET.recordedKey, {
+              venue: SET.venue,
+              date: fmt.date(fixtureDate(SET.recordedOnIso), DAY_MONTH_YEAR),
+            })}{" "}
+            ·{" "}
             <strong>
               {t(SET.lengthKey, {
                 count: SET.trackCount,

@@ -4,7 +4,8 @@ import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { StudioDashboardCharts } from "./StudioDashboardCharts";
 import { StudioDashboardSide } from "./StudioDashboardSide";
-import { fixtureDate, STATS } from "./studioDashboard.data";
+import { STATS } from "./studioDashboard.data";
+import { DAY_MONTH, fixtureDate } from "./studioFixtureDate";
 import s from "./creator.module.css";
 import css from "./StudioNumbers.module.css";
 
@@ -54,10 +55,10 @@ export function StudioDashboardShowcase() {
                     stat.labelKey,
                     stat.labelDateIso
                       ? {
-                          date: fmt.date(fixtureDate(stat.labelDateIso), {
-                            day: "numeric",
-                            month: "short",
-                          }),
+                          date: fmt.date(
+                            fixtureDate(stat.labelDateIso),
+                            DAY_MONTH,
+                          ),
                         }
                       : undefined,
                   )}

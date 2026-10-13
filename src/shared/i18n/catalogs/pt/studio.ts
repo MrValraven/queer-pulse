@@ -431,10 +431,10 @@ export const studio: Catalog = {
   "accessibility.group.lowVision.heading":
     "Para navegação por <em>baixa visão</em> e teclado",
   "accessibility.group.lowVision.dek":
-    "Todo o leitor é operável sem rato, e o tema escuro foi construído para ter contraste claro além de atmosfera.",
+    "Todo o leitor é operável sem rato, e os temas claro e escuro foram construídos para ter contraste além de atmosfera.",
   "accessibility.item.contrast.heading": "Contraste que <em>passa</em>",
   "accessibility.item.contrast.body":
-    "O texto principal está a 4,5:1 ou melhor contra o roxo; os elementos interativos a um mínimo de 3:1, com um modo de alto contraste que reforça tudo ainda mais. Os anéis de foco estão sempre visíveis.",
+    "O texto principal está a 4,5:1 ou melhor nos dois temas; os elementos interativos a um mínimo de 3:1, com um modo de alto contraste que reforça tudo ainda mais. Os anéis de foco estão sempre visíveis.",
   "accessibility.item.screenReader.heading":
     "Notas para leitor de ecrã no <em>leitor</em>",
   "accessibility.item.screenReader.body":
@@ -1881,6 +1881,18 @@ export const studio: Catalog = {
   "shell.searchLabel": "Pesquisar no Studio",
   "shell.searchPlaceholderLive": "pesquisar artistas, lançamentos, faixas…",
   "shell.accountLabel": "A tua conta, {name}",
+  "shell.menu.library": "A tua biblioteca",
+  "shell.menu.artistPages": "As tuas páginas de artista",
+  "shell.menu.dashboard": "Painel de artista",
+  "shell.menu.settings": "Definições",
+  "shell.menu.backToQueerPulse": "Voltar ao QueerPulse",
+  "shell.tabs.label": "Secções do Studio",
+  "shell.sheet.label": "Menu do Studio",
+  "shell.sheet.close": "Fechar menu",
+  "shell.sheet.more": "Mais no Studio",
+  "shell.uploadShort": "Carregar",
+  "shell.sustainShort": "Contribuir",
+  "shell.tabs.openCalls": "Concursos",
   "shell.uploadCta": "Carregar um lançamento",
   "creator.avatarLabel": "A carregar como {name}",
   "rail.v1.navLabel": "Studio",

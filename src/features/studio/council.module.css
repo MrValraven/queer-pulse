@@ -1,4 +1,4 @@
-/* Shared dark styles for Studio council/governance tools */
+/* Shared styles for Studio council/governance tools; they follow the app theme */
 .wrap {
   padding: 8px 0 var(--section-y-64);
   max-width: var(--maxw-page);
@@ -12,40 +12,40 @@
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--studio-accent-text);
   margin-bottom: 12px;
 }
 .ebJade {
-  color: var(--jade-light, var(--jade-light));
+  color: var(--studio-jade-text);
 }
 .pageH h1 {
   font-family: var(--serif);
   font-weight: 300;
   font-size: var(--text-display);
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 1;
 }
 .pageH h1 em {
   font-style: italic;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .dek {
   font-size: var(--text-16);
-  color: rgba(var(--cream-rgb), 0.62);
+  color: var(--studio-text-muted);
   line-height: 1.6;
   max-width: 64ch;
   margin-top: 16px;
 }
 .dek em {
-  color: var(--jade-light, var(--jade-light));
+  color: var(--studio-jade-text);
   font-style: italic;
 }
 
 /* Council intro */
 .intro {
-  background: rgba(var(--cream-rgb), 0.04);
-  border: 1px solid rgba(var(--cream-rgb), 0.1);
+  background: rgba(var(--studio-ink-rgb), 0.04);
+  border: 1px solid rgba(var(--studio-ink-rgb), 0.1);
   border-radius: var(--radius-18);
   padding: 28px 30px;
   margin-bottom: 24px;
@@ -53,13 +53,13 @@
 .lede {
   font-family: var(--serif);
   font-size: var(--text-18);
-  color: rgba(var(--cream-rgb), 0.78);
+  color: var(--studio-text-muted);
   line-height: 1.5;
   max-width: 64ch;
 }
 .lede em {
   font-style: italic;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .facts {
   display: grid;
@@ -67,22 +67,22 @@
   gap: 16px;
   margin-top: 24px;
   padding-top: 22px;
-  border-top: 1px solid rgba(var(--cream-rgb), 0.1);
+  border-top: 1px solid rgba(var(--studio-ink-rgb), 0.1);
 }
 .fact .v {
   font-family: var(--serif);
   font-weight: 300;
   font-size: var(--text-26);
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
   letter-spacing: -0.015em;
 }
 .fact .v em {
   font-style: normal;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .fact .l {
   font-size: var(--text-12);
-  color: rgba(var(--cream-rgb), 0.5);
+  color: var(--studio-text-muted);
   margin-top: 4px;
 }
 
@@ -92,8 +92,8 @@
   gap: 18px;
 }
 .cur {
-  background: rgba(var(--cream-rgb), 0.04);
-  border: 1px solid rgba(var(--cream-rgb), 0.1);
+  background: rgba(var(--studio-ink-rgb), 0.04);
+  border: 1px solid rgba(var(--studio-ink-rgb), 0.1);
   border-radius: var(--radius-18);
   padding: 24px 26px;
 }
@@ -115,13 +115,13 @@
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .curHead h3 {
   font-family: var(--serif);
   font-weight: 400;
   font-size: var(--text-21);
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
   letter-spacing: -0.01em;
 }
 .curHead h3 em {
@@ -129,7 +129,7 @@
 }
 .where {
   font-size: var(--text-12);
-  color: rgba(var(--cream-rgb), 0.5);
+  color: var(--studio-text-muted);
   display: flex;
   align-items: center;
   gap: 7px;
@@ -140,16 +140,16 @@
   width: 3px;
   height: 3px;
   border-radius: 50%;
-  background: rgba(var(--cream-rgb), 0.3);
+  background: rgba(var(--studio-ink-rgb), 0.3);
 }
 .curBio {
   font-size: var(--text-13-5);
-  color: rgba(var(--cream-rgb), 0.6);
+  color: var(--studio-text-muted);
   line-height: 1.6;
 }
 .curBio em {
   font-style: italic;
-  color: rgba(var(--cream-rgb), 0.85);
+  color: rgba(var(--studio-ink-rgb), 0.85);
 }
 .curNote {
   background: rgba(var(--accent-rgb), 0.06);
@@ -163,25 +163,25 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: rgba(var(--cream-rgb), 0.5);
+  color: var(--studio-text-muted);
   margin-bottom: 8px;
 }
 .curNote p {
   font-family: var(--serif);
   font-size: var(--text-14-5);
-  color: rgba(var(--cream-rgb), 0.85);
+  color: rgba(var(--studio-ink-rgb), 0.85);
   line-height: 1.55;
   font-style: italic;
 }
 .curNote p em {
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .slLbl {
   font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: rgba(var(--cream-rgb), 0.5);
+  color: var(--studio-text-muted);
   margin-bottom: 8px;
 }
 .slRow {
@@ -189,30 +189,30 @@
   grid-template-columns: 1fr auto auto;
   gap: 12px;
   padding: 7px 0;
-  border-bottom: 1px solid rgba(var(--cream-rgb), 0.07);
+  border-bottom: 1px solid rgba(var(--studio-ink-rgb), 0.07);
   font-size: var(--text-12-5);
 }
 .slRow:last-child {
   border-bottom: none;
 }
 .st {
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
   font-family: var(--serif);
 }
 .st em {
   font-style: italic;
 }
 .sd {
-  color: rgba(var(--cream-rgb), 0.5);
+  color: var(--studio-text-muted);
   white-space: nowrap;
 }
 .sp {
-  color: rgba(var(--cream-rgb), 0.6);
+  color: var(--studio-text-muted);
   white-space: nowrap;
 }
 .sp em {
   font-style: normal;
-  color: var(--jade-light, var(--jade-light));
+  color: var(--studio-jade-text);
 }
 .curFoot {
   display: flex;
@@ -221,15 +221,15 @@
   gap: 12px;
   margin-top: 16px;
   padding-top: 14px;
-  border-top: 1px solid rgba(var(--cream-rgb), 0.1);
+  border-top: 1px solid rgba(var(--studio-ink-rgb), 0.1);
 }
 .curStat {
   font-size: var(--text-12);
-  color: rgba(var(--cream-rgb), 0.5);
+  color: var(--studio-text-muted);
 }
 .curStat em {
   font-style: normal;
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
   font-weight: 600;
 }
 
@@ -238,9 +238,9 @@
   font-family: var(--sans);
   font-size: var(--text-13);
   font-weight: 600;
-  color: rgba(var(--cream-rgb), 1);
-  background: rgba(var(--cream-rgb), 0.08);
-  border: 1px solid rgba(var(--cream-rgb), 0.12);
+  color: rgba(var(--studio-ink-rgb), 1);
+  background: rgba(var(--studio-ink-rgb), 0.08);
+  border: 1px solid rgba(var(--studio-ink-rgb), 0.12);
   border-radius: var(--radius-pill);
   padding: 8px 16px;
   cursor: pointer;
@@ -253,10 +253,10 @@
   border-color: var(--accent);
 }
 .btDismiss {
-  color: rgba(var(--cream-rgb), 0.6);
+  color: var(--studio-text-muted);
 }
 .btUphold {
-  color: var(--accent-soft);
+  color: var(--studio-accent-chip-text);
   border-color: rgba(var(--accent-rgb), 0.3);
 }
 
@@ -271,13 +271,13 @@
 }
 .trH .sub {
   font-size: var(--text-14);
-  color: rgba(var(--cream-rgb), 0.55);
+  color: var(--studio-text-muted);
   line-height: 1.6;
   max-width: 56ch;
   margin-top: 10px;
 }
 .trH .sub em {
-  color: var(--jade-light, var(--jade-light));
+  color: var(--studio-jade-text);
   font-style: italic;
 }
 .kpiStrip {
@@ -285,8 +285,8 @@
   gap: 12px;
 }
 .kpiMini {
-  background: rgba(var(--cream-rgb), 0.04);
-  border: 1px solid rgba(var(--cream-rgb), 0.1);
+  background: rgba(var(--studio-ink-rgb), 0.04);
+  border: 1px solid rgba(var(--studio-ink-rgb), 0.1);
   border-radius: var(--radius-12);
   padding: 12px 18px;
   text-align: center;
@@ -295,25 +295,25 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: var(--text-26);
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
 }
 .kpiMini .v em {
   font-style: normal;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .kpiMini .v.jade em {
-  color: var(--jade-light, var(--jade-light));
+  color: var(--studio-jade-text);
 }
 .kpiMini .l {
   font-size: var(--text-11);
-  color: rgba(var(--cream-rgb), 0.5);
+  color: var(--studio-text-muted);
   margin-top: 4px;
   white-space: nowrap;
 }
 .trTabs {
   display: flex;
   gap: 6px;
-  border-bottom: 1px solid rgba(var(--cream-rgb), 0.1);
+  border-bottom: 1px solid rgba(var(--studio-ink-rgb), 0.1);
   margin-bottom: 22px;
   flex-wrap: wrap;
 }
@@ -321,7 +321,7 @@
   font-family: var(--sans);
   font-size: var(--text-13);
   font-weight: 600;
-  color: rgba(var(--cream-rgb), 0.5);
+  color: var(--studio-text-muted);
   background: none;
   border: none;
   padding: 10px 14px;
@@ -330,15 +330,15 @@
   margin-bottom: -1px;
 }
 .trTabOn {
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
   border-bottom-color: var(--accent);
 }
 .trTabWarn {
-  color: var(--accent-soft);
+  color: var(--studio-accent-soft-text);
 }
 .ctNum {
   font-size: var(--text-11);
-  color: rgba(var(--cream-rgb), 0.35);
+  color: var(--studio-text-faint);
 }
 .trBody {
   display: grid;
@@ -352,8 +352,8 @@
   gap: 12px;
 }
 .subRow {
-  background: rgba(var(--cream-rgb), 0.04);
-  border: 1px solid rgba(var(--cream-rgb), 0.1);
+  background: rgba(var(--studio-ink-rgb), 0.04);
+  border: 1px solid rgba(var(--studio-ink-rgb), 0.1);
   border-radius: var(--radius-16);
   padding: 18px 20px;
   cursor: pointer;
@@ -378,20 +378,20 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: var(--text-18);
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
 }
 .subTop h3 em {
   font-style: italic;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .subWho {
   font-size: var(--text-12-5);
-  color: rgba(var(--cream-rgb), 0.5);
+  color: var(--studio-text-muted);
   margin-top: 2px;
 }
 .subWho em {
   font-style: italic;
-  color: var(--jade-light, var(--jade-light));
+  color: var(--studio-jade-text);
 }
 .badges {
   display: flex;
@@ -401,23 +401,23 @@
 }
 .badges span {
   font-size: var(--text-10-5);
-  color: rgba(var(--cream-rgb), 0.55);
-  background: rgba(var(--cream-rgb), 0.07);
+  color: var(--studio-text-muted);
+  background: rgba(var(--studio-ink-rgb), 0.07);
   border-radius: var(--radius-5);
   padding: 3px 8px;
 }
 .badges .first {
   background: rgba(var(--jade-rgb), 0.16);
-  color: var(--jade-light, var(--jade-light));
+  color: var(--studio-jade-chip-text);
 }
 .badges .claimed {
   background: rgba(var(--accent-rgb), 0.16);
-  color: var(--accent-soft);
+  color: var(--studio-accent-chip-text);
 }
 .deadline {
   text-align: right;
   font-size: var(--text-11);
-  color: rgba(var(--cream-rgb), 0.5);
+  color: var(--studio-text-muted);
   white-space: nowrap;
 }
 .deadline b {
@@ -425,11 +425,11 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: var(--text-18);
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
 }
 .subNote {
   font-size: var(--text-13);
-  color: rgba(var(--cream-rgb), 0.65);
+  color: var(--studio-text-muted);
   line-height: 1.6;
   margin: 12px 0;
   font-family: var(--serif);
@@ -440,12 +440,12 @@
   flex-wrap: wrap;
   gap: 14px;
   font-size: var(--text-11-5);
-  color: rgba(var(--cream-rgb), 0.5);
+  color: var(--studio-text-muted);
   padding-top: 10px;
-  border-top: 1px solid rgba(var(--cream-rgb), 0.07);
+  border-top: 1px solid rgba(var(--studio-ink-rgb), 0.07);
 }
 .metaStrip em {
-  color: rgba(var(--cream-rgb), 0.6);
+  color: var(--studio-text-muted);
   font-style: italic;
 }
 
@@ -453,8 +453,8 @@
 .aside {
   position: sticky;
   top: 88px;
-  background: rgba(var(--cream-rgb), 0.04);
-  border: 1px solid rgba(var(--cream-rgb), 0.1);
+  background: rgba(var(--studio-ink-rgb), 0.04);
+  border: 1px solid rgba(var(--studio-ink-rgb), 0.1);
   border-radius: var(--radius-16);
   padding: 22px 24px;
 }
@@ -462,19 +462,19 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: var(--text-22);
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
 }
 .aside h2 em {
   font-style: italic;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .asideWho {
   font-size: var(--text-12-5);
-  color: rgba(var(--cream-rgb), 0.5);
+  color: var(--studio-text-muted);
   margin: 4px 0 16px;
 }
 .playerMini {
-  background: rgba(var(--cream-rgb), 0.04);
+  background: rgba(var(--studio-ink-rgb), 0.04);
   border-radius: var(--radius-12);
   padding: 14px 16px;
   margin-bottom: 16px;
@@ -488,7 +488,7 @@
 }
 .pmWf span {
   flex: 1;
-  background: rgba(var(--cream-rgb), 0.16);
+  background: rgba(var(--studio-ink-rgb), 0.16);
   border-radius: var(--radius-2);
   min-height: 3px;
 }
@@ -504,9 +504,10 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  /* Light cream in every theme (--cream is dark inside the Studio shell):
-     13.69:1 against the mini player, 16.55:1 under the --studio-bg glyph. */
-  background: rgba(var(--cream-rgb), 1);
+  /* Inverted solid control: a Studio ink fill under a Studio surface glyph.
+     Dark mode draws a cream button with a dark glyph; light mode draws a
+     plum button with a cream glyph. */
+  background: rgba(var(--studio-ink-rgb), 1);
   border: none;
   display: flex;
   align-items: center;
@@ -516,17 +517,17 @@
 .pmPlay svg {
   width: 12px;
   height: 12px;
-  color: var(--studio-bg);
+  color: var(--studio-surface);
   margin-left: 1px;
 }
 .pmTimes {
   display: flex;
   gap: 8px;
   font-size: var(--text-11-5);
-  color: rgba(var(--cream-rgb), 0.5);
+  color: var(--studio-text-muted);
 }
 .pmTimes .e {
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .claimRow {
   display: flex;
@@ -543,7 +544,7 @@
   height: 2.667em;
   border-radius: 50%;
   background: rgba(var(--jade-rgb), 0.22);
-  color: var(--jade-light, var(--jade-light));
+  color: var(--studio-jade-chip-text);
   font-family: var(--serif);
   display: flex;
   align-items: center;
@@ -555,13 +556,13 @@
   flex: 1;
   min-width: 0;
   font-size: var(--text-12-5);
-  color: rgba(var(--cream-rgb), 0.78);
+  color: var(--studio-text-muted);
   font-family: var(--serif);
   font-style: italic;
   line-height: 1.45;
 }
 .claimRow .text em {
-  color: var(--jade-light, var(--jade-light));
+  color: var(--studio-jade-text);
 }
 .claimRow .text b {
   display: block;
@@ -569,7 +570,7 @@
   font-family: var(--sans);
   font-weight: 600;
   font-size: var(--text-12);
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
 }
 .detailBlock {
   margin-bottom: 16px;
@@ -579,16 +580,16 @@
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: rgba(var(--cream-rgb), 0.5);
+  color: var(--studio-text-muted);
   margin-bottom: 8px;
 }
 .detailBlock p {
   font-size: var(--text-13);
-  color: rgba(var(--cream-rgb), 0.7);
+  color: var(--studio-text-muted);
   line-height: 1.6;
 }
 .detailBlock p em {
-  color: var(--accent);
+  color: var(--studio-accent-text);
   font-style: italic;
 }
 .dGrid {
@@ -598,53 +599,53 @@
   font-size: var(--text-12-5);
 }
 .dGrid .k {
-  color: rgba(var(--cream-rgb), 0.5);
+  color: var(--studio-text-muted);
 }
 .dGrid .v {
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
 }
 .dGrid .v em {
   font-style: normal;
-  color: var(--jade-light, var(--jade-light));
+  color: var(--studio-jade-text);
 }
 .shortlistH {
   font-family: var(--serif);
   font-weight: 400;
   font-size: var(--text-18);
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
   margin: 20px 0 12px;
 }
 .shortlistH em {
   font-style: italic;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .decision h4 {
   font-size: var(--text-12-5);
   font-weight: 600;
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
   margin-bottom: 8px;
 }
 .decision textarea {
   width: 100%;
-  background: rgba(var(--cream-rgb), 0.06);
-  border: 1px solid rgba(var(--cream-rgb), 0.12);
+  background: rgba(var(--studio-ink-rgb), 0.06);
+  border: 1px solid rgba(var(--studio-ink-rgb), 0.12);
   border-radius: var(--radius-10);
   padding: 11px 13px;
   font-family: var(--sans);
   font-size: var(--text-13);
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
   resize: vertical;
   min-height: 70px;
 }
 .decision .hint {
   font-size: var(--text-11-5);
-  color: rgba(var(--cream-rgb), 0.5);
+  color: var(--studio-text-muted);
   font-family: var(--serif);
   font-style: italic;
   margin-top: 8px;
 }
 .decision .hint em {
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .decision .actions {
   display: flex;
@@ -660,8 +661,8 @@
   gap: 16px;
 }
 .flag {
-  background: rgba(var(--cream-rgb), 0.04);
-  border: 1px solid rgba(var(--cream-rgb), 0.1);
+  background: rgba(var(--studio-ink-rgb), 0.04);
+  border: 1px solid rgba(var(--studio-ink-rgb), 0.1);
   border-radius: var(--radius-16);
   padding: 22px 24px;
 }
@@ -687,23 +688,23 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: var(--text-18);
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
 }
 .flagTi h3 em {
   font-style: italic;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .flagTi .who {
   font-size: var(--text-12);
-  color: rgba(var(--cream-rgb), 0.5);
+  color: var(--studio-text-muted);
 }
 .flagPlay {
   width: 34px;
   height: 34px;
   border-radius: 50%;
-  background: rgba(var(--cream-rgb), 0.08);
+  background: rgba(var(--studio-ink-rgb), 0.08);
   border: none;
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -722,25 +723,25 @@
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: var(--accent-soft);
+  color: var(--studio-accent-chip-text);
   background: rgba(var(--accent-rgb), 0.14);
   border-radius: var(--radius-6);
   padding: 3px 9px;
 }
 .flagReason p {
   font-size: var(--text-14);
-  color: rgba(var(--cream-rgb), 0.78);
+  color: var(--studio-text-muted);
   line-height: 1.6;
   margin-top: 10px;
   font-family: var(--serif);
 }
 .flagReason p em {
   font-style: italic;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .rmeta {
   font-size: var(--text-12);
-  color: rgba(var(--cream-rgb), 0.5);
+  color: var(--studio-text-muted);
   margin-top: 8px;
 }
 .flagClaim {
@@ -748,19 +749,19 @@
   align-items: center;
   gap: 10px;
   font-size: var(--text-13);
-  color: rgba(var(--cream-rgb), 0.6);
+  color: var(--studio-text-muted);
   padding: 12px 0;
 }
 .flagClaim em {
   font-style: italic;
-  color: var(--jade-light, var(--jade-light));
+  color: var(--studio-jade-text);
 }
 .flagClaim .av {
   width: 2.545em;
   height: 2.545em;
   border-radius: 50%;
   background: rgba(var(--jade-rgb), 0.2);
-  color: var(--jade-light, var(--jade-light));
+  color: var(--studio-jade-chip-text);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -775,7 +776,7 @@
 .flagClaim .dl {
   margin-left: auto;
   font-size: var(--text-11-5);
-  color: rgba(var(--cream-rgb), 0.5);
+  color: var(--studio-text-muted);
 }
 .flagActions {
   display: flex;
@@ -783,7 +784,7 @@
   gap: 8px;
   margin-top: 12px;
   padding-top: 14px;
-  border-top: 1px solid rgba(var(--cream-rgb), 0.08);
+  border-top: 1px solid rgba(var(--studio-ink-rgb), 0.08);
 }
 .grow {
   flex: 1;
@@ -793,7 +794,7 @@
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: var(--jade-light, var(--jade-light));
+  color: var(--studio-jade-chip-text);
   background: rgba(var(--jade-rgb), 0.16);
   border-radius: var(--radius-6);
   padding: 4px 10px;
@@ -866,14 +867,14 @@
   }
 }
 
-/* ── Loading skeletons (light-on-dark, for the dark council surface) ── */
+/* ── Loading skeletons (Studio ink washes, so they read in both themes) ── */
 .skel {
   border-radius: var(--radius-8);
   background: linear-gradient(
     90deg,
-    rgba(var(--cream-rgb), 0.05) 25%,
-    rgba(var(--cream-rgb), 0.11) 50%,
-    rgba(var(--cream-rgb), 0.05) 75%
+    rgba(var(--studio-ink-rgb), 0.05) 25%,
+    rgba(var(--studio-ink-rgb), 0.11) 50%,
+    rgba(var(--studio-ink-rgb), 0.05) 75%
   );
   background-size: 200% 100%;
   animation: qpShimmer 1.5s ease infinite;
@@ -884,7 +885,7 @@
   }
 }
 
-/* Local copies of shared keyframes — see src/styles/tokens/effects.css.
+/* Local copies of shared keyframes; see src/styles/tokens/effects.css.
    Global keyframes can't be referenced from a CSS module (the animation-name
    gets scoped to a dangling hash), so each module needs its own copy. */
 @keyframes qpShimmer {

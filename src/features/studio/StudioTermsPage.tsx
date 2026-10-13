@@ -160,7 +160,7 @@ export function StudioTermsPage() {
             <p>{t("studio:terms.longVersions.meta")}</p>
           </div>
           <Button
-            variant="ghost-dark"
+            variant="ghost"
             onClick={() =>
               showToast(t("studio:terms.readFullTermsToast"), "info")
             }
@@ -168,7 +168,7 @@ export function StudioTermsPage() {
             {t("studio:terms.readFullTermsCta")}
           </Button>
           <Button
-            variant="ghost-dark"
+            variant="ghost"
             onClick={() => showToast(t("studio:terms.readDeedToast"), "info")}
           >
             {t("studio:terms.readDeedCta")}

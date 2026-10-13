@@ -26,7 +26,7 @@ export function StudioFundFlows() {
       <div className={s.flow2}>
         <div className={s.flowCol}>
           <h3>
-            <span style={{ color: "var(--jade-light)" }} aria-hidden>
+            <span style={{ color: "var(--studio-jade-text)" }} aria-hidden>
               <FiArrowDown />
             </span>{" "}
             {t("studio:fund.flows.inHeading")}
@@ -50,7 +50,7 @@ export function StudioFundFlows() {
         </div>
         <div className={s.flowCol}>
           <h3>
-            <span style={{ color: "var(--accent)" }} aria-hidden>
+            <span style={{ color: "var(--studio-accent-text)" }} aria-hidden>
               <FiArrowUp />
             </span>{" "}
             {t("studio:fund.flows.outHeading")}

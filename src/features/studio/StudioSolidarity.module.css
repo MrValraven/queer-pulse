@@ -24,7 +24,7 @@
 .body {
   max-width: 60ch;
   margin: 0;
-  color: rgba(var(--cream-rgb), 0.82);
+  color: rgba(var(--studio-ink-rgb), 0.82);
   font-size: var(--text-16);
   line-height: var(--lh-body);
 }
@@ -37,7 +37,7 @@
   padding: 12px 14px;
   border: 1px solid var(--line);
   border-radius: var(--radius-12);
-  color: rgba(var(--cream-rgb), 0.72);
+  color: var(--studio-text-muted);
   font-size: var(--text-14);
 }
 
@@ -62,12 +62,12 @@
 
 .primary {
   background: var(--accent);
-  /* Dark ink on coral: --accent-ink resolves to --accent inside the dark Studio shell. */
+  /* Dark Studio ink on the coral fill, fixed in both themes. */
   color: var(--studio-bg);
 }
 
 .secondary {
-  border: 1px solid rgba(var(--cream-rgb), 0.32);
+  border: 1px solid rgba(var(--studio-ink-rgb), 0.32);
   color: var(--text);
 }
 

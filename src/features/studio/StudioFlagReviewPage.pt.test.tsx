@@ -43,9 +43,9 @@ describe("StudioFlagReviewPage in Portuguese", () => {
     expect(
       await screen.findByText("Gravado ao vivo · Casa do Comum · 7 artistas"),
     ).toBeInTheDocument();
-    expect(await screen.findByText("decidir até 19 Jun")).toBeInTheDocument();
+    expect(await screen.findByText("decidir até 19/06")).toBeInTheDocument();
     expect(
-      await screen.findByText("João Ribeiro · resolvido a 6 Jun"),
+      await screen.findByText("João Ribeiro · resolvido a 6/06"),
     ).toBeInTheDocument();
 
     expect(screen.queryByText("Possible uncleared sample")).toBeNull();

@@ -280,7 +280,7 @@ export function StudioReceiptPage() {
             {t("studio:receipt.actions.share")}
           </Button>
           <Button
-            variant="ghost-dark"
+            variant="ghost"
             onClick={() =>
               showToast(
                 t("studio:receipt.toast.tipAgain", { artist: RECEIPT_ARTIST }),
@@ -290,13 +290,13 @@ export function StudioReceiptPage() {
           >
             {t("studio:receipt.actions.tipAgain")}
           </Button>
-          <Button variant="ghost-dark" to={routes.studioArtist}>
+          <Button variant="ghost" to={routes.studioArtist}>
             {t("studio:receipt.actions.openArtistPage", {
               artist: RECEIPT_ARTIST,
             })}
           </Button>
           <Button
-            variant="ghost-dark"
+            variant="ghost"
             onClick={() =>
               showToast(t("studio:receipt.toast.emailCopy"), "success")
             }

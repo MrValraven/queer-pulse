@@ -1,4 +1,5 @@
-/* Shared dark styles for Studio funding/community pages (Solidarity Fund, Calls, Set Submission) */
+/* Shared styles for the Studio funding and community pages (Solidarity Fund,
+   Calls, Set Submission). They follow the app theme through the Studio tokens. */
 .wrap {
   padding: 8px 0 var(--section-y-64);
   max-width: var(--maxw-page);
@@ -15,7 +16,7 @@
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--jade-light, var(--jade-light));
+  color: var(--studio-jade-text);
   margin-bottom: 12px;
 }
 .eb .live {
@@ -25,29 +26,29 @@
   background: var(--jade);
 }
 .ebAccent {
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .hero h1 {
   font-family: var(--serif);
   font-weight: 300;
   font-size: var(--text-display);
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 1;
 }
 .hero h1 em {
   font-style: italic;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .dek {
   font-size: var(--text-16);
-  color: rgba(var(--cream-rgb), 0.62);
+  color: var(--studio-text-muted);
   line-height: 1.6;
   max-width: 62ch;
   margin-top: 16px;
 }
 .dek em {
-  color: var(--jade-light, var(--jade-light));
+  color: var(--studio-jade-text);
   font-style: italic;
 }
 
@@ -58,23 +59,23 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: var(--text-heading);
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
   letter-spacing: -0.02em;
   margin-bottom: 8px;
 }
 .sec h2 em {
   font-style: italic;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .secDek {
   font-size: var(--text-14);
-  color: rgba(var(--cream-rgb), 0.55);
+  color: var(--studio-text-muted);
   line-height: 1.6;
   margin-bottom: 24px;
   max-width: 60ch;
 }
 .secDek em {
-  color: var(--jade-light, var(--jade-light));
+  color: var(--studio-jade-text);
   font-style: italic;
 }
 
@@ -83,8 +84,8 @@
   display: grid;
   grid-template-columns: 1.4fr 1fr;
   gap: 22px;
-  background: rgba(var(--cream-rgb), 0.04);
-  border: 1px solid rgba(var(--cream-rgb), 0.1);
+  background: rgba(var(--studio-ink-rgb), 0.04);
+  border: 1px solid rgba(var(--studio-ink-rgb), 0.1);
   border-radius: var(--radius-18);
   padding: 30px 32px;
 }
@@ -94,24 +95,27 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: rgba(var(--cream-rgb), 0.6);
+  color: var(--studio-text-muted);
 }
 .balMain .v {
   font-family: var(--serif);
   font-weight: 300;
   font-size: var(--text-56);
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 1;
   margin: 8px 0;
+  /* The balance stays on one line; the global overflow-wrap would split it. */
+  overflow-wrap: normal;
+  white-space: nowrap;
 }
 .balMain .v em {
   font-style: normal;
-  color: var(--jade-light, var(--jade-light));
+  color: var(--studio-jade-text);
 }
 .balMain .sub {
   font-size: var(--text-13-5);
-  color: rgba(var(--cream-rgb), 0.55);
+  color: var(--studio-text-muted);
   line-height: 1.6;
   max-width: 52ch;
 }
@@ -122,8 +126,8 @@
   justify-content: center;
 }
 .mini {
-  background: rgba(var(--cream-rgb), 0.04);
-  border: 1px solid rgba(var(--cream-rgb), 0.08);
+  background: rgba(var(--studio-ink-rgb), 0.04);
+  border: 1px solid rgba(var(--studio-ink-rgb), 0.08);
   border-radius: var(--radius-12);
   padding: 16px 18px;
 }
@@ -131,12 +135,12 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: var(--text-28);
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
   letter-spacing: -0.02em;
 }
 .mini .v em {
   font-style: normal;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 
 /* In/out flow */
@@ -146,8 +150,8 @@
   gap: 22px;
 }
 .flowCol {
-  background: rgba(var(--cream-rgb), 0.04);
-  border: 1px solid rgba(var(--cream-rgb), 0.1);
+  background: rgba(var(--studio-ink-rgb), 0.04);
+  border: 1px solid rgba(var(--studio-ink-rgb), 0.1);
   border-radius: var(--radius-16);
   padding: 22px 24px;
 }
@@ -155,7 +159,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: var(--text-16);
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
   margin-bottom: 14px;
   display: flex;
   align-items: center;
@@ -166,7 +170,7 @@
   justify-content: space-between;
   gap: 14px;
   padding: 12px 0;
-  border-bottom: 1px solid rgba(var(--cream-rgb), 0.08);
+  border-bottom: 1px solid rgba(var(--studio-ink-rgb), 0.08);
 }
 .flowItem:last-child {
   border-bottom: none;
@@ -174,15 +178,15 @@
 .flowItem .k {
   font-size: var(--text-14);
   font-weight: 600;
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
 }
 .flowItem .k em {
   font-style: italic;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .flowItem .d {
   font-size: var(--text-12-5);
-  color: rgba(var(--cream-rgb), 0.6);
+  color: var(--studio-text-muted);
   line-height: 1.5;
   margin-top: 3px;
 }
@@ -195,10 +199,10 @@
   font-style: normal;
 }
 .amtIn em {
-  color: var(--jade-light, var(--jade-light));
+  color: var(--studio-jade-text);
 }
 .amtOut em {
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 
 /* Disbursements */
@@ -208,7 +212,7 @@
   gap: 16px;
   align-items: center;
   padding: 14px 0;
-  border-bottom: 1px solid rgba(var(--cream-rgb), 0.08);
+  border-bottom: 1px solid rgba(var(--studio-ink-rgb), 0.08);
 }
 .dt {
   text-align: center;
@@ -217,7 +221,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: var(--text-24);
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
   display: block;
   line-height: 1;
 }
@@ -226,13 +230,13 @@
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: rgba(var(--cream-rgb), 0.6);
+  color: var(--studio-text-muted);
 }
 .di h5 {
   font-family: var(--serif);
   font-weight: 500;
   font-size: var(--text-15);
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
@@ -246,7 +250,7 @@
 }
 .di p {
   font-size: var(--text-12-5);
-  color: rgba(var(--cream-rgb), 0.6);
+  color: var(--studio-text-muted);
   margin-top: 3px;
 }
 .tag2 {
@@ -261,33 +265,34 @@
 }
 .tagTrans {
   background: rgba(var(--jade-rgb), 0.16);
-  color: var(--jade-light, var(--jade-light));
+  color: var(--studio-jade-chip-text);
 }
 .tagEmerg {
   background: rgba(var(--accent-rgb), 0.16);
-  color: var(--accent-soft);
+  color: var(--studio-accent-chip-text);
 }
 .tagGrant {
   background: rgba(var(--violet-rgb), 0.16);
-  color: color-mix(
-    in srgb,
-    var(--violet) 45%,
-    white
-  ); /* light violet grant-tag text on violet tint */
+  /* Deep violet grant-tag text on the violet tint; lilac in dark (below). */
+  color: color-mix(in srgb, var(--violet) 70%, var(--text-strong));
+}
+:global([data-theme="dark"]) .tagGrant,
+:global([data-theme="dark"]) .tagGrantCall {
+  color: color-mix(in srgb, var(--violet) 45%, white);
 }
 .tagAccess {
-  background: rgba(var(--cream-rgb), 0.1);
-  color: rgba(var(--cream-rgb), 0.7);
+  background: rgba(var(--studio-ink-rgb), 0.1);
+  color: var(--studio-text-muted);
 }
 .disbAmt {
   font-family: var(--serif);
   font-size: var(--text-18);
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
   white-space: nowrap;
 }
 .disbAmt em {
   font-style: normal;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 
 .apply {
@@ -305,22 +310,22 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: var(--text-30);
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
   letter-spacing: -0.02em;
 }
 .apply h2 em {
   font-style: italic;
-  color: var(--jade-light, var(--jade-light));
+  color: var(--studio-jade-text);
 }
 .apply p {
   font-size: var(--text-14);
-  color: rgba(var(--cream-rgb), 0.6);
+  color: var(--studio-text-muted);
   line-height: 1.6;
   margin-top: 8px;
 }
 .apply p em {
   font-style: italic;
-  color: var(--jade-light, var(--jade-light));
+  color: var(--studio-jade-text);
 }
 .acts {
   display: flex;
@@ -333,9 +338,9 @@
   font-family: var(--sans);
   font-size: var(--text-13-5);
   font-weight: 600;
-  color: rgba(var(--cream-rgb), 1);
-  background: rgba(var(--cream-rgb), 0.08);
-  border: 1px solid rgba(var(--cream-rgb), 0.12);
+  color: rgba(var(--studio-ink-rgb), 1);
+  background: rgba(var(--studio-ink-rgb), 0.08);
+  border: 1px solid rgba(var(--studio-ink-rgb), 0.12);
   border-radius: var(--radius-pill);
   padding: 10px 18px;
   cursor: pointer;
@@ -345,8 +350,8 @@
   padding: 13px 22px;
   font-size: var(--text-14-5);
 }
-/* A `.bt` that leads with a react-icons glyph: centres the icon against the
-   label instead of letting it sit on the text baseline. */
+/* A `.bt` that leads with a react-icons glyph: centres the icon on the
+   middle of the label. */
 .btWithIcon {
   display: inline-flex;
   align-items: center;
@@ -357,12 +362,12 @@
 .btP {
   background: var(--accent);
   color: var(--studio-bg);
-  border-color: var(--accent);
+  border-color: var(--studio-accent-text);
 }
 .btJade {
-  background: var(--jade-light, var(--jade-light));
+  background: var(--jade-light);
   color: var(--studio-bg);
-  border-color: var(--jade-light, var(--jade-light));
+  border-color: var(--jade-light);
 }
 
 /* Calls */
@@ -377,29 +382,30 @@
   font-family: var(--sans);
   font-size: var(--text-12-5);
   font-weight: 600;
-  color: rgba(var(--cream-rgb), 0.55);
+  color: var(--studio-text-muted);
   background: transparent;
-  border: 1px solid rgba(var(--cream-rgb), 0.14);
+  border: 1px solid rgba(var(--studio-ink-rgb), 0.14);
   border-radius: var(--radius-pill);
   padding: 6px 13px;
   cursor: pointer;
 }
-/* The Studio shell sets data-theme="dark", where --cream is the dark page
-   colour. --cream-rgb stays light in every theme: 16.55:1 under the
-   --studio-bg label and against the page. */
+/* The selected chip inverts the page: a solid Studio ink fill with the
+   Studio surface as its label, so it reads as cream on the dark page and as
+   plum on the light one. --cream follows the app theme and is the light page
+   colour in light mode, so it stays out of this rule. */
 .chipOn {
-  background: rgba(var(--cream-rgb), 1);
-  color: var(--studio-bg);
-  border-color: rgba(var(--cream-rgb), 1);
+  background: rgba(var(--studio-ink-rgb), 1);
+  color: var(--studio-surface);
+  border-color: rgba(var(--studio-ink-rgb), 1);
 }
 .filterCount {
   margin-left: auto;
   font-size: var(--text-12-5);
-  color: rgba(var(--cream-rgb), 0.6);
+  color: var(--studio-text-muted);
 }
 .filterCount em {
   font-style: normal;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .calls {
   display: flex;
@@ -407,8 +413,8 @@
   gap: 14px;
 }
 .call {
-  background: rgba(var(--cream-rgb), 0.04);
-  border: 1px solid rgba(var(--cream-rgb), 0.1);
+  background: rgba(var(--studio-ink-rgb), 0.04);
+  border: 1px solid rgba(var(--studio-ink-rgb), 0.1);
   border-radius: var(--radius-16);
   padding: 22px 24px;
 }
@@ -428,7 +434,7 @@
   height: 2.769em;
   border-radius: 50%;
   background: rgba(var(--accent-rgb), 0.18);
-  color: var(--accent-soft);
+  color: var(--studio-accent-chip-text);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -438,16 +444,16 @@
 }
 .callCur .av.jade {
   background: rgba(var(--jade-rgb), 0.2);
-  color: var(--jade-light, var(--jade-light));
+  color: var(--studio-jade-chip-text);
 }
 .callCur .nm {
   font-size: var(--text-12-5);
   font-weight: 600;
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
 }
 .callCur .ro {
   font-size: var(--text-11);
-  color: rgba(var(--cream-rgb), 0.6);
+  color: var(--studio-text-muted);
 }
 .callTags {
   display: flex;
@@ -462,53 +468,51 @@
   text-transform: uppercase;
   padding: 3px 8px;
   border-radius: var(--radius-6);
-  background: rgba(var(--cream-rgb), 0.08);
-  color: rgba(var(--cream-rgb), 0.7);
+  background: rgba(var(--studio-ink-rgb), 0.08);
+  color: var(--studio-text-muted);
 }
 .tagCommission {
   background: rgba(var(--accent-rgb), 0.16);
-  color: var(--accent-soft);
+  color: var(--studio-accent-chip-text);
 }
 .tagGrantCall {
   background: rgba(var(--violet-rgb), 0.16);
-  color: color-mix(
-    in srgb,
-    var(--violet) 45%,
-    white
-  ); /* light violet grant-tag text on violet tint */
+  /* Deep violet grant-tag text on the violet tint; lilac in dark, set beside
+     .tagGrant. */
+  color: color-mix(in srgb, var(--violet) 70%, var(--text-strong));
 }
 .tagResidency {
   background: rgba(var(--jade-rgb), 0.16);
-  color: var(--jade-light, var(--jade-light));
+  color: var(--studio-jade-chip-text);
 }
 .tagUrgent {
-  background: rgba(var(--cream-rgb), 0.1);
-  color: rgba(var(--cream-rgb), 0.7);
+  background: rgba(var(--studio-ink-rgb), 0.1);
+  color: var(--studio-text-muted);
 }
 .tagApplied {
   background: rgba(var(--jade-rgb), 0.18);
-  color: var(--jade-light, var(--jade-light));
+  color: var(--studio-jade-chip-text);
 }
 .callMain h3 {
   font-family: var(--serif);
   font-weight: 400;
   font-size: var(--text-20);
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
   letter-spacing: -0.012em;
 }
 .callMain h3 em {
   font-style: italic;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .brief {
   font-size: var(--text-13-5);
-  color: rgba(var(--cream-rgb), 0.6);
+  color: var(--studio-text-muted);
   line-height: 1.6;
   margin-top: 8px;
 }
 .brief em {
   font-style: italic;
-  color: rgba(var(--cream-rgb), 0.85);
+  color: rgba(var(--studio-ink-rgb), 0.85);
 }
 .callAmt {
   text-align: right;
@@ -517,15 +521,15 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: var(--text-28);
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
 }
 .callAmt .v em {
   font-style: normal;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .callAmt .l {
   font-size: var(--text-11);
-  color: rgba(var(--cream-rgb), 0.6);
+  color: var(--studio-text-muted);
 }
 .callFoot {
   display: flex;
@@ -535,25 +539,25 @@
   flex-wrap: wrap;
   margin-top: 16px;
   padding-top: 16px;
-  border-top: 1px solid rgba(var(--cream-rgb), 0.08);
+  border-top: 1px solid rgba(var(--studio-ink-rgb), 0.08);
 }
 .callMeta {
   display: flex;
   align-items: center;
   gap: 10px;
   font-size: var(--text-12);
-  color: rgba(var(--cream-rgb), 0.6);
+  color: var(--studio-text-muted);
   flex-wrap: wrap;
 }
 .callMeta em {
   font-style: italic;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .callMeta .dot {
   width: 3px;
   height: 3px;
   border-radius: 50%;
-  background: rgba(var(--cream-rgb), 0.3);
+  background: rgba(var(--studio-ink-rgb), 0.3);
 }
 .callActions {
   display: flex;
@@ -562,14 +566,14 @@
 .attach {
   margin-top: 16px;
   padding-top: 16px;
-  border-top: 1px dashed rgba(var(--cream-rgb), 0.12);
+  border-top: 1px dashed rgba(var(--studio-ink-rgb), 0.12);
 }
 .al {
   font-size: var(--text-11-5);
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: rgba(var(--cream-rgb), 0.6);
+  color: var(--studio-text-muted);
   margin-bottom: 10px;
 }
 .picker {
@@ -582,14 +586,14 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  border: 1.5px solid rgba(var(--cream-rgb), 0.12);
+  border: 1.5px solid rgba(var(--studio-ink-rgb), 0.12);
   border-radius: var(--radius-12);
   padding: 8px 12px 8px 8px;
   cursor: pointer;
   min-width: 180px;
 }
 .trkOn {
-  border-color: var(--accent);
+  border-color: var(--studio-accent-text);
   background: rgba(var(--accent-rgb), 0.06);
 }
 .trk .cv {
@@ -602,24 +606,24 @@
 .trk h5 {
   font-size: var(--text-13);
   font-weight: 600;
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
 }
 .trk h5 em {
   font-style: italic;
 }
 .trk p {
   font-size: var(--text-11);
-  color: rgba(var(--cream-rgb), 0.6);
+  color: var(--studio-text-muted);
 }
 .attachTa {
   width: 100%;
-  background: rgba(var(--cream-rgb), 0.06);
-  border: 1px solid rgba(var(--cream-rgb), 0.12);
+  background: rgba(var(--studio-ink-rgb), 0.06);
+  border: 1px solid rgba(var(--studio-ink-rgb), 0.12);
   border-radius: var(--radius-10);
   padding: 11px 14px;
   font-family: var(--sans);
   font-size: var(--text-13-5);
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
   resize: vertical;
   min-height: 84px;
   min-height: 4lh;
@@ -633,12 +637,12 @@
 }
 .singleNote {
   font-size: var(--text-12);
-  color: rgba(var(--cream-rgb), 0.6);
+  color: var(--studio-text-muted);
   font-style: italic;
   font-family: var(--serif);
 }
 .singleNote em {
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 
 /* Set submission */
@@ -652,13 +656,13 @@
   align-items: center;
   gap: 8px;
   font-size: var(--text-13);
-  color: rgba(var(--cream-rgb), 0.6);
+  color: var(--studio-text-muted);
 }
 .djStep .num {
   width: 2.167em;
   height: 2.167em;
   border-radius: 50%;
-  background: rgba(var(--cream-rgb), 0.1);
+  background: rgba(var(--studio-ink-rgb), 0.1);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -666,11 +670,11 @@
   font-size: var(--text-12);
 }
 .djStepDone .num {
-  background: var(--jade-light, var(--jade-light));
+  background: var(--jade-light);
   color: var(--studio-bg);
 }
 .djStepOn {
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
 }
 /* Dark ink on the coral fill: 6.28:1 (cream on --accent is 2.63:1). */
 .djStepOn .num {
@@ -680,7 +684,7 @@
 .djBar {
   width: 36px;
   height: 1px;
-  background: rgba(var(--cream-rgb), 0.14);
+  background: rgba(var(--studio-ink-rgb), 0.14);
 }
 .djGrid {
   display: grid;
@@ -692,8 +696,8 @@
   display: flex;
   align-items: center;
   gap: 14px;
-  background: rgba(var(--cream-rgb), 0.04);
-  border: 1px solid rgba(var(--cream-rgb), 0.1);
+  background: rgba(var(--studio-ink-rgb), 0.04);
+  border: 1px solid rgba(var(--studio-ink-rgb), 0.1);
   border-radius: var(--radius-14);
   padding: 16px 18px;
   margin-bottom: 22px;
@@ -703,7 +707,7 @@
   height: 40px;
   border-radius: var(--radius-10);
   background: rgba(var(--accent-rgb), 0.12);
-  color: var(--accent);
+  color: var(--studio-accent-text);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -716,29 +720,29 @@
 .djFile h5 {
   font-size: var(--text-13-5);
   font-weight: 600;
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
 }
 .djFile p {
   font-size: var(--text-11-5);
-  color: rgba(var(--cream-rgb), 0.6);
+  color: var(--studio-text-muted);
   margin-top: 2px;
 }
 .djFile .ok {
   margin-left: auto;
   font-size: var(--text-11);
   font-weight: 700;
-  color: var(--jade-light, var(--jade-light));
+  color: var(--studio-jade-text);
 }
 .secLbl {
   font-size: var(--text-11-5);
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: rgba(var(--cream-rgb), 0.6);
+  color: var(--studio-text-muted);
   margin-bottom: 10px;
 }
 .secLbl em {
-  color: var(--jade-light, var(--jade-light));
+  color: var(--studio-jade-text);
   text-transform: none;
   letter-spacing: 0;
   font-family: var(--serif);
@@ -746,26 +750,26 @@
 }
 .paste {
   width: 100%;
-  background: rgba(var(--cream-rgb), 0.06);
-  border: 1px solid rgba(var(--cream-rgb), 0.12);
+  background: rgba(var(--studio-ink-rgb), 0.06);
+  border: 1px solid rgba(var(--studio-ink-rgb), 0.12);
   border-radius: var(--radius-12);
   padding: 14px 16px;
   font-family: var(--sans);
   font-variant-numeric: tabular-nums;
   letter-spacing: 0.06em;
   font-size: var(--text-12-5);
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
   resize: vertical;
   min-height: 150px;
   line-height: 1.7;
 }
 .pasteHint {
   font-size: var(--text-12);
-  color: rgba(var(--cream-rgb), 0.6);
+  color: var(--studio-text-muted);
   margin-top: 8px;
 }
 .pasteHint em {
-  color: var(--jade-light, var(--jade-light));
+  color: var(--studio-jade-text);
   font-style: italic;
 }
 .matcher {
@@ -777,14 +781,14 @@
   gap: 12px;
   align-items: center;
   padding: 10px 0;
-  border-bottom: 1px solid rgba(var(--cream-rgb), 0.08);
+  border-bottom: 1px solid rgba(var(--studio-ink-rgb), 0.08);
 }
 .mtRow .tc {
   font-family: var(--sans);
   font-variant-numeric: tabular-nums;
   letter-spacing: 0.06em;
   font-size: var(--text-11-5);
-  color: rgba(var(--cream-rgb), 0.6);
+  color: var(--studio-text-muted);
 }
 .mtRow .cv {
   width: 36px;
@@ -794,7 +798,7 @@
 }
 .mtRow h5 {
   font-size: var(--text-13-5);
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
   font-family: var(--serif);
 }
 .mtRow h5 em {
@@ -802,11 +806,11 @@
 }
 .mtRow p {
   font-size: var(--text-11-5);
-  color: rgba(var(--cream-rgb), 0.6);
+  color: var(--studio-text-muted);
   margin-top: 2px;
 }
 .mtRow p em {
-  color: var(--jade-light, var(--jade-light));
+  color: var(--studio-jade-text);
   font-style: italic;
 }
 .st {
@@ -818,7 +822,7 @@
   white-space: nowrap;
 }
 .stMatched {
-  color: var(--jade-light, var(--jade-light));
+  color: var(--studio-jade-text);
 }
 .stMatched svg {
   width: 13px;
@@ -831,7 +835,7 @@
   padding: 0;
   font-family: inherit;
   font-size: inherit;
-  color: var(--accent);
+  color: var(--studio-accent-text);
   cursor: pointer;
   font-weight: 600;
 }
@@ -841,8 +845,8 @@
   gap: 18px;
 }
 .djCard {
-  background: rgba(var(--cream-rgb), 0.04);
-  border: 1px solid rgba(var(--cream-rgb), 0.1);
+  background: rgba(var(--studio-ink-rgb), 0.04);
+  border: 1px solid rgba(var(--studio-ink-rgb), 0.1);
   border-radius: var(--radius-14);
   padding: 20px 22px;
 }
@@ -850,12 +854,12 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: var(--text-17);
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
   margin-bottom: 14px;
 }
 .djCard h3 em {
   font-style: italic;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .field {
   margin-bottom: 14px;
@@ -864,44 +868,44 @@
   display: block;
   font-size: var(--text-12);
   font-weight: 600;
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
   margin-bottom: 6px;
 }
 .field input,
 .field select {
   width: 100%;
-  background: rgba(var(--cream-rgb), 0.06);
-  border: 1px solid rgba(var(--cream-rgb), 0.12);
+  background: rgba(var(--studio-ink-rgb), 0.06);
+  border: 1px solid rgba(var(--studio-ink-rgb), 0.12);
   border-radius: var(--radius-10);
   padding: 10px 13px;
   font-family: var(--sans);
   font-size: var(--text-13-5);
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
 }
 .djRow {
   display: flex;
   justify-content: space-between;
   padding: 8px 0;
-  border-bottom: 1px solid rgba(var(--cream-rgb), 0.08);
+  border-bottom: 1px solid rgba(var(--studio-ink-rgb), 0.08);
   font-size: var(--text-13);
-  color: rgba(var(--cream-rgb), 0.6);
+  color: var(--studio-text-muted);
 }
 .djRow:last-of-type {
   border-bottom: none;
 }
 .djRow .v {
   font-family: var(--serif);
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
 }
 .djRow .v.jade {
-  color: var(--jade-light, var(--jade-light));
+  color: var(--studio-jade-text);
 }
 .djRow .v.warn {
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .djRow .v em {
   font-style: normal;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .holdNote {
   display: flex;
@@ -911,17 +915,17 @@
   padding: 12px 14px;
   margin-top: 12px;
   font-size: var(--text-12);
-  color: rgba(var(--cream-rgb), 0.6);
+  color: var(--studio-text-muted);
   line-height: 1.55;
 }
 .holdNote svg {
   width: 16px;
   height: 16px;
-  color: var(--accent);
+  color: var(--studio-accent-text);
   flex: none;
 }
 .holdNote em {
-  color: var(--accent);
+  color: var(--studio-accent-text);
   font-style: italic;
 }
 
@@ -929,13 +933,13 @@
   text-align: center;
   margin-top: 18px;
   font-size: var(--text-12-5);
-  color: rgba(var(--cream-rgb), 0.6);
+  color: var(--studio-text-muted);
   font-family: var(--serif);
   font-style: italic;
 }
 .logNote a,
 .logNote button {
-  color: var(--jade-light, var(--jade-light));
+  color: var(--studio-jade-text);
   background: none;
   border: none;
   padding: 0;
@@ -958,6 +962,9 @@
 
 /* Phones only: tablets keep the cover column */
 @media (--md) {
+  .balMain .v {
+    font-size: var(--text-40);
+  }
   .mtRow {
     grid-template-columns: 40px minmax(0, 1fr) auto;
     row-gap: 6px;
@@ -967,14 +974,15 @@
   }
 }
 
-/* ── Loading skeletons (light-on-dark, for the dark Studio surface) ── */
+/* Loading skeletons: a shimmer on the Studio ink channel, so it reads on
+   both the light and the dark Studio surface. */
 .skel {
   border-radius: var(--radius-8);
   background: linear-gradient(
     90deg,
-    rgba(var(--cream-rgb), 0.05) 25%,
-    rgba(var(--cream-rgb), 0.11) 50%,
-    rgba(var(--cream-rgb), 0.05) 75%
+    rgba(var(--studio-ink-rgb), 0.05) 25%,
+    rgba(var(--studio-ink-rgb), 0.11) 50%,
+    rgba(var(--studio-ink-rgb), 0.05) 75%
   );
   background-size: 200% 100%;
   animation: qpShimmer 1.5s ease infinite;
@@ -985,7 +993,7 @@
   }
 }
 
-/* Local copies of shared keyframes — see src/styles/tokens/effects.css.
+/* Local copies of shared keyframes: see src/styles/tokens/effects.css.
    Global keyframes can't be referenced from a CSS module (the animation-name
    gets scoped to a dangling hash), so each module needs its own copy. */
 @keyframes qpShimmer {

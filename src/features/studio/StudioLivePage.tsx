@@ -3,22 +3,25 @@ import { StudioShell } from "./StudioShell";
 import { StudioTipModal } from "./StudioTipModal";
 import { StudioLiveNow } from "./StudioLiveNow";
 import { StudioLiveChat } from "./StudioLiveChat";
+import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
+import { fixtureDate, WEEKDAY_DAY_MONTH } from "./studioFixtureDate";
 import s from "./live.module.css";
 
-// Today's mock broadcast schedule: show title, host and the formatted
-// date/time stay literal; the duration phrase resolves through
-// `studioShowcase:live.ribbon.duration` with the figures below.
+// Today's mock broadcast schedule: show title, host and the clock time stay
+// literal, the date is formatted in the active locale, and the duration
+// phrase resolves through `studioShowcase:live.ribbon.duration`.
 const SHOW_TITLE = "Vespertina, vol. iv";
 const SHOW_HOST = "Sara Marques";
-const SHOW_SCHEDULE_LINE = "Wed 10 Jun · ";
+const SHOW_DATE_ISO = "2026-06-10";
 const SHOW_TIME = "21:18 Lisbon";
 const SHOW_LENGTH = "1h 42m";
 const SHOW_ELAPSED = "22 min";
 
 export function StudioLivePage() {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const [tipOpen, setTipOpen] = useState(false);
   const openTip = () => setTipOpen(true);
 
@@ -34,7 +37,8 @@ export function StudioLivePage() {
           />
         </span>
         <span className={s.clock}>
-          {SHOW_SCHEDULE_LINE}
+          {fmt.date(fixtureDate(SHOW_DATE_ISO), WEEKDAY_DAY_MONTH)}
+          {" · "}
           <em>{SHOW_TIME}</em>
           {" · "}
           {t("studioShowcase:live.ribbon.duration", {

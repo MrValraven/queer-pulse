@@ -213,28 +213,32 @@ export const NAV_MENUS: MegaMenu[] = [
           },
           {
             // The persona directory (`/subprofiles`): members' work-facing
-            // personas, next to the members directory it complements — that
+            // personas, next to the members directory it complements. That
             // one browses people, this one browses what they do.
             labelKey:
               "shared:megaNav.community.col.people.professionalDirectory",
             href: routes.subprofiles,
           },
-          { labelKey: "nav:forum", href: routes.forum },
-          {
-            // DISC-4 — the topics directory, sitting next to Forum (its main
-            // source of content once a tagged thread links into a topic —
-            // see `TopicPostLinkService` on the backend).
-            labelKey: "shared:megaNav.community.col.people.topics",
-            href: routes.topics,
-          },
           {
             labelKey: "shared:megaNav.community.col.organise.changeMakers",
             href: routes.changemakers,
           },
+          {
+            labelKey: "shared:megaNav.community.col.discover.partners",
+            href: routes.partners,
+          },
+          { labelKey: "nav:forum", href: routes.forum },
+          {
+            // DISC-4: the topics directory, sitting next to Forum (its main
+            // source of content once a tagged thread links into a topic,
+            // see `TopicPostLinkService` on the backend).
+            labelKey: "shared:megaNav.community.col.people.topics",
+            href: routes.topics,
+          },
         ],
       },
       {
-        headKey: "shared:megaNav.community.col.gather.head",
+        headKey: "shared:megaNav.community.col.gatheringsPlaces.head",
         links: [
           {
             labelKey: "shared:megaNav.community.col.gather.events",
@@ -248,32 +252,22 @@ export const NAV_MENUS: MegaMenu[] = [
               "shared:megaNav.community.col.organise.activismVolunteering",
             href: routes.volunteer,
           },
-        ],
-      },
-      {
-        headKey: "shared:megaNav.community.col.discover.head",
-        // The directory (featured) is the single browse surface for local
-        // spaces: it carries the verified badge and the `?safe=verified`
-        // filter directly. "How verification works" is deliberately left out
-        // of the nav links, because the safe-spaces hub is a trust
-        // destination reached in context: from the explainer section on the
-        // directory page and from the line inside each verified listing's
-        // trust block. The logged-out `featurePublic` promo of this menu
-        // spotlights it. See the copy in
-        // `shared:megaNav.community.{featurePublic,col.discover}.*`.
-        links: [
           {
+            // The directory is the single browse surface for local spaces: it
+            // carries the verified badge and the `?safe=verified` filter
+            // directly. "How verification works" is deliberately left out of
+            // the nav links, because the safe-spaces hub is a trust
+            // destination reached in context: from the explainer section on
+            // the directory page and from the line inside each verified
+            // listing's trust block. The logged-out `featurePublic` promo of
+            // this menu spotlights it. See the copy in
+            // `shared:megaNav.community.{featurePublic,col.discover}.*`.
             labelKey: "shared:megaNav.community.col.discover.businessDirectory",
             href: routes.directory,
-            featured: true,
           },
           {
             labelKey: "shared:megaNav.community.col.discover.housing",
             href: routes.housing,
-          },
-          {
-            labelKey: "shared:megaNav.community.col.discover.partners",
-            href: routes.partners,
           },
         ],
       },

@@ -1,13 +1,13 @@
 .wrap {
-  --text: rgba(var(--cream-rgb), 0.92);
-  --text-60: rgba(var(--cream-rgb), 0.62);
-  /* Cream at 0.52 clears the AA 4.5:1 floor on every studio ground (4.96:1 on
-     --surface, 4.87:1 on --studio-bg). It carries 11px and 12px meta text, so it
-     never qualifies as large text. The old 0.40 measured 3.55:1 and failed. */
-  --text-40: rgba(var(--cream-rgb), 0.52);
-  --line: rgba(var(--cream-rgb), 0.1);
-  --surface: rgba(var(--cream-rgb), 0.05);
-  --rail: var(--studio-rail);
+  --text: var(--studio-text);
+  --text-60: var(--studio-text-muted);
+  /* It carries 11px and 12px meta text, so it never qualifies as large text:
+     the muted token clears the AA 4.5:1 floor on every studio ground in both
+     themes. The old cream 0.40 measured 3.55:1 and failed. */
+  --text-40: var(--studio-text-muted);
+  --line: rgba(var(--studio-ink-rgb), 0.1);
+  --surface: rgba(var(--studio-ink-rgb), 0.05);
+  --rail: var(--studio-surface-rail);
 
   max-width: 860px;
   margin: 0 auto;
@@ -63,8 +63,8 @@
     45deg,
     transparent 0,
     transparent 9px,
-    rgba(var(--cream-rgb), 0.045) 9px,
-    rgba(var(--cream-rgb), 0.045) 10px
+    rgba(var(--studio-ink-rgb), 0.045) 9px,
+    rgba(var(--studio-ink-rgb), 0.045) 10px
   );
   pointer-events: none;
 }
@@ -79,20 +79,20 @@
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--studio-accent-text);
   margin-bottom: 14px;
 }
 .hero h1 {
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(2rem, 5vw, 3.25rem);
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 1.02;
 }
 .hero h1 em {
   font-style: italic;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .sub {
   font-size: var(--text-16);
@@ -103,7 +103,7 @@
 }
 .sub em {
   font-style: italic;
-  color: var(--jade-light);
+  color: var(--studio-jade-text);
 }
 
 /* ── What this means card ── */
@@ -119,13 +119,13 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: var(--text-22);
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
   letter-spacing: -0.01em;
   margin-bottom: 12px;
 }
 .card h3 em {
   font-style: italic;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .card p {
   font-size: var(--text-14-5);
@@ -146,17 +146,17 @@
   width: 20px;
   height: 20px;
   flex: none;
-  color: var(--jade-light);
+  color: var(--studio-jade-chip-text);
   margin-top: 1px;
 }
 .jadeLine span {
   font-size: var(--text-13-5);
-  color: rgba(var(--cream-rgb), 0.82);
+  color: rgba(var(--studio-ink-rgb), 0.82);
   line-height: 1.55;
 }
 .jadeLine span em {
   font-style: italic;
-  color: var(--jade-light);
+  color: var(--studio-jade-chip-text);
 }
 
 /* ── Actions ── */
@@ -180,13 +180,13 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: var(--text-heading);
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
   letter-spacing: -0.02em;
   line-height: 1.05;
 }
 .rowH h2 em {
   font-style: italic;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .rowH .subLine {
   font-size: var(--text-14);
@@ -223,6 +223,8 @@
     box-shadow: 0 18px 40px -22px rgba(0, 0, 0, 0.6);
   }
 }
+/* Covers can be pale placeholders, dark art or bright photos, so every tag
+   carries its own fixed plum backing and keeps its jade and soft-coral ink fixed. */
 .tag {
   position: absolute;
   top: 10px;
@@ -233,15 +235,14 @@
   text-transform: uppercase;
   padding: 4px 8px;
   border-radius: var(--radius-6);
+  background: rgba(var(--plum-rgb), 0.8);
   backdrop-filter: var(--blur-md);
   z-index: 2;
 }
 .tagFree {
-  background: rgba(var(--jade-rgb), 0.32);
   color: var(--jade-light);
 }
 .tagMem {
-  background: rgba(var(--accent-rgb), 0.32);
   color: var(--accent-soft);
 }
 .playFab {
@@ -303,7 +304,7 @@
 }
 .tcard h4 em {
   font-style: italic;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .meta {
   font-size: var(--text-12);

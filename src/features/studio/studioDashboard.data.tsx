@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { StudioEuroAmount } from "./StudioEuroAmount";
+import { StudioNumber } from "./StudioNumber";
 
 export interface DashStat {
   labelKey: string;
@@ -35,13 +36,16 @@ export interface DashCity {
 export const STATS: DashStat[] = [
   {
     labelKey: "studio:dashboard.stats.playsThisMonth",
-    v: (
-      <>
-        36,<em>400</em>
-      </>
-    ),
+    v: <StudioNumber value={36400} shouldEmphasizeLastGroup />,
     trendKey: "studio:demo.dashboard.trend.plays",
-    trendValues: { delta: "+ 12,140", active: 4, total: 11 },
+    trendValues: { active: 4, total: 11 },
+    trendSlots: {
+      delta: (
+        <>
+          + <StudioNumber value={12140} />
+        </>
+      ),
+    },
   },
   {
     labelKey: "studio:dashboard.stats.streamingEarnings",
@@ -130,6 +134,19 @@ export const CITIES: DashCity[] = [
   { name: null, otherCount: 35, pct: 4 },
 ];
 
-/** Noon UTC keeps a date-only fixture on its day in every time zone. */
-export const fixtureDate = (dateIso: string) =>
-  new Date(`${dateIso}T12:00:00Z`);
+/** A daily-plays range chip: its stable id and the span it covers. The
+ *  label is `Intl` unit formatting ("7d" / "7 dias", "1y" / "1 ano"). */
+export interface ChartRange {
+  id: string;
+  amount: number;
+  unit: "day" | "year";
+}
+
+export const CHART_RANGES: ChartRange[] = [
+  { id: "7d", amount: 7, unit: "day" },
+  { id: "14d", amount: 14, unit: "day" },
+  { id: "30d", amount: 30, unit: "day" },
+  { id: "1y", amount: 1, unit: "year" },
+];
+
+export const SELECTED_CHART_RANGE_ID = "14d";

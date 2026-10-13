@@ -135,13 +135,13 @@ export function StudioOpenCallsShowcase() {
                         fontFamily: "var(--serif)",
                         fontWeight: 300,
                         fontSize: 28,
-                        color: "rgb(var(--cream-rgb))",
+                        color: "rgba(var(--studio-ink-rgb), 1)",
                       }}
                     >
                       <em
                         style={{
                           fontStyle: "normal",
-                          color: "var(--accent)",
+                          color: "var(--studio-accent-text)",
                         }}
                       >
                         {fmt.currency(500)}
@@ -151,7 +151,7 @@ export function StudioOpenCallsShowcase() {
                       className={s.l}
                       style={{
                         fontSize: 11,
-                        color: "rgba(var(--cream-rgb), 0.4)",
+                        color: "var(--studio-text-faint)",
                       }}
                     >
                       {t("studio:calls.applied.flatLabel")}

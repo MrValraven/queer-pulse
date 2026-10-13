@@ -10,7 +10,7 @@ import s from "./funding.module.css";
 
 const SET_PAYOUT_POOL = 11.4;
 
-/** Stable ids — never the translated label (§5.1 trap: this `<select>` had
+/** Stable ids, kept apart from the translated label (§5.1 trap: this `<select>` had
  * no `value=`, so the option label WAS the stored value). */
 const SET_TYPES = [
   { id: "liveDjSet", labelKey: "studio:setSubmission.sidebar.type.liveDjSet" },
@@ -81,7 +81,7 @@ export function StudioSetSidebar({ matched, held }: StudioSetSidebarProps) {
             className={s.v}
             style={{
               fontFamily: "var(--serif)",
-              color: "rgb(var(--cream-rgb))",
+              color: "rgba(var(--studio-ink-rgb), 1)",
             }}
           >
             {TRACKS.length}
@@ -93,7 +93,7 @@ export function StudioSetSidebar({ matched, held }: StudioSetSidebarProps) {
             className={`${s.v} ${s.jade}`}
             style={{
               fontFamily: "var(--serif)",
-              color: "var(--jade-light)",
+              color: "var(--studio-jade-text)",
             }}
           >
             {t("studio:setSubmission.sidebar.tracksCount", { count: matched })}
@@ -103,7 +103,10 @@ export function StudioSetSidebar({ matched, held }: StudioSetSidebarProps) {
           <span>{t("studio:setSubmission.sidebar.onHold")}</span>
           <span
             className={`${s.v} ${s.warn}`}
-            style={{ fontFamily: "var(--serif)", color: "var(--accent)" }}
+            style={{
+              fontFamily: "var(--serif)",
+              color: "var(--studio-accent-text)",
+            }}
           >
             {t("studio:setSubmission.sidebar.tracksCount", { count: held })}
           </span>
@@ -114,10 +117,15 @@ export function StudioSetSidebar({ matched, held }: StudioSetSidebarProps) {
             className={s.v}
             style={{
               fontFamily: "var(--serif)",
-              color: "rgb(var(--cream-rgb))",
+              color: "rgba(var(--studio-ink-rgb), 1)",
             }}
           >
-            <em style={{ fontStyle: "normal", color: "var(--accent)" }}>
+            <em
+              style={{
+                fontStyle: "normal",
+                color: "var(--studio-accent-text)",
+              }}
+            >
               {fmt.currency(SET_PAYOUT_POOL)}
             </em>
           </span>

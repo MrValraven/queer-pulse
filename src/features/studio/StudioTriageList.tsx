@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { FiInbox } from "react-icons/fi";
 import { ImageSlot, FadeIn, EmptyState } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
+import { useFormat } from "../../shared/i18n/format";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { buildSubs, TABS } from "./studioTriage.data";
@@ -41,10 +42,11 @@ export function StudioTriageList({
   onBackToNew: () => void;
 }) {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const [active, setActive] = useState(0);
   const loading = useSimulatedLoad();
 
-  const allSubs = useMemo(() => buildSubs(t), [t]);
+  const allSubs = useMemo(() => buildSubs(t, fmt), [t, fmt]);
 
   const subs = useMemo(() => {
     switch (tab) {

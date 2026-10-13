@@ -76,7 +76,7 @@
 
 @media (hover: hover) {
   .control:hover {
-    background: rgba(var(--cream-rgb), 0.08);
+    background: rgba(var(--studio-ink-rgb), 0.08);
   }
 }
 
@@ -103,7 +103,7 @@
   display: inline-flex;
   margin-inline-start: 8px;
   padding: 1px 8px;
-  border: 1px solid rgba(var(--cream-rgb), 0.28);
+  border: 1px solid rgba(var(--studio-ink-rgb), 0.28);
   border-radius: var(--radius-pill);
   font-size: var(--text-11);
   vertical-align: middle;

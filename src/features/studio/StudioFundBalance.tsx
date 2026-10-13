@@ -20,32 +20,19 @@ export function StudioFundBalance() {
             fontWeight: 700,
             letterSpacing: "0.08em",
             textTransform: "uppercase",
-            color: "rgba(var(--cream-rgb), 0.4)",
+            color: "var(--studio-text-faint)",
           }}
         >
           {t("studio:fund.balance.label")}
         </div>
-        <div
-          className={s.v}
-          style={{
-            fontFamily: "var(--serif)",
-            fontWeight: 300,
-            fontSize: 56,
-            color: "rgb(var(--cream-rgb))",
-            letterSpacing: "-0.025em",
-            lineHeight: 1,
-            margin: "8px 0",
-          }}
-        >
-          <em style={{ fontStyle: "normal", color: "var(--jade-light)" }}>
-            {fmt.currency(FUND_BALANCE)}
-          </em>
+        <div className={s.v}>
+          <em>{fmt.currency(FUND_BALANCE)}</em>
         </div>
         <div
           className={s.sub}
           style={{
             fontSize: 13.5,
-            color: "rgba(var(--cream-rgb), 0.55)",
+            color: "var(--studio-text-muted)",
             lineHeight: 1.6,
             maxWidth: "52ch",
           }}
@@ -61,16 +48,21 @@ export function StudioFundBalance() {
               fontFamily: "var(--serif)",
               fontWeight: 300,
               fontSize: 28,
-              color: "rgb(var(--cream-rgb))",
+              color: "rgba(var(--studio-ink-rgb), 1)",
             }}
           >
-            <em style={{ fontStyle: "normal", color: "var(--accent)" }}>
+            <em
+              style={{
+                fontStyle: "normal",
+                color: "var(--studio-accent-text)",
+              }}
+            >
               {fmt.currency(FUND_PAID_THIS_QUARTER)}
             </em>
           </div>
           <div
             className={s.l}
-            style={{ fontSize: 11.5, color: "rgba(var(--cream-rgb), 0.4)" }}
+            style={{ fontSize: 11.5, color: "var(--studio-text-faint)" }}
           >
             {t("studio:fund.balance.paidThisQuarterLabel")}
           </div>
@@ -82,16 +74,21 @@ export function StudioFundBalance() {
               fontFamily: "var(--serif)",
               fontWeight: 300,
               fontSize: 28,
-              color: "rgb(var(--cream-rgb))",
+              color: "rgba(var(--studio-ink-rgb), 1)",
             }}
           >
-            <em style={{ fontStyle: "normal", color: "var(--accent)" }}>
+            <em
+              style={{
+                fontStyle: "normal",
+                color: "var(--studio-accent-text)",
+              }}
+            >
               {fmt.number(FUND_PEOPLE_PAID_THIS_YEAR)}
             </em>
           </div>
           <div
             className={s.l}
-            style={{ fontSize: 11.5, color: "rgba(var(--cream-rgb), 0.4)" }}
+            style={{ fontSize: 11.5, color: "var(--studio-text-faint)" }}
           >
             {t("studio:fund.balance.peoplePaidLabel", {
               count: FUND_PEOPLE_PAID_THIS_YEAR,

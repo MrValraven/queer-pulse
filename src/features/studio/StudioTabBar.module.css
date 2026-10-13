@@ -1,0 +1,108 @@
+/* Studio's phone tab bar (StudioTabBar.tsx), Spotify's bottom navigation
+   painted with the Studio roles so it follows the app theme. Shows only at
+   <=880px, where the rail hides. Its height is `--studio-tab-bar-h`
+   (tokens/spacing.css), which standalone.css also reads to raise
+   `--bottom-inset`, so the two never drift. */
+.bar {
+  display: none;
+}
+
+/* Holds the end of the page clear of the fixed bar. The player bar renders
+   its own spacer at app level, so the two add up. */
+.spacer {
+  display: none;
+}
+
+@media (--compact) {
+  .spacer {
+    display: block;
+    height: var(--bottom-inset);
+  }
+
+  .bar {
+    position: fixed;
+    inset: auto 0 0 0;
+    z-index: var(--z-nav);
+    display: grid;
+    grid-auto-flow: column;
+    /* A zero floor keeps the columns equal when one label runs long. */
+    grid-auto-columns: minmax(0, 1fr);
+    align-items: stretch;
+    /* Opaque, so the labels keep their contrast over any page content. */
+    background: var(--studio-surface);
+    /* Clears the iOS home indicator, and in landscape keeps the outermost
+       tabs clear of the notch. Inert at env() == 0. */
+    padding-bottom: env(safe-area-inset-bottom);
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+
+  /* Content softens into the bar as it scrolls under, like Spotify's. */
+  .bar::before {
+    content: "";
+    position: absolute;
+    inset: auto 0 100% 0;
+    height: 28px;
+    background: linear-gradient(to top, var(--studio-surface), transparent);
+    pointer-events: none;
+  }
+}
+
+.tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  /* 44px minimum touch target. */
+  min-height: 44px;
+  height: var(--studio-tab-bar-h);
+  padding: 0 4px;
+  color: var(--studio-text-muted);
+  font-family: var(--sans);
+  text-decoration: none;
+  transition:
+    color var(--dur-fast) var(--ease),
+    transform var(--dur-fast) var(--ease);
+}
+
+.tab:active {
+  transform: scale(0.94);
+}
+
+.tab[aria-current="page"] {
+  color: var(--studio-text);
+}
+
+.tab:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.icon {
+  width: 22px;
+  height: 22px;
+  flex: none;
+}
+
+.label {
+  font-size: var(--text-11);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  /* A label wider than its column ellipsizes inside it. */
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tab {
+    transition: none;
+  }
+  .tab:active {
+    transform: none;
+  }
+}

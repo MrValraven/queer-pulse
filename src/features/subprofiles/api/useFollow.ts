@@ -69,6 +69,12 @@ export function useFollow(subprofileId: string) {
     void queryClient.invalidateQueries({
       queryKey: studioKeys.followedArtists(demoMode),
     });
+    // The "personas you follow" list gains or loses this row. Its cached
+    // pages stay fresh for the default staleTime, so a toggle made here would
+    // otherwise leave the old list showing when the member goes back to it.
+    void queryClient.invalidateQueries({
+      queryKey: ["subprofile", "following"],
+    });
   };
 
   const follow = useMutation<FollowResult, Error, FollowVariables>({

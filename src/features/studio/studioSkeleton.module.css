@@ -1,13 +1,13 @@
-/* Light-on-dark skeletons for the Studio pages (the shared <Skeleton*> shimmer
-   is tuned for cream backgrounds and would be invisible here). Reuses the shared
-   qpShimmer keyframe; animates background-position only. */
+/* Skeletons for the Studio pages, shimmering on the Studio ink channel so they
+   read on the Studio surface in both themes. Reuses the shared qpShimmer
+   keyframe; animates background-position only. */
 
 .shimmer {
   background: linear-gradient(
     90deg,
-    rgba(var(--cream-rgb), 0.05) 25%,
-    rgba(var(--cream-rgb), 0.1) 50%,
-    rgba(var(--cream-rgb), 0.05) 75%
+    rgba(var(--studio-ink-rgb), 0.05) 25%,
+    rgba(var(--studio-ink-rgb), 0.1) 50%,
+    rgba(var(--studio-ink-rgb), 0.05) 75%
   );
   background-size: 200% 100%;
   animation: qpShimmer 1.5s ease infinite;
@@ -46,7 +46,7 @@
   border-radius: var(--radius-10);
 }
 
-/* Local copies of shared keyframes — see src/styles/tokens/effects.css.
+/* Local copies of shared keyframes, see src/styles/tokens/effects.css.
    Global keyframes can't be referenced from a CSS module (the animation-name
    gets scoped to a dangling hash), so each module needs its own copy. */
 @keyframes qpShimmer {

@@ -1,13 +1,13 @@
 .wrap {
-  --text: rgba(var(--cream-rgb), 0.92);
-  --text-60: rgba(var(--cream-rgb), 0.62);
-  /* Cream at 0.52 clears the AA 4.5:1 floor on every studio ground (4.96:1 on
-     --surface, 4.87:1 on --studio-bg). It carries 11px and 12px meta text, so it
-     never qualifies as large text. The old 0.40 measured 3.55:1 and failed. */
-  --text-40: rgba(var(--cream-rgb), 0.52);
-  --line: rgba(var(--cream-rgb), 0.1);
-  --surface: rgba(var(--cream-rgb), 0.05);
-  --rail: var(--studio-rail);
+  --text: var(--studio-text);
+  --text-60: var(--studio-text-muted);
+  /* It carries 11px and 12px meta text, so it never qualifies as large text:
+     the muted token clears the AA 4.5:1 floor on every studio ground in both
+     themes. The old cream 0.40 measured 3.55:1 and failed. */
+  --text-40: var(--studio-text-muted);
+  --line: rgba(var(--studio-ink-rgb), 0.1);
+  --surface: rgba(var(--studio-ink-rgb), 0.05);
+  --rail: var(--studio-surface-rail);
 
   padding: 8px 0 var(--section-y-64);
   max-width: 860px;
@@ -24,20 +24,20 @@
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--studio-accent-text);
   margin-bottom: 12px;
 }
 .pageH h1 {
   font-family: var(--serif);
   font-weight: 300;
   font-size: var(--text-display);
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 1;
 }
 .pageH h1 em {
   font-style: italic;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .dek {
   font-size: var(--text-16);
@@ -68,7 +68,7 @@
   outline: none;
   font-family: var(--sans);
   font-size: var(--text-15);
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
 }
 .search input::placeholder {
   color: var(--text-40);
@@ -115,19 +115,19 @@
 .catIcon {
   width: 24px;
   height: 24px;
-  color: var(--accent);
+  color: var(--studio-accent-text);
   margin-bottom: 14px;
 }
 .cat h4 {
   font-family: var(--serif);
   font-weight: 400;
   font-size: var(--text-19);
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
   letter-spacing: -0.01em;
 }
 .cat h4 em {
   font-style: italic;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .cat p {
   font-size: var(--text-13);
@@ -145,13 +145,13 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: var(--text-heading);
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
   letter-spacing: -0.02em;
   margin-bottom: 18px;
 }
 .sec h2 em {
   font-style: italic;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 
 .faq {
@@ -174,7 +174,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: var(--text-18);
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
   letter-spacing: -0.01em;
 }
 .faqQ:focus-visible {
@@ -193,7 +193,7 @@
   font-weight: 300;
   font-size: var(--text-22);
   line-height: 1;
-  color: var(--accent);
+  color: var(--studio-accent-text);
   transition: transform 0.28s var(--ease);
 }
 .faqIconOpen {
@@ -210,7 +210,7 @@
 }
 .faqAOpen {
   /* 480px at a 16px root. Root-relative so the collapse cap grows with the
-     answer text instead of clipping a long answer at a raised font size. */
+     answer text and a long answer stays whole at a raised font size. */
   max-height: 30rem;
   opacity: 1;
   animation: helpFadeUp 0.32s var(--ease);
@@ -224,22 +224,22 @@
 }
 .faqAInner em {
   font-style: italic;
-  color: var(--jade-light);
+  color: var(--studio-jade-text);
 }
 .faqAInner strong {
   color: var(--text);
   font-weight: 600;
 }
 .faqAInner a {
-  color: var(--accent);
+  color: var(--studio-accent-text);
   text-decoration: underline;
   text-underline-offset: 2px;
 }
 .faqAInner a:hover {
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
 }
 
-/* Still stuck — contact cards */
+/* Still stuck: contact cards */
 .contact {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -259,24 +259,24 @@
 .ccIcon {
   width: 26px;
   height: 26px;
-  color: var(--accent);
+  color: var(--studio-accent-text);
   margin-bottom: 12px;
 }
 .ccJade .ccIcon {
-  color: var(--jade-light);
+  color: var(--studio-jade-text);
 }
 .cc h4 {
   font-family: var(--serif);
   font-weight: 400;
   font-size: var(--text-18);
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
 }
 .cc h4 em {
   font-style: italic;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .ccJade h4 em {
-  color: var(--jade-light);
+  color: var(--studio-jade-text);
 }
 .cc p {
   font-size: var(--text-13);
@@ -286,7 +286,7 @@
 }
 .cc p em {
   font-style: italic;
-  color: var(--jade-light);
+  color: var(--studio-jade-text);
 }
 
 .bt {
@@ -294,9 +294,9 @@
   font-family: var(--sans);
   font-size: var(--text-13);
   font-weight: 600;
-  color: rgba(var(--cream-rgb), 1);
-  background: rgba(var(--cream-rgb), 0.08);
-  border: 1px solid rgba(var(--cream-rgb), 0.12);
+  color: rgba(var(--studio-ink-rgb), 1);
+  background: rgba(var(--studio-ink-rgb), 0.08);
+  border: 1px solid rgba(var(--studio-ink-rgb), 0.12);
   border-radius: var(--radius-pill);
   padding: 8px 16px;
   cursor: pointer;
@@ -305,7 +305,7 @@
 }
 @media (hover: hover) {
   .bt:hover {
-    background: rgba(var(--cream-rgb), 0.14);
+    background: rgba(var(--studio-ink-rgb), 0.14);
   }
 }
 .bt:focus-visible {
@@ -314,7 +314,7 @@
   box-shadow: var(--ring-cream);
 }
 .ccJade .bt {
-  color: var(--jade-light);
+  color: var(--studio-jade-chip-text);
   background: rgba(var(--jade-rgb), 0.14);
   border-color: rgba(var(--jade-rgb), 0.3);
 }
@@ -335,7 +335,7 @@
   text-underline-offset: 2px;
 }
 .status a:hover {
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
 }
 .dot {
   width: 8px;

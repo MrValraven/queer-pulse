@@ -19,7 +19,6 @@
   font-size: var(--text-12-5);
   font-weight: 500;
   padding: 12px 16px;
-  opacity: 0.7;
 }
 
 .initials {
@@ -31,18 +30,20 @@
   border-radius: var(--radius-avatar);
 }
 
-/* Tints */
+/* Tints. Each colour is the TEXT token for its hue, so the initials and the
+   placeholder caption clear 4.5:1 over their own tint on cream and paper in
+   both themes. The caption stays at full opacity for the same reason. */
 .default {
   background: rgba(var(--plum-rgb), 0.06);
-  color: var(--accent);
+  color: var(--accent-text);
 }
 .coral {
   background: rgba(var(--accent-rgb), 0.15);
-  color: var(--accent-ink);
+  color: var(--accent-text);
 }
 .jade {
   background: rgba(var(--jade-rgb), 0.15);
-  color: var(--jade);
+  color: var(--jade-text);
 }
 .plum {
   background: rgba(var(--plum-rgb), 0.1);

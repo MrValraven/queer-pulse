@@ -67,6 +67,12 @@
      carries badge/chip text on jade TINTS, which are darker than cream:
      5.14 cream / 5.68 paper / 4.51 over jade-12% / 4.50 over jade-20%. */
   --jade-ink: #3c7159;
+  /* Jade as TEXT on a jade-15% tint, the ImageSlot initials circle. --jade-ink
+     lands at 4.37:1 there when the tint sits on the cream page (Studio's
+     surface), so this is the same hue a step darker: 5.23 over the tint on
+     cream / 5.73 on paper / 4.56 on Studio's deepest light surface. Dark
+     aliases --jade-ink. */
+  --jade-text: #35644f;
   /* Jade as a FILLED BUTTON background with a white label: 4.52:1 against #fff
      (--jade itself is 3.98:1 — large text only). */
   --jade-fill: #458267;
@@ -251,6 +257,41 @@
      here rather than written inline so the dark sub-brand has one home. */
   --studio-deep: #0a0414;
   --studio-receipt: #0c0518;
+  /* Studio's theme-following roles. The four constants above stay dark in
+     both themes (the logged-out landing, sign-in and coming-soon pages keep
+     the dark sub-brand, and coral fills carry --studio-bg as label ink). The
+     signed-in Studio shells paint with the roles below, which follow the app
+     theme: light here, dark in the block further down.
+     --studio-ink-rgb is the channel for washes, hairlines and decorative
+     marks (any alpha). Text uses the three text roles, whose alphas are set
+     per theme. Light: muted 7.0:1 and faint 4.85:1 on the cream page. Dark
+     keeps the shells' original alphas, where faint measures about 4.1:1 on
+     cards and is kept for metadata. */
+  --studio-surface: var(--cream);
+  --studio-surface-rail: color-mix(in srgb, var(--plum) 4%, var(--cream));
+  --studio-surface-deep: color-mix(in srgb, var(--plum) 8%, var(--cream));
+  --studio-ink-rgb: var(--plum-rgb);
+  --studio-text: var(--plum);
+  --studio-text-muted: rgba(var(--plum-rgb), 0.78);
+  --studio-text-faint: rgba(var(--plum-rgb), 0.7);
+  /* Coral and jade as small TEXT. Plain --accent is 2.63:1 on cream, and
+     --jade-light is an on-dark mark colour. */
+  --studio-accent-text: var(--accent-text);
+  --studio-accent-soft-text: var(--accent-text);
+  --studio-jade-text: var(--jade-ink);
+  /* Coral and jade ink for chips, initials and buttons sitting ON their own
+     coral or jade wash (up to 0.18 over a card). --accent-text and
+     --jade-ink dip under 4.5:1 there, so light mixes them toward plum:
+     about 5:1 on the strongest wash. */
+  --studio-accent-chip-text: color-mix(
+    in srgb,
+    var(--accent-text) 75%,
+    var(--plum)
+  );
+  --studio-jade-chip-text: color-mix(in srgb, var(--jade-ink) 75%, var(--plum));
+  /* The soft glow behind the creator back-office heroes. Jade reads as a
+     grey-green smudge on cream, so light warms it to a faint coral. */
+  --studio-hero-glow: rgba(var(--accent-rgb), 0.08);
 
   /* ── Cinema (dark viewing surface) ── */
   /* Cinema is dark by design, like Studio: this surface is intentionally the
@@ -274,6 +315,7 @@
   --ink-60: rgba(247, 243, 238, 0.62);
   --ink-40: rgba(247, 243, 238, 0.61);
   --jade-ink: #7cd7ad; /* on dark surfaces a lighter jade reads as "ink" */
+  --jade-text: var(--jade-ink); /* 8.95:1 over the jade tint on dark paper */
   /* Plum is the dark-mode paper colour, so it can't double as a category tint
      the way it does in light mode (that would read as dark-on-dark). This
      light lavender pairing stands in for it on dark, e.g. the Badges
@@ -342,4 +384,19 @@
   --desk-stage-5: #b597e6;
   --desk-stage-6: #94b6d6;
   --desk-stage-8: var(--jade-light);
+  /* Studio in dark: the signed-in shells' original dark palette, value for
+     value, so dark Studio renders as it did when the shells forced it. */
+  --studio-surface: var(--studio-bg);
+  --studio-surface-rail: var(--studio-rail);
+  --studio-surface-deep: var(--studio-deep);
+  --studio-ink-rgb: 247, 243, 238;
+  --studio-text: rgba(247, 243, 238, 0.92);
+  --studio-text-muted: rgba(247, 243, 238, 0.62);
+  --studio-text-faint: rgba(247, 243, 238, 0.45);
+  --studio-accent-text: var(--accent);
+  --studio-accent-soft-text: var(--accent-soft);
+  --studio-jade-text: var(--jade-light);
+  --studio-accent-chip-text: var(--accent-soft);
+  --studio-jade-chip-text: var(--jade-light);
+  --studio-hero-glow: rgba(var(--jade-rgb), 0.14);
 }

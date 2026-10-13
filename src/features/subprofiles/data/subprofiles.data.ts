@@ -106,7 +106,17 @@ export interface DemoSubprofile extends SubprofileDTO {
    *  by `mockSetEndorsed`, read back by `mockMyEndorsement`. */
   viewerEndorsementNote?: string | null;
   endorsers: EndorserDTO[];
+  /** The ONE demo record of whether the viewer follows this persona. The
+   *  persona page, the "personas you follow" list (`mockFollowedPersonas`)
+   *  and the Studio artist views all read this flag, and `mockSetFollowing`
+   *  is its only writer, so a follow or an unfollow made on any surface
+   *  shows on every other one. */
   viewerFollowing: boolean;
+  /** When the demo viewer started following, read by the followed list's
+   *  "followed on" line and its newest-first order. Seeded only on personas
+   *  that start followed; `mockSetFollowing` stamps it on a follow and clears
+   *  it on an unfollow. */
+  viewerFollowedAt?: string | null;
   /** When the availability or the therapist status last changed (PRD-435),
    *  carried onto the public and card DTOs. Optional so personas that never
    *  stated a status need not declare it. */
@@ -143,9 +153,10 @@ const NIGHTFORM: DemoSubprofile = {
   endorsementCount: 3,
   viewerEndorsed: false,
   followerCount: 41,
-  // Matches the followed-personas seed, so the page, the library and the
-  // Studio artist hero all show the demo viewer following NIGHTFORM.
+  // Starts followed: the page, the followed list and the Studio artist hero
+  // all read this one flag. Unlinked, so the list addresses it by handle.
   viewerFollowing: true,
+  viewerFollowedAt: "2025-11-18T20:10:00.000Z",
   skinData: {
     booker: {
       fee: "€400–600, depending on set length",
@@ -435,7 +446,10 @@ const ANIKA_WRITER: DemoSubprofile = {
   endorsementCount: 0,
   viewerEndorsed: false,
   followerCount: 14,
-  viewerFollowing: false,
+  // Starts followed: the followed list's linked row, addressed under the
+  // creator's profile slug.
+  viewerFollowing: true,
+  viewerFollowedAt: "2025-10-02T09:25:00.000Z",
   skinData: {
     excerpt: {
       from: "Salt Lines",
@@ -731,7 +745,9 @@ const CASA_CORVO: DemoSubprofile = {
   endorsementCount: 5,
   viewerEndorsed: false,
   followerCount: 32,
-  viewerFollowing: false,
+  // Starts followed: the followed list's unlinked venue row.
+  viewerFollowing: true,
+  viewerFollowedAt: "2025-08-14T18:40:00.000Z",
   skinData: {
     menuMeta: {
       no: "Menu no. 12",
@@ -3163,7 +3179,9 @@ export const mockMyEndorsement = (
 
 /** POST/DELETE /subprofiles/:id/follow mock — flips the in-memory demo state for
  *  the persona so a route-smoke suite exercising both calls in sequence sees a
- *  consistent count. Idempotent: repeating the same direction is a no-op. */
+ *  consistent count. Idempotent: repeating the same direction is a no-op.
+ *  The only writer of the demo follow state: the persona page, the followed
+ *  list and the Studio hero all toggle through here. */
 export const mockSetFollowing = (
   id: string,
   viewerFollowing: boolean,
@@ -3176,6 +3194,8 @@ export const mockSetFollowing = (
       sp.followerCount + (viewerFollowing ? 1 : -1),
     );
     sp.viewerFollowing = viewerFollowing;
+    // A fresh follow is the newest one, as the server dates it.
+    sp.viewerFollowedAt = viewerFollowing ? new Date().toISOString() : null;
   }
   return {
     followerCount: sp.followerCount,

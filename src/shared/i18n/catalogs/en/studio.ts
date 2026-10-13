@@ -428,10 +428,10 @@ export const studio: Catalog = {
   "accessibility.group.lowVision.heading":
     "For low-vision & <em>keyboard</em> navigation",
   "accessibility.group.lowVision.dek":
-    "The whole player is operable without a mouse, and the dark theme is built to clear contrast as well as mood.",
+    "The whole player is operable without a mouse, and both the light and dark themes are built to clear contrast as well as mood.",
   "accessibility.item.contrast.heading": "Contrast that <em>passes</em>",
   "accessibility.item.contrast.body":
-    "Body text sits at 4.5:1 or better against the plum; interactive elements at 3:1 minimum, with a high-contrast mode that lifts everything further. Focus rings are always visible.",
+    "Body text sits at 4.5:1 or better in both themes; interactive elements at 3:1 minimum, with a high-contrast mode that lifts everything further. Focus rings are always visible.",
   "accessibility.item.screenReader.heading":
     "Screen-reader notes on the <em>player</em>",
   "accessibility.item.screenReader.body":
@@ -1860,6 +1860,18 @@ export const studio: Catalog = {
   "shell.searchLabel": "Search Studio",
   "shell.searchPlaceholderLive": "search artists, releases, tracks…",
   "shell.accountLabel": "Your account, {name}",
+  "shell.menu.library": "Your library",
+  "shell.menu.artistPages": "Your artist pages",
+  "shell.menu.dashboard": "Artist dashboard",
+  "shell.menu.settings": "Settings",
+  "shell.menu.backToQueerPulse": "Back to QueerPulse",
+  "shell.tabs.label": "Studio sections",
+  "shell.sheet.label": "Studio menu",
+  "shell.sheet.close": "Close menu",
+  "shell.sheet.more": "More in Studio",
+  "shell.uploadShort": "Upload",
+  "shell.sustainShort": "Sustain",
+  "shell.tabs.openCalls": "Open calls",
   "shell.uploadCta": "Upload a release",
   "creator.avatarLabel": "Uploading as {name}",
   "rail.v1.navLabel": "Studio",

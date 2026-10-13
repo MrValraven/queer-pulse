@@ -1,0 +1,199 @@
+/* The listener shell's phone side sheet. It sits above the player bar and the
+   bottom tabs (--z-nav), and every colour comes from the theme-following
+   --studio-* roles, so it reads right in both light and dark. */
+
+.root {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+}
+
+.scrim {
+  position: absolute;
+  inset: 0;
+  background: var(--scrim-soft);
+  backdrop-filter: var(--blur-sm);
+  animation: studioSheetScrimIn var(--dur-base) var(--ease-out);
+}
+
+.panel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: min(320px, 86vw);
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  padding-top: env(safe-area-inset-top);
+  padding-left: env(safe-area-inset-left);
+  padding-bottom: env(safe-area-inset-bottom);
+  background: var(--studio-surface);
+  color: var(--studio-text);
+  box-shadow: var(--shadow-e4);
+  text-align: left;
+  animation: studioSheetIn var(--dur-base) var(--ease-out);
+}
+/* The dialog takes focus on open so the trap starts inside it. It is a
+   container, so it draws no ring of its own. */
+.panel:focus {
+  outline: none;
+}
+
+/* Leaving: the panel slides back out and the scrim fades. The duration
+   mirrors SHEET_EXIT_MS in StudioAccountMenu.tsx, which owns the unmount. */
+.rootClosing {
+  pointer-events: none;
+}
+.rootClosing .scrim {
+  animation: studioSheetScrimOut 200ms var(--ease-in) forwards;
+}
+.rootClosing .panel {
+  animation: studioSheetOut 200ms var(--ease-in) forwards;
+}
+
+/* The Studio lockup, after the rail's .brandRow, with the close button at
+   the far end. */
+.brandRow {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 10px 8px 10px 18px;
+  border-bottom: 1px solid rgba(var(--studio-ink-rgb), 0.1);
+}
+.pulseDot {
+  width: 9px;
+  height: 9px;
+  border-radius: var(--radius-avatar);
+  background: var(--accent);
+  flex: none;
+}
+.brand {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: var(--text-21);
+  color: var(--studio-text);
+  white-space: nowrap;
+}
+.brand em {
+  font-style: italic;
+}
+.product {
+  font-size: var(--text-11);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--studio-accent-text);
+}
+
+.close {
+  flex: none;
+  margin-left: auto;
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--studio-text);
+  font-size: var(--text-18);
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease);
+}
+@media (hover: hover) {
+  .close:hover {
+    background: rgba(var(--studio-ink-rgb), 0.08);
+  }
+}
+.close:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* The account panel laid out full height: its header and footer keep their
+   size and its scroll region takes the rest. */
+.body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  color: var(--studio-text);
+}
+
+/* Every row in the sheet is a full 44px touch target. The dropdown keeps its
+   denser rows. */
+.body a,
+.body button {
+  min-height: 44px;
+}
+
+/* The showcase rail's giving line, small and muted at the end of the list. */
+.giving {
+  margin: 10px 0 6px;
+  padding: 10px 12px 0;
+  border-top: 1px solid rgba(var(--studio-ink-rgb), 0.1);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: var(--text-12);
+  line-height: 1.5;
+  color: var(--studio-text-faint);
+}
+.giving em {
+  color: var(--studio-text-muted);
+}
+.giving b {
+  color: var(--studio-accent-text);
+  font-style: normal;
+}
+.givingPaid {
+  display: block;
+  margin-top: 4px;
+}
+
+@keyframes studioSheetIn {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: none;
+  }
+}
+@keyframes studioSheetOut {
+  from {
+    transform: none;
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+@keyframes studioSheetScrimIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes studioSheetScrimOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scrim,
+  .panel,
+  .rootClosing .scrim,
+  .rootClosing .panel {
+    animation: none;
+  }
+  .close {
+    transition: none;
+  }
+}

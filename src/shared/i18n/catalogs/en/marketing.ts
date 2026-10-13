@@ -3840,10 +3840,26 @@ export const marketing: Catalog = {
     "Playlists, follows and genres in Studio",
   "changelog.entries.studio-v2.body":
     "Make and share playlists, follow artists for new releases, browse by genre and see your numbers as an artist.",
+  "changelog.entries.studio-phone-tabs.title":
+    "Studio tabs and a side menu on phones",
+  "changelog.entries.studio-phone-tabs.body":
+    "Home, Search, Library and Open calls sit in a bottom bar, and your avatar opens the rest of Studio.",
+  "changelog.entries.readable-placeholder-initials.title":
+    "Easier-to-read initials on photo placeholders",
+  "changelog.entries.readable-placeholder-initials.body":
+    "Initials and labels on empty photo circles now meet contrast guidelines in light and dark mode.",
+  "changelog.entries.studio-light-mode-account-menu.title":
+    "Studio in light mode, with its own account menu",
+  "changelog.entries.studio-light-mode-account-menu.body":
+    "Studio follows your app theme, and your avatar opens your library, artist pages and a way back to QueerPulse.",
   "changelog.entries.studio-v2-fixes.title":
     "Clearer Studio pages, steady track order",
   "changelog.entries.studio-v2-fixes.body":
     "Studio pages read clearly on phones and in Portuguese, and removing a failed upload keeps your track order.",
+  "changelog.entries.forum-compose-fits-phones-unfollows-stick.title":
+    "Forum posts fit phones, unfollows stick",
+  "changelog.entries.forum-compose-fits-phones-unfollows-stick.body":
+    "Writing a forum post fits phone screens, and a persona you unfollow leaves your list right away.",
   "changelog.entries.calendar-entries-carry-description-and-host.title":
     "Calendar entries carry the gathering's description",
   "changelog.entries.calendar-entries-carry-description-and-host.body":
@@ -3851,7 +3867,7 @@ export const marketing: Catalog = {
   "changelog.entries.community-menu-local-places.title":
     "Local places now live in the Community menu",
   "changelog.entries.community-menu-local-places.body":
-    "The directory, Housing and Partners sit under Discover in Community, so the top bar has one menu less.",
+    "The directory and Housing sit in Gatherings & places and Partners in People, so the top bar has one menu less.",
   "changelog.entries.marketing-flyers.title":
     "Event flyers and team tee files in admin Marketing",
   "changelog.entries.marketing-flyers.body":

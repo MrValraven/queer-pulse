@@ -477,7 +477,6 @@ export const shared: Catalog = {
   // Kept as "Dating" (not "Convívios") to avoid colliding with nav:gatherings
   // ("Convívios"), already the platform's term for the events feature.
   "megaNav.community.col.people.dating": "Dating",
-  "megaNav.community.col.gather.head": "Convívios",
   "megaNav.community.col.gather.events": "Eventos",
   "megaNav.community.col.organise.activismVolunteering":
     "Ativismo e Voluntariado",
@@ -487,6 +486,7 @@ export const shared: Catalog = {
     "Diretório de negócios locais",
   "megaNav.community.col.discover.housing": "Habitação",
   "megaNav.community.col.discover.partners": "Parceiros",
+  "megaNav.community.col.gatheringsPlaces.head": "Convívios e lugares",
 
   // MegaNav — Resources
   "megaNav.resources.title": "Recursos",

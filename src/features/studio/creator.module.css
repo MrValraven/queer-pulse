@@ -1,22 +1,23 @@
-/* QueerPulse Studio — creator back-office (dark) */
+/* QueerPulse Studio: creator back office. It follows the app theme through
+   the Studio tokens (light on cream, dark on the Studio page). */
 .root {
-  --bg: var(--studio-bg);
-  --surface: rgba(var(--cream-rgb), 0.05);
-  --line: rgba(var(--cream-rgb), 0.08);
-  --text: rgba(var(--cream-rgb), 0.92);
-  --text60: rgba(var(--cream-rgb), 0.62);
-  --text40: rgba(var(--cream-rgb), 0.4);
-  /* The shell carries data-theme="dark", which flips --line-rgb here, but
-     these two were resolved on <html> with the app theme's channels, so they
-     are restated to pick up the dark ones. */
-  --wash: rgba(var(--line-rgb), 0.05);
-  --line-2: rgba(var(--line-rgb), 0.22);
+  --bg: var(--studio-surface);
+  --surface: rgba(var(--studio-ink-rgb), 0.05);
+  --line: rgba(var(--studio-ink-rgb), 0.08);
+  --text: var(--studio-text);
+  --text60: var(--studio-text-muted);
+  --text40: var(--studio-text-faint);
+  /* The creator shell sets no data-theme of its own and follows the app
+     theme. The wash and the stronger hairline sit on the Studio ink channel
+     so they match the rest of this shell in both themes. */
+  --wash: rgba(var(--studio-ink-rgb), 0.05);
+  --line-2: rgba(var(--studio-ink-rgb), 0.22);
   background: var(--bg);
   color: var(--text);
   min-height: 100svh;
   /* Firefox */
   scrollbar-width: thin;
-  scrollbar-color: rgba(var(--cream-rgb), 0.18) transparent;
+  scrollbar-color: rgba(var(--studio-ink-rgb), 0.18) transparent;
 }
 /* Themed scrollbars for inner scroll areas inside the creator shell (WebKit/Blink) */
 .root ::-webkit-scrollbar {
@@ -27,14 +28,14 @@
   background: transparent;
 }
 .root ::-webkit-scrollbar-thumb {
-  background: rgba(var(--cream-rgb), 0.18);
+  background: rgba(var(--studio-ink-rgb), 0.18);
   border-radius: var(--radius-pill);
   border: 2px solid transparent;
   background-clip: padding-box;
 }
 @media (hover: hover) {
   .root ::-webkit-scrollbar-thumb:hover {
-    background: rgba(var(--cream-rgb), 0.32);
+    background: rgba(var(--studio-ink-rgb), 0.32);
     background-clip: padding-box;
   }
 }
@@ -51,9 +52,13 @@
   gap: 20px;
   padding: 16px 30px;
   padding-block-start: max(16px, env(safe-area-inset-top));
-  background: rgba(var(--plum-rgb), 0.86);
+  /* Cream glass over the light page; plum glass in dark (below). */
+  background: color-mix(in srgb, var(--studio-surface) 86%, transparent);
   backdrop-filter: var(--blur-lg);
   border-bottom: 1px solid var(--line);
+}
+:global([data-theme="dark"]) .topbar {
+  background: rgba(var(--plum-rgb), 0.86);
 }
 .brand {
   display: flex;
@@ -79,7 +84,7 @@
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--jade-light);
+  color: var(--studio-jade-text);
   border: 1px solid rgba(var(--jade-rgb), 0.3);
   border-radius: var(--radius-pill);
   padding: 3px 9px;
@@ -102,7 +107,7 @@
 @media (hover: hover) {
   .navItem:hover {
     color: var(--text);
-    background: rgba(var(--cream-rgb), 0.05);
+    background: rgba(var(--studio-ink-rgb), 0.05);
   }
 }
 .navItemActive {
@@ -129,7 +134,7 @@
   height: 2.615em;
   border-radius: 50%;
   background: rgba(var(--accent-rgb), 0.2);
-  color: var(--accent-soft);
+  color: var(--studio-accent-chip-text);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -222,7 +227,7 @@
   border-radius: 50%;
   background: radial-gradient(
     circle,
-    rgba(var(--jade-rgb), 0.14),
+    var(--studio-hero-glow),
     transparent 62%
   );
   pointer-events: none;
@@ -252,7 +257,7 @@
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--jade-light);
+  color: var(--studio-jade-text);
   margin-bottom: 14px;
 }
 .eb .live {
@@ -272,7 +277,7 @@
 }
 .hero h1 em {
   font-style: italic;
-  color: var(--jade-light);
+  color: var(--studio-jade-text);
   font-weight: 400;
 }
 .hero .sub {
@@ -285,7 +290,7 @@
   max-width: 60ch;
 }
 .hero .sub em {
-  color: var(--accent);
+  color: var(--studio-accent-text);
   font-weight: 600;
 }
 
@@ -325,13 +330,22 @@
   letter-spacing: -0.022em;
   line-height: 1;
   margin-bottom: 6px;
+  /* A figure stays on one line; the global overflow-wrap would split it. */
+  overflow-wrap: normal;
+  white-space: nowrap;
+}
+/* Small phones: two stat cards share the row, so the figure steps down to fit. */
+@media (--xs) {
+  .bsV {
+    font-size: var(--text-26);
+  }
 }
 .bsV em {
   font-style: italic;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .bigstatPayout .bsV em {
-  color: var(--jade-light);
+  color: var(--studio-jade-text);
 }
 .bsTrend {
   font-size: var(--text-12);
@@ -341,11 +355,11 @@
   line-height: 1.4;
 }
 .bsTrend em {
-  color: var(--accent);
+  color: var(--studio-accent-text);
   font-weight: 600;
 }
 .bsTrend em.up {
-  color: var(--jade-light);
+  color: var(--studio-jade-text);
 }
 
 /* Body layout */
@@ -391,7 +405,7 @@
 }
 .cardH h3 em {
   font-style: italic;
-  color: var(--jade-light);
+  color: var(--studio-jade-text);
 }
 .cardH .sub {
   font-size: var(--text-12-5);
@@ -424,7 +438,7 @@
   background: var(--accent);
   /* Dark ink on the coral fill: 6.28:1. */
   color: var(--studio-bg);
-  border-color: var(--accent);
+  border-color: var(--studio-accent-text);
 }
 .chart {
   height: 200px;
@@ -450,9 +464,11 @@
   }
 }
 .barToday {
+  /* The jade-text token tops the bar: pale jade on the dark page, deep
+     jade on cream, where pale jade would wash out. */
   background: linear-gradient(
     180deg,
-    var(--jade-light) 0%,
+    var(--studio-jade-text) 0%,
     rgba(var(--jade-rgb), 0.4) 100%
   );
 }
@@ -470,7 +486,7 @@
   gap: 10px;
 }
 .chartFoot em {
-  color: var(--accent);
+  color: var(--studio-accent-text);
   font-weight: 600;
 }
 
@@ -491,7 +507,7 @@
   height: 2.923em;
   border-radius: 50%;
   background: rgba(var(--accent-rgb), 0.18);
-  color: var(--accent-soft);
+  color: var(--studio-accent-chip-text);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -506,7 +522,7 @@
 }
 .rowWhat em {
   font-style: italic;
-  color: var(--jade-light);
+  color: var(--studio-jade-text);
 }
 .rowWho {
   font-size: var(--text-12);
@@ -529,7 +545,7 @@
   margin-bottom: 16px;
 }
 .hint em {
-  color: var(--jade-light);
+  color: var(--studio-jade-text);
 }
 .cityRow {
   display: flex;
@@ -553,7 +569,7 @@
   flex: 1;
   height: 7px;
   border-radius: var(--radius-pill);
-  background: rgba(var(--cream-rgb), 0.08);
+  background: rgba(var(--studio-ink-rgb), 0.08);
   overflow: hidden;
 }
 .barFl {
@@ -590,7 +606,7 @@
   height: 38px;
   border-radius: var(--radius-10);
   background: rgba(var(--accent-rgb), 0.12);
-  color: var(--accent);
+  color: var(--studio-accent-text);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -642,7 +658,7 @@
 }
 .sideCard h4 em {
   font-style: italic;
-  color: var(--jade-light);
+  color: var(--studio-jade-text);
 }
 .sideCard p {
   font-size: var(--text-13-5);
@@ -650,7 +666,7 @@
   line-height: 1.65;
 }
 .sideCard p em {
-  color: var(--accent);
+  color: var(--studio-accent-text);
   font-style: italic;
 }
 .sideList {
@@ -670,7 +686,7 @@
   border-bottom: none;
 }
 .sideList em {
-  color: var(--jade-light);
+  color: var(--studio-jade-text);
   font-style: normal;
   font-weight: 600;
 }
@@ -697,14 +713,14 @@
   padding: 0;
 }
 .stepOn {
-  border-color: var(--accent);
+  border-color: var(--studio-accent-text);
   background: rgba(var(--accent-rgb), 0.06);
 }
 .stepNum {
   width: 2.154em;
   height: 2.154em;
   border-radius: 50%;
-  background: rgba(var(--cream-rgb), 0.1);
+  background: rgba(var(--studio-ink-rgb), 0.1);
   color: var(--text60);
   display: flex;
   align-items: center;
@@ -733,7 +749,7 @@
 
 /* Dropzone + file rows */
 .dropzone {
-  border: 2px dashed rgba(var(--cream-rgb), 0.18);
+  border: 2px dashed rgba(var(--studio-ink-rgb), 0.18);
   border-radius: var(--radius-18);
   padding: 40px 30px;
   text-align: center;
@@ -744,7 +760,7 @@
   height: 48px;
   border-radius: 50%;
   background: rgba(var(--accent-rgb), 0.12);
-  color: var(--accent);
+  color: var(--studio-accent-text);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -763,7 +779,7 @@
 }
 .dropzone h3 em {
   font-style: italic;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .dropzone p {
   font-size: var(--text-13-5);
@@ -776,7 +792,7 @@
   margin-top: 12px;
 }
 .dropzone .types em {
-  color: var(--jade-light);
+  color: var(--studio-jade-text);
   font-style: normal;
 }
 .uploaded {
@@ -791,7 +807,7 @@
 }
 .uploaded h4 em {
   font-style: italic;
-  color: var(--jade-light);
+  color: var(--studio-jade-text);
   font-size: var(--text-13);
 }
 .fileRow {
@@ -809,7 +825,7 @@
   width: 34px;
   height: 34px;
   border-radius: var(--radius-9);
-  background: rgba(var(--cream-rgb), 0.06);
+  background: rgba(var(--studio-ink-rgb), 0.06);
   color: var(--text60);
   display: flex;
   align-items: center;
@@ -822,7 +838,7 @@
 }
 .fileIcWarn {
   background: rgba(var(--accent-rgb), 0.14);
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .fileRow h5 {
   font-size: var(--text-13-5);
@@ -841,7 +857,7 @@
   gap: 5px;
   font-size: var(--text-11-5);
   font-weight: 600;
-  color: var(--jade-light);
+  color: var(--studio-jade-text);
   white-space: nowrap;
 }
 .fileCheck svg {
@@ -849,7 +865,7 @@
   height: 13px;
 }
 .fileCheckWarn {
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .warnCard {
   display: flex;
@@ -866,18 +882,18 @@
 .warnCard svg {
   width: 18px;
   height: 18px;
-  color: var(--accent);
+  color: var(--studio-accent-text);
   flex: none;
 }
 .warnCard strong {
   color: var(--text);
 }
 .warnCard em {
-  color: var(--accent);
+  color: var(--studio-accent-text);
   font-style: italic;
 }
 .warnCard a {
-  color: var(--accent);
+  color: var(--studio-accent-text);
   font-weight: 600;
 }
 
@@ -914,7 +930,7 @@
   height: 2.667em;
   border-radius: 50%;
   background: rgba(var(--accent-rgb), 0.18);
-  color: var(--accent-soft);
+  color: var(--studio-accent-chip-text);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -941,7 +957,7 @@
 }
 .splitPct em {
   font-style: normal;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .splitFoot {
   display: flex;
@@ -958,14 +974,14 @@
   font-family: var(--serif);
 }
 .splitFoot .total em {
-  color: var(--jade-light);
+  color: var(--studio-jade-text);
   font-weight: 600;
 }
 .addBtn {
   font-family: var(--sans);
   font-size: var(--text-13);
   font-weight: 600;
-  color: var(--accent);
+  color: var(--studio-accent-text);
   background: rgba(var(--accent-rgb), 0.12);
   border: none;
   border-radius: var(--radius-pill);
@@ -1030,7 +1046,7 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .payRow h5 {
   font-family: var(--serif);
@@ -1040,7 +1056,7 @@
 }
 .payRow h5 em {
   font-style: italic;
-  color: var(--jade-light);
+  color: var(--studio-jade-text);
   font-size: var(--text-13);
 }
 .payMeta {
@@ -1060,7 +1076,7 @@
 }
 .payAmt em {
   font-style: normal;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .payStatus {
   font-size: var(--text-10-5);
@@ -1073,11 +1089,11 @@
 }
 .statusPending {
   background: rgba(var(--accent-rgb), 0.16);
-  color: var(--accent-soft);
+  color: var(--studio-accent-chip-text);
 }
 .statusPaid {
   background: rgba(var(--jade-rgb), 0.18);
-  color: var(--jade-light);
+  color: var(--studio-jade-chip-text);
 }
 
 /* Breakdown rows */
@@ -1124,7 +1140,7 @@
 }
 .bdRow .bdTotal em {
   font-style: normal;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 /* Plays and rate share one wrapper: on desktop it dissolves so both stay
    their own grid columns; on phones it becomes one cell under the name */
@@ -1166,7 +1182,7 @@
   justify-content: space-between;
   margin-top: 14px;
   padding-top: 14px;
-  border-top: 2px solid rgba(var(--cream-rgb), 0.16);
+  border-top: 2px solid rgba(var(--studio-ink-rgb), 0.16);
   font-size: var(--text-13);
   color: var(--text60);
 }
@@ -1178,7 +1194,7 @@
 }
 .bdFoot .v em {
   font-style: normal;
-  color: var(--jade-light);
+  color: var(--studio-jade-text);
 }
 
 /* Payout summary lines (hero) */
@@ -1201,7 +1217,7 @@
 }
 .ln .v2 em {
   font-style: normal;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 
 /* Bank methods */
@@ -1220,7 +1236,7 @@
   height: 36px;
   border-radius: var(--radius-10);
   background: rgba(var(--jade-rgb), 0.16);
-  color: var(--jade-light);
+  color: var(--studio-jade-chip-text);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1228,7 +1244,7 @@
   flex: none;
 }
 .methodIcAlt {
-  background: rgba(var(--cream-rgb), 0.06);
+  background: rgba(var(--studio-ink-rgb), 0.06);
   color: var(--text60);
 }
 .methodNm {
@@ -1249,7 +1265,7 @@
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: var(--jade-light);
+  color: var(--studio-jade-chip-text);
   background: rgba(var(--jade-rgb), 0.16);
   border-radius: var(--radius-6);
   padding: 3px 8px;
@@ -1276,8 +1292,9 @@
 .field input,
 .field select {
   width: 100%;
-  background: rgba(var(--cream-rgb), 0.06);
-  border: 1px solid var(--line);
+  background: rgba(var(--studio-ink-rgb), 0.06);
+  /* Field edges clear 3:1 against the page in both themes (WCAG 1.4.11). */
+  border: 1px solid rgba(var(--studio-ink-rgb), 0.45);
   border-radius: var(--radius-10);
   padding: 11px 14px;
   font-family: var(--sans);
@@ -1304,7 +1321,7 @@
   background: none;
   border: none;
   padding: 0;
-  color: var(--accent);
+  color: var(--studio-accent-text);
   font-weight: 600;
   font-family: inherit;
   font-size: inherit;
@@ -1319,7 +1336,7 @@
   line-height: 1.6;
 }
 .loudExplainer em {
-  color: var(--accent);
+  color: var(--studio-accent-text);
   font-style: italic;
 }
 
@@ -1331,8 +1348,8 @@
 }
 .collabForm input {
   flex: 1;
-  background: rgba(var(--cream-rgb), 0.06);
-  border: 1px solid var(--line);
+  background: rgba(var(--studio-ink-rgb), 0.06);
+  border: 1px solid rgba(var(--studio-ink-rgb), 0.45);
   border-radius: var(--radius-10);
   padding: 10px 13px;
   font-family: var(--sans);
@@ -1340,11 +1357,11 @@
   color: var(--text);
 }
 .collabForm input:focus {
-  border-color: var(--accent);
+  border-color: var(--studio-accent-text);
 }
 
 /* Submitted-for-review plum panel */
-/* Entrance for each upload step (files → metadata → submitted) — rise-and-fade. */
+/* Entrance for each upload step (files, metadata, submitted): rise and fade. */
 .screenIn {
   animation: screenIn 0.4s var(--ease) both;
 }
@@ -1401,14 +1418,15 @@
   margin: 0 auto 24px;
 }
 
-/* ── Loading skeletons (light-on-dark, for the dark creator surface) ── */
+/* Loading skeletons: a shimmer on the Studio ink channel, so it reads on
+   both the light and the dark creator surface. */
 .skel {
   border-radius: var(--radius-8);
   background: linear-gradient(
     90deg,
-    rgba(var(--cream-rgb), 0.05) 25%,
-    rgba(var(--cream-rgb), 0.11) 50%,
-    rgba(var(--cream-rgb), 0.05) 75%
+    rgba(var(--studio-ink-rgb), 0.05) 25%,
+    rgba(var(--studio-ink-rgb), 0.11) 50%,
+    rgba(var(--studio-ink-rgb), 0.05) 75%
   );
   background-size: 200% 100%;
   animation: qpShimmer 1.5s ease infinite;
@@ -1425,7 +1443,7 @@
   height: 48px;
   border-radius: 50%;
   background: rgba(var(--accent-rgb), 0.12);
-  color: var(--accent);
+  color: var(--studio-accent-text);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1448,7 +1466,7 @@
   font-family: var(--serif);
 }
 
-/* Local copies of shared keyframes — see src/styles/tokens/effects.css.
+/* Local copies of shared keyframes: see src/styles/tokens/effects.css.
    Global keyframes can't be referenced from a CSS module (the animation-name
    gets scoped to a dangling hash), so each module needs its own copy. */
 @keyframes qpShimmer {
@@ -1507,7 +1525,7 @@
   padding: 0;
   border: none;
   background: none;
-  accent-color: var(--accent);
+  accent-color: var(--studio-accent-text);
 }
 
 fieldset.field {
@@ -1528,7 +1546,7 @@ fieldset.field legend {
 .fieldError {
   margin: 6px 0 0;
   font-size: var(--text-12);
-  color: var(--accent-soft);
+  color: var(--studio-accent-soft-text);
 }
 
 .fieldCount {
@@ -1570,8 +1588,8 @@ fieldset.field legend {
   width: 100%;
   font: inherit;
   color: inherit;
-  background: rgba(var(--cream-rgb), 0.04);
-  border: 1px solid var(--line);
+  background: rgba(var(--studio-ink-rgb), 0.04);
+  border: 1px solid rgba(var(--studio-ink-rgb), 0.45);
   border-radius: var(--radius-10);
   padding: 10px 12px;
 }

@@ -82,7 +82,7 @@ export function StudioProgramPage() {
               {t("studio:program.header.autosave", { time: "11:42" })}
             </div>
             <Button
-              variant="ghost-dark"
+              variant="ghost"
               onClick={() =>
                 showToast(t("studio:program.toast.openingRoomPreview"), "info")
               }
@@ -125,7 +125,7 @@ export function StudioProgramPage() {
           </div>
           <div className={s.publishActions}>
             <Button
-              variant="ghost-dark"
+              variant="ghost"
               onClick={() =>
                 showToast(
                   t("studio:program.toast.openingHomepagePreview"),
@@ -136,7 +136,7 @@ export function StudioProgramPage() {
               {t("studio:program.publishBar.previewHomepageCta")}
             </Button>
             <Button
-              variant="ghost-dark"
+              variant="ghost"
               onClick={() =>
                 showToast(t("studio:program.toast.draftSaved"), "success")
               }

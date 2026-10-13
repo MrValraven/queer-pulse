@@ -5,6 +5,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { StudioTrackView } from "./api/studio.adapters";
 import { useStudioShowcase } from "./useStudioShowcase";
 import { SPLIT } from "./studioTrack.data";
+import { StudioEuroAmount } from "./StudioEuroAmount";
 import trackStyles from "./track.module.css";
 
 // Content: the curator's quote, the per-track split/credits breakdown and
@@ -18,7 +19,9 @@ const CURATOR_QUOTE_PRE =
   "arrangement that knows when to step out of the room. ";
 const CURATOR_QUOTE_EM = "Stay through the second verse.";
 const CURATOR_QUOTE_POST = '"';
-const TRACK_ARTIST_SHARE_TO = " to Mariana. €";
+const TRACK_ARTIST_SHARE = 0.8;
+const TRACK_PLATFORM_SHARE = 0.2;
+const TRACK_ARTIST_SHARE_TO = " to Mariana. ";
 const TRACK_PLATFORM_SHARE_NOTE = " keeps Studio open.";
 const SHEET_MUSIC_SPEC = "6 pages · piano + voice · CC-BY-NC · Mariana Sol";
 
@@ -53,9 +56,9 @@ function StudioTrackSplit() {
         {t("studio:track.sidebar.splitHeading")}
       </div>
       <div className={trackStyles.splitLead}>
-        €<em>0.80</em>
+        <StudioEuroAmount value={TRACK_ARTIST_SHARE} shouldEmphasizeNumber />
         {TRACK_ARTIST_SHARE_TO}
-        <em>0.20</em>
+        <StudioEuroAmount value={TRACK_PLATFORM_SHARE} shouldEmphasizeNumber />
         {TRACK_PLATFORM_SHARE_NOTE}
       </div>
       <div className={trackStyles.splitBar}>
@@ -63,7 +66,10 @@ function StudioTrackSplit() {
         <span style={{ width: "8%", background: "var(--jade)" }} />
         <span style={{ width: "8%", background: "var(--plum)" }} />
         <span
-          style={{ width: "4%", background: "rgba(var(--cream-rgb), 0.2)" }}
+          style={{
+            width: "4%",
+            background: "rgba(var(--studio-ink-rgb), 0.2)",
+          }}
         />
       </div>
       <div>
@@ -74,7 +80,12 @@ function StudioTrackSplit() {
               <b>{r.k}</b>
               {r.sub}
             </span>
-            <span className={trackStyles.splV}>{r.v}</span>
+            <span className={trackStyles.splV}>
+              <StudioEuroAmount
+                value={r.amount}
+                shouldEmphasizeNumber={r.isEmphasized}
+              />
+            </span>
           </div>
         ))}
       </div>

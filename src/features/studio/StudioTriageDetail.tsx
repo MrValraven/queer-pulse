@@ -77,7 +77,10 @@ export function StudioTriageDetail() {
             </svg>
           </button>
           <div className={s.pmTimes}>
-            <span className={s.e} style={{ color: "var(--accent)" }}>
+            <span
+              className={s.e}
+              style={{ color: "var(--studio-accent-text)" }}
+            >
               1:48
             </span>
             <span>4:40</span>
@@ -116,7 +119,7 @@ export function StudioTriageDetail() {
 
       <div className={s.detailBlock}>
         <h4>{t("studio:triage.detail.flaggedHeading", { count: 3 })}</h4>
-        <p style={{ fontStyle: "italic", color: "rgba(247,243,238,.6)" }}>
+        <p style={{ fontStyle: "italic", color: "var(--studio-text-muted)" }}>
           {FLAGGED_COMMENTS.map(
             ({ curator, quoteKey }) => `${curator}: "${t(quoteKey)}"`,
           ).join(" · ")}
@@ -145,7 +148,7 @@ export function StudioTriageDetail() {
           className={s.hint}
           style={{
             fontSize: 11.5,
-            color: "rgba(247,243,238,.5)",
+            color: "var(--studio-text-muted)",
             fontFamily: "var(--serif)",
             fontStyle: "italic",
             marginTop: 8,
@@ -153,7 +156,9 @@ export function StudioTriageDetail() {
         >
           <Translation
             i18nKey="studio:triage.detail.decision.hint"
-            components={{ em: <em style={{ color: "var(--accent)" }} /> }}
+            components={{
+              em: <em style={{ color: "var(--studio-accent-text)" }} />,
+            }}
           />
         </div>
         <div
@@ -205,7 +210,7 @@ export function StudioTriageDetail() {
               borderRadius: 10,
               background: "rgba(var(--jade-rgb), 0.14)",
               border: "1px solid rgba(var(--jade-rgb), 0.3)",
-              color: "rgba(var(--cream-rgb), 1)",
+              color: "rgba(var(--studio-ink-rgb), 1)",
               fontSize: 12.5,
             }}
           >
@@ -215,7 +220,7 @@ export function StudioTriageDetail() {
                 style={{
                   marginTop: 6,
                   fontStyle: "italic",
-                  color: "rgba(var(--cream-rgb), 0.7)",
+                  color: "var(--studio-text-muted)",
                 }}
               >
                 &ldquo;{note.trim()}&rdquo;

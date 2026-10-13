@@ -2,13 +2,15 @@ import { useState } from "react";
 import { StudioShell } from "./StudioShell";
 import { StudioTriageList } from "./StudioTriageList";
 import { StudioTriageDetail } from "./StudioTriageDetail";
+import { useFormat } from "../../shared/i18n/format";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { KPIS, TABS } from "./studioTriage.data";
+import { KPIS, MEDIAN_REPLY_DAYS, TABS } from "./studioTriage.data";
 import s from "./council.module.css";
 
 export function StudioTriagePage() {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const [tab, setTab] = useState("new");
 
   return (
@@ -30,7 +32,7 @@ export function StudioTriagePage() {
               className={s.sub}
               style={{
                 fontSize: 14,
-                color: "rgba(247,243,238,.55)",
+                color: "var(--studio-text-muted)",
                 lineHeight: 1.6,
                 maxWidth: "56ch",
                 marginTop: 10,
@@ -39,9 +41,9 @@ export function StudioTriagePage() {
               <Translation
                 i18nKey="studio:triage.header.sub"
                 components={{
-                  em: <em style={{ color: "var(--jade-light)" }} />,
+                  em: <em style={{ color: "var(--studio-jade-text)" }} />,
                 }}
-                values={{ days: "9.4" }}
+                values={{ days: fmt.number(MEDIAN_REPLY_DAYS) }}
               />
             </div>
           </div>
@@ -50,7 +52,9 @@ export function StudioTriagePage() {
               <div key={kpiIndex} className={s.kpiMini}>
                 <div
                   className={`${s.v} ${kpi.jade ? "jade" : ""}`}
-                  style={kpi.jade ? { color: "var(--jade-light)" } : undefined}
+                  style={
+                    kpi.jade ? { color: "var(--studio-jade-text)" } : undefined
+                  }
                 >
                   {kpi.v}
                 </div>

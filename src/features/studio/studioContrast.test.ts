@@ -2,10 +2,11 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
 /**
- * Studio shells set data-theme="dark", where --cream and --paper resolve to
- * the dark page colours. These four rules once painted with them and dropped
- * to about 1:1 contrast in both app themes. CSS cannot be measured in jsdom,
- * so this test pins the declarations that carry the fix.
+ * Studio shells follow the app theme. Studio's own roles (--studio-ink-rgb,
+ * --studio-surface) flip with it, while --cream and --paper resolve to the
+ * app page colours. These rules once painted with the app colours and dropped
+ * to about 1:1 contrast. CSS cannot be measured in jsdom, so this test pins
+ * the declarations that carry the fix.
  */
 const STUDIO_DIR = "src/features/studio";
 
@@ -30,17 +31,17 @@ function ruleBody(source: string, selector: string): string {
 const THEME_FLIPPING_SURFACE = /var\(--cream\)|var\(--paper\)/;
 
 describe("Studio demo page contrast", () => {
-  it("paints the selected open calls chip with the light cream channels", () => {
+  it("inverts the selected open calls chip on the Studio ink channel", () => {
     const body = ruleBody(cssOf("funding.module.css"), ".chipOn");
     expect(body).not.toMatch(THEME_FLIPPING_SURFACE);
-    expect(body).toContain("background: rgba(var(--cream-rgb), 1);");
-    expect(body).toContain("color: var(--studio-bg);");
+    expect(body).toContain("background: rgba(var(--studio-ink-rgb), 1);");
+    expect(body).toContain("color: var(--studio-surface);");
   });
 
-  it("paints the triage play button with the light cream channels", () => {
+  it("inverts the triage play button on the Studio ink channel", () => {
     const body = ruleBody(cssOf("council.module.css"), ".pmPlay");
     expect(body).not.toMatch(THEME_FLIPPING_SURFACE);
-    expect(body).toContain("background: rgba(var(--cream-rgb), 1);");
+    expect(body).toContain("background: rgba(var(--studio-ink-rgb), 1);");
   });
 
   it("gives the withdrawn card play button the two-tone focus ring", () => {

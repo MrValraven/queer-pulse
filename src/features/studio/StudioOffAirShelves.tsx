@@ -18,26 +18,26 @@ const cardTitle: React.CSSProperties = {
   fontFamily: "var(--serif)",
   fontWeight: 400,
   fontSize: 15,
-  color: "rgba(247,243,238,.92)",
+  color: "var(--studio-text)",
   letterSpacing: "-0.01em",
 };
 const meta: React.CSSProperties = {
   fontSize: 12,
-  color: "rgba(247,243,238,.4)",
+  color: "var(--studio-text-faint)",
 };
 const curator: React.CSSProperties = {
   fontSize: 12,
-  color: "rgba(247,243,238,.5)",
+  color: "var(--studio-text-muted)",
 };
 const rowNote: React.CSSProperties = {
   fontSize: 13,
-  color: "rgba(247,243,238,.4)",
+  color: "var(--studio-text-faint)",
 };
 const rowLink: React.CSSProperties = {
   marginLeft: "auto",
   fontSize: 13,
   fontWeight: 600,
-  color: "rgba(247,243,238,.6)",
+  color: "var(--studio-text-muted)",
 };
 
 /** Joins a card's format word, artist, track count and running time into its " · " meta line. */
@@ -109,7 +109,7 @@ export function StudioOffAirShelves({ loading }: { loading: boolean }) {
                 {item.pay && (
                   <div style={meta}>
                     {t("studio:offAir.perPlay")}{" "}
-                    <em style={{ color: "var(--accent)" }}>
+                    <em style={{ color: "var(--studio-accent-text)" }}>
                       <StudioEuroAmount value={0.05} />
                     </em>
                   </div>

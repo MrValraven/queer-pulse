@@ -3926,10 +3926,26 @@ export const marketing: Catalog = {
     "Playlists, artistas para seguir e géneros no Studio",
   "changelog.entries.studio-v2.body":
     "Cria e partilha playlists, segue artistas para saberes dos lançamentos, explora por género e vê os teus números.",
+  "changelog.entries.studio-phone-tabs.title":
+    "Separadores do Studio e menu lateral no telemóvel",
+  "changelog.entries.studio-phone-tabs.body":
+    "Início, Pesquisar, Biblioteca e Concursos ficam numa barra em baixo, e o teu avatar abre o resto do Studio.",
+  "changelog.entries.readable-placeholder-initials.title":
+    "Iniciais mais legíveis nos espaços de foto",
+  "changelog.entries.readable-placeholder-initials.body":
+    "As iniciais e legendas nos círculos de foto vazios cumprem agora as regras de contraste, no modo claro e escuro.",
+  "changelog.entries.studio-light-mode-account-menu.title":
+    "Studio em modo claro, com o seu menu de conta",
+  "changelog.entries.studio-light-mode-account-menu.body":
+    "O Studio segue o tema da app, e o teu avatar abre a biblioteca, as páginas de artista e o regresso ao QueerPulse.",
   "changelog.entries.studio-v2-fixes.title":
     "Studio mais legível e ordem das faixas estável",
   "changelog.entries.studio-v2-fixes.body":
     "As páginas do Studio leem-se bem no telemóvel e em português, e remover um carregamento falhado mantém a ordem das faixas.",
+  "changelog.entries.forum-compose-fits-phones-unfollows-stick.title":
+    "Posts do fórum cabem no telemóvel",
+  "changelog.entries.forum-compose-fits-phones-unfollows-stick.body":
+    "Escrever um post no fórum cabe no ecrã do telemóvel, e uma persona que deixas de seguir sai logo da tua lista.",
   "changelog.entries.calendar-entries-carry-description-and-host.title":
     "As entradas de calendário trazem a descrição do convívio",
   "changelog.entries.calendar-entries-carry-description-and-host.body":
@@ -3937,7 +3953,7 @@ export const marketing: Catalog = {
   "changelog.entries.community-menu-local-places.title":
     "Os espaços locais passam para o menu Comunidade",
   "changelog.entries.community-menu-local-places.body":
-    "O diretório, a Habitação e os Parceiros estão em Descobrir, na Comunidade, e a barra de topo tem menos um menu.",
+    "O diretório e a Habitação estão em Convívios e lugares e os Parceiros em Pessoas, e a barra de topo tem menos um menu.",
   "changelog.entries.marketing-flyers.title":
     "Flyers de eventos e ficheiros da t-shirt da equipa no Marketing do admin",
   "changelog.entries.marketing-flyers.body":

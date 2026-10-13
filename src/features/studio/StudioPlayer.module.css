@@ -17,9 +17,11 @@
   gap: 16px;
   min-height: var(--studio-player-height);
   padding: 10px 20px;
-  background: var(--studio-rail);
-  color: rgba(var(--cream-rgb), 0.92);
-  border-top: 1px solid rgba(var(--cream-rgb), 0.08);
+  /* Paints with the Studio roles, so the bar follows the app theme on every
+     page it plays over. */
+  background: var(--studio-surface-rail);
+  color: var(--studio-text);
+  border-top: 1px solid rgba(var(--studio-ink-rgb), 0.08);
 }
 
 .now {
@@ -59,7 +61,7 @@
 
 .artist {
   font-size: var(--text-12);
-  color: rgba(var(--cream-rgb), 0.62);
+  color: var(--studio-text-muted);
 }
 
 .controls {
@@ -90,8 +92,9 @@
   width: 40px;
   height: 40px;
   border-radius: var(--radius-pill);
-  background: rgba(var(--cream-rgb), 0.92);
-  color: var(--studio-rail);
+  /* An inverted ink disc: cream on the dark rail, plum on the light one. */
+  background: rgba(var(--studio-ink-rgb), 0.92);
+  color: var(--studio-surface-rail);
 }
 
 .seekArea {
@@ -106,14 +109,16 @@
 
 .time {
   font-size: var(--text-11);
-  color: rgba(var(--cream-rgb), 0.62);
+  color: var(--studio-text-muted);
   font-variant-numeric: tabular-nums;
 }
 
 .seek {
   flex: 1;
   min-width: 0;
-  accent-color: var(--accent);
+  /* Coral on the dark rail, the deeper coral on the light one, so the thumb
+     and the played track clear 3:1 against the bar in both themes. */
+  accent-color: var(--studio-accent-text);
 }
 
 .status:empty {
@@ -126,7 +131,7 @@
 
 .retry {
   font-weight: 600;
-  color: var(--accent);
+  color: var(--studio-accent-text);
   text-decoration: underline;
 }
 
@@ -138,12 +143,12 @@
 
 .payLine {
   font-size: var(--text-11);
-  color: rgba(var(--cream-rgb), 0.62);
+  color: var(--studio-text-muted);
 }
 
 .payLine b {
   display: block;
-  color: var(--jade-light);
+  color: var(--studio-jade-text);
   text-transform: uppercase;
   letter-spacing: 0.06em;
 }
@@ -153,7 +158,7 @@
   border-radius: var(--radius-pill);
   padding: 7px 14px;
   font-weight: 600;
-  color: var(--accent);
+  color: var(--studio-accent-text);
   background: rgba(var(--accent-rgb), 0.14);
   cursor: pointer;
 }
@@ -170,20 +175,24 @@
   box-shadow: var(--ring-cream);
 }
 
-@media (--mobile) {
+/* Gated at --compact (880px) with the Studio tab bar, so the card floats
+   above the tabs wherever they show. */
+@media (--compact) {
   .spacer {
-    height: var(--studio-player-inset, var(--studio-player-height, 64px));
+    height: var(--studio-player-inset, var(--studio-player-height, 72px));
   }
 
+  /* A floating card, Spotify's mini player: inset 8px from both edges with
+     an 8px gap above whatever sits under it. useStudioPlayerInset measures
+     this box, so the gaps stay inside it as padding and the card is painted
+     by ::before. The bar itself stays full-width and transparent. */
   .bar {
-    --studio-player-height: 64px;
-    grid-template-columns: minmax(0, 1fr) auto auto;
-    gap: 10px;
-    padding: 8px 12px;
-    /* Flush with the screen bottom (Studio, where --bottom-inset is 0) the
-       bar clears the home indicator itself; above the tab bar or the consent
-       banner the inset is already counted below it, so this adds nothing. */
-    padding-bottom: calc(
+    --studio-player-height: 72px;
+    /* The card's distance from the bar's bottom edge: the 8px gap, plus the
+       home indicator when the bar is flush with the screen bottom. Above the
+       tab bar or the consent banner the indicator is already counted below
+       it, so the max adds nothing there. */
+    --studio-player-card-floor: calc(
       8px +
         max(
           0px,
@@ -191,6 +200,24 @@
             max(var(--bottom-inset), var(--consent-inset, 0px))
         )
     );
+    isolation: isolate;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    gap: 10px;
+    padding: 8px 20px;
+    padding-bottom: calc(8px + var(--studio-player-card-floor));
+    background: transparent;
+    border-top: 0;
+  }
+
+  .bar::before {
+    content: "";
+    position: absolute;
+    inset: 0 8px var(--studio-player-card-floor);
+    z-index: -1;
+    border-radius: var(--radius-12);
+    background: var(--studio-surface-rail);
+    border: 1px solid rgba(var(--studio-ink-rgb), 0.08);
+    box-shadow: var(--shadow-e3);
   }
 
   .controls .secondaryControl,
@@ -249,11 +276,11 @@
 
 @media (hover: hover) {
   .addToPlaylist:hover {
-    background: rgba(var(--cream-rgb), 0.08);
+    background: rgba(var(--studio-ink-rgb), 0.08);
   }
 }
 
-@media (--mobile) {
+@media (--compact) {
   /* The mini bar keeps cover, title and play; Add to playlist joins the
      controls when the bar is expanded. */
   .bar:not([data-expanded]) .addToPlaylist {

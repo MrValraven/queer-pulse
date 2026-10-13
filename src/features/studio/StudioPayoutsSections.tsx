@@ -19,12 +19,9 @@ import {
 import s from "./creator.module.css";
 import { StudioEuroAmount } from "./StudioEuroAmount";
 
-// Content: the mock SEPA bank account's masked IBAN — comes from the
+// Content: the mock SEPA bank account's masked IBAN. It comes from the
 // artist's payout method record in live mode.
 const SEPA_MASKED_IBAN = "LU 82 0019 … 1844 3700";
-
-/** Mock amounts are stored as "1,712" strings; the page formats them per locale. */
-const parseMockAmount = (amount: string) => Number(amount.replace(/,/g, ""));
 
 const WHOLE_EUROS = { minimumFractionDigits: 0, maximumFractionDigits: 0 };
 
@@ -52,7 +49,7 @@ export function PayoutsHero() {
               fontFamily: "var(--serif)",
               fontStyle: "italic",
               fontSize: 17,
-              color: "rgba(247,243,238,.62)",
+              color: "var(--studio-text-muted)",
               marginTop: 14,
             }}
           >
@@ -72,8 +69,13 @@ export function PayoutsHero() {
                 className={s.v2}
                 style={{ fontFamily: "var(--serif)", color: "var(--text)" }}
               >
-                <em style={{ fontStyle: "normal", color: "var(--accent)" }}>
-                  {fmt.currency(parseMockAmount(line.v), "EUR", WHOLE_EUROS)}
+                <em
+                  style={{
+                    fontStyle: "normal",
+                    color: "var(--studio-accent-text)",
+                  }}
+                >
+                  {fmt.currency(line.v, "EUR", WHOLE_EUROS)}
                 </em>
               </span>
             </div>
@@ -98,7 +100,12 @@ export function PayoutsHero() {
               className={s.v2}
               style={{ fontFamily: "var(--serif)", fontSize: 18 }}
             >
-              <em style={{ fontStyle: "normal", color: "var(--jade-light)" }}>
+              <em
+                style={{
+                  fontStyle: "normal",
+                  color: "var(--studio-jade-text)",
+                }}
+              >
                 {fmt.currency(2140, "EUR", WHOLE_EUROS)}
               </em>
             </span>
@@ -114,10 +121,6 @@ function PayoutRowCopy({ payout }: { payout: PayoutRow }) {
   const { t } = useTranslation();
   const fmt = useFormat();
   const splitNote = payoutSplitNote(payout, t);
-  const localizedPayout = {
-    ...payout,
-    plays: fmt.number(parseMockAmount(payout.plays)),
-  };
   return (
     <div className={s.payCopy}>
       <h5>
@@ -135,7 +138,7 @@ function PayoutRowCopy({ payout }: { payout: PayoutRow }) {
         />
       </h5>
       <div className={s.payMeta}>
-        {payoutMetaParts(localizedPayout, t).join(" · ")}
+        {payoutMetaParts(payout, t, fmt).join(" · ")}
         {splitNote === null ? null : (
           <>
             {" · "}
@@ -206,7 +209,7 @@ export function PayoutsList({
                         fontWeight: 700,
                         letterSpacing: "0.08em",
                         textTransform: "uppercase",
-                        color: "var(--accent)",
+                        color: "var(--studio-accent-text)",
                       }}
                     >
                       {t(payout.monthKey)}
@@ -214,13 +217,7 @@ export function PayoutsList({
                   </div>
                   <PayoutRowCopy payout={payout} />
                   <div className={s.payAmt}>
-                    <em>
-                      {fmt.currency(
-                        parseMockAmount(payout.amt),
-                        "EUR",
-                        WHOLE_EUROS,
-                      )}
-                    </em>
+                    <em>{fmt.currency(payout.amt, "EUR", WHOLE_EUROS)}</em>
                   </div>
                   <span
                     className={`${s.payStatus} ${payout.status === "pending" ? s.statusPending : s.statusPaid}`}
@@ -289,7 +286,7 @@ export function PayoutsList({
                       style={{ color: "var(--text60)", whiteSpace: "nowrap" }}
                     >
                       {t("studioShowcase:payouts.plays", {
-                        plays: fmt.number(parseMockAmount(breakdownRow.plays)),
+                        plays: fmt.number(breakdownRow.plays),
                       })}
                     </span>
                     <span
@@ -310,10 +307,10 @@ export function PayoutsList({
                     <em
                       style={{
                         fontStyle: "normal",
-                        color: "var(--accent)",
+                        color: "var(--studio-accent-text)",
                       }}
                     >
-                      {fmt.currency(parseMockAmount(breakdownRow.total))}
+                      {fmt.currency(breakdownRow.total)}
                     </em>
                   </span>
                 </div>
@@ -329,7 +326,9 @@ export function PayoutsList({
               color: "var(--text)",
             }}
           >
-            <em style={{ fontStyle: "normal", color: "var(--jade-light)" }}>
+            <em
+              style={{ fontStyle: "normal", color: "var(--studio-jade-text)" }}
+            >
               {fmt.currency(1820)}
             </em>
           </span>

@@ -1,14 +1,14 @@
-/* Studio Receipt — a €2 tip receipt (dark surface) */
+/* Studio Receipt: a €2 tip receipt, themed through the Studio tokens */
 .wrap {
-  --text: rgba(var(--cream-rgb), 0.92);
-  --text-60: rgba(var(--cream-rgb), 0.62);
-  /* Cream at 0.52 clears the AA 4.5:1 floor on every studio ground (4.96:1 on
-     --surface, 4.87:1 on --studio-bg). It carries 11px and 12px meta text, so it
-     never qualifies as large text. The old 0.40 measured 3.55:1 and failed. */
-  --text-40: rgba(var(--cream-rgb), 0.52);
-  --line: rgba(var(--cream-rgb), 0.1);
-  --surface: rgba(var(--cream-rgb), 0.05);
-  --rail: var(--studio-rail);
+  --text: var(--studio-text);
+  --text-60: var(--studio-text-muted);
+  /* It carries 11px and 12px meta text, so it never qualifies as large text:
+     the muted token clears the AA 4.5:1 floor on every studio ground in both
+     themes. The old cream 0.40 measured 3.55:1 and failed. */
+  --text-40: var(--studio-text-muted);
+  --line: rgba(var(--studio-ink-rgb), 0.1);
+  --surface: rgba(var(--studio-ink-rgb), 0.05);
+  --rail: var(--studio-surface-rail);
 
   max-width: var(--maxw-text);
   margin: 0 auto;
@@ -29,7 +29,7 @@
   align-items: center;
   justify-content: center;
   background: rgba(var(--jade-rgb), 0.16);
-  color: var(--jade-light);
+  color: var(--studio-jade-text);
   animation: rcPulse 2.4s var(--ease) infinite;
 }
 .icon svg {
@@ -40,13 +40,13 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: var(--text-title);
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 1.05;
 }
 .thank h1 em {
   font-style: italic;
-  color: var(--jade-light);
+  color: var(--studio-jade-text);
 }
 .thank .sub {
   font-size: var(--text-15);
@@ -56,17 +56,22 @@
 }
 .thank .sub em {
   font-style: italic;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 
-/* The receipt card — near-black with coral/jade top stripe */
+/* The receipt card: a slip with a coral/jade top stripe. It reads the page
+   text roles, so it follows the theme: a faint plum-tinted rail slip on the
+   light cream page, the near-black receipt ground in dark. */
 .card {
   position: relative;
-  background: var(--studio-receipt);
+  background: var(--studio-surface-rail);
   border: 1px solid var(--line);
   border-radius: var(--radius-20);
   padding: 30px 32px 26px;
   overflow: hidden;
+}
+:global([data-theme="dark"]) .card {
+  background: var(--studio-receipt);
 }
 .card::before {
   content: "";
@@ -76,7 +81,7 @@
   background: linear-gradient(90deg, var(--accent) 0%, var(--jade) 100%);
 }
 
-/* Card head — cover + info + amount */
+/* Card head: cover + info + amount */
 .head {
   display: grid;
   grid-template-columns: 64px 1fr auto;
@@ -97,14 +102,14 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--studio-accent-text);
   margin-bottom: 6px;
 }
 .info h2 {
   font-family: var(--serif);
   font-weight: 400;
   font-size: var(--text-24);
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
   letter-spacing: -0.01em;
   line-height: 1.1;
 }
@@ -117,7 +122,7 @@
   margin-top: 5px;
 }
 .by a {
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
   text-decoration: none;
   border-bottom: 1px solid var(--line);
 }
@@ -131,13 +136,13 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: var(--text-40);
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
   letter-spacing: -0.02em;
   white-space: nowrap;
 }
 .amount em {
   font-style: normal;
-  color: var(--jade-light);
+  color: var(--studio-jade-text);
 }
 
 /* Money-split section */
@@ -156,11 +161,11 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: var(--text-19);
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
 }
 .splitH h3 em {
   font-style: italic;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .splitH .small {
   font-size: var(--text-12);
@@ -201,7 +206,7 @@
   background: var(--jade);
 }
 .dot.muted {
-  background: rgba(var(--cream-rgb), 0.18);
+  background: rgba(var(--studio-ink-rgb), 0.18);
 }
 .k {
   color: var(--text);
@@ -220,14 +225,14 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: var(--text-18);
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
   white-space: nowrap;
 }
 .v em {
   font-style: normal;
 }
 .v.tip em {
-  color: var(--jade-light);
+  color: var(--studio-jade-text);
 }
 .v.muted {
   color: var(--text-40);
@@ -271,7 +276,7 @@
 .rcd .v code {
   font-family: var(--sans);
   font-size: var(--text-13);
-  color: var(--jade-light);
+  color: var(--studio-jade-text);
   letter-spacing: 0.01em;
 }
 
@@ -292,7 +297,7 @@
   font-family: var(--serif);
   font-size: var(--text-18);
   font-style: italic;
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
   line-height: 1.5;
 }
 .reply {
@@ -310,7 +315,7 @@
   border-radius: 50%;
   flex: none;
   background: rgba(var(--accent-rgb), 0.2);
-  color: var(--accent-soft);
+  color: var(--studio-accent-chip-text);
   font-family: var(--serif);
   font-size: var(--text-13);
   display: flex;
@@ -322,7 +327,7 @@
 }
 .who {
   font-size: var(--text-12);
-  color: var(--accent-soft);
+  color: var(--studio-accent-chip-text);
   font-weight: 600;
 }
 .who em {
@@ -363,8 +368,8 @@
   border-bottom: 1px solid var(--line);
 }
 .foot span a:hover {
-  color: var(--jade-light);
-  border-bottom-color: var(--jade-light);
+  color: var(--studio-jade-text);
+  border-bottom-color: var(--studio-jade-text);
 }
 .foot code {
   font-family: var(--sans);
@@ -372,7 +377,7 @@
 }
 .exportBtn {
   font-weight: 600;
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
   background: none;
   border: none;
   padding: 0;
@@ -381,7 +386,7 @@
   font-size: var(--text-12);
 }
 .exportBtn:hover {
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 
 /* Actions row */
@@ -409,7 +414,7 @@
   color: var(--text-60);
 }
 .privNote a {
-  color: var(--accent);
+  color: var(--studio-accent-text);
   text-decoration: none;
   white-space: nowrap;
 }
@@ -441,7 +446,7 @@
 }
 
 /* Local jade thank-you pulse (global keyframes can't be referenced from a
-   CSS module — the animation-name gets scoped to a dangling hash). */
+   CSS module: the animation-name gets scoped to a dangling hash). */
 @keyframes rcPulse {
   0%,
   100% {
@@ -466,6 +471,6 @@
     display: none;
   }
   .card {
-    border-color: rgba(var(--cream-rgb), 0.25);
+    border-color: rgba(var(--studio-ink-rgb), 0.25);
   }
 }

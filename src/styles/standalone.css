@@ -64,11 +64,14 @@
     --bottom-inset: env(safe-area-inset-bottom, 0px);
   }
 
-  /* Studio renders no bottom tab bar (StudioShell and StudioCreatorShell stamp
-     `data-studio-shell` through useStudioShellSignal), so the token drops to
-     0 as on desktop and the player bar sits at the bottom of the screen. The
-     bar adds the home-indicator clearance as its own bottom padding
-     (StudioPlayer.module.css), and the consent banner adds its own. */
+  /* The app's bottom tab bar is absent in Studio (StudioShell and
+     StudioCreatorShell stamp `data-studio-shell` through
+     useStudioShellSignal), so the token drops to 0 as on desktop. The creator
+     shell's player bar sits at the bottom of the screen and adds the
+     home-indicator clearance as its own bottom padding
+     (StudioPlayer.module.css); the consent banner adds its own. The listener
+     shell renders its own tab bar at <=880px, and the `data-studio-tabs`
+     rule further down raises the token again for it. */
   html[data-studio-shell="true"] {
     --bottom-inset: 0px;
   }
@@ -157,5 +160,20 @@
   main[data-page-main][data-shell="rail"] {
     margin-top: 0;
     padding-bottom: 0;
+  }
+}
+
+/* Studio's own bottom tab bar (StudioTabBar, which stamps `data-studio-tabs`
+   through useStudioTabsSignal) shows at <=880px, so bottom-anchored UI (the
+   player bar, the consent banner, QuickExit, the save bars) clears it plus the
+   iOS home indicator the bar pads itself for. The `:not()` lifts the
+   selector to (0,2,1), above the (0,1,1) `data-studio-shell` rule, so it wins
+   wherever it sits in this file. The Check-in focus layer covers this bar
+   too, so the `:not()` lets its no-bar value hold. */
+@media (--compact) {
+  html[data-studio-tabs="true"]:not([data-checkin-focus="true"]) {
+    --bottom-inset: calc(
+      var(--studio-tab-bar-h) + env(safe-area-inset-bottom, 0px)
+    );
   }
 }

@@ -67,7 +67,7 @@ export interface SplitRow {
 
 export const SPLIT: SplitRow[] = [
   {
-    color: "var(--jade-light)",
+    color: "var(--studio-jade-text)",
     name: SHEET_TRANSCRIBER,
     roleKey: "studio:sheet.checkout.role.transcriber",
     amount: SHEET_SPLIT_SHARES.transcriber,
@@ -79,7 +79,7 @@ export const SPLIT: SplitRow[] = [
     amount: SHEET_SPLIT_SHARES.composer,
   },
   {
-    color: "rgba(247,243,238,.3)",
+    color: "rgba(var(--studio-ink-rgb), 0.3)",
     name: "",
     amount: SHEET_SPLIT_SHARES.coop,
   },

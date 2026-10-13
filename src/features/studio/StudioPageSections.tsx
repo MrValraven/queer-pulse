@@ -131,7 +131,12 @@ function StudioSideCol() {
         </div>
         <div className={styles.lrow}>
           <span className={styles.k}>{t("studio:room.set.ledgerPlays")}</span>
-          <span className={styles.v}>{WEDNESDAY_SET.ledgerPlays}</span>
+          <span className={styles.v}>
+            {fmt.number(WEDNESDAY_SET.ledgerPlays, {
+              notation: "compact",
+              maximumFractionDigits: 1,
+            })}
+          </span>
         </div>
         <div className={styles.lrow}>
           <span className={styles.k}>

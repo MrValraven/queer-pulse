@@ -5,7 +5,7 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ALBUM } from "./studioAlbum.data";
-import { fixtureDate } from "./studioDashboard.data";
+import { DAY_MONTH, fixtureDate, WEEKDAY_DAY_MONTH } from "./studioFixtureDate";
 import s from "./creator.module.css";
 import { StudioEuroAmount } from "./StudioEuroAmount";
 
@@ -61,11 +61,7 @@ export function StudioDashboardSide() {
               {t("studio:dashboard.side.quickActions.goLive.label")}
               <small>
                 {t("studio:demo.dashboard.goLivePlan", {
-                  date: fmt.date(fixtureDate("2026-06-10"), {
-                    weekday: "short",
-                    day: "numeric",
-                    month: "short",
-                  }),
+                  date: fmt.date(fixtureDate("2026-06-10"), WEEKDAY_DAY_MONTH),
                   title: ALBUM.title,
                 })}
               </small>
@@ -90,10 +86,7 @@ export function StudioDashboardSide() {
               <small>
                 {t("studio:demo.dashboard.nextPayout", {
                   amount: fmt.currency(2140),
-                  date: fmt.date(fixtureDate("2026-07-05"), {
-                    day: "numeric",
-                    month: "short",
-                  }),
+                  date: fmt.date(fixtureDate("2026-07-05"), DAY_MONTH),
                 })}
               </small>
             </span>

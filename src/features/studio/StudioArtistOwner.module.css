@@ -1,9 +1,9 @@
 .panel {
   margin-block: 8px 28px;
   padding: 18px 20px;
-  border: 1px solid rgba(var(--cream-rgb), 0.08);
+  border: 1px solid rgba(var(--studio-ink-rgb), 0.08);
   border-radius: var(--radius-14);
-  background: rgba(var(--cream-rgb), 0.03);
+  background: rgba(var(--studio-ink-rgb), 0.03);
 }
 
 .heading {
@@ -60,11 +60,11 @@
   font-size: var(--text-11);
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: rgba(var(--cream-rgb), 0.62);
+  color: var(--studio-text-muted);
 }
 
 .status[data-status="taken_down"] {
-  color: var(--accent-soft);
+  color: var(--studio-accent-soft-text);
 }
 
 .reason,
@@ -74,7 +74,7 @@
 }
 
 .error {
-  color: var(--accent-soft);
+  color: var(--studio-accent-soft-text);
 }
 
 /* The artist page's empty lines: no bio yet, no releases yet. */
@@ -91,7 +91,7 @@
 }
 
 .action {
-  border: 1px solid rgba(var(--cream-rgb), 0.18);
+  border: 1px solid rgba(var(--studio-ink-rgb), 0.18);
   border-radius: var(--radius-pill);
   padding: 6px 12px;
   font-size: var(--text-12);

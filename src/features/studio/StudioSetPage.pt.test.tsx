@@ -26,7 +26,7 @@ describe("StudioSetPage in Portuguese", () => {
 
     expect(await screen.findByText("11 faixas · 58 min")).toBeInTheDocument();
     expect(
-      await screen.findByText(/Gravado ao vivo · Casa do Comum · 12 Apr 2026/),
+      await screen.findByText(/Gravado ao vivo · Casa do Comum · 12\/04\/2026/),
     ).toBeInTheDocument();
     expect(
       await screen.findByText(/A hora entre o pôr do sol e a segunda garrafa/),

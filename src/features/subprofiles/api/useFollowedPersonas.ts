@@ -5,6 +5,7 @@ import {
   unfollowSubprofile,
   type FollowedPersonasPage,
 } from "./subprofiles.api";
+import { studioKeys } from "../../studio/api/studioQueryKeys";
 
 /**
  * Rows per page. Matches the backend's `PAGE_SIZE`, which `GET
@@ -56,7 +57,8 @@ export function useFollowedPersonas(page: number, isEnabled: boolean) {
  * `["subprofile", "following"]` family is invalidated (page counts shift, so
  * patching one page in place would leave the others wrong), and so is the
  * persona's own public query, whose "Following" pill and follower count this
- * just changed.
+ * just changed. The Studio holds the same follow in its artist view and its
+ * library's Artists tab, so both are marked stale too.
  */
 export function useUnfollowPersona() {
   const { demoMode } = useDemoMode();
@@ -74,7 +76,13 @@ export function useUnfollowPersona() {
       }
       await unfollowSubprofile(personaId);
     },
-    onSuccess: async () => {
+    onSuccess: async (_result, { personaId }) => {
+      void queryClient.invalidateQueries({
+        queryKey: studioKeys.artist(demoMode, personaId),
+      });
+      void queryClient.invalidateQueries({
+        queryKey: studioKeys.followedArtists(demoMode),
+      });
       await Promise.all([
         queryClient.invalidateQueries({
           queryKey: ["subprofile", "following"],

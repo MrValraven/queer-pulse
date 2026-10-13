@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { Translation } from "../../shared/i18n/Translation";
 import type { TFunction } from "../../shared/i18n/types";
+import { StudioNumber } from "./StudioNumber";
 
 /** Round hero portrait for Mariana Sol (Unsplash). */
 export const PRESS_PORTRAIT =
@@ -40,9 +41,9 @@ export const PREVIEW_WAVE: number[] = [
 
 /**
  * Facts shown as label / value pairs in the hero. `labelKey` is chrome
- * (Pattern A). Places, years and figures in `value` stay literal; the phrases
- * around them render through `<Translation>` from the `studioShowcase`
- * catalog.
+ * (Pattern A). Places and years in `value` stay literal, the play count
+ * formats in the active locale, and the phrases around them render through
+ * `<Translation>` from the `studioShowcase` catalog.
  */
 export const PRESS_FACTS: { labelKey: string; value: ReactNode }[] = [
   { labelKey: "studio:press.fact.from", value: "Sintra, Portugal" },
@@ -56,7 +57,7 @@ export const PRESS_FACTS: { labelKey: string; value: ReactNode }[] = [
     value: (
       <Translation
         i18nKey="studioShowcase:press.facts.playsValue"
-        values={{ plays: "231k" }}
+        slots={{ plays: <StudioNumber value={231000} isCompact /> }}
         components={{ em: <em /> }}
       />
     ),

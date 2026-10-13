@@ -46,12 +46,16 @@ li.trackRow:first-child {
 .genreField select {
   min-height: var(--tap-min);
   padding: 0 12px;
-  border: 1px solid rgba(var(--cream-rgb), 0.4);
+  border: 1px solid rgba(var(--studio-ink-rgb), 0.4);
   border-radius: var(--radius-pill);
   background: transparent;
   color: inherit;
-  color-scheme: dark;
+  color-scheme: light;
   font: inherit;
+}
+/* The native option list follows the app theme with the page. */
+:global([data-theme="dark"]) .genreField select {
+  color-scheme: dark;
 }
 
 .genreField select:focus-visible {

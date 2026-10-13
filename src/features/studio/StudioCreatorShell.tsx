@@ -3,18 +3,20 @@ import { Link, NavLink } from "react-router-dom";
 import { FiArrowRight } from "react-icons/fi";
 import { routes } from "../../app/routeMap";
 import { Translation } from "../../shared/i18n/Translation";
-import { Avatar } from "../../shared/components/ui";
 import { useAccountIdentity } from "../../shared/components/layout/useAccountIdentity";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { StudioArtistRefView } from "./api/studio.adapters";
+import { StudioAccountMenu } from "./StudioAccountMenu";
 import { useStudioShowcase } from "./useStudioShowcase";
 import { useStudioShellSignal } from "./useStudioShellSignal";
 import { NAV } from "./StudioCreatorShell.data";
 import s from "./creator.module.css";
+import shellStyles from "./StudioShell.module.css";
 
-/** Dark creator back-office frame: sticky topbar + sub-nav. `isEditingRelease`
- *  is set by the upload page while it reopens a published or taken-down
- *  release, so "New release" stops reading as the current page. */
+/** Creator back-office frame: sticky topbar + sub-nav, following the app
+ *  theme like the listener shell. `isEditingRelease` is set by the upload
+ *  page while it reopens a published or taken-down release, so "New
+ *  release" stops reading as the current page. */
 export function StudioCreatorShell({
   children,
   persona,
@@ -28,10 +30,11 @@ export function StudioCreatorShell({
   const identity = useAccountIdentity();
   const isShowcase = useStudioShowcase();
   useStudioShellSignal();
-  // A dark surface whatever the app theme: the subtree opts into the dark
-  // token set so shared components paint their dark variants here.
+  // Studio follows the app theme: its colours come from the theme-following
+  // --studio-* tokens, so the shell and the shared components inside it
+  // switch with the rest of the app.
   return (
-    <div className={s.root} data-theme="dark">
+    <div className={s.root}>
       <div className={s.topbar}>
         <Link to={routes.studio} className={s.brand}>
           <span className={s.pulseDot} aria-hidden />
@@ -77,20 +80,13 @@ export function StudioCreatorShell({
               <FiArrowRight aria-hidden />
             </Link>
           )}
-          <span
-            className={s.avatar}
-            role="img"
-            aria-label={t("studio:creator.avatarLabel", {
+          <StudioAccountMenu
+            className={shellStyles.creatorAccount}
+            persona={persona}
+            triggerLabel={t("studio:creator.avatarLabel", {
               name: persona?.name ?? identity.name,
             })}
-          >
-            <Avatar
-              initials={persona?.initials ?? identity.initials}
-              src={persona?.avatarUrl ?? identity.photo}
-              size={34}
-              alt=""
-            />
-          </span>
+          />
         </div>
       </div>
       <main>{children}</main>

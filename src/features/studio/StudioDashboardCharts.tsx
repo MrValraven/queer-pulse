@@ -3,7 +3,14 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { StudioLine } from "./StudioSkeletons";
-import { BARS, CURATORS, CITIES, fixtureDate } from "./studioDashboard.data";
+import {
+  BARS,
+  CHART_RANGES,
+  CURATORS,
+  CITIES,
+  SELECTED_CHART_RANGE_ID,
+} from "./studioDashboard.data";
+import { fixtureDate, WEEKDAY_DAY_MONTH } from "./studioFixtureDate";
 import s from "./creator.module.css";
 
 // Chart footer figures: demo content, fixed for the showcase.
@@ -54,15 +61,22 @@ export function StudioDashboardCharts({ loading }: { loading: boolean }) {
             />
           </h3>
           <div className={s.range}>
-            {["7d", "14d", "30d", "1y"].map((range) => (
+            {CHART_RANGES.map((range) => (
               <button
-                key={range}
+                key={range.id}
                 type="button"
-                className={[s.rangeBtn, range === "14d" && s.rangeBtnOn]
+                className={[
+                  s.rangeBtn,
+                  range.id === SELECTED_CHART_RANGE_ID && s.rangeBtnOn,
+                ]
                   .filter(Boolean)
                   .join(" ")}
               >
-                {range}
+                {fmt.number(range.amount, {
+                  style: "unit",
+                  unit: range.unit,
+                  unitDisplay: "narrow",
+                })}
               </button>
             ))}
           </div>
@@ -124,7 +138,7 @@ export function StudioDashboardCharts({ loading }: { loading: boolean }) {
                     curator.tone === "jade"
                       ? {
                           background: "rgba(var(--jade-rgb), 0.2)",
-                          color: "var(--jade-light)",
+                          color: "var(--studio-jade-text)",
                         }
                       : undefined
                   }
@@ -143,11 +157,7 @@ export function StudioDashboardCharts({ loading }: { loading: boolean }) {
                 </div>
                 <div className={s.rowWhen}>
                   {curator.whenIso
-                    ? fmt.date(fixtureDate(curator.whenIso), {
-                        weekday: "short",
-                        day: "numeric",
-                        month: "short",
-                      })
+                    ? fmt.date(fixtureDate(curator.whenIso), WEEKDAY_DAY_MONTH)
                     : t("studio:demo.dashboard.curator.today")}
                 </div>
               </FadeIn>

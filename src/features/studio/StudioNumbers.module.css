@@ -9,14 +9,14 @@
 
 .showcaseSub {
   margin-top: 14px;
-  color: rgba(var(--cream-rgb), 0.62);
+  color: var(--studio-text-muted);
   font-family: var(--serif);
   font-size: var(--text-17);
   font-style: italic;
 }
 
 .accentEm {
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 
 /* Same frame as creator.module.css `.body`, so the section lines up with the
@@ -35,7 +35,7 @@
 }
 
 .eyebrow {
-  color: var(--accent);
+  color: var(--studio-accent-text);
   font-size: var(--text-12);
   font-weight: 700;
   letter-spacing: var(--ls-eyebrow);
@@ -50,13 +50,13 @@
 }
 
 .title em {
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 
 .dek {
   max-width: 62ch;
   margin: 0;
-  color: rgba(var(--cream-rgb), 0.72);
+  color: var(--studio-text-muted);
   font-size: var(--text-14);
 }
 
@@ -70,12 +70,15 @@
 .select {
   min-height: var(--tap-min);
   padding: 0 12px;
-  border: 1px solid rgba(var(--cream-rgb), 0.24);
+  border: 1px solid rgba(var(--studio-ink-rgb), 0.24);
   border-radius: var(--radius-10);
   background: transparent;
   color: inherit;
-  color-scheme: dark;
+  color-scheme: light;
   font: inherit;
+}
+:global([data-theme="dark"]) .select {
+  color-scheme: dark;
 }
 
 .followers {
@@ -86,7 +89,7 @@
 }
 
 .followersLabel {
-  color: rgba(var(--cream-rgb), 0.62);
+  color: var(--studio-text-muted);
   font-size: var(--text-13);
 }
 
@@ -105,7 +108,7 @@
 
 .caption {
   margin-bottom: 10px;
-  color: rgba(var(--cream-rgb), 0.62);
+  color: var(--studio-text-muted);
   font-size: var(--text-13);
   text-align: left;
 }
@@ -125,7 +128,7 @@
 }
 
 .table thead th {
-  color: rgba(var(--cream-rgb), 0.62);
+  color: var(--studio-text-muted);
   font-size: var(--text-12);
   font-weight: 600;
   overflow-wrap: normal;
@@ -136,7 +139,7 @@
 }
 
 .releaseRow {
-  border-top: 1px solid rgba(var(--cream-rgb), 0.12);
+  border-top: 1px solid rgba(var(--studio-ink-rgb), 0.12);
 }
 
 .releaseCell {
@@ -155,7 +158,7 @@
 
 .trackTable {
   margin: 0 0 8px;
-  color: rgba(var(--cream-rgb), 0.82);
+  color: rgba(var(--studio-ink-rgb), 0.82);
 }
 
 /* A hanging indent: the position number sits in the gutter, so a wrapped
@@ -170,7 +173,7 @@
   display: inline-block;
   min-width: 24px;
   margin-inline-end: 8px;
-  color: rgba(var(--cream-rgb), 0.5);
+  color: var(--studio-text-muted);
   text-indent: 0;
 }
 
@@ -209,10 +212,12 @@
 
 .status {
   padding: 1px 8px;
-  border: 1px solid rgba(var(--cream-rgb), 0.28);
+  border: 1px solid rgba(var(--studio-ink-rgb), 0.28);
   border-radius: var(--radius-pill);
-  color: rgba(var(--cream-rgb), 0.72);
+  color: var(--studio-text-muted);
   font-size: var(--text-11);
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .expand:focus-visible,

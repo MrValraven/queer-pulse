@@ -186,7 +186,7 @@ export const WEDNESDAY_SET = {
   casual: 223,
   cities: 41,
   ledgerPaidArtists: 11940,
-  ledgerPlays: "202k",
+  ledgerPlays: 202000,
   ledgerArtistShare: 0.803,
   ledgerPerPlay: 0.05,
 };

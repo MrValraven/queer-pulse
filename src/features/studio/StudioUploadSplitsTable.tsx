@@ -21,7 +21,7 @@ export function SplitsTable({
   const [handle, setHandle] = useState("");
 
   // The field only appears after the user asks for it, so sending focus there
-  // follows their action rather than teleporting them on page load.
+  // follows their own action. A page load leaves focus where it was.
   const handleRef = useRef<HTMLInputElement>(null);
   useEffect(() => {
     if (adding) handleRef.current?.focus();
@@ -63,7 +63,7 @@ export function SplitsTable({
         <tbody>
           {rows.map((row) => (
             <tr key={row.name}>
-              {/* eslint-disable-next-line jsx-a11y/control-has-associated-label -- data cell, not an interactive control; the collaborator name/handle text (row.name/subtitle) is the cell's content, nested one level past the rule's static depth limit. */}
+              {/* eslint-disable-next-line jsx-a11y/control-has-associated-label -- a plain data cell; the collaborator name/handle text (row.name/subtitle) is the cell's content, nested one level past the rule's static depth limit. */}
               <td>
                 <div className={s.splitWho}>
                   <span
@@ -72,7 +72,7 @@ export function SplitsTable({
                       row.tone === "jade"
                         ? {
                             background: "rgba(var(--jade-rgb),.18)",
-                            color: "var(--jade-light)",
+                            color: "var(--studio-jade-text)",
                           }
                         : undefined
                     }

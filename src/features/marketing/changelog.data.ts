@@ -63,6 +63,33 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "studio-phone-tabs",
+        category: "feature",
+        date: "13 Oct 2026",
+        ...entryKeys("studio-phone-tabs"),
+        tag: { labelKey: "marketing:changelog.tag.studio", to: routes.studio },
+      },
+      {
+        id: "readable-placeholder-initials",
+        category: "fix",
+        date: "13 Oct 2026",
+        ...entryKeys("readable-placeholder-initials"),
+      },
+      {
+        id: "studio-light-mode-account-menu",
+        category: "feature",
+        date: "13 Oct 2026",
+        ...entryKeys("studio-light-mode-account-menu"),
+        tag: { labelKey: "marketing:changelog.tag.studio", to: routes.studio },
+      },
+      {
+        id: "forum-compose-fits-phones-unfollows-stick",
+        category: "fix",
+        date: "13 Oct 2026",
+        ...entryKeys("forum-compose-fits-phones-unfollows-stick"),
+        tag: { labelKey: "marketing:changelog.tag.forum", to: routes.forum },
+      },
+      {
         id: "studio-v2",
         category: "feature",
         date: "13 Oct 2026",

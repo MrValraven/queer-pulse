@@ -1,13 +1,13 @@
 .wrap {
-  --text: rgba(var(--cream-rgb), 0.92);
-  --text-60: rgba(var(--cream-rgb), 0.62);
-  /* Cream at 0.52 clears the AA 4.5:1 floor on every studio ground (4.96:1 on
-     --surface, 4.87:1 on --studio-bg). It carries 11px and 12px meta text, so it
-     never qualifies as large text. The old 0.40 measured 3.55:1 and failed. */
-  --text-40: rgba(var(--cream-rgb), 0.52);
-  --line: rgba(var(--cream-rgb), 0.1);
-  --surface: rgba(var(--cream-rgb), 0.05);
-  --rail: var(--studio-rail);
+  --text: var(--studio-text);
+  --text-60: var(--studio-text-muted);
+  /* It carries 11px and 12px meta text, so it never qualifies as large text:
+     the muted token clears the AA 4.5:1 floor on every studio ground in both
+     themes. The old cream 0.40 measured 3.55:1 and failed. */
+  --text-40: var(--studio-text-muted);
+  --line: rgba(var(--studio-ink-rgb), 0.1);
+  --surface: rgba(var(--studio-ink-rgb), 0.05);
+  --rail: var(--studio-surface-rail);
 
   padding: 8px 0 var(--section-y-64);
   max-width: 780px;
@@ -23,20 +23,20 @@
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--studio-accent-text);
   margin-bottom: 14px;
 }
 .hero h1 {
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(2rem, 5vw, 3.25rem);
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 1.02;
 }
 .hero h1 em {
   font-style: italic;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .lede {
   font-size: var(--text-17);
@@ -46,7 +46,7 @@
   max-width: 62ch;
 }
 .lede em {
-  color: var(--jade-light);
+  color: var(--studio-jade-text);
   font-style: italic;
 }
 
@@ -61,7 +61,7 @@
 .statement p {
   font-family: var(--serif);
   font-size: var(--text-16);
-  color: rgba(var(--cream-rgb), 0.82);
+  color: rgba(var(--studio-ink-rgb), 0.82);
   line-height: 1.65;
 }
 .statement p + p {
@@ -69,7 +69,7 @@
 }
 .statement p em {
   font-style: italic;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 
 /* ── Section ── */
@@ -80,13 +80,13 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: var(--text-28);
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
   letter-spacing: -0.015em;
   line-height: 1.15;
 }
 .sec h2 em {
   font-style: italic;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .dek {
   font-size: var(--text-15);
@@ -117,7 +117,7 @@
   height: 46px;
   border-radius: var(--radius-12);
   background: rgba(var(--accent-rgb), 0.12);
-  color: var(--accent);
+  color: var(--studio-accent-text);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -131,12 +131,12 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: var(--text-18);
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
   letter-spacing: -0.01em;
 }
 .ai h4 em {
   font-style: italic;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .ai p {
   font-size: var(--text-14);
@@ -146,7 +146,7 @@
 }
 .ai p em {
   font-style: italic;
-  color: rgba(var(--cream-rgb), 0.85);
+  color: rgba(var(--studio-ink-rgb), 0.85);
 }
 
 /* ── Status pill ── */
@@ -168,12 +168,12 @@
   height: 11px;
 }
 .live {
-  color: var(--jade-light);
+  color: var(--studio-jade-chip-text);
   background: rgba(var(--jade-rgb), 0.16);
 }
 .soon {
-  color: var(--amber);
-  background: rgba(var(--amber-rgb), 0.14);
+  color: var(--amber-ink);
+  background: rgba(var(--amber-rgb), 0.08);
 }
 
 /* ── Keyboard table ── */
@@ -197,11 +197,11 @@
 }
 .desc {
   font-size: var(--text-14-5);
-  color: rgba(var(--cream-rgb), 0.82);
+  color: rgba(var(--studio-ink-rgb), 0.82);
 }
 .desc em {
   font-style: italic;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .keys {
   display: flex;
@@ -211,9 +211,9 @@
   font-family: var(--sans);
   font-size: var(--text-12);
   font-weight: 600;
-  color: rgba(var(--cream-rgb), 1);
-  background: rgba(var(--cream-rgb), 0.08);
-  border: 1px solid rgba(var(--cream-rgb), 0.16);
+  color: rgba(var(--studio-ink-rgb), 1);
+  background: rgba(var(--studio-ink-rgb), 0.08);
+  border: 1px solid rgba(var(--studio-ink-rgb), 0.16);
   border-bottom-width: 2px;
   border-radius: var(--radius-7);
   min-width: 2.5em;
@@ -228,6 +228,7 @@
 .contact {
   position: relative;
   overflow: hidden;
+  /* A fixed plum panel in both themes: its cream ink and edge stay cream. */
   background: var(--plum);
   border: 1px solid rgba(var(--cream-rgb), 0.1);
   border-radius: var(--radius-22);

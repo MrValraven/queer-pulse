@@ -5,6 +5,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { ALBUM } from "./studioAlbum.data";
 import { ARTIST_SHOWCASE } from "./studioArtist.data";
+import { DAY_MONTH, fixtureDate } from "./studioFixtureDate";
 import styles from "./studio.module.css";
 import { StudioEuroAmount } from "./StudioEuroAmount";
 
@@ -98,7 +99,11 @@ export function StudioArtistSidebar({
           <span className={styles.k}>
             {t("studio:artist.sidebar.premiereLabel")} · <em>{ALBUM.title}</em>
             <br />
-            {ARTIST_SHOWCASE.premiereDateTime}
+            {formatters.date(
+              fixtureDate(ARTIST_SHOWCASE.premiereDateIso),
+              DAY_MONTH,
+            )}{" "}
+            · {ARTIST_SHOWCASE.premiereTime}
           </span>
           <Link to={routes.rsvp} className={styles.cta}>
             {t("studio:artist.sidebar.rsvpCta")}

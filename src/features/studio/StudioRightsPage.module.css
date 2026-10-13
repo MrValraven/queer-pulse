@@ -1,13 +1,13 @@
 .wrap {
-  --text: rgba(var(--cream-rgb), 0.92);
-  --text-60: rgba(var(--cream-rgb), 0.62);
-  /* Cream at 0.52 clears the AA 4.5:1 floor on every studio ground (4.96:1 on
-     --surface, 4.87:1 on --studio-bg). It carries 11px and 12px meta text, so it
-     never qualifies as large text. The old 0.40 measured 3.55:1 and failed. */
-  --text-40: rgba(var(--cream-rgb), 0.52);
-  --line: rgba(var(--cream-rgb), 0.1);
-  --surface: rgba(var(--cream-rgb), 0.05);
-  --rail: var(--studio-rail);
+  --text: var(--studio-text);
+  --text-60: var(--studio-text-muted);
+  /* It carries 11px and 12px meta text, so it never qualifies as large text:
+     the muted token clears the AA 4.5:1 floor on every studio ground in both
+     themes. The old cream 0.40 measured 3.55:1 and failed. */
+  --text-40: var(--studio-text-muted);
+  --line: rgba(var(--studio-ink-rgb), 0.1);
+  --surface: rgba(var(--studio-ink-rgb), 0.05);
+  --rail: var(--studio-surface-rail);
   padding: 8px 0 var(--section-y-64);
   max-width: 920px;
   margin: 0 auto;
@@ -22,20 +22,20 @@
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--studio-accent-text);
   margin-bottom: 12px;
 }
 .pageH h1 {
   font-family: var(--serif);
   font-weight: 300;
   font-size: var(--text-display);
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 1;
 }
 .pageH h1 em {
   font-style: italic;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .dek {
   font-size: var(--text-16);
@@ -66,7 +66,7 @@
   height: 38px;
   border-radius: var(--radius-10);
   background: rgba(var(--jade-rgb), 0.14);
-  color: var(--jade-light);
+  color: var(--studio-jade-text);
   margin-bottom: 14px;
 }
 .pIcon svg {
@@ -77,13 +77,13 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: var(--text-19);
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
   letter-spacing: -0.01em;
   margin-bottom: 8px;
 }
 .p h4 em {
   font-style: italic;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .p p {
   font-size: var(--text-13-5);
@@ -110,12 +110,12 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: var(--text-30);
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
   letter-spacing: -0.02em;
 }
 .secH h2 em {
   font-style: italic;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .secH .sub {
   font-size: var(--text-13);
@@ -145,12 +145,12 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: var(--text-19);
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
   letter-spacing: -0.01em;
 }
 .ri h5 em {
   font-style: italic;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .rm {
   font-size: var(--text-12-5);
@@ -196,7 +196,7 @@
   gap: 8px;
   font-size: var(--text-12-5);
   font-weight: 600;
-  color: var(--amber);
+  color: var(--amber-ink);
   white-space: nowrap;
 }
 .rtStatus .d {
@@ -219,7 +219,7 @@
   font-family: var(--sans);
   font-size: var(--text-13);
   font-weight: 600;
-  color: var(--accent);
+  color: var(--studio-accent-text);
   background: transparent;
   border: 1px solid rgba(var(--accent-rgb), 0.4);
   border-radius: var(--radius-pill);
@@ -250,8 +250,8 @@
     border-color 0.18s var(--ease);
 }
 .btUndo:hover {
-  background: rgba(var(--cream-rgb), 0.08);
-  border-color: rgba(var(--cream-rgb), 0.22);
+  background: rgba(var(--studio-ink-rgb), 0.08);
+  border-color: rgba(var(--studio-ink-rgb), 0.22);
 }
 .btTake:focus-visible,
 .btUndo:focus-visible {
@@ -272,13 +272,13 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: var(--text-21);
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
   letter-spacing: -0.01em;
   margin-bottom: 10px;
 }
 .foot h4 em {
   font-style: italic;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .foot p {
   font-size: var(--text-14);
@@ -288,15 +288,15 @@
 }
 .foot p em {
   font-style: italic;
-  color: var(--jade-light);
+  color: var(--studio-jade-text);
 }
 .foot a {
-  color: var(--accent);
+  color: var(--studio-accent-text);
   text-decoration: underline;
   text-underline-offset: 2px;
 }
 .foot a:hover {
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
 }
 
 /* ── Modal ── */
@@ -317,7 +317,7 @@
 .modal {
   width: 100%;
   max-width: 460px;
-  background: var(--studio-bg);
+  background: var(--studio-surface);
   border: 1px solid var(--line);
   border-radius: var(--radius-20);
   padding: 30px 32px 28px;
@@ -333,14 +333,14 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: var(--text-28);
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
   letter-spacing: -0.02em;
   line-height: 1.1;
   margin-top: 4px;
 }
 .modalTitle em {
   font-style: italic;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .modalMeta {
   font-size: var(--text-12-5);
@@ -355,7 +355,7 @@
 }
 .modalBody em {
   font-style: italic;
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
 }
 .keep {
   background: rgba(var(--jade-rgb), 0.08);
@@ -368,11 +368,11 @@
   font-family: var(--serif);
   font-size: var(--text-14);
   font-style: italic;
-  color: rgba(var(--cream-rgb), 0.85);
+  color: rgba(var(--studio-ink-rgb), 0.85);
   line-height: 1.55;
 }
 .keep p em {
-  color: var(--jade-light);
+  color: var(--studio-jade-text);
 }
 .modalActions {
   display: flex;
@@ -385,7 +385,7 @@
   font-size: var(--text-14);
   font-weight: 600;
   color: var(--text);
-  background: rgba(var(--cream-rgb), 0.06);
+  background: rgba(var(--studio-ink-rgb), 0.06);
   border: 1px solid var(--line);
   border-radius: var(--radius-pill);
   padding: 12px 18px;
@@ -395,7 +395,7 @@
     border-color 0.18s var(--ease);
 }
 .bt:hover {
-  background: rgba(var(--cream-rgb), 0.1);
+  background: rgba(var(--studio-ink-rgb), 0.1);
 }
 .btConfirm {
   /* Dark ink on the coral fill: 6.28:1. */

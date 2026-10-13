@@ -1,7 +1,7 @@
 .checklist {
   padding: 14px 16px;
   border-radius: var(--radius-10);
-  background: rgba(var(--cream-rgb), 0.04);
+  background: rgba(var(--studio-ink-rgb), 0.04);
   border: 1px solid var(--line);
 }
 
@@ -20,7 +20,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  color: var(--jade-light);
+  color: var(--studio-jade-text);
 }
 
 .body {
@@ -66,7 +66,7 @@
 .error {
   margin: 0;
   font-size: var(--text-13);
-  color: var(--accent-soft);
+  color: var(--studio-accent-soft-text);
 }
 
 .stepNav {

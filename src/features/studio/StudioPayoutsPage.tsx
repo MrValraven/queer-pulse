@@ -1,6 +1,7 @@
 import { useSimulatedLoad } from "../../shared/hooks";
 import { StudioCreatorShell } from "./StudioCreatorShell";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { PAYOUTS, payoutCsvMeta } from "./studioPayouts.data";
 import {
@@ -13,6 +14,7 @@ import s from "./creator.module.css";
 
 export function StudioPayoutsPage() {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const { showToast } = useToast();
   const loading = useSimulatedLoad();
 
@@ -28,8 +30,8 @@ export function StudioPayoutsPage() {
       ...PAYOUTS.map((payout) => [
         t(payout.periodKey),
         `${payout.d} ${t(payout.monthKey)}`,
-        payoutCsvMeta(payout, t),
-        payout.amt.replace(/,/g, ""),
+        payoutCsvMeta(payout, t, fmt),
+        String(payout.amt),
         payout.status === "pending"
           ? t("studio:payouts.list.status.pending")
           : t("studio:payouts.list.status.paid"),

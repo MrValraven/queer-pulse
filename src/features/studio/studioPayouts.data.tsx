@@ -1,17 +1,20 @@
 import type { ReactNode } from "react";
+import type { Formatters } from "../../shared/i18n/format";
 import { Translation } from "../../shared/i18n/Translation";
 import type { TFunction } from "../../shared/i18n/types";
 
+/** Every figure below is a number; the page formats it in the active locale. */
 export interface PayoutSummaryRow {
   labelKey: string;
-  v: string;
+  /** Whole euros. */
+  v: number;
 }
 
 /**
  * One monthly payout. `monthKey`, `periodKey` and `noteKey` are
  * `studioShowcase` catalog keys (Pattern A). The tallies are data: `plays`
- * keeps its literal figure formatting, the other counts drive plural keys
- * through `payoutMetaParts` / `payoutSplitNote`.
+ * formats as a locale number, the other counts drive plural keys through
+ * `payoutMetaParts` / `payoutSplitNote`.
  */
 export interface PayoutRow {
   d: string;
@@ -19,13 +22,14 @@ export interface PayoutRow {
   periodKey: string;
   /** Optional emphasised note after the title. */
   noteKey?: string;
-  plays: string;
+  plays: number;
   tips: number;
   albumBuys: number;
   directSubs: number;
   /** Present when the payout splits to collaborators. */
   collaborators?: number;
-  amt: string;
+  /** Whole euros. */
+  amt: number;
   status: string;
 }
 
@@ -34,16 +38,17 @@ export interface PayoutBreakdownRow {
       which stands for several tracks and so has no single number. */
   n?: string;
   nm: ReactNode;
-  /** Literal play-count figure; the "plays" phrase comes from the catalog. */
-  plays: string;
-  total: string;
+  /** Play count; the "plays" phrase comes from the catalog. */
+  plays: number;
+  /** Euros, with cents. */
+  total: number;
 }
 
 export const SUMMARY: PayoutSummaryRow[] = [
-  { labelKey: "studio:payouts.summary.fromStreaming", v: "1,712" },
-  { labelKey: "studio:payouts.summary.fromTips", v: "312" },
-  { labelKey: "studio:payouts.summary.fromAlbumBuys", v: "76" },
-  { labelKey: "studio:payouts.summary.directSubs", v: "40" },
+  { labelKey: "studio:payouts.summary.fromStreaming", v: 1712 },
+  { labelKey: "studio:payouts.summary.fromTips", v: 312 },
+  { labelKey: "studio:payouts.summary.fromAlbumBuys", v: 76 },
+  { labelKey: "studio:payouts.summary.directSubs", v: 40 },
 ];
 
 export const PAYOUTS: PayoutRow[] = [
@@ -52,23 +57,23 @@ export const PAYOUTS: PayoutRow[] = [
     monthKey: "studioShowcase:payouts.month.jul",
     periodKey: "studioShowcase:payouts.period.july2026",
     noteKey: "studioShowcase:payouts.row.note.pending",
-    plays: "36,400",
+    plays: 36400,
     tips: 87,
     albumBuys: 1,
     directSubs: 12,
     collaborators: 3,
-    amt: "2,140",
+    amt: 2140,
     status: "pending",
   },
   {
     d: "5",
     monthKey: "studioShowcase:payouts.month.jun",
     periodKey: "studioShowcase:payouts.period.june2026",
-    plays: "24,260",
+    plays: 24260,
     tips: 64,
     albumBuys: 4,
     directSubs: 8,
-    amt: "1,213",
+    amt: 1213,
     status: "paid",
   },
   {
@@ -76,22 +81,22 @@ export const PAYOUTS: PayoutRow[] = [
     monthKey: "studioShowcase:payouts.month.may",
     periodKey: "studioShowcase:payouts.period.may2026",
     noteKey: "studioShowcase:payouts.row.note.firstMonthOfCds",
-    plays: "18,420",
+    plays: 18420,
     tips: 42,
     albumBuys: 12,
     directSubs: 6,
-    amt: "1,084",
+    amt: 1084,
     status: "paid",
   },
   {
     d: "5",
     monthKey: "studioShowcase:payouts.month.apr",
     periodKey: "studioShowcase:payouts.period.april2026",
-    plays: "8,140",
+    plays: 8140,
     tips: 18,
     albumBuys: 3,
     directSubs: 4,
-    amt: "486",
+    amt: 486,
     status: "paid",
   },
   {
@@ -99,19 +104,23 @@ export const PAYOUTS: PayoutRow[] = [
     monthKey: "studioShowcase:payouts.month.mar",
     periodKey: "studioShowcase:payouts.period.march2026",
     noteKey: "studioShowcase:payouts.row.note.firstOnStudio",
-    plays: "2,140",
+    plays: 2140,
     tips: 6,
     albumBuys: 1,
     directSubs: 2,
-    amt: "142",
+    amt: 142,
     status: "paid",
   },
 ];
 
 /** The tally phrases of a payout row, in display order. */
-export function payoutMetaParts(payout: PayoutRow, t: TFunction): string[] {
+export function payoutMetaParts(
+  payout: PayoutRow,
+  t: TFunction,
+  fmt: Formatters,
+): string[] {
   return [
-    t("studioShowcase:payouts.plays", { plays: payout.plays }),
+    t("studioShowcase:payouts.plays", { plays: fmt.number(payout.plays) }),
     t("studioShowcase:payouts.meta.tips", { count: payout.tips }),
     t("studioShowcase:payouts.meta.albumBuys", { count: payout.albumBuys }),
     t("studioShowcase:payouts.meta.directSubs", { count: payout.directSubs }),
@@ -131,8 +140,12 @@ export function payoutSplitNote(
 }
 
 /** The whole tally line as plain text, for the CSV export. */
-export function payoutCsvMeta(payout: PayoutRow, t: TFunction): string {
-  const parts = payoutMetaParts(payout, t);
+export function payoutCsvMeta(
+  payout: PayoutRow,
+  t: TFunction,
+  fmt: Formatters,
+): string {
+  const parts = payoutMetaParts(payout, t, fmt);
   const splitNote = payoutSplitNote(payout, t);
   return (splitNote === null ? parts : [...parts, splitNote]).join(" · ");
 }
@@ -145,8 +158,8 @@ export const BREAKDOWN: PayoutBreakdownRow[] = [
         Carta para a <em>santa</em>
       </>
     ),
-    plays: "25,832",
-    total: "1,291.60",
+    plays: 25832,
+    total: 1291.6,
   },
   {
     n: "04",
@@ -155,8 +168,8 @@ export const BREAKDOWN: PayoutBreakdownRow[] = [
         A <em>vizinha</em> que reza
       </>
     ),
-    plays: "4,144",
-    total: "207.20",
+    plays: 4144,
+    total: 207.2,
   },
   {
     n: "03",
@@ -165,8 +178,8 @@ export const BREAKDOWN: PayoutBreakdownRow[] = [
         Mãe, três <em>vezes</em>
       </>
     ),
-    plays: "2,880",
-    total: "144.00",
+    plays: 2880,
+    total: 144,
   },
   {
     n: "01",
@@ -175,8 +188,8 @@ export const BREAKDOWN: PayoutBreakdownRow[] = [
         Mãe, <em>vento</em>
       </>
     ),
-    plays: "1,684",
-    total: "84.20",
+    plays: 1684,
+    total: 84.2,
   },
   {
     n: "08",
@@ -185,8 +198,8 @@ export const BREAKDOWN: PayoutBreakdownRow[] = [
         O <em>nome</em>
       </>
     ),
-    plays: "920",
-    total: "46.00",
+    plays: 920,
+    total: 46,
   },
   {
     nm: (
@@ -195,7 +208,7 @@ export const BREAKDOWN: PayoutBreakdownRow[] = [
         components={{ em: <em /> }}
       />
     ),
-    plays: "940",
-    total: "47.00",
+    plays: 940,
+    total: 47,
   },
 ];

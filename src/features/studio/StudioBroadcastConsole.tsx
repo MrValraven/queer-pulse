@@ -380,7 +380,7 @@ function TalkbackPane() {
           placeholder={t("studio:broadcast.aside.talkback.placeholder")}
           aria-label={t("studio:broadcast.aside.talkback.aria")}
         />
-        <Button variant="ghost-dark" type="submit">
+        <Button variant="ghost" type="submit">
           {t("studio:broadcast.aside.talkback.sendCta")}
         </Button>
       </form>

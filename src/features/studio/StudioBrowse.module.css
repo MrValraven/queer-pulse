@@ -12,7 +12,7 @@
   align-items: center;
   min-height: var(--tap-min);
   padding: 0 16px;
-  border: 1px solid rgba(var(--cream-rgb), 0.4);
+  border: 1px solid rgba(var(--studio-ink-rgb), 0.4);
   border-radius: var(--radius-pill);
   color: var(--text);
   font-size: var(--text-14);
@@ -24,7 +24,7 @@
 
 @media (hover: hover) {
   .chip:hover {
-    background: rgba(var(--cream-rgb), 0.06);
+    background: rgba(var(--studio-ink-rgb), 0.06);
   }
 }
 

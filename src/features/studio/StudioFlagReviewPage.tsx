@@ -5,18 +5,20 @@ import { StudioShell } from "./StudioShell";
 import { StudioLine } from "./StudioSkeletons";
 import { StudioFlagCard } from "./StudioFlagCard";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { useFormat } from "../../shared/i18n/format";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { buildFlags, resolvedFlagImage } from "./studioFlagReview.data";
+import { DAY_MONTH, fixtureDate } from "./studioFixtureDate";
 import s from "./council.module.css";
 
-// The already-resolved mock flag: the track title, the reporter's and
-// reviewer's names and the formatted date stay literal; the phrases around
-// them resolve through `studioShowcase:flagReview.resolved.*`.
+// The already-resolved mock flag: the track title and the reporter's and
+// reviewer's names stay literal, the date formats in the active locale, and
+// the phrases around them resolve through `studioShowcase:flagReview.resolved.*`.
 const FLAG_TRACK_TITLE_PRE = "Kitchen ";
 const FLAG_TRACK_TITLE_EM = "warm-up";
 const FLAG_REPORTER_NAME = "João Ribeiro";
-const FLAG_RESOLVED_DATE = "6 Jun";
+const FLAG_RESOLVED_DATE_ISO = "2026-06-06";
 const REVIEWER_INITIALS = "SM";
 const REVIEWER_NAME = "Sara Marques";
 
@@ -47,10 +49,11 @@ function FlagCardSkeleton() {
 
 export function StudioFlagReviewPage() {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const { showToast } = useToast();
   const [resolved, setResolved] = useState<Record<string, string>>({});
   const loading = useSimulatedLoad();
-  const flags = useMemo(() => buildFlags(t), [t]);
+  const flags = useMemo(() => buildFlags(t, fmt), [t, fmt]);
 
   function resolve(id: string, verb: string, msg: string) {
     setResolved((r) => ({ ...r, [id]: verb }));
@@ -124,7 +127,10 @@ export function StudioFlagReviewPage() {
                   <div className={s.who}>
                     {t("studioShowcase:flagReview.resolved.reporterLine", {
                       name: FLAG_REPORTER_NAME,
-                      date: FLAG_RESOLVED_DATE,
+                      date: fmt.date(
+                        fixtureDate(FLAG_RESOLVED_DATE_ISO),
+                        DAY_MONTH,
+                      ),
                     })}
                   </div>
                 </div>

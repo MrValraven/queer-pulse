@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useLayoutEffect } from "react";
 
 const STUDIO_SHELL_ATTRIBUTE = "data-studio-shell";
 
@@ -7,12 +7,14 @@ const STUDIO_SHELL_ATTRIBUTE = "data-studio-shell";
 let mountedShellCount = 0;
 
 /** Stamps `<html data-studio-shell="true">` while a Studio shell is mounted.
- *  Studio renders no bottom tab bar, so standalone.css collapses
- *  `--bottom-inset` on that signal and the player bar sits at the screen
- *  bottom; studio.module.css reads it for the sticky topbar's scroll padding.
- *  Same technique as MessagesPage's `data-messages-thread`. */
+ *  The app's bottom tab bar is absent in Studio, so standalone.css collapses
+ *  `--bottom-inset` on that signal; the listener shell's own tab bar raises it
+ *  again at <=880px through useStudioTabsSignal. studio.module.css reads the
+ *  signal for the sticky topbar's scroll padding. A layout effect, so the
+ *  attribute lands before the first paint. Same technique as MessagesPage's
+ *  `data-messages-thread`. */
 export function useStudioShellSignal() {
-  useEffect(() => {
+  useLayoutEffect(() => {
     const root = document.documentElement;
     mountedShellCount += 1;
     root.setAttribute(STUDIO_SHELL_ATTRIBUTE, "true");

@@ -66,8 +66,8 @@ export function StudioFlagCard({ flag, done, onResolve }: StudioFlagCardProps) {
               style={
                 flag.unclaimed
                   ? {
-                      background: "rgba(247,243,238,.1)",
-                      color: "rgba(247,243,238,.4)",
+                      background: "rgba(var(--studio-ink-rgb), 0.1)",
+                      color: "var(--studio-text-faint)",
                     }
                   : undefined
               }

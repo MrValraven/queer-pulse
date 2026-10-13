@@ -6,30 +6,30 @@
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--jade-light, var(--jade-light));
+  color: var(--studio-jade-text);
   margin-bottom: 12px;
 }
 .pageH h1 {
   font-family: var(--serif);
   font-weight: 300;
   font-size: var(--text-display);
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
   letter-spacing: -0.025em;
   line-height: 1;
 }
 .pageH h1 em {
   font-style: italic;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .dek {
   font-size: var(--text-16);
-  color: rgba(var(--cream-rgb), 0.6);
+  color: var(--studio-text-muted);
   line-height: 1.6;
   max-width: 60ch;
   margin-top: 16px;
 }
 .dek em {
-  color: var(--jade-light, var(--jade-light));
+  color: var(--studio-jade-text);
   font-style: italic;
 }
 
@@ -61,16 +61,16 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: var(--text-28);
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
   letter-spacing: -0.015em;
 }
 .sheetHi h1 em {
   font-style: italic;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .sheetBy {
   font-size: var(--text-13-5);
-  color: rgba(var(--cream-rgb), 0.6);
+  color: var(--studio-text-muted);
   margin: 6px 0 14px;
 }
 .sheetBy em {
@@ -83,8 +83,8 @@
 }
 .spec {
   font-size: var(--text-11-5);
-  color: rgba(var(--cream-rgb), 0.7);
-  background: rgba(var(--cream-rgb), 0.06);
+  color: var(--studio-text-muted);
+  background: rgba(var(--studio-ink-rgb), 0.06);
   border-radius: var(--radius-6);
   padding: 4px 10px;
 }
@@ -94,20 +94,31 @@
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: rgba(var(--cream-rgb), 0.5);
+  color: var(--studio-text-muted);
   margin-bottom: 10px;
 }
 .previewLbl em {
-  color: var(--accent);
+  color: var(--studio-accent-text);
   font-style: normal;
 }
+/* The sheet music preview is a page of paper: white with a hairline edge on
+   the light Studio surface, and the darker inset panel it always was in dark
+   mode. */
 .pdf {
-  background: var(--cream);
+  --sheet-paper: var(--paper);
+  --sheet-paper-edge: rgba(var(--line-rgb), 0.09);
+  background: var(--sheet-paper);
+  outline: 1px solid var(--sheet-paper-edge);
+  outline-offset: -1px;
   border-radius: var(--radius-12);
   padding: 36px 40px 0;
   position: relative;
   overflow: hidden;
   height: 360px;
+}
+:global([data-theme="dark"]) .pdf {
+  --sheet-paper: var(--cream);
+  --sheet-paper-edge: transparent;
 }
 .watermark {
   position: absolute;
@@ -141,7 +152,7 @@
 }
 .staff .ln {
   height: 1px;
-  background: rgba(var(--plum-rgb), 0.3);
+  background: rgba(var(--studio-ink-rgb), 0.3);
 }
 .notesRow {
   display: flex;
@@ -153,7 +164,7 @@
   width: 9px;
   height: 7px;
   border-radius: 50%;
-  background: var(--plum);
+  background: var(--studio-text);
   transform: rotate(-20deg);
 }
 .noteD.s {
@@ -167,8 +178,8 @@
   height: 140px;
   background: linear-gradient(
     to bottom,
-    rgba(var(--cream-rgb), 0),
-    var(--cream) 70%
+    transparent,
+    var(--sheet-paper) 70%
   );
   display: flex;
   align-items: flex-end;
@@ -193,8 +204,8 @@
   align-items: center;
   gap: 14px;
   margin-top: 20px;
-  background: rgba(var(--cream-rgb), 0.04);
-  border: 1px solid rgba(var(--cream-rgb), 0.1);
+  background: rgba(var(--studio-ink-rgb), 0.04);
+  border: 1px solid rgba(var(--studio-ink-rgb), 0.1);
   border-radius: var(--radius-14);
   padding: 16px 18px;
 }
@@ -203,7 +214,7 @@
   height: 2.857em;
   border-radius: 50%;
   background: rgba(var(--jade-rgb), 0.2);
-  color: var(--jade-light, var(--jade-light));
+  color: var(--studio-jade-chip-text);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -214,24 +225,24 @@
 .transcriber h5 {
   font-size: var(--text-14);
   font-weight: 600;
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
 }
 .transcriber h5 em {
   font-style: italic;
 }
 .transcriber p {
   font-size: var(--text-12-5);
-  color: rgba(var(--cream-rgb), 0.5);
+  color: var(--studio-text-muted);
   margin-top: 2px;
 }
 .transcriber p em {
-  color: var(--jade-light, var(--jade-light));
+  color: var(--studio-jade-text);
   font-style: italic;
 }
 
 .checkout {
-  background: rgba(var(--cream-rgb), 0.04);
-  border: 1px solid rgba(var(--cream-rgb), 0.12);
+  background: rgba(var(--studio-ink-rgb), 0.04);
+  border: 1px solid rgba(var(--studio-ink-rgb), 0.12);
   border-radius: var(--radius-18);
   padding: 26px 28px;
   position: sticky;
@@ -241,15 +252,15 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: var(--text-24);
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
 }
 .checkout h2 em {
   font-style: italic;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .chSub {
   font-size: var(--text-13);
-  color: rgba(var(--cream-rgb), 0.5);
+  color: var(--studio-text-muted);
   margin: 4px 0 18px;
 }
 .line {
@@ -257,37 +268,37 @@
   justify-content: space-between;
   align-items: flex-start;
   padding: 10px 0;
-  border-bottom: 1px solid rgba(var(--cream-rgb), 0.08);
+  border-bottom: 1px solid rgba(var(--studio-ink-rgb), 0.08);
   font-size: var(--text-13-5);
-  color: rgba(var(--cream-rgb), 0.7);
+  color: var(--studio-text-muted);
 }
 .line .k small {
   display: block;
   font-size: var(--text-11-5);
-  color: rgba(var(--cream-rgb), 0.5);
+  color: var(--studio-text-muted);
   margin-top: 2px;
 }
 .line .v {
   font-family: var(--serif);
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
   white-space: nowrap;
 }
 .lineTotal {
   border-bottom: none;
   padding-top: 14px;
   font-weight: 600;
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
 }
 .lineTotal .v {
   font-size: var(--text-18);
 }
 .lineTotal .v em {
   font-style: normal;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 
 .splitViz {
-  background: rgba(var(--cream-rgb), 0.03);
+  background: rgba(var(--studio-ink-rgb), 0.03);
   border-radius: var(--radius-12);
   padding: 16px 18px;
   margin: 14px 0;
@@ -297,7 +308,7 @@
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: rgba(var(--cream-rgb), 0.5);
+  color: var(--studio-text-muted);
   margin-bottom: 10px;
 }
 .splitBar {
@@ -308,20 +319,20 @@
   margin-bottom: 12px;
 }
 .splitBar .a {
-  background: var(--jade-light, var(--jade-light));
+  background: var(--studio-jade-text);
 }
 .splitBar .b {
   background: var(--accent);
 }
 .splitBar .c {
-  background: rgba(var(--cream-rgb), 0.3);
+  background: rgba(var(--studio-ink-rgb), 0.3);
 }
 .splitR {
   display: flex;
   align-items: center;
   gap: 8px;
   font-size: var(--text-12-5);
-  color: rgba(var(--cream-rgb), 0.6);
+  color: var(--studio-text-muted);
   padding: 5px 0;
 }
 .sw {
@@ -335,21 +346,21 @@
 }
 .sn em {
   font-style: italic;
-  color: rgba(var(--cream-rgb), 0.85);
+  color: rgba(var(--studio-ink-rgb), 0.85);
 }
 .sv {
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
 }
 .splitFoot {
   font-size: var(--text-11-5);
-  color: rgba(var(--cream-rgb), 0.5);
+  color: var(--studio-text-muted);
   line-height: 1.55;
   margin-top: 10px;
   font-style: italic;
   font-family: var(--serif);
 }
 .splitFoot em {
-  color: var(--jade-light, var(--jade-light));
+  color: var(--studio-jade-text);
   font-style: normal;
 }
 
@@ -363,37 +374,39 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  border: 1.5px solid rgba(var(--cream-rgb), 0.12);
+  border: 1.5px solid rgba(var(--studio-ink-rgb), 0.12);
   border-radius: var(--radius-12);
   padding: 12px 14px;
   cursor: pointer;
 }
+/* The selected method uses the Studio jade ink, which clears 3:1 on the
+   light surface and stays the light jade in dark mode. */
 .pmOn {
-  border-color: var(--jade-light, var(--jade-light));
+  border-color: var(--studio-jade-text);
   background: rgba(var(--jade-rgb), 0.06);
 }
 .pmDot {
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  border: 2px solid rgba(var(--cream-rgb), 0.3);
+  border: 2px solid rgba(var(--studio-ink-rgb), 0.3);
   flex: none;
 }
 .pmOn .pmDot {
-  border-color: var(--jade-light, var(--jade-light));
-  background: var(--jade-light, var(--jade-light));
-  box-shadow: inset 0 0 0 3px var(--studio-bg);
+  border-color: var(--studio-jade-text);
+  background: var(--studio-jade-text);
+  box-shadow: inset 0 0 0 3px var(--studio-surface);
 }
 .pn {
   font-size: var(--text-13-5);
   font-weight: 600;
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
 }
 .pn small {
   display: block;
   font-size: var(--text-11-5);
   font-weight: 400;
-  color: rgba(var(--cream-rgb), 0.5);
+  color: var(--studio-text-muted);
   margin-top: 2px;
 }
 .chBtn {
@@ -414,7 +427,7 @@
 }
 .chNote {
   font-size: var(--text-11-5);
-  color: rgba(var(--cream-rgb), 0.5);
+  color: var(--studio-text-muted);
   font-style: italic;
   font-family: var(--serif);
   text-align: center;
@@ -422,7 +435,7 @@
   line-height: 1.5;
 }
 .chNote em {
-  color: var(--jade-light, var(--jade-light));
+  color: var(--studio-jade-text);
 }
 
 @media (--compact) {

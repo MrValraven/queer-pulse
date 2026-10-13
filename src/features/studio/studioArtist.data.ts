@@ -16,7 +16,9 @@ export type ArtistTabId = (typeof TABS)[number]["id"];
 /** Demo-only sidebar and hero figures, moved here from the components. */
 export const ARTIST_SHOWCASE = {
   subscribeAmount: 3,
-  premiereDateTime: "10 Jun · 21:00 Lisbon",
+  /** `yyyy-mm-dd`, formatted in the active locale; the clock time stays literal. */
+  premiereDateIso: "2026-06-10",
+  premiereTime: "21:00 Lisbon",
   sidebarStats: {
     plays: 36400,
     earningsStreaming: 1820,
@@ -30,8 +32,6 @@ export interface ArtistRelease {
   pre: string;
   em?: string;
   meta: string;
-  buy: string;
-  split: string;
   tint: "coral" | "plum" | "jade";
   to: string;
   image: string;
@@ -51,8 +51,6 @@ export const RELEASES: ArtistRelease[] = [
     pre: "Cidade dos ",
     em: "santos",
     meta: "Album · 11 tracks · 2026",
-    buy: "buy · €8",
-    split: "€6.40 to Mariana",
     tint: "coral",
     to: routes.studioAlbum,
     image:
@@ -62,8 +60,6 @@ export const RELEASES: ArtistRelease[] = [
     pre: "A ",
     em: "Beja",
     meta: "EP · 5 tracks · 2024",
-    buy: "buy · €4",
-    split: "€3.20",
     tint: "plum",
     to: routes.studioAlbum,
     image:
@@ -72,8 +68,6 @@ export const RELEASES: ArtistRelease[] = [
   {
     pre: "Devoção",
     meta: "Album · 9 tracks · 2023",
-    buy: "buy · €7",
-    split: "€5.60",
     tint: "jade",
     to: routes.studioAlbum,
     image:

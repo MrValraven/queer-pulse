@@ -1,11 +1,12 @@
 /* The dialog and the picker portal to <body>, so they paint with the app
-   theme's tokens; the card, chip and mosaic sit inside the dark Studio shell. */
+   theme's tokens; the card, chip and mosaic sit inside the Studio shell and
+   paint with the Studio roles. */
 
 /* Cover mosaic (fills a positioned parent, like ImageSlot). Two or three
    covers repeat to fill all four cells; the tint shows behind each cover
    until it loads, then the cover fades in. Plum and default mix the surrounding text
-   colour, so they read on the light picker (ink) and on the dark Studio
-   surface (cream) alike; coral and jade hold up on both. */
+   colour, so they read on the picker and on the Studio surface in both
+   themes; coral and jade hold up on both. */
 .mosaic {
   --mosaic-tint: color-mix(in srgb, currentColor 12%, transparent);
   position: absolute;
@@ -68,7 +69,7 @@
 .visibilityChip {
   display: inline-flex;
   padding: 1px 8px;
-  border: 1px solid rgba(var(--cream-rgb), 0.28);
+  border: 1px solid rgba(var(--studio-ink-rgb), 0.28);
   border-radius: var(--radius-pill);
   color: var(--text60);
   font-size: var(--text-11);

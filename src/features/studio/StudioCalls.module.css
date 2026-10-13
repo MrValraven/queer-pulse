@@ -28,7 +28,7 @@
 .dek {
   max-width: 60ch;
   margin: 0;
-  color: rgba(var(--cream-rgb), 0.72);
+  color: var(--studio-text-muted);
 }
 
 .heroLinks {
@@ -53,7 +53,7 @@
   padding: 20px 22px;
   border: 1px solid var(--line);
   border-radius: var(--radius-18);
-  background: rgba(var(--cream-rgb), 0.04);
+  background: rgba(var(--studio-ink-rgb), 0.04);
 }
 
 .funder {
@@ -101,7 +101,7 @@
 }
 
 .fact dd[data-tone="accent"] {
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 
 .fact dd[data-tone="muted"] {

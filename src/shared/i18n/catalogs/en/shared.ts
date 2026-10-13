@@ -506,7 +506,6 @@ export const shared: Catalog = {
     "Professional directory",
   "megaNav.community.col.people.topics": "Topics",
   "megaNav.community.col.people.dating": "Dating",
-  "megaNav.community.col.gather.head": "Gather",
   "megaNav.community.col.gather.events": "Events",
   "megaNav.community.col.organise.activismVolunteering":
     "Activism & Volunteering",
@@ -519,6 +518,7 @@ export const shared: Catalog = {
     "Local Business directory",
   "megaNav.community.col.discover.housing": "Housing",
   "megaNav.community.col.discover.partners": "Partners",
+  "megaNav.community.col.gatheringsPlaces.head": "Gatherings & places",
 
   // MegaNav — Resources
   "megaNav.resources.title": "Resources",

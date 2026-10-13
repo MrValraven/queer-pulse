@@ -146,7 +146,7 @@ export function StudioWithdrawnPage() {
           <Button variant="primary" size="lg" to={routes.studioArtist}>
             {t("studio:withdrawn.visitArtistCta")}
           </Button>
-          <Button variant="ghost-dark" size="lg" to={routes.studio}>
+          <Button variant="ghost" size="lg" to={routes.studio}>
             {t("studio:withdrawn.backToPlayerCta")}
           </Button>
         </div>

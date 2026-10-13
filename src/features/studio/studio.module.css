@@ -1,22 +1,23 @@
-/* QueerPulse Studio — dark music-app shared styles */
+/* QueerPulse Studio: shared music-app styles, painted on the Studio roles
+   so the shell follows the app theme. */
 .root {
-  --bg: var(--studio-bg);
-  --rail: var(--studio-rail);
-  --line: rgba(var(--cream-rgb), 0.08);
-  --text: rgba(var(--cream-rgb), 0.92);
-  --text60: rgba(var(--cream-rgb), 0.62);
-  --text40: rgba(var(--cream-rgb), 0.4);
-  /* The shell carries data-theme="dark", which flips --line-rgb here, but
-     these two were resolved on <html> with the app theme's channels, so they
-     are restated to pick up the dark ones. */
-  --wash: rgba(var(--line-rgb), 0.05);
-  --line-2: rgba(var(--line-rgb), 0.22);
+  --bg: var(--studio-surface);
+  --rail: var(--studio-surface-rail);
+  --line: rgba(var(--studio-ink-rgb), 0.08);
+  --text: var(--studio-text);
+  --text60: var(--studio-text-muted);
+  --text40: var(--studio-text-faint);
+  /* The app-wide wash and hairline restated on the Studio ink channel, so
+     every wash inside the shell shares one palette with the Studio roles in
+     both themes. */
+  --wash: rgba(var(--studio-ink-rgb), 0.05);
+  --line-2: rgba(var(--studio-ink-rgb), 0.22);
   background: var(--bg);
   color: var(--text);
   min-height: 100svh;
   /* Firefox */
   scrollbar-width: thin;
-  scrollbar-color: rgba(var(--cream-rgb), 0.18) transparent;
+  scrollbar-color: rgba(var(--studio-ink-rgb), 0.18) transparent;
 }
 /* Themed scrollbars for every inner scroll area inside the studio shell (WebKit/Blink) */
 .root ::-webkit-scrollbar {
@@ -27,14 +28,14 @@
   background: transparent;
 }
 .root ::-webkit-scrollbar-thumb {
-  background: rgba(var(--cream-rgb), 0.18);
+  background: rgba(var(--studio-ink-rgb), 0.18);
   border-radius: var(--radius-pill);
   border: 2px solid transparent;
   background-clip: padding-box;
 }
 @media (hover: hover) {
   .root ::-webkit-scrollbar-thumb:hover {
-    background: rgba(var(--cream-rgb), 0.32);
+    background: rgba(var(--studio-ink-rgb), 0.32);
     background-clip: padding-box;
   }
 }
@@ -89,7 +90,7 @@
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--studio-accent-text);
   margin-left: auto;
 }
 .railGrp {
@@ -120,7 +121,7 @@
 @media (hover: hover) {
   .railItem:hover {
     color: var(--text);
-    background: rgba(var(--cream-rgb), 0.03);
+    background: rgba(var(--studio-ink-rgb), 0.03);
   }
 }
 .railItemOn {
@@ -151,7 +152,7 @@
 }
 @media (hover: hover) {
   .plItem:hover {
-    background: rgba(var(--cream-rgb), 0.03);
+    background: rgba(var(--studio-ink-rgb), 0.03);
   }
 }
 .plCov {
@@ -190,7 +191,7 @@
   margin-top: 6px;
 }
 .railFoot b {
-  color: var(--accent);
+  color: var(--studio-accent-text);
   font-style: normal;
 }
 
@@ -207,7 +208,7 @@
   position: sticky;
   top: 0;
   z-index: var(--z-sticky);
-  background: color-mix(in srgb, var(--studio-bg) 82%, transparent);
+  background: color-mix(in srgb, var(--studio-surface) 82%, transparent);
   backdrop-filter: var(--blur-lg);
   border-bottom: 1px solid var(--line);
 }
@@ -219,7 +220,7 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: rgba(var(--cream-rgb), 0.06);
+  background: rgba(var(--studio-ink-rgb), 0.06);
   border: none;
   color: var(--text60);
   cursor: pointer;
@@ -237,7 +238,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  background: rgba(var(--cream-rgb), 0.06);
+  background: rgba(var(--studio-ink-rgb), 0.06);
   border: 1px solid var(--line);
   border-radius: var(--radius-pill);
   padding: 9px 16px;
@@ -267,7 +268,7 @@
 .sustainPill {
   font-size: var(--text-13);
   font-weight: 600;
-  color: var(--bg);
+  color: var(--studio-bg);
   background: var(--accent);
   border-radius: var(--radius-pill);
   padding: 8px 16px;
@@ -288,7 +289,7 @@
   width: 2.615em;
   height: 2.615em;
   border-radius: 50%;
-  background: rgba(var(--cream-rgb), 0.1);
+  background: rgba(var(--studio-ink-rgb), 0.1);
   color: var(--text);
   display: flex;
   align-items: center;
@@ -305,42 +306,107 @@
 /* The page scrolls the document, so the sticky topbar's clearance goes on
    <html> while a Studio shell is mounted (useStudioShellSignal). Keyboard
    focus and in-page jumps then stop below the bar. Covers the creator
-   shell's topbar too, which is a little shorter. */
+   shell's topbar too, which is a little shorter. The bottom clearance keeps
+   focus clear of the phone tab bar and the player bar. */
 :global(html[data-studio-shell="true"]) {
   scroll-padding-top: 96px;
+  scroll-padding-bottom: calc(
+    var(--bottom-inset, 0px) + var(--studio-player-inset, 0px)
+  );
 }
-
-/* Phones: the search drops to its own full-width row under the actions, the
-   back and forward buttons give way to the browser's own, and every label
-   stays on one line, so the sticky bar is two short rows. */
+/* The creator shell wraps to two rows on phones, so its bar runs taller.
+   The listener shell's phone bar sets its own clearance below. */
 @media (--md) {
-  :global(html[data-studio-shell="true"]) {
+  :global(html[data-studio-shell="true"]:not([data-studio-tabs="true"])) {
     scroll-padding-top: 128px;
   }
+}
+
+/* The brand lockup that leads the phone topbar, beside the avatar. With the
+   short action labels the word fits whole from 360px up; the ellipsis is a
+   last resort for anything narrower, and only the brand ever shrinks. */
+.topBrand {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex: 0 100 auto;
+  min-width: 8px;
+  min-height: 44px;
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: var(--text-17);
+  color: var(--studio-text);
+  border-radius: var(--radius-4);
+}
+.topBrand .pulseDot {
+  width: 8px;
+  height: 8px;
+}
+.topBrandWord {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding-inline-end: 2px;
+}
+.topBrandWord em {
+  font-style: italic;
+}
+.topBrand:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* Phones and tablets: one row of avatar, brand and actions. Search is a tab
+   there, the back and forward buttons give way to the browser's own on the
+   smallest screens, and every label stays on one line. The actions keep
+   their size and take a 44px hit area; the pill keeps its slimmer look and
+   reaches 44px through a transparent extension. */
+@media (--compact) {
+  /* The bar's own height: its top padding (which grows with the notch), the
+     44px row, the 10px bottom padding and the hairline. */
+  :global(html[data-studio-shell="true"][data-studio-tabs="true"]) {
+    scroll-padding-top: calc(max(10px, env(safe-area-inset-top, 0px)) + 55px);
+  }
   .topbar {
-    flex-wrap: wrap;
-    gap: 10px 12px;
+    flex-wrap: nowrap;
+    gap: 12px;
     padding: 10px 16px;
     padding-block-start: max(10px, env(safe-area-inset-top));
   }
-  .search {
-    order: 1;
-    flex: 1 1 100%;
-    max-width: none;
-    padding: 8px 14px;
+  .navs {
+    flex: none;
   }
   .topRight {
-    flex-wrap: wrap;
-    justify-content: flex-end;
-    gap: 8px 10px;
-    min-width: 0;
+    flex: none;
+    flex-wrap: nowrap;
+    gap: 10px;
   }
   .creatorLink,
   .sustainPill {
+    display: inline-flex;
+    align-items: center;
     white-space: nowrap;
   }
+  .creatorLink {
+    gap: 6px;
+    min-height: 44px;
+  }
+  .creatorLink svg {
+    flex: none;
+    width: 15px;
+    height: 15px;
+  }
   .sustainPill {
-    padding: 6px 12px;
+    position: relative;
+    min-height: 32px;
+    padding: 0 12px;
+  }
+  .sustainPill::before {
+    content: "";
+    position: absolute;
+    inset: -6px 0;
   }
 }
 @media (--xs) {
@@ -374,7 +440,7 @@
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .eb .live {
   width: 7px;
@@ -393,7 +459,7 @@
 }
 .heroInfo h1 em {
   font-style: italic;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .by {
   font-size: var(--text-15);
@@ -435,7 +501,7 @@
   font-size: var(--text-13-5);
   font-weight: 600;
   color: var(--text);
-  background: rgba(var(--cream-rgb), 0.08);
+  background: rgba(var(--studio-ink-rgb), 0.08);
   border: 1px solid var(--line);
   border-radius: var(--radius-pill);
   padding: 10px 18px;
@@ -444,7 +510,7 @@
 }
 @media (hover: hover) {
   .heroActions button:hover {
-    background: rgba(var(--cream-rgb), 0.14);
+    background: rgba(var(--studio-ink-rgb), 0.14);
   }
 }
 /* Beats .heroActions button (0,1,1): the hero play keeps the coral fill. */
@@ -477,7 +543,7 @@
   margin-left: 2px;
 }
 .heroActions .tip {
-  color: var(--accent);
+  color: var(--studio-accent-text);
   border-color: rgba(var(--accent-rgb), 0.3);
 }
 .payPill {
@@ -496,12 +562,12 @@
 .payPill svg {
   width: 18px;
   height: 18px;
-  color: var(--jade-light);
+  color: var(--studio-jade-text);
   flex: none;
 }
 .payPill em {
   font-style: normal;
-  color: var(--jade-light);
+  color: var(--studio-jade-text);
   font-weight: 600;
 }
 .payPill .small {
@@ -512,8 +578,8 @@
 .row {
   padding: 24px 0 40px;
 }
-/* Wraps on phones so a header action drops under the heading instead of
-   squeezing it; the action keeps its label on one line. */
+/* Wraps on phones so a header action drops under the heading and the heading
+   keeps its full width; the action keeps its label on one line. */
 .rowH {
   display: flex;
   flex-wrap: wrap;
@@ -533,7 +599,7 @@
 }
 .rowH h2 em {
   font-style: italic;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .rowH .sub {
   font-size: var(--text-13);
@@ -583,20 +649,20 @@
   text-transform: uppercase;
   padding: 4px 8px;
   border-radius: var(--radius-6);
+  /* Covers can be pale placeholders, dark art or bright photos, so every tag
+     carries its own fixed plum backing and keeps its ink fixed in both themes. */
+  background: rgba(var(--plum-rgb), 0.8);
   backdrop-filter: var(--blur-md);
   z-index: 2;
 }
 .tagFree {
-  background: rgba(var(--jade-rgb), 0.32);
   color: var(--jade-light);
 }
 .tagMem {
-  background: rgba(var(--accent-rgb), 0.32);
   color: var(--accent-soft);
 }
 .tagLive {
-  background: rgba(var(--cream-rgb), 0.18);
-  color: var(--text);
+  color: rgba(var(--cream-rgb), 0.92);
 }
 .playFab {
   position: absolute;
@@ -661,7 +727,7 @@
 }
 .payLine em {
   font-style: normal;
-  color: var(--jade-light);
+  color: var(--studio-jade-text);
   font-weight: 600;
 }
 
@@ -673,7 +739,7 @@
   align-items: start;
 }
 .setCard {
-  background: rgba(var(--cream-rgb), 0.04);
+  background: rgba(var(--studio-ink-rgb), 0.04);
   border: 1px solid var(--line);
   border-radius: var(--radius-18);
   padding: 24px 26px;
@@ -687,7 +753,7 @@
 }
 .setCard h3 em {
   font-style: italic;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .setDesc {
   font-size: var(--text-13);
@@ -734,7 +800,7 @@
 }
 .setRow .pay b {
   display: block;
-  color: var(--jade-light);
+  color: var(--studio-jade-chip-text);
   font-size: var(--text-9-5);
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -758,7 +824,7 @@
   border-radius: var(--radius-8);
 }
 .setRowNow h5 {
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 
 .sideCol {
@@ -767,7 +833,7 @@
   gap: 16px;
 }
 .sideCard {
-  background: rgba(var(--cream-rgb), 0.04);
+  background: rgba(var(--studio-ink-rgb), 0.04);
   border: 1px solid var(--line);
   border-radius: var(--radius-16);
   padding: 20px 22px;
@@ -780,7 +846,7 @@
 }
 .sideCard .ct em {
   font-style: italic;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .sideCard .sub {
   font-size: var(--text-12-5);
@@ -799,7 +865,7 @@
   height: 2.727em;
   border-radius: 50%;
   background: rgba(var(--accent-rgb), 0.2);
-  color: var(--accent-soft);
+  color: var(--studio-accent-chip-text);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -814,10 +880,10 @@
 }
 .avStack .jade {
   background: rgba(var(--jade-rgb), 0.22);
-  color: var(--jade-light);
+  color: var(--studio-jade-chip-text);
 }
 .ledgerCard {
-  background: rgba(var(--cream-rgb), 0.04);
+  background: rgba(var(--studio-ink-rgb), 0.04);
   border: 1px solid var(--line);
   border-radius: var(--radius-16);
   padding: 20px 22px;
@@ -835,7 +901,7 @@
 }
 .ledgerCard .head em {
   font-style: italic;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .ledgerCard .lrow {
   display: flex;
@@ -857,38 +923,52 @@
 }
 .ledgerCard .v em {
   font-style: normal;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .ledgerCard .cta {
   display: inline-block;
   margin-top: 14px;
   font-size: var(--text-12-5);
   font-weight: 600;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 
 /* Tabs */
-/* The tablist scrolls sideways on phones. The padding leaves room for the
-   focus ring (3px offset + 3px outline, plus the tab's -1px bottom margin),
-   and the baseline is a background on the content box so it spans the tabs
-   and the active underline still sits on it. */
+/* The tablist scrolls sideways on phones, and a scroller clips whatever paints
+   outside its padding box. The focus ring reaches past the tab's border box by
+   its offset plus its outline, which is the same 3px wide (the cream halo
+   fills the offset gap). The tab's border box in turn reaches past its label
+   by the tab's own padding (studioKit.module.css: 4px top, 8px each side) and
+   1px below through its -1px bottom margin. The scroller's padding covers
+   both, and an equal negative inline margin puts the labels back on the page
+   content edge. The baseline is a background on the content box so it spans
+   the tabs and the active underline still sits on it. */
 .tabs {
+  --tab-ring-reach: calc(var(--focus-ring-offset) * 2);
+  --tab-inline-reach: calc(8px + var(--tab-ring-reach));
   display: flex;
   gap: 24px;
-  padding: 10px 14px 7px;
-  margin-inline: -14px;
+  padding: calc(4px + var(--tab-ring-reach)) var(--tab-inline-reach)
+    calc(1px + var(--tab-ring-reach));
+  margin-inline: calc(-1 * var(--tab-inline-reach));
   background: linear-gradient(var(--line), var(--line)) 0 100% / 100% 1px
     no-repeat;
   background-origin: content-box;
   margin-bottom: 21px;
   overflow-x: auto;
   /* scrollIntoView keeps the focused tab's ring clear of the scroller edge. */
-  scroll-padding-inline: 14px;
+  scroll-padding-inline: var(--tab-inline-reach);
   scrollbar-width: none;
   overscroll-behavior-x: contain;
 }
 .tabs::-webkit-scrollbar {
   display: none;
+}
+/* The last tab keeps its trailing 8px so the scroll range ends past its ring.
+   Browsers round the scroll range to whole pixels, so with the ring flush
+   against the far edge the last pixel column of the outline was cut off. */
+.tabs > .tab:last-child {
+  margin-inline-end: 0;
 }
 .tab {
   white-space: nowrap;
@@ -932,7 +1012,7 @@
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .detailHero h1 {
   font-family: var(--serif);
@@ -945,7 +1025,7 @@
 }
 .detailHero h1 em {
   font-style: italic;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 
 /* Detail layout (album/artist body) */
@@ -964,7 +1044,7 @@
 }
 .prose em {
   font-style: italic;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .author {
   display: flex;
@@ -981,7 +1061,7 @@
   height: 2.667em;
   border-radius: 50%;
   background: rgba(var(--accent-rgb), 0.2);
-  color: var(--accent-soft);
+  color: var(--studio-accent-chip-text);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -989,7 +1069,7 @@
   font-size: var(--text-12);
 }
 .buyCard {
-  background: rgba(var(--cream-rgb), 0.04);
+  background: rgba(var(--studio-ink-rgb), 0.04);
   border: 1px solid var(--line);
   border-radius: var(--radius-18);
   padding: 24px 26px;
@@ -1005,7 +1085,7 @@
 }
 .buyCard .price em {
   font-style: italic;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .buyCard .price .small {
   font-size: var(--text-14);
@@ -1026,7 +1106,7 @@
   font-size: var(--text-13-5);
   font-weight: 600;
   color: var(--text);
-  background: rgba(var(--cream-rgb), 0.08);
+  background: rgba(var(--studio-ink-rgb), 0.08);
   border: 1px solid var(--line);
   border-radius: var(--radius-12);
   padding: 12px 16px;
@@ -1036,7 +1116,7 @@
 }
 @media (hover: hover) {
   .bt:hover {
-    background: rgba(var(--cream-rgb), 0.14);
+    background: rgba(var(--studio-ink-rgb), 0.14);
   }
 }
 .btP {
@@ -1053,7 +1133,7 @@
 }
 .splitHint em {
   font-style: normal;
-  color: var(--jade-light);
+  color: var(--studio-jade-text);
   font-weight: 600;
 }
 
@@ -1063,7 +1143,7 @@
 }
 .payMini b {
   display: block;
-  color: var(--jade-light);
+  color: var(--studio-jade-text);
   font-size: var(--text-9-5);
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -1071,7 +1151,7 @@
 .tipMini {
   font-size: var(--text-12-5);
   font-weight: 600;
-  color: var(--accent);
+  color: var(--studio-accent-text);
   background: rgba(var(--accent-rgb), 0.14);
   border: none;
   border-radius: var(--radius-pill);
@@ -1097,14 +1177,14 @@
   }
 }
 
-/* ── Loading skeletons (light-on-dark, for the dark Studio surface) ── */
+/* Loading skeletons: an ink shimmer that follows the Studio surface. */
 .skel {
   border-radius: var(--radius-8);
   background: linear-gradient(
     90deg,
-    rgba(var(--cream-rgb), 0.05) 25%,
-    rgba(var(--cream-rgb), 0.11) 50%,
-    rgba(var(--cream-rgb), 0.05) 75%
+    rgba(var(--studio-ink-rgb), 0.05) 25%,
+    rgba(var(--studio-ink-rgb), 0.11) 50%,
+    rgba(var(--studio-ink-rgb), 0.05) 75%
   );
   background-size: 200% 100%;
   animation: qpShimmer 1.5s ease infinite;
@@ -1124,7 +1204,7 @@
   }
 }
 
-/* Local copies of shared keyframes — see src/styles/tokens/effects.css.
+/* Local copies of shared keyframes, see src/styles/tokens/effects.css.
    Global keyframes can't be referenced from a CSS module (the animation-name
    gets scoped to a dangling hash), so each module needs its own copy. */
 @keyframes qpShimmer {

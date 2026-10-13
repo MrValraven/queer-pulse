@@ -1,6 +1,8 @@
 import { type ReactNode } from "react";
+import type { Formatters } from "../../shared/i18n/format";
 import { Translation } from "../../shared/i18n/Translation";
 import type { TFunction } from "../../shared/i18n/types";
+import { DAY_MONTH, fixtureDate } from "./studioFixtureDate";
 
 export interface Flag {
   id: string;
@@ -43,10 +45,14 @@ function claimedBy(curator: string): ReactNode {
 }
 
 /** The flag queue (Pattern B, memoized in StudioFlagReviewPage). Track
- * titles, artist and curator names, the venue and the formatted deadline
- * dates stay literal; every phrase around them resolves through
- * `studioShowcase:flagReview.*`. */
-export function buildFlags(t: TFunction): Flag[] {
+ * titles, artist and curator names and the venue stay literal, the deadline
+ * dates format in the active locale, and every phrase around them resolves
+ * through `studioShowcase:flagReview.*`. */
+export function buildFlags(t: TFunction, fmt: Formatters): Flag[] {
+  const decideBy = (dateIso: string) =>
+    t("studioShowcase:flagReview.flag.decideBy", {
+      date: fmt.date(fixtureDate(dateIso), DAY_MONTH),
+    });
   return [
     {
       id: "f1",
@@ -67,9 +73,7 @@ export function buildFlags(t: TFunction): Flag[] {
       rmeta: `${t("studioShowcase:flagReview.flag.flaggedBy", { count: 2 })} · ${t("studioShowcase:flagReview.flag.rmeta.artistNotified")}`,
       claimAv: "SM",
       claim: claimedBy("Sara Marques"),
-      deadline: t("studioShowcase:flagReview.flag.decideBy", {
-        date: "19 Jun",
-      }),
+      deadline: decideBy("2026-06-19"),
       image:
         "https://plus.unsplash.com/premium_photo-1669876271015-55e215f60bc4?q=80&w=400&auto=format&fit=crop",
     },
@@ -94,9 +98,7 @@ export function buildFlags(t: TFunction): Flag[] {
       rmeta: `${t("studioShowcase:flagReview.flag.flaggedBy", { count: 1 })} · ${t("studioShowcase:flagReview.flag.rmeta.namedArtistNotified")}`,
       claimAv: "DO",
       claim: claimedBy("D. Okoye"),
-      deadline: t("studioShowcase:flagReview.flag.decideBy", {
-        date: "21 Jun",
-      }),
+      deadline: decideBy("2026-06-21"),
       image:
         "https://images.unsplash.com/photo-1774394027421-9daa1181f9ea?q=80&w=800&auto=format&fit=crop",
     },
@@ -119,9 +121,7 @@ export function buildFlags(t: TFunction): Flag[] {
       rmeta: `${t("studioShowcase:flagReview.flag.flaggedBy", { count: 1 })} · ${t("studioShowcase:flagReview.flag.rmeta.unclaimedInQueue", { count: 2 })}`,
       claimAv: "?",
       claim: t("studioShowcase:flagReview.flag.unclaimed"),
-      deadline: t("studioShowcase:flagReview.flag.decideBy", {
-        date: "23 Jun",
-      }),
+      deadline: decideBy("2026-06-23"),
       unclaimed: true,
       image:
         "https://plus.unsplash.com/premium_photo-1666232835461-f49509f2a97c?q=80&w=800&auto=format&fit=crop",

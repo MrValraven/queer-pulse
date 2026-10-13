@@ -2,9 +2,10 @@ export const coverImage =
   "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=600&auto=format&fit=crop";
 
 /**
- * The set hero. Title, curator, venue and the recording date stay literal
- * (proper nouns and an already formatted date); the phrases around them are
- * catalog keys resolved in StudioSetPage (Pattern A).
+ * The set hero. Title, curator and venue stay literal (proper nouns), the
+ * recording date is a `yyyy-mm-dd` fixture formatted in the active locale,
+ * and the phrases around them are catalog keys resolved in StudioSetPage
+ * (Pattern A).
  */
 export const SET = {
   title: "Vespertina ",
@@ -12,7 +13,7 @@ export const SET = {
   by: "Sara Marques",
   curatorFirstName: "Sara",
   venue: "Casa do Comum",
-  recordedOn: "12 Apr 2026",
+  recordedOnIso: "2026-04-12",
   recordedKey: "studioShowcase:set.hero.recorded",
   trackCount: 11,
   minutes: 58,

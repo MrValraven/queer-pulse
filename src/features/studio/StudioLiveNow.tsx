@@ -263,14 +263,14 @@ export function StudioLiveNow({ onTip }: { onTip: () => void }) {
                 </div>
                 <div className={s.srPay}>
                   {setRow.payNoteKey && (
-                    <b style={{ color: "var(--accent)" }}>
+                    <b style={{ color: "var(--studio-accent-text)" }}>
                       {t(setRow.payNoteKey)}
                     </b>
                   )}
                   {setRow.payEmLabel ? (
                     <em
                       style={{
-                        color: "var(--accent)",
+                        color: "var(--studio-accent-text)",
                         fontStyle: "italic",
                       }}
                     >

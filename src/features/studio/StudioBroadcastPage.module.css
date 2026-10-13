@@ -1,13 +1,13 @@
 .wrap {
-  --text: rgba(var(--cream-rgb), 0.92);
-  --text-60: rgba(var(--cream-rgb), 0.62);
-  /* Cream at 0.52 clears the AA 4.5:1 floor on every studio ground (4.96:1 on
-     --surface, 4.87:1 on --studio-bg). It carries 11px and 12px meta text, so it
-     never qualifies as large text. The old 0.40 measured 3.55:1 and failed. */
-  --text-40: rgba(var(--cream-rgb), 0.52);
-  --line: rgba(var(--cream-rgb), 0.1);
-  --surface: rgba(var(--cream-rgb), 0.05);
-  --rail: var(--studio-rail);
+  --text: var(--studio-text);
+  --text-60: var(--studio-text-muted);
+  /* Meta text at 11px and 12px never qualifies as large text, so it takes the
+     muted Studio text token, which clears the AA 4.5:1 floor on the Studio
+     surface and rail in both themes. The old cream at 0.40 measured 3.55:1. */
+  --text-40: var(--studio-text-muted);
+  --line: rgba(var(--studio-ink-rgb), 0.1);
+  --surface: rgba(var(--studio-ink-rgb), 0.05);
+  --rail: var(--studio-surface-rail);
   padding: 8px 0 var(--section-y-64);
 }
 
@@ -73,14 +73,14 @@
 }
 .onAir em {
   font-style: italic;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .pill {
   font-size: var(--text-10-5);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--studio-accent-chip-text);
   background: rgba(var(--accent-rgb), 0.14);
   border: 1px solid rgba(var(--accent-rgb), 0.3);
   border-radius: var(--radius-pill);
@@ -94,7 +94,7 @@
   color: var(--text);
   padding: 4px 12px;
   border-radius: var(--radius-8);
-  background: rgba(var(--cream-rgb), 0.06);
+  background: rgba(var(--studio-ink-rgb), 0.06);
 }
 .headMeta {
   font-size: var(--text-13);
@@ -128,13 +128,13 @@
 .pauseBtn:hover,
 .pauseBtn:focus-visible {
   color: var(--text);
-  border-color: rgba(var(--cream-rgb), 0.2);
+  border-color: rgba(var(--studio-ink-rgb), 0.2);
 }
 .endBtn {
   font-family: var(--sans);
   font-size: var(--text-13);
   font-weight: 600;
-  color: var(--accent);
+  color: var(--studio-accent-text);
   background: transparent;
   border: 1.5px solid rgba(var(--accent-rgb), 0.5);
   border-radius: var(--radius-10);
@@ -203,7 +203,7 @@
 }
 .dev:hover,
 .dev:focus-visible {
-  border-color: rgba(var(--cream-rgb), 0.2);
+  border-color: rgba(var(--studio-ink-rgb), 0.2);
 }
 .dev.on {
   border-color: rgba(var(--jade-rgb), 0.5);
@@ -223,14 +223,14 @@
   position: relative;
 }
 .dev.on .radio {
-  border-color: var(--jade-light);
+  border-color: var(--studio-jade-text);
 }
 .dev.on .radio::after {
   content: "";
   position: absolute;
   inset: 3px;
   border-radius: 50%;
-  background: var(--jade-light);
+  background: var(--studio-jade-text);
 }
 .devName {
   font-size: var(--text-13-5);
@@ -264,7 +264,7 @@
   flex: 1;
   height: 8px;
   border-radius: var(--radius-pill);
-  background: rgba(var(--cream-rgb), 0.08);
+  background: rgba(var(--studio-ink-rgb), 0.08);
   overflow: hidden;
 }
 .meterFill {
@@ -312,7 +312,7 @@
   width: 40px;
   height: 22px;
   border-radius: var(--radius-pill);
-  background: rgba(var(--cream-rgb), 0.12);
+  background: rgba(var(--studio-ink-rgb), 0.12);
   border: 1px solid var(--line);
   flex: none;
   position: relative;
@@ -344,20 +344,20 @@
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--studio-accent-text);
   margin-bottom: 12px;
 }
 .nowTitle {
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(1.625rem, 3.4vw, 2.375rem);
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
   letter-spacing: -0.02em;
   line-height: 1.05;
 }
 .nowTitle em {
   font-style: italic;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .wave {
   display: flex;
@@ -439,7 +439,7 @@
 }
 .cueTitle em {
   font-style: italic;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .cueWho {
   font-size: var(--text-12);
@@ -455,17 +455,17 @@
   white-space: nowrap;
 }
 .badgeOnair {
-  color: var(--accent);
+  color: var(--studio-accent-chip-text);
   background: rgba(var(--accent-rgb), 0.14);
   border: 1px solid rgba(var(--accent-rgb), 0.3);
 }
 .badgeMatched {
-  color: var(--jade-light);
+  color: var(--studio-jade-chip-text);
   background: rgba(var(--jade-rgb), 0.14);
   border: 1px solid rgba(var(--jade-rgb), 0.3);
 }
 .badgeHold {
-  color: var(--amber);
+  color: var(--amber-ink);
   background: rgba(var(--amber-rgb), 0.14);
   border: 1px solid rgba(var(--amber-rgb), 0.32);
 }
@@ -479,7 +479,7 @@
 }
 .cueFoot em {
   font-style: italic;
-  color: var(--jade-light);
+  color: var(--studio-jade-text);
 }
 
 /* ---- Right tabs ---- */
@@ -506,7 +506,7 @@
 }
 .tab em {
   font-style: normal;
-  color: var(--jade-light);
+  color: var(--studio-jade-text);
 }
 .tab:hover,
 .tab:focus-visible {
@@ -514,8 +514,8 @@
 }
 .tab.active {
   color: var(--text);
-  border-color: rgba(var(--cream-rgb), 0.24);
-  background: rgba(var(--cream-rgb), 0.06);
+  border-color: rgba(var(--studio-ink-rgb), 0.24);
+  background: rgba(var(--studio-ink-rgb), 0.06);
 }
 
 /* ---- Tips ---- */
@@ -542,7 +542,7 @@
   font-size: var(--text-11);
   font-weight: 700;
   color: var(--text);
-  background: rgba(var(--cream-rgb), 0.1);
+  background: rgba(var(--studio-ink-rgb), 0.1);
 }
 .tipBody {
   flex: 1;
@@ -561,7 +561,7 @@
 .tipAmount {
   font-size: var(--text-13);
   font-weight: 700;
-  color: var(--jade-light);
+  color: var(--studio-jade-text);
 }
 .tipNote {
   font-size: var(--text-12-5);
@@ -586,14 +586,14 @@
 }
 .tipTotalLbl em {
   font-style: normal;
-  color: var(--jade-light);
+  color: var(--studio-jade-chip-text);
   font-weight: 600;
 }
 .tipTotalV {
   font-family: var(--serif);
   font-weight: 300;
   font-size: var(--text-28);
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
   margin-top: 4px;
 }
 
@@ -616,11 +616,11 @@
   font-size: var(--text-11);
   font-weight: 700;
   color: var(--text);
-  background: rgba(var(--cream-rgb), 0.1);
+  background: rgba(var(--studio-ink-rgb), 0.1);
 }
 .tbOwn .tbAv {
   background: rgba(var(--accent-rgb), 0.18);
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .tbBody {
   flex: 1;

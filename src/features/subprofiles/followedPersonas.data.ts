@@ -11,49 +11,25 @@ import type {
  * reaches this module exclusively behind `if (demoMode)`, and the live branch
  * reads the API.
  *
- * WHY A SEED SET AT ALL. `DEMO_SUBPROFILES` ships almost every persona with
- * `viewerFollowing: false`, so deriving the list from the registry alone would
- * show a single row and miss both address shapes the row has to build. The
- * list carries three follows: NIGHTFORM (unlinked, addressed by its global
- * handle `/p/:handle`) is followed in the registry itself, and this set seeds
- * the other two, one linked persona addressed under its creator
- * (`/members/:ownerSlug/:slug`) and one more unlinked venue.
+ * ONE SOURCE OF TRUTH. The list is derived from the persona registry alone:
+ * a row is every persona whose `viewerFollowing` flag is set, dated by its
+ * `viewerFollowedAt`. This module keeps no follow state of its own, so the
+ * persona page, the Studio artist hero (`useFollow`) and the unfollow button
+ * on this list (`mockUnfollowPersona`) all write the same flag through
+ * `mockSetFollowing`, and a follow or an unfollow made on one surface shows
+ * on every other one. To start the demo following a persona, set both
+ * fields on its registry entry.
  *
- * A persona the registry already marks followed stays OUT of this set. The
- * persona page and the Studio artist hero unfollow through `useFollow`, which
- * flips only the registry (`mockSetFollowing`); a seed entry for the same id
- * would keep it listed here and make `demoIsFollowingArtist` report it
- * followed again on the next Studio read.
- *
- * ONE SOURCE OF TRUTH FOR THE TOGGLE. Unfollowing in demo goes through
- * `mockUnfollowPersona` below, which flips the shared registry state via
- * `mockSetFollowing` (so the persona's own page agrees) AND drops the id from
- * this seed. Without the second half, a persona seeded here would come back on
- * the next read of the list, which is exactly the kind of demo bug that reads
- * as a broken product.
+ * The registry starts the viewer following three personas so the list shows
+ * both link shapes: NIGHTFORM and Casa Corvo (unlinked, so the row carries no
+ * owner) and Anika Kovač's poetry (linked, so the row carries its creator's
+ * slug and name). Their follow instants are
+ * hand-dated into the PAST like every other demo fixture in this repo, so a
+ * "followed 3 weeks ago" line reads correctly whenever the demo is opened.
  */
-const seededFollowedIds = new Set<string>([
-  // Linked, published, addressed under its creator's profile slug.
-  "sp-anika-writer",
-  // Unlinked, published, a venue persona.
-  "sp-tomas-casa-corvo",
-]);
 
-/**
- * The demo instants each starting follow was made at (seeded or already in
- * the registry), hand-dated into the PAST
- * like every other demo fixture in this repo, so a "followed 3 weeks ago" line
- * reads correctly without depending on when the demo is opened.
- */
-const seededFollowedAt: Record<string, string> = {
-  "sp-diogo-nightform": "2025-11-18T20:10:00.000Z",
-  "sp-anika-writer": "2025-10-02T09:25:00.000Z",
-  "sp-tomas-casa-corvo": "2025-08-14T18:40:00.000Z",
-};
-
-/** Whether the demo viewer follows this persona right now. */
-const isDemoFollowed = (personaId: string, viewerFollowing: boolean): boolean =>
-  viewerFollowing || seededFollowedIds.has(personaId);
+/** Dates a follow the registry holds without a timestamp. */
+const UNDATED_FOLLOW_AT = "2025-12-01T12:00:00.000Z";
 
 /**
  * `GET /subprofiles/following` mock: every demo persona the viewer follows
@@ -71,7 +47,7 @@ export const mockFollowedPersonas = (
     (persona) =>
       persona.status === "published" &&
       persona.visibility === "open" &&
-      isDemoFollowed(persona.id, persona.viewerFollowing),
+      persona.viewerFollowing,
   ).map((persona) => {
     const isLinked = persona.linkVisibility === "linked";
     return {
@@ -93,7 +69,7 @@ export const mockFollowedPersonas = (
       // owner's name to the row's "Owner Name | Dancer" title.
       ownerName: isLinked ? persona.ownerName : null,
       followerCount: persona.followerCount,
-      followedAt: seededFollowedAt[persona.id] ?? "2025-12-01T12:00:00.000Z",
+      followedAt: persona.viewerFollowedAt ?? UNDATED_FOLLOW_AT,
     };
   });
   rows.sort((left, right) => right.followedAt.localeCompare(left.followedAt));
@@ -107,11 +83,10 @@ export const mockFollowedPersonas = (
 };
 
 /**
- * `DELETE /subprofiles/:id/follow` mock for this surface. Flips the shared
- * registry state so the persona's own page agrees, then drops the seed so the
- * row does not reappear on the next read.
+ * `DELETE /subprofiles/:id/follow` mock for this surface. Clears the registry
+ * flag the list is derived from, so the row leaves this list and the
+ * persona's own page shows Follow again.
  */
 export const mockUnfollowPersona = (personaId: string): void => {
   mockSetFollowing(personaId, false);
-  seededFollowedIds.delete(personaId);
 };

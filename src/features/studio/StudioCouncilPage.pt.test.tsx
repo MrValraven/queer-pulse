@@ -35,7 +35,7 @@ describe("StudioCouncilPage in Portuguese", () => {
       await screen.findByText("Lugar 1 · preside este trimestre"),
     ).toBeInTheDocument();
     expect(await screen.findByText("DJ e programação")).toBeInTheDocument();
-    expect(await screen.findByText("9 Jun · 12 faixas")).toBeInTheDocument();
+    expect(await screen.findByText("9/06 · 12 faixas")).toBeInTheDocument();
     expect(
       await screen.findByText(
         /Organizou as noites de quarta-feira da Casa do Comum/,

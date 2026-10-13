@@ -6,7 +6,7 @@
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .pageH h1 {
   font-family: var(--serif);
@@ -14,23 +14,23 @@
   font-size: var(--text-title);
   line-height: 1.05;
   letter-spacing: -0.02em;
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
   margin: 12px 0 0;
 }
 .pageH h1 em {
   font-style: italic;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .dek {
   font-size: var(--text-15-5);
   line-height: 1.6;
-  color: rgba(var(--cream-rgb), 0.62);
+  color: var(--studio-text-muted);
   max-width: 60ch;
   margin-top: 14px;
 }
 .dek em {
   font-style: italic;
-  color: rgba(var(--cream-rgb), 0.85);
+  color: rgba(var(--studio-ink-rgb), 0.85);
 }
 
 /* Collection / set hero */
@@ -56,20 +56,20 @@
   font-size: var(--text-display);
   line-height: 1.02;
   letter-spacing: -0.02em;
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
   margin: 10px 0 0;
 }
 .collInfo h1 em {
   font-style: italic;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .collMeta {
   font-size: var(--text-14);
-  color: rgba(var(--cream-rgb), 0.6);
+  color: var(--studio-text-muted);
   margin-top: 14px;
 }
 .collMeta strong {
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
   font-weight: 600;
 }
 .collActions {
@@ -83,8 +83,8 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  background: rgba(var(--cream-rgb), 0.06);
-  border: 1px solid rgba(var(--cream-rgb), 0.16);
+  background: rgba(var(--studio-ink-rgb), 0.06);
+  border: 1px solid rgba(var(--studio-ink-rgb), 0.16);
   border-radius: var(--radius-pill);
   padding: 15px 24px;
   margin: 8px 0 22px;
@@ -92,7 +92,7 @@
 .searchBar svg {
   width: 20px;
   height: 20px;
-  color: rgba(var(--cream-rgb), 0.55);
+  color: var(--studio-text-muted);
   flex: none;
 }
 .searchBar input {
@@ -101,10 +101,10 @@
   background: none;
   font: inherit;
   font-size: var(--text-16);
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
 }
 .searchBar input::placeholder {
-  color: rgba(var(--cream-rgb), 0.5);
+  color: var(--studio-text-muted);
 }
 .chips {
   display: flex;
@@ -114,9 +114,9 @@
 }
 .chip {
   appearance: none;
-  border: 1px solid rgba(var(--cream-rgb), 0.2);
+  border: 1px solid rgba(var(--studio-ink-rgb), 0.2);
   background: transparent;
-  color: rgba(var(--cream-rgb), 0.8);
+  color: rgba(var(--studio-ink-rgb), 0.8);
   font: inherit;
   font-size: var(--text-13);
   font-weight: 600;
@@ -128,9 +128,11 @@
     color var(--ease),
     border-color var(--ease);
 }
+/* --cream and --text-strong follow the app theme, so the selected chip is the
+   app page tone with a solid ink outline in both themes. */
 .chipOn {
   background: var(--cream);
-  border-color: rgba(var(--cream-rgb), 1);
+  border-color: rgba(var(--studio-ink-rgb), 1);
   color: var(--text-strong);
 }
 /* Tabs */
@@ -146,13 +148,13 @@
   font: inherit;
   font-size: var(--text-14-5);
   font-weight: 700;
-  color: rgba(var(--cream-rgb), 0.5);
+  color: var(--studio-text-muted);
   padding: 8px 4px;
   cursor: pointer;
   border-bottom: 2px solid transparent;
 }
 .tabOn {
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
   border-bottom-color: var(--accent);
 }
 
@@ -176,21 +178,21 @@
   display: block;
   font-weight: 700;
   font-size: var(--text-13-5);
-  color: rgba(var(--cream-rgb), 0.85);
+  color: rgba(var(--studio-ink-rgb), 0.85);
   margin-bottom: 8px;
 }
 .coInput {
   width: 100%;
-  border: 1px solid rgba(var(--cream-rgb), 0.18);
+  border: 1px solid rgba(var(--studio-ink-rgb), 0.18);
   border-radius: var(--radius-11);
   padding: 13px 15px;
   font: inherit;
   font-size: var(--text-15);
-  color: rgba(var(--cream-rgb), 1);
-  background: rgba(var(--cream-rgb), 0.04);
+  color: rgba(var(--studio-ink-rgb), 1);
+  background: rgba(var(--studio-ink-rgb), 0.04);
 }
 .coInput::placeholder {
-  color: rgba(var(--cream-rgb), 0.35);
+  color: var(--studio-text-faint);
 }
 .coInput:focus {
   border-color: var(--accent);
@@ -201,28 +203,28 @@
   gap: 14px;
 }
 .summary {
-  background: rgba(var(--cream-rgb), 0.06);
-  border: 1px solid rgba(var(--cream-rgb), 0.16);
+  background: rgba(var(--studio-ink-rgb), 0.06);
+  border: 1px solid rgba(var(--studio-ink-rgb), 0.16);
   border-radius: var(--radius-16);
   padding: 28px;
 }
 .sumH {
   font-family: var(--serif);
   font-size: var(--text-24);
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
   margin-bottom: 4px;
 }
 .sumH em {
   font-style: italic;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .sumLine {
   display: flex;
   justify-content: space-between;
   font-size: var(--text-14-5);
-  color: rgba(var(--cream-rgb), 0.72);
+  color: var(--studio-text-muted);
   padding: 11px 0;
-  border-bottom: 1px solid rgba(var(--cream-rgb), 0.1);
+  border-bottom: 1px solid rgba(var(--studio-ink-rgb), 0.1);
 }
 .sumTotal {
   display: flex;
@@ -230,16 +232,16 @@
   align-items: baseline;
   padding-top: 16px;
   font-weight: 700;
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
 }
 .sumTotal span:last-child {
   font-family: var(--serif);
   font-size: var(--text-26);
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .sumNote {
   font-size: var(--text-12-5);
-  color: rgba(var(--cream-rgb), 0.5);
+  color: var(--studio-text-muted);
   line-height: 1.5;
   margin-top: 16px;
 }
@@ -249,8 +251,8 @@
   text-align: center;
   max-width: 540px;
   margin: 40px auto;
-  background: rgba(var(--cream-rgb), 0.05);
-  border: 1px solid rgba(var(--cream-rgb), 0.14);
+  background: rgba(var(--studio-ink-rgb), 0.05);
+  border: 1px solid rgba(var(--studio-ink-rgb), 0.14);
   border-radius: var(--radius-20);
   padding: var(--section-y-56) 40px;
 }
@@ -282,22 +284,24 @@
   place-items: center;
   margin: 0 auto 20px;
   font-size: var(--text-26);
+  /* The check sits on the jade fill, so it keeps cream ink in both themes. */
+  color: rgba(var(--cream-rgb), 0.92);
 }
 .done h1 {
   font-family: var(--serif);
   font-weight: 300;
   font-size: var(--text-title);
-  color: rgba(var(--cream-rgb), 1);
+  color: rgba(var(--studio-ink-rgb), 1);
   letter-spacing: -0.02em;
 }
 .done h1 em {
   font-style: italic;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 .done p {
   font-size: var(--text-15-5);
   line-height: 1.6;
-  color: rgba(var(--cream-rgb), 0.68);
+  color: var(--studio-text-muted);
   margin: 14px auto 26px;
   max-width: 42ch;
 }

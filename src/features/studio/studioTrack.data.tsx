@@ -1,15 +1,16 @@
-import { type ReactNode } from "react";
-
+/** One share of a play, in euros; the sidebar formats it in the active
+ *  locale. `isEmphasized` marks the artist's share in coral. */
 export interface SplitRow {
   c: string;
   k: string;
   sub: string;
-  v: ReactNode;
+  amount: number;
+  isEmphasized?: boolean;
 }
 
+/** "Name · role", split into a credit by the demo API. */
 export interface CreditRow {
   who: string;
-  role: string;
 }
 
 export interface MoreTrack {
@@ -37,37 +38,34 @@ export const SPLIT: SplitRow[] = [
     c: "var(--accent)",
     k: "Mariana Sol",
     sub: "Direct, monthly",
-    v: (
-      <>
-        €<em>0.80</em>
-      </>
-    ),
+    amount: 0.8,
+    isEmphasized: true,
   },
   {
     c: "var(--jade)",
     k: "Solidarity fund",
     sub: "Grants & mastering vouchers",
-    v: "€0.08",
+    amount: 0.08,
   },
   {
     c: "var(--plum)",
     k: "Platform & staff",
     sub: "Hosting, captions, council",
-    v: "€0.08",
+    amount: 0.08,
   },
   {
-    c: "rgba(var(--cream-rgb), 0.2)",
+    c: "rgba(var(--studio-ink-rgb), 0.2)",
     k: "Payment fees",
     sub: "Stripe / SEPA only",
-    v: "€0.04",
+    amount: 0.04,
   },
 ];
 
 export const CREDITS: CreditRow[] = [
-  { who: "Mariana Sol · voice, piano, words", role: "85% · songwriter" },
-  { who: "João Anjos · cello", role: "10%" },
-  { who: "Inês T. · mix & master", role: "5%" },
-  { who: "Helena P. · translator", role: "€40 from solidarity fund" },
+  { who: "Mariana Sol · voice, piano, words" },
+  { who: "João Anjos · cello" },
+  { who: "Inês T. · mix & master" },
+  { who: "Helena P. · translator" },
 ];
 
 export const MORE: MoreTrack[] = [

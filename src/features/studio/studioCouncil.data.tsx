@@ -8,9 +8,9 @@ import { StudioEuroAmount } from "./StudioEuroAmount";
  * `MEMBERS` is a demo-only roster: Studio has no live council endpoint, so its
  * seats, roles, bios, notebook lines and payout labels ship in the bundle and
  * resolve through `studioShowcase:council.member.*` keys (Pattern A). Proper
- * nouns stay literal here: curator names, cities, set titles, and the
- * already-formatted dates. Euro figures are numbers, rendered as
- * `payoutSlots` so they format in the active locale.
+ * nouns stay literal here: curator names, cities and set titles. Dates are
+ * `yyyy-mm-dd` fixtures the page formats in the active locale, and euro
+ * figures are numbers, rendered as `payoutSlots` for the same reason.
  */
 export interface CouncilFact {
   v: ReactNode;
@@ -63,8 +63,8 @@ export interface CouncilSlate {
   pre: string;
   em?: string;
   post?: string;
-  /** Already-formatted date, rendered through the slate meta key. */
-  date: string;
+  /** `yyyy-mm-dd`, formatted in the active locale through the slate meta key. */
+  dateIso: string;
   trackCount: number;
   /** `<Translation>` key for the payout line, plus its `{token}` values. */
   payoutKey: string;
@@ -85,7 +85,8 @@ export interface Member {
   since: number;
   /** `<Translation>` keys: both strings carry an `<em>` run. */
   bioKey: string;
-  noteDate: string;
+  /** `yyyy-mm-dd` of the latest notebook entry, formatted at render. */
+  noteDateIso: string;
   noteKey: string;
   slatesThisYear: number;
   slates: CouncilSlate[];
@@ -114,14 +115,14 @@ export const MEMBERS: Member[] = [
     roleKey: "studioShowcase:council.member.role.djProgrammer",
     since: 2024,
     bioKey: "studioShowcase:council.member.saraMarques.bio",
-    noteDate: "9 Jun",
+    noteDateIso: "2026-06-09",
     noteKey: "studioShowcase:council.member.saraMarques.note",
     slatesThisYear: 18,
     slates: [
       {
         pre: "Vespertina, ",
         em: "vol. iv",
-        date: "9 Jun",
+        dateIso: "2026-06-09",
         trackCount: 12,
         payoutKey: PAYOUT_OUT,
         payoutSlots: euroAmountSlot(8.2),
@@ -129,7 +130,7 @@ export const MEMBERS: Member[] = [
       {
         pre: "Songs to play your ",
         em: "mother",
-        date: "2 Jun",
+        dateIso: "2026-06-02",
         trackCount: 14,
         payoutKey: PAYOUT_OUT,
         payoutSlots: euroAmountSlot(11400, true),
@@ -150,7 +151,7 @@ export const MEMBERS: Member[] = [
     roleKey: "studioShowcase:council.member.role.composerArchivist",
     since: 2025,
     bioKey: "studioShowcase:council.member.dOkoye.bio",
-    noteDate: "5 Jun",
+    noteDateIso: "2026-06-05",
     noteKey: "studioShowcase:council.member.dOkoye.note",
     slatesThisYear: 9,
     slates: [
@@ -158,7 +159,7 @@ export const MEMBERS: Member[] = [
         pre: "Trans ",
         em: "composers",
         post: ", 1972 to now",
-        date: "28 May",
+        dateIso: "2026-05-28",
         trackCount: 12,
         payoutKey: PAYOUT_PAID,
         payoutValues: { count: 12 },
@@ -166,7 +167,7 @@ export const MEMBERS: Member[] = [
       {
         pre: "Songs for ",
         em: "insomnia",
-        date: "14 May",
+        dateIso: "2026-05-14",
         trackCount: 22,
         payoutKey: PAYOUT_OUT,
         payoutSlots: euroAmountSlot(4.1),
@@ -187,14 +188,14 @@ export const MEMBERS: Member[] = [
     roleKey: "studioShowcase:council.member.role.soundArchivist",
     since: 2024,
     bioKey: "studioShowcase:council.member.yaraReis.bio",
-    noteDate: "2 Jun",
+    noteDateIso: "2026-06-02",
     noteKey: "studioShowcase:council.member.yaraReis.note",
     slatesThisYear: 11,
     slates: [
       {
         pre: "Lisbon dyke-bar ",
         em: "standards",
-        date: "21 May",
+        dateIso: "2026-05-21",
         trackCount: 28,
         payoutKey: PAYOUT_OUT,
         payoutSlots: euroAmountSlot(9.3),
@@ -202,7 +203,7 @@ export const MEMBERS: Member[] = [
       {
         pre: "Almost ",
         em: "asleep",
-        date: "9 May",
+        dateIso: "2026-05-09",
         trackCount: 31,
         payoutKey: PAYOUT_OUT,
         payoutSlots: euroAmountSlot(5.8),
@@ -223,14 +224,14 @@ export const MEMBERS: Member[] = [
     roleKey: "studioShowcase:council.member.role.producer",
     since: 2025,
     bioKey: "studioShowcase:council.member.joaoRibeiro.bio",
-    noteDate: "30 May",
+    noteDateIso: "2026-05-30",
     noteKey: "studioShowcase:council.member.joaoRibeiro.note",
     slatesThisYear: 7,
     slates: [
       {
         pre: "Kitchen ",
         em: "warm-up",
-        date: "23 May",
+        dateIso: "2026-05-23",
         trackCount: 9,
         payoutKey: PAYOUT_OUT,
         payoutSlots: euroAmountSlot(3.2),
@@ -239,7 +240,7 @@ export const MEMBERS: Member[] = [
         pre: "Made ",
         em: "here",
         post: ", spring",
-        date: "16 May",
+        dateIso: "2026-05-16",
         trackCount: 5,
         payoutKey: PAYOUT_GRANT,
         payoutSlots: euroAmountSlot(5500, true),
@@ -260,14 +261,14 @@ export const MEMBERS: Member[] = [
     roleKey: "studioShowcase:council.member.role.artistCurator",
     since: 2025,
     bioKey: "studioShowcase:council.member.akinDiallo.bio",
-    noteDate: "27 May",
+    noteDateIso: "2026-05-27",
     noteKey: "studioShowcase:council.member.akinDiallo.note",
     slatesThisYear: 6,
     slates: [
       {
         pre: "Salt water, ",
         em: "slowly",
-        date: "19 May",
+        dateIso: "2026-05-19",
         trackCount: 10,
         payoutKey: PAYOUT_OUT,
         payoutSlots: euroAmountSlot(4.6),
@@ -275,7 +276,7 @@ export const MEMBERS: Member[] = [
       {
         pre: "The long way ",
         em: "home",
-        date: "5 May",
+        dateIso: "2026-05-05",
         trackCount: 14,
         payoutKey: PAYOUT_OUT,
         payoutSlots: euroAmountSlot(6.1),
@@ -296,14 +297,14 @@ export const MEMBERS: Member[] = [
     roleKey: "studioShowcase:council.member.role.choirDirector",
     since: 2026,
     bioKey: "studioShowcase:council.member.helenaPinto.bio",
-    noteDate: "24 May",
+    noteDateIso: "2026-05-24",
     noteKey: "studioShowcase:council.member.helenaPinto.note",
     slatesThisYear: 3,
     slates: [
       {
         pre: "Vespers, ",
         em: "recorded",
-        date: "17 May",
+        dateIso: "2026-05-17",
         trackCount: 12,
         payoutKey: PAYOUT_OUT,
         payoutSlots: euroAmountSlot(3.4),
@@ -311,7 +312,7 @@ export const MEMBERS: Member[] = [
       {
         pre: "Fifteen voices, one ",
         em: "stairwell",
-        date: "10 May",
+        dateIso: "2026-05-10",
         trackCount: 8,
         payoutKey: PAYOUT_OUT,
         payoutSlots: euroAmountSlot(2.8),

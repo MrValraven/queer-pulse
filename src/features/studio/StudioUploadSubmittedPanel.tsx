@@ -28,7 +28,7 @@ export function SubmittedPanel({ release }: { release: StudioReleaseView }) {
           {t("studio:uploadFlow.published.openCta")}{" "}
           <FiArrowRight aria-hidden />
         </Button>
-        <Button variant="ghost" to={studioUploadPath()} reloadDocument>
+        <Button variant="ghost-dark" to={studioUploadPath()} reloadDocument>
           {t("studio:uploadFlow.published.anotherCta")}
         </Button>
       </div>

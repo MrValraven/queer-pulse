@@ -1,6 +1,9 @@
 import type { ReactNode } from "react";
+import type { Formatters } from "../../shared/i18n/format";
 import { Translation } from "../../shared/i18n/Translation";
 import type { TFunction } from "../../shared/i18n/types";
+import { StudioNumber } from "./StudioNumber";
+import { fixtureDate, WEEKDAY_DAY_MONTH } from "./studioFixtureDate";
 
 export interface TriageKpi {
   v: ReactNode;
@@ -19,9 +22,10 @@ export interface TriageTab {
   warn?: boolean;
 }
 
-/** A submission row. Built by `buildSubs(t)` (Pattern B): the who line,
- * badges, artist note and meta strip carry translated copy, while titles,
- * names, places, file specs and dates stay literal. `day` is the number of
+/** A submission row. Built by `buildSubs(t, fmt)` (Pattern B): the who line,
+ * badges, artist note and meta strip carry translated copy, titles, names,
+ * places and file specs stay literal, and the submitted date is formatted in
+ * the active locale. `day` is the number of
  * days the submission has waited; the list renders it through
  * `studioShowcase:triage.sub.day` and filters on it. */
 export interface Sub {
@@ -36,6 +40,9 @@ export interface Sub {
   meta: ReactNode[];
   image?: string;
 }
+
+/** Median days to a reply, shown in the KPI strip and the header line. */
+export const MEDIAN_REPLY_DAYS = 9.4;
 
 export const KPIS: TriageKpi[] = [
   {
@@ -57,7 +64,10 @@ export const KPIS: TriageKpi[] = [
   {
     v: (
       <>
-        <em>9.4</em>d
+        <em>
+          <StudioNumber value={MEDIAN_REPLY_DAYS} />
+        </em>
+        d
       </>
     ),
     labelKey: "studio:triage.kpi.medianReply",
@@ -107,18 +117,15 @@ export const TABS: TriageTab[] = [
   },
 ];
 
-/** "Submitted <date>" meta entry; the formatted date stays literal. */
-function submittedOn(date: string): ReactNode {
-  return (
+export function buildSubs(t: TFunction, fmt: Formatters): Sub[] {
+  /** "Submitted <date>" meta entry, the date in the active locale. */
+  const submittedOn = (dateIso: string): ReactNode => (
     <Translation
       i18nKey="studioShowcase:triage.sub.meta.submittedOn"
       components={{ em: <em /> }}
-      values={{ date }}
+      values={{ date: fmt.date(fixtureDate(dateIso), WEEKDAY_DAY_MONTH) }}
     />
   );
-}
-
-export function buildSubs(t: TFunction): Sub[] {
   const firstSubmission = t("studioShowcase:triage.sub.badge.firstSubmission");
   const loudnessReady = (loudness: string) =>
     t("studioShowcase:triage.sub.meta.loudnessReady", { loudness });
@@ -154,7 +161,7 @@ export function buildSubs(t: TFunction): Sub[] {
       of: true,
       note: t("studioShowcase:triage.sub.piano.note"),
       meta: [
-        submittedOn("Sun 31 May"),
+        submittedOn("2026-05-31"),
         "FLAC · 24/48 · 38.4 MB",
         loudnessReady("−14.1 LUFS"),
         t("studioShowcase:triage.sub.meta.lyricTranslationRequested", {
@@ -179,7 +186,7 @@ export function buildSubs(t: TFunction): Sub[] {
       of: true,
       note: t("studioShowcase:triage.sub.coro.note"),
       meta: [
-        submittedOn("Tue 2 Jun"),
+        submittedOn("2026-06-02"),
         "FLAC · 24/96 · 412 MB",
         loudnessReady("−15.2 LUFS"),
         t("studioShowcase:triage.sub.meta.translationsAttached", {
@@ -208,7 +215,7 @@ export function buildSubs(t: TFunction): Sub[] {
       of: true,
       note: t("studioShowcase:triage.sub.tomboy.note"),
       meta: [
-        submittedOn("Fri 5 Jun"),
+        submittedOn("2026-06-05"),
         "FLAC · 24/44.1 · 1.8 GB",
         t("studioShowcase:triage.sub.meta.clearedSourceArtists", {
           count: 18,
@@ -236,7 +243,7 @@ export function buildSubs(t: TFunction): Sub[] {
       of: true,
       note: t("studioShowcase:triage.sub.ainda.note"),
       meta: [
-        submittedOn("Sat 30 May"),
+        submittedOn("2026-05-30"),
         "WAV · 24/48 · 23.4 MB",
         loudnessReady("−13.8 LUFS"),
         t("studioShowcase:triage.sub.meta.noteFromVoucher", {
