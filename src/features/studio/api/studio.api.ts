@@ -11,7 +11,10 @@ import {
   type CreateStudioReleaseBody,
   type CreateStudioTrackBody,
   type StudioArtistDTO,
+  type StudioArtistStatsDTO,
   type StudioErrorCode,
+  type StudioGenre,
+  type StudioGenresDTO,
   type StudioMeDTO,
   type StudioPageDTO,
   type StudioReleaseCardDTO,
@@ -34,20 +37,28 @@ const segment = (id: string) => encodeURIComponent(id);
  *  grant gets `{ hasAccess: false }` here and a 403 everywhere else. */
 export const getStudioMe = () => apiGet<StudioMeDTO>("/studio/me");
 
-export function getStudioReleases(cursor: string | null) {
-  const query = cursor ? `?cursor=${encodeURIComponent(cursor)}` : "";
+export function getStudioReleases(
+  cursor: string | null,
+  genre: StudioGenre | null = null,
+) {
+  const params = new URLSearchParams();
+  if (cursor) params.set("cursor", cursor);
+  if (genre) params.set("genre", genre);
+  const query = params.toString();
   return apiGet<StudioPageDTO<StudioReleaseCardDTO>>(
-    `/studio/releases${query}`,
+    `/studio/releases${query ? `?${query}` : ""}`,
   );
 }
 
 export function searchStudio(
   query: string,
   type: StudioSearchType,
+  genre: StudioGenre | null,
   signal?: AbortSignal,
 ) {
   const params = new URLSearchParams({ q: query });
   if (type !== "all") params.set("type", type);
+  if (genre) params.set("genre", genre);
   return apiGet<StudioSearchResultDTO>(
     `/studio/search?${params.toString()}`,
     undefined,
@@ -64,6 +75,15 @@ export const getStudioArtist = (subprofileId: string) =>
 
 export const getStudioTrack = (trackId: string) =>
   apiGet<StudioTrackDTO>(`/studio/tracks/${segment(trackId)}`);
+
+/** Genres with at least one listenable published release (no counts). */
+export const getStudioGenres = () => apiGet<StudioGenresDTO>("/studio/genres");
+
+/** Owners and co-owners only; anyone else gets a 404. */
+export const getStudioArtistStats = (subprofileId: string) =>
+  apiGet<StudioArtistStatsDTO>(
+    `/studio/artists/${segment(subprofileId)}/stats`,
+  );
 
 /** A presigned GET valid for 15 minutes. Never cached: callers hold it in
  *  memory for the one track that is loading. */

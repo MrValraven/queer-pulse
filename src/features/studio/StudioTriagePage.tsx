@@ -27,7 +27,7 @@ export function StudioTriagePage() {
               </h1>
             </div>
             <div
-              className="sub"
+              className={s.sub}
               style={{
                 fontSize: 14,
                 color: "rgba(247,243,238,.55)",

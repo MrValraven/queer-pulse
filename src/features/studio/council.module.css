@@ -246,9 +246,10 @@
   cursor: pointer;
   text-align: center;
 }
+/* Dark ink on the coral fill: 6.28:1 (cream on --accent is 2.63:1). */
 .btP {
   background: var(--accent);
-  color: rgba(var(--cream-rgb), 1);
+  color: var(--studio-bg);
   border-color: var(--accent);
 }
 .btDismiss {
@@ -503,7 +504,9 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: var(--cream);
+  /* Light cream in every theme (--cream is dark inside the Studio shell):
+     13.69:1 against the mini player, 16.55:1 under the --studio-bg glyph. */
+  background: rgba(var(--cream-rgb), 1);
   border: none;
   display: flex;
   align-items: center;
@@ -549,6 +552,8 @@
   flex: none;
 }
 .claimRow .text {
+  flex: 1;
+  min-width: 0;
   font-size: var(--text-12-5);
   color: rgba(var(--cream-rgb), 0.78);
   font-family: var(--serif);
@@ -763,6 +768,10 @@
   font-size: var(--text-11);
   flex: none;
 }
+.flagClaim .claimText {
+  flex: 1;
+  min-width: 0;
+}
 .flagClaim .dl {
   margin-left: auto;
   font-size: var(--text-11-5);
@@ -801,6 +810,59 @@
   }
   .kpiStrip {
     flex-wrap: wrap;
+  }
+}
+
+/* Phones: placed after the base rules so these win at equal specificity */
+@media (--md) {
+  .curFoot {
+    flex-wrap: wrap;
+    row-gap: 10px;
+  }
+  .subTop {
+    grid-template-columns: 48px minmax(0, 1fr);
+  }
+  .subTop > :nth-child(3) {
+    grid-column: 1 / -1;
+    text-align: start;
+  }
+  .slRow {
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: 12px;
+    row-gap: 2px;
+  }
+  .slRow .st {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .slRow .sd {
+    grid-column: 1;
+    grid-row: 2;
+  }
+  .slRow .sp {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    align-self: center;
+  }
+  .flagClaim {
+    flex-wrap: wrap;
+  }
+  .flagClaim .claimText {
+    flex: 1 1 0;
+  }
+  .flagClaim .dl {
+    flex-basis: 100%;
+    margin-inline-start: 0;
+    padding-inline-start: calc(2.545em + 10px);
+  }
+  .flagActions {
+    flex-wrap: wrap;
+  }
+  .flagActions > .bt {
+    flex: 1 1 calc(50% - 4px);
+  }
+  .flagActions > .grow {
+    display: none;
   }
 }
 

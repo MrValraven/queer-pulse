@@ -11,9 +11,7 @@ import {
   SHEET_TRANSCRIBER,
 } from "./studioSheetStore.data";
 
-// Content: technical sheet-music facts and the transcriber's avatar
-// initials — comes from the sheet-music record in live mode.
-const SHEET_KEY_SIGNATURE_NOTE = " · voice & piano · D minor";
+// Content: the transcriber's avatar initials, from the sheet-music record.
 const TRANSCRIBER_INITIALS = "TR";
 
 export function StudioSheetPreview() {
@@ -44,9 +42,9 @@ export function StudioSheetPreview() {
             />
           </div>
           <div className={s.specs}>
-            {SPECS.map((sp) => (
-              <span key={sp} className={s.spec}>
-                {sp}
+            {SPECS.map((spec) => (
+              <span key={spec.id} className={s.spec}>
+                {t(spec.labelKey, spec.values)}
               </span>
             ))}
           </div>
@@ -64,8 +62,9 @@ export function StudioSheetPreview() {
         <div className={s.watermark}>{t("studio:sheet.preview.watermark")}</div>
         <div className={s.pdfTitle}>{SHEET_TITLE}</div>
         <div className={s.pdfSub}>
-          {SHEET_COMPOSER}
-          {SHEET_KEY_SIGNATURE_NOTE}
+          {t("studioShowcase:sheetStore.preview.pdfSub", {
+            composer: SHEET_COMPOSER,
+          })}
         </div>
         {[0, 1, 2].map((g) => (
           <div key={g}>
@@ -109,7 +108,7 @@ export function StudioSheetPreview() {
 
       <div className={s.transcriber}>
         <span
-          className="av"
+          className={s.av}
           style={{
             width: 40,
             height: 40,

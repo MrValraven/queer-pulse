@@ -122,6 +122,13 @@ export function useStudioPlayback(
     playRelease: (releaseId, startTrackId) =>
       playQueue([releaseId], startTrackId),
     playReleases: (releaseIds) => playQueue(releaseIds),
+    playTracks: async (items, startTrackId) => {
+      // A newer Play wins over a release queue still loading.
+      playRequestRef.current += 1;
+      if (shouldStopRef.current || items.length === 0) return;
+      refreshCountRef.current = 0;
+      await commands().loadTrack(items, startIndexFor(items, startTrackId), 0);
+    },
     togglePlay: () => {
       const engine = engineRef.current;
       const current = stateRef.current;
@@ -200,6 +207,8 @@ export function useStudioPlayback(
       playRelease: (releaseId, startTrackId) =>
         actionsRef.current.playRelease(releaseId, startTrackId),
       playReleases: (releaseIds) => actionsRef.current.playReleases(releaseIds),
+      playTracks: (items, startTrackId) =>
+        actionsRef.current.playTracks(items, startTrackId),
       togglePlay: () => actionsRef.current.togglePlay(),
       next: () => actionsRef.current.next(),
       previous: () => actionsRef.current.previous(),

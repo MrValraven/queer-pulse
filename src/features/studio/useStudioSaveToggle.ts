@@ -4,13 +4,13 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 
 export interface StudioSaveSubject {
   savedId: string;
-  kind: "studio_release" | "studio_track";
+  kind: "studio_release" | "studio_track" | "studio_playlist";
   title: string;
   href: string;
   meta?: string;
 }
 
-/** Save a release or a track with the existing Saved feature (two new kinds,
+/** Save a release, a track or a playlist with the existing Saved feature (new kinds,
  *  no separate Studio library). */
 export function useStudioSaveToggle(subject: StudioSaveSubject | null) {
   const { isSaved, toggleSave } = useSaved();

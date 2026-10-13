@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
+import { Translation } from "../../shared/i18n/Translation";
 import s from "./live.module.css";
 import { CHAT, TABS, type Msg } from "./studioLive.data";
 
@@ -18,7 +19,12 @@ export function StudioLiveChat({ onTip }: { onTip: () => void }) {
     if (!body) return;
     setMessages((prev) => [
       ...prev,
-      { av: "·", name: "You", text: body, time: "now" },
+      {
+        av: "·",
+        name: <Translation i18nKey="studioShowcase:live.chat.you" />,
+        text: body,
+        time: <Translation i18nKey="studioShowcase:live.chat.justNow" />,
+      },
     ]);
     setDraft("");
   }
@@ -42,20 +48,22 @@ export function StudioLiveChat({ onTip }: { onTip: () => void }) {
       </div>
       <div className={s.chatBody}>
         {messages.map((mAny, i) => {
-          if ("system" in mAny) {
+          if ("systemLine" in mAny) {
             return (
               <div
-                key={`sys-${mAny.system}`}
+                key={`sys-${mAny.systemLine.key}`}
                 className={`${s.msg} ${s.msgSystem}`}
               >
-                <div className={s.text}>{mAny.system}</div>
+                <div className={s.text}>
+                  {t(mAny.systemLine.key, mAny.systemLine.values)}
+                </div>
               </div>
             );
           }
           const m = mAny;
           return (
             <div
-              key={`msg-${i}-${m.name}`}
+              key={`msg-${i}-${m.av}`}
               className={[s.msg, m.tip && s.msgTip].filter(Boolean).join(" ")}
             >
               <span
@@ -77,11 +85,11 @@ export function StudioLiveChat({ onTip }: { onTip: () => void }) {
                 >
                   {m.name}
                 </span>
-                {m.role && (
+                {m.roleKey && (
                   <span
                     className={`${s.mRole} ${m.roleClass === "cu" ? s.cu : m.roleClass === "artist" ? s.artist : ""}`}
                   >
-                    {m.role}
+                    {t(m.roleKey)}
                   </span>
                 )}
                 <div className={s.mText}>{m.text}</div>

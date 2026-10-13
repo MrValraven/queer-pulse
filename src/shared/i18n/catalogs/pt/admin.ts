@@ -8020,16 +8020,16 @@ export const admin: Catalog = {
   "ambassadors.errors.ambassador_ineligible_member":
     "Esta conta não pode ter o estatuto. É uma conta de sistema ou não está ativa.",
   "ambassadors.drawer.label": "Pessoa embaixadora",
-  "ambassadors.drawer.since": "Pessoa embaixadora desde {since} · {focus}",
-  "ambassadors.drawer.none": "Sem etiqueta de pessoa embaixadora visível",
+  "ambassadors.drawer.since": "Desde {since} · {focus}",
+  "ambassadors.drawer.none": "Sem etiqueta visível",
   "ambassadors.drawer.hiddenNote":
     "As etiquetas escondidas não aparecem aqui. A página de pessoas embaixadoras tem o registo completo.",
   "ambassadors.drawer.manage": "Gerir pessoas embaixadoras",
   // ── Studio v1 (2026-10-08) ─────────────────────────────────────────────────
   "studioAccess.label": "Studio",
-  "studioAccess.grantedBy": "Acesso ao Studio: dado por {staff} a {date}",
-  "studioAccess.grantedOn": "Acesso ao Studio: dado a {date}",
-  "studioAccess.none": "Sem acesso ao Studio",
+  "studioAccess.grantedBy": "Dado por {staff} a {date}",
+  "studioAccess.grantedOn": "Dado a {date}",
+  "studioAccess.none": "Sem acesso",
   "studioAccess.loadFailed": "Não conseguimos carregar o acesso ao Studio",
   "studioAccess.retry": "Verificar o acesso de novo",
   "studioAccess.grantCta": "Dar acesso ao Studio",

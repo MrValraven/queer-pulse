@@ -45,7 +45,7 @@ describe("AdminMemberStudioAccessLine (demo)", () => {
   it("names who granted access, and revokes it only after the confirm", async () => {
     renderLine("ines");
     expect(
-      await screen.findByText(/^Studio access: granted by Sofia on /),
+      await screen.findByText(/^Granted by Sofia on /),
     ).toBeInTheDocument();
     fireEvent.click(
       screen.getByRole("button", { name: "Revoke Studio access" }),
@@ -54,11 +54,11 @@ describe("AdminMemberStudioAccessLine (demo)", () => {
     expect(
       within(dialog).getByText("Revoke Studio access?"),
     ).toBeInTheDocument();
-    expect(screen.getByText(/granted by Sofia/)).toBeInTheDocument();
+    expect(screen.getByText(/Granted by Sofia/)).toBeInTheDocument();
     fireEvent.click(
       within(dialog).getByRole("button", { name: "Revoke access" }),
     );
-    expect(await screen.findByText("No Studio access")).toBeInTheDocument();
+    expect(await screen.findByText("Not granted")).toBeInTheDocument();
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: "Grant Studio access" }),
@@ -67,17 +67,15 @@ describe("AdminMemberStudioAccessLine (demo)", () => {
 
   it("shows no access for a member without a grant, and grants it in one click", async () => {
     renderLine("member-without-grant");
-    expect(await screen.findByText("No Studio access")).toBeInTheDocument();
+    expect(await screen.findByText("Not granted")).toBeInTheDocument();
     fireEvent.click(
       screen.getByRole("button", { name: "Grant Studio access" }),
     );
-    expect(
-      await screen.findByText(/^Studio access: granted on /),
-    ).toBeInTheDocument();
+    expect(await screen.findByText(/^Granted on /)).toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: "Revoke Studio access" }),
     ).toBeInTheDocument();
-    expect(screen.queryByText("No Studio access")).not.toBeInTheDocument();
+    expect(screen.queryByText("Not granted")).not.toBeInTheDocument();
   });
 
   it("moves focus to the swapped-in Grant button after a revoke, and back to Revoke after a grant", async () => {

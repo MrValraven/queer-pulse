@@ -17,6 +17,7 @@ import {
 import type { SavedListDTO } from "./api/SavedLists.api";
 import { SavedListShareControls } from "./SavedListShareControls";
 import { SavedUnavailableNote } from "./SavedUnavailableNote";
+import { savedKindBadge } from "./savedKindBadge";
 import styles from "./SavedListDetailModal.module.css";
 
 /** The inline rename field. Its own component so `useFocusOnMount` runs when
@@ -99,9 +100,7 @@ function SavedListItemRow({
     <div
       className={`${styles.row}${isUnavailable ? ` ${styles.rowUnavailable}` : ""}`}
     >
-      <span className={styles.rowBadge}>
-        {item.kind.slice(0, 3).toUpperCase()}
-      </span>
+      <span className={styles.rowBadge}>{savedKindBadge(item.kind)}</span>
       <div className={styles.rowInfo}>
         {canOpen && item.href ? (
           <Link

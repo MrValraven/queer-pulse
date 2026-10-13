@@ -4,6 +4,7 @@ import {
   FiAward,
   FiClipboard,
   FiHome,
+  FiMusic,
   FiStar,
   FiTag,
   FiUserX,
@@ -288,8 +289,38 @@ function buildUnreadNotifications(
         },
       ],
     },
+    buildStudioReleaseNotification(t, fmt),
     ...buildUnreadActivityNotifications(t, fmt),
   ];
+}
+
+function buildStudioReleaseNotification(
+  t: TFunction,
+  fmt: Formatters,
+): DemoNotificationRow {
+  return {
+    // The demo counterpart of the live `studio_release_published` row
+    // (Studio v2). It reuses the live keys and names the persona only.
+    id: 19,
+    type: "community",
+    unread: true,
+    icon: { Glyph: FiMusic, background: "rgba(var(--plum-rgb), .07)" },
+    text: t("notifications:type.studio_release_published.text", {
+      subprofileName: "Mariana Sol",
+      releaseTitle: "Cidade dos santos",
+      count: 1,
+    }),
+    meta: t("notifications:type.studio_release_published.meta"),
+    time: fmt.relativeTime(-2, "hour"),
+    createdAtIso: agoIso(2, "hour"),
+    actions: [
+      {
+        label: t("notifications:actions.listenNow"),
+        variant: "ghost",
+        href: "/studio/album?id=demo-release-cidade-dos-santos",
+      },
+    ],
+  };
 }
 
 function buildReadNotifications(

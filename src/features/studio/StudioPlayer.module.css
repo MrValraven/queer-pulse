@@ -225,3 +225,38 @@
     display: flex;
   }
 }
+
+.addToPlaylist {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--tap-min);
+  height: var(--tap-min);
+  margin-inline-start: auto;
+  /* A clear gap keeps it from reading as the transport "previous" button. */
+  margin-inline-end: 16px;
+  font-size: var(--text-18);
+  border: none;
+  border-radius: var(--radius-pill);
+  background: none;
+  color: inherit;
+  cursor: pointer;
+  transition-property: background-color;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+@media (hover: hover) {
+  .addToPlaylist:hover {
+    background: rgba(var(--cream-rgb), 0.08);
+  }
+}
+
+@media (--mobile) {
+  /* The mini bar keeps cover, title and play; Add to playlist joins the
+     controls when the bar is expanded. */
+  .bar:not([data-expanded]) .addToPlaylist {
+    display: none;
+  }
+}

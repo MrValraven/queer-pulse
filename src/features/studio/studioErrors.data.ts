@@ -22,6 +22,11 @@ export const STUDIO_ERROR_MESSAGE_KEY: Record<StudioErrorCode, string> = {
   studio_track_limit: "studio:errors.trackLimit",
   studio_audio_unreadable: "studio:errors.audioUnreadable",
   studio_audio_wrong_owner: "studio:errors.audioWrongOwner",
+  studio_playlist_limit: "studio:errors.playlistLimit",
+  studio_playlist_track_limit: "studio:errors.playlistTrackLimit",
+  studio_playlist_order_mismatch: "studio:errors.playlistOrderMismatch",
+  studio_playlist_credit_not_allowed: "studio:errors.playlistCreditNotAllowed",
+  studio_playlist_track_unavailable: "studio:errors.playlistTrackUnavailable",
 };
 
 export function studioErrorMessageKey(code: StudioErrorCode | null): string {

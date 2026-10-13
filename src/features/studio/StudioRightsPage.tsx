@@ -4,11 +4,17 @@ import { FiCheckCircle, FiDollarSign, FiLock } from "react-icons/fi";
 import { ImageSlot } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
 import { Translation } from "../../shared/i18n/Translation";
 import { routes } from "../../app/routeMap";
 import { StudioShell } from "./StudioShell";
 import { StudioTakedownModal } from "./StudioTakedownModal";
-import { PROMISES, RELEASES, type Release } from "./studioRights.data";
+import {
+  PROMISES,
+  RELEASES,
+  formatReleaseMeta,
+  type Release,
+} from "./studioRights.data";
 import s from "./StudioRightsPage.module.css";
 
 const PROMISE_ICONS: Record<string, ReactNode> = {
@@ -19,6 +25,7 @@ const PROMISE_ICONS: Record<string, ReactNode> = {
 
 export function StudioRightsPage() {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const { showToast } = useToast();
   const [releases, setReleases] = useState<Release[]>(RELEASES);
   const [pending, setPending] = useState<Release | null>(null);
@@ -115,7 +122,9 @@ export function StudioRightsPage() {
                   {rel.titleEm && <em>{rel.titleEm}</em>}
                   {rel.titlePost}
                 </h5>
-                <div className={s.rm}>{rel.meta}</div>
+                <div className={s.rm}>
+                  {formatReleaseMeta(rel.meta, t, fmt)}
+                </div>
               </div>
 
               {removing ? (
@@ -138,8 +147,10 @@ export function StudioRightsPage() {
                 <>
                   {rel.licence && (
                     <div className={s.lic}>
-                      {rel.licence.top}
-                      <span>{rel.licence.sub}</span>
+                      {rel.licence.topKey
+                        ? t(rel.licence.topKey)
+                        : rel.licence.top}
+                      <span>{t(rel.licence.subKey)}</span>
                     </div>
                   )}
                   <button
@@ -177,7 +188,7 @@ export function StudioRightsPage() {
       {pending && (
         <StudioTakedownModal
           title={pending.title}
-          meta={pending.meta}
+          meta={formatReleaseMeta(pending.meta, t, fmt)}
           onConfirm={confirmTakedown}
           onClose={() => setPending(null)}
         />

@@ -2637,4 +2637,11 @@ export const members: Catalog = {
     "Couldn't send your message. Check your connection and try again.",
   "profile.hello.openThreadCta": "Open the conversation",
   "profile.hello.sending": "Sending…",
+  // ── Studio v2 (2026-10-13): the profile's Studio playlists block ──────────
+  "studioPlaylists.title": "{firstName}'s playlists",
+  "studioPlaylists.titleSelf": "Your playlists",
+  "studioPlaylists.listLabel": "Playlists in Studio",
+  "studioPlaylists.trackCount_one": "{count} track",
+  "studioPlaylists.trackCount_other": "{count} tracks",
+  "studioPlaylists.libraryCta": "Open your Studio library",
 };

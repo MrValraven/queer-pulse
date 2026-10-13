@@ -139,7 +139,7 @@ const GATED_PATTERNS: string[] = [
   // in, so without this a logged-out visitor rendered the whole wizard.
   routes.onboarding,
   routes.welcome,
-  // Local discovery — directory & map (safe-spaces / visas / arriving stay public)
+  // Local discovery: directory & map (the safe-spaces guide stays public)
   "/local/directory",
   "/local/directory/*",
   "/local/map",
@@ -150,6 +150,11 @@ const GATED_PATTERNS: string[] = [
   // and `/local/housing/coop/*` included.
   "/local/housing",
   "/local/housing/*",
+  // The arriving and visa guides are admin-only for now while they are not
+  // ready for members. Gated here so a signed-out visitor goes to sign-in;
+  // ADMIN_PATTERNS below turns away every signed-in member who is not an admin.
+  routes.arriving,
+  routes.visas,
   "/business-directory",
   "/spaces-map",
   // Cinema: browsing films is public; watching + membership are gated.
@@ -307,7 +312,14 @@ export function isDemoOnlyNavLink(href: string): boolean {
  * (or admin). Enforced client-side in live mode; the backend remains the source
  * of truth and must 403 each call regardless.
  */
-const ADMIN_PATTERNS: string[] = ["/admin", "/admin/*"];
+const ADMIN_PATTERNS: string[] = [
+  "/admin",
+  "/admin/*",
+  // The arriving and visa guides are admin-only for now while they are not
+  // ready for members (also in GATED_PATTERNS for signed-out visitors).
+  routes.arriving,
+  routes.visas,
+];
 const MOD_PATTERNS: string[] = ["/mod/*"];
 
 /**

@@ -16,7 +16,8 @@ export const CHANGELOG_RELEASE_NOTES: Record<
   { highlights: string[]; pushes?: number }
 > = {
   "13 Oct 2026": {
-    highlights: ["marketing-flyers", "search-first-work-picker"],
+    highlights: ["studio-v2", "marketing-flyers", "search-first-work-picker"],
+    pushes: 3,
   },
   "12 Oct 2026": {
     highlights: [

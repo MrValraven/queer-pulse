@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { FiPlus, FiCheck, FiArrowRight } from "react-icons/fi";
 import { routes } from "../../app/routeMap";
@@ -34,14 +35,11 @@ function TracklistRowSkeleton() {
   );
 }
 
-const SET_ITEM = {
+/** The saved-item identity; its title, meta and description are translated at render. */
+const SET_ITEM_BASE = {
   id: "post:studio-set",
   kind: "post" as const,
-  title: "Studio set",
   href: "/studio/set",
-  meta: "Set",
-  description:
-    "A late-night live set from the studio, captured in one continuous take.",
 };
 
 const PER_PLAY_AMOUNT = 0.05;
@@ -51,7 +49,16 @@ export function StudioSetPage() {
   const fmt = useFormat();
   const { isSaved, toggleSave } = useSaved();
   const { showToast } = useToast();
-  const saved = isSaved(SET_ITEM.id);
+  const setItem = useMemo(
+    () => ({
+      ...SET_ITEM_BASE,
+      title: t("studioShowcase:set.saved.title"),
+      meta: t("studioShowcase:set.saved.meta"),
+      description: t("studioShowcase:set.saved.description"),
+    }),
+    [t],
+  );
+  const saved = isSaved(SET_ITEM_BASE.id);
   const loading = useSimulatedLoad();
 
   return (
@@ -77,9 +84,17 @@ export function StudioSetPage() {
             <em>{SET.em}</em>
           </h1>
           <div className={s.collMeta}>
-            {SET.recorded} · <strong>{SET.length}</strong>
+            {t(SET.recordedKey, { venue: SET.venue, date: SET.recordedOn })} ·{" "}
+            <strong>
+              {t(SET.lengthKey, {
+                count: SET.trackCount,
+                minutes: SET.minutes,
+              })}
+            </strong>
           </div>
-          <div className={s.dek}>{SET.blurb}</div>
+          <div className={s.dek}>
+            {t(SET.blurbKey, { name: SET.curatorFirstName })}
+          </div>
           <div className={s.collActions}>
             <button
               type="button"
@@ -93,7 +108,7 @@ export function StudioSetPage() {
             <button
               type="button"
               onClick={() => {
-                const now = toggleSave(SET_ITEM);
+                const now = toggleSave(setItem);
                 showToast(
                   now
                     ? t("studio:detail.addedToast")

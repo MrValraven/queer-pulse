@@ -24,8 +24,31 @@ export const STUDIO_SEARCH_TYPES = [
   "releases",
   "tracks",
   "artists",
+  "playlists",
 ] as const;
 export type StudioSearchType = (typeof STUDIO_SEARCH_TYPES)[number];
+
+// Studio v2 vocabularies (QUEERPULSE-STUDIO-V2-CONTRACT-2026-10-13.md).
+export const STUDIO_PLAYLIST_VISIBILITIES = [
+  "public",
+  "connections",
+  "private",
+] as const;
+export type StudioPlaylistVisibility =
+  (typeof STUDIO_PLAYLIST_VISIBILITIES)[number];
+
+/** Counts from 1 to 4 are withheld on "Your numbers". */
+export const STUDIO_STATS_THRESHOLD = 5;
+
+export const STUDIO_PLAYLIST_LIMITS = {
+  nameMax: 80,
+  descriptionMax: 500,
+  playlistsPerMember: 100,
+  tracksPerPlaylist: 500,
+  tracksPerAdd: 50,
+  playlistsPerPage: 24,
+  trackPlaylistsMax: 6,
+} as const;
 
 export const STUDIO_GENRES = [
   "fado",
@@ -82,6 +105,11 @@ export const STUDIO_ERROR_CODES = [
   "studio_track_limit",
   "studio_audio_unreadable",
   "studio_audio_wrong_owner",
+  "studio_playlist_limit",
+  "studio_playlist_track_limit",
+  "studio_playlist_order_mismatch",
+  "studio_playlist_credit_not_allowed",
+  "studio_playlist_track_unavailable",
 ] as const;
 export type StudioErrorCode = (typeof STUDIO_ERROR_CODES)[number];
 
@@ -122,13 +150,16 @@ export interface StudioReleaseCardDTO {
   /** Sum of the tracks that have audio. */
   totalDurationSeconds: number;
   artist: StudioArtistRefDTO;
+  /** v2: when the release went live; null for a draft. Lists arrive ordered
+   *  by it (published_at desc, id desc). */
+  publishedAt: string | null;
+  /** v2: on every card (was release-only). */
+  genre: string | null;
 }
 
 export interface StudioReleaseDTO extends StudioReleaseCardDTO {
   description: string | null;
-  genre: string | null;
   status: StudioReleaseStatus;
-  publishedAt: string | null;
   tracks: StudioTrackSummaryDTO[];
   isOwner: boolean;
   /** Owner-only; null for everyone else. */
@@ -155,6 +186,13 @@ export interface StudioArtistDTO {
         takedownReason: string | null;
       })[]
     | null;
+  /** v2: shown as is; already public on persona pages. */
+  followerCount: number;
+  /** v2: the viewer's own follow state. */
+  isFollowing: boolean;
+  /** v2: public playlists credited to this persona, newest updated first,
+   *  at most 24. */
+  playlists: StudioPlaylistCardDTO[];
 }
 
 export interface StudioMeDTO {
@@ -170,8 +208,10 @@ export interface StudioPageDTO<Item> {
 
 export interface StudioSearchResultDTO {
   releases: StudioReleaseCardDTO[];
-  tracks: (StudioTrackSummaryDTO & { release: StudioReleaseCardDTO })[];
+  tracks: StudioPlaylistTrackDTO[];
   artists: StudioArtistRefDTO[];
+  /** v2: public playlists only; [] unless the type is all or playlists. */
+  playlists: StudioPlaylistCardDTO[];
 }
 
 /** A presigned GET, valid for 15 minutes. */
@@ -213,4 +253,106 @@ export interface UpdateStudioTrackBody {
   credits?: StudioCreditDTO[];
   lyrics?: string | null;
   isExplicit?: boolean;
+}
+
+// ── Studio v2: playlists, genres, stats ───────────────────────────────────
+
+/** A member credit; `slug` addresses the member's profile (/members/<slug>). */
+export interface StudioPlaylistMemberDTO {
+  id: string;
+  slug: string;
+  displayName: string;
+  avatarUrl: string | null;
+}
+
+/** Who a playlist shows as. Exactly one of persona and member is set. */
+export interface StudioPlaylistCreditDTO {
+  persona: StudioArtistRefDTO | null;
+  member: StudioPlaylistMemberDTO | null;
+}
+
+export interface StudioPlaylistCardDTO {
+  id: string;
+  name: string;
+  credit: StudioPlaylistCreditDTO;
+  /** Up to four distinct release covers, in playlist order. */
+  coverUrls: string[];
+  /** Tracks this viewer can play. */
+  trackCount: number;
+  totalDurationSeconds: number;
+  updatedAt: string;
+  isOwner: boolean;
+  /** Owner only; null for everyone else. */
+  visibility: StudioPlaylistVisibility | null;
+}
+
+export type StudioPlaylistTrackDTO = StudioTrackSummaryDTO & {
+  release: StudioReleaseCardDTO;
+};
+
+export interface StudioPlaylistEntryDTO {
+  entryId: string;
+  /** 1-based and contiguous across every entry the response carries. */
+  position: number;
+  addedAt: string;
+  /** False only ever reaches the owner. */
+  isAvailable: boolean;
+  /** Null when the entry is unavailable. */
+  track: StudioPlaylistTrackDTO | null;
+}
+
+export interface StudioPlaylistDTO extends StudioPlaylistCardDTO {
+  description: string | null;
+  /** Viewers get available entries only, renumbered 1..n. */
+  entries: StudioPlaylistEntryDTO[];
+  /** Owner only. */
+  creditSubprofileId: string | null;
+}
+
+/** Slugs from STUDIO_GENRES with at least one listenable published
+ *  release, in list order. */
+export interface StudioGenresDTO {
+  genres: string[];
+}
+
+/** `value` is null when the count is 1 to 4. */
+export interface StudioCountDTO {
+  value: number | null;
+  isBelowThreshold: boolean;
+}
+
+export interface StudioStatsTrackDTO {
+  track: StudioTrackSummaryDTO;
+  saves: StudioCountDTO;
+  playlistInclusions: StudioCountDTO;
+}
+
+export interface StudioStatsReleaseDTO {
+  release: StudioReleaseCardDTO & { status: StudioReleaseStatus };
+  saves: StudioCountDTO;
+  /** Distinct PUBLIC playlists containing any of its tracks. */
+  playlistInclusions: StudioCountDTO;
+  tracks: StudioStatsTrackDTO[];
+}
+
+export interface StudioArtistStatsDTO {
+  subprofileId: string;
+  followerCount: number;
+  /** Published first (published_at desc), then the others. */
+  releases: StudioStatsReleaseDTO[];
+}
+
+export interface CreateStudioPlaylistBody {
+  name: string;
+  description?: string;
+  visibility: StudioPlaylistVisibility;
+  creditSubprofileId?: string;
+}
+
+/** `creditSubprofileId: null` clears a persona credit (shown as the member). */
+export interface UpdateStudioPlaylistBody {
+  name?: string;
+  description?: string;
+  visibility?: StudioPlaylistVisibility;
+  creditSubprofileId?: string | null;
 }

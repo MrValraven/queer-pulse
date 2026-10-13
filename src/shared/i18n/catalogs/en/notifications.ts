@@ -1448,4 +1448,17 @@ export const notifications: Catalog = {
   "type.event_community_invite_response.declined.textNamed":
     "<profile>{name}</profile> declined your collab invite for {communityName}.",
   "type.event_community_invite_response.declined.meta": "Collab declined",
+  // Studio v2. A persona this member follows released something in Studio.
+  // Names the persona only (no actor key). Bundled on
+  // the persona: `formatNotification` sets `count` from `otherActorCount`.
+  "type.studio_release_published.text":
+    "{subprofileName} released {releaseTitle}.",
+  "type.studio_release_published.text_one":
+    "{subprofileName} released {releaseTitle}.",
+  "type.studio_release_published.text_other":
+    "{subprofileName} released {count} new releases.",
+  "type.studio_release_published.meta": "Artist you follow",
+  "type.studio_release_published.subprofileNameFallback": "Someone you follow",
+  "type.studio_release_published.releaseTitleFallback": "a new release",
+  "actions.listenNow": "Listen now",
 };

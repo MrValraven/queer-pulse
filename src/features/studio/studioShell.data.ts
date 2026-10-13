@@ -1,4 +1,5 @@
 import { routes } from "../../app/routeMap";
+import type { TranslateOptions } from "../../shared/i18n/types";
 
 /**
  * i18n Pattern A. `labelKey` is chrome (a static nav grid); the component
@@ -43,23 +44,6 @@ export const RAIL_MAIN: RailLink[] = [
     labelKey: "studio:rail.main.notifications",
     to: routes.studioNotifications,
   },
-];
-
-/** The live rail: Studio v1's three listening destinations. Upload and the
- *  artist's own releases are added per persona by StudioRailLive. */
-export const LIVE_RAIL_MAIN: RailLink[] = [
-  {
-    label: "Home",
-    labelKey: "studio:rail.main.home",
-    to: routes.studio,
-    end: true,
-  },
-  {
-    label: "Search",
-    labelKey: "studio:rail.v1.search",
-    to: routes.studioSearch,
-  },
-  { label: "Saved", labelKey: "studio:rail.v1.saved", to: routes.collections },
 ];
 
 export const CONTRIBUTE: RailLink[] = [
@@ -151,7 +135,9 @@ export const YEARLY_GIVING = { amount: 312, artistCount: 47 };
 export interface LibraryItem {
   name: string;
   em: string;
-  meta: string;
+  /** The facts line under the name: a catalog key plus its values. */
+  metaKey: string;
+  metaValues?: TranslateOptions;
   tint: "coral" | "plum" | "jade";
   to: string;
   image?: string;
@@ -161,7 +147,8 @@ export const LIBRARY: LibraryItem[] = [
   {
     name: "Cidade dos ",
     em: "santos",
-    meta: "Album · Mariana Sol",
+    metaKey: "studioShowcase:rail.library.meta.album",
+    metaValues: { artist: "Mariana Sol" },
     tint: "coral",
     to: routes.studioAlbum,
     image:
@@ -170,7 +157,8 @@ export const LIBRARY: LibraryItem[] = [
   {
     name: "Vespertina ",
     em: "vol. iv",
-    meta: "Set · Sara Marques",
+    metaKey: "studioShowcase:rail.library.meta.set",
+    metaValues: { artist: "Sara Marques" },
     tint: "plum",
     to: routes.studio,
     image:
@@ -179,7 +167,8 @@ export const LIBRARY: LibraryItem[] = [
   {
     name: "Lisbon dyke-bar ",
     em: "standards",
-    meta: "Collection · 28 tracks",
+    metaKey: "studioShowcase:rail.library.meta.collectionTracks",
+    metaValues: { count: 28 },
     tint: "jade",
     to: routes.studio,
     image:
@@ -188,7 +177,8 @@ export const LIBRARY: LibraryItem[] = [
   {
     name: "Trans ",
     em: "composers",
-    meta: "Mix · D. Okoye",
+    metaKey: "studioShowcase:rail.library.meta.mix",
+    metaValues: { artist: "D. Okoye" },
     tint: "plum",
     to: routes.studio,
     image:
@@ -197,7 +187,8 @@ export const LIBRARY: LibraryItem[] = [
   {
     name: "The Anjos ",
     em: "tape",
-    meta: "Live · Casa do Comum",
+    metaKey: "studioShowcase:rail.library.meta.live",
+    metaValues: { venue: "Casa do Comum" },
     tint: "coral",
     to: routes.studio,
     image:

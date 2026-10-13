@@ -111,7 +111,8 @@ export function readableMentionText(
  * other length links every event to the first date.
  *
  * `mentionNames` is optional: a caller holding resolved mention names passes
- * them so the description names people and places in full.
+ * them so the description names people and places in full. `hostedByLine` is
+ * the "Hosted by … for …" credit, set between the description and the link.
  */
 export function buildGatheringCalendarEvents({
   form,
@@ -119,6 +120,7 @@ export function buildGatheringCalendarEvents({
   occurrenceSlugs,
   urlForSlug,
   location,
+  hostedByLine = "",
   mentionNames,
 }: {
   form: GatheringCalendarInput;
@@ -126,6 +128,7 @@ export function buildGatheringCalendarEvents({
   occurrenceSlugs: readonly string[];
   urlForSlug: (occurrenceSlug: string) => string;
   location: string;
+  hostedByLine?: string;
   mentionNames?: ReadonlyMap<string, string>;
 }): ShareCalendarEvent[] {
   const occurrences = gatheringOccurrences(form);
@@ -146,7 +149,9 @@ export function buildGatheringCalendarEvents({
       start,
       end: durationMs === null ? null : new Date(start.getTime() + durationMs),
       location,
-      description: [trimmedDescription, url].filter(Boolean).join("\n\n"),
+      description: [trimmedDescription, hostedByLine, url]
+        .filter(Boolean)
+        .join("\n\n"),
       url,
     };
   });

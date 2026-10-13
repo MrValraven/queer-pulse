@@ -108,7 +108,7 @@ describe("Studio releases on a persona page (demo)", () => {
     ).toBeInTheDocument();
   });
 
-  it("shows nothing in the editor preview", () => {
+  it("shows the published releases in the editor preview, as cards that do not navigate", async () => {
     render(
       <TestProviders>
         <SubprofileSections
@@ -119,9 +119,15 @@ describe("Studio releases on a persona page (demo)", () => {
         />
       </TestProviders>,
     );
+    const section = await screen.findByRole("region", { name: /discography/i });
+    expect(within(section).getByText(/pedro on the 25/i)).toBeInTheDocument();
     expect(
-      screen.queryByRole("region", { name: /discography/i }),
+      within(section).queryByRole("link", { name: /pedro on the 25/i }),
     ).not.toBeInTheDocument();
+    expect(section).toHaveAttribute(
+      "data-preview-anchor",
+      "section:discography",
+    );
   });
 
   it("makes no Studio request and shows no block for a viewer without a grant", async () => {
@@ -165,5 +171,44 @@ describe("Studio releases on a persona page (demo)", () => {
       screen.queryByRole("region", { name: /discography/i }),
     ).not.toBeInTheDocument();
     expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+  });
+
+  it("lists the persona's public playlists in the Studio block", async () => {
+    render(
+      <TestProviders>
+        <SubprofileSections
+          persona={personaOf({})}
+          skin="studio"
+          mode="public"
+          featuredId={null}
+        />
+      </TestProviders>,
+    );
+    const list = await screen.findByRole("list", { name: /studio playlists/i });
+    expect(
+      within(list).getByRole("link", { name: /trans composers vol\. iv/i }),
+    ).toHaveAttribute(
+      "href",
+      "/studio/collection?id=demo-playlist-trans-composers",
+    );
+  });
+
+  it("never shows a draft in the preview", async () => {
+    render(
+      <TestProviders>
+        <SubprofileSections
+          persona={personaOf({
+            id: "demo-persona-mariana-sol",
+            handle: "",
+            slug: "mariana-sol",
+          })}
+          skin="studio"
+          mode="preview"
+          featuredId={null}
+        />
+      </TestProviders>,
+    );
+    await screen.findByRole("region", { name: /discography/i });
+    expect(screen.queryByText("Cartas ao mar")).not.toBeInTheDocument();
   });
 });

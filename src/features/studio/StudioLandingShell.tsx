@@ -23,7 +23,7 @@ export function StudioLandingShell({ children }: { children: ReactNode }) {
         <span className={styles.product}>{t("studio:brand.studioLabel")}</span>
         <nav className={styles.topNav}>
           {TOP_NAV.map((l) => (
-            <Link key={l.label} to={l.to}>
+            <Link key={l.labelKey} to={l.to}>
               {t(l.labelKey)}
             </Link>
           ))}
@@ -60,10 +60,10 @@ function StudioLandingFooter() {
         </div>
         <div className={styles.footCols}>
           {FOOTER_COLUMNS.map((col) => (
-            <div key={col.title} className={styles.footCol}>
+            <div key={col.titleKey} className={styles.footCol}>
               <h4>{t(col.titleKey)}</h4>
               {col.links.map((l) => (
-                <Link key={l.label} to={l.to}>
+                <Link key={l.labelKey} to={l.to}>
                   {t(l.labelKey)}
                 </Link>
               ))}

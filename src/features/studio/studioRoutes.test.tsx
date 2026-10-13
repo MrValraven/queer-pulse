@@ -67,4 +67,30 @@ describe("studioRoutes", () => {
     renderAt("/studio/not-a-page", { ...live, hasStudioAccess: true });
     expect(screen.getByText("Studio404Page")).toBeInTheDocument();
   });
+
+  it.each([
+    ["/studio/library", "StudioLibraryPage"],
+    ["/studio/collection?id=p1", "StudioCollectionPage"],
+    ["/studio/dashboard", "StudioDashboardPage"],
+    ["/studio/calls", "StudioOpenCallsPage"],
+    ["/studio/solidarity-fund", "StudioSolidarityFundPage"],
+    ["/studio/browse?genre=fado", "StudioBrowsePage"],
+  ])("opens %s for a granted member (Studio v2)", (path, page) => {
+    renderAt(path, { ...live, hasStudioAccess: true });
+    expect(screen.getByText(page)).toBeInTheDocument();
+  });
+
+  it("keeps council and triage redirecting to Studio home", () => {
+    renderAt("/studio/council", { ...live, hasStudioAccess: true });
+    expect(screen.getByText("StudioPage")).toBeInTheDocument();
+  });
+
+  it("opens browse in the demo too", () => {
+    renderAt("/studio/browse", {
+      demoMode: true,
+      hasStudioAccess: true,
+      isStudioAccessPending: false,
+    });
+    expect(screen.getByText("StudioBrowsePage")).toBeInTheDocument();
+  });
 });

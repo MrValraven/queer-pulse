@@ -58,6 +58,8 @@ export const enNamespaceLoaders: Partial<
   resources: () => import("./en/resources").then((module) => module.resources),
   economy: () => import("./en/economy").then((module) => module.economy),
   studio: () => import("./en/studio").then((module) => module.studio),
+  studioShowcase: () =>
+    import("./en/studioShowcase").then((module) => module.studioShowcase),
   cinema: () => import("./en/cinema").then((module) => module.cinema),
   settings: () => import("./en/settings").then((module) => module.settings),
   simulations: () =>
@@ -102,6 +104,8 @@ export const ptNamespaceLoaders: Partial<
   resources: () => import("./pt/resources").then((module) => module.resources),
   economy: () => import("./pt/economy").then((module) => module.economy),
   studio: () => import("./pt/studio").then((module) => module.studio),
+  studioShowcase: () =>
+    import("./pt/studioShowcase").then((module) => module.studioShowcase),
   cinema: () => import("./pt/cinema").then((module) => module.cinema),
   settings: () => import("./pt/settings").then((module) => module.settings),
   simulations: () =>
@@ -163,6 +167,7 @@ const en: Record<Namespace, Catalog> = {
   resources: PENDING_CATALOG,
   economy: PENDING_CATALOG,
   studio: PENDING_CATALOG,
+  studioShowcase: PENDING_CATALOG,
   cinema: PENDING_CATALOG,
   settings: PENDING_CATALOG,
   simulations: PENDING_CATALOG,
@@ -202,6 +207,7 @@ const pt: Record<Namespace, Catalog> = {
   resources: PENDING_CATALOG,
   economy: PENDING_CATALOG,
   studio: PENDING_CATALOG,
+  studioShowcase: PENDING_CATALOG,
   cinema: PENDING_CATALOG,
   settings: PENDING_CATALOG,
   simulations: PENDING_CATALOG,

@@ -11,6 +11,7 @@ import {
 import { ImageSlot } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useStudioPlayer } from "./player/studioPlayerContext";
+import { StudioAddToPlaylistButton } from "./StudioAddToPlaylistButton";
 import { StudioPlayerSeek } from "./StudioPlayerSeek";
 import { StudioPlayerShowcase } from "./StudioPlayerShowcase";
 import { useStudioShowcase } from "./useStudioShowcase";
@@ -62,6 +63,14 @@ export function StudioPlayer({
               {item.artistName}
             </Link>
           </span>
+          <StudioAddToPlaylistButton
+            trackIds={[item.trackId]}
+            subjectTitle={item.title}
+            ariaLabel={t("studio:playlist.add.trackAria", {
+              title: item.title,
+            })}
+            className={styles.addToPlaylist}
+          />
         </div>
 
         <div className={styles.controls}>

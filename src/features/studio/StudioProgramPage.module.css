@@ -128,6 +128,15 @@
   gap: 16px;
   margin-bottom: 16px;
 }
+@media (--sm) {
+  .groupHead {
+    flex-wrap: wrap;
+    gap: 4px 12px;
+  }
+  .groupHead h2 {
+    min-width: 0;
+  }
+}
 .groupHead h2 {
   font-family: var(--serif);
   font-weight: 300;

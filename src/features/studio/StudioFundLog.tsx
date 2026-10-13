@@ -7,7 +7,17 @@ import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { DISB, DISB_MORE } from "./studioSolidarityFund.data";
 import { downloadCsv } from "../../shared/lib/downloadBlob";
+import type { TFunction } from "../../shared/i18n/types";
+import type { DisbursementRow } from "./studioSolidarityFund.data";
 import s from "./funding.module.css";
+
+const rowDate = (row: DisbursementRow) => new Date(`${row.dateIso}T12:00:00Z`);
+
+/** The recipient as plain text (the CSV has no markup). */
+function plainName(row: DisbursementRow, t: TFunction): string {
+  if (row.person) return `${row.person.first} ${row.person.last}`;
+  return row.nameKey ? t(row.nameKey).replace(/<\/?em>/g, "") : "";
+}
 
 const tagClass: Record<string, string> = {
   trans: s.tagTrans!,
@@ -59,10 +69,14 @@ export function StudioFundLog() {
         t("studio:fund.log.csv.amount"),
       ],
       ...[...DISB, ...DISB_MORE].map((r) => [
-        `${r.d} ${r.m}`,
+        fmt.date(rowDate(r), {
+          day: "numeric",
+          month: "short",
+          timeZone: "UTC",
+        }),
         t(r.tagKey),
-        r.csvName,
-        r.note,
+        plainName(r, t),
+        t(r.noteKey),
         String(r.amount),
       ]),
     ];
@@ -90,22 +104,39 @@ export function StudioFundLog() {
           ))
         : rows.map((r, i) => (
             <FadeIn
-              key={`${r.csvName}-${r.d}${r.m}-${r.amount}`}
+              key={`${r.dateIso}-${r.noteKey}`}
               delay={Math.min(i, 8) * 60}
             >
               <div className={s.disbRow}>
                 <div className={s.dt}>
-                  <b>{r.d}</b>
-                  <span>{r.m}</span>
+                  <b>
+                    {fmt.date(rowDate(r), { day: "numeric", timeZone: "UTC" })}
+                  </b>
+                  <span>
+                    {fmt.date(rowDate(r), { month: "short", timeZone: "UTC" })}
+                  </span>
                 </div>
                 <div className={s.di}>
                   <h5>
                     <span className={`${s.tag2} ${tagClass[r.tagClass]}`}>
                       {t(r.tagKey)}
                     </span>
-                    {r.name}
+                    {r.person ? (
+                      <span className={s.diName}>
+                        {r.person.first} <em>{r.person.last}</em>
+                      </span>
+                    ) : (
+                      r.nameKey && (
+                        <span className={s.diName}>
+                          <Translation
+                            i18nKey={r.nameKey}
+                            components={{ em: <em /> }}
+                          />
+                        </span>
+                      )
+                    )}
                   </h5>
-                  <p>{r.note}</p>
+                  <p>{t(r.noteKey)}</p>
                 </div>
                 <div className={s.disbAmt}>
                   <em>{fmt.currency(r.amount)}</em>

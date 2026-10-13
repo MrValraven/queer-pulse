@@ -8,8 +8,12 @@ import styles from "./PersonaStudioReleases.module.css";
  *  card opens the release in Studio. */
 export function PersonaStudioReleases({
   releases,
+  isInteractive = true,
 }: {
   releases: StudioReleaseCardView[];
+  /** False in the editor preview: cards show and do not navigate away from
+   *  unsaved edits. */
+  isInteractive?: boolean;
 }) {
   const { t } = useTranslation();
   if (releases.length === 0) return null;
@@ -18,9 +22,9 @@ export function PersonaStudioReleases({
       className={styles.grid}
       aria-label={t("subprofiles:studioReleases.label")}
     >
-      {releases.map((release) => (
-        <li key={release.id}>
-          <Link to={release.href} className={styles.card}>
+      {releases.map((release) => {
+        const body = (
+          <>
             <span className={styles.cover}>
               <ImageSlot
                 src={release.coverUrl ?? undefined}
@@ -40,9 +44,20 @@ export function PersonaStudioReleases({
                 .filter(Boolean)
                 .join(" · ")}
             </span>
-          </Link>
-        </li>
-      ))}
+          </>
+        );
+        return (
+          <li key={release.id}>
+            {isInteractive ? (
+              <Link to={release.href} className={styles.card}>
+                {body}
+              </Link>
+            ) : (
+              <span className={styles.card}>{body}</span>
+            )}
+          </li>
+        );
+      })}
     </ul>
   );
 }

@@ -28,6 +28,12 @@ export interface StudioPlayerActions {
   playRelease: (releaseId: string, startTrackId?: string) => Promise<void>;
   /** Several releases as one queue, in the order given (the artist page's Play all). */
   playReleases: (releaseIds: string[]) => Promise<void>;
+  /** A ready-made list as one queue, in the order given (a playlist, or its
+   *  shuffle), starting at `startTrackId` when given. Reads no release. */
+  playTracks: (
+    items: StudioQueueItem[],
+    startTrackId?: string,
+  ) => Promise<void>;
   togglePlay: () => void;
   next: () => void;
   previous: () => void;

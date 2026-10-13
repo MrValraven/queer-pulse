@@ -110,6 +110,7 @@ export const forum: Catalog = {
   "compose.tagsNoMatch": "Nenhuma etiqueta corresponde a “{query}”.",
   "compose.popularTagsLabel": "Populares",
   "compose.browseTags": "Ver todas as etiquetas",
+  "compose.musicTag.fullHint": "Remove uma etiqueta para juntar esta",
   "compose.hideTagList": "Esconder a lista de etiquetas",
 
   // ── Categorias do vocabulário de etiquetas (forumTags.data.ts) ──────────
@@ -1225,4 +1226,7 @@ export const forum: Catalog = {
   "funding.ask.authorControls": "A tua angariação",
   "funding.follow.followedToast": "Vais saber dos novos concursos",
   "funding.follow.unfollowedToast": "Deixas de saber dos novos concursos",
+  "funding.compose.musicQuickTag": "Música e som",
+  "funding.compose.musicQuickTagHint":
+    "Junta a etiqueta música, para o concurso aparecer também nos concursos abertos do Studio",
 };

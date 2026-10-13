@@ -9,7 +9,7 @@ import {
   SPLIT,
   PAY_METHODS,
   SHEET_TITLE,
-  SHEET_SPEC,
+  SHEET_PAGE_COUNT,
   SHEET_PRICE,
   SHEET_PROCESSING_FEE,
   SHEET_SPLIT_RATIO,
@@ -37,21 +37,25 @@ export function StudioSheetCheckout() {
       </h2>
       <div className={s.chSub}>{t("studio:sheet.checkout.subtitle")}</div>
       <div className={s.line}>
-        <span className="k">
+        <span className={s.k}>
           {t("studio:sheet.checkout.leadSheetLabel", { title: SHEET_TITLE })}
-          <small>{SHEET_SPEC}</small>
+          <small>
+            {t("studioShowcase:sheetStore.checkout.spec", {
+              count: SHEET_PAGE_COUNT,
+            })}
+          </small>
         </span>
         <span className={s.v}>{fmt.currency(SHEET_PRICE)}</span>
       </div>
       <div className={s.line}>
-        <span className="k">
+        <span className={s.k}>
           {t("studio:sheet.checkout.processingLabel")}
           <small>{t("studio:sheet.checkout.processingSub")}</small>
         </span>
         <span className={s.v}>{fmt.currency(SHEET_PROCESSING_FEE)}</span>
       </div>
       <div className={`${s.line} ${s.lineTotal}`}>
-        <span className="k">{t("studio:sheet.checkout.totalLabel")}</span>
+        <span className={s.k}>{t("studio:sheet.checkout.totalLabel")}</span>
         <span className={s.v}>
           <em>{fmt.currency(total)}</em>
         </span>

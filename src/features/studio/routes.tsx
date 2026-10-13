@@ -37,6 +37,10 @@ const StudioCollectionPage = lazyNamed(
   () => import("./StudioCollectionPage"),
   "StudioCollectionPage",
 );
+const StudioBrowsePage = lazyNamed(
+  () => import("./StudioBrowsePage"),
+  "StudioBrowsePage",
+);
 const StudioSetPage = lazyNamed(
   () => import("./StudioSetPage"),
   "StudioSetPage",
@@ -171,7 +175,7 @@ function demoStudioRoutes() {
       <Route path={routes.studio} element={<StudioPage />} />
       <Route path={routes.studioAlbum} element={<StudioAlbumPage />} />
       <Route path={routes.studioArtist} element={<StudioArtistPage />} />
-      <Route path="/studio/dashboard" element={<StudioDashboardPage />} />
+      <Route path={routes.studioDashboard} element={<StudioDashboardPage />} />
       <Route path={routes.studioUpload} element={<StudioUploadPage />} />
       <Route path={routes.studioPayouts} element={<StudioPayoutsPage />} />
       <Route path={routes.studioTrack} element={<StudioTrackPage />} />
@@ -182,11 +186,12 @@ function demoStudioRoutes() {
       />
       <Route path={routes.studioSet} element={<StudioSetPage />} />
       <Route path={routes.studioSearch} element={<StudioSearchPage />} />
+      <Route path={routes.studioBrowse} element={<StudioBrowsePage />} />
       <Route path={routes.studioLibrary} element={<StudioLibraryPage />} />
       <Route path={routes.studioCheckout} element={<StudioCheckoutPage />} />
       <Route path="/studio/sheet-store" element={<StudioSheetStorePage />} />
       <Route
-        path="/studio/solidarity-fund"
+        path={routes.studioSolidarityFund}
         element={<StudioSolidarityFundPage />}
       />
       <Route path={routes.studioCalls} element={<StudioOpenCallsPage />} />
@@ -228,8 +233,10 @@ function demoStudioRoutes() {
   );
 }
 
-/** Studio v1 for a granted member: listen, search, upload. Deferred pages
- *  bounce to Studio home; anything else under /studio is the Studio 404. */
+/** Studio for a granted member: listen, search, browse, upload, playlists and
+ *  the library, Your numbers, open calls and the solidarity page. Deferred
+ *  pages bounce to Studio home; anything else under /studio is the Studio
+ *  404. */
 function grantedStudioRoutes() {
   return (
     <>
@@ -239,6 +246,18 @@ function grantedStudioRoutes() {
       <Route path={routes.studioTrack} element={<StudioTrackPage />} />
       <Route path={routes.studioSearch} element={<StudioSearchPage />} />
       <Route path={routes.studioUpload} element={<StudioUploadPage />} />
+      <Route path={routes.studioBrowse} element={<StudioBrowsePage />} />
+      <Route
+        path={routes.studioCollection}
+        element={<StudioCollectionPage />}
+      />
+      <Route path={routes.studioLibrary} element={<StudioLibraryPage />} />
+      <Route path={routes.studioDashboard} element={<StudioDashboardPage />} />
+      <Route path={routes.studioCalls} element={<StudioOpenCallsPage />} />
+      <Route
+        path={routes.studioSolidarityFund}
+        element={<StudioSolidarityFundPage />}
+      />
       <Route path="/studio/404" element={<Studio404Page />} />
       <Route path="/studio/500" element={<Studio500Page />} />
       {STUDIO_DEFERRED_PATHS.map((path) => (

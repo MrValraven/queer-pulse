@@ -39,8 +39,8 @@ export function HousingPage() {
       <JsonLd
         schema={buildBreadcrumbSchema([
           {
-            name: t("shared:megaNav.lisbon.title"),
-            path: routes.safeSpaces,
+            name: t("shared:megaNav.community.col.discover.head"),
+            path: routes.directory,
           },
           { name: pageTitle, path: routes.housing },
         ])}

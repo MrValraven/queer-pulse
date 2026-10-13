@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, type QueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { getStudioArtist } from "./studio.api";
 import { toArtistView, type StudioArtistView } from "./studio.adapters";
@@ -46,4 +46,26 @@ export function useStudioArtist(
     artist: query.data ?? null,
     loadState: studioLoadStateOf(query, query.data !== undefined),
   };
+}
+
+/** After a Follow or Unfollow from the Studio hero: the server's answer
+ *  goes straight into the cached artist view, so the count never flickers
+ *  through a refetch. */
+export function patchStudioArtistFollow(
+  queryClient: QueryClient,
+  demoMode: boolean,
+  subprofileId: string,
+  result: { followerCount: number; viewerFollowing: boolean },
+): void {
+  queryClient.setQueryData<StudioArtistView>(
+    studioKeys.artist(demoMode, subprofileId),
+    (view) =>
+      view
+        ? {
+            ...view,
+            followerCount: result.followerCount,
+            isFollowing: result.viewerFollowing,
+          }
+        : view,
+  );
 }

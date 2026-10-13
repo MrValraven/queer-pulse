@@ -129,13 +129,26 @@ export function setMonitoringConsent(granted: boolean): void {
   flushBufferedEvents();
 }
 
-const PRIVATE_BREADCRUMB_PATHS = ["/studio/tracks/", "/studio/releases/"];
+/**
+ * Substrings matched against each breadcrumb URL, target and message. The
+ * first three cover API requests (stream, release and playlist reads); the
+ * last three cover the page routes a member opens to play a track, an album
+ * or a playlist.
+ */
+const PRIVATE_BREADCRUMB_PATHS = [
+  "/studio/tracks/",
+  "/studio/releases/",
+  "/studio/playlists/",
+  "/studio/track?id=",
+  "/studio/album?id=",
+  "/studio/collection?id=",
+];
 
 /**
  * Drops the SDK's default fetch, xhr and navigation breadcrumbs that name a
- * Studio track or release URL (a stream request there would show up on a
- * later error event as a play history). Every other breadcrumb passes through
- * unchanged.
+ * Studio track, release or playlist URL (a stream request or a page visit
+ * there would show up on a later error event as a play history). Every other
+ * breadcrumb passes through unchanged.
  */
 export function dropStudioPlayBreadcrumb(
   breadcrumb: Sentry.Breadcrumb,
@@ -146,12 +159,49 @@ export function dropStudioPlayBreadcrumb(
     breadcrumb.data?.from,
     breadcrumb.message,
   ];
-  const isPrivate = candidates.some(
-    (candidate) =>
-      typeof candidate === "string" &&
-      PRIVATE_BREADCRUMB_PATHS.some((path) => candidate.includes(path)),
-  );
+  const isPrivate = candidates.some(isPrivateObservabilityUrl);
   return isPrivate ? null : breadcrumb;
+}
+
+/**
+ * The matcher behind every privacy scrub in this module: true when a value is
+ * a string naming one of the {@link PRIVATE_BREADCRUMB_PATHS}.
+ */
+export function isPrivateObservabilityUrl(candidate: unknown): boolean {
+  return (
+    typeof candidate === "string" &&
+    PRIVATE_BREADCRUMB_PATHS.some((path) => candidate.includes(path))
+  );
+}
+
+/**
+ * The browser SDK attaches `location.href` as `event.request.url` and the
+ * page's `Referer` header to every error event, so an error thrown on a
+ * playlist page would name the playlist. Removes the URL (and any query
+ * string) when it names a private path, and every `Referer` header, in any
+ * key casing, that does. Everything else on the event passes through.
+ */
+export function dropPrivateRequestUrl(
+  event: Sentry.ErrorEvent,
+): Sentry.ErrorEvent {
+  const request = event.request;
+  if (!request) return event;
+  if (isPrivateObservabilityUrl(request.url)) {
+    delete request.url;
+    delete request.query_string;
+  }
+  const headers = request.headers;
+  if (headers) {
+    for (const headerName of Object.keys(headers)) {
+      if (
+        headerName.toLowerCase() === "referer" &&
+        isPrivateObservabilityUrl(headers[headerName])
+      ) {
+        delete headers[headerName];
+      }
+    }
+  }
+  return event;
 }
 
 /**
@@ -182,11 +232,13 @@ export async function initObservability(): Promise<void> {
     //    (setMonitoringConsent flips `enabled`).
     // 2. Expected failure: a signed-out 401 is an answer the app handles, so it
     //    never spends monitoring quota. See SILENT_HTTP_STATUSES.
+    // Events that pass both gates lose a page URL or Referer naming a Studio
+    // track, album or playlist (dropPrivateRequestUrl).
     beforeBreadcrumb: dropStudioPlayBreadcrumb,
     beforeSend: (event, hint) => {
       if (!enabled) return null;
       if (isExpectedHttpFailure(hint.originalException)) return null;
-      return event;
+      return dropPrivateRequestUrl(event);
     },
   });
 

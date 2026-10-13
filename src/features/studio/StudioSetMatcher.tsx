@@ -1,19 +1,24 @@
+import { useMemo } from "react";
 import { FiCheck, FiPlay } from "react-icons/fi";
 import { ImageSlot, FadeIn } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { TRACKS, PASTE } from "./studioSetSubmission.data";
+import {
+  TRACKS,
+  buildPaste,
+  resolveTrackTitle,
+} from "./studioSetSubmission.data";
 import s from "./funding.module.css";
 
 const PER_PLAY_RATE = 0.05;
 
-// Content: the uploaded mock master file's name and technical metadata —
-// comes from the uploaded file in live mode.
+// Content: the uploaded mock master file's name and technical figures, from
+// the uploaded file in live mode.
 const UPLOADED_FILENAME = "house-for-the-tired_master.wav";
-const UPLOADED_FILE_META =
-  "2h 08m · 24-bit / 48kHz · 1.4 GB · loudness −9.2 LUFS ";
+const UPLOADED_FILE_META = "2h 08m · 24-bit / 48kHz · 1.4 GB";
+const UPLOADED_FILE_LOUDNESS = "−9.2 LUFS";
 
 interface StudioSetMatcherProps {
   ran: boolean;
@@ -29,6 +34,7 @@ export function StudioSetMatcher({
   const { t } = useTranslation();
   const fmt = useFormat();
   const { showToast } = useToast();
+  const paste = useMemo(() => buildPaste(t), [t]);
   return (
     <div>
       <div className={s.djFile}>
@@ -47,7 +53,10 @@ export function StudioSetMatcher({
         <div>
           <h5>{UPLOADED_FILENAME}</h5>
           <p>
-            {UPLOADED_FILE_META}
+            {UPLOADED_FILE_META} ·{" "}
+            {t("studioShowcase:setSubmission.file.loudness", {
+              value: UPLOADED_FILE_LOUDNESS,
+            })}{" "}
             <FiCheck />
           </p>
         </div>
@@ -62,7 +71,7 @@ export function StudioSetMatcher({
       <textarea
         className={s.paste}
         aria-label={t("studio:setSubmission.matcher.tracklistLabel")}
-        defaultValue={PASTE}
+        defaultValue={paste}
       />
       <div className={s.pasteHint}>
         <Translation
@@ -114,7 +123,13 @@ export function StudioSetMatcher({
                   />
                 </span>
                 <div>
-                  <h5>{track.m ? <em>{track.title}</em> : track.title}</h5>
+                  <h5>
+                    {track.m ? (
+                      <em>{resolveTrackTitle(track, t)}</em>
+                    ) : (
+                      resolveTrackTitle(track, t)
+                    )}
+                  </h5>
                   <p>
                     {track.m ? (
                       <Translation

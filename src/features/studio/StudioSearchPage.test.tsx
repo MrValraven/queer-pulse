@@ -135,6 +135,7 @@ describe("StudioSearchTrackRow", () => {
     const view = toSearchView({
       releases: [],
       artists: [],
+      playlists: [],
       tracks: [
         {
           id: "t1",
@@ -158,6 +159,8 @@ describe("StudioSearchTrackRow", () => {
               kind: "musician",
               avatarUrl: null,
             },
+            publishedAt: "2026-04-12T10:00:00.000Z",
+            genre: null,
           },
         },
       ],
@@ -173,6 +176,7 @@ describe("StudioSearchTrackRow", () => {
       hasNext: false,
       playRelease,
       playReleases: vi.fn(() => Promise.resolve()),
+      playTracks: vi.fn(() => Promise.resolve()),
       togglePlay: vi.fn(),
       next: vi.fn(),
       previous: vi.fn(),
@@ -191,10 +195,94 @@ describe("StudioSearchTrackRow", () => {
         </StudioPlayerContext.Provider>
       </TestProviders>,
     );
-    const playButton = screen.getByRole("button", { name: /vela acesa/i });
+    const playButton = screen.getByRole("button", { name: "Play Vela acesa" });
     expect(playButton.tagName).toBe("BUTTON");
     expect(playButton.closest("a")).toBeNull();
     fireEvent.click(playButton);
     expect(playRelease).toHaveBeenCalledWith("r9", "t1");
+    expect(
+      screen.getByRole("button", { name: "Add Vela acesa to a playlist" }),
+    ).not.toHaveAttribute("aria-disabled");
+  });
+});
+
+describe("StudioSearchPage (v2)", () => {
+  it("finds public playlists under the Playlists filter", async () => {
+    render(
+      <TestProviders initialEntries={["/studio/search?q=dyke&type=playlists"]}>
+        <StudioSearchPage />
+      </TestProviders>,
+    );
+    expect(screen.getByRole("button", { name: "Playlists" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+    const playlists = await screen.findByRole("region", { name: /playlists/i });
+    expect(
+      within(playlists).getByRole("link", {
+        name: "Lisbon dyke-bar standards",
+      }),
+    ).toBeInTheDocument();
+  });
+
+  it("shows the genre select only when there is a query", () => {
+    const { unmount } = render(
+      <TestProviders initialEntries={["/studio/search"]}>
+        <StudioSearchPage />
+      </TestProviders>,
+    );
+    expect(
+      screen.queryByRole("combobox", { name: "Genre" }),
+    ).not.toBeInTheDocument();
+    unmount();
+    render(
+      <TestProviders initialEntries={["/studio/search?q=a"]}>
+        <StudioSearchPage />
+      </TestProviders>,
+    );
+    expect(screen.getByRole("combobox", { name: "Genre" })).toBeInTheDocument();
+  });
+
+  it("narrows releases by the genre in the URL", async () => {
+    render(
+      <TestProviders
+        initialEntries={["/studio/search?q=a&type=releases&genre=electronic"]}
+      >
+        <StudioSearchPage />
+      </TestProviders>,
+    );
+    expect(screen.getByRole("combobox", { name: "Genre" })).toHaveValue(
+      "electronic",
+    );
+    const releases = await screen.findByRole("region", { name: /releases/i });
+    expect(
+      within(releases).getByRole("link", { name: "Bicha, with love" }),
+    ).toBeInTheDocument();
+    expect(
+      within(releases).queryByRole("link", { name: "Cidade dos santos" }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("writes a chosen genre into the URL", async () => {
+    render(
+      <TestProviders initialEntries={["/studio/search?q=a"]}>
+        <StudioSearchPage />
+      </TestProviders>,
+    );
+    fireEvent.change(screen.getByRole("combobox", { name: "Genre" }), {
+      target: { value: "fado" },
+    });
+    await waitFor(() =>
+      expect(screen.getByRole("combobox", { name: "Genre" })).toHaveValue(
+        "fado",
+      ),
+    );
+    const releases = await screen.findByRole("region", { name: /releases/i });
+    expect(
+      within(releases).getByRole("link", { name: "Cidade dos santos" }),
+    ).toBeInTheDocument();
+    expect(
+      within(releases).queryByRole("link", { name: "Bicha, with love" }),
+    ).not.toBeInTheDocument();
   });
 });

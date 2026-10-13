@@ -2,39 +2,33 @@ import { routes } from "../../app/routeMap";
 
 /**
  * Logged-out marketing landing for QueerPulse Studio (shown at /studio).
- * i18n Pattern A throughout — chrome nav/footer/promise/stat copy holds
- * catalog keys; the components resolve them with `t()`.
+ * i18n Pattern A throughout: nav, footer, promise and stat copy hold catalog
+ * keys, and the components resolve them with `t()`.
  */
 
 export interface FooterLink {
-  label: string;
   labelKey: string;
   to: string;
 }
 export interface FooterColumn {
-  title: string;
   titleKey: string;
   links: FooterLink[];
 }
 
 export const TOP_NAV: FooterLink[] = [
   {
-    label: "About the co-op",
     labelKey: "studio:landing.nav.aboutCoop",
     to: routes.studioAbout,
   },
   {
-    label: "Public ledger",
     labelKey: "studio:landing.nav.publicLedger",
     to: routes.governance,
   },
   {
-    label: "How it works",
     labelKey: "studio:landing.nav.howItWorks",
     to: "#how",
   },
   {
-    label: "For artists",
     labelKey: "studio:landing.nav.forArtists",
     to: "#artists",
   },
@@ -43,7 +37,7 @@ export const TOP_NAV: FooterLink[] = [
 export const HERO_SET_ART =
   "https://images.unsplash.com/photo-1528643609128-c50fdc20cc58?q=80&w=800&auto=format&fit=crop";
 
-/** Waveform bars for the demo player — the leading `played` run is coral. */
+/** Waveform bars for the demo player; the leading `played` run is coral. */
 export const DEMO_WAVE: { h: number; played: boolean }[] = [
   { h: 30, played: true },
   { h: 55, played: true },
@@ -101,15 +95,15 @@ export const PROMISES: Promise[] = [
 ];
 
 /**
- * `prefix`/`suffix` are symbolic (currency/percent glyphs), not language
- * prose, so they stay as literal display fragments. `unitKey` is the one spot
- * a unit *word* ("days") is glued to the animated number — it resolves
- * through `t()` and is appended with its own space.
+ * A headline figure, formatted for the active locale at render: `style` picks
+ * euros or a percentage (`value` 80.3 means 80.3%), `fractionDigits` fixes
+ * the decimals. `unitKey` is the one spot a unit word ("days") is glued to
+ * the number: it resolves through `t()` and is appended with its own space.
  */
 export interface CounterStat {
   value: number;
-  prefix?: string;
-  suffix?: string;
+  style?: "currency" | "percent";
+  fractionDigits?: number;
   unitKey?: string;
   labelKey: string;
 }
@@ -119,20 +113,21 @@ export const PAYOUT_TOTAL = 62140;
 
 export const COUNTER_STATS: CounterStat[] = [
   {
-    value: 5,
-    prefix: "€0.0",
-    suffix: "",
+    value: 0.05,
+    style: "currency",
+    fractionDigits: 2,
     labelKey: "studio:landing.counter.stat.perPlay",
   },
   {
-    value: 80,
-    suffix: ".3%",
+    value: 80.3,
+    style: "percent",
+    fractionDigits: 1,
     labelKey: "studio:landing.counter.stat.artistShare",
   },
   { value: 2104, labelKey: "studio:landing.counter.stat.sustainers" },
   {
-    value: 9,
-    suffix: ".4",
+    value: 9.4,
+    fractionDigits: 1,
     unitKey: "studio:landing.counter.unit.days",
     labelKey: "studio:landing.counter.stat.councilAnswerTime",
   },
@@ -140,7 +135,8 @@ export const COUNTER_STATS: CounterStat[] = [
 
 export interface CompareCard {
   labelKey: string;
-  value: string;
+  /** Euros per play, formatted for the active locale at render. */
+  value: number;
   ctxKey: string;
   us?: boolean;
 }
@@ -148,22 +144,22 @@ export interface CompareCard {
 export const COMPARE: CompareCard[] = [
   {
     labelKey: "studio:landing.compare.spotify.label",
-    value: "€0.003",
+    value: 0.003,
     ctxKey: "studio:landing.compare.spotify.ctx",
   },
   {
     labelKey: "studio:landing.compare.apple.label",
-    value: "€0.007",
+    value: 0.007,
     ctxKey: "studio:landing.compare.apple.ctx",
   },
   {
     labelKey: "studio:landing.compare.tidal.label",
-    value: "€0.012",
+    value: 0.012,
     ctxKey: "studio:landing.compare.tidal.ctx",
   },
   {
     labelKey: "studio:landing.compare.us.label",
-    value: "€0.05",
+    value: 0.05,
     ctxKey: "studio:landing.compare.us.ctx",
     us: true,
   },
@@ -171,104 +167,84 @@ export const COMPARE: CompareCard[] = [
 
 export const FOOTER_COLUMNS: FooterColumn[] = [
   {
-    title: "Studio",
     titleKey: "studio:landing.footer.col.studio",
     links: [
       {
-        label: "This week",
         labelKey: "studio:landing.footer.col.studio.thisWeek",
         to: routes.studio,
       },
       {
-        label: "Sheet music",
         labelKey: "studio:rail.main.sheetMusic",
         to: routes.studioSheetStore,
       },
       {
-        label: "DJ sets",
         labelKey: "studio:landing.footer.col.studio.djSets",
         to: routes.studioSet,
       },
       {
-        label: "Live broadcast",
         labelKey: "studio:landing.footer.col.studio.liveBroadcast",
         to: routes.studioLive,
       },
     ],
   },
   {
-    title: "Artists",
     titleKey: "studio:landing.footer.col.artists",
     links: [
       {
-        label: "Submit music",
         labelKey: "studio:landing.footer.col.artists.submitMusic",
         to: routes.studioUpload,
       },
       {
-        label: "Artist dashboard",
         labelKey: "studio:landing.footer.col.artists.dashboard",
         to: routes.studioDashboard,
       },
       {
-        label: "Revenue split",
         labelKey: "studio:landing.footer.col.artists.revenueSplit",
         to: routes.studioAbout,
       },
       {
-        label: "Rights & takedown",
         labelKey: "studio:rail.contribute.rightsTakedown",
         to: routes.studioRights,
       },
     ],
   },
   {
-    title: "The co-op",
     titleKey: "studio:rail.section.coop",
     links: [
       {
-        label: "The strategy plan",
         labelKey: "studio:landing.footer.col.coop.strategyPlan",
         to: routes.studioAbout,
       },
       {
-        label: "Trust & terms",
         labelKey: "studio:rail.utility.trustTerms",
         to: routes.studioTerms,
       },
       {
-        label: "Public ledger",
         labelKey: "studio:landing.nav.publicLedger",
         to: routes.governance,
       },
       {
-        label: "Accessibility",
         labelKey: "studio:rail.utility.accessibility",
         to: routes.studioAccessibility,
       },
     ],
   },
   {
-    title: "Council",
     titleKey: "studio:landing.footer.col.council",
     links: [
       {
-        label: "Programming",
         labelKey: "studio:landing.footer.col.council.programming",
         to: routes.studioProgram,
       },
       {
-        label: "Submissions",
         labelKey: "studio:landing.footer.col.council.submissions",
         to: routes.studioTriage,
       },
       {
-        label: "Curator council",
         labelKey: "studio:landing.footer.col.council.curatorCouncil",
         to: routes.studioCouncil,
       },
       {
-        label: "Open calls",
         labelKey: "studio:rail.contribute.openCalls",
         to: routes.studioCalls,
       },

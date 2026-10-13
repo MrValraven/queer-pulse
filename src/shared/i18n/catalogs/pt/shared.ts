@@ -457,17 +457,18 @@ export const shared: Catalog = {
 
   // MegaNav — Community
   "megaNav.community.title": "Comunidade",
-  "megaNav.community.subtitle": "Pessoas & encontros",
+  "megaNav.community.subtitle": "Pessoas, encontros & espaços",
   "megaNav.community.feature.eyebrow": "Comunidade",
   "megaNav.community.feature.title": "Encontra a tua gente.",
   "megaNav.community.feature.body":
     "Um diretório de pessoas, fóruns e convívios: o tecido de ligação do dia a dia da rede.",
   "megaNav.community.feature.cta": "Explorar pessoas",
   "megaNav.community.featurePublic.eyebrow": "Comunidade",
-  "megaNav.community.featurePublic.title": "Organizar em conjunto.",
+  "megaNav.community.featurePublic.title":
+    "Como verificamos os espaços locais.",
   "megaNav.community.featurePublic.body":
-    "Campanhas, ajuda mútua e equipas de voluntariado: trabalho onde podes participar, sem precisares de convite.",
-  "megaNav.community.featurePublic.cta": "Participar",
+    "Cada espaço é revisto antes de receber o selo de verificado. Vê como funciona, e quais foram removidos.",
+  "megaNav.community.featurePublic.cta": "Ver como funciona a verificação",
   "megaNav.community.col.people.head": "Pessoas",
   "megaNav.community.col.people.membersDirectory": "Diretório de pessoas",
   "megaNav.community.col.people.professionalDirectory":
@@ -481,27 +482,11 @@ export const shared: Catalog = {
   "megaNav.community.col.organise.activismVolunteering":
     "Ativismo e Voluntariado",
   "megaNav.community.col.organise.changeMakers": "Agentes de mudança",
-
-  // MegaNav — Lisbon
-  "megaNav.lisbon.title": "Lisboa",
-  "megaNav.lisbon.subtitle": "Descobrir & viver aqui",
-  "megaNav.lisbon.feature.eyebrow": "Lisboa",
-  "megaNav.lisbon.feature.title": "Encontra os teus espaços locais.",
-  "megaNav.lisbon.feature.body":
-    "Bares, clínicas, salões e lojas que te acolhem: todos revistos, com os espaços verificados bem identificados.",
-  "megaNav.lisbon.feature.cta": "Explorar espaços locais",
-  "megaNav.lisbon.featurePublic.eyebrow": "Lisboa",
-  "megaNav.lisbon.featurePublic.title": "Como verificamos os espaços locais.",
-  "megaNav.lisbon.featurePublic.body":
-    "Cada espaço é revisto antes de receber o selo de verificado. Vê como funciona, e quais foram removidos.",
-  "megaNav.lisbon.featurePublic.cta": "Ver como funciona a verificação",
-  "megaNav.lisbon.col.discover.head": "Descobrir",
-  "megaNav.lisbon.col.discover.businessDirectory":
+  "megaNav.community.col.discover.head": "Descobrir",
+  "megaNav.community.col.discover.businessDirectory":
     "Diretório de negócios locais",
-  "megaNav.lisbon.col.discover.partners": "Parceiros",
-  "megaNav.lisbon.col.livingHere.head": "Viver aqui",
-  "megaNav.lisbon.col.livingHere.housing": "Habitação",
-  "megaNav.lisbon.col.livingHere.visasResidency": "Vistos e residência",
+  "megaNav.community.col.discover.housing": "Habitação",
+  "megaNav.community.col.discover.partners": "Parceiros",
 
   // MegaNav — Resources
   "megaNav.resources.title": "Recursos",

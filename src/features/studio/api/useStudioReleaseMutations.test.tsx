@@ -30,9 +30,14 @@ vi.mock("./studio.api", () => ({
 function artistViewOf(published: StudioReleaseView[]): StudioArtistView {
   return {
     artist: { id: DEMO_ARTIST_MARIANA.id } as StudioArtistView["artist"],
+    allReleases: published,
     releases: published,
     singles: [],
     ownerReleases: [],
+    isOwner: true,
+    followerCount: 0,
+    isFollowing: false,
+    playlists: [],
   };
 }
 
@@ -135,9 +140,34 @@ describe("release mutations keep the lists in step", () => {
     const invalidate = vi.spyOn(queryClient, "invalidateQueries");
     const { result } = renderHook(() => useDeleteStudioRelease(), { wrapper });
     await act(() => result.current.mutateAsync({ releaseId: "r1" }));
-    await waitFor(() => expect(invalidate).toHaveBeenCalledTimes(2));
+    await waitFor(() => expect(invalidate).toHaveBeenCalled());
     const keys = invalidate.mock.calls.map((call) => call[0]?.queryKey);
     expect(keys).toContainEqual(["studio", "artist"]);
     expect(keys).toContainEqual(["studio", "releases"]);
+  });
+
+  it("invalidates the playlist, search and stats keys after a live delete", async () => {
+    demoState.demoMode = false;
+    deleteStudioRelease.mockResolvedValue(undefined);
+    const { queryClient, wrapper } = setup();
+    const invalidate = vi.spyOn(queryClient, "invalidateQueries");
+    const { result } = renderHook(() => useDeleteStudioRelease(), { wrapper });
+    await act(() => result.current.mutateAsync({ releaseId: "r1" }));
+    await waitFor(() => expect(invalidate).toHaveBeenCalled());
+    const keys = invalidate.mock.calls.map((call) => call[0]?.queryKey);
+    expect(keys).toContainEqual(["studio", "playlist"]);
+    expect(keys).toContainEqual(studioKeys.myPlaylists(false));
+    expect(keys).toContainEqual(["studio", "memberPlaylists"]);
+    expect(keys).toContainEqual(["studio", "trackPlaylists"]);
+    expect(keys).toContainEqual(["studio", "search"]);
+    expect(keys).toContainEqual(["studio", "stats"]);
+  });
+
+  it("leaves the demo playlist and stats caches alone after a demo delete", async () => {
+    const { queryClient, wrapper } = setup();
+    const invalidate = vi.spyOn(queryClient, "invalidateQueries");
+    const { result } = renderHook(() => useDeleteStudioRelease(), { wrapper });
+    await act(() => result.current.mutateAsync({ releaseId: "r1" }));
+    expect(invalidate).not.toHaveBeenCalled();
   });
 });

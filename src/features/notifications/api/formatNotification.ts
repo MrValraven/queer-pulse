@@ -2117,6 +2117,10 @@ export function formatNotification(
   // `event_nearly_full` are pluralised on their own count field; see
   // `PLURAL_COUNT_FIELD`.
   mirrorPluralCount(type, payload, tokens);
+  // Studio v2: a new-release row bundles on the persona, so its count rides
+  // on otherActorCount (the payload is the newest release's).
+  if (type === "studio_release_published")
+    tokens.count = (otherActorCount ?? 0) + 1;
   // ENG-409: the defensive tokens of the kinds in `notificationKindCopy.ts`.
   applyLifecycleTokens(type, payload, tokens, t);
   if (type === "funding_deadline_soon" || type === "funding_deadline_changed") {

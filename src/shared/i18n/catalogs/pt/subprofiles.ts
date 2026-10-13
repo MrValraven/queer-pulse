@@ -3219,4 +3219,8 @@ export const subprofiles: Catalog = {
   "studioReleases.type.ep": "EP",
   "studioReleases.type.single": "Single",
   "studioReleases.type.mix": "Mix",
+  "studioPlaylists.heading": "Playlists",
+  "studioPlaylists.label": "Playlists no Studio",
+  "studioPlaylists.trackCount_one": "{count} faixa",
+  "studioPlaylists.trackCount_other": "{count} faixas",
 };

@@ -1,6 +1,9 @@
+import type { Formatters } from "../../shared/i18n/format";
+import type { TFunction } from "../../shared/i18n/types";
+
 /**
  * The three promise cards at the top of the Rights & takedown page. Chrome
- * (Pattern A) — resolved via `t(titleKey)` / `t(bodyKey)` in the component.
+ * (Pattern A): resolved via `t(titleKey)` / `t(bodyKey)` in the component.
  */
 export interface RightsPromise {
   key: string;
@@ -26,6 +29,68 @@ export const PROMISES: RightsPromise[] = [
   },
 ];
 
+/**
+ * The facts line under a release title. The format word and the phrases are
+ * catalog keys; play counts stay literal and paid totals are euro figures,
+ * formatted for the active locale.
+ */
+export interface ReleaseMeta {
+  formatKey: string;
+  trackCount?: number;
+  year: number;
+  plays?: string;
+  paid?: number;
+  /** Tracks under a clearance dispute (live recordings). */
+  disputedTrackCount?: number;
+}
+
+const WHOLE_EUROS = { minimumFractionDigits: 0, maximumFractionDigits: 0 };
+
+/** Resolve a {@link ReleaseMeta} into the "Album · 11 tracks · 2026 · ..." line. */
+export function formatReleaseMeta(
+  meta: ReleaseMeta,
+  t: TFunction,
+  fmt: Formatters,
+): string {
+  const parts = [t(meta.formatKey)];
+  if (meta.trackCount != null) {
+    parts.push(
+      t("studioShowcase:rights.release.trackCount", {
+        count: meta.trackCount,
+      }),
+    );
+  }
+  parts.push(String(meta.year));
+  if (meta.plays) {
+    parts.push(t("studioShowcase:rights.release.plays", { plays: meta.plays }));
+  }
+  if (meta.paid != null) {
+    parts.push(
+      t("studioShowcase:rights.release.paid", {
+        amount: fmt.currency(meta.paid, "EUR", WHOLE_EUROS),
+      }),
+    );
+  }
+  if (meta.disputedTrackCount != null) {
+    parts.push(
+      t("studioShowcase:rights.release.clearanceDispute", {
+        count: meta.disputedTrackCount,
+      }),
+    );
+  }
+  return parts.join(" · ");
+}
+
+/**
+ * The licence badge. A licence code ("CC-BY-NC") stays literal in `top`;
+ * a worded licence uses `topKey`. The second line is always a key.
+ */
+export interface ReleaseLicence {
+  top?: string;
+  topKey?: string;
+  subKey: string;
+}
+
 /** A single release row. `state` drives whether it can be taken down. */
 export interface Release {
   id: string;
@@ -35,8 +100,8 @@ export interface Release {
   titlePre: string;
   titleEm?: string;
   titlePost?: string;
-  meta: string;
-  licence?: { top: string; sub: string };
+  meta: ReleaseMeta;
+  licence?: ReleaseLicence;
   cover: string;
   tint: "coral" | "jade" | "plum";
   state: "live" | "removing";
@@ -50,8 +115,14 @@ export const RELEASES: Release[] = [
     title: "Cidade dos santos",
     titlePre: "Cidade dos ",
     titleEm: "santos",
-    meta: "Album · 11 tracks · 2026 · 142k plays · €7,100 paid",
-    licence: { top: "CC-BY-NC", sub: "licence" },
+    meta: {
+      formatKey: "studioShowcase:rights.release.format.album",
+      trackCount: 11,
+      year: 2026,
+      plays: "142k",
+      paid: 7100,
+    },
+    licence: { top: "CC-BY-NC", subKey: "studioShowcase:rights.licence.sub" },
     cover:
       "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=400&auto=format&fit=crop",
     tint: "coral",
@@ -61,8 +132,17 @@ export const RELEASES: Release[] = [
     id: "devocao",
     title: "Devoção",
     titlePre: "Devoção",
-    meta: "EP · 9 tracks · 2025 · 61k plays · €3,040 paid",
-    licence: { top: "All rights", sub: "reserved" },
+    meta: {
+      formatKey: "studioShowcase:rights.release.format.ep",
+      trackCount: 9,
+      year: 2025,
+      plays: "61k",
+      paid: 3040,
+    },
+    licence: {
+      topKey: "studioShowcase:rights.licence.allRights.top",
+      subKey: "studioShowcase:rights.licence.allRights.sub",
+    },
     cover:
       "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=400&auto=format&fit=crop",
     tint: "plum",
@@ -73,8 +153,13 @@ export const RELEASES: Release[] = [
     title: "A Beja",
     titlePre: "A ",
     titleEm: "Beja",
-    meta: "Single · 2025 · 28k plays · €1,400 paid",
-    licence: { top: "CC-BY-SA", sub: "licence" },
+    meta: {
+      formatKey: "studioShowcase:rights.release.format.single",
+      year: 2025,
+      plays: "28k",
+      paid: 1400,
+    },
+    licence: { top: "CC-BY-SA", subKey: "studioShowcase:rights.licence.sub" },
     cover:
       "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?q=80&w=400&auto=format&fit=crop",
     tint: "jade",
@@ -85,7 +170,11 @@ export const RELEASES: Release[] = [
     title: "Live at Casa do Comum",
     titlePre: "Live at ",
     titleEm: "Casa do Comum",
-    meta: "Live recording · 2024 · clearance dispute on 2 tracks",
+    meta: {
+      formatKey: "studioShowcase:rights.release.format.liveRecording",
+      year: 2024,
+      disputedTrackCount: 2,
+    },
     cover:
       "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?q=80&w=400&auto=format&fit=crop",
     tint: "coral",
@@ -97,8 +186,13 @@ export const RELEASES: Release[] = [
     title: "The first Sunday",
     titlePre: "The first ",
     titleEm: "Sunday",
-    meta: "Single · 2024 · 9k plays · €450 paid",
-    licence: { top: "CC-BY-NC", sub: "licence" },
+    meta: {
+      formatKey: "studioShowcase:rights.release.format.single",
+      year: 2024,
+      plays: "9k",
+      paid: 450,
+    },
+    licence: { top: "CC-BY-NC", subKey: "studioShowcase:rights.licence.sub" },
     cover:
       "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?q=80&w=400&auto=format&fit=crop",
     tint: "plum",

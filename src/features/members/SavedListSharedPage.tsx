@@ -9,6 +9,7 @@ import { linkToPath } from "../../app/routeMap";
 import type { SavedItemDTO } from "./api/saved.api";
 import { useSharedSavedList } from "./api/SavedLists.queries";
 import { SavedUnavailableNote } from "./SavedUnavailableNote";
+import { savedKindBadge } from "./savedKindBadge";
 import styles from "./SavedListSharedPage.module.css";
 
 /** One item on the shared list. Every reader is a signed-in member, so an item
@@ -39,9 +40,7 @@ function SharedSavedListRow({ item }: { item: SavedItemDTO }) {
     <li
       className={`${styles.row}${isUnavailable ? ` ${styles.rowUnavailable}` : ""}`}
     >
-      <span className={styles.rowBadge}>
-        {item.kind.slice(0, 3).toUpperCase()}
-      </span>
+      <span className={styles.rowBadge}>{savedKindBadge(item.kind)}</span>
       <span>
         {canOpen && item.href ? (
           <Link to={linkToPath(item.href)} className={styles.rowTitle}>

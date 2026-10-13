@@ -4,6 +4,7 @@ import { ImageSlot } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { StudioSearchTrackView } from "./api/studio.adapters";
 import { useStudioPlayer } from "./player/studioPlayerContext";
+import { StudioAddToPlaylistButton } from "./StudioAddToPlaylistButton";
 import styles from "./studio.module.css";
 import kit from "./studioKit.module.css";
 import releaseStyles from "./StudioRelease.module.css";
@@ -64,11 +65,19 @@ export function StudioSearchTrackRow({
           </Link>
         </h5>
         <div
-          className={styles.who}
+          className={`${styles.who} ${searchStyles.trackArtist}`}
         >{`${track.release.artist.name} · ${track.release.title}`}</div>
       </div>
       <div className={styles.pay} />
-      <div className={styles.tm}>{track.durationLabel ?? ""}</div>
+      <div className={`${styles.tm} ${releaseStyles.timeCell}`}>
+        {track.durationLabel ?? ""}
+        <StudioAddToPlaylistButton
+          trackIds={track.hasAudio ? [track.id] : []}
+          subjectTitle={track.title}
+          ariaLabel={t("studio:playlist.add.trackAria", { title: track.title })}
+          className={releaseStyles.rowAdd}
+        />
+      </div>
     </li>
   );
 }

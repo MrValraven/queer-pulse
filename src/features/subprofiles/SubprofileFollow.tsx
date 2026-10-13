@@ -4,7 +4,7 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useAuth } from "../../app/providers/authContext";
-import { useFollow } from "./api/useFollow";
+import { useFollow, type FollowResult } from "./api/useFollow";
 
 /**
  * The persona's follow control: a one-tap Follow/Following toggle. Mirrors
@@ -20,11 +20,15 @@ export function SubprofileFollow({
   followerCount,
   viewerFollowing,
   isOwnerViewing,
+  onFollowResult,
 }: {
   subprofileId: string;
   followerCount: number;
   viewerFollowing: boolean;
   isOwnerViewing: boolean;
+  /** Called with the server's answer after a follow or an unfollow, so a
+   *  surface with its own cache (the Studio artist hero) can store it. */
+  onFollowResult?: (result: FollowResult) => void;
 }) {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
@@ -38,11 +42,10 @@ export function SubprofileFollow({
   async function toggle() {
     if (pending) return;
     try {
-      if (viewerFollowing) {
-        await unfollow.mutateAsync({ currentFollowerCount: followerCount });
-      } else {
-        await follow.mutateAsync({ currentFollowerCount: followerCount });
-      }
+      const result = viewerFollowing
+        ? await unfollow.mutateAsync({ currentFollowerCount: followerCount })
+        : await follow.mutateAsync({ currentFollowerCount: followerCount });
+      onFollowResult?.(result);
     } catch {
       showToast(t("subprofiles:hero.follow.error"), "error");
     }

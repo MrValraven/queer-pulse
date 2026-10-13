@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { FiArrowRight } from "react-icons/fi";
 import { Button, ImageSlot } from "../../shared/components/ui";
@@ -14,29 +14,24 @@ import {
   PRESS_PHOTOS,
   PREVIEW_WAVE,
   PRESS_FACTS,
-  BIO_SHORT,
-  BIO_LONG,
-  BIO_SHORT_RICH,
-  BIO_LONG_RICH,
+  BIO_SHORT_KEY,
+  BIO_LONG_KEYS,
+  buildBioCopy,
   PRESS_QUOTES,
-  BOILERPLATE,
+  buildBoilerplate,
 } from "./studioPress.data";
 import { ALBUM } from "./studioAlbum.data";
 import styles from "./StudioPressPage.module.css";
 
-// Content: the artist's own name, tagline, and press-kit facts — comes from
-// the artist record in live mode.
+// Proper nouns stay literal: the artist's name, the preview track title and
+// the press contact address. The phrases around them live in the
+// `studioShowcase` catalog.
 const ARTIST_NAME = "Mariana Sol";
 const ARTIST_FIRST_NAME = "Mariana";
 const ARTIST_LAST_NAME = "Sol";
-const TAGLINE_PRE = "Fado that refuses church. ";
-const TAGLINE_EM = "A hymn for the ones who left and the ones who stayed.";
 const PREVIEW_TRACK_TITLE_PRE = "Carta para a ";
 const PREVIEW_TRACK_TITLE_EM = "santa";
-const RELEASE_META = "Album · 11 tracks · released 14 Mar 2026 · CC-BY-NC";
-const CONTACT_PRE = "Mariana handles her own press. No gatekeepers. ";
 const CONTACT_EMAIL = "press@marianasol.pt";
-const CONTACT_POST = " · usually replies within a day.";
 
 /** Auto-generated artist press kit for Mariana Sol. Standalone dark page. */
 export function StudioPressPage() {
@@ -53,9 +48,7 @@ export function StudioPressPage() {
       <div className={styles.wrap}>
         <Hero />
         <PreviewSection />
-        <BioSection
-          onCopyBoth={() => void copy(`${BIO_SHORT}\n\n${BIO_LONG}`)}
-        />
+        <BioSection onCopyBoth={() => void copy(buildBioCopy(t))} />
         <PhotosSection
           onDownloadAll={() =>
             showToast(t("studio:press.downloadingPhotosToast"), "success")
@@ -99,8 +92,10 @@ function Hero() {
           {ARTIST_FIRST_NAME} <em>{ARTIST_LAST_NAME}</em>
         </h1>
         <div className={styles.tagline}>
-          {TAGLINE_PRE}
-          <em>{TAGLINE_EM}</em>
+          <Translation
+            i18nKey="studioShowcase:press.hero.tagline"
+            components={{ em: <em /> }}
+          />
         </div>
         <div className={styles.facts}>
           {facts.map((f) => (
@@ -223,11 +218,17 @@ function BioSection({ onCopyBoth }: { onCopyBoth: () => void }) {
       <div className={styles.bio}>
         <div className={`${styles.col} ${styles.short}`}>
           <div className={styles.bl}>{t("studio:press.bio.shortLabel")}</div>
-          <p>{BIO_SHORT_RICH}</p>
+          <p>
+            <Translation i18nKey={BIO_SHORT_KEY} components={{ em: <em /> }} />
+          </p>
         </div>
         <div className={styles.col}>
           <div className={styles.bl}>{t("studio:press.bio.longLabel")}</div>
-          {BIO_LONG_RICH}
+          {BIO_LONG_KEYS.map((key) => (
+            <p key={key}>
+              <Translation i18nKey={key} components={{ em: <em /> }} />
+            </p>
+          ))}
         </div>
       </div>
     </section>
@@ -259,7 +260,7 @@ function PhotosSection({
       <div className={styles.photos}>
         {PRESS_PHOTOS.map((p) => (
           <button
-            key={p.caption}
+            key={p.captionKey}
             type="button"
             className={styles.photo}
             onClick={onDownloadOne}
@@ -270,7 +271,7 @@ function PhotosSection({
               width="100%"
               height="100%"
               radius={14}
-              placeholder={p.caption}
+              placeholder={t(p.captionKey)}
               style={{ position: "absolute", inset: 0 }}
             />
             <span className={styles.photoHint}>
@@ -310,7 +311,9 @@ function ReleaseSection() {
             {ALBUM.titlePre}
             <em>{ALBUM.titleEm}</em>
           </h4>
-          <div className={styles.relMeta}>{RELEASE_META}</div>
+          <div className={styles.relMeta}>
+            {t("studioShowcase:press.release.meta")}
+          </div>
         </div>
         <span className={`${styles.wmBadge} ${styles.jade}`}>
           {t("studio:press.outNowBadge")}
@@ -321,6 +324,7 @@ function ReleaseSection() {
 }
 
 function QuotesSection() {
+  const { t } = useTranslation();
   return (
     <section className={styles.sec}>
       <SectionHead>
@@ -331,8 +335,8 @@ function QuotesSection() {
       </SectionHead>
       <div className={styles.quotes}>
         {PRESS_QUOTES.map((q) => (
-          <div key={q.quote} className={styles.quote}>
-            <p>"{q.quote}"</p>
+          <div key={q.quoteKey} className={styles.quote}>
+            <p>"{t(q.quoteKey)}"</p>
             <div className={styles.src}>{q.source}</div>
           </div>
         ))}
@@ -343,6 +347,7 @@ function QuotesSection() {
 
 function BoilerplateSection({ onCopy }: { onCopy: (text: string) => void }) {
   const { t } = useTranslation();
+  const boilerplateRows = useMemo(() => buildBoilerplate(t), [t]);
   return (
     <section className={styles.sec}>
       <SectionHead>
@@ -352,7 +357,7 @@ function BoilerplateSection({ onCopy }: { onCopy: (text: string) => void }) {
         />
       </SectionHead>
       <div className={styles.boiler}>
-        {BOILERPLATE.map((row) => (
+        {boilerplateRows.map((row) => (
           <div key={row.labelKey} className={styles.copyRow}>
             <span className={styles.k}>{t(row.labelKey)}</span>
             <span className={styles.v}>{row.value}</span>
@@ -383,9 +388,11 @@ function ContactSection({ onRequest }: { onRequest: () => void }) {
             />
           </h3>
           <p>
-            {CONTACT_PRE}
-            <em>{CONTACT_EMAIL}</em>
-            {CONTACT_POST}
+            <Translation
+              i18nKey="studioShowcase:press.contact.body"
+              values={{ email: CONTACT_EMAIL }}
+              components={{ em: <em /> }}
+            />
           </p>
         </div>
         <Button variant="ghost-dark" size="lg" to={routes.studioArtist}>

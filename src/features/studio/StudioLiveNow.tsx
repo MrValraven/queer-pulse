@@ -8,9 +8,11 @@ import { useSaved } from "../../app/providers/useSaved";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
+import type { TFunction } from "../../shared/i18n/types";
 import { StudioLine } from "./StudioSkeletons";
+import { StudioEuroAmount } from "./StudioEuroAmount";
 import s from "./live.module.css";
-import { WF, PLAYED, SET, coverImage } from "./studioLive.data";
+import { WF, PLAYED, SET, coverImage, type LiveCopy } from "./studioLive.data";
 
 const stateClass: Record<string, string> = {
   played: s.setPlayed!,
@@ -26,16 +28,32 @@ const LIVE_TRACK = {
   titlePre: "Carta para a ",
   titleEm: "santa",
   href: "/studio/live",
-  meta: "Mariana Sol · live set",
 };
 
 const LIVE_ARTIST_NAME = "Mariana Sol";
 const LIVE_ALBUM_TITLE = "Cidade dos santos";
 const SET_BUILDING_CURATOR = "Sara";
-const SET_BUILDING_ELAPSED = "2 sec ago";
+const SET_BUILDING_ELAPSED_SECONDS = 2;
+
+/** The saved-library record; its meta line takes the language active at save time. */
+function buildLiveTrack(t: TFunction) {
+  return {
+    ...LIVE_TRACK,
+    meta: t("studioShowcase:live.now.savedMeta", { artist: LIVE_ARTIST_NAME }),
+  };
+}
+
+/** Resolves a set-row copy ref: its catalog key with the literal data it carries. */
+function copyText(
+  t: TFunction,
+  copy: LiveCopy | undefined,
+): string | undefined {
+  return copy && t(copy.key, copy.values);
+}
 
 /** Set-building header: heading + "curator typed the next track" activity line. */
 function SetBuildingHeader() {
+  const { t } = useTranslation();
   return (
     <div className={s.tlH}>
       <h3>
@@ -44,13 +62,15 @@ function SetBuildingHeader() {
           components={{ em: <em /> }}
         />
       </h3>
-      <div className="meta">
+      <div className={s.meta}>
         <Translation
           i18nKey="studio:liveNow.setBuilding.activityLine"
           components={{ em: <em /> }}
           values={{
             curator: SET_BUILDING_CURATOR,
-            elapsed: SET_BUILDING_ELAPSED,
+            elapsed: t("studioShowcase:live.now.setBuilding.elapsed", {
+              seconds: SET_BUILDING_ELAPSED_SECONDS,
+            }),
           }}
         />
       </div>
@@ -149,7 +169,7 @@ export function StudioLiveNow({ onTip }: { onTip: () => void }) {
                 type="button"
                 className={s.bt}
                 onClick={() => {
-                  const now = toggleSave(LIVE_TRACK);
+                  const now = toggleSave(buildLiveTrack(t));
                   showToast(
                     t(
                       now
@@ -191,13 +211,17 @@ export function StudioLiveNow({ onTip }: { onTip: () => void }) {
           </div>
           <div>
             <div className={`${s.lsV} ${s.jade}`}>
-              €<em>448</em>
+              <em>
+                <StudioEuroAmount value={448} />
+              </em>
             </div>
             <div className={s.lsL}>{t("studio:liveNow.tippedLabel")}</div>
           </div>
           <div>
             <div className={s.lsV}>
-              €<em>0.05</em>
+              <em>
+                <StudioEuroAmount value={0.05} />
+              </em>
             </div>
             <div className={s.lsL}>
               {t("studio:liveNow.perPlayLabel", { artist: "Mariana" })}
@@ -235,23 +259,25 @@ export function StudioLiveNow({ onTip }: { onTip: () => void }) {
                     {setRow.em && <em>{setRow.em}</em>}
                     {setRow.post}
                   </h5>
-                  <div className={s.srWho}>{setRow.who}</div>
+                  <div className={s.srWho}>{copyText(t, setRow.whoLabel)}</div>
                 </div>
                 <div className={s.srPay}>
-                  {setRow.payNote && (
-                    <b style={{ color: "var(--accent)" }}>{setRow.payNote}</b>
+                  {setRow.payNoteKey && (
+                    <b style={{ color: "var(--accent)" }}>
+                      {t(setRow.payNoteKey)}
+                    </b>
                   )}
-                  {setRow.payEm ? (
+                  {setRow.payEmLabel ? (
                     <em
                       style={{
                         color: "var(--accent)",
                         fontStyle: "italic",
                       }}
                     >
-                      {setRow.payEm}
+                      {copyText(t, setRow.payEmLabel)}
                     </em>
                   ) : (
-                    setRow.pay
+                    copyText(t, setRow.payLabel)
                   )}
                 </div>
                 <span className={s.srTm}>{setRow.tm}</span>

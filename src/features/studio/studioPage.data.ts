@@ -1,3 +1,4 @@
+import type { TranslateOptions } from "../../shared/i18n/types";
 import { memberName } from "../members/data/members";
 
 export const HERO_ART =
@@ -9,8 +10,12 @@ export interface SetRow {
   titlePre: string;
   titleEm?: string;
   who: string;
-  pay: string;
-  payNote?: string;
+  /** The pay line: a `studioShowcase` key plus the artist it names. */
+  pay?: { key: string; values?: TranslateOptions };
+  /** Catalog key for the bold note before the pay line ("paid"). */
+  payNoteKey?: string;
+  /** The queued-next row shows "up next" with an arrow in place of a pay line. */
+  isUpNext?: boolean;
   tm: string;
   now?: boolean;
   image?: string;
@@ -23,8 +28,11 @@ export const SET: SetRow[] = [
     titlePre: "A summer in ",
     titleEm: "Cascais",
     who: memberName("ines"),
-    payNote: "paid",
-    pay: "€0.05 to Inês",
+    payNoteKey: "studioShowcase:room.set.payNote.paid",
+    pay: {
+      key: "studioShowcase:live.set.pay.toArtist",
+      values: { artist: "Inês" },
+    },
     tm: "4:12",
     image:
       "https://images.unsplash.com/photo-1669026219505-0545ae1dabf5?q=80&w=600&auto=format&fit=crop",
@@ -35,8 +43,11 @@ export const SET: SetRow[] = [
     titlePre: "Paris is ",
     titleEm: "still burning",
     who: "Akin Diallo",
-    payNote: "paid",
-    pay: "€0.05 to Akin",
+    payNoteKey: "studioShowcase:room.set.payNote.paid",
+    pay: {
+      key: "studioShowcase:live.set.pay.toArtist",
+      values: { artist: "Akin" },
+    },
     tm: "5:08",
     image:
       "https://images.unsplash.com/photo-1615749303653-6d12ed97eb1e?q=80&w=800&auto=format&fit=crop",
@@ -47,8 +58,11 @@ export const SET: SetRow[] = [
     titlePre: "If you have to ",
     titleEm: "ask",
     who: "Yara Reis",
-    payNote: "paid",
-    pay: "€0.05 to Yara",
+    payNoteKey: "studioShowcase:room.set.payNote.paid",
+    pay: {
+      key: "studioShowcase:live.set.pay.toArtist",
+      values: { artist: "Yara" },
+    },
     tm: "1:22",
     image:
       "https://images.unsplash.com/photo-1618327907102-e07a8d7081c6?q=80&w=800&auto=format&fit=crop",
@@ -59,8 +73,11 @@ export const SET: SetRow[] = [
     titlePre: "Salt water, ",
     titleEm: "slowly",
     who: "Akin Diallo",
-    payNote: "paid",
-    pay: "€0.05 to Akin",
+    payNoteKey: "studioShowcase:room.set.payNote.paid",
+    pay: {
+      key: "studioShowcase:live.set.pay.toArtist",
+      values: { artist: "Akin" },
+    },
     tm: "5:31",
     image:
       "https://images.unsplash.com/photo-1618853606853-bacd55fb7f70?q=80&w=800&auto=format&fit=crop",
@@ -71,8 +88,11 @@ export const SET: SetRow[] = [
     titlePre: "Cantiga para a ",
     titleEm: "vizinha",
     who: "Coro de Outubro",
-    payNote: "paid",
-    pay: "€0.05 to Coro",
+    payNoteKey: "studioShowcase:room.set.payNote.paid",
+    pay: {
+      key: "studioShowcase:live.set.pay.toArtist",
+      values: { artist: "Coro" },
+    },
     tm: "6:08",
     image:
       "https://images.unsplash.com/photo-1634146330658-b052db81cd15?q=80&w=800&auto=format&fit=crop",
@@ -83,8 +103,11 @@ export const SET: SetRow[] = [
     titlePre: "Carta para a ",
     titleEm: "santa",
     who: "Mariana Sol · now playing",
-    payNote: "paying",
-    pay: "€0.05 to Mariana",
+    payNoteKey: "studioShowcase:room.set.payNote.paying",
+    pay: {
+      key: "studioShowcase:live.set.pay.toArtist",
+      values: { artist: "Mariana" },
+    },
     tm: "4:18",
     now: true,
     image:
@@ -96,7 +119,7 @@ export const SET: SetRow[] = [
     titlePre: "Pedro on the ",
     titleEm: "25",
     who: "Pedro Limão",
-    pay: "up next →",
+    isUpNext: true,
     tm: "4:20",
     image:
       "https://images.unsplash.com/photo-1636207608470-dfedb46c2380?q=80&w=800&auto=format&fit=crop",
@@ -107,7 +130,7 @@ export const SET: SetRow[] = [
     titlePre: "Mother, ",
     titleEm: "weather",
     who: "Yuki Tanaka",
-    pay: "€0.05 / play",
+    pay: { key: "studioShowcase:live.set.pay.perPlay" },
     tm: "7:14",
     image:
       "https://images.unsplash.com/photo-1657627157213-c5f44dbd0724?q=80&w=800&auto=format&fit=crop",

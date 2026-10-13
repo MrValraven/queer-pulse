@@ -4,7 +4,7 @@ import { ImageSlot } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { type Submission } from "./studioProgram.data";
+import { resolveText, type Submission } from "./studioProgram.data";
 import s from "./StudioProgramPage.module.css";
 
 interface InboxProps {
@@ -61,10 +61,10 @@ export function StudioProgramInbox({
                   {submission.titlePre}
                   {submission.titleEm && <em>{submission.titleEm}</em>}
                 </div>
-                <div className={s.subWho}>{submission.who}</div>
+                <div className={s.subWho}>{resolveText(submission.who, t)}</div>
               </div>
             </div>
-            <p className={s.subQuote}>{submission.quote}</p>
+            <p className={s.subQuote}>{t(submission.quoteKey)}</p>
             <div className={s.subActions}>
               <button type="button" className={s.subBtn} onClick={onListen}>
                 {t("studio:program.inbox.listenCta")}

@@ -1,6 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { followSubprofile, unfollowSubprofile } from "./subprofiles.api";
+import { patchStudioArtistFollow } from "../../studio/api/useStudioArtist";
+import { studioKeys } from "../../studio/api/studioQueryKeys";
 import type { PublicSubprofileOutcome } from "./usePublicSubprofile";
 
 /** Result shape shared by the follow and unfollow endpoints. */
@@ -61,6 +63,12 @@ export function useFollow(subprofileId: string) {
             }
           : prev,
     );
+    // Studio reads the same follow from its own caches: the artist view
+    // (count and Follow state) and the library's Artists tab.
+    patchStudioArtistFollow(queryClient, demoMode, subprofileId, result);
+    void queryClient.invalidateQueries({
+      queryKey: studioKeys.followedArtists(demoMode),
+    });
   };
 
   const follow = useMutation<FollowResult, Error, FollowVariables>({

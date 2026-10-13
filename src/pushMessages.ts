@@ -126,6 +126,12 @@ const en: Record<string, string> = {
   "push:personaUpdate.title": "New work from a persona you follow",
   "push:personaUpdate.body": "{persona} published something new.",
   "push:personaUpdate.bodyWithTitle": "{persona} published {itemTitle}.",
+  // Studio v2: a persona the member follows released something in Studio.
+  // Names the persona only. These two MUST stay word for word the English
+  // fallbacks the backend sender sets (P1 plan), because iOS renders the
+  // fallback directly.
+  "push:studioReleasePublished.title": "New from an artist you follow",
+  "push:studioReleasePublished.body": "{persona} released {title}",
   // Shown INSTEAD of the real title/body when the member has turned on
   // "hide previews" (see pushPrivacy.ts). Says something arrived without
   // naming who it is from or what it said.
@@ -307,6 +313,9 @@ const pt: Record<string, string> = {
   "push:personaUpdate.title": "Novidades de uma persona que segues",
   "push:personaUpdate.body": "{persona} publicou algo novo.",
   "push:personaUpdate.bodyWithTitle": "{persona} publicou {itemTitle}.",
+  // Studio v2: ver a nota no bloco EN.
+  "push:studioReleasePublished.title": "Novidade de quem segues",
+  "push:studioReleasePublished.body": "{persona} lançou {title}",
   "push:preview.hidden.title": "QueerPulse",
   "push:preview.hidden.body": "Tens uma notificação nova.",
   "push:preview.hidden.message": "Tens uma mensagem nova.",

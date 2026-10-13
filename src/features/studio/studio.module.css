@@ -447,6 +447,17 @@
     background: rgba(var(--cream-rgb), 0.14);
   }
 }
+/* Beats .heroActions button (0,1,1): the hero play keeps the coral fill. */
+.heroActions .playBig {
+  background: var(--accent);
+  border: none;
+  padding: 0;
+}
+@media (hover: hover) {
+  .heroActions .playBig:hover {
+    background: var(--accent-fill);
+  }
+}
 .playBig {
   width: 52px;
   height: 52px;
@@ -461,7 +472,8 @@
 .playBig svg {
   width: 16px;
   height: 16px;
-  color: rgba(var(--cream-rgb), 1);
+  /* Dark ink on the coral fill: 6.28:1. */
+  color: var(--studio-bg);
   margin-left: 2px;
 }
 .heroActions .tip {
@@ -500,11 +512,17 @@
 .row {
   padding: 24px 0 40px;
 }
+/* Wraps on phones so a header action drops under the heading instead of
+   squeezing it; the action keeps its label on one line. */
 .rowH {
   display: flex;
+  flex-wrap: wrap;
   align-items: baseline;
-  gap: 18px;
+  gap: 10px 18px;
   margin-bottom: 22px;
+}
+.rowH button {
+  white-space: nowrap;
 }
 .rowH h2 {
   font-family: var(--serif);
@@ -519,7 +537,7 @@
 }
 .rowH .sub {
   font-size: var(--text-13);
-  color: var(--text40);
+  color: var(--text60);
 }
 .rowH .all {
   margin-left: auto;
@@ -609,7 +627,8 @@
 .playFab svg {
   width: 13px;
   height: 13px;
-  color: rgba(var(--cream-rgb), 1);
+  /* Dark ink on the coral fill: 6.28:1. */
+  color: var(--studio-bg);
   margin-left: 1px;
 }
 .byCur {
@@ -724,6 +743,15 @@
   font-size: var(--text-12);
   color: var(--text40);
   font-variant-numeric: tabular-nums;
+}
+@media (--sm) {
+  .setRow {
+    grid-template-columns: 24px 36px minmax(0, 1fr) auto;
+    gap: 8px;
+  }
+  .setRow .pay {
+    display: none;
+  }
 }
 .setRowNow {
   background: rgba(var(--accent-rgb), 0.08);
@@ -840,18 +868,35 @@
 }
 
 /* Tabs */
+/* The tablist scrolls sideways on phones. The padding leaves room for the
+   focus ring (3px offset + 3px outline, plus the tab's -1px bottom margin),
+   and the baseline is a background on the content box so it spans the tabs
+   and the active underline still sits on it. */
 .tabs {
   display: flex;
   gap: 24px;
-  padding: 8px 0 0;
-  border-bottom: 1px solid var(--line);
-  margin-bottom: 28px;
+  padding: 10px 14px 7px;
+  margin-inline: -14px;
+  background: linear-gradient(var(--line), var(--line)) 0 100% / 100% 1px
+    no-repeat;
+  background-origin: content-box;
+  margin-bottom: 21px;
+  overflow-x: auto;
+  /* scrollIntoView keeps the focused tab's ring clear of the scroller edge. */
+  scroll-padding-inline: 14px;
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
+}
+.tabs::-webkit-scrollbar {
+  display: none;
 }
 .tab {
+  white-space: nowrap;
+  flex: none;
   font-family: var(--sans);
   font-size: var(--text-14);
   font-weight: 600;
-  color: var(--text40);
+  color: var(--text60);
   background: none;
   border: none;
   padding-bottom: 12px;
@@ -996,7 +1041,8 @@
 }
 .btP {
   background: var(--accent);
-  color: rgba(var(--cream-rgb), 1);
+  /* Dark ink on the coral fill: 6.28:1. */
+  color: var(--studio-bg);
   border-color: var(--accent);
 }
 .splitHint {

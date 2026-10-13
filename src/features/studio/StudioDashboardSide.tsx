@@ -2,19 +2,16 @@ import { Link } from "react-router-dom";
 import { FiArrowRight } from "react-icons/fi";
 import { routes } from "../../app/routeMap";
 import { Translation } from "../../shared/i18n/Translation";
+import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ALBUM } from "./studioAlbum.data";
+import { fixtureDate } from "./studioDashboard.data";
 import s from "./creator.module.css";
-
-// Content: a specific scheduled-plan note (bundles the mock album title +
-// a fixed date), computed from live data in live mode.
-const GO_LIVE_PLAN_NOTE = `Plan: Wed 10 Jun · premiere of ${ALBUM.title}`;
-// Content: a specific upcoming payout figure/date — comes from the ledger
-// in live mode.
-const NEXT_PAYOUT_NOTE = "Next: €2,140 on 5 Jul · SEPA";
+import { StudioEuroAmount } from "./StudioEuroAmount";
 
 export function StudioDashboardSide() {
   const { t } = useTranslation();
+  const fmt = useFormat();
   return (
     <div className={s.col}>
       <div className={s.card}>
@@ -62,7 +59,16 @@ export function StudioDashboardSide() {
             </span>
             <span className={s.quickNm}>
               {t("studio:dashboard.side.quickActions.goLive.label")}
-              <small>{GO_LIVE_PLAN_NOTE}</small>
+              <small>
+                {t("studio:demo.dashboard.goLivePlan", {
+                  date: fmt.date(fixtureDate("2026-06-10"), {
+                    weekday: "short",
+                    day: "numeric",
+                    month: "short",
+                  }),
+                  title: ALBUM.title,
+                })}
+              </small>
             </span>
             <span className={s.quickArr} aria-hidden>
               <FiArrowRight />
@@ -81,7 +87,15 @@ export function StudioDashboardSide() {
             </span>
             <span className={s.quickNm}>
               {t("studio:dashboard.side.quickActions.payouts.label")}
-              <small>{NEXT_PAYOUT_NOTE}</small>
+              <small>
+                {t("studio:demo.dashboard.nextPayout", {
+                  amount: fmt.currency(2140),
+                  date: fmt.date(fixtureDate("2026-07-05"), {
+                    day: "numeric",
+                    month: "short",
+                  }),
+                })}
+              </small>
             </span>
             <span className={s.quickArr} aria-hidden>
               <FiArrowRight />
@@ -104,7 +118,9 @@ export function StudioDashboardSide() {
         <ul className={s.sideList}>
           <li>
             <span>{t("studio:dashboard.side.deal.perPlay.label")}</span>
-            <em>€0.05</em>
+            <em>
+              <StudioEuroAmount value={0.05} />
+            </em>
           </li>
           <li>
             <span>{t("studio:dashboard.side.deal.yourShare.label")}</span>

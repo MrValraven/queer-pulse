@@ -105,13 +105,21 @@ export function StudioCouncilPage() {
                       />
                     </div>
                     <div>
-                      <div className={s.seat}>{mem.seat}</div>
+                      <div className={s.seat}>
+                        {t(mem.seatKey, { seat: mem.seat })}
+                      </div>
                       <h3>
                         {mem.pre}
                         <em>{mem.em}</em>
                       </h3>
                       <div className={s.where}>
-                        {mem.where.map((w, i) => (
+                        {[
+                          mem.city,
+                          t(mem.roleKey),
+                          t("studioShowcase:council.member.since", {
+                            year: mem.since,
+                          }),
+                        ].map((w, i) => (
                           <span
                             key={w}
                             style={{
@@ -127,17 +135,29 @@ export function StudioCouncilPage() {
                       </div>
                     </div>
                   </div>
-                  <p className={s.curBio}>{mem.bio}</p>
+                  <p className={s.curBio}>
+                    <Translation
+                      i18nKey={mem.bioKey}
+                      components={{ em: <em /> }}
+                    />
+                  </p>
                   <div className={s.curNote}>
                     <div className={s.nl}>
                       {t("studio:council.notebookLabel")} · {mem.noteDate}
                     </div>
-                    <p>{mem.note}</p>
+                    <p>
+                      <Translation
+                        i18nKey={mem.noteKey}
+                        components={{ em: <em /> }}
+                      />
+                    </p>
                   </div>
                   <div>
                     <div className={s.slLbl}>
                       {t("studio:council.recentSlatesLabel")} ·{" "}
-                      {mem.slatesCount}
+                      {t("studioShowcase:council.member.slatesThisYear", {
+                        total: mem.slatesThisYear,
+                      })}
                     </div>
                     {mem.slates.map((sl) => (
                       <div key={sl.pre} className={s.slRow}>
@@ -146,13 +166,34 @@ export function StudioCouncilPage() {
                           {sl.em && <em>{sl.em}</em>}
                           {sl.post}
                         </div>
-                        <div className={s.sd}>{sl.date}</div>
-                        <div className={s.sp}>{sl.out}</div>
+                        <div className={s.sd}>
+                          {t("studioShowcase:council.member.slate.meta", {
+                            date: sl.date,
+                            count: sl.trackCount,
+                          })}
+                        </div>
+                        <div className={s.sp}>
+                          <Translation
+                            i18nKey={sl.payoutKey}
+                            values={sl.payoutValues}
+                            slots={sl.payoutSlots}
+                            components={{ em: <em /> }}
+                          />
+                        </div>
                       </div>
                     ))}
                   </div>
                   <div className={s.curFoot}>
-                    <div className={s.curStat}>{mem.stat}</div>
+                    <div className={s.curStat}>
+                      <Translation
+                        i18nKey="studioShowcase:council.member.stat"
+                        values={{
+                          tracks: mem.tracksProgrammed,
+                          artists: mem.artistsPaid,
+                        }}
+                        components={{ em: <em /> }}
+                      />
+                    </div>
                     <Link to={routes.studioAlbum} className={s.bt}>
                       {t("studio:council.theirSlateCta")}{" "}
                       <FiArrowRight aria-hidden />

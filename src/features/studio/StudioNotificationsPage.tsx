@@ -4,16 +4,22 @@ import { StudioShell } from "./StudioShell";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
 import {
   NOTIFICATIONS,
   FILTERS,
   type Filter,
   type NotifItem,
+  notifValues,
 } from "./studioNotifications.data";
 import s from "./StudioNotificationsPage.module.css";
 
+/** Tag runs a notification title may carry. */
+const TITLE_TAGS = { strong: <strong />, em: <em /> };
+
 function NotifRow({ item, unread }: { item: NotifItem; unread: boolean }) {
   const { t } = useTranslation();
+  const fmt = useFormat();
   const { icon } = item;
   return (
     <Link
@@ -34,9 +40,17 @@ function NotifRow({ item, unread }: { item: NotifItem; unread: boolean }) {
         </div>
       )}
       <div className={s.ntBody}>
-        <h4>{item.title}</h4>
-        {item.reply && <div className={s.reply}>{item.reply}</div>}
-        <div className={s.meta}>{item.meta}</div>
+        <h4>
+          <Translation
+            i18nKey={item.title.key}
+            values={notifValues(item.title, fmt)}
+            components={TITLE_TAGS}
+          />
+        </h4>
+        {item.replyKey && <div className={s.reply}>{t(item.replyKey)}</div>}
+        <div className={s.meta}>
+          {t(item.meta.key, notifValues(item.meta, fmt))}
+        </div>
         {item.action && (
           <div className={s.ntAct}>
             <span
@@ -59,7 +73,7 @@ function NotifRow({ item, unread }: { item: NotifItem; unread: boolean }) {
           </div>
         )}
       </div>
-      <div className={s.ntTime}>{item.time}</div>
+      <div className={s.ntTime}>{t(item.time.key, item.time.values)}</div>
     </Link>
   );
 }

@@ -190,6 +190,18 @@
   border-radius: var(--radius-16);
   max-width: 640px;
 }
+@media (--md) {
+  .nightcap {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 14px 16px;
+    padding: 16px;
+  }
+  .nightcap .playBig {
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
+}
 
 .ncCover {
   width: 78px;
@@ -240,7 +252,8 @@
   height: 50px;
   border-radius: 50%;
   background: var(--accent);
-  color: rgba(var(--cream-rgb), 1);
+  /* Dark ink on the coral fill: 6.28:1. */
+  color: var(--studio-bg);
   border: none;
   display: flex;
   align-items: center;

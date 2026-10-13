@@ -41,15 +41,14 @@ export function demoCreateRelease(
     trackCount: 0,
     totalDurationSeconds: 0,
     artist: persona,
+    publishedAt: null,
+    genre: null,
   });
   return {
     ...card,
     description: null,
-    genre: null,
-    genreLabelKey: null,
     status: "draft",
     statusLabelKey: STUDIO_RELEASE_STATUS_LABEL_KEY.draft,
-    publishedAt: null,
     isOwner: true,
     tracks: [],
     playableTrackCount: 0,
@@ -100,6 +99,8 @@ export function demoCreateTrack(
     trackCount: 0,
     totalDurationSeconds: 0,
     artist: DEMO_STUDIO_ME.uploadablePersonas[0]!,
+    publishedAt: null,
+    genre: null,
   });
   return {
     id,

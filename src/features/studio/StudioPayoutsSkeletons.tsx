@@ -14,7 +14,7 @@ export function PayoutRowSkeleton() {
           style={{ width: 26, height: 9, margin: "7px auto 0" }}
         />
       </div>
-      <div>
+      <div className={s.payCopy}>
         <div className={s.skel} style={{ width: "55%", height: 14 }} />
         <div
           className={s.skel}

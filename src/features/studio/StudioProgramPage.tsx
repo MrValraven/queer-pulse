@@ -63,7 +63,10 @@ export function StudioProgramPage() {
               <Translation
                 i18nKey="studio:program.header.title"
                 components={{ em: <em /> }}
-                values={{ weekNumber: 24, dateRange: "15 to 21 June" }}
+                values={{
+                  weekNumber: 24,
+                  dateRange: t("studioShowcase:program.header.dateRange"),
+                }}
               />
             </h1>
             <div className={s.sub}>
@@ -114,7 +117,10 @@ export function StudioProgramPage() {
             <Translation
               i18nKey="studio:program.publishBar.status"
               components={{ em: <em /> }}
-              values={{ percent: 87, publishDate: "Mon 15 Jun, 12:00 Lisbon" }}
+              values={{
+                percent: 87,
+                publishDate: t("studioShowcase:program.publishBar.publishDate"),
+              }}
             />
           </div>
           <div className={s.publishActions}>

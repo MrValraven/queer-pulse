@@ -1,11 +1,16 @@
 import { useMemo } from "react";
+import { useAuth } from "../../../app/providers/authContext";
 import { useToast } from "../../../shared/components/feedback/useToast";
 import { useFormat } from "../../../shared/i18n/format";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { CalendarEventInput } from "../../../shared/lib/calendarExport";
 import { gatheringShareUrl } from "../data";
-import { DEFAULT_DURATION_MS } from "../gatheringCalendarInput";
+import {
+  calendarHostedByLine,
+  DEFAULT_DURATION_MS,
+} from "../gatheringCalendarInput";
 import type { GatheringForm } from "../useGatheringForm";
+import { useHostableCommunities } from "../useHostableCommunities";
 import {
   buildGatheringCalendarEvents,
   buildMultiEventIcs,
@@ -31,15 +36,29 @@ export interface ShareKitCalendarSheet {
  * gathering. The web calendar links add the first date, and the downloaded
  * file holds every date, so a weekly series still lands in full. Null when the
  * form yields no valid date, which leaves the calendar button inert.
+ *
+ * The credit line names the signed-in host and the lead community only: guest
+ * communities are just invited at publish and count once they accept.
  */
 export function useShareKitCalendar(
   form: GatheringForm,
   slug: string,
   occurrenceSlugs: readonly string[],
 ): ShareKitCalendarSheet | null {
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const formatters = useFormat();
   const { showToast } = useToast();
+  const { user } = useAuth();
+  const { options: hostableCommunities } = useHostableCommunities();
+  const profile = user?.profile;
+  const hostName = profile
+    ? [profile.firstName, profile.lastName].filter(Boolean).join(" ")
+    : "";
+  const leadCommunityName = form.communitySlug
+    ? hostableCommunities.find(
+        (community) => community.slug === form.communitySlug,
+      )?.name
+    : undefined;
 
   return useMemo(() => {
     const events = buildGatheringCalendarEvents({
@@ -48,6 +67,12 @@ export function useShareKitCalendar(
       occurrenceSlugs,
       urlForSlug: gatheringShareUrl,
       location: gatheringPlaceLabel(form, t),
+      hostedByLine: calendarHostedByLine({
+        host: hostName,
+        communityNames: leadCommunityName ? [leadCommunityName] : [],
+        t,
+        language,
+      }),
     });
     const firstEvent = events[0];
     if (!firstEvent) return null;
@@ -82,5 +107,15 @@ export function useShareKitCalendar(
         : undefined,
       onToast: (message: string) => showToast(message, "success"),
     };
-  }, [form, slug, occurrenceSlugs, t, formatters, showToast]);
+  }, [
+    form,
+    slug,
+    occurrenceSlugs,
+    t,
+    language,
+    formatters,
+    showToast,
+    hostName,
+    leadCommunityName,
+  ]);
 }

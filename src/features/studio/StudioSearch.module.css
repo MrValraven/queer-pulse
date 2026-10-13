@@ -7,3 +7,55 @@ li.trackRow {
 li.trackRow:first-child {
   border-top: none;
 }
+
+@media (--sm) {
+  li.trackRow {
+    grid-template-columns: 32px 36px minmax(0, 1fr) auto;
+    gap: 8px;
+  }
+
+  li.trackRow .pay {
+    display: none;
+  }
+
+  /* The card keeps a 26px side padding inside the content gutter, which left
+     the title column about 76px wide. Element-qualified so it beats
+     studio.module.css .setCard whatever the stylesheet order. */
+  ol.trackList {
+    padding: 12px;
+  }
+
+  div.trackArtist {
+    min-width: 0;
+    overflow: hidden;
+    overflow-wrap: normal;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+/* Studio v2: the genre select beside the type filter. */
+.genreField {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 18px;
+  font-size: var(--text-13);
+}
+
+.genreField select {
+  min-height: var(--tap-min);
+  padding: 0 12px;
+  border: 1px solid rgba(var(--cream-rgb), 0.4);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: inherit;
+  color-scheme: dark;
+  font: inherit;
+}
+
+.genreField select:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}

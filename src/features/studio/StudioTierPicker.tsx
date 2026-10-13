@@ -9,6 +9,7 @@ import {
   type StudioTier,
 } from "./studioSignIn.data";
 import styles from "./StudioSignInPage.module.css";
+import { StudioEuroAmount } from "./StudioEuroAmount";
 
 /**
  * Paid-tier chooser for the Studio "Join" flow — self-contained: owns its own
@@ -51,7 +52,9 @@ export function StudioTierPicker() {
               />
             </h4>
             <div className={styles.tierPrice}>
-              €<em>{STUDIO_TIER_PRICE}</em>
+              <em>
+                <StudioEuroAmount value={STUDIO_TIER_PRICE} />
+              </em>
               <b>{t("studio:signin.perMonth")}</b>
             </div>
           </div>
@@ -103,7 +106,9 @@ export function StudioTierPicker() {
               />
             </h4>
             <div className={styles.tierPrice}>
-              €<em>{COOP_TIER_PRICE}</em>
+              <em>
+                <StudioEuroAmount value={COOP_TIER_PRICE} />
+              </em>
               <b>{t("studio:signin.perMonth")}</b>
             </div>
           </div>

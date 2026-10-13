@@ -1,14 +1,23 @@
 export const coverImage =
   "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=600&auto=format&fit=crop";
 
+/**
+ * The set hero. Title, curator, venue and the recording date stay literal
+ * (proper nouns and an already formatted date); the phrases around them are
+ * catalog keys resolved in StudioSetPage (Pattern A).
+ */
 export const SET = {
   title: "Vespertina ",
   em: "vol. iv",
   by: "Sara Marques",
-  recorded: "Recorded live · Casa do Comum · 12 Apr 2026",
-  length: "11 tracks · 58 min",
-  blurb:
-    "The hour between sunset and the second bottle. Sara's fourth Vespertina set, recorded in one take to a room of forty, and now paying every artist in it on each listen.",
+  curatorFirstName: "Sara",
+  venue: "Casa do Comum",
+  recordedOn: "12 Apr 2026",
+  recordedKey: "studioShowcase:set.hero.recorded",
+  trackCount: 11,
+  minutes: 58,
+  lengthKey: "studioShowcase:set.hero.length",
+  blurbKey: "studioShowcase:set.hero.blurb",
 };
 
 export interface SetRow {

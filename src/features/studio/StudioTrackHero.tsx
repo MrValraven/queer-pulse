@@ -5,6 +5,7 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
 import type { StudioTrackView } from "./api/studio.adapters";
 import { useStudioPlayer } from "./player/studioPlayerContext";
+import { StudioAddToPlaylistButton } from "./StudioAddToPlaylistButton";
 import { useStudioSaveToggle } from "./useStudioSaveToggle";
 import { useStudioShowcase } from "./useStudioShowcase";
 import ss from "./studio.module.css";
@@ -109,6 +110,11 @@ export function StudioTrackHero({
                 ? t("studio:save.savedLabel")
                 : t("studio:save.saveCta")}
             </button>
+            <StudioAddToPlaylistButton
+              trackIds={track.hasAudio ? [track.id] : []}
+              subjectTitle={track.title}
+              label={t("studio:playlist.add.trackCta")}
+            />
             {isShowcase && (
               <button type="button" className={ss.tip} onClick={onTip}>
                 <FiHeart aria-hidden />{" "}

@@ -167,7 +167,8 @@
 }
 .btP {
   background: var(--accent);
-  color: rgba(var(--cream-rgb), 1);
+  /* Dark ink on the coral fill: 6.28:1. */
+  color: var(--studio-bg);
   border-color: var(--accent);
 }
 .listeners {
@@ -184,6 +185,7 @@
   font-size: var(--text-28);
   color: var(--text, var(--cream));
   line-height: 1;
+  white-space: nowrap;
 }
 .lsV em {
   font-style: normal;
@@ -197,6 +199,12 @@
   color: rgba(var(--cream-rgb), 0.5);
   margin-top: 6px;
   line-height: 1.4;
+}
+@media (--md) {
+  .listeners {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding: 16px 18px;
+  }
 }
 
 .tlH {
@@ -242,6 +250,30 @@
 }
 .setRow:last-child {
   border-bottom: none;
+}
+@media (--md) {
+  .setRow {
+    grid-template-columns: 18px 34px minmax(0, 1fr) auto;
+    gap: 4px 10px;
+  }
+  .setRow > .srN,
+  .setRow > .srCov {
+    grid-row: 1 / 3;
+    align-self: start;
+  }
+  .setRow > .srInfo {
+    grid-column: 3;
+    min-width: 0;
+  }
+  .setRow > .srPay {
+    grid-column: 3;
+    grid-row: 2;
+    text-align: start;
+  }
+  .setRow > .srTm {
+    grid-column: 4;
+    grid-row: 1;
+  }
 }
 .setPlayed {
   opacity: 0.5;
@@ -478,7 +510,8 @@
 @media (hover: hover) {
   .chatActions button:hover {
     background: var(--accent);
-    color: rgba(var(--cream-rgb), 1);
+    /* Dark ink on the coral fill: 6.28:1. */
+    color: var(--studio-bg);
     border-color: var(--accent);
   }
 }

@@ -262,6 +262,13 @@
   display: none;
 }
 
+/* The Studio playlists block carries a 40px top margin for the desktop
+   column; inside a tab panel the flex gap already spaces it. Collapse wraps
+   the section, so this matches it at any depth. */
+.tabPanel [data-profile-studio-playlists] {
+  margin-top: 0;
+}
+
 /* `MobileProfileTabEmptyState` renders unconditionally as the last child of
    every `.tabPanel`; this rule takes it away again the moment the panel
    actually has content. The test is "any sibling that isn't the empty state

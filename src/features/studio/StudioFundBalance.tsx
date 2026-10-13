@@ -14,19 +14,19 @@ export function StudioFundBalance() {
     <div className={s.bal}>
       <div className={s.balMain}>
         <div
-          className="l"
+          className={s.l}
           style={{
             fontSize: 11.5,
             fontWeight: 700,
             letterSpacing: "0.08em",
             textTransform: "uppercase",
-            color: "rgba(247,243,238,.4)",
+            color: "rgba(var(--cream-rgb), 0.4)",
           }}
         >
           {t("studio:fund.balance.label")}
         </div>
         <div
-          className="v"
+          className={s.v}
           style={{
             fontFamily: "var(--serif)",
             fontWeight: 300,
@@ -42,29 +42,21 @@ export function StudioFundBalance() {
           </em>
         </div>
         <div
-          className="sub"
+          className={s.sub}
           style={{
             fontSize: 13.5,
-            color: "rgba(247,243,238,.55)",
+            color: "rgba(var(--cream-rgb), 0.55)",
             lineHeight: 1.6,
             maxWidth: "52ch",
           }}
         >
-          {/* eslint-disable local/no-literal-string -- not swept: describes
-              the fund's runway/quarterly-rollover rule, a governance
-              commitment (extraction-brief §6) deliberately left for a
-              native pt-PT reviewer; renders in English via the fallback
-              chain until that review lands. */}
-          Healthy: roughly four months of current disbursement. Anything above
-          six months' runway rolls into the next quarterly grant round by
-          council vote.
-          {/* eslint-enable local/no-literal-string */}
+          {t("studio:demo.fund.balanceNote")}
         </div>
       </div>
       <div className={s.balSide}>
         <div className={s.mini}>
           <div
-            className="v"
+            className={s.v}
             style={{
               fontFamily: "var(--serif)",
               fontWeight: 300,
@@ -77,15 +69,15 @@ export function StudioFundBalance() {
             </em>
           </div>
           <div
-            className="l"
-            style={{ fontSize: 11.5, color: "rgba(247,243,238,.4)" }}
+            className={s.l}
+            style={{ fontSize: 11.5, color: "rgba(var(--cream-rgb), 0.4)" }}
           >
             {t("studio:fund.balance.paidThisQuarterLabel")}
           </div>
         </div>
         <div className={s.mini}>
           <div
-            className="v"
+            className={s.v}
             style={{
               fontFamily: "var(--serif)",
               fontWeight: 300,
@@ -98,8 +90,8 @@ export function StudioFundBalance() {
             </em>
           </div>
           <div
-            className="l"
-            style={{ fontSize: 11.5, color: "rgba(247,243,238,.4)" }}
+            className={s.l}
+            style={{ fontSize: 11.5, color: "rgba(var(--cream-rgb), 0.4)" }}
           >
             {t("studio:fund.balance.peoplePaidLabel", {
               count: FUND_PEOPLE_PAID_THIS_YEAR,

@@ -1,7 +1,7 @@
 # QueerPulse robots policy
 #
 # Posture: DELIBERATELY QUIET. Only the public-service surface is indexed:
-# resources, safety, about/governance, policies and the local arrival guides.
+# resources, safety, about/governance, policies and the local safe-spaces guide.
 # The magazine, cinema, studio, activism, archive and sustainer surfaces are
 # intentionally NOT indexed; they rely on word-of-mouth and direct sharing.
 # The gated member surface is disallowed outright.
@@ -97,6 +97,9 @@ Disallow: /resources/therapists
 Disallow: /local/map
 Disallow: /local/venue
 Disallow: /local/housing
+# The arriving and visa guides are admin-only for now.
+Disallow: /local/arriving
+Disallow: /local/visas
 Disallow: /business-directory
 Disallow: /spaces-map
 Disallow: /cinema/watch
@@ -218,6 +221,9 @@ Disallow: /resources/therapists
 Disallow: /local/map
 Disallow: /local/venue
 Disallow: /local/housing
+# The arriving and visa guides are admin-only for now.
+Disallow: /local/arriving
+Disallow: /local/visas
 Disallow: /business-directory
 Disallow: /spaces-map
 Disallow: /magazine

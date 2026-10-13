@@ -1,136 +1,64 @@
-import type { ImageSlotTint } from "../../shared/components/ui";
+import type { SavedItem } from "../../app/providers/useSaved";
+import type { StudioLibraryTab } from "./studioPaths";
 
-export interface LibItem {
-  pre: string;
-  em?: string;
-  post?: string;
-  meta: string;
-  to: string;
-  tint: ImageSlotTint;
-  image?: string;
-}
+// ── Studio v2 live library ─────────────────────────────────────────────────
 
-// `id` is the stable lookup key into LIBRARY and stored UI-selection value —
-// never translate it directly; `labelKey`/`categoryKey` resolve via t().
-export const TABS = [
-  {
-    id: "Albums",
-    labelKey: "studio:library.tabs.albums",
-    categoryKey: "studio:library.category.albums",
-  },
-  {
-    id: "Sets",
-    labelKey: "studio:library.tabs.sets",
-    categoryKey: "studio:library.category.sets",
-  },
-  {
-    id: "Collections",
-    labelKey: "studio:library.tabs.collections",
-    categoryKey: "studio:library.category.collections",
-  },
-  {
-    id: "Tracks",
-    labelKey: "studio:library.tabs.tracks",
-    categoryKey: "studio:library.category.tracks",
-  },
-] as const;
+export const LIVE_LIBRARY_TABS: { id: StudioLibraryTab; labelKey: string }[] = [
+  { id: "playlists", labelKey: "studio:libraryLive.tabs.playlists" },
+  { id: "releases", labelKey: "studio:libraryLive.tabs.releases" },
+  { id: "tracks", labelKey: "studio:libraryLive.tabs.tracks" },
+  { id: "artists", labelKey: "studio:libraryLive.tabs.artists" },
+];
 
-export const LIBRARY: Record<string, LibItem[]> = {
-  Albums: [
-    {
-      pre: "Cidade dos ",
-      em: "santos",
-      meta: "Mariana Sol · 11 tracks",
-      to: "/studio/album",
-      tint: "coral",
-      image:
-        "https://images.unsplash.com/photo-1758391407796-ca8949b88a01?q=80&w=400&auto=format&fit=crop",
-    },
-    {
-      pre: "Marvila ",
-      em: "nights",
-      meta: "D. Okoye · 8 tracks",
-      to: "/studio/album",
-      tint: "jade",
-      image:
-        "https://images.unsplash.com/photo-1635237773272-dcd7a1e16859?q=80&w=800&auto=format&fit=crop",
-    },
-    {
-      pre: "Quiet ",
-      em: "rooms",
-      meta: "Inês T. · 9 tracks",
-      to: "/studio/album",
-      tint: "plum",
-      image:
-        "https://images.unsplash.com/photo-1636207608470-dfedb46c2380?q=80&w=800&auto=format&fit=crop",
-    },
-  ],
-  Sets: [
-    {
-      pre: "Vespertina ",
-      em: "vol. iv",
-      meta: "Sara Marques · 58 min",
-      to: "/studio/set",
-      tint: "plum",
-      image:
-        "https://images.unsplash.com/photo-1657627157213-c5f44dbd0724?q=80&w=800&auto=format&fit=crop",
-    },
-    {
-      pre: "The Anjos ",
-      em: "tape",
-      meta: "Casa do Comum · 42 min",
-      to: "/studio/set",
-      tint: "coral",
-      image:
-        "https://images.unsplash.com/photo-1670956008011-a9dfc94e12b8?q=80&w=800&auto=format&fit=crop",
-    },
-  ],
-  Collections: [
-    {
-      pre: "Lisbon dyke-bar ",
-      em: "standards",
-      meta: "28 tracks · curated",
-      to: "/studio/collection",
-      tint: "jade",
-      image:
-        "https://images.unsplash.com/photo-1671703938773-df94fd42e838?q=80&w=800&auto=format&fit=crop",
-    },
-    {
-      pre: "Trans ",
-      em: "composers",
-      meta: "Mix · D. Okoye",
-      to: "/studio/collection",
-      tint: "plum",
-      image:
-        "https://images.unsplash.com/photo-1675283090273-4739316cdf80?q=80&w=800&auto=format&fit=crop",
-    },
-  ],
-  Tracks: [
-    {
-      pre: "Carta para a ",
-      em: "santa",
-      meta: "Mariana Sol · 4:18",
-      to: "/studio/track",
-      tint: "coral",
-      image:
-        "https://images.unsplash.com/photo-1679967488543-5a0655c54227?q=80&w=800&auto=format&fit=crop",
-    },
-    {
-      pre: "Madrugada",
-      meta: "Inês T. · 5:11",
-      to: "/studio/track",
-      tint: "plum",
-      image:
-        "https://images.unsplash.com/photo-1680443674341-8d75146757b2?q=80&w=800&auto=format&fit=crop",
-    },
-    {
-      pre: "Última ",
-      em: "dança",
-      meta: "Helena P. · 4:50",
-      to: "/studio/track",
-      tint: "jade",
-      image:
-        "https://images.unsplash.com/photo-1682579280153-5ea1d3bb95ac?q=80&w=800&auto=format&fit=crop",
-    },
-  ],
-};
+/** Demo only: saves the library shows beside whatever the demo member saved
+ *  this session, so every tab has something in it. One is unavailable, to
+ *  show that state. Titles and names are content and stay as written. */
+export const DEMO_LIBRARY_SAVES: SavedItem[] = [
+  {
+    id: "studio_release:demo-release-cidade-dos-santos",
+    kind: "studio_release",
+    title: "Cidade dos santos",
+    href: "/studio/album?id=demo-release-cidade-dos-santos",
+    meta: "Mariana Sol",
+    availability: "available",
+  },
+  {
+    id: "studio_release:demo-release-home-2",
+    kind: "studio_release",
+    title: "Bicha, with love",
+    href: "/studio/album?id=demo-release-home-2",
+    meta: "LeChatDashinko",
+    availability: "available",
+  },
+  {
+    id: "studio_release:demo-release-withdrawn",
+    kind: "studio_release",
+    title: "Bairro antigo",
+    href: null,
+    meta: "Mariana Sol",
+    availability: "unavailable",
+  },
+  {
+    id: "studio_track:demo-track-cidade-dos-santos-06",
+    kind: "studio_track",
+    title: "Carta para a santa",
+    href: "/studio/track?id=demo-track-cidade-dos-santos-06",
+    meta: "Mariana Sol · Cidade dos santos",
+    availability: "available",
+  },
+  {
+    id: "studio_track:demo-track-home-4-01",
+    kind: "studio_track",
+    title: "Pedro on the 25",
+    href: "/studio/track?id=demo-track-home-4-01",
+    meta: "NIGHTFORM",
+    availability: "available",
+  },
+  {
+    id: "studio_playlist:demo-playlist-dyke-bar-standards",
+    kind: "studio_playlist",
+    title: "Lisbon dyke-bar standards",
+    href: "/studio/collection?id=demo-playlist-dyke-bar-standards",
+    availability: "available",
+  },
+];

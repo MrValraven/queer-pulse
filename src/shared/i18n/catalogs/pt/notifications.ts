@@ -1414,4 +1414,15 @@ export const notifications: Catalog = {
   "type.event_community_invite_response.declined.textNamed":
     "<profile>{name}</profile> recusou, por {communityName}, o teu convite para colaborar.",
   "type.event_community_invite_response.declined.meta": "Colaboração recusada",
+  // Studio v2: ver a nota no bloco EN. Nomeia só a persona.
+  "type.studio_release_published.text":
+    "{subprofileName} lançou {releaseTitle}.",
+  "type.studio_release_published.text_one":
+    "{subprofileName} lançou {releaseTitle}.",
+  "type.studio_release_published.text_other":
+    "{subprofileName} lançou {count} novos lançamentos.",
+  "type.studio_release_published.meta": "Artista que segues",
+  "type.studio_release_published.subprofileNameFallback": "Alguém que segues",
+  "type.studio_release_published.releaseTitleFallback": "um lançamento novo",
+  "actions.listenNow": "Ouvir agora",
 };

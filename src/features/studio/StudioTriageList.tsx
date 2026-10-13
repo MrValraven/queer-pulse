@@ -4,7 +4,7 @@ import { ImageSlot, FadeIn, EmptyState } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { SUBS, TABS } from "./studioTriage.data";
+import { buildSubs, TABS } from "./studioTriage.data";
 import s from "./council.module.css";
 
 function SubmissionRowSkeleton() {
@@ -44,31 +44,30 @@ export function StudioTriageList({
   const [active, setActive] = useState(0);
   const loading = useSimulatedLoad();
 
+  const allSubs = useMemo(() => buildSubs(t), [t]);
+
   const subs = useMemo(() => {
     switch (tab) {
       case "yours":
-        return SUBS.filter((sub) =>
+        return allSubs.filter((sub) =>
           sub.badges.some((badge) => badge.cls === "claimed"),
         );
       case "atDeadline":
-        return SUBS.filter((sub) => {
-          const day = parseInt(sub.day.replace(/\D/g, ""), 10);
-          return sub.of && day >= 11;
-        });
+        return allSubs.filter((sub) => sub.of && sub.day >= 11);
       case "shortlisted":
       case "answered":
         return [];
       default:
-        return SUBS;
+        return allSubs;
     }
-  }, [tab]);
+  }, [tab, allSubs]);
 
   const activeTab = TABS.find((tabOption) => tabOption.id === tab) ?? TABS[0]!;
 
   return (
     <section className={s.subList}>
       {loading ? (
-        Array.from({ length: SUBS.length }).map((_, skeletonIndex) => (
+        Array.from({ length: allSubs.length }).map((_, skeletonIndex) => (
           <SubmissionRowSkeleton key={skeletonIndex} />
         ))
       ) : subs.length === 0 ? (
@@ -143,7 +142,7 @@ export function StudioTriageList({
                   </div>
                 </div>
                 <div className={s.deadline}>
-                  <b>{sub.day}</b>
+                  <b>{t("studioShowcase:triage.sub.day", { day: sub.day })}</b>
                   {sub.of && t("studio:triage.list.dayOfTotal")}
                 </div>
               </div>

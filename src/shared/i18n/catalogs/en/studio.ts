@@ -87,9 +87,9 @@ export const studio: Catalog = {
   // ── "This week" set section ───────────────────────────────────────────────
   "room.set.title": "The Wednesday <em>set</em>",
   "room.set.subtitle":
-    "Programmed by {curator} · synchronous · {count} in the room",
+    "Programmed by {curator} · synchronous · {count} listening",
   "room.set.readPlanCta": "Read the plan",
-  "room.set.sideHeading": "In the room with you",
+  "room.set.sideHeading": "Listening with you",
   "room.set.sideSub":
     "{sustainers} sustainers · {casual} casual · {cities} cities",
   "room.set.ledgerHead": "Ledger · this month",
@@ -98,14 +98,12 @@ export const studio: Catalog = {
   "room.set.ledgerArtistShare": "Artist share",
   "room.set.ledgerPerPlay": "Per play",
 
-  // ── "This week, programmed" tracks section ────────────────────────────────
-
   // ── Error pages (Studio404Page, Studio500Page) ────────────────────────────
   "error.brandAria": "QueerPulse Studio home",
   "error404.eyebrow": "Track not found",
   "error404.title": "This song <em>doesn't exist.</em>",
   "error404.body":
-    "The track, set, or page you were after was never recorded, got taken down by the artist, or lives behind a sign-in. No drama. The catalogue is large and the room is warm.",
+    "The track, set, or page you were after was never recorded, got taken down by the artist, or lives behind a sign-in. No drama. The catalogue is large and there's plenty more to hear.",
   "error404.backCta": "Back to the player",
   "error404.goBackCta": "Go back",
   "error404.tryInsteadTitle": "Try one of these instead",
@@ -113,7 +111,7 @@ export const studio: Catalog = {
   "error404.link.set.sub": "Live, programmed Mondays",
   "error404.link.search.label": "<em>Search</em> the catalogue",
   "error404.link.search.sub": "Tracks, artists, sheet music",
-  "error404.link.library.label": "Your <em>room</em>",
+  "error404.link.library.label": "Your <em>library</em>",
   "error404.link.library.sub": "Saved, sustaining, tipped",
 
   "error500.eyebrow": "Something dropped out",
@@ -131,7 +129,7 @@ export const studio: Catalog = {
   "landing.nav.howItWorks": "How it works",
   "landing.nav.forArtists": "For artists",
   "landing.footer.tagline":
-    "A queer professional network rooted in Lisbon. Studio is one of its rooms, alongside Cinema, Magazine, and Gatherings.",
+    "A queer professional network rooted in Lisbon. Studio sits alongside Cinema, Magazine, and Gatherings.",
   "landing.footer.col.studio": "Studio",
   "landing.footer.col.studio.thisWeek": "This week",
   "landing.footer.col.studio.djSets": "DJ sets",
@@ -153,7 +151,7 @@ export const studio: Catalog = {
   "landing.hero.clock": "{weekday} · {time} Lisbon",
   "landing.hero.title": "Music, <em>programmed</em> by queer ears.",
   "landing.hero.dek":
-    "A co-op streaming room. <em>{sharePercent}</em> of every listen to the artist. <em>{tipPercent}</em> of every tip. The ledger is public. The curators have names. <em>No algorithm has ever set foot in here.</em>",
+    "A co-op streaming platform. <em>{sharePercent}</em> of every listen to the artist. <em>{tipPercent}</em> of every tip. The ledger is public. The curators have names. <em>No algorithm has ever set foot in here.</em>",
   "landing.hero.demoCta": "Listen to a demo set · free",
 
   "landing.demo.eyebrow": "The Wednesday set · free preview",
@@ -164,23 +162,23 @@ export const studio: Catalog = {
   "landing.demo.trackPrefix": "Track {n} ·",
   "landing.demo.byLine": "{artist} · from {album}",
   "landing.demo.payNote":
-    "This listen pays {artist} <em>{amount}</em> when you're a sustainer. Right now, the room is open as a demo.",
+    "This listen pays {artist} <em>{amount}</em> when you're a sustainer. Right now, Studio is open as a demo.",
   "landing.demo.quote":
     "“Stay through the second verse of track six. <em>The piano leaves you there on purpose.</em>” {attribution}, programming lead",
 
   // ── Four promises (StudioLandingPromises) ─────────────────────────────────
-  "landing.promises.eyebrow": "The contract · not the marketing",
+  "landing.promises.eyebrow": "The contract · in writing",
   "landing.promises.title":
     "Four <em>promises</em> we make, to artists and listeners.",
   "landing.promises.share.title": "A fair, <em>visible</em> share.",
   "landing.promises.share.body":
     "80% of every listen to the artist. 100% of every tip. The other 20% covers payments, hosting, captions, sheet-music typesetting, and council stipends. The split is on every artist page, every receipt, every album.",
-  "landing.promises.humans.title": "A room <em>programmed</em> by humans.",
+  "landing.promises.humans.title": "Music <em>programmed</em> by people.",
   "landing.promises.humans.body":
     'Every track on the homepage has a curator\'s name and a one-paragraph note. No "popular near you", no "made for you", no infinite scroll. The week is small, hand-built, and dated.',
   "landing.promises.coOwned.title": "Co-owned by the <em>listeners</em>.",
   "landing.promises.coOwned.body":
-    "Sustainers ({price}/mo) become voting co-op members after twelve months. They elect the council, approve the rate card, and see every euro on the ledger. The platform is structurally accountable to the room.",
+    "Sustainers ({price}/mo) become voting co-op members after twelve months. They elect the council, approve the rate card, and see every euro on the ledger. The platform answers to the people who sustain it.",
   "landing.promises.privacy.title": "Privacy as a <em>default</em>.",
   "landing.promises.privacy.body":
     "No listening data sold, syndicated, or used to recommend. Personal play history is private and deletable in one click. Aggregate plays exist for the ledger; nothing else leaves the building.",
@@ -211,9 +209,9 @@ export const studio: Catalog = {
     "No ads · no shareholders · sustainer-pooled. Set annually by vote.",
 
   // ── Closing CTA band (StudioLandingCta) ───────────────────────────────────
-  "landing.cta.title": "Take a <em>seat</em> in the room.",
+  "landing.cta.title": "Pull up a <em>chair</em>.",
   "landing.cta.body":
-    "{price} a month. Cancel any time. <em>The first listen</em> tells you whether the room is for you.",
+    "{price} a month. Cancel any time. <em>The first listen</em> tells you whether Studio is for you.",
   "landing.cta.readPlanCta": "Read the plan first",
   "landing.cta.secondary":
     "Already a QueerPulse member? Studio is <em>{addOnPrice}/mo on top</em>.",
@@ -222,7 +220,7 @@ export const studio: Catalog = {
   // ── Sign in / Join (StudioSignInPage) ─────────────────────────────────────
   "signin.tabs.signIn": "Sign in",
   "signin.tabs.join": "Join",
-  "signin.aside.onAirNow": "On the air now · {count} in the room",
+  "signin.aside.onAirNow": "On the air now · {count} listening",
   "signin.aside.title":
     "A streaming co-op that <em>pays</em> the people who made the song.",
   "signin.aside.body":
@@ -246,7 +244,7 @@ export const studio: Catalog = {
   "signin.in.signedInToast": "Signed in, welcome back",
   "signin.in.signedInGoogleToast": "Signed in with Google, welcome back",
 
-  "signin.join.title": "Join the <em>room.</em>",
+  "signin.join.title": "Join <em>Studio.</em>",
   "signin.join.lede":
     "Pick how much of the co-op you want. You can change tiers or cancel any month: no lock-in, no winback emails.",
   "signin.join.chooseTier": "Choose your tier",
@@ -267,8 +265,8 @@ export const studio: Catalog = {
   "signin.perMonth": "/mo",
 
   // ── Welcome onboarding wizard (StudioWelcomePage) ─────────────────────────
-  "welcome.eyebrow": "You're in · let's set your room",
-  "welcome.title": "Welcome to the <em>room</em>, {name}.",
+  "welcome.eyebrow": "You're in · let's set up Studio for you",
+  "welcome.title": "Welcome to <em>Studio</em>, {name}.",
   "welcome.sub":
     "Three quick things and the first set is yours. <em>Skip any of it</em>. None of this is locked in.",
   "welcome.step1.title": "Follow a few <em>artists</em>",
@@ -285,7 +283,7 @@ export const studio: Catalog = {
   "welcome.tip.coffee": "a coffee",
   "welcome.tip.round": "a round",
   "welcome.tip.record": "a record",
-  "welcome.step3.title": "How private do you want the <em>room</em>?",
+  "welcome.step3.title": "How <em>private</em> do you want to be?",
   "welcome.step3.dek":
     "Our defaults are the careful ones. <em>Nothing here is on unless you turn it on.</em>",
   "welcome.step3.history.title": "Keep my listening history",
@@ -297,8 +295,8 @@ export const studio: Catalog = {
   "welcome.step3.librarySync.title": "Sync my library across devices",
   "welcome.step3.librarySync.body":
     "Saves and follows move with you. On by default. Turn off to keep it on this device only.",
-  "welcome.enterRoomCta": "Enter the room",
-  "welcome.readyToast": "Your room is ready",
+  "welcome.enterRoomCta": "Open Studio",
+  "welcome.readyToast": "Studio is ready for you",
 
   // ── About the co-op (StudioAboutPage + StudioAboutSections) ──────────────
   "about.hero.eyebrow": "About · written for sceptics",
@@ -313,9 +311,9 @@ export const studio: Catalog = {
   "about.sec.whatItIs.p1":
     "QueerPulse Studio is owned by the people who use it: listeners and artists hold every share between them. <strong>Eighty cents of every euro a listen generates goes to the artist.</strong> Every cent of every tip. The split is public, the catalogue is curated by an elected council of six, and the masters never leave the artist's hands.",
   "about.sec.whatItIs.p2":
-    "It is the third room of the QueerPulse co-op, after the Magazine and Cinema. One membership covers all of it. You can be a member for the writing and never open Studio; you can be here only for the music and never read a word.",
+    "It is the third part of the QueerPulse co-op, after the Magazine and Cinema. One membership covers all of it. You can be a member for the writing and never open Studio; you can be here only for the music and never read a word.",
   "about.sec.whatItIs.pull":
-    "We are not trying to be a smaller Spotify. We're trying to be a <em>different kind of room</em>.",
+    "We're building a <em>different kind</em> of streaming.",
 
   "about.sec.rate.num": "02: the rate",
   "about.sec.rate.heading":
@@ -381,7 +379,7 @@ export const studio: Catalog = {
   "about.skeptic.leave.a":
     "You keep your masters and everything you've earned. Takedown is a one-page, 14-day process with no retention loop. Past plays stay paid. Leaving is as easy as arriving. We think that's the only honest way to ask you to stay.",
 
-  "about.cta.title": "The room is small, and it <em>pays</em>.",
+  "about.cta.title": "Studio is small, and it <em>pays</em>.",
   "about.cta.body":
     "Listen to one set free, no account. If it's for you, sustain it for the price of two coffees.",
   "about.cta.join": "Join Studio",
@@ -413,7 +411,7 @@ export const studio: Catalog = {
     "Live rooms and tracks show a real-time waveform tied to the actual audio, so rhythm and dynamics are visible as well as audible.",
   "accessibility.item.signed.heading": "Signed <em>broadcasts</em>",
   "accessibility.item.signed.body":
-    "Flagship council broadcasts include a Portuguese Sign Language (LGP) interpreter window. Expanding to weekly rooms next quarter.",
+    "Flagship council broadcasts include a Portuguese Sign Language (LGP) interpreter window. Expanding to the weekly live rooms next quarter.",
 
   "accessibility.group.language.heading":
     "For listeners in <em>any language</em>",
@@ -532,8 +530,8 @@ export const studio: Catalog = {
   "help.contact.access.action": "Accessibility",
 
   // ── Artist press kit (StudioPressPage + StudioPressBar) ───────────────────
-  // Chrome only — the artist's bio, quotes, and boilerplate values are her own
-  // authored press material and stay English in both modes (§1).
+  // Chrome only. The demo's mock content for this page lives in studioShowcase
+  // (translated); proper nouns and figures stay in the data files.
   "press.copiedToast": "Copied",
   "press.copyFailToast": "Could not copy",
   "press.downloadingPhotosToast": "Downloading press photos · hi-res",
@@ -648,8 +646,8 @@ export const studio: Catalog = {
   "terms.readDeedToast": "Opening the co-op deed…",
 
   // ── Rights & takedown (StudioRightsPage) ──────────────────────────────────
-  // Chrome only — release titles/meta below are the artist's own releases and
-  // stay English in both modes (§1).
+  // Chrome only. The demo's mock content for this page lives in studioShowcase
+  // (translated); proper nouns and figures stay in the data files.
   "rights.promise.window.title": "14-day removal",
   "rights.promise.window.body":
     "Confirm a takedown and the release stops being served within 14 days, usually the same night. Caches clear, links 404 to a tasteful page.",
@@ -732,7 +730,7 @@ export const studio: Catalog = {
   "album.tabs.tracklist": "Tracklist",
   "album.tabs.linerNotes": "Liner notes",
   "album.main.perPlaySuffix": "{amount} / play",
-  "album.sidebar.buyEyebrow": "The room is open to you",
+  "album.sidebar.buyEyebrow": "Studio is open to you",
   "album.sidebar.buySub": "Buy the album · keep it offline · FLAC + AAC.",
   "album.sidebar.buyCta": "Buy · {amount}",
   "album.sidebar.payWhatYouCanCta": "Pay what you can · {amount} min",
@@ -770,22 +768,13 @@ export const studio: Catalog = {
   "artist.sidebar.rsvpCta": "RSVP",
 
   // ── Live set detail page (StudioSetPage) ──────────────────────────────────
-  // Scope note: set title, curator name and blurb are content — left English.
+  // Chrome only. The demo's mock content for this page lives in studioShowcase
+  // (translated); proper nouns and figures stay in the data files.
   "set.page.playAria": "Play set",
   "set.page.joinLiveRoomCta": "Join the live room",
   "set.page.tracklistHeading": "The <em>tracklist</em>",
   "set.page.everyPlayPaysNote": "Every play pays the artist",
   "set.page.payingNowLabel": "paying now",
-
-  // ── Collection detail page (StudioCollectionPage) ─────────────────────────
-  // Scope note: collection title, curator name and track titles are content.
-  "collection.page.playAria": "Play collection",
-  "collection.page.shuffleCta": "Shuffle",
-  "collection.page.shufflingToast": "Shuffling the collection",
-  "collection.page.allPlaysPaidNote": "paid to artists on every listen",
-  "collection.page.inThisCollectionHeading": "In this <em>collection</em>",
-  "collection.page.findMoreCta": "Find more",
-  "collection.page.relatedHeading": "Related <em>collections</em>",
 
   // ── Off-air shelves (StudioOffAirShelves) ─────────────────────────────────
   "offAir.carryOn.heading": "Carry on where you <em>left off</em>",
@@ -821,10 +810,10 @@ export const studio: Catalog = {
   "endCard.listenCta": "listen with pride",
 
   // ── Curation council (StudioCouncilPage) ──────────────────────────────────
-  // Chrome only — curator seats/bios/notebooks/slates below are each
-  // curator's own record and stay English in both modes (§1).
+  // Chrome only. The demo's mock content for this page lives in studioShowcase
+  // (translated); proper nouns and figures stay in the data files.
   "council.hero.eyebrow": "Governance · the council",
-  "council.hero.title": "Six people decide what the room <em>hears</em>.",
+  "council.hero.title": "Six people choose what everyone <em>hears</em>.",
   "council.hero.dek":
     "Elected yearly by the assembly, paid a flat stipend on the public ledger, term-limited to two years. They program the weekly set, run triage, and write the notes. <em>Everything they pick has their name on it.</em>",
   "council.intro.lede":
@@ -844,8 +833,8 @@ export const studio: Catalog = {
   "council.theirSlateCta": "Their slate",
 
   // ── Settings (StudioSettingsPage + Controls + Sections) ───────────────────
-  "settings.eyebrow": "Your room · settings",
-  "settings.title": "How the room <em>treats</em> you.",
+  "settings.eyebrow": "Your Studio · settings",
+  "settings.title": "How Studio <em>treats</em> you.",
   "settings.dek":
     "Audio, privacy, captions, tipping. Nothing here is on unless you turn it on, and anything you turn on, you can erase in <em>one tap, no confirmation modal</em>.",
 
@@ -871,10 +860,10 @@ export const studio: Catalog = {
     "Even out volume across tracks and sets. <em>Off</em> if you want the artist's intended dynamics.",
   "settings.audio.crossfade.heading": "Crossfade between tracks in a set",
   "settings.audio.crossfade.body":
-    "Only applies inside DJ sets and live rooms, never on album playback.",
+    "Applies inside DJ sets and live rooms. Albums keep the gaps between tracks as recorded.",
 
   "settings.privacy.label": "Privacy",
-  "settings.privacy.title": "What the room <em>remembers</em>",
+  "settings.privacy.title": "What Studio <em>remembers</em>",
   "settings.privacy.dek":
     "The short version: almost nothing, by default. We never sell, share, or train on what you play. Aggregate plays feed the public ledger, nothing that identifies you.",
   "settings.privacy.history.heading": "Listening history",
@@ -898,7 +887,7 @@ export const studio: Catalog = {
     "Anyone can read it on the artist's page. You can still hide any single note later.",
   "settings.privacy.tipReceipts.heading": "Public tip receipts",
   "settings.privacy.tipReceipts.body":
-    'Each tip mints a receipt showing the split, no personal data. On, it can be shared as a "look what the room paid this artist" card.',
+    'Each tip mints a receipt showing the split, with no personal data. On, it can be shared as a "look what we paid this artist" card.',
 
   "settings.captions.label": "Captions & lyrics",
   "settings.captions.title": "Words on the <em>screen</em>",
@@ -957,10 +946,10 @@ export const studio: Catalog = {
     "Account closure opens in a separate flow.",
 
   // ── Notifications (StudioNotificationsPage) ───────────────────────────────
-  // Chrome only — each notification's names/tracks/quotes below are content,
-  // API-sourced in live mode, and stay English in both modes (§1).
-  "notifications.eyebrow": "Your room · what happened while you were out",
-  "notifications.title": "The room's been <em>busy</em>.",
+  // Chrome only. The demo's mock content for this page lives in studioShowcase
+  // (translated); proper nouns and figures stay in the data files.
+  "notifications.eyebrow": "Your Studio · what happened while you were out",
+  "notifications.title": "It's been <em>busy</em> here.",
   "notifications.dek":
     "Tip replies from artists, new releases from people you follow, live rooms about to open. <em>Only the things you asked to hear about</em>. Tune it in Settings.",
   "notifications.filter.all": "All",
@@ -1067,7 +1056,7 @@ export const studio: Catalog = {
   "dashboard.side.quickActions.heading": "Things you can <em>do</em> from here",
   "dashboard.side.quickActions.upload.label": "Upload a new release",
   "dashboard.side.quickActions.upload.hint": "WAV / FLAC · 3 steps · 8 minutes",
-  "dashboard.side.quickActions.goLive.label": "Go live: host a listening room",
+  "dashboard.side.quickActions.goLive.label": "Go live: host a live room",
   "dashboard.side.quickActions.payouts.label": "Review payouts & banking",
   "dashboard.side.deal.eyebrow": "The deal, always",
   "dashboard.side.deal.heading": "80% to <em>you.</em>",
@@ -1178,9 +1167,8 @@ export const studio: Catalog = {
   "upload.continueToMetadataCta": "Continue to metadata",
 
   // ── Payouts (StudioPayoutsPage + Sections + Skeletons) ─────────────────────
-  // Chrome only — this artist's actual payout figures, IBAN/tax/contact
-  // details, and per-track breakdown below are her own financial data,
-  // API-sourced in live mode, and stay English in both modes (§1).
+  // Chrome only. The demo's mock content for this page lives in studioShowcase
+  // (translated); proper nouns and figures stay in the data files.
   "payouts.hero.eyebrow": "Payouts & banking",
   "payouts.hero.title": "<em>{amount}</em> lands on day {day}.",
   "payouts.hero.sub":
@@ -1237,17 +1225,15 @@ export const studio: Catalog = {
   "payouts.export.toast": "Payout history exported as CSV",
 
   // ── Programme the week (StudioProgramPage + Inbox + Slate) ────────────────
-  // Chrome only — submission/track/collection/broadcast titles, quotes, and
-  // curator notes below are content (each writer/artist's own submission or
-  // this curator's own note), API-sourced in live mode, and stay English
-  // in both modes (§1).
+  // Chrome only. The demo's mock content for this page lives in studioShowcase
+  // (translated); proper nouns and figures stay in the data files.
   "program.header.eyebrow":
-    "Programming the room · Monday morning · drag anything below",
+    "Programming the week · Monday morning · drag anything below",
   "program.header.title": "Week <em>{weekNumber}</em> · {dateRange}",
   "program.header.sub":
     "Build the slate of the week: <em>one cover, 12 to 16 tracks, 2 to 3 collections, broadcasts</em>. Press publish at noon and the homepage rotates.",
   "program.header.autosave": "Auto-saved · {time}, every keystroke",
-  "program.header.previewRoomCta": "Preview the room",
+  "program.header.previewRoomCta": "Preview the week's programme",
 
   "program.publishBar.status":
     "Slate is <em>{percent}% complete</em> · publishes {publishDate} · auto-rotates the homepage",
@@ -1258,7 +1244,7 @@ export const studio: Catalog = {
   "program.toast.addedToSlate": "Added to this week's slate",
   "program.toast.passed": "Passed. The writer can resubmit later",
   "program.toast.playingPreview": "Playing preview…",
-  "program.toast.openingRoomPreview": "Opening the room preview…",
+  "program.toast.openingRoomPreview": "Opening the programme preview…",
   "program.toast.chooseNewCover": "Choose a new cover artist…",
   "program.toast.editingCoverNote": "Editing the cover note…",
   "program.toast.openingHomepagePreview": "Opening homepage preview…",
@@ -1274,7 +1260,7 @@ export const studio: Catalog = {
   "program.inbox.passCta": "Pass",
 
   "program.slate.cover.heading": "Cover artist of the week",
-  "program.slate.cover.count": "1 of 1 · the room's headline",
+  "program.slate.cover.count": "1 of 1 · the week's headline",
   "program.slate.cover.swapCta": "Swap",
   "program.slate.cover.editNoteCta": "Edit note",
   "program.slate.singles.heading": "This week's singles",
@@ -1295,16 +1281,14 @@ export const studio: Catalog = {
     "＋ schedule a third broadcast for Saturday late",
 
   // ── Submission triage (StudioTriagePage + List + Detail) ───────────────────
-  // Chrome only — submitters' names/quotes/tracks/badges and this specific
-  // submission's file/waveform/curator notes below are content, API-sourced
-  // in live mode, and stay English in both modes (§1). The tab `id`s below
-  // are stable filter values — never render the English label as a stored
-  // key (§5.1 trap).
+  // Chrome only. The demo's mock content for this page lives in studioShowcase
+  // (translated); proper nouns and figures stay in the data files.
+  // The tab `id`s below are stable filter values, kept apart from the translated labels (§5.1).
   "triage.header.eyebrow":
     "Submission triage · the council answers every submission in 14 days",
   "triage.header.title": "Inbox · <em>{count}</em> new this week.",
   "triage.header.sub":
-    "Every submission gets read or listened to. <em>Pass</em> takes a sentence: that sentence becomes the artist's answer. Median reply time this season: {count} days.",
+    "Every submission gets read or listened to. <em>Pass</em> takes a sentence: that sentence becomes the artist's answer. Median reply time this season: {days} days.",
 
   "triage.kpi.newThisWeek": "new this week",
   "triage.kpi.youClaimed": "you claimed",
@@ -1352,13 +1336,11 @@ export const studio: Catalog = {
   "triage.detail.toast.addedToSlate": "Added to the next slate",
 
   // ── Flag review (StudioFlagReviewPage + Card) ──────────────────────────────
-  // Chrome only — flagged-release titles, reporter quotes, and claim/who
-  // details below are content, API-sourced in live mode, and stay English
-  // in both modes (§1). `verb` stored on resolve is a stable id, not the
-  // English label — resolve via RESOLUTION_LABELS, never render it raw
-  // (§5.1 trap).
+  // Chrome only. The demo's mock content for this page lives in studioShowcase
+  // (translated); proper nouns and figures stay in the data files.
+  // The `verb` stored on resolve is a stable id, shown through RESOLUTION_LABELS (§5.1).
   "flagReview.header.eyebrow": "Council · flag review",
-  "flagReview.header.title": "When the room <em>flags</em> something.",
+  "flagReview.header.title": "When someone <em>flags</em> something.",
   "flagReview.header.dek":
     "Listeners can flag a release for uncleared samples, missing credits, or misattribution. A curator claims each one, the named artist gets to respond, and <em>every decision is logged with a reason</em>. Nothing is taken down silently.",
 
@@ -1385,11 +1367,9 @@ export const studio: Catalog = {
   "flagReview.toast.heldUntilCorrected": "Held until corrected",
 
   // ── Live room (StudioLivePage + LiveNow + LiveChat) ────────────────────────
-  // Chrome only — the live show/track/artist names, the chat transcript, and
-  // per-listen stats below are content (the room's actual live state and
-  // chat log), API-sourced in live mode, and stay English in both modes
-  // (§1). Chat-tab `id`s are stable values — never the translated label
-  // (§5.1 trap).
+  // Chrome only. The demo's mock content for this page lives in studioShowcase
+  // (translated); proper nouns and figures stay in the data files.
+  // Chat-tab `id`s are stable values, kept apart from the translated labels (§5.1).
   "live.ribbon.onAirNow": "On the air now",
 
   "liveNow.saveTrackCta": "Save track",
@@ -1398,7 +1378,7 @@ export const studio: Catalog = {
   "liveNow.removedToast": "Removed from your library",
   "liveNow.lyricsNotesCta": "Lyrics & notes",
   "liveNow.listenersLabel":
-    "in the room with you · {sustainers} sustainers, {casual} casual",
+    "listening with you · {sustainers} sustainers, {casual} casual",
   "liveNow.tippedLabel": "tipped during this set · 100% to artists",
   "liveNow.perPlayLabel": "per qualifying play · pays {artist} right now",
   "liveNow.setBuilding.heading": "The set · <em>building live</em>",
@@ -1408,28 +1388,27 @@ export const studio: Catalog = {
   "liveChat.tabs.chat.label": "Chat",
   "liveChat.tabs.tips.label": "Tips",
   "liveChat.tabs.listeners.label": "Listeners",
-  "liveChat.inputPlaceholder": "say something to the room…",
+  "liveChat.inputPlaceholder": "say something to everyone listening…",
   "liveChat.sendAria": "Send",
   "liveChat.tipPresetCta": "Tip {amount}",
   "liveChat.tipCustomCta": "Tip €__",
 
   // ── Go live / broadcaster console (StudioBroadcastPage + Console) ─────────
-  // Chrome only — device names, cue-sheet track titles, tip messages, and
-  // talkback chat below are content, API-sourced in live mode, and stay
-  // English in both modes (§1).
+  // Chrome only. The demo's mock content for this page lives in studioShowcase
+  // (translated); proper nouns and figures stay in the data files.
   "broadcast.status.onAir": "You're <em>on the air</em>",
   "broadcast.status.livePill": "live",
   "broadcast.status.meta":
-    "<em>{count}</em> in the room · {sustainers} sustainers · {cities} cities",
+    "<em>{count}</em> listening · {sustainers} sustainers · {cities} cities",
   "broadcast.status.pauseMicCta": "Pause mic",
   "broadcast.status.endBroadcastCta": "End broadcast",
-  "broadcast.status.toast.micPaused": "Mic paused. The room hears silence",
+  "broadcast.status.toast.micPaused": "Mic paused. Your listeners hear silence",
   "broadcast.status.toast.ending": "Broadcast ends in 5… archiving to a replay",
 
   "broadcast.audioIn.panelLabel": "Audio in",
   "broadcast.audioIn.singleCamVideo": "Single-cam video",
   "broadcast.audioIn.cameraNote":
-    "Audio-only is the default for listening rooms. Camera ships in Phase 5, flagged off for now.",
+    "Audio-only is the default for live rooms. Camera ships in Phase 5, flagged off for now.",
 
   "broadcast.nowPlaying.onAirNow": "On the air now",
   "broadcast.nowPlaying.setListLabel":
@@ -1456,10 +1435,9 @@ export const studio: Catalog = {
   "broadcast.aside.talkback.sentToast": "Sent to your mods",
 
   // ── Sheet music store (StudioSheetStorePage + Preview + Checkout + Also) ──
-  // Chrome only — track/album/composer/transcriber names below are content,
-  // API-sourced in live mode, and stay English in both modes (§1). Amounts
-  // route through useFormat().currency() at render — see SHEET_PRICE etc. in
-  // studioSheetStore.data.ts.
+  // Chrome only. The demo's mock content for this page lives in studioShowcase
+  // (translated); proper nouns and figures stay in the data files.
+  // Amounts route through useFormat().currency() at render (SHEET_PRICE and friends in studioSheetStore.data.tsx).
   "sheet.store.eyebrow": "Sheet music & lyrics archive",
   "sheet.store.title": "Buy the <em>score</em>, pay the people.",
   "sheet.store.dek":
@@ -1507,8 +1485,8 @@ export const studio: Catalog = {
   "sheet.also.freeReadTag": "Free read",
 
   // ── Tip receipt (StudioReceiptPage) ────────────────────────────────────────
-  // Chrome only — track/artist/album names and the tip note quote below are
-  // content and stay English in both modes (§1).
+  // Chrome only. The demo's mock content for this page lives in studioShowcase
+  // (translated); proper nouns and figures stay in the data files.
   "receipt.tipEyebrow": "Tip · while listening",
   "receipt.byPrefix": "by",
   "receipt.fromAlbum": "from <em>{album}</em>",
@@ -1518,7 +1496,7 @@ export const studio: Catalog = {
   "receipt.splitNote": "100% pass-through on tips, no exceptions.",
   "receipt.split.artistSub_one": "Direct, SEPA · settles in {count} day",
   "receipt.split.artistSub_other": "Direct, SEPA · settles in {count} days",
-  "receipt.split.platformName": "Platform · the room",
+  "receipt.split.platformName": "Platform · Studio",
   "receipt.split.platformSub":
     "Stripe processing fee absorbed by the co-op on tips.",
   "receipt.split.artistPct": "100%",
@@ -1695,10 +1673,9 @@ export const studio: Catalog = {
   "calls.applied.flatLabel": "flat",
 
   // ── Set submission (StudioSetSubmissionPage + Matcher + Sidebar) ──────────
-  // Chrome only — the uploaded filename, track/artist names, and tracklist
-  // paste below are content and stay English in both modes (§1). The set
-  // `type` <select> below had no stable `value=` — the option label WAS the
-  // stored value (§5.1 trap) — fixed with stable ids.
+  // Chrome only. The demo's mock content for this page lives in studioShowcase
+  // (translated); proper nouns and figures stay in the data files.
+  // The set `type` <select> stores stable ids as option values (§5.1).
   "setSubmission.hero.eyebrow": "New submission · DJ set or mix",
   "setSubmission.hero.title": "Submit a <em>set</em>.",
   "setSubmission.hero.dek":
@@ -1746,14 +1723,13 @@ export const studio: Catalog = {
     "Set submitted. Live now, held shares pending clearance",
 
   // ── Off-air landing (StudioOffAirPage + Hero) ─────────────────────────────
-  // Chrome only — the curator's signoff quote, next-broadcast title, and
-  // night-cap set/curator names below are content and stay English in both
-  // modes (§1). StudioOffAirShelves is already swept — match its pattern.
+  // Chrome only. The demo's mock content for this page lives in studioShowcase
+  // (translated); proper nouns and figures stay in the data files.
   "offAir.page.browseNote":
     "The doors are shut, but the shelves are open. <em>Browse anything below</em>. It all still plays.",
   "offAir.hero.statusLine": "Off air · {time} in Lisbon",
-  "offAir.hero.roomDark": "the room is dark",
-  "offAir.hero.title": "The room is <em>closed</em> for the night.",
+  "offAir.hero.roomDark": "quiet tonight",
+  "offAir.hero.title": "Studio is <em>off air</em> for the night.",
   "offAir.hero.untilDoors": "until doors",
   "offAir.hero.nextBroadcastLabel": "Next broadcast · {time} Lisbon",
   "offAir.hero.nightcapEyebrow": "Last night's night-cap",
@@ -1809,7 +1785,6 @@ export const studio: Catalog = {
   "media.coverLabel": "cover",
   "media.scoreLabel": "score",
   "media.setArtLabel": "set art",
-  "media.collectionLabel": "collection",
   "media.portraitLabel": "portrait",
   "media.trackLabel": "track",
 
@@ -1830,7 +1805,6 @@ export const studio: Catalog = {
   // ── no-literal-string sweep: misc chrome eyebrows/labels ──────────────────
   "album.sidebar.splitHint":
     "If you buy at {price}: <em>{artistShare} to {artist}</em>, {solidarityShare} to the solidarity fund, {platformShare} to the platform, processing absorbed.",
-  "collection.page.curatedByEyebrow": "Collection · curated by {curator}",
   "flagReview.reviewedByLine": "Reviewed by <em>{reviewer}</em>",
   "set.page.programmedByEyebrow": "Set · programmed by {curator}",
   "sheet.checkout.leadSheetLabel": "Lead sheet: {title}",
@@ -1890,7 +1864,6 @@ export const studio: Catalog = {
   "creator.avatarLabel": "Uploading as {name}",
   "rail.v1.navLabel": "Studio",
   "rail.v1.search": "Search",
-  "rail.v1.saved": "Saved",
   "rail.v1.yourMusic": "Your music",
   "rail.v1.upload": "Upload a release",
   "rail.v1.yourReleases": "Your releases · {name}",
@@ -1911,6 +1884,7 @@ export const studio: Catalog = {
   "artistPage.viewProfile": "View profile",
   "artistPage.noBio": "No bio yet",
   "artistPage.noReleases": "No releases yet",
+  "artistPage.section.playlists": "Public <em>playlists</em>",
   "owner.heading": "Your releases",
   "owner.edit": "Edit",
   "owner.editAria": "Edit {title}",
@@ -2081,4 +2055,282 @@ export const studio: Catalog = {
   "uploadFlow.locked.takenDownBody":
     "Taken down by QueerPulse staff: {reason}. It can't be edited while it's down",
   "uploadFlow.locked.backCta": "Back to your releases",
+  // ── Studio v2 (2026-10-13) ──────────────────────────────────────────────────
+  "artistPage.followerCount_one": "{count} follower",
+  "artistPage.followerCount_other": "{count} followers",
+  "errors.playlistLimit":
+    "You can keep up to 100 playlists. Delete one to make another",
+  "errors.playlistTrackLimit": "A playlist holds up to 500 tracks",
+  "errors.playlistOrderMismatch":
+    "The playlist changed. Reload the page and try again",
+  "errors.playlistCreditNotAllowed":
+    "That persona can't be credited right now. Show it as you, or pick another persona",
+  "errors.playlistTrackUnavailable": "That track can't be added right now",
+  "playlist.visibility.public": "Public",
+  "playlist.visibility.connections": "Connections only",
+  "playlist.visibility.private": "Private",
+  "playlist.visibility.publicHint": "Any member with Studio can find it",
+  "playlist.visibility.connectionsHint":
+    "Only your connections with Studio can open it",
+  "playlist.visibility.privateHint": "Only you",
+  "playlist.dialog.createTitle": "New playlist",
+  "playlist.dialog.editTitle": "Edit details",
+  "playlist.dialog.visibilityTitle": "Change visibility",
+  "playlist.dialog.nameLabel": "Name",
+  "playlist.dialog.namePlaceholder": "Songs for the walk home",
+  "playlist.dialog.nameRequired": "Give your playlist a name",
+  "playlist.dialog.descriptionLabel": "Description",
+  "playlist.dialog.descriptionHelper": "Optional. Up to 500 characters",
+  "playlist.dialog.visibilityLegend": "Who can open it",
+  "playlist.dialog.creditLegend": "Show as",
+  "playlist.dialog.creditYou": "You",
+  "playlist.dialog.creditYouHint": "Shows your name and photo",
+  "playlist.dialog.creditPersonaHint":
+    "Shows on {name}'s Studio page while it's public",
+  "playlist.dialog.linkOnlyNote":
+    "Your connections can open it by link. It stays off {name}'s page, so nobody learns who runs {name}",
+  "playlist.dialog.createCta": "Create playlist",
+  "playlist.dialog.saveDetailsCta": "Save details",
+  "playlist.dialog.saveVisibilityCta": "Save visibility",
+  "playlist.dialog.cancelCta": "Cancel",
+  "playlist.dialog.createdToast": "Playlist created",
+  "playlist.dialog.savedToast": "Changes saved",
+  "playlist.delete.title": "Delete {name}?",
+  "playlist.delete.body":
+    "The playlist and its order go for good. The music stays in Studio",
+  "playlist.delete.confirmCta": "Delete playlist",
+  "playlist.delete.deletedToast": "Playlist deleted",
+  "playlist.add.trackCta": "Add to playlist",
+  "playlist.add.trackAria": "Add {title} to a playlist",
+  "playlist.add.releaseCta": "Add release to playlist",
+  "playlist.add.pickerTitle": "Add to playlist",
+  "playlist.add.newPlaylistCta": "Create playlist",
+  "playlist.add.listLabel": "Your playlists",
+  "playlist.add.addToAria": "Add to {name}",
+  "playlist.shareCta": "Share playlist",
+  "playlist.add.addedToast": "Added to {name}",
+  "playlist.add.alreadyThereToast": "Already in {name}",
+  "playlist.add.empty": "You have no playlists yet. Make one to start",
+  "playlist.add.loadError": "We couldn't load your playlists",
+  "playlist.add.showMore": "Show more playlists",
+  "playlist.add.loadingMore": "Loading more playlists",
+  "playlist.add.loadMoreError": "We couldn't load more playlists",
+  "playlist.add.nothingToAdd": "Every track here is already in {name}",
+  "playlist.page.eyebrow": "Playlist",
+  "playlist.page.byline": "By <strong>{name}</strong>",
+  "playlist.page.playAria": "Play {name}",
+  "playlist.page.pauseAria": "Pause {name}",
+  "playlist.page.shuffleCta": "Shuffle playlist",
+  "playlist.page.actionsLabel": "Playlist actions",
+  "playlist.page.editDetails": "Edit details",
+  "playlist.page.changeVisibility": "Change visibility",
+  "playlist.page.deletePlaylist": "Delete playlist",
+  "playlist.page.tracklistLabel": "Tracks in {name}",
+  "playlist.page.emptyOwnerTitle": "Nothing in this playlist yet",
+  "playlist.page.emptyOwnerBody":
+    "Add tracks from a release, a track page or the player",
+  "playlist.page.emptyViewerTitle": "Nothing here you can play right now",
+  "playlist.page.findMusicCta": "Find music",
+  "playlist.row.unavailable": "No longer available",
+  "playlist.row.remove": "Remove {title} from the playlist",
+  "playlist.row.removeUnavailable": "Remove entry {position} from the playlist",
+  "playlist.row.moveUp": "Move {title} up",
+  "playlist.row.moveDown": "Move {title} down",
+  "playlist.row.movedStatus": "{title} is now number {position}",
+  "playlist.row.removedToast": "Removed from the playlist",
+  "playlist.row.orderError": "We couldn't save the new order. Try again",
+  "playlist.row.removeError": "We couldn't remove that. Try again",
+  "playlist.card.coverLabel": "Playlist cover",
+  "playlist.inThese.heading": "In these <em>playlists</em>",
+  "searchPage.filter.playlists": "Playlists",
+  "searchPage.section.playlists": "<em>Playlists</em>",
+  "searchPage.genreLabel": "Genre",
+  "searchPage.genreAny": "Any genre",
+  "home.genres.heading": "Browse by <em>genre</em>",
+  "home.genres.listLabel": "Genres",
+  "browse.eyebrow": "Browse",
+  "browse.title": "Releases in <em>{genre}</em>",
+  "browse.titleNone": "Browse by <em>genre</em>",
+  "browse.pickPrompt": "Pick a genre to see its releases",
+  "browse.noGenres": "Genres show up here once releases are published",
+  "browse.gridLabel": "Releases in {genre}",
+  "browse.empty.title": "No releases in {genre} yet",
+  "browse.empty.body": "New music shows up here as artists publish it",
+  "libraryLive.dek":
+    "Your playlists, plus the releases, tracks and artists you keep close",
+  "libraryLive.tablistLabel": "Your library",
+  "libraryLive.tabs.playlists": "Playlists",
+  "libraryLive.tabs.releases": "Releases",
+  "libraryLive.tabs.tracks": "Tracks",
+  "libraryLive.tabs.artists": "Artists",
+  "libraryLive.yourPlaylists": "Your <em>playlists</em>",
+  "libraryLive.savedPlaylists": "Saved <em>playlists</em>",
+  "libraryLive.newPlaylistCta": "Create playlist",
+  "libraryLive.empty.playlistsTitle": "No playlists yet",
+  "libraryLive.empty.playlistsBody":
+    "Make one for a mood, a night or a person, then add tracks from anywhere in Studio",
+  "libraryLive.empty.releasesTitle": "No saved releases yet",
+  "libraryLive.empty.releasesBody":
+    "Save a release from its page and it waits for you here",
+  "libraryLive.empty.tracksTitle": "No saved tracks yet",
+  "libraryLive.empty.tracksBody":
+    "Save a track from its page and it waits for you here",
+  "libraryLive.empty.artistsTitle": "You don't follow any artists yet",
+  "libraryLive.empty.artistsBody":
+    "Follow an artist from their Studio page to keep them close",
+  "libraryLive.showMoreArtists": "Show more artists",
+  "libraryLive.loadingMoreArtists": "Loading more artists",
+  "libraryLive.loadMoreArtistsError": "We couldn't load more artists",
+  "numbers.eyebrow": "Your numbers",
+  "numbers.title": "How <em>{name}</em> is reaching people",
+  "numbers.dek":
+    "Totals as they stand today. Studio never counts plays, and any count from 1 to 4 shows as Fewer than 5 so nobody can be singled out",
+  "numbers.personaLabel": "Persona",
+  "numbers.followers": "Followers",
+  "numbers.tableCaption":
+    "Saves and public playlist inclusions for each of {name}'s releases",
+  "numbers.column.release": "Release",
+  "numbers.column.saves": "Saves",
+  "numbers.column.inPublicPlaylists": "In public playlists",
+  "numbers.fewerThanFive": "Fewer than 5",
+  "numbers.showTracks": "Show tracks for {title}",
+  "numbers.hideTracks": "Hide tracks for {title}",
+  "numbers.empty.title": "No releases yet",
+  "numbers.empty.body": "Publish a release and its numbers show up here",
+  "callsLive.eyebrow": "From Funding & Grants",
+  "callsLive.title": "Open calls for <em>music</em>",
+  "callsLive.dek":
+    "Funders and organisers post their calls in Funding & Grants. These are the open ones tagged music",
+  "callsLive.postCta": "Post an open call",
+  "callsLive.allCallsCta": "See all open calls",
+  "callsLive.musicCallsCta": "See music calls in Funding & Grants",
+  "callsLive.listLabel": "Open calls for music",
+  "callsLive.empty.title": "No open calls for music right now",
+  "callsLive.empty.body":
+    "New calls tagged music show up here as soon as they're posted",
+  "callsLive.loadErrorTitle": "We couldn't load the open calls",
+  "callsLive.showMore": "Show more calls",
+  "callsLive.loadingMore": "Loading more calls",
+  "callsLive.loadMoreError": "We couldn't load more calls",
+  "callsLive.card.amount": "Amount",
+  "callsLive.card.deadline": "Deadline",
+  "callsLive.card.eligibility": "Who can apply",
+  "callsLive.card.scope": "Where",
+  "callsLive.card.notStated": "Not stated",
+  "fundLive.eyebrow": "Solidarity",
+  "fundLive.title": "Members helping <em>members</em>",
+  "fundLive.body":
+    "QueerPulse never handles money. When a musician needs help, members raise it through fundraisers in Funding & Grants, and moderators check each one before it goes up",
+  "fundLive.safety":
+    "Give only through a fundraiser's own link. If someone asks you for money in a message, report it",
+  "fundLive.fundraisersCta": "See music fundraisers",
+  "fundLive.startCta": "Start a fundraiser",
+  "fundLive.callsCta": "See open calls for music",
+  "rail.v2.library": "Library",
+  "rail.v2.openCalls": "Open calls",
+  "rail.v2.yourNumbers": "Your numbers",
+  "creator.nav.yourNumbers": "Your numbers",
+  // Demo-only showcase copy moved out of P2's data files (spec 3.2). Names
+  // of people, places, tracks and releases stay literal in the data files.
+  "demo.dashboard.trend.plays":
+    "<up>{delta}</up> vs. last month · {active} of {total} tracks active",
+  "demo.dashboard.trend.earnings":
+    "<up>{delta}</up> vs. last month · {rate} per qualifying play",
+  "demo.dashboard.trend.tips":
+    "{tippers} tippers, {notes} with notes · <up>{recent} since you opened this page</up>",
+  "demo.dashboard.trend.payout":
+    "SEPA · LU IBAN · settles the morning of the 5th",
+  "demo.dashboard.curator.what.wednesdaySet":
+    "<em>{title}</em> placed at track 6 of the Wednesday set",
+  "demo.dashboard.curator.what.collection":
+    "<em>{title}</em> added to “Songs to play your mother”",
+  "demo.dashboard.curator.what.mix":
+    "<em>{title}</em> included in Trans composers vol. iv",
+  "demo.dashboard.curator.what.warmup":
+    "<em>{title}</em> picked for the Monday warm-up",
+  "demo.dashboard.curator.who.wednesdaySet":
+    "Sara Marques · Vespertina vol. iv · “stay through the second verse”",
+  "demo.dashboard.curator.who.collection":
+    "Sara Marques · collection · rotated in for this week",
+  "demo.dashboard.curator.who.mix":
+    "D. Okoye · mix · liner-note paragraph about the lyric",
+  "demo.dashboard.curator.who.warmup":
+    "João Ribeiro · one track · “for the kitchen, 8pm”",
+  "demo.dashboard.curator.today": "today",
+  "demo.dashboard.otherCities": "{count} other cities",
+  "demo.dashboard.peakSummary":
+    "Peak: <em>today</em> · {plays} plays · Sara picked you on Monday",
+  "demo.dashboard.topTrackShare": "<em>{title}</em> is {percent}% of this",
+  "demo.dashboard.goLivePlan": "Plan: {date} · premiere of {title}",
+  "demo.dashboard.nextPayout": "Next: {amount} on {date} · SEPA",
+  "demo.calls.seat": "Council · seat {seat}",
+  "demo.calls.tag.commission": "Commission",
+  "demo.calls.tag.grant": "Grant",
+  "demo.calls.tag.residency": "Residency",
+  "demo.calls.tag.closesInDays_one": "Closes in {count} day",
+  "demo.calls.tag.closesInDays_other": "Closes in {count} days",
+  "demo.calls.tag.applied": "Applied · {date}",
+  "demo.calls.meta.deadline": "Deadline {date}",
+  "demo.calls.meta.oneTrack": "1 track",
+  "demo.calls.meta.slotsFilled": "{filled} of {total} slots filled",
+  "demo.calls.meta.releaseAsEvidence": "1 release as evidence",
+  "demo.calls.meta.grantCount": "{count} grants",
+  "demo.calls.meta.trackAndNote": "1 track and a note",
+  "demo.calls.meta.oneResidency": "1 residency",
+  "demo.calls.track.unreleased": "unreleased",
+  "demo.calls.marsha.title": "A song for the <em>Marsha P. Johnson</em> night",
+  "demo.calls.marsha.brief":
+    "We're scoring the 28 June broadcast, a 90-minute live room marking the anniversary. We want <em>one original track</em>, 3 to 6 minutes, to carry the broadcast between speakers. Yours to keep and re-release",
+  "demo.calls.marsha.amountLabel": "flat · paid on accept",
+  "demo.calls.marsha.placeholder":
+    "A sentence on why this one (optional). The council reads the work first",
+  "demo.calls.spring.title": "Spring grant: <em>trans composers</em> strand",
+  "demo.calls.spring.brief":
+    "Unrestricted €1,200 grants for trans and non-binary composers working in any form: score, ambient, choral, club. We fund the <em>practice</em> itself, with nothing to deliver. Twelve grants this round",
+  "demo.calls.spring.amountLabel": "unrestricted",
+  "demo.calls.spring.placeholder":
+    "What would the grant let you make? (optional)",
+  "demo.calls.residency.title": "Casa do Comum: <em>August</em> residency",
+  "demo.calls.residency.brief":
+    "Two weeks in the Lisbon venue with keys, a PA and a recording rig, ending with one live broadcast from there. Travel and a €600 stipend covered. We're looking for someone who'll <em>use the space loudly</em>",
+  "demo.calls.residency.amountLabel": "plus space and travel",
+  "demo.calls.residency.placeholder":
+    "How would you use the two weeks? (optional)",
+  "demo.calls.applied.title": "Closing theme for the <em>Pride assembly</em>",
+  "demo.calls.applied.brief":
+    "You attached <em>{track}</em> and a note. Sara claimed it on {claimedOn} and decides by {decisionBy}. You'll hear back here, with a sentence either way",
+  "demo.calls.applied.statusNote": "in review with Sara",
+  "demo.fund.balanceNote":
+    "Healthy: roughly four months of current disbursement. Anything above six months' runway rolls into the next quarterly grant round by council vote",
+  "demo.fund.flowsDek":
+    "No new fee funds this. It's the overflow of a system designed to overflow toward people, and it leaves <em>the artist's 80% and your tips</em> untouched",
+  "demo.fund.applyBody":
+    "If you're a member having a hard month, the emergency strand is a short form and a fast yes: <em>no portfolio, no means test, no shame</em>. Transcribers and translators are paid per accepted piece, and grants open each quarter",
+  "demo.fund.name.withheld": "Withheld by <em>request</em>",
+  "demo.fund.name.helenaAndOthers": "Helena <em>Pinto</em> and 6 others",
+  "demo.fund.name.lgpInterpreter": "LGP <em>interpreter</em>",
+  "demo.fund.name.communityPool": "Community <em>pool</em> · 9 people",
+  "demo.fund.name.instrument": "Instrument <em>replacement</em>",
+  "demo.fund.name.captioning": "Captioning <em>pass</em> · 6 broadcasts",
+  "demo.fund.name.springStrand": "Spring strand · <em>4 artists</em>",
+  "demo.fund.note.teresa":
+    "14 lead sheets accepted into the archive this fortnight",
+  "demo.fund.note.rent":
+    "One month's rent for a member between tours, confidential",
+  "demo.fund.note.springGrants":
+    "Spring first-release strand · €1,200 unrestricted each",
+  "demo.fund.note.marshaSigning":
+    "Signed the Marsha P. Johnson broadcast · 90 minutes",
+  "demo.fund.note.lyricTranslations":
+    "Lyric translations from PT to EN, PT to ES and FR to PT across 22 tracks",
+  "demo.fund.note.accordion":
+    "A stolen accordion, replaced within a week, no application form",
+  "demo.fund.note.mateus":
+    "First-release grant · debut EP mastering and artwork",
+  "demo.fund.note.captions": "Live captions across the May broadcast season",
+  "demo.fund.note.pedro": "Lyric translation from PT to EN across 8 tracks",
+  "demo.fund.note.medical": "Medical costs for a member, confidential",
+  "demo.fund.note.sofia": "9 lead sheets accepted into the archive",
+  "demo.fund.note.springArtists":
+    "First-release grants · €1,200 unrestricted each",
 };

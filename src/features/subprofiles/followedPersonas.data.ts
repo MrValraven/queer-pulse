@@ -11,13 +11,19 @@ import type {
  * reaches this module exclusively behind `if (demoMode)`, and the live branch
  * reads the API.
  *
- * WHY A SEED SET AT ALL. `DEMO_SUBPROFILES` ships every persona with
+ * WHY A SEED SET AT ALL. `DEMO_SUBPROFILES` ships almost every persona with
  * `viewerFollowing: false`, so deriving the list from the registry alone would
- * render an empty state forever and the demo would show none of the surface it
- * exists to show. This seeds three of them, chosen to exercise both address
- * shapes the row has to build: two unlinked personas addressed by their global
- * handle (`/p/:handle`) and one linked persona addressed under its creator
- * (`/members/:ownerSlug/:slug`).
+ * show a single row and miss both address shapes the row has to build. The
+ * list carries three follows: NIGHTFORM (unlinked, addressed by its global
+ * handle `/p/:handle`) is followed in the registry itself, and this set seeds
+ * the other two, one linked persona addressed under its creator
+ * (`/members/:ownerSlug/:slug`) and one more unlinked venue.
+ *
+ * A persona the registry already marks followed stays OUT of this set. The
+ * persona page and the Studio artist hero unfollow through `useFollow`, which
+ * flips only the registry (`mockSetFollowing`); a seed entry for the same id
+ * would keep it listed here and make `demoIsFollowingArtist` report it
+ * followed again on the next Studio read.
  *
  * ONE SOURCE OF TRUTH FOR THE TOGGLE. Unfollowing in demo goes through
  * `mockUnfollowPersona` below, which flips the shared registry state via
@@ -27,8 +33,6 @@ import type {
  * as a broken product.
  */
 const seededFollowedIds = new Set<string>([
-  // Unlinked, published, addressed by its handle.
-  "sp-diogo-nightform",
   // Linked, published, addressed under its creator's profile slug.
   "sp-anika-writer",
   // Unlinked, published, a venue persona.
@@ -36,7 +40,8 @@ const seededFollowedIds = new Set<string>([
 ]);
 
 /**
- * The demo instants each seeded follow was made at, hand-dated into the PAST
+ * The demo instants each starting follow was made at (seeded or already in
+ * the registry), hand-dated into the PAST
  * like every other demo fixture in this repo, so a "followed 3 weeks ago" line
  * reads correctly without depending on when the demo is opened.
  */

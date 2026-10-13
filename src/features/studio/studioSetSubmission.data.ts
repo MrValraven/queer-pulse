@@ -1,9 +1,13 @@
 import { memberName } from "../members/data/members";
+import type { TFunction } from "../../shared/i18n/types";
 
 export interface SetTrack {
   tc: string;
   who: string;
-  title: string;
+  /** The recorded title, a proper noun. Absent for an unidentified track. */
+  title?: string;
+  /** Catalog key for an unidentified track's placeholder label. */
+  titleKey?: string;
   m: boolean;
   tint: "coral" | "plum" | "jade";
   image?: string;
@@ -31,7 +35,7 @@ export const TRACKS: SetTrack[] = [
   {
     tc: "12:18",
     who: "",
-    title: "unknown bootleg edit",
+    titleKey: "studioShowcase:setSubmission.tracks.unknownBootleg",
     m: false,
     tint: "plum",
     image:
@@ -58,7 +62,7 @@ export const TRACKS: SetTrack[] = [
   {
     tc: "31:10",
     who: "",
-    title: "white label — ID / ID",
+    titleKey: "studioShowcase:setSubmission.tracks.whiteLabel",
     m: false,
     tint: "coral",
     image:
@@ -75,10 +79,23 @@ export const TRACKS: SetTrack[] = [
   },
 ];
 
-export const PASTE = `00:00  ${memberName("ines")} — A summer in Cascais
-06:40  Akin Diallo — Salt water, slowly
-12:18  (unknown bootleg edit)
-18:30  Yara Reis — If you have to ask
-24:52  Coro de Outubro — Cantiga para a vizinha
-31:10  white label — ID / ID
-37:44  Mariana Sol — Carta para a santa`;
+/** A track's display title: the recorded title, or the translated placeholder. */
+export function resolveTrackTitle(track: SetTrack, t: TFunction): string {
+  return track.titleKey ? t(track.titleKey) : (track.title ?? "");
+}
+
+/**
+ * The tracklist the DJ pasted, as the textarea's starting text. Pattern B:
+ * the two unidentified lines carry translated placeholder labels.
+ */
+export function buildPaste(t: TFunction): string {
+  return [
+    `00:00  ${memberName("ines")} - A summer in Cascais`,
+    "06:40  Akin Diallo - Salt water, slowly",
+    `12:18  (${t("studioShowcase:setSubmission.tracks.unknownBootleg")})`,
+    "18:30  Yara Reis - If you have to ask",
+    "24:52  Coro de Outubro - Cantiga para a vizinha",
+    `31:10  ${t("studioShowcase:setSubmission.tracks.whiteLabel")}`,
+    "37:44  Mariana Sol - Carta para a santa",
+  ].join("\n");
+}

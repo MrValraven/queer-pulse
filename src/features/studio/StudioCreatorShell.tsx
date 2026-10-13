@@ -57,7 +57,11 @@ export function StudioCreatorShell({
                       .join(" ")
                   }
                 >
-                  {t(item.labelKey)}
+                  {t(
+                    isShowcase
+                      ? item.labelKey
+                      : (item.liveLabelKey ?? item.labelKey),
+                  )}
                 </NavLink>
               );
             },

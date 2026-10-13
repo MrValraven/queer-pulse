@@ -374,7 +374,8 @@
   height: 48px;
   border-radius: 50%;
   background: var(--accent);
-  color: rgba(var(--cream-rgb), 1);
+  /* Dark ink on the coral fill: 6.28:1. */
+  color: var(--studio-bg);
   border: none;
   display: flex;
   align-items: center;

@@ -12,6 +12,7 @@ import { toArtistView } from "./api/studio.adapters";
 import { demoStudioArtist } from "./api/studioDemoApi";
 import { DEMO_ARTIST_MARIANA } from "./api/studioDemoMe.data";
 import { studioKeys } from "./api/studioQueryKeys";
+import { StudioArtistMain } from "./StudioArtistMain";
 import { StudioArtistPage } from "./StudioArtistPage";
 
 describe("StudioArtistPage (demo fixture)", () => {
@@ -175,5 +176,39 @@ describe("StudioArtistPage (demo fixture)", () => {
       </TestProviders>,
     );
     expect(await screen.findByText(/can't find/i)).toBeInTheDocument();
+  });
+});
+
+describe("StudioArtistMain playlists", () => {
+  it("lists the persona's public playlists under a Public playlists heading", () => {
+    const artistView = toArtistView(demoStudioArtist(DEMO_ARTIST_MARIANA.id));
+    expect(artistView.playlists.length).toBeGreaterThan(0);
+    render(
+      <TestProviders>
+        <StudioArtistMain tab="music" artist={artistView} />
+      </TestProviders>,
+    );
+    expect(
+      screen.getByRole("heading", { level: 2, name: "Public playlists" }),
+    ).toBeInTheDocument();
+    const [firstPlaylist] = artistView.playlists;
+    expect(
+      screen.getByRole("link", { name: firstPlaylist?.name }),
+    ).toBeInTheDocument();
+  });
+
+  it("renders no Public playlists section when the persona has none", () => {
+    const artistView = {
+      ...toArtistView(demoStudioArtist(DEMO_ARTIST_MARIANA.id)),
+      playlists: [],
+    };
+    render(
+      <TestProviders>
+        <StudioArtistMain tab="music" artist={artistView} />
+      </TestProviders>,
+    );
+    expect(
+      screen.queryByRole("heading", { level: 2, name: "Public playlists" }),
+    ).not.toBeInTheDocument();
   });
 });

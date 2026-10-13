@@ -2,42 +2,52 @@ import { useId, useState } from "react";
 import { FiZap, FiSettings, FiArrowRight } from "react-icons/fi";
 import { FadeIn, Select } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
+import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { SUMMARY, PAYOUTS, BREAKDOWN } from "./studioPayouts.data";
+import {
+  SUMMARY,
+  PAYOUTS,
+  BREAKDOWN,
+  payoutMetaParts,
+  payoutSplitNote,
+  type PayoutRow,
+} from "./studioPayouts.data";
 import {
   PayoutRowSkeleton,
   BreakdownRowSkeleton,
 } from "./StudioPayoutsSkeletons";
 import s from "./creator.module.css";
+import { StudioEuroAmount } from "./StudioEuroAmount";
 
 // Content: the mock SEPA bank account's masked IBAN — comes from the
 // artist's payout method record in live mode.
 const SEPA_MASKED_IBAN = "LU 82 0019 … 1844 3700";
 
+/** Mock amounts are stored as "1,712" strings; the page formats them per locale. */
+const parseMockAmount = (amount: string) => Number(amount.replace(/,/g, ""));
+
+const WHOLE_EUROS = { minimumFractionDigits: 0, maximumFractionDigits: 0 };
+
 export function PayoutsHero() {
   const { t } = useTranslation();
+  const fmt = useFormat();
   return (
     <section className={s.hero}>
-      <div
-        className={s.heroInner}
-        style={{
-          display: "grid",
-          gridTemplateColumns: "1.4fr 1fr",
-          gap: 40,
-          alignItems: "end",
-        }}
-      >
+      <div className={`${s.heroInner} ${s.heroSplit}`}>
         <div>
           <div className={s.eb}>{t("studio:payouts.hero.eyebrow")}</div>
           <h1>
             <Translation
               i18nKey="studio:payouts.hero.title"
               components={{ em: <em /> }}
-              values={{ amount: "€2,140", day: 5 }}
+              values={{
+                amount: fmt.currency(2140, "EUR", WHOLE_EUROS),
+                day: 5,
+              }}
             />
           </h1>
           <div
-            className="sub"
+            className={s.sub}
             style={{
               fontFamily: "var(--serif)",
               fontStyle: "italic",
@@ -51,18 +61,19 @@ export function PayoutsHero() {
         </div>
         <div className={s.sideCard} style={{ minWidth: 0 }}>
           <div className={s.sideEb}>
-            {t("studio:payouts.hero.breakdownEyebrow", { month: "July" })}
+            {t("studio:payouts.hero.breakdownEyebrow", {
+              month: t("studioShowcase:payouts.hero.breakdownMonth"),
+            })}
           </div>
           {SUMMARY.map((line) => (
             <div key={line.labelKey} className={s.ln}>
               <span>{t(line.labelKey)}</span>
               <span
-                className="v2"
+                className={s.v2}
                 style={{ fontFamily: "var(--serif)", color: "var(--text)" }}
               >
-                €
                 <em style={{ fontStyle: "normal", color: "var(--accent)" }}>
-                  {line.v}
+                  {fmt.currency(parseMockAmount(line.v), "EUR", WHOLE_EUROS)}
                 </em>
               </span>
             </div>
@@ -70,10 +81,13 @@ export function PayoutsHero() {
           <div className={s.ln}>
             <span>{t("studio:payouts.summary.splitsRouted")}</span>
             <span
-              className="v2"
+              className={s.v2}
               style={{ fontFamily: "var(--serif)", color: "var(--text40)" }}
             >
-              −€<em style={{ fontStyle: "normal" }}>198</em>
+              −
+              <em style={{ fontStyle: "normal" }}>
+                {fmt.currency(198, "EUR", WHOLE_EUROS)}
+              </em>
             </span>
           </div>
           <div className={s.ln}>
@@ -81,18 +95,55 @@ export function PayoutsHero() {
               {t("studio:payouts.summary.toYourIban")}
             </span>
             <span
-              className="v2"
+              className={s.v2}
               style={{ fontFamily: "var(--serif)", fontSize: 18 }}
             >
-              €
               <em style={{ fontStyle: "normal", color: "var(--jade-light)" }}>
-                2,140
+                {fmt.currency(2140, "EUR", WHOLE_EUROS)}
               </em>
             </span>
           </div>
         </div>
       </div>
     </section>
+  );
+}
+
+/** A payout row's title and tally line, composed from catalog keys. */
+function PayoutRowCopy({ payout }: { payout: PayoutRow }) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
+  const splitNote = payoutSplitNote(payout, t);
+  const localizedPayout = {
+    ...payout,
+    plays: fmt.number(parseMockAmount(payout.plays)),
+  };
+  return (
+    <div className={s.payCopy}>
+      <h5>
+        <Translation
+          i18nKey={
+            payout.noteKey
+              ? "studioShowcase:payouts.row.titleWithNote"
+              : "studioShowcase:payouts.row.title"
+          }
+          components={{ em: <em /> }}
+          values={{
+            period: t(payout.periodKey),
+            note: payout.noteKey ? t(payout.noteKey) : undefined,
+          }}
+        />
+      </h5>
+      <div className={s.payMeta}>
+        {payoutMetaParts(localizedPayout, t).join(" · ")}
+        {splitNote === null ? null : (
+          <>
+            {" · "}
+            <em>{splitNote}</em>
+          </>
+        )}
+      </div>
+    </div>
   );
 }
 
@@ -104,6 +155,7 @@ export function PayoutsList({
   onExport: () => void;
 }) {
   const { t } = useTranslation();
+  const fmt = useFormat();
   return (
     <div className={s.col}>
       <div className={s.card}>
@@ -129,11 +181,14 @@ export function PayoutsList({
               <PayoutRowSkeleton key={skeletonIndex} />
             ))
           : PAYOUTS.map((payout, payoutIndex) => (
-              <FadeIn key={payout.m} delay={Math.min(payoutIndex, 8) * 60}>
+              <FadeIn
+                key={payout.monthKey}
+                delay={Math.min(payoutIndex, 8) * 60}
+              >
                 <div className={s.payRow}>
                   <div className={s.payDate}>
                     <div
-                      className="d"
+                      className={s.d}
                       style={{
                         fontFamily: "var(--serif)",
                         fontWeight: 300,
@@ -145,7 +200,7 @@ export function PayoutsList({
                       {payout.d}
                     </div>
                     <div
-                      className="m"
+                      className={s.m}
                       style={{
                         fontSize: 10,
                         fontWeight: 700,
@@ -154,15 +209,18 @@ export function PayoutsList({
                         color: "var(--accent)",
                       }}
                     >
-                      {payout.m}
+                      {t(payout.monthKey)}
                     </div>
                   </div>
-                  <div>
-                    <h5>{payout.title}</h5>
-                    <div className={s.payMeta}>{payout.meta}</div>
-                  </div>
+                  <PayoutRowCopy payout={payout} />
                   <div className={s.payAmt}>
-                    €<em>{payout.amt}</em>
+                    <em>
+                      {fmt.currency(
+                        parseMockAmount(payout.amt),
+                        "EUR",
+                        WHOLE_EUROS,
+                      )}
+                    </em>
                   </div>
                   <span
                     className={`${s.payStatus} ${payout.status === "pending" ? s.statusPending : s.statusPaid}`}
@@ -185,7 +243,7 @@ export function PayoutsList({
             />
           </h3>
           <div
-            className="sub"
+            className={s.sub}
             style={{
               fontSize: 12.5,
               color: "var(--text40)",
@@ -206,7 +264,7 @@ export function PayoutsList({
               >
                 <div className={s.bdRow}>
                   <span
-                    className="n"
+                    className={s.n}
                     style={{
                       fontFamily: "monospace",
                       color: "var(--text40)",
@@ -216,7 +274,7 @@ export function PayoutsList({
                     {breakdownRow.n}
                   </span>
                   <span
-                    className="nm"
+                    className={s.nm}
                     style={{
                       color: "var(--text)",
                       fontFamily: "var(--serif)",
@@ -225,34 +283,37 @@ export function PayoutsList({
                   >
                     {breakdownRow.nm}
                   </span>
-                  <span
-                    className="plays"
-                    style={{ color: "var(--text60)", whiteSpace: "nowrap" }}
-                  >
-                    {breakdownRow.plays}
+                  <span className={s.bdMeta}>
+                    <span
+                      className={s.plays}
+                      style={{ color: "var(--text60)", whiteSpace: "nowrap" }}
+                    >
+                      {t("studioShowcase:payouts.plays", {
+                        plays: fmt.number(parseMockAmount(breakdownRow.plays)),
+                      })}
+                    </span>
+                    <span
+                      className={s.rate}
+                      style={{ color: "var(--text60)", fontSize: 12 }}
+                    >
+                      @ <StudioEuroAmount value={0.05} />
+                    </span>
                   </span>
                   <span
-                    className="rate"
-                    style={{ color: "var(--text40)", fontSize: 12 }}
-                  >
-                    @ €0.05
-                  </span>
-                  <span
-                    className="bdTotal"
+                    className={s.bdTotal}
                     style={{
                       fontFamily: "var(--serif)",
                       color: "var(--text)",
                       whiteSpace: "nowrap",
                     }}
                   >
-                    €
                     <em
                       style={{
                         fontStyle: "normal",
                         color: "var(--accent)",
                       }}
                     >
-                      {breakdownRow.total}
+                      {fmt.currency(parseMockAmount(breakdownRow.total))}
                     </em>
                   </span>
                 </div>
@@ -261,16 +322,15 @@ export function PayoutsList({
         <div className={s.bdFoot}>
           <span>{t("studio:payouts.breakdown.subtotalLabel")}</span>
           <span
-            className="v"
+            className={s.v}
             style={{
               fontFamily: "var(--serif)",
               fontSize: 18,
               color: "var(--text)",
             }}
           >
-            €
             <em style={{ fontStyle: "normal", color: "var(--jade-light)" }}>
-              1,820.00
+              {fmt.currency(1820)}
             </em>
           </span>
         </div>
@@ -374,7 +434,9 @@ export function PayoutsSidebar() {
           <input
             id={`${fieldId}-tax`}
             type="text"
-            defaultValue="Portugal · NIF on file"
+            defaultValue={t(
+              "studioShowcase:payouts.preferences.taxResidencyValue",
+            )}
           />
           <span className={s.fhint}>
             {t("studio:payouts.preferences.taxResidency.hint")}

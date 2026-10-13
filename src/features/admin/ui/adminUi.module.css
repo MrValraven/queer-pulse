@@ -706,6 +706,14 @@
 .toggleOn .toggleKnob {
   transform: translateX(18px);
 }
+/* Plum on the dark ground and a `--paper` knob both vanish, so the off track
+   takes the line channels (cream in dark) and the knob goes light. */
+[data-theme="dark"] .toggle:not(.toggleOn) {
+  background: rgba(var(--line-rgb), 0.24);
+}
+[data-theme="dark"] .toggleKnob {
+  background: rgb(var(--ink-rgb));
+}
 @media (prefers-reduced-motion: reduce) {
   .toggle,
   .toggleKnob {

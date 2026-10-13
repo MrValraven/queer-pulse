@@ -105,6 +105,7 @@ export const forum: Catalog = {
   "compose.tagsNoMatch": "No tag matches “{query}”.",
   "compose.popularTagsLabel": "Popular",
   "compose.browseTags": "Browse all tags",
+  "compose.musicTag.fullHint": "Remove a tag to add this one",
   "compose.hideTagList": "Hide the tag list",
 
   // ── Tag vocabulary categories (forumTags.data.ts) ───────────────────────
@@ -1204,4 +1205,7 @@ export const forum: Catalog = {
   "funding.ask.authorControls": "Your fundraiser",
   "funding.follow.followedToast": "You'll hear about new open calls",
   "funding.follow.unfollowedToast": "You won't hear about new open calls now",
+  "funding.compose.musicQuickTag": "Music & sound",
+  "funding.compose.musicQuickTagHint":
+    "Adds the music tag, so the call also shows on Studio's open calls",
 };

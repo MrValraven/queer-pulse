@@ -1,0 +1,230 @@
+/* The member drawer's access panel, under Roles & access: staff roles, the
+   ambassador tag and Studio access as three rows with one anatomy. Title and
+   status on the left, the action on the right, a footnote under both. The
+   panel draws the only frame; rows are split by hairlines and carry no
+   background of their own. */
+.panel {
+  list-style: none;
+  margin: 18px 0 0;
+  padding: 0;
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-14);
+  /* --line-rgb is plum in light and cream in dark, so one faint tint reads as
+     the same quiet surface in both themes. */
+  background: rgba(var(--line-rgb), 0.04);
+}
+
+.row {
+  padding: 14px 16px;
+}
+
+/* Drawn on the second row onward so a row that renders nothing (a roster or
+   grant still loading) leaves no stray line behind. */
+.row + .row {
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+/* Title and status take what the action leaves. Once the text would drop under
+   about twelve characters a line, the action wraps below it instead. */
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px 16px;
+}
+
+.text {
+  display: flex;
+  flex: 1 1 11rem;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.title {
+  font-size: var(--text-14);
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--text-strong);
+}
+
+.status {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: var(--text-13);
+  line-height: 1.45;
+  color: var(--ink-60);
+}
+
+/* Centred on the status's first line, so a status that wraps keeps its dot
+   beside the opening words. */
+.dot {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  margin-top: calc((1.45em - 8px) / 2);
+  border-radius: 50%;
+  box-sizing: border-box;
+}
+
+.dot_on {
+  background: var(--jade);
+}
+
+.dot_off {
+  border: 1.5px solid rgba(var(--line-rgb), 0.4);
+}
+
+.dot_warn {
+  background: var(--accent-ink);
+}
+
+.action {
+  display: flex;
+  flex: none;
+  align-items: center;
+}
+
+.footnote {
+  margin: 8px 0 0;
+  font-size: var(--text-12);
+  line-height: 1.45;
+  color: var(--ink-60);
+}
+
+/* The disclosure variant: title, status and chevron are one button. */
+.headButton {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  border-radius: var(--radius-8);
+  /* The chevron is small enough to stay beside the text at any width. */
+  flex-wrap: nowrap;
+  align-items: center;
+}
+
+.headButton:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.chevron {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 32px;
+  height: 32px;
+  /* Pulls the glyph onto the right edge the other rows' actions end on; the
+     hover disc spills into the row padding. */
+  margin-right: -7px;
+  border-radius: 50%;
+  color: var(--ink-60);
+  transition:
+    background var(--dur-base) var(--ease),
+    color var(--dur-base) var(--ease);
+}
+
+.chevron svg {
+  width: 18px;
+  height: 18px;
+  transition: transform var(--dur-base) var(--ease);
+}
+
+.chevronOpen svg {
+  transform: rotate(180deg);
+}
+
+@media (hover: hover) {
+  .headButton:hover .chevron {
+    background: rgba(var(--line-rgb), 0.07);
+    color: var(--text-strong);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chevron,
+  .chevron svg {
+    transition: none;
+  }
+}
+
+/* Compact text action (Manage ambassadors): sits on the title's line. */
+.textLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: var(--text-13);
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--text-strong);
+  text-decoration: none;
+  border-radius: var(--radius-4);
+}
+
+.textLink:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+@media (hover: hover) {
+  .textLink:hover {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+}
+
+/* The staff-role grants, opened under their row. Flat lines on the panel's
+   own surface, split by hairlines, aligned to the row's text. */
+.grantList {
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0;
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+.grantRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 0;
+}
+
+.grantRow:last-child {
+  padding-bottom: 0;
+}
+
+.grantRow + .grantRow {
+  border-top: 1px solid rgba(var(--line-rgb), 0.07);
+}
+
+.grantText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.grantLabel {
+  font-size: var(--text-13);
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--text-strong);
+}
+
+.grantDesc {
+  font-size: var(--text-12);
+  line-height: 1.45;
+  color: var(--ink-60);
+}

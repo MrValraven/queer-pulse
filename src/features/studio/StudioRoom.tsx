@@ -1,5 +1,6 @@
 import { useStudioReleases } from "./api/useStudioReleases";
 import { StudioArtistsRow } from "./StudioArtistsRow";
+import { StudioHomeGenres } from "./StudioGenreChips";
 import { StudioHomeHero } from "./StudioHomeHero";
 import { StudioNewReleases } from "./StudioNewReleases";
 import { StudioSetSection } from "./StudioPageSections";
@@ -14,6 +15,7 @@ export function StudioRoom() {
   return (
     <StudioShell>
       <StudioHomeHero releasesResult={releasesResult} />
+      <StudioHomeGenres />
       {isShowcase && <StudioSetSection />}
       <StudioNewReleases releasesResult={releasesResult} />
       <StudioArtistsRow releases={releasesResult.releases} />

@@ -73,7 +73,11 @@ export type LifecycleNotificationKind =
   // `1d`), or its deadline moved. System-driven, no actor; the payload carries
   // `threadSlug`, `threadTitle`, `deadline` and, for the reminder, `stage`.
   | "funding_deadline_soon"
-  | "funding_deadline_changed";
+  | "funding_deadline_changed"
+  // Studio v2. A persona the member follows published a release in Studio.
+  // Bundled on the persona; the payload names the persona and the newest
+  // release, and carries no actor (the human behind a persona stays unnamed).
+  | "studio_release_published";
 
 /**
  * Which tab each of these kinds files under, following the neighbours already
@@ -134,6 +138,9 @@ export const LIFECYCLE_KIND_CATEGORY: Record<
   // A saved call's deadline news, the tab housing_listing_expiring uses.
   funding_deadline_soon: "platform",
   funding_deadline_changed: "platform",
+  // New music from a persona the member follows, the same tab as
+  // persona_update.
+  studio_release_published: "community",
 };
 
 export function isLifecycleKind(
@@ -313,6 +320,7 @@ const TOKEN_FIELDS: Partial<Record<LifecycleNotificationKind, string[]>> = {
   subprofile_member_removed: ["subprofileName"],
   funding_deadline_soon: ["threadTitle"],
   funding_deadline_changed: ["threadTitle"],
+  studio_release_published: ["subprofileName", "releaseTitle"],
 };
 
 /**

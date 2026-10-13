@@ -1,0 +1,292 @@
+/* The dialog and the picker portal to <body>, so they paint with the app
+   theme's tokens; the card, chip and mosaic sit inside the dark Studio shell. */
+
+/* Cover mosaic (fills a positioned parent, like ImageSlot). Two or three
+   covers repeat to fill all four cells; the tint shows behind each cover
+   until it loads, then the cover fades in. Plum and default mix the surrounding text
+   colour, so they read on the light picker (ink) and on the dark Studio
+   surface (cream) alike; coral and jade hold up on both. */
+.mosaic {
+  --mosaic-tint: color-mix(in srgb, currentColor 12%, transparent);
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 2px;
+  border-radius: inherit;
+  overflow: hidden;
+}
+
+.mosaic[data-tint="plum"] {
+  --mosaic-tint: color-mix(in srgb, currentColor 18%, transparent);
+}
+
+.mosaic[data-tint="coral"] {
+  --mosaic-tint: rgba(var(--accent-rgb), 0.24);
+}
+
+.mosaic[data-tint="jade"] {
+  --mosaic-tint: rgba(var(--jade-rgb), 0.24);
+}
+
+.mosaicCell {
+  position: relative;
+  background: var(--mosaic-tint);
+}
+
+.mosaicCell img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity var(--dur-base) var(--ease);
+}
+
+.mosaicCell img[data-loaded="true"] {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mosaicCell img {
+    transition: none;
+  }
+}
+
+/* The meta line wraps as a flex row (the credit and count in one span, the
+   chip beside it), so a chip that drops to its own line starts at the line
+   edge like the title above it. */
+.metaRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 6px;
+}
+
+.visibilityChip {
+  display: inline-flex;
+  padding: 1px 8px;
+  border: 1px solid rgba(var(--cream-rgb), 0.28);
+  border-radius: var(--radius-pill);
+  color: var(--text60);
+  font-size: var(--text-11);
+  vertical-align: middle;
+}
+
+/* Dialog. FormField styles its own input and textarea; the form's gap does
+   the spacing, so the field's own bottom margin goes. */
+.form {
+  display: grid;
+  gap: 18px;
+}
+
+.form .formField {
+  margin-bottom: 0;
+}
+
+.radioInput:focus-visible,
+.newRow:focus-visible,
+.pickerRow:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* The whole radio card carries the ring where :has() works; the radio's own
+   ring above stays the fallback. */
+@supports selector(:has(*)) {
+  .radioCard:has(.radioInput:focus-visible) {
+    outline: var(--focus-ring);
+    outline-offset: var(--focus-ring-offset);
+    box-shadow: var(--ring-cream);
+  }
+
+  .radioCard .radioInput:focus-visible {
+    outline: none;
+    box-shadow: none;
+  }
+}
+
+.fieldset {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+/* Matches the shared FormField label beside it (NAME, DESCRIPTION). */
+.legend {
+  margin-bottom: 8px;
+  padding: 0;
+  color: var(--ink-60);
+  font-size: var(--text-11-5);
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.radioCards {
+  display: grid;
+  gap: 8px;
+}
+
+.radioCard {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-12);
+  cursor: pointer;
+  transition-property: border-color, background-color;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+.radioCard:has(.radioInput:checked) {
+  border-color: var(--accent);
+  background: rgba(var(--accent-rgb), 0.06);
+}
+
+.radioInput {
+  flex: none;
+  margin: 3px 0 0;
+  accent-color: var(--accent);
+}
+
+.radioIcon {
+  flex: none;
+  margin-top: 2px;
+  color: var(--ink-60);
+}
+
+.radioText {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.radioTitle {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.radioHint {
+  color: var(--ink-60);
+  font-size: var(--text-13);
+}
+
+.creditAvatar {
+  position: relative;
+  flex: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.note {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: var(--radius-10);
+  background: rgba(var(--plum-rgb), 0.08);
+  font-size: var(--text-13);
+}
+
+.error {
+  margin: 0;
+  color: var(--danger-ink);
+  font-size: var(--text-14);
+}
+
+/* Picker */
+.newRow,
+.pickerRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: var(--tap-min);
+  padding: 8px 10px;
+  border: 0;
+  border-radius: var(--radius-10);
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition-property: background-color;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+.newRow {
+  color: var(--accent-text);
+  font-weight: 600;
+}
+
+.newRowIcon {
+  flex: none;
+}
+
+@media (hover: hover) {
+  .newRow:hover,
+  .pickerRow:hover {
+    background: rgba(var(--ink-rgb), 0.05);
+  }
+}
+
+.newRow[aria-disabled="true"],
+.pickerRow[aria-disabled="true"] {
+  cursor: progress;
+  opacity: 0.7;
+}
+
+.pickerList {
+  display: grid;
+  gap: 2px;
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pickerCover {
+  position: relative;
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-6);
+  overflow: hidden;
+}
+
+.pickerName {
+  flex: 1;
+  min-width: 0;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+
+.pickerMeta {
+  flex: none;
+  color: var(--ink-60);
+  font-size: var(--text-13);
+}
+
+.pickerEmpty {
+  margin: 12px 0 0;
+  color: var(--ink-60);
+}
+
+.pickerSkeleton {
+  display: grid;
+  gap: 12px;
+  padding: 8px 10px;
+}
+
+.pickerMore {
+  margin-top: 12px;
+}

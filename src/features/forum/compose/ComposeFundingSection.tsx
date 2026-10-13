@@ -17,6 +17,8 @@ import type { FundingLinkLookup } from "../funding/useFundingLinkLookup";
 import { ComposeAskFields } from "./ComposeAskFields";
 import { ComposeAskGate } from "./ComposeAskGate";
 import { ComposeCallFields } from "./ComposeCallFields";
+import { ComposeMusicQuickTag } from "./ComposeMusicQuickTag";
+import { memberTagLimitFor } from "./composeThread.types";
 import type { ComposeFunding } from "./composeThread.types";
 import styles from "./ComposeFundingSection.module.css";
 
@@ -35,6 +37,11 @@ export interface ComposeFundingSectionProps {
   askEligibility?: AskEligibility;
   /** The member verified their phone from the gate. */
   onAskVerified?: () => void;
+  /** The post's tags, for the "Music & sound" quick tag on a call. Absent
+   *  hides it (the edit modal keeps tags in its own dialog). */
+  tags?: string[];
+  onAddTag?: (tag: string) => void;
+  onRemoveTag?: (tag: string) => void;
 }
 
 /** The structured details an open call or a fundraiser carries. */
@@ -49,6 +56,9 @@ export function ComposeFundingSection({
   body,
   askEligibility,
   onAskVerified,
+  tags,
+  onAddTag,
+  onRemoveTag,
 }: ComposeFundingSectionProps) {
   const { t } = useTranslation();
   const headingId = useId();
@@ -91,6 +101,14 @@ export function ComposeFundingSection({
         lookup={lookup}
         linkErrorKey={target === "link" ? errorKey : null}
       />
+      {tags && onAddTag && onRemoveTag && (
+        <ComposeMusicQuickTag
+          tags={tags}
+          maxTags={memberTagLimitFor("call")}
+          onAdd={onAddTag}
+          onRemove={onRemoveTag}
+        />
+      )}
     </section>
   );
 }

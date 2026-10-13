@@ -52,12 +52,16 @@ function StillCard({ card }: { card: WithdrawnCard }) {
           </svg>
         </span>
       </div>
-      {card.byCur && <div className={s.byCur}>{card.byCur}</div>}
+      {(card.byCurKey || card.byCur) && (
+        <div className={s.byCur}>
+          {card.byCurKey ? t(card.byCurKey) : card.byCur}
+        </div>
+      )}
       <h4>
         {card.titlePre}
         {card.titleEm && <em>{card.titleEm}</em>}
       </h4>
-      <div className={s.meta}>{card.meta}</div>
+      <div className={s.meta}>{t(card.metaKey, card.metaValues)}</div>
     </>
   );
 
@@ -159,7 +163,7 @@ export function StudioWithdrawnPage() {
           </div>
           <div className={s.rowGrid}>
             {STILL_AVAILABLE.map((card) => (
-              <StillCard key={card.titlePre + card.meta} card={card} />
+              <StillCard key={card.titlePre + card.metaKey} card={card} />
             ))}
           </div>
         </div>

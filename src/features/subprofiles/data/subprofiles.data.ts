@@ -143,7 +143,9 @@ const NIGHTFORM: DemoSubprofile = {
   endorsementCount: 3,
   viewerEndorsed: false,
   followerCount: 41,
-  viewerFollowing: false,
+  // Matches the followed-personas seed, so the page, the library and the
+  // Studio artist hero all show the demo viewer following NIGHTFORM.
+  viewerFollowing: true,
   skinData: {
     booker: {
       fee: "€400–600, depending on set length",

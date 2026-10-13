@@ -6,14 +6,16 @@ import { useScrollReveal } from "../../shared/hooks";
 import { routes } from "../../app/routeMap";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useFormat } from "../../shared/i18n/format";
+import { useFormat, type Formatters } from "../../shared/i18n/format";
 import { SUSTAIN_PRICE } from "./studioShell.data";
 import {
   PROMISES,
   PAYOUT_TOTAL,
   COUNTER_STATS,
   COMPARE,
+  type CounterStat,
 } from "./studioLanding.data";
+import { StudioEuroAmount } from "./StudioEuroAmount";
 import styles from "./StudioLandingPage.module.css";
 
 export function StudioLandingPromises() {
@@ -47,6 +49,18 @@ export function StudioLandingPromises() {
   );
 }
 
+/** A counter figure in the active locale: "€0.05" / "0,05 €", "80.3%" / "80,3 %". */
+function formatCounterStat(stat: CounterStat, fmt: Formatters): string {
+  const digits = {
+    minimumFractionDigits: stat.fractionDigits ?? 0,
+    maximumFractionDigits: stat.fractionDigits ?? 0,
+  };
+  if (stat.style === "currency") return fmt.currency(stat.value, "EUR", digits);
+  if (stat.style === "percent")
+    return fmt.number(stat.value / 100, { style: "percent", ...digits });
+  return fmt.number(stat.value, digits);
+}
+
 const LEDGER_ARTIST_COUNT = 2138;
 const LEDGER_CYCLE_COUNT = 5;
 
@@ -54,6 +68,13 @@ export function StudioLandingCounter() {
   const { ref, isVisible } = useScrollReveal<HTMLDivElement>();
   const { t } = useTranslation();
   const fmt = useFormat();
+  // The euro mark's side follows the locale: "€" before in EN, " €" after in PT.
+  const [euroBefore, euroAfter] = fmt
+    .currency(0, "EUR", {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    })
+    .split("0");
 
   return (
     <section className={styles.counter} id="artists">
@@ -69,7 +90,7 @@ export function StudioLandingCounter() {
           />
         </h2>
         <div className={styles.bigN}>
-          €
+          {euroBefore}
           <em>
             <RollingNumber
               value={fmt.number(PAYOUT_TOTAL)}
@@ -78,6 +99,7 @@ export function StudioLandingCounter() {
               isRevealed={isVisible}
             />
           </em>
+          {euroAfter}
         </div>
         <p className={styles.counterSub}>
           {t("studio:landing.counter.sub", {
@@ -95,7 +117,7 @@ export function StudioLandingCounter() {
             <div key={s.labelKey} className={styles.cs}>
               <div className={styles.v}>
                 <em>
-                  {(s.prefix ?? "") + fmt.number(s.value) + (s.suffix ?? "")}
+                  {formatCounterStat(s, fmt)}
                   {s.unitKey ? ` ${t(s.unitKey)}` : ""}
                 </em>
               </div>
@@ -129,7 +151,9 @@ export function StudioLandingComparison() {
             >
               <div className={styles.lbl}>{t(c.labelKey)}</div>
               <div className={styles.v}>
-                <em>{c.value}</em>
+                <em>
+                  <StudioEuroAmount value={c.value} />
+                </em>
               </div>
               <div className={styles.ctx}>{t(c.ctxKey)}</div>
             </div>

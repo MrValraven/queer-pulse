@@ -1,6 +1,8 @@
 import type { ReactNode } from "react";
 import { FiHeart, FiClock, FiMonitor } from "react-icons/fi";
 import { routes } from "../../app/routeMap";
+import type { Formatters } from "../../shared/i18n/format";
+import type { TranslateOptions } from "../../shared/i18n/types";
 
 export type NotifType = "reply" | "release" | "live";
 
@@ -30,17 +32,45 @@ export type NotifIcon =
 
 export type NotifAction = { labelKey: string };
 
+/**
+ * A `studioShowcase` catalog key plus its interpolation values. Euro figures
+ * sit in `euroValues` as numbers so they format in the active locale.
+ */
+export type NotifText = {
+  key: string;
+  values?: TranslateOptions;
+  euroValues?: Record<string, number>;
+};
+
+/** The interpolation values of a {@link NotifText}, euros formatted ("€2" / "2 €"). */
+export function notifValues(
+  text: NotifText,
+  fmt: Formatters,
+): TranslateOptions | undefined {
+  if (!text.euroValues) return text.values;
+  const values: TranslateOptions = { ...text.values };
+  for (const [token, amount] of Object.entries(text.euroValues)) {
+    const fractionDigits = Number.isInteger(amount) ? 0 : 2;
+    values[token] = fmt.currency(amount, "EUR", {
+      minimumFractionDigits: fractionDigits,
+      maximumFractionDigits: fractionDigits,
+    });
+  }
+  return values;
+}
+
 export type NotifItem = {
   id: string;
   type: NotifType;
   to: string;
   unread: boolean;
   day: "today" | "week";
-  time: string;
+  time: NotifText;
   icon: NotifIcon;
-  title: ReactNode;
-  reply?: string;
-  meta: ReactNode;
+  /** Rendered through `<Translation>`; the value may carry `<strong>` and `<em>` runs. */
+  title: NotifText;
+  replyKey?: string;
+  meta: NotifText;
   action?: NotifAction;
 };
 
@@ -51,15 +81,21 @@ export const NOTIFICATIONS: NotifItem[] = [
     to: routes.studioLibrary,
     unread: true,
     day: "today",
-    time: "22 min",
+    time: {
+      key: "studioShowcase:notifications.time.minutes",
+      values: { minutes: 22 },
+    },
     icon: { kind: "av", initials: "MS" },
-    title: (
-      <>
-        <strong>Mariana Sol</strong> replied to your <em>€2 tip</em>
-      </>
-    ),
-    reply: '"rita ily, this one really was for the mães. see you Wednesday."',
-    meta: <>on “Carta para a santa”</>,
+    title: {
+      key: "studioShowcase:notifications.items.tipReply.title",
+      values: { name: "Mariana Sol" },
+      euroValues: { amount: 2 },
+    },
+    replyKey: "studioShowcase:notifications.items.marianaReply.reply",
+    meta: {
+      key: "studioShowcase:notifications.items.onTrack",
+      values: { track: "Carta para a santa" },
+    },
   },
   {
     id: "wednesday-set",
@@ -67,15 +103,16 @@ export const NOTIFICATIONS: NotifItem[] = [
     to: routes.studioLive,
     unread: true,
     day: "today",
-    time: "now",
+    time: { key: "studioShowcase:notifications.time.now" },
     icon: { kind: "live", node: <FiMonitor /> },
-    title: (
-      <>
-        The <strong>Wednesday set</strong> is <em>live now</em>, Sara Marques
-        programming
-      </>
-    ),
-    meta: <>312 in the room · contains 3 artists you follow</>,
+    title: {
+      key: "studioShowcase:notifications.items.wednesdaySetLive.title",
+      values: { curator: "Sara Marques" },
+    },
+    meta: {
+      key: "studioShowcase:notifications.items.wednesdaySetLive.meta",
+      values: { listeners: 312, count: 3 },
+    },
     action: { labelKey: "studio:notifications.action.joinRoom" },
   },
   {
@@ -84,15 +121,19 @@ export const NOTIFICATIONS: NotifItem[] = [
     to: routes.studioAlbum,
     unread: true,
     day: "today",
-    time: "3h",
+    time: {
+      key: "studioShowcase:notifications.time.hours",
+      values: { hours: 3 },
+    },
     icon: { kind: "av", initials: "AD", jade: true },
-    title: (
-      <>
-        <strong>Akin Diallo</strong> released a new single,{" "}
-        <em>Salt water, slowly (live)</em>
-      </>
-    ),
-    meta: <>From an artist you sustain at €3/mo · free for sustainers</>,
+    title: {
+      key: "studioShowcase:notifications.items.newSingle.title",
+      values: { name: "Akin Diallo", track: "Salt water, slowly (live)" },
+    },
+    meta: {
+      key: "studioShowcase:notifications.items.newSingle.meta",
+      euroValues: { amount: 3 },
+    },
   },
   {
     id: "okoye-collection",
@@ -100,15 +141,19 @@ export const NOTIFICATIONS: NotifItem[] = [
     to: routes.studioCollection,
     unread: false,
     day: "today",
-    time: "6h",
+    time: {
+      key: "studioShowcase:notifications.time.hours",
+      values: { hours: 6 },
+    },
     icon: { kind: "av", initials: "DO" },
-    title: (
-      <>
-        <strong>D. Okoye</strong> added a track you tipped to a collection,{" "}
-        <em>Songs for insomnia</em>
-      </>
-    ),
-    meta: <>“Carta para a santa” now appears in 2 council collections</>,
+    title: {
+      key: "studioShowcase:notifications.items.collectionAdd.title",
+      values: { name: "D. Okoye", collection: "Songs for insomnia" },
+    },
+    meta: {
+      key: "studioShowcase:notifications.items.collectionAdd.meta",
+      values: { track: "Carta para a santa", count: 2 },
+    },
   },
   {
     id: "pedro-reply",
@@ -116,16 +161,18 @@ export const NOTIFICATIONS: NotifItem[] = [
     to: routes.studioLibrary,
     unread: false,
     day: "week",
-    time: "Tue",
+    time: { key: "studioShowcase:notifications.time.weekday.tue" },
     icon: { kind: "av", initials: "PL", jade: true },
-    title: (
-      <>
-        <strong>Pedro Limão</strong> replied to your <em>€5 tip</em>
-      </>
-    ),
-    reply:
-      '"this song lives in your head rent-free? it lives in mine too. obrigado."',
-    meta: <>on “Pedro on the 25” · 5 days ago</>,
+    title: {
+      key: "studioShowcase:notifications.items.tipReply.title",
+      values: { name: "Pedro Limão" },
+      euroValues: { amount: 5 },
+    },
+    replyKey: "studioShowcase:notifications.items.pedroReply.reply",
+    meta: {
+      key: "studioShowcase:notifications.items.onTrackDaysAgo",
+      values: { track: "Pedro on the 25", count: 5 },
+    },
   },
   {
     id: "monthly-recap",
@@ -133,15 +180,17 @@ export const NOTIFICATIONS: NotifItem[] = [
     to: routes.studioReceipt,
     unread: false,
     day: "week",
-    time: "Mon",
+    time: { key: "studioShowcase:notifications.time.weekday.mon" },
     icon: { kind: "sys", node: euroIcon },
-    title: (
-      <>
-        Your monthly recap is in: you paid <strong>€31</strong> to{" "}
-        <em>9 artists</em> in May
-      </>
-    ),
-    meta: <>€7 sustainer · €24 direct subscriptions · view the breakdown</>,
+    title: {
+      key: "studioShowcase:notifications.items.monthlyRecap.title",
+      values: { count: 9 },
+      euroValues: { amount: 31 },
+    },
+    meta: {
+      key: "studioShowcase:notifications.items.monthlyRecap.meta",
+      euroValues: { sustainer: 7, direct: 24 },
+    },
   },
   {
     id: "mariana-premiere",
@@ -149,15 +198,13 @@ export const NOTIFICATIONS: NotifItem[] = [
     to: routes.studioLive,
     unread: false,
     day: "week",
-    time: "Mon",
+    time: { key: "studioShowcase:notifications.time.weekday.mon" },
     icon: { kind: "live", node: <FiClock /> },
-    title: (
-      <>
-        <strong>Mariana Sol</strong> set a premiere: <em>Cidade dos santos</em>,
-        all 11 tracks
-      </>
-    ),
-    meta: <>10 Jun · 21:00 Lisbon · listening room · you'll be reminded</>,
+    title: {
+      key: "studioShowcase:notifications.items.premiereSet.title",
+      values: { name: "Mariana Sol", album: "Cidade dos santos", count: 11 },
+    },
+    meta: { key: "studioShowcase:notifications.items.premiereSet.meta" },
     action: { labelKey: "studio:notifications.action.rsvp" },
   },
   {
@@ -166,15 +213,13 @@ export const NOTIFICATIONS: NotifItem[] = [
     to: "/studio/solidarity-fund",
     unread: false,
     day: "week",
-    time: "Sun",
+    time: { key: "studioShowcase:notifications.time.weekday.sun" },
     icon: { kind: "sys", node: <FiHeart /> },
-    title: (
-      <>
-        Your <em>tip round-ups</em> helped the solidarity fund replace a stolen
-        accordion
-      </>
-    ),
-    meta: <>€1.80 of your round-ups went to emergency support this quarter</>,
+    title: { key: "studioShowcase:notifications.items.solidarityFund.title" },
+    meta: {
+      key: "studioShowcase:notifications.items.solidarityFund.meta",
+      euroValues: { amount: 1.8 },
+    },
   },
 ];
 

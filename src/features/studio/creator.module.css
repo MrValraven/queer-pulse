@@ -231,6 +231,19 @@
   position: relative;
   z-index: 1;
 }
+/* The payouts hero lays its copy beside the breakdown card; one column on a phone. */
+.heroSplit {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 40px;
+  align-items: end;
+}
+@media (--md) {
+  .heroSplit {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+}
 .eb {
   display: inline-flex;
   align-items: center;
@@ -409,7 +422,8 @@
 }
 .rangeBtnOn {
   background: var(--accent);
-  color: rgba(var(--cream-rgb), 1);
+  /* Dark ink on the coral fill: 6.28:1. */
+  color: var(--studio-bg);
   border-color: var(--accent);
 }
 .chart {
@@ -701,7 +715,8 @@
 }
 .stepOn .stepNum {
   background: var(--accent);
-  color: rgba(var(--cream-rgb), 1);
+  /* Dark ink on the coral fill: 6.28:1. */
+  color: var(--studio-bg);
 }
 .stepNm {
   font-size: var(--text-14);
@@ -970,6 +985,36 @@
 .payRow:last-child {
   border-bottom: none;
 }
+.payCopy {
+  min-width: 0;
+}
+/* Phones: the title takes the whole width beside the date, with the amount
+   and status sharing a second line under it */
+@media (--md) {
+  .payRow {
+    grid-template-columns: 36px minmax(0, 1fr) auto;
+    column-gap: 12px;
+    row-gap: 6px;
+  }
+  .payRow .payDate {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+  }
+  .payRow .payCopy {
+    grid-column: 2 / -1;
+    grid-row: 1;
+  }
+  .payRow .payAmt {
+    grid-column: 2;
+    grid-row: 2;
+    justify-self: start;
+  }
+  .payRow .payStatus {
+    grid-column: 3;
+    grid-row: 2;
+    justify-self: end;
+  }
+}
 .payDate {
   text-align: center;
 }
@@ -1068,14 +1113,53 @@
   color: var(--text40);
   font-size: var(--text-12);
 }
+/* Every row is its own grid, so a shared minimum on the total keeps the
+   plays and rate columns lined up from row to row */
 .bdRow .bdTotal {
   font-family: var(--serif);
   color: var(--text);
   white-space: nowrap;
+  min-width: 6.5em;
+  text-align: end;
 }
 .bdRow .bdTotal em {
   font-style: normal;
   color: var(--accent);
+}
+/* Plays and rate share one wrapper: on desktop it dissolves so both stay
+   their own grid columns; on phones it becomes one cell under the name */
+.bdRow .bdMeta {
+  display: contents;
+}
+@media (--md) {
+  .bdRow {
+    grid-template-columns: 32px minmax(0, 1fr) auto;
+    row-gap: 4px;
+  }
+  .bdRow .n {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .bdRow .nm {
+    grid-column: 2;
+    grid-row: 1;
+    min-width: 0;
+  }
+  .bdRow .bdTotal {
+    grid-column: 3;
+    grid-row: 1;
+    min-width: 0;
+  }
+  .bdRow .bdMeta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    column-gap: 8px;
+    row-gap: 2px;
+    grid-column: 2;
+    grid-row: 2;
+    min-width: 0;
+  }
 }
 .bdFoot {
   display: flex;
@@ -1090,6 +1174,7 @@
   font-family: var(--serif);
   font-size: var(--text-18);
   color: var(--text);
+  white-space: nowrap;
 }
 .bdFoot .v em {
   font-style: normal;
@@ -1100,6 +1185,7 @@
 .ln {
   display: flex;
   justify-content: space-between;
+  gap: 12px;
   padding: 8px 0;
   border-bottom: 1px solid var(--line);
   font-size: var(--text-13-5);
@@ -1111,6 +1197,7 @@
 .ln .v2 {
   font-family: var(--serif);
   color: var(--text);
+  white-space: nowrap;
 }
 .ln .v2 em {
   font-style: normal;

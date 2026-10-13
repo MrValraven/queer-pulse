@@ -1,36 +1,47 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { FILE, WF } from "./studioTriage.data";
+import { buildFile, WF } from "./studioTriage.data";
 import s from "./council.module.css";
 
-/** This specific submission's artist name — content, interpolated into the
- * translated decision copy below. */
+/** This specific submission's artist name, interpolated into the translated
+ * decision copy below. */
 const CURRENT_SUBMISSION_ARTIST_NAME = "Renato";
 
-// Content — this submission's title, artist line, claim status, and
-// reviewer comments, comes from the submission record in live mode.
+// This submission's title, artist line and people stay literal (titles and
+// names); the claim status and curator quotes resolve through
+// `studioShowcase:triage.detail.*`.
 const SUBMISSION_TITLE_PRE = "The piano ";
 const SUBMISSION_TITLE_EM = "I waited for";
 const SUBMISSION_ARTIST_LINE = "Renato V. · Porto · single · 4:40";
 const CLAIMANT_INITIALS = "SM";
-const CLAIM_STATUS_HEADLINE = "Claimed by Sara M.";
-const CLAIM_STATUS_NOTE = "You're answering this one. ";
-const SECOND_READER_NOTE = "D. Okoye second-reading queued.";
-const FLAGGED_COMMENTS =
-  'D. Okoye: "the bridge at 2:14 is the thing." · João R.: "PT feels ' +
-  'regional: Porto, not Lisbon." · Yara R.: "i\'d put this on the ' +
-  'standards collection in a year, easily."';
+const CLAIMANT_NAME = "Sara M.";
+const SECOND_READER_NAME = "D. Okoye";
+const FLAGGED_COMMENTS: { curator: string; quoteKey: string }[] = [
+  {
+    curator: "D. Okoye",
+    quoteKey: "studioShowcase:triage.detail.flagged.bridge",
+  },
+  {
+    curator: "João R.",
+    quoteKey: "studioShowcase:triage.detail.flagged.regional",
+  },
+  {
+    curator: "Yara R.",
+    quoteKey: "studioShowcase:triage.detail.flagged.standards",
+  },
+];
 
 export function StudioTriageDetail() {
   const { t } = useTranslation();
   const { showToast } = useToast();
   // Demo-only triage: the note and decision are held in local state and
-  // reflected below the actions so a decision is visibly recorded, rather than
-  // a bare toast that implies persistence (studio is coming-soon in live).
+  // reflected below the actions so a decision is visibly recorded; a bare
+  // toast alone would imply persistence (studio is coming-soon in live).
   const [note, setNote] = useState("");
   const [decision, setDecision] = useState<string | null>(null);
+  const fileRows = useMemo(() => buildFile(t), [t]);
 
   function record(message: string, tone: "info" | "success") {
     setDecision(message);
@@ -66,7 +77,7 @@ export function StudioTriageDetail() {
             </svg>
           </button>
           <div className={s.pmTimes}>
-            <span className="e" style={{ color: "var(--accent)" }}>
+            <span className={s.e} style={{ color: "var(--accent)" }}>
               1:48
             </span>
             <span>4:40</span>
@@ -75,18 +86,26 @@ export function StudioTriageDetail() {
       </div>
 
       <div className={s.claimRow}>
-        <div className="av">{CLAIMANT_INITIALS}</div>
+        <div className={s.av}>{CLAIMANT_INITIALS}</div>
         <div className={s.text}>
-          <b>{CLAIM_STATUS_HEADLINE}</b>
-          {CLAIM_STATUS_NOTE}
-          <em>{SECOND_READER_NOTE}</em>
+          <b>
+            {t("studioShowcase:triage.detail.claim.headline", {
+              name: CLAIMANT_NAME,
+            })}
+          </b>
+          {t("studioShowcase:triage.detail.claim.note")}{" "}
+          <em>
+            {t("studioShowcase:triage.detail.claim.secondReader", {
+              name: SECOND_READER_NAME,
+            })}
+          </em>
         </div>
       </div>
 
       <div className={s.detailBlock}>
         <h4>{t("studio:triage.detail.fileHeading")}</h4>
         <div className={s.dGrid}>
-          {FILE.map(([labelKey, value], fileRowIndex) => (
+          {fileRows.map(([labelKey, value], fileRowIndex) => (
             <span key={fileRowIndex} style={{ display: "contents" }}>
               <span className={s.k}>{t(labelKey)}</span>
               <span className={s.v}>{value}</span>
@@ -98,7 +117,9 @@ export function StudioTriageDetail() {
       <div className={s.detailBlock}>
         <h4>{t("studio:triage.detail.flaggedHeading", { count: 3 })}</h4>
         <p style={{ fontStyle: "italic", color: "rgba(247,243,238,.6)" }}>
-          {FLAGGED_COMMENTS}
+          {FLAGGED_COMMENTS.map(
+            ({ curator, quoteKey }) => `${curator}: "${t(quoteKey)}"`,
+          ).join(" · ")}
         </p>
       </div>
 
@@ -121,7 +142,7 @@ export function StudioTriageDetail() {
           onChange={(event) => setNote(event.target.value)}
         />
         <div
-          className="hint"
+          className={s.hint}
           style={{
             fontSize: 11.5,
             color: "rgba(247,243,238,.5)",
@@ -136,7 +157,7 @@ export function StudioTriageDetail() {
           />
         </div>
         <div
-          className="actions"
+          className={s.actions}
           style={{
             display: "flex",
             gap: 8,

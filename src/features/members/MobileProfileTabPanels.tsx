@@ -14,6 +14,7 @@ import { RelatedSection } from "./ProfileRelatedSection";
 import { NowSection } from "./now/NowSection";
 import { ProfileCommunitiesSection } from "./ProfileCommunitiesSection";
 import { PlacesSection } from "./PlacesSection";
+import { ProfileStudioPlaylists } from "./ProfileStudioPlaylists";
 import { MobileProfileTabEmptyState } from "./MobileProfileTabEmptyState";
 import styles from "./MobileProfile.module.css";
 
@@ -122,6 +123,17 @@ export function MobileProfileTabPanels({
           </SectionWrap>
           {/* Self-wraps (also rendered bare on desktop) — no SectionWrap. */}
           <PlacesSection
+            memberSlug={memberSlug}
+            isSelf={selfView}
+            firstName={firstName}
+          />
+          {/* Studio v2: the member's Studio playlists, same props as the
+              desktop `ProfileBelowHeroSections`. Self-wraps and renders no
+              node until there are playlists to show, so the empty-state
+              `:has()` rule still reads it right. These tabs render in read
+              mode only (a phone editing its profile gets
+              `ProfileBelowHeroSections`), so the desktop editing gate holds. */}
+          <ProfileStudioPlaylists
             memberSlug={memberSlug}
             isSelf={selfView}
             firstName={firstName}

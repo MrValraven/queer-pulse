@@ -1,6 +1,23 @@
-import type { ReactNode } from "react";
+import type { TFunction, TranslateOptions } from "../../shared/i18n/types";
 
 export type Tint = "coral" | "jade" | "plum" | "default";
+
+/** A `studioShowcase` catalog key plus its interpolation values. */
+export interface KeyedText {
+  key: string;
+  values?: TranslateOptions;
+}
+
+/**
+ * Text that is either literal (proper nouns only, or a note the curator
+ * typed in the UI) or a catalog key resolved at render.
+ */
+export type LocalText = string | KeyedText;
+
+/** Resolves a `LocalText` for display in the active language. */
+export function resolveText(text: LocalText, t: TFunction): string {
+  return typeof text === "string" ? text : t(text.key, text.values);
+}
 
 /** The headline cover artist of the week. */
 export interface Cover {
@@ -8,8 +25,9 @@ export interface Cover {
   tint: Tint;
   titlePre: string;
   titleEm: string;
-  by: string;
-  note: ReactNode;
+  by: KeyedText;
+  /** Catalog key; the value carries an `<em>` run. */
+  noteKey: string;
 }
 
 /** A single placed in the week's slate. Note is editable in the UI. */
@@ -19,8 +37,8 @@ export interface Single {
   tint: Tint;
   titlePre: string;
   titleEm: string;
-  who: string;
-  note: string;
+  who: LocalText;
+  note: LocalText;
 }
 
 /** A curated collection rotating this week. */
@@ -28,8 +46,8 @@ export interface Collection {
   id: string;
   titlePre: string;
   titleEm: string;
-  meta: string;
-  badge: string;
+  meta: KeyedText;
+  badge: KeyedText;
   badgeTone: "in" | "out" | "flat";
 }
 
@@ -37,10 +55,12 @@ export interface Collection {
 export interface Broadcast {
   id: string;
   day: string;
-  weekday: string;
+  weekdayKey: string;
+  /** Catalog key for a chrome label shown before the title. */
+  leadKey?: string;
   titlePre: string;
   titleEm: string;
-  meta: string;
+  meta: KeyedText;
   time: string;
 }
 
@@ -51,8 +71,8 @@ export interface Submission {
   tint: Tint;
   titlePre: string;
   titleEm: string;
-  who: string;
-  quote: string;
+  who: LocalText;
+  quoteKey: string;
 }
 
 export const COVER: Cover = {
@@ -61,15 +81,11 @@ export const COVER: Cover = {
   tint: "coral",
   titlePre: "Cidade dos ",
   titleEm: "santos",
-  by: "Mariana Sol · Sintra · debut album · 11 tracks · premiere Wed 10 Jun",
-  note: (
-    <>
-      <em>Stay through the second verse of track six.</em> A Beja-born
-      songwriter on her own terms, finally. Eleven tracks of fado-pop, addressed
-      plainly to a saint who isn't listening. The Wednesday set will end with
-      the album closer.
-    </>
-  ),
+  by: {
+    key: "studioShowcase:program.cover.by",
+    values: { artist: "Mariana Sol", city: "Sintra", count: 11 },
+  },
+  noteKey: "studioShowcase:program.cover.note",
 };
 
 export const SINGLES: Single[] = [
@@ -81,7 +97,7 @@ export const SINGLES: Single[] = [
     titlePre: "The kitchen in ",
     titleEm: "April",
     who: "Rita Ferreira · Évora · 2026",
-    note: "A patient piano ballad about coming home to a mother who left the radio on.",
+    note: { key: "studioShowcase:program.singles.note.kitchenInApril" },
   },
   {
     id: "s2",
@@ -91,7 +107,7 @@ export const SINGLES: Single[] = [
     titlePre: "Bicha, with ",
     titleEm: "love",
     who: "Mateus F. & DJ Carrasco",
-    note: "Six speakers, one Brazilian word, now a 120-bpm dancefloor edit. The remix the original always wanted.",
+    note: { key: "studioShowcase:program.singles.note.bichaWithLove" },
   },
   {
     id: "s3",
@@ -100,8 +116,11 @@ export const SINGLES: Single[] = [
     tint: "plum",
     titlePre: "Cantiga para a ",
     titleEm: "vizinha",
-    who: "Coro de Outubro · Lisbon",
-    note: "Fifteen trans voices, recorded live in a kitchen. No reverb. No edits.",
+    who: {
+      key: "studioShowcase:program.singles.who.lisbon",
+      values: { artist: "Coro de Outubro" },
+    },
+    note: { key: "studioShowcase:program.singles.note.cantigaParaAVizinha" },
   },
   {
     id: "s4",
@@ -110,8 +129,11 @@ export const SINGLES: Single[] = [
     tint: "jade",
     titlePre: "Pedro on the ",
     titleEm: "25",
-    who: "Pedro Limão · Lisbon",
-    note: "A tram, a saxophone, and the only honest song about cruising the Praça do Comércio I've heard this year.",
+    who: {
+      key: "studioShowcase:program.singles.who.lisbon",
+      values: { artist: "Pedro Limão" },
+    },
+    note: { key: "studioShowcase:program.singles.note.pedroOnThe25" },
   },
   {
     id: "s5",
@@ -121,7 +143,7 @@ export const SINGLES: Single[] = [
     titlePre: "Salt water, ",
     titleEm: "slowly",
     who: "Akin Diallo · Dakar / Paris",
-    note: "A Wolof-language elegy for a brother who didn't get on the boat. Sparse, tidal, breathtaking.",
+    note: { key: "studioShowcase:program.singles.note.saltWaterSlowly" },
   },
   {
     id: "s6",
@@ -130,8 +152,11 @@ export const SINGLES: Single[] = [
     tint: "plum",
     titlePre: "If you have to ",
     titleEm: "ask",
-    who: "Yara Reis · Lisbon",
-    note: "Eighty seconds of unaccompanied vocal. A 1970s dyke-bar standard, sung from memory.",
+    who: {
+      key: "studioShowcase:program.singles.who.lisbon",
+      values: { artist: "Yara Reis" },
+    },
+    note: { key: "studioShowcase:program.singles.note.ifYouHaveToAsk" },
   },
   {
     id: "s7",
@@ -151,7 +176,7 @@ export const SINGLES: Single[] = [
     titlePre: "Carnation, ",
     titleEm: "still",
     who: "Sofía Castro · Porto",
-    note: "Fifty years on, a new song for the revolution. A waltz, in 5/4.",
+    note: { key: "studioShowcase:program.singles.note.carnationStill" },
   },
 ];
 
@@ -160,24 +185,44 @@ export const COLLECTIONS: Collection[] = [
     id: "c1",
     titlePre: "Songs to play your ",
     titleEm: "mother",
-    meta: "curated by Sara Marques · 14 tracks",
-    badge: "3 in / 1 out",
+    meta: {
+      key: "studioShowcase:program.collections.meta.curatedBy",
+      values: { curator: "Sara Marques", count: 14 },
+    },
+    badge: {
+      key: "studioShowcase:program.collections.badge.inOut",
+      values: { added: 3, removed: 1 },
+    },
     badgeTone: "in",
   },
   {
     id: "c2",
     titlePre: "Lisbon dyke-bar ",
     titleEm: "standards",
-    meta: "by Yara Reis · 28 tracks",
-    badge: "no change",
+    meta: {
+      key: "studioShowcase:program.collections.meta.by",
+      values: { curator: "Yara Reis", count: 28 },
+    },
+    badge: { key: "studioShowcase:program.collections.badge.noChange" },
     badgeTone: "flat",
   },
   {
     id: "c3",
     titlePre: "Trans choral, ",
     titleEm: "worldwide",
-    meta: "by D. Okoye · 22 tracks · 2 new from Tokyo Trans Choir",
-    badge: "2 in",
+    meta: {
+      key: "studioShowcase:program.collections.meta.byWithNew",
+      values: {
+        curator: "D. Okoye",
+        count: 22,
+        newCount: 2,
+        source: "Tokyo Trans Choir",
+      },
+    },
+    badge: {
+      key: "studioShowcase:program.collections.badge.in",
+      values: { added: 2 },
+    },
     badgeTone: "in",
   },
 ];
@@ -186,19 +231,26 @@ export const BROADCASTS: Broadcast[] = [
   {
     id: "b1",
     day: "10",
-    weekday: "Wed",
+    weekdayKey: "studioShowcase:program.broadcasts.weekday.wed",
     titlePre: "Vespertina ",
     titleEm: "vol. iv",
-    meta: "Sara Marques · 1h 42m · the Wednesday set · live waveform + chat",
+    meta: {
+      key: "studioShowcase:program.broadcasts.meta.wednesdaySet",
+      values: { host: "Sara Marques", duration: "1h 42m" },
+    },
     time: "21:00 LIS",
   },
   {
     id: "b2",
     day: "11",
-    weekday: "Thu",
-    titlePre: "Premiere · ",
+    weekdayKey: "studioShowcase:program.broadcasts.weekday.thu",
+    leadKey: "studioShowcase:program.broadcasts.premiereLead",
+    titlePre: "",
     titleEm: "Cidade dos santos",
-    meta: "Mariana Sol · listening room · all 11 tracks · captioned EN + PT",
+    meta: {
+      key: "studioShowcase:program.broadcasts.meta.premiere",
+      values: { host: "Mariana Sol", count: 11 },
+    },
     time: "21:00 LIS",
   },
 ];
@@ -211,9 +263,11 @@ export const INBOX: Submission[] = [
     tint: "coral",
     titlePre: "The piano ",
     titleEm: "I waited for",
-    who: "Renato V. · Porto · first submission",
-    quote:
-      "i'm a 56-year-old former dock worker. i bought a piano at 49 and i'm writing the songs i should have written at 24.",
+    who: {
+      key: "studioShowcase:program.inbox.who.firstSubmission",
+      values: { name: "Renato V.", city: "Porto" },
+    },
+    quoteKey: "studioShowcase:program.inbox.quote.pianoIWaitedFor",
   },
   {
     id: "i2",
@@ -222,9 +276,11 @@ export const INBOX: Submission[] = [
     tint: "plum",
     titlePre: "Coro de ",
     titleEm: "Porto",
-    who: "eight voices · Porto",
-    quote:
-      "we're the porto cousin of coro de outubro. four songs of our own, all in mirandês.",
+    who: {
+      key: "studioShowcase:program.inbox.who.choir",
+      values: { city: "Porto" },
+    },
+    quoteKey: "studioShowcase:program.inbox.quote.coroDePorto",
   },
   {
     id: "i3",
@@ -233,9 +289,11 @@ export const INBOX: Submission[] = [
     tint: "jade",
     titlePre: "Tomboy · ",
     titleEm: "Outubro",
-    who: "DJ from São Paulo · second submission",
-    quote:
-      "sapatão-sci-fi mix, 38 minutes, all heard from below the dancefloor.",
+    who: {
+      key: "studioShowcase:program.inbox.who.djSecondSubmission",
+      values: { city: "São Paulo" },
+    },
+    quoteKey: "studioShowcase:program.inbox.quote.tomboyOutubro",
   },
   {
     id: "i4",
@@ -244,8 +302,11 @@ export const INBOX: Submission[] = [
     tint: "coral",
     titlePre: "Ainda",
     titleEm: "",
-    who: "Helena P. · Aveiro · first single",
-    quote: "two minutes and forty-six seconds. a piano and a small fire.",
+    who: {
+      key: "studioShowcase:program.inbox.who.firstSingle",
+      values: { name: "Helena P.", city: "Aveiro" },
+    },
+    quoteKey: "studioShowcase:program.inbox.quote.ainda",
   },
   {
     id: "i5",
@@ -255,8 +316,7 @@ export const INBOX: Submission[] = [
     titlePre: "House for the ",
     titleEm: "still",
     who: "Akim N. · Berlin / Luanda",
-    quote:
-      "slow house for people who don't drink anymore. recorded in one take.",
+    quoteKey: "studioShowcase:program.inbox.quote.houseForTheStill",
   },
   {
     id: "i6",
@@ -265,7 +325,10 @@ export const INBOX: Submission[] = [
     tint: "plum",
     titlePre: "Tia, ",
     titleEm: "obrigada",
-    who: "Júlia B. · Salvador · 1 of 8 tracks",
-    quote: "an album in mãe-tongue, mostly. one song per aunt in my life.",
+    who: {
+      key: "studioShowcase:program.inbox.who.trackOfAlbum",
+      values: { name: "Júlia B.", city: "Salvador", position: 1, total: 8 },
+    },
+    quoteKey: "studioShowcase:program.inbox.quote.tiaObrigada",
   },
 ];

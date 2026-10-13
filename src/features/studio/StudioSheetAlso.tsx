@@ -68,7 +68,9 @@ export function StudioSheetAlso() {
                 {a.pre}
                 <em>{a.em}</em>
               </h4>
-              <div className={ss.meta}>{a.who}</div>
+              <div className={ss.meta}>
+                {a.who} · {t(a.formatKey)}
+              </div>
             </FadeIn>
           ))}
         </div>

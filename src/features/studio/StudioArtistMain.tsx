@@ -1,6 +1,8 @@
+import { Collapse } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { StudioArtistView } from "./api/studio.adapters";
+import { StudioPlaylistCard } from "./StudioPlaylistCard";
 import { StudioReleaseCard } from "./StudioReleaseCard";
 import { releaseFactsLine } from "./studioFacts";
 import type { ArtistTabId } from "./studioArtist.data";
@@ -33,7 +35,10 @@ export function StudioArtistMain({
     );
   }
 
-  if (artist.releases.length + artist.singles.length === 0) {
+  if (
+    artist.releases.length + artist.singles.length + artist.playlists.length ===
+    0
+  ) {
     return (
       <p className={ownerStyles.note}>{t("studio:artistPage.noReleases")}</p>
     );
@@ -78,6 +83,21 @@ export function StudioArtistMain({
           </div>
         </>
       )}
+      <Collapse isOpen={artist.playlists.length > 0}>
+        <div className={`${styles.rowH} ${kit.sectionGap}`}>
+          <h2>
+            <Translation
+              i18nKey="studio:artistPage.section.playlists"
+              components={{ em: <em /> }}
+            />
+          </h2>
+        </div>
+        <div className={`${styles.rowGrid} ${kit.rowGrid5}`}>
+          {artist.playlists.map((playlist) => (
+            <StudioPlaylistCard key={playlist.id} playlist={playlist} />
+          ))}
+        </div>
+      </Collapse>
     </>
   );
 }

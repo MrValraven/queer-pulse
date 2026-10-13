@@ -3491,7 +3491,7 @@ export const marketing: Catalog = {
     "{count} alterações de infraestrutura",
   // Release headlines, one per shipping day (see changelogReleases.ts).
   "changelog.releases.2026-10-13.headline":
-    "Flyers e ficheiros da t-shirt no Marketing do admin, e encontra o teu trabalho escrevendo o nome.",
+    "O Studio ganha playlists, artistas para seguir e géneros, o Marketing do admin ganha flyers, e encontras o teu trabalho escrevendo o nome.",
   "changelog.releases.2026-10-12.headline":
     "Organiza com comunidades convidadas, filtra anúncios pelo que oferecem e ouve música no Studio.",
   "changelog.releases.2026-10-08.headline":
@@ -3922,6 +3922,22 @@ export const marketing: Catalog = {
     "Partilhar os meus planos sobe para o topo do convívio",
   "changelog.entries.share-my-plans-in-the-header.body":
     "Quando vais, um ícone de escudo ao lado de Adicionar ao calendário envia os teus planos a alguém de confiança.",
+  "changelog.entries.studio-v2.title":
+    "Playlists, artistas para seguir e géneros no Studio",
+  "changelog.entries.studio-v2.body":
+    "Cria e partilha playlists, segue artistas para saberes dos lançamentos, explora por género e vê os teus números.",
+  "changelog.entries.studio-v2-fixes.title":
+    "Studio mais legível e ordem das faixas estável",
+  "changelog.entries.studio-v2-fixes.body":
+    "As páginas do Studio leem-se bem no telemóvel e em português, e remover um carregamento falhado mantém a ordem das faixas.",
+  "changelog.entries.calendar-entries-carry-description-and-host.title":
+    "As entradas de calendário trazem a descrição do convívio",
+  "changelog.entries.calendar-entries-carry-description-and-host.body":
+    "As notas trazem a descrição, quem organiza e para que comunidades, antes da ligação.",
+  "changelog.entries.community-menu-local-places.title":
+    "Os espaços locais passam para o menu Comunidade",
+  "changelog.entries.community-menu-local-places.body":
+    "O diretório, a Habitação e os Parceiros estão em Descobrir, na Comunidade, e a barra de topo tem menos um menu.",
   "changelog.entries.marketing-flyers.title":
     "Flyers de eventos e ficheiros da t-shirt da equipa no Marketing do admin",
   "changelog.entries.marketing-flyers.body":

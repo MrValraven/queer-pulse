@@ -11,22 +11,19 @@ const NIGHTCAP_TITLE_PRE = "Vespertina, ";
 const NIGHTCAP_TITLE_EM = "vol. iv";
 const NIGHTCAP_PAID_OUT = 8.2;
 
-// Content: the curator's own signoff quote and attribution — an authored
-// closing statement, comes from the broadcast record in live mode.
-const SIGNOFF_QUOTE =
-  '"We played fourteen songs and paid fourteen people. Go to sleep. The ' +
-  "catalogue stays open, and we'll be back when the kettle's on.\"";
-const SIGNOFF_ATTRIBUTION = "Sara Marques, closing the Wednesday set at 01:58";
+const NIGHTCAP_CURATOR = "Sara Marques";
+const NIGHTCAP_DURATION = "1h 42m";
+const NIGHTCAP_TRACK_COUNT = 12;
 
-// Content: next broadcast's show title, host, and description — comes from
-// the programme schedule in live mode.
-const NEXT_SHOW_TITLE_PRE = "Morning pages with ";
+// The curator who closed the night and when: proper noun and clock figure,
+// slotted into the catalog attribution line.
+const SIGNOFF_CURATOR = "Sara Marques";
+const SIGNOFF_TIME = "01:58";
+
+// The next broadcast's show title and host: proper nouns, slotted into the
+// catalog title line.
+const NEXT_SHOW_TITLE = "Morning pages";
 const NEXT_SHOW_HOST = "D. Okoye";
-const NEXT_SHOW_DESCRIPTION =
-  "Ambient & trans composers · 90 minutes · captioned live";
-
-// Content: the nightcap replay's curator/duration/track-count summary line.
-const NIGHTCAP_SUMMARY = "Sara Marques · 1h 42m · 12 tracks · ";
 
 export function StudioOffAirHero() {
   const { t } = useTranslation();
@@ -57,8 +54,13 @@ export function StudioOffAirHero() {
         </h1>
 
         <p className={styles.signoff}>
-          {SIGNOFF_QUOTE}
-          <span className={styles.signoffWho}>{SIGNOFF_ATTRIBUTION}</span>
+          {t("studioShowcase:offAir.hero.signoff.quote")}
+          <span className={styles.signoffWho}>
+            {t("studioShowcase:offAir.hero.signoff.attribution", {
+              name: SIGNOFF_CURATOR,
+              time: SIGNOFF_TIME,
+            })}
+          </span>
         </p>
 
         {/* Next broadcast */}
@@ -77,10 +79,13 @@ export function StudioOffAirHero() {
               {t("studio:offAir.hero.nextBroadcastLabel", { time: "08:00" })}
             </div>
             <h3>
-              {NEXT_SHOW_TITLE_PRE}
-              <em>{NEXT_SHOW_HOST}</em>
+              <Translation
+                i18nKey="studioShowcase:offAir.hero.nextShow.title"
+                components={{ em: <em /> }}
+                values={{ show: NEXT_SHOW_TITLE, host: NEXT_SHOW_HOST }}
+              />
             </h3>
-            <p>{NEXT_SHOW_DESCRIPTION}</p>
+            <p>{t("studioShowcase:offAir.hero.nextShow.description")}</p>
           </div>
         </div>
 
@@ -105,10 +110,16 @@ export function StudioOffAirHero() {
               <em>{NIGHTCAP_TITLE_EM}</em>
             </h3>
             <p>
-              {NIGHTCAP_SUMMARY}
-              {t("studio:offAir.hero.paidOutSuffix", {
-                amount: fmt.currency(NIGHTCAP_PAID_OUT),
-              })}
+              {[
+                NIGHTCAP_CURATOR,
+                NIGHTCAP_DURATION,
+                t("studioShowcase:offAir.meta.trackCount", {
+                  count: NIGHTCAP_TRACK_COUNT,
+                }),
+                t("studio:offAir.hero.paidOutSuffix", {
+                  amount: fmt.currency(NIGHTCAP_PAID_OUT),
+                }),
+              ].join(" · ")}
             </p>
           </div>
           <button

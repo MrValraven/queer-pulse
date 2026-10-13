@@ -5,6 +5,7 @@ import { useShareLink } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { StudioReleaseView } from "./api/studio.adapters";
 import { useStudioPlayer } from "./player/studioPlayerContext";
+import { StudioAddToPlaylistButton } from "./StudioAddToPlaylistButton";
 import { StudioDetailHero } from "./StudioDetailHero";
 import { StudioReleaseOverflow } from "./StudioReleaseOverflow";
 import { releaseFactsLine } from "./studioFacts";
@@ -124,6 +125,15 @@ export function StudioAlbumHero({
                 ? t("studio:save.savedLabel")
                 : t("studio:save.saveCta")}
             </button>
+          )}
+          {isPublished && (
+            <StudioAddToPlaylistButton
+              trackIds={release.tracks
+                .filter((track) => track.hasAudio)
+                .map((track) => track.id)}
+              subjectTitle={release.title}
+              label={t("studio:playlist.add.releaseCta")}
+            />
           )}
           {isShowcase && isPublished && (
             <button type="button" className={styles.tip} onClick={onTip}>

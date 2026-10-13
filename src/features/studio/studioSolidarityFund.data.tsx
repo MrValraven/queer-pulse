@@ -1,5 +1,3 @@
-import type { ReactNode } from "react";
-
 export interface FundFlowRow {
   labelKey: string;
   descKey: string;
@@ -7,13 +5,15 @@ export interface FundFlowRow {
 }
 
 export interface DisbursementRow {
-  d: string;
-  m: string;
+  /** Date only; rendered as day and short month in the reader's language. */
+  dateIso: string;
   tagKey: string;
   tagClass: string;
-  name: ReactNode;
-  csvName: string;
-  note: string;
+  /** A person's name, as written. */
+  person?: { first: string; last: string };
+  /** A described recipient from the catalog (carries <em>). */
+  nameKey?: string;
+  noteKey: string;
   amount: number;
 }
 
@@ -65,174 +65,102 @@ export const OUT: FundFlowRow[] = [
 
 export const DISB: DisbursementRow[] = [
   {
-    d: "8",
-    m: "Jun",
+    dateIso: "2026-06-08",
     tagKey: "studio:fund.log.tag.transcriber",
     tagClass: "trans",
-    name: (
-      <>
-        Teresa <em>Rocha</em>
-      </>
-    ),
-    csvName: "Teresa Rocha",
-    note: "14 lead sheets accepted into the archive this fortnight",
+    person: { first: "Teresa", last: "Rocha" },
+    noteKey: "studio:demo.fund.note.teresa",
     amount: 210,
   },
   {
-    d: "6",
-    m: "Jun",
+    dateIso: "2026-06-06",
     tagKey: "studio:fund.log.tag.emergency",
     tagClass: "emerg",
-    name: (
-      <>
-        Withheld by <em>request</em>
-      </>
-    ),
-    csvName: "Withheld by request",
-    note: "One month's rent for a member between tours, confidential",
+    nameKey: "studio:demo.fund.name.withheld",
+    noteKey: "studio:demo.fund.note.rent",
     amount: 600,
   },
   {
-    d: "5",
-    m: "Jun",
+    dateIso: "2026-06-05",
     tagKey: "studio:fund.log.tag.grant",
     tagClass: "grant",
-    name: (
-      <>
-        Helena <em>Pinto</em> &amp; 6 others
-      </>
-    ),
-    csvName: "Helena Pinto & 6 others",
-    note: "Spring first-release strand · €1,200 unrestricted each",
+    nameKey: "studio:demo.fund.name.helenaAndOthers",
+    noteKey: "studio:demo.fund.note.springGrants",
     amount: 1400,
   },
   {
-    d: "2",
-    m: "Jun",
+    dateIso: "2026-06-02",
     tagKey: "studio:fund.log.tag.access",
     tagClass: "access",
-    name: (
-      <>
-        LGP <em>interpreter</em>
-      </>
-    ),
-    csvName: "LGP interpreter",
-    note: "Signed the Marsha P. Johnson broadcast · 90 minutes",
+    nameKey: "studio:demo.fund.name.lgpInterpreter",
+    noteKey: "studio:demo.fund.note.marshaSigning",
     amount: 240,
   },
   {
-    d: "29",
-    m: "May",
+    dateIso: "2026-05-29",
     tagKey: "studio:fund.log.tag.translator",
     tagClass: "trans",
-    name: (
-      <>
-        Community <em>pool</em> · 9 people
-      </>
-    ),
-    csvName: "Community pool · 9 people",
-    note: "Lyric translations: PT→EN, PT→ES, FR→PT across 22 tracks",
+    nameKey: "studio:demo.fund.name.communityPool",
+    noteKey: "studio:demo.fund.note.lyricTranslations",
     amount: 380,
   },
   {
-    d: "24",
-    m: "May",
+    dateIso: "2026-05-24",
     tagKey: "studio:fund.log.tag.emergency",
     tagClass: "emerg",
-    name: (
-      <>
-        Instrument <em>replacement</em>
-      </>
-    ),
-    csvName: "Instrument replacement",
-    note: "A stolen accordion, replaced within a week, no application form",
+    nameKey: "studio:demo.fund.name.instrument",
+    noteKey: "studio:demo.fund.note.accordion",
     amount: 900,
   },
 ];
 
 export const DISB_MORE: DisbursementRow[] = [
   {
-    d: "20",
-    m: "May",
+    dateIso: "2026-05-20",
     tagKey: "studio:fund.log.tag.grant",
     tagClass: "grant",
-    name: (
-      <>
-        Mateus <em>Faria</em>
-      </>
-    ),
-    csvName: "Mateus Faria",
-    note: "First-release grant · debut EP mastering and artwork",
+    person: { first: "Mateus", last: "Faria" },
+    noteKey: "studio:demo.fund.note.mateus",
     amount: 1200,
   },
   {
-    d: "17",
-    m: "May",
+    dateIso: "2026-05-17",
     tagKey: "studio:fund.log.tag.access",
     tagClass: "access",
-    name: (
-      <>
-        Captioning <em>pass</em> · 6 broadcasts
-      </>
-    ),
-    csvName: "Captioning pass · 6 broadcasts",
-    note: "Live captions across the May live-room season",
+    nameKey: "studio:demo.fund.name.captioning",
+    noteKey: "studio:demo.fund.note.captions",
     amount: 320,
   },
   {
-    d: "11",
-    m: "May",
+    dateIso: "2026-05-11",
     tagKey: "studio:fund.log.tag.translator",
     tagClass: "trans",
-    name: (
-      <>
-        Pedro <em>Lima</em>
-      </>
-    ),
-    csvName: "Pedro Lima",
-    note: "PT→EN lyric translation across 8 tracks",
+    person: { first: "Pedro", last: "Lima" },
+    noteKey: "studio:demo.fund.note.pedro",
     amount: 160,
   },
   {
-    d: "4",
-    m: "May",
+    dateIso: "2026-05-04",
     tagKey: "studio:fund.log.tag.emergency",
     tagClass: "emerg",
-    name: (
-      <>
-        Withheld by <em>request</em>
-      </>
-    ),
-    csvName: "Withheld by request",
-    note: "Medical costs for a member, confidential",
+    nameKey: "studio:demo.fund.name.withheld",
+    noteKey: "studio:demo.fund.note.medical",
     amount: 750,
   },
   {
-    d: "28",
-    m: "Apr",
+    dateIso: "2026-04-28",
     tagKey: "studio:fund.log.tag.transcriber",
     tagClass: "trans",
-    name: (
-      <>
-        Sofia <em>Neves</em>
-      </>
-    ),
-    csvName: "Sofia Neves",
-    note: "9 lead sheets accepted into the archive",
+    person: { first: "Sofia", last: "Neves" },
+    noteKey: "studio:demo.fund.note.sofia",
     amount: 135,
   },
   {
-    d: "21",
-    m: "Apr",
+    dateIso: "2026-04-21",
     tagKey: "studio:fund.log.tag.grant",
     tagClass: "grant",
-    name: (
-      <>
-        Spring strand · <em>4 artists</em>
-      </>
-    ),
-    csvName: "Spring strand · 4 artists",
-    note: "First-release grants · €1,200 unrestricted each",
+    nameKey: "studio:demo.fund.name.springStrand",
+    noteKey: "studio:demo.fund.note.springArtists",
     amount: 4800,
   },
 ];

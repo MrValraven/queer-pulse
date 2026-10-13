@@ -65,7 +65,9 @@ function StudioRailShowcase() {
                 {pl.name}
                 <em>{pl.em}</em>
               </span>
-              <span className={styles.plMeta}>{pl.meta}</span>
+              <span className={styles.plMeta}>
+                {t(pl.metaKey, pl.metaValues)}
+              </span>
             </span>
           </Link>
         ))}

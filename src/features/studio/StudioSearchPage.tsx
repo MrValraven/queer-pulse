@@ -6,9 +6,14 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { StudioSearchView } from "./api/studio.adapters";
 import { useStudioReleases } from "./api/useStudioReleases";
 import { useStudioSearch } from "./api/useStudioSearch";
-import { STUDIO_LIMITS, type StudioSearchType } from "./api/studio.types";
+import {
+  STUDIO_LIMITS,
+  type StudioGenre,
+  type StudioSearchType,
+} from "./api/studio.types";
 import { StudioLoadError } from "./StudioLoadStates";
 import { StudioReleaseCard } from "./StudioReleaseCard";
+import { StudioSearchGenreSelect } from "./StudioSearchGenreSelect";
 import { StudioSearchFilters } from "./StudioSearchFilters";
 import { StudioSearchResults } from "./StudioSearchResults";
 import { StudioShell } from "./StudioShell";
@@ -25,19 +30,21 @@ interface ShownSearch {
   result: StudioSearchView;
   query: string;
   type: StudioSearchType;
+  genre: StudioGenre | null;
 }
 
 export function StudioSearchPage() {
   const { t } = useTranslation();
   const isShowcase = useStudioShowcase();
   const searchInputRef = useRef<HTMLInputElement>(null);
-  const { query, type, setQuery, setType, clear } = useStudioSearchParams();
+  const { query, type, genre, setQuery, setType, setGenre, clear } =
+    useStudioSearchParams();
   // typedDraft is null while the input follows the URL, and holds the text
   // the member is typing until the URL catches up or changes.
   const [typedDraft, setTypedDraft] = useState<string | null>(null);
   const draft = typedDraft ?? query;
   const debouncedDraft = useDebouncedValue(draft, 300);
-  const { result, loadState, isIdle } = useStudioSearch(query, type);
+  const { result, loadState, isIdle } = useStudioSearch(query, type, genre);
   const featured = useStudioReleases();
 
   const [seenQuery, setSeenQuery] = useState(query);
@@ -53,10 +60,13 @@ export function StudioSearchPage() {
   const trimmedQuery = query.trim();
   const [shownSearch, setShownSearch] = useState<ShownSearch | null>(null);
   if (result && shownSearch?.result !== result)
-    setShownSearch({ result, query: trimmedQuery, type });
+    setShownSearch({ result, query: trimmedQuery, type, genre });
   const shown = result && shownSearch?.result === result ? shownSearch : null;
   const isRefreshing =
-    shown !== null && (shown.query !== trimmedQuery || shown.type !== type);
+    shown !== null &&
+    (shown.query !== trimmedQuery ||
+      shown.type !== type ||
+      shown.genre !== genre);
 
   // The input writes the URL once the typing has paused on the current text;
   // the URL (Back, the topbar search) writes the input through the derived draft.
@@ -101,6 +111,7 @@ export function StudioSearchPage() {
         />
       </form>
       <StudioSearchFilters type={type} onChange={setType} />
+      {!isIdle && <StudioSearchGenreSelect value={genre} onChange={setGenre} />}
       {isShowcase && isIdle && (
         <div className={s.chips}>
           {RECENT.map((term) => (
@@ -121,7 +132,8 @@ export function StudioSearchPage() {
               count:
                 shown.result.releases.length +
                 shown.result.tracks.length +
-                shown.result.artists.length,
+                shown.result.artists.length +
+                shown.result.playlists.length,
             })
           : ""}
       </div>

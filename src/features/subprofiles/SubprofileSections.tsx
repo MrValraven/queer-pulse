@@ -4,8 +4,9 @@ import { isUpcoming, sectionShape } from "./personaSkinRender";
 import type { PersonaViewMode } from "./personaSkinRender";
 import { SubprofileItemRow } from "./SubprofileItemRow";
 import { SubprofileItemTile } from "./SubprofileItemTile";
+import { PersonaStudioPlaylists } from "./PersonaStudioPlaylists";
 import { PersonaStudioReleases } from "./PersonaStudioReleases";
-import { studioSectionFor, usePersonaStudioReleases } from "./personaStudio";
+import { studioSectionFor, usePersonaStudio } from "./personaStudio";
 import type {
   PublicSubprofileView,
   SubprofileItemView,
@@ -214,7 +215,9 @@ export function SubprofileSections({
   const { t } = useTranslation();
   const interactive = mode !== "preview";
   const studioSection = studioSectionFor(persona.kind);
-  const studioReleases = usePersonaStudioReleases(persona, mode);
+  const studio = usePersonaStudio(persona);
+  const hasStudioContent =
+    studio.releases.length > 0 || studio.playlists.length > 0;
   const hasStudioSection = persona.sections.some(
     (section) => section.section === studioSection,
   );
@@ -232,7 +235,7 @@ export function SubprofileSections({
               )
             : section.items;
         const isStudioSection =
-          section.section === studioSection && studioReleases.length > 0;
+          section.section === studioSection && hasStudioContent;
         if (items.length === 0 && !isStudioSection) return null;
         const shape = sectionShape(section.section, skin, items);
         return (
@@ -256,7 +259,16 @@ export function SubprofileSections({
               )}
             </header>
             {isStudioSection && (
-              <PersonaStudioReleases releases={studioReleases} />
+              <>
+                <PersonaStudioReleases
+                  releases={studio.releases}
+                  isInteractive={interactive}
+                />
+                <PersonaStudioPlaylists
+                  playlists={studio.playlists}
+                  isInteractive={interactive}
+                />
+              </>
             )}
             {items.length > 0 && (
               <SectionBody
@@ -275,14 +287,25 @@ export function SubprofileSections({
           </section>
         );
       })}
-      {studioSection && !hasStudioSection && studioReleases.length > 0 && (
-        <section className="pp-sec" aria-labelledby={`pp-sec-${studioSection}`}>
+      {studioSection && !hasStudioSection && hasStudioContent && (
+        <section
+          className="pp-sec"
+          data-preview-anchor={`section:${studioSection}`}
+          aria-labelledby={`pp-sec-${studioSection}`}
+        >
           <header>
             <h2 id={`pp-sec-${studioSection}`}>
               {t(`subprofiles:section.${studioSection}`)}
             </h2>
           </header>
-          <PersonaStudioReleases releases={studioReleases} />
+          <PersonaStudioReleases
+            releases={studio.releases}
+            isInteractive={interactive}
+          />
+          <PersonaStudioPlaylists
+            playlists={studio.playlists}
+            isInteractive={interactive}
+          />
         </section>
       )}
     </>

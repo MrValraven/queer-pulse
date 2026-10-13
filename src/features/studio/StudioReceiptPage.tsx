@@ -23,9 +23,9 @@ import {
 } from "./studioReceipt.data";
 import s from "./StudioReceiptPage.module.css";
 
-// Content: the payment method's masked card summary — comes from the
-// payment record in live mode.
-const RECEIPT_CARD_SUMMARY = "Saved card · ending 4242 · ";
+// The saved card's last four digits: a figure from the payment record in live
+// mode. The phrase around it comes from the `studioShowcase` catalog.
+const RECEIPT_CARD_LAST4 = "4242";
 
 /** Jade heart-hands "thank you" mark that pulses. */
 function ThankIcon() {
@@ -73,7 +73,9 @@ function ReceiptCard() {
             height={64}
             radius={10}
             placeholder=""
-            alt={`${RECEIPT_TRACK_TITLE} cover`}
+            alt={t("studioShowcase:receipt.coverAlt", {
+              title: RECEIPT_TRACK_TITLE,
+            })}
           />
         </div>
         <div className={s.info}>
@@ -163,7 +165,9 @@ function ReceiptCard() {
         <div className={s.rcd}>
           <div className={s.eb}>{t("studio:receipt.detail.method")}</div>
           <div className={s.v}>
-            {RECEIPT_CARD_SUMMARY}
+            {t("studioShowcase:receipt.detail.cardSummary", {
+              last4: RECEIPT_CARD_LAST4,
+            })}{" "}
             <Translation
               i18nKey="studio:receipt.detail.chosenByDefault"
               components={{ em: <em /> }}
@@ -191,7 +195,7 @@ function ReceiptCard() {
         <div className={s.label}>
           {t("studio:receipt.note.label", { artist: RECEIPT_ARTIST })}
         </div>
-        <div className={s.quote}>{NOTE.quote}</div>
+        <div className={s.quote}>{t(NOTE.quoteKey)}</div>
         <div className={s.reply}>
           <div className={s.av}>{NOTE.reply.avatar}</div>
           <div className={s.replyBody}>
@@ -202,7 +206,7 @@ function ReceiptCard() {
                 components={{ em: <em /> }}
               />
             </div>
-            <div className={s.replyText}>{NOTE.reply.body}</div>
+            <div className={s.replyText}>"{t(NOTE.reply.bodyKey)}"</div>
             <div className={s.when}>
               {t("studio:receipt.note.replyWhen", {
                 relativeTime: fmt.relativeTime(

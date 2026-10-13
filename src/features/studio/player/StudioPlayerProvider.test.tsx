@@ -9,6 +9,7 @@ import type { StudioReleaseDTO } from "../api/studio.types";
 import { studioKeys } from "../api/studioQueryKeys";
 import type { StudioAudioEvent } from "./studioAudioEngine";
 import { StudioPlayerProvider } from "./StudioPlayerProvider";
+import { queueFromRelease } from "./studioQueue";
 import { useStudioPlayer, useStudioPlayerClock } from "./studioPlayerContext";
 
 let loggedIn = true;
@@ -406,5 +407,29 @@ describe("StudioPlayerProvider with a withdrawn grant or a missing release", () 
     expect(fetchStudioStream).not.toHaveBeenCalled();
     expect(engine.load).not.toHaveBeenCalled();
     expect(hook.result.current.player.queue).toEqual([]);
+  });
+});
+
+describe("StudioPlayerProvider: a list of tracks", () => {
+  it("plays the items in the order given, from the chosen track, reading no release", async () => {
+    const { engine, hook } = setup();
+    const items = [...queueFromRelease(release)].reverse();
+    await act(() => hook.result.current.player.playTracks(items, "t1"));
+    expect(
+      hook.result.current.player.queue.map((item) => item.trackId),
+    ).toEqual(["t2", "t1"]);
+    expect(hook.result.current.player.currentItem?.trackId).toBe("t1");
+    expect(getStudioRelease).not.toHaveBeenCalled();
+    expect(engine.load).toHaveBeenLastCalledWith(
+      "https://stream.example/t1?v=1",
+      0,
+    );
+  });
+
+  it("leaves the player as it was for an empty list", async () => {
+    const { hook } = setup();
+    await act(() => hook.result.current.player.playTracks([]));
+    expect(hook.result.current.player.queue).toEqual([]);
+    expect(fetchStudioStream).not.toHaveBeenCalled();
   });
 });

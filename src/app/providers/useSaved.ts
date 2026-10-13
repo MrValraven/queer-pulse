@@ -12,9 +12,11 @@ export type SavedKind =
   | "landlord"
   | "listing"
   // Studio v1: ids `studio_release:<id>` and `studio_track:<id>`, opening
-  // `/studio/album?id=` and `/studio/track?id=`.
+  // `/studio/album?id=` and `/studio/track?id=`. Studio v2 adds
+  // `studio_playlist:<id>`, opening `/studio/collection?id=`.
   | "studio_release"
-  | "studio_track";
+  | "studio_track"
+  | "studio_playlist";
 
 /**
  * Whether the thing a save points at can still be opened.

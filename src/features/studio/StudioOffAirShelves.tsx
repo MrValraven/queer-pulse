@@ -4,9 +4,15 @@ import { ImageSlot, FadeIn } from "../../shared/components/ui";
 import { linkToPath, routes } from "../../app/routeMap";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
+import type { TFunction } from "../../shared/i18n/types";
 import { StudioCardGridSkeleton } from "./StudioSkeletons";
-import { OFF_AIR_LIBRARY, QUIET_HOURS } from "./studioOffAir.data";
+import {
+  OFF_AIR_LIBRARY,
+  QUIET_HOURS,
+  type OffAirCard,
+} from "./studioOffAir.data";
 import studioStyles from "./studio.module.css";
+import { StudioEuroAmount } from "./StudioEuroAmount";
 
 const cardTitle: React.CSSProperties = {
   fontFamily: "var(--serif)",
@@ -33,6 +39,20 @@ const rowLink: React.CSSProperties = {
   fontWeight: 600,
   color: "rgba(247,243,238,.6)",
 };
+
+/** Joins a card's format word, artist, track count and running time into its " · " meta line. */
+function offAirMetaLine(item: OffAirCard, t: TFunction): string {
+  return [
+    item.kindKey ? t(item.kindKey) : undefined,
+    item.artist,
+    item.trackCount === undefined
+      ? undefined
+      : t("studioShowcase:offAir.meta.trackCount", { count: item.trackCount }),
+    item.duration,
+  ]
+    .filter((part): part is string => Boolean(part))
+    .join(" · ");
+}
 
 export function StudioOffAirShelves({ loading }: { loading: boolean }) {
   const { t } = useTranslation();
@@ -85,11 +105,13 @@ export function StudioOffAirShelves({ loading }: { loading: boolean }) {
                 <h4 style={cardTitle}>
                   {item.title} <em>{item.titleEm}</em>
                 </h4>
-                <div style={meta}>{item.meta}</div>
+                <div style={meta}>{offAirMetaLine(item, t)}</div>
                 {item.pay && (
                   <div style={meta}>
                     {t("studio:offAir.perPlay")}{" "}
-                    <em style={{ color: "var(--accent)" }}>€0.05</em>
+                    <em style={{ color: "var(--accent)" }}>
+                      <StudioEuroAmount value={0.05} />
+                    </em>
                   </div>
                 )}
               </FadeIn>
@@ -138,7 +160,7 @@ export function StudioOffAirShelves({ loading }: { loading: boolean }) {
                 <h4 style={cardTitle}>
                   {item.title} <em>{item.titleEm}</em>
                 </h4>
-                <div style={meta}>{item.meta}</div>
+                <div style={meta}>{offAirMetaLine(item, t)}</div>
               </FadeIn>
             ))}
           </div>

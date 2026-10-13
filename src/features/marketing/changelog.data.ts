@@ -63,6 +63,40 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "studio-v2",
+        category: "feature",
+        date: "13 Oct 2026",
+        ...entryKeys("studio-v2"),
+        tag: { labelKey: "marketing:changelog.tag.studio", to: routes.studio },
+      },
+      {
+        id: "studio-v2-fixes",
+        category: "fix",
+        date: "13 Oct 2026",
+        ...entryKeys("studio-v2-fixes"),
+        tag: { labelKey: "marketing:changelog.tag.studio", to: routes.studio },
+      },
+      {
+        id: "calendar-entries-carry-description-and-host",
+        category: "improvement",
+        date: "13 Oct 2026",
+        ...entryKeys("calendar-entries-carry-description-and-host"),
+        tag: {
+          labelKey: "marketing:changelog.tag.gatherings",
+          to: routes.gatherings,
+        },
+      },
+      {
+        id: "community-menu-local-places",
+        category: "improvement",
+        date: "13 Oct 2026",
+        ...entryKeys("community-menu-local-places"),
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
+      },
+      {
         id: "marketing-flyers",
         category: "feature",
         date: "13 Oct 2026",
@@ -6632,10 +6666,7 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
         category: "improvement",
         date: "26 Aug 2026",
         ...entryKeys("arriving-points-at-real-things"),
-        tag: {
-          labelKey: "marketing:changelog.tag.arriving",
-          to: routes.arriving,
-        },
+        // Tag removed 2026-10-13: the Arriving guide is admin-only for now.
       },
       {
         id: "what-you-send-in-now-gets-an-answer",

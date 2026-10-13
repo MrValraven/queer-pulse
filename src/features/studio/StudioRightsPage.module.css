@@ -398,7 +398,8 @@
   background: rgba(var(--cream-rgb), 0.1);
 }
 .btConfirm {
-  color: rgba(var(--cream-rgb), 1);
+  /* Dark ink on the coral fill: 6.28:1. */
+  color: var(--studio-bg);
   background: var(--accent);
   border-color: var(--accent);
 }

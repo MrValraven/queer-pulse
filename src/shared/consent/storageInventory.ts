@@ -299,13 +299,14 @@ export const STORAGE_INVENTORY: StorageEntry[] = [
       "qp:demo:roadmap:v2",
       "qp-employer-affiliation",
       "qp-posted-jobs",
+      "qp.demo.studioLibrarySeeded.v1",
     ],
     kind: "localStorage",
     category: "functional",
     purposeKey: `${NS}.previewMode.purpose`,
     lifetimeKey: `${NS}.lifetime.untilCleared`,
     sourceHint:
-      "app/providers/DemoModeProvider.tsx, app/providers/useDemoSession.ts, features/admin/adminRoadmap.data.ts",
+      "app/providers/DemoModeProvider.tsx, app/providers/useDemoSession.ts, features/admin/adminRoadmap.data.ts, features/studio/api/useStudioLibrarySaves.ts",
   },
   {
     id: "offlineFiles",

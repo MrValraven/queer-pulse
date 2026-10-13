@@ -7,9 +7,11 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { StudioSearchView } from "./api/studio.adapters";
 import type { StudioSearchType } from "./api/studio.types";
 import { StudioArtistCard } from "./StudioArtistCard";
+import { StudioPlaylistCard } from "./StudioPlaylistCard";
 import { StudioReleaseCard } from "./StudioReleaseCard";
 import { StudioSearchTrackRow } from "./StudioSearchTrackRow";
 import styles from "./studio.module.css";
+import searchStyles from "./StudioSearch.module.css";
 
 function ResultSection({
   titleKey,
@@ -32,7 +34,8 @@ function ResultSection({
 }
 
 /** The server's answer, rendered as it came: no client filter runs over it.
- *  `query` and `type` are the ones this result answers. */
+ *  `query`, `type` and the genre the server applied are the ones this
+ *  result answers; `type` picks the sections shown. */
 export function StudioSearchResults({
   result,
   query,
@@ -75,7 +78,7 @@ export function StudioSearchResults({
         )}
       {(type === "all" || type === "tracks") && result.tracks.length > 0 && (
         <ResultSection titleKey="studio:searchPage.section.tracks">
-          <ol className={styles.setCard}>
+          <ol className={`${styles.setCard} ${searchStyles.trackList}`}>
             {result.tracks.map((track) => (
               <StudioSearchTrackRow key={track.id} track={track} />
             ))}
@@ -91,6 +94,16 @@ export function StudioSearchResults({
           </div>
         </ResultSection>
       )}
+      {(type === "all" || type === "playlists") &&
+        result.playlists.length > 0 && (
+          <ResultSection titleKey="studio:searchPage.section.playlists">
+            <div className={styles.rowGrid}>
+              {result.playlists.map((playlist) => (
+                <StudioPlaylistCard key={playlist.id} playlist={playlist} />
+              ))}
+            </div>
+          </ResultSection>
+        )}
     </>
   );
 }

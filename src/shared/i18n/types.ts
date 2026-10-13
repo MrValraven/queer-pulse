@@ -25,6 +25,7 @@ export type Namespace =
   | "resources"
   | "economy"
   | "studio"
+  | "studioShowcase"
   | "cinema"
   | "settings"
   | "simulations"

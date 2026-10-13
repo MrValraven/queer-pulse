@@ -2,7 +2,7 @@ import { useSimulatedLoad } from "../../shared/hooks";
 import { StudioCreatorShell } from "./StudioCreatorShell";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { PAYOUTS } from "./studioPayouts.data";
+import { PAYOUTS, payoutCsvMeta } from "./studioPayouts.data";
 import {
   PayoutsHero,
   PayoutsList,
@@ -26,11 +26,13 @@ export function StudioPayoutsPage() {
         t("studio:payouts.export.headers.status"),
       ],
       ...PAYOUTS.map((payout) => [
-        payout.period,
-        `${payout.d} ${payout.m}`,
-        payout.csvMeta,
+        t(payout.periodKey),
+        `${payout.d} ${t(payout.monthKey)}`,
+        payoutCsvMeta(payout, t),
         payout.amt.replace(/,/g, ""),
-        payout.status,
+        payout.status === "pending"
+          ? t("studio:payouts.list.status.pending")
+          : t("studio:payouts.list.status.paid"),
       ]),
     ];
     downloadCsv("studio-payout-history.csv", data);

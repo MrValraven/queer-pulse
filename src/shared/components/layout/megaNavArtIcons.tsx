@@ -34,26 +34,6 @@ export function CommunityArt(): ReactNode {
   );
 }
 
-// Lisbon → a coral map pin dropped between two little hillside houses.
-export function LisbonArt(): ReactNode {
-  return (
-    <svg {...svgBaseProps}>
-      <path d="M40 118h160" />
-      <path d="M54 118V94l18-14 18 14v24" />
-      <path d="M54 94h36" />
-      <path d="M62 104h20" />
-      <path d="M150 118V98l18-13 18 13v20" />
-      <path d="M150 98h36" />
-      <path d="M158 108h20" />
-      <path
-        d="M120 32C106 32 95 43 95 57 95 78 120 118 120 118 120 118 145 78 145 57 145 43 134 32 120 32Z"
-        stroke="var(--accent)"
-      />
-      <circle cx="120" cy="53" r="9" />
-    </svg>
-  );
-}
-
 // Resources → a life-buoy ring (support & care).
 export function ResourcesArt(): ReactNode {
   return (

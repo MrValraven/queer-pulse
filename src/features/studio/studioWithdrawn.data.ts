@@ -1,4 +1,5 @@
 import { routes } from "../../app/routeMap";
+import type { TranslateOptions } from "../../shared/i18n/types";
 
 /** A card in the "Still available from this artist" grid. */
 export interface WithdrawnCard {
@@ -9,11 +10,15 @@ export interface WithdrawnCard {
   /** Corner pill on the cover: "Free" or "Sustainer". Omitted when absent. */
   tag?: "free" | "mem";
   tagLabelKey?: string;
-  /** Curator credit line ("by Sara Marques" / "All releases"), when present. */
+  /** Curator credit line: a person's name, kept literal. */
   byCur?: string;
+  /** Curator credit line as a catalog key ("All releases"). */
+  byCurKey?: string;
   titlePre: string;
   titleEm?: string;
-  meta: string;
+  /** The facts line under the title: a catalog key plus its values. */
+  metaKey: string;
+  metaValues?: TranslateOptions;
 }
 
 export const STILL_AVAILABLE: WithdrawnCard[] = [
@@ -26,7 +31,8 @@ export const STILL_AVAILABLE: WithdrawnCard[] = [
     tagLabelKey: "studio:tag.sustainer",
     titlePre: "Cidade dos ",
     titleEm: "santos",
-    meta: "Mariana Sol · 11 tracks",
+    metaKey: "studioShowcase:withdrawn.still.meta.artistTracks",
+    metaValues: { artist: "Mariana Sol", count: 11 },
   },
   {
     cvTint: "jade",
@@ -36,7 +42,8 @@ export const STILL_AVAILABLE: WithdrawnCard[] = [
     tagLabelKey: "studio:tag.free",
     titlePre: "A ",
     titleEm: "Beja",
-    meta: "Mariana Sol · EP",
+    metaKey: "studioShowcase:withdrawn.still.meta.artistEp",
+    metaValues: { artist: "Mariana Sol" },
   },
   {
     to: routes.studioCollection,
@@ -46,7 +53,8 @@ export const STILL_AVAILABLE: WithdrawnCard[] = [
     byCur: "Sara Marques",
     titlePre: "Songs to play your ",
     titleEm: "mother",
-    meta: "Collection · 14 tracks",
+    metaKey: "studioShowcase:withdrawn.still.meta.collectionTracks",
+    metaValues: { count: 14 },
   },
   {
     cvTint: "coral",
@@ -56,16 +64,18 @@ export const STILL_AVAILABLE: WithdrawnCard[] = [
     tagLabelKey: "studio:tag.free",
     titlePre: "The first ",
     titleEm: "Sunday",
-    meta: "Mariana Sol · single",
+    metaKey: "studioShowcase:withdrawn.still.meta.artistSingle",
+    metaValues: { artist: "Mariana Sol" },
   },
   {
     to: routes.studioArtist,
     cvTint: "jade",
     image:
       "https://images.unsplash.com/photo-1675283090273-4739316cdf80?q=80&w=600&auto=format&fit=crop",
-    byCur: "All releases",
+    byCurKey: "studioShowcase:withdrawn.still.allReleases",
     titlePre: "Mariana ",
     titleEm: "Sol",
-    meta: "Artist · Sintra",
+    metaKey: "studioShowcase:withdrawn.still.meta.artistCity",
+    metaValues: { city: "Sintra" },
   },
 ];

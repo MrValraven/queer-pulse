@@ -1,0 +1,85 @@
+.wrap {
+  display: grid;
+  gap: 14px;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 40px 0 var(--section-y-72);
+}
+
+.eyebrow {
+  color: var(--text60);
+  font-size: var(--text-12);
+  font-weight: 700;
+  letter-spacing: var(--ls-eyebrow);
+  text-transform: uppercase;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-42);
+  font-weight: 400;
+}
+
+.body {
+  max-width: 60ch;
+  margin: 0;
+  color: rgba(var(--cream-rgb), 0.82);
+  font-size: var(--text-16);
+  line-height: var(--lh-body);
+}
+
+.safety {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 0;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-12);
+  color: rgba(var(--cream-rgb), 0.72);
+  font-size: var(--text-14);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.primary,
+.secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: var(--tap-min);
+  padding: 0 18px;
+  border-radius: var(--radius-pill);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.primary {
+  background: var(--accent);
+  /* Dark ink on coral: --accent-ink resolves to --accent inside the dark Studio shell. */
+  color: var(--studio-bg);
+}
+
+.secondary {
+  border: 1px solid rgba(var(--cream-rgb), 0.32);
+  color: var(--text);
+}
+
+.primary:focus-visible,
+.secondary:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+@media (--sm) {
+  .wrap {
+    padding: 28px 0 var(--section-y-48);
+  }
+}

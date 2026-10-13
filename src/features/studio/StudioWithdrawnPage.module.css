@@ -264,11 +264,15 @@
   cursor: pointer;
   z-index: 2;
 }
+/* The app's two-tone focus ring: the cream halo reads on dark ground and art,
+   the --accent-deep ring reads on light art. The button sits 10px inside the
+   cover, so the 6px ring stays clear of the cover's overflow clip. */
 .playFab:focus-visible {
   opacity: 1;
   transform: none;
-  outline: 2px solid var(--cream);
-  outline-offset: 2px;
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }
 @media (hover: hover) {
   .tcard:hover .playFab {
@@ -276,10 +280,11 @@
     transform: none;
   }
 }
+/* Dark ink on the coral fill: 6.28:1 (cream on --accent is 2.63:1). */
 .playFab svg {
   width: 13px;
   height: 13px;
-  color: rgba(var(--cream-rgb), 1);
+  color: var(--studio-bg);
   margin-left: 1px;
 }
 .byCur {

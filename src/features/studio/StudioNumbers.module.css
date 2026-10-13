@@ -1,0 +1,241 @@
+.liveDot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-right: 8px;
+  border-radius: 50%;
+  background: var(--jade);
+}
+
+.showcaseSub {
+  margin-top: 14px;
+  color: rgba(var(--cream-rgb), 0.62);
+  font-family: var(--serif);
+  font-size: var(--text-17);
+  font-style: italic;
+}
+
+.accentEm {
+  color: var(--accent);
+}
+
+/* Same frame as creator.module.css `.body`, so the section lines up with the
+   charts above it. */
+.section {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding-block: 40px var(--section-y-64);
+  padding-inline: 30px;
+}
+
+.head {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 28px;
+}
+
+.eyebrow {
+  color: var(--accent);
+  font-size: var(--text-12);
+  font-weight: 700;
+  letter-spacing: var(--ls-eyebrow);
+  text-transform: uppercase;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-34);
+  font-weight: 400;
+}
+
+.title em {
+  color: var(--accent);
+}
+
+.dek {
+  max-width: 62ch;
+  margin: 0;
+  color: rgba(var(--cream-rgb), 0.72);
+  font-size: var(--text-14);
+}
+
+.personaField {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: var(--text-13);
+}
+
+.select {
+  min-height: var(--tap-min);
+  padding: 0 12px;
+  border: 1px solid rgba(var(--cream-rgb), 0.24);
+  border-radius: var(--radius-10);
+  background: transparent;
+  color: inherit;
+  color-scheme: dark;
+  font: inherit;
+}
+
+.followers {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.followersLabel {
+  color: rgba(var(--cream-rgb), 0.62);
+  font-size: var(--text-13);
+}
+
+.followersValue {
+  font-family: var(--serif);
+  font-size: var(--text-40);
+  font-variant-numeric: tabular-nums;
+}
+
+.table,
+.trackTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-14);
+}
+
+.caption {
+  margin-bottom: 10px;
+  color: rgba(var(--cream-rgb), 0.62);
+  font-size: var(--text-13);
+  text-align: left;
+}
+
+.table th,
+.table td,
+.trackTable th,
+.trackTable td {
+  padding: 10px 8px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.table th:first-child,
+.trackTable th:first-child {
+  text-align: left;
+}
+
+.table thead th {
+  color: rgba(var(--cream-rgb), 0.62);
+  font-size: var(--text-12);
+  font-weight: 600;
+  overflow-wrap: normal;
+}
+
+.table td:not(:first-child) {
+  white-space: nowrap;
+}
+
+.releaseRow {
+  border-top: 1px solid rgba(var(--cream-rgb), 0.12);
+}
+
+.releaseCell {
+  font-weight: 500;
+}
+
+.releaseCellInner {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tracksRow > td {
+  padding: 0;
+}
+
+.trackTable {
+  margin: 0 0 8px;
+  color: rgba(var(--cream-rgb), 0.82);
+}
+
+/* A hanging indent: the position number sits in the gutter, so a wrapped
+   track name lines up under its first line. Keeps the cell a table cell. */
+.trackTable th {
+  padding-inline-start: 80px;
+  font-weight: 400;
+  text-indent: -32px;
+}
+
+.trackPosition {
+  display: inline-block;
+  min-width: 24px;
+  margin-inline-end: 8px;
+  color: rgba(var(--cream-rgb), 0.5);
+  text-indent: 0;
+}
+
+.expand {
+  display: grid;
+  place-items: center;
+  width: var(--tap-min);
+  height: var(--tap-min);
+  border: 0;
+  border-radius: var(--radius-8);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.chevron {
+  transition-property: transform;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+.expand[aria-expanded="true"] .chevron {
+  transform: rotate(90deg);
+}
+
+.releaseLink {
+  color: inherit;
+  text-decoration: none;
+}
+
+@media (hover: hover) {
+  .releaseLink:hover {
+    text-decoration: underline;
+  }
+}
+
+.status {
+  padding: 1px 8px;
+  border: 1px solid rgba(var(--cream-rgb), 0.28);
+  border-radius: var(--radius-pill);
+  color: rgba(var(--cream-rgb), 0.72);
+  font-size: var(--text-11);
+}
+
+.expand:focus-visible,
+.releaseLink:focus-visible,
+.select:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+@media (--sm) {
+  .section {
+    padding-block: 28px var(--section-y-48);
+  }
+
+  /* The tracks row's own cell (a first child) keeps its zero padding. */
+  .table th,
+  .table td:not(:first-child) {
+    padding: 10px 4px;
+  }
+
+  .trackTable th {
+    padding-block: 10px;
+    padding-inline: 56px 4px;
+  }
+}

@@ -1,13 +1,19 @@
 import { useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
-import { STUDIO_SEARCH_TYPES, type StudioSearchType } from "./api/studio.types";
+import { isStudioGenre } from "./api/studio.adapters";
+import {
+  STUDIO_SEARCH_TYPES,
+  type StudioGenre,
+  type StudioSearchType,
+} from "./api/studio.types";
 
 const KNOWN_TYPES: ReadonlySet<string> = new Set(STUDIO_SEARCH_TYPES);
 
-/** The query and the filter live in the URL (`?q=` and `?type=`), so a
- *  search can be shared and reloaded. A filter change, Clear and a submitted
- *  search add a history entry, so Back walks them; typing writes the query
- *  with `isReplace`, so a half-typed word never fills the history. */
+/** The query, the filter and the genre live in the URL (`?q=`, `?type=`,
+ *  `?genre=`), so a search can be shared and reloaded. A filter change, a
+ *  genre change, Clear and a submitted search add a history entry, so Back
+ *  walks them; typing writes the query with `isReplace`, so a half-typed word
+ *  never fills the history. */
 export function useStudioSearchParams() {
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get("q") ?? "";
@@ -15,6 +21,10 @@ export function useStudioSearchParams() {
   const type: StudioSearchType = KNOWN_TYPES.has(typeParam)
     ? (typeParam as StudioSearchType)
     : "all";
+  const genreParam = searchParams.get("genre");
+  const genre: StudioGenre | null = isStudioGenre(genreParam)
+    ? genreParam
+    : null;
 
   const update = useCallback(
     (mutate: (params: URLSearchParams) => void, isReplace: boolean) => {
@@ -43,6 +53,7 @@ export function useStudioSearchParams() {
   return {
     query,
     type,
+    genre,
     setQuery,
     setType: (nextType: StudioSearchType) =>
       update(
@@ -52,10 +63,18 @@ export function useStudioSearchParams() {
             : params.set("type", nextType),
         false,
       ),
+    /** A history entry, like a filter change. */
+    setGenre: (nextGenre: StudioGenre | null) =>
+      update(
+        (params) =>
+          nextGenre ? params.set("genre", nextGenre) : params.delete("genre"),
+        false,
+      ),
     clear: () =>
       update((params) => {
         params.delete("q");
         params.delete("type");
+        params.delete("genre");
       }, false),
   };
 }

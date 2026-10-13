@@ -90,7 +90,8 @@
 }
 .ntChip.on {
   background: var(--accent);
-  color: rgba(var(--cream-rgb), 1);
+  /* Dark ink on the coral fill: 6.28:1. */
+  color: var(--studio-bg);
   border-color: var(--accent);
 }
 .ntRead {
@@ -260,7 +261,8 @@
 }
 .btP {
   background: var(--accent);
-  color: rgba(var(--cream-rgb), 1);
+  /* Dark ink on the coral fill: 6.28:1. */
+  color: var(--studio-bg);
   border-color: var(--accent);
 }
 @media (hover: hover) {

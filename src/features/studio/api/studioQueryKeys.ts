@@ -1,6 +1,6 @@
 import type { QueryClient } from "@tanstack/react-query";
 import { studioErrorCodeOf } from "./studio.api";
-import type { StudioSearchType } from "./studio.types";
+import type { StudioGenre, StudioSearchType } from "./studio.types";
 
 /** Every Studio query key starts with "studio" so one invalidation reaches
  *  them all, and carries `demoMode` so the two modes never share a cache. */
@@ -17,8 +17,30 @@ export const studioKeys = {
     ["studio", "track", demoMode, trackId] as const,
   artist: (demoMode: boolean, subprofileId: string) =>
     ["studio", "artist", demoMode, subprofileId] as const,
-  search: (demoMode: boolean, query: string, type: StudioSearchType) =>
-    ["studio", "search", demoMode, query, type] as const,
+  search: (
+    demoMode: boolean,
+    query: string,
+    type: StudioSearchType,
+    genre: StudioGenre | null,
+  ) => ["studio", "search", demoMode, query, type, genre ?? "any"] as const,
+  // Studio v2. `browse` sits outside "releases" on purpose: the demo patches
+  // the home grid under that key, and a genre list must not receive a card
+  // of another genre.
+  genres: (demoMode: boolean) => ["studio", "genres", demoMode] as const,
+  browse: (demoMode: boolean, genre: StudioGenre | null) =>
+    ["studio", "browse", demoMode, genre ?? "none"] as const,
+  myPlaylists: (demoMode: boolean) =>
+    ["studio", "playlists", "mine", demoMode] as const,
+  playlist: (demoMode: boolean, playlistId: string) =>
+    ["studio", "playlist", demoMode, playlistId] as const,
+  memberPlaylists: (demoMode: boolean, memberSlug: string) =>
+    ["studio", "memberPlaylists", demoMode, memberSlug] as const,
+  trackPlaylists: (demoMode: boolean, trackId: string) =>
+    ["studio", "trackPlaylists", demoMode, trackId] as const,
+  stats: (demoMode: boolean, subprofileId: string) =>
+    ["studio", "stats", demoMode, subprofileId] as const,
+  followedArtists: (demoMode: boolean) =>
+    ["studio", "followedArtists", demoMode] as const,
 };
 
 /** A Studio request refused with `studio_access_required` means the grant was

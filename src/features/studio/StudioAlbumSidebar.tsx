@@ -6,6 +6,7 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
 import { ALBUM_BUY, ALBUM_LEDGER } from "./studioAlbum.data";
 import styles from "./studio.module.css";
+import { StudioEuroAmount } from "./StudioEuroAmount";
 
 const ARTIST_SHARE = 6.4;
 const SOLIDARITY_SHARE = 0.8;
@@ -25,7 +26,9 @@ export function StudioAlbumSidebar({
       <div className={styles.buyCard}>
         <div className={styles.eb}>{t("studio:album.sidebar.buyEyebrow")}</div>
         <div className={styles.price}>
-          €<em>{ALBUM_BUY.price}</em>
+          <em>
+            <StudioEuroAmount value={ALBUM_BUY.price} />
+          </em>
         </div>
         <div className={styles.sub}>{t("studio:album.sidebar.buySub")}</div>
         <div className={styles.buyActions}>

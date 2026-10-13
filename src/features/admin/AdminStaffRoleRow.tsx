@@ -1,7 +1,7 @@
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { AdminToggle } from "./ui";
 import type { StaffRoleMeta } from "./staffRoles.registry";
-import styles from "./AdminMembersPage.module.css";
+import styles from "./AdminMemberAccessPanel.module.css";
 
 /**
  * One row of the drawer's staff-role grant list: the role's name and what it
@@ -26,12 +26,10 @@ export function AdminStaffRoleRow({
   const { t } = useTranslation();
 
   return (
-    <li className={styles.staffRoleRow}>
-      <div className={styles.staffRoleText}>
-        <span className={styles.staffRoleLabel}>{t(staffRole.labelKey)}</span>
-        <span className={styles.staffRoleDesc}>
-          {t(staffRole.descriptionKey)}
-        </span>
+    <li className={styles.grantRow}>
+      <div className={styles.grantText}>
+        <span className={styles.grantLabel}>{t(staffRole.labelKey)}</span>
+        <span className={styles.grantDesc}>{t(staffRole.descriptionKey)}</span>
       </div>
       <AdminToggle
         checked={checked}

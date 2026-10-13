@@ -17,6 +17,7 @@ import { SavedListDetailModal } from "./SavedListDetailModal";
 import { SavedUnavailableNote } from "./SavedUnavailableNote";
 import { SavedListFileModal, SavedListNewModal } from "./SavedListModals";
 import { useSavedListsController } from "./SavedListsPage.controller";
+import { savedKindBadge } from "./savedKindBadge";
 import styles from "./SavedListsPage.module.css";
 
 /** One list in the grid. Its footer carries the only two visibility states the
@@ -94,9 +95,7 @@ function SavedListRecentRow({
       }`}
       onClick={onFile}
     >
-      <span className={styles.recentKind}>
-        {item.kind.slice(0, 3).toUpperCase()}
-      </span>
+      <span className={styles.recentKind}>{savedKindBadge(item.kind)}</span>
       <span className={styles.recentInfo}>
         <b>{item.title}</b>
         {item.meta && <span className={styles.recentMeta}>{item.meta}</span>}

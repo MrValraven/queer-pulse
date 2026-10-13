@@ -2,6 +2,7 @@ import { routes, subprofileEditPath } from "../../../app/routeMap";
 import { MY_HOUSING_LISTINGS_PATH } from "../../economy/housing.data";
 import { gatheringPath } from "../../gatherings/data";
 import { listingCorrectionContactPath } from "../../marketing/contactPrefill";
+import { studioReleasePath } from "../../studio/studioPaths";
 
 /**
  * A landlord's public page. The route is declared as the literal
@@ -125,6 +126,14 @@ export function lifecycleSourceHref(
       const listingRef = slugOf(payload, "listingRef");
       return {
         href: listingRef ? listingCorrectionContactPath(listingRef) : undefined,
+      };
+    }
+    // Studio v2: the new release itself. A recipient whose grant has gone
+    // lands on the Studio teaser, which the route gate already shows.
+    case "studio_release_published": {
+      const releaseId = slugOf(payload, "releaseId");
+      return {
+        href: releaseId ? studioReleasePath(releaseId) : routes.studio,
       };
     }
     case "persona_import_ready":

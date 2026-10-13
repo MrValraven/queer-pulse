@@ -1,0 +1,133 @@
+.list {
+  margin: 0;
+  list-style: none;
+}
+
+.row {
+  grid-template-columns: 24px 36px minmax(0, 1fr) auto;
+}
+
+.rowOwner {
+  grid-template-columns: 20px 24px 36px minmax(0, 1fr) auto auto;
+}
+
+.rowUnavailable .main {
+  opacity: 0.55;
+}
+
+.handle {
+  display: grid;
+  place-items: center;
+  color: var(--text40);
+  cursor: grab;
+}
+
+.handle:active {
+  cursor: grabbing;
+}
+
+/* The empty handle span on an unavailable row offers no drag. */
+.handle:empty,
+.handle:empty:active {
+  cursor: default;
+}
+
+/* Native HTML5 drag is inert on touch and the handle is a tiny target there;
+   Move up / Move down carry the reorder. */
+@media (pointer: coarse) {
+  .handle {
+    visibility: hidden;
+  }
+}
+
+.position {
+  color: var(--text60);
+  font-family: var(--serif);
+  text-align: center;
+}
+
+.main {
+  min-width: 0;
+}
+
+.duration {
+  white-space: nowrap;
+}
+
+.controls {
+  display: inline-flex;
+  gap: 2px;
+}
+
+.control {
+  display: grid;
+  place-items: center;
+  width: var(--tap-min);
+  height: var(--tap-min);
+  border: 0;
+  border-radius: var(--radius-8);
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+  transition-property: background-color, opacity;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+@media (hover: hover) {
+  .control:hover {
+    background: rgba(var(--cream-rgb), 0.08);
+  }
+}
+
+.control[aria-disabled="true"] {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.control:focus-visible,
+.creditLink:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.creditLink {
+  color: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.chip {
+  display: inline-flex;
+  margin-inline-start: 8px;
+  padding: 1px 8px;
+  border: 1px solid rgba(var(--cream-rgb), 0.28);
+  border-radius: var(--radius-pill);
+  font-size: var(--text-11);
+  vertical-align: middle;
+}
+
+.description {
+  max-width: 60ch;
+  margin: 14px 0 0;
+  color: var(--text);
+  font-family: var(--serif);
+  font-style: italic;
+}
+
+@media (--sm) {
+  .rowOwner {
+    grid-template-columns: 20px 24px 36px minmax(0, 1fr);
+  }
+
+  .rowOwner .duration {
+    display: none;
+  }
+
+  .rowOwner .controls {
+    grid-column: 3 / -1;
+    justify-content: flex-end;
+  }
+}

@@ -7,13 +7,15 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
 import s from "./live.module.css";
 
-// Content: today's mock broadcast schedule (show title, host, date/time,
-// duration) — comes from the broadcast record in live mode.
+// Today's mock broadcast schedule: show title, host and the formatted
+// date/time stay literal; the duration phrase resolves through
+// `studioShowcase:live.ribbon.duration` with the figures below.
 const SHOW_TITLE = "Vespertina, vol. iv";
 const SHOW_HOST = "Sara Marques";
 const SHOW_SCHEDULE_LINE = "Wed 10 Jun · ";
 const SHOW_TIME = "21:18 Lisbon";
-const SHOW_DURATION_SUFFIX = " · 1h 42m show, 22 min in";
+const SHOW_LENGTH = "1h 42m";
+const SHOW_ELAPSED = "22 min";
 
 export function StudioLivePage() {
   const { t } = useTranslation();
@@ -34,7 +36,11 @@ export function StudioLivePage() {
         <span className={s.clock}>
           {SHOW_SCHEDULE_LINE}
           <em>{SHOW_TIME}</em>
-          {SHOW_DURATION_SUFFIX}
+          {" · "}
+          {t("studioShowcase:live.ribbon.duration", {
+            length: SHOW_LENGTH,
+            elapsed: SHOW_ELAPSED,
+          })}
         </span>
       </div>
 

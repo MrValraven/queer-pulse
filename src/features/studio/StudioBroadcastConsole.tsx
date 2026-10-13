@@ -12,6 +12,8 @@ import {
   INCOMING_TIPS,
   TALKBACK,
   CUE_BADGE_LABEL_KEYS,
+  CUE_LIVE_OWN_META_KEY,
+  CUE_MATCHED_META_KEY,
   type Cue,
   type Tip,
 } from "./studioBroadcast.data";
@@ -24,9 +26,9 @@ const badgeClass = {
 };
 
 // Content: the currently-playing mock track's title, split for the <em>
-// emphasis on its last word — same track as studioAlbum.data.ts's TRACKS[5]
-// ("Carta para a santa"). In live mode this comes from the broadcast's
-// now-playing track record.
+// emphasis on its last word. It is the same track as studioAlbum.data.ts's
+// TRACKS[5] ("Carta para a santa"). In live mode this comes from the
+// broadcast's now-playing track record.
 const NOW_PLAYING_TITLE_PRE = "Carta para a ";
 const NOW_PLAYING_TITLE_EM = "santa";
 
@@ -85,9 +87,13 @@ export function AudioInColumn({ reduced }: { reduced: boolean }) {
           >
             <div className={s.devTop}>
               <span className={s.radio} />
-              <span className={s.devName}>{device.name}</span>
+              <span className={s.devName}>
+                {t(device.nameLabel.key, device.nameLabel.values)}
+              </span>
             </div>
-            <div className={s.devSub}>{device.sub}</div>
+            <div className={s.devSub}>
+              {t(device.subLabel.key, device.subLabel.values)}
+            </div>
           </button>
         ))}
         <div style={{ marginTop: 18 }}>
@@ -146,7 +152,7 @@ export function NowPlayingColumn({ reduced }: { reduced: boolean }) {
       pre: (title ?? raw) + " ",
       em: "",
       who: whoRaw ?? t("studio:broadcast.nowPlaying.justAdded"),
-      meta: t("studio:broadcast.nowPlaying.liveYourOwn"),
+      metaKey: CUE_LIVE_OWN_META_KEY,
       badge: "onair",
     };
     setCues((prev) => [
@@ -156,7 +162,7 @@ export function NowPlayingColumn({ reduced }: { reduced: boolean }) {
           ? {
               ...existingCue,
               badge: "matched" as const,
-              meta: "matched",
+              metaKey: CUE_MATCHED_META_KEY,
             }
           : existingCue,
       ),
@@ -203,12 +209,21 @@ export function NowPlayingColumn({ reduced }: { reduced: boolean }) {
             <span className={s.cueTime}>{cue.time}</span>
             <div>
               <div className={s.cueTitle}>
-                {cue.pre}
-                {cue.em && <em>{cue.em}</em>}
-                {cue.post}
+                {cue.titleKey ? (
+                  <Translation
+                    i18nKey={cue.titleKey}
+                    components={{ em: <em /> }}
+                  />
+                ) : (
+                  <>
+                    {cue.pre}
+                    {cue.em && <em>{cue.em}</em>}
+                    {cue.post}
+                  </>
+                )}
               </div>
               <div className={s.cueWho}>
-                {cue.who} · {cue.meta}
+                {cue.whoKey ? t(cue.whoKey) : cue.who} · {t(cue.metaKey)}
               </div>
             </div>
             <span className={`${s.badge} ${badgeClass[cue.badge]}`}>
@@ -230,6 +245,7 @@ export function NowPlayingColumn({ reduced }: { reduced: boolean }) {
 
 /* ---------- RIGHT: tips / talkback ---------- */
 export function AsideColumn({ reduced }: { reduced: boolean }) {
+  const { t } = useTranslation();
   const fmt = useFormat();
   const [tab, setTab] = useState<"tips" | "talkback">("tips");
   const [tips, setTips] = useState<Tip[]>(INITIAL_TIPS);
@@ -301,7 +317,7 @@ export function AsideColumn({ reduced }: { reduced: boolean }) {
                     <div
                       className={`${s.tipNote} ${tip.privateTip ? s.priv : ""}`}
                     >
-                      {tip.note}
+                      {t(tip.noteKey)}
                     </div>
                   </div>
                 </div>
@@ -339,10 +355,12 @@ function TalkbackPane() {
           <span className={s.tbAv}>{message.initials}</span>
           <div className={s.tbBody}>
             <div className={s.tbName}>
-              {message.name}
-              {message.role && <em> · {message.role}</em>}
+              {message.own
+                ? t("studioShowcase:broadcast.talkback.you")
+                : message.name}
+              {message.roleKey && <em> · {t(message.roleKey)}</em>}
             </div>
-            <div className={s.tbText}>{message.text}</div>
+            <div className={s.tbText}>{t(message.textKey)}</div>
           </div>
         </div>
       ))}

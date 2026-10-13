@@ -1,11 +1,13 @@
 import { FiX } from "react-icons/fi";
 import { MdDragIndicator } from "react-icons/md";
 import { ImageSlot } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   COVER,
   COLLECTIONS,
   BROADCASTS,
+  resolveText,
   type Single,
 } from "./studioProgram.data";
 import s from "./StudioProgramPage.module.css";
@@ -56,8 +58,13 @@ export function StudioProgramSlate({
               {COVER.titlePre}
               <em>{COVER.titleEm}</em>
             </h3>
-            <div className={s.coverBy}>{COVER.by}</div>
-            <blockquote className={s.coverNote}>{COVER.note}</blockquote>
+            <div className={s.coverBy}>{t(COVER.by.key, COVER.by.values)}</div>
+            <blockquote className={s.coverNote}>
+              <Translation
+                i18nKey={COVER.noteKey}
+                components={{ em: <em /> }}
+              />
+            </blockquote>
             <div className={s.coverActions}>
               <button type="button" className={s.chip} onClick={onSwap}>
                 {t("studio:program.slate.cover.swapCta")}
@@ -107,11 +114,11 @@ export function StudioProgramSlate({
                   {single.titlePre}
                   <em>{single.titleEm}</em>
                 </div>
-                <div className={s.trackWho}>{single.who}</div>
+                <div className={s.trackWho}>{resolveText(single.who, t)}</div>
               </div>
               <input
                 className={s.noteField}
-                value={single.note}
+                value={resolveText(single.note, t)}
                 placeholder={t("studio:program.slate.singles.notePlaceholder")}
                 onChange={(e) => onNoteChange(single.id, e.target.value)}
                 aria-label={t("studio:program.slate.singles.noteAria", {
@@ -154,10 +161,12 @@ export function StudioProgramSlate({
                   {collection.titlePre}
                   <em>{collection.titleEm}</em>
                 </div>
-                <div className={s.collSub}>{collection.meta}</div>
+                <div className={s.collSub}>
+                  {t(collection.meta.key, collection.meta.values)}
+                </div>
               </div>
               <span className={`${s.collBadge} ${s[collection.badgeTone]}`}>
-                {collection.badge}
+                {t(collection.badge.key, collection.badge.values)}
               </span>
             </div>
           ))}
@@ -179,14 +188,17 @@ export function StudioProgramSlate({
             <div key={broadcast.id} className={s.bcast}>
               <div className={s.dateBox}>
                 <b>{broadcast.day}</b>
-                <span>{broadcast.weekday}</span>
+                <span>{t(broadcast.weekdayKey)}</span>
               </div>
               <div className={s.bcastMeta}>
                 <div className={s.bcastTitle}>
+                  {broadcast.leadKey && `${t(broadcast.leadKey)} · `}
                   {broadcast.titlePre}
                   <em>{broadcast.titleEm}</em>
                 </div>
-                <div className={s.bcastSub}>{broadcast.meta}</div>
+                <div className={s.bcastSub}>
+                  {t(broadcast.meta.key, broadcast.meta.values)}
+                </div>
               </div>
               <span className={s.timePill}>{broadcast.time}</span>
             </div>

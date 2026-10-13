@@ -51,10 +51,6 @@ export function VisasPage() {
       <PageMeta title={pageTitle} description={pageDescription} />
       <JsonLd
         schema={buildBreadcrumbSchema([
-          {
-            name: t("shared:megaNav.lisbon.title"),
-            path: routes.safeSpaces,
-          },
           { name: pageTitle, path: routes.visas },
         ])}
       />

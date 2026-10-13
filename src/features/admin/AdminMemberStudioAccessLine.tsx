@@ -7,8 +7,7 @@ import {
   useMemberStudioAccess,
   useRevokeStudioAccess,
 } from "./api/useAdminStudio";
-import styles from "./AdminMembersPage.module.css";
-import studioStyles from "./AdminStudio.module.css";
+import { AdminAccessRow } from "./AdminAccessRow";
 
 const DATE_OPTIONS: Intl.DateTimeFormatOptions = {
   day: "numeric",
@@ -17,10 +16,11 @@ const DATE_OPTIONS: Intl.DateTimeFormatOptions = {
 };
 
 /**
- * The member drawer's Studio line, beside the ambassador line: who granted
- * Studio access and when, or that there is none, with Grant or Revoke.
- * Renders nothing until the grant is read, so "No Studio access" never
- * flashes for a member who has it.
+ * The member drawer's Studio row, under the ambassador row in the access
+ * panel: who granted Studio access and when, or that there is none, with
+ * Grant or Revoke. Renders nothing until the grant is read, so "Not granted"
+ * never flashes for a member who has it. Grant is an outlined button: it is
+ * a minor, reversible action in a drawer full of heavier ones.
  */
 export function AdminMemberStudioAccessLine({
   memberId,
@@ -62,65 +62,67 @@ export function AdminMemberStudioAccessLine({
     : "";
 
   return (
-    <div className={studioStyles.accessGroup}>
-      <span className={styles.subGroupLabel}>
-        {t("admin:studioAccess.label")}
-      </span>
-      <div ref={actionRowRef} className={styles.roleCurrentRow}>
-        <span className={styles.roleCurrentLabel}>
-          {hasLoadFailed
-            ? t("admin:studioAccess.loadFailed")
-            : record
-              ? record.grantedBy
-                ? t("admin:studioAccess.grantedBy", {
-                    staff: record.grantedBy.displayName,
-                    date: grantedOn,
-                  })
-                : t("admin:studioAccess.grantedOn", { date: grantedOn })
-              : t("admin:studioAccess.none")}
-        </span>
-        {hasLoadFailed ? (
-          <Button
-            size="sm"
-            variant="ghost"
-            aria-disabled={isRetrying || undefined}
-            onClick={() => {
-              if (!isRetrying) void access.refetch();
-            }}
-          >
-            {t("admin:studioAccess.retry")}
-          </Button>
-        ) : record ? (
-          <Button
-            size="sm"
-            variant="ghost"
-            onClick={() => setIsConfirmingRevoke(true)}
-          >
-            {t("admin:studioAccess.revokeCta")}
-          </Button>
-        ) : (
-          <Button
-            size="sm"
-            variant="primary"
-            aria-disabled={grant.isPending || undefined}
-            onClick={() => {
-              if (grant.isPending) return;
-              shouldFocusSwappedButton.current = true;
-              grant.mutate(
-                { memberId },
-                {
-                  onError: () => {
-                    shouldFocusSwappedButton.current = false;
+    <AdminAccessRow
+      title={t("admin:studioAccess.label")}
+      status={
+        hasLoadFailed
+          ? t("admin:studioAccess.loadFailed")
+          : record
+            ? record.grantedBy
+              ? t("admin:studioAccess.grantedBy", {
+                  staff: record.grantedBy.displayName,
+                  date: grantedOn,
+                })
+              : t("admin:studioAccess.grantedOn", { date: grantedOn })
+            : t("admin:studioAccess.none")
+      }
+      tone={hasLoadFailed ? "warn" : record ? "on" : "off"}
+      footnote={t("admin:studioAccess.hint")}
+      action={
+        <div ref={actionRowRef}>
+          {hasLoadFailed ? (
+            <Button
+              size="sm"
+              variant="ghost"
+              aria-disabled={isRetrying || undefined}
+              onClick={() => {
+                if (!isRetrying) void access.refetch();
+              }}
+            >
+              {t("admin:studioAccess.retry")}
+            </Button>
+          ) : record ? (
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={() => setIsConfirmingRevoke(true)}
+            >
+              {t("admin:studioAccess.revokeCta")}
+            </Button>
+          ) : (
+            <Button
+              size="sm"
+              variant="ghost"
+              aria-disabled={grant.isPending || undefined}
+              onClick={() => {
+                if (grant.isPending) return;
+                shouldFocusSwappedButton.current = true;
+                grant.mutate(
+                  { memberId },
+                  {
+                    onError: () => {
+                      shouldFocusSwappedButton.current = false;
+                    },
                   },
-                },
-              );
-            }}
-          >
-            {t("admin:studioAccess.grantCta")}
-          </Button>
-        )}
-      </div>
-      <p className={styles.dHint}>{t("admin:studioAccess.hint")}</p>
+                );
+              }}
+            >
+              {t("admin:studioAccess.grantCta")}
+            </Button>
+          )}
+        </div>
+      }
+    >
       <ConfirmDialog
         open={isConfirmingRevoke}
         onClose={() => setIsConfirmingRevoke(false)}
@@ -141,6 +143,6 @@ export function AdminMemberStudioAccessLine({
         description={t("admin:studioAccess.revokeBody")}
         confirmLabel={t("admin:studioAccess.revokeConfirm")}
       />
-    </div>
+    </AdminAccessRow>
   );
 }

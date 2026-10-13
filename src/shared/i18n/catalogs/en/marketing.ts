@@ -3406,7 +3406,7 @@ export const marketing: Catalog = {
     "{count} infrastructure changes",
   // Release headlines, one per shipping day (see changelogReleases.ts).
   "changelog.releases.2026-10-13.headline":
-    "Printable flyers and team tee files in admin Marketing, and find your work by typing it.",
+    "Studio gains playlists, follows and genre browsing, admin Marketing gets printable flyers, and you find your work by typing it.",
   "changelog.releases.2026-10-12.headline":
     "Host with guest communities, filter listings by what they offer, and listen in Studio.",
   "changelog.releases.2026-10-08.headline":
@@ -3836,6 +3836,22 @@ export const marketing: Catalog = {
     "Share my plans moves up to the gathering's header",
   "changelog.entries.share-my-plans-in-the-header.body":
     "Once you're going, a shield icon beside Add to calendar sends your plans to someone you trust.",
+  "changelog.entries.studio-v2.title":
+    "Playlists, follows and genres in Studio",
+  "changelog.entries.studio-v2.body":
+    "Make and share playlists, follow artists for new releases, browse by genre and see your numbers as an artist.",
+  "changelog.entries.studio-v2-fixes.title":
+    "Clearer Studio pages, steady track order",
+  "changelog.entries.studio-v2-fixes.body":
+    "Studio pages read clearly on phones and in Portuguese, and removing a failed upload keeps your track order.",
+  "changelog.entries.calendar-entries-carry-description-and-host.title":
+    "Calendar entries carry the gathering's description",
+  "changelog.entries.calendar-entries-carry-description-and-host.body":
+    "The notes hold the description, who hosts it and for which communities, above the link.",
+  "changelog.entries.community-menu-local-places.title":
+    "Local places now live in the Community menu",
+  "changelog.entries.community-menu-local-places.body":
+    "The directory, Housing and Partners sit under Discover in Community, so the top bar has one menu less.",
   "changelog.entries.marketing-flyers.title":
     "Event flyers and team tee files in admin Marketing",
   "changelog.entries.marketing-flyers.body":

@@ -419,3 +419,203 @@ describe("useStudioTrackUploads queueing, order and focus", () => {
     expect(movedButton).toHaveAttribute("aria-disabled", "true");
   });
 });
+
+describe("useStudioTrackUploads order after removing a row", () => {
+  /** B and D fail their first create; every other create answers with the
+   *  lowercased title as the track id. `heldCreate` holds D's second create. */
+  function scriptCreates(heldCreate?: Promise<{ id: string; title: string }>) {
+    const attemptsByTitle = new Map<string, number>();
+    createTrack.mockImplementation(({ title }: { title: string }) => {
+      const attempt = (attemptsByTitle.get(title) ?? 0) + 1;
+      attemptsByTitle.set(title, attempt);
+      if ((title === "B" || title === "D") && attempt === 1)
+        return Promise.reject(new Error("network"));
+      if (title === "D" && heldCreate) return heldCreate;
+      return Promise.resolve({ id: title.toLowerCase(), title });
+    });
+  }
+
+  async function renderWithTwoFailedCreates() {
+    uploadStudioAudio.mockReturnValue(handle(Promise.resolve("key")));
+    const rendered = renderHook(() => useStudioTrackUploads("r1", "p1", []));
+    act(() =>
+      rendered.result.current.addFiles(
+        ["A.mp3", "B.mp3", "C.mp3", "D.mp3"].map((name) => mp3(name)),
+      ),
+    );
+    await waitFor(() =>
+      expect(rendered.result.current.rows.map((row) => row.stage)).toEqual([
+        "ready",
+        "failed",
+        "ready",
+        "failed",
+      ]),
+    );
+    return rendered;
+  }
+
+  it("sends the shown order after the last trackless row is removed", async () => {
+    scriptCreates();
+    const { result } = await renderWithTwoFailedCreates();
+
+    act(() => result.current.retry(result.current.rows[1]!.localId));
+    await waitFor(() => expect(result.current.rows[1]?.stage).toBe("ready"));
+    // The server holds a, c, b now, but D still has no track.
+    expect(reorder).not.toHaveBeenCalled();
+
+    act(() => result.current.remove(result.current.rows[3]!.localId));
+    await waitFor(() =>
+      expect(reorder).toHaveBeenCalledWith({
+        releaseId: "r1",
+        trackIds: ["a", "b", "c"],
+      }),
+    );
+    expect(reorder).toHaveBeenCalledTimes(1);
+    expect(deleteTrack).not.toHaveBeenCalled();
+    expect(result.current.rows.map((row) => row.title)).toEqual([
+      "A",
+      "B",
+      "C",
+    ]);
+  });
+
+  it("sends the shown order only after a row removed mid-create loses its track", async () => {
+    const heldCreate = deferred<{ id: string; title: string }>();
+    scriptCreates(heldCreate.promise);
+    const { result } = await renderWithTwoFailedCreates();
+
+    act(() => result.current.retry(result.current.rows[1]!.localId));
+    await waitFor(() => expect(result.current.rows[1]?.stage).toBe("ready"));
+    act(() => result.current.retry(result.current.rows[3]!.localId));
+    await waitFor(() => expect(result.current.rows[3]?.stage).toBe("creating"));
+
+    act(() => result.current.remove(result.current.rows[3]!.localId));
+    await settle();
+    // D's create is still on its way, so nothing is sent yet.
+    expect(reorder).not.toHaveBeenCalled();
+
+    await act(async () => {
+      heldCreate.resolve({ id: "d", title: "D" });
+      await Promise.resolve();
+    });
+    await waitFor(() =>
+      expect(deleteTrack).toHaveBeenCalledWith({
+        trackId: "d",
+        releaseId: "r1",
+      }),
+    );
+    await waitFor(() =>
+      expect(reorder).toHaveBeenCalledWith({
+        releaseId: "r1",
+        trackIds: ["a", "b", "c"],
+      }),
+    );
+    expect(reorder).toHaveBeenCalledTimes(1);
+  });
+
+  it("sends nothing when a removed row's track delete fails", async () => {
+    uploadStudioAudio.mockReturnValue(handle(Promise.resolve("key")));
+    deleteTrack.mockRejectedValueOnce(new Error("network"));
+    const { result } = renderHook(() => useStudioTrackUploads("r1", "p1", []));
+    act(() => result.current.addFiles([mp3("A.mp3"), mp3("B.mp3")]));
+    await waitFor(() =>
+      expect(result.current.rows.map((row) => row.stage)).toEqual([
+        "ready",
+        "ready",
+      ]),
+    );
+
+    act(() => result.current.remove(result.current.rows[0]!.localId));
+    await waitFor(() =>
+      expect(result.current.rows.map((row) => row.title)).toEqual(["A", "B"]),
+    );
+    expect(result.current.rows[0]?.stage).toBe("failed");
+    expect(reorder).not.toHaveBeenCalled();
+  });
+
+  it("sends the shown order once a row removed mid-create fails its create", async () => {
+    const heldCreate = deferred<{ id: string; title: string }>();
+    scriptCreates(heldCreate.promise);
+    const { result } = await renderWithTwoFailedCreates();
+
+    act(() => result.current.retry(result.current.rows[1]!.localId));
+    await waitFor(() => expect(result.current.rows[1]?.stage).toBe("ready"));
+    act(() => result.current.retry(result.current.rows[3]!.localId));
+    await waitFor(() => expect(result.current.rows[3]?.stage).toBe("creating"));
+
+    act(() => result.current.remove(result.current.rows[3]!.localId));
+    await settle();
+    expect(reorder).not.toHaveBeenCalled();
+
+    await act(async () => {
+      heldCreate.reject(new Error("network"));
+      await Promise.resolve();
+    });
+    await waitFor(() =>
+      expect(reorder).toHaveBeenCalledWith({
+        releaseId: "r1",
+        trackIds: ["a", "b", "c"],
+      }),
+    );
+    expect(reorder).toHaveBeenCalledTimes(1);
+    expect(deleteTrack).not.toHaveBeenCalled();
+  });
+
+  it("waits for a removed track's delete before sending the order a later removal changed", async () => {
+    const heldDelete = deferred<void>();
+    deleteTrack.mockReturnValueOnce(heldDelete.promise);
+    scriptCreates();
+    const { result } = await renderWithTwoFailedCreates();
+
+    act(() => result.current.retry(result.current.rows[1]!.localId));
+    await waitFor(() => expect(result.current.rows[1]?.stage).toBe("ready"));
+    // The server holds a, c, b. A's delete is held, then D goes.
+    act(() => result.current.remove(result.current.rows[0]!.localId));
+    act(() => result.current.remove(result.current.rows[2]!.localId));
+    expect(result.current.rows.map((row) => row.title)).toEqual(["B", "C"]);
+    await settle();
+    // The server still holds a, so an order without it would be refused.
+    expect(reorder).not.toHaveBeenCalled();
+
+    await act(async () => {
+      heldDelete.resolve();
+      await Promise.resolve();
+    });
+    await waitFor(() =>
+      expect(reorder).toHaveBeenCalledWith({
+        releaseId: "r1",
+        trackIds: ["b", "c"],
+      }),
+    );
+    expect(reorder).toHaveBeenCalledTimes(1);
+    expect(deleteTrack).toHaveBeenCalledWith({ trackId: "a", releaseId: "r1" });
+  });
+
+  it("sends a move made while a removed track's delete is held once that delete lands", async () => {
+    const heldDelete = deferred<void>();
+    deleteTrack.mockReturnValueOnce(heldDelete.promise);
+    const tracks = [trackRow("a", "A"), trackRow("b", "B"), trackRow("c", "C")];
+    const { result } = renderHook(() =>
+      useStudioTrackUploads("r1", "p1", tracks),
+    );
+
+    act(() => result.current.remove(result.current.rows[0]!.localId));
+    act(() => result.current.move(result.current.rows[1]!.localId, -1));
+    expect(result.current.rows.map((row) => row.title)).toEqual(["C", "B"]);
+    await settle();
+    // The server still holds a, so the move waits for its delete.
+    expect(reorder).not.toHaveBeenCalled();
+
+    await act(async () => {
+      heldDelete.resolve();
+      await Promise.resolve();
+    });
+    await waitFor(() =>
+      expect(reorder).toHaveBeenCalledWith({
+        releaseId: "r1",
+        trackIds: ["c", "b"],
+      }),
+    );
+    expect(reorder).toHaveBeenCalledTimes(1);
+  });
+});

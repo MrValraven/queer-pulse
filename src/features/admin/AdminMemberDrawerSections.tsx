@@ -9,6 +9,7 @@ import { AdminMemberRoleControl } from "./AdminMemberRoleControl";
 import { AdminMemberStaffRoles } from "./AdminMemberStaffRoles";
 import { AdminMemberAmbassadorLine } from "./AdminMemberAmbassadorLine";
 import { AdminMemberStudioAccessLine } from "./AdminMemberStudioAccessLine";
+import { AdminAccessPanel } from "./AdminAccessRow";
 import {
   SEALED_IDENTITY,
   type AdminMember,
@@ -21,8 +22,10 @@ import styles from "./AdminMembersPage.module.css";
 
 /**
  * Groups the tier control (`AdminMemberRoleControl`) with the additive
- * staff-role toggles (`AdminMemberStaffRoles`) under one umbrella heading —
- * the tier is "how much power", staff roles are "which functional desks".
+ * access the member holds, under one umbrella heading: the tier is "how much
+ * power", the access panel below it is "which desks and features". Staff
+ * roles, the ambassador tag and Studio share one panel and one row anatomy,
+ * so the three read as a single list of grants.
  */
 export function RolesAndAccessSection({
   member,
@@ -37,15 +40,17 @@ export function RolesAndAccessSection({
       <h3 className={styles.dHeading}>{t("admin:staffRoles.title")}</h3>
       <p className={styles.dHint}>{t("admin:staffRoles.subtitle")}</p>
       <AdminMemberRoleControl member={member} detail={detail} />
-      <AdminMemberStaffRoles
-        memberId={member.id}
-        slug={member.slug}
-        isSystem={detail.isSystem}
-        role={detail.role}
-        staffRoles={detail.staffRoles}
-      />
-      <AdminMemberAmbassadorLine slug={member.slug} />
-      <AdminMemberStudioAccessLine memberId={member.id} />
+      <AdminAccessPanel>
+        <AdminMemberStaffRoles
+          memberId={member.id}
+          slug={member.slug}
+          isSystem={detail.isSystem}
+          role={detail.role}
+          staffRoles={detail.staffRoles}
+        />
+        <AdminMemberAmbassadorLine slug={member.slug} />
+        <AdminMemberStudioAccessLine memberId={member.id} />
+      </AdminAccessPanel>
     </section>
   );
 }

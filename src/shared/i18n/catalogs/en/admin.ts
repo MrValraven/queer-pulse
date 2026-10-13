@@ -7954,16 +7954,16 @@ export const admin: Catalog = {
   "ambassadors.errors.ambassador_ineligible_member":
     "This account can't hold the status. It's a system account or it isn't active.",
   "ambassadors.drawer.label": "Ambassador",
-  "ambassadors.drawer.since": "Ambassador since {since} · {focus}",
-  "ambassadors.drawer.none": "No visible Ambassador tag",
+  "ambassadors.drawer.since": "Since {since} · {focus}",
+  "ambassadors.drawer.none": "No visible tag",
   "ambassadors.drawer.hiddenNote":
     "Hidden tags don't show here. The Ambassadors page has the full record.",
   "ambassadors.drawer.manage": "Manage ambassadors",
   // ── Studio v1 (2026-10-08) ─────────────────────────────────────────────────
   "studioAccess.label": "Studio",
-  "studioAccess.grantedBy": "Studio access: granted by {staff} on {date}",
-  "studioAccess.grantedOn": "Studio access: granted on {date}",
-  "studioAccess.none": "No Studio access",
+  "studioAccess.grantedBy": "Granted by {staff} on {date}",
+  "studioAccess.grantedOn": "Granted on {date}",
+  "studioAccess.none": "Not granted",
   "studioAccess.loadFailed": "We couldn't load Studio access",
   "studioAccess.retry": "Check access again",
   "studioAccess.grantCta": "Grant Studio access",

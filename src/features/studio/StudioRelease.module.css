@@ -27,6 +27,19 @@
   }
 }
 
+/* Phones: tighter gaps and a narrower number column give the title the
+   width the add button took. */
+@media (--sm) {
+  .tracklist > li {
+    grid-template-columns: 32px 32px minmax(0, 1fr) auto;
+    gap: 8px;
+  }
+
+  .timeCell {
+    gap: 0;
+  }
+}
+
 .rowPlay {
   position: relative;
   display: inline-flex;
@@ -62,7 +75,7 @@
 
 .rowNumber {
   font-family: var(--serif);
-  color: var(--text40);
+  color: var(--text60);
   transition-property: opacity;
   transition-duration: 0.15s;
 }
@@ -153,4 +166,46 @@ li[aria-current] > .rowPlay .rowNumber {
   .menuItem:hover {
     background: rgba(var(--cream-rgb), 0.08);
   }
+}
+
+/* Studio v2: the duration cell holds the row's Add to playlist button. */
+.timeCell {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.rowAdd {
+  display: grid;
+  place-items: center;
+  width: var(--tap-min);
+  height: var(--tap-min);
+  margin-block: -8px;
+  font-size: var(--text-18);
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  transition-property: background-color, opacity;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+@media (hover: hover) {
+  .rowAdd:hover {
+    background: rgba(var(--cream-rgb), 0.08);
+  }
+}
+
+.rowAdd[aria-disabled="true"] {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.rowAdd:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }

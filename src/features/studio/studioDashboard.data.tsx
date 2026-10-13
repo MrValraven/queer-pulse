@@ -1,25 +1,34 @@
 import type { ReactNode } from "react";
+import { StudioEuroAmount } from "./StudioEuroAmount";
 
 export interface DashStat {
   labelKey: string;
-  /** Interpolation values for `labelKey` (e.g. the payout date) — content,
-   * not chrome, but slotted into the translated template via {token}. */
-  labelValues?: Record<string, string | number>;
+  /** A date the label names (the next payout), formatted where it renders. */
+  labelDateIso?: string;
   v: ReactNode;
-  trend: ReactNode;
+  /** The trend line under the figure: a catalog key and its values. */
+  trendKey: string;
+  trendValues?: Record<string, string | number>;
+  /** Trend tokens rendered as nodes, for euro figures in the active locale. */
+  trendSlots?: Record<string, ReactNode>;
   payout?: boolean;
 }
 
 export interface DashCurator {
   av: string;
-  tone: string;
-  what: ReactNode;
-  who: string;
-  when: string;
+  tone: "coral" | "jade";
+  whatKey: string;
+  /** The track the line names: content, as written. */
+  title: string;
+  whoKey: string;
+  /** Null reads "today". */
+  whenIso: string | null;
 }
 
 export interface DashCity {
-  nm: string;
+  /** A place name as written; null for the "other cities" row. */
+  name: string | null;
+  otherCount?: number;
   pct: number;
 }
 
@@ -31,48 +40,45 @@ export const STATS: DashStat[] = [
         36,<em>400</em>
       </>
     ),
-    trend: (
-      <>
-        <em className="up">+ 12,140</em> vs. last month · 4 of 11 tracks active
-      </>
-    ),
+    trendKey: "studio:demo.dashboard.trend.plays",
+    trendValues: { delta: "+ 12,140", active: 4, total: 11 },
   },
   {
     labelKey: "studio:dashboard.stats.streamingEarnings",
     v: (
-      <>
-        €<em>1,820</em>
-      </>
+      <em>
+        <StudioEuroAmount value={1820} />
+      </em>
     ),
-    trend: (
-      <>
-        <em className="up">+ €607</em> vs. last month · €0.05 / qualifying play
-      </>
-    ),
+    trendKey: "studio:demo.dashboard.trend.earnings",
+    trendSlots: {
+      delta: (
+        <>
+          + <StudioEuroAmount value={607} />
+        </>
+      ),
+      rate: <StudioEuroAmount value={0.05} />,
+    },
   },
   {
     labelKey: "studio:dashboard.stats.tipsReceived",
     v: (
-      <>
-        €<em>448</em>
-      </>
+      <em>
+        <StudioEuroAmount value={448} />
+      </em>
     ),
-    trend: (
-      <>
-        87 tippers, 64 with notes ·{" "}
-        <em className="up">5 since you opened this page</em>
-      </>
-    ),
+    trendKey: "studio:demo.dashboard.trend.tips",
+    trendValues: { tippers: 87, notes: 64, recent: 5 },
   },
   {
     labelKey: "studio:dashboard.stats.nextPayout",
-    labelValues: { date: "5 Jul" },
+    labelDateIso: "2026-07-05",
     v: (
-      <>
-        €<em>2,140</em>
-      </>
+      <em>
+        <StudioEuroAmount value={2140} />
+      </em>
     ),
-    trend: <>→ SEPA · LU IBAN · settles morning of the 5th</>,
+    trendKey: "studio:demo.dashboard.trend.payout",
     payout: true,
   },
 ];
@@ -83,55 +89,47 @@ export const CURATORS: DashCurator[] = [
   {
     av: "SM",
     tone: "coral",
-    what: (
-      <>
-        <em>Carta para a santa</em> placed at track 6 of the Wednesday set
-      </>
-    ),
-    who: 'Sara Marques · Vespertina vol. iv · "stay through the second verse"',
-    when: "today",
+    whatKey: "studio:demo.dashboard.curator.what.wednesdaySet",
+    title: "Carta para a santa",
+    whoKey: "studio:demo.dashboard.curator.who.wednesdaySet",
+    whenIso: null,
   },
   {
     av: "SM",
     tone: "coral",
-    what: (
-      <>
-        <em>Mãe, três vezes</em> added to "Songs to play your mother"
-      </>
-    ),
-    who: "Sara Marques · collection · rotated in for this week",
-    when: "Mon 8 Jun",
+    whatKey: "studio:demo.dashboard.curator.what.collection",
+    title: "Mãe, três vezes",
+    whoKey: "studio:demo.dashboard.curator.who.collection",
+    whenIso: "2026-06-08",
   },
   {
     av: "DO",
     tone: "jade",
-    what: (
-      <>
-        <em>O nome</em> included in Trans composers vol. iv
-      </>
-    ),
-    who: "D. Okoye · mix · liner-note paragraph about the lyric",
-    when: "Fri 5 Jun",
+    whatKey: "studio:demo.dashboard.curator.what.mix",
+    title: "O nome",
+    whoKey: "studio:demo.dashboard.curator.who.mix",
+    whenIso: "2026-06-05",
   },
   {
     av: "JR",
     tone: "coral",
-    what: (
-      <>
-        <em>Bairro quente</em> picked for the Monday warm-up
-      </>
-    ),
-    who: 'João Ribeiro · single track placement · "for the kitchen, 8pm"',
-    when: "Mon 1 Jun",
+    whatKey: "studio:demo.dashboard.curator.what.warmup",
+    title: "Bairro quente",
+    whoKey: "studio:demo.dashboard.curator.who.warmup",
+    whenIso: "2026-06-01",
   },
 ];
 
 export const CITIES: DashCity[] = [
-  { nm: "Lisbon, PT", pct: 62 },
-  { nm: "São Paulo, BR", pct: 14 },
-  { nm: "Porto, PT", pct: 8 },
-  { nm: "Berlin, DE", pct: 5 },
-  { nm: "Mexico City, MX", pct: 4 },
-  { nm: "Paris, FR", pct: 3 },
-  { nm: "35 other cities", pct: 4 },
+  { name: "Lisbon, PT", pct: 62 },
+  { name: "São Paulo, BR", pct: 14 },
+  { name: "Porto, PT", pct: 8 },
+  { name: "Berlin, DE", pct: 5 },
+  { name: "Mexico City, MX", pct: 4 },
+  { name: "Paris, FR", pct: 3 },
+  { name: null, otherCount: 35, pct: 4 },
 ];
+
+/** Noon UTC keeps a date-only fixture on its day in every time zone. */
+export const fixtureDate = (dateIso: string) =>
+  new Date(`${dateIso}T12:00:00Z`);

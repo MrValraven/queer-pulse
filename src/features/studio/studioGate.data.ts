@@ -1,23 +1,19 @@
 import { routes } from "../../app/routeMap";
 
 /**
- * Studio pages that stay demo-only in v1 (spec section 2). A granted member
- * who opens one in a live build lands on Studio home. Money, live sets,
- * governance, the library, the dashboard, Studio's own settings and
- * notifications, and the co-op's information pages (they describe the
- * payout model, which v1 does not run).
+ * Studio pages that stay demo-only (spec v1 section 2, v2 section 8). A
+ * granted member who opens one in a live build lands on Studio home: money,
+ * live sets, governance (council, triage, flag review), Studio's own
+ * settings and notifications, and the co-op's information pages. Studio v2
+ * opened the library, the playlist page, the dashboard, open calls and the
+ * solidarity page.
  */
 export const STUDIO_DEFERRED_PATHS: readonly string[] = [
-  routes.studioDashboard,
   routes.studioPayouts,
   routes.studioLive,
-  routes.studioCollection,
   routes.studioSet,
-  routes.studioLibrary,
   routes.studioCheckout,
   routes.studioSheetStore,
-  "/studio/solidarity-fund",
-  routes.studioCalls,
   routes.studioSetSubmission,
   routes.studioCouncil,
   routes.studioTriage,

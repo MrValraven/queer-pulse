@@ -61,6 +61,9 @@ function cardOf(release: StudioReleaseView): StudioReleaseCardView {
     artist: release.artist,
     href: release.href,
     savedId: release.savedId,
+    publishedAt: release.publishedAt,
+    genre: release.genre,
+    genreLabelKey: release.genreLabelKey,
   };
 }
 
@@ -93,6 +96,9 @@ export function syncDemoReleaseLists(
       );
       return {
         ...artistView,
+        allReleases: isPublished
+          ? [card, ...others(artistView.allReleases)]
+          : others(artistView.allReleases),
         releases:
           isPublished && !isSingle
             ? [card, ...others(artistView.releases)]
@@ -148,6 +154,23 @@ export function refreshReleaseLists(
   }
   void queryClient.invalidateQueries({ queryKey: ["studio", "artist"] });
   void queryClient.invalidateQueries({ queryKey: ["studio", "releases"] });
+  // A publish or unpublish changes the genre lists too (Studio v2).
+  void queryClient.invalidateQueries({ queryKey: ["studio", "browse"] });
+  void queryClient.invalidateQueries({ queryKey: ["studio", "genres"] });
+  // Playlists hold the release's tracks, so a publish, unpublish or delete
+  // changes which entries play; search results and Your numbers count them.
+  void queryClient.invalidateQueries({ queryKey: ["studio", "playlist"] });
+  void queryClient.invalidateQueries({
+    queryKey: studioKeys.myPlaylists(demoMode),
+  });
+  void queryClient.invalidateQueries({
+    queryKey: ["studio", "memberPlaylists"],
+  });
+  void queryClient.invalidateQueries({
+    queryKey: ["studio", "trackPlaylists"],
+  });
+  void queryClient.invalidateQueries({ queryKey: ["studio", "search"] });
+  void queryClient.invalidateQueries({ queryKey: ["studio", "stats"] });
 }
 
 /** Write the server's answer into the release cache and refresh the lists

@@ -32,7 +32,7 @@ export function StudioFlagCard({ flag, done, onResolve }: StudioFlagCardProps) {
             {flag.titleEm && <em>{flag.titleEm}</em>}
             {flag.titlePost}
           </h3>
-          <div className="who">{flag.who}</div>
+          <div className={s.who}>{flag.who}</div>
         </div>
         {done ? (
           <span className={s.flagResolvedTag}>
@@ -62,7 +62,7 @@ export function StudioFlagCard({ flag, done, onResolve }: StudioFlagCardProps) {
           </div>
           <div className={s.flagClaim}>
             <span
-              className="av"
+              className={s.av}
               style={
                 flag.unclaimed
                   ? {
@@ -74,7 +74,7 @@ export function StudioFlagCard({ flag, done, onResolve }: StudioFlagCardProps) {
             >
               {flag.claimAv}
             </span>
-            {flag.claim}
+            <span className={s.claimText}>{flag.claim}</span>
             <span className={s.dl}>{flag.deadline}</span>
           </div>
           <div className={s.flagActions}>

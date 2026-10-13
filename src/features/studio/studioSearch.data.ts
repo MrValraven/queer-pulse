@@ -10,6 +10,7 @@ export const STUDIO_SEARCH_FILTERS: {
   { id: "releases", labelKey: "studio:searchPage.filter.releases" },
   { id: "tracks", labelKey: "studio:searchPage.filter.tracks" },
   { id: "artists", labelKey: "studio:search.filter.artists" },
+  { id: "playlists", labelKey: "studio:searchPage.filter.playlists" },
 ];
 
 /** Demo-only suggestion chips (the showcase never stored searches). */

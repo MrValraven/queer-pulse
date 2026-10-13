@@ -336,3 +336,25 @@ describe("formatPushActions (ENG-414)", () => {
     expect(formatPushActions(undefined, "pt")).toBeUndefined();
   });
 });
+
+describe("studio release push copy", () => {
+  it("names the persona and the release in both languages", () => {
+    const source = {
+      title: "New from an artist you follow",
+      body: "Mariana Sol released Cidade dos santos",
+      l10n: {
+        titleKey: "push:studioReleasePublished.title",
+        bodyKey: "push:studioReleasePublished.body",
+        params: { persona: "Mariana Sol", title: "Cidade dos santos" },
+      },
+    };
+    expect(formatPushCopy(source, "en")).toEqual({
+      title: "New from an artist you follow",
+      body: "Mariana Sol released Cidade dos santos",
+    });
+    expect(formatPushCopy(source, "pt")).toEqual({
+      title: "Novidade de quem segues",
+      body: "Mariana Sol lançou Cidade dos santos",
+    });
+  });
+});

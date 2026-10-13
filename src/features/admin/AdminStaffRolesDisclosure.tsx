@@ -1,62 +1,70 @@
-import { FiChevronDown } from "react-icons/fi";
+import { useState, type ReactNode } from "react";
+import { Collapse } from "../../shared/components/ui/Collapse";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import styles from "./AdminMembersPage.module.css";
+import { AdminAccessRow } from "./AdminAccessRow";
+import styles from "./AdminMemberAccessPanel.module.css";
 
 /**
- * The header row of the drawer's staff-role grant list, as a disclosure.
+ * The staff-roles row of the drawer's access panel: a disclosure over the
+ * grant toggles.
  *
  * Eight toggle cards rendered flat made the member drawer very tall, so the
  * list ships collapsed. A collapsed section that says nothing about what it
- * hides is a lie by omission, so the header carries the count of active
+ * hides is a lie by omission, so the status line carries the count of active
  * grants: an admin reads "3 of 8 granted" without opening anything.
  *
- * Its own file rather than a block inside `AdminMemberStaffRoles`, which is
- * already near the repo's 200-line ceiling.
+ * `Collapse` unmounts the list while it is shut, so the `aria-controls`
+ * target is a wrapper that stays mounted around it. The locked reason sits
+ * outside the button as the row's footnote, because it explains why the
+ * toggles are inert.
  */
 export function AdminStaffRolesDisclosure({
   listId,
-  isOpen,
-  onToggle,
   grantedCount,
   totalCount,
+  lockedReason,
+  confirmDialog,
+  children,
 }: {
-  /** `id` of the `<ul>` this button shows and hides; the `aria-controls` target. */
+  /** `id` of the region this row shows and hides; the `aria-controls` target. */
   listId: string;
-  isOpen: boolean;
-  onToggle: () => void;
   /** Grants held right now, counting an admin's implicit hold on all of them. */
   grantedCount: number;
   totalCount: number;
+  lockedReason: string | null;
+  /** Rendered inside the row, outside the collapsing region. */
+  confirmDialog?: ReactNode;
+  /** The `AdminStaffRoleRow` items. */
+  children: ReactNode;
 }) {
   const { t } = useTranslation();
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <button
-      type="button"
-      className={styles.staffRolesToggle}
-      aria-expanded={isOpen}
-      aria-controls={listId}
-      onClick={onToggle}
+    <AdminAccessRow
+      title={t("admin:staffRoles.grantsLabel")}
+      status={
+        grantedCount === 0
+          ? t("admin:staffRoles.grantsSummaryNone")
+          : t("admin:staffRoles.grantsSummary", {
+              count: grantedCount,
+              total: totalCount,
+            })
+      }
+      tone={grantedCount > 0 ? "on" : "off"}
+      footnote={lockedReason}
+      disclosure={{
+        isOpen,
+        onToggle: () => setIsOpen((wasOpen) => !wasOpen),
+        controlsId: listId,
+      }}
     >
-      <span className={styles.staffRolesToggleLabel}>
-        {t("admin:staffRoles.grantsLabel")}
-      </span>
-      <span className={styles.staffRolesToggleMeta}>
-        <span className={styles.staffRolesSummary}>
-          {grantedCount === 0
-            ? t("admin:staffRoles.grantsSummaryNone")
-            : t("admin:staffRoles.grantsSummary", {
-                count: grantedCount,
-                total: totalCount,
-              })}
-        </span>
-        <FiChevronDown
-          aria-hidden
-          className={`${styles.staffRolesChevron} ${
-            isOpen ? styles.staffRolesChevronOpen : ""
-          }`}
-        />
-      </span>
-    </button>
+      <div id={listId}>
+        <Collapse isOpen={isOpen}>
+          <ul className={styles.grantList}>{children}</ul>
+        </Collapse>
+      </div>
+      {confirmDialog}
+    </AdminAccessRow>
   );
 }

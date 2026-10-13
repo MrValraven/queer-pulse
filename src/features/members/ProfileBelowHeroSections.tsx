@@ -2,6 +2,7 @@ import { ProfileContent, type ProfileContentEdit } from "./ProfileSections";
 import { ProfileCommunitiesSection } from "./ProfileCommunitiesSection";
 import { PlacesSection } from "./PlacesSection";
 import { ProfileWritingSection } from "../magazine/ProfileWritingSection";
+import { ProfileStudioPlaylists } from "./ProfileStudioPlaylists";
 import type { MemberProfile } from "./data/memberProfiles";
 import type { Member } from "./data/members";
 
@@ -65,6 +66,16 @@ export function ProfileBelowHeroSections({
         isSelf={selfView}
         firstName={profile.first}
       />
+      {/* Studio v2: the member's Studio playlists, for a viewer with a
+          Studio grant. Renders nothing unless there are some. Left out while
+          editing, like Places: nothing in this form edits a playlist. */}
+      {!isEditingProfile && (
+        <ProfileStudioPlaylists
+          memberSlug={ownerSlug}
+          isSelf={selfView}
+          firstName={profile.first}
+        />
+      )}
     </>
   );
 }

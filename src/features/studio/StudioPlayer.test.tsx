@@ -35,6 +35,7 @@ function playerValue(
     hasNext: false,
     playRelease: vi.fn(() => Promise.resolve()),
     playReleases: vi.fn(() => Promise.resolve()),
+    playTracks: vi.fn(() => Promise.resolve()),
     togglePlay: vi.fn(),
     next: vi.fn(),
     previous: vi.fn(),

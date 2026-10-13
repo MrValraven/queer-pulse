@@ -185,7 +185,7 @@
 }
 .rcr {
   display: grid;
-  grid-template-columns: auto 1fr auto auto;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
   gap: 12px;
   align-items: baseline;
   font-size: var(--text-14);
@@ -418,6 +418,15 @@
 }
 
 @media (--sm) {
+  .rcr {
+    gap: 8px;
+  }
+  .rcr .v {
+    font-size: var(--text-16);
+  }
+  .rcr .pct {
+    min-width: 0;
+  }
   .head {
     grid-template-columns: 56px 1fr;
     row-gap: 14px;

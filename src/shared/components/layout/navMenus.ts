@@ -1,7 +1,6 @@
 import type { IconType } from "react-icons";
 import {
   FiUsers,
-  FiMapPin,
   FiLifeBuoy,
   FiBookOpen,
   FiBriefcase,
@@ -60,9 +59,10 @@ export interface MegaMenu {
   feature?: MegaFeature;
   /**
    * Public stand-in for `feature`, used when the primary promo points into the
-   * gated member surface and the visitor is logged out. Lets public-facing
-   * menus (Community, Lisbon) keep a highlighted main link that actually leads
-   * somewhere a signed-out visitor can go, instead of dropping the promo.
+   * gated member surface and the visitor is logged out. Lets a public-facing
+   * menu (Community, whose stand-in is the safe-spaces explainer) keep a
+   * highlighted main link that actually leads somewhere a signed-out visitor
+   * can go, instead of dropping the promo.
    */
   featurePublic?: MegaFeature;
   columns: MegaColumn[];
@@ -146,9 +146,9 @@ function markBeingBuilt(
  * from that one flag.
  *
  * The feature promo is the menu's highlighted "main link". When its destination
- * is gated (Community → members, Lisbon → directory), a logged-out visitor gets
- * the menu's `featurePublic` stand-in instead — a promo that leads somewhere
- * they can actually go — so the highlight never disappears. Only when neither is
+ * is gated (Community → members), a logged-out visitor gets the menu's
+ * `featurePublic` stand-in instead (Community → safe spaces), a promo that
+ * leads somewhere they can actually go, so the highlight never disappears. Only when neither is
  * reachable is the promo dropped, and that menu is usually omitted anyway once
  * all its columns are gated.
  */
@@ -200,7 +200,7 @@ export const NAV_MENUS: MegaMenu[] = [
       eyebrowKey: "shared:megaNav.community.featurePublic.eyebrow",
       titleKey: "shared:megaNav.community.featurePublic.title",
       bodyKey: "shared:megaNav.community.featurePublic.body",
-      href: routes.volunteer,
+      href: routes.safeSpaces,
       ctaKey: "shared:megaNav.community.featurePublic.cta",
     },
     columns: [
@@ -250,61 +250,30 @@ export const NAV_MENUS: MegaMenu[] = [
           },
         ],
       },
-    ],
-  },
-  {
-    key: "Lisbon",
-    titleKey: "shared:megaNav.lisbon.title",
-    subtitleKey: "shared:megaNav.lisbon.subtitle",
-    icon: FiMapPin,
-    feature: {
-      eyebrowKey: "shared:megaNav.lisbon.feature.eyebrow",
-      titleKey: "shared:megaNav.lisbon.feature.title",
-      bodyKey: "shared:megaNav.lisbon.feature.body",
-      href: routes.directory,
-      ctaKey: "shared:megaNav.lisbon.feature.cta",
-    },
-    featurePublic: {
-      eyebrowKey: "shared:megaNav.lisbon.featurePublic.eyebrow",
-      titleKey: "shared:megaNav.lisbon.featurePublic.title",
-      bodyKey: "shared:megaNav.lisbon.featurePublic.body",
-      href: routes.safeSpaces,
-      ctaKey: "shared:megaNav.lisbon.featurePublic.cta",
-    },
-    columns: [
       {
-        headKey: "shared:megaNav.lisbon.col.discover.head",
+        headKey: "shared:megaNav.community.col.discover.head",
         // The directory (featured) is the single browse surface for local
-        // spaces — it now carries the verified badge + `?safe=verified` filter
-        // directly. "How verification works" is deliberately NOT a nav link:
-        // the safe-spaces hub is a trust *destination* reached in context —
-        // from the explainer section on the directory page and from the line
-        // inside each verified listing's trust block — not a top-level entry.
-        // The logged-out `featurePublic` promo still spotlights it. See the
-        // copy in `shared:megaNav.lisbon.{feature,featurePublic,col.discover}.*`.
+        // spaces: it carries the verified badge and the `?safe=verified`
+        // filter directly. "How verification works" is deliberately left out
+        // of the nav links, because the safe-spaces hub is a trust
+        // destination reached in context: from the explainer section on the
+        // directory page and from the line inside each verified listing's
+        // trust block. The logged-out `featurePublic` promo of this menu
+        // spotlights it. See the copy in
+        // `shared:megaNav.community.{featurePublic,col.discover}.*`.
         links: [
           {
-            labelKey: "shared:megaNav.lisbon.col.discover.businessDirectory",
+            labelKey: "shared:megaNav.community.col.discover.businessDirectory",
             href: routes.directory,
             featured: true,
           },
           {
-            labelKey: "shared:megaNav.lisbon.col.discover.partners",
-            href: routes.partners,
-          },
-        ],
-      },
-      {
-        headKey: "shared:megaNav.lisbon.col.livingHere.head",
-        links: [
-          { labelKey: "nav:arriving", href: routes.arriving },
-          {
-            labelKey: "shared:megaNav.lisbon.col.livingHere.housing",
+            labelKey: "shared:megaNav.community.col.discover.housing",
             href: routes.housing,
           },
           {
-            labelKey: "shared:megaNav.lisbon.col.livingHere.visasResidency",
-            href: routes.visas,
+            labelKey: "shared:megaNav.community.col.discover.partners",
+            href: routes.partners,
           },
         ],
       },

@@ -214,7 +214,7 @@
 
 /* ── Links (expanded accordion + flyout share these) ─────────────────────── */
 /* Accordion height: the panel stays mounted and eases open/closed via the
-   grid-template-rows 0fr→1fr trick, so rows below (Lisbon, Resources…) glide
+   grid-template-rows 0fr→1fr trick, so rows below (Resources, Culture…) glide
    down instead of snapping. Padding lives on the inner element — an
    overflow-clipped grid child with min-height:0 — so it's fully collapsed at
    0fr rather than leaking a few px of height. */

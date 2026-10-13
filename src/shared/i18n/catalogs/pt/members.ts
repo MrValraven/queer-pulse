@@ -2609,4 +2609,11 @@ export const members: Catalog = {
     "Não foi possível enviar a tua mensagem. Verifica a ligação e tenta outra vez.",
   "profile.hello.openThreadCta": "Abrir a conversa",
   "profile.hello.sending": "A enviar…",
+  // ── Studio v2 (2026-10-13): o bloco de playlists do Studio no perfil ──────
+  "studioPlaylists.title": "Playlists de {firstName}",
+  "studioPlaylists.titleSelf": "As tuas playlists",
+  "studioPlaylists.listLabel": "Playlists no Studio",
+  "studioPlaylists.trackCount_one": "{count} faixa",
+  "studioPlaylists.trackCount_other": "{count} faixas",
+  "studioPlaylists.libraryCta": "Abrir a tua biblioteca do Studio",
 };

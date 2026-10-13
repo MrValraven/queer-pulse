@@ -78,7 +78,7 @@ export function StudioSetSidebar({ matched, held }: StudioSetSidebarProps) {
         <div className={s.djRow}>
           <span>{t("studio:setSubmission.sidebar.tracksInSet")}</span>
           <span
-            className="v"
+            className={s.v}
             style={{
               fontFamily: "var(--serif)",
               color: "rgb(var(--cream-rgb))",
@@ -90,7 +90,7 @@ export function StudioSetSidebar({ matched, held }: StudioSetSidebarProps) {
         <div className={s.djRow}>
           <span>{t("studio:setSubmission.sidebar.matchedPaying")}</span>
           <span
-            className={`${s.v} jade`}
+            className={`${s.v} ${s.jade}`}
             style={{
               fontFamily: "var(--serif)",
               color: "var(--jade-light)",
@@ -102,7 +102,7 @@ export function StudioSetSidebar({ matched, held }: StudioSetSidebarProps) {
         <div className={s.djRow}>
           <span>{t("studio:setSubmission.sidebar.onHold")}</span>
           <span
-            className={`${s.v} warn`}
+            className={`${s.v} ${s.warn}`}
             style={{ fontFamily: "var(--serif)", color: "var(--accent)" }}
           >
             {t("studio:setSubmission.sidebar.tracksCount", { count: held })}
@@ -111,7 +111,7 @@ export function StudioSetSidebar({ matched, held }: StudioSetSidebarProps) {
         <div className={s.djRow}>
           <span>{t("studio:setSubmission.sidebar.payoutPool")}</span>
           <span
-            className="v"
+            className={s.v}
             style={{
               fontFamily: "var(--serif)",
               color: "rgb(var(--cream-rgb))",

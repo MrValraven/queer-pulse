@@ -234,8 +234,12 @@
   font-size: var(--text-15);
   color: rgba(var(--cream-rgb), 1);
   display: flex;
-  align-items: center;
-  gap: 8px;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 8px;
+}
+.diName {
+  min-width: 0;
 }
 .di h5 em {
   font-style: italic;
@@ -246,6 +250,8 @@
   margin-top: 3px;
 }
 .tag2 {
+  flex: none;
+  white-space: nowrap;
   font-size: var(--text-10);
   font-weight: 700;
   letter-spacing: 0.05em;
@@ -347,9 +353,10 @@
   justify-content: center;
   gap: 7px;
 }
+/* Dark ink on the coral fill: 6.28:1 (cream on --accent is 2.63:1). */
 .btP {
   background: var(--accent);
-  color: rgba(var(--cream-rgb), 1);
+  color: var(--studio-bg);
   border-color: var(--accent);
 }
 .btJade {
@@ -377,8 +384,11 @@
   padding: 6px 13px;
   cursor: pointer;
 }
+/* The Studio shell sets data-theme="dark", where --cream is the dark page
+   colour. --cream-rgb stays light in every theme: 16.55:1 under the
+   --studio-bg label and against the page. */
 .chipOn {
-  background: var(--cream);
+  background: rgba(var(--cream-rgb), 1);
   color: var(--studio-bg);
   border-color: rgba(var(--cream-rgb), 1);
 }
@@ -611,7 +621,8 @@
   font-size: var(--text-13-5);
   color: rgba(var(--cream-rgb), 1);
   resize: vertical;
-  min-height: 60px;
+  min-height: 84px;
+  min-height: 4lh;
 }
 .attachFoot {
   display: flex;
@@ -661,9 +672,10 @@
 .djStepOn {
   color: rgba(var(--cream-rgb), 1);
 }
+/* Dark ink on the coral fill: 6.28:1 (cream on --accent is 2.63:1). */
 .djStepOn .num {
   background: var(--accent);
-  color: rgba(var(--cream-rgb), 1);
+  color: var(--studio-bg);
 }
 .djBar {
   width: 36px;
@@ -941,6 +953,17 @@
   }
   .callAmt {
     text-align: left;
+  }
+}
+
+/* Phones only: tablets keep the cover column */
+@media (--md) {
+  .mtRow {
+    grid-template-columns: 40px minmax(0, 1fr) auto;
+    row-gap: 6px;
+  }
+  .mtRow .cv {
+    display: none;
   }
 }
 

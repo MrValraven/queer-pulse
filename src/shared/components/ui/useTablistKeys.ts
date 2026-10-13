@@ -53,7 +53,11 @@ export function useTablistKeys(
       if (!isEnabled(nextIndex)) return;
     }
     onSelectIndex(nextIndex);
-    tabRefs.current[nextIndex]?.focus();
+    const nextTab = tabRefs.current[nextIndex];
+    nextTab?.focus();
+    // A strip that scrolls sideways must bring the focused tab (and its ring)
+    // into view. jsdom has no scrollIntoView.
+    nextTab?.scrollIntoView?.({ inline: "nearest", block: "nearest" });
   }
 
   function handleKeyDown(event: KeyboardEvent<HTMLElement>, index: number) {

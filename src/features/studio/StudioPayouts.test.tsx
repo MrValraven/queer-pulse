@@ -10,8 +10,8 @@ import { PayoutsList } from "./StudioPayoutsSections";
  * timer to stub) and assert two things: the balance rows render their real
  * paid/pending status, and the Export-CSV control delegates to the `onExport`
  * callback the page owns (which writes the CSV + toast). The heading/status/CTA
- * copy comes from the lazy `studio` catalog, so those queries use `findBy*`;
- * the mock payout titles are plain data and use `getBy*`.
+ * copy comes from the lazy `studio` catalog and the payout titles from the lazy
+ * `studioShowcase` catalog, so those queries use `findBy*`.
  *
  * Note: the sidebar's payout *threshold* is a presentational `<select>`
  * preference — it gates nothing and changes no ARIA/text — so it isn't asserted
@@ -29,8 +29,8 @@ describe("PayoutsList", () => {
     // The most recent payout is pending; the rest are paid.
     expect(await screen.findByText("Pending")).toBeInTheDocument();
     expect(screen.getAllByText("Paid").length).toBeGreaterThan(0);
-    // Plain (non-i18n) mock title of a real payout row.
-    expect(screen.getByText(/June 2026 payout/)).toBeInTheDocument();
+    // Catalog-composed title of a real payout row.
+    expect(await screen.findByText(/June 2026 payout/)).toBeInTheDocument();
   });
 
   it("delegates CSV export to the onExport callback", async () => {

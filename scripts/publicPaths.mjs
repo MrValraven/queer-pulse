@@ -104,6 +104,10 @@ export const GATED_PATTERNS = [
   "/local/venue/*",
   "/local/housing",
   "/local/housing/*",
+  // The arriving and visa guides are admin-only for now while they are not
+  // ready for members. Mirrors authGate.ts.
+  "/local/arriving",
+  "/local/visas",
   "/business-directory",
   "/spaces-map",
   "/cinema/watch",
@@ -161,7 +165,7 @@ export function isGatedPath(pathname) {
  * QueerPulse deliberately does NOT index the magazine, cinema, studio, activism,
  * archive or sustainer surfaces — they rely on word-of-mouth and direct sharing.
  * The resources surface is likewise excluded from prerender + sitemap: it is
- * served as normal SPA routes. Safety and arrival guides are the front door.
+ * served as normal SPA routes. The safety pages and the safe-spaces guide are the front door.
  *
  * Two hard rules for anything added here:
  *   1. It must not be gated (assertNoGatedPaths enforces this).
@@ -207,10 +211,10 @@ export const QUIET_PUBLIC_PATHS = [
   // LG-01.
   "/policies/accessibility",
 
-  // ── Local — arrival + safe-space guides (directory/map are gated) ────────
+  // ── Local: the safe-space guide ──────────────────────────────────────────
+  // Directory and map are gated, and so are the arriving and visa guides,
+  // which are admin-only for now.
   "/local/safe-spaces",
-  "/local/arriving",
-  "/local/visas",
 
   // ── Safety & crisis, and the coming-out guide: the indexed front door
   // (PRD-331). /safety and /safety/legal render through ManagedGuide

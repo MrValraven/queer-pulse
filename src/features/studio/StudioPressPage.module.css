@@ -104,6 +104,34 @@
   align-items: center;
   gap: 12px;
 }
+@media (max-width: 720px) {
+  .bar {
+    flex-wrap: wrap;
+    gap: 10px 14px;
+    padding-inline: 16px;
+  }
+  /* Two rows at most for the sticky bar: the crumb repeats the page hero */
+  .crumb {
+    display: none;
+  }
+  .acts {
+    flex: 1 1 100%;
+    flex-wrap: nowrap;
+    margin-inline-start: 0;
+  }
+  .acts > * {
+    flex: 1 1 0;
+    min-width: 0;
+    min-height: var(--tap-min);
+    padding-inline: 12px;
+    text-align: center;
+  }
+  /* Higher specificity than the shared Button, which keeps labels on one line */
+  .acts > :is(button, a) {
+    white-space: normal;
+    line-height: 1.25;
+  }
+}
 
 /* ── Layout ─────────────────────────────────────────────────── */
 .wrap {
@@ -302,7 +330,8 @@ a.track:hover {
   border: none;
   cursor: pointer;
   background: var(--accent);
-  color: rgba(var(--cream-rgb), 1);
+  /* Dark ink on the coral fill: 6.28:1. */
+  color: var(--studio-bg);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -595,7 +624,8 @@ a.track:hover {
 }
 .cp:hover {
   background: var(--accent);
-  color: rgba(var(--cream-rgb), 1);
+  /* Dark ink on the coral fill: 6.28:1. */
+  color: var(--studio-bg);
 }
 
 /* ── Contact ────────────────────────────────────────────────── */

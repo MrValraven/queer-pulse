@@ -486,17 +486,20 @@ export const shared: Catalog = {
 
   // MegaNav — Community
   "megaNav.community.title": "Community",
-  "megaNav.community.subtitle": "People & gathering",
+  "megaNav.community.subtitle": "People, gatherings & places",
   "megaNav.community.feature.eyebrow": "Community",
   "megaNav.community.feature.title": "Find your people.",
   "megaNav.community.feature.body":
     "A member directory, forums, and gatherings: the everyday connective tissue of the network.",
   "megaNav.community.feature.cta": "Browse members",
   "megaNav.community.featurePublic.eyebrow": "Community",
-  "megaNav.community.featurePublic.title": "Organise together.",
+  // Shown to logged-out visitors while the members directory is gated. Points
+  // at the safe-spaces hub (how verification works + the delisting wall), the
+  // public half of the Discover column.
+  "megaNav.community.featurePublic.title": "How we verify local spaces.",
   "megaNav.community.featurePublic.body":
-    "Campaigns, mutual aid, and volunteer crews: work you can show up for, no invite needed.",
-  "megaNav.community.featurePublic.cta": "Get involved",
+    "Every listing is reviewed before it earns the verified badge. See how it works, and which spaces have been delisted.",
+  "megaNav.community.featurePublic.cta": "See how verification works",
   "megaNav.community.col.people.head": "People",
   "megaNav.community.col.people.membersDirectory": "Members directory",
   "megaNav.community.col.people.professionalDirectory":
@@ -508,37 +511,14 @@ export const shared: Catalog = {
   "megaNav.community.col.organise.activismVolunteering":
     "Activism & Volunteering",
   "megaNav.community.col.organise.changeMakers": "Change Makers",
-
-  // MegaNav — Lisbon
-  "megaNav.lisbon.title": "Lisbon",
-  "megaNav.lisbon.subtitle": "Discover & living here",
-  "megaNav.lisbon.feature.eyebrow": "Lisbon",
-  // Reframed (Task 11): the directory is the single browse surface for local
-  // spaces (verified badge + `?safe=verified` filter live there now), so this
-  // promo is the primary "find a place" CTA — not a duplicate of the safe-spaces
-  // copy below.
-  "megaNav.lisbon.feature.title": "Find your local spaces.",
-  "megaNav.lisbon.feature.body":
-    "Bars, clinics, salons, and shops that welcome you: every listing reviewed, with verified spaces clearly badged.",
-  "megaNav.lisbon.feature.cta": "Browse local spaces",
-  "megaNav.lisbon.featurePublic.eyebrow": "Lisbon",
-  // Reframed (Task 11): safe-spaces is the trust hub (how verification works +
-  // the delisting wall), not a second directory — this stand-in promo (shown to
-  // logged-out visitors when the directory is gated) now sells that explainer
-  // instead of repeating "places that welcome you" from the feature above.
-  "megaNav.lisbon.featurePublic.title": "How we verify local spaces.",
-  "megaNav.lisbon.featurePublic.body":
-    "Every listing is reviewed before it earns the verified badge. See how it works, and which spaces have been delisted.",
-  "megaNav.lisbon.featurePublic.cta": "See how verification works",
-  "megaNav.lisbon.col.discover.head": "Discover",
-  // "Local Business directory" — keep this in sync with the global-search
+  "megaNav.community.col.discover.head": "Discover",
+  // "Local Business directory": keep this in sync with the global-search
   // entry (search.data.ts) and the PWA manifest shortcut (vite.config.ts),
   // which all name the same page.
-  "megaNav.lisbon.col.discover.businessDirectory": "Local Business directory",
-  "megaNav.lisbon.col.discover.partners": "Partners",
-  "megaNav.lisbon.col.livingHere.head": "Living here",
-  "megaNav.lisbon.col.livingHere.housing": "Housing",
-  "megaNav.lisbon.col.livingHere.visasResidency": "Visas & Residency",
+  "megaNav.community.col.discover.businessDirectory":
+    "Local Business directory",
+  "megaNav.community.col.discover.housing": "Housing",
+  "megaNav.community.col.discover.partners": "Partners",
 
   // MegaNav — Resources
   "megaNav.resources.title": "Resources",

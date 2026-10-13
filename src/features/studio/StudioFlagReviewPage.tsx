@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { ImageSlot, FadeIn } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { StudioShell } from "./StudioShell";
@@ -7,18 +7,18 @@ import { StudioFlagCard } from "./StudioFlagCard";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { FLAGS, resolvedFlagImage } from "./studioFlagReview.data";
+import { buildFlags, resolvedFlagImage } from "./studioFlagReview.data";
 import s from "./council.module.css";
 
-// Content: the already-resolved mock flag's track title, reporter, and
-// case-resolution details — in live mode these come from the flag record.
+// The already-resolved mock flag: the track title, the reporter's and
+// reviewer's names and the formatted date stay literal; the phrases around
+// them resolve through `studioShowcase:flagReview.resolved.*`.
 const FLAG_TRACK_TITLE_PRE = "Kitchen ";
 const FLAG_TRACK_TITLE_EM = "warm-up";
-const FLAG_REPORTER_LINE = "João Ribeiro · resolved 6 Jun";
+const FLAG_REPORTER_NAME = "João Ribeiro";
+const FLAG_RESOLVED_DATE = "6 Jun";
 const REVIEWER_INITIALS = "SM";
 const REVIEWER_NAME = "Sara Marques";
-const FLAG_RESOLUTION_NOTE =
-  "· reporter was told the sample is public-domain, with a link";
 
 /** Mirrors a .flag review card: cover + title row, reason block, action row. */
 function FlagCardSkeleton() {
@@ -50,6 +50,7 @@ export function StudioFlagReviewPage() {
   const { showToast } = useToast();
   const [resolved, setResolved] = useState<Record<string, string>>({});
   const loading = useSimulatedLoad();
+  const flags = useMemo(() => buildFlags(t), [t]);
 
   function resolve(id: string, verb: string, msg: string) {
     setResolved((r) => ({ ...r, [id]: verb }));
@@ -83,7 +84,7 @@ export function StudioFlagReviewPage() {
               <FlagCardSkeleton key={skeletonIndex} />
             ))}
           {!loading &&
-            FLAGS.map((flag, flagIndex) => {
+            flags.map((flag, flagIndex) => {
               const done = resolved[flag.id];
               return (
                 <FadeIn
@@ -101,7 +102,7 @@ export function StudioFlagReviewPage() {
           {/* Already resolved */}
           {!loading && (
             <FadeIn
-              delay={Math.min(FLAGS.length, 8) * 60}
+              delay={Math.min(flags.length, 8) * 60}
               className={`${s.flag} ${s.flagResolved}`}
             >
               <div className={s.flagTop}>
@@ -120,20 +121,27 @@ export function StudioFlagReviewPage() {
                     {FLAG_TRACK_TITLE_PRE}
                     <em>{FLAG_TRACK_TITLE_EM}</em>
                   </h3>
-                  <div className="who">{FLAG_REPORTER_LINE}</div>
+                  <div className={s.who}>
+                    {t("studioShowcase:flagReview.resolved.reporterLine", {
+                      name: FLAG_REPORTER_NAME,
+                      date: FLAG_RESOLVED_DATE,
+                    })}
+                  </div>
                 </div>
                 <span className={s.flagResolvedTag}>
                   {t("studio:flagReview.dismissedClearedTag")}
                 </span>
               </div>
               <div className={s.flagClaim} style={{ marginTop: 14 }}>
-                <span className="av">{REVIEWER_INITIALS}</span>
-                <Translation
-                  i18nKey="studio:flagReview.reviewedByLine"
-                  components={{ em: <em /> }}
-                  values={{ reviewer: REVIEWER_NAME }}
-                />{" "}
-                {FLAG_RESOLUTION_NOTE}
+                <span className={s.av}>{REVIEWER_INITIALS}</span>
+                <span className={s.claimText}>
+                  <Translation
+                    i18nKey="studio:flagReview.reviewedByLine"
+                    components={{ em: <em /> }}
+                    values={{ reviewer: REVIEWER_NAME }}
+                  />{" "}
+                  · {t("studioShowcase:flagReview.resolved.note")}
+                </span>
               </div>
             </FadeIn>
           )}

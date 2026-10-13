@@ -1,8 +1,10 @@
 import type { ImageSlotTint } from "../../../shared/components/ui";
-import { personaPath } from "../../../app/routeMap";
+import { personaPath, routes } from "../../../app/routeMap";
 import { initialsFromName } from "../../../shared/lib/initials";
+import type { FollowedPersonaDTO } from "../../subprofiles/api/subprofiles.api";
 import {
   studioArtistPath,
+  studioPlaylistPath,
   studioReleasePath,
   studioTrackPath,
 } from "../studioPaths";
@@ -10,9 +12,18 @@ import type {
   StudioArtistDTO,
   StudioArtistPersonaKind,
   StudioArtistRefDTO,
+  StudioArtistStatsDTO,
+  StudioCountDTO,
   StudioCreditDTO,
   StudioGenre,
+  StudioGenresDTO,
   StudioMeDTO,
+  StudioPlaylistCardDTO,
+  StudioPlaylistCreditDTO,
+  StudioPlaylistDTO,
+  StudioPlaylistEntryDTO,
+  StudioPlaylistTrackDTO,
+  StudioPlaylistVisibility,
   StudioReleaseCardDTO,
   StudioReleaseDTO,
   StudioReleaseStatus,
@@ -21,7 +32,11 @@ import type {
   StudioTrackDTO,
   StudioTrackSummaryDTO,
 } from "./studio.types";
-import { STUDIO_GENRES } from "./studio.types";
+import {
+  STUDIO_ARTIST_PERSONA_KINDS,
+  STUDIO_GENRES,
+  STUDIO_STATS_THRESHOLD,
+} from "./studio.types";
 
 // View models every Studio page renders. Live and demo both reach the pages
 // through these functions (demo builds wire-shaped DTOs from the mock files
@@ -61,6 +76,11 @@ export interface StudioReleaseCardView {
   artist: StudioArtistRefView;
   href: string;
   savedId: string;
+  /** When the release went live; null for a draft. Lists arrive in the
+   *  server's order (published_at desc, id desc) and are never re-sorted. */
+  publishedAt: string | null;
+  genre: string | null;
+  genreLabelKey: string | null;
 }
 
 export interface StudioTrackRowView {
@@ -77,11 +97,8 @@ export interface StudioTrackRowView {
 
 export interface StudioReleaseView extends StudioReleaseCardView {
   description: string | null;
-  genre: string | null;
-  genreLabelKey: string | null;
   status: StudioReleaseStatus;
   statusLabelKey: string;
-  publishedAt: string | null;
   isOwner: boolean;
   tracks: StudioTrackRowView[];
   playableTrackCount: number;
@@ -110,11 +127,20 @@ export interface StudioOwnerReleaseView extends StudioReleaseCardView {
 
 export interface StudioArtistView {
   artist: StudioArtistDetailView;
-  /** Albums, EPs and mixes, newest first. */
+  /** Every published release in the server's order (published_at desc,
+   *  id desc). Play all queues from this list as it stands. */
+  allReleases: StudioReleaseCardView[];
+  /** Albums, EPs and mixes, in the same order. */
   releases: StudioReleaseCardView[];
   singles: StudioReleaseCardView[];
   /** Drafts and taken-down releases; null unless the viewer owns the persona. */
   ownerReleases: StudioOwnerReleaseView[] | null;
+  /** The viewer owns or co-owns the persona (the server sends ownerReleases). */
+  isOwner: boolean;
+  followerCount: number;
+  isFollowing: boolean;
+  /** Public playlists credited to this persona, newest updated first. */
+  playlists: StudioPlaylistCardView[];
 }
 
 export interface StudioSearchTrackView extends StudioTrackRowView {
@@ -125,6 +151,7 @@ export interface StudioSearchView {
   releases: StudioReleaseCardView[];
   tracks: StudioSearchTrackView[];
   artists: StudioArtistRefView[];
+  playlists: StudioPlaylistCardView[];
   isEmpty: boolean;
 }
 
@@ -171,7 +198,37 @@ export const STUDIO_GENRE_LABEL_KEY: Record<StudioGenre, string> = {
   other: "studio:genre.other",
 };
 
+export const STUDIO_PLAYLIST_VISIBILITY_LABEL_KEY: Record<
+  StudioPlaylistVisibility,
+  string
+> = {
+  public: "studio:playlist.visibility.public",
+  connections: "studio:playlist.visibility.connections",
+  private: "studio:playlist.visibility.private",
+};
+
+export const STUDIO_PLAYLIST_VISIBILITY_HINT_KEY: Record<
+  StudioPlaylistVisibility,
+  string
+> = {
+  public: "studio:playlist.visibility.publicHint",
+  connections: "studio:playlist.visibility.connectionsHint",
+  private: "studio:playlist.visibility.privateHint",
+};
+
 const KNOWN_GENRES: ReadonlySet<string> = new Set(STUDIO_GENRES);
+const ARTIST_KINDS: ReadonlySet<string> = new Set(STUDIO_ARTIST_PERSONA_KINDS);
+
+export function isStudioGenre(
+  value: string | null | undefined,
+): value is StudioGenre {
+  return typeof value === "string" && KNOWN_GENRES.has(value);
+}
+
+export function genreLabelKeyOf(genre: string | null): string | null {
+  return isStudioGenre(genre) ? STUDIO_GENRE_LABEL_KEY[genre] : null;
+}
+
 const PLACEHOLDER_TINTS: readonly ImageSlotTint[] = ["coral", "plum", "jade"];
 
 /** Seconds to "4:18"; null while the server has not read a duration. */
@@ -211,6 +268,7 @@ export function lyricStanzasOf(lyrics: string | null): string[][] {
 export const studioSavedId = {
   release: (releaseId: string) => `studio_release:${releaseId}`,
   track: (trackId: string) => `studio_track:${trackId}`,
+  playlist: (playlistId: string) => `studio_playlist:${playlistId}`,
 };
 
 export function toArtistRefView(dto: StudioArtistRefDTO): StudioArtistRefView {
@@ -245,6 +303,9 @@ export function toReleaseCardView(
     artist: toArtistRefView(dto.artist),
     href: studioReleasePath(dto.id),
     savedId: studioSavedId.release(dto.id),
+    publishedAt: dto.publishedAt,
+    genre: dto.genre,
+    genreLabelKey: genreLabelKeyOf(dto.genre),
   };
 }
 
@@ -269,14 +330,8 @@ export function toReleaseView(dto: StudioReleaseDTO): StudioReleaseView {
   return {
     ...toReleaseCardView(dto),
     description: dto.description,
-    genre: dto.genre,
-    genreLabelKey:
-      dto.genre && KNOWN_GENRES.has(dto.genre)
-        ? STUDIO_GENRE_LABEL_KEY[dto.genre as StudioGenre]
-        : null,
     status: dto.status,
     statusLabelKey: STUDIO_RELEASE_STATUS_LABEL_KEY[dto.status],
-    publishedAt: dto.publishedAt,
     isOwner: dto.isOwner,
     tracks,
     playableTrackCount: tracks.filter((track) => track.hasAudio).length,
@@ -308,6 +363,7 @@ export function toArtistView(dto: StudioArtistDTO): StudioArtistView {
       bio: dto.artist.bio,
       city: dto.artist.city,
     },
+    allReleases: cards,
     releases: cards.filter((card) => card.type !== "single"),
     singles: cards.filter((card) => card.type === "single"),
     ownerReleases:
@@ -317,21 +373,31 @@ export function toArtistView(dto: StudioArtistDTO): StudioArtistView {
         statusLabelKey: STUDIO_RELEASE_STATUS_LABEL_KEY[release.status],
         takedownReason: release.takedownReason,
       })) ?? null,
+    isOwner: dto.ownerReleases !== null,
+    followerCount: dto.followerCount,
+    isFollowing: dto.isFollowing,
+    playlists: dto.playlists.map(toPlaylistCardView),
   };
+}
+
+export function toSearchTrackView(
+  dto: StudioPlaylistTrackDTO,
+): StudioSearchTrackView {
+  return { ...toTrackRowView(dto), release: toReleaseCardView(dto.release) };
 }
 
 export function toSearchView(dto: StudioSearchResultDTO): StudioSearchView {
   const releases = dto.releases.map(toReleaseCardView);
-  const tracks = dto.tracks.map((track) => ({
-    ...toTrackRowView(track),
-    release: toReleaseCardView(track.release),
-  }));
+  const tracks = dto.tracks.map(toSearchTrackView);
   const artists = dto.artists.map(toArtistRefView);
+  const playlists = dto.playlists.map(toPlaylistCardView);
   return {
     releases,
     tracks,
     artists,
-    isEmpty: releases.length + tracks.length + artists.length === 0,
+    playlists,
+    isEmpty:
+      releases.length + tracks.length + artists.length + playlists.length === 0,
   };
 }
 
@@ -342,4 +408,239 @@ export function toMeView(dto: StudioMeDTO): StudioMeView {
       ? dto.uploadablePersonas.map(toArtistRefView)
       : [],
   };
+}
+
+// ── Studio v2: playlists ───────────────────────────────────────────────────
+
+export interface StudioPlaylistCreditView {
+  kind: "persona" | "member";
+  id: string;
+  name: string;
+  avatarUrl: string | null;
+  initials: string;
+  tint: ImageSlotTint;
+  /** The persona's Studio page, or the member's profile (/members/<slug>).
+   *  Null only for a member credit that arrived without a slug. */
+  href: string | null;
+}
+
+export interface StudioPlaylistCardView {
+  id: string;
+  name: string;
+  credit: StudioPlaylistCreditView;
+  /** Up to four distinct release covers, in playlist order. */
+  coverUrls: string[];
+  tint: ImageSlotTint;
+  /** Tracks this viewer can play. */
+  trackCount: number;
+  totalDurationSeconds: number;
+  updatedAt: string;
+  isOwner: boolean;
+  /** Owner only; null for everyone else. */
+  visibility: StudioPlaylistVisibility | null;
+  visibilityLabelKey: string | null;
+  href: string;
+  savedId: string;
+}
+
+export interface StudioPlaylistEntryView {
+  entryId: string;
+  position: number;
+  addedAt: string;
+  /** False only ever reaches the owner: the row reads "No longer
+   *  available" and offers Remove only. */
+  isAvailable: boolean;
+  track: StudioSearchTrackView | null;
+}
+
+export interface StudioPlaylistView extends StudioPlaylistCardView {
+  description: string | null;
+  entries: StudioPlaylistEntryView[];
+  /** The available entries' tracks that have audio, in playlist order: what
+   *  Play playlist and Shuffle queue. */
+  playableTracks: StudioSearchTrackView[];
+  /** Owner only. */
+  creditSubprofileId: string | null;
+}
+
+export function toPlaylistCreditView(
+  dto: StudioPlaylistCreditDTO,
+): StudioPlaylistCreditView {
+  if (dto.persona) {
+    const persona = toArtistRefView(dto.persona);
+    return {
+      kind: "persona",
+      id: persona.id,
+      name: persona.name,
+      avatarUrl: persona.avatarUrl,
+      initials: persona.initials,
+      tint: persona.tint,
+      href: persona.href,
+    };
+  }
+  const member = dto.member ?? {
+    id: "",
+    slug: "",
+    displayName: "",
+    avatarUrl: null,
+  };
+  return {
+    kind: "member",
+    id: member.id,
+    name: member.displayName,
+    avatarUrl: member.avatarUrl,
+    initials: initialsFromName(member.displayName, "QP"),
+    tint: tintForId(member.id || member.displayName),
+    // routeMap has no member-profile helper; the codebase builds this path
+    // the same way everywhere.
+    href: member.slug
+      ? `${routes.members}/${encodeURIComponent(member.slug)}`
+      : null,
+  };
+}
+
+export function toPlaylistCardView(
+  dto: StudioPlaylistCardDTO,
+): StudioPlaylistCardView {
+  const visibility = dto.isOwner ? dto.visibility : null;
+  return {
+    id: dto.id,
+    name: dto.name,
+    credit: toPlaylistCreditView(dto.credit),
+    coverUrls: [...new Set(dto.coverUrls)].slice(0, 4),
+    tint: tintForId(dto.id),
+    trackCount: dto.trackCount,
+    totalDurationSeconds: dto.totalDurationSeconds,
+    updatedAt: dto.updatedAt,
+    isOwner: dto.isOwner,
+    visibility,
+    visibilityLabelKey: visibility
+      ? STUDIO_PLAYLIST_VISIBILITY_LABEL_KEY[visibility]
+      : null,
+    href: studioPlaylistPath(dto.id),
+    savedId: studioSavedId.playlist(dto.id),
+  };
+}
+
+export function toPlaylistEntryView(
+  dto: StudioPlaylistEntryDTO,
+): StudioPlaylistEntryView {
+  const isAvailable = dto.isAvailable && dto.track !== null;
+  return {
+    entryId: dto.entryId,
+    position: dto.position,
+    addedAt: dto.addedAt,
+    isAvailable,
+    track: isAvailable && dto.track ? toSearchTrackView(dto.track) : null,
+  };
+}
+
+/** The available entries' tracks that have audio, in playlist order. */
+export function playableTracksOf(
+  entries: StudioPlaylistEntryView[],
+): StudioSearchTrackView[] {
+  return entries.flatMap((entry) =>
+    entry.track && entry.track.hasAudio ? [entry.track] : [],
+  );
+}
+
+export function toPlaylistView(dto: StudioPlaylistDTO): StudioPlaylistView {
+  const entries = [...dto.entries]
+    .sort((left, right) => left.position - right.position)
+    .map(toPlaylistEntryView)
+    .filter((entry) => dto.isOwner || entry.isAvailable);
+  return {
+    ...toPlaylistCardView(dto),
+    description: dto.description,
+    entries,
+    playableTracks: playableTracksOf(entries),
+    creditSubprofileId: dto.isOwner ? dto.creditSubprofileId : null,
+  };
+}
+
+// ── Studio v2: Your numbers ────────────────────────────────────────────────
+
+export interface StudioCountView {
+  /** Null when the count is withheld (1 to 4). */
+  value: number | null;
+  isBelowThreshold: boolean;
+}
+
+export interface StudioStatsTrackView {
+  track: StudioTrackRowView;
+  saves: StudioCountView;
+  playlistInclusions: StudioCountView;
+}
+
+export interface StudioStatsReleaseView {
+  release: StudioReleaseCardView;
+  status: StudioReleaseStatus;
+  statusLabelKey: string;
+  saves: StudioCountView;
+  playlistInclusions: StudioCountView;
+  tracks: StudioStatsTrackView[];
+}
+
+export interface StudioArtistStatsView {
+  subprofileId: string;
+  followerCount: number;
+  releases: StudioStatsReleaseView[];
+}
+
+const WITHHELD_COUNT: StudioCountView = Object.freeze({
+  value: null,
+  isBelowThreshold: true,
+});
+
+/** Fails closed: a count from 1 to 4, or a missing value, always reads as
+ *  withheld, whatever the flag says. */
+export function toCountView(dto: StudioCountDTO): StudioCountView {
+  const { value } = dto;
+  if (dto.isBelowThreshold || value === null) return WITHHELD_COUNT;
+  if (value > 0 && value < STUDIO_STATS_THRESHOLD) return WITHHELD_COUNT;
+  return { value, isBelowThreshold: false };
+}
+
+export function toArtistStatsView(
+  dto: StudioArtistStatsDTO,
+): StudioArtistStatsView {
+  return {
+    subprofileId: dto.subprofileId,
+    followerCount: dto.followerCount,
+    releases: dto.releases.map((row) => ({
+      release: toReleaseCardView(row.release),
+      status: row.release.status,
+      statusLabelKey: STUDIO_RELEASE_STATUS_LABEL_KEY[row.release.status],
+      saves: toCountView(row.saves),
+      playlistInclusions: toCountView(row.playlistInclusions),
+      tracks: row.tracks.map((trackRow) => ({
+        track: toTrackRowView(trackRow.track),
+        saves: toCountView(trackRow.saves),
+        playlistInclusions: toCountView(trackRow.playlistInclusions),
+      })),
+    })),
+  };
+}
+
+// ── Studio v2: genres and followed artists ─────────────────────────────────
+
+/** The server's genres, in its order (STUDIO_GENRES order); an unknown slug
+ *  from a newer server is dropped so every chip has a label. */
+export function toGenreList(dto: StudioGenresDTO): StudioGenre[] {
+  return dto.genres.filter(isStudioGenre);
+}
+
+/** A followed persona as a Studio artist, or null when it does not make
+ *  music (the library's Artists tab lists musicians and DJs only). */
+export function toFollowedArtistView(
+  dto: FollowedPersonaDTO,
+): StudioArtistRefView | null {
+  if (!ARTIST_KINDS.has(dto.kind)) return null;
+  return toArtistRefView({
+    id: dto.id,
+    handle: dto.handle ?? "",
+    name: dto.displayName,
+    kind: dto.kind as StudioArtistPersonaKind,
+    avatarUrl: dto.avatarUrl,
+  });
 }

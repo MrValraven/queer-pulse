@@ -9,12 +9,17 @@ import { ShareMenu } from "../messages/share/ShareMenu";
 import { GatheringBookmarkButton } from "./GatheringBookmarkButton";
 import { GatheringSharePlansButton } from "./GatheringSharePlansButton";
 import {
+  calendarHostedByLine,
   gatheringCalendarSubtitle,
   toCalendarInput,
 } from "./gatheringCalendarInput";
 import { buildGatheringShareMessage } from "./gatheringShareMessage";
 import { gatheringPath } from "./gatheringPaths";
 import type { GatheringDetail } from "./data";
+import {
+  useVisibleGatheringCommunity,
+  useVisibleGuestCommunities,
+} from "./useVisibleGatheringCommunity";
 import styles from "./GatheringHeaderToolbar.module.css";
 
 /**
@@ -48,10 +53,12 @@ export function GatheringHeaderToolbar({
   /** Host-only controls, rendered last so the member actions keep their place. */
   hostMenu?: ReactNode;
 }) {
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const formatters = useFormat();
   const { showToast } = useToast();
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+  const leadCommunity = useVisibleGatheringCommunity(gathering);
+  const guestCommunities = useVisibleGuestCommunities(gathering);
   const calendarLabel = t("shared:addToCalendar.title");
   const shareText = buildGatheringShareMessage(gathering, t, formatters);
 
@@ -92,7 +99,18 @@ export function GatheringHeaderToolbar({
       </div>
       {isCalendarOpen && (
         <AddToCalendarSheet
-          input={toCalendarInput(gathering)}
+          input={toCalendarInput(
+            gathering,
+            calendarHostedByLine({
+              host: gathering.host,
+              communityNames: [
+                ...(leadCommunity ? [leadCommunity] : []),
+                ...guestCommunities,
+              ].map((community) => community.name),
+              t,
+              language,
+            }),
+          )}
           subtitle={gatheringCalendarSubtitle(gathering, formatters)}
           filename={`${gathering.title.replace(/\s+/g, "-")}.ics`}
           onToast={(message) => showToast(message, "success")}

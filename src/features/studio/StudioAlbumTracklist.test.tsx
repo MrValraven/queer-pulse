@@ -68,6 +68,7 @@ function renderTracklist(overrides: Partial<StudioPlayerValue> = {}) {
     hasNext: false,
     playRelease: vi.fn(() => Promise.resolve()),
     playReleases: vi.fn(() => Promise.resolve()),
+    playTracks: vi.fn(() => Promise.resolve()),
     togglePlay: vi.fn(),
     next: vi.fn(),
     previous: vi.fn(),
@@ -119,6 +120,18 @@ describe("StudioAlbumTracklist", () => {
     );
     expect(
       screen.getByRole("button", { name: /play pending/i }),
+    ).toHaveAttribute("aria-disabled", "true");
+  });
+});
+
+describe("StudioAlbumTracklist: add to playlist", () => {
+  it("offers Add to playlist on each row of a published release, disabled when there is no audio", () => {
+    renderTracklist();
+    expect(
+      screen.getByRole("button", { name: "Add Tide to a playlist" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Add Pending to a playlist" }),
     ).toHaveAttribute("aria-disabled", "true");
   });
 });

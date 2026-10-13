@@ -15,6 +15,11 @@ export const FUNDING_CATEGORY_ID = "funding";
  *  server adds this tag to every open call. */
 export const OPEN_CALLS_TOPIC_TAG = "open-call";
 
+/** The tag that puts a Funding call or fundraiser on Studio's music pages
+ *  (`/studio/calls`, `/studio/solidarity-fund`). One of FORUM_TAG_OPTIONS,
+ *  so the composer accepts it. */
+export const FUNDING_MUSIC_TAG = "music";
+
 /** "Follow new calls" says what it did in its own words, in place of the
  *  topic page's "#open-call" toast. */
 export const FOLLOW_TOAST_KEYS = {

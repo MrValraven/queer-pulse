@@ -14,6 +14,7 @@ import { StudioTrackHero } from "./StudioTrackHero";
 import { StudioTrackInSet } from "./StudioTrackInSet";
 import { StudioTrackLyrics } from "./StudioTrackLyrics";
 import { StudioTrackMore } from "./StudioTrackMore";
+import { StudioTrackPlaylists } from "./StudioTrackPlaylists";
 import { StudioTrackSidebar } from "./StudioTrackSidebar";
 import { useStudioShowcase } from "./useStudioShowcase";
 import trackStyles from "./track.module.css";
@@ -69,6 +70,7 @@ export function StudioTrackPage() {
         <StudioTrackSidebar track={track} />
       </div>
       <StudioTrackMore track={track} />
+      <StudioTrackPlaylists trackId={track.id} />
       {isShowcase && isTipOpen && (
         <StudioTipModal
           recipient={track.release.artist.name}

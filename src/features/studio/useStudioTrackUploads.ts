@@ -182,6 +182,9 @@ function useTrackOrder(releaseId: string | null, rowState: UploadRowsState) {
   const [orderErrorKey, setOrderErrorKey] = useState<string | null>(null);
   const { rowsRef, serverOrderRef, isMountedRef, commitRows } = rowState;
   const senderRef = useRef<LatestSender<ReorderRequest> | null>(null);
+  /** Removed rows whose track may still be on the server. The server refuses
+   *  an order that leaves out a track it holds, so the sync waits for them. */
+  const heldRemovalsRef = useRef(new Set<string>());
 
   async function sendOrder(request: ReorderRequest) {
     try {
@@ -219,18 +222,39 @@ function useTrackOrder(releaseId: string | null, rowState: UploadRowsState) {
     if (!moved) return;
     next.splice(targetIndex, 0, moved);
     commitRows(next);
+    // The last held removal to settle sends the shown order.
+    if (heldRemovalsRef.current.size > 0) return;
     submitOrder(next);
   }
 
-  /** After a create: once every row has a track, the server gets the shown
-   *  order when it differs (a retried create lands last on the server). */
+  /** After a create or a removal: once every row has a track, the server gets
+   *  the shown order when it differs (a retried create lands last on the
+   *  server, and removing the last trackless row can leave that order behind). */
   function syncOrderIfNeeded() {
+    if (heldRemovalsRef.current.size > 0 || !isMountedRef.current) return;
     const shownIds = trackIdsOf(rowsRef.current);
+    // The server takes an order of one track or more.
+    if (shownIds.length === 0) return;
     if (shownIds.join(",") !== serverOrderRef.current.join(","))
       submitOrder(rowsRef.current);
   }
 
-  return { orderErrorKey, moveTo, syncOrderIfNeeded };
+  /** Ends the hold a removed row placed, if it placed one, then sends the
+   *  shown order when `shouldSync` is set. */
+  function releaseOrderSync(localId: string, shouldSync: boolean) {
+    const wasHeld = heldRemovalsRef.current.delete(localId);
+    if (wasHeld && shouldSync) syncOrderIfNeeded();
+  }
+
+  return {
+    orderErrorKey,
+    moveTo,
+    syncOrderIfNeeded,
+    holdOrderSync: (localId: string) => {
+      heldRemovalsRef.current.add(localId);
+    },
+    releaseOrderSync,
+  };
 }
 
 /**
@@ -281,15 +305,23 @@ export function useStudioTrackUploads(
     return createChain.run(async () => {
       if (isGone(localId)) return null;
       patchRow(localId, { stage: "creating" });
-      const created = await createTrack.mutateAsync({
-        releaseId: forReleaseId,
-        title,
-      });
+      const created = await createTrack
+        .mutateAsync({ releaseId: forReleaseId, title })
+        .catch((error: unknown) => {
+          // Removed while being made and the create failed: the order goes now.
+          order.releaseOrderSync(localId, true);
+          throw error;
+        });
       serverOrderRef.current = [...serverOrderRef.current, created.id];
       if (!isMountedRef.current) return null;
       if (!rowOf(localId)) {
-        // Removed while being made: its track goes too.
-        await deleteTrackOf(created.id, forReleaseId).catch(() => undefined);
+        // Removed while being made: its track goes too, then the shown order.
+        // A late track that stays on the server would refuse every order.
+        const isDeleted = await deleteTrackOf(created.id, forReleaseId).then(
+          () => true,
+          () => false,
+        );
+        order.releaseOrderSync(localId, isDeleted);
         return null;
       }
       patchRow(localId, { trackId: created.id, stage: "queued" });
@@ -363,8 +395,22 @@ export function useStudioTrackUploads(
     }
   }
 
+  /** Deletes the removed row's track, then sends the shown order once every
+   *  remaining row has a track. A failed delete restores the row and still
+   *  runs the sync, which then sends only what other removals left waiting.
+   *  A row whose create is still in flight is left to createFor, which syncs
+   *  once that create fails or its late track is deleted. */
   async function deleteRemovedRow(row: UploadRow, index: number) {
-    if (!row.trackId || !releaseId) return;
+    if (row.stage === "creating") {
+      order.holdOrderSync(row.localId);
+      return;
+    }
+    if (!releaseId) return;
+    if (!row.trackId) {
+      order.syncOrderIfNeeded();
+      return;
+    }
+    order.holdOrderSync(row.localId);
     try {
       await deleteTrackOf(row.trackId, releaseId);
     } catch (error) {
@@ -377,6 +423,10 @@ export function useStudioTrackUploads(
         isRetryable: false,
       });
       commitRows(restored);
+    } finally {
+      // After a failed delete the restored row matches the server again, so
+      // the sync sends only what other removals left waiting.
+      order.releaseOrderSync(row.localId, true);
     }
   }
 

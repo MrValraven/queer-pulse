@@ -1,10 +1,19 @@
 import { routes } from "../../app/routeMap";
 
-export const NAV = [
+export interface CreatorNavItem {
+  labelKey: string;
+  /** The label a live member reads, when it differs from the showcase's. */
+  liveLabelKey?: string;
+  to: string;
+  isShowcaseOnly: boolean;
+}
+
+export const NAV: CreatorNavItem[] = [
   {
     labelKey: "studio:creator.nav.dashboard",
-    to: "/studio/dashboard",
-    isShowcaseOnly: true,
+    liveLabelKey: "studio:creator.nav.yourNumbers",
+    to: routes.studioDashboard,
+    isShowcaseOnly: false,
   },
   {
     labelKey: "studio:creator.nav.newRelease",

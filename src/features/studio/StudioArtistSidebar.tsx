@@ -6,6 +6,7 @@ import { useFormat } from "../../shared/i18n/format";
 import { ALBUM } from "./studioAlbum.data";
 import { ARTIST_SHOWCASE } from "./studioArtist.data";
 import styles from "./studio.module.css";
+import { StudioEuroAmount } from "./StudioEuroAmount";
 
 /** The money side of an artist page: demo only (`useStudioShowcase`). */
 export function StudioArtistSidebar({
@@ -25,7 +26,9 @@ export function StudioArtistSidebar({
           {t("studio:artist.sidebar.sustainEyebrow", { artist: artistName })}
         </div>
         <div className={styles.price}>
-          €<em>{ARTIST_SHOWCASE.subscribeAmount}</em>
+          <em>
+            <StudioEuroAmount value={ARTIST_SHOWCASE.subscribeAmount} />
+          </em>
           <span className={styles.small}>
             {t("studio:artist.sidebar.perMonthSuffix")}
           </span>

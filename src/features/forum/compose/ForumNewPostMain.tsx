@@ -127,6 +127,9 @@ export function ForumNewPostMain({
               body={state.body}
               askEligibility={page.askEligibility}
               onAskVerified={page.confirmAskVerified}
+              tags={state.tags}
+              onAddTag={setters.addTag}
+              onRemoveTag={setters.removeTag}
             />
           )}
         </Collapse>

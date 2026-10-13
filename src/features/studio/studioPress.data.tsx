@@ -1,4 +1,6 @@
 import type { ReactNode } from "react";
+import { Translation } from "../../shared/i18n/Translation";
+import type { TFunction } from "../../shared/i18n/types";
 
 /** Round hero portrait for Mariana Sol (Unsplash). */
 export const PRESS_PORTRAIT =
@@ -8,23 +10,24 @@ export const PRESS_PORTRAIT =
 export const PRESS_COVER =
   "https://images.unsplash.com/photo-1518609878373-06d740f60d8b?auto=format&fit=crop&w=600&q=80";
 
-/** Four hi-res press photos (each carries a hover download hint). */
-export const PRESS_PHOTOS: { src: string; caption: string }[] = [
+/** Four hi-res press photos (each carries a hover download hint).
+ *  `captionKey` is a `studioShowcase` catalog key (Pattern A). */
+export const PRESS_PHOTOS: { src: string; captionKey: string }[] = [
   {
     src: "https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&w=800&q=80",
-    caption: "Live · converted garage",
+    captionKey: "studioShowcase:press.photos.liveGarage",
   },
   {
     src: "https://images.unsplash.com/photo-1524368535928-5b5e00ddc76b?auto=format&fit=crop&w=800&q=80",
-    caption: "Portrait · Sintra hills",
+    captionKey: "studioShowcase:press.photos.portraitSintra",
   },
   {
     src: "https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?auto=format&fit=crop&w=800&q=80",
-    caption: "Studio · Cidade dos santos",
+    captionKey: "studioShowcase:press.photos.studioSession",
   },
   {
     src: "https://images.unsplash.com/photo-1499415479124-43c32433a620?auto=format&fit=crop&w=800&q=80",
-    caption: "Portrait · black & white",
+    captionKey: "studioShowcase:press.photos.portraitMono",
   },
 ];
 
@@ -37,62 +40,55 @@ export const PREVIEW_WAVE: number[] = [
 
 /**
  * Facts shown as label / value pairs in the hero. `labelKey` is chrome
- * (Pattern A); `value` is the artist's own authored/press data and stays
- * English in both modes per `docs/i18n/extraction-brief.md` §1.
+ * (Pattern A). Places, years and figures in `value` stay literal; the phrases
+ * around them render through `<Translation>` from the `studioShowcase`
+ * catalog.
  */
 export const PRESS_FACTS: { labelKey: string; value: ReactNode }[] = [
   { labelKey: "studio:press.fact.from", value: "Sintra, Portugal" },
-  { labelKey: "studio:press.fact.pronouns", value: "she / her" },
+  {
+    labelKey: "studio:press.fact.pronouns",
+    value: <Translation i18nKey="studioShowcase:press.facts.pronounsValue" />,
+  },
   { labelKey: "studio:press.fact.since", value: "2024" },
   {
     labelKey: "studio:press.fact.plays",
     value: (
-      <>
-        <em>231k</em> on Studio
-      </>
+      <Translation
+        i18nKey="studioShowcase:press.facts.playsValue"
+        values={{ plays: "231k" }}
+        components={{ em: <em /> }}
+      />
     ),
   },
   { labelKey: "studio:press.fact.forFansOf", value: "Cesária, Anohni" },
 ];
 
-/** Short + long bios (both copyable). */
-export const BIO_SHORT =
-  "Mariana Sol is a Sintra-born singer and composer working at the seam between fado and devotional song. Her 2026 album Cidade dos santos has been played 142,000 times on the QueerPulse co-op, paying her €7,100 directly.";
+/** Short + long bios. Each key carries `<em>` runs: the page renders them
+ *  through `<Translation>`, the clipboard gets `buildBioCopy(t)`. */
+export const BIO_SHORT_KEY = "studioShowcase:press.bio.short";
+export const BIO_LONG_KEYS = [
+  "studioShowcase:press.bio.long.p1",
+  "studioShowcase:press.bio.long.p2",
+];
 
-export const BIO_LONG =
-  "Mariana Sol grew up in the hills above Sintra, in a house where her grandmother sang the rosary like a torch song. She writes fado that refuses church: hymns for queer congregations that never had a building.\n\nHer debut Cidade dos santos (2026) arrived on QueerPulse Studio, the listener-owned co-op, where she keeps her masters and 80% of every play. She performs the Wednesday listening room from a converted garage, tipped in real time by a room of several hundred.";
+/** Drop the `<em>` markers from a resolved catalog string (clipboard text). */
+export function stripEmphasis(text: string): string {
+  return text.replace(/<\/?em>/g, "");
+}
 
-/** Rich (JSX) renders of the two bios for on-page display. */
-export const BIO_SHORT_RICH: ReactNode = (
-  <>
-    Mariana Sol is a Sintra-born singer and composer working at the seam between
-    fado and devotional song. Her 2026 album <em>Cidade dos santos</em> has been
-    played 142,000 times on the QueerPulse co-op, paying her €7,100 directly.
-  </>
-);
+/** Both bios as plain text, paragraphs separated by a blank line. */
+export function buildBioCopy(t: TFunction): string {
+  return [BIO_SHORT_KEY, ...BIO_LONG_KEYS]
+    .map((key) => stripEmphasis(t(key)))
+    .join("\n\n");
+}
 
-export const BIO_LONG_RICH: ReactNode = (
-  <>
-    <p>
-      Mariana Sol grew up in the hills above Sintra, in a house where her
-      grandmother sang the rosary like a torch song. She writes{" "}
-      <em>fado that refuses church</em>: hymns for queer congregations that
-      never had a building.
-    </p>
-    <p>
-      Her debut <em>Cidade dos santos</em> (2026) arrived on QueerPulse Studio,
-      the listener-owned co-op, where she keeps her masters and 80% of every
-      play. She performs the Wednesday listening room from a converted garage,
-      tipped in real time by a room of several hundred.
-    </p>
-  </>
-);
-
-/** Selected-press pull quotes. */
-export const PRESS_QUOTES: { quote: string; source: ReactNode }[] = [
+/** Selected-press pull quotes. Outlet names stay literal; the medium after
+ *  the dot comes from the catalog. */
+export const PRESS_QUOTES: { quoteKey: string; source: ReactNode }[] = [
   {
-    quote:
-      "The most devastating record to come out of the Iberian queer underground this decade.",
+    quoteKey: "studioShowcase:press.quotes.shape",
     source: (
       <>
         Shape <em>· Lisbon</em>
@@ -100,68 +96,89 @@ export const PRESS_QUOTES: { quote: string; source: ReactNode }[] = [
     ),
   },
   {
-    quote: "Sol sings like she's negotiating with God and winning.",
+    quoteKey: "studioShowcase:press.quotes.wire",
     source: (
       <>
-        The Wire <em>· print</em>
+        The Wire{" "}
+        <em>
+          · <Translation i18nKey="studioShowcase:press.quotes.medium.print" />
+        </em>
       </>
     ),
   },
   {
-    quote: "Proof that the co-op model produces art, not just spreadsheets.",
+    quoteKey: "studioShowcase:press.quotes.pitchfork",
     source: (
       <>
-        Pitchfork <em>· feature</em>
+        Pitchfork{" "}
+        <em>
+          · <Translation i18nKey="studioShowcase:press.quotes.medium.feature" />
+        </em>
       </>
     ),
   },
   {
-    quote: "You will cry in a language you don't speak.",
+    quoteKey: "studioShowcase:press.quotes.gayTimes",
     source: (
       <>
-        Gay Times <em>· review</em>
+        Gay Times{" "}
+        <em>
+          · <Translation i18nKey="studioShowcase:press.quotes.medium.review" />
+        </em>
       </>
     ),
   },
 ];
 
-/**
- * Facts & boilerplate copy rows. `labelKey` is chrome (Pattern A); `value`
- * (display) and `copy` (clipboard text) are the artist's own press data and
- * stay English in both modes per `docs/i18n/extraction-brief.md` §1.
- */
-export const BOILERPLATE: {
+const BOOKING_EMAIL = "bookings@marianasol.pt";
+const PRONOUNCE_GUIDE = "mah-ree-AH-nah SOL";
+
+export interface BoilerplateRow {
   labelKey: string;
+  /** On-page render. */
   value: ReactNode;
+  /** Clipboard text, `<em>` markers dropped. */
   copy: string;
-}[] = [
-  {
-    labelKey: "studio:press.boilerplate.fullName",
-    value: "Mariana Sol (b. 1996, Sintra)",
-    copy: "Mariana Sol (b. 1996, Sintra)",
-  },
-  {
-    labelKey: "studio:press.boilerplate.genre",
-    value: "Fado · devotional · art song",
-    copy: "Fado · devotional · art song",
-  },
-  {
-    labelKey: "studio:press.boilerplate.label",
-    value: (
-      <>
-        <em>Self-released</em> · masters retained · via QueerPulse Studio co-op
-      </>
-    ),
-    copy: "Self-released · masters retained · via QueerPulse Studio co-op",
-  },
-  {
-    labelKey: "studio:press.boilerplate.booking",
-    value: "Direct · no agent · bookings@marianasol.pt",
-    copy: "Direct · no agent · bookings@marianasol.pt",
-  },
-  {
-    labelKey: "studio:press.boilerplate.pronounce",
-    value: "mah-ree-AH-nah SOL",
-    copy: "mah-ree-AH-nah SOL",
-  },
-];
+}
+
+/** Facts & boilerplate copy rows (Pattern B, memoized in the consumer).
+ *  `labelKey` stays on the existing `studio` keys. */
+export function buildBoilerplate(t: TFunction): BoilerplateRow[] {
+  const fullName = t("studioShowcase:press.boilerplate.fullNameValue");
+  const genre = t("studioShowcase:press.boilerplate.genreValue");
+  const booking = t("studioShowcase:press.boilerplate.bookingValue", {
+    email: BOOKING_EMAIL,
+  });
+  return [
+    {
+      labelKey: "studio:press.boilerplate.fullName",
+      value: fullName,
+      copy: fullName,
+    },
+    {
+      labelKey: "studio:press.boilerplate.genre",
+      value: genre,
+      copy: genre,
+    },
+    {
+      labelKey: "studio:press.boilerplate.label",
+      value: (
+        <Translation
+          i18nKey="studioShowcase:press.boilerplate.labelValue"
+          components={{ em: <em /> }}
+        />
+      ),
+      copy: stripEmphasis(t("studioShowcase:press.boilerplate.labelValue")),
+    },
+    {
+      labelKey: "studio:press.boilerplate.booking",
+      value: booking,
+      copy: booking,
+    },
+    {
+      labelKey: "studio:press.boilerplate.pronounce",
+      value: PRONOUNCE_GUIDE,
+      copy: PRONOUNCE_GUIDE,
+    },
+  ];
+}

@@ -1,17 +1,15 @@
 import { FadeIn } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
+import { useFormat } from "../../shared/i18n/format";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { StudioLine } from "./StudioSkeletons";
-import { BARS, CURATORS, CITIES } from "./studioDashboard.data";
+import { BARS, CURATORS, CITIES, fixtureDate } from "./studioDashboard.data";
 import s from "./creator.module.css";
 
-// Chart footer: bundles live analytics figures (peak day, play count,
-// curator attribution, top-track share) — content, computed from data in
-// live mode, not fixed platform chrome.
-const CHART_PEAK_SUMMARY_PRE = "Peak: ";
-const CHART_PEAK_DAY = "today";
-const CHART_PEAK_SUMMARY_POST = " · 4,212 plays · Sara picked you on Monday";
+// Chart footer figures: demo content, fixed for the showcase.
+const CHART_PEAK_PLAYS = 4212;
 const CHART_TOP_TRACK_TITLE = "Carta para a santa";
-const CHART_TOP_TRACK_SUMMARY_POST = " is 71% of this";
+const CHART_TOP_TRACK_PERCENT = 71;
 
 /** Mirrors a creator .row: round avatar + two text lines + trailing meta. */
 function DashRowSkeleton() {
@@ -43,6 +41,8 @@ function CityRowSkeleton() {
 }
 
 export function StudioDashboardCharts({ loading }: { loading: boolean }) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
   return (
     <div className={s.col}>
       <div className={s.card}>
@@ -80,13 +80,21 @@ export function StudioDashboardCharts({ loading }: { loading: boolean }) {
         </div>
         <div className={s.chartFoot}>
           <span>
-            {CHART_PEAK_SUMMARY_PRE}
-            <em>{CHART_PEAK_DAY}</em>
-            {CHART_PEAK_SUMMARY_POST}
+            <Translation
+              i18nKey="studio:demo.dashboard.peakSummary"
+              components={{ em: <em /> }}
+              values={{ plays: fmt.number(CHART_PEAK_PLAYS) }}
+            />
           </span>
           <span>
-            <em>{CHART_TOP_TRACK_TITLE}</em>
-            {CHART_TOP_TRACK_SUMMARY_POST}
+            <Translation
+              i18nKey="studio:demo.dashboard.topTrackShare"
+              components={{ em: <em /> }}
+              values={{
+                title: CHART_TOP_TRACK_TITLE,
+                percent: CHART_TOP_TRACK_PERCENT,
+              }}
+            />
           </span>
         </div>
       </div>
@@ -106,7 +114,7 @@ export function StudioDashboardCharts({ loading }: { loading: boolean }) {
             ))
           : CURATORS.map((curator, curatorIndex) => (
               <FadeIn
-                key={curatorIndex}
+                key={curator.whatKey}
                 delay={Math.min(curatorIndex, 8) * 60}
                 className={s.row}
               >
@@ -115,7 +123,7 @@ export function StudioDashboardCharts({ loading }: { loading: boolean }) {
                   style={
                     curator.tone === "jade"
                       ? {
-                          background: "rgba(74,140,111,.2)",
+                          background: "rgba(var(--jade-rgb), 0.2)",
                           color: "var(--jade-light)",
                         }
                       : undefined
@@ -124,10 +132,24 @@ export function StudioDashboardCharts({ loading }: { loading: boolean }) {
                   {curator.av}
                 </span>
                 <div>
-                  <div className={s.rowWhat}>{curator.what}</div>
-                  <div className={s.rowWho}>{curator.who}</div>
+                  <div className={s.rowWhat}>
+                    <Translation
+                      i18nKey={curator.whatKey}
+                      components={{ em: <em /> }}
+                      values={{ title: curator.title }}
+                    />
+                  </div>
+                  <div className={s.rowWho}>{t(curator.whoKey)}</div>
                 </div>
-                <div className={s.rowWhen}>{curator.when}</div>
+                <div className={s.rowWhen}>
+                  {curator.whenIso
+                    ? fmt.date(fixtureDate(curator.whenIso), {
+                        weekday: "short",
+                        day: "numeric",
+                        month: "short",
+                      })
+                    : t("studio:demo.dashboard.curator.today")}
+                </div>
               </FadeIn>
             ))}
       </div>
@@ -153,11 +175,16 @@ export function StudioDashboardCharts({ loading }: { loading: boolean }) {
             ))
           : CITIES.map((city, cityIndex) => (
               <FadeIn
-                key={city.nm}
+                key={city.name ?? "other-cities"}
                 delay={Math.min(cityIndex, 8) * 60}
                 className={s.cityRow}
               >
-                <span className={s.cityNm}>{city.nm}</span>
+                <span className={s.cityNm}>
+                  {city.name ??
+                    t("studio:demo.dashboard.otherCities", {
+                      count: city.otherCount ?? 0,
+                    })}
+                </span>
                 <div className={s.barWrap}>
                   <div className={s.barBg}>
                     <div

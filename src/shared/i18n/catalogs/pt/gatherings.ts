@@ -120,6 +120,8 @@ export const gatherings: Catalog = {
   // Shared/cross-page chrome
   "common.backToGatherings": "Convívios",
   "common.hostedBy": "Organização de",
+  "common.calendarHostedBy": "Organização de {host}",
+  "common.calendarHostedByFor": "Organização de {host} para {communities}",
   "common.runBy": "Dinamizado por",
   "common.hostRemoved": "Uma pessoa que já não está por cá",
   "common.timeRangeTo": "às",

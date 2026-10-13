@@ -23,6 +23,8 @@ const release = toReleaseCardView({
     kind: "musician",
     avatarUrl: null,
   },
+  publishedAt: "2026-04-12T10:00:00.000Z",
+  genre: null,
 });
 
 function renderCard(playRelease = vi.fn(() => Promise.resolve())) {
@@ -35,6 +37,7 @@ function renderCard(playRelease = vi.fn(() => Promise.resolve())) {
     hasNext: false,
     playRelease,
     playReleases: vi.fn(() => Promise.resolve()),
+    playTracks: vi.fn(() => Promise.resolve()),
     togglePlay: vi.fn(),
     next: vi.fn(),
     previous: vi.fn(),

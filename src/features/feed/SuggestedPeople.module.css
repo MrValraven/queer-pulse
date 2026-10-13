@@ -138,6 +138,9 @@
   line-height: 1.35;
   color: var(--accent);
   overflow-wrap: anywhere;
+  /* Evens out a two-line reason ("You are both in / QueerPulse Social") so a
+     lone word never dangles on the second line. */
+  text-wrap: balance;
 }
 
 /* The auto margin keeps "Connect" on the bottom edge when a card has no

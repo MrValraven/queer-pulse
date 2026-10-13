@@ -40,7 +40,7 @@ export const COLUMNS: FooterColumn[] = [
     headingKey: "shared:footerData.col.lisbonLife.head",
     links: [
       {
-        labelKey: "shared:megaNav.lisbon.col.discover.businessDirectory",
+        labelKey: "shared:megaNav.community.col.discover.businessDirectory",
         href: routes.directory,
       },
       {
@@ -51,7 +51,6 @@ export const COLUMNS: FooterColumn[] = [
         labelKey: "shared:megaNav.work.col.career.jobBoard",
         href: routes.jobs,
       },
-      { labelKey: "nav:arriving", href: routes.arriving },
       {
         labelKey: "shared:megaNav.work.col.economy.skillsExchange",
         href: routes.barter,

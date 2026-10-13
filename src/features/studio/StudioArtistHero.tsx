@@ -14,6 +14,7 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
+import { SubprofileFollow } from "../subprofiles/SubprofileFollow";
 import type { StudioArtistView } from "./api/studio.adapters";
 import { useStudioPlayer } from "./player/studioPlayerContext";
 import { ARTIST_SHOWCASE } from "./studioArtist.data";
@@ -22,7 +23,7 @@ import { useStudioShowcase } from "./useStudioShowcase";
 import styles from "./studio.module.css";
 import kit from "./studioKit.module.css";
 
-/** Play all queues at most this many releases, newest first. */
+/** Play all queues at most this many releases, in the server's order. */
 const PLAY_ALL_LIMIT = 10;
 
 export function StudioArtistHero({
@@ -47,15 +48,12 @@ export function StudioArtistHero({
     failed: t("studio:detail.copyFailedToast"),
   });
   const person = artist.artist;
-  // Albums and singles arrive as two lists, each newest first: merge them
-  // by release date so the queue opens on the newest release of either.
-  const releaseIds = [...artist.releases, ...artist.singles]
-    .sort((left, right) =>
-      (right.releasedOn ?? "").localeCompare(left.releasedOn ?? ""),
-    )
+  // The server sends releases published newest first (published_at desc,
+  // id desc); Play all keeps that order as it stands.
+  const releaseIds = artist.allReleases
     .map((release) => release.id)
     .slice(0, PLAY_ALL_LIMIT);
-  const releaseCount = artist.releases.length + artist.singles.length;
+  const releaseCount = artist.allReleases.length;
   const isFollowed = isFollowing(person.id);
 
   return (
@@ -78,7 +76,10 @@ export function StudioArtistHero({
       }
       kind={[t(person.kindLabelKey), person.city].filter(Boolean).join(" · ")}
       title={<span ref={titleRef}>{person.name}</span>}
-      by={t("studio:artistPage.releaseCount", { count: releaseCount })}
+      by={[
+        t("studio:artistPage.releaseCount", { count: releaseCount }),
+        t("studio:artistPage.followerCount", { count: artist.followerCount }),
+      ].join(" · ")}
       actions={
         <>
           <button
@@ -96,7 +97,7 @@ export function StudioArtistHero({
               <FiExternalLink aria-hidden />
             </Link>
           )}
-          {isShowcase && (
+          {isShowcase ? (
             <>
               <button
                 type="button"
@@ -123,6 +124,15 @@ export function StudioArtistHero({
                 {t("studio:detail.tipArtistCta", { artist: person.name })}
               </button>
             </>
+          ) : (
+            // useFollow patches the artist view and refreshes the library's
+            // Artists tab itself.
+            <SubprofileFollow
+              subprofileId={person.id}
+              followerCount={artist.followerCount}
+              viewerFollowing={artist.isFollowing}
+              isOwnerViewing={artist.isOwner}
+            />
           )}
           <button
             type="button"

@@ -341,7 +341,8 @@
   justify-content: center;
   gap: 8px;
   background: var(--accent);
-  color: rgba(var(--cream-rgb), 1);
+  /* Dark ink on the coral fill: 6.28:1. */
+  color: var(--studio-bg);
   border: none;
   border-radius: var(--radius-pill);
   padding: 12px 24px;

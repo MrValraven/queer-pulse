@@ -78,9 +78,8 @@ export const MEMBER_TABS: BottomTab[] = [
  *
  * Chosen for what a visitor with no account can actually use: the resource
  * library (the platform's public-service front door), the safe-spaces guide
- * (the public half of the Lisbon surface, and already the Lisbon menu's
- * logged-out feature promo), and About (what this place is, and the route to
- * requesting an invite).
+ * (already the Community menu's logged-out feature promo), and About (what
+ * this place is, and the route to requesting an invite).
  */
 const PUBLIC_TAB_CANDIDATES: BottomTab[] = [
   {

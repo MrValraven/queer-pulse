@@ -30,6 +30,8 @@ export function StudioTipModal({
   const dialogRef = useDismiss(onClose);
   const { t } = useTranslation();
   const fmt = useFormat();
+  // PT writes the euro mark after the amount ("5 €"), EN before ("€5").
+  const isEuroMarkAfter = !fmt.currency(0).startsWith("€");
   const [phase, setPhase] = useState<Phase>("pick");
   const [amount, setAmount] = useState(2);
   const [custom, setCustom] = useState("");
@@ -131,7 +133,7 @@ export function StudioTipModal({
             </div>
 
             <div className={styles.customRow}>
-              <span>€</span>
+              {!isEuroMarkAfter && <span>€</span>}
               <input
                 type="number"
                 min={1}
@@ -141,6 +143,7 @@ export function StudioTipModal({
                 value={custom}
                 onChange={(e) => setCustom(e.target.value)}
               />
+              {isEuroMarkAfter && <span>€</span>}
             </div>
 
             <Button

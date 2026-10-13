@@ -5,6 +5,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import type { StudioReleaseView } from "./api/studio.adapters";
 import { useStudioPlayer } from "./player/studioPlayerContext";
+import { StudioAddToPlaylistButton } from "./StudioAddToPlaylistButton";
 import { useStudioShowcase } from "./useStudioShowcase";
 import styles from "./studio.module.css";
 import kit from "./studioKit.module.css";
@@ -25,6 +26,7 @@ export function StudioAlbumTracklist({
   const isShowcase = useStudioShowcase();
   // The server refuses every stream on a taken-down release, owners included.
   const isStreamable = release.status !== "taken_down";
+  const isPublished = release.status === "published";
 
   return (
     <ol
@@ -101,8 +103,18 @@ export function StudioAlbumTracklist({
                   amount: formatters.currency(PER_PLAY_AMOUNT),
                 })}
             </div>
-            <div className={styles.tm}>
+            <div className={`${styles.tm} ${releaseStyles.timeCell}`}>
               {track.durationLabel ?? t("studio:release.processing")}
+              {isPublished && (
+                <StudioAddToPlaylistButton
+                  trackIds={isPlayBlocked ? [] : [track.id]}
+                  subjectTitle={track.title}
+                  ariaLabel={t("studio:playlist.add.trackAria", {
+                    title: track.title,
+                  })}
+                  className={releaseStyles.rowAdd}
+                />
+              )}
             </div>
           </li>
         );

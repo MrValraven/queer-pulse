@@ -61,8 +61,14 @@ export function StudioSetSection() {
                 <div className={styles.who}>{row.who}</div>
               </div>
               <div className={styles.pay}>
-                {row.payNote && <b>{row.payNote}</b>}
-                {row.pay}
+                {row.payNoteKey && <b>{t(row.payNoteKey)}</b>}
+                {row.pay && t(row.pay.key, row.pay.values)}
+                {row.isUpNext && (
+                  <>
+                    {t("studioShowcase:room.set.upNext")}{" "}
+                    <FiArrowRight aria-hidden />
+                  </>
+                )}
               </div>
               <div className={styles.tm}>{row.tm}</div>
             </div>

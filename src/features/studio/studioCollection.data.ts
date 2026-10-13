@@ -1,106 +1,132 @@
-import type { ImageSlotTint } from "../../shared/components/ui";
+import type { StudioPlaylistVisibility } from "./api/studio.types";
 
-export const HERO_COVER =
-  "https://images.unsplash.com/photo-1651443146979-4cf9a27dcade?q=80&w=600&auto=format&fit=crop";
+// ── Studio v2 demo playlists ───────────────────────────────────────────────
+// Playlist names and descriptions are member-written content, so they stay
+// as written in both languages (the catalog header says the same).
 
-export const COLLECTION = {
-  title: "Lisbon dyke-bar ",
-  em: "standards",
-  curator: "Sara Marques",
-  count: "28 tracks",
-  hours: "1h 54m",
-  blurb:
-    "The songs that actually get played: at Purex, at the Anjos back room, at every house party that goes past 4am. Curated from the catalogue, paid to the artists on every listen.",
+export const DEMO_VIEWER_MEMBER_SLUG = "tiago";
+
+/** The signed-in demo member as a playlist credit. */
+export const DEMO_VIEWER_MEMBER = {
+  id: "demo-member-tiago",
+  slug: DEMO_VIEWER_MEMBER_SLUG,
+  displayName: "Tiago Costa",
+  avatarUrl: null,
 };
 
-export interface CollTrack {
-  pre: string;
-  em?: string;
-  post?: string;
-  meta: string;
-  tint: ImageSlotTint;
-  image?: string;
+export interface DemoPlaylistSeed {
+  id: string;
+  name: string;
+  description: string | null;
+  visibility: StudioPlaylistVisibility;
+  isViewerOwner: boolean;
+  /** A persona credit; null shows the playlist as `creditMember`. */
+  creditPersonaId: string | null;
+  creditMember: {
+    id: string;
+    slug: string;
+    displayName: string;
+    avatarUrl: string | null;
+  } | null;
+  /** The credited member's profile slug (the same as `creditMember.slug`),
+   *  kept beside it so the profile block's filter reads one field. */
+  creditMemberSlug: string | null;
+  /** Track ids in playlist order. One that matches no published demo track
+   *  plays the part of a track that is no longer available. */
+  trackIds: string[];
+  updatedAt: string;
 }
 
-export const TRACKS: CollTrack[] = [
-  {
-    pre: "Carta para a ",
-    em: "santa",
-    meta: "Mariana Sol · 4:18",
-    tint: "coral",
-    image:
-      "https://images.unsplash.com/photo-1651443040361-40c9b4c440f8?q=80&w=400&auto=format&fit=crop",
-  },
-  {
-    pre: "Vespertina ",
-    em: "vol. iv",
-    meta: "Sara Marques · 6:02",
-    tint: "plum",
-    image:
-      "https://images.unsplash.com/photo-1746417222725-17e161c1f6fa?q=80&w=800&auto=format&fit=crop",
-  },
-  {
-    pre: "Anjos ",
-    em: "tape",
-    meta: "D. Okoye · 3:44",
-    tint: "jade",
-    image:
-      "https://images.unsplash.com/photo-1746470621234-ded97a0d8f3a?q=80&w=800&auto=format&fit=crop",
-  },
-  {
-    pre: "Madrugada",
-    meta: "Inês T. · 5:11",
-    tint: "plum",
-    image:
-      "https://images.unsplash.com/photo-1746470621309-0bb74b10b19b?q=80&w=800&auto=format&fit=crop",
-  },
-  {
-    pre: "Purex ",
-    em: "theme",
-    meta: "Various · 3:02",
-    tint: "coral",
-    image:
-      "https://images.unsplash.com/photo-1748723594339-46dc3e25e329?q=80&w=800&auto=format&fit=crop",
-  },
-  {
-    pre: "Última ",
-    em: "dança",
-    meta: "Helena P. · 4:50",
-    tint: "jade",
-    image:
-      "https://images.unsplash.com/photo-1749496935342-11fddc03871c?q=80&w=800&auto=format&fit=crop",
-  },
-];
+/** What the old id-less `/studio/collection` link opens in the demo. */
+export const DEMO_DEFAULT_PLAYLIST_ID = "demo-playlist-dyke-bar-standards";
 
-export const RELATED: {
-  pre: string;
-  em?: string;
-  meta: string;
-  tint: ImageSlotTint;
-  image?: string;
-}[] = [
+export const DEMO_PLAYLIST_SEEDS: DemoPlaylistSeed[] = [
   {
-    pre: "Trans ",
-    em: "composers",
-    meta: "Mix · D. Okoye",
-    tint: "plum",
-    image:
-      "https://images.unsplash.com/photo-1641515860544-483ea99e265d?q=80&w=400&auto=format&fit=crop",
+    id: DEMO_DEFAULT_PLAYLIST_ID,
+    name: "Lisbon dyke-bar standards",
+    description:
+      "The songs that actually get played: at Purex, in Anjos, at every house party that goes past 4am",
+    visibility: "public",
+    isViewerOwner: false,
+    creditPersonaId: null,
+    creditMember: {
+      id: "demo-member-sara-marques",
+      slug: "sara-marques",
+      displayName: "Sara Marques",
+      avatarUrl: null,
+    },
+    creditMemberSlug: "sara-marques",
+    trackIds: [
+      "demo-track-cidade-dos-santos-06",
+      "demo-track-home-1-01",
+      "demo-track-home-2-01",
+      "demo-track-home-3-01",
+      "demo-track-mariana-2-02",
+      "demo-track-cidade-dos-santos-02",
+      "demo-track-home-4-01",
+    ],
+    updatedAt: "2026-10-09T18:00:00.000Z",
   },
   {
-    pre: "Late ",
-    em: "Marvila",
-    meta: "Collection · 19 tracks",
-    tint: "coral" as const,
-    image:
-      "https://images.unsplash.com/photo-1528643609128-c50fdc20cc58?q=80&w=800&auto=format&fit=crop",
+    id: "demo-playlist-trans-composers",
+    name: "Trans composers vol. iv",
+    description: "Voices finding their own register",
+    visibility: "public",
+    isViewerOwner: false,
+    creditPersonaId: "sp-diogo-nightform",
+    creditMember: null,
+    creditMemberSlug: null,
+    trackIds: [
+      "demo-track-home-3-01",
+      "demo-track-home-2-01",
+      "demo-track-cidade-dos-santos-08",
+    ],
+    updatedAt: "2026-10-07T12:00:00.000Z",
   },
   {
-    pre: "Fado ",
-    em: "reworked",
-    meta: "Collection · 12 tracks",
-    tint: "jade" as const,
-    image:
-      "https://images.unsplash.com/photo-1565502233254-3d22afd146eb?q=80&w=800&auto=format&fit=crop",
+    id: "demo-playlist-cartas-que-voltam",
+    name: "Cartas que voltam",
+    description: "Letters, sung back",
+    visibility: "public",
+    isViewerOwner: true,
+    creditPersonaId: "demo-persona-mariana-sol",
+    creditMember: null,
+    creditMemberSlug: null,
+    trackIds: [
+      "demo-track-cidade-dos-santos-06",
+      "demo-track-mariana-single-1-01",
+      "demo-track-mariana-2-01",
+    ],
+    updatedAt: "2026-10-11T09:00:00.000Z",
+  },
+  {
+    id: "demo-playlist-kitchen-tapes",
+    name: "Kitchen tapes",
+    description: "For washing up slowly",
+    visibility: "private",
+    isViewerOwner: true,
+    creditPersonaId: null,
+    creditMember: DEMO_VIEWER_MEMBER,
+    creditMemberSlug: DEMO_VIEWER_MEMBER_SLUG,
+    trackIds: [
+      "demo-track-cidade-dos-santos-01",
+      "demo-track-cidade-dos-santos-03",
+      "demo-track-withdrawn-01",
+      "demo-track-mariana-3-01",
+      "demo-track-home-1-01",
+    ],
+    updatedAt: "2026-10-12T21:00:00.000Z",
+  },
+  {
+    id: "demo-playlist-for-the-group-chat",
+    name: "For the group chat",
+    description: null,
+    visibility: "connections",
+    isViewerOwner: true,
+    creditPersonaId: null,
+    creditMember: DEMO_VIEWER_MEMBER,
+    creditMemberSlug: DEMO_VIEWER_MEMBER_SLUG,
+    trackIds: ["demo-track-home-2-01", "demo-track-home-4-01"],
+    updatedAt: "2026-10-10T20:00:00.000Z",
   },
 ];

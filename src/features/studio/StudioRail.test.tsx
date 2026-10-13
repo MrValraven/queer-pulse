@@ -34,7 +34,7 @@ describe("StudioRail", () => {
     );
   });
 
-  it("shows only v1 destinations in live mode, with the artist's links", async () => {
+  it("shows the live destinations in live mode, with the artist's links", async () => {
     isShowcase = false;
     render(
       <TestProviders initialEntries={["/studio/artist?id=p1"]}>
@@ -46,9 +46,16 @@ describe("StudioRail", () => {
       "href",
       "/studio/search",
     );
-    expect(within(nav).getByRole("link", { name: "Saved" })).toHaveAttribute(
+    expect(within(nav).getByRole("link", { name: "Library" })).toHaveAttribute(
       "href",
-      "/account/collections",
+      "/studio/library",
+    );
+    expect(
+      within(nav).getByRole("link", { name: "Open calls" }),
+    ).toHaveAttribute("href", "/studio/calls");
+    expect(screen.getByRole("link", { name: "Your numbers" })).toHaveAttribute(
+      "href",
+      "/studio/dashboard",
     );
     expect(
       screen.getByRole("link", { name: "Upload a release" }),
@@ -57,7 +64,9 @@ describe("StudioRail", () => {
       "aria-current",
       "page",
     );
-    expect(screen.queryByText(/Solidarity fund/)).not.toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: "Solidarity fund" }),
+    ).toHaveAttribute("href", "/studio/solidarity-fund");
     expect(screen.queryByText(/Sustained/)).not.toBeInTheDocument();
   });
 });

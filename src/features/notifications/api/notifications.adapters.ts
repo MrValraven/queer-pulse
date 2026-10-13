@@ -33,6 +33,7 @@ import { writerTabHref } from "../../magazine/writerTabs";
 import { communityPostPath } from "../../communities/communityPostPath";
 import { barterProposalsPath } from "../../economy/barterProposals.paths";
 import { adminQueueRoute } from "./adminQueueRoutes";
+import { studioReleasePath } from "../../studio/studioPaths";
 import {
   lifecycleSourceHref,
   personaImportHref,
@@ -364,7 +365,9 @@ export function notificationDtoToView(
     // waiting for a look"), so `NotificationItem` must not also append the
     // generic "and 3 others" bundle suffix on top of it: that would both
     // double-count and speak about people where none are named.
-    hasOwnBundleCount: kind === "admin_queue_item",
+    // `studio_release_published` counts its bundled releases in its own copy too.
+    hasOwnBundleCount:
+      kind === "admin_queue_item" || kind === "studio_release_published",
     time: formatTime(dto.createdAt, fmt),
     createdAtIso: dto.createdAt,
   };
@@ -567,6 +570,22 @@ export function notificationDtoToView(
         href: personaImportHref(dto.payload),
       },
     ];
+  }
+
+  // Studio v2: one action, straight to the new release. A payload without a
+  // release id drops the action and keeps the row.
+  if (dto.type === "studio_release_published") {
+    const releaseId = (dto.payload as { releaseId?: unknown } | null)
+      ?.releaseId;
+    if (typeof releaseId === "string" && releaseId) {
+      view.actions = [
+        {
+          label: t("notifications:actions.listenNow"),
+          variant: "primary",
+          href: studioReleasePath(releaseId),
+        },
+      ];
+    }
   }
 
   return view;
