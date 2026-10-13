@@ -64,6 +64,15 @@
     --bottom-inset: env(safe-area-inset-bottom, 0px);
   }
 
+  /* Studio renders no bottom tab bar (StudioShell and StudioCreatorShell stamp
+     `data-studio-shell` through useStudioShellSignal), so the token drops to
+     0 as on desktop and the player bar sits at the bottom of the screen. The
+     bar adds the home-indicator clearance as its own bottom padding
+     (StudioPlayer.module.css), and the consent banner adds its own. */
+  html[data-studio-shell="true"] {
+    --bottom-inset: 0px;
+  }
+
   /* The Check-in focus layer (CheckinFocusLayer.tsx stamps this attribute)
      covers the bottom tab bar, so the token drops to its no-bar value (0, as
      on desktop). Every consumer that paints over the layer (the consent

@@ -76,7 +76,7 @@ function StillCard({ card }: { card: WithdrawnCard }) {
 export function StudioWithdrawnPage() {
   const { t } = useTranslation();
   return (
-    <StudioShell hidePlayer>
+    <StudioShell>
       <div className={s.wrap}>
         <div className={s.hero}>
           <div className={s.cover} aria-hidden="true">

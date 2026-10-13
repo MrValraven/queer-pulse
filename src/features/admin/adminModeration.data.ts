@@ -564,6 +564,29 @@ export const EMERGENCY_REPORTS: ModReport[] = [
 ];
 
 export const OTHER_REPORTS: ModReport[] = [
+  // Studio v1 demo: a copyright report on a Studio release, so demo admin
+  // shows the queue row's cover thumbnail and the drawer's takedown panel.
+  // The subject is the Studio fixture's default release
+  // (`DEMO_DEFAULT_RELEASE_ID` in `studio/api/studioDemoMe.data.ts`), written
+  // out here so the admin chunk does not import the Studio fixture.
+  {
+    id: "r-studio-release",
+    subjectType: "studio_release",
+    subjectId: "demo-release-cidade-dos-santos",
+    severity: "medium",
+    category: "Copyright",
+    chips: [{ tone: "amber", labelKey: "admin:moderation.category.copyright" }],
+    title: "Cidade dos santos",
+    preview:
+      "Reporter says the opening track samples a recording they hold the rights to, with no credit or permission.",
+    reporterName: "Joana P.",
+    reportedName: "Mariana Sol",
+    priorReports: { kind: "count", count: 0 },
+    reporterCredibility: { kind: "new" },
+    age: "25m",
+    risk: { tone: "amber", key: "admin:moderation.risk.medium" },
+    slaDueAt: new Date(Date.now() + 300 * 60_000).toISOString(),
+  },
   // PRD-360 / PRD-361 demo: a message report on an unsent photo, so demo mode
   // shows the message evidence block and the audited conversation viewer
   // (fixture in `adminReportConversationContext.data.ts`).
@@ -1281,11 +1304,15 @@ export const MOD_ACTIONS: ModAction[] = [
  * (`moderation.service.ts`); this filter only keeps the tiles from showing in
  * the single-report drawer. The bulk decision modal keeps offering both tiles
  * for every subject and leans on that typed refusal per row.
+ *
+ * A `studio_release` is taken down and restored from its own panel
+ * (AdminStudioReleaseActions), so the generic hide and remove tiles stay off it.
  */
 const SUBJECT_TYPES_WITHOUT_CONTENT = new Set<ReportSubjectType>([
   "venue",
   "conversation",
   "identity",
+  "studio_release",
 ]);
 
 export function modActionsFor(subjectType: ReportSubjectType): ModAction[] {

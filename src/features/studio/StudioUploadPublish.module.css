@@ -1,0 +1,78 @@
+.checklist {
+  padding: 14px 16px;
+  border-radius: var(--radius-10);
+  background: rgba(var(--cream-rgb), 0.04);
+  border: 1px solid var(--line);
+}
+
+.checklist ul {
+  margin: 6px 0 0;
+  padding-inline-start: 18px;
+}
+
+.checklistLead,
+.ready {
+  margin: 0;
+  font-weight: 600;
+}
+
+.ready {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--jade-light);
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.rights {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  line-height: 1.5;
+  cursor: pointer;
+}
+
+.rights input {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  margin: 2px 0 0;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.rights input:disabled {
+  cursor: default;
+}
+
+.submittedActions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+
+.rights input:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.error {
+  margin: 0;
+  font-size: var(--text-13);
+  color: var(--accent-soft);
+}
+
+.stepNav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 6px;
+}

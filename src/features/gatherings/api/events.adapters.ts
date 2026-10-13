@@ -6,6 +6,7 @@ import {
   type SpotsLabel,
 } from "../data";
 import type { GatheringForm } from "../useGatheringForm";
+import { guestCommunitiesFromDetail } from "./eventCommunities.adapters";
 import { OTHER_FORMAT_KEY } from "../gatheringCatalog";
 import {
   EXISTING_GATHERING_RSVP_QUESTIONS,
@@ -252,6 +253,7 @@ export function detailToGathering(
     // undefined here, matching GatheringDetail's "unset" representation.
     communitySlug: dto.communitySlug ?? undefined,
     community: dto.community ?? undefined,
+    guestCommunities: guestCommunitiesFromDetail(dto.guestCommunities),
     venueListingId: dto.listingId ?? null,
     venueListing: dto.venueListing ?? null,
     runByListing: dto.runByListing ?? null,

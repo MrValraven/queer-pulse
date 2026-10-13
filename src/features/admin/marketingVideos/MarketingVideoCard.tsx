@@ -39,9 +39,9 @@ export function MarketingVideoCard({
         />
       </div>
       <div className={styles.cardBody}>
-        <h2 id={headingId} className={styles.cardTitle}>
+        <h3 id={headingId} className={styles.cardTitle}>
           {title}
-        </h2>
+        </h3>
         <p className={styles.cardMeta}>
           {t("admin:marketingVideos.card.meta", {
             duration: formatClock(video.durationSeconds),

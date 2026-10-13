@@ -1,27 +1,28 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ConfirmDialog } from "../../shared/components/ui";
-import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { EditDetailsModal } from "./EditDetailsModal";
 import type { GatheringDetailsDraft } from "./editDetailsDraft";
 import { SeriesEditScopeModal } from "./SeriesEditScopeModal";
-import type { SeriesScopeModalMode } from "./ManageGatheringModals";
 import {
-  applyEditDraft,
-  buildEditPatch,
-  editDraftCareFields,
-  editDraftFormatFields,
+  editDraftFromState,
   liveInitialState,
+  liveStateKeepingGuests,
   type GatheringState,
 } from "./manageGatheringState";
-import { dateToDatetimeValue } from "./manageGatheringDates";
 import { gatheringCancelledPath, type GatheringDetail } from "./data";
-import type { SeriesScope, UpdateEventDto } from "./api/events.api";
 import { useAttendees } from "./api/useAttendees";
 import { useCancelEvent, useUpdateEvent } from "./api/useEventMutations";
 import { useDeleteGatheringFlow } from "./useDeleteGatheringFlow";
+import { useGatheringEditSave } from "./useGatheringEditSave";
+import {
+  useRefreshGuestListAfterLeadChange,
+  useSaveGuestCommunityChanges,
+} from "./useSaveGuestCommunityChanges";
+import { SavedGuestListContext } from "./savedGuestListContext";
+import { useSeedGuestCommunities } from "./useSeedGuestCommunities";
 import { GatheringHostMenu } from "./GatheringHostMenu";
 
 /**
@@ -39,10 +40,10 @@ import { GatheringHostMenu } from "./GatheringHostMenu";
  * They first shipped as a strip of four full-size buttons that competed with
  * the RSVP for attention; one icon button in the header keeps them a tap away.
  *
- * Edit and cancel run on the manage dashboard's own layer (`liveInitialState`
- * / `applyEditDraft` / `buildEditPatch`, `EditDetailsModal`,
- * `SeriesEditScopeModal`), so the two surfaces cannot drift into two different
- * meanings of "save" or two different answers to MSG-10's this-vs-future.
+ * Edit and cancel run on the Manage page's own save path
+ * (`useGatheringEditSave`, with `buildEditPatch`, the guest community
+ * changes and MSG-10's this-vs-future prompt), so the two surfaces share
+ * one meaning of "save".
  */
 export function GatheringHostBar({
   gathering,
@@ -55,7 +56,6 @@ export function GatheringHostBar({
   const { t } = useTranslation();
   const fmt = useFormat();
   const navigate = useNavigate();
-  const { showToast } = useToast();
 
   const updateEvent = useUpdateEvent(gathering.slug);
   const cancelEvent = useCancelEvent(gathering.slug);
@@ -73,98 +73,60 @@ export function GatheringHostBar({
   const { data: attendees } = useAttendees(gathering.slug);
   const attendeeCount = attendees?.goingCount ?? 0;
 
-  const [isEditOpen, setEditOpen] = useState(false);
+  // The draft the edit modal opened on, or null while it is closed. Kept
+  // whole because the modal freezes it, and Save reads the host's guest
+  // changes against the list it holds.
+  const [editInitial, setEditInitial] = useState<GatheringDetailsDraft | null>(
+    null,
+  );
   const [isCancelConfirmOpen, setCancelConfirmOpen] = useState(false);
-  // MSG-10, exactly as the manage dashboard does it: a repeating gathering
-  // asks this-vs-future, and a saved edit's patch waits in `pendingEdit` until
-  // the host answers, beside the pre-edit state a dismissed prompt restores.
-  const [seriesScopeModal, setSeriesScopeModal] =
-    useState<SeriesScopeModalMode>(null);
-  const [pendingEdit, setPendingEdit] = useState<{
-    patch: UpdateEventDto;
-    snapshot: GatheringState;
-  } | null>(null);
 
   // The PRE-edit snapshot `buildEditPatch` compares against (read its doc: the
   // community comparison depends on this being the PERSISTED value). Re-seeded
   // during render whenever the fetched gathering changes, so a second edit
   // after a save reads what the server now holds. A render-time reset lands
   // in the same commit as the new gathering, the pattern `useGatheringRsvp`
-  // already uses on this page.
+  // already uses on this page. The guest list has its own query, so the
+  // re-seed keeps it (`liveStateKeepingGuests`).
   const [previousGathering, setPreviousGathering] = useState(gathering);
   const [gatheringState, setGatheringState] = useState<GatheringState>(() =>
     liveInitialState(gathering, fmt, t),
   );
   if (previousGathering !== gathering) {
     setPreviousGathering(gathering);
-    setGatheringState(liveInitialState(gathering, fmt, t));
+    setGatheringState((current) =>
+      liveStateKeepingGuests(current, gathering, fmt, t),
+    );
   }
+  const { guestListStatus, retryGuestList } = useSeedGuestCommunities({
+    slug: gathering.slug,
+    setGatheringState,
+  });
+  const saveGuestCommunities = useSaveGuestCommunityChanges(gathering.slug);
+  const refreshGuestListAfterLeadChange = useRefreshGuestListAfterLeadChange(
+    gathering.slug,
+  );
 
-  // Resolves with the notified count, `null` for a series (it sends after
-  // the modal closes) or a failure, which the app-wide MutationCache
-  // `onError` already toasts.
-  const saveEditDraft = (draft: GatheringDetailsDraft) => {
-    setGatheringState((current) => applyEditDraft(current, draft, fmt, t));
-    const patch = buildEditPatch(gatheringState, draft);
-    if (gathering.series) {
-      setPendingEdit({ patch, snapshot: gatheringState });
-      return Promise.resolve(null);
-    }
-    return updateEvent
-      .mutateAsync(patch)
-      .then((result) => result.notifiedCount)
-      .catch(() => null);
-  };
-
-  // The host's answer to `SeriesEditScopeModal`: fires the deferred cancel or
-  // edit with the scope they picked. An edit toasts who it notified.
-  const chooseSeriesScope = (scope: SeriesScope) => {
-    const mode = seriesScopeModal;
-    setSeriesScopeModal(null);
-    if (mode === "cancel") {
+  // MSG-10 runs exactly as the Manage page runs it: a repeating gathering's
+  // edit waits for the this-vs-future answer, and a picked cancel scope
+  // cancels and leaves for the cancelled page.
+  const editSave = useGatheringEditSave({
+    isSeries: Boolean(gathering.series),
+    gatheringState,
+    setGatheringState,
+    updateEvent,
+    onSaveGuestCommunities: saveGuestCommunities,
+    onLeadCommunityChanged: refreshGuestListAfterLeadChange,
+    onChooseCancelScope: (scope) => {
       cancelEvent.mutate(scope);
       void navigate(gatheringCancelledPath(gathering.slug));
-    } else if (mode === "edit" && pendingEdit) {
-      void updateEvent
-        .mutateAsync({ ...pendingEdit.patch, seriesScope: scope })
-        .then(({ notifiedCount }) => {
-          if (notifiedCount !== null && notifiedCount > 0) {
-            showToast(
-              t("gatherings:manage.editModal.notifiedToast", {
-                count: notifiedCount,
-              }),
-              "success",
-            );
-          }
-        })
-        .catch(() => {
-          // Already toasted by the app-wide MutationCache `onError`.
-        });
-      setPendingEdit(null);
-    }
-  };
-
-  // Dismissed without an answer: nothing was sent, so the edit already folded
-  // into `gatheringState` comes back off it (`buildEditPatch` sends the venue
-  // only when it changed, so a folded venue would never reach the server).
-  // Restored over the latest state, keeping a cover saved meanwhile unless
-  // this edit is the one that changed it, as `useGatheringEditSave` does.
-  const closeSeriesScope = () => {
-    setSeriesScopeModal(null);
-    if (!pendingEdit) return;
-    const { patch, snapshot } = pendingEdit;
-    setGatheringState((current) =>
-      patch.coverImageUrl === undefined
-        ? { ...snapshot, coverImageUrl: current.coverImageUrl }
-        : snapshot,
-    );
-    setPendingEdit(null);
-  };
+    },
+  });
 
   // A repeating gathering asks which dates through the series prompt, the
   // same swap the manage dashboard makes; a single date gets the plain confirm.
   const askToCancel = () => {
-    if (gathering.series) setSeriesScopeModal("cancel");
+    if (gathering.series) editSave.openCancelScope();
     else setCancelConfirmOpen(true);
   };
 
@@ -182,47 +144,42 @@ export function GatheringHostBar({
         isCancelled={gathering.cancelled === true}
         isCancelPending={cancelEvent.isPending}
         isDeletePending={isDeletePending}
-        onEdit={() => setEditOpen(true)}
+        onEdit={() => setEditInitial(editDraftFromState(gatheringState))}
         onCancel={askToCancel}
         onDelete={requestDelete}
       />
 
-      {isEditOpen && (
-        <EditDetailsModal
-          initial={{
-            title: gatheringState.title,
-            startAt: dateToDatetimeValue(gatheringState.startAt),
-            // "" when the gathering states no end, which the modal reads as
-            // an empty (and still clearable) end field.
-            endAt: gatheringState.endAt
-              ? dateToDatetimeValue(gatheringState.endAt)
-              : "",
-            location: gatheringState.location,
-            description: gatheringState.description,
-            visibility: gatheringState.visibility,
-            communitySlug: gatheringState.communitySlug,
-            // Family, format, the host's own words and the details bag, read
-            // off the persisted state in one place (see its doc for how a
-            // stored value that is not a catalog key opens the modal).
-            ...editDraftFormatFields(gatheringState),
-            // The cover, care and RSVP settings, read the same way.
-            ...editDraftCareFields(gatheringState),
+      {editInitial && (
+        // The guest field reads the saved list from here, and shows it
+        // loading when the modal opened before the list answered.
+        <SavedGuestListContext.Provider
+          value={{
+            status: guestListStatus,
+            guests: gatheringState.guestCommunities ?? [],
+            onRetry: retryGuestList,
           }}
-          onClose={() => {
-            setEditOpen(false);
-            // MSG-10. A save on a repeating gathering stashed its patch to
-            // send later; closing the modal is the cue to ask this-vs-future.
-            if (pendingEdit) setSeriesScopeModal("edit");
-          }}
-          onSave={saveEditDraft}
-        />
+        >
+          <EditDetailsModal
+            initial={editInitial}
+            onClose={() => {
+              setEditInitial(null);
+              // MSG-10. A save on a repeating gathering stashed its patch to
+              // send later; closing the modal is the cue to ask
+              // this-vs-future.
+              editSave.askScopeForPendingEdit();
+            }}
+            onSave={(draft) =>
+              editSave.saveEditDraft(draft, editInitial.guestCommunities)
+            }
+          />
+        </SavedGuestListContext.Provider>
       )}
 
-      {seriesScopeModal && (
+      {editSave.seriesScopeModal && (
         <SeriesEditScopeModal
-          mode={seriesScopeModal}
-          onChoose={chooseSeriesScope}
-          onClose={closeSeriesScope}
+          mode={editSave.seriesScopeModal}
+          onChoose={editSave.chooseSeriesScope}
+          onClose={editSave.closeSeriesScope}
         />
       )}
 

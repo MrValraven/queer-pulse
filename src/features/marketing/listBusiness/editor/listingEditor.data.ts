@@ -62,7 +62,16 @@ export const LISTING_EDITOR_SECTIONS: ListingEditorSectionDefinition[] = [
     key: "story",
     id: "lb-editor-story",
     labelKey: "marketing:listBusiness.wizard.pill.story",
-    anchors: [ANCHOR.tagline, ANCHOR.whatItIs],
+    anchors: [
+      ANCHOR.tagline,
+      ANCHOR.whatItIs,
+      ANCHOR.attributes,
+      ANCHOR.highlights,
+      ANCHOR.inclusionPractices,
+      ANCHOR.saferSpacePolicyUrl,
+      ANCHOR.langs,
+      ANCHOR.langsOther,
+    ],
   },
   {
     key: "services",
@@ -90,6 +99,11 @@ export const LISTING_EDITOR_SECTIONS: ListingEditorSectionDefinition[] = [
       ANCHOR.sessionFormats,
       ANCHOR.registration,
       ANCHOR.replyNote,
+      ANCHOR.entryMode,
+      ANCHOR.coverPolicy,
+      ANCHOR.coverFreeBefore,
+      ANCHOR.waysToPay,
+      ANCHOR.nifInvoices,
       ANCHOR.social,
     ],
   },
@@ -114,7 +128,7 @@ export const LISTING_EDITOR_SECTIONS: ListingEditorSectionDefinition[] = [
     key: "photos",
     id: "lb-editor-photos",
     labelKey: "marketing:listBusiness.wizard.pill.photos",
-    anchors: [ANCHOR.photos],
+    anchors: [ANCHOR.cover, ANCHOR.photos],
   },
   {
     key: "aboutYou",
@@ -161,7 +175,7 @@ export const LISTING_EDITOR_SECTION_IDS = LISTING_EDITOR_SECTIONS.map(
 );
 
 /** The same definitions keyed by name, so each section renders by the name it
- *  is known by instead of an array index. */
+ *  is known by, whatever its position in the array. */
 export const LISTING_EDITOR_SECTION_BY_KEY = Object.fromEntries(
   LISTING_EDITOR_SECTIONS.map((section) => [section.key, section]),
 ) as Record<ListingEditorSectionKey, ListingEditorSectionDefinition>;
@@ -169,7 +183,7 @@ export const LISTING_EDITOR_SECTION_BY_KEY = Object.fromEntries(
 /**
  * The same sections as a CO-MANAGER meets them.
  *
- * Two blocks change shape rather than disappearing. "About you" holds only the
+ * Two blocks change shape and stay on the page. "About you" holds only the
  * role shown on the listing, because the owner's own details are not a
  * co-manager's to see, so it is titled for what it actually contains and its
  * outstanding-field anchors shrink to that one field. "Permissions" becomes

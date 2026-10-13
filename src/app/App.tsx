@@ -44,6 +44,8 @@ import { CommunityMembershipProvider } from "./providers/CommunityMembershipProv
 import { CommunityEditsProvider } from "./providers/CommunityEditsProvider";
 import { DeletedConversationsProvider } from "./providers/DeletedConversationsProvider";
 import { DirectoryListingsProvider } from "./providers/DirectoryListingsProvider";
+import { StudioPlayerProvider } from "../features/studio/player/StudioPlayerProvider";
+import { StudioPlayerMount } from "../features/studio/StudioPlayerMount";
 import { lazyNamed } from "./routeHelpers";
 import { RoomLoader } from "../shared/components/feedback/RoomLoader";
 import { AuthErrorToast } from "../shared/components/feedback/AuthErrorToast";
@@ -185,6 +187,11 @@ const DataProviders = composeProviders([
   CommunityEditsProvider,
   DeletedConversationsProvider,
   DirectoryListingsProvider,
+  // Studio v1's one app-wide player (the <audio> element, the queue, Media
+  // Session). Needs the router (its bar links to tracks), auth, demo mode and
+  // the query client, all above it. Inside DataProviders so the queue
+  // survives every route change.
+  StudioPlayerProvider,
   // Innermost on purpose: ConnectProvider renders <ConnectModal> as a sibling
   // of its children, so the modal only sees contexts provided ABOVE it. It
   // calls useConnectionActions → useSocial/useConnections, so it must sit below
@@ -285,8 +292,17 @@ export function App() {
                     it lands at the bottom of the page, not the top. Kept inside
                     DataProviders so it still sees member/session context. */}
                 <AppFooter />
+                {/* The Studio player bar: fixed above the tab bar and the
+                    consent banner, with an in-flow spacer so the page end
+                    clears it. Renders nothing until something is queued. */}
+                <StudioPlayerMount />
               </div>
             </DataProviders>
+            {/* Inside ShellFrameProvider because the update card only shows on
+                standard-frame member pages (never sign-in or onboarding). The
+                service worker it registers is still app-wide: this stays
+                mounted on every route and only the card is held back. */}
+            <PwaUpdatePrompt />
           </ShellFrameProvider>
           <RoomLoader />
           <ConsentBanner />
@@ -299,7 +315,6 @@ export function App() {
           <PolicyReacceptanceGate />
           <AuthErrorToast />
           <StaffOnlyBounceToast />
-          <PwaUpdatePrompt />
           <QueryErrorToastBridge />
         </BrowserRouter>
       </ErrorBoundary>

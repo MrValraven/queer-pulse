@@ -76,7 +76,7 @@ function StatusBar({ reduced }: { reduced: boolean }) {
 export function StudioBroadcastPage() {
   const reduced = usePrefersReducedMotion();
   return (
-    <StudioShell hidePlayer>
+    <StudioShell>
       <div className={s.wrap}>
         <StatusBar reduced={reduced} />
         <div className={s.grid}>

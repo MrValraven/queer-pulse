@@ -87,6 +87,7 @@ export const safety: Catalog = {
   "myReports.subject.conversation": "Sobre um grupo de conversa",
   "myReports.subject.identity": "Sobre uma conversa com um negócio",
   "myReports.subject.group_listing": "Sobre um quarto num grupo de habitação",
+  "myReports.subject.studio_release": "Sobre um lançamento do Studio",
   "report.guide.meta.title": "Como funciona a denúncia na QueerPulse",
   "report.guide.meta.description":
     "O que acontece depois de submeteres uma denúncia na QueerPulse: o nosso processo de análise, os princípios por trás de cada decisão, e um registo público de decisões de moderação anteriores.",
@@ -294,6 +295,7 @@ export const safety: Catalog = {
   "reason.hateSpeech": "Discurso de ódio ou insulto discriminatório",
   "reason.unwantedContact": "Contacto indesejado depois de pedido para parar",
   "reason.impersonation": "Falsa identidade ou personificação",
+  "reason.copyright": "Usa música ou arte de outra pessoa sem autorização",
   "reason.discrimination": "Discriminação ou uso do género errado",
   "reason.spam": "Spam ou autopromoção",
   "reason.offTopic": "Fora do tópico ou perturbador",

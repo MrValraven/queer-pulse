@@ -1,5 +1,6 @@
 import { useCallback, type Dispatch, type SetStateAction } from "react";
 import type { ListingDraft } from "./listBusiness.data";
+import { withByAppointmentLinked } from "./listingAppointmentLink";
 import {
   LISBON_PARISH_NAMES,
   NEARBY_MUNICIPALITIES,
@@ -74,14 +75,11 @@ export function useMobileSetters(
       ),
     [setDraft],
   );
+  /** The hours toggle "By appointment only". Linked to the way in
+   *  (`withByAppointmentLinked`). */
   const setByAppointment = useCallback(
     (isByAppointment: boolean) =>
-      setDraft((draft) =>
-        patchMobileDetails(draft, (details) => ({
-          ...details,
-          byAppointment: isByAppointment,
-        })),
-      ),
+      setDraft((draft) => withByAppointmentLinked(draft, isByAppointment)),
     [setDraft],
   );
   const setHasMeetingPoint = useCallback(

@@ -60,6 +60,9 @@ export const GATED_PATTERNS = [
   "/rsvp",
   "/host",
   "/create-gathering",
+  // A guest community's collab invite. Mirrors authGate.ts.
+  "/collab-invites",
+  "/collab-invites/*",
   // The Go together questionnaire and feedback prompt. Mirrors authGate.ts.
   "/go-together",
   "/go-together/*",

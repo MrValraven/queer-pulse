@@ -27,6 +27,7 @@ import { CommunityMembershipProvider } from "../app/providers/CommunityMembershi
 import { CommunityEditsProvider } from "../app/providers/CommunityEditsProvider";
 import { DeletedConversationsProvider } from "../app/providers/DeletedConversationsProvider";
 import { DirectoryListingsProvider } from "../app/providers/DirectoryListingsProvider";
+import { StudioPlayerProvider } from "../features/studio/player/StudioPlayerProvider";
 import {
   PublicProfileContext,
   type PublicProfileContextValue,
@@ -73,6 +74,9 @@ const PROVIDERS: ProviderComponent[] = [
   CommunityEditsProvider,
   DeletedConversationsProvider,
   DirectoryListingsProvider,
+  // Mirrors App.tsx's DataProviders; pages that call useStudioPlayer throw
+  // without it.
+  StudioPlayerProvider,
 ];
 
 function nest(providers: ProviderComponent[], children: ReactNode): ReactNode {

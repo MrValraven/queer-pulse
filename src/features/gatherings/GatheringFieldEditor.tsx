@@ -25,7 +25,7 @@ export function GatheringFieldEditor({
   onSave,
 }: {
   field: GatheringEditableField;
-  /** The full saved draft, built by the page's `editDraftFor(gatheringState)`. */
+  /** The full saved draft, built by `editDraftFromState(gatheringState)`. */
   initial: GatheringDetailsDraft;
   onClose: () => void;
   /** Called with the WHOLE draft, only this field's values changed. */

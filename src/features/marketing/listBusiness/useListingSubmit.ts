@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { useToast } from "../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { routes } from "../../../app/routeMap";
-import { TOTAL_STEPS, type PhotoKey } from "./listBusiness.data";
+import { TOTAL_STEPS, type RejectedPhotoSlot } from "./listBusiness.data";
 import { resolveListing422, flashField } from "./listing422";
 
 const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
@@ -36,7 +36,7 @@ export function useListingSubmit({
   /** The page module's field-flash class, forwarded to `flashField`. */
   flashClass?: string;
   /** Receives the photo slots the server refused (empty when none were). */
-  onPhotosRejected: (slots: PhotoKey[]) => void;
+  onPhotosRejected: (slots: RejectedPhotoSlot[]) => void;
   /** An edit has no step 0, so an `online` error routes to the basics. */
   isEdit?: boolean;
 }) {

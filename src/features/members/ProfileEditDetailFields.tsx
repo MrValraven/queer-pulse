@@ -119,7 +119,7 @@ export function ProfileEditDetailFields({
         <WorkFieldPicker
           discipline={draft.discipline}
           profession={draft.profession}
-          headingClassName={styles.fieldLabel}
+          className={styles.workPicker}
           onChange={(next) => updateDraft(next)}
         />
       </div>

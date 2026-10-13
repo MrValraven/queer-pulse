@@ -16,11 +16,14 @@ import {
   appendUniquePlaces,
   businessToLocal,
   filterLocalPlaces,
+  localPlaceMatchesListingFacts,
 } from "./localPlaces";
 import {
   useDirectoryFilterParams,
   useDirectoryFilterResults,
+  type DirectoryFilterParams,
 } from "./useDirectoryFilters";
+import type { DirectoryPlace } from "./directoryPlaces";
 import { type LocalFilterFieldsProps } from "./LocalFilterFields";
 import { DirectoryNearMe } from "./DirectoryNearMe";
 import { useMapFallbackShownAt } from "./useMapFallbackShownAt";
@@ -43,6 +46,46 @@ function useShownCategories(
   );
 }
 
+/** The 18+ shops as local places, and how many of them the member's refine
+ *  filters keep, for the header's total (the server's `total` already
+ *  answers the same filters for the public pool). */
+function useAdultLocals(
+  adultPlaces: DirectoryPlace[],
+  demoMode: boolean,
+  isAdultShown: boolean,
+  {
+    listingFacts,
+    safe,
+    owned,
+    access,
+  }: Pick<DirectoryFilterParams, "listingFacts" | "safe" | "owned" | "access">,
+) {
+  // The 18+ list comes from an endpoint that takes no fact filters, so its
+  // cards are narrowed here, with the server's semantics.
+  const adultLocals = useMemo(
+    () =>
+      adultPlaces
+        .map((place) => businessToLocal(place, demoMode))
+        .filter((place) => localPlaceMatchesListingFacts(place, listingFacts)),
+    [adultPlaces, demoMode, listingFacts],
+  );
+  const adultMatchCount = useMemo(
+    () =>
+      isAdultShown
+        ? filterLocalPlaces(adultLocals, {
+            categories: [],
+            query: "",
+            safe,
+            owned,
+            access,
+            isOnlineScope: true,
+          }).length
+        : 0,
+    [isAdultShown, adultLocals, safe, owned, access],
+  );
+  return { adultLocals, adultMatchCount };
+}
+
 /**
  * All the state, data fetching and derived values `DirectoryPage` renders
  * from: the URL-held filter state, the paginated local-places fetch, the
@@ -59,7 +102,7 @@ export function useDirectoryPageState() {
     view,
     categories,
     sort,
-    vibes,
+    listingFacts,
     safe,
     owned,
     openNow,
@@ -70,7 +113,7 @@ export function useDirectoryPageState() {
     clearCategories,
     setQuery,
     setSort,
-    toggleVibe,
+    toggleListingFact,
     setSafe,
     toggleOwned,
     setOpenNow,
@@ -92,7 +135,14 @@ export function useDirectoryPageState() {
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
-  } = useLocalPlaces({ query, safe, access, owned, online: isOnlineView });
+  } = useLocalPlaces({
+    query,
+    safe,
+    access,
+    owned,
+    online: isOnlineView,
+    listingFacts,
+  });
   // ENG-501: a failed next page also sets `isError`. The full error state is
   // for a read that loaded nothing; once places are on screen they stay, and
   // the grid's footer reports the failed page and retries it.
@@ -103,7 +153,7 @@ export function useDirectoryPageState() {
   const myLocation = useMyLocation();
   // Where the "use my location" control lives. On desktop it rides the search
   // row, between the field and "Refine". On phones that row collapses into the
-  // Filters sheet, and distance is too central to bury behind a tap — so there
+  // Filters sheet, and distance is too central to bury behind a tap, so there
   // it stays in the results header. Same breakpoint the bar itself switches on,
   // so exactly one of the two renders.
   const isMobile = useMediaQuery(mediaMax("mobile"));
@@ -133,35 +183,19 @@ export function useDirectoryPageState() {
     categories,
     isOnlineView && !isAdultShown,
   );
-  const adultLocals = useMemo(
-    () =>
-      adultDirectory.places.map((place) => businessToLocal(place, demoMode)),
-    [adultDirectory.places, demoMode],
+  const { adultLocals, adultMatchCount } = useAdultLocals(
+    adultDirectory.places,
+    demoMode,
+    isAdultShown,
+    filterParams,
   );
   // The server already narrowed the Online tab's pool to what sells online
   // (`online=true`), so nothing here re-checks that. The member's own chips
-  // (categories, vibes, the refine filters) still run over it below, as on
+  // (categories, the refine filters) still run over it below, as on
   // every tab.
   const scopedPlaces = useMemo(
     () => (isAdultShown ? appendUniquePlaces(places, adultLocals) : places),
     [isAdultShown, places, adultLocals],
-  );
-  // The 18+ shops the member's refine filters keep, for the header's total:
-  // the server's `total` already answers the same filters for the public pool.
-  const adultMatchCount = useMemo(
-    () =>
-      isAdultShown
-        ? filterLocalPlaces(adultLocals, {
-            categories: [],
-            query: "",
-            vibes: [],
-            safe,
-            owned,
-            access,
-            isOnlineScope: true,
-          }).length
-        : 0,
-    [isAdultShown, adultLocals, safe, owned, access],
   );
   const {
     filtered,
@@ -235,8 +269,8 @@ export function useDirectoryPageState() {
     isLoadedSetComplete,
     query,
     onQueryChange: setQuery,
-    vibes,
-    onToggleVibe: toggleVibe,
+    listingFacts,
+    onToggleListingFact: toggleListingFact,
     safeOnly: safe === "verified",
     onToggleSafeOnly: () => setSafe(safe !== "verified"),
     owned,

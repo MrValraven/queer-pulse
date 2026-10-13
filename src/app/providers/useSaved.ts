@@ -10,7 +10,11 @@ export type SavedKind =
   | "housing"
   | "flatmate"
   | "landlord"
-  | "listing";
+  | "listing"
+  // Studio v1: ids `studio_release:<id>` and `studio_track:<id>`, opening
+  // `/studio/album?id=` and `/studio/track?id=`.
+  | "studio_release"
+  | "studio_track";
 
 /**
  * Whether the thing a save points at can still be opened.

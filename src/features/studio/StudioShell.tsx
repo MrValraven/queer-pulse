@@ -5,22 +5,27 @@ import { routes } from "../../app/routeMap";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { StudioRail } from "./StudioRail";
-import { StudioPlayer } from "./StudioPlayer";
-import { CURRENT_MEMBER_INITIALS, SUSTAIN_PRICE } from "./studioShell.data";
+import { StudioShellAccount } from "./StudioShellAccount";
+import { StudioShellSearch } from "./StudioShellSearch";
+import { useStudioAccess } from "./api/useStudioAccess";
+import { SUSTAIN_PRICE } from "./studioShell.data";
+import { studioUploadPath } from "./studioPaths";
+import { useStudioShowcase } from "./useStudioShowcase";
+import { useStudioShellSignal } from "./useStudioShellSignal";
 import styles from "./studio.module.css";
 
-export function StudioShell({
-  children,
-  hidePlayer = false,
-}: {
-  children: ReactNode;
-  hidePlayer?: boolean;
-}) {
+export function StudioShell({ children }: { children: ReactNode }) {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const fmt = useFormat();
+  const isShowcase = useStudioShowcase();
+  const { uploadablePersonas } = useStudioAccess();
+  useStudioShellSignal();
+  // Studio is a dark surface whatever the app theme: the subtree opts into the
+  // dark token set so shared components (buttons, avatars, empty states,
+  // selects) paint their dark variants here.
   return (
-    <div className={styles.root}>
+    <div className={styles.root} data-theme="dark">
       <div className={styles.app}>
         <StudioRail />
 
@@ -58,41 +63,40 @@ export function StudioShell({
                 </svg>
               </button>
             </div>
-            <div className={styles.search}>
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={2}
-                strokeLinecap="round"
-              >
-                <circle cx={11} cy={11} r={7} />
-                <path d="m21 21-4.35-4.35" />
-              </svg>
-              <input
-                type="text"
-                aria-label={t("studio:shell.searchPlaceholder")}
-                placeholder={t("studio:shell.searchPlaceholder")}
-              />
-            </div>
+            <StudioShellSearch />
             <div className={styles.topRight}>
-              <Link to={routes.studioDashboard} className={styles.creatorLink}>
-                {t("studio:shell.forArtistsCta")} <FiArrowRight aria-hidden />
-              </Link>
-              <Link to={routes.cinemaMembership} className={styles.sustainPill}>
-                {t("studio:shell.sustainCta", {
-                  price: fmt.currency(SUSTAIN_PRICE),
-                })}
-              </Link>
-              <div className={styles.avatar}>{CURRENT_MEMBER_INITIALS}</div>
+              {isShowcase ? (
+                <>
+                  <Link
+                    to={routes.studioDashboard}
+                    className={styles.creatorLink}
+                  >
+                    {t("studio:shell.forArtistsCta")}{" "}
+                    <FiArrowRight aria-hidden />
+                  </Link>
+                  <Link
+                    to={routes.cinemaMembership}
+                    className={styles.sustainPill}
+                  >
+                    {t("studio:shell.sustainCta", {
+                      price: fmt.currency(SUSTAIN_PRICE),
+                    })}
+                  </Link>
+                </>
+              ) : (
+                uploadablePersonas.length > 0 && (
+                  <Link to={studioUploadPath()} className={styles.creatorLink}>
+                    {t("studio:shell.uploadCta")} <FiArrowRight aria-hidden />
+                  </Link>
+                )
+              )}
+              <StudioShellAccount />
             </div>
           </div>
 
           <div className={styles.content}>{children}</div>
         </main>
       </div>
-
-      {!hidePlayer && <StudioPlayer />}
     </div>
   );
 }

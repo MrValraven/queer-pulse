@@ -5,14 +5,12 @@ import { toPlainText } from "../../../shared/markdown";
 import type { TFunction } from "../../../shared/i18n/types";
 import {
   catLabel,
-  goodForLabel,
-  langLabel,
   PRICES,
   slugify,
   type ListingDraft,
 } from "./listBusiness.data";
 import { isAdultCategoryPicked } from "../localCategories";
-import { listingTagLabel } from "./listingTags.data";
+import { listingFactSummaries } from "./listingFactSummaries";
 import { canAcceptAdultTerms } from "./listingOnline.data";
 import { normalizeOwnedBy, OWNED_BY_TAG_KEYS } from "./listingOwnedBy.data";
 import type { ListingForm } from "./useListingForm";
@@ -128,6 +126,44 @@ function PathPlaceGroup({
   );
 }
 
+/** Recaps step 2: the tagline, the description, the attributes, highlights,
+ *  practices and languages; its edit link jumps back to that step. */
+function ReviewStoryGroup({
+  draft,
+  onEdit,
+}: {
+  draft: ListingDraft;
+  onEdit: () => void;
+}) {
+  const { t } = useTranslation();
+  const facts = listingFactSummaries(t, draft);
+  return (
+    <Group
+      title={t("marketing:listBusiness.step5.group.story")}
+      onEdit={onEdit}
+    >
+      <Row k={t("marketing:listBusiness.step5.row.tagline")} quote>
+        {draft.tagline}
+      </Row>
+      <Row k={t("marketing:listBusiness.step5.row.whatItIs")} isMultiline>
+        {descriptionSummary(draft)}
+      </Row>
+      <Row k={t("marketing:listBusiness.step5.row.attributes")}>
+        {facts.attributes}
+      </Row>
+      <Row k={t("marketing:listBusiness.step5.row.highlights")}>
+        {facts.highlights}
+      </Row>
+      <Row k={t("marketing:listBusiness.step5.row.practices")}>
+        {facts.practices}
+      </Row>
+      <Row k={t("marketing:listBusiness.step5.row.languages")}>
+        {facts.languages}
+      </Row>
+    </Group>
+  );
+}
+
 export function StepReview({
   form,
   userName,
@@ -223,26 +259,7 @@ export function StepReview({
         </Row>
       </Group>
 
-      <Group
-        title={t("marketing:listBusiness.step5.group.story")}
-        onEdit={() => onEdit(2)}
-      >
-        <Row k={t("marketing:listBusiness.step5.row.tagline")} quote>
-          {draft.tagline}
-        </Row>
-        <Row k={t("marketing:listBusiness.step5.row.whatItIs")} isMultiline>
-          {descriptionSummary(draft)}
-        </Row>
-        <Row k={t("marketing:listBusiness.step5.row.tags")}>
-          {draft.tags.map((tag) => listingTagLabel(t, tag)).join(", ")}
-        </Row>
-        <Row k={t("marketing:listBusiness.step5.row.goodFor")}>
-          {draft.goodFor.map((g) => goodForLabel(t, g)).join(", ")}
-        </Row>
-        <Row k={t("marketing:listBusiness.step5.row.languages")}>
-          {draft.langs.map((l) => langLabel(t, l)).join(", ")}
-        </Row>
-      </Group>
+      <ReviewStoryGroup draft={draft} onEdit={() => onEdit(2)} />
 
       <ReviewPracticalGroup draft={draft} onEdit={() => onEdit(3)} />
 

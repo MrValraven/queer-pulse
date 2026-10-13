@@ -3,6 +3,7 @@ import { type VisitPlacement } from "./useDirectoryVisitPlacement";
 import { DirectoryHoursSection } from "./DirectoryHoursSection";
 import { DirectoryVisitSection } from "./DirectoryVisitSection";
 import { DirectoryAboutSection } from "./DirectoryAboutSection";
+import { DirectoryGettingInSection } from "./DirectoryGettingInSection";
 import { DirectoryServicesSection } from "./DirectoryServicesSection";
 import { DirectoryMenuSection } from "./DirectoryMenuSection";
 import { DirectoryShopSection } from "./DirectoryShopSection";
@@ -35,25 +36,28 @@ interface Props {
  * questions in the order they ask them, picking up where the owner's own words
  * in the header leave off.
  *
- * 1. What is it? The owner's amenity list, "What this place offers". Their
- *    description sits in the header right above the gallery, and this list
- *    is its continuation, so nothing comes between the two.
+ * 1. What is it? What's here: the owner's attributes grouped, and their
+ *    inclusion practices. Their description sits in the header right above
+ *    the gallery, and this list is its continuation, so nothing comes between
+ *    the two.
  * 2. Is it open, or how do I buy? The hours for a place (the live status
  *    chip, the weekly grid, the dated exceptions and the freshness stamp),
  *    "Ordering & delivery" for anything that sells online.
- * 3. Where is it, and how do I reach it? The map, address, every contact
+ * 3. How do I get in and pay? "Getting in": the way in, entry, ways to pay,
+ *    NIF invoices, languages.
+ * 4. Where is it, and how do I reach it? The map, address, every contact
  *    route and the primary call to action. Here only while the grid is one
  *    column (phones, the moderation drawer); beside a two-column grid the same
  *    card opens the rail instead (see `DirectorySpaceAside`).
- * 4. What does it cost? The services, the menu, or the shop behind the
+ * 5. What does it cost? The services, the menu, or the shop behind the
  *    header's price band.
- * 5. Can I get in? Accessibility and languages, promoted out of two grey
- *    rows at the bottom of a sidebar card into a section of their own.
- * 6. What is still unclear? The public questions members put to the business,
+ * 6. Can I get in? Accessibility, promoted out of two grey rows at the
+ *    bottom of a sidebar card into a section of its own.
+ * 7. What is still unclear? The public questions members put to the business,
  *    and the answers that came back. Sits between the listing's own words and
  *    other members' verdicts, because that is where an unanswered detail
  *    surfaces.
- * 7. What do people say? The reviews, the longest block and the last one,
+ * 8. What do people say? The reviews, the longest block and the last one,
  *    because nobody scrolls past it to find the address any more.
  *
  * On a phone this order IS the page: one column, top to bottom, exactly as
@@ -67,7 +71,11 @@ export function DirectorySpaceMain({
 }: Props) {
   return (
     <div>
-      <DirectoryAboutSection place={place} />
+      <DirectoryAboutSection
+        place={place}
+        ownerRef={ownerRef}
+        preview={preview}
+      />
       {/* An online-only business has no hours: its ordering block takes the
           spot. A place that also sells online keeps its hours and follows
           them with the block. */}
@@ -79,6 +87,7 @@ export function DirectorySpaceMain({
           {place.hasOnlineShop && <DirectoryOrderingSection place={place} />}
         </>
       )}
+      <DirectoryGettingInSection place={place} />
       {visitPlacement === "main" && (
         <DirectoryVisitSection
           place={place}

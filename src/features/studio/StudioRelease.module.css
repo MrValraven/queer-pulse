@@ -1,0 +1,156 @@
+.tracklist {
+  list-style: none;
+  margin: 0;
+  padding-inline-start: 0;
+}
+
+/* The first column holds the 32px play button. */
+.tracklist > li {
+  grid-template-columns: 32px 36px minmax(0, 1fr) auto auto;
+}
+
+/* The card's own padding already frames the first row, so its top divider
+   would draw an empty row. */
+.tracklist > li:first-child {
+  border-top: none;
+}
+
+/* The per-play amount is showcase money: on phones it would squeeze the
+   title to a letter or two per line, so the column drops out. */
+@media (--md) {
+  .tracklist > li {
+    grid-template-columns: 32px 36px minmax(0, 1fr) auto;
+  }
+
+  .tracklist > li > .payColumn {
+    display: none;
+  }
+}
+
+.rowPlay {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: var(--radius-pill);
+  background: none;
+  color: rgba(var(--cream-rgb), 0.62);
+  cursor: pointer;
+}
+
+/* Blocked play buttons keep focus (aria-disabled), so they stay in the tab
+   order and only look inactive. */
+.rowPlay[aria-disabled="true"],
+.heroPlay[aria-disabled="true"] {
+  cursor: default;
+  opacity: 0.4;
+}
+
+.rowIcon {
+  position: absolute;
+  inset: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition-property: opacity;
+  transition-duration: 0.15s;
+}
+
+.rowNumber {
+  font-family: var(--serif);
+  color: var(--text40);
+  transition-property: opacity;
+  transition-duration: 0.15s;
+}
+
+/* The number turns into the play or pause glyph on hover, on focus and on
+   the playing row. Opacity only, so reduced motion has nothing to move. */
+li:hover > .rowPlay:not([aria-disabled="true"]) .rowIcon,
+.rowPlay:focus-visible .rowIcon,
+li[aria-current] > .rowPlay .rowIcon {
+  opacity: 1;
+}
+
+li:hover > .rowPlay:not([aria-disabled="true"]) .rowNumber,
+.rowPlay:focus-visible .rowNumber,
+li[aria-current] > .rowPlay .rowNumber {
+  opacity: 0;
+}
+
+.rowPlay:focus-visible,
+.overflow button:focus-visible,
+.menuItem:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.linerParagraph {
+  white-space: pre-line;
+}
+
+.statusLine {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 10px;
+  margin-top: 10px;
+}
+
+.statusLabel {
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  font-size: var(--text-11);
+  font-weight: 700;
+  color: var(--text);
+  background: rgba(var(--cream-rgb), 0.22);
+}
+
+.explicit {
+  margin-inline-start: 8px;
+  padding: 1px 5px;
+  border-radius: var(--radius-4);
+  font-size: var(--text-10);
+  font-weight: 700;
+  text-decoration: none;
+  background: rgba(var(--cream-rgb), 0.16);
+}
+
+.overflow {
+  position: relative;
+}
+
+.menu {
+  position: absolute;
+  inset-inline-end: 0;
+  top: calc(100% + 6px);
+  z-index: var(--z-popover);
+  min-width: 180px;
+  padding: 6px;
+  border-radius: var(--radius-10);
+  background: var(--studio-rail);
+  border: 1px solid rgba(var(--cream-rgb), 0.12);
+  box-shadow: var(--shadow-panel);
+}
+
+.menuItem {
+  display: block;
+  width: 100%;
+  padding: 8px 10px;
+  border: none;
+  border-radius: var(--radius-6);
+  background: none;
+  color: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+@media (hover: hover) {
+  .menuItem:hover {
+    background: rgba(var(--cream-rgb), 0.08);
+  }
+}

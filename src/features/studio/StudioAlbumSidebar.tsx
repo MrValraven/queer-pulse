@@ -7,12 +7,17 @@ import { useFormat } from "../../shared/i18n/format";
 import { ALBUM_BUY, ALBUM_LEDGER } from "./studioAlbum.data";
 import styles from "./studio.module.css";
 
-const ARTIST_NAME = "Mariana Sol";
 const ARTIST_SHARE = 6.4;
 const SOLIDARITY_SHARE = 0.8;
 const PLATFORM_SHARE = 0.8;
 
-export function StudioAlbumSidebar({ onTip }: { onTip: () => void }) {
+export function StudioAlbumSidebar({
+  artistName,
+  onTip,
+}: {
+  artistName: string;
+  onTip: () => void;
+}) {
   const { t } = useTranslation();
   const fmt = useFormat();
   return (
@@ -47,7 +52,7 @@ export function StudioAlbumSidebar({ onTip }: { onTip: () => void }) {
             components={{ em: <em /> }}
             values={{
               price: fmt.currency(ALBUM_BUY.price),
-              artist: ARTIST_NAME,
+              artist: artistName,
               artistShare: fmt.currency(ARTIST_SHARE),
               solidarityShare: fmt.currency(SOLIDARITY_SHARE),
               platformShare: fmt.currency(PLATFORM_SHARE),
@@ -66,7 +71,7 @@ export function StudioAlbumSidebar({ onTip }: { onTip: () => void }) {
         <div className={styles.lrow}>
           <span className={styles.k}>
             {t("studio:album.sidebar.paidToArtistLifetime", {
-              artist: ARTIST_NAME,
+              artist: artistName,
             })}
           </span>
           <span className={styles.v}>

@@ -94,17 +94,4 @@ describe("resolveListing422 for online listings", () => {
       anchor: ANCHOR.online,
     });
   });
-
-  it("routes unknown tags to the tag field on the story step", () => {
-    const error = new ApiError(400, "Bad Request", {
-      message:
-        'Unknown listing tags: "Ships worldwide". Pick tags from GET /directory/tags.',
-    });
-    expect(resolveListing422(error, english)).toMatchObject({
-      step: 2,
-      anchor: ANCHOR.tags,
-      message:
-        'Unknown listing tags: "Ships worldwide". Pick tags from GET /directory/tags.',
-    });
-  });
 });

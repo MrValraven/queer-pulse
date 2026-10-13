@@ -496,15 +496,20 @@ export const members: Catalog = {
   "profileEdit.work.label": "What you do",
   "profileEdit.work.help":
     "Public. Shown on your profile, and how people find you under “What they do” and “Profession” in the member directory.",
-  "workPicker.fieldHeading": "Your field",
-  "workPicker.professionHeading": "Your role",
-  "workPicker.professionPrompt":
-    "Pick a field above or search to see the roles.",
-  "workPicker.searchPlaceholder": "Search a field or role…",
+  "workPicker.matchingFieldsHeading": "Matching fields",
+  "workPicker.matchingRolesHeading": "Matching roles",
+  "workPicker.searchPlaceholder": "Type your job, like nurse or barista",
   "workPicker.searchAriaLabel": "Search fields and roles",
-  "workPicker.noMatch": "No field or role matches “{query}”.",
+  "workPicker.noMatch":
+    "No field or role matches “{query}”. Try another word, or browse by field below.",
   "workPicker.showAll": "Show all fields and roles",
   "workPicker.showOnlyPicks": "Show only my picks",
+  "workPicker.picksHeading": "Your picks",
+  "workPicker.browseHeading": "Or browse by field",
+  "workPicker.groupPickCount_one": "{count} picked",
+  "workPicker.groupPickCount_other": "{count} picked",
+  "workPicker.group.lifeStage": "Studying, caring or between jobs",
+  "workPicker.removePick": "Remove {label}",
   "workPicker.unlistedNote":
     "Only you and your connections see this. Sex work still carries stigma, and a list anyone could search might out you, so it stays out of member search, filters, suggestions and directory cards.",
   "profileEdit.field.addSkillPlaceholder": "Search skills…",

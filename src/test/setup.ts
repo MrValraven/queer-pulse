@@ -85,6 +85,16 @@ if (!URL.revokeObjectURL) {
   URL.revokeObjectURL = () => {};
 }
 
+// jsdom defines the media methods but only logs "Not implemented" from each,
+// and the Studio player's <audio> engine (StudioPlayerProvider, mounted by
+// TestProviders) calls them whenever a live-mode suite plays or stops. They
+// exist, so these
+// stubs are unconditional: quiet no-ops, with play() resolving as a browser
+// that allows playback does.
+HTMLMediaElement.prototype.load = () => {};
+HTMLMediaElement.prototype.pause = () => {};
+HTMLMediaElement.prototype.play = () => Promise.resolve();
+
 // ── MSW × jsdom × Node AbortSignal realm mismatch ────────────────────────────
 // MSW v2's fetch interceptor (under Node + jsdom) validates `RequestInit.signal`
 // against a *different* `AbortSignal` realm than the app's global one, so ANY

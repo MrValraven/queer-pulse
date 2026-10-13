@@ -11,8 +11,9 @@ import type {
 /**
  * Map a public `SafeSpaceCardDTO` onto the `VerifiedSpace` view model the
  * safe-spaces grid renders. The grid (`SafeSpaceCard`) reads only card-level
- * fields (slug, category, typeLabel, name, neighbourhood, description, tags, rating, reviews);
- * detail-only fields are filled with empty defaults here because the detail
+ * fields (slug, category, typeLabel, name, neighbourhood, description,
+ * highlights, inclusionPractices, rating, reviews); detail-only fields are
+ * filled with empty defaults here because the detail
  * page fetches its own richer payload via `useSafeSpace` — these placeholder
  * values are never rendered by the grid.
  */
@@ -25,7 +26,8 @@ export function verifiedCardDtoToSpace(dto: SafeSpaceCardDTO): VerifiedSpace {
     name: dto.name,
     neighbourhood: dto.hood,
     description: dto.desc,
-    tags: dto.tags,
+    highlights: dto.highlights,
+    inclusionPractices: dto.inclusionPractices,
     rating: dto.rating,
     reviews: `${dto.reviews} reviews`,
     tier: dto.tier ?? 0,
@@ -37,7 +39,7 @@ export function verifiedCardDtoToSpace(dto: SafeSpaceCardDTO): VerifiedSpace {
     // detail-only fields — unused by the grid, filled by the detail fetch
     eyebrow: "",
     sub: "",
-    metaPills: [],
+    attributes: [],
     reVerified: "",
     verifier: "",
     promises: [],
@@ -109,7 +111,8 @@ function verifiedDetailDtoToSpace(dto: SafeSpaceDetailDTO): VerifiedSpace {
     name: dto.name,
     neighbourhood: dto.hood,
     description: dto.desc,
-    tags: dto.tags,
+    highlights: dto.highlights,
+    inclusionPractices: dto.inclusionPractices,
     rating: dto.rating,
     reviews: `${dto.reviews} reviews`,
     tier: dto.tier ?? 0,
@@ -117,7 +120,7 @@ function verifiedDetailDtoToSpace(dto: SafeSpaceDetailDTO): VerifiedSpace {
     isBadgeDueForReReview: dto.isBadgeDueForReReview ?? false,
     eyebrow: dto.eyebrow,
     sub: dto.sub,
-    metaPills: dto.metaPills,
+    attributes: dto.attributes,
     reVerified: dto.reVerified,
     verifier: dto.verifier,
     promises: dto.promises,

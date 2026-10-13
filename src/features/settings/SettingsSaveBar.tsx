@@ -1,6 +1,7 @@
 import { useId, useState } from "react";
 import { FiChevronDown, FiChevronUp } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
+import { useFloatingBarInset } from "../../shared/hooks";
 import { RollingNumber } from "../../shared/components/ui/RollingNumber";
 import { useFormat } from "../../shared/i18n/format";
 import { Translation } from "../../shared/i18n/Translation";
@@ -33,9 +34,10 @@ export function SettingsSaveBar({
   const [expanded, setExpanded] = useState(false);
   const panelId = useId();
   const hasChanges = changedKeys.length > 0;
+  const barRef = useFloatingBarInset();
 
   return (
-    <div className={styles.wrap}>
+    <div ref={barRef} className={styles.wrap}>
       {expanded && hasChanges && (
         <div id={panelId} className={styles.panel} role="list">
           {changedKeys.map((key) => (

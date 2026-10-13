@@ -1,17 +1,22 @@
+import { useStudioReleases } from "./api/useStudioReleases";
+import { StudioArtistsRow } from "./StudioArtistsRow";
+import { StudioHomeHero } from "./StudioHomeHero";
+import { StudioNewReleases } from "./StudioNewReleases";
+import { StudioSetSection } from "./StudioPageSections";
 import { StudioShell } from "./StudioShell";
-import {
-  StudioHero,
-  StudioSetSection,
-  StudioTracksSection,
-} from "./StudioPageSections";
+import { useStudioShowcase } from "./useStudioShowcase";
 
-/** The logged-in Studio "This week" room (shown at /studio to members). */
+/** Studio home for a signed-in member: the newest release, the new releases
+ *  grid, the artists behind them, and (demo) the Wednesday set. */
 export function StudioRoom() {
+  const releasesResult = useStudioReleases();
+  const isShowcase = useStudioShowcase();
   return (
     <StudioShell>
-      <StudioHero />
-      <StudioSetSection />
-      <StudioTracksSection />
+      <StudioHomeHero releasesResult={releasesResult} />
+      {isShowcase && <StudioSetSection />}
+      <StudioNewReleases releasesResult={releasesResult} />
+      <StudioArtistsRow releases={releasesResult.releases} />
     </StudioShell>
   );
 }

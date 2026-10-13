@@ -33,6 +33,13 @@ export const AUDIT_ACTION_LABEL_KEY: Partial<Record<string, string>> = {
   // PRD-361: a moderator opened the file attached to a reported message.
   report_message_attachment_viewed:
     "admin:moderation.action.reportMessageAttachmentViewed",
+  // Studio v1: grants name the member; takedown and restore name only the
+  // release (the note carries its id), so the trail never ties a persona to
+  // its owner.
+  studio_access_granted: "admin:moderation.action.studioAccessGranted",
+  studio_access_revoked: "admin:moderation.action.studioAccessRevoked",
+  studio_release_taken_down: "admin:moderation.action.studioReleaseTakenDown",
+  studio_release_restored: "admin:moderation.action.studioReleaseRestored",
 };
 
 /** The moderator-facing label for one audit entry. An unmapped code falls

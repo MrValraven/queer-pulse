@@ -1,6 +1,7 @@
 import { FadeIn } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { absoluteFileUrl, formatBytes } from "./adminMedia.format";
+import { formatBytes } from "./adminMedia.format";
+import { AdminMediaPreview } from "./AdminMediaPreview";
 import { AdminMediaReferenceBadge } from "./AdminMediaReferences";
 import {
   ADMIN_MEDIA_KINDS,
@@ -11,7 +12,8 @@ import {
 import styles from "./AdminMediaPage.module.css";
 
 /**
- * One object tile in the media grid: thumbnail, kind badge, and a size ·
+ * One object tile in the media grid: thumbnail (or a document tile for a
+ * non-image such as a menu PDF), kind badge, and a size ·
  * uploader line. The whole card opens the inspection drawer; the uploader name
  * filters the grid to that member.
  *
@@ -44,12 +46,7 @@ export function AdminMediaCard({
           onClick={() => onOpen(object)}
           aria-label={t("admin:media.openAriaLabel", { key: object.key })}
         />
-        <img
-          className={styles.thumb}
-          src={absoluteFileUrl(object.fileUrl)}
-          alt=""
-          loading="lazy"
-        />
+        <AdminMediaPreview object={object} variant="card" />
         <span className={styles.badgeRow}>
           <span className={styles.kindBadge}>
             {ADMIN_MEDIA_KINDS.includes(object.kind as AdminMediaKind)

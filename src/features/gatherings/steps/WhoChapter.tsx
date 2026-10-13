@@ -1,5 +1,9 @@
 import { useId } from "react";
-import { SegmentedControl, Select } from "../../../shared/components/ui";
+import {
+  Collapse,
+  SegmentedControl,
+  Select,
+} from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { AudienceScopeField } from "../AudienceScopeField";
 import { Field, FieldRow, SwitchRow } from "../CreateGatheringFields";
@@ -13,6 +17,7 @@ import { useHostableCommunities } from "../useHostableCommunities";
 import { CapacityStepperField } from "./CapacityStepperField";
 import { CohostPickerField } from "./CohostPickerField";
 import { CostKindField } from "./CostKindField";
+import { GuestCommunitiesWizardField } from "./GuestCommunitiesWizardField";
 import { RunByField } from "./RunByField";
 import { RSVP_CUTOFF_OPTIONS } from "./whoChapter.data";
 import styles from "./WhoChapter.module.css";
@@ -20,7 +25,7 @@ import styles from "./WhoChapter.module.css";
 /**
  * Chapter 3, "Who is it for?": capacity, language, cost, co-hosts, the business that runs it, the
  * waitlist, attendee-count and Go together switches, when RSVPs close, the
- * community it is posted to and who can see it. Nothing here is required.
+ * community it is posted to, the guest communities and who can see it. Nothing here is required.
  */
 export function WhoChapter({ form }: { form: GatheringForm }) {
   const { t } = useTranslation();
@@ -124,6 +129,11 @@ export function WhoChapter({ form }: { form: GatheringForm }) {
           </Field>
         )}
       </FieldRow>
+      {/* Under the community picker, for the hosts who see that picker: a
+          guest needs a lead to join. */}
+      <Collapse isOpen={myCommunityOptions.length > 0}>
+        <GuestCommunitiesWizardField form={form} />
+      </Collapse>
       <AudienceScopeField
         fieldId={`${fieldId}-audience`}
         value={form.audienceScope}

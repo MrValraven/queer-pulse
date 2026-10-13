@@ -2,6 +2,10 @@ import { useState, type Dispatch, type SetStateAction } from "react";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
+import type {
+  GuestCommunityChanges,
+  GuestCommunityDraftEntry,
+} from "./api/eventCommunities.api";
 import type { SeriesScope, UpdateEventDto } from "./api/events.api";
 import type { useUpdateEvent } from "./api/useEventMutations";
 import type { GatheringDetailsDraft } from "./editDetailsDraft";
@@ -16,6 +20,8 @@ import {
   buildEditPatch,
   buildFieldEditPatch,
   changedEditableFields,
+  guestChangesStillNeeded,
+  guestCommunityChangesFor,
   type GatheringState,
 } from "./manageGatheringState";
 
@@ -28,6 +34,9 @@ interface PendingEdit {
   /** Field and venue saves confirm with a toast once the server holds the
    *  change; the full edit modal shows its own success panel. */
   shouldToast: boolean;
+  /** The guest invites and removals the full modal's save holds back with
+   *  the patch, sent only once the PATCH lands. `null` for any other edit. */
+  guestChanges: GuestCommunityChanges | null;
 }
 
 /** How a "Run by" save ended, so its editor knows whether to close. */
@@ -52,6 +61,10 @@ export type RunBySaveOutcome = "saved" | "refused" | "failed" | "awaitingScope";
  * for its success panel. On a repeating gathering it resolves `null`, and
  * the count arrives as a toast once the host has picked a scope.
  *
+ * The full modal's guest community changes ride with its patch and go out
+ * after it lands; on a repeating gathering they wait with it, apply to this
+ * date only, and a dismissed prompt sends none of them.
+ *
  * A schedule-only field save skips the prompt: the server never copies a
  * start or an end onto the other dates in a series (events.service.ts
  * `update()` strips both before it touches them), so "this date" is the
@@ -65,6 +78,8 @@ export function useGatheringEditSave({
   setGatheringState,
   updateEvent,
   onChooseCancelScope,
+  onSaveGuestCommunities,
+  onLeadCommunityChanged,
 }: {
   isSeries: boolean;
   gatheringState: GatheringState;
@@ -72,6 +87,13 @@ export function useGatheringEditSave({
   updateEvent: ReturnType<typeof useUpdateEvent>;
   /** The host's scope answer for a cancel the page asked about. */
   onChooseCancelScope: (scope: SeriesScope) => void;
+  /** Sends a saved edit's guest community changes. Optional, so a caller
+   *  with no guest list (and the run-by tests) can leave it out. */
+  onSaveGuestCommunities?: (changes: GuestCommunityChanges) => void;
+  /** A saved PATCH moved the lead community (`""` when it cleared it). The
+   *  server drops a guest that became the lead, so the guest list reads
+   *  again. Optional, like `onSaveGuestCommunities`. */
+  onLeadCommunityChanged?: (leadSlug: string) => void;
 }) {
   const { t } = useTranslation();
   const fmt = useFormat();
@@ -88,12 +110,21 @@ export function useGatheringEditSave({
   const sendEdit = (
     patch: UpdateEventDto & { seriesScope?: SeriesScope },
     shouldToast: boolean,
+    guestChanges: GuestCommunityChanges | null = null,
   ): Promise<number | null> =>
     updateEvent
       .mutateAsync(patch)
       .then((result) => {
         if (shouldToast)
           showToast(t("gatherings:manage.overview.savedToast"), "success");
+        // `buildEditPatch` carries the community only when it changed.
+        if (patch.communitySlug !== undefined) {
+          onLeadCommunityChanged?.(patch.communitySlug ?? "");
+        }
+        // Guest changes follow the PATCH: a lead set in this same save is on
+        // the gathering before a guest joins it, and a refused save sends
+        // none of them.
+        if (guestChanges) onSaveGuestCommunities?.(guestChanges);
         return result.notifiedCount;
       })
       .catch(() => {
@@ -108,24 +139,41 @@ export function useGatheringEditSave({
   // pending edit is all there can be: the full modal saves once per opening
   // and asks on close, and the field and venue editors ask at once, so the
   // modal prompt is up before another editor can open.
-  const stashEdit = (patch: UpdateEventDto, shouldToast: boolean) =>
-    setPendingEdit({ patch, snapshot: gatheringState, shouldToast });
+  const stashEdit = (
+    patch: UpdateEventDto,
+    shouldToast: boolean,
+    guestChanges: GuestCommunityChanges | null = null,
+  ) =>
+    setPendingEdit({
+      patch,
+      snapshot: gatheringState,
+      shouldToast,
+      guestChanges,
+    });
 
   // The full edit modal's save. `buildEditPatch` reads the PRE-edit snapshot
   // from this closure's `gatheringState`; see its doc for why that matters.
   // Resolves with the notified count for the modal's success panel. A
   // repeating gathering resolves `null` at once: it sends only after the
   // modal has closed, and `chooseSeriesScope` toasts the count then.
+  // `openedGuests` is the guest list the modal opened on, which the host's
+  // guest changes are read against (see `guestCommunityChangesFor`).
   const saveEditDraft = (
     draft: GatheringDetailsDraft,
+    openedGuests?: readonly GuestCommunityDraftEntry[],
   ): Promise<number | null> => {
     setGatheringState((current) => applyEditDraft(current, draft, fmt, t));
     const patch = buildEditPatch(gatheringState, draft);
+    const guestChanges = guestCommunityChangesFor(
+      gatheringState,
+      draft,
+      openedGuests,
+    );
     if (isSeries) {
-      stashEdit(patch, false);
+      stashEdit(patch, false, guestChanges);
       return Promise.resolve(null);
     }
-    return sendEdit(patch, false);
+    return sendEdit(patch, false, guestChanges);
   };
 
   // A focused editor's save. The editor closes itself right after, so a
@@ -220,9 +268,17 @@ export function useGatheringEditSave({
     if (mode === "cancel") {
       onChooseCancelScope(scope);
     } else if ((mode === "edit" || mode === "editField") && pendingEdit) {
+      // The saved guest list may have refreshed while the prompt was up.
+      const guestChanges =
+        pendingEdit.guestChanges &&
+        guestChangesStillNeeded(
+          pendingEdit.guestChanges,
+          gatheringState.guestCommunities ?? [],
+        );
       void sendEdit(
         { ...pendingEdit.patch, seriesScope: scope },
         pendingEdit.shouldToast,
+        guestChanges,
       ).then((notifiedCount) => {
         if (mode === "edit" && notifiedCount !== null && notifiedCount > 0) {
           showToast(
@@ -239,16 +295,18 @@ export function useGatheringEditSave({
 
   // Dismissed without an answer: nothing was sent, so an edit already shown
   // on screen is taken back off it. Restored over the latest state, keeping
-  // a cover saved meanwhile unless this edit is the one that changed it.
+  // a cover saved meanwhile unless this edit is the one that changed it, and
+  // the guest list as the seed last wrote it (no edit folds into that).
   const closeSeriesScope = () => {
     setSeriesScopeModal(null);
     if (pendingEdit) {
       const { patch, snapshot } = pendingEdit;
-      setGatheringState((current) =>
-        patch.coverImageUrl === undefined
+      setGatheringState((current) => ({
+        ...(patch.coverImageUrl === undefined
           ? { ...snapshot, coverImageUrl: current.coverImageUrl }
-          : snapshot,
-      );
+          : snapshot),
+        guestCommunities: current.guestCommunities,
+      }));
       setPendingEdit(null);
     }
   };

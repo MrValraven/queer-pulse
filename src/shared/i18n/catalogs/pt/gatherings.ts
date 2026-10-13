@@ -120,8 +120,6 @@ export const gatherings: Catalog = {
   // Shared/cross-page chrome
   "common.backToGatherings": "Convívios",
   "common.hostedBy": "Organização de",
-  // GatheringCommunity.tsx: the hero line reads "Com Queer Runners Lisboa".
-  "common.hostedWith": "Com",
   "common.runBy": "Dinamizado por",
   "common.hostRemoved": "Uma pessoa que já não está por cá",
   "common.timeRangeTo": "às",
@@ -1848,7 +1846,7 @@ export const gatherings: Catalog = {
   "gathering.where.mapAriaArea": "Mapa que mostra a área aproximada de {area}",
   "gathering.access.heading": "Acessibilidade",
   "gathering.access.lead":
-    "O que quem organiza nos disse sobre entrar e estar à vontade. Uma pergunta sem resposta quer dizer que ninguém nos disse, por isso pergunta se precisares de saber.",
+    "O que quem organiza nos disse sobre entrar e estar à vontade.",
 
   // ── LOC-06: o que quem organiza já disse ──────────────────────────────────
   "gathering.announcements.heading": "De quem organiza",
@@ -1922,9 +1920,6 @@ export const gatherings: Catalog = {
   "rsvpControl.refusedToast": "Quem organiza retirou-te deste convívio.",
   "rsvpControl.goneToast": "Este convívio já não existe.",
   "rsvpControl.errorToast": "Não resultou. Tenta outra vez daqui a pouco.",
-  "sharePlans.panelHeading": "Diz a alguém onde vais estar",
-  "sharePlans.panelLead":
-    "Envia a uma pessoa de confiança a hora e o sítio. Vai como uma mensagem normal e só ela vê.",
   "sharePlans.openCta": "Partilhar os meus planos",
   "sharePlans.eyebrow": "Só entre vocês",
   "sharePlans.title": "Diz a alguém <em>onde vais estar</em>",
@@ -2205,4 +2200,95 @@ export const gatherings: Catalog = {
   "preview.errorTitle": "A pré-visualização não carregou",
   "preview.errorBody":
     "O teu convívio está bem. Tenta outra vez daqui a pouco, ou volta à tua vista de anfitrião.",
+
+  // ── Comunidades convidadas: editor, assistente, página, convite ───────────
+  "guestCommunities.label": "Comunidades convidadas",
+  "guestCommunities.labelOptional": "Comunidades convidadas (opcional)",
+  "guestCommunities.hint":
+    "Convida outras comunidades para organizarem isto contigo. A equipa de cada uma aceita antes de o nome aparecer no convívio.",
+  "guestCommunities.lockedHint":
+    "Escolhe primeiro a comunidade com que organizas. As comunidades convidadas juntam-se a um convívio que já tem uma.",
+  "guestCommunities.lockedHintWithRows":
+    "Escolhe a comunidade com que organizas para convidares mais.",
+  "guestCommunities.searchPlaceholder": "Pesquisa comunidades pelo nome",
+  "guestCommunities.resultsLabel": "Comunidades que podes convidar",
+  "guestCommunities.listLabel": "Comunidades convidadas para este convívio",
+  "guestCommunities.loading": "À procura de comunidades…",
+  "guestCommunities.noMatch": "Nenhuma comunidade corresponde a essa pesquisa.",
+  "guestCommunities.loadError": "As comunidades não carregaram.",
+  "guestCommunities.capReached":
+    "Este convívio já tem {max} comunidades convidadas, o máximo possível. Remove uma para convidares outra.",
+  "guestCommunities.status.pending": "Convite enviado",
+  "guestCommunities.status.accepted": "Juntou-se",
+  "guestCommunities.status.declined": "Recusou",
+  "guestCommunities.status.unsentEdit": "Segue quando guardares",
+  "guestCommunities.status.unsentCreate": "Segue quando publicares",
+  "guestCommunities.removeCta": "Remover comunidade",
+  "guestCommunities.saveFailed_one":
+    "{count} alteração às comunidades convidadas não ficou guardada. Abre Editar detalhes para tentares outra vez.",
+  "guestCommunities.saveFailed_other":
+    "{count} alterações às comunidades convidadas não ficaram guardadas. Abre Editar detalhes para tentares outra vez.",
+  "guestCommunities.inviteFailed_one":
+    "{count} convite a uma comunidade não seguiu. Convida outra vez em Editar detalhes.",
+  "guestCommunities.inviteFailed_other":
+    "{count} convites a comunidades não seguiram. Convida outra vez em Editar detalhes.",
+  "guestCommunities.reviewValue":
+    "{names}. Os convites seguem quando publicares.",
+
+  "common.hostedWithList.one": "Com {first}",
+  "common.hostedWithList.two": "Com {first} e {second}",
+  "common.hostedWithList.three": "Com {first}, {second} e {third}",
+  "common.hostedWithList.more_one":
+    "Com {first}, {second}, {third} e mais {count}",
+  "common.hostedWithList.more_other":
+    "Com {first}, {second}, {third} e mais {count}",
+  "gathering.guestCommunityRole": "Comunidade convidada",
+  "gathering.leaveCollabCta": "Remover a nossa comunidade",
+  "gathering.leaveCollabTitle": "Remover {name} deste convívio?",
+  "gathering.leaveCollabBody":
+    "Sai da página da tua comunidade e do separador Comunidades das pessoas que a integram, e a comunidade não pode voltar a juntar-se a este convívio. A organização não recebe aviso.",
+  "gathering.leaveCollabKeepCta": "Manter a nossa comunidade",
+  "gathering.leaveCollabToast": "{name} saiu deste convívio.",
+
+  "collabInvite.back": "Notificações",
+  "collabInvite.eyebrow": "Convite para colaborar",
+  "collabInvite.title":
+    "{lead} quer organizar <em>em conjunto</em> com {community}.",
+  "collabInvite.titleNoLead":
+    "{community} tem um convite para organizar <em>em conjunto</em>.",
+  "collabInvite.sub":
+    "Qualquer pessoa que gere {community} pode responder por ela. Uma resposta conta para toda a equipa.",
+  "collabInvite.acceptingTitle": "O que acontece se <em>aceitares</em>",
+  "collabInvite.acceptingListing":
+    "Aparece na página da tua comunidade. As pessoas da comunidade podem vê-lo e confirmar presença.",
+  "collabInvite.acceptingName":
+    "{community} aparece no convívio ao lado de {lead}.",
+  "collabInvite.acceptingNameNoLead":
+    "{community} aparece no convívio como comunidade organizadora.",
+  "collabInvite.acceptingRights":
+    "A organização continua a gerir o convívio. A tua equipa pode retirar a comunidade a qualquer momento.",
+  "collabInvite.acceptCta": "Aceitar colaboração",
+  "collabInvite.declineCta": "Recusar convite",
+  "collabInvite.acceptedToast": "{community} também organiza este convívio.",
+  "collabInvite.declinedToast":
+    "Convite recusado. A organização vai ver a tua resposta.",
+  "collabInvite.cannotRespond":
+    "Quem gere {community} responde a este convite.",
+  "collabInvite.notFoundTitle": "Este convite já não está aqui",
+  "collabInvite.notFoundDescription":
+    "A organização pode tê-lo retirado, ou pertence a uma comunidade que não ajudas a gerir.",
+  "collabInvite.acceptedTitle": "{name} aceitou em nome de {community}",
+  "collabInvite.acceptedTitleNoName": "{community} aceitou este convite",
+  "collabInvite.acceptedDescription":
+    "{title} aparece na página de {community}.",
+  "collabInvite.declinedTitle": "{name} recusou em nome de {community}",
+  "collabInvite.declinedTitleNoName": "{community} recusou este convite",
+  "collabInvite.declinedDescription":
+    "{title} fica fora da página de {community}.",
+  "collabInvite.cancelledTitle": "Este convívio foi cancelado",
+  "collabInvite.cancelledDescription":
+    "O convite fechou quando a organização cancelou {title}.",
+  "collabInvite.pastTitle": "Este convívio já aconteceu",
+  "collabInvite.pastDescription": "O convite fechou quando {title} aconteceu.",
+  "collabInvite.viewGatheringCta": "Ver convívio",
 };

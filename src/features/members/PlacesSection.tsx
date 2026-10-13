@@ -9,6 +9,7 @@ import { OwnerOfferInbox } from "../marketing/listBusiness/ownership/OwnerOfferI
 import { routes } from "../../app/routeMap";
 import { EmptyState, LoadErrorState } from "../../shared/components/ui";
 import { submittedToPlace } from "../marketing/api/directory.adapters";
+import { withCardCover } from "../marketing/listBusiness/preview/cardCoverPhoto";
 import { useMemberListings } from "./api/useMemberListings";
 import { useMySuggestedListings } from "./api/useMySuggestedListings";
 import { PlacesGrid } from "./PlacesGrid";
@@ -96,7 +97,9 @@ export function PlacesSection({
       status: listing.status,
       ref: listing.ref,
       managementRole: listing.managementRole,
-      place: submittedToPlace(listing),
+      // The card shows the cover the owner set, as visitors see it, else the
+      // first gallery photo. The listing's own page keeps the wide shot.
+      place: withCardCover(submittedToPlace(listing), listing),
     }));
   // The static registry is a mock. It is a base in demo only; using it for a
   // real member in live mode would leak a demo persona's places.

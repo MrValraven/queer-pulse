@@ -7,6 +7,7 @@ export const SUGGEST_EDIT_FIELDS: SuggestEditField[] = [
   "phone",
   "website",
   "description",
+  "attributes",
   "other",
 ];
 
@@ -42,6 +43,8 @@ export function suggestEditFieldOptions({
  * `other` is the catch-all for corrections that map to no single column, so
  * there is nothing a typed value could be written to. The server returns 400
  * for a proposed value on `other`, so the input is not offered for it at all.
+ * `attributes` (Details and amenities) maps to no single column either and
+ * takes prose only; the server refuses a value on it (backend delta 13).
  */
 export interface SuggestEditFieldShape {
   /** Native input type, so a phone gets a phone keypad and a URL gets a URL one. */

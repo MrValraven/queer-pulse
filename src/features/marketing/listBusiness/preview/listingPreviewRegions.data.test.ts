@@ -559,7 +559,9 @@ describe("renderedPreviewRegions", () => {
     for (const region of [
       "tagline",
       "whatItIs",
-      "goodFor",
+      "whatsHere",
+      "practices",
+      "gettingIn",
       "languages",
       "hours",
       "owner",
@@ -659,5 +661,110 @@ describe("shownOwnerName", () => {
         }),
       ),
     ).toBe("");
+  });
+});
+
+describe("cover photo", () => {
+  const withCover = draftWith({
+    coverPhoto: { image: "listing-covers/u/k.webp", alt: "Front door" },
+  });
+
+  it("places the cover on the card and moves the gallery to the full page once a cover is set", () => {
+    expect(placementForAnchor(ANCHOR.cover, withCover)).toEqual(
+      expect.objectContaining({ kind: "preview" }),
+    );
+    expect(placementForAnchor(ANCHOR.photos, withCover)).toEqual({
+      kind: "fullPage",
+      captionKey: `${CAPTION_PREFIX}photosGallery`,
+    });
+    expect(placementForAnchor(ANCHOR.photos, blankDraft())).toEqual(
+      expect.objectContaining({ kind: "preview" }),
+    );
+  });
+
+  it("puts the gallery back on the card when the cover is removed", () => {
+    const removed = {
+      ...withCover,
+      coverPhoto: { image: "", alt: "Front door" },
+    };
+    expect(placementForAnchor(ANCHOR.photos, removed)).toEqual({
+      kind: "preview",
+      regions: ["photo"],
+      captionKey: `${CAPTION_PREFIX}photos`,
+    });
+  });
+
+  it("outlines the card's photo band for the cover, whatever the owner's visibility", () => {
+    for (const visibility of VISIBILITY_MODES) {
+      expect(
+        placementForAnchor(ANCHOR.cover, draftWith({ visibility })),
+        visibility,
+      ).toEqual({
+        kind: "preview",
+        regions: ["photo"],
+        captionKey: `${CAPTION_PREFIX}cover`,
+      });
+    }
+  });
+});
+
+describe("attribute and fact fields", () => {
+  it("puts what's true on the page, the highlights on the card, and practices and languages on the page", () => {
+    const draft = draftWith({ name: "Livraria Rosa" });
+    expect(placementForAnchor(ANCHOR.attributes, draft)).toMatchObject({
+      kind: "preview",
+      regions: ["whatsHere"],
+    });
+    expect(placementForAnchor(ANCHOR.highlights, draft)).toMatchObject({
+      kind: "preview",
+      regions: ["pills"],
+    });
+    expect(placementForAnchor(ANCHOR.saferSpacePolicyUrl, draft)).toMatchObject(
+      {
+        kind: "preview",
+        regions: ["practices"],
+      },
+    );
+    expect(placementForAnchor(ANCHOR.langsOther, draft)).toMatchObject({
+      kind: "preview",
+      regions: ["languages"],
+    });
+  });
+
+  it("says an online listing's page leaves the way in and the ways to pay out", () => {
+    const online = draftWith({ name: "Fio Solto", online: true });
+    for (const anchor of [ANCHOR.entryMode, ANCHOR.waysToPay]) {
+      expect(placementForAnchor(anchor, online)).toEqual({
+        kind: "notShown",
+        captionKey: `${CAPTION_PREFIX}gettingInOnline`,
+      });
+    }
+    expect(placementForAnchor(ANCHOR.nifInvoices, online)).toMatchObject({
+      regions: ["gettingIn"],
+    });
+  });
+
+  it("shows the cover answer only for nightlife or culture", () => {
+    expect(
+      placementForAnchor(ANCHOR.coverPolicy, draftWith({ cats: ["food"] })),
+    ).toEqual({
+      kind: "notShown",
+      captionKey: `${CAPTION_PREFIX}coverPolicyOff`,
+    });
+    expect(
+      placementForAnchor(
+        ANCHOR.coverFreeBefore,
+        draftWith({ cats: ["nightlife"] }),
+      ),
+    ).toMatchObject({ kind: "preview", regions: ["gettingIn"] });
+  });
+
+  it("draws the three new excerpt blocks for every kind", () => {
+    for (const online of [false, true]) {
+      const regions = renderedPreviewRegions(draftWith({ online }));
+      for (const region of ["whatsHere", "practices", "gettingIn"] as const) {
+        expect(regions.has(region), `${region} online=${online}`).toBe(true);
+      }
+    }
   });
 });

@@ -87,7 +87,9 @@
 .body [data-preview-region="status"],
 .body [data-preview-region="host"],
 .body [data-preview-region="whatItIs"],
-.body [data-preview-region="goodFor"],
+.body [data-preview-region="whatsHere"],
+.body [data-preview-region="practices"],
+.body [data-preview-region="gettingIn"],
 .body [data-preview-region="languages"],
 .body [data-preview-region="hours"] {
   border-radius: var(--radius-4);
@@ -115,7 +117,9 @@
 .body[data-highlight~="host"] [data-preview-region="host"],
 .body[data-highlight~="tagline"] [data-preview-region="tagline"],
 .body[data-highlight~="whatItIs"] [data-preview-region="whatItIs"],
-.body[data-highlight~="goodFor"] [data-preview-region="goodFor"],
+.body[data-highlight~="whatsHere"] [data-preview-region="whatsHere"],
+.body[data-highlight~="practices"] [data-preview-region="practices"],
+.body[data-highlight~="gettingIn"] [data-preview-region="gettingIn"],
 .body[data-highlight~="languages"] [data-preview-region="languages"],
 .body[data-highlight~="hours"] [data-preview-region="hours"],
 .body[data-highlight~="owner"] [data-preview-region="owner"] {

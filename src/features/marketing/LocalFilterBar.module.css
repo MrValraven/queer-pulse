@@ -37,7 +37,6 @@
   border-color: rgba(var(--cream-rgb), 0.1);
 }
 
-.vibeRow,
 .safeRow {
   display: flex;
   align-items: center;
@@ -45,13 +44,12 @@
   flex-wrap: wrap;
   margin-top: 14px;
 }
-/* A labelled block of refinements inside the drawer (place type). The vibe/safe
-   rows keep their inline label; this one heads a wrapping chip grid. */
+/* A labelled block of refinements inside the drawer (place type). The safe
+   row keeps its inline label; this one heads a wrapping chip grid. */
 .group {
   margin-top: 14px;
 }
-.groupLabel,
-.vibeLabel {
+.groupLabel {
   font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -95,7 +93,7 @@
   opacity: 0.4;
   cursor: not-allowed;
 }
-/* Touch: lift the ~30px vibe/safe chips to the ≥44px target minimum (they sit in
+/* Touch: lift the ~30px chips to the ≥44px target minimum (they sit in
    the mobile Filters sheet); padding is unchanged so the resting ink stays compact. */
 @media (pointer: coarse) {
   .chip {
@@ -107,12 +105,8 @@
   color: rgba(var(--cream-rgb), 1);
   border-color: var(--line-strong);
 }
-.vibe.chipOn {
-  background: var(--jade);
-  border-color: var(--jade);
-}
 
-/* Category legend swatch inside each category chip — a colour fill + white icon
+/* Category legend swatch inside each category chip: a colour fill + white icon
    mirroring that category's map pin, so the filter bar reads as a live legend.
    Self-contained fill keeps it legible on the plum active chip and in dark mode
    alike (theme-stable, like the pins). One fill per category → --cat-* tokens. */
@@ -166,7 +160,7 @@
   background: var(--cat-home-services);
 }
 
-/* Live count inside each category chip — dimmed so the label stays primary. */
+/* Live count inside each category chip, dimmed so the label stays primary. */
 .count {
   margin-inline-start: 6px;
   font-size: 0.85em;
@@ -174,19 +168,12 @@
   opacity: 0.6;
 }
 
-/* "Vibe filters apply to venues" — shown only while a vibe is active. */
-.vibeNote {
-  font-size: var(--text-12);
-  color: var(--ink-40);
-  font-style: italic;
-}
-
 /* Desktop bar row: the search field and the "Refine" pill share one line, so
    the bar is a single compact strip until the drawer is opened. */
-/* Search field, "use my location", "Refine", List/Map — one line, every control
+/* Search field, "use my location", "Refine", List/Map on one line, every control
    the same height, so everything that shapes the results sits together and the
-   results header below is left to report what they found. A grid rather than a
-   flex row because the location control brings a note with it: that note is
+   results header below is left to report what they found. A grid, because
+   the location control brings a note with it: that note is
    placed on a second line (see `nearMeInline` in DirectoryPage.module.css),
    where it can't stretch the field above it. */
 .barRow {
@@ -216,11 +203,11 @@
 
 /* ── Mobile: compact sticky toolbar ──────────────────────────────────────────
    On phones the full filter set (search + wrapping chips + refine drawer) would
-   eat 200–260px of a sticky bar, so it collapses behind a single "Filters"
+   eat 200 to 260px of a sticky bar, so it collapses behind a single "Filters"
    control that opens the set in a bottom sheet. The List/Map switcher rides
    alongside it so a visitor scrolled deep into the list can still flip to the
    map without scrolling back up. Frosted, since it overlays the scrolling page
-   (the desktop `.bar` scrolls away instead). */
+   (the desktop `.bar` scrolls away with the page). */
 .mobileBar {
   position: sticky;
   top: var(--sticky-top);
@@ -234,7 +221,7 @@
   backdrop-filter: var(--blur-lg);
 }
 :global([data-theme="dark"]) .mobileBar {
-  background: rgba(26, 16, 40, 0.86);
+  background: color-mix(in srgb, var(--studio-bg) 86%, transparent);
 }
 .mobileBarRow {
   display: flex;
@@ -368,4 +355,112 @@
    it drops the standalone margin it carries for the flat mobile sheet. */
 .quickGroup > .safeRow {
   margin-top: 0;
+}
+
+/* "Show more filters": a quiet text toggle that opens the attribute groups. */
+.moreFilters {
+  margin-top: 14px;
+}
+.moreFiltersToggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  border: 0;
+  background: none;
+  font-family: inherit;
+  font-size: var(--text-12-5);
+  font-weight: 600;
+  color: var(--text-strong);
+  cursor: pointer;
+}
+.moreFiltersToggle svg {
+  width: 16px;
+  height: 16px;
+  color: var(--ink-40);
+}
+.moreFiltersToggle:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-radius: var(--radius-4);
+}
+@media (hover: hover) {
+  .moreFiltersToggle:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+}
+/* Touch: the same 44px floor the chips get in the Filters sheet. */
+@media (pointer: coarse) {
+  .moreFiltersToggle {
+    min-height: 44px;
+  }
+}
+/* The toggle's gap already spaces its badge; the chip count's own margin
+   would double it. */
+.moreFiltersToggle .count {
+  margin-inline-start: 0;
+}
+/* The languages behind "Show more languages", one row gap under the first. */
+.moreLanguages {
+  margin-top: 8px;
+}
+.moreFiltersGroup + .moreFiltersGroup {
+  margin-top: 14px;
+}
+.moreFiltersHeading {
+  display: block;
+  margin-bottom: 8px;
+  font-size: var(--text-11-5);
+  font-weight: 600;
+  color: var(--ink-60);
+}
+
+/* "Who runs it" through "Access needs" inside the Refine drawer. One band of
+   the panel, holding its own run of bands: stacked while the drawer is narrow
+   (the full screen map's card), two to a row once it is wide, so a desktop
+   drawer is not one tall column of short chip rows. The container is the band
+   itself, so the switch follows the drawer's width, whatever the viewport.
+   Last in the file so these rules win over the groups' own margins. */
+.factBands {
+  container-type: inline-size;
+}
+.factGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+.factGrid > * {
+  margin: 0;
+}
+.factGrid > * + * {
+  margin-top: 18px;
+}
+.factGrid > *:not(:last-child) {
+  padding-bottom: 18px;
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.07);
+}
+:global([data-theme="dark"]) .factGrid > *:not(:last-child) {
+  border-bottom-color: rgba(var(--cream-rgb), 0.08);
+}
+/* Two to a row. The cells of a row stretch to one height, so the hairline
+   under them runs on as one rule; the space between the columns is padding
+   for the same reason. The last row (one cell or two) has no rule. */
+@container (min-width: 880px) {
+  .factGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .factGrid > :nth-child(2) {
+    margin-top: 0;
+  }
+  .factGrid > :nth-child(odd) {
+    padding-inline-end: 14px;
+  }
+  .factGrid > :nth-child(even) {
+    padding-inline-start: 14px;
+  }
+  .factGrid > :nth-last-child(2):nth-child(odd) {
+    padding-bottom: 0;
+    border-bottom: none;
+  }
 }

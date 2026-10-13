@@ -37,8 +37,11 @@ describe("draftToDto", () => {
     };
     expect(draftToDto(legacyDraft)).toHaveProperty("ownedBy", []);
     expect(
-      draftToDto({ ...legacyDraft, ownedBy: ["nonbinary", "women"] }),
-    ).toHaveProperty("ownedBy", ["women", "nonbinary"]);
+      draftToDto({
+        ...legacyDraft,
+        ownedBy: ["migrant", "nonbinary", "women"],
+      }),
+    ).toHaveProperty("ownedBy", ["women", "nonbinary", "migrant"]);
   });
 
   it("on a claim draft keeps the owner's name and the affirming agreement", () => {
@@ -209,5 +212,54 @@ describe("draftToDto for the three kinds", () => {
     });
     expect(dto).not.toHaveProperty("isWhereFoundAnswered");
     expect(dto).not.toHaveProperty("inactiveModeCats");
+  });
+});
+
+describe("draftToDto coverPhoto", () => {
+  const claimDraft = () => ({ ...blankDraft(), path: "claim" as const });
+
+  it("sends the cover with trimmed alt", () => {
+    const payload = draftToDto({
+      ...claimDraft(),
+      coverPhoto: { image: "listing-covers/u/k.webp", alt: "  Front door " },
+    });
+    expect(payload.coverPhoto).toEqual({
+      image: "listing-covers/u/k.webp",
+      alt: "Front door",
+    });
+  });
+
+  it("sends null when there is no cover image", () => {
+    expect(
+      draftToDto({ ...claimDraft(), coverPhoto: { image: "", alt: "stale" } })
+        .coverPhoto,
+    ).toBeNull();
+    expect(
+      draftToDto({ ...claimDraft(), coverPhoto: undefined }).coverPhoto,
+    ).toBeNull();
+  });
+
+  it("sends a removed cover as null on an update so the server clears it", () => {
+    const payload = draftToUpdateDto({
+      ...claimDraft(),
+      coverPhoto: { image: "", alt: "Front door" },
+    });
+    expect(payload).toHaveProperty("coverPhoto", null);
+  });
+
+  it("carries the cover on a co-manager's save and on a suggestion", () => {
+    const cover = { image: "listing-covers/u/k.webp", alt: "Front door" };
+    const coManagerPayload = draftToUpdateDto({
+      ...claimDraft(),
+      managementRole: "co_manager" as const,
+      coverPhoto: cover,
+    });
+    expect(coManagerPayload).toHaveProperty("coverPhoto", cover);
+    const suggestion = draftToDto({
+      ...blankDraft(),
+      path: "suggest" as const,
+      coverPhoto: cover,
+    });
+    expect(suggestion.coverPhoto).toEqual(cover);
   });
 });

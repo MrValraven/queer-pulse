@@ -39,7 +39,8 @@ export type MediaReferenceType =
   | "magazine-deck" // MagazineDeck.cover / .slides[] image refs
   | "message-photo" // Message.attachment (a photo sent in a conversation)
   | "press-contact" // PressContact.avatarUrl
-  | "sticker"; // Sticker.storageKey
+  | "sticker" // Sticker.storageKey
+  | "studio-cover"; // StudioRelease.coverKey
 
 /** One place an uploaded image is referenced. The backend owns `entityId`/
  *  `label`/`slug`; the frontend owns turning `type` into a localized label
@@ -132,6 +133,12 @@ export function mediaReferenceHref(reference: MediaReference): string | null {
       return slug ? communityPath(slug) : null;
     case "cinema-cover":
       return entityId ? `${routes.cinemaWatch}?title=${entityId}` : null;
+    // A Studio release cover. Opens only for a viewer with a Studio grant
+    // (anyone else meets the Studio teaser), which is still the right page.
+    case "studio-cover":
+      return entityId
+        ? `${routes.studioAlbum}?id=${encodeURIComponent(entityId)}`
+        : null;
     case "landlord":
       return slug ? `/work/landlord/${slug}` : null;
     case "company-work":

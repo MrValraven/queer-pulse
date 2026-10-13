@@ -417,3 +417,11 @@
   justify-content: flex-start;
   margin-top: 14px;
 }
+
+/* "With {lead}" under a gathering this community joined as a guest. */
+.eventCollab {
+  margin-top: 2px;
+  font-size: var(--text-12-5);
+  font-weight: 600;
+  color: var(--ink-60);
+}

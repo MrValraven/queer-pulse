@@ -8,6 +8,7 @@ import { useTranslation } from "../../i18n/useTranslation";
 import { Button } from "./Button";
 import { type CropRect, IDENTITY_CROP } from "./cropGeometry";
 import ImageReframer from "./ImageReframer";
+import type { FreeformChoiceKey } from "./useImageReframerState";
 import { Modal } from "./Modal";
 
 /** The photo to reframe: a freshly picked `File`, or the URL of an upload
@@ -18,6 +19,8 @@ type ReframeSource =
 export type PhotoReframeModalProps = ReframeSource & {
   kind: UploadKind;
   initialCrop?: CropRect;
+  /** Ratio chip a freeform kind opens on, e.g. "square" for a release cover. */
+  initialFreeformChoice?: FreeformChoiceKey;
   /** One line under the title, e.g. where else an in-use photo appears. */
   note?: string;
   onCancel: () => void;
@@ -41,6 +44,7 @@ export default function PhotoReframeModal({
   src,
   kind,
   initialCrop,
+  initialFreeformChoice,
   note,
   onCancel,
   onConfirm,
@@ -95,6 +99,7 @@ export default function PhotoReframeModal({
           aspect={aspect}
           aspectLabel={aspectLabel}
           allowFreeform={allowFreeform}
+          initialFreeformChoice={initialFreeformChoice}
           minOutput={minOutput}
           value={initialCrop}
           onChange={setRect}

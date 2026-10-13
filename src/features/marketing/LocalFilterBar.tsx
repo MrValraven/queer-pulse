@@ -21,9 +21,10 @@ import s from "./LocalFilterBar.module.css";
  * Shared filter bar for the Local page (both list + map views). On desktop it's
  * an inline bar that scrolls away with the page: one row of search, "use my
  * location", a "Refine" toggle and the List/Map switcher, with every filter
- * group (place type, sort, safe spaces, access, vibe) in the drawer below. On
- * phones that row collapses behind a single "Filters" sheet, and the List/Map
- * switcher rides in a compact sticky bar so it stays reachable while scrolled.
+ * group (place type, sort, safe spaces, access, owned-by, the listing facts)
+ * in the drawer below. On phones that row collapses behind a single "Filters"
+ * sheet, and the List/Map switcher rides in a compact sticky bar so it stays
+ * reachable while scrolled.
  */
 export function LocalFilterBar({
   view,
@@ -33,12 +34,12 @@ export function LocalFilterBar({
   activeFiltersSlot,
   ...fields
 }: LocalFilterFieldsProps & {
-  /** Current List/Map/Online view — the switcher rides in the mobile sticky bar. */
+  /** Current List/Map/Online view. The switcher rides in the mobile sticky bar. */
   view: string;
   onViewChange: (next: string) => void;
   /** Total active filters, surfaced on the collapsed "Filters" control. */
   activeFilterCount: number;
-  /** How many places the current filters surface — shown on the sheet's close CTA. */
+  /** How many places the current filters surface, shown on the sheet's close CTA. */
   resultCount: number;
   /** The active-filter chips, shown under the search row so what is currently
    *  narrowing the list reads at a glance with the drawer shut. Desktop only:
@@ -49,7 +50,8 @@ export function LocalFilterBar({
   const { t } = useTranslation();
   const fmt = useFormat();
   // On phones the full filter set lives in a bottom sheet so the sticky bar
-  // stays a compact one-row toolbar instead of eating 200–260px of viewport.
+  // stays a compact one-row toolbar and keeps the 200 to 260px of viewport
+  // the full set would take.
   const isMobile = useMediaQuery(mediaMax("mobile"));
   const [sheetOpen, setSheetOpen] = useState(false);
 

@@ -487,6 +487,8 @@ export const admin: Catalog = {
     "changed the invite quota of",
   "platformLog.kind.mod.invite_revoked": "revoked an invite",
   "platformLog.kind.mod.invite_revoked.target": "revoked an invite from",
+  "platformLog.kind.mod.invite_refreshed": "refreshed an invite",
+  "platformLog.kind.mod.invite_refreshed.target": "refreshed an invite from",
   "platformLog.kind.mod.sign_in_identity_relinked":
     "relinked a sign-in identity",
   "platformLog.kind.mod.sign_in_identity_relinked.target":
@@ -1556,6 +1558,9 @@ export const admin: Catalog = {
   "adminInvites.drawer.dateTime": "{date} at {time}",
   "adminInvites.drawer.inviteMessageLabel": "Invite message",
   "adminInvites.drawer.vouchMessageLabel": "Vouch message",
+  "adminInvites.drawer.privateNoteLabel": "Inviter's private note",
+  "adminInvites.drawer.privateNoteCaption":
+    "Only the inviter and admins see this.",
   "adminInvites.quota.manageCta": "Manage invite quotas",
   "adminInvites.quota.modalEyebrow": "Resource limits",
   "adminInvites.quota.modalTitle": "Invite quotas",
@@ -1582,6 +1587,16 @@ export const admin: Catalog = {
   "adminInvites.revoke.movedOnToast":
     "That invite has already been accepted, revoked or expired. Reopen the list for its current state.",
   "adminInvites.revoke.failedToast": "Couldn't revoke that invite. Try again.",
+  "adminInvites.refresh.cta": "Refresh invite",
+  "adminInvites.refresh.confirmTitle": "Refresh {code}?",
+  "adminInvites.refresh.confirmBody":
+    "The same link from {name} works again for 7 days. Anyone who already has it can use it to join.",
+  "adminInvites.refresh.confirmCta": "Refresh invite",
+  "adminInvites.refresh.doneToast": "{code} works again for 7 days",
+  "adminInvites.refresh.movedOnToast":
+    "This invite changed while you had it open. Reload to see where it stands.",
+  "adminInvites.refresh.failedToast":
+    "Couldn't refresh this invite. Try again.",
 
   "adminCommissionInterests.title": "Commission <em>interest</em>",
   "adminCommissionInterests.header.eyebrow": "Culture",
@@ -2107,13 +2122,13 @@ export const admin: Catalog = {
   "adminListings.history.askedBy": "Asked by {actor}",
   "adminListings.history.awaitingReply": "Awaiting reply",
 
-  // ── Uploaded images (admin media console) ────────────────────────────────
-  "media.title": "Uploaded <em>images</em>",
+  // ── Uploaded files (admin media console) ─────────────────────────────────
+  "media.title": "Uploaded <em>files</em>",
   "media.header.eyebrow": "Security tooling",
-  "media.header.title": "Uploaded <em>images</em>",
+  "media.header.title": "Uploaded <em>files</em>",
   "media.header.sub":
     "Every object stored in the platform's upload bucket, with per-file owner and storage details for security review.",
-  "media.filterAriaLabel": "Filter by upload kind",
+  "media.kindFilterLabel": "Upload kind",
   "media.kinds.all": "All",
   "media.kinds.avatars": "Avatars",
   "media.kinds.work": "Work images",
@@ -2122,6 +2137,14 @@ export const admin: Catalog = {
   "media.kinds.gathering-photos": "Gathering photos",
   "media.kinds.group-avatars": "Group avatars",
   "media.kinds.listing-photos": "Listing photos",
+  "media.kinds.listing-covers": "Listing covers",
+  "media.kinds.listing-menus": "Listing menus",
+  "media.kinds.community-covers": "Community banners",
+  "media.kinds.community-avatars": "Community logos",
+  "media.kinds.event-covers": "Gathering covers",
+  "media.kinds.forum-photos": "Forum photos",
+  "media.kinds.persona": "Persona images",
+  "media.kinds.stickers": "Stickers",
   // Second filter over the same grid: "is anything still pointing at this?".
   // It narrows the pages already loaded (every object arrives with its
   // references resolved), which is why the copy says how much of the bucket
@@ -2165,11 +2188,11 @@ export const admin: Catalog = {
   "media.delete.eyebrow": "Delete file",
   "media.delete.confirmTitle": "Permanently delete this file?",
   "media.delete.confirmBody":
-    "This removes the stored file from the bucket for good. If a profile, listing, or post still points at it, that image will stop loading. This can't be undone.",
+    "This removes the stored file from the bucket for good. If a profile, listing, or post still points at it, it will stop loading there. This can't be undone.",
   "media.delete.confirmBodyInUse_one":
-    "This file is still referenced in {count} place, listed below. Deleting it now will break that image. It'll stop loading. This can't be undone.",
+    "This file is still referenced in {count} place, listed below. If you delete it now, it stops loading there. This can't be undone.",
   "media.delete.confirmBodyInUse_other":
-    "This file is still referenced in {count} places, listed below. Deleting it now will break those images. They'll stop loading. This can't be undone.",
+    "This file is still referenced in {count} places, listed below. If you delete it now, it stops loading in every one of them. This can't be undone.",
   "media.delete.confirm": "Delete file",
   "media.delete.pending": "Deleting…",
   "media.delete.success": "File deleted",
@@ -2182,7 +2205,7 @@ export const admin: Catalog = {
   "media.empty.body": "Nothing is stored under this kind yet.",
   "media.demo.title": "Available in live mode only",
   "media.demo.body":
-    "Uploaded images come from the live storage bucket, so there is nothing to show in demo mode.",
+    "Uploaded files come from the live storage bucket, so there is nothing to show in demo mode.",
   "media.filterByUploader.searchPlaceholder": "Filter by who uploaded it…",
   "media.filterByUploader.searchAriaLabel": "Search members to filter uploads",
   "media.filterByUploader.noResults": "No members match “{search}”.",
@@ -2210,6 +2233,7 @@ export const admin: Catalog = {
   "editSuggestions.field.phone": "Phone number",
   "editSuggestions.field.website": "Website",
   "editSuggestions.field.description": "Description",
+  "editSuggestions.field.attributes": "Details and amenities",
   "editSuggestions.field.other": "Something else",
   "editSuggestions.filter.pending": "Pending",
   "editSuggestions.filter.accepted": "Accepted",
@@ -3210,6 +3234,7 @@ export const admin: Catalog = {
   "governance.audit.actionType.member_verified": "Member verified",
   "governance.audit.actionType.invite_quota_changed": "Invite quota changed",
   "governance.audit.actionType.invite_revoked": "Invite revoked",
+  "governance.audit.actionType.invite_refreshed": "Invite refreshed",
   // Reversals and the ban-ratification window (`ModerationService`,
   // `AccountEnforcementService`, `BanRatificationService`).
   "governance.audit.actionType.content_restored": "Content restored",
@@ -7934,6 +7959,44 @@ export const admin: Catalog = {
   "ambassadors.drawer.hiddenNote":
     "Hidden tags don't show here. The Ambassadors page has the full record.",
   "ambassadors.drawer.manage": "Manage ambassadors",
+  // ── Studio v1 (2026-10-08) ─────────────────────────────────────────────────
+  "studioAccess.label": "Studio",
+  "studioAccess.grantedBy": "Studio access: granted by {staff} on {date}",
+  "studioAccess.grantedOn": "Studio access: granted on {date}",
+  "studioAccess.none": "No Studio access",
+  "studioAccess.loadFailed": "We couldn't load Studio access",
+  "studioAccess.retry": "Check access again",
+  "studioAccess.grantCta": "Grant Studio access",
+  "studioAccess.revokeCta": "Revoke Studio access",
+  "studioAccess.hint":
+    "Lets the member listen in Studio, and upload if they run a published musician or DJ persona set to Open to everyone",
+  "studioAccess.revokeTitle": "Revoke Studio access?",
+  "studioAccess.revokeBody":
+    "Their player stops and Studio shows them the coming-soon page again",
+  "studioAccess.revokeConfirm": "Revoke Studio access",
+  "moderation.studioRelease.heading": "Studio release",
+  "moderation.studioRelease.subject": "{title} by {artist}",
+  "moderation.studioRelease.takeDownCta": "Take down release",
+  "moderation.studioRelease.restoreCta": "Restore release",
+  "moderation.studioRelease.takeDownTitle": "Take down {title}?",
+  "moderation.studioRelease.takeDownBody":
+    "It leaves Studio for everyone. The artist sees your reason on their artist page",
+  "moderation.studioRelease.takeDownConfirm": "Take down release",
+  "moderation.studioRelease.reasonLabel": "Reason the artist will see",
+  "moderation.studioRelease.takenDownNote": "Release taken down",
+  "moderation.studioRelease.restoredNote": "Release restored and live again",
+  "moderation.studioRelease.restoredDraftNote":
+    "Release restored as a draft: it was not live when taken down",
+  "moderation.studioRelease.statusLabel": "Status",
+  "moderation.studioRelease.takedownReasonLabel": "Takedown reason",
+  "moderation.studioRelease.retry": "Load the release again",
+  "moderation.studioRelease.loadFailed": "We couldn't load this release",
+  "moderation.studioRelease.thumbAlt": "Cover of {title}",
+  "moderation.category.copyright": "Copyright",
+  "moderation.action.studioAccessGranted": "Granted Studio access",
+  "moderation.action.studioAccessRevoked": "Revoked Studio access",
+  "moderation.action.studioReleaseTakenDown": "Took down a Studio release",
+  "moderation.action.studioReleaseRestored": "Restored a Studio release",
   "ambassadors.loadMore": "Load more",
   "ambassadors.loadingMore": "Loading…",
   "ambassadors.loadMoreError": "We couldn't load more ambassadors. Try again.",
@@ -7949,9 +8012,35 @@ export const admin: Catalog = {
   "ambassadors.history.empty": "No grants on record for this member.",
   "ambassadors.circle.notFounded":
     "The circle opens when the first ambassador is granted.",
-  "marketingVideos.header.eyebrow": "Marketing",
+  "marketingVideos.header.eyebrow": "Films, flyers and merch",
   "marketingVideos.header.sub":
-    "Our launch films, kept as code. Watch one here, then turn it into a video file on your computer whenever you need it.",
+    "Our launch films, event flyers and team merch, kept as code. Watch a film and turn it into a video file, or download print files, whenever you need them.",
+  "marketingVideos.sections.films": "Films",
+  "marketingVideos.sections.flyers": "Flyers",
+  "marketingVideos.sections.merch": "Merch",
+  "marketingVideos.merch.team-tee.title": "Team tee",
+  "marketingVideos.merch.team-tee.summary":
+    "For black tees and pullovers: the wordmark 9\u00a0cm wide at chest level and the tagline 28\u00a0cm wide between the shoulder blades.",
+  "marketingVideos.merchCard.meta": "Black tee or pullover · 2 inks",
+  "marketingVideos.merchCard.previewAlt": "The {title} mockup, front and back",
+  "marketingVideos.merchCard.view": "View mockup",
+  "marketingVideos.merchCard.download.frontPng": "Download front PNG",
+  "marketingVideos.merchCard.download.frontPdf": "Download front PDF",
+  "marketingVideos.merchCard.download.frontSvg": "Download front SVG",
+  "marketingVideos.merchCard.download.backPng": "Download back PNG",
+  "marketingVideos.merchCard.download.backPdf": "Download back PDF",
+  "marketingVideos.merchCard.download.backSvg": "Download back SVG",
+  "marketingVideos.flyers.first-event.title": "First event",
+  "marketingVideos.flyers.first-event.summary":
+    "Made for our first gathering: a queer network rooted in Lisbon, and a QR code that opens queerpulse.com.",
+  "marketingVideos.flyerCard.meta": "A5 portrait · PDF and PNG",
+  "marketingVideos.flyerCard.previewAlt": "The {title} flyer",
+  "marketingVideos.flyerCard.view": "View flyer",
+  "marketingVideos.flyerCard.download.pdfA5": "Download PDF (A5)",
+  "marketingVideos.flyerCard.download.pdfA5Print":
+    "Download PDF with bleed (A5)",
+  "marketingVideos.flyerCard.download.pdfA4": "Download PDF (A4)",
+  "marketingVideos.flyerCard.download.png": "Download PNG",
   "marketingVideos.films.cinematic.title": "Cinematic",
   "marketingVideos.films.cinematic.summary":
     "Slow and warm, at 100 BPM. The product as six moments, then the city and the invitation.",

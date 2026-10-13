@@ -6,6 +6,7 @@ import type {
 import type { AdminBotSummaryDTO } from "../../features/admin/api/adminBots.api";
 import type { JobCardDTO } from "../../features/economy/api/jobs.api";
 import type { Paginated } from "../../shared/api/refs";
+import type { StudioMeDTO } from "../../features/studio/api/studio.types";
 import { subprofileHandlers } from "./subprofiles.handlers";
 import { handleHandlers } from "./handles.handlers";
 import { ambassadorHandlers } from "./ambassadors.handlers";
@@ -115,6 +116,14 @@ export const handlers = [
   ),
   http.get(`${API_V1}/admin/bots`, () =>
     HttpResponse.json<AdminBotSummaryDTO[]>([adminBotSummary]),
+  ),
+  // The Studio route gate and the nav read this once per signed-in session;
+  // the default member holds no Studio access grant.
+  http.get(`${API_V1}/studio/me`, () =>
+    HttpResponse.json<StudioMeDTO>({
+      hasAccess: false,
+      uploadablePersonas: [],
+    }),
   ),
   ...subprofileHandlers(API_V1),
   ...handleHandlers(API_V1),

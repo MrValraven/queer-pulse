@@ -14,6 +14,7 @@ import {
   getSentInvites,
   resendInvite,
   revokeInvite,
+  updateInvitePrivateNote,
   type SentInviteCountsDTO,
   type SentInviteDTO,
 } from "./invite.api";
@@ -44,6 +45,9 @@ export interface SentInviteView {
    *  person. Undefined means a bearer link anyone holding it can redeem. */
   recipientEmail?: string;
   note?: string;
+  /** The member's own label for who the invite is for. Only they and our
+   *  team see it. Undefined when they never wrote one. */
+  privateNote?: string;
   /** Name of the person who accepted, if this invite was used. */
   acceptedByName?: string;
 }
@@ -71,6 +75,7 @@ function dtoToView(dto: SentInviteDTO): SentInviteView {
     expiresAt: dto.expiresAt ? new Date(dto.expiresAt) : null,
     recipientEmail: dto.email ?? undefined,
     note: dto.note ?? undefined,
+    privateNote: dto.privateNote ?? undefined,
     // Non-null only on a `used` row (backend contract), so this "joined by
     // {name}" line appears exactly when someone actually redeemed the code.
     acceptedByName: accepted
@@ -249,8 +254,10 @@ function patchCachedInvite(
   );
 }
 
-/** Find an invite in whichever cached filter-tab list holds it. */
-function findCachedInvite(
+/** Find an invite in whichever cached filter-tab list holds it. Exported for
+ *  callbacks that outlive a render, such as a toast's Undo, which need the
+ *  row as the cache holds it now. */
+export function findCachedInvite(
   queryClient: QueryClient,
   demoMode: boolean,
   id: string,
@@ -410,6 +417,7 @@ export function useResendInvite() {
           expiresAt: new Date(Date.now() + SEVEN_DAYS_MS),
           recipientEmail: current?.recipientEmail,
           note: current?.note,
+          privateNote: current?.privateNote,
           acceptedByName: undefined,
         };
         demoInviteOverrides.set(id, resent);
@@ -429,4 +437,68 @@ export function useResendInvite() {
       });
     },
   });
+}
+
+/** What the private-note editor saves: the row to patch and the new text.
+ *  `null` (or blank text) clears the note. */
+export interface UpdateInvitePrivateNoteVariables {
+  id: string;
+  code: string;
+  privateNote: string | null;
+}
+
+/**
+ * Set, change or clear the member's private note on one of their invites,
+ * whatever its status (`PATCH /invites/:code/private-note`). The cache changes
+ * only once the save succeeds, so a failed save leaves the old note on screen.
+ * `onSuccess` writes just the note into the cached row in every filter-tab
+ * list, and leaves the row's other fields (status, expiry) as the lists last
+ * fetched them. Live mode then refetches the lists in `onSettled`, so a list
+ * read that left the server before the save is superseded by a fresh one that
+ * carries the new note. A note moves no invite between tabs, so the counts
+ * stay as they are.
+ *
+ * Demo mode applies the same edit to the cached row locally (no network) and
+ * records it in the demo overrides, the way demo revoke does, so a tab opened
+ * later still shows it. Errors surface through the caller's `onError`;
+ * `silentError` keeps the global mutation-error toast from doubling up.
+ */
+export function useUpdateInvitePrivateNote() {
+  const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
+
+  return useMutation<SentInviteView, unknown, UpdateInvitePrivateNoteVariables>(
+    {
+      mutationKey: ["sent-invites", "private-note"],
+      meta: { silentError: true },
+      mutationFn: async ({ id, code, privateNote }) => {
+        // Blank and null both clear, the same rule the backend applies.
+        const trimmedNote = privateNote?.trim() || null;
+        if (demoMode) {
+          const current = findCachedInvite(queryClient, demoMode, id);
+          if (!current) throw new Error("Invite is not in the cached lists");
+          const updated: SentInviteView = {
+            ...current,
+            privateNote: trimmedNote ?? undefined,
+          };
+          demoInviteOverrides.set(id, updated);
+          return updated;
+        }
+        return dtoToView(await updateInvitePrivateNote(code, trimmedNote));
+      },
+      onSuccess: (updated) => {
+        patchCachedInvite(queryClient, demoMode, updated.id, (invite) => ({
+          ...invite,
+          privateNote: updated.privateNote,
+        }));
+      },
+      onSettled: () => {
+        // Demo's cache patch and override already are the result.
+        if (demoMode) return;
+        void queryClient.invalidateQueries({
+          queryKey: sentInviteKeys.lists(demoMode),
+        });
+      },
+    },
+  );
 }

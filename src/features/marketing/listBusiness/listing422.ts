@@ -1,20 +1,24 @@
 import { ApiError } from "../../../shared/api/client";
 import type { TFunction } from "../../../shared/i18n/types";
-import { ANCHOR, PHOTO_KEYS, type PhotoKey } from "./listBusiness.data";
+import {
+  ANCHOR,
+  PHOTO_KEYS,
+  type RejectedPhotoSlot,
+} from "./listBusiness.data";
 
 /* ===========================================================================
    Server-side validation (400 / 422) → wizard step + field routing (item #4).
 
    When a submit/save is rejected with a validation error, we jump to the
    wizard step that OWNS the first offending field and surface the server's
-   message inline there, instead of dumping the member on a hardcoded review
-   step with a generic toast. The map below is the single source of truth for
+   message inline there, so the member lands on the field to fix. The map below is the single source of truth for
    "which step owns which field", keyed by the top-level `ListingDraft` field.
 
    Both statuses count. NestJS's default `ValidationPipe` answers a failed DTO
    check with a 400 carrying `{ message: string[] }`, and a typed 422 carries
-   the same shapes. A refused photo also names its slot (`photos.wide`), which
-   is collected separately so the gallery can mark that one tile.
+   the same shapes. A refused photo also names its slot (`photos.wide`, or
+   `coverPhoto.image` for the cover), which is collected separately so the
+   gallery can mark that one tile.
    =========================================================================== */
 
 /** Where a given `ListingDraft` field lives: its wizard step + the DOM anchor
@@ -44,9 +48,9 @@ const FIELD_TO_STEP: Record<string, FieldLocation> = {
   // `ownerOffer.memberSlug` routes by its first path segment, the same way
   // `social.website` and `photos.wide` do.
   ownerOffer: { step: 0, anchor: ADMIN_BLOCK_ANCHOR },
-  // Step 0 — how you know the place
+  // Step 0: how you know the place
   path: { step: 0, anchor: ANCHOR.path },
-  // Step 1 — basics
+  // Step 1: basics
   name: { step: 1, anchor: ANCHOR.name },
   cats: { step: 1, anchor: ANCHOR.cats },
   // `online` is routed in `locationOf`: a create answers it on step 0 ("Where
@@ -55,23 +59,36 @@ const FIELD_TO_STEP: Record<string, FieldLocation> = {
   badge: { step: 1, anchor: ANCHOR.badge },
   price: { step: 1, anchor: ANCHOR.price },
   blurb: { step: 1, anchor: ANCHOR.blurb },
-  // Step 2 — story
+  // Step 2: story
   tagline: { step: 2, anchor: ANCHOR.tagline },
   whatItIs: { step: 2, anchor: ANCHOR.whatItIs },
-  // Step 3 — practical
+  attributes: { step: 2, anchor: ANCHOR.attributes },
+  highlights: { step: 2, anchor: ANCHOR.highlights },
+  inclusionPractices: { step: 2, anchor: ANCHOR.inclusionPractices },
+  saferSpacePolicyUrl: { step: 2, anchor: ANCHOR.saferSpacePolicyUrl },
+  langs: { step: 2, anchor: ANCHOR.langs },
+  langsOther: { step: 2, anchor: ANCHOR.langsOther },
+  // Step 3: practical
   address: { step: 3, anchor: ANCHOR.address },
   latitude: { step: 3, anchor: ANCHOR.address },
   longitude: { step: 3, anchor: ANCHOR.address },
   hours: { step: 3, anchor: ANCHOR.hours },
   social: { step: 3, anchor: ANCHOR.social },
-  // Step 4 — photos & you
+  entryMode: { step: 3, anchor: ANCHOR.entryMode },
+  coverPolicy: { step: 3, anchor: ANCHOR.coverPolicy },
+  coverFreeBefore: { step: 3, anchor: ANCHOR.coverFreeBefore },
+  // The top-level ways to pay; `onlineDetails.payments` routes on its own.
+  payments: { step: 3, anchor: ANCHOR.waysToPay },
+  issuesNifInvoices: { step: 3, anchor: ANCHOR.nifInvoices },
+  // Step 4: photos & you
   rel: { step: 4, anchor: ANCHOR.rel },
   ownedBy: { step: 4, anchor: ANCHOR.ownedBy },
   ownerName: { step: 4, anchor: ANCHOR.ownerName },
   ownerRole: { step: 4, anchor: ANCHOR.ownerRole },
+  coverPhoto: { step: 4, anchor: ANCHOR.cover },
   photos: { step: 4, anchor: ANCHOR.photos },
   alt: { step: 4, anchor: ANCHOR.photos },
-  // Step 5 — review / consents
+  // Step 5: review / consents
   consentOuting: { step: 5, anchor: ANCHOR.consent },
   consentGuide: { step: 5, anchor: ANCHOR.consent },
   // Step 1: the basics an online listing adds.
@@ -109,9 +126,11 @@ const CATEGORY_MESSAGE_PATTERN = /^Category "/;
  *  carrying no property path. */
 const CLAIM_FULFILMENT_MESSAGE_PATTERN = /requires a way people get it/;
 
-/** The tag check names no property path ("Unknown listing tags: "x". Pick
- *  tags from GET /directory/tags."), so it is matched by its opening words. */
-const UNKNOWN_TAGS_MESSAGE_PATTERN = /^Unknown listing tags/;
+/** The attribute checks name no property path (backend server rules 1, 2,
+ *  3 and 7), so they are matched by their opening words. */
+const ATTRIBUTE_MESSAGE_PATTERN = /^(Unknown listing attributes|Attribute ")/;
+const HIGHLIGHT_MESSAGE_PATTERN = /^Highlight "|cannot be a highlight\.$/;
+const PRACTICE_MESSAGE_PATTERN = /^Practice "/;
 
 /** Whether the form is editing a listing that exists, which moves the
  *  online-only answer from step 0 to the basics. */
@@ -129,7 +148,7 @@ export interface Listing422Target {
   step: number;
   anchor: string;
   message: string;
-  photoSlots: PhotoKey[];
+  photoSlots: RejectedPhotoSlot[];
 }
 
 interface RawFieldError {
@@ -145,14 +164,18 @@ function firstPathSegment(name: string): string {
   return name.split(/[.[]/)[0]?.trim() ?? name;
 }
 
-/** `"photos.wide"` / `"photos[wide]"` → `"wide"`; any other path → `null`. */
-function photoSlotFromPath(path: string): PhotoKey | null {
+/** `"photos.wide"` / `"photos[wide]"` → `"wide"`; `"coverPhoto.image"` (or
+ *  the whole `coverPhoto`) → `"cover"`; any other path, the cover's alt text
+ *  included, → `null`. */
+function photoSlotFromPath(path: string): RejectedPhotoSlot | null {
   const [field, slot] = path.split(/[.[\]]/).filter(Boolean);
+  if (field?.trim() === "coverPhoto")
+    return slot?.trim() === "alt" ? null : "cover";
   if (field?.trim() !== "photos") return null;
   return PHOTO_KEYS.find((photoKey) => photoKey === slot) ?? null;
 }
 
-/** The value as a trimmed string, or `""` for anything non-string — so a
+/** The value as a trimmed string, or `""` for anything non-string, so a
  *  malformed body never stringifies an object to `"[object Object]"`. */
 function asString(value: unknown): string {
   return typeof value === "string" ? value : "";
@@ -160,9 +183,12 @@ function asString(value: unknown): string {
 
 /** class-validator messages begin with the offending property path, e.g.
  *  `"name should not be empty"`, `"photos.wide must be ..."`. Read that
- *  leading token so an array-of-strings body still routes to a field. */
+ *  leading token so an array-of-strings body still routes to a field. A
+ *  check run on each item of a list opens with `each value in` before the
+ *  property (`"each value in payments must be one of ..."`), so those three
+ *  words are skipped. */
 function pathFromMessage(message: string): string {
-  const match = message.trim().match(/^([A-Za-z0-9_.[\]]+)/);
+  const match = message.trim().match(/^(?:each value in )?([A-Za-z0-9_.[\]]+)/);
   return match?.[1] ?? "";
 }
 
@@ -186,8 +212,15 @@ function locationOf(
   if (CATEGORY_MESSAGE_PATTERN.test(fieldError.message.trim())) {
     return { step: 1, anchor: ANCHOR.cats };
   }
-  if (UNKNOWN_TAGS_MESSAGE_PATTERN.test(fieldError.message.trim())) {
-    return { step: 2, anchor: ANCHOR.tags };
+  const message = fieldError.message.trim();
+  if (ATTRIBUTE_MESSAGE_PATTERN.test(message)) {
+    return { step: 2, anchor: ANCHOR.attributes };
+  }
+  if (HIGHLIGHT_MESSAGE_PATTERN.test(message)) {
+    return { step: 2, anchor: ANCHOR.highlights };
+  }
+  if (PRACTICE_MESSAGE_PATTERN.test(message)) {
+    return { step: 2, anchor: ANCHOR.inclusionPractices };
   }
   if (fieldError.field === "online") {
     return options.isEdit === true
@@ -224,9 +257,9 @@ function isAdultTermsError(data: unknown): boolean {
 /**
  * Pull `{ path, field, message }` out of an error body, tolerating the shapes a
  * NestJS backend realistically emits:
- *  - `{ message: string[] }` — class-validator default (field read from each
+ *  - `{ message: string[] }`: class-validator default (field read from each
  *    line's leading property path);
- *  - `{ errors | violations | fields: { field: msg | msg[] } }` — a keyed map;
+ *  - `{ errors | violations | fields: { field: msg | msg[] } }`: a keyed map;
  *  - `{ errors | violations | fields: [{ field|property|path, message }] }`.
  */
 function extractFieldErrors(data: unknown): RawFieldError[] {
@@ -345,7 +378,7 @@ export function resolveListing422(
 }
 
 /**
- * Scroll a field into view and flash it — reused after a 422 jump so the member
+ * Scroll a field into view and flash it, reused after a 422 jump so the member
  * sees exactly which field the server rejected. `flashClass` is passed in (it
  * lives on the page CSS module) so this stays a plain DOM util with no styles
  * import of its own.

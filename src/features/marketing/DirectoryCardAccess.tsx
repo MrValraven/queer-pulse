@@ -42,13 +42,13 @@ function AccessPill({
  * each one.
  *
  * Only `yes` appears here, and that is the whole design. The card has room for
- * a few short claims, and the two answers it leaves out mean different things
- * that both need the space the detail page gives them: a `no` deserves the
- * plain, unapologetic row `DirectoryAccessibilityAnswers` gives it, and an
- * `unknown` deserves its own wording ("nobody has told us") rather than being
- * silently folded into either side. So the row is read as "here is some of
- * what this place says it has", never as a complete account, and the label
- * names it that way. A listing that has answered nothing shows nothing.
+ * a few short claims, and the two answers it leaves out each get their own
+ * quiet line on the detail page (`DirectoryAccessibilityAnswers`): the noes
+ * under "Not available", the unanswered ones under "Not mentioned yet" with a
+ * nudge to ask, kept apart so neither is folded into the other. So the row is
+ * read as "here is some of what this place says it has", a partial account,
+ * and the label names it that way. A listing that has answered nothing shows
+ * nothing.
  *
  * The row stays on one line so every card in a grid row keeps the same
  * height: it shows as many pills as the card's width holds and folds the rest

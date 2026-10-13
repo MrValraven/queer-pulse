@@ -4,16 +4,19 @@ import { useHoursExceptionSetters } from "./useHoursExceptionSetters";
 import { useListingFormMissing } from "./useListingFormMissing";
 import { useListingHoursSetters } from "./useListingHoursSetters";
 import {
+  coverPhotoOf,
   witLine,
   type ListingDraft,
   type OwnerBadge,
   type ListingPath,
   type PhotoKey,
+  type RejectedPhotoSlot,
 } from "./listBusiness.data";
 import { splitParagraphs } from "../../subprofiles/skinParagraphsText";
 import { blankDraft, type ListingSeed } from "./listingFormDraft";
 import { applyCategoryPricingDefault } from "./listingMenu.data";
 import { useAccessibilitySetters } from "./useAccessibilitySetters";
+import { useListingFactSetters } from "./useListingFactSetters";
 import { useMenuSetters } from "./useMenuSetters";
 import { useMobileSetters } from "./useMobileSetters";
 import { useOnlineSetters } from "./useOnlineSetters";
@@ -44,9 +47,16 @@ export function useListingForm(initial?: ListingDraft, seed?: ListingSeed) {
   }, []);
 
   // Photo slots the server refused on the last submit or save (a
-  // `photos.<slot>` validation error), so the gallery can say so on the slot
-  // itself. Replacing or removing that slot's photo clears it.
-  const [rejectedPhotoSlots, setRejectedPhotoSlots] = useState<PhotoKey[]>([]);
+  // `photos.<slot>` or `coverPhoto.image` validation error), so the gallery
+  // can say so on the slot itself. Replacing or removing that slot's photo
+  // clears it.
+  const [rejectedPhotoSlots, setRejectedPhotoSlots] = useState<
+    RejectedPhotoSlot[]
+  >([]);
+
+  // The cover's display-only preview, kept out of the draft for the same
+  // reason as `photoPreviews`.
+  const [coverPreview, setCoverPreview] = useState("");
 
   // Dated overrides of the weekly grid live in their own hook: they are a
   // self-contained sub-editor, and keeping them here would bury the rest.
@@ -61,6 +71,7 @@ export function useListingForm(initial?: ListingDraft, seed?: ListingSeed) {
   const onlineSetters = useOnlineSetters(setDraft);
   const mobileSetters = useMobileSetters(setDraft);
   const shopItemSetters = useShopItemSetters(setDraft);
+  const factSetters = useListingFactSetters(setDraft);
   const { clearShopPhotoPreviews } = shopItemSetters;
 
   /** Patch one or more top-level fields. A categories change can re-default
@@ -74,6 +85,7 @@ export function useListingForm(initial?: ListingDraft, seed?: ListingSeed) {
       setDraft(next ?? blankDraft(seed));
       setPhotoPreviews({ wide: "", d1: "", d2: "", vibe: "" });
       setRejectedPhotoSlots([]);
+      setCoverPreview("");
       clearShopPhotoPreviews();
     },
     [seed, clearShopPhotoPreviews],
@@ -104,16 +116,6 @@ export function useListingForm(initial?: ListingDraft, seed?: ListingSeed) {
     setDraft((d) => ({ ...d, badge }));
   }, []);
 
-  const toggleIn = useCallback((key: "goodFor" | "langs", id: string) => {
-    setDraft((d) => {
-      const arr = d[key];
-      return {
-        ...d,
-        [key]: arr.includes(id) ? arr.filter((x) => x !== id) : [...arr, id],
-      };
-    });
-  }, []);
-
   /** The description, as the text its field holds: cut into paragraphs on
    *  blank lines and stored one entry per paragraph. An entry keeps the id
    *  already at its index, so React keys stay stable while the member types. */
@@ -126,20 +128,6 @@ export function useListingForm(initial?: ListingDraft, seed?: ListingSeed) {
         return existing ? { ...existing, text: paragraph } : witLine(paragraph);
       }),
     }));
-  }, []);
-
-  /* tags (≤6) */
-  const addTag = useCallback((raw: string) => {
-    const t = raw.trim();
-    if (!t) return;
-    setDraft((d) =>
-      d.tags.length >= 6 || d.tags.includes(t)
-        ? d
-        : { ...d, tags: [...d.tags, t] },
-    );
-  }, []);
-  const removeTag = useCallback((t: string) => {
-    setDraft((d) => ({ ...d, tags: d.tags.filter((x) => x !== t) }));
   }, []);
 
   const setSocial = useCallback(
@@ -157,6 +145,23 @@ export function useListingForm(initial?: ListingDraft, seed?: ListingSeed) {
   const setAlt = useCallback((key: PhotoKey, v: string) => {
     setDraft((d) => ({ ...d, alt: { ...d.alt, [key]: v } }));
   }, []);
+  const setCoverPhoto = useCallback((image: string) => {
+    setDraft((currentDraft) => ({
+      ...currentDraft,
+      coverPhoto: { ...coverPhotoOf(currentDraft), image },
+    }));
+    setRejectedPhotoSlots((slots) =>
+      slots.includes("cover")
+        ? slots.filter((slot) => slot !== "cover")
+        : slots,
+    );
+  }, []);
+  const setCoverAlt = useCallback((alt: string) => {
+    setDraft((currentDraft) => ({
+      ...currentDraft,
+      coverPhoto: { ...coverPhotoOf(currentDraft), alt },
+    }));
+  }, []);
 
   const missing = useListingFormMissing(draft);
   const canAdvance = useStepGate(missing);
@@ -172,10 +177,7 @@ export function useListingForm(initial?: ListingDraft, seed?: ListingSeed) {
     pickPath,
     toggleCat,
     pickBadge,
-    toggleIn,
     setDescription,
-    addTag,
-    removeTag,
     ...hoursSetters,
     ...accessibilitySetters,
     ...serviceSetters,
@@ -184,9 +186,14 @@ export function useListingForm(initial?: ListingDraft, seed?: ListingSeed) {
     ...onlineSetters,
     ...mobileSetters,
     ...shopItemSetters,
+    ...factSetters,
     setSocial,
     setPhoto,
     setAlt,
+    coverPreview,
+    setCoverPreview,
+    setCoverPhoto,
+    setCoverAlt,
     missing,
     canAdvance,
   };

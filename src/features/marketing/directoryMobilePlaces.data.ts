@@ -58,7 +58,19 @@ export const MOBILE_DIRECTORY_PLACES: DirectoryPlace[] = [
     tint: "plum",
     desc: "Queer history on foot through Mouraria and Alfama, from the fado houses to the corner where the first Pride march gathered.",
     tagline: "Two hours, ten streets, a hundred years of queer Lisbon.",
-    pills: ["Walking tours", "PT / EN", "€€"],
+    price: "€€",
+    attributes: [
+      "queer-history",
+      "walking-tours",
+      "small-groups",
+      "step-free-route",
+    ],
+    highlights: ["queer-history", "small-groups"],
+    entryMode: "bookingRecommended",
+    payments: ["card", "mbway"],
+    inclusionPractices: ["chosen-name"],
+    langs: ["pt", "en"],
+    hostsGatherings: true,
     rating: { score: "4.8", count: 27 },
     gallery: [
       "Largo da Severa at dusk",
@@ -70,10 +82,6 @@ export const MOBILE_DIRECTORY_PLACES: DirectoryPlace[] = [
       "Small walking tours of queer Lisbon, led by a historian who grew up in Mouraria. Every walk starts at Largo da Severa and keeps a slow pace, with stops to sit.",
       "Weekend mornings in Portuguese and English, and a Thursday evening walk in summer. Private walks for groups by arrangement.",
     ],
-    goodFor: [
-      { label: "A first week in Lisbon", yes: true },
-      { label: "Groups up to 15", yes: true },
-    ],
     hoursType: "appointment",
     hoursNote: "",
     hours: weekOpenOn({
@@ -81,7 +89,6 @@ export const MOBILE_DIRECTORY_PLACES: DirectoryPlace[] = [
       Sat: { from: "10:00", to: "12:30" },
       Sun: { from: "10:00", to: "12:30" },
     }),
-    langs: ["pt", "en"],
     // The four out-and-about questions show on the page. A tour has no
     // toilets of its own, so those two stay unanswered.
     accessibility: {
@@ -144,7 +151,16 @@ export const MOBILE_DIRECTORY_PLACES: DirectoryPlace[] = [
     tint: "coral",
     desc: "Haircuts and colour at home, for anyone who would rather skip the salon. Gender-neutral pricing.",
     tagline: "The salon comes to you.",
-    pills: ["Haircuts at home", "Gender-neutral pricing", "€€"],
+    price: "€€",
+    attributes: [
+      "priced-by-service",
+      "curly-textured-hair",
+      "shaves-and-beards",
+    ],
+    highlights: ["priced-by-service", "curly-textured-hair"],
+    entryMode: "appointmentOnly",
+    payments: ["mbway", "cash"],
+    langs: ["pt", "pt-BR"],
     rating: { score: "4.9", count: 18 },
     gallery: [
       "Kit laid out on a towel",
@@ -156,19 +172,9 @@ export const MOBILE_DIRECTORY_PLACES: DirectoryPlace[] = [
       "Alex cuts and colours hair in your home, with everything brought along and a sheet down before the first snip.",
       "Prices follow the time a cut takes.",
     ],
-    goodFor: [
-      { label: "First haircut after transition", yes: true },
-      { label: "Kids", yes: true },
-    ],
-    hoursType: "shop",
+    hoursType: "appointment",
     hoursNote: "",
-    hours: weekOpenOn({
-      Tue: { from: "10:00", to: "19:00" },
-      Wed: { from: "10:00", to: "19:00" },
-      Thu: { from: "10:00", to: "19:00" },
-      Fri: { from: "10:00", to: "19:00" },
-      Sat: { from: "10:00", to: "19:00" },
-    }),
+    hours: emptyHours(),
     owner: {
       name: "Alex Moura",
       initials: "AM",
@@ -187,6 +193,7 @@ export const MOBILE_DIRECTORY_PLACES: DirectoryPlace[] = [
       ...emptyMobileDetails(),
       allOfCity: false,
       parishes: ["Arroios", "Estrela", "Penha de França"],
+      byAppointment: true,
     },
     reviews: [],
   },
@@ -200,7 +207,13 @@ export const MOBILE_DIRECTORY_PLACES: DirectoryPlace[] = [
     tint: "jade",
     desc: "Small moves and van hire with two careful movers. Flat-pack built, plants wrapped, stairs no problem.",
     tagline: "Moving day, without the drama.",
-    pills: ["Moves and van hire", "€€"],
+    price: "€€",
+    attributes: ["free-quotes", "weekend-visits", "insured", "small-jobs"],
+    highlights: ["free-quotes", "small-jobs"],
+    entryMode: "appointmentOnly",
+    payments: ["card", "mbway", "multibanco"],
+    issuesNifInvoices: true,
+    langs: ["pt", "en"],
     rating: { score: "4.7", count: 12 },
     gallery: [
       "The van",
@@ -211,10 +224,6 @@ export const MOBILE_DIRECTORY_PLACES: DirectoryPlace[] = [
     whatItIs: [
       "A queer-friendly two-person moving crew for flats and studios across Lisbon, and over the river to Almada.",
       "Every move is quoted after a short call, so there are no opening hours: get in touch to book.",
-    ],
-    goodFor: [
-      { label: "Studio and one-bedroom moves", yes: true },
-      { label: "Pianos", yes: false },
     ],
     hoursType: "appointment",
     hoursNote: "",

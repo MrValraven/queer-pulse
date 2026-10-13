@@ -87,13 +87,18 @@ export function AdminListingRow({
         <p className={styles.whoLine}>{listingProvenanceLabel(row, t)}</p>
         {ageLabel && <p className={styles.ageLine}>{ageLabel}</p>}
       </div>
-      <div className={styles.cellStatus}>
-        <AdminChip tone={LISTING_STATUS_TONE[row.status]} dot>
-          {t(`admin:adminListings.status.${row.status}`)}
-        </AdminChip>
-      </div>
-      <div className={styles.cellActions}>
-        <ListingModerationActions variant="row" row={row} />
+      {/* Layout-transparent above phone width, where status and actions are
+          grid cells of their own; at phone width it becomes the wrapping
+          last line, so the actions drop under the chip when both cannot fit. */}
+      <div className={styles.cellFoot}>
+        <div className={styles.cellStatus}>
+          <AdminChip tone={LISTING_STATUS_TONE[row.status]} dot>
+            {t(`admin:adminListings.status.${row.status}`)}
+          </AdminChip>
+        </div>
+        <div className={styles.cellActions}>
+          <ListingModerationActions variant="row" row={row} />
+        </div>
       </div>
     </div>
   );

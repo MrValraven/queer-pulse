@@ -169,6 +169,7 @@ export function ListingEditor({ listing }: { listing: ManagedListingDTO }) {
             <ListingEditorLivePreview
               draft={draft}
               photoPreviews={form.photoPreviews}
+              coverPreview={form.coverPreview}
               fieldsRef={fieldsRef}
               prefersReducedMotion={prefersReducedMotion}
               onOpenFullPreview={() => setIsPreviewOpen(true)}

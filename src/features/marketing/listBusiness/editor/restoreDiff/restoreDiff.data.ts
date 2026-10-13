@@ -51,9 +51,12 @@ export const RESTORE_FIELD_AREAS: RestoreFieldAreaMap = {
   blurb: "basics",
   tagline: "story",
   whatItIs: "story",
-  tags: "story",
-  goodFor: "story",
+  attributes: "story",
+  highlights: "story",
+  inclusionPractices: "story",
+  saferSpacePolicyUrl: "story",
   langs: "story",
+  langsOther: "story",
   services: "services",
   pricingMode: "services",
   menu: "services",
@@ -68,10 +71,17 @@ export const RESTORE_FIELD_AREAS: RestoreFieldAreaMap = {
   hours: "practical",
   hoursNote: "practical",
   hoursExceptions: "practical",
+  // "Getting in and paying" sits above the contact rows in the editor.
+  entryMode: "practical",
+  coverPolicy: "practical",
+  coverFreeBefore: "practical",
+  payments: "practical",
+  issuesNifInvoices: "practical",
   social: "practical",
   hasOnlineShop: "practical",
   onlineDetails: "practical",
   accessibility: "accessibility",
+  coverPhoto: "photos",
   photos: "photos",
   alt: "photos",
   rel: "aboutYou",
@@ -189,6 +199,7 @@ export function buildRestoreDiff({
   sections,
   t,
   photoPreviews,
+  coverPreview,
 }: {
   current: ListingDraft;
   saved: ListingDraft;
@@ -197,12 +208,15 @@ export function buildRestoreDiff({
   /** This session's upload previews (`form.photoPreviews`), which the editor
    *  shows in place of the draft's photo values. */
   photoPreviews?: Record<PhotoKey, string>;
+  /** This session's cover preview (`form.coverPreview`). */
+  coverPreview?: string;
 }): RestoreDiffArea[] {
   const context: RestoreDiffContext = {
     current: healListingDraft(current),
     saved: healListingDraft(saved),
     t,
     photoPreviews,
+    coverPreview,
   };
   const seenAreas = new Set<RestoreAreaKey>();
   const areas: RestoreDiffArea[] = [];

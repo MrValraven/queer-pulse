@@ -1,5 +1,6 @@
 import { isAdultCategoryPicked } from "../localCategories";
 import {
+  coverPhotoOf,
   emptyHours,
   hoursForPayload,
   normalizeHoursExceptions,
@@ -7,6 +8,10 @@ import {
   type OwnerPersonalField,
 } from "./listBusiness.data";
 import { normalizeAccessibilityDraft } from "./listingAccessibility.data";
+import {
+  listingFactsForPayload,
+  withOnlyOfferedFacts,
+} from "./listingFactsPayload";
 import { normalizeOwnedBy } from "./listingOwnedBy.data";
 import { emptyMenuDraft, menuForPayload } from "./listingMenu.data";
 import {
@@ -20,7 +25,6 @@ import {
   completeServiceRows,
   servicesForPayload,
 } from "./listingServices.data";
-import { knownListingTags } from "./listingRetiredTags";
 import { effectivePricingMode, shopItemsForPayload } from "./listingShop.data";
 import { stripOwnerPersonalFields } from "./ownerPersonalFields";
 import type {
@@ -104,6 +108,7 @@ export function businessPayload(
   // before. An online listing and a "By appointment only" one keep no hours.
   const hasNoLocation = draft.online || isMobileWithoutMeetingPoint(draft);
   const hasNoHours = draft.online || isByAppointmentListing(draft);
+  const coverPhoto = coverPhotoOf(draft);
   return {
     path: draft.path,
     name: draft.name.trim(),
@@ -122,14 +127,17 @@ export function businessPayload(
     // Paragraphs of the description. The editor never stores a blank one,
     // but a draft saved before it did may still carry an empty line.
     whatItIs: draft.whatItIs.filter((paragraph) => paragraph.text.trim()),
-    tags: draft.tags,
-    goodFor: draft.goodFor,
     accessibility: {
       answers: accessibility.answers,
       note: accessibility.note.trim(),
     },
+    // The attributes, highlights, way in, cover, ways to pay, NIF answer,
+    // practices and languages, cleaned by the server's own rules. An update
+    // keeps the attributes and practices a kind or category change carried
+    // over, which the server keeps valid; a create has them dropped before
+    // this runs (`draftToDto`). `tags` and `goodFor` are gone from every body.
+    ...listingFactsForPayload(draft),
     ...pricingPayload(draft),
-    langs: draft.langs,
     online: draft.online,
     // Out and about. Derived from the kind, so it is never sent alongside
     // `online` (a 400), and the block goes in the shape the server stores.
@@ -164,6 +172,11 @@ export function businessPayload(
     social: draft.social,
     photos: draft.photos,
     alt: draft.alt,
+    // The owner's card cover. No image means no cover, sent as null so a
+    // removal clears it server side.
+    coverPhoto: coverPhoto.image
+      ? { image: coverPhoto.image, alt: coverPhoto.alt.trim() }
+      : null,
     // The role shown on the public listing describes the business, so it
     // belongs here alongside the rest of the business fields.
     ownerRole: draft.ownerRole.trim(),
@@ -207,26 +220,29 @@ function listingPayload(draft: ListingDraft): UpdateListingDto {
  * return type enforces. Nor does it carry the 18+ acknowledgement: a
  * suggester does not speak for the business, as staff do not.
  *
- * Either path carries only the vocabulary's tags (`knownListingTags`): the
- * server refuses any other tag on a create, such as one a draft from before
- * the online fields still holds.
+ * Neither path carries `tags` or `goodFor`: the attribute vocabulary replaced
+ * both on 2026-10-08, and the server ignores them.
+ *
+ * Both paths are creates, so both send only the attributes and practices the
+ * listing's kind and categories are offered (`withOnlyOfferedFacts`): a new
+ * listing stores nothing for the server to keep, and it answers 400 to a
+ * slug outside the offer.
  */
 export function draftToDto(
   draft: ListingDraft,
 ): CreateListingDto | SuggestListingDto {
-  const tags = knownListingTags(draft.tags);
-  if (draft.path === "suggest") {
+  const offeredDraft = withOnlyOfferedFacts(draft);
+  if (offeredDraft.path === "suggest") {
     const {
       ownerRole: _ownerRole,
       adultTermsAccepted: _adultTermsAccepted,
       ...business
-    } = businessPayload(draft);
-    return { ...business, tags };
+    } = businessPayload(offeredDraft);
+    return business;
   }
   return {
-    ...listingPayload(draft),
-    tags,
-    affirmingBaselineAccepted: draft.affirmingBaselineAccepted,
+    ...listingPayload(offeredDraft),
+    affirmingBaselineAccepted: offeredDraft.affirmingBaselineAccepted,
   };
 }
 

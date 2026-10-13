@@ -7,6 +7,7 @@ import {
   type MyMediaItem,
 } from "../settings/api/myMedia.api";
 import { CROP_CONFIG } from "./api/uploadProcessing";
+import type { FreeformChoiceKey } from "../../shared/components/ui/useImageReframerState";
 import type { UploadKind } from "./api/useUploadImage";
 
 /** Every place an upload is referenced, as one translated, comma-joined list. */
@@ -27,17 +28,20 @@ function useUsedAsLabel() {
 function seedCropFor(
   item: MyMediaItem,
   kind: UploadKind,
+  initialFreeformChoice?: FreeformChoiceKey,
 ): CropRect | undefined {
   if (!item.crop) return undefined;
   const { aspect, aspectLabel, allowFreeform } = CROP_CONFIG[kind];
-  const openingLabel =
+  let openingLabel =
     allowFreeform && typeof aspect !== "number" ? "original" : aspectLabel;
+  if (allowFreeform && initialFreeformChoice === "square") openingLabel = "1:1";
   return item.crop.aspect === openingLabel ? item.crop : undefined;
 }
 
 interface PastUploadReframeModalProps {
   item: MyMediaItem;
   kind: UploadKind;
+  initialFreeformChoice?: FreeformChoiceKey;
   onCancel: () => void;
   onConfirm: (crop: CropRect) => void;
 }
@@ -50,6 +54,7 @@ interface PastUploadReframeModalProps {
 export function PastUploadReframeModal({
   item,
   kind,
+  initialFreeformChoice,
   onCancel,
   onConfirm,
 }: PastUploadReframeModalProps) {
@@ -60,7 +65,8 @@ export function PastUploadReframeModal({
     <PhotoReframeModal
       src={resolveMyMediaUrl(item.fileUrl)}
       kind={kind}
-      initialCrop={seedCropFor(item, kind)}
+      initialCrop={seedCropFor(item, kind, initialFreeformChoice)}
+      initialFreeformChoice={initialFreeformChoice}
       note={
         item.references.length > 0
           ? t("members:avatar.picker.editInUse", {

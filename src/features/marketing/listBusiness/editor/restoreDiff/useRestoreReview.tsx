@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { useTranslation } from "../../../../../shared/i18n/useTranslation";
-import { PHOTO_KEYS } from "../../listBusiness.data";
+import { coverPhotoOf, PHOTO_KEYS } from "../../listBusiness.data";
 import type { ListingForm } from "../../useListingForm";
 import { jumpToEditorSection } from "../jumpToEditorSection";
 import type { ListingEditorSectionDefinition } from "../listingEditor.data";
@@ -30,7 +30,8 @@ import type { RestoreAreaKey } from "./restoreDiff.types";
  * slot, which is right for a whole-draft replace and wrong for a partial
  * one: a slot the merge left alone still holds this session's upload as a
  * storage key, which only its preview can display. Those slots get their
- * preview and rejected flag back straight after the reset.
+ * preview and rejected flag back straight after the reset, and so does the
+ * cover when the merge left its picture alone.
  */
 export function useRestoreReview({
   form,
@@ -63,9 +64,18 @@ export function useRestoreReview({
             sections,
             t,
             photoPreviews: form.photoPreviews,
+            coverPreview: form.coverPreview,
           })
         : [],
-    [isOpen, restorable, draft, sections, t, form.photoPreviews],
+    [
+      isOpen,
+      restorable,
+      draft,
+      sections,
+      t,
+      form.photoPreviews,
+      form.coverPreview,
+    ],
   );
 
   useEffect(() => {
@@ -90,15 +100,20 @@ export function useRestoreReview({
     const keptPhotoSlots = PHOTO_KEYS.filter(
       (slot) => merged.photos[slot] === draft.photos[slot],
     );
-    const { photoPreviews, rejectedPhotoSlots } = form;
+    const isCoverKept =
+      coverPhotoOf(merged).image === coverPhotoOf(draft).image;
+    const { photoPreviews, coverPreview, rejectedPhotoSlots } = form;
     form.reset(merged);
     // Queued after the reset's own updates, so these land on top of it.
     for (const slot of keptPhotoSlots) {
       const preview = photoPreviews[slot];
       if (preview) form.setPhotoPreview(slot, preview);
     }
+    if (isCoverKept && coverPreview) form.setCoverPreview(coverPreview);
     form.setRejectedPhotoSlots(
-      rejectedPhotoSlots.filter((slot) => keptPhotoSlots.includes(slot)),
+      rejectedPhotoSlots.filter((slot) =>
+        slot === "cover" ? isCoverKept : keptPhotoSlots.includes(slot),
+      ),
     );
     autosave.dismissRestorable();
     const firstRestoredArea = areas.find((area) => areaKeys.has(area.key));

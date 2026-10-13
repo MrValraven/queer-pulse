@@ -24,6 +24,7 @@ const FIELD_TONE: Record<EditSuggestionField, AdminTone> = {
   phone: "plum",
   website: "plum",
   description: "plum",
+  attributes: "plum",
   other: "ghost",
 };
 

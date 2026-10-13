@@ -1,8 +1,9 @@
-import { ANCHOR, type ListingDraft } from "../listBusiness.data";
+import { ANCHOR, coverPhotoOf, type ListingDraft } from "../listBusiness.data";
 import {
   cardAccessibilityQuestionsFor,
   normalizeAccessibilityAnswers,
 } from "../listingAccessibility.data";
+import { hasCoverCategory } from "../listingFacts.data";
 import {
   isByAppointmentListing,
   isMobileWithoutMeetingPoint,
@@ -39,8 +40,10 @@ export type ListingPreviewRegion =
   | "host"
   | "tagline"
   | "whatItIs"
-  | "goodFor"
+  | "whatsHere"
   | "languages"
+  | "practices"
+  | "gettingIn"
   | "hours"
   | "owner"
   | "visit"
@@ -80,8 +83,10 @@ export const LISTING_PREVIEW_RENDERED_REGIONS: readonly ListingPreviewRegion[] =
     "host",
     "tagline",
     "whatItIs",
-    "goodFor",
+    "whatsHere",
     "languages",
+    "practices",
+    "gettingIn",
     "hours",
     "owner",
     "visit",
@@ -243,6 +248,24 @@ function sessionFormatsPlacement(draft: ListingDraft): ListingFieldPlacement {
     : preview("ordering", "ordering");
 }
 
+/** The cover answer reaches the page only for nightlife and culture, and
+ *  never for an online listing (what a save sends). */
+function coverPlacement(draft: ListingDraft): ListingFieldPlacement {
+  return !draft.online && hasCoverCategory(draft.cats)
+    ? preview("coverPolicy", "gettingIn")
+    : notShown("coverPolicyOff");
+}
+
+/** An online listing has no way in and keeps its own payment list. */
+function placeOnlyGettingIn(
+  captionName: string,
+): (draft: ListingDraft) => ListingFieldPlacement {
+  return (draft) =>
+    draft.online
+      ? notShown("gettingInOnline")
+      : preview(captionName, "gettingIn");
+}
+
 /**
  * A full `Record`, so adding an `ANCHOR` without saying where it shows fails
  * the typecheck. Each entry was checked against `submittedToPlace`, the card
@@ -270,9 +293,18 @@ export const LISTING_FIELD_PLACEMENTS: Record<AnchorId, ListingPlacementRule> =
     [ANCHOR.blurb]: preview("blurb", "desc"),
     [ANCHOR.tagline]: preview("tagline", "tagline"),
     [ANCHOR.whatItIs]: preview("whatItIs", "whatItIs"),
-    [ANCHOR.tags]: preview("tags", "pills"),
-    [ANCHOR.goodFor]: preview("goodFor", "goodFor"),
     [ANCHOR.langs]: preview("langs", "languages"),
+    [ANCHOR.attributes]: preview("attributes", "whatsHere"),
+    // The card's pill row prints the price band, then these three.
+    [ANCHOR.highlights]: preview("highlights", "pills"),
+    [ANCHOR.inclusionPractices]: preview("inclusionPractices", "practices"),
+    [ANCHOR.saferSpacePolicyUrl]: preview("saferSpacePolicyUrl", "practices"),
+    [ANCHOR.langsOther]: preview("langsOther", "languages"),
+    [ANCHOR.entryMode]: placeOnlyGettingIn("entryMode"),
+    [ANCHOR.coverPolicy]: coverPlacement,
+    [ANCHOR.coverFreeBefore]: coverPlacement,
+    [ANCHOR.waysToPay]: placeOnlyGettingIn("waysToPay"),
+    [ANCHOR.nifInvoices]: preview("nifInvoices", "gettingIn"),
     [ANCHOR.address]: (draft) =>
       isMobileWithoutMeetingPoint(draft)
         ? meetingPointOff()
@@ -322,7 +354,15 @@ export const LISTING_FIELD_PLACEMENTS: Record<AnchorId, ListingPlacementRule> =
           ? notShown("hoursByAppointment")
           : fullPage("hoursExceptions"),
     [ANCHOR.social]: fullPage("social"),
-    [ANCHOR.photos]: preview("photos", "photo"),
+    // The card's photo band is public: everyone browsing the directory sees
+    // the cover, whatever the owner's name visibility.
+    [ANCHOR.cover]: preview("cover", "photo"),
+    // With a cover, the gallery only fills the full page; without one, its
+    // first photo is the card's photo too.
+    [ANCHOR.photos]: (draft) =>
+      coverPhotoOf(draft).image
+        ? fullPage("photosGallery")
+        : preview("photos", "photo"),
     [ANCHOR.rel]: hidden("rel"),
     [ANCHOR.ownerName]: ownerNamePlacement,
     [ANCHOR.ownerRole]: ownerRolePlacement,
@@ -376,14 +416,17 @@ export function placementForAnchor(
 }
 
 /** Excerpt blocks that always render: filled, or as a placeholder line while
- *  highlighted. The hours block is left out for an online listing, as the
- *  detail page leaves out its hours section, and the ordering block is drawn
- *  only for a listing that sells online. */
+ *  highlighted. The getting-in block is drawn for every kind (an online
+ *  listing still answers the NIF question). The hours block is left out for
+ *  an online listing, as the detail page leaves out its hours section, and
+ *  the ordering block is drawn only for a listing that sells online. */
 const ALWAYS_DRAWN_EXCERPT: readonly ListingPreviewRegion[] = [
   "tagline",
   "whatItIs",
-  "goodFor",
+  "whatsHere",
+  "practices",
   "languages",
+  "gettingIn",
 ];
 
 /**

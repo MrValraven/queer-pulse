@@ -6,6 +6,15 @@ import {
   type PhotoKey,
 } from "./listBusiness.data";
 import { normalizeAccessibilityDraft } from "./listingAccessibility.data";
+import {
+  normalizeCoverFreeBefore,
+  normalizeCoverPolicy,
+  normalizeEntryMode,
+  normalizeInclusionPractices,
+  normalizePaymentMethods,
+} from "./listingFacts.data";
+import { withAppointmentAnswersInStep } from "./listingAppointmentLink";
+import { healLegacyLanguages } from "./listingLegacyAttributes";
 import { pricingModeOf, toMenuDraft } from "./listingMenu.data";
 import { hasMeetingPoint, normalizeMobileDetails } from "./listingMobile.data";
 import { normalizeOnlineDetails } from "./listingOnline.data";
@@ -14,6 +23,19 @@ import { toShopItemRows } from "./listingShop.data";
 import type { ManagedListingDTO } from "./api/listings.api";
 import { ownerPersonalFieldsFrom } from "./ownerPersonalFields";
 import { normalizeCategory } from "../localCategories";
+
+/** The two fact text fields as the draft holds them: the wire's none is
+ *  null, the draft's is "". Shared by every reader that turns a listing
+ *  body or response into a draft or a `PendingListing`. */
+export function factTextFieldsForDraft(source: {
+  coverFreeBefore?: string | null;
+  saferSpacePolicyUrl?: string | null;
+}): { coverFreeBefore: string; saferSpacePolicyUrl: string } {
+  return {
+    coverFreeBefore: normalizeCoverFreeBefore(source.coverFreeBefore),
+    saferSpacePolicyUrl: source.saferSpacePolicyUrl ?? "",
+  };
+}
 
 /**
  * Convert a `ManagedListingDTO` into a clean `ListingDraft` for seeding the
@@ -29,11 +51,16 @@ import { normalizeCategory } from "../localCategories";
  * reach the API as an empty string.
  */
 export function dtoToDraft(dto: ManagedListingDTO): ListingDraft {
+  // An older payload can still hold language names; a current one holds
+  // codes, which pass through untouched.
+  const languages = healLegacyLanguages(dto.langs ?? [], dto.langsOther ?? "");
   const photos = Object.fromEntries(
     PHOTO_KEYS.map((photoKey) => [photoKey, dto.photos[photoKey] ?? ""]),
   ) as Record<PhotoKey, string>;
 
-  return {
+  // A listing stored before the two appointment answers were linked can hold
+  // them apart; the editor opens with them in step.
+  return withAppointmentAnswersInStep({
     path: dto.path,
     name: dto.name,
     // Canonicalize legacy display-string categories to slugs so the wizard chip
@@ -46,8 +73,6 @@ export function dtoToDraft(dto: ManagedListingDTO): ListingDraft {
     blurb: dto.blurb,
     tagline: dto.tagline,
     whatItIs: dto.whatItIs,
-    tags: dto.tags,
-    goodFor: dto.goodFor,
     // Wire shape to editable shape: the note loses its null, and every service
     // row gains the client-only key that keeps React keys stable across a
     // reorder or a removal from the middle of the list.
@@ -59,7 +84,17 @@ export function dtoToDraft(dto: ManagedListingDTO): ListingDraft {
       online: dto.online ?? false,
     }),
     menu: toMenuDraft(dto.menu),
-    langs: dto.langs,
+    langs: languages.langs,
+    langsOther: languages.langsOther,
+    attributes: dto.attributes ?? [],
+    highlights: dto.highlights ?? [],
+    entryMode: normalizeEntryMode(dto.entryMode),
+    coverPolicy: normalizeCoverPolicy(dto.coverPolicy),
+    payments: normalizePaymentMethods(dto.payments),
+    issuesNifInvoices:
+      typeof dto.issuesNifInvoices === "boolean" ? dto.issuesNifInvoices : null,
+    inclusionPractices: normalizeInclusionPractices(dto.inclusionPractices),
+    ...factTextFieldsForDraft(dto),
     // Legacy rows predate the flag; treat a missing value as a physical listing.
     online: dto.online ?? false,
     // "Based in" is an online listing's alone. A place's stored city (the
@@ -91,6 +126,10 @@ export function dtoToDraft(dto: ManagedListingDTO): ListingDraft {
     social: dto.social,
     photos,
     alt: dto.alt,
+    coverPhoto: {
+      image: dto.coverPhoto?.image ?? "",
+      alt: dto.coverPhoto?.alt ?? "",
+    },
     // The role printed on the public listing belongs to the business, so it
     // arrives for a co-manager too and stays editable by them.
     ownerRole: dto.ownerRole,
@@ -102,5 +141,5 @@ export function dtoToDraft(dto: ManagedListingDTO): ListingDraft {
     affirmingBaselineAccepted: true,
     // Read back out by the payload mapper, never sent.
     managementRole: dto.managementRole ?? "owner",
-  };
+  });
 }

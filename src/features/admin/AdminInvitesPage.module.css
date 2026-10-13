@@ -1,8 +1,17 @@
 .rows {
+  /* Positioned so a card leaving the grid (AnimatePresence popLayout) is
+     lifted out against the grid itself while the rest glide into its cell. */
+  position: relative;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 12px;
   margin-top: 20px;
+}
+
+/* The animated grid cell around each card. A grid of its own, so the FadeIn
+   inside stretches and the card's height: 100% still evens out a row. */
+.rowCell {
+  display: grid;
 }
 
 .emptyLine {
@@ -170,6 +179,17 @@
 .drawerChips {
   display: flex;
   gap: 8px;
+  /* Hugs the chip, so the ring drawn when focus lands here after a revoke or
+     refresh wraps just the pill. */
+  align-self: flex-start;
+  border-radius: var(--radius-pill);
+}
+
+.drawerChips:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-radius: var(--radius-pill);
 }
 
 .detailList {
@@ -238,6 +258,12 @@
   color: var(--ink-60);
 }
 
+/* The lock ahead of "Inviter's private note", on the label's baseline. */
+.messageLabelIcon {
+  vertical-align: -0.125em;
+  margin-inline-end: var(--icon-gap-inline);
+}
+
 .messageText {
   margin: 0;
   font-size: var(--text-14-5);
@@ -248,6 +274,15 @@
 :global([data-theme="dark"]) .messageBlock {
   background: rgba(var(--cream-rgb), 0.05);
   border-color: rgba(var(--cream-rgb), 0.1);
+}
+
+/* The inviter's private note is internal: an untinted box with a dashed
+   hairline, so it reads apart from the two tinted messages the recipient
+   sees. Two classes and placed after the dark rule above so it wins in both
+   themes; --line-2 flips with --line-rgb on its own. */
+.messageBlock.messageBlockInternal {
+  background: transparent;
+  border: 1px dashed var(--line-2);
 }
 
 @media (prefers-reduced-motion: reduce) {

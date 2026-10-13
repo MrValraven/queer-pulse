@@ -237,6 +237,9 @@ const SESSION_REQUEST_BUDGET = [
   "/v1/auth/me",
   "/v1/consent/me",
   "/v1/me/bootstrap",
+  // The Studio route gate (AppRoutes) and the nav's being-built marker read
+  // the member's Studio access once per session (`useStudioAccess()`).
+  "/v1/studio/me",
   // AnnouncementBanner (in both PageShell and AppShell) → usePlatformStatus().
   "/v1/platform-status",
   // The nav's bell (`useUnreadCount`) and DM (`useUnreadMessages`) badges used

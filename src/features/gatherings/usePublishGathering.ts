@@ -1,3 +1,4 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { useRef, useState } from "react";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useToast } from "../../shared/components/feedback/useToast";
@@ -8,6 +9,8 @@ import {
   switchOnGoTogetherForSlugs,
 } from "../goTogether/host/goTogetherPublish";
 import { createCohostInvite } from "./api/events.api";
+import { inviteGuestCommunity } from "./api/eventCommunities.api";
+import { invalidateHostingReaders } from "./api/eventCommunityKeys";
 import { formToCreateEventDto } from "./api/events.adapters";
 import { useCreateEvent } from "./api/useEventMutations";
 import {
@@ -20,7 +23,7 @@ import { isRefusedVenueListingError } from "./venueListingErrors";
 
 /**
  * Publishing a gathering: the real create mutation, its toasts, and the
- * co-host invites that follow it (ruling R12).
+ * co-host and guest community invites that follow it (ruling R12).
  *
  * The success screen, the toast and `onPublished` fire only from the
  * mutation's own success, so a rejected create keeps the host on the form
@@ -50,6 +53,7 @@ export function usePublishGathering({
   const { showToast } = useToast();
   const { demoMode } = useDemoMode();
   const createEvent = useCreateEvent();
+  const queryClient = useQueryClient();
   // The slug the backend assigned, for the success CTA. Null in demo, where
   // nothing persists, so the CTA falls back to the board.
   const [createdSlug, setCreatedSlug] = useState<string | null>(null);
@@ -93,6 +97,33 @@ export function usePublishGathering({
   };
 
   /**
+   * Invite each guest community onto the new gathering. In parallel, and
+   * the publish stands whatever they return: a failure warns with how many
+   * did not go, and the host can invite again from Edit details. A
+   * community the host runs joins at once on the server.
+   */
+  const inviteGuestCommunities = async (
+    slug: string,
+    communitySlugs: string[],
+  ) => {
+    const results = await Promise.allSettled(
+      communitySlugs.map((communitySlug) =>
+        inviteGuestCommunity(slug, communitySlug),
+      ),
+    );
+    invalidateHostingReaders(queryClient);
+    const failedCount = results.filter(
+      (result) => result.status === "rejected",
+    ).length;
+    if (failedCount > 0) {
+      showToast(
+        t("gatherings:guestCommunities.inviteFailed", { count: failedCount }),
+        "warning",
+      );
+    }
+  };
+
+  /**
    * Switch Go together on for every saved date. Best effort: the gathering
    * is already published, so a failure only toasts once, and the host can
    * switch it on from Manage.
@@ -108,6 +139,10 @@ export function usePublishGathering({
     if (isPublishInFlightRef.current || createEvent.isPending) return;
     // Read now: the form may change while the request is out.
     const cohostSlugs = [...form.cohostSlugs];
+    // Guests need a lead, so a form with none sends no invite.
+    const guestCommunitySlugs = form.communitySlug
+      ? form.guestCommunities.map((guest) => guest.slug)
+      : [];
     const shouldOfferGoTogether = form.goTogetherEnabled && !demoMode;
     const payload = formToCreateEventDto(form);
     isPublishInFlightRef.current = true;
@@ -125,6 +160,10 @@ export function usePublishGathering({
         // Demo mode returns no slug, and there is nothing to invite onto.
         if (slug && cohostSlugs.length > 0) {
           void inviteCohosts(slug, cohostSlugs);
+        }
+        // Onto the first date, like the co-host invites.
+        if (slug && guestCommunitySlugs.length > 0) {
+          void inviteGuestCommunities(slug, guestCommunitySlugs);
         }
         // Demo makes no call: nothing was saved to switch it on for. A date
         // whose opt-in already closed (under 6 hours away) is left out.

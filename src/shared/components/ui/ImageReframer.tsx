@@ -20,6 +20,8 @@ export interface ImageReframerProps {
   aspect: number | "free";
   aspectLabel: string;
   allowFreeform: boolean;
+  /** Ratio chip a freeform kind opens on (see `useImageReframerState`). */
+  initialFreeformChoice?: FreeformChoiceKey;
   minOutput: { width: number; height: number };
   value?: CropRect;
   onChange: (rect: CropRect) => void;
@@ -42,6 +44,7 @@ export default function ImageReframer({
   aspect,
   aspectLabel,
   allowFreeform,
+  initialFreeformChoice,
   minOutput: { width: minOutputWidth, height: minOutputHeight },
   value,
   onChange,
@@ -72,6 +75,7 @@ export default function ImageReframer({
     aspect,
     aspectLabel,
     allowFreeform,
+    initialFreeformChoice,
     minOutputWidth,
     minOutputHeight,
     value,

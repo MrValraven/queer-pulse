@@ -502,6 +502,8 @@ export const admin: Catalog = {
     "alterou a quota de convites de",
   "platformLog.kind.mod.invite_revoked": "revogou um convite",
   "platformLog.kind.mod.invite_revoked.target": "revogou um convite de",
+  "platformLog.kind.mod.invite_refreshed": "renovou um convite",
+  "platformLog.kind.mod.invite_refreshed.target": "renovou um convite de",
   "platformLog.kind.mod.sign_in_identity_relinked":
     "reassociou uma identidade de acesso",
   "platformLog.kind.mod.sign_in_identity_relinked.target":
@@ -1580,6 +1582,9 @@ export const admin: Catalog = {
   "adminInvites.drawer.dateTime": "{date} às {time}",
   "adminInvites.drawer.inviteMessageLabel": "Mensagem do convite",
   "adminInvites.drawer.vouchMessageLabel": "Mensagem do voto de confiança",
+  "adminInvites.drawer.privateNoteLabel": "Nota privada de quem convidou",
+  "adminInvites.drawer.privateNoteCaption":
+    "Só quem convidou e os admins veem isto.",
   "adminInvites.quota.manageCta": "Gerir quotas de convites",
   "adminInvites.quota.modalEyebrow": "Limites de recursos",
   "adminInvites.quota.modalTitle": "Quotas de convites",
@@ -1609,6 +1614,16 @@ export const admin: Catalog = {
     "Esse convite já foi aceite, revogado ou expirou. Reabre a lista para veres o estado atual.",
   "adminInvites.revoke.failedToast":
     "Não foi possível revogar esse convite. Tenta de novo.",
+  "adminInvites.refresh.cta": "Renovar convite",
+  "adminInvites.refresh.confirmTitle": "Renovar {code}?",
+  "adminInvites.refresh.confirmBody":
+    "A mesma ligação de {name} volta a funcionar durante 7 dias. Quem já a tiver pode usá-la para entrar.",
+  "adminInvites.refresh.confirmCta": "Renovar convite",
+  "adminInvites.refresh.doneToast": "{code} volta a funcionar durante 7 dias",
+  "adminInvites.refresh.movedOnToast":
+    "Este convite mudou enquanto o tinhas aberto. Recarrega para veres em que ponto está.",
+  "adminInvites.refresh.failedToast":
+    "Não foi possível renovar este convite. Tenta de novo.",
 
   "adminCommissionInterests.title": "Interesse em <em>encomendas</em>",
   "adminCommissionInterests.header.eyebrow": "Cultura",
@@ -2132,13 +2147,13 @@ export const admin: Catalog = {
   "adminListings.history.askedBy": "Perguntado por {actor}",
   "adminListings.history.awaitingReply": "A aguardar resposta",
 
-  // ── Imagens enviadas (consola de media do admin) ─────────────────────────
-  "media.title": "Imagens <em>enviadas</em>",
+  // ── Ficheiros enviados (consola de media do admin) ───────────────────────
+  "media.title": "Ficheiros <em>enviados</em>",
   "media.header.eyebrow": "Ferramenta de segurança",
-  "media.header.title": "Imagens <em>enviadas</em>",
+  "media.header.title": "Ficheiros <em>enviados</em>",
   "media.header.sub":
     "Todos os objetos guardados no bucket de uploads da plataforma, com dono e detalhes de armazenamento por ficheiro para revisão de segurança.",
-  "media.filterAriaLabel": "Filtrar por tipo de upload",
+  "media.kindFilterLabel": "Tipo de upload",
   "media.kinds.all": "Tudo",
   "media.kinds.avatars": "Avatares",
   "media.kinds.work": "Imagens de trabalho",
@@ -2146,7 +2161,15 @@ export const admin: Catalog = {
   "media.kinds.persona-covers": "Banners de persona",
   "media.kinds.gathering-photos": "Fotos de encontros",
   "media.kinds.group-avatars": "Avatares de grupo",
-  "media.kinds.listing-photos": "Fotos de espaços",
+  "media.kinds.listing-photos": "Fotos de estabelecimentos",
+  "media.kinds.listing-covers": "Capas de estabelecimentos",
+  "media.kinds.listing-menus": "Menus de estabelecimentos",
+  "media.kinds.community-covers": "Banners de comunidades",
+  "media.kinds.community-avatars": "Logótipos de comunidades",
+  "media.kinds.event-covers": "Capas de encontros",
+  "media.kinds.forum-photos": "Fotos do fórum",
+  "media.kinds.persona": "Imagens de persona",
+  "media.kinds.stickers": "Stickers",
   "media.usage.filterAriaLabel": "Filtrar por ficheiros ainda em uso",
   "media.usage.all": "Tudo",
   "media.usage.inUse": "Em uso",
@@ -2183,11 +2206,11 @@ export const admin: Catalog = {
   "media.delete.eyebrow": "Eliminar ficheiro",
   "media.delete.confirmTitle": "Eliminar este ficheiro definitivamente?",
   "media.delete.confirmBody":
-    "Isto remove o ficheiro do armazenamento de forma permanente. Se um perfil, anúncio ou publicação ainda apontar para ele, essa imagem deixa de carregar. Não é possível anular.",
+    "Isto remove o ficheiro do armazenamento de forma permanente. Se um perfil, anúncio ou publicação ainda apontar para ele, deixa de carregar aí. Não é possível anular.",
   "media.delete.confirmBodyInUse_one":
-    "Este ficheiro ainda está referenciado num local, listado abaixo. Ao eliminá-lo agora, essa imagem deixa de carregar. Não é possível anular.",
+    "Este ficheiro ainda está referenciado num local, listado abaixo. Se o eliminares agora, deixa de carregar nesse local. Não é possível anular.",
   "media.delete.confirmBodyInUse_other":
-    "Este ficheiro ainda está referenciado em {count} locais, listados abaixo. Ao eliminá-lo agora, essas imagens deixam de carregar. Não é possível anular.",
+    "Este ficheiro ainda está referenciado em {count} locais, listados abaixo. Se o eliminares agora, deixa de carregar em todos eles. Não é possível anular.",
   "media.delete.confirm": "Eliminar ficheiro",
   "media.delete.pending": "A eliminar…",
   "media.delete.success": "Ficheiro eliminado",
@@ -2200,7 +2223,7 @@ export const admin: Catalog = {
   "media.empty.body": "Ainda não há nada guardado neste tipo.",
   "media.demo.title": "Disponível apenas no modo ao vivo",
   "media.demo.body":
-    "As imagens enviadas vêm do bucket de armazenamento ao vivo, por isso não há nada para mostrar no modo de demonstração.",
+    "Os ficheiros enviados vêm do bucket de armazenamento ao vivo, por isso não há nada para mostrar no modo de demonstração.",
   "media.filterByUploader.searchPlaceholder": "Filtrar por quem enviou…",
   "media.filterByUploader.searchAriaLabel":
     "Procurar membros para filtrar os envios",
@@ -2229,6 +2252,7 @@ export const admin: Catalog = {
   "editSuggestions.field.phone": "Número de telefone",
   "editSuggestions.field.website": "Site",
   "editSuggestions.field.description": "Descrição",
+  "editSuggestions.field.attributes": "Detalhes e comodidades",
   "editSuggestions.field.other": "Outra coisa",
   "editSuggestions.filter.pending": "Pendentes",
   "editSuggestions.filter.accepted": "Aceites",
@@ -3206,6 +3230,7 @@ export const admin: Catalog = {
   "governance.audit.actionType.invite_quota_changed":
     "Quota de convites alterada",
   "governance.audit.actionType.invite_revoked": "Convite revogado",
+  "governance.audit.actionType.invite_refreshed": "Convite renovado",
   "governance.audit.actionType.content_restored": "Conteúdo restaurado",
   "governance.audit.actionType.restriction_lifted": "Restrição levantada",
   "governance.audit.actionType.ban_pending_ratification":
@@ -8000,6 +8025,45 @@ export const admin: Catalog = {
   "ambassadors.drawer.hiddenNote":
     "As etiquetas escondidas não aparecem aqui. A página de pessoas embaixadoras tem o registo completo.",
   "ambassadors.drawer.manage": "Gerir pessoas embaixadoras",
+  // ── Studio v1 (2026-10-08) ─────────────────────────────────────────────────
+  "studioAccess.label": "Studio",
+  "studioAccess.grantedBy": "Acesso ao Studio: dado por {staff} a {date}",
+  "studioAccess.grantedOn": "Acesso ao Studio: dado a {date}",
+  "studioAccess.none": "Sem acesso ao Studio",
+  "studioAccess.loadFailed": "Não conseguimos carregar o acesso ao Studio",
+  "studioAccess.retry": "Verificar o acesso de novo",
+  "studioAccess.grantCta": "Dar acesso ao Studio",
+  "studioAccess.revokeCta": "Retirar acesso ao Studio",
+  "studioAccess.hint":
+    "Deixa a pessoa ouvir no Studio e carregar música se gerir uma persona de música ou DJ publicada e aberta a todas as pessoas",
+  "studioAccess.revokeTitle": "Retirar o acesso ao Studio?",
+  "studioAccess.revokeBody":
+    "O leitor para e o Studio volta a mostrar-lhe a página de brevemente",
+  "studioAccess.revokeConfirm": "Retirar acesso ao Studio",
+  "moderation.studioRelease.heading": "Lançamento do Studio",
+  "moderation.studioRelease.subject": "{title}, de {artist}",
+  "moderation.studioRelease.takeDownCta": "Retirar lançamento",
+  "moderation.studioRelease.restoreCta": "Repor lançamento",
+  "moderation.studioRelease.takeDownTitle": "Retirar {title}?",
+  "moderation.studioRelease.takeDownBody":
+    "Sai do Studio para toda a gente. Quem o publicou vê o teu motivo na página de artista",
+  "moderation.studioRelease.takeDownConfirm": "Retirar lançamento",
+  "moderation.studioRelease.reasonLabel": "Motivo que quem publicou vai ver",
+  "moderation.studioRelease.takenDownNote": "Lançamento retirado",
+  "moderation.studioRelease.restoredNote": "Lançamento reposto e de novo no ar",
+  "moderation.studioRelease.restoredDraftNote":
+    "Lançamento reposto como rascunho: não estava no ar quando foi retirado",
+  "moderation.studioRelease.statusLabel": "Estado",
+  "moderation.studioRelease.takedownReasonLabel": "Motivo da retirada",
+  "moderation.studioRelease.retry": "Carregar o lançamento de novo",
+  "moderation.studioRelease.loadFailed":
+    "Não conseguimos carregar este lançamento",
+  "moderation.studioRelease.thumbAlt": "Capa de {title}",
+  "moderation.category.copyright": "Direitos de autor",
+  "moderation.action.studioAccessGranted": "Deu acesso ao Studio",
+  "moderation.action.studioAccessRevoked": "Retirou o acesso ao Studio",
+  "moderation.action.studioReleaseTakenDown": "Retirou um lançamento do Studio",
+  "moderation.action.studioReleaseRestored": "Repôs um lançamento do Studio",
   "ambassadors.loadMore": "Ver mais",
   "ambassadors.loadingMore": "A carregar…",
   "ambassadors.loadMoreError":
@@ -8016,9 +8080,35 @@ export const admin: Catalog = {
   "ambassadors.history.empty": "Não há estatutos registados para esta pessoa.",
   "ambassadors.circle.notFounded":
     "O círculo abre quando for atribuído o estatuto à primeira pessoa embaixadora.",
-  "marketingVideos.header.eyebrow": "Marketing",
+  "marketingVideos.header.eyebrow": "Filmes, flyers e merch",
   "marketingVideos.header.sub":
-    "Os nossos filmes de lançamento, guardados como código. Vê um aqui e transforma-o num ficheiro de vídeo no teu computador sempre que precisares.",
+    "Os nossos filmes de lançamento, flyers de eventos e merch da equipa, guardados como código. Vê um filme e transforma-o num ficheiro de vídeo, ou descarrega ficheiros para imprimir, sempre que precisares.",
+  "marketingVideos.sections.films": "Filmes",
+  "marketingVideos.sections.flyers": "Flyers",
+  "marketingVideos.sections.merch": "Merch",
+  "marketingVideos.merch.team-tee.title": "T-shirt da equipa",
+  "marketingVideos.merch.team-tee.summary":
+    "Para t-shirts e camisolas pretas: o logótipo com 9\u00a0cm à altura do peito e o lema com 28\u00a0cm entre as omoplatas.",
+  "marketingVideos.merchCard.meta": "T-shirt ou camisola preta · 2 cores",
+  "marketingVideos.merchCard.previewAlt": "Maquete da {title}, frente e costas",
+  "marketingVideos.merchCard.view": "Ver maquete",
+  "marketingVideos.merchCard.download.frontPng": "Descarregar PNG da frente",
+  "marketingVideos.merchCard.download.frontPdf": "Descarregar PDF da frente",
+  "marketingVideos.merchCard.download.frontSvg": "Descarregar SVG da frente",
+  "marketingVideos.merchCard.download.backPng": "Descarregar PNG das costas",
+  "marketingVideos.merchCard.download.backPdf": "Descarregar PDF das costas",
+  "marketingVideos.merchCard.download.backSvg": "Descarregar SVG das costas",
+  "marketingVideos.flyers.first-event.title": "Primeiro evento",
+  "marketingVideos.flyers.first-event.summary":
+    "Feito para o nosso primeiro encontro: uma rede queer com raízes em Lisboa e um código QR que abre queerpulse.com.",
+  "marketingVideos.flyerCard.meta": "A5 vertical · PDF e PNG",
+  "marketingVideos.flyerCard.previewAlt": "O flyer {title}",
+  "marketingVideos.flyerCard.view": "Ver flyer",
+  "marketingVideos.flyerCard.download.pdfA5": "Descarregar PDF (A5)",
+  "marketingVideos.flyerCard.download.pdfA5Print":
+    "Descarregar PDF com sangria (A5)",
+  "marketingVideos.flyerCard.download.pdfA4": "Descarregar PDF (A4)",
+  "marketingVideos.flyerCard.download.png": "Descarregar PNG",
   "marketingVideos.films.cinematic.title": "Cinematográfico",
   "marketingVideos.films.cinematic.summary":
     "Lento e caloroso, a 100 BPM. O produto em seis momentos, depois a cidade e o convite.",

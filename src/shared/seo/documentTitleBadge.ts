@@ -41,8 +41,13 @@ export function getDocumentBaseTitle(): string {
 /** Set the page's own title; the current unread count is prefixed to it. */
 export function writeDocumentTitle(title: string): void {
   baseTitle = title;
-  lastWrittenTitle = formatTitle(title, badgeCount);
-  document.title = lastWrittenTitle;
+  document.title = formatTitle(title, badgeCount);
+  // Read back rather than keep the string written: the browser strips and
+  // collapses whitespace in `document.title`, so a title with a doubled or
+  // edge space ("Ana  — QueerPulse", or " — QueerPulse" while a name loads)
+  // never compared equal to it. `getDocumentBaseTitle` then took the badged
+  // text as the page's own title, and the count stuck until a reload.
+  lastWrittenTitle = document.title;
 }
 
 /** Set the unread count shown in front of the title (0 clears it). */

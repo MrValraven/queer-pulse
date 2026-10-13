@@ -85,6 +85,7 @@ export const safety: Catalog = {
   "myReports.subject.conversation": "About a group chat",
   "myReports.subject.identity": "About a business chat",
   "myReports.subject.group_listing": "About a room in a housing group",
+  "myReports.subject.studio_release": "About a Studio release",
   "report.guide.meta.title": "How reporting works on QueerPulse",
   "report.guide.meta.description":
     "What happens after you submit a report on QueerPulse: our review process, the principles behind every decision, and a public log of past moderation outcomes.",
@@ -309,6 +310,7 @@ export const safety: Catalog = {
   "reason.hateSpeech": "Hate speech or a slur",
   "reason.unwantedContact": "Unwanted contact after being asked to stop",
   "reason.impersonation": "Misrepresentation or impersonation",
+  "reason.copyright": "Uses someone else's music or artwork without permission",
   "reason.discrimination": "Discrimination or misgendering",
   "reason.spam": "Spam or self-promotion",
   "reason.offTopic": "Off-topic or disruptive",

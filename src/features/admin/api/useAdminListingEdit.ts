@@ -3,6 +3,7 @@ import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { ApiError } from "../../../shared/api/client";
 import { DIRECTORY_KEY } from "../../marketing/api/directoryQueryKey";
 import { listingDtoToPending } from "../../marketing/listBusiness/api/listings.adapters";
+import { factTextFieldsForDraft } from "../../marketing/listBusiness/dtoToDraft";
 import type { ManagedListingDTO } from "../../marketing/listBusiness/api/listings.api";
 import {
   BLANK_OWNER_PERSONAL_FIELDS,
@@ -89,6 +90,11 @@ function demoUpdatedListing({
     services: toServiceRows(business.services),
     menu: toMenuDraft(business.menu),
     onlineDetails: normalizeOnlineDetails(business.onlineDetails),
+    // The body sends "no cover" as null; the draft holds it as empty strings.
+    coverPhoto: business.coverPhoto ?? { image: "", alt: "" },
+    // The cover time and the policy link go as null when unset; the draft
+    // holds "".
+    ...factTextFieldsForDraft(business),
     affirmingBaselineAccepted: true,
     isStaffAuthored: true,
     ref,

@@ -1,6 +1,8 @@
-import { Route } from "react-router-dom";
+import { Navigate, Route } from "react-router-dom";
 import { routes } from "../../app/routeMap";
 import { lazyNamed } from "../../app/routeHelpers";
+import { STUDIO_DEFERRED_PATHS } from "./studioGate.data";
+import { StudioGateSkeleton } from "./StudioGateSkeleton";
 
 const StudioPage = lazyNamed(() => import("./StudioPage"), "StudioPage");
 const StudioAlbumPage = lazyNamed(
@@ -156,23 +158,19 @@ const StudioComingSoonPage = lazyNamed(
   "StudioComingSoonPage",
 );
 
-/** The music studio (creator platform): catalogue, upload/payouts, live sets,
- *  moderation council/triage, the public shopfront, and its own state screens.
- *
- *  Studio is a demo-only showcase — it has no backend and every page renders
- *  fabricated `*.data.ts` content (payouts, tips, broadcast/fund figures). So
- *  in LIVE mode (`demoMode === false`) the entire `/studio/*` surface resolves
- *  to a single honest coming-soon page instead of presenting invented numbers
- *  as real. See `docs/superpowers/specs/2026-07-30-studio-live-mode-gate-design.md`. */
-export function studioRoutes(demoMode: boolean) {
-  if (!demoMode) {
-    return <Route path="/studio/*" element={<StudioComingSoonPage />} />;
-  }
+interface StudioRouteOptions {
+  demoMode: boolean;
+  hasStudioAccess: boolean;
+  isStudioAccessPending: boolean;
+}
+
+/** Every demo route, unchanged from the showcase. */
+function demoStudioRoutes() {
   return (
     <>
       <Route path={routes.studio} element={<StudioPage />} />
       <Route path={routes.studioAlbum} element={<StudioAlbumPage />} />
-      <Route path="/studio/artist" element={<StudioArtistPage />} />
+      <Route path={routes.studioArtist} element={<StudioArtistPage />} />
       <Route path="/studio/dashboard" element={<StudioDashboardPage />} />
       <Route path={routes.studioUpload} element={<StudioUploadPage />} />
       <Route path={routes.studioPayouts} element={<StudioPayoutsPage />} />
@@ -228,4 +226,51 @@ export function studioRoutes(demoMode: boolean) {
       <Route path={routes.studioWithdrawn} element={<StudioWithdrawnPage />} />
     </>
   );
+}
+
+/** Studio v1 for a granted member: listen, search, upload. Deferred pages
+ *  bounce to Studio home; anything else under /studio is the Studio 404. */
+function grantedStudioRoutes() {
+  return (
+    <>
+      <Route path={routes.studio} element={<StudioPage />} />
+      <Route path={routes.studioAlbum} element={<StudioAlbumPage />} />
+      <Route path={routes.studioArtist} element={<StudioArtistPage />} />
+      <Route path={routes.studioTrack} element={<StudioTrackPage />} />
+      <Route path={routes.studioSearch} element={<StudioSearchPage />} />
+      <Route path={routes.studioUpload} element={<StudioUploadPage />} />
+      <Route path="/studio/404" element={<Studio404Page />} />
+      <Route path="/studio/500" element={<Studio500Page />} />
+      {STUDIO_DEFERRED_PATHS.map((path) => (
+        <Route
+          key={path}
+          path={path}
+          element={<Navigate to={routes.studio} replace />}
+        />
+      ))}
+      <Route path="/studio/*" element={<Studio404Page />} />
+    </>
+  );
+}
+
+/**
+ * The music studio. Demo renders the full showcase. Live mode shows Studio v1
+ * to members with a Studio access grant (GET /studio/me) and the coming-soon
+ * teaser to everyone else, as before. While the grant is still being read the
+ * whole subtree holds on the Studio skeleton, so the teaser never flashes.
+ * See QUEERPULSE-STUDIO-V1-DESIGN-2026-10-08.md section 6.
+ */
+export function studioRoutes({
+  demoMode,
+  hasStudioAccess,
+  isStudioAccessPending,
+}: StudioRouteOptions) {
+  if (demoMode) return demoStudioRoutes();
+  if (isStudioAccessPending) {
+    return <Route path="/studio/*" element={<StudioGateSkeleton />} />;
+  }
+  if (!hasStudioAccess) {
+    return <Route path="/studio/*" element={<StudioComingSoonPage />} />;
+  }
+  return grantedStudioRoutes();
 }

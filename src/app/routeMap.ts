@@ -498,6 +498,10 @@ export const routes = {
   verificationNeeded: "/system/verification-needed",
   rsvp: "/rsvp",
   createGathering: "/create-gathering",
+  /** A guest community's invite to host a gathering together
+   *  (`/collab-invites/:inviteId`), answered by its owners, co-owners and
+   *  mods. Gated, and Disallowed in robots.txt. */
+  collabInvite: "/collab-invites",
   blockMute: "/safety/block-mute",
   film: "/film",
   cinemaMembership: "/cinema/membership",
@@ -560,6 +564,9 @@ export const topicPath = (tag: string) =>
   `/topic/${tag.replace(/^#/, "").toLowerCase()}`;
 /** A community's detail page (`/community/:slug`). */
 export const communityPath = (slug: string) => `/community/${slug}`;
+/** One collab invite's response page (`/collab-invites/:inviteId`). */
+export const collabInvitePath = (inviteId: string) =>
+  `${routes.collabInvite}/${inviteId}`;
 /** A business's detail page in the local directory (`/local/directory/:slug`). */
 export const businessPath = (slug: string) => `${routes.directory}/${slug}`;
 

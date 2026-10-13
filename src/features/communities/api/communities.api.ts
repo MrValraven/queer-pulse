@@ -847,6 +847,12 @@ export interface CommunityPulseEventDTO {
   /** `null` when the host turned "Show attendee count" off and the viewer is
    *  not the host. Render no figure for it. */
   goingCount: number | null;
+  /** `lead` when this community runs the gathering, `guest` when it accepted
+   *  an invite to host another community's. Absent from an older server. */
+  hostedAs?: "lead" | "guest";
+  /** The lead community on a `guest` row, null when it is withheld from
+   *  this viewer. */
+  leadCommunity?: { slug: string; name: string } | null;
 }
 
 export interface CommunityPulseAuthorDTO {

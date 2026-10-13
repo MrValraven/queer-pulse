@@ -114,6 +114,9 @@ export const auth: Catalog = {
     "Filling this in sends nothing to that address. You still pass the link on yourself.",
   "invite.compose.recipientEmail.invalid":
     "That doesn't look like an email address. Check it, or leave the field empty.",
+  "invite.compose.privateNote.label": "Private note",
+  "invite.compose.privateNote.placeholder": "e.g. Sofia from book club",
+  "invite.compose.privateNote.help": "Only you and our team see this.",
   "invite.compose.vouch.label": "Your vouch",
   "invite.compose.vouch.placeholder":
     "Why should they join? A sentence or two goes a long way.",
@@ -194,6 +197,25 @@ export const auth: Catalog = {
   "invite.sentList.loadError": "We couldn't load your invites",
   "invite.sentList.loadErrorBody":
     "Check your connection, then give it another try.",
+  "invite.sentList.privateNote.srPrefix": "Your private note:",
+  "invite.sentList.privateNote.addCta": "Add private note",
+  "invite.sentList.privateNote.editCta": "Edit private note",
+  "invite.sentList.privateNote.addAriaLabel":
+    "Add private note to the invite to {invite}",
+  "invite.sentList.privateNote.editAriaLabel":
+    "Edit private note on the invite to {invite}",
+  "invite.sentList.privateNote.saveCta": "Save private note",
+  "invite.sentList.privateNote.cancelCta": "Cancel",
+  "invite.sentList.privateNote.deleteCta": "Delete private note",
+  "invite.sentList.privateNote.saving": "Saving…",
+  "invite.sentList.privateNote.deleting": "Deleting…",
+  "invite.sentList.privateNote.savedToast": "Private note saved",
+  "invite.sentList.privateNote.deletedToast": "Private note deleted",
+  "invite.sentList.privateNote.undoCta": "Undo",
+  "invite.sentList.privateNote.errorToast":
+    "We couldn't save your private note just now. Give it another try in a moment.",
+  "invite.sentList.privateNote.deleteErrorToast":
+    "We couldn't delete your private note just now. Give it another try in a moment.",
 
   // ── Invite unfurl preview card (mirrors the static Open Graph tags) ──
   "sharePreview.heroTitle.line1": "Walk into a room",
@@ -695,7 +717,7 @@ export const auth: Catalog = {
   // their work. Optional: skipping writes nothing.
   "onboarding.stepWork.heading": "What do <em>you do?</em>",
   "onboarding.stepWork.hint":
-    "Pick your field, or search for your role, then the roles that fit. This is public, and it's how people find you in the member directory.",
+    "Search for your job, or browse by field. This is public, and it's how people find you in the member directory.",
   "onboarding.stepWork.continue": "Continue",
   "onboarding.stepWork.skip": "Skip for now",
   "onboarding.stepWork.back": "Back",

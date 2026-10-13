@@ -8,13 +8,7 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { useSaved } from "../../app/providers/useSaved";
 import { activateOnKey } from "../../shared/lib/activateOnKey";
 import { routes } from "../../app/routeMap";
-import {
-  TYPE_LABEL_KEYS,
-  VIBE_BG,
-  VIBE_FG,
-  VIBE_LABEL_KEYS,
-  type Venue,
-} from "./map.data";
+import { TYPE_LABEL_KEYS, type Venue } from "./map.data";
 import s from "./localMap.module.css";
 import p from "./DirectoryPage.module.css";
 
@@ -38,18 +32,8 @@ export function MapVenueCard({
   const { isSaved, toggleSave } = useSaved();
   const savedId = `listing:venue:${v.id}`;
   const saved = isSaved(savedId);
-  // Capped to 3 total (mirrors LocalBusinessCard's `pills.slice(0, 3)`) so a
-  // venue with more vibe tags + accessibility never wraps to a second row.
+  // The price band, then the accessible pill when it applies: one row, like the business card's.
   const pills = [
-    ...v.vibe.map((vibe) => (
-      <span
-        key={vibe}
-        className={s.vt}
-        style={{ background: VIBE_BG[vibe], color: VIBE_FG[vibe] }}
-      >
-        {t(VIBE_LABEL_KEYS[vibe]!)}
-      </span>
-    )),
     <span key="price" className={p.pill}>
       {v.price}
     </span>,

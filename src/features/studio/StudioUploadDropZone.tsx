@@ -1,35 +1,91 @@
+import { useId, useRef, useState, type DragEvent } from "react";
+import { FiUpload } from "react-icons/fi";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import s from "./creator.module.css";
+import tracksStyles from "./StudioUploadTracks.module.css";
 
-export function DropZone() {
+const ACCEPT = ".mp3,.m4a,audio/mpeg,audio/mp4";
+
+/** A real file input behind a visible button, so Tab, Enter and Space open
+ *  the picker; dropping files anywhere on the zone adds them too. */
+export function DropZone({
+  onFiles,
+  isDisabled,
+}: {
+  onFiles: (files: File[]) => void;
+  isDisabled: boolean;
+}) {
   const { t } = useTranslation();
+  const inputId = useId();
+  const hintId = useId();
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
+
+  function handleDrop(event: DragEvent<HTMLDivElement>) {
+    event.preventDefault();
+    setIsDragging(false);
+    if (!isDisabled) onFiles(Array.from(event.dataTransfer.files));
+  }
+
   return (
-    <div className={s.dropzone}>
+    <div
+      className={[s.dropzone, isDragging && tracksStyles.dropActive]
+        .filter(Boolean)
+        .join(" ")}
+      onDragOver={(event) => {
+        event.preventDefault();
+        if (!isDisabled && event.dataTransfer.types.includes("Files"))
+          setIsDragging(true);
+      }}
+      onDragLeave={(event) => {
+        // Moving between the zone's own children keeps the highlight.
+        if (!event.currentTarget.contains(event.relatedTarget as Node | null))
+          setIsDragging(false);
+      }}
+      onDrop={handleDrop}
+    >
       <div className={s.uploadIcon}>
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth={2}
-          style={{ width: 22, height: 22 }}
-        >
-          <path d="M12 19V5M5 12l7-7 7 7" />
-        </svg>
+        <FiUpload aria-hidden />
       </div>
       <h3>
         <Translation
-          i18nKey="studio:upload.dropzone.title"
+          i18nKey="studio:uploadFlow.files.dropTitle"
           components={{ em: <em /> }}
         />
       </h3>
-      <p>{t("studio:upload.dropzone.body")}</p>
-      <p className={s.uploadTypes}>
+      <p id={hintId} className={s.uploadTypes}>
         <Translation
-          i18nKey="studio:upload.dropzone.accepts"
-          components={{ em: <em style={{ color: "var(--jade-light)" }} /> }}
+          i18nKey="studio:uploadFlow.files.accepts"
+          components={{ em: <em /> }}
         />
       </p>
+      <input
+        ref={inputRef}
+        id={inputId}
+        className={tracksStyles.fileInput}
+        type="file"
+        accept={ACCEPT}
+        multiple
+        disabled={isDisabled}
+        tabIndex={-1}
+        aria-label={t("studio:uploadFlow.files.chooseCta")}
+        aria-describedby={hintId}
+        onChange={(event) => {
+          onFiles(Array.from(event.target.files ?? []));
+          event.target.value = "";
+        }}
+      />
+      <button
+        type="button"
+        className={tracksStyles.chooseButton}
+        data-upload-choose=""
+        disabled={isDisabled}
+        aria-describedby={hintId}
+        onClick={() => inputRef.current?.click()}
+      >
+        {t("studio:uploadFlow.files.chooseCta")}
+      </button>
     </div>
   );
 }

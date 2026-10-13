@@ -6,6 +6,7 @@ import { SidebarGroup } from "./SidebarGroup";
 import { SidebarFooter } from "./SidebarFooter";
 import { useIsLinkVisible } from "../../../app/authGate";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
+import { useStudioAccess } from "../../../features/studio/api/useStudioAccess";
 import { useNavMode } from "../../../app/providers/navModeContext";
 import { useAuth } from "../../../app/providers/authContext";
 import { useUnreadCount } from "../../../features/notifications/api/useUnreadCount";
@@ -23,7 +24,8 @@ export function Sidebar({ unreadCount }: { unreadCount?: number }) {
   const { t } = useTranslation();
   const isVisible = useIsLinkVisible();
   const { demoMode } = useDemoMode();
-  const menus = filterMenus(NAV_MENUS, isVisible, demoMode);
+  const { hasAccess: hasStudioAccess } = useStudioAccess();
+  const menus = filterMenus(NAV_MENUS, isVisible, demoMode, hasStudioAccess);
   const { railCollapsed, toggleRail } = useNavMode();
   const { loggedIn } = useAuth();
   // Same self-sourcing badge as the top-bar bell: an explicit prop wins, else

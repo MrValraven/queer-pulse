@@ -28,11 +28,10 @@ export interface Venue {
   id: string;
   name: string;
   bairro: string; // informal area, kept for the card subtitle only
-  freguesia: string; // official parish — the map + filter key
+  freguesia: string; // official parish: the map + filter key
   latitude: number;
   longitude: number;
   type: string;
-  vibe: string[];
   accessible: boolean;
   address: string;
   hours: string;
@@ -55,7 +54,6 @@ export const VENUES: Venue[] = [
     latitude: 38.7168,
     longitude: -9.1489,
     type: "bar",
-    vibe: ["mixed", "masc-leaning"],
     accessible: true,
     address: "Rua da Palmeira 38",
     hours: "11pm – 6am",
@@ -74,7 +72,6 @@ export const VENUES: Venue[] = [
     latitude: 38.7163,
     longitude: -9.1478,
     type: "club",
-    vibe: ["mixed"],
     accessible: false,
     address: "Rua da Imprensa Nacional 104B",
     hours: "Thu–Sat 11pm – 6am",
@@ -93,7 +90,6 @@ export const VENUES: Venue[] = [
     latitude: 38.717,
     longitude: -9.1477,
     type: "bar",
-    vibe: ["mixed", "masc-leaning"],
     accessible: true,
     address: "Rua de São Marçal 106",
     hours: "9pm – 2am",
@@ -112,7 +108,6 @@ export const VENUES: Venue[] = [
     latitude: 38.7161,
     longitude: -9.1488,
     type: "café",
-    vibe: ["mixed", "sober-friendly"],
     accessible: false,
     address: "Praça da Alegria 48",
     hours: "Tue–Sat 10pm – 2am",
@@ -131,7 +126,6 @@ export const VENUES: Venue[] = [
     latitude: 38.7037,
     longitude: -9.1787,
     type: "bookshop",
-    vibe: ["mixed"],
     accessible: true,
     address: "Rua Rodrigues de Faria 103",
     hours: "Mon–Fri 11am – 8pm · weekends 10am – 9pm",
@@ -150,7 +144,6 @@ export const VENUES: Venue[] = [
     latitude: 38.716,
     longitude: -9.1346,
     type: "clinic",
-    vibe: ["mixed", "trans-centred"],
     accessible: true,
     address: "Rua de São Lázaro 58",
     hours: "Mon–Fri 9am – 5pm",
@@ -169,7 +162,6 @@ export const VENUES: Venue[] = [
     latitude: 38.7151,
     longitude: -9.1344,
     type: "café",
-    vibe: ["mixed", "sober-friendly"],
     accessible: false,
     address: "Rua do Diário de Notícias 39",
     hours: "Mon–Sat 7pm – midnight",
@@ -188,7 +180,6 @@ export const VENUES: Venue[] = [
     latitude: 38.7159,
     longitude: -9.1355,
     type: "community space",
-    vibe: ["mixed", "trans-centred", "femme-leaning"],
     accessible: true,
     address: "Largo do Intendente 27",
     hours: "Tue–Sat 11am – 7pm",
@@ -207,7 +198,6 @@ export const VENUES: Venue[] = [
     latitude: 38.722,
     longitude: -9.1351,
     type: "community space",
-    vibe: ["mixed", "trans-centred"],
     accessible: true,
     address: "Rua dos Fanqueiros 38",
     hours: "Mon–Fri 10am – 6pm",
@@ -226,7 +216,6 @@ export const VENUES: Venue[] = [
     latitude: 38.7211,
     longitude: -9.1349,
     type: "club",
-    vibe: ["mixed", "femme-leaning"],
     accessible: false,
     address: "Rua das Salgadeiras 28",
     hours: "Fri–Sat midnight – 6am",
@@ -245,7 +234,6 @@ export const VENUES: Venue[] = [
     latitude: 38.7133,
     longitude: -9.1456,
     type: "bar",
-    vibe: ["mixed", "masc-leaning"],
     accessible: true,
     address: "Rua da Atalaia 34",
     hours: "Mon–Sat 10pm – 4am",
@@ -264,7 +252,6 @@ export const VENUES: Venue[] = [
     latitude: 38.7124,
     longitude: -9.1454,
     type: "club",
-    vibe: ["masc-leaning"],
     accessible: false,
     address: "Rua da Barroca 33",
     hours: "Fri–Sat 11pm – 6am",
@@ -283,7 +270,6 @@ export const VENUES: Venue[] = [
     latitude: 38.7073,
     longitude: -9.1454,
     type: "clinic",
-    vibe: ["mixed", "masc-leaning"],
     accessible: true,
     address: "Rua do Crucifixo 100",
     hours: "Mon–Fri 1pm – 8pm",
@@ -302,7 +288,6 @@ export const VENUES: Venue[] = [
     latitude: 38.708,
     longitude: -9.1584,
     type: "sauna",
-    vibe: ["masc-leaning"],
     accessible: true,
     address: "Rua de Santos-o-Velho 14",
     hours: "Daily 2pm – midnight",
@@ -321,7 +306,6 @@ export const VENUES: Venue[] = [
     latitude: 38.7172,
     longitude: -9.1481,
     type: "café",
-    vibe: ["mixed", "sober-friendly"],
     accessible: true,
     address: "Rua Dom Pedro V 129",
     hours: "Mon–Sat 12pm – midnight",
@@ -340,7 +324,6 @@ export const VENUES: Venue[] = [
     latitude: 38.716,
     longitude: -9.1485,
     type: "barbershop",
-    vibe: ["mixed", "masc-leaning", "trans-centred"],
     accessible: true,
     address: "Rua da Escola Politécnica 62",
     hours: "Tue–Sat 10am – 7pm",
@@ -359,7 +342,6 @@ export const VENUES: Venue[] = [
     latitude: 38.7149,
     longitude: -9.1354,
     type: "barbershop",
-    vibe: ["mixed", "femme-leaning"],
     accessible: false,
     address: "Rua do Capelão 22",
     hours: "Mon–Sat 9am – 6pm",
@@ -378,7 +360,6 @@ export const VENUES: Venue[] = [
     latitude: 38.7219,
     longitude: -9.136,
     type: "barbershop",
-    vibe: ["mixed"],
     accessible: true,
     address: "Largo do Intendente 4",
     hours: "Tue–Sat 11am – 8pm",
@@ -397,7 +378,6 @@ export const VENUES: Venue[] = [
     latitude: 38.707,
     longitude: -9.1576,
     type: "barbershop",
-    vibe: ["femme-leaning", "mixed"],
     accessible: false,
     address: "Rua de Santos-o-Velho 8",
     hours: "Wed–Sun 10am – 6pm",
@@ -416,7 +396,6 @@ export const VENUES: Venue[] = [
     latitude: 38.7063,
     longitude: -9.1446,
     type: "gym",
-    vibe: ["mixed", "trans-centred"],
     accessible: true,
     address: "Rua do Alecrim 44",
     hours: "Mon–Fri 7am – 10pm · Sat–Sun 9am – 6pm",
@@ -435,7 +414,6 @@ export const VENUES: Venue[] = [
     latitude: 38.7132,
     longitude: -9.1466,
     type: "gym",
-    vibe: ["mixed", "femme-leaning"],
     accessible: false,
     address: "Rua Nova do Carvalho 18",
     hours: "Mon–Fri 8am – 9pm · Sat 9am – 5pm",
@@ -454,7 +432,6 @@ export const VENUES: Venue[] = [
     latitude: 38.7209,
     longitude: -9.1359,
     type: "gym",
-    vibe: ["mixed"],
     accessible: true,
     address: "Rua do Benformoso 191",
     hours: "Mon–Sat 7am – 10pm",
@@ -473,7 +450,6 @@ export const VENUES: Venue[] = [
     latitude: 38.7114,
     longitude: -9.1285,
     type: "gym",
-    vibe: ["mixed", "masc-leaning"],
     accessible: true,
     address: "Rua dos Remedios 52",
     hours: "Daily 8am – 10pm",
@@ -486,8 +462,8 @@ export const VENUES: Venue[] = [
   },
 ];
 
-// `t` is the canonical (English, stored/filter) type id — never translate the
-// id itself, only `labelKey`'s resolved value (i18n brief §5.1: enum/filter
+// `t` is the canonical (English, stored/filter) type id. Never translate the
+// id itself; translate `labelKey`'s resolved value (i18n brief §5.1: enum/filter
 // values must stay stable across a language switch).
 export const TYPES = [
   { t: "all", labelKey: "marketing:map.filter.type.all" },
@@ -504,22 +480,6 @@ export const TYPES = [
   { t: "barbershop", labelKey: "marketing:map.filter.type.barbershop" },
   { t: "gym", labelKey: "marketing:map.filter.type.gym" },
 ];
-/** Canonical (English, stored) vibe ids — same stored-value rule as `TYPES`. */
-export const VIBES = [
-  "mixed",
-  "masc-leaning",
-  "femme-leaning",
-  "trans-centred",
-  "sober-friendly",
-];
-/** Display label key for each canonical vibe id. */
-export const VIBE_LABEL_KEYS: Record<string, string> = {
-  mixed: "marketing:map.filter.vibe.mixed",
-  "masc-leaning": "marketing:map.filter.vibe.mascLeaning",
-  "femme-leaning": "marketing:map.filter.vibe.femmeLeaning",
-  "trans-centred": "marketing:map.filter.vibe.transCentred",
-  "sober-friendly": "marketing:map.filter.vibe.soberFriendly",
-};
 /** Display label key for each canonical venue-type id (mirrors `TYPES`, minus "all"). */
 export const TYPE_LABEL_KEYS: Record<string, string> = Object.fromEntries(
   TYPES.filter((type) => type.t !== "all").map((type) => [
@@ -561,7 +521,7 @@ export const TYPE_ICON: Record<string, IconType> = {
   barbershop: FiScissors,
   gym: FiActivity,
 };
-/** Icon per unified category — every Local map pin + filter chip keys off this.
+/** Icon per unified category: every Local map pin + filter chip keys off this.
  *  Distinct, evocative glyphs (no duplicates) so each category reads at pin size. */
 export const CATEGORY_ICON: Record<string, IconType> = {
   nightlife: FaMartiniGlass,
@@ -582,18 +542,4 @@ export const HOUSING_PIN_TYPE = "housing";
  *  CATEGORY_ICON, which also feeds the directory's filter chips. */
 export const PIN_ONLY_ICON: Record<string, IconType> = {
   [HOUSING_PIN_TYPE]: FaHouse,
-};
-export const VIBE_BG: Record<string, string> = {
-  mixed: "rgba(45,27,61,.06)",
-  "masc-leaning": "rgba(45,27,61,.09)",
-  "femme-leaning": "rgba(232,119,90,.09)",
-  "trans-centred": "rgba(74,140,111,.1)",
-  "sober-friendly": "rgba(74,140,111,.08)",
-};
-export const VIBE_FG: Record<string, string> = {
-  mixed: "var(--ink-60)",
-  "masc-leaning": "var(--ink-60)",
-  "femme-leaning": "var(--accent-ink)",
-  "trans-centred": "var(--jade)",
-  "sober-friendly": "var(--jade)",
 };

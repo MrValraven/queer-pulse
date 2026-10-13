@@ -12,6 +12,11 @@ import {
   type DirectoryPlace,
 } from "./directoryPlaces";
 import {
+  matchesListingFacts,
+  NO_LISTING_FACT_FILTERS,
+  type DirectoryListingFactFilters,
+} from "./directoryListingFactFilters";
+import {
   coveredParishes,
   hasMeetingPoint,
   isByAppointmentListing,
@@ -53,22 +58,21 @@ export interface LocalPlace {
   category: string;
   /** Informal neighbourhood, for the card subtitle. */
   neighbourhood: string;
-  /** Official parish — map + parish-sidebar key. */
+  /** Official parish: the map and parish-sidebar key. */
   freguesia: string;
   /** null ⇒ list-only (no mappable address). */
   coords: Coords | null;
   /** Where "view / see full details" points. */
   detailPath: string;
-  /** Venue-only extras; undefined for businesses without a venue twin. */
-  vibe?: string[];
+  /** Venue-only extra; undefined for businesses without a venue twin. */
   beenHere?: number;
   /** The badge as it currently speaks, from the live directory card DTO.
-   * Undefined for demo-only venues — never synthesize this for a venue. */
+   * Undefined for demo-only venues; never synthesize this for a venue. */
   safeSpaceStatus?: SafeSpaceStatus;
   /** Verification tier when `safeSpaceStatus` is "verified"; null otherwise/absent. */
   safeSpaceTier?: number | null;
-  /** Pre-lowered haystack for the search box — name + area + category + blurb
-   *  + tags, so a query matches more than just the name. */
+  /** Pre-lowered haystack for the search box: name + area + category + blurb,
+   *  close to what the server's `q` searches, so demo search reads like live. */
   searchText: string;
   /** Original record, for kind-specific card rendering. */
   source: DirectoryPlace | Venue;
@@ -104,7 +108,7 @@ const warnedFreguesias = new Set<string>();
 /**
  * A place's map count only renders if its `freguesia` matches a parish polygon.
  * In dev, warn when it does not, so an unmapped hood or a mistyped venue parish
- * surfaces instead of silently dropping off the map (the place still lists in
+ * surfaces loudly the moment it drops off the map (the place still lists in
  * the sidebar). Each distinct unknown freguesia warns once, however many times
  * the mappers re-run. `source` names where the value came from, for the message.
  */
@@ -156,7 +160,7 @@ export function businessToLocal(
   demoMode: boolean,
 ): LocalPlace {
   // Prefer the pin the owner placed when listing. The hand-placed BUSINESS_COORDS
-  // table is demo-only seed data — consulting it in live mode would give a real
+  // table is demo-only seed data: consulting it in live mode would give a real
   // listing without stored coordinates fake coords on a slug collision.
   // A door to pin: a place, or an out-and-about listing at its meeting
   // point. An online-only business has none, and a come-to-you one has none
@@ -195,7 +199,6 @@ export function businessToLocal(
       place.hood,
       place.cat,
       place.desc,
-      place.pills?.join(" "),
     ]),
     source: place,
   };
@@ -212,14 +215,12 @@ export function venueToLocal(venue: Venue): LocalPlace {
     freguesia: placeFreguesia(coords, venue.freguesia, `venue "${venue.name}"`),
     coords,
     detailPath: `${routes.venue}/${venue.id}`,
-    vibe: venue.vibe,
     beenHere: venue.beenHere,
     searchText: buildSearchText([
       venue.name,
       venue.bairro,
       venue.type,
       venue.note,
-      venue.vibe?.join(" "),
     ]),
     source: venue,
   };
@@ -304,7 +305,7 @@ export function compareNeighbourhoods(first: string, second: string): number {
 
 /**
  * Demo-only merge: businesses are canonical. A venue whose normalized name
- * matches a business folds its coords/vibe/beenHere into that business and is
+ * matches a business folds its coords and beenHere into that business and is
  * dropped; a business keeps its own coords when it already has them. Venues
  * with no business twin pass through as their own entries.
  */
@@ -326,7 +327,6 @@ export function mergeLocalPlaces(
       ...business,
       coords: business.coords ?? twin.coords,
       freguesia: isBorrowingPin ? twin.freguesia : business.freguesia,
-      vibe: twin.vibe,
       beenHere: twin.beenHere,
       searchText: buildSearchText([business.searchText, twin.searchText]),
     };
@@ -340,7 +340,13 @@ export interface LocalFilters {
    *  stays when its category is any one of them. */
   categories: string[];
   query: string;
-  vibes: string[];
+  /** The attribute and fact filters (`attr`, `entry`, `pay`, `lang`,
+   *  `practice`). Absent means none. */
+  listingFacts?: DirectoryListingFactFilters;
+  /** True in live mode, where the server already narrowed by
+   *  `listingFacts`: the list is shown as it came back, so a card from an
+   *  older payload with no facts never vanishes. Chip counts pass false. */
+  areListingFactsServerFiltered?: boolean;
   /** `"verified"` restricts to safe-space-verified places; `null`/absent = no restriction. */
   safe?: "verified" | null;
   /** Keep only places open at this moment on their OWN clock. */
@@ -364,7 +370,7 @@ export interface LocalFilters {
  * Several tags are an OR, like place types and unlike access needs: someone
  * picking "Trans-owned" and "Non-binary-owned" wants places run by either.
  * Only a business can carry a tag: a demo-only venue says nothing about its
- * owners, so it drops out once the filter is on rather than being assumed
+ * owners, so it drops out once the filter is on, with nothing assumed
  * either way.
  */
 export function placeMatchesOwnedBy(
@@ -431,12 +437,24 @@ export function placeMeetsAccess(
   return access.every((slug) => answers[slug] === "yes");
 }
 
+/** The fact filters on one place: a business through its own card fields,
+ *  a demo-only venue (no facts) never once a filter is on. */
+export function localPlaceMatchesListingFacts(
+  place: LocalPlace,
+  filters: DirectoryListingFactFilters,
+): boolean {
+  return matchesListingFacts(
+    place.kind === "business" ? (place.source as DirectoryPlace) : null,
+    filters,
+  );
+}
+
 /**
  * Shared filter for both list + map views. The query matches the full
- * `searchText` haystack (name + area + category + blurb + tags), not just the
- * name. Vibes are **pass-through**: only venues carry vibe data, so a selected
- * vibe narrows venues while businesses (no vibe) always stay visible — instead
- * of silently deleting every business the moment a vibe is picked. Place types
+ * `searchText` haystack (name + area + category + blurb), so a query reaches
+ * past the name. The attribute and fact
+ * filters follow the server's semantics (see `matchesListingFacts`) and run
+ * here only where the server did not already apply them. Place types
  * combine as an OR, since a place has exactly one type and someone picking
  * "Food" and "Nightlife" wants both kinds of place. `safe` is a hard filter
  * like the place types: demo-only venues never carry `safeSpaceStatus`
@@ -446,7 +464,7 @@ export function placeMeetsAccess(
  * `?safe=verified`: it anti-joins the open badge suspensions inside the query,
  * so a paused badge never reaches the page or its `total`. A place whose badge
  * is on hold reads `"suspended"` and drops out here too, so the two agree
- * rather than one of them quietly re-admitting what the other excluded.
+ * and neither quietly re-admits what the other excluded.
  * Nothing is filtered twice: in live mode the server has already dropped them
  * and this predicate simply never re-adds one.
  *
@@ -474,15 +492,6 @@ export function filterLocalPlaces(
     if (normalizedQuery && !place.searchText.includes(normalizedQuery)) {
       return false;
     }
-    if (filters.vibes.length > 0) {
-      const placeVibes = place.vibe ?? [];
-      if (
-        placeVibes.length > 0 &&
-        !filters.vibes.some((vibe) => placeVibes.includes(vibe))
-      ) {
-        return false;
-      }
-    }
     // Exactly "verified". A suspended badge is not a verified one, and this
     // must never soften into a truthiness check.
     if (filters.safe === "verified" && place.safeSpaceStatus !== "verified") {
@@ -498,6 +507,15 @@ export function filterLocalPlaces(
       return false;
     }
     if (!placeMatchesOwnedBy(place, filters.owned ?? [])) {
+      return false;
+    }
+    if (
+      !filters.areListingFactsServerFiltered &&
+      !localPlaceMatchesListingFacts(
+        place,
+        filters.listingFacts ?? NO_LISTING_FACT_FILTERS,
+      )
+    ) {
       return false;
     }
     return true;

@@ -17,6 +17,7 @@ import type {
   RsvpQuestions,
 } from "../gatheringExtras";
 import type { RunByListingView } from "../runByListing";
+import type { EventGuestCommunityDTO } from "./eventCommunities.api";
 
 // ── Backend DTOs ───────────────────────────────────────────────────────────
 // Shapes the NestJS events domain returns. Only the fields the prototype pages
@@ -113,6 +114,9 @@ export interface EventCommunityDTO {
   slug: string;
   name: string;
   accessTier: AccessTier;
+  /** Resolved avatar URL, null when the community has none. Absent from an
+   *  older server; either way the card falls back to the community icon. */
+  avatarImageUrl?: string | null;
 }
 
 export interface EventHostDTO {
@@ -318,6 +322,10 @@ export interface EventDetailDTO extends EventCardDTO {
    *  `EventCommunityDTO`. Absent from an older server, which simply shows no
    *  community on the page. */
   community?: EventCommunityDTO | null;
+  /** The communities hosting with the lead, accepted rows only. A private
+   *  guest is withheld per viewer under the rule `community` follows.
+   *  Absent from an older server, which reads as none. */
+  guestCommunities?: EventGuestCommunityDTO[];
   /** The directory listing this gathering's venue is linked to, or `null`/
    *  absent for a free-text venue. Settable via the venue picker (PATCH
    *  `/events/:slug` with `listingId`, see `UpdateEventDto` below). */

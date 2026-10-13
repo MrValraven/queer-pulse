@@ -33,13 +33,23 @@ export function blankDraft(seed?: ListingSeed): ListingDraft {
     tagline: "",
     // The description, one entry per paragraph: an empty field holds none.
     whatItIs: [],
-    tags: [],
-    goodFor: [],
     accessibility: emptyAccessibilityDraft(),
     services: [],
     pricingMode: "services",
     menu: emptyMenuDraft(),
     langs: [],
+    langsOther: "",
+    // Nothing ticked, nothing answered: every new question starts at "Not
+    // saying" (null) or empty.
+    attributes: [],
+    highlights: [],
+    entryMode: null,
+    coverPolicy: null,
+    coverFreeBefore: "",
+    payments: [],
+    issuesNifInvoices: null,
+    inclusionPractices: [],
+    saferSpacePolicyUrl: "",
     online: false,
     // A new draft has not answered "Where do people find it?" yet. Drafts
     // saved before the question existed leave the key out, which reads as
@@ -63,6 +73,7 @@ export function blankDraft(seed?: ListingSeed): ListingDraft {
     social: { instagram: "", website: "", email: "", phone: "" },
     photos: { wide: "", d1: "", d2: "", vibe: "" },
     alt: { wide: "", d1: "", d2: "", vibe: "" },
+    coverPhoto: { image: "", alt: "" },
     rel: "",
     ownerName: seed?.ownerName ?? "",
     ownerRole: "",

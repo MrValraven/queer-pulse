@@ -97,10 +97,6 @@
   color: rgba(var(--cream-rgb), 1);
   border-color: var(--line-strong);
 }
-.vibe.chipOn {
-  background: var(--jade);
-  border-color: var(--jade);
-}
 
 .mapPanel {
   position: sticky;
@@ -113,7 +109,7 @@
   border-radius: var(--radius-18);
   overflow: hidden;
   /* Ease the map surface in on mount so switching List→Map (which re-creates
-     the MapLibre instance) reads as an intentional reveal, not a flicker.
+     the MapLibre instance) reads as an intentional reveal with no flicker.
      Reduced motion snaps to the end state via the global net in effects.css. */
   animation: qpMapIn var(--dur-slow) var(--ease-out) both;
 }
@@ -155,7 +151,7 @@
 /* Draggable location pin for LocationPickerMap.tsx. maplibre sets its positioning
    transform on the OUTER .pickerPinWrap; the teardrop, its lift, and its drop
    ping live on the inner .pickerPin so they never fight the map's positioning
-   (same wrapper/inner split as venueMarker.module.css — applying transforms to
+   (same wrapper/inner split as venueMarker.module.css; applying transforms to
    the marker element itself gets clobbered by maplibre's inline transform). The
    wrapper is anchored "bottom", so its ground shadow lands on the exact point. */
 .pickerPinWrap {
@@ -167,7 +163,7 @@
 .pickerPinWrap:active {
   cursor: grabbing;
 }
-/* Ground shadow at the tip — plants the pin instead of letting it float. */
+/* Ground shadow at the tip: plants the pin so it never seems to float. */
 .pickerPinWrap::after {
   content: "";
   position: absolute;
@@ -183,7 +179,7 @@
     opacity var(--dur-fast) var(--ease);
 }
 
-/* The teardrop — brand accent (matches BRAND.accent in shared/components/map/siteMapStyle.ts). The
+/* The teardrop: brand accent (matches BRAND.accent in shared/components/map/siteMapStyle.ts). The
    -45° rotation points the sharp corner straight down onto the shadow. */
 .pickerPin {
   position: absolute;
@@ -266,7 +262,7 @@
   background: color-mix(in srgb, var(--cream) 88%, var(--plum));
 }
 
-/* Local copy of the shared map-panel entrance keyframe — a CSS Module can't
+/* Local copy of the shared map-panel entrance keyframe: a CSS Module can't
    reference the global @keyframes in effects.css (the animation-name gets
    scoped to a dangling hash). See the same note in Skeleton.module.css. */
 @keyframes qpMapIn {
@@ -392,8 +388,8 @@
 
 .vc {
   /* Fills its FadeIn/.wrap grid cell (grid rows stretch by default) so a
-     venue card matches the height of taller cards in the same row, instead
-     of sitting at its own shorter intrinsic content height. */
+     venue card matches the height of taller cards in the same row and never
+     sits at its own shorter intrinsic content height. */
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -424,15 +420,6 @@
   color: var(--text-strong);
   letter-spacing: -0.01em;
 }
-.vt {
-  font-size: var(--text-11-5);
-  font-weight: 600;
-  /* 16px plus 4px above and below fills the shared one-row .pillsRow exactly. */
-  line-height: 16px;
-  white-space: nowrap;
-  padding: 4px 10px;
-  border-radius: var(--radius-pill);
-}
 /* Accordion reveal: the 0fr→1fr grid-rows technique animates to the details'
    natural height. Details stay mounted so it plays open AND closed. */
 .vcReveal {
@@ -458,7 +445,7 @@
   opacity: 1;
 }
 /* Beyond a small fade/slide (this grows the card's height), land the reduced-
-   motion end state explicitly rather than leaning on the global duration net. */
+   motion end state explicitly; the global duration net is not enough here. */
 @media (prefers-reduced-motion: reduce) {
   .vcReveal,
   .vcBody {
@@ -978,7 +965,7 @@
   }
   /* The sheet covers the bottom edge; the top-right corner is free. The
      credit is capped short of the zoom column on the left so a phone-width
-     line wraps beside the buttons instead of running over them. */
+     line wraps beside the buttons and never runs over them. */
   .stage[data-fullscreen="true"] :global(.maplibregl-ctrl-bottom-right) {
     top: 0;
     bottom: auto;

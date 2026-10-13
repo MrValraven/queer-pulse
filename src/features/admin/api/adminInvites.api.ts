@@ -3,6 +3,7 @@ import {
   apiDelete,
   apiGet,
   apiPatch,
+  apiPost,
 } from "../../../shared/api/client";
 
 /**
@@ -34,6 +35,9 @@ export interface AdminInviteDTO {
   note?: string | null;
   /** The inviter's "why I'm inviting you" vouch message. */
   vouch?: string | null;
+  /** The inviter's own label for who the invite is for. Seen only by the
+   *  inviter and admins. */
+  privateNote?: string | null;
   /** ISO timestamp the invite was created. */
   createdAt: string;
   /** ISO timestamp the invite stops working. */
@@ -105,6 +109,31 @@ export const deleteAdminInvite = (inviteId: string) =>
  *  more. A conflict, not a failure — the row simply moved on underneath the
  *  open drawer. */
 export function isInviteNotRevocableError(err: unknown): boolean {
+  return err instanceof ApiError && err.status === 409;
+}
+
+/**
+ * Bring any expired invite back to life platform-wide, whoever sent it
+ * (`POST /admin/invites/:id/refresh`, admin-only, no body, audited server-side
+ * as the mod action `invite_refreshed`). The invite keeps its `code`, so the
+ * link the inviter already shared works again, and its expiry moves to seven
+ * days from now.
+ *
+ * Addressed by the invite's internal `id`, the same as the revoke. Returns the
+ * invite in its new `valid` state, so the caller can patch the row in place.
+ *
+ * Failure modes the UI must tell apart from a generic error:
+ * - `404`: no invite with that id (it was hard-deleted, or the id is stale)
+ * - `409`: the invite is no longer expired: accepted, revoked, or already
+ *   valid again ({@link isInviteNotRefreshableError}). Expected whenever the
+ *   drawer has been open a while, so it reads as "this moved on".
+ */
+export const postAdminInviteRefresh = (inviteId: string) =>
+  apiPost<AdminInviteDTO>(`/admin/invites/${inviteId}/refresh`);
+
+/** True when the backend refused a refresh because the invite is not expired
+ *  any more. The row moved on underneath the open drawer, which is ordinary. */
+export function isInviteNotRefreshableError(err: unknown): boolean {
   return err instanceof ApiError && err.status === 409;
 }
 

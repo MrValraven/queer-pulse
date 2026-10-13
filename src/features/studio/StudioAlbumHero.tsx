@@ -1,106 +1,149 @@
 import { Link } from "react-router-dom";
-import { FiHeart, FiPlus, FiCheck } from "react-icons/fi";
+import { FiCheck, FiHeart, FiPause, FiPlay, FiPlus } from "react-icons/fi";
 import { ImageSlot } from "../../shared/components/ui";
 import { useShareLink } from "../../shared/hooks";
-import { useSaved } from "../../app/providers/useSaved";
-import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { Translation } from "../../shared/i18n/Translation";
-import { routes } from "../../app/routeMap";
+import type { StudioReleaseView } from "./api/studio.adapters";
+import { useStudioPlayer } from "./player/studioPlayerContext";
 import { StudioDetailHero } from "./StudioDetailHero";
+import { StudioReleaseOverflow } from "./StudioReleaseOverflow";
+import { releaseFactsLine } from "./studioFacts";
+import { useStudioSaveToggle } from "./useStudioSaveToggle";
+import { useStudioShowcase } from "./useStudioShowcase";
 import styles from "./studio.module.css";
-import { ALBUM_COVER, ALBUM } from "./studioAlbum.data";
+import releaseStyles from "./StudioRelease.module.css";
 
-const ARTIST_NAME = "Mariana Sol";
-const RELEASE_YEAR = "2026";
-const RELEASE_LOCATION = "Sintra";
-
-export function StudioAlbumHero({ onTip }: { onTip: () => void }) {
+export function StudioAlbumHero({
+  release,
+  onTip,
+  onReport,
+}: {
+  release: StudioReleaseView;
+  onTip: () => void;
+  onReport: () => void;
+}) {
   const { t } = useTranslation();
-  const { isSaved, toggleSave } = useSaved();
-  const { showToast } = useToast();
+  const player = useStudioPlayer();
+  const isShowcase = useStudioShowcase();
   const { share } = useShareLink({
     copied: t("studio:detail.linkCopiedToast"),
     failed: t("studio:detail.copyFailedToast"),
   });
-  const saved = isSaved(ALBUM.id);
-
-  const shareUrl =
-    typeof window !== "undefined" ? window.location.href : routes.studioAlbum;
+  const save = useStudioSaveToggle({
+    savedId: release.savedId,
+    kind: "studio_release",
+    title: release.title,
+    href: release.href,
+    meta: release.artist.name,
+  });
+  const isCurrent = player.isCurrentRelease(release.id);
+  const isPlaying = isCurrent && player.status === "playing";
+  const isPublished = release.status === "published";
+  // The server refuses every stream on a taken-down release, owners included.
+  const isStreamable = release.status !== "taken_down";
+  const isPlayBlocked = !isStreamable || release.playableTrackCount === 0;
 
   return (
     <StudioDetailHero
       art={
         <ImageSlot
-          src={ALBUM_COVER}
-          tint="coral"
+          src={release.coverUrl ?? undefined}
+          tint={release.tint}
           width="100%"
           height="100%"
           radius={16}
-          placeholder={`${t("studio:media.coverLabel")} · ${ALBUM.title}`}
+          placeholder={
+            release.status === "taken_down"
+              ? ""
+              : `${t("studio:media.coverLabel")} · ${release.title}`
+          }
           style={{ position: "absolute", inset: 0 }}
           loading="eager"
           fetchPriority="high"
         />
       }
-      kind="Album · 11 tracks · 42 min"
-      title={
-        <>
-          {ALBUM.titlePre}
-          <em>{ALBUM.titleEm}</em>
-        </>
-      }
+      kind={releaseFactsLine(release, t)}
+      title={release.title}
       by={
-        <Translation
-          i18nKey="studio:albumHero.byLine"
-          components={{ strong: <strong /> }}
-          values={{
-            artist: ARTIST_NAME,
-            year: RELEASE_YEAR,
-            location: RELEASE_LOCATION,
-          }}
-        />
+        <>
+          {t("studio:release.by")}{" "}
+          <Link to={release.artist.href}>
+            <strong>{release.artist.name}</strong>
+          </Link>
+          {release.releaseYear && ` · ${release.releaseYear}`}
+          {release.genreLabelKey && ` · ${t(release.genreLabelKey)}`}
+          {!isPublished && (
+            <span className={releaseStyles.statusLine}>
+              <strong className={releaseStyles.statusLabel}>
+                {t(release.statusLabelKey)}
+              </strong>
+              {release.status === "taken_down" && release.takedownReason && (
+                <span>
+                  {t("studio:owner.takedownReason", {
+                    reason: release.takedownReason,
+                  })}
+                </span>
+              )}
+            </span>
+          )}
+        </>
       }
       actions={
         <>
-          <Link
-            to={routes.studio}
-            className={styles.playBig}
-            aria-label={t("studio:player.play")}
-          >
-            <svg viewBox="0 0 12 14" fill="currentColor">
-              <path d="M1 1l10 6-10 6z" />
-            </svg>
-          </Link>
           <button
             type="button"
+            className={`${styles.playBig} ${releaseStyles.heroPlay}`}
+            aria-disabled={isPlayBlocked || undefined}
+            aria-label={
+              isPlaying
+                ? t("studio:card.pauseRelease", { title: release.title })
+                : t("studio:card.playRelease", { title: release.title })
+            }
             onClick={() => {
-              const now = toggleSave(ALBUM);
-              showToast(
-                now
-                  ? t("studio:detail.addedToast")
-                  : t("studio:detail.removedToast"),
-                now ? "success" : "info",
-              );
+              if (isPlayBlocked) return;
+              if (isCurrent) player.togglePlay();
+              else void player.playRelease(release.id);
             }}
           >
-            {saved ? (
-              <>
-                <FiCheck /> {t("studio:room.hero.inLibrary")}
-              </>
-            ) : (
-              <>
-                <FiPlus /> {t("studio:room.hero.addLibrary")}
-              </>
-            )}
+            {isPlaying ? <FiPause aria-hidden /> : <FiPlay aria-hidden />}
           </button>
-          <button type="button" className={styles.tip} onClick={onTip}>
-            <FiHeart />{" "}
-            {t("studio:detail.tipArtistCta", { artist: ARTIST_NAME })}
-          </button>
-          <button type="button" onClick={() => void share(shareUrl)}>
-            {t("studio:detail.shareCta")}
-          </button>
+          {isPublished && (
+            <button
+              type="button"
+              aria-pressed={save.isSaved}
+              aria-label={t(
+                save.isSaved
+                  ? "studio:save.removeSavedCta"
+                  : "studio:save.saveReleaseCta",
+                { title: release.title },
+              )}
+              onClick={save.toggle}
+            >
+              {save.isSaved ? <FiCheck aria-hidden /> : <FiPlus aria-hidden />}{" "}
+              {save.isSaved
+                ? t("studio:save.savedLabel")
+                : t("studio:save.saveCta")}
+            </button>
+          )}
+          {isShowcase && isPublished && (
+            <button type="button" className={styles.tip} onClick={onTip}>
+              <FiHeart aria-hidden />{" "}
+              {t("studio:detail.tipArtistCta", { artist: release.artist.name })}
+            </button>
+          )}
+          {isPublished && (
+            <button
+              type="button"
+              onClick={() => void share(window.location.href)}
+            >
+              {t("studio:detail.shareCta")}
+            </button>
+          )}
+          {/* Filing needs a published release (the server 404s anything else),
+              and an artist does not report their own release. */}
+          {isPublished && !release.isOwner && (
+            <StudioReleaseOverflow onReport={onReport} />
+          )}
         </>
       }
     />

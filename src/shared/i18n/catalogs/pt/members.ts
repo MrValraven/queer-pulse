@@ -482,15 +482,20 @@ export const members: Catalog = {
   "profileEdit.work.label": "O que fazes",
   "profileEdit.work.help":
     "Público. Aparece no teu perfil e é assim que as pessoas te encontram em “O que fazem” e “Profiss\u00e3o” no diret\u00f3rio.",
-  "workPicker.fieldHeading": "A tua área",
-  "workPicker.professionHeading": "A tua função",
-  "workPicker.professionPrompt":
-    "Escolhe uma área acima ou pesquisa para veres as funções.",
-  "workPicker.searchPlaceholder": "Pesquisar uma área ou função…",
+  "workPicker.matchingFieldsHeading": "Áreas encontradas",
+  "workPicker.matchingRolesHeading": "Funções encontradas",
+  "workPicker.searchPlaceholder": "O teu trabalho, como enfermeira",
   "workPicker.searchAriaLabel": "Pesquisar áreas e funções",
-  "workPicker.noMatch": "Nenhuma área ou função corresponde a “{query}”.",
+  "workPicker.noMatch":
+    "Nenhuma área ou função corresponde a “{query}”. Tenta outra palavra, ou explora por área abaixo.",
   "workPicker.showAll": "Mostrar todas as áreas e funções",
   "workPicker.showOnlyPicks": "Mostrar só as minhas escolhas",
+  "workPicker.picksHeading": "As tuas escolhas",
+  "workPicker.browseHeading": "Ou explora por área",
+  "workPicker.groupPickCount_one": "{count} escolhida",
+  "workPicker.groupPickCount_other": "{count} escolhidas",
+  "workPicker.group.lifeStage": "A estudar, a cuidar ou entre empregos",
+  "workPicker.removePick": "Remover {label}",
   "workPicker.unlistedNote":
     "Só tu e as tuas conexões veem isto. O trabalho sexual ainda carrega estigma, e uma lista que qualquer pessoa pudesse pesquisar poderia expor-te, por isso fica fora da pesquisa de membros, dos filtros, das sugestões e dos cartões do diretório.",
   "profileEdit.field.addSkillPlaceholder": "Procurar competências…",

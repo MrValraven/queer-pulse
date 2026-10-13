@@ -74,7 +74,7 @@ describe("DirectoryCardStatus for an out-and-about listing", () => {
 
   it("reads the hours of one that has them", async () => {
     const { container } = renderWithProviders(
-      <DirectoryCardStatus place={fixture("corte-movel")} />,
+      <DirectoryCardStatus place={fixture("lisboa-arco-iris-walks")} />,
     );
     expect(await screen.findByText(/Open|Closed|Closing/)).toBeInTheDocument();
     expect(container.textContent).not.toContain("By appointment");

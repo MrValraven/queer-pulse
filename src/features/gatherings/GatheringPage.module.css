@@ -101,7 +101,7 @@
 }
 .metaItem {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 8px;
 }
 /* "With <community>": a link that reads as part of the meta line, so it
@@ -109,6 +109,8 @@
 .metaLink {
   color: var(--ink);
   font-weight: 600;
+  display: inline-block;
+  max-width: 100%;
   text-decoration: underline;
   text-decoration-color: rgba(var(--line-rgb), 0.25);
   text-underline-offset: 3px;
@@ -123,6 +125,8 @@
   }
 }
 .metaDot {
+  flex: none;
+  margin-top: calc((1lh - 6px) / 2);
   width: 6px;
   height: 6px;
   border-radius: 50%;
@@ -250,6 +254,13 @@
   gap: 12px;
   margin-bottom: 22px;
 }
+/* A row with an action under its role: the icon aligns with the name. */
+.hostRowWithAction {
+  align-items: flex-start;
+}
+.hostRowWithAction .communityIcon {
+  margin-top: 2px;
+}
 .hostName {
   font-weight: 600;
   font-size: var(--text-15);
@@ -267,7 +278,8 @@
   margin-top: 2px;
 }
 /* The "Hosted with" community block: an icon disc the size of the host's
-   avatar, so the two rows line up. */
+   avatar, so the two rows line up. Holds the community's avatar when it has
+   one. */
 .communityIcon {
   flex: none;
   display: grid;
@@ -275,10 +287,19 @@
   width: 44px;
   height: 44px;
   border-radius: 50%;
+  overflow: hidden;
   background: rgba(var(--plum-rgb), 0.06);
   border: 1px solid rgba(var(--line-rgb), 0.09);
   color: var(--ink);
   font-size: var(--text-18);
+}
+/* A mark with transparency lands on something solid, not the tint. */
+.communityAvatar {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: var(--paper);
 }
 .communityName {
   color: var(--ink);

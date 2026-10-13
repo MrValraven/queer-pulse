@@ -62,7 +62,7 @@
   min-width: 0;
 }
 /* DES glyph ban: this row previously drew its breadcrumb separator with a
-   CSS ::after "›". Removed — a react-icons chevron belongs in the component;
+   CSS ::after "›". Removed: a react-icons chevron belongs in the component;
    .breadcrumbList li keeps its 6px gap for that icon to sit in. */
 .crumbSep {
   flex-shrink: 0;
@@ -154,7 +154,7 @@
    place has uploaded photos) ─────────────────────────────────────────────────
    A compact split: the main photo on the left, the remaining shots stacked in
    a clickable column on the right (each opens the lightbox). This keeps the
-   hero from dominating the page the way a full-bleed banner did — the eye gets
+   hero from dominating the page the way a full-bleed banner did; the eye gets
    the place AND a sense of the space in one glance. There are at most four
    photo slots, so the right column never holds more than three thumbnails. */
 .photoGallery {
@@ -603,7 +603,7 @@
   text-transform: uppercase;
   font-size: var(--text-11);
 }
-/* Empty-state trust chip: a brand-new listing reads as "New", not as a hollow
+/* Empty-state trust chip: a brand-new listing reads as "New", with no hollow
    zero-star rating. */
 .newChip {
   font-size: var(--text-12);
@@ -644,7 +644,7 @@
 .sec {
   margin-bottom: 40px;
 }
-/* Consecutive answers in the main column, separated by a hairline instead of
+/* Consecutive answers in the main column, separated by a hairline over the
    pure air: the block boundaries were invisible, so a heading, a loose chip
    and a narrow card all read as one drift of content. */
 .sec + .sec {
@@ -652,7 +652,7 @@
   padding-top: 34px;
 }
 /* Heading row: the title, with any live status chip on the same baseline right
-   beside it — "Hours · Open now" reads as one statement, where the chip on its
+   beside it: "Hours · Open now" reads as one statement, where the chip on its
    own line under the heading read as a third loose thing. Wraps before it ever
    squashes the title. */
 .secHead {
@@ -744,19 +744,101 @@
   stroke-linecap: round;
   stroke-linejoin: round;
 }
-.featureMaybe {
-  color: var(--ink-60);
+
+/* What's here: one block per attribute group, headed. The groups sit further
+   apart than the items inside them, so proximity alone groups them. */
+.whatsHereGroup + .whatsHereGroup {
+  margin-top: 18px;
 }
-.featureMaybe .featureIc {
-  background: rgba(var(--plum-rgb), 0.06);
+.whatsHereGroup > .features {
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
-.featureMaybe .featureIc svg {
-  stroke: var(--ink-40);
+.whatsHereHeading {
+  margin: 0 0 10px;
+  font-family: var(--sans);
+  font-size: var(--text-13);
+  font-weight: 700;
+  color: var(--text-strong);
+}
+.policyLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 12px;
+  font-size: var(--text-13);
+  font-weight: 600;
+  color: var(--text-strong);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.policyLink:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-radius: var(--radius-4);
+}
+/* "Suggest an edit to these details" under the policy link: the shared
+   trigger's side padding goes so its text starts on the link's left edge, and
+   it carries the link's underline. The block padding stays, which keeps the
+   44px touch target. The wrapper class plus its child button outranks the
+   shared trigger's own padding whichever stylesheet loads first, and leaves
+   DirectoryContestControl.module.css as its other users have it. */
+.suggestDetails > button {
+  min-height: var(--tap-min);
+  padding-inline: 0;
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
-/* One card holds the whole hours answer — the week, any one-off changes, and
-   who last vouched for it — so the section is a single object in the column
-   instead of a 380px table with a stamp drifting below it.
+/* Before you go: label and answer side by side, stacked on a phone and in a
+   narrow container (the moderation drawer). The rows start 18px further down,
+   the same air a .subLine leaves, so the heading sits as far from its first
+   row as the Hours heading does from its first day. Padding carries it: a
+   margin would collapse into the heading's own. Labels and answers read like
+   the Ordering & delivery facts beside them: a quiet caption label and an
+   answer at body size. */
+.gettingInRows {
+  margin: 0;
+  padding-top: 18px;
+  display: grid;
+  gap: 12px;
+}
+.gettingInRow {
+  display: grid;
+  grid-template-columns: minmax(0, 12em) minmax(0, 1fr);
+  align-items: baseline;
+  gap: 12px;
+}
+.gettingInRow dt {
+  font-size: var(--text-caption);
+  font-weight: 600;
+  color: var(--ink-60);
+}
+.gettingInRow dd {
+  margin: 0;
+  font-size: var(--text-body);
+  line-height: 1.5;
+  color: var(--ink);
+  text-wrap: pretty;
+}
+@media (--sm) {
+  .gettingInRow {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2px;
+  }
+}
+@container directorySpace (max-width: 460px) {
+  .gettingInRow {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2px;
+  }
+}
+
+/* One card holds the whole hours answer (the week, any one-off changes, and
+   who last vouched for it), so the section is a single object in the column
+   and no 380px table with a stamp drifting below it.
    Its own container: the week splits into two columns on the width the card
    actually has, which is not the viewport's (the moderation preview drawer
    renders this same body far narrower). */
@@ -780,7 +862,7 @@
 }
 /* Footer strip: the freshness stamp, attached to the hours it vouches for.
    The stamp is a <p>, so `.sec p`'s trailing 1em outranks `.freshness`'s own
-   `margin: 0` on specificity — reset it here, where the strip owns the
+   `margin: 0` on specificity; reset it here, where the strip owns the
    padding. */
 .hoursFoot {
   border-top: 1px solid rgba(var(--line-rgb), 0.09);
@@ -790,7 +872,7 @@
 .hoursFoot > .freshness {
   margin: 0;
 }
-/* Mon–Thu beside Fri–Sun. A single 636px-wide column of seven rows strands the
+/* Mon to Thu beside Fri to Sun. A single 636px-wide column of seven rows strands the
    day at one end and the time at the other; two short columns keep the pair
    readable and use the width the main column actually has. */
 @container directoryHours (min-width: 480px) {
@@ -905,8 +987,8 @@
 }
 
 /* ---- one-off date exceptions (holiday closures / special hours) ---- */
-/* A band inside the hours card (see `.hoursCard`), not a second bordered list
-   nested in the first. */
+/* A band inside the hours card (see `.hoursCard`), with no second bordered
+   list nested in the first. */
 .exceptions {
   border-top: 1px solid rgba(var(--line-rgb), 0.09);
   padding: 16px 16px 6px;
@@ -1165,7 +1247,7 @@
   color: var(--text-strong);
   transition: color 0.18s var(--ease);
 }
-/* Only the linked variant reacts to hover — the reviewer's name is the click
+/* Only the linked variant reacts to hover: the reviewer's name is the click
    target for their profile. */
 @media (hover: hover) {
   a.revAuthor:hover .revName {
@@ -1189,14 +1271,14 @@
   text-wrap: pretty;
   /* Members type paragraphs into the composer and the endpoint stores them
      verbatim, so the blank lines and line breaks they wrote are rendered
-     rather than collapsed into one wall of text. `pre-line` (not `pre-wrap`)
+     and never collapse into one wall of text. `pre-line` (not `pre-wrap`)
      so ordinary runs of spaces still collapse and long words still wrap. */
   white-space: pre-line;
   overflow-wrap: anywhere;
 }
 /* Collapsed state, set by `DirectoryReviewText` while the words are folded
-   away. It is applied whenever the block is collapsed — including when the
-   review is short enough to fit — because that is what lets the component
+   away. It is applied whenever the block is collapsed (including when the
+   review is short enough to fit), because that is what lets the component
    measure `scrollHeight` against `clientHeight` to decide whether the Read
    more toggle is needed at this width at all. */
 .revText[data-clamped] {
@@ -1207,8 +1289,8 @@
   overflow: hidden;
 }
 /* The Read more / Show less toggle under a clamped review. A quiet text
-   affordance rather than a pill, so it reads as part of the review's own
-   words instead of competing with Helpful / Report / Edit below it. */
+   affordance with no pill, so it reads as part of the review's own words
+   and stays clear of Helpful / Report / Edit below it. */
 .revMore {
   display: inline-flex;
   align-items: center;
@@ -1231,7 +1313,7 @@
   height: 14px;
 }
 
-/* "Report this review" — a small, low-emphasis affordance under every review
+/* "Report this review": a small, low-emphasis affordance under every review
    (unlike the owner-only .replyToggle beside it), so it never competes
    visually with the reply CTA. */
 .reportToggle {
@@ -1281,7 +1363,7 @@
   overflow-wrap: anywhere;
 }
 /* The owner Reply / Edit-reply action is a ghost <Button>. Only override the
-   size to read as a quiet, compact pill — NOT the horizontal padding: zeroing
+   size to read as a quiet, compact pill, and leave the horizontal padding: zeroing
    it (the old `4px 0`) collapsed the pill's border-radius onto the label, so
    the outline rendered as a cramped circle clipping the text. Keep the
    button's own 44px min-height tap target; just tighten the type + gutters. */
@@ -1384,8 +1466,8 @@
   gap: 8px;
 }
 /* Directions is the reason most readers open a venue page, so it keeps a coral
-   tint and reads as first among equals. The tint lives on the icon rather than
-   the button so the quiet hover treatment in Button.module.css (which repaints
+   tint and reads as first among equals. The tint lives on the icon (the
+   button stays untinted) so the quiet hover treatment in Button.module.css (which repaints
    the button's own `color`) leaves it coral. */
 .actionBarDirectionsIcon {
   color: var(--accent);
@@ -1603,7 +1685,7 @@
   margin-top: 14px;
 }
 /* Inside the visit card the action is one button in a column that is already
-   narrow: let it size to its label rather than spanning the whole cell. */
+   narrow: let it size to its label and leave the rest of the cell empty. */
 .visitFoot .cta {
   margin-top: 0;
   align-items: flex-start;
@@ -1831,7 +1913,7 @@
   align-items: center;
   justify-content: center;
   /* 24px icon + 14px padding = 52px hit area, past the comfortable touch
-     minimum - grows the hit area, not the visible icon. */
+     minimum. It grows the hit area and leaves the visible icon its size. */
   padding: 14px;
   background: none;
   border: none;
@@ -1900,15 +1982,15 @@
 }
 /* Why the submit button is dead, said right beside it: the hint rides in the
    same right-aligned group as the buttons, centred on them, so the two read as
-   one statement instead of sitting at opposite ends of the row. It shrinks and
-   wraps (onto its own right-aligned line when the row runs out of space) rather
-   than pushing the buttons around.
+   one statement, never at opposite ends of the row. It shrinks and wraps (onto
+   its own right-aligned line when the row runs out of space) and leaves the
+   buttons where they are.
 
    Scoped under .reviewFormActions on purpose: this <p> also matches `.sec p`
    (0,1,1) above, which was winning over a bare `.reviewHint` (0,1,0) and
    dressing the hint as body prose: 16px/1.7 in full --ink, plus a 1em bottom
    margin that pushed it ~8px off the button's centre line. Out-specify the
-   prose rule here rather than narrowing it; the rest of the page relies on its
+   prose rule here and leave it as wide as it is; the rest of the page relies on its
    reach. Every property it sets is restated below. */
 .reviewFormActions .reviewHint {
   display: inline-flex;
@@ -1962,9 +2044,10 @@
 }
 
 /* ── Inline safe-space trust section (reuses the safety feature's own
-   .grid for its internal two-column layout — see DirectorySpaceTrust.tsx).
-   Sits inside this page's existing .page container (not a second one), so
-   it only needs a section-level top divider, not its own max-width/padding. */
+   .grid for its internal two-column layout; see DirectorySpaceTrust.tsx).
+   Sits inside this page's existing .page container (no second one), so
+   it only needs a section-level top divider and no max-width/padding of its
+   own. */
 .trustSection {
   border-top: 1px solid rgba(var(--line-rgb), 0.1);
   padding-top: 32px;
@@ -2083,7 +2166,7 @@
   overflow: hidden;
 }
 /* A wider card gets a taller band, so the map keeps a readable proportion
-   instead of turning into a thin strip. */
+   and never turns into a thin strip. */
 @container directoryVisit (min-width: 480px) {
   .visitMap {
     min-height: 260px;
@@ -2160,18 +2243,6 @@
   line-height: 1.5;
   color: var(--ink-60);
 }
-/* ── "Access & languages" section (main column) ─────────────────────────────
-   Reuses the .contactRow presentation the two lines already had, minus the
-   leading hairline on the first one. */
-.accessRows > .contactRow:first-child {
-  border-top: none;
-}
-/* The structured accessibility answers sit above these rows now, so separate
-   the two groups rather than letting the legacy line touch the last answer. */
-.accessRows:not(:empty) {
-  margin-top: 18px;
-}
-
 /* ── "Within a short walk" nearby row ───────────────────────────────────────
    The walkable neighbours, shown as the directory's own listing cards (see
    DirectoryNearbyPlaces) in the shared `.relatedGrid`, above the wider
@@ -2237,7 +2308,7 @@
 }
 
 /* Row under the review body: helpful vote, report, and the author's own edit.
-   Wraps on a narrow column instead of forcing horizontal scroll. */
+   Wraps on a narrow column, so it never forces horizontal scroll. */
 .revActions {
   display: flex;
   align-items: center;

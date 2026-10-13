@@ -28,7 +28,9 @@ describe("AdminMarketingVideosPage", () => {
     const cinematic = within(
       await screen.findByRole("article", { name: "Cinematic" }),
     );
-    expect(screen.getAllByRole("article")).toHaveLength(4);
+    // The flyer and merch cards are articles too, so count within the films.
+    const films = within(screen.getByRole("region", { name: "Films" }));
+    expect(films.getAllByRole("article")).toHaveLength(4);
     expect(cinematic.getByText(/1:05 · 1080p/)).toBeInTheDocument();
     expect(cinematic.getByTitle("Cinematic, still frame")).toHaveAttribute(
       "src",

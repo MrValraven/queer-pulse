@@ -30,8 +30,6 @@ function makeDto(overrides: Partial<ListingDTO> = {}): ListingDTO {
     blurb: "Haircuts at home",
     tagline: "",
     whatItIs: [],
-    tags: [],
-    goodFor: [],
     langs: [],
     online: false,
     address: "",
@@ -73,6 +71,44 @@ describe("dtoToDraft for an out-and-about listing", () => {
     expect(draft.mobileDetails?.byAppointment).toBe(true);
   });
 
+  it("opens with the two appointment answers in step", () => {
+    const toggledOn = dtoToDraft(
+      makeDto({
+        mobile: true,
+        mobileDetails: { ...emptyMobileDetails(), byAppointment: true },
+        entryMode: null,
+      }),
+    );
+    expect(toggledOn.entryMode).toBe("appointmentOnly");
+    const byWayIn = dtoToDraft(
+      makeDto({ mobile: true, entryMode: "appointmentOnly" }),
+    );
+    expect(byWayIn.mobileDetails?.byAppointment).toBe(true);
+  });
+
+  it("leaves the toggle off for By appointment only when the listing stores hours", () => {
+    const withHours = dtoToDraft(
+      makeDto({
+        mobile: true,
+        entryMode: "appointmentOnly",
+        hours: {
+          Tue: { open: true, intervals: [{ from: "10:00", to: "19:00" }] },
+        },
+      }),
+    );
+    expect(withHours.entryMode).toBe("appointmentOnly");
+    expect(withHours.mobileDetails?.byAppointment).toBe(false);
+    expect(withHours.hours.Tue?.open).toBe(true);
+    const withNote = dtoToDraft(
+      makeDto({
+        mobile: true,
+        entryMode: "appointmentOnly",
+        hoursNote: "Saturdays book up fast",
+      }),
+    );
+    expect(withNote.mobileDetails?.byAppointment).toBe(false);
+  });
+
   it("leaves it unticked without coordinates", () => {
     const draft = dtoToDraft(makeDto({ mobile: true }));
     expect(draft.hasMeetingPoint).toBe(false);
@@ -91,5 +127,22 @@ describe("dtoToDraft for an out-and-about listing", () => {
     );
     expect(pending.hasMeetingPoint).toBe(true);
     expect(pending.mobileDetails).toEqual(emptyMobileDetails());
+  });
+
+  it("gives the pending view model the draft's empty fact text for the wire's null", () => {
+    const pending = listingDtoToPending(
+      makeDto({ coverFreeBefore: null, saferSpacePolicyUrl: null }),
+    );
+    expect(pending.coverFreeBefore).toBe("");
+    expect(pending.saferSpacePolicyUrl).toBe("");
+    const filled = listingDtoToPending(
+      makeDto({
+        coverPolicy: "freeBefore",
+        coverFreeBefore: "23:00",
+        saferSpacePolicyUrl: "https://clube.pt/politica",
+      }),
+    );
+    expect(filled.coverFreeBefore).toBe("23:00");
+    expect(filled.saferSpacePolicyUrl).toBe("https://clube.pt/politica");
   });
 });

@@ -1,6 +1,7 @@
 import { useId } from "react";
-import { FiAlertCircle } from "react-icons/fi";
+import { FiAlertCircle, FiLock } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { INVITE_PRIVATE_NOTE_MAX_LENGTH } from "./api/invite.api";
 import styles from "./InvitePage.module.css";
 
 interface InviteComposeFieldsProps {
@@ -9,6 +10,9 @@ interface InviteComposeFieldsProps {
   setRecipientEmail: (value: string) => void;
   /** Set once the member tried to generate with a malformed address. */
   hasRecipientEmailError: boolean;
+  /** The member's own reminder of who the invite is for. Never shared. */
+  privateNote: string;
+  setPrivateNote: (value: string) => void;
   vouch: string;
   setVouch: (v: string) => void;
   note: string;
@@ -19,6 +23,8 @@ export function InviteComposeFields({
   recipientEmail,
   setRecipientEmail,
   hasRecipientEmailError,
+  privateNote,
+  setPrivateNote,
   vouch,
   setVouch,
   note,
@@ -28,6 +34,7 @@ export function InviteComposeFields({
   const fieldId = useId();
   const helpId = `${fieldId}-recipient-help`;
   const errorId = `${fieldId}-recipient-error`;
+  const privateNoteHelpId = `${fieldId}-private-note-help`;
 
   return (
     <div className={styles.card}>
@@ -67,6 +74,38 @@ export function InviteComposeFields({
             {t("auth:invite.compose.recipientEmail.invalid")}
           </div>
         )}
+      </div>
+
+      {/* The member's own label, kept apart from the two fields below that the
+          recipient reads: the lock and the help line say who sees it. */}
+      <div className={styles.field}>
+        <label htmlFor={`${fieldId}-private-note`}>
+          <FiLock aria-hidden className={styles.fieldLabelIcon} />
+          {t("auth:invite.compose.privateNote.label")}{" "}
+          <span className={styles.optionalSuffix}>
+            {t("auth:common.optionalSuffix")}
+          </span>
+        </label>
+        <input
+          id={`${fieldId}-private-note`}
+          type="text"
+          autoComplete="off"
+          maxLength={INVITE_PRIVATE_NOTE_MAX_LENGTH}
+          placeholder={t("auth:invite.compose.privateNote.placeholder")}
+          value={privateNote}
+          onChange={(event) => setPrivateNote(event.target.value)}
+          aria-describedby={privateNoteHelpId}
+        />
+        {/* Help and count share one row so the count sits right under the
+            input, where the vouch and note fields keep theirs. */}
+        <div className={styles.fieldMeta}>
+          <p id={privateNoteHelpId} className={styles.fieldHelp}>
+            {t("auth:invite.compose.privateNote.help")}
+          </p>
+          <div className={styles.charCount}>
+            {privateNote.length}/{INVITE_PRIVATE_NOTE_MAX_LENGTH}
+          </div>
+        </div>
       </div>
 
       <div className={styles.field}>

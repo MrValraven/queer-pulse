@@ -12,6 +12,7 @@ import {
   reviewContentNotesText,
   reviewCostText,
   reviewCustomQuestionText,
+  reviewGuestCommunitiesText,
   reviewLanguageText,
   reviewRsvpCutoffText,
   reviewRsvpQuestionsText,
@@ -35,7 +36,8 @@ export interface ReviewGroupProps {
 /**
  * Chapter 3 read back: spots, language, cost, who can see it, the waitlist,
  * when RSVPs close, the community (only for a host who runs or moderates one,
- * as the chapter itself shows the field) and the co-hosts picked.
+ * as the chapter itself shows the field), the guest communities with when
+ * their invites go out, and the co-hosts picked.
  */
 export function WhoReviewGroup({ form, onEditChapter }: ReviewGroupProps) {
   const { t } = useTranslation();
@@ -84,6 +86,12 @@ export function WhoReviewGroup({ form, onEditChapter }: ReviewGroupProps) {
           <ReviewRow
             label={t("gatherings:create.v2.review.row.community")}
             value={communityName}
+          />
+        )}
+        {myCommunityOptions.length > 0 && (
+          <ReviewRow
+            label={t("gatherings:guestCommunities.label")}
+            value={reviewGuestCommunitiesText(form, t)}
           />
         )}
         <ReviewRow

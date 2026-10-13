@@ -43,7 +43,11 @@ export const ONLINE_DIRECTORY_PLACES: DirectoryPlace[] = [
     desc: "A risograph zine shop run from a spare room. Queer comics, poetry and Portuguese-language small press, posted anywhere in Portugal.",
     tagline:
       "Small-press queer zines, printed by hand and posted to your door.",
-    pills: ["Zines & small press", "Ships across Portugal", "€"],
+    price: "€",
+    attributes: ["good-for-gifts", "gift-cards", "workshops"],
+    highlights: ["good-for-gifts", "workshops"],
+    issuesNifInvoices: true,
+    langs: ["pt"],
     rating: { score: "4.9", count: 31 },
     gallery: [
       "Riso drum, mid-print",
@@ -54,12 +58,6 @@ export const ONLINE_DIRECTORY_PLACES: DirectoryPlace[] = [
     whatItIs: [
       "Fio Solto is a one-person zine shop and riso press. Everything in the catalogue is made by queer artists, most of them working in Portuguese, many of them printing for the first time.",
       "Orders are packed by hand twice a week. If you make zines yourself, there is a standing open call: send a PDF and a note, and every submission gets a reply.",
-    ],
-    goodFor: [
-      { label: "Queer comics in Portuguese", yes: true },
-      { label: "A gift that someone actually made", yes: true },
-      { label: "First-time zine makers", yes: true },
-      { label: "Same-day delivery", yes: false },
     ],
     hoursType: "appointment",
     hoursNote: "",
@@ -147,7 +145,13 @@ export const ONLINE_DIRECTORY_PLACES: DirectoryPlace[] = [
     tint: "jade",
     desc: "Queer and trans-affirming therapy by video, in Portuguese and English. Sliding-scale places held every month for newcomers.",
     tagline: "Therapy where you don't have to explain yourself first.",
-    pills: ["Therapy", "PT & EN", "Sliding scale", "€€"],
+    price: "€€",
+    attributes: ["by-appointment", "free-first-call", "sliding-scale"],
+    highlights: ["sliding-scale", "free-first-call", "by-appointment"],
+    issuesNifInvoices: true,
+    inclusionPractices: ["chosen-name", "safer-space-policy"],
+    saferSpacePolicyUrl: "https://corpointeiro.pt/espaco-seguro",
+    langs: ["pt", "en"],
     rating: { score: "5.0", count: 18 },
     gallery: [
       "Consulting room, on screen",
@@ -158,12 +162,6 @@ export const ONLINE_DIRECTORY_PLACES: DirectoryPlace[] = [
     whatItIs: [
       "Corpo Inteiro is a small online practice of two psychologists, both registered with the Ordem, both queer, one of them trans. Sessions run by video, so it works from Porto, the Algarve, or a flat share in Arroios, and in person in Lisbon for anyone who prefers to meet.",
       "A handful of sliding-scale places open every month, prioritised for people who have just arrived in Portugal or are mid-transition and waiting on the public system.",
-    ],
-    goodFor: [
-      { label: "Gender-affirming support", yes: true },
-      { label: "Newcomers to Portugal", yes: true },
-      { label: "Couples & polycules", yes: true },
-      { label: "Crisis or emergency care", yes: false },
     ],
     hoursType: "appointment",
     hoursNote: "",
@@ -232,12 +230,11 @@ export const ONLINE_DIRECTORY_PLACES: DirectoryPlace[] = [
     desc: "Binders, tucking wear and swimwear designed and sewn in Portugal, in sizes that start where the big brands stop.",
     tagline:
       "Gender-affirming clothes, cut for real bodies and sewn close to home.",
-    pills: [
-      "Gender-affirming wear",
-      "Made in Portugal",
-      "Discreet packaging",
-      "€€",
-    ],
+    price: "€€",
+    attributes: ["made-to-order", "gift-cards"],
+    highlights: ["made-to-order"],
+    inclusionPractices: ["chosen-name"],
+    langs: ["pt", "en"],
     rating: { score: "4.8", count: 57 },
     gallery: [
       "Cutting table",
@@ -248,12 +245,6 @@ export const ONLINE_DIRECTORY_PLACES: DirectoryPlace[] = [
     whatItIs: [
       "Peito Livre designs binders, tucking underwear and swimwear, and has them sewn by a family workshop in Guimarães. The size range runs well past where imported brands give up.",
       "Every parcel ships in plain packaging with a neutral sender name, and the fit team answers questions by message, so nobody has to guess their size alone.",
-    ],
-    goodFor: [
-      { label: "A first binder", yes: true },
-      { label: "Plus sizes", yes: true },
-      { label: "Discreet delivery", yes: true },
-      { label: "Trying on in person", yes: false },
     ],
     hoursType: "shop",
     hoursNote: "",
@@ -308,7 +299,11 @@ export const ONLINE_DIRECTORY_PLACES: DirectoryPlace[] = [
     tint: "jade",
     desc: "A remote web studio building accessible, bilingual sites for queer collectives, NGOs and the small businesses in this directory.",
     tagline: "Websites that work for everyone, built by people who get it.",
-    pills: ["Web studio", "Accessibility audits", "Bilingual PT/EN", "€€"],
+    price: "€€",
+    attributes: ["by-appointment", "sliding-scale"],
+    highlights: ["sliding-scale"],
+    issuesNifInvoices: true,
+    langs: ["pt", "en"],
     rating: { score: "4.9", count: 12 },
     gallery: [
       "Wireframes on the wall",
@@ -319,12 +314,6 @@ export const ONLINE_DIRECTORY_PLACES: DirectoryPlace[] = [
     whatItIs: [
       "Código Arco is three developers and a designer, working remotely from Lisbon, Porto and Coimbra. They build sites for collectives, associations and queer-owned businesses, with accessibility built into every job from the first sketch.",
       "Collectives with no budget can apply for one pro-bono build a quarter. Everything else is quoted up front, in plain language.",
-    ],
-    goodFor: [
-      { label: "A site for a collective", yes: true },
-      { label: "Accessibility audits", yes: true },
-      { label: "Bilingual PT/EN content", yes: true },
-      { label: "Crypto or ad-tech projects", yes: false },
     ],
     hoursType: "appointment",
     hoursNote: "",
@@ -373,7 +362,11 @@ export const ONLINE_DIRECTORY_PLACES: DirectoryPlace[] = [
     tint: "coral",
     desc: "Small-batch piri-piri and fermented hot sauces, bottled in a shared kitchen and posted across Portugal and the EU.",
     tagline: "Hot sauce with a grudge and a family recipe.",
-    pills: ["Hot sauce", "Ships to the EU", "Vegan", "€"],
+    price: "€",
+    attributes: ["vegan-options", "gift-cards"],
+    highlights: ["vegan-options", "gift-cards"],
+    issuesNifInvoices: true,
+    langs: ["pt"],
     rating: { score: "4.7", count: 44 },
     gallery: [
       "Chillies drying",
@@ -384,12 +377,6 @@ export const ONLINE_DIRECTORY_PLACES: DirectoryPlace[] = [
     whatItIs: [
       "Molho Bravo started as a grandmother's piri-piri recipe and a queer kitchen's refusal to keep it to themselves. It now runs to six sauces, all fermented for at least a month, all vegan.",
       "Bottled in a shared kitchen in Setúbal and posted twice a week. A cut of every bottle goes to a Lisbon queer food bank.",
-    ],
-    goodFor: [
-      { label: "Gifts that travel well", yes: true },
-      { label: "Vegan kitchens", yes: true },
-      { label: "Supporting a food bank", yes: true },
-      { label: "People who can't take heat", yes: false },
     ],
     hoursType: "shop",
     hoursNote: "",
@@ -441,7 +428,10 @@ export const ONLINE_DIRECTORY_PLACES: DirectoryPlace[] = [
     tint: "plum",
     desc: "Portuguese lessons by video for queer newcomers, with vocabulary the textbooks leave out: the SNS, the AIMA queue and a night out.",
     tagline: "Portuguese for the life you actually live here.",
-    pills: ["Language lessons", "Small groups", "A1 to B2", "€"],
+    price: "€",
+    attributes: ["classes", "beginner-friendly", "student-discount"],
+    highlights: ["beginner-friendly", "classes"],
+    langs: ["pt", "en", "uk", "ar"],
     rating: { score: "4.9", count: 39 },
     gallery: [
       "Group class on screen",
@@ -452,12 +442,6 @@ export const ONLINE_DIRECTORY_PLACES: DirectoryPlace[] = [
     whatItIs: [
       "Aulas Kiki teaches European Portuguese online, in small groups of queer and trans newcomers. Lessons cover the things you need first: talking to a GP, filling in forms with the right pronouns, and holding your own at a bar.",
       "Groups cap at six. Questions between lessons are answered by chat, and a monthly free conversation night is open to anyone, whatever their level.",
-    ],
-    goodFor: [
-      { label: "Newcomers to Lisbon", yes: true },
-      { label: "Learning with people like you", yes: true },
-      { label: "Exam preparation", yes: true },
-      { label: "Brazilian Portuguese", yes: false },
     ],
     hoursType: "appointment",
     hoursNote: "",
@@ -520,7 +504,10 @@ export const ADULT_ONLINE_DIRECTORY_PLACES: DirectoryPlace[] = [
     tint: "plum",
     desc: "Body-safe intimacy products and small-press zines about pleasure and consent, posted in plain packaging.",
     tagline: "Pleasure, consent and good materials, posted discreetly.",
-    pills: ["Plain packaging", "€€"],
+    price: "€€",
+    attributes: ["gift-cards"],
+    highlights: [],
+    langs: ["pt"],
     // No reviews yet, so no score: a rating with nothing behind it would
     // claim feedback the page cannot show.
     rating: { score: "0", count: 0 },
@@ -528,10 +515,6 @@ export const ADULT_ONLINE_DIRECTORY_PLACES: DirectoryPlace[] = [
     whatItIs: [
       "Toque Macio stocks body-safe products from small makers and publishes zines on pleasure, consent and bodies that rarely get written about.",
       "Everything ships in plain packaging with a neutral sender name. Questions about materials and sizes are answered by message.",
-    ],
-    goodFor: [
-      { label: "Body-safe materials", yes: true },
-      { label: "Discreet delivery", yes: true },
     ],
     hoursType: "appointment",
     hoursNote: "",

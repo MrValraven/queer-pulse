@@ -95,6 +95,8 @@ export function useCommunityUpcomingGatherings(
           // "open to all" rather than as "0 going", which would be a number
           // this response deliberately does not carry.
           goingCount: gathering.goingCount ?? 0,
+          hostedAs: gathering.hostedAs,
+          leadCommunity: gathering.leadCommunity,
         },
         fmt,
         t,

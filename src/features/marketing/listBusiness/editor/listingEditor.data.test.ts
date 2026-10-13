@@ -1,5 +1,8 @@
+import { renderHook } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { ANCHOR } from "../listBusiness.data";
+import { blankDraft } from "../listingFormDraft";
+import { useListingFormMissing } from "../useListingFormMissing";
 import {
   editorSectionByKeyFor,
   editorSectionsFor,
@@ -7,6 +10,10 @@ import {
   withListingKindLabels,
   withPricingModeLabel,
 } from "./listingEditor.data";
+import {
+  countMissingInSection,
+  flattenEditorMissing,
+} from "./listingEditorMissing";
 
 describe("withPricingModeLabel", () => {
   it("renames the services section to Menu in menu mode", () => {
@@ -120,5 +127,60 @@ describe("sections for an online listing", () => {
         ANCHOR.hasOnlineShop,
       ]),
     );
+  });
+});
+
+describe("the attribute and fact anchors", () => {
+  it("counts the attribute and fact fields in the sections that render them", () => {
+    const story = LISTING_EDITOR_SECTIONS.find(
+      (section) => section.key === "story",
+    );
+    const practical = LISTING_EDITOR_SECTIONS.find(
+      (section) => section.key === "practical",
+    );
+    expect(story?.anchors).toEqual(
+      expect.arrayContaining([
+        ANCHOR.attributes,
+        ANCHOR.highlights,
+        ANCHOR.inclusionPractices,
+        ANCHOR.saferSpacePolicyUrl,
+        ANCHOR.langs,
+        ANCHOR.langsOther,
+      ]),
+    );
+    expect(practical?.anchors).toEqual(
+      expect.arrayContaining([
+        ANCHOR.entryMode,
+        ANCHOR.coverPolicy,
+        ANCHOR.coverFreeBefore,
+        ANCHOR.waysToPay,
+        ANCHOR.nifInvoices,
+      ]),
+    );
+  });
+});
+
+describe("the photos section", () => {
+  const photosSection = LISTING_EDITOR_SECTIONS.find(
+    (section) => section.key === "photos",
+  );
+
+  it("owns the cover and the gallery anchors", () => {
+    expect(photosSection?.anchors).toEqual([ANCHOR.cover, ANCHOR.photos]);
+  });
+
+  it("counts a cover that lacks alt text as outstanding", () => {
+    const draft = {
+      ...blankDraft(),
+      path: "claim" as const,
+      coverPhoto: { image: "listing-covers/u/k.webp", alt: " " },
+    };
+    const { result } = renderHook(() => useListingFormMissing(draft));
+    expect(
+      countMissingInSection(
+        flattenEditorMissing(result.current),
+        photosSection?.anchors ?? [],
+      ),
+    ).toBe(1);
   });
 });

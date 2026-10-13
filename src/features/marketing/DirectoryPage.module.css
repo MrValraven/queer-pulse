@@ -75,7 +75,7 @@
 
 /* Hero photo + overlays (safe-space/queer-owned badge, save toggle). Bled to
    the card's own top/left/right edges via negative margins matching the
-   card's padding (top 16px, inline 18px — shared by .card and .vc). */
+   card's padding (top 16px, inline 18px, shared by .card and .vc). */
 .photoWrap {
   position: relative;
   margin: -16px -18px 0;
@@ -87,8 +87,8 @@
   inset-inline-start: 12px;
 }
 /* The directory card's badge corner: the ownership pill, then the safe-space
-   mark beside it. A row rather than one slot, so a verified safe space no
-   longer hides what the place actually is. The row stops 12px short of the
+   mark beside it. Both share one row, so a verified safe space leaves what
+   the place actually is in view. The row stops 12px short of the
    right edge, so in a narrow column the pill's words ellipsize inside the
    photo. */
 .photoBadges {
@@ -136,7 +136,7 @@
 }
 /* A small chip over the photo's top-left corner (the "Within a short walk"
    distance). It sits on a member-supplied photo, so it carries its own opaque
-   ground and a two-value edge rather than trusting the image underneath. */
+   ground and a two-value edge, whatever the image underneath. */
 .photoTag {
   position: absolute;
   inset-block-start: 12px;
@@ -306,6 +306,15 @@
   overflow: hidden;
   min-height: calc(1.6em * 2);
 }
+/* The card's two pill rows as one block (DirectoryCardPills): the rows sit
+   as close together as the pills inside them, and the second row is only
+   there when the card has a badge to show. */
+.pillRows {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
 /* Exactly one pill row tall, whatever the tags: min-height holds the row open on
    a card with none, and max-height clips the second row, so a pill that does
    not fit the column wraps below and drops out whole. "Member-run" comes first,
@@ -340,11 +349,51 @@
   background: rgba(var(--jade-rgb), 0.1);
 }
 /* The owner's own "who runs it" tags. Self-declared, so they wear a plain
-   tint rather than anything that could pass for the verified marks.
+   tint that keeps them apart from the verified marks.
    `--violet` is lifted for contrast in dark mode. */
 .pillOwnedBy {
   color: var(--violet);
   background: rgba(var(--violet-rgb), 0.1);
+}
+/* The price band reads first among the listing's own pills. */
+.pillPrice {
+  color: var(--text-strong);
+}
+/* The second row: at most two badges on one line. The tighter gap and badge
+   padding below let the two longest Portuguese badges ("Aberto ao domingo",
+   "Organiza encontros") fit whole in the narrowest card column, at 720px and
+   1024px. Narrower still, the two pills shrink and each label ellipsizes
+   inside its own pill. */
+.badgeRow {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 4px;
+  min-width: 0;
+}
+/* Worked out by the card (late, Sundays, gatherings): a warm tint, text kept
+   at full strength for contrast, and an icon before the label so a badge
+   reads apart from the owner's highlights in both themes. The icon's own
+   whitespace pads its side, so that side and the icon gap stay slim. */
+.pillBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 4px 6px 4px 5px;
+  color: var(--text-strong);
+  background: rgba(var(--accent-rgb), 0.12);
+}
+/* --accent-ink keeps the icon at 3:1 over the light wash; dark mode aliases
+   it to --accent, which already clears that on the dark card. */
+.pillBadge svg {
+  inline-size: 12px;
+  block-size: 12px;
+  flex: none;
+  color: var(--accent-ink);
+}
+.pillBadgeLabel {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .foot {
   display: flex;
@@ -511,6 +560,10 @@
 :global([data-theme="dark"]) .pill:not(.pillMember) {
   background: rgba(var(--cream-rgb), 0.07);
 }
+/* The derived badges keep their warm tint on the dark card. */
+:global([data-theme="dark"]) .pill.pillBadge {
+  background: rgba(var(--accent-rgb), 0.16);
+}
 /* The "Also online" pill takes the same cream wash on the dark card. */
 :global([data-theme="dark"]) .alsoOnlinePill {
   background: rgba(var(--cream-rgb), 0.07);
@@ -525,7 +578,7 @@
 }
 .resultsRow {
   /* One shared height for the controls on this line, so the near-me button
-     keeps the same 40px it has on the desktop search row — and so the privacy
+     keeps the same 40px it has on the desktop search row, and so the privacy
      note hanging below it can't shift that line off centre. */
   --results-control-h: 40px;
   display: flex;
@@ -561,7 +614,7 @@
   border: 0;
 }
 
-/* Zero-height scroll marker for progressive windowing — reveals the next
+/* Zero-height scroll marker for progressive windowing: reveals the next
    batch of directory cards as it nears the viewport. Never occupies visual
    space. Mirrors MemberDirectoryFilterPage.module.css's `.sentinel`. */
 .sentinel {
@@ -671,9 +724,9 @@
 
 /* ── "Use my location" ─────────────────────────────────────────────────────
    Rides the desktop search row with the other result-shaping controls; on
-   phones it sits in the results header instead. The note under it carries the
+   phones it sits in the results header. The note under it carries the
    privacy promise while the feature is on, so it stays part of the control
-   rather than fine print elsewhere. */
+   itself. */
 .nearMe {
   display: flex;
   flex-direction: column;
@@ -682,7 +735,7 @@
   min-width: 0;
 }
 /* Inline (the desktop search row): no box of its own, so the button and the
-   note are placed straight into that row's grid — the button on the field's
+   note are placed straight into that row's grid: the button on the field's
    line, the note on a second line, where its height can't stretch the field or
    the "Refine" toggle beside it. */
 .nearMeInline {
@@ -699,8 +752,8 @@
   max-width: none;
 }
 /* On the search row the resting control sits between two paper surfaces (the
-   field and "Refine"), so it takes the same ground rather than the transparent
-   one it uses against the cream results header. The "on" state keeps its plum. */
+   field and "Refine"), so it takes the same paper ground; against the cream
+   results header it stays transparent. The "on" state keeps its plum. */
 .nearMeInline > .nearMeButton:not(.nearMeButtonOn) {
   background: var(--paper);
 }
@@ -745,8 +798,8 @@
   display: flex;
   align-items: center;
   gap: 5px;
-  /* Indented to the button's own text, so the caption reads as belonging to it
-     rather than starting at the pill's outer edge. */
+  /* Indented to the button's own text, so the caption reads as belonging to
+     it and lines up with its words. */
   margin: 0 0 0 2px;
   max-width: 34ch;
   font-size: var(--text-11-5);

@@ -87,6 +87,10 @@ const GATED_PATTERNS: string[] = [
   "/rsvp",
   "/host",
   "/create-gathering",
+  // A guest community's collab invite (`/collab-invites/:inviteId`), read
+  // and answered by that community's owners, co-owners and mods.
+  "/collab-invites",
+  "/collab-invites/*",
   // The Go together friend-match questionnaire and day-after feedback prompt
   // (F3). `/go-together/*` covers both, the same wildcard pattern `/forum/*`
   // needs just below: the bare "/go-together" is never a route on its own, so

@@ -1,4 +1,4 @@
-import { Link, NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { ImageSlot } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
 import { Translation } from "../../shared/i18n/Translation";
@@ -12,53 +12,20 @@ import {
   LIBRARY,
   SUSTAINER_SINCE_DATE,
   YEARLY_GIVING,
-  type RailLink,
 } from "./studioShell.data";
+import { RailGroup } from "./StudioRailGroup";
+import { StudioRailLive } from "./StudioRailLive";
+import { useStudioShowcase } from "./useStudioShowcase";
 import styles from "./studio.module.css";
 
-function railClass({ isActive }: { isActive: boolean }) {
-  return [styles.railItem, isActive && styles.railItemOn]
-    .filter(Boolean)
-    .join(" ");
-}
-
-function RailGroup({ items }: { items: RailLink[] }) {
-  const { t } = useTranslation();
-  return (
-    <>
-      {items.map((item) => (
-        <NavLink
-          key={`${item.label}-${item.to}`}
-          to={item.to}
-          end={item.end}
-          className={railClass}
-        >
-          <span className={styles.nm}>{t(item.labelKey)}</span>
-        </NavLink>
-      ))}
-    </>
-  );
-}
-
-export function StudioRail() {
+function StudioRailShowcase() {
   const { t } = useTranslation();
   const fmt = useFormat();
   return (
-    <aside className={styles.rail}>
-      <div className={styles.brandRow}>
-        <span className={styles.pulseDot} aria-hidden />
-        <Link to={routes.homepage} className={styles.brand}>
-          <Translation
-            i18nKey="studio:brand.lockup"
-            components={{ em: <em /> }}
-          />
-        </Link>
-        <span className={styles.product}>{t("studio:brand.studioLabel")}</span>
-      </div>
-
-      <div className={styles.railGrp}>
+    <>
+      <nav className={styles.railGrp} aria-label={t("studio:rail.v1.navLabel")}>
         <RailGroup items={RAIL_MAIN} />
-      </div>
+      </nav>
 
       <div className={styles.railDivider} />
 
@@ -126,6 +93,27 @@ export function StudioRail() {
           />
         </span>
       </div>
+    </>
+  );
+}
+
+export function StudioRail() {
+  const { t } = useTranslation();
+  const isShowcase = useStudioShowcase();
+  return (
+    <aside className={styles.rail}>
+      <div className={styles.brandRow}>
+        <span className={styles.pulseDot} aria-hidden />
+        <Link to={routes.homepage} className={styles.brand}>
+          <Translation
+            i18nKey="studio:brand.lockup"
+            components={{ em: <em /> }}
+          />
+        </Link>
+        <span className={styles.product}>{t("studio:brand.studioLabel")}</span>
+      </div>
+
+      {isShowcase ? <StudioRailShowcase /> : <StudioRailLive />}
     </aside>
   );
 }

@@ -1,5 +1,4 @@
 import { useState, type ReactNode } from "react";
-import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import {
   RefinePanel,
   RefineSplit,
@@ -9,11 +8,17 @@ import { useRefineDrawer } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { LocalAccessFilter } from "./LocalAccessFilter";
 import { LocalCategoryFilter } from "./LocalCategoryFilter";
+import { LocalListingFactFilters } from "./LocalListingFactFilters";
+import { LocalMoreFilters } from "./LocalMoreFilters";
 import { LocalOwnedByFilter } from "./LocalOwnedByFilter";
 import { LocalQuickFilters } from "./LocalQuickFilters";
 import { LocalSortFilter } from "./LocalSortFilter";
-import { LocalVibeFilter } from "./LocalVibeFilter";
 import type { LocalSort } from "./localPlaces";
+import {
+  countListingFactFilters,
+  type DirectoryListingFactFilters,
+  type ListingFactFilterChange,
+} from "./directoryListingFactFilters";
 import {
   ADULT_LISTING_CATEGORY_SLUG,
   LOCAL_CATEGORIES,
@@ -32,7 +37,8 @@ export interface LocalFilterFieldsProps {
   /** Live count per category id (+ "all"), reflecting the other active filters. */
   categoryCounts: Record<string, number>;
   /** How many loaded places each one-tap chip (open now, verified, each access
-   *  need, each vibe) would leave if turned on, with the other filters kept. */
+   *  need, each fact chip) would leave if turned on, with the other filters
+   *  kept. */
   chipCounts: LocalChipCounts;
   /** True once every page of places has loaded without error, which is when a
    *  zero count is final and its chip can go unpickable. Until then a zero may
@@ -40,8 +46,10 @@ export interface LocalFilterFieldsProps {
   isLoadedSetComplete: boolean;
   query: string;
   onQueryChange: (value: string) => void;
-  vibes: string[];
-  onToggleVibe: (vibe: string) => void;
+  /** The attribute and fact filters (`?attr=`, `?entry=`, `?pay=`,
+   *  `?lang=`, `?practice=`). */
+  listingFacts: DirectoryListingFactFilters;
+  onToggleListingFact: (change: ListingFactFilterChange) => void;
   /** Whether the "Verified safe spaces" filter (`?safe=verified`) is active. */
   safeOnly: boolean;
   onToggleSafeOnly: () => void;
@@ -61,8 +69,8 @@ export interface LocalFilterFieldsProps {
   owned: ListingOwnedBy[];
   onToggleOwned: (value: ListingOwnedBy) => void;
   /** How the results are ordered. Sorting is a refinement, so the control lives
-   *  inside the drawer with the filters rather than out on the results header,
-   *  which leaves that header to say what it found. */
+   *  inside the drawer with the filters, which leaves the results header to
+   *  say what it found. */
   sort: LocalSort;
   onSortChange: (next: string) => void;
   /** True while "use my location" is on. The sort control needs it because a
@@ -70,11 +78,11 @@ export interface LocalFilterFieldsProps {
    *  never because it overrides them. */
   isLocationOn: boolean;
   /** The "use my location" control, which rides the search row between the
-   *  field and "Refine" — ordering the results is a refinement, and that row is
+   *  field and "Refine": ordering the results is a refinement, and that row is
    *  where the other two live. Rendered by the `"bar"` and `"overlay"`
    *  variants: the mobile sheet is itself behind a tap, and distance is too
    *  central to bury there, so on phones the Local page keeps it in the
-   *  results header instead. */
+   *  results header. */
   nearMeSlot?: ReactNode;
   /** The List/Map switcher, which rides the far end of the search row so every
    *  control that shapes the results sits on one line. Rendered by the `"bar"`
@@ -83,7 +91,8 @@ export interface LocalFilterFieldsProps {
   viewSlot?: ReactNode;
   /** True on the Online tab, which lists every business that sells online.
    *  Its category chips are what they sell; the questions about a visit (is
-   *  it open right now, is the entrance step-free, the vibe) are left out,
+   *  it open right now, is the entrance step-free, how to get in, ways to
+   *  pay) are left out,
    *  since they say nothing about buying online. */
   isOnlineScope?: boolean;
   /** Whether "Show 18+ shops" (`?adult=1`) is on and read. Show 18+ shops is
@@ -101,7 +110,7 @@ interface LocalFilterFieldsVariantProps extends LocalFilterFieldsProps {
    * Where this set is rendered. `"bar"` (default) is the desktop sticky bar,
    * where every filter collapses behind the "Refine" toggle so the bar stays
    * one row tall. `"sheet"` is the mobile Filters sheet, which is itself
-   * already a collapsed surface — nesting a second drawer inside it would put
+   * already a collapsed surface. Nesting a second drawer inside it would put
    * the place types two taps deep, so there the groups render flat.
    * `"overlay"` is the floating card inside the desktop full screen map: the
    * bar's row minus the List/Map switcher, with a drawer state of its own.
@@ -115,11 +124,74 @@ interface LocalFilterFieldsVariantProps extends LocalFilterFieldsProps {
 }
 
 /**
+ * "Who runs it" through "Access needs", one band of the drawer. Once the
+ * drawer is wide enough they pair up two to a row (`.factGrid`), so a wide
+ * screen is not left with a tall single column of short chip rows. The
+ * mobile sheet keeps them as its plain stack.
+ */
+function FactBands({
+  isStacked,
+  children,
+}: {
+  isStacked: boolean;
+  children: ReactNode;
+}) {
+  if (isStacked) return <>{children}</>;
+  return (
+    <div className={s.factBands}>
+      <div className={s.factGrid}>{children}</div>
+    </div>
+  );
+}
+
+/** The search field on the filter row. The text it shows is held by
+ *  `LocalFilterFields`, which keeps it in step with the URL's `query`. */
+function LocalSearchField({
+  searchText,
+  onSearchTextChange,
+}: {
+  searchText: string;
+  onSearchTextChange: (next: string) => void;
+}) {
+  const { t } = useTranslation();
+  return (
+    <div className={s.search}>
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={2}
+        strokeLinecap="round"
+        aria-hidden
+      >
+        <circle cx={11} cy={11} r={7} />
+        <path d="M21 21l-4.35-4.35" />
+      </svg>
+      <input
+        type="text"
+        aria-label={t("marketing:local.filter.searchPlaceholder")}
+        placeholder={t("marketing:local.filter.searchPlaceholder")}
+        value={searchText}
+        onChange={(event) => onSearchTextChange(event.target.value)}
+        // Escape empties a filled field first. Claiming the key keeps the full
+        // screen map open (useMapFullscreen leaves on any Escape left
+        // unclaimed), so only an Escape in an empty field closes it.
+        onKeyDown={(event) => {
+          if (event.key !== "Escape" || searchText === "") return;
+          event.preventDefault();
+          onSearchTextChange("");
+        }}
+      />
+    </div>
+  );
+}
+
+/**
  * The filter set itself: search, then the groups. Place type (what they
  * sell, on the Online tab), the one-tap narrowings (open now, verified safe
  * spaces, out and about and, on the Online tab for a signed-in member, Show
- * 18+ shops), "who
- * runs it", access needs, and (demo-only) vibe. Rendered inline in the
+ * 18+ shops), "who runs it", how to get in, ways to pay, languages,
+ * inclusion practices, access needs, and more filters. Rendered inline in the
  * desktop bar behind the "Refine" toggle, or flat inside the mobile "Filters"
  * sheet; one markup source so the two layouts never diverge in behaviour.
  */
@@ -132,8 +204,8 @@ export function LocalFilterFields({
   isLoadedSetComplete,
   query,
   onQueryChange,
-  vibes,
-  onToggleVibe,
+  listingFacts,
+  onToggleListingFact,
   safeOnly,
   onToggleSafeOnly,
   openNow,
@@ -156,8 +228,6 @@ export function LocalFilterFields({
   variant = "bar",
   activeFiltersSlot,
 }: LocalFilterFieldsVariantProps) {
-  const { t } = useTranslation();
-  const { demoMode } = useDemoMode();
   // Every filter collapses behind one toggle so the bar stays a single row;
   // the visitor's open/closed choice sticks per device. The map card keeps its
   // own key, so entering full screen opens on a shut drawer and the map stays
@@ -166,19 +236,11 @@ export function LocalFilterFields({
   const refine = useRefineDrawer(
     isOverlay ? "qp.local.mapRefineOpen" : "qp.local.refineOpen",
   );
-  // Vibe (Cozy/Loud/Chill) only ever has data on demo-only venues (`map.data`'s
-  // `VENUES.vibe`) — a real business has no vibe-tag field at all (its
-  // `photos.vibe` is an unrelated photo-caption slot, not a mood tag), so the
-  // chips would silently do nothing to a real listing. Gated to demo mode only
-  // (gap-audit HSG-8), matching this folder's existing `useDemoMode` gates
-  // (`DirectoryAsideExtras`, `DirectoryAsideFooter`) until/unless a real
-  // vibe-tag field exists on live businesses.
-  const showVibeFilter = demoMode && !isOnlineScope;
   // Surfaced on the collapsed toggle so hidden-but-active filters still read.
-  // Every chosen place type counts as one filter, the same way each vibe and
-  // each access need does, so the badge matches the chips applied.
+  // Every chosen place type counts as one filter, the same way each fact chip
+  // and each access need does, so the badge matches the chips applied.
   const activeRefineCount =
-    vibes.length +
+    countListingFactFilters(listingFacts) +
     access.length +
     categories.length +
     (safeOnly ? 1 : 0) +
@@ -204,40 +266,15 @@ export function LocalFilterFields({
   };
 
   const search = (
-    <div className={s.search}>
-      <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth={2}
-        strokeLinecap="round"
-        aria-hidden
-      >
-        <circle cx={11} cy={11} r={7} />
-        <path d="M21 21l-4.35-4.35" />
-      </svg>
-      <input
-        type="text"
-        aria-label={t("marketing:local.filter.searchPlaceholder")}
-        placeholder={t("marketing:local.filter.searchPlaceholder")}
-        value={searchText}
-        onChange={(event) => changeSearchText(event.target.value)}
-        // Escape empties a filled field first. Claiming the key keeps the full
-        // screen map open (useMapFullscreen leaves on any Escape left
-        // unclaimed), so only an Escape in an empty field closes it.
-        onKeyDown={(event) => {
-          if (event.key !== "Escape" || searchText === "") return;
-          event.preventDefault();
-          changeSearchText("");
-        }}
-      />
-    </div>
+    <LocalSearchField
+      searchText={searchText}
+      onSearchTextChange={changeSearchText}
+    />
   );
 
   // The groups, in one place: the bar renders them inside the refine drawer,
   // the sheet renders them straight into its body. Each one is a band with the
-  // same uppercase label, so the drawer reads as a stack of named sections
-  // instead of loose chips.
+  // same uppercase label, so the drawer reads as a stack of named sections.
   const groups = (
     <>
       <LocalCategoryFilter
@@ -285,23 +322,32 @@ export function LocalFilterFields({
           onToggleAdult={onToggleAdult}
         />
       </RefineSplit>
-      <LocalOwnedByFilter owned={owned} onToggleOwned={onToggleOwned} />
-      {!isOnlineScope && (
-        <LocalAccessFilter
-          access={access}
-          onToggleAccess={onToggleAccess}
-          accessCounts={chipCounts.access}
+      <FactBands isStacked={variant === "sheet"}>
+        <LocalOwnedByFilter owned={owned} onToggleOwned={onToggleOwned} />
+        <LocalListingFactFilters
+          listingFacts={listingFacts}
+          onToggleListingFact={onToggleListingFact}
+          counts={chipCounts.listingFacts}
           isLoadedSetComplete={isLoadedSetComplete}
+          isOnlineScope={isOnlineScope}
         />
-      )}
-      {showVibeFilter && (
-        <LocalVibeFilter
-          vibes={vibes}
-          onToggleVibe={onToggleVibe}
-          vibeCounts={chipCounts.vibes}
-          isLoadedSetComplete={isLoadedSetComplete}
-        />
-      )}
+        {!isOnlineScope && (
+          <LocalAccessFilter
+            access={access}
+            onToggleAccess={onToggleAccess}
+            accessCounts={chipCounts.access}
+            isLoadedSetComplete={isLoadedSetComplete}
+          />
+        )}
+      </FactBands>
+      <LocalMoreFilters
+        listingFacts={listingFacts}
+        onToggleListingFact={onToggleListingFact}
+        counts={chipCounts.listingFacts}
+        isLoadedSetComplete={isLoadedSetComplete}
+        isOnlineScope={isOnlineScope}
+        categories={categories}
+      />
     </>
   );
 

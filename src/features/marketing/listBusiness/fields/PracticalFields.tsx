@@ -7,9 +7,11 @@ import { ListBusinessLocationField } from "../ListBusinessLocationField";
 import { ListingHoursEditor } from "../ListingHoursEditor";
 import { listingKindOf } from "../listingMobile.data";
 import { AlsoSellsOnlineField } from "./AlsoSellsOnlineField";
+import { EntryFields } from "./EntryFields";
 import { MobilePracticalFields } from "./MobilePracticalFields";
 import { OnlineSellingFields } from "./OnlineSellingFields";
 import { SOCIAL_FIELDS } from "./practicalFields.data";
+import { WaysToPayFields } from "./WaysToPayFields";
 import styles from "../ListBusinessPage.module.css";
 
 /**
@@ -18,7 +20,10 @@ import styles from "../ListBusinessPage.module.css";
  * optional meeting point, hours or "By appointment only", and "We also sell
  * online". An online-only business: "How
  * people buy from you" (main link through the reply note), which replaces the
- * address and the hours. Both end with the contact rows.
+ * address and the hours. Every kind then answers the NIF question; a place
+ * and an out-and-about business first say how people get in, what entry
+ * costs (nightlife and culture) and how they can pay. All end with the
+ * contact rows.
  *
  * Shared by the create wizard's step 3 pane (`StepPractical`) and the owner
  * editor's Practical section. Fragment, so each field stays a direct child of
@@ -56,6 +61,16 @@ export function PracticalFields({
           <AlsoSellsOnlineField form={form} />
         </>
       )}
+
+      {kind !== "online" && (
+        <>
+          <h3 className={styles.groupH}>
+            {t("marketing:listBusiness.step3.gettingInHeading")}
+          </h3>
+          <EntryFields form={form} />
+        </>
+      )}
+      <WaysToPayFields form={form} />
 
       <h3 className={styles.groupH}>
         {t(

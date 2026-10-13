@@ -8,6 +8,16 @@ import {
   type PhotoKey,
 } from "../listBusiness/listBusiness.data";
 import {
+  normalizeCoverFreeBefore,
+  normalizeCoverPolicy,
+  normalizeEntryMode,
+  normalizeInclusionPractices,
+  normalizeLanguageCodes,
+  normalizePaymentMethods,
+} from "../listBusiness/listingFacts.data";
+import { listingFactsForPayload } from "../listBusiness/listingFactsPayload";
+import { healLegacyLanguages } from "../listBusiness/listingLegacyAttributes";
+import {
   normalizeAccessibilityAnswers,
   normalizeListingAccessibilityAnswers,
   type AccessibilityAnswerMap,
@@ -44,8 +54,8 @@ import type {
  * Spread the card DTO's `coverPhoto` into the `photos`/`alt`/`photoFocus`
  * fields the card body reads.
  *
- * Returns an EMPTY object for a listing with no photo, rather than a `photos`
- * record of nulls: `LocalBusinessCardBody` shows its placeholder caption when
+ * Returns an EMPTY object for a listing with no photo (no `photos` record of
+ * nulls): `LocalBusinessCardBody` shows its placeholder caption when
  * `photos?.wide` is falsy either way, but leaving the field undefined keeps a
  * photoless card indistinguishable from the demo places, which carry no
  * `photos` at all and fall back to their `gallery` caption blocks.
@@ -83,7 +93,7 @@ function cardHours(
  * The card's accessibility block, or `undefined` when the payload carries no
  * answers at all.
  *
- * Absent answers are left absent rather than healed into six `unknown`s: the
+ * Absent answers are left absent and never healed into six `unknown`s: the
  * card shows only the needs a listing has actually said YES to, so a listing
  * that has answered nothing and a listing that has answered "no" to everything
  * both correctly show no access row. The card never carries the owner's
@@ -95,6 +105,42 @@ function cardAccessibility(
 ): DirectoryPlace["accessibility"] | undefined {
   if (!answers) return undefined;
   return { answers: normalizeAccessibilityAnswers(answers), note: null };
+}
+
+/** Strings only, order kept: a newer server's slug this build does not know
+ *  still renders (by its words) and still matches its filter. */
+function slugList(raw: readonly unknown[] | undefined): string[] {
+  return (raw ?? []).filter(
+    (entry): entry is string => typeof entry === "string",
+  );
+}
+
+/** The fields the card and the detail page both carry. */
+function cardFacts(
+  dto: DirectoryCardDTO,
+): Pick<
+  DirectoryPlace,
+  | "price"
+  | "attributes"
+  | "highlights"
+  | "entryMode"
+  | "payments"
+  | "langs"
+  | "inclusionPractices"
+  | "hostsGatherings"
+  | "cats"
+> {
+  return {
+    price: dto.price ?? "",
+    attributes: slugList(dto.attributes),
+    highlights: slugList(dto.highlights).slice(0, 3),
+    entryMode: normalizeEntryMode(dto.entryMode),
+    payments: normalizePaymentMethods(dto.payments),
+    langs: normalizeLanguageCodes(dto.langs),
+    inclusionPractices: normalizeInclusionPractices(dto.inclusionPractices),
+    hostsGatherings: dto.hostsGatherings === true,
+    ...(dto.cats ? { cats: [...dto.cats] } : {}),
+  };
 }
 
 /** An out-and-about listing with no meeting point has no location to print. */
@@ -114,9 +160,10 @@ function hasNoPublicLocation(
  * Map a public `DirectoryCardDTO` onto the `DirectoryPlace` view model the grid
  * renders. The grid reads only card-level fields (name, cat, hood, desc, tint,
  * av, owned, member, cover photo, opening hours, accessibility answers,
- * pills); the detail-only fields are filled with empty defaults here because
- * the detail page fetches its own richer payload via `useDirectoryPlace` — those
- * placeholder values are never rendered.
+ * price, highlights and the filterable facts); the detail-only
+ * fields are filled with empty defaults here because the detail page
+ * fetches its own richer payload via `useDirectoryPlace`. Those placeholder
+ * values are never rendered.
  */
 export function cardDtoToPlace(dto: DirectoryCardDTO): DirectoryPlace {
   return {
@@ -160,13 +207,14 @@ export function cardDtoToPlace(dto: DirectoryCardDTO): DirectoryPlace {
     // card carries its state too. Absent on older payloads → left undefined
     // and read through `operatingStateOf`, which defaults to "open".
     operatingState: dto.operatingState,
-    // The owner's cover photo, so the card shows the wide shot they uploaded
-    // rather than the "Photo coming" frame. The card reads the `wide` slot, and
-    // the cover IS the first gallery entry (the wide shot), so it lands there;
-    // the remaining slots stay empty because a card payload never carries them.
+    // The card's cover photo, so the card shows a real photo where the "Photo
+    // coming" frame would sit. The cover is the owner's own coverPhoto when set, else
+    // the first gallery entry, which the backend resolves into `coverPhoto`.
+    // The card reads the `wide` slot, so it lands there; the remaining slots
+    // stay empty because a card payload never carries them.
     ...cardCoverPhoto(dto.coverPhoto),
-    // Opening hours on the card, so "Open till 23:00" is answered in the grid
-    // instead of one click away. The three fields are exactly the ones
+    // Opening hours on the card, so "Open till 23:00" is answered right in the
+    // grid. The three fields are exactly the ones
     // `openStatus` reads, in exactly the shapes the detail page already used:
     // the venue's own timezone (null ⇒ Europe/Lisbon, which `zonedNow`
     // defaults to), the weekly grid, and the near-term exception slice
@@ -177,16 +225,12 @@ export function cardDtoToPlace(dto: DirectoryCardDTO): DirectoryPlace {
     // The six accessibility answers, so a card can show what it meets and the
     // grid can be filtered on real needs. `unknown` travels through intact.
     accessibility: cardAccessibility(dto.accessibilityAnswers),
-    // The pill row under the blurb: price band first when set, then the tags,
-    // so the real card matches the wizard preview. Absent on older payloads,
-    // which the card reads as an empty row.
-    pills: dto.pills ?? [],
-    // detail-only fields — unused by the grid, filled by the detail fetch
+    ...cardFacts(dto),
+    // detail-only fields: unused by the grid, filled by the detail fetch
     tagline: "",
     rating: { score: "0", count: 0 },
     gallery: [],
     whatItIs: [],
-    goodFor: [],
     hoursType: "appointment",
     hoursNote: "",
     owner: {
@@ -195,7 +239,7 @@ export function cardDtoToPlace(dto: DirectoryCardDTO): DirectoryPlace {
       // avatar sits beside the owner's first name in the card footer, so
       // "Maison Du Tiago" was showing "MD" next to "Tiago". An owner who
       // names nobody keeps the business initials, and the footer drops the
-      // whole line rather than printing a lone bubble.
+      // whole line and never prints a lone bubble.
       initials: dto.memberFirst ? initials(dto.memberFirst) : dto.av,
       tint: dto.tint,
       role: "",
@@ -270,20 +314,26 @@ export function detailDtoToPlace(
     tagline: dto.tagline,
     city: dto.city || undefined,
     timezone: dto.timezone ?? undefined,
-    pills: dto.pills,
     rating: dto.rating,
     gallery: dto.gallery,
     whatItIs: dto.whatItIs,
-    goodFor: dto.goodFor,
     // Optional on the wire: a payload predating the accessibility/services/
     // baseline work simply carries none of them, and every consumer treats an
-    // absent block as "this listing has said nothing" rather than as a "no".
+    // absent block as "this listing has said nothing", which is no "no".
     accessibility: dto.accessibility,
     services: dto.services ?? [],
     pricingMode: dto.pricingMode ?? "services",
     menu: dto.menu ?? emptyMenu(),
     affirmingBaseline: dto.affirmingBaseline,
     queerOwnedVerification: dto.queerOwnedVerification,
+    ...cardFacts(dto),
+    coverPolicy: normalizeCoverPolicy(dto.coverPolicy),
+    coverFreeBefore: normalizeCoverFreeBefore(dto.coverFreeBefore) || null,
+    issuesNifInvoices:
+      typeof dto.issuesNifInvoices === "boolean" ? dto.issuesNifInvoices : null,
+    saferSpacePolicyUrl: dto.saferSpacePolicyUrl || null,
+    // Codes on a current payload; names from an older one heal here.
+    ...healLegacyLanguages(dto.langs, dto.langsOther ?? ""),
     hoursType: dto.hoursType,
     hoursNote: dto.hoursNote,
     owner: dto.owner,
@@ -304,11 +354,10 @@ export function detailDtoToPlace(
     operatingState: dto.operatingState,
     movedToListing: dto.movedToListing ?? null,
     detailsConfirmedAt: dto.detailsConfirmedAt ?? null,
-    langs: dto.langs,
     savedCount: dto.savedCount,
     reviews: dto.reviews,
     // Optional on the wire (a payload predating the public-questions work has
-    // none) — an absent block reads as "nobody has asked anything yet".
+    // none): an absent block reads as "nobody has asked anything yet".
     questions: dto.questions ?? [],
     upcoming: dto.upcoming.map((event) => {
       const startAt = new Date(event.startAt);
@@ -333,12 +382,12 @@ export function detailDtoToPlace(
 
 const DIRECTORY_TINTS: Tint[] = ["coral", "jade", "plum"];
 
-/** Deterministic tint from a string (a listing slug, or — for vouches, which
- * carry no slug — the voucher's name), so the same input keeps the same
+/** Deterministic tint from a string (a listing slug, or, for vouches, which
+ * carry no slug, the voucher's name), so the same input keeps the same
  * colour across renders. Mirrors the backend's `tintForSlug`
  * (queerpulse-backend/src/listings/listing-response.ts), which the backend
  * itself keys on `vouch.name` for the safe-spaces hub's own vouches
- * (`toSafeSpaceDetail`) — exported so `directorySafeSpace.adapters.ts` can
+ * (`toSafeSpaceDetail`). Exported so `directorySafeSpace.adapters.ts` can
  * derive the same tint client-side for the directory detail's RAW vouches. */
 export function tintForSlug(slug: string): Tint {
   let hash = 0;
@@ -370,7 +419,7 @@ interface SubmittedOwnerIdentity {
 }
 
 /** The owner's public-facing identity, redacted to honour the visibility
- * chosen in the listing wizard — mirrors the backend's `ownerIdentity`, which
+ * chosen in the listing wizard. Mirrors the backend's `ownerIdentity`, which
  * is the real boundary for live listings. Reproduced here so a demo listing's
  * own detail page looks the same regardless of source. */
 function submittedOwnerIdentity(
@@ -429,29 +478,29 @@ function submittedOnlineBlock(
  * Map a member's own submitted listing (the wizard draft + submission
  * metadata kept in `useDirectoryListings`' `submitted` overlay) onto
  * `DirectoryPlace`, so a demo-created listing's detail page
- * (`/local/directory/:slug`) resolves instead of only ever finding the static
- * `DIRECTORY_PLACES` fixtures. Mirrors the backend's `toDirectoryDetail`
+ * (`/local/directory/:slug`) resolves beside the static `DIRECTORY_PLACES`
+ * fixtures. Mirrors the backend's `toDirectoryDetail`
  * (queerpulse-backend/src/listings/listing-response.ts) field-for-field, so
  * the page renders the same whether the source is a live
  * `GET /directory/:slug` or this demo fallback.
  *
- * `useDirectoryPlace`'s demo branch is the only caller — live mode never
+ * `useDirectoryPlace`'s demo branch is the only caller; live mode never
  * touches this. Ownership (the "Edit this listing" link, the review-reply
  * composer) is resolved independently by matching the route slug against
- * `submitted` in `DirectorySpacePage`, not from any field this returns, so
+ * `submitted` in `DirectorySpacePage`, with no field this returns involved, so
  * nothing here needs to be owner-aware.
  *
  * Deliberate simplifications versus the live payload:
- * - `rating`/`reviews` are always empty — a freshly submitted listing has no
+ * - `rating`/`reviews` are always empty: a freshly submitted listing has no
  *   reviews yet.
  * - `hoursType` is always `"appointment"`. Harmless: this listing's real
- *   per-weekday `hours` (always present — the wizard seeds every day via
+ *   per-weekday `hours` (always present: the wizard seeds every day via
  *   `emptyHours()`) takes priority over the `hoursType` template on the
  *   detail page, so the template is never actually rendered.
  */
 export function submittedToPlace(
   listing: PendingListing,
-  /** The submitter's own profile photo, for the "Who runs it" card — same
+  /** The submitter's own profile photo, for the "Who runs it" card, with the same
    * gating as `identity.inQueerPulse` below (only a public, profile-linked
    * submission shows a real photo). The caller passes `useAuth()`'s
    * `user.profile.avatarUrl`; absent when logged out or the profile has no
@@ -498,7 +547,12 @@ export function submittedToPlace(
     latitude: hasNoLocation ? null : listing.latitude,
     longitude: hasNoLocation ? null : listing.longitude,
     tagline: listing.tagline,
-    pills: [...(listing.price ? [listing.price] : []), ...listing.tags],
+    // As a save sends them, so a demo listing's card and page read like a
+    // live one. A submitted draft has hosted nothing yet.
+    price: listing.price,
+    ...listingFactsForPayload(listing),
+    hostsGatherings: false,
+    cats: [...listing.cats],
     rating: { score: "0", count: 0 },
     gallery: [
       listing.alt.wide,
@@ -507,7 +561,6 @@ export function submittedToPlace(
       listing.alt.vibe,
     ].filter((caption) => caption.length > 0),
     whatItIs: listing.whatItIs.map((line) => line.text),
-    goodFor: listing.goodFor.map((id) => ({ label: id, yes: true })),
     // A draft saved before these fields existed carries neither, so both are
     // healed on the way through: the answer map is filled up to all ten
     // questions and the service rows lose their client-only keys.
@@ -540,7 +593,6 @@ export function submittedToPlace(
     photos,
     alt: listing.alt,
     hours: normalizeHours(listing.hours),
-    langs: listing.langs,
     reviews: [],
   };
 }

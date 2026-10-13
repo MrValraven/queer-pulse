@@ -5,13 +5,32 @@ import {
   type OnlinePaymentMethod,
   type OnlineSessionFormat,
 } from "./listingOnline.data";
-import { LISTING_TAG_GROUPS } from "./listingTags.data";
+
+/**
+ * The two keys a draft saved before 2026-10-08 can still carry. `ListingDraft`
+ * no longer has them; the healers read them through this type, and
+ * `healLegacyListingDraft` removes them.
+ */
+export interface LegacyListingDraftFields {
+  tags?: unknown;
+  goodFor?: unknown;
+}
+
+/** A legacy list slot read defensively: its strings, or none. */
+export function legacyStringList(value: unknown): string[] {
+  return Array.isArray(value)
+    ? value.filter((entry): entry is string => typeof entry === "string")
+    : [];
+}
 
 /**
  * The ten tags that became structured online fields on 2026-10-07. The
  * backend migration moved them on every stored listing; a draft saved before
- * that still carries them, and the server answers its create with "Unknown
- * listing tags". Same map as the backend's `ONLINE_TAG_MOVES_AT_MIGRATION`.
+ * that still carries them. Since 2026-10-08 the server ignores `tags`, and a
+ * create's attributes must be ones the listing's kind and categories are
+ * offered (server rules 2 and 7), so a retired tag survives only once moved
+ * to its online field here. Same map as the backend's
+ * `ONLINE_TAG_MOVES_AT_MIGRATION`.
  */
 type RetiredTagMove =
   | { field: "fulfilment"; value: OnlineFulfilment }
@@ -43,12 +62,16 @@ function retiredTagMove(tag: string): RetiredTagMove | undefined {
  * A resumed online draft with its retired tags moved into the online block
  * (how people get it, payments, session formats) and out of `tags`. Returns
  * the same draft when there is nothing to move, so a caller can run it on
- * every load. A place draft is left as it is: its create body drops the
- * retired tags (`knownListingTags`).
+ * every load. A place draft is left as it is: the attribute healer
+ * (`healLegacyListingDraft`) drops the retired tags with the rest of the
+ * legacy keys.
  */
-export function healRetiredOnlineTags(draft: ListingDraft): ListingDraft {
+export function healRetiredOnlineTags(
+  draft: ListingDraft & LegacyListingDraftFields,
+): ListingDraft & LegacyListingDraftFields {
   if (!draft.online) return draft;
-  const moves = draft.tags.flatMap((tag) => {
+  const tags = legacyStringList(draft.tags);
+  const moves = tags.flatMap((tag) => {
     const move = retiredTagMove(tag);
     return move ? [move] : [];
   });
@@ -58,7 +81,7 @@ export function healRetiredOnlineTags(draft: ListingDraft): ListingDraft {
     moves.filter((move) => move.field === field).map((move) => move.value);
   return {
     ...draft,
-    tags: draft.tags.filter((tag) => retiredTagMove(tag) === undefined),
+    tags: tags.filter((tag) => retiredTagMove(tag) === undefined),
     // Through the normaliser again: known values once each, canonical order.
     onlineDetails: normalizeOnlineDetails({
       ...details,
@@ -70,15 +93,4 @@ export function healRetiredOnlineTags(draft: ListingDraft): ListingDraft {
       ],
     }),
   };
-}
-
-const KNOWN_LISTING_TAGS: ReadonlySet<string> = new Set(
-  LISTING_TAG_GROUPS.flatMap((group) => [...group.tags, ...group.onlineTags]),
-);
-
-/** The tags a CREATE body may carry: the vocabulary's, place and online
- *  alike. The server refuses any other tag on a create, while an update
- *  keeps the older tags a listing already holds. */
-export function knownListingTags(tags: readonly string[]): string[] {
-  return tags.filter((tag) => KNOWN_LISTING_TAGS.has(tag));
 }

@@ -15,6 +15,7 @@ import {
   type LifecycleNotificationKind,
   openCallsTopicLabel,
 } from "./notificationKindCopy";
+import { collabResponseKey } from "./communityCollabNotifications";
 import { notificationReasonOf } from "./notificationReason";
 import {
   isLegacySafeSpaceOutcome,
@@ -156,6 +157,12 @@ export type NotificationKind =
   | "event_lineup_invite"
   | "event_lineup_accepted"
   | "event_lineup_declined"
+  // Guest communities (2026-10-08): the invite reaches the guest
+  // community's owners, co-owners and mods; the answer reaches the
+  // gathering's organisers (mirrors the backend values added in
+  // `AddEventCommunityNotificationTypes`).
+  | "event_community_invite"
+  | "event_community_invite_response"
   // Sent to a member the first time a save newly credits their handle as a
   // collaborator on someone else's persona item (mirrors the backend
   // `notifications_type_enum` value added in
@@ -737,6 +744,8 @@ const KIND_CATEGORY: Record<NotificationKind, NotifType> = {
   event_lineup_invite: "events",
   event_lineup_accepted: "events",
   event_lineup_declined: "events",
+  event_community_invite: "events",
+  event_community_invite_response: "events",
   event_rsvp: "events",
   community_reply: "community",
   community_banned: "community",
@@ -2055,6 +2064,8 @@ export function formatNotification(
     key = moderationKeyFor(type, payload);
   } else if (type === "safe_space_review") {
     key = safeSpaceReviewKeyFor(payload);
+  } else if (type === "event_community_invite_response") {
+    key = collabResponseKey(payload);
   } else if (type === "event_updated") {
     key = eventUpdatedKeyFor(type, payload);
   } else if (type === "concern_update") {

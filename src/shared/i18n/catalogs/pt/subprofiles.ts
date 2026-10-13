@@ -3213,4 +3213,10 @@ export const subprofiles: Catalog = {
   "feedImport.listenAria": "Ouvir {title}",
   "feedImport.watch": "Ver",
   "feedImport.watchAria": "Ver {title}",
+  // ── Studio v1 (2026-10-08) ─────────────────────────────────────────────────
+  "studioReleases.label": "Lançamentos no Studio",
+  "studioReleases.type.album": "Álbum",
+  "studioReleases.type.ep": "EP",
+  "studioReleases.type.single": "Single",
+  "studioReleases.type.mix": "Mix",
 };

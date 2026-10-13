@@ -1,11 +1,19 @@
 import { useMemo } from "react";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { buildUploadSideInfo } from "./studioUpload.data";
+import {
+  buildUploadSideInfo,
+  buildUploadSideInfoLive,
+} from "./studioUpload.data";
+import { useStudioShowcase } from "./useStudioShowcase";
 import s from "./creator.module.css";
 
 export function UploadSidebar() {
   const { t } = useTranslation();
-  const sideInfo = useMemo(() => buildUploadSideInfo(t), [t]);
+  const isShowcase = useStudioShowcase();
+  const sideInfo = useMemo(
+    () => (isShowcase ? buildUploadSideInfo(t) : buildUploadSideInfoLive(t)),
+    [isShowcase, t],
+  );
   return (
     <div className={s.col}>
       {sideInfo.map((info) => (

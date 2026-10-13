@@ -1390,4 +1390,28 @@ export const notifications: Catalog = {
     "<profile>{name}</profile> pôs o teu nome na coautoria de “{threadTitle}”.",
   "type.forum_co_author_credit.meta": "Coautoria",
   "type.forum_co_author_credit.threadTitleFallback": "um tópico",
+
+  // Comunidades convidadas (2026-10-08). O convite chega a quem gere a
+  // comunidade convidada; a resposta chega à organização do convívio, com uma
+  // frase por decisão (`collabResponseKey`).
+  "type.event_community_invite.text":
+    "{communityName} tem um convite para organizar um convívio em conjunto.",
+  "type.event_community_invite.textNamed":
+    "<profile>{name}</profile> convidou {communityName} para organizar {eventTitle} em conjunto.",
+  "type.event_community_invite.meta": "Convite para colaborar",
+  "type.event_community_invite_response.text":
+    "{communityName} respondeu ao teu convite para colaborar.",
+  "type.event_community_invite_response.textNamed":
+    "<profile>{name}</profile> respondeu, por {communityName}, ao teu convite para colaborar.",
+  "type.event_community_invite_response.meta": "Colaboração",
+  "type.event_community_invite_response.accepted.text":
+    "{communityName} aceitou o teu convite para colaborar em {eventTitle}.",
+  "type.event_community_invite_response.accepted.textNamed":
+    "<profile>{name}</profile> aceitou, por {communityName}, o teu convite para colaborar.",
+  "type.event_community_invite_response.accepted.meta": "Colaboração aceite",
+  "type.event_community_invite_response.declined.text":
+    "{communityName} recusou o teu convite para colaborar em {eventTitle}.",
+  "type.event_community_invite_response.declined.textNamed":
+    "<profile>{name}</profile> recusou, por {communityName}, o teu convite para colaborar.",
+  "type.event_community_invite_response.declined.meta": "Colaboração recusada",
 };

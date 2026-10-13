@@ -1,66 +1,57 @@
 import { Link } from "react-router-dom";
 import { FiArrowRight } from "react-icons/fi";
-import { ImageSlot, FadeIn } from "../../shared/components/ui";
-import { useSimulatedLoad } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
+import type { StudioReleaseView } from "./api/studio.adapters";
+import { useStudioArtist } from "./api/useStudioArtist";
+import { StudioReleaseCard } from "./StudioReleaseCard";
 import { StudioCardGridSkeleton } from "./StudioSkeletons";
-import { MORE } from "./studioAlbum.data";
-import { routes } from "../../app/routeMap";
+import { releaseFactsLine } from "./studioFacts";
 import styles from "./studio.module.css";
 
-const tagClass = { free: styles.tagFree, mem: styles.tagMem };
+const MORE_LIMIT = 4;
 
-export function StudioAlbumMore() {
+/** The artist's other releases. Quietly absent when there are none or the
+ *  read failed: the release above is the page. */
+export function StudioAlbumMore({ release }: { release: StudioReleaseView }) {
   const { t } = useTranslation();
-  const loading = useSimulatedLoad();
+  const { artist, loadState } = useStudioArtist(release.artist.id);
+  const others = artist
+    ? [...artist.releases, ...artist.singles]
+        .filter((candidate) => candidate.id !== release.id)
+        .slice(0, MORE_LIMIT)
+    : [];
+  if (
+    loadState.isError ||
+    loadState.isNotFound ||
+    (artist && others.length === 0)
+  )
+    return null;
 
   return (
-    <section className={styles.row} style={{ paddingBottom: 60 }}>
+    <section className={styles.row}>
       <div className={styles.rowH}>
         <h2>
           <Translation
             i18nKey="studio:album.more.heading"
-            values={{ artist: "Mariana Sol" }}
+            values={{ artist: release.artist.name }}
             components={{ em: <em /> }}
           />
         </h2>
-        <Link to={routes.studioArtist} className={styles.all}>
+        <Link to={release.artist.href} className={styles.all}>
           {t("studio:album.more.artistPageCta")} <FiArrowRight aria-hidden />
         </Link>
       </div>
-      {loading ? (
-        <StudioCardGridSkeleton className={styles.rowGrid} count={4} />
+      {!artist ? (
+        <StudioCardGridSkeleton className={styles.rowGrid} count={MORE_LIMIT} />
       ) : (
         <div className={styles.rowGrid}>
-          {MORE.map((m, i) => (
-            <FadeIn
-              key={m.pre}
-              delay={Math.min(i, 8) * 60}
-              as={Link}
-              to={routes.studioAlbum}
-              className={styles.card}
-            >
-              <div className={styles.cardCov}>
-                <ImageSlot
-                  src={m.image}
-                  tint={m.tint}
-                  width="100%"
-                  height="100%"
-                  radius={10}
-                  placeholder={t("studio:media.coverLabel")}
-                  style={{ position: "absolute", inset: 0 }}
-                />
-                <span className={`${styles.tag} ${tagClass[m.tag]}`}>
-                  {t(m.tagLabelKey)}
-                </span>
-              </div>
-              <h4>
-                {m.pre}
-                {m.em && <em>{m.em}</em>}
-              </h4>
-              <div className={styles.meta}>{m.meta}</div>
-            </FadeIn>
+          {others.map((other) => (
+            <StudioReleaseCard
+              key={other.id}
+              release={other}
+              meta={releaseFactsLine(other, t)}
+            />
           ))}
         </div>
       )}

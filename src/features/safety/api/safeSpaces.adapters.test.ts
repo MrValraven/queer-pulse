@@ -21,7 +21,8 @@ const verifiedCard: SafeSpaceCardDTO = {
   name: "Purex",
   hood: "Intendente",
   desc: "One of Lisbon's longest-running queer bars.",
-  tags: ["Gender-neutral bathrooms", "Accessible"],
+  highlights: ["drag-shows"],
+  inclusionPractices: ["named-contact"],
   rating: "4.9",
   reviews: 54,
   tier: 1,
@@ -46,7 +47,7 @@ const verifiedDetail: SafeSpaceDetailDTO = {
   sub: "A long-running queer bar.",
   verifier: "Mod team · 2 visits",
   reVerified: "2 May 2026",
-  metaPills: [{ label: "Open late, Wed–Sun" }],
+  attributes: ["drag-shows", "dancefloor"],
   promises: [{ title: "Staff intervene, every time.", desc: "..." }],
   vouches: [
     {
@@ -77,7 +78,8 @@ describe("verifiedCardDtoToSpace", () => {
     expect(space.category).toBe("Bar");
     expect(space.name).toBe("Purex");
     expect(space.neighbourhood).toBe("Intendente");
-    expect(space.tags).toEqual(verifiedCard.tags);
+    expect(space.highlights).toEqual(verifiedCard.highlights);
+    expect(space.inclusionPractices).toEqual(verifiedCard.inclusionPractices);
     expect(space.rating).toBe("4.9");
     expect(space.reviews).toBe("54 reviews");
     expect(space.tier).toBe(1);
@@ -93,7 +95,7 @@ describe("verifiedCardDtoToSpace", () => {
     expect(space.promises).toEqual([]);
     expect(space.vouches).toEqual([]);
     expect(space.glance).toEqual([]);
-    expect(space.metaPills).toEqual([]);
+    expect(space.attributes).toEqual([]);
     expect(space.eyebrow).toBe("");
     expect(space.sub).toBe("");
     expect(space.address).toBe("");
@@ -162,7 +164,11 @@ describe("safeSpaceDetailDtoToSpace", () => {
     expect(result.kind).toBe("verified");
     if (result.kind !== "verified") throw new Error("expected verified");
     expect(result.data.slug).toBe("purex");
-    expect(result.data.metaPills).toEqual(verifiedDetail.metaPills);
+    expect(result.data.attributes).toEqual(verifiedDetail.attributes);
+    expect(result.data.highlights).toEqual(verifiedDetail.highlights);
+    expect(result.data.inclusionPractices).toEqual(
+      verifiedDetail.inclusionPractices,
+    );
     expect(result.data.promises).toEqual(verifiedDetail.promises);
     expect(result.data.vouches).toEqual(verifiedDetail.vouches);
     expect(result.data.glance).toEqual(verifiedDetail.glance);

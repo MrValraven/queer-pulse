@@ -2,15 +2,14 @@ import { useEffect, useId, useRef, type RefObject } from "react";
 import { FiArrowRight } from "react-icons/fi";
 import { Button } from "../../../../shared/components/ui";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
-import type { ListingDraft, PhotoKey } from "../listBusiness.data";
+import { ANCHOR, type ListingDraft, type PhotoKey } from "../listBusiness.data";
 import { ListingLivePreviewBody } from "../preview/ListingLivePreviewBody";
 import {
   highlightedRegionsFor,
   placementForAnchor,
 } from "../preview/listingPreviewRegions.data";
 import { useFocusedListingField } from "../preview/useFocusedListingField";
-import { jumpToEditorSection } from "./jumpToEditorSection";
-import { LISTING_EDITOR_SECTION_BY_KEY } from "./listingEditor.data";
+import { jumpToListingField } from "../jumpToListingField";
 import pageStyles from "../ListBusinessPage.module.css";
 import styles from "./ListingEditor.module.css";
 
@@ -95,12 +94,15 @@ function revealRegionsIn(
 export function ListingEditorLivePreview({
   draft,
   photoPreviews,
+  coverPreview,
   fieldsRef,
   prefersReducedMotion,
   onOpenFullPreview,
 }: {
   draft: ListingDraft;
   photoPreviews: Record<PhotoKey, string>;
+  /** This session's cover upload, which the directory card shows first. */
+  coverPreview: string;
   /** The fields column. The focus hook lives here, so focusing or hovering a
    *  field re-renders only this column. */
   fieldsRef: RefObject<HTMLElement | null>;
@@ -142,6 +144,7 @@ export function ListingEditorLivePreview({
       <ListingLivePreviewBody
         draft={draft}
         photoPreviews={photoPreviews}
+        coverPreview={coverPreview}
         activeAnchor={activeAnchor}
         header={
           <h2
@@ -154,10 +157,7 @@ export function ListingEditorLivePreview({
         }
         isHeaderSticky
         onAddPhoto={() =>
-          jumpToEditorSection(
-            LISTING_EDITOR_SECTION_BY_KEY.photos.id,
-            prefersReducedMotion,
-          )
+          jumpToListingField(ANCHOR.cover, prefersReducedMotion)
         }
       />
 

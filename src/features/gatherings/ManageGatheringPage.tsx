@@ -15,10 +15,8 @@ import { ManageGatheringHeader } from "./ManageGatheringHeader";
 import type { GatheringDetailsDraft } from "./editDetailsDraft";
 import { ManageGatheringModals } from "./ManageGatheringModals";
 import {
-  editDraftCareFields,
-  editDraftFormatFields,
+  editDraftFromState,
   manageGatheringCounts,
-  type GatheringState,
 } from "./manageGatheringState";
 import {
   DEMO_GATHERING_SLUGS,
@@ -29,7 +27,6 @@ import {
 import { useEvent } from "./api/useEvent";
 import { useAttendees } from "./api/useAttendees";
 import { useUpdateEvent, useCancelEvent } from "./api/useEventMutations";
-import { dateToDatetimeValue } from "./manageGatheringDates";
 import {
   CHECKIN_FOCUS_PARAM,
   MANAGE_GATHERING_TAB_PARAM,
@@ -43,6 +40,12 @@ import { useCancelGatheringFlow } from "./useCancelGatheringFlow";
 import { useDeleteGatheringFlow } from "./useDeleteGatheringFlow";
 import { useManageGatheringState } from "./useManageGatheringState";
 import { useGatheringEditSave } from "./useGatheringEditSave";
+import {
+  useRefreshGuestListAfterLeadChange,
+  useSaveGuestCommunityChanges,
+} from "./useSaveGuestCommunityChanges";
+import { SavedGuestListContext } from "./savedGuestListContext";
+import { useSeedGuestCommunities } from "./useSeedGuestCommunities";
 import styles from "./ManageGatheringPage.module.css";
 
 /**
@@ -113,27 +116,6 @@ function ManageUnavailable({ loading }: { loading: boolean }) {
   );
 }
 
-/**
- * The edit modal's starting draft, read off the dashboard's state. The format
- * fields and the cover, care and RSVP fields each come from their own reader
- * in `manageGatheringState`, which `GatheringHostBar` spreads the same way.
- */
-function editDraftFor(state: GatheringState): GatheringDetailsDraft {
-  return {
-    title: state.title,
-    startAt: dateToDatetimeValue(state.startAt),
-    // "" when the gathering states no end, which the modal reads as an empty
-    // (and still clearable) end field.
-    endAt: state.endAt ? dateToDatetimeValue(state.endAt) : "",
-    location: state.location,
-    description: state.description,
-    visibility: state.visibility,
-    communitySlug: state.communitySlug,
-    ...editDraftFormatFields(state),
-    ...editDraftCareFields(state),
-  };
-}
-
 function ManageGatheringMain({
   demoMode,
   gathering,
@@ -160,13 +142,27 @@ function ManageGatheringMain({
   // Shared with the Attendees tab via the react-query cache (same key), so this
   // is free; live reads real going/waitlist counts, demo keeps the static ones.
   const { data: attendees } = useAttendees(slug);
-  const [editOpen, setEditOpen] = useState(false);
+  // The draft the edit modal opened on, or null while it is closed. Kept
+  // whole because the modal freezes it, and Save reads the host's guest
+  // changes against the list it holds.
+  const [editInitial, setEditInitial] = useState<GatheringDetailsDraft | null>(
+    null,
+  );
   const [messageOpen, setMessageOpen] = useState(false);
 
   const [gatheringState, setGatheringState] = useManageGatheringState({
     demoMode,
     gathering,
   });
+  // The organisers' guest list (every status) seeds the editor's baseline;
+  // the edit modal's guest field shows it loading until it has answered.
+  const { guestListStatus, retryGuestList } = useSeedGuestCommunities({
+    slug,
+    setGatheringState,
+  });
+  const saveGuestCommunities = useSaveGuestCommunityChanges(slug);
+  const refreshGuestListAfterLeadChange =
+    useRefreshGuestListAfterLeadChange(slug);
   // The URL drives the tab: `?tab=attendees` (a lineup reply notification)
   // opens that tab, also when it arrives while mounted, and every switch
   // writes `?tab=` back. With no valid `?tab=`, the page opens on Check-in
@@ -205,6 +201,8 @@ function ManageGatheringMain({
     gatheringState,
     setGatheringState,
     updateEvent,
+    onSaveGuestCommunities: saveGuestCommunities,
+    onLeadCommunityChanged: refreshGuestListAfterLeadChange,
     onChooseCancelScope: (scope) => {
       cancelEvent.mutate(scope);
       void navigate(gatheringCancelledPath(slug));
@@ -243,7 +241,9 @@ function ManageGatheringMain({
           <ManageGatheringHeader
             title={gatheringState.title}
             daysToGo={daysToGo}
-            onEditDetails={() => setEditOpen(true)}
+            onEditDetails={() =>
+              setEditInitial(editDraftFromState(gatheringState))
+            }
             onMessageAttendees={() => setMessageOpen(true)}
             isCheckinLive={isCheckinLive}
             isCheckinActive={activeTab === "checkin"}
@@ -275,7 +275,7 @@ function ManageGatheringMain({
               onUpdateSettings={(patch) => {
                 if (!demoMode) updateEvent.mutate(patch);
               }}
-              buildEditDraft={() => editDraftFor(gatheringState)}
+              buildEditDraft={() => editDraftFromState(gatheringState)}
               onSaveEdit={editSave.saveFieldEdit}
               onUpdateVenue={editSave.saveVenue}
               runByListing={gatheringState.runByListing ?? null}
@@ -293,24 +293,34 @@ function ManageGatheringMain({
         </div>
       </div>
 
-      <ManageGatheringModals
-        slug={slug}
-        editInitial={editOpen ? editDraftFor(gatheringState) : null}
-        onCloseEdit={() => {
-          setEditOpen(false);
-          // MSG-10: a save on a repeating gathering stashes its patch until
-          // the host picks a scope; closing the modal is the cue to ask
-          // this-vs-future.
-          editSave.askScopeForPendingEdit();
+      <SavedGuestListContext.Provider
+        value={{
+          status: guestListStatus,
+          guests: gatheringState.guestCommunities ?? [],
+          onRetry: retryGuestList,
         }}
-        onSaveEdit={editSave.saveEditDraft}
-        seriesScopeMode={editSave.seriesScopeModal}
-        onChooseSeriesScope={editSave.chooseSeriesScope}
-        onCloseSeriesScope={editSave.closeSeriesScope}
-        isMessageOpen={messageOpen}
-        attendeeCount={attendeeCount}
-        onCloseMessage={() => setMessageOpen(false)}
-      />
+      >
+        <ManageGatheringModals
+          slug={slug}
+          editInitial={editInitial}
+          onCloseEdit={() => {
+            setEditInitial(null);
+            // MSG-10: a save on a repeating gathering stashes its patch until
+            // the host picks a scope; closing the modal is the cue to ask
+            // this-vs-future.
+            editSave.askScopeForPendingEdit();
+          }}
+          onSaveEdit={(draft) =>
+            editSave.saveEditDraft(draft, editInitial?.guestCommunities)
+          }
+          seriesScopeMode={editSave.seriesScopeModal}
+          onChooseSeriesScope={editSave.chooseSeriesScope}
+          onCloseSeriesScope={editSave.closeSeriesScope}
+          isMessageOpen={messageOpen}
+          attendeeCount={attendeeCount}
+          onCloseMessage={() => setMessageOpen(false)}
+        />
+      </SavedGuestListContext.Provider>
       {cancelDialog}
       {deleteDialog}
     </PageShell>

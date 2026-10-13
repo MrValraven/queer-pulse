@@ -67,7 +67,7 @@ export function DirectoryListView({
   distanceById?: ReadonlyMap<string, number> | null;
   total: number;
   /** How many places have been fetched so far, BEFORE the client-side category
-   *  / vibe / "open now" filters that produced `places`. Only read by the
+   *  and "open now" filters that produced `places`. Only read by the
    *  filtered-empty state, which must not claim the whole registry was
    *  checked when pages remain unfetched. */
   loadedCount?: number;
@@ -81,7 +81,7 @@ export function DirectoryListView({
   hasActiveFilters: boolean;
   onClearFilters: () => void;
   /** True when the backend has more pages beyond what's already loaded into
-   *  `places` (gap-audit HSG-5) — distinct from `hasMore` below, which is
+   *  `places` (gap-audit HSG-5). Distinct from `hasMore` below, which is
    *  purely about revealing more of what's ALREADY loaded. */
   hasMoreFromServer?: boolean;
   /** True while the next server page is in flight. */
@@ -96,13 +96,13 @@ export function DirectoryListView({
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [been, setBeen] = useState<Record<string, number>>({});
 
-  // `places` is whatever's been fetched from the server SO FAR (paginated —
-  // see `useLocalPlaces`), filtered client-side — mounting every loaded card
+  // `places` is whatever's been fetched from the server SO FAR (paginated,
+  // see `useLocalPlaces`), filtered client-side. Mounting every loaded card
   // at once would still mean the grid's live DOM node count grows 1:1 with
   // however much has loaded. Window it the same way MemberDirectoryFilterPage
   // windows its grid: a capped initial slice grown via an IntersectionObserver
   // sentinel, resetting whenever the filtered set's identity changes (a new
-  // search/category/vibe result).
+  // search, category, access, owned-by or listing-fact result).
   const {
     visible: placesWindowed,
     sentinelRef,
@@ -136,7 +136,7 @@ export function DirectoryListView({
   // Four distinct states below: the read failed, nothing is listed yet, the
   // filters matched nothing in a registry that is fully loaded, and the filters
   // matched nothing YET while pages remain unfetched. The last two differ only
-  // in what they are entitled to claim: category, vibe and "open now" are
+  // in what they are entitled to claim: category and "open now" are
   // applied client-side over the loaded pages alone, so with `hasMoreFromServer`
   // still true a flat "no places match those filters" would be a platform-wide
   // verdict this view has not earned. Both offer Clear filters as the primary

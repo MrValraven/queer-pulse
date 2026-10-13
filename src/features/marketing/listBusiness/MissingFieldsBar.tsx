@@ -2,32 +2,8 @@ import { useId, type Ref } from "react";
 import { FiAlertCircle, FiArrowRight } from "react-icons/fi";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { MissingField } from "./listBusiness.data";
+import { jumpToListingField } from "./jumpToListingField";
 import styles from "./ListBusinessPage.module.css";
-
-/**
- * Scroll to the field a "what's still needed" chip names, flash it, and move
- * focus to its first control. Selectors match native inputs plus the button
- * groups used for radio/chip choices.
- */
-function jumpToField(anchor: string) {
-  const el = document.getElementById(anchor);
-  if (!el) return;
-  el.scrollIntoView({ behavior: "smooth", block: "center" });
-  const focusable = el.querySelector<HTMLElement>(
-    'input:not([type="hidden"]), select, textarea, [role="radio"], button',
-  );
-  // Let the smooth scroll settle before pulling focus (which would otherwise
-  // yank the viewport back).
-  window.setTimeout(() => focusable?.focus({ preventScroll: true }), 340);
-  const flash = styles.fieldFlash;
-  if (flash) {
-    // Restart the flash even if the same chip is clicked twice in a row.
-    el.classList.remove(flash);
-    void el.offsetWidth;
-    el.classList.add(flash);
-    window.setTimeout(() => el.classList.remove(flash), 1400);
-  }
-}
 
 /**
  * The "a few things left" bar: one chip per still-unfilled required field,
@@ -90,7 +66,7 @@ export function MissingFieldsBar({
               key={field.anchor}
               type="button"
               className={styles.neededChip}
-              onClick={() => jumpToField(field.anchor)}
+              onClick={() => jumpToListingField(field.anchor)}
               aria-label={t("marketing:listBusiness.paneActions.jumpToAria", {
                 label,
               })}

@@ -2263,4 +2263,7 @@ export const communities: Catalog = {
     "Só a pessoa responsável ou quem é cotitular pode pedir espaços.",
   "spaces.request.loadError": "Não foi possível carregar o estado do pedido.",
   "spaces.request.retry": "Tentar de novo",
+
+  // Separador Eventos: um convívio em que esta comunidade é convidada nomeia a comunidade principal.
+  "detail.events.withLead": "Com {name}",
 };

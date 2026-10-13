@@ -1,27 +1,47 @@
 import { apiGet, apiDelete } from "../../../shared/api/client";
 import type { MediaReference } from "../../../shared/media/mediaReferences";
 
-/** Upload-kind prefixes the console can filter by — mirrors the backend
- *  `UPLOAD_KIND_SPECS` prefixes. `"all"` is the synthetic unfiltered tab. */
+/** Upload-kind prefixes the console can filter by. Mirrors the backend's
+ *  `KNOWN_PREFIXES` in `admin-media.service.ts`: every `UPLOAD_KIND_SPECS`
+ *  prefix except the private message ones, plus `persona` (unlinked persona
+ *  images). `"all"` is the synthetic unfiltered option. */
 export type AdminMediaKind =
   | "all"
   | "avatars"
-  | "work"
-  | "story-covers"
-  | "persona-covers"
-  | "gathering-photos"
   | "group-avatars"
-  | "listing-photos";
+  | "community-avatars"
+  | "community-covers"
+  | "persona-covers"
+  | "persona"
+  | "gathering-photos"
+  | "event-covers"
+  | "listing-photos"
+  | "listing-covers"
+  | "listing-menus"
+  | "story-covers"
+  | "work"
+  | "forum-photos"
+  | "stickers";
 
+/** The select lists the kinds by family: people and group marks, then
+ *  community, persona, gathering, listing, editorial and platform files. */
 export const ADMIN_MEDIA_KINDS: AdminMediaKind[] = [
   "all",
   "avatars",
-  "work",
-  "story-covers",
-  "persona-covers",
-  "gathering-photos",
   "group-avatars",
+  "community-avatars",
+  "community-covers",
+  "persona-covers",
+  "persona",
+  "gathering-photos",
+  "event-covers",
   "listing-photos",
+  "listing-covers",
+  "listing-menus",
+  "story-covers",
+  "work",
+  "forum-photos",
+  "stickers",
 ];
 
 export interface AdminMediaUploader {

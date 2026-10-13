@@ -1424,4 +1424,28 @@ export const notifications: Catalog = {
     "<profile>{name}</profile> credited you as co-author on “{threadTitle}”.",
   "type.forum_co_author_credit.meta": "Co-author credit",
   "type.forum_co_author_credit.threadTitleFallback": "a thread",
+
+  // Guest communities (2026-10-08). The invite reaches the guest community's
+  // owners, co-owners and mods; the answer reaches the gathering's organisers
+  // and has a line per decision (`collabResponseKey`).
+  "type.event_community_invite.text":
+    "{communityName} has an invitation to host a gathering together.",
+  "type.event_community_invite.textNamed":
+    "<profile>{name}</profile> invited {communityName} to host {eventTitle} together.",
+  "type.event_community_invite.meta": "Collab invitation",
+  "type.event_community_invite_response.text":
+    "{communityName} answered your collab invite.",
+  "type.event_community_invite_response.textNamed":
+    "<profile>{name}</profile> answered your collab invite for {communityName}.",
+  "type.event_community_invite_response.meta": "Collab",
+  "type.event_community_invite_response.accepted.text":
+    "{communityName} accepted your collab invite for {eventTitle}.",
+  "type.event_community_invite_response.accepted.textNamed":
+    "<profile>{name}</profile> accepted your collab invite for {communityName}.",
+  "type.event_community_invite_response.accepted.meta": "Collab accepted",
+  "type.event_community_invite_response.declined.text":
+    "{communityName} declined your collab invite for {eventTitle}.",
+  "type.event_community_invite_response.declined.textNamed":
+    "<profile>{name}</profile> declined your collab invite for {communityName}.",
+  "type.event_community_invite_response.declined.meta": "Collab declined",
 };

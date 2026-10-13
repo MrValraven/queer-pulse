@@ -6,6 +6,12 @@ import { inviteFullUrlFor } from "../../shared/lib/inviteUrl";
 import type { Formatters } from "../../shared/i18n/format";
 import type { TFunction } from "../../shared/i18n/types";
 import type { SentInviteView } from "./api/useSentInvites";
+import {
+  SentInvitePrivateNoteEditor,
+  SentInvitePrivateNoteLabel,
+  SentInvitePrivateNoteToggle,
+} from "./SentInvitePrivateNoteEditor";
+import { useSentInvitePrivateNote } from "./useSentInvitePrivateNote";
 import styles from "./SentInvitesList.module.css";
 
 /** Day + 24h time, e.g. "Jul 30, 2026, 14:32". One locale-aware call so each
@@ -30,6 +36,10 @@ export function SentInviteRowSkeletons() {
           <div className={styles.main}>
             <SkeletonLine width="45%" />
             <SkeletonLine width="70%" />
+            {/* Holds the private-note toggle's line under the details. */}
+            <div className={styles.skeletonToggle}>
+              <SkeletonLine width="30%" height={12} />
+            </div>
           </div>
         </div>
       ))}
@@ -41,7 +51,10 @@ export function SentInviteRowSkeletons() {
  *  accepted line. A pinned invite leads with the address it is bound to and
  *  demotes the code; an unpinned one keeps the code and says plainly that
  *  anyone holding the link can redeem it. A still-Pending invite
- *  (`status === "valid"`) also gets Copy link and Revoke controls. */
+ *  (`status === "valid"`) also gets Copy link and Revoke controls. The
+ *  member's private note, when there is one, leads the row; every row can
+ *  add or edit it from the quiet toggle under its details, which opens the
+ *  editor full width below. */
 export function SentInviteRow({
   invite,
   t,
@@ -65,6 +78,8 @@ export function SentInviteRow({
   const { copy, copied: hasCopied } = useClipboard();
   // What the invite is called out loud: the address it is bound to, or its code.
   const inviteLabel = invite.recipientEmail ?? invite.code;
+  const { toggleRef: privateNoteToggleRef, ...privateNoteState } =
+    useSentInvitePrivateNote(invite, t);
 
   async function copyInviteLink() {
     const didCopy = await copy(inviteFullUrlFor(invite.code));
@@ -93,72 +108,87 @@ export function SentInviteRow({
 
   return (
     <div className={styles.row}>
-      <div className={styles.main}>
-        {invite.recipientEmail ? (
-          <>
-            <div className={styles.recipient}>{invite.recipientEmail}</div>
-            <div className={styles.codeSecondary}>
-              {invite.code} · {t("auth:invite.sentList.pinnedNote")}
-            </div>
-          </>
-        ) : (
-          <>
-            <div className={styles.code}>{invite.code}</div>
-            <div className={styles.bearer}>
-              {t("auth:invite.sentList.anyoneWithLink")}
-            </div>
-          </>
-        )}
-        {invite.note && <div className={styles.note}>"{invite.note}"</div>}
-        <div className={styles.detail}>{detail}</div>
+      <div className={styles.rowBody}>
+        <div className={styles.main}>
+          <SentInvitePrivateNoteLabel privateNote={invite.privateNote} t={t} />
+          {invite.recipientEmail ? (
+            <>
+              <div className={styles.recipient}>{invite.recipientEmail}</div>
+              <div className={styles.codeSecondary}>
+                {invite.code} · {t("auth:invite.sentList.pinnedNote")}
+              </div>
+            </>
+          ) : (
+            <>
+              <div className={styles.code}>{invite.code}</div>
+              <div className={styles.bearer}>
+                {t("auth:invite.sentList.anyoneWithLink")}
+              </div>
+            </>
+          )}
+          {invite.note && <div className={styles.note}>"{invite.note}"</div>}
+          <div className={styles.detail}>{detail}</div>
+          <SentInvitePrivateNoteToggle
+            invite={invite}
+            inviteLabel={inviteLabel}
+            toggleRef={privateNoteToggleRef}
+            noteState={privateNoteState}
+            t={t}
+          />
+        </div>
+        <div className={styles.side}>
+          <span className={`${styles.chip} ${styles[invite.statusTone]}`}>
+            {t(invite.statusKey)}
+          </span>
+          {invite.status === "valid" && (
+            <Button
+              variant="ghost"
+              size="md"
+              className={styles.copy}
+              aria-label={t("auth:invite.sentList.copyLinkAriaLabel", {
+                invite: inviteLabel,
+              })}
+              onClick={() => void copyInviteLink()}
+            >
+              {hasCopied ? <FiCheck aria-hidden /> : <FiCopy aria-hidden />}
+              {hasCopied
+                ? t("auth:common.copied")
+                : t("auth:invite.sentList.copyLinkCta")}
+            </Button>
+          )}
+          {invite.status === "valid" && (
+            <Button
+              variant="ghost"
+              size="md"
+              className={styles.revoke}
+              disabled={isRevoking}
+              onClick={() => onRevoke(invite)}
+            >
+              {isRevoking
+                ? t("auth:invite.sentList.revoking")
+                : t("auth:invite.sentList.revokeCta")}
+            </Button>
+          )}
+          {invite.status === "expired" && (
+            <Button
+              variant="ghost"
+              size="md"
+              className={styles.revoke}
+              disabled={isResending}
+              onClick={() => onResend(invite)}
+            >
+              {isResending
+                ? t("auth:invite.sentList.resending")
+                : t("auth:invite.sentList.resendCta")}
+            </Button>
+          )}
+        </div>
       </div>
-      <div className={styles.side}>
-        <span className={`${styles.chip} ${styles[invite.statusTone]}`}>
-          {t(invite.statusKey)}
-        </span>
-        {invite.status === "valid" && (
-          <Button
-            variant="ghost"
-            size="md"
-            className={styles.copy}
-            aria-label={t("auth:invite.sentList.copyLinkAriaLabel", {
-              invite: inviteLabel,
-            })}
-            onClick={() => void copyInviteLink()}
-          >
-            {hasCopied ? <FiCheck aria-hidden /> : <FiCopy aria-hidden />}
-            {hasCopied
-              ? t("auth:common.copied")
-              : t("auth:invite.sentList.copyLinkCta")}
-          </Button>
-        )}
-        {invite.status === "valid" && (
-          <Button
-            variant="ghost"
-            size="md"
-            className={styles.revoke}
-            disabled={isRevoking}
-            onClick={() => onRevoke(invite)}
-          >
-            {isRevoking
-              ? t("auth:invite.sentList.revoking")
-              : t("auth:invite.sentList.revokeCta")}
-          </Button>
-        )}
-        {invite.status === "expired" && (
-          <Button
-            variant="ghost"
-            size="md"
-            className={styles.revoke}
-            disabled={isResending}
-            onClick={() => onResend(invite)}
-          >
-            {isResending
-              ? t("auth:invite.sentList.resending")
-              : t("auth:invite.sentList.resendCta")}
-          </Button>
-        )}
-      </div>
+      <SentInvitePrivateNoteEditor
+        invite={invite}
+        noteState={privateNoteState}
+        t={t}
+      />
     </div>
   );
 }

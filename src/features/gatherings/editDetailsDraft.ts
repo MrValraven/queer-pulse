@@ -1,3 +1,4 @@
+import type { GuestCommunityDraftEntry } from "./api/eventCommunities.api";
 import type { EventVisibility } from "./api/events.api";
 import type { FormatDetails, GatheringFamily } from "./gatheringCatalog";
 import type {
@@ -40,6 +41,14 @@ export interface GatheringDetailsDraft {
    *  `useGatheringForm`'s `communitySlug` convention (the same "no community"
    *  empty-string sentinel), since it is settable in both create and edit. */
   communitySlug: string;
+  /** The guest communities as the editor shows them: saved rows with the
+   *  status the server holds, plus rows added in this edit as `"unsent"`.
+   *  Absent when the modal opened before the organisers' guest list
+   *  answered; the field then follows the saved list until the host changes
+   *  it, and an absent list sends no guest change. `buildEditPatch` leaves
+   *  it off the PATCH; `guestCommunityChangesFor` turns the difference from
+   *  the saved list into invites and removals, sent once the PATCH lands. */
+  guestCommunities?: GuestCommunityDraftEntry[];
   /** How many people can go, as typed in the stepper, or `""` for no limit.
    *  The same string convention the wizard's `form.cap` uses, since the two
    *  share `CapacityStepper`. `buildEditPatch` sends it only when it differs

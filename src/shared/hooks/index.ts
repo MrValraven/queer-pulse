@@ -11,6 +11,7 @@ export { useDebouncedValue } from "./useDebouncedValue";
 export { usePrefersReducedMotion } from "./usePrefersReducedMotion";
 export { useVisualViewportKeyboard } from "./useVisualViewportKeyboard";
 export { useScrollLock } from "./useScrollLock";
+export { useFloatingBarInset } from "./useFloatingBarInset";
 export { useFocusOnMount } from "./useFocusOnMount";
 export { useOutsideDismiss } from "./useOutsideDismiss";
 export { useExitTransition } from "./useExitTransition";

@@ -133,7 +133,6 @@ export const TRACKS: {
 export const TABS = [
   { id: "tracklist", labelKey: "studio:album.tabs.tracklist" },
   { id: "linerNotes", labelKey: "studio:album.tabs.linerNotes" },
-  { id: "credits", labelKey: "studio:album.tabs.credits" },
 ] as const;
 export type AlbumTabId = (typeof TABS)[number]["id"];
 

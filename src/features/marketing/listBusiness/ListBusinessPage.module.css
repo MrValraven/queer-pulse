@@ -4,8 +4,8 @@
   /* nav band reserved by shell (base.css); this is only breathing room */
   padding: var(--section-y-56) 0 12px;
   /* Clip sideways only (no horizontal scroll from the off-edge glows) so the
-     glows can rise under the nav band and fade down past the hero instead of
-     stopping at its bottom edge. */
+     glows can rise under the nav band and fade down past the hero's bottom
+     edge. */
   overflow-x: clip;
 }
 @media (max-width: 720px) {
@@ -285,9 +285,9 @@
   }
 }
 
-/* Vertical rhythm for a step's body. Every top-level element in a step —
-   FormFields (via .lbField, which neutralises FormField's own 16px margin) and
-   the custom blocks below — is a direct child, so this single gap is the one
+/* Vertical rhythm for a step's body. Every top-level element in a step
+   (FormFields via .lbField, which neutralises FormField's own 16px margin, and
+   the custom blocks below) is a direct child, so this single gap is the one
    spacer and nothing double-spaces. PaneActions sits OUTSIDE .stepBody (it's
    rendered by the page after the step) and keeps its own footer divider. */
 .stepBody {
@@ -297,10 +297,10 @@
 }
 /* Escalate the field whose Select panel is open above its siblings. Every
    .stepBody child animates transform on entrance (below), which transiently
-   makes each one its own stacking context — Select's own z-index escalation
+   makes each one its own stacking context; Select's own z-index escalation
    on `.container.open` only wins inside that context, so a later sibling
    still paints over an earlier field's open panel. Keyed on the open
-   trigger, not `[role="listbox"]`: the panel swaps the listbox out for its
+   trigger (never on `[role="listbox"]`): the panel swaps the listbox out for its
    "No matches" / loading status, which dropped the lift mid-search. See the
    fadein-row-stacking-context-clips-dropdown pattern. */
 .stepBody > *:has([aria-haspopup="listbox"][aria-expanded="true"]) {
@@ -308,7 +308,7 @@
 }
 .stepBody .lbField {
   /* Out-specifies FormField's own `.field { margin-bottom: 16px }` (0,2,0 vs
-     0,1,0) so the flex gap alone drives field-to-field rhythm — locally, with
+     0,1,0) so the flex gap alone drives field-to-field rhythm, locally, with
      the shared FormField left untouched. */
   margin-bottom: 0;
 }
@@ -348,7 +348,7 @@
   border-top: 1px solid rgba(var(--line-rgb), 0.08);
 }
 
-/* Tightly-coupled sub-groups that should hug rather than take a full gap step:
+/* Tightly-coupled sub-groups that should hug, with less than a full gap step:
    the map + its "pin placed" caption, the hours toolbar + day card, the
    "Staying in the loop" heading + its note. */
 .mapWrap,
@@ -406,6 +406,14 @@
     border-color 0.2s var(--ease),
     color 0.2s var(--ease),
     background 0.2s var(--ease);
+}
+/* Touch: lift the chips to the 44px target minimum, the same floor the
+   directory's filter chips get (LocalFilterBar.module.css); padding is
+   unchanged so the resting ink stays compact. */
+@media (pointer: coarse) {
+  .chip {
+    min-height: var(--tap-min);
+  }
 }
 @media (hover: hover) {
   .chip:not(.chipOn):hover {
@@ -782,18 +790,6 @@
   transform: scale(1);
 }
 
-/* ===== Good-for grid (uses shared CheckLine) ===== */
-.gfGrid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 9px;
-}
-@media (max-width: 520px) {
-  .gfGrid {
-    grid-template-columns: 1fr;
-  }
-}
-
 /* ===== Tag input ===== */
 .tagInputWrap {
   display: flex;
@@ -981,20 +977,24 @@
   outline-offset: var(--focus-ring-offset);
   box-shadow: var(--ring-cream);
 }
+/* Touch targets: on a touch screen both slot buttons grow to the 44px floor,
+   and the icon-only Remove button grows to 44px wide as well. */
+@media (pointer: coarse) {
+  .photoBtn {
+    justify-content: center;
+    min-height: var(--tap-min);
+    min-width: var(--tap-min);
+  }
+}
 .photoError {
   margin: 0;
   font-size: var(--text-12);
   color: var(--accent);
 }
-/* Standing note for a slot (the cover slot's "shown on your directory card").
-   Rendered above the frame so it labels it, and it stays put once a photo fills
-   the slot — unlike the ImageSlot placeholder caption, which disappears exactly
-   when the owner most needs to know where that photo lands. */
-.photoNote {
-  margin: 0;
-  font-size: var(--text-12);
-  line-height: 1.35;
-  color: rgba(var(--ink-rgb), 0.62);
+/* The cover slot is a card-sized preview, so it stays narrow beside the
+   full-width gallery below. */
+.coverSlot {
+  max-width: 392px;
 }
 
 /* ===== Member toggle row ===== */
@@ -1382,8 +1382,8 @@
   border-color: rgba(var(--line-rgb), 0.18);
   background: rgba(var(--plum-rgb), 0.015);
 }
-/* Centered over the card preview's empty photo slot — jumps straight to the
-   wizard's photos step instead of making the upload option easy to miss.
+/* Centered over the card preview's empty photo slot: jumps straight to the
+   wizard's photos step, so the upload option is hard to miss.
    `.ghost-dark`'s cream-on-transparent look assumes a photo backdrop; the
    empty slot is a pale tint, so this needs its own solid backing to read. */
 .previewAddPhotoBtn {
@@ -1964,10 +1964,10 @@
 }
 
 /* =========================================================================
-   Motion polish — refined & subtle. Every keyframe below is opt-in via
+   Motion polish: refined & subtle. Every keyframe below is opt-in via
    `prefers-reduced-motion: no-preference`, so with reduced motion elements
    render in their natural (visible) resting state and nothing moves.
-   Keyframes are local copies — a CSS module can't reference the global ones
+   Keyframes are local copies: a CSS module can't reference the global ones
    in src/styles/tokens/effects.css (the name gets scoped to a dead hash).
    ========================================================================= */
 

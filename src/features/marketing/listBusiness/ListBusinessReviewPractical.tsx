@@ -3,6 +3,7 @@ import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { TFunction } from "../../../shared/i18n/types";
 import { websiteLabel } from "../directoryPlaces";
 import { DAYS, type ListingDraft } from "./listBusiness.data";
+import { listingFactSummaries } from "./listingFactSummaries";
 import {
   FULFILMENT_LABEL_KEYS,
   isSellingOnline,
@@ -265,6 +266,34 @@ function MobileRecapRows({ draft }: { draft: ListingDraft }) {
   );
 }
 
+/** The way in, entry, ways to pay and NIF answer, as a save sends them. An
+ *  online listing answers the NIF question alone. */
+function GettingInRows({ draft }: { draft: ListingDraft }) {
+  const { t } = useTranslation();
+  const facts = listingFactSummaries(t, draft);
+  const isOnline = listingKindOf(draft) === "online";
+  return (
+    <>
+      {!isOnline && (
+        <>
+          <Row k={t("marketing:listBusiness.step5.row.entry")}>
+            {facts.entry}
+          </Row>
+          {facts.cover && (
+            <Row k={t("marketing:listBusiness.step5.row.cover")}>
+              {facts.cover}
+            </Row>
+          )}
+          <Row k={t("marketing:listBusiness.step5.row.paymentsInPerson")}>
+            {facts.payments}
+          </Row>
+        </>
+      )}
+      <Row k={t("marketing:listBusiness.step5.row.nif")}>{facts.nif}</Row>
+    </>
+  );
+}
+
 /** Recaps the practical step: where and when for a place, the area, meeting
  *  point and hours for an out-and-about business, how people buy for anything
  *  that sells online, then the contact links. */
@@ -300,6 +329,7 @@ export function ReviewPracticalGroup({
         </Row>
       )}
       {isSellingOnline(draft) && <OnlineSellingRows draft={draft} />}
+      <GettingInRows draft={draft} />
       <Row k={t("marketing:listBusiness.step5.row.online")}>
         {onlineSummary(t, draft)}
       </Row>

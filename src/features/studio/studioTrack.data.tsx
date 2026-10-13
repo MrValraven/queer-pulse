@@ -56,7 +56,7 @@ export const SPLIT: SplitRow[] = [
     v: "€0.08",
   },
   {
-    c: "rgba(247,243,238,.2)",
+    c: "rgba(var(--cream-rgb), 0.2)",
     k: "Payment fees",
     sub: "Stripe / SEPA only",
     v: "€0.04",

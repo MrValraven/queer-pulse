@@ -1,18 +1,18 @@
 /* ===========================================================
-   List Your Business — static option data, types, helpers.
+   List Your Business: static option data, types, helpers.
    Ported from the design bundle (qp-listing.js).
 
-   i18n note: option lists below (CATS, GOODFOR, LANGS) double as both
+   i18n note: option lists below (CATS) double as both
    platform-authored chrome (the visible chip/dropdown label) AND the raw
    value stored in `ListingDraft`/sent to the backend verbatim (the DTO is
-   the draft as-is — see `api/listings.api.ts`). Translating the stored value
+   the draft as-is; see `api/listings.api.ts`). Translating the stored value
    itself would mean a language switch silently rewrites already-submitted
    data, so these keep their canonical English id and gain a `_LABEL_KEYS`
-   lookup + `xLabel(s)` helper resolved with `t()` only at render time — the
+   lookup + `xLabel(s)` helper resolved with `t()` only at render time: the
    "fused mock string" pattern from the extraction brief, applied to enum
-   values instead of a composed sentence. REL/VIS/PRICES/DAYS
+   values. REL/VIS/PRICES/DAYS
    already had a separate `id`, so their label fields become `labelKey`s
-   directly. NEIGHBOURHOODS (Lisbon place names) are left untouched — proper
+   directly. NEIGHBOURHOODS (Lisbon place names) are left untouched: proper
    nouns that read identically in pt-PT, same rationale as the gatherings
    HOOD_KEYS neighbourhood rail.
    =========================================================== */
@@ -21,12 +21,18 @@ import type { TFunction } from "../../../shared/i18n/types";
 import { leadingInitials } from "../../../shared/lib/initials";
 import { LOCAL_CATEGORIES, categoryLabel } from "../localCategories";
 import type { ListingAccessibilityDraft } from "./listingAccessibility.data";
+import type {
+  ListingCoverPolicy,
+  ListingEntryMode,
+  ListingInclusionPractice,
+  ListingPaymentMethod,
+} from "./listingFacts.data";
 import type { ListingMenuDraft, ListingPricingMode } from "./listingMenu.data";
 import type { ListingServiceRow } from "./listingServices.data";
 import type { ListingOwnedBy } from "./listingOwnedBy.data";
 import type { ListingOnlineDetailsDraft } from "./listingOnline.data";
 import type { ListingShopItemRow } from "./listingShop.data";
-import type { ListingKind, ListingMobileDetails } from "./listingMobile.data";
+import type { ListingMobileDetails } from "./listingMobile.data";
 
 export const TOTAL_STEPS = 6;
 
@@ -40,7 +46,7 @@ export function firstWizardStep(isEdit: boolean): number {
   return isEdit ? EDIT_FIRST_STEP : 0;
 }
 
-/** Step-pill labels, as catalog keys — resolved with `t()` by the consumer. */
+/** Step-pill labels, as catalog keys, resolved with `t()` by the consumer. */
 export const PILL_LABEL_KEYS = [
   "marketing:listBusiness.wizard.pill.path",
   "marketing:listBusiness.wizard.pill.basics",
@@ -79,9 +85,17 @@ export const ANCHOR = {
   blurb: "lb-blurb",
   tagline: "lb-tagline",
   whatItIs: "lb-what-it-is",
-  tags: "lb-tags",
-  goodFor: "lb-good-for",
   langs: "lb-langs",
+  attributes: "lb-attributes",
+  highlights: "lb-highlights",
+  inclusionPractices: "lb-inclusion-practices",
+  saferSpacePolicyUrl: "lb-safer-space-policy-url",
+  langsOther: "lb-langs-other",
+  entryMode: "lb-entry-mode",
+  coverPolicy: "lb-cover-policy",
+  coverFreeBefore: "lb-cover-free-before",
+  waysToPay: "lb-ways-to-pay",
+  nifInvoices: "lb-nif-invoices",
   address: "lb-address",
   online: "lb-online",
   whereFound: "lb-where-found",
@@ -105,6 +119,7 @@ export const ANCHOR = {
   hoursNote: "lb-hours-note",
   hoursExceptions: "lb-hours-exceptions",
   social: "lb-social",
+  cover: "lb-cover",
   photos: "lb-photos",
   rel: "lb-rel",
   ownerName: "lb-owner-name",
@@ -131,12 +146,12 @@ export interface MissingField {
 
 /* ---------- Option data ---------- */
 
-/* CATS / GOODFOR / LANGS keep their canonical English id — that id IS the
-   value stored in `ListingDraft` and sent to the backend verbatim — and gain
-   a `_LABEL_KEYS` lookup resolved with `t()` only at render, so a language
-   switch can never rewrite already-entered draft data. */
+/* CATS keeps its canonical English id. That id IS the value stored in
+   `ListingDraft` and sent to the backend verbatim, and its label resolves
+   with `t()` only at render, so a language switch can never rewrite
+   already-entered draft data. */
 
-/* Categories are the unified directory slugs (LOCAL_CATEGORIES) — the same
+/* Categories are the unified directory slugs (LOCAL_CATEGORIES), the same
  * vocabulary the map pins, category filter, and backend hours template key off.
  * The wizard stores the slug verbatim, so a new listing is born map-correct.
  * "nightlife" is included so the choosable set equals the displayed set. */
@@ -159,88 +174,6 @@ export const PRICES: PriceBand[] = [
   { id: "€€", labelKey: "marketing:listBusiness.price.midRange", sym: "€€" },
   { id: "€€€", labelKey: "marketing:listBusiness.price.higherEnd", sym: "€€€" },
 ];
-
-/** The "Good for" chips offered to a place listing. Access claims live in the
- *  structured `accessibility` answers, so none appear here. */
-export const GOODFOR_PLACE = [
-  "Walk-ins welcome",
-  "Solo-friendly",
-  "Dog-friendly",
-  "Budget-friendly",
-  "Hosts community events",
-];
-
-/** The "Good for" chips offered to an online-only listing. */
-export const GOODFOR_ONLINE = [
-  "Budget-friendly",
-  "Hosts community events",
-  "Beginner-friendly",
-  "Good for gifts",
-];
-
-/** The "Good for" chips offered to an out-and-about listing: the place
- *  list, less "Walk-ins welcome", since there is no door to walk in at. */
-export const GOODFOR_MOBILE = GOODFOR_PLACE.filter(
-  (value) => value !== "Walk-ins welcome",
-);
-
-/** The chips offered to a listing of this kind. */
-export function goodForOptions(kind: ListingKind): readonly string[] {
-  if (kind === "online") return GOODFOR_ONLINE;
-  return kind === "mobile" ? GOODFOR_MOBILE : GOODFOR_PLACE;
-}
-
-/* The five accessibility ids stay keyed below so a value a listing still
-   stores renders a label, though no list offers them any more. */
-export const GOODFOR_LABEL_KEYS: Record<string, string> = {
-  "Wheelchair accessible":
-    "marketing:listBusiness.goodFor.wheelchairAccessible",
-  "Gender-neutral toilets":
-    "marketing:listBusiness.goodFor.genderNeutralToilets",
-  "Step-free entrance": "marketing:listBusiness.goodFor.stepFreeEntrance",
-  "Walk-ins welcome": "marketing:listBusiness.goodFor.walkInsWelcome",
-  "Quiet, low-sensory hours": "marketing:listBusiness.goodFor.quietLowSensory",
-  "Solo-friendly": "marketing:listBusiness.goodFor.soloFriendly",
-  "Dog-friendly": "marketing:listBusiness.goodFor.dogFriendly",
-  "Hosts community events":
-    "marketing:listBusiness.goodFor.hostsCommunityEvents",
-  "Budget-friendly": "marketing:listBusiness.goodFor.budgetFriendly",
-  "Accessible bathroom": "marketing:listBusiness.goodFor.accessibleBathroom",
-  "Beginner-friendly": "marketing:listBusiness.goodFor.beginnerFriendly",
-  "Good for gifts": "marketing:listBusiness.goodFor.goodForGifts",
-};
-
-/** Display label for a stored good-for id. Falls back to the id itself. */
-export function goodForLabel(t: TFunction, id: string): string {
-  const key = GOODFOR_LABEL_KEYS[id];
-  return key ? t(key) : id;
-}
-
-export const LANGS = [
-  "Português",
-  "Português (Brasil)",
-  "English",
-  "Español",
-  "Français",
-  "LGP (sign)",
-  "Other",
-];
-
-export const LANG_LABEL_KEYS: Record<string, string> = {
-  Português: "marketing:listBusiness.lang.portugues",
-  "Português (Brasil)": "marketing:listBusiness.lang.portuguesBrasil",
-  English: "marketing:listBusiness.lang.english",
-  Español: "marketing:listBusiness.lang.espanol",
-  Français: "marketing:listBusiness.lang.francais",
-  "LGP (sign)": "marketing:listBusiness.lang.lgp",
-  Other: "marketing:listBusiness.lang.other",
-};
-
-/** Display label for a stored language id. Falls back to the id itself. */
-export function langLabel(t: TFunction, id: string): string {
-  const key = LANG_LABEL_KEYS[id];
-  return key ? t(key) : id;
-}
 
 export interface OptionRow {
   id: string;
@@ -323,8 +256,8 @@ export const DAYS: DayDef[] = [
 
 /* ---------- City seam (item #15) ----------
    The whole wizard is Lisbon-only today. Everything city-specific lives on this
-   single `CITY` object so a second city becomes a data change, not a code
-   change: the neighbourhood dropdown, the fallback map centroids used when a
+   single `CITY` object so a second city becomes a data change alone, with no
+   code change: the neighbourhood dropdown, the fallback map centroids used when a
    member can't paste a Google Maps link (item #1), the default timezone the
    directory reads hours against, and the "Elsewhere in <city>" catch-all.
    Consumers still import `NEIGHBOURHOODS` (derived below) unchanged. */
@@ -341,9 +274,9 @@ export interface CityConfig {
   neighbourhoods: string[];
   /** Stable, locale-independent value for the trailing "anywhere else in this
    *  city" option (submitted to the backend / fed to `neighbourhoodCentroid`).
-   *  Its user-facing label is localised via `hoodLabel`, not this string. */
+   *  Its user-facing label is localised via `hoodLabel`. */
   elsewhereLabel: string;
-  /** Approx centroid per named neighbourhood — the geocode fallback pin. */
+  /** Approx centroid per named neighbourhood: the geocode fallback pin. */
   neighbourhoodCentroids: Record<string, LatLng>;
 }
 
@@ -478,7 +411,7 @@ export function hoodLabel(t: TFunction, hood: string): string {
 
 /** Best-effort fallback coordinate for a neighbourhood, so a member who can't
  *  paste a Google Maps link still gets a draggable pin near the right area
- *  instead of being stuck at the location step (item #1). Unknown/"Elsewhere"
+ *  and moves past the location step (item #1). Unknown/"Elsewhere"
  *  falls back to the city centroid. */
 export function neighbourhoodCentroid(hood: string): LatLng {
   return CITY.neighbourhoodCentroids[hood] ?? CITY.centroid;
@@ -527,7 +460,7 @@ export type OwnerVisibility = "public" | "role" | "anon";
 export type ManagementRole = "owner" | "co_manager";
 
 /**
- * The eight fields that belong to the OWNER as a person rather than to the
+ * The eight fields that belong to the OWNER as a person, apart from the
  * business. A co-manager never receives them (the API leaves the keys out of
  * its response entirely) and a PATCH carrying any of them is refused with a
  * 403, so this list is the single place the client names them: the payload
@@ -564,11 +497,11 @@ export function witLine(text = ""): WitLine {
   return { id: `wit-${witSeq}`, text };
 }
 
-/* ---------- Opening hours (item #6 — split intervals + overnight) ----------
+/* ---------- Opening hours (item #6: split intervals + overnight) ----------
    A day can be closed, or open across one or two intervals. Each interval is a
-   `from`–`to` pair in "HH:MM"; when `to <= from` the interval runs past midnight
+   `from`/`to` pair in "HH:MM"; when `to <= from` the interval runs past midnight
    (a late bar), which is VALID. Two intervals model a lunch-break closure
-   (e.g. 12:00–15:00 · 19:00–23:00). Legacy `{ open, from, to }` rows are healed
+   (e.g. 12:00 to 15:00, then 19:00 to 23:00). Legacy `{ open, from, to }` rows are healed
    by `normalizeDayHours`. */
 export interface HoursInterval {
   from: string;
@@ -582,7 +515,7 @@ export interface DayHours {
 /* ---------- Per-date hours exceptions ----------
    A dated override of the weekly grid: "closed on Christmas Eve", "opens late
    on Pride Saturday". `open: false` means CLOSED that date, and a closed date
-   carries NO intervals at all — the backend rejects a closed entry that still
+   carries NO intervals at all: the backend rejects a closed entry that still
    lists opening windows, so the editor's setters keep the two in step. */
 export interface HoursException extends DayHours {
   /** "YYYY-MM-DD". */
@@ -599,6 +532,25 @@ export const HOURS_EXCEPTION_NOTE_MAX = 140;
 export type PhotoKey = "wide" | "d1" | "d2" | "vibe";
 export const PHOTO_KEYS: PhotoKey[] = ["wide", "d1", "d2", "vibe"];
 
+/** The cover photo as the form holds it: a storage key or served URL, and
+ *  its alt text. Empty strings when unset. */
+export interface ListingCoverPhotoDraft {
+  image: string;
+  alt: string;
+}
+
+export const EMPTY_COVER_PHOTO: ListingCoverPhotoDraft = { image: "", alt: "" };
+
+/** The draft's cover, empty when the draft has none. */
+export function coverPhotoOf(
+  draft: Pick<ListingDraft, "coverPhoto">,
+): ListingCoverPhotoDraft {
+  return draft.coverPhoto ?? EMPTY_COVER_PHOTO;
+}
+
+/** A photo the server refused: one of the gallery slots, or the cover. */
+export type RejectedPhotoSlot = PhotoKey | "cover";
+
 export interface ListingDraft {
   path: ListingPath | "";
   name: string;
@@ -610,10 +562,6 @@ export interface ListingDraft {
   blurb: string; // one-liner, <=140
   tagline: string;
   whatItIs: WitLine[]; // the description, one entry per paragraph (1-20)
-  tags: string[]; // <=6
-  /** Atmosphere tags only (GOODFOR_PLACE / GOODFOR_ONLINE ids). Access claims live in `accessibility`,
-   *  which can answer no; these are all positive claims. */
-  goodFor: string[];
   /** The venue's six accessibility answers plus the owner's free-text note.
    *  Optional so a draft written before the feature existed stays valid; every
    *  reader heals it through `normalizeAccessibilityDraft`. */
@@ -626,7 +574,36 @@ export interface ListingDraft {
   pricingMode?: ListingPricingMode;
   /** The menu in its editable shape (client ids on every row). */
   menu?: ListingMenuDraft;
+  /** Language codes from `LISTING_LANGUAGE_CODES` ("pt", "pt-BR"). A draft
+   *  saved before 2026-10-08 holds names ("Português"); every load heals it
+   *  through `healLegacyListingDraft`. */
   langs: string[];
+  /** "Anything else?": a language or dialect outside the codes, as written,
+   *  at most 80 characters. Optional so older drafts stay valid. */
+  langsOther?: string;
+  /** Attribute slugs the owner ticked (contract: at most 40). Optional so
+   *  older drafts stay valid; a stored slug outside the current offer stays
+   *  until the owner removes it. */
+  attributes?: string[];
+  /** Up to 3 of `attributes` for the card, never a sensitive one. */
+  highlights?: string[];
+  /** "How do people get in?"; null is "Not saying". Never sent online. */
+  entryMode?: ListingEntryMode | null;
+  /** Entry for nightlife and culture; null is "Not saying". */
+  coverPolicy?: ListingCoverPolicy | null;
+  /** "HH:MM" while `coverPolicy` is "freeBefore", "" otherwise. Sent as null
+   *  unless it applies. */
+  coverFreeBefore?: string;
+  /** Ways to pay at a place or out and about. Online keeps its own list in
+   *  `onlineDetails.payments`. */
+  payments?: ListingPaymentMethod[];
+  /** Invoices with the customer's NIF: yes, no, or null for not saying. */
+  issuesNifInvoices?: boolean | null;
+  /** Practices above the baseline a visitor can check. */
+  inclusionPractices?: ListingInclusionPractice[];
+  /** The published safer-space policy, as typed; "" when none. Sent only
+   *  with the "safer-space-policy" practice. */
+  saferSpacePolicyUrl?: string;
   /** Online-only business with no physical location. When true the listing
    *  uses the online categories, a "Based in" city and the "How people buy
    *  from you" fields, and carries no address, pin, neighbourhood or hours.
@@ -688,7 +665,12 @@ export interface ListingDraft {
   };
   photos: Record<PhotoKey, string>;
   alt: Record<PhotoKey, string>;
-  rel: OwnerRel | ""; // REL id — your connection to the place
+  /** The owner's own cover for the directory card, separate from the four
+   *  gallery slots. Optional so a draft saved before the field existed stays
+   *  valid; read it through `coverPhotoOf`. An empty `image` is no cover, and
+   *  the card then shows the wide shot. */
+  coverPhoto?: ListingCoverPhotoDraft;
+  rel: OwnerRel | ""; // REL id: your connection to the place
   ownerName: string;
   ownerRole: string;
   ownerBio: string;
@@ -704,7 +686,7 @@ export interface ListingDraft {
   /** The submitter agrees to the LGBTQ+ affirming baseline. Required to be
    *  `true` to create a listing at all: it is the condition of appearing in
    *  this directory, matching the housing side's mandatory pledge. There is no
-   *  edit that un-agrees to it, so it is CREATE-ONLY — `draftToUpdateDto`
+   *  edit that un-agrees to it, so it is CREATE-ONLY: `draftToUpdateDto`
    *  leaves it out of every PATCH, which the API rejects it from. */
   affirmingBaselineAccepted: boolean;
   /**
@@ -755,7 +737,7 @@ export function emptyHours(): Record<string, DayHours> {
   return hours;
 }
 
-/** Heal one day into the interval shape — accepts the new shape, the legacy
+/** Heal one day into the interval shape. Accepts the new shape, the legacy
  *  `{ open, from, to }` shape, or junk (→ a closed default day). Idempotent. */
 export function normalizeDayHours(raw: unknown): DayHours {
   if (raw && typeof raw === "object") {
@@ -799,12 +781,12 @@ export function normalizeHours(
  * The week's hours as the API accepts them: a CLOSED day carries no intervals.
  *
  * The editor deliberately keeps a closed day's times in the draft, so toggling
- * a day shut and open again restores what was there rather than resetting it to
- * 09:00. The API takes the opposite view: `@IsValidDayHours()` rejects a closed
+ * a day shut and open again restores what was there and keeps it from
+ * resetting to 09:00. The API takes the opposite view: `@IsValidDayHours()` rejects a closed
  * day that still carries intervals as a contradiction, and rejects the whole
  * request with it. Those two are both right for their own side, so the
- * reconciliation belongs here at the write boundary, applied once, instead of
- * either surface bending to the other.
+ * reconciliation belongs here at the write boundary, applied once, and
+ * neither surface bends to the other.
  */
 export function hoursForPayload(
   hours: Record<string, DayHours>,
@@ -825,8 +807,9 @@ export function isOvernight(interval: HoursInterval): boolean {
   return interval.to <= interval.from;
 }
 
-/** A compact human string for one day's hours, or null when closed/blank —
- *  e.g. "12:00–15:00 · 19:00–02:00". Used by every read-only hours display. */
+/** A compact human string for one day's hours, or null when closed/blank:
+ *  each interval's two times joined by a dash, the intervals joined by a
+ *  middle dot. Used by every read-only hours display. */
 export function formatDayHours(day: DayHours | undefined): string | null {
   if (!day?.open) return null;
   const label = day.intervals
@@ -888,7 +871,7 @@ export function anyDayOpen(hours: Record<string, DayHours>): boolean {
 /* ---------- Hours-exception helpers ----------
    These mirror the backend's own rules (`hours-exceptions.validator.ts` and
    `day-hours.validator.ts`) so an owner is told what is wrong while the field
-   is still in front of them, instead of collecting a 400 on save. */
+   is still in front of them, well before a 400 on save. */
 
 const CALENDAR_DATE_PATTERN = /^(\d{4})-(\d{2})-(\d{2})$/;
 

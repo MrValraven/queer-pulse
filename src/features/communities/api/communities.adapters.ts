@@ -726,6 +726,9 @@ export function pulseEventToCommunityEvent(
     spots: goingLabel,
     slug: dto.slug,
     endAt: end,
+    ...(dto.hostedAs === "guest" && dto.leadCommunity
+      ? { leadCommunityName: dto.leadCommunity.name }
+      : {}),
   };
 }
 

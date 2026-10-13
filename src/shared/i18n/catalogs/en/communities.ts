@@ -2273,4 +2273,7 @@ export const communities: Catalog = {
     "Only the owner or a co-owner can ask for spaces.",
   "spaces.request.loadError": "Couldn't load the request status.",
   "spaces.request.retry": "Try again",
+
+  // Events tab: a gathering this community joined as a guest names its lead.
+  "detail.events.withLead": "With {name}",
 };

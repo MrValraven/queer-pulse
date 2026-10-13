@@ -43,7 +43,7 @@ export function StudioTermsPage() {
   const licences = useMemo(() => buildLicences(t), [t]);
 
   return (
-    <StudioShell hidePlayer>
+    <StudioShell>
       <div className={s.wrap}>
         <div className={s.pageH}>
           <div className={s.eb}>{t("studio:terms.eyebrow")}</div>

@@ -1,11 +1,17 @@
 import { apiGet, apiPatch } from "../../../shared/api/client";
 import type { MemberRefDTO } from "../../../shared/api/refs";
 
-/** The 6 fields a member can flag as needing a correction — mirrors
+/** The 7 fields a member can flag as needing a correction, mirroring
  *  `SuggestEditField` in `marketing/api/useSuggestEdit.ts`, the member-facing
  *  submission side of this same feature. */
 export type EditSuggestionField =
-  "hours" | "address" | "phone" | "website" | "description" | "other";
+  | "hours"
+  | "address"
+  | "phone"
+  | "website"
+  | "description"
+  | "attributes"
+  | "other";
 
 export type EditSuggestionStatus = "pending" | "accepted" | "dismissed";
 

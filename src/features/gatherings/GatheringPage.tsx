@@ -315,9 +315,10 @@ function GatheringDetailBody({
                 />
               )}
 
-              {/* LOC-04/06/08: announcements, where it actually is, the six
-                  accessibility answers, and "tell someone where I'm going".
-                  Live only: the demo registry carries none of that data. */}
+              {/* LOC-04/06/08: announcements, where it actually is, and the
+                  six accessibility answers. "Share my plans" lives in the
+                  header toolbar. Live only: the demo registry carries none of
+                  that data. */}
               <GatheringDetailPanels
                 gathering={gathering}
                 demoMode={demoMode}

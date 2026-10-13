@@ -1,5 +1,6 @@
 import { FiUser, FiX } from "react-icons/fi";
-import { FadeIn, SegmentedControl } from "../../shared/components/ui";
+import { useId } from "react";
+import { FadeIn, SegmentedControl, Select } from "../../shared/components/ui";
 import { AdminMediaUploaderPicker } from "./AdminMediaUploaderPicker";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -33,22 +34,28 @@ export function AdminMediaFilters({
   onUploaderFilterChange: (uploader: AdminMediaUploader | null) => void;
 }) {
   const { t } = useTranslation();
+  const kindLabelId = useId();
 
   return (
-    <FadeIn delay={60}>
+    <FadeIn delay={60} className={styles.filtersFade}>
       <div className={styles.filters}>
         <div className={styles.kindFilter}>
-          <SegmentedControl
-            label={t("admin:media.filterAriaLabel")}
+          <span className={styles.kindFilterLabel} id={kindLabelId}>
+            {t("admin:media.kindFilterLabel")}
+          </span>
+          <Select
+            size="sm"
+            labelledBy={kindLabelId}
+            className={styles.kindSelect}
             value={kind}
-            onChange={(next) => onKindChange(next as AdminMediaKind)}
+            onChange={(next) => onKindChange((next ?? "all") as AdminMediaKind)}
             options={ADMIN_MEDIA_KINDS.map((kindValue) => ({
               value: kindValue,
               label: t(`admin:media.kinds.${kindValue}`),
             }))}
-            // While filtering by uploader, kind tabs are inert: the uploader
-            // view spans every kind (the backend ignores `prefix`).
-            disabledOptions={uploaderFilter ? ADMIN_MEDIA_KINDS : undefined}
+            // While filtering by uploader, the kind choice is inert: the
+            // uploader view spans every kind (the backend ignores `prefix`).
+            disabled={uploaderFilter !== null}
           />
         </div>
         <div className={styles.usageFilter}>

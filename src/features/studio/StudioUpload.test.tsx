@@ -1,70 +1,98 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
-import { UploadMainCol } from "./StudioUploadMainCol";
+import { StudioUploadPage } from "./StudioUploadPage";
 import { SplitsTable } from "./StudioUploadSplitsTable";
 
 /**
- * Studio is demo-only in live (the whole /studio/* surface collapses to the
- * coming-soon page), so there's no adapter to exercise — only the wizard's
- * client-side interaction. `UploadMainCol` owns the real step machine
- * (files → metadata → done), and `SplitsTable` owns the invite-a-collaborator
- * form whose CTA is gated on a non-empty handle. Both are self-contained and
- * driven through `TestProviders` (real Toast + i18n, no mocks); neither reads
- * `useSimulatedLoad`, so there's no skeleton timer to stub. All button/heading
- * copy comes from the lazy `studio` catalog, so those queries use `findBy*`.
+ * The upload flow runs the same steps in demo and live: Release, Tracks,
+ * Publish. In demo the mutations resolve locally (studioDemoMutations), so
+ * the whole flow is exercised here without a network.
  */
-
 beforeEach(() => {
-  // The wizard is local-state only, but SavedProvider/Drafts mount in the
-  // wrapper — clear their localStorage so nothing bleeds across the file run.
   window.localStorage.clear();
 });
 
-describe("UploadMainCol step navigation", () => {
-  it("advances from the files step into metadata & credits, where the title is editable", async () => {
+describe("StudioUploadPage steps", () => {
+  it("holds the member on the release step until the release has a title", async () => {
     render(
-      <TestProviders>
-        <UploadMainCol />
+      <TestProviders initialEntries={["/studio/upload"]}>
+        <StudioUploadPage />
       </TestProviders>,
     );
-
-    // Files step: only the forward CTA is present, no Submit yet.
     fireEvent.click(
-      await screen.findByRole("button", { name: /continue to metadata/i }),
+      await screen.findByRole("button", { name: /save and continue/i }),
     );
-
-    // Metadata step: the Submit-for-review action and the title field appear.
     expect(
-      await screen.findByRole("button", { name: /submit for review/i }),
+      await screen.findByText(/give the release a title/i),
     ).toBeInTheDocument();
-    const titleField = screen.getByDisplayValue("Cidade dos santos");
-    fireEvent.change(titleField, { target: { value: "Cartas ao mar" } });
-    expect(screen.getByDisplayValue("Cartas ao mar")).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /release/i, current: "step" }),
+    ).toBeInTheDocument();
   });
 
-  it("submits the release and lands on the submitted-for-review panel with a toast", async () => {
+  it("creates the draft on leaving the release step and moves to tracks", async () => {
     render(
-      <TestProviders>
-        <UploadMainCol />
+      <TestProviders initialEntries={["/studio/upload"]}>
+        <StudioUploadPage />
       </TestProviders>,
     );
-
-    fireEvent.click(
-      await screen.findByRole("button", { name: /continue to metadata/i }),
-    );
-    fireEvent.click(
-      await screen.findByRole("button", { name: /submit for review/i }),
-    );
-
-    // Done step: the payouts CTA renders and the success toast fires. The CTA
-    // is a <Button to={…}> — react-router Link, so it has role "link".
+    fireEvent.change(await screen.findByLabelText(/release title/i), {
+      target: { value: "Cartas ao mar" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: /save and continue/i }));
     expect(
-      await screen.findByRole("link", { name: /view your payouts/i }),
+      await screen.findByRole("button", { name: /choose audio files/i }),
     ).toBeInTheDocument();
     expect(
-      await screen.findByText("Release submitted for review"),
+      screen.getByRole("button", { name: /tracks/i, current: "step" }),
     ).toBeInTheDocument();
+  });
+
+  it("locks a published release's track list behind Unpublish", async () => {
+    render(
+      <TestProviders
+        initialEntries={[
+          "/studio/upload?release=demo-release-cidade-dos-santos",
+        ]}
+      >
+        <StudioUploadPage />
+      </TestProviders>,
+    );
+    fireEvent.click(
+      await screen.findByRole("button", { name: /save and continue/i }),
+    );
+    expect(
+      await screen.findByRole("button", {
+        name: /unpublish to change tracks/i,
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: /choose audio files/i }),
+    ).not.toBeInTheDocument();
+    // Scoped to the stepper: "Unpublish to change tracks" also says publish.
+    const publishStep = within(
+      screen.getByRole("list", { name: /upload steps/i }),
+    ).getByRole("button", { name: /publish/i });
+    expect(publishStep).toBeDisabled();
+    expect(publishStep).not.toHaveAttribute("aria-current");
+  });
+
+  it("shows staff's reason and nothing to edit for a taken-down release", async () => {
+    render(
+      <TestProviders
+        initialEntries={[
+          "/studio/upload?release=demo-release-taken-down-bairro",
+        ]}
+      >
+        <StudioUploadPage />
+      </TestProviders>,
+    );
+    expect(
+      await screen.findByText("This release was taken down"),
+    ).toBeInTheDocument();
+    expect(screen.getByText(/check the sample/)).toBeInTheDocument();
+    expect(screen.queryByLabelText(/release title/i)).not.toBeInTheDocument();
   });
 });
 

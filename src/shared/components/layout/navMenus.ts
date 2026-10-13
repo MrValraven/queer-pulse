@@ -87,6 +87,9 @@ export interface MegaMenu {
  * be dropped and badged at once. `authGate.ts` names Cinema and Studio as the
  * two deliberate exceptions to those lists; this is the other half of that
  * decision, the part that makes the signal visible.
+ *
+ * Studio stops being marked for a member with a Studio access grant (Studio
+ * v1, 2026-10-08).
  */
 const BEING_BUILT_LIVE_PREFIXES: string[] = [routes.cinema, routes.studio];
 
@@ -94,13 +97,18 @@ const BEING_BUILT_LIVE_PREFIXES: string[] = [routes.cinema, routes.studio];
  * True when a nav link points into a surface that is still being built. Always
  * false in demo mode, where both surfaces render their full mock experience.
  */
-export function isBeingBuiltLink(href: string, demoMode: boolean): boolean {
+export function isBeingBuiltLink(
+  href: string,
+  demoMode: boolean,
+  hasStudioAccess = false,
+): boolean {
   if (demoMode) return false;
   const path = linkToPath(href).split(/[?#]/)[0] || "/";
   if (!path.startsWith("/")) return false; // external / mailto / tel
-  return BEING_BUILT_LIVE_PREFIXES.some(
-    (prefix) => path === prefix || path.startsWith(`${prefix}/`),
-  );
+  return BEING_BUILT_LIVE_PREFIXES.some((prefix) => {
+    if (prefix === routes.studio && hasStudioAccess) return false;
+    return path === prefix || path.startsWith(`${prefix}/`);
+  });
 }
 
 /**
@@ -116,8 +124,12 @@ export function isBeingBuiltLink(href: string, demoMode: boolean): boolean {
  * goes. In demo mode both surfaces are fully built, so nothing is demoted there
  * and the demo nav keeps its original hierarchy.
  */
-function markBeingBuilt(link: MegaLink, demoMode: boolean): MegaLink {
-  if (!isBeingBuiltLink(link.href, demoMode)) return link;
+function markBeingBuilt(
+  link: MegaLink,
+  demoMode: boolean,
+  hasStudioAccess = false,
+): MegaLink {
+  if (!isBeingBuiltLink(link.href, demoMode, hasStudioAccess)) return link;
   return { ...link, featured: false, isBeingBuilt: true };
 }
 
@@ -144,6 +156,7 @@ export function filterMenus(
   menus: MegaMenu[],
   isVisible: (href: string) => boolean,
   demoMode: boolean,
+  hasStudioAccess = false,
 ): MegaMenu[] {
   return menus
     .map((menu) => {
@@ -152,10 +165,10 @@ export function filterMenus(
           ...column,
           links: column.links
             .filter((link) => isVisible(link.href))
-            .map((link) => markBeingBuilt(link, demoMode)),
+            .map((link) => markBeingBuilt(link, demoMode, hasStudioAccess)),
           cta:
             column.cta && isVisible(column.cta.href)
-              ? markBeingBuilt(column.cta, demoMode)
+              ? markBeingBuilt(column.cta, demoMode, hasStudioAccess)
               : undefined,
         }))
         .filter((column) => column.links.length > 0 || column.cta);

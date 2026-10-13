@@ -1,7 +1,10 @@
+import { useCallback } from "react";
 import {
   useInfiniteQuery,
   useQuery,
   useQueryClient,
+  type InfiniteData,
+  type QueryKey,
 } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useDemoAwareMutation } from "./demoAwareMutation";
@@ -10,6 +13,7 @@ import {
   getAdminInvites,
   getAdminInviteInviters,
   patchAdminInviteQuota,
+  postAdminInviteRefresh,
   type AdminInviteDTO,
   type AdminInviteInviterDTO,
   type AdminInviteQuotaDTO,
@@ -195,8 +199,9 @@ export function useUpdateInviteQuota() {
  * once. `setQueriesData` with a partial key patches all of them in one pass, and
  * a row that no longer matches its query's filter is left in place rather than
  * spliced out: dropping it would make the row vanish mid-read for the admin who
- * just acted on it. The status chip changing to "Revoked" is the honest signal;
- * the next refetch reconciles membership.
+ * just acted on it. The status chip changing to "Revoked" is the honest signal
+ * while the drawer stays open; membership is reconciled when the drawer closes
+ * (see {@link useReconcileAdminInviteMembership}).
  */
 function patchInviteInCache(
   queryClient: ReturnType<typeof useQueryClient>,
@@ -213,6 +218,74 @@ function patchInviteInCache(
           items: page.items.map((row) => (row.id === invite.id ? invite : row)),
         })),
       },
+  );
+}
+
+/** Whether a row with `status` belongs in a list filtered by `filter`: the
+ *  "all" list holds every status, every other filter holds only its own. */
+export function isInviteInFilter(
+  filter: AdminInviteFilter,
+  status: AdminInviteStatus,
+): boolean {
+  return filter === "all" || filter === status;
+}
+
+/** The filter segment of an `["admin-invites", demoMode, filter, inviterSlug]`
+ *  key. */
+function filterFromQueryKey(queryKey: QueryKey): AdminInviteFilter {
+  return queryKey[2] as AdminInviteFilter;
+}
+
+/**
+ * Settles list membership for an invite whose status changed while its drawer
+ * was open, called once that drawer closes. `patchInviteInCache` deliberately
+ * leaves the row where it was so it does not vanish mid-read; this is the
+ * second half of that.
+ *
+ * Every cached `admin-invites` list whose filter no longer admits the new
+ * status drops the row, and its `total` (read from `pages[0].total`, and used by
+ * `getNextPageParam` on every page) goes down by one so any count stays right.
+ * The splice is a direct cache write in both modes: a refetch in demo mode would
+ * re-read the unchanged fixture and bring the old status back.
+ *
+ * Live mode also marks the lists for the new status stale without refetching
+ * them, so the Pending or Revoked tab picks the row up the next time it is
+ * shown. Demo mode skips that for the same fixture reason.
+ */
+export function useReconcileAdminInviteMembership() {
+  const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
+  return useCallback(
+    (invite: AdminInviteDTO) => {
+      const cachedLists = queryClient.getQueriesData<
+        InfiniteData<AdminInvitesPageVM>
+      >({ queryKey: ["admin-invites", demoMode] });
+      for (const [queryKey, cachedList] of cachedLists) {
+        if (
+          !cachedList ||
+          isInviteInFilter(filterFromQueryKey(queryKey), invite.status)
+        )
+          continue;
+        const hasRow = cachedList.pages.some((page) =>
+          page.items.some((row) => row.id === invite.id),
+        );
+        if (!hasRow) continue;
+        queryClient.setQueryData<InfiniteData<AdminInvitesPageVM>>(queryKey, {
+          ...cachedList,
+          pages: cachedList.pages.map((page) => ({
+            ...page,
+            items: page.items.filter((row) => row.id !== invite.id),
+            total: Math.max(0, page.total - 1),
+          })),
+        });
+      }
+      if (demoMode) return;
+      void queryClient.invalidateQueries({
+        queryKey: ["admin-invites", demoMode, invite.status],
+        refetchType: "none",
+      });
+    },
+    [queryClient, demoMode],
   );
 }
 
@@ -243,6 +316,46 @@ export function useRevokeAdminInvite() {
     logContext: (invite) => ({ id: invite.id }),
     onSuccess: (revoked) => {
       patchInviteInCache(queryClient, demoMode, revoked);
+    },
+  });
+}
+
+/** How long a refreshed invite stays open: the backend sets `expiresAt` to
+ *  now plus this, and demo mode mirrors it. */
+const REFRESHED_INVITE_LIFETIME_MS = 7 * 24 * 60 * 60 * 1000;
+
+/**
+ * Refresh an expired invite from the admin oversight drawer, whoever sent it.
+ * The code stays the same, so the link the inviter already shared works again
+ * for seven days; the caller gates this behind the shared `ConfirmDialog`.
+ *
+ * Demo mode never touches the network (this is an admin-only endpoint that 403s
+ * otherwise) and resolves a synthetic valid row; live mode calls
+ * `POST /admin/invites/:id/refresh`. Either way the cache is patched from the
+ * RESULT in `onSuccess`, after the server answers, so the row only reads
+ * "Pending" once the refresh is real.
+ */
+export function useRefreshAdminInvite() {
+  const { demoMode } = useDemoMode();
+  const queryClient = useQueryClient();
+  return useDemoAwareMutation<AdminInviteDTO, unknown, AdminInviteDTO>({
+    demoMode,
+    mutationKey: ["admin-invites", "refresh"],
+    // Same reason as the revoke: the caller tells a 409 apart from a real
+    // failure, so the app-wide generic toast stays out of it.
+    meta: { silentError: true },
+    demoResult: (invite) => ({
+      ...invite,
+      status: "valid" as const,
+      expiresAt: new Date(
+        Date.now() + REFRESHED_INVITE_LIFETIME_MS,
+      ).toISOString(),
+    }),
+    live: (invite) => postAdminInviteRefresh(invite.id),
+    logLabel: "admin.invite.refresh",
+    logContext: (invite) => ({ id: invite.id }),
+    onSuccess: (refreshed) => {
+      patchInviteInCache(queryClient, demoMode, refreshed);
     },
   });
 }

@@ -16,6 +16,7 @@ import {
 } from "./AdminReportDrawerDecision";
 import { AdminReportDrawerHead } from "./AdminReportDrawerHead";
 import { ReportedPhotoEvidence } from "./AdminReportPhotoEvidence";
+import { AdminStudioReleaseActions } from "./AdminStudioReleaseActions";
 import {
   MIN_MEMBER_FACING_NOTE_LENGTH,
   modActionCodeFor,
@@ -115,6 +116,10 @@ export function AdminReportDrawer({
         </>
       ) : (
         <ReportContextFallback report={report} />
+      )}
+
+      {report.subjectType === "studio_release" && (
+        <AdminStudioReleaseActions report={report} />
       )}
 
       <ReportDrawerActionGrid

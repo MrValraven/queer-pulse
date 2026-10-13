@@ -2,6 +2,21 @@ import { useCallback, useEffect, useMemo, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import type { MyLocationCoordinates } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
+import { listingFactActiveFilters } from "./directoryListingFactActiveFilters";
+import {
+  clearListingFactParams,
+  countListingFactChips,
+  dropOnlineHiddenFactParams,
+  FILTERABLE_ATTRIBUTE_SLUGS,
+  LISTING_FACT_PARAM_KEYS,
+  readListingFactFilters,
+  withListingFactChange,
+  writeListingFactFilters,
+  type DirectoryListingFactFilters,
+  type ListingFactCounts,
+  type ListingFactFilterChange,
+} from "./directoryListingFactFilters";
 import {
   ADULT_LISTING_CATEGORY_SLUG,
   DIRECTORY_CATEGORY_IDS,
@@ -26,7 +41,6 @@ import {
   sortByDistance,
   sortByNeighbourhoodDistance,
 } from "./nearMePlaces";
-import { VIBES, VIBE_LABEL_KEYS } from "./map.data";
 import type { ActiveFilter } from "../../shared/components/ui";
 import {
   normalizeOwnedBy,
@@ -50,8 +64,8 @@ export interface LocalChipCounts {
   safe: number;
   /** Matches with each access need added to the ones already ticked. */
   access: Record<AccessibilitySlug, number>;
-  /** Matches with each vibe added to the ones already chosen. */
-  vibes: Record<string, number>;
+  /** Matches with each attribute and fact chip pressed, every other filter kept. */
+  listingFacts: ListingFactCounts;
 }
 
 const SORT_VALUES: LocalSort[] = ["default", "name", "hood"];
@@ -75,11 +89,11 @@ const ACCESS_LABEL_KEYS: Record<AccessibilitySlug, string> = Object.fromEntries(
 /**
  * Read `?access=` into the six canonical slugs.
  *
- * Anything unrecognised is dropped here rather than forwarded. The endpoint
+ * Anything unrecognised is dropped here, before the request. The endpoint
  * answers 400 to a misspelt slug on purpose (a silently ignored accessibility
  * filter is the failure mode that hurts someone), so a hand-edited or stale
  * URL must never turn the whole grid into an error. Duplicates collapse, and
- * the order is the canonical question order rather than typing order, so two
+ * the order is the canonical question order whatever the typing order, so two
  * equivalent URLs produce one cache key.
  */
 function toAccess(raw: string | null): AccessibilitySlug[] {
@@ -111,16 +125,11 @@ export function toCategories(raw: string | null): string[] {
 
 /**
  * Read `?owned=` into the chosen ownership tags. Same rules as `toAccess`: an
- * unknown value is dropped rather than forwarded into a 400, duplicates
+ * unknown value is dropped before it can become a 400, duplicates
  * collapse, and the order is canonical so equivalent URLs share a cache key.
  */
 export function toOwned(raw: string | null): ListingOwnedBy[] {
   return raw ? normalizeOwnedBy(raw.split(",")) : [];
-}
-
-/** Read `?vibe=` into the chosen vibes, in the order they were picked. */
-function toVibes(raw: string | null): string[] {
-  return raw?.split(",").filter(Boolean) ?? [];
 }
 
 /** Write a list filter into the params, dropping the key when the list is
@@ -187,7 +196,9 @@ export interface DirectoryFilterParams {
   categories: string[];
   query: string;
   sort: LocalSort;
-  vibes: string[];
+  /** The attribute and fact filters (`?attr=`, `?entry=`, `?pay=`, `?lang=`,
+   *  `?practice=`). The Online tab reads no way in and no ways to pay. */
+  listingFacts: DirectoryListingFactFilters;
   safe: "verified" | null;
   /** Ownership tags (`?owned=`), ANY of which a place must carry, in
    *  canonical order. Empty means no restriction. */
@@ -209,7 +220,7 @@ export interface DirectoryFilterParams {
   clearCategories: () => void;
   setQuery: (next: string) => void;
   setSort: (next: string) => void;
-  toggleVibe: (vibe: string) => void;
+  toggleListingFact: (change: ListingFactFilterChange) => void;
   setSafe: (next: boolean) => void;
   toggleOwned: (value: ListingOwnedBy) => void;
   setOpenNow: (next: boolean) => void;
@@ -219,13 +230,31 @@ export interface DirectoryFilterParams {
   clearFilters: () => void;
 }
 
+/** The attribute and fact filters as the URL holds them. Rebuilt from the
+ *  five raw values, so the memo holds while any other param changes. */
+function useListingFactFilterParams(
+  searchParams: URLSearchParams,
+  isOnlineView: boolean,
+): DirectoryListingFactFilters {
+  const factSearch = new URLSearchParams();
+  for (const key of Object.values(LISTING_FACT_PARAM_KEYS)) {
+    const value = searchParams.get(key);
+    if (value !== null) factSearch.set(key, value);
+  }
+  const rawFacts = factSearch.toString();
+  return useMemo(
+    () => readListingFactFilters(new URLSearchParams(rawFacts), isOnlineView),
+    [rawFacts, isOnlineView],
+  );
+}
+
 /**
  * The directory's view + filter + sort STATE, held in the URL so a filtered
  * directory is shareable and survives refresh / Back. Split out of the old
  * combined `useDirectoryFilters` (gap-audit HSG-5) so `query`/`safe` are
- * readable BEFORE `useLocalPlaces` runs — they're now sent server-side as
- * `q`/`safe`, which needs this URL state resolved first, not derived from an
- * already-fetched `places` array. `view` pushes a history entry; every other
+ * readable BEFORE `useLocalPlaces` runs: they're now sent server-side as
+ * `q`/`safe`, which needs this URL state resolved first, ahead of any
+ * fetched `places` array. `view` pushes a history entry; every other
  * edit replaces, to avoid spamming history per keystroke.
  */
 export function useDirectoryFilterParams(): DirectoryFilterParams {
@@ -243,12 +272,7 @@ export function useDirectoryFilterParams(): DirectoryFilterParams {
   );
   const query = searchParams.get("q") ?? "";
   const sort = toSort(searchParams.get("sort"));
-  const rawVibes = searchParams.get("vibe");
-  // Vibe is a place-only group, hidden on the Online tab.
-  const vibes = useMemo(
-    () => (isOnlineView ? NO_VALUES : toVibes(rawVibes)),
-    [rawVibes, isOnlineView],
-  );
+  const listingFacts = useListingFactFilterParams(searchParams, isOnlineView);
   const safe = searchParams.get("safe") === "verified" ? "verified" : null;
   const rawOwned = searchParams.get("owned");
   const owned = useMemo(() => toOwned(rawOwned), [rawOwned]);
@@ -304,6 +328,7 @@ export function useDirectoryFilterParams(): DirectoryFilterParams {
         if (nextView === "online") {
           params.delete("open");
           params.delete("mobile");
+          dropOnlineHiddenFactParams(params);
         }
       }, true),
     [mutateParams],
@@ -338,14 +363,14 @@ export function useDirectoryFilterParams(): DirectoryFilterParams {
     (next: string) => setParam("sort", next, next === "default"),
     [setParam],
   );
-  const toggleVibe = useCallback(
-    (vibe: string) =>
+  const toggleListingFact = useCallback(
+    (change: ListingFactFilterChange) =>
       mutateParams((params) => {
-        const current = toVibes(params.get("vibe"));
-        const next = current.includes(vibe)
-          ? current.filter((entry) => entry !== vibe)
-          : [...current, vibe];
-        setListParam(params, "vibe", next);
+        const current = readListingFactFilters(
+          params,
+          toView(params.get("view")) === "online",
+        );
+        writeListingFactFilters(params, withListingFactChange(current, change));
       }),
     [mutateParams],
   );
@@ -406,6 +431,8 @@ export function useDirectoryFilterParams(): DirectoryFilterParams {
       mutateParams((params) => {
         params.delete("cat");
         params.delete("q");
+        clearListingFactParams(params);
+        // Legacy: Vibe left the product, so an old shared link's `vibe` goes too.
         params.delete("vibe");
         params.delete("safe");
         params.delete("owned");
@@ -422,7 +449,7 @@ export function useDirectoryFilterParams(): DirectoryFilterParams {
     categories,
     query,
     sort,
-    vibes,
+    listingFacts,
     safe,
     owned,
     openNow,
@@ -434,7 +461,7 @@ export function useDirectoryFilterParams(): DirectoryFilterParams {
     clearCategories,
     setQuery,
     setSort,
-    toggleVibe,
+    toggleListingFact,
     setSafe,
     toggleOwned,
     setOpenNow,
@@ -467,14 +494,14 @@ function useActiveFilters(params: DirectoryFilterParams): ActiveFilter[] {
   const {
     categories,
     query,
-    vibes,
+    listingFacts,
     safe,
     owned,
     openNow,
     isOutAndAbout,
     access,
     toggleCategory,
-    toggleVibe,
+    toggleListingFact,
     setSafe,
     toggleOwned,
     setOpenNow,
@@ -489,13 +516,6 @@ function useActiveFilters(params: DirectoryFilterParams): ActiveFilter[] {
         key: `cat:${categoryId}`,
         label: t(LOCAL_CATEGORY_LABEL_KEYS[categoryId] ?? categoryId),
         onRemove: () => toggleCategory(categoryId),
-      });
-    });
-    vibes.forEach((vibe) => {
-      list.push({
-        key: `vibe:${vibe}`,
-        label: t(VIBE_LABEL_KEYS[vibe] ?? vibe),
-        onRemove: () => toggleVibe(vibe),
       });
     });
     if (safe === "verified") {
@@ -533,6 +553,7 @@ function useActiveFilters(params: DirectoryFilterParams): ActiveFilter[] {
         onRemove: () => toggleAccess(slug),
       });
     });
+    list.push(...listingFactActiveFilters(t, listingFacts, toggleListingFact));
     if (query.trim()) {
       list.push({
         key: "query",
@@ -543,7 +564,7 @@ function useActiveFilters(params: DirectoryFilterParams): ActiveFilter[] {
     return list;
   }, [
     categories,
-    vibes,
+    listingFacts,
     safe,
     owned,
     openNow,
@@ -552,7 +573,7 @@ function useActiveFilters(params: DirectoryFilterParams): ActiveFilter[] {
     query,
     t,
     toggleCategory,
-    toggleVibe,
+    toggleListingFact,
     setSafe,
     toggleOwned,
     setOpenNow,
@@ -568,10 +589,12 @@ function useActiveFilters(params: DirectoryFilterParams): ActiveFilter[] {
  * `useDirectoryFilterParams`. `query`/`safe`/`access`/`owned` are ALSO applied
  * here (even though the network fetch already filtered by them server-side)
  * purely as a cheap, harmless no-op safety net, and so the demo fixture
- * answers the same filters with no backend at all. `cat`/`vibe`/`open` are the three
- * that genuinely only ever apply here client-side: the first two for the
- * reasons in that hook's doc comment, and `open` because the grid is CDN-cached
- * and a server-computed open state would go stale in the dangerous direction.
+ * answers the same filters with no backend at all. `cat` and `open` only ever
+ * apply here: `cat` for the reasons in that hook's doc comment, and `open`
+ * because the grid is CDN-cached and a server-computed open state would go
+ * stale in the dangerous direction. The attribute and fact filters apply here
+ * in demo mode only (live, the server narrowed them, and the list is shown as
+ * it came back).
  */
 export function useDirectoryFilterResults(
   places: LocalPlace[],
@@ -589,7 +612,7 @@ export function useDirectoryFilterResults(
     view,
     categories,
     query,
-    vibes,
+    listingFacts,
     safe,
     owned,
     openNow,
@@ -597,6 +620,8 @@ export function useDirectoryFilterResults(
     access,
     sort,
   } = params;
+  const { demoMode } = useDemoMode();
+  const areListingFactsServerFiltered = !demoMode;
   // Each tab's chips read one vocabulary, so places match and count through
   // `categoryForScope`: online counterparts on the Online tab, place
   // counterparts on the list and the map.
@@ -608,7 +633,8 @@ export function useDirectoryFilterResults(
         filterLocalPlaces(places, {
           categories,
           query,
-          vibes,
+          listingFacts,
+          areListingFactsServerFiltered,
           safe,
           owned,
           openNow,
@@ -622,7 +648,8 @@ export function useDirectoryFilterResults(
       places,
       categories,
       query,
-      vibes,
+      listingFacts,
+      areListingFactsServerFiltered,
       safe,
       owned,
       openNow,
@@ -641,12 +668,12 @@ export function useDirectoryFilterResults(
     [origin, matched],
   );
 
-  // The chosen sort and "use my location" BOTH stay in force, rather than one
-  // quietly replacing the other. What that means depends on what the sort has
+  // The chosen sort and "use my location" BOTH stay in force, and neither
+  // quietly replaces the other. What that means depends on what the sort has
   // an opinion about:
   //
   // - "By neighbourhood" groups the list, and says nothing about the order of
-  //   the groups or of what is inside them — so distance decides both, and the
+  //   the groups or of what is inside them, so distance decides both, and the
   //   member gets the shape they asked for with the ordering they turned on.
   // - "A to Z" is a lookup order: every position is already taken, and there is
   //   nothing for distance to refine. It is kept exactly as chosen, and the
@@ -677,7 +704,8 @@ export function useDirectoryFilterResults(
         filterLocalPlaces(places, {
           categories: [],
           query,
-          vibes,
+          listingFacts,
+          areListingFactsServerFiltered,
           safe,
           owned,
           openNow,
@@ -690,7 +718,8 @@ export function useDirectoryFilterResults(
     [
       places,
       query,
-      vibes,
+      listingFacts,
+      areListingFactsServerFiltered,
       safe,
       owned,
       openNow,
@@ -707,7 +736,8 @@ export function useDirectoryFilterResults(
     const current = {
       categories,
       query,
-      vibes,
+      listingFacts,
+      areListingFactsServerFiltered,
       safe,
       owned,
       openNow,
@@ -727,15 +757,26 @@ export function useDirectoryFilterResults(
           countWith({ access: [...access, slug] }),
         ]),
       ) as Record<AccessibilitySlug, number>,
-      vibes: Object.fromEntries(
-        VIBES.map((vibe) => [vibe, countWith({ vibes: [...vibes, vibe] })]),
+      // Over the loaded set with the predicate on, even live: the server
+      // already narrowed by the current choice, so each count says what one
+      // more press would leave (see `isListingFactChipDisabled`).
+      listingFacts: countListingFactChips(
+        (facts) =>
+          filterLocalPlaces(places, {
+            ...current,
+            listingFacts: facts,
+            areListingFactsServerFiltered: false,
+          }).length,
+        listingFacts,
+        FILTERABLE_ATTRIBUTE_SLUGS,
       ),
     };
   }, [
     places,
     categories,
     query,
-    vibes,
+    listingFacts,
+    areListingFactsServerFiltered,
     safe,
     owned,
     openNow,

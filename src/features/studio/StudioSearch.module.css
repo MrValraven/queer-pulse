@@ -1,0 +1,9 @@
+/* A search track row opens with the 32px play button, as the album tracklist
+   does, so the two line up. */
+li.trackRow {
+  grid-template-columns: 32px 36px minmax(0, 1fr) auto auto;
+}
+
+li.trackRow:first-child {
+  border-top: none;
+}

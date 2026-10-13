@@ -1,81 +1,73 @@
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useListingAttributeVocabulary } from "./listBusiness/api/useListingAttributeVocabulary";
 import { type DirectoryPlace } from "./directoryPlaces";
+import { whatsHereGroups } from "./directoryGettingIn.data";
+import { DirectoryReportDetailsControl } from "./DirectoryReportDetailsControl";
+import {
+  DirectoryInclusionPractices,
+  DirectoryWhatsHereGroups,
+} from "./DirectoryWhatsHereGroups";
+import { normalizeInclusionPractices } from "./listBusiness/listingFacts.data";
 import { listingKindOf } from "./listBusiness/listingMobile.data";
 import s from "./DirectorySpacePage.module.css";
 
-const Check = () => (
-  <svg viewBox="0 0 24 24">
-    <polyline points="20 6 9 17 4 12" />
-  </svg>
-);
-const Dash = () => (
-  <svg viewBox="0 0 24 24">
-    <line x1={5} y1={12} x2={19} y2={12} />
-  </svg>
-);
-
 /**
- * "What this place offers": the amenity list the owner set at submission. The
- * owner's description used to sit here under its own title; it now reads
- * untitled in the identity header (see `DirectorySpaceHeader`).
+ * "What's here": every attribute the owner ticked, translated and grouped
+ * under the heading of its group (the listing's own category heading for a
+ * slug two groups share), then the inclusion practices with the published
+ * policy, then the member's way to say something here is wrong (an edit
+ * suggestion on the "Details and amenities" bucket).
  *
- * First in the main column, directly under the gallery: the description in the
- * header ends right above the photos, and this list is its continuation, so
- * the hours and the map card come after it and no longer split the owner's
- * account in two. Extracted out of `DirectorySpaceMain` so that component is a
- * plain running order and nothing else.
+ * First in the main column, directly under the gallery: the description in
+ * the header ends right above the photos, and this list continues it.
+ * Owner-attributed: the owner set these, so the sub-line names them.
  */
-export function DirectoryAboutSection({ place }: { place: DirectoryPlace }) {
+export function DirectoryAboutSection({
+  place,
+  ownerRef,
+  preview = false,
+}: {
+  place: DirectoryPlace;
+  /** Present for the owner, who edits the listing directly. */
+  ownerRef?: string;
+  /** Moderation preview: read-only, so no suggestion control. */
+  preview?: boolean;
+}) {
   const { t } = useTranslation();
-  const hasGoodFor = place.goodFor.length > 0;
+  const vocabulary = useListingAttributeVocabulary();
+  const kind = listingKindOf(place);
+  const groups = whatsHereGroups(place, vocabulary);
+  const practices = normalizeInclusionPractices(place.inclusionPractices);
+  if (groups.length === 0 && practices.length === 0) return null;
 
   return (
-    <>
-      {hasGoodFor && (
-        <section className={s.sec}>
-          {/* Owner-attributed at every review count. These tags are set once
-              by the owner at submission and no review ever touches them, so a
-              "what members say" heading would claim a consensus that does not
-              exist. The sub-line underneath names the owner for the same
-              reason (see goodForSub), or the business when the listing
-              names no first name. */}
-          <h2>
-            <Translation
-              i18nKey={
-                place.online
-                  ? "marketing:directory.detail.offersTitleOnline"
-                  : listingKindOf(place) === "mobile"
-                    ? "marketing:directory.detail.offersTitleMobile"
-                    : "marketing:directory.detail.offersTitle"
-              }
-              components={{ em: <em /> }}
-            />
-          </h2>
-          <p className={s.subLine}>
-            {place.owner.first.trim() === ""
-              ? t("marketing:directory.detail.goodForSubBusiness")
-              : t("marketing:directory.detail.goodForSub", {
-                  name: place.owner.first,
-                })}
-          </p>
-          <div className={s.features}>
-            {place.goodFor.map((feature) => (
-              <div
-                key={feature.label}
-                className={[s.feature, !feature.yes && s.featureMaybe]
-                  .filter(Boolean)
-                  .join(" ")}
-              >
-                <div className={s.featureIc}>
-                  {feature.yes ? <Check /> : <Dash />}
-                </div>
-                {feature.label}
-              </div>
-            ))}
-          </div>
-        </section>
+    <section className={s.sec}>
+      <h2>
+        <Translation
+          i18nKey={
+            kind === "place"
+              ? "marketing:directory.detail.whatsHere.title"
+              : "marketing:directory.detail.whatsHere.titleElsewhere"
+          }
+          components={{ em: <em /> }}
+        />
+      </h2>
+      <p className={s.subLine}>
+        {place.owner.first.trim() === ""
+          ? t("marketing:directory.detail.goodForSubBusiness")
+          : t("marketing:directory.detail.goodForSub", {
+              name: place.owner.first,
+            })}
+      </p>
+      <DirectoryWhatsHereGroups groups={groups} />
+      <DirectoryInclusionPractices
+        practices={practices}
+        policyUrl={place.saferSpacePolicyUrl}
+      />
+      {!preview && (
+        <DirectoryReportDetailsControl place={place} ownerRef={ownerRef} />
       )}
-    </>
+    </section>
   );
 }

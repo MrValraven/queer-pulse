@@ -90,27 +90,6 @@
   font-size: var(--text-15);
   color: var(--ink);
 }
-.vibes {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 24px;
-}
-.vibesLabel {
-  font-family: var(--sans);
-  font-size: var(--text-13);
-  color: var(--ink-60);
-  margin-right: 4px;
-}
-.vibe {
-  font-family: var(--sans);
-  font-size: var(--text-13);
-  color: var(--jade);
-  background: rgba(var(--jade-rgb), 0.1);
-  border-radius: var(--radius-6);
-  padding: 4px 10px;
-}
 .been {
   font-family: var(--sans);
   font-size: var(--text-14);

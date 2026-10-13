@@ -2,6 +2,7 @@ import { useCallback, useMemo } from "react";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useAuth } from "../../../app/providers/authContext";
+import { useStudioAccess } from "../../studio/api/useStudioAccess";
 import { isComingSoonLink, isDemoOnlyNavLink } from "../../../app/authGate";
 import { useDebouncedValue } from "../../../shared/hooks";
 import { isBeingBuiltLink } from "../../../shared/components/layout/navMenus";
@@ -67,10 +68,14 @@ const SEE_ALL_LIMIT = 50;
  * the being-built Cinema and Studio in live mode). A launch lifts the check
  * there, and the search row comes back with it (PRD-327).
  */
-const isPageLaunched = (href: string, demoMode: boolean) =>
+const isPageLaunched = (
+  href: string,
+  demoMode: boolean,
+  hasStudioAccess: boolean,
+) =>
   !isComingSoonLink(href) &&
   (demoMode || !isDemoOnlyNavLink(href)) &&
-  !isBeingBuiltLink(href, demoMode);
+  !isBeingBuiltLink(href, demoMode, hasStudioAccess);
 
 /**
  * A topic's post-count subline in the member's language (PRD-327), shared by
@@ -95,13 +100,13 @@ export function useDescribeTopicPosts() {
  * `PAGE_SEARCH_ENTRIES`; resolving them here, before any filtering, lets a
  * member find "Eventos" by typing in Portuguese.
  */
-function useLocalizedStaticRows(demoMode: boolean) {
+function useLocalizedStaticRows(demoMode: boolean, hasStudioAccess: boolean) {
   const { t } = useTranslation();
   const describeTopicPosts = useDescribeTopicPosts();
   const pageItems = useMemo<SearchItem[]>(
     () =>
       PAGE_SEARCH_ENTRIES.filter((entry) =>
-        isPageLaunched(entry.href, demoMode),
+        isPageLaunched(entry.href, demoMode, hasStudioAccess),
       ).map((entry) => ({
         t: "page",
         name: t(entry.nameKey),
@@ -110,7 +115,7 @@ function useLocalizedStaticRows(demoMode: boolean) {
         icon: entry.icon,
         kw: entry.kw,
       })),
-    [t, demoMode],
+    [t, demoMode, hasStudioAccess],
   );
   // The demo corpus: translated pages and topics ahead of the mock content,
   // the order the static list always had.
@@ -138,12 +143,15 @@ export function useSearchData(
   type: ResultType | "all" = "all",
 ): SearchDataResult {
   const { demoMode } = useDemoMode();
+  const { hasAccess: hasStudioAccess } = useStudioAccess();
   const { loggedIn, checking } = useAuth();
   const needle = query.trim().toLowerCase();
   const debounced = useDebouncedValue(needle, 200);
   const liveType = type !== "all" && isLiveSearchType(type) ? type : undefined;
-  const { pageItems, describeTopicPosts, demoData } =
-    useLocalizedStaticRows(demoMode);
+  const { pageItems, describeTopicPosts, demoData } = useLocalizedStaticRows(
+    demoMode,
+    hasStudioAccess,
+  );
 
   const searchQuery = useQuery({
     queryKey: ["search", demoMode, debounced, liveType],

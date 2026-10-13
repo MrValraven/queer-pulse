@@ -7,6 +7,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { AddToCalendarSheet } from "../../shared/components/calendar/AddToCalendarSheet";
 import { ShareMenu } from "../messages/share/ShareMenu";
 import { GatheringBookmarkButton } from "./GatheringBookmarkButton";
+import { GatheringSharePlansButton } from "./GatheringSharePlansButton";
 import {
   gatheringCalendarSubtitle,
   toCalendarInput,
@@ -18,7 +19,8 @@ import styles from "./GatheringHeaderToolbar.module.css";
 
 /**
  * The quiet icon row at the top-right of the gathering header: Save, "Add to
- * calendar", the Share menu, and then whatever host controls the page hands in.
+ * calendar", "Share my plans", the Share menu, and then whatever host controls
+ * the page hands in.
  *
  * WHY ICONS. These used to be full-size buttons in the hero beside the RSVP,
  * and four buttons of equal weight made the one action that matters (taking a
@@ -77,6 +79,7 @@ export function GatheringHeaderToolbar({
             </IconButton>
           </Tooltip>
         )}
+        <GatheringSharePlansButton gathering={gathering} />
         <ShareMenu
           content={{
             path: gatheringPath(gathering.slug),

@@ -62,6 +62,7 @@ function buildGeneratedInvite(
     status,
     note: null,
     vouch: null,
+    privateNote: null,
     email: position % 3 === 0 ? `guest.${position + 5}@example.com` : null,
     createdAt: new Date(createdAt).toISOString(),
     expiresAt:
@@ -88,7 +89,7 @@ const GENERATED_INVITES: SentInviteDTO[] = GENERATED_STATUSES.map(
 /** Demo-mode sample of invites the current member has already sent, so the
  *  sent-invites list renders fully with no backend. Mirrors the finalized
  *  {@link SentInviteDTO} (`MyInviteView`): real `id`, `acceptedBy` only on a
- *  `used` row, and `note`/`vouch`/`email` present-or-null.
+ *  `used` row, and `note`/`vouch`/`privateNote`/`email` present-or-null.
  *
  *  The four hand-written rows lead; {@link GENERATED_INVITES} adds older ones
  *  so the list runs past one 20-row page and "Show more" has something to
@@ -101,6 +102,8 @@ export const SENT_INVITES: SentInviteDTO[] = [
     status: "used",
     note: "You'd genuinely belong here: no ads, no algorithm.",
     vouch: null,
+    // The member's own label: only they and our team ever see it.
+    privateNote: "Marco from climbing",
     email: null,
     createdAt: "2026-06-18T10:42:00.000Z",
     expiresAt: "2026-06-25T10:42:00.000Z",
@@ -117,6 +120,7 @@ export const SENT_INVITES: SentInviteDTO[] = [
     status: "valid",
     note: "Thought of you the moment I joined this.",
     vouch: null,
+    privateNote: null,
     // Pinned: only this address can redeem it, so the row reads as addressed.
     email: "ines.pereira@example.com",
     createdAt: "2026-07-01T14:10:00.000Z",
@@ -129,6 +133,7 @@ export const SENT_INVITES: SentInviteDTO[] = [
     status: "expired",
     note: null,
     vouch: null,
+    privateNote: null,
     email: null,
     createdAt: "2026-05-30T09:00:00.000Z",
     expiresAt: "2026-06-06T09:00:00.000Z",
@@ -140,6 +145,7 @@ export const SENT_INVITES: SentInviteDTO[] = [
     status: "valid",
     note: null,
     vouch: null,
+    privateNote: "Sofia, Ana's friend from the book club",
     // Unpinned: a bearer link, so the row reads "anyone with the link".
     email: null,
     createdAt: "2026-07-04T18:25:00.000Z",

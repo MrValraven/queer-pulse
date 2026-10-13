@@ -20,11 +20,15 @@ import {
   routes,
   thread,
 } from "../../../app/routeMap";
-import { coHostInvitePath, gatheringPath } from "../../gatherings/data";
+import { gatheringPath } from "../../gatherings/data";
 import {
-  lineupInvitePath,
-  manageGatheringPath,
-} from "../../gatherings/gatheringPaths";
+  collabResponseKey,
+  COLLAB_RESPONSE_KIND,
+} from "./communityCollabNotifications";
+import {
+  gatheringInviteSourceHref,
+  isGatheringInviteSource,
+} from "./gatheringInviteHrefs";
 import { writerTabHref } from "../../magazine/writerTabs";
 import { communityPostPath } from "../../communities/communityPostPath";
 import { barterProposalsPath } from "../../economy/barterProposals.paths";
@@ -224,6 +228,8 @@ const PERSONALIZED_KINDS = new Set<NotificationKind>([
   "event_lineup_invite",
   "event_lineup_accepted",
   "event_lineup_declined",
+  "event_community_invite",
+  "event_community_invite_response",
   "mention",
   "forum_reply",
   // Coverage-sweep kinds that carry a member actor (and so a `textNamed`
@@ -389,14 +395,17 @@ export function notificationDtoToView(
     const { entityKind, source } =
       (dto.payload as { entityKind?: string; source?: string } | null) ?? {};
     const isMemberMention = !entityKind || entityKind === "member";
+    // A collab answer names the responder in one line per decision.
     const namedKey =
-      kind !== "mention"
-        ? kind
-        : !isMemberMention
-          ? `mention.${entityKind}`
-          : source === "event"
-            ? "mention.gathering"
-            : kind;
+      kind === COLLAB_RESPONSE_KIND
+        ? collabResponseKey(dto.payload)
+        : kind !== "mention"
+          ? kind
+          : !isMemberMention
+            ? `mention.${entityKind}`
+            : source === "event"
+              ? "mention.gathering"
+              : kind;
     view.actorSlug = hasProfile ? dto.actor.slug : undefined;
     const isPersonalized = Boolean(kind && PERSONALIZED_KINDS.has(kind));
     view.actor = {
@@ -646,25 +655,6 @@ function safeSpaceSourceHref(payload: Record<string, unknown>): string {
   return typeof listingSlug === "string" && listingSlug
     ? businessPath(listingSlug)
     : routes.safeSpaces;
-}
-
-/**
- * Lineup invites. The invite opens its own page by lineup row id; a reply
- * opens the organizer's Manage page on the Attendees tab, where the lineup
- * editor lives.
- */
-function lineupSourceHref(
-  payload: Record<string, unknown>,
-): string | undefined {
-  const eventSlug = payload.eventSlug;
-  if (typeof eventSlug !== "string" || !eventSlug) return undefined;
-  if (payload.source === "lineup_reply") {
-    return manageGatheringPath(eventSlug, "attendees");
-  }
-  const inviteId = payload.inviteId;
-  return typeof inviteId === "string" && inviteId
-    ? lineupInvitePath(eventSlug, inviteId)
-    : undefined;
 }
 
 /**
@@ -919,21 +909,10 @@ function sourceHrefFromPayload(
       ? `${routes.messages}?c=${conversationParam}&m=${encodeURIComponent(messageId)}`
       : `${routes.messages}?c=${conversationParam}`;
   }
-  // A real cohost invite (SDD 2026-08-18 "cohost invite flow") has its own
-  // `source` value, distinct from plain event/event_rsvp notifications. It
-  // deep-links to the invite page, using the invite id.
-  if (payload.source === "cohost_invite") {
-    const eventSlug = payload.eventSlug;
-    const inviteId = payload.inviteId;
-    return typeof eventSlug === "string" &&
-      eventSlug &&
-      typeof inviteId === "string" &&
-      inviteId
-      ? coHostInvitePath(eventSlug, inviteId)
-      : undefined;
-  }
-  if (payload.source === "lineup_invite" || payload.source === "lineup_reply") {
-    return lineupSourceHref(payload);
+  // A gathering's invites and their replies (co-host, lineup, guest
+  // community collab), each to its own page. See `gatheringInviteHrefs.ts`.
+  if (isGatheringInviteSource(payload.source)) {
+    return gatheringInviteSourceHref(payload);
   }
   // Coverage-sweep sources — each deep-links to the entity the notification is
   // about. A missing slug falls back to no href (the row still shows its text /

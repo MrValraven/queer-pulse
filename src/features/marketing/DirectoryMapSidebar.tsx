@@ -13,7 +13,7 @@ import { type DirectoryMapViewState } from "./useDirectoryMapView";
 import s from "./localMap.module.css";
 import p from "./DirectoryPage.module.css";
 
-// Mirrors the real .vc: hero photo, name + rating, type/bairro, vibe pills.
+// Mirrors the real .vc: hero photo, name + rating, type/bairro, pills.
 function VenueCardSkeleton() {
   return (
     <div className={s.vc} aria-hidden>

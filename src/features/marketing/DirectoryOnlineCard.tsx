@@ -6,11 +6,11 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { activateOnKey } from "../../shared/lib/activateOnKey";
 import { routes } from "../../app/routeMap";
 import { DirectoryCardMeta } from "./DirectoryCardMeta";
+import { DirectoryCardPills } from "./DirectoryCardPills";
 import { DirectoryCardRating } from "./DirectoryCardRating";
 import { DirectoryCardStatus } from "./DirectoryCardStatus";
 import { DirectoryCardVisit } from "./DirectoryCardVisit";
 import { SafeSpaceCardMark } from "./SafeSpaceCardMark";
-import { OWNED_BY_TAG_KEYS } from "./listBusiness/listingOwnedBy.data";
 import {
   ownershipBadgeOf,
   OWNERSHIP_BADGE_KEYS,
@@ -40,7 +40,7 @@ const CHANNELS: {
  * The card's cover, framed as a small browser window: three dots and the
  * business's own address in the bar, so "this lives online" reads before a
  * word of the card does. With no cover photo, the window shows the business's
- * tagline set like a homepage instead of an empty "photo coming" slot.
+ * tagline set like a homepage, so the slot always has something to say.
  */
 function OnlineCardWindow({
   place,
@@ -169,15 +169,11 @@ export function DirectoryOnlineCard({
       <DirectoryCardMeta place={place} isOnOnlineTab />
       <div className={card.desc}>{place.desc}</div>
 
-      {(place.ownedBy ?? []).length > 0 && (
-        <div className={card.pillsRow}>
-          {(place.ownedBy ?? []).map((value) => (
-            <span key={value} className={`${card.pill} ${card.pillOwnedBy}`}>
-              {t(OWNED_BY_TAG_KEYS[value])}
-            </span>
-          ))}
-        </div>
-      )}
+      <DirectoryCardPills
+        place={place}
+        isMemberShown={false}
+        isHiddenWhenEmpty
+      />
 
       {channels.length > 0 && (
         <div className={s.channels}>

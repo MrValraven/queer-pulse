@@ -6,7 +6,7 @@ import {
   type OwnershipBadgeState,
 } from "./directoryPlaces";
 import { categoryLabel } from "./localCategories";
-import { listingTagLabel } from "./listBusiness/listingTags.data";
+import { priceBandLabel } from "./directoryCardFacts";
 import { OWNED_BY_TAG_KEYS } from "./listBusiness/listingOwnedBy.data";
 import { Stars } from "./DirectoryStars";
 import { DirectoryActionBar } from "./DirectoryActionBar";
@@ -38,8 +38,8 @@ const OWNERSHIP_PILL_KEYS: Record<OwnershipBadgeState, string> = {
 /**
  * The listing's identity block, now the FIRST thing on the page (above the
  * gallery): eyebrow → name → tagline → a single consolidated meta row
- * carrying every at-a-glance signal (verified/friendly badge, the place's own
- * pills, and either the rating or a "New" chip) → the queer-owned provenance
+ * carrying every at-a-glance signal (verified/friendly badge, the price
+ * band, and either the rating or a "New" chip) → the queer-owned provenance
  * → the "Run by" byline. The primary actions (Directions / Share / Save) sit
  * inline on the right, aligned with the name, as part of the header itself. The owner's own description spans the full width of the
  * header, under both the identity column and the actions, closing the header
@@ -100,11 +100,11 @@ export function DirectorySpaceHeader({ place, preview = false }: Props) {
                   {t(OWNED_BY_TAG_KEYS[value])}
                 </span>
               ))}
-              {place.pills.map((pill) => (
-                <span key={pill} className={s.pill}>
-                  {listingTagLabel(t, pill)}
-                </span>
-              ))}
+              {/* The price band; the listing's own details live in What's
+                  here below. */}
+              {place.price && (
+                <span className={s.pill}>{priceBandLabel(t, place.price)}</span>
+              )}
               {hasReviews ? (
                 <span className={s.rating}>
                   <Stars

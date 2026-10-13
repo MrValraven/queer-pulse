@@ -11,6 +11,7 @@ import type {
   EventVisibility,
   RsvpDetailsDTO,
 } from "./api/events.api";
+import type { GatheringGuestCommunity } from "./api/eventCommunities.api";
 import type { FormatDetails, GatheringFamily } from "./gatheringCatalog";
 import type {
   ContentNoteKey,
@@ -125,6 +126,10 @@ export interface GatheringDetail {
    *  line on the event page. Withheld by the server from a viewer who may not
    *  know a private community exists (see `EventCommunityDTO`). */
   community?: EventCommunityDTO;
+  /** The communities hosting with the lead, accepted ones only, for the
+   *  hero's "With …" line and the sidebar's "Hosted with" card. Each is
+   *  named to a viewer under the private rule `community` follows. */
+  guestCommunities?: GatheringGuestCommunity[];
   /** Live mode only: the directory listing this gathering's venue is linked
    *  to, or null/absent for a free-text venue. Settable via the manage
    *  dashboard's venue picker. Absent in the demo registry (no demo
@@ -399,6 +404,25 @@ export const gatheringDetails: Record<string, GatheringDetail> = {
     hood: "Príncipe Real",
     host: "QueerPulse",
     hostSlug: "",
+    communitySlug: "rainbow-arts",
+    community: {
+      slug: "rainbow-arts",
+      name: "Rainbow Arts Collective",
+      accessTier: "public",
+    },
+    // The demo collab invite (`collabInvite.data.ts`) asks Queer Runners
+    // Lisboa to host this with Rainbow Arts, so accepting it opens a page
+    // that already names the runners beside the lead.
+    guestCommunities: [
+      {
+        id: "collab-portfolio-night",
+        slug: "queer-runners",
+        name: "Queer Runners Lisboa",
+        accessTier: "public",
+        viewerManages: true,
+        avatarImageUrl: null,
+      },
+    ],
     spots: { key: "gatherings:spots.going", values: { count: 32 } },
     ctaKey: "gatherings:cta.illBeThere",
     body: "Bring a portfolio, a laptop, a phone, whatever your work lives on. This is an informal evening for designers and photographers in the network to share work-in-progress and meet each other without an agenda. Drinks from 7pm at a borrowed space in Príncipe Real.",
@@ -558,6 +582,18 @@ export const gatheringDetails: Record<string, GatheringDetail> = {
       name: "Queer Runners Lisboa",
       accessTier: "public",
     },
+    // Hosted together with the Hub, which the demo viewer moderates, so the
+    // sidebar offers "Remove our community" in demo.
+    guestCommunities: [
+      {
+        id: "demo-collab-trans-hub-run",
+        slug: "trans-hub",
+        name: "Trans & Non-Binary Hub",
+        accessTier: "public",
+        viewerManages: true,
+        avatarImageUrl: null,
+      },
+    ],
     spots: { key: "gatherings:spots.allPaces" },
     ctaKey: "gatherings:cta.rsvp",
     body: "A flat, friendly 5K along the river to close out the month: all paces, walkers included, no one left behind. We meet by the water, run loose, and finish with coffee. First-timers, say hi when you arrive and we'll pair you up.",
@@ -839,6 +875,26 @@ export const gatheringDetails: Record<string, GatheringDetail> = {
     hood: "Príncipe Real",
     host: "Sofia Rodrigues",
     hostSlug: "",
+    // Led by a community the demo viewer moderates, so the demo Manage page
+    // (`DEMO_GATHERING_SLUGS.manage`) opens its guest field unlocked over the
+    // rows in `eventGuestCommunities.data.ts`. Only the accepted guest shows
+    // here.
+    communitySlug: "queer-runners",
+    community: {
+      slug: "queer-runners",
+      name: "Queer Runners Lisboa",
+      accessTier: "public",
+    },
+    guestCommunities: [
+      {
+        id: "demo-collab-trans-hub",
+        slug: "trans-hub",
+        name: "Trans & Non-Binary Hub",
+        accessTier: "public",
+        viewerManages: true,
+        avatarImageUrl: null,
+      },
+    ],
     spots: { key: "gatherings:spots.going", values: { count: 38 } },
     ctaKey: "gatherings:cta.rsvp",
     body: "Three hours on the terrace at A Cevicheria: one long table, food that keeps arriving, and the easy work of introducing people who have so far only seen each other's profiles. Thirty-eight came in June. Come on your own if you like; you will not be on your own for long.",

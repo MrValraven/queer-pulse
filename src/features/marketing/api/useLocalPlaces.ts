@@ -45,10 +45,10 @@ export interface LocalPlacesResult {
  * (business canonical), so live mode shows businesses alone — no mock venues
  * leak into production.
  *
- * `category`/`vibe` stay client-side filters over whatever's been loaded so
- * far (see `useDirectoryFilters`) — `category` so its chip counts stay
- * correct against the loaded set, `vibe` because it's a demo-only concept
- * (see `LocalFilterFields`'s `useDemoMode` gate).
+ * `category` stays a client-side filter over whatever has been loaded so far
+ * (see `useDirectoryFilters`), so its chip counts stay correct against the
+ * loaded set. The attribute and fact filters go server-side live through
+ * `filters.listingFacts`.
  *
  * The Online tab passes `online`, so its pool comes narrowed (server live,
  * demo fixture in demo) and no venue joins it.

@@ -2,10 +2,16 @@ import { useMutation } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { apiPost } from "../../../shared/api/client";
 
-/** The 6 fields a member can flag as needing a correction — mirrors the
+/** The 7 fields a member can flag as needing a correction, mirroring the
  *  backend's accepted `field` enum on `POST /directory/:slug/edit-suggestions`. */
 export type SuggestEditField =
-  "hours" | "address" | "phone" | "website" | "description" | "other";
+  | "hours"
+  | "address"
+  | "phone"
+  | "website"
+  | "description"
+  | "attributes"
+  | "other";
 
 export interface SuggestEditInput {
   field: SuggestEditField;

@@ -3,6 +3,7 @@ import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { ANCHOR } from "../listBusiness.data";
 import { listingKindOf, type ListingKind } from "../listingMobile.data";
 import type { ListingForm } from "../useListingForm";
+import { ListingCoverPhotoField } from "../ListingCoverPhotoField";
 import { ListingPhotoGallery } from "../ListingPhotoGallery";
 import styles from "../ListBusinessPage.module.css";
 
@@ -13,22 +14,27 @@ const HELPER_KEYS: Record<ListingKind, string> = {
 };
 
 /**
- * The photo field body: the four-slot gallery with its per-slot alt text.
+ * The photo field body: the optional cover for the directory card, then the
+ * four-slot gallery with its per-slot alt text.
  *
  * Shared by the create wizard's step 4 pane (`StepPhotosYou`) and the owner
- * editor's Photos section. Carries `ANCHOR.photos`, so the "add alt text"
- * chip in the still-needed bar has a field to scroll to on both surfaces.
+ * editor's Photos section. Carries `ANCHOR.cover` and `ANCHOR.photos`, so the
+ * "add alt text" chip in the still-needed bar and a refused upload have a
+ * field to scroll to on both surfaces.
  */
 export function PhotosFields({ form }: { form: ListingForm }) {
   const { t } = useTranslation();
   return (
-    <FormField
-      className={styles.lbField}
-      id={ANCHOR.photos}
-      label={t("marketing:listBusiness.step4.photosLabel")}
-      helper={t(HELPER_KEYS[listingKindOf(form.draft)])}
-    >
-      <ListingPhotoGallery form={form} />
-    </FormField>
+    <>
+      <ListingCoverPhotoField form={form} />
+      <FormField
+        className={styles.lbField}
+        id={ANCHOR.photos}
+        label={t("marketing:listBusiness.step4.photosLabel")}
+        helper={t(HELPER_KEYS[listingKindOf(form.draft)])}
+      >
+        <ListingPhotoGallery form={form} />
+      </FormField>
+    </>
   );
 }

@@ -10,7 +10,7 @@ import styles from "./WorkFieldPicker.module.css";
  * chips stop popping/gliding individually and each group instead only fades
  * with its own `Collapse` (see `isPresenceAnimated` below). A broad
  * substring query (a single common letter) can match most of `DISCIPLINES`'s
- * ~317 roles at once, which would otherwise mount hundreds of `m.button`
+ * ~464 roles at once, which would otherwise mount hundreds of `m.button`
  * layout-projection nodes and re-measure all of them on every keystroke. A
  * typical search or picking a handful of fields stays well under this and
  * keeps the full per-chip motion.
@@ -18,7 +18,8 @@ import styles from "./WorkFieldPicker.module.css";
 const PRESENCE_CHIP_LIMIT = 40;
 
 /** Whether the result chips glide to their new places. Carried by context,
- *  so the picker can set it across the role area that renders the results. */
+ *  so the picker sets it once around the results block and every group's
+ *  chip row reads it. */
 const ResultChipGlideContext = createContext(true);
 
 /**
@@ -44,7 +45,7 @@ export function ResultChipGlide({
 
 interface WorkProfessionResultsProps {
   groups: ProfessionGroup[];
-  /** `id` of the picker's "Your role" heading. Each group's chip row is named
+  /** `id` of the picker's "Matching roles" heading. Each group's chip row is named
    *  by it plus the field label, so a screen reader hears the group as roles
    *  within that field. */
   roleHeadingId: string;

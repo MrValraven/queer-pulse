@@ -329,6 +329,9 @@
   --ring-plum-soft: 0 0 0 4px rgba(var(--plum-rgb), 0.08);
   --ring-paper: 0 0 0 2px var(--paper); /* punch-out ring: avatar over a card */
   --ring-cream: 0 0 0 3px rgba(var(--cream-rgb), 0.95);
+  /* The same cream halo drawn inside the box, for a control whose ring must
+     stay within its own bounds (pair with a negative outline offset). */
+  --ring-cream-inset: inset 0 0 0 3px rgba(var(--cream-rgb), 0.95);
   /* Plum-on-plum edge: a cream hairline that keeps a plum surface legible on a
      plum ground, such as a tooltip over the community hero's action row. It
      draws depth-free EDGE, so pair it with an elevation step. Five inset

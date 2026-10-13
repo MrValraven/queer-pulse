@@ -5,7 +5,7 @@ import type {
   ManagedListingDTO,
 } from "../../marketing/listBusiness/api/listings.api";
 import {
-  adminDraftToDto,
+  adminBusinessPayload,
   type AdminCreateListingDto,
 } from "./adminListingCreate.api";
 
@@ -28,24 +28,19 @@ export type AdminUpdateListingDto = Omit<
 /**
  * Build the admin PATCH body from a finished wizard draft.
  *
- * Runs the draft through `adminDraftToDto`, so the business half is the same
- * derivation (and the same excluded-key delete) the admin create uses, then
- * drops the three keys the edit body has no room for. `publishState` is only
- * there because the create builder requires one; `path` is dropped because
- * the draft carries the staff path the wizard needs to render, which is not
- * the listing's stored path. No `ownerOffer` is passed, so none is added.
- * The tags go as the draft holds them: an update keeps the older tags a
- * listing already carries, which the create body's vocabulary filter drops.
+ * Runs the draft through `adminBusinessPayload`, the same derivation (and the
+ * same excluded-key delete) the admin create uses, then drops `path`: the
+ * draft carries the staff path the wizard needs to render, which is not the
+ * listing's stored path. The attribute fields go in the business half, as
+ * the member's save sends them. The create's offer filter does not run here,
+ * so the attributes and practices the listing carries outside its offer stay
+ * until staff remove them.
  */
 export function adminDraftToUpdateDto(
   draft: ListingDraft,
 ): AdminUpdateListingDto {
-  const {
-    publishState: _publishState,
-    path: _path,
-    ...business
-  } = adminDraftToDto(draft, { publishState: "review" });
-  return { ...business, tags: draft.tags };
+  const { path: _path, ...business } = adminBusinessPayload(draft);
+  return business;
 }
 
 /** `GET /admin/listings/:ref/editable`. Admin only. Owner-personal fields

@@ -1,0 +1,12 @@
+/* The action under a hosting community's role line in the sidebar card
+   ("Remove our community"). */
+.action {
+  margin-top: 8px;
+}
+
+/* The action is a 40px ghost button; phones need a 44px target. */
+@media (--md) {
+  .action > :is(button, a) {
+    min-height: var(--tap-min);
+  }
+}

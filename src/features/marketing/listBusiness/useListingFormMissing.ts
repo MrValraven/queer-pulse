@@ -5,11 +5,13 @@ import {
   hoursExceptionsValid,
   hoursValid,
   ANCHOR,
+  coverPhotoOf,
   PHOTO_KEYS,
   type ListingDraft,
   type MissingField,
 } from "./listBusiness.data";
 import { emptyMenuDraft, isMenuLinkValid, menuValid } from "./listingMenu.data";
+import { factMissingFields } from "./listingFactsMissing";
 import { listingKindOf } from "./listingMobile.data";
 import { mobileMissingFields } from "./listingMobileMissing";
 import { onlineMissingFields } from "./listingOnlineMissing";
@@ -26,7 +28,7 @@ function add(list: MissingField[], labelKey: string, anchor: string) {
 
 /**
  * Per-step "what's still needed" gating, kept out of `useListingForm` so that
- * hook stays about the draft's state rather than its validation rules.
+ * hook stays about the draft's state and this one about its validation rules.
  *
  * Requirements branch on the chosen path (item #2). A CLAIM (you own/run the
  * place) is held to the full bar. A SUGGEST (a regular recommending a place
@@ -40,6 +42,8 @@ function add(list: MissingField[], labelKey: string, anchor: string) {
  * An out-and-about listing swaps them for its area, its meeting point when
  * ticked, and an open day or "By appointment only" on a claim
  * (`mobileMissingFields`).
+ *
+ * The attribute fields add their two required pairs on every path (`factMissingFields`).
  */
 export function useListingFormMissing(
   draft: ListingDraft,
@@ -47,6 +51,7 @@ export function useListingFormMissing(
   return useMemo(() => {
     const online = onlineMissingFields(draft);
     const mobile = mobileMissingFields(draft);
+    const facts = factMissingFields(draft);
     // The location and hours rules below are a place's. An online listing has
     // its own (above) and an out-and-about one its own (`mobileMissingFields`).
     const isPlace = listingKindOf(draft) === "place";
@@ -108,6 +113,7 @@ export function useListingFormMissing(
       add(s2, "marketing:listBusiness.missing.tagline", ANCHOR.tagline);
     if (!draft.whatItIs.some((line) => line.text.trim()))
       add(s2, "marketing:listBusiness.missing.whatItIs", ANCHOR.whatItIs);
+    s2.push(...facts.step2);
 
     const s3: MissingField[] = [];
     // An online-only business has no physical location, so neither an address
@@ -133,6 +139,7 @@ export function useListingFormMissing(
       );
     s3.push(...online.step3);
     s3.push(...mobile.step3);
+    s3.push(...facts.step3);
     // Socials are optional; this only fires when a filled one is malformed, so
     // the chip always reads "fix the format" (item #10).
     if (!allSocialsValid(draft.social))
@@ -146,12 +153,20 @@ export function useListingFormMissing(
     if (isClaim && !draft.ownerRole.trim())
       add(s4, "marketing:listBusiness.missing.ownerRole", ANCHOR.ownerRole);
     // Accessibility: any photo that's present needs alt text, on both paths
-    // (item #8). An empty slot never blocks.
-    const photoNeedsAlt = PHOTO_KEYS.some(
+    // (item #8). An empty slot never blocks. One chip, pointing at the cover
+    // first because it sits first on the page.
+    const coverPhoto = coverPhotoOf(draft);
+    const isCoverAltMissing =
+      Boolean(coverPhoto.image.trim()) && !coverPhoto.alt.trim();
+    const isGalleryAltMissing = PHOTO_KEYS.some(
       (key) => draft.photos[key].trim() && !draft.alt[key].trim(),
     );
-    if (photoNeedsAlt)
-      add(s4, "marketing:listBusiness.missing.alt", ANCHOR.photos);
+    if (isCoverAltMissing || isGalleryAltMissing)
+      add(
+        s4,
+        "marketing:listBusiness.missing.alt",
+        isCoverAltMissing ? ANCHOR.cover : ANCHOR.photos,
+      );
 
     const s5: MissingField[] = [];
     if (

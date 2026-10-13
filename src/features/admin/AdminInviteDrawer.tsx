@@ -1,7 +1,8 @@
-import type { ReactNode } from "react";
-import { FiCopy } from "react-icons/fi";
+import { useEffect, useId, useRef, type ReactNode } from "react";
+import { FiCopy, FiLock } from "react-icons/fi";
 import { AdminDrawer, AdminAvatar, AdminChip } from "./ui";
 import { AdminInviteRevokeAction } from "./AdminInviteRevokeAction";
+import { AdminInviteRefreshAction } from "./AdminInviteRefreshAction";
 import { ADMIN_INVITE_STATUS_TONE } from "./adminInviteStatusTone";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -55,20 +56,37 @@ function daysFromNow(iso: string): number {
   return Math.round(diff / millisPerDay);
 }
 
-/** A longer free-text message the inviter typed (invite note or vouch), shown
- *  as a quoted callout. Renders nothing when the message is absent. */
+/** A longer free-text message the inviter typed (invite note, vouch or their
+ *  private note), shown as a quoted callout. An optional icon leads the label
+ *  and an optional caption says who can read it. `isInternal` gives the
+ *  inviter's own label a quieter, untinted box so it reads apart from the
+ *  two messages the recipient sees. Renders nothing when the message is
+ *  absent. */
 function MessageBlock({
   label,
   message,
+  icon,
+  caption,
+  isInternal = false,
 }: {
   label: string;
   message: string | null | undefined;
+  icon?: ReactNode;
+  caption?: string;
+  isInternal?: boolean;
 }) {
   if (!message) return null;
+  const blockClassName = isInternal
+    ? `${styles.messageBlock} ${styles.messageBlockInternal}`
+    : styles.messageBlock;
   return (
-    <div className={styles.messageBlock}>
-      <span className={styles.messageLabel}>{label}</span>
+    <div className={blockClassName}>
+      <span className={styles.messageLabel}>
+        {icon}
+        {label}
+      </span>
       <p className={styles.messageText}>{message}</p>
+      {caption && <span className={styles.detailCaption}>{caption}</span>}
     </div>
   );
 }
@@ -96,23 +114,51 @@ function DetailRow({
  * recipient or target email or open link, status, and full timestamps with a
  * relative expiry read-out) with no extra fetch and no demo/live branch.
  *
- * The body stays a read-out. The one action lives in the footer:
- * {@link AdminInviteRevokeAction}, which renders itself only for a still-valid
- * invite and owns its own confirm dialog and mutation.
+ * The body stays a read-out. The actions live in the footer, one per status:
+ * {@link AdminInviteRevokeAction} for a still-valid invite and
+ * {@link AdminInviteRefreshAction} for an expired one. Each owns its own
+ * confirm dialog and mutation. A refresh flips the row to `valid`, so the
+ * footer swaps straight from Refresh to Revoke at the same height; an accepted
+ * or revoked invite has no footer at all.
  */
 export function AdminInviteDrawer({
   invite,
   onClose,
   onRevoked,
+  onRefreshed,
 }: {
   invite: AdminInviteDTO;
   onClose: () => void;
   /** The confirmed revoked row, so the open drawer reflects the new status. */
   onRevoked: (revoked: AdminInviteDTO) => void;
+  /** The confirmed refreshed row, so the open drawer reflects the new status
+   *  and expiry. */
+  onRefreshed: (refreshed: AdminInviteDTO) => void;
 }) {
   const { t } = useTranslation();
   const fmt = useFormat();
   const { showToast } = useToast();
+  const codeTextId = useId();
+  const statusChipsId = useId();
+  const statusChipsRef = useRef<HTMLDivElement>(null);
+  const previousStatusRef = useRef(invite.status);
+
+  // A confirmed revoke or refresh unmounts the footer action that opened the
+  // confirm (Refresh swaps to Revoke, a revoke leaves no footer), so the
+  // dialog's focus restore aims at a detached button and focus drops to
+  // <body>, outside the drawer's trap. Land it on the status chips instead,
+  // which name the new status; the swapped-in Revoke is destructive and never
+  // takes focus on its own. The restore runs in `useDismiss`'s passive cleanup
+  // as the confirm unmounts, in the same commit as this status change, so the
+  // focus waits a frame to be sure it lands after that restore.
+  useEffect(() => {
+    if (previousStatusRef.current === invite.status) return;
+    previousStatusRef.current = invite.status;
+    const focusFrame = requestAnimationFrame(() =>
+      statusChipsRef.current?.focus(),
+    );
+    return () => cancelAnimationFrame(focusFrame);
+  }, [invite.status]);
 
   const handleCopyCode = async () => {
     try {
@@ -133,7 +179,9 @@ export function AdminInviteDrawer({
       head={
         <div className={styles.drawerHeadInner}>
           <div className={styles.drawerCode}>
-            <span className={styles.drawerCodeText}>{invite.code}</span>
+            <span id={codeTextId} className={styles.drawerCodeText}>
+              {invite.code}
+            </span>
             <button
               type="button"
               className={styles.copyButton}
@@ -144,7 +192,16 @@ export function AdminInviteDrawer({
               <FiCopy />
             </button>
           </div>
-          <div className={styles.drawerChips}>
+          {/* Named "<code> <status>" so a screen reader announces the new
+              status when focus lands here after a revoke or refresh. */}
+          <div
+            ref={statusChipsRef}
+            id={statusChipsId}
+            className={styles.drawerChips}
+            role="group"
+            tabIndex={-1}
+            aria-labelledby={`${codeTextId} ${statusChipsId}`}
+          >
             <AdminChip tone={ADMIN_INVITE_STATUS_TONE[invite.status]} dot>
               {t(`admin:adminInvites.status.${invite.status}`)}
             </AdminChip>
@@ -154,6 +211,8 @@ export function AdminInviteDrawer({
       foot={
         invite.status === "valid" ? (
           <AdminInviteRevokeAction invite={invite} onRevoked={onRevoked} />
+        ) : invite.status === "expired" ? (
+          <AdminInviteRefreshAction invite={invite} onRefreshed={onRefreshed} />
         ) : undefined
       }
     >
@@ -195,6 +254,13 @@ export function AdminInviteDrawer({
           )}
         </DetailRow>
 
+        <MessageBlock
+          label={t("admin:adminInvites.drawer.privateNoteLabel")}
+          message={invite.privateNote}
+          icon={<FiLock aria-hidden className={styles.messageLabelIcon} />}
+          caption={t("admin:adminInvites.drawer.privateNoteCaption")}
+          isInternal
+        />
         <MessageBlock
           label={t("admin:adminInvites.drawer.inviteMessageLabel")}
           message={invite.note}

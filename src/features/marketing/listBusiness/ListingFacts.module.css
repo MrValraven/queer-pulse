@@ -1,0 +1,125 @@
+/* The Story step's fact fields: the attribute picker, the highlights, the
+   practices and the languages. The search row keeps
+   ListBusinessPage.module.css's .tagInputWrap and the chips reuse its
+   .chip / .chipOn; this file only lays them out. */
+
+/* Section labels ("Choose from what fits your categories", "No longer fits
+   your categories", "More languages"). */
+.sectionLabel {
+  font-size: var(--text-11);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
+
+.availableHeader {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 12px;
+  margin: 14px 0 10px;
+}
+.counter {
+  font-size: var(--text-12-5);
+  font-weight: 600;
+  color: var(--ink-60);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Groups stack; chips inside each group wrap. */
+.groups {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.groupHeading {
+  font-size: var(--text-12-5);
+  font-weight: 600;
+  color: var(--text-strong);
+}
+.chipWrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+/* A compact .chip: icon and label on one line. */
+.tagChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+}
+.tagChip svg {
+  flex: none;
+}
+.tagChip:not([aria-pressed="true"]) svg {
+  color: var(--ink-40);
+}
+.tagChip:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+/* A highlight chip past the cap: muted like .chip:disabled, still in the
+   tab order, and its hover stays at rest. */
+.tagChip[aria-disabled="true"] {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+@media (hover: hover) {
+  .tagChip[aria-disabled="true"]:not([aria-pressed="true"]):hover {
+    border-color: rgba(var(--line-rgb), 0.16);
+    color: var(--ink-60);
+  }
+}
+
+.noMatch {
+  margin: 0;
+  font-size: var(--text-13);
+  color: var(--ink-60);
+}
+
+/* Ticked attributes the listing's categories no longer offer. */
+.legacy {
+  margin-top: 16px;
+}
+.legacyList {
+  margin-top: 8px;
+}
+
+.legacyNote {
+  margin: 4px 0 0;
+  font-size: var(--text-12-5);
+  color: var(--ink-60);
+}
+
+/* The highlights counter rides the field's label row. */
+.labelCounter {
+  font-size: var(--text-12-5);
+  font-weight: 600;
+  color: var(--ink-60);
+  font-variant-numeric: tabular-nums;
+}
+
+.emptyNote {
+  margin: 0;
+  font-size: var(--text-13);
+  color: var(--ink-60);
+}
+
+/* "More languages": a label, the search row, then its matches, spaced by
+   the column's gap. */
+.moreLanguages {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 14px;
+}

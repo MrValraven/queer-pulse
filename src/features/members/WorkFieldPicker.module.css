@@ -1,17 +1,18 @@
-/* Default styling for the shared work picker's own sub-headings. Host surfaces
-   that already have a label style (the two profile editors) pass
-   `headingClassName` and never see these. */
+/* The picker's sub-headings ("Your picks", "Or browse by field", the search
+   results'). A quiet sentence-case label, one step under a host's field
+   label, so the picker reads as one field on every surface. A half step
+   above the per-field labels inside the lists (`.resultGroupLabel`). */
 .head {
-  font-size: var(--text-15);
-  font-weight: 700;
-  color: var(--ink);
+  font-size: var(--text-13);
+  font-weight: 600;
+  color: var(--ink-60);
   margin: 0 0 8px;
 }
 
-/* Separates the profession group from the field chips above it. A wrapper
-   rather than a second class on the heading, so it never collides with the
-   host's own heading margin. */
-.professionGroup {
+/* Separates the search's matching fields from the role results above them.
+   It sits on a wrapper around the heading, inside the fields' fold, so the
+   gap opens and closes with them. */
+.matchingFields {
   margin-top: 18px;
 }
 
@@ -25,39 +26,139 @@
 }
 
 /* The no-match line, right under the search box it answers. It folds open
-   inside the always-mounted live region, margin included, so the field
-   heading below glides down and back. */
+   inside the always-mounted live region, margin included, so whatever sits
+   below glides down and back. */
 .noMatch {
   margin: 0 0 10px;
 }
 
-/* The note about unlisted work, under the last role chip. A touch looser
-   than the 8px between chip rows, so it reads as a note on the whole list.
-   The gap sits inside the note's fold and opens and closes with it, and it
-   clears the role frame's 6px ring room, so the note's first line never
-   covers the chips above while it opens. */
+/* The note about unlisted work, under the picks row. A touch looser than
+   the 8px between chips, so it reads as a note on the whole row. The gap
+   sits inside the note's fold and opens and closes with it, so the note's
+   first line never covers the chips above while it opens. */
 .unlistedNote {
   margin-top: 10px;
 }
 
-/* Holds the role area's views. Positioned, because a view on its way out
-   (AnimatePresence popLayout) is lifted out of the flow and placed against
-   this box while the next one fades in over it. */
-.professionViews {
-  position: relative;
-}
-
-/* One view. flow-root holds its content's edge margins (the result list's
-   negative top margin) inside the view, so they never collapse up through
-   `.professionViews` and shift the view on its way out. */
-.professionView {
-  display: flow-root;
-}
-
-/* Search sits above the field heading; same gap as the member directory's
+/* Search sits above everything else; same gap as the member directory's
    search field (`MemberDirectoryFilterPage.module.css`). */
 .searchField {
   margin-bottom: 10px;
+}
+
+/* The search results carry their gaps inside their fold, so they open and
+   close with them: 16px under the search box (with its 10px), which sets the
+   first heading apart from the box and keeps it near its own chips, and 18px
+   to the picks below. */
+.results {
+  margin: 6px 0 18px;
+}
+
+/* "Matching roles" stands over a list of field labels, so it sits further
+   above them than they sit above their chips, which reads it as their
+   parent. "Matching fields" takes the same gap, so both headings match. */
+.results .head {
+  margin-bottom: 12px;
+}
+
+/* "Your picks". Its gap to the browse list below sits inside its fold, and
+   the browse list adds the rest, so the list sits as far under the picks as
+   under the search box when there are no picks: 10px from the picks or
+   the search box, then 10px of its own. */
+.picks {
+  margin-bottom: 10px;
+}
+
+.browse {
+  margin-top: 10px;
+}
+
+/* The ten group rows, divided by hairlines like a settings list. */
+.groupList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+.group {
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+/* A full-width row: label, the quiet pick count, then the chevron at the
+   end. At least 44px tall, so a tap lands on it easily. */
+.groupToggle {
+  width: 100%;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  padding: 10px 4px;
+  border: 0;
+  border-radius: var(--radius-tag);
+  background: none;
+  font: inherit;
+  font-size: var(--text-14);
+  font-weight: 600;
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+  transition-property: background-color;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease-std);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .groupToggle:hover {
+    background: rgba(var(--plum-rgb), 0.045);
+  }
+}
+
+.groupToggle:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* Takes the free space, so the count and chevron sit at the row's end. */
+.groupLabel {
+  flex: 1;
+  min-width: 0;
+}
+
+.groupCount {
+  font-size: var(--text-12-5);
+  font-weight: 500;
+  color: var(--ink-60);
+  white-space: nowrap;
+}
+
+/* Turns over off `aria-expanded`, a compositor-only transform. */
+.groupChevron {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  color: var(--ink-40);
+  transition-property: transform;
+  transition-duration: var(--dur-base);
+  transition-timing-function: var(--ease-std);
+}
+
+.groupToggle[aria-expanded="true"] .groupChevron {
+  transform: rotate(180deg);
+}
+
+/* An open group's chips, inset to the label's edge. The bottom padding
+   spaces the last chip row off the next row's hairline. */
+.groupBody {
+  padding: 2px 4px 14px;
+}
+
+/* A picked field's roles under its name. Each carries the gap above
+   itself, inside its own fold, so a field dropped takes its gap with it. */
+.fieldRoles {
+  margin-top: 14px;
 }
 
 /* Grouped profession search results: each field's matches sit under their own
@@ -75,9 +176,11 @@
   margin-top: var(--result-group-gap);
 }
 
+/* A field's name over its role chips. Lighter than `.head`, so a heading
+   and the field labels under it never read as one level. */
 .resultGroupLabel {
   font-size: var(--text-12-5);
-  font-weight: 600;
+  font-weight: 500;
   color: var(--ink-60);
   letter-spacing: 0;
   text-transform: none;
@@ -88,12 +191,14 @@
    and roles and folds it back to the member's picks. Same affordance as the
    bio's Read more toggle (`ExpandableText.module.css`): coral text with a
    chevron, so it reads as a way into the list and leaves the chips as the
-   main thing to act on. */
+   main thing to act on. The box is 44px tall so a tap lands on it easily;
+   the text sits centred in it, so it reads 12px under the picks above. */
 .showAllToggle {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  margin-top: 12px;
+  min-height: 44px;
+  margin: 0;
   padding: 0;
   border: 0;
   background: none;

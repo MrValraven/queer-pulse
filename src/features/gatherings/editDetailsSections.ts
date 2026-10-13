@@ -42,7 +42,7 @@ export const EDIT_SECTION_FIELDS = {
     "coverImageUrl",
   ],
   whenWhere: ["startAt", "endAt", "location", "costKind", "cost"],
-  audience: ["communitySlug", "visibility", "capacity"],
+  audience: ["communitySlug", "guestCommunities", "visibility", "capacity"],
   care: ["themes", "contentNotes", "houseRules"],
   rsvp: ["rsvpCutoff", "rsvpQuestions", "customRsvpQuestion"],
 } as const satisfies Record<EditSectionKey, readonly DraftField[]>;

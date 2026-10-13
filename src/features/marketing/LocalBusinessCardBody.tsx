@@ -4,13 +4,12 @@ import { Avatar, ImageSlot } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { activateOnKey } from "../../shared/lib/activateOnKey";
 import { DirectoryCardAccess } from "./DirectoryCardAccess";
+import { DirectoryCardPills } from "./DirectoryCardPills";
 import { DirectoryCardMeta } from "./DirectoryCardMeta";
 import { DirectoryCardRating } from "./DirectoryCardRating";
 import { DirectoryCardStatus } from "./DirectoryCardStatus";
 import { DirectoryCardVisit } from "./DirectoryCardVisit";
 import { SafeSpaceCardMark } from "./SafeSpaceCardMark";
-import { listingTagLabel } from "./listBusiness/listingTags.data";
-import { OWNED_BY_TAG_KEYS } from "./listBusiness/listingOwnedBy.data";
 import {
   ownershipBadgeOf,
   OWNERSHIP_BADGE_KEYS,
@@ -23,11 +22,11 @@ import s from "./DirectoryPage.module.css";
  * connected to the community (always), and what its safe-space badge is
  * currently saying (only when there is a badge to speak of).
  *
- * They sit side by side rather than one replacing the other: the safe-space
+ * They sit side by side, each with its own say: the safe-space
  * pill used to occupy the same slot and simply hide the ownership badge, so a
  * verified safe space never got to say it was queer-owned. Safe space is the
  * narrower, rarer claim, so it shrinks to an icon with its meaning on hover,
- * focus and via its accessible name, leaving the wordier badge the room.
+ * focus and via its accessible name, leaving the wordier badge the space.
  *
  * The safe-space half lives in `SafeSpaceCardMark`, which is the only place
  * that turns the card payload into a mark. This used to test
@@ -54,7 +53,7 @@ function DirectoryCardBadges({ place }: { place: DirectoryPlace }) {
 }
 
 /**
- * The card's visuals only — photo, badges, name/rating, meta, description,
+ * The card's visuals only: photo, badges, name/rating, meta, description,
  * pills, and footer. Shared by `LocalBusinessCard` (the live, clickable card
  * in the directory grid) and the listing wizard's sticky preview, so the two
  * can never drift apart again.
@@ -74,12 +73,12 @@ export function LocalBusinessCardBody({
   /** Present on the live card (wraps a real save toggle); absent on the
    *  wizard preview, where the bookmark renders as a static, unsaved icon. */
   saveControl?: { saved: boolean; onSave: (event: SyntheticEvent) => void };
-  /** Rendered over the photo slot — the wizard preview uses this for its
+  /** Rendered over the photo slot. The wizard preview uses this for its
    *  "add a cover photo" call to action when there's no photo yet. Suppresses
    *  the empty-slot caption (both are centered and would otherwise overlap). */
   photoOverlay?: ReactNode;
   /** Replaces the bookmark in the photo's top-right corner. The profile's
-   *  "Places you run" grid puts its LIVE / IN REVIEW chip there — an owner
+   *  "Places you run" grid puts its LIVE / IN REVIEW chip there: an owner
    *  can't meaningfully save their own listing. Overrides `saveControl`. */
   topRight?: ReactNode;
   /** Drop the star rating (default: shown). The profile's owner grid passes
@@ -175,27 +174,10 @@ export function LocalBusinessCardBody({
       <div className={s.desc} data-preview-region="desc">
         {place.desc}
       </div>
-      {/* One row at most: "Member-run" and the owner's own "who runs it" tags
-          lead so they are the pills that survive a narrow column (someone
-          filtering for a trans-owned place must be able to see why each card
-          matched), and the listing's tags fill whatever room is left. */}
-      <div className={s.pillsRow} data-preview-region="pills">
-        {place.member && (
-          <span className={`${s.pill} ${s.pillMember}`}>
-            {t("marketing:directory.card.memberRun")}
-          </span>
-        )}
-        {(place.ownedBy ?? []).map((value) => (
-          <span key={value} className={`${s.pill} ${s.pillOwnedBy}`}>
-            {t(OWNED_BY_TAG_KEYS[value])}
-          </span>
-        ))}
-        {place.pills.slice(0, 3).map((pill) => (
-          <span key={pill} className={s.pill}>
-            {listingTagLabel(t, pill)}
-          </span>
-        ))}
-      </div>
+      {/* Row one: member-run and owned-by first, then the price band and the
+          three highlights. Row two, when earned: the derived badges (see
+          DirectoryCardPills). */}
+      <DirectoryCardPills place={place} />
       <DirectoryCardAccess place={place} />
       <div className={`${s.foot} ${s.listFoot}`}>
         <DirectoryCardStatus place={place} />
@@ -213,7 +195,7 @@ export function LocalBusinessCardBody({
                 it (the server redacts it exactly as it redacts the name);
                 initials over their tint otherwise. No `name`/`alt`: their
                 first name is right there beside it, so the image is
-                decorative rather than read twice. */}
+                decorative and the name is read once. */}
             <Avatar
               initials={place.owner.initials}
               tint={place.owner.tint}

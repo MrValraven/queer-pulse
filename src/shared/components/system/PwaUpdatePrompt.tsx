@@ -1,7 +1,10 @@
 import { useEffect, useRef, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { useRegisterSW } from "virtual:pwa-register/react";
 import { routes } from "../../../app/routeMap";
+import { useAuth } from "../../../app/providers/authContext";
 import { useConsent } from "../../../app/providers/useConsent";
+import { useShellFrame } from "../../../app/providers/shellFrame";
 import { PwaUpdateCard, type UpdatePhase } from "./PwaUpdateCard";
 import { useNextBuildVersion } from "./useNextBuildVersion";
 
@@ -35,6 +38,27 @@ const UPDATE_CHECK_INTERVAL_MS = 60 * 60 * 1000;
  * card that says "Updating…" forever.
  */
 const UPDATE_RELOAD_TIMEOUT_MS = 15_000;
+
+/**
+ * Whether the current page is somewhere the update card may appear: a signed-in
+ * member who has finished onboarding, on a page with the standard app frame
+ * (the feed and the rest of the member surface).
+ *
+ * Sign-in, request-invite and the onboarding wizard all live under `/auth/*`,
+ * and someone there is in the middle of a flow whose next step matters more
+ * than a new build: a reload would also throw away what they have typed. Admin
+ * and system pages register no frame, the same reason they never show the
+ * install nudge. The waiting build is not lost on any of these: the card shows
+ * as soon as the member reaches a page where it is allowed.
+ */
+function useIsUpdateCardAllowedHere(): boolean {
+  const { loggedIn, checking, user } = useAuth();
+  const { active: isStandardFrame } = useShellFrame();
+  const { pathname } = useLocation();
+  if (checking || !loggedIn || !user?.onboardedAt) return false;
+  if (pathname === "/auth" || pathname.startsWith("/auth/")) return false;
+  return isStandardFrame;
+}
 
 /**
  * Registers the service worker and, when a new build is waiting, offers a
@@ -78,6 +102,7 @@ export function PwaUpdatePrompt() {
   // the time consent lets the card show.
   const nextVersion = useNextBuildVersion(needRefresh);
   const lastCheckedAtRef = useRef(0);
+  const isAllowedHere = useIsUpdateCardAllowedHere();
 
   useEffect(() => {
     if (!swRegistration) return;
@@ -116,7 +141,14 @@ export function PwaUpdatePrompt() {
     };
   }, [swRegistration]);
 
-  if (!needRefresh || dismissed || consentStatus === "unknown") return null;
+  if (
+    !needRefresh ||
+    dismissed ||
+    consentStatus === "unknown" ||
+    !isAllowedHere
+  ) {
+    return null;
+  }
 
   const applyUpdate = () => {
     setPhase("activating");

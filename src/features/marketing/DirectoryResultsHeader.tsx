@@ -26,7 +26,7 @@ export function DirectoryResultsHeader({
 }: {
   shown: number;
   total: number;
-  /** How many places have actually been fetched so far. Category, vibe and
+  /** How many places have actually been fetched so far. Category and
    *  "open now" are filtered client-side over exactly this set (see
    *  `useDirectoryFilterResults`), so while pages remain unfetched `shown` and
    *  `total` count two different populations and the sentence has to say so. */
@@ -42,10 +42,10 @@ export function DirectoryResultsHeader({
   /** Read for the map view's "N of these are on the map" note, and to give
    *  the Online tab its own sentence. */
   view: string;
-  /** The "use my location" control, passed in rather than built here so this
-   *  header stays presentational and the member's position never travels
-   *  further than the one component that owns it. Filled on phones only — on
-   *  desktop the control rides the search row instead (see `DirectoryPage`). */
+  /** The "use my location" control. The caller passes it in so this header
+   *  stays presentational and the member's position never travels further
+   *  than the one component that owns it. Filled on phones only: on desktop
+   *  the control rides the search row (see `DirectoryPage`). */
   nearMeSlot?: ReactNode;
   /** The active-filter chips. Filled on phones only: on desktop they ride the
    *  filter bar, under the search row that sets them (see `DirectoryPage`). */

@@ -5,7 +5,15 @@ describe("suggestEditFieldOptions", () => {
   it("offers every bucket for a place", () => {
     expect(
       suggestEditFieldOptions({ isOnline: false, hasNoAddress: false }),
-    ).toEqual(["hours", "address", "phone", "website", "description", "other"]);
+    ).toEqual([
+      "hours",
+      "address",
+      "phone",
+      "website",
+      "description",
+      "attributes",
+      "other",
+    ]);
   });
 
   it("leaves the address out for a business with no meeting point, and keeps its hours", () => {
@@ -20,6 +28,6 @@ describe("suggestEditFieldOptions", () => {
   it("leaves hours and address out online, as before", () => {
     expect(
       suggestEditFieldOptions({ isOnline: true, hasNoAddress: false }),
-    ).toEqual(["phone", "website", "description", "other"]);
+    ).toEqual(["phone", "website", "description", "attributes", "other"]);
   });
 });

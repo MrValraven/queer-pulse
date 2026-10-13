@@ -5,6 +5,7 @@ import type {
   Tint,
 } from "../../marketing/directoryPlaces";
 import { normalizeListingAccessibilityAnswers } from "../../marketing/listBusiness/listingAccessibility.data";
+import { listingFactsForPayload } from "../../marketing/listBusiness/listingFactsPayload";
 import {
   listingKindOf,
   normalizeMobileDetails,
@@ -84,7 +85,7 @@ export type ListingPreviewSource = Omit<
   | "operatingState"
   | "movedToListingId"
   | "detailsConfirmedAt"
-  // The owner as a person rather than the business as a business. Neither
+  // The owner as a person, apart from the business as a business. Neither
   // consent is public-page content or read below, and the moderation queue
   // no longer serves them to a `directory_moderator` grant holder at all, so
   // requiring them here would make the narrowed queue row unpreviewable.
@@ -197,7 +198,7 @@ function previewOnlineFields(
 /**
  * Map a listing onto the `DirectoryPlace` view model the public detail
  * components render. Faithful to the live page: same tint, initials,
- * redaction, pills, gallery, hours template. Rating/reviews/upcoming are empty:
+ * redaction, gallery, hours template. Rating/reviews/upcoming are empty:
  * a submission under review has none yet.
  *
  * Takes the widened `ListingPreviewSource`, so the same mapper serves the
@@ -240,11 +241,15 @@ export function listingDtoToPreviewPlace(
         ? normalizeMobileDetails(dto.mobileDetails)
         : null,
     tagline: dto.tagline,
-    // Price tier first (when set), then the listing's own tags — as detail pills.
-    pills: [...(dto.price ? [dto.price] : []), ...dto.tags],
+    // The owner and the moderator preview the facts as the public page
+    // will read them: cleaned the way a save sends them.
+    price: dto.price,
+    ...listingFactsForPayload(dto),
+    hostsGatherings: false,
+    cats: [...dto.cats],
     rating: { score: "0", count: 0 },
     // Carry the real uploaded photos + their alt text so the moderator sees the
-    // actual photo hero/thumbnails the public page shows — not a caption stand-in.
+    // actual photo hero/thumbnails the public page shows, with no caption stand-in.
     // `DirectoryGallery` only falls back to caption cells when every slot is null.
     photos: dto.photos,
     alt: dto.alt,
@@ -254,10 +259,6 @@ export function listingDtoToPreviewPlace(
       (caption) => caption.length > 0,
     ),
     whatItIs: dto.whatItIs.map((line) => line.text),
-    // Atmosphere tags only, and the listing stores positive bullets, so every
-    // one is a "yes". Access claims live on `accessibility` below, which can
-    // answer no.
-    goodFor: dto.goodFor.map((label) => ({ label, yes: true })),
     // Both structured blocks are part of what a moderator reviews and what an
     // owner previews, so they render exactly as the public page would. Healed
     // on the way through: a draft written before these existed answers all ten

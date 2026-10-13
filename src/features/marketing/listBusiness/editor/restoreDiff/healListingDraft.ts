@@ -6,6 +6,13 @@ import {
   type HoursException,
   type ListingDraft,
 } from "../../listBusiness.data";
+import {
+  normalizeCoverPolicy,
+  normalizeEntryMode,
+  normalizeInclusionPractices,
+  normalizePaymentMethods,
+} from "../../listingFacts.data";
+import { healLegacyListingDraft } from "../../listingLegacyAttributes";
 import { toMenuDraft } from "../../listingMenu.data";
 import { normalizeMobileDetails } from "../../listingMobile.data";
 import { normalizeOnlineDetails } from "../../listingOnline.data";
@@ -21,6 +28,8 @@ import { toShopItemRows } from "../../listingShop.data";
  * a complete draft here, so the editor keeps working. A well-formed draft comes
  * back with every value as it was (same text, same row ids), so healing an
  * editor draft is a no-op in everything the review compares or restores.
+ * A copy from before the attribute vocabulary is healed into it with the
+ * migration's own table (`healLegacyListingDraft`).
  */
 
 const STRING_KEYS = [
@@ -40,7 +49,7 @@ const STRING_KEYS = [
   "ownerBio",
 ] as const satisfies ReadonlyArray<keyof ListingDraft>;
 
-const STRING_LIST_KEYS = ["cats", "tags", "goodFor", "langs"] as const;
+const STRING_LIST_KEYS = ["cats", "langs"] as const;
 
 const EMPTY_SOCIAL: ListingDraft["social"] = {
   instagram: "",
@@ -150,6 +159,12 @@ export function healListingDraft(draft: ListingDraft): ListingDraft {
   healed.social = { ...EMPTY_SOCIAL, ...draft.social };
   healed.photos = { ...EMPTY_PHOTO_SLOTS, ...draft.photos };
   healed.alt = { ...EMPTY_PHOTO_SLOTS, ...draft.alt };
+  // Absent on a draft saved before the field existed, which meant "no cover".
+  healed.coverPhoto = {
+    image:
+      typeof draft.coverPhoto?.image === "string" ? draft.coverPhoto.image : "",
+    alt: typeof draft.coverPhoto?.alt === "string" ? draft.coverPhoto.alt : "",
+  };
   // Absent on a draft saved before the field existed, which meant "none".
   healed.ownedBy = normalizeOwnedBy(draft.ownedBy);
   if (typeof healed.latitude !== "number") healed.latitude = null;
@@ -181,5 +196,42 @@ export function healListingDraft(draft: ListingDraft): ListingDraft {
   if (draft.inactiveModeCats !== undefined) {
     healed.inactiveModeCats = stringList(draft.inactiveModeCats);
   }
-  return healed;
+  // The attribute and fact fields: absent stays absent (that reads as
+  // unanswered), and a present but mangled one heals to its own shape.
+  for (const key of ["attributes", "highlights"] as const) {
+    if (draft[key] !== undefined) healed[key] = stringList(draft[key]);
+  }
+  for (const key of [
+    "coverFreeBefore",
+    "saferSpacePolicyUrl",
+    "langsOther",
+  ] as const) {
+    if (draft[key] !== undefined && typeof draft[key] !== "string") {
+      healed[key] = "";
+    }
+  }
+  if (draft.entryMode !== undefined) {
+    healed.entryMode = normalizeEntryMode(draft.entryMode);
+  }
+  if (draft.coverPolicy !== undefined) {
+    healed.coverPolicy = normalizeCoverPolicy(draft.coverPolicy);
+  }
+  if (draft.payments !== undefined) {
+    healed.payments = normalizePaymentMethods(draft.payments);
+  }
+  if (draft.inclusionPractices !== undefined) {
+    healed.inclusionPractices = normalizeInclusionPractices(
+      draft.inclusionPractices,
+    );
+  }
+  if (
+    draft.issuesNifInvoices !== undefined &&
+    typeof draft.issuesNifInvoices !== "boolean"
+  ) {
+    healed.issuesNifInvoices = null;
+  }
+  // Last, on the now well-shaped lists: a copy from before 2026-10-08 still
+  // carries tags, Good-for and language names. A current draft comes back as
+  // the same object.
+  return healLegacyListingDraft(healed);
 }

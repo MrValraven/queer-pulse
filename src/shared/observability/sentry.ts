@@ -129,6 +129,31 @@ export function setMonitoringConsent(granted: boolean): void {
   flushBufferedEvents();
 }
 
+const PRIVATE_BREADCRUMB_PATHS = ["/studio/tracks/", "/studio/releases/"];
+
+/**
+ * Drops the SDK's default fetch, xhr and navigation breadcrumbs that name a
+ * Studio track or release URL (a stream request there would show up on a
+ * later error event as a play history). Every other breadcrumb passes through
+ * unchanged.
+ */
+export function dropStudioPlayBreadcrumb(
+  breadcrumb: Sentry.Breadcrumb,
+): Sentry.Breadcrumb | null {
+  const candidates = [
+    breadcrumb.data?.url,
+    breadcrumb.data?.to,
+    breadcrumb.data?.from,
+    breadcrumb.message,
+  ];
+  const isPrivate = candidates.some(
+    (candidate) =>
+      typeof candidate === "string" &&
+      PRIVATE_BREADCRUMB_PATHS.some((path) => candidate.includes(path)),
+  );
+  return isPrivate ? null : breadcrumb;
+}
+
 /**
  * Single init entry point, called from main.tsx before render. Async so the
  * `@sentry/react` module is only fetched once the DSN+PROD guard passes —
@@ -157,6 +182,7 @@ export async function initObservability(): Promise<void> {
     //    (setMonitoringConsent flips `enabled`).
     // 2. Expected failure: a signed-out 401 is an answer the app handles, so it
     //    never spends monitoring quota. See SILENT_HTTP_STATUSES.
+    beforeBreadcrumb: dropStudioPlayBreadcrumb,
     beforeSend: (event, hint) => {
       if (!enabled) return null;
       if (isExpectedHttpFailure(hint.originalException)) return null;

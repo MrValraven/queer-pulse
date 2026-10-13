@@ -1,10 +1,11 @@
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { MarkdownLite } from "../../../../shared/markdown";
-import {
-  goodForLabel,
-  langLabel,
-  type ListingDraft,
-} from "../listBusiness.data";
+import type { ListingDraft } from "../listBusiness.data";
+import { attributeLabel } from "../listingAttributes.data";
+import { languageLabel } from "../listingFacts.data";
+import { listingFactsForPayload } from "../listingFactsPayload";
+import { factsSourceAsSaved } from "../listingFactSummaries";
+import { ListingLivePreviewFacts } from "./ListingLivePreviewFacts";
 import { ListingLivePreviewOrdering } from "./ListingLivePreviewOrdering";
 import { ListingLivePreviewOwner } from "./ListingLivePreviewOwner";
 import { ExcerptSection } from "./ListingLivePreviewSection";
@@ -16,9 +17,10 @@ import styles from "../ListBusinessPage.module.css";
 const PLACEHOLDER = "marketing:listBusiness.livePreview.placeholder";
 
 /** The "on your page" excerpt under the preview card: tagline, description,
- *  good for, languages, hours for a place, ordering and delivery for anything
- *  that sells online, and who runs it. Each block carries the
- *  `data-preview-region` the field highlight outlines. */
+ *  what's here, inclusion practices, getting in, languages, hours for a
+ *  place, ordering and delivery for anything that sells online, and who
+ *  runs it. Each block carries the `data-preview-region` the field
+ *  highlight outlines. */
 export function ListingLivePreviewExcerpt({
   draft,
   ownerPhotoUrl,
@@ -37,6 +39,12 @@ export function ListingLivePreviewExcerpt({
     .map((paragraph) => paragraph.text)
     .filter((text) => text.trim())
     .join("\n\n");
+  // A create drops what falls outside the offer, so the preview does too.
+  const facts = listingFactsForPayload(factsSourceAsSaved(draft));
+  const languages = [
+    ...facts.langs.map((code) => languageLabel(t, code)),
+    ...(facts.langsOther ? [facts.langsOther] : []),
+  ];
   // "By appointment only" keeps no hours; the block says so, as the page does.
   const hours = isByAppointmentListing(draft)
     ? t("marketing:directory.detail.byAppointmentOnly")
@@ -68,19 +76,24 @@ export function ListingLivePreviewExcerpt({
       </ExcerptSection>
 
       <ExcerptSection
-        region="goodFor"
-        title={t("marketing:listBusiness.preview.goodFor")}
-        isHighlighted={isHighlighted("goodFor")}
-        placeholder={t(`${PLACEHOLDER}.goodFor`)}
+        region="whatsHere"
+        title={t("marketing:listBusiness.preview.whatsHere")}
+        isHighlighted={isHighlighted("whatsHere")}
+        placeholder={t(`${PLACEHOLDER}.whatsHere`)}
       >
-        {draft.goodFor.length > 0 ? (
+        {facts.attributes.length > 0 ? (
           <div className={styles.pdChips}>
-            {draft.goodFor.map((goodFor) => (
-              <span key={goodFor}>{goodForLabel(t, goodFor)}</span>
+            {facts.attributes.map((slug) => (
+              <span key={slug}>{attributeLabel(t, slug)}</span>
             ))}
           </div>
         ) : null}
       </ExcerptSection>
+
+      <ListingLivePreviewFacts
+        draft={draft}
+        highlightedRegions={highlightedRegions}
+      />
 
       <ExcerptSection
         region="languages"
@@ -88,10 +101,10 @@ export function ListingLivePreviewExcerpt({
         isHighlighted={isHighlighted("languages")}
         placeholder={t(`${PLACEHOLDER}.languages`)}
       >
-        {draft.langs.length > 0 ? (
+        {languages.length > 0 ? (
           <div className={styles.pdChips}>
-            {draft.langs.map((languageCode) => (
-              <span key={languageCode}>{langLabel(t, languageCode)}</span>
+            {languages.map((languageName) => (
+              <span key={languageName}>{languageName}</span>
             ))}
           </div>
         ) : null}

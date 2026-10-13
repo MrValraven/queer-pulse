@@ -11,15 +11,22 @@ const TINT_CLASS: Record<Tint, string | undefined> = {
 };
 
 /**
- * A queue row's visual anchor: the listing's lead photo, or its two-letter
- * initials on the listing's own tint (the same tint the public page uses)
- * when it has no photo or the photo fails to load. Decorative, because the
- * listing's name sits right beside it.
+ * A queue row's visual anchor: the listing's card cover (its own cover, else
+ * its lead photo), or its two-letter initials on the listing's own tint (the
+ * same tint the public page uses) when it has no photo or the photo fails to
+ * load. Decorative, because the listing's name sits right beside it.
  */
 export function ListingRowThumb({ row }: { row: ListingQueueRow }) {
   const photos = row.detail.photos;
+  // The cover first, as the directory card shows it; then the gallery slots.
   // `||` so an empty-string slot also falls through to the next photo.
-  const photoUrl = photos.wide || photos.d1 || photos.vibe || photos.d2 || null;
+  const photoUrl =
+    row.detail.coverPhoto?.image ||
+    photos.wide ||
+    photos.d1 ||
+    photos.vibe ||
+    photos.d2 ||
+    null;
   // Keyed to the URL, so a row whose photo changes gets a fresh attempt.
   const [failedUrl, setFailedUrl] = useState<string | null>(null);
 

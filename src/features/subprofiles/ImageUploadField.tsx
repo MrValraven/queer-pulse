@@ -42,6 +42,12 @@ interface ImageUploadFieldProps {
   circle?: boolean;
   size?: number;
   placeholder?: string;
+  /** Shows the remove button. Off where the saved image can be replaced
+   *  and never cleared (a Studio release cover). Defaults to true. */
+  isRemovable?: boolean;
+  /** Opens the reframer on the Square ratio chip, and renders the slot as a
+   *  square of `size` (a Studio release cover). Off by default. */
+  isSquare?: boolean;
 }
 
 /**
@@ -71,6 +77,8 @@ export function ImageUploadField({
   circle = false,
   size = 150,
   placeholder,
+  isRemovable = true,
+  isSquare = false,
 }: ImageUploadFieldProps) {
   const { t } = useTranslation();
   const [pickerOpen, setPickerOpen] = useState(false);
@@ -135,7 +143,7 @@ export function ImageUploadField({
         tint="plum"
         shape={circle ? "circle" : "rounded"}
         src={displayedValue || undefined}
-        width={circle ? size : "100%"}
+        width={circle || isSquare ? size : "100%"}
         height={size}
         radius={14}
         placeholder={resolvedPlaceholder}
@@ -160,7 +168,7 @@ export function ImageUploadField({
             ? t("subprofiles:imageUpload.change")
             : t("subprofiles:imageUpload.add")}
         </button>
-        {displayedValue && (
+        {displayedValue && isRemovable && (
           <button
             type="button"
             className={styles.smallBtn}
@@ -191,6 +199,7 @@ export function ImageUploadField({
           onPick={handlePick}
           onUploaded={onUploaded}
           onDeletedCurrent={clear}
+          initialFreeformChoice={isSquare ? "square" : undefined}
           onClose={() => setPickerOpen(false)}
         />
       )}

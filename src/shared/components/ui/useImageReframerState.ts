@@ -33,6 +33,9 @@ export interface UseImageReframerStateOptions {
   aspect: number | "free";
   aspectLabel: string;
   allowFreeform: boolean;
+  /** Which ratio chip a freeform kind opens on. Defaults to the kind's own
+   *  shape, or Original when it has none. */
+  initialFreeformChoice?: FreeformChoiceKey;
   minOutputWidth: number;
   minOutputHeight: number;
   value?: CropRect;
@@ -74,6 +77,7 @@ export function useImageReframerState({
   aspect,
   aspectLabel,
   allowFreeform,
+  initialFreeformChoice,
   minOutputWidth,
   minOutputHeight,
   value,
@@ -84,7 +88,8 @@ export function useImageReframerState({
   const [panY, setPanY] = useState(0.5);
   const [source, setSource] = useState<SourceSize | null>(null);
   const [freeformChoice, setFreeformChoice] = useState<FreeformChoiceKey>(
-    typeof aspect === "number" ? "native" : "original",
+    initialFreeformChoice ??
+      (typeof aspect === "number" ? "native" : "original"),
   );
 
   const seededRef = useRef(false);

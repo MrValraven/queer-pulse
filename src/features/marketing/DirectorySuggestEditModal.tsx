@@ -17,9 +17,9 @@ const MESSAGE_MAX_LENGTH = 2000;
 
 /**
  * The "Suggest an edit" form itself, opened by `DirectorySuggestEditControl`.
- * A non-owner member picks which of the 6 backend-recognized fields is off
- * (4 for an online-only listing, which has no hours or address to correct,
- * and 5 for a business with no meeting point, which has no address),
+ * A non-owner member picks which of the 7 backend-recognised fields is off
+ * (5 for an online-only listing, which has no hours or address to correct,
+ * and 6 for a business with no meeting point, which has no address),
  * writes a note, and may also hand over the actual corrected value; submits
  * through `useSuggestEdit`, which POSTs in live mode and just resolves in demo
  * (there's no owner inbox to patch here).
@@ -27,14 +27,15 @@ const MESSAGE_MAX_LENGTH = 2000;
  * The value is optional throughout. Knowing something is wrong without knowing
  * what is right is a genuinely useful report, so prose alone always submits.
  * When a value IS offered and the server refuses it, the server's own reason
- * (it names the constraint that failed) is shown against the input instead of
- * disappearing behind a generic failure toast.
+ * (it names the constraint that failed) is shown against the input, where the
+ * member can act on it, and a generic failure toast stays for everything else.
  */
 export function DirectorySuggestEditModal({
   slug,
   placeName,
   isOnline = false,
   hasNoAddress = false,
+  initialField,
   onClose,
 }: {
   slug: string;
@@ -45,13 +46,21 @@ export function DirectorySuggestEditModal({
   /** An out-and-about listing with no meeting point: the address bucket
    *  leaves the picker (the server refuses a correction to it). */
   hasNoAddress?: boolean;
+  /** The bucket to open on, when the modal is opened from a section (What's
+   *  here opens on "Details and amenities"). Falls back to the first bucket
+   *  this listing offers. */
+  initialField?: SuggestEditField;
   onClose: () => void;
 }) {
   const { t } = useTranslation();
   const { showToast } = useToast();
   const suggestEdit = useSuggestEdit(slug);
   const fieldOptions = suggestEditFieldOptions({ isOnline, hasNoAddress });
-  const [field, setField] = useState<SuggestEditField>(fieldOptions[0]!);
+  const [field, setField] = useState<SuggestEditField>(
+    initialField && fieldOptions.includes(initialField)
+      ? initialField
+      : fieldOptions[0]!,
+  );
   const [message, setMessage] = useState("");
   const [proposedValue, setProposedValue] = useState("");
   const [valueRejection, setValueRejection] = useState<string | null>(null);
@@ -176,14 +185,15 @@ export function DirectorySuggestEditModal({
           onChange={(next) => {
             setProposedValue(next);
             // Editing the value answers the server's objection to it, so the
-            // objection goes rather than sitting under a value it no longer
-            // describes.
+            // objection goes: it no longer describes the value under it.
             setValueRejection(null);
           }}
         />
       ) : (
         <p className={styles.proseOnly}>
-          {t("marketing:directory.detail.suggestEdit.value.proseOnly")}
+          {field === "attributes"
+            ? t("marketing:directory.detail.suggestEdit.value.attributesHelper")
+            : t("marketing:directory.detail.suggestEdit.value.proseOnly")}
         </p>
       )}
     </Modal>

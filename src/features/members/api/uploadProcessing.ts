@@ -101,6 +101,14 @@ export const UPLOAD_LIMITS: Record<UploadKind, UploadLimit> = {
     minWidth: 1200,
     minHeight: 600,
   },
+  // Listing card cover: the directory card shows it at 392x168, so 400px
+  // wide is the floor that never upscales at 1x. Small and light on purpose.
+  "listing-cover": {
+    maxBytes: 2 * MB,
+    maxLabel: "2 MB",
+    minWidth: 400,
+    minHeight: 172,
+  },
   // A listing's menu when it is a photo of the board. No minimum size: a
   // phone photo of a chalkboard is fine. Mirrors the backend's 10 MB cap
   // (`listing-menu` in `upload-kinds.ts`). A PDF menu never enters this image
@@ -156,6 +164,10 @@ export const UPLOAD_LIMITS: Record<UploadKind, UploadLimit> = {
   // (see the `kind === "sticker"` branch there), so there is no resample
   // step whose output dimensions this would gate.
   sticker: { maxBytes: 1 * MB, maxLabel: "1 MB" },
+  // Studio audio (Studio v1). Never read by this image pipeline: audio goes
+  // through features/studio/api/studioAudioUpload.ts. Present only so the
+  // Record stays total. 50 MB mirrors the backend's `studio_audio` cap.
+  studio_audio: { maxBytes: 50 * MB, maxLabel: "50 MB" },
 };
 
 /** Type + size guards. Throws a human-readable `Error` the UI shows in role="alert". */
@@ -202,6 +214,8 @@ const MAX_DIMENSION_PX: Record<UploadKind, number> = {
   "work-image": 1600,
   "story-cover": 2560,
   "listing-photo": 2560,
+  // A card-sized cover: 1200px covers the card at 3x.
+  "listing-cover": 1200,
   // Menu text has to stay readable, so the wide-hero cap.
   "listing-menu": 2560,
   "community-cover": 2560,
@@ -233,6 +247,8 @@ const MAX_DIMENSION_PX: Record<UploadKind, number> = {
   // platform artwork rather than a size saving. Present only so the
   // `Record<UploadKind, …>` stays total.
   sticker: 0,
+  // Unused: audio is never resampled. Present only so the Record stays total.
+  studio_audio: 0,
 };
 
 /** Re-encode quality used once an image is actually being downscaled — a
@@ -814,6 +830,8 @@ export const CROP_CONFIG: Record<UploadKind, AspectConfig> = {
   // locks to 1:1 exactly like a member or group avatar.
   "community-avatar": { aspect: 1, aspectLabel: "1:1", allowFreeform: false },
   "listing-photo": { aspect: 2, aspectLabel: "2:1", allowFreeform: false },
+  // The directory card's photo band (392x168).
+  "listing-cover": { aspect: 7 / 3, aspectLabel: "7:3", allowFreeform: false },
   // A menu photo is never reframed.
   "listing-menu": { aspect: "free", aspectLabel: "free", allowFreeform: true },
   "work-image": { aspect: "free", aspectLabel: "free", allowFreeform: true },
@@ -836,6 +854,8 @@ export const CROP_CONFIG: Record<UploadKind, AspectConfig> = {
   // exports it pre-sized at 512x512, and the reframe editor never opens for
   // this kind. Present only so the `Record<UploadKind, …>` stays total.
   sticker: { aspect: "free", aspectLabel: "free", allowFreeform: true },
+  // Unused: audio has no crop. Present only so the Record stays total.
+  studio_audio: { aspect: "free", aspectLabel: "free", allowFreeform: true },
 };
 
 /** Minimum output pixel dimensions for the crop, derived from `UPLOAD_LIMITS`. */

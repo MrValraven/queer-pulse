@@ -13,7 +13,10 @@
 /* Floating pill, bottom-centred, slides up on appearance. */
 .floating {
   position: fixed;
-  bottom: calc(max(24px, env(safe-area-inset-bottom)) + var(--bottom-inset));
+  bottom: calc(
+    max(24px, env(safe-area-inset-bottom)) + var(--bottom-inset) +
+      var(--studio-player-inset, 0px)
+  );
   left: 50%;
   transform: translateX(-50%);
   z-index: var(--z-popover);

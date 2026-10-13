@@ -119,8 +119,6 @@ export const gatherings: Catalog = {
   // Shared/cross-page chrome
   "common.backToGatherings": "Gatherings",
   "common.hostedBy": "Hosted by",
-  // GatheringCommunity.tsx: the hero line reads "With Queer Runners Lisboa".
-  "common.hostedWith": "With",
   "common.runBy": "Run by",
   "common.hostRemoved": "A former member",
   "common.connectCta": "Connect",
@@ -1827,7 +1825,7 @@ export const gatherings: Catalog = {
   "gathering.where.mapAriaArea": "Map showing the approximate area of {area}",
   "gathering.access.heading": "Access",
   "gathering.access.lead":
-    "What the host has told us about getting in and being comfortable. An unanswered question means nobody has said, so ask if you need to know.",
+    "What the host has told us about getting in and being comfortable.",
 
   // ── LOC-06: what the organisers have said ─────────────────────────────────
   "gathering.announcements.heading": "From the hosts",
@@ -1898,9 +1896,6 @@ export const gatherings: Catalog = {
   "rsvpControl.refusedToast": "The host has removed you from this gathering.",
   "rsvpControl.goneToast": "This gathering isn't there any more.",
   "rsvpControl.errorToast": "That didn't go through. Try again in a moment.",
-  "sharePlans.panelHeading": "Tell someone where you'll be",
-  "sharePlans.panelLead":
-    "Send one person you trust the time and the place. It goes as an ordinary message, and only they see it.",
   "sharePlans.openCta": "Share my plans",
   "sharePlans.eyebrow": "Just between you two",
   "sharePlans.title": "Tell someone <em>where you'll be</em>",
@@ -2194,4 +2189,92 @@ export const gatherings: Catalog = {
   "preview.errorTitle": "The preview didn't load",
   "preview.errorBody":
     "Your gathering is fine. Try again in a moment, or go back to your host view.",
+
+  // ── Guest communities: editor, wizard, display, collab invite page ────────
+  "guestCommunities.label": "Guest communities",
+  "guestCommunities.labelOptional": "Guest communities (optional)",
+  "guestCommunities.hint":
+    "Invite other communities to host this with you. Their team accepts before their name shows on the gathering.",
+  "guestCommunities.lockedHint":
+    "Pick the community you host with first. Guest communities join a gathering that has one.",
+  "guestCommunities.lockedHintWithRows":
+    "Pick the community you host with to invite more.",
+  "guestCommunities.searchPlaceholder": "Search communities by name",
+  "guestCommunities.resultsLabel": "Communities you can invite",
+  "guestCommunities.listLabel": "Communities invited to this gathering",
+  "guestCommunities.loading": "Looking for communities…",
+  "guestCommunities.noMatch": "No community matches that search.",
+  "guestCommunities.loadError": "Communities didn't load.",
+  "guestCommunities.capReached":
+    "This gathering has {max} guest communities, the most it can have. Remove one to invite another.",
+  "guestCommunities.status.pending": "Invited",
+  "guestCommunities.status.accepted": "Joined",
+  "guestCommunities.status.declined": "Declined",
+  "guestCommunities.status.unsentEdit": "Sends when you save",
+  "guestCommunities.status.unsentCreate": "Sends when you publish",
+  "guestCommunities.removeCta": "Remove community",
+  "guestCommunities.saveFailed_one":
+    "{count} guest community change didn't save. Open Edit details to try again.",
+  "guestCommunities.saveFailed_other":
+    "{count} guest community changes didn't save. Open Edit details to try again.",
+  "guestCommunities.inviteFailed_one":
+    "{count} community invite didn't go out. Invite it again from Edit details.",
+  "guestCommunities.inviteFailed_other":
+    "{count} community invites didn't go out. Invite them again from Edit details.",
+  "guestCommunities.reviewValue": "{names}. Invites go out when you publish.",
+
+  "common.hostedWithList.one": "With {first}",
+  "common.hostedWithList.two": "With {first} and {second}",
+  "common.hostedWithList.three": "With {first}, {second} and {third}",
+  "common.hostedWithList.more_one":
+    "With {first}, {second}, {third} and {count} more",
+  "common.hostedWithList.more_other":
+    "With {first}, {second}, {third} and {count} more",
+  "gathering.guestCommunityRole": "Guest community",
+  "gathering.leaveCollabCta": "Remove our community",
+  "gathering.leaveCollabTitle": "Remove {name} from this gathering?",
+  "gathering.leaveCollabBody":
+    "It comes off your community page and your members' Communities feed, and your community can't join this gathering again. The organisers aren't notified.",
+  "gathering.leaveCollabKeepCta": "Keep our community",
+  "gathering.leaveCollabToast": "{name} is off this gathering.",
+
+  "collabInvite.back": "Notifications",
+  "collabInvite.eyebrow": "Collab invitation",
+  "collabInvite.title":
+    "{lead} wants to host <em>together</em> with {community}.",
+  "collabInvite.titleNoLead":
+    "{community} is invited to host <em>together</em>.",
+  "collabInvite.sub":
+    "Any owner, co-owner or mod of {community} can answer for it. One answer counts for the whole team.",
+  "collabInvite.acceptingTitle": "What <em>accepting</em> does",
+  "collabInvite.acceptingListing":
+    "Lists on your community page. Your members can see it and RSVP.",
+  "collabInvite.acceptingName":
+    "{community} shows on the gathering beside {lead}.",
+  "collabInvite.acceptingNameNoLead":
+    "{community} shows on the gathering as a host.",
+  "collabInvite.acceptingRights":
+    "The organisers keep running the gathering. Your team can remove your community from it at any time.",
+  "collabInvite.acceptCta": "Accept collab",
+  "collabInvite.declineCta": "Decline invite",
+  "collabInvite.acceptedToast": "{community} is hosting this gathering too.",
+  "collabInvite.declinedToast":
+    "Invite declined. The organisers will see your answer.",
+  "collabInvite.cannotRespond":
+    "The owners, co-owners and mods of {community} answer this invite.",
+  "collabInvite.notFoundTitle": "This invite isn't here anymore",
+  "collabInvite.notFoundDescription":
+    "The organisers may have removed it, or it belongs to a community you don't help run.",
+  "collabInvite.acceptedTitle": "{name} accepted for {community}",
+  "collabInvite.acceptedTitleNoName": "{community} accepted this invite",
+  "collabInvite.acceptedDescription": "{title} lists on {community}'s page.",
+  "collabInvite.declinedTitle": "{name} declined for {community}",
+  "collabInvite.declinedTitleNoName": "{community} declined this invite",
+  "collabInvite.declinedDescription": "{title} stays off {community}'s page.",
+  "collabInvite.cancelledTitle": "This gathering was cancelled",
+  "collabInvite.cancelledDescription":
+    "The invite closed when the organisers called {title} off.",
+  "collabInvite.pastTitle": "This gathering already happened",
+  "collabInvite.pastDescription": "The invite closed once {title} took place.",
+  "collabInvite.viewGatheringCta": "View gathering",
 };

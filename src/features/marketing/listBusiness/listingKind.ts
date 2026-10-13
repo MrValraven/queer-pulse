@@ -1,5 +1,6 @@
 import { listingCategoriesFor, normalizeCategory } from "../localCategories";
 import type { ListingDraft } from "./listBusiness.data";
+import { withAppointmentAnswersInStep } from "./listingAppointmentLink";
 import { applyCategoryPricingDefault } from "./listingMenu.data";
 import {
   listingKindOf,
@@ -83,6 +84,8 @@ export function whereFoundChoiceOf(draft: ListingDraft): WhereFoundChoice | "" {
  * the two the categories stay as they are. Becoming out and about never
  * ticks the meeting point: an address typed for a shop stays in the draft
  * and stays private until the owner ticks "People meet us at a set spot".
+ * Becoming out and about also puts the two appointment answers in step
+ * (`withAppointmentAnswersInStep`).
  */
 export function withKind(draft: ListingDraft, kind: ListingKind): ListingDraft {
   const currentKind = listingKindOf(draft);
@@ -90,11 +93,11 @@ export function withKind(draft: ListingDraft, kind: ListingKind): ListingDraft {
   if (kind === "online") return withListingKind(draft, true);
   const asPlace =
     currentKind === "online" ? withListingKind(draft, false) : draft;
-  return {
+  return withAppointmentAnswersInStep({
     ...asPlace,
     mobile: kind === "mobile",
     mobileDetails: normalizeMobileDetails(asPlace.mobileDetails),
-  };
+  });
 }
 
 export function withWhereFoundChoice(

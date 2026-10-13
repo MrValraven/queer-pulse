@@ -6,8 +6,8 @@ export type UploadContentType =
   "image/jpeg" | "image/png" | "image/webp" | "image/gif";
 
 /** Document content types the `message-document` upload kind accepts
- *  (PRD-226): PDFs, spreadsheets, and plain text. Never video/audio/voice —
- *  that stays a deliberate scope boundary. Mirrors the backend's
+ *  (PRD-226): PDFs, spreadsheets, and plain text. Never video or voice;
+ *  audio only through the `studio_audio` kind. Mirrors the backend's
  *  `DOCUMENT_UPLOAD_TYPES` (`queerpulse-backend/src/storage/
  *  upload-content-types.ts`). */
 export type DocumentContentType =
@@ -25,13 +25,18 @@ export type UploadKind =
   | "gathering-photo"
   | "group-avatar"
   | "listing-photo"
+  | "listing-cover"
   | "listing-menu"
   | "community-cover"
   | "community-avatar"
   | "event-cover"
   | "message-image"
   | "message-document"
-  | "sticker";
+  | "sticker"
+  | "studio_audio";
+
+/** Audio content types, accepted by the `studio_audio` kind only (Studio v1). */
+export type StudioAudioUploadContentType = "audio/mpeg" | "audio/mp4";
 
 /**
  * ============================================================================
@@ -98,9 +103,13 @@ export type UploadKind =
  */
 export interface PresignRequest {
   kind: UploadKind;
-  contentType: UploadContentType | DocumentContentType;
+  contentType:
+    UploadContentType | DocumentContentType | StudioAudioUploadContentType;
   /** Byte size of the file being uploaded, so the server can reject over-cap early. */
   byteSize: number;
+  /** The persona a persona-scoped kind (`studio_audio`) belongs to, so its key
+   *  is scoped to the persona. */
+  subprofileId?: string;
 }
 
 /** Response from `POST /uploads/presign`. */
@@ -124,13 +133,16 @@ export interface PresignedUpload {
  */
 export const requestUpload = (
   kind: UploadKind,
-  contentType: UploadContentType | DocumentContentType,
+  contentType:
+    UploadContentType | DocumentContentType | StudioAudioUploadContentType,
   byteSize: number,
+  subprofileId?: string,
 ) =>
   apiPost<PresignedUpload>("/uploads/presign", {
     kind,
     contentType,
     byteSize,
+    ...(subprofileId ? { subprofileId } : {}),
   } satisfies PresignRequest);
 
 /**

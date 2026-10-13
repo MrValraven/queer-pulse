@@ -21,14 +21,12 @@ export const RAIL_MAIN: RailLink[] = [
   {
     label: "The Wednesday set",
     labelKey: "studio:rail.main.wednesdaySet",
-    to: routes.studio,
-    end: true,
+    to: routes.studioSet,
   },
   {
     label: "Browse",
     labelKey: "studio:rail.main.browse",
-    to: routes.studio,
-    end: true,
+    to: routes.studioSearch,
   },
   {
     label: "Sheet music",
@@ -45,6 +43,23 @@ export const RAIL_MAIN: RailLink[] = [
     labelKey: "studio:rail.main.notifications",
     to: routes.studioNotifications,
   },
+];
+
+/** The live rail: Studio v1's three listening destinations. Upload and the
+ *  artist's own releases are added per persona by StudioRailLive. */
+export const LIVE_RAIL_MAIN: RailLink[] = [
+  {
+    label: "Home",
+    labelKey: "studio:rail.main.home",
+    to: routes.studio,
+    end: true,
+  },
+  {
+    label: "Search",
+    labelKey: "studio:rail.v1.search",
+    to: routes.studioSearch,
+  },
+  { label: "Saved", labelKey: "studio:rail.v1.saved", to: routes.collections },
 ];
 
 export const CONTRIBUTE: RailLink[] = [
@@ -120,9 +135,6 @@ export const UTILITY: RailLink[] = [
     to: routes.studioTerms,
   },
 ];
-
-export const PLAYER_ART =
-  "https://images.unsplash.com/photo-1654432673600-33ff123df18a?q=80&w=400&auto=format&fit=crop";
 
 /** Mock signed-in member's avatar initials — content, not chrome. */
 export const CURRENT_MEMBER_INITIALS = "RM";

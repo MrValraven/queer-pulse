@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { DIRECTORY_PLACES } from "./directoryPlaces";
+import { NO_LISTING_FACT_FILTERS } from "./directoryListingFactFilters";
 import { VENUES } from "./map.data";
 import {
   appendUniquePlaces,
@@ -67,14 +68,13 @@ describe("venueToLocal", () => {
     expect(local.kind).toBe("venue");
     expect(local.category).toBe("nightlife");
     expect(local.coords).toEqual({ latitude: 38.7168, longitude: -9.1489 });
-    expect(local.vibe).toEqual(["mixed", "masc-leaning"]);
     expect(local.beenHere).toBe(247);
     expect(local.detailPath).toBe("/local/venue/v1");
   });
 });
 
 describe("mergeLocalPlaces", () => {
-  it("folds a name-matched venue's geo/vibe/been-here into the business and drops the venue", () => {
+  it("folds a name-matched venue's geo and been-here into the business and drops the venue", () => {
     const businesses = DIRECTORY_PLACES.map((place) =>
       businessToLocal(place, true),
     );
@@ -88,7 +88,6 @@ describe("mergeLocalPlaces", () => {
     const navalha = navalhaEntries[0]!;
     expect(navalha.kind).toBe("business");
     expect(navalha.coords).not.toBeNull();
-    expect(navalha.vibe).toBeDefined();
     expect(navalha.beenHere).toBeDefined();
   });
 
@@ -127,11 +126,10 @@ describe("filterLocalPlaces", () => {
     VENUES.map(venueToLocal),
   );
 
-  it("returns everything when no place type is chosen, query empty, no vibes", () => {
+  it("returns everything when no place type is chosen and the query is empty", () => {
     const result = filterLocalPlaces(places, {
       categories: [],
       query: "",
-      vibes: [],
     });
     expect(result).toEqual(places);
   });
@@ -140,7 +138,6 @@ describe("filterLocalPlaces", () => {
     const nightlife = filterLocalPlaces(places, {
       categories: ["nightlife"],
       query: "",
-      vibes: [],
     });
     expect(nightlife.length).toBeGreaterThan(0);
     expect(nightlife.every((place) => place.category === "nightlife")).toBe(
@@ -152,7 +149,6 @@ describe("filterLocalPlaces", () => {
     const filtersFor = (categories: string[]) => ({
       categories,
       query: "",
-      vibes: [],
     });
     const nightlife = filterLocalPlaces(places, filtersFor(["nightlife"]));
     const food = filterLocalPlaces(places, filtersFor(["food"]));
@@ -169,7 +165,6 @@ describe("filterLocalPlaces", () => {
     const result = filterLocalPlaces(places, {
       categories: [],
       query: "Mouraria",
-      vibes: [],
     });
     expect(result.length).toBeGreaterThan(0);
     expect(result.every((place) => place.searchText.includes("mouraria"))).toBe(
@@ -177,33 +172,16 @@ describe("filterLocalPlaces", () => {
     );
   });
 
-  it("broadens beyond the name — a word from the blurb still matches", () => {
+  it("broadens beyond the name: a word from the blurb still matches", () => {
     // "sliding scale" appears in descriptions, never in a place name.
     const result = filterLocalPlaces(places, {
       categories: [],
       query: "sliding scale",
-      vibes: [],
     });
     expect(result.length).toBeGreaterThan(0);
     expect(
       result.some((place) => !place.name.toLowerCase().includes("sliding")),
     ).toBe(true);
-  });
-
-  it("passes vibe-less businesses through while narrowing venues to the vibe", () => {
-    const result = filterLocalPlaces(places, {
-      categories: [],
-      query: "",
-      vibes: ["mixed"],
-    });
-    // Every venue kept matches the selected vibe…
-    expect(
-      result
-        .filter((place) => place.kind === "venue")
-        .every((place) => (place.vibe ?? []).includes("mixed")),
-    ).toBe(true);
-    // …and vibe-less businesses are still present, not silently dropped.
-    expect(result.some((place) => place.kind === "business")).toBe(true);
   });
 
   const ownedByOf = (place: (typeof places)[number]) =>
@@ -215,7 +193,6 @@ describe("filterLocalPlaces", () => {
     const result = filterLocalPlaces(places, {
       categories: [],
       query: "",
-      vibes: [],
       owned: ["trans"],
     });
     expect(result.length).toBeGreaterThan(0);
@@ -230,7 +207,6 @@ describe("filterLocalPlaces", () => {
     const filtersFor = (owned: ("women" | "trans" | "nonbinary")[]) => ({
       categories: [],
       query: "",
-      vibes: [],
       owned,
     });
     const trans = filterLocalPlaces(places, filtersFor(["trans"]));
@@ -250,7 +226,6 @@ describe("filterLocalPlaces", () => {
     const result = filterLocalPlaces(places, {
       categories: [],
       query: "",
-      vibes: [],
       owned: ["women"],
     });
     expect(
@@ -266,12 +241,10 @@ describe("filterLocalPlaces", () => {
     const unfiltered = filterLocalPlaces(places, {
       categories: [],
       query: "",
-      vibes: [],
     });
     const result = filterLocalPlaces(places, {
       categories: [],
       query: "",
-      vibes: [],
       owned: [],
     });
     expect(result).toHaveLength(unfiltered.length);
@@ -324,7 +297,6 @@ describe("selling online", () => {
     const result = filterLocalPlaces([bookshop], {
       categories: ["books-music"],
       query: "",
-      vibes: [],
       isOnlineScope: true,
     });
     expect(result).toEqual([bookshop]);
@@ -353,7 +325,6 @@ describe("online-only listings on the List tab", () => {
   const filtersFor = (categories: string[], isOnlineScope: boolean) => ({
     categories,
     query: "",
-    vibes: [],
     isOnlineScope,
   });
 
@@ -430,5 +401,59 @@ describe("appendUniquePlaces", () => {
       first,
       second,
     ]);
+  });
+});
+
+describe("filterLocalPlaces and the fact filters", () => {
+  const businesses = DIRECTORY_PLACES.map((place) =>
+    businessToLocal(place, true),
+  );
+  const everything = [...businesses, ...VENUES.map(venueToLocal)];
+
+  it("narrows businesses with the server's semantics in demo mode, and drops venues", () => {
+    const result = filterLocalPlaces(everything, {
+      categories: [],
+      query: "",
+      listingFacts: {
+        ...NO_LISTING_FACT_FILTERS,
+        payments: ["cash"],
+        languages: ["pt-BR", "kea"],
+      },
+    });
+    expect(result.map((place) => place.name)).toContain("Salão Mouraria");
+    for (const place of result) {
+      expect(place.kind).toBe("business");
+      const source = place.source as (typeof DIRECTORY_PLACES)[number];
+      expect(source.payments ?? []).toContain("cash");
+      expect(
+        (source.langs ?? []).some((code) => code === "pt-BR" || code === "kea"),
+      ).toBe(true);
+    }
+  });
+
+  it("leaves the server's narrowing alone in live mode", () => {
+    expect(
+      filterLocalPlaces(businesses, {
+        categories: [],
+        query: "",
+        listingFacts: { ...NO_LISTING_FACT_FILTERS, payments: ["multibanco"] },
+        areListingFactsServerFiltered: true,
+      }),
+    ).toHaveLength(businesses.length);
+  });
+
+  it("never matches a search on the words of an attribute alone", () => {
+    const ticked = businesses.filter((place) =>
+      (
+        (place.source as (typeof DIRECTORY_PLACES)[number]).attributes ?? []
+      ).includes("sexual-health-prep"),
+    );
+    expect(ticked.length).toBeGreaterThan(0);
+    expect(
+      filterLocalPlaces(businesses, {
+        categories: [],
+        query: "sexual health prep",
+      }),
+    ).toEqual([]);
   });
 });

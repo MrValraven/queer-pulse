@@ -35,6 +35,9 @@ export function InviteLinkPanel({
   // Only ever true after a generate attempt with a malformed address — the
   // member isn't scolded mid-typing.
   const [hasRecipientEmailError, setHasRecipientEmailError] = useState(false);
+  // Optional: the member's own reminder of who this is for. Sent only when
+  // they wrote something, and never shown to the recipient.
+  const [privateNote, setPrivateNote] = useState("");
   const [vouch, setVouch] = useState("");
   const [note, setNote] = useState("");
   // Covers the whole generate() run — including the delay floor — so the button
@@ -85,6 +88,7 @@ export function InviteLinkPanel({
           email: trimmedRecipientEmail || undefined,
           note: note.trim() || undefined,
           vouch: vouch.trim() || undefined,
+          privateNote: privateNote.trim() || undefined,
         }),
         sleep(650),
       ]);
@@ -119,6 +123,8 @@ export function InviteLinkPanel({
             if (hasRecipientEmailError) setHasRecipientEmailError(false);
           }}
           hasRecipientEmailError={hasRecipientEmailError}
+          privateNote={privateNote}
+          setPrivateNote={setPrivateNote}
           vouch={vouch}
           setVouch={setVouch}
           note={note}

@@ -1,3 +1,4 @@
+import { factTextFieldsForDraft } from "../dtoToDraft";
 import type { PendingListing, PhotoKey } from "../listBusiness.data";
 import { normalizeAccessibilityDraft } from "../listingAccessibility.data";
 import { pricingModeOf, toMenuDraft } from "../listingMenu.data";
@@ -40,6 +41,12 @@ export function listingDtoToPending(dto: ManagedListingDTO): PendingListing {
     photos: Object.fromEntries(
       PHOTO_KEYS.map((photoKey) => [photoKey, dto.photos[photoKey] ?? ""]),
     ) as Record<PhotoKey, string>,
+    // The cover arrives in its view shape (a nullable served URL, maybe a
+    // crop); the draft holds it as two strings, empty when there is none.
+    coverPhoto: {
+      image: dto.coverPhoto?.image ?? "",
+      alt: dto.coverPhoto?.alt ?? "",
+    },
     // Both structured blocks arrive in their WIRE shape and are adopted into
     // the editable one: the note loses its null and each service row gains the
     // client-only key its React list needs.
@@ -51,6 +58,9 @@ export function listingDtoToPending(dto: ManagedListingDTO): PendingListing {
       online: dto.online ?? false,
     }),
     menu: toMenuDraft(dto.menu),
+    // The cover time and the policy link arrive null when unset; the draft
+    // holds "".
+    ...factTextFieldsForDraft(dto),
     // The online block, the shop and "Based in" arrive in their wire shapes
     // through the spread above; these replace them with the editable ones.
     // A place's stored city never seeds "Based in".

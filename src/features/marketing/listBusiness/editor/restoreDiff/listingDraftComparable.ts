@@ -1,10 +1,12 @@
 import {
+  coverPhotoOf,
   DAYS,
   type DayHours,
   type HoursException,
   type ListingDraft,
 } from "../../listBusiness.data";
 import { normalizeAccessibilityDraft } from "../../listingAccessibility.data";
+import { listingFactsForPayload } from "../../listingFactsPayload";
 import {
   listingKindOf,
   mobileDetailsForPayload,
@@ -114,6 +116,29 @@ const COMPARABLE_NORMALISERS: Partial<
   onlineDetails: (draft) =>
     toPublicOnlineDetails(normalizeOnlineDetails(draft.onlineDetails)),
   shopItems: (draft) => draft.shopItems ?? [],
+  // Read as a save sends them: an answer the kind or the categories no
+  // longer keep does not count, and a copy from before the fields reads as
+  // the empty answers.
+  attributes: (draft) => listingFactsForPayload(draft).attributes,
+  highlights: (draft) => listingFactsForPayload(draft).highlights,
+  entryMode: (draft) => listingFactsForPayload(draft).entryMode,
+  coverPolicy: (draft) => listingFactsForPayload(draft).coverPolicy,
+  coverFreeBefore: (draft) => listingFactsForPayload(draft).coverFreeBefore,
+  payments: (draft) => listingFactsForPayload(draft).payments,
+  issuesNifInvoices: (draft) => listingFactsForPayload(draft).issuesNifInvoices,
+  inclusionPractices: (draft) =>
+    listingFactsForPayload(draft).inclusionPractices,
+  saferSpacePolicyUrl: (draft) =>
+    listingFactsForPayload(draft).saferSpacePolicyUrl,
+  langs: (draft) => listingFactsForPayload(draft).langs,
+  langsOther: (draft) => listingFactsForPayload(draft).langsOther,
+  // A cover without a photo drops out of the JSON, so a listing with no
+  // cover keeps the fingerprint it had before the field existed, and alt
+  // text left behind by a removed cover never marks the draft dirty.
+  coverPhoto: (draft) => {
+    const cover = coverPhotoOf(draft);
+    return cover.image ? cover : undefined;
+  },
   // Read as a save sends them: absent on an older copy reads as a place with
   // the empty block, and the meeting point box only counts on a mobile draft.
   mobile: (draft) => listingKindOf(draft) === "mobile",

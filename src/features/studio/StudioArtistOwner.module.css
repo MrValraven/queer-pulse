@@ -1,0 +1,117 @@
+.panel {
+  margin-block: 8px 28px;
+  padding: 18px 20px;
+  border: 1px solid rgba(var(--cream-rgb), 0.08);
+  border-radius: var(--radius-14);
+  background: rgba(var(--cream-rgb), 0.03);
+}
+
+.heading {
+  font-family: var(--serif);
+  font-size: var(--text-19);
+  margin: 0 0 12px;
+}
+
+.heading:focus-visible,
+.title:focus-visible,
+.action:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+}
+
+.cover {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-6);
+  overflow: hidden;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.title {
+  color: inherit;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.status {
+  font-size: var(--text-11);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: rgba(var(--cream-rgb), 0.62);
+}
+
+.status[data-status="taken_down"] {
+  color: var(--accent-soft);
+}
+
+.reason,
+.error {
+  margin: 0;
+  font-size: var(--text-12);
+}
+
+.error {
+  color: var(--accent-soft);
+}
+
+/* The artist page's empty lines: no bio yet, no releases yet. */
+.note {
+  margin: 0;
+  font-size: var(--text-13);
+  color: var(--text60);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.action {
+  border: 1px solid rgba(var(--cream-rgb), 0.18);
+  border-radius: var(--radius-pill);
+  padding: 6px 12px;
+  font-size: var(--text-12);
+  color: inherit;
+  background: none;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.action[aria-disabled="true"] {
+  opacity: 0.5;
+  cursor: default;
+}
+
+@media (--md) {
+  .row {
+    grid-template-columns: 44px minmax(0, 1fr);
+  }
+
+  .actions {
+    grid-column: 1 / -1;
+  }
+}

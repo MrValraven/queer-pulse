@@ -1689,94 +1689,213 @@ export const marketing: Catalog = {
     "ex.: Passeios de duas horas pela Mouraria e por Alfama, com histórias de quem as viveu.",
   "listBusiness.step2.descriptionHint":
     "Deixa uma linha em branco para começar um novo parágrafo.",
-  "listBusiness.step2.tagsLabel":
-    "Etiquetas: palavras por que as pessoas possam filtrar",
-  "listBusiness.step2.tagsPlaceholder": "Procura etiquetas",
-  "listBusiness.step2.tagsAvailableLabel": "Escolhe entre as disponíveis",
-  "listBusiness.step2.tagsChosenCount": "{count} de 6 escolhidas",
-  "listBusiness.step2.tagsNoMatch": "Nenhuma etiqueta corresponde a “{query}”",
-  "listBusiness.step2.tagsLegacyLabel": "Outras etiquetas desta listagem",
-  "listBusiness.step2.tagsCapHint":
-    "Seis etiquetas é o máximo que um anúncio pode ter",
-  "listBusiness.step2.tagRemoveAria": "Remover {tag}",
-  "listBusiness.step2.goodForLabel": "Bom para… (marca o que for verdade)",
-  "listBusiness.step2.goodForHelper":
-    "As pequenas coisas que dizem à nossa gente que está segura e é bem-vinda.",
-  "listBusiness.step2.goodForAria": "Bom para",
   "listBusiness.step2.langsLabel": "Idiomas falados (opcional)",
-  "listBusiness.step2.langsAria": "Idiomas",
-  // Opções "bom para"
-  "listBusiness.goodFor.wheelchairAccessible": "Acessível a cadeiras de rodas",
-  "listBusiness.goodFor.genderNeutralToilets": "Casas de banho neutras",
-  "listBusiness.goodFor.stepFreeEntrance": "Entrada sem degraus",
-  "listBusiness.goodFor.walkInsWelcome": "Sem marcação necessária",
-  "listBusiness.goodFor.quietLowSensory":
-    "Horas calmas, de baixo estímulo sensorial",
-  "listBusiness.goodFor.soloFriendly": "Bom para ir sozinhe",
-  "listBusiness.goodFor.dogFriendly": "Aceita cães",
-  "listBusiness.goodFor.hostsCommunityEvents": "Acolhe eventos da comunidade",
-  "listBusiness.goodFor.budgetFriendly": "Amigo da carteira",
-  "listBusiness.goodFor.accessibleBathroom": "Casa de banho acessível",
-  "listBusiness.goodFor.beginnerFriendly": "Bom para principiantes",
-  "listBusiness.goodFor.goodForGifts": "Bom para presentes",
-  // Vocabulário de etiquetas: títulos dos grupos, depois uma chave por etiqueta
-  "listBusiness.tagGroup.visiting": "Como visitar",
-  "listBusiness.tagGroup.happening": "O que lá acontece",
-  "listBusiness.tagGroup.foodDrink": "Comida e bebida",
-  "listBusiness.tagGroup.pricing": "Preços",
-  "listBusiness.tagGroup.ordering": "Encomendas e envios",
-  "listBusiness.tagGroup.payment": "Formas de pagamento",
-  "listBusiness.tagGroup.sessions": "Sessões",
-  "listBusiness.tagGroup.visitingOnline": "Como marcar",
-  "listBusiness.tag.byAppointment": "Por marcação",
-  "listBusiness.tag.bookingRecommended": "Reserva recomendada",
-  "listBusiness.tag.membersOnly": "Só para membros",
-  "listBusiness.tag.freeEntry": "Entrada livre",
-  "listBusiness.tag.dayPasses": "Passes diários",
-  "listBusiness.tag.memberships": "Planos de adesão",
-  "listBusiness.tag.classPacks": "Pacotes de aulas",
-  "listBusiness.tag.workshops": "Workshops",
-  "listBusiness.tag.classes": "Aulas",
-  "listBusiness.tag.liveMusic": "Música ao vivo",
-  "listBusiness.tag.djNights": "Noites com DJ",
-  "listBusiness.tag.dragShows": "Espetáculos drag",
-  "listBusiness.tag.exhibitions": "Exposições",
-  "listBusiness.tag.readingsAndTalks": "Leituras e conversas",
-  "listBusiness.tag.communityEvents": "Eventos da comunidade",
-  "listBusiness.tag.supportGroups": "Grupos de apoio",
-  "listBusiness.tag.spaceForHire": "Espaço para alugar",
-  "listBusiness.tag.veganOptions": "Opções veganas",
-  "listBusiness.tag.vegetarianOptions": "Opções vegetarianas",
-  "listBusiness.tag.glutenFreeOptions": "Opções sem glúten",
-  "listBusiness.tag.alcoholFreeOptions": "Opções sem álcool",
-  "listBusiness.tag.terrace": "Esplanada",
-  "listBusiness.tag.lateOpening": "Aberto até tarde",
-  "listBusiness.tag.genderNeutralPricing": "Preços sem distinção de género",
-  "listBusiness.tag.slidingScale": "Preço solidário",
-  "listBusiness.tag.payWhatYouCan": "Paga o que puderes",
-  "listBusiness.tag.studentDiscount": "Desconto para estudantes",
-  "listBusiness.tag.shipsToPortugal": "Envia para Portugal",
-  "listBusiness.tag.shipsAcrossEu": "Envia para toda a UE",
-  "listBusiness.tag.shipsWorldwide": "Envia para todo o mundo",
-  "listBusiness.tag.pickUpInLisbon": "Levantamento em Lisboa",
-  "listBusiness.tag.madeToOrder": "Feito por encomenda",
-  "listBusiness.tag.customCommissions": "Peças por encomenda personalizada",
-  "listBusiness.tag.digitalDownloads": "Downloads digitais",
-  "listBusiness.tag.giftCards": "Cartões-oferta",
-  "listBusiness.tag.mbWay": "MB WAY",
-  "listBusiness.tag.multibanco": "Multibanco",
-  "listBusiness.tag.payPal": "PayPal",
-  "listBusiness.tag.videoSessions": "Sessões por vídeo",
-  "listBusiness.tag.phoneSessions": "Sessões por telefone",
-  "listBusiness.tag.freeFirstCall": "Primeira conversa grátis",
-  // Idiomas (os endónimos ficam iguais; só "Outro" e a glosa de LGP traduzem)
-  "listBusiness.lang.portugues": "Português",
-  "listBusiness.lang.english": "English",
-  "listBusiness.lang.espanol": "Español",
-  "listBusiness.lang.francais": "Français",
-  "listBusiness.lang.lgp": "LGP (gestual)",
-  "listBusiness.lang.other": "Outro",
-  "listBusiness.lang.portuguesBrasil": "Português (Brasil)",
+  "listBusiness.step2.attributes.label": "O que se aplica a este espaço",
+  "listBusiness.step2.attributes.labelMobile": "O que se aplica ao que fazes",
+  "listBusiness.step2.attributes.labelOnline":
+    "O que se aplica ao que ofereces",
+  "listBusiness.step2.attributes.helper":
+    "Marca tudo o que se aplica. A maioria são filtros do diretório, por isso cada um ajuda as pessoas certas a encontrar-te.",
+  "listBusiness.step2.attributes.searchPlaceholder": "Procura detalhes",
+  "listBusiness.step2.attributes.availableLabel":
+    "Escolhe entre o que se aplica às tuas categorias",
+  "listBusiness.step2.attributes.chosenCount_one": "{count} marcado",
+  "listBusiness.step2.attributes.chosenCount_other": "{count} marcados",
+  "listBusiness.step2.attributes.noMatch": "Nada corresponde a “{query}”",
+  "listBusiness.step2.attributes.outsideOfferLabel":
+    "Já não se aplica às tuas categorias",
+  "listBusiness.step2.attributes.outsideOfferNote":
+    "Ficam no teu anúncio até os removeres.",
+  "listBusiness.step2.attributes.outsideOfferNoteNew":
+    "Estes não vão ser guardados. Remove-os, ou volta a escolher essa categoria no passo Básico.",
+  "listBusiness.step2.attributes.removeAria": "Remover {attribute}",
+  "listBusiness.step2.highlights.label": "Escolhe até 3 para o teu cartão",
+  "listBusiness.step2.highlights.helper":
+    "Aparecem no teu cartão do diretório, a seguir ao escalão de preço.",
+  "listBusiness.step2.highlights.counter": "{count} de 3",
+  "listBusiness.step2.highlights.empty":
+    "Marca alguns detalhes acima e depois escolhe aqui os teus três.",
+  "listBusiness.step2.highlights.aria": "Destaques do teu cartão",
+  "listBusiness.step2.practices.label": "Práticas de inclusão (opcional)",
+  "listBusiness.step2.practices.helper":
+    "Práticas para lá do nosso compromisso afirmativo que qualquer pessoa pode confirmar quando vier.",
+  "listBusiness.step2.practices.aria": "Práticas de inclusão",
+  "listBusiness.step2.practices.policyUrlLabel":
+    "Link para a tua política de espaço seguro",
+  "listBusiness.step2.practices.policyUrlPlaceholder":
+    "oteusite.pt/espaco-seguro",
+  "listBusiness.step2.practices.policyUrlError":
+    "Confirma o link: deve ser algo como oteusite.pt/politica.",
+  "listBusiness.step2.langs.commonAria": "Idiomas mais comuns",
+  "listBusiness.step2.langs.moreLabel": "Mais idiomas",
+  "listBusiness.step2.langs.morePlaceholder": "Procura idiomas",
+  "listBusiness.step2.langs.moreNoMatch":
+    "Nenhum idioma corresponde a “{query}”",
+  "listBusiness.step2.langs.otherLabel": "Mais algum?",
+  "listBusiness.step2.langs.otherHelper":
+    "Outro idioma ou um dialeto, como o escreverias.",
+  "listBusiness.step2.langs.otherPlaceholder": "ex.: Galego",
+  // ── Atributos dos anúncios (contrato 2026-10-08): uma etiqueta por slug,
+  //    com a chave do slug em camelCase, e depois um título por grupo.
+  "listingAttribute.terrace": "Esplanada ou lugares ao ar livre",
+  "listingAttribute.wifi": "Wi-Fi",
+  "listingAttribute.laptopFriendly": "Dá para trabalhar com portátil",
+  "listingAttribute.kidFriendly": "Bom para crianças",
+  "listingAttribute.dogFriendly": "Aceita cães",
+  "listingAttribute.soloFriendly": "Bom para ir a solo",
+  "listingAttribute.spaceForHire": "Espaço para alugar",
+  "listingAttribute.takeaway": "Para levar",
+  "listingAttribute.delivery": "Entregas",
+  "listingAttribute.hostsEvents": "Organiza eventos",
+  "listingAttribute.workshops": "Workshops",
+  "listingAttribute.classes": "Aulas",
+  "listingAttribute.veganOptions": "Opções veganas",
+  "listingAttribute.vegetarianOptions": "Opções vegetarianas",
+  "listingAttribute.glutenFreeOptions": "Opções sem glúten",
+  "listingAttribute.halal": "Halal",
+  "listingAttribute.alcoholFreeDrinks": "Boas bebidas sem álcool",
+  "listingAttribute.brunch": "Brunch",
+  "listingAttribute.kitchenOpenLate": "Cozinha aberta até tarde",
+  "listingAttribute.liveMusic": "Música ao vivo",
+  "listingAttribute.djNights": "Noites com DJ",
+  "listingAttribute.dragShows": "Espetáculos drag",
+  "listingAttribute.karaoke": "Karaoke",
+  "listingAttribute.dancefloor": "Pista de dança",
+  "listingAttribute.quietCorner": "Canto sossegado para conversar",
+  "listingAttribute.smokingArea": "Zona de fumadores",
+  "listingAttribute.coatCheck": "Bengaleiro",
+  "listingAttribute.adultsOnly": "Só maiores de 18",
+  "listingAttribute.exhibitions": "Exposições",
+  "listingAttribute.readingsAndTalks": "Leituras e conversas",
+  "listingAttribute.screenings": "Sessões de cinema",
+  "listingAttribute.englishSubtitles": "Sessões com legendas em inglês",
+  "listingAttribute.lgbtqSection": "Secção LGBTQ+",
+  "listingAttribute.bookClub": "Clube de leitura",
+  "listingAttribute.secondHand": "Em segunda mão",
+  "listingAttribute.supportGroups": "Grupos de apoio",
+  "listingAttribute.kitchenAccess": "Acesso à cozinha",
+  "listingAttribute.projectorAndSound": "Projetor e som",
+  "listingAttribute.quietRoom": "Sala sossegada",
+  "listingAttribute.openToNonMembers": "Aberto a pessoas de fora",
+  "listingAttribute.pricedByService":
+    "Preço por serviço e comprimento do cabelo",
+  "listingAttribute.curlyTexturedHair": "Cabelo encaracolado e crespo",
+  "listingAttribute.colourSpecialist": "Especialista em cor",
+  "listingAttribute.shavesAndBeards": "Barba e barbear",
+  "listingAttribute.facialHairRemoval": "Remoção de pelos faciais",
+  "listingAttribute.makeup": "Maquilhagem",
+  "listingAttribute.privateRoom": "Sala privada disponível",
+  "listingAttribute.dropInClasses": "Aulas avulsas",
+  "listingAttribute.dayPasses": "Passes diários",
+  "listingAttribute.classPacks": "Pacotes de aulas",
+  "listingAttribute.memberships": "Planos de adesão",
+  "listingAttribute.beginnerSessions": "Sessões para principiantes",
+  "listingAttribute.transNonbinarySessions":
+    "Sessões para pessoas trans e não binárias",
+  "listingAttribute.privateChanging": "Cabines privadas para mudar de roupa",
+  "listingAttribute.personalTraining": "Treino personalizado",
+  "listingAttribute.takesInsurance": "Aceita seguros de saúde",
+  "listingAttribute.onlineConsultations": "Também tem consultas online",
+  "listingAttribute.homeVisits": "Consultas ao domicílio",
+  "listingAttribute.sameWeekAppointments": "Marcações na mesma semana",
+  "listingAttribute.sexualHealthPrep": "Saúde sexual e PrEP",
+  "listingAttribute.transCareExperience":
+    "Experiência em cuidados a pessoas trans",
+  "listingAttribute.madeToOrder": "Feito por encomenda",
+  "listingAttribute.customCommissions": "Peças por encomenda personalizada",
+  "listingAttribute.localMakers": "Criação local",
+  "listingAttribute.repairs": "Reparações",
+  "listingAttribute.giftWrapping": "Embrulho para oferta",
+  "listingAttribute.refurbished": "Equipamentos recondicionados",
+  "listingAttribute.dataRecovery": "Recuperação de dados",
+  "listingAttribute.beginnerHelp":
+    "Ajuda com paciência para quem está a começar",
+  "listingAttribute.tradeIns": "Retoma de equipamentos",
+  "listingAttribute.queerHistory": "História queer",
+  "listingAttribute.walkingTours": "A pé",
+  "listingAttribute.privateTours": "Visitas privadas",
+  "listingAttribute.smallGroups": "Grupos pequenos",
+  "listingAttribute.stepFreeRoute": "Percurso sem degraus",
+  "listingAttribute.freeQuotes": "Orçamentos grátis",
+  "listingAttribute.sameDay": "No próprio dia ou em urgência",
+  "listingAttribute.weekendVisits": "Visitas ao fim de semana",
+  "listingAttribute.insured": "Com seguro",
+  "listingAttribute.smallJobs": "Trabalhos pequenos são bem-vindos",
+  "listingAttribute.byAppointment": "Por marcação",
+  "listingAttribute.beginnerFriendly": "Bom para principiantes",
+  "listingAttribute.goodForGifts": "Bom para presentes",
+  "listingAttribute.giftCards": "Cartões-oferta",
+  "listingAttribute.freeFirstCall": "Primeira conversa grátis",
+  "listingAttribute.slidingScale": "Preço solidário",
+  "listingAttribute.payWhatYouCan": "Paga o que puderes",
+  "listingAttribute.studentDiscount": "Desconto para estudantes",
+  "listingAttribute.group.around": "No espaço",
+  "listingAttribute.group.food": "Comida e bebida",
+  "listingAttribute.group.nightlife": "Noites",
+  "listingAttribute.group.culture": "Cultura",
+  "listingAttribute.group.space": "O espaço",
+  "listingAttribute.group.grooming": "Cabelo e cuidados",
+  "listingAttribute.group.fitness": "Treino",
+  "listingAttribute.group.health": "Cuidados de saúde",
+  "listingAttribute.group.design": "Feito aqui",
+  "listingAttribute.group.tech": "Ajuda com tecnologia",
+  "listingAttribute.group.tours": "Visitas",
+  "listingAttribute.group.homeServices": "Em tua casa",
+  "listingAttribute.group.onlineOffering": "O que oferecemos",
+  "listingAttribute.group.onlineFood": "Comida e bebida",
+  "listingAttribute.group.onlineOrdering": "Encomendas",
+  "listingAttribute.group.onlineSessions": "Sessões",
+  "listingAttribute.group.pricing": "Preços",
+  "listingAttribute.group.other": "Mais detalhes",
+  // ── Como se entra, como se paga, práticas de inclusão e idiomas.
+  "listingFacts.entry.walkIn": "Entra quando quiseres",
+  "listingFacts.entry.walkInMobile": "É só aparecer",
+  "listingFacts.entry.bookingRecommended": "Reserva recomendada",
+  "listingFacts.entry.appointmentOnly": "Só por marcação",
+  "listingFacts.entry.membersOnly": "Só para membros",
+  "listingFacts.cover.free": "Entrada livre",
+  "listingFacts.cover.freeBefore": "Entrada livre até às {time}",
+  "listingFacts.cover.freeBeforeChoice": "Entrada livre até certa hora",
+  "listingFacts.cover.cover": "Entrada paga",
+  "listingFacts.cover.ticketed": "Com bilhete",
+  "listingFacts.payment.card": "Cartão",
+  "listingFacts.payment.mbway": "MB WAY",
+  "listingFacts.payment.multibanco": "Multibanco",
+  "listingFacts.payment.cash": "Dinheiro",
+  "listingFacts.payment.cashOnly": "Só dinheiro",
+  "listingFacts.practice.chosenName": "Usa o nome que escolheste",
+  "listingFacts.practice.chosenNameHelp":
+    "A tua equipa pergunta e usa o nome que cada pessoa dá, diga o documento o que disser.",
+  "listingFacts.practice.saferSpacePolicy":
+    "Política de espaço seguro publicada",
+  "listingFacts.practice.saferSpacePolicyHelp":
+    "Uma política escrita que qualquer pessoa pode ler antes de vir. Junta o link em baixo.",
+  "listingFacts.practice.namedContact": "Alguém com quem falar no local",
+  "listingFacts.practice.namedContactHelp":
+    "Uma pessoa identificada em cada turno que trata de tudo o que correr mal.",
+  "listingFacts.practice.harmReduction": "Redução de riscos disponível",
+  "listingFacts.practice.harmReductionHelp":
+    "Água, preservativos, testes ou naloxona à mão, e uma equipa que sabe onde estão.",
+  // Os endónimos ficam iguais; só os Sinais Internacionais se traduzem.
+  "listingFacts.language.pt": "Português",
+  "listingFacts.language.ptBR": "Português (Brasil)",
+  "listingFacts.language.en": "English",
+  "listingFacts.language.es": "Español",
+  "listingFacts.language.fr": "Français",
+  "listingFacts.language.it": "Italiano",
+  "listingFacts.language.de": "Deutsch",
+  "listingFacts.language.uk": "Українська",
+  "listingFacts.language.ru": "Русский",
+  "listingFacts.language.zh": "中文",
+  "listingFacts.language.hi": "हिन्दी",
+  "listingFacts.language.ne": "नेपाली",
+  "listingFacts.language.bn": "বাংলা",
+  "listingFacts.language.ar": "العربية",
+  "listingFacts.language.kea": "Kriolu (Cabo Verde)",
+  "listingFacts.language.lgp": "LGP (língua gestual)",
+  "listingFacts.language.ils": "Sinais Internacionais",
+  "listingFacts.nif.yes": "Sim",
+  "listingFacts.nif.no": "Não",
   // Passo 3 — prático
   "listBusiness.step3.title": "O",
   "listBusiness.step3.em": "prático",
@@ -1839,6 +1958,23 @@ export const marketing: Catalog = {
   "listBusiness.step3.onlineHeadingOnline": "Outras formas de te contactar",
   "listBusiness.step3.onlineHint":
     "És tu que escolhes o que é público. Deixa em branco o que preferires manter fora do anúncio.",
+  "listBusiness.step3.gettingInHeading": "Como se entra e como se paga",
+  "listBusiness.step3.notSaying": "Prefiro não dizer",
+  "listBusiness.step3.entry.label": "Como é que as pessoas entram?",
+  "listBusiness.step3.entry.helper":
+    "Escolhe o que se aplica na maioria dos dias.",
+  "listBusiness.step3.entry.appointmentLinked":
+    "Isto também marca o teu horário como Só por marcação.",
+  "listBusiness.step3.cover.label": "Entrada",
+  "listBusiness.step3.cover.helper": "Quanto custa entrar numa noite normal.",
+  "listBusiness.step3.cover.timeLabel": "Livre até às",
+  "listBusiness.step3.cover.timeError":
+    "Indica até que horas a entrada é livre.",
+  "listBusiness.step3.pay.label": "Formas de pagamento no local",
+  "listBusiness.step3.pay.helper": "Marca todas as formas como te podem pagar.",
+  "listBusiness.step3.nif.label": "Faturas com NIF",
+  "listBusiness.step3.nif.helper":
+    "As pessoas podem pedir fatura com o número de contribuinte?",
   "listBusiness.step3.titleOnline": "Como é que as pessoas",
   "listBusiness.step3.emOnline": "te compram",
   "listBusiness.step3.subBuy":
@@ -1945,6 +2081,8 @@ export const marketing: Catalog = {
   "listBusiness.step3.byAppointment.title": "Só por marcação",
   "listBusiness.step3.byAppointment.sub":
     "Sem horário fixo. As pessoas contactam-te para marcar.",
+  "listBusiness.step3.byAppointment.linked":
+    "Isto também define como as pessoas entram: Só por marcação.",
   "listBusiness.social.instagram.placeholder": "Instagram · @nome",
   "listBusiness.social.website.placeholder": "Site · oteulugar.pt",
   "listBusiness.social.website.err": "Isso não parece um endereço web.",
@@ -1966,11 +2104,16 @@ export const marketing: Catalog = {
   "listBusiness.step4.sub":
     "As imagens ajudam as pessoas a sentir a sala antes de chegarem. E gostamos de saber quem está por trás da porta.",
   "listBusiness.step4.photosLabel": "Algumas fotos (opcional)",
+  "listBusiness.step4.coverLabel": "Foto de capa (opcional)",
+  "listBusiness.step4.coverHelper":
+    "Aparece no teu cartão no diretório. Sem ela, o cartão usa o teu plano geral. Horizontal · pelo menos 400px de largura · até 2 MB.",
+  "listBusiness.step4.coverHelperFirstPhoto":
+    "Aparece no teu cartão no diretório. Sem ela, o cartão usa a tua primeira foto. Horizontal · pelo menos 400px de largura · até 2 MB.",
+  "listBusiness.step4.cover.placeholder": "Aparece no teu cartão do diretório",
+  "listBusiness.step4.alt.cover": "Capa · texto alternativo",
   "listBusiness.step4.photosHelper":
-    "O plano geral é a tua capa: é a foto que aparece no teu cartão no diretório. Horizontal funciona melhor · idealmente ≥1200px de largura · menos de 5MB cada · sem gráficos carregados de texto.",
+    "Mostra o espaço, alguns detalhes e as pessoas que lhe dão vida. Horizontal funciona melhor · idealmente ≥1200px de largura · menos de 5MB cada · sem gráficos carregados de texto.",
   "listBusiness.step4.gallery.wide": "Plano geral do espaço",
-  "listBusiness.step4.gallery.wideNote":
-    "Foto de capa · aparece no teu cartão no diretório",
   "listBusiness.step4.gallery.detail": "Um detalhe",
   "listBusiness.step4.gallery.vibe": "Pessoas / ambiente",
   "listBusiness.step4.subOnline":
@@ -1978,9 +2121,9 @@ export const marketing: Catalog = {
   "listBusiness.step4.subMobile":
     "As fotos ajudam as pessoas a imaginar o que fazes e quem vão conhecer. E gostamos de saber quem está por trás.",
   "listBusiness.step4.photosHelperOnline":
-    "A primeira foto é a capa do teu cartão no diretório. Os teus produtos, o teu espaço de trabalho ou o teu logótipo, tudo serve. O formato horizontal resulta melhor, até 5MB cada.",
+    "Os teus produtos, o teu espaço de trabalho ou o teu logótipo, tudo serve. O formato horizontal resulta melhor, até 5MB cada.",
   "listBusiness.step4.photosHelperMobile":
-    "A primeira foto é a capa do teu cartão no diretório. Tu a trabalhar ou o ponto de encontro, qualquer um serve. O formato horizontal resulta melhor, até 5MB cada.",
+    "Tu a trabalhar ou o ponto de encontro, qualquer um serve. O formato horizontal resulta melhor, até 5MB cada.",
   "listBusiness.step4.gallery.wideOnline":
     "Os teus produtos, o teu espaço de trabalho ou o teu logótipo",
   "listBusiness.step4.gallery.wideMobile":
@@ -2041,6 +2184,9 @@ export const marketing: Catalog = {
   "listBusiness.step4.ownedBy.bipoc.title": "Pessoas BIPOC",
   "listBusiness.step4.ownedBy.bipoc.sub":
     "Pessoas negras, indígenas e racializadas.",
+  "listBusiness.step4.ownedBy.migrant.title": "Pessoas migrantes",
+  "listBusiness.step4.ownedBy.migrant.sub":
+    "Pessoas que vieram de outro país para Portugal.",
   "listBusiness.step4.ownedByPublicNote":
     "Estas etiquetas são públicas, mesmo que mantenhas o teu nome privado. Num negócio pequeno, uma etiqueta pode apontar diretamente para ti, por isso marca só o que te sentes bem em que toda a gente saiba. Podes mudar isto quando quiseres.",
   "listBusiness.step4.loopHeading": "Manteres-te a par",
@@ -2110,9 +2256,13 @@ export const marketing: Catalog = {
   "listBusiness.step5.row.oneLiner": "Descrição curta",
   "listBusiness.step5.row.tagline": "Lema",
   "listBusiness.step5.row.whatItIs": "Descrição",
-  "listBusiness.step5.row.tags": "Etiquetas",
-  "listBusiness.step5.row.goodFor": "Bom para",
   "listBusiness.step5.row.languages": "Idiomas",
+  "listBusiness.step5.row.attributes": "O que se aplica",
+  "listBusiness.step5.row.highlights": "Destaques do cartão",
+  "listBusiness.step5.row.practices": "Práticas de inclusão",
+  "listBusiness.step5.row.entry": "Como se entra",
+  "listBusiness.step5.row.cover": "Entrada",
+  "listBusiness.step5.row.nif": "Faturas com NIF",
   "listBusiness.step5.row.address": "Morada",
   "listBusiness.step5.row.hours": "Horário",
   "listBusiness.step5.row.online": "Online",
@@ -2123,6 +2273,7 @@ export const marketing: Catalog = {
   "listBusiness.step5.row.mainLink": "Link principal",
   "listBusiness.step5.row.howGet": "Como o recebem",
   "listBusiness.step5.row.payments": "Formas de pagamento",
+  "listBusiness.step5.row.paymentsInPerson": "Formas de pagamento no local",
   "listBusiness.step5.row.sessions": "Formatos das sessões",
   "listBusiness.step5.row.replyNote": "Respostas e envios",
   "listBusiness.step5.row.alsoOnline": "Também vende online",
@@ -2220,6 +2371,11 @@ export const marketing: Catalog = {
   "listBusiness.missing.menuLink":
     "um endereço web que funcione no link do teu menu",
   "listBusiness.missing.affirmingBaseline": "o compromisso afirmativo",
+  "listBusiness.missing.saferSpacePolicyUrl":
+    "um link para a tua política de espaço seguro",
+  "listBusiness.missing.saferSpacePolicyUrlFormat":
+    "o formato do link da política corrigido",
+  "listBusiness.missing.coverFreeBefore": "a hora até à qual a entrada é livre",
   "listBusiness.missing.whereFound": "onde as pessoas o encontram",
   "listBusiness.missing.parishes": "as freguesias onde trabalhas",
   "listBusiness.missing.hoursOrAppointment": 'o horário ou "só por marcação"',
@@ -2246,8 +2402,10 @@ export const marketing: Catalog = {
   "listBusiness.preview.placeholderTagline":
     "O teu lema torna-se a citação em destaque no topo da tua página.",
   "listBusiness.preview.whatItIs": "Descrição",
-  "listBusiness.preview.goodFor": "Bom para",
   "listBusiness.preview.languages": "Idiomas",
+  "listBusiness.preview.whatsHere": "O que há aqui",
+  "listBusiness.preview.gettingIn": "Antes de ir",
+  "listBusiness.preview.practices": "Práticas de inclusão",
   "listBusiness.preview.hours": "Horário",
   "listBusiness.preview.ordering": "Encomendas e entregas",
   "listBusiness.preview.roleShown": "Papel visível · nome privado",
@@ -2280,12 +2438,30 @@ export const marketing: Catalog = {
     "O teu lema aparece aqui, em destaque no topo da tua página.",
   "listBusiness.livePreview.caption.whatItIs":
     "A tua descrição aparece aqui, na tua página.",
-  "listBusiness.livePreview.caption.tags":
-    "As tuas etiquetas aparecem aqui. O cartão leva três, com o preço incluído.",
-  "listBusiness.livePreview.caption.goodFor":
-    "O que marcares aparece aqui, na tua página.",
   "listBusiness.livePreview.caption.langs":
     "Os idiomas que falas aparecem aqui, na tua página.",
+  "listBusiness.livePreview.caption.attributes":
+    "Tudo o que marcares aparece aqui, na tua página, debaixo do respetivo título.",
+  "listBusiness.livePreview.caption.highlights":
+    "Os teus três aparecem aqui, no teu cartão, a seguir ao escalão de preço.",
+  "listBusiness.livePreview.caption.inclusionPractices":
+    "As tuas práticas aparecem na tua página, em “O que há aqui”.",
+  "listBusiness.livePreview.caption.saferSpacePolicyUrl":
+    "A tua página tem aqui o link para a tua política, ao lado da prática.",
+  "listBusiness.livePreview.caption.langsOther":
+    "O que escreveres aparece aqui, a seguir aos idiomas que escolheres.",
+  "listBusiness.livePreview.caption.entryMode":
+    "Como se entra aparece aqui, na tua página.",
+  "listBusiness.livePreview.caption.coverPolicy":
+    "Quanto custa entrar aparece aqui, na tua página.",
+  "listBusiness.livePreview.caption.coverPolicyOff":
+    "Só perguntamos pela entrada a espaços de noite e cultura, por isso a tua página não a mostra.",
+  "listBusiness.livePreview.caption.waysToPay":
+    "As tuas formas de pagamento aparecem aqui, na tua página.",
+  "listBusiness.livePreview.caption.nifInvoices":
+    "A tua resposta aparece aqui, na tua página.",
+  "listBusiness.livePreview.caption.gettingInOnline":
+    "Um anúncio online não tem porta, por isso a tua página deixa isto de fora.",
   "listBusiness.livePreview.caption.address":
     "A tua morada aparece na página completa, com um mapa. Abre-a para veres.",
   "listBusiness.livePreview.caption.hours":
@@ -2294,8 +2470,12 @@ export const marketing: Catalog = {
     "As datas especiais aparecem na página completa, e o cartão segue-as no dia.",
   "listBusiness.livePreview.caption.social":
     "Os teus links aparecem na tua página completa. Abre-a para veres onde.",
+  "listBusiness.livePreview.caption.cover":
+    "A tua capa aparece aqui, no teu cartão no diretório. Quem navega no diretório vê-a.",
   "listBusiness.livePreview.caption.photos":
-    "A tua foto de capa aparece aqui. As outras vão para a galeria da página.",
+    "A tua primeira foto aparece aqui até adicionares uma capa. As outras vão para a galeria da página.",
+  "listBusiness.livePreview.caption.photosGallery":
+    "Estas vão para a galeria da tua página. O cartão mostra a tua foto de capa.",
   "listBusiness.livePreview.caption.rel":
     "Só tu e a equipa de revisão veem isto. Ajuda-a a perceber o teu anúncio.",
   "listBusiness.livePreview.caption.ownerName":
@@ -2312,10 +2492,14 @@ export const marketing: Catalog = {
     "Todos os anúncios fazem esta promessa, e a tua página completa di-lo.",
   "listBusiness.livePreview.placeholder.whatItIs":
     "A tua descrição vai aparecer aqui.",
-  "listBusiness.livePreview.placeholder.goodFor":
-    "O que marcares vai aparecer aqui.",
   "listBusiness.livePreview.placeholder.languages":
     "Os idiomas que escolheres vão aparecer aqui.",
+  "listBusiness.livePreview.placeholder.whatsHere":
+    "Os detalhes que marcares vão aparecer aqui.",
+  "listBusiness.livePreview.placeholder.gettingIn":
+    "Como se entra e se paga vai aparecer aqui.",
+  "listBusiness.livePreview.placeholder.practices":
+    "As práticas que marcares vão aparecer aqui.",
   "listBusiness.livePreview.placeholder.hours":
     "Os teus dias e horas de abertura vão aparecer aqui.",
   "listBusiness.livePreview.placeholder.owner":
@@ -2410,8 +2594,9 @@ export const marketing: Catalog = {
   "listBusiness.fullPreview.sub":
     "É assim que o teu anúncio vai ficar no diretório depois de a equipa o aprovar.",
   "listBusiness.fullPreview.whatItIs": "Descrição",
-  "listBusiness.fullPreview.goodFor": "Bom para",
-  "listBusiness.fullPreview.goodToKnow": "Bom saber",
+  "listBusiness.fullPreview.whatsHere": "O que há aqui",
+  "listBusiness.fullPreview.gettingIn": "Antes de ir",
+  "listBusiness.fullPreview.practices": "Práticas de inclusão",
   "listBusiness.fullPreview.hours": "Horário de funcionamento",
   "listBusiness.fullPreview.ordering": "Encomendas e entregas",
   "listBusiness.fullPreview.shop": "Na loja",
@@ -2535,6 +2720,20 @@ export const marketing: Catalog = {
   "listBusiness.editor.history.field.pricingMode":
     "se o anúncio mostra serviços ou um menu",
   "listBusiness.editor.history.field.langs": "as línguas faladas",
+  "listBusiness.editor.history.field.attributes": "os detalhes e comodidades",
+  "listBusiness.editor.history.field.highlights": "os destaques do cartão",
+  "listBusiness.editor.history.field.entryMode": "como se entra",
+  "listBusiness.editor.history.field.coverPolicy": "o preço da entrada",
+  "listBusiness.editor.history.field.coverFreeBefore":
+    "a hora da entrada livre",
+  "listBusiness.editor.history.field.payments": "as formas de pagamento",
+  "listBusiness.editor.history.field.issuesNifInvoices":
+    "a resposta sobre faturas com NIF",
+  "listBusiness.editor.history.field.inclusionPractices":
+    "as práticas de inclusão",
+  "listBusiness.editor.history.field.saferSpacePolicyUrl":
+    "o link da política de espaço seguro",
+  "listBusiness.editor.history.field.langsOther": "os outros idiomas falados",
   "listBusiness.editor.history.field.online": "a opção só online",
   "listBusiness.editor.history.field.address": "a morada",
   "listBusiness.editor.history.field.mapPin": "o pino no mapa",
@@ -2544,6 +2743,7 @@ export const marketing: Catalog = {
     "o horário de feriados e datas especiais",
   "listBusiness.editor.history.field.social": "os contactos e as redes sociais",
   "listBusiness.editor.history.field.photoGallery": "as fotos",
+  "listBusiness.editor.history.field.coverPhoto": "a foto de capa",
   "listBusiness.editor.history.field.rel": "a ligação ao negócio",
   "listBusiness.editor.history.field.ownerName":
     "o nome de quem é proprietário",
@@ -3053,9 +3253,18 @@ export const marketing: Catalog = {
   "listBusiness.editor.restore.diff.field.blurb": "Descrição curta",
   "listBusiness.editor.restore.diff.field.tagline": "Lema",
   "listBusiness.editor.restore.diff.field.whatItIs": "Descrição",
-  "listBusiness.editor.restore.diff.field.tags": "Etiquetas",
-  "listBusiness.editor.restore.diff.field.goodFor": "Bom para",
   "listBusiness.editor.restore.diff.field.langs": "Idiomas falados",
+  "listBusiness.editor.restore.diff.field.attributes": "Detalhes e comodidades",
+  "listBusiness.editor.restore.diff.field.highlights": "Destaques do cartão",
+  "listBusiness.editor.restore.diff.field.entryMode": "Como se entra",
+  "listBusiness.editor.restore.diff.field.coverPolicy": "Entrada",
+  "listBusiness.editor.restore.diff.field.coverFreeBefore": "Entrada livre até",
+  "listBusiness.editor.restore.diff.field.issuesNifInvoices": "Faturas com NIF",
+  "listBusiness.editor.restore.diff.field.inclusionPractices":
+    "Práticas de inclusão",
+  "listBusiness.editor.restore.diff.field.saferSpacePolicyUrl":
+    "Link da política de espaço seguro",
+  "listBusiness.editor.restore.diff.field.langsOther": "Outros idiomas",
   "listBusiness.editor.restore.diff.field.services": "Serviços e preços",
   "listBusiness.editor.restore.diff.field.pricingMode":
     "O que a tua página mostra",
@@ -3075,6 +3284,7 @@ export const marketing: Catalog = {
   "listBusiness.editor.restore.diff.field.accessibility":
     "Respostas de acessibilidade",
   "listBusiness.editor.restore.diff.field.photos": "Fotos",
+  "listBusiness.editor.restore.diff.field.coverPhoto": "Foto de capa",
   "listBusiness.editor.restore.diff.field.rel": "A tua ligação ao negócio",
   "listBusiness.editor.restore.diff.field.ownerName": "O teu nome",
   "listBusiness.editor.restore.diff.field.ownerRole":
@@ -3097,6 +3307,8 @@ export const marketing: Catalog = {
   "listBusiness.editor.restore.diff.field.isVatIncluded":
     "Preços com IVA e taxas de importação",
   "listBusiness.editor.restore.diff.field.payments": "Formas de pagamento",
+  "listBusiness.editor.restore.diff.field.paymentsInPerson":
+    "Formas de pagamento no local",
   "listBusiness.editor.restore.diff.field.sessionFormats":
     "Formatos das sessões",
   "listBusiness.editor.restore.diff.field.registration": "Registo profissional",
@@ -3131,6 +3343,7 @@ export const marketing: Catalog = {
   "listBusiness.editor.restore.diff.row.otherChange":
     "Alguns detalhes são diferentes",
   "listBusiness.editor.restore.diff.photo.wide": "Plano geral",
+  "listBusiness.editor.restore.diff.photo.cover": "Foto de capa",
   "listBusiness.editor.restore.diff.photo.d1": "Detalhe 1",
   "listBusiness.editor.restore.diff.photo.d2": "Detalhe 2",
   "listBusiness.editor.restore.diff.photo.vibe": "Pessoas e ambiente",
@@ -3201,6 +3414,8 @@ export const marketing: Catalog = {
   "listBusiness.confirmDetails.lastConfirmed": "Última confirmação {when}.",
   "listBusiness.confirmDetails.never":
     "Nunca os confirmaste, por isso quem visita só tem o dia em que os escreveste.",
+  "listBusiness.confirmDetails.scope":
+    "Isto inclui o horário, a morada, os contactos, as comodidades e como se entra.",
   "listBusiness.confirmDetails.justNow": "há instantes",
   "listBusiness.confirmDetails.unknownWhen": "há algum tempo",
   "listBusiness.confirmDetails.cta": "Continua certo",
@@ -3275,6 +3490,10 @@ export const marketing: Catalog = {
   "changelog.release.count.infrastructure_other":
     "{count} alterações de infraestrutura",
   // Release headlines, one per shipping day (see changelogReleases.ts).
+  "changelog.releases.2026-10-13.headline":
+    "Flyers e ficheiros da t-shirt no Marketing do admin, e encontra o teu trabalho escrevendo o nome.",
+  "changelog.releases.2026-10-12.headline":
+    "Organiza com comunidades convidadas, filtra anúncios pelo que oferecem e ouve música no Studio.",
   "changelog.releases.2026-10-08.headline":
     "Negócios sem loja já se podem listar, e editar um convívio ganhou um editor amplo e guiado.",
   "changelog.releases.2026-10-07.headline":
@@ -3691,10 +3910,85 @@ export const marketing: Catalog = {
     "Os negócios itinerantes têm as suas próprias perguntas de acesso",
   "changelog.entries.out-and-about-access-questions.body":
     "Visitas e serviços ao domicílio respondem sobre o percurso, e os cartões dos convívios mostram quem os dinamiza.",
+  "changelog.entries.suggested-people-reasons-line-up.title":
+    "Os motivos em Pessoas que talvez conheças ficam alinhados",
+  "changelog.entries.suggested-people-reasons-line-up.body":
+    "O motivo de cada sugestão fica logo acima de Conectar, à mesma altura em todos os cartões.",
+  "changelog.entries.tab-unread-count-clears.title":
+    "A contagem de não lidas no separador desaparece quando lês",
+  "changelog.entries.tab-unread-count-clears.body":
+    "Em algumas páginas o (1) ficava no título do separador depois de o sino esvaziar, até recarregares.",
+  "changelog.entries.share-my-plans-in-the-header.title":
+    "Partilhar os meus planos sobe para o topo do convívio",
+  "changelog.entries.share-my-plans-in-the-header.body":
+    "Quando vais, um ícone de escudo ao lado de Adicionar ao calendário envia os teus planos a alguém de confiança.",
+  "changelog.entries.marketing-flyers.title":
+    "Flyers de eventos e ficheiros da t-shirt da equipa no Marketing do admin",
+  "changelog.entries.marketing-flyers.body":
+    "A equipa admin pode ver e descarregar o flyer do primeiro evento e os ficheiros de impressão da t-shirt da equipa.",
+  "changelog.entries.search-first-work-picker.title":
+    "Encontra o teu trabalho escrevendo o nome",
+  "changelog.entries.search-first-work-picker.body":
+    '"O que fazes?" abre numa caixa de pesquisa, com todas as áreas arrumadas em 10 grupos para explorar.',
+  "changelog.entries.taken-down-gatherings-off-venue-pages.title":
+    "Convívios retirados saem das páginas dos espaços",
+  "changelog.entries.taken-down-gatherings-off-venue-pages.body":
+    "Também deixam de contar para o selo que diz que um espaço acolhe convívios.",
+  "changelog.entries.settings-save-bar-on-phones.title":
+    "A barra de guardar das Definições cabe no telemóvel",
+  "changelog.entries.settings-save-bar-on-phones.body":
+    "Fica longe do campo que acabaste de mudar, e os chips dos seletores têm a altura de um polegar no ecrã tátil.",
+  "changelog.entries.guest-communities-on-gatherings.title":
+    "Organiza um convívio com outras comunidades",
+  "changelog.entries.guest-communities-on-gatherings.body":
+    "Convida outras comunidades como convidadas: quando a equipa aceita, aparece na página delas e chega a quem as integra.",
+  "changelog.entries.studio-v1.title": "Ouve e carrega música no Studio",
+  "changelog.entries.studio-v1.body":
+    "Com acesso ao Studio, ouves lançamentos de personas de música e DJ em toda a app e carregas os teus.",
+  "changelog.entries.private-notes-on-invites.title":
+    "Notas privadas nos convites que envias",
+  "changelog.entries.private-notes-on-invites.body":
+    "Aponta para quem é cada convite, ao criá-lo ou mais tarde. Só tu e a nossa equipa veem a nota.",
+  "changelog.entries.admin-refresh-expired-invites.title":
+    "Os admins podem renovar o convite expirado de qualquer pessoa",
+  "changelog.entries.admin-refresh-expired-invites.body":
+    "A mesma ligação volta a funcionar durante 7 dias, e quem a enviou mantém os convites do mês.",
+  "changelog.entries.anonymous-vouches-stay-anonymous-in-notifications.title":
+    "Os votos de confiança anónimos ficam anónimos nas notificações",
+  "changelog.entries.anonymous-vouches-stay-anonymous-in-notifications.body":
+    "O sino e os alertas do telemóvel dizem que alguém te deu um voto de confiança, e os antigos deixam de nomear quem o deu.",
+  "changelog.entries.update-card-waits-for-member-pages.title":
+    "O cartão de atualização espera que entres",
+  "changelog.entries.update-card-waits-for-member-pages.body":
+    "Aparece no teu feed e nas outras páginas de membro, para nunca interromper o registo ou o início de sessão.",
+  "changelog.entries.calendar-entries-link-to-the-gathering.title":
+    "Os eventos no calendário levam-te de volta ao convívio",
+  "changelog.entries.calendar-entries-link-to-the-gathering.body":
+    "Ao adicionares um convívio ao calendário, as notas do evento trazem o link dele no QueerPulse.",
+  "changelog.entries.access-answers-lead-with-what-is-there.title":
+    "A acessibilidade começa pelo que existe",
+  "changelog.entries.access-answers-lead-with-what-is-there.body":
+    "O que está confirmado forma uma lista leve, as falhas ficam numa linha discreta e um encontro sem respostas esconde-a.",
+  "changelog.entries.gathering-shows-community-avatar.title":
+    "Um convívio mostra o avatar da sua comunidade",
+  "changelog.entries.gathering-shows-community-avatar.body":
+    "Em Organizado com, a imagem da própria comunidade substitui o ícone genérico sempre que existe uma.",
+  "changelog.entries.listing-photo-buttons-easier-to-tap.title":
+    "Os botões das fotos são mais fáceis de tocar quando listas um negócio",
+  "changelog.entries.listing-photo-buttons-easier-to-tap.body":
+    "No telemóvel os botões de carregar têm o tamanho certo, e o Adicionar foto de capa da pré-visualização aparece quando os passos anteriores estão feitos.",
+  "changelog.entries.listing-cover-photo.title":
+    "Dá ao teu anúncio a sua própria foto de capa",
+  "changelog.entries.listing-cover-photo.body":
+    "Uma foto de capa pequena para o teu cartão no diretório, à parte da galeria; sem ela, o cartão mostra o teu plano geral.",
   "changelog.entries.no-fixed-premises-listings.title":
     "Lista um negócio sem loja",
   "changelog.entries.no-fixed-premises-listings.body":
     "Visitas guiadas e serviços ao domicílio dizem onde trabalham em Lisboa, e os convívios nomeiam o negócio que os dinamiza.",
+  "changelog.entries.listing-attributes.title":
+    "Os anúncios mostram o que oferecem, e podes filtrar por isso",
+  "changelog.entries.listing-attributes.body":
+    "Quem gere um negócio marca o que se aplica e escolhe três para o cartão, e filtras por entrada, pagamento ou idioma.",
   "changelog.entries.wider-gathering-editor.title":
     "Edita o teu convívio num editor mais amplo e guiado",
   "changelog.entries.wider-gathering-editor.body":
@@ -9666,7 +9960,7 @@ export const marketing: Catalog = {
     "Tenta outra categoria ou outra pesquisa, ou limpa os filtros para ver todos os negócios online.",
   "directory.empty.title": "Nenhum lugar corresponde a esses filtros",
   "directory.empty.body":
-    "Tenta uma categoria mais ampla, menos ambientes ou outra pesquisa, ou limpa os filtros para ver tudo.",
+    "Tenta uma categoria mais ampla, menos filtros ou outra pesquisa, ou limpa os filtros para ver tudo.",
   // PRD-246. O mesmo estado vazio, para quando ainda faltam páginas por chegar.
   "directory.emptyPartial.title": "Ainda não há correspondências",
   "directory.emptyPartial.body":
@@ -9700,6 +9994,10 @@ export const marketing: Catalog = {
   "directory.ownedBy.trans": "Negócio de pessoas trans",
   "directory.ownedBy.nonbinary": "Negócio de pessoas não binárias",
   "directory.ownedBy.bipoc": "Negócio de pessoas BIPOC",
+  "directory.ownedBy.migrant": "Negócio de pessoas migrantes",
+  "directory.card.badge.openLate": "Aberto até tarde",
+  "directory.card.badge.openSundays": "Aberto ao domingo",
+  "directory.card.badge.hostsGatherings": "Organiza encontros",
   "directory.card.online": "Online",
   "directory.card.visit": "Visitar",
   "directory.card.onlineIn": "Online · {city}",
@@ -9773,11 +10071,23 @@ export const marketing: Catalog = {
   "directory.detail.newBadge": "Novo",
   "directory.detail.onlineBusiness": "Só online",
   "directory.detail.onlineBusinessIn": "Só online · com base em {city}",
-  "directory.detail.offersTitleOnline": "O que <em>oferece</em>",
-  "directory.detail.offersTitle": "O que este espaço <em>oferece</em>",
-  "directory.detail.offersTitleMobile": "O que <em>oferece</em>",
-  "directory.detail.goodForSub": "Como {name} descreve.",
+  "directory.detail.goodForSub": "Nas palavras de {name}.",
   "directory.detail.goodForSubBusiness": "Como o negócio o descreve.",
+  "directory.detail.whatsHere.title": "O que há <em>aqui</em>",
+  "directory.detail.whatsHere.titleElsewhere": "O que <em>esperar</em>",
+  "directory.detail.whatsHere.practicesTitle": "Práticas de inclusão",
+  "directory.detail.whatsHere.policyLink": "Ler a política de espaço seguro",
+  "directory.detail.whatsHere.suggestEdit":
+    "Sugerir uma alteração a estes detalhes",
+  "directory.detail.whatsHere.suggestEditAria":
+    "Sugerir uma alteração a estes detalhes: {name}",
+  "directory.detail.gettingIn.title": "Antes de <em>ir</em>",
+  "directory.detail.gettingIn.titleOnline": "Convém <em>saber</em>",
+  "directory.detail.gettingIn.entry": "Como se entra",
+  "directory.detail.gettingIn.cover": "Entrada",
+  "directory.detail.gettingIn.payments": "Pagamento no local",
+  "directory.detail.gettingIn.nif": "Faturas com NIF",
+  "directory.detail.gettingIn.languages": "Idiomas",
   "directory.detail.hoursTitle": "Horário",
   "directory.detail.today": "Hoje",
   "directory.detail.hoursClosed": "Encerrado",
@@ -9921,19 +10231,18 @@ export const marketing: Catalog = {
   "directory.detail.byAppointmentOnly": "Só por marcação",
   "directory.detail.accessTitle": "Entrar e ser compreendido",
   "directory.detail.accessTitleMobile": "Participar e ser compreendido",
-  "directory.detail.languagesTitle": "Ser compreendido",
   "directory.detail.accessTitleOnline": "Acesso online e línguas",
   "directory.detail.accessSub":
     "Conforme {name} declarou. Pergunta se precisares de ter a certeza.",
 
-  // ── Respostas estruturadas de acessibilidade. Três estados, e os três são
-  //    informação: `unknown` nunca aparece como "não" e nunca desaparece.
+  // ── Respostas estruturadas de acessibilidade. Os "sim" vêm primeiro; um
+  //    "não" e uma pergunta sem resposta ficam numa linha discreta cada.
   "directory.detail.accessibility.noteLabel": "Nas palavras de quem gere",
   "directory.detail.accessibility.noteLabelNamed": "Nas palavras de {name}",
-  "directory.detail.accessibility.unansweredLine_one":
-    "Falta responder a uma pergunta. Ninguém nos disse nada num sentido nem no outro, por isso pergunta diretamente se isso for importante para ti.",
-  "directory.detail.accessibility.unansweredLine_other":
-    "Faltam responder a {count} perguntas. Ninguém nos disse nada num sentido nem no outro, por isso pergunta diretamente se alguma delas for importante para ti.",
+  "directory.detail.accessibility.notAvailableLabel": "Não disponível",
+  "directory.detail.accessibility.notMentionedLabel": "Ainda sem resposta",
+  "directory.detail.accessibility.notMentionedHint":
+    "Vale a pena perguntar se for importante para ti.",
 
   // ── Serviços com preço. A faixa de preço no cabeçalho continua a ser o
   //    sinal rápido; isto diz o que essa faixa compra.
@@ -10110,13 +10419,14 @@ export const marketing: Catalog = {
     "Não foi possível carregar as restantes perguntas. Tenta novamente.",
   "directory.detail.suggestEdit.title": "Sugerir uma correção",
   "directory.detail.suggestEdit.sub":
-    "Reparaste em algo que não bate certo? Diz à pessoa responsável o que corrigir. Só ela vê.",
+    "Reparaste em algo que não bate certo? Diz-nos o que corrigir. Só a nossa equipa e quem gere o anúncio, se houver, o veem.",
   "directory.detail.suggestEdit.fieldLabel": "O que precisa de atenção?",
   "directory.detail.suggestEdit.field.hours": "Horário",
   "directory.detail.suggestEdit.field.address": "Morada",
   "directory.detail.suggestEdit.field.phone": "Número de telefone",
   "directory.detail.suggestEdit.field.website": "Site",
   "directory.detail.suggestEdit.field.description": "Descrição",
+  "directory.detail.suggestEdit.field.attributes": "Detalhes e comodidades",
   "directory.detail.suggestEdit.field.other": "Outra coisa",
   "directory.detail.suggestEdit.messageLabel": "O que deve mudar?",
   "directory.detail.suggestEdit.messagePlaceholder":
@@ -10137,6 +10447,8 @@ export const marketing: Catalog = {
   "directory.detail.suggestEdit.value.rejected": "{reason}",
   "directory.detail.suggestEdit.value.proseOnly":
     "Para o resto, descreve a correção na nota acima. Este balde não aceita um valor de substituição.",
+  "directory.detail.suggestEdit.value.attributesHelper":
+    "Diz que detalhe está errado e como devia ser, na nota acima.",
   "directory.detail.suggestEdit.value.hours.label":
     "O que é que o horário devia dizer?",
   "directory.detail.suggestEdit.value.hours.placeholder":
@@ -10272,7 +10584,6 @@ export const marketing: Catalog = {
   "directory.myClaims.viewListing": "Ver {name} no diretório",
   "directory.myClaims.editListing": "Editar {name}",
   "directory.detail.mapAria": "Mapa a mostrar onde fica {name}",
-  "directory.detail.languagesLabel": "Idiomas",
   "directory.detail.accessLabel": "Acessibilidade",
   "directory.detail.trust.lastVerifiedLabel": "Última verificação",
   "directory.detail.trust.howLine":
@@ -10814,11 +11125,6 @@ export const marketing: Catalog = {
   "map.filter.type.communitySpace": "Comunidade",
   "map.filter.type.barbershop": "Barbearia / Cabeleireiro",
   "map.filter.type.gym": "Ginásio",
-  "map.filter.vibe.mixed": "misto",
-  "map.filter.vibe.mascLeaning": "tendência masc",
-  "map.filter.vibe.femmeLeaning": "tendência femme",
-  "map.filter.vibe.transCentred": "centrado em pessoas trans",
-  "map.filter.vibe.soberFriendly": "acolhedor para sóbries",
   "map.sidebar.allVenues": "Todos os espaços",
   "map.sidebar.acrossLisbon": "Por toda a Lisboa · {count}",
   "map.sidebar.venueCount_one": "<b>{count}</b> espaço",
@@ -10852,8 +11158,6 @@ export const marketing: Catalog = {
   "local.filter.searchPlaceholder": "Procurar espaços e locais…",
   "local.filter.categoryLabel": "Tipo de lugar",
   "local.filter.refine": "Refinar",
-  "local.filter.vibeLabel": "Ambiente",
-  "local.filter.vibeVenueNote": "Os filtros de ambiente aplicam-se a espaços",
   "local.filter.verifiedSafeSpaces": "Espaços seguros verificados",
   "local.filter.ownedByLabel": "Quem gere",
   "local.filter.ownedByNote":
@@ -10868,6 +11172,25 @@ export const marketing: Catalog = {
   "local.filter.accessLabel": "Necessidades de acesso",
   "local.filter.accessNote":
     "Mostra os locais que responderam sim a tudo o que escolheres. Um local sobre o qual ninguém perguntou fica de fora dos resultados.",
+  "local.filter.entryLabel": "Como entrar",
+  "local.filter.entryNote":
+    "Escolhe um. Um espaço sobre o qual ninguém nos disse nada fica de fora.",
+  "local.filter.payLabel": "Formas de pagamento",
+  "local.filter.payNote":
+    "Mostra espaços que aceitam todas as formas que escolheres.",
+  "local.filter.langLabel": "Idiomas",
+  "local.filter.langNote":
+    "Mostra espaços onde se fala qualquer um dos idiomas que escolheres.",
+  "local.filter.practiceLabel": "Práticas de inclusão",
+  "local.filter.practiceNote":
+    "Mostra espaços que seguem todas as práticas que escolheres, nas palavras deles.",
+  "local.filter.moreFilters.show": "Mostrar mais filtros",
+  "local.filter.languages.showMore": "Mostrar mais idiomas",
+  "local.filter.languages.showFewer": "Mostrar menos idiomas",
+  "local.filter.moreFilters.hide": "Esconder mais filtros",
+  "local.filter.moreFilters.label": "Detalhes e comodidades",
+  "local.filter.moreFilters.note":
+    "Mostra espaços que disseram sim a tudo o que escolheres.",
   // Mostrado sob o controlo de ordenação enquanto a localização está ligada,
   // a dizer o que a posição faz pela ordenação escolhida. As duas funcionam
   // em conjunto; nenhuma substitui a outra.

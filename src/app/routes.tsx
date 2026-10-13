@@ -45,6 +45,7 @@ import { onboardingRoutes } from "../features/onboarding/routes";
 import { economyRoutes } from "../features/economy/routes";
 import { cinemaRoutes } from "../features/cinema/routes";
 import { studioRoutes } from "../features/studio/routes";
+import { useStudioAccess } from "../features/studio/api/useStudioAccess";
 import { forumRoutes } from "../features/forum/routes";
 import { settingsRoutes } from "../features/settings/routes";
 import { governanceRoutes } from "../features/governance/routes";
@@ -85,6 +86,8 @@ export function AppRoutes() {
   // in flight. Its content still renders, so the fade shows the page leaving.
   const isExitingPlane = transitionScope ? !transitionScope.isPresent : false;
   const { demoMode } = useDemoMode();
+  // Before the early returns below, so the hook order never changes.
+  const studioAccess = useStudioAccess();
   // The Work & Economy surface isn't launched yet, so bounce its routes to the
   // roadmap, where a "Coming soon" card lists what's landing. Decided before the
   // auth checks because it doesn't depend on a session (the roadmap is public),
@@ -138,7 +141,11 @@ export function AppRoutes() {
           {onboardingRoutes()}
           {economyRoutes()}
           {cinemaRoutes(demoMode)}
-          {studioRoutes(demoMode)}
+          {studioRoutes({
+            demoMode,
+            hasStudioAccess: studioAccess.hasAccess,
+            isStudioAccessPending: studioAccess.isPending,
+          })}
           {forumRoutes()}
           {settingsRoutes()}
           {systemRoutes()}

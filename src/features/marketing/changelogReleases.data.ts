@@ -7,15 +7,26 @@
  * see `assignVersions` in changelogReleases.ts.
  *
  * `pushes` counts the commits pushed on that day; leaving it out means 1.
- * From 5 Oct 2026 on, each push bumps the minor version, so raise it by one
- * on every new push of the day.
+ * Raise it by one on every new push of the day: a day with a feature bumps
+ * the minor once and each further push bumps the patch, any other day bumps
+ * the patch once per push.
  */
 export const CHANGELOG_RELEASE_NOTES: Record<
   string,
   { highlights: string[]; pushes?: number }
 > = {
+  "13 Oct 2026": {
+    highlights: ["marketing-flyers", "search-first-work-picker"],
+  },
+  "12 Oct 2026": {
+    highlights: [
+      "guest-communities-on-gatherings",
+      "studio-v1",
+      "listing-attributes",
+    ],
+  },
   "8 Oct 2026": {
-    pushes: 3,
+    pushes: 5,
     highlights: [
       "no-fixed-premises-listings",
       "checkin-guest-details",
@@ -42,8 +53,6 @@ export const CHANGELOG_RELEASE_NOTES: Record<
     ],
   },
   "5 Oct 2026": {
-    // First day of per-push versioning: one push so far, which is v1.54.0.
-    pushes: 1,
     // More than seven entries this day, so three highlights, features first:
     // the Platform log of every staff action leads as the largest build, then
     // the Staff & roles page staff can act on, then approvals that record who

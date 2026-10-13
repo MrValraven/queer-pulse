@@ -18,6 +18,12 @@ import {
 } from "../listBusiness/listingOwnedBy.data";
 import { isSellingOnline } from "../listBusiness/listingOnline.data";
 import {
+  hasListingFactFilters,
+  listingFactFilterKey,
+  NO_LISTING_FACT_FILTERS,
+  type DirectoryListingFactFilters,
+} from "../directoryListingFactFilters";
+import {
   cardDtoToPlace,
   detailDtoToPlace,
   submittedToPlace,
@@ -33,17 +39,16 @@ export { DIRECTORY_KEY };
 
 /**
  * Whole-catalog source for callers that need every live business client-side
- * rather than a browsable page: the gatherings venue picker, @mention
- * suggestions, and the directory detail page's "related places" strip. The
- * `/local/directory` grid itself uses `useDirectoryPlacesPage` below (real
- * server-side filtering + pagination) — this hook stays a small, unfiltered,
- * unpaginated read for surfaces that just want "every business" to search/
+ * as one list: the gatherings venue picker, @mention suggestions, and the
+ * directory detail page's "related places" strip. The `/local/directory` grid
+ * itself uses `useDirectoryPlacesPage` below (real server-side filtering +
+ * pagination); this hook stays a small, unfiltered, unpaginated read for surfaces that just want "every business" to search/
  * match against locally.
  *
  * Demo mode returns the prototype's own `DIRECTORY_PLACES` registry and never
  * hits the network. Live mode fetches the public `GET /directory` (every live
- * listing, capped at the backend's `DEFAULT_LIST_LIMIT`) and adapts each card
- * — so with "Populate platform" OFF these surfaces work against real
+ * listing, capped at the backend's `DEFAULT_LIST_LIMIT`) and adapts each card,
+ * so with "Populate platform" OFF these surfaces work against real
  * businesses, and the fabricated fixture only appears in demo.
  *
  * Returns a plain array (callers keep their own loading UI), so this stays a
@@ -57,7 +62,7 @@ export interface DirectoryPlacesResult {
   places: DirectoryPlace[];
   isLoading: boolean;
   /** True when the whole-catalog read failed. Consumers that show the places
-   *  as their own content must render an error instead of an empty rail. */
+   *  as their own content must render an error in place of an empty rail. */
   isError: boolean;
   refetch: () => void;
 }
@@ -89,25 +94,29 @@ export function useDirectoryPlacesQuery(): DirectoryPlacesResult {
 }
 
 export interface DirectoryPlacesPageFilters {
-  /** Free-text search — sent server-side as `q` in live mode. */
+  /** Free-text search, sent server-side as `q` in live mode. */
   query?: string;
-  /** `"verified"` restricts to safe-space-verified listings — sent
+  /** `"verified"` restricts to safe-space-verified listings, sent
    * server-side as `safe`. `null`/absent = no restriction. */
   safe?: "verified" | null;
   /**
-   * Accessibility needs that must ALL be met — sent server-side as `access`,
+   * Accessibility needs that must ALL be met, sent server-side as `access`,
    * where the match is on a stored answer of exactly `"yes"`. Empty/absent
    * applies no accessibility filter. Only the six canonical slugs are ever
-   * sent: the endpoint answers 400 to anything else rather than quietly
-   * ignoring it, which is the behaviour that keeps a filter honest.
+   * sent: the endpoint answers 400 to anything else and ignores nothing
+   * quietly, which is the behaviour that keeps a filter honest.
    */
   access?: AccessibilitySlug[];
-  /** Ownership tags, ANY of which a listing must carry — sent server-side as
+  /** Ownership tags, ANY of which a listing must carry, sent server-side as
    * `owned`. Empty/absent = no restriction. */
   owned?: ListingOwnedBy[];
   /** Only listings that sell online: sent as `online=true` live, where the
    *  server narrows and counts them; the demo fixture is narrowed here. */
   online?: boolean;
+  /** The attribute and fact filters: sent server-side live (`attr`, `entry`,
+   *  `pay`, `lang`, `practice`); the demo fixture is narrowed client-side by
+   *  `useDirectoryFilterResults` with the same semantics. */
+  listingFacts?: DirectoryListingFactFilters;
 }
 
 export interface DirectoryPlacesPageResult {
@@ -158,15 +167,14 @@ export function demoDirectoryPlaces(isOnlineOnly: boolean): DirectoryPlace[] {
 
 /**
  * Paginated, server-filtered source for the `/local/directory` grid
- * (gap-audit HSG-5): sends the active `query`/`safe` filters to the backend
- * as `q`/`safe` query params — instead of `useDirectoryPlaces`' old pattern of
- * fetching every live listing unfiltered and filtering client-side — and
- * pages through the real backend `total` via `getDirectoryPage` rather than
- * silently stopping at `DEFAULT_LIST_LIMIT`. `cat` (category) deliberately
- * stays a client-side filter over the loaded pages (see
- * `useDirectoryFilters`'s `categoryCounts`), and `vibe` is demo-only (see
- * `LocalFilterFields`'s `useDemoMode` gate) — neither is a real server-side
- * concept here.
+ * (gap-audit HSG-5): sends the active search, safe-space, access, owned-by
+ * and listing-fact filters to the backend as query params (`q`, `safe`,
+ * `access`, `owned`, `attr`, `entry`, `pay`, `lang`, `practice`), so the
+ * server narrows the list (`useDirectoryPlaces` fetches every live listing
+ * unfiltered), and pages through the real backend `total` via
+ * `getDirectoryPage` all the way past `DEFAULT_LIST_LIMIT`. `cat` (category)
+ * deliberately stays a client-side filter over the loaded pages (see
+ * `useDirectoryFilters`'s `categoryCounts`).
  *
  * Demo mode returns the full `DIRECTORY_PLACES` fixture as a single terminal
  * page (`hasNextPage: false`), so demo renders exactly as before with no
@@ -191,6 +199,8 @@ export function useDirectoryPlacesPage(
   const owned = normalizeOwnedBy(filters.owned);
   const ownedKey = owned.join(",");
   const isOnlineOnly = filters.online === true;
+  const listingFacts = filters.listingFacts ?? NO_LISTING_FACT_FILTERS;
+  const listingFactsKey = listingFactFilterKey(listingFacts);
 
   const query = useInfiniteQuery<DirectoryPageVM>({
     queryKey: [
@@ -201,6 +211,7 @@ export function useDirectoryPlacesPage(
       safe,
       accessKey,
       ownedKey,
+      listingFactsKey,
       isOnlineOnly,
     ],
     initialPageParam: 1,
@@ -216,6 +227,9 @@ export function useDirectoryPlacesPage(
           access: access.length > 0 ? access : undefined,
           owned: owned.length > 0 ? owned : undefined,
           online: isOnlineOnly || undefined,
+          listingFacts: hasListingFactFilters(listingFacts)
+            ? listingFacts
+            : undefined,
           page: pageParam as number,
         }),
       );
@@ -249,18 +263,18 @@ export function useDirectoryPlacesPage(
  * A single directory place by slug, for the detail page
  * (`/local/directory/:slug`). Demo resolves against the mock registry, then
  * falls back to the member's own submitted-listings overlay (so a demo
- * user's wizard-created listing is viewable and its owner-only affordances —
- * "Edit this listing", replying to reviews — are reachable); live fetches the
+ * user's wizard-created listing is viewable and its owner-only affordances,
+ * "Edit this listing" and replying to reviews, are reachable); live fetches the
  * public `GET /directory/:slug` and adapts it.
  *
- * Returns `{ place, isLoading, isError, error, refetch }` rather than a bare
- * value: the live fetch is async, so the detail page must distinguish "still
- * loading" (show a skeleton), "settled, not found" (an honest not-found panel),
- * and "the read failed" (show a retry) instead of redirecting on the initial
- * undefined.
+ * Returns `{ place, isLoading, isError, error, refetch }` as a whole object:
+ * the live fetch is async, so the detail page must distinguish "still
+ * loading" (show a skeleton), "settled and missing" (an honest not-found
+ * panel), and "the read failed" (show a retry), and must never redirect on
+ * the initial undefined.
  *
  * The 404 is handed to the PAGE as an `ApiError`, the same shape
- * `useHousingListing`/`HousingListingPage` settled on, rather than being caught
+ * `useHousingListing`/`HousingListingPage` settled on, and is never caught
  * here. Catching it and returning `undefined` looked like "resolve to not
  * found", but react-query rejects `undefined` as query data outright (it throws
  * `<queryHash> data is undefined`), so every 404 landed in the query's ERROR
@@ -284,8 +298,8 @@ export function useDirectoryPlace(slug: string | undefined): {
   const fmt = useFormat();
   const { user, loggedIn } = useAuth();
   // Hook-safe: read the demo/session listings overlay at the hook's top
-  // level (never inside queryFn). `local` is the whole demo store — same
-  // source `useDirectoryListings`' `submitted` reads in demo mode — and, in
+  // level (never inside queryFn). `local` is the whole demo store (the same
+  // source `useDirectoryListings`' `submitted` reads in demo mode) and, in
   // live mode, only ever a same-session optimistic overlay never consulted
   // below (the demo branch is the sole caller of `demoPlace`).
   const { local: submittedListings } = useDirectoryListingsActions();
@@ -293,8 +307,8 @@ export function useDirectoryPlace(slug: string | undefined): {
   // Fixture-first, then the member's own submitted listing for that slug.
   // Kept synchronous to match `getPlace`'s existing demo pattern. A demo
   // submission is always the signed-in viewer's own listing, so their real
-  // profile photo (not a mock registry lookup) is the right "who runs it"
-  // avatar — mirrors the live detail's resolved `owner.avatarUrl`.
+  // profile photo is the right "who runs it" avatar, with no mock registry
+  // lookup. It mirrors the live detail's resolved `owner.avatarUrl`.
   const demoPlace = (): DirectoryPlace | null => {
     // The 18+ fixture answers only a signed-in member, as the live detail
     // read 404s for everybody else.
@@ -328,7 +342,7 @@ export function useDirectoryPlace(slug: string | undefined): {
       demoMode ? loggedIn : null,
     ],
     enabled: slug !== undefined,
-    // `null` rather than `undefined` for a demo slug that names nothing:
+    // `null` for a demo slug that names nothing:
     // `undefined` reads as "no initial data" and would put the query into a
     // pending state the demo registry can answer synchronously.
     initialData: demoMode ? demoPlace() : undefined,

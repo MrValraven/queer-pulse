@@ -1,46 +1,73 @@
-import { useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
 import { FiSearch } from "react-icons/fi";
-import { ImageSlot, FadeIn, EmptyState } from "../../shared/components/ui";
-import { useSimulatedLoad } from "../../shared/hooks";
+import { useDebouncedValue } from "../../shared/hooks/useDebouncedValue";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import type { StudioSearchView } from "./api/studio.adapters";
+import { useStudioReleases } from "./api/useStudioReleases";
+import { useStudioSearch } from "./api/useStudioSearch";
+import { STUDIO_LIMITS, type StudioSearchType } from "./api/studio.types";
+import { StudioLoadError } from "./StudioLoadStates";
+import { StudioReleaseCard } from "./StudioReleaseCard";
+import { StudioSearchFilters } from "./StudioSearchFilters";
+import { StudioSearchResults } from "./StudioSearchResults";
 import { StudioShell } from "./StudioShell";
-import { FILTERS, RECENT, RESULTS } from "./studioSearch.data";
+import { StudioCardGridSkeleton } from "./StudioSkeletons";
+import { RECENT } from "./studioSearch.data";
+import { useStudioSearchParams } from "./useStudioSearchParams";
+import { useStudioShowcase } from "./useStudioShowcase";
 import ss from "./studio.module.css";
 import s from "./studioPages.module.css";
 
-function SearchResultSkeleton() {
-  return (
-    <div className={ss.skelCard}>
-      <div className={`${ss.skel} ${ss.skelCover}`} />
-      <div
-        className={ss.skel}
-        style={{ width: "80%", height: 15, marginTop: 2 }}
-      />
-      <div className={ss.skel} style={{ width: "55%", height: 12 }} />
-    </div>
-  );
+const FEATURED_COUNT = 8;
+
+interface ShownSearch {
+  result: StudioSearchView;
+  query: string;
+  type: StudioSearchType;
 }
 
 export function StudioSearchPage() {
   const { t } = useTranslation();
-  const [query, setQuery] = useState("");
-  const [filter, setFilter] = useState("Everything");
-  const loading = useSimulatedLoad();
+  const isShowcase = useStudioShowcase();
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  const { query, type, setQuery, setType, clear } = useStudioSearchParams();
+  // typedDraft is null while the input follows the URL, and holds the text
+  // the member is typing until the URL catches up or changes.
+  const [typedDraft, setTypedDraft] = useState<string | null>(null);
+  const draft = typedDraft ?? query;
+  const debouncedDraft = useDebouncedValue(draft, 300);
+  const { result, loadState, isIdle } = useStudioSearch(query, type);
+  const featured = useStudioReleases();
 
-  const results = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    return RESULTS.filter((result) => {
-      const matchFilter = filter === "Everything" || result.kind === filter;
-      const matchQuery =
-        !q ||
-        `${result.pre}${result.em ?? ""}${result.post ?? ""} ${result.meta}`
-          .toLowerCase()
-          .includes(q);
-      return matchFilter && matchQuery;
-    });
-  }, [query, filter]);
+  const [seenQuery, setSeenQuery] = useState(query);
+  if (seenQuery !== query) {
+    setSeenQuery(query);
+    setTypedDraft(null);
+  }
+
+  // While a new term loads, useStudioSearch keeps the previous result. A fresh
+  // result object always answers the current query and filter, so remember
+  // which term each result belongs to and label the result with that one.
+  // Terms compare trimmed, as the hook queries with the trimmed text.
+  const trimmedQuery = query.trim();
+  const [shownSearch, setShownSearch] = useState<ShownSearch | null>(null);
+  if (result && shownSearch?.result !== result)
+    setShownSearch({ result, query: trimmedQuery, type });
+  const shown = result && shownSearch?.result === result ? shownSearch : null;
+  const isRefreshing =
+    shown !== null && (shown.query !== trimmedQuery || shown.type !== type);
+
+  // The input writes the URL once the typing has paused on the current text;
+  // the URL (Back, the topbar search) writes the input through the derived draft.
+  useEffect(() => {
+    if (
+      typedDraft !== null &&
+      debouncedDraft === typedDraft &&
+      debouncedDraft !== query
+    )
+      setQuery(debouncedDraft, { isReplace: true });
+  }, [debouncedDraft, typedDraft, query, setQuery]);
 
   return (
     <StudioShell>
@@ -53,135 +80,92 @@ export function StudioSearchPage() {
           />
         </h1>
       </div>
-
-      <div className={s.searchBar}>
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth={2}
-          strokeLinecap="round"
-        >
-          <circle cx={11} cy={11} r={7} />
-          <path d="m21 21-4.35-4.35" />
-        </svg>
+      <form
+        className={s.searchBar}
+        role="search"
+        onSubmit={(event) => {
+          event.preventDefault();
+          if (draft !== query) setQuery(draft);
+          setTypedDraft(null);
+        }}
+      >
+        <FiSearch aria-hidden />
         <input
+          ref={searchInputRef}
           type="search"
-          aria-label={t("studio:search.inputPlaceholder")}
-          placeholder={t("studio:search.inputPlaceholder")}
-          value={query}
-          onChange={(event) => setQuery(event.target.value)}
+          value={draft}
+          maxLength={STUDIO_LIMITS.searchQueryMax}
+          aria-label={t("studio:searchPage.inputLabel")}
+          placeholder={t("studio:shell.searchPlaceholderLive")}
+          onChange={(event) => setTypedDraft(event.target.value)}
         />
-      </div>
-
-      <div className={s.chips}>
-        {FILTERS.map((option) => (
-          <button
-            key={option.id}
-            type="button"
-            className={`${s.chip} ${filter === option.id ? s.chipOn : ""}`}
-            onClick={() => setFilter(option.id)}
-          >
-            {t(option.labelKey)}
-          </button>
-        ))}
-      </div>
-
-      {!query && (
+      </form>
+      <StudioSearchFilters type={type} onChange={setType} />
+      {isShowcase && isIdle && (
         <div className={s.chips}>
           {RECENT.map((term) => (
             <button
               key={term}
               type="button"
               className={s.chip}
-              onClick={() => setQuery(term)}
+              onClick={() => setTypedDraft(term)}
             >
               {term}
             </button>
           ))}
         </div>
       )}
-
-      <section className={ss.row}>
-        <div className={ss.rowH}>
-          <h2>
-            {query ? (
-              <Translation
-                i18nKey="studio:search.results.forQuery"
-                components={{ em: <em /> }}
-                values={{ query }}
-              />
-            ) : (
+      <div role="status" className={ss.visuallyHidden}>
+        {shown && !isRefreshing && !shown.result.isEmpty
+          ? t("studio:searchPage.resultCount", {
+              count:
+                shown.result.releases.length +
+                shown.result.tracks.length +
+                shown.result.artists.length,
+            })
+          : ""}
+      </div>
+      {isIdle ? (
+        <section className={ss.row}>
+          <div className={ss.rowH}>
+            <h2>
               <Translation
                 i18nKey="studio:search.results.featuredNow"
                 components={{ em: <em /> }}
               />
-            )}
-          </h2>
-        </div>
-        {loading ? (
-          <div className={ss.rowGrid}>
-            {Array.from({ length: 8 }).map((_, skeletonIndex) => (
-              <SearchResultSkeleton key={skeletonIndex} />
-            ))}
+            </h2>
           </div>
-        ) : results.length === 0 ? (
-          <EmptyState
-            icon={<FiSearch />}
-            title={t("studio:search.empty.title")}
-            description={
-              <Translation
-                i18nKey="studio:search.empty.description"
-                components={{ em: <em /> }}
-                values={{
-                  term:
-                    query ||
-                    t(
-                      FILTERS.find((option) => option.id === filter)
-                        ?.labelKey ?? "studio:search.filter.everything",
-                    ),
-                }}
-              />
-            }
-            action={{
-              label: t("studio:search.empty.clearCta"),
-              onClick: () => {
-                setQuery("");
-                setFilter("Everything");
-              },
+          {featured.loadState.isLoading ? (
+            <StudioCardGridSkeleton
+              count={FEATURED_COUNT}
+              className={ss.rowGrid}
+            />
+          ) : (
+            <div className={ss.rowGrid}>
+              {featured.releases.slice(0, FEATURED_COUNT).map((release) => (
+                <StudioReleaseCard key={release.id} release={release} />
+              ))}
+            </div>
+          )}
+        </section>
+      ) : loadState.isError ? (
+        <StudioLoadError loadState={loadState} />
+      ) : !shown ? (
+        <StudioCardGridSkeleton count={FEATURED_COUNT} className={ss.rowGrid} />
+      ) : (
+        <div aria-busy={isRefreshing}>
+          <StudioSearchResults
+            result={shown.result}
+            query={shown.query}
+            type={shown.type}
+            onClear={() => {
+              setTypedDraft(null);
+              clear();
+              searchInputRef.current?.focus();
             }}
           />
-        ) : (
-          <div className={ss.rowGrid}>
-            {results.map((result, resultIndex) => (
-              <FadeIn
-                key={result.pre + result.meta}
-                delay={Math.min(resultIndex, 8) * 60}
-              >
-                <Link to={result.to} className={ss.card}>
-                  <div className={ss.cardCov}>
-                    <ImageSlot
-                      src={result.image}
-                      tint={result.tint}
-                      width="100%"
-                      height="100%"
-                      radius={10}
-                      placeholder={t("studio:media.coverLabel")}
-                      style={{ position: "absolute", inset: 0 }}
-                    />
-                  </div>
-                  <h4>
-                    {result.pre}
-                    {result.em && <em>{result.em}</em>}
-                    {result.post}
-                  </h4>
-                  <div className={ss.meta}>{result.meta}</div>
-                </Link>
-              </FadeIn>
-            ))}
-          </div>
-        )}
-      </section>
+        </div>
+      )}
     </StudioShell>
   );
 }

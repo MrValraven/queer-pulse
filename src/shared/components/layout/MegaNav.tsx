@@ -8,6 +8,7 @@ import { FiChevronDown } from "react-icons/fi";
 import { NAV_MENUS, filterMenus } from "./navMenus";
 import { useIsLinkVisible } from "../../../app/authGate";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
+import { useStudioAccess } from "../../../features/studio/api/useStudioAccess";
 import { useTranslation } from "../../i18n/useTranslation";
 import { MegaNavPanel } from "./MegaNavPanel";
 import styles from "./MegaNav.module.css";
@@ -16,7 +17,13 @@ export function MegaNav() {
   const { t } = useTranslation();
   const isLinkVisible = useIsLinkVisible();
   const { demoMode } = useDemoMode();
-  const menus = filterMenus(NAV_MENUS, isLinkVisible, demoMode);
+  const { hasAccess: hasStudioAccess } = useStudioAccess();
+  const menus = filterMenus(
+    NAV_MENUS,
+    isLinkVisible,
+    demoMode,
+    hasStudioAccess,
+  );
   // `openKey` doubles as the panel's active section: which section the rail
   // highlights and the columns/preview render. `null` means the panel is closed.
   const [openKey, setOpenKey] = useState<string | null>(null);

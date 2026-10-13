@@ -23,8 +23,6 @@ function demoListing(
     blurb: "",
     tagline: "",
     whatItIs: [],
-    tags: [],
-    goodFor: [],
     langs: ["pt", "en"],
     online: false,
     address: "",
@@ -148,8 +146,9 @@ export const ADMIN_LISTINGS_QUEUE: ListingQueueRow[] = [
           text: "Livraria da Esquina is a small second-hand bookshop: poetry, zines, and a queer shelf the staff keep stocked and in order.",
         },
       ],
-      tags: ["Second-hand books", "Reading corner"],
-      goodFor: ["Browsing on a slow afternoon", "Finding queer poetry"],
+      attributes: ["second-hand", "lgbtq-section", "book-club"],
+      highlights: ["second-hand", "lgbtq-section"],
+      entryMode: "walkIn",
       hoursNote: "Open Tue to Sat, afternoons.",
       address: "R. dos Anjos 71 · Anjos",
       visibility: "public",
@@ -193,12 +192,14 @@ export const ADMIN_LISTINGS_QUEUE: ListingQueueRow[] = [
           text: "It's built for the slow evening: a second date, a birthday for six, or a Tuesday that quietly becomes something. Tell the room what you like and let them pour.",
         },
       ],
-      tags: ["Natural wine", "Small plates", "Step-free entrance"],
-      goodFor: [
-        "A great second date",
-        "Natural wine guidance",
-        "Celebrating something",
+      attributes: [
+        "vegetarian-options",
+        "alcohol-free-drinks",
+        "kitchen-open-late",
       ],
+      highlights: ["kitchen-open-late", "alcohol-free-drinks"],
+      entryMode: "bookingRecommended",
+      payments: ["card", "mbway"],
       hoursNote: "Evenings, Tue–Sun. Closed Mondays.",
       social: {
         instagram: "@maisondutiago",
@@ -217,6 +218,13 @@ export const ADMIN_LISTINGS_QUEUE: ListingQueueRow[] = [
         d1: "The bar",
         d2: "Small plates",
         vibe: "Príncipe Real window",
+      },
+      // The one demo row with its own cover, so the queue shows a cover
+      // thumb beside rows that fall back to their wide shot.
+      coverPhoto: {
+        image:
+          "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?q=80&w=1200&auto=format&fit=crop",
+        alt: "Friends raising glasses of red wine",
       },
       address: "R. da Escola Politécnica 60 · Príncipe Real",
       ownerName: "Tiago Costa",
@@ -262,12 +270,9 @@ export const ADMIN_LISTINGS_QUEUE: ListingQueueRow[] = [
           text: "Entry is free wherever it can be, and the space is often someone's first-ever public reading. It works hand in hand with the neighbourhood.",
         },
       ],
-      tags: ["Events space", "Free entry", "Step-free"],
-      goodFor: [
-        "Readings and launches",
-        "A first public reading",
-        "Meeting other makers",
-      ],
+      attributes: ["exhibitions", "readings-and-talks", "hosts-events"],
+      highlights: ["readings-and-talks", "exhibitions"],
+      coverPolicy: "free",
       hoursNote: "Open Wed–Sun afternoons. Event nights run later.",
       social: {
         instagram: "@casaviva.lisboa",
@@ -331,12 +336,10 @@ export const ADMIN_LISTINGS_QUEUE: ListingQueueRow[] = [
           text: "A galão, a warm pastel de nata, and staff who remember your order. Sometimes the bar is exactly that.",
         },
       ],
-      tags: ["Café · pastelaria", "Daily", "Ground floor"],
-      goodFor: [
-        "A no-stress neighbourhood coffee",
-        "Bringing visiting family",
-        "Cheap, excellent pastéis",
-      ],
+      attributes: ["takeaway", "kid-friendly", "vegetarian-options"],
+      highlights: ["takeaway"],
+      entryMode: "walkIn",
+      payments: ["card", "cash"],
       hoursNote: "Open daily, early. Closes by evening.",
       social: {
         instagram: "@cafeaurora.graca",

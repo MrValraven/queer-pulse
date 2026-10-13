@@ -11,6 +11,7 @@ import type { CropRect } from "../../shared/components/ui/cropGeometry";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { ImageProcessingError } from "./api/uploadProcessing";
+import type { FreeformChoiceKey } from "../../shared/components/ui/useImageReframerState";
 import { useUploadImage, type UploadKind } from "./api/useUploadImage";
 import {
   useMyMedia,
@@ -29,10 +30,14 @@ import styles from "./PhotoPickerModal.module.css";
 
 const LOADING_SKELETON_CELLS = 6;
 
-/** The upload path never reframes a GIF (see `handleFile`), so the grid never
- *  offers to reposition one either. */
-function canReframe(item: MyMediaItem): boolean {
-  return !item.key.toLowerCase().endsWith(".gif");
+/** A crop is stored once per media item and shared by every place it is used,
+ *  so the grid offers to reposition only a past upload of the picker's own
+ *  kind: reframing an avatar inside a listing cover picker would silently
+ *  reframe that avatar on the profile too. Any past upload can still be picked
+ *  with its existing crop. The upload path never reframes a GIF (see
+ *  `handleFile`), so the grid never offers to reposition one either. */
+function canReframe(item: MyMediaItem, pickerKind: UploadKind): boolean {
+  return item.kind === pickerKind && !item.key.toLowerCase().endsWith(".gif");
 }
 
 interface PastUploadsSectionProps {
@@ -44,6 +49,9 @@ interface PastUploadsSectionProps {
   /** False when the picker was opened with `shouldReframe={false}`: the tiles
    *  then offer no reposition button, since that surface stores no crop. */
   isReframeOffered: boolean;
+  /** The picker's own upload kind: only past uploads of this kind offer the
+   *  reposition button (see `canReframe`). */
+  pickerKind: UploadKind;
   onRetry: () => void;
   onSelect: (item: MyMediaItem) => void;
   onRequestEdit: (item: MyMediaItem) => void;
@@ -53,8 +61,8 @@ interface PastUploadsSectionProps {
 /**
  * The "Your photos" grid of the member's own past uploads, with its own loading
  * (skeletons), error (retry), and empty states. Selecting a thumbnail picks it;
- * the crop affordance requests a reposition and the trash one a delete (the
- * parent owns both dialogs).
+ * the crop affordance (on uploads of the picker's own kind) requests a
+ * reposition and the trash one a delete (the parent owns both dialogs).
  */
 function PastUploadsSection({
   items,
@@ -62,6 +70,7 @@ function PastUploadsSection({
   isError,
   isBusy,
   isReframeOffered,
+  pickerKind,
   onRetry,
   onSelect,
   onRequestEdit,
@@ -125,7 +134,7 @@ function PastUploadsSection({
                 </span>
               )}
               <div className={styles.tileActions}>
-                {isReframeOffered && canReframe(item) && (
+                {isReframeOffered && canReframe(item, pickerKind) && (
                   <button
                     type="button"
                     className={styles.tileBtn}
@@ -190,8 +199,12 @@ interface PhotoPickerModalProps {
   /** Defaults to true. Pass false for surfaces that store no crop (review
    *  photos, space-listing galleries): framing there would be ignored on
    *  display, so a device upload goes straight up uncropped (the path GIFs
-   *  take) and the grid tiles offer no reposition button. */
+   *  take) and the grid tiles offer no reposition button. When true, only
+   *  past uploads of this picker's `kind` offer one. */
   shouldReframe?: boolean;
+  /** Ratio chip a freeform kind's reframer opens on (a release cover opens
+   *  on "square"). */
+  initialFreeformChoice?: FreeformChoiceKey;
 }
 
 /**
@@ -212,6 +225,7 @@ export function PhotoPickerModal({
   onDeletedCurrent,
   onDeleted,
   shouldReframe = true,
+  initialFreeformChoice,
 }: PhotoPickerModalProps) {
   const { t } = useTranslation();
   const { showToast } = useToast();
@@ -359,6 +373,7 @@ export function PhotoPickerModal({
         isError={isError}
         isBusy={uploading || saveMediaCrop.isPending}
         isReframeOffered={shouldReframe}
+        pickerKind={kind}
         onRetry={() => void refetch()}
         onSelect={(item) => {
           onPick(
@@ -389,6 +404,7 @@ export function PhotoPickerModal({
         <PhotoReframeModal
           file={pendingFile}
           kind={kind}
+          initialFreeformChoice={initialFreeformChoice}
           onCancel={() => setPendingFile(null)}
           onConfirm={(crop) => void handleCropConfirmed(crop)}
         />
@@ -398,6 +414,7 @@ export function PhotoPickerModal({
         <PastUploadReframeModal
           item={pendingEdit}
           kind={kind}
+          initialFreeformChoice={initialFreeformChoice}
           onCancel={() => setPendingEdit(null)}
           onConfirm={confirmEdit}
         />

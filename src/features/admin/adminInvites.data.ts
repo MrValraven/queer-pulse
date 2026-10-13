@@ -16,6 +16,7 @@ export const ADMIN_INVITES: AdminInviteDTO[] = [
     note: "Marco! Finally getting you in here. See you Thursday.",
     vouch:
       "I've organised three community nights with Marco. He shows up for people and holds space with real care.",
+    privateNote: "Marco from climbing",
     createdAt: "2026-06-18T10:42:00.000Z",
     expiresAt: "2026-06-25T10:42:00.000Z",
   },
@@ -28,6 +29,7 @@ export const ADMIN_INVITES: AdminInviteDTO[] = [
     note: "Thought of you the moment I joined. Come say hi.",
     vouch:
       "We were housemates for two years. One of the kindest, most reliable people I know.",
+    privateNote: "Sofia, Ana's friend from the book club",
     createdAt: "2026-07-01T14:10:00.000Z",
     expiresAt: "2026-07-08T14:10:00.000Z",
   },

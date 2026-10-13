@@ -50,6 +50,8 @@ import {
   type RsvpQuestions,
 } from "./gatheringExtras";
 import { scheduleInstants } from "./steps/schedulePair";
+import type { GuestCommunityDraftEntry } from "./api/eventCommunities.api";
+import { guestsForLead } from "./guestCommunities";
 
 /**
  * Everything "Duplicate this gathering" copies forward (PRD-190), and the
@@ -1039,8 +1041,18 @@ function useGatheringWhereState(initialCommunitySlug: string) {
   // `setCommunitySlug` below for the fallback when it is cleared.
   const [audienceScope, setAudienceScope] =
     useState<EventVisibility>("members");
+  // Other communities invited to host with the lead. Part of no create
+  // payload: `usePublishGathering` invites each one once the create has
+  // returned a slug, and only while a lead is set. Like the co-hosts, they
+  // stay out of the saved draft (`GatheringDraftSnapshot`).
+  const [guestCommunities, setGuestCommunities] = useState<
+    GuestCommunityDraftEntry[]
+  >([]);
   const setCommunitySlug = (value: string) => {
     setCommunitySlugValue(value);
+    // A guest that becomes the lead leaves the list, and clearing the lead
+    // drops the picks (none of them went out yet).
+    setGuestCommunities((current) => guestsForLead(current, value));
     // The "Community members" tier needs a community. If the host clears
     // their community pick after choosing it, the scope drops back to the
     // wizard's default so it always points at an audience that exists.
@@ -1104,13 +1116,16 @@ function useGatheringWhereState(initialCommunitySlug: string) {
     address.trim().length > 0 ||
     directions.trim().length > 0 ||
     onlineUrl.trim().length > 0 ||
-    audienceScope !== "members";
+    audienceScope !== "members" ||
+    guestCommunities.length > 0;
 
   return {
     hood,
     setHood,
     communitySlug,
     setCommunitySlug,
+    guestCommunities,
+    setGuestCommunities,
     audienceScope,
     setAudienceScope,
     venue,
@@ -1479,7 +1494,8 @@ export function useGatheringForm(initial: GatheringFormInitial = {}) {
     // `repeats`, `cadence`, `endType`, `endCount`, `endUntil`, their setters
     // and `recurrenceValid`.
     ...recurrenceState,
-    // `hood`, `communitySlug`, `audienceScope`, `venue`, `venueListingId`,
+    // `hood`, `communitySlug`, `guestCommunities`, `setGuestCommunities`,
+    // `audienceScope`, `venue`, `venueListingId`,
     // `venueListing`, `address`, `directions`, `onlineUrl`, their setters,
     // `onlineUrlValid`, `setRefusedVenueListingId` and
     // `isVenueListingRefused`.

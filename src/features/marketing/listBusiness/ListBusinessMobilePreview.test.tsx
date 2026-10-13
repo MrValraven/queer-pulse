@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import type { ReactNode } from "react";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { I18nProvider } from "../../../app/providers/I18nProvider";
 import { blankDraft } from "./listingFormDraft";
 import type { ListingDraft } from "./listBusiness.data";
@@ -9,6 +9,12 @@ import { ListBusinessFullPreview } from "./ListBusinessFullPreview";
 import { ReviewPracticalGroup } from "./ListBusinessReviewPractical";
 import { StepReview } from "./ListBusinessReviewStep";
 import type { ListingForm } from "./useListingForm";
+
+vi.mock("./api/useListingAttributeVocabulary", async () => {
+  const { LOCAL_ATTRIBUTE_VOCABULARY } =
+    await import("./listingAttributes.data");
+  return { useListingAttributeVocabulary: () => LOCAL_ATTRIBUTE_VOCABULARY };
+});
 
 function renderWithI18n(node: ReactNode) {
   return render(<I18nProvider>{node}</I18nProvider>);

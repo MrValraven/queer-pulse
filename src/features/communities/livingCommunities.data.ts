@@ -369,6 +369,12 @@ const HUB_MOMENTS: PulseMoment[] = [
 
 const HUB_EVENTS: CommunityEvent[] = [
   communityEventFromGathering("hub-e1", "trans-hub-meetup"),
+  // The Hub joined Queer Runners Lisboa's end-of-month run as a guest
+  // community (see its `guestCommunities` in gatherings/data.ts).
+  {
+    ...communityEventFromGathering("hub-e-collab", "queer-runners-run"),
+    leadCommunityName: "Queer Runners Lisboa",
+  },
   {
     id: "hub-e2",
     dd: "12",

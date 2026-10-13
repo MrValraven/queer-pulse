@@ -4,6 +4,8 @@ import { isUpcoming, sectionShape } from "./personaSkinRender";
 import type { PersonaViewMode } from "./personaSkinRender";
 import { SubprofileItemRow } from "./SubprofileItemRow";
 import { SubprofileItemTile } from "./SubprofileItemTile";
+import { PersonaStudioReleases } from "./PersonaStudioReleases";
+import { studioSectionFor, usePersonaStudioReleases } from "./personaStudio";
 import type {
   PublicSubprofileView,
   SubprofileItemView,
@@ -211,6 +213,11 @@ export function SubprofileSections({
 }) {
   const { t } = useTranslation();
   const interactive = mode !== "preview";
+  const studioSection = studioSectionFor(persona.kind);
+  const studioReleases = usePersonaStudioReleases(persona, mode);
+  const hasStudioSection = persona.sections.some(
+    (section) => section.section === studioSection,
+  );
 
   return (
     <>
@@ -224,16 +231,19 @@ export function SubprofileSections({
                 (item) => !(item.isFeatured && item.id === featuredId),
               )
             : section.items;
-        if (items.length === 0) return null;
+        const isStudioSection =
+          section.section === studioSection && studioReleases.length > 0;
+        if (items.length === 0 && !isStudioSection) return null;
         const shape = sectionShape(section.section, skin, items);
         return (
           <section
             key={section.section}
             className="pp-sec"
             data-preview-anchor={`section:${section.section}`}
+            aria-labelledby={`pp-sec-${section.section}`}
           >
             <header>
-              <h2>{t(section.labelKey)}</h2>
+              <h2 id={`pp-sec-${section.section}`}>{t(section.labelKey)}</h2>
               {items.length > 1 && (
                 <span
                   className="count"
@@ -245,21 +255,36 @@ export function SubprofileSections({
                 </span>
               )}
             </header>
-            <SectionBody
-              shape={shape}
-              items={items}
-              skin={skin}
-              interactive={interactive}
-              onOpenWork={onOpenWork}
-              onOpenGalleryPhoto={onOpenGalleryPhoto}
-              onOpenPoem={onOpenPoem}
-              displayName={persona.displayName}
-              accent={persona.accent ?? undefined}
-              kind={persona.kind}
-            />
+            {isStudioSection && (
+              <PersonaStudioReleases releases={studioReleases} />
+            )}
+            {items.length > 0 && (
+              <SectionBody
+                shape={shape}
+                items={items}
+                skin={skin}
+                interactive={interactive}
+                onOpenWork={onOpenWork}
+                onOpenGalleryPhoto={onOpenGalleryPhoto}
+                onOpenPoem={onOpenPoem}
+                displayName={persona.displayName}
+                accent={persona.accent ?? undefined}
+                kind={persona.kind}
+              />
+            )}
           </section>
         );
       })}
+      {studioSection && !hasStudioSection && studioReleases.length > 0 && (
+        <section className="pp-sec" aria-labelledby={`pp-sec-${studioSection}`}>
+          <header>
+            <h2 id={`pp-sec-${studioSection}`}>
+              {t(`subprofiles:section.${studioSection}`)}
+            </h2>
+          </header>
+          <PersonaStudioReleases releases={studioReleases} />
+        </section>
+      )}
     </>
   );
 }

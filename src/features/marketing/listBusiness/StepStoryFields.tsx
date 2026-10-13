@@ -1,9 +1,11 @@
+import { useId } from "react";
 import { FormField } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { ANCHOR } from "./listBusiness.data";
 import { ListingDescriptionEditor } from "./ListingDescriptionEditor";
-import { ListingTagPicker } from "./ListingTagPicker";
-import { listingKindOf } from "./listingMobile.data";
+import { ListingAttributePicker } from "./ListingAttributePicker";
+import { isNewListingDraft } from "./listingFactSummaries";
+import { listingKindOf, type ListingKind } from "./listingMobile.data";
 import type { ListingForm } from "./useListingForm";
 import styles from "./ListBusinessPage.module.css";
 
@@ -38,22 +40,37 @@ export function StepStoryDescriptionField({ form }: { form: ListingForm }) {
   );
 }
 
-/** The tag field: pick up to six tags from the curated vocabulary for the
- *  listing's kind (see ListingTagPicker). */
-export function StepStoryTagsField({ form }: { form: ListingForm }) {
+/** The label names what the attributes describe for this kind. */
+const ATTRIBUTE_LABEL_KEYS: Record<ListingKind, string> = {
+  place: "marketing:listBusiness.step2.attributes.label",
+  mobile: "marketing:listBusiness.step2.attributes.labelMobile",
+  online: "marketing:listBusiness.step2.attributes.labelOnline",
+};
+
+/** "What's true about this place": every attribute the listing's kind and
+ *  categories are offered, uncapped (see ListingAttributePicker). */
+export function StepStoryAttributesField({ form }: { form: ListingForm }) {
   const { t } = useTranslation();
-  const { draft, addTag, removeTag } = form;
+  const { draft, toggleAttribute } = form;
+  const kind = listingKindOf(draft);
+  // The picker is a custom child FormField leaves unwired, so the search
+  // box names the helper itself.
+  const helperId = useId();
   return (
     <FormField
       className={styles.lbField}
-      id={ANCHOR.tags}
-      label={t("marketing:listBusiness.step2.tagsLabel")}
+      id={ANCHOR.attributes}
+      label={t(ATTRIBUTE_LABEL_KEYS[kind])}
+      helper={t("marketing:listBusiness.step2.attributes.helper")}
+      helperId={helperId}
     >
-      <ListingTagPicker
-        tags={draft.tags}
-        kind={listingKindOf(draft)}
-        onAdd={addTag}
-        onRemove={removeTag}
+      <ListingAttributePicker
+        attributes={draft.attributes ?? []}
+        kind={kind}
+        cats={draft.cats}
+        describedBy={helperId}
+        isNewDraft={isNewListingDraft(draft)}
+        onToggle={toggleAttribute}
       />
     </FormField>
   );

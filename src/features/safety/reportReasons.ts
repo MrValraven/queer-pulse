@@ -92,7 +92,11 @@ export type ReportSubjectType =
   // a different table, so a group room had no report control at all. Mirrors
   // the backend `ReportSubjectType.GroupListing`, backed by migration
   // `AddGroupListingReportSubject1829500200000`.
-  | "group_listing";
+  | "group_listing"
+  // Studio v1 (2026-10-08): ONE published Studio release, addressed by its
+  // uuid. Staff take it down and restore it from the report drawer's Studio
+  // panel. Mirrors the backend `ReportSubjectType.StudioRelease`.
+  | "studio_release";
 
 export type ReasonCode =
   | "outing"
@@ -123,6 +127,8 @@ export type ReasonCode =
   // blank title on a live row.
   | "listing_dispute"
   | "listing_owner_notify"
+  // Someone else's music or artwork used without permission (Studio v1).
+  | "copyright"
   | "other";
 
 /** Stable code → human label. Labels are the only thing that gets localized. */
@@ -148,6 +154,7 @@ export const REASON_LABELS: Record<ReasonCode, string> = {
   // lookup is total, never offered as a report option.
   listing_dispute: "Dispute or claim of a business listing",
   listing_owner_notify: "Owner outreach: suggested listing",
+  copyright: "Uses someone else's music or artwork without permission",
   other: "Something else, explained in detail",
 };
 
@@ -179,6 +186,7 @@ export const REASON_LABEL_KEYS: Record<ReasonCode, string> = {
   off_platform: "safety:reason.offPlatform",
   listing_dispute: "safety:reason.listingDispute",
   listing_owner_notify: "safety:reason.listingOwnerNotify",
+  copyright: "safety:reason.copyright",
   other: "safety:reason.other",
 };
 
@@ -518,6 +526,22 @@ export const SUBJECT_REASONS: Record<ReportSubjectType, ReasonCode[]> = {
     "discrimination",
     "off_platform",
     "harassment",
+    "other",
+  ],
+  // A Studio release (Studio v1). Order as the backend's reason catalogue
+  // lists it, plus `copyright` (coordinator amendment, 2026-10-08): someone
+  // else's music or cover art used without permission. `outing` and
+  // `doxxing` are here because lyrics and liner notes can name people. The
+  // live list comes from GET /reports/reasons; this is the fallback.
+  studio_release: [
+    "outing",
+    "doxxing",
+    "harassment",
+    "hate_speech",
+    "impersonation",
+    "copyright",
+    "discrimination",
+    "spam",
     "other",
   ],
 };

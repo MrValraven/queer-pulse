@@ -92,6 +92,43 @@ describe("changedFieldLabelKeys", () => {
       `${PREFIX}.field.social`,
     ]);
   });
+
+  it("names every attribute and fact field the audit can record", () => {
+    expect(
+      changedFieldLabelKeys([
+        "attributes",
+        "highlights",
+        "entryMode",
+        "coverPolicy",
+        "coverFreeBefore",
+        "payments",
+        "issuesNifInvoices",
+        "inclusionPractices",
+        "saferSpacePolicyUrl",
+        "langsOther",
+      ]),
+    ).toEqual(
+      [
+        "attributes",
+        "highlights",
+        "entryMode",
+        "coverPolicy",
+        "coverFreeBefore",
+        "payments",
+        "issuesNifInvoices",
+        "inclusionPractices",
+        "saferSpacePolicyUrl",
+        "langsOther",
+      ].map((field) => `${PREFIX}.field.${field}`),
+    );
+  });
+
+  it("still names the retired tags on an old history row", () => {
+    expect(changedFieldLabelKeys(["tags", "goodFor"])).toEqual([
+      `${PREFIX}.field.tags`,
+      `${PREFIX}.field.goodFor`,
+    ]);
+  });
 });
 
 describe("historyActorLabel", () => {

@@ -20,11 +20,9 @@ const basePlace: DirectoryPlace = {
   tint: "coral",
   desc: "A creative studio for queer artists.",
   tagline: "A creative studio for queer artists.",
-  pills: [],
   rating: { score: "0", count: 0 },
   gallery: [],
   whatItIs: [],
-  goodFor: [],
   hoursType: "studio",
   hoursNote: "",
   owner: {
@@ -156,7 +154,7 @@ describe("schema builders", () => {
         },
         social: { phone: "+351 21 000 0000" },
         rating: { score: "4.8", count: 12 },
-        pills: ["Wheelchair access", "€€"],
+        price: "€€",
       },
       "https://queerpulse.com/local/directory/atelier-pulso",
     );
@@ -173,5 +171,13 @@ describe("schema builders", () => {
       reviewCount: 12,
     });
     expect(schema.priceRange).toBe("€€");
+  });
+
+  it("leaves priceRange out for a free listing", () => {
+    const schema = buildLocalBusinessSchema(
+      { ...basePlace, price: "Free" },
+      "https://queerpulse.com/local/directory/atelier-pulso",
+    );
+    expect(schema.priceRange).toBeUndefined();
   });
 });

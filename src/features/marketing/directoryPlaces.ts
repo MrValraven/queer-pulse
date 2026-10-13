@@ -24,6 +24,12 @@ import {
 } from "./listBusiness/listingOnline.data";
 import type { DirectoryShopItem } from "./listBusiness/listingShop.data";
 import type { ListingMobileDetails } from "./listBusiness/listingMobile.data";
+import type {
+  ListingCoverPolicy,
+  ListingEntryMode,
+  ListingInclusionPractice,
+  ListingPaymentMethod,
+} from "./listBusiness/listingFacts.data";
 import { ONLINE_DIRECTORY_PLACES } from "./directoryOnlinePlaces.data";
 import { MOBILE_DIRECTORY_PLACES } from "./directoryMobilePlaces.data";
 
@@ -85,17 +91,17 @@ export interface Owner {
   first: string;
   /** The owner's public profile slug, for the "View profile" deep link. Present
    * only when they linked a public profile; absent/null otherwise (the link then
-   * falls back to the members index). Resolved server-side from the owner id —
-   * never a display name. */
+   * falls back to the members index). Resolved server-side from the owner id,
+   * never from a display name. */
   slug?: string | null;
-  /** The owner's real profile photo, for the "Who runs it" card — same
+  /** The owner's real profile photo, for the "Who runs it" card, with the same
    * gating as `slug` (public + profile-linked only). Absent/null falls back
    * to the tinted `initials` avatar. */
   avatarUrl?: string | null;
 }
 
 /** The listing owner's single public reply to a review, shown beneath it.
- * Mirrors the backend's `ReviewOwnerReplyDTO` — absent/`null` until the owner
+ * Mirrors the backend's `ReviewOwnerReplyDTO`: absent/`null` until the owner
  * posts one via `PATCH /listings/:ref/reviews/:reviewId/reply`. */
 export interface ReviewOwnerReply {
   text: string;
@@ -103,7 +109,7 @@ export interface ReviewOwnerReply {
 }
 
 export interface Review {
-  /** Stable id — the review's uuid PK live, a `<slug>-review-<n>` token in the
+  /** Stable id: the review's uuid PK live, a `<slug>-review-<n>` token in the
    * demo fixture. Targets `useReplyToReview`'s PATCH endpoint. */
   id: string;
   initials: string;
@@ -115,7 +121,7 @@ export interface Review {
   helpful: number;
   /** ISO-8601 timestamp of when the review was posted. Live payloads always
    * carry it; the demo fixture has none, so every display path must treat an
-   * absent value as "no date to show" rather than rendering an Invalid Date. */
+   * absent value as "no date to show" and never render an Invalid Date. */
   createdAt?: string;
   /** ISO-8601 timestamp of the reviewer's last edit, or `null`/absent when the
    * review has never been edited. Drives the quiet "edited" marker. */
@@ -123,7 +129,7 @@ export interface Review {
   /**
    * Precomputed server-side: the reviewer changed their words AFTER the owner
    * had already replied, so the reply may be answering text nobody can read
-   * any more. Never re-derive this from `editedAt` vs `ownerReply.at` — the
+   * any more. Never re-derive this from `editedAt` vs `ownerReply.at`: the
    * server owns the comparison (clock skew, reply overwrites, moderation
    * edits), the frontend only renders it.
    */
@@ -144,7 +150,7 @@ export interface Review {
 /**
  * Who wrote the public answer under a question. `"owner"` is the business
  * itself; `"moderator"` is a QueerPulse moderator stepping in. The two are
- * never presented the same way — a moderator's words must never read as the
+ * never presented the same way: a moderator's words must never read as the
  * business speaking (see `DirectoryQuestionAnswer`). `null` alongside a `null`
  * `answer` simply means nobody has answered yet, which is a normal state.
  */
@@ -200,7 +206,7 @@ export interface MovedToListingView {
  * A one-off override of the weekly grid for a single calendar date: either a
  * closure or a set of special hours. `open: false` means CLOSED that day (the
  * `intervals` are then ignored); `open: true` with intervals means the venue
- * runs those hours instead of its usual weekday row. Dates are `"YYYY-MM-DD"`
+ * runs those hours in place of its usual weekday row. Dates are `"YYYY-MM-DD"`
  * in the venue's own timezone, so they sort and compare as plain strings.
  */
 export interface ListingHoursException {
@@ -213,12 +219,12 @@ export interface ListingHoursException {
 export interface DirectoryPlace {
   /* ---- card ---- */
   slug: string;
-  /** The listing's real DB uuid — the id a cross-entity FK (e.g. a gathering's
+  /** The listing's real DB uuid: the id a cross-entity FK (e.g. a gathering's
    * venue link, `Event.listingId`) targets. Present for live business
    * listings (from `GET /directory`); absent for the static demo fixture
    * below, which has no real row to point at. */
   id?: string;
-  /** Human-readable business reference (e.g. `QPL-2026-0007`) — the id every
+  /** Human-readable business reference (e.g. `QPL-2026-0007`): the id every
    * listing MUTATION path is keyed by (`/listings/:ref/...`, incl. the dispute
    * endpoint). Distinct from `slug` (the cosmetic public URL id). Absent for
    * demo places and until the detail DTO carries it; the dispute action gates
@@ -242,27 +248,50 @@ export interface DirectoryPlace {
   desc: string;
   /* ---- detail ---- */
   tagline: string;
-  pills: string[];
   rating: { score: string; count: number };
   gallery: string[];
   whatItIs: string[];
-  /** Atmosphere tags (dog-friendly, solo-friendly and the like). Access claims
-   * are NOT in here: they live in `accessibility`, which can answer no. */
-  goodFor: { label: string; yes: boolean }[];
+  /** The price band ("Free", "€" to "€€€"), "" when the listing gives none:
+   *  the card's first pill and the header's. Absent on older rows. */
+  price?: string;
+  /** Attribute slugs. The card's payload leaves the sensitive ones out; the
+   *  detail payload and the demo fixtures carry every one. */
+  attributes?: string[];
+  /** Up to three of `attributes` for the card. */
+  highlights?: string[];
+  entryMode?: ListingEntryMode | null;
+  /** Detail only: entry for nightlife and culture. */
+  coverPolicy?: ListingCoverPolicy | null;
+  /** Detail only: "HH:MM" with `coverPolicy: "freeBefore"`. */
+  coverFreeBefore?: string | null;
+  payments?: ListingPaymentMethod[];
+  /** Detail only: invoices with the customer's NIF; null is not said. */
+  issuesNifInvoices?: boolean | null;
+  inclusionPractices?: ListingInclusionPractice[];
+  /** Detail only: the published safer-space policy (with `https://`). */
+  saferSpacePolicyUrl?: string | null;
+  /** Detail only: languages outside the codes, as the owner wrote them. */
+  langsOther?: string;
+  /** Has run, or been the confirmed venue of, a public gathering in the
+   *  last 180 days or coming up (server side). Demo fixtures set it by hand. */
+  hostsGatherings?: boolean;
+  /** Every category the listing carries (amendment 1). Demo fixtures leave
+   *  it unset; readers fall back to `[cat]`. */
+  cats?: string[];
   /** The venue's structured accessibility answers plus its free-text note.
    * All six questions always arrive, `unknown` included. Absent on demo
    * fixtures and older payloads, which simply show no accessibility section. */
   accessibility?: ListingAccessibilityView;
   /** What the business sells and what it costs, in the owner's own words.
-   * Absent/empty when it prices nothing; the `pills` price band is unchanged. */
+   * Absent/empty when it prices nothing; the price band is unchanged. */
   services?: ListingServiceOffering[];
   /** Which priced list the page shows. Absent means services. */
   pricingMode?: ListingPricingMode;
   /** The menu, with `file.url` already resolved. Absent when there is none. */
   menu?: ListingMenu;
   /** The listing's agreement to the affirming baseline. Carried so the record
-   * is complete; the page states the commitment for the whole directory rather
-   * than reading this per listing. */
+   * is complete; the page states the commitment once for the whole directory
+   * and never reads this per listing. */
   affirmingBaseline?: AffirmingBaselineView;
   /** Who confirmed the queer-owned badge, when, and on what basis. Read
    * `queerOwnedVerified` for whether the badge currently applies. */
@@ -293,7 +322,7 @@ export interface DirectoryPlace {
    * correct regardless of the visitor's own timezone. Absent → Europe/Lisbon. */
   timezone?: string;
   /** Online-only business (no physical location). When true the card shows an
-   * "Online" badge instead of a neighbourhood and the place never pins the map. */
+   * "Online" badge in place of a neighbourhood and the place never pins the map. */
   online?: boolean;
   /** A place that also sells online. It keeps its door, categories and hours,
    *  and gains the "Also online" pill and the ordering block. Absent means no. */
@@ -354,13 +383,14 @@ export interface DirectoryPlace {
   movedToListing?: MovedToListingView | null;
   /** ISO-8601 timestamp the owner last confirmed the practical details (hours,
    * address, contacts) are still correct. `null`/absent ⇒ never confirmed, and
-   * the page says so rather than implying freshness it can't vouch for. */
+   * the page says so and never implies freshness it can't vouch for. */
   detailsConfirmedAt?: string | null;
+  /** Language codes ("pt", "pt-BR"). */
   langs?: string[];
   /** `slug` deep-links to the Events Hub (`/events/:slug`); `id` is the DB PK,
    * present when the source event carries one. `startAt` is the raw ISO
-   * start (local floating time, no timezone offset) — present on live data
-   * and seeded on demo fixtures — and powers the add-to-calendar links;
+   * start (local floating time, no timezone offset), present on live data
+   * and seeded on demo fixtures, and powers the add-to-calendar links;
    * absent means the calendar affordance is skipped gracefully. */
   upcoming?: {
     when: string;
@@ -376,19 +406,19 @@ export interface DirectoryPlace {
   /**
    * The most recent public questions on this listing (newest first, capped at
    * 10 by the detail endpoint). Absent on demo fixtures and on submitted
-   * drafts, which the Q&A section reads as "no questions yet" — a normal,
+   * drafts, which the Q&A section reads as "no questions yet": a normal,
    * unremarkable state, never an error.
    */
   questions?: ListingPublicQuestion[];
-  /** Count of members who saved this listing — backend-only field. Absent for
+  /** Count of members who saved this listing (a backend-only field). Absent for
    * most demo places (the "hidden when absent" path); a few carry a seeded
    * value so the trust signal is visible in demo mode too. */
   savedCount?: number;
   /**
-   * Safe-space trust block — present alongside `safeSpaceStatus`/
+   * Safe-space trust block, present alongside `safeSpaceStatus`/
    * `safeSpaceTier` when this listing has ever been a verified/removed safe
    * space; absent for demo places, submitted drafts, and never-reviewed live
-   * listings. `safeSpaceVouches` are RAW (no `initials`/`tint` — see
+   * listings. `safeSpaceVouches` are RAW (no `initials`/`tint`; see
    * `directorySafeSpace.adapters.ts`, which derives those client-side for the
    * reused safety detail components).
    */
@@ -437,7 +467,14 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     desc: "Graphic design studio specialising in brand identity and editorial work for cultural institutions and small presses. Open by appointment.",
     tagline:
       "A queer design studio for the people making culture in this city.",
-    pills: ["Design studio", "By appointment", "€€", "Step-free entrance"],
+    price: "€€",
+    attributes: ["made-to-order", "custom-commissions", "local-makers"],
+    highlights: ["custom-commissions", "made-to-order"],
+    entryMode: "appointmentOnly",
+    payments: ["card", "mbway"],
+    issuesNifInvoices: true,
+    inclusionPractices: ["chosen-name"],
+    langs: ["pt", "en"],
     rating: { score: "4.9", count: 23 },
     gallery: [
       "Studio · main desk",
@@ -448,12 +485,6 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     whatItIs: [
       "Inês runs Atelier Pulso as a one-and-a-half-person studio doing brand identity and editorial design, mostly for cultural institutions, small presses, and queer projects that need to look as serious as they are.",
       "It is genuinely open by appointment: message ahead and you can come look at the print archive, talk about a project, or just see how a real working studio runs. Riso and letterpress on site.",
-    ],
-    goodFor: [
-      { label: "Brand identity for a queer project", yes: true },
-      { label: "Editorial & book design", yes: true },
-      { label: "Seeing a working print archive", yes: true },
-      { label: "Quick same-day jobs", yes: false },
     ],
     hoursType: "appointment",
     hoursNote: "Open by appointment. Message to arrange a time.",
@@ -507,7 +538,20 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     desc: "Monthly intimate dinners hosted by Tomás Beto: twelve seats, seasonal menu, honest cooking. The most important table in Mouraria.",
     tagline:
       "Twelve seats, one long table, and the best night out you can have sitting down.",
-    pills: ["Supper club", "Monthly · ticketed", "€€€", "Dietary-friendly"],
+    price: "€€€",
+    attributes: [
+      "vegan-options",
+      "vegetarian-options",
+      "solo-friendly",
+      "hosts-events",
+      "alcohol-free-drinks",
+    ],
+    highlights: ["solo-friendly", "vegan-options", "hosts-events"],
+    entryMode: "bookingRecommended",
+    payments: ["card", "mbway"],
+    inclusionPractices: ["chosen-name", "named-contact"],
+    langs: ["pt", "en"],
+    hostsGatherings: true,
     rating: { score: "5.0", count: 41 },
     savedCount: 27,
     gallery: [
@@ -519,12 +563,6 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     whatItIs: [
       "Once a month Tomás Beto opens his Mouraria home and cooks a seasonal menu for twelve strangers who leave as something closer to friends. No menu choices, no separate tables: one seating, one conversation.",
       "Tickets go fast and the list is half community, half newcomers placed deliberately next to people they should meet. Tell him your dietary needs when you book and they're simply handled.",
-    ],
-    goodFor: [
-      { label: "Meeting people without the bar", yes: true },
-      { label: "A special-occasion dinner", yes: true },
-      { label: "Solo diners (you'll be seated well)", yes: true },
-      { label: "Walk-ins: it's ticketed only", yes: false },
     ],
     hoursType: "appointment",
     hoursNote: "Monthly seatings. Book a seat for the next dinner.",
@@ -545,7 +583,7 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
         title: "June dinner: early summer, the market decides",
         // Maps to the real demo gathering "Queer Supper Club №12" (same
         // host, Tomás) so the deep link resolves to a real event page
-        // instead of gatheringDetails' silent default fallback.
+        // and skips gatheringDetails' silent default fallback.
         slug: "supper-club-12",
         startAt: "2026-06-21T20:00:00",
       },
@@ -605,18 +643,21 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     tint: P,
     desc: "Functional ceramics with a slow aesthetic, sold online: mugs, plates and the odd commissioned set, posted anywhere in Portugal.",
     tagline: "Slow, functional ceramics, sold online and posted to your door.",
-    pills: ["Ceramics", "Online shop", "€€", "Ships in Portugal"],
+    price: "€€",
+    attributes: [
+      "made-to-order",
+      "custom-commissions",
+      "gift-cards",
+      "good-for-gifts",
+    ],
+    highlights: ["made-to-order", "good-for-gifts"],
+    issuesNifInvoices: true,
+    langs: ["pt", "en"],
     rating: { score: "4.8", count: 19 },
     gallery: ["The wheel", "Drying shelves", "Packing table", "Glaze tests"],
     whatItIs: [
       "Beatriz makes functional ceramics (mugs, plates, the odd commission) with an unhurried hand, and sells every piece through her own online shop, packed by hand and posted to your door.",
       "A new batch goes up once a month and tends to go quickly. Commissions are open for sets, and she answers questions about sizes, glazes and dishwashers by email or in a QueerPulse message.",
-    ],
-    goodFor: [
-      { label: "Everyday mugs and plates", yes: true },
-      { label: "Commissioning a set", yes: true },
-      { label: "Gifts posted anywhere in Portugal", yes: true },
-      { label: "Picking up in person", yes: false },
     ],
     hoursType: "studio",
     hoursNote: "A new batch monthly. Commissions by email.",
@@ -636,7 +677,6 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     },
     address: "",
     online: true,
-    langs: ["pt", "en"],
     reviews: [
       {
         id: "estudio-beatriz-pinto-review-1",
@@ -671,23 +711,27 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     desc: "LGBTQ+-affirming mental health support: therapy, peer groups, crisis support. Sliding scale fees. Portuguese and English.",
     tagline:
       "Mental health support that doesn't make you explain yourself first.",
-    pills: [
-      "Mental health",
-      "Sliding scale",
-      "PT / EN",
-      "Wheelchair-accessible",
+    price: "€",
+    attributes: [
+      "online-consultations",
+      "same-week-appointments",
+      "trans-care-experience",
+      "sexual-health-prep",
+      "sliding-scale",
     ],
+    highlights: ["sliding-scale", "online-consultations"],
+    entryMode: "appointmentOnly",
+    payments: ["card", "mbway", "multibanco"],
+    issuesNifInvoices: true,
+    inclusionPractices: ["chosen-name", "safer-space-policy", "named-contact"],
+    saferSpacePolicyUrl: "https://marelilas.pt/espaco-seguro",
+    langs: ["pt", "en"],
+    hostsGatherings: true,
     rating: { score: "4.9", count: 88 },
     gallery: ["Reception", "Therapy room", "Group room", "Intendente entrance"],
     whatItIs: [
       "Maré Lilás is an LGBTQ+-affirming mental health practice offering individual therapy, peer-support groups, and crisis support, with clinicians who are trained in, and many of whom share, queer and trans experience.",
       "Fees are sliding-scale and nobody is turned away for money. Sessions run in Portuguese and English, and the trans-care pathway is genuinely competent rather than improvised.",
-    ],
-    goodFor: [
-      { label: "Affirming individual therapy", yes: true },
-      { label: "Peer-support groups", yes: true },
-      { label: "Sliding-scale / low-cost care", yes: true },
-      { label: "Same-day emergency cover", yes: false },
     ],
     hoursType: "clinic",
     hoursNote: "Mon–Sat by appointment. Crisis line outside hours.",
@@ -750,7 +794,23 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     desc: "Queer-run independent bookshop with a strong feminist and LGBTQ+ section. Regular readings, launches, and community events.",
     tagline:
       "The bookshop that keeps the section you came for right at the front.",
-    pills: ["Bookshop", "Events space", "€€", "Step-free"],
+    price: "€€",
+    attributes: [
+      "lgbtq-section",
+      "readings-and-talks",
+      "book-club",
+      "second-hand",
+      "hosts-events",
+    ],
+    highlights: ["lgbtq-section", "readings-and-talks", "book-club"],
+    entryMode: "walkIn",
+    coverPolicy: "free",
+    payments: ["card", "mbway", "cash"],
+    issuesNifInvoices: true,
+    inclusionPractices: ["chosen-name", "safer-space-policy"],
+    saferSpacePolicyUrl: "https://livrariabertha.pt/espaco-seguro",
+    langs: ["pt", "en"],
+    hostsGatherings: true,
     rating: { score: "4.9", count: 54 },
     gallery: [
       "Front table",
@@ -761,12 +821,6 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     whatItIs: [
       "Bertha is a small queer-run independent bookshop where the feminist and LGBTQ+ titles hold the front table, curated by people who've read them.",
       "Most weeks there's a reading, a launch, or a book club squeezed between the stacks. The staff recommendations are dangerous to your wallet and good for your soul.",
-    ],
-    goodFor: [
-      { label: "Finding queer & feminist titles", yes: true },
-      { label: "Readings and launches", yes: true },
-      { label: "A staff recommendation", yes: true },
-      { label: "A huge mainstream selection", yes: false },
     ],
     hoursType: "shop",
     hoursNote: "Open Tue–Sun. Event nights run later.",
@@ -855,7 +909,6 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
       Sat: { open: true, from: "10:00", to: "21:00" },
       Sun: { open: true, from: "12:00", to: "18:00" },
     }),
-    langs: ["pt", "en"],
     safeSpaceStatus: "verified",
     safeSpaceTier: 2,
     // Demo fixture for a badge that STILL STANDS and is past its yearly check.
@@ -949,7 +1002,13 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     tint: J,
     desc: "Family-run café known among the community for warmth and a complete absence of hostility. Excellent pastéis.",
     tagline: "A sixty-year-old family café that quietly became one of ours.",
-    pills: ["Café · pastelaria", "Daily", "€", "Ground floor"],
+    price: "€",
+    attributes: ["takeaway", "kid-friendly", "vegetarian-options", "terrace"],
+    highlights: ["terrace", "takeaway"],
+    entryMode: "walkIn",
+    payments: ["card", "multibanco", "cash"],
+    issuesNifInvoices: true,
+    langs: ["pt"],
     rating: { score: "4.7", count: 36 },
     gallery: [
       "The counter",
@@ -960,12 +1019,6 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     whatItIs: [
       "Mouraria Velha isn't a queer business and would never call itself one. It's a family pastelaria that's been on the corner for sixty years. What it is, is reliably, unremarkably kind to everyone who walks in.",
       "The community adopted it for exactly that: no second glances, no misgendering, just a galão, a warm pastel de nata, and the dona who remembers your order. Sometimes the bar is simply that.",
-    ],
-    goodFor: [
-      { label: "A no-stress neighbourhood coffee", yes: true },
-      { label: "Bringing visiting family", yes: true },
-      { label: "Cheap, excellent pastéis", yes: true },
-      { label: "Late nights: closes early", yes: false },
     ],
     hoursType: "cafe",
     hoursNote: "Open daily, early. Closes by evening.",
@@ -1092,18 +1145,18 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     tint: J,
     desc: "Music production studio available for session hire. Diogo and the team specialise in electronic and experimental work.",
     tagline: "A queer-run music studio where experimental isn't a dirty word.",
-    pills: ["Music studio", "Session hire", "€€", "Lift access"],
+    price: "€€",
+    attributes: ["repairs", "beginner-help", "sliding-scale"],
+    highlights: ["beginner-help", "sliding-scale"],
+    entryMode: "appointmentOnly",
+    payments: ["card", "mbway"],
+    issuesNifInvoices: true,
+    langs: ["pt", "en"],
     rating: { score: "4.8", count: 27 },
     gallery: ["The desk", "Live room", "Modular wall", "Bairro Alto rooftop"],
     whatItIs: [
       "Diogo runs a session-hire production studio leaning electronic and experimental, kitted with a serious modular wall and a live room that punches above the building it's in.",
       "Rates are fair, and community members get priority booking and a sliding scale for first records. You can hire it with or without Diogo and the team engineering.",
-    ],
-    goodFor: [
-      { label: "Recording an electronic record", yes: true },
-      { label: "Mixing & mastering", yes: true },
-      { label: "First-record sliding scale", yes: true },
-      { label: "Loud live bands at 3am", yes: false },
     ],
     hoursType: "appointment",
     hoursNote: "Session hire by booking, day and night slots.",
@@ -1156,18 +1209,25 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     desc: "Community coworking space, explicitly LGBTQ+-friendly. Day passes and monthly desks at accessible prices.",
     tagline:
       'A coworking space that put "LGBTQ+-friendly" in writing and meant it.',
-    pills: ["Coworking", "Day passes", "€", "Wheelchair-accessible"],
+    price: "€",
+    attributes: [
+      "wifi",
+      "laptop-friendly",
+      "quiet-room",
+      "kitchen-access",
+      "open-to-non-members",
+    ],
+    highlights: ["wifi", "quiet-room", "open-to-non-members"],
+    entryMode: "walkIn",
+    payments: ["card", "mbway"],
+    issuesNifInvoices: true,
+    inclusionPractices: ["chosen-name", "named-contact"],
+    langs: ["pt", "en", "es"],
     rating: { score: "4.6", count: 31 },
     gallery: ["Open floor", "Quiet room", "Kitchen", "Intendente square"],
     whatItIs: [
       "Espaço Intendente is a community coworking space, not queer-owned, but one that wrote an explicit inclusion policy, trained its staff, and de-gendered its bathrooms before anyone asked.",
       "Day passes are cheap, monthly desks are accessible, and the noticeboard is half freelance gigs and half queer events. A solid, low-drama place to actually get work done.",
-    ],
-    goodFor: [
-      { label: "Affordable day-pass desk", yes: true },
-      { label: "A quiet room for calls", yes: true },
-      { label: "Meeting other queer freelancers", yes: true },
-      { label: "24-hour access", yes: false },
     ],
     hoursType: "gym",
     hoursNote: "Open Mon–Sat, generous hours.",
@@ -1260,19 +1320,25 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     desc: "Queer-owned natural wine bar and small plates restaurant. Natural wine list, seasonal kitchen, generous hospitality.",
     tagline:
       "Natural wine, small plates, and a room that wants you to stay one more glass.",
-    pills: ["Wine bar · small plates", "Evenings", "€€€", "Ground floor"],
+    price: "€€€",
+    attributes: [
+      "vegetarian-options",
+      "alcohol-free-drinks",
+      "kitchen-open-late",
+      "terrace",
+    ],
+    highlights: ["kitchen-open-late", "alcohol-free-drinks"],
+    entryMode: "bookingRecommended",
+    payments: ["card", "mbway"],
+    issuesNifInvoices: true,
+    inclusionPractices: ["chosen-name"],
+    langs: ["pt", "en"],
     rating: { score: "4.8", count: 49 },
     savedCount: 18,
     gallery: ["The bar", "Small plates", "Wine wall", "Arroios corner"],
     whatItIs: [
       "A Farinha is a queer-owned natural wine bar and small-plates kitchen in Arroios: a short, seasonal menu, a long, opinionated wine list, and staff who actually want to talk you through it.",
       "It's the place for a second date, a celebration, or a slow Tuesday that turns into something. Tell them what you like and let them pour; they rarely miss.",
-    ],
-    goodFor: [
-      { label: "A great second date", yes: true },
-      { label: "Natural wine guidance", yes: true },
-      { label: "Celebrating something", yes: true },
-      { label: "A quick cheap bite", yes: false },
     ],
     hoursType: "bar",
     hoursNote: "Evenings, Tue–Sun. Closed Mondays.",
@@ -1323,7 +1389,6 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
       Sat: { open: true, from: "18:00", to: "02:00" },
       Sun: { open: true, from: "16:00", to: "23:00" },
     }),
-    langs: ["pt", "en"],
     safeSpaceStatus: "verified",
     safeSpaceTier: 3,
     safeSpaceVerifier: "Mod team · 3 visits",
@@ -1396,7 +1461,14 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     tint: J,
     desc: "Portrait photography studio. Analog film, medium format, studio on site. Priority allocation for community members.",
     tagline: "Analog portraits that see you the way you'd like to be seen.",
-    pills: ["Photography", "By appointment", "€€", "Lift access"],
+    price: "€€",
+    attributes: ["custom-commissions", "made-to-order"],
+    highlights: ["custom-commissions"],
+    entryMode: "appointmentOnly",
+    payments: ["card", "mbway"],
+    issuesNifInvoices: true,
+    inclusionPractices: ["chosen-name"],
+    langs: ["pt", "en", "fr"],
     rating: { score: "5.0", count: 22 },
     gallery: [
       "Shooting space",
@@ -1407,12 +1479,6 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     whatItIs: [
       "André shoots portraits on analog film (medium format, real grain, a studio on site) and is unusually good at the thing portrait photographers claim and rarely deliver: making people feel safe enough to look like themselves.",
       "Community members get priority booking and a sliding scale, and he keeps a standing offer for free affirming portraits during transition milestones. Just ask.",
-    ],
-    goodFor: [
-      { label: "Affirming portrait sessions", yes: true },
-      { label: "Analog / medium-format film", yes: true },
-      { label: "Transition milestone portraits", yes: true },
-      { label: "Same-week digital turnaround", yes: false },
     ],
     hoursType: "appointment",
     hoursNote: "Portrait sessions by appointment.",
@@ -1465,12 +1531,18 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     desc: "General practice with two LGBTQ+-affirming GPs and a trans-competent endocrinologist. Accepts SNS referrals.",
     tagline:
       "A regular GP practice where you don't have to brace before the appointment.",
-    pills: [
-      "GP · endocrinology",
-      "SNS referrals",
-      "€€",
-      "Wheelchair-accessible",
+    price: "€€",
+    attributes: [
+      "takes-insurance",
+      "trans-care-experience",
+      "same-week-appointments",
     ],
+    highlights: ["takes-insurance", "same-week-appointments"],
+    entryMode: "appointmentOnly",
+    payments: ["card", "multibanco"],
+    issuesNifInvoices: true,
+    inclusionPractices: ["chosen-name"],
+    langs: ["pt", "en"],
     rating: { score: "4.7", count: 63 },
     gallery: [
       "Reception",
@@ -1481,12 +1553,6 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     whatItIs: [
       "Clínica da Estrela is an ordinary general practice that happens to have two genuinely LGBTQ+-affirming GPs and a trans-competent endocrinologist on its books. In this city, that's anything but ordinary.",
       "It accepts SNS referrals and private appointments, and the front desk has been briefed so the first hurdle, being booked in under the right name, isn't a hurdle at all.",
-    ],
-    goodFor: [
-      { label: "An affirming regular GP", yes: true },
-      { label: "Trans-competent endocrinology", yes: true },
-      { label: "SNS-referral appointments", yes: true },
-      { label: "Walk-in urgent care", yes: false },
     ],
     hoursType: "clinic",
     hoursNote: "Mon–Sat by appointment. Closed Sundays.",
@@ -1559,18 +1625,26 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     desc: "Artist-run gallery in a Marvila warehouse. Programming focuses on queer and feminist artists, emphasis on emerging work.",
     tagline:
       "A warehouse gallery that bets on queer artists before the market does.",
-    pills: ["Gallery", "Free entry", "€", "Step-free · large"],
+    price: "€",
+    attributes: [
+      "exhibitions",
+      "readings-and-talks",
+      "screenings",
+      "english-subtitles",
+    ],
+    highlights: ["exhibitions", "english-subtitles"],
+    entryMode: "walkIn",
+    coverPolicy: "free",
+    payments: ["card", "cash"],
+    inclusionPractices: ["chosen-name", "safer-space-policy"],
+    saferSpacePolicyUrl: "https://galerialume.pt/politica",
+    langs: ["pt", "en"],
+    hostsGatherings: true,
     rating: { score: "4.8", count: 28 },
     gallery: ["Main hall", "Current show", "Project room", "Marvila exterior"],
     whatItIs: [
       "Lume is an artist-run gallery in a Marvila warehouse, programming queer and feminist work with a deliberate bias toward emerging artists who don't yet have a commercial gallery behind them.",
       "Entry is free, the openings are generous, and the project room is often someone's first-ever solo show. It works in partnership with the Rainbow Arts Collective. The collective is frequently where Lume's next show begins.",
-    ],
-    goodFor: [
-      { label: "Seeing emerging queer art", yes: true },
-      { label: "Generous, social openings", yes: true },
-      { label: "A first solo show as an artist", yes: true },
-      { label: "Buying blue-chip names", yes: false },
     ],
     hoursType: "gallery",
     hoursNote: "Open Wed–Sun afternoons. Openings run late.",
@@ -1650,7 +1724,18 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     desc: "Queer-owned barbershop known for trans haircuts done right. No awkward questions. No gendered pricing.",
     tagline:
       "A barbershop where the cut you ask for is the cut you get. No negotiation.",
-    pills: ["Barbershop", "Walk-in & booking", "€€", "Ground floor"],
+    price: "€€",
+    attributes: [
+      "priced-by-service",
+      "shaves-and-beards",
+      "curly-textured-hair",
+    ],
+    highlights: ["priced-by-service", "shaves-and-beards"],
+    entryMode: "walkIn",
+    payments: ["card", "mbway", "cash"],
+    issuesNifInvoices: true,
+    inclusionPractices: ["chosen-name"],
+    langs: ["pt", "en"],
     rating: { score: "5.0", count: 71 },
     savedCount: 41,
     gallery: [
@@ -1662,12 +1747,6 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     whatItIs: [
       "Navalha is a queer-owned barbershop that built its reputation on the thing a lot of barbers fumble: giving trans and non-binary clients the haircut they actually asked for, without the interrogation or the flinch.",
       "Pricing is by service, the same whatever your gender or hair length, and the chairs are run by barbers who can talk you through a big change or just give you the usual in comfortable quiet.",
-    ],
-    goodFor: [
-      { label: "Trans & non-binary cuts done right", yes: true },
-      { label: "A first big chop, held gently", yes: true },
-      { label: "Gender-neutral pricing", yes: true },
-      { label: "Elaborate colour work", yes: false },
     ],
     hoursType: "shop",
     hoursNote: "Tue–Sat, walk-ins welcome, booking advised.",
@@ -1761,7 +1840,16 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     desc: "Neighbourhood salon adopted by the queer community. Bilingual, trans-welcoming, affordable.",
     tagline:
       "A neighbourhood salon that learned our names and never made it weird.",
-    pills: ["Hair salon", "Affordable", "PT / EN", "Ground floor"],
+    price: "€",
+    attributes: [
+      "priced-by-service",
+      "curly-textured-hair",
+      "colour-specialist",
+    ],
+    highlights: ["priced-by-service"],
+    entryMode: "walkIn",
+    payments: ["cash"],
+    langs: ["pt", "pt-BR", "kea"],
     rating: { score: "4.6", count: 33 },
     gallery: [
       "Salon floor",
@@ -1772,12 +1860,6 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     whatItIs: [
       "Salão Mouraria isn't a queer business. It's a long-standing neighbourhood salon whose owner simply treats trans and queer clients with the same easy warmth as everyone else, and got recommended around until it became one of ours.",
       "It's affordable, bilingual enough, and unbothered. Just a reliable, kind local, which is sometimes exactly the thing.",
-    ],
-    goodFor: [
-      { label: "An affordable trim, no fuss", yes: true },
-      { label: "A trans-welcoming local salon", yes: true },
-      { label: "Bilingual service", yes: true },
-      { label: "High-fashion colour", yes: false },
     ],
     hoursType: "shop",
     hoursNote: "Tue–Sat. Booking by phone.",
@@ -1827,7 +1909,20 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     desc: "Gender-neutral pricing on every service, the same whatever your hair length or gender. Clean space, good music.",
     tagline:
       "One price list, no gender column. Revolutionary how rare that still is.",
-    pills: ["Hair studio", "Gender-neutral pricing", "€€", "Step-free"],
+    price: "€€",
+    attributes: [
+      "priced-by-service",
+      "curly-textured-hair",
+      "colour-specialist",
+      "makeup",
+      "private-room",
+    ],
+    highlights: ["priced-by-service", "curly-textured-hair", "private-room"],
+    entryMode: "bookingRecommended",
+    payments: ["card", "mbway"],
+    issuesNifInvoices: true,
+    inclusionPractices: ["chosen-name"],
+    langs: ["pt", "en"],
     rating: { score: "4.9", count: 38 },
     gallery: [
       "The chair",
@@ -1838,12 +1933,6 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     whatItIs: [
       "Studio Cabelo built its whole identity on a quietly radical idea: one price list, by service, full stop. No surcharge for long hair, no men's-versus-women's column, no maths designed to charge women more.",
       "The space is clean, the music is good, and the stylists are skilled across textures and lengths. Come for the principle, stay because the cut is genuinely excellent.",
-    ],
-    goodFor: [
-      { label: "Genuinely gender-neutral pricing", yes: true },
-      { label: "Skilled cuts across all textures", yes: true },
-      { label: "Colour and restyles", yes: true },
-      { label: "A €10 budget trim", yes: false },
     ],
     hoursType: "shop",
     hoursNote: "Tue–Sat. Booking advised.",
@@ -1896,7 +1985,20 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     desc: "The most trans-inclusive gym in the city. Gender-neutral changing rooms on every floor, no body-shaming culture.",
     tagline:
       "A gym you can actually change in, designed by people who'd been driven out of others.",
-    pills: ["Gym", "Memberships", "€€", "Wheelchair-accessible"],
+    price: "€€",
+    attributes: [
+      "memberships",
+      "day-passes",
+      "private-changing",
+      "trans-nonbinary-sessions",
+      "personal-training",
+    ],
+    highlights: ["private-changing", "trans-nonbinary-sessions", "day-passes"],
+    entryMode: "membersOnly",
+    payments: ["card", "multibanco"],
+    issuesNifInvoices: true,
+    inclusionPractices: ["chosen-name", "named-contact"],
+    langs: ["pt", "en"],
     rating: { score: "4.7", count: 52 },
     gallery: [
       "Weights floor",
@@ -1907,12 +2009,6 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     whatItIs: [
       "Academia Livre isn't queer-owned, but it consulted trans members of the community when it refitted, and it shows: gender-neutral, private-stall changing rooms on every floor, a no-body-shaming policy with teeth, and staff trained to enforce it.",
       "It's a normal, well-equipped gym in every other respect, which is the point. The radical part is just being able to work out and shower without strategising.",
-    ],
-    goodFor: [
-      { label: "Changing without strategising", yes: true },
-      { label: "A no-shame training culture", yes: true },
-      { label: "Standard well-equipped gym", yes: true },
-      { label: "Boutique class-only fitness", yes: false },
     ],
     hoursType: "gym",
     hoursNote: "Open daily, early to late.",
@@ -1967,7 +2063,13 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     desc: "Feminist and queer-centred fitness studio. Small classes, no mirrors, no scales. Body-neutral by design.",
     tagline:
       "Fitness without the mirror, the scale, or the voice in your head.",
-    pills: ["Fitness studio", "Class packs", "€€", "Step-free"],
+    price: "€€",
+    attributes: ["class-packs", "beginner-sessions", "drop-in-classes"],
+    highlights: ["beginner-sessions", "class-packs"],
+    entryMode: "bookingRecommended",
+    payments: ["card", "mbway"],
+    inclusionPractices: ["chosen-name"],
+    langs: ["pt", "en"],
     rating: { score: "4.9", count: 44 },
     gallery: [
       "Studio (no mirrors)",
@@ -1978,12 +2080,6 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     whatItIs: [
       "Corpo Livre is a queer- and feminist-centred fitness studio built around small classes and a deliberate absence: no mirrors, no scales, no before-and-after talk. Movement for how it feels in your body.",
       "Classes are capped low so instructors actually know you, and the culture is body-neutral by design rather than by slogan. Strength, mobility, and the radical novelty of not being watched.",
-    ],
-    goodFor: [
-      { label: "Training without mirror anxiety", yes: true },
-      { label: "Small, known classes", yes: true },
-      { label: "A body-neutral culture", yes: true },
-      { label: "Anonymous big-box workouts", yes: false },
     ],
     hoursType: "gym",
     hoursNote: "Class times Mon–Sat. Book a spot.",
@@ -2036,7 +2132,20 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     desc: "Yoga, capoeira, and weights in a converted Alfama warehouse. Queer-run, sliding-scale memberships.",
     tagline:
       "Yoga, capoeira, and iron under one Alfama roof. Pay what you can.",
-    pills: ["Movement studio", "Sliding scale", "€", "Ramp access"],
+    price: "€",
+    attributes: [
+      "drop-in-classes",
+      "sliding-scale",
+      "pay-what-you-can",
+      "beginner-sessions",
+    ],
+    highlights: ["pay-what-you-can", "drop-in-classes"],
+    entryMode: "walkIn",
+    payments: ["mbway", "cash"],
+    inclusionPractices: ["chosen-name", "safer-space-policy"],
+    saferSpacePolicyUrl: "https://movimento.pt/espaco-seguro",
+    langs: ["pt", "en", "es"],
+    hostsGatherings: true,
     rating: { score: "4.8", count: 36 },
     gallery: [
       "Warehouse floor",
@@ -2047,12 +2156,6 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
     whatItIs: [
       "Movimento is a queer-run movement space in a converted Alfama warehouse that refuses to specialise: yoga at dawn, capoeira in the evening, free weights in between, all in one generous room.",
       "Memberships are sliding-scale and nobody checks your maths, so the room ends up genuinely mixed, which is half the point. Come for one discipline, get curious about another.",
-    ],
-    goodFor: [
-      { label: "Mixing yoga, capoeira & weights", yes: true },
-      { label: "Pay-what-you-can access", yes: true },
-      { label: "A genuinely mixed room", yes: true },
-      { label: "Fancy machines & saunas", yes: false },
     ],
     hoursType: "gym",
     hoursNote: "Class schedule Mon–Sat; weights room open daily.",
@@ -2103,6 +2206,110 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
       },
     ],
   },
+  {
+    slug: "noite-aberta",
+    name: "Noite Aberta",
+    cat: "nightlife",
+    hood: "Cais do Sodré",
+    owned: true,
+    av: "NA",
+    tint: P,
+    desc: "A queer-run dance bar by the river with DJ sets, drag nights and a calm corner for catching your breath. Free entry before 23:00.",
+    tagline: "Dance until late, step into the quiet corner whenever you like.",
+    price: "€€",
+    attributes: [
+      "dj-nights",
+      "drag-shows",
+      "karaoke",
+      "dancefloor",
+      "quiet-corner",
+      "coat-check",
+      "alcohol-free-drinks",
+      "hosts-events",
+    ],
+    highlights: ["dancefloor", "drag-shows", "quiet-corner"],
+    entryMode: "bookingRecommended",
+    coverPolicy: "freeBefore",
+    coverFreeBefore: "23:00",
+    payments: ["card", "mbway"],
+    issuesNifInvoices: true,
+    inclusionPractices: [
+      "safer-space-policy",
+      "harm-reduction",
+      "named-contact",
+    ],
+    saferSpacePolicyUrl: "https://noiteaberta.pt/espaco-seguro",
+    langs: ["pt", "en", "es"],
+    hostsGatherings: true,
+    rating: { score: "4.8", count: 41 },
+    gallery: [
+      "The dancefloor",
+      "Bar by the window",
+      "Quiet corner",
+      "Drag night",
+    ],
+    whatItIs: [
+      "Noite Aberta is a queer-run dance bar a few steps from the river. The sound system is warm, the bar staff know your name by the second visit, and there is always a seat in the quiet corner when you need a pause.",
+      "Thursday is karaoke, Friday and Saturday bring DJs and drag, and the team looks after the door and the floor so everyone gets home well. Water is free all night.",
+    ],
+    hoursType: "bar",
+    hoursNote:
+      "Open Wed to Sat, late. Booking a table is a good idea on weekends.",
+    hours: normalizeHours({
+      Mon: { open: false },
+      Tue: { open: false },
+      Wed: { open: true, from: "21:00", to: "02:00" },
+      Thu: { open: true, from: "21:00", to: "02:00" },
+      Fri: { open: true, from: "22:00", to: "05:00" },
+      Sat: { open: true, from: "22:00", to: "06:00" },
+      Sun: { open: false },
+    }),
+    owner: {
+      name: "Carla & Duarte",
+      initials: "NA",
+      tint: P,
+      role: "Founders",
+      bio: "Two night-shift veterans who wanted a dance floor where everyone feels looked after. Both QueerPulse members.",
+      inQueerPulse: true,
+      first: "Carla",
+    },
+    social: {
+      instagram: "@noiteaberta.lx",
+      website: "noiteaberta.pt",
+      email: "ola@noiteaberta.pt",
+    },
+    address: "R. Nova do Carvalho 24 · Cais do Sodré",
+    upcoming: [
+      {
+        when: "Thu 12 Nov · 21:00",
+        title: "Queer karaoke night",
+        slug: "queer-karaoke-night",
+        startAt: "2026-11-12T21:00:00",
+      },
+    ],
+    reviews: [
+      {
+        id: "noite-aberta-review-1",
+        initials: MEMBERS.kai!.initials,
+        name: memberName("kai"),
+        tint: J,
+        byline: "they/them · regular",
+        stars: 5,
+        text: "Danced till five and felt safe the whole time. The quiet corner saved my night twice",
+        helpful: 18,
+      },
+      {
+        id: "noite-aberta-review-2",
+        initials: MEMBERS.rita!.initials,
+        name: memberName("rita"),
+        tint: C,
+        byline: "she/her · regular",
+        stars: 5,
+        text: "Free before eleven and the drag shows are the best in the city",
+        helpful: 9,
+      },
+    ],
+  },
   // Businesses with no door: the directory's Online tab.
   ...ONLINE_DIRECTORY_PLACES,
   // Businesses with no premises: out and about.
@@ -2135,10 +2342,10 @@ export function getPlace(slug: string | undefined): DirectoryPlace | undefined {
 
 /**
  * Weekday hours templates. Index 0 = Monday … 6 = Sunday. Returns stable
- * English `dayKey` ids (i18n Pattern A) — the sole consumer,
+ * English `dayKey` ids (i18n Pattern A). The sole consumer,
  * `DirectorySpaceMain.tsx`, resolves `marketing:directory.days.${dayKey}`
  * via `t()`. `val` is `null` for a closed day so the consumer can render the
- * translated "Closed" chrome instead of a baked-in English string.
+ * translated "Closed" chrome with no baked-in English string.
  */
 export function hoursRows(
   type: HoursType,
@@ -2252,7 +2459,8 @@ export function realHoursRows(
     "sunday",
   ];
   return dayIds.map((dayId, index) => {
-    // `formatDayHours` renders one or two intervals ("12:00–15:00 · 19:00–02:00")
+    // `formatDayHours` renders one or two intervals ("12:00 to 15:00", then
+    // "19:00 to 02:00", in its own compact form)
     // and returns null when the day is closed or blank.
     const value = formatDayHours(normalizeDayHours(hours[dayId]));
     return {
@@ -2281,7 +2489,7 @@ function minutesOf(hourMinute: string): number {
  * The current wall-clock time in a venue's timezone, returned as a `Date` whose
  * LOCAL getters (`getHours`, `getDay`, …) already reflect that zone. Feeding
  * this into `openStatus` / the hours-table "today" highlight makes them read the
- * venue's clock, not the visitor's browser timezone — so a Lisbon bar open till
+ * venue's clock, whatever the visitor's browser timezone, so a Lisbon bar open till
  * 2am doesn't show "Closed" to someone browsing from New York. Defaults to
  * Europe/Lisbon, where the directory lives.
  */
@@ -2319,7 +2527,7 @@ export function websiteHref(raw: string): string {
 }
 
 /**
- * The website reduced to a clean hostname for display — scheme, `www.`, and any
+ * The website reduced to a clean hostname for display: scheme, `www.`, and any
  * path stripped, so a long URL like `https://shotgun.live/en/venues/drama-bar`
  * reads simply as `shotgun.live` in the contact row (the link still points at
  * the full URL). Falls back to the trimmed input if it can't be parsed.
@@ -2361,7 +2569,7 @@ function exceptionOn(
  *
  * An exception with `open: false` yields no intervals (closed, whatever the
  * weekday row says). An exception with `open: true` and no intervals is
- * malformed; it also yields none rather than silently falling back to the
+ * malformed; it also yields none and never silently falls back to the
  * weekday row, which would resurrect the hours the owner just overrode.
  */
 function effectiveIntervals(
@@ -2409,7 +2617,7 @@ const CLOSING_SOON_MINUTES = 60;
 export interface OpenStatus {
   state: "open" | "closed" | "unknown";
   /** True when an open venue closes within the next hour. A sub-state of
-   * `"open"` rather than a fourth `state` value, so a caller that only asks
+   * `"open"` with no fourth `state` value, so a caller that only asks
    * "is it open?" keeps answering correctly. */
   isClosingSoon: boolean;
   /** `"HH:MM"` the window currently running ends at; `null` unless open. */
@@ -2422,7 +2630,7 @@ export interface OpenStatus {
  * is still running) taking precedence over the weekday grid.
  *
  * Returns `unknown` when there is nothing to evaluate at all (no hours and no
- * exception for today), so the page hides the status chip rather than claiming
+ * exception for today), so the page hides the status chip and never claims
  * a venue is closed when nobody ever said.
  *
  * `now` must already be the VENUE's wall clock, so pass `zonedNow(place.timezone)`.
@@ -2512,7 +2720,8 @@ export function upcomingHoursExceptions(
     .slice(0, limit);
 }
 
-/** One exception's hours as a compact `"12:00–15:00 · 19:00–02:00"` string, or
+/** One exception's hours as a compact string (each interval's two times
+ *  joined by a dash, the intervals joined by a middle dot), or
  *  `null` when the date is a closure (the caller renders "Closed" chrome). */
 export function formatExceptionHours(
   exception: ListingHoursException,
@@ -2526,11 +2735,11 @@ export function formatExceptionHours(
 /**
  * A listing date from the API turned into a `Date` the localized `fmt.date`
  * helper can format. A bare `"YYYY-MM-DD"` (the operating state's `setAt`, an
- * exception's `date`) is read as LOCAL midnight rather than through
+ * exception's `date`) is read as LOCAL midnight and never goes through
  * `new Date(string)`, which would treat it as UTC and could render the day
  * before west of Greenwich. A full ISO timestamp (`detailsConfirmedAt`) parses
  * normally. Returns `null` for anything unparseable, so a bad value shows
- * nothing instead of "Invalid Date".
+ * nothing and never "Invalid Date".
  */
 export function parseListingDate(
   value: string | null | undefined,
@@ -2570,14 +2779,14 @@ export function ownershipBadgeOf(place: DirectoryPlace): OwnershipBadgeState {
  * payload alone so a grid of 25 places costs no extra request.
  *
  * Four card states, from three DTO fields:
- * - `null` — no badge to speak of (never reviewed, or removed). Nothing renders.
- * - `"verified"` — the badge stands.
- * - `"due"` — the badge stands AND is past its yearly check. Still valid, so it
+ * - `null`: no badge to speak of (never reviewed, or removed). Nothing renders.
+ * - `"verified"`: the badge stands.
+ * - `"due"`: the badge stands AND is past its yearly check. Still valid, so it
  *   keeps the verified mark; the wording alone carries the age of the claim.
- * - `"paused"` — the platform has put the badge on hold while a review runs.
+ * - `"paused"`: the platform has put the badge on hold while a review runs.
  *   The mark changes outright, because "verified" is no longer true.
  *
- * Deliberately derived rather than read off a single field: the DETAIL page
+ * Deliberately derived, never read off a single field: the DETAIL page
  * asks `GET /safe-spaces/:slug/badge-state` for the full five-state truth, and
  * calling that per card would be an N+1 across the grid.
  */

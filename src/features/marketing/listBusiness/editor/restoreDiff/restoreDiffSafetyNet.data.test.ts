@@ -73,7 +73,7 @@ describe("isVisibleFieldChange", () => {
     expect(
       isVisibleFieldChange({
         kind: "set",
-        key: "tags",
+        key: "attributes",
         labelKey: "label",
         added: [],
         removed: [],
@@ -120,7 +120,7 @@ describe("fallbackFieldChange", () => {
   it("joins string lists in their stored order", () => {
     const change = fallbackFieldChange({
       t,
-      key: "tags",
+      key: "attributes",
       labelKey: "label",
       before: ["books", "tea"],
       after: ["tea", "books"],

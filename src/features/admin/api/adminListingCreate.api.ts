@@ -1,6 +1,6 @@
 import { apiPost } from "../../../shared/api/client";
 import { businessPayload } from "../../marketing/listBusiness/draftToDto";
-import { knownListingTags } from "../../marketing/listBusiness/listingRetiredTags";
+import { withOnlyOfferedFacts } from "../../marketing/listBusiness/listingFactsPayload";
 import {
   OWNER_PERSONAL_FIELDS,
   type ListingDraft,
@@ -75,7 +75,7 @@ export interface AdminListingCreateExtras {
 }
 
 /** The business half of the body: everything except what the console adds. */
-type AdminListingBusinessPayload = Omit<
+export type AdminListingBusinessPayload = Omit<
   AdminCreateListingDto,
   "publishState" | "ownerOffer"
 >;
@@ -119,25 +119,39 @@ function stripAdminExcludedKeys(payload: object): AdminListingBusinessPayload {
 }
 
 /**
+ * The business half both admin bodies share, built from the draft as it
+ * stands.
+ *
+ * It comes straight from `businessPayload`, the shared derivation the member
+ * create and the co-manager save already use, so hours normalisation, the
+ * online-only address blanking and the service-row cleanup all behave
+ * identically here. `ownerRole` is the one key that half carries which these
+ * bodies may not: it is printed on the public listing, so it belongs to the
+ * business, while the server's admin DTOs omit it and answer 400. It carries
+ * no `tags`: the attribute fields replaced them (2026-10-08). The staff edit
+ * (`adminDraftToUpdateDto`) sends this as it is, so the attributes and
+ * practices a stored listing carries outside its offer stay.
+ */
+export function adminBusinessPayload(
+  draft: ListingDraft,
+): AdminListingBusinessPayload {
+  return stripAdminExcludedKeys(businessPayload(draft));
+}
+
+/**
  * Build the admin POST body from a finished wizard draft.
  *
- * The business half comes straight from `businessPayload`, the shared
- * derivation the member create and the co-manager save already use, so hours
- * normalisation, the online-only address blanking and the service-row cleanup
- * all behave identically here. `ownerRole` is the one key that half carries
- * which this body may not: it is printed on the public listing, so it belongs
- * to the business, while the server's admin DTO omits it and answers 400.
- * A create carries only the vocabulary's tags (`knownListingTags`): the
- * server refuses any other tag on a create, such as one a draft from before
- * the online fields still holds.
+ * A create, so it sends only the attributes and practices the listing's kind
+ * and categories are offered (`withOnlyOfferedFacts`): a new listing stores
+ * nothing for the server to keep, and it answers 400 to a slug outside the
+ * offer.
  */
 export function adminDraftToDto(
   draft: ListingDraft,
   { publishState, ownerOffer }: AdminListingCreateExtras,
 ): AdminCreateListingDto {
   return {
-    ...stripAdminExcludedKeys(businessPayload(draft)),
-    tags: knownListingTags(draft.tags),
+    ...adminBusinessPayload(withOnlyOfferedFacts(draft)),
     publishState,
     ...(ownerOffer ? { ownerOffer } : {}),
   };

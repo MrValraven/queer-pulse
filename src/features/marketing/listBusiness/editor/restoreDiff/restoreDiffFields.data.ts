@@ -28,6 +28,10 @@ export interface RestoreDiffContext {
   /** This session's upload previews, which the editor shows in place of
    *  `current.photos` (a fresh upload holds a bare storage key there). */
   photoPreviews?: Record<PhotoKey, string>;
+  /** This session's cover preview, which the editor shows while
+   *  `current.coverPhoto` holds a fresh upload's bare storage key, as
+   *  `photoPreviews` does for the gallery. */
+  coverPreview?: string;
 }
 
 type FieldChanges = RestoreFieldChange[];
@@ -38,7 +42,13 @@ export type StringFieldKey = {
 }[keyof ListingDraft];
 
 /** Draft keys that hold a list of plain strings. */
-export type StringListFieldKey = "cats" | "tags" | "goodFor" | "langs";
+export type StringListFieldKey =
+  | "cats"
+  | "langs"
+  | "attributes"
+  | "highlights"
+  | "payments"
+  | "inclusionPractices";
 
 /** Compared through `comparableField`, so a regenerated row id never counts. */
 export function isFieldChanged(
@@ -111,7 +121,7 @@ export function choiceField(
 /**
  * A multi-pick field, reported as what bringing the copy back would add and
  * remove. Order is visible too (the first category is the main one on the
- * directory card, and tags and languages print in stored order), so a list
+ * directory card, and attributes and languages print in stored order), so a list
  * holding the same values in a new order shows both orders in full. For
  * categories that change is named as the category order, since it can swap
  * which one leads, and a new leading category is named on its own.
@@ -122,8 +132,8 @@ export function setField(
   describe: (value: string) => string,
 ): FieldChanges {
   if (!isFieldChanged(context, key)) return [];
-  const before = context.current[key];
-  const after = context.saved[key];
+  const before: readonly string[] = context.current[key] ?? [];
+  const after: readonly string[] = context.saved[key] ?? [];
   const { added, removed } = diffStringLists(before, after);
   if (added.length === 0 && removed.length === 0) {
     return [

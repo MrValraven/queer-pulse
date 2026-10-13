@@ -9,11 +9,22 @@ export const ARTIST_ID = "mariana-sol";
 // language; only `labelKey` resolves via t() at render (i18n §5.1).
 export const TABS = [
   { id: "music", labelKey: "studio:artist.tabs.music" },
-  { id: "featuredIn", labelKey: "studio:artist.tabs.featuredIn" },
-  { id: "sheetMusic", labelKey: "studio:artist.tabs.sheetMusic" },
   { id: "about", labelKey: "studio:artist.tabs.about" },
 ] as const;
 export type ArtistTabId = (typeof TABS)[number]["id"];
+
+/** Demo-only sidebar and hero figures, moved here from the components. */
+export const ARTIST_SHOWCASE = {
+  subscribeAmount: 3,
+  premiereDateTime: "10 Jun · 21:00 Lisbon",
+  sidebarStats: {
+    plays: 36400,
+    earningsStreaming: 1820,
+    tipsReceived: 448,
+    directSubscribers: 612,
+  },
+  sustainersCount: 4200,
+};
 
 export interface ArtistRelease {
   pre: string;

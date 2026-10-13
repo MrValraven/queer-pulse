@@ -6,7 +6,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
 import { routes } from "../../app/routeMap";
 import { useLocalVenue } from "./api/useLocalPlaces";
-import { TYPE_LABEL_KEYS, VIBE_LABEL_KEYS } from "./map.data";
+import { TYPE_LABEL_KEYS } from "./map.data";
 import s from "./VenueDetailPage.module.css";
 
 /**
@@ -61,19 +61,6 @@ export function VenueDetailPage() {
                 <dd>{venue.hours}</dd>
               </div>
             </dl>
-
-            {venue.vibe.length > 0 && (
-              <div className={s.vibes}>
-                <span className={s.vibesLabel}>
-                  {t("marketing:local.filter.vibeLabel")}
-                </span>
-                {venue.vibe.map((vibe) => (
-                  <span key={vibe} className={s.vibe}>
-                    {t(VIBE_LABEL_KEYS[vibe]!)}
-                  </span>
-                ))}
-              </div>
-            )}
 
             <div className={s.been}>
               <Translation

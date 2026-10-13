@@ -151,9 +151,9 @@ export function buildMedicalWebPageSchema(
 
 /**
  * For a directory listing's own detail page. Fields the listing hasn't filled
- * in (coordinates, a photo, a phone number, reviews, a price-range pill) are
- * omitted entirely rather than emitted as null — an empty `aggregateRating`
- * would falsely claim a rating for a place with zero reviews.
+ * in (coordinates, a photo, a phone number, reviews, a price band) are
+ * left out of the object entirely. An empty `aggregateRating` would falsely
+ * claim a rating for a place with zero reviews.
  */
 export function buildLocalBusinessSchema(
   place: DirectoryPlace,
@@ -195,8 +195,9 @@ export function buildLocalBusinessSchema(
     };
   }
 
-  const priceRangePill = place.pills.find((pill) => /^€+$/.test(pill));
-  if (priceRangePill) schema.priceRange = priceRangePill;
+  // The stored band, when it is one ("€" to "€€€"); "Free" and free text
+  // carry no price range.
+  if (place.price && /^€+$/.test(place.price)) schema.priceRange = place.price;
 
   // Real per-weekday hours (live listings) surface as an
   // OpeningHoursSpecification so the rich result can show open/closed times.

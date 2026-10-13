@@ -13,6 +13,7 @@ export function ListBusinessPreview({
   draft,
   userName,
   photoPreviews,
+  coverPreview,
   formColumnRef,
   onAddPhoto,
   footnote,
@@ -20,12 +21,16 @@ export function ListBusinessPreview({
   draft: ListingDraft;
   userName: string;
   photoPreviews: Record<PhotoKey, string>;
+  /** This session's cover upload, which the directory card shows first. */
+  coverPreview: string;
   /** The wizard's form column. The focus hook lives here, so focusing or
    *  hovering a field re-renders only the preview. */
   formColumnRef: RefObject<HTMLElement | null>;
-  /** Jumps the wizard to the photos step: wired to the preview's "add cover
-   *  photo" call to action when there's no photo yet. */
-  onAddPhoto: () => void;
+  /** Jumps the wizard to the cover field on the photos step: wired to the
+   *  preview's "add cover photo" call to action when there's no photo yet.
+   *  Left out, the card shows no such button. The wizard leaves it out while
+   *  a step before photos still has missing required fields. */
+  onAddPhoto?: () => void;
   /** The line under the preview. Defaults to the new-submission note that
    *  the listing goes live after review; an edit passes its own. */
   footnote?: string;
@@ -49,6 +54,7 @@ export function ListBusinessPreview({
       <ListingLivePreviewBody
         draft={draft}
         photoPreviews={photoPreviews}
+        coverPreview={coverPreview}
         activeAnchor={activeAnchor}
         onAddPhoto={onAddPhoto}
       />

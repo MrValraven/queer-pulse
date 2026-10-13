@@ -1,0 +1,667 @@
+<!doctype html>
+<!--
+  QueerPulse event flyer, in the pro film's language.
+
+  The same dark stage (hairline grid, grain, coral and violet
+  glows), the same sentence-case grotesk with a Fraunces italic turn, and
+  the film's vouch tree as the picture: QueerPulse is the coral point at its
+  centre, linking the people, communities, events and opportunities shaping
+  queer life in Lisbon. The QR in the paper card points at queerpulse.com.
+
+  One A5 page drawn on a 1240 x 1760 canvas; `pnpm flyers` (render.mjs)
+  writes qr.svg, then the PNG, the A5 and A4 PDFs and the dashboard
+  preview into public/marketing-flyers/.
+
+  ?print=bleed is the print-shop version: the artwork runs 3 mm past the
+  trim edge on every side, with crop marks in a white 6 mm margin outside.
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>QueerPulse flyer</title>
+    <style>
+      @font-face {
+        font-family: "Fraunces";
+        font-style: normal;
+        font-weight: 100 900;
+        src: url("../../public/marketing-videos/fonts/fraunces.woff2")
+          format("woff2");
+      }
+      @font-face {
+        font-family: "Fraunces";
+        font-style: italic;
+        font-weight: 100 900;
+        src: url("../../public/marketing-videos/fonts/fraunces-italic.woff2")
+          format("woff2");
+      }
+      @font-face {
+        font-family: "DM Sans";
+        font-style: normal;
+        font-weight: 100 1000;
+        src: url("../../public/marketing-videos/fonts/dm-sans.woff2")
+          format("woff2");
+      }
+
+      :root {
+        --plum: #2d1b3d;
+        --night: #150b1d;
+        --coral: #e8775a;
+        --coral-ink: #c85a40;
+        --cream: #f7f3ee;
+        --paper: #ffffff;
+        --ink-60: rgba(26, 26, 31, 0.6);
+        --hair: rgba(247, 243, 238, 0.14);
+        --muted: rgba(247, 243, 238, 0.6);
+      }
+      @page {
+        margin: 0;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html,
+      body {
+        width: 1240px;
+        height: 1760px;
+        overflow: hidden;
+        background: var(--night);
+      }
+      body {
+        font-family: "DM Sans", sans-serif;
+        color: var(--cream);
+        -webkit-font-smoothing: antialiased;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      em {
+        font-style: italic;
+      }
+      #sheet {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+      }
+      #stage {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+        background: var(--night);
+      }
+      #marks {
+        position: absolute;
+        inset: 0;
+        display: none;
+      }
+
+      /* ── Print-shop version: bleed and crop marks ──
+         The script sets --bleed and --slug in px. The stage stays 1240 x 1760
+         and lets its glows and grain run past the trim; the sheet clips them
+         at the bleed, and the marks sit in the white slug outside it. */
+      html[data-print="bleed"],
+      html[data-print="bleed"] body {
+        width: calc(1240px + 2 * (var(--bleed) + var(--slug)));
+        height: calc(1760px + 2 * (var(--bleed) + var(--slug)));
+        background: #ffffff;
+      }
+      html[data-print="bleed"] #sheet {
+        inset: auto;
+        left: var(--slug);
+        top: var(--slug);
+        width: calc(1240px + 2 * var(--bleed));
+        height: calc(1760px + 2 * var(--bleed));
+        background: var(--night);
+      }
+      html[data-print="bleed"] #stage {
+        inset: auto;
+        left: var(--bleed);
+        top: var(--bleed);
+        width: 1240px;
+        height: 1760px;
+        overflow: visible;
+        background: none;
+      }
+      html[data-print="bleed"] #grain {
+        inset: calc(-1 * var(--bleed));
+      }
+      html[data-print="bleed"] #marks {
+        display: block;
+      }
+      .av {
+        display: block;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+      }
+
+      /* ── The stage: glow, hairline grid, grain ── */
+      .glow {
+        position: absolute;
+        border-radius: 50%;
+      }
+      #glow-violet {
+        left: -620px;
+        top: 420px;
+        width: 1500px;
+        height: 1300px;
+        background: radial-gradient(
+          closest-side,
+          rgba(98, 62, 140, 0.55),
+          rgba(98, 62, 140, 0)
+        );
+      }
+      #glow-coral {
+        left: 420px;
+        top: -460px;
+        width: 1300px;
+        height: 1000px;
+        background: radial-gradient(
+          closest-side,
+          rgba(232, 119, 90, 0.2),
+          rgba(232, 119, 90, 0)
+        );
+      }
+      /* Swells behind the tree's root, as the film's does for the name. */
+      #glow-root {
+        left: 70px;
+        top: 620px;
+        width: 1100px;
+        height: 760px;
+        background: radial-gradient(
+          closest-side,
+          rgba(232, 119, 90, 0.2),
+          rgba(232, 119, 90, 0)
+        );
+      }
+      #grid {
+        position: absolute;
+        inset: 0;
+        width: 1240px;
+        height: 1760px;
+      }
+      #grain {
+        position: absolute;
+        inset: 0;
+        opacity: 0.03;
+        pointer-events: none;
+      }
+
+      /* ── Type: one sentence-case grotesk, the serif italic for the turn ── */
+      .eyebrow {
+        position: absolute;
+        left: 80px;
+        top: 120px;
+        font-size: 19px;
+        font-weight: 650;
+        letter-spacing: 0.24em;
+        text-transform: uppercase;
+        color: var(--muted);
+        white-space: nowrap;
+      }
+      .eyebrow b {
+        color: var(--coral);
+        font-weight: 650;
+      }
+      .hl {
+        position: absolute;
+        left: 80px;
+        top: 168px;
+        font-size: 112px;
+        font-weight: 600;
+        letter-spacing: -0.045em;
+        line-height: 1.02;
+        white-space: nowrap;
+      }
+      .hl em {
+        font-family: "Fraunces", serif;
+        font-weight: 380;
+        font-size: 1.06em;
+        letter-spacing: -0.02em;
+        color: var(--coral);
+        font-variation-settings:
+          "opsz" 144,
+          "SOFT" 50;
+      }
+      .hl span {
+        display: block;
+      }
+      .lede {
+        position: absolute;
+        left: 80px;
+        top: 436px;
+        width: 1080px;
+        font-size: 30px;
+        line-height: 1.4;
+        color: rgba(247, 243, 238, 0.74);
+      }
+
+      /* ── The vouch tree ── */
+      #tree-lines {
+        position: absolute;
+        inset: 0;
+        width: 1240px;
+        height: 1760px;
+        overflow: visible;
+      }
+      .node {
+        position: absolute;
+        border-radius: 50%;
+      }
+      .node .av {
+        box-shadow: 0 0 0 4px var(--night);
+      }
+      .node.far {
+        opacity: 0.6;
+      }
+      .node.lit .av {
+        box-shadow:
+          0 0 0 4px var(--night),
+          0 0 0 7px var(--coral);
+      }
+      /* Spread-only rings and a gradient halo: blurred box-shadows turn
+         into hard squares in the PDF. */
+      .node.root {
+        background: var(--coral);
+        box-shadow: 0 0 0 14px rgba(232, 119, 90, 0.18);
+      }
+      .halo {
+        position: absolute;
+        border-radius: 50%;
+        background: radial-gradient(
+          closest-side,
+          rgba(232, 119, 90, 0.45),
+          rgba(232, 119, 90, 0)
+        );
+      }
+      .ring {
+        position: absolute;
+        border-radius: 50%;
+        border: 2px solid var(--coral);
+      }
+
+      /* Glass chips, as the film's, in one caption row under the tree. */
+      #chips {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 1192px;
+        display: flex;
+        justify-content: center;
+        gap: 16px;
+      }
+      .chip {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        gap: 14px;
+        height: 64px;
+        padding: 0 26px 0 10px;
+        border-radius: 999px;
+        background: rgba(21, 11, 29, 0.78);
+        border: 1px solid var(--hair);
+        color: rgba(247, 243, 238, 0.92);
+        font-size: 24px;
+        font-weight: 550;
+        letter-spacing: -0.005em;
+        white-space: nowrap;
+      }
+      .chip .ic {
+        display: grid;
+        place-items: center;
+        width: 44px;
+        height: 44px;
+        flex: none;
+        border-radius: 50%;
+        background: rgba(232, 119, 90, 0.14);
+      }
+      .chip svg {
+        width: 22px;
+        height: 22px;
+        stroke: var(--coral);
+        fill: none;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      /* ── The invite card ── */
+      #card {
+        position: absolute;
+        left: 80px;
+        right: 80px;
+        top: 1288px;
+        height: 352px;
+        display: flex;
+        align-items: center;
+        gap: 52px;
+        padding: 36px 56px 36px 36px;
+        border-radius: 36px;
+        background: var(--paper);
+        color: var(--plum);
+      }
+      #qr {
+        flex: none;
+        width: 280px;
+        height: 280px;
+        display: block;
+      }
+      .card-copy {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+        min-width: 0;
+      }
+      .label {
+        font-size: 17px;
+        font-weight: 700;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--coral-ink);
+      }
+      .card-title {
+        font-family: "Fraunces", serif;
+        font-size: 50px;
+        font-weight: 420;
+        line-height: 1.08;
+        letter-spacing: -0.01em;
+        font-variation-settings: "opsz" 72;
+      }
+      .card-title em {
+        color: var(--coral-ink);
+        font-weight: 380;
+      }
+      .card-meta {
+        font-size: 24px;
+        line-height: 1.4;
+        color: var(--ink-60);
+      }
+      .card-meta b {
+        color: var(--plum);
+        font-weight: 700;
+      }
+      /* The illustrations' CC BY licence asks for this line. */
+      #credit {
+        position: absolute;
+        right: 80px;
+        bottom: 52px;
+        font-size: 15px;
+        color: rgba(247, 243, 238, 0.4);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="sheet">
+    <div id="stage">
+      <div class="glow" id="glow-violet"></div>
+      <div class="glow" id="glow-coral"></div>
+      <div class="glow" id="glow-root"></div>
+      <svg id="grid"></svg>
+
+      <div class="eyebrow">Introducing <b>QueerPulse</b></div>
+      <div class="hl">
+        <span>A queer network,</span>
+        <span><em>rooted in Lisbon</em></span>
+      </div>
+      <p class="lede">
+        Discover what’s happening across Lisbon’s queer ecosystem and find the
+        people, communities, events and opportunities shaping queer life in
+        the city
+      </p>
+
+      <svg id="tree-lines"></svg>
+      <div id="tree-nodes"></div>
+      <div id="chips"></div>
+
+      <div id="card">
+        <img id="qr" src="./qr.svg" alt="QR code for queerpulse.com" />
+        <div class="card-copy">
+          <span class="label">Scan to join</span>
+          <p class="card-title">
+            Met someone tonight?<br /><em>Keep in touch on QueerPulse</em>
+          </p>
+          <p class="card-meta">
+            Membership is by invite, request yours at
+            <b>queerpulse.com</b> or ask a member to vouch you in
+          </p>
+        </div>
+      </div>
+
+      <p id="credit">Illustrations: Micah by Micah Lanier, CC BY 4.0</p>
+      <div id="grain"></div>
+    </div>
+    </div>
+    <svg id="marks" aria-hidden="true"></svg>
+
+    <script>
+      const AV = "../../public/marketing-videos/avatars/";
+      const $ = (selector) => document.querySelector(selector);
+      const isBleed =
+        new URLSearchParams(location.search).get("print") === "bleed";
+      const el = (tag, className, parent, html) => {
+        const node = document.createElement(tag);
+        if (className) node.className = className;
+        if (html != null) node.innerHTML = html;
+        parent.appendChild(node);
+        return node;
+      };
+      const svgEl = (tag, attrs, parent) => {
+        const node = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          tag,
+        );
+        for (const key in attrs) node.setAttribute(key, attrs[key]);
+        parent.appendChild(node);
+        return node;
+      };
+      // The film's seeded generator, so the tree branches the same way.
+      function rng(seed) {
+        return () => {
+          seed |= 0;
+          seed = (seed + 0x6d2b79f5) | 0;
+          let value = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+          value =
+            (value + Math.imul(value ^ (value >>> 7), 61 | value)) ^ value;
+          return ((value ^ (value >>> 14)) >>> 0) / 4294967296;
+        };
+      }
+
+      /* ── Grid: hairlines every 160px ── */
+      const GRID = $("#grid");
+      const gridFade = svgEl("defs", {}, GRID);
+      gridFade.innerHTML = `<linearGradient id="fade" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#f7f3ee" stop-opacity="0"/>
+          <stop offset="0.12" stop-color="#f7f3ee" stop-opacity="0.05"/>
+          <stop offset="0.88" stop-color="#f7f3ee" stop-opacity="0.05"/>
+          <stop offset="1" stop-color="#f7f3ee" stop-opacity="0"/>
+        </linearGradient>`;
+      for (let x = 60; x < 1240; x += 160) {
+        svgEl(
+          "rect",
+          { x: x - 0.5, y: 0, width: 1, height: 1760, fill: "url(#fade)" },
+          GRID,
+        );
+      }
+      /* ── Grain: one 256px tile of seeded grey noise, repeated ── */
+      {
+        const canvas = document.createElement("canvas");
+        canvas.width = canvas.height = 256;
+        const context = canvas.getContext("2d"),
+          image = context.createImageData(256, 256),
+          random = rng(2026);
+        for (let i = 0; i < image.data.length; i += 4) {
+          const value = random() * 255;
+          image.data[i] = image.data[i + 1] = image.data[i + 2] = value;
+          image.data[i + 3] = 255;
+        }
+        context.putImageData(image, 0, 0);
+        $("#grain").style.backgroundImage = `url(${canvas.toDataURL()})`;
+      }
+
+      /* ── The vouch tree, built as the film builds it ── */
+      const CENTRE = { x: 620, y: 872 };
+      const GEN_RADIUS = [0, 158, 282, 392],
+        GEN_SIZE = [0, 86, 68, 56],
+        ROOT_SIZE = 46,
+        SQUASH = 0.66;
+      const CAST = [
+        "ines",
+        "bilal",
+        "kai",
+        "amara",
+        "daniel",
+        "priya",
+        "jordan",
+        "monica",
+        "harjit",
+        "sofia",
+        "tomas",
+        "yuki",
+        "chidi",
+        "philippine",
+        "noor",
+        "rafael",
+        "lucia",
+        "anika",
+        "sam",
+        "joana",
+        "leo",
+        "grace",
+        "mateo",
+        "eva",
+      ];
+      const treeRandom = rng(42);
+      const nodes = [{ x: 0, y: 0, gen: 0, parent: null }];
+      [-145, -40, 60, 145].forEach((angle, branchIndex) => {
+        nodes.push({ gen: 1, angle, parent: 0 });
+        const gen1Index = nodes.length - 1,
+          kids = 2 + (branchIndex % 2);
+        for (let kid = 0; kid < kids; kid++) {
+          const kidAngle =
+            angle + (kid - (kids - 1) / 2) * 34 + (treeRandom() - 0.5) * 8;
+          nodes.push({ gen: 2, angle: kidAngle, parent: gen1Index });
+          const gen2Index = nodes.length - 1,
+            grandkids = branchIndex === 2 ? 2 : treeRandom() < 0.6 ? 1 : 0;
+          for (let grandkid = 0; grandkid < grandkids; grandkid++)
+            nodes.push({
+              gen: 3,
+              angle:
+                kidAngle +
+                (grandkid - (grandkids - 1) / 2) * 17 +
+                (treeRandom() - 0.5) * 6,
+              parent: gen2Index,
+            });
+        }
+      });
+      let castIndex = 0;
+      nodes.forEach((node, index) => {
+        if (node.gen > 0) {
+          const radians = (node.angle * Math.PI) / 180,
+            jitter = 1 + (treeRandom() - 0.5) * 0.1;
+          node.x = Math.cos(radians) * GEN_RADIUS[node.gen] * jitter;
+          node.y = Math.sin(radians) * GEN_RADIUS[node.gen] * SQUASH * jitter;
+          node.person = CAST[castIndex++ % CAST.length];
+        }
+        node.branch =
+          node.gen === 0
+            ? -1
+            : node.gen === 1
+              ? index
+              : nodes[node.parent].branch;
+      });
+      const lines = $("#tree-lines"),
+        layer = $("#tree-nodes");
+      const screen = (node) => [CENTRE.x + node.x, CENTRE.y + node.y];
+      // QueerPulse is the point every first link runs back to, so those
+      // glow coral; the links further out stay hairlines.
+      nodes.forEach((node) => {
+        if (node.parent == null) return;
+        const isFromCentre = node.gen === 1;
+        const [x1, y1] = screen(nodes[node.parent]),
+          [x2, y2] = screen(node);
+        svgEl(
+          "line",
+          {
+            x1,
+            y1,
+            x2,
+            y2,
+            stroke: isFromCentre ? "#e8775a" : "#f7f3ee",
+            "stroke-opacity": isFromCentre ? 0.9 : 0.24,
+            "stroke-width": isFromCentre ? 3.5 : 1.6,
+            "stroke-linecap": "round",
+          },
+          lines,
+        );
+      });
+      const halo = el("div", "halo", layer);
+      halo.style.cssText = `left:${CENTRE.x - 110}px;top:${CENTRE.y - 110}px;width:220px;height:220px`;
+      [150, 96].forEach((size, ringIndex) => {
+        const ring = el("div", "ring", layer);
+        ring.style.cssText = `left:${CENTRE.x - size / 2}px;top:${CENTRE.y - size / 2}px;width:${size}px;height:${size}px;opacity:${ringIndex ? 0.4 : 0.16}`;
+      });
+      const NODE_CLASS = ["node root", "node lit", "node", "node far"];
+      nodes.forEach((node) => {
+        const size = node.gen === 0 ? ROOT_SIZE : GEN_SIZE[node.gen];
+        const element = el("div", NODE_CLASS[node.gen], layer);
+        if (node.gen > 0)
+          element.innerHTML = `<img class="av" src="${AV}${node.person}.svg" alt="">`;
+        const [x, y] = screen(node);
+        element.style.cssText = `left:${x - size / 2}px;top:${y - size / 2}px;width:${size}px;height:${size}px`;
+      });
+
+      /* ── Chips: the film's promise, two things gone and one kept ── */
+      const ICON = {
+        none: '<circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/>',
+        users:
+          '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
+      };
+      [
+        ["none", "No ads"],
+        ["none", "No algorithm"],
+        ["users", "Just your people"],
+      ].forEach(([icon, text]) =>
+        el(
+          "div",
+          "chip",
+          $("#chips"),
+          `<span class="ic"><svg viewBox="0 0 24 24">${ICON[icon]}</svg></span>${text}`,
+        ),
+      );
+
+      /* ── Print-shop version: 3 mm bleed, crop marks in a 6 mm slug ── */
+      if (isBleed) {
+        const PX_PER_MM = 1240 / 148;
+        const bleed = 3 * PX_PER_MM,
+          slug = 6 * PX_PER_MM,
+          gap = 1 * PX_PER_MM;
+        const root = document.documentElement;
+        root.dataset.print = "bleed";
+        root.style.setProperty("--bleed", `${bleed}px`);
+        root.style.setProperty("--slug", `${slug}px`);
+        const marks = $("#marks");
+        const left = slug + bleed,
+          top = slug + bleed,
+          right = left + 1240,
+          bottom = top + 1760,
+          pageWidth = right + bleed + slug,
+          pageHeight = bottom + bleed + slug;
+        marks.setAttribute("width", pageWidth);
+        marks.setAttribute("height", pageHeight);
+        // Each trim line gets a short mark in the slug at both of its ends.
+        const lines = [];
+        for (const x of [left, right])
+          lines.push([x, gap, x, slug - gap], [x, pageHeight - slug + gap, x, pageHeight - gap]);
+        for (const y of [top, bottom])
+          lines.push([gap, y, slug - gap, y], [pageWidth - slug + gap, y, pageWidth - gap, y]);
+        lines.forEach(([x1, y1, x2, y2]) =>
+          svgEl(
+            "line",
+            { x1, y1, x2, y2, stroke: "#000000", "stroke-width": 0.6 },
+            marks,
+          ),
+        );
+      }
+    </script>
+  </body>
+</html>

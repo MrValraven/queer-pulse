@@ -1,16 +1,13 @@
-import { FiCheck } from "react-icons/fi";
 import { intlLocale } from "../../../shared/i18n/locale";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { MarkdownLite } from "../../../shared/markdown";
 import {
   DAYS,
   formatDayHours,
-  goodForLabel,
   initials,
-  langLabel,
   type ListingDraft,
 } from "./listBusiness.data";
-import { listingTagLabel } from "./listingTags.data";
+import { ListBusinessPreviewFacts } from "./ListBusinessPreviewFacts";
 import {
   isByAppointmentListing,
   isMobileWithoutMeetingPoint,
@@ -26,9 +23,9 @@ import styles from "./ListBusinessPage.module.css";
 
 /**
  * The stacked detail sections of the full-page listing preview: description,
- * good-for, good-to-know, hours (a place only), ordering and delivery (when it
- * sells online), the shop (when that is the priced list), find-it, and
- * who-runs-it. Split out of `ListBusinessFullPreview` so each component stays
+ * what's here, the practices, getting in, hours (a place only), ordering and
+ * delivery (when it sells online), the shop (when that is the priced list),
+ * find-it, and who-runs-it. Split out of `ListBusinessFullPreview` so each component stays
  * under the line limit. The online block and the shop are cleaned the way a
  * save sends them, so the preview never shows a hidden sub-answer.
  */
@@ -82,32 +79,7 @@ export function ListBusinessPreviewDetails({
         </section>
       )}
 
-      {draft.goodFor.length > 0 && (
-        <section className={styles.fpSec}>
-          <h4>{t("marketing:listBusiness.fullPreview.goodFor")}</h4>
-          <div className={styles.fpGoodFor}>
-            {draft.goodFor.map((good) => (
-              <span key={good} className={styles.fpGoodForRow}>
-                <FiCheck size={13} /> {goodForLabel(t, good)}
-              </span>
-            ))}
-          </div>
-        </section>
-      )}
-
-      {(draft.langs.length > 0 || draft.tags.length > 0) && (
-        <section className={styles.fpSec}>
-          <h4>{t("marketing:listBusiness.fullPreview.goodToKnow")}</h4>
-          <div className={styles.pdChips}>
-            {draft.langs.map((language) => (
-              <span key={`l-${language}`}>{langLabel(t, language)}</span>
-            ))}
-            {draft.tags.map((tag) => (
-              <span key={`t-${tag}`}>{listingTagLabel(t, tag)}</span>
-            ))}
-          </div>
-        </section>
-      )}
+      <ListBusinessPreviewFacts draft={draft} />
 
       {isMobile && (
         <section className={styles.fpSec}>

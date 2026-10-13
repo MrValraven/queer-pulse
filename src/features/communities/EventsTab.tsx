@@ -26,6 +26,14 @@ function EventRow({ ev }: { ev: CommunityEvent }) {
       </div>
       <div className={styles.eventMain}>
         <div className={detail.gTitle}>{ev.title}</div>
+        {/* A gathering this community joined as a guest names its lead. */}
+        {ev.leadCommunityName && (
+          <div className={styles.eventCollab}>
+            {t("communities:detail.events.withLead", {
+              name: ev.leadCommunityName,
+            })}
+          </div>
+        )}
         <div className={detail.gMeta}>
           {ev.meta}
           {ev.spots ? ` · ${ev.spots}` : ""}

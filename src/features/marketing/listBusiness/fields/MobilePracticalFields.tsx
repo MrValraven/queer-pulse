@@ -8,12 +8,13 @@ import type { ListingForm } from "../useListingForm";
 import { AlsoSellsOnlineField } from "./AlsoSellsOnlineField";
 import { MeetingPointField } from "./MeetingPointField";
 import styles from "../ListBusinessPage.module.css";
+import factStyles from "./PracticalFacts.module.css";
 
 /**
  * The practical step for an out-and-about listing, in order: the optional
  * meeting point, then the hours with "By appointment only" above the grid
  * (ticking it hides the grid, the note and the special dates, and the save
- * sends none), then "We also sell online", unchanged. The caller adds the
+ * sends none; a helper line under it says the way in follows), then "We also sell online", unchanged. The caller adds the
  * contact rows and languages after, as for every kind.
  */
 export function MobilePracticalFields({
@@ -41,6 +42,9 @@ export function MobilePracticalFields({
           title={t("marketing:listBusiness.step3.byAppointment.title")}
           sub={t("marketing:listBusiness.step3.byAppointment.sub")}
         />
+        <p className={factStyles.linkedNote}>
+          {t("marketing:listBusiness.step3.byAppointment.linked")}
+        </p>
       </div>
       {!isByAppointment && (
         <>

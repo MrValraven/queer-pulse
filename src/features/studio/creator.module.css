@@ -6,6 +6,11 @@
   --text: rgba(var(--cream-rgb), 0.92);
   --text60: rgba(var(--cream-rgb), 0.62);
   --text40: rgba(var(--cream-rgb), 0.4);
+  /* The shell carries data-theme="dark", which flips --line-rgb here, but
+     these two were resolved on <html> with the app theme's channels, so they
+     are restated to pick up the dark ones. */
+  --wash: rgba(var(--line-rgb), 0.05);
+  --line-2: rgba(var(--line-rgb), 0.22);
   background: var(--bg);
   color: var(--text);
   min-height: 100svh;
@@ -46,7 +51,7 @@
   gap: 20px;
   padding: 16px 30px;
   padding-block-start: max(16px, env(safe-area-inset-top));
-  background: rgba(26, 16, 40, 0.86);
+  background: rgba(var(--plum-rgb), 0.86);
   backdrop-filter: var(--blur-lg);
   border-bottom: 1px solid var(--line);
 }
@@ -131,6 +136,73 @@
   font-family: var(--serif);
   font-size: var(--text-13);
   font-weight: 500;
+}
+
+/* The sticky topbar's clearance for keyboard focus and in-page jumps. Same
+   rule as studio.module.css, restated because a creator route can load
+   without that stylesheet. */
+:global(html[data-studio-shell="true"]) {
+  scroll-padding-top: 96px;
+}
+
+/* Phones: row one is the brand, the Creator chip and the avatar; row two is
+   the sub-nav (scrolling sideways on the narrowest screens) with the public
+   page link at its end, which drops to a third row when the nav fills the
+   width. Every label stays on one line. */
+@media (--md) {
+  :global(html[data-studio-shell="true"]) {
+    scroll-padding-top: 128px;
+  }
+  .topbar {
+    flex-wrap: wrap;
+    column-gap: 10px;
+    row-gap: 0;
+    padding: 10px 16px;
+    padding-block-start: max(10px, env(safe-area-inset-top));
+  }
+  /* A zero-height full-width item that ends row one. */
+  .topbar::after {
+    content: "";
+    order: 1;
+    flex-basis: 100%;
+  }
+  .brand,
+  .product {
+    flex: none;
+    white-space: nowrap;
+  }
+  .topRight {
+    display: contents;
+  }
+  .avatar {
+    margin-left: auto;
+  }
+  .subnav {
+    order: 2;
+    flex: 1 1 auto;
+    min-width: 0;
+    /* The padding keeps a focused item's ring inside the scroller; the
+       negative start margin lines the first item up with the brand. */
+    margin: 6px 0 0 -4px;
+    padding: 4px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .subnav::-webkit-scrollbar {
+    display: none;
+  }
+  .navItem {
+    flex: none;
+    white-space: nowrap;
+    padding: 7px 12px;
+  }
+  .back {
+    order: 3;
+    flex: none;
+    margin: 6px 0 0 auto;
+    padding-block: 4px;
+    white-space: nowrap;
+  }
 }
 
 /* Hero */
@@ -597,6 +669,7 @@
   max-width: 1280px;
   margin: 0 auto;
   flex-wrap: wrap;
+  list-style: none;
 }
 .step {
   display: flex;
@@ -607,7 +680,7 @@
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--radius-12);
-  padding: 14px 18px;
+  padding: 0;
 }
 .stepOn {
   border-color: var(--accent);
@@ -1298,4 +1371,120 @@
   100% {
     background-position: 200% 0;
   }
+}
+
+/* Upload flow: stepper buttons, release fields, save status */
+.stepButton {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 14px 18px;
+  border: none;
+  border-radius: inherit;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+.stepButton:disabled {
+  cursor: default;
+  opacity: 0.55;
+}
+
+.stepButton:focus-visible,
+.typeOptions input:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.typeOptions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.typeOptions label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  font-weight: 500;
+}
+
+.typeOptions input {
+  width: auto;
+  padding: 0;
+  border: none;
+  background: none;
+  accent-color: var(--accent);
+}
+
+fieldset.field {
+  border: none;
+  padding: 0;
+  margin-inline: 0;
+  min-width: 0;
+}
+
+fieldset.field legend {
+  padding: 0;
+  margin-bottom: 6px;
+  font-size: var(--text-12-5);
+  font-weight: 600;
+  color: var(--text);
+}
+
+.fieldError {
+  margin: 6px 0 0;
+  font-size: var(--text-12);
+  color: var(--accent-soft);
+}
+
+.fieldCount {
+  margin: 6px 0 0;
+  font-size: var(--text-11);
+  color: var(--text40);
+  text-align: end;
+}
+
+.stepNav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.lockedNote {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 14px 16px;
+  border-radius: var(--radius-10);
+  border: 1px solid rgba(var(--accent-rgb), 0.4);
+  background: rgba(var(--accent-rgb), 0.06);
+}
+
+.lockedNote p {
+  margin: 0;
+}
+
+.saveStatus {
+  margin: 0;
+  font-size: var(--text-12);
+  color: var(--text60);
+}
+
+.field textarea {
+  width: 100%;
+  font: inherit;
+  color: inherit;
+  background: rgba(var(--cream-rgb), 0.04);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-10);
+  padding: 10px 12px;
 }

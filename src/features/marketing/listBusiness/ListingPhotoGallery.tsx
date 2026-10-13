@@ -7,30 +7,12 @@ import type { ListingForm } from "./useListingForm";
 import { ListingPhotoField } from "./ListingPhotoField";
 import styles from "./ListBusinessPage.module.css";
 
-/** The directory card's photo band: 168px tall (`LocalBusinessCardBody`) on a
- *  392px card (the live preview's column), so 7:3. The cover slot uses the same
- *  frame so the uploader crops the photo exactly like the card does. */
-const CARD_COVER_ASPECT = "7 / 3";
-
 const GALLERY: {
   key: PhotoKey;
   height: number;
-  /** Overrides `height` with a fluid frame of this ratio. */
-  aspectRatio?: string;
   wide?: boolean;
-  /** Standing note above the frame; only the cover slot carries one. */
-  noteKey?: string;
 }[] = [
-  {
-    key: "wide",
-    height: 150,
-    aspectRatio: CARD_COVER_ASPECT,
-    wide: true,
-    // The wide shot IS the directory cover: the backend's `coverPhoto` is the
-    // first entry of the ordered gallery, and this slot writes it. Say so here
-    // rather than leaving owners to discover it from the live grid.
-    noteKey: "marketing:listBusiness.step4.gallery.wideNote",
-  },
+  { key: "wide", height: 150, wide: true },
   {
     key: "d1",
     height: 110,
@@ -73,10 +55,8 @@ export function ListingPhotoGallery({ form }: { form: ListingForm }) {
           <ListingPhotoField
             key={slot.key}
             height={slot.height}
-            aspectRatio={slot.aspectRatio}
             wide={slot.wide}
             placeholder={t(PHOTO_CAPTION_KEYS[slot.key][kind])}
-            note={slot.noteKey ? t(slot.noteKey) : undefined}
             displayValue={photoPreviews[slot.key] || draft.photos[slot.key]}
             persistedValue={draft.photos[slot.key]}
             isRejectedByServer={rejectedPhotoSlots.includes(slot.key)}

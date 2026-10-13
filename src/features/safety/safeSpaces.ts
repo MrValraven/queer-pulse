@@ -29,13 +29,19 @@ export interface VerifiedSpace {
   name: string;
   neighbourhood: string;
   description: string;
-  tags: string[];
+  /** Up to three non-sensitive attribute slugs, rendered through
+   *  `attributeLabel` (listingAttributes.data.ts). */
+  highlights: string[];
+  /** Inclusion practice slugs, rendered through `inclusionPracticeLabel`
+   *  (listingFacts.data.ts). */
+  inclusionPractices: string[];
   rating: string;
   reviews: string;
   /* detail */
   eyebrow: string;
   sub: string;
-  metaPills: { label: string; accent?: boolean }[];
+  /** Every attribute slug the space carries, sensitive ones included. */
+  attributes: string[];
   /** Trust tier as a number; the label is composed at render so it localizes. */
   tier: number;
   /**
@@ -88,16 +94,13 @@ export const VERIFIED_SPACES: VerifiedSpace[] = [
     neighbourhood: "Intendente",
     description:
       "One of Lisbon's longest-running queer bars. Genuinely inclusive, with no single type of person dominating the scene. Staff are known to be directly supportive if anything goes wrong. Gender-neutral bathrooms, accessible entrance.",
-    tags: ["Gender-neutral bathrooms", "Accessible", "Trans-welcoming"],
+    highlights: [],
+    inclusionPractices: [],
     rating: "4.9",
     reviews: "54 reviews",
     eyebrow: "Bar · Intendente · Lisbon",
     sub: "A long-running queer bar that never let one crowd take it over. Mixed, easy, and staffed by people who step in before you have to ask.",
-    metaPills: [
-      { label: "Open late, Wed–Sun" },
-      { label: "Gender-neutral bathrooms", accent: true },
-      { label: "Step-free entrance", accent: true },
-    ],
+    attributes: [],
     tier: 1,
     reVerified: "2 May 2026",
     verifier: "Mod team · 2 visits",
@@ -156,15 +159,13 @@ export const VERIFIED_SPACES: VerifiedSpace[] = [
     neighbourhood: "Rato",
     description:
       "Old-school Lisbon gay bar with a loyal community. Welcoming to lesbians, bi, and non-binary people as much as gay men. Drag nights on Fridays. Some accessibility limitations (stairs to main bar).",
-    tags: ["Drag nights", "Long-standing", "Stairs noted"],
+    highlights: ["drag-shows"],
+    inclusionPractices: [],
     rating: "4.7",
     reviews: "38 reviews",
     eyebrow: "Bar · Rato · Lisbon",
     sub: "A Lisbon institution that grew up well: once a gay-men's bar, now a home for the whole community. Friday drag is legendary; the stairs are real.",
-    metaPills: [
-      { label: "Drag Fridays" },
-      { label: "Stairs to main bar", accent: true },
-    ],
+    attributes: ["drag-shows"],
     tier: 2,
     reVerified: "11 Apr 2026",
     verifier: "Mod team · 2 visits",
@@ -223,16 +224,13 @@ export const VERIFIED_SPACES: VerifiedSpace[] = [
     neighbourhood: "Santa Apolónia",
     description:
       "Lisbon's most celebrated club has a consistent track record with the queer community. Multiple floors, good lighting in bathrooms, security staff who take complaints seriously. Queer nights occur regularly. Check their calendar.",
-    tags: ["Queer nights", "Reviewed security", "Multiple floors"],
+    highlights: [],
+    inclusionPractices: ["named-contact"],
     rating: "4.6",
     reviews: "47 reviews",
     eyebrow: "Club · Santa Apolónia · Lisbon",
     sub: "The big one, and a careful one. Security here actually takes complaints seriously, the bathrooms are lit, and queer nights are a core part of the programming.",
-    metaPills: [
-      { label: "Regular queer nights" },
-      { label: "Trained security", accent: true },
-      { label: "Multiple floors" },
-    ],
+    attributes: [],
     tier: 1,
     reVerified: "28 Mar 2026",
     verifier: "Mod team · 3 visits",
@@ -291,16 +289,13 @@ export const VERIFIED_SPACES: VerifiedSpace[] = [
     neighbourhood: "Príncipe Real",
     description:
       "A calm, queer-owned café. Good for laptop work or a quiet coffee. Community notice board on the wall. Staff know many regulars by name. Fully accessible. One of the few alcohol-free-friendly options in the neighbourhood.",
-    tags: ["Queer-owned", "Sober-friendly", "Accessible", "Community board"],
+    highlights: ["alcohol-free-drinks"],
+    inclusionPractices: [],
     rating: "4.9",
     reviews: "29 reviews",
     eyebrow: "Café · Príncipe Real · Lisbon",
     sub: "A queer-owned, sober-friendly café built for the long stay: laptop mornings, quiet first dates, a community board that actually gets read. Fully step-free.",
-    metaPills: [
-      { label: "Queer-owned" },
-      { label: "Sober-friendly", accent: true },
-      { label: "Fully accessible", accent: true },
-    ],
+    attributes: ["alcohol-free-drinks"],
     tier: 1,
     reVerified: "6 May 2026",
     verifier: "Mod team · 2 visits",
@@ -359,16 +354,13 @@ export const VERIFIED_SPACES: VerifiedSpace[] = [
     neighbourhood: "Intendente",
     description:
       "Community-run sexual health service. Staff are experienced with queer and trans clients. No judgment, no assumptions about bodies or practices. Free and anonymous. See the sexual health page for full details.",
-    tags: ["Trans-experienced staff", "Free", "Anonymous"],
+    highlights: [],
+    inclusionPractices: [],
     rating: "4.9",
     reviews: "84 reviews",
     eyebrow: "Healthcare · Intendente · Lisbon",
     sub: "Community-run sexual health, free and anonymous, staffed by people who have heard it all and judge none of it. No assumptions about your body or your life.",
-    metaPills: [
-      { label: "Free & anonymous", accent: true },
-      { label: "Trans-experienced staff", accent: true },
-      { label: "Walk-in & booking" },
-    ],
+    attributes: ["trans-care-experience"],
     tier: 1,
     reVerified: "19 May 2026",
     verifier: "Mod team · 2 visits",
@@ -427,16 +419,13 @@ export const VERIFIED_SPACES: VerifiedSpace[] = [
     neighbourhood: "Mouraria",
     description:
       "A barbershop with community roots. Explicitly welcoming to trans and non-binary people. Staff are experienced with all hair types and won't make your visit about your identity. No gendered pricing.",
-    tags: ["Trans-welcoming", "No gendered pricing", "Walk-in welcome"],
+    highlights: ["priced-by-service"],
+    inclusionPractices: [],
     rating: "4.8",
     reviews: "22 reviews",
     eyebrow: "Barbershop · Mouraria · Lisbon",
     sub: "A neighbourhood barbershop that quietly does the thing so many fumble: the cut you ask for, no interrogation, no gendered price list, no flinch.",
-    metaPills: [
-      { label: "No gendered pricing", accent: true },
-      { label: "Walk-in welcome" },
-      { label: "Trans-experienced", accent: true },
-    ],
+    attributes: ["priced-by-service"],
     tier: 2,
     reVerified: "24 Apr 2026",
     verifier: "Mod team · 2 visits",
@@ -495,16 +484,13 @@ export const VERIFIED_SPACES: VerifiedSpace[] = [
     neighbourhood: "Bairro Alto",
     description:
       "Arts venue with a long history of hosting queer artists and events. Programming is consistently intersectional. Welcomes community events, hosts several regular queer club nights, and has always been a safe space for queerness in Lisbon.",
-    tags: ["Queer programming", "Community events", "Accessible"],
+    highlights: ["hosts-events"],
+    inclusionPractices: [],
     rating: "4.8",
     reviews: "41 reviews",
     eyebrow: "Arts venue · Bairro Alto · Lisbon",
     sub: "Decades of putting queer artists on the main stage rather than the after-hours slot. Intersectional by instinct, and a reliable safe room since long before there were badges.",
-    metaPills: [
-      { label: "Queer programming" },
-      { label: "Hosts community events", accent: true },
-      { label: "Step-free main hall", accent: true },
-    ],
+    attributes: ["hosts-events"],
     tier: 1,
     reVerified: "15 Apr 2026",
     verifier: "Mod team · 2 visits",
@@ -567,16 +553,13 @@ export const VERIFIED_SPACES: VerifiedSpace[] = [
     neighbourhood: "Cais do Sodré",
     description:
       "Queer-staffed, relaxed, and consistently respectful. Gender-neutral bathroom. A go-to for community members who want somewhere quiet and welcoming for a first date or a meeting. No alcohol, sober-friendly.",
-    tags: ["Sober-friendly", "Queer staff", "Gender-neutral bathroom"],
+    highlights: ["alcohol-free-drinks"],
+    inclusionPractices: [],
     rating: "4.7",
     reviews: "18 reviews",
     eyebrow: "Café · Cais do Sodré · Lisbon",
     sub: "Calm, queer-staffed, and reliably respectful: the go-to for a low-stakes first date or a daytime meeting in a loud part of town. Sober by default.",
-    metaPills: [
-      { label: "Queer-staffed" },
-      { label: "Sober-friendly", accent: true },
-      { label: "Gender-neutral bathroom", accent: true },
-    ],
+    attributes: ["alcohol-free-drinks"],
     tier: 2,
     reVerified: "9 May 2026",
     verifier: "Mod team · 2 visits",

@@ -92,10 +92,8 @@ describe("detailDtoToPlace for online listings", () => {
       tagline: "",
       city: "",
       timezone: null,
-      pills: [],
       gallery: [],
       whatItIs: [],
-      goodFor: [],
       hoursType: "appointment",
       hoursNote: "",
       owner: {

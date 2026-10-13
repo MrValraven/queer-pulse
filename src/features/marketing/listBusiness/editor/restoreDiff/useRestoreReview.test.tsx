@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../../../../test/TestProviders";
-import type { ListingDraft, PhotoKey } from "../../listBusiness.data";
+import type { ListingDraft, RejectedPhotoSlot } from "../../listBusiness.data";
 import { blankDraft } from "../../listingFormDraft";
 import type { ListingForm } from "../../useListingForm";
 import { LISTING_EDITOR_SECTIONS } from "../listingEditor.data";
@@ -15,10 +15,12 @@ import { useRestoreReview } from "./useRestoreReview";
  * form and the autosave, and that a partial restore gives back the photo
  * preview and rejected flag of a slot it left alone (`form.reset` clears
  * both, and in live mode the slot then holds an undisplayable storage key).
+ * The cover follows the same rule as a gallery slot.
  * The form and autosave are fakes, so each call can be read back.
  */
 
 const PREVIEW_URL = "blob:uploaded-this-session";
+const COVER_PREVIEW_URL = "blob:cover-uploaded-this-session";
 const OPEN_LABEL = "Open review";
 
 /** On screen: a photo uploaded this session (a storage key plus its blob
@@ -38,14 +40,29 @@ function drafts(): { current: ListingDraft; saved: ListingDraft } {
   return { current, saved };
 }
 
-function fakes() {
-  const { current, saved } = drafts();
+/** With `hasSessionCover`, the screen also holds a cover uploaded this
+ *  session (previewed and flagged by the server), and the saved copy has
+ *  none, so restoring Photos changes the cover's picture. */
+function fakes({ hasSessionCover = false } = {}) {
+  const drafted = drafts();
+  const current: ListingDraft = hasSessionCover
+    ? {
+        ...drafted.current,
+        coverPhoto: { image: "listing-covers/new-key", alt: "The door" },
+      }
+    : drafted.current;
+  const { saved } = drafted;
+  const rejectedPhotoSlots: RejectedPhotoSlot[] = hasSessionCover
+    ? ["wide", "cover"]
+    : ["wide"];
   const form = {
     draft: current,
     photoPreviews: { wide: PREVIEW_URL, d1: "", d2: "", vibe: "" },
-    rejectedPhotoSlots: ["wide"] as PhotoKey[],
+    coverPreview: hasSessionCover ? COVER_PREVIEW_URL : "",
+    rejectedPhotoSlots,
     reset: vi.fn<(next?: ListingDraft) => void>(),
     setPhotoPreview: vi.fn(),
+    setCoverPreview: vi.fn(),
     setRejectedPhotoSlots: vi.fn(),
   };
   const autosave: ListingEditorAutosave = {
@@ -81,8 +98,8 @@ function Harness({
   );
 }
 
-function renderHarness() {
-  const setup = fakes();
+function renderHarness(options: { hasSessionCover?: boolean } = {}) {
+  const setup = fakes(options);
   render(
     <TestProviders>
       <Harness form={setup.form} autosave={setup.autosave} />
@@ -125,5 +142,31 @@ describe("useRestoreReview", () => {
     const previewOrder = form.setPhotoPreview.mock.invocationCallOrder[0] ?? -1;
     expect(previewOrder).toBeGreaterThan(resetOrder);
     expect(autosave.dismissRestorable).toHaveBeenCalledTimes(1);
+  });
+
+  it("keeps the cover's preview and rejected flag when its picture stays", async () => {
+    const { form } = renderHarness({ hasSessionCover: true });
+    fireEvent.click(await screen.findByRole("checkbox", { name: /^Photos/ }));
+    fireEvent.click(screen.getByRole("button", { name: "Bring back 1 area" }));
+
+    const merged = form.reset.mock.calls[0]?.[0];
+    expect(merged?.coverPhoto?.image).toBe("listing-covers/new-key");
+    expect(form.setCoverPreview).toHaveBeenCalledWith(COVER_PREVIEW_URL);
+    expect(form.setRejectedPhotoSlots).toHaveBeenCalledWith(["wide", "cover"]);
+    const resetOrder = form.reset.mock.invocationCallOrder[0] ?? 0;
+    const coverOrder = form.setCoverPreview.mock.invocationCallOrder[0] ?? -1;
+    expect(coverOrder).toBeGreaterThan(resetOrder);
+  });
+
+  it("leaves the cover's preview and rejected flag cleared when its picture changes", async () => {
+    const { form } = renderHarness({ hasSessionCover: true });
+    fireEvent.click(
+      await screen.findByRole("button", { name: "Bring them all back" }),
+    );
+
+    const merged = form.reset.mock.calls[0]?.[0];
+    expect(merged?.coverPhoto?.image).toBe("");
+    expect(form.setCoverPreview).not.toHaveBeenCalled();
+    expect(form.setRejectedPhotoSlots).toHaveBeenCalledWith([]);
   });
 });

@@ -6,6 +6,7 @@ import { Button } from "../ui";
 import { linkToPath } from "../../../app/routeMap";
 import { useIsLinkVisible } from "../../../app/authGate";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
+import { useStudioAccess } from "../../../features/studio/api/useStudioAccess";
 import { NavBuildBadge } from "./NavBuildBadge";
 import { useTranslation } from "../../i18n/useTranslation";
 import styles from "./MegaNavDrawer.module.css";
@@ -18,7 +19,13 @@ export function MegaNavDrawer({ onNavigate }: MegaNavDrawerProps) {
   const { t } = useTranslation();
   const isLinkVisible = useIsLinkVisible();
   const { demoMode } = useDemoMode();
-  const menus = filterMenus(NAV_MENUS, isLinkVisible, demoMode);
+  const { hasAccess: hasStudioAccess } = useStudioAccess();
+  const menus = filterMenus(
+    NAV_MENUS,
+    isLinkVisible,
+    demoMode,
+    hasStudioAccess,
+  );
   const [openKey, setOpenKey] = useState<string | null>(null);
 
   return (

@@ -10,16 +10,15 @@
   display: flex;
   align-items: center;
   gap: 10px;
+  width: 100%;
   padding: 16px 0;
+  background: none;
+  border: none;
   cursor: pointer;
-  list-style: none;
+  text-align: left;
   font-family: var(--serif);
   font-size: var(--text-16);
   color: var(--ink);
-}
-
-.summary::-webkit-details-marker {
-  display: none;
 }
 
 .summaryIcon {
@@ -40,8 +39,14 @@
   transition-timing-function: var(--ease);
 }
 
-.guide[open] .chevron {
+.chevronOpen {
   transform: rotate(180deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chevron {
+    transition: none;
+  }
 }
 
 .steps {

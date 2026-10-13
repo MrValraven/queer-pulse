@@ -12,7 +12,7 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { routes } from "../../app/routeMap";
-import { absoluteFileUrl } from "./adminMedia.format";
+import { AdminMediaPreview } from "./AdminMediaPreview";
 import {
   getAdminMediaHead,
   type AdminMediaHead,
@@ -196,8 +196,12 @@ function AdminMediaDrawer({
 
   const declaredContentType = object.contentType ?? t("admin:media.unknown");
   const realContentType = head?.contentType ?? null;
+  // A null declared type is unknown (an extension outside the image types,
+  // such as a PDF menu), so only a known declared type can disagree.
   const contentTypeMismatch =
-    realContentType !== null && realContentType !== object.contentType;
+    object.contentType !== null &&
+    realContentType !== null &&
+    realContentType !== object.contentType;
 
   return (
     <>
@@ -205,10 +209,10 @@ function AdminMediaDrawer({
         label={t("admin:media.drawer.ariaLabel")}
         onClose={onClose}
         head={
-          <img
-            className={styles.drawerImage}
-            src={absoluteFileUrl(object.fileUrl)}
-            alt=""
+          <AdminMediaPreview
+            object={object}
+            variant="drawer"
+            realContentType={realContentType}
           />
         }
         foot={

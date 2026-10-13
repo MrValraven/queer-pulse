@@ -15,7 +15,7 @@ import {
 
 const fixture = (slug: string) =>
   MOBILE_DIRECTORY_PLACES.find((place) => place.slug === slug)!;
-const NO_FILTERS = { categories: [], query: "", vibes: [] };
+const NO_FILTERS = { categories: [], query: "" };
 
 afterEach(() => vi.useRealTimers());
 
@@ -75,11 +75,11 @@ describe("Open now and Out and about", () => {
     for (const day of Object.keys(hours)) {
       hours[day] = { open: true, intervals: [{ from: "00:00", to: "23:59" }] };
     }
-    const hairdresser = businessToLocal(
-      { ...fixture("corte-movel"), hours },
+    const tour = businessToLocal(
+      { ...fixture("lisboa-arco-iris-walks"), hours },
       true,
     );
-    expect(isPlaceOpenNow(hairdresser)).toBe(true);
+    expect(isPlaceOpenNow(tour)).toBe(true);
   });
 
   it("keeps only out-and-about listings with the chip on", () => {

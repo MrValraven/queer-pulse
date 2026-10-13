@@ -274,6 +274,26 @@
   letter-spacing: 0;
   font-size: var(--text-11);
 }
+/* The lock ahead of the "Private note" label: the one field only the member
+   and our team ever read. Sits on the label's baseline, sized by its 1em. */
+.fieldLabelIcon {
+  vertical-align: -0.125em;
+  margin-inline-end: var(--icon-gap-inline);
+}
+/* The private note's help line and its count on one row: help on the left,
+   count on the right, so the count sits directly under the input. */
+.fieldMeta {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--gap-sm);
+}
+.fieldMeta .fieldHelp {
+  margin: 0;
+}
+.fieldMeta .charCount {
+  flex-shrink: 0;
+}
 
 .formNote {
   font-size: var(--text-12-5);

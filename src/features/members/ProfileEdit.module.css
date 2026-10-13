@@ -220,6 +220,11 @@
 }
 
 /* ---- Now status + Open to ------------------------------------------------- */
+/* Matches the bio and "now" fields above and below it, which cap at 56ch. */
+.workPicker {
+  max-width: 56ch;
+}
+
 .nowInput {
   font-size: var(--text-16);
   color: var(--ink);

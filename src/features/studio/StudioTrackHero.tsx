@@ -1,46 +1,48 @@
-import { FiHeart, FiPlus, FiCheck } from "react-icons/fi";
+import { FiCheck, FiHeart, FiPause, FiPlay, FiPlus } from "react-icons/fi";
 import { ImageSlot } from "../../shared/components/ui";
-import { useSaved } from "../../app/providers/useSaved";
-import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
-import { TRACK, coverImage } from "./studioTrack.data";
+import type { StudioTrackView } from "./api/studio.adapters";
+import { useStudioPlayer } from "./player/studioPlayerContext";
+import { useStudioSaveToggle } from "./useStudioSaveToggle";
+import { useStudioShowcase } from "./useStudioShowcase";
 import ss from "./studio.module.css";
 
-// Content — this track's position/duration/earnings are per-instance mock
-// figures; the artist name is content. Only the surrounding chrome sentences
-// are translated (§1).
-const TRACK_POSITION = { current: 6, total: 11 };
-const ARTIST_NAME = "Mariana Sol";
-const TRACK_TITLE_PRE = "Carta para a ";
-const TRACK_TITLE_EM = "santa";
-const ALBUM_TITLE = "Cidade dos santos";
-const RELEASE_YEAR = "2026";
-const MONTH_EARNINGS = 2140;
 const QUICK_TIP_AMOUNT = 2;
-const PER_LISTEN_AMOUNT = 0.05;
-const TRACK_DURATION = "4:18";
-const TRACK_AUDIO_FORMAT = "Flac · 24/48";
 
-export function StudioTrackHero({ onTip }: { onTip: () => void }) {
+export function StudioTrackHero({
+  track,
+  onTip,
+}: {
+  track: StudioTrackView;
+  onTip: () => void;
+}) {
   const { t } = useTranslation();
-  const fmt = useFormat();
-  const { isSaved, toggleSave } = useSaved();
-  const { showToast } = useToast();
-  const saved = isSaved(TRACK.id);
+  const formatters = useFormat();
+  const player = useStudioPlayer();
+  const isShowcase = useStudioShowcase();
+  const save = useStudioSaveToggle({
+    savedId: track.savedId,
+    kind: "studio_track",
+    title: track.title,
+    href: track.href,
+    meta: track.release.artist.name,
+  });
+  const isCurrent = player.isCurrentTrack(track.id);
+  const isPlaying = isCurrent && player.status === "playing";
 
   return (
-    <section className={ss.hero} style={{ padding: "24px 0 32px" }}>
+    <section className={`${ss.hero} ${ss.heroTight}`}>
       <div className={ss.heroInner}>
         <div className={ss.heroArt}>
           <ImageSlot
-            src={coverImage}
-            tint="coral"
+            src={track.release.coverUrl ?? undefined}
+            tint={track.release.tint}
             width="100%"
             height="100%"
             radius={16}
-            placeholder={`${t("studio:media.coverLabel")} · ${t("studio:media.trackLabel")} ${TRACK_POSITION.current}`}
+            placeholder={`${t("studio:media.coverLabel")} · ${track.release.title}`}
             style={{ position: "absolute", inset: 0 }}
             loading="eager"
             fetchPriority="high"
@@ -48,110 +50,73 @@ export function StudioTrackHero({ onTip }: { onTip: () => void }) {
         </div>
         <div className={ss.heroInfo}>
           <div className={ss.eb}>
-            <span className={ss.live} />{" "}
             {t("studio:track.hero.eyebrow", {
-              current: TRACK_POSITION.current,
-              total: TRACK_POSITION.total,
+              current: track.position,
+              total: track.release.trackCount,
             })}
           </div>
-          <h1>
-            {TRACK_TITLE_PRE}
-            <em>{TRACK_TITLE_EM}</em>
-          </h1>
+          <h1>{track.title}</h1>
           <div className={ss.by}>
             <Translation
-              i18nKey="studio:track.hero.byFromLine"
+              i18nKey="studio:trackPage.byLine"
               components={{ strong: <strong />, em: <em /> }}
               values={{
-                artist: ARTIST_NAME,
-                album: ALBUM_TITLE,
-                year: RELEASE_YEAR,
+                artist: track.release.artist.name,
+                release: track.release.title,
               }}
             />
           </div>
           <div className={ss.stats}>
-            <span>
-              <Translation
-                i18nKey="studio:room.hero.listening"
-                components={{ em: <em /> }}
-                values={{ count: 312 }}
-              />
-            </span>
-            <span className={ss.dot} />
-            <span>{TRACK_DURATION}</span>
-            <span className={ss.dot} />
-            <span>{TRACK_AUDIO_FORMAT}</span>
-            <span className={ss.dot} />
-            <span>
-              <Translation
-                i18nKey="studio:track.hero.payMonth"
-                components={{ em: <em /> }}
-                values={{
-                  amount: fmt.currency(MONTH_EARNINGS),
-                  artist: ARTIST_NAME,
-                }}
-              />
-            </span>
+            {track.durationLabel && <span>{track.durationLabel}</span>}
+            {track.isExplicit && (
+              <>
+                <span className={ss.dot} />
+                <span>{t("studio:release.explicit")}</span>
+              </>
+            )}
           </div>
           <div className={ss.heroActions}>
             <button
               type="button"
               className={ss.playBig}
-              aria-label={t("studio:player.play")}
+              disabled={!track.hasAudio}
+              aria-label={
+                isPlaying
+                  ? t("studio:release.pauseTrack", { title: track.title })
+                  : t("studio:release.playTrack", { title: track.title })
+              }
+              onClick={() =>
+                isCurrent
+                  ? player.togglePlay()
+                  : void player.playRelease(track.releaseId, track.id)
+              }
             >
-              <svg viewBox="0 0 12 14" fill="currentColor">
-                <path d="M1 1l10 6-10 6z" />
-              </svg>
+              {isPlaying ? <FiPause aria-hidden /> : <FiPlay aria-hidden />}
             </button>
             <button
               type="button"
-              onClick={() => {
-                const now = toggleSave(TRACK);
-                showToast(
-                  now
-                    ? t("studio:room.hero.addedToast")
-                    : t("studio:room.hero.removedToast"),
-                  now ? "success" : "info",
-                );
-              }}
-            >
-              {saved ? (
-                <>
-                  <FiCheck /> {t("studio:room.hero.inLibrary")}
-                </>
-              ) : (
-                <>
-                  <FiPlus /> {t("studio:room.hero.addLibrary")}
-                </>
+              aria-pressed={save.isSaved}
+              aria-label={t(
+                save.isSaved
+                  ? "studio:save.removeSavedCta"
+                  : "studio:save.saveReleaseCta",
+                { title: track.title },
               )}
-            </button>
-            <button type="button" className={ss.tip} onClick={onTip}>
-              <FiHeart />{" "}
-              {t("studio:player.tipCta", {
-                amount: fmt.currency(QUICK_TIP_AMOUNT),
-              })}
-            </button>
-          </div>
-          <div className={ss.payPill}>
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={2}
+              onClick={save.toggle}
             >
-              <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7H14a3.5 3.5 0 0 1 0 7H6" />
-            </svg>
-            <span>
-              <Translation
-                i18nKey="studio:room.hero.payNote"
-                components={{ em: <em /> }}
-                values={{
-                  artist: ARTIST_NAME,
-                  amount: fmt.currency(PER_LISTEN_AMOUNT),
-                }}
-              />{" "}
-              <span className={ss.small}>{t("studio:room.hero.tipOnTop")}</span>
-            </span>
+              {save.isSaved ? <FiCheck aria-hidden /> : <FiPlus aria-hidden />}{" "}
+              {save.isSaved
+                ? t("studio:save.savedLabel")
+                : t("studio:save.saveCta")}
+            </button>
+            {isShowcase && (
+              <button type="button" className={ss.tip} onClick={onTip}>
+                <FiHeart aria-hidden />{" "}
+                {t("studio:player.tipCta", {
+                  amount: formatters.currency(QUICK_TIP_AMOUNT),
+                })}
+              </button>
+            )}
           </div>
         </div>
       </div>

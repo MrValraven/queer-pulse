@@ -2,6 +2,7 @@ import { AddToCalendarSheet } from "../../shared/components/calendar/AddToCalend
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { CalendarEventInput } from "../../shared/lib/calendarExport";
+import { gatheringShareUrl } from "../gatherings/gatheringPaths";
 import { useMyEvents } from "./MyEventsContext";
 import { atTime } from "./myEvents.helpers";
 import { joinWhenParts, myEventWhen } from "./myEvents.when";
@@ -9,11 +10,19 @@ import type { MyEvent } from "./myEvents.types";
 
 const HOUR_MS = 60 * 60 * 1000;
 
-/** Turn a MyEvent into calendar-export input, defaulting to a 1h duration. */
+/** Turn a MyEvent into calendar-export input, defaulting to a 1h duration.
+ *  The description carries the gathering's QueerPulse link when the card has
+ *  a page to point at, as the gathering page's own "Add to calendar" does. */
 function toCalendarInput(ev: MyEvent): CalendarEventInput {
   const start = atTime(ev, "start");
   const end = ev.end ? atTime(ev, "end") : new Date(start.getTime() + HOUR_MS);
-  return { title: ev.title, start, end, location: ev.venue };
+  return {
+    title: ev.title,
+    start,
+    end,
+    location: ev.venue,
+    description: ev.slug ? gatheringShareUrl(ev.slug) : undefined,
+  };
 }
 
 /**

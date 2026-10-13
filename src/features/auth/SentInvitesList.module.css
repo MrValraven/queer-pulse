@@ -45,15 +45,23 @@
   flex-direction: column;
   gap: 10px;
 }
+/* The card: the invite's details on top, the private-note editor below when
+   it is open. The space between them lives inside the editor's fold, so it
+   grows in smoothly with the editor. */
 .row {
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 14px;
+  flex-direction: column;
   background: var(--paper);
   border: 1px solid rgba(var(--line-rgb), 0.09);
   border-radius: var(--radius-13);
   padding: 14px 16px;
+}
+/* Details on the left, status chip and row actions on the right. */
+.rowBody {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
 }
 .main {
   min-width: 0;
@@ -100,6 +108,185 @@
 .detail {
   font-size: var(--text-12-5);
   color: var(--ink-40);
+}
+
+/* The member's own label for who the invite is for. It leads the row in
+   plain type (no quotes, no italic) so it never reads as the public note. */
+.privateNote {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--icon-gap-inline);
+  font-size: var(--text-13);
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--ink-60);
+  overflow-wrap: anywhere;
+}
+.privateNoteIcon {
+  flex: none;
+  margin-top: 0.25em;
+  color: var(--ink-40);
+}
+/* A code-only row has no address to name the person, so the note is its most
+   human line and takes the title ink. A pinned row keeps it a step quieter
+   than the address beneath it. */
+.main:has(.code) .privateNoteText {
+  color: var(--text-strong);
+}
+/* "Add private note" / "Edit private note": a quiet text action closing the
+   details column. The padding keeps a 44px hit area, and the matching negative
+   margins line the text up with the column and tuck the box into the card's
+   own padding so the row grows by the text line only. */
+.privateNoteToggle {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--icon-gap-inline);
+  min-height: 44px;
+  padding: 0 8px;
+  margin-inline-start: -8px;
+  margin-block: -4px -10px;
+  background: none;
+  border: none;
+  border-radius: var(--radius-4);
+  font-family: inherit;
+  font-size: var(--text-12-5);
+  font-weight: 600;
+  color: var(--ink-60);
+  text-decoration: underline;
+  text-decoration-color: var(--line-2);
+  text-underline-offset: 3px;
+  cursor: pointer;
+  transition-property: color, text-decoration-color;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+.privateNoteToggleIcon {
+  flex: none;
+  color: var(--ink-40);
+}
+@media (hover: hover) {
+  .privateNoteToggle:hover:not([aria-disabled="true"]) {
+    color: var(--ink);
+    text-decoration-color: currentColor;
+  }
+}
+/* Open: full ink and a solid underline, so the toggle reads as the thing that
+   opened the editor below. */
+.privateNoteToggle[aria-expanded="true"] {
+  color: var(--ink);
+  text-decoration-color: currentColor;
+}
+/* A save is in flight: the toggle holds the editor as it is. */
+.privateNoteToggle[aria-disabled="true"] {
+  cursor: progress;
+}
+/* The toggle's box starts flush under the detail line and tucks into the
+   card's padding, so the usual outside ring would cover the text above and the
+   card edge below. The same two tones draw inside the 44px box instead: the
+   cream halo on the box's inner edge, the accent ring 3px within it, so one of
+   the two clears whatever ground sits behind in either theme. */
+.privateNoteToggle:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: -6px;
+  box-shadow: var(--ring-cream-inset);
+}
+/* The editor's fold reaches a small gutter past the card's content edge, and
+   the editor pads it back, so the field's focus ring (outline, offset and
+   cream halo) sits inside the box the fold clips while it opens. */
+.privateNoteCollapse {
+  margin-inline: -6px;
+}
+.privateNoteEditor {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 10px;
+  padding: 12px 6px 6px;
+  container-type: inline-size;
+}
+/* The divider spans the content width only, so the ring gutter stays unseen. */
+.privateNoteEditor::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  inset-inline: 6px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
+}
+.privateNoteFieldLabel {
+  font-size: var(--text-12);
+  font-weight: 600;
+  color: var(--ink-60);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.privateNoteInput {
+  width: 100%;
+  font-family: var(--sans);
+  font-size: var(--text-16);
+  line-height: 1.5;
+  color: var(--ink);
+  background: var(--cream);
+  border: 1.5px solid rgba(var(--line-rgb), 0.14);
+  border-radius: var(--radius-12);
+  padding: 10px 14px;
+  resize: none;
+  transition-property: border-color, background-color;
+  transition-duration: var(--dur-base);
+  transition-timing-function: var(--ease);
+}
+.privateNoteInput:focus {
+  border-color: var(--line-strong);
+  background-color: var(--paper);
+}
+.privateNoteMeta {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+.privateNoteHelp {
+  margin: 0;
+  font-size: var(--text-12-5);
+  line-height: 1.6;
+  color: var(--ink-60);
+}
+.privateNoteCount {
+  flex: none;
+  font-size: var(--text-12);
+  color: var(--ink-40);
+}
+/* Wraps at phone width: Save and Cancel share a line, Delete drops below. */
+.privateNoteActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+/* The md Button's 44px floor with the compact row-action type. */
+.privateNoteAction {
+  padding: 8px 16px;
+  font-size: var(--text-13-5);
+}
+.privateNoteDelete {
+  margin-inline-start: auto;
+}
+/* Narrow editor: Delete wraps under Save and starts the line with it. */
+@container (max-width: 480px) {
+  .privateNoteDelete {
+    margin-inline-start: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .privateNoteInput,
+  .privateNoteToggle {
+    transition-property: none;
+  }
+}
+/* Loading row: room for the private-note toggle's line. */
+.skeletonToggle {
+  padding-block: 12px 2px;
 }
 
 .side {

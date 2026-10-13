@@ -1,5 +1,5 @@
 import { API_BASE_URL } from "../../../../../shared/api/config";
-import { PHOTO_KEYS } from "../../listBusiness.data";
+import { coverPhotoOf, PHOTO_KEYS } from "../../listBusiness.data";
 import {
   ACCESSIBILITY_ANSWER_BY_ID,
   accessibilityQuestionsFor,
@@ -22,10 +22,10 @@ import {
 import type { RestoreRowChange } from "./restoreDiff.types";
 
 /**
- * Row builders for accessibility answers, services and photo slots. The hours
- * rows and the menu rows have files of their own. Each returns only the rows
- * that differ, decided on the raw values, with every display string already
- * resolved.
+ * Row builders for accessibility answers, services, photo slots and the
+ * cover. The hours rows and the menu rows have files of their own. Each
+ * returns only the rows that differ, decided on the raw values, with every
+ * display string already resolved.
  */
 
 const ACCESSIBILITY_NOTE_LABEL_KEY =
@@ -166,4 +166,37 @@ export function photoRows(context: RestoreDiffContext): RestoreRowChange[] {
       },
     ];
   });
+}
+
+/** The cover's row, when its picture or alt text differs. Same status and
+ *  thumbnail rules as a gallery slot's row. */
+export function coverPhotoRows(
+  context: RestoreDiffContext,
+): RestoreRowChange[] {
+  const { current, saved, t, coverPreview } = context;
+  const beforeCover = coverPhotoOf(current);
+  const afterCover = coverPhotoOf(saved);
+  if (
+    beforeCover.image === afterCover.image &&
+    beforeCover.alt === afterCover.alt
+  )
+    return [];
+  const isAdded = !beforeCover.image && Boolean(afterCover.image);
+  const isRemoved = Boolean(beforeCover.image) && !afterCover.image;
+  const row = changedRow(
+    "coverPhoto",
+    t(`${DIFF_KEY_PREFIX}.photo.cover`),
+    isAdded ? null : beforeCover.alt,
+    isRemoved ? null : afterCover.alt,
+  );
+  const beforeShown = beforeCover.image
+    ? coverPreview || beforeCover.image
+    : "";
+  return [
+    {
+      ...row,
+      beforeImageUrl: displayablePhotoUrl(beforeShown, true),
+      afterImageUrl: displayablePhotoUrl(afterCover.image, false),
+    },
+  ];
 }

@@ -82,38 +82,6 @@
   font-style: italic;
   color: var(--accent);
 }
-.lyrLang {
-  display: flex;
-  gap: 2px;
-  background: rgba(var(--cream-rgb), 0.06);
-  border-radius: var(--radius-pill);
-  padding: 3px;
-}
-.lyrLang button {
-  font-family: var(--sans);
-  font-size: var(--text-12);
-  font-weight: 600;
-  color: rgba(var(--cream-rgb), 0.5);
-  background: transparent;
-  border: none;
-  border-radius: var(--radius-pill);
-  padding: 5px 12px;
-  cursor: pointer;
-}
-.lyrLangOn {
-  background: var(--accent);
-  color: rgba(var(--cream-rgb), 1);
-}
-.lyric .annot {
-  font-size: var(--text-11-5);
-  font-style: italic;
-  font-family: var(--serif);
-  color: var(--accent);
-  margin: 18px 0 8px;
-}
-.lyric .annot:first-child {
-  margin-top: 0;
-}
 .lyric p {
   font-family: var(--serif);
   font-size: var(--text-17);
@@ -124,12 +92,16 @@
   font-style: italic;
   color: rgba(var(--cream-rgb), 1);
 }
-.lyric p.played {
-  color: rgba(var(--cream-rgb), 0.85);
+.lyric .stanza {
+  margin: 0 0 18px;
 }
-.lyric p.now {
-  color: var(--accent);
-  font-weight: 500;
+.lyric .stanza:last-child {
+  margin-bottom: 0;
+}
+.noLyrics {
+  margin: 0;
+  font-size: var(--text-14);
+  color: rgba(var(--cream-rgb), 0.62);
 }
 .lyrFoot {
   display: flex;

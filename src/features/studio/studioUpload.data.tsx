@@ -1,19 +1,28 @@
-export const UPLOAD_STEPS = [
+import type { UploadStepId } from "./studioUploadDraft.data";
+
+export const UPLOAD_STEPS: {
+  id: UploadStepId;
+  num: number;
+  nmKey: string;
+  subKey: string;
+}[] = [
   {
+    id: "release",
     num: 1,
-    nmKey: "studio:upload.steps.files.nm",
-    subKey: "studio:upload.steps.files.sub",
-    on: true,
+    nmKey: "studio:uploadFlow.steps.release.nm",
+    subKey: "studio:uploadFlow.steps.release.sub",
   },
   {
+    id: "tracks",
     num: 2,
-    nmKey: "studio:upload.steps.metadata.nm",
-    subKey: "studio:upload.steps.metadata.sub",
+    nmKey: "studio:uploadFlow.steps.tracks.nm",
+    subKey: "studio:uploadFlow.steps.tracks.sub",
   },
   {
+    id: "publish",
     num: 3,
-    nmKey: "studio:upload.steps.licence.nm",
-    subKey: "studio:upload.steps.licence.sub",
+    nmKey: "studio:uploadFlow.steps.publish.nm",
+    subKey: "studio:uploadFlow.steps.publish.sub",
   },
 ];
 
@@ -51,7 +60,7 @@ export const UPLOAD_SPLITS = [
     tone: "coral",
     name: "Mariana Sol",
     subtitle: "you · songwriter, voice, piano · all tracks",
-    role: "writer + performer · 1 – 11",
+    role: "writer + performer · 1 to 11",
     percent: "85",
   },
   {
@@ -153,6 +162,40 @@ export function buildUploadSideInfo(t: TFunction) {
         {
           label: t("studio:upload.side.lyrics.list.approval.label"),
           value: t("studio:upload.side.lyrics.list.approval.value"),
+          em: false,
+        },
+      ],
+    },
+  ];
+}
+
+/** The live sidebar: what v1 really does with a file (kept as uploaded, no
+ *  loudness work, no ISRC). */
+export function buildUploadSideInfoLive(t: TFunction) {
+  return [
+    {
+      eyebrow: t("studio:uploadFlow.side.eyebrow"),
+      title: (
+        <Translation
+          i18nKey="studio:uploadFlow.side.title"
+          components={{ em: <em /> }}
+        />
+      ),
+      body: t("studio:uploadFlow.side.body"),
+      list: [
+        {
+          label: t("studio:uploadFlow.side.formats.label"),
+          value: t("studio:uploadFlow.side.formats.value"),
+          em: true,
+        },
+        {
+          label: t("studio:uploadFlow.side.size.label"),
+          value: t("studio:uploadFlow.side.size.value"),
+          em: false,
+        },
+        {
+          label: t("studio:uploadFlow.side.listeners.label"),
+          value: t("studio:uploadFlow.side.listeners.value"),
           em: false,
         },
       ],

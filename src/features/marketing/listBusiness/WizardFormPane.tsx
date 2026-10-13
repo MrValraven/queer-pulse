@@ -1,11 +1,14 @@
 import { useRef } from "react";
+import { usePrefersReducedMotion } from "../../../shared/hooks/usePrefersReducedMotion";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import {
+  ANCHOR,
   NEXT_LABEL_KEYS,
   TOTAL_STEPS,
   firstWizardStep,
   type ListingDraft,
 } from "./listBusiness.data";
+import { jumpToListingField } from "./jumpToListingField";
 import type { ListingForm } from "./useListingForm";
 import { PaneActions, WizardChrome } from "./ListBusinessChrome";
 import { StepBasics, StepPath, StepStory } from "./ListBusinessSteps";
@@ -14,6 +17,21 @@ import { StepPhotosYou } from "./ListBusinessPhotosStep";
 import { StepReview } from "./ListBusinessReviewStep";
 import { ListBusinessPreview } from "./ListBusinessPreview";
 import styles from "./ListBusinessPage.module.css";
+
+/** The wizard step that holds the photos, the cover field among them. */
+const PHOTOS_STEP = 4;
+
+/** Jumps to the cover field the way a missing-field chip does. Waits two
+ *  frames first: the photos pane remounts (keyed by step) and lays out
+ *  before the field can be found. With reduced motion on, the scroll jumps
+ *  straight there. */
+function jumpToCoverField(prefersReducedMotion: boolean) {
+  window.requestAnimationFrame(() =>
+    window.requestAnimationFrame(() =>
+      jumpToListingField(ANCHOR.cover, prefersReducedMotion),
+    ),
+  );
+}
 
 /** The active "form" phase of the create wizard: step pills, current step pane
  *  (with its back/next footer), and the live preview column. */
@@ -75,6 +93,7 @@ export function WizardFormPane({
   duplicateCheckBaselineName?: string;
 }) {
   const { t } = useTranslation();
+  const prefersReducedMotion = usePrefersReducedMotion();
   // The form column, so the preview can outline where the current field shows.
   const formColumnRef = useRef<HTMLDivElement>(null);
   const isEdit = editRef !== undefined;
@@ -89,12 +108,17 @@ export function WizardFormPane({
   // The final save only checks the review step's own gate, so a forward jump
   // must never land past a step with missing required fields. An edit has no
   // Path step, so its gate starts at Basics.
+  const areEarlierStepsComplete = (index: number): boolean =>
+    [...Array(index).keys()]
+      .slice(firstStep)
+      .every((stepIndex) => form.canAdvance(stepIndex));
   const canJumpTo = (index: number): boolean =>
     index < step ||
-    (isJumpAheadEnabled === true &&
-      [...Array(index).keys()]
-        .slice(firstStep)
-        .every((stepIndex) => form.canAdvance(stepIndex)));
+    (isJumpAheadEnabled === true && areEarlierStepsComplete(index));
+  // The preview's "add cover photo" button jumps straight to the photos step,
+  // so it only shows once that step is open to the member.
+  const isPhotosStepReachable =
+    step >= PHOTOS_STEP || areEarlierStepsComplete(PHOTOS_STEP);
 
   return (
     <div className={styles.page}>
@@ -120,7 +144,9 @@ export function WizardFormPane({
             )}
             {step === 2 && <StepStory form={form} />}
             {step === 3 && <StepPractical form={form} />}
-            {step === 4 && <StepPhotosYou form={form} userName={userName} />}
+            {step === PHOTOS_STEP && (
+              <StepPhotosYou form={form} userName={userName} />
+            )}
             {step === 5 && (
               <StepReview
                 form={form}
@@ -161,8 +187,16 @@ export function WizardFormPane({
           draft={draft}
           userName={userName}
           photoPreviews={form.photoPreviews}
+          coverPreview={form.coverPreview}
           formColumnRef={formColumnRef}
-          onAddPhoto={() => goToStep(4)}
+          onAddPhoto={
+            isPhotosStepReachable
+              ? () => {
+                  goToStep(PHOTOS_STEP);
+                  jumpToCoverField(prefersReducedMotion);
+                }
+              : undefined
+          }
           footnote={previewFootnote}
         />
       </div>

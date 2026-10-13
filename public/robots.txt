@@ -28,6 +28,8 @@ Disallow: /work
 Disallow: /economy
 Disallow: /admin
 Disallow: /marketing-videos/
+Disallow: /marketing-flyers/
+Disallow: /marketing-merch/
 Disallow: /brand/logo-concepts/
 Disallow: /mod
 Disallow: /feed
@@ -57,6 +59,7 @@ Disallow: /host
 Disallow: /create-gathering
 Disallow: /manage-gathering
 Disallow: /co-host-invite
+Disallow: /collab-invites
 Disallow: /go-together
 Disallow: /forum
 Disallow: /thread
@@ -187,6 +190,7 @@ Disallow: /host
 Disallow: /create-gathering
 Disallow: /manage-gathering
 Disallow: /co-host-invite
+Disallow: /collab-invites
 Disallow: /go-together
 Disallow: /forum
 Disallow: /thread

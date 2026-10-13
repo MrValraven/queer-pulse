@@ -32,6 +32,10 @@ const LineupInvitePage = lazyNamed(
   () => import("./LineupInvitePage"),
   "LineupInvitePage",
 );
+const CollabInvitePage = lazyNamed(
+  () => import("./CollabInvitePage"),
+  "CollabInvitePage",
+);
 const RsvpPage = lazyNamed(() => import("./RsvpPage"), "RsvpPage");
 const RsvpRedirect = lazyNamed(() => import("./RsvpRedirect"), "RsvpRedirect");
 const HostPage = lazyNamed(() => import("./HostPage"), "HostPage");
@@ -100,6 +104,12 @@ export function gatheringRoutes(demoMode: boolean) {
       <Route
         path={`${routes.gatherings}/:slug/lineup-invite/:entryId`}
         element={<LineupInvitePage />}
+      />
+      {/* A guest community's invite to host a gathering together, answered
+          by its owners, co-owners and mods (auth-gated, Disallowed). */}
+      <Route
+        path={`${routes.collabInvite}/:inviteId`}
+        element={<CollabInvitePage />}
       />
       {/* The standalone `/event` prototype detail page is retired: it was
           pinned to a single mock gathering with no live subject, and the real

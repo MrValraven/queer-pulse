@@ -1,17 +1,20 @@
-import { useId } from "react";
-import { FormField, Select } from "../../shared/components/ui";
+import { useContext, useId, useState } from "react";
+import { Collapse, FormField, Select } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useMyCommunityOptions } from "../communities/api/useMyCommunityOptions";
 import { AudienceScopeField } from "./AudienceScopeField";
 import type { GatheringDetailsDraft } from "./editDetailsDraft";
-import { editFieldDomId } from "./editDetailsChanges";
+import { editFieldDomId, isSameDraftValue } from "./editDetailsChanges";
+import { EditDetailsGuestCommunities } from "./EditDetailsGuestCommunities";
 import { EditDetailsSection } from "./EditDetailsSection";
 import { useEditDetailsSections } from "./editDetailsSectionsContext";
 import { CapacityStepper } from "./fields/CapacityStepper";
+import { guestsForLead } from "./guestCommunities";
 import {
   editCapacityProblem,
   isEditCapacityLowered,
 } from "./manageGatheringState";
+import { SavedGuestListContext } from "./savedGuestListContext";
 import { MAX_CAPACITY, MIN_CAPACITY } from "./steps/whoChapter.data";
 import { useHostableCommunities } from "./useHostableCommunities";
 import fieldStyles from "./EditDetailsFields.module.css";
@@ -19,7 +22,8 @@ import styles from "./EditDetailsModal.module.css";
 
 /**
  * "Who it's for" in the edit-details modal: the community the gathering is
- * hosted with, who can see it, and how many people can go.
+ * hosted with, the guest communities hosting with it, who can see it, and
+ * how many people can go.
  *
  * Split out of `EditDetailsModal` so both stay inside the 200-line rule. The
  * first two fields are separate choices that touch at one point: the
@@ -52,6 +56,24 @@ export function EditDetailsAudience({
   const sections = useEditDetailsSections();
   const { options: hostableOptions } = useHostableCommunities();
   const myCommunityOptions = useMyCommunityOptions();
+  // A draft with no guest list opened before the saved list answered. The
+  // field then follows the saved list (loading until it arrives), and the
+  // draft takes its own copy on the host's first change. This section
+  // mounts with the modal, so its first draft is the one the modal opened on.
+  const savedGuestList = useContext(SavedGuestListContext);
+  const [isOpenedWithoutGuestList] = useState(
+    draft.guestCommunities === undefined,
+  );
+  const guests = draft.guestCommunities ?? savedGuestList.guests;
+  const guestListStatus =
+    draft.guestCommunities === undefined ? savedGuestList.status : "ready";
+  // Back to no list of its own once an edit returns to the saved rows, so
+  // adding and then removing a guest leaves the section unedited.
+  const guestDraftValue = (nextGuests: typeof guests) =>
+    isOpenedWithoutGuestList &&
+    isSameDraftValue(nextGuests, savedGuestList.guests)
+      ? undefined
+      : nextGuests;
   // Only communities the editor runs or moderates can be picked. The one the
   // gathering is already hosted with stays listed even when they don't (a
   // co-host, or a host who has since stepped down), so the field shows the
@@ -100,6 +122,15 @@ export function EditDetailsAudience({
         !value && draft.visibility === "community"
           ? "members"
           : draft.visibility,
+      // A guest that becomes the lead leaves the list, and clearing the
+      // lead drops rows that never went out (see `guestsForLead`). Left
+      // alone while the saved list is unknown, so a save cannot read the
+      // missing rows as removed.
+      ...(guestListStatus === "ready"
+        ? {
+            guestCommunities: guestDraftValue(guestsForLead(guests, value)),
+          }
+        : {}),
     });
 
   return (
@@ -149,6 +180,22 @@ export function EditDetailsAudience({
               : undefined
           }
         />
+        {/* Shown to an editor who can pick a lead, and to anyone while the
+            gathering already holds guests, so a saved row can be removed. */}
+        <Collapse
+          isOpen={communityOptions.length > 0 || guests.length > 0}
+          className={fieldStyles.fullRow}
+        >
+          <EditDetailsGuestCommunities
+            leadSlug={draft.communitySlug}
+            guests={guests}
+            status={guestListStatus}
+            onRetry={savedGuestList.onRetry}
+            onChange={(nextGuests) =>
+              onChange({ guestCommunities: guestDraftValue(nextGuests) })
+            }
+          />
+        </Collapse>
         {/* Reads the IN-PROGRESS draft, so picking or clearing a community in
           this same edit shows or hides the "Community members" tier straight
           away, exactly like the create wizard's `form.communitySlug !== ""`. */}

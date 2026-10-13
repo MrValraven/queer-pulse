@@ -4,6 +4,10 @@ import { getInviteQuota, type InviteQuotaDTO } from "./invite.api";
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
+/** The quota query's key, shared with the mutations that spend an invite. */
+export const inviteQuotaKey = (demoMode: boolean) =>
+  ["invite-quota", demoMode] as const;
+
 /**
  * Presentation-normalized invite allowance. Keeps the raw counts and turns
  * `resetsAt` into a `Date`. The whole-day countdown is deliberately NOT stored
@@ -49,7 +53,7 @@ export function useInviteQuota(
 ) {
   const { demoMode } = useDemoMode();
   return useQuery<InviteQuotaView>({
-    queryKey: ["invite-quota", demoMode],
+    queryKey: inviteQuotaKey(demoMode),
     enabled: options.enabled ?? true,
     ...(options.retry !== undefined ? { retry: options.retry } : {}),
     queryFn: async () => {

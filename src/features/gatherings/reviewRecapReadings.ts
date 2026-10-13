@@ -92,6 +92,20 @@ export function reviewCohostsText(form: GatheringForm): string {
   return form.cohosts.map((cohost) => cohost.name).join(LIST_SEPARATOR);
 }
 
+/** The guest communities picked, with when their invites go out. Empty
+ *  without a lead, since none would be sent. */
+export function reviewGuestCommunitiesText(
+  form: GatheringForm,
+  t: TFunction,
+): string {
+  if (!form.communitySlug || form.guestCommunities.length === 0) return "";
+  return t("gatherings:guestCommunities.reviewValue", {
+    names: form.guestCommunities
+      .map((guest) => guest.name)
+      .join(LIST_SEPARATOR),
+  });
+}
+
 export function reviewContentNotesText(
   form: GatheringForm,
   t: TFunction,

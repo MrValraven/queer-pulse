@@ -22,7 +22,12 @@ export interface SafeSpaceCardDTO {
   name: string;
   hood: string;
   desc: string;
-  tags: string[];
+  /** Up to three non-sensitive attribute slugs the listing leads with
+   *  (`listingAttributes.data.ts`). Labels come from `attributeLabel`. */
+  highlights: string[];
+  /** Inclusion practice slugs (`listingFacts.data.ts`). Labels come from
+   *  `inclusionPracticeLabel`. */
+  inclusionPractices: string[];
   rating: string;
   reviews: number;
   tier: number | null;
@@ -92,7 +97,8 @@ export interface SafeSpaceDetailDTO extends SafeSpaceCardDTO {
   sub: string;
   verifier: string;
   reVerified: string;
-  metaPills: { label: string; accent?: boolean }[];
+  /** Every attribute slug the listing carries, sensitive ones included. */
+  attributes: string[];
   promises: { title: string; desc: string }[];
   vouches: {
     initials: string;

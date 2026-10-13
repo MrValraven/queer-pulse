@@ -3,12 +3,19 @@
   /* While the consent banner shows, sit 24px above its top edge. Its inset
      already spans the tab bar and home indicator, so `max` keeps them from
      being counted twice. */
-  bottom: max(
-    calc(max(24px, env(safe-area-inset-bottom)) + var(--bottom-inset)),
-    calc(var(--consent-inset, 0px) + 24px)
+  bottom: calc(
+    max(
+        calc(max(24px, env(safe-area-inset-bottom)) + var(--bottom-inset)),
+        calc(var(--consent-inset, 0px) + 24px)
+      ) + var(--studio-player-inset, 0px)
   );
   left: 50%;
   transform: translateX(-50%);
+  /* Its own width, capped at the viewport less the page gutters. With no
+     width, a fixed box at `left: 50%` shrink-wraps into the right half of the
+     viewport, which on a phone squeezed the message to one letter per line. */
+  width: max-content;
+  max-width: calc(100% - 2 * var(--wrap-px));
   z-index: var(--z-sticky);
   display: flex;
   flex-direction: column;
@@ -18,8 +25,9 @@
 
 .saveBar {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 24px;
+  gap: 12px 24px;
   background: var(--plum);
   color: rgba(var(--cream-rgb), 1);
   border-radius: var(--radius-pill);
@@ -72,6 +80,32 @@
   display: flex;
   align-items: center;
   gap: 10px;
+  /* Holds the right edge when a long message pushes it onto its own line. */
+  margin-inline-start: auto;
+}
+
+/* A phone never fits the message and both buttons on one line, so the bar
+   becomes a card the width of the page: the message on top, the two buttons
+   sharing the line below. A pill that tall would read as a blob. */
+@media (--mobile) {
+  .wrap {
+    width: 100%;
+  }
+  .saveBar {
+    width: 100%;
+    border-radius: var(--radius-card);
+    padding: 14px;
+  }
+  .saveBar > p,
+  .changesToggle {
+    padding-inline: 4px;
+  }
+  .actions {
+    flex: 1 1 100%;
+  }
+  .actions > * {
+    flex: 1;
+  }
 }
 
 /* Local copy — global keyframes can't be referenced from a CSS module. */

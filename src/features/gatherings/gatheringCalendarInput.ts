@@ -2,12 +2,18 @@ import type { CalendarEventInput } from "../../shared/lib/calendarExport";
 import type { useFormat } from "../../shared/i18n/format";
 import { eventZoneFormat } from "./eventTimezone";
 import type { GatheringDetail } from "./data";
+import { gatheringShareUrl } from "./gatheringPaths";
 
 /** Assumed length of a gathering whose host stated no end time: long enough
  *  that a calendar entry does not read as a five-minute appointment, short
  *  enough that it does not swallow the evening. */
 export const DEFAULT_DURATION_MS = 2 * 60 * 60 * 1000;
 
+/**
+ * The gathering as one calendar event. The description carries the
+ * gathering's QueerPulse link, so the calendar entry leads back to the page
+ * with its address, RSVP and updates.
+ */
 export function toCalendarInput(
   gathering: GatheringDetail,
 ): CalendarEventInput {
@@ -19,6 +25,7 @@ export function toCalendarInput(
     start,
     end,
     location: gathering.venue ?? gathering.hood,
+    description: gatheringShareUrl(gathering.slug),
   };
 }
 

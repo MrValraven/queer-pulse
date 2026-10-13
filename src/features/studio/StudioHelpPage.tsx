@@ -96,7 +96,7 @@ export function StudioHelpPage() {
   }
 
   return (
-    <StudioShell hidePlayer>
+    <StudioShell>
       <div className={s.wrap}>
         <div className={s.pageH}>
           <div className={s.eb}>{t("studio:help.hero.eyebrow")}</div>

@@ -8,10 +8,12 @@
   /* The last term lifts it 16px above the consent banner while that shows
      (the banner's inset already spans the tab bar and home indicator). It
      stays visible throughout: a safety escape hatch never waits on consent. */
-  bottom: max(
-    16px,
-    calc(var(--bottom-inset, 0px) + env(safe-area-inset-bottom)),
-    calc(var(--consent-inset, 0px) + 16px)
+  bottom: calc(
+    max(
+        16px,
+        calc(var(--bottom-inset, 0px) + env(safe-area-inset-bottom)),
+        calc(var(--consent-inset, 0px) + 16px)
+      ) + var(--studio-player-inset, 0px)
   );
   display: inline-flex;
   align-items: center;

@@ -1,12 +1,20 @@
 import type { Formatters } from "../../shared/i18n/format";
 import type { TFunction } from "../../shared/i18n/types";
+import type {
+  GuestCommunityChanges,
+  GuestCommunityDraftEntry,
+} from "./api/eventCommunities.api";
 import type { EventVisibility, UpdateEventDto } from "./api/events.api";
 import type { AttendeesResult } from "./api/useAttendees";
 import type { GatheringDetailsDraft } from "./editDetailsDraft";
 import type { GatheringEditableField } from "./GatheringFieldEditor";
 import type { VenueSelection } from "./VenuePicker";
 import type { RunByListingView, RunBySelection } from "./runByListing";
-import type { GatheringDetail } from "./data";
+import {
+  DEMO_GATHERING_SLUGS,
+  gatheringDetails,
+  type GatheringDetail,
+} from "./data";
 import { MAX_GATHERING_SPAN_DAYS } from "./createGathering.data";
 import {
   EXISTING_GATHERING_RSVP_QUESTIONS,
@@ -26,6 +34,7 @@ import {
   type GatheringFamily,
 } from "./gatheringCatalog";
 import { gatheringWhen } from "./gatheringSchedule";
+import { diffGuestCommunities, guestsForLead } from "./guestCommunities";
 import { dateToDatetimeValue, daysUntil } from "./manageGatheringDates";
 import { MAX_CAPACITY, MIN_CAPACITY } from "./steps/whoChapter.data";
 import {
@@ -85,6 +94,14 @@ export interface GatheringState {
    *  in the edit modal now, same "" sentinel `useGatheringForm` uses. Absent
    *  (`""`) in the demo prototype. */
   communitySlug: string;
+  /** The guest communities as PERSISTED, every status, seeded from the
+   *  organisers' list (`useSeedGuestCommunities`). The pre-edit snapshot
+   *  `guestCommunityChangesFor` diffs against, the role `communitySlug`
+   *  plays for the PATCH. An edit never folds into it: only the seed
+   *  writes it, once the list has answered again after a save. Absent
+   *  until that list first answers, which the edit modal reads as "still
+   *  loading"; every existing state literal stays valid. */
+  guestCommunities?: GuestCommunityDraftEntry[];
   /** How many people can go as PERSISTED, or `null` for no limit. Same
    *  pre-edit-snapshot role `communitySlug` plays: `buildEditPatch` compares
    *  against it and sends a capacity only on a change. */
@@ -175,6 +192,12 @@ function demoScheduleAt(hour: number): Date {
   return at;
 }
 
+/** The lead community slug of the gathering the demo Manage page opens on
+ *  (`DEMO_GATHERING_SLUGS.manage`), as its detail mock carries it. */
+function demoManagedLeadSlug(): string {
+  return gatheringDetails[DEMO_GATHERING_SLUGS.manage]?.communitySlug ?? "";
+}
+
 /** The demo dashboard's starting state: the static Pride-Brunch prototype.
  *  Its date and time rows read through `dateDisplay` and `timeDisplay`, the
  *  same functions a save uses, so a row keeps one format before and after. */
@@ -207,7 +230,10 @@ export function demoInitialState(
     // The static prototype has no audience-scope of its own; "members"
     // (Public) matches the wizard's default and prior behaviour.
     visibility: "members",
-    communitySlug: "",
+    // The lead on the demo Manage gathering's detail mock, a community the
+    // demo viewer moderates, so the guest field opens unlocked over that
+    // gathering's demo guest rows.
+    communitySlug: demoManagedLeadSlug(),
     // The number its "capacity" details row shows.
     capacity: GATHERING_CAPACITY,
     // The static prototype predates families and carries none of it.
@@ -701,7 +727,7 @@ function capacityDisplay(capacity: number | null, t: TFunction): string {
 
 /**
  * Whether the draft moves the start or the end. Compared in the draft's own
- * minute-precision wire values (the ones `editDraftFor` seeds it with), so an
+ * minute-precision wire values (the ones `editDraftFromState` seeds it with), so an
  * untouched schedule reads as unchanged even when the stored instant carries
  * seconds.
  */
@@ -739,6 +765,10 @@ export function applyEditDraft(
     description: draft.description,
     visibility: draft.visibility,
     communitySlug: draft.communitySlug,
+    // `guestCommunities` stays the saved list `...current` carries. The
+    // invites and removals go out only after the PATCH lands, and a refused
+    // save sends none, so folding the draft in here would hide its unsent
+    // rows from the next save's diff. The seed refreshes it from the server.
     // Folded in exactly as they go on the wire, so a second edit in the same
     // session opens on the family and format the first one saved, over the
     // values the page was seeded with.
@@ -889,8 +919,110 @@ export function buildEditPatch(
 }
 
 /**
+ * The edit modal's starting draft, read off the dashboard's state. Both
+ * surfaces that open the modal (the Manage page and the gathering page's
+ * host bar) call this, so they open on the same draft. The guest list is a
+ * copy of the saved one, absent while that list has not answered yet. A
+ * saved guest an earlier save made the lead is left out, as the server
+ * dropped it, while the saved list waits for its next refetch.
+ */
+export function editDraftFromState(
+  state: GatheringState,
+): GatheringDetailsDraft {
+  return {
+    title: state.title,
+    startAt: dateToDatetimeValue(state.startAt),
+    // "" when the gathering states no end, which the modal reads as an
+    // empty (and still clearable) end field.
+    endAt: state.endAt ? dateToDatetimeValue(state.endAt) : "",
+    location: state.location,
+    description: state.description,
+    visibility: state.visibility,
+    communitySlug: state.communitySlug,
+    guestCommunities: state.guestCommunities
+      ? guestsForLead(state.guestCommunities, state.communitySlug).map(
+          (guest) => ({ ...guest }),
+        )
+      : undefined,
+    ...editDraftFormatFields(state),
+    ...editDraftCareFields(state),
+  };
+}
+
+/**
+ * The guest invites and removals a saved edit sends. They go through their
+ * own endpoints once the PATCH lands (`useGatheringEditSave`).
+ *
+ * The host's changes are read against the list the modal OPENED on
+ * (`openedGuests`), since the saved list can refresh while the modal is
+ * open (a refetch lands after every applied guest change). Read against the
+ * refreshed list, an untouched row a refetch brought in would go out as a
+ * removal. Each change is then checked against the saved list as it stands
+ * now (`guestChangesStillNeeded`). Without `openedGuests` (a modal opened
+ * before the list answered) the saved list is the reference.
+ *
+ * A guest this save made the lead was already dropped by the server in the
+ * PATCH, so `diffGuestCommunities` skips it. A draft with no guest list (the
+ * modal opened before the list answered, and the host left the field alone)
+ * sends nothing.
+ */
+export function guestCommunityChangesFor(
+  current: GatheringState,
+  draft: GatheringDetailsDraft,
+  openedGuests?: readonly GuestCommunityDraftEntry[],
+): GuestCommunityChanges {
+  if (draft.guestCommunities === undefined) {
+    return { invites: [], removeSlugs: [] };
+  }
+  const savedGuests = current.guestCommunities ?? [];
+  return guestChangesStillNeeded(
+    diffGuestCommunities(
+      openedGuests ?? savedGuests,
+      draft.guestCommunities,
+      draft.communitySlug,
+    ),
+    savedGuests,
+  );
+}
+
+/**
+ * The changes the saved list still needs: an invite only for a community it
+ * does not hold yet, a removal only for one it still holds. Applied again
+ * when a repeating gathering's stashed changes finally go out, since the list
+ * can refresh while the scope prompt is up.
+ */
+export function guestChangesStillNeeded(
+  changes: GuestCommunityChanges,
+  savedGuests: readonly GuestCommunityDraftEntry[],
+): GuestCommunityChanges {
+  const savedSlugs = new Set(savedGuests.map((guest) => guest.slug));
+  return {
+    invites: changes.invites.filter((guest) => !savedSlugs.has(guest.slug)),
+    removeSlugs: changes.removeSlugs.filter((slug) => savedSlugs.has(slug)),
+  };
+}
+
+/**
+ * The host bar's re-seed when a refetched detail arrives: a fresh state
+ * from the detail, keeping the guest list its own query seeded. The detail
+ * carries accepted guests only, so reading the list from it would empty the
+ * baseline and the next save would invite every guest again.
+ */
+export function liveStateKeepingGuests(
+  current: GatheringState,
+  gathering: GatheringDetail,
+  fmt: Formatters,
+  t: TFunction,
+): GatheringState {
+  return {
+    ...liveInitialState(gathering, fmt, t),
+    guestCommunities: current.guestCommunities,
+  };
+}
+
+/**
  * Which of the Overview's focused editors a draft changed, compared against
- * the saved state in the same terms the page's `editDraftFor` seeds a draft
+ * the saved state in the same terms `editDraftFromState` seeds a draft
  * with: the schedule in its minute-precision wire values, the capacity as a
  * parsed number ("045" reads as 45, "" as no limit), the description as
  * trimmed text. Each editor touches only its own field, so a field save lists

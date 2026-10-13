@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useId, useState } from "react";
 import { FiBookOpen, FiChevronDown } from "react-icons/fi";
+import { Collapse } from "../../shared/components/ui/Collapse";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./JoinRequestReviewGuide.module.css";
 
@@ -39,55 +40,66 @@ function writeIsOpen(isOpen: boolean) {
 /**
  * "How to review someone nobody here knows": the five-step checklist and the
  * never-a-reason list from the review rubric (v1.1), above the pending queue.
- * A native <details> so keyboard and screen-reader behaviour come for free;
- * open by default on screens at least 600px wide, and the reviewer's choice is
- * remembered per device.
+ * A disclosure button over a `Collapse`, so opening and closing glide in
+ * height (a native <details> hides its content the instant it closes, so it
+ * cannot animate shut). Open by default on screens at least 600px wide, and
+ * the reviewer's choice is remembered per device.
  */
 export function JoinRequestReviewGuide() {
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(readIsOpen);
+  const panelId = useId();
+  const toggle = () => {
+    const isNowOpen = !isOpen;
+    setIsOpen(isNowOpen);
+    writeIsOpen(isNowOpen);
+  };
   return (
-    <details
-      className={styles.guide}
-      open={isOpen}
-      onToggle={(event) => {
-        const isNowOpen = event.currentTarget.open;
-        if (isNowOpen === isOpen) return;
-        setIsOpen(isNowOpen);
-        writeIsOpen(isNowOpen);
-      }}
-    >
-      <summary className={styles.summary}>
+    <section className={styles.guide}>
+      <button
+        type="button"
+        className={styles.summary}
+        aria-expanded={isOpen}
+        aria-controls={panelId}
+        onClick={toggle}
+      >
         <FiBookOpen aria-hidden className={styles.summaryIcon} />
         <span className={styles.summaryText}>
           {t("admin:members.verify.guide.summary")}
         </span>
-        <FiChevronDown aria-hidden className={styles.chevron} />
-      </summary>
-      <ol className={styles.steps}>
-        {STEP_NUMBERS.map((stepNumber) => (
-          <li key={stepNumber} className={styles.step}>
-            <span className={styles.stepNumber}>{stepNumber}</span>
-            <p className={styles.stepText}>
-              <strong className={styles.stepTitle}>
-                {t(`admin:members.verify.guide.step${stepNumber}Title`)}
-              </strong>{" "}
-              {t(`admin:members.verify.guide.step${stepNumber}Body`)}
+        <FiChevronDown
+          aria-hidden
+          className={`${styles.chevron} ${isOpen ? styles.chevronOpen : ""}`}
+        />
+      </button>
+      <Collapse isOpen={isOpen}>
+        <div id={panelId}>
+          <ol className={styles.steps}>
+            {STEP_NUMBERS.map((stepNumber) => (
+              <li key={stepNumber} className={styles.step}>
+                <span className={styles.stepNumber}>{stepNumber}</span>
+                <p className={styles.stepText}>
+                  <strong className={styles.stepTitle}>
+                    {t(`admin:members.verify.guide.step${stepNumber}Title`)}
+                  </strong>{" "}
+                  {t(`admin:members.verify.guide.step${stepNumber}Body`)}
+                </p>
+              </li>
+            ))}
+          </ol>
+          <div className={styles.never}>
+            <p className={styles.neverTitle}>
+              {t("admin:members.verify.guide.neverTitle")}
             </p>
-          </li>
-        ))}
-      </ol>
-      <div className={styles.never}>
-        <p className={styles.neverTitle}>
-          {t("admin:members.verify.guide.neverTitle")}
-        </p>
-        <p className={styles.neverBody}>
-          {t("admin:members.verify.guide.neverBody")}
-        </p>
-      </div>
-      <p className={styles.rubric}>
-        {t("admin:members.verify.guide.rubricVersion")}
-      </p>
-    </details>
+            <p className={styles.neverBody}>
+              {t("admin:members.verify.guide.neverBody")}
+            </p>
+          </div>
+          <p className={styles.rubric}>
+            {t("admin:members.verify.guide.rubricVersion")}
+          </p>
+        </div>
+      </Collapse>
+    </section>
   );
 }

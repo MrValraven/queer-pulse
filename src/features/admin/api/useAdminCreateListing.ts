@@ -1,6 +1,7 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { listingDtoToPending } from "../../marketing/listBusiness/api/listings.adapters";
+import { factTextFieldsForDraft } from "../../marketing/listBusiness/dtoToDraft";
 import { BLANK_OWNER_PERSONAL_FIELDS } from "../../marketing/listBusiness/ownerPersonalFields";
 import { toMenuDraft } from "../../marketing/listBusiness/listingMenu.data";
 import { normalizeOnlineDetails } from "../../marketing/listBusiness/listingOnline.data";
@@ -47,6 +48,11 @@ function demoCreatedListing({
     services: toServiceRows(business.services),
     menu: toMenuDraft(business.menu),
     onlineDetails: normalizeOnlineDetails(business.onlineDetails),
+    // The body sends "no cover" as null; the draft holds it as empty strings.
+    coverPhoto: business.coverPhoto ?? { image: "", alt: "" },
+    // The cover time and the policy link go as null when unset; the draft
+    // holds "".
+    ...factTextFieldsForDraft(business),
     // The listing exists, so the affirming baseline applies to it. Whoever
     // accepts the handover agrees to it in their own name.
     affirmingBaselineAccepted: true,

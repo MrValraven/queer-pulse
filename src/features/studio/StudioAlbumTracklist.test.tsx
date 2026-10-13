@@ -1,0 +1,124 @@
+import { fireEvent, render, screen, within } from "@testing-library/react";
+import { describe, expect, it, vi } from "vitest";
+import { TestProviders } from "../../test/TestProviders";
+import { toReleaseView } from "./api/studio.adapters";
+import {
+  StudioPlayerContext,
+  type StudioPlayerValue,
+} from "./player/studioPlayerContext";
+import { StudioAlbumTracklist } from "./StudioAlbumTracklist";
+
+const release = toReleaseView({
+  id: "r1",
+  title: "Salt water",
+  type: "ep",
+  coverUrl: null,
+  releasedOn: "2026-04-12",
+  trackCount: 3,
+  totalDurationSeconds: 400,
+  artist: {
+    id: "p1",
+    handle: "nightform",
+    name: "NIGHTFORM",
+    kind: "musician",
+    avatarUrl: null,
+  },
+  description: null,
+  genre: null,
+  status: "published",
+  publishedAt: null,
+  tracks: [
+    {
+      id: "t1",
+      position: 1,
+      title: "Tide",
+      durationSeconds: 200,
+      isExplicit: false,
+      hasAudio: true,
+    },
+    {
+      id: "t2",
+      position: 2,
+      title: "Pier",
+      durationSeconds: 200,
+      isExplicit: true,
+      hasAudio: true,
+    },
+    {
+      id: "t3",
+      position: 3,
+      title: "Pending",
+      durationSeconds: null,
+      isExplicit: false,
+      hasAudio: false,
+    },
+  ],
+  isOwner: false,
+  rightsConfirmedAt: null,
+  takedownReason: null,
+});
+
+function renderTracklist(overrides: Partial<StudioPlayerValue> = {}) {
+  const value: StudioPlayerValue = {
+    queue: [],
+    currentIndex: 0,
+    status: "idle",
+    currentItem: null,
+    hasPrevious: false,
+    hasNext: false,
+    playRelease: vi.fn(() => Promise.resolve()),
+    playReleases: vi.fn(() => Promise.resolve()),
+    togglePlay: vi.fn(),
+    next: vi.fn(),
+    previous: vi.fn(),
+    seek: vi.fn(),
+    retry: vi.fn(),
+    stop: vi.fn(),
+    isCurrentRelease: () => false,
+    isCurrentTrack: () => false,
+    ...overrides,
+  };
+  render(
+    <TestProviders>
+      <StudioPlayerContext.Provider value={value}>
+        <StudioAlbumTracklist release={release} />
+      </StudioPlayerContext.Provider>
+    </TestProviders>,
+  );
+  return value;
+}
+
+describe("StudioAlbumTracklist", () => {
+  it("plays the row that was pressed, inside its release", async () => {
+    const value = renderTracklist();
+    fireEvent.click(await screen.findByRole("button", { name: /play pier/i }));
+    expect(value.playRelease).toHaveBeenCalledWith("r1", "t2");
+  });
+
+  it("marks the playing row with aria-current and pauses it in place", async () => {
+    const value = renderTracklist({
+      status: "playing",
+      isCurrentTrack: (trackId) => trackId === "t1",
+      isCurrentRelease: () => true,
+    });
+    const rows = await screen.findAllByRole("listitem");
+    expect(rows[0]).toHaveAttribute("aria-current", "true");
+    expect(rows[1]).not.toHaveAttribute("aria-current");
+    fireEvent.click(
+      within(rows[0]!).getByRole("button", { name: /pause tide/i }),
+    );
+    expect(value.togglePlay).toHaveBeenCalled();
+    expect(value.playRelease).not.toHaveBeenCalled();
+  });
+
+  it("links each title to its track page and holds back a track still processing", async () => {
+    renderTracklist();
+    expect(await screen.findByRole("link", { name: "Tide" })).toHaveAttribute(
+      "href",
+      "/studio/track?id=t1",
+    );
+    expect(
+      screen.getByRole("button", { name: /play pending/i }),
+    ).toHaveAttribute("aria-disabled", "true");
+  });
+});

@@ -1,7 +1,7 @@
 import { routes } from "../../app/routeMap";
 import { ADULT_LISTING_CATEGORY_SLUG } from "../marketing/localCategories";
 import { blankDraft } from "../marketing/listBusiness/listingFormDraft";
-import { healRetiredOnlineTags } from "../marketing/listBusiness/listingRetiredTags";
+import type { LegacyListingDraftFields } from "../marketing/listBusiness/listingLegacyAttributes";
 import {
   OWNER_PERSONAL_FIELDS,
   type ListingDraft,
@@ -68,32 +68,30 @@ export const MEMBER_ONLY_DRAFT_KEYS: readonly (keyof ListingDraft)[] = [
  * deleted here again by name so a server that sent one could still not get it
  * onto a listing. What is left is laid over a staff-authored blank and healed,
  * so a payload from an older wizard (a missing field, a mangled slot, a tag
- * that is now an online field) opens as a complete draft: every step renders
+ * that is now an online field or an attribute, a language name) opens as a complete draft: every step renders
  * and the create goes through.
  */
 export function teamDraftFromMemberDraft(
-  payload: Partial<ListingDraft>,
+  payload: Partial<ListingDraft> & LegacyListingDraftFields,
 ): ListingDraft {
   const businessHalf = { ...payload } as Record<string, unknown>;
   for (const key of MEMBER_ONLY_DRAFT_KEYS) delete businessHalf[key];
   return withoutAdultCategory(
-    healRetiredOnlineTags(
-      healListingDraft({
-        ...staffAuthoredDraft(),
-        ...(businessHalf as Partial<ListingDraft>),
-        ...BLANK_OWNER_PERSONAL_FIELDS,
-        ownerRole: "",
-        affirmingBaselineAccepted: false,
-        adultTermsAccepted: false,
-        badge: "",
-        evidence: "",
-        isStaffAuthored: true,
-        path: "suggest",
-        // The blank above starts unanswered. A member draft from before "Where do
-        // people find it?" has no key, and its `online` flag already answers it.
-        isWhereFoundAnswered: payload.isWhereFoundAnswered ?? true,
-      }),
-    ),
+    healListingDraft({
+      ...staffAuthoredDraft(),
+      ...(businessHalf as Partial<ListingDraft> & LegacyListingDraftFields),
+      ...BLANK_OWNER_PERSONAL_FIELDS,
+      ownerRole: "",
+      affirmingBaselineAccepted: false,
+      adultTermsAccepted: false,
+      badge: "",
+      evidence: "",
+      isStaffAuthored: true,
+      path: "suggest",
+      // The blank above starts unanswered. A member draft from before "Where do
+      // people find it?" has no key, and its `online` flag already answers it.
+      isWhereFoundAnswered: payload.isWhereFoundAnswered ?? true,
+    }),
   );
 }
 

@@ -34,7 +34,8 @@
   margin-top: var(--messages-top-offset);
   height: calc(
     var(--layout-viewport-height, 100svh) - var(--messages-top-offset) -
-      max(var(--bottom-inset), var(--keyboard-inset, 0px))
+      max(var(--bottom-inset), var(--keyboard-inset, 0px)) -
+      var(--studio-player-inset, 0px)
   );
 }
 /* Any mobile view (≤860px, browser tab or installed alike). No app bar sits

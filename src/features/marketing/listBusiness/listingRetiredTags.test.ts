@@ -4,7 +4,6 @@ import { draftToDto } from "./draftToDto";
 import { normalizeOnlineDetails } from "./listingOnline.data";
 import {
   healRetiredOnlineTags,
-  knownListingTags,
   RETIRED_ONLINE_TAG_MOVES,
 } from "./listingRetiredTags";
 
@@ -59,16 +58,10 @@ describe("healRetiredOnlineTags", () => {
 });
 
 describe("tags on a create body", () => {
-  it("keeps only the vocabulary's tags", () => {
-    expect(
-      knownListingTags(["Terrace", "PayPal", "Cosy", "Gift cards"]),
-    ).toEqual(["Terrace", "Gift cards"]);
-  });
-
-  it("drops a retired tag from both create paths", () => {
+  it("sends no tags on either create path", () => {
     for (const path of ["claim", "suggest"] as const) {
       const draft = { ...blankDraft(), path, tags: ["Terrace", "MB WAY"] };
-      expect(draftToDto(draft).tags, path).toEqual(["Terrace"]);
+      expect("tags" in draftToDto(draft), path).toBe(false);
     }
   });
 });

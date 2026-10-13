@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { ListingDraft } from "../marketing/listBusiness/listBusiness.data";
+import { blankDraft } from "../marketing/listBusiness/listingFormDraft";
 import {
   MEMBER_ONLY_DRAFT_KEYS,
   teamDraftFromMemberDraft,
@@ -113,6 +114,27 @@ describe("teamDraftFromMemberDraft", () => {
   });
 });
 
+describe("teamDraftFromMemberDraft legacy shape", () => {
+  it("heals a staff-console draft that still holds tags and language names", () => {
+    const draft = teamDraftFromMemberDraft({
+      name: "Barbearia Norte",
+      cats: ["grooming"],
+      tags: ["Walk-ins welcome", "Sliding scale", "Fades"],
+      goodFor: ["Dog-friendly"],
+      langs: ["Português", "English"],
+    });
+    expect(draft.attributes).toEqual(["sliding-scale", "dog-friendly"]);
+    expect(draft.entryMode).toBe("walkIn");
+    expect(draft.langs).toEqual(["pt", "en"]);
+    expect("tags" in draft).toBe(false);
+    const body = adminDraftToDto(draft, { publishState: "review" });
+    expect("tags" in body).toBe(false);
+    expect(body).toMatchObject({
+      attributes: ["sliding-scale", "dog-friendly"],
+    });
+  });
+});
+
 describe("teamListingFromDraftPath", () => {
   it("points the add-a-listing form at the draft", () => {
     expect(teamListingFromDraftPath("listing-draft-0004")).toBe(
@@ -138,5 +160,40 @@ describe("adminDraftToUpdateDto", () => {
     >;
     expect(body).not.toHaveProperty("adultTermsAccepted");
     expect(body.cats).toEqual(["intimacy"]);
+  });
+});
+
+describe("attributes outside the offer on the admin bodies", () => {
+  /** A nightlife listing switched to food: "dj-nights" and "harm-reduction"
+   *  are no longer offered. */
+  const switchedToFood: ListingDraft = {
+    ...blankDraft(),
+    path: "suggest",
+    isStaffAuthored: true,
+    cats: ["food"],
+    attributes: ["dj-nights", "vegan-options"],
+    highlights: ["dj-nights", "vegan-options"],
+    inclusionPractices: ["chosen-name", "harm-reduction"],
+  };
+
+  it("drops them from the admin create", () => {
+    const body = adminDraftToDto(switchedToFood, { publishState: "review" });
+    expect(body).toMatchObject({
+      attributes: ["vegan-options"],
+      highlights: ["vegan-options"],
+      inclusionPractices: ["chosen-name"],
+      publishState: "review",
+    });
+  });
+
+  it("keeps them on the admin update", () => {
+    const body = adminDraftToUpdateDto(switchedToFood);
+    expect(body).toMatchObject({
+      attributes: ["dj-nights", "vegan-options"],
+      highlights: ["dj-nights", "vegan-options"],
+      inclusionPractices: ["chosen-name", "harm-reduction"],
+    });
+    expect(body).not.toHaveProperty("publishState");
+    expect(body).not.toHaveProperty("path");
   });
 });

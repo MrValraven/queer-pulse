@@ -79,6 +79,9 @@ export function ListingDetailsConfirmCard({
               })
             : t("marketing:listBusiness.confirmDetails.never")}
         </p>
+        <p className={styles.confirmSub}>
+          {t("marketing:listBusiness.confirmDetails.scope")}
+        </p>
       </div>
       <Button
         variant={freshness === "stale" ? "primary" : "ghost"}

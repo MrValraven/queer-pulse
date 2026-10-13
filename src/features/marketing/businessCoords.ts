@@ -33,6 +33,7 @@ export const BUSINESS_COORDS: Record<
   "a-farinha": { latitude: 38.729, longitude: -9.136 },
   "studio-andre-quintela": { latitude: 38.707, longitude: -9.145 },
   "clinica-da-estrela": { latitude: 38.713, longitude: -9.16 },
+  "noite-aberta": { latitude: 38.7068, longitude: -9.1446 },
   "galeria-lume": { latitude: 38.736, longitude: -9.105 },
   "lisboa-arco-iris-walks": WALKING_TOUR_MEETING_POINT,
 };

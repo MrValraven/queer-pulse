@@ -226,7 +226,6 @@ export function BioSection({
         <WorkFieldPicker
           discipline={work.discipline}
           profession={work.profession}
-          headingClassName={styles.fieldLabel}
           onChange={onWorkChange}
         />
       </div>

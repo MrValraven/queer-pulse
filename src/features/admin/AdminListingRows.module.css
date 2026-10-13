@@ -5,12 +5,15 @@
    switches on the PANEL's width through `@container listingQueue`, so the
    admin sidebar opening or closing can never desync it from the viewport.
 
-   Three layouts: wide (panel 960px and up), medium (640 to 959), phone (below
-   640). Wide is the base rule below. The status track is 136px because the
+   Three layouts: wide (panel 1040px and up), medium (640 to 1039), phone
+   (below 640). Wide is the base rule below. The status track is 136px because the
    longest chip, PT "Pergunta rápida", is 125px. The actions column has a
-   176px floor because the widest cluster, PT "Ver página" plus the kebab, is
-   169px: each row is its own grid, and a floor above every cluster keeps the
-   Submitted by and Status columns aligned row to row. */
+   276px floor because the widest cluster, an ownerless live listing's PT
+   "Editar" plus "Ver página" plus the kebab, is 275px (the EN set is 250px):
+   each row is its own grid, and a floor above every cluster keeps the
+   Submitted by and Status columns aligned row to row. The wide layout starts
+   at 1040px so that floor still leaves the listing and Submitted by columns
+   about 258px and 186px at its narrowest. */
 .rows {
   display: flex;
   flex-direction: column;
@@ -21,7 +24,7 @@
   display: grid;
   grid-template-columns:
     20px 48px minmax(0, 1.8fr) minmax(0, 1.3fr) 136px
-    minmax(176px, auto);
+    minmax(276px, auto);
   column-gap: 16px;
   align-items: center;
   padding: 0 18px;
@@ -126,6 +129,11 @@
   gap: 8px;
   position: relative;
   z-index: 1;
+}
+/* Holds the status and actions cells. It generates no box above phone width,
+   so both stay grid items of the row there. */
+.cellFoot {
+  display: contents;
 }
 
 .rowOpen {
@@ -333,10 +341,11 @@
    Status and actions share one right-hand `auto` track, the chip on the
    listing's line and the actions on the submitter's line, so the listing cell
    keeps every pixel left of them: at a 640px panel it is 640 - 36 padding -
-   20 - 48 - 3 x 12 gaps - 169 (widest actions) = 331px. Each row sizes that
+   20 - 48 - 3 x 12 gaps - 169 (widest actions without Edit) = 331px, and
+   225px on an ownerless row whose cluster adds Edit. Each row sizes that
    track to its own cluster; its cells are right-aligned, so their edges still
    line up row to row. */
-@container listingQueue (max-width: 959px) {
+@container listingQueue (max-width: 1039px) {
   .columnHeader,
   .row {
     grid-template-columns: 20px 48px minmax(0, 1fr) auto;
@@ -390,9 +399,12 @@
   }
 }
 
-/* ── Phone: status and actions share a last line ──────────────────────────
+/* ── Phone: status and actions share a wrapping last line ─────────────────
    Below a 640px panel the medium listing cell would drop under 330px, so the
-   status and actions move to their own line and the listing takes the rest. */
+   status and actions move to their own line and the listing takes the rest.
+   That line is a wrapping flex row: the chip on the left, the actions pushed
+   right, and when both cannot fit (Edit plus "Publish live" plus the kebab
+   next to "In review" at 390px) the actions drop under the chip. */
 @container listingQueue (max-width: 639px) {
   .columnHeader {
     grid-template-columns: minmax(0, 1fr);
@@ -410,24 +422,37 @@
     grid-template-areas:
       "check thumb main"
       "check thumb who"
-      "status status actions";
+      "foot foot foot";
   }
   .thumb {
     width: 44px;
     height: 44px;
   }
-  /* The chip may run wider than the first two narrow columns, so the status
-     cell spans the full line and the actions cell sits on top at the right. */
+  /* A loading row's status cell has no foot around it, so it takes the foot
+     line itself. */
+  .cellFoot,
   .cellStatus {
-    grid-column: status-start / actions-end;
-    grid-row: 3;
+    grid-area: foot;
     justify-self: start;
     align-self: center;
     margin-top: 10px;
   }
+  .cellFoot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px 12px;
+    justify-self: stretch;
+    min-width: 0;
+  }
+  .cellFoot .cellStatus {
+    margin-top: 0;
+  }
   .cellActions {
+    flex-wrap: wrap;
     align-self: center;
-    margin-top: 10px;
+    margin-left: auto;
+    max-width: 100%;
   }
   /* Two lines keep the ref in view on a narrow listing cell. */
   .rowMeta {

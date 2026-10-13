@@ -13,6 +13,10 @@
 
 html {
   scroll-behavior: smooth;
+  /* A floating bottom action bar, such as the Settings save bar, publishes
+     how much of the viewport bottom it covers (`useFloatingBarInset`), so
+     tabbing and `scrollIntoView` stop above it. */
+  scroll-padding-bottom: var(--floating-bar-inset, 0px);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   /* Contain horizontal overflow at the document ROOT, not just on <body>.

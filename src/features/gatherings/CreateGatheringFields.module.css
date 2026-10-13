@@ -64,12 +64,22 @@
 .input::placeholder {
   color: var(--ink-40);
 }
-.input:hover {
+.input:hover:where(:not(:disabled)) {
   border-color: rgba(var(--line-rgb), 0.3);
 }
 .input:focus {
   border-color: var(--accent);
   box-shadow: var(--ring-accent-soft);
+}
+.input:disabled {
+  background: var(--wash);
+  border-color: rgba(var(--line-rgb), 0.18);
+  cursor: not-allowed;
+}
+.input::-webkit-search-cancel-button,
+.input::-webkit-search-decoration {
+  -webkit-appearance: none;
+  appearance: none;
 }
 .input[aria-invalid="true"] {
   border-color: var(--accent);

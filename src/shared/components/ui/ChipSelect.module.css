@@ -42,22 +42,19 @@
     color 0.16s var(--ease),
     background 0.16s var(--ease);
 }
-/* Touch: chips stay visually compact (~32px) but get a centered ≥44px-tall
-   hit strip. Vertical-only so wrapped chips in a row don't overlap taps. */
 /* base.css squares off every `:focus-visible` element to a small radius,
    which would turn a focused pill into a rounded box. The ring itself stays
    the global one. */
 .chip:focus-visible {
   border-radius: var(--radius-pill);
 }
+/* Touch: the pill itself grows to the house 44px floor. An invisible hit
+   strip on a compact pill left the drawn chip at about 34px, and in a wrapped
+   row the strips of neighbouring lines overlapped, so a tap near a line's edge
+   could land on the chip above or below it. */
 @media (pointer: coarse) {
-  .chip::before {
-    content: "";
-    position: absolute;
-    inset-inline: 0;
-    top: 50%;
-    height: 44px;
-    transform: translateY(-50%);
+  .chip {
+    min-height: var(--tap-min);
   }
 }
 @media (hover: hover) {
@@ -154,11 +151,10 @@
   }
 }
 
-/* Touch-sized chips (opt-in via `size="touch"` on ChipSelect): the visible
-   pill itself grows to the house 44px minimum, giving the tap target a real
-   visible box on top of the coarse-pointer hit strip above. Horizontal
-   padding is unchanged; `align-items: center` on .chip centers the label in
-   the taller box. */
+/* Touch-sized chips (opt-in via `size="touch"` on ChipSelect): the 44px pill
+   a coarse pointer gets anyway, kept on a mouse too, for pickers where taps
+   are the primary input. Horizontal padding is unchanged; `align-items:
+   center` on .chip centers the label in the taller box. */
 .touch {
   min-height: var(--tap-min);
 }

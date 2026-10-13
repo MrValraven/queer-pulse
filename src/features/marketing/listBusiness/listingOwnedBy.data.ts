@@ -1,15 +1,14 @@
 /**
  * Who owns and runs a business, in the owner's own words: women, trans people,
- * non-binary people, Black, Indigenous and people of colour (BIPOC). Any
- * combination, or none.
+ * non-binary people, Black, Indigenous and people of colour (BIPOC), and
+ * migrants. Any combination, or none.
  *
- * These tags say something about the OWNER as a person, not about the
- * business, and saying one publicly can out them. So they are owner-personal
- * data (see `OWNER_PERSONAL_FIELDS`): only the owner ever sets them, a
- * co-manager neither sees nor sends them, a suggestion never carries them,
- * and staff never answer them on somebody's behalf. Nobody verifies them
- * either, so they are always shown as plain tags, never beside the verified
- * marks.
+ * These tags describe the OWNER as a person, and saying one publicly can
+ * out them. So they are owner-personal data (see `OWNER_PERSONAL_FIELDS`):
+ * only the owner ever sets them, a co-manager neither sees nor sends them, a
+ * suggestion never carries them, and staff never answer them on somebody's
+ * behalf. Nobody verifies them either, so they always show as plain tags,
+ * apart from the verified marks.
  *
  * The ids are the wire values the API stores and the `?owned=` filter sends;
  * labels resolve through `t()` only at render.
@@ -19,6 +18,7 @@ export const LISTING_OWNED_BY = [
   "trans",
   "nonbinary",
   "bipoc",
+  "migrant",
 ] as const;
 
 export type ListingOwnedBy = (typeof LISTING_OWNED_BY)[number];
@@ -31,13 +31,14 @@ export const OWNED_BY_TAG_KEYS: Record<ListingOwnedBy, string> = {
   trans: "marketing:directory.ownedBy.trans",
   nonbinary: "marketing:directory.ownedBy.nonbinary",
   bipoc: "marketing:directory.ownedBy.bipoc",
+  migrant: "marketing:directory.ownedBy.migrant",
 };
 
 /**
  * Any list that claims to hold tags, cleaned into the canonical shape: known
  * ids only, each once, in `LISTING_OWNED_BY` order.
  *
- * Unknown ids are dropped rather than trusted. A newer server may know a tag
+ * Unknown ids are dropped. A newer server may know a tag
  * this build has no words for, and a hand-edited URL may carry a typo; the
  * endpoint 400s an unknown value, so none may ever be forwarded to it. The
  * fixed order means two equivalent lists compare equal and share a cache key.

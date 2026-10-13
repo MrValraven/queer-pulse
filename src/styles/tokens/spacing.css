@@ -38,6 +38,8 @@
   --gap-grid: 22px;
   --gap-sm: 14px;
   --gap-xs: 9px;
+  /* The space between an inline icon and its label text. */
+  --icon-gap-inline: 6px;
 
   /* ── Navbar ── */
   --nav-top: 18px;

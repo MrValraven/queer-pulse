@@ -1,0 +1,198 @@
+/* Guest communities: the search with its dropdown, the cap note and the
+   rows. Option styling matches the co-host picker (WhoChapter.module.css). */
+.picker {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.search {
+  position: relative;
+  /* Opening the list on a phone scrolls the search to the top, clear of the
+     sticky nav. */
+  scroll-margin-top: var(--sticky-top);
+}
+.dropdown {
+  position: absolute;
+  top: calc(100% + 2px);
+  left: 0;
+  right: 0;
+  z-index: var(--z-popover);
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  border-radius: var(--radius-14);
+  box-shadow: var(--shadow-e3);
+}
+.options {
+  max-height: min(320px, 40vh);
+  overflow-y: auto;
+  margin: 0;
+  padding: 4px 0;
+  list-style: none;
+}
+.option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 14px;
+  font: inherit;
+  color: var(--ink);
+  text-align: left;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+.option:hover,
+.option:focus-visible {
+  background: var(--wash);
+}
+.option:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: -3px;
+  /* The inset outline is the ring here; the global cream halo would spill
+     out of the list. */
+  box-shadow: none;
+}
+.optionIcon,
+.rowIcon {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  font-size: var(--text-14);
+  border-radius: var(--radius-avatar);
+}
+.optionIcon {
+  color: var(--jade);
+  background: rgba(var(--jade-rgb), 0.12);
+}
+.rowIcon {
+  color: var(--accent-ink);
+  background: rgba(var(--accent-rgb), 0.1);
+}
+.optionText {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.optionName {
+  font-size: var(--text-14);
+  font-weight: 600;
+}
+.optionMeta {
+  font-size: var(--text-12-5);
+  color: var(--ink-40);
+}
+.empty {
+  margin: 0;
+  padding: 12px 14px;
+  font-size: var(--text-13);
+  color: var(--ink-60);
+}
+.error {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 12px;
+  padding: 8px 8px 8px 14px;
+}
+.errorText {
+  margin: 0;
+  font-size: var(--text-13);
+  color: var(--ink-60);
+}
+.helper {
+  font-size: var(--text-12-5);
+  line-height: 1.5;
+  color: var(--ink-40);
+}
+.capNote {
+  margin: 0;
+  font-size: var(--text-13);
+  color: var(--ink-60);
+}
+.rows {
+  display: flex;
+  flex-direction: column;
+}
+/* One line on wider screens. On a small phone the action drops under the
+   name, so the name and its pill keep the first line. */
+.row {
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr) auto auto;
+  grid-template-areas: "icon name status action";
+  align-items: center;
+  gap: 8px 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.08);
+}
+.row .rowIcon {
+  grid-area: icon;
+}
+.row .status {
+  grid-area: status;
+  justify-self: end;
+}
+.row .rowAction,
+.rowActionSpacer {
+  grid-area: action;
+}
+.rowActionSpacer {
+  display: flex;
+  visibility: hidden;
+}
+.rowName {
+  grid-area: name;
+  min-width: 0;
+  font-size: var(--text-14);
+  font-weight: 600;
+  color: var(--ink);
+}
+.status {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  font-size: var(--text-12-5);
+  font-weight: 600;
+  border: 1px solid transparent;
+  border-radius: var(--radius-pill);
+}
+.statusPending {
+  color: var(--ink);
+  background: rgba(var(--amber-rgb), 0.16);
+}
+.statusAccepted {
+  color: var(--ink);
+  background: rgba(var(--jade-rgb), 0.14);
+}
+.statusDeclined {
+  color: var(--ink-60);
+  background: rgba(var(--line-rgb), 0.06);
+}
+.statusUnsent {
+  color: var(--ink-60);
+  border-color: rgba(var(--line-rgb), 0.3);
+  border-style: dashed;
+}
+@media (--md) {
+  .row .rowAction {
+    min-height: var(--tap-min);
+  }
+}
+@media (--xs) {
+  .row {
+    grid-template-columns: 30px minmax(0, 1fr) auto;
+    grid-template-areas:
+      "icon name status"
+      ". action action";
+  }
+  .row .rowAction {
+    justify-self: start;
+  }
+  .rowActionSpacer {
+    display: none;
+  }
+}

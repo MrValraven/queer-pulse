@@ -20,7 +20,11 @@ import {
   CO_MANAGER_EDITOR_SECTIONS,
   LISTING_EDITOR_SECTIONS,
 } from "../listingEditor.data";
-import { isSameListingContent } from "./listingDraftComparable";
+import { healListingDraft } from "./healListingDraft";
+import {
+  comparableDraft,
+  isSameListingContent,
+} from "./listingDraftComparable";
 import {
   buildRestoreDiff,
   mergeRestoredAreas,
@@ -56,8 +60,8 @@ function listingDraft(overrides: Partial<ListingDraft> = {}): ListingDraft {
       witLine("We stock queer fiction and poetry."),
       witLine("Readings every Thursday evening."),
     ],
-    tags: ["books", "readings"],
-    goodFor: ["Solo-friendly"],
+    attributes: ["book-club", "readings-and-talks"],
+    highlights: ["book-club"],
     services: toServiceRows([
       { name: "Book club", price: "5 EUR", note: "Monthly" },
     ]),
@@ -79,7 +83,7 @@ function listingDraft(overrides: Partial<ListingDraft> = {}): ListingDraft {
       file: null,
       link: "",
     }),
-    langs: ["Português", "English"],
+    langs: ["pt", "en"],
     address: "Rua da Graça 12, Lisboa",
     geocoded: true,
     latitude: 38.7186,
@@ -415,15 +419,23 @@ describe("buildRestoreDiff shows every change the merge would apply", () => {
     );
   });
 
-  it("shows a tag reorder as both orders", () => {
-    const current = listingDraft({ tags: ["books", "readings"] });
-    const saved = listingDraft({ tags: ["readings", "books"] });
+  it("shows an attribute reorder as both orders", () => {
+    const current = listingDraft({
+      attributes: ["book-club", "readings-and-talks"],
+    });
+    const saved = listingDraft({
+      attributes: ["readings-and-talks", "book-club"],
+    });
     const [story] = diff(current, saved);
     const field = fieldOfKind(story?.fields[0], "choice");
-    expect(field.key).toBe("tags");
-    expect(field.labelKey).toBe(`${DIFF_PREFIX}.field.tags`);
-    expect(field.before).toBe("books, readings");
-    expect(field.after).toBe("readings, books");
+    expect(field.key).toBe("attributes");
+    expect(field.labelKey).toBe(`${DIFF_PREFIX}.field.attributes`);
+    expect(field.before).toBe(
+      "marketing:listingAttribute.bookClub, marketing:listingAttribute.readingsAndTalks",
+    );
+    expect(field.after).toBe(
+      "marketing:listingAttribute.readingsAndTalks, marketing:listingAttribute.bookClub",
+    );
   });
 
   it("gives a menu item a row when only its raw fields moved", () => {
@@ -735,5 +747,234 @@ describe("isSameListingContent on the online flags", () => {
     const adultCurrent = listingDraft({ online: true, cats: ["intimacy"] });
     const adultSaved = { ...adultCurrent, adultTermsAccepted: true };
     expect(isSameListingContent(adultCurrent, adultSaved)).toBe(false);
+  });
+});
+
+/** Every field entry the review lists, across all its areas. */
+function changedFields(current: ListingDraft, saved: ListingDraft) {
+  return diff(current, saved).flatMap((area) => area.fields);
+}
+
+describe("cover photo rows", () => {
+  it("shows an added cover in the photos area", () => {
+    const current = listingDraft({ coverPhoto: { image: "", alt: "" } });
+    const saved = listingDraft({
+      coverPhoto: { image: "listing-covers/u/k.webp", alt: "Door" },
+    });
+    const photosArea = diff(current, saved).find(
+      (area) => area.key === "photos",
+    );
+    const coverField = fieldOfKind(
+      photosArea?.fields.find((field) => field.key === "coverPhoto"),
+      "rows",
+    );
+    expect(coverField.labelKey).toBe(`${DIFF_PREFIX}.field.coverPhoto`);
+    expect(coverField.rows).toEqual([
+      {
+        key: "coverPhoto",
+        status: "added",
+        label: `${DIFF_PREFIX}.photo.cover`,
+        before: null,
+        after: "Door",
+        beforeImageUrl: null,
+        afterImageUrl: `${API_BASE_URL}/files/listing-covers/u/k.webp`,
+      },
+    ]);
+  });
+
+  it("shows nothing when neither side has a cover, including a draft saved before the field", () => {
+    const { coverPhoto: _omitted, ...legacySaved } = listingDraft();
+    const current = listingDraft({ coverPhoto: { image: "", alt: "" } });
+    const fields = changedFields(current, legacySaved);
+    expect(fields.find((field) => field.key === "coverPhoto")).toBeUndefined();
+    expect(isSameListingContent(current, legacySaved)).toBe(true);
+  });
+
+  it("prefers this session's cover preview on screen", () => {
+    const current = listingDraft({
+      coverPhoto: { image: "listing-covers/u/new.webp", alt: "Door" },
+    });
+    const saved = listingDraft({
+      coverPhoto: { image: "https://img.test/old.jpg", alt: "Door" },
+    });
+    const areas = buildRestoreDiff({
+      current,
+      saved,
+      sections: LISTING_EDITOR_SECTIONS,
+      t,
+      coverPreview: "blob:http://localhost/cover",
+    });
+    const coverField = fieldOfKind(
+      areas
+        .flatMap((area) => area.fields)
+        .find((field) => field.key === "coverPhoto"),
+      "rows",
+    );
+    expect(coverField.rows[0]?.beforeImageUrl).toBe(
+      "blob:http://localhost/cover",
+    );
+    expect(coverField.rows[0]?.afterImageUrl).toBe("https://img.test/old.jpg");
+  });
+
+  it("restores the cover with the photos area", () => {
+    const current = listingDraft();
+    const saved = listingDraft({
+      coverPhoto: { image: "listing-covers/u/k.webp", alt: "Door" },
+    });
+    const merged = mergeRestoredAreas({
+      current,
+      saved,
+      areaKeys: new Set<RestoreAreaKey>(["photos"]),
+    });
+    expect(merged.coverPhoto).toEqual({
+      image: "listing-covers/u/k.webp",
+      alt: "Door",
+    });
+    expect(RESTORE_FIELD_AREAS.coverPhoto).toBe("photos");
+    const coverOnScreen = listingDraft({
+      coverPhoto: { image: "https://img.test/cover.jpg", alt: "The door" },
+    });
+    const basicsOnly = mergeRestoredAreas({
+      current: coverOnScreen,
+      saved,
+      areaKeys: new Set<RestoreAreaKey>(["basics"]),
+    });
+    expect(basicsOnly.coverPhoto).toBe(coverOnScreen.coverPhoto);
+  });
+
+  it("keeps the fingerprint of a listing with no cover as it was before the field", () => {
+    const { coverPhoto: _omitted, ...legacy } = listingDraft();
+    const emptyCover = { ...legacy, coverPhoto: { image: "", alt: "" } };
+    const legacyJson = JSON.stringify(comparableDraft(legacy));
+    expect(legacyJson).not.toContain("coverPhoto");
+    expect(JSON.stringify(comparableDraft(emptyCover))).toBe(legacyJson);
+    const withCover = {
+      ...legacy,
+      coverPhoto: { image: "listing-covers/u/k.webp", alt: "Door" },
+    };
+    expect(JSON.stringify(comparableDraft(withCover))).not.toBe(legacyJson);
+  });
+
+  it("fingerprints alt text left by a removed cover the same as no cover", () => {
+    const { coverPhoto: _omitted, ...legacy } = listingDraft();
+    const altOnly = { ...legacy, coverPhoto: { image: "", alt: "x" } };
+    expect(JSON.stringify(comparableDraft(altOnly))).toBe(
+      JSON.stringify(comparableDraft(legacy)),
+    );
+  });
+});
+
+describe("healListingDraft coverPhoto", () => {
+  it("fills a missing or mangled cover with empty strings", () => {
+    expect(
+      healListingDraft({ ...listingDraft(), coverPhoto: undefined }).coverPhoto,
+    ).toEqual({ image: "", alt: "" });
+    expect(
+      healListingDraft({
+        ...listingDraft(),
+        coverPhoto: { image: 7, alt: null } as never,
+      }).coverPhoto,
+    ).toEqual({ image: "", alt: "" });
+  });
+});
+
+describe("restore review for the attribute fields", () => {
+  const FACT_KEYS = [
+    "attributes",
+    "highlights",
+    "entryMode",
+    "coverPolicy",
+    "coverFreeBefore",
+    "payments",
+    "issuesNifInvoices",
+    "inclusionPractices",
+    "saferSpacePolicyUrl",
+    "langsOther",
+  ] as const;
+
+  it("reports no change for a copy saved before the fields existed", () => {
+    const current = listingDraft({ attributes: [], highlights: [] });
+    const saved: Record<string, unknown> = { ...current };
+    for (const key of FACT_KEYS) delete saved[key];
+    const older = saved as unknown as ListingDraft;
+    expect(isSameListingContent(current, older)).toBe(true);
+    expect(diff(current, older)).toEqual([]);
+  });
+
+  it("heals a local copy that still holds tags and language names before comparing", () => {
+    const current = listingDraft({
+      cats: ["culture"],
+      attributes: ["exhibitions"],
+      highlights: ["exhibitions"],
+      langs: ["pt"],
+    });
+    const {
+      attributes: _attributes,
+      highlights: _highlights,
+      ...withoutNewFields
+    } = current;
+    const legacyCopy = {
+      ...withoutNewFields,
+      tags: ["Exhibitions"],
+      goodFor: [],
+      langs: ["Português"],
+    };
+    expect(isSameListingContent(current, legacyCopy)).toBe(true);
+    expect(diff(current, legacyCopy)).toEqual([]);
+    expect("tags" in healListingDraft(legacyCopy)).toBe(false);
+  });
+
+  it("lists a changed way in and a new way to pay in the practical area", () => {
+    const current = listingDraft({ entryMode: "walkIn", payments: ["card"] });
+    const saved = listingDraft({
+      entryMode: "bookingRecommended",
+      payments: ["card", "mbway"],
+    });
+    const practical = diff(current, saved).find(
+      (area) => area.key === "practical",
+    );
+    expect(practical?.fields.map((field) => field.key)).toEqual([
+      "entryMode",
+      "payments",
+    ]);
+    expect(
+      practical?.fields.find((field) => field.key === "payments")?.labelKey,
+    ).toBe("marketing:listBusiness.editor.restore.diff.field.paymentsInPerson");
+  });
+
+  it("ignores a cover answer the categories do not keep", () => {
+    expect(
+      isSameListingContent(
+        listingDraft({ cats: ["food"], coverPolicy: null }),
+        listingDraft({ cats: ["food"], coverPolicy: "free" }),
+      ),
+    ).toBe(true);
+  });
+
+  it("restores attributes with the story area and the ways to pay with the practical area", () => {
+    const current = listingDraft();
+    const saved = listingDraft({
+      attributes: ["book-club"],
+      payments: ["cash"],
+    });
+    const story = mergeRestoredAreas({
+      current,
+      saved,
+      areaKeys: new Set<RestoreAreaKey>(["story"]),
+    });
+    expect(story.attributes).toEqual(["book-club"]);
+    expect(story.payments).toEqual(current.payments);
+    const practical = mergeRestoredAreas({
+      current,
+      saved,
+      areaKeys: new Set<RestoreAreaKey>(["practical"]),
+    });
+    expect(practical.payments).toEqual(["cash"]);
+  });
+
+  it("puts every new draft key in an area", () => {
+    for (const key of FACT_KEYS) {
+      expect(RESTORE_FIELD_AREAS[key], key).toBeDefined();
+    }
   });
 });

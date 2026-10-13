@@ -1,111 +1,78 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import { FiArrowRight, FiChevronRight } from "react-icons/fi";
-import { routes } from "../../app/routeMap";
-import { ImageSlot } from "../../shared/components/ui";
+import { Link, useSearchParams } from "react-router-dom";
+import { FiChevronRight } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { Translation } from "../../shared/i18n/Translation";
+import { useStudioTrack } from "./api/useStudioTrack";
+import {
+  StudioDetailSkeleton,
+  StudioLoadError,
+  StudioNotFound,
+} from "./StudioLoadStates";
 import { StudioShell } from "./StudioShell";
-import { StudioTrackHero } from "./StudioTrackHero";
-import { StudioTrackLyrics } from "./StudioTrackLyrics";
-import { StudioTrackSidebar } from "./StudioTrackSidebar";
 import { StudioTipModal } from "./StudioTipModal";
-import { MORE } from "./studioTrack.data";
-import ss from "./studio.module.css";
+import { StudioTrackHero } from "./StudioTrackHero";
+import { StudioTrackInSet } from "./StudioTrackInSet";
+import { StudioTrackLyrics } from "./StudioTrackLyrics";
+import { StudioTrackMore } from "./StudioTrackMore";
+import { StudioTrackSidebar } from "./StudioTrackSidebar";
+import { useStudioShowcase } from "./useStudioShowcase";
 import trackStyles from "./track.module.css";
-
-// Content — this track's title, artist name and album title come from the
-// API in live mode and are never translated (§1).
-const ARTIST_NAME = "Mariana Sol";
-const ALBUM_TITLE = "Cidade dos santos";
-const TRACK_NUMBER = 6;
 
 export function StudioTrackPage() {
   const { t } = useTranslation();
-  const [tipOpen, setTipOpen] = useState(false);
+  const [searchParams] = useSearchParams();
+  const { track, loadState } = useStudioTrack(searchParams.get("id"));
+  const isShowcase = useStudioShowcase();
+  const [isTipOpen, setIsTipOpen] = useState(false);
+
+  if (loadState.isNotFound)
+    return (
+      <StudioShell>
+        <StudioNotFound />
+      </StudioShell>
+    );
+  if (loadState.isError)
+    return (
+      <StudioShell>
+        <StudioLoadError loadState={loadState} />
+      </StudioShell>
+    );
+  if (!track)
+    return (
+      <StudioShell>
+        <StudioDetailSkeleton />
+      </StudioShell>
+    );
 
   return (
     <StudioShell>
-      <div className={trackStyles.crumb}>
-        <Link to={routes.studioArtist}>{ARTIST_NAME}</Link>
+      <nav
+        className={trackStyles.crumb}
+        aria-label={t("studio:trackPage.crumbLabel")}
+      >
+        <Link to={track.release.artist.href}>{track.release.artist.name}</Link>
         <span aria-hidden>
           <FiChevronRight />
         </span>
-        <Link to={routes.studioAlbum}>{ALBUM_TITLE}</Link>
+        <Link to={track.release.href}>{track.release.title}</Link>
         <span aria-hidden>
           <FiChevronRight />
         </span>
-        <em>{t("studio:track.page.crumbLabel", { number: TRACK_NUMBER })}</em>
-      </div>
-
-      <StudioTrackHero onTip={() => setTipOpen(true)} />
-
-      <div className={trackStyles.inSet}>
-        <span className={trackStyles.live} />
-        <span>
-          <Translation
-            i18nKey="studio:track.inSet.status"
-            components={{ b: <b />, em: <em /> }}
-            values={{
-              count: 312,
-              curator: "Sara Marques",
-              next: 7,
-              countdown: "2:36",
-            }}
-          />
-        </span>
-        <Link to={routes.studioLive}>
-          {t("studio:track.inSet.joinCta")} <FiArrowRight aria-hidden />
-        </Link>
-      </div>
-
+        <em aria-current="page">
+          {t("studio:track.page.crumbLabel", { number: track.position })}
+        </em>
+      </nav>
+      <StudioTrackHero track={track} onTip={() => setIsTipOpen(true)} />
+      {isShowcase && <StudioTrackInSet />}
       <div className={trackStyles.body}>
-        <StudioTrackLyrics />
-        <StudioTrackSidebar />
+        <StudioTrackLyrics track={track} />
+        <StudioTrackSidebar track={track} />
       </div>
-
-      <section className={ss.row}>
-        <div className={ss.rowH}>
-          <h2>
-            <Translation
-              i18nKey="studio:album.more.heading"
-              values={{ artist: ALBUM_TITLE }}
-              components={{ em: <em /> }}
-            />
-          </h2>
-          <Link to={routes.studioAlbum} className={ss.all}>
-            {t("studio:track.more.fullAlbumCta")} <FiArrowRight aria-hidden />
-          </Link>
-        </div>
-        <div className={ss.rowGrid}>
-          {MORE.map((mr) => (
-            <Link key={mr.pre} to={routes.studioTrack} className={ss.card}>
-              <div className={ss.cardCov}>
-                <ImageSlot
-                  src={mr.image}
-                  tint={mr.tint}
-                  width="100%"
-                  height="100%"
-                  radius={10}
-                  placeholder={t("studio:media.coverLabel")}
-                  style={{ position: "absolute", inset: 0 }}
-                />
-              </div>
-              <h4>
-                {mr.pre}
-                {mr.em && <em>{mr.em}</em>}
-                {mr.post}
-              </h4>
-              <div className={ss.meta}>{mr.meta}</div>
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      {tipOpen && (
+      <StudioTrackMore track={track} />
+      {isShowcase && isTipOpen && (
         <StudioTipModal
-          recipient="Mariana Sol"
-          onClose={() => setTipOpen(false)}
+          recipient={track.release.artist.name}
+          onClose={() => setIsTipOpen(false)}
         />
       )}
     </StudioShell>

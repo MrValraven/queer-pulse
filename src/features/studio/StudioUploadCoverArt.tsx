@@ -1,54 +1,42 @@
-import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { Check } from "./StudioUploadIcons";
+import { Translation } from "../../shared/i18n/Translation";
+import { ImageUploadField } from "../subprofiles/ImageUploadField";
 import s from "./creator.module.css";
 
-// Content: the uploaded mock cover-art file's name and technical metadata —
-// comes from the uploaded file in live mode.
-const UPLOADED_FILENAME = "cidade_cover.jpg";
-const UPLOADED_FILE_META =
-  "2400 × 2400 · sRGB · 4.2 MB · no text in upper third";
-
-export function CoverArt() {
+/**
+ * Cover art through the existing image upload and crop flow (`work-image`,
+ * the persona section image kind). The key goes to PATCH as `coverKey`; the
+ * server re-homes it under the persona, so no key carries the uploader's id.
+ * v1 has no "remove the cover" on the wire, so the field offers Change alone.
+ */
+export function CoverArt({
+  value,
+  onChange,
+}: {
+  value: string;
+  onChange: (key: string) => void;
+}) {
   const { t } = useTranslation();
   return (
     <div className={s.uploaded}>
       <h4>
         <Translation
-          i18nKey="studio:upload.coverArt.heading"
+          i18nKey="studio:uploadFlow.cover.heading"
           components={{ em: <em /> }}
-          values={{ readyCount: 1, totalCount: 1 }}
         />
       </h4>
-      <div className={s.fileRow}>
-        <span
-          className={s.fileIc}
-          style={{
-            background: "rgba(var(--accent-rgb),.16)",
-            color: "var(--accent)",
-          }}
-        >
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth={2}
-            style={{ width: 16, height: 16 }}
-          >
-            <rect x={3} y={3} width={18} height={18} rx={2} />
-            <circle cx={9} cy={9} r={2} />
-            <path d="m21 15-5-5L5 21" />
-          </svg>
-        </span>
-        <div>
-          <h5>{UPLOADED_FILENAME}</h5>
-          <div className={s.fileMeta}>{UPLOADED_FILE_META}</div>
-        </div>
-        <span className={s.fileCheck}>
-          <Check />
-          {t("studio:upload.files.okReady")}
-        </span>
-      </div>
+      <ImageUploadField
+        value={value}
+        onChange={(key) => {
+          if (key) onChange(key);
+        }}
+        kind="work-image"
+        size={160}
+        isSquare
+        placeholder={t("studio:uploadFlow.cover.placeholder")}
+        isRemovable={false}
+      />
+      <p className={s.fileMeta}>{t("studio:uploadFlow.cover.hint")}</p>
     </div>
   );
 }

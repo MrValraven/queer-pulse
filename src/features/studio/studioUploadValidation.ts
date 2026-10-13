@@ -1,0 +1,128 @@
+import {
+  ACCOUNT_RESTRICTED_COPY,
+  isAccountRestricted,
+} from "../../shared/api/errorMessage";
+import { studioErrorCodeOf } from "./api/studio.api";
+import { StudioAudioUploadError } from "./api/studioAudioUpload";
+import {
+  STUDIO_AUDIO_CONTENT_TYPES,
+  STUDIO_LIMITS,
+  type StudioAudioContentType,
+  type StudioErrorCode,
+} from "./api/studio.types";
+import { studioErrorMessageKeyOf } from "./studioErrors.data";
+
+export type FileRejectionReason = "type" | "size" | "limit";
+
+export const FILE_REJECTION_KEY: Record<FileRejectionReason, string> = {
+  type: "studio:uploadFlow.files.rejectType",
+  size: "studio:uploadFlow.files.rejectSize",
+  limit: "studio:uploadFlow.files.rejectLimit",
+};
+
+const KNOWN_TYPES: ReadonlySet<string> = new Set(STUDIO_AUDIO_CONTENT_TYPES);
+/** Browsers that send no type, or an older alias, still name the file. */
+const TYPE_BY_EXTENSION: Record<string, StudioAudioContentType> = {
+  mp3: "audio/mpeg",
+  m4a: "audio/mp4",
+};
+const TYPE_ALIASES: Record<string, StudioAudioContentType> = {
+  "audio/mp3": "audio/mpeg",
+  "audio/x-m4a": "audio/mp4",
+  "audio/m4a": "audio/mp4",
+};
+
+export function audioContentTypeOf(file: File): StudioAudioContentType | null {
+  if (KNOWN_TYPES.has(file.type)) return file.type as StudioAudioContentType;
+  const alias = TYPE_ALIASES[file.type];
+  if (alias) return alias;
+  if (
+    file.type &&
+    !file.type.startsWith("audio/") &&
+    file.type !== "application/octet-stream"
+  )
+    return null;
+  const extension = file.name.split(".").pop()?.toLowerCase() ?? "";
+  return TYPE_BY_EXTENSION[extension] ?? null;
+}
+
+/** "01 - Tide.mp3" becomes "Tide"; the artist can rename it on the row. */
+export function titleFromFileName(fileName: string): string {
+  const title = fileName
+    .replace(/\.[^.]+$/, "")
+    .replace(/^\d{1,3}\s*[-_.]?\s*/, "")
+    .replace(/_/g, " ")
+    .trim()
+    .slice(0, STUDIO_LIMITS.titleMax);
+  return title || "Untitled";
+}
+
+export function validateAudioFiles(files: File[], existingCount: number) {
+  const accepted: { file: File; contentType: StudioAudioContentType }[] = [];
+  const rejected: { fileName: string; reason: FileRejectionReason }[] = [];
+  for (const file of files) {
+    const contentType = audioContentTypeOf(file);
+    if (!contentType) rejected.push({ fileName: file.name, reason: "type" });
+    else if (file.size > STUDIO_LIMITS.audioMaxBytes)
+      rejected.push({ fileName: file.name, reason: "size" });
+    else if (
+      existingCount + accepted.length >=
+      STUDIO_LIMITS.tracksPerReleaseMax
+    )
+      rejected.push({ fileName: file.name, reason: "limit" });
+    else accepted.push({ file, contentType });
+  }
+  return { accepted, rejected };
+}
+
+/** A refused Studio write as a catalog key: the shared restriction line for a
+ *  member under a moderation restriction, else the Studio code's own line. */
+export function studioWriteErrorKeyOf(error: unknown): string {
+  return studioErrorMessageKeyOf(error);
+}
+
+/** A presign the server refused with 403: the grant, persona ownership, the
+ *  persona kind or a restriction. The same request is refused on every Retry. */
+const isPresignRefusal = (error: StudioAudioUploadError) =>
+  error.stage === "presign" && error.status === 403;
+
+/** One message per failure a row can show. */
+export function uploadErrorKeyOf(error: unknown): string {
+  if (error instanceof StudioAudioUploadError) {
+    if (error.stage === "presign" && error.status === 413)
+      return "studio:uploadFlow.files.errorTooLarge";
+    if (isPresignRefusal(error)) return studioErrorMessageKeyOf(error.cause);
+    return "studio:uploadFlow.files.errorUpload";
+  }
+  return studioWriteErrorKeyOf(error);
+}
+
+/** Refusals that come back the same on every Retry. */
+const HARD_ERROR_CODES: ReadonlySet<StudioErrorCode> = new Set([
+  "studio_audio_wrong_owner",
+  "studio_release_not_draft",
+  "studio_track_limit",
+]);
+
+/** Failures a Retry cannot fix: the server refuses the same file (413), the
+ *  uploaded object belongs to someone else (422 wrong owner), the release
+ *  left draft or is full (409), the presign was refused (403), or the member
+ *  is under a restriction (403).
+ *  The row keeps Remove, so the member can drop it and add the file again. */
+export function isRetryableUploadError(error: unknown): boolean {
+  if (error instanceof StudioAudioUploadError)
+    return !(
+      (error.stage === "presign" && error.status === 413) ||
+      isPresignRefusal(error)
+    );
+  if (isAccountRestricted(error)) return false;
+  const code = studioErrorCodeOf(error);
+  return code === null || !HARD_ERROR_CODES.has(code);
+}
+
+/** The line a row shows when removing its track failed. */
+export function removeErrorKeyOf(error: unknown): string {
+  return isAccountRestricted(error)
+    ? ACCOUNT_RESTRICTED_COPY.key
+    : "studio:uploadFlow.files.errorRemove";
+}

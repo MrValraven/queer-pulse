@@ -40,19 +40,24 @@ import type {
   ListingPublicOnlineDetails,
 } from "../listBusiness/listingOnline.data";
 import type { DirectoryShopItem } from "../listBusiness/listingShop.data";
+import {
+  writeListingFactFilters,
+  type DirectoryListingFactFilters,
+} from "../directoryListingFactFilters";
 
-/** Photos as the detail endpoint returns them — each slot resolved to a URL or null. */
+/** Photos as the detail endpoint returns them, each slot resolved to a URL or null. */
 export type PhotoSetView = Record<PhotoKey, string | null>;
 
 /**
  * The listing's cover photo as the card endpoints return it: the first entry
  * of the owner's ordered gallery, which is the wide shot they uploaded first.
- * `null` when the listing has no photos at all — the card then falls back to
+ * `null` when the listing has no photos at all; the card then falls back to
  * its tinted placeholder frame.
  *
  * `crop` is the rect the owner framed in the photo-reframe editor. The card
  * strip is a fixed 168px band whose aspect won't match that rect, so it is
- * read as a FOCAL REGION (`ImageSlot`'s `focus`) rather than an exact frame.
+ * read as a FOCAL REGION (`ImageSlot`'s `focus`), a looser target than an
+ * exact frame.
  */
 export interface CoverPhotoView {
   image: string | null;
@@ -68,7 +73,7 @@ export interface CoverPhotoView {
  * non-null only when the listing is linked to its owner's member profile.
  */
 export interface DirectoryCardDTO {
-  /** The listing's real DB uuid — distinct from `slug` (the cosmetic public
+  /** The listing's real DB uuid, distinct from `slug` (the cosmetic public
    * URL id). Lets a cross-entity FK (e.g. a gathering's venue link) target a
    * real listing picked from this card grid. */
   id: string;
@@ -84,7 +89,7 @@ export interface DirectoryCardDTO {
    * `owned` claim above. Drives the "VERIFIED QUEER-OWNED" badge. */
   queerOwnedVerified: boolean;
   /** Who owns and runs it, in the owner's own words: any of `"women"`,
-   * `"trans"`, `"nonbinary"`, `"bipoc"`. Self-declared, never moderator-checked, so it
+   * `"trans"`, `"nonbinary"`, `"bipoc"`, `"migrant"`. Self-declared, never moderator-checked, so it
    * must never read as verified. Raw strings on the wire: the adapter keeps
    * only the ids this build knows. Optional so a payload from before the
    * field shipped still validates; absent ⇒ none. */
@@ -93,7 +98,7 @@ export interface DirectoryCardDTO {
   /** The owner's profile photo for the card's "run by <first>" line, resolved
    * server-side and gated exactly like `memberFirst` (null for an unlinked,
    * anonymous or role-only listing, and for a member who hid their photo).
-   * Absent on older payloads — the card then falls back to initials. */
+   * Absent on older payloads; the card then falls back to initials. */
   memberAvatarUrl?: string | null;
   /** Online-only business (no physical location). Absent on older payloads. */
   online?: boolean;
@@ -125,7 +130,7 @@ export interface DirectoryCardDTO {
    * `listings.safe_space_status` column the backend stores.
    *
    * `"suspended"` is the fourth value and the reason this is derived server
-   * side rather than copied: three member flags (or a moderator) pause a badge
+   * side and never copied: three member flags (or a moderator) pause a badge
    * immediately, and while that review is open the stored column deliberately
    * still reads `verified` because the grant itself is untouched. Serialising
    * that column onto a card would print "verified" for a place the platform
@@ -134,7 +139,7 @@ export interface DirectoryCardDTO {
    *
    * `"none"` = never reviewed. Any reader still comparing against
    * `"verified"` fails safe: `"suspended"` matches neither `"verified"` nor
-   * `"removed"`, so the badge stops rendering rather than lying.
+   * `"removed"`, so the badge stops rendering and never lies.
    */
   safeSpaceStatus: "none" | "verified" | "suspended" | "removed";
   /** Verification tier when `safeSpaceStatus` is "verified"; null otherwise. */
@@ -146,7 +151,7 @@ export interface DirectoryCardDTO {
    * This is NOT a suspension: an overdue re-review takes nothing down, so
    * `safeSpaceStatus` stays `"verified"` and the badge still shows. What it
    * carries is the AGE of the claim, so a surface can say when it was last
-   * checked instead of implying it was checked this morning. Always `false`
+   * checked, with no hint that it was checked this morning. Always `false`
    * for a badge that is suspended, absent or removed. Absent on older payloads.
    */
   isBadgeDueForReReview?: boolean;
@@ -155,11 +160,11 @@ export interface DirectoryCardDTO {
    * absent is read through `operatingStateOf`, which defaults to `"open"`. */
   operatingState?: OperatingStateView;
   /** The listing's cover photo, so the grid card shows the owner's own wide
-   * shot instead of the "Photo coming" placeholder. Optional here because the
+   * shot in place of the "Photo coming" placeholder. Optional here because the
    * demo/session card sources never carry it. */
   coverPhoto?: CoverPhotoView | null;
   /** IANA timezone the hours below run on, so "Open now" is computed on the
-   * VENUE's clock rather than the visitor's. `null`/absent ⇒ Europe/Lisbon. */
+   * VENUE's clock, whatever the visitor's clock says. `null`/absent ⇒ Europe/Lisbon. */
   timezone?: string | null;
   /** Weekly grid keyed by the frontend's `DAYS` id (`"Mon"`..`"Sun"`). An
    * EMPTY object means the listing has never published hours, which is a
@@ -179,11 +184,22 @@ export interface DirectoryCardDTO {
    * `no`. Absent on older payloads and on the demo/session card sources, which
    * the card then reads as "this listing has said nothing at all". */
   accessibilityAnswers?: AccessibilityAnswerMap;
-  /** The card's pill row: the price band first when one is set, then the
-   * listing's tags, the same order the listing wizard's preview builds.
-   * Absent on older payloads and on the demo/session card sources, which the
-   * card then reads as an empty row. */
-  pills?: string[];
+  /** The stored price band, "" when none. Absent on older payloads. */
+  price?: string;
+  /** Attribute slugs, the sensitive ones left out (backend delta 2). */
+  attributes?: string[];
+  /** Up to three, never sensitive. */
+  highlights?: string[];
+  entryMode?: string | null;
+  payments?: string[];
+  /** Language codes. */
+  langs?: string[];
+  inclusionPractices?: string[];
+  /** A public gathering run here, or at this confirmed venue, in the last
+   *  180 days or coming up. */
+  hostsGatherings?: boolean;
+  /** Every category (amendment 1). */
+  cats?: string[];
 }
 
 /**
@@ -196,8 +212,8 @@ export interface DirectoryCardDTO {
  * Semantics that matter to every caller: multiple values are an AND (the
  * listing must meet all of them), and a listing matches only when its stored
  * answer is exactly `"yes"`. An `unknown` answer never matches, because
- * "nobody has told us" is not a met need. An unrecognised slug is a 400 rather
- * than a silently dropped filter, so only the six canonical
+ * "nobody has told us" is not a met need. An unrecognised slug is a 400 and
+ * is never silently dropped, so only the six canonical
  * `AccessibilitySlug` values may ever reach this.
  */
 function setAccessParam(
@@ -220,10 +236,10 @@ function setOwnedParam(
   if (owned && owned.length > 0) search.set("owned", owned.join(","));
 }
 
-/** GET /directory — every live directory listing (public), optionally
- * filtered. Always the bare, `DEFAULT_LIST_LIMIT`-capped array shape — for
- * whole-catalog callers that need the full working set client-side rather
- * than a browsable page (the gatherings venue picker, @mention suggestions,
+/** GET /directory: every live directory listing (public), optionally
+ * filtered. Always the bare, `DEFAULT_LIST_LIMIT`-capped array shape, for
+ * whole-catalog callers that need the full working set client-side as one
+ * list (the gatherings venue picker, @mention suggestions,
  * the directory detail page's "related places" strip). The `/local/directory`
  * grid itself calls `getDirectoryPage` instead, which paginates. */
 export function getDirectory(params?: {
@@ -274,11 +290,11 @@ export function getAdultDirectory(params?: {
 }
 
 /**
- * GET /directory?page=N — the paginated variant backing the `/local/directory`
+ * GET /directory?page=N: the paginated variant backing the `/local/directory`
  * grid (gap-audit HSG-5): sends `q`/`safe` server-side, so the network payload
- * matches what's actually being searched for instead of dragging down every
- * live listing on every render, and pages through the real `total` instead of
- * silently stopping at the backend's `DEFAULT_LIST_LIMIT` cap. `cat`
+ * matches what's actually being searched for and leaves the other live
+ * listings on the server, and pages through the real `total` all the way past
+ * the backend's `DEFAULT_LIST_LIMIT` cap. `cat`
  * deliberately stays client-side (see `useDirectoryFilters`'s `categoryCounts`)
  * so each category chip's count stays correct against the loaded set no
  * matter which category is currently selected.
@@ -297,6 +313,8 @@ export function getDirectoryPage(params: {
   owned?: ListingOwnedBy[];
   /** Only listings that sell online (online only, or a place with a shop). */
   online?: boolean;
+  /** The attribute and fact filters (see `directoryListingFactFilters`). */
+  listingFacts?: DirectoryListingFactFilters;
   page: number;
 }): Promise<DirectoryCardDTO[] | ItemsPage<DirectoryCardDTO>> {
   const search = new URLSearchParams();
@@ -305,20 +323,21 @@ export function getDirectoryPage(params: {
   if (params.online) search.set("online", "true");
   setOwnedParam(search, params.owned);
   setAccessParam(search, params.access);
+  if (params.listingFacts) writeListingFactFilters(search, params.listingFacts);
   search.set("page", String(params.page));
   return apiGet<DirectoryCardDTO[] | ItemsPage<DirectoryCardDTO>>(
     `/directory?${search.toString()}`,
   );
 }
 
-/** A safe-space "promise" the venue keeps — mirrors the backend's
+/** A safe-space "promise" the venue keeps. Mirrors the backend's
  * `SafeSpacePromise`. */
 export interface SafeSpacePromiseDTO {
   title: string;
   desc: string;
 }
 
-/** A member vouch for a safe space, as the directory detail DTO carries it —
+/** A member vouch for a safe space, as the directory detail DTO carries it:
  * RAW, with no `initials`/`tint` (unlike the safe-spaces hub's own
  * `SafeSpaceVouchDTO`, which the backend enriches with those before sending).
  * Mirrors the backend's `SafeSpaceVouch` entity shape. */
@@ -346,13 +365,13 @@ export interface SafeSpaceRemovalDTO {
  * `DirectoryDetailDTO`. `rating` is a placeholder ("0" / 0) until the reviews
  * subsystem lands; `reviews`/`upcoming` are added by later sub-projects.
  *
- * The `safeSpace*`-prefixed fields are the RAW trust block — present
+ * The `safeSpace*`-prefixed fields are the RAW trust block, present
  * alongside the inherited `safeSpaceStatus`/`safeSpaceTier` so the directory
  * detail page can render the full safe-space narrative from the same record.
  * They mirror the raw `Listing` columns exactly (same source the backend's
- * `toSafeSpaceDetail` reads for the safe-spaces hub) rather than that hub's
- * own derived `SafeSpaceDetailDTO`, which adds per-vouch `initials`/`tint` —
- * `directorySafeSpace.adapters.ts` derives those client-side instead. `null`/
+ * `toSafeSpaceDetail` reads for the safe-spaces hub). That hub's own derived
+ * `SafeSpaceDetailDTO` adds per-vouch `initials`/`tint`; here
+ * `directorySafeSpace.adapters.ts` derives those client-side. `null`/
  * empty whenever the listing has never been a verified/removed safe space.
  */
 export interface DirectoryDetailDTO extends DirectoryCardDTO {
@@ -365,12 +384,8 @@ export interface DirectoryDetailDTO extends DirectoryCardDTO {
   tagline: string;
   /** IANA timezone the hours run on; `null` ⇒ the FE defaults to Europe/Lisbon. */
   timezone: string | null;
-  pills: string[];
   gallery: string[];
   whatItIs: string[];
-  /** Atmosphere bullets only, every one a positive check. Accessibility moved
-   * out of here into `accessibility` below, which can answer no. */
-  goodFor: { label: string; yes: boolean }[];
   /** The venue's structured accessibility answers plus its free-text note. All
    * six questions are always present; `unknown` is a real answer and must not
    * be rendered as a negative or dropped. Optional here only because a payload
@@ -392,7 +407,7 @@ export interface DirectoryDetailDTO extends DirectoryCardDTO {
    * by definition, so it is never a distinguishing badge and never a filter. */
   affirmingBaseline?: AffirmingBaselineView;
   /** Who confirmed the queer-owned badge, when, on what basis, and when it
-   * lapses — the same kind of evidence the safe-space block beside it carries. */
+   * lapses: the same kind of evidence the safe-space block beside it carries. */
   queerOwnedVerification?: QueerOwnedVerificationView;
   hoursType: HoursType;
   hoursNote: string;
@@ -432,6 +447,14 @@ export interface DirectoryDetailDTO extends DirectoryCardDTO {
   alt: Record<PhotoKey, string>;
   hours: Record<string, DayHours>;
   langs: string[];
+  /** Every stored attribute, sensitive ones included. Inherited from the card
+   *  type; documented here because the card leaves the sensitive ones out. */
+  attributes?: string[];
+  coverPolicy?: string | null;
+  coverFreeBefore?: string | null;
+  issuesNifInvoices?: boolean | null;
+  saferSpacePolicyUrl?: string | null;
+  langsOther?: string;
   /** Count of members who saved this listing. Drives the "Saved by N members"
    * trust signal on the detail page. */
   savedCount: number;
@@ -455,7 +478,7 @@ export interface DirectoryDetailDTO extends DirectoryCardDTO {
 }
 
 /**
- * GET /directory/by-member/:slug — a member's publicly-live directory listings
+ * GET /directory/by-member/:slug: a member's publicly-live directory listings
  * (public, no auth). Returns `[]` for unknown members. Same redacted card DTO
  * the public grid uses, so visitors can see the places a member runs.
  */
@@ -466,7 +489,7 @@ export const getListingsByMember = (slug: string) =>
     validateDirectoryList,
   );
 
-/** GET /directory/:slug — one live directory listing by slug (public). */
+/** GET /directory/:slug: one live directory listing by slug (public). */
 export const getDirectorySpace = (slug: string) =>
   apiGet<DirectoryDetailDTO>(
     `/directory/${slug}`,
@@ -479,7 +502,7 @@ export interface SubmitReviewInput {
   stars: number;
   text: string;
   /**
-   * A `listing-photo` presign key from `useUploadImage("listing-photo")` — the
+   * A `listing-photo` presign key from `useUploadImage("listing-photo")`: the
    * private storage key, never a fetchable URL. Omit to post a text-only
    * review; send `""` to clear a photo that was attached before.
    */
@@ -487,7 +510,7 @@ export interface SubmitReviewInput {
 }
 
 /**
- * POST /directory/:slug/reviews — leave a review (member-only). Returns the
+ * POST /directory/:slug/reviews: leave a review (member-only). Returns the
  * created review in the same shape the detail page renders.
  */
 export const submitReview = (slug: string, input: SubmitReviewInput) =>
@@ -497,7 +520,7 @@ export const submitReview = (slug: string, input: SubmitReviewInput) =>
 export type EditReviewInput = SubmitReviewInput;
 
 /**
- * PATCH /directory/:slug/reviews/:reviewId — rewrite your own review. The
+ * PATCH /directory/:slug/reviews/:reviewId: rewrite your own review. The
  * endpoint is author-gated and answers 403 for anyone else, so the UI only
  * ever offers this on a review whose `authorSlug` matches the signed-in
  * member. Returns the updated review in the detail page's own shape.
@@ -520,14 +543,14 @@ export interface ReviewHelpfulResponse {
   hasVoted: boolean;
 }
 
-/** POST /directory/:slug/reviews/:reviewId/helpful — idempotent; 400 on your
+/** POST /directory/:slug/reviews/:reviewId/helpful: idempotent; 400 on your
  *  own review. */
 export const voteReviewHelpful = (slug: string, reviewId: string) =>
   apiPost<ReviewHelpfulResponse>(
     `/directory/${slug}/reviews/${reviewId}/helpful`,
   );
 
-/** DELETE /directory/:slug/reviews/:reviewId/helpful — idempotent. */
+/** DELETE /directory/:slug/reviews/:reviewId/helpful: idempotent. */
 export const clearReviewHelpful = (slug: string, reviewId: string) =>
   apiDelete<ReviewHelpfulResponse>(
     `/directory/${slug}/reviews/${reviewId}/helpful`,
@@ -539,7 +562,7 @@ export const clearReviewHelpful = (slug: string, reviewId: string) =>
 export type ListingPublicQuestionDTO = ListingPublicQuestion;
 
 /**
- * GET /directory/:slug/questions — the full, paged question list, for
+ * GET /directory/:slug/questions: the full, paged question list, for
  * everything beyond the ten the detail payload carries. Newest first.
  */
 export const getListingQuestions = (slug: string, page: number) =>
@@ -548,7 +571,7 @@ export const getListingQuestions = (slug: string, page: number) =>
   );
 
 /**
- * POST /directory/:slug/questions — ask the business something in public.
+ * POST /directory/:slug/questions: ask the business something in public.
  * Member-gated and throttled: 400 when you own the listing yourself, 429 once
  * you are over quota (that body carries a plain reason worth showing).
  */
@@ -556,9 +579,9 @@ export const askListingQuestion = (slug: string, body: string) =>
   apiPost<ListingPublicQuestionDTO>(`/directory/${slug}/questions`, { body });
 
 /**
- * POST /listings/:ref/public-questions/:id/answer — the owner answering, keyed
+ * POST /listings/:ref/public-questions/:id/answer: the owner answering, keyed
  * by the listing's `ref` (its owner-facing id, distinct from the public
- * `slug` — see `DirectorySpacePage`'s `owned.ref`).
+ * `slug`; see `DirectorySpacePage`'s `owned.ref`).
  */
 export const answerListingQuestion = (
   ref: string,

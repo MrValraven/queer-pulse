@@ -3,6 +3,7 @@ import { FiCamera, FiTrash2 } from "react-icons/fi";
 import { ConfirmDialog, ImageSlot } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { PhotoPickerModal } from "../../members/PhotoPickerModal";
+import type { UploadKind } from "../../members/api/uploads.api";
 import styles from "./ListBusinessPage.module.css";
 
 interface ListingPhotoFieldProps {
@@ -12,10 +13,6 @@ interface ListingPhotoFieldProps {
   aspectRatio?: string;
   wide?: boolean;
   placeholder: string;
-  /** Standing caption above the frame. The cover slot uses it to say the photo
-   *  is the one the directory card shows. The `placeholder` caption vanishes
-   *  the moment a photo fills the slot, so it cannot carry that message. */
-  note?: string;
   /** What the frame paints: the form's preview for this slot when it has one,
    *  else the persisted value. */
   displayValue: string;
@@ -39,6 +36,13 @@ interface ListingPhotoFieldProps {
    *  inside a card with its own trash button (a shop item) passes an X so
    *  the two removals look different. */
   removeIcon?: ReactNode;
+  /** What the picker uploads as. The cover slot passes `"listing-cover"` for
+   *  its smaller size floor and cap. */
+  kind?: UploadKind;
+  /** The id of text that explains the slot's rules (the cover's size and
+   *  ratio helper), read out with the slot's buttons. Left out, the slot
+   *  carries no description. */
+  describedBy?: string;
 }
 
 /**
@@ -62,7 +66,6 @@ export function ListingPhotoField({
   aspectRatio,
   wide,
   placeholder,
-  note,
   displayValue,
   persistedValue,
   isRejectedByServer,
@@ -70,6 +73,8 @@ export function ListingPhotoField({
   onRemove,
   accessibleName,
   removeIcon = <FiTrash2 size={14} aria-hidden />,
+  kind = "listing-photo",
+  describedBy,
 }: ListingPhotoFieldProps) {
   const { t } = useTranslation();
   const errorId = useId();
@@ -99,8 +104,8 @@ export function ListingPhotoField({
       aria-busy={pickerOpen || undefined}
       role={accessibleName ? "group" : undefined}
       aria-label={accessibleName}
+      aria-describedby={describedBy}
     >
-      {note && <p className={styles.photoNote}>{note}</p>}
       <ImageSlot
         tint="plum"
         radius={14}
@@ -154,7 +159,7 @@ export function ListingPhotoField({
       />
       {pickerOpen && (
         <PhotoPickerModal
-          kind="listing-photo"
+          kind={kind}
           onPick={(key, previewUrl) => onResolved(key, previewUrl)}
           onDeleted={(deletedKey) => {
             if (isPersistedPhoto(deletedKey)) clear();

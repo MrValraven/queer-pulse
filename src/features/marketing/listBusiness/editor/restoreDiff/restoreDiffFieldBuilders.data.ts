@@ -4,15 +4,15 @@ import {
   REL,
   VIS,
   catLabel,
-  goodForLabel,
   hoodLabel,
-  langLabel,
   type ListingDraft,
 } from "../../listBusiness.data";
+import { languageLabel } from "../../listingFacts.data";
 import { pricingModeOf } from "../../listingMenu.data";
 import { listingKindOf } from "../../listingMobile.data";
 import { normalizeOwnedBy, OWNED_BY_TAG_KEYS } from "../../listingOwnedBy.data";
 import type { RestoreFieldChange } from "./restoreDiff.types";
+import { FACT_FIELD_BUILDERS } from "./restoreDiffFactFields.data";
 import {
   choiceField,
   fieldLabelKey,
@@ -36,6 +36,7 @@ import {
 } from "./restoreDiffOnlineFields.data";
 import {
   accessibilityRows,
+  coverPhotoRows,
   photoRows,
   serviceRows,
 } from "./restoreDiffRows.data";
@@ -88,11 +89,9 @@ export const FIELD_BUILDERS: Record<keyof ListingDraft, FieldBuilder> = {
   blurb: (context) => textField(context, "blurb"),
   tagline: (context) => textField(context, "tagline"),
   whatItIs: paragraphsField,
-  tags: (context) => setField(context, "tags", (tag) => tag),
-  goodFor: (context) =>
-    setField(context, "goodFor", (id) => goodForLabel(context.t, id)),
   langs: (context) =>
-    setField(context, "langs", (id) => langLabel(context.t, id)),
+    setField(context, "langs", (code) => languageLabel(context.t, code)),
+  ...FACT_FIELD_BUILDERS,
   services: (context) =>
     isFieldChanged(context, "services")
       ? rowsField("services", fieldLabelKey("services"), serviceRows(context))
@@ -133,6 +132,14 @@ export const FIELD_BUILDERS: Record<keyof ListingDraft, FieldBuilder> = {
           "accessibility",
           fieldLabelKey("accessibility"),
           accessibilityRows(context),
+        )
+      : [],
+  coverPhoto: (context) =>
+    isFieldChanged(context, "coverPhoto")
+      ? rowsField(
+          "coverPhoto",
+          fieldLabelKey("coverPhoto"),
+          coverPhotoRows(context),
         )
       : [],
   photos: (context) =>

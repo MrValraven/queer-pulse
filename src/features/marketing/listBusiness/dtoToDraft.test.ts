@@ -34,8 +34,6 @@ function makeDto(overrides: Partial<ListingDTO> = {}): ListingDTO {
     blurb: "A queer art studio",
     tagline: "",
     whatItIs: [],
-    tags: [],
-    goodFor: [],
     langs: [],
     online: false,
     address: "Rua X 1",
@@ -103,6 +101,52 @@ describe("dtoToDraft", () => {
     expect(draft.slug).toBeUndefined();
     expect(draft.submittedBy).toBeUndefined();
     expect(draft.createdAt).toBeUndefined();
+  });
+
+  it("reads the attribute and fact fields, healing language names from an older payload", () => {
+    const draft = dtoToDraft(
+      makeDto({
+        attributes: ["terrace"],
+        highlights: ["terrace"],
+        entryMode: "walkIn",
+        coverPolicy: null,
+        coverFreeBefore: null,
+        payments: ["card"],
+        issuesNifInvoices: false,
+        inclusionPractices: ["chosen-name"],
+        saferSpacePolicyUrl: null,
+        langs: ["Português", "en"],
+        langsOther: "",
+      }),
+    );
+    expect(draft).toMatchObject({
+      attributes: ["terrace"],
+      highlights: ["terrace"],
+      entryMode: "walkIn",
+      coverPolicy: null,
+      coverFreeBefore: "",
+      payments: ["card"],
+      issuesNifInvoices: false,
+      inclusionPractices: ["chosen-name"],
+      saferSpacePolicyUrl: "",
+      langs: ["pt", "en"],
+      langsOther: "",
+    });
+  });
+
+  it("reads a payload from before the fields existed as empty answers", () => {
+    expect(dtoToDraft(makeDto())).toMatchObject({
+      attributes: [],
+      highlights: [],
+      entryMode: null,
+      coverPolicy: null,
+      coverFreeBefore: "",
+      payments: [],
+      issuesNifInvoices: null,
+      inclusionPractices: [],
+      saferSpacePolicyUrl: "",
+      langsOther: "",
+    });
   });
 });
 
@@ -302,5 +346,63 @@ describe("dtoToDraft round trips for the three kinds", () => {
       },
     });
     expect(dtoToDraft(dto).adultTermsAccepted).toBe(true);
+  });
+});
+
+describe("dtoToDraft coverPhoto", () => {
+  it("reads the owner's cover", () => {
+    const draft = dtoToDraft(
+      makeDto({
+        coverPhoto: {
+          image: "https://api.example/files/listing-covers/u/k.webp",
+          alt: "Front door",
+        },
+      }),
+    );
+    expect(draft.coverPhoto).toEqual({
+      image: "https://api.example/files/listing-covers/u/k.webp",
+      alt: "Front door",
+    });
+  });
+
+  it("gives an empty cover when the listing has none, whatever the gallery holds", () => {
+    const draft = dtoToDraft(
+      makeDto({
+        coverPhoto: null,
+        photos: {
+          wide: "https://api.example/files/listing-photos/u/w.webp",
+          d1: null,
+          d2: null,
+          vibe: null,
+        },
+      }),
+    );
+    expect(draft.coverPhoto).toEqual({ image: "", alt: "" });
+  });
+
+  it("gives an empty cover for a payload from before the field", () => {
+    const { coverPhoto: _omitted, ...legacyDto } = makeDto({
+      coverPhoto: null,
+    });
+    expect(dtoToDraft(legacyDto).coverPhoto).toEqual({ image: "", alt: "" });
+  });
+
+  it("saves an edited listing with no cover as a null cover, leaving the wide shot in the gallery", () => {
+    const draft = dtoToDraft(
+      makeDto({
+        coverPhoto: null,
+        photos: {
+          wide: "https://api.example/files/listing-photos/u/w.webp",
+          d1: null,
+          d2: null,
+          vibe: null,
+        },
+      }),
+    );
+    const payload = draftToDto(draft);
+    expect(payload.coverPhoto).toBeNull();
+    expect(payload.photos.wide).toBe(
+      "https://api.example/files/listing-photos/u/w.webp",
+    );
   });
 });

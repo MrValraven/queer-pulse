@@ -111,6 +111,9 @@ export const auth: Catalog = {
     "Preencher isto não envia nada para esse endereço. O link continua a ser partilhado por ti.",
   "invite.compose.recipientEmail.invalid":
     "Isto não parece um endereço de email. Verifica ou deixa o campo vazio.",
+  "invite.compose.privateNote.label": "Nota privada",
+  "invite.compose.privateNote.placeholder": "Ex.: a Sofia do clube de leitura",
+  "invite.compose.privateNote.help": "Só tu e a nossa equipa veem isto.",
   "invite.compose.vouch.label": "O teu voto de confiança",
   "invite.compose.vouch.placeholder":
     "Porque é que devia entrar? Uma ou duas frases já ajudam bastante.",
@@ -192,6 +195,25 @@ export const auth: Catalog = {
   "invite.sentList.loadMoreError": "Não conseguimos carregar mais convites.",
   "invite.sentList.loadError": "Não conseguimos carregar os teus convites",
   "invite.sentList.loadErrorBody": "Verifica a tua ligação e tenta outra vez.",
+  "invite.sentList.privateNote.srPrefix": "A tua nota privada:",
+  "invite.sentList.privateNote.addCta": "Adicionar nota privada",
+  "invite.sentList.privateNote.editCta": "Editar nota privada",
+  "invite.sentList.privateNote.addAriaLabel":
+    "Adicionar nota privada ao convite para {invite}",
+  "invite.sentList.privateNote.editAriaLabel":
+    "Editar nota privada do convite para {invite}",
+  "invite.sentList.privateNote.saveCta": "Guardar nota privada",
+  "invite.sentList.privateNote.cancelCta": "Cancelar",
+  "invite.sentList.privateNote.deleteCta": "Apagar nota privada",
+  "invite.sentList.privateNote.saving": "A guardar…",
+  "invite.sentList.privateNote.deleting": "A apagar…",
+  "invite.sentList.privateNote.savedToast": "Nota privada guardada",
+  "invite.sentList.privateNote.deletedToast": "Nota privada apagada",
+  "invite.sentList.privateNote.undoCta": "Anular",
+  "invite.sentList.privateNote.errorToast":
+    "Não conseguimos guardar a tua nota privada agora. Tenta outra vez daqui a pouco.",
+  "invite.sentList.privateNote.deleteErrorToast":
+    "Não conseguimos apagar a tua nota privada agora. Tenta outra vez daqui a pouco.",
 
   // ── Cartão de pré-visualização do convite (espelha as tags Open Graph) ──
   "sharePreview.heroTitle.line1": "Entra numa sala",
@@ -701,7 +723,7 @@ export const auth: Catalog = {
   // diretório procuram. Opcional: saltar não guarda nada.
   "onboarding.stepWork.heading": "O que <em>fazes?</em>",
   "onboarding.stepWork.hint":
-    "Escolhe a tua área, ou pesquisa a tua função, e depois as funções que encaixam. Isto é público e é assim que as pessoas te encontram no diretório de membros.",
+    "Pesquisa o teu trabalho, ou explora por área. Isto é público e é assim que as pessoas te encontram no diretório de membros.",
   "onboarding.stepWork.continue": "Continuar",
   "onboarding.stepWork.skip": "Saltar por agora",
   "onboarding.stepWork.back": "Voltar",

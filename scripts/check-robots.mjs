@@ -93,6 +93,14 @@ const ACCEPTED_EXTRA_DISALLOWS = new Map([
     "Not a route: the HTML marketing films the admin Marketing videos page previews and renders. They carry unreleased copy, so they stay out of an index (vercel.json also sends X-Robots-Tag: noindex).",
   ],
   [
+    "/marketing-flyers/",
+    "Not a route: the printable event flyers (PNG and PDF) the admin Marketing page lists for download. Print files have no place in search results.",
+  ],
+  [
+    "/marketing-merch/",
+    "Not a route: the team tee's print files and mockup the admin Marketing page lists for download. Print files have no place in search results.",
+  ],
+  [
     "/brand/logo-concepts/",
     "Not a route: the candidate logo SVGs the admin Logo concepts page shows. Unreleased marks, so they stay out of an index (vercel.json also sends X-Robots-Tag: noindex).",
   ],

@@ -63,6 +63,173 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "marketing-flyers",
+        category: "feature",
+        date: "13 Oct 2026",
+        ...entryKeys("marketing-flyers"),
+      },
+      {
+        id: "search-first-work-picker",
+        category: "improvement",
+        date: "13 Oct 2026",
+        ...entryKeys("search-first-work-picker"),
+        tag: {
+          labelKey: "marketing:changelog.tag.members",
+          to: routes.members,
+        },
+      },
+      {
+        id: "taken-down-gatherings-off-venue-pages",
+        category: "fix",
+        date: "13 Oct 2026",
+        ...entryKeys("taken-down-gatherings-off-venue-pages"),
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
+      },
+      {
+        id: "settings-save-bar-on-phones",
+        category: "fix",
+        date: "13 Oct 2026",
+        ...entryKeys("settings-save-bar-on-phones"),
+      },
+      {
+        id: "listing-attributes",
+        category: "feature",
+        date: "12 Oct 2026",
+        ...entryKeys("listing-attributes"),
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
+      },
+      {
+        id: "guest-communities-on-gatherings",
+        category: "feature",
+        date: "12 Oct 2026",
+        ...entryKeys("guest-communities-on-gatherings"),
+      },
+      {
+        id: "studio-v1",
+        category: "feature",
+        date: "12 Oct 2026",
+        ...entryKeys("studio-v1"),
+        tag: { labelKey: "marketing:changelog.tag.studio", to: routes.studio },
+      },
+      {
+        id: "private-notes-on-invites",
+        category: "feature",
+        date: "12 Oct 2026",
+        ...entryKeys("private-notes-on-invites"),
+        tag: {
+          labelKey: "marketing:changelog.tag.invite",
+          to: routes.invite,
+        },
+      },
+      {
+        id: "admin-refresh-expired-invites",
+        category: "feature",
+        date: "12 Oct 2026",
+        ...entryKeys("admin-refresh-expired-invites"),
+      },
+      {
+        id: "anonymous-vouches-stay-anonymous-in-notifications",
+        category: "fix",
+        date: "12 Oct 2026",
+        ...entryKeys("anonymous-vouches-stay-anonymous-in-notifications"),
+        tag: {
+          labelKey: "marketing:changelog.tag.vouch",
+          to: routes.members,
+        },
+      },
+      {
+        id: "share-my-plans-in-the-header",
+        category: "improvement",
+        date: "12 Oct 2026",
+        ...entryKeys("share-my-plans-in-the-header"),
+        tag: {
+          labelKey: "marketing:changelog.tag.gatherings",
+          to: routes.gatherings,
+        },
+      },
+      {
+        id: "update-card-waits-for-member-pages",
+        category: "fix",
+        date: "12 Oct 2026",
+        ...entryKeys("update-card-waits-for-member-pages"),
+        tag: {
+          labelKey: "marketing:changelog.tag.feed",
+          to: routes.feed,
+        },
+      },
+      {
+        id: "calendar-entries-link-to-the-gathering",
+        category: "improvement",
+        date: "12 Oct 2026",
+        ...entryKeys("calendar-entries-link-to-the-gathering"),
+        tag: {
+          labelKey: "marketing:changelog.tag.gatherings",
+          to: routes.gatherings,
+        },
+      },
+      {
+        id: "access-answers-lead-with-what-is-there",
+        category: "improvement",
+        date: "8 Oct 2026",
+        ...entryKeys("access-answers-lead-with-what-is-there"),
+        tag: {
+          labelKey: "marketing:changelog.tag.gatherings",
+          to: routes.gatherings,
+        },
+      },
+      {
+        id: "gathering-shows-community-avatar",
+        category: "improvement",
+        date: "8 Oct 2026",
+        ...entryKeys("gathering-shows-community-avatar"),
+        tag: {
+          labelKey: "marketing:changelog.tag.gatherings",
+          to: routes.gatherings,
+        },
+      },
+      {
+        id: "listing-photo-buttons-easier-to-tap",
+        category: "fix",
+        date: "8 Oct 2026",
+        ...entryKeys("listing-photo-buttons-easier-to-tap"),
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
+      },
+      {
+        id: "suggested-people-reasons-line-up",
+        category: "fix",
+        date: "8 Oct 2026",
+        ...entryKeys("suggested-people-reasons-line-up"),
+        tag: {
+          labelKey: "marketing:changelog.tag.feed",
+          to: routes.feed,
+        },
+      },
+      {
+        id: "tab-unread-count-clears",
+        category: "fix",
+        date: "8 Oct 2026",
+        ...entryKeys("tab-unread-count-clears"),
+      },
+      {
+        id: "listing-cover-photo",
+        category: "feature",
+        date: "8 Oct 2026",
+        ...entryKeys("listing-cover-photo"),
+        tag: {
+          labelKey: "marketing:changelog.tag.directory",
+          to: routes.directory,
+        },
+      },
+      {
         id: "empty-now-card-leads-with-doors",
         category: "improvement",
         date: "8 Oct 2026",

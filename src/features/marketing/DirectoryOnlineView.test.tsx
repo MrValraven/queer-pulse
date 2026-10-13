@@ -13,6 +13,10 @@ import {
   type LocalFilterFieldsProps,
 } from "./LocalFilterFields";
 import { AUTH_STORAGE_KEY } from "./cookies.data";
+import {
+  countListingFactChips,
+  NO_LISTING_FACT_FILTERS,
+} from "./directoryListingFactFilters";
 import { DIRECTORY_PLACES } from "./directoryPlaces";
 import { ADULT_ONLINE_DIRECTORY_PLACES } from "./directoryOnlinePlaces.data";
 import { isSellingOnline } from "./listBusiness/listingOnline.data";
@@ -171,13 +175,13 @@ describe("LocalFilterFields, online scope", () => {
       access: Object.fromEntries(
         ACCESSIBILITY_QUESTION_SLUGS.map((slug) => [slug, 1]),
       ) as Record<AccessibilitySlug, number>,
-      vibes: {},
+      listingFacts: countListingFactChips(() => 1, NO_LISTING_FACT_FILTERS, []),
     },
     isLoadedSetComplete: false,
     query: "",
     onQueryChange: noop,
-    vibes: [],
-    onToggleVibe: noop,
+    listingFacts: NO_LISTING_FACT_FILTERS,
+    onToggleListingFact: noop,
     safeOnly: false,
     onToggleSafeOnly: noop,
     openNow: false,

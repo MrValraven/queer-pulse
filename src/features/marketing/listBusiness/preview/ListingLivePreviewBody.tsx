@@ -6,12 +6,12 @@ import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { submittedToPlace } from "../../api/directory.adapters";
 import { LocalBusinessCardBody } from "../../LocalBusinessCardBody";
 import {
-  PHOTO_KEYS,
   slugify,
   type ListingDraft,
   type PendingListing,
   type PhotoKey,
 } from "../listBusiness.data";
+import { withCardCover } from "./cardCoverPhoto";
 import { ListingLivePreviewExcerpt } from "./ListingLivePreviewExcerpt";
 import { ListingPreviewFieldCaption } from "./ListingPreviewFieldCaption";
 import {
@@ -31,6 +31,7 @@ import dirStyles from "../../DirectoryPage.module.css";
 export function ListingLivePreviewBody({
   draft,
   photoPreviews,
+  coverPreview = "",
   activeAnchor,
   onAddPhoto,
   header,
@@ -38,6 +39,9 @@ export function ListingLivePreviewBody({
 }: {
   draft: ListingDraft;
   photoPreviews: Record<PhotoKey, string>;
+  /** This session's cover upload (a blob URL), shown on the card ahead of the
+   *  stored cover. Empty when the member has not picked one. */
+  coverPreview?: string;
   /** The field the member is on (useFocusedListingField's `activeAnchor`);
    *  null shows the idle caption. */
   activeAnchor: string | null;
@@ -79,6 +83,7 @@ export function ListingLivePreviewBody({
       <ListingPreviewCard
         draft={draft}
         photoPreviews={photoPreviews}
+        coverPreview={coverPreview}
         ownerPhotoUrl={ownerPhotoUrl}
         onAddPhoto={onAddPhoto}
       />
@@ -96,11 +101,13 @@ export function ListingLivePreviewBody({
 function ListingPreviewCard({
   draft,
   photoPreviews,
+  coverPreview = "",
   ownerPhotoUrl,
   onAddPhoto,
 }: {
   draft: ListingDraft;
   photoPreviews: Record<PhotoKey, string>;
+  coverPreview?: string;
   ownerPhotoUrl: string | null;
   onAddPhoto?: () => void;
 }) {
@@ -139,25 +146,23 @@ function ListingPreviewCard({
   }
 
   // Same shape the real directory card renders from, so the preview can
-  // never drift from the live card again. `photoPreviews` (the just-uploaded
-  // blob URL) wins over the persisted `draft.photos` value, mirroring the
-  // wizard's own display convention (see ListingPhotoGallery).
-  const submittedPlace = submittedToPlace(
-    {
-      ...draft,
-      ref: "",
-      slug: slugify(draft.name),
-      status: "review",
-      submittedBy: "",
-      photos: PHOTO_KEYS.reduce(
-        (photos, key) => {
-          photos[key] = photoPreviews[key] || draft.photos[key];
-          return photos;
-        },
-        {} as Record<PhotoKey, string>,
-      ),
-    } satisfies PendingListing,
-    ownerPhotoUrl,
+  // never drift from the live card again. `withCardCover` puts the card's
+  // photo in the wide slot exactly as the owner's "Places I run" card does,
+  // with this session's uploads (blob URLs) ahead of the stored values.
+  const submittedPlace = withCardCover(
+    submittedToPlace(
+      {
+        ...draft,
+        ref: "",
+        slug: slugify(draft.name),
+        status: "review",
+        submittedBy: "",
+      } satisfies PendingListing,
+      ownerPhotoUrl,
+    ),
+    draft,
+    coverPreview,
+    photoPreviews,
   );
   // The real card says "run by <first>" only for a profile-linked listing
   // (the backend's `memberFirst`), so the preview hides it the same way.

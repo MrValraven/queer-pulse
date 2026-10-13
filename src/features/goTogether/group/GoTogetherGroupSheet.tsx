@@ -279,7 +279,7 @@ function GroupSheetBody({
 interface GoTogetherGroupSheetProps {
   groupId: string;
   /** The gathering whose Share plans flow "Tell someone where you'll be"
-   *  opens (`?share=plans`, read by `GatheringDetailPanels`). */
+   *  opens (`?share=plans`, read by `GatheringSharePlansButton`). */
   eventSlug: string;
   /** The chat the sheet was opened from. "Open group chat" hides while the
    *  group's chat is this one. */

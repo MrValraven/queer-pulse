@@ -338,8 +338,8 @@
   background:
     linear-gradient(rgba(var(--plum-rgb), 0.85), rgba(var(--plum-rgb), 0.85))
       16% 18% / 46% 5px no-repeat,
-    linear-gradient(rgba(var(--plum-rgb), 0.6), rgba(var(--plum-rgb), 0.6))
-      16% 28% / 28% 5px no-repeat,
+    linear-gradient(rgba(var(--plum-rgb), 0.6), rgba(var(--plum-rgb), 0.6)) 16%
+      28% / 28% 5px no-repeat,
     rgba(var(--cream-rgb), 0.88);
 }
 

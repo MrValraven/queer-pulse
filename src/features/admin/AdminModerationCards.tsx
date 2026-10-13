@@ -21,6 +21,8 @@ import {
   priorReportsText,
   reporterCredibilityText,
 } from "./adminModeration.data";
+import { AdminStudioReleaseThumb } from "./AdminStudioReleaseThumb";
+import studioStyles from "./AdminStudio.module.css";
 import { ageLabelOf, type ModReportView } from "./moderationAge";
 import { reporterDisplayName } from "./moderationReporter";
 import type { ModReportCluster } from "./moderationQueue.types";
@@ -119,8 +121,20 @@ export function ReportCard({
         </span>
 
         <span className={styles.reportTitle}>
-          {report.title} {report.titleEm && <em>{report.titleEm}</em>}{" "}
-          {report.titleAfter}
+          {report.subjectType === "studio_release" ? (
+            <span className={studioStyles.titleRow}>
+              <AdminStudioReleaseThumb releaseId={report.subjectId} />
+              <span className={studioStyles.titleText}>
+                {report.title} {report.titleEm && <em>{report.titleEm}</em>}{" "}
+                {report.titleAfter}
+              </span>
+            </span>
+          ) : (
+            <>
+              {report.title} {report.titleEm && <em>{report.titleEm}</em>}{" "}
+              {report.titleAfter}
+            </>
+          )}
         </span>
         <span className={styles.reportPreview}>{report.preview}</span>
 

@@ -109,6 +109,12 @@ export interface CommunityEvent {
    * out. Absent on the demo registry's rows, which state no end.
    */
   endAt?: Date | null;
+  /**
+   * The lead community's name when this community joined the gathering as a
+   * guest, for the Events tab's "With {name}" line. Absent on a gathering
+   * this community leads, and when the lead is private and withheld.
+   */
+  leadCommunityName?: string;
 }
 
 /** A community member with their role + light directory metadata. */

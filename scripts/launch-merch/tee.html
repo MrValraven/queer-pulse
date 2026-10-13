@@ -1,0 +1,250 @@
+<!doctype html>
+<!--
+  QueerPulse team tee, for black shirts and pullovers.
+
+  Two prints in the flyer's type, two inks (cream and coral):
+  - front: the QueerPulse wordmark on the left chest, 9 cm wide
+  - back: "A queer network, rooted in Lisbon", 28 cm wide
+
+  ?part=front and ?part=back show one print at its real size (1 CSS px is
+  1/96 in), so render.mjs can shoot it at 300 dpi on a transparent ground
+  and print it to a vector PDF. ?part=mockup shows both on a black tee,
+  reading the PNGs `pnpm merch` (render.mjs) wrote into
+  public/marketing-merch/ first.
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>QueerPulse team tee</title>
+    <style>
+      @font-face {
+        font-family: "Fraunces";
+        font-style: normal;
+        font-weight: 100 900;
+        src: url("../../public/marketing-videos/fonts/fraunces.woff2")
+          format("woff2");
+      }
+      @font-face {
+        font-family: "Fraunces";
+        font-style: italic;
+        font-weight: 100 900;
+        src: url("../../public/marketing-videos/fonts/fraunces-italic.woff2")
+          format("woff2");
+      }
+      @font-face {
+        font-family: "DM Sans";
+        font-style: normal;
+        font-weight: 100 1000;
+        src: url("../../public/marketing-videos/fonts/dm-sans.woff2")
+          format("woff2");
+      }
+
+      :root {
+        --cream: #f7f3ee;
+        --coral: #e8775a;
+        --shirt: #141215;
+      }
+      @page {
+        margin: 0;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html,
+      body {
+        background: transparent;
+        -webkit-font-smoothing: antialiased;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      .part {
+        display: none;
+      }
+      html[data-part="front"] #front,
+      html[data-part="back"] #back,
+      html[data-part="mockup"] #mockup {
+        display: inline-block;
+      }
+
+      /* ── Prints: padded so italic overhangs stay inside the shot ── */
+      .print {
+        padding: 0.14em 0.16em 0.2em;
+        white-space: nowrap;
+      }
+      .wordmark {
+        font-family: "Fraunces", serif;
+        font-weight: 500;
+        letter-spacing: -0.01em;
+        line-height: 1;
+        color: var(--cream);
+        font-variation-settings:
+          "opsz" 144,
+          "SOFT" 30;
+      }
+      .wordmark i {
+        font-style: italic;
+        color: var(--coral);
+      }
+      .tagline {
+        text-align: center;
+        line-height: 1.02;
+      }
+      .tagline span {
+        display: block;
+      }
+      .tagline .lead {
+        font-family: "DM Sans", sans-serif;
+        font-weight: 600;
+        letter-spacing: -0.045em;
+        color: var(--cream);
+      }
+      .tagline em {
+        font-family: "Fraunces", serif;
+        font-style: italic;
+        font-weight: 380;
+        font-size: 1.06em;
+        letter-spacing: -0.02em;
+        color: var(--coral);
+        font-variation-settings:
+          "opsz" 144,
+          "SOFT" 50;
+      }
+
+      /* ── Mockup: a flat black tee, front and back, 1 cm to 10 px ── */
+      html[data-part="mockup"],
+      html[data-part="mockup"] body {
+        background: #ece8e3;
+      }
+      #mockup {
+        padding: 60px 70px 70px;
+        font-family: "DM Sans", sans-serif;
+        color: #2d1b3d;
+      }
+      .tees {
+        display: flex;
+        gap: 80px;
+      }
+      .tee {
+        position: relative;
+        width: 700px;
+        height: 780px;
+      }
+      .tee svg {
+        position: absolute;
+        inset: 0;
+      }
+      .tee img {
+        position: absolute;
+      }
+      .tee figcaption {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: -40px;
+        text-align: center;
+        font-size: 18px;
+        font-weight: 600;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: rgba(45, 27, 61, 0.55);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="part print wordmark" id="front">Queer<i>Pulse</i></div>
+
+    <div class="part print tagline" id="back">
+      <span class="lead">A queer network,</span>
+      <span><em>rooted in Lisbon</em></span>
+    </div>
+
+    <div class="part" id="mockup">
+      <div class="tees">
+        <figure class="tee" id="tee-front">
+          <svg viewBox="0 0 700 780" aria-hidden="true">
+            <path class="body" d="" />
+          </svg>
+          <img src="../../public/marketing-merch/team-tee-front.png" alt="" />
+          <figcaption>Front</figcaption>
+        </figure>
+        <figure class="tee" id="tee-back">
+          <svg viewBox="0 0 700 780" aria-hidden="true">
+            <path class="body" d="" />
+          </svg>
+          <img src="../../public/marketing-merch/team-tee-back.png" alt="" />
+          <figcaption>Back</figcaption>
+        </figure>
+      </div>
+    </div>
+
+    <script>
+      const part = new URLSearchParams(location.search).get("part") || "front";
+      document.documentElement.dataset.part = part;
+      const CSS_PX_PER_CM = 96 / 2.54;
+      // Print widths, in cm, of the text itself (padding comes on top).
+      const PRINT_WIDTH_CM = { front: 9, back: 28 };
+
+      // Grows the type until its widest line is exactly the print width.
+      function fit(print, widthCm) {
+        print.style.fontSize = "100px";
+        // The tagline's lines are its block children; the wordmark is one line.
+        const lines = print.classList.contains("tagline")
+          ? [...print.children]
+          : [print];
+        const measure = (line) => {
+          const range = document.createRange();
+          range.selectNodeContents(line);
+          return range.getBoundingClientRect().width;
+        };
+        const widest = Math.max(...lines.map(measure));
+        print.style.fontSize = `${(100 * widthCm * CSS_PX_PER_CM) / widest}px`;
+      }
+
+      // A flat tee: neck, shoulders, short sleeves, straight body.
+      function teePath(neckDepth) {
+        return [
+          "M 250 40",
+          `C 285 ${40 + neckDepth}, 415 ${40 + neckDepth}, 450 40`,
+          "L 560 66 L 694 196 L 622 272 L 588 244",
+          "L 600 760 L 100 760 L 112 244",
+          "L 78 272 L 6 196 L 140 66 Z",
+        ].join(" ");
+      }
+
+      window.ready = document.fonts.ready.then(() => {
+        fit(document.getElementById("front"), PRINT_WIDTH_CM.front);
+        fit(document.getElementById("back"), PRINT_WIDTH_CM.back);
+        if (part !== "mockup") return;
+        const CM = 10;
+        // Prints sit by their real size: the PNGs are 300 dpi, trimmed to ink.
+        const PNG_DPI = 300;
+        // The neckline curve dips to 3/4 of its depth at the centre, which is
+        // where shops measure "below the collar" from.
+        const collarCentre = (neck) => 40 + neck * 0.75;
+        const placements = {
+          // Wearer's left chest, so the viewer's right; at chest level,
+          // 12 cm below the front collar.
+          "tee-front": { neck: 64, centreX: 350 + 9 * CM, below: 12 },
+          // Centred between the shoulder blades, 13 cm below the back collar.
+          "tee-back": { neck: 18, centreX: 350, below: 13 },
+        };
+        return Promise.all(
+          Object.entries(placements).map(async ([id, place]) => {
+            const tee = document.getElementById(id);
+            const path = tee.querySelector("path");
+            path.setAttribute("d", teePath(place.neck));
+            path.setAttribute("fill", "var(--shirt)");
+            const image = tee.querySelector("img");
+            await image.decode();
+            const widthPx = (image.naturalWidth / PNG_DPI) * 2.54 * CM;
+            image.style.width = `${widthPx}px`;
+            image.style.left = `${place.centreX - widthPx / 2}px`;
+            image.style.top = `${collarCentre(place.neck) + place.below * CM}px`;
+          }),
+        );
+      });
+    </script>
+  </body>
+</html>

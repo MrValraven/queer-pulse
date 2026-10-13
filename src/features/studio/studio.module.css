@@ -6,10 +6,14 @@
   --text: rgba(var(--cream-rgb), 0.92);
   --text60: rgba(var(--cream-rgb), 0.62);
   --text40: rgba(var(--cream-rgb), 0.4);
+  /* The shell carries data-theme="dark", which flips --line-rgb here, but
+     these two were resolved on <html> with the app theme's channels, so they
+     are restated to pick up the dark ones. */
+  --wash: rgba(var(--line-rgb), 0.05);
+  --line-2: rgba(var(--line-rgb), 0.22);
   background: var(--bg);
   color: var(--text);
   min-height: 100svh;
-  padding-bottom: calc(92px + env(safe-area-inset-bottom));
   /* Firefox */
   scrollbar-width: thin;
   scrollbar-color: rgba(var(--cream-rgb), 0.18) transparent;
@@ -49,7 +53,7 @@
   padding: 24px 0 40px;
   position: sticky;
   top: 0;
-  height: 100dvh;
+  height: calc(100dvh - var(--studio-player-inset, 0px));
   overflow-y: auto;
   border-right: 1px solid var(--line);
   display: flex;
@@ -203,7 +207,7 @@
   position: sticky;
   top: 0;
   z-index: var(--z-sticky);
-  background: rgba(26, 16, 40, 0.82);
+  background: color-mix(in srgb, var(--studio-bg) 82%, transparent);
   backdrop-filter: var(--blur-lg);
   border-bottom: 1px solid var(--line);
 }
@@ -296,6 +300,53 @@
 
 .content {
   padding: 0 32px;
+}
+
+/* The page scrolls the document, so the sticky topbar's clearance goes on
+   <html> while a Studio shell is mounted (useStudioShellSignal). Keyboard
+   focus and in-page jumps then stop below the bar. Covers the creator
+   shell's topbar too, which is a little shorter. */
+:global(html[data-studio-shell="true"]) {
+  scroll-padding-top: 96px;
+}
+
+/* Phones: the search drops to its own full-width row under the actions, the
+   back and forward buttons give way to the browser's own, and every label
+   stays on one line, so the sticky bar is two short rows. */
+@media (--md) {
+  :global(html[data-studio-shell="true"]) {
+    scroll-padding-top: 128px;
+  }
+  .topbar {
+    flex-wrap: wrap;
+    gap: 10px 12px;
+    padding: 10px 16px;
+    padding-block-start: max(10px, env(safe-area-inset-top));
+  }
+  .search {
+    order: 1;
+    flex: 1 1 100%;
+    max-width: none;
+    padding: 8px 14px;
+  }
+  .topRight {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 8px 10px;
+    min-width: 0;
+  }
+  .creatorLink,
+  .sustainPill {
+    white-space: nowrap;
+  }
+  .sustainPill {
+    padding: 6px 12px;
+  }
+}
+@media (--xs) {
+  .navs {
+    display: none;
+  }
 }
 
 /* Hero now-playing */
@@ -708,6 +759,9 @@
   color: var(--text40);
   margin-top: 4px;
 }
+.sideCard .lrow {
+  margin-top: 10px;
+}
 .avStack {
   display: flex;
   margin-top: 14px;
@@ -908,6 +962,10 @@
   font-style: italic;
   color: var(--accent);
 }
+.buyCard .price .small {
+  font-size: var(--text-14);
+  color: var(--text40);
+}
 .buyCard .sub {
   font-size: var(--text-13);
   color: var(--text60);
@@ -953,134 +1011,6 @@
   font-weight: 600;
 }
 
-/* Pinned footer player */
-.fp {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: var(--z-nav);
-  height: calc(80px + env(safe-area-inset-bottom));
-  background: rgba(18, 9, 32, 0.94);
-  backdrop-filter: var(--blur-lg);
-  border-top: 1px solid var(--line);
-  display: grid;
-  grid-template-columns: 1fr 2fr 1fr;
-  align-items: center;
-  gap: 20px;
-  padding: 0 22px;
-  padding-block-end: max(0px, env(safe-area-inset-bottom));
-}
-.fpL {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  min-width: 0;
-}
-.fpArt {
-  width: 52px;
-  height: 52px;
-  border-radius: var(--radius-8);
-  overflow: hidden;
-  flex: none;
-}
-.fpInfo {
-  min-width: 0;
-}
-.fpInfo .t {
-  font-family: var(--serif);
-  font-size: var(--text-14);
-  color: var(--text);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.fpInfo .t em {
-  font-style: italic;
-}
-.fpInfo .a {
-  font-size: var(--text-12);
-  color: var(--text40);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.fpHeart {
-  background: none;
-  border: none;
-  color: var(--text40);
-  cursor: pointer;
-}
-.fpHeart svg {
-  width: 18px;
-  height: 18px;
-}
-.fpC {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-}
-.fpTrans {
-  display: flex;
-  align-items: center;
-  gap: 18px;
-}
-.fpTrans button {
-  background: none;
-  border: none;
-  color: var(--text60);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-}
-.fpTrans button svg {
-  width: 14px;
-  height: 14px;
-}
-.fpTrans .play {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: var(--text);
-  color: var(--bg);
-  justify-content: center;
-}
-.fpTrans .play svg {
-  width: 12px;
-  height: 12px;
-  color: var(--bg);
-}
-.fpBar {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  width: 100%;
-  max-width: 480px;
-}
-.fpBar .t {
-  font-size: var(--text-11);
-  color: var(--text40);
-  font-variant-numeric: tabular-nums;
-}
-.fpBar .track {
-  flex: 1;
-  height: 4px;
-  border-radius: var(--radius-pill);
-  background: rgba(var(--cream-rgb), 0.16);
-  overflow: hidden;
-}
-.fpBar .fill {
-  width: 40%;
-  height: 100%;
-  background: var(--accent);
-}
-.fpR {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 14px;
-}
 .payMini {
   font-size: var(--text-11-5);
   color: var(--text40);
@@ -1118,12 +1048,6 @@
   }
   .rowGrid {
     grid-template-columns: repeat(2, 1fr);
-  }
-  .fp {
-    grid-template-columns: 1fr auto;
-  }
-  .fpC {
-    display: none;
   }
 }
 
@@ -1164,4 +1088,19 @@
   100% {
     background-position: 200% 0;
   }
+}
+
+/* The track hero's tighter padding (was an inline style). */
+.heroTight {
+  padding: 24px 0 32px;
+}
+
+/* Read by screen readers and kept off screen: the search result count. */
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }

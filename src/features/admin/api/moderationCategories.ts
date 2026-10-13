@@ -25,6 +25,7 @@ export const REASON_CATEGORY_KEY: Partial<Record<ReasonCode, string>> = {
   venue_safety: "admin:moderation.category.venue",
   venue_staff: "admin:moderation.category.venue",
   venue_accessibility: "admin:moderation.category.venue",
+  copyright: "admin:moderation.category.copyright",
   other: "admin:moderation.category.other",
 };
 

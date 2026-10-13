@@ -15,12 +15,14 @@ export type MyMediaKind =
   | "gathering-photo"
   | "group-avatar"
   | "listing-photo"
+  | "listing-cover"
   | "listing-menu"
   | "community-cover"
   | "community-avatar"
   | "event-cover"
   | "message-image"
-  | "message-document";
+  | "message-document"
+  | "studio_audio";
 
 export interface MyMediaItem {
   key: string;

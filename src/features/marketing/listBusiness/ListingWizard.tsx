@@ -12,7 +12,8 @@ import {
   type PendingListing,
 } from "./listBusiness.data";
 import { useListingForm, type ListingSeed } from "./useListingForm";
-import { healRetiredOnlineTags } from "./listingRetiredTags";
+import { withAppointmentAnswersInStep } from "./listingAppointmentLink";
+import { healLegacyListingDraft } from "./listingLegacyAttributes";
 import { useListingDraft } from "./useListingDraft";
 import { DraftBanner, SendingPanel } from "./ListBusinessChrome";
 import { WizardFormPane } from "./WizardFormPane";
@@ -116,16 +117,19 @@ export interface ListingWizardProps {
 /** Module-level, so its identity is stable for every hook that takes it. */
 const scrollUp = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
-/** A resumed create draft from before the online fields moves its retired
- *  tags into them; the server would refuse the create otherwise. An edit's
- *  draft comes from the stored listing, which the migration already moved. */
-function createDraftOnLoad(
+/** Every draft the wizard opens is healed: a resumed create draft from
+ *  before the online fields or the attribute vocabulary, and a server draft
+ *  from an older build. An edit's draft comes from the stored listing, where
+ *  the healer finds nothing to do and hands the same object back. The two
+ *  appointment answers of an out-and-about draft are then put in step. */
+function healedDraft(draft: ListingDraft): ListingDraft {
+  return withAppointmentAnswersInStep(healLegacyListingDraft(draft));
+}
+
+function draftOnLoad(
   initialDraft: ListingDraft | undefined,
-  editRef: string | undefined,
 ): ListingDraft | undefined {
-  return initialDraft && editRef === undefined
-    ? healRetiredOnlineTags(initialDraft)
-    : initialDraft;
+  return initialDraft ? healedDraft(initialDraft) : undefined;
 }
 
 export function ListingWizard({
@@ -171,7 +175,7 @@ export function ListingWizard({
       },
     [seed, resolvedUserName, profile.bio],
   );
-  const loadedDraft = createDraftOnLoad(initialDraft, editRef);
+  const loadedDraft = draftOnLoad(initialDraft);
   const form = useListingForm(loadedDraft, resolvedSeed);
   const { draft } = form;
   // A draft resumed from the landing list / a `?draft` deep link.
@@ -203,7 +207,7 @@ export function ListingWizard({
     saved,
     clearDraft,
     (resumed) => {
-      form.reset(healRetiredOnlineTags(resumed.draft));
+      form.reset(healedDraft(resumed.draft));
       setStep(resumed.step);
     },
   );

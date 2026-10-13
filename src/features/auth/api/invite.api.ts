@@ -2,6 +2,7 @@ import {
   ApiError,
   apiDelete,
   apiGet,
+  apiPatch,
   apiPost,
 } from "../../../shared/api/client";
 
@@ -84,6 +85,9 @@ export function isRoutableInviteCode(code: string): boolean {
   return code.length > 0 && !CODE_PATH_BREAKING.test(code);
 }
 
+/** The backend's cap on an invite's private note (`varchar(120)`). */
+export const INVITE_PRIVATE_NOTE_MAX_LENGTH = 120;
+
 /** What the member types when generating a share link. */
 export interface CreateInvitePayload {
   /**
@@ -99,6 +103,9 @@ export interface CreateInvitePayload {
   note?: string;
   /** Optional vouch (why they're inviting this person), shown at onboarding (max 280). */
   vouch?: string;
+  /** Optional label to remember who the invite is for (max 120). It stays
+   *  with the inviter and our team. */
+  privateNote?: string;
 }
 
 /** The row the backend creates in the `invites` table, returned to the client. */
@@ -162,6 +169,10 @@ export interface SentInviteDTO {
   note: string | null;
   /** The inviter's vouch (why they're inviting this person), if any. */
   vouch: string | null;
+  /** The inviter's own label for who the invite is for. It reaches the
+   *  inviter's own list and the admin views, and stays out of the public
+   *  resolve view. */
+  privateNote: string | null;
   /** The address the invite was addressed to, if it was an email invite. */
   email: string | null;
   status: InviteDTO["status"];
@@ -244,6 +255,19 @@ export const resendInvite = (code: string) =>
  */
 export const revokeInvite = (code: string) =>
   apiDelete<void>(`/invites/${encodeURIComponent(code)}`);
+
+/**
+ * Set or clear the private note on one of the current member's own invites,
+ * whatever its status. `null` (or a blank string) clears it. Returns the
+ * updated {@link SentInviteDTO} row; 404s an invite that isn't yours.
+ */
+export const updateInvitePrivateNote = (
+  code: string,
+  privateNote: string | null,
+) =>
+  apiPatch<SentInviteDTO>(`/invites/${encodeURIComponent(code)}/private-note`, {
+    privateNote,
+  });
 
 /**
  * The member's personal-invite allowance for the current calendar month, as

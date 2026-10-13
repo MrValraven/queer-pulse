@@ -1,75 +1,79 @@
-import { useId, useState } from "react";
-import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
-import { Button, Select } from "../../shared/components/ui";
+import { FiArrowRight } from "react-icons/fi";
+import { Button } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { STUDIO_RELEASE_TYPES_BY_KIND } from "./api/studio.types";
+import { CoverArt } from "./StudioUploadCoverArt";
+import { StudioUploadPersonaPicker } from "./StudioUploadPersonaPicker";
+import { StudioUploadReleaseFields } from "./StudioUploadReleaseFields";
+import type { StudioUploadDraft } from "./useStudioUploadDraft";
 import s from "./creator.module.css";
 
-export function MetadataStep({
-  onBack,
-  onSubmit,
-}: {
-  onBack: () => void;
-  onSubmit: () => void;
-}) {
+/** The release step: persona, details and cover. Leaving it creates the
+ *  draft; after that a draft's edits save themselves, and a published
+ *  release's edits save on "Save changes". */
+export function MetadataStep({ draft }: { draft: StudioUploadDraft }) {
   const { t } = useTranslation();
-  const titleFieldId = useId();
-  const yearFieldId = useId();
-  const genreFieldId = useId();
-  const [genre, setGenre] = useState("fado");
+  const isPublished = draft.isStructureLocked;
+  let saveStatus = "";
+  if (draft.saveErrorKey) saveStatus = t(draft.saveErrorKey);
+  else if (draft.isSaving) saveStatus = t("studio:uploadFlow.saving");
+  else if (isPublished && draft.hasSavedChanges)
+    saveStatus = t("studio:uploadFlow.release.changesSaved");
+  else if (!isPublished && draft.release)
+    saveStatus = t("studio:uploadFlow.saved");
   return (
     <div className={s.card}>
       <div className={s.cardH}>
         <h3>
           <Translation
-            i18nKey="studio:upload.metadata.heading"
+            i18nKey="studio:uploadFlow.release.heading"
             components={{ em: <em /> }}
           />
         </h3>
-        <div className={s.cardSub}>{t("studio:upload.metadata.sub")}</div>
+        {!isPublished && (
+          <div className={s.cardSub}>{t("studio:uploadFlow.release.sub")}</div>
+        )}
       </div>
-      <div className={s.field}>
-        <label htmlFor={titleFieldId}>
-          {t("studio:upload.metadata.field.title")}
-        </label>
-        {/* Defaults below prefill this artist's own release — content. */}
-        <input id={titleFieldId} type="text" defaultValue="Cidade dos santos" />
-      </div>
-      <div className={s.field}>
-        <label htmlFor={yearFieldId}>
-          {t("studio:upload.metadata.field.year")}
-        </label>
-        <input id={yearFieldId} type="text" defaultValue="2026" />
-      </div>
-      <div className={s.field}>
-        <label htmlFor={genreFieldId}>
-          {t("studio:upload.metadata.field.genre")}
-        </label>
-        <Select
-          id={genreFieldId}
-          options={[
-            { value: "fado", label: t("studio:upload.metadata.genre.fado") },
-            {
-              value: "electronic",
-              label: t("studio:upload.metadata.genre.electronic"),
-            },
-            { value: "folk", label: t("studio:upload.metadata.genre.folk") },
-            {
-              value: "experimental",
-              label: t("studio:upload.metadata.genre.experimental"),
-            },
-          ]}
-          value={genre}
-          onChange={(value) => setGenre(value ?? "fado")}
-        />
-      </div>
-      <div style={{ display: "flex", gap: 10, marginTop: 4 }}>
-        <Button variant="ghost" onClick={onBack}>
-          <FiArrowLeft aria-hidden /> {t("studio:upload.metadata.backCta")}
+      <StudioUploadPersonaPicker
+        personas={draft.personas}
+        value={draft.form.subprofileId}
+        isLocked={draft.release !== null}
+        onChange={(persona) => {
+          draft.setField("subprofileId", persona.id);
+          draft.setField(
+            "type",
+            STUDIO_RELEASE_TYPES_BY_KIND[persona.kind][0] ?? "single",
+          );
+        }}
+      />
+      <StudioUploadReleaseFields draft={draft} />
+      <CoverArt
+        value={draft.form.coverKey ?? draft.release?.coverUrl ?? ""}
+        onChange={(key) => draft.setField("coverKey", key)}
+      />
+      <div className={s.stepNav}>
+        {isPublished && (
+          <Button
+            variant="ghost"
+            onClick={() => void draft.saveChanges()}
+            aria-disabled={
+              draft.isSaving || !draft.hasUnsavedChanges || undefined
+            }
+          >
+            {t("studio:uploadFlow.release.saveChangesCta")}
+          </Button>
+        )}
+        <Button
+          onClick={() => void draft.continueToTracks()}
+          aria-disabled={draft.isSaving || undefined}
+        >
+          {t("studio:uploadFlow.release.continueCta")}{" "}
+          <FiArrowRight aria-hidden />
         </Button>
-        <Button onClick={onSubmit}>
-          {t("studio:upload.metadata.submitCta")} <FiArrowRight aria-hidden />
-        </Button>
+        <p className={s.saveStatus} role="status">
+          {saveStatus}
+        </p>
       </div>
     </div>
   );

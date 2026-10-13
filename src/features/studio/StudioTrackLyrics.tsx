@@ -1,75 +1,44 @@
-/* eslint-disable local/no-literal-string -- this file is almost entirely the
-   track's own lyrics, verse annotations, and translation credit: content
-   authored by the artist/translator, fetched from the API in live mode and
-   never translated (extraction-brief §1). The heading and lead-sheet CTA
-   below already route through t()/<Translation>. */
-import { useState } from "react";
+import { Fragment } from "react";
 import { Link } from "react-router-dom";
 import { FiArrowRight } from "react-icons/fi";
 import { routes } from "../../app/routeMap";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { Translation } from "../../shared/i18n/Translation";
+import type { StudioTrackView } from "./api/studio.adapters";
+import { useStudioShowcase } from "./useStudioShowcase";
 import trackStyles from "./track.module.css";
 
-export function StudioTrackLyrics() {
+export function StudioTrackLyrics({ track }: { track: StudioTrackView }) {
   const { t } = useTranslation();
-  const [lang, setLang] = useState("PT");
+  const isShowcase = useStudioShowcase();
   return (
     <div className={trackStyles.lyrCard}>
       <div className={trackStyles.lyrH}>
-        <h3>
-          <Translation
-            i18nKey="studio:track.lyrics.heading"
-            components={{ em: <em /> }}
-          />
-        </h3>
-        <div className={trackStyles.lyrLang}>
-          {["PT", "EN", "FR"].map((languageCode) => (
-            <button
-              type="button"
-              key={languageCode}
-              className={
-                lang === languageCode ? trackStyles.lyrLangOn : undefined
-              }
-              onClick={() => setLang(languageCode)}
-            >
-              {languageCode}
-            </button>
+        <h3>{t("studio:trackPage.lyricsHeading")}</h3>
+      </div>
+      {track.lyricStanzas.length > 0 ? (
+        <div className={trackStyles.lyric} lang="und">
+          {track.lyricStanzas.map((lines, stanzaIndex) => (
+            <p key={stanzaIndex} className={trackStyles.stanza}>
+              {lines.map((line, lineIndex) => (
+                <Fragment key={lineIndex}>
+                  {line}
+                  {lineIndex < lines.length - 1 && <br />}
+                </Fragment>
+              ))}
+            </p>
           ))}
         </div>
-      </div>
-      <div className={trackStyles.lyric}>
-        <div className={trackStyles.annot}>
-          Verse one: addressed to St. Iria, plainly
+      ) : (
+        <p className={trackStyles.noLyrics}>{t("studio:trackPage.noLyrics")}</p>
+      )}
+      {isShowcase && (
+        <div className={trackStyles.lyrFoot}>
+          <Link to={routes.studioSheetStore}>
+            {t("studio:track.lyrics.leadSheetChordsCta")}{" "}
+            <FiArrowRight aria-hidden />
+          </Link>
         </div>
-        <p className={trackStyles.played}>Querida santa, não me ouves —</p>
-        <p className={trackStyles.played}>e ainda assim te escrevo.</p>
-        <p className={trackStyles.played}>
-          A casa está vazia, a <em>rádio</em> ligada,
-        </p>
-        <p className={trackStyles.now}>e a luz que entra é a tua.</p>
-        <p>O dia inteiro à porta, à espera —</p>
-        <p>como quem espera a chuva.</p>
-        <div className={trackStyles.annot}>
-          Verse two: to her mother, the same day
-        </div>
-        <p>Mãe deixou a chave por baixo da pedra,</p>
-        <p>a manhã que partiu.</p>
-        <p>
-          Disseste-me: <em>não voltes.</em>
-        </p>
-        <p>Eu não voltei.</p>
-        <div className={trackStyles.annot}>Chorus</div>
-        <p>Santa que ouve quem ninguém ouve —</p>
-        <p>esta casa é tua também.</p>
-      </div>
-      <div className={trackStyles.lyrFoot}>
-        <span>Translated by Helena P. · approved by the artist · Apr 2026</span>
-        <Link to={routes.studioSheetStore}>
-          {t("studio:track.lyrics.leadSheetChordsCta")}{" "}
-          <FiArrowRight aria-hidden />
-        </Link>
-      </div>
+      )}
     </div>
   );
 }
