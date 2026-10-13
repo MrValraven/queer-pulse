@@ -20,7 +20,7 @@ export const connect: Catalog = {
   "page.eyebrow": "A tua rede",
   "page.title": "Pessoas que <em>conheceste mesmo.</em>",
   "page.lead":
-    "O teu perfil principal não faz seguidores. Conectas-te a pessoas quando já as conheceste: num convívio, através de alguém, ou porque te deram um voto de confiança. Qualidade em vez de quantidade.",
+    "O teu perfil principal não faz seguidores. Conectas-te a pessoas quando já as conheceste: num evento, através de alguém, ou porque te deram um voto de confiança. Qualidade em vez de quantidade.",
   "page.inviteCta": "Convidar alguém",
   "page.note":
     "<b>Sem contagem de seguidores aqui, de propósito.</b> Queres seguir as publicações de uma persona sem te conectares primeiro? É para isso que servem as personas. As conexões são bidirecionais: desbloqueiam mensagens e atualizações marcadas.",
@@ -107,7 +107,7 @@ export const connect: Catalog = {
   "allTab.sortClosestMutuals": "Mais em comum",
   "allTab.emptyTitle": "Ainda sem conexões",
   "allTab.emptyDescription":
-    "A tua rede começa com um simples olá. Conhece pessoas num convívio ou procura quem já conheces e conecta-te depois de se terem encontrado.",
+    "A tua rede começa com um simples olá. Conhece pessoas num evento ou procura quem já conheces e conecta-te depois de se terem encontrado.",
   "allTab.findMembers": "Encontrar pessoas",
   "allTab.emptySearchTitle": "Nada corresponde à tua pesquisa",
   "allTab.emptySearchDescription":

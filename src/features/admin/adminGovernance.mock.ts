@@ -82,7 +82,7 @@ export const INCOME_LEDGER: LedgerRow[] = [
   },
   {
     labelKey: "governance.ledger.gatheringTickets",
-    demoLabel: "Gathering tickets",
+    demoLabel: "Event tickets",
     amount: 4820,
     width: 14,
     color: "violet",
@@ -135,8 +135,7 @@ export const AUDIT_ENTRIES: AuditEntry[] = [
     actionTone: "coral",
     type: "dismiss",
     subject: "report #4471",
-    reason:
-      "Genuine community gathering, not spam. Reporter thanked for caution.",
+    reason: "Genuine community event, not spam. Reporter thanked for caution.",
     when: "1h ago",
     range: "today",
   },

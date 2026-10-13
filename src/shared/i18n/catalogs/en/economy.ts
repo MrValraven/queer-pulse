@@ -3915,7 +3915,7 @@ export const economy: Catalog = {
   "joinGroup.namePlaceholder": "The name you go by",
   "joinGroup.relationshipLabel": "How you're part of the community",
   "joinGroup.relationshipPlaceholder":
-    "A friend vouched for me, I've been to a few gatherings…",
+    "A friend vouched for me, I've been to a few events…",
   "joinGroup.optional": "(optional)",
   "joinGroup.disclaimer":
     "Your answers are seen only by the group's stewards, never posted publicly.",

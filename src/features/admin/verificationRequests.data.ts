@@ -182,7 +182,7 @@ export const DEMO_VERIFICATION_REQUEST_DETAIL: Record<
   "request-pending-1": {
     ...DEMO_VERIFICATION_REQUESTS[0]!,
     context:
-      "I've been an active member for over a year and would like phone verification so I can RSVP to smaller gatherings.",
+      "I've been an active member for over a year and would like phone verification so I can RSVP to smaller events.",
     evidenceRef: null,
     decisionReason: null,
     reviewedBy: null,

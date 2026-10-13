@@ -70,7 +70,7 @@ export const safety: Catalog = {
   "myReports.subject.flatmate": "About a flatmate profile",
   "myReports.subject.landlord": "About a landlord",
   "myReports.subject.listing": "About a business listing",
-  "myReports.subject.event": "About a gathering",
+  "myReports.subject.event": "About an event",
   "myReports.subject.business": "About a business",
   "myReports.subject.company": "About an employer",
   "myReports.subject.job": "About a job posting",
@@ -78,7 +78,7 @@ export const safety: Catalog = {
   "myReports.subject.review": "About a review",
   "myReports.subject.magazine_comment": "About a magazine comment",
   "myReports.subject.listing_public_question": "About a question on a listing",
-  "myReports.subject.event_photo": "About a gathering photo",
+  "myReports.subject.event_photo": "About an event photo",
   "myReports.subject.landlord_recommendation":
     "About a landlord recommendation",
   "myReports.subject.volunteering": "About a volunteering opportunity",
@@ -124,7 +124,7 @@ export const safety: Catalog = {
   "report.category.unwantedContact": "Unwanted contact or messages",
   "report.category.impersonation": "Misrepresentation or impersonation",
   "report.category.discrimination": "Discrimination",
-  "report.category.venueSafety": "Unsafe behaviour at a gathering",
+  "report.category.venueSafety": "Unsafe behaviour at an event",
   "report.category.other": "Something else",
   "report.form.involvedLabel": "Who or what was involved (optional)",
   "report.form.involvedPlaceholder":

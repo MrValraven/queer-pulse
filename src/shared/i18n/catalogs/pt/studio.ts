@@ -126,7 +126,7 @@ export const studio: Catalog = {
   "landing.nav.howItWorks": "Como funciona",
   "landing.nav.forArtists": "Para artistas",
   "landing.footer.tagline":
-    "Uma rede profissional queer com raízes em Lisboa. O Studio vive ao lado do Cinema, da Magazine e dos Encontros.",
+    "Uma rede profissional queer com raízes em Lisboa. O Studio vive ao lado do Cinema, da Magazine e dos Eventos.",
   "landing.footer.col.studio": "Studio",
   "landing.footer.col.studio.thisWeek": "Esta semana",
   "landing.footer.col.studio.djSets": "Sets de DJ",
@@ -256,7 +256,7 @@ export const studio: Catalog = {
   "signin.join.tier.coop.badge": "Melhor valor",
   "signin.join.tier.coop.title": "Toda a <em>cooperativa</em>",
   "signin.join.tier.coop.body":
-    "Studio <em>mais</em> Cinema, Magazine, Encontros, grupos de leitura e um voto na assembleia anual. Uma só assinatura, toda a QueerPulse.",
+    "Studio <em>mais</em> Cinema, Magazine, Eventos, grupos de leitura e um voto na assembleia anual. Uma só assinatura, toda a QueerPulse.",
   "signin.join.tier.coop.incl": "Uma conta em todos os espaços",
   "signin.join.submitCta": "Continuar para o pagamento",
   "signin.join.alreadyMember": "Já és pessoa da comunidade?",
@@ -501,7 +501,7 @@ export const studio: Catalog = {
 
   "help.faq.priceDiff.q": "Qual é a diferença entre 7 € e 11 €?",
   "help.faq.priceDiff.a":
-    "<strong>7 €/mês</strong> é só o Studio. <strong>11 €/mês</strong> é toda a cooperativa QueerPulse: Studio mais Cinema, Magazine, Encontros, grupos de leitura e um voto na assembleia anual. Uma só assinatura, todos os espaços. Muda de nível em qualquer mês.",
+    "<strong>7 €/mês</strong> é só o Studio. <strong>11 €/mês</strong> é toda a cooperativa QueerPulse: Studio mais Cinema, Magazine, Eventos, grupos de leitura e um voto na assembleia anual. Uma só assinatura, todos os espaços. Muda de nível em qualquer mês.",
   "help.faq.cancel.q": "Como cancelo?",
   "help.faq.cancel.a":
     'Um clique em <a>Definições, depois Apagar e sair</a>. Sem chamada de retenção, sem ciclo de "tens a certeza", sem emails a insistir. Achamos que sair devia ser tão fácil como entrar. É a única forma honesta de te pedir para ficares.',

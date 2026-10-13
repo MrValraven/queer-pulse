@@ -956,7 +956,7 @@ export const messages: Catalog = {
   "share.kind.listing": "anúncio",
   "share.kind.community": "comunidade",
   "share.kind.directory": "espaço",
-  "share.kind.gathering": "encontro",
+  "share.kind.gathering": "evento",
   "share.kind.generic": "isto",
   "share.previewLabel": "Pré-visualização",
   "share.previewTo": "Para",

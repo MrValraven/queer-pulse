@@ -21,12 +21,12 @@ export const gatherings: Catalog = {
   "landing.ways.browse.cta": "See all events",
   "landing.ways.calendar.title": "The calendar view",
   "landing.ways.calendar.body":
-    "The whole month at a glance, with RSVPs you've made and the gatherings near you highlighted.",
+    "The whole month at a glance, with RSVPs you've made and the events near you highlighted.",
   "landing.ways.calendar.cta": "Open the calendar",
   "landing.ways.host.title": "Host your own",
   "landing.ways.host.body":
     "A step-by-step guide to running a supper club, workshop, or screening, with partner spaces and member support.",
-  "landing.ways.host.cta": "Host a gathering",
+  "landing.ways.host.cta": "Host an event",
 
   // ── Lisbon neighbourhoods ─────────────────────────────────────────────────
   // Proper nouns: identical in both catalogs. Keyed anyway so the rail stays
@@ -92,7 +92,7 @@ export const gatherings: Catalog = {
   "rsvpControl.hostingNoteUncapped": "You're on the guest list too.",
   "rsvpControl.hostingCount_one": "Just you so far.",
   "rsvpControl.hostingCount_other": "{count} going so far, you included.",
-  "rsvpControl.hostingManageCta": "Manage gathering",
+  "rsvpControl.hostingManageCta": "Manage event",
   "rsvpControl.goingTitle": "You're <em>going</em>",
   "rsvpControl.waitlistTitle": "You're on the <em>waitlist</em>",
   "rsvpControl.goingCount_one": "{count} member going so far",
@@ -117,7 +117,7 @@ export const gatherings: Catalog = {
 
   // ── Event, RSVP, gathering detail, cancelled, cohost invite ───────────────
   // Shared/cross-page chrome
-  "common.backToGatherings": "Gatherings",
+  "common.backToGatherings": "Events",
   "common.hostedBy": "Hosted by",
   "common.calendarHostedBy": "Hosted by {host}",
   "common.calendarHostedByFor": "Hosted by {host} for {communities}",
@@ -128,7 +128,7 @@ export const gatherings: Catalog = {
 
   // GatheringPage
   "gathering.badge.event": "QueerPulse event",
-  "gathering.badge.gathering": "Member gathering",
+  "gathering.badge.gathering": "Member event",
   "gathering.spotsRemainingLabel": "spots remaining",
   "gathering.hostedWithHeading": "Hosted with",
   "gathering.hostedWithRole": "Community",
@@ -138,9 +138,9 @@ export const gatherings: Catalog = {
     "Guests see the full address once they're going.",
   "gathering.locationNote":
     "Full location shared with confirmed guests after you RSVP.",
-  "gathering.moreTitle": "More <em>gatherings</em>",
+  "gathering.moreTitle": "More <em>events</em>",
   "gathering.coverAlt": "Cover photo for {title}",
-  "gathering.notFoundTitle": "We couldn't find this gathering",
+  "gathering.notFoundTitle": "We couldn't find this event",
   "gathering.notFoundDescription":
     "It may have been cancelled, or the link might be out of date.",
 
@@ -169,7 +169,7 @@ export const gatherings: Catalog = {
   "rsvp.calendar.googleCta": "Google Calendar",
   "rsvp.calendar.appleCta": "Apple / .ics",
   "rsvp.calendar.downloadedToast": "Calendar file downloaded.",
-  "rsvp.viewDetailsCta": "View gathering details",
+  "rsvp.viewDetailsCta": "View event details",
   "rsvp.inviteCta": "Tell a friend: copy invite link",
   "rsvp.inviteCopiedToast":
     "Invite link copied. Share it with someone who should come.",
@@ -184,7 +184,7 @@ export const gatherings: Catalog = {
     "Ask before touching, check before sharing photos, and take cues from each other. When in doubt, ask.",
   "rsvp.coc.privacy.strong": "What happens here stays here.",
   "rsvp.coc.privacy.rest":
-    "This is a private community. Please don't share personal information, stories, or photos from gatherings without consent.",
+    "This is a private community. Please don't share personal information, stories, or photos from events without consent.",
   "rsvp.coc.organiser.strong":
     "If something doesn't feel right, tell the organiser.",
   "rsvp.coc.organiser.rest":
@@ -212,14 +212,14 @@ export const gatherings: Catalog = {
     "Hold the room's boundaries with the host, and step in if something needs addressing.",
   "cohostInvite.role.page_editor.label": "Page editor",
   "cohostInvite.role.page_editor.description":
-    "Keep the gathering's page accurate: details, photos, and the answers people ask for.",
+    "Keep the event's page accurate: details, photos, and the answers people ask for.",
   "cohostInvite.commitment.light.label": "Just the day of",
   "cohostInvite.commitment.light.description":
     "A hand on the day itself, with nothing to do beforehand.",
-  "cohostInvite.commitment.half_event.label": "Half the gathering",
+  "cohostInvite.commitment.half_event.label": "Half the event",
   "cohostInvite.commitment.half_event.description":
     "Around for a good chunk of it, with the rest covered by someone else.",
-  "cohostInvite.commitment.full_event.label": "The whole gathering",
+  "cohostInvite.commitment.full_event.label": "The whole event",
   "cohostInvite.commitment.full_event.description":
     "There from setup to packing down.",
   "cohostInvite.commitment.ongoing.label": "Ongoing",
@@ -230,7 +230,7 @@ export const gatherings: Catalog = {
   // already answered on another device or in an earlier session.
   "cohostInvite.notFoundTitle": "This invite isn't here anymore",
   "cohostInvite.notFoundDescription":
-    "It may have been withdrawn, or the gathering it belonged to has gone. Nothing you did.",
+    "It may have been withdrawn, or the event it belonged to has gone. Nothing you did.",
   "cohostInvite.alreadyRespondedTitle": "You've already answered this invite",
   "cohostInvite.alreadyAcceptedDescription":
     "You're co-hosting with {host}. Their host tools are open to you.",
@@ -238,8 +238,8 @@ export const gatherings: Catalog = {
     "You declined this one. {host} can always invite you to the next.",
   "cohostInvite.eyebrow": "Co-host invitation",
   "cohostInvite.title": "{host} wants you to <em>co-host</em> with her.",
-  "cohostInvite.hostedCount_one": "Hosted {count} gathering",
-  "cohostInvite.hostedCount_other": "Hosted {count} gatherings",
+  "cohostInvite.hostedCount_one": "Hosted {count} event",
+  "cohostInvite.hostedCount_other": "Hosted {count} events",
   "cohostInvite.mutualsCount_one": "{count} mutual",
   "cohostInvite.mutualsCount_other": "{count} mutuals",
   "cohostInvite.replyBy": "Reply by {date}",
@@ -252,7 +252,7 @@ export const gatherings: Catalog = {
   "cohostInvite.declinedToast":
     "Polite no sent to {host}. She'll find another second pair of hands.",
   "cohostInvite.permissionsNote":
-    "Accepting lets you edit the page, message guests and manage RSVPs. <b>Cancelling the gathering and the host fund stay with {host}.</b>",
+    "Accepting lets you edit the page, message guests and manage RSVPs. <b>Cancelling the event and the host fund stay with {host}.</b>",
 
   // GatheringCancelledPage
   "cancelled.back": "Back to calendar",
@@ -289,7 +289,7 @@ export const gatherings: Catalog = {
   "calendar.prevMonth": "Previous month",
   "calendar.nextMonth": "Next month",
   "calendar.upcomingTitle": "All upcoming events",
-  "calendar.emptyTitle": "No upcoming gatherings",
+  "calendar.emptyTitle": "No upcoming events",
   "calendar.emptyDescription":
     "The calendar's quiet for now. Browse what's happening across the community, or be the one to start something.",
   "calendar.browseEventsCta": "Browse events",
@@ -298,30 +298,30 @@ export const gatherings: Catalog = {
   "calendar.noEventsDay": "No events on this day.",
   "calendar.subscribeTitle": "Subscribe to calendar",
   "calendar.subscribeBody":
-    "A feed you can subscribe to from Google Calendar, Apple Calendar or Outlook is still being built. Until it lands, open any gathering and add that one to your calendar from its page.",
-  "calendar.hostCta": "Host your own gathering",
+    "A feed you can subscribe to from Google Calendar, Apple Calendar or Outlook is still being built. Until it lands, open any event and add that one to your calendar from its page.",
+  "calendar.hostCta": "Host your own event",
 
   // Events
   "events.eyebrow": "What's on",
   "events.subtitle":
     "Every event here is hosted by QueerPulse or by people in the community. Browse the season and find your people.",
   "events.kindEvent": "Event",
-  "events.kindGathering": "Gathering",
+  "events.kindGathering": "Event",
   "events.ticketedTag": "Ticketed",
   "events.priceSingle": "{price}",
   "events.priceRange": "{min}–{max}",
 
   // Recap
-  "recap.eyebrow": "Gathering recap",
+  "recap.eyebrow": "Event recap",
   "recap.attendedCount_one": "{count} attended",
   "recap.attendedCount_other": "{count} attended",
   "recap.linkCopiedToast": "Link copied!",
   "recap.photoAddedToast": "Your photo was added to the recap.",
   "recap.uploadErrorToast": "We couldn't add that photo. Please try again.",
   "recap.writeupEyebrow": "The write-up",
-  "recap.gatheringHeading": "The <em>gathering</em>",
+  "recap.gatheringHeading": "The <em>event</em>",
   "recap.fromTheDayEyebrow": "From the day",
-  "recap.photoPlaceholder": "photo from the gathering",
+  "recap.photoPlaceholder": "photo from the event",
   "recap.photosByMembers": "Photos by community members",
   "recap.submitYoursCta": "Submit yours",
   "recap.whoWasThereEyebrow": "Who was there",
@@ -336,10 +336,10 @@ export const gatherings: Catalog = {
   "recap.hostLabel": "Host",
   "recap.comingUpNextEyebrow": "Coming up next",
   "recap.moreFromHostEyebrow": "More from {name}",
-  "recap.moreFromHostCta": "See gathering",
-  "recap.seriesNextUpEyebrow": "This gathering repeats",
+  "recap.moreFromHostCta": "See event",
+  "recap.seriesNextUpEyebrow": "This event repeats",
   "recap.seriesNextUpCta": "See the next date",
-  "recap.attendedThisGathering": "You attended this gathering",
+  "recap.attendedThisGathering": "You attended this event",
   "recap.yearInReviewCta": "Add to your year in review",
   "recap.soonBadge": "Soon",
   "recap.shareThisRecap": "Share this recap",
@@ -348,7 +348,7 @@ export const gatherings: Catalog = {
   // Recap — photo upload modal
   "recap.upload.title": "Add a photo",
   "recap.upload.subtitle":
-    "Share a moment from the gathering. Choose a photo and add a caption.",
+    "Share a moment from the event. Choose a photo and add a caption.",
   "recap.upload.choosePhotoLabel": "Choose a photo",
   "recap.upload.captionLabel": "Caption",
   "recap.upload.captionPlaceholder": "Say something about this moment…",
@@ -379,7 +379,7 @@ export const gatherings: Catalog = {
   "photos.consentToPublish": "with consent to publish",
   "photos.downloadAllCta": "Download all",
   "photos.slideshowCta": "Slideshow",
-  "photos.policyTitle": "How we handle <em>gathering photos</em>",
+  "photos.policyTitle": "How we handle <em>event photos</em>",
   "photos.policyBody1":
     "Every photo here was taken by an attending member with consent from the people in the frame. <b>Faces are blurred by default</b> unless the person specifically opted in by name. This isn't a privacy nicety. It's how we make sure people show up next time.",
   "photos.policyBody2":
@@ -534,11 +534,11 @@ export const gatherings: Catalog = {
   "catalog.format.other.sub": "Name it yourself",
   // What a gathering with no format at all reads as, on a card or a detail
   // page. Never blank: an empty line reads as a broken card.
-  "catalog.format.unset": "Gathering",
+  "catalog.format.unset": "Event",
 
   "catalog.details.bring.label": "What to bring",
   "catalog.details.bring.hint":
-    "One line. Everyone coming sees it on the gathering page.",
+    "One line. Everyone coming sees it on the event page.",
   "catalog.details.isAdultsOnly.label": "Adults only, 18 and over",
   "catalog.details.isAdultsOnly.hint":
     "Say so up front if the door checks age.",
@@ -649,11 +649,11 @@ export const gatherings: Catalog = {
   "create.step1.searchResultsLabel": "Matching formats",
   "create.step1.searchEmpty":
     "Nothing matches that yet. Try another word, or pick a kind below.",
-  "create.step1.familyLabel": "Kind of gathering",
+  "create.step1.familyLabel": "Kind of event",
   "create.step1.formatLabel": "Format",
   "create.step1.otherLabel": "Name your format",
   "create.step1.otherPlaceholder": "In a few words, what is it?",
-  "create.step1.otherRequired": "Write what your gathering is, in a few words.",
+  "create.step1.otherRequired": "Write what your event is, in a few words.",
 
   // steps/WhatChapter.tsx, CapacityStepperField.tsx, WhoChapter.tsx: the
   // family's own questions, and the two defaults it set
@@ -664,14 +664,14 @@ export const gatherings: Catalog = {
     "{count} is the usual size for this format. Change it freely.",
   "create.step3.attendeeCountLabel": "Show how many people are going",
   "create.step3.attendeeCountHint":
-    "Most gatherings show the count. Care and support gatherings start with it hidden.",
+    "Most events show the count. Care and support events start with it hidden.",
 
   // BrowseFilterBar.tsx: the family chip row above the refine drawer
-  "hub.browse.familyLabel": "Kind of gathering",
+  "hub.browse.familyLabel": "Kind of event",
   "hub.browse.familyAny": "Any kind",
 
   // EditDetailsModal.tsx: family and format, editable after publishing
-  "manage.editModal.fieldFamily": "Kind of gathering",
+  "manage.editModal.fieldFamily": "Kind of event",
   "manage.editModal.fieldFormat": "Format",
   "manage.editModal.fieldFormatOther": "Name your format",
   "manage.editModal.familyNone": "Not set",
@@ -690,21 +690,21 @@ export const gatherings: Catalog = {
   "create.lang.other": "Other",
 
   // CreateGatheringPage.tsx / CreateGatheringSuccess.tsx
-  "create.eyebrow": "List your gathering",
-  "create.title": "Create your <em>gathering.</em>",
-  "create.toast.publishError": "Couldn't publish your gathering. Try again.",
+  "create.eyebrow": "List your event",
+  "create.title": "Create your <em>event.</em>",
+  "create.toast.publishError": "Couldn't publish your event. Try again.",
   "create.toast.venueRefused":
-    "Your gathering isn't live yet. The venue you picked can't be linked any more, so choose another one.",
+    "Your event isn't live yet. The venue you picked can't be linked any more, so choose another one.",
   "create.toast.runByRefused":
-    "That business can't be named as running this gathering. Pick another, or none.",
-  "create.toast.published": "Your gathering is live",
-  "create.success.title": "Your gathering <em>is live.</em>",
+    "That business can't be named as running this event. Pick another, or none.",
+  "create.toast.published": "Your event is live",
+  "create.success.title": "Your event <em>is live.</em>",
   "create.success.viewCta": "View on board",
-  "create.success.eventCta": "See your gathering page",
+  "create.success.eventCta": "See your event page",
   "create.nav.cancel": "Cancel",
   "create.nav.leaveConfirm":
-    "You have an unpublished gathering here. Leave without saving it?",
-  "create.nav.publish": "Publish gathering",
+    "You have an unpublished event here. Leave without saving it?",
+  "create.nav.publish": "Publish event",
   "create.nav.continue": "Continue",
 
   // ── Create-gathering v2: six chapters, live preview, review and publish ───
@@ -733,14 +733,14 @@ export const gatherings: Catalog = {
 
   // usePublishGathering.ts: a co-host invite that did not go out after publishing
   "create.v2.toast.cohostInviteFailed_one":
-    "Your gathering is live, but 1 co-host invite didn't go through. You can invite them again from the manage page.",
+    "Your event is live, but 1 co-host invite didn't go through. You can invite them again from the manage page.",
   "create.v2.toast.cohostInviteFailed_other":
-    "Your gathering is live, but {count} co-host invites didn't go through. You can invite them again from the manage page.",
+    "Your event is live, but {count} co-host invites didn't go through. You can invite them again from the manage page.",
 
   // CreateGatheringChapter.tsx / createGathering.data.ts: the six chapter heads
   "create.v2.chapter.what.title": "What are you <em>hosting?</em>",
   "create.v2.chapter.what.intro":
-    "Pick the format that comes most naturally to you. The best gatherings are the ones hosts actually enjoy running.",
+    "Pick the format that comes most naturally to you. The best events are the ones hosts actually enjoy running.",
   "create.v2.chapter.whenWhere.title": "When and <em>where?</em>",
   "create.v2.chapter.whenWhere.intro":
     "The neighbourhood is shown on the listing. The full address is only shared with confirmed attendees.",
@@ -749,10 +749,10 @@ export const gatherings: Catalog = {
     "Set a realistic cap. It's easier to open more spots than to turn people away at the door.",
   "create.v2.chapter.access.title": "Can everyone <em>get in?</em>",
   "create.v2.chapter.access.intro":
-    "Only tick what you can genuinely confirm. A “no” is as useful as a “yes”: attendees plan around both. “Not sure yet” stays visible on your gathering, so people can see it is still open.",
+    "Only tick what you can genuinely confirm. A “no” is as useful as a “yes”: attendees plan around both. “Not sure yet” stays visible on your event, so people can see it is still open.",
   "create.v2.chapter.care.title": "Taking <em>care.</em>",
   "create.v2.chapter.care.intro":
-    "Two lines that set the tone. They show on your gathering page, so people know what to expect before they RSVP.",
+    "Two lines that set the tone. They show on your event page, so people know what to expect before they RSVP.",
   "create.v2.chapter.review.title": "Review and <em>publish.</em>",
   "create.v2.chapter.review.intro":
     "Everything you set, in one place. Check it over, and use Edit to change a part. Once you publish, it shows on the board straight away.",
@@ -826,7 +826,7 @@ export const gatherings: Catalog = {
 
   // CreateGatheringReview.tsx / CreateGatheringPublishParts.tsx: what publishing still needs, the two pledges, Publish
   "create.v2.ready.item.format": "Pick a format",
-  "create.v2.ready.item.title": "Name your gathering",
+  "create.v2.ready.item.title": "Name your event",
   "create.v2.ready.item.date": "Date and start time in the future",
   "create.v2.ready.item.joinLink": "Join link starts with http:// or https://",
   "create.v2.ready.item.recurrence": "Repeat schedule is complete",
@@ -840,7 +840,7 @@ export const gatherings: Catalog = {
   "create.v2.ready.jumpHint": "Go to this field.",
   "create.v2.ready.pledgesLabel": "Before you publish",
   "create.v2.ready.hintReady":
-    "Goes live on the board immediately. You can edit or cancel it from your gathering page.",
+    "Goes live on the board immediately. You can edit or cancel it from your event page.",
   "create.v2.ready.hintDetails_one": "{count} detail still needed",
   "create.v2.ready.hintDetails_other": "{count} details still needed",
   "create.v2.ready.hintConfirms_one": "{count} confirmation to tick",
@@ -853,7 +853,7 @@ export const gatherings: Catalog = {
   "create.v2.ready.accessUnanswered_other":
     "{count} questions not answered yet",
   "create.v2.confirm.codeOfCare":
-    "This gathering follows the QueerPulse Code of Care.",
+    "This event follows the QueerPulse Code of Care.",
   "create.v2.confirm.codeOfCareLink": "Read the Code of Care",
   "create.v2.confirm.accessibility":
     "The accessibility answers I gave are accurate to the best of my knowledge.",
@@ -871,7 +871,7 @@ export const gatherings: Catalog = {
   "create.v2.preview.modeLabel": "Preview as",
   "create.v2.preview.modeBoard": "On the board",
   "create.v2.preview.modeAttendees": "Attendees see",
-  "create.v2.preview.cardLabel": "Preview of your gathering card",
+  "create.v2.preview.cardLabel": "Preview of your event card",
   "create.v2.preview.coverFamily": "{family} · cover shows here",
   "create.v2.preview.coverEmpty": "Cover image shows here",
   "create.v2.preview.formatPlaceholder": "Format",
@@ -923,7 +923,7 @@ export const gatherings: Catalog = {
   "create.v2.what.themesLabel": "Themes",
   "create.v2.what.themesHint": "Shown on your card. Pick up to three.",
   "create.v2.what.descriptionOverBudget":
-    "Board cards show about the first {budget} characters. The rest is still on the gathering's own page.",
+    "Board cards show about the first {budget} characters. The rest is still on the event's own page.",
 
   // steps/SameAsLastTimeStrip.tsx: chapter 2, reusing the last gathering's details
   "create.v2.when.lastTime.title": "Same as last time?",
@@ -931,7 +931,7 @@ export const gatherings: Catalog = {
   "create.v2.when.lastTime.notNow": "Not now",
   "create.v2.when.lastTime.spots_one": "{count} spot",
   "create.v2.when.lastTime.spots_other": "{count} spots",
-  "create.v2.when.lastTime.toast": "Filled from your last gathering",
+  "create.v2.when.lastTime.toast": "Filled from your last event",
 
   // steps/PlaceFields.tsx: chapter 2, the address only confirmed attendees get
   "create.v2.when.addressLabel": "Full address",
@@ -945,7 +945,7 @@ export const gatherings: Catalog = {
   "create.v2.when.note.clash":
     "<strong>{title}</strong> starts at {time} in {hood} that day. Same crowd, same neighbourhood: consider another time or co-hosting.",
   "create.v2.when.note.lateSunday":
-    "Late Sunday: the last metro is around 01:00, and evening gatherings draw fewer people on Sundays.",
+    "Late Sunday: the last metro is around 01:00, and evening events draw fewer people on Sundays.",
 
   // steps/dateNotes.data.ts: fixed-date Portuguese public holidays, plus Santo António
   "create.v2.when.holiday.newYear": "New Year's Day",
@@ -962,11 +962,11 @@ export const gatherings: Catalog = {
 
   // steps/RepeatsFields.tsx / SeriesPreview.tsx: chapter 2, a repeating gathering
   "create.v2.when.repeatsDescription":
-    "A standing weekly or monthly meetup. Each date publishes as its own gathering, with its own RSVPs.",
+    "A standing weekly or monthly meetup. Each date publishes as its own event, with its own RSVPs.",
   "create.v2.when.series.empty":
     "Set the date above and the series will show here.",
   "create.v2.when.series.summary":
-    "<strong>{dates}</strong> · {first}<arrow>to</arrow>{last}. Each publishes as its own gathering.",
+    "<strong>{dates}</strong> · {first}<arrow>to</arrow>{last}. Each publishes as its own event.",
   "create.v2.when.series.listLabel": "Every date in the series",
   "create.v2.when.series.dates_one": "{count} date",
   "create.v2.when.series.dates_other": "{count} dates",
@@ -1012,13 +1012,12 @@ export const gatherings: Catalog = {
   "create.v2.who.rsvpCutoffLabel": "RSVPs close",
   "create.v2.who.communityLabel": "Host it with a community",
   "create.v2.who.runByLabel": "Run by one of your businesses",
-  "create.v2.who.runByHint":
-    "Your gathering page links to the business you pick.",
+  "create.v2.who.runByHint": "Your event page links to the business you pick.",
   "create.v2.who.runByNone": "No business",
   "create.v2.who.runByPrefilled":
     "We filled in the meeting point from {name}. You can change it.",
   "create.v2.who.runByRefused":
-    "This business can't run this gathering. Pick another, or none.",
+    "This business can't run this event. Pick another, or none.",
 
   // steps/AccessChapter.tsx: chapter 4
   "create.v2.access.questionsLabel": "Six questions",
@@ -1046,7 +1045,7 @@ export const gatherings: Catalog = {
     "It is on the board now. RSVPs show up in your notifications, and the full address goes only to confirmed attendees.",
   "create.v2.success.leadSeries":
     "{dateCount} dates are on the board. RSVPs show up in your notifications, and the full address goes only to confirmed attendees.",
-  "create.v2.success.shareLabel": "Share your gathering",
+  "create.v2.success.shareLabel": "Share your event",
   "create.v2.success.copyLink": "Copy link",
   "create.v2.success.linkCopied": "Link copied",
   "create.v2.success.copyFallback": "Copy this link to share it: {url}",
@@ -1078,13 +1077,13 @@ export const gatherings: Catalog = {
 
   // steps/FormatPicker.tsx, TitleField.tsx, WhatChapter.tsx: chapter 1
   "create.step1.typeRequired": "Pick a format to get started.",
-  "create.step1.familyRequired": "Pick a kind of gathering to see its formats.",
-  "create.step1.titleLabel": "Gathering title",
+  "create.step1.familyRequired": "Pick a kind of event to see its formats.",
+  "create.step1.titleLabel": "Event title",
   "create.step1.titlePlaceholder":
     "A clear, specific title that says exactly what it is",
   "create.step1.descLabel": "Short description",
   "create.step1.descPlaceholder":
-    "What will people do? What should they expect? What makes this gathering worth attending?",
+    "What will people do? What should they expect? What makes this event worth attending?",
 
   // steps/ScheduleFields.tsx, PlaceFields.tsx: chapter 2, date and place
   "create.step2.dateLabel": "Starts",
@@ -1103,7 +1102,7 @@ export const gatherings: Catalog = {
     "e.g. Ring the bell on the left, 5 min walk from Intendente metro",
 
   // steps/RepeatsFields.tsx: chapter 2, repeats (MSG-10)
-  "create.step2b.toggle": "This gathering repeats",
+  "create.step2b.toggle": "This event repeats",
   "create.step2b.cadenceLabel": "How often",
   "create.step2b.endTypeLabel": "Ends",
   "create.step2b.endType.count": "After a number of dates",
@@ -1112,7 +1111,7 @@ export const gatherings: Catalog = {
   "create.step2b.endCountHint": "Between 2 and {max} dates.",
   "create.step2b.endUntilLabel": "Last possible date",
   "create.step2b.invalidHint":
-    "Pick a number of dates or an end date after your gathering's start.",
+    "Pick a number of dates or an end date after your event's start.",
   "create.repeats.cadence.weekly": "Weekly",
   "create.repeats.cadence.biweekly": "Every 2 weeks",
   "create.repeats.cadence.monthly": "Monthly",
@@ -1127,11 +1126,11 @@ export const gatherings: Catalog = {
   "create.step3.communityLabel": "Host it with a community (optional)",
   "create.step3.communityNone": "No community",
   "create.step3.communityHint":
-    "Shows the community's name on the gathering. Only communities you run or moderate are listed. It doesn't change who can see it; you choose that just below.",
+    "Shows the community's name on the event. Only communities you run or moderate are listed. It doesn't change who can see it; you choose that just below.",
 
   // AudienceScopeField.tsx: shared by the create wizard (chapter 3) and the
   // manage-gathering edit modal.
-  "audienceScope.label": "Who can see this gathering?",
+  "audienceScope.label": "Who can see this event?",
   "audienceScope.hint":
     "Choose how wide this reaches. You can change it anytime.",
   "audienceScope.members.label": "Public",
@@ -1160,15 +1159,15 @@ export const gatherings: Catalog = {
 
   // HostPage.tsx
   "host.hero.eyebrow": "For members",
-  "host.hero.title": "Host a gathering <em>for your people.</em>",
+  "host.hero.title": "Host an event <em>for your people.</em>",
   "host.hero.lead":
     "You don't need a venue budget, a committee, or a plan. You need a date, a few chairs, and something worth gathering for. This guide walks you through the rest.",
-  "host.outro.title": "The best gatherings are the ones <em>that happen.</em>",
+  "host.outro.title": "The best events are the ones <em>that happen.</em>",
   "host.outro.sub": "Start small, start soon. The community is here.",
-  "host.createGatheringCta": "Create your gathering",
+  "host.createGatheringCta": "Create your event",
 
   // HostSteps.tsx — step 1
-  "host.step1.title": "Decide what kind of <em>gathering</em> you want",
+  "host.step1.title": "Decide what kind of <em>event</em> you want",
   "host.step1.body":
     "The format shapes everything else. A dinner for eight is a completely different project from a workshop for thirty. Start with what you're actually good at and what feels manageable without help.",
   "host.step1.tip.head": "Start smaller than you think",
@@ -1178,7 +1177,7 @@ export const gatherings: Catalog = {
   // HostSteps.tsx — step 2
   "host.step2.title": "Find the <em>right space</em>",
   "host.step2.body":
-    "Your home is usually the best option for small gatherings. It's free, flexible, and signals that this is a community gathering rather than a commercial event. For larger events, the network has access to several partner spaces across the city.",
+    "Your home is usually the best option for small events. It's free, flexible, and signals that this is a community event rather than a commercial one. For larger events, the network has access to several partner spaces across the city.",
   "host.step2.list.small":
     "<b>Under 12 people:</b> home or studio is ideal. Ask the board if you need a kitchen or a projector you don't have.",
   "host.step2.list.medium":
@@ -1192,7 +1191,7 @@ export const gatherings: Catalog = {
   // HostSteps.tsx — step 3
   "host.step3.title": "Invite people <em>thoughtfully</em>",
   "host.step3.body":
-    'Gatherings work because the room is curated, whatever its size. Think about who you\'re inviting and why: focus on "who would get something from being in this room together" over "who do I owe."',
+    'Events work because the room is curated, whatever its size. Think about who you\'re inviting and why: focus on "who would get something from being in this room together" over "who do I owe."',
   "host.step3.list.clear":
     "Be clear about what the event is, how long, and what people should bring or expect.",
   "host.step3.list.location":
@@ -1210,25 +1209,25 @@ export const gatherings: Catalog = {
     "Have something for people to do or hold in the first five minutes.",
   "host.step4.list.dontManage":
     "Don't try to manage the conversation too much. Open the room; don't run a panel.",
-  "host.step4.tip.head": "On safety at gatherings",
+  "host.step4.tip.head": "On safety at events",
   "host.step4.tip.body":
     "If you're hosting at your home, you have the right to ask anyone to leave at any time, for any reason. The QueerPulse Code of Care applies.",
 
   // HostSteps.tsx — step 5
   "host.step5.title": "After it's <em>over</em>",
   "host.step5.body1":
-    "Write a brief note on the gathering listing: what happened, how it went. This helps people who couldn't make it and gives future hosts a sense of what works.",
+    "Write a brief note on the event listing: what happened, how it went. This helps people who couldn't make it and gives future hosts a sense of what works.",
   "host.step5.body2":
-    "If you want to make it recurring, list it on the QueerPulse gatherings board. We'll help you find attendees and build the kind of trusted event that becomes a fixture in the community's calendar.",
+    "If you want to make it recurring, list it on the QueerPulse events board. We'll help you find attendees and build the kind of trusted event that becomes a fixture in the community's calendar.",
   "host.step5.cta": "Tell us how it went",
 
   // HostSidebar.tsx
-  "host.sidebar.readyTitle": "Ready to list your gathering?",
+  "host.sidebar.readyTitle": "Ready to list your event?",
   "host.sidebar.readyBody":
-    "Once you have a date, a format, and a rough idea of who you're inviting, you can list it on the QueerPulse gatherings page.",
+    "Once you have a date, a format, and a rough idea of who you're inviting, you can list it on the QueerPulse events page.",
   "host.sidebar.spacesTitle": "Partner spaces",
   "host.sidebar.spacesBody":
-    "Spaces that have hosted QueerPulse gatherings and are open to hosting more.",
+    "Spaces that have hosted QueerPulse events and are open to hosting more.",
   "host.sidebar.capacity": "up to {max}",
 
   // ── Host dashboard, manage, cohosts, QR, album ────────────────────────────
@@ -1245,7 +1244,7 @@ export const gatherings: Catalog = {
     "We couldn't reach your clipboard. Copy the link from the share card instead.",
 
   // ── Prototype pages: live-mode coming-soon (demo-only, no live gathering) ─────
-  "prototypeComingSoon.browseCta": "Browse gatherings",
+  "prototypeComingSoon.browseCta": "Browse events",
 
   // ── Manage: overview tab ─────────────────────────────────────────────────────
   "manage.overview.stat.going": "Going",
@@ -1304,31 +1303,31 @@ export const gatherings: Catalog = {
   "manage.messages.sentToast_other": "Update sent to {count} attendees",
 
   // ── Manage: settings tab ─────────────────────────────────────────────────────
-  "manage.settings.optionsHeading": "Gathering options",
+  "manage.settings.optionsHeading": "Event options",
   "manage.settings.allowWaitlist.title": "Allow waitlist",
   "manage.settings.allowWaitlist.desc":
-    "Members can join a waitlist if the gathering is full",
+    "Members can join a waitlist if the event is full",
   "manage.settings.showAttendeeCount.title": "Show attendee count publicly",
   "manage.settings.showAttendeeCount.desc":
     "Visitors can see how many people are going",
   "manage.settings.dangerZoneHeading": "Danger zone",
-  "manage.settings.cancelLabel": "Cancel this gathering",
+  "manage.settings.cancelLabel": "Cancel this event",
   "manage.settings.cancelText":
     "All attendees will be notified and RSVPs will be released. This cannot be undone. A cancellation message will be sent automatically.",
-  "manage.settings.cancelCta": "Cancel gathering",
-  "manage.settings.deleteLabel": "Delete this gathering",
+  "manage.settings.cancelCta": "Cancel event",
+  "manage.settings.deleteLabel": "Delete this event",
   "manage.settings.deleteText":
-    "Removes the gathering with its RSVPs, photos and announcements for good. Nobody is notified. If people have signed up, cancel it first so they are told.",
-  "manage.settings.deleteCta": "Delete gathering",
+    "Removes the event with its RSVPs, photos and announcements for good. Nobody is notified. If people have signed up, cancel it first so they are told.",
+  "manage.settings.deleteCta": "Delete event",
 
   // ── Manage: sidebar ───────────────────────────────────────────────────────────
   "manage.sidebar.coverAlt": "Cover photo for {title}",
-  "manage.sidebar.coverPhotoLine1": "gathering",
+  "manage.sidebar.coverPhotoLine1": "event",
   "manage.sidebar.coverPhotoLine2": "cover photo",
   "manage.sidebar.copyCta": "Copy",
   "manage.sidebar.viewListingCta": "View public listing",
   "manage.sidebar.supportText":
-    "Need help with your gathering? <a>Message the QueerPulse team</a>",
+    "Need help with your event? <a>Message the QueerPulse team</a>",
 
   // ── Manage: tab bar ────────────────────────────────────────────────────────────
   "manage.tabs.overview": "Overview",
@@ -1341,10 +1340,10 @@ export const gatherings: Catalog = {
   "manage.cancelCta": "Cancel",
 
   // ── Manage: edit-details modal ────────────────────────────────────────────────
-  "manage.editModal.title": "Update your gathering",
+  "manage.editModal.title": "Update your event",
   "manage.editModal.sub":
     "Changes go live on the public listing. Attendees are told when the start time or place changes.",
-  "manage.editModal.section.gathering": "The gathering",
+  "manage.editModal.section.gathering": "The event",
   "manage.editModal.section.whenWhere": "When and where",
   "manage.editModal.section.audience": "Who it's for",
   "manage.editModal.section.care": "Taking care",
@@ -1356,7 +1355,7 @@ export const gatherings: Catalog = {
   "manage.editModal.endBeforeStartError":
     "The end needs to come after the start. Move the start earlier, the end later, or clear the end.",
   "manage.editModal.endSpanError":
-    "A gathering can run for up to {days} days. Bring the end closer to the start.",
+    "An event can run for up to {days} days. Bring the end closer to the start.",
   "manage.editModal.capacityLowerHint":
     "Everyone already going keeps their spot. New RSVPs stop at this number.",
   "manage.editModal.capacityRangeError":
@@ -1366,7 +1365,7 @@ export const gatherings: Catalog = {
   "manage.editModal.saveCta": "Save changes",
   "manage.editModal.successTitle": "Details <em>updated.</em>",
   "manage.editModal.successSub":
-    "Your changes to <b>{title}</b> are live on the listing. Anyone who's RSVP'd will see the update next time they open the gathering.",
+    "Your changes to <b>{title}</b> are live on the listing. Anyone who's RSVP'd will see the update next time they open the event.",
   "manage.editModal.successMeta_one":
     "Saved just now · {count} attendee notified",
   "manage.editModal.successMeta_other":
@@ -1410,17 +1409,17 @@ export const gatherings: Catalog = {
   "manage.editModal.preview.label": "On your card",
 
   // ── Manage: this-vs-future series scope prompt (MSG-10) ────────────────────
-  "manage.seriesScope.eyebrow": "Recurring gathering",
+  "manage.seriesScope.eyebrow": "Recurring event",
   "manage.seriesScope.edit.title": "Apply this <em>change</em> to…",
   "manage.seriesScope.edit.sub":
-    "This gathering repeats. Choose whether your edit covers just this date or every date still to come. Every future date takes this date's title, description, audience, format, care and RSVP settings, replacing what it had. Its place, cover, cost, capacity and community change only when you changed them here.",
+    "This event repeats. Choose whether your edit covers just this date or every date still to come. Every future date takes this date's title, description, audience, format, care and RSVP settings, replacing what it had. Its place, cover, cost, capacity and community change only when you changed them here.",
   "manage.seriesScope.editField.sub":
-    "This gathering repeats. Choose whether this change covers just this date or every date still to come.",
+    "This event repeats. Choose whether this change covers just this date or every date still to come.",
   "manage.seriesScope.edit.thisCta": "Just this date",
   "manage.seriesScope.edit.futureCta": "This and every future date",
   "manage.seriesScope.cancel.title": "Cancel <em>which dates?</em>",
   "manage.seriesScope.cancel.sub":
-    "This gathering repeats. Choose whether to cancel just this date or the whole standing series.",
+    "This event repeats. Choose whether to cancel just this date or the whole standing series.",
   "manage.seriesScope.cancel.thisCta": "Just this date",
   "manage.seriesScope.cancel.futureCta": "This and every future date",
 
@@ -1428,7 +1427,7 @@ export const gatherings: Catalog = {
   "manage.messageModal.eyebrow": "Message attendees",
   "manage.messageModal.title": "Write to your guests",
   "manage.messageModal.sub":
-    "This reaches everyone who's confirmed for this gathering. Keep it short: a venue note, a schedule change, or a warm hello.",
+    "This reaches everyone who's confirmed for this event. Keep it short: a venue note, a schedule change, or a warm hello.",
   "manage.messageModal.bodyLabel": "Message",
   "manage.messageModal.sendCta_one": "Send to {count} attendee",
   "manage.messageModal.sendCta_other": "Send to {count} attendees",
@@ -1444,7 +1443,7 @@ export const gatherings: Catalog = {
   "manage.invite.eyebrow": "Invite members",
   "manage.invite.title": "Bring the <em>right people</em> in",
   "manage.invite.sub":
-    "Pick the members you'd like at this gathering. They'll get a warm invite they can accept or pass on, no pressure either way.",
+    "Pick the members you'd like at this event. They'll get a warm invite they can accept or pass on, no pressure either way.",
   "manage.invite.searchLabel": "Search members to invite",
   "manage.invite.loadingPeople": "Finding the people you are connected to.",
   "manage.invite.noConnections":
@@ -1463,9 +1462,9 @@ export const gatherings: Catalog = {
   "manage.invite.sentToast_other": "Invitation sent to {count} members",
   "manage.invite.successTitle": "Invitations <em>on their way.</em>",
   "manage.invite.successSub_one":
-    "<b>{count} member</b> just got an invite to this gathering in their QueerPulse notifications. You'll see them appear as they RSVP.",
+    "<b>{count} member</b> just got an invite to this event in their QueerPulse notifications. You'll see them appear as they RSVP.",
   "manage.invite.successSub_other":
-    "<b>{count} members</b> just got an invite to this gathering in their QueerPulse notifications. You'll see them appear as they RSVP.",
+    "<b>{count} members</b> just got an invite to this event in their QueerPulse notifications. You'll see them appear as they RSVP.",
   "manage.invite.successMeta_one": "Sent just now · {count} invited",
   "manage.invite.successMeta_other": "Sent just now · {count} invited",
 
@@ -1477,7 +1476,7 @@ export const gatherings: Catalog = {
     "Everyone who RSVP'd or was invited is notified when the venue changes.",
   "manage.fieldEditor.runBySub": "Pick one of your businesses, or none.",
   "manage.fieldEditor.runByReadOnly":
-    "{name} runs this gathering. Only someone who runs that business can change it.",
+    "{name} runs this event. Only someone who runs that business can change it.",
   "manage.fieldEditor.capacitySub":
     "Sets how many people can say they're going.",
   "manage.fieldEditor.descriptionSub": "Shows on the public listing.",
@@ -1509,7 +1508,7 @@ export const gatherings: Catalog = {
   "venuePicker.resultCount_one": "{count} venue found",
   "venuePicker.resultCount_other": "{count} venues found",
   "venuePicker.refusedError":
-    "This venue can't be linked to a gathering any more. Tap Change to pick another or type the name in yourself.",
+    "This venue can't be linked to an event any more. Tap Change to pick another or type the name in yourself.",
   "venuePicker.runByHint":
     "Running this as a tour or a visiting service? Pick your business under “Run by one of your businesses” instead.",
 
@@ -1517,7 +1516,7 @@ export const gatherings: Catalog = {
   "cohost.panelTitle": "Cohosts",
   "cohost.addCta": "Add cohost",
   "cohost.panelDesc":
-    "Cohosts can edit this gathering, message guests and manage RSVPs. You stay the lead host. Cancelling and the host fund stay with you.",
+    "Cohosts can edit this event, message guests and manage RSVPs. You stay the lead host. Cancelling and the host fund stay with you.",
   "cohost.emptyState":
     "No cohosts yet. Adding one means you're not carrying the night alone.",
   "cohost.roleCohost": "Cohost",
@@ -1595,22 +1594,22 @@ export const gatherings: Catalog = {
   "hub.highlights.heading": "Worth showing up for",
   "hub.browse.heading": "Everything that's on",
   "hub.browse.loadMore": "Show more",
-  "hub.browse.monthCount_one": "{count} gathering",
-  "hub.browse.monthCount_other": "{count} gatherings",
+  "hub.browse.monthCount_one": "{count} event",
+  "hub.browse.monthCount_other": "{count} events",
   "hub.browse.searchLabel": "Search events",
   "hub.browse.searchPlaceholder": "Search by name or neighbourhood",
   "hub.browse.noMatch.title": "Nothing matches those filters.",
   "hub.browse.noMatch.body":
-    "Try a wider stretch of dates, another neighbourhood, or any kind of gathering.",
+    "Try a wider stretch of dates, another neighbourhood, or any kind of event.",
   "hub.calendar.heading": "The month at a glance",
   "hub.host.title": "Hosting <em>something</em>?",
   "hub.host.body":
     "A supper, a reading, a protest, a party: whatever you're hosting, we'll help people find it.",
-  "hub.host.cta": "Host a gathering",
+  "hub.host.cta": "Host an event",
   "hub.ways.heading": "Ways to gather",
   "hub.empty.title": "Nothing on the calendar yet.",
   "hub.empty.body":
-    "New gatherings turn up here all the time. You could host the first.",
+    "New events turn up here all the time. You could host the first.",
   "hub.card.cta": "See it",
   "hub.card.moreThemes": "+{count}",
   "hub.card.runBy": "Run by {name}",
@@ -1623,14 +1622,13 @@ export const gatherings: Catalog = {
   // (GatheringPerformerNudge).
   "lineup.title": "Lineup",
   "lineup.description":
-    "Invite who's performing, hosting or working this gathering. They show on the lineup once they accept.",
+    "Invite who's performing, hosting or working this event. They show on the lineup once they accept.",
   "lineup.empty": "Nobody's on the lineup yet.",
   "lineup.inviteCta": "Invite to lineup",
   "lineup.roleLabel": "Their role",
   "lineup.removeAria": "Remove {name} from the lineup",
   "lineup.pickerTitle": "Invite to lineup",
-  "lineup.pickerSub":
-    "Invite your connections or anyone going to this gathering.",
+  "lineup.pickerSub": "Invite your connections or anyone going to this event.",
   "lineup.pickerSearchPlaceholder": "Search people",
   "lineup.pickerEmpty":
     "Nobody by that name among your connections or people going.",
@@ -1654,7 +1652,7 @@ export const gatherings: Catalog = {
     "The lineup is full at {max}. Remove someone to invite more.",
   "lineup.removeConfirmTitle": "Take {name} off the lineup?",
   "lineup.removeConfirmBody":
-    "They accepted, so they'll disappear from the gathering's page.",
+    "They accepted, so they'll disappear from the event's page.",
   "lineup.removeConfirmCta": "Remove",
   "lineup.errorToast": "We couldn't save that just now. Try again.",
 
@@ -1668,8 +1666,7 @@ export const gatherings: Catalog = {
   "lineupInvite.declinedToast": "Invite declined",
   "lineupInvite.closedTitle": "This invite is no longer open",
   "lineupInvite.acceptedTitle": "You're on this lineup",
-  "lineupInvite.acceptedDescription":
-    "The gathering's page shows the full lineup.",
+  "lineupInvite.acceptedDescription": "The event's page shows the full lineup.",
   "lineupInvite.declinedTitle": "You declined this invite",
   "lineupInvite.declinedDescription":
     "The host can invite you again if plans change.",
@@ -1677,14 +1674,14 @@ export const gatherings: Catalog = {
   "lineupInvite.loadErrorTitle": "We couldn't load this invite",
   "lineupInvite.loadErrorDescription":
     "Check your connection and try again in a moment.",
-  "lineupInvite.openGathering": "Open the gathering",
+  "lineupInvite.openGathering": "Open the event",
   "lineupInvite.back": "Back to notifications",
   "lineupInvite.bannerText": "You're invited to the lineup as {role}.",
   "lineupInvite.onLineupText": "You're on the lineup as {role}.",
   "lineupInvite.leaveCta": "Leave lineup",
   "lineupInvite.leaveConfirmTitle": "Leave the lineup?",
   "lineupInvite.leaveConfirmBody":
-    "You'll disappear from this gathering's lineup. The host can invite you again.",
+    "You'll disappear from this event's lineup. The host can invite you again.",
   "lineupInvite.leftToast": "You left the lineup",
   "lineupInvite.errorToast": "That didn't go through. Try again.",
 
@@ -1719,7 +1716,7 @@ export const gatherings: Catalog = {
   // still means zero, and never uses these.
   "door.checkInsNotKept": "No longer kept",
   "door.checkInsNotKeptNote":
-    "Check-ins are no longer kept for past gatherings. We clear them 30 days after a gathering ends.",
+    "Check-ins are no longer kept for past events. We clear them 30 days after an event ends.",
   // The same absence, said once more where the guest list's arrival filters
   // used to be. Deliberately different wording from the note above it: the
   // two sit on one screen, so repeating that sentence verbatim would read as
@@ -1728,7 +1725,7 @@ export const gatherings: Catalog = {
   // attendance window. The host did nothing wrong, so it states what the
   // platform did rather than reading as a failure, and it offers no retry.
   "door.checkInClosedNotice":
-    "Check-in is closed for this gathering. We cleared its arrival records once the check-in window passed, so no new ones can be added.",
+    "Check-in is closed for this event. We cleared its arrival records once the check-in window passed, so no new ones can be added.",
   "door.scan.eyebrow": "Check in",
   "door.scan.title": "Read a membership card",
   "door.scan.viewfinderAria": "Camera view for reading a membership card",
@@ -1799,14 +1796,14 @@ export const gatherings: Catalog = {
     "If they haven't RSVPed yet, they can do it now on their own phone.",
   "checkin.notOnList.showCodeCta": "Show RSVP code",
   "checkin.notOnList.codeTitle": "Scan to RSVP",
-  "checkin.notOnList.codeLabel": "Code that opens this gathering's page",
+  "checkin.notOnList.codeLabel": "Code that opens this event's page",
   "checkin.scan.welcome": "Welcome, {name}",
   "checkin.scan.repeat": "{name} arrived at {time}",
   "checkin.scan.refusedTitle": "Can't check in",
   "checkin.scan.ready": "Ready for the next card",
   "checkin.scan.dismiss": "Dismiss",
   "checkin.footer.retention":
-    "Gathering data is deleted 30 days after the event. Attendance records are never shared publicly.",
+    "Event data is deleted 30 days after the event. Attendance records are never shared publicly.",
 
   // ── LOC-04: where it is, and who can get in ───────────────────────────────
   "gathering.where.heading": "Getting there",
@@ -1870,12 +1867,12 @@ export const gatherings: Catalog = {
     "Only the hosts can see they're going",
 
   // ── LOC-08: the host's own door ───────────────────────────────────────────
-  "manage.bans.eyebrow": "This gathering only",
-  "manage.bans.title": "Ban {name} from this gathering",
+  "manage.bans.eyebrow": "This event only",
+  "manage.bans.title": "Ban {name} from this event",
   "manage.bans.sub":
     "They won't be told, and they won't be able to RSVP again.",
   "manage.bans.explainer":
-    "This covers this gathering and nothing else. It says nothing about them anywhere else on QueerPulse. If you want them out of your whole space, block them from their profile instead.",
+    "This covers this event and nothing else. It says nothing about them anywhere else on QueerPulse. If you want them out of your whole space, block them from their profile instead.",
   "manage.bans.reasonLabel": "A note for you",
   "manage.bans.reasonHelper":
     "Only the organisers ever see this. It is never sent to them.",
@@ -1883,20 +1880,20 @@ export const gatherings: Catalog = {
   "manage.bans.barCta": "Ban them",
   "manage.bans.barringCta": "Banning…",
   "manage.bans.barShortCta": "Ban",
-  "manage.bans.barAria": "Ban {name} from this gathering",
-  "manage.bans.barredToast": "{name} is banned from this gathering",
+  "manage.bans.barAria": "Ban {name} from this event",
+  "manage.bans.barredToast": "{name} is banned from this event",
   "manage.bans.errorToast": "That didn't go through. Try again in a moment.",
   "manage.bans.listHeading_one": "Banned (1)",
   "manage.bans.listHeading_other": "Banned ({count})",
   "manage.bans.emptyTitle": "Nobody is banned",
   "manage.bans.emptyDescription":
-    "If you ever need to keep someone away from this one gathering, you can do it from their row above.",
+    "If you ever need to keep someone away from this one event, you can do it from their row above.",
   "manage.bans.barredOn": "Banned {date}",
   "manage.bans.liftCta": "Unban",
   "manage.bans.liftAria": "Unban {name}",
   "manage.bans.liftedToast": "{name} can RSVP again",
-  "rsvpControl.refusedToast": "The host has removed you from this gathering.",
-  "rsvpControl.goneToast": "This gathering isn't there any more.",
+  "rsvpControl.refusedToast": "The host has removed you from this event.",
+  "rsvpControl.goneToast": "This event isn't there any more.",
   "rsvpControl.errorToast": "That didn't go through. Try again in a moment.",
   "sharePlans.openCta": "Share my plans",
   "sharePlans.eyebrow": "Just between you two",
@@ -1987,15 +1984,14 @@ export const gatherings: Catalog = {
   // render an ordinary RSVP button in both states and the server answered it
   // with a 400 the member had no way to read.
   "gathering.cancelledBanner":
-    "This gathering was cancelled. Nothing is happening on this date.",
-  "gathering.endedBanner":
-    "This gathering has already happened. RSVPs are closed.",
+    "This event was cancelled. Nothing is happening on this date.",
+  "gathering.endedBanner": "This event has already happened. RSVPs are closed.",
   // The host's RSVP cutoff has passed (GatheringRsvpPanels.tsx,
   // GatheringHeroActions.tsx).
   "gathering.rsvpClosedBanner":
-    "RSVPs for this gathering have closed. You can still message the host.",
-  "gathering.reportCta": "Report this gathering",
-  "gathering.reportAriaLabel": "Report the gathering {title}",
+    "RSVPs for this event have closed. You can still message the host.",
+  "gathering.reportCta": "Report this event",
+  "gathering.reportAriaLabel": "Report the event {title}",
 
   // PRD-188 — "Maybe" on the detail page. The API and My Events both supported
   // it while this surface offered only a seat, so a member could not mark
@@ -2019,11 +2015,11 @@ export const gatherings: Catalog = {
   // PRD-181 / PRD-183 — the sidebar panel for a closed gathering. Someone who
   // was coming is told their plan has changed; someone who was not is simply
   // told the state.
-  "rsvpControl.cancelledTitle": "This gathering was <em>cancelled</em>",
+  "rsvpControl.cancelledTitle": "This event was <em>cancelled</em>",
   "rsvpControl.cancelledNote": "The host called it off.",
   "rsvpControl.cancelledAttendingNote":
     "The host called it off, so your place is gone. Nothing else to do.",
-  "rsvpControl.endedTitle": "This gathering has <em>ended</em>",
+  "rsvpControl.endedTitle": "This event has <em>ended</em>",
   "rsvpControl.endedNote": "It already happened.",
   "rsvpControl.endedAttendingNote": "Hope it was good.",
 
@@ -2039,7 +2035,7 @@ export const gatherings: Catalog = {
   "rsvpControl.rsvpClosedNote":
     "The host stopped taking RSVPs on {date} at {time}.",
   "rsvpControl.maybeClosedNote": "RSVPs have closed, so this stays a maybe.",
-  "rsvpControl.closedToast": "RSVPs for this gathering have closed.",
+  "rsvpControl.closedToast": "RSVPs for this event have closed.",
 
   // PRD-187 — "Anything we should know?" on the gathering detail
   // (GatheringRsvpDetailsModal). Capacity counts declared guests, so an
@@ -2096,7 +2092,7 @@ export const gatherings: Catalog = {
 
   // PRD-190 — host tooling: run a gathering again, and take the door list
   // offline. The export button used to raise a toast and produce no file.
-  "manage.overview.duplicateCta": "Duplicate gathering",
+  "manage.overview.duplicateCta": "Duplicate event",
   "manage.attendees.exportingCta": "Exporting…",
   "manage.attendees.exportDemoToast":
     "There's no real guest list to export in the demo.",
@@ -2107,11 +2103,11 @@ export const gatherings: Catalog = {
   // A host used to stand on their own gathering with nothing to manage it by.
   // Cancel keeps the evening on the board and tells everyone; delete removes
   // it and tells nobody, so its copy has to make that finality plain.
-  "hostBar.label": "Your gathering",
+  "hostBar.label": "Your event",
   "hostBar.editCta": "Edit details",
   "hostBar.manageCta": "Manage",
-  "hostBar.cancelCta": "Cancel gathering",
-  "hostBar.deleteCta": "Delete gathering",
+  "hostBar.cancelCta": "Cancel event",
+  "hostBar.deleteCta": "Delete event",
   "hostBar.cancelTitle": "Cancel {title}?",
   "hostBar.cancelBody_one":
     "It stays on the board marked cancelled, and {count} person holding a seat is told.",
@@ -2121,17 +2117,17 @@ export const gatherings: Catalog = {
   "hostBar.cancelKeepCta": "Keep it on",
   "hostBar.deleteTitle": "Delete {title}?",
   "hostBar.deleteBody":
-    "This removes the gathering along with its RSVPs, photos and announcements, for good. Nobody is notified and there is no undo. To tell the people who signed up, cancel it instead.",
+    "This removes the event along with its RSVPs, photos and announcements, for good. Nobody is notified and there is no undo. To tell the people who signed up, cancel it instead.",
   "hostBar.deleteConfirmCta": "Delete for good",
   "hostBar.deleteKeepCta": "Keep it",
   "hostBar.deletedToast": "{title} is deleted.",
   "hostBar.deleteBlockedToast":
     "People have already signed up for this one. Cancel it first so they are told, then delete it.",
   "hostBar.deleteHostOnlyToast":
-    "Only the host can delete a gathering. As a co-host you can cancel it.",
-  "hostBar.deleteGoneToast": "That gathering is already gone.",
+    "Only the host can delete an event. As a co-host you can cancel it.",
+  "hostBar.deleteGoneToast": "That event is already gone.",
   "hostBar.deleteFailedToast":
-    "The gathering couldn't be deleted. Try again in a moment.",
+    "The event couldn't be deleted. Try again in a moment.",
   // The host's actions now sit behind one "more" button in the page header
   // (GatheringHostMenu); these name that button.
   "hostBar.menuAria": "Host tools for {title}",
@@ -2140,11 +2136,11 @@ export const gatherings: Catalog = {
   // ── Header icon toolbar (GatheringHeaderToolbar) ──────────────────────────
   // Save, add to calendar and share, moved up beside the type label so the
   // RSVP is the one button in the hero.
-  "headerToolbar.aria": "Gathering actions",
+  "headerToolbar.aria": "Event actions",
   // The shared message (gatheringShareMessage.ts): the title, then these
   // lines, then the link. The place is the public one, venue and
   // neighbourhood; the street address stays with the people going.
-  "headerToolbar.share.message.cancelled": "This gathering has been cancelled",
+  "headerToolbar.share.message.cancelled": "This event has been cancelled",
   "headerToolbar.share.message.when": "{date} · {time}",
   "headerToolbar.share.message.timeWithNote": "{time} {note}",
   "headerToolbar.share.message.venueAndHood": "{venue}, {neighbourhood}",
@@ -2176,7 +2172,7 @@ export const gatherings: Catalog = {
   "create.step2.endsBeforeStart":
     "This ends before it starts. Move the end date or time later.",
   "create.step2.spanTooLong":
-    "A gathering can run for up to {days} days. Bring the end closer to the start.",
+    "An event can run for up to {days} days. Bring the end closer to the start.",
 
   // ── Host guest preview (GatheringPreviewBar) ────────────────────────────────
   "preview.menuCta": "Preview as guest",
@@ -2190,25 +2186,25 @@ export const gatherings: Catalog = {
   "preview.inertToast": "This is a preview. Guests can tap this.",
   "preview.errorTitle": "The preview didn't load",
   "preview.errorBody":
-    "Your gathering is fine. Try again in a moment, or go back to your host view.",
+    "Your event is fine. Try again in a moment, or go back to your host view.",
 
   // ── Guest communities: editor, wizard, display, collab invite page ────────
   "guestCommunities.label": "Guest communities",
   "guestCommunities.labelOptional": "Guest communities (optional)",
   "guestCommunities.hint":
-    "Invite other communities to host this with you. Their team accepts before their name shows on the gathering.",
+    "Invite other communities to host this with you. Their team accepts before their name shows on the event.",
   "guestCommunities.lockedHint":
-    "Pick the community you host with first. Guest communities join a gathering that has one.",
+    "Pick the community you host with first. Guest communities join an event that has one.",
   "guestCommunities.lockedHintWithRows":
     "Pick the community you host with to invite more.",
   "guestCommunities.searchPlaceholder": "Search communities by name",
   "guestCommunities.resultsLabel": "Communities you can invite",
-  "guestCommunities.listLabel": "Communities invited to this gathering",
+  "guestCommunities.listLabel": "Communities invited to this event",
   "guestCommunities.loading": "Looking for communities…",
   "guestCommunities.noMatch": "No community matches that search.",
   "guestCommunities.loadError": "Communities didn't load.",
   "guestCommunities.capReached":
-    "This gathering has {max} guest communities, the most it can have. Remove one to invite another.",
+    "This event has {max} guest communities, the most it can have. Remove one to invite another.",
   "guestCommunities.status.pending": "Invited",
   "guestCommunities.status.accepted": "Joined",
   "guestCommunities.status.declined": "Declined",
@@ -2234,11 +2230,11 @@ export const gatherings: Catalog = {
     "With {first}, {second}, {third} and {count} more",
   "gathering.guestCommunityRole": "Guest community",
   "gathering.leaveCollabCta": "Remove our community",
-  "gathering.leaveCollabTitle": "Remove {name} from this gathering?",
+  "gathering.leaveCollabTitle": "Remove {name} from this event?",
   "gathering.leaveCollabBody":
-    "It comes off your community page and your members' Communities feed, and your community can't join this gathering again. The organisers aren't notified.",
+    "It comes off your community page and your members' Communities feed, and your community can't join this event again. The organisers aren't notified.",
   "gathering.leaveCollabKeepCta": "Keep our community",
-  "gathering.leaveCollabToast": "{name} is off this gathering.",
+  "gathering.leaveCollabToast": "{name} is off this event.",
 
   "collabInvite.back": "Notifications",
   "collabInvite.eyebrow": "Collab invitation",
@@ -2251,15 +2247,14 @@ export const gatherings: Catalog = {
   "collabInvite.acceptingTitle": "What <em>accepting</em> does",
   "collabInvite.acceptingListing":
     "Lists on your community page. Your members can see it and RSVP.",
-  "collabInvite.acceptingName":
-    "{community} shows on the gathering beside {lead}.",
+  "collabInvite.acceptingName": "{community} shows on the event beside {lead}.",
   "collabInvite.acceptingNameNoLead":
-    "{community} shows on the gathering as a host.",
+    "{community} shows on the event as a host.",
   "collabInvite.acceptingRights":
-    "The organisers keep running the gathering. Your team can remove your community from it at any time.",
+    "The organisers keep running the event. Your team can remove your community from it at any time.",
   "collabInvite.acceptCta": "Accept collab",
   "collabInvite.declineCta": "Decline invite",
-  "collabInvite.acceptedToast": "{community} is hosting this gathering too.",
+  "collabInvite.acceptedToast": "{community} is hosting this event too.",
   "collabInvite.declinedToast":
     "Invite declined. The organisers will see your answer.",
   "collabInvite.cannotRespond":
@@ -2273,10 +2268,10 @@ export const gatherings: Catalog = {
   "collabInvite.declinedTitle": "{name} declined for {community}",
   "collabInvite.declinedTitleNoName": "{community} declined this invite",
   "collabInvite.declinedDescription": "{title} stays off {community}'s page.",
-  "collabInvite.cancelledTitle": "This gathering was cancelled",
+  "collabInvite.cancelledTitle": "This event was cancelled",
   "collabInvite.cancelledDescription":
     "The invite closed when the organisers called {title} off.",
-  "collabInvite.pastTitle": "This gathering already happened",
+  "collabInvite.pastTitle": "This event already happened",
   "collabInvite.pastDescription": "The invite closed once {title} took place.",
-  "collabInvite.viewGatheringCta": "View gathering",
+  "collabInvite.viewGatheringCta": "View event",
 };

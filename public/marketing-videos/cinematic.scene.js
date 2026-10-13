@@ -357,7 +357,7 @@ const MOMENTS = [
     head: "Everyone arrives<br /><em>through someone.</em>",
   },
   {
-    lab: "Gatherings",
+    lab: "Events",
     head: "See who’s going<br /><em>before you go.</em>",
   },
   {

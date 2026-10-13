@@ -423,7 +423,7 @@ export const resources: Catalog = {
   "glossary.backLink": "Resource Library",
   "glossary.hero.title": "A working <em>glossary.</em>",
   "glossary.hero.dek":
-    "Words used here, across the platform, in the magazine, at gatherings. <b>Definitions are working drafts.</b> Where a term is contested, we say so. Where it's Lisbon-specific, we mark it. <em>Suggest edits at the bottom; the editors look at them weekly.</em>",
+    "Words used here, across the platform, in the magazine, at events. <b>Definitions are working drafts.</b> Where a term is contested, we say so. Where it's Lisbon-specific, we mark it. <em>Suggest edits at the bottom; the editors look at them weekly.</em>",
   "glossary.foot.body":
     "This is a working document. Suggestions are read by the editorial team weekly and discussed at the monthly assembly. <em>We will get things wrong; we'd rather get them wrong publicly and fix them.</em>",
 
@@ -1218,12 +1218,12 @@ export const resources: Catalog = {
   "sober.stat.changes.label":
     "when community spaces deliberately include sober options, and when sober people don't have to be invisible",
 
-  "sober.gatherings.title": "Sober <em>gatherings.</em>",
+  "sober.gatherings.title": "Sober <em>events.</em>",
   "sober.gatherings.lead":
-    "Alcohol-free events, or events where alcohol is present but not the point. All QueerPulse gatherings are marked if they're alcohol-free.",
+    "Alcohol-free events, or events where alcohol is present but not the point. All QueerPulse events are marked if they're alcohol-free.",
   "sober.gatherings.hostCta": "Host or attend a meeting",
   "sober.gatherings.leadLive":
-    "No gatherings are listed on QueerPulse yet. If you would like to host an alcohol-free meet-up, tell the team and they will review your request.",
+    "No events are listed on QueerPulse yet. If you would like to host an alcohol-free meet-up, tell the team and they will review your request.",
   "sober.gatherings.hostCtaLive": "Host a meeting",
   "sober.type.alcoholFree": "Alcohol-free",
   "sober.type.supportGroup": "Support group",
@@ -1244,7 +1244,7 @@ export const resources: Catalog = {
     "This isn't only about lifestyle preference. If you're in recovery, from alcohol, substances, or anything else, there are people here who understand. No advice unless you ask for it.",
   "sober.recovery.peerGroup.title": "Sober & Queer peer group",
   "sober.recovery.peerGroup.desc":
-    "A private, moderated space within QueerPulse for people in recovery. Weekly online meeting, text channel, and occasional in-person gatherings. No particular programme, and all approaches welcome.",
+    "A private, moderated space within QueerPulse for people in recovery. Weekly online meeting, text channel, and occasional in-person events. No particular programme, and all approaches welcome.",
   "sober.recovery.peerGroup.linkLabel": "Join the group",
   "sober.recovery.oneToOne.title": "One-to-one: talk to a peer",
   "sober.recovery.oneToOne.desc":
@@ -1265,8 +1265,8 @@ export const resources: Catalog = {
   "sober.outro.findSpacesCta": "Find safe spaces",
   "sober.outro.browseCommunitiesCta": "Browse communities",
 
-  "sober.host.modalTitle": "Sober gatherings",
-  "sober.host.success.hostTitle": "Gathering <em>submitted.</em>",
+  "sober.host.modalTitle": "Sober events",
+  "sober.host.success.hostTitle": "Event <em>submitted.</em>",
   "sober.host.success.attendTitle": "Request <em>sent.</em>",
   "sober.host.success.hostSub":
     "Your request has reached the QueerPulse team. They review it and follow up with you in QueerPulse.",
@@ -1276,7 +1276,7 @@ export const resources: Catalog = {
     "Start an alcohol-free meet-up, or join an existing peer meeting. Either way, you decide how visible you are.",
   "sober.host.modeLabel": "What would you like to do?",
   "sober.host.mode.host.name": "Host a meeting",
-  "sober.host.mode.host.desc": "Propose a new alcohol-free gathering.",
+  "sober.host.mode.host.desc": "Propose a new alcohol-free event.",
   "sober.host.mode.attend.name": "Attend a meeting",
   "sober.host.mode.attend.desc": "Ask to join a peer support meeting.",
   "sober.host.nameLabel.host": "Your name",
@@ -1290,12 +1290,12 @@ export const resources: Catalog = {
   "sober.host.detailPlaceholder.attend":
     "e.g. the weekly Sober & Queer peer support, and whether you'd like a buddy to meet you there.",
   "sober.host.cancelCta": "Cancel",
-  "sober.host.submitCta.host": "Submit gathering",
+  "sober.host.submitCta.host": "Submit event",
   "sober.host.submitCta.attend": "Request to attend",
   "sober.host.submitCta.hostLive": "Send request",
   "sober.host.introLive":
-    "Tell the team about an alcohol-free gathering you would like to host. You decide how much to share.",
-  "sober.host.modalTitleLive": "Host a sober gathering",
+    "Tell the team about an alcohol-free event you would like to host. You decide how much to share.",
+  "sober.host.modalTitleLive": "Host a sober event",
 
   // ── Guide library grid — shared by marketing/ResourceLibraryPage (the
   // canonical, nav-linked "/resources", CNT-11's consolidated real,
@@ -1574,7 +1574,7 @@ export const resources: Catalog = {
   "microGrants.apply.category.legal.name": "Legal & advocacy",
   "microGrants.apply.category.legal.sub": "Rights, accompaniment",
   "microGrants.apply.category.community.name": "Community & space",
-  "microGrants.apply.category.community.sub": "Gatherings, mutual aid",
+  "microGrants.apply.category.community.sub": "Events, mutual aid",
   "microGrants.apply.category.other.name": "Other",
   "microGrants.apply.category.other.sub": "Something that doesn't fit neatly",
 
@@ -1800,7 +1800,7 @@ export const resources: Catalog = {
   "accessibleLisbon.outro.title": "Been somewhere <em>that works?</em>",
   "accessibleLisbon.outro.sub":
     "The list only stays honest because we keep adding to it. Bring a verified spot to your community's resource board.",
-  "accessibleLisbon.outro.cta": "Find a gathering",
+  "accessibleLisbon.outro.cta": "Find an event",
 
   // ── ArtCritGuidePage (+ artCritGuide.data.ts) ───────────────────────────
   "artCritGuide.meta.title": "How Rainbow Arts crit sessions work",
@@ -2015,7 +2015,7 @@ export const resources: Catalog = {
     "Almost everyone is, and almost everyone almost turns around at the door. The people setting up tables this month did exactly that at their first one. It gets easy fast.",
   "firstMeetupGuide.faq3.q": "How will I find the group?",
   "firstMeetupGuide.faq3.a":
-    "The host posts where they'll be and what they're wearing, usually at a specific entrance or lift at a set time, then everyone moves together. Check the gathering's pinned post.",
+    "The host posts where they'll be and what they're wearing, usually at a specific entrance or lift at a set time, then everyone moves together. Check the event's pinned post.",
   "firstMeetupGuide.faq4.q": "Do I have to stay the whole time?",
   "firstMeetupGuide.faq4.a":
     "No. Leave whenever you like, no explanation needed. Staying twenty minutes still counts as coming.",
@@ -2362,7 +2362,7 @@ export const resources: Catalog = {
 
   "runningGuide.outro.title": "See you at the <em>start line.</em>",
   "runningGuide.outro.sub":
-    "Coffee after is half the point. Find the next run on the gatherings board.",
+    "Coffee after is half the point. Find the next run on the events board.",
   "runningGuide.outro.cta": "Find the next run",
 
   // ── SchoolFormsGuidePage (+ schoolFormsGuide.data.ts) ───────────────────
@@ -2503,7 +2503,7 @@ export const resources: Catalog = {
   "spoonTheory.uses.title": "How we <em>use it</em>",
   "spoonTheory.use1.title": "Hybrid by default",
   "spoonTheory.use1.body":
-    "Every gathering has an online option so a low-spoon day never means missing out. Online is another door into the same room, and it counts the same.",
+    "Every event has an online option so a low-spoon day never means missing out. Online is another door into the same room, and it counts the same.",
   "spoonTheory.use2.title": "Drop-in, no penalty",
   "spoonTheory.use2.body":
     "RSVP yes and not make it? Completely fine. We plan for it. The spoons you protect by staying home are yours to protect.",
@@ -2521,7 +2521,7 @@ export const resources: Catalog = {
 
   "spoonTheory.outro.title": "Come in whatever <em>state you're in.</em>",
   "spoonTheory.outro.sub":
-    "We're not measuring. Every gathering is hybrid, drop-in, and built for real bodies.",
+    "We're not measuring. Every event is hybrid, drop-in, and built for real bodies.",
   "spoonTheory.outro.cta": "Find a low-sensory hangout",
 
   // ── IntersectionalityPage (+ IntersectionalityCards.tsx +
@@ -2825,7 +2825,7 @@ export const resources: Catalog = {
   "accessibleLisbon.live.title": "Verified accessible spaces are coming soon.",
   "accessibleLisbon.live.body":
     "We're confirming step-free access, accessible bathrooms and staff training with each venue before we list it, so every space here is one members have checked.",
-  "accessibleLisbon.live.cta": "Find gatherings",
+  "accessibleLisbon.live.cta": "Find events",
 
   "ingredientsMap.missing.liveToast":
     "Community suggestions aren't open yet. This map is still being built.",

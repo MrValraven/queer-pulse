@@ -21,7 +21,7 @@ export const feed: Catalog = {
   "tab.all": "Tudo",
   "tab.communities": "Comunidades",
   "tab.connections": "Conexões",
-  "tab.gatherings": "Convívios",
+  "tab.gatherings": "Eventos",
   "tab.people": "Pessoas",
   "tab.posts": "Publicações",
   "tab.listAria": "Filtrar o teu feed",
@@ -54,9 +54,9 @@ export const feed: Catalog = {
 
   "tab.gatherings.empty.title": "Ainda nada marcado",
   "tab.gatherings.empty.description":
-    "Quando um convívio em que participas for anunciado ou resumido, vais encontrá-lo aqui.",
+    "Quando um evento em que participas for anunciado ou resumido, vais encontrá-lo aqui.",
   "tab.gatherings.empty.action": "Ver o que há",
-  "tab.gatherings.error.title": "Não foi possível carregar os convívios",
+  "tab.gatherings.error.title": "Não foi possível carregar os eventos",
   "tab.gatherings.error.description":
     "Não conseguimos chegar ao que aí vem. Tenta outra vez.",
 
@@ -98,7 +98,7 @@ export const feed: Catalog = {
 
   // ── FeedCards: SavedArticleCard / RecapCard ─────────────────────────────
   "card.savedArticle.eyebrow": "Dos teus guardados",
-  "card.recap.eyebrow": "Resumo do convívio",
+  "card.recap.eyebrow": "Resumo do evento",
 
   // ── Etiquetas de ação partilhadas ────────────────────────────────────────
   "action.connect": "Conectar",
@@ -166,7 +166,7 @@ export const feed: Catalog = {
 
   // ── FeedSidebar ─────────────────────────────────────────────────────────
   "sidebar.upcomingHeading": "Em breve",
-  "sidebar.upcomingEmpty": "Ainda não tens convívios marcados.",
+  "sidebar.upcomingEmpty": "Ainda não tens eventos marcados.",
   "sidebar.seeCalendar": "Ver calendário completo",
   "sidebar.newThisWeekHeading": "Pessoas novas",
   "sidebar.newMembersEmpty": "Ainda não há pessoas novas para mostrar.",
@@ -178,7 +178,7 @@ export const feed: Catalog = {
   "sidebar.manage": "Gerir",
 
   // ── Chrome dos cartões redesenhados (eyebrows, ações, provas/estatísticas) ─
-  "card.eyebrow.gathering": "Convívio",
+  "card.eyebrow.gathering": "Evento",
   "card.eyebrow.community": "Comunidade",
   "card.eyebrow.communityPost": "De uma comunidade tua",
   "card.eyebrow.forumThread": "Tópico do fórum",

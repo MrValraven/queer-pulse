@@ -40,7 +40,7 @@ export const nav: Catalog = {
   "landing.label": "Landing page sections",
   "landing.about": "The idea",
   "landing.communities": "Communities",
-  "landing.gatherings": "Gatherings",
+  "landing.gatherings": "Events",
   "landing.housing": "Housing",
   "landing.personas": "Personas",
   "landing.why": "Why we built this",

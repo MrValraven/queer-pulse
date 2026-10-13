@@ -694,8 +694,8 @@ export const COMMUNITY_DETAILS: Record<string, CommunityDetail> = {
         starting point, built in from the beginning.
       </>,
       <>
-        Every gathering is hybrid, seated, low-sensory by default, and carers
-        are always welcome. No inspiration required. Just people who understand
+        Every event is hybrid, seated, low-sensory by default, and carers are
+        always welcome. No inspiration required. Just people who understand
         spoons, flares, and the specific exhaustion of explaining both halves of
         yourself.
       </>,

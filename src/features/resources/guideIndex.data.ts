@@ -94,7 +94,7 @@ export const GUIDE_INDEX_DEMO: ResourceIndexEntryDTO[] = [
     category: "health",
     title: "Sober and sober-curious in queer Lisbon",
     description:
-      "Alcohol-free gatherings, sober hosts, and nightlife that does not run on drinking.",
+      "Alcohol-free events, sober hosts, and nightlife that does not run on drinking.",
     routePath: routes.sober,
     lastReviewedOn: null,
     isManaged: false,

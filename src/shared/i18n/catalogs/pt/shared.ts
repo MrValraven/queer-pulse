@@ -457,11 +457,11 @@ export const shared: Catalog = {
 
   // MegaNav — Community
   "megaNav.community.title": "Comunidade",
-  "megaNav.community.subtitle": "Pessoas, encontros & espaços",
+  "megaNav.community.subtitle": "Pessoas, eventos & espaços",
   "megaNav.community.feature.eyebrow": "Comunidade",
   "megaNav.community.feature.title": "Encontra a tua gente.",
   "megaNav.community.feature.body":
-    "Um diretório de pessoas, fóruns e convívios: o tecido de ligação do dia a dia da rede.",
+    "Um diretório de pessoas, fóruns e eventos: o tecido de ligação do dia a dia da rede.",
   "megaNav.community.feature.cta": "Explorar pessoas",
   "megaNav.community.featurePublic.eyebrow": "Comunidade",
   "megaNav.community.featurePublic.title":
@@ -486,7 +486,7 @@ export const shared: Catalog = {
     "Diretório de negócios locais",
   "megaNav.community.col.discover.housing": "Habitação",
   "megaNav.community.col.discover.partners": "Parceiros",
-  "megaNav.community.col.gatheringsPlaces.head": "Convívios e lugares",
+  "megaNav.community.col.gatheringsPlaces.head": "Eventos e lugares",
 
   // MegaNav — Resources
   "megaNav.resources.title": "Recursos",

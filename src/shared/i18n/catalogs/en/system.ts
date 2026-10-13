@@ -30,7 +30,7 @@ export const system: Catalog = {
   "notFound.linksTitle": "Popular places",
   "notFound.links.magazine.label": "Magazine",
   "notFound.links.magazine.sub": "Essays, interviews and reviews",
-  "notFound.links.gatherings.label": "Gatherings",
+  "notFound.links.gatherings.label": "Events",
   "notFound.links.gatherings.sub": "What's on this month",
   "notFound.links.readingGroups.label": "Reading groups",
   "notFound.links.readingGroups.sub": "Read along with others",
@@ -134,7 +134,7 @@ export const system: Catalog = {
   "accountSuspended.whatStays.title": "What still works · during suspension",
   "accountSuspended.whatStays.item1": "Reading public content & the magazine",
   "accountSuspended.whatStays.item2":
-    "Attending gatherings you'd already RSVP'd to",
+    "Attending events you'd already RSVP'd to",
   "accountSuspended.whatStays.item3":
     "Crisis chat · always available, no exceptions",
   // `{decisionDays}` comes from `features/system/accountWindows.ts`, mirroring
@@ -369,7 +369,7 @@ export const system: Catalog = {
   "status.live.component.messaging.desc": "Direct and group messages",
   "status.live.component.communities.name": "Communities and forum",
   "status.live.component.communities.desc":
-    "Community spaces, threads and gatherings",
+    "Community spaces, threads and events",
   "status.live.component.directory.name": "Local directory",
   "status.live.component.directory.desc": "Places, safe spaces and the map",
   "status.live.component.magazine.name": "Magazine",

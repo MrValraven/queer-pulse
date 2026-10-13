@@ -338,7 +338,7 @@ export const cards: Catalog = {
 
   "modTools.title": "Members card",
   "modTools.empty":
-    "Give your members a card that proves they belong here. They can show it at your gatherings and anyone can verify it.",
+    "Give your members a card that proves they belong here. They can show it at your events and anyone can verify it.",
   "modTools.start": "Start a members card",
   "modTools.edit": "Edit card",
   "modTools.pause": "Pause this card programme",

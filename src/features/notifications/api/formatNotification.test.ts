@@ -824,7 +824,7 @@ describe("formatNotification: event_reminder with a gathering title", () => {
 
   it("keeps the original sentence for an older row with no title", () => {
     const untitled = formatNotification("event_reminder", { eventId: "e1" }, t);
-    expect(untitled.text).toBe("A gathering you're going to is coming up.");
+    expect(untitled.text).toBe("An event you're going to is coming up.");
   });
 
   it("resolves the titled variant in Portuguese", () => {
@@ -1217,7 +1217,7 @@ describe("formatNotification: newly forwarded payload fields", () => {
     );
     expect(titled.textValues?.title).toBe("Picnic in Estrela");
     expect(formatNotification("event_announcement", {}, t).text).toBe(
-      "A host posted an update about one of your gatherings.",
+      "A host posted an update about one of your events.",
     );
   });
 
@@ -1514,15 +1514,13 @@ describe("formatNotification: event_nearly_full", () => {
       { ...basePayload, seatsRemaining: 2 },
       t,
     );
-    expect(result.text).toBe(
-      "A gathering you were looking at has 2 spots left.",
-    );
+    expect(result.text).toBe("An event you were looking at has 2 spots left.");
     expect(result.category).toBe("events");
   });
 
   it("reads as the almost-full variant when the host hid the count", () => {
     const result = formatNotification("event_nearly_full", basePayload, t);
-    expect(result.text).toBe("A gathering you were looking at is nearly full.");
+    expect(result.text).toBe("An event you were looking at is nearly full.");
     expect(result.text).not.toContain("{seatsRemaining}");
     expect(result.meta).toBe("Last few spots");
   });
@@ -1534,7 +1532,7 @@ describe("formatNotification: event_nearly_full", () => {
       makeT("pt"),
     );
     expect(result.text).toBe(
-      "Um convívio que estavas a ponderar está quase cheio.",
+      "Um evento que estavas a ponderar está quase cheio.",
     );
   });
 });

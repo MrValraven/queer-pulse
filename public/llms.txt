@@ -26,7 +26,7 @@ here.
 
 ## What is not public
 
-Member profiles, the feed, messages, gatherings and events, communities, the
+Member profiles, the feed, messages, events, communities, the
 forum, the job board and the member directory are all private and require an
 invitation. Please do not attempt to index or summarise them.
 

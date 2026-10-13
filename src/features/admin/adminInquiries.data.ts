@@ -87,7 +87,7 @@ export const ADMIN_INQUIRIES: AdminInquiryDTO[] = [
     email: "duarte@casadobairro.example",
     orgName: "Casa do Bairro",
     subject: "Room for community events in Marvila",
-    body: "We run a neighbourhood centre with a hall that sits empty on weeknights and would like to offer it for gatherings.",
+    body: "We run a neighbourhood centre with a hall that sits empty on weeknights and would like to offer it for events.",
     status: "new",
     isPriority: false,
     listingRef: null,

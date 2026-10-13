@@ -1813,7 +1813,7 @@ export const magazine: Catalog = {
   "story.outro.tomas.title":
     "Queres juntar-te à mesa do Tomás? <em>Junta-te à rede primeiro.</em>",
   "story.outro.tomas.sub":
-    "O jantar, a rede, os encontros: tudo começa com um convite de alguém que te conhece.",
+    "O jantar, a rede, os eventos: tudo começa com um convite de alguém que te conhece.",
   "story.outro.safety.title": "Leste e parece-te <em>certo?</em>",
   "story.outro.safety.sub":
     "Não somos para todas as pessoas. Mas se isto faz sentido para ti, talvez sejas para nós.",

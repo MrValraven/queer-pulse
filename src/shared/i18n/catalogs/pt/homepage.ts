@@ -163,7 +163,7 @@ export const homepage: Catalog = {
     "Antes de mandares mensagem a alguém, vês como estão conectados: quem lhe deu um voto de confiança e quem já conhecem os dois.",
   "painPoints.network.modal.c.title": "Como isto sustenta a QueerPulse",
   "painPoints.network.modal.c.body":
-    "A habitação, os convívios e o diretório assentam nisto. Dar a tua morada a alguém é outra decisão quando um membro em quem confias deu um voto de confiança a essa pessoa.",
+    "A habitação, os eventos e o diretório assentam nisto. Dar a tua morada a alguém é outra decisão quando um membro em quem confias deu um voto de confiança a essa pessoa.",
 
   "painPoints.directory.label": "O diretório de negócios",
   "painPoints.directory.question":
@@ -200,7 +200,7 @@ export const homepage: Catalog = {
   "painPoints.whatsOn.heading":
     "Por isso construímos <em>um calendário para a cidade.</em>",
   "painPoints.whatsOn.body":
-    "Todos os convívios num só sítio: caminhadas de manhã, jantares partilhados, oficinas, visitas a ateliês, sessões de cinema e conversas. Filtra por dia, bairro, tipo e custo, e cada um diz à partida se é espaço sóbrio, se tem acesso sem degraus ou um canto tranquilo.",
+    "Todos os eventos num só sítio: caminhadas de manhã, jantares partilhados, oficinas, visitas a ateliês, sessões de cinema e conversas. Filtra por dia, bairro, tipo e custo, e cada um diz à partida se é espaço sóbrio, se tem acesso sem degraus ou um canto tranquilo.",
   "painPoints.whatsOn.payoff":
     "Um piquenique em Monsanto ao domingo, marcado como espaço sóbrio antes de eu perguntar.",
   "painPoints.whatsOn.payoff2":
@@ -214,7 +214,7 @@ export const homepage: Catalog = {
     "Filtras por dia, bairro, tipo e custo, e depois inscreves-te. O teu bilhete traz a morada, quem organiza e um código para a entrada.",
   "painPoints.whatsOn.modal.b.title": "O que ganhas com isto",
   "painPoints.whatsOn.modal.b.body":
-    "Cada convívio diz à partida se é espaço sóbrio, se tem acesso sem degraus ou um canto tranquilo, por isso sabes ao que vais.",
+    "Cada evento diz à partida se é espaço sóbrio, se tem acesso sem degraus ou um canto tranquilo, por isso sabes ao que vais.",
   "painPoints.whatsOn.modal.c.title": "Como isto sustenta a QueerPulse",
   "painPoints.whatsOn.modal.c.body":
     "É aqui que a rede deixa de ser uma lista de nomes. Quem organiza tem entradas e lista de espera, e quem aparece sai a conhecer gente.",
@@ -227,7 +227,7 @@ export const homepage: Catalog = {
   "painPoints.host.heading":
     "Por isso construímos <em>um guia para organizar.</em>",
   "painPoints.host.body":
-    "Tudo para transformar uma ideia num convívio real: uma página que as pessoas encontram, inscrições que podes contar e orientação de quem já organizou.",
+    "Tudo para transformar uma ideia num evento real: uma página que as pessoas encontram, inscrições que podes contar e orientação de quem já organizou.",
   "painPoints.host.payoff":
     "Doze pessoas, uma mesa comprida, e uma checklist que se preocupou por mim.",
   "painPoints.host.payoff2": "Roubei-te a checklist. O meu é em março.",
@@ -299,7 +299,7 @@ export const homepage: Catalog = {
     "A pergunta que andas a adiar desde março recebe uma resposta a sério de quem já passou por isso, normalmente na mesma noite.",
   "painPoints.forum.modal.c.title": "Como isto sustenta a QueerPulse",
   "painPoints.forum.modal.c.body":
-    "Guias, convívios e comunidades inteiras começam como tópicos no fórum. A moderação publica o que fez em cada trimestre e podes recorrer de uma decisão.",
+    "Guias, eventos e comunidades inteiras começam como tópicos no fórum. A moderação publica o que fez em cada trimestre e podes recorrer de uma decisão.",
 
   "painPoints.magazine.label": "A revista",
   "painPoints.magazine.question":
@@ -458,7 +458,7 @@ export const homepage: Catalog = {
     "Cada pessoa é convidada e recebe o voto de confiança de alguém que já cá está. Sem bots, sem estranhos a copiar a lista.",
   "membersExplainer.pillars.inside.title": "O melhor abre-se por dentro",
   "membersExplainer.pillars.inside.body":
-    "Perfis completos, comunidades e encontros abrem-se no momento em que te juntas.",
+    "Perfis completos, comunidades e eventos abrem-se no momento em que te juntas.",
   "membersExplainer.pillars.safe.title":
     "Os votos de confiança mantêm o espaço seguro",
   "membersExplainer.pillars.safe.body":
@@ -477,7 +477,7 @@ export const homepage: Catalog = {
   // ── Gatherings (destaque na homepage) ─────────────────────────────────────
   "gatherings.title": "Encontra-te <em>pessoalmente.</em>",
   "gatherings.subtitle":
-    "Jantares, oficinas, sessões de cinema e caminhadas: convívios reais a acontecer por Lisboa este mês.",
+    "Jantares, oficinas, sessões de cinema e caminhadas: eventos reais a acontecer por Lisboa este mês.",
   "gatherings.spots.seatsLeft": "lugares restantes",
   "gatherings.spots.spotsLeft": "vagas restantes",
   "gatherings.spots.going": "pessoas vão",
@@ -494,10 +494,10 @@ export const homepage: Catalog = {
   "liveStories.issueKicker": "Edição {number}",
   "liveStories.magazineKicker": "Da revista",
   // Linha por cima de um encontro escolhido pela equipa, mostrado a visitantes sem sessão (PRD-323).
-  "liveGatherings.curatedKicker": "Encontro da comunidade",
+  "liveGatherings.curatedKicker": "Evento da comunidade",
   // Linhas de encontros escolhidos abrem o explicador para visitantes sem sessão (PRD-323).
   "membersExplainer.ledeGathering":
-    "Os detalhes dos encontros abrem quando entras. Vê porque é assim e como podes entrar.",
+    "Os detalhes dos eventos abrem quando entras. Vê porque é assim e como podes entrar.",
   "membersExplainer.ledeRoadmap":
     "Votar no que construímos a seguir é para membros. Aqui tens como entrar ou iniciar sessão.",
   "membersExplainer.ledeRating":
@@ -573,7 +573,7 @@ export const homepage: Catalog = {
 
   "communities.room.pulse": "o feed ao vivo",
   "communities.room.discussions": "conversas",
-  "communities.room.events": "convívios e confirmações",
+  "communities.room.events": "eventos e confirmações",
   "communities.room.resources": "guias e biblioteca",
 
   // ── Housing ────────────────────────────────────────────────────────────────

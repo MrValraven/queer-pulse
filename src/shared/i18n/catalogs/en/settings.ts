@@ -113,7 +113,7 @@ export const settings: Catalog = {
   "identity.chip.preferNotToSay": "Prefer not to say",
   "lookingFor.chip.communityFriendship": "Community & friendship",
   "lookingFor.chip.professionalNetworking": "Professional networking",
-  "lookingFor.chip.gatheringsEvents": "Gatherings & events",
+  "lookingFor.chip.gatheringsEvents": "Events",
   "lookingFor.chip.creativeCollaboration": "Creative collaboration",
   "lookingFor.chip.housingFlatmates": "Housing & flatmates",
   "lookingFor.chip.resourcesSupport": "Resources & support",
@@ -126,7 +126,7 @@ export const settings: Catalog = {
   "lookingFor.chip.nightlife": "Nightlife",
   "interests.title": "Shape what you <em>see.</em>",
   "interests.sub":
-    "These are private (not shown on your profile). They help us surface gatherings, members, and content that's relevant to you. Change them any time.",
+    "These are private (not shown on your profile). They help us surface events, members, and content that's relevant to you. Change them any time.",
   "interests.identities.heading": "Which identities feel like yours?",
   "interests.identities.skip": "Skip",
   "interests.identities.helper":
@@ -207,14 +207,14 @@ export const settings: Catalog = {
   // member should see the cost before they flip one. ──────────────────────
   "interests.contentSetting.dating": "Dating & relationship content",
   "interests.contentSetting.dating.desc":
-    "Hides posts and gatherings from dating, relationship and kink communities",
+    "Hides posts and events from dating, relationship and kink communities",
   "interests.contentSetting.mentalHealth": "Mental health & wellbeing content",
   "interests.contentSetting.mentalHealth.desc":
-    "Hides posts and gatherings from mental health, wellbeing and recovery communities",
+    "Hides posts and events from mental health, wellbeing and recovery communities",
   "interests.contentSetting.sexualityIdentity":
     "Sexuality & identity exploration content",
   "interests.contentSetting.sexualityIdentity.desc":
-    "Hides posts and gatherings from sexuality, gender and coming-out communities",
+    "Hides posts and events from sexuality, gender and coming-out communities",
   "interests.content.toastError": "We couldn't save that setting. Try again.",
 
   // ── SettingsPanes.tsx — NotificationsPane ────────────────────────────────
@@ -226,7 +226,7 @@ export const settings: Catalog = {
     "We couldn't save that notification setting. Please try again.",
   "notifications.toast.saveErrorReason":
     "We couldn't save that notification setting: {reason}.",
-  "notifications.section.gatherings": "Gatherings",
+  "notifications.section.gatherings": "Events",
   "notifications.section.messagesConnections": "Messages & connections",
   "notifications.section.communitiesBoard": "Communities & board",
   "notifications.section.delivery": "Delivery",
@@ -238,18 +238,17 @@ export const settings: Catalog = {
   "notifications.messageSound.desc":
     "Play a soft chime when a message arrives while QueerPulse is open. Muted chats stay silent.",
   "notifications.section.yourWork": "Your work and your listings",
-  "notifications.volume.eventInvites.title": "New gathering announced",
-  "notifications.volume.eventInvites.desc":
-    "When you are invited to a gathering",
+  "notifications.volume.eventInvites.title": "New event announced",
+  "notifications.volume.eventInvites.desc": "When you are invited to an event",
   "notifications.volume.eventReminders.title": "RSVP reminder",
   "notifications.volume.eventReminders.desc":
-    "Before a gathering you said you are going to",
-  "notifications.volume.eventActivity.title": "Activity on gatherings you run",
+    "Before an event you said you are going to",
+  "notifications.volume.eventActivity.title": "Activity on events you run",
   "notifications.volume.eventActivity.desc":
     "New RSVPs, and invitations to co-host",
   "notifications.volume.eventCapacity.title": "Last few spots",
   "notifications.volume.eventCapacity.desc":
-    "When a gathering you saved, or said maybe to, is nearly full",
+    "When an event you saved, or said maybe to, is nearly full",
   "notifications.volume.newMessages.title": "New message",
   "notifications.volume.newMessages.desc":
     "When someone sends you a direct message",
@@ -378,7 +377,7 @@ export const settings: Catalog = {
   "data.section.personalisation": "Personalisation",
   "data.searchPersonalisation.title": "Search personalisation",
   "data.searchPersonalisation.desc":
-    "Use your interests and connections to improve suggested members and gatherings. This is a product preference that stays on your account, kept separate from tracking.",
+    "Use your interests and connections to improve suggested members and events. This is a product preference that stays on your account, kept separate from tracking.",
   "data.section.dangerZone": "Danger zone",
   "data.deactivate.title": "Deactivate account",
   "data.deactivate.desc":
@@ -614,7 +613,7 @@ export const settings: Catalog = {
   "uploads.kind.listing-menu": "Listing menu",
   "uploads.kind.community-cover": "Community banner",
   "uploads.kind.community-avatar": "Community logo",
-  "uploads.kind.event-cover": "Gathering cover",
+  "uploads.kind.event-cover": "Event cover",
   "uploads.kind.message-image": "Chat photo",
   "uploads.kind.message-document": "Chat file",
   "uploads.kind.studio_audio": "Studio audio",
@@ -1321,7 +1320,7 @@ export const settings: Catalog = {
   "mySubmissions.lead":
     "Everything you have submitted for someone to look at, and where each one stands. Answers land here and in your notifications. QueerPulse sends no email, so this page is where a decision stays once you have cleared the bell.",
   "mySubmissions.footNote":
-    "Only submissions that go to a review queue appear here. Posts, gatherings and listings you publish yourself go live straight away, so there is nothing to wait on.",
+    "Only submissions that go to a review queue appear here. Posts, events and listings you publish yourself go live straight away, so there is nothing to wait on.",
   "mySubmissions.emptyAll.title": "You have not sent anything in yet",
   "mySubmissions.emptyAll.description":
     "Apply to list an organisation as a partner, propose a swap on the skill exchange, or suggest an entry for the resources directory, and it will appear here with its answer.",
@@ -1384,7 +1383,7 @@ export const settings: Catalog = {
   // switch it qualifies.
   "notifications.reminderLead.title": "Remind me",
   "notifications.reminderLead.desc":
-    "How long before a gathering starts. Only applies while event reminders are on.",
+    "How long before an event starts. Only applies while event reminders are on.",
   "notifications.reminderLead.option.60": "An hour before",
   "notifications.reminderLead.option.1440": "A day before",
   "notifications.reminderLead.option.10080": "A week before",

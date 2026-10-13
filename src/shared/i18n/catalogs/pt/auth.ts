@@ -690,7 +690,7 @@ export const auth: Catalog = {
   "onboarding.stepNorms.norm.askBeforePhoto.title":
     "Pergunta antes de fotografar",
   "onboarding.stepNorms.norm.askBeforePhoto.desc":
-    "Nos convívios, pergunta sempre antes de fotografar outras pessoas, mesmo num espaço partilhado.",
+    "Nos eventos, pergunta sempre antes de fotografar outras pessoas, mesmo num espaço partilhado.",
   "onboarding.stepNorms.agree":
     "Li e concordo com as <guidelines>Diretrizes da Comunidade</guidelines>",
   "onboarding.stepNorms.readHint":
@@ -730,7 +730,7 @@ export const auth: Catalog = {
   "onboarding.stepWork.saveError":
     "Não conseguimos guardar isso agora. Tenta novamente.",
   "onboarding.intent.community": "Comunidade",
-  "onboarding.intent.gatherings": "Convívios e eventos",
+  "onboarding.intent.gatherings": "Eventos",
   "onboarding.intent.professional": "Conexões profissionais",
   "onboarding.intent.dating": "Namoro",
   "onboarding.intent.friendship": "Amizade",
@@ -766,7 +766,7 @@ export const auth: Catalog = {
   "onboarding.stepDone.cta": "Ir para o meu início",
   "onboarding.stepDone.notifications.title": "Fica a par de tudo",
   "onboarding.stepDone.notifications.desc":
-    "Recebe notificações de mensagens, convites e lembretes de convívios no teu telemóvel. Podes mudar isto a qualquer momento nas Definições.",
+    "Recebe notificações de mensagens, convites e lembretes de eventos no teu telemóvel. Podes mudar isto a qualquer momento nas Definições.",
   "onboarding.stepDone.stampFailed.title":
     "Não conseguimos guardar que terminaste",
   "onboarding.stepDone.stampFailed.desc":

@@ -159,7 +159,7 @@ export const marketing: Catalog = {
     "Um contexto católico em mudança, outras tradições, e as pessoas membras que conciliam fé e experiência queer. Ser laica também cabe aqui.",
   "about.linkModal.intersections.point.class.title": "Classe e economia.",
   "about.linkModal.intersections.point.class.body":
-    "A vida social queer carrega um carácter de classe que ninguém nomeia. A secção nomeia a subida de custos em Lisboa e o que fazemos quanto ao acesso: encontros com preço solidário, um fórum gratuito, e uma adesão que continua gratuita para quem não pode contribuir.",
+    "A vida social queer carrega um carácter de classe que ninguém nomeia. A secção nomeia a subida de custos em Lisboa e o que fazemos quanto ao acesso: eventos com preço solidário, um fórum gratuito, e uma adesão que continua gratuita para quem não pode contribuir.",
   "about.linkModal.intersections.cta":
     "Lê o guia completo de interseccionalidade",
 
@@ -379,7 +379,7 @@ export const marketing: Catalog = {
     "Aqui tens uma escada. Escolhe o degrau que corresponde ao que tens para dar este mês.",
   "activism.start.step1.title": "Aparece uma vez",
   "activism.start.step1.body":
-    "Vai a um convívio, uma vigília, uma reunião comunitária. A presença é o primeiro ato.",
+    "Vai a um evento, uma vigília, uma reunião comunitária. A presença é o primeiro ato.",
   "activism.start.step2.title": "Dá algumas horas",
   "activism.start.step2.body":
     "Escolhe um turno recorrente: uma linha de apoio, uma tarde de sensibilização, uma banca num evento.",
@@ -464,7 +464,7 @@ export const marketing: Catalog = {
   "coc.toc.changes": "Alterações",
   "coc.scope.title": "§01 <em>Âmbito</em>",
   "coc.scope.p1":
-    "Este Código aplica-se a tudo na QueerPulse (<strong>publicações, mensagens, convívios, comentários, perfis</strong>) e a conduta fora da plataforma quando afeta diretamente a segurança de outra pessoa aqui.",
+    "Este Código aplica-se a tudo na QueerPulse (<strong>publicações, mensagens, eventos, comentários, perfis</strong>) e a conduta fora da plataforma quando afeta diretamente a segurança de outra pessoa aqui.",
   "coc.scope.p2":
     "Aplica-se a todas as pessoas, <em>sem exceção</em>, incluindo fundadores, equipa e moderação.",
   "coc.scope.p3":
@@ -538,7 +538,7 @@ export const marketing: Catalog = {
     "Um período de arrefecimento, de dias a semanas, consoante a gravidade.",
   "coc.ladder.step4.title": "Remoção de um espaço",
   "coc.ladder.step4.body":
-    "Perda de acesso a um convívio, comunidade ou canal específico, enquanto o resto da plataforma continua aberto.",
+    "Perda de acesso a um evento, comunidade ou canal específico, enquanto o resto da plataforma continua aberto.",
   "coc.ladder.step5.title": "Remoção da QueerPulse",
   "coc.ladder.step5.body":
     "Reservado para violações graves ou repetidas. <em>Sempre revisível em recurso.</em>",
@@ -766,7 +766,7 @@ export const marketing: Catalog = {
   "guidelines.clause04.titlePre": "Mantém o espaço ",
   "guidelines.clause04.titleEm": "privado",
   "guidelines.clause04.p1":
-    "O que se partilha num convívio, num espaço de apoio, ou numa comunidade privada, fica lá, a menos que a pessoa diga o contrário.",
+    "O que se partilha num evento, num espaço de apoio, ou numa comunidade privada, fica lá, a menos que a pessoa diga o contrário.",
   "guidelines.clause04.p2":
     "Isto inclui capturas de ecrã. Pergunta antes de partilhares algo que veio de dentro da QueerPulse.",
   "guidelines.clause05.titlePre": "Repara para além do ",
@@ -831,7 +831,7 @@ export const marketing: Catalog = {
   // ── Ajuda ──────────────────────────────────────────────────────────────
   "help.meta.title": "Central de ajuda da QueerPulse: convites, segurança",
   "help.meta.description":
-    "Respostas às perguntas mais comuns sobre a QueerPulse: como funcionam os convites, gerir a tua conta, confirmações e convívios, denúncias e recursos, e escalões de adesão.",
+    "Respostas às perguntas mais comuns sobre a QueerPulse: como funcionam os convites, gerir a tua conta, confirmações e eventos, denúncias e recursos, e escalões de adesão.",
   "help.hero.eyebrow": "Ajuda",
   "help.hero.title": "Perguntas, <em>respondidas.</em>",
   "help.hero.sub": "Pesquisa abaixo, ou navega por tema.",
@@ -852,8 +852,8 @@ export const marketing: Catalog = {
   "help.category.gettingStarted.head": "Para <em>começar</em>",
   "help.category.account.label": "Conta",
   "help.category.account.head": "A tua <em>conta</em>",
-  "help.category.gatherings.label": "Convívios",
-  "help.category.gatherings.head": "<em>Convívios</em>",
+  "help.category.gatherings.label": "Eventos",
+  "help.category.gatherings.head": "<em>Eventos</em>",
   "help.category.safety.label": "Segurança",
   "help.category.safety.head": "<em>Segurança</em>",
   "help.category.membership.label": "Adesão",
@@ -868,7 +868,7 @@ export const marketing: Catalog = {
     "Configuras o teu perfil e a tua conta fica ativa de imediato: sem período de espera.",
   "help.qa.lisbonOnly.q": "A QueerPulse é só para quem vive em Lisboa?",
   "help.qa.lisbonOnly.a":
-    "Os convívios são em Lisboa, mas a adesão em si não está limitada por localização. Muitas pessoas participam à distância pela rede e pela revista.",
+    "Os eventos são em Lisboa, mas a adesão em si não está limitada por localização. Muitas pessoas participam à distância pela rede e pela revista.",
   "help.qa.free.q": "A QueerPulse é gratuita?",
   "help.qa.free.a": "Sim, a QueerPulse é gratuita para aderir e usar.",
   "help.qa.changeName.q": "Como mudo o meu nome ou pronomes?",
@@ -890,8 +890,8 @@ export const marketing: Catalog = {
     "Os níveis refletem há quanto tempo entraste na comunidade com um voto de confiança e a tua atividade. São um sinal de confiança, sem qualquer barreira de pagamento.",
   "help.qa.rsvp.q": "Como funcionam as confirmações de presença?",
   "help.qa.rsvp.a":
-    "Confirma na página do evento através do <calendarLink>calendário</calendarLink> ou do quadro de eventos. <strong>As vagas são limitadas</strong> na maioria dos convívios, por isso confirma cedo.",
-  "help.qa.hostGathering.q": "Posso organizar o meu próprio convívio?",
+    "Confirma na página do evento através do <calendarLink>calendário</calendarLink> ou do quadro de eventos. <strong>As vagas são limitadas</strong> na maioria dos eventos, por isso confirma cedo.",
+  "help.qa.hostGathering.q": "Posso organizar o meu próprio evento?",
   "help.qa.hostGathering.a":
     "Sim, vê o <hostLink>guia de organização</hostLink> para um passo a passo completo.",
   "help.qa.cantMakeIt.q":
@@ -1061,7 +1061,7 @@ export const marketing: Catalog = {
     "Quem a organiza diz olá e mostra-te tudo, para nunca começares do nada.",
   "communitiesAbout.how.belong.title": "Aparece e pertence",
   "communitiesAbout.how.belong.body":
-    "Entra na conversa, vai aos convívios e torna-te uma cara que as pessoas gostam de ver.",
+    "Entra na conversa, vai aos eventos e torna-te uma cara que as pessoas gostam de ver.",
   "communitiesAbout.outro.title": "A tua gente já está aqui.",
   "communitiesAbout.outro.sub":
     "Pede um convite e mostramos-te as comunidades que parecem casa.",
@@ -1115,7 +1115,7 @@ export const marketing: Catalog = {
   "privacy.whatWeCollect.activity.item2":
     "<strong>O que faz o chat funcionar</strong>: quem está numa conversa, confirmações de entrega e de leitura, reações, e quem bloqueaste. Quem está a escrever e quem está online não é guardado, existe apenas em tempo real.",
   "privacy.whatWeCollect.activity.item3":
-    "<strong>Confirmações e presenças em eventos</strong>, para os convívios poderem planear-se conforme o número de pessoas.",
+    "<strong>Confirmações e presenças em eventos</strong>, para os eventos poderem planear-se conforme o número de pessoas.",
   "privacy.whatWeCollect.activity.item4":
     "<strong>Uma localização geral</strong> que escolheres adicionar, uma cidade ou zona, e a área do mapa que exploras no diretório. Nunca lemos a localização precisa do teu dispositivo.",
   "privacy.whatWeCollect.activity.item5":
@@ -1136,7 +1136,7 @@ export const marketing: Catalog = {
   "privacy.howWeUse.intro": "Os teus dados só são usados para:",
   "privacy.howWeUse.item1": "Gerir a tua conta e manter a tua sessão segura",
   "privacy.howWeUse.item2":
-    "Mostrar-te convívios, comunidades e conteúdo relevantes para ti",
+    "Mostrar-te eventos, comunidades e conteúdo relevantes para ti",
   "privacy.howWeUse.item3":
     "Entregar as tuas mensagens, notificações e as conexões que crias",
   "privacy.howWeUse.item4":
@@ -1158,12 +1158,12 @@ export const marketing: Catalog = {
     "<strong>Mais ninguém.</strong> Nunca vendemos nem alugamos os teus dados a terceiros.",
   "privacy.retention.title": "Por quanto tempo guardamos",
   "privacy.retention.p1":
-    "O teu perfil, as tuas mensagens, as tuas publicações, as tuas conexões e os teus envios são guardados enquanto a tua conta estiver aberta. As tuas confirmações de presença também, para que um convívio a que foste continue no teu histórico e quem o organizou mantenha a sua contagem. O que desaparece sozinho são os detalhes de presença listados abaixo.",
+    "O teu perfil, as tuas mensagens, as tuas publicações, as tuas conexões e os teus envios são guardados enquanto a tua conta estiver aberta. As tuas confirmações de presença também, para que um evento a que foste continue no teu histórico e quem o organizou mantenha a sua contagem. O que desaparece sozinho são os detalhes de presença listados abaixo.",
   "privacy.retention.clearsHeading": "Coisas que desaparecem sozinhas",
   "privacy.retention.p3":
     "Estas acontecem automaticamente, faças alguma coisa ou não:",
   "privacy.retention.clears.gathering":
-    "<strong>O que disseste a quem organiza sobre necessidades de acesso ou alimentares, e o registo de que fizeste check-in</strong>: 30 dias depois do convívio. A tua confirmação de presença em si permanece, para que os convívios passados mantenham a sua contagem.",
+    "<strong>O que disseste a quem organiza sobre necessidades de acesso ou alimentares, e o registo de que fizeste check-in</strong>: 30 dias depois do evento. A tua confirmação de presença em si permanece, para que os eventos passados mantenham a sua contagem.",
   "privacy.retention.clears.notifications":
     "<strong>Notificações lidas</strong>: 90 dias. As não lidas ficam até as veres.",
   "privacy.retention.clears.push":
@@ -1186,7 +1186,7 @@ export const marketing: Catalog = {
   "privacy.retention.deleted.keptModeration":
     "<strong>Os registos de moderação</strong> permanecem, com o teu nome removido, para que eliminar uma conta não possa apagar o registo das denúncias que fizeste sobre outras pessoas.",
   "privacy.retention.deleted.keptContent":
-    "<strong>Conteúdo de que outras pessoas dependem</strong> permanece, como um convívio que estavas a organizar ou um anúncio que publicaste, com o teu nome removido.",
+    "<strong>Conteúdo de que outras pessoas dependem</strong> permanece, como um evento que estavas a organizar ou um anúncio que publicaste, com o teu nome removido.",
   "privacy.retention.beyondHeading": "O que guardamos para além da tua conta",
   "privacy.retention.beyond.body":
     "Os registos de moderação, os registos de consentimento e os registos dos pedidos de dados que fizeste são guardados como prova, com o teu nome removido sempre que é possível.",
@@ -1331,13 +1331,13 @@ export const marketing: Catalog = {
   "terms.content.magazineHeading": "Revista e submissões criativas",
   "terms.content.magazineBody":
     "Aplicam-se termos adicionais a propostas para a revista e submissões criativas. Vê as diretrizes de submissão quando propuseres algo.",
-  "terms.events.title": "Convívios e eventos",
+  "terms.events.title": "Eventos",
   "terms.events.p1":
-    "Os convívios são organizados por pessoas da comunidade e pela QueerPulse; cada um tem os seus próprios termos de presença e cancelamento, indicados na página do evento.",
+    "Os eventos são organizados por pessoas da comunidade e pela QueerPulse; cada um tem os seus próprios termos de presença e cancelamento, indicados na página do evento.",
   "terms.events.p2":
     "Os preços dos bilhetes em eventos de escala progressiva são definidos por quem organiza, dentro dos escalões exigidos pela plataforma. A QueerPulse não fica com nenhuma percentagem da receita dos bilhetes.",
   "terms.events.p3":
-    "Espera-se que sigas o Código de Conduta e quaisquer regras específicas do espaço em cada convívio.",
+    "Espera-se que sigas o Código de Conduta e quaisquer regras específicas do espaço em cada evento.",
   "terms.events.p4":
     "Quem organiza pode remover participantes que violem o Código de Conduta no seu evento, ao seu critério.",
   "terms.termination.title": "Cessação",
@@ -1355,7 +1355,7 @@ export const marketing: Catalog = {
   "terms.liability.p1":
     "A QueerPulse é fornecida “tal como está”. Trabalhamos para a manter a funcionar bem, mas não podemos garantir que esteja sempre disponível ou sem erros.",
   "terms.liability.p2":
-    "Não somos responsáveis pela conduta das pessoas nos convívios, embora levemos as denúncias a sério e ajamos sobre elas.",
+    "Não somos responsáveis pela conduta das pessoas nos eventos, embora levemos as denúncias a sério e ajamos sobre elas.",
   "terms.liability.p3":
     "Na medida permitida por lei, a nossa responsabilidade limita-se ao montante que nos pagaste nos últimos 12 meses, se algum.",
   "terms.liability.highlight":
@@ -1459,7 +1459,7 @@ export const marketing: Catalog = {
   "pressKit.facts.founded": "Fundada · Lisboa",
   "pressKit.facts.activeMembers": "Pessoas ativas hoje",
   "pressKit.facts.communities": "Comunidades na plataforma",
-  "pressKit.facts.gatherings": "Convívios realizados até agora",
+  "pressKit.facts.gatherings": "Eventos realizados até agora",
   "pressKit.facts.safeSpaces": "Espaços seguros verificados em Lisboa",
   "pressKit.facts.magazineIssues": "Edições da revista até hoje",
   "pressKit.coverage.section.title": "<em>Cobertura</em> recente",
@@ -2800,7 +2800,7 @@ export const marketing: Catalog = {
   "listBusiness.deleteFlow.losses.photos": "As fotos",
   "listBusiness.deleteFlow.losses.publicPage": "A página pública e o link dela",
   "listBusiness.deleteFlow.losses.gatheringsStay":
-    "Os encontros ligados ficam, mas sem o local associado.",
+    "Os eventos ligados ficam, mas sem o local associado.",
   "listBusiness.deleteFlow.losses.noUndo.owner":
     "Não há forma de desfazer e não fica nenhuma cópia.",
   "listBusiness.deleteFlow.losses.noUndo.moderator":
@@ -3495,11 +3495,11 @@ export const marketing: Catalog = {
   "changelog.releases.2026-10-12.headline":
     "Organiza com comunidades convidadas, filtra anúncios pelo que oferecem e ouve música no Studio.",
   "changelog.releases.2026-10-08.headline":
-    "Negócios sem loja já se podem listar, e editar um convívio ganhou um editor amplo e guiado.",
+    "Negócios sem loja já se podem listar, e editar um evento ganhou um editor amplo e guiado.",
   "changelog.releases.2026-10-07.headline":
     "Os negócios online têm o seu próprio formulário, e fazes o check-in das pessoas na gestão.",
   "changelog.releases.2026-10-06.headline":
-    "Concursos de financiamento e angariações, encontros reais para quem visita e o teu idioma contigo.",
+    "Concursos de financiamento e angariações, eventos reais para quem visita e o teu idioma contigo.",
   "changelog.releases.2026-10-05.headline":
     "As conversas que leste ficam lidas, etiquetas BIPOC nos espaços e um registo de cada ação da equipa.",
   "changelog.releases.2026-10-02.headline":
@@ -3531,15 +3531,15 @@ export const marketing: Catalog = {
   "changelog.releases.2026-09-12.headline":
     "O teu cartão Agora mostra o que a tua disponibilidade faz, e as fotos da ficha vêm dos teus ficheiros.",
   "changelog.releases.2026-09-11.headline":
-    "Quem organiza cria convívios em cinco capítulos curtos, e os guias ganham um editor completo.",
+    "Quem organiza cria eventos em cinco capítulos curtos, e os guias ganham um editor completo.",
   "changelog.releases.2026-09-10.headline":
     "Cada conversa pode ter o seu papel de parede, na cor que escolheres.",
   "changelog.releases.2026-09-09.headline":
-    "Os anfitriões gerem um encontro a partir da página dele, e o registo de alterações lê-se como lançamentos.",
+    "Os anfitriões gerem um evento a partir da página dele, e o registo de alterações lê-se como lançamentos.",
   "changelog.releases.2026-09-08.headline":
     "A biografia liga pessoas e lugares, e o menu de conta troca idioma e tema.",
   "changelog.releases.2026-09-06.headline":
-    "Habitação, mensagens, fórum, revista e encontros levam todos uma volta completa.",
+    "Habitação, mensagens, fórum, revista e eventos levam todos uma volta completa.",
   "changelog.releases.2026-09-03.headline":
     "A app instalada abre com um batimento direto no teu feed, e as páginas de comunidade cabem no telemóvel.",
   "changelog.releases.2026-09-01.headline":
@@ -3571,7 +3571,7 @@ export const marketing: Catalog = {
   "changelog.releases.2026-08-19.headline":
     "Os distintivos e níveis foram redesenhados, e os XP de Primeiros passos voltam a aparecer.",
   "changelog.releases.2026-08-18.headline":
-    "Escolhe quem vê o quê no teu perfil, reclama um anúncio do diretório, e adiciona encontros ao calendário.",
+    "Escolhe quem vê o quê no teu perfil, reclama um anúncio do diretório, e adiciona eventos ao calendário.",
   "changelog.releases.2026-08-14.headline":
     "Ganha XP, níveis e distintivos, reenquadra as tuas fotos, e acrescenta traduções a um poema.",
   "changelog.releases.2026-08-13.headline":
@@ -3597,7 +3597,7 @@ export const marketing: Catalog = {
   "changelog.releases.2026-07-29.headline":
     "Conversas de grupo, pesquisa de mensagens e GIFs chegam ao chat, e os eventos ganham uma casa só.",
   "changelog.releases.2026-07-28.headline":
-    "Os convívios ganham galerias de fotos, chegam as menções e as mensagens avisam-te no telemóvel.",
+    "Os eventos ganham galerias de fotos, chegam as menções e as mensagens avisam-te no telemóvel.",
   "changelog.releases.2026-07-25.headline":
     "Os subperfis ficam mais ricos, e as mensagens ganham edição, resposta e ações por toque longo.",
   "changelog.releases.2026-07-23.headline":
@@ -3699,17 +3699,17 @@ export const marketing: Catalog = {
   "changelog.entries.second-starred-item-stays.body":
     "Só o item em Destaque sai da sua secção. Qualquer outro item com estrela fica na tua página.",
   "changelog.entries.gathering-names-its-community.title":
-    "A página de um convívio diz com que comunidade é organizado",
+    "A página de um evento diz com que comunidade é organizado",
   "changelog.entries.gathering-names-its-community.body":
     "Aparece no cabeçalho e por baixo de quem organiza, com link. O nome de uma comunidade privada só aparece a quem é membro e a quem organiza.",
   "changelog.entries.hosting-with-a-community-is-for-its-team.title":
     "Só quem é dono, co-dono ou modera uma comunidade pode organizar com ela",
   "changelog.entries.hosting-with-a-community-is-for-its-team.body":
-    "Organizar com uma comunidade põe o nome dela no convívio, por isso o seletor só mostra comunidades que ajudas a gerir.",
+    "Organizar com uma comunidade põe o nome dela no evento, por isso o seletor só mostra comunidades que ajudas a gerir.",
   "changelog.entries.host-with-a-community-is-not-visibility.title":
     "Organizar com uma comunidade já não parece uma definição de visibilidade",
   "changelog.entries.host-with-a-community-is-not-visibility.body":
-    "O seletor diz agora Organizar com uma comunidade, e que isso não muda quem o pode ver. Um convívio Público também pode ter uma.",
+    "O seletor diz agora Organizar com uma comunidade, e que isso não muda quem o pode ver. Um evento Público também pode ter uma.",
   "changelog.entries.launch-films-and-marketing-videos.title":
     "Filmes de lançamento, feitos a partir da própria QueerPulse",
   "changelog.entries.launch-films-and-marketing-videos.body":
@@ -3820,9 +3820,9 @@ export const marketing: Catalog = {
     "O cartão de atualização mostra uma linha de progresso e recarrega sempre, mesmo num separador aberto com recarga forçada.",
   // 6 Oct 2026: linhas transitadas das análises (PRD-320, PRD-323, PRD-325, PRD-327, PRD-329, ENG-190).
   "changelog.entries.gathering-links-from-feed-open.title":
-    "As ligações para encontros no feed já abrem",
+    "As ligações para eventos no feed já abrem",
   "changelog.entries.gathering-links-from-feed-open.body":
-    "As ligações no feed e nas notificações abrem o encontro certo, incluindo os que já passaram, marcados como terminados.",
+    "As ligações no feed e nas notificações abrem o evento certo, incluindo os que já passaram, marcados como terminados.",
   "changelog.entries.new-member-cards-show-what-you-share.title":
     "Os cartões de novas pessoas mostram o que têm em comum",
   "changelog.entries.new-member-cards-show-what-you-share.body":
@@ -3844,14 +3844,14 @@ export const marketing: Catalog = {
   "changelog.entries.gathering-venue-fills-address.body":
     "Escolhe um sítio do diretório e a morada vem com ele, só tens de dizer como se entra.",
   "changelog.entries.gathering-cohosts-and-venue-stand-out.title":
-    "A coorganização tem etiqueta e o local ganha destaque num encontro",
+    "A coorganização tem etiqueta e o local ganha destaque num evento",
   "changelog.entries.gathering-cohosts-and-venue-stand-out.body":
     "Em Quem vai, a coorganização aparece marcada ao lado de quem organiza, e o nome do local abre o Como chegar em letra grande.",
   "changelog.entries.checkin-tab.title": "Faz o check-in a partir da gestão",
   "changelog.entries.checkin-tab.body":
     "Lê cartões seguidos, procura na lista toda e mantém o ecrã ligado no modo foco à porta.",
   "changelog.entries.manage-field-editors.title":
-    "Edita cada detalhe do encontro no seu próprio editor",
+    "Edita cada detalhe do evento no seu próprio editor",
   "changelog.entries.manage-field-editors.body":
     "Data, hora, capacidade e descrição abrem cada uma o seu editor, e mudar a data agora fica mesmo guardado.",
   "changelog.entries.film-preview-sound-at-once.title":
@@ -3871,7 +3871,7 @@ export const marketing: Catalog = {
   "changelog.entries.feed-holds-still-while-loading.body":
     "Os cartões semanais de novos membros que já vês ficam iguais ao fazer scroll, e quem aparece depois tem cartão próprio.",
   "changelog.entries.tag-people-in-gathering-descriptions.title":
-    "Marca membros e negócios na descrição dos convívios",
+    "Marca membros e negócios na descrição dos eventos",
   "changelog.entries.tag-people-in-gathering-descriptions.body":
     "Usa @ ou b/ ao escrever, e os membros e donos de negócios marcados recebem uma notificação de menção.",
   "changelog.entries.edit-notified-count.title":
@@ -3909,7 +3909,7 @@ export const marketing: Catalog = {
   "changelog.entries.out-and-about-access-questions.title":
     "Os negócios itinerantes têm as suas próprias perguntas de acesso",
   "changelog.entries.out-and-about-access-questions.body":
-    "Visitas e serviços ao domicílio respondem sobre o percurso, e os cartões dos convívios mostram quem os dinamiza.",
+    "Visitas e serviços ao domicílio respondem sobre o percurso, e os cartões dos eventos mostram quem os dinamiza.",
   "changelog.entries.suggested-people-reasons-line-up.title":
     "Os motivos em Pessoas que talvez conheças ficam alinhados",
   "changelog.entries.suggested-people-reasons-line-up.body":
@@ -3919,7 +3919,7 @@ export const marketing: Catalog = {
   "changelog.entries.tab-unread-count-clears.body":
     "Em algumas páginas o (1) ficava no título do separador depois de o sino esvaziar, até recarregares.",
   "changelog.entries.share-my-plans-in-the-header.title":
-    "Partilhar os meus planos sobe para o topo do convívio",
+    "Partilhar os meus planos sobe para o topo do evento",
   "changelog.entries.share-my-plans-in-the-header.body":
     "Quando vais, um ícone de escudo ao lado de Adicionar ao calendário envia os teus planos a alguém de confiança.",
   "changelog.entries.studio-v2.title":
@@ -3947,13 +3947,13 @@ export const marketing: Catalog = {
   "changelog.entries.forum-compose-fits-phones-unfollows-stick.body":
     "Escrever um post no fórum cabe no ecrã do telemóvel, e uma persona que deixas de seguir sai logo da tua lista.",
   "changelog.entries.calendar-entries-carry-description-and-host.title":
-    "As entradas de calendário trazem a descrição do convívio",
+    "As entradas de calendário trazem a descrição do evento",
   "changelog.entries.calendar-entries-carry-description-and-host.body":
     "As notas trazem a descrição, quem organiza e para que comunidades, antes da ligação.",
   "changelog.entries.community-menu-local-places.title":
     "Os espaços locais passam para o menu Comunidade",
   "changelog.entries.community-menu-local-places.body":
-    "O diretório e a Habitação estão em Convívios e lugares e os Parceiros em Pessoas, e a barra de topo tem menos um menu.",
+    "O diretório e a Habitação estão em Eventos e lugares e os Parceiros em Pessoas, e a barra de topo tem menos um menu.",
   "changelog.entries.marketing-flyers.title":
     "Flyers de eventos e ficheiros da t-shirt da equipa no Marketing do admin",
   "changelog.entries.marketing-flyers.body":
@@ -3963,15 +3963,15 @@ export const marketing: Catalog = {
   "changelog.entries.search-first-work-picker.body":
     '"O que fazes?" abre numa caixa de pesquisa, com todas as áreas arrumadas em 10 grupos para explorar.',
   "changelog.entries.taken-down-gatherings-off-venue-pages.title":
-    "Convívios retirados saem das páginas dos espaços",
+    "Eventos retirados saem das páginas dos espaços",
   "changelog.entries.taken-down-gatherings-off-venue-pages.body":
-    "Também deixam de contar para o selo que diz que um espaço acolhe convívios.",
+    "Também deixam de contar para o selo que diz que um espaço acolhe eventos.",
   "changelog.entries.settings-save-bar-on-phones.title":
     "A barra de guardar das Definições cabe no telemóvel",
   "changelog.entries.settings-save-bar-on-phones.body":
     "Fica longe do campo que acabaste de mudar, e os chips dos seletores têm a altura de um polegar no ecrã tátil.",
   "changelog.entries.guest-communities-on-gatherings.title":
-    "Organiza um convívio com outras comunidades",
+    "Organiza um evento com outras comunidades",
   "changelog.entries.guest-communities-on-gatherings.body":
     "Convida outras comunidades como convidadas: quando a equipa aceita, aparece na página delas e chega a quem as integra.",
   "changelog.entries.studio-v1.title": "Ouve e carrega música no Studio",
@@ -3994,15 +3994,15 @@ export const marketing: Catalog = {
   "changelog.entries.update-card-waits-for-member-pages.body":
     "Aparece no teu feed e nas outras páginas de membro, para nunca interromper o registo ou o início de sessão.",
   "changelog.entries.calendar-entries-link-to-the-gathering.title":
-    "Os eventos no calendário levam-te de volta ao convívio",
+    "Os eventos no calendário levam-te de volta ao evento",
   "changelog.entries.calendar-entries-link-to-the-gathering.body":
-    "Ao adicionares um convívio ao calendário, as notas do evento trazem o link dele no QueerPulse.",
+    "Ao adicionares um evento ao calendário, as notas do evento trazem o link dele no QueerPulse.",
   "changelog.entries.access-answers-lead-with-what-is-there.title":
     "A acessibilidade começa pelo que existe",
   "changelog.entries.access-answers-lead-with-what-is-there.body":
-    "O que está confirmado forma uma lista leve, as falhas ficam numa linha discreta e um encontro sem respostas esconde-a.",
+    "O que está confirmado forma uma lista leve, as falhas ficam numa linha discreta e um evento sem respostas esconde-a.",
   "changelog.entries.gathering-shows-community-avatar.title":
-    "Um convívio mostra o avatar da sua comunidade",
+    "Um evento mostra o avatar da sua comunidade",
   "changelog.entries.gathering-shows-community-avatar.body":
     "Em Organizado com, a imagem da própria comunidade substitui o ícone genérico sempre que existe uma.",
   "changelog.entries.listing-photo-buttons-easier-to-tap.title":
@@ -4016,13 +4016,13 @@ export const marketing: Catalog = {
   "changelog.entries.no-fixed-premises-listings.title":
     "Lista um negócio sem loja",
   "changelog.entries.no-fixed-premises-listings.body":
-    "Visitas guiadas e serviços ao domicílio dizem onde trabalham em Lisboa, e os convívios nomeiam o negócio que os dinamiza.",
+    "Visitas guiadas e serviços ao domicílio dizem onde trabalham em Lisboa, e os eventos nomeiam o negócio que os dinamiza.",
   "changelog.entries.listing-attributes.title":
     "Os anúncios mostram o que oferecem, e podes filtrar por isso",
   "changelog.entries.listing-attributes.body":
     "Quem gere um negócio marca o que se aplica e escolhe três para o cartão, e filtras por entrada, pagamento ou idioma.",
   "changelog.entries.wider-gathering-editor.title":
-    "Edita o teu convívio num editor mais amplo e guiado",
+    "Edita o teu evento num editor mais amplo e guiado",
   "changelog.entries.wider-gathering-editor.body":
     "Salta entre secções, vê o que mudou numa pré-visualização do cartão e recebe um aviso antes de perder alterações.",
   "changelog.entries.date-fields-keep-your-hour.title":
@@ -4030,7 +4030,7 @@ export const marketing: Catalog = {
   "changelog.entries.date-fields-keep-your-hour.body":
     "As setas passam das 11 da manhã ao meio-dia, escrever 12 mantém os dois dígitos e o Escape fecha só o calendário.",
   "changelog.entries.more-gathering-themes.title":
-    "Escolhe entre muitos mais temas para o teu convívio",
+    "Escolhe entre muitos mais temas para o teu evento",
   "changelog.entries.more-gathering-themes.body":
     "Os temas cobrem agora para quem é, a língua, o acesso e o ambiente, agrupados para encontrares os três certos.",
   "changelog.entries.checkin-guest-details.title":
@@ -4040,7 +4040,7 @@ export const marketing: Catalog = {
   "changelog.entries.listed-venue-address-open.title":
     "Vê a morada de um espaço listado antes de confirmares",
   "changelog.entries.listed-venue-address-open.body":
-    "Os convívios num negócio do diretório mostram a morada a toda a gente, tal como a página do negócio.",
+    "Os eventos num negócio do diretório mostram a morada a toda a gente, tal como a página do negócio.",
   "changelog.entries.smoother-checkin-moves.title":
     "Fazer ou desfazer um check-in mexe a pessoa com suavidade",
   "changelog.entries.smoother-checkin-moves.body":
@@ -4050,11 +4050,11 @@ export const marketing: Catalog = {
   "changelog.entries.smoother-focus-mode.body":
     "A lista de convidados desliza entre o seu lugar na página e o ecrã inteiro, enquanto a página se esbate atrás.",
   "changelog.entries.gathering-guest-preview.title":
-    "Vê o teu convívio como um convidado",
+    "Vê o teu evento como um convidado",
   "changelog.entries.gathering-guest-preview.body":
-    "Os anfitriões podem ver a página do convívio como um membro, alguém que vai ou alguém em lista de espera.",
+    "Os anfitriões podem ver a página do evento como um membro, alguém que vai ou alguém em lista de espera.",
   "changelog.entries.roomier-venue-editor.title":
-    "Escolhe o local de um encontro numa lista completa",
+    "Escolhe o local de um evento numa lista completa",
   "changelog.entries.roomier-venue-editor.body":
     "O editor de local abre largo, com os locais por perto à vista e uma linha para usares qualquer nome que escrevas.",
   "changelog.entries.bell-hide-keeps-notifications.title":
@@ -4070,7 +4070,7 @@ export const marketing: Catalog = {
   "changelog.entries.forum-replies-read-as-one-conversation.body":
     "As respostas agrupam-se pelo espaço e pelas linhas, Denunciar fica no menu e o editado aparece junto à data.",
   "changelog.entries.gathering-where-map.title":
-    "Os encontros mostram no mapa onde acontecem",
+    "Os eventos mostram no mapa onde acontecem",
   "changelog.entries.gathering-where-map.body":
     "No computador, o local aparece num mapa ao lado dos detalhes, com um botão que abre o caminho no Google Maps.",
   "changelog.entries.thread-mentions-read-as-names.title":
@@ -4096,13 +4096,13 @@ export const marketing: Catalog = {
   "changelog.entries.smooth-tab-switching.title":
     "Mudar de separador desliza em vez de saltar",
   "changelog.entries.smooth-tab-switching.body":
-    "O sublinhado desliza até ao separador que escolhes, e os painéis de Gerir um encontro entram desse lado.",
+    "O sublinhado desliza até ao separador que escolhes, e os painéis de Gerir um evento entram desse lado.",
   "changelog.entries.venue-change-opens-search.title":
     "Alterar um local ligado deixa-te escolher outro",
   "changelog.entries.venue-change-opens-search.body":
     "Carregar em Alterar em Editar local ou no assistente de criação abre a pesquisa no diretório, pronta a escrever.",
   "changelog.entries.manage-description-keeps-line-breaks.title":
-    "As descrições dos encontros mantêm as quebras de linha na gestão e no feed",
+    "As descrições dos eventos mantêm as quebras de linha na gestão e no feed",
   "changelog.entries.manage-description-keeps-line-breaks.body":
     "Os parágrafos e espaços aparecem no separador Visão geral e nos cartões do feed tal como os escreveste.",
   "changelog.entries.message-sound-plays-reliably.title":
@@ -4120,23 +4120,23 @@ export const marketing: Catalog = {
   "changelog.entries.lineup-invites.title":
     "Quem atua aceita o convite antes de aparecer no lineup",
   "changelog.entries.lineup-invites.body":
-    "Convidas as tuas ligações ou quem vai ao convívio, e a pessoa entra ou recusa a partir da notificação.",
+    "Convidas as tuas ligações ou quem vai ao evento, e a pessoa entra ou recusa a partir da notificação.",
   "changelog.entries.lineup-editor-in-manage.title":
-    "Quem vai já vê a lineup do convívio",
+    "Quem vai já vê a lineup do evento",
   "changelog.entries.lineup-editor-in-manage.body":
-    "Marcas quem atua em Gerir convívio, e a página do convívio mostra essas pessoas quando há alguém marcado.",
+    "Marcas quem atua em Gerir evento, e a página do evento mostra essas pessoas quando há alguém marcado.",
   "changelog.entries.date-pickers-take-keyboard-focus.title":
     "Seletores de data e ferramentas de anfitrião funcionam com o teclado",
   "changelog.entries.date-pickers-take-keyboard-focus.body":
     "Ao abrir um seletor de data ou o menu de anfitrião, o foco entra logo nele e as setas funcionam de imediato.",
   "changelog.entries.gathering-share-menu.title":
-    "Partilha convívios, comunidades, locais e artigos como quiseres",
+    "Partilha eventos, comunidades, locais e artigos como quiseres",
   "changelog.entries.gathering-share-menu.body":
     "Um só menu Partilhar: envia numa mensagem, no WhatsApp ou para outra app, ou copia uma mensagem pronta com o link.",
   "changelog.entries.events-browse-poster-cards.title":
     "Explorar eventos parece uma parede de cartazes",
   "changelog.entries.events-browse-poster-cards.body":
-    "O A seguir passa a ser um cartaz grande que podes guardar e cada convívio ganha um cartão com a data e quem vai.",
+    "O A seguir passa a ser um cartaz grande que podes guardar e cada evento ganha um cartão com a data e quem vai.",
   "changelog.entries.hidden-going-counts-stay-hidden.title":
     "Contagens escondidas ficam escondidas nas listas",
   "changelog.entries.hidden-going-counts-stay-hidden.body":
@@ -4146,17 +4146,17 @@ export const marketing: Catalog = {
   "changelog.entries.calendar-fits-every-month.body":
     "Os meses que começam a meio da semana já não fazem a grelha dos dias sair do cartão do calendário.",
   "changelog.entries.gathering-description-keeps-line-breaks.title":
-    "As descrições dos convívios mantêm os parágrafos",
+    "As descrições dos eventos mantêm os parágrafos",
   "changelog.entries.gathering-description-keeps-line-breaks.body":
     "As quebras de linha e os espaços que quem organiza escreve aparecem agora na página tal como foram escritos.",
   "changelog.entries.my-events-ended-greyed-at-bottom.title":
-    "Vê os convívios que já acabaram a cinzento, no fim de Os meus eventos",
+    "Vê os eventos que já acabaram a cinzento, no fim de Os meus eventos",
   "changelog.entries.my-events-ended-greyed-at-bottom.body":
-    "A página lê agora a data real, por isso um convívio que já acabou deixa de aparecer como próximo.",
+    "A página lê agora a data real, por isso um evento que já acabou deixa de aparecer como próximo.",
   "changelog.entries.gathering-live-card-sits-straight.title":
-    "Pré-visualização direita quando o teu convívio fica no ar",
+    "Pré-visualização direita quando o teu evento fica no ar",
   "changelog.entries.gathering-live-card-sits-straight.body":
-    'O cartão ao lado de "O teu convívio está no ar" fica agora direito, tal como aparece no quadro.',
+    'O cartão ao lado de "O teu evento está no ar" fica agora direito, tal como aparece no quadro.',
   "changelog.entries.film-preview-full-screen.title":
     "Vê os filmes de marketing em ecrã inteiro",
   "changelog.entries.film-preview-full-screen.body":
@@ -4170,9 +4170,9 @@ export const marketing: Catalog = {
   "changelog.entries.spending-lines-split-into-items.body":
     "Os admins listam o que cada linha de despesa cobre, como alojamento e ferramentas de IA, e a discriminação pública soma tudo.",
   "changelog.entries.feed-gatherings-show-their-photo.title":
-    "Os encontros no feed mostram a foto",
+    "Os eventos no feed mostram a foto",
   "changelog.entries.feed-gatherings-show-their-photo.body":
-    "Um encontro com foto de capa abre o cartão no feed com ela, e cada cartão tem um só botão de Detalhes.",
+    "Um evento com foto de capa abre o cartão no feed com ela, e cada cartão tem um só botão de Detalhes.",
   "changelog.entries.feed-cards-keep-their-column.title":
     "Os cartões do feed ficam no lugar quando um se abre",
   "changelog.entries.feed-cards-keep-their-column.body":
@@ -4209,7 +4209,7 @@ export const marketing: Catalog = {
   "changelog.entries.sober-page-lists-what-exists.title":
     "A página Sóbrie mostra só o que existe",
   "changelog.entries.sober-page-lists-what-exists.body":
-    "Os encontros de exemplo, as inscrições e as etiquetas de espaços saíram, e ainda podes propor organizar um.",
+    "Os eventos de exemplo, as inscrições e as etiquetas de espaços saíram, e ainda podes propor organizar um.",
 
   "changelog.entries.sexual-health-guide-in-portuguese.title":
     "Guia de saúde sexual em português",
@@ -4257,9 +4257,9 @@ export const marketing: Catalog = {
     "As datas da Privacidade, dos Termos e do registo de alterações aparecem agora em português.",
 
   "changelog.entries.homepage-shows-real-gatherings.title":
-    "Quem visita vê encontros e histórias reais",
+    "Quem visita vê eventos e histórias reais",
   "changelog.entries.homepage-shows-real-gatherings.body":
-    "A equipa pode destacar encontros públicos e histórias publicadas na página inicial para quem ainda não entrou.",
+    "A equipa pode destacar eventos públicos e histórias publicadas na página inicial para quem ainda não entrou.",
   "changelog.entries.group-join-shows-your-standing.title":
     "Os grupos de habitação mostram o estado do teu pedido",
   "changelog.entries.group-join-shows-your-standing.body":
@@ -4343,7 +4343,7 @@ export const marketing: Catalog = {
   "changelog.entries.invite-pickers-search-every-connection.title":
     "Os convites procuram em todas as tuas conexões",
   "changelog.entries.invite-pickers-search-every-connection.body":
-    "Grupos, convívios, personas, comunidades, listagens e posts no fórum procuram agora em todas as tuas conexões.",
+    "Grupos, eventos, personas, comunidades, listagens e posts no fórum procuram agora em todas as tuas conexões.",
   "changelog.entries.own-messages-stay-yours-after-rename.title":
     "As tuas mensagens ficam do teu lado depois de mudares o nome de utilizador",
   "changelog.entries.own-messages-stay-yours-after-rename.body":
@@ -4353,7 +4353,7 @@ export const marketing: Catalog = {
   "changelog.entries.inbox-no-stale-selection-on-phones.body":
     "A caixa de entrada só marca a conversa aberta quando a lista e a conversa estão lado a lado, para nunca parecer por ler.",
   "changelog.entries.gathering-page-shows-cover.title":
-    "As páginas dos convívios mostram a foto de capa",
+    "As páginas dos eventos mostram a foto de capa",
   "changelog.entries.gathering-page-shows-cover.body":
     "A foto que quem organiza carregou abre agora a página como um banner largo por cima do título, também no telemóvel.",
   "changelog.entries.admin-listing-offers-search-members.title":
@@ -4385,19 +4385,19 @@ export const marketing: Catalog = {
   "changelog.entries.admin-menu-clears-status-bar.body":
     "Na app instalada, as barras de topo ficavam por baixo da hora e da bateria; agora começam abaixo delas.",
   "changelog.entries.hosts-are-going-to-their-own-gathering.title":
-    "Quem organiza já vai ao próprio convívio",
+    "Quem organiza já vai ao próprio evento",
   "changelog.entries.hosts-are-going-to-their-own-gathering.body":
-    "Criar um convívio guarda o teu lugar, e a página mostra um painel de organização com acesso a Gerir.",
+    "Criar um evento guarda o teu lugar, e a página mostra um painel de organização com acesso a Gerir.",
   "changelog.entries.cohost-picker-reaches-every-connection.title":
     "Adicionar pessoa coanfitriã chega agora a todas as tuas conexões",
   "changelog.entries.cohost-picker-reaches-every-connection.body":
     "Escrever um nome pesquisa todas as tuas conexões, e o que escreveste fica quando escolhes outra pessoa.",
   "changelog.entries.gathering-goes-live-screen.title":
-    "Um novo ecrã de celebração quando o teu convívio fica no ar",
+    "Um novo ecrã de celebração quando o teu evento fica no ar",
   "changelog.entries.gathering-goes-live-screen.body":
     "O teu cartão aterra ao lado de um painel mais largo, o visto desenha-se sozinho e a partilha fica junto ao título.",
   "changelog.entries.edit-gathering-capacity.title":
-    "Muda a capacidade de um convívio depois de publicar",
+    "Muda a capacidade de um evento depois de publicar",
   "changelog.entries.edit-gathering-capacity.body":
     "Editar detalhes tem agora o seletor de capacidade, e se a aumentares, quem está na lista de espera sobe.",
   "changelog.entries.gathering-invite-reaches-every-connection.title":
@@ -4409,17 +4409,17 @@ export const marketing: Catalog = {
   "changelog.entries.share-kit-story-preview-calendar-picker.body":
     "Adicionar ao calendário tem Google, Outlook e Yahoo, e a imagem para story aparece primeiro com Descarregar e Partilhar.",
   "changelog.entries.gathering-review-step.title":
-    "Uma última revisão antes de o teu encontro ir para o ar",
+    "Uma última revisão antes de o teu evento ir para o ar",
   "changelog.entries.gathering-review-step.body":
     "Um sexto passo mostra tudo o que definiste, com Editar em cada parte, e o botão Publicar passa para lá.",
   "changelog.entries.no-connect-to-yourself.title":
-    "O teu próprio encontro já não te propõe ligares-te a ti",
+    "O teu próprio evento já não te propõe ligares-te a ti",
   "changelog.entries.no-connect-to-yourself.body":
     "Quando és tu a organizar, o painel de RSVP deixa de mostrar o botão de contacto com a pessoa anfitriã.",
   "changelog.entries.gathering-preview-stays-whole.title":
-    "A pré-visualização do encontro mantém a altura toda",
+    "A pré-visualização do evento mantém a altura toda",
   "changelog.entries.gathering-preview-stays-whole.body":
-    "Em ecrãs mais baixos, a pré-visualização ao lado de um novo encontro já não encolhe até ao título.",
+    "Em ecrãs mais baixos, a pré-visualização ao lado de um novo evento já não encolhe até ao título.",
   "changelog.entries.update-card-version-every-deploy.title":
     "O cartão de atualização mostra sempre a versão",
   "changelog.entries.update-card-version-every-deploy.body":
@@ -4513,7 +4513,7 @@ export const marketing: Catalog = {
   "changelog.entries.safer-report-forms.body":
     "Denúncias sobre uma comunidade vão agora direto para a moderação da plataforma, que age de forma independente dos donos.",
   "changelog.entries.takedowns-reach-everywhere.title":
-    "Um encontro retirado deixa de lembrar quem se inscreveu",
+    "Um evento retirado deixa de lembrar quem se inscreveu",
   "changelog.entries.takedowns-reach-everywhere.body":
     "Também sai dos calendários subscritos, e uma oportunidade de voluntariado removida desaparece das listas.",
   "changelog.entries.my-reports-show-what.title":
@@ -4621,7 +4621,7 @@ export const marketing: Catalog = {
   "changelog.entries.go-together-sturdier.title":
     "Os grupos do Vamos juntes aguentam-se melhor",
   "changelog.entries.go-together-sturdier.body":
-    "Os grupos nunca passam de cinco, sair depois do início mantém a revelação e convívios apagados fecham as conversas.",
+    "Os grupos nunca passam de cinco, sair depois do início mantém a revelação e eventos apagados fecham as conversas.",
   "changelog.entries.notifications-sync-across-screens.title":
     "As notificações ficam sincronizadas entre ecrãs",
   "changelog.entries.notifications-sync-across-screens.body":
@@ -4743,9 +4743,9 @@ export const marketing: Catalog = {
   "changelog.entries.notification-boundaries-hold.body":
     "Fotos ocultas, pessoas bloqueadas e palavras removidas ficam fora do sino, das menções e da exportação de dados.",
   "changelog.entries.gathering-reminders-follow-settings.title":
-    "Os lembretes de convívios seguem as tuas definições",
+    "Os lembretes de eventos seguem as tuas definições",
   "changelog.entries.gathering-reminders-follow-settings.body":
-    "Os lembretes respeitam o teu interruptor e as pré-visualizações ocultas, nomeiam o convívio e abrem-no na tua língua.",
+    "Os lembretes respeitam o teu interruptor e as pré-visualizações ocultas, nomeiam o evento e abrem-no na tua língua.",
   "changelog.entries.notification-bell-reads-unread-count.title":
     "Os leitores de ecrã ouvem quantas estão por ler",
   "changelog.entries.notification-bell-reads-unread-count.body":
@@ -4982,9 +4982,9 @@ export const marketing: Catalog = {
   "changelog.entries.profile-actions-toolbar.body":
     "Editar, pré-visualizar e o menu ficam no canto superior direito no computador, e numa linha sob o teu nome no telemóvel.",
   "changelog.entries.go-together.title":
-    "Vamos juntes: entra num pequeno grupo quando vais a um convívio a sós",
+    "Vamos juntes: entra num pequeno grupo quando vais a um evento a sós",
   "changelog.entries.go-together.body":
-    "Responde a um questionário curto, entra num convívio e chega com 4 ou 5 pessoas com quem tens afinidade.",
+    "Responde a um questionário curto, entra num evento e chega com 4 ou 5 pessoas com quem tens afinidade.",
   "changelog.entries.friendly-businesses-keep-their-listing.title":
     "Os negócios que acolhem pessoas LGBTQ+ mantêm o seu anúncio",
   "changelog.entries.friendly-businesses-keep-their-listing.body":
@@ -5238,7 +5238,7 @@ export const marketing: Catalog = {
   "changelog.entries.persona-creator-handoff.body":
     "Quem partilha a persona há mais tempo passa a ser responsável, e as ligações antigas levam ao novo endereço.",
   "changelog.entries.gathering-page-header-toolbar.title":
-    "Ações mais arrumadas na página de um convívio",
+    "Ações mais arrumadas na página de um evento",
   "changelog.entries.gathering-page-header-toolbar.body":
     "Guardar, calendário e partilhar são ícones junto ao título, e quem organiza tem editar, cancelar e eliminar num só menu.",
   "changelog.entries.document-upload-thumbnails.title":
@@ -5511,7 +5511,7 @@ export const marketing: Catalog = {
   "changelog.entries.tap-what-is-missing-to-go-straight-to-it.body":
     "Cada linha da lista é um botão que desliza até ao campo, põe lá o cursor e destaca-o por um momento.",
   "changelog.entries.the-gathering-wizard-says-what-it-needs.title":
-    "O assistente de convívios diz o que precisa",
+    "O assistente de eventos diz o que precisa",
   "changelog.entries.the-gathering-wizard-says-what-it-needs.body":
     "Cada etapa abre a dizer se é obrigatória ou opcional, e uma lista por cima de Continuar mostra o que ainda falta.",
   "changelog.entries.bio-mentions-read-as-names.title":
@@ -5825,9 +5825,9 @@ export const marketing: Catalog = {
   "changelog.entries.reposition-a-photo-you-already-uploaded.body":
     "Cada foto em As tuas fotos ganha um botão para a aproximar e mover sem a voltares a carregar.",
   "changelog.entries.edit-a-gatherings-care-and-rsvps-after-publishing.title":
-    "Edita os cuidados e as confirmações de um convívio já publicado",
+    "Edita os cuidados e as confirmações de um evento já publicado",
   "changelog.entries.edit-a-gatherings-care-and-rsvps-after-publishing.body":
-    "As confirmações podem fechar quando o convívio começa, e os convívios que se repetem mantêm a hora quando os relógios mudam.",
+    "As confirmações podem fechar quando o evento começa, e os eventos que se repetem mantêm a hora quando os relógios mudam.",
   "changelog.entries.calendars-open-in-front-of-dialogs.title":
     "Os calendários abrem à frente das janelas",
   "changelog.entries.calendars-open-in-front-of-dialogs.body":
@@ -5841,7 +5841,7 @@ export const marketing: Catalog = {
   "changelog.entries.guide-editor-workspace.body":
     "Formatação, pré-visualização ao vivo, cartões, ligações para onde cada guia aparece e rascunhos guardados no navegador.",
   "changelog.entries.create-a-gathering-in-five-short-chapters.title":
-    "Cria um convívio em cinco capítulos curtos, com pré-visualização ao vivo",
+    "Cria um evento em cinco capítulos curtos, com pré-visualização ao vivo",
   "changelog.entries.create-a-gathering-in-five-short-chapters.body":
     "Agora podes juntar regras da casa, avisos de conteúdo, temas, perguntas ao confirmar presença e um prazo para confirmar.",
   "changelog.entries.the-landing-page-drops-the-bottom-bar-for-visitors.title":
@@ -5897,11 +5897,11 @@ export const marketing: Catalog = {
   "changelog.entries.housing-explains-itself-before-the-door.body":
     "Sem sessão iniciada, o botão de alojamento da página inicial abre o que é, em vez do ecrã de entrada.",
   "changelog.entries.pick-the-gathering-you-actually-want-to-host.title":
-    "Escolhe o convívio que queres mesmo organizar",
+    "Escolhe o evento que queres mesmo organizar",
   "changelog.entries.pick-the-gathering-you-actually-want-to-host.body":
     "Nove tipos e cinquenta e seis formatos substituem os oito antigos, e agora o formato já define um tamanho sensato e faz as suas próprias perguntas.",
   "changelog.entries.a-gathering-can-run-past-midnight.title":
-    "Um convívio pode passar da meia-noite",
+    "Um evento pode passar da meia-noite",
   "changelog.entries.a-gathering-can-run-past-midnight.body":
     "Diz quando o teu acaba, mesmo que seja às quatro da manhã ou três dias depois.",
   "changelog.entries.the-changelog-reads-as-releases.title":
@@ -5909,9 +5909,9 @@ export const marketing: Catalog = {
   "changelog.entries.the-changelog-reads-as-releases.body":
     "Cada dia é um lançamento com versão, título, destaques e entradas agrupadas por tipo, que podes abrir e fechar.",
   "changelog.entries.run-your-gathering-from-its-own-page.title":
-    "Gere o teu encontro a partir da página dele",
+    "Gere o teu evento a partir da página dele",
   "changelog.entries.run-your-gathering-from-its-own-page.body":
-    "Uma faixa de anfitrião por baixo do RSVP deixa-te editar, cancelar ou apagar o encontro onde estás.",
+    "Uma faixa de anfitrião por baixo do RSVP deixa-te editar, cancelar ou apagar o evento onde estás.",
   "changelog.entries.a-persona-page-is-one-colour-again.title":
     "As páginas de persona abrem na cor certa",
   "changelog.entries.a-persona-page-is-one-colour-again.body":
@@ -5999,11 +5999,11 @@ export const marketing: Catalog = {
   "changelog.entries.reporting-without-an-account.title":
     "Denunciar sem ter conta",
   "changelog.entries.reporting-without-an-account.body":
-    "Enviar uma denúncia sem sessão falhava; agora funciona a partir das páginas de segurança, de um anúncio, encontro ou perfil.",
+    "Enviar uma denúncia sem sessão falhava; agora funciona a partir das páginas de segurança, de um anúncio, evento ou perfil.",
   "changelog.entries.report-from-where-you-are.title":
     "Denuncia a partir de onde encontras o problema",
   "changelog.entries.report-from-where-you-are.body":
-    "Um encontro pode ser denunciado na própria página sem entrares na lista; oportunidades e perfis também têm denúncia.",
+    "Um evento pode ser denunciado na própria página sem entrares na lista; oportunidades e perfis também têm denúncia.",
   "changelog.entries.a-receipt-when-you-report.title":
     "Um comprovativo assim que denuncias",
   "changelog.entries.a-receipt-when-you-report.body":
@@ -6091,7 +6091,7 @@ export const marketing: Catalog = {
   "changelog.entries.hiding-your-photo-now-holds-everywhere.title":
     "Desligar a tua foto passa a valer em todo o lado",
   "changelog.entries.hiding-your-photo-now-holds-everywhere.body":
-    "Mostrar a tua foto passa por uma única verificação em mensagens, encontros, conexões, cartões de membro e página pública.",
+    "Mostrar a tua foto passa por uma única verificação em mensagens, eventos, conexões, cartões de membro e página pública.",
   "changelog.entries.someone-you-blocked-can-no-longer-vouch-for-you.title":
     "Quem bloqueaste já não te pode dar voto de confiança",
   "changelog.entries.someone-you-blocked-can-no-longer-vouch-for-you.body":
@@ -6165,9 +6165,9 @@ export const marketing: Catalog = {
   "changelog.entries.the-communities-home-tab-shows-your-real-week.body":
     "A vista geral lê das tuas comunidades: o que foi publicado, o que vem aí e o que está à tua espera.",
   "changelog.entries.you-can-see-a-communitys-gatherings-before-you-join.title":
-    "Já podes ver os convívios de uma comunidade antes de entrares",
+    "Já podes ver os eventos de uma comunidade antes de entrares",
   "changelog.entries.you-can-see-a-communitys-gatherings-before-you-join.body":
-    "Os convívios abertos veem-se de fora; o que a comunidade reserva a quem é membro continua reservado, e a página diz-to.",
+    "Os eventos abertos veem-se de fora; o que a comunidade reserva a quem é membro continua reservado, e a página diz-to.",
   "changelog.entries.communities-can-set-a-mark-and-a-welcome-note.title":
     "As comunidades podem ter uma marca e uma nota de boas-vindas",
   "changelog.entries.communities-can-set-a-mark-and-a-welcome-note.body":
@@ -6235,7 +6235,7 @@ export const marketing: Catalog = {
   "changelog.entries.content-settings-actually-filter-your-feed.title":
     "As definições de conteúdo em Interesses já funcionam",
   "changelog.entries.content-settings-actually-filter-your-feed.body":
-    "Desligar encontros, saúde mental, ou sexualidade e identidade esconde essas comunidades do teu feed; o acesso fica igual.",
+    "Desligar eventos, saúde mental, ou sexualidade e identidade esconde essas comunidades do teu feed; o acesso fica igual.",
   "changelog.entries.you-can-stop-being-suggested-to-strangers.title":
     "Podes deixar de ser sugerido a quem não conheces",
   "changelog.entries.you-can-stop-being-suggested-to-strangers.body":
@@ -6249,9 +6249,9 @@ export const marketing: Catalog = {
   "changelog.entries.answer-a-connection-request-where-you-read-it.body":
     "O perfil oferece aceitar, a notificação traz aceitar e recusar, e o que escreveste vai contigo para a conversa.",
   "changelog.entries.a-gathering-tells-you-when-it-is-nearly-full.title":
-    "Um convívio pode avisar-te quando faltam poucos lugares",
+    "Um evento pode avisar-te quando faltam poucos lugares",
   "changelog.entries.a-gathering-tells-you-when-it-is-nearly-full.body":
-    "Para convívios guardados ou com talvez, podes pedir um aviso quando faltam lugares; desligado por defeito, cala-se se abrir.",
+    "Para eventos guardados ou com talvez, podes pedir um aviso quando faltam lugares; desligado por defeito, cala-se se abrir.",
   "changelog.entries.blocked-and-muted-in-one-place.title":
     "Pessoas bloqueadas e silenciadas na mesma lista",
   "changelog.entries.blocked-and-muted-in-one-place.body":
@@ -6354,7 +6354,7 @@ export const marketing: Catalog = {
   "changelog.tag.settings": "Definições de notificações",
   "changelog.tag.privacySettings": "Abrir as tuas definições de privacidade",
   "changelog.tag.messages": "Abrir mensagens",
-  "changelog.tag.createGathering": "Criar um convívio",
+  "changelog.tag.createGathering": "Criar um evento",
   "changelog.tag.startCommunity": "Começar uma comunidade",
   "changelog.tag.communities": "Ver comunidades",
   "changelog.tag.subprofiles": "Ver subperfis",
@@ -6367,7 +6367,7 @@ export const marketing: Catalog = {
   "changelog.tag.forum": "Visitar o fórum",
   "changelog.tag.sessions": "Vê as tuas sessões ativas",
   "changelog.tag.profile": "Abrir o teu perfil",
-  "changelog.tag.gatherings": "Ver encontros",
+  "changelog.tag.gatherings": "Ver eventos",
   "changelog.tag.members": "Conhecer os membros",
   "changelog.tag.events": "Abrir o Events Hub",
   "changelog.tag.roadmap": "Abrir o roteiro",
@@ -6431,13 +6431,13 @@ export const marketing: Catalog = {
   "changelog.entries.the-housing-board-is-open.body":
     "Quartos e casas anunciados por membros chegam ao quadro depois de moderação, e o teu anúncio mostra-te a decisão e o motivo.",
   "changelog.entries.gatherings-say-where-and-what-they-cost.title":
-    "Os convívios dizem onde são e quanto custam",
+    "Os eventos dizem onde são e quanto custam",
   "changelog.entries.gatherings-say-where-and-what-they-cost.body":
     "A morada, as indicações de chegada, o bairro e a acessibilidade ficam guardados e à vista; a morada exata chega a quem vai.",
   "changelog.entries.hosts-run-their-own-door.title":
     "Quem organiza controla a própria porta",
   "changelog.entries.hosts-run-their-own-door.body":
-    "Avisa quem vai, regista entradas à porta, vê as necessidades de acesso partilhadas, e impede alguém num convívio.",
+    "Avisa quem vai, regista entradas à porta, vê as necessidades de acesso partilhadas, e impede alguém num evento.",
   "changelog.entries.the-safe-space-badge-has-a-mechanism.title":
     "O selo de espaço seguro passa a valer o que a página diz",
   "changelog.entries.the-safe-space-badge-has-a-mechanism.body":
@@ -6449,11 +6449,11 @@ export const marketing: Catalog = {
   "changelog.entries.a-venue-is-asked-before-it-hosts-you.title":
     "O espaço é consultado antes de te receber",
   "changelog.entries.a-venue-is-asked-before-it-hosts-you.body":
-    "Indicar um negócio como espaço consulta quem é dono, que confirma ou retira; até lá o convívio fica fora da página pública.",
+    "Indicar um negócio como espaço consulta quem é dono, que confirma ou retira; até lá o evento fica fora da página pública.",
   "changelog.entries.arriving-points-at-real-things.title":
     "Chegar a Lisboa aponta para coisas reais",
   "changelog.entries.arriving-points-at-real-things.body":
-    "A página para quem chegou mostra convívios reais, espaços e comunidades reais, e uma lista das primeiras duas semanas.",
+    "A página para quem chegou mostra eventos reais, espaços e comunidades reais, e uma lista das primeiras duas semanas.",
   "changelog.entries.what-you-send-in-now-gets-an-answer.title":
     "O que envias passa a ter resposta",
   "changelog.entries.what-you-send-in-now-gets-an-answer.body":
@@ -6519,9 +6519,9 @@ export const marketing: Catalog = {
   "changelog.entries.notification-previews-stay-hidden-on-iphone.body":
     "Esconder as pré-visualizações viaja com a tua conta, a notificação sai já sem conteúdo, e vem ligada por omissão.",
   "changelog.entries.leaving-no-longer-deletes-other-peoples-gatherings.title":
-    "Sair já não apaga os encontros de outras pessoas",
+    "Sair já não apaga os eventos de outras pessoas",
   "changelog.entries.leaving-no-longer-deletes-other-peoples-gatherings.body":
-    "Apagar uma conta apagava os seus encontros; um futuro passa a quem co-organiza ou é cancelado com aviso a quem ia.",
+    "Apagar uma conta apagava os seus eventos; um futuro passa a quem co-organiza ou é cancelado com aviso a quem ia.",
   "changelog.entries.a-new-device-signing-in-tells-you.title":
     "Ficas a saber quando um novo dispositivo inicia sessão",
   "changelog.entries.a-new-device-signing-in-tells-you.body":
@@ -6685,7 +6685,7 @@ export const marketing: Catalog = {
   "changelog.entries.share-card-shows-your-own-gathering.title":
     "O cart\u00e3o de partilha de um conv\u00edvio mostra agora esse conv\u00edvio",
   "changelog.entries.share-card-shows-your-own-gathering.body":
-    "O cartão mostra o convívio que estás a gerir, com título, data, local e foto de capa; Copiar dá-te o link público.",
+    "O cartão mostra o evento que estás a gerir, com título, data, local e foto de capa; Copiar dá-te o link público.",
   "changelog.entries.place-page-reads-in-one-piece.title":
     "A p\u00e1gina de um espa\u00e7o passa a ler-se como um todo",
   "changelog.entries.place-page-reads-in-one-piece.body":
@@ -7109,7 +7109,7 @@ export const marketing: Catalog = {
   "changelog.entries.community-pulse-and-insights.title":
     "As comunidades já mostram os seus eventos, discussões e oportunidades de voluntariado reais",
   "changelog.entries.community-pulse-and-insights.body":
-    "O separador Eventos lista os convívios reais, a barra lateral mostra discussões recentes, e quem gere tem um painel novo.",
+    "O separador Eventos lista os eventos reais, a barra lateral mostra discussões recentes, e quem gere tem um painel novo.",
   "changelog.entries.onboarding-identity-and-notifications.title":
     "A configuração inicial já pergunta pronomes e preferências de notificação",
   "changelog.entries.onboarding-identity-and-notifications.body":
@@ -7155,16 +7155,16 @@ export const marketing: Catalog = {
   "changelog.entries.article-editor-header-and-send-on.body":
     "A barra fica encostada ao topo do ecrã, e “Enviar” avança mesmo a peça para a fase editorial seguinte.",
   "changelog.entries.gathering-rsvp-fix.title":
-    "Confirmar presença nos encontros já funciona",
+    "Confirmar presença nos eventos já funciona",
   "changelog.entries.gathering-rsvp-fix.body":
     "“Eu vou” confirma logo, com uma notificação e a opção Cancelar presença no mesmo sítio.",
   "changelog.entries.add-to-calendar-modal.title":
-    "Adiciona encontros ao teu calendário",
+    "Adiciona eventos ao teu calendário",
   "changelog.entries.add-to-calendar-modal.body":
     "Um seletor oferece o Google Calendar ou um ficheiro .ics compatível com o Apple Calendar, o Outlook e a maioria das apps.",
   "changelog.entries.recognition-xp.title": "Ganha XP, níveis e crachás",
   "changelog.entries.recognition-xp.body":
-    "A lista de primeiros passos, comunidades, encontros e conexões dão experiência; acompanha na página de Crachás.",
+    "A lista de primeiros passos, comunidades, eventos e conexões dão experiência; acompanha na página de Crachás.",
 
   "changelog.entries.governance-editable-finances.title":
     "Valores financeiros editáveis, com indicação da origem de cada número",
@@ -7233,47 +7233,47 @@ export const marketing: Catalog = {
     "Em Pessoas Convidadas, remover alguém liberta o lugar, e Promover traz alguém da lista de espera, fora de ordem se quiseres.",
 
   "changelog.entries.myevents-calendar-feed-subscribe.title":
-    "Subscreve os teus convívios no Google ou Apple Calendar",
+    "Subscreve os teus eventos no Google ou Apple Calendar",
   "changelog.entries.myevents-calendar-feed-subscribe.body":
-    "“Subscrever o teu feed” em Os Meus Convívios copia um link privado que mantém o Google ou Apple Calendar atualizado.",
+    "“Subscrever o teu feed” em Os Meus Eventos copia um link privado que mantém o Google ou Apple Calendar atualizado.",
 
   "changelog.entries.gatherings-recap-more-from-host.title":
-    "Os resumos passam a apontar para mais convívios da mesma pessoa anfitriã",
+    "Os resumos passam a apontar para mais eventos da mesma pessoa anfitriã",
   "changelog.entries.gatherings-recap-more-from-host.body":
-    "A página de resumo mostra outros convívios futuros da mesma pessoa anfitriã, para marcares o próximo a partir dali.",
+    "A página de resumo mostra outros eventos futuros da mesma pessoa anfitriã, para marcares o próximo a partir dali.",
 
   "changelog.entries.myevents-rsvp-actions-real.title":
-    "As ações em Os Meus Convívios já atualizam mesmo a tua inscrição",
+    "As ações em Os Meus Eventos já atualizam mesmo a tua inscrição",
   "changelog.entries.myevents-rsvp-actions-real.body":
     "Talvez, vou, aceitar ou recusar um convite, e sair de uma lista de espera passam a escrever na tua inscrição real.",
 
   "changelog.entries.myevents-block-host-real.title":
-    '"Bloquear a pessoa anfitriã" em Os Meus Convívios já bloqueia mesmo',
+    '"Bloquear a pessoa anfitriã" em Os Meus Eventos já bloqueia mesmo',
   "changelog.entries.myevents-block-host-real.body":
-    "A opção de bloquear no menu de um cartão de convívio usa o mesmo bloqueio de todo o resto da QueerPulse.",
+    "A opção de bloquear no menu de um cartão de evento usa o mesmo bloqueio de todo o resto da QueerPulse.",
 
   "changelog.entries.myevents-reminder-indicator-honest.title":
-    "O sino de lembrete nos cartões de convívio passa a ser um estado",
+    "O sino de lembrete nos cartões de evento passa a ser um estado",
   "changelog.entries.myevents-reminder-indicator-honest.body":
     "Os lembretes vão para todas as pessoas que vão ou talvez vão, com a antecedência que definires em Preferências.",
 
   "changelog.entries.gatherings-edit-date-time-fix.title":
-    "Editar a data e hora de um convívio já o reagenda mesmo",
+    "Editar a data e hora de um evento já o reagenda mesmo",
   "changelog.entries.gatherings-edit-date-time-fix.body":
     "O campo de data em Editar detalhes guarda uma data real, e todas as pessoas com inscrição são notificadas da mudança.",
 
   "changelog.entries.gatherings-cancelled-page-real-content.title":
-    "A página de um convívio cancelado já mostra o convívio real",
+    "A página de um evento cancelado já mostra o evento real",
   "changelog.entries.gatherings-cancelled-page-real-content.body":
-    "O aviso de cancelamento mostra o título, a data, a pessoa anfitriã e o local reais do convívio cancelado.",
+    "O aviso de cancelamento mostra o título, a data, a pessoa anfitriã e o local reais do evento cancelado.",
 
   "changelog.entries.gatherings-cohost-roster-visible.title":
     "Quem organiza já vê quem já está a coanfitrionar",
   "changelog.entries.gatherings-cohost-roster-visible.body":
-    "O painel de pessoas coanfitriãs no painel de gestão lista quem já coanfitria o teu convívio.",
+    "O painel de pessoas coanfitriãs no painel de gestão lista quem já coanfitria o teu evento.",
 
   "changelog.entries.gatherings-remove-pricing-step.title":
-    "Removido o passo de preços ao criar um convívio",
+    "Removido o passo de preços ao criar um evento",
   "changelog.entries.gatherings-remove-pricing-step.body":
     "A QueerPulse não processa pagamentos, por isso o passo de preços de bilhetes saiu do assistente de criação.",
 
@@ -7520,7 +7520,7 @@ export const marketing: Catalog = {
   "changelog.entries.feed-connections-tab.title":
     'Novo separador "Conexões" no teu feed',
   "changelog.entries.feed-connections-tab.body":
-    "Publicações, tópicos do fórum e convívios das tuas conexões, tudo num só lugar na barra de separadores do feed.",
+    "Publicações, tópicos do fórum e eventos das tuas conexões, tudo num só lugar na barra de separadores do feed.",
 
   "changelog.entries.connections-report-now-files.title":
     "Corrigido: denunciar uma conexão agora envia mesmo a denúncia",
@@ -7573,7 +7573,7 @@ export const marketing: Catalog = {
     "Marca uma publicação do quadro como encontrada, indica a pronúncia do teu nome, escreve a bio em português e abre o teu QR.",
 
   "changelog.entries.gathering-venue-directory-link.title":
-    "Liga o espaço de um encontro à sua ficha no diretório local",
+    "Liga o espaço de um evento à sua ficha no diretório local",
   "changelog.entries.gathering-venue-directory-link.body":
     "Ao definires o espaço, podes pesquisar o diretório local e escolher um negócio real, e o nome liga à sua ficha.",
   "changelog.entries.add-to-calendar-picker-redesign.title":
@@ -7640,7 +7640,7 @@ export const marketing: Catalog = {
     "O quadro termina com a faixa de fecho acolhedora do site, com formas rápidas de anunciar o teu espaço ou perguntar no fórum.",
 
   "changelog.entries.gathering-audience-scope.title":
-    "Escolhe quem pode ver o teu convívio",
+    "Escolhe quem pode ver o teu evento",
   "changelog.entries.gathering-audience-scope.body":
     "Define até onde chega: toda a QueerPulse, quem as tuas conexões conhecem, as tuas conexões, uma comunidade ou só por convite.",
 
@@ -7659,7 +7659,7 @@ export const marketing: Catalog = {
   "changelog.entries.feed-avatar-to-profile.title":
     "Toca na foto de alguém no feed para abrir o perfil",
   "changelog.entries.feed-avatar-to-profile.body":
-    "Funciona em publicações, notas de nova pessoa, tópicos do fórum e cartões de convívio.",
+    "Funciona em publicações, notas de nova pessoa, tópicos do fórum e cartões de evento.",
   "changelog.entries.affirming-housing-baseline.title":
     "Todas as casas e todos os colegas de casa aqui são afirmativos LGBTQ+, agora é o padrão",
   "changelog.entries.affirming-housing-baseline.body":
@@ -7753,9 +7753,9 @@ export const marketing: Catalog = {
     "Cobre o Iniciar sessão com o Google, as notificações push, os dados de localização e mensagens, e os serviços que usamos.",
 
   "changelog.entries.gatherings-manage-rsvp-recap-live.title":
-    "Organizar um encontro já funciona a sério",
+    "Organizar um evento já funciona a sério",
   "changelog.entries.gatherings-manage-rsvp-recap-live.body":
-    "Presença e lista de espera no próprio encontro; quem organiza edita, cancela, vê quem vem, junta co-anfitriões e põe fotos.",
+    "Presença e lista de espera no próprio evento; quem organiza edita, cancela, vê quem vem, junta co-anfitriões e põe fotos.",
 
   "changelog.entries.coop-template-portuguese.title":
     "Os modelos para formar uma cooperativa já falam português",
@@ -7785,7 +7785,7 @@ export const marketing: Catalog = {
   "changelog.entries.public-profile-eligibility-live.title":
     "Perfis públicos que podes mesmo conquistar.",
   "changelog.entries.public-profile-eligibility-live.body":
-    "O progresso segue textos publicados, encontros que organizaste, votos de confiança, recomendações e o tempo que apareceste.",
+    "O progresso segue textos publicados, eventos que organizaste, votos de confiança, recomendações e o tempo que apareceste.",
 
   "changelog.entries.public-profile-eligibility-tracker.title":
     "Um caminho mais claro para o perfil público.",
@@ -8438,9 +8438,9 @@ export const marketing: Catalog = {
     "Contactos, candidaturas a bolsas e painéis e nomeações de espaços seguros guardam o que escreves para a equipa.",
 
   "changelog.entries.save-events-for-later.title":
-    "Guarda convívios para mais tarde",
+    "Guarda eventos para mais tarde",
   "changelog.entries.save-events-for-later.body":
-    "Toca em Guardar em qualquer convívio; tudo o que guardas aparece no separador Guardados em Os Meus Eventos.",
+    "Toca em Guardar em qualquer evento; tudo o que guardas aparece no separador Guardados em Os Meus Eventos.",
 
   "changelog.entries.collections-are-here.title":
     "Agrupa o que guardas em coleções",
@@ -8474,7 +8474,7 @@ export const marketing: Catalog = {
   "changelog.entries.community-activity-in-your-feed.title":
     "O teu feed mostra agora o que se passa nas tuas comunidades",
   "changelog.entries.community-activity-in-your-feed.body":
-    "Publicações, anúncios, convívios, tópicos e quem se juntou chegam ao feed; partilha um convívio ou tópico numa comunidade.",
+    "Publicações, anúncios, eventos, tópicos e quem se juntou chegam ao feed; partilha um evento ou tópico numa comunidade.",
 
   "changelog.entries.assignable-staff-roles.title":
     "A administração já pode atribuir funções da equipa da revista",
@@ -8486,7 +8486,7 @@ export const marketing: Catalog = {
   "changelog.entries.feed-scroll-no-longer-sticks.title":
     "O teu feed volta a rolar sem prender",
   "changelog.entries.feed-scroll-no-longer-sticks.body":
-    "Rolar com o rato ou trackpad sobre o feed, notificações, membros e convívios podia prender; agora rola como deve ser.",
+    "Rolar com o rato ou trackpad sobre o feed, notificações, membros e eventos podia prender; agora rola como deve ser.",
 
   "changelog.entries.fresh-feed-card-layout.title":
     "Um visual renovado para o teu feed",
@@ -8549,7 +8549,7 @@ export const marketing: Catalog = {
   "changelog.entries.community-page-polish.title":
     "Uma página de comunidade mais acolhedora",
   "changelog.entries.community-page-polish.body":
-    "Podes partilhá-la, sair pede confirmação, Eventos mostra todos os próximos convívios, e mudar de separador atualiza o link.",
+    "Podes partilhá-la, sair pede confirmação, Eventos mostra todos os próximos eventos, e mudar de separador atualiza o link.",
 
   "changelog.entries.job-application-status.title":
     "Vê em que ponto estão as tuas candidaturas",
@@ -8707,7 +8707,7 @@ export const marketing: Catalog = {
   "changelog.entries.save-events-communities.title":
     "Guarda eventos e comunidades, e guardados que ficam mesmo guardados",
   "changelog.entries.save-events-communities.body":
-    "O mesmo marcador guarda um convívio ou uma comunidade na tua coleção, e guardar empregos e curtas-metragens fica guardado.",
+    "O mesmo marcador guarda um evento ou uma comunidade na tua coleção, e guardar empregos e curtas-metragens fica guardado.",
   "changelog.entries.invite-revoke-oversight.title":
     "Recupera um convite que enviaste",
   "changelog.entries.invite-revoke-oversight.body":
@@ -8751,7 +8751,7 @@ export const marketing: Catalog = {
   "changelog.entries.launch-hardening-p1.title":
     "Reforço de segurança, honestidade e fiabilidade",
   "changelog.entries.launch-hardening-p1.body":
-    "Bloquear trava mensagens, presença, escrita e notificações e esconde o teu perfil; alterações num convívio atualizam logo.",
+    "Bloquear trava mensagens, presença, escrita e notificações e esconde o teu perfil; alterações num evento atualizam logo.",
   "changelog.entries.remove-listings-from-moderation.title":
     "Moderadores podem remover listagens do diretório",
   "changelog.entries.remove-listings-from-moderation.body":
@@ -8849,9 +8849,9 @@ export const marketing: Catalog = {
     "O sino cobre RSVPs, respostas, pedidos de entrada, candidaturas, avaliações, convites aceites e denúncias resolvidas.",
 
   "changelog.entries.gathering-create-fix.title":
-    "Criar um convívio volta a funcionar, e leva-te ao teu evento",
+    "Criar um evento volta a funcionar, e leva-te ao teu evento",
   "changelog.entries.gathering-create-fix.body":
-    "O sucesso só aparece depois de publicar, Ver o teu evento abre o convívio real, e o assistente exige um início no futuro.",
+    "O sucesso só aparece depois de publicar, Ver o teu evento abre o evento real, e o assistente exige um início no futuro.",
   "changelog.entries.directory-collapsible-filters.title":
     "Filtros mais arrumados no diretório de espaços",
   "changelog.entries.directory-collapsible-filters.body":
@@ -9048,7 +9048,7 @@ export const marketing: Catalog = {
 
   "changelog.entries.events-hub.title": "Uma casa só para os eventos",
   "changelog.entries.events-hub.body":
-    "Eventos, Encontros e Calendário são um único Events Hub com Destaques, Explorar e calendário completo, e fotos reais.",
+    "Eventos e Calendário são um único Events Hub com Destaques, Explorar e calendário completo, e fotos reais.",
 
   "changelog.entries.gifs-in-chat.title": "Envia GIFs no chat",
   "changelog.entries.gifs-in-chat.body":
@@ -9085,7 +9085,7 @@ export const marketing: Catalog = {
     "A caixa ocupa toda a largura do compositor e cresce à medida que escreves; tocar num emoji já usado remove a tua reação.",
   "changelog.entries.chat-mentions.title": "Menciona pessoas e lugares no chat",
   "changelog.entries.chat-mentions.body":
-    "Escreve @ para um membro, ou c/ b/ e/ t/ # para comunidade, negócio, encontro, tópico ou tema, e escolhe uma sugestão.",
+    "Escreve @ para um membro, ou c/ b/ e/ t/ # para comunidade, negócio, evento, tópico ou tema, e escolhe uma sugestão.",
   "changelog.entries.group-chats.title": "Conversas de grupo",
   "changelog.entries.group-chats.body":
     "Cria e nomeia um grupo; os administradores gerem membros, os recibos mostram quem leu e uma bolha mostra quem escreve.",
@@ -9160,7 +9160,7 @@ export const marketing: Catalog = {
     "As reações aparecem de imediato para todos na conversa, e as tuas mensagens mantêm a posição quando reages.",
   "changelog.entries.event-photos.title": "Galerias de fotos de eventos",
   "changelog.entries.event-photos.body":
-    "Quem organiza e quem participou pode partilhar fotos num encontro, visíveis apenas para quem lá esteve.",
+    "Quem organiza e quem participou pode partilhar fotos num evento, visíveis apenas para quem lá esteve.",
   "changelog.entries.mentions.title": "Menciona pessoas e comunidades",
   "changelog.entries.mentions.body":
     "Escreve @ para etiquetar um membro ou c/ para ligar uma comunidade nas respostas; quem mencionas recebe uma notificação.",
@@ -10029,7 +10029,7 @@ export const marketing: Catalog = {
   "directory.ownedBy.migrant": "Negócio de pessoas migrantes",
   "directory.card.badge.openLate": "Aberto até tarde",
   "directory.card.badge.openSundays": "Aberto ao domingo",
-  "directory.card.badge.hostsGatherings": "Organiza encontros",
+  "directory.card.badge.hostsGatherings": "Organiza eventos",
   "directory.card.online": "Online",
   "directory.card.visit": "Visitar",
   "directory.card.onlineIn": "Online · {city}",
@@ -10767,7 +10767,7 @@ export const marketing: Catalog = {
     "A ILGA Portugal tem uma linha de apoio para discriminação, violência e crise, e pode encaminhar-te para apoio jurídico. Guarda o número no telemóvel enquanto está tudo calmo.",
   "arriving.checklist.steps.crisis.linkLabel": "ilga-portugal.pt",
   "arriving.checklist.steps.gathering.title":
-    "Ir a um encontro nas primeiras duas semanas",
+    "Ir a um evento nas primeiras duas semanas",
   "arriving.checklist.steps.gathering.note":
     "Ler sobre uma cidade é uma coisa diferente de estar numa sala dela. Uma noite muda a sensação do mês inteiro.",
   "arriving.checklist.steps.gathering.linkLabel": "O que aí vem",
@@ -10888,14 +10888,14 @@ export const marketing: Catalog = {
   "arriving.firstStep.eventMeta": "{hood} · {time}",
   "arriving.firstStep.loading": "A carregar o que aí vem",
   "arriving.firstStep.error":
-    "A lista de encontros não carregou agora. Tenta outra vez daqui a pouco.",
+    "A lista de eventos não carregou agora. Tenta outra vez daqui a pouco.",
   "arriving.firstStep.retry": "Tentar outra vez",
   "arriving.firstStep.empty":
-    "Não há nada no calendário neste momento. Aparecem encontros novos quase todas as semanas, por isso vale a pena voltar em breve.",
-  "arriving.firstStep.emptyCta": "Ver a página de encontros",
-  "arriving.firstStep.allCta": "Ver todos os encontros",
+    "Não há nada no calendário neste momento. Aparecem eventos novos quase todas as semanas, por isso vale a pena voltar em breve.",
+  "arriving.firstStep.emptyCta": "Ver a página de eventos",
+  "arriving.firstStep.allCta": "Ver todos os eventos",
   "arriving.firstStep.locked":
-    "O calendário de encontros vive dentro da QueerPulse. Quem é membro vê o que há esta semana e diz que vai.",
+    "O calendário de eventos vive dentro da QueerPulse. Quem é membro vê o que há esta semana e diz que vai.",
   "arriving.firstStep.lockedCta": "Pedir um convite",
 
   // ── Comunidades. Comunidades reais, da mesma fonte que a grelha de
@@ -10914,7 +10914,7 @@ export const marketing: Catalog = {
 
   "arriving.outro.title": "Vamos conhecer <em>a comunidade?</em>",
   "arriving.outro.sub":
-    "Pede um convite para a QueerPulse e ganha acesso à rede completa: pessoas, encontros, o quadro, e tudo o resto nesta página.",
+    "Pede um convite para a QueerPulse e ganha acesso à rede completa: pessoas, eventos, o quadro, e tudo o resto nesta página.",
   "arriving.outro.cta": "Pedir um convite",
 
   // ── Vistos & Residência — conteúdo jurídico/imigração. Traduzido com o
@@ -11767,7 +11767,7 @@ export const marketing: Catalog = {
   "changelog.entries.an-empty-browse-stops-blaming-your-filters.title":
     "Um Explorar vazio deixa de culpar os teus filtros",
   "changelog.entries.an-empty-browse-stops-blaming-your-filters.body":
-    "Com filtros ligados, um Explorar vazio aponta as datas, o bairro e o tipo de convívio que podes alargar.",
+    "Com filtros ligados, um Explorar vazio aponta as datas, o bairro e o tipo de evento que podes alargar.",
 
   "changelog.entries.one-row-of-tabs-on-events.title":
     "Uma só linha de separadores nos Eventos",
@@ -11792,12 +11792,12 @@ export const marketing: Catalog = {
   "changelog.entries.three-icons-leave-the-events-header.title":
     "Três ícones saem do cabeçalho dos eventos",
   "changelog.entries.three-icons-leave-the-events-header.body":
-    "Roda dentada, sino e lupa saíram; fica o nome da página, o alternador Os meus eventos e Descobrir, e Organizar um convívio.",
+    "Roda dentada, sino e lupa saíram; fica o nome da página, o alternador Os meus eventos e Descobrir, e Organizar um evento.",
 
   "changelog.entries.browse-events-gets-the-same-refine.title":
     "Explorar eventos ganha o mesmo Refinar",
   "changelog.entries.browse-events-gets-the-same-refine.body":
-    "O quadro do Descobrir ganha um campo de pesquisa e um Refinar com quando, bairro, tipo de encontro e custo.",
+    "O quadro do Descobrir ganha um campo de pesquisa e um Refinar com quando, bairro, tipo de evento e custo.",
 
   "changelog.entries.your-events-filters-fold-away.title":
     "Os filtros dos teus eventos recolhem-se",
@@ -11889,7 +11889,7 @@ export const marketing: Catalog = {
   "changelog.entries.what-we-said-we-would-delete-gets-deleted.title":
     "O que dissemos que apagávamos passa a ser apagado",
   "changelog.entries.what-we-said-we-would-delete-gets-deleted.body":
-    "Acesso, notas alimentares e check-ins apagam-se 30 dias após o encontro; a presença fica, as exportações expiram em 7.",
+    "Acesso, notas alimentares e check-ins apagam-se 30 dias após o evento; a presença fica, as exportações expiram em 7.",
   "changelog.entries.reporting-says-why-it-is-slowing-you-down.title":
     "As denúncias dizem porque te estão a travar",
   "changelog.entries.reporting-says-why-it-is-slowing-you-down.body":
@@ -12132,7 +12132,7 @@ export const marketing: Catalog = {
   "accessibilityStatement.legal.microenterprise":
     "<strong>A isenção das microempresas.</strong> O artigo 2.º, n.º 5, alínea b) diz que o decreto-lei não se aplica às microempresas que prestam os serviços previstos no n.º 3. Uma microempresa, na definição que o decreto-lei vai buscar à Diretiva, emprega menos de 10 pessoas e tem um volume de negócios anual ou um balanço total anual não superior a 2 milhões de euros.",
   "accessibilityStatement.legal.p2":
-    "A bilhética paga nos encontros é uma questão de produto ainda em aberto. Se o QueerPulse alguma vez vender fosse o que fosse, passa plausivelmente a ser um serviço de comércio eletrónico ao abrigo do artigo 2.º, n.º 3, alínea g). O artigo 13.º, n.º 2, alínea b) passaria então a pedir-nos que explicássemos publicamente, por escrito e oralmente, de que forma o serviço cumpre os requisitos de acessibilidade aplicáveis, a menos que a isenção das microempresas continuasse a cobrir-nos. Escrevemos isto como um sinal para irmos verificar, e não fazemos nenhuma previsão sobre qual seria a resposta.",
+    "A bilhética paga nos eventos é uma questão de produto ainda em aberto. Se o QueerPulse alguma vez vender fosse o que fosse, passa plausivelmente a ser um serviço de comércio eletrónico ao abrigo do artigo 2.º, n.º 3, alínea g). O artigo 13.º, n.º 2, alínea b) passaria então a pedir-nos que explicássemos publicamente, por escrito e oralmente, de que forma o serviço cumpre os requisitos de acessibilidade aplicáveis, a menos que a isenção das microempresas continuasse a cobrir-nos. Escrevemos isto como um sinal para irmos verificar, e não fazemos nenhuma previsão sobre qual seria a resposta.",
   "accessibilityStatement.legal.p3":
     "A declaração de acessibilidade em que a maior parte das pessoas pensa vem de outra lei. A Diretiva sobre a Acessibilidade da Web, a (UE) 2016/2102, transposta cá pelo Decreto-Lei n.º 83/2018, vincula os organismos do setor público. O QueerPulse não é um deles.",
   "accessibilityStatement.legal.disclaimerLabel":
@@ -12293,7 +12293,7 @@ export const marketing: Catalog = {
   "changelog.entries.message-a-business-without-leaving.body":
     "Antes de escreveres, a ficha diz-te se a pessoa responsável está contactável e se já lhe escreveste hoje.",
   "changelog.entries.remove-a-photo-from-a-gathering-album.title":
-    "Podes remover uma foto do álbum de um encontro",
+    "Podes remover uma foto do álbum de um evento",
   "changelog.entries.remove-a-photo-from-a-gathering-album.body":
     "Quem a publicou ou quem organiza pode removê-la por teclado ou por toque, e o ficheiro é apagado do armazenamento.",
   "changelog.entries.your-own-jobs-and-a-way-to-correct-them.title":
@@ -12411,7 +12411,7 @@ export const marketing: Catalog = {
   "changelog.entries.housing-filters-fold-away-until-you-need-them.title":
     "Os filtros de casas ficam recolhidos at\u00e9 precisares deles",
   "changelog.entries.housing-filters-fold-away-until-you-need-them.body":
-    "Um botão Refinar esconde-os, como nos encontros; o que aplicaste aparece em etiquetas, e cada uma retira o seu filtro.",
+    "Um botão Refinar esconde-os, como nos eventos; o que aplicaste aparece em etiquetas, e cada uma retira o seu filtro.",
   "changelog.entries.empty-category-filters-can-no-longer-be-picked.title":
     "Os filtros de categoria sem nada por tr\u00e1s ficam inativos",
   "changelog.entries.empty-category-filters-can-no-longer-be-picked.body":
@@ -12429,7 +12429,7 @@ export const marketing: Catalog = {
   "changelog.entries.deep-links-no-longer-flash-the-homepage.body":
     "Cada página carrega numa moldura vazia e define o próprio título e descrição, por isso a antevisão descreve-a bem.",
   "changelog.entries.report-one-photo-not-the-whole-gathering.title":
-    "Podes denunciar uma foto, e não o encontro inteiro",
+    "Podes denunciar uma foto, e não o evento inteiro",
   "changelog.entries.report-one-photo-not-the-whole-gathering.body":
     "Cada foto do álbum tem o seu botão de denúncia, com outing e exposição de dados no topo, porque chegam à fila de uma hora.",
   "changelog.entries.report-one-landlord-warning.title":
@@ -12529,7 +12529,7 @@ export const marketing: Catalog = {
   "changelog.entries.published-pieces-now-reach-your-feed.title":
     "As peças publicadas chegam agora ao teu feed",
   "changelog.entries.published-pieces-now-reach-your-feed.body":
-    "Os artigos juntam-se às publicações, tópicos e encontros no teu feed, no teu idioma; os de quem bloqueaste ficam fora.",
+    "Os artigos juntam-se às publicações, tópicos e eventos no teu feed, no teu idioma; os de quem bloqueaste ficam fora.",
   "changelog.entries.blocks-and-mutes-now-apply-under-magazine-articles.title":
     "Os bloqueios e os silenciamentos passam a valer nos artigos da revista",
   "changelog.entries.blocks-and-mutes-now-apply-under-magazine-articles.body":
@@ -12553,34 +12553,34 @@ export const marketing: Catalog = {
 
   // ── Deep-scan section 6 (Gatherings), built 2026-09-06 ────────────────────
   "changelog.entries.your-reminder-and-cancellation-links-now-open-the-gathering.title":
-    "Os links de lembrete e de cancelamento abrem agora o encontro",
+    "Os links de lembrete e de cancelamento abrem agora o evento",
   "changelog.entries.your-reminder-and-cancellation-links-now-open-the-gathering.body":
-    "Lembretes, cancelamentos e entradas de calendário abrem o encontro, no telemóvel e no Google ou Apple Calendar.",
+    "Lembretes, cancelamentos e entradas de calendário abrem o evento, no telemóvel e no Google ou Apple Calendar.",
 
   "changelog.entries.online-gatherings-now-have-a-join-link.title":
-    "Os encontros online passam a ter link de entrada",
+    "Os eventos online passam a ter link de entrada",
   "changelog.entries.online-gatherings-now-have-a-join-link.body":
     "O assistente pede o link de vídeo e partilha-o com quem vai, como uma morada, nunca na página pública.",
 
   "changelog.entries.a-cancelled-gathering-now-says-so.title":
-    "Um encontro cancelado passa a dizê-lo",
+    "Um evento cancelado passa a dizê-lo",
   "changelog.entries.a-cancelled-gathering-now-says-so.body":
     "Diz que foi cancelado onde quer que o encontres, o botão de confirmação desaparece, e quem tem convite é avisado.",
 
   "changelog.entries.maybe-add-to-calendar-and-your-details-on-the-gathering-itself.title":
-    "Talvez, adicionar ao calendário e os teus detalhes, na própria página do encontro",
+    "Talvez, adicionar ao calendário e os teus detalhes, na própria página do evento",
   "changelog.entries.maybe-add-to-calendar-and-your-details-on-the-gathering-itself.body":
     "Marca-te como talvez, adiciona a data ao calendário, e diz a quem organiza que levas mais alguém ou precisas de acesso.",
 
   "changelog.entries.choose-when-your-gathering-reminder-arrives.title":
-    "Escolhe quando chega o lembrete do encontro",
+    "Escolhe quando chega o lembrete do evento",
   "changelog.entries.choose-when-your-gathering-reminder-arrives.body":
     "Escolhe uma hora antes, um dia antes ou uma semana antes; as definições de notificações só tinham um interruptor.",
 
   "changelog.entries.hosts-can-run-a-gathering-again-and-take-the-door-list-offline.title":
-    "Quem organiza pode repetir um encontro e levar a lista da porta offline",
+    "Quem organiza pode repetir um evento e levar a lista da porta offline",
   "changelog.entries.hosts-can-run-a-gathering-again-and-take-the-door-list-offline.body":
-    "Duplicar convívio preenche o assistente com um encontro passado, e Exportar na lista de presenças descarrega um ficheiro.",
+    "Duplicar evento preenche o assistente com um evento passado, e Exportar na lista de presenças descarrega um ficheiro.",
 
   // Section 5 of the 2026-09-05 deep scan: forum, feed and saved items.
   "changelog.tag.saved": "Abrir as tuas coleções",
@@ -12669,7 +12669,7 @@ export const marketing: Catalog = {
 
   // Uno reverse sticker art, 22 Sep 2026.
   "changelog.entries.hosts-can-delete-a-gathering-from-manage.title":
-    "Quem organiza pode eliminar um convívio no Gerir",
+    "Quem organiza pode eliminar um evento no Gerir",
   "changelog.entries.hosts-can-delete-a-gathering-from-manage.body":
     "As Definições têm agora um botão Eliminar ao lado de Cancelar, com a mesma confirmação e regra de cancelar primeiro.",
   "changelog.entries.uno-reverse-stickers-look-like-the-real-card.title":

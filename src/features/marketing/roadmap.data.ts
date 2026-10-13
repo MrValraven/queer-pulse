@@ -82,8 +82,8 @@ export const HERO_STATS: HeroStatDTO[] = [
 export const SHIPPED: ShippedItem[] = [
   {
     id: "gathering-dashboard",
-    category: "Gatherings",
-    name: "Gathering dashboard",
+    category: "Events",
+    name: "Event dashboard",
     description:
       "Live check-in and attendance management for hosts, including QR scanning and waitlist promotion.",
     date: "May 2026",
@@ -117,7 +117,7 @@ export const SHIPPED: ShippedItem[] = [
   },
   {
     id: "rsvp-ticket",
-    category: "Gatherings",
+    category: "Events",
     name: "RSVP ticket",
     description:
       "Shareable post-RSVP confirmation with QR code, calendar integration, and waitlist state.",
@@ -152,7 +152,7 @@ export const BUILDING: BuildingItem[] = [
     category: "Platform",
     name: "Mobile app beta",
     description:
-      "iOS and Android apps, starting with gatherings and messaging. Beta invites go to Level 4+ members first.",
+      "iOS and Android apps, starting with events and messaging. Beta invites go to Level 4+ members first.",
     stage: "In progress",
     eta: "~Q3 2026",
     progress: 60,
@@ -177,8 +177,8 @@ export const BUILDING: BuildingItem[] = [
   },
   {
     id: "map-view-gatherings",
-    category: "Gatherings",
-    name: "Map view for gatherings",
+    category: "Events",
+    name: "Map view for events",
     description:
       "Browse upcoming events on a city map. Filter by date, type, and distance.",
     stage: "Early design",
@@ -222,7 +222,7 @@ export const PLANNED: PlannedItem[] = [
     category: "Messaging",
     name: "Group messaging",
     description:
-      "Create threads with multiple members, for planning gatherings, projects, or just chatting.",
+      "Create threads with multiple members, for planning events, projects, or just chatting.",
     votes: 76,
   },
   {
@@ -253,7 +253,7 @@ export const TOP_IDEAS: IdeaItem[] = [
   },
   {
     id: "idea-recurring-gatherings",
-    text: "Recurring gatherings (monthly series)",
+    text: "Recurring events (monthly series)",
     votes: 18,
   },
   {
@@ -271,7 +271,7 @@ export const BACKLOG: BacklogItem[] = [
     category: "Content",
     name: "Creator tipping",
     description:
-      "Let members send small optional tips to magazine contributors and gathering hosts.",
+      "Let members send small optional tips to magazine contributors and event hosts.",
     votes: 19,
   },
   {

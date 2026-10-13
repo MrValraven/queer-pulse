@@ -85,7 +85,7 @@ export const communities: Catalog = {
   "discover.outro.body2":
     "You don't need a big idea or a crowd behind you. Start with a few people and see where it goes.",
   "discover.outro.cta": "Start a community",
-  "discover.featured.gatheringFlag": "Gathering this week",
+  "discover.featured.gatheringFlag": "Event this week",
   "discover.featured.next": "Next:",
   "discover.featured.youreIn": "You're in",
   "discover.featured.openCta": "Open community",
@@ -154,8 +154,8 @@ export const communities: Catalog = {
   // communities" and only when something is waiting.
   "hub.invitesLink_one": "{count} invitation waiting",
   "hub.invitesLink_other": "{count} invitations waiting",
-  "hub.sidebar.upcomingCount_one": "{count} gathering coming up",
-  "hub.sidebar.upcomingCount_other": "{count} gatherings coming up",
+  "hub.sidebar.upcomingCount_one": "{count} event coming up",
+  "hub.sidebar.upcomingCount_other": "{count} events coming up",
   "hub.sidebar.upcoming": "Upcoming in your communities",
   "hub.sidebar.suggestions": "Communities you might like",
   "hub.pulseCard.announcement": "Announcement",
@@ -197,7 +197,7 @@ export const communities: Catalog = {
   "gate.eyebrow": "Members only",
   "gate.about": "What this is for",
   "gate.languages": "Spoken here",
-  "gate.nextGathering": "Next public gathering",
+  "gate.nextGathering": "Next public event",
   "gate.request.line":
     "This community reviews who joins. Ask, and a moderator reads it.",
   "gate.request.action": "Ask to join",
@@ -328,13 +328,13 @@ export const communities: Catalog = {
     "We couldn't leave that community. Try again in a moment.",
   "detail.leave.confirm.title": "Leave {name}?",
   "detail.leave.confirm.body":
-    "You'll stop seeing this community's pulse and gatherings. Your posts and replies stay in the community exactly where they are, under your name. You can always come back. You'll just need to join again.",
+    "You'll stop seeing this community's pulse and events. Your posts and replies stay in the community exactly where they are, under your name. You can always come back. You'll just need to join again.",
   "detail.leave.confirm.cancel": "Stay",
   "detail.leave.confirm.confirmCta": "Leave community",
   "detail.hero.andMore": "and {count} more",
   "detail.sidebar.organiser": "Organiser",
   "detail.sidebar.connectCta": "Connect",
-  "detail.sidebar.nextGathering": "Next gathering",
+  "detail.sidebar.nextGathering": "Next event",
   "detail.sidebar.rsvpCta": "RSVP",
   "detail.sidebar.relatedCommunities": "Related communities",
   "detail.sidebar.communityThreads": "Recent discussions",
@@ -360,7 +360,7 @@ export const communities: Catalog = {
 
   // ── About / About+Resources shared section labels ─────────────────────────
   "detail.about.whoFor": "Who this is for",
-  "detail.about.upcomingGathering": "Upcoming gathering",
+  "detail.about.upcomingGathering": "Upcoming event",
 
   // ── Members tab (fallback hub) ────────────────────────────────────────────
   "detail.members.showingOf_one": "Showing {shown} of {count} member",
@@ -408,21 +408,20 @@ export const communities: Catalog = {
   "detail.discussion.loadMore": "Load more",
 
   // ── Events tab (living hub) ────────────────────────────────────────────────
-  "detail.events.upcoming": "Upcoming gatherings",
+  "detail.events.upcoming": "Upcoming events",
   // PRD-145. The Events tab as a PROSPECTIVE member sees it. The endpoint behind
   // it deliberately omits gatherings a community keeps to its roster, so the
   // note is what stops a short list from reading as an empty calendar.
   "detail.events.nonMemberNote":
-    "Gatherings this community keeps to its members are not listed here.",
-  "detail.events.loadMore": "Show more gatherings",
-  "detail.events.noUpcoming":
-    "No gatherings on the calendar yet. Check back soon.",
-  "detail.events.past": "Past gatherings",
+    "Events this community keeps to its members are not listed here.",
+  "detail.events.loadMore": "Show more events",
+  "detail.events.noUpcoming": "No events on the calendar yet. Check back soon.",
+  "detail.events.past": "Past events",
   "detail.events.recapCta": "Read recap",
   "detail.events.rsvpCta": "RSVP",
   "detail.events.host.lead":
     "You help run this community, so you can put something on its calendar. Pick a date, a place and a size, then choose who gets to see it.",
-  "detail.events.host.cta": "Host a gathering here",
+  "detail.events.host.cta": "Host an event here",
 
   // ── Roster / members tab (living hub) ─────────────────────────────────────
   "detail.roster.searchAria": "Search members",
@@ -1277,7 +1276,7 @@ export const communities: Catalog = {
   "detail.pulse.search.errorTitle": "We couldn't run that search",
   "detail.pulse.search.errorDescription":
     "Something went wrong reaching this community's posts. Try again in a moment.",
-  "detail.events.error.title": "We couldn't load the gatherings",
+  "detail.events.error.title": "We couldn't load the events",
   "detail.events.error.description":
     "Something went wrong reaching this community's calendar. Try again in a moment.",
   "detail.events.error.retryCta": "Try again",
@@ -1634,7 +1633,7 @@ export const communities: Catalog = {
   "start.feature.discussion.label": "Discussion",
   "start.feature.discussion.desc": "A shared board for threads.",
   "start.feature.events.label": "Events",
-  "start.feature.events.desc": "Gatherings and a calendar.",
+  "start.feature.events.desc": "Events and a calendar.",
   "start.feature.roster.label": "Member roster",
   "start.feature.roster.desc": "A visible list of who's here.",
 
@@ -1713,7 +1712,7 @@ export const communities: Catalog = {
   "start.confirm.recap.for": "For",
   "start.confirm.recap.kind": "Kind",
   "start.confirm.recap.who": "Who",
-  "start.confirm.recap.gathering": "Gathering",
+  "start.confirm.recap.gathering": "Event",
   "start.confirm.recap.safety": "Safety",
   "start.confirm.recap.access": "Access",
   "start.confirm.recap.roster": "Roster",
@@ -1800,10 +1799,10 @@ export const communities: Catalog = {
   "detail.nowReading": "Now reading: <strong>{book}</strong>",
   "detail.cadenceDefault": "Finding its rhythm",
   "detail.nextEvent.soonChip": "soon",
-  "detail.nextEvent.tbaTitle": "Next gathering to be announced",
+  "detail.nextEvent.tbaTitle": "Next event to be announced",
   "detail.nextEvent.checkEventsTab": "Check the events tab",
   "detail.nextEvent.openToMembers": "Open to members",
-  "detail.nextEvent.firstTitle": "First gathering, to be announced",
+  "detail.nextEvent.firstTitle": "First event, to be announced",
   "detail.nextEvent.onceFewPeople": "Once a few people are in",
   "detail.nextEvent.openToAllMembers": "Open to all members",
   "detail.topicThread.welcomeTitle": "Welcome to {name}",
@@ -2003,7 +2002,7 @@ export const communities: Catalog = {
   // Deep-scan section 13 (the vertical surfaces), built 2026-08-31.
   // PHOTO-ESCALATE — PHOTO-ESCALATE (TS-14) — the mod tools report row. Sits beside the existing detail.modtools.reports.staffOnlyNote, which stays as-is for the emergency band. This one is shown when the report is about something the platform will not show a community moderator (a gathering photo today), so Take it down and Dismiss are absent and escalation is the offered action.
   "detail.modtools.reports.unviewableSubjectNote":
-    "This report is about a photo we cannot show you here. Platform staff can see it, so the decision is theirs. Send it up, and add anything you know about the gathering or the people in it.",
+    "This report is about a photo we cannot show you here. Platform staff can see it, so the decision is theirs. Send it up, and add anything you know about the event or the people in it.",
 
   // ── Shared-value library ───────────────────────────────────────────────────
   // The browsable catalogue behind "Browse values" on the wizard's Tone chapter
@@ -2061,14 +2060,14 @@ export const communities: Catalog = {
   "values.lib.contactsTheirs":
     "Contact details are shared by the person they belong to and nobody else.",
   "values.lib.gatheringsOffline":
-    "What happens at a gathering stays off the internet afterwards.",
+    "What happens at an event stays off the internet afterwards.",
 
   "values.lib.accessDetails":
-    "Access details go in every gathering post, before anyone has to ask.",
+    "Access details go in every event post, before anyone has to ask.",
   "values.lib.plainLanguage":
     "Plain language. We explain the jargon or we drop it.",
   "values.lib.scentAware":
-    "Gatherings are scent aware so people with sensitivities can come.",
+    "Events are scent aware so people with sensitivities can come.",
   "values.lib.quieterSpace":
     "There is somewhere quieter to go when it gets to be too much.",
   "values.lib.noAssumedKnowledge":
@@ -2118,7 +2117,7 @@ export const communities: Catalog = {
     "Harm reduction over judgement. We share what we know.",
   "values.lib.stayWithThem":
     "If someone is not okay, somebody stays with them.",
-  "values.lib.substanceFree": "Our gatherings are substance free.",
+  "values.lib.substanceFree": "Our events are substance free.",
   "values.lib.recoveryRespected":
     "Recovery is respected here and never a topic of comment.",
   "values.lib.getHomeSafe": "We make sure everyone has a way home.",
@@ -2159,11 +2158,11 @@ export const communities: Catalog = {
   "values.lib.chosenFamily": "Chosen family counts as family here.",
   "values.lib.carersSupported":
     "Carers get help to take part rather than working it out alone.",
-  "values.lib.ageStated": "Every gathering says plainly who it is for by age.",
+  "values.lib.ageStated": "Every event says plainly who it is for by age.",
   "values.lib.adultsOnly":
     "Some of what we do is adults only, and it is always said clearly.",
   "values.lib.partnersWelcome":
-    "Partners are welcome unless a gathering says otherwise.",
+    "Partners are welcome unless an event says otherwise.",
   "values.lib.somewhereForKids":
     "There is somewhere for a child to rest or be fed.",
   "values.lib.schedulingReal":

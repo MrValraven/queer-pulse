@@ -714,13 +714,13 @@ export const admin: Catalog = {
   "members.verify.source.queer_101": "Queer 101",
   "members.verify.source.magazine": "Magazine",
   "members.verify.source.status": "Status page",
-  "members.verify.source.gathering_vouch": "Gathering vouch callout",
+  "members.verify.source.gathering_vouch": "Event vouch callout",
   "members.verify.source.family": "Family page",
   "members.verify.source.reading_groups": "Reading groups",
   "members.verify.source.direct": "Opened the invite page directly",
   "members.verify.source.other": "Another page",
   "members.verify.source.volunteer_explainer": "Volunteer explainer",
-  "members.verify.source.gathering_explainer": "Gathering explainer",
+  "members.verify.source.gathering_explainer": "Event explainer",
   "members.verify.source.roadmap_explainer": "Roadmap explainer",
   "members.verify.source.rating_explainer": "Guide rating explainer",
   "members.verify.ageAttested": "18+ confirmed {date} · Terms v{version}",
@@ -787,7 +787,7 @@ export const admin: Catalog = {
   "members.verify.approvalReasonDetail.known_to_team":
     "Someone on the team knows them or has met them.",
   "members.verify.approvalReasonDetail.partner_or_event":
-    "They found us through a partner group, a gathering or an event.",
+    "They found us through a partner group or an event.",
   "members.verify.approvalReasonDetail.social_profile_checked":
     "Their profile showed a real person and nothing hostile.",
   "members.verify.approvalReasonDetail.other":
@@ -1697,7 +1697,7 @@ export const admin: Catalog = {
   "adminConcerns.error": "We couldn't load concerns. Please try again.",
   "adminConcerns.filter.all": "All",
   "adminConcerns.category.member": "Member or behaviour",
-  "adminConcerns.category.gathering": "Gathering or event",
+  "adminConcerns.category.gathering": "Event",
   "adminConcerns.category.content": "Content or platform",
   "adminConcerns.category.appeal": "Moderation appeal",
   "adminConcerns.category.other": "Something else",
@@ -2134,14 +2134,14 @@ export const admin: Catalog = {
   "media.kinds.work": "Work images",
   "media.kinds.story-covers": "Story covers",
   "media.kinds.persona-covers": "Persona banners",
-  "media.kinds.gathering-photos": "Gathering photos",
+  "media.kinds.gathering-photos": "Event photos",
   "media.kinds.group-avatars": "Group avatars",
   "media.kinds.listing-photos": "Listing photos",
   "media.kinds.listing-covers": "Listing covers",
   "media.kinds.listing-menus": "Listing menus",
   "media.kinds.community-covers": "Community banners",
   "media.kinds.community-avatars": "Community logos",
-  "media.kinds.event-covers": "Gathering covers",
+  "media.kinds.event-covers": "Event covers",
   "media.kinds.forum-photos": "Forum photos",
   "media.kinds.persona": "Persona images",
   "media.kinds.stickers": "Stickers",
@@ -3125,7 +3125,7 @@ export const admin: Catalog = {
   "governance.ledger.magazine": "Magazine production",
   "governance.ledger.memberSustainers": "Member sustainers",
   "governance.ledger.partnerGrants": "Partner grants",
-  "governance.ledger.gatheringTickets": "Gathering tickets",
+  "governance.ledger.gatheringTickets": "Event tickets",
 
   "governance.income.title": "Where it <em>comes from</em>",
   "governance.income.sub": "{amount} / month, in from three honest places.",
@@ -3963,7 +3963,7 @@ export const admin: Catalog = {
 
   // ── Category taxonomy — shared across board/toolbar/drawer/capacity/etc ───
   "roadmap.categories.resources": "Resources",
-  "roadmap.categories.gatherings": "Gatherings",
+  "roadmap.categories.gatherings": "Events",
   "roadmap.categories.members": "Members",
   "roadmap.categories.safety": "Safety",
   "roadmap.categories.content": "Content",
@@ -4504,10 +4504,10 @@ export const admin: Catalog = {
   "landing.picker.searchPlaceholder": "Search by name…",
   "landing.picker.searchAriaLabel": "Search who's eligible to feature",
   // Gathering and story picker search copy (PRD-323).
-  "landing.picker.searchPlaceholder.gathering": "Search gatherings by title…",
+  "landing.picker.searchPlaceholder.gathering": "Search events by title…",
   "landing.picker.searchPlaceholder.story": "Search stories by title…",
   "landing.picker.searchAriaLabel.gathering":
-    "Search the gatherings you can feature",
+    "Search the events you can feature",
   "landing.picker.searchAriaLabel.story": "Search the stories you can feature",
   "landing.picker.addCta": "Add",
   "landing.picker.submitCta": "Add to homepage",
@@ -4581,18 +4581,18 @@ export const admin: Catalog = {
   "landing.hidden.not_public": "Hidden: no longer public",
   "landing.hidden.deleted": "Hidden: deleted",
   // Gathering and story sections (PRD-323): tabs, helpers, empty states, hidden reasons, kicker field.
-  "landing.tabs.gathering": "Gatherings",
+  "landing.tabs.gathering": "Events",
   "landing.tabs.story": "Stories",
   "landing.helper.gathering":
-    "Only published gatherings that are open to everyone and still ahead show up here. A gathering leaves the homepage on its own once it ends or is cancelled.",
+    "Only published events that are open to everyone and still ahead show up here. An event leaves the homepage on its own once it ends or is cancelled.",
   "landing.helper.story":
     "Published original magazine stories are ready to feature here. A story leaves the homepage on its own if it is unpublished.",
   "landing.picker.empty.gathering":
-    "No upcoming public gatherings are eligible yet.",
+    "No upcoming public events are eligible yet.",
   "landing.picker.empty.story": "No published stories are eligible yet.",
-  "landing.list.empty.gathering.title": "No gatherings featured yet",
+  "landing.list.empty.gathering.title": "No events featured yet",
   "landing.list.empty.gathering.body":
-    "Search for an upcoming public gathering and add it to the homepage.",
+    "Search for an upcoming public event and add it to the homepage.",
   "landing.list.empty.story.title": "No stories featured yet",
   "landing.list.empty.story.body":
     "Search for a published story and add it to the homepage.",
@@ -5273,7 +5273,7 @@ export const admin: Catalog = {
   "governance.overview.health.stat.retention": "Member retention rate",
   "governance.overview.health.stat.reportsFiled": "Reports filed this quarter",
   "governance.overview.health.stat.membersRemoved": "Members removed",
-  "governance.overview.health.stat.gatheringsHosted": "Gatherings hosted",
+  "governance.overview.health.stat.gatheringsHosted": "Events hosted",
   "governance.overview.health.stat.appealUpheld": "Moderation appeal upheld",
   "governance.overview.health.trend.upThisQuarter": "Up this quarter",
   "governance.overview.health.trend.steady": "Steady",
@@ -5312,7 +5312,7 @@ export const admin: Catalog = {
   "governance.overview.principles.icon.book": "Book",
   "governance.overview.principles.icon.accessible": "Accessibility",
   "governance.overview.decisions.key.slidingScale":
-    "May 2026: Sliding scale introduced for gatherings",
+    "May 2026: Sliding scale introduced for events",
   "governance.overview.decisions.key.forumLaunched":
     "April 2026: Forum launched",
   "governance.overview.decisions.key.visibilityDefaults":
@@ -7832,7 +7832,7 @@ export const admin: Catalog = {
   "emailTemplates.blocks.featureRemove": "Remove row {number}",
   "emailTemplates.blocks.featureAdd": "Add a row",
   "emailTemplates.blocks.featureIcon.communities": "Communities",
-  "emailTemplates.blocks.featureIcon.gatherings": "Gatherings",
+  "emailTemplates.blocks.featureIcon.gatherings": "Events",
   "emailTemplates.blocks.featureIcon.directory": "Directory",
   "emailTemplates.blocks.featureIcon.messages": "Messages",
   "emailTemplates.blocks.featureIcon.magazine": "Magazine",
@@ -8032,7 +8032,7 @@ export const admin: Catalog = {
   "marketingVideos.merchCard.download.backSvg": "Download back SVG",
   "marketingVideos.flyers.first-event.title": "First event",
   "marketingVideos.flyers.first-event.summary":
-    "Made for our first gathering: a queer network rooted in Lisbon, and a QR code that opens queerpulse.com.",
+    "Made for our first event: a queer network rooted in Lisbon, and a QR code that opens queerpulse.com.",
   "marketingVideos.flyerCard.meta": "A5 portrait · PDF and PNG",
   "marketingVideos.flyerCard.previewAlt": "The {title} flyer",
   "marketingVideos.flyerCard.view": "View flyer",

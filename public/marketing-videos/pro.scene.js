@@ -673,7 +673,7 @@ const VIG = [
 ];
 const FEATS = [
   ["Vouches", "A friend", "<em>gets you in</em>"],
-  ["Gatherings", "Your people", "<em>come with you</em>"],
+  ["Events", "Your people", "<em>come with you</em>"],
   ["Messages", "Your friends", "<em>keep you posted</em>"],
   ["Queer businesses", "Queer owners", "<em>welcome you</em>"],
   ["Forum", "Someone here", "<em>shows you how</em>"],

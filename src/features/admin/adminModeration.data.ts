@@ -746,7 +746,7 @@ export const OTHER_REPORTS: ModReport[] = [
     severity: "medium",
     category: "Spam",
     chips: [{ tone: "amber", labelKey: "admin:moderation.chip.spam" }],
-    title: "Crypto promo links posted across 6 gathering threads",
+    title: "Crypto promo links posted across 6 event threads",
     preview:
       "Same external link dropped into unrelated event discussions. Likely a compromised or bad-faith account.",
     reporterName: "3 members",
@@ -1209,7 +1209,7 @@ export const RESOLVED: ResolvedItem[] = [
     outcomeTone: "coral",
     title: 'Reported "spam" was a member’s own event',
     preview:
-      'Dismissed by Júlia S., "Genuine community gathering, not promotion. No action; reporter thanked for caution."',
+      'Dismissed by Júlia S., "Genuine community event, not promotion. No action; reporter thanked for caution."',
     closed: "Closed 1h ago",
     notified: ["Member notified", "Reporter notified"],
     status: { tone: "jade", key: "admin:moderation.status.logged" },

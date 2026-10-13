@@ -34,7 +34,7 @@ export const system: Catalog = {
   "notFound.linksTitle": "Sítios populares",
   "notFound.links.magazine.label": "Revista",
   "notFound.links.magazine.sub": "Ensaios, entrevistas e críticas",
-  "notFound.links.gatherings.label": "Convívios",
+  "notFound.links.gatherings.label": "Eventos",
   "notFound.links.gatherings.sub": "O que há este mês",
   "notFound.links.readingGroups.label": "Grupos de leitura",
   "notFound.links.readingGroups.sub": "Lê em conjunto com outras pessoas",
@@ -134,7 +134,7 @@ export const system: Catalog = {
     "O que continua a funcionar · durante a suspensão",
   "accountSuspended.whatStays.item1": "Ler conteúdo público e a revista",
   "accountSuspended.whatStays.item2":
-    "Participar em convívios a que já tinhas confirmado presença",
+    "Participar em eventos a que já tinhas confirmado presença",
   "accountSuspended.whatStays.item3":
     "Chat de crise · sempre disponível, sem exceções",
   // `{decisionDays}` vem de `features/system/accountWindows.ts`. Esta linha
@@ -364,7 +364,7 @@ export const system: Catalog = {
   "status.live.component.messaging.desc": "Mensagens diretas e de grupo",
   "status.live.component.communities.name": "Comunidades e fórum",
   "status.live.component.communities.desc":
-    "Espaços de comunidade, tópicos e encontros",
+    "Espaços de comunidade, tópicos e eventos",
   "status.live.component.directory.name": "Diretório local",
   "status.live.component.directory.desc": "Locais, espaços seguros e o mapa",
   "status.live.component.magazine.name": "Revista",

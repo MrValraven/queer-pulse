@@ -93,7 +93,7 @@ const DEMO_CONTACTS: PressContactDTO[] = [
     id: "demo-contact-catarina",
     name: "Catarina Vaz",
     role: "Head of community",
-    description: "Speaks to safe spaces, gatherings and moderation.",
+    description: "Speaks to safe spaces, events and moderation.",
     languages: "EN / PT / ES",
     email: "catarina@queerpulse.app",
     avatarUrl: null,

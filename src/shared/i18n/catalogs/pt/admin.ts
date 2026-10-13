@@ -746,13 +746,13 @@ export const admin: Catalog = {
   "members.verify.source.magazine": "Revista",
   "members.verify.source.status": "Página de estado",
   "members.verify.source.gathering_vouch":
-    "Apelo a votos de confiança num encontro",
+    "Apelo a votos de confiança num evento",
   "members.verify.source.family": "Página Família",
   "members.verify.source.reading_groups": "Grupos de leitura",
   "members.verify.source.direct": "Abriu a página de pedido diretamente",
   "members.verify.source.other": "Outra página",
   "members.verify.source.volunteer_explainer": "Explicação do voluntariado",
-  "members.verify.source.gathering_explainer": "Explicação dos convívios",
+  "members.verify.source.gathering_explainer": "Explicação dos eventos",
   "members.verify.source.roadmap_explainer": "Explicação do roteiro",
   "members.verify.source.rating_explainer": "Explicação da avaliação de guias",
   "members.verify.ageAttested": "18+ confirmado a {date} · Termos v{version}",
@@ -819,7 +819,7 @@ export const admin: Catalog = {
   "members.verify.approvalReasonDetail.known_to_team":
     "Alguém da equipa conhece esta pessoa ou já esteve com ela.",
   "members.verify.approvalReasonDetail.partner_or_event":
-    "Chegou até nós por um grupo parceiro, um encontro ou um evento.",
+    "Chegou até nós por um grupo parceiro ou um evento.",
   "members.verify.approvalReasonDetail.social_profile_checked":
     "O perfil mostrava uma pessoa real e nada de hostil.",
   "members.verify.approvalReasonDetail.other":
@@ -1728,7 +1728,7 @@ export const admin: Catalog = {
     "Não foi possível carregar as preocupações. Tenta novamente.",
   "adminConcerns.filter.all": "Todas",
   "adminConcerns.category.member": "Pessoa ou comportamento",
-  "adminConcerns.category.gathering": "Convívio ou evento",
+  "adminConcerns.category.gathering": "Evento",
   "adminConcerns.category.content": "Conteúdo ou plataforma",
   "adminConcerns.category.appeal": "Contestação de moderação",
   "adminConcerns.category.other": "Outra coisa",
@@ -2159,14 +2159,14 @@ export const admin: Catalog = {
   "media.kinds.work": "Imagens de trabalho",
   "media.kinds.story-covers": "Capas de história",
   "media.kinds.persona-covers": "Banners de persona",
-  "media.kinds.gathering-photos": "Fotos de encontros",
+  "media.kinds.gathering-photos": "Fotos de eventos",
   "media.kinds.group-avatars": "Avatares de grupo",
   "media.kinds.listing-photos": "Fotos de estabelecimentos",
   "media.kinds.listing-covers": "Capas de estabelecimentos",
   "media.kinds.listing-menus": "Menus de estabelecimentos",
   "media.kinds.community-covers": "Banners de comunidades",
   "media.kinds.community-avatars": "Logótipos de comunidades",
-  "media.kinds.event-covers": "Capas de encontros",
+  "media.kinds.event-covers": "Capas de eventos",
   "media.kinds.forum-photos": "Fotos do fórum",
   "media.kinds.persona": "Imagens de persona",
   "media.kinds.stickers": "Stickers",
@@ -3133,7 +3133,7 @@ export const admin: Catalog = {
   "governance.ledger.magazine": "Produção da revista",
   "governance.ledger.memberSustainers": "Pessoas apoiantes",
   "governance.ledger.partnerGrants": "Subsídios de parceiros",
-  "governance.ledger.gatheringTickets": "Bilhetes de convívios",
+  "governance.ledger.gatheringTickets": "Bilhetes de eventos",
 
   "governance.income.title": "De onde <em>vem</em>",
   "governance.income.sub": "{amount} / mês, vindos de três fontes honestas.",
@@ -3965,7 +3965,7 @@ export const admin: Catalog = {
 
   // ── Categorias — partilhadas entre quadro/barra de ferramentas/painel/capacidade
   "roadmap.categories.resources": "Recursos",
-  "roadmap.categories.gatherings": "Encontros",
+  "roadmap.categories.gatherings": "Eventos",
   "roadmap.categories.members": "Pessoas",
   "roadmap.categories.safety": "Segurança",
   "roadmap.categories.content": "Conteúdo",
@@ -4524,11 +4524,10 @@ export const admin: Catalog = {
   "landing.picker.searchPlaceholder": "Pesquisar por nome…",
   "landing.picker.searchAriaLabel": "Pesquisar pessoas elegíveis para destaque",
   // Texto da pesquisa do seletor de encontros e histórias (PRD-323).
-  "landing.picker.searchPlaceholder.gathering":
-    "Pesquisa encontros pelo título…",
+  "landing.picker.searchPlaceholder.gathering": "Pesquisa eventos pelo título…",
   "landing.picker.searchPlaceholder.story": "Pesquisa histórias pelo título…",
   "landing.picker.searchAriaLabel.gathering":
-    "Pesquisa os encontros que podes destacar",
+    "Pesquisa os eventos que podes destacar",
   "landing.picker.searchAriaLabel.story":
     "Pesquisa as histórias que podes destacar",
   "landing.picker.addCta": "Adicionar",
@@ -4605,18 +4604,18 @@ export const admin: Catalog = {
   "landing.hidden.not_public": "Oculto: já não é público",
   "landing.hidden.deleted": "Oculto: eliminado",
   // Secções de encontros e histórias (PRD-323): separadores, ajudas, estados vazios, motivos de ocultação, linha de destaque.
-  "landing.tabs.gathering": "Encontros",
+  "landing.tabs.gathering": "Eventos",
   "landing.tabs.story": "Histórias",
   "landing.helper.gathering":
-    "Só aparecem aqui encontros publicados, abertos a toda a gente e ainda por acontecer. Um encontro sai da página inicial sozinho quando termina ou é cancelado.",
+    "Só aparecem aqui eventos publicados, abertos a toda a gente e ainda por acontecer. Um evento sai da página inicial sozinho quando termina ou é cancelado.",
   "landing.helper.story":
     "As histórias originais publicadas na revista estão prontas a ser destacadas aqui. Uma história sai da página inicial sozinha se deixar de estar publicada.",
   "landing.picker.empty.gathering":
-    "Ainda não há encontros públicos futuros elegíveis.",
+    "Ainda não há eventos públicos futuros elegíveis.",
   "landing.picker.empty.story": "Ainda não há histórias publicadas elegíveis.",
-  "landing.list.empty.gathering.title": "Ainda sem encontros em destaque",
+  "landing.list.empty.gathering.title": "Ainda sem eventos em destaque",
   "landing.list.empty.gathering.body":
-    "Procura um encontro público futuro e adiciona-o à página inicial.",
+    "Procura um evento público futuro e adiciona-o à página inicial.",
   "landing.list.empty.story.title": "Ainda sem histórias em destaque",
   "landing.list.empty.story.body":
     "Procura uma história publicada e adiciona-a à página inicial.",
@@ -5177,7 +5176,7 @@ export const admin: Catalog = {
     "Os cartões, notas, parceiros e reserva que a página de Governação mostra ao lado dos números deste trimestre. Cada lista é guardada por inteiro.",
   "governance.finances.report.section.stats": "Cartões de números",
   "governance.finances.report.section.notes":
-    "Como funcionam as finanças dos convívios",
+    "Como funcionam as finanças dos eventos",
   "governance.finances.report.section.partners": "Parceiros declarados",
   "governance.finances.report.section.reserve": "Reserva operacional",
   "governance.finances.report.col.figure": "Número",
@@ -5292,7 +5291,7 @@ export const admin: Catalog = {
   "governance.overview.health.stat.reportsFiled":
     "Denúncias apresentadas este trimestre",
   "governance.overview.health.stat.membersRemoved": "Pessoas afastadas",
-  "governance.overview.health.stat.gatheringsHosted": "Convívios realizados",
+  "governance.overview.health.stat.gatheringsHosted": "Eventos realizados",
   "governance.overview.health.stat.appealUpheld":
     "Contestação de moderação aceite",
   "governance.overview.health.trend.upThisQuarter": "Subiu este trimestre",
@@ -5334,7 +5333,7 @@ export const admin: Catalog = {
   "governance.overview.principles.icon.book": "Livro",
   "governance.overview.principles.icon.accessible": "Acessibilidade",
   "governance.overview.decisions.key.slidingScale":
-    "Maio de 2026: Introduzida escala progressiva para os convívios",
+    "Maio de 2026: Introduzida escala progressiva para os eventos",
   "governance.overview.decisions.key.forumLaunched":
     "Abril de 2026: Fórum lançado",
   "governance.overview.decisions.key.visibilityDefaults":
@@ -7894,7 +7893,7 @@ export const admin: Catalog = {
   "emailTemplates.blocks.featureRemove": "Remover a linha {number}",
   "emailTemplates.blocks.featureAdd": "Adicionar uma linha",
   "emailTemplates.blocks.featureIcon.communities": "Comunidades",
-  "emailTemplates.blocks.featureIcon.gatherings": "Encontros",
+  "emailTemplates.blocks.featureIcon.gatherings": "Eventos",
   "emailTemplates.blocks.featureIcon.directory": "Diretório",
   "emailTemplates.blocks.featureIcon.messages": "Mensagens",
   "emailTemplates.blocks.featureIcon.magazine": "Revista",
@@ -8100,7 +8099,7 @@ export const admin: Catalog = {
   "marketingVideos.merchCard.download.backSvg": "Descarregar SVG das costas",
   "marketingVideos.flyers.first-event.title": "Primeiro evento",
   "marketingVideos.flyers.first-event.summary":
-    "Feito para o nosso primeiro encontro: uma rede queer com raízes em Lisboa e um código QR que abre queerpulse.com.",
+    "Feito para o nosso primeiro evento: uma rede queer com raízes em Lisboa e um código QR que abre queerpulse.com.",
   "marketingVideos.flyerCard.meta": "A5 vertical · PDF e PNG",
   "marketingVideos.flyerCard.previewAlt": "O flyer {title}",
   "marketingVideos.flyerCard.view": "Ver flyer",

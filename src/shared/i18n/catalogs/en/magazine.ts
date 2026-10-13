@@ -1804,7 +1804,7 @@ export const magazine: Catalog = {
   "story.outro.tomas.title":
     "Want to join Tomás's table? <em>Join the network first.</em>",
   "story.outro.tomas.sub":
-    "The supper club, the network, the gatherings: it all starts with an invitation from someone who knows you.",
+    "The supper club, the network, the events: it all starts with an invitation from someone who knows you.",
   "story.outro.safety.title": "Read it and think it sounds <em>right?</em>",
   "story.outro.safety.sub":
     "We're not for everyone. But if this resonates, you might be for us.",

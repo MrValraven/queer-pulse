@@ -19,7 +19,7 @@ export const connect: Catalog = {
   "page.eyebrow": "Your network",
   "page.title": "People you've <em>actually met.</em>",
   "page.lead":
-    "Your main profile doesn't do followers. You connect with people once you've met them: at a gathering, through someone, or because they vouched for you. Quality over count.",
+    "Your main profile doesn't do followers. You connect with people once you've met them: at an event, through someone, or because they vouched for you. Quality over count.",
   "page.inviteCta": "Invite a friend",
   "page.note":
     "<b>No follower counts here, on purpose.</b> Looking to follow a persona's updates without connecting first? That's what personas are for. Connections are a two-way thing: they unlock messaging and tagged updates.",
@@ -108,7 +108,7 @@ export const connect: Catalog = {
   "allTab.sortClosestMutuals": "Closest mutuals",
   "allTab.emptyTitle": "No connections yet",
   "allTab.emptyDescription":
-    "Your network starts with a single hello. Meet people at a gathering, or find members you already know and connect once you've met.",
+    "Your network starts with a single hello. Meet people at an event, or find members you already know and connect once you've met.",
   "allTab.findMembers": "Find members",
   "allTab.emptySearchTitle": "Nothing matches your search",
   "allTab.emptySearchDescription":

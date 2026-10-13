@@ -53,7 +53,7 @@ export const officialInesConversation: Conversation = demoConversation({
 });
 
 const welcomeLine =
-  "Welcome to QueerPulse! Here's what to explore first: your profile, upcoming gatherings, and the member directory. We're glad you're here.";
+  "Welcome to QueerPulse! Here's what to explore first: your profile, upcoming events, and the member directory. We're glad you're here.";
 
 const joanaQuestionLine =
   "Hi! Is there a way to hide my profile from people I'm not connected with?";

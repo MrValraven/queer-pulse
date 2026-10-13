@@ -3778,7 +3778,7 @@ const SEED_ENTRIES: Record<string, Omit<Member, "id">> = {
       },
       {
         icon: FiCalendar,
-        title: "Organised a community gathering",
+        title: "Organised a community event",
         sub: "Queer + non-monogamy meetup",
         to: routes.events,
       },

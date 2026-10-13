@@ -1293,7 +1293,7 @@ export const subprofiles: Catalog = {
   "affiliationsEditor.allLinked.event":
     "You've linked every event you're going to.",
   "affiliationsEditor.browse.community": "Browse communities",
-  "affiliationsEditor.browse.event": "Browse gatherings",
+  "affiliationsEditor.browse.event": "Browse events",
   "affiliationsEditor.eventOptionLabel": "{name} ({date})",
   "affiliationsEditor.add": "Add a link",
   "affiliationsEditor.capHint": "That's the most links you can add.",

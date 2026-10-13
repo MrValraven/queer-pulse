@@ -111,8 +111,8 @@ export const commissions: Commission[] = [
         </p>
         <p>
           Full production support: archive access, DCP mastering, captioning,
-          and a dedicated community screening at QueerPulse's Lisbon gathering
-          in November 2026.
+          and a dedicated community screening at QueerPulse's Lisbon event in
+          November 2026.
         </p>
       </>
     ),

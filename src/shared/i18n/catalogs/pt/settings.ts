@@ -111,7 +111,7 @@ export const settings: Catalog = {
   "identity.chip.preferNotToSay": "Prefiro não dizer",
   "lookingFor.chip.communityFriendship": "Comunidade e amizade",
   "lookingFor.chip.professionalNetworking": "Rede profissional",
-  "lookingFor.chip.gatheringsEvents": "Convívios e eventos",
+  "lookingFor.chip.gatheringsEvents": "Eventos",
   "lookingFor.chip.creativeCollaboration": "Colaboração criativa",
   "lookingFor.chip.housingFlatmates": "Habitação e colegas de casa",
   "lookingFor.chip.resourcesSupport": "Recursos e apoio",
@@ -124,7 +124,7 @@ export const settings: Catalog = {
   "lookingFor.chip.nightlife": "Vida noturna",
   "interests.title": "Molda o que <em>vês.</em>",
   "interests.sub":
-    "Isto é privado (não aparece no teu perfil). Ajuda-nos a mostrar-te convívios, pessoas e conteúdo relevante para ti. Podes mudar isto quando quiseres.",
+    "Isto é privado (não aparece no teu perfil). Ajuda-nos a mostrar-te eventos, pessoas e conteúdo relevante para ti. Podes mudar isto quando quiseres.",
   "interests.identities.heading": "Que identidades sentes como tuas?",
   "interests.identities.skip": "Saltar",
   "interests.identities.helper":
@@ -202,15 +202,15 @@ export const settings: Catalog = {
   // ── interests.data.ts — definições de conteúdo (idem) ────────────────────
   "interests.contentSetting.dating": "Conteúdo sobre convívios e relações",
   "interests.contentSetting.dating.desc":
-    "Esconde publicações e encontros de comunidades de encontros, relações e kink",
+    "Esconde publicações e eventos de comunidades de encontros, relações e kink",
   "interests.contentSetting.mentalHealth":
     "Conteúdo sobre saúde mental e bem-estar",
   "interests.contentSetting.mentalHealth.desc":
-    "Esconde publicações e encontros de comunidades de saúde mental, bem-estar e recuperação",
+    "Esconde publicações e eventos de comunidades de saúde mental, bem-estar e recuperação",
   "interests.contentSetting.sexualityIdentity":
     "Conteúdo sobre exploração da sexualidade e identidade",
   "interests.contentSetting.sexualityIdentity.desc":
-    "Esconde publicações e encontros de comunidades de sexualidade, género e assumir-se",
+    "Esconde publicações e eventos de comunidades de sexualidade, género e assumir-se",
   "interests.content.toastError":
     "Não conseguimos guardar essa definição. Tenta novamente.",
 
@@ -222,7 +222,7 @@ export const settings: Catalog = {
     "Não foi possível guardar essa definição de notificações. Tenta novamente.",
   "notifications.toast.saveErrorReason":
     "Não foi possível guardar essa definição de notificações: {reason}.",
-  "notifications.section.gatherings": "Convívios",
+  "notifications.section.gatherings": "Eventos",
   "notifications.section.messagesConnections": "Mensagens e conexões",
   "notifications.section.communitiesBoard": "Comunidades e mural",
   "notifications.section.delivery": "Entrega",
@@ -234,19 +234,19 @@ export const settings: Catalog = {
   "notifications.messageSound.desc":
     "Toca um som suave quando chega uma mensagem com a QueerPulse aberta. As conversas silenciadas ficam caladas.",
   "notifications.section.yourWork": "O teu trabalho e os teus anúncios",
-  "notifications.volume.eventInvites.title": "Novo convívio anunciado",
+  "notifications.volume.eventInvites.title": "Novo evento anunciado",
   "notifications.volume.eventInvites.desc":
-    "Quando és convidada para um convívio",
+    "Quando és convidada para um evento",
   "notifications.volume.eventReminders.title": "Lembrete de presença",
   "notifications.volume.eventReminders.desc":
-    "Antes de um convívio a que disseste que ias",
+    "Antes de um evento a que disseste que ias",
   "notifications.volume.eventActivity.title":
-    "Atividade nos convívios que organizas",
+    "Atividade nos eventos que organizas",
   "notifications.volume.eventActivity.desc":
     "Novas confirmações e convites para co-organizar",
   "notifications.volume.eventCapacity.title": "Últimos lugares",
   "notifications.volume.eventCapacity.desc":
-    "Quando um convívio que guardaste, ou a que respondeste talvez, está quase cheio",
+    "Quando um evento que guardaste, ou ao qual respondeste talvez, está quase cheio",
   "notifications.volume.newMessages.title": "Nova mensagem",
   "notifications.volume.newMessages.desc":
     "Quando alguém te envia uma mensagem direta",
@@ -375,7 +375,7 @@ export const settings: Catalog = {
   "data.section.personalisation": "Personalização",
   "data.searchPersonalisation.title": "Personalização da pesquisa",
   "data.searchPersonalisation.desc":
-    "Usa os teus interesses e conexões para melhorar as pessoas e convívios sugeridos. É uma preferência de produto que fica na tua conta, mantida à parte de qualquer monitorização.",
+    "Usa os teus interesses e conexões para melhorar as pessoas e eventos sugeridos. É uma preferência de produto que fica na tua conta, mantida à parte de qualquer monitorização.",
   "data.section.dangerZone": "Zona de perigo",
   "data.deactivate.title": "Desativar conta",
   "data.deactivate.desc":
@@ -601,14 +601,14 @@ export const settings: Catalog = {
   "uploads.kind.work-image": "Imagem de destaque",
   "uploads.kind.story-cover": "Capa de matéria",
   "uploads.kind.persona-cover": "Banner de persona",
-  "uploads.kind.gathering-photo": "Foto de convívio",
+  "uploads.kind.gathering-photo": "Foto de evento",
   "uploads.kind.group-avatar": "Foto de grupo",
   "uploads.kind.listing-photo": "Foto do estabelecimento",
   "uploads.kind.listing-cover": "Capa do estabelecimento",
   "uploads.kind.listing-menu": "Menu do estabelecimento",
   "uploads.kind.community-cover": "Banner da comunidade",
   "uploads.kind.community-avatar": "Logótipo da comunidade",
-  "uploads.kind.event-cover": "Capa de convívio",
+  "uploads.kind.event-cover": "Capa de evento",
   "uploads.kind.message-image": "Foto de conversa",
   "uploads.kind.message-document": "Ficheiro de conversa",
   "uploads.kind.studio_audio": "Áudio do Studio",
@@ -1310,7 +1310,7 @@ export const settings: Catalog = {
   "mySubmissions.lead":
     "Tudo o que submeteste para alguém rever, e o ponto de situação de cada coisa. As respostas chegam aqui e às tuas notificações. A QueerPulse não envia email, por isso é nesta página que a decisão fica depois de limpares o sino.",
   "mySubmissions.footNote":
-    "Só aparecem aqui as submissões que passam por uma fila de revisão. As publicações, encontros e anúncios que publicas ficam logo online, por isso não há nada a aguardar.",
+    "Só aparecem aqui as submissões que passam por uma fila de revisão. As publicações, eventos e anúncios que publicas ficam logo online, por isso não há nada a aguardar.",
   "mySubmissions.emptyAll.title": "Ainda não enviaste nada",
   "mySubmissions.emptyAll.description":
     "Candidata uma organização a parceira, propõe uma troca na bolsa de competências ou sugere uma entrada para o diretório de recursos, e passa a aparecer aqui com a respetiva resposta.",
@@ -1372,7 +1372,7 @@ export const settings: Catalog = {
   // PRD-186 — ver a nota no catálogo EN.
   "notifications.reminderLead.title": "Lembra-me",
   "notifications.reminderLead.desc":
-    "Quanto tempo antes de um encontro começar. Só se aplica com os lembretes ligados.",
+    "Quanto tempo antes de um evento começar. Só se aplica com os lembretes ligados.",
   "notifications.reminderLead.option.60": "Uma hora antes",
   "notifications.reminderLead.option.1440": "Um dia antes",
   "notifications.reminderLead.option.10080": "Uma semana antes",

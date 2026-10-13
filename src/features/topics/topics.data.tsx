@@ -187,7 +187,7 @@ const healthcare: Topic = {
       author: "Trans Hub",
       initials: "TH",
       tone: "coral",
-      meta: "Hosted gathering · Fri 12 Jun, 19:00",
+      meta: "Hosted event · Fri 12 Jun, 19:00",
       kind: "event",
       category: "event",
       title: (
@@ -358,7 +358,7 @@ const trans: Topic = {
       author: "Trans Hub",
       initials: "TH",
       tone: "coral",
-      meta: "Hosted gathering · Sun 21 Jun, 16:00",
+      meta: "Hosted event · Sun 21 Jun, 16:00",
       kind: "event",
       category: "event",
       title: (
@@ -504,7 +504,7 @@ const mentalhealth: Topic = {
       author: "Peer Support Circle",
       initials: "PS",
       tone: "coral",
-      meta: "Weekly gathering · Sun 18:30",
+      meta: "Weekly event · Sun 18:30",
       kind: "event",
       category: "event",
       title: (

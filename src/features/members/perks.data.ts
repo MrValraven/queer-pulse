@@ -135,6 +135,6 @@ export const availableCount = perkGroups[0]!.perks.length;
  */
 export const sidebarCopy = {
   explain:
-    "Perks aren't a loyalty programme. They're our way of making sure the members who show up get a little more back. Each level reflects something real: time invested, gatherings attended, people connected. The platform grows because you do.",
+    "Perks aren't a loyalty programme. They're our way of making sure the members who show up get a little more back. Each level reflects something real: time invested, events attended, people connected. The platform grows because you do.",
   suggestToast: "Suggestion sent. Thank you",
 };

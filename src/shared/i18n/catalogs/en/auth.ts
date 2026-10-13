@@ -683,7 +683,7 @@ export const auth: Catalog = {
     "Members share things here they might not share elsewhere. Treat that as a privilege.",
   "onboarding.stepNorms.norm.askBeforePhoto.title": "Ask before you photograph",
   "onboarding.stepNorms.norm.askBeforePhoto.desc":
-    "At gatherings, always ask before photographing other members, even in a shared space.",
+    "At events, always ask before photographing other members, even in a shared space.",
   "onboarding.stepNorms.agree":
     "I've read and agree to the <guidelines>Community Guidelines</guidelines>",
   "onboarding.stepNorms.readHint":
@@ -724,7 +724,7 @@ export const auth: Catalog = {
   "onboarding.stepWork.saveError":
     "We couldn't save that just now. Please try again.",
   "onboarding.intent.community": "Community",
-  "onboarding.intent.gatherings": "Gatherings & events",
+  "onboarding.intent.gatherings": "Events",
   "onboarding.intent.professional": "Professional connections",
   "onboarding.intent.dating": "Dating",
   "onboarding.intent.friendship": "Friendship",
@@ -760,7 +760,7 @@ export const auth: Catalog = {
   "onboarding.stepDone.cta": "Go to my home",
   "onboarding.stepDone.notifications.title": "Stay in the loop",
   "onboarding.stepDone.notifications.desc":
-    "Get notified about messages, invites, and gathering reminders on your phone. Change this anytime in Settings.",
+    "Get notified about messages, invites, and event reminders on your phone. Change this anytime in Settings.",
   "onboarding.stepDone.stampFailed.title":
     "We couldn't save that you're finished",
   "onboarding.stepDone.stampFailed.desc":

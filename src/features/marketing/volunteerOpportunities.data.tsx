@@ -677,17 +677,17 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
     avatar: "QP",
     background: "rgba(232,119,90,.12)",
     color: "var(--accent-ink)",
-    role: "Events & Gatherings Volunteer",
+    role: "Events Volunteer",
     causes: ["community_events", "arts"],
     commit: "low",
     time: "Event by event",
     location: "In-person · Lisbon",
     skills: ["Organisation", "Hospitality", "People skills"],
     description:
-      "Help set up, run, and support QueerPulse member gatherings. Every event needs someone making it feel warm. Flexible commitment, instant community.",
+      "Help set up, run, and support QueerPulse member events. Every event needs someone making it feel warm. Flexible commitment, instant community.",
     eyebrow: volunteerEyebrow("QueerPulse"),
     urgent: "Recruiting · members welcome",
-    titleLead: "Gatherings crew · ",
+    titleLead: "Events crew · ",
     titleEm: "QueerPulse events.",
     sub: (
       <>
@@ -711,13 +711,13 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
         ),
         label: "Minimum events",
       },
-      { value: <b>~23</b>, label: "Gatherings a month" },
+      { value: <b>~23</b>, label: "Events a month" },
       { value: <b>Instant</b>, label: "Community" },
     ],
     why: [
       <>
-        The difference between a good gathering and an awkward one is almost
-        always one person paying attention:{" "}
+        The difference between a good event and an awkward one is almost always
+        one person paying attention:{" "}
         <b>
           noticing who's standing alone, making the introduction, refilling the
           water.
@@ -729,8 +729,7 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
         <em>
           you help for a few hours and you walk out knowing half the room.
         </em>{" "}
-        Most of our most-connected members started by volunteering at
-        gatherings.
+        Most of our most-connected members started by volunteering at events.
       </>,
     ],
     tasks: [
@@ -754,7 +753,7 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
       },
     ],
     commitments: [
-      { b: "No minimum", s: "Pick gatherings from the calendar that suit you" },
+      { b: "No minimum", s: "Pick events from the calendar that suit you" },
       {
         b: "An event = ~3 hours",
         s: "Including the early arrival and the tidy-up",
@@ -774,9 +773,9 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
       </>,
     ],
     teamIntro:
-      "A friendly crew across the city's gatherings. A few familiar faces:",
+      "A friendly crew across the city's events. A few familiar faces:",
     team: TEAM_POOL.slice(0, 5),
-    applyRole: "Gatherings Crew · QueerPulse",
+    applyRole: "Events Crew · QueerPulse",
     spotsFilled: "31 / 45",
     spotsPct: 68,
     spots: [
@@ -786,9 +785,9 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
         label: chromeLabel("commitment"),
         value: <b style={{ color: "var(--jade)" }}>Pick your events</b>,
       },
-      { label: "Next gathering", value: <b>Welcome dinner · 14 Jun</b> },
+      { label: "Next event", value: <b>Welcome dinner · 14 Jun</b> },
     ],
-    applyConfirm: applyConfirmation("Gatherings Crew · QueerPulse"),
+    applyConfirm: applyConfirmation("Events Crew · QueerPulse"),
     partner: null,
     community: null,
   },

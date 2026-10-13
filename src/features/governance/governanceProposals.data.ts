@@ -60,7 +60,7 @@ export const DEMO_GOVERNANCE_PROPOSALS: GovernanceProposalDTO[] = [
   {
     id: "demo-member-motion-screening",
     type: "member_motion",
-    title: "Add a sliding-scale line to every paid gathering listing",
+    title: "Add a sliding-scale line to every paid event listing",
     description:
       "The sliding scale exists, but you only find it once you open the ticket step. Putting the lowest available price on the listing card itself would tell someone whether an evening is within reach before they invest any hope in it.",
     targetMemberId: null,

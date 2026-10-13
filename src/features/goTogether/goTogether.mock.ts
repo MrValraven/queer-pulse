@@ -233,7 +233,7 @@ const DEMO_CARD_STATE_OVERRIDE_VALUES: readonly DemoCardStateOverride[] = [
  *  way a host would. */
 const DEMO_CHANGED_HOST_QUESTION: HostQuestion = {
   id: "q1",
-  prompt: "After the gathering: dancing or a quiet drink?",
+  prompt: "After the event: dancing or a quiet drink?",
   options: [
     { id: "q1o1", label: "Dancing" },
     { id: "q1o2", label: "A quiet drink" },

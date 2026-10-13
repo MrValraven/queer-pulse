@@ -568,7 +568,7 @@ describe("GoTogetherGroupSheet member block (PRD-421)", () => {
     fireEvent.click(screen.getByRole("button", { name: "Block Sofia" }));
     expect(
       screen.getByRole("dialog", { name: "Block Sofia?" }),
-    ).toHaveTextContent("You and Sofia stop being a pair for this gathering.");
+    ).toHaveTextContent("You and Sofia stop being a pair for this event.");
   });
 });
 

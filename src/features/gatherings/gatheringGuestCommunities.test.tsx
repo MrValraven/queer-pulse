@@ -225,7 +225,7 @@ describe("GatheringCommunityCard", () => {
     );
     expect(leaveMutate).not.toHaveBeenCalled();
     expect(
-      screen.getByText("Remove Trans & Non-Binary Hub from this gathering?"),
+      screen.getByText("Remove Trans & Non-Binary Hub from this event?"),
     ).toBeInTheDocument();
     const removeButtons = screen.getAllByRole("button", {
       name: "Remove our community",
@@ -242,7 +242,7 @@ describe("GatheringCommunityCard", () => {
     succeedOnLeave();
     renderCardAndRemove(false);
     expect(
-      screen.queryByText("Remove Trans & Non-Binary Hub from this gathering?"),
+      screen.queryByText("Remove Trans & Non-Binary Hub from this event?"),
     ).not.toBeInTheDocument();
     expect(screen.getByText("Hosted with")).toHaveFocus();
     expect(syncAfterLeave).not.toHaveBeenCalled();
@@ -260,7 +260,7 @@ describe("GatheringCommunityCard", () => {
     succeedOnLeave();
     renderCardAndRemove(true);
     expect(
-      screen.queryByText("Remove Trans & Non-Binary Hub from this gathering?"),
+      screen.queryByText("Remove Trans & Non-Binary Hub from this event?"),
     ).not.toBeInTheDocument();
     expect(syncAfterLeave).toHaveBeenCalledWith({
       id: "row-trans-hub",

@@ -3897,7 +3897,7 @@ export const economy: Catalog = {
   "joinGroup.namePlaceholder": "O nome por que te tratam",
   "joinGroup.relationshipLabel": "Como fazes parte da comunidade",
   "joinGroup.relationshipPlaceholder":
-    "Um amigo deu-me um voto de confiança, já fui a alguns encontros…",
+    "Um amigo deu-me um voto de confiança, já fui a alguns eventos…",
   "joinGroup.optional": "(opcional)",
   "joinGroup.disclaimer":
     "As tuas respostas são vistas apenas pela equipa do grupo, nunca publicadas.",

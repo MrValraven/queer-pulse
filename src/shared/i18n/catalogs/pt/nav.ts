@@ -37,7 +37,7 @@ export const nav: Catalog = {
   "landing.label": "Secções da página inicial",
   "landing.about": "A ideia",
   "landing.communities": "Comunidades",
-  "landing.gatherings": "Encontros",
+  "landing.gatherings": "Eventos",
   "landing.housing": "Habitação",
   "landing.personas": "Personas",
   "landing.why": "Porque construímos isto",

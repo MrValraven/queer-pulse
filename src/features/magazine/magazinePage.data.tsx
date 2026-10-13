@@ -285,7 +285,7 @@ export const REVIEWS: Card[] = [
 export const COMMUNITY: Card[] = [
   {
     id: "sunday-table",
-    kicker: "Gathering",
+    kicker: "Event",
     title: "The Sunday table at Esplanada do Intendente",
     excerpt:
       "Three years of eight to twenty-three people gathering every Sunday for an event that has no organiser, no invitation, and no agenda. A portrait.",

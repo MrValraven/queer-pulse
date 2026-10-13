@@ -148,9 +148,9 @@ export const notifications: Catalog = {
   "type.mention.textNamed":
     "<profile>{name}</profile> mencionou-te numa discussão.",
   "type.mention.meta": "Menção",
-  "type.mention.gathering.text": "Foste mencionado num convívio.",
+  "type.mention.gathering.text": "Foste mencionado num evento.",
   "type.mention.gathering.textNamed":
-    "<profile>{name}</profile> mencionou-te num convívio.",
+    "<profile>{name}</profile> mencionou-te num evento.",
   "type.mention.gathering.meta": "Menção",
 
   // As notificações "mention" ramificam consoante `payload.entityKind` — o
@@ -170,10 +170,10 @@ export const notifications: Catalog = {
   "type.mention.business.meta": "Menção de negócio",
 
   "type.mention.event.text":
-    "O teu convívio e/{entityRef} foi mencionado numa discussão.",
+    "O teu evento e/{entityRef} foi mencionado numa discussão.",
   "type.mention.event.textNamed":
-    "<profile>{name}</profile> mencionou o teu convívio e/{entityRef}.",
-  "type.mention.event.meta": "Menção de convívio",
+    "<profile>{name}</profile> mencionou o teu evento e/{entityRef}.",
+  "type.mention.event.meta": "Menção de evento",
 
   "type.mention.thread.text":
     "O teu tópico t/{entityRef} foi mencionado numa discussão.",
@@ -186,25 +186,25 @@ export const notifications: Catalog = {
     "<profile>{name}</profile> respondeu ao teu comentário.",
   "type.forum_reply.meta": "Resposta",
 
-  "type.event_invite.text": "Tens um convite para um convívio.",
+  "type.event_invite.text": "Tens um convite para um evento.",
   "type.event_invite.textNamed":
-    "<profile>{name}</profile> convidou-te para um convívio.",
-  "type.event_invite.meta": "Convite para convívio",
+    "<profile>{name}</profile> convidou-te para um evento.",
+  "type.event_invite.meta": "Convite para evento",
 
   "type.event_cohost_invite.text":
-    "Tens um convite para coanfitriar um convívio.",
+    "Tens um convite para coanfitriar um evento.",
   "type.event_cohost_invite.textNamed":
-    "<profile>{name}</profile> convidou-te para coanfitriar um convívio.",
+    "<profile>{name}</profile> convidou-te para coanfitriar um evento.",
   "type.event_cohost_invite.meta": "Convite para coanfitriar",
 
   "type.event_lineup_invite.text":
-    "Tens um convite para o lineup de um convívio.",
+    "Tens um convite para o lineup de um evento.",
   "type.event_lineup_invite.textNamed":
-    "<profile>{name}</profile> convidou-te para o lineup de um convívio.",
+    "<profile>{name}</profile> convidou-te para o lineup de um evento.",
   "type.event_lineup_invite.meta": "Convite para o lineup",
-  "type.event_lineup_accepted.text": "Alguém entrou no lineup do teu convívio.",
+  "type.event_lineup_accepted.text": "Alguém entrou no lineup do teu evento.",
   "type.event_lineup_accepted.textNamed":
-    "<profile>{name}</profile> entrou no lineup do teu convívio.",
+    "<profile>{name}</profile> entrou no lineup do teu evento.",
   "type.event_lineup_accepted.meta": "Lineup",
   "type.event_lineup_declined.text":
     "Alguém recusou o teu convite para o lineup.",
@@ -217,45 +217,44 @@ export const notifications: Catalog = {
   // Forma simples para uma linha sem contagem de lugares: tem de continuar a
   // ler-se como uma frase em vez de deixar "{seatsRemaining}" no ecrã.
   "type.event_nearly_full.text":
-    "Um convívio que estavas a ponderar está quase cheio.",
+    "Um evento que estavas a ponderar está quase cheio.",
   "type.event_nearly_full.text_one":
-    "Um convívio que estavas a ponderar tem 1 lugar livre.",
+    "Um evento que estavas a ponderar tem 1 lugar livre.",
   "type.event_nearly_full.text_other":
-    "Um convívio que estavas a ponderar tem {seatsRemaining} lugares livres.",
+    "Um evento que estavas a ponderar tem {seatsRemaining} lugares livres.",
   "type.event_nearly_full.meta": "Últimos lugares",
 
   "type.event_reminder.text":
-    "Está a aproximar-se um convívio em que vais estar.",
-  "type.event_reminder.meta": "Lembrete de convívio",
+    "Está a aproximar-se um evento em que vais estar.",
+  "type.event_reminder.meta": "Lembrete de evento",
   "type.event_reminder.titled.text":
-    "Está a aproximar-se um convívio em que vais estar: {eventTitle}.",
-  "type.event_reminder.titled.meta": "Lembrete de convívio",
+    "Está a aproximar-se um evento em que vais estar: {eventTitle}.",
+  "type.event_reminder.titled.meta": "Lembrete de evento",
 
   "type.waitlist_promoted.text":
     "Abriu uma vaga. Já não estás em lista de espera.",
   "type.waitlist_promoted.meta": "Lista de espera",
 
-  "type.event_cancelled.text": "Um convívio em que vais estar foi cancelado.",
-  "type.event_cancelled.meta": "Atualização de convívio",
+  "type.event_cancelled.text": "Um evento em que vais estar foi cancelado.",
+  "type.event_cancelled.meta": "Atualização de evento",
 
-  "type.event_updated.text":
-    "Mudaram detalhes de um convívio em que vais estar.",
-  "type.event_updated.meta": "Atualização de convívio",
+  "type.event_updated.text": "Mudaram detalhes de um evento em que vais estar.",
+  "type.event_updated.meta": "Atualização de evento",
   "type.event_updated.time.text":
-    "Mudou a hora de início de um convívio em que vais estar.",
-  "type.event_updated.time.meta": "Atualização de convívio",
+    "Mudou a hora de início de um evento em que vais estar.",
+  "type.event_updated.time.meta": "Atualização de evento",
   "type.event_updated.location.text":
-    "Mudou o local de um convívio em que vais estar.",
-  "type.event_updated.location.meta": "Atualização de convívio",
+    "Mudou o local de um evento em que vais estar.",
+  "type.event_updated.location.meta": "Atualização de evento",
 
   // Cobertura alargada de notificações. As personalizadas têm o campo
   // `<profile>{name}</profile>` em `textNamed`; as geradas pelo sistema
   // (pedido aprovado/recusado, registo aprovado, denúncia/recurso/roteiro) não
   // têm autor e por isso só têm `.text` genérico.
-  "type.event_rsvp.text": "Alguém confirmou presença no teu convívio.",
+  "type.event_rsvp.text": "Alguém confirmou presença no teu evento.",
   "type.event_rsvp.textNamed":
-    "<profile>{name}</profile> confirmou presença no teu convívio.",
-  "type.event_rsvp.meta": "Presença em convívio",
+    "<profile>{name}</profile> confirmou presença no teu evento.",
+  "type.event_rsvp.meta": "Presença em evento",
 
   "type.community_reply.text": "Alguém respondeu à tua publicação.",
   "type.community_reply.textNamed":
@@ -877,7 +876,7 @@ export const notifications: Catalog = {
   "type.event_announcement.textNamed":
     "<profile>{name}</profile> publicou uma atualização sobre {title}.",
   "type.event_announcement.meta": "Mensagem de quem organiza",
-  "type.event_announcement.titleFallback": "um dos teus convívios",
+  "type.event_announcement.titleFallback": "um dos teus eventos",
   "type.forum_thread_reviewed.text": "O teu tópico “{title}” foi revisto.",
   "type.forum_thread_reviewed.meta": "Revisão de tópico",
   "type.forum_thread_reviewed.approved.text":
@@ -1009,11 +1008,11 @@ export const notifications: Catalog = {
   "type.listing_edit_suggestion_accepted.field.description": "a descrição",
   "type.listing_edit_suggestion_accepted.fieldFallback": "os detalhes",
   "type.venue_event_attachment.text":
-    "Há um convívio marcado no espaço {listingName}: {eventTitle}.",
-  "type.venue_event_attachment.meta": "Convívio no teu espaço",
+    "Há um evento marcado no espaço {listingName}: {eventTitle}.",
+  "type.venue_event_attachment.meta": "Evento no teu espaço",
   "type.venue_event_attachment.untitled.text":
-    "Há um convívio novo marcado no espaço {listingName}.",
-  "type.venue_event_attachment.untitled.meta": "Convívio no teu espaço",
+    "Há um evento novo marcado no espaço {listingName}.",
+  "type.venue_event_attachment.untitled.meta": "Evento no teu espaço",
   "type.venue_event_attachment.listingNameFallback": "que geres",
   "type.persona_endorsed.text": "Alguém recomendou uma das tuas personas.",
   "type.persona_endorsed.meta": "Recomendação de persona",
@@ -1101,7 +1100,7 @@ export const notifications: Catalog = {
   "bundle.others_other": "e mais {count}",
 
   "tabs.all": "Todas",
-  "tabs.events": "Encontros",
+  "tabs.events": "Eventos",
   "tabs.community": "Comunidade",
   "tabs.platform": "Plataforma",
   "tabs.mentions": "Menções",
@@ -1115,7 +1114,7 @@ export const notifications: Catalog = {
   "row.reasonLeadMember": "Motivo indicado por quem pediu:",
   "row.reasonLeadQuestion": "A pergunta da moderação:",
   "actions.viewThread": "Ver conversa",
-  "actions.viewEvent": "Ver encontro",
+  "actions.viewEvent": "Ver evento",
   "actions.viewProfile": "Ver perfil",
   "actions.accept": "Aceitar",
   "actions.decline": "Recusar",
@@ -1139,8 +1138,8 @@ export const notifications: Catalog = {
 
   // Lista de notificações de demonstração (notificationsList.data.tsx)
   "list.2.text":
-    "A tua inscrição em <strong>{title}</strong> foi confirmada. O encontro é no dia {date}, em {venue}.",
-  "list.2.meta": "Encontro · Convívio",
+    "A tua inscrição em <strong>{title}</strong> foi confirmada. O evento é no dia {date}, em {venue}.",
+  "list.2.meta": "Evento",
   "list.3.text":
     "<strong>{name}</strong> convidou-te a juntares-te ao grupo de leitura <strong>{group}</strong>.",
   "list.3.meta": "Grupo de leitura · Convite",
@@ -1164,7 +1163,7 @@ export const notifications: Catalog = {
   "list.8.meta": "Atualização da plataforma",
   "list.9.text":
     "O <strong>{event}</strong> a que foste tem uma conversa de continuação marcada para {date}.",
-  "list.9.meta": "Encontro · Continuação",
+  "list.9.meta": "Evento · Continuação",
   "list.11.text_one":
     "O teu post no Fórum (“{postTitle}”) recebeu {count} resposta.",
   "list.11.text_other":
@@ -1185,7 +1184,7 @@ export const notifications: Catalog = {
   "mentions.tabs.unread": "Não lidas",
   "mentions.tabs.posts": "Em posts",
   "mentions.tabs.articles": "Em artigos",
-  "mentions.tabs.events": "Em encontros",
+  "mentions.tabs.events": "Em eventos",
   "mentions.unreadSummary_one": "{count} não lida",
   "mentions.unreadSummary_other": "{count} não lidas",
   "mentions.oldestFrom": "· a mais antiga de {when}",
@@ -1220,8 +1219,8 @@ export const notifications: Catalog = {
   "mentions.context.namedInvite": "num convite de {name}",
   "mentions.context.communityPost": "num post da comunidade {community}",
   "mentions.context.thread": "numa conversa",
-  "mentions.context.gathering": "num convívio",
-  "mentions.context.eventInvite": "num convite para um encontro",
+  "mentions.context.gathering": "num evento",
+  "mentions.context.eventInvite": "num convite para um evento",
   "mentions.context.communityReply": "numa resposta na comunidade {community}",
   // Caixa de menções em direto (GET /mentions) — grupo do dia + alternativas
   // quando a linha do backend não traz rótulo/autor resolvido (MentionsPanel).
@@ -1229,7 +1228,7 @@ export const notifications: Catalog = {
   "mentions.liveContext.community": "num post da comunidade",
   "mentions.liveContext.generic": "mencionou-te",
   "mentions.liveWhere.fallback": "a conversa",
-  "mentions.liveWhere.gathering": "o convívio",
+  "mentions.liveWhere.gathering": "o evento",
   "mentions.liveActor.unknown": "Alguém",
 
   // Pré-visualização de notificação (NotificationDeepLinkPage.tsx / Cards.tsx)
@@ -1395,7 +1394,7 @@ export const notifications: Catalog = {
   // comunidade convidada; a resposta chega à organização do convívio, com uma
   // frase por decisão (`collabResponseKey`).
   "type.event_community_invite.text":
-    "{communityName} tem um convite para organizar um convívio em conjunto.",
+    "{communityName} tem um convite para organizar um evento em conjunto.",
   "type.event_community_invite.textNamed":
     "<profile>{name}</profile> convidou {communityName} para organizar {eventTitle} em conjunto.",
   "type.event_community_invite.meta": "Convite para colaborar",

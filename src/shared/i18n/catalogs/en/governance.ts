@@ -56,7 +56,7 @@ export const governance: Catalog = {
   "health.stat.retention.label": "Member retention rate",
   "health.stat.reportsFiled.label": "Reports filed this quarter",
   "health.stat.membersRemoved.label": "Members removed",
-  "health.stat.gatheringsHosted.label": "Gatherings hosted",
+  "health.stat.gatheringsHosted.label": "Events hosted",
   "health.stat.appealUpheld.label": "Moderation appeal upheld",
 
   "health.trend.upThisQuarter": "{count} this quarter",
@@ -83,7 +83,7 @@ export const governance: Catalog = {
 
   "steps.reportFiled.title": "Report filed",
   "steps.reportFiled.text":
-    "Any member can report another member, a gathering, a board post, or any content. Reports are confidential. The reported person is not told who filed the report.",
+    "Any member can report another member, an event, a board post, or any content. Reports are confidential. The reported person is not told who filed the report.",
   "steps.review.title": "Review by the moderation team",
   "steps.review.text":
     "The moderation team reviews every report, starting with urgent safety issues.",
@@ -129,7 +129,7 @@ export const governance: Catalog = {
   "principles.accessNotConditional.title":
     "Access is not conditional on ability to pay",
   "principles.accessNotConditional.text":
-    "A sliding scale for all paid gatherings. No one is excluded for financial circumstances.",
+    "A sliding scale for all paid events. No one is excluded for financial circumstances.",
 
   // ── Finances ────────────────────────────────────────────────────────────
   "sections.finances.eyebrow": "Financial transparency",
@@ -273,9 +273,9 @@ export const governance: Catalog = {
   "sections.decisions.title": "What changed and <em>why.</em>",
 
   "decisions.slidingScale.lead":
-    "May 2026: Sliding scale introduced for gatherings.",
+    "May 2026: Sliding scale introduced for events.",
   "decisions.slidingScale.body":
-    "Following a forum discussion, the council agreed to implement a sliding scale for all paid gatherings.",
+    "Following a forum discussion, the council agreed to implement a sliding scale for all paid events.",
   "decisions.forumLaunched.lead": "April 2026: Forum launched.",
   "decisions.forumLaunched.body":
     "Following member requests for a place to discuss longer-form topics. Categories and guidelines were co-designed with members.",
@@ -301,7 +301,7 @@ export const governance: Catalog = {
     "Your identity stays confidential. QueerPulse sends no email, so when you submit this you get a reference code instead: keep it, and you can check what happened to your concern at any time.",
   "sections.raise.selectPlaceholder": "What kind of concern?",
   "sections.raise.option.member": "Report a member or behaviour",
-  "sections.raise.option.gathering": "Report a gathering or event",
+  "sections.raise.option.gathering": "Report an event",
   "sections.raise.option.content": "Content or platform issue",
   "sections.raise.option.appeal": "Moderation decision I want to appeal",
   "sections.raise.option.other": "Something else",

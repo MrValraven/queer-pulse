@@ -146,7 +146,7 @@ export const marketing: Catalog = {
     "A changing Catholic context, other traditions, and the members who hold faith and queerness together. Being secular sits there too.",
   "about.linkModal.intersections.point.class.title": "Class and economics.",
   "about.linkModal.intersections.point.class.body":
-    "Queer social life carries an unspoken class character. The section names Lisbon's cost shift and what we do about access: sliding-scale gatherings, a free forum, and membership that stays free for anyone who cannot contribute.",
+    "Queer social life carries an unspoken class character. The section names Lisbon's cost shift and what we do about access: sliding-scale events, a free forum, and membership that stays free for anyone who cannot contribute.",
   "about.linkModal.intersections.cta": "Read the full intersectionality guide",
 
   "about.linkModal.guidelinesExclusion.eyebrow": "Community guidelines",
@@ -363,7 +363,7 @@ export const marketing: Catalog = {
     "Here's a ladder. Pick the rung that matches what you have to give this month.",
   "activism.start.step1.title": "Show up once",
   "activism.start.step1.body":
-    "Come to a gathering, a vigil, a community meeting. Presence is the first act.",
+    "Come to an event, a vigil, a community meeting. Presence is the first act.",
   "activism.start.step2.title": "Give a few hours",
   "activism.start.step2.body":
     "Pick one recurring slot, a helpline shift, an outreach afternoon, a stall at an event.",
@@ -448,7 +448,7 @@ export const marketing: Catalog = {
   "coc.toc.changes": "Changes",
   "coc.scope.title": "§01 <em>Scope</em>",
   "coc.scope.p1":
-    "This Code applies everywhere on QueerPulse (<strong>posts, messages, gatherings, comments, profiles</strong>) and to conduct off-platform when it directly affects another member's safety here.",
+    "This Code applies everywhere on QueerPulse (<strong>posts, messages, events, comments, profiles</strong>) and to conduct off-platform when it directly affects another member's safety here.",
   "coc.scope.p2":
     "It applies to every member, <em>without exception</em>, founders, staff, moderators included.",
   "coc.scope.p3":
@@ -521,7 +521,7 @@ export const marketing: Catalog = {
     "A cooling-off period, from days to weeks, depending on severity.",
   "coc.ladder.step4.title": "Removal from a space",
   "coc.ladder.step4.body":
-    "Loss of access to a specific gathering, community, or channel, while the rest of the platform stays open.",
+    "Loss of access to a specific event, community, or channel, while the rest of the platform stays open.",
   "coc.ladder.step5.title": "Removal from QueerPulse",
   "coc.ladder.step5.body":
     "Reserved for serious or repeated violations. <em>Always reviewable on appeal.</em>",
@@ -743,7 +743,7 @@ export const marketing: Catalog = {
   "guidelines.clause04.titlePre": "Keep the space ",
   "guidelines.clause04.titleEm": "private",
   "guidelines.clause04.p1":
-    "What's shared in a gathering, a support space, or a private community stays there unless the person says otherwise.",
+    "What's shared in an event, a support space, or a private community stays there unless the person says otherwise.",
   "guidelines.clause04.p2":
     "This includes screenshots. Ask before you share anything that came from inside QueerPulse.",
   "guidelines.clause05.titlePre": "Repair beyond the ",
@@ -801,9 +801,9 @@ export const marketing: Catalog = {
   "guidelines.outro.backCta": "Back to home",
 
   // ── Help ───────────────────────────────────────────────────────────────
-  "help.meta.title": "QueerPulse help centre: invites, safety, gatherings",
+  "help.meta.title": "QueerPulse help centre: invites, safety, events",
   "help.meta.description":
-    "Answers to common QueerPulse questions, how invites work, managing your account, RSVPs and hosting gatherings, reporting and appeals, and membership tiers.",
+    "Answers to common QueerPulse questions, how invites work, managing your account, RSVPs and hosting events, reporting and appeals, and membership tiers.",
   "help.hero.eyebrow": "Help",
   "help.hero.title": "Questions, <em>answered.</em>",
   "help.hero.sub": "Search below, or browse by topic.",
@@ -827,8 +827,8 @@ export const marketing: Catalog = {
   "help.category.gettingStarted.head": "Getting <em>started</em>",
   "help.category.account.label": "Account",
   "help.category.account.head": "Your <em>account</em>",
-  "help.category.gatherings.label": "Gatherings",
-  "help.category.gatherings.head": "<em>Gatherings</em>",
+  "help.category.gatherings.label": "Events",
+  "help.category.gatherings.head": "<em>Events</em>",
   "help.category.safety.label": "Safety",
   "help.category.safety.head": "<em>Safety</em>",
   "help.category.membership.label": "Membership",
@@ -843,7 +843,7 @@ export const marketing: Catalog = {
     "You'll set up your profile, and your account is active immediately: no waiting period.",
   "help.qa.lisbonOnly.q": "Is QueerPulse only for people in Lisbon?",
   "help.qa.lisbonOnly.a":
-    "Gatherings are Lisbon-based, but membership itself isn't location-locked. Plenty of members join remotely for the network and the magazine.",
+    "Events are Lisbon-based, but membership itself isn't location-locked. Plenty of members join remotely for the network and the magazine.",
   "help.qa.free.q": "Is QueerPulse free?",
   "help.qa.free.a": "Yes, QueerPulse is free to join and use.",
   "help.qa.changeName.q": "How do I change my name or pronouns?",
@@ -864,8 +864,8 @@ export const marketing: Catalog = {
     "Levels reflect how long you've been vouched into the community and your activity. They are a trust signal, and everything stays free.",
   "help.qa.rsvp.q": "How do RSVPs work?",
   "help.qa.rsvp.a":
-    "Confirm on the event page via the <calendarLink>calendar</calendarLink> or events board. <strong>Spots are limited</strong> at most gatherings, so RSVP early.",
-  "help.qa.hostGathering.q": "Can I host my own gathering?",
+    "Confirm on the event page via the <calendarLink>calendar</calendarLink> or events board. <strong>Spots are limited</strong> at most events, so RSVP early.",
+  "help.qa.hostGathering.q": "Can I host my own event?",
   "help.qa.hostGathering.a":
     "Yes, see the <hostLink>hosting guide</hostLink> for a step-by-step walkthrough.",
   "help.qa.cantMakeIt.q": "I RSVP'd but can't make it. What do I do?",
@@ -1028,7 +1028,7 @@ export const marketing: Catalog = {
     "The people who run it say hello and show you around, so you never start from nothing.",
   "communitiesAbout.how.belong.title": "Show up and belong",
   "communitiesAbout.how.belong.body":
-    "Join the conversation, come to gatherings, and become a face people are glad to see.",
+    "Join the conversation, come to events, and become a face people are glad to see.",
   "communitiesAbout.outro.title": "Your people are already here.",
   "communitiesAbout.outro.sub":
     "Request an invite and we'll point you to the communities that feel like home.",
@@ -1081,7 +1081,7 @@ export const marketing: Catalog = {
   "privacy.whatWeCollect.activity.item2":
     "<strong>What keeps chat working</strong>: who's in a conversation, delivery and read receipts, reactions, and anyone you've blocked. Typing and who's online aren't stored. They're live-only.",
   "privacy.whatWeCollect.activity.item3":
-    "<strong>Event RSVPs and attendance</strong>, so gatherings can plan around headcount.",
+    "<strong>Event RSVPs and attendance</strong>, so events can plan around headcount.",
   "privacy.whatWeCollect.activity.item4":
     "<strong>A general location</strong> you choose to add, a city or area, and the map area you browse in the directory. We never read your device's precise location.",
   "privacy.whatWeCollect.activity.item5":
@@ -1102,7 +1102,7 @@ export const marketing: Catalog = {
   "privacy.howWeUse.intro": "Your data is used only to:",
   "privacy.howWeUse.item1": "Run your account and keep you signed in securely",
   "privacy.howWeUse.item2":
-    "Show you gatherings, communities, and content relevant to you",
+    "Show you events, communities, and content relevant to you",
   "privacy.howWeUse.item3":
     "Deliver your messages, notifications, and the connections you make",
   "privacy.howWeUse.item4":
@@ -1124,12 +1124,12 @@ export const marketing: Catalog = {
     "<strong>Nobody else.</strong> We don't sell or rent your data to any third party, ever.",
   "privacy.retention.title": "How long we keep it",
   "privacy.retention.p1":
-    "Your profile, your messages, your posts, your connections and your uploads are kept for as long as your account is open. Your RSVPs are kept too, so a gathering you went to stays in your own history and its host keeps their headcount. What clears on its own is the attendance detail listed below.",
+    "Your profile, your messages, your posts, your connections and your uploads are kept for as long as your account is open. Your RSVPs are kept too, so an event you went to stays in your own history and its host keeps their headcount. What clears on its own is the attendance detail listed below.",
   "privacy.retention.clearsHeading": "Things that clear on their own",
   "privacy.retention.p3":
     "These run on a schedule, whether or not you do anything:",
   "privacy.retention.clears.gathering":
-    "<strong>What you told a host about access or dietary needs, and the record that you checked in</strong>: 30 days after the gathering. Your RSVP row itself stays, so past gatherings keep their attendance count.",
+    "<strong>What you told a host about access or dietary needs, and the record that you checked in</strong>: 30 days after the event. Your RSVP row itself stays, so past events keep their attendance count.",
   "privacy.retention.clears.notifications":
     "<strong>Read notifications</strong>: 90 days. Unread ones are kept until you have seen them.",
   "privacy.retention.clears.push":
@@ -1151,7 +1151,7 @@ export const marketing: Catalog = {
   "privacy.retention.deleted.keptModeration":
     "<strong>Moderation records</strong> stay, with your name removed from them, so that deleting an account cannot erase the record of reports you filed about other people.",
   "privacy.retention.deleted.keptContent":
-    "<strong>Content other members depend on</strong> stays, such as a gathering you were hosting or a listing you posted, with your name removed from it.",
+    "<strong>Content other members depend on</strong> stays, such as an event you were hosting or a listing you posted, with your name removed from it.",
   "privacy.retention.beyondHeading": "What we keep beyond your account",
   "privacy.retention.beyond.body":
     "Moderation records, consent records and records of the data requests you made are kept as evidence, with your name removed from them where it can be.",
@@ -1295,13 +1295,13 @@ export const marketing: Catalog = {
   "terms.content.magazineHeading": "Magazine and creative submissions",
   "terms.content.magazineBody":
     "Additional terms apply to magazine pitches and creative submissions. See the submission guidelines when you pitch.",
-  "terms.events.title": "Gatherings and events",
+  "terms.events.title": "Events",
   "terms.events.p1":
-    "Gatherings are organised by members and QueerPulse; each carries its own attendance and cancellation terms shown on the event page.",
+    "Events are organised by members and QueerPulse; each carries its own attendance and cancellation terms shown on the event page.",
   "terms.events.p2":
     "Ticket prices for sliding-scale events are set by hosts within the platform's required tiers. QueerPulse takes no percentage of ticket revenue.",
   "terms.events.p3":
-    "You're expected to follow the Code of Conduct and any venue-specific rules at every gathering.",
+    "You're expected to follow the Code of Conduct and any venue-specific rules at every event.",
   "terms.events.p4":
     "Hosts may remove attendees who violate the Code of Conduct at their event, at their discretion.",
   "terms.termination.title": "Termination",
@@ -1318,7 +1318,7 @@ export const marketing: Catalog = {
   "terms.liability.p1":
     "QueerPulse is provided “as is”. We work hard to keep it running smoothly but can't guarantee it will always be available or error-free.",
   "terms.liability.p2":
-    "We aren't responsible for the conduct of members at gatherings, though we take reports seriously and act on them.",
+    "We aren't responsible for the conduct of members at events, though we take reports seriously and act on them.",
   "terms.liability.p3":
     "To the extent permitted by law, our liability is limited to the amount you've paid us in the past 12 months, if any.",
   "terms.liability.highlight":
@@ -1419,7 +1419,7 @@ export const marketing: Catalog = {
   "pressKit.facts.founded": "Founded · Lisbon",
   "pressKit.facts.activeMembers": "Active members today",
   "pressKit.facts.communities": "Communities on the platform",
-  "pressKit.facts.gatherings": "Gatherings held so far",
+  "pressKit.facts.gatherings": "Events held so far",
   "pressKit.facts.safeSpaces": "Verified safe spaces in Lisbon",
   "pressKit.facts.magazineIssues": "Magazine issues to date",
   "pressKit.coverage.section.title": "Recent <em>coverage</em>",
@@ -2728,7 +2728,7 @@ export const marketing: Catalog = {
   "listBusiness.deleteFlow.losses.photos": "Its photos",
   "listBusiness.deleteFlow.losses.publicPage": "The public page and its link",
   "listBusiness.deleteFlow.losses.gatheringsStay":
-    "Linked gatherings stay, without the place attached.",
+    "Linked events stay, without the place attached.",
   "listBusiness.deleteFlow.losses.noUndo.owner":
     "There is no undo, and no copy is kept.",
   "listBusiness.deleteFlow.losses.noUndo.moderator": "There is no undo.",
@@ -3410,11 +3410,11 @@ export const marketing: Catalog = {
   "changelog.releases.2026-10-12.headline":
     "Host with guest communities, filter listings by what they offer, and listen in Studio.",
   "changelog.releases.2026-10-08.headline":
-    "Businesses with no shop can list, and hosts edit gatherings in a wider, guided editor.",
+    "Businesses with no shop can list, and hosts edit events in a wider, guided editor.",
   "changelog.releases.2026-10-07.headline":
     "Online businesses get their own listing form, and you check guests in from Manage.",
   "changelog.releases.2026-10-06.headline":
-    "Funding calls, fundraisers, real gatherings for visitors and a language that follows you.",
+    "Funding calls, fundraisers, real events for visitors and a language that follows you.",
   "changelog.releases.2026-10-05.headline":
     "Chats you have read stay read, BIPOC-run listing tags, and one log of every staff action.",
   "changelog.releases.2026-10-02.headline":
@@ -3446,15 +3446,15 @@ export const marketing: Catalog = {
   "changelog.releases.2026-09-12.headline":
     "Your Now card shows what your openness does, and listing photos come from your uploads.",
   "changelog.releases.2026-09-11.headline":
-    "Hosts create gatherings in five short chapters, and guides get a full editor.",
+    "Hosts create events in five short chapters, and guides get a full editor.",
   "changelog.releases.2026-09-10.headline":
     "Every chat can carry its own wallpaper, in a colour you choose.",
   "changelog.releases.2026-09-09.headline":
-    "Hosts run a gathering from its own page, and the changelog reads as releases.",
+    "Hosts run an event from its own page, and the changelog reads as releases.",
   "changelog.releases.2026-09-08.headline":
     "Bios can link people and places, and the account menu switches language and theme.",
   "changelog.releases.2026-09-06.headline":
-    "Housing, messages, the forum, the magazine and gatherings all get a full pass.",
+    "Housing, messages, the forum, the magazine and events all get a full pass.",
   "changelog.releases.2026-09-03.headline":
     "The installed app opens on a heartbeat to your feed, and community pages fit a phone.",
   "changelog.releases.2026-09-01.headline":
@@ -3486,7 +3486,7 @@ export const marketing: Catalog = {
   "changelog.releases.2026-08-19.headline":
     "Badges and levels are redesigned, and Getting Started XP shows up again.",
   "changelog.releases.2026-08-18.headline":
-    "Choose who sees your profile, claim a listing, and add gatherings to your calendar.",
+    "Choose who sees your profile, claim a listing, and add events to your calendar.",
   "changelog.releases.2026-08-14.headline":
     "Earn XP, levels and badges, reframe your photos, and add translations of a poem.",
   "changelog.releases.2026-08-13.headline":
@@ -3512,7 +3512,7 @@ export const marketing: Catalog = {
   "changelog.releases.2026-07-29.headline":
     "Group chats, message search and GIFs land in chat, and events get one home.",
   "changelog.releases.2026-07-28.headline":
-    "Gatherings get photo galleries, mentions arrive, and messages can push to your phone.",
+    "Events get photo galleries, mentions arrive, and messages can push to your phone.",
   "changelog.releases.2026-07-25.headline":
     "Subprofiles get richer, and messages gain edit, reply and long-press actions.",
   "changelog.releases.2026-07-23.headline":
@@ -3614,17 +3614,17 @@ export const marketing: Catalog = {
   "changelog.entries.second-starred-item-stays.body":
     "Only the item in your Spotlight leaves its section. Any other starred item stays on your page.",
   "changelog.entries.gathering-names-its-community.title":
-    "A gathering's page names the community it's hosted with",
+    "An event's page names the community it's hosted with",
   "changelog.entries.gathering-names-its-community.body":
     "It shows in the header and under the host, linked. A private community's name shows only to its members and the organisers.",
   "changelog.entries.hosting-with-a-community-is-for-its-team.title":
     "Only a community's owners, co-owners and mods can host with it",
   "changelog.entries.hosting-with-a-community-is-for-its-team.body":
-    "Hosting with a community puts its name on the gathering, so the picker lists only communities you help run.",
+    "Hosting with a community puts its name on the event, so the picker lists only communities you help run.",
   "changelog.entries.host-with-a-community-is-not-visibility.title":
     "Hosting with a community no longer reads as a visibility setting",
   "changelog.entries.host-with-a-community-is-not-visibility.body":
-    "The picker now says Host it with a community, and that this doesn't change who can see it. A Public gathering can have one too.",
+    "The picker now says Host it with a community, and that this doesn't change who can see it. A Public event can have one too.",
   "changelog.entries.launch-films-and-marketing-videos.title":
     "Launch films, made from QueerPulse itself",
   "changelog.entries.launch-films-and-marketing-videos.body":
@@ -3734,9 +3734,9 @@ export const marketing: Catalog = {
     "The update card shows a progress line and always reloads, even in a tab opened with a hard refresh.",
   // 6 Oct 2026: carried scan rows (PRD-320, PRD-323, PRD-325, PRD-327, PRD-329, ENG-190).
   "changelog.entries.gathering-links-from-feed-open.title":
-    "Gathering links from the feed now open",
+    "Event links from the feed now open",
   "changelog.entries.gathering-links-from-feed-open.body":
-    "Links in the feed and notifications open the right gathering, past ones included, which show that they ended.",
+    "Links in the feed and notifications open the right event, past ones included, which show that they ended.",
   "changelog.entries.new-member-cards-show-what-you-share.title":
     "New member cards show what you have in common",
   "changelog.entries.new-member-cards-show-what-you-share.body":
@@ -3758,14 +3758,14 @@ export const marketing: Catalog = {
   "changelog.entries.gathering-venue-fills-address.body":
     "Pick a place from the directory and its street address comes with it, so you only add how to get in.",
   "changelog.entries.gathering-cohosts-and-venue-stand-out.title":
-    "Co-hosts are tagged and the venue leads on a gathering",
+    "Co-hosts are tagged and the venue leads on an event",
   "changelog.entries.gathering-cohosts-and-venue-stand-out.body":
     "Who's going marks co-hosts beside the host, and the venue name now opens Getting there in large type.",
   "changelog.entries.checkin-tab.title": "Check in guests from Manage",
   "changelog.entries.checkin-tab.body":
     "Scan cards back to back, search the whole list and keep the screen awake in focus mode at the door.",
   "changelog.entries.manage-field-editors.title":
-    "Edit each gathering detail in its own editor",
+    "Edit each event detail in its own editor",
   "changelog.entries.manage-field-editors.body":
     "Date, time, capacity and description each open a focused editor, and a date change now really saves.",
   "changelog.entries.film-preview-sound-at-once.title":
@@ -3785,7 +3785,7 @@ export const marketing: Catalog = {
   "changelog.entries.feed-holds-still-while-loading.body":
     "New-member cards you can already see stay the same as you scroll, and later joiners get their own card.",
   "changelog.entries.tag-people-in-gathering-descriptions.title":
-    "Tag members and businesses in gathering descriptions",
+    "Tag members and businesses in event descriptions",
   "changelog.entries.tag-people-in-gathering-descriptions.body":
     "Type @ or b/ as you write, and tagged members and business owners get a mention notification.",
   "changelog.entries.edit-notified-count.title":
@@ -3823,7 +3823,7 @@ export const marketing: Catalog = {
   "changelog.entries.out-and-about-access-questions.title":
     "Out-and-about listings ask their own access questions",
   "changelog.entries.out-and-about-access-questions.body":
-    "Tours and mobile services answer access questions about the route, and gathering cards show who runs them.",
+    "Tours and mobile services answer access questions about the route, and event cards show who runs them.",
   "changelog.entries.suggested-people-reasons-line-up.title":
     "People you might know reasons line up across the cards",
   "changelog.entries.suggested-people-reasons-line-up.body":
@@ -3833,7 +3833,7 @@ export const marketing: Catalog = {
   "changelog.entries.tab-unread-count-clears.body":
     "On some pages the (1) stayed in the tab title after the bell emptied, until you reloaded.",
   "changelog.entries.share-my-plans-in-the-header.title":
-    "Share my plans moves up to the gathering's header",
+    "Share my plans moves up to the event's header",
   "changelog.entries.share-my-plans-in-the-header.body":
     "Once you're going, a shield icon beside Add to calendar sends your plans to someone you trust.",
   "changelog.entries.studio-v2.title":
@@ -3861,13 +3861,13 @@ export const marketing: Catalog = {
   "changelog.entries.forum-compose-fits-phones-unfollows-stick.body":
     "Writing a forum post fits phone screens, and a persona you unfollow leaves your list right away.",
   "changelog.entries.calendar-entries-carry-description-and-host.title":
-    "Calendar entries carry the gathering's description",
+    "Calendar entries carry the event's description",
   "changelog.entries.calendar-entries-carry-description-and-host.body":
     "The notes hold the description, who hosts it and for which communities, above the link.",
   "changelog.entries.community-menu-local-places.title":
     "Local places now live in the Community menu",
   "changelog.entries.community-menu-local-places.body":
-    "The directory and Housing sit in Gatherings & places and Partners in People, so the top bar has one menu less.",
+    "The directory and Housing sit in Events & places and Partners in People, so the top bar has one menu less.",
   "changelog.entries.marketing-flyers.title":
     "Event flyers and team tee files in admin Marketing",
   "changelog.entries.marketing-flyers.body":
@@ -3877,15 +3877,15 @@ export const marketing: Catalog = {
   "changelog.entries.search-first-work-picker.body":
     '"What do you do?" opens on a search box, with every field tucked into 10 groups to browse.',
   "changelog.entries.taken-down-gatherings-off-venue-pages.title":
-    "Taken-down gatherings leave venue pages",
+    "Taken-down events leave venue pages",
   "changelog.entries.taken-down-gatherings-off-venue-pages.body":
-    "They also stop counting toward the badge that says a venue hosts gatherings.",
+    "They also stop counting toward the badge that says a venue hosts events.",
   "changelog.entries.settings-save-bar-on-phones.title":
     "The Settings save bar fits on phones",
   "changelog.entries.settings-save-bar-on-phones.body":
     "It stays clear of the field you just changed, and picker chips are a full thumb's height on touch.",
   "changelog.entries.guest-communities-on-gatherings.title":
-    "Host a gathering with other communities",
+    "Host an event with other communities",
   "changelog.entries.guest-communities-on-gatherings.body":
     "Invite other communities as guests: once their team accepts, it lists on their page and reaches their members.",
   "changelog.entries.studio-v1.title": "Listen and upload in Studio",
@@ -3908,15 +3908,15 @@ export const marketing: Catalog = {
   "changelog.entries.update-card-waits-for-member-pages.body":
     "It shows on your feed and other member pages, so signing up or signing in is never interrupted.",
   "changelog.entries.calendar-entries-link-to-the-gathering.title":
-    "Calendar entries link back to the gathering",
+    "Calendar entries link back to the event",
   "changelog.entries.calendar-entries-link-to-the-gathering.body":
-    "Adding a gathering to your calendar puts its QueerPulse link in the event's notes.",
+    "Adding an event to your calendar puts its QueerPulse link in the event's notes.",
   "changelog.entries.access-answers-lead-with-what-is-there.title":
     "Access answers lead with what is there",
   "changelog.entries.access-answers-lead-with-what-is-there.body":
-    "Confirmed features form a light list and gaps share one quiet line; an unanswered gathering hides it.",
+    "Confirmed features form a light list and gaps share one quiet line; an unanswered event hides it.",
   "changelog.entries.gathering-shows-community-avatar.title":
-    "A gathering shows its community's avatar",
+    "An event shows its community's avatar",
   "changelog.entries.gathering-shows-community-avatar.body":
     "Under Hosted with, the community's own image replaces the generic icon whenever one is set.",
   "changelog.entries.listing-photo-buttons-easier-to-tap.title":
@@ -3930,13 +3930,13 @@ export const marketing: Catalog = {
   "changelog.entries.no-fixed-premises-listings.title":
     "List a business that has no shop",
   "changelog.entries.no-fixed-premises-listings.body":
-    "Tours and mobile services say where in Lisbon they work, and gatherings can name the business that runs them.",
+    "Tours and mobile services say where in Lisbon they work, and events can name the business that runs them.",
   "changelog.entries.listing-attributes.title":
     "Listings now say what they offer, and you can filter by it",
   "changelog.entries.listing-attributes.body":
     "Owners tick what fits their place and pick three for the card, and you filter by way in, payment or language.",
   "changelog.entries.wider-gathering-editor.title":
-    "Edit your gathering in a wider, guided editor",
+    "Edit your event in a wider, guided editor",
   "changelog.entries.wider-gathering-editor.body":
     "Jump between sections, see what changed on a live card preview, and get asked before edits are lost.",
   "changelog.entries.date-fields-keep-your-hour.title":
@@ -3944,7 +3944,7 @@ export const marketing: Catalog = {
   "changelog.entries.date-fields-keep-your-hour.body":
     "Arrow keys move 11 AM to noon, typing 12 keeps both digits, and Escape closes only the calendar.",
   "changelog.entries.more-gathering-themes.title":
-    "Choose from many more gathering themes",
+    "Choose from many more event themes",
   "changelog.entries.more-gathering-themes.body":
     "Themes now cover who it's for, language, access and mood, grouped so the right three are quick to find.",
   "changelog.entries.checkin-guest-details.title":
@@ -3954,7 +3954,7 @@ export const marketing: Catalog = {
   "changelog.entries.listed-venue-address-open.title":
     "See a listed venue's address before you RSVP",
   "changelog.entries.listed-venue-address-open.body":
-    "Gatherings at a business from the directory show its street address to everyone, as its own page does.",
+    "Events at a business from the directory show its street address to everyone, as its own page does.",
   "changelog.entries.smoother-checkin-moves.title":
     "Checking in or undoing a guest moves them smoothly",
   "changelog.entries.smoother-checkin-moves.body":
@@ -3964,11 +3964,11 @@ export const marketing: Catalog = {
   "changelog.entries.smoother-focus-mode.body":
     "The guest list glides between its spot on the page and full screen while the page fades out behind it.",
   "changelog.entries.gathering-guest-preview.title":
-    "Preview your gathering as a guest",
+    "Preview your event as a guest",
   "changelog.entries.gathering-guest-preview.body":
-    "Hosts can see their gathering page as a member, a guest who's going, or someone on the waitlist.",
+    "Hosts can see their event page as a member, a guest who's going, or someone on the waitlist.",
   "changelog.entries.roomier-venue-editor.title":
-    "Pick a gathering's venue from a full list",
+    "Pick an event's venue from a full list",
   "changelog.entries.roomier-venue-editor.body":
     "The venue editor opens wide, with nearby places in view and a row to use any name you type.",
   "changelog.entries.bell-hide-keeps-notifications.title":
@@ -3984,7 +3984,7 @@ export const marketing: Catalog = {
   "changelog.entries.forum-replies-read-as-one-conversation.body":
     "Replies are grouped by space and thread lines, Report sits in the reply menu, and edits show beside the date.",
   "changelog.entries.gathering-where-map.title":
-    "Gatherings show where they are on a map",
+    "Events show where they are on a map",
   "changelog.entries.gathering-where-map.body":
     "On a computer the venue sits on a map beside the details, with a button that opens directions in Google Maps.",
   "changelog.entries.thread-mentions-read-as-names.title":
@@ -4010,13 +4010,13 @@ export const marketing: Catalog = {
   "changelog.entries.smooth-tab-switching.title":
     "Switching tabs glides instead of jumping",
   "changelog.entries.smooth-tab-switching.body":
-    "The underline slides to the tab you pick, and a gathering's Manage panels ease in from that side.",
+    "The underline slides to the tab you pick, and an event's Manage panels ease in from that side.",
   "changelog.entries.venue-change-opens-search.title":
     "Change on a linked venue lets you pick another",
   "changelog.entries.venue-change-opens-search.body":
     "Pressing Change in Edit venue or the create wizard now opens the directory search, with the cursor ready.",
   "changelog.entries.manage-description-keeps-line-breaks.title":
-    "Gathering descriptions keep their line breaks in Manage and the feed",
+    "Event descriptions keep their line breaks in Manage and the feed",
   "changelog.entries.manage-description-keeps-line-breaks.body":
     "Paragraphs and spacing show on the Overview tab and on feed cards exactly as you typed them.",
   "changelog.entries.message-sound-plays-reliably.title":
@@ -4036,21 +4036,21 @@ export const marketing: Catalog = {
   "changelog.entries.lineup-invites.body":
     "Hosts invite connections or anyone going, and the performer joins or declines from their notification.",
   "changelog.entries.lineup-editor-in-manage.title":
-    "Guests can see a gathering's lineup",
+    "Guests can see an event's lineup",
   "changelog.entries.lineup-editor-in-manage.body":
-    "Hosts tag people from the Manage page, and the gathering page lists them once someone is tagged.",
+    "Hosts tag people from the Manage page, and the event page lists them once someone is tagged.",
   "changelog.entries.date-pickers-take-keyboard-focus.title":
     "Date pickers and host tools work from the keyboard",
   "changelog.entries.date-pickers-take-keyboard-focus.body":
     "Opening a date picker or the host menu now puts focus inside it, so the arrow keys work straight away.",
   "changelog.entries.gathering-share-menu.title":
-    "Share gatherings, communities, places and articles any way you like",
+    "Share events, communities, places and articles any way you like",
   "changelog.entries.gathering-share-menu.body":
     "One Share menu: send in a message, on WhatsApp or to any app, or copy a ready message with the link.",
   "changelog.entries.events-browse-poster-cards.title":
     "Browsing events feels like a poster wall",
   "changelog.entries.events-browse-poster-cards.body":
-    "Next up becomes a big poster you can save, and each gathering gets a ticket card with its date and who is going.",
+    "Next up becomes a big poster you can save, and each event gets a ticket card with its date and who is going.",
   "changelog.entries.hidden-going-counts-stay-hidden.title":
     "Hidden going counts stay hidden on lists",
   "changelog.entries.hidden-going-counts-stay-hidden.body":
@@ -4060,17 +4060,17 @@ export const marketing: Catalog = {
   "changelog.entries.calendar-fits-every-month.body":
     "Months that start midweek no longer spill the day grid past the edge of the calendar card.",
   "changelog.entries.gathering-description-keeps-line-breaks.title":
-    "Gathering descriptions keep their paragraphs",
+    "Event descriptions keep their paragraphs",
   "changelog.entries.gathering-description-keeps-line-breaks.body":
-    "Line breaks and spacing a host types now show on the gathering page exactly as written.",
+    "Line breaks and spacing a host types now show on the event page exactly as written.",
   "changelog.entries.my-events-ended-greyed-at-bottom.title":
-    "See finished gatherings greyed out at the bottom of My events",
+    "See finished events greyed out at the bottom of My events",
   "changelog.entries.my-events-ended-greyed-at-bottom.body":
-    "The page now reads today's real date, so a gathering that has ended stops showing as upcoming.",
+    "The page now reads today's real date, so an event that has ended stops showing as upcoming.",
   "changelog.entries.gathering-live-card-sits-straight.title":
-    "A straight preview when your gathering goes live",
+    "A straight preview when your event goes live",
   "changelog.entries.gathering-live-card-sits-straight.body":
-    'The card beside "Your gathering is live" now sits level, so it reads like it will on the board.',
+    'The card beside "Your event is live" now sits level, so it reads like it will on the board.',
   "changelog.entries.film-preview-full-screen.title":
     "Watch marketing films full screen",
   "changelog.entries.film-preview-full-screen.body":
@@ -4084,9 +4084,9 @@ export const marketing: Catalog = {
   "changelog.entries.spending-lines-split-into-items.body":
     "Admins list what each spending line covers, like hosting and AI tools, and the public breakdown adds them up.",
   "changelog.entries.feed-gatherings-show-their-photo.title":
-    "Gatherings in the feed show their photo",
+    "Events in the feed show their photo",
   "changelog.entries.feed-gatherings-show-their-photo.body":
-    "A gathering with a cover photo now leads its feed card with it, and each card has one Details button.",
+    "An event with a cover photo now leads its feed card with it, and each card has one Details button.",
   "changelog.entries.feed-cards-keep-their-column.title":
     "Feed cards stay put when one expands",
   "changelog.entries.feed-cards-keep-their-column.body":
@@ -4123,7 +4123,7 @@ export const marketing: Catalog = {
   "changelog.entries.sober-page-lists-what-exists.title":
     "The Sober page lists only what exists",
   "changelog.entries.sober-page-lists-what-exists.body":
-    "Sample gatherings, RSVPs and venue labels are gone, and you can still offer to host one.",
+    "Sample events, RSVPs and venue labels are gone, and you can still offer to host one.",
 
   "changelog.entries.sexual-health-guide-in-portuguese.title":
     "Sexual health guide in Portuguese",
@@ -4171,9 +4171,9 @@ export const marketing: Catalog = {
     "Privacy, Terms and changelog dates now print in Portuguese for Portuguese readers.",
 
   "changelog.entries.homepage-shows-real-gatherings.title":
-    "Visitors see real gatherings and stories",
+    "Visitors see real events and stories",
   "changelog.entries.homepage-shows-real-gatherings.body":
-    "The team can feature public gatherings and published stories on the homepage for people who haven't joined.",
+    "The team can feature public events and published stories on the homepage for people who haven't joined.",
   "changelog.entries.group-join-shows-your-standing.title":
     "Housing groups show where your request stands",
   "changelog.entries.group-join-shows-your-standing.body":
@@ -4256,7 +4256,7 @@ export const marketing: Catalog = {
   "changelog.entries.invite-pickers-search-every-connection.title":
     "Invite pickers search all your connections",
   "changelog.entries.invite-pickers-search-every-connection.body":
-    "Group chats, gatherings, personas, communities, listings and forum posts now search every connection you have.",
+    "Group chats, events, personas, communities, listings and forum posts now search every connection you have.",
   "changelog.entries.own-messages-stay-yours-after-rename.title":
     "Your messages stay on your side after a username change",
   "changelog.entries.own-messages-stay-yours-after-rename.body":
@@ -4266,7 +4266,7 @@ export const marketing: Catalog = {
   "changelog.entries.inbox-no-stale-selection-on-phones.body":
     "The inbox only marks the open chat when the list and the chat sit side by side, so it never looks unread.",
   "changelog.entries.gathering-page-shows-cover.title":
-    "Gathering pages show their cover photo",
+    "Event pages show their cover photo",
   "changelog.entries.gathering-page-shows-cover.body":
     "The photo the host uploaded now opens the page as a wide banner above the title, on phones too.",
   "changelog.entries.admin-listing-offers-search-members.title":
@@ -4297,19 +4297,19 @@ export const marketing: Catalog = {
   "changelog.entries.admin-menu-clears-status-bar.body":
     "In the installed app their top bars sat under the clock and battery; they now start below them.",
   "changelog.entries.hosts-are-going-to-their-own-gathering.title":
-    "Hosts are going to their own gatherings",
+    "Hosts are going to their own events",
   "changelog.entries.hosts-are-going-to-their-own-gathering.body":
-    "Creating a gathering saves your seat, and your page shows a hosting panel with a way to Manage.",
+    "Creating an event saves your seat, and your page shows a hosting panel with a way to Manage.",
   "changelog.entries.cohost-picker-reaches-every-connection.title":
     "Add a cohost now reaches everyone you're connected to",
   "changelog.entries.cohost-picker-reaches-every-connection.body":
     "Typing a name searches all your connections, and what you typed stays when you pick someone else.",
   "changelog.entries.gathering-goes-live-screen.title":
-    "A new celebration screen when your gathering goes live",
+    "A new celebration screen when your event goes live",
   "changelog.entries.gathering-goes-live-screen.body":
     "Your card lands beside a wider panel, the check draws itself, and sharing sits right by the headline.",
   "changelog.entries.edit-gathering-capacity.title":
-    "Change a gathering's capacity after publishing",
+    "Change an event's capacity after publishing",
   "changelog.entries.edit-gathering-capacity.body":
     "Edit details now has the capacity stepper, and raising it moves people up from the waitlist.",
   "changelog.entries.gathering-invite-reaches-every-connection.title":
@@ -4321,17 +4321,17 @@ export const marketing: Catalog = {
   "changelog.entries.share-kit-story-preview-calendar-picker.body":
     "Add to calendar offers Google, Outlook and Yahoo, and the story image shows first with Download and Share.",
   "changelog.entries.gathering-review-step.title":
-    "A last review step before your gathering goes live",
+    "A last review step before your event goes live",
   "changelog.entries.gathering-review-step.body":
     "A sixth step reads back everything you set, with Edit on each part, and Publish now sits there.",
   "changelog.entries.no-connect-to-yourself.title":
-    "Your own gathering no longer offers to connect you to yourself",
+    "Your own event no longer offers to connect you to yourself",
   "changelog.entries.no-connect-to-yourself.body":
     "When you host, the RSVP panel drops the host contact button instead of pointing it at you.",
   "changelog.entries.gathering-preview-stays-whole.title":
-    "The gathering preview keeps its full height",
+    "The event preview keeps its full height",
   "changelog.entries.gathering-preview-stays-whole.body":
-    "On shorter screens the card preview beside a new gathering no longer shrinks to its label.",
+    "On shorter screens the card preview beside a new event no longer shrinks to its label.",
   "changelog.entries.update-card-version-every-deploy.title":
     "The update card always names the version",
   "changelog.entries.update-card-version-every-deploy.body":
@@ -4424,7 +4424,7 @@ export const marketing: Catalog = {
   "changelog.entries.safer-report-forms.body":
     "Reports about a community now go straight to platform moderators, who act independently of its owners.",
   "changelog.entries.takedowns-reach-everywhere.title":
-    "A taken-down gathering stops reminding people",
+    "A taken-down event stops reminding people",
   "changelog.entries.takedowns-reach-everywhere.body":
     "It also drops out of subscribed calendars, and a removed volunteering opportunity disappears from listings.",
   "changelog.entries.my-reports-show-what.title":
@@ -4531,7 +4531,7 @@ export const marketing: Catalog = {
   "changelog.entries.go-together-sturdier.title":
     "Go together groups hold together better",
   "changelog.entries.go-together-sturdier.body":
-    "Groups never pass five, leaving after the start keeps your reveal, and deleted gatherings close their chats.",
+    "Groups never pass five, leaving after the start keeps your reveal, and deleted events close their chats.",
   "changelog.entries.notifications-sync-across-screens.title":
     "Notifications stay in sync across your screens",
   "changelog.entries.notifications-sync-across-screens.body":
@@ -4653,9 +4653,9 @@ export const marketing: Catalog = {
   "changelog.entries.notification-boundaries-hold.body":
     "Hidden photos, blocked people and removed words stay out of your bell, mentions and data export.",
   "changelog.entries.gathering-reminders-follow-settings.title":
-    "Gathering reminders follow your settings",
+    "Event reminders follow your settings",
   "changelog.entries.gathering-reminders-follow-settings.body":
-    "Reminders respect your switch and hidden previews, name the gathering and open it, in your language.",
+    "Reminders respect your switch and hidden previews, name the event and open it, in your language.",
   "changelog.entries.notification-bell-reads-unread-count.title":
     "Screen readers hear your unread count",
   "changelog.entries.notification-bell-reads-unread-count.body":
@@ -4894,7 +4894,7 @@ export const marketing: Catalog = {
   "changelog.entries.go-together.title":
     "Go together: get matched into a small group when you're going solo",
   "changelog.entries.go-together.body":
-    "Answer a short questionnaire, opt in on a gathering, and meet up with 4 or 5 compatible people.",
+    "Answer a short questionnaire, opt in on an event, and meet up with 4 or 5 compatible people.",
   "changelog.entries.friendly-businesses-keep-their-listing.title":
     "LGBTQ+ friendly businesses keep their listing",
   "changelog.entries.friendly-businesses-keep-their-listing.body":
@@ -5146,7 +5146,7 @@ export const marketing: Catalog = {
   "changelog.entries.persona-creator-handoff.body":
     "The longest-standing co-owner becomes the creator, and old links to the persona forward to its new address.",
   "changelog.entries.gathering-page-header-toolbar.title":
-    "Tidier actions on a gathering page",
+    "Tidier actions on an event page",
   "changelog.entries.gathering-page-header-toolbar.body":
     "Save, calendar and share are icons beside the title, and hosts find edit, cancel and delete in one menu.",
   "changelog.entries.document-upload-thumbnails.title":
@@ -5418,7 +5418,7 @@ export const marketing: Catalog = {
   "changelog.entries.tap-what-is-missing-to-go-straight-to-it.body":
     "Each checklist line is a button that scrolls to the field, puts your cursor in it and rings it briefly.",
   "changelog.entries.the-gathering-wizard-says-what-it-needs.title":
-    "The gathering wizard says what it needs",
+    "The event wizard says what it needs",
   "changelog.entries.the-gathering-wizard-says-what-it-needs.body":
     "Each step says whether it is required or optional, and a checklist above Continue lists what is missing.",
   "changelog.entries.bio-mentions-read-as-names.title":
@@ -5731,9 +5731,9 @@ export const marketing: Catalog = {
   "changelog.entries.reposition-a-photo-you-already-uploaded.body":
     "Every photo in Your photos gets a crop button to zoom and move it without uploading it again.",
   "changelog.entries.edit-a-gatherings-care-and-rsvps-after-publishing.title":
-    "Edit a gathering's care and RSVP settings after publishing",
+    "Edit an event's care and RSVP settings after publishing",
   "changelog.entries.edit-a-gatherings-care-and-rsvps-after-publishing.body":
-    "RSVPs can now close when a gathering starts, and repeating gatherings keep their time when the clocks change.",
+    "RSVPs can now close when an event starts, and repeating events keep their time when the clocks change.",
   "changelog.entries.calendars-open-in-front-of-dialogs.title":
     "Calendars open in front of dialogs",
   "changelog.entries.calendars-open-in-front-of-dialogs.body":
@@ -5747,7 +5747,7 @@ export const marketing: Catalog = {
   "changelog.entries.guide-editor-workspace.body":
     "Formatting, live preview, card previews, links to where each guide appears, and drafts kept in your browser.",
   "changelog.entries.create-a-gathering-in-five-short-chapters.title":
-    "Create a gathering in five short chapters with a live preview",
+    "Create an event in five short chapters with a live preview",
   "changelog.entries.create-a-gathering-in-five-short-chapters.body":
     "Hosts can now add house rules, content notes, themes, RSVP questions and a time when RSVPs close.",
   "changelog.entries.the-landing-page-drops-the-bottom-bar-for-visitors.title":
@@ -5803,11 +5803,11 @@ export const marketing: Catalog = {
   "changelog.entries.housing-explains-itself-before-the-door.body":
     "Signed out, the homepage housing button now opens what housing here is instead of a sign-in screen.",
   "changelog.entries.pick-the-gathering-you-actually-want-to-host.title":
-    "Pick the gathering you actually want to host",
+    "Pick the event you actually want to host",
   "changelog.entries.pick-the-gathering-you-actually-want-to-host.body":
     "Nine kinds and fifty-six formats replace the old eight, and the format now sets a sensible size and asks its own questions.",
   "changelog.entries.a-gathering-can-run-past-midnight.title":
-    "A gathering can run past midnight",
+    "An event can run past midnight",
   "changelog.entries.a-gathering-can-run-past-midnight.body":
     "Say when yours ends, even when that is four in the morning or three days later.",
   "changelog.entries.the-changelog-reads-as-releases.title":
@@ -5815,9 +5815,9 @@ export const marketing: Catalog = {
   "changelog.entries.the-changelog-reads-as-releases.body":
     "Each day is a collapsible release with a version, a headline, highlights and entries grouped by type.",
   "changelog.entries.run-your-gathering-from-its-own-page.title":
-    "Run your gathering from its own page",
+    "Run your event from its own page",
   "changelog.entries.run-your-gathering-from-its-own-page.body":
-    "A host strip under the RSVP row lets you edit, cancel or delete the gathering you are standing on.",
+    "A host strip under the RSVP row lets you edit, cancel or delete the event you are standing on.",
   "changelog.entries.a-persona-page-is-one-colour-again.title":
     "Persona pages open on their own colour",
   "changelog.entries.a-persona-page-is-one-colour-again.body":
@@ -5905,11 +5905,11 @@ export const marketing: Catalog = {
   "changelog.entries.reporting-without-an-account.title":
     "Report something without an account",
   "changelog.entries.reporting-without-an-account.body":
-    "Reporting while signed out used to fail; it now works from the safety pages, a listing, gathering or profile.",
+    "Reporting while signed out used to fail; it now works from the safety pages, a listing, event or profile.",
   "changelog.entries.report-from-where-you-are.title":
     "Report from where you meet it",
   "changelog.entries.report-from-where-you-are.body":
-    "Report a gathering from its page without joining the guest list; opportunities and profiles have Report too.",
+    "Report an event from its page without joining the guest list; opportunities and profiles have Report too.",
   "changelog.entries.a-receipt-when-you-report.title":
     "A receipt the moment you report",
   "changelog.entries.a-receipt-when-you-report.body":
@@ -5996,7 +5996,7 @@ export const marketing: Catalog = {
   "changelog.entries.hiding-your-photo-now-holds-everywhere.title":
     "Turning off your photo now holds everywhere",
   "changelog.entries.hiding-your-photo-now-holds-everywhere.body":
-    "Show your photo runs one check in messages, gatherings, connections, membership cards and your public page.",
+    "Show your photo runs one check in messages, events, connections, membership cards and your public page.",
   "changelog.entries.someone-you-blocked-can-no-longer-vouch-for-you.title":
     "Someone you blocked can no longer vouch for you",
   "changelog.entries.someone-you-blocked-can-no-longer-vouch-for-you.body":
@@ -6070,9 +6070,9 @@ export const marketing: Catalog = {
   "changelog.entries.the-communities-home-tab-shows-your-real-week.body":
     "The overview reads from your actual communities: what was posted, what is coming up and what awaits you.",
   "changelog.entries.you-can-see-a-communitys-gatherings-before-you-join.title":
-    "You can see a community's gatherings before you join",
+    "You can see a community's events before you join",
   "changelog.entries.you-can-see-a-communitys-gatherings-before-you-join.body":
-    "Open gatherings show from outside; what the community keeps for members stays private, and the page says so.",
+    "Open events show from outside; what the community keeps for members stays private, and the page says so.",
   "changelog.entries.communities-can-set-a-mark-and-a-welcome-note.title":
     "Communities can set a mark and a welcome note",
   "changelog.entries.communities-can-set-a-mark-and-a-welcome-note.body":
@@ -6154,9 +6154,9 @@ export const marketing: Catalog = {
   "changelog.entries.answer-a-connection-request-where-you-read-it.body":
     "The profile offers accept, the notification adds decline, and what you typed follows into the conversation.",
   "changelog.entries.a-gathering-tells-you-when-it-is-nearly-full.title":
-    "A gathering can tell you when it is down to the last few spots",
+    "An event can tell you when it is down to the last few spots",
   "changelog.entries.a-gathering-tells-you-when-it-is-nearly-full.body":
-    "Opt in for gatherings you saved or said maybe to: one notification when spots run low, none if seats free up.",
+    "Opt in for events you saved or said maybe to: one notification when spots run low, none if seats free up.",
   "changelog.entries.blocked-and-muted-in-one-place.title":
     "Blocked and muted people are in one list",
   "changelog.entries.blocked-and-muted-in-one-place.body":
@@ -6260,7 +6260,7 @@ export const marketing: Catalog = {
   "changelog.tag.settings": "Notification settings",
   "changelog.tag.privacySettings": "Open your privacy settings",
   "changelog.tag.messages": "Open messages",
-  "changelog.tag.createGathering": "Create a gathering",
+  "changelog.tag.createGathering": "Create an event",
   "changelog.tag.startCommunity": "Start a community",
   "changelog.tag.communities": "Browse communities",
   "changelog.tag.subprofiles": "See subprofiles",
@@ -6273,7 +6273,7 @@ export const marketing: Catalog = {
   "changelog.tag.forum": "Visit the forum",
   "changelog.tag.profile": "Open your profile",
   "changelog.tag.sessions": "See your active sessions",
-  "changelog.tag.gatherings": "See gatherings",
+  "changelog.tag.gatherings": "See events",
   "changelog.tag.members": "Meet the members",
   "changelog.tag.events": "Open the Events Hub",
   "changelog.tag.roadmap": "Open the roadmap",
@@ -6380,7 +6380,7 @@ export const marketing: Catalog = {
   "changelog.entries.the-housing-board-is-open.body":
     "Member rooms and homes reach the board after a moderator's review; your listing shows the decision and reason.",
   "changelog.entries.gatherings-say-where-and-what-they-cost.title":
-    "Gatherings say where they are and what they cost",
+    "Events say where they are and what they cost",
   "changelog.entries.gatherings-say-where-and-what-they-cost.body":
     "Address, directions, neighbourhood and access details are kept and shown; the exact address goes to guests.",
   "changelog.entries.hosts-run-their-own-door.title":
@@ -6398,11 +6398,11 @@ export const marketing: Catalog = {
   "changelog.entries.a-venue-is-asked-before-it-hosts-you.title":
     "A venue is asked before it hosts you",
   "changelog.entries.a-venue-is-asked-before-it-hosts-you.body":
-    "Naming a business as venue asks its owner to confirm or remove it; until then the gathering is off its page.",
+    "Naming a business as venue asks its owner to confirm or remove it; until then the event is off its page.",
   "changelog.entries.arriving-points-at-real-things.title":
     "Arriving in Lisbon points at real things",
   "changelog.entries.arriving-points-at-real-things.body":
-    "The newcomer page shows real upcoming gatherings, real places and communities, and a two-week checklist.",
+    "The newcomer page shows real upcoming events, real places and communities, and a two-week checklist.",
   "changelog.entries.what-you-send-in-now-gets-an-answer.title":
     "What you send in now gets an answer",
   "changelog.entries.what-you-send-in-now-gets-an-answer.body":
@@ -6469,9 +6469,9 @@ export const marketing: Catalog = {
   "changelog.entries.notification-previews-stay-hidden-on-iphone.body":
     "Hiding previews travels with your account, notifications leave us stripped, and it is on by default.",
   "changelog.entries.leaving-no-longer-deletes-other-peoples-gatherings.title":
-    "Leaving no longer deletes other people’s gatherings",
+    "Leaving no longer deletes other people’s events",
   "changelog.entries.leaving-no-longer-deletes-other-peoples-gatherings.body":
-    "Erasing an account deleted its gatherings; a future one now passes to a co-host or is cancelled with notice.",
+    "Erasing an account deleted its events; a future one now passes to a co-host or is cancelled with notice.",
   "changelog.entries.a-new-device-signing-in-tells-you.title":
     "You hear about it when a new device signs in",
   "changelog.entries.a-new-device-signing-in-tells-you.body":
@@ -6589,9 +6589,9 @@ export const marketing: Catalog = {
   "changelog.entries.mod-tools-became-a-console.body":
     "It opens on what awaits you, with a rail for Requests, Reports, Members, Invites, Member card and Danger zone.",
   "changelog.entries.share-card-shows-your-own-gathering.title":
-    "A gathering's share card now shows that gathering",
+    "An event's share card now shows that event",
   "changelog.entries.share-card-shows-your-own-gathering.body":
-    "The card shows the gathering you manage, with title, date, venue and cover photo; Copy gives its public link.",
+    "The card shows the event you manage, with title, date, venue and cover photo; Copy gives its public link.",
   "changelog.entries.place-page-reads-in-one-piece.title":
     "A place's page now reads as one thing",
   "changelog.entries.place-page-reads-in-one-piece.body":
@@ -7014,7 +7014,7 @@ export const marketing: Catalog = {
   "changelog.entries.community-pulse-and-insights.title":
     "Communities now show their real events, discussions, and volunteer opportunities",
   "changelog.entries.community-pulse-and-insights.body":
-    "The Events tab lists real upcoming gatherings, the sidebar shows recent discussions, and mods get insights.",
+    "The Events tab lists real upcoming events, the sidebar shows recent discussions, and mods get insights.",
   "changelog.entries.onboarding-identity-and-notifications.title":
     "Onboarding now asks for pronouns and notification preferences",
   "changelog.entries.onboarding-identity-and-notifications.body":
@@ -7065,12 +7065,12 @@ export const marketing: Catalog = {
   "changelog.entries.gathering-rsvp-fix.body":
     "“I'm going” confirms right away, with a toast and a Cancel RSVP option in the same spot.",
   "changelog.entries.add-to-calendar-modal.title":
-    "Add gatherings to your calendar",
+    "Add events to your calendar",
   "changelog.entries.add-to-calendar-modal.body":
     "A picker offers Google Calendar or a .ics file that works with Apple Calendar, Outlook and most other apps.",
   "changelog.entries.recognition-xp.title": "Earn XP, levels, and badges",
   "changelog.entries.recognition-xp.body":
-    "Your checklist, communities, gatherings and connections all earn experience; track it on the Badges page.",
+    "Your checklist, communities, events and connections all earn experience; track it on the Badges page.",
 
   "changelog.entries.governance-editable-finances.title":
     "Editable finance figures, with a note on where each number comes from",
@@ -7148,7 +7148,7 @@ export const marketing: Catalog = {
   "changelog.entries.gatherings-recap-more-from-host.title":
     "Recaps now point you to more from the same host",
   "changelog.entries.gatherings-recap-more-from-host.body":
-    "A recap page lists a few upcoming gatherings from the same host, so you can book the next one from there.",
+    "A recap page lists a few upcoming events from the same host, so you can book the next one from there.",
 
   "changelog.entries.myevents-rsvp-actions-real.title":
     "My Events actions now actually update your RSVP",
@@ -7166,22 +7166,22 @@ export const marketing: Catalog = {
     "Reminders go to everyone going or maybe going, timed by the reminder lead you set in Preferences.",
 
   "changelog.entries.gatherings-edit-date-time-fix.title":
-    "Editing a gathering's date and time now actually reschedules it",
+    "Editing an event's date and time now actually reschedules it",
   "changelog.entries.gatherings-edit-date-time-fix.body":
     "The date field in Edit details saves a real date, and everyone with an RSVP is told about the change.",
 
   "changelog.entries.gatherings-cancelled-page-real-content.title":
-    "A cancelled gathering's page now shows the real gathering",
+    "A cancelled event's page now shows the real event",
   "changelog.entries.gatherings-cancelled-page-real-content.body":
-    "The cancellation notice carries the real title, date, host and venue of the gathering that was called off.",
+    "The cancellation notice carries the real title, date, host and venue of the event that was called off.",
 
   "changelog.entries.gatherings-cohost-roster-visible.title":
     "Hosts can now see who's already co-hosting",
   "changelog.entries.gatherings-cohost-roster-visible.body":
-    "The cohost panel in the manage dashboard lists the people already cohosting your gathering.",
+    "The cohost panel in the manage dashboard lists the people already cohosting your event.",
 
   "changelog.entries.gatherings-remove-pricing-step.title":
-    "Removed the pricing step from creating a gathering",
+    "Removed the pricing step from creating an event",
   "changelog.entries.gatherings-remove-pricing-step.body":
     "QueerPulse handles no payments, so the ticket-pricing step is gone from the create wizard.",
 
@@ -7427,7 +7427,7 @@ export const marketing: Catalog = {
   "changelog.entries.feed-connections-tab.title":
     'A new "Connections" tab in your feed',
   "changelog.entries.feed-connections-tab.body":
-    "Posts, forum threads and gatherings from your connections, gathered in one place in the feed's tab bar.",
+    "Posts, forum threads and events from your connections, gathered in one place in the feed's tab bar.",
 
   "changelog.entries.connections-report-now-files.title":
     "Fixed: Reporting a connection now files a real report",
@@ -7480,7 +7480,7 @@ export const marketing: Catalog = {
     "Mark a board post as found, record your name's pronunciation, write a Portuguese bio, and open your QR code.",
 
   "changelog.entries.gathering-venue-directory-link.title":
-    "Link a gathering's venue to its local directory listing",
+    "Link an event's venue to its local directory listing",
   "changelog.entries.gathering-venue-directory-link.body":
     "Search the local directory when setting the venue and pick a real business, so the name links to its listing.",
   "changelog.entries.add-to-calendar-picker-redesign.title":
@@ -7547,7 +7547,7 @@ export const marketing: Catalog = {
     "The board ends with the site's warm closing band, with quick ways to list your space or ask the forum.",
 
   "changelog.entries.gathering-audience-scope.title":
-    "Choose who can see your gathering",
+    "Choose who can see your event",
   "changelog.entries.gathering-audience-scope.body":
     "Choose everyone on QueerPulse, friends of your connections, your connections, one community or invite-only.",
 
@@ -7566,7 +7566,7 @@ export const marketing: Catalog = {
   "changelog.entries.feed-avatar-to-profile.title":
     "Tap anyone's photo in the feed to open their profile",
   "changelog.entries.feed-avatar-to-profile.body":
-    "Works on posts, new-member notes, forum threads and gathering cards alike.",
+    "Works on posts, new-member notes, forum threads and event cards alike.",
   "changelog.entries.affirming-housing-baseline.title":
     "Every home and housemate here is LGBTQ+ affirming. Now it's the standard",
   "changelog.entries.affirming-housing-baseline.body":
@@ -7660,9 +7660,9 @@ export const marketing: Catalog = {
     "It covers Sign in with Google, push notifications, location and messaging data, and the services we rely on.",
 
   "changelog.entries.gatherings-manage-rsvp-recap-live.title":
-    "Hosting a gathering now works for real",
+    "Hosting an event now works for real",
   "changelog.entries.gatherings-manage-rsvp-recap-live.body":
-    "RSVP and a waitlist sit on the gathering; hosts edit, cancel, see guests, add co-hosts and post photos.",
+    "RSVP and a waitlist sit on the event; hosts edit, cancel, see guests, add co-hosts and post photos.",
 
   "changelog.entries.coop-template-portuguese.title":
     "The co-op formation templates now speak Portuguese",
@@ -7692,7 +7692,7 @@ export const marketing: Catalog = {
   "changelog.entries.public-profile-eligibility-live.title":
     "Public profiles you can actually earn.",
   "changelog.entries.public-profile-eligibility-live.body":
-    "Progress tracks writing you published, gatherings you hosted, vouches, endorsements and time showing up.",
+    "Progress tracks writing you published, events you hosted, vouches, endorsements and time showing up.",
 
   "changelog.entries.public-profile-eligibility-tracker.title":
     "A clearer path to a public profile.",
@@ -7717,7 +7717,7 @@ export const marketing: Catalog = {
   "changelog.entries.meganav-highlight-illustrations.title":
     "Illustrated menus in the top navigation",
   "changelog.entries.meganav-highlight-illustrations.body":
-    "Each menu opens with a hand-drawn scene of its highlight: people gathering, the city, support, culture, work.",
+    "Each menu opens with a hand-drawn scene of its highlight: people event, the city, support, culture, work.",
 
   "changelog.entries.coming-out-guide-public.title":
     "The coming-out guide is open to everyone again",
@@ -8338,7 +8338,7 @@ export const marketing: Catalog = {
 
   "changelog.entries.save-events-for-later.title": "Save events for later",
   "changelog.entries.save-events-for-later.body":
-    "Tap Save on any gathering to bookmark it; everything you save shows under the Saved tab in My Events.",
+    "Tap Save on any event to bookmark it; everything you save shows under the Saved tab in My Events.",
 
   "changelog.entries.collections-are-here.title":
     "Group your saves into collections",
@@ -8372,7 +8372,7 @@ export const marketing: Catalog = {
   "changelog.entries.community-activity-in-your-feed.title":
     "Your feed now shows what's happening in your communities",
   "changelog.entries.community-activity-in-your-feed.body":
-    "Posts, announcements, gatherings, threads and new members flow in; you can share a gathering or thread there.",
+    "Posts, announcements, events, threads and new members flow in; you can share an event or thread there.",
 
   "changelog.entries.assignable-staff-roles.title":
     "Admins can now assign magazine staff roles",
@@ -8383,7 +8383,7 @@ export const marketing: Catalog = {
   "changelog.entries.feed-scroll-no-longer-sticks.title":
     "Your feed scrolls smoothly again",
   "changelog.entries.feed-scroll-no-longer-sticks.body":
-    "Mouse or trackpad scrolling over the feed, notifications, members and gatherings could stick; now it scrolls.",
+    "Mouse or trackpad scrolling over the feed, notifications, members and events could stick; now it scrolls.",
 
   "changelog.entries.fresh-feed-card-layout.title":
     "A fresh look for your feed",
@@ -8445,7 +8445,7 @@ export const marketing: Catalog = {
   "changelog.entries.community-page-polish.title":
     "A friendlier community page",
   "changelog.entries.community-page-polish.body":
-    "Share it, confirm before leaving, see every upcoming gathering under Events, and tabs update the link.",
+    "Share it, confirm before leaving, see every upcoming event under Events, and tabs update the link.",
 
   "changelog.entries.job-application-status.title":
     "See where your job applications stand",
@@ -8601,7 +8601,7 @@ export const marketing: Catalog = {
   "changelog.entries.save-events-communities.title":
     "Save events and communities, and saves that really stick",
   "changelog.entries.save-events-communities.body":
-    "The same bookmark saves a gathering or a community to your collection, and saving jobs and short films sticks.",
+    "The same bookmark saves an event or a community to your collection, and saving jobs and short films sticks.",
   "changelog.entries.invite-revoke-oversight.title":
     "Take back an invite you've sent",
   "changelog.entries.invite-revoke-oversight.body":
@@ -8645,7 +8645,7 @@ export const marketing: Catalog = {
   "changelog.entries.launch-hardening-p1.title":
     "Safety, honesty and reliability hardening",
   "changelog.entries.launch-hardening-p1.body":
-    "Blocking stops messages, presence, typing and push, and hides your profile; gathering changes refresh at once.",
+    "Blocking stops messages, presence, typing and push, and hides your profile; event changes refresh at once.",
   "changelog.entries.remove-listings-from-moderation.title":
     "Moderators can remove directory listings",
   "changelog.entries.remove-listings-from-moderation.body":
@@ -8765,9 +8765,9 @@ export const marketing: Catalog = {
   "changelog.entries.moderation-takedowns.body":
     "Members can't see hidden content, staff still can; removed content shows a removed by a moderator note.",
   "changelog.entries.gathering-create-fix.title":
-    "Creating a gathering works again, and lands on your event",
+    "Creating an event works again, and lands on your event",
   "changelog.entries.gathering-create-fix.body":
-    "Success appears only once published, See your event opens the real gathering, and a future start is required.",
+    "Success appears only once published, See your event opens the real event, and a future start is required.",
   "changelog.entries.directory-photos-crisp.title":
     "Listing cover photos load crisp again",
   "changelog.entries.directory-photos-crisp.body":
@@ -8932,7 +8932,7 @@ export const marketing: Catalog = {
 
   "changelog.entries.events-hub.title": "One home for events",
   "changelog.entries.events-hub.body":
-    "Events, Gatherings and Calendar are one Events Hub: Highlights, Browse, a full calendar and real photos.",
+    "Events and Calendar are one Events Hub: Highlights, Browse, a full calendar and real photos.",
 
   "changelog.entries.gifs-in-chat.title": "Send GIFs in chat",
   "changelog.entries.gifs-in-chat.body":
@@ -8968,7 +8968,7 @@ export const marketing: Catalog = {
     "The message box fills the composer and grows as you type; tap an emoji you already used to undo the reaction.",
   "changelog.entries.chat-mentions.title": "Mention people and places in chat",
   "changelog.entries.chat-mentions.body":
-    "Type @ for a member, or c/ b/ e/ t/ # for a community, business, gathering, thread or topic, then pick one.",
+    "Type @ for a member, or c/ b/ e/ t/ # for a community, business, event, thread or topic, then pick one.",
   "changelog.entries.group-chats.title": "Group chats",
   "changelog.entries.group-chats.body":
     "Start and name a group; admins manage members, receipts show who has read, and a bubble shows who is typing.",
@@ -9041,7 +9041,7 @@ export const marketing: Catalog = {
     "Reactions appear instantly for everyone in the chat, and your own messages hold their place when you react.",
   "changelog.entries.event-photos.title": "Event photo galleries",
   "changelog.entries.event-photos.body":
-    "Organisers and attendees can share photos on a gathering, visible only to those who were there.",
+    "Organisers and attendees can share photos on an event, visible only to those who were there.",
   "changelog.entries.mentions.title": "Mention people and communities",
   "changelog.entries.mentions.body":
     "Type @ to tag a member or c/ to link a community in forum and community replies; anyone mentioned is notified.",
@@ -9899,7 +9899,7 @@ export const marketing: Catalog = {
   "directory.ownedBy.migrant": "Migrant-owned",
   "directory.card.badge.openLate": "Open late",
   "directory.card.badge.openSundays": "Open Sundays",
-  "directory.card.badge.hostsGatherings": "Hosts gatherings",
+  "directory.card.badge.hostsGatherings": "Hosts events",
   "directory.card.online": "Online",
   "directory.card.visit": "Visit",
   "directory.card.onlineIn": "Online · {city}",
@@ -10627,7 +10627,7 @@ export const marketing: Catalog = {
     "ILGA Portugal runs a support line for discrimination, violence and crisis, and can point you towards legal aid. Put it in your phone while everything is calm.",
   "arriving.checklist.steps.crisis.linkLabel": "ilga-portugal.pt",
   "arriving.checklist.steps.gathering.title":
-    "Go to one gathering in your first two weeks",
+    "Go to one event in your first two weeks",
   "arriving.checklist.steps.gathering.note":
     "Reading about a city is a different thing from standing in a room in it. One evening changes how the whole month feels.",
   "arriving.checklist.steps.gathering.linkLabel": "What's coming up",
@@ -10747,14 +10747,14 @@ export const marketing: Catalog = {
   "arriving.firstStep.eventMeta": "{hood} · {time}",
   "arriving.firstStep.loading": "Loading what's coming up",
   "arriving.firstStep.error":
-    "The gathering list didn't load just now. Try again in a moment.",
+    "The event list didn't load just now. Try again in a moment.",
   "arriving.firstStep.retry": "Try again",
   "arriving.firstStep.empty":
-    "Nothing is on the calendar right now. New gatherings go up most weeks, so it's worth looking again soon.",
-  "arriving.firstStep.emptyCta": "See the gatherings page",
-  "arriving.firstStep.allCta": "See every gathering",
+    "Nothing is on the calendar right now. New events go up most weeks, so it's worth looking again soon.",
+  "arriving.firstStep.emptyCta": "See the events page",
+  "arriving.firstStep.allCta": "See every event",
   "arriving.firstStep.locked":
-    "The gathering calendar lives inside QueerPulse. Members can see what's on this week and say they're coming.",
+    "The event calendar lives inside QueerPulse. Members can see what's on this week and say they're coming.",
   "arriving.firstStep.lockedCta": "Request an invite",
 
   // ── Communities. Real communities from the same source the discover grid
@@ -10773,7 +10773,7 @@ export const marketing: Catalog = {
 
   "arriving.outro.title": "Ready to meet <em>the community?</em>",
   "arriving.outro.sub":
-    "Request an invite to QueerPulse and get access to the full network, members, gatherings, board, and everything else on this page.",
+    "Request an invite to QueerPulse and get access to the full network, members, events, board, and everything else on this page.",
   "arriving.outro.cta": "Request an invite",
 
   // ── Visas & Residency — page/section chrome + the visa/legal guidance
@@ -11616,7 +11616,7 @@ export const marketing: Catalog = {
   "changelog.entries.an-empty-browse-stops-blaming-your-filters.title":
     "An empty Browse stops blaming your filters",
   "changelog.entries.an-empty-browse-stops-blaming-your-filters.body":
-    "With filters on, an empty Browse names the dates, the neighbourhood and the kind of gathering you could widen.",
+    "With filters on, an empty Browse names the dates, the neighbourhood and the kind of event you could widen.",
 
   "changelog.entries.one-row-of-tabs-on-events.title":
     "One row of tabs on Events",
@@ -11641,12 +11641,12 @@ export const marketing: Catalog = {
   "changelog.entries.three-icons-leave-the-events-header.title":
     "Three icons leave the events header",
   "changelog.entries.three-icons-leave-the-events-header.body":
-    "Gear, bell and magnifier leave the page name, the My events and Discover switch, and Host a gathering.",
+    "Gear, bell and magnifier leave the page name, the My events and Discover switch, and Host an event.",
 
   "changelog.entries.browse-events-gets-the-same-refine.title":
     "Browse events gets the same Refine",
   "changelog.entries.browse-events-gets-the-same-refine.body":
-    "Discover's browse board gets a search field and a Refine with when, neighbourhood, kind of gathering and cost.",
+    "Discover's browse board gets a search field and a Refine with when, neighbourhood, kind of event and cost.",
 
   "changelog.entries.your-events-filters-fold-away.title":
     "Your events filters fold away",
@@ -11738,7 +11738,7 @@ export const marketing: Catalog = {
   "changelog.entries.what-we-said-we-would-delete-gets-deleted.title":
     "What we said we'd delete now gets deleted",
   "changelog.entries.what-we-said-we-would-delete-gets-deleted.body":
-    "Access needs, dietary notes and check-ins clear 30 days after a gathering; RSVPs stay, exports expire in 7.",
+    "Access needs, dietary notes and check-ins clear 30 days after an event; RSVPs stay, exports expire in 7.",
   "changelog.entries.reporting-says-why-it-is-slowing-you-down.title":
     "Reporting says why it's slowing you down",
   "changelog.entries.reporting-says-why-it-is-slowing-you-down.body":
@@ -11983,7 +11983,7 @@ export const marketing: Catalog = {
   "accessibilityStatement.legal.microenterprise":
     "<strong>The microenterprise exemption.</strong> Article 2(5)(b) says the decree-law does not apply to microenterprises providing the services in Article 2(3). A microenterprise, in the definition the decree-law takes from the Directive, employs fewer than 10 people and has an annual turnover or annual balance sheet total of no more than 2 million euros.",
   "accessibilityStatement.legal.p2":
-    "Paid ticketing on gatherings is an open product question here. If QueerPulse ever sells anything, it plausibly becomes an e-commerce service under Article 2(3)(g). Article 13(2)(b) would then ask us to explain publicly, in writing and orally, how the service meets the applicable accessibility requirements, unless the microenterprise exemption still covered us. We write that down as a trigger to go and check, and we make no prediction about what the answer would be.",
+    "Paid ticketing on events is an open product question here. If QueerPulse ever sells anything, it plausibly becomes an e-commerce service under Article 2(3)(g). Article 13(2)(b) would then ask us to explain publicly, in writing and orally, how the service meets the applicable accessibility requirements, unless the microenterprise exemption still covered us. We write that down as a trigger to go and check, and we make no prediction about what the answer would be.",
   "accessibilityStatement.legal.p3":
     "The accessibility statement most people have in mind comes from a different law. The Web Accessibility Directive, (EU) 2016/2102, transposed here as Decreto-Lei n.º 83/2018, binds public sector bodies. QueerPulse is not one.",
   "accessibilityStatement.legal.disclaimerLabel": "Not legal advice",
@@ -12143,7 +12143,7 @@ export const marketing: Catalog = {
   "changelog.entries.message-a-business-without-leaving.body":
     "Before you type, the business page says whether the owner is reachable and whether you already wrote today.",
   "changelog.entries.remove-a-photo-from-a-gathering-album.title":
-    "You can remove a photo from a gathering album",
+    "You can remove a photo from an event album",
   "changelog.entries.remove-a-photo-from-a-gathering-album.body":
     "The poster or the organiser can remove it by keyboard or touch, and the file is deleted from storage too.",
   "changelog.entries.your-own-jobs-and-a-way-to-correct-them.title":
@@ -12261,7 +12261,7 @@ export const marketing: Catalog = {
   "changelog.entries.housing-filters-fold-away-until-you-need-them.title":
     "Housing filters fold away until you need them",
   "changelog.entries.housing-filters-fold-away-until-you-need-them.body":
-    "A Refine button hides them, as on gatherings; applied filters read as chips, and each chip removes its own.",
+    "A Refine button hides them, as on events; applied filters read as chips, and each chip removes its own.",
   "changelog.entries.empty-category-filters-can-no-longer-be-picked.title":
     "Category filters with nothing behind them are now inactive",
   "changelog.entries.empty-category-filters-can-no-longer-be-picked.body":
@@ -12279,7 +12279,7 @@ export const marketing: Catalog = {
   "changelog.entries.deep-links-no-longer-flash-the-homepage.body":
     "Every page loads in an empty frame and sets its own title and description, so link previews describe it.",
   "changelog.entries.report-one-photo-not-the-whole-gathering.title":
-    "You can report one photo, not the whole gathering",
+    "You can report one photo, not the whole event",
   "changelog.entries.report-one-photo-not-the-whole-gathering.body":
     "Each album photo has its own report control; outing and doxxing sit first, as they reach the one-hour queue.",
   "changelog.entries.report-one-landlord-warning.title":
@@ -12379,7 +12379,7 @@ export const marketing: Catalog = {
   "changelog.entries.published-pieces-now-reach-your-feed.title":
     "Published pieces now reach your feed",
   "changelog.entries.published-pieces-now-reach-your-feed.body":
-    "Articles join posts, threads and gatherings in your feed, in your language; a blocked author's stay out.",
+    "Articles join posts, threads and events in your feed, in your language; a blocked author's stay out.",
   "changelog.entries.blocks-and-mutes-now-apply-under-magazine-articles.title":
     "Blocks and mutes now apply under magazine articles",
   "changelog.entries.blocks-and-mutes-now-apply-under-magazine-articles.body":
@@ -12403,34 +12403,34 @@ export const marketing: Catalog = {
 
   // ── Deep-scan section 6 (Gatherings), built 2026-09-06 ────────────────────
   "changelog.entries.your-reminder-and-cancellation-links-now-open-the-gathering.title":
-    "Reminder and cancellation links now open the gathering",
+    "Reminder and cancellation links now open the event",
   "changelog.entries.your-reminder-and-cancellation-links-now-open-the-gathering.body":
-    "Reminders, cancellations and calendar entries open the gathering, from your phone or Google or Apple Calendar.",
+    "Reminders, cancellations and calendar entries open the event, from your phone or Google or Apple Calendar.",
 
   "changelog.entries.online-gatherings-now-have-a-join-link.title":
-    "Online gatherings now have a join link",
+    "Online events now have a join link",
   "changelog.entries.online-gatherings-now-have-a-join-link.body":
     "The wizard asks for the video link and shares it with the people going, like a street address, never publicly.",
 
   "changelog.entries.a-cancelled-gathering-now-says-so.title":
-    "A cancelled gathering now says so",
+    "A cancelled event now says so",
   "changelog.entries.a-cancelled-gathering-now-says-so.body":
     "It reads as cancelled wherever you meet it, its RSVP button is gone, and invitation holders are told.",
 
   "changelog.entries.maybe-add-to-calendar-and-your-details-on-the-gathering-itself.title":
-    "Maybe, add to calendar, and your details, on the gathering itself",
+    "Maybe, add to calendar, and your details, on the event itself",
   "changelog.entries.maybe-add-to-calendar-and-your-details-on-the-gathering-itself.body":
     "Mark yourself a maybe, add the date to your calendar, and tell the host about a plus-one or an access need.",
 
   "changelog.entries.choose-when-your-gathering-reminder-arrives.title":
-    "Choose when your gathering reminder arrives",
+    "Choose when your event reminder arrives",
   "changelog.entries.choose-when-your-gathering-reminder-arrives.body":
     "Pick an hour before, a day before or a week before; notification settings used to have only an on-off switch.",
 
   "changelog.entries.hosts-can-run-a-gathering-again-and-take-the-door-list-offline.title":
-    "Hosts can run a gathering again, and take the door list offline",
+    "Hosts can run an event again, and take the door list offline",
   "changelog.entries.hosts-can-run-a-gathering-again-and-take-the-door-list-offline.body":
-    "Duplicate gathering prefills the wizard from a past gathering, and Export on the attendee list downloads a file.",
+    "Duplicate event prefills the wizard from a past event, and Export on the attendee list downloads a file.",
 
   // Section 5 of the 2026-09-05 deep scan: forum, feed and saved items.
   "changelog.tag.saved": "Open your collections",
@@ -12518,7 +12518,7 @@ export const marketing: Catalog = {
 
   // Uno reverse sticker art, 22 Sep 2026.
   "changelog.entries.hosts-can-delete-a-gathering-from-manage.title":
-    "Hosts can delete a gathering from Manage",
+    "Hosts can delete an event from Manage",
   "changelog.entries.hosts-can-delete-a-gathering-from-manage.body":
     "Settings now has a Delete button beside Cancel, with the same confirm and cancel-first rule.",
   "changelog.entries.uno-reverse-stickers-look-like-the-real-card.title":

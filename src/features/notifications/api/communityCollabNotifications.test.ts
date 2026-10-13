@@ -108,7 +108,7 @@ describe("collab notification copy", () => {
     expect(
       formatNotification("event_community_invite", invitePayload, t).text,
     ).toBe(
-      "Trans & Non-Binary Hub has an invitation to host a gathering together.",
+      "Trans & Non-Binary Hub has an invitation to host an event together.",
     );
   });
 

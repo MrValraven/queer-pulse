@@ -256,8 +256,8 @@ export const goTogether: Catalog = {
 
   // UI copy for the card, questionnaire, group, feedback, host and settings surfaces.
   "card.body": "Get matched with a small group to go together.",
-  "card.closed.note": "Go together has closed for this gathering.",
-  "card.error.alreadyGrouped": "You're already in a group for this gathering.",
+  "card.closed.note": "Go together has closed for this event.",
+  "card.error.alreadyGrouped": "You're already in a group for this event.",
   "card.error.generic": "That didn't go through. Try again in a moment.",
   "card.error.ineligible":
     "Go together isn't available on your account right now.",
@@ -267,15 +267,14 @@ export const goTogether: Catalog = {
     "Tick the box to confirm your lens, or choose No lens.",
   "card.error.lensMismatch":
     "This pair can't go ahead with that lens choice. Choose another, or go solo.",
-  "card.error.locked": "Groups have already formed for this gathering.",
+  "card.error.locked": "Groups have already formed for this event.",
   "card.error.partnerUnavailable":
-    "That friend can't go together with you for this gathering. They may not be going yet. Pick someone else, or go solo.",
+    "That friend can't go together with you for this event. They may not be going yet. Pick someone else, or go solo.",
   "card.error.profileNeeded":
     "Answer the Go together questions first, then come back to join.",
-  "card.error.unavailable":
-    "Go together isn't running for this gathering anymore.",
+  "card.error.unavailable": "Go together isn't running for this event anymore.",
   "card.ineligible.unavailableBody":
-    "You're still welcome at this gathering as you are.",
+    "You're still welcome at this event as you are.",
   "card.ineligible.unavailableTitle":
     "Go together isn't available on your account right now",
   "card.ineligible.verifyBody":
@@ -283,7 +282,7 @@ export const goTogether: Catalog = {
   "card.ineligible.verifyCta": "Verify my account",
   "card.ineligible.verifyTitle": "Verify your account to join",
   "card.lens.consent":
-    "I'm choosing this lens for myself. QueerPulse uses it only to group me for this gathering and deletes it once the gathering is over.",
+    "I'm choosing this lens for myself. QueerPulse uses it only to group me for this event and deletes it once the event is over.",
   "card.lens.hint":
     "Only you see this choice. With a lens, you're grouped only with members who chose the same one.",
   "card.lens.none.description": "Group me with anyone who's going.",
@@ -301,7 +300,7 @@ export const goTogether: Catalog = {
   "card.optIn.sending": "Saving",
   "card.pairInvite.accept": "Accept",
   "card.pairInvite.body":
-    "Say yes and you'll both be matched into a small group for this gathering.",
+    "Say yes and you'll both be matched into a small group for this event.",
   "card.pairInvite.confirm": "Go with {name}",
   "card.pairInvite.decline": "Decline",
   "card.pairInvite.title": "{name} wants to go together",
@@ -314,7 +313,7 @@ export const goTogether: Catalog = {
   "card.partner.search": "Search your connections",
   "card.partner.title": "Who are you going with?",
   "card.questionnaire.body":
-    "First, a few questions about what you enjoy and how you like to spend time with people. You answer once, and we use it for every gathering.",
+    "First, a few questions about what you enjoy and how you like to spend time with people. You answer once, and we use it for every event.",
   "card.questionnaire.cta": "Answer the questions",
   "card.questionnaire.refreshBody":
     "A few questions have changed since you last answered. Update them and you're ready to join.",
@@ -336,20 +335,20 @@ export const goTogether: Catalog = {
   "card.waiting.title": "Your group lands {day} at {time}",
   "card.waiting.titleSoon": "Your group lands soon",
   "feedback.backToEvents": "Back to your events",
-  "feedback.backToGathering": "Back to the gathering",
+  "feedback.backToGathering": "Back to the event",
   "feedback.click.no": "No",
   "feedback.click.somewhat": "Somewhat",
   "feedback.click.yes": "Yes",
   "feedback.clickQuestion.title": "Did the group click?",
   "feedback.closed.body":
-    "Meet-again answers are only open for 7 days after a gathering.",
+    "Meet-again answers are only open for 7 days after an event.",
   "feedback.closed.title": "This round of feedback has closed",
   "feedback.confirmation.body":
     "If someone said yes back, you'll both hear about it.",
   "feedback.confirmation.title": "Thanks for",
   "feedback.goAgain.ariaLabel": "Go together again",
   "feedback.goAgain.description":
-    "If two or more of you join another gathering, we'll group you together again.",
+    "If two or more of you join another event, we'll group you together again.",
   "feedback.goAgain.title": "Go together again",
   "feedback.likingGap":
     "People usually underestimate how much others enjoyed their company.",
@@ -375,8 +374,8 @@ export const goTogether: Catalog = {
   "group.checkIn.statusHere": "Your group can see you've arrived.",
   "group.checkIn.statusLeft": "Your group can see you've left.",
   "group.dissolved": "This group has ended.",
-  "group.entryTitle": "Your group for this gathering",
-  "group.error.checkInClosed": "Check-in has closed for this gathering.",
+  "group.entryTitle": "Your group for this event",
+  "group.error.checkInClosed": "Check-in has closed for this event.",
   "group.error.generic": "That didn't go through. Try again in a moment.",
   "group.error.mergeExpired":
     "That group has filled up or closed. You're still in your current group.",
@@ -393,7 +392,7 @@ export const goTogether: Catalog = {
   "group.membersHeading": "Who's going with you",
   "group.merge.accept": "Join another group",
   "group.merge.body":
-    "Another group going to this gathering has room. You can join it if you'd like.",
+    "Another group going to this event has room. You can join it if you'd like.",
   "group.merge.title": "Your group got smaller",
   "group.openChat": "Open group chat",
   "group.pairPartner": "Coming with you",
@@ -408,7 +407,7 @@ export const goTogether: Catalog = {
   "group.status.left": "Left",
   "group.you": "You",
   "host.closedNote":
-    "Opt-in has closed for this gathering, so these settings can't change now.",
+    "Opt-in has closed for this event, so these settings can't change now.",
   "host.create.description":
     "People coming alone or with one friend can get matched into small groups to arrive together. Add questions and a meeting point from Manage.",
   "host.create.title": "Offer Go together",
@@ -424,7 +423,7 @@ export const goTogether: Catalog = {
     "Lets people coming alone or with one friend get matched into small groups to arrive together.",
   "host.loadError": "Go together settings didn't load",
   "host.lockedNote":
-    "Matching has run for this gathering, so these settings are locked.",
+    "Matching has run for this event, so these settings are locked.",
   "host.meetingPoint.hint": "Pick a public spot near the venue.",
   "host.meetingPoint.label": "Meeting point",
   "host.meetingPoint.placeholder": "By the kiosk at the park entrance",
@@ -457,9 +456,9 @@ export const goTogether: Catalog = {
   "host.summary.waiting_one": "person waiting",
   "host.summary.waiting_other": "people waiting",
   "host.toast.badCutoff":
-    "Go together couldn't be saved: the matching time no longer fits this gathering. Try again.",
+    "Go together couldn't be saved: the matching time no longer fits this event. Try again.",
   "host.toast.closed":
-    "Opt-in has closed for this gathering, so these settings stay as they are.",
+    "Opt-in has closed for this event, so these settings stay as they are.",
   "host.toast.locked":
     "Matching has already run, so these settings are locked.",
   "host.toast.publishSwitchFailed":
@@ -486,7 +485,7 @@ export const goTogether: Catalog = {
   "questionnaire.consent.retention":
     "If 12 months pass without you editing them or signing up for Go together, we delete them.",
   "questionnaire.consent.use":
-    "We use your answers to suggest a small group when you join Go together for a gathering.",
+    "We use your answers to suggest a small group when you join Go together for an event.",
   "questionnaire.drinking.label": "How do you feel about drinking?",
   "questionnaire.energy.nightShape.prompt": "Your kind of night out",
   "questionnaire.energy.planner.prompt": "When it comes to plans",
@@ -562,10 +561,10 @@ export const goTogether: Catalog = {
   "settings.data.card.title": "Your Go together answers",
   "settings.data.delete.cta": "Delete my answers",
   "settings.data.delete.description":
-    "This removes your answers for good and takes you out of Go together for any gathering whose group hasn't formed yet. You can always answer again later.",
+    "This removes your answers for good and takes you out of Go together for any event whose group hasn't formed yet. You can always answer again later.",
   "settings.data.delete.title": "Your answers, gone for good",
   "settings.data.deleteConfirm.body":
-    "Deleting removes your answers for good and takes you out of Go together for any gathering whose group hasn't formed yet. You can answer the questions again whenever you're ready.",
+    "Deleting removes your answers for good and takes you out of Go together for any event whose group hasn't formed yet. You can answer the questions again whenever you're ready.",
   "settings.data.deleteConfirm.confirm": "Delete my answers",
   "settings.data.deleteConfirm.title": "Delete your Go together answers?",
   "settings.data.deleteError":
@@ -573,7 +572,7 @@ export const goTogether: Catalog = {
   "settings.data.deleted": "Your answers were deleted.",
   "settings.data.empty.cta": "Answer the questions",
   "settings.data.empty.description":
-    "Answer a few questions about how you like to spend time, and we'll group you with people going to the same gathering who might click.",
+    "Answer a few questions about how you like to spend time, and we'll group you with people going to the same event who might click.",
   "settings.data.empty.title":
     "You haven't answered the Go together questions yet",
   "settings.data.refreshSuggested":
@@ -609,7 +608,7 @@ export const goTogether: Catalog = {
   "group.member.report": "Report {name}",
   "group.block.title": "Block {name}?",
   "group.block.description.beforeStart":
-    "You'll move out of this group, into another group going to this gathering if one fits. Your card shows what's next. {name} stays and isn't told why.",
+    "You'll move out of this group, into another group going to this event if one fits. Your card shows what's next. {name} stays and isn't told why.",
   "group.block.description.afterStart":
     "You'll leave this group and its chat. {name} stays and isn't told why.",
   "group.block.description.late":
@@ -633,7 +632,6 @@ export const goTogether: Catalog = {
   "group.block.pairMoves":
     "{partner} is coming with you, so they move with you.",
   "group.block.pairEnds":
-    "You and {partner} stop being a pair for this gathering, and {partner} stays in the group.",
-  "group.block.pairBlocked":
-    "You and {name} stop being a pair for this gathering.",
+    "You and {partner} stop being a pair for this event, and {partner} stays in the group.",
+  "group.block.pairBlocked": "You and {name} stop being a pair for this event.",
 };

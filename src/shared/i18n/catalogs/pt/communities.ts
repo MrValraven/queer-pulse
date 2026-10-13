@@ -86,7 +86,7 @@ export const communities: Catalog = {
   "discover.outro.body2":
     "Não precisas de uma grande ideia nem de uma multidão atrás de ti. Começa com um punhado de pessoas e vê onde isso te leva.",
   "discover.outro.cta": "Começar uma comunidade",
-  "discover.featured.gatheringFlag": "Encontro esta semana",
+  "discover.featured.gatheringFlag": "Evento esta semana",
   "discover.featured.next": "A seguir:",
   "discover.featured.youreIn": "Já fazes parte",
   "discover.featured.openCta": "Abrir comunidade",
@@ -146,8 +146,8 @@ export const communities: Catalog = {
   // PRD-140. Ver o comentario na versao EN.
   "hub.invitesLink_one": "{count} convite à espera",
   "hub.invitesLink_other": "{count} convites à espera",
-  "hub.sidebar.upcomingCount_one": "{count} encontro a caminho",
-  "hub.sidebar.upcomingCount_other": "{count} encontros a caminho",
+  "hub.sidebar.upcomingCount_one": "{count} evento a caminho",
+  "hub.sidebar.upcomingCount_other": "{count} eventos a caminho",
   "hub.sidebar.upcoming": "A caminho nas tuas comunidades",
   "hub.sidebar.suggestions": "Comunidades que podes gostar",
   "hub.pulseCard.announcement": "Anúncio",
@@ -184,7 +184,7 @@ export const communities: Catalog = {
   "gate.eyebrow": "Só para membros",
   "gate.about": "Para que serve",
   "gate.languages": "Fala-se aqui",
-  "gate.nextGathering": "Próximo encontro público",
+  "gate.nextGathering": "Próximo evento público",
   "gate.request.line":
     "Esta comunidade avalia quem entra. Pede, e um moderador lê o teu pedido.",
   "gate.request.action": "Pedir para entrar",
@@ -316,13 +316,13 @@ export const communities: Catalog = {
     "Não conseguimos sair dessa comunidade. Tenta daqui a pouco.",
   "detail.leave.confirm.title": "Sair de {name}?",
   "detail.leave.confirm.body":
-    "Deixas de ver o pulso e os convívios desta comunidade. As tuas publicações e respostas ficam na comunidade exatamente onde estão, com o teu nome. Podes voltar sempre que quiseres. Só precisas de entrar de novo.",
+    "Deixas de ver o pulso e os eventos desta comunidade. As tuas publicações e respostas ficam na comunidade exatamente onde estão, com o teu nome. Podes voltar sempre que quiseres. Só precisas de entrar de novo.",
   "detail.leave.confirm.cancel": "Ficar",
   "detail.leave.confirm.confirmCta": "Sair da comunidade",
   "detail.hero.andMore": "e mais {count}",
   "detail.sidebar.organiser": "Organização",
   "detail.sidebar.connectCta": "Conectar",
-  "detail.sidebar.nextGathering": "Próximo convívio",
+  "detail.sidebar.nextGathering": "Próximo evento",
   "detail.sidebar.rsvpCta": "Confirmar presença",
   "detail.sidebar.relatedCommunities": "Comunidades relacionadas",
   "detail.sidebar.communityThreads": "Conversas recentes",
@@ -347,7 +347,7 @@ export const communities: Catalog = {
 
   // ── Rótulos partilhados de Sobre / Sobre+Recursos ─────────────────────────
   "detail.about.whoFor": "Para quem é",
-  "detail.about.upcomingGathering": "Próximo convívio",
+  "detail.about.upcomingGathering": "Próximo evento",
 
   // ── Separador Pessoas (hub simplificado) ──────────────────────────────────
   "detail.members.showingOf_one": "A mostrar {shown} de {count} pessoa",
@@ -396,21 +396,21 @@ export const communities: Catalog = {
   "detail.discussion.loadMore": "Carregar mais",
 
   // ── Separador Eventos (hub completo) ──────────────────────────────────────
-  "detail.events.upcoming": "Próximos convívios",
+  "detail.events.upcoming": "Próximos eventos",
   // PRD-145. The Events tab as a PROSPECTIVE member sees it. The endpoint behind
   // it deliberately omits gatherings a community keeps to its roster, so the
   // note is what stops a short list from reading as an empty calendar.
   "detail.events.nonMemberNote":
-    "Os convívios que esta comunidade reserva a quem já é membro não aparecem aqui.",
-  "detail.events.loadMore": "Ver mais convívios",
+    "Os eventos que esta comunidade reserva a quem já é membro não aparecem aqui.",
+  "detail.events.loadMore": "Ver mais eventos",
   "detail.events.noUpcoming":
-    "Ainda não há convívios no calendário. Volta em breve.",
-  "detail.events.past": "Convívios passados",
+    "Ainda não há eventos no calendário. Volta em breve.",
+  "detail.events.past": "Eventos passados",
   "detail.events.recapCta": "Ler retrospetiva",
   "detail.events.rsvpCta": "Confirmar presença",
   "detail.events.host.lead":
     "Ajudas a gerir esta comunidade, por isso podes pôr algo no calendário dela. Escolhe uma data, um sítio e um tamanho, e depois quem o pode ver.",
-  "detail.events.host.cta": "Organizar um convívio aqui",
+  "detail.events.host.cta": "Organizar um evento aqui",
 
   // ── Separador de pessoas / lista (hub completo) ───────────────────────────
   "detail.roster.searchAria": "Pesquisar pessoas",
@@ -650,7 +650,7 @@ export const communities: Catalog = {
   // Uma remoção barra o regresso, e uma remoção sem prazo é um pedido de
   // bloqueio PERMANENTE, que passa a precisar de duas assinaturas (PRD-25).
   "detail.modtools.confirm.removeMember.body":
-    "Perde o acesso às publicações, encontros e pessoas daqui e fica barrade de voltar durante um período. Remover alguém não a barra para sempre por si só: isso precisa de uma segunda assinatura de quem é responsável, cotitular ou modera, e vais saber em que ficou esta remoção.",
+    "Perde o acesso às publicações, eventos e pessoas daqui e fica barrade de voltar durante um período. Remover alguém não a barra para sempre por si só: isso precisa de uma segunda assinatura de quem é responsável, cotitular ou modera, e vais saber em que ficou esta remoção.",
   "detail.modtools.confirm.removeMember.confirmCta": "Remover pessoa",
   "detail.modtools.confirm.grantCoOwner.title": "Tornar {name} cotitular?",
   "detail.modtools.confirm.grantCoOwner.body":
@@ -1251,7 +1251,7 @@ export const communities: Catalog = {
   "detail.pulse.search.errorTitle": "Não foi possível fazer a pesquisa",
   "detail.pulse.search.errorDescription":
     "Algo correu mal ao chegar às publicações desta comunidade. Tenta de novo daqui a pouco.",
-  "detail.events.error.title": "Não foi possível carregar os convívios",
+  "detail.events.error.title": "Não foi possível carregar os eventos",
   "detail.events.error.description":
     "Algo correu mal ao chegar ao calendário desta comunidade. Tenta de novo daqui a pouco.",
   "detail.events.error.retryCta": "Tentar novamente",
@@ -1611,7 +1611,7 @@ export const communities: Catalog = {
   "start.feature.discussion.label": "Discussão",
   "start.feature.discussion.desc": "Um quadro partilhado para tópicos.",
   "start.feature.events.label": "Eventos",
-  "start.feature.events.desc": "Convívios e um calendário.",
+  "start.feature.events.desc": "Eventos e um calendário.",
   "start.feature.roster.label": "Lista de pessoas",
   "start.feature.roster.desc": "Uma lista visível de quem está aqui.",
 
@@ -1691,7 +1691,7 @@ export const communities: Catalog = {
   "start.confirm.recap.for": "Para",
   "start.confirm.recap.kind": "Tipo",
   "start.confirm.recap.who": "Quem",
-  "start.confirm.recap.gathering": "Reunir",
+  "start.confirm.recap.gathering": "Evento",
   "start.confirm.recap.safety": "Segurança",
   "start.confirm.recap.access": "Acesso",
   "start.confirm.recap.roster": "Lista",
@@ -1777,10 +1777,10 @@ export const communities: Catalog = {
   "detail.nowReading": "A ler agora: <strong>{book}</strong>",
   "detail.cadenceDefault": "A encontrar o seu ritmo",
   "detail.nextEvent.soonChip": "em breve",
-  "detail.nextEvent.tbaTitle": "Próximo convívio a anunciar",
+  "detail.nextEvent.tbaTitle": "Próximo evento a anunciar",
   "detail.nextEvent.checkEventsTab": "Vê o separador de eventos",
   "detail.nextEvent.openToMembers": "Aberto às pessoas da comunidade",
-  "detail.nextEvent.firstTitle": "Primeiro convívio, a anunciar",
+  "detail.nextEvent.firstTitle": "Primeiro evento, a anunciar",
   "detail.nextEvent.onceFewPeople": "Assim que houver algumas pessoas",
   "detail.nextEvent.openToAllMembers":
     "Aberto a todas as pessoas da comunidade",
@@ -1982,7 +1982,7 @@ export const communities: Catalog = {
   // Deep-scan section 13 (the vertical surfaces), built 2026-08-31.
   // PHOTO-ESCALATE — PHOTO-ESCALATE (TS-14) — the mod tools report row. Sits beside the existing detail.modtools.reports.staffOnlyNote, which stays as-is for the emergency band. This one is shown when the report is about something the platform will not show a community moderator (a gathering photo today), so Take it down and Dismiss are absent and escalation is the offered action.
   "detail.modtools.reports.unviewableSubjectNote":
-    "Esta denúncia é sobre uma fotografia que não te podemos mostrar aqui. A equipa da plataforma consegue vê-la, por isso a decisão é dela. Envia para cima e acrescenta o que souberes sobre o encontro ou sobre quem lá esteve.",
+    "Esta denúncia é sobre uma fotografia que não te podemos mostrar aqui. A equipa da plataforma consegue vê-la, por isso a decisão é dela. Envia para cima e acrescenta o que souberes sobre o evento ou sobre quem lá esteve.",
 
   // ── Biblioteca de valores partilhados ──────────────────────────────────────
   // O catálogo por trás de "Ver valores" no capítulo Tom do assistente e no
@@ -2041,14 +2041,14 @@ export const communities: Catalog = {
   "values.lib.contactsTheirs":
     "Os contactos são partilhados por quem é dono deles e por mais ninguém.",
   "values.lib.gatheringsOffline":
-    "O que acontece num encontro fica fora da internet depois.",
+    "O que acontece num evento fica fora da internet depois.",
 
   "values.lib.accessDetails":
-    "Os detalhes de acessibilidade vão em cada publicação de encontro, antes de alguém ter de perguntar.",
+    "Os detalhes de acessibilidade vão em cada publicação de evento, antes de alguém ter de perguntar.",
   "values.lib.plainLanguage":
     "Linguagem simples. Explicamos o jargão ou deixamo-lo de fora.",
   "values.lib.scentAware":
-    "Os encontros têm atenção a perfumes para que quem tem sensibilidades possa vir.",
+    "Os eventos têm atenção a perfumes para que quem tem sensibilidades possa vir.",
   "values.lib.quieterSpace":
     "Há sempre um sítio mais calmo para onde ir quando for demais.",
   "values.lib.noAssumedKnowledge":
@@ -2099,7 +2099,7 @@ export const communities: Catalog = {
     "Redução de riscos em vez de julgamento. Partilhamos o que sabemos.",
   "values.lib.stayWithThem":
     "Se alguém não estiver bem, fica alguém com essa pessoa.",
-  "values.lib.substanceFree": "Os nossos encontros são livres de substâncias.",
+  "values.lib.substanceFree": "Os nossos eventos são livres de substâncias.",
   "values.lib.recoveryRespected":
     "A recuperação é respeitada aqui e nunca é assunto de comentário.",
   "values.lib.getHomeSafe":
@@ -2141,11 +2141,11 @@ export const communities: Catalog = {
   "values.lib.chosenFamily": "A família escolhida conta como família aqui.",
   "values.lib.carersSupported":
     "Quem cuida recebe ajuda para participar em vez de se desenrascar sozinho.",
-  "values.lib.ageStated": "Cada encontro diz claramente para que idades é.",
+  "values.lib.ageStated": "Cada evento diz claramente para que idades é.",
   "values.lib.adultsOnly":
     "Parte do que fazemos é só para adultos, e isso é sempre dito claramente.",
   "values.lib.partnersWelcome":
-    "Parceiros e parceiras são bem-vindos, a não ser que o encontro diga o contrário.",
+    "Parceiros e parceiras são bem-vindos, a não ser que o evento diga o contrário.",
   "values.lib.somewhereForKids":
     "Há um sítio para uma criança descansar ou comer.",
   "values.lib.schedulingReal":
@@ -2221,7 +2221,7 @@ export const communities: Catalog = {
   "spaces.mod.form.optional": "Opcional",
   "spaces.mod.form.rulesCount": "{count} de {max}",
   "spaces.mod.form.rulePlaceholder":
-    "Por exemplo: Pede antes de partilhar fotos de um encontro",
+    "Por exemplo: Pede antes de partilhar fotos de um evento",
   "spaces.mod.form.requiredHint":
     "São precisos os quatro campos do essencial para criar o espaço.",
   "spaces.mod.form.creating": "A criar…",

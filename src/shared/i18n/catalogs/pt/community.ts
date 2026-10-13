@@ -344,7 +344,7 @@ export const community: Catalog = {
   "dating.app.feeld.audience":
     "Todos os géneros · Não-monogamia ética · Próxima do kink",
   "dating.app.feeld.body":
-    "A referência para não-monogamia ética, relações abertas e kink em Lisboa. Muito inclusiva quanto à identidade. A crescer rápido na comunidade. Também muito usada em eventos e convívios.",
+    "A referência para não-monogamia ética, relações abertas e kink em Lisboa. Muito inclusiva quanto à identidade. A crescer rápido na comunidade. Também muito usada em eventos.",
   "dating.app.feeld.tag1": "Não-monogamia ética",
   "dating.app.feeld.tag2": "Próxima do kink",
   "dating.app.feeld.tag3": "Inclusiva quanto à identidade",
@@ -383,7 +383,7 @@ export const community: Catalog = {
   "dating.culture.eventsMatter.title":
     "Os eventos são como as pessoas realmente se conhecem",
   "dating.culture.eventsMatter.text":
-    "As aplicações importam menos aqui do que em algumas cidades. Uma parte significativa das relações na comunidade QueerPulse começou num evento da comunidade, através de uma apresentação em comum, ou num convívio do fórum. Aparece.",
+    "As aplicações importam menos aqui do que em algumas cidades. Uma parte significativa das relações na comunidade QueerPulse começou num evento da comunidade, através de uma apresentação em comum, ou num evento do fórum. Aparece.",
 
   "dating.structures.heading": "<em>Estruturas</em> de relação",
   "dating.structures.lead":
@@ -395,11 +395,11 @@ export const community: Catalog = {
   "dating.structure.enm.label": "Não-monogamia ética",
   "dating.structure.enm.title": "Relações abertas",
   "dating.structure.enm.text":
-    'A não-monogamia ética cobre um leque amplo, desde "abertos mas juntos" até relações totalmente independentes com várias pessoas. O Feeld e os próprios convívios da comunidade são os melhores pontos de entrada. O fórum tem um tópico ativo sobre não-monogamia ética com convívios locais.',
+    'A não-monogamia ética cobre um leque amplo, desde "abertos mas juntos" até relações totalmente independentes com várias pessoas. O Feeld e os próprios eventos da comunidade são os melhores pontos de entrada. O fórum tem um tópico ativo sobre não-monogamia ética com eventos locais.',
   "dating.structure.polyamory.label": "Poliamor",
   "dating.structure.polyamory.title": "Várias relações de amor",
   "dating.structure.polyamory.text":
-    "Uma cultura distinta da não-monogamia ética, mais focada em várias relações de compromisso do que em estruturas abertas ou casuais. Há uma comunidade poliamorosa ativa em Lisboa, com convívios regulares e apoio no fórum. Legalmente complexo em Portugal, sobretudo em questões de habitação, saúde e situações familiares.",
+    "Uma cultura distinta da não-monogamia ética, mais focada em várias relações de compromisso do que em estruturas abertas ou casuais. Há uma comunidade poliamorosa ativa em Lisboa, com eventos regulares e apoio no fórum. Legalmente complexo em Portugal, sobretudo em questões de habitação, saúde e situações familiares.",
   "dating.structure.relationshipAnarchy.label": "Anarquia relacional",
   "dating.structure.relationshipAnarchy.title": "Sem hierarquia, sem regras",
   "dating.structure.relationshipAnarchy.text":
@@ -433,19 +433,18 @@ export const community: Catalog = {
 
   "dating.social.heading": "Conhece pessoas <em>presencialmente.</em>",
   "dating.social.lead":
-    "As aplicações estão bem. Mas a comunidade QueerPulse tende mesmo é a encontrar-se em eventos: convívios, jantares, convívios pensados especificamente para criar ligação. Menos transacional do que uma aplicação de namoro; mais honesto sobre aquilo que procuras.",
+    "As aplicações estão bem. Mas a comunidade QueerPulse tende mesmo é a encontrar-se em eventos: convívios, jantares, e encontros pensados especificamente para criar ligação. Menos transacional do que uma aplicação de namoro; mais honesto sobre aquilo que procuras.",
   "dating.social.upcomingEventsCta": "Ver próximos eventos",
   "dating.social.forumThreadCta": "Tópico social no fórum",
   "dating.event.singlesDinner.name": "Jantar Queer para Solteires",
   "dating.event.singlesDinner.detail": "Mensal · Mouraria · 12–16 pessoas",
   "dating.event.singlesDinner.note":
     "Jantares organizados para pessoas solteiras da comunidade. Sem agenda, sem pressão: só uma boa refeição e a oportunidade de conhecer pessoas como deve ser.",
-  "dating.event.enmPolySocial.name": "Convívio Não-Monogamia & Poliamor",
+  "dating.event.enmPolySocial.name": "Evento Não-Monogamia & Poliamor",
   "dating.event.enmPolySocial.detail": "Bimensal · Arroios · Contínuo",
   "dating.event.enmPolySocial.note":
-    "Convívio da comunidade para pessoas não-monógamas. Principalmente social, e também um espaço para falar sobre como viver a não-monogamia ética em Lisboa.",
-  "dating.event.newMembersSocial.name":
-    "Convívio para Quem Entrou Recentemente",
+    "Evento da comunidade para pessoas não-monógamas. Principalmente social, e também um espaço para falar sobre como viver a não-monogamia ética em Lisboa.",
+  "dating.event.newMembersSocial.name": "Evento para Quem Entrou Recentemente",
   "dating.event.newMembersSocial.detail": "A cada 6 semanas · Local rotativo",
   "dating.event.newMembersSocial.note":
     "Especificamente para quem entrou na comunidade nos últimos 3 meses. A comunidade aparece sempre para este.",
@@ -696,7 +695,7 @@ export const community: Catalog = {
   "parentNetwork.lead":
     "Pais e mães LGBTQ+, coparentes e pessoas a navegar a parentalidade: biológica, adotiva, escolhida e tudo o que está entre isso. Mais do que um fórum, é um acordo permanente entre famílias que se ajudam mutuamente, tanto no prático como no mais pesado.",
   "parentNetwork.stat.parents": "pais, mães e coparentes",
-  "parentNetwork.stat.meetups": "convívios por mês",
+  "parentNetwork.stat.meetups": "eventos por mês",
   "parentNetwork.stat.kids": "crianças no grupo de brincadeiras",
   "parentNetwork.offer.healthcare.title": "Cuidados de saúde afirmativos",
   "parentNetwork.offer.healthcare.body":
@@ -706,18 +705,18 @@ export const community: Catalog = {
     "Que escolas fazem bem feito, como lidar com formulários que presumem uma mãe e um pai, e pessoas da comunidade que já passaram pelas mesmas candidaturas.",
   "parentNetwork.offer.playdates.title": "Brincadeiras e apoio às crianças",
   "parentNetwork.offer.playdates.body":
-    "Um grupo permanente de brincadeiras, troca de cuidados entre pessoas de confiança da comunidade, e convívios de fim de semana onde ninguém tem de explicar a própria família.",
+    "Um grupo permanente de brincadeiras, troca de cuidados entre pessoas de confiança da comunidade, e eventos de fim de semana onde ninguém tem de explicar a própria família.",
   "parentNetwork.offer.vent.title": "Um lugar para desabafar",
   "parentNetwork.offer.vent.body":
     "Logística da coparentalidade, percursos de gestação de substituição e adoção, e as pequenas coisas do dia a dia, com pessoas que realmente entendem.",
   "parentNetwork.comingUp.heading": "Para <em>breve.</em>",
   "parentNetwork.comingUp.lead":
     "A maioria dos meses traz uma manhã de brincadeiras e uma noite para os adultos. Crianças bem-vindas, salvo aviso em contrário.",
-  "parentNetwork.comingUp.liveEmpty.title": "Ainda não há encontros marcados",
+  "parentNetwork.comingUp.liveEmpty.title": "Ainda não há eventos marcados",
   "parentNetwork.comingUp.liveEmpty.description":
     "Não há nada no calendário de momento. As brincadeiras e os serões para adultos vão aparecer aqui à medida que os membros os organizam.",
   "parentNetwork.tag.playdate": "Brincadeiras",
-  "parentNetwork.tag.social": "Convívio",
+  "parentNetwork.tag.social": "Evento",
   "parentNetwork.tag.workshop": "Workshop",
   "parentNetwork.resource.legalRights": "Direitos legais como família queer",
   "parentNetwork.resource.healthcareGuides": "Guias de saúde e documentação",

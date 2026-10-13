@@ -115,10 +115,7 @@ describe("DirectoryCardPills", () => {
       hostsGatherings: true,
     });
     const [, badgeRow] = pillRowsOf(container);
-    expect(printedTextsOf(badgeRow)).toEqual([
-      "Open Sundays",
-      "Hosts gatherings",
-    ]);
+    expect(printedTextsOf(badgeRow)).toEqual(["Open Sundays", "Hosts events"]);
   });
 
   it("drops Hosts gatherings when a highlight says the place hosts events", () => {
@@ -158,7 +155,7 @@ describe("DirectoryCardPills", () => {
       hostsGatherings: true,
     });
     expect(pillRowsOf(container)).toHaveLength(1);
-    expect(container.textContent).not.toContain("Hosts gatherings");
+    expect(container.textContent).not.toContain("Hosts events");
   });
 
   it("translates Free and keeps the empty first row on the list card", () => {
@@ -182,6 +179,6 @@ describe("DirectoryCardPills", () => {
     );
     const rows = pillRowsOf(container);
     expect(rows).toHaveLength(1);
-    expect(printedTextsOf(rows[0])).toEqual(["Hosts gatherings"]);
+    expect(printedTextsOf(rows[0])).toEqual(["Hosts events"]);
   });
 });

@@ -174,9 +174,9 @@ export const notifications: Catalog = {
   "type.mention.textNamed":
     "<profile>{name}</profile> mentioned you in a discussion.",
   "type.mention.meta": "Mention",
-  "type.mention.gathering.text": "You were mentioned in a gathering.",
+  "type.mention.gathering.text": "You were mentioned in an event.",
   "type.mention.gathering.textNamed":
-    "<profile>{name}</profile> mentioned you in a gathering.",
+    "<profile>{name}</profile> mentioned you in an event.",
   "type.mention.gathering.meta": "Mention",
 
   // `mention` rows branch by `payload.entityKind` — what was actually
@@ -196,10 +196,10 @@ export const notifications: Catalog = {
   "type.mention.business.meta": "Business mention",
 
   "type.mention.event.text":
-    "Your gathering e/{entityRef} was mentioned in a discussion.",
+    "Your event e/{entityRef} was mentioned in a discussion.",
   "type.mention.event.textNamed":
-    "<profile>{name}</profile> mentioned your gathering e/{entityRef}.",
-  "type.mention.event.meta": "Gathering mention",
+    "<profile>{name}</profile> mentioned your event e/{entityRef}.",
+  "type.mention.event.meta": "Event mention",
 
   "type.mention.thread.text":
     "Your thread t/{entityRef} was mentioned in a discussion.",
@@ -212,25 +212,23 @@ export const notifications: Catalog = {
     "<profile>{name}</profile> replied to your comment.",
   "type.forum_reply.meta": "Reply",
 
-  "type.event_invite.text": "You have an invitation to a gathering.",
+  "type.event_invite.text": "You have an invitation to an event.",
   "type.event_invite.textNamed":
-    "<profile>{name}</profile> invited you to a gathering.",
-  "type.event_invite.meta": "Gathering invitation",
+    "<profile>{name}</profile> invited you to an event.",
+  "type.event_invite.meta": "Event invitation",
 
-  "type.event_cohost_invite.text":
-    "You've been invited to co-host a gathering.",
+  "type.event_cohost_invite.text": "You've been invited to co-host an event.",
   "type.event_cohost_invite.textNamed":
-    "<profile>{name}</profile> invited you to co-host a gathering.",
+    "<profile>{name}</profile> invited you to co-host an event.",
   "type.event_cohost_invite.meta": "Co-host invitation",
 
-  "type.event_lineup_invite.text":
-    "You've been invited to a gathering's lineup.",
+  "type.event_lineup_invite.text": "You've been invited to an event's lineup.",
   "type.event_lineup_invite.textNamed":
-    "<profile>{name}</profile> invited you to a gathering's lineup.",
+    "<profile>{name}</profile> invited you to an event's lineup.",
   "type.event_lineup_invite.meta": "Lineup invitation",
-  "type.event_lineup_accepted.text": "Someone joined your gathering's lineup.",
+  "type.event_lineup_accepted.text": "Someone joined your event's lineup.",
   "type.event_lineup_accepted.textNamed":
-    "<profile>{name}</profile> joined your gathering's lineup.",
+    "<profile>{name}</profile> joined your event's lineup.",
   "type.event_lineup_accepted.meta": "Lineup",
   "type.event_lineup_declined.text": "Someone declined your lineup invite.",
   "type.event_lineup_declined.textNamed":
@@ -242,44 +240,42 @@ export const notifications: Catalog = {
   // payload's `seatsRemaining`.
   // Flat form for a row that arrived without a seat count: it still has to
   // read as a sentence rather than leaving "{seatsRemaining}" on screen.
-  "type.event_nearly_full.text":
-    "A gathering you were looking at is nearly full.",
+  "type.event_nearly_full.text": "An event you were looking at is nearly full.",
   "type.event_nearly_full.text_one":
-    "A gathering you were looking at has 1 spot left.",
+    "An event you were looking at has 1 spot left.",
   "type.event_nearly_full.text_other":
-    "A gathering you were looking at has {seatsRemaining} spots left.",
+    "An event you were looking at has {seatsRemaining} spots left.",
   "type.event_nearly_full.meta": "Last few spots",
 
-  "type.event_reminder.text": "A gathering you're going to is coming up.",
-  "type.event_reminder.meta": "Gathering reminder",
+  "type.event_reminder.text": "An event you're going to is coming up.",
+  "type.event_reminder.meta": "Event reminder",
   "type.event_reminder.titled.text":
-    "A gathering you're going to is coming up: {eventTitle}.",
-  "type.event_reminder.titled.meta": "Gathering reminder",
+    "An event you're going to is coming up: {eventTitle}.",
+  "type.event_reminder.titled.meta": "Event reminder",
 
   "type.waitlist_promoted.text": "A spot opened up. You're off the waitlist.",
-  "type.waitlist_promoted.meta": "Gathering waitlist",
+  "type.waitlist_promoted.meta": "Event waitlist",
 
-  "type.event_cancelled.text":
-    "A gathering you're going to has been cancelled.",
-  "type.event_cancelled.meta": "Gathering update",
+  "type.event_cancelled.text": "An event you're going to has been cancelled.",
+  "type.event_cancelled.meta": "Event update",
 
-  "type.event_updated.text": "Details changed for a gathering you're going to.",
-  "type.event_updated.meta": "Gathering update",
+  "type.event_updated.text": "Details changed for an event you're going to.",
+  "type.event_updated.meta": "Event update",
   "type.event_updated.time.text":
-    "The start time changed for a gathering you're going to.",
-  "type.event_updated.time.meta": "Gathering update",
+    "The start time changed for an event you're going to.",
+  "type.event_updated.time.meta": "Event update",
   "type.event_updated.location.text":
-    "The location changed for a gathering you're going to.",
-  "type.event_updated.location.meta": "Gathering update",
+    "The location changed for an event you're going to.",
+  "type.event_updated.location.meta": "Event update",
 
   // Platform-wide coverage sweep. Personalized kinds carry a
   // `<profile>{name}</profile>` `textNamed` slot; the system-driven ones
   // (join approved/declined, listing approved, report/appeal/roadmap updates)
   // have no actor and so only a generic `.text`.
-  "type.event_rsvp.text": "Someone RSVP'd to your gathering.",
+  "type.event_rsvp.text": "Someone RSVP'd to your event.",
   "type.event_rsvp.textNamed":
-    "<profile>{name}</profile> RSVP'd to your gathering.",
-  "type.event_rsvp.meta": "Gathering RSVP",
+    "<profile>{name}</profile> RSVP'd to your event.",
+  "type.event_rsvp.meta": "Event RSVP",
 
   "type.community_reply.text": "Someone replied to your post.",
   "type.community_reply.textNamed":
@@ -910,7 +906,7 @@ export const notifications: Catalog = {
   "type.event_announcement.textNamed":
     "<profile>{name}</profile> posted an update about {title}.",
   "type.event_announcement.meta": "Message from the host",
-  "type.event_announcement.titleFallback": "one of your gatherings",
+  "type.event_announcement.titleFallback": "one of your events",
   "type.forum_thread_reviewed.text": "Your thread “{title}” has been reviewed.",
   "type.forum_thread_reviewed.meta": "Thread review",
   "type.forum_thread_reviewed.approved.text":
@@ -1044,10 +1040,10 @@ export const notifications: Catalog = {
   "type.listing_edit_suggestion_accepted.fieldFallback": "details",
   "type.venue_event_attachment.text":
     "{eventTitle} has been listed at {listingName}.",
-  "type.venue_event_attachment.meta": "Gathering at your venue",
+  "type.venue_event_attachment.meta": "Event at your venue",
   "type.venue_event_attachment.untitled.text":
-    "A gathering has been listed at {listingName}.",
-  "type.venue_event_attachment.untitled.meta": "Gathering at your venue",
+    "An event has been listed at {listingName}.",
+  "type.venue_event_attachment.untitled.meta": "Event at your venue",
   "type.venue_event_attachment.listingNameFallback": "your venue",
   "type.persona_endorsed.text": "Someone endorsed one of your personas.",
   "type.persona_endorsed.meta": "Persona endorsement",
@@ -1177,7 +1173,7 @@ export const notifications: Catalog = {
   // post titles) stay as `{token}` values, never translated.
   "list.2.text":
     "Your RSVP for <strong>{title}</strong> has been confirmed. The event is on {date} at {venue}.",
-  "list.2.meta": "Event · Gathering",
+  "list.2.meta": "Event",
   "list.3.text":
     "<strong>{name}</strong> invited you to join <strong>{group}</strong> reading group.",
   "list.3.meta": "Reading group · Invitation",
@@ -1257,7 +1253,7 @@ export const notifications: Catalog = {
   "mentions.context.namedInvite": "in {name} invite",
   "mentions.context.communityPost": "in a {community} post",
   "mentions.context.thread": "in a thread",
-  "mentions.context.gathering": "in a gathering",
+  "mentions.context.gathering": "in an event",
   "mentions.context.eventInvite": "in an event invite",
   "mentions.context.communityReply": "in a {community} reply",
   // Live inbox (GET /mentions) — day bucket + fallbacks when the backend row
@@ -1266,7 +1262,7 @@ export const notifications: Catalog = {
   "mentions.liveContext.community": "in a community post",
   "mentions.liveContext.generic": "mentioned you",
   "mentions.liveWhere.fallback": "the conversation",
-  "mentions.liveWhere.gathering": "the gathering",
+  "mentions.liveWhere.gathering": "the event",
   "mentions.liveActor.unknown": "Someone",
 
   // Notification deep-link preview (NotificationDeepLinkPage.tsx / Cards.tsx)
@@ -1429,7 +1425,7 @@ export const notifications: Catalog = {
   // owners, co-owners and mods; the answer reaches the gathering's organisers
   // and has a line per decision (`collabResponseKey`).
   "type.event_community_invite.text":
-    "{communityName} has an invitation to host a gathering together.",
+    "{communityName} has an invitation to host an event together.",
   "type.event_community_invite.textNamed":
     "<profile>{name}</profile> invited {communityName} to host {eventTitle} together.",
   "type.event_community_invite.meta": "Collab invitation",

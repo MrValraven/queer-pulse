@@ -457,7 +457,7 @@ const FEATS = [
   },
   {
     word: "GATHER",
-    label: "Gatherings",
+    label: "Events",
     head: "See who’s <em>going.</em>",
     bg: "var(--jade)",
     ink: "var(--cream)",

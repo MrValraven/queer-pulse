@@ -304,7 +304,7 @@ describe("GoTogetherFeedbackPage", () => {
     renderPage();
 
     const backLink = screen.getByRole("link", {
-      name: "Back to the gathering",
+      name: "Back to the event",
     });
     expect(backLink).toHaveAttribute("href", gatheringPath("pride-picnic"));
   });
@@ -341,7 +341,7 @@ describe("GoTogetherFeedbackPage final fix wave", () => {
 
     expect(screen.getByText("Go together")).toBeInTheDocument();
     expect(
-      screen.getByRole("link", { name: "Back to the gathering" }),
+      screen.getByRole("link", { name: "Back to the event" }),
     ).toHaveAttribute("href", gatheringPath("pride-picnic"));
   });
 

@@ -59,7 +59,7 @@ export const governance: Catalog = {
   "health.stat.retention.label": "Taxa de retenção de pessoas",
   "health.stat.reportsFiled.label": "Denúncias apresentadas este trimestre",
   "health.stat.membersRemoved.label": "Pessoas afastadas",
-  "health.stat.gatheringsHosted.label": "Convívios realizados",
+  "health.stat.gatheringsHosted.label": "Eventos realizados",
   "health.stat.appealUpheld.label": "Contestação de moderação aceite",
 
   "health.trend.upThisQuarter": "{count} este trimestre",
@@ -85,7 +85,7 @@ export const governance: Catalog = {
 
   "steps.reportFiled.title": "Denúncia apresentada",
   "steps.reportFiled.text":
-    "Qualquer pessoa da comunidade pode denunciar outra pessoa, um convívio, uma publicação do fórum, ou qualquer conteúdo. As denúncias são confidenciais. A pessoa denunciada não é informada de quem a apresentou.",
+    "Qualquer pessoa da comunidade pode denunciar outra pessoa, um evento, uma publicação do fórum, ou qualquer conteúdo. As denúncias são confidenciais. A pessoa denunciada não é informada de quem a apresentou.",
   "steps.review.title": "Revisão pela equipa de moderação",
   "steps.review.text":
     "A equipa de moderação revê todas as denúncias, começando pelas questões de segurança urgentes.",
@@ -133,7 +133,7 @@ export const governance: Catalog = {
   "principles.accessNotConditional.title":
     "O acesso não depende da capacidade de pagar",
   "principles.accessNotConditional.text":
-    "Uma escala progressiva para todos os convívios pagos. Ninguém é excluído por motivos financeiros.",
+    "Uma escala progressiva para todos os eventos pagos. Ninguém é excluído por motivos financeiros.",
 
   // ── Finanças ────────────────────────────────────────────────────────────
   "sections.finances.eyebrow": "Transparência financeira",
@@ -147,7 +147,7 @@ export const governance: Catalog = {
     "Clica em qualquer linha para ver a discriminação completa.",
   "sections.finances.totalIncome": "Receita total · {amount}",
   "sections.finances.totalExpense": "Despesa total · {amount}",
-  "sections.finances.eventsHeading": "Como funcionam as finanças dos convívios",
+  "sections.finances.eventsHeading": "Como funcionam as finanças dos eventos",
   "sections.finances.surplusHeading": "O que fazemos com o excedente.",
   "sections.finances.surplusBody":
     "Os excedentes trimestrais entram numa reserva operacional. A nossa meta é três meses de custos de funcionamento, cerca de {target}.",
@@ -280,9 +280,9 @@ export const governance: Catalog = {
   "sections.decisions.title": "O que mudou e <em>porquê.</em>",
 
   "decisions.slidingScale.lead":
-    "Maio de 2026: Introduzida escala progressiva para os convívios.",
+    "Maio de 2026: Introduzida escala progressiva para os eventos.",
   "decisions.slidingScale.body":
-    "Na sequência de uma discussão no fórum, o conselho concordou em implementar uma escala progressiva para todos os convívios pagos.",
+    "Na sequência de uma discussão no fórum, o conselho concordou em implementar uma escala progressiva para todos os eventos pagos.",
   "decisions.forumLaunched.lead": "Abril de 2026: Fórum lançado.",
   "decisions.forumLaunched.body":
     "Na sequência de pedidos da comunidade por um espaço para discutir temas mais longos. Categorias e diretrizes co-desenhadas com pessoas da comunidade.",
@@ -308,7 +308,7 @@ export const governance: Catalog = {
     "A tua identidade permanece confidencial. O QueerPulse não envia emails, por isso ao submeteres recebes um código de referência: guarda-o, e podes ver a qualquer momento o que aconteceu à tua preocupação.",
   "sections.raise.selectPlaceholder": "Que tipo de preocupação?",
   "sections.raise.option.member": "Denunciar uma pessoa ou comportamento",
-  "sections.raise.option.gathering": "Denunciar um convívio ou evento",
+  "sections.raise.option.gathering": "Denunciar um evento",
   "sections.raise.option.content": "Problema de conteúdo ou da plataforma",
   "sections.raise.option.appeal": "Decisão de moderação que quero contestar",
   "sections.raise.option.other": "Outra coisa",

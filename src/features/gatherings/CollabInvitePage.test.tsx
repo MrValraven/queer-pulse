@@ -175,7 +175,7 @@ describe("CollabInvitePage", () => {
         .getAllByRole("link")
         .filter((link) => link.getAttribute("href") === "/notifications"),
     ).toHaveLength(1);
-    expect(main.getByRole("link", { name: "View gathering" })).toHaveAttribute(
+    expect(main.getByRole("link", { name: "View event" })).toHaveAttribute(
       "href",
       gatheringPath("portfolio-night"),
     );
@@ -194,9 +194,7 @@ describe("CollabInvitePage", () => {
 
   it("says the gathering was cancelled", () => {
     renderPage({ event: { ...PENDING_INVITE.event, isCancelled: true } });
-    expect(
-      screen.getByText("This gathering was cancelled"),
-    ).toBeInTheDocument();
+    expect(screen.getByText("This event was cancelled")).toBeInTheDocument();
     expect(
       screen.queryByRole("button", { name: "Accept collab" }),
     ).not.toBeInTheDocument();
@@ -204,8 +202,6 @@ describe("CollabInvitePage", () => {
 
   it("says the gathering already happened", () => {
     renderPage({ event: { ...PENDING_INVITE.event, isPast: true } });
-    expect(
-      screen.getByText("This gathering already happened"),
-    ).toBeInTheDocument();
+    expect(screen.getByText("This event already happened")).toBeInTheDocument();
   });
 });

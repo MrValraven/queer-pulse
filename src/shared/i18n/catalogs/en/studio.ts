@@ -129,7 +129,7 @@ export const studio: Catalog = {
   "landing.nav.howItWorks": "How it works",
   "landing.nav.forArtists": "For artists",
   "landing.footer.tagline":
-    "A queer professional network rooted in Lisbon. Studio sits alongside Cinema, Magazine, and Gatherings.",
+    "A queer professional network rooted in Lisbon. Studio sits alongside Cinema, Magazine, and Events.",
   "landing.footer.col.studio": "Studio",
   "landing.footer.col.studio.thisWeek": "This week",
   "landing.footer.col.studio.djSets": "DJ sets",
@@ -256,7 +256,7 @@ export const studio: Catalog = {
   "signin.join.tier.coop.badge": "Best value",
   "signin.join.tier.coop.title": "The whole <em>co-op</em>",
   "signin.join.tier.coop.body":
-    "Studio <em>plus</em> Cinema, the Magazine, Gatherings, reading groups, and a vote at the annual assembly. One membership, the entire QueerPulse.",
+    "Studio <em>plus</em> Cinema, the Magazine, Events, reading groups, and a vote at the annual assembly. One membership, the entire QueerPulse.",
   "signin.join.tier.coop.incl": "One member account across every surface",
   "signin.join.submitCta": "Continue to payment",
   "signin.join.alreadyMember": "Already a member?",
@@ -496,7 +496,7 @@ export const studio: Catalog = {
 
   "help.faq.priceDiff.q": "What's the difference between €7 and €11?",
   "help.faq.priceDiff.a":
-    "<strong>€7/mo</strong> is Studio only. <strong>€11/mo</strong> is the whole QueerPulse co-op: Studio plus Cinema, the Magazine, Gatherings, reading groups, and a vote at the annual assembly. One membership, every surface. Change tiers any month.",
+    "<strong>€7/mo</strong> is Studio only. <strong>€11/mo</strong> is the whole QueerPulse co-op: Studio plus Cinema, the Magazine, Events, reading groups, and a vote at the annual assembly. One membership, every surface. Change tiers any month.",
   "help.faq.cancel.q": "How do I cancel?",
   "help.faq.cancel.a":
     'One click in <a>Settings, then Erase & exit</a>. No retention call, no "are you sure" loop, no winback emails. We think leaving should be as easy as arriving. That\'s the only honest way to ask you to stay.',

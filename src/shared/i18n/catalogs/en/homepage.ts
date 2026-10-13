@@ -148,7 +148,7 @@ export const homepage: Catalog = {
     "Before you message anyone you can see how you are connected: who vouched for them, and who you both already know.",
   "painPoints.network.modal.c.title": "How it powers QueerPulse",
   "painPoints.network.modal.c.body":
-    "Housing, gatherings and the directory all lean on it. Handing someone your address is a different decision when a member you trust put their name on them.",
+    "Housing, events and the directory all lean on it. Handing someone your address is a different decision when a member you trust put their name on them.",
 
   "painPoints.directory.label": "The business directory",
   "painPoints.directory.question":
@@ -186,7 +186,7 @@ export const homepage: Catalog = {
   "painPoints.whatsOn.heading":
     "So we built <em>one calendar for the city.</em>",
   "painPoints.whatsOn.body":
-    "Every gathering in one place: morning walks, supper clubs, workshops, studio visits, screenings and discussions. Filter by day, neighbourhood, kind and cost, and each one says up front whether it is a sober space, step-free, or has a quiet corner.",
+    "Every event in one place: morning walks, supper clubs, workshops, studio visits, screenings and discussions. Filter by day, neighbourhood, kind and cost, and each one says up front whether it is a sober space, step-free, or has a quiet corner.",
   "painPoints.whatsOn.payoff":
     "A picnic in Monsanto on Sunday, marked sober space before I had to ask.",
   "painPoints.whatsOn.payoff2":
@@ -212,7 +212,7 @@ export const homepage: Catalog = {
     "I have had the same idea for a year. Venue, budget and who brings the chairs is where I stop.",
   "painPoints.host.heading": "So we built <em>a way to host.</em>",
   "painPoints.host.body":
-    "Everything for turning an idea into a real gathering: a page people can find, RSVPs you can count, and guidance from people who have hosted before.",
+    "Everything for turning an idea into a real event: a page people can find, RSVPs you can count, and guidance from people who have hosted before.",
   "painPoints.host.payoff":
     "Twelve people, one long table, and a checklist that did the worrying for me.",
   "painPoints.host.payoff2": "I stole your checklist. Mine is in March.",
@@ -282,7 +282,7 @@ export const homepage: Catalog = {
     "The question you have been carrying since March gets a real answer from someone who has done it, usually the same night.",
   "painPoints.forum.modal.c.title": "How it powers QueerPulse",
   "painPoints.forum.modal.c.body":
-    "Guides, gatherings and whole communities start as forum threads. Moderation publishes what it did each quarter, and you can appeal a decision.",
+    "Guides, events and whole communities start as forum threads. Moderation publishes what it did each quarter, and you can appeal a decision.",
 
   "painPoints.magazine.label": "The magazine",
   "painPoints.magazine.question":
@@ -437,7 +437,7 @@ export const homepage: Catalog = {
     "Every member is invited and vouched for by someone already here. No bots, no strangers scraping the list.",
   "membersExplainer.pillars.inside.title": "The good stuff opens from inside",
   "membersExplainer.pillars.inside.body":
-    "Full profiles, communities and gatherings unlock the moment you become a member.",
+    "Full profiles, communities and events unlock the moment you become a member.",
   "membersExplainer.pillars.safe.title": "Vouching keeps it a safe space",
   "membersExplainer.pillars.safe.body":
     "Keeping the directory members-only is how people here get to be fully themselves.",
@@ -455,7 +455,7 @@ export const homepage: Catalog = {
   // ── Gatherings (homepage teaser) ──────────────────────────────────────────
   "gatherings.title": "Meet <em>in person.</em>",
   "gatherings.subtitle":
-    "Dinners, workshops, screenings, and walks: real gatherings happening across Lisbon this month.",
+    "Dinners, workshops, screenings, and walks: real events happening across Lisbon this month.",
   "gatherings.spots.seatsLeft": "seats left",
   "gatherings.spots.spotsLeft": "spots left",
   "gatherings.spots.going": "going",
@@ -472,10 +472,10 @@ export const homepage: Catalog = {
   "liveStories.issueKicker": "Issue {number}",
   "liveStories.magazineKicker": "From the magazine",
   // Kicker for an admin-curated gathering shown to signed-out visitors (PRD-323).
-  "liveGatherings.curatedKicker": "Community gathering",
+  "liveGatherings.curatedKicker": "Community event",
   // Signed-out curated gathering rows open the members explainer (PRD-323).
   "membersExplainer.ledeGathering":
-    "Gathering details open up once you're in. Here's why we keep it that way, and how to join.",
+    "Event details open up once you're in. Here's why we keep it that way, and how to join.",
   "membersExplainer.ledeRoadmap":
     "Voting on what we build next is for members. Here's how to join or sign in.",
   "membersExplainer.ledeRating":
@@ -549,7 +549,7 @@ export const homepage: Catalog = {
 
   "communities.room.pulse": "the live feed",
   "communities.room.discussions": "threads",
-  "communities.room.events": "gatherings & RSVPs",
+  "communities.room.events": "events & RSVPs",
   "communities.room.resources": "guides & library",
 
   // ── Housing ────────────────────────────────────────────────────────────────

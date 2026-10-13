@@ -425,7 +425,7 @@ export const resources: Catalog = {
   "glossary.backLink": "Biblioteca de Recursos",
   "glossary.hero.title": "Um <em>glossário</em> em construção.",
   "glossary.hero.dek":
-    "Palavras usadas aqui: em toda a plataforma, na revista, nos convívios. <b>As definições são rascunhos de trabalho.</b> Onde um termo é contestado, dizemo-lo. Onde é específico de Lisboa, assinalamo-lo. <em>Sugere alterações no fundo da página; a equipa editorial vê-as semanalmente.</em>",
+    "Palavras usadas aqui: em toda a plataforma, na revista, nos eventos. <b>As definições são rascunhos de trabalho.</b> Onde um termo é contestado, dizemo-lo. Onde é específico de Lisboa, assinalamo-lo. <em>Sugere alterações no fundo da página; a equipa editorial vê-as semanalmente.</em>",
   "glossary.foot.body":
     "Este é um documento de trabalho. As sugestões são lidas pela equipa editorial semanalmente e discutidas na assembleia mensal. <em>Vamos errar; preferimos errar publicamente e corrigir.</em>",
 
@@ -1225,13 +1225,13 @@ export const resources: Catalog = {
   "sober.stat.changes.label":
     "isto muda quando os espaços comunitários incluem deliberadamente opções sóbrias, e quando quem é sóbrie pode estar presente com à-vontade",
 
-  "sober.gatherings.title": "Convívios <em>sóbries.</em>",
+  "sober.gatherings.title": "Eventos <em>sóbrios.</em>",
   "sober.gatherings.lead":
-    "Eventos sem álcool, ou eventos onde o álcool está presente mas não é o foco. Todos os convívios da QueerPulse estão assinalados quando são sem álcool.",
-  "sober.gatherings.hostCta": "Organizar ou participar num convívio",
+    "Eventos sem álcool, ou eventos onde o álcool está presente mas não é o foco. Todos os eventos da QueerPulse estão assinalados quando são sem álcool.",
+  "sober.gatherings.hostCta": "Organizar ou participar num evento",
   "sober.gatherings.leadLive":
-    "Ainda não há encontros listados na QueerPulse. Se queres organizar um encontro sem álcool, fala com a equipa e ela analisa o teu pedido.",
-  "sober.gatherings.hostCtaLive": "Organizar um encontro",
+    "Ainda não há eventos listados na QueerPulse. Se queres organizar um evento sem álcool, fala com a equipa e ela analisa o teu pedido.",
+  "sober.gatherings.hostCtaLive": "Organizar um evento",
   "sober.type.alcoholFree": "Sem álcool",
   "sober.type.supportGroup": "Grupo de apoio",
   "sober.rsvp.going": "Vou",
@@ -1251,7 +1251,7 @@ export const resources: Catalog = {
     "Isto vai além da preferência de estilo de vida. Se estás em recuperação, de álcool, substâncias, ou qualquer outra coisa, há aqui pessoas que compreendem. Conselhos só quando pedires.",
   "sober.recovery.peerGroup.title": "Grupo de pares Sóbrie e Queer",
   "sober.recovery.peerGroup.desc":
-    "Um espaço privado e moderado dentro da QueerPulse para pessoas em recuperação. Reunião semanal online, canal de texto, e convívios presenciais ocasionais. Todas as abordagens são bem-vindas, sem programa específico.",
+    "Um espaço privado e moderado dentro da QueerPulse para pessoas em recuperação. Reunião semanal online, canal de texto, e eventos presenciais ocasionais. Todas as abordagens são bem-vindas, sem programa específico.",
   "sober.recovery.peerGroup.linkLabel": "Junta-te ao grupo",
   "sober.recovery.oneToOne.title": "Individual: fala com um par",
   "sober.recovery.oneToOne.desc":
@@ -1272,19 +1272,19 @@ export const resources: Catalog = {
   "sober.outro.findSpacesCta": "Encontrar espaços seguros",
   "sober.outro.browseCommunitiesCta": "Explorar comunidades",
 
-  "sober.host.modalTitle": "Convívios sóbries",
-  "sober.host.success.hostTitle": "Convívio <em>submetido.</em>",
+  "sober.host.modalTitle": "Eventos sóbrios",
+  "sober.host.success.hostTitle": "Evento <em>submetido.</em>",
   "sober.host.success.attendTitle": "Pedido <em>enviado.</em>",
   "sober.host.success.hostSub":
     "O teu pedido chegou à equipa da QueerPulse. Ela analisa-o e responde-te na QueerPulse.",
   "sober.host.success.attendSub":
     "O teu pedido chegou à equipa da QueerPulse. Ela analisa-o e responde-te na QueerPulse. Nada é partilhado publicamente.",
   "sober.host.intro":
-    "Começa um convívio sem álcool, ou junta-te a uma reunião de pares já existente. De qualquer forma, decides tu quão visível queres estar.",
+    "Começa um evento sem álcool, ou junta-te a uma reunião de pares já existente. De qualquer forma, decides tu quão visível queres estar.",
   "sober.host.modeLabel": "O que gostarias de fazer?",
-  "sober.host.mode.host.name": "Organizar um convívio",
-  "sober.host.mode.host.desc": "Propõe um novo convívio sem álcool.",
-  "sober.host.mode.attend.name": "Participar num convívio",
+  "sober.host.mode.host.name": "Organizar um evento",
+  "sober.host.mode.host.desc": "Propõe um novo evento sem álcool.",
+  "sober.host.mode.attend.name": "Participar num evento",
   "sober.host.mode.attend.desc":
     "Pede para te juntares a uma reunião de apoio entre pares.",
   "sober.host.nameLabel.host": "O teu nome",
@@ -1298,12 +1298,12 @@ export const resources: Catalog = {
   "sober.host.detailPlaceholder.attend":
     "ex.: a reunião semanal Sóbrie e Queer de apoio entre pares, e se gostarias de alguém para te acompanhar lá.",
   "sober.host.cancelCta": "Cancelar",
-  "sober.host.submitCta.host": "Submeter convívio",
+  "sober.host.submitCta.host": "Submeter evento",
   "sober.host.submitCta.attend": "Pedir para participar",
   "sober.host.submitCta.hostLive": "Enviar pedido",
   "sober.host.introLive":
-    "Fala à equipa do encontro sem álcool que gostarias de organizar. Tu decides quanto partilhas.",
-  "sober.host.modalTitleLive": "Organizar um convívio sóbrio",
+    "Fala à equipa do evento sem álcool que gostarias de organizar. Tu decides quanto partilhas.",
+  "sober.host.modalTitleLive": "Organizar um evento sóbrio",
 
   // ── Grade da biblioteca de guias — partilhada por marketing/ResourceLibraryPage
   // (a página real "/resources", ligada à navegação, consolidada pela CNT-11)
@@ -1583,7 +1583,7 @@ export const resources: Catalog = {
   "microGrants.apply.category.legal.name": "Direito e ativismo",
   "microGrants.apply.category.legal.sub": "Direitos, acompanhamento",
   "microGrants.apply.category.community.name": "Comunidade e espaço",
-  "microGrants.apply.category.community.sub": "Encontros, entreajuda",
+  "microGrants.apply.category.community.sub": "Eventos, entreajuda",
   "microGrants.apply.category.other.name": "Outro",
   "microGrants.apply.category.other.sub":
     "Algo que não encaixa bem noutra categoria",
@@ -1772,7 +1772,7 @@ export const resources: Catalog = {
   "accessibleLisbon.place.alamedaGulbenkian.detail":
     "4 km por jardins e passeios largos. Uma subida ligeira, o resto é nivelado.",
   "accessibleLisbon.place.arquivo.detail":
-    "Café-biblioteca, genuinamente sossegado, entrada nivelada a partir da praça. Bom para encontros de baixo ruído.",
+    "Café-biblioteca, genuinamente sossegado, entrada nivelada a partir da praça. Bom para eventos de baixo ruído.",
   "accessibleLisbon.place.mariaCaxuxa.detail":
     "Entrada sem degraus, aro magnético auditivo, casa de banho acessível, e equipa que sabe o que faz.",
   "accessibleLisbon.place.heim.detail":
@@ -1814,7 +1814,7 @@ export const resources: Catalog = {
     "Estiveste nalgum sítio <em>que funciona?</em>",
   "accessibleLisbon.outro.sub":
     "A lista só se mantém honesta porque continuamos a acrescentar-lhe coisas. Traz um local verificado para o quadro de recursos da tua comunidade.",
-  "accessibleLisbon.outro.cta": "Encontrar um encontro",
+  "accessibleLisbon.outro.cta": "Encontrar um evento",
 
   // ── ArtCritGuidePage (+ artCritGuide.data.ts) ───────────────────────────
   "artCritGuide.meta.title":
@@ -1987,12 +1987,11 @@ export const resources: Catalog = {
 
   // ── FirstMeetupGuidePage (+ firstMeetupGuide.data.ts) ───────────────────
   "firstMeetupGuide.meta.title":
-    "O teu primeiro encontro QueerPulse: o que esperar",
+    "O teu primeiro evento QueerPulse: o que esperar",
   "firstMeetupGuide.meta.description":
-    "O que acontece de facto num primeiro encontro presencial, o que 'sem agenda' significa na prática, e respostas às perguntas que quem chega tem medo de fazer.",
+    "O que acontece de facto num primeiro evento presencial, o que 'sem agenda' significa na prática, e respostas às perguntas que quem chega tem medo de fazer.",
   "firstMeetupGuide.hero.eyebrow": "Queer Social",
-  "firstMeetupGuide.hero.title":
-    "O teu primeiro encontro, <em>sem pressão.</em>",
+  "firstMeetupGuide.hero.title": "O teu primeiro evento, <em>sem pressão.</em>",
   "firstMeetupGuide.hero.lead":
     'O que esperar, o que "sem agenda" realmente significa, e respostas às coisas que estás demasiado nervoso/a para perguntar. Vem sozinhe, vem ansiose, vais ser bem cuidade.',
   "firstMeetupGuide.hero.anchor.expect": "O que esperar",
@@ -2030,18 +2029,18 @@ export const resources: Catalog = {
     "Ninguém conhece, da primeira vez. A pessoa anfitriã chega cedo especificamente para receber as pessoas à porta e apresentar-te. Diz que és nove por aqui: é a frase mais fácil de dizer aqui.",
   "firstMeetupGuide.faq2.q": "E se eu estiver mesmo nervoso/a?",
   "firstMeetupGuide.faq2.a":
-    "Quase todes estão, e quase todes quase dão meia-volta à porta. As pessoas que estão a preparar as mesas este mês fizeram exatamente isso no primeiro encontro delas. Fica fácil depressa.",
+    "Quase todes estão, e quase todes quase dão meia-volta à porta. As pessoas que estão a preparar as mesas este mês fizeram exatamente isso no primeiro evento delas. Fica fácil depressa.",
   "firstMeetupGuide.faq3.q": "Como vou encontrar o grupo?",
   "firstMeetupGuide.faq3.a":
-    "A pessoa anfitriã publica onde vai estar e o que vai vestir, normalmente numa entrada ou elevador específico, a uma hora marcada, e depois todes seguem juntes. Vê a publicação fixada do encontro.",
+    "A pessoa anfitriã publica onde vai estar e o que vai vestir, normalmente numa entrada ou elevador específico, a uma hora marcada, e depois todes seguem juntes. Vê a publicação fixada do evento.",
   "firstMeetupGuide.faq4.q": "Tenho de ficar o tempo todo?",
   "firstMeetupGuide.faq4.a":
     "Não. Sai quando quiseres, sem precisares de explicar. Ficar vinte minutos também conta como teres vindo.",
 
   "firstMeetupGuide.outro.title": "Basta <em>aparecer.</em>",
   "firstMeetupGuide.outro.sub":
-    "É esse o único requisito de entrada. O próximo encontro está no quadro.",
-  "firstMeetupGuide.outro.cta": "Encontrar o próximo encontro",
+    "É esse o único requisito de entrada. O próximo evento está no quadro.",
+  "firstMeetupGuide.outro.cta": "Encontrar o próximo evento",
 
   // ── GroupShowArchivePage (+ groupShowArchive.data.ts) ───────────────────
   "groupShowArchive.meta.title":
@@ -2379,7 +2378,7 @@ export const resources: Catalog = {
 
   "runningGuide.outro.title": "Vemo-nos na <em>linha de partida.</em>",
   "runningGuide.outro.sub":
-    "O café a seguir é metade do objetivo. Encontra a próxima corrida no quadro de encontros.",
+    "O café a seguir é metade do objetivo. Encontra a próxima corrida no quadro de eventos.",
   "runningGuide.outro.cta": "Encontrar a próxima corrida",
 
   // ── SchoolFormsGuidePage (+ schoolFormsGuide.data.ts) ───────────────────
@@ -2516,7 +2515,7 @@ export const resources: Catalog = {
   "spoonTheory.uses.title": "Como a <em>usamos</em>",
   "spoonTheory.use1.title": "Híbrido por defeito",
   "spoonTheory.use1.body":
-    "Todos os encontros têm opção online, para que um dia de poucas colheres nunca signifique ficar de fora. Online é outra porta para a mesma sala, com o mesmo peso.",
+    "Todos os eventos têm opção online, para que um dia de poucas colheres nunca signifique ficar de fora. Online é outra porta para a mesma sala, com o mesmo peso.",
   "spoonTheory.use2.title": "Aparece se puderes, sem penalização",
   "spoonTheory.use2.body":
     "Confirmaste presença e não consegues ir? Sem problema. Contamos com isso. As colheres que poupas ao ficar em casa são tuas para guardar.",
@@ -2535,8 +2534,8 @@ export const resources: Catalog = {
 
   "spoonTheory.outro.title": "Vem como <em>estiveres.</em>",
   "spoonTheory.outro.sub":
-    "Não estamos a medir nada. Todos os encontros são híbridos, sem compromisso de chegada, e feitos para corpos reais.",
-  "spoonTheory.outro.cta": "Encontrar um encontro de baixo estímulo",
+    "Não estamos a medir nada. Todos os eventos são híbridos, sem compromisso de chegada, e feitos para corpos reais.",
+  "spoonTheory.outro.cta": "Encontrar um evento de baixo estímulo",
 
   // ── IntersectionalityPage (+ IntersectionalityCards.tsx +
   //    IntersectionalityFooter.tsx + intersectionality.data.ts) ───────────
@@ -2601,7 +2600,7 @@ export const resources: Catalog = {
     "A comunidade queer tem muitas vezes um carácter de classe não dito: certos bares, eventos, estéticas e códigos sociais assinalam pertença de formas que excluem quem não pode ou não participa. Nomear isto é o primeiro passo para fazer algo sobre isso.",
   "intersectionality.class.note.strong": "A posição da QueerPulse:",
   "intersectionality.class.note.text":
-    "Tentamos tornar a participação na comunidade acessível independentemente do rendimento. Os encontros têm opções de preço variável; o fórum é gratuito; esta plataforma é gratuita para quem não pode pagar uma contribuição. Se o custo for uma barreira para o que seja aqui, contacta-nos diretamente. Será tratado com discrição.",
+    "Tentamos tornar a participação na comunidade acessível independentemente do rendimento. Os eventos têm opções de preço variável; o fórum é gratuito; esta plataforma é gratuita para quem não pode pagar uma contribuição. Se o custo for uma barreira para o que seja aqui, contacta-nos diretamente. Será tratado com discrição.",
   "intersectionality.class.info1.eyebrow":
     "A subida do custo de vida em Lisboa",
   "intersectionality.class.info1.title": "O que a gentrificação significa aqui",
@@ -2841,7 +2840,7 @@ export const resources: Catalog = {
     "Os espaços acessíveis verificados estão para breve.",
   "accessibleLisbon.live.body":
     "Estamos a confirmar acesso sem degraus, casas de banho acessíveis e formação do pessoal com cada espaço antes de o listarmos, para que cada lugar aqui tenha sido verificado por membros.",
-  "accessibleLisbon.live.cta": "Encontrar encontros",
+  "accessibleLisbon.live.cta": "Encontrar eventos",
 
   "ingredientsMap.missing.liveToast":
     "As sugestões da comunidade ainda não estão abertas. Este mapa ainda está a ser construído.",

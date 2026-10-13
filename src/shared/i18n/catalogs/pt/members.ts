@@ -126,8 +126,8 @@ export const members: Catalog = {
   "profile.backTo.community": "Voltar à comunidade",
   "profile.backTo.forum": "Voltar ao fórum",
   "profile.backTo.thread": "Voltar à conversa",
-  "profile.backTo.gatherings": "Voltar aos convívios",
-  "profile.backTo.gathering": "Voltar ao convívio",
+  "profile.backTo.gatherings": "Voltar aos eventos",
+  "profile.backTo.gathering": "Voltar ao evento",
   "profile.backTo.events": "Voltar aos eventos",
   "profile.backTo.event": "Voltar ao evento",
   "profile.backTo.feed": "Voltar ao feed",
@@ -755,12 +755,12 @@ export const members: Catalog = {
   "publicProfile.control.locked.title":
     "Um perfil público é algo em que <em>cresces aos poucos.</em>",
   "publicProfile.control.locked.lede":
-    "Os perfis públicos são para quem ajuda a levar o lado público da QueerPulse: quem escreve, organiza convívios ou lidera projetos. É aqui que estás:",
+    "Os perfis públicos são para quem ajuda a levar o lado público da QueerPulse: quem escreve, organiza eventos ou lidera projetos. É aqui que estás:",
   "publicProfile.control.unlocked.eyebrow": "Perfil público · desbloqueado",
   "publicProfile.control.unlocked.title":
     "Já podes partilhar um <em>perfil público.</em>",
   "publicProfile.control.unlocked.lede":
-    "Um perfil público vai permitir que quem ainda não é da comunidade encontre a tua escrita, os teus convívios e uma forma de te contactar, sem abrir o resto da comunidade.",
+    "Um perfil público vai permitir que quem ainda não é da comunidade encontre a tua escrita, os teus eventos e uma forma de te contactar, sem abrir o resto da comunidade.",
   "publicProfile.control.notYet":
     "Os perfis públicos ainda não estão abertos, por isso nada aqui é publicado em lado nenhum e ninguém fora da QueerPulse te vê. Guardamos o que escolheres, e é isso que vamos ativar no dia em que abrirem.",
   "publicProfile.control.switchLabel": "Mostrar um perfil público",
@@ -802,7 +802,7 @@ export const members: Catalog = {
   "publicProfile.eligibility.family.participation.label":
     "Participação constante",
   "publicProfile.eligibility.family.participation.hint":
-    "Ir a encontros, publicar e manter-te ativo recentemente",
+    "Ir a eventos, publicar e manter-te ativo recentemente",
   "publicProfile.eligibility.progress.pct":
     "{pct}% do caminho para um perfil público",
   "publicProfile.eligibility.gates.heading": "Primeiro, o essencial",
@@ -815,7 +815,7 @@ export const members: Catalog = {
     "Publica algo ou organiza um evento aberto",
   "publicProfile.eligibility.action.vouch":
     "Pede a quem te conhece que te dê um voto de confiança",
-  "publicProfile.eligibility.action.attend": "Aparece a um encontro ou dois",
+  "publicProfile.eligibility.action.attend": "Aparece a um evento ou dois",
   "publicProfile.eligibility.action.points": "+{points}",
   "publicProfile.eligibility.family.amount": "{points} / {cap}",
   "publicProfile.eligibility.standing.blocked":
@@ -823,7 +823,7 @@ export const members: Catalog = {
 
   // ── Etiquetas de estatísticas do perfil público (currentUserPublic.data) ──
   "publicProfile.stat.poemsPublished": "Poemas publicados",
-  "publicProfile.stat.eventsHosted": "Convívios organizados",
+  "publicProfile.stat.eventsHosted": "Eventos organizados",
   "publicProfile.stat.yearsOnPlatform": "Ano na QueerPulse",
   "publicProfile.stat.membersReached": "Pessoas alcançadas",
 
@@ -872,7 +872,7 @@ export const members: Catalog = {
   "search.resultCount_other": `<b>{count}</b> resultados para "<b>{query}</b>"`,
   "search.empty.title": "Nada encontrado",
   "search.empty.body":
-    "Tenta outra palavra: nome de uma pessoa, bairro, competência, ou tipo de convívio.",
+    "Tenta outra palavra: nome de uma pessoa, bairro, competência, ou tipo de evento.",
   // Linhas de páginas da pesquisa, linha dos tópicos e ações do estado vazio (search.data.ts, SearchResults.tsx).
   "search.page.members.name": "Membros",
   "search.page.members.sub": "Encontra pessoas da comunidade",
@@ -936,7 +936,7 @@ export const members: Catalog = {
   "search.hero.title":
     "Encontra quem ou o que quiseres <em>na comunidade.</em>",
   "search.hero.placeholder":
-    "Pessoas, convívios, comunidades, publicações no quadro…",
+    "Pessoas, eventos, comunidades, publicações no quadro…",
 
   // ── Filtro avançado do diretório (MemberDirectoryFilterPage) ───────────────
   "directory.eyebrow": "Pessoas · filtro avançado",
@@ -1587,7 +1587,7 @@ export const members: Catalog = {
   // ── Paleta de comandos (CommandPalette) ─────────────────────────────────────
   "commandPalette.ariaLabel": "Pesquisar na QueerPulse",
   "commandPalette.escKey": "esc",
-  "commandPalette.placeholder": "Pesquisar pessoas, convívios, comunidades…",
+  "commandPalette.placeholder": "Pesquisar pessoas, eventos, comunidades…",
   "commandPalette.signInBody":
     "Inicia sessão para pesquisar em toda a QueerPulse.",
   "commandPalette.noMatches": "Sem resultados. Tenta outra palavra.",
@@ -1887,9 +1887,9 @@ export const members: Catalog = {
     "Dares um voto de confiança a outra pessoa.",
   "badges.xpBreakdown.sources.connections": "Conexões feitas",
   "badges.xpBreakdown.sources.connectionsDesc": "Conectares-te a outro membro.",
-  "badges.xpBreakdown.sources.events": "Convívios em que participaste",
+  "badges.xpBreakdown.sources.events": "Eventos em que participaste",
   "badges.xpBreakdown.sources.eventsDesc":
-    "Participares num convívio organizado por outra pessoa.",
+    "Participares num evento organizado por outra pessoa.",
   "badges.xpBreakdown.sources.posts": "Publicações na comunidade",
   "badges.xpBreakdown.sources.postsDesc":
     "Publicares onde há outras pessoas, ou responderes a alguém.",
@@ -1908,9 +1908,9 @@ export const members: Catalog = {
   "badges.xpBreakdown.sources.volunteering": "Sessões de voluntariado",
   "badges.xpBreakdown.sources.volunteeringDesc":
     "Uma sessão de voluntariado confirmada por quem publicou a oportunidade.",
-  "badges.xpBreakdown.sources.hosting": "Convívios que organizaste",
+  "badges.xpBreakdown.sources.hosting": "Eventos que organizaste",
   "badges.xpBreakdown.sources.hostingDesc":
-    "Organizares um convívio que aconteceu e teve gente.",
+    "Organizares um evento que aconteceu e teve gente.",
   "badges.xpBreakdown.sources.magazine": "Peças publicadas na revista",
   "badges.xpBreakdown.sources.magazineDesc":
     "Uma peça tua publicada na revista.",
@@ -2069,7 +2069,7 @@ export const members: Catalog = {
   "badges.ledger.reason.adjustmentWhy":
     "Esta linha foi escrita pela plataforma. Fala com a equipa da comunidade se quiseres saber o detalhe.",
   "perks.sidebar.explainBody":
-    "As vantagens não são um programa de fidelização. São a forma de quem aparece receber um pouco mais de volta. Cada nível representa algo real: tempo aqui, encontros a que foste, pessoas que ligaste. O que desbloqueias é uma fatia maior do que a plataforma já faz.",
+    "As vantagens não são um programa de fidelização. São a forma de quem aparece receber um pouco mais de volta. Cada nível representa algo real: tempo aqui, eventos a que foste, pessoas que ligaste. O que desbloqueias é uma fatia maior do que a plataforma já faz.",
   "perks.sidebar.suggestLabel":
     "O que tornaria mais valioso seres membro a longo prazo?",
   "badges.case.categoryToggleLabel": "Mostrar distintivos de {category}",
@@ -2086,15 +2086,15 @@ export const members: Catalog = {
   "badges.catalog.wellRead.name": "Boa Leitura",
   "badges.catalog.wellRead.locked": "Guarda 5 artigos ou recursos",
   "badges.catalog.wellRead.earned": "Guardaste 5 artigos ou recursos",
-  "badges.catalog.firstGathering.name": "Primeiro Encontro",
-  "badges.catalog.firstGathering.locked": "Vai ao teu primeiro encontro",
-  "badges.catalog.firstGathering.earned": "Foste a um encontro QueerPulse",
+  "badges.catalog.firstGathering.name": "Primeiro Evento",
+  "badges.catalog.firstGathering.locked": "Vai ao teu primeiro evento",
+  "badges.catalog.firstGathering.earned": "Foste a um evento QueerPulse",
   "badges.catalog.threeCompany.name": "Três é Companhia",
-  "badges.catalog.threeCompany.locked": "Vai a 3 encontros",
-  "badges.catalog.threeCompany.earned": "3 encontros a que foste",
+  "badges.catalog.threeCompany.locked": "Vai a 3 eventos",
+  "badges.catalog.threeCompany.earned": "3 eventos a que foste",
   "badges.catalog.regularAttendee.name": "Presença Habitual",
-  "badges.catalog.regularAttendee.locked": "Vai a 5 encontros num ano",
-  "badges.catalog.regularAttendee.earned": "5 encontros num ano",
+  "badges.catalog.regularAttendee.locked": "Vai a 5 eventos num ano",
+  "badges.catalog.regularAttendee.earned": "5 eventos num ano",
   "badges.catalog.decade.name": "Aniversário",
   "badges.catalog.decade.locked": "Sê membro durante 1 ano",
   "badges.catalog.decade.earned": "Membro há 1 ano",
@@ -2128,11 +2128,11 @@ export const members: Catalog = {
     "Preenche o teu Perfil de Trabalho (competências e áreas de foco)",
   "badges.catalog.workReady.earned": "Completaste o Perfil de Trabalho",
   "badges.catalog.eventHost.name": "Quem Organiza",
-  "badges.catalog.eventHost.locked": "Organiza um encontro QueerPulse",
-  "badges.catalog.eventHost.earned": "Organizaste um encontro QueerPulse",
+  "badges.catalog.eventHost.locked": "Organiza um evento QueerPulse",
+  "badges.catalog.eventHost.earned": "Organizaste um evento QueerPulse",
   "badges.catalog.serialHost.name": "Organização em Série",
-  "badges.catalog.serialHost.locked": "Organiza 3 encontros aprovados",
-  "badges.catalog.serialHost.earned": "Organizaste 3 encontros aprovados",
+  "badges.catalog.serialHost.locked": "Organiza 3 eventos aprovados",
+  "badges.catalog.serialHost.earned": "Organizaste 3 eventos aprovados",
   "badges.catalog.firstSteps.name": "Primeiros Passos",
   "badges.catalog.firstSteps.locked": "Termina a tua lista de primeiros passos",
   "badges.catalog.firstSteps.earned": "Terminaste a lista de primeiros passos",
@@ -2140,13 +2140,13 @@ export const members: Catalog = {
   "badges.catalog.pride2026.locked": "Desfila com o bloco QueerPulse",
   "badges.catalog.pride2026.earned": "Desfilaste com o bloco QueerPulse",
   "badges.catalog.firstTable2026.name": "Ano Novo, Primeira Mesa",
-  "badges.catalog.firstTable2026.locked": "Vai ao primeiro encontro do ano",
-  "badges.catalog.firstTable2026.earned": "Foste ao primeiro encontro do ano",
+  "badges.catalog.firstTable2026.locked": "Vai ao primeiro evento do ano",
+  "badges.catalog.firstTable2026.earned": "Foste ao primeiro evento do ano",
   "badges.catalog.winterWarmth2026.name": "Calor de Inverno",
   "badges.catalog.winterWarmth2026.locked":
-    "Leva alguém novo a um encontro de dezembro",
+    "Leva alguém novo a um evento de dezembro",
   "badges.catalog.winterWarmth2026.earned":
-    "Levaste alguém novo a um encontro de dezembro",
+    "Levaste alguém novo a um evento de dezembro",
 
   "badges.catalog.pride2026.window": "Aberto até {date}",
   "badges.catalog.firstTable2026.window": "Só em janeiro",
@@ -2200,16 +2200,16 @@ export const members: Catalog = {
   "perks.catalog.inviteQuotaAtLimit.desc":
     "O teu limite mensal de convites é de {total}.",
   "perks.base.browseDirectory": "Ver o diretório de membros",
-  "perks.base.joinGatherings": "Ir a encontros e confirmar presença",
+  "perks.base.joinGatherings": "Ir a eventos e confirmar presença",
   "perks.base.directMessages": "Falar diretamente com outros membros",
   "perks.base.saveArticles": "Guardar artigos e recursos",
   "perks.base.joinCommunities": "Entrar em comunidades",
-  "perks.base.hostGathering": "Organizar um encontro",
+  "perks.base.hostGathering": "Organizar um evento",
 
   "badges.ledger.integrityHeading": "Porque podes confiar nisto",
   "badges.ledger.integrity1Title": "Contado a partir do que já fizeste.",
   "badges.ledger.integrity1Body":
-    "As presenças vêm da tua própria confirmação num encontro que já começou. Não há nada extra para entregar.",
+    "As presenças vêm da tua própria confirmação num evento que já começou. Não há nada extra para entregar.",
   "badges.ledger.integrity2Title": "Cada ponto tem uma linha.",
   "badges.ledger.integrity2Body":
     "Cada aumento entra nesta lista com data e descrição, para o total poder ser conferido com ela.",
@@ -2491,7 +2491,7 @@ export const members: Catalog = {
 
   "savedLists.empty.title": "Ainda não guardaste nada",
   "savedLists.empty.description":
-    "Guarda um artigo, um sítio ou um encontro e aparece aqui. Podes agrupar os teus guardados em listas quando quiseres.",
+    "Guarda um artigo, um sítio ou um evento e aparece aqui. Podes agrupar os teus guardados em listas quando quiseres.",
 
   "savedLists.newCard.title": "Nova lista",
   "savedLists.newCard.subtitle":

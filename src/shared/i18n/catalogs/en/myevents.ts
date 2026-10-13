@@ -11,7 +11,7 @@ import type { Catalog } from "../../types";
 export const myevents: Catalog = {
   // ── Global events header (EventsHeader) ───────────────────────────────────
   "eventsHeader.title": "Events",
-  "eventsHeader.hostCta": "Host a gathering",
+  "eventsHeader.hostCta": "Host an event",
 
   // ── Top-level My events | Discover switch (EventsTopTabs) ─────────────────
   "topTabs.mine": "My events",
@@ -72,7 +72,7 @@ export const myevents: Catalog = {
   "agenda.invitesSent": "Invites you've sent",
   "agenda.otherCommunity": "Other",
   "agenda.ended": "Already happened",
-  "agenda.endedSub": "These gatherings have already gone by.",
+  "agenda.endedSub": "These events have already gone by.",
   "agenda.showMore_one": "Show {count} more",
   "agenda.showMore_other": "Show {count} more",
   // Distinct error/retry state when the live events fetch fails (never a false
@@ -85,8 +85,8 @@ export const myevents: Catalog = {
   // ── Empty states (empties.data.tsx, Pattern B) ────────────────────────────
   "empties.upcoming.title": "Nothing on the calendar <em>yet</em>",
   "empties.upcoming.sub":
-    "When you say yes to a gathering or host one of your own, it'll land right here. There's always something on. Have a look when you're ready.",
-  "empties.upcoming.browseCta": "Browse gatherings",
+    "When you say yes to an event or host one of your own, it'll land right here. There's always something on. Have a look when you're ready.",
+  "empties.upcoming.browseCta": "Browse events",
   "empties.upcoming.hostCta": "Host your own",
   "empties.going.title": "No RSVPs <em>right now</em>",
   "empties.going.sub":
@@ -94,20 +94,20 @@ export const myevents: Catalog = {
   "empties.going.cta": "See what's on",
   "empties.hosting.title": "You're not hosting <em>anything</em>",
   "empties.hosting.sub":
-    "The best gatherings start with one person deciding to make space. Yours could be a small dinner or a whole picnic. We'll help you run it.",
-  "empties.hosting.cta": "Create a gathering",
+    "The best events start with one person deciding to make space. Yours could be a small dinner or a whole picnic. We'll help you run it.",
+  "empties.hosting.cta": "Create an event",
   "empties.waitlisted.title": "No waitlists <em>right now</em>",
   "empties.waitlisted.sub":
-    "When a gathering you want is full, join its waitlist and we'll keep your place. We'll let you know if a spot opens.",
-  "empties.waitlisted.cta": "Browse gatherings",
+    "When an event you want is full, join its waitlist and we'll keep your place. We'll let you know if a spot opens.",
+  "empties.waitlisted.cta": "Browse events",
   "empties.past.title": "No history <em>here</em>, but you're early",
   "empties.past.sub":
-    "Once you've been to your first gathering, it'll live here as a quiet record of where you've been and who you met.",
+    "Once you've been to your first event, it'll live here as a quiet record of where you've been and who you met.",
   "empties.past.cta": "Find your first one",
   "empties.saved.title": "Nothing saved or <em>pending</em>",
   "empties.saved.sub":
-    "Bookmark gatherings you're not sure about yet, and any invites from other members will wait for you here. No rush, no pressure.",
-  "empties.saved.cta": "Browse gatherings",
+    "Bookmark events you're not sure about yet, and any invites from other members will wait for you here. No rush, no pressure.",
+  "empties.saved.cta": "Browse events",
   "empties.day.title": "Nothing on <em>this day</em>",
   "empties.day.sub":
     "You've nothing planned here. Pick another day with a dot, or clear the filter to see everything coming up.",
@@ -256,20 +256,20 @@ export const myevents: Catalog = {
   "access.contentNoteFallbackToast": "This event carries a content note",
   "access.saferSpacePolicy": "Safer-space policy",
   "access.saferSpaceToast":
-    "This gathering follows the QueerPulse safer-space policy",
+    "This event follows the QueerPulse safer-space policy",
   "alert.plansChanged": "Plans changed.",
   "alert.seeWhatChanged": "See what changed",
   "alert.seeWhatChangedToast": "Showing the full change history",
   "conflict.clashesWith": "Clashes with {title}",
   "conflict.body":
     "at the same time. You can only be in one place. You might want to let one go.",
-  "edge.cancelledTitle": "The host cancelled this gathering.",
+  "edge.cancelledTitle": "The host cancelled this event.",
   "edge.cancelledBody": "Your RSVP was released.",
   "edge.findSomethingSimilar": "find something similar",
-  "edge.findingSimilarToast": "Finding similar gatherings…",
+  "edge.findingSimilarToast": "Finding similar events…",
   "edge.reviewTitle": "Under review.",
   "edge.reviewBody":
-    "A report came in, so this gathering is being checked by our team. It stays up while we look.",
+    "A report came in, so this event is being checked by our team. It stays up while we look.",
   "edge.seeStatus": "see status",
   "edge.seeStatusToast": "Opening the review status…",
   "edge.blockedBody":
@@ -334,11 +334,11 @@ export const myevents: Catalog = {
   "insights.eyebrow": "Your year so far",
   "insights.emptyStat": "Your year <em>starts</em> here",
   "insights.emptySub":
-    "Once you go to your first gathering, it'll gather here: a quiet count of where you've been this year.",
+    "Once you go to your first event, it'll gather here: a quiet count of where you've been this year.",
   "insights.emptyCta": "Find your first one",
-  "insights.stat_one": "<em>{count}</em> gathering",
-  "insights.stat_other": "<em>{count}</em> gatherings",
-  "insights.sub": "Every gathering you've shown up for this year.",
+  "insights.stat_one": "<em>{count}</em> event",
+  "insights.stat_other": "<em>{count}</em> events",
+  "insights.sub": "Every event you've shown up for this year.",
   "insights.streak_one": "month in a row",
   "insights.streak_other": "months in a row",
   "insights.topCircle": "your top circle",
@@ -422,7 +422,7 @@ export const myevents: Catalog = {
   "rsvpModal.saveCta": "Save",
   "rsvpModal.savedToast": "Saved",
   "rsvpModal.saveErrorToast": "That didn't save. Try again.",
-  "rsvpModal.closedToast": "RSVPs for this gathering have closed.",
+  "rsvpModal.closedToast": "RSVPs for this event have closed.",
 
   // ── Ticket modal (EventTicketModal) ───────────────────────────────────────
   "ticketModal.eyebrow": "Your ticket",

@@ -349,7 +349,7 @@ export const cards: Catalog = {
 
   "modTools.title": "Cartão de sócio",
   "modTools.empty":
-    "Dá a quem é membro um cartão que prova que pertence aqui. Podem mostrá-lo nos vossos encontros e qualquer pessoa o consegue verificar.",
+    "Dá a quem é membro um cartão que prova que pertence aqui. Podem mostrá-lo nos vossos eventos e qualquer pessoa o consegue verificar.",
   "modTools.start": "Criar cartão de sócio",
   "modTools.edit": "Editar cartão",
   "modTools.pause": "Pausar este cartão de sócio",

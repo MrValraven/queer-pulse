@@ -72,30 +72,30 @@ export const SIM_GROUPS: { label: string; flows: SimFlow[] }[] = [
     flows: [
       {
         id: "rsvp-to-a-gathering",
-        title: "RSVP to a gathering",
+        title: "RSVP to an event",
         description:
           "Walk through reserving a spot at an event and receiving your ticket.",
         to: routes.rsvp,
       },
       {
         id: "host-a-gathering",
-        title: "Host a gathering",
+        title: "Host an event",
         description:
-          "The whole host journey: from the host pitch through creating, publishing and inviting a co-organiser to your gathering.",
+          "The whole host journey: from the host pitch through creating, publishing and inviting a co-organiser to your event.",
         to: routes.host,
       },
       {
         id: "gathering-recap",
-        title: "Gathering recap",
+        title: "Event recap",
         description:
-          "Preview the post-event recap a host or attendee sees once a gathering has wrapped.",
+          "Preview the post-event recap a host or attendee sees once an event has wrapped.",
         to: gatheringRecapPath(DEMO_GATHERING_SLUGS.recap),
       },
       {
         id: "gathering-cancelled",
-        title: "Gathering cancelled",
+        title: "Event cancelled",
         description:
-          "See the notice attendees receive when a gathering they signed up for is called off.",
+          "See the notice attendees receive when an event they signed up for is called off.",
         to: gatheringCancelledPath(DEMO_GATHERING_SLUGS.cancelled),
       },
     ],

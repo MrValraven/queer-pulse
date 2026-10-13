@@ -234,8 +234,8 @@ function buildShippedItems(): AdminRoadmapItemDTO[] {
     buildItem({
       id: "gathering-dashboard",
       column: "shipped",
-      category: "Gatherings",
-      name: "Gathering dashboard",
+      category: "Events",
+      name: "Event dashboard",
       description:
         "Live check-in and attendance management for hosts, including QR scanning and waitlist promotion.",
       date: "May 2026",
@@ -504,7 +504,7 @@ function buildBuildingItemsPartTwo(): AdminRoadmapItemDTO[] {
       category: "Platform",
       name: "Mobile app beta",
       description:
-        "iOS and Android apps, starting with gatherings and messaging. Beta invites go to Level 4+ members first.",
+        "iOS and Android apps, starting with events and messaging. Beta invites go to Level 4+ members first.",
       stage: "In progress",
       eta: "~Q3 2026",
       progress: 60,
@@ -558,8 +558,8 @@ function buildBuildingItemsPartTwo(): AdminRoadmapItemDTO[] {
     buildItem({
       id: "map-view-gatherings",
       column: "building",
-      category: "Gatherings",
-      name: "Map view for gatherings",
+      category: "Events",
+      name: "Map view for events",
       description:
         "Browse upcoming events on a city map. Filter by date, type, and distance.",
       stage: "Early design",
@@ -707,7 +707,7 @@ function buildPlannedItems(): AdminRoadmapItemDTO[] {
       category: "Messaging",
       name: "Group messaging",
       description:
-        "Create threads with multiple members, for planning gatherings, projects, or just chatting.",
+        "Create threads with multiple members, for planning events, projects, or just chatting.",
       votes: 76,
       publicNote: "Small rooms inside the room.",
       targetQuarter: "Q1 2027",
@@ -973,7 +973,7 @@ function buildRoadmapIdeas(): AdminRoadmapIdeaDTO[] {
     }),
     buildPublishedIdea({
       id: "idea-recurring-gatherings",
-      text: "Recurring gatherings (monthly series)",
+      text: "Recurring events (monthly series)",
       votes: 18,
       sortOrder: 3,
       createdAt: "2026-07-04T09:00:00.000Z",
@@ -999,8 +999,8 @@ function buildRoadmapIdeas(): AdminRoadmapIdeaDTO[] {
     }),
     buildPendingIdea({
       id: "idea-buddy-system",
-      text: "Buddy system for first gatherings",
-      category: "Gatherings",
+      text: "Buddy system for first events",
+      category: "Events",
       votes: 51,
       note: 'Submitted by Sofia A., "Walking in alone the first time is the hardest part."',
       sortOrder: 6,
@@ -1027,8 +1027,8 @@ function buildRoadmapIdeas(): AdminRoadmapIdeaDTO[] {
     }),
     buildPendingIdea({
       id: "idea-sober-tag",
-      text: "Sober-friendly gathering tag",
-      category: "Gatherings",
+      text: "Sober-friendly event tag",
+      category: "Events",
       votes: 33,
       note: 'Submitted by Beatriz L., "Not everything has to happen in a bar."',
       sortOrder: 9,

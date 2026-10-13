@@ -15,7 +15,7 @@ export const feed: Catalog = {
   "tab.all": "All",
   "tab.communities": "Communities",
   "tab.connections": "Connections",
-  "tab.gatherings": "Gatherings",
+  "tab.gatherings": "Events",
   "tab.people": "People",
   "tab.posts": "Posts",
   // Accessible name for the tablist itself (shared <Tabs label>).
@@ -48,9 +48,9 @@ export const feed: Catalog = {
 
   "tab.gatherings.empty.title": "Nothing on the calendar yet",
   "tab.gatherings.empty.description":
-    "When a gathering you're part of is announced or recapped, you'll find it here.",
+    "When an event you're part of is announced or recapped, you'll find it here.",
   "tab.gatherings.empty.action": "See what's on",
-  "tab.gatherings.error.title": "Couldn't load gatherings",
+  "tab.gatherings.error.title": "Couldn't load events",
   "tab.gatherings.error.description":
     "We couldn't reach what's coming up. Give it another try.",
 
@@ -92,7 +92,7 @@ export const feed: Catalog = {
 
   // ── FeedCards: SavedArticleCard / RecapCard ─────────────────────────────
   "card.savedArticle.eyebrow": "From your saves",
-  "card.recap.eyebrow": "Gathering recap",
+  "card.recap.eyebrow": "Event recap",
 
   // ── Shared action labels ────────────────────────────────────────────────
   "action.connect": "Connect",
@@ -164,7 +164,7 @@ export const feed: Catalog = {
 
   // ── FeedSidebar ─────────────────────────────────────────────────────────
   "sidebar.upcomingHeading": "Upcoming",
-  "sidebar.upcomingEmpty": "No gatherings on your calendar yet.",
+  "sidebar.upcomingEmpty": "No events on your calendar yet.",
   "sidebar.seeCalendar": "See full calendar",
   "sidebar.newThisWeekHeading": "Recently joined",
   "sidebar.newMembersEmpty": "No new members to show yet.",
@@ -176,7 +176,7 @@ export const feed: Catalog = {
   "sidebar.manage": "Manage",
 
   // ── Redesigned card chrome (eyebrows, actions, proof/stat templates) ──
-  "card.eyebrow.gathering": "Gathering",
+  "card.eyebrow.gathering": "Event",
   "card.eyebrow.community": "Community",
   "card.eyebrow.communityPost": "From a community you're in",
   "card.eyebrow.forumThread": "Forum thread",

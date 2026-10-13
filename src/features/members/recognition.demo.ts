@@ -97,7 +97,7 @@ const demoXpLedger: XpLedgerEntry[] = [
   },
   {
     createdAt: "2025-01-18T00:00:00.000Z",
-    description: "Badge earned: First Gathering",
+    description: "Badge earned: First Event",
     xp: 60,
   },
 ];

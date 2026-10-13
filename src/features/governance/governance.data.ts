@@ -282,7 +282,7 @@ export const INCOME: FinLine[] = [
     total: { label: "99 contributing members", amount: "€1,840" },
   },
   {
-    label: "Gathering ticket sales",
+    label: "Event ticket sales",
     amount: "€2,180",
     note: "Net figure. QueerPulse takes 0% of ticket revenue. 100% goes to hosts. This line covers only events we organise ourselves.",
     width: 94,
@@ -389,7 +389,7 @@ export const EXPENSE: FinLine[] = [
   {
     label: "Community events",
     amount: "€1,240",
-    note: "Venue hire, equipment, and materials for platform-organised gatherings. Newcomer events, mental health sessions, and community dinners.",
+    note: "Venue hire, equipment, and materials for platform-organised events. Newcomer events, mental health sessions, and community dinners.",
     width: 60,
     items: [
       {
@@ -545,7 +545,7 @@ export const EVENTS: [string, string][] = [
   ],
   [
     "Sliding scale is mandatory.",
-    "Every paid gathering must offer a reduced rate. Members request it privately, no explanation asked.",
+    "Every paid event must offer a reduced rate. Members request it privately, no explanation asked.",
   ],
   [
     "QueerPulse subsidises specific event types.",
@@ -557,7 +557,7 @@ export const EVENTS: [string, string][] = [
   ],
   [
     "This quarter:",
-    "34 gatherings hosted. ~€8,400 in ticket revenue, all of which went directly to hosts.",
+    "34 events hosted. ~€8,400 in ticket revenue, all of which went directly to hosts.",
   ],
 ];
 

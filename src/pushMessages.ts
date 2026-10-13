@@ -192,7 +192,7 @@ const en: Record<string, string> = {
     "We could not make the introduction to {name}. Tap to read why.",
   // A gathering has named this member's venue (LOC-16). The one prompt to
   // confirm or detach before it reaches the venue's public page.
-  "push:venue.attachment.title": "A gathering at your venue",
+  "push:venue.attachment.title": "An event at your venue",
   "push:venue.attachment.body":
     '{listingName} has been named as the venue for "{eventTitle}".',
   // Platform staff offering a struggling community a hand (OPS-05). Reaches
@@ -228,14 +228,13 @@ const en: Record<string, string> = {
   // bodies for all three must stay word-for-word identical to these, since
   // iOS renders that fallback directly and never reads this catalog.
   "push:goTogether.pairInvite.title": "Go together",
-  "push:goTogether.pairInvite.body":
-    "{name} wants to go to a gathering together",
+  "push:goTogether.pairInvite.body": "{name} wants to go to an event together",
   "push:goTogether.groupReady.title": "Go together",
-  "push:goTogether.groupReady.body": "Your group for a gathering is ready",
+  "push:goTogether.groupReady.body": "Your group for an event is ready",
   "push:goTogether.mutual.title": "Go together",
   "push:goTogether.mutual.body": "You and {name} both want to meet again",
   "push:goTogether.memberLeft.title": "Go together",
-  "push:goTogether.memberLeft.body": "Someone left your group for a gathering",
+  "push:goTogether.memberLeft.body": "Someone left your group for an event",
   "push:goTogether.memberLeft.bodyMergeOffer":
     "Someone left your group. Another group has room for you",
   "push:goTogether.unmatched.title": "Go together",
@@ -244,7 +243,7 @@ const en: Record<string, string> = {
   "push:goTogether.unmatched.bodyFinal":
     "We weren't able to place you in a group this time",
   "push:goTogether.unmatched.bodyHostSwitchedOff":
-    "The host switched Go together off for this gathering",
+    "The host switched Go together off for this event",
   "push:goTogether.meetAgain.title": "Go together",
   "push:goTogether.meetAgain.body": "Want to meet your group again?",
 };
@@ -287,10 +286,10 @@ const pt: Record<string, string> = {
     "{title} não foi publicado. Toca para leres porquê.",
   "push:vouch.received.title": "Recebeste um aval",
   "push:vouch.received.body": "{name} avalizou-te.",
-  "push:event.updated.title": "Convívio atualizado",
+  "push:event.updated.title": "Evento atualizado",
   "push:event.updated.body":
     "{event} tem novos detalhes. Toca para ver o que mudou.",
-  "push:event.cancelled.title": "Convívio cancelado",
+  "push:event.cancelled.title": "Evento cancelado",
   "push:event.cancelled.body": "{event} foi cancelado.",
   // ENG-141: duas chaves, sem plural CLDR neste catálogo. Ver a nota EN.
   // A forma escolhida evita também a concordância de género: o sujeito
@@ -366,7 +365,7 @@ const pt: Record<string, string> = {
   "push:landlordIntro.declined.title": "Sobre o teu pedido de apresentação",
   "push:landlordIntro.declined.body":
     "Não conseguimos fazer a apresentação a {name}. Toca para leres porquê.",
-  "push:venue.attachment.title": "Um convívio no teu espaço",
+  "push:venue.attachment.title": "Um evento no teu espaço",
   "push:venue.attachment.body":
     '{listingName} foi indicado como o espaço de "{eventTitle}".',
   "push:community.supportOffered.title": "Uma oferta de apoio",
@@ -384,14 +383,13 @@ const pt: Record<string, string> = {
   "push:listingOwnerOffer.body":
     "{name} ofereceu-te a propriedade de {listingName}.",
   "push:goTogether.pairInvite.title": "Vamos juntes",
-  "push:goTogether.pairInvite.body": "{name} quer ir contigo a um convívio",
+  "push:goTogether.pairInvite.body": "{name} quer ir contigo a um evento",
   "push:goTogether.groupReady.title": "Vamos juntes",
-  "push:goTogether.groupReady.body": "O teu grupo para um convívio está pronto",
+  "push:goTogether.groupReady.body": "O teu grupo para um evento está pronto",
   "push:goTogether.mutual.title": "Vamos juntes",
   "push:goTogether.mutual.body": "Tu e {name} querem voltar a encontrar-se",
   "push:goTogether.memberLeft.title": "Vamos juntes",
-  "push:goTogether.memberLeft.body":
-    "Alguém saiu do teu grupo para um convívio",
+  "push:goTogether.memberLeft.body": "Alguém saiu do teu grupo para um evento",
   "push:goTogether.memberLeft.bodyMergeOffer":
     "Alguém saiu do teu grupo. Há outro grupo com lugar para ti",
   "push:goTogether.unmatched.title": "Vamos juntes",
@@ -400,7 +398,7 @@ const pt: Record<string, string> = {
   "push:goTogether.unmatched.bodyFinal":
     "Desta vez não foi possível juntar-te a um grupo",
   "push:goTogether.unmatched.bodyHostSwitchedOff":
-    "Quem organiza desligou o Vamos juntes neste convívio",
+    "Quem organiza desligou o Vamos juntes neste evento",
   "push:goTogether.meetAgain.title": "Vamos juntes",
   "push:goTogether.meetAgain.body": "Queres voltar a encontrar o teu grupo?",
 };

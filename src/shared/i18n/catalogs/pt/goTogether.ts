@@ -257,8 +257,8 @@ export const goTogether: Catalog = {
 
   // UI copy for the card, questionnaire, group, feedback, host and settings surfaces.
   "card.body": "Junta-te a um grupo pequeno para irem juntes.",
-  "card.closed.note": "O Vamos juntes já fechou para este convívio.",
-  "card.error.alreadyGrouped": "Já estás num grupo para este convívio.",
+  "card.closed.note": "O Vamos juntes já fechou para este evento.",
+  "card.error.alreadyGrouped": "Já estás num grupo para este evento.",
   "card.error.generic":
     "Não foi possível concluir. Tenta outra vez daqui a pouco.",
   "card.error.ineligible":
@@ -269,15 +269,15 @@ export const goTogether: Catalog = {
     "Marca a caixa para confirmar a tua lente, ou escolhe Sem lente.",
   "card.error.lensMismatch":
     "Este par não pode avançar com essa escolha de lente. Escolhe outra, ou vai sozinhe.",
-  "card.error.locked": "Os grupos já se formaram para este convívio.",
+  "card.error.locked": "Os grupos já se formaram para este evento.",
   "card.error.partnerUnavailable":
-    "Essa pessoa não pode ir contigo a este convívio. Talvez ainda não tenha confirmado presença. Escolhe outra pessoa ou vai sozinhe.",
+    "Essa pessoa não pode ir contigo a este evento. Talvez ainda não tenha confirmado presença. Escolhe outra pessoa ou vai sozinhe.",
   "card.error.profileNeeded":
     "Responde primeiro às perguntas do Vamos juntes e depois volta para entrar.",
   "card.error.unavailable":
-    "O Vamos juntes já não está a funcionar para este convívio.",
+    "O Vamos juntes já não está a funcionar para este evento.",
   "card.ineligible.unavailableBody":
-    "Continuas bem-vinde a este convívio, tal como estás.",
+    "Continuas bem-vinde a este evento, tal como estás.",
   "card.ineligible.unavailableTitle":
     "Vamos juntes não está disponível na tua conta neste momento",
   "card.ineligible.verifyBody":
@@ -285,7 +285,7 @@ export const goTogether: Catalog = {
   "card.ineligible.verifyCta": "Verificar a minha conta",
   "card.ineligible.verifyTitle": "Verifica a tua conta para entrar",
   "card.lens.consent":
-    "Escolho esta lente por mim. A QueerPulse usa-a só para me juntar a um grupo neste convívio e apaga-a quando o convívio terminar.",
+    "Escolho esta lente por mim. A QueerPulse usa-a só para me juntar a um grupo neste evento e apaga-a quando o evento terminar.",
   "card.lens.hint":
     "Só tu vês esta escolha. Com uma lente, ficas num grupo só com pessoas que escolheram a mesma.",
   "card.lens.none.description": "Junta-me a qualquer pessoa que vá.",
@@ -302,7 +302,7 @@ export const goTogether: Catalog = {
   "card.optIn.sending": "A guardar",
   "card.pairInvite.accept": "Aceitar",
   "card.pairInvite.body":
-    "Se aceitares, ficam juntes num grupo pequeno para este convívio.",
+    "Se aceitares, ficam juntes num grupo pequeno para este evento.",
   "card.pairInvite.confirm": "Ir com {name}",
   "card.pairInvite.decline": "Recusar",
   "card.pairInvite.title": "{name} quer ir contigo",
@@ -315,7 +315,7 @@ export const goTogether: Catalog = {
   "card.partner.search": "Procurar nas tuas conexões",
   "card.partner.title": "Com quem vais?",
   "card.questionnaire.body":
-    "Primeiro, umas perguntas sobre o que gostas e como gostas de estar com pessoas. Respondes uma vez e usamos as respostas em todos os convívios.",
+    "Primeiro, umas perguntas sobre o que gostas e como gostas de estar com pessoas. Respondes uma vez e usamos as respostas em todos os eventos.",
   "card.questionnaire.cta": "Responder às perguntas",
   "card.questionnaire.refreshBody":
     "Algumas perguntas mudaram desde a última vez que respondeste. Atualiza-as e já podes entrar.",
@@ -337,20 +337,20 @@ export const goTogether: Catalog = {
   "card.waiting.title": "Conheces o teu grupo: {day}, às {time}",
   "card.waiting.titleSoon": "Conheces o teu grupo em breve",
   "feedback.backToEvents": "Voltar aos teus eventos",
-  "feedback.backToGathering": "Voltar ao convívio",
+  "feedback.backToGathering": "Voltar ao evento",
   "feedback.click.no": "Não",
   "feedback.click.somewhat": "Assim-assim",
   "feedback.click.yes": "Sim",
   "feedback.clickQuestion.title": "O grupo bateu certo?",
   "feedback.closed.body":
-    "As respostas sobre quem queres voltar a encontrar só ficam abertas durante os 7 dias a seguir ao convívio.",
+    "As respostas sobre quem queres voltar a encontrar só ficam abertas durante os 7 dias a seguir ao evento.",
   "feedback.closed.title": "Este período de feedback já fechou",
   "feedback.confirmation.body":
     "Se alguém também disse que sim, ficam as duas pessoas a saber.",
   "feedback.confirmation.title": "Obrigade por",
   "feedback.goAgain.ariaLabel": "Vamos juntes outra vez",
   "feedback.goAgain.description":
-    "Se duas ou mais pessoas do grupo entrarem noutro convívio, juntamos-vos outra vez.",
+    "Se duas ou mais pessoas do grupo entrarem noutro evento, juntamos-vos outra vez.",
   "feedback.goAgain.title": "Vamos juntes outra vez",
   "feedback.likingGap":
     "As pessoas costumam subestimar o quanto as outras gostaram da companhia delas.",
@@ -375,8 +375,8 @@ export const goTogether: Catalog = {
   "group.checkIn.statusHere": "O teu grupo vê que já chegaste.",
   "group.checkIn.statusLeft": "O teu grupo vê que já saíste.",
   "group.dissolved": "Este grupo terminou.",
-  "group.entryTitle": "O teu grupo para este convívio",
-  "group.error.checkInClosed": "O check-in já fechou para este convívio.",
+  "group.entryTitle": "O teu grupo para este evento",
+  "group.error.checkInClosed": "O check-in já fechou para este evento.",
   "group.error.generic": "Não deu. Tenta outra vez daqui a pouco.",
   "group.error.mergeExpired":
     "Esse grupo encheu ou fechou. Continuas no teu grupo atual.",
@@ -393,7 +393,7 @@ export const goTogether: Catalog = {
   "group.membersHeading": "Quem vai contigo",
   "group.merge.accept": "Juntar-me a outro grupo",
   "group.merge.body":
-    "Há lugar noutro grupo que vai a este convívio. Podes juntar-te a ele, se quiseres.",
+    "Há lugar noutro grupo que vai a este evento. Podes juntar-te a ele, se quiseres.",
   "group.merge.title": "O teu grupo ficou mais pequeno",
   "group.openChat": "Abrir a conversa do grupo",
   "group.pairPartner": "Vem contigo",
@@ -408,7 +408,7 @@ export const goTogether: Catalog = {
   "group.status.left": "Já saiu",
   "group.you": "Tu",
   "host.closedNote":
-    "Os pedidos para este convívio já fecharam, por isso estas definições já não podem mudar.",
+    "Os pedidos para este evento já fecharam, por isso estas definições já não podem mudar.",
   "host.create.description":
     "Quem vem sozinhe ou com uma pessoa amiga pode entrar num pequeno grupo para chegarem juntes. Adiciona perguntas e um ponto de encontro em Gerir.",
   "host.create.title": "Oferecer o Vamos juntes",
@@ -424,7 +424,7 @@ export const goTogether: Catalog = {
     "Quem vem sozinhe ou com uma pessoa amiga pode entrar num pequeno grupo para chegarem juntes.",
   "host.loadError": "Não foi possível carregar as definições do Vamos juntes",
   "host.lockedNote":
-    "Os grupos deste convívio já foram formados, por isso estas definições estão bloqueadas.",
+    "Os grupos deste evento já foram formados, por isso estas definições estão bloqueadas.",
   "host.meetingPoint.hint": "Escolhe um sítio público perto do local.",
   "host.meetingPoint.label": "Ponto de encontro",
   "host.meetingPoint.placeholder": "Junto ao quiosque à entrada do parque",
@@ -458,9 +458,9 @@ export const goTogether: Catalog = {
   "host.summary.waiting_one": "pessoa à espera",
   "host.summary.waiting_other": "pessoas à espera",
   "host.toast.badCutoff":
-    "Não foi possível guardar o Vamos juntes: a hora dos grupos já não encaixa neste convívio. Tenta outra vez.",
+    "Não foi possível guardar o Vamos juntes: a hora dos grupos já não encaixa neste evento. Tenta outra vez.",
   "host.toast.closed":
-    "Os pedidos para este convívio já fecharam, por isso estas definições ficam como estão.",
+    "Os pedidos para este evento já fecharam, por isso estas definições ficam como estão.",
   "host.toast.locked":
     "Os grupos já foram formados, por isso estas definições estão bloqueadas.",
   "host.toast.publishSwitchFailed":
@@ -488,7 +488,7 @@ export const goTogether: Catalog = {
   "questionnaire.consent.retention":
     "Se passarem 12 meses sem as editares nem te inscreveres no Vamos juntes, apagamo-las.",
   "questionnaire.consent.use":
-    "Usamos as tuas respostas para te sugerir um grupo pequeno quando entras no Vamos juntes de um convívio.",
+    "Usamos as tuas respostas para te sugerir um grupo pequeno quando entras no Vamos juntes de um evento.",
   "questionnaire.drinking.label": "Como te sentes em relação ao álcool?",
   "questionnaire.energy.nightShape.prompt": "O teu tipo de noite",
   "questionnaire.energy.planner.prompt": "Quando se trata de planos",
@@ -569,10 +569,10 @@ export const goTogether: Catalog = {
   "settings.data.card.title": "As tuas respostas do Vamos juntes",
   "settings.data.delete.cta": "Eliminar as minhas respostas",
   "settings.data.delete.description":
-    "Isto remove as tuas respostas por completo e tira-te do Vamos juntes em qualquer convívio cujo grupo ainda não se formou. Podes sempre responder outra vez mais tarde.",
+    "Isto remove as tuas respostas por completo e tira-te do Vamos juntes em qualquer evento cujo grupo ainda não se formou. Podes sempre responder outra vez mais tarde.",
   "settings.data.delete.title": "As tuas respostas, eliminadas para sempre",
   "settings.data.deleteConfirm.body":
-    "Eliminar remove as tuas respostas por completo e tira-te do Vamos juntes em qualquer convívio cujo grupo ainda não se formou. Podes responder às perguntas outra vez quando quiseres.",
+    "Eliminar remove as tuas respostas por completo e tira-te do Vamos juntes em qualquer evento cujo grupo ainda não se formou. Podes responder às perguntas outra vez quando quiseres.",
   "settings.data.deleteConfirm.confirm": "Eliminar as minhas respostas",
   "settings.data.deleteConfirm.title":
     "Eliminar as tuas respostas do Vamos juntes?",
@@ -581,7 +581,7 @@ export const goTogether: Catalog = {
   "settings.data.deleted": "As tuas respostas foram eliminadas.",
   "settings.data.empty.cta": "Responder às perguntas",
   "settings.data.empty.description":
-    "Responde a algumas perguntas sobre como gostas de passar o tempo e juntamos-te a pessoas do mesmo convívio com quem te podes dar bem.",
+    "Responde a algumas perguntas sobre como gostas de passar o tempo e juntamos-te a pessoas do mesmo evento com quem te podes dar bem.",
   "settings.data.empty.title":
     "Ainda não respondeste às perguntas do Vamos juntes",
   "settings.data.refreshSuggested":
@@ -617,7 +617,7 @@ export const goTogether: Catalog = {
   "group.member.report": "Denunciar {name}",
   "group.block.title": "Bloquear {name}?",
   "group.block.description.beforeStart":
-    "Sais deste grupo e passas para outro grupo que vai a este convívio, se houver um que encaixe. O teu cartão mostra o que vem a seguir. {name} fica, e ninguém lhe diz porquê.",
+    "Sais deste grupo e passas para outro grupo que vai a este evento, se houver um que encaixe. O teu cartão mostra o que vem a seguir. {name} fica, e ninguém lhe diz porquê.",
   "group.block.description.afterStart":
     "Sais deste grupo e da conversa. {name} fica, e ninguém lhe diz porquê.",
   "group.block.description.late":
@@ -641,7 +641,7 @@ export const goTogether: Catalog = {
   "group.block.pairMoves":
     "{partner} vem contigo, por isso muda de grupo contigo.",
   "group.block.pairEnds":
-    "Tu e {partner} deixam de ser um par para este convívio, e {partner} fica no grupo.",
+    "Tu e {partner} deixam de ser um par para este evento, e {partner} fica no grupo.",
   "group.block.pairBlocked":
-    "Tu e {name} deixam de ser um par para este convívio.",
+    "Tu e {name} deixam de ser um par para este evento.",
 };

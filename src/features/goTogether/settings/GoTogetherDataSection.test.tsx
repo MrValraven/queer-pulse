@@ -195,7 +195,7 @@ describe("GoTogetherDataSection", () => {
     ).toBeInTheDocument();
     expect(
       screen.getByText(
-        "Deleting removes your answers for good and takes you out of Go together for any gathering whose group hasn't formed yet. You can answer the questions again whenever you're ready.",
+        "Deleting removes your answers for good and takes you out of Go together for any event whose group hasn't formed yet. You can answer the questions again whenever you're ready.",
       ),
     ).toBeInTheDocument();
 

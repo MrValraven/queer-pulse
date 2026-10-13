@@ -226,7 +226,7 @@ export const FILMMAKERS: Record<string, Filmmaker> = {
         kind: "Masterclass · open",
         titlePre: "Filming in the kitchen: ",
         titleEm: "intimacy and the documentary frame",
-        sub: "QueerPulse Gathering · 18:00 · 34 going · free",
+        sub: "QueerPulse Event · 18:00 · 34 going · free",
       },
     ],
     links: [

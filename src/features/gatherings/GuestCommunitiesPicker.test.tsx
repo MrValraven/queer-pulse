@@ -196,7 +196,7 @@ describe("GuestCommunitiesPicker", () => {
     expect(searchBox()).toBeDisabled();
     expect(
       screen.getByText(
-        "This gathering has 5 guest communities, the most it can have. Remove one to invite another.",
+        "This event has 5 guest communities, the most it can have. Remove one to invite another.",
       ),
     ).toBeInTheDocument();
   });
@@ -278,7 +278,7 @@ describe("GuestCommunitiesPicker", () => {
       await screen.findByRole("button", { name: /Rainbow Arts Collective/ }),
     );
     const capNote = await screen.findByText(
-      "This gathering has 5 guest communities, the most it can have. Remove one to invite another.",
+      "This event has 5 guest communities, the most it can have. Remove one to invite another.",
     );
     await waitFor(() => expect(capNote).toHaveFocus());
     expect(searchBox()).toBeDisabled();

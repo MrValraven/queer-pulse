@@ -73,7 +73,7 @@ describe("RunByField", () => {
     );
     expect(
       await screen.findByText(
-        "This business can't run this gathering. Pick another, or none.",
+        "This business can't run this event. Pick another, or none.",
       ),
     ).toBeInTheDocument();
   });

@@ -72,7 +72,7 @@ export const safety: Catalog = {
   "myReports.subject.flatmate": "Sobre um perfil de colega de casa",
   "myReports.subject.landlord": "Sobre um senhorio",
   "myReports.subject.listing": "Sobre um anúncio de negócio",
-  "myReports.subject.event": "Sobre um convívio",
+  "myReports.subject.event": "Sobre um evento",
   "myReports.subject.business": "Sobre um negócio",
   "myReports.subject.company": "Sobre um empregador",
   "myReports.subject.job": "Sobre uma oferta de emprego",
@@ -80,7 +80,7 @@ export const safety: Catalog = {
   "myReports.subject.review": "Sobre uma avaliação",
   "myReports.subject.magazine_comment": "Sobre um comentário na revista",
   "myReports.subject.listing_public_question": "Sobre uma pergunta num anúncio",
-  "myReports.subject.event_photo": "Sobre uma fotografia de um convívio",
+  "myReports.subject.event_photo": "Sobre uma fotografia de um evento",
   "myReports.subject.landlord_recommendation":
     "Sobre uma recomendação de senhorio",
   "myReports.subject.volunteering": "Sobre uma oportunidade de voluntariado",
@@ -124,7 +124,7 @@ export const safety: Catalog = {
   "report.category.unwantedContact": "Contacto ou mensagens indesejados",
   "report.category.impersonation": "Falsa identidade ou personificação",
   "report.category.discrimination": "Discriminação",
-  "report.category.venueSafety": "Comportamento inseguro num convívio",
+  "report.category.venueSafety": "Comportamento inseguro num evento",
   "report.category.other": "Outra coisa",
   "report.form.involvedLabel": "Quem ou o que esteve envolvido (opcional)",
   "report.form.involvedPlaceholder":

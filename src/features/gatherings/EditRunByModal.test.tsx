@@ -33,7 +33,7 @@ describe("EditRunByModal", () => {
     );
     expect(
       await screen.findByText(
-        "Someone Else's Studio runs this gathering. Only someone who runs that business can change it.",
+        "Someone Else's Studio runs this event. Only someone who runs that business can change it.",
       ),
     ).toBeInTheDocument();
     expect(screen.queryByRole("combobox")).not.toBeInTheDocument();
@@ -138,7 +138,7 @@ describe("EditRunByModal", () => {
     await waitFor(() =>
       expect(
         screen.getByText(
-          "This business can't run this gathering. Pick another, or none.",
+          "This business can't run this event. Pick another, or none.",
         ),
       ).toBeInTheDocument(),
     );

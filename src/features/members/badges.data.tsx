@@ -153,11 +153,11 @@ export const perksLadder: PerkLadderRow[] = [
     status: "Done",
     perks: [
       { id: "browse-directory", label: "Browse the member directory" },
-      { id: "join-gatherings", label: "Join gatherings & RSVP" },
+      { id: "join-gatherings", label: "Join events & RSVP" },
       { id: "direct-messages", label: "Message other members directly" },
       { id: "save-articles", label: "Save articles & resources" },
       { id: "join-communities", label: "Join communities" },
-      { id: "host-gathering", label: "Host a gathering" },
+      { id: "host-gathering", label: "Host an event" },
       { id: "vouch-access", label: "Vouch access" },
     ],
   },

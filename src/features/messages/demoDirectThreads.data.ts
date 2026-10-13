@@ -184,7 +184,7 @@ export const kaiConversation: Conversation = demoConversation({
 });
 
 const teamLine =
-  "Welcome to QueerPulse! Here's what to explore first: your profile, upcoming gatherings, and the member directory. We're glad you're here.";
+  "Welcome to QueerPulse! Here's what to explore first: your profile, upcoming events, and the member directory. We're glad you're here.";
 
 /** The official thread (PRD-372): no counterpart profile, pinned so the
  *  welcome stays at the top of the inbox. It is the member's one official

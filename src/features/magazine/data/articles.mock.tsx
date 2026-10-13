@@ -611,7 +611,7 @@ export const articles: Record<string, Article> = {
     initials: "QP",
     tint: "plum",
     imgDesc:
-      "A small, warmly lit room set for a few people, an intentional gathering rather than a crowd",
+      "A small, warmly lit room set for a few people, an intentional event rather than a crowd",
     authorBio:
       "QueerPulse was built by a small group of queer professionals in Lisbon who kept asking each other why there wasn't a space like this already. Questions, concerns, and feedback are always welcome at hello@queerpulse.com.",
     tags: ["On Building", "Safety", "Community"],
@@ -690,7 +690,7 @@ export const articles: Record<string, Article> = {
           </>
         ),
       },
-      "There are real costs. People who should be in this room aren't yet, because they don't know anyone who's already here, or because they're in a situation where asking for an invitation feels exposing. We think about this a lot. We're trying to build ways in for people who arrive at the edge of the network without a prior connection: community events, open gatherings, a waitlist that we work through ourselves. We're not satisfied with where we are on this.",
+      "There are real costs. People who should be in this room aren't yet, because they don't know anyone who's already here, or because they're in a situation where asking for an invitation feels exposing. We think about this a lot. We're trying to build ways in for people who arrive at the edge of the network without a prior connection: community events, a waitlist that we work through ourselves. We're not satisfied with where we are on this.",
       "The other cost is slower growth, and with it slower revenue. We're a small operation funded by membership and by the occasional partnership with organisations we trust. We're not going to scale our way out of needing to think carefully about these tradeoffs. That's okay. We'd rather be smaller and right than larger and compromised.",
       {
         kind: "quote",

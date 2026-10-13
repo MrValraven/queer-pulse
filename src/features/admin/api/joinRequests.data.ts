@@ -311,7 +311,7 @@ export const JOIN_REQUESTS: JoinRequestDTO[] = [
     inviteStatus: "used",
     inviteExpiresAt: "2026-05-20T09:20:00.000Z",
     message:
-      "A friend vouched for me at a gathering last month. I would like to stay in touch with people I met there.",
+      "A friend vouched for me at an event last month. I would like to stay in touch with people I met there.",
     mutualMemberEmail: "devon@example.com",
     declineReason: null,
     // Approved before reasons were asked for, so demo mode covers the

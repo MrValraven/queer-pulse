@@ -486,11 +486,11 @@ export const shared: Catalog = {
 
   // MegaNav — Community
   "megaNav.community.title": "Community",
-  "megaNav.community.subtitle": "People, gatherings & places",
+  "megaNav.community.subtitle": "People, events & places",
   "megaNav.community.feature.eyebrow": "Community",
   "megaNav.community.feature.title": "Find your people.",
   "megaNav.community.feature.body":
-    "A member directory, forums, and gatherings: the everyday connective tissue of the network.",
+    "A member directory, forums, and events: the everyday connective tissue of the network.",
   "megaNav.community.feature.cta": "Browse members",
   "megaNav.community.featurePublic.eyebrow": "Community",
   // Shown to logged-out visitors while the members directory is gated. Points
@@ -518,7 +518,7 @@ export const shared: Catalog = {
     "Local Business directory",
   "megaNav.community.col.discover.housing": "Housing",
   "megaNav.community.col.discover.partners": "Partners",
-  "megaNav.community.col.gatheringsPlaces.head": "Gatherings & places",
+  "megaNav.community.col.gatheringsPlaces.head": "Events & places",
 
   // MegaNav — Resources
   "megaNav.resources.title": "Resources",

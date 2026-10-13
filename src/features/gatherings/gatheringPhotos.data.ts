@@ -29,7 +29,7 @@ export const PHOTOS_DEK =
 export const PHOTOS_DEK_EMPHASIS =
   "Faces are blurred by default unless the person opted in by name";
 export const PHOTOS_DEK_SUFFIX =
-  ". That's our standard policy on gathering photography.";
+  ". That's our standard policy on event photography.";
 
 export type Tint = "tintA" | "tintB" | "tintC" | "tintD";
 export type Span = "" | "wide" | "tall";

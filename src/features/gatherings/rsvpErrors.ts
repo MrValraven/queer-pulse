@@ -28,8 +28,13 @@ import type { TFunction } from "../../shared/i18n/types";
  */
 
 /** The backend's sentence for an RSVP after the cutoff: `RSVPS_CLOSED_MESSAGE`
- *  in `queerpulse-backend/src/events/gathering-extras.ts`. */
-const RSVPS_CLOSED_MESSAGE = "RSVPs for this gathering have closed";
+ *  in `queerpulse-backend/src/events/gathering-extras.ts`. The second entry is
+ *  the wording a backend deployed before the "event" rename still sends; drop
+ *  it once both sides have shipped. */
+const RSVPS_CLOSED_MESSAGES = [
+  "RSVPs for this event have closed",
+  "RSVPs for this gathering have closed",
+];
 
 /** Did the server refuse because the host's RSVP cutoff has passed? Also the
  *  answer to a member raising their guest count after the cutoff. */
@@ -37,7 +42,7 @@ export function isRsvpsClosedError(error: unknown): boolean {
   return (
     error instanceof ApiError &&
     error.status === 400 &&
-    error.message.includes(RSVPS_CLOSED_MESSAGE)
+    RSVPS_CLOSED_MESSAGES.some((message) => error.message.includes(message))
   );
 }
 

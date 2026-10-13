@@ -190,7 +190,7 @@ const RUNNERS_MOMENTS: PulseMoment[] = [
   {
     id: "run-m2",
     kind: "event",
-    text: "New gathering posted: Sunrise run, Parque das Nações",
+    text: "New event posted: Sunrise run, Parque das Nações",
     time: "1d",
   },
   {
@@ -356,7 +356,7 @@ const HUB_MOMENTS: PulseMoment[] = [
   {
     id: "hub-m2",
     kind: "event",
-    text: "New gathering posted: Legal name-change workshop",
+    text: "New event posted: Legal name-change workshop",
     time: "1d",
   },
   {
@@ -574,7 +574,7 @@ const ARTS_MOMENTS: PulseMoment[] = [
   {
     id: "art-m1",
     kind: "event",
-    text: "New gathering posted: Open crit, Atelier Pulso",
+    text: "New event posted: Open crit, Atelier Pulso",
     time: "7h",
   },
   {
@@ -768,7 +768,7 @@ const SOCIAL_MOMENTS: PulseMoment[] = [
   {
     id: "soc-m2",
     kind: "event",
-    text: "New gathering posted: June meetup, Park rooftop",
+    text: "New event posted: June meetup, Park rooftop",
     time: "6h",
   },
   { id: "soc-m3", kind: "joined", text: "Luísa joined the group", time: "2d" },
@@ -923,7 +923,7 @@ const AID_MOMENTS: PulseMoment[] = [
   {
     id: "aid-m2",
     kind: "event",
-    text: "New gathering posted: name-change clinic with ILGA",
+    text: "New event posted: name-change clinic with ILGA",
     time: "1d",
   },
   {
@@ -1096,7 +1096,7 @@ const PARENTS_MOMENTS: PulseMoment[] = [
   {
     id: "par-m1",
     kind: "event",
-    text: "New gathering posted: family picnic, Jardim da Estrela",
+    text: "New event posted: family picnic, Jardim da Estrela",
     time: "8h",
   },
   { id: "par-m2", kind: "joined", text: "Rita joined the network", time: "2d" },
@@ -1155,7 +1155,7 @@ const PARENTS_RESOURCES: CommunityResource[] = [
 ];
 
 const PARENTS_RULES = [
-  "Kids are welcome at in-person gatherings unless specifically noted otherwise.",
+  "Kids are welcome at in-person events unless specifically noted otherwise.",
   "Different family structures are all valid here. None need explaining or defending.",
   "Medical experiences: share your story, not prescriptions for other families.",
   "What's shared in the network stays in the network.",
@@ -1397,7 +1397,7 @@ const ELDERS_MOMENTS: PulseMoment[] = [
   {
     id: "eld-m1",
     kind: "event",
-    text: "New gathering posted: long lunch, Cervejaria Trindade",
+    text: "New event posted: long lunch, Cervejaria Trindade",
     time: "8h",
   },
   {
@@ -1594,7 +1594,7 @@ const YOUTH_MOMENTS: PulseMoment[] = [
   {
     id: "yth-m1",
     kind: "event",
-    text: "New gathering posted: CVs and first-jobs clinic",
+    text: "New event posted: CVs and first-jobs clinic",
     time: "6h",
   },
   {
@@ -1737,7 +1737,7 @@ const POC_PULSE: Post[] = [
     id: "poc-p3",
     author: P("sofia-castano"),
     kind: "post",
-    body: "Documented the last gathering properly. Full photo set going up in the archive this week. It was a beautiful evening. Tag yourselves in the album and grab what you need.",
+    body: "Documented the last event properly. Full photo set going up in the archive this week. It was a beautiful evening. Tag yourselves in the album and grab what you need.",
     reactions: rx(["celebrate", 21], ["heart", 18, true]),
     replies: [],
     time: "3d",
@@ -1765,7 +1765,7 @@ const POC_MOMENTS: PulseMoment[] = [
   {
     id: "poc-m1",
     kind: "event",
-    text: "New gathering posted: supper & sounds, Mouraria",
+    text: "New event posted: supper & sounds, Mouraria",
     time: "7h",
   },
   {
@@ -1929,7 +1929,7 @@ const DISABLED_MOMENTS: PulseMoment[] = [
   {
     id: "dis-m1",
     kind: "event",
-    text: "New gathering posted: low-sensory hangout (hybrid)",
+    text: "New event posted: low-sensory hangout (hybrid)",
     time: "7h",
   },
   {
@@ -1992,7 +1992,7 @@ const DISABLED_RESOURCES: CommunityResource[] = [
 ];
 
 const DISABLED_RULES = [
-  "Every gathering is hybrid by default. Online is never second class.",
+  "Every event is hybrid by default. Online is never second class.",
   "Access needs are mentioned up front and accommodated without question or comment.",
   "Never ask what someone's diagnosis is unless they offer it.",
   "Carers and personal assistants are always welcome: no booking, no fuss.",

@@ -371,7 +371,7 @@ export const community: Catalog = {
     "Dating across a language barrier is a specific experience. Some people find it freeing; others find it exhausting. The queer expat community is large enough that you can absolutely date within it. But you'll miss the broader community if you only date other expats.",
   "dating.culture.eventsMatter.title": "Events are how people actually meet",
   "dating.culture.eventsMatter.text":
-    "Apps matter less here than in some cities. A significant portion of relationships in the QueerPulse community started at a community event, through a mutual introduction, or at a forum gathering. Show up to things.",
+    "Apps matter less here than in some cities. A significant portion of relationships in the QueerPulse community started at a community event, through a mutual introduction, or at a forum event. Show up to things.",
 
   "dating.structures.heading": "Relationship <em>structures</em>",
   "dating.structures.lead":
@@ -420,7 +420,7 @@ export const community: Catalog = {
 
   "dating.social.heading": "Meet people <em>in person.</em>",
   "dating.social.lead":
-    "Apps are fine. But the QueerPulse community tends to actually meet at events: socials, dinners, gatherings specifically for connection. Less transactional than a dating app; more honest about what you're there for.",
+    "Apps are fine. But the QueerPulse community tends to actually meet at events: socials, dinners, and meetups made specifically for connection. Less transactional than a dating app; more honest about what you're there for.",
   "dating.social.upcomingEventsCta": "See upcoming events",
   "dating.social.forumThreadCta": "Social forum thread",
   "dating.event.singlesDinner.name": "Queer Singles Dinner",
@@ -430,7 +430,7 @@ export const community: Catalog = {
   "dating.event.enmPolySocial.name": "ENM & Poly Social",
   "dating.event.enmPolySocial.detail": "Bi-monthly · Arroios · Ongoing",
   "dating.event.enmPolySocial.note":
-    "Community gathering for non-monogamous members. Primarily social, secondarily a space to talk about navigating ENM in Lisbon.",
+    "Community event for non-monogamous members. Primarily social, secondarily a space to talk about navigating ENM in Lisbon.",
   "dating.event.newMembersSocial.name": "New Members Social",
   "dating.event.newMembersSocial.detail": "Every 6 weeks · Venue rotates",
   "dating.event.newMembersSocial.note":
@@ -680,7 +680,7 @@ export const community: Catalog = {
     "Which schools get it right, how to handle forms that assume a mother and a father, and members who've been through the same admissions.",
   "parentNetwork.offer.playdates.title": "Playdates & childcare",
   "parentNetwork.offer.playdates.body":
-    "A standing playdate group, swap-sitting between trusted members, and weekend gatherings where no one has to explain their family.",
+    "A standing playdate group, swap-sitting between trusted members, and weekend events where no one has to explain their family.",
   "parentNetwork.offer.vent.title": "A place to vent",
   "parentNetwork.offer.vent.body":
     "Co-parenting logistics, surrogacy and adoption journeys, and the small daily things, with people who actually get it.",

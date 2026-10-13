@@ -211,7 +211,7 @@ describe("GoTogetherHostSettings", () => {
 
     expect(
       screen.getByText(
-        "Matching has run for this gathering, so these settings are locked.",
+        "Matching has run for this event, so these settings are locked.",
       ),
     ).toBeInTheDocument();
     expect(

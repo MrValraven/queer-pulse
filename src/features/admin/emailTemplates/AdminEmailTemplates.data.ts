@@ -65,7 +65,7 @@ export const EMAIL_TEMPLATES_DEMO: EmailTemplateAdminDTO[] = [
               },
               {
                 icon: "gatherings",
-                title: "Gatherings near you",
+                title: "Events near you",
                 text: "Meetups, parties and slow coffees, planned by the community for the community.",
               },
               {
@@ -139,7 +139,7 @@ export const EMAIL_TEMPLATES_DEMO: EmailTemplateAdminDTO[] = [
               },
               {
                 icon: "gatherings",
-                title: "Encontros perto de ti",
+                title: "Eventos perto de ti",
                 text: "Convívios, festas e cafés sem pressa, organizados pela comunidade para a comunidade.",
               },
               {

@@ -889,7 +889,7 @@ describe("GoTogetherCard after matching ends", () => {
   it("says Go together has closed once the search has ended", () => {
     renderCard(makeCard({ state: "closed" }));
     expect(
-      screen.getByText("Go together has closed for this gathering."),
+      screen.getByText("Go together has closed for this event."),
     ).toBeInTheDocument();
     expect(
       screen.queryByText(/we'll still try to group you/),

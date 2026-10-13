@@ -125,8 +125,8 @@ export const members: Catalog = {
   "profile.backTo.community": "Back to the community",
   "profile.backTo.forum": "Back to the forum",
   "profile.backTo.thread": "Back to the conversation",
-  "profile.backTo.gatherings": "Back to gatherings",
-  "profile.backTo.gathering": "Back to the gathering",
+  "profile.backTo.gatherings": "Back to events",
+  "profile.backTo.gathering": "Back to the event",
   "profile.backTo.events": "Back to events",
   "profile.backTo.event": "Back to the event",
   "profile.backTo.feed": "Back to the feed",
@@ -813,7 +813,7 @@ export const members: Catalog = {
   "publicProfile.eligibility.family.participation.label":
     "Sustained participation",
   "publicProfile.eligibility.family.participation.hint":
-    "Attending gatherings, posting & staying active recently",
+    "Attending events, posting & staying active recently",
   "publicProfile.eligibility.progress.pct":
     "{pct}% of the way to a public profile",
   "publicProfile.eligibility.gates.heading": "First, the essentials",
@@ -826,7 +826,7 @@ export const members: Catalog = {
     "Publish a piece or host an open event",
   "publicProfile.eligibility.action.vouch":
     "Ask a member who knows you to vouch",
-  "publicProfile.eligibility.action.attend": "Come to a gathering or two",
+  "publicProfile.eligibility.action.attend": "Come to an event or two",
   "publicProfile.eligibility.action.points": "+{points}",
   "publicProfile.eligibility.family.amount": "{points} / {cap}",
   "publicProfile.eligibility.standing.blocked":
@@ -884,7 +884,7 @@ export const members: Catalog = {
   "search.resultCount_other": `<b>{count}</b> results for "<b>{query}</b>"`,
   "search.empty.title": "Nothing found",
   "search.empty.body":
-    "Try a different word: member name, neighbourhood, skill, or type of gathering.",
+    "Try a different word: member name, neighbourhood, skill, or type of event.",
   // Search page rows, topic sub line and empty-state actions (search.data.ts, SearchResults.tsx).
   "search.page.members.name": "Members",
   "search.page.members.sub": "Find people in the community",
@@ -946,7 +946,7 @@ export const members: Catalog = {
     "The request didn't come back. This is on our side, and your words were fine. Try again in a moment.",
   "search.hero.label": "Search",
   "search.hero.title": "Find anyone, anything <em>in the community.</em>",
-  "search.hero.placeholder": "Members, gatherings, communities, board posts…",
+  "search.hero.placeholder": "Members, events, communities, board posts…",
 
   // ── Member directory filter (MemberDirectoryFilterPage) ────────────────────
   "directory.eyebrow": "Members · advanced filter",
@@ -1601,7 +1601,7 @@ export const members: Catalog = {
   // ── Command palette (CommandPalette) ────────────────────────────────────────
   "commandPalette.ariaLabel": "Search QueerPulse",
   "commandPalette.escKey": "esc",
-  "commandPalette.placeholder": "Search members, gatherings, communities…",
+  "commandPalette.placeholder": "Search members, events, communities…",
   "commandPalette.signInBody": "Sign in to search across QueerPulse.",
   "commandPalette.noMatches": "No matches. Try another word.",
   "commandPalette.searching": "Searching…",
@@ -1898,9 +1898,9 @@ export const members: Catalog = {
   "badges.xpBreakdown.sources.connections": "Connections made",
   "badges.xpBreakdown.sources.connectionsDesc":
     "Connecting with another member.",
-  "badges.xpBreakdown.sources.events": "Gatherings attended",
+  "badges.xpBreakdown.sources.events": "Events attended",
   "badges.xpBreakdown.sources.eventsDesc":
-    "Attending a gathering someone else is hosting.",
+    "Attending an event someone else is hosting.",
   "badges.xpBreakdown.sources.posts": "Community posts",
   "badges.xpBreakdown.sources.postsDesc":
     "Posting where other people are, or replying to someone.",
@@ -1922,9 +1922,9 @@ export const members: Catalog = {
   "badges.xpBreakdown.sources.volunteering": "Volunteer sessions",
   "badges.xpBreakdown.sources.volunteeringDesc":
     "A volunteer session confirmed by the person who posted it.",
-  "badges.xpBreakdown.sources.hosting": "Gatherings hosted",
+  "badges.xpBreakdown.sources.hosting": "Events hosted",
   "badges.xpBreakdown.sources.hostingDesc":
-    "Hosting a gathering that happened and drew people.",
+    "Hosting an event that happened and drew people.",
   "badges.xpBreakdown.sources.magazine": "Magazine pieces published",
   "badges.xpBreakdown.sources.magazineDesc":
     "A piece of yours published in the magazine.",
@@ -2089,7 +2089,7 @@ export const members: Catalog = {
   "badges.ledger.reason.adjustmentWhy":
     "This row was written by the platform. Ask the community team if you want the detail behind it.",
   "perks.sidebar.explainBody":
-    "Perks are not a loyalty scheme. They are how the members who keep showing up get a little more back. Each level stands for something real: time here, gatherings attended, people connected. What you unlock is a bigger share of what the platform can already do.",
+    "Perks are not a loyalty scheme. They are how the members who keep showing up get a little more back. Each level stands for something real: time here, events attended, people connected. What you unlock is a bigger share of what the platform can already do.",
   "perks.sidebar.suggestLabel":
     "What would make being a long-term member worth more to you?",
   "badges.case.categoryToggleLabel": "Show {category} badges",
@@ -2106,15 +2106,15 @@ export const members: Catalog = {
   "badges.catalog.wellRead.name": "Well-Read",
   "badges.catalog.wellRead.locked": "Save 5 articles or resources",
   "badges.catalog.wellRead.earned": "Saved 5 articles or resources",
-  "badges.catalog.firstGathering.name": "First Gathering",
-  "badges.catalog.firstGathering.locked": "Attend your first gathering",
-  "badges.catalog.firstGathering.earned": "Attended a QueerPulse gathering",
+  "badges.catalog.firstGathering.name": "First Event",
+  "badges.catalog.firstGathering.locked": "Attend your first event",
+  "badges.catalog.firstGathering.earned": "Attended a QueerPulse event",
   "badges.catalog.threeCompany.name": "Three's Company",
-  "badges.catalog.threeCompany.locked": "Attend 3 gatherings",
-  "badges.catalog.threeCompany.earned": "3 gatherings attended",
+  "badges.catalog.threeCompany.locked": "Attend 3 events",
+  "badges.catalog.threeCompany.earned": "3 events attended",
   "badges.catalog.regularAttendee.name": "Regular",
-  "badges.catalog.regularAttendee.locked": "Attend 5 gatherings in one year",
-  "badges.catalog.regularAttendee.earned": "5 gatherings in one year",
+  "badges.catalog.regularAttendee.locked": "Attend 5 events in one year",
+  "badges.catalog.regularAttendee.earned": "5 events in one year",
   "badges.catalog.decade.name": "Anniversary",
   "badges.catalog.decade.locked": "Be a member for 1 year",
   "badges.catalog.decade.earned": "Member for 1 year",
@@ -2147,11 +2147,11 @@ export const members: Catalog = {
     "Fill out your Work Profile (skills and focus areas)",
   "badges.catalog.workReady.earned": "Completed the Work Profile",
   "badges.catalog.eventHost.name": "Event Host",
-  "badges.catalog.eventHost.locked": "Host a QueerPulse gathering",
-  "badges.catalog.eventHost.earned": "Hosted a QueerPulse gathering",
+  "badges.catalog.eventHost.locked": "Host a QueerPulse event",
+  "badges.catalog.eventHost.earned": "Hosted a QueerPulse event",
   "badges.catalog.serialHost.name": "Serial Host",
-  "badges.catalog.serialHost.locked": "Host 3 approved gatherings",
-  "badges.catalog.serialHost.earned": "Hosted 3 approved gatherings",
+  "badges.catalog.serialHost.locked": "Host 3 approved events",
+  "badges.catalog.serialHost.earned": "Hosted 3 approved events",
   "badges.catalog.firstSteps.name": "First Steps",
   "badges.catalog.firstSteps.locked": "Finish your getting started checklist",
   "badges.catalog.firstSteps.earned": "Completed the getting started checklist",
@@ -2159,15 +2159,14 @@ export const members: Catalog = {
   "badges.catalog.pride2026.locked": "March with the QueerPulse block",
   "badges.catalog.pride2026.earned": "Marched with the QueerPulse block",
   "badges.catalog.firstTable2026.name": "New Year, First Table",
-  "badges.catalog.firstTable2026.locked":
-    "Attend the first gathering of the year",
+  "badges.catalog.firstTable2026.locked": "Attend the first event of the year",
   "badges.catalog.firstTable2026.earned":
-    "Attended the first gathering of the year",
+    "Attended the first event of the year",
   "badges.catalog.winterWarmth2026.name": "Winter Warmth",
   "badges.catalog.winterWarmth2026.locked":
-    "Bring someone new to a December gathering",
+    "Bring someone new to a December event",
   "badges.catalog.winterWarmth2026.earned":
-    "Brought someone new to a December gathering",
+    "Brought someone new to a December event",
 
   "badges.catalog.pride2026.window": "Open until {date}",
   "badges.catalog.firstTable2026.window": "January only",
@@ -2230,16 +2229,16 @@ export const members: Catalog = {
   "perks.catalog.inviteQuotaAtLimit.desc":
     "Your monthly invite allowance is {total}.",
   "perks.base.browseDirectory": "Browse the member directory",
-  "perks.base.joinGatherings": "Join gatherings and RSVP",
+  "perks.base.joinGatherings": "Join events and RSVP",
   "perks.base.directMessages": "Message other members directly",
   "perks.base.saveArticles": "Save articles and resources",
   "perks.base.joinCommunities": "Join communities",
-  "perks.base.hostGathering": "Host a gathering",
+  "perks.base.hostGathering": "Host an event",
 
   "badges.ledger.integrityHeading": "Why this can be trusted",
   "badges.ledger.integrity1Title": "Counted from what you already did.",
   "badges.ledger.integrity1Body":
-    "Attendance comes from your own RSVP on a gathering that has already started. There is nothing extra to file.",
+    "Attendance comes from your own RSVP on an event that has already started. There is nothing extra to file.",
   "badges.ledger.integrity2Title": "Every point has a row.",
   "badges.ledger.integrity2Body":
     "Each increase lands in this list with a date and a description, so the total can be checked against it.",
@@ -2518,7 +2517,7 @@ export const members: Catalog = {
 
   "savedLists.empty.title": "Nothing saved yet",
   "savedLists.empty.description":
-    "Save an article, a place or a gathering and it will show up here. You can group your saves into lists whenever you want to.",
+    "Save an article, a place or an event and it will show up here. You can group your saves into lists whenever you want to.",
 
   "savedLists.newCard.title": "New list",
   "savedLists.newCard.subtitle": "Group saves by the reason you kept them",
