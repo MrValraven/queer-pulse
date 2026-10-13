@@ -63,6 +63,22 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "balanced-headline-wraps",
+        category: "fix",
+        date: "13 Oct 2026",
+        ...entryKeys("balanced-headline-wraps"),
+      },
+      {
+        id: "host-guide-fits-phones",
+        category: "improvement",
+        date: "13 Oct 2026",
+        ...entryKeys("host-guide-fits-phones"),
+        tag: {
+          labelKey: "marketing:changelog.tag.gatherings",
+          to: routes.host,
+        },
+      },
+      {
         id: "studio-phone-tabs",
         category: "feature",
         date: "13 Oct 2026",

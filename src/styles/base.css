@@ -131,6 +131,13 @@ img {
   max-width: 100%;
 }
 
+/* Balanced heading wraps, so a hero title never strands its last word on a
+   line of its own ("…for your / people."). :where() keeps specificity at
+   zero, so a module that sets its own text-wrap (pretty, nowrap) still wins. */
+:where(h1, h2, h3) {
+  text-wrap: balance;
+}
+
 /* Global input font-size floor. On iOS Safari, focusing a control under 16px
    zooms the viewport. This low-specificity rule protects any input/textarea/
    select that doesn't set its own font-size; controls with an explicit

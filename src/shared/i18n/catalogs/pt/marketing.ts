@@ -3942,6 +3942,14 @@ export const marketing: Catalog = {
     "Studio mais legível e ordem das faixas estável",
   "changelog.entries.studio-v2-fixes.body":
     "As páginas do Studio leem-se bem no telemóvel e em português, e remover um carregamento falhado mantém a ordem das faixas.",
+  "changelog.entries.balanced-headline-wraps.title":
+    "Os títulos já não deixam a última palavra sozinha",
+  "changelog.entries.balanced-headline-wraps.body":
+    "Os títulos dividem-se por igual entre linhas, por isso um destaque como o do guia para anfitriões mantém a frase junta.",
+  "changelog.entries.host-guide-fits-phones.title":
+    "O guia para anfitriões lê-se melhor no telemóvel",
+  "changelog.entries.host-guide-fits-phones.body":
+    "Os passos usam a largura toda do ecrã, os formatos ficam em linhas compactas e o botão de criar já não se repete.",
   "changelog.entries.forum-compose-fits-phones-unfollows-stick.title":
     "Posts do fórum cabem no telemóvel",
   "changelog.entries.forum-compose-fits-phones-unfollows-stick.body":

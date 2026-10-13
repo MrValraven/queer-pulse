@@ -3856,6 +3856,14 @@ export const marketing: Catalog = {
     "Clearer Studio pages, steady track order",
   "changelog.entries.studio-v2-fixes.body":
     "Studio pages read clearly on phones and in Portuguese, and removing a failed upload keeps your track order.",
+  "changelog.entries.balanced-headline-wraps.title":
+    "Headlines no longer strand their last word",
+  "changelog.entries.balanced-headline-wraps.body":
+    "Page titles split evenly across lines, so a hero like the host guide's keeps its phrase together.",
+  "changelog.entries.host-guide-fits-phones.title":
+    "The host guide reads better on phones",
+  "changelog.entries.host-guide-fits-phones.body":
+    "Steps get the full screen width, format cards turn into compact rows, and the repeated create button is gone.",
   "changelog.entries.forum-compose-fits-phones-unfollows-stick.title":
     "Forum posts fit phones, unfollows stick",
   "changelog.entries.forum-compose-fits-phones-unfollows-stick.body":

@@ -302,14 +302,73 @@
 }
 
 @media (--mobile) {
+  .hero {
+    padding: var(--section-y-48) 0 var(--section-y-56);
+  }
+  .heroTypes {
+    gap: 8px;
+    margin-top: 24px;
+  }
+  .htype {
+    padding: 6px 13px;
+  }
+  .body {
+    padding: var(--section-y-48) 0 var(--section-y-64);
+  }
   .grid {
     grid-template-columns: 1fr;
+    gap: 32px;
   }
   .sidebar {
     position: static;
   }
+  /* The Outro below repeats the create button, so the stacked sidebar
+     drops its own copy and keeps the partner-spaces card. */
+  .readyCard {
+    display: none;
+  }
+
+  /* A smaller numeral circle hands the width back to the step text. The
+     rail shares the circle's type scale, so its em anchors still meet the
+     circle's bottom edge at its centre. */
+  .step {
+    grid-template-columns: auto 1fr;
+    gap: 0 16px;
+    padding-bottom: 36px;
+  }
+  .step:not(:last-child)::before {
+    font-size: var(--text-17);
+  }
+  .stepNum {
+    font-size: var(--text-17);
+  }
+  .stepContent {
+    padding-top: 7px;
+  }
+
+  /* Format cards read as compact rows with the icon beside the copy. */
   .typesGrid {
     grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .typeCard {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: 14px;
+    align-items: start;
+    padding: 14px 16px;
+  }
+  .tcIcon {
+    grid-row: span 2;
+    margin-bottom: 0;
+    line-height: 1;
+    padding-top: 2px;
+  }
+  .typeCard h4 {
+    margin-bottom: 4px;
+  }
+  .typeCard p {
+    margin-bottom: 0;
   }
 }
 
@@ -319,4 +378,7 @@
 }
 :global([data-theme="dark"]) .stepNum {
   background: var(--paper);
+}
+:global([data-theme="dark"]) .step:not(:last-child)::before {
+  background: rgba(var(--cream-rgb), 0.12);
 }

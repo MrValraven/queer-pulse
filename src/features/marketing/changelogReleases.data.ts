@@ -17,7 +17,7 @@ export const CHANGELOG_RELEASE_NOTES: Record<
 > = {
   "13 Oct 2026": {
     highlights: ["studio-v2", "marketing-flyers", "search-first-work-picker"],
-    pushes: 4,
+    pushes: 5,
   },
   "12 Oct 2026": {
     highlights: [

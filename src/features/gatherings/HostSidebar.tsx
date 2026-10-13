@@ -17,7 +17,7 @@ export function HostSidebar() {
 
   return (
     <Reveal as="aside" className={styles.sidebar} delay={90}>
-      <div className={styles.sidebarCard}>
+      <div className={`${styles.sidebarCard} ${styles.readyCard}`}>
         <h3>{t("gatherings:host.sidebar.readyTitle")}</h3>
         <p>{t("gatherings:host.sidebar.readyBody")}</p>
         <Button className={styles.fullBtn} to={routes.createGathering}>
