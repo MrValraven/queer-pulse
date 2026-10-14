@@ -11,34 +11,18 @@ import {
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useStudioFollowedArtists } from "./api/useStudioFollowedArtists";
-import {
-  useStudioLibrarySaves,
-  type StudioLibrarySaveKind,
-} from "./api/useStudioLibrarySaves";
+import { useStudioLibrarySaves } from "./api/useStudioLibrarySaves";
 import { useStudioMyPlaylists } from "./api/useStudioMyPlaylists";
 import { StudioArtistCard } from "./StudioArtistCard";
 import { StudioLibrarySavedList } from "./StudioLibrarySavedList";
+import { StudioLikedSongsCard } from "./StudioLikedSongsCard";
 import { StudioLoadError } from "./StudioLoadStates";
 import type { StudioLibraryTab } from "./studioPaths";
 import { StudioPlaylistCard } from "./StudioPlaylistCard";
 import { StudioPlaylistDialog } from "./StudioPlaylistDialog";
-import { StudioCardGridSkeleton } from "./StudioSkeletons";
+import { StudioCardGridSkeleton, StudioCardSkeleton } from "./StudioSkeletons";
 import styles from "./studio.module.css";
 import kit from "./studioKit.module.css";
-
-const SAVES_EMPTY_KEYS: Record<
-  "studio_release" | "studio_track",
-  { title: string; body: string }
-> = {
-  studio_release: {
-    title: "studio:libraryLive.empty.releasesTitle",
-    body: "studio:libraryLive.empty.releasesBody",
-  },
-  studio_track: {
-    title: "studio:libraryLive.empty.tracksTitle",
-    body: "studio:libraryLive.empty.tracksBody",
-  },
-};
 
 function LibraryEmpty({
   titleKey,
@@ -79,12 +63,10 @@ function LibraryPlaylists() {
   const mine = useStudioMyPlaylists();
   const saved = useStudioLibrarySaves("studio_playlist");
   const [isCreating, setIsCreating] = useState(false);
+  const isPlaylistsReady = !mine.loadState.isError && !mine.loadState.isLoading;
   // The empty state carries its own Create playlist action, so the header
   // pill appears only once at least one playlist has loaded.
-  const hasOwnPlaylists =
-    !mine.loadState.isError &&
-    !mine.loadState.isLoading &&
-    mine.playlists.length > 0;
+  const hasOwnPlaylists = isPlaylistsReady && mine.playlists.length > 0;
   const mineHeadingId = useId();
   const savedHeadingId = useId();
   return (
@@ -107,23 +89,28 @@ function LibraryPlaylists() {
             </button>
           </Collapse>
         </div>
-        {mine.loadState.isError ? (
+        {/* Liked songs always leads the grid: it needs no playlist load. */}
+        <div className={styles.rowGrid}>
+          <StudioLikedSongsCard />
+          {mine.loadState.isLoading &&
+            Array.from({ length: 3 }, (_, index) => (
+              <StudioCardSkeleton key={index} />
+            ))}
+          {isPlaylistsReady &&
+            mine.playlists.map((playlist) => (
+              <StudioPlaylistCard key={playlist.id} playlist={playlist} />
+            ))}
+        </div>
+        {mine.loadState.isError && (
           <StudioLoadError loadState={mine.loadState} />
-        ) : mine.loadState.isLoading ? (
-          <StudioCardGridSkeleton count={4} className={styles.rowGrid} />
-        ) : mine.playlists.length === 0 ? (
+        )}
+        <Collapse isOpen={isPlaylistsReady && mine.playlists.length === 0}>
           <LibraryEmpty
-            titleKey="studio:libraryLive.empty.playlistsTitle"
+            titleKey="studio:libraryLive.empty.ownPlaylistsTitle"
             bodyKey="studio:libraryLive.empty.playlistsBody"
             onCreatePlaylist={() => setIsCreating(true)}
           />
-        ) : (
-          <div className={styles.rowGrid}>
-            {mine.playlists.map((playlist) => (
-              <StudioPlaylistCard key={playlist.id} playlist={playlist} />
-            ))}
-          </div>
-        )}
+        </Collapse>
         {(mine.hasMore || mine.isFetchNextPageError) && (
           <div className={kit.moreFooter}>
             <LoadMoreFooter
@@ -167,15 +154,16 @@ function LibraryPlaylists() {
   );
 }
 
-function LibrarySaves({
-  kind,
-}: {
-  kind: Exclude<StudioLibrarySaveKind, "studio_playlist">;
-}) {
-  const items = useStudioLibrarySaves(kind);
-  const keys = SAVES_EMPTY_KEYS[kind];
+/** Saved releases. Liked tracks have their own page (routes.studioLiked). */
+function LibraryReleases() {
+  const items = useStudioLibrarySaves("studio_release");
   if (items.length === 0)
-    return <LibraryEmpty titleKey={keys.title} bodyKey={keys.body} />;
+    return (
+      <LibraryEmpty
+        titleKey="studio:libraryLive.empty.releasesTitle"
+        bodyKey="studio:libraryLive.empty.releasesBody"
+      />
+    );
   return <StudioLibrarySavedList items={items} />;
 }
 
@@ -220,9 +208,5 @@ function LibraryArtists() {
 export function StudioLibraryPanel({ tab }: { tab: StudioLibraryTab }) {
   if (tab === "playlists") return <LibraryPlaylists />;
   if (tab === "artists") return <LibraryArtists />;
-  return (
-    <LibrarySaves
-      kind={tab === "releases" ? "studio_release" : "studio_track"}
-    />
-  );
+  return <LibraryReleases />;
 }

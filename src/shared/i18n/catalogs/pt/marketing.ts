@@ -3944,6 +3944,22 @@ export const marketing: Catalog = {
     "Studio mais legível e ordem das faixas estável",
   "changelog.entries.studio-v2-fixes.body":
     "As páginas do Studio leem-se bem no telemóvel e em português, e remover um carregamento falhado mantém a ordem das faixas.",
+  "changelog.entries.studio-liked-songs.title":
+    "Põe gosto numa música e guarda-a nas Músicas de que gostas",
+  "changelog.entries.studio-liked-songs.body":
+    "Toca no coração de qualquer faixa e ela vai para uma playlist privada que todos os membros têm desde o início.",
+  "changelog.entries.studio-close-player.title":
+    "Fecha o leitor do Studio quando acabares",
+  "changelog.entries.studio-close-player.body":
+    "Um botão de fechar para o som e esconde a barra até tocares algo novo.",
+  "changelog.entries.studio-smooth-waveform.title":
+    "A barra do player do Studio mexe-se com suavidade",
+  "changelog.entries.studio-smooth-waveform.body":
+    "A onda desliza a cada frame e o play, o volume, a troca de faixa e a própria barra entram no sítio com suavidade.",
+  "changelog.entries.studio-queue-clears-nav.title":
+    "A fila do Studio fica abaixo do menu do site",
+  "changelog.entries.studio-queue-clears-nav.body":
+    "Nas páginas fora do Studio, a fila aberta começa por baixo da barra do menu e o título e o botão de fechar ficam à vista.",
   "changelog.entries.studio-artist-kinds.title":
     "Podcasts, spoken word e áudio de performance no Studio",
   "changelog.entries.studio-artist-kinds.body":

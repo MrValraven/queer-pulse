@@ -6,14 +6,15 @@ import type { StudioLibraryTab } from "./studioPaths";
 export const LIVE_LIBRARY_TABS: { id: StudioLibraryTab; labelKey: string }[] = [
   { id: "playlists", labelKey: "studio:libraryLive.tabs.playlists" },
   { id: "releases", labelKey: "studio:libraryLive.tabs.releases" },
-  { id: "tracks", labelKey: "studio:libraryLive.tabs.tracks" },
   { id: "artists", labelKey: "studio:libraryLive.tabs.artists" },
 ];
 
 /** Demo only: saves the library shows beside whatever the demo member saved
- *  this session, so every tab has something in it. One is withdrawn by our
- *  team and one is gone for another reason, to show both states. Titles and
- *  names are content and stay as written. */
+ *  this session, so every tab and Liked songs have something in them. The
+ *  `studio_track` saves are the demo member's liked songs. One release and
+ *  one track are withdrawn by our team and one release is gone for another
+ *  reason, to show each state. Titles and names are content and stay as
+ *  written. */
 export const DEMO_LIBRARY_SAVES: SavedItem[] = [
   {
     id: "studio_release:demo-release-cidade-dos-santos",
@@ -63,6 +64,47 @@ export const DEMO_LIBRARY_SAVES: SavedItem[] = [
     href: "/studio/track?id=demo-track-home-4-01",
     meta: "NIGHTFORM",
     availability: "available",
+  },
+  {
+    id: "studio_track:demo-track-home-1-01",
+    kind: "studio_track",
+    title: "The kitchen in April",
+    href: "/studio/track?id=demo-track-home-1-01",
+    meta: "Rita Ferreira",
+    availability: "available",
+  },
+  {
+    id: "studio_track:demo-track-cidade-dos-santos-01",
+    kind: "studio_track",
+    title: "Abertura: a luz",
+    href: "/studio/track?id=demo-track-cidade-dos-santos-01",
+    meta: "Mariana Sol · Cidade dos santos",
+    availability: "available",
+  },
+  {
+    id: "studio_track:demo-track-home-2-01",
+    kind: "studio_track",
+    title: "Bicha, with love",
+    href: "/studio/track?id=demo-track-home-2-01",
+    meta: "LeChatDashinko",
+    availability: "available",
+  },
+  {
+    id: "studio_track:demo-track-mariana-2-01",
+    kind: "studio_track",
+    title: "Planície",
+    href: "/studio/track?id=demo-track-mariana-2-01",
+    meta: "Mariana Sol · A Beja",
+    availability: "available",
+  },
+  {
+    id: "studio_track:demo-track-withdrawn-01",
+    kind: "studio_track",
+    title: "Bairro antigo",
+    href: "/studio/track?id=demo-track-withdrawn-01",
+    meta: "Mariana Sol",
+    availability: "unavailable",
+    unavailableReason: "withdrawn",
   },
   {
     id: "studio_playlist:demo-playlist-dyke-bar-standards",

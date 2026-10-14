@@ -21,6 +21,30 @@
   background: var(--studio-surface-rail);
   color: var(--studio-text);
   border-top: 1px solid rgba(var(--studio-ink-rgb), 0.08);
+  /* The bar rises in when the first track is queued. Only transform and
+     opacity move, so its box height, which useStudioPlayerInset publishes
+     for the spacer, holds steady the whole way. */
+  transition-property: transform, opacity;
+  transition-duration: var(--dur-base);
+  transition-timing-function: var(--ease-out);
+}
+
+/* Browsers without @starting-style show the bar at once. */
+@starting-style {
+  .bar {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+}
+
+/* Closed by the member: the bar slides down and fades while the inset eases
+   to 0 (useStudioBarExit runs the same 200ms). A Play during the exit drops
+   the attribute and the bar rises back over the same transition. */
+.bar[data-closing] {
+  transform: translateY(100%);
+  opacity: 0;
+  pointer-events: none;
+  transition-duration: 200ms;
 }
 
 .now {
@@ -46,6 +70,47 @@
   display: flex;
   flex-direction: column;
   min-width: 0;
+}
+
+/* Track change: the leaving and entering blocks share one grid cell, so the
+   column keeps its size while they crossfade. Every level keeps min-width 0
+   so the title still ellipsizes. */
+.nowSwap,
+.coverSwap {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  min-width: 0;
+}
+
+.nowSwapItem {
+  grid-area: 1 / 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.coverSwap {
+  width: 100%;
+  height: 100%;
+}
+
+/* The entering cover paints over the leaving one, whatever their DOM
+   order. */
+.coverSwapItem {
+  grid-area: 1 / 1;
+  z-index: 1;
+  display: block;
+  min-width: 0;
+}
+
+.coverSwapItem[data-leaving] {
+  z-index: 0;
+}
+
+.nowSwapItem[data-leaving],
+.coverSwapItem[data-leaving],
+.addToPlaylistSlot[data-leaving] {
+  pointer-events: none;
 }
 
 .title,
@@ -105,13 +170,26 @@
   min-width: 0;
 }
 
+/* Held at the scrubber's 32px, so the row keeps its height while a new
+   track's waveform loads behind the plain range input. */
 .seekRow {
   display: flex;
   align-items: center;
   gap: 10px;
+  min-block-size: 32px;
 }
 
+/* Now playing's waveform is 48px tall; the row keeps that height while a
+   new track's waveform loads. */
+.seekRow[data-size="large"] {
+  min-block-size: 48px;
+}
+
+/* A fixed 4ch box, so the waveform beside it keeps its width as the
+   elapsed time ticks. */
 .time {
+  min-inline-size: 4ch;
+  text-align: center;
   font-size: var(--text-11);
   color: var(--studio-text-muted);
   font-variant-numeric: tabular-nums;
@@ -148,6 +226,11 @@
   height: var(--tap-min);
   border-radius: var(--radius-pill);
   font-size: var(--text-18);
+  /* The queue toggle's colour follows aria-expanded; it eases with the
+     hover background and the press. */
+  transition-property: background-color, color, transform;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
 }
 
 .toolButton[aria-expanded="true"] {
@@ -162,6 +245,11 @@
   /* An inverted ink disc: cream on the dark rail, plum on the light one. */
   background: rgba(var(--studio-ink-rgb), 0.92);
   color: var(--studio-surface-rail);
+  /* The desktop bar's press and hover values, so both play buttons feel the
+     same. */
+  transition-property: transform, background-color;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
 }
 
 /* A hit area of at least --tap-min around the 40px disc (the controls kit's
@@ -245,7 +333,31 @@
   background: none;
   color: inherit;
   cursor: pointer;
-  transition-property: background-color;
+  transition-property: background-color, color, transform;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+/* Holds the Like heart and Add to playlist together at the row's end while
+   they fade in or out for a private preview. The slot is the row's flex
+   item, so it carries the auto margin for both. */
+.addToPlaylistSlot {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-inline-start: auto;
+}
+
+/* The Like heart in the bar and the mini card: the 44px round target,
+   hover and press of the tool buttons beside it. Its liked colour comes
+   from StudioLikeButton. The slot in each selector lifts it over the
+   heart's own `.icon` rule, which pulls its block margins in. */
+.addToPlaylistSlot .like,
+.miniLikeSlot .like {
+  flex: none;
+  margin-block: 0;
+  transition-property: background-color, transform;
   transition-duration: var(--dur-fast);
   transition-timing-function: var(--ease);
 }
@@ -255,6 +367,23 @@
   .toolButton:hover {
     background: rgba(var(--studio-ink-rgb), 0.08);
   }
+
+  .playButton:hover {
+    background: rgba(var(--studio-ink-rgb), 1);
+    transform: scale(1.04);
+  }
+}
+
+/* A light press. After the hover rules, so a held press wins over the
+   hover lift. */
+.toolButton:active,
+.addToPlaylist:active,
+.like:active {
+  transform: scale(0.92);
+}
+
+.playButton:active {
+  transform: scale(0.94);
 }
 
 .bar a:focus-visible,
@@ -267,11 +396,12 @@
 
 /* From the phone card up to about 1180px the four columns squeezed the
    title to nothing. Here the title column keeps a floor (about 140px of
-   title at 960px), the volume keeps its mute button and drops its slider,
-   and the seek drops its time labels (the slider still speaks its time). */
+   title at 960px, beside the Like heart and Add to playlist), the volume
+   keeps its mute button and drops its slider, and the seek drops its time
+   labels (the slider still speaks its time). */
 @media (max-width: 1180px) {
   .bar {
-    grid-template-columns: minmax(264px, 1.2fr) auto minmax(0, 2fr) auto;
+    grid-template-columns: minmax(312px, 1.2fr) auto minmax(0, 2fr) auto;
   }
 
   .tools input[type="range"],
@@ -363,9 +493,15 @@
     align-items: center;
   }
 
-  .miniSkipSlot {
+  .miniSkipSlot,
+  .miniLikeSlot {
     display: flex;
     flex: none;
+  }
+
+  /* The heart leads the controls; its gap folds away with its slot. */
+  .miniLikeSlot .like {
+    margin-inline-end: 4px;
   }
 
   .miniSkipSlot[data-direction="back"] .miniSkip {
@@ -376,7 +512,8 @@
     margin-inline-start: 8px;
   }
 
-  .miniSkip {
+  .miniSkip,
+  .miniClose {
     display: inline-grid;
     place-items: center;
     width: var(--tap-min);
@@ -389,6 +526,21 @@
     color: var(--studio-text);
     font-size: var(--text-18);
     cursor: pointer;
+    transition-property: transform;
+    transition-duration: var(--dur-fast);
+    transition-timing-function: var(--ease);
+  }
+
+  /* Close sits last, a little apart from the play button and the skips. */
+  .miniClose {
+    margin-inline-start: 4px;
+    color: var(--studio-text-muted);
+  }
+
+  /* The same light press as the play button beside it. */
+  .miniSkip:active,
+  .miniClose:active {
+    transform: scale(0.92);
   }
 
   /* The space under the error line lives inside the Collapse, so it grows
@@ -442,7 +594,8 @@
 }
 
 .miniOpen:focus-visible,
-.miniSkip:focus-visible {
+.miniSkip:focus-visible,
+.miniClose:focus-visible {
   outline: var(--focus-ring);
   outline-offset: var(--focus-ring-offset);
   box-shadow: var(--ring-cream);

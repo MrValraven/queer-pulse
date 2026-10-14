@@ -1,8 +1,7 @@
 .panel {
   position: fixed;
-  /* Studio pages show no app nav (the band variable still follows the
-     member's nav-mode preference), so the panel sits a fixed gap from the
-     top. */
+  /* Studio's own pages show no app nav, so the panel sits a fixed gap from
+     the top there. `.panelBelowNav` handles pages that show the nav. */
   top: 12px;
   inset-inline-end: 12px;
   /* Ends above the player bar, which itself sits above the tab bar or the
@@ -21,6 +20,13 @@
   color: var(--studio-text);
   border: 1px solid rgba(var(--studio-ink-rgb), 0.12);
   box-shadow: var(--shadow-panel);
+}
+
+/* On a page with the site nav, the panel starts below it. `--sticky-top` is
+   the nav chrome at the viewport top: the floating pill's band, or zero in
+   sidebar mode. */
+.panelBelowNav {
+  top: calc(var(--sticky-top) + 12px);
 }
 
 .panelHead {

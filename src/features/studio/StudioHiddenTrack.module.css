@@ -52,9 +52,11 @@ li.hidden.hiddenSearchRow {
   grid-template-columns: 36px minmax(0, 1fr) auto auto;
 }
 
+/* Phones: the duration cell moves under the title in column 2 and the pay
+   cell is hidden, so two columns hold the whole row. */
 @media (--sm) {
   li.hidden.hiddenSearchRow {
-    grid-template-columns: 36px minmax(0, 1fr) auto;
+    grid-template-columns: 36px minmax(0, 1fr);
   }
 }
 

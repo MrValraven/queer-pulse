@@ -126,6 +126,7 @@ describe("Studio v2 read hooks (demo)", () => {
   it("clears older seed flags and reseeds the current fixture", () => {
     window.localStorage.setItem("qp-demo-studio-library-seeded", "1");
     window.localStorage.setItem("qp.demo.studioLibrarySeeded.v1", "1");
+    window.localStorage.setItem("qp.demo.studioLibrarySeeded.v2", "1");
     const { result } = renderHook(
       () => useStudioLibrarySaves("studio_release"),
       { wrapper },
@@ -139,9 +140,32 @@ describe("Studio v2 read hooks (demo)", () => {
     expect(
       window.localStorage.getItem("qp.demo.studioLibrarySeeded.v1"),
     ).toBeNull();
-    expect(window.localStorage.getItem("qp.demo.studioLibrarySeeded.v2")).toBe(
+    expect(
+      window.localStorage.getItem("qp.demo.studioLibrarySeeded.v2"),
+    ).toBeNull();
+    expect(window.localStorage.getItem("qp.demo.studioLibrarySeeded.v3")).toBe(
       "1",
     );
+  });
+
+  it("seeds the demo liked songs, the withdrawn one included", () => {
+    const { result } = renderHook(() => useStudioLibrarySaves("studio_track"), {
+      wrapper,
+    });
+    expect(result.current.map((item) => item.id)).toEqual(
+      expect.arrayContaining([
+        "studio_track:demo-track-home-1-01",
+        "studio_track:demo-track-withdrawn-01",
+      ]),
+    );
+    expect(
+      result.current.find(
+        (item) => item.id === "studio_track:demo-track-withdrawn-01",
+      ),
+    ).toMatchObject({
+      availability: "unavailable",
+      unavailableReason: "withdrawn",
+    });
   });
 });
 

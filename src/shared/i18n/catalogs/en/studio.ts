@@ -1730,6 +1730,20 @@ export const studio: Catalog = {
   "save.savedLabel": "Saved",
   "save.savedToast": "Saved",
   "save.removedToast": "Removed from Saved",
+
+  // ── Liked songs (StudioLikeButton, StudioLikedPage) ─────────────────────
+  "like.cta": "Like",
+  "like.trackAria": "Like {title}",
+  "like.addedToast": "Added to Liked songs",
+  "like.removedToast": "Removed from Liked songs",
+  "liked.title": "Liked songs",
+  "liked.page.privateNote": "Only you can see the songs you like here",
+  "liked.page.emptyTitle": "Songs you like will show up here",
+  "liked.page.emptyBody":
+    "Tap the heart on any track to keep it in Liked songs",
+  "liked.page.showMore": "Show more songs",
+  "liked.page.loadingMore": "Loading more songs",
+  "liked.page.loadMoreError": "We couldn't load more of your liked songs",
   "errors.generic": "Something went wrong. Try again",
   "errors.accessRequired": "Your Studio access has ended",
   "errors.notPersonaOwner": "Only the persona's owners can change its releases",
@@ -1836,6 +1850,7 @@ export const studio: Catalog = {
   "playerBar.seekValue": "{elapsed} of {total}",
   "playerBar.cantPlay": "This track can't play right now",
   "playerBar.retry": "Retry the track",
+  "playerBar.close": "Close player",
   "uploadFlow.hero.title": "Put your music <em>out.</em>",
   "uploadFlow.hero.sub":
     "Three steps: the release, its tracks, then publish. MP3 or M4A, up to 50 MB a track",
@@ -2050,24 +2065,20 @@ export const studio: Catalog = {
   "browse.empty.title": "No releases in {genre} yet",
   "browse.empty.body": "New music shows up here as artists publish it",
   "libraryLive.dek":
-    "Your playlists, plus the releases, tracks and artists you keep close",
+    "Your playlists, Liked songs, saved releases and the artists you follow",
   "libraryLive.tablistLabel": "Your library",
   "libraryLive.tabs.playlists": "Playlists",
   "libraryLive.tabs.releases": "Releases",
-  "libraryLive.tabs.tracks": "Tracks",
   "libraryLive.tabs.artists": "Artists",
   "libraryLive.yourPlaylists": "Your <em>playlists</em>",
   "libraryLive.savedPlaylists": "Saved <em>playlists</em>",
   "libraryLive.newPlaylistCta": "Create playlist",
-  "libraryLive.empty.playlistsTitle": "No playlists yet",
+  "libraryLive.empty.ownPlaylistsTitle": "No playlists of your own yet",
   "libraryLive.empty.playlistsBody":
     "Make one for a mood, a night or a person, then add tracks from anywhere in Studio",
   "libraryLive.empty.releasesTitle": "No saved releases yet",
   "libraryLive.empty.releasesBody":
     "Save a release from its page and it waits for you here",
-  "libraryLive.empty.tracksTitle": "No saved tracks yet",
-  "libraryLive.empty.tracksBody":
-    "Save a track from its page and it waits for you here",
   "libraryLive.empty.artistsTitle": "You don't follow any artists yet",
   "libraryLive.empty.artistsBody":
     "Follow an artist from their Studio page to keep them close",
@@ -2268,7 +2279,7 @@ export const studio: Catalog = {
     "No. Studio keeps no play counts, no listening history and no recommendations built from what you play. What's playing and your queue live in this browser tab only, and they're gone when you close it.",
   "helpLive.faq.saving.q": "How do saving, playlists and following work?",
   "helpLive.faq.saving.a":
-    "Save any release or track and it waits for you in your <a>library</a>. A playlist can be Public, Connections only or Private, and you can change that any time. Follow an artist from their page to hear when they put out something new.",
+    "Save any release and it waits for you in your <a>library</a>. Tap the heart on a track and it goes into Liked songs, which only you can see. A playlist can be Public, Connections only or Private, and you can change that any time. Follow an artist from their page to hear when they put out something new.",
   "helpLive.faq.playerSettings.q": "Can I change how the player behaves?",
   "helpLive.faq.playerSettings.a":
     "Yes. In <a>Settings</a> you can turn off Autoplay next, hide tracks marked explicit and, on most browsers, set a crossfade between tracks. Your choices follow you to every device.",

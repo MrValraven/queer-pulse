@@ -166,6 +166,16 @@ describe("StudioPlayer bar (desktop)", () => {
     );
   });
 
+  it("offers the Like heart beside Add to playlist", async () => {
+    renderWithPlayer(<StudioPlayer />);
+    const bar = await screen.findByRole("region", { name: "Studio player" });
+    const heart = within(bar).getByRole("button", { name: "Like Tide" });
+    expect(heart).toHaveAttribute("aria-pressed");
+    expect(heart.nextElementSibling).toBe(
+      within(bar).getByRole("button", { name: "Add Tide to a playlist" }),
+    );
+  });
+
   it("shows a private preview as plain text with no save", async () => {
     renderWithPlayer(<StudioPlayer />, { player: previewPlayer() });
     await screen.findByRole("slider", { name: "Seek" });
@@ -175,6 +185,7 @@ describe("StudioPlayer bar (desktop)", () => {
     expect(
       screen.queryByRole("button", { name: "Add Tide to a playlist" }),
     ).toBeNull();
+    expect(screen.queryByRole("button", { name: "Like Tide" })).toBeNull();
   });
 
   it("offers Retry when a track cannot play", async () => {
@@ -446,6 +457,25 @@ describe("StudioPlayer mini player (phone)", () => {
     expect(surfaceHolder.current?.openNowPlaying).toHaveBeenCalled();
   });
 
+  it("offers the Like heart with Close player last", async () => {
+    asPhone();
+    renderWithPlayer(<StudioPlayer />);
+    const heart = await screen.findByRole("button", { name: "Like Tide" });
+    expect(heart).toHaveAttribute("aria-pressed");
+    const close = screen.getByRole("button", { name: "Close player" });
+    expect(close.parentElement?.lastElementChild).toBe(close);
+  });
+
+  it("folds the heart away for an episode", async () => {
+    asPhone();
+    const player = createStudioPlayerValue({
+      currentItem: queueItem({ isEpisode: true }),
+    });
+    renderWithPlayer(<StudioPlayer />, { player });
+    await screen.findByRole("button", { name: /Open Now playing/ });
+    expect(screen.queryByRole("button", { name: "Like Tide" })).toBeNull();
+  });
+
   it("shows a private preview as plain text with no save", async () => {
     asPhone();
     renderWithPlayer(<StudioPlayer />, { player: previewPlayer() });
@@ -455,6 +485,7 @@ describe("StudioPlayer mini player (phone)", () => {
     expect(
       screen.queryByRole("button", { name: "Add Tide to a playlist" }),
     ).toBeNull();
+    expect(screen.queryByRole("button", { name: "Like Tide" })).toBeNull();
   });
 
   it("opens Now playing on a swipe up", async () => {

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { AnimatePresence } from "motion/react";
 import { FiPlus } from "react-icons/fi";
 import {
@@ -17,8 +17,10 @@ import {
 import { useAddStudioPlaylistTracks } from "./api/useStudioPlaylistMutations";
 import { studioErrorMessageKeyOf } from "./studioErrors.data";
 import { StudioPlaylistCover } from "./StudioPlaylistCover";
+import { StudioPickerLikedRow } from "./StudioPickerLikedRow";
 import { StudioPlaylistDialog } from "./StudioPlaylistDialog";
 import { StudioLine } from "./StudioSkeletons";
+import type { StudioLikeSubject } from "./useStudioLike";
 import css from "./StudioPlaylist.module.css";
 
 interface PickTarget {
@@ -41,106 +43,122 @@ function addedToastOf(
   return { key: "studio:playlist.add.alreadyThereToast", type: "info" };
 }
 
+/** The playlists once loaded. Liked songs (when offered) leads the list
+ *  whatever the load state, since it needs no request. */
 function PickerList({
   result,
+  likedRow,
   busyPlaylistId,
   onPick,
 }: {
   result: StudioPlaylistListResult;
+  likedRow: ReactNode;
   busyPlaylistId: string | null;
   onPick: (target: PickTarget) => void;
 }) {
   const { t } = useTranslation();
-  const { loadState, playlists } = result;
-  if (loadState.isLoading)
-    return (
-      <div
-        className={css.pickerSkeleton}
-        role="status"
-        aria-label={t("studio:states.loadingLabel")}
-      >
-        <StudioLine width="70%" height={18} />
-        <StudioLine width="55%" height={18} />
-        <StudioLine width="62%" height={18} />
-      </div>
-    );
-  if (loadState.isError)
-    return (
-      <LoadErrorState
-        title={t("studio:playlist.add.loadError")}
-        onRetry={loadState.retry}
-        isRetrying={loadState.isRetrying}
-        compact
-      />
-    );
-  if (playlists.length === 0)
-    return <p className={css.pickerEmpty}>{t("studio:playlist.add.empty")}</p>;
+  const { loadState } = result;
+  const playlists =
+    loadState.isLoading || loadState.isError ? [] : result.playlists;
+  const hasRows = Boolean(likedRow) || playlists.length > 0;
   return (
     <>
       {/* An explicit list role: VoiceOver drops the semantics of a list
           styled with list-style none, and a ul with role list trips
           jsx-a11y's redundant-role rule, so this follows DraftCardRibbonFacts. */}
-      <div
-        className={css.pickerList}
-        role="list"
-        aria-label={t("studio:playlist.add.listLabel")}
-      >
-        {playlists.map((card: StudioPlaylistCardView) => (
-          <div key={card.id} role="listitem">
-            <button
-              type="button"
-              className={css.pickerRow}
-              aria-disabled={busyPlaylistId !== null || undefined}
-              aria-busy={busyPlaylistId === card.id || undefined}
-              aria-label={t("studio:playlist.add.addToAria", {
-                name: card.name,
-              })}
-              onClick={() => onPick(card)}
-            >
-              <span className={css.pickerCover}>
-                <StudioPlaylistCover
-                  coverUrls={card.coverUrls}
-                  tint={card.tint}
-                  label=""
-                  radius={6}
-                />
-              </span>
-              <span className={css.pickerName}>{card.name}</span>
-              <span className={css.pickerMeta}>
-                {t("studio:facts.trackCount", { count: card.trackCount })}
-              </span>
-            </button>
-          </div>
-        ))}
-      </div>
-      {(result.hasMore || result.isFetchNextPageError) && (
-        <LoadMoreFooter
-          className={css.pickerMore}
-          isFetchingNextPage={result.isFetchingNextPage}
-          isFetchNextPageError={result.isFetchNextPageError}
-          onLoadMore={result.fetchNextPage}
-          label={t("studio:playlist.add.showMore")}
-          loadingLabel={t("studio:playlist.add.loadingMore")}
-          errorMessage={t("studio:playlist.add.loadMoreError")}
+      {hasRows && (
+        <div
+          className={css.pickerList}
+          role="list"
+          aria-label={t("studio:playlist.add.listLabel")}
+        >
+          {likedRow && <div role="listitem">{likedRow}</div>}
+          {playlists.map((card: StudioPlaylistCardView) => (
+            <div key={card.id} role="listitem">
+              <button
+                type="button"
+                className={css.pickerRow}
+                aria-disabled={busyPlaylistId !== null || undefined}
+                aria-busy={busyPlaylistId === card.id || undefined}
+                aria-label={t("studio:playlist.add.addToAria", {
+                  name: card.name,
+                })}
+                onClick={() => onPick(card)}
+              >
+                <span className={css.pickerCover}>
+                  <StudioPlaylistCover
+                    coverUrls={card.coverUrls}
+                    tint={card.tint}
+                    label=""
+                    radius={6}
+                  />
+                </span>
+                <span className={css.pickerName}>{card.name}</span>
+                <span className={css.pickerMeta}>
+                  {t("studio:facts.trackCount", { count: card.trackCount })}
+                </span>
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+      {loadState.isLoading && (
+        <div
+          className={css.pickerSkeleton}
+          role="status"
+          aria-label={t("studio:states.loadingLabel")}
+        >
+          <StudioLine width="70%" height={18} />
+          <StudioLine width="55%" height={18} />
+          <StudioLine width="62%" height={18} />
+        </div>
+      )}
+      {loadState.isError && (
+        <LoadErrorState
+          title={t("studio:playlist.add.loadError")}
+          onRetry={loadState.retry}
+          isRetrying={loadState.isRetrying}
+          compact
         />
       )}
+      {!hasRows && !loadState.isLoading && !loadState.isError && (
+        <p className={css.pickerEmpty}>{t("studio:playlist.add.empty")}</p>
+      )}
+      {!loadState.isLoading &&
+        !loadState.isError &&
+        (result.hasMore || result.isFetchNextPageError) && (
+          <LoadMoreFooter
+            className={css.pickerMore}
+            isFetchingNextPage={result.isFetchingNextPage}
+            isFetchNextPageError={result.isFetchNextPageError}
+            onLoadMore={result.fetchNextPage}
+            label={t("studio:playlist.add.showMore")}
+            loadingLabel={t("studio:playlist.add.loadingMore")}
+            errorMessage={t("studio:playlist.add.loadMoreError")}
+          />
+        )}
     </>
   );
 }
 
 /**
- * "Add to playlist": the member's playlists with Create playlist first. A
- * pick appends the tracks (the server skips any already there) and says
- * where they went. Create playlist opens the create dialog over this one and
- * adds the tracks to the playlist it makes. Mount inside AnimatePresence.
+ * "Add to playlist": Create playlist first, then Liked songs for a single
+ * track, then the member's playlists. A pick appends the tracks (the server
+ * skips any already there) and says where they went. Create playlist opens
+ * the create dialog over this one and adds the tracks to the playlist it
+ * makes. Liked songs toggles the like and closes. Mount inside
+ * AnimatePresence.
  */
 export function StudioAddToPlaylistPicker({
   trackIds,
   subjectTitle,
+  likeSubject,
   onClose,
 }: {
   trackIds: string[];
   subjectTitle: string;
+  /** One track's like; a whole release passes none and Liked songs stays out. */
+  likeSubject?: StudioLikeSubject;
   onClose: () => void;
 }) {
   const { t } = useTranslation();
@@ -189,6 +207,15 @@ export function StudioAddToPlaylistPicker({
         </button>
         <PickerList
           result={mine}
+          likedRow={
+            likeSubject && (
+              <StudioPickerLikedRow
+                subject={likeSubject}
+                isDisabled={busyPlaylistId !== null}
+                onClose={onClose}
+              />
+            )
+          }
           busyPlaylistId={busyPlaylistId}
           onPick={(target) => void addTo(target)}
         />

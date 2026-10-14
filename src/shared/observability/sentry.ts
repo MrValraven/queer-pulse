@@ -135,7 +135,11 @@ export function setMonitoringConsent(granted: boolean): void {
  * preview and press kit reads (a radio read names the genre or mood a member listens to); the page
  * entries cover the routes a member opens to play a track, an album, a
  * playlist, a scene or a private preview, and the press kit pages (who opens
- * a preview link or a press kit is never recorded).
+ * a preview link or a press kit is never recorded). The saved entry covers
+ * a Studio like or save (`PUT`/`DELETE /me/saved/studio_track:<id>`), which
+ * names the track a member liked, and the items entry covers adding a Studio
+ * track, release or playlist to a saved list
+ * (`/me/saved/lists/<id>/items/studio_<kind>:<id>`).
  */
 const PRIVATE_BREADCRUMB_PATHS = [
   "/studio/tracks/",
@@ -156,6 +160,8 @@ const PRIVATE_BREADCRUMB_PATHS = [
   "/studio/press?id=",
   "/studio/press/print?id=",
   "/studio/press/edit",
+  "/me/saved/studio_",
+  "/items/studio_",
 ];
 
 /**

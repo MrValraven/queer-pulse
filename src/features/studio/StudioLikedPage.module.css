@@ -1,0 +1,60 @@
+/* The Private chip under Liked songs' name carries the playlist page's
+   `.chip` and this modifier. It stands alone on the line, so it starts
+   flush. The doubled class outranks `.chip` whatever order the two
+   stylesheets load in. */
+.privateChip.privateChip {
+  margin-inline-start: 0;
+}
+
+/* A row's title is an h3 under the list's h2. It keeps the look of the
+   playlist rows' h5 titles (`.setRow h5` in studio.module.css), and the
+   doubled class outranks `.setCard h3`, which the list's card would
+   otherwise give it. */
+.rowTitle.rowTitle {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: var(--text-14);
+  letter-spacing: inherit;
+  color: var(--text);
+  text-wrap: wrap;
+}
+
+/* The playing row's title, as `.setRowNow h5`. */
+.rowTitleNow.rowTitleNow {
+  color: var(--studio-accent-text);
+}
+
+/* A row hidden by "Hide explicit tracks" greys its title, as `.hidden h5`
+   in StudioHiddenTrack.module.css does for the h5 rows. */
+.rowTitleHidden.rowTitleHidden,
+.rowTitleHidden.rowTitleHidden a {
+  color: var(--studio-text-muted);
+}
+
+/* Play and Shuffle sit in a Collapse inside the hero's `.heroActions`, so
+   this inner row lays them out the way that row does. It carries the row's
+   26px top spacing, so the space folds away with the buttons. */
+.heroActionsRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  padding-block-start: 26px;
+}
+
+/* Liked songs' `.heroActions` wrapper: its spacing lives in `.heroActionsRow`.
+   The doubled class outranks `.heroActions` whatever order the two
+   stylesheets load in. */
+.heroActionsFlush.heroActionsFlush {
+  margin-top: 0;
+}
+
+/* Holds the track menu's column on an unavailable row, with `.rowAdd`'s box
+   (StudioRelease.module.css) and none of its hover or pointer. */
+.menuPlaceholder {
+  display: block;
+  flex: none;
+  inline-size: var(--tap-min);
+  block-size: var(--tap-min);
+  margin-block: -8px;
+}

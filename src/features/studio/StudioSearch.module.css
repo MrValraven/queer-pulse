@@ -8,9 +8,13 @@ li.trackRow:first-child {
   border-top: none;
 }
 
+/* Phones, as the album tracklist does: the duration and the row buttons
+   move to a second line under the title, so the title takes the full
+   column. The play button and the cover span both lines, and the buttons
+   keep their 44px targets. */
 @media (--sm) {
   li.trackRow {
-    grid-template-columns: 32px 36px minmax(0, 1fr) auto;
+    grid-template-columns: 32px 36px minmax(0, 1fr);
     gap: 8px;
   }
 
@@ -31,6 +35,26 @@ li.trackRow:first-child {
     overflow-wrap: normal;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+
+  li.trackRow > :nth-child(-n + 2) {
+    grid-row: span 2;
+  }
+
+  li.trackRow > .trackTime {
+    grid-column: 3;
+    grid-row: 2;
+    justify-content: flex-start;
+  }
+
+  /* A hidden row has no play cell: the cover alone spans both lines and the
+     second line sits under the title in column 2. */
+  li.trackRow.trackRowHidden > :nth-child(2) {
+    grid-row: auto;
+  }
+
+  li.trackRow.trackRowHidden > .trackTime {
+    grid-column: 2;
   }
 }
 

@@ -41,6 +41,18 @@ export function useStudioMediaSession(
     currentTimeRef.current = clock.currentTime;
   }, [clock.currentTime]);
 
+  // A closed player leaves no position on the lock screen either: called
+  // with no state, setPositionState clears it.
+  useEffect(() => {
+    const session = mediaSession();
+    if (item || !session?.setPositionState) return;
+    try {
+      session.setPositionState();
+    } catch {
+      // A browser that refuses the clear keeps its widget until the next track.
+    }
+  }, [item]);
+
   useEffect(() => {
     const session = mediaSession();
     if (!session || typeof MediaMetadata === "undefined") return;

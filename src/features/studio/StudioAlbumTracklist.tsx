@@ -13,6 +13,7 @@ import {
   StudioHiddenTrackNumber,
 } from "./StudioHiddenTrack";
 import hiddenCss from "./StudioHiddenTrack.module.css";
+import { StudioLikeButton } from "./StudioLikeButton";
 import { useStudioShowcase } from "./useStudioShowcase";
 import styles from "./studio.module.css";
 import kit from "./studioKit.module.css";
@@ -50,6 +51,15 @@ export function StudioAlbumTracklist({
         const isPlaying = isCurrent && player.status === "playing";
         const isPlayBlocked = !isStreamable || !track.hasAudio;
         const isHidden = hideExplicit && track.isExplicit;
+        // A heart only where the track can be played and opened: a
+        // published release read outside a preview link.
+        const isLikeable = isPublished && !release.isPreview && !isPlayBlocked;
+        const likeSubject = {
+          trackId: track.id,
+          title: track.title,
+          href: track.href,
+          artistName: release.artist.name,
+        };
         return (
           <li
             key={track.id}
@@ -129,7 +139,15 @@ export function StudioAlbumTracklist({
                 })}
             </div>
             <div className={`${styles.tm} ${releaseStyles.timeCell}`}>
-              {track.durationLabel ?? t("studio:release.processing")}
+              <span className={releaseStyles.timeLabel}>
+                {track.durationLabel ?? t("studio:release.processing")}
+              </span>
+              {isLikeable && (
+                <StudioLikeButton
+                  subject={likeSubject}
+                  className={releaseStyles.rowAdd}
+                />
+              )}
               {isPublished && (
                 <StudioAddToPlaylistButton
                   trackIds={isPlayBlocked ? [] : [track.id]}
@@ -138,6 +156,7 @@ export function StudioAlbumTracklist({
                     title: track.title,
                   })}
                   className={releaseStyles.rowAdd}
+                  likeSubject={isLikeable ? likeSubject : undefined}
                 />
               )}
               {hasTrackMenu && (

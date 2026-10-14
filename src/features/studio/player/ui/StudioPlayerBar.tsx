@@ -1,23 +1,25 @@
 import { Link } from "react-router-dom";
-import { FiList, FiRadio } from "react-icons/fi";
-import { AnimatePresence, m } from "motion/react";
-import { useMotionPrefs } from "../../../../app/providers/motionPrefs";
+import { FiList } from "react-icons/fi";
 import { Collapse, ImageSlot } from "../../../../shared/components/ui";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { StudioAddToPlaylistButton } from "../../StudioAddToPlaylistButton";
+import { StudioLikeButton } from "../../StudioLikeButton";
 import { StudioPlayerSeek } from "../../StudioPlayerSeek";
 import { StudioPlayerShowcase } from "../../StudioPlayerShowcase";
+import type { StudioLikeSubject } from "../../useStudioLike";
 import { useStudioShowcase } from "../../useStudioShowcase";
-import {
-  useStudioPlayer,
-  type StudioQueueItem,
-  type StudioRadioSession,
-} from "../studioPlayerContext";
-import { radioFilterLabelKey } from "../studioQueue";
+import { useStudioPlayer, type StudioQueueItem } from "../studioPlayerContext";
 import { useStudioPlayerSurface } from "../studioPlayerSurface";
 import { StudioCastButton } from "./StudioCastButton";
 import { StudioChapterLine } from "./StudioChapterLine";
+import { StudioPlayerCloseButton } from "./StudioPlayerCloseButton";
 import { StudioPlayerMorePanel } from "./StudioPlayerMorePanel";
+import {
+  StudioNowCoverSwap,
+  StudioNowSaveSlot,
+  StudioNowTextSwap,
+} from "./StudioPlayerNowSwap";
+import { StudioPlayerRadioLine } from "./StudioPlayerRadioLine";
 import {
   StudioRepeatButton,
   StudioShuffleButton,
@@ -28,47 +30,27 @@ import { StudioVolumeControl } from "./StudioVolumeControl";
 import { STUDIO_QUEUE_BUTTON_ID } from "./studioQueueMoves";
 import styles from "../../StudioPlayer.module.css";
 
-/** "Radio · Fado" under the title while a station plays. It fades in and
- *  out with the station. */
-function StudioPlayerRadioLine({
-  radio,
-}: {
-  radio: StudioRadioSession | null;
-}) {
-  const { t } = useTranslation();
-  const { reducedMotion } = useMotionPrefs();
-  return (
-    <AnimatePresence initial={false}>
-      {radio && (
-        <m.span
-          key="radio"
-          className={styles.radioLabel}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: reducedMotion ? 0 : 0.2 }}
-        >
-          <FiRadio aria-hidden />
-          {/* The text sits in its own span: a flex container's loose text
-              never ellipsizes. */}
-          <span className={styles.radioText}>
-            {t("studio:radio.playerLabel", {
-              name: t(radioFilterLabelKey(radio.filter)),
-            })}
-          </span>
-        </m.span>
-      )}
-    </AnimatePresence>
-  );
+/** The current track as the heart likes it. */
+function studioLikeSubjectFor(item: StudioQueueItem): StudioLikeSubject {
+  return {
+    trackId: item.trackId,
+    title: item.title,
+    href: item.trackHref,
+    artistName: item.artistName,
+  };
 }
 
-/** Cover, title, artist, chapter and radio lines, and Add to playlist. A
- *  private preview (`previewToken`) shows plain text and offers no save. */
+/** Cover, title, artist, chapter and radio lines, the Like heart and Add to
+ *  playlist. A private preview (`previewToken`) shows plain text and offers
+ *  no save or like. Cover and titles crossfade when the track changes; the
+ *  key is the track, so the same track queued twice in a row stays still. */
 function StudioPlayerNow({ item }: { item: StudioQueueItem }) {
   const { t } = useTranslation();
   const player = useStudioPlayer();
   const surface = useStudioPlayerSurface();
   const isPreview = Boolean(item.previewToken);
+  const swapKey = `${item.trackId}-${isPreview ? "preview" : "track"}`;
+  const likeSubject = studioLikeSubjectFor(item);
   return (
     <div className={styles.now}>
       <button
@@ -80,48 +62,57 @@ function StudioPlayerNow({ item }: { item: StudioQueueItem }) {
         })}
         onClick={() => surface.openNowPlaying()}
       >
-        <ImageSlot
-          src={item.coverUrl ?? undefined}
-          tint={item.tint}
-          width={48}
-          height={48}
-          radius={8}
-          placeholder=""
-        />
+        <StudioNowCoverSwap swapKey={item.trackId}>
+          <ImageSlot
+            src={item.coverUrl ?? undefined}
+            tint={item.tint}
+            width={48}
+            height={48}
+            radius={8}
+            placeholder=""
+          />
+        </StudioNowCoverSwap>
       </button>
       <span className={styles.titles}>
-        {isPreview ? (
-          <>
-            <span className={styles.title}>{item.title}</span>
-            <span className={styles.artist}>{item.artistName}</span>
-          </>
-        ) : (
-          <>
-            <Link to={item.trackHref} className={styles.title}>
-              {item.title}
-            </Link>
-            <Link to={item.artistHref} className={styles.artist}>
-              {item.artistName}
-            </Link>
-          </>
-        )}
+        <StudioNowTextSwap swapKey={swapKey}>
+          {isPreview ? (
+            <>
+              <span className={styles.title}>{item.title}</span>
+              <span className={styles.artist}>{item.artistName}</span>
+            </>
+          ) : (
+            <>
+              <Link to={item.trackHref} className={styles.title}>
+                {item.title}
+              </Link>
+              <Link to={item.artistHref} className={styles.artist}>
+                {item.artistName}
+              </Link>
+            </>
+          )}
+        </StudioNowTextSwap>
         <StudioChapterLine />
         <StudioPlayerRadioLine radio={player.radio} />
       </span>
-      {!isPreview && (
+      {/* The heart and Add to playlist share one slot, so they sit
+          together at the row's end and fade as one for a preview. */}
+      <StudioNowSaveSlot isShown={!isPreview}>
+        <StudioLikeButton subject={likeSubject} className={styles.like} />
         <StudioAddToPlaylistButton
           trackIds={[item.trackId]}
           subjectTitle={item.title}
           ariaLabel={t("studio:playlist.add.trackAria", { title: item.title })}
           className={styles.addToPlaylist}
+          likeSubject={likeSubject}
         />
-      )}
+      </StudioNowSaveSlot>
     </div>
   );
 }
 
-/** Sleep chip, Cast, the queue toggle, volume and the More panel. While Now
- *  playing is open its own chip announces, so this one stays silent. */
+/** Sleep chip, Cast, the queue toggle, volume, the More panel and Close
+ *  player. While Now playing is open its own chip announces, so this one
+ *  stays silent. */
 function StudioPlayerTools() {
   const { t } = useTranslation();
   const surface = useStudioPlayerSurface();
@@ -145,6 +136,7 @@ function StudioPlayerTools() {
       </button>
       <StudioVolumeControl />
       <StudioPlayerMorePanel placement="up" />
+      <StudioPlayerCloseButton className={styles.toolButton} />
     </div>
   );
 }

@@ -446,6 +446,7 @@ export const routes = {
   studioE: "/studio",
   studioLanding: "/studio",
   studioLibrary: "/studio/library",
+  studioLiked: "/studio/liked",
   studioLive: "/studio/live",
   studioScene: "/studio/scene",
   studioSearch: "/studio/search",

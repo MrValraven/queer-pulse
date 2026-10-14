@@ -80,3 +80,32 @@ describe("StudioTrackPage: a track on a withdrawn release", () => {
     ).toBeInTheDocument();
   });
 });
+
+describe("StudioTrackPage: the Like heart", () => {
+  it("offers Like on a track of a live release", async () => {
+    render(
+      <TestProviders initialEntries={[TRACK_URL]}>
+        <StudioTrackPage />
+      </TestProviders>,
+    );
+    expect(
+      await screen.findByRole("button", { name: "Like Carta para a santa" }),
+    ).toBeInTheDocument();
+  });
+
+  it("leaves Like off the owner's taken-down track", async () => {
+    render(
+      <TestProviders
+        initialEntries={["/studio/track?id=demo-track-taken-down-bairro-01"]}
+      >
+        <StudioTrackPage />
+      </TestProviders>,
+    );
+    expect(
+      await screen.findByRole("heading", { level: 1, name: "Bairro antigo" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: "Like Bairro antigo" }),
+    ).not.toBeInTheDocument();
+  });
+});

@@ -10,6 +10,7 @@ import { StudioNowPlayingHost } from "./player/ui/StudioNowPlaying";
 import { StudioPlayerBar } from "./player/ui/StudioPlayerBar";
 import { StudioQueuePanelHost } from "./player/ui/StudioQueuePanel";
 import { StudioShortcutsSheetHost } from "./player/ui/StudioShortcutsSheet";
+import { useStudioBarExit } from "./useStudioBarExit";
 import styles from "./StudioPlayer.module.css";
 
 /** The history-state key that stamps the shortcuts sheet's own entry. */
@@ -132,8 +133,9 @@ function useShortcutsBackDismiss(isOpen: boolean, onBack: () => void) {
 }
 
 /**
- * The app-wide player. Mounted by StudioPlayerMount only while something is
- * queued and the member has Studio access. Desktop gets the full bar; at
+ * The app-wide player. Mounted by StudioPlayerMount while something is
+ * queued and the member has Studio access, and held through its exit when
+ * the member closes it (useStudioBarExit). Desktop gets the full bar; at
  * the Studio tab-bar width (880px) a minimal card opens Now playing. The
  * three overlays it hosts portal to <body>.
  */
@@ -147,15 +149,20 @@ export function StudioPlayer({
   const surface = useStudioPlayerSurface();
   const isPhone = useMediaQuery(mediaMax(880));
   useShortcutsBackDismiss(surface.isShortcutsOpen, surface.closeShortcuts);
-  const item = player.currentItem;
+  const { item, isClosing, attachBar } = useStudioBarExit(
+    player.currentItem,
+    barRef,
+  );
   if (!item) return null;
   return (
     <>
       <div className={styles.spacer} aria-hidden />
       <section
-        ref={barRef}
+        ref={attachBar}
         className={styles.bar}
         aria-label={t("studio:playerBar.regionLabel")}
+        data-closing={isClosing || undefined}
+        inert={isClosing || undefined}
       >
         {isPhone ? (
           <StudioMiniPlayer item={item} />

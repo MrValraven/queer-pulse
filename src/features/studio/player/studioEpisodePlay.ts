@@ -30,6 +30,26 @@ export function hasExplicitStart(queueEntryId: string | null): boolean {
   return queueEntryId !== null && explicitStartEntryId === queueEntryId;
 }
 
+/** The episode tracker's "save the place now", while it is mounted. Closing
+ *  the player calls it before the reset clears the item, so the place is
+ *  kept up to the second. Held in this tab's memory only. */
+let episodePlaceSaver: (() => void) | null = null;
+
+/** The tracker hands in its save; the returned function takes it back,
+ *  only while it is still the current one. */
+export function registerEpisodePlaceSaver(saver: () => void): () => void {
+  episodePlaceSaver = saver;
+  return () => {
+    if (episodePlaceSaver === saver) episodePlaceSaver = null;
+  };
+}
+
+/** Saves the current episode's place now, when the tracker would on a pause.
+ *  Does nothing for music or with no tracker mounted. */
+export function saveCurrentEpisodePlace(): void {
+  episodePlaceSaver?.();
+}
+
 /** Plays one episode as a queue of its own, with its show as the source
  *  (spec 5.6). On the episode already loaded it seeks to `startAtSeconds`
  *  (a timestamp in the notes, a `&t=` link) and makes sure it plays; that

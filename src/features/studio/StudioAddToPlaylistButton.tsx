@@ -2,6 +2,7 @@ import { useState } from "react";
 import { AnimatePresence } from "motion/react";
 import { FiPlusCircle } from "react-icons/fi";
 import { StudioAddToPlaylistPicker } from "./StudioAddToPlaylistPicker";
+import type { StudioLikeSubject } from "./useStudioLike";
 
 /** The trigger every "Add to playlist" surface uses (release hero, track
  *  hero, player bar). With no track to add it stays focusable and says so
@@ -12,6 +13,7 @@ export function StudioAddToPlaylistButton({
   label,
   ariaLabel,
   className,
+  likeSubject,
 }: {
   trackIds: string[];
   subjectTitle: string;
@@ -19,6 +21,8 @@ export function StudioAddToPlaylistButton({
   label?: string;
   ariaLabel?: string;
   className?: string;
+  /** A single track's like: the picker then offers Liked songs first. */
+  likeSubject?: StudioLikeSubject;
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const isBlocked = trackIds.length === 0;
@@ -46,6 +50,7 @@ export function StudioAddToPlaylistButton({
             key="picker"
             trackIds={trackIds}
             subjectTitle={subjectTitle}
+            likeSubject={likeSubject}
             onClose={() => setIsOpen(false)}
           />
         )}

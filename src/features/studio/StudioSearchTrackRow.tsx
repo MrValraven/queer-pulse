@@ -9,6 +9,7 @@ import { StudioTrackMenu } from "./player/ui/StudioTrackMenu";
 import { StudioAddToPlaylistButton } from "./StudioAddToPlaylistButton";
 import { StudioHiddenTrackNote } from "./StudioHiddenTrack";
 import hiddenCss from "./StudioHiddenTrack.module.css";
+import { StudioLikeButton } from "./StudioLikeButton";
 import styles from "./studio.module.css";
 import kit from "./studioKit.module.css";
 import releaseStyles from "./StudioRelease.module.css";
@@ -26,6 +27,12 @@ export function StudioSearchTrackRow({
   const isHidden = useStudioHideExplicit() && track.isExplicit;
   const isCurrent = player.isCurrentTrack(track.id);
   const isPlaying = isCurrent && player.status === "playing";
+  const likeSubject = {
+    trackId: track.id,
+    title: track.title,
+    href: track.href,
+    artistName: track.release.artist.name,
+  };
   return (
     <li
       className={[
@@ -34,6 +41,7 @@ export function StudioSearchTrackRow({
         isCurrent && styles.setRowNow,
         isHidden && hiddenCss.hidden,
         isHidden && hiddenCss.hiddenSearchRow,
+        isHidden && searchStyles.trackRowHidden,
       ]
         .filter(Boolean)
         .join(" ")}
@@ -82,13 +90,24 @@ export function StudioSearchTrackRow({
         {isHidden && <StudioHiddenTrackNote />}
       </div>
       <div className={styles.pay} />
-      <div className={`${styles.tm} ${releaseStyles.timeCell}`}>
-        {track.durationLabel ?? ""}
+      <div
+        className={`${styles.tm} ${releaseStyles.timeCell} ${searchStyles.trackTime}`}
+      >
+        <span className={releaseStyles.timeLabel}>
+          {track.durationLabel ?? ""}
+        </span>
+        {track.hasAudio && (
+          <StudioLikeButton
+            subject={likeSubject}
+            className={releaseStyles.rowAdd}
+          />
+        )}
         <StudioAddToPlaylistButton
           trackIds={track.hasAudio ? [track.id] : []}
           subjectTitle={track.title}
           ariaLabel={t("studio:playlist.add.trackAria", { title: track.title })}
           className={releaseStyles.rowAdd}
+          likeSubject={track.hasAudio ? likeSubject : undefined}
         />
         <StudioTrackMenu
           track={{

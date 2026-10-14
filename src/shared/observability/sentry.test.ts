@@ -191,6 +191,57 @@ describe("dropPrivateRequestUrl", () => {
   });
 });
 
+describe("Studio saves and likes", () => {
+  it("drops a breadcrumb for liking or saving a Studio track, release or playlist", () => {
+    for (const url of [
+      "/v1/me/saved/studio_track%3A3f2a9c1e-0b7d-4c55-9e1a-2d4f6b8c0e11",
+      "/v1/me/saved/studio_track:3f2a9c1e-0b7d-4c55-9e1a-2d4f6b8c0e11",
+      "/v1/me/saved/studio_release%3Ar1",
+      "/v1/me/saved/studio_playlist%3Ap1",
+    ])
+      expect(
+        dropStudioPlayBreadcrumb({
+          category: "fetch",
+          data: { url, method: "PUT" },
+        }),
+      ).toBeNull();
+  });
+
+  it("keeps a breadcrumb for the saved list and for other saved kinds", () => {
+    for (const url of [
+      "/v1/me/saved",
+      "/v1/me/saved?kind=studio_track",
+      "/v1/me/saved/event%3Ae1",
+    ]) {
+      const crumb = { category: "fetch", data: { url, method: "GET" } };
+      expect(dropStudioPlayBreadcrumb(crumb)).toBe(crumb);
+    }
+  });
+
+  it("drops a breadcrumb for a Studio item in a saved list", () => {
+    for (const url of [
+      "/v1/me/saved/lists/l1/items/studio_track%3A3f2a9c1e",
+      "/v1/me/saved/lists/l1/items/studio_track:3f2a9c1e",
+      "/v1/me/saved/lists/l1/items/studio_release%3Ar1",
+      "/v1/me/saved/lists/l1/items/studio_playlist%3Ap1",
+    ])
+      expect(
+        dropStudioPlayBreadcrumb({
+          category: "fetch",
+          data: { url, method: "PUT" },
+        }),
+      ).toBeNull();
+  });
+
+  it("keeps a breadcrumb for an event item in a saved list", () => {
+    const crumb = {
+      category: "fetch",
+      data: { url: "/v1/me/saved/lists/l1/items/event%3Ae1", method: "PUT" },
+    };
+    expect(dropStudioPlayBreadcrumb(crumb)).toBe(crumb);
+  });
+});
+
 describe("Studio v3 private paths", () => {
   it("drops breadcrumbs that name a preview link or a press kit", () => {
     const token = "a".repeat(64);

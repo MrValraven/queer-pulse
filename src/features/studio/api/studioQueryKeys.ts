@@ -70,6 +70,10 @@ export const studioKeys = {
     ["studio", "memberPlaylists", demoMode, memberSlug] as const,
   trackPlaylists: (demoMode: boolean, trackId: string) =>
     ["studio", "trackPlaylists", demoMode, trackId] as const,
+  /** Liked songs, the member's `studio_track` saves. The demo appends the
+   *  saved ids, so a like or an unlike reads the list again. */
+  likedTracks: (demoMode: boolean) =>
+    ["studio", "likedTracks", demoMode] as const,
   stats: (demoMode: boolean, subprofileId: string) =>
     ["studio", "stats", demoMode, subprofileId] as const,
   followedArtists: (demoMode: boolean) =>

@@ -20,6 +20,7 @@ import {
   StudioHiddenTrackNumber,
 } from "./StudioHiddenTrack";
 import hiddenCss from "./StudioHiddenTrack.module.css";
+import { StudioLikeButton } from "./StudioLikeButton";
 import styles from "./studio.module.css";
 import kit from "./studioKit.module.css";
 import releaseStyles from "./StudioRelease.module.css";
@@ -141,7 +142,8 @@ function EntryControls({
  *  entry (owner only) reads Withdrawn when our team took its release down,
  *  else No longer available, and offers Remove only. An explicit track
  *  hidden by the member's settings shows its number in place of the play
- *  button. Rows glide to a new place and fade out on removal. */
+ *  button. Every row with playable audio carries the Like heart. Rows
+ *  glide to a new place and fade out on removal. */
 export function StudioPlaylistEntryRow(props: StudioPlaylistEntryRowProps) {
   const { t } = useTranslation();
   const { reducedMotion } = useMotionPrefs();
@@ -223,7 +225,7 @@ export function StudioPlaylistEntryRow(props: StudioPlaylistEntryRowProps) {
           {entry.position}
         </span>
       )}
-      <div className={styles.srCov}>
+      <div className={`${styles.srCov} ${css.cover}`}>
         <ImageSlot
           src={track?.release.coverUrl ?? undefined}
           tint={track?.release.tint ?? "plum"}
@@ -251,7 +253,20 @@ export function StudioPlaylistEntryRow(props: StudioPlaylistEntryRowProps) {
         {isHidden && <StudioHiddenTrackNote />}
       </div>
       <div className={`${styles.tm} ${css.duration} ${releaseStyles.timeCell}`}>
-        {track?.durationLabel ?? ""}
+        <span className={releaseStyles.timeLabel}>
+          {track?.durationLabel ?? ""}
+        </span>
+        {track?.hasAudio && (
+          <StudioLikeButton
+            subject={{
+              trackId: track.id,
+              title: track.title,
+              href: track.href,
+              artistName: track.release.artist.name,
+            }}
+            className={releaseStyles.rowAdd}
+          />
+        )}
         {track && (
           <StudioTrackMenu
             track={{

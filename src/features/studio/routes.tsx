@@ -62,6 +62,10 @@ const StudioLibraryPage = lazyNamed(
   () => import("./StudioLibraryPage"),
   "StudioLibraryPage",
 );
+const StudioLikedPage = lazyNamed(
+  () => import("./StudioLikedPage"),
+  "StudioLikedPage",
+);
 const StudioCheckoutPage = lazyNamed(
   () => import("./StudioCheckoutPage"),
   "StudioCheckoutPage",
@@ -211,6 +215,7 @@ function demoStudioRoutes() {
       <Route path={routes.studioScene} element={<StudioScenePage />} />
       <Route path={routes.studioCredits} element={<StudioCreditsPage />} />
       <Route path={routes.studioLibrary} element={<StudioLibraryPage />} />
+      <Route path={routes.studioLiked} element={<StudioLikedPage />} />
       <Route path={routes.studioCheckout} element={<StudioCheckoutPage />} />
       <Route path="/studio/sheet-store" element={<StudioSheetStorePage />} />
       <Route
@@ -283,6 +288,7 @@ function grantedStudioRoutes() {
         element={<StudioCollectionPage />}
       />
       <Route path={routes.studioLibrary} element={<StudioLibraryPage />} />
+      <Route path={routes.studioLiked} element={<StudioLikedPage />} />
       <Route path={routes.studioDashboard} element={<StudioDashboardPage />} />
       <Route path={routes.studioCalls} element={<StudioOpenCallsPage />} />
       <Route

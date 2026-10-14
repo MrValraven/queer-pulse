@@ -10,6 +10,7 @@ import {
 import { formatTrackTime } from "../../api/studio.adapters";
 import { barsForWidth, chapterTickPositions } from "./studioWaveformBars";
 import styles from "./StudioWaveformScrubber.module.css";
+import { useStudioSmoothProgress } from "./useStudioSmoothProgress";
 
 /** The class the range input takes when it lies over the bars. */
 export const WAVEFORM_OVERLAY_CLASS = styles.overlay;
@@ -33,12 +34,15 @@ function useElementWidth() {
 }
 
 /** Bars from the upload-time peaks behind the seek slider (spec 7.7). The
- *  slider passed as `children` stays the only control. */
+ *  slider passed as `children` stays the only control. While playing, the
+ *  played clip glides between clock ticks at `playbackRate`. */
 export function StudioWaveformScrubber({
   peaks,
   chapterStarts,
   currentTime,
   duration,
+  isPlaying,
+  playbackRate,
   size,
   children,
 }: {
@@ -46,6 +50,8 @@ export function StudioWaveformScrubber({
   chapterStarts: readonly number[];
   currentTime: number;
   duration: number;
+  isPlaying: boolean;
+  playbackRate: number;
   size: "bar" | "large";
   children: ReactNode;
 }) {
@@ -62,6 +68,19 @@ export function StudioWaveformScrubber({
   );
   const progress =
     duration > 0 ? Math.min(1, Math.max(0, currentTime / duration)) : 0;
+  const paintPlayedClip = useCallback(
+    (rect: SVGRectElement, fraction: number) => {
+      rect.setAttribute("width", String(fraction * width));
+    },
+    [width],
+  );
+  const playedClipRef = useStudioSmoothProgress({
+    currentTime,
+    duration,
+    isPlaying,
+    playbackRate,
+    paint: paintPlayedClip,
+  });
   const barShapes = useMemo(() => {
     const slot = bars.length > 0 ? width / bars.length : 0;
     return bars.map((value, index) => {
@@ -103,7 +122,13 @@ export function StudioWaveformScrubber({
       >
         <defs>
           <clipPath id={clipId}>
-            <rect x={0} y={0} width={progress * width} height={height} />
+            <rect
+              ref={playedClipRef}
+              x={0}
+              y={0}
+              width={progress * width}
+              height={height}
+            />
           </clipPath>
         </defs>
         <g className={styles.unplayed}>{barShapes}</g>

@@ -5,6 +5,8 @@ import {
   useStudioPlayer,
   useStudioPlayerClock,
 } from "./player/studioPlayerContext";
+import { useStudioEpisodeSpeed } from "./player/useStudioEpisodeMemory";
+import { playbackRateFor } from "./player/useStudioEpisodeRate";
 import {
   StudioWaveformScrubber,
   WAVEFORM_OVERLAY_CLASS,
@@ -34,7 +36,11 @@ export function StudioPlayerSeek({
 }) {
   const { t } = useTranslation();
   const { currentTime, duration } = useStudioPlayerClock();
-  const { currentWaveform, currentChapters } = useStudioPlayer();
+  const { currentWaveform, currentChapters, currentItem, status } =
+    useStudioPlayer();
+  // Same rule as the engine: music at 1x, an episode at the member's speed.
+  const { speed } = useStudioEpisodeSpeed();
+  const playbackRate = playbackRateFor(currentItem?.isEpisode === true, speed);
   const chapterStarts = useMemo(
     () => currentChapters?.map((chapter) => chapter.startSeconds) ?? [],
     [currentChapters],
@@ -81,7 +87,7 @@ export function StudioPlayerSeek({
   );
 
   return (
-    <div className={styles.seekRow}>
+    <div className={styles.seekRow} data-size={size}>
       <span className={styles.time} aria-hidden>
         {elapsedLabel}
       </span>
@@ -91,6 +97,8 @@ export function StudioPlayerSeek({
           chapterStarts={chapterStarts}
           currentTime={currentTime}
           duration={total}
+          isPlaying={status === "playing"}
+          playbackRate={playbackRate}
           size={size}
         >
           {slider}

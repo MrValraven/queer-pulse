@@ -10,12 +10,23 @@
   height: 48px;
 }
 
+/* The bars fade in when the scrubber mounts, in place of the plain range
+   input that stood in while the waveform loaded. */
 .bars {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   pointer-events: none;
+  transition-property: opacity;
+  transition-duration: var(--dur-base);
+  transition-timing-function: var(--ease-out);
+}
+
+@starting-style {
+  .bars {
+    opacity: 0;
+  }
 }
 
 .unplayed {

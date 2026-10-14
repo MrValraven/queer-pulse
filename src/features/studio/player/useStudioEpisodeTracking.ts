@@ -1,6 +1,10 @@
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { markEpisodePlayed, saveEpisodePosition } from "./studioEpisodeMemory";
-import { hasExplicitStart, markExplicitStart } from "./studioEpisodePlay";
+import {
+  hasExplicitStart,
+  markExplicitStart,
+  registerEpisodePlaceSaver,
+} from "./studioEpisodePlay";
 import {
   EPISODE_SAVE_INTERVAL_SECONDS,
   hasReachedPlayed,
@@ -151,19 +155,24 @@ export function useStudioEpisodeTracking(): void {
     isPlayedNow,
   ]);
 
+  // Reads refs only, so it stays the same function for the hook's life.
+  const saveNow = useCallback(() => {
+    const latest = latestRef.current;
+    if (!latest.episodeKey || !latest.trackId || !latest.memberId) return;
+    if (latest.isPlayedNow || playedKeyRef.current === latest.episodeKey)
+      return;
+    if (awaitedSeekRef.current !== null) return;
+    if (hasPlayedKeyRef.current !== latest.episodeKey) return;
+    saveEpisodePosition(latest.memberId, latest.trackId, latest.currentTime);
+  }, []);
+
+  // Closing the player saves the place through this, before the reset.
+  useEffect(() => registerEpisodePlaceSaver(saveNow), [saveNow]);
+
   // On pause, and when the page goes away, the place is saved as it is.
   useEffect(() => {
-    function saveNow() {
-      const latest = latestRef.current;
-      if (!latest.episodeKey || !latest.trackId || !latest.memberId) return;
-      if (latest.isPlayedNow || playedKeyRef.current === latest.episodeKey)
-        return;
-      if (awaitedSeekRef.current !== null) return;
-      if (hasPlayedKeyRef.current !== latest.episodeKey) return;
-      saveEpisodePosition(latest.memberId, latest.trackId, latest.currentTime);
-    }
     if (player.status === "paused") saveNow();
     window.addEventListener("pagehide", saveNow);
     return () => window.removeEventListener("pagehide", saveNow);
-  }, [player.status]);
+  }, [player.status, saveNow]);
 }

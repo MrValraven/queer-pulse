@@ -7,6 +7,7 @@ import {
   socialPlatform,
 } from "../../../shared/social/socialPlatforms";
 import type { FollowedPersonaDTO } from "../../subprofiles/api/subprofiles.api";
+import { personaNameBesideCraft } from "../../subprofiles/personaTitleName";
 import {
   studioArtistPath,
   studioPlaylistPath,
@@ -1220,7 +1221,13 @@ export function toFollowedArtistView(
   return toArtistRefView({
     id: dto.id,
     handle: dto.handle ?? "",
-    name: dto.displayName,
+    // A persona still named after its profession reads as its linked owner's
+    // name here, since the card already shows the kind on the line below.
+    name: personaNameBesideCraft({
+      displayName: dto.displayName,
+      kind: dto.kind,
+      ownerName: dto.ownerName,
+    }),
     kind: dto.kind as StudioArtistPersonaKind,
     avatarUrl: dto.avatarUrl,
   });

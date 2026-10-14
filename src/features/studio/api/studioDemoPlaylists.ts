@@ -92,8 +92,9 @@ export function resetDemoPlaylists(): void {
 resetDemoPlaylists();
 
 /** Every published demo track with its release card: what a viewer can open.
- *  Read per call so a fixture edit shows up. */
-const publishedTracks = () =>
+ *  Read per call so a fixture edit shows up. Liked songs reads it too
+ *  (`studioDemoLiked`), also only through a dynamic import. */
+export const demoPublishedTracks = () =>
   new Map<string, StudioPlaylistTrackDTO>([
     ...DEMO_RELEASES.flatMap((release) =>
       release.tracks.map(
@@ -148,7 +149,7 @@ function creditOf(playlist: DemoPlaylist): StudioPlaylistCreditDTO {
 
 function toDto(playlist: DemoPlaylist): StudioPlaylistDTO {
   const isOwner = playlist.isViewerOwner;
-  const tracksById = publishedTracks();
+  const tracksById = demoPublishedTracks();
   const resolved = playlist.entries.map((entry) => ({
     entry,
     track: tracksById.get(entry.trackId) ?? null,
@@ -391,7 +392,7 @@ export function demoAddPlaylistTracks(
   const fresh = [...new Set(trackIds)].filter(
     (trackId) => !present.has(trackId),
   );
-  const tracksById = publishedTracks();
+  const tracksById = demoPublishedTracks();
   if (fresh.some((trackId) => !tracksById.get(trackId)?.hasAudio))
     throw refused(422, "studio_playlist_track_unavailable");
   if (

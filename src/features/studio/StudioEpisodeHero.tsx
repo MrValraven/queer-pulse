@@ -1,5 +1,5 @@
 import { Link, useSearchParams } from "react-router-dom";
-import { FiCheck, FiPause, FiPlay, FiPlus } from "react-icons/fi";
+import { FiPause, FiPlay } from "react-icons/fi";
 import { ImageSlot } from "../../shared/components/ui";
 import { useShareLink } from "../../shared/hooks";
 import { useFormat } from "../../shared/i18n/format";
@@ -16,9 +16,9 @@ import { StudioDetailHero } from "./StudioDetailHero";
 import css from "./StudioEpisode.module.css";
 import { StudioHiddenTrackNote } from "./StudioHiddenTrack";
 import hiddenCss from "./StudioHiddenTrack.module.css";
+import { StudioLikeButton } from "./StudioLikeButton";
 import { StudioMarkPlayedButton } from "./StudioMarkPlayedButton";
 import heroStyles from "./StudioTrackHero.module.css";
-import { useStudioSaveToggle } from "./useStudioSaveToggle";
 import styles from "./studio.module.css";
 import releaseStyles from "./StudioRelease.module.css";
 
@@ -30,7 +30,7 @@ const DATE_FORMAT: Intl.DateTimeFormatOptions = {
 
 /** An episode's hero (spec 5.3): its show, its date, Play (the episode
  *  alone; a `&t=` link starts there and wins over a saved place), Mark as
- *  played, Save, Add to playlist, the track menu and Share. Nothing
+ *  played, Like, Add to playlist, the track menu and Share. Nothing
  *  autoplays. "Hide explicit tracks" hides Play as on the track hero. */
 export function StudioEpisodeHero({ track }: { track: StudioTrackView }) {
   const { t } = useTranslation();
@@ -97,7 +97,7 @@ export function StudioEpisodeHero({ track }: { track: StudioTrackView }) {
 }
 
 /** The hero's action row in two groups that wrap whole: Play with its start
- *  time and Mark as played, then Save, Add to playlist, the menu and Share
+ *  time and Mark as played, then Like, Add to playlist, the menu and Share
  *  (the menu and Share keep one line). A published episode without audio
  *  offers Share beside an inert Play; a draft shows the inert Play alone. */
 function EpisodeHeroActions({
@@ -114,13 +114,12 @@ function EpisodeHeroActions({
     copied: t("studio:detail.linkCopiedToast"),
     failed: t("studio:detail.copyFailedToast"),
   });
-  const save = useStudioSaveToggle({
-    savedId: track.savedId,
-    kind: "studio_track",
+  const likeSubject = {
+    trackId: track.id,
     title: track.title,
     href: track.href,
-    meta: track.release.artist.name,
-  });
+    artistName: track.release.artist.name,
+  };
   const isCurrent = player.isCurrentTrack(track.id);
   const isPlaying = isCurrent && player.status === "playing";
   const isPlayable = track.hasAudio && track.isDraft !== true;
@@ -181,30 +180,12 @@ function EpisodeHeroActions({
         <div className={css.actionGroup}>
           {isPlayable && (
             <>
-              <button
-                type="button"
-                aria-pressed={save.isSaved}
-                aria-label={t(
-                  save.isSaved
-                    ? "studio:save.removeSavedCta"
-                    : "studio:save.saveReleaseCta",
-                  { title: track.title },
-                )}
-                onClick={save.toggle}
-              >
-                {save.isSaved ? (
-                  <FiCheck aria-hidden />
-                ) : (
-                  <FiPlus aria-hidden />
-                )}{" "}
-                {save.isSaved
-                  ? t("studio:save.savedLabel")
-                  : t("studio:save.saveCta")}
-              </button>
+              <StudioLikeButton subject={likeSubject} variant="labelled" />
               <StudioAddToPlaylistButton
                 trackIds={[track.id]}
                 subjectTitle={track.title}
                 label={t("studio:playlist.add.trackCta")}
+                likeSubject={likeSubject}
               />
             </>
           )}

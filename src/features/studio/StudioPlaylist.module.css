@@ -277,6 +277,25 @@
   font-size: var(--text-13);
 }
 
+/* The Liked songs tick: always mounted, so it fades with the pressed state. */
+.pickerTick {
+  flex: none;
+  inline-size: 1em;
+  color: var(--accent-text);
+  opacity: 0;
+  transition: opacity var(--dur-base) var(--ease);
+}
+
+.pickerRow[aria-pressed="true"] .pickerTick {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pickerTick {
+    transition: none;
+  }
+}
+
 .pickerEmpty {
   margin: 12px 0 0;
   color: var(--ink-60);

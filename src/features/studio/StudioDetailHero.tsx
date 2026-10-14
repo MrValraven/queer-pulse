@@ -2,7 +2,7 @@ import type { CSSProperties, ReactNode } from "react";
 import styles from "./studio.module.css";
 
 interface StudioDetailHeroProps {
-  /** The cover/portrait art node — typically an `ImageSlot`. */
+  /** The cover/portrait art node, typically an `ImageSlot`. */
   art: ReactNode;
   /** Optional extra style on the art frame, e.g. a circular crop for artists. */
   artStyle?: CSSProperties;
@@ -14,6 +14,9 @@ interface StudioDetailHeroProps {
   by: ReactNode;
   /** Row of hero action controls (play / save / tip / share). */
   actions: ReactNode;
+  /** Optional extra class on the action row, e.g. to move its spacing into
+   *  content that folds away. */
+  actionsClassName?: string;
   /** Optional block rendered below the actions, e.g. a pay pill. */
   children?: ReactNode;
 }
@@ -31,6 +34,7 @@ export function StudioDetailHero({
   title,
   by,
   actions,
+  actionsClassName,
   children,
 }: StudioDetailHeroProps) {
   return (
@@ -42,7 +46,15 @@ export function StudioDetailHero({
         <div className={styles.kind}>{kind}</div>
         <h1>{title}</h1>
         <div className={styles.by}>{by}</div>
-        <div className={styles.heroActions}>{actions}</div>
+        <div
+          className={
+            actionsClassName
+              ? `${styles.heroActions} ${actionsClassName}`
+              : styles.heroActions
+          }
+        >
+          {actions}
+        </div>
         {children}
       </div>
     </section>

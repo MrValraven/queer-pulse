@@ -1,4 +1,5 @@
 import { fireEvent, render, screen, within } from "@testing-library/react";
+import { Route, Routes } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
 import { resetDemoPlaylists } from "./api/studioDemoPlaylists";
@@ -31,7 +32,13 @@ beforeEach(() => {
 function renderAt(path: string) {
   render(
     <TestProviders initialEntries={[path]}>
-      <StudioLibraryPage />
+      <Routes>
+        <Route path="/studio/library" element={<StudioLibraryPage />} />
+        <Route
+          path="/studio/liked"
+          element={<div data-testid="liked-page" />}
+        />
+      </Routes>
     </TestProviders>,
   );
 }
@@ -52,6 +59,47 @@ describe("library (demo)", () => {
     expect(
       screen.getByRole("button", { name: /create playlist/i }),
     ).toBeInTheDocument();
+  });
+
+  it("starts the Playlists grid with Liked songs, marked Private", async () => {
+    renderAt("/studio/library");
+    const panel = screen.getByRole("tabpanel");
+    const liked = within(panel).getByRole("link", { name: "Liked songs" });
+    expect(liked).toHaveAttribute("href", "/studio/liked");
+    const kitchen = await within(panel).findByRole("link", {
+      name: "Kitchen tapes",
+    });
+    expect(
+      liked.compareDocumentPosition(kitchen) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+    expect(
+      within(liked.closest("article")!).getByText("Private"),
+    ).toBeInTheDocument();
+  });
+
+  it("keeps Liked songs above the empty Playlists state", async () => {
+    showcase.hasNoPlaylists = true;
+    renderAt("/studio/library");
+    const panel = screen.getByRole("tabpanel");
+    await within(panel).findByRole("link", { name: "Browse the studio" });
+    expect(
+      within(panel).getByRole("link", { name: "Liked songs" }),
+    ).toHaveAttribute("href", "/studio/liked");
+  });
+
+  it("offers Playlists, Releases and Artists as the library tabs", () => {
+    renderAt("/studio/library");
+    expect(screen.queryByRole("tab", { name: "Tracks" })).toBeNull();
+    expect(screen.getAllByRole("tab").map((tab) => tab.textContent)).toEqual([
+      "Playlists",
+      "Releases",
+      "Artists",
+    ]);
+  });
+
+  it("opens Liked songs from the old Tracks tab link", () => {
+    renderAt("/studio/library?tab=tracks");
+    expect(screen.getByTestId("liked-page")).toBeInTheDocument();
   });
 
   it("links a withdrawn save to its release and leaves another lost save unlinked", async () => {
@@ -84,7 +132,7 @@ describe("library (demo)", () => {
     renderAt("/studio/library");
     expect(
       screen.getByText(
-        "Your playlists, plus the releases, tracks and artists you keep close",
+        "Your playlists, Liked songs, saved releases and the artists you follow",
       ),
     ).toBeInTheDocument();
     expect(screen.queryByText(/paid/)).not.toBeInTheDocument();

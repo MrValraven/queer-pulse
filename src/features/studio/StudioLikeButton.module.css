@@ -1,0 +1,46 @@
+/* The heart that likes a track (Liked songs). The icon variant sits in a
+   track row beside Add to playlist and matches its 44px round target; the
+   labelled variant takes the hero's button look from `.heroActions button`. */
+
+.button svg {
+  transition-property: color, fill;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+/* Liked: the heart fills in the accent text colour, which holds 3:1 against
+   the cream page in light theme. The attribute selector (0,2,0) beats
+   `.heroActions button` and `.rowAdd`, so the colour holds in every slot. */
+.button[aria-pressed="true"] svg {
+  color: var(--studio-accent-text);
+}
+
+.button:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.icon {
+  display: grid;
+  place-items: center;
+  width: var(--tap-min);
+  height: var(--tap-min);
+  margin-block: -8px;
+  padding: 0;
+  font-size: var(--text-18);
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  transition-property: background-color;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+@media (hover: hover) {
+  .icon:hover {
+    background: rgba(var(--studio-ink-rgb), 0.08);
+  }
+}

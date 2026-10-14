@@ -67,10 +67,10 @@ export const studioPressPrintPath = (
 ) =>
   `${routes.studioPressPrint}?id=${encodeURIComponent(subprofileId)}${shouldPrint ? "&print=1" : ""}`;
 
+/** Liked tracks live on their own page (routes.studioLiked). */
 export const STUDIO_LIBRARY_TABS = [
   "playlists",
   "releases",
-  "tracks",
   "artists",
 ] as const;
 export type StudioLibraryTab = (typeof STUDIO_LIBRARY_TABS)[number];

@@ -71,7 +71,10 @@ const release = toReleaseView({
   personaCredits: [],
 });
 
-function renderTracklist(overrides: Partial<StudioPlayerValue> = {}) {
+function renderTracklist(
+  overrides: Partial<StudioPlayerValue> = {},
+  tracklistRelease = release,
+) {
   const value: StudioPlayerValue = {
     ...createStudioPlayerTestValue(),
     status: "idle",
@@ -95,7 +98,7 @@ function renderTracklist(overrides: Partial<StudioPlayerValue> = {}) {
   render(
     <TestProviders>
       <StudioPlayerContext.Provider value={value}>
-        <StudioAlbumTracklist release={release} />
+        <StudioAlbumTracklist release={tracklistRelease} />
       </StudioPlayerContext.Provider>
     </TestProviders>,
   );
@@ -146,6 +149,23 @@ describe("StudioAlbumTracklist: add to playlist", () => {
     expect(
       screen.getByRole("button", { name: "Add Pending to a playlist" }),
     ).toHaveAttribute("aria-disabled", "true");
+  });
+});
+
+describe("StudioAlbumTracklist: like", () => {
+  it("offers a heart on each playable row of a published release", () => {
+    renderTracklist();
+    const heart = screen.getByRole("button", { name: "Like Tide" });
+    expect(heart).toHaveAttribute("aria-pressed", "false");
+    expect(
+      screen.getByRole("button", { name: "Like Pier" }),
+    ).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Like Pending" })).toBeNull();
+  });
+
+  it("leaves the heart off a preview read through its private link", () => {
+    renderTracklist({}, { ...release, isPreview: true });
+    expect(screen.queryByRole("button", { name: /^like /i })).toBeNull();
   });
 });
 

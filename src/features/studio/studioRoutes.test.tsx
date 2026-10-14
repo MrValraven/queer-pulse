@@ -135,6 +135,25 @@ describe("studioRoutes", () => {
     expect(screen.getByText("StudioPage")).toBeInTheDocument();
   });
 
+  it("opens Liked songs for a granted member", () => {
+    renderAt("/studio/liked", { ...live, hasStudioAccess: true });
+    expect(screen.getByText("StudioLikedPage")).toBeInTheDocument();
+  });
+
+  it("opens Liked songs in the demo too", () => {
+    renderAt("/studio/liked", {
+      demoMode: true,
+      hasStudioAccess: true,
+      isStudioAccessPending: false,
+    });
+    expect(screen.getByText("StudioLikedPage")).toBeInTheDocument();
+  });
+
+  it("keeps Liked songs behind the grant", () => {
+    renderAt("/studio/liked", { ...live, hasStudioAccess: false });
+    expect(screen.getByText("StudioComingSoonPage")).toBeInTheDocument();
+  });
+
   it("opens browse in the demo too", () => {
     renderAt("/studio/browse", {
       demoMode: true,

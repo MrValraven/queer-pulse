@@ -1,5 +1,5 @@
 import { useSearchParams } from "react-router-dom";
-import { FiCheck, FiHeart, FiPause, FiPlay, FiPlus } from "react-icons/fi";
+import { FiGift, FiPause, FiPlay } from "react-icons/fi";
 import { ImageSlot } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
@@ -11,9 +11,9 @@ import { parseStartSeconds } from "./player/studioTimestampLink";
 import { StudioTrackMenu } from "./player/ui/StudioTrackMenu";
 import { StudioAddToPlaylistButton } from "./StudioAddToPlaylistButton";
 import { StudioHiddenTrackNote } from "./StudioHiddenTrack";
+import { StudioLikeButton } from "./StudioLikeButton";
 import hiddenCss from "./StudioHiddenTrack.module.css";
 import heroStyles from "./StudioTrackHero.module.css";
-import { useStudioSaveToggle } from "./useStudioSaveToggle";
 import { useStudioShowcase } from "./useStudioShowcase";
 import ss from "./studio.module.css";
 
@@ -30,13 +30,17 @@ export function StudioTrackHero({
   const formatters = useFormat();
   const player = useStudioPlayer();
   const isShowcase = useStudioShowcase();
-  const save = useStudioSaveToggle({
-    savedId: track.savedId,
-    kind: "studio_track",
+  const likeSubject = {
+    trackId: track.id,
     title: track.title,
     href: track.href,
-    meta: track.release.artist.name,
-  });
+    artistName: track.release.artist.name,
+  };
+  // A heart only where the track can be played: a live release (publishedAt
+  // is null for a draft or a scheduled release) and an uploaded audio file.
+  // The owner reads those tracks here too, and a like would land in Liked
+  // songs as No longer available.
+  const isLikeable = track.release.publishedAt !== null && track.hasAudio;
   const isCurrent = player.isCurrentTrack(track.id);
   const isPlaying = isCurrent && player.status === "playing";
   const isHidden = useStudioHideExplicit() && track.isExplicit;
@@ -134,26 +138,14 @@ export function StudioTrackHero({
                 {t("studio:player.playFrom", { time: startLabel })}
               </span>
             )}
-            <button
-              type="button"
-              aria-pressed={save.isSaved}
-              aria-label={t(
-                save.isSaved
-                  ? "studio:save.removeSavedCta"
-                  : "studio:save.saveReleaseCta",
-                { title: track.title },
-              )}
-              onClick={save.toggle}
-            >
-              {save.isSaved ? <FiCheck aria-hidden /> : <FiPlus aria-hidden />}{" "}
-              {save.isSaved
-                ? t("studio:save.savedLabel")
-                : t("studio:save.saveCta")}
-            </button>
+            {isLikeable && (
+              <StudioLikeButton subject={likeSubject} variant="labelled" />
+            )}
             <StudioAddToPlaylistButton
               trackIds={track.hasAudio ? [track.id] : []}
               subjectTitle={track.title}
               label={t("studio:playlist.add.trackCta")}
+              likeSubject={isLikeable ? likeSubject : undefined}
             />
             <StudioTrackMenu
               track={{
@@ -166,7 +158,7 @@ export function StudioTrackHero({
             />
             {isShowcase && (
               <button type="button" className={ss.tip} onClick={onTip}>
-                <FiHeart aria-hidden />{" "}
+                <FiGift aria-hidden />{" "}
                 {t("studio:player.tipCta", {
                   amount: formatters.currency(QUICK_TIP_AMOUNT),
                 })}

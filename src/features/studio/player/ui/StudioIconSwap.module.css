@@ -1,0 +1,11 @@
+/* The leaving and the entering icon stack in one cell, so the swap never
+   widens the button or leaves a gap between them. */
+.swap {
+  display: inline-grid;
+  place-items: center;
+}
+
+.icon {
+  grid-area: 1 / 1;
+  display: inline-flex;
+}

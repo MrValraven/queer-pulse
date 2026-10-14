@@ -71,7 +71,7 @@ describe("the episode page (demo)", () => {
     );
   });
 
-  it("offers Save and the track menu on a published episode", async () => {
+  it("offers Like and the track menu on a published episode", async () => {
     renderTrack("demo-episode-late-bloomers-01");
     expect(
       await screen.findByRole("button", {
@@ -79,7 +79,7 @@ describe("the episode page (demo)", () => {
       }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: "Save Coming out at 40" }),
+      screen.getByRole("button", { name: "Like Coming out at 40" }),
     ).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Share" })).toBeInTheDocument();
   });
@@ -116,7 +116,7 @@ describe("the episode page (demo)", () => {
     ).toBeInTheDocument();
   });
 
-  it("keeps a draft episode inert: no Save, menu or timestamp buttons", async () => {
+  it("keeps a draft episode inert: no Like, menu or timestamp buttons", async () => {
     const playTracks = renderTrack("demo-episode-late-bloomers-draft");
     expect(
       await screen.findByRole("heading", {
@@ -130,7 +130,7 @@ describe("the episode page (demo)", () => {
       }),
     ).toBeNull();
     expect(
-      screen.queryByRole("button", { name: "Save Our parents, part two" }),
+      screen.queryByRole("button", { name: "Like Our parents, part two" }),
     ).toBeNull();
     expect(
       screen.queryByRole("button", {
@@ -159,7 +159,7 @@ describe("the episode page (demo)", () => {
     expect(
       await screen.findByRole("button", { name: "Share" }),
     ).toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: "Save Tide" })).toBeNull();
+    expect(screen.queryByRole("button", { name: "Like Tide" })).toBeNull();
     expect(
       screen.queryByRole("button", { name: "More actions for Tide" }),
     ).toBeNull();

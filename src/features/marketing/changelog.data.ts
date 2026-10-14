@@ -63,6 +63,34 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "studio-liked-songs",
+        category: "feature",
+        date: "14 Oct 2026",
+        ...entryKeys("studio-liked-songs"),
+        tag: { labelKey: "marketing:changelog.tag.studio", to: routes.studio },
+      },
+      {
+        id: "studio-close-player",
+        category: "improvement",
+        date: "14 Oct 2026",
+        ...entryKeys("studio-close-player"),
+        tag: { labelKey: "marketing:changelog.tag.studio", to: routes.studio },
+      },
+      {
+        id: "studio-smooth-waveform",
+        category: "fix",
+        date: "14 Oct 2026",
+        ...entryKeys("studio-smooth-waveform"),
+        tag: { labelKey: "marketing:changelog.tag.studio", to: routes.studio },
+      },
+      {
+        id: "studio-queue-clears-nav",
+        category: "fix",
+        date: "14 Oct 2026",
+        ...entryKeys("studio-queue-clears-nav"),
+        tag: { labelKey: "marketing:changelog.tag.studio", to: routes.studio },
+      },
+      {
         id: "studio-artist-kinds",
         category: "feature",
         date: "14 Oct 2026",

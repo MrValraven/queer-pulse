@@ -1,4 +1,5 @@
 import {
+  useContext,
   useEffect,
   useId,
   useLayoutEffect,
@@ -9,6 +10,7 @@ import { createPortal } from "react-dom";
 import { AnimatePresence, m, useIsPresent } from "motion/react";
 import { FiX } from "react-icons/fi";
 import { useMotionPrefs } from "../../../../app/providers/motionPrefs";
+import { ShellFrameContext } from "../../../../app/providers/shellFrame";
 import { useMediaQuery } from "../../../../shared/hooks/useMediaQuery";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { mediaMax } from "../../../../shared/theme/breakpoints";
@@ -84,6 +86,15 @@ function usePanelFocus(openerRef: OpenerRef | undefined, isPresent: boolean) {
   return { panelRef, headingRef };
 }
 
+/** Whether the site nav is on screen above the panel: a standard page frame
+ *  is up and draws the app chrome (AppChrome's own rule above the phone
+ *  breakpoint). Studio's own pages register no frame. */
+function useIsSiteNavShown(): boolean {
+  const frames = useContext(ShellFrameContext)?.frames ?? [];
+  const topFrame = frames[frames.length - 1];
+  return topFrame !== undefined && !topFrame.chromeless;
+}
+
 /** The desktop side panel: pushes no layout, sits above the player bar and
  *  leaves the page usable (non-modal). */
 function StudioQueuePanel({
@@ -97,11 +108,16 @@ function StudioQueuePanel({
   const { reducedMotion } = useMotionPrefs();
   const headingId = useId();
   const isPresent = useIsPresent();
+  const isSiteNavShown = useIsSiteNavShown();
   const { panelRef, headingRef } = usePanelFocus(openerRef, isPresent);
   return (
     <m.aside
       ref={panelRef}
-      className={styles.panel}
+      className={
+        isSiteNavShown
+          ? `${styles.panel} ${styles.panelBelowNav}`
+          : styles.panel
+      }
       aria-labelledby={headingId}
       inert={!isPresent}
       initial={{ opacity: 0, x: reducedMotion ? 0 : 24 }}

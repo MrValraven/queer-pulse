@@ -1,31 +1,51 @@
-import {
-  useRef,
-  type MouseEvent as ReactMouseEvent,
-  type PointerEvent as ReactPointerEvent,
-} from "react";
 import { AnimatePresence, m } from "motion/react";
-import { FiPause, FiPlay } from "react-icons/fi";
+import type { ReactNode } from "react";
 import { ImageSlot, useChipMotion } from "../../../../shared/components/ui";
-import { useVerticalSwipe } from "../../../../shared/hooks/useVerticalSwipe";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
+import { StudioLikeButton } from "../../StudioLikeButton";
 import {
   useStudioPlayer,
   useStudioPlayerClock,
   type StudioQueueItem,
 } from "../studioPlayerContext";
+import { useStudioEpisodeSpeed } from "../useStudioEpisodeMemory";
+import { playbackRateFor } from "../useStudioEpisodeRate";
 import { useStudioPlayerSurface } from "../studioPlayerSurface";
 import { StudioEpisodeSkipButton } from "./StudioEpisodeSkipButton";
+import { StudioPlayPauseIcon } from "./StudioIconSwap";
 import { StudioPlayerStatus } from "./StudioPlayerBar";
+import { StudioPlayerCloseButton } from "./StudioPlayerCloseButton";
+import { useMiniCardSwipe } from "./useMiniCardSwipe";
+import { useStudioSmoothProgress } from "./useStudioSmoothProgress";
 import styles from "../../StudioPlayer.module.css";
 
-/** The thin progress line: decorative, the clock lives only here. */
+/** Draws the mini line's fill as a horizontal scale. */
+function paintMiniFill(fill: HTMLSpanElement, fraction: number) {
+  fill.style.transform = `scaleX(${fraction})`;
+}
+
+/** The thin progress line: decorative, the clock lives only here. While
+ *  playing it glides between the clock's ticks like the waveform does; the
+ *  rendered scale is the paused and first value. */
 function MiniProgress() {
   const { currentTime, duration } = useStudioPlayerClock();
+  const { currentItem, status } = useStudioPlayer();
+  // Same rule as the engine: music at 1x, an episode at the member's speed.
+  const { speed } = useStudioEpisodeSpeed();
+  const playbackRate = playbackRateFor(currentItem?.isEpisode === true, speed);
   const progress =
     duration && duration > 0 ? Math.min(1, currentTime / duration) : 0;
+  const fillRef = useStudioSmoothProgress({
+    currentTime,
+    duration: duration ?? 0,
+    isPlaying: status === "playing",
+    playbackRate,
+    paint: paintMiniFill,
+  });
   return (
     <span className={styles.miniProgress} aria-hidden="true">
       <span
+        ref={fillRef}
         className={styles.miniProgressFill}
         style={{ transform: `scaleX(${progress})` }}
       />
@@ -33,86 +53,29 @@ function MiniProgress() {
   );
 }
 
-/** Upward travel past which a press counts as a drag and its click is dropped. */
-const DRAG_CLICK_SLOP_PX = 10;
-/** A click this soon after a drag's release ends that drag; later ones pass. */
-const DRAG_CLICK_WINDOW_MS = 500;
-
-/**
- * The card's swipe up. useVerticalSwipe captures the pointer on the card,
- * which retargets the release and its click to the card, so a tap on a
- * button would land nowhere. The press hands the capture on to the pressed
- * button; move and up events still bubble to the card, so a swipe started
- * anywhere still opens Now playing. A pointer click within
- * DRAG_CLICK_WINDOW_MS of a drag's release ends that drag and is dropped;
- * keyboard clicks (detail 0) and any later click always pass, so a click
- * that arrives with no pointerdown (some assistive tech) is never lost.
- */
-function useMiniCardSwipe(onSwipe: () => void) {
-  const hasDraggedRef = useRef(false);
-  const dragEndedAtRef = useRef<number | null>(null);
-  const swipe = useVerticalSwipe({
-    direction: "up",
-    onSwipe: () => {
-      hasDraggedRef.current = true;
-      onSwipe();
-    },
-    onDrag: (offset) => {
-      if (offset > DRAG_CLICK_SLOP_PX) hasDraggedRef.current = true;
-    },
-  });
-  return {
-    ...swipe,
-    onPointerDown(event: ReactPointerEvent<HTMLElement>) {
-      hasDraggedRef.current = false;
-      dragEndedAtRef.current = null;
-      swipe.onPointerDown(event);
-      // The hook ignores mouse presses, so a mouse keeps its own capture.
-      if (event.pointerType === "mouse") return;
-      const button = (event.target as Element).closest("button");
-      if (!button) return;
-      try {
-        button.setPointerCapture(event.pointerId);
-      } catch {
-        // jsdom or unsupported: the click still reaches the button.
-      }
-    },
-    onPointerUp(event: ReactPointerEvent<HTMLElement>) {
-      swipe.onPointerUp(event);
-      if (hasDraggedRef.current) dragEndedAtRef.current = event.timeStamp;
-      hasDraggedRef.current = false;
-    },
-    onClickCapture(event: ReactMouseEvent<HTMLElement>) {
-      const dragEndedAt = dragEndedAtRef.current;
-      dragEndedAtRef.current = null;
-      const isDragEnd =
-        dragEndedAt !== null &&
-        event.timeStamp - dragEndedAt <= DRAG_CLICK_WINDOW_MS;
-      if (!isDragEnd || event.detail === 0) return;
-      event.preventDefault();
-      event.stopPropagation();
-    },
-  };
-}
-
-/** An episode's skip beside the play button (spec 5.6). It grows in and
- *  folds away by width and fade, so the card glides between music and
- *  episodes. Overflow clips only while it moves, keeping the focus ring
- *  whole at rest. */
-function MiniSkipSlot({
+/** A control slot of the mini card. It grows in and folds away by width
+ *  and fade, so the card glides as its controls change. Overflow clips only
+ *  while it moves, keeping the focus ring whole at rest. */
+function MiniFoldSlot({
+  slotKey,
+  className,
   direction,
   isShown,
+  children,
 }: {
-  direction: "back" | "forward";
+  slotKey: string;
+  className?: string;
+  direction?: "back" | "forward";
   isShown: boolean;
+  children: ReactNode;
 }) {
   const { transition } = useChipMotion();
   return (
     <AnimatePresence initial={false}>
       {isShown && (
         <m.span
-          key={direction}
-          className={styles.miniSkipSlot}
+          key={slotKey}
+          className={className}
           data-direction={direction}
           initial={{ width: 0, opacity: 0, overflow: "hidden" }}
           animate={{ width: "auto", opacity: 1, overflow: "visible" }}
@@ -127,19 +90,45 @@ function MiniSkipSlot({
             overflow: { duration: 0, delay: transition.duration },
           }}
         >
-          <StudioEpisodeSkipButton
-            direction={direction}
-            className={styles.miniSkip}
-          />
+          {children}
         </m.span>
       )}
     </AnimatePresence>
   );
 }
 
+/** An episode's skip beside the play button (spec 5.6), so the card glides
+ *  between music and episodes. */
+function MiniSkipSlot({
+  direction,
+  isShown,
+}: {
+  direction: "back" | "forward";
+  isShown: boolean;
+}) {
+  return (
+    <MiniFoldSlot
+      slotKey={direction}
+      className={styles.miniSkipSlot}
+      direction={direction}
+      isShown={isShown}
+    >
+      <StudioEpisodeSkipButton
+        direction={direction}
+        className={styles.miniSkip}
+      />
+    </MiniFoldSlot>
+  );
+}
+
 /** The phone mini player (spec 7.1): tap or swipe up for Now playing. Title
  *  and artist are plain text for every item, private previews included, and
- *  the card offers no save. */
+ *  the card keeps to a single save, the Like heart. The heart leads the
+ *  controls for a music track; it folds away for a private preview and for
+ *  an episode, whose skips need the room beside the title. Close player ends
+ *  the row; like the play button, a press on any of them takes the pointer
+ *  from the card's swipe, so a tap acts and a swipe that starts on it still
+ *  opens Now playing. */
 export function StudioMiniPlayer({ item }: { item: StudioQueueItem }) {
   const { t } = useTranslation();
   const player = useStudioPlayer();
@@ -147,6 +136,7 @@ export function StudioMiniPlayer({ item }: { item: StudioQueueItem }) {
   const swipe = useMiniCardSwipe(() => surface.openNowPlaying());
   const isPlaying = player.status === "playing";
   const isEpisode = item.isEpisode === true;
+  const isPreview = Boolean(item.previewToken);
   return (
     <div className={styles.mini} {...swipe}>
       <StudioPlayerStatus />
@@ -175,6 +165,21 @@ export function StudioMiniPlayer({ item }: { item: StudioQueueItem }) {
         </span>
       </button>
       <span className={styles.miniControls}>
+        <MiniFoldSlot
+          slotKey="like"
+          className={styles.miniLikeSlot}
+          isShown={!isPreview && !isEpisode}
+        >
+          <StudioLikeButton
+            subject={{
+              trackId: item.trackId,
+              title: item.title,
+              href: item.trackHref,
+              artistName: item.artistName,
+            }}
+            className={styles.like}
+          />
+        </MiniFoldSlot>
         <MiniSkipSlot direction="back" isShown={isEpisode} />
         <button
           type="button"
@@ -185,9 +190,10 @@ export function StudioMiniPlayer({ item }: { item: StudioQueueItem }) {
           }
           aria-busy={player.status === "loading" || undefined}
         >
-          {isPlaying ? <FiPause aria-hidden /> : <FiPlay aria-hidden />}
+          <StudioPlayPauseIcon isPlaying={isPlaying} />
         </button>
         <MiniSkipSlot direction="forward" isShown={isEpisode} />
+        <StudioPlayerCloseButton className={styles.miniClose} />
       </span>
       <MiniProgress />
     </div>

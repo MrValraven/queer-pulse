@@ -5,12 +5,7 @@ import {
   type SavedItem,
 } from "../../app/providers/useSaved";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { StudioTrackMenu } from "./player/ui/StudioTrackMenu";
 import css from "./StudioLibrary.module.css";
-
-/** Saved track ids read `studio_track:<trackId>` (studioSavedId.track in
- *  studio.adapters). */
-const SAVED_TRACK_PREFIX = "studio_track:";
 
 /** Saved Studio things as quiet rows: the title opens it. A save our team
  *  took down reads "Withdrawn" and keeps its href (its page explains it);
@@ -48,21 +43,6 @@ export function StudioLibrarySavedList({ items }: { items: SavedItem[] }) {
                     : "studio:playlist.row.unavailable",
                 )}
               </span>
-            )}
-            {!isUnavailable && href && item.kind === "studio_track" && (
-              <StudioTrackMenu
-                track={{
-                  id: item.id.slice(SAVED_TRACK_PREFIX.length),
-                  title: item.title,
-                  href: linkToPath(href),
-                  // A saved item carries no audio or explicit flag: playNext
-                  // answers false for a track that cannot join, and the menu
-                  // says so.
-                  hasAudio: true,
-                  isExplicit: false,
-                }}
-                className={css.savedMenu}
-              />
             )}
           </li>
         );

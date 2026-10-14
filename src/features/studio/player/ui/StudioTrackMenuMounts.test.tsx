@@ -1,7 +1,6 @@
 import { screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { StudioAlbumTracklist } from "../../StudioAlbumTracklist";
-import { StudioLibrarySavedList } from "../../StudioLibrarySavedList";
 import { StudioPlaylistEntryRow } from "../../StudioPlaylistEntryRow";
 import { StudioSearchTrackRow } from "../../StudioSearchTrackRow";
 import { StudioTrackHero } from "../../StudioTrackHero";
@@ -93,33 +92,6 @@ describe("track menu mounts", () => {
     expect(
       await screen.findByRole("button", { name: "More actions for Tide" }),
     ).toBeInTheDocument();
-  });
-
-  it("sits on saved tracks in the library and skips saved releases", async () => {
-    renderWithPlayer(
-      <StudioLibrarySavedList
-        items={[
-          {
-            id: "studio_track:t1",
-            kind: "studio_track",
-            title: "Tide",
-            href: "/studio/track?id=t1",
-          },
-          {
-            id: "studio_release:r1",
-            kind: "studio_release",
-            title: "Salt water",
-            href: "/studio/album?id=r1",
-          },
-        ]}
-      />,
-    );
-    expect(
-      await screen.findByRole("button", { name: "More actions for Tide" }),
-    ).toBeInTheDocument();
-    expect(
-      screen.queryByRole("button", { name: "More actions for Salt water" }),
-    ).toBeNull();
   });
 
   it("sits in the track hero", async () => {

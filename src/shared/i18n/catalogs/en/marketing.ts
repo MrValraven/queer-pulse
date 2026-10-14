@@ -3858,6 +3858,22 @@ export const marketing: Catalog = {
     "Clearer Studio pages, steady track order",
   "changelog.entries.studio-v2-fixes.body":
     "Studio pages read clearly on phones and in Portuguese, and removing a failed upload keeps your track order.",
+  "changelog.entries.studio-liked-songs.title":
+    "Like a song and keep it in Liked songs",
+  "changelog.entries.studio-liked-songs.body":
+    "Tap the heart on any track and it lands in a private playlist every member has from day one.",
+  "changelog.entries.studio-close-player.title":
+    "Close the Studio player when you are done",
+  "changelog.entries.studio-close-player.body":
+    "A close button stops the audio and hides the bar until you play something new.",
+  "changelog.entries.studio-smooth-waveform.title":
+    "The Studio player bar moves smoothly",
+  "changelog.entries.studio-smooth-waveform.body":
+    "The waveform glides every frame, and play, volume, track changes and the bar itself ease into place.",
+  "changelog.entries.studio-queue-clears-nav.title":
+    "The Studio queue sits below the site menu",
+  "changelog.entries.studio-queue-clears-nav.body":
+    "Outside Studio, the open queue starts under the menu bar, so its heading and close button stay in view.",
   "changelog.entries.studio-artist-kinds.title":
     "Podcasts, spoken word and performance audio in Studio",
   "changelog.entries.studio-artist-kinds.body":

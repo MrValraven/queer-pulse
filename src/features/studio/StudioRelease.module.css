@@ -64,6 +64,13 @@
     grid-row: 2;
     justify-content: flex-start;
   }
+
+  /* The second line starts at the duration; the auto margin pushes the row
+     buttons to its end, so the hearts line up down the list whatever each
+     duration's width. */
+  .timeLabel {
+    margin-inline-end: auto;
+  }
 }
 
 .rowPlay {
@@ -200,6 +207,11 @@ li[aria-current] > .rowPlay .rowNumber {
   align-items: center;
   justify-content: flex-end;
   gap: 6px;
+}
+
+/* Even digit widths, so durations of one length line up. */
+.timeLabel {
+  font-variant-numeric: tabular-nums;
 }
 
 .rowAdd {

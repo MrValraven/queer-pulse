@@ -9,6 +9,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
 import { createStudioPlayerTestValue } from "../../test/studioPlayerTestValue";
 import { resetDemoPlaylists } from "./api/studioDemoPlaylists";
+import { resetStudioLibrarySeedForTests } from "./api/useStudioLibrarySaves";
 import {
   StudioPlayerContext,
   type StudioPlayerValue,
@@ -26,6 +27,12 @@ vi.mock("./api/useStudioPlaybackPreferences", async (importOriginal) => ({
 beforeEach(() => {
   resetDemoPlaylists();
   playback.hideExplicit = false;
+  // The shell seeds the demo library fixture, which saves the dyke-bar
+  // playlist. Marking the seed done keeps the saved store empty, so a
+  // viewer meets the playlist unsaved.
+  window.localStorage.removeItem("qp.saved.v1");
+  resetStudioLibrarySeedForTests();
+  window.localStorage.setItem("qp.demo.studioLibrarySeeded.v3", "1");
 });
 
 function renderPage(playlistId: string) {

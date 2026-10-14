@@ -1743,6 +1743,21 @@ export const studio: Catalog = {
   "save.savedLabel": "Guardado",
   "save.savedToast": "Guardado",
   "save.removedToast": "Removido dos guardados",
+
+  // ── Liked songs (StudioLikeButton, StudioLikedPage) ─────────────────────
+  "like.cta": "Gosto",
+  "like.trackAria": "Gosto de {title}",
+  "like.addedToast": "Adicionada a Músicas de que gostas",
+  "like.removedToast": "Removida de Músicas de que gostas",
+  "liked.title": "Músicas de que gostas",
+  "liked.page.privateNote": "Só tu vês aqui as músicas de que gostas",
+  "liked.page.emptyTitle": "As músicas de que gostas vão aparecer aqui",
+  "liked.page.emptyBody":
+    "Toca no coração de qualquer faixa para a guardares em Músicas de que gostas",
+  "liked.page.showMore": "Mostrar mais músicas",
+  "liked.page.loadingMore": "A carregar mais músicas",
+  "liked.page.loadMoreError":
+    "Não conseguimos carregar mais músicas de que gostas",
   "errors.generic": "Algo correu mal. Tenta de novo",
   "errors.accessRequired": "O teu acesso ao Studio terminou",
   "errors.notPersonaOwner":
@@ -1852,6 +1867,7 @@ export const studio: Catalog = {
   "playerBar.seekValue": "{elapsed} de {total}",
   "playerBar.cantPlay": "Esta faixa não pode tocar agora",
   "playerBar.retry": "Tentar a faixa de novo",
+  "playerBar.close": "Fechar leitor",
   "uploadFlow.hero.title": "Põe a tua música <em>cá fora.</em>",
   "uploadFlow.hero.sub":
     "Três passos: o lançamento, as faixas e a publicação. MP3 ou M4A, até 50 MB por faixa",
@@ -2073,24 +2089,20 @@ export const studio: Catalog = {
   "browse.empty.title": "Ainda não há lançamentos de {genre}",
   "browse.empty.body": "A música nova aparece aqui à medida que é publicada",
   "libraryLive.dek":
-    "As tuas playlists, e os lançamentos, faixas e artistas que tens por perto",
+    "As tuas playlists, as Músicas de que gostas, os lançamentos guardados e os artistas que segues",
   "libraryLive.tablistLabel": "A tua biblioteca",
   "libraryLive.tabs.playlists": "Playlists",
   "libraryLive.tabs.releases": "Lançamentos",
-  "libraryLive.tabs.tracks": "Faixas",
   "libraryLive.tabs.artists": "Artistas",
   "libraryLive.yourPlaylists": "As tuas <em>playlists</em>",
   "libraryLive.savedPlaylists": "<em>Playlists</em> guardadas",
   "libraryLive.newPlaylistCta": "Criar playlist",
-  "libraryLive.empty.playlistsTitle": "Ainda não há playlists",
+  "libraryLive.empty.ownPlaylistsTitle": "Ainda não tens playlists tuas",
   "libraryLive.empty.playlistsBody":
     "Cria uma para um estado de espírito, uma noite ou uma pessoa, e junta faixas de qualquer parte do Studio",
   "libraryLive.empty.releasesTitle": "Ainda não guardaste lançamentos",
   "libraryLive.empty.releasesBody":
     "Guarda um lançamento na página dele e fica aqui à tua espera",
-  "libraryLive.empty.tracksTitle": "Ainda não guardaste faixas",
-  "libraryLive.empty.tracksBody":
-    "Guarda uma faixa na página dela e fica aqui à tua espera",
   "libraryLive.empty.artistsTitle": "Ainda não segues artistas",
   "libraryLive.empty.artistsBody":
     "Segue artistas a partir da página Studio de cada persona para as teres por perto",
@@ -2294,7 +2306,7 @@ export const studio: Catalog = {
   "helpLive.faq.saving.q":
     "Como funcionam os guardados, as playlists e seguir artistas?",
   "helpLive.faq.saving.a":
-    "Guarda qualquer lançamento ou faixa e fica à tua espera na tua <a>biblioteca</a>. Uma playlist pode ser Pública, Só ligações ou Privada, e podes mudar isso quando quiseres. Segue artistas a partir da página de cada artista para saberes quando lançam algo novo.",
+    "Guarda qualquer lançamento e fica à tua espera na tua <a>biblioteca</a>. Toca no coração de uma faixa e ela vai para as Músicas de que gostas, que só tu vês. Uma playlist pode ser Pública, Só ligações ou Privada, e podes mudar isso quando quiseres. Segue artistas a partir da página de cada artista para saberes quando lançam algo novo.",
   "helpLive.faq.playerSettings.q":
     "Posso mudar a forma como o leitor funciona?",
   "helpLive.faq.playerSettings.a":

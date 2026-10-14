@@ -21,7 +21,7 @@ export const CHANGELOG_RELEASE_NOTES: Record<
       "studio-listening",
       "studio-v3-artist-tools",
     ],
-    pushes: 4,
+    pushes: 5,
   },
   "13 Oct 2026": {
     highlights: ["studio-v2", "marketing-flyers", "search-first-work-picker"],

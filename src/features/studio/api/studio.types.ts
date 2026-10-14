@@ -103,6 +103,8 @@ export const STUDIO_PLAYLIST_LIMITS = {
   tracksPerAdd: 50,
   playlistsPerPage: 24,
   trackPlaylistsMax: 6,
+  /** Liked songs: rows per page of `GET /studio/playlists/liked`. */
+  likedTracksPerPage: 100,
 } as const;
 
 // Studio v3 artist tools vocabularies
@@ -636,6 +638,24 @@ export interface StudioPlaylistEntryDTO {
   /** Owner only, with isAvailable false: set when the cause is a release
    *  takedown. Every other cause sends nothing. */
   unavailableReason?: StudioUnavailableReason;
+}
+
+/** One row of Liked songs (`GET /studio/playlists/liked`): the member's own
+ *  `studio_track` save. `entryId` is the save's id, `addedAt` when it was
+ *  made, and `position` runs 1-based and contiguous across pages. Every
+ *  unavailable row reaches the member, since the list is only ever theirs. */
+export interface StudioLikedTrackEntryDTO extends StudioPlaylistEntryDTO {
+  /** The saved subject id, present on every row, available or not. */
+  trackId: string;
+  /** The title the member saved, shown when the track is unavailable. */
+  savedTitle: string;
+}
+
+export interface StudioLikedTracksPageDTO extends StudioPageDTO<StudioLikedTrackEntryDTO> {
+  /** Likes the member can play, across the whole list. */
+  trackCount: number;
+  /** Their total length. */
+  totalDurationSeconds: number;
 }
 
 export interface StudioPlaylistDTO extends StudioPlaylistCardDTO {

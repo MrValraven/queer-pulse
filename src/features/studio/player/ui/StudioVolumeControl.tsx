@@ -1,6 +1,8 @@
+import { useEffect, useState, type CSSProperties } from "react";
 import { FiVolume1, FiVolume2, FiVolumeX } from "react-icons/fi";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { useStudioPlayer } from "../studioPlayerContext";
+import { StudioIconSwap } from "./StudioIconSwap";
 import styles from "./StudioPlayerControls.module.css";
 
 const SLIDER_KEYS = new Set([
@@ -13,6 +15,9 @@ const SLIDER_KEYS = new Set([
   "Home",
   "End",
 ]);
+/** A little past the 250ms --dur-base glide, for when transitionend never
+ *  comes. */
+const GLIDE_FALLBACK_MS = 300;
 
 /** Desktop volume and mute (spec 7.11); phones use the hardware buttons. */
 export function StudioVolumeControl() {
@@ -20,8 +25,27 @@ export function StudioVolumeControl() {
   const { preferences, setVolume, toggleMute } = useStudioPlayer();
   const percent = Math.round(preferences.volume * 100);
   const shownPercent = preferences.isMuted ? 0 : percent;
+  const iconKind =
+    shownPercent === 0 ? "muted" : shownPercent < 50 ? "low" : "high";
   const Icon =
-    shownPercent === 0 ? FiVolumeX : shownPercent < 50 ? FiVolume1 : FiVolume2;
+    iconKind === "muted"
+      ? FiVolumeX
+      : iconKind === "low"
+        ? FiVolume1
+        : FiVolume2;
+  /** True for the one glide a mute toggle starts; any direct input on the
+   *  slider ends it, so a drag never trails the pointer. */
+  const [isAnimatingFill, setIsAnimatingFill] = useState(false);
+  // A hidden slider (1180px and below) never fires transitionend, so the
+  // glide flag also clears itself just after the --dur-base glide would end.
+  useEffect(() => {
+    if (!isAnimatingFill) return;
+    const glideTimeoutId = window.setTimeout(
+      () => setIsAnimatingFill(false),
+      GLIDE_FALLBACK_MS,
+    );
+    return () => window.clearTimeout(glideTimeoutId);
+  }, [isAnimatingFill]);
   return (
     <div className={styles.volume}>
       <button
@@ -32,9 +56,15 @@ export function StudioVolumeControl() {
             ? t("studio:player.unmute")
             : t("studio:player.mute")
         }
-        onClick={toggleMute}
+        onClick={() => {
+          // At a level of 0 the toggle moves nothing, so no glide starts.
+          if (percent > 0) setIsAnimatingFill(true);
+          toggleMute();
+        }}
       >
-        <Icon aria-hidden />
+        <StudioIconSwap iconKey={iconKind}>
+          <Icon aria-hidden />
+        </StudioIconSwap>
       </button>
       <input
         type="range"
@@ -43,11 +73,21 @@ export function StudioVolumeControl() {
         max={100}
         step={1}
         value={shownPercent}
+        style={{ "--volume-fill": shownPercent / 100 } as CSSProperties}
+        data-animating={isAnimatingFill ? "" : undefined}
         aria-label={t("studio:player.volume")}
         aria-valuetext={t("studio:player.volumeValue", {
           percent: shownPercent,
         })}
+        onTransitionEnd={(event) => {
+          if (event.propertyName === "--volume-fill") setIsAnimatingFill(false);
+        }}
+        onTransitionCancel={(event) => {
+          if (event.propertyName === "--volume-fill") setIsAnimatingFill(false);
+        }}
+        onPointerDown={() => setIsAnimatingFill(false)}
         onKeyDown={(event) => {
+          setIsAnimatingFill(false);
           // The slider steps itself; the window-level arrow shortcuts stay out.
           if (SLIDER_KEYS.has(event.key)) event.stopPropagation();
         }}

@@ -31,7 +31,7 @@ describe("StudioPlayer.module.css", () => {
     const narrowRule = /@media \(max-width: 1180px\)\s*\{([\s\S]*?)\n\}/.exec(
       css,
     )?.[1];
-    expect(narrowRule).toMatch(/grid-template-columns:\s*minmax\(264px/);
+    expect(narrowRule).toMatch(/grid-template-columns:\s*minmax\(312px/);
     expect(narrowRule).toMatch(
       /\.tools input\[type="range"\],\s*\.seekArea \.time\s*\{\s*display:\s*none/,
     );
@@ -61,5 +61,15 @@ describe("StudioPlayer.module.css", () => {
 
   it("lets the mini card take a vertical swipe", () => {
     expect(css).toMatch(/\.mini\s*\{[^}]*touch-action:\s*none/);
+  });
+
+  it("keeps the heart and Add to playlist together at the row's end", () => {
+    expect(css).toMatch(
+      /\.addToPlaylistSlot\s*\{[^}]*margin-inline-start:\s*auto/,
+    );
+    expect(css).toMatch(
+      /\.addToPlaylistSlot \.like,\s*\.miniLikeSlot \.like\s*\{[^}]*margin-block:\s*0/,
+    );
+    expect(css).toMatch(/\.like:active\s*\{\s*transform:\s*scale\(0\.92\)/);
   });
 });

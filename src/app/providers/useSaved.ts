@@ -80,14 +80,41 @@ export function isSavedItemUnavailable(item: {
   return item.availability === "unavailable";
 }
 
+export interface SavedToggleOptions {
+  /** Live only: runs once the server holds the change. It never runs in
+   *  demo mode or after a failed request. */
+  onSynced?: () => void;
+}
+
+export interface SavedRememberOptions {
+  /** `readSaveScope()` as it stood before the request that read these
+   *  items. A batch read under an earlier member is dropped. */
+  scopeAtRead?: number;
+}
+
 export interface SavedContextValue {
   items: SavedItem[];
   isSaved: (id: string) => boolean;
   /** Toggle an item; returns the new saved state (true = now saved). */
-  toggleSave: (item: SavedItem) => boolean;
+  toggleSave: (item: SavedItem, options?: SavedToggleOptions) => boolean;
   save: (item: SavedItem) => void;
   unsave: (id: string) => void;
   byKind: (kind: SavedKind) => SavedItem[];
+  /**
+   * Adds saves the server already holds to the local store: ids the store
+   * lacks are appended, ids it has keep their current copy. Sends nothing,
+   * in either mode. A list that reads saves page by page (Studio's Liked
+   * songs) calls it so every row it shows also reads as saved everywhere.
+   * Live, a later hydration from the server's first page keeps them, after
+   * the server's own items, until they are unsaved. An id unsaved this
+   * session stays out until it is saved again, so a read that left the
+   * server before the unsave can't bring it back.
+   */
+  remember: (items: SavedItem[], options?: SavedRememberOptions) => void;
+  /** The scope the store holds now. It moves on when another member signs
+   *  in on this device. Read it before a request whose items go to
+   *  `remember`, and hand it back as `scopeAtRead`. */
+  readSaveScope: () => number;
 }
 
 export const SavedContext = createContext<SavedContextValue | null>(null);

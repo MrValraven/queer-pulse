@@ -56,9 +56,3 @@ a.savedTitle:focus-visible {
 .savedNote {
   flex-basis: 100%;
 }
-
-/* The track menu sits at the end of its row, so its panel opens inward. */
-.savedMenu {
-  margin-inline-start: auto;
-  align-self: center;
-}

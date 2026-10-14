@@ -1,17 +1,11 @@
 import { AnimatePresence, m, useIsPresent } from "motion/react";
 import { useLayoutEffect, useRef, type ReactNode } from "react";
-import {
-  FiPause,
-  FiPlay,
-  FiRepeat,
-  FiShuffle,
-  FiSkipBack,
-  FiSkipForward,
-} from "react-icons/fi";
+import { FiRepeat, FiShuffle, FiSkipBack, FiSkipForward } from "react-icons/fi";
 import { useChipMotion } from "../../../../shared/components/ui";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { useStudioPlayer } from "../studioPlayerContext";
 import { StudioEpisodeSkipButton } from "./StudioEpisodeSkipButton";
+import { StudioPlayPauseIcon } from "./StudioIconSwap";
 import styles from "./StudioPlayerControls.module.css";
 
 const REPEAT_KEY = {
@@ -40,6 +34,7 @@ export function StudioRepeatButton() {
   const { t } = useTranslation();
   const player = useStudioPlayer();
   const mode = player.queue.repeat;
+  const { chip } = useChipMotion();
   return (
     <button
       type="button"
@@ -49,11 +44,22 @@ export function StudioRepeatButton() {
       onClick={player.cycleRepeat}
     >
       <FiRepeat aria-hidden />
-      {mode === "one" && (
-        <span className={styles.repeatOne} aria-hidden="true">
-          1
-        </span>
-      )}
+      {/* The "1" pops in and out with the shared chip motion. */}
+      <AnimatePresence initial={false}>
+        {mode === "one" && (
+          <m.span
+            key="repeat-one"
+            className={styles.repeatOne}
+            aria-hidden="true"
+            initial={chip.initial}
+            animate={chip.animate}
+            exit={chip.exit}
+            transition={chip.transition}
+          >
+            1
+          </m.span>
+        )}
+      </AnimatePresence>
     </button>
   );
 }
@@ -170,7 +176,7 @@ export function StudioTransport({ size }: { size: "bar" | "large" }) {
         }
         aria-busy={player.status === "loading" || undefined}
       >
-        {isPlaying ? <FiPause aria-hidden /> : <FiPlay aria-hidden />}
+        <StudioPlayPauseIcon isPlaying={isPlaying} />
       </button>
       <TransportSlot slotKey={`forward-${slotKind}`}>
         {isEpisode ? (

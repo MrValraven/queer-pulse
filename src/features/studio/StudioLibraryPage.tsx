@@ -1,5 +1,6 @@
 import { useId } from "react";
-import { useSearchParams } from "react-router-dom";
+import { Navigate, useSearchParams } from "react-router-dom";
+import { routes } from "../../app/routeMap";
 import { FadeIn, tabPanelProps } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
@@ -22,8 +23,9 @@ const KNOWN_TABS: ReadonlySet<string> = new Set(STUDIO_LIBRARY_TABS);
 const isLibraryTab = (value: string | null): value is StudioLibraryTab =>
   value !== null && KNOWN_TABS.has(value);
 
-/** The library (Studio v2): your playlists and saved ones, saved releases
- *  and tracks, and the artists you follow. The tab lives in `?tab=`. */
+/** The library (Studio v2): your playlists and saved ones (Liked songs
+ *  first), saved releases, and the artists you follow. The tab lives in
+ *  `?tab=`. The old `?tab=tracks` link opens Liked songs. */
 export function StudioLibraryPage() {
   const { t } = useTranslation();
   const fmt = useFormat();
@@ -32,6 +34,8 @@ export function StudioLibraryPage() {
   const tabParam = searchParams.get("tab");
   const tab: StudioLibraryTab = isLibraryTab(tabParam) ? tabParam : "playlists";
   const idPrefix = useId();
+  if (tabParam === "tracks")
+    return <Navigate to={routes.studioLiked} replace />;
   return (
     <StudioShell>
       <div className={s.pageH}>

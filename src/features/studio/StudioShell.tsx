@@ -10,6 +10,7 @@ import { mediaMax } from "../../shared/theme/breakpoints";
 import { useAccountIdentity } from "../../shared/components/layout/useAccountIdentity";
 import { StudioRail } from "./StudioRail";
 import { StudioAccountMenu } from "./StudioAccountMenu";
+import { StudioDemoLibrarySeed } from "./StudioDemoLibrarySeed";
 import { StudioShellSearch } from "./StudioShellSearch";
 import { StudioTabBar } from "./StudioTabBar";
 import { useStudioAccess } from "./api/useStudioAccess";
@@ -46,6 +47,10 @@ export function StudioShell({ children }: { children: ReactNode }) {
   // (buttons, avatars, empty states, selects) switch with the rest of the app.
   return (
     <div className={styles.root}>
+      {/* Every Studio page mounts the shell, so the demo library fixture
+          seeds on whichever page a visitor opens first. The leaf reads the
+          saved store, so a save re-renders it alone. */}
+      <StudioDemoLibrarySeed />
       <div className={styles.app}>
         <StudioRail />
 
