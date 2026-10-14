@@ -59,6 +59,25 @@ describe("handleQueryError", () => {
     expect(emit).not.toHaveBeenCalled();
   });
 
+  it("files no monitoring event for a withdrawn Studio release and still logs a bare 410", () => {
+    handleQueryError(
+      new ApiError(410, "This release was withdrawn.", {
+        statusCode: 410,
+        code: "studio_release_withdrawn",
+        message: "This release was withdrawn.",
+        error: "Gone",
+      }),
+      query,
+    );
+    expect(logError).not.toHaveBeenCalled();
+    expect(emit).not.toHaveBeenCalled();
+    handleQueryError(
+      new ApiError(410, "Gone", { code: "SOMETHING_ELSE" }),
+      query,
+    );
+    expect(logError).toHaveBeenCalledOnce();
+  });
+
   it("stays silent for a PLATFORM_LOCKED 503 (the lock provider owns that screen)", () => {
     // ToastProvider sits ABOVE PlatformLockProvider, so its viewport renders
     // over the maintenance screen. Without this carve-out a lockdown starting

@@ -12,6 +12,7 @@ import {
   FiInfo,
   FiLink,
   FiMic,
+  FiPaperclip,
   FiRadio,
   FiShield,
   FiUpload,
@@ -20,7 +21,11 @@ import {
 } from "react-icons/fi";
 import { routes } from "../../app/routeMap";
 import { studioUploadPath } from "./studioPaths";
-import { LIVE_RAIL_LINKS } from "./studioRailLive.data";
+import {
+  LIVE_RAIL_FLAG_REVIEW_LINK,
+  LIVE_RAIL_LINKS,
+  LIVE_RAIL_UTILITY_LINKS,
+} from "./studioRailLive.data";
 import {
   CONTRIBUTE,
   GOVERNANCE,
@@ -84,12 +89,29 @@ function toSheetLinks(links: RailLink[]): StudioNavSheetLink[] {
 /** Live: the live rail's links the tabs leave out (the Solidarity fund). */
 export const SHEET_LIVE_LINKS = toSheetLinks(LIVE_RAIL_LINKS);
 
+/** Live: the "Help and info" group. */
+export const SHEET_LIVE_UTILITY_LINKS = toSheetLinks(LIVE_RAIL_UTILITY_LINKS);
+
+/** Live, for Moderators and Admins: the flag review. */
+export const SHEET_FLAG_REVIEW_LINK: StudioNavSheetLink = {
+  ...LIVE_RAIL_FLAG_REVIEW_LINK,
+  icon: FiFlag,
+};
+
 /** Live, for members with an artist page: the upload flow. */
 export const SHEET_UPLOAD_LINK: StudioNavSheetLink = {
   label: "Upload",
   labelKey: "studio:rail.v1.upload",
   to: studioUploadPath(),
   icon: FiUpload,
+};
+
+/** Live, for members with an artist page: the press kit editor. */
+export const SHEET_PRESS_KIT_LINK: StudioNavSheetLink = {
+  label: "Press kit",
+  labelKey: "studio:rail.v3.pressKit",
+  to: routes.studioPressEdit,
+  icon: FiPaperclip,
 };
 
 /** Demo: the showcase rail's groups, each under its own label. */

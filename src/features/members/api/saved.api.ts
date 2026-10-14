@@ -4,6 +4,7 @@ import type { Paginated } from "../../../shared/api/refs";
 import type {
   SavedItem,
   SavedItemAvailability,
+  SavedItemUnavailableReason,
   SavedKind,
 } from "../../../app/providers/useSaved";
 
@@ -22,7 +23,8 @@ export interface SavedItemDTO {
   id: string;
   kind: SavedKind;
   title: string;
-  /** Always present. `null` when the subject can no longer be opened. */
+  /** Always present. `null` when the subject can no longer be opened, except
+   *  a withdrawn Studio save, which keeps its href (see `unavailableReason`). */
   href: string | null;
   meta?: string;
   description?: string;
@@ -30,11 +32,19 @@ export interface SavedItemDTO {
   /** ISO 8601 timestamp the save happened. */
   savedAt: string;
   /**
-   * The server's verdict on the subject. Always present. `"unavailable"` never
-   * says why, on purpose: the reason would leak whether something was deleted,
-   * made private, or hidden from this member in particular.
+   * The server's verdict on the subject. Always present. `"unavailable"` names
+   * a cause only through `unavailableReason`, and only for a Studio takedown;
+   * any other cause stays unnamed on purpose: it would leak whether something
+   * was deleted, made private, or hidden from this member in particular.
    */
   availability: SavedItemAvailability;
+  /**
+   * Studio open pages: "withdrawn" on a `studio_release` or `studio_track`
+   * save our team took down. The only reason the API ever names, and such a
+   * row keeps its stored `href`, because that release's own URL explains it
+   * without saying more. Every other unavailable row has `href: null`.
+   */
+  unavailableReason?: SavedItemUnavailableReason;
 }
 
 /** The mutable subset PUT accepts (everything except id + savedAt). */
@@ -80,6 +90,8 @@ export function dtoToSavedItem(dto: SavedItemDTO): SavedItem {
     description: dto.description,
     readTime: dto.readTime,
     availability: dto.availability,
+    unavailableReason:
+      dto.availability === "unavailable" ? dto.unavailableReason : undefined,
   };
 }
 

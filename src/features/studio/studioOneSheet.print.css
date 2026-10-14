@@ -1,0 +1,80 @@
+/* Print isolation for the Studio one-sheet, the cards.print.css pattern.
+
+   Every rule is scoped to a document that holds the one-sheet root
+   ([data-studio-one-sheet]). Once this chunk has loaded the file stays in
+   the document, so a bare `[data-print-root]` or a bare `@page` here would
+   reach the Economy documents (tools.print.css, 18mm margins) and the card
+   sheets (cards.print.css). The sheet prints on its own named page, which
+   outranks their unnamed `@page` rules for its pages only. */
+
+@media print {
+  /* Everything that is neither the sheet, nor inside it, nor a wrapper
+     between <body> and it, leaves the document, so the printer counts one
+     page. */
+  body:has([data-studio-one-sheet])
+    *:not(
+      :has([data-studio-one-sheet]),
+      [data-studio-one-sheet],
+      [data-studio-one-sheet] *
+    ) {
+    display: none !important;
+  }
+
+  /* The wrappers that survive carry app-chrome spacing and the app theme's
+     ground. On paper they are pass-throughs. */
+  html:has([data-studio-one-sheet]),
+  body:has([data-studio-one-sheet]),
+  body :has([data-studio-one-sheet]) {
+    display: block !important;
+    position: static !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    background: none !important;
+    box-shadow: none !important;
+    width: auto !important;
+    max-width: none !important;
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+    transform: none !important;
+  }
+
+  body:has([data-studio-one-sheet]) {
+    page: studio-one-sheet;
+  }
+
+  /* Doubled attribute: outranks tools.print.css's absolute positioning and
+     the module's on-screen centring row. */
+  [data-print-root][data-studio-one-sheet] {
+    display: block !important;
+    position: static !important;
+    inset: auto !important;
+    width: auto !important;
+    margin: 0 !important;
+    overflow: visible !important;
+    visibility: visible !important;
+    page: studio-one-sheet;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* On paper the sheet IS the page: the named page's margin frames it, so
+     the sheet sheds its on-screen padding, border and A4 box. It stays light
+     whatever the app theme: data-theme="light" on the sheet re-declares the
+     light tokens. */
+  [data-studio-one-sheet] > article {
+    width: auto;
+    min-height: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    break-after: auto;
+  }
+
+  @page studio-one-sheet {
+    size: A4 portrait;
+    margin: 14mm;
+  }
+}

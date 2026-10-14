@@ -24,7 +24,12 @@ export const CATEGORY_ARCHIVE_KEYS: Record<string, readonly string[]> = {
     "joinApplication",
     "staffRoles",
   ],
-  subprofiles: ["subprofiles", "personaActivity", "personaContent"],
+  subprofiles: [
+    "subprofiles",
+    "personaActivity",
+    "personaContent",
+    "personaPosts",
+  ],
   nowHistory: ["nowHistory"],
   messages: ["messages", "reportedConversations", "messageActivity"],
   forumPosts: ["posts", "forumActivity"],
@@ -71,7 +76,13 @@ export const CATEGORY_ARCHIVE_KEYS: Record<string, readonly string[]> = {
     "recognition",
     "watchHistory",
   ],
-  saved: ["saved", "savedLists", "collections", "drafts"],
+  saved: [
+    "saved",
+    "savedLists",
+    "collections",
+    "drafts",
+    "studioReleaseReminders",
+  ],
   notifications: ["notifications", "pushDevices", "notificationPreferences"],
   consent: ["consent", "policyAcceptances", "policyStatus"],
   media: ["media"],
@@ -144,6 +155,16 @@ function demoContentFor(archiveKey: string): unknown {
         affirmingPledgeAcceptedAt: now,
         underAgeDisclosedAt: null,
       };
+    case "personaPosts":
+      return [
+        {
+          personaName: "Mariana Sol",
+          body: "Maré alta comes out on Friday",
+          linkUrl: null,
+          createdAt: now,
+          editedAt: null,
+        },
+      ];
     case "flatmateProfile":
     case "preferences":
     case "eventPreferences":

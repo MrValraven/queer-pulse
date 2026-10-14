@@ -10,6 +10,7 @@ import {
   applyLifecycleTokens,
   fundingDeadlineToken,
   isLifecycleKind,
+  textVariantOf,
   LIFECYCLE_KIND_CATEGORY,
   lifecycleKeyFor,
   type LifecycleNotificationKind,
@@ -2118,8 +2119,17 @@ export function formatNotification(
   // `PLURAL_COUNT_FIELD`.
   mirrorPluralCount(type, payload, tokens);
   // Studio v2: a new-release row bundles on the persona, so its count rides
-  // on otherActorCount (the payload is the newest release's).
-  if (type === "studio_release_published")
+  // on otherActorCount (the payload is the newest release's). Studio
+  // discovery: a credit request row bundles on the credited persona the
+  // same way. `persona_post` (Studio v3) bundles on the persona the same way.
+  // `studio_episode_published` (Studio artist kinds) bundles on the persona
+  // the same way.
+  if (
+    type === "studio_release_published" ||
+    type === "studio_credit_requested" ||
+    type === "persona_post" ||
+    type === "studio_episode_published"
+  )
     tokens.count = (otherActorCount ?? 0) + 1;
   // ENG-409: the defensive tokens of the kinds in `notificationKindCopy.ts`.
   applyLifecycleTokens(type, payload, tokens, t);
@@ -2242,7 +2252,7 @@ export function formatNotification(
     tokens.name = listingActorNameToken(actorDisplayName, t);
   }
   return {
-    text: t(`notifications:type.${key}.text`, tokens),
+    text: t(`notifications:type.${key}.${textVariantOf(type, tokens)}`, tokens),
     // `ambassador_granted` is the one kind whose meta line is resolved as a
     // whole string rather than through the shared `key`/`tokens` templating
     // above: see `ambassadorGrantedMeta`. Every other kind keeps the ordinary

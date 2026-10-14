@@ -5,21 +5,30 @@ import {
   type SavedItem,
 } from "../../app/providers/useSaved";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { StudioTrackMenu } from "./player/ui/StudioTrackMenu";
 import css from "./StudioLibrary.module.css";
 
-/** Saved Studio things as quiet rows: the title opens it; one that can no
- *  longer be opened stays, unlinked, and says so without a reason (the API
- *  never gives one, on purpose). */
+/** Saved track ids read `studio_track:<trackId>` (studioSavedId.track in
+ *  studio.adapters). */
+const SAVED_TRACK_PREFIX = "studio_track:";
+
+/** Saved Studio things as quiet rows: the title opens it. A save our team
+ *  took down reads "Withdrawn" and keeps its href (its page explains it);
+ *  any other lost save stays, unlinked, as "No longer available" (the API
+ *  names no other reason, on purpose). */
 export function StudioLibrarySavedList({ items }: { items: SavedItem[] }) {
   const { t } = useTranslation();
   return (
     <ul className={css.savedList}>
       {items.map((item) => {
-        const href = isSavedItemUnavailable(item) ? null : item.href;
+        const isUnavailable = isSavedItemUnavailable(item);
+        const isWithdrawn =
+          isUnavailable && item.unavailableReason === "withdrawn";
+        const href = isUnavailable && !isWithdrawn ? null : (item.href ?? null);
         return (
           <li
             key={item.id}
-            className={[css.savedRow, href === null && css.savedRowUnavailable]
+            className={[css.savedRow, isUnavailable && css.savedRowUnavailable]
               .filter(Boolean)
               .join(" ")}
           >
@@ -31,10 +40,29 @@ export function StudioLibrarySavedList({ items }: { items: SavedItem[] }) {
               <span className={css.savedTitle}>{item.title}</span>
             )}
             {item.meta && <span className={css.savedMeta}>{item.meta}</span>}
-            {href === null && (
+            {isUnavailable && (
               <span className={css.savedNote}>
-                {t("studio:playlist.row.unavailable")}
+                {t(
+                  isWithdrawn
+                    ? "studio:withdrawnLive.rowLabel"
+                    : "studio:playlist.row.unavailable",
+                )}
               </span>
+            )}
+            {!isUnavailable && href && item.kind === "studio_track" && (
+              <StudioTrackMenu
+                track={{
+                  id: item.id.slice(SAVED_TRACK_PREFIX.length),
+                  title: item.title,
+                  href: linkToPath(href),
+                  // A saved item carries no audio or explicit flag: playNext
+                  // answers false for a track that cannot join, and the menu
+                  // says so.
+                  hasAudio: true,
+                  isExplicit: false,
+                }}
+                className={css.savedMenu}
+              />
             )}
           </li>
         );

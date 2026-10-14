@@ -368,38 +368,14 @@ export const studioShowcase: Catalog = {
     "{amount} of your round-ups went to emergency support this quarter",
 
   // ── Press: hero (StudioPressPage) ──
-  "press.hero.tagline":
-    "Fado that refuses church. <em>A hymn for the ones who left and the ones who stayed.</em>",
   "press.facts.pronounsValue": "she / her",
   "press.facts.playsValue": "<em>{plays}</em> on Studio",
-
-  // ── Press: bio (StudioPressPage) ──
-  "press.bio.short":
-    "Mariana Sol is a Sintra-born singer and composer working at the seam between fado and devotional song. Her 2026 album <em>Cidade dos santos</em> has been played 142,000 times on the QueerPulse co-op, paying her €7,100 directly.",
-  "press.bio.long.p1":
-    "Mariana Sol grew up in the hills above Sintra, in a house where her grandmother sang the rosary like a torch song. She writes <em>fado that refuses church</em>: hymns for queer congregations that never had a building.",
-  "press.bio.long.p2":
-    "Her debut <em>Cidade dos santos</em> (2026) arrived on QueerPulse Studio, the listener-owned co-op, where she keeps her masters and 80% of every play. She performs the Wednesday live room from a converted garage, tipped in real time by several hundred listeners.",
 
   // ── Press: photos (StudioPressPage) ──
   "press.photos.liveGarage": "Live · converted garage",
   "press.photos.portraitSintra": "Portrait · Sintra hills",
   "press.photos.studioSession": "Studio · Cidade dos santos",
   "press.photos.portraitMono": "Portrait · black & white",
-
-  // ── Press: latest release (StudioPressPage) ──
-  "press.release.meta": "Album · 11 tracks · released 14 Mar 2026 · CC-BY-NC",
-
-  // ── Press: selected press (StudioPressPage) ──
-  "press.quotes.shape":
-    "The most devastating record to come out of the Iberian queer underground this decade",
-  "press.quotes.wire": "Sol sings like she's negotiating with God and winning",
-  "press.quotes.pitchfork":
-    "Proof that the co-op model produces art as well as spreadsheets",
-  "press.quotes.gayTimes": "You will cry in a language you don't speak",
-  "press.quotes.medium.print": "print",
-  "press.quotes.medium.feature": "feature",
-  "press.quotes.medium.review": "review",
 
   // ── Press: facts and boilerplate (StudioPressPage) ──
   "press.boilerplate.fullNameValue": "Mariana Sol (b. 1996, Sintra)",

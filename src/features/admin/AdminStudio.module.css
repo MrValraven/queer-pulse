@@ -35,6 +35,17 @@
   object-fit: cover;
 }
 
+/* Studio v3: a reported persona post's photo in the drawer. The width and
+   height attributes reserve its box until it loads. */
+.postPhoto {
+  display: block;
+  width: 100%;
+  max-width: 240px;
+  height: auto;
+  margin-top: 8px;
+  border-radius: var(--radius-8);
+}
+
 /* The queue thumbnail's placeholder tints, matching ImageSlot's. */
 .tintDefault {
   background: rgba(var(--plum-rgb), 0.06);

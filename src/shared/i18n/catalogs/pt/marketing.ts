@@ -3490,6 +3490,8 @@ export const marketing: Catalog = {
   "changelog.release.count.infrastructure_other":
     "{count} alterações de infraestrutura",
   // Release headlines, one per shipping day (see changelogReleases.ts).
+  "changelog.releases.2026-10-14.headline":
+    "O Studio ganha podcasts, spoken word e áudio de performance, ambientes, cenas, escolhas da equipa, rádio de género ou ambiente, créditos de personas, um leitor completo, lançamentos agendados e kits de imprensa.",
   "changelog.releases.2026-10-13.headline":
     "O Studio ganha playlists, artistas para seguir e géneros, o Marketing do admin ganha flyers, e encontras o teu trabalho escrevendo o nome.",
   "changelog.releases.2026-10-12.headline":
@@ -3942,6 +3944,33 @@ export const marketing: Catalog = {
     "Studio mais legível e ordem das faixas estável",
   "changelog.entries.studio-v2-fixes.body":
     "As páginas do Studio leem-se bem no telemóvel e em português, e remover um carregamento falhado mantém a ordem das faixas.",
+  "changelog.entries.studio-artist-kinds.title":
+    "Podcasts, spoken word e áudio de performance no Studio",
+  "changelog.entries.studio-artist-kinds.body":
+    "Podcasts, poesia e performance chegam ao Studio: episódios, transcrições e fontes creditadas.",
+  "changelog.entries.studio-listening.title": "Um leitor completo no Studio",
+  "changelog.entries.studio-listening.body":
+    "Fila, ecrã A tocar agora, letras sincronizadas, capítulos nas misturas, forma de onda, volume equilibrado, transição entre faixas, temporizador e atalhos de teclado.",
+  "changelog.entries.studio-v3-artist-tools.title":
+    "Lançamentos agendados, kits de imprensa e novidades no Studio",
+  "changelog.entries.studio-v3-artist-tools.body":
+    "Agenda lançamentos com Avisa-me, partilha pré-escutas privadas, junta links de compra, imprime a folha e publica novidades.",
+  "changelog.entries.studio-discovery.title":
+    "Descobre música do Studio por ambiente, cena e escolhas da equipa",
+  "changelog.entries.studio-discovery.body":
+    "Ouve rádio de género ou ambiente e credita personas nas tuas faixas depois de a pessoa artista creditada aceitar.",
+  "changelog.entries.studio-open-pages.title":
+    "Ajuda, direitos e definições do Studio abertos",
+  "changelog.entries.studio-open-pages.body":
+    "Ajuda, Direitos, Termos e Definições já funcionam para quem tem acesso ao Studio, um lançamento retirado explica-se e quem publica pode contestar uma retirada.",
+  "changelog.entries.see-everyone-going.title":
+    "Vê toda a gente que vai a um evento",
+  "changelog.entries.see-everyone-going.body":
+    'Toca em "+N mais" em Quem vai e a lista completa abre ali mesmo, sem quem escolheu ir em privado.',
+  "changelog.entries.pending-ownership-claims-count.title":
+    "As reivindicações à espera mostram um número",
+  "changelog.entries.pending-ownership-claims-count.body":
+    "O menu de administração e o separador de reivindicações contam as que esperam, e aprovar uma pede agora confirmação.",
   "changelog.entries.balanced-headline-wraps.title":
     "Os títulos já não deixam a última palavra sozinha",
   "changelog.entries.balanced-headline-wraps.body":

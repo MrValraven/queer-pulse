@@ -36,4 +36,18 @@ export const safeStorage = {
       /* storage blocked — nothing to clear */
     }
   },
+  /** Every key in this origin's localStorage, or [] when storage is blocked.
+   *  Studio's episode memory uses it to clear its keys for every member. */
+  keys(): string[] {
+    try {
+      const keys: string[] = [];
+      for (let index = 0; index < window.localStorage.length; index += 1) {
+        const key = window.localStorage.key(index);
+        if (key !== null) keys.push(key);
+      }
+      return keys;
+    } catch {
+      return [];
+    }
+  },
 };

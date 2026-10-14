@@ -40,6 +40,32 @@
   }
 }
 
+/* Titles wrap between words, with hyphenation (the page sets the lang) as
+   the fallback for one very long word. */
+.tracklist > li h5 {
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+/* Phones: the duration and the row buttons move to a second line under the
+   title, so the title takes the full column. The play button and the cover
+   span both lines. The buttons keep their 44px targets. */
+@media (--sm) {
+  .tracklist > li {
+    grid-template-columns: 32px 32px minmax(0, 1fr);
+  }
+
+  .tracklist > li > :nth-child(-n + 2) {
+    grid-row: span 2;
+  }
+
+  .tracklist > li > .timeCell {
+    grid-column: 3;
+    grid-row: 2;
+    justify-content: flex-start;
+  }
+}
+
 .rowPlay {
   position: relative;
   display: inline-flex;

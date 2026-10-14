@@ -1,0 +1,174 @@
+.page {
+  min-height: 100svh;
+  background: var(--studio-surface);
+  color: var(--studio-text);
+  font-family: var(--sans);
+}
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-sticky);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 18px;
+  padding: 14px 36px;
+  padding-block-start: max(14px, env(safe-area-inset-top));
+  background: var(--studio-surface-rail);
+  border-bottom: 1px solid rgba(var(--studio-ink-rgb), 0.1);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--studio-text);
+  text-decoration: none;
+}
+
+.brand:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.pulseDot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.wordmark {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: var(--text-20);
+}
+
+.wordmarkItalic {
+  font-style: italic;
+}
+
+.crumb {
+  padding-left: 18px;
+  border-left: 1px solid rgba(var(--studio-ink-rgb), 0.12);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: var(--text-14);
+  color: var(--studio-text-muted);
+}
+
+.crumb em {
+  color: var(--studio-accent-text);
+}
+
+.actions {
+  margin-left: auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.wrap {
+  max-width: var(--maxw-page);
+  margin: 0 auto;
+  padding: var(--section-y-48) 36px var(--section-y-96);
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 44px;
+  align-items: center;
+  padding-bottom: var(--section-y-48);
+  border-bottom: 1px solid rgba(var(--studio-ink-rgb), 0.1);
+}
+
+.portrait {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.heroText {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.eyebrow {
+  margin: 0;
+  font-size: var(--text-11);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--studio-accent-text);
+}
+
+.name {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: var(--text-40);
+  line-height: 1;
+}
+
+.kind {
+  margin: 0;
+  color: var(--studio-text-muted);
+}
+
+.pitch {
+  margin: 0;
+  max-width: 44ch;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: var(--text-20);
+  line-height: 1.45;
+}
+
+.edit {
+  margin-top: 6px;
+}
+
+@media (max-width: 720px) {
+  /* On a phone the wrapped bar would hold a third of the screen, so it
+     scrolls away with the page. */
+  .bar {
+    position: static;
+    padding-inline: 16px;
+  }
+
+  .crumb {
+    display: none;
+  }
+
+  .actions {
+    flex: 1 1 100%;
+    margin-left: 0;
+  }
+
+  .wrap {
+    padding-inline: 16px;
+  }
+
+  .hero {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    justify-items: center;
+    text-align: center;
+  }
+
+  .heroText {
+    align-items: center;
+  }
+
+  /* The small button's 40px floor goes back to the 44px tap target. */
+  .heroText .edit {
+    min-height: var(--tap-min);
+  }
+}

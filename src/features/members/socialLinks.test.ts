@@ -89,3 +89,54 @@ describe("socialDisplayLabel", () => {
     );
   });
 });
+
+describe("Bandcamp artist subdomains", () => {
+  it("links a subdomain value to its own host", () => {
+    expect(socialHref("bandcamp", "marianasol.bandcamp.com")).toBe(
+      "https://marianasol.bandcamp.com",
+    );
+    expect(socialHref("bandcamp", "you.bandcamp.com/album/first")).toBe(
+      "https://you.bandcamp.com/album/first",
+    );
+    expect(socialHref("bandcamp", "https://marianasol.bandcamp.com")).toBe(
+      "https://marianasol.bandcamp.com",
+    );
+  });
+
+  it("keeps every other Bandcamp value as before", () => {
+    expect(socialHref("bandcamp", "marianasol")).toBe(
+      "https://bandcamp.com/marianasol",
+    );
+    expect(socialHref("bandcamp", "@marianasol")).toBe(
+      "https://bandcamp.com/marianasol",
+    );
+    expect(socialHref("bandcamp", "bandcamp.com/marianasol")).toBe(
+      "https://bandcamp.com/marianasol",
+    );
+    expect(socialHref("bandcamp", "www.bandcamp.com/marianasol")).toBe(
+      "https://bandcamp.com/marianasol",
+    );
+    expect(socialDisplayLabel("bandcamp", "marianasol")).toBe("marianasol");
+    expect(
+      socialDisplayLabel("bandcamp", "https://bandcamp.com/marianasol"),
+    ).toBe("marianasol");
+  });
+
+  it("labels a subdomain value with its host", () => {
+    expect(socialDisplayLabel("bandcamp", "marianasol.bandcamp.com")).toBe(
+      "marianasol.bandcamp.com",
+    );
+    expect(
+      socialDisplayLabel("bandcamp", "https://marianasol.bandcamp.com/"),
+    ).toBe("marianasol.bandcamp.com");
+  });
+
+  it("leaves other platforms with a lookalike value untouched", () => {
+    expect(socialHref("soundcloud", "you.bandcamp.com")).toBe(
+      "https://soundcloud.com/you.bandcamp.com",
+    );
+    expect(socialDisplayLabel("website", "you.bandcamp.com")).toBe(
+      "you.bandcamp.com",
+    );
+  });
+});

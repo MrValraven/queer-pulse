@@ -94,6 +94,36 @@ describe("dropStudioPlayBreadcrumb", () => {
     expect(dropStudioPlayBreadcrumb(fetchCrumb)).toBe(fetchCrumb);
     expect(dropStudioPlayBreadcrumb(clickCrumb)).toBe(clickCrumb);
   });
+
+  it("drops a fetch breadcrumb for a radio read", () => {
+    expect(
+      dropStudioPlayBreadcrumb({
+        category: "fetch",
+        data: { url: "/v1/studio/radio?genre=fado", method: "GET" },
+      }),
+    ).toBeNull();
+  });
+
+  it("drops the artist kinds reads that name what a member listens to", () => {
+    expect(
+      dropStudioPlayBreadcrumb({
+        category: "fetch",
+        data: { url: "/v1/studio/episodes/latest?limit=12", method: "GET" },
+      }),
+    ).toBeNull();
+    expect(
+      dropStudioPlayBreadcrumb({
+        category: "fetch",
+        data: { url: "/v1/studio/formats", method: "GET" },
+      }),
+    ).toBeNull();
+    expect(
+      dropStudioPlayBreadcrumb({
+        category: "xhr",
+        data: { url: "/v1/studio/tracks/e1/publish", method: "POST" },
+      }),
+    ).toBeNull();
+  });
 });
 
 function eventWithRequest(request: ErrorEvent["request"]): ErrorEvent {
@@ -158,5 +188,41 @@ describe("dropPrivateRequestUrl", () => {
     expect(event.request?.headers).toEqual({
       Referer: "https://queerpulse.test/events",
     });
+  });
+});
+
+describe("Studio v3 private paths", () => {
+  it("drops breadcrumbs that name a preview link or a press kit", () => {
+    const token = "a".repeat(64);
+    for (const url of [
+      `/v1/studio/previews/${token}`,
+      `/v1/studio/previews/${token}/tracks/t1/stream`,
+      "/v1/studio/artists/p1/press-kit",
+    ])
+      expect(
+        dropStudioPlayBreadcrumb({ category: "fetch", data: { url } }),
+      ).toBeNull();
+    for (const to of [
+      `/studio/preview/${token}`,
+      "/studio/press?id=p1",
+      "/studio/press/print?id=p1",
+      "/studio/press/edit?persona=p1",
+    ])
+      expect(
+        dropStudioPlayBreadcrumb({
+          category: "navigation",
+          data: { from: "/studio", to },
+        }),
+      ).toBeNull();
+  });
+
+  it("strips a preview page from an error's request url", () => {
+    const event = dropPrivateRequestUrl(
+      eventWithRequest({
+        url: `https://queerpulse.test/studio/preview/${"b".repeat(64)}`,
+        method: "GET",
+      }),
+    );
+    expect(event.request).toEqual({ method: "GET" });
   });
 });

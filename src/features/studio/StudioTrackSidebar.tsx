@@ -1,11 +1,13 @@
 import { Link } from "react-router-dom";
 import { FiArrowRight } from "react-icons/fi";
 import { routes } from "../../app/routeMap";
+import { Collapse } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { StudioTrackView } from "./api/studio.adapters";
 import { useStudioShowcase } from "./useStudioShowcase";
 import { SPLIT } from "./studioTrack.data";
 import { StudioEuroAmount } from "./StudioEuroAmount";
+import { StudioPersonaCreditChips } from "./StudioPersonaCreditChips";
 import trackStyles from "./track.module.css";
 
 // Content: the curator's quote, the per-track split/credits breakdown and
@@ -123,32 +125,37 @@ function StudioTrackSheetMini({ title }: { title: string }) {
 
 export function StudioTrackSidebar({ track }: { track: StudioTrackView }) {
   const { t } = useTranslation();
-  const isShowcase = useStudioShowcase();
+  // The demo's curator note, split and lead sheet speak of a song, so they
+  // show on music tracks alone.
+  const isMusicShowcase =
+    useStudioShowcase() && track.release.format === "music";
   return (
     <div className={trackStyles.rSide}>
-      {isShowcase && <StudioTrackCuratorNote />}
-      {isShowcase && <StudioTrackSplit />}
+      {isMusicShowcase && <StudioTrackCuratorNote />}
+      {isMusicShowcase && <StudioTrackSplit />}
       <div className={trackStyles.sCard}>
         <div className={trackStyles.sEb}>
           {t("studio:track.sidebar.creditsHeading")}
         </div>
-        {track.credits.length > 0 ? (
-          track.credits.map((credit) => (
-            <div
-              key={`${credit.name}-${credit.role}`}
-              className={trackStyles.credRow}
-            >
-              <span className={trackStyles.who}>{credit.name}</span>
-              <span className={trackStyles.role}>{credit.role}</span>
-            </div>
-          ))
-        ) : (
+        <StudioPersonaCreditChips credits={track.personaCredits} />
+        {track.credits.map((credit) => (
+          <div
+            key={`${credit.name}-${credit.role}`}
+            className={trackStyles.credRow}
+          >
+            <span className={trackStyles.who}>{credit.name}</span>
+            <span className={trackStyles.role}>{credit.role}</span>
+          </div>
+        ))}
+        <Collapse
+          isOpen={track.credits.length + track.personaCredits.length === 0}
+        >
           <p className={trackStyles.noLyrics}>
             {t("studio:trackPage.noCredits")}
           </p>
-        )}
+        </Collapse>
       </div>
-      {isShowcase && <StudioTrackSheetMini title={track.title} />}
+      {isMusicShowcase && <StudioTrackSheetMini title={track.title} />}
     </div>
   );
 }

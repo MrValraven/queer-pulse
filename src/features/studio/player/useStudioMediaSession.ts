@@ -1,10 +1,15 @@
 import { useEffect, useRef } from "react";
+import {
+  EPISODE_SKIP_BACK_SECONDS,
+  EPISODE_SKIP_FORWARD_SECONDS,
+  MUSIC_SEEK_SECONDS,
+} from "./studioEpisodeRules";
 import type {
   StudioPlayerClock,
   StudioPlayerValue,
 } from "./studioPlayerContext";
-
-const SEEK_OFFSET_SECONDS = 10;
+import { useStudioEpisodeSpeed } from "./useStudioEpisodeMemory";
+import { playbackRateFor } from "./useStudioEpisodeRate";
 
 function mediaSession(): MediaSession | null {
   return typeof navigator !== "undefined" && "mediaSession" in navigator
@@ -19,6 +24,16 @@ export function useStudioMediaSession(
   clock: StudioPlayerClock,
 ) {
   const item = player.currentItem;
+  // Artist kinds: episodes step 15 s back and 30 s forward, music 10 s.
+  const isEpisode = item?.isEpisode === true;
+  const backSeconds = isEpisode
+    ? EPISODE_SKIP_BACK_SECONDS
+    : MUSIC_SEEK_SECONDS;
+  const forwardSeconds = isEpisode
+    ? EPISODE_SKIP_FORWARD_SECONDS
+    : MUSIC_SEEK_SECONDS;
+  const { speed } = useStudioEpisodeSpeed();
+  const playbackRate = playbackRateFor(isEpisode, speed);
   // The handlers read the playhead through a ref, so they register once per
   // track and play state and stay put while the clock ticks.
   const currentTimeRef = useRef(clock.currentTime);
@@ -52,7 +67,7 @@ export function useStudioMediaSession(
     const session = mediaSession();
     if (!session || !item) return;
     const isPlaying = player.status === "playing";
-    const handlers: [MediaSessionAction, MediaSessionActionHandler][] = [
+    const handlers: [MediaSessionAction, MediaSessionActionHandler | null][] = [
       [
         "play",
         () => {
@@ -66,7 +81,8 @@ export function useStudioMediaSession(
         },
       ],
       ["previoustrack", () => player.previous()],
-      ["nexttrack", () => player.next()],
+      // The lock screen greys Next out when nothing follows.
+      ["nexttrack", player.hasNext ? () => player.next() : null],
       [
         "seekto",
         (details) => {
@@ -77,16 +93,14 @@ export function useStudioMediaSession(
         "seekbackward",
         (details) =>
           player.seek(
-            currentTimeRef.current -
-              (details.seekOffset ?? SEEK_OFFSET_SECONDS),
+            currentTimeRef.current - (details.seekOffset ?? backSeconds),
           ),
       ],
       [
         "seekforward",
         (details) =>
           player.seek(
-            currentTimeRef.current +
-              (details.seekOffset ?? SEEK_OFFSET_SECONDS),
+            currentTimeRef.current + (details.seekOffset ?? forwardSeconds),
           ),
       ],
     ];
@@ -106,7 +120,7 @@ export function useStudioMediaSession(
         }
       }
     };
-  }, [player, item]);
+  }, [player, item, backSeconds, forwardSeconds]);
 
   useEffect(() => {
     const session = mediaSession();
@@ -121,10 +135,10 @@ export function useStudioMediaSession(
       session.setPositionState({
         duration: clock.duration,
         position: Math.min(Math.max(0, clock.currentTime), clock.duration),
-        playbackRate: 1,
+        playbackRate,
       });
     } catch {
       // A position the browser refuses leaves the lock screen as it was.
     }
-  }, [clock.currentTime, clock.duration]);
+  }, [clock.currentTime, clock.duration, playbackRate]);
 }

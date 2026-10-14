@@ -14,9 +14,19 @@
   border-radius: var(--radius-pill);
   padding: 6px 12px;
   font-size: var(--text-12);
+  font-family: inherit;
   color: inherit;
   background: none;
   cursor: pointer;
+}
+
+/* The remove-credit icon keeps a full tap target. */
+.creditRow button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-block-size: var(--tap-min);
+  min-inline-size: var(--tap-min);
 }
 
 .addCredit {
@@ -24,6 +34,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  min-block-size: var(--tap-min);
   border: 1px solid rgba(var(--studio-ink-rgb), 0.28);
   border-radius: var(--radius-pill);
   padding: 8px 16px;
@@ -108,6 +119,7 @@
 }
 
 .stage {
+  position: relative;
   font-size: var(--text-12);
   color: var(--text60);
 }
@@ -133,6 +145,11 @@
   flex-wrap: wrap;
   gap: 6px;
   justify-content: flex-end;
+}
+
+/* The Collapse around the details panel spans the row's grid. */
+.detailsSlot {
+  grid-column: 1 / -1;
 }
 
 .details {
@@ -233,4 +250,53 @@
     grid-column: 1 / -1;
     justify-content: flex-start;
   }
+}
+
+.measuring {
+  opacity: 0;
+  transition-property: opacity;
+  transition-duration: var(--dur-base);
+  transition-timing-function: var(--ease);
+}
+
+.measuring[data-visible] {
+  opacity: 1;
+}
+
+/* Hidden, it leaves the flow so it never widens or wraps the stage line
+   (the pt copy is the longest). It fades in once shown. */
+.measuring:not([data-visible]) {
+  position: absolute;
+  inset-inline-start: 0;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.loudToggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-block-size: var(--tap-min);
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--studio-accent-text);
+  font-weight: 600;
+  font-family: inherit;
+  font-size: inherit;
+  cursor: pointer;
+}
+
+.backfill p {
+  margin: 8px 0 0;
+  font-size: var(--text-12);
+  color: var(--studio-text-muted);
+}
+
+.loudList {
+  margin: 6px 0 8px;
+  padding-inline-start: 18px;
 }

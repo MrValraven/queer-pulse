@@ -299,21 +299,6 @@ export const studio: Catalog = {
   "welcome.readyToast": "Studio is ready for you",
 
   // ── About the co-op (StudioAboutPage + StudioAboutSections) ──────────────
-  "about.hero.eyebrow": "About · written for sceptics",
-  "about.hero.title":
-    "A streaming co-op that <em>pays</em> the people who made the song.",
-  "about.hero.lede":
-    "You've heard \"fair pay for artists\" from every platform that underpays them. So here's the arithmetic, the governance, and the honest ceiling: <em>no slogans you can't audit.</em>",
-
-  "about.sec.whatItIs.num": "01: what it is",
-  "about.sec.whatItIs.heading":
-    "A listening platform, run as a <em>co-op</em>.",
-  "about.sec.whatItIs.p1":
-    "QueerPulse Studio is owned by the people who use it: listeners and artists hold every share between them. <strong>Eighty cents of every euro a listen generates goes to the artist.</strong> Every cent of every tip. The split is public, the catalogue is curated by an elected council of six, and the masters never leave the artist's hands.",
-  "about.sec.whatItIs.p2":
-    "It is the third part of the QueerPulse co-op, after the Magazine and Cinema. One membership covers all of it. You can be a member for the writing and never open Studio; you can be here only for the music and never read a word.",
-  "about.sec.whatItIs.pull":
-    "We're building a <em>different kind</em> of streaming.",
 
   "about.sec.rate.num": "02: the rate",
   "about.sec.rate.heading":
@@ -379,18 +364,10 @@ export const studio: Catalog = {
   "about.skeptic.leave.a":
     "You keep your masters and everything you've earned. Takedown is a one-page, 14-day process with no retention loop. Past plays stay paid. Leaving is as easy as arriving. We think that's the only honest way to ask you to stay.",
 
-  "about.cta.title": "Studio is small, and it <em>pays</em>.",
-  "about.cta.body":
-    "Listen to one set free, no account. If it's for you, sustain it for the price of two coffees.",
   "about.cta.join": "Join Studio",
   "about.cta.ledger": "Read the public ledger",
 
   // ── Accessibility (StudioAccessibilityPage) ───────────────────────────────
-  "accessibility.hero.eyebrow": "Accessibility · the working list",
-  "accessibility.hero.title":
-    "Music is for everyone or it <em>isn't music</em>.",
-  "accessibility.hero.lede":
-    "This is both a statement of intent and a live checklist of what actually works today. Where something's <em>not</em> done yet, we say so. We'd rather be honest than aspirational.",
   "accessibility.statement.p1":
     "QueerPulse Studio commits to meeting <em>WCAG 2.2 AA</em> across every surface, and to treating accessibility as a core product requirement, built in from the start. Deaf and hard-of-hearing people should be able to use a music platform. So should blind and low-vision people, people who navigate by keyboard, and people who need words in their own language.",
   "accessibility.statement.p2":
@@ -441,45 +418,16 @@ export const studio: Catalog = {
   "accessibility.item.reducedMotion.body":
     "Every decorative animation (the pulse dot, the waveforms, the equaliser bars) stills itself when your system asks for reduced motion. Nothing essential moves.",
 
-  "accessibility.status.live": "Live",
   "accessibility.status.inProgress": "In progress",
 
   "accessibility.shortcuts.title": "Player <em>keyboard</em> shortcuts",
   "accessibility.shortcuts.dek":
-    "Focus anywhere outside a text field. These work the same on every Studio surface, since the transport is always mounted.",
-  "accessibility.shortcut.playPause": "Play / <em>pause</em>",
-  "accessibility.shortcut.prevNext": "Previous / next <em>track</em>",
-  "accessibility.shortcut.volume": "Volume <em>up / down</em>",
-  "accessibility.shortcut.tip": "Tip the current artist",
-  "accessibility.shortcut.save": "Save to library",
-  "accessibility.shortcut.captions": "Toggle <em>captions / lyrics</em>",
-  "accessibility.shortcut.search": "Open search",
-  "accessibility.key.space": "Space",
+    "They work on any Studio page while something is queued, unless you're typing in a field",
 
-  "accessibility.contact.title": "Found a <em>barrier</em>?",
-  "accessibility.contact.body":
-    "Tell us and we'll treat it as a bug to fix. Reports from assistive-tech users jump the queue: <em>hello@queerpulse.com</em>, or flag it from any page's footer. We respond within two working days, with a fix or an honest timeline.",
-  "accessibility.contact.reportCta": "Report an access barrier",
-  "accessibility.contact.reportToast": "Thanks. We'll treat this as a bug",
   "accessibility.contact.meta":
     "Last audited 2 Jun 2026 · WCAG 2.2 AA · NVDA, VoiceOver, TalkBack · next audit Sep 2026",
 
   // ── Help & FAQ (StudioHelpPage + StudioHelpFaq) ───────────────────────────
-  "help.hero.eyebrow": "Help · answers from our team",
-  "help.hero.title": "How can we <em>help</em>?",
-  "help.hero.dek":
-    "Most answers are below. If they're not, our team reads every message. We don't run a bot maze, and there's no tier of support you have to pay for.",
-  "help.searchPlaceholder": "Search help: tipping, payouts, audio quality…",
-  "help.searchAria": "Search help",
-  "help.searchCta": "Search",
-  "help.searchingToast": "Searching the help centre…",
-
-  "help.cat.listening.heading": "Listening & <em>tipping</em>",
-  "help.cat.listening.blurb": "Playback, tips, sustaining, library",
-  "help.cat.account.heading": "Account & <em>billing</em>",
-  "help.cat.account.blurb": "Membership, tiers, privacy, cancelling",
-  "help.cat.artists.heading": "For <em>artists</em>",
-  "help.cat.artists.blurb": "Uploads, payouts, rights, the rate",
 
   "help.faq.moneyGo.q": "Where does my money actually go?",
   "help.faq.moneyGo.a":
@@ -490,9 +438,6 @@ export const studio: Catalog = {
   "help.faq.tipNotesPrivate.q": "Are my tip notes private?",
   "help.faq.tipNotesPrivate.a":
     "<strong>Yes, by default.</strong> A note you write with a tip is seen only by you and the artist. You can choose to make notes semi-public or public in <a>Settings</a>, and flip any single note later.",
-  "help.faq.listeningHistory.q": "Do you keep my listening history?",
-  "help.faq.listeningHistory.a":
-    "Not unless you turn it on. By default <em>nothing about what you play leaves your browser</em>. If you enable history, it's a private record only you see, erasable in one tap with no confirmation modal.",
 
   "help.faq.priceDiff.q": "What's the difference between €7 and €11?",
   "help.faq.priceDiff.a":
@@ -500,34 +445,15 @@ export const studio: Catalog = {
   "help.faq.cancel.q": "How do I cancel?",
   "help.faq.cancel.a":
     'One click in <a>Settings, then Erase & exit</a>. No retention call, no "are you sure" loop, no winback emails. We think leaving should be as easy as arriving. That\'s the only honest way to ask you to stay.',
-  "help.faq.dataSold.q": "Is my data sold or used to train anything?",
-  "help.faq.dataSold.a":
-    "<strong>Never.</strong> We don't sell, share, or train on what you listen to. Aggregate play counts feed the public ledger, but nothing that identifies you. Full detail in the <a>trust & terms</a> page.",
 
   "help.faq.getPaid.q": "When and how do I get paid?",
   "help.faq.getPaid.a":
     'Monthly, on the 5th, with a €5 floor. SEPA or Stripe Connect. You see the per-stream rate that month, ledger entry numbers, and per-release breakdowns. Collaborators are paid <em>directly</em>. There\'s no "main artist" wallet. See <a>Payouts</a>.',
-  "help.faq.keepMasters.q": "Do I keep my masters?",
-  "help.faq.keepMasters.a":
-    "<strong>Always.</strong> You keep your masters and your rights. You can take any release down in a one-page, 14-day process with no retention loop, and past plays stay paid. See <a>Rights & takedown</a>.",
   "help.faq.realisticEarn.q": "What can I realistically earn?",
   "help.faq.realisticEarn.a":
     "We're honest about the ceiling: roughly €74/mo casual, €340/mo building, €1,820/mo sustaining. Studio won't replace a touring income, but it can replace the rent. The full breakdown is on <a>About Studio</a>.",
 
-  "help.stillStuck.title": "Still <em>stuck</em>?",
   "help.statusOperational": "All systems operational ·",
-
-  "help.contact.email.title": "<em>Email</em> our team",
-  "help.contact.email.replyLine": "replies within a day",
-  "help.contact.email.action": "Send a message",
-  "help.contact.email.toast": "Opening your mail client…",
-  "help.contact.forum.title": "Community <em>forum</em>",
-  "help.contact.forum.body": "Members helping members <em>· always open</em>",
-  "help.contact.forum.action": "Visit the forum",
-  "help.contact.forum.toast": "Opening the forum…",
-  "help.contact.access.title": "Report an <em>access barrier</em>",
-  "help.contact.access.body": "Assistive-tech reports <em>jump the queue</em>",
-  "help.contact.access.action": "Accessibility",
 
   // ── Artist press kit (StudioPressPage + StudioPressBar) ───────────────────
   // Chrome only. The demo's mock content for this page lives in studioShowcase
@@ -537,7 +463,6 @@ export const studio: Catalog = {
   "press.downloadingPhotosToast": "Downloading press photos · hi-res",
   "press.downloadingPhotoToast": "Downloading photo · hi-res",
   "press.accessRequestedToast": "Press access requested. We'll verify you once",
-  "press.eyebrow": "Auto-generated press kit · always current",
   "press.fact.from": "From",
   "press.fact.pronouns": "Pronouns",
   "press.fact.since": "Since",
@@ -552,14 +477,9 @@ export const studio: Catalog = {
   "press.previewNote":
     "This preview carries an <em>inaudible watermark</em> and a spoken QueerPulse tag at the tail. For a clean broadcast master, request the full promo. We verify press once, then you're cleared for everything.",
   "press.section.bio": "<em>Bio</em>",
-  "press.copyBothCta": "Copy both",
-  "press.bio.shortLabel": "Short · 40 words",
-  "press.bio.longLabel": "Long · 120 words",
   "press.section.photos": "Press <em>photos</em>",
   "press.downloadAllCta": "Download all · hi-res",
   "press.downloadOneHint": "Download hi-res",
-  "press.section.release": "Latest <em>release</em>",
-  "press.outNowBadge": "Out now",
   "press.section.press": "Selected <em>press</em>",
   "press.section.boilerplate": "Facts & <em>boilerplate</em>",
   "press.copyCta": "Copy",
@@ -568,11 +488,7 @@ export const studio: Catalog = {
   "press.boilerplate.label": "Label",
   "press.boilerplate.booking": "Booking",
   "press.boilerplate.pronounce": "Pronounce",
-  "press.section.contactHeading": "Press & <em>booking</em>",
-  "press.viewArtistCta": "View artist page",
   "press.requestAccessCta": "Request press access",
-  "press.generatedFooter":
-    "Generated by QueerPulse Studio · last refreshed 10 Jun 2026 · this page updates itself as {name} releases",
   "press.bar.crumb": "Press kit · <em>{name}</em>",
   "press.bar.copyLinkCta": "Copy press link",
   "press.bar.downloadAssetsCta": "Download assets",
@@ -580,11 +496,6 @@ export const studio: Catalog = {
   "press.bar.preparingToast": "Preparing your press assets",
 
   // ── Trust & terms (StudioTermsPage) ───────────────────────────────────────
-  "terms.eyebrow": "The fine print, in plain Portuguese-English",
-  "terms.hero.eyebrow": "Trust & terms",
-  "terms.hero.title": "The deal, written so you can <em>actually read it</em>.",
-  "terms.hero.lede":
-    "The full legal terms exist and a lawyer wrote them. But here's the whole thing in plain language first: <em>because a co-op you can't understand isn't really yours</em>.",
 
   "terms.deal.artists.title": "Artists keep <em>80%</em> & their masters",
   "terms.deal.artists.body":
@@ -637,11 +548,8 @@ export const studio: Catalog = {
   "terms.sec.privacy.footnote":
     "Aggregate, de-identified play counts feed the public ledger so artists get paid and the numbers are auditable. You can export everything we hold, or erase it, from <a>Settings, then Erase & exit</a>: instantly, no modal, no undo needed because we mean it.",
 
-  "terms.longVersions.title": "The long versions",
   "terms.longVersions.meta":
     "terms v3.2 · privacy v2.1 · co-op deed 2024 · last updated 2 Jun 2026",
-  "terms.readFullTermsCta": "Read full terms",
-  "terms.readFullTermsToast": "Opening the full legal terms…",
   "terms.readDeedCta": "Read the deed",
   "terms.readDeedToast": "Opening the co-op deed…",
 
@@ -657,11 +565,6 @@ export const studio: Catalog = {
   "rights.promise.banking.title": "Banking untouched",
   "rights.promise.banking.body":
     "A takedown is not an account closure. Your SEPA details, your payout schedule, your collaborator splits: all stay live.",
-
-  "rights.hero.eyebrow": "Your work · your call",
-  "rights.hero.title": "Rights & <em>takedown</em>.",
-  "rights.hero.dek":
-    'One page. Your masters are yours. You can take any release off Studio at any time, for any reason or none. No retention team, no exit survey, no "are you sure" loop designed to wear you down.',
 
   "rights.releases.heading": "Your <em>releases</em>",
   "rights.releases.liveCount_one": "{count} live",
@@ -763,9 +666,6 @@ export const studio: Catalog = {
   "artist.sidebar.earningsStreaming": "Earnings (streaming)",
   "artist.sidebar.tipsReceived": "Tips received",
   "artist.sidebar.directSubscribers": "Direct subscribers",
-  "artist.sidebar.upcomingHeading": "Upcoming",
-  "artist.sidebar.premiereLabel": "Premiere",
-  "artist.sidebar.rsvpCta": "RSVP",
 
   // ── Live set detail page (StudioSetPage) ──────────────────────────────────
   // Chrome only. The demo's mock content for this page lives in studioShowcase
@@ -833,10 +733,6 @@ export const studio: Catalog = {
   "council.theirSlateCta": "Their slate",
 
   // ── Settings (StudioSettingsPage + Controls + Sections) ───────────────────
-  "settings.eyebrow": "Your Studio · settings",
-  "settings.title": "How Studio <em>treats</em> you.",
-  "settings.dek":
-    "Audio, privacy, captions, tipping. Nothing here is on unless you turn it on, and anything you turn on, you can erase in <em>one tap, no confirmation modal</em>.",
 
   "settings.audio.label": "Audio",
   "settings.audio.title": "Sound <em>quality</em>",
@@ -858,9 +754,6 @@ export const studio: Catalog = {
   "settings.audio.normalise.heading": "Normalise loudness",
   "settings.audio.normalise.body":
     "Even out volume across tracks and sets. <em>Off</em> if you want the artist's intended dynamics.",
-  "settings.audio.crossfade.heading": "Crossfade between tracks in a set",
-  "settings.audio.crossfade.body":
-    "Applies inside DJ sets and live rooms. Albums keep the gaps between tracks as recorded.",
 
   "settings.privacy.label": "Privacy",
   "settings.privacy.title": "What Studio <em>remembers</em>",
@@ -1094,14 +987,6 @@ export const studio: Catalog = {
   "upload.files.heading":
     "Uploaded <em>{readyCount} of {totalCount} ready</em>",
   "upload.files.okReady": "OK · ready",
-  "upload.files.loudnessCheck": "Loudness check",
-  "upload.files.loudWarning.title": "Track {trackNumber} is loud.",
-  "upload.files.loudWarning.body":
-    "Master comes in at {measuredLoudness}. Our floor is {targetLoudness} default. <em>This isn't fatal:</em> we can normalise on the fly per listener. If you intended this peak, leave it.",
-  "upload.files.loudToggle.show": "What we do with loud masters",
-  "upload.files.loudToggle.hide": "What we do with loud masters",
-  "upload.files.loudExplainer":
-    "We keep your master <em>exactly as delivered</em> and store it untouched. For playback we apply per-listener loudness normalisation to roughly −14 LUFS, so your track sits at a comfortable level next to everything else in a set, <em>without re-encoding or clipping your file</em>. Listeners who turn normalisation off in their settings hear your original peak. Nothing is baked in; you can change the target or opt out per release at any time.",
 
   "upload.coverArt.heading":
     "Cover art <em>{readyCount} of {totalCount} · linted</em>",
@@ -1130,7 +1015,8 @@ export const studio: Catalog = {
   "upload.side.files.list.listenerDelivery.label": "Listener delivery",
   "upload.side.files.list.listenerDelivery.value": "FLAC + AAC 256",
   "upload.side.files.list.loudnessTarget.label": "Loudness target",
-  "upload.side.files.list.loudnessTarget.value": "−14 LUFS",
+  "upload.side.files.list.loudnessTarget.value":
+    "−14 LUFS, measured as you upload",
   "upload.side.files.list.isrc.label": "ISRC assignment",
   "upload.side.files.list.isrc.value": "automatic",
 
@@ -1848,7 +1734,7 @@ export const studio: Catalog = {
   "errors.accessRequired": "Your Studio access has ended",
   "errors.notPersonaOwner": "Only the persona's owners can change its releases",
   "errors.personaKindNotAllowed":
-    "Only musician and DJ personas can release music in Studio",
+    "Only music, podcast, spoken word and performance personas can release in Studio",
   "errors.releaseNotDraft": "This release is no longer a draft",
   "errors.releaseTypeMismatch": "That release type doesn't fit this persona",
   "errors.trackOrderMismatch":
@@ -1913,7 +1799,7 @@ export const studio: Catalog = {
   "owner.unpublishBody":
     "It goes back to draft and leaves Studio until you publish it again",
   "owner.unpublishConfirm": "Unpublish release",
-  "owner.takedownReason": "Taken down by QueerPulse staff: {reason}",
+  "owner.takedownReason": "Taken down by our team: {reason}",
   "release.by": "by",
   "release.tabsLabel": "{title} sections",
   "release.tracklistLabel": "Tracklist of {title}",
@@ -1950,8 +1836,6 @@ export const studio: Catalog = {
   "playerBar.seekValue": "{elapsed} of {total}",
   "playerBar.cantPlay": "This track can't play right now",
   "playerBar.retry": "Retry the track",
-  "playerBar.expand": "Show the full player",
-  "playerBar.collapse": "Show the mini player",
   "uploadFlow.hero.title": "Put your music <em>out.</em>",
   "uploadFlow.hero.sub":
     "Three steps: the release, its tracks, then publish. MP3 or M4A, up to 50 MB a track",
@@ -2038,7 +1922,7 @@ export const studio: Catalog = {
   "uploadFlow.publish.gap.rights": "Confirm you hold the rights",
   "uploadFlow.publish.ready": "Everything is in place",
   "uploadFlow.publish.rightsLabel":
-    "I own or control the rights to this music and the cover, and I'm happy for QueerPulse members to stream it.",
+    "I own or control the rights to this recording and the cover, and I'm happy for QueerPulse members to stream it.",
   "uploadFlow.publish.publishCta": "Publish release",
   "uploadFlow.publish.publishing": "Publishing",
   "uploadFlow.published.title": "<em>{title}</em> is live",
@@ -2046,9 +1930,9 @@ export const studio: Catalog = {
     "Members with Studio access can play it now. You can unpublish it from your artist page at any time",
   "uploadFlow.published.openCta": "Open the release",
   "uploadFlow.published.anotherCta": "Upload another release",
-  "uploadFlow.noPersona.title": "You need a musician or DJ persona",
+  "uploadFlow.noPersona.title": "You need a Studio artist persona",
   "uploadFlow.noPersona.body":
-    "To upload, you need a musician or DJ persona that is published and set to Open to everyone. Set one up, then come back",
+    "To upload, you need a published persona set to Open to everyone, of one of these kinds: musician, DJ, podcaster, podcast producer, poet, spoken word artist, drag performer, performer, dancer, ballroom and vogue, or burlesque performer. Set one up, then come back",
   "uploadFlow.noPersona.cta": "Go to your personas",
   "uploadFlow.side.eyebrow": "What happens to your files",
   "uploadFlow.side.title": "Your files, <em>kept as they are</em>",
@@ -2060,12 +1944,9 @@ export const studio: Catalog = {
   "uploadFlow.side.size.value": "up to 50 MB",
   "uploadFlow.side.listeners.label": "Who can listen",
   "uploadFlow.side.listeners.value": "members with Studio access",
-  "uploadFlow.locked.publishedNote":
-    "This release is published. You can edit its details and each track's details; to add, remove or reorder tracks, unpublish it first",
-  "uploadFlow.locked.unpublishCta": "Unpublish to change tracks",
   "uploadFlow.locked.takenDownTitle": "This release was taken down",
   "uploadFlow.locked.takenDownBody":
-    "Taken down by QueerPulse staff: {reason}. It can't be edited while it's down",
+    "Taken down by our team: {reason}. It can't be edited while it's down",
   "uploadFlow.locked.backCta": "Back to your releases",
   // ── Studio v2 (2026-10-13) ──────────────────────────────────────────────────
   "artistPage.followerCount_one": "{count} follower",
@@ -2162,8 +2043,8 @@ export const studio: Catalog = {
   "home.genres.listLabel": "Genres",
   "browse.eyebrow": "Browse",
   "browse.title": "Releases in <em>{genre}</em>",
-  "browse.titleNone": "Browse by <em>genre</em>",
-  "browse.pickPrompt": "Pick a genre to see its releases",
+  "browse.titleNone": "Browse by <em>genre</em> or <em>mood</em>",
+  "browse.pickPrompt": "Pick a genre or a mood to see its releases",
   "browse.noGenres": "Genres show up here once releases are published",
   "browse.gridLabel": "Releases in {genre}",
   "browse.empty.title": "No releases in {genre} yet",
@@ -2345,4 +2226,1025 @@ export const studio: Catalog = {
   "demo.fund.note.sofia": "9 lead sheets accepted into the archive",
   "demo.fund.note.springArtists":
     "First-release grants · €1,200 unrestricted each",
+
+  // ── Studio open pages (2026-10-13): live Help, About, Terms,
+  // Accessibility, Rights, the withdrawn view, disputes, player settings,
+  // flag review and the live rail's utility group. The showcase keys above
+  // stay for the demo.
+  "errors.releaseWithdrawn": "This release was withdrawn",
+  "errors.releaseNotTakenDown": "This release isn't taken down anymore",
+  "errors.disputeAlreadyOpen": "A dispute is already waiting for our team",
+  "errors.disputeLimitReached": "This release has used all three disputes",
+  "errors.disputeNotOpen": "This dispute already has a decision",
+  "errors.releaseHasOpenDispute":
+    "This release has a dispute waiting. Restore it from Disputes",
+  "errors.takedownReportMismatch": "That report isn't about this release",
+  "errors.takedownReportNotOpen": "That report was already handled",
+
+  "helpLive.hero.eyebrow": "Studio help",
+  "helpLive.hero.title": "How can we <em>help</em>?",
+  "helpLive.hero.dek":
+    "Answers about listening, sharing your music and staying safe in Studio. If something's missing, our team reads every message.",
+  "helpLive.search.label": "Search Studio help",
+  "helpLive.search.placeholder": "Try saving, playlists or disputes",
+  "helpLive.search.clearCta": "Clear search",
+  "helpLive.search.resultCount_one": "{count} answer matches",
+  "helpLive.search.resultCount_other": "{count} answers match",
+  "helpLive.search.emptyTitle": 'Nothing matches "{query}"',
+  "helpLive.search.emptyBody": "Try another word, or ask our team below.",
+  "helpLive.cat.listening.heading": "<em>Listening</em>",
+  "helpLive.cat.listening.blurb": "Playback, saves, playlists and following",
+  "helpLive.cat.sharing.heading": "Sharing your <em>music</em>",
+  "helpLive.cat.sharing.blurb":
+    "Uploads, personas, the rights checkbox and your stats",
+  "helpLive.cat.safety.heading": "Safety and <em>rights</em>",
+  "helpLive.cat.safety.blurb": "Reports, takedowns and disputes",
+  "helpLive.cat.money.heading": "Money and <em>tips</em>",
+  "helpLive.faq.whatIsStudio.q": "What is Studio, and who can use it?",
+  "helpLive.faq.whatIsStudio.a":
+    "Studio is the place on QueerPulse where queer artists share their music with members. It's free and listen-only, and it's open to members our team has given Studio access.",
+  "helpLive.faq.tracking.q": "Does Studio keep track of what I listen to?",
+  "helpLive.faq.tracking.a":
+    "No. Studio keeps no play counts, no listening history and no recommendations built from what you play. What's playing and your queue live in this browser tab only, and they're gone when you close it.",
+  "helpLive.faq.saving.q": "How do saving, playlists and following work?",
+  "helpLive.faq.saving.a":
+    "Save any release or track and it waits for you in your <a>library</a>. A playlist can be Public, Connections only or Private, and you can change that any time. Follow an artist from their page to hear when they put out something new.",
+  "helpLive.faq.playerSettings.q": "Can I change how the player behaves?",
+  "helpLive.faq.playerSettings.a":
+    "Yes. In <a>Settings</a> you can turn off Autoplay next, hide tracks marked explicit and, on most browsers, set a crossfade between tracks. Your choices follow you to every device.",
+  "helpLive.faq.uploading.q": "How do I upload a release?",
+  "helpLive.faq.uploading.a":
+    "Start from <a>Upload a release</a>, choose one of your musician or DJ personas, add your tracks, cover and details, tick the rights checkbox and publish. Your release appears under the persona's name.",
+  "helpLive.faq.rightsCheckbox.q": "What does the rights checkbox mean?",
+  "helpLive.faq.rightsCheckbox.a":
+    "Ticking it confirms that you own or control the rights to every recording and composition in the release, and that its credits are accurate. If that changes, unpublish the release from your artist page.",
+  "helpLive.faq.stats.q": "What do my stats show?",
+  "helpLive.faq.stats.a":
+    "<a>Your numbers</a> shows followers, saves and how many public playlists include your music. Any count from 1 to 4 reads Fewer than 5, so nobody can work out who saved what. Studio keeps no play counts.",
+  "helpLive.faq.reporting.q": "How do I report a release?",
+  "helpLive.faq.reporting.a":
+    "Open the release, then More actions, then Report release. Our team reviews every report, and if a release breaks the rules, they take it down and the artist sees why.",
+  "helpLive.faq.takedown.q": "What happens when a release is taken down?",
+  "helpLive.faq.takedown.a":
+    "It goes offline for listeners straight away. Anyone who saved it keeps it in their library, marked withdrawn. The artist reads our team's reason on the release page and can dispute it there.",
+  "helpLive.faq.dispute.q": "How do I dispute a takedown?",
+  "helpLive.faq.dispute.a":
+    "Open your release. Under the takedown reason, write a note to our team and send it. Their reply appears in the same place, and if they agree, the release comes back. Each release can be disputed up to three times, one at a time. More on <a>Rights and takedowns</a>.",
+  "helpLive.contact.heading": "Still <em>stuck</em>?",
+  "helpLive.contact.team.title": "Contact <em>our team</em>",
+  "helpLive.contact.team.body":
+    "Send a message through the contact form and our team picks it up from there.",
+  "helpLive.contact.team.action": "Contact our team",
+  "helpLive.contact.email.title": "<em>Email</em> us",
+  "helpLive.contact.email.body":
+    "Write to hello@queerpulse.com from your own mail app.",
+  "helpLive.contact.email.action": "Email our team",
+  "helpLive.contact.platform.title": "QueerPulse <em>help</em>",
+  "helpLive.contact.platform.body":
+    "Questions about your account and staying safe across QueerPulse.",
+  "helpLive.contact.platform.action": "Open QueerPulse help",
+
+  "aboutLive.hero.eyebrow": "About Studio",
+  "aboutLive.hero.title": "Music by queer artists, for <em>our members</em>.",
+  "aboutLive.hero.lede":
+    "Studio is a place on QueerPulse where queer artists share their music with members. It's free and listen-only, and what you play stays private.",
+  "aboutLive.sec.today.num": "01: what it is today",
+  "aboutLive.sec.today.heading": "What Studio <em>does</em>",
+  "aboutLive.sec.today.p1":
+    "Artists upload releases under a musician or DJ persona and publish them for members with Studio access. Listeners play, save, make playlists and follow the artists they love.",
+  "aboutLive.sec.today.p2":
+    "There's no money in Studio today: listening is free, and uploading is free too.",
+  "aboutLive.sec.privacy.num": "02: what it doesn't record",
+  "aboutLive.sec.privacy.heading": "Listening stays <em>yours</em>",
+  "aboutLive.sec.privacy.p1":
+    "Studio keeps no play counts, no listening history and no recommendations built from what you play. Your queue lives in your browser tab and leaves with it.",
+  "aboutLive.sec.privacy.p2":
+    "Artists see followers, saves and public playlist inclusions, and any count from 1 to 4 shows as Fewer than 5.",
+  "aboutLive.sec.control.num": "03: how artists keep control",
+  "aboutLive.sec.control.heading": "Your music, <em>your call</em>",
+  "aboutLive.sec.control.p1":
+    "Unpublish any release from your artist page whenever you like. Reports from members go to our team, and if they take a release down, you read their reason on the release and can dispute it there.",
+  "aboutLive.sec.personas.num": "04: personas and privacy",
+  "aboutLive.sec.personas.heading": "Release under your <em>artist name</em>",
+  "aboutLive.sec.personas.p1":
+    "Your releases, the playlists you credit to a persona and your stats all sit under the persona's name. Members with Studio access see your releases, your tracks, your artist name and your public playlists.",
+  "aboutLive.sec.next.num": "05: where it's going",
+  "aboutLive.sec.next.heading": "Growing with <em>the people who use it</em>",
+  "aboutLive.sec.next.p1":
+    "We'd like Studio to pay artists one day and to give members a say in how it runs. We'll build that in the open with our community, and we'll say so here when something is real.",
+  "aboutLive.showcase.heading": "The <em>co-op vision</em>",
+  "aboutLive.showcase.dek":
+    "What a co-op Studio could look like, shown in this demo.",
+  "aboutLive.cta.title": "Come and <em>listen</em>.",
+  "aboutLive.cta.body":
+    "Start on Studio home, or read the short Studio terms first.",
+  "aboutLive.cta.open": "Open Studio",
+  "aboutLive.cta.terms": "Read the Studio terms",
+
+  "termsLive.eyebrow": "Studio terms",
+  "termsLive.title": "The short <em>Studio addendum</em>",
+  "termsLive.lede":
+    "These add to the QueerPulse terms and privacy policy, which apply to Studio in full. They cover what's particular to Studio.",
+  "termsLive.sec.rights.num": "01: the rights checkbox",
+  "termsLive.sec.rights.heading": "When you <em>publish</em>",
+  "termsLive.sec.rights.p1":
+    "Before you publish, you confirm that you own or control the rights to every recording and composition in the release, and that its credits are accurate. You keep your rights. While the release is published, members with Studio access can stream it on QueerPulse.",
+  "termsLive.sec.visible.num": "02: what members see",
+  "termsLive.sec.visible.heading": "What's <em>visible</em>",
+  "termsLive.sec.visible.p1":
+    "Members with Studio access can see your releases and tracks, your artist name and your public playlists. A playlist set to Connections only or Private stays with the people that setting allows.",
+  "termsLive.sec.stored.num": "03: what Studio stores",
+  "termsLive.sec.stored.heading": "What we <em>keep</em>",
+  "termsLive.sec.stored.p1":
+    "Studio stores your releases with their audio and artwork, your saves, playlists and follows, your player settings, and any dispute you send along with our team's reply. It keeps no record of what you play: no play counts and no listening history.",
+  "termsLive.sec.stored.p2":
+    "Everything Studio stores about you is covered by the QueerPulse <a>privacy policy</a>.",
+  "termsLive.sec.takedown.num": "04: takedowns and disputes",
+  "termsLive.sec.takedown.heading": "If something <em>goes wrong</em>",
+  "termsLive.sec.takedown.p1":
+    "You can unpublish your own release at any time. If a member reports a release, our team reviews it and may take it down. You see their reason on the release page and can dispute it there, one dispute at a time and up to three for each release. Our team replies on the release, and if they agree, it comes back.",
+  "termsLive.questions":
+    "Questions about these terms? Write to <a>hello@queerpulse.com</a> or <link>contact our team</link>.",
+  "termsLive.full.title": "The full terms",
+  "termsLive.full.body":
+    "The QueerPulse terms and privacy policy apply to Studio too.",
+  "termsLive.full.termsCta": "Read full terms",
+  "termsLive.full.privacyCta": "Read the privacy policy",
+
+  "accessibilityLive.eyebrow": "Accessibility in Studio",
+  "accessibilityLive.title": "What works <em>today</em>",
+  "accessibilityLive.lede":
+    "This list covers only what Studio does right now. When something isn't there yet, we say so.",
+  "accessibilityLive.status.live": "Live",
+  "accessibilityLive.status.notYet": "Not yet",
+  "accessibilityLive.group.player.heading": "The <em>player</em>",
+  "accessibilityLive.group.player.dek":
+    "Made to work with a keyboard, a screen reader and your device's own media controls.",
+  "accessibilityLive.item.mediaKeys.heading":
+    "Media keys and the <em>lock screen</em>",
+  "accessibilityLive.item.mediaKeys.body":
+    "Play, pause, next and previous work from your keyboard's media keys, your headphones and your phone's lock screen.",
+  "accessibilityLive.item.seek.heading": "A <em>keyboard</em> seek bar",
+  "accessibilityLive.item.seek.body":
+    "The progress bar is a slider. Arrow keys move through the track, and Home and End jump to its start and end.",
+  "accessibilityLive.item.labels.heading": "Labelled <em>controls</em>",
+  "accessibilityLive.item.labels.body":
+    "Every player button has a name your screen reader reads out, and playback problems are announced in a live region.",
+  "accessibilityLive.group.display.heading": "Display and <em>language</em>",
+  "accessibilityLive.group.display.dek":
+    "Studio follows the choices you've made for QueerPulse.",
+  "accessibilityLive.item.motion.heading": "Respects <em>reduced motion</em>",
+  "accessibilityLive.item.motion.body":
+    "When your device or QueerPulse asks for reduced motion, panels and lists appear without sliding or fading.",
+  "accessibilityLive.item.themes.heading": "Light and <em>dark</em> themes",
+  "accessibilityLive.item.themes.body":
+    "Studio follows your QueerPulse theme. Switch it from the account menu or from Studio settings.",
+  "accessibilityLive.item.languages.heading": "English and <em>Portuguese</em>",
+  "accessibilityLive.item.languages.body":
+    "Studio's own words come in English and Portuguese. Titles and lyrics stay as the artist wrote them.",
+  "accessibilityLive.group.words.heading": "Words and <em>captions</em>",
+  "accessibilityLive.group.words.dek": "What you can read while you listen.",
+  "accessibilityLive.item.lyrics.heading": "Lyrics as <em>text</em>",
+  "accessibilityLive.item.lyrics.body":
+    "When an artist adds lyrics, the track page shows them as text you can read at your own pace.",
+  "accessibilityLive.item.captions.heading": "<em>Captions</em>",
+  "accessibilityLive.item.captions.body":
+    "Studio has no spoken content to caption yet, so there are no captions today.",
+  "accessibilityLive.contact.title": "Found a <em>barrier</em>?",
+  "accessibilityLive.contact.body":
+    "Tell our team what got in your way and where. We treat it as a bug to fix.",
+  "accessibilityLive.contact.cta": "Report an accessibility problem",
+
+  "rightsLive.eyebrow": "Rights and takedowns",
+  "rightsLive.title": "How rights <em>work</em> in Studio",
+  "rightsLive.dek":
+    "What you confirm when you publish, what happens after a report, and how to dispute a takedown.",
+  "rightsLive.sec.checkbox.heading": "The rights <em>checkbox</em>",
+  "rightsLive.sec.checkbox.body":
+    "Before publishing, you confirm that you own or control the rights to every recording and composition in the release, and that the credits are accurate.",
+  "rightsLive.sec.report.heading": "After a <em>report</em>",
+  "rightsLive.sec.report.body":
+    "Our team reviews every report. If a release breaks the rules, they take it down and write a reason you can read on the release page. The release goes offline for listeners, and anyone who saved it keeps it in their library, marked withdrawn.",
+  "rightsLive.sec.dispute.heading": "How to <em>dispute</em>",
+  "rightsLive.sec.dispute.body":
+    "Open your release. Under the takedown reason, write a note to our team and send it. Their reply appears on the release, and if they agree, it comes back. You can dispute each release up to three times, one at a time.",
+  "rightsLive.sec.unpublish.heading": "Unpublish <em>any time</em>",
+  "rightsLive.sec.unpublish.body":
+    "You can unpublish your own release from your artist page whenever you like. It goes back to a draft that only you and the persona's co-owners can see.",
+  "rightsLive.cta": "Open your releases",
+
+  "withdrawnLive.eyebrow": "Studio",
+  "withdrawnLive.title": "This release was <em>withdrawn</em>",
+  "withdrawnLive.body":
+    "Our team took it down after a report. If you saved it, it stays in your library marked withdrawn.",
+  "withdrawnLive.homeCta": "Back to Studio home",
+  "withdrawnLive.rightsCta": "How takedowns work",
+  "withdrawnLive.rowLabel": "Withdrawn",
+
+  "dispute.heading": "Dispute this takedown",
+  "dispute.yourDisputeHeading": "Your dispute",
+  "dispute.intro":
+    "If you think our team got this wrong, tell them why. They read every dispute and reply here.",
+  "dispute.openFormCta": "Write a dispute",
+  "dispute.againCta": "Write another dispute",
+  "dispute.closeFormCta": "Close the dispute form",
+  "dispute.noteLabel": "Your note to our team",
+  "dispute.noteHint":
+    "Up to 1,000 characters. Share anything that helps, like who holds the rights.",
+  "dispute.noteRequired": "Write a note before you send it",
+  "dispute.sendCta": "Send dispute",
+  "dispute.sendingCta": "Sending dispute",
+  "dispute.sentToast": "Dispute sent to our team",
+  "dispute.openStatus": "Dispute sent, our team will reply here",
+  "dispute.sentOn": "Sent {date}",
+  "dispute.yourNoteLabel": "Your note",
+  "dispute.upheldTitle": "Our team restored this release",
+  "dispute.rejectedTitle": "Our team kept this release down",
+  "dispute.replyLabel": "Their reply",
+  "dispute.decidedOn": "Decided {date}",
+  "dispute.limitReached": "This release has used all three disputes.",
+
+  "settingsLive.eyebrow": "Your Studio settings",
+  "settingsLive.title": "How Studio <em>plays</em> for you",
+  "settingsLive.dek":
+    "Playback and content settings follow you to every device where you use Studio.",
+  "settingsLive.playback.label": "Playback",
+  "settingsLive.playback.title": "What plays <em>next</em>",
+  "settingsLive.autoplay.heading": "Autoplay next",
+  "settingsLive.autoplay.body":
+    "When a track ends, the next one in your queue starts. Turn it off to stop after each track.",
+  "settingsLive.crossfade.heading": "Crossfade",
+  "settingsLive.crossfade.body":
+    "Blend the end of one track into the start of the next while Autoplay next is on.",
+  "settingsLive.crossfade.sliderLabel": "Crossfade length",
+  "settingsLive.crossfade.off": "Off",
+  "settingsLive.crossfade.seconds": "{count} s",
+  "settingsLive.crossfade.valueText_one": "{count} second",
+  "settingsLive.crossfade.valueText_other": "{count} seconds",
+  "settingsLive.content.label": "Content",
+  "settingsLive.content.title": "What you <em>hear</em>",
+  "settingsLive.hideExplicit.heading": "Hide explicit tracks",
+  "settingsLive.hideExplicit.body":
+    "Tracks marked explicit leave your queue and show greyed out in lists. Turn it off to bring them back straight away.",
+  "settingsLive.theme.label": "Theme",
+  "settingsLive.theme.title": "How Studio <em>looks</em>",
+  "settingsLive.theme.dark.heading": "Dark mode",
+  "settingsLive.theme.dark.body":
+    "Studio follows your QueerPulse theme, so a change here applies across QueerPulse on this device.",
+  "settingsLive.saveError": "We couldn't save that setting. Try again",
+
+  "hiddenTrack.label": "Hidden by your settings",
+
+  "flagReviewLive.eyebrow": "Staff · Studio review",
+  "flagReviewLive.title": "Studio <em>reports</em> and disputes",
+  "flagReviewLive.dek":
+    "Reports from members, disputes from artists and every release that's down. The artist reads the reason or reply you write here.",
+  "flagReviewLive.tablistLabel": "Studio review queues",
+  "flagReviewLive.tabs.reports": "Reports",
+  "flagReviewLive.tabs.disputes": "Disputes",
+  "flagReviewLive.tabs.withdrawn": "Withdrawn",
+  "flagReviewLive.card.byArtist": "by {artist}",
+  "flagReviewLive.card.unknownRelease": "A Studio release",
+  "flagReviewLive.card.filedOn": "Reported {date}",
+  "flagReviewLive.card.takedownReason": "Takedown reason",
+  "flagReviewLive.card.artistNote": "The artist's note",
+  "flagReviewLive.card.disputedOn": "Disputed {date}",
+  "flagReviewLive.card.takenDownOn": "Taken down {date}",
+  "flagReviewLive.card.openDispute": "Dispute waiting",
+  "flagReviewLive.action.takeDown": "Take down release",
+  "flagReviewLive.action.dismiss": "Dismiss report",
+  "flagReviewLive.action.openModeration": "Open in moderation",
+  "flagReviewLive.action.restore": "Restore release",
+  "flagReviewLive.action.keepDown": "Keep release down",
+  "flagReviewLive.dialog.takeDownTitle": "Take down {title}?",
+  "flagReviewLive.dialog.takeDownBody":
+    "It goes offline for listeners straight away, and every open report about it closes.",
+  "flagReviewLive.dialog.reasonLabel": "Reason the artist will see",
+  "flagReviewLive.dialog.dismissTitle": "Dismiss this report about {title}?",
+  "flagReviewLive.dialog.dismissBody":
+    "The release stays online and the report closes.",
+  "flagReviewLive.dialog.restoreTitle": "Restore {title}?",
+  "flagReviewLive.dialog.restoreDisputeBody":
+    "It comes back and the artist reads your reply on the release.",
+  "flagReviewLive.dialog.restoreWithdrawnBody": "It comes back for listeners.",
+  "flagReviewLive.dialog.keepDownTitle": "Keep {title} down?",
+  "flagReviewLive.dialog.keepDownBody":
+    "It stays offline and the artist reads your reply on the release.",
+  "flagReviewLive.dialog.replyLabel": "Reply the artist will read",
+  "flagReviewLive.toast.takenDown":
+    "{title} is down and its reports are closed",
+  "flagReviewLive.toast.dismissed": "Report dismissed",
+  "flagReviewLive.toast.restored": "{title} is back online",
+  "flagReviewLive.toast.keptDown":
+    "{title} stays down and the artist has your reply",
+  "flagReviewLive.toast.actionError": "That didn't go through. Try again",
+  "flagReviewLive.empty.reportsTitle": "No open reports",
+  "flagReviewLive.empty.reportsBody":
+    "New reports about Studio releases show up here.",
+  "flagReviewLive.empty.disputesTitle": "No open disputes",
+  "flagReviewLive.empty.disputesBody": "Disputes from artists show up here.",
+  "flagReviewLive.empty.withdrawnTitle": "Nothing is taken down",
+  "flagReviewLive.empty.withdrawnBody":
+    "Releases our team takes down are listed here.",
+  "flagReviewLive.loadError": "We couldn't load this list",
+  "flagReviewLive.loadMore": "Show more",
+  "flagReviewLive.loadingMore": "Loading more",
+  "flagReviewLive.loadMoreError": "We couldn't load more. Try again",
+
+  "rail.live.utilityLabel": "Help and info",
+  "rail.live.help": "Help",
+  "rail.live.about": "About Studio",
+  "rail.live.rights": "Rights and takedowns",
+  "rail.live.terms": "Studio terms",
+  "rail.live.accessibility": "Accessibility",
+  "rail.live.flagReview": "Flag review",
+  // ── Studio discovery (QUEERPULSE-STUDIO-DISCOVERY-DESIGN-2026-10-13.md) ──
+  "mood.lateNight": "Late night",
+  "mood.euphoric": "Euphoric",
+  "mood.tender": "Tender",
+  "mood.melancholy": "Melancholy",
+  "mood.defiant": "Defiant",
+  "mood.dreamy": "Dreamy",
+  "mood.slowBurn": "Slow burn",
+  "mood.sweaty": "Sweaty",
+  "mood.calm": "Calm",
+  "mood.playful": "Playful",
+  "home.moods.heading": "Browse by <em>mood</em>",
+  "home.moods.listLabel": "Moods",
+  "home.hero.featuredEyebrow": "Featured",
+  "home.staffPicks.title": "Staff <em>picks</em>",
+  "home.newThisWeek.title": "New this <em>week</em>",
+  "home.scenes.title": "Local <em>scenes</em>",
+  "home.scenes.listLabel": "Scenes",
+  "curation.noteLabel": "Note from the Studio team:",
+  "browse.titleMood": "<em>{mood}</em> releases",
+  "browse.titleBoth": "<em>{mood}</em> releases in {genre}",
+  "browse.gridLabelMood": "{mood} releases",
+  "browse.gridLabelBoth": "{mood} releases in {genre}",
+  "browse.empty.titleMood": "Nothing with the mood {mood} yet",
+  "browse.empty.titleBoth": "Nothing in {genre} with the mood {mood} yet",
+  "browse.anyGenre": "Any genre",
+  "browse.anyMood": "Any mood",
+  "radio.playCta": "Play {name} radio",
+  "radio.error": "The radio couldn't start. Try again",
+  "radio.empty": "This radio has nothing to play yet",
+  "radio.playerLabel": "Radio · {name}",
+  "scene.eyebrow": "Scene · {city}",
+  "scene.playCta": "Play scene",
+  "scene.releases.title": "<em>Releases</em>",
+  "scene.releases.gridLabel": "Releases in {name}",
+  "scene.empty.title": "No releases in this scene yet",
+  "scene.empty.body": "Artists add a release to a scene when they upload it",
+  "scene.artists.title": "<em>Artists</em> in this scene",
+  "scene.events.title": "Upcoming <em>events</em>",
+  "scene.events.online": "Online",
+  "scene.notFound.title": "We can't find that scene",
+  "scene.notFound.body":
+    "It may have been archived, or the link may be out of date",
+  "searchPage.moodLabel": "Mood",
+  "searchPage.moodAny": "Any mood",
+  "credits.nav": "Credits",
+  "credits.badge_one": "{count} credit request waiting",
+  "credits.badge_other": "{count} credit requests waiting",
+  "credits.role.featured": "Featured",
+  "credits.role.producer": "Producer",
+  "credits.role.coWriter": "Co-writer",
+  "credits.role.mixing": "Mixing",
+  "credits.role.mastering": "Mastering",
+  "credits.role.remix": "Remix",
+  "credits.role.coverArt": "Cover art",
+  "credits.role.other": "Other",
+  "credits.status.pending": "Pending",
+  "credits.status.accepted": "Accepted",
+  "credits.status.declined": "Declined",
+  "credits.removeCta": "Remove credit",
+  "credits.editor.heading": "Credit a persona",
+  "credits.editor.hint":
+    "Type the exact handle of a public persona. Nothing shows on the track until they accept",
+  "credits.editor.handleLabel": "Persona handle",
+  "credits.editor.findCta": "Find persona",
+  "credits.editor.finding": "Looking for that persona",
+  "credits.editor.notFound": "No public persona has that handle",
+  "credits.editor.roleLabel": "Role",
+  "credits.editor.addCta": "Credit {name}",
+  "credits.editor.clearCta": "Clear persona",
+  "credits.editor.listLabel": "Persona credits on this track",
+  "credits.editor.removeAria": "Remove credit for {name} as {role}",
+  "credits.editor.notPublic":
+    "This persona is no longer public, so the credit stays hidden",
+  "credits.editor.limit": "A track holds up to {limit} persona credits",
+  "credits.editor.added": "Credit sent to {name}",
+  "credits.editor.removed": "Credit removed",
+  "credits.editor.handleLine": "@{handle}",
+  "credits.page.eyebrow": "Credits",
+  "credits.page.title": "Your <em>credits</em>",
+  "credits.page.sub":
+    "Your personas, credited on other artists' tracks. A credit shows publicly once you accept it",
+  "credits.inbox.requests.title": "<em>Requests</em>",
+  "credits.inbox.accepted.title": "<em>Accepted</em>",
+  "credits.inbox.requestLine":
+    "{requester} credited {persona} as {role} on {track}",
+  "credits.inbox.acceptedLine":
+    "{requester} credits {persona} as {role} on {track}",
+  "credits.inbox.releaseLine": "From {release}",
+  "credits.inbox.acceptCta": "Accept credit",
+  "credits.inbox.declineCta": "Decline credit",
+  "credits.inbox.acceptAria": "Accept credit for {persona} on {track}",
+  "credits.inbox.declineAria": "Decline credit for {persona} on {track}",
+  "credits.inbox.removeAria": "Remove credit for {persona} on {track}",
+  "credits.inbox.confirmRemove.title": "Remove this credit?",
+  "credits.inbox.confirmRemove.body": "{persona} stops showing on {track}",
+  "credits.inbox.empty.title": "No credit requests right now",
+  "credits.inbox.empty.body":
+    "When an artist credits one of your personas on a track, the request shows up here",
+  "credits.inbox.toast.accepted": "Credit accepted",
+  "credits.inbox.toast.declined": "Credit declined",
+  "credits.inbox.toast.removed": "Credit removed",
+  "credits.inbox.gone": "That credit request is no longer open",
+  "credits.inbox.removeGone": "That credit was already removed",
+  "credits.public.listLabel": "Credited personas",
+  "credits.album.title": "<em>Credits</em>",
+  "artist.appearsOn.title": "Appears <em>on</em>",
+  "artist.related.title": "Related <em>artists</em>",
+  "uploadFlow.release.moodLabel": "Mood",
+  "uploadFlow.release.moodNone": "No mood",
+  "uploadFlow.release.sceneLabel": "Scene",
+  "uploadFlow.release.sceneNone": "No scene",
+  "uploadFlow.release.sceneHint": "Adds this release to one scene page",
+  "uploadFlow.release.sceneOption": "{name}, {city}",
+  "uploadFlow.release.sceneArchived": "Current scene, now archived",
+  "uploadFlow.release.sceneLoading": "Loading scenes",
+  "uploadFlow.release.sceneUnavailable": "Scenes didn't load",
+  "errors.radioFilterRequired": "Pick a genre or a mood for the radio",
+  "errors.sceneNotFound": "That scene isn't on Studio",
+  "errors.creditNotFound": "That credit is gone",
+  "errors.curationShelfFull": "This shelf holds 12 picks. Remove one first",
+  "errors.curationAlreadyOnShelf": "That release is already on this shelf",
+  "errors.curationOrderMismatch":
+    "The shelf changed while you were moving picks. Reload and try again",
+  "errors.sceneSlugTaken": "Another scene uses that address",
+  "errors.sceneOrderMismatch":
+    "The scenes changed while you were moving them. Reload and try again",
+  "errors.creditAlreadyRequested":
+    "This persona already has that credit on this track",
+  "errors.creditNotAccepted": "Only an accepted credit can be removed here",
+  "errors.sceneNotAvailable": "That scene can't be picked right now",
+  "errors.curationReleaseNotPublished":
+    "Only a published release can go on a shelf",
+  "errors.sceneEventNotPinnable":
+    "Only an upcoming event open to members can be pinned",
+  "errors.creditPersonaNotCreditable": "That persona can't be credited",
+  "errors.creditSelfPersona": "That's this release's own persona",
+  // ── Studio v3 artist tools (2026-10-13) ──────────────────────────────────────
+  "releaseStatus.scheduled": "Scheduled",
+  "errors.releaseNotSchedulable":
+    "Only a draft or a scheduled release can be scheduled",
+  "errors.releaseNeedsPlayableTrack":
+    "A live release keeps at least one track with audio. Add another before removing this one",
+  "errors.releaseNoChanges":
+    "There's no track change to note since the last version",
+  "errors.previewNotAvailable":
+    "Preview links are for drafts and scheduled releases",
+  "errors.previewNotFound":
+    "We can't find that preview. The link may have been turned off",
+  "errors.scheduleOutOfRange":
+    "Pick a time between 15 minutes and 365 days from now",
+  "errors.pressTrackNotAllowed":
+    "One of those tracks isn't on this persona's releases",
+  "schedule.choice.legend": "When should it go live?",
+  "schedule.choice.now": "Publish now",
+  "schedule.choice.nowHint":
+    "It goes live as soon as you press Publish release",
+  "schedule.choice.schedule": "Schedule release",
+  "schedule.choice.scheduleHint": "Pick a date and time, and it goes live then",
+  "schedule.form.dateLabel": "Date",
+  "schedule.form.timeLabel": "Time",
+  "schedule.form.zoneHint": "In your time zone ({zone})",
+  "schedule.form.readback": "Goes live on {date} at {time}",
+  "schedule.form.incomplete": "Pick a date and a time",
+  "schedule.form.tooSoon": "Pick a time at least 15 minutes from now",
+  "schedule.form.tooFar": "Pick a date within the next 365 days",
+  "schedule.form.scheduleCta": "Schedule release",
+  "schedule.form.saveDateCta": "Save new date",
+  "schedule.form.keepDateCta": "Keep the current date",
+  "schedule.form.scheduling": "Scheduling",
+  "schedule.panel.heading": "Scheduled for <em>{date}</em> at {time}",
+  "schedule.panel.body":
+    "It goes live by itself on the day. Members who pressed Notify me get the alert then",
+  "schedule.panel.changeDateCta": "Change date",
+  "schedule.panel.cancelCta": "Cancel schedule",
+  "schedule.panel.cancelling": "Cancelling",
+  "schedule.panel.dateChanged": "New date saved",
+  "upcoming.outOn": "Out {date} at {time}",
+  "upcoming.tracksOut_one": "{count} track, out {date}",
+  "upcoming.tracksOut_other": "{count} tracks, out {date}",
+  "upcoming.notifyMe": "Notify me",
+  "upcoming.notifyMeSet": "We'll tell you",
+  "upcoming.notifyMeAria": "Notify me when {title} is out",
+  "upcoming.notifyMeOffStatus": "Reminder for {title} turned off",
+  "upcoming.notifyMeError": "We couldn't save that. Try again",
+  "upcoming.cardHeading": "Upcoming",
+  "versions.line": "Version {version} · {date}",
+  "versions.earlierCta": "Earlier versions",
+  "versions.blockLabel": "What changed in this release",
+  "versions.panel.heading": "You changed the tracks",
+  "versions.panel.body":
+    "Add a version note so listeners know what's new. It shows on the release page as version {version}",
+  "versions.panel.noteLabel": "Version note",
+  "versions.panel.notePlaceholder": "What changed, in a line or two",
+  "versions.panel.noteCount": "{count} of {max}",
+  "versions.panel.noteRequired": "Write what changed first",
+  "versions.panel.saveCta": "Save version note",
+  "versions.panel.saving": "Saving",
+  "versions.panel.savedStatus":
+    "Version note saved. Followers get no second alert",
+  "previewLink.heading": "Private preview link",
+  "previewLink.offBody":
+    "Share this release before it's out. Only members with Studio access can open the link",
+  "previewLink.onBody":
+    "Anyone with Studio access who holds this link can listen until the release is out. Then it opens the release page",
+  "previewLink.makeCta": "Make preview link",
+  "previewLink.fieldLabel": "Preview link",
+  "previewLink.copyCta": "Copy link",
+  "previewLink.copied": "Copied",
+  "previewLink.copiedToast": "Preview link copied",
+  "previewLink.copyFailedToast":
+    "We couldn't copy the link. Select it and copy it yourself",
+  "previewLink.made": "Made {time}",
+  "previewLink.newCta": "Make new link",
+  "previewLink.newTitle": "Make a new preview link?",
+  "previewLink.newBody": "The old link stops working",
+  "previewLink.turnOffCta": "Turn off link",
+  "previewLink.madeStatus": "Preview link made",
+  "previewLink.replacedStatus": "New link made. The old one stopped working",
+  "previewLink.turnedOffStatus": "Preview link turned off",
+  "previewLink.dialogTitle": "Preview link for {title}",
+  "previewPage.banner":
+    "Private preview from {persona}. Please keep this link to yourself",
+  "support.artistHeading": "Support {name}",
+  "support.releaseHeading": "Buy and support {name}",
+  "support.listLabel": "Where to support {name}",
+  "support.note":
+    "These open {name}'s own pages and QueerPulse never handles money",
+  "support.ownerEmpty":
+    "Add Bandcamp, Ko-fi or Patreon to your persona's links",
+  "support.ownerEmptyCta": "Edit persona links",
+  "support.buyOnBandcamp": "Buy on Bandcamp",
+  "support.buyRelease": "Buy this release",
+  "support.opensInNewTab": "(opens in a new tab)",
+  "pressKit.eyebrow": "Press kit",
+  "pressKit.section.bestTracks": "Best <em>tracks</em>",
+  "pressKit.bestTracksLabel": "Best tracks by {name}",
+  "pressKit.fallbackNote": "From the newest releases",
+  "pressKit.copyBioCta": "Copy bio",
+  "pressKit.bioCopiedToast": "Bio copied",
+  "pressKit.noBio": "No bio yet",
+  "pressKit.section.releases": "Latest <em>releases</em>",
+  "pressKit.section.links": "Links and <em>support</em>",
+  "pressKit.linksLabel": "{name} elsewhere",
+  "pressKit.section.contact": "<em>Contact</em>",
+  "pressKit.noContact": "No press contact yet",
+  "pressKit.editCta": "Edit press kit",
+  "pressKit.ownerEmptySection": "Publish a release to fill this section",
+  "pressEdit.eyebrow": "Press kit",
+  "pressEdit.title": "Your <em>press kit</em>",
+  "pressEdit.dek":
+    "What members with Studio access see on your press page, and what the one-sheet prints",
+  "pressEdit.personaLabel": "Persona",
+  "pressEdit.heading": "Press kit for <em>{name}</em>",
+  "pressEdit.sub":
+    "Everything here is optional. Empty parts come from the persona",
+  "pressEdit.pitchLabel": "Pitch",
+  "pressEdit.count": "{count} of {max}",
+  "pressEdit.pitchTooLong": "Keep the pitch to 140 characters",
+  "pressEdit.bioLabel": "Press bio",
+  "pressEdit.bioHint":
+    "Shows on the press kit when set. Empty uses the persona bio",
+  "pressEdit.bioTooLong": "Keep the press bio to 1500 characters",
+  "pressEdit.tracksLegend": "Best tracks",
+  "pressEdit.tracksHint": "Up to {max}, in the order you set",
+  "pressEdit.tracksFallbackHint":
+    "With none chosen, the press kit shows up to 5 tracks from your newest releases",
+  "pressEdit.trackUnavailable": "No longer available",
+  "pressEdit.addTrackLabel": "Add a track",
+  "pressEdit.addTrackPlaceholder": "Pick a track",
+  "pressEdit.moveUp": "Move {title} up",
+  "pressEdit.moveDown": "Move {title} down",
+  "pressEdit.removeTrack": "Remove {title} from best tracks",
+  "pressEdit.removeUnavailableTrack": "Remove unavailable track {number}",
+  "pressEdit.tracksLoadErrorTitle": "Your tracks didn't load",
+  "pressEdit.quotesLegend": "Quotes",
+  "pressEdit.quoteLabel": "Quote",
+  "pressEdit.sourceLabel": "Source",
+  "pressEdit.addQuoteCta": "Add quote",
+  "pressEdit.removeQuoteCta": "Remove quote {number}",
+  "pressEdit.quoteRequired": "Write the quote, or remove this one",
+  "pressEdit.quoteTooLong": "Keep a quote to 300 characters",
+  "pressEdit.quoteSourceRequired": "Say where the quote is from",
+  "pressEdit.quoteSourceTooLong": "Keep the source to 80 characters",
+  "pressEdit.contactLabel": "Contact",
+  "pressEdit.contactHint":
+    "A web page starting with https:// or an address starting with mailto:",
+  "pressEdit.contactInvalid":
+    "Use a link starting with https:// or an address starting with mailto:",
+  "pressEdit.saveCta": "Save press kit",
+  "pressEdit.saving": "Saving",
+  "pressEdit.savedStatus": "Press kit saved",
+  "pressEdit.viewCta": "View press kit",
+  "oneSheet.downloadCta": "Download one-sheet",
+  "oneSheet.backCta": "Back to the press kit",
+  "oneSheet.saveHint": "In the print dialog, choose Save as PDF",
+  "oneSheet.fileTitle": "{name} one-sheet",
+  "oneSheet.label": "{name} one-sheet",
+  "oneSheet.bio": "Bio",
+  "oneSheet.bestTracks": "Best tracks",
+  "oneSheet.releases": "Latest releases",
+  "oneSheet.contact": "Contact",
+  "oneSheet.links": "Links",
+  "oneSheet.qrLabel": "QR code for the {name} persona page",
+  "owner.v3.previewLink": "Preview link",
+  "owner.v3.previewLinkAria": "Preview link for {title}",
+  "owner.v3.toolsHeading": "Press kit and updates",
+  "owner.v3.pressKit": "Press kit",
+  "owner.v3.editPressKit": "Edit press kit",
+  "owner.v3.postUpdateHeading": "Post an update",
+  "uploadFlow.v3.buyUrlLabel": "Buy link",
+  "uploadFlow.v3.buyUrlHint": "Bandcamp or your own shop. Optional",
+  "uploadFlow.v3.buyUrlHttpsOnly": "Use a full link starting with https://",
+  "uploadFlow.v3.buyUrlTooLong": "Keep the link to 1000 characters",
+  "uploadFlow.v3.removePublishedTitle": "Remove {title} from {release}?",
+  "uploadFlow.v3.removePublishedBody":
+    "People who saved it will see it as no longer available, and it comes off every playlist it's on",
+  "uploadFlow.v3.removePublishedConfirm": "Remove track",
+  "numbers.reminders": "Waiting for it: {value}",
+  "rail.v3.pressKit": "Press kit",
+  "creator.nav.pressKit": "Press kit",
+  "artistPage.v3.moreAria": "More about {name}",
+  "artistPage.v3.pressKit": "Press kit",
+  // ── Studio Listening (2026-10-13): player, Now playing, queue, track
+  // menu, chapters, lyric timing and the upload loudness check. Plan 3
+  // Task 0 writes every key; Plan 2's code reads only the shortcuts and
+  // chapters.error.outOfRange keys (contract section D). ────────────────
+  // Player shortcuts (contract D; st/player/studioShortcuts.data.ts, StudioShortcutsSheet)
+  "shortcuts.title": "Keyboard shortcuts",
+  "shortcuts.dek":
+    "They work on any page while something is queued, unless you're typing in a field",
+  "shortcuts.closeCta": "Close shortcuts",
+  "shortcuts.playPause": "Play or pause",
+  "shortcuts.seekBack": "Back 5 seconds",
+  "shortcuts.seekForward": "Forward 5 seconds",
+  "shortcuts.previousTrack": "Previous track",
+  "shortcuts.nextTrack": "Next track",
+  "shortcuts.volumeUp": "Volume up",
+  "shortcuts.volumeDown": "Volume down",
+  "shortcuts.mute": "Mute or unmute",
+  "shortcuts.shuffle": "Shuffle on or off",
+  "shortcuts.repeat": "Change repeat",
+  "shortcuts.lyrics": "Open the lyrics",
+  "shortcuts.queue": "Open the queue",
+  "shortcuts.help": "Show these shortcuts",
+  "shortcuts.key.space": "Space",
+  "shortcuts.key.shift": "Shift",
+  "shortcuts.key.left": "Left arrow",
+  "shortcuts.key.right": "Right arrow",
+  "shortcuts.key.up": "Up arrow",
+  "shortcuts.key.down": "Down arrow",
+  // Player bar, controls and Now playing extras (player/ui)
+  "player.playFrom": "Play from {time}",
+  "player.playFromAria": "Play {title} from {time}",
+  "player.openNowPlaying": "Open Now playing, {title} by {artist}",
+  "player.chapterAria": "Chapter {number}: {title}",
+  "player.queueShow": "Show the queue",
+  "player.queueHide": "Hide the queue",
+  "player.shuffle": "Shuffle",
+  "player.repeat.off": "Repeat: off",
+  "player.repeat.all": "Repeat: all",
+  "player.repeat.one": "Repeat: this track",
+  "player.cast": "Play on another device",
+  "player.castConnected": "Playing on another device",
+  "player.volume": "Volume",
+  "player.volumeValue": "{percent}%",
+  "player.mute": "Mute",
+  "player.unmute": "Unmute",
+  "player.more": "More player options",
+  "player.crossfade.label": "Crossfade",
+  "player.crossfade.value_one": "{count} second",
+  "player.crossfade.value_other": "{count} seconds",
+  "player.crossfade.off": "Off",
+  "player.crossfade.hint":
+    "Fades each track into the next. Tracks from the same release play straight through",
+  "player.crossfade.unavailable": "Crossfade isn't available in this session",
+  "player.loudness.label": "Even out loudness",
+  "player.loudness.hint": "Brings every track close to the same level",
+  "player.loudness.plainHint":
+    "In this session it can only turn loud tracks down",
+  "player.shortcutsCta": "Keyboard shortcuts",
+  "player.sleep.heading": "Sleep timer",
+  "player.sleep.minutes": "{count} minutes",
+  "player.sleep.endOfTrack": "End of track",
+  "player.sleep.turnOff": "Turn off the timer",
+  "player.sleep.chip": "{remaining} left",
+  "player.sleep.chipEndOfTrack": "Stops after this track",
+  "player.sleep.cancelAria": "Turn off the sleep timer, {remaining} left",
+  "player.sleep.cancelAriaEndOfTrack":
+    "Turn off the sleep timer set for the end of this track",
+  "player.sleep.setStatus": "Sleep timer set for {minutes} minutes",
+  "player.sleep.endOfTrackStatus": "Playback stops at the end of this track",
+  "player.sleep.cancelledStatus": "Sleep timer off",
+  "player.lyrics.listLabel": "Lyrics, following the music",
+  "player.lyrics.backToCurrent": "Back to current line",
+  // Now playing (StudioNowPlaying)
+  "nowPlaying.dialogLabel": "Now playing",
+  "nowPlaying.close": "Close Now playing",
+  "nowPlaying.playingFrom": "Playing from {source}",
+  "nowPlaying.playingFromQueue": "Playing from your queue",
+  "nowPlaying.tabsLabel": "Now playing details",
+  "nowPlaying.tab.lyrics": "Lyrics",
+  "nowPlaying.tab.queue": "Queue",
+  "nowPlaying.tab.credits": "Credits",
+  "nowPlaying.tab.chapters": "Chapters",
+  "nowPlaying.noLyrics": "No lyrics for this track yet",
+  "nowPlaying.noCredits": "No credits for this track yet",
+  "nowPlaying.creditsLoading": "Loading the credits",
+  // Queue (StudioQueueList, StudioQueuePanel)
+  "queue.heading": "Queue",
+  "queue.close": "Close the queue",
+  "queue.nowPlaying": "Now playing",
+  "queue.yours": "Your queue",
+  "queue.clear": "Clear queue",
+  "queue.clearedStatus": "Your queue is empty",
+  "queue.nextFrom": "Next from {source}",
+  "queue.nextUp": "Next up",
+  "queue.emptyHint":
+    "Add tracks with Play next or Add to queue in any track's menu",
+  "queue.upcomingEmpty": "Nothing more after this track",
+  "queue.moveUp": "Move {title} up",
+  "queue.moveDown": "Move {title} down",
+  "queue.remove": "Remove {title} from the queue",
+  "queue.movedStatus": "{title} is now number {position}",
+  "queue.removedStatus": "Removed {title} from the queue",
+  "queue.dragHint": "Drag to reorder",
+  // Track menu (StudioTrackMenu)
+  "trackMenu.trigger": "More actions for {title}",
+  "trackMenu.playNext": "Play next",
+  "trackMenu.addToQueue": "Add to queue",
+  "trackMenu.copyLink": "Copy link",
+  "trackMenu.copyLinkAt": "Copy link at {time}",
+  "trackMenu.playingNextToast": "Playing next",
+  "trackMenu.addedToast": "Added to your queue",
+  "trackMenu.linkCopiedToast": "Link copied",
+  "trackMenu.queueFailedToast": "This track can't join your queue right now",
+  // Chapters: listener lists, errors (contract A.7, D) and the editor
+  "chapters.listHeading": "Tracklist",
+  "chapters.listHeadingFor": "Tracklist for {title}",
+  "chapters.listLabel": "Chapters in {title}",
+  "chapters.error.outOfRange":
+    "Every chapter has to start before the track ends",
+  "chapters.error.time": "Write the time as m:ss or h:mm:ss",
+  "chapters.error.firstAtZero": "The first chapter starts at 0:00",
+  "chapters.error.order": "Start after the chapter above",
+  "chapters.error.pastEnd": "Start before the track ends at {time}",
+  "chapters.error.titleRequired": "Give this chapter a title",
+  "chapters.error.titleTooLong": "Keep the title to 120 characters",
+  "chapters.error.artistTooLong": "Keep the artist to 120 characters",
+  "chapters.error.tooMany": "Keep it to 100 chapters",
+  "chapters.error.summary": "Fix the chapters marked below to save",
+  "chapters.editor.heading": "Chapters",
+  "chapters.editor.count_one": "{count} chapter",
+  "chapters.editor.count_other": "{count} chapters",
+  "chapters.editor.hint":
+    "Mark where each part of the track starts. Listeners can jump straight to it",
+  "chapters.editor.needsAudio": "Add chapters once this track's audio is ready",
+  "chapters.editor.timeLabel": "Start time for chapter {number}",
+  "chapters.editor.titleLabel": "Title for chapter {number}",
+  "chapters.editor.artistLabel": "Artist for chapter {number}, optional",
+  "chapters.editor.add": "Add a chapter",
+  "chapters.editor.remove": "Remove chapter {number}",
+  "chapters.editor.moveUp": "Move chapter {number} up",
+  "chapters.editor.moveDown": "Move chapter {number} down",
+  "chapters.editor.pasteToggle": "Paste a tracklist",
+  "chapters.editor.pasteLabel": "Tracklist, one line per chapter",
+  "chapters.editor.pasteHint":
+    "For example 00:00 Artist - Title or 1:02:30 Title",
+  "chapters.editor.pasteApply": "Use this tracklist",
+  "chapters.editor.pasteReplaceNote": "This replaces the chapters above",
+  "chapters.editor.pasteUnparsed": "We couldn't read these lines:",
+  "chapters.editor.pasteLine": "Line {number}: {text}",
+  "chapters.editor.pasteEmpty":
+    "Paste at least one line that starts with a time",
+  "chapters.editor.pastedStatus_one": "{count} chapter added",
+  "chapters.editor.pastedStatus_other": "{count} chapters added",
+  // Lyric timing tool (upload/lyrics)
+  "lyricTiming.addCta": "Add timings",
+  "lyricTiming.editCta": "Edit timings",
+  "lyricTiming.summary_one": "{count} line timed",
+  "lyricTiming.summary_other": "{count} lines timed",
+  "lyricTiming.clearCta": "Clear timings",
+  "lyricTiming.mismatch":
+    "The lyrics changed since you timed them. Saving clears the timings",
+  "lyricTiming.dialogTitle": "Time the lyrics",
+  "lyricTiming.dialogSub": "Listeners see each line light up as it plays",
+  "lyricTiming.modesLabel": "How to add timings",
+  "lyricTiming.mode.tap": "Tap along",
+  "lyricTiming.mode.paste": "Paste LRC",
+  "lyricTiming.paste.label": "LRC lyrics",
+  "lyricTiming.paste.hint":
+    "One line per stamp, like [01:23.45] A line of the song. Tags such as [ar:] are skipped and [offset:] is applied",
+  "lyricTiming.paste.parsed_one": "{count} line read",
+  "lyricTiming.paste.parsed_other": "{count} lines read",
+  "lyricTiming.paste.unparsedHeading":
+    "These lines have no time we can read and stay out:",
+  "lyricTiming.paste.noStamp": "Line {number}: {text}",
+  "lyricTiming.paste.tooLong": "Line {number} is over 300 characters",
+  "lyricTiming.paste.overLimit": "Keep it to 500 timed lines",
+  "lyricTiming.tap.stamp": "Stamp line {number}",
+  "lyricTiming.tap.stampVisible": "Stamp",
+  "lyricTiming.tap.stampHint": "Press Space or Stamp as each line starts",
+  "lyricTiming.tap.left_one": "{count} line left",
+  "lyricTiming.tap.left_other": "{count} lines left",
+  "lyricTiming.tap.allStamped": "Every line has a time",
+  "lyricTiming.tap.earlier": "Line {number} 0.1 seconds earlier",
+  "lyricTiming.tap.later": "Line {number} 0.1 seconds later",
+  "lyricTiming.tap.playFromHere": "Play from line {number}",
+  "lyricTiming.tap.restart": "Start over",
+  "lyricTiming.tap.notTimed": "No time yet",
+  "lyricTiming.tap.silentClock":
+    "This track has no audio to play here, so the clock runs silently",
+  "lyricTiming.tap.loading": "Loading the audio",
+  "lyricTiming.tap.audioError":
+    "We couldn't play the audio. Paste LRC still works",
+  "lyricTiming.tap.needsLyrics":
+    "Write the lyrics first to tap along, or paste LRC",
+  "lyricTiming.preview": "Preview",
+  "lyricTiming.saveCta": "Use these timings",
+  "lyricTiming.cancelCta": "Cancel",
+  "lyricTiming.needAllLines": "Time every line to use these timings",
+  "lyricTiming.needLines": "Paste at least one timed line",
+  // Upload loudness: measuring, backfill and the check (spec 8.1 to 8.3)
+  "upload.loudness.measuring": "Measuring loudness",
+  "upload.loudness.backfill_one": "Measuring {count} track",
+  "upload.loudness.backfill_other": "Measuring {count} tracks",
+  "upload.loudness.heading": "Loudness check",
+  "upload.loudness.loudNote":
+    "Track {number} measures {lufs} LUFS. Listeners who keep 'Even out loudness' on hear it a little quieter",
+  "upload.loudness.peakNote":
+    "Track {number} peaks at {peak} dB, at the top of the scale. Studio keeps a raised track's peaks at −1 dB or lower, so it may play a little quieter",
+  "upload.loudness.explainerToggle": "How Studio evens out loudness",
+  "upload.loudness.explainer":
+    "We keep your file <em>exactly as you uploaded it</em>. As it uploads, your browser measures how loud it is. When a listener has 'Even out loudness' on, Studio turns each track up or down toward −14 LUFS, by at most 6 dB up and 12 dB down, and a track it turns up never peaks above −1 dB. Listeners who switch it off hear your master as it is. Nothing is re-encoded",
+  "uploadFlow.side.loudness.label": "Loudness",
+  "uploadFlow.side.loudness.value": "measured as you upload",
+  // ── Studio artist kinds (2026-10-14) ──────────────────────────────────────────
+  "format.all": "All",
+  "format.music": "Music",
+  "format.podcast": "Podcasts",
+  "format.spoken_word": "Spoken word",
+  "format.performance": "Performance",
+  "format.listLabel": "Show one format",
+  "releaseType.podcast": "Podcast",
+  "releaseType.edit": "Performance edit",
+  "releaseType.lip_sync": "Lip-sync mix",
+  "genre.spokenWord": "Spoken word",
+  "home.newEpisodes.title": "New <em>episodes</em>",
+  "home.spokenWord.title": "Spoken <em>word</em>",
+  "home.onStage.title": "On <em>stage</em>",
+  "episodeCard.playAria": "Play {title}",
+  "episodeCard.pauseAria": "Pause {title}",
+  "browse.titleFormat": "<em>{format}</em> in Studio",
+  "browse.gridLabelFormat": "Everything in {format}",
+  "browse.emptyTitleFormat": "Nothing in {format} yet",
+  "searchPage.formatLabel": "Format",
+  "searchPage.formatAny": "Any format",
+  "show.kindLine_one": "Podcast · {count} episode",
+  "show.kindLine_other": "Podcast · {count} episodes",
+  "show.playLatestCta": "Play latest episode",
+  "show.pauseLatestCta": "Pause latest episode",
+  "show.aboutHeading": "About the show",
+  "show.episodesHeading": "Episodes",
+  "show.sortLabel": "Order episodes",
+  "show.sortNewest": "Newest",
+  "show.sortOldest": "Oldest",
+  "show.noEpisodes": "No episodes yet",
+  "show.addEpisodeCta": "Add episode",
+  "show.draftsHeading": "Drafts",
+  "show.draftChip": "Draft",
+  "show.editEpisodeCta": "Edit episode",
+  "show.savedMeta": "Podcast · {artist}",
+  "show.listLabel": "Episodes of {title}",
+  "episode.number": "Episode {number}",
+  "episode.minutesLeft_one": "{count} min left",
+  "episode.minutesLeft_other": "{count} min left",
+  "episode.played": "Played",
+  "episode.markPlayed": "Mark as played",
+  "episode.markUnplayed": "Mark as unplayed",
+  "episode.markedPlayedStatus": "{title} marked as played",
+  "episode.markedUnplayedStatus": "{title} marked as unplayed",
+  "episode.playAria": "Play {title}",
+  "episode.pauseAria": "Pause {title}",
+  "episode.notesHeading": "Show notes",
+  "episode.opensInNewTab": "(opens in a new tab)",
+  "episode.playFromAria": "Play from {time}",
+  "episode.crumbLabel": "Episode",
+  "episode.fromLabel": "From",
+  "episode.publishedOn": "Published {date}",
+  "trackPage.transcriptHeading": "Transcript",
+  "trackPage.noTranscript": "No transcript for this one",
+  "sources.heading": "Sources",
+  "sources.line": "{title} by {artist}",
+  "sources.listLabel": "Songs used in {title}",
+  "sources.editorHint": "Each song you used, with who made it",
+  "sources.titleLabel": "Song title {number}",
+  "sources.artistLabel": "Artist {number}",
+  "sources.addCta": "Add source",
+  "sources.removeCta": "Remove source",
+  "sources.removeAria": "Remove source {number}",
+  "sources.incomplete":
+    "Fill in the song title and the artist on every row, or remove the row",
+  "artist.main.showsHeading": "Shows",
+  "artist.main.performanceHeading": "Performance audio",
+  "owner.addEpisodeAria": "Add episode to {title}",
+  "player.skipBack": "Skip back 15 s",
+  "player.skipForward": "Skip forward 30 s",
+  "player.speed.heading": "Speed",
+  "player.speed.value": "{rate}x",
+  "player.speed.hint": "Speed applies to podcast episodes. Music plays at 1x",
+  "uploadFlow.release.showNameLabel": "Show name",
+  "uploadFlow.release.showAboutLabel": "About the show",
+  "uploadFlow.publish.gap.sources": "Credit every source: {titles}",
+  "uploadFlow.publish.rightsLabelSourced":
+    "I have permission to share this edit, every source is credited, and I'm happy for QueerPulse members to stream it.",
+  "uploadFlow.files.transcriptLabel": "Transcript",
+  "uploadFlow.files.lyricsHint":
+    "The words as they're sung, one line per sung line",
+  "uploadFlow.files.transcriptHint":
+    "Everything that's said, so people can read along",
+  "uploadFlow.files.notesLabel": "Show notes",
+  "uploadFlow.files.notesHint":
+    "Web addresses become links, and times like 12:30 become play buttons",
+  "uploadFlow.files.countLabel": "{count} of {max}",
+  "uploadFlow.files.rejectSizePodcast": "{fileName} is over 250 MB",
+  "uploadFlow.files.acceptsPodcast":
+    "accepts · <em>MP3 · M4A</em> · up to 250 MB an episode",
+  "episodeUpload.newTitle": "New <em>episode</em>",
+  "episodeUpload.editTitle": "Edit <em>episode</em>",
+  "episodeUpload.forShow": "For {show}",
+  "episodeUpload.audioHeading": "Episode audio",
+  "episodeUpload.titleLabel": "Episode title",
+  "episodeUpload.explicitLabel": "This episode has explicit content",
+  "episodeUpload.uploading": "Uploading {fileName}",
+  "episodeUpload.processing": "Reading the audio",
+  "episodeUpload.uploadFailed": "The upload stopped. Choose the file again",
+  "episodeUpload.chaptersFromNotesCta": "Read chapters from the notes",
+  "episodeUpload.chaptersReplaceTitle": "Replace the chapters?",
+  "episodeUpload.chaptersReplaceBody_one":
+    "The times in the notes replace the {count} chapter you have",
+  "episodeUpload.chaptersReplaceBody_other":
+    "The times in the notes replace the {count} chapters you have",
+  "episodeUpload.chaptersReplaceConfirm": "Replace chapters",
+  "episodeUpload.chaptersNoneFound":
+    "No line in the notes starts with a time like 12:30",
+  "episodeUpload.chaptersRead_one": "Read {count} chapter from the notes",
+  "episodeUpload.chaptersRead_other": "Read {count} chapters from the notes",
+  "episodeUpload.saveCta": "Save episode",
+  "episodeUpload.publishCta": "Publish episode",
+  "episodeUpload.savedStatus": "Episode saved",
+  "episodeUpload.needsAudio": "Add the audio to publish this episode",
+  "episodeUpload.publishedTitle": "<em>{title}</em> is live",
+  "episodeUpload.openEpisodeCta": "Open the episode",
+  "episodeUpload.anotherCta": "Add another episode",
+  "episodeUpload.backToShowCta": "Back to the show",
+  "episodeUpload.draftShowTitle": "This show is still a draft",
+  "episodeUpload.draftShowBody":
+    "Add its first episodes on the Tracks step, then publish the show",
+  "episodeUpload.draftShowCta": "Open the show's tracks",
+  "episodeUpload.oneFileOnly":
+    "An episode takes one file, so we used {fileName}",
+  "episodeUpload.scheduledShowTitle": "This show goes out on {date}",
+  "episodeUpload.scheduledShowBody": "Episodes you add now go out with it",
+  "errors.publishMissingSources":
+    "Credit every source on the edit, lip-sync and mix tracks",
+  "errors.episodeShowNotPublished": "Publish the show before its episodes",
+  "errors.episodeAlreadyPublished": "This episode is already live",
+  "errors.episodeOrderLocked":
+    "A live show lists its episodes by date, so their order stays as it is",
+  "errors.notAPodcast": "Episodes belong to podcast shows",
+  "errors.episodeLimit": "A show holds at most 500 episodes",
+  "uploadFlow.hero.subShow":
+    "Three steps: the show, its episodes, then publish. MP3 or M4A, up to 250 MB an episode",
+  "uploadFlow.side.size.valueShow": "up to 250 MB an episode",
+  "uploadFlow.release.headingShow": "The <em>show</em>",
+  "uploadFlow.release.continueCtaShow": "Save and continue to episodes",
+  "facts.episodeCount_one": "{count} episode",
+  "facts.episodeCount_other": "{count} episodes",
+  "episodeUpload.eyebrow": "New episode · upload",
+  "episodeUpload.dropTitle": "Drop an MP3 or M4A file here",
+  "episodeUpload.chooseFile": "Choose an audio file",
+  "chapters.editor.hintEpisode": "Mark where each part of the episode starts",
+  "chapters.editor.pasteEpisode": "Paste chapters",
+  "searchPage.episodesHeading": "<em>Episodes</em>",
+  "artist.showCount_one": "{count} show",
+  "artist.showCount_other": "{count} shows",
+  "artist.tabs.podcast": "Shows",
+  "artist.tabs.spokenWord": "Spoken word",
+  "artist.tabs.performance": "Performance",
 };

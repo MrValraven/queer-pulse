@@ -1,0 +1,139 @@
+.choice {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
+.legend {
+  margin-bottom: 10px;
+  font-size: var(--text-12-5);
+  font-weight: 600;
+  color: var(--studio-text);
+}
+
+.options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 10px;
+}
+
+/* The radio column is the radio's own width; the label (radio and title)
+   spans the card's first row and the hint sits under the title. */
+.option {
+  position: relative;
+  display: grid;
+  grid-template-columns: 18px 1fr;
+  align-items: start;
+  align-content: start;
+  gap: 2px 10px;
+  padding: 14px 16px;
+  border: 1px solid rgba(var(--studio-ink-rgb), 0.18);
+  border-radius: var(--radius-12);
+  transition-property: border-color, background-color;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+.option:has(input:checked) {
+  border-color: var(--accent);
+  background: rgba(var(--accent-rgb), 0.06);
+}
+
+.optionLabel {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  cursor: pointer;
+}
+
+/* The whole card picks the option, hint included. */
+.optionLabel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-12);
+}
+
+.option input {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  margin: 2px 0 0;
+  accent-color: var(--accent);
+}
+
+.option input:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.optionTitle {
+  font-weight: 600;
+  color: var(--studio-text);
+}
+
+.optionHint {
+  grid-column: 2;
+  font-size: var(--text-12-5);
+  color: var(--studio-text-muted);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: 14px;
+}
+
+.fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0 14px;
+}
+
+.hint {
+  margin: 0;
+  font-size: var(--text-12);
+  color: var(--studio-text-muted);
+}
+
+.readback {
+  margin: 4px 0 0;
+  min-height: 1.4em;
+  font-family: var(--serif);
+  font-size: var(--text-17);
+  color: var(--studio-text);
+}
+
+.readbackEmpty {
+  min-height: 0;
+  margin: 0;
+}
+
+.actions,
+.panelActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.panelActions {
+  margin-bottom: 12px;
+}
+
+.panelHeading:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.status {
+  margin: 0;
+  min-height: 1.2em;
+  font-size: var(--text-12-5);
+  color: var(--studio-jade-text);
+}

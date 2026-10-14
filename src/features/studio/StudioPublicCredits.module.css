@@ -1,0 +1,102 @@
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 12px;
+  padding: 0;
+  list-style: none;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: var(--tap-min);
+  padding: 0 12px;
+  border: 1px solid rgba(var(--studio-ink-rgb), 0.18);
+  border-radius: var(--radius-pill);
+  color: var(--text);
+  font-size: var(--text-13);
+  text-decoration: none;
+  transition-property: border-color;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+a.chip:focus-visible,
+a.summaryName:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+@media (hover: hover) {
+  a.chip:hover {
+    border-color: var(--accent);
+  }
+
+  a.summaryName:hover {
+    color: var(--studio-accent-text);
+  }
+}
+
+.chipName {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.chipRole {
+  color: var(--studio-text-muted);
+}
+
+.summary {
+  margin-top: 28px;
+}
+
+/* The track page's small caps eyebrow (track.module.css .sEb), so the
+   same Credits block reads alike on the album and the track. */
+.summaryTitle {
+  margin: 0 0 14px;
+  font-family: var(--sans);
+  font-size: var(--text-10-5);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--studio-text-muted);
+}
+
+.summaryTitle em {
+  font-style: normal;
+  color: inherit;
+}
+
+.summaryRows {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.summaryRow {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 4px 16px;
+  padding: 10px 0;
+  border-top: 1px solid var(--line);
+}
+
+.summaryName {
+  font-weight: 600;
+  color: var(--text);
+  text-decoration: none;
+  transition-property: color;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+.summaryRoles {
+  font-size: var(--text-13);
+  color: var(--studio-text-muted);
+}

@@ -6,6 +6,7 @@ import { SubprofileSections } from "./SubprofileSections";
 import { SubprofileSpotlight } from "./SubprofileSpotlight";
 import { SubprofileSkinExtras } from "./SubprofileSkinExtras";
 import { SubprofileAffiliations } from "./SubprofileAffiliations";
+import { PersonaUpdates } from "./PersonaUpdates";
 import { PersonaRightsFooter } from "./rights/PersonaRightsFooter";
 import { KIND_LABEL_KEYS, personaNameBesideCraft } from "./subprofile-kinds";
 import { usePersonaMotion } from "./usePersonaMotion";
@@ -146,6 +147,19 @@ export function SubprofilePageBody({
               skin={skin}
               slot="afterBio"
               mode={mode}
+            />
+
+            {/* Studio v3: a musician's or DJ's updates, under the hero and
+                above the sections. Read-only in the editor preview. */}
+            <PersonaUpdates
+              persona={{
+                id: data.id,
+                kind: data.kind,
+                displayName: data.displayName,
+              }}
+              mode={mode}
+              surface="persona"
+              isComposerShown
             />
 
             <div className="pp-body">

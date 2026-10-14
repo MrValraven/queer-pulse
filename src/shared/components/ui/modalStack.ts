@@ -41,6 +41,12 @@ export function hasOpenModal(): boolean {
   return stack.length > 0;
 }
 
+/** How many dialogs are mounted. Lets a layer that is itself a dialog (the
+ *  Studio player's Now playing) tell "only me" from "something above me". */
+export function openModalCount(): number {
+  return stack.length;
+}
+
 /**
  * Dialog layers, bottom first, for `useInertWhileCovered` below. `Modal`,
  * `ModalSheet` and `SideSheet` register their scrim here, so with a confirm

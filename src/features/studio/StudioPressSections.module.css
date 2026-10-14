@@ -1,0 +1,185 @@
+.section {
+  padding: 40px 0;
+  border-bottom: 1px solid rgba(var(--studio-ink-rgb), 0.1);
+}
+
+.section:last-child {
+  border-bottom: 0;
+}
+
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px 18px;
+  margin-bottom: 20px;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: var(--text-32);
+}
+
+.title em {
+  font-style: italic;
+  color: var(--studio-accent-text);
+}
+
+.headAction {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: var(--tap-min);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--studio-accent-text);
+  font: inherit;
+  font-size: var(--text-13);
+  cursor: pointer;
+}
+
+.headAction:focus-visible,
+.trackPlay:focus-visible,
+.contact:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.hint {
+  margin: 0 0 14px;
+  font-size: var(--text-13);
+  color: var(--studio-text-muted);
+}
+
+.tracks {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.track {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 12px;
+  border-radius: var(--radius-12);
+  background: rgba(var(--studio-ink-rgb), 0.04);
+  transition-property: background-color;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+.track[aria-current="true"] {
+  background: rgba(var(--studio-ink-rgb), 0.09);
+}
+
+.trackPlay {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: var(--tap-min);
+  height: var(--tap-min);
+  border: 0;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--studio-bg);
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.trackText {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.trackTitle {
+  font-weight: 600;
+}
+
+.trackMeta {
+  font-size: var(--text-12-5);
+  color: var(--studio-text-muted);
+}
+
+.prose p {
+  margin: 0 0 14px;
+  max-width: 68ch;
+  line-height: 1.75;
+  white-space: pre-wrap;
+}
+
+.releases {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 18px;
+}
+
+.quotes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 18px;
+}
+
+.quote {
+  margin: 0;
+  padding: 18px 20px;
+  border-radius: var(--radius-14);
+  border: 1px solid rgba(var(--studio-ink-rgb), 0.1);
+}
+
+.quote blockquote {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-19);
+  line-height: 1.4;
+}
+
+.quoteSource {
+  margin-top: 10px;
+  font-size: var(--text-12-5);
+  color: var(--studio-text-muted);
+}
+
+.linkColumns {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 18px;
+}
+
+.contact {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 100%;
+  font-family: var(--serif);
+  font-size: var(--text-22);
+  color: var(--studio-accent-text);
+  overflow-wrap: anywhere;
+}
+
+.contactExternal {
+  flex-shrink: 0;
+  font-size: var(--text-15);
+}
+
+/* Phone: every press control reaches the 44px tap target. The doubled
+   class outranks the small button's 40px floor. */
+@media (max-width: 720px) {
+  .copyBio.copyBio {
+    min-height: var(--tap-min);
+  }
+
+  .contact {
+    min-height: var(--tap-min);
+  }
+}

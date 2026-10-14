@@ -1,0 +1,240 @@
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.fieldRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.summary {
+  font-size: var(--text-12);
+  color: var(--studio-text-muted);
+}
+
+.linkButton {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: var(--tap-min);
+  padding: 4px 0;
+  border: none;
+  background: none;
+  color: var(--accent-text);
+  font-size: var(--text-13);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.field .linkButton {
+  color: var(--studio-accent-text);
+}
+
+.warning {
+  margin: 0;
+  font-size: var(--text-12);
+  color: var(--accent-text);
+}
+
+.field .warning {
+  color: var(--studio-accent-soft-text);
+}
+
+.panel,
+.pane {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.label,
+.hint,
+.count {
+  margin: 0;
+  font-size: var(--text-12);
+  color: rgba(var(--ink-rgb), 0.7);
+}
+
+.textarea {
+  width: 100%;
+  min-height: 12em;
+  padding: 10px;
+  border: 1px solid rgba(var(--studio-ink-rgb), 0.18);
+  border-radius: var(--radius-8);
+  background: var(--studio-surface);
+  color: var(--studio-text);
+  font-family: var(--sans);
+  font-size: var(--text-14);
+}
+
+.problems {
+  font-size: var(--text-12);
+}
+
+.problems ul {
+  margin: 4px 0 0;
+  padding-inline-start: 18px;
+}
+
+.transport {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.iconButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--tap-min);
+  height: var(--tap-min);
+  border: 1px solid rgba(var(--line-rgb), 0.16);
+  border-radius: var(--radius-pill);
+  background: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.clock {
+  font-size: var(--text-14);
+  font-variant-numeric: tabular-nums;
+}
+
+.stamp {
+  margin-inline-start: auto;
+  min-width: 140px;
+  min-height: 56px;
+  padding: 0 24px;
+  border: none;
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+  color: var(--studio-bg);
+  font-size: var(--text-18);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.stamp[aria-disabled="true"],
+.iconButton[aria-disabled="true"] {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.lines {
+  display: flex;
+  flex-direction: column;
+  max-height: 40vh;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+}
+
+.line {
+  display: grid;
+  grid-template-columns: 5.5em minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 6px;
+  border-radius: var(--radius-6);
+}
+
+.line[data-next] {
+  background: rgba(var(--accent-rgb), 0.12);
+}
+
+.line[data-playing] .lineText {
+  font-weight: 700;
+}
+
+.lineTime {
+  font-size: var(--text-12);
+  font-variant-numeric: tabular-nums;
+  color: rgba(var(--ink-rgb), 0.7);
+}
+
+.lineText {
+  overflow-wrap: anywhere;
+}
+
+.lineActions {
+  display: flex;
+}
+
+.lineActions button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--tap-min);
+  height: var(--tap-min);
+  border: none;
+  border-radius: var(--radius-pill);
+  background: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.lineActions button[aria-disabled="true"] {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.footerRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.preview {
+  padding: 8px 12px;
+  border-radius: var(--radius-10);
+  background: var(--studio-surface);
+  color: var(--studio-text);
+}
+
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  width: 100%;
+}
+
+.footer .warning {
+  flex: 1;
+}
+
+.linkButton:focus-visible,
+.iconButton:focus-visible,
+.stamp:focus-visible,
+.lineActions button:focus-visible,
+.textarea:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+@media (--compact) {
+  .stamp {
+    width: 100%;
+    margin-inline-start: 0;
+  }
+
+  .transport {
+    flex-wrap: wrap;
+  }
+
+  .line {
+    grid-template-columns: 5.5em minmax(0, 1fr);
+  }
+
+  .lineActions {
+    grid-column: 1 / -1;
+    justify-content: flex-end;
+  }
+}

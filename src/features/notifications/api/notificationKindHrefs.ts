@@ -1,8 +1,12 @@
-import { routes, subprofileEditPath } from "../../../app/routeMap";
+import {
+  personaUpdatesPath,
+  routes,
+  subprofileEditPath,
+} from "../../../app/routeMap";
 import { MY_HOUSING_LISTINGS_PATH } from "../../economy/housing.data";
 import { gatheringPath } from "../../gatherings/data";
 import { listingCorrectionContactPath } from "../../marketing/contactPrefill";
-import { studioReleasePath } from "../../studio/studioPaths";
+import { studioReleasePath, studioTrackPath } from "../../studio/studioPaths";
 
 /**
  * A landlord's public page. The route is declared as the literal
@@ -131,6 +135,40 @@ export function lifecycleSourceHref(
     // Studio v2: the new release itself. A recipient whose grant has gone
     // lands on the Studio teaser, which the route gate already shows.
     case "studio_release_published": {
+      const releaseId = slugOf(payload, "releaseId");
+      return {
+        href: releaseId ? studioReleasePath(releaseId) : routes.studio,
+      };
+    }
+    // Studio artist kinds: the new episode, else its show, else Studio.
+    case "studio_episode_published": {
+      const trackId = slugOf(payload, "trackId");
+      const releaseId = slugOf(payload, "releaseId");
+      if (trackId) return { href: studioTrackPath(trackId) };
+      return {
+        href: releaseId ? studioReleasePath(releaseId) : routes.studio,
+      };
+    }
+    // Studio v3: the persona page's Updates block. Without an address the
+    // row opens the persona directory.
+    case "persona_post": {
+      const handle = slugOf(payload, "subprofileSlugOrHandle");
+      return { href: handle ? personaUpdatesPath(handle) : routes.subprofiles };
+    }
+    // Studio discovery: a credit request opens the credits inbox; an
+    // accepted credit opens the track, or the inbox for a row without one.
+    case "studio_credit_requested":
+      return { href: routes.studioCredits };
+    case "studio_credit_accepted": {
+      const trackId = slugOf(payload, "trackId");
+      return {
+        href: trackId ? studioTrackPath(trackId) : routes.studioCredits,
+      };
+    }
+    // Studio open pages: the owner reads our team's reason, and any reply to
+    // their dispute, on the release itself.
+    case "studio_release_taken_down":
+    case "studio_release_dispute_decided": {
       const releaseId = slugOf(payload, "releaseId");
       return {
         href: releaseId ? studioReleasePath(releaseId) : routes.studio,

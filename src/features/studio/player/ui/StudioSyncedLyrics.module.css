@@ -1,0 +1,116 @@
+.root {
+  position: relative;
+  min-height: 0;
+}
+
+.list {
+  position: relative;
+  max-block-size: min(60vh, 520px);
+  margin: 0;
+  padding: 24px 0;
+  list-style: none;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.line {
+  display: block;
+  width: 100%;
+  padding: 6px 4px;
+  border: none;
+  border-radius: var(--radius-6);
+  background: none;
+  font-family: var(--serif);
+  font-size: var(--text-20);
+  line-height: 1.35;
+  text-align: start;
+  overflow-wrap: anywhere;
+  color: var(--studio-text-muted);
+  cursor: pointer;
+  transition-property: color, opacity;
+  transition-duration: var(--dur-base);
+  transition-timing-function: var(--ease);
+}
+
+.line[data-past] {
+  opacity: 0.7;
+}
+
+.line[aria-current="true"] {
+  color: var(--studio-text);
+  font-weight: 600;
+}
+
+.gap {
+  padding: 4px;
+  color: var(--studio-text-faint);
+}
+
+.back {
+  position: absolute;
+  inset-inline-start: 50%;
+  inset-block-end: 12px;
+  /* translate, so motion's own transform (for y) composes with it. */
+  translate: -50% 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border: none;
+  border-radius: var(--radius-pill);
+  font-size: var(--text-13);
+  font-weight: 600;
+  color: var(--studio-surface-rail);
+  background: rgba(var(--studio-ink-rgb), 0.92);
+  box-shadow: var(--shadow-e2);
+  cursor: pointer;
+}
+
+/* On the track page the list scrolls with the page, between the sticky
+   topbar and the player bar. The box is capped to that space so all of it
+   can show at once: the viewport less the player bar, the phone tab bar and
+   the topbar clearance (96px, the same figure as the Studio shell's
+   scroll-padding-top in studio.module.css). */
+.root[data-page-flow] {
+  display: grid;
+}
+
+.root[data-page-flow] .list {
+  grid-area: 1 / 1;
+  max-block-size: min(
+    60vh,
+    520px,
+    calc(
+      100dvh - var(--studio-player-inset, 0px) - var(--bottom-inset, 0px) -
+        96px
+    )
+  );
+}
+
+/* Shares the list's grid cell and sticks above the player bar, so the pill
+   stays on screen while the bottom of the box runs under the bar. */
+.root[data-page-flow] .back {
+  grid-area: 1 / 1;
+  align-self: end;
+  justify-self: center;
+  position: sticky;
+  inset-inline-start: auto;
+  inset-block-end: calc(
+    var(--studio-player-inset, 0px) + var(--bottom-inset, 0px) + 12px
+  );
+  margin-block-end: 12px;
+  translate: none;
+}
+
+.line:focus-visible,
+.back:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+@media (--compact) {
+  .line {
+    font-size: var(--text-18);
+  }
+}

@@ -19,18 +19,26 @@ import { StudioLoadError } from "./StudioLoadStates";
 import { StudioLine } from "./StudioSkeletons";
 import { StudioTipModal } from "./StudioTipModal";
 import { releaseFactsLine } from "./studioFacts";
+import type { StudioHomeHeroChoice } from "./studioHome.data";
 import { studioUploadPath } from "./studioPaths";
 import { useStudioSaveToggle } from "./useStudioSaveToggle";
 import { useStudioShowcase } from "./useStudioShowcase";
 import styles from "./studio.module.css";
 import kit from "./studioKit.module.css";
+import css from "./StudioCuration.module.css";
 
-/** The newest release, with Play, Save and (demo) Tip. Owns the page's
- *  loading, empty and error states so the grid below never doubles them. */
+/** The featured release with its staff note, else the newest release, with
+ *  Play, Save and (demo) Tip. Owns the page's loading, empty and error
+ *  states so the rows below never double them. */
 export function StudioHomeHero({
   releasesResult,
+  hero,
+  isHeroSettled,
 }: {
   releasesResult: StudioReleasesResult;
+  hero: StudioHomeHeroChoice;
+  /** False while curation still loads: the hero shows its skeleton. */
+  isHeroSettled: boolean;
 }) {
   const { t } = useTranslation();
   const headingId = useId();
@@ -38,23 +46,23 @@ export function StudioHomeHero({
   const isShowcase = useStudioShowcase();
   const { uploadablePersonas } = useStudioAccess();
   const [isTipOpen, setIsTipOpen] = useState(false);
-  const { releases, loadState } = releasesResult;
-  const newest = releases[0] ?? null;
+  const { loadState } = releasesResult;
+  const release = hero.release;
   const save = useStudioSaveToggle(
-    newest
+    release
       ? {
-          savedId: newest.savedId,
+          savedId: release.savedId,
           kind: "studio_release",
-          title: newest.title,
-          href: newest.href,
-          meta: newest.artist.name,
+          title: release.title,
+          href: release.href,
+          meta: release.artist.name,
         }
       : null,
   );
 
-  if (loadState.isError || loadState.isNotFound)
+  if (!release && (loadState.isError || loadState.isNotFound))
     return <StudioLoadError loadState={loadState} />;
-  if (loadState.isLoading) {
+  if (!isHeroSettled || (!release && loadState.isLoading)) {
     return (
       <section className={styles.hero} aria-busy="true">
         <StudioLine width="60%" height={42} />
@@ -62,7 +70,7 @@ export function StudioHomeHero({
       </section>
     );
   }
-  if (!newest) {
+  if (!release) {
     return (
       <EmptyState
         icon={<FiMusic />}
@@ -81,19 +89,19 @@ export function StudioHomeHero({
     );
   }
 
-  const isCurrent = player.isCurrentRelease(newest.id);
+  const isCurrent = player.isCurrentRelease(release.id);
   const isPlaying = isCurrent && player.status === "playing";
   return (
     <section className={styles.hero} aria-labelledby={headingId}>
       <div className={styles.heroInner}>
         <div className={styles.heroArt}>
           <ImageSlot
-            src={newest.coverUrl ?? undefined}
-            tint={newest.tint}
+            src={release.coverUrl ?? undefined}
+            tint={release.tint}
             width="100%"
             height="100%"
             radius={16}
-            placeholder={`${t("studio:media.coverLabel")} · ${newest.artist.name}`}
+            placeholder={`${t("studio:media.coverLabel")} · ${release.artist.name}`}
             style={{ position: "absolute", inset: 0 }}
             loading="eager"
             fetchPriority="high"
@@ -101,25 +109,37 @@ export function StudioHomeHero({
         </div>
         <div className={styles.heroInfo}>
           <div className={styles.eb} id={headingId}>
-            {t("studio:home.hero.eyebrow")}
+            {t(
+              hero.isFeatured
+                ? "studio:home.hero.featuredEyebrow"
+                : "studio:home.hero.eyebrow",
+            )}
           </div>
           <h1>
-            <Link to={newest.href} className={kit.titleLink}>
-              {newest.title}
+            <Link to={release.href} className={kit.titleLink}>
+              {release.title}
             </Link>
           </h1>
+          {hero.note && (
+            <p className={css.heroNote}>
+              <span className="visuallyHidden">
+                {t("studio:curation.noteLabel")}{" "}
+              </span>
+              {hero.note}
+            </p>
+          )}
           <div className={styles.by}>
             <Translation
               i18nKey="studio:home.hero.byLine"
               components={{ strong: <strong /> }}
               values={{
-                artist: newest.artist.name,
-                facts: releaseFactsLine(newest, t),
+                artist: release.artist.name,
+                facts: releaseFactsLine(release, t),
               }}
             />
           </div>
           {isShowcase && (
-            <StudioHomeHeroShowcase artistName={newest.artist.name} />
+            <StudioHomeHeroShowcase artistName={release.artist.name} />
           )}
           <div className={styles.heroActions}>
             <button
@@ -127,13 +147,13 @@ export function StudioHomeHero({
               className={styles.playBig}
               aria-label={
                 isPlaying
-                  ? t("studio:card.pauseRelease", { title: newest.title })
-                  : t("studio:card.playRelease", { title: newest.title })
+                  ? t("studio:card.pauseRelease", { title: release.title })
+                  : t("studio:card.playRelease", { title: release.title })
               }
               onClick={() =>
                 isCurrent
                   ? player.togglePlay()
-                  : void player.playRelease(newest.id)
+                  : void player.playRelease(release.id)
               }
             >
               {isPlaying ? <FiPause aria-hidden /> : <FiPlay aria-hidden />}
@@ -145,7 +165,7 @@ export function StudioHomeHero({
                 save.isSaved
                   ? "studio:save.removeSavedCta"
                   : "studio:save.saveReleaseCta",
-                { title: newest.title },
+                { title: release.title },
               )}
               onClick={save.toggle}
             >
@@ -162,7 +182,7 @@ export function StudioHomeHero({
               >
                 <FiHeart aria-hidden />{" "}
                 {t("studio:detail.tipArtistCta", {
-                  artist: newest.artist.name,
+                  artist: release.artist.name,
                 })}
               </button>
             )}
@@ -171,7 +191,7 @@ export function StudioHomeHero({
       </div>
       {isTipOpen && (
         <StudioTipModal
-          recipient={newest.artist.name}
+          recipient={release.artist.name}
           onClose={() => setIsTipOpen(false)}
         />
       )}

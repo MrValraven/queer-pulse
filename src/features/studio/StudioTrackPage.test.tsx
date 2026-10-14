@@ -1,9 +1,12 @@
 import { render, screen, within } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
+import { resetDemoCreditLedger } from "./api/studioDemoCreditLedger";
 import { StudioTrackPage } from "./StudioTrackPage";
 
 const TRACK_URL = "/studio/track?id=demo-track-cidade-dos-santos-06";
+
+beforeEach(() => resetDemoCreditLedger());
 
 describe("StudioTrackPage (demo fixture)", () => {
   it("shows credits and lyrics from data, with no fake language switch", async () => {
@@ -57,5 +60,23 @@ describe("StudioTrackPage (demo fixture)", () => {
       "href",
       "/studio/album?id=demo-release-cidade-dos-santos",
     );
+  });
+});
+
+describe("StudioTrackPage: a track on a withdrawn release", () => {
+  it("shows the withdrawn view in place", async () => {
+    render(
+      <TestProviders
+        initialEntries={["/studio/track?id=demo-track-withdrawn-01"]}
+      >
+        <StudioTrackPage />
+      </TestProviders>,
+    );
+    expect(
+      await screen.findByRole("heading", {
+        level: 1,
+        name: "This release was withdrawn",
+      }),
+    ).toBeInTheDocument();
   });
 });

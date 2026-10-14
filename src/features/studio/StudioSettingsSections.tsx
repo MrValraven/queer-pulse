@@ -5,6 +5,7 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { Toggle, Seg, RadioCards } from "./StudioSettingsControls";
+import { useStudioPlayer } from "./player/studioPlayerContext";
 import {
   STREAM_QUALITY_OPTS,
   TIP_PRIVACY_OPTS,
@@ -18,8 +19,7 @@ export function AudioSection() {
   const { t } = useTranslation();
   const [streamQ, setStreamQ] = useState("flac");
   const [dlQ, setDlQ] = useState("FLAC");
-  const [normalise, setNormalise] = useState(true);
-  const [crossfade, setCrossfade] = useState(false);
+  const player = useStudioPlayer();
 
   return (
     <section className={s.sec}>
@@ -33,7 +33,7 @@ export function AudioSection() {
       <p className={s.secDek}>{t("studio:settings.audio.dek")}</p>
       <div className={`${s.opt} ${s.optBlock}`}>
         <div className={s.ot} style={{ marginBottom: 12 }}>
-          <h4>{t("studio:settings.audio.streamQuality.heading")}</h4>
+          <h3>{t("studio:settings.audio.streamQuality.heading")}</h3>
           <p>{t("studio:settings.audio.streamQuality.body")}</p>
         </div>
         <RadioCards
@@ -44,14 +44,14 @@ export function AudioSection() {
       </div>
       <div className={s.opt}>
         <div className={s.ot}>
-          <h4>{t("studio:settings.audio.downloadQuality.heading")}</h4>
+          <h3>{t("studio:settings.audio.downloadQuality.heading")}</h3>
           <p>{t("studio:settings.audio.downloadQuality.body")}</p>
         </div>
         <Seg opts={DOWNLOAD_QUALITY_OPTS} active={dlQ} onChange={setDlQ} />
       </div>
       <div className={s.opt}>
         <div className={s.ot}>
-          <h4>{t("studio:settings.audio.normalise.heading")}</h4>
+          <h3>{t("studio:settings.audio.normalise.heading")}</h3>
           <p>
             <Translation
               i18nKey="studio:settings.audio.normalise.body"
@@ -60,20 +60,11 @@ export function AudioSection() {
           </p>
         </div>
         <Toggle
-          on={normalise}
-          onToggle={() => setNormalise((v) => !v)}
+          on={player.preferences.isLoudnessEven}
+          onToggle={() =>
+            player.setLoudnessEven(!player.preferences.isLoudnessEven)
+          }
           label={t("studio:settings.audio.normalise.heading")}
-        />
-      </div>
-      <div className={s.opt}>
-        <div className={s.ot}>
-          <h4>{t("studio:settings.audio.crossfade.heading")}</h4>
-          <p>{t("studio:settings.audio.crossfade.body")}</p>
-        </div>
-        <Toggle
-          on={crossfade}
-          onToggle={() => setCrossfade((v) => !v)}
-          label={t("studio:settings.audio.crossfade.heading")}
         />
       </div>
     </section>
@@ -99,7 +90,7 @@ export function PrivacySection() {
       <p className={s.secDek}>{t("studio:settings.privacy.dek")}</p>
       <div className={s.opt}>
         <div className={s.ot}>
-          <h4>{t("studio:settings.privacy.history.heading")}</h4>
+          <h3>{t("studio:settings.privacy.history.heading")}</h3>
           <p>{t("studio:settings.privacy.history.body")}</p>
         </div>
         <Toggle
@@ -110,7 +101,7 @@ export function PrivacySection() {
       </div>
       <div className={s.opt}>
         <div className={s.ot}>
-          <h4>{t("studio:settings.privacy.cloudSync.heading")}</h4>
+          <h3>{t("studio:settings.privacy.cloudSync.heading")}</h3>
           <p>{t("studio:settings.privacy.cloudSync.body")}</p>
         </div>
         <Toggle
@@ -121,7 +112,7 @@ export function PrivacySection() {
       </div>
       <div className={`${s.opt} ${s.optBlock}`}>
         <div className={s.ot} style={{ marginBottom: 12 }}>
-          <h4>{t("studio:settings.privacy.tipNotes.heading")}</h4>
+          <h3>{t("studio:settings.privacy.tipNotes.heading")}</h3>
           <p>
             <Translation
               i18nKey="studio:settings.privacy.tipNotes.body"
@@ -137,7 +128,7 @@ export function PrivacySection() {
       </div>
       <div className={s.opt}>
         <div className={s.ot}>
-          <h4>{t("studio:settings.privacy.tipReceipts.heading")}</h4>
+          <h3>{t("studio:settings.privacy.tipReceipts.heading")}</h3>
           <p>{t("studio:settings.privacy.tipReceipts.body")}</p>
         </div>
         <Toggle
@@ -169,7 +160,7 @@ export function CaptionsSection() {
       <p className={s.secDek}>{t("studio:settings.captions.dek")}</p>
       <div className={s.opt}>
         <div className={s.ot}>
-          <h4>{t("studio:settings.captions.showCaptions.heading")}</h4>
+          <h3>{t("studio:settings.captions.showCaptions.heading")}</h3>
           <p>
             <Translation
               i18nKey="studio:settings.captions.showCaptions.body"
@@ -185,7 +176,7 @@ export function CaptionsSection() {
       </div>
       <div className={s.opt}>
         <div className={s.ot}>
-          <h4>{t("studio:settings.captions.captionSize.heading")}</h4>
+          <h3>{t("studio:settings.captions.captionSize.heading")}</h3>
           <p>{t("studio:settings.captions.captionSize.body")}</p>
         </div>
         <Seg
@@ -196,7 +187,7 @@ export function CaptionsSection() {
       </div>
       <div className={s.opt}>
         <div className={s.ot}>
-          <h4>{t("studio:settings.captions.lyricLanguage.heading")}</h4>
+          <h3>{t("studio:settings.captions.lyricLanguage.heading")}</h3>
           <p>{t("studio:settings.captions.lyricLanguage.body")}</p>
         </div>
         <Select
@@ -230,7 +221,7 @@ export function CaptionsSection() {
       </div>
       <div className={s.opt}>
         <div className={s.ot}>
-          <h4>{t("studio:settings.captions.showBoth.heading")}</h4>
+          <h3>{t("studio:settings.captions.showBoth.heading")}</h3>
           <p>{t("studio:settings.captions.showBoth.body")}</p>
         </div>
         <Toggle
@@ -261,7 +252,7 @@ export function TippingSection() {
       <p className={s.secDek}>{t("studio:settings.tipping.dek")}</p>
       <div className={s.opt}>
         <div className={s.ot}>
-          <h4>{t("studio:settings.tipping.defaultAmount.heading")}</h4>
+          <h3>{t("studio:settings.tipping.defaultAmount.heading")}</h3>
           <p>{t("studio:settings.tipping.defaultAmount.body")}</p>
         </div>
         <div className={s.chips}>
@@ -286,7 +277,7 @@ export function TippingSection() {
       </div>
       <div className={s.opt}>
         <div className={s.ot}>
-          <h4>{t("studio:settings.tipping.roundUp.heading")}</h4>
+          <h3>{t("studio:settings.tipping.roundUp.heading")}</h3>
           <p>
             {t("studio:settings.tipping.roundUp.body", {
               albumPrice: fmt.currency(3.4),
@@ -324,7 +315,7 @@ export function EraseSection() {
       <div className={s.danger}>
         <div className={s.opt}>
           <div className={s.ot}>
-            <h4>{t("studio:settings.erase.history.heading")}</h4>
+            <h3>{t("studio:settings.erase.history.heading")}</h3>
             <p className={s.eraseNote}>
               <Translation
                 i18nKey="studio:settings.erase.history.note"
@@ -344,7 +335,7 @@ export function EraseSection() {
         </div>
         <div className={s.opt}>
           <div className={s.ot}>
-            <h4>{t("studio:settings.erase.export.heading")}</h4>
+            <h3>{t("studio:settings.erase.export.heading")}</h3>
             <p className={s.eraseNote}>
               {t("studio:settings.erase.export.note")}
             </p>
@@ -361,7 +352,7 @@ export function EraseSection() {
         </div>
         <div className={s.opt}>
           <div className={s.ot}>
-            <h4>{t("studio:settings.erase.closeAccount.heading")}</h4>
+            <h3>{t("studio:settings.erase.closeAccount.heading")}</h3>
             <p className={s.eraseNote}>
               <Translation
                 i18nKey="studio:settings.erase.closeAccount.note"

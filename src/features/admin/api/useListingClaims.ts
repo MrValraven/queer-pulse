@@ -8,6 +8,10 @@ import { getListingClaims, type ListingClaimDTO } from "./listingClaims.api";
  *  success. */
 export const LISTING_CLAIMS_KEY = "admin-listing-claims";
 
+const DEMO_PENDING_CLAIM_COUNT = ADMIN_LISTING_CLAIMS.filter(
+  (claim) => claim.status === "pending",
+).length;
+
 /**
  * The pending "claim this listing" review queue, paginated (ENG-41).
  *
@@ -22,17 +26,30 @@ export const LISTING_CLAIMS_KEY = "admin-listing-claims";
  * hits the network: this is a Moderator/Admin-only endpoint that 403s for anyone
  * else, and the fixture is fabricated data that must never surface as platform
  * truth. Mirrors `useAdminCommunityTagRequests`.
+ *
+ * `isEnabled: false` mounts the hook without fetching. The admin rail's badge
+ * passes it for a viewer the endpoint would refuse, so a member of staff with
+ * no claim access never fires a guaranteed 403 on every admin page. The query
+ * key does not include the flag: the rail and /admin/listings share one cache
+ * entry, so the badge is served from the page's own fetch and the other way
+ * round.
  */
-export function useListingClaims() {
+export function useListingClaims({
+  isEnabled = true,
+}: { isEnabled?: boolean } = {}) {
   const { demoMode } = useDemoMode();
   const query = useInfiniteQuery<ItemsPage<ListingClaimDTO>>({
     queryKey: [LISTING_CLAIMS_KEY, demoMode],
+    enabled: isEnabled,
     initialPageParam: 1,
     queryFn: ({ pageParam }) =>
       demoMode
         ? Promise.resolve({
             items: ADMIN_LISTING_CLAIMS,
-            total: ADMIN_LISTING_CLAIMS.length,
+            // The fixture keeps a decided claim beside the pending one so the
+            // demo shows both row states, but `total` is the size of the
+            // PENDING queue, as it is live, so the badges count only that.
+            total: DEMO_PENDING_CLAIM_COUNT,
             page: 1,
             pageSize: ADMIN_LISTING_CLAIMS.length || 1,
           })

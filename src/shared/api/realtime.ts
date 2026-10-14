@@ -222,6 +222,27 @@ function threadQueryKey(conversationId: string) {
   return { queryKey: ["messages", conversationId] as const };
 }
 
+/** Studio: our team took the member's release down or decided their
+ *  dispute, so the release page they may have open (status, reason, dispute
+ *  panel) reads again. The key mirrors `studioKeys.release(demoMode,
+ *  releaseId)` with `demoMode` false (the socket only runs live), written out
+ *  so this shared module does not import the Studio API. */
+function refreshStudioReleaseOnNotice(
+  queryClient: QueryClient,
+  notification: ServerToClientEvents["notification:new"],
+): void {
+  if (
+    notification.type !== "studio_release_taken_down" &&
+    notification.type !== "studio_release_dispute_decided"
+  )
+    return;
+  const releaseId = notification.payload.releaseId;
+  if (typeof releaseId !== "string" || !releaseId) return;
+  void queryClient.invalidateQueries({
+    queryKey: ["studio", "release", false, releaseId],
+  });
+}
+
 /**
  * Opens one socket to `/chat` and funnels every frame through cache
  * invalidation, so the socket never has to know a page's component tree — only
@@ -1190,6 +1211,7 @@ class RealtimeClient {
       if (notification.type === "mention") {
         void this.qc.invalidateQueries({ queryKey: ["mentions", false] });
       }
+      refreshStudioReleaseOnNotice(this.qc, notification);
     });
     // Another tab or device of this same member read or dismissed rows
     // (mark one read, mark all read, mentions mark all read, dismiss). The

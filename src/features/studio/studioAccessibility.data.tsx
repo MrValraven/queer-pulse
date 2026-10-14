@@ -9,6 +9,9 @@ import {
   FiEye,
   FiVolume2,
   FiPause,
+  FiMoon,
+  FiSkipForward,
+  FiSliders,
 } from "react-icons/fi";
 import { Translation } from "../../shared/i18n/Translation";
 import type { TFunction } from "../../shared/i18n/types";
@@ -16,10 +19,10 @@ import type { TFunction } from "../../shared/i18n/types";
 /**
  * Content for the Studio Accessibility page. Platform-authored chrome (never
  * fetched — see `docs/i18n/extraction-brief.md` §1). Pattern B:
- * `buildGroups(t)` / `buildShortcuts(t)` are memoized in the consumer.
+ * `buildGroups(t)` is memoized in the consumer.
  */
 
-export type ItemStatus = "live" | "soon";
+export type ItemStatus = "live" | "soon" | "notYet";
 
 export interface AccessItem {
   icon: ReactNode;
@@ -216,60 +219,57 @@ export function buildGroups(t: TFunction): AccessGroup[] {
   ];
 }
 
-export interface ShortcutRow {
-  heading: ReactNode;
-  keys: string[];
-}
+// ── Studio open pages: what works today (spec section 3.5) ────────────────
 
-export function buildShortcuts(t: TFunction): ShortcutRow[] {
+const liveItem = (
+  id: string,
+  icon: ReactNode,
+  status: ItemStatus = "live",
+): AccessItem => ({
+  icon,
+  heading: (
+    <Translation
+      i18nKey={`studio:accessibilityLive.item.${id}.heading`}
+      components={{ em: <em /> }}
+    />
+  ),
+  body: <Translation i18nKey={`studio:accessibilityLive.item.${id}.body`} />,
+  status,
+});
+
+const liveGroup = (
+  id: string,
+  t: TFunction,
+  items: AccessItem[],
+): AccessGroup => ({
+  heading: (
+    <Translation
+      i18nKey={`studio:accessibilityLive.group.${id}.heading`}
+      components={{ em: <em /> }}
+    />
+  ),
+  dek: t(`studio:accessibilityLive.group.${id}.dek`),
+  items,
+});
+
+/** Only what exists: Media Session keys, the keyboard seek slider, labelled
+ *  controls with a live region, reduced motion, both themes, two languages,
+ *  lyrics as text, and captions honestly "Not yet". */
+export function buildLiveGroups(t: TFunction): AccessGroup[] {
   return [
-    {
-      heading: (
-        <Translation
-          i18nKey="studio:accessibility.shortcut.playPause"
-          components={{ em: <em /> }}
-        />
-      ),
-      keys: [t("studio:accessibility.key.space")],
-    },
-    {
-      heading: (
-        <Translation
-          i18nKey="studio:accessibility.shortcut.prevNext"
-          components={{ em: <em /> }}
-        />
-      ),
-      keys: ["←", "→"],
-    },
-    {
-      heading: (
-        <Translation
-          i18nKey="studio:accessibility.shortcut.volume"
-          components={{ em: <em /> }}
-        />
-      ),
-      keys: ["↑", "↓"],
-    },
-    {
-      heading: t("studio:accessibility.shortcut.tip"),
-      keys: ["T"],
-    },
-    {
-      heading: t("studio:accessibility.shortcut.save"),
-      keys: ["S"],
-    },
-    {
-      heading: (
-        <Translation
-          i18nKey="studio:accessibility.shortcut.captions"
-          components={{ em: <em /> }}
-        />
-      ),
-      keys: ["C"],
-    },
-    {
-      heading: t("studio:accessibility.shortcut.search"),
-      keys: ["/"],
-    },
+    liveGroup("player", t, [
+      liveItem("mediaKeys", <FiSkipForward />),
+      liveItem("seek", <FiSliders />),
+      liveItem("labels", <FiVolume2 />),
+    ]),
+    liveGroup("display", t, [
+      liveItem("motion", <FiPause />),
+      liveItem("themes", <FiMoon />),
+      liveItem("languages", <FiGlobe />),
+    ]),
+    liveGroup("words", t, [
+      liveItem("lyrics", <FiAlignLeft />),
+      liveItem("captions", <FiMessageSquare />, "notYet"),
+    ]),
   ];
 }

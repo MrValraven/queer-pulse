@@ -8,21 +8,23 @@ export type StudioLibrarySaveKind =
   "studio_release" | "studio_track" | "studio_playlist";
 
 /** Listed in `shared/consent/storageInventory.ts` (the `previewMode` row);
- *  rename both together. */
-const SEEDED_FLAG_KEY = "qp.demo.studioLibrarySeeded.v1";
-/** Pre-v1 key. A browser that still holds it was seeded already. */
-const LEGACY_SEEDED_FLAG_KEY = "qp-demo-studio-library-seeded";
+ *  rename both together. v2 reseeds browsers that hold an older library
+ *  fixture (v1 and the pre-v1 key), so they see the Withdrawn and "Demo tape"
+ *  rows. */
+const SEEDED_FLAG_KEY = "qp.demo.studioLibrarySeeded.v2";
+/** Older flags: a browser that holds one has the old fixture, so it is
+ *  dropped and the new fixture seeds. */
+const OLDER_SEEDED_FLAG_KEYS = [
+  "qp.demo.studioLibrarySeeded.v1",
+  "qp-demo-studio-library-seeded",
+];
 let hasSeededThisSession = false;
 
 /** `safeStorage` never throws, so a blocked store reads as "not seeded" and
  *  the in-memory flag keeps the seed to once per session. */
 function hasSeededBefore(): boolean {
   if (hasSeededThisSession) return true;
-  if (safeStorage.get(LEGACY_SEEDED_FLAG_KEY) !== null) {
-    safeStorage.set(SEEDED_FLAG_KEY, "1");
-    safeStorage.remove(LEGACY_SEEDED_FLAG_KEY);
-    return true;
-  }
+  for (const olderKey of OLDER_SEEDED_FLAG_KEYS) safeStorage.remove(olderKey);
   return safeStorage.get(SEEDED_FLAG_KEY) === "1";
 }
 
@@ -35,7 +37,7 @@ function markSeeded(): void {
 export function resetStudioLibrarySeedForTests(): void {
   hasSeededThisSession = false;
   safeStorage.remove(SEEDED_FLAG_KEY);
-  safeStorage.remove(LEGACY_SEEDED_FLAG_KEY);
+  for (const olderKey of OLDER_SEEDED_FLAG_KEYS) safeStorage.remove(olderKey);
 }
 
 /** One kind of Studio save from the existing Saved feature. The demo puts
@@ -44,12 +46,17 @@ export function resetStudioLibrarySeedForTests(): void {
 export function useStudioLibrarySaves(
   kind: StudioLibrarySaveKind,
 ): SavedItem[] {
-  const { byKind, save } = useSaved();
+  const { byKind, save, unsave } = useSaved();
   const { demoMode } = useDemoMode();
   useEffect(() => {
     if (!demoMode || hasSeededBefore()) return;
     markSeeded();
-    for (const item of DEMO_LIBRARY_SAVES) save(item);
-  }, [demoMode, save]);
+    // Replace by id, so a returning browser's old copy of a fixture row
+    // gives way to the current one.
+    for (const item of DEMO_LIBRARY_SAVES) {
+      unsave(item.id);
+      save(item);
+    }
+  }, [demoMode, save, unsave]);
   return byKind(kind);
 }

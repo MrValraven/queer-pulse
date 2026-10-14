@@ -32,3 +32,35 @@ export const LIVE_RAIL_LINKS: RailLink[] = [
     to: routes.studioSolidarityFund,
   },
 ];
+
+/** The live rail's "Help and info" group (Studio open pages). */
+export const LIVE_RAIL_UTILITY_LINKS: RailLink[] = [
+  { label: "Help", labelKey: "studio:rail.live.help", to: routes.studioHelp },
+  {
+    label: "About Studio",
+    labelKey: "studio:rail.live.about",
+    to: routes.studioAbout,
+  },
+  {
+    label: "Rights and takedowns",
+    labelKey: "studio:rail.live.rights",
+    to: routes.studioRights,
+  },
+  {
+    label: "Studio terms",
+    labelKey: "studio:rail.live.terms",
+    to: routes.studioTerms,
+  },
+  {
+    label: "Accessibility",
+    labelKey: "studio:rail.live.accessibility",
+    to: routes.studioAccessibility,
+  },
+];
+
+/** Moderators and Admins only: the staff flag review. */
+export const LIVE_RAIL_FLAG_REVIEW_LINK: RailLink = {
+  label: "Flag review",
+  labelKey: "studio:rail.live.flagReview",
+  to: routes.studioFlagReview,
+};

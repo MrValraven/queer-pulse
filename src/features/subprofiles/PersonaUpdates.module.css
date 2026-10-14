@@ -1,0 +1,279 @@
+/* The block's own rules lean on currentColor mixes and opacity, so they read
+   on every persona skin and in both Studio themes. The post menu is an app
+   surface: it paints on --paper with --ink-rgb ink on the persona page (no
+   skin remaps those two), and on the theme-following Studio roles inside
+   .studioBlock. */
+.block {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* The persona-surface section mounts outside .pp-body, so it carries the
+   same top padding to clear the hero bio. The page skin sets its own. */
+.personaBlock {
+  padding-top: clamp(40px, 5cqw, 64px);
+  scroll-margin-block-start: calc(var(--nav-band) + 16px);
+}
+
+/* Phone: Button size sm is 40px tall; touch needs the --tap-min floor. */
+@media (max-width: 640px) {
+  .tapTarget.tapTarget {
+    min-height: var(--tap-min);
+  }
+}
+
+.studioBlock {
+  --updates-menu-surface: var(--studio-surface-rail);
+  --updates-menu-ink-rgb: var(--studio-ink-rgb);
+  margin-top: 28px;
+  color: var(--studio-text);
+}
+
+.studioHeading {
+  margin: 0 0 12px;
+  font-family: var(--serif);
+  font-size: var(--text-22);
+  color: var(--studio-text);
+}
+
+.studioHeading:focus-visible,
+.post:focus-visible,
+.menuTrigger:focus-visible,
+.menuItem:focus-visible,
+.linkCard:focus-visible,
+.textarea:focus-visible,
+.input:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.item + .item {
+  border-top: 1px solid color-mix(in srgb, currentColor 14%, transparent);
+}
+
+.post {
+  padding: 14px 0;
+}
+
+.postHead {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+  font-size: var(--text-12-5);
+}
+
+.postTime {
+  opacity: 0.72;
+}
+
+/* Its resting opacity (0.72) is set by the fade that brings it in. */
+.edited {
+  white-space: nowrap;
+}
+
+.postBody {
+  margin: 0;
+  max-width: 70ch;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  line-height: 1.55;
+}
+
+.photoFrame {
+  display: block;
+  margin-top: 10px;
+  aspect-ratio: 4 / 3;
+  max-width: min(100%, 480px);
+  border-radius: var(--radius-12);
+  overflow: hidden;
+  background: color-mix(in srgb, currentColor 8%, transparent);
+}
+
+.photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.linkCard {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 100%;
+  margin-top: 10px;
+  padding: 8px 12px;
+  border: 1px solid color-mix(in srgb, currentColor 22%, transparent);
+  border-radius: var(--radius-10);
+  color: inherit;
+  text-decoration: none;
+  font-size: var(--text-13);
+}
+
+.linkHost {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font-weight: 600;
+}
+
+@media (hover: hover) {
+  a.linkCard:hover {
+    background: color-mix(in srgb, currentColor 6%, transparent);
+  }
+}
+
+.menuWrap {
+  position: relative;
+  margin-left: auto;
+}
+
+.menuTrigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--tap-min);
+  height: var(--tap-min);
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: none;
+  color: inherit;
+  font-size: var(--text-18);
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+@media (hover: hover) {
+  .menuTrigger:hover {
+    background: color-mix(in srgb, currentColor 8%, transparent);
+  }
+}
+
+.menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 4px);
+  z-index: var(--z-popover);
+  min-width: 180px;
+  display: flex;
+  flex-direction: column;
+  padding: 6px;
+  border-radius: var(--radius-12);
+  background: var(--updates-menu-surface, var(--paper));
+  border: 1px solid
+    rgba(var(--updates-menu-ink-rgb, var(--ink-rgb)), 0.12);
+  color: rgba(var(--updates-menu-ink-rgb, var(--ink-rgb)), 0.92);
+  box-shadow: var(--shadow-panel);
+}
+
+.menuItem {
+  min-height: var(--tap-min);
+  padding: 0 12px;
+  border: 0;
+  border-radius: var(--radius-8);
+  background: none;
+  color: inherit;
+  font: inherit;
+  font-size: var(--text-14);
+  text-align: left;
+  white-space: nowrap;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+@media (hover: hover) {
+  .menuItem:hover {
+    background: rgba(var(--updates-menu-ink-rgb, var(--ink-rgb)), 0.06);
+  }
+}
+
+.composer {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px;
+  border: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+  border-radius: var(--radius-12);
+}
+
+.label {
+  font-size: var(--text-12-5);
+  font-weight: 600;
+}
+
+.textarea,
+.input {
+  width: 100%;
+  font: inherit;
+  color: inherit;
+  background: color-mix(in srgb, currentColor 4%, transparent);
+  border: 1px solid color-mix(in srgb, currentColor 40%, transparent);
+  border-radius: var(--radius-10);
+  padding: 10px 12px;
+}
+
+.textarea {
+  resize: vertical;
+}
+
+.count {
+  margin: 0;
+  font-size: var(--text-12);
+  opacity: 0.72;
+}
+
+.extra {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: 6px;
+}
+
+/* On a persona skin the line keeps the skin's own ink (coral text fails
+   contrast on the dark-ground skins); the coral icon carries the cue. */
+.error {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  font-size: var(--text-12-5);
+  font-weight: 600;
+  color: inherit;
+}
+
+.errorIcon {
+  flex: none;
+  color: var(--accent);
+}
+
+.studioBlock .error {
+  color: var(--studio-accent-text);
+}
+
+.retryLine {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.composerActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.spacer {
+  flex: 1;
+}

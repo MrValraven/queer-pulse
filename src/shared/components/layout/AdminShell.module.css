@@ -612,10 +612,10 @@
 }
 .navCountWarn {
   background: var(--amber);
-  color: var(--text-strong);
-}
-.navItemActive .navCountWarn {
-  color: var(--text-strong);
+  /* Amber stays light in both themes, so the figure stays plum in both:
+     --text-strong flips near-white in dark mode and washed out on amber.
+     css-scale-allow: non-flipping-text */
+  color: var(--plum);
 }
 
 /* ── User footer ─────────────────────────────────────────────────────────── */

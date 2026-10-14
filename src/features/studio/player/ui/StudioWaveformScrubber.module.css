@@ -1,0 +1,89 @@
+.scrubber {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  height: 32px;
+  border-radius: var(--radius-6);
+}
+
+.scrubber[data-size="large"] {
+  height: 48px;
+}
+
+.bars {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.unplayed {
+  fill: rgba(var(--studio-ink-rgb), 0.5);
+}
+
+.played {
+  fill: var(--studio-accent-text);
+}
+
+.tick {
+  stroke: rgba(var(--studio-ink-rgb), 0.7);
+  stroke-width: 1;
+}
+
+.hoverLine {
+  stroke: var(--studio-text);
+  stroke-width: 1;
+  opacity: 0;
+  transition-property: opacity;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+.hoverTime {
+  --hover-half-width: 1.75rem;
+  position: absolute;
+  bottom: calc(100% + 6px);
+  transform: translateX(-50%);
+  padding: 2px 6px;
+  border-radius: var(--radius-6);
+  font-size: var(--text-11);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: var(--studio-text);
+  background: var(--studio-surface-rail);
+  border: 1px solid rgba(var(--studio-ink-rgb), 0.12);
+  pointer-events: none;
+  opacity: 0;
+  transition-property: opacity;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+.hoverLine[data-visible],
+.hoverTime[data-visible] {
+  opacity: 1;
+}
+
+/* The range input lies over the bars: invisible, full size, still the
+   control that takes focus, pointer and keys. */
+.overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+  appearance: none;
+  z-index: 1;
+  /* The bar is a drag target on phones: it takes the horizontal pan, the
+     page still scrolls vertically. */
+  touch-action: pan-y;
+}
+
+.scrubber:has(.overlay:focus-visible) {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}

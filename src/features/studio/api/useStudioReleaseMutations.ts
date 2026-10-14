@@ -33,8 +33,10 @@ import type { InfiniteData } from "@tanstack/react-query";
 import { studioKeys } from "./studioQueryKeys";
 
 const SILENT = { silentError: true } as const;
+/** The server lists at most 6 upcoming releases on an artist page. */
+const UPCOMING_LIMIT = 6;
 
-function cachedRelease(
+export function cachedRelease(
   queryClient: QueryClient,
   demoMode: boolean,
   releaseId: string,
@@ -64,6 +66,10 @@ function cardOf(release: StudioReleaseView): StudioReleaseCardView {
     publishedAt: release.publishedAt,
     genre: release.genre,
     genreLabelKey: release.genreLabelKey,
+    mood: release.mood,
+    scene: release.scene,
+    format: release.format,
+    isShow: release.isShow,
   };
 }
 
@@ -82,6 +88,7 @@ export function syncDemoReleaseLists(
   isRemoved = false,
 ) {
   const isPublished = !isRemoved && release.status === "published";
+  const isScheduled = !isRemoved && release.status === "scheduled";
   const card = cardOf(release);
   queryClient.setQueriesData<StudioArtistView>(
     { queryKey: ["studio", "artist", true] },
@@ -118,9 +125,31 @@ export function syncDemoReleaseLists(
                     status: release.status,
                     statusLabelKey: release.statusLabelKey,
                     takedownReason: release.takedownReason,
+                    publishAt: release.publishAt,
                   },
                   ...ownerOthers,
                 ],
+        // Studio v3: a scheduled release is listed under Upcoming, soonest
+        // first; any other status leaves the list.
+        upcoming: isScheduled
+          ? [
+              {
+                ...card,
+                publishAt: release.publishAt ?? "",
+                isReminderSet: release.isReminderSet,
+              },
+              ...artistView.upcoming.filter(
+                (candidate) => candidate.id !== release.id,
+              ),
+            ]
+              .sort(
+                (left, right) =>
+                  Date.parse(left.publishAt) - Date.parse(right.publishAt),
+              )
+              .slice(0, UPCOMING_LIMIT)
+          : artistView.upcoming.filter(
+              (candidate) => candidate.id !== release.id,
+            ),
       };
     },
   );
@@ -157,6 +186,22 @@ export function refreshReleaseLists(
   // A publish or unpublish changes the genre lists too (Studio v2).
   void queryClient.invalidateQueries({ queryKey: ["studio", "browse"] });
   void queryClient.invalidateQueries({ queryKey: ["studio", "genres"] });
+  // Artist kinds: format chips, format shelves and the New episodes shelf
+  // list published releases and episodes the same way.
+  void queryClient.invalidateQueries({ queryKey: ["studio", "formats"] });
+  void queryClient.invalidateQueries({
+    queryKey: ["studio", "formatReleases"],
+  });
+  void queryClient.invalidateQueries({
+    queryKey: ["studio", "latestEpisodes"],
+  });
+  // Moods and scenes list published releases the same way.
+  void queryClient.invalidateQueries({ queryKey: ["studio", "moods"] });
+  void queryClient.invalidateQueries({ queryKey: ["studio", "scenes"] });
+  void queryClient.invalidateQueries({ queryKey: ["studio", "scene"] });
+  void queryClient.invalidateQueries({
+    queryKey: ["studio", "sceneReleases"],
+  });
   // Playlists hold the release's tracks, so a publish, unpublish or delete
   // changes which entries play; search results and Your numbers count them.
   void queryClient.invalidateQueries({ queryKey: ["studio", "playlist"] });
@@ -171,6 +216,10 @@ export function refreshReleaseLists(
   });
   void queryClient.invalidateQueries({ queryKey: ["studio", "search"] });
   void queryClient.invalidateQueries({ queryKey: ["studio", "stats"] });
+  // The press kit lists the latest releases and their tracks (Studio v3).
+  void queryClient.invalidateQueries({
+    queryKey: ["studio", "studioPressKit"],
+  });
 }
 
 /** Write the server's answer into the release cache and refresh the lists

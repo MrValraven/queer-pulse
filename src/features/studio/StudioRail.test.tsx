@@ -16,6 +16,11 @@ vi.mock("./api/useStudioAccess", () => ({
   }),
 }));
 
+const staff = vi.hoisted(() => ({ isStaff: false }));
+vi.mock("./useIsStudioStaff", () => ({
+  useIsStudioStaff: () => staff.isStaff,
+}));
+
 describe("StudioRail", () => {
   it("lights up only Home on Studio home in the demo", async () => {
     isShowcase = true;
@@ -60,6 +65,10 @@ describe("StudioRail", () => {
     expect(
       screen.getByRole("link", { name: "Upload a release" }),
     ).toHaveAttribute("href", "/studio/upload");
+    expect(screen.getByRole("link", { name: "Press kit" })).toHaveAttribute(
+      "href",
+      "/studio/press/edit",
+    );
     expect(screen.getByRole("link", { name: /NIGHTFORM/ })).toHaveAttribute(
       "aria-current",
       "page",
@@ -68,5 +77,43 @@ describe("StudioRail", () => {
       screen.getByRole("link", { name: "Solidarity fund" }),
     ).toHaveAttribute("href", "/studio/solidarity-fund");
     expect(screen.queryByText(/Sustained/)).not.toBeInTheDocument();
+  });
+
+  it("gives every live member the Help and info pages", async () => {
+    isShowcase = false;
+    staff.isStaff = false;
+    render(
+      <TestProviders initialEntries={["/studio"]}>
+        <StudioRail />
+      </TestProviders>,
+    );
+    const links: [string, string][] = [
+      ["Help", "/studio/help"],
+      ["About Studio", "/studio/about"],
+      ["Rights and takedowns", "/studio/rights"],
+      ["Studio terms", "/studio/terms"],
+      ["Accessibility", "/studio/accessibility"],
+    ];
+    for (const [name, href] of links)
+      expect(await screen.findByRole("link", { name })).toHaveAttribute(
+        "href",
+        href,
+      );
+    expect(
+      screen.queryByRole("link", { name: "Flag review" }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("adds Flag review for staff", async () => {
+    isShowcase = false;
+    staff.isStaff = true;
+    render(
+      <TestProviders initialEntries={["/studio"]}>
+        <StudioRail />
+      </TestProviders>,
+    );
+    expect(
+      await screen.findByRole("link", { name: "Flag review" }),
+    ).toHaveAttribute("href", "/studio/flag-review");
   });
 });

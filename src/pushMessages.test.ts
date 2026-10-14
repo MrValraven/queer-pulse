@@ -358,3 +358,90 @@ describe("studio release push copy", () => {
     });
   });
 });
+
+describe("studio credit push copy", () => {
+  it("names the personas and the track in both languages", () => {
+    const requestedSource = {
+      title: "New credit request",
+      body: "NIGHTFORM credited Mariana Sol on Pedro on the 25",
+      l10n: {
+        titleKey: "push:studioCreditRequested.title",
+        bodyKey: "push:studioCreditRequested.body",
+        params: {
+          requester: "NIGHTFORM",
+          persona: "Mariana Sol",
+          track: "Pedro on the 25",
+        },
+      },
+    };
+    expect(formatPushCopy(requestedSource, "pt")).toEqual({
+      title: "Novo pedido de crédito",
+      body: "NIGHTFORM creditou Mariana Sol em Pedro on the 25",
+    });
+    const acceptedSource = {
+      title: "Credit accepted",
+      body: "NIGHTFORM accepted your credit on Carta para a santa",
+      l10n: {
+        titleKey: "push:studioCreditAccepted.title",
+        bodyKey: "push:studioCreditAccepted.body",
+        params: { persona: "NIGHTFORM", track: "Carta para a santa" },
+      },
+    };
+    expect(formatPushCopy(acceptedSource, "en")).toEqual({
+      title: "Credit accepted",
+      body: "NIGHTFORM accepted your credit on Carta para a santa",
+    });
+    expect(formatPushCopy(acceptedSource, "pt")).toEqual({
+      title: "Crédito aceite",
+      body: "NIGHTFORM aceitou o teu crédito em Carta para a santa",
+    });
+  });
+});
+
+describe("persona post push copy", () => {
+  it("titles the push with the persona and shows the excerpt in both languages", () => {
+    const source = {
+      title: "Fallback title",
+      body: "Fallback body",
+      l10n: {
+        titleKey: "push:personaPost.title",
+        bodyKey: "push:personaPost.body",
+        params: { persona: "NIGHTFORM", excerpt: "New single in nine days" },
+      },
+    };
+    expect(formatPushCopy(source, "en")).toEqual({
+      title: "NIGHTFORM",
+      body: "New single in nine days",
+    });
+    expect(formatPushCopy(source, "pt")).toEqual({
+      title: "NIGHTFORM",
+      body: "New single in nine days",
+    });
+  });
+});
+
+describe("studio episode push copy", () => {
+  it("names the show, the persona and the episode in both languages", () => {
+    const source = {
+      title: "New episode of Late Bloomers",
+      body: "Late Bloomers: Chosen family dinners",
+      l10n: {
+        titleKey: "push:studioEpisodePublished.title",
+        bodyKey: "push:studioEpisodePublished.body",
+        params: {
+          show: "Late Bloomers",
+          persona: "Late Bloomers",
+          episode: "Chosen family dinners",
+        },
+      },
+    };
+    expect(formatPushCopy(source, "en")).toEqual({
+      title: "New episode of Late Bloomers",
+      body: "Late Bloomers: Chosen family dinners",
+    });
+    expect(formatPushCopy(source, "pt")).toEqual({
+      title: "Novo episódio de Late Bloomers",
+      body: "Late Bloomers: Chosen family dinners",
+    });
+  });
+});

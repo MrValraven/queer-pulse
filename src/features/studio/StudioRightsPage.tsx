@@ -1,198 +1,58 @@
-import { useMemo, useState, type ReactNode } from "react";
-import { Link } from "react-router-dom";
-import { FiCheckCircle, FiDollarSign, FiLock } from "react-icons/fi";
-import { ImageSlot } from "../../shared/components/ui";
-import { useToast } from "../../shared/components/feedback/useToast";
-import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useFormat } from "../../shared/i18n/format";
+import { Button } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
-import { routes } from "../../app/routeMap";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useStudioAccess } from "./api/useStudioAccess";
+import { StudioRightsShowcase } from "./StudioRightsShowcase";
 import { StudioShell } from "./StudioShell";
-import { StudioTakedownModal } from "./StudioTakedownModal";
-import {
-  PROMISES,
-  RELEASES,
-  formatReleaseMeta,
-  type Release,
-} from "./studioRights.data";
+import { RIGHTS_LIVE_SECTIONS } from "./studioRights.data";
+import { useStudioShowcase } from "./useStudioShowcase";
 import s from "./StudioRightsPage.module.css";
 
-const PROMISE_ICONS: Record<string, ReactNode> = {
-  window: <FiCheckCircle aria-hidden />,
-  paid: <FiDollarSign aria-hidden />,
-  banking: <FiLock aria-hidden />,
-};
-
+/** How rights, reports, takedowns and disputes work, in both modes; the
+ *  co-op's mock release table in the demo only (spec section 3.6). */
 export function StudioRightsPage() {
   const { t } = useTranslation();
-  const fmt = useFormat();
-  const { showToast } = useToast();
-  const [releases, setReleases] = useState<Release[]>(RELEASES);
-  const [pending, setPending] = useState<Release | null>(null);
-
-  const { liveCount, removingCount } = useMemo(
-    () => ({
-      liveCount: releases.filter((r) => r.state === "live").length,
-      removingCount: releases.filter((r) => r.state === "removing").length,
-    }),
-    [releases],
-  );
-
-  function confirmTakedown() {
-    if (!pending) return;
-    const { id, title } = pending;
-    setReleases((rs) =>
-      rs.map((r) =>
-        r.id === id ? { ...r, state: "removing", daysLeft: 14 } : r,
-      ),
-    );
-    setPending(null);
-    showToast(t("studio:rights.takedownStartedToast", { title }), "info");
-  }
-
-  function cancelRemoval(rel: Release) {
-    setReleases((rs) =>
-      rs.map((r) =>
-        r.id === rel.id ? { ...r, state: "live", daysLeft: undefined } : r,
-      ),
-    );
-    showToast(t("studio:rights.removalCancelledToast"), "success");
-  }
+  const isShowcase = useStudioShowcase();
+  const releasesHref = useStudioAccess().uploadablePersonas[0]?.href;
 
   return (
     <StudioShell>
       <div className={s.wrap}>
         <div className={s.pageH}>
-          <div className={s.eb}>{t("studio:rights.hero.eyebrow")}</div>
+          <div className={s.eb}>{t("studio:rightsLive.eyebrow")}</div>
           <h1>
             <Translation
-              i18nKey="studio:rights.hero.title"
+              i18nKey="studio:rightsLive.title"
               components={{ em: <em /> }}
             />
           </h1>
-          <div className={s.dek}>{t("studio:rights.hero.dek")}</div>
+          <div className={s.dek}>{t("studio:rightsLive.dek")}</div>
         </div>
 
-        <div className={s.promise}>
-          {PROMISES.map((p) => (
-            <div key={p.key} className={s.p}>
-              <span className={s.pIcon}>{PROMISE_ICONS[p.key]}</span>
-              <h4>{t(p.titleKey)}</h4>
-              <p>{t(p.bodyKey)}</p>
-            </div>
+        <div className={s.liveSections}>
+          {RIGHTS_LIVE_SECTIONS.map((section) => (
+            <section key={section.id} className={s.liveSec}>
+              <h2>
+                <Translation
+                  i18nKey={section.headingKey}
+                  components={{ em: <em /> }}
+                />
+              </h2>
+              <p>{t(section.bodyKey)}</p>
+            </section>
           ))}
         </div>
 
-        <div className={s.secH}>
-          <h2>
-            <Translation
-              i18nKey="studio:rights.releases.heading"
-              components={{ em: <em /> }}
-            />
-          </h2>
-          <div className={s.sub}>
-            {t("studio:rights.releases.liveCount", { count: liveCount })}
-            {removingCount > 0 &&
-              ` · ${t("studio:rights.releases.removingCount", { count: removingCount })}`}
+        {releasesHref && (
+          <div className={s.liveCta}>
+            <Button variant="primary" size="lg" to={releasesHref}>
+              {t("studio:rightsLive.cta")}
+            </Button>
           </div>
-        </div>
+        )}
 
-        {releases.map((rel) => {
-          const removing = rel.state === "removing";
-          return (
-            <div
-              key={rel.id}
-              className={[s.relRow, removing && s.removing]
-                .filter(Boolean)
-                .join(" ")}
-            >
-              <div className={s.cover}>
-                <ImageSlot
-                  src={rel.cover}
-                  tint={rel.tint}
-                  width={56}
-                  height={56}
-                  radius={9}
-                  placeholder=""
-                />
-              </div>
-              <div className={s.ri}>
-                <h5>
-                  {rel.titlePre}
-                  {rel.titleEm && <em>{rel.titleEm}</em>}
-                  {rel.titlePost}
-                </h5>
-                <div className={s.rm}>
-                  {formatReleaseMeta(rel.meta, t, fmt)}
-                </div>
-              </div>
-
-              {removing ? (
-                <>
-                  <div className={s.rtStatus}>
-                    <span className={s.d} aria-hidden />
-                    {t("studio:rights.removingStatus", {
-                      count: rel.daysLeft ?? 0,
-                    })}
-                  </div>
-                  <button
-                    type="button"
-                    className={s.btUndo}
-                    onClick={() => cancelRemoval(rel)}
-                  >
-                    {t("studio:rights.cancelRemovalCta")}
-                  </button>
-                </>
-              ) : (
-                <>
-                  {rel.licence && (
-                    <div className={s.lic}>
-                      {rel.licence.topKey
-                        ? t(rel.licence.topKey)
-                        : rel.licence.top}
-                      <span>{t(rel.licence.subKey)}</span>
-                    </div>
-                  )}
-                  <button
-                    type="button"
-                    className={s.btTake}
-                    onClick={() => setPending(rel)}
-                  >
-                    {t("studio:rights.takeDownCta")}
-                  </button>
-                </>
-              )}
-            </div>
-          );
-        })}
-
-        <div className={s.foot}>
-          <h4>
-            <Translation
-              i18nKey="studio:rights.leavingCoop.title"
-              components={{ em: <em /> }}
-            />
-          </h4>
-          <p>
-            <Translation
-              i18nKey="studio:rights.leavingCoop.body"
-              components={{
-                em: <em />,
-                a: <Link to={routes.studioSettings} />,
-              }}
-            />
-          </p>
-        </div>
+        {isShowcase && <StudioRightsShowcase />}
       </div>
-
-      {pending && (
-        <StudioTakedownModal
-          title={pending.title}
-          meta={formatReleaseMeta(pending.meta, t, fmt)}
-          onConfirm={confirmTakedown}
-          onClose={() => setPending(null)}
-        />
-      )}
     </StudioShell>
   );
 }

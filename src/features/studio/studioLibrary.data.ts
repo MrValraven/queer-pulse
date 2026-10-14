@@ -11,8 +11,9 @@ export const LIVE_LIBRARY_TABS: { id: StudioLibraryTab; labelKey: string }[] = [
 ];
 
 /** Demo only: saves the library shows beside whatever the demo member saved
- *  this session, so every tab has something in it. One is unavailable, to
- *  show that state. Titles and names are content and stay as written. */
+ *  this session, so every tab has something in it. One is withdrawn by our
+ *  team and one is gone for another reason, to show both states. Titles and
+ *  names are content and stay as written. */
 export const DEMO_LIBRARY_SAVES: SavedItem[] = [
   {
     id: "studio_release:demo-release-cidade-dos-santos",
@@ -34,8 +35,17 @@ export const DEMO_LIBRARY_SAVES: SavedItem[] = [
     id: "studio_release:demo-release-withdrawn",
     kind: "studio_release",
     title: "Bairro antigo",
-    href: null,
+    href: "/studio/album?id=demo-release-withdrawn",
     meta: "Mariana Sol",
+    availability: "unavailable",
+    unavailableReason: "withdrawn",
+  },
+  {
+    id: "studio_release:demo-release-gone",
+    kind: "studio_release",
+    title: "Demo tape, 2019",
+    href: null,
+    meta: "NIGHTFORM",
     availability: "unavailable",
   },
   {

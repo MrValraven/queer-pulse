@@ -1,6 +1,7 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
+import { createStudioPlayerTestValue } from "../../test/studioPlayerTestValue";
 import { toReleaseCardView } from "./api/studio.adapters";
 import {
   StudioPlayerContext,
@@ -25,13 +26,15 @@ const release = toReleaseCardView({
   },
   publishedAt: "2026-04-12T10:00:00.000Z",
   genre: null,
+  mood: null,
+  scene: null,
 });
 
 function renderCard(playRelease = vi.fn(() => Promise.resolve())) {
   const value = {
-    queue: [],
-    currentIndex: 0,
+    ...createStudioPlayerTestValue(),
     status: "idle",
+    radio: null,
     currentItem: null,
     hasPrevious: false,
     hasNext: false,

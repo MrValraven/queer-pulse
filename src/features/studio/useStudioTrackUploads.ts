@@ -62,6 +62,13 @@ interface RowWork {
   isRunning: boolean;
 }
 
+/** A file the list accepted, with the row it became (for the analysis). */
+export interface AcceptedUpload {
+  localId: string;
+  file: File;
+  contentType: StudioAudioContentType;
+}
+
 export interface StudioTrackUploads {
   rows: UploadRow[];
   rejections: { fileName: string; reason: FileRejectionReason }[];
@@ -257,6 +264,74 @@ function useTrackOrder(releaseId: string | null, rowState: UploadRowsState) {
   };
 }
 
+/** Records the work for each accepted file and the row it becomes. */
+function registerAcceptedFiles(
+  accepted: ReturnType<typeof validateAudioFiles>["accepted"],
+  workByRow: Map<string, RowWork>,
+): { acceptedUploads: AcceptedUpload[]; added: UploadRow[] } {
+  const acceptedUploads = accepted.map(({ file, contentType }) => {
+    const localId = nextLocalId();
+    workByRow.set(localId, {
+      file,
+      contentType,
+      uploadedKey: null,
+      handle: null,
+      isRunning: false,
+    });
+    return { localId, file, contentType };
+  });
+  const added = acceptedUploads.map(({ localId, file }) =>
+    rowFromFile(localId, file),
+  );
+  return { acceptedUploads, added };
+}
+
+interface RemovalContext {
+  releaseId: string | null;
+  order: ReturnType<typeof useTrackOrder>;
+  rowState: UploadRowsState;
+  deleteTrackOf: (trackId: string, forReleaseId: string) => Promise<void>;
+}
+
+/** Deletes the removed row's track, then sends the shown order once every
+ *  remaining row has a track. A failed delete restores the row and still
+ *  runs the sync, which then sends only what other removals left waiting.
+ *  A row whose create is still in flight is left to createFor, which syncs
+ *  once that create fails or its late track is deleted. */
+async function deleteRemovedRow(
+  row: UploadRow,
+  index: number,
+  { releaseId, order, rowState, deleteTrackOf }: RemovalContext,
+) {
+  if (row.stage === "creating") {
+    order.holdOrderSync(row.localId);
+    return;
+  }
+  if (!releaseId) return;
+  if (!row.trackId) {
+    order.syncOrderIfNeeded();
+    return;
+  }
+  order.holdOrderSync(row.localId);
+  try {
+    await deleteTrackOf(row.trackId, releaseId);
+  } catch (error) {
+    // The track is still on the release, so its row returns to its place.
+    const restored = [...rowState.rowsRef.current];
+    restored.splice(Math.min(index, restored.length), 0, {
+      ...row,
+      stage: "failed",
+      errorKey: removeErrorKeyOf(error),
+      isRetryable: false,
+    });
+    rowState.commitRows(restored);
+  } finally {
+    // After a failed delete the restored row matches the server again, so
+    // the sync sends only what other removals left waiting.
+    order.releaseOrderSync(row.localId, true);
+  }
+}
+
 /**
  * Each file runs create track, upload, confirm. Creates run one at a time in
  * list order, so the server's positions match the list; uploads share a few
@@ -270,6 +345,11 @@ export function useStudioTrackUploads(
   releaseId: string | null,
   subprofileId: string,
   initialTracks: StudioTrackRowView[],
+  options: {
+    onFilesAccepted?: (accepted: AcceptedUpload[]) => void;
+    /** Artist kinds: the per-file cap of the release's format. */
+    audioMaxBytes?: number;
+  } = {},
 ): StudioTrackUploads {
   const { demoMode } = useDemoMode();
   const createTrack = useCreateStudioTrack();
@@ -395,41 +475,6 @@ export function useStudioTrackUploads(
     }
   }
 
-  /** Deletes the removed row's track, then sends the shown order once every
-   *  remaining row has a track. A failed delete restores the row and still
-   *  runs the sync, which then sends only what other removals left waiting.
-   *  A row whose create is still in flight is left to createFor, which syncs
-   *  once that create fails or its late track is deleted. */
-  async function deleteRemovedRow(row: UploadRow, index: number) {
-    if (row.stage === "creating") {
-      order.holdOrderSync(row.localId);
-      return;
-    }
-    if (!releaseId) return;
-    if (!row.trackId) {
-      order.syncOrderIfNeeded();
-      return;
-    }
-    order.holdOrderSync(row.localId);
-    try {
-      await deleteTrackOf(row.trackId, releaseId);
-    } catch (error) {
-      // The track is still on the release, so its row returns to its place.
-      const restored = [...rowsRef.current];
-      restored.splice(Math.min(index, restored.length), 0, {
-        ...row,
-        stage: "failed",
-        errorKey: removeErrorKeyOf(error),
-        isRetryable: false,
-      });
-      commitRows(restored);
-    } finally {
-      // After a failed delete the restored row matches the server again, so
-      // the sync sends only what other removals left waiting.
-      order.releaseOrderSync(row.localId, true);
-    }
-  }
-
   return {
     rows,
     rejections,
@@ -438,20 +483,16 @@ export function useStudioTrackUploads(
       const { accepted, rejected } = validateAudioFiles(
         files,
         rowsRef.current.length,
+        options.audioMaxBytes,
       );
       setRejections(rejected);
-      const added = accepted.map(({ file, contentType }) => {
-        const localId = nextLocalId();
-        workRef.current.set(localId, {
-          file,
-          contentType,
-          uploadedKey: null,
-          handle: null,
-          isRunning: false,
-        });
-        return rowFromFile(localId, file);
-      });
+      const { acceptedUploads, added } = registerAcceptedFiles(
+        accepted,
+        workRef.current,
+      );
       commitRows([...rowsRef.current, ...added]);
+      // Spec 8.1: measuring starts together with the upload.
+      options.onFilesAccepted?.(acceptedUploads);
       added.forEach((row) => void process(row.localId));
     },
     retry: (localId) => void process(localId),
@@ -466,7 +507,12 @@ export function useStudioTrackUploads(
       commitRows(
         rowsRef.current.filter((candidate) => candidate.localId !== localId),
       );
-      void deleteRemovedRow(row, index);
+      void deleteRemovedRow(row, index, {
+        releaseId,
+        order,
+        rowState,
+        deleteTrackOf,
+      });
     },
     move: (localId, offset) => {
       const index = rowsRef.current.findIndex((row) => row.localId === localId);

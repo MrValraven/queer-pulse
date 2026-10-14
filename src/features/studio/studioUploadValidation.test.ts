@@ -3,6 +3,8 @@ import { ApiError } from "../../shared/api/client";
 import { StudioAudioUploadError } from "./api/studioAudioUpload";
 import {
   audioContentTypeOf,
+  audioMaxBytesFor,
+  fileRejectionKeyOf,
   isRetryableUploadError,
   removeErrorKeyOf,
   titleFromFileName,
@@ -96,6 +98,15 @@ describe("audio file validation", () => {
     expect(removeErrorKeyOf(new Error("network"))).toBe(
       "studio:uploadFlow.files.errorRemove",
     );
+    expect(
+      removeErrorKeyOf(
+        new ApiError(409, "refused", {
+          statusCode: 409,
+          code: "studio_release_needs_playable_track",
+          message: "refused",
+        }),
+      ),
+    ).toBe("studio:errors.releaseNeedsPlayableTrack");
   });
 
   it("names a refused presign by its cause and never offers Retry", () => {
@@ -122,5 +133,24 @@ describe("audio file validation", () => {
       "studio:uploadFlow.files.errorUpload",
     );
     expect(isRetryableUploadError(presignOutage)).toBe(true);
+  });
+});
+
+describe("the audio cap by format", () => {
+  it("takes 250 MB for a podcast and 50 MB otherwise", () => {
+    const big = sized("episode.mp3", "audio/mpeg", 100 * 1024 * 1024);
+    expect(
+      validateAudioFiles([big], 0, audioMaxBytesFor("podcast")).accepted,
+    ).toHaveLength(1);
+    expect(
+      validateAudioFiles([big], 0, audioMaxBytesFor("music")).rejected[0]
+        ?.reason,
+    ).toBe("size");
+    expect(fileRejectionKeyOf("size", "podcast")).toBe(
+      "studio:uploadFlow.files.rejectSizePodcast",
+    );
+    expect(fileRejectionKeyOf("size", "music")).toBe(
+      "studio:uploadFlow.files.rejectSize",
+    );
   });
 });

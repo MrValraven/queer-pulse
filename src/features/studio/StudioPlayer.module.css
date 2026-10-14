@@ -12,13 +12,12 @@
   bottom: max(var(--bottom-inset), var(--consent-inset, 0px));
   z-index: var(--z-nav);
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto minmax(0, 2fr) auto auto;
+  grid-template-columns: minmax(0, 1.2fr) auto minmax(0, 2fr) auto;
   align-items: center;
   gap: 16px;
   min-height: var(--studio-player-height);
   padding: 10px 20px;
-  /* Paints with the Studio roles, so the bar follows the app theme on every
-     page it plays over. */
+  /* Studio roles, so the bar follows the app theme on every page. */
   background: var(--studio-surface-rail);
   color: var(--studio-text);
   border-top: 1px solid rgba(var(--studio-ink-rgb), 0.08);
@@ -35,8 +34,12 @@
   flex: none;
   width: 48px;
   height: 48px;
+  padding: 0;
+  border: none;
   border-radius: var(--radius-8);
   overflow: hidden;
+  background: none;
+  cursor: pointer;
 }
 
 .titles {
@@ -46,7 +49,8 @@
 }
 
 .title,
-.artist {
+.artist,
+.chapter {
   color: inherit;
   text-decoration: none;
   white-space: nowrap;
@@ -64,37 +68,37 @@
   color: var(--studio-text-muted);
 }
 
+.chapter {
+  font-size: var(--text-11);
+  color: var(--studio-accent-text);
+}
+
+.radioLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--icon-gap-inline);
+  min-width: 0;
+  max-width: 100%;
+  color: var(--studio-text-muted);
+  font-size: var(--text-11);
+  letter-spacing: 0.04em;
+}
+
+.radioLabel svg {
+  flex: none;
+}
+
+.radioText {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .controls {
   display: flex;
   align-items: center;
-  gap: 14px;
-}
-
-.secondaryControl,
-.playButton,
-.expandToggle,
-.retry {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  cursor: pointer;
-  color: inherit;
-  background: none;
-}
-
-.secondaryControl[aria-disabled="true"] {
-  opacity: 0.4;
-  cursor: default;
-}
-
-.playButton {
-  width: 40px;
-  height: 40px;
-  border-radius: var(--radius-pill);
-  /* An inverted ink disc: cream on the dark rail, plum on the light one. */
-  background: rgba(var(--studio-ink-rgb), 0.92);
-  color: var(--studio-surface-rail);
+  gap: 6px;
 }
 
 .seekArea {
@@ -121,8 +125,68 @@
   accent-color: var(--studio-accent-text);
 }
 
+.tools {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.toolButton,
+.retry,
+.playButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  color: inherit;
+  background: none;
+}
+
+.toolButton {
+  width: var(--tap-min);
+  height: var(--tap-min);
+  border-radius: var(--radius-pill);
+  font-size: var(--text-18);
+}
+
+.toolButton[aria-expanded="true"] {
+  color: var(--studio-accent-text);
+}
+
+.playButton {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-pill);
+  /* An inverted ink disc: cream on the dark rail, plum on the light one. */
+  background: rgba(var(--studio-ink-rgb), 0.92);
+  color: var(--studio-surface-rail);
+}
+
+/* A hit area of at least --tap-min around the 40px disc (the controls kit's
+   pattern). */
+.playButton::before {
+  content: "";
+  position: absolute;
+  inset-block: min(0px, calc((100% - var(--tap-min)) / 2));
+  inset-inline: min(0px, calc((100% - var(--tap-min)) / 2));
+}
+
+.status {
+  grid-column: 1 / -1;
+}
+
+/* While idle the region stays in the accessibility tree, so screen readers
+   already know it when the error line arrives. Out of flow and visually
+   hidden, it adds no grid row and no gap; .bar (fixed) and .mini (relative)
+   both contain it. */
 .status:empty {
-  display: none;
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
 }
 
 .error {
@@ -136,6 +200,7 @@
 }
 
 .showcase {
+  grid-column: 1 / -1;
   display: flex;
   align-items: center;
   gap: 12px;
@@ -163,8 +228,33 @@
   cursor: pointer;
 }
 
-.expandToggle {
-  display: none;
+.addToPlaylist {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--tap-min);
+  height: var(--tap-min);
+  margin-inline-start: auto;
+  /* The gap keeps it apart from the shuffle button that opens the next
+     column, so the two read as separate controls. */
+  margin-inline-end: 8px;
+  font-size: var(--text-18);
+  border: none;
+  border-radius: var(--radius-pill);
+  background: none;
+  color: inherit;
+  cursor: pointer;
+  transition-property: background-color;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+@media (hover: hover) {
+  .addToPlaylist:hover,
+  .toolButton:hover {
+    background: rgba(var(--studio-ink-rgb), 0.08);
+  }
 }
 
 .bar a:focus-visible,
@@ -175,23 +265,57 @@
   box-shadow: var(--ring-cream);
 }
 
-/* Gated at --compact (880px) with the Studio tab bar, so the card floats
-   above the tabs wherever they show. */
+/* From the phone card up to about 1180px the four columns squeezed the
+   title to nothing. Here the title column keeps a floor (about 140px of
+   title at 960px), the volume keeps its mute button and drops its slider,
+   and the seek drops its time labels (the slider still speaks its time). */
+@media (max-width: 1180px) {
+  .bar {
+    grid-template-columns: minmax(264px, 1.2fr) auto minmax(0, 2fr) auto;
+  }
+
+  .tools input[type="range"],
+  .seekArea .time {
+    display: none;
+  }
+}
+
+/* Below about 1040px the sleep chip and Cast could squeeze the seek to
+   nothing, so the seek takes a full-width second row, with its time labels
+   back. The title row keeps its room. */
+@media (max-width: 1040px) {
+  .bar {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    row-gap: 8px;
+  }
+
+  .seekArea {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  .seekArea .time {
+    display: inline;
+  }
+}
+
+/* The mini player: a floating card over the Studio tab bar (Spotify's mini
+   player), gated at --compact (880px) with the tabs. useStudioPlayerInset
+   measures this box, so the gaps stay inside it as padding and the card is
+   painted by ::before; the bar stays full-width and transparent. */
+.mini {
+  display: none;
+}
+
 @media (--compact) {
   .spacer {
     height: var(--studio-player-inset, var(--studio-player-height, 72px));
   }
 
-  /* A floating card, Spotify's mini player: inset 8px from both edges with
-     an 8px gap above whatever sits under it. useStudioPlayerInset measures
-     this box, so the gaps stay inside it as padding and the card is painted
-     by ::before. The bar itself stays full-width and transparent. */
   .bar {
     --studio-player-height: 72px;
     /* The card's distance from the bar's bottom edge: the 8px gap, plus the
-       home indicator when the bar is flush with the screen bottom. Above the
-       tab bar or the consent banner the indicator is already counted below
-       it, so the max adds nothing there. */
+       home indicator when the bar is flush with the screen bottom. */
     --studio-player-card-floor: calc(
       8px +
         max(
@@ -201,10 +325,10 @@
         )
     );
     isolation: isolate;
-    grid-template-columns: minmax(0, 1fr) auto auto;
-    gap: 10px;
-    padding: 8px 20px;
-    padding-bottom: calc(8px + var(--studio-player-card-floor));
+    display: block;
+    /* No top padding: the card starts at the bar's top edge, so the whole
+       visible card is the mini player and takes the swipe. */
+    padding: 0 8px var(--studio-player-card-floor);
     background: transparent;
     border-top: 0;
   }
@@ -220,70 +344,106 @@
     box-shadow: var(--shadow-e3);
   }
 
-  .controls .secondaryControl,
-  .seekArea,
-  .showcase {
-    display: none;
-  }
-
-  .expandToggle {
-    display: inline-flex;
-    width: 40px;
-    height: 40px;
-  }
-
-  .bar[data-expanded] {
+  .mini {
+    position: relative;
+    display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
-    row-gap: 12px;
+    align-items: center;
+    column-gap: 8px;
+    min-height: 56px;
+    padding: 8px 12px 8px 8px;
+    touch-action: none;
   }
 
-  .bar[data-expanded] .controls .secondaryControl {
-    display: inline-flex;
-  }
-
-  .bar[data-expanded] .seekArea,
-  .bar[data-expanded] .status {
-    grid-column: 1 / -1;
-    display: block;
-  }
-
-  .bar[data-expanded] .showcase {
-    grid-column: 1 / -1;
+  /* Studio artist kinds: skip 15/30 beside the mini player's play button.
+     The play button and both skip slots share the card's auto column, and
+     each slot animates its own width, so the column follows them smoothly. */
+  .miniControls {
     display: flex;
+    align-items: center;
+  }
+
+  .miniSkipSlot {
+    display: flex;
+    flex: none;
+  }
+
+  .miniSkipSlot[data-direction="back"] .miniSkip {
+    margin-inline-end: 8px;
+  }
+
+  .miniSkipSlot[data-direction="forward"] .miniSkip {
+    margin-inline-start: 8px;
+  }
+
+  .miniSkip {
+    display: inline-grid;
+    place-items: center;
+    width: var(--tap-min);
+    height: var(--tap-min);
+    flex: none;
+    padding: 0;
+    border: 0;
+    border-radius: var(--radius-pill);
+    background: none;
+    color: var(--studio-text);
+    font-size: var(--text-18);
+    cursor: pointer;
+  }
+
+  /* The space under the error line lives inside the Collapse, so it grows
+     in with the line. */
+  .mini .error {
+    display: block;
+    padding-block-end: 6px;
+  }
+
+  /* A full tap height for Retry, so a near miss does not land on the
+     swipe card. */
+  .retry {
+    min-block-size: var(--tap-min);
+  }
+
+  .miniOpen {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+    padding: 0;
+    border: none;
+    background: none;
+    color: inherit;
+    text-align: start;
+    cursor: pointer;
+  }
+
+  .miniOpen .art {
+    width: 44px;
+    height: 44px;
+  }
+
+  .miniProgress {
+    position: absolute;
+    inset-inline: 12px;
+    bottom: 2px;
+    height: 2px;
+    border-radius: var(--radius-pill);
+    background: rgba(var(--studio-ink-rgb), 0.16);
+    overflow: hidden;
+  }
+
+  .miniProgressFill {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: var(--studio-accent-text);
+    transform-origin: 0 50%;
   }
 }
 
-.addToPlaylist {
-  flex: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: var(--tap-min);
-  height: var(--tap-min);
-  margin-inline-start: auto;
-  /* A clear gap keeps it from reading as the transport "previous" button. */
-  margin-inline-end: 16px;
-  font-size: var(--text-18);
-  border: none;
-  border-radius: var(--radius-pill);
-  background: none;
-  color: inherit;
-  cursor: pointer;
-  transition-property: background-color;
-  transition-duration: var(--dur-fast);
-  transition-timing-function: var(--ease);
-}
-
-@media (hover: hover) {
-  .addToPlaylist:hover {
-    background: rgba(var(--studio-ink-rgb), 0.08);
-  }
-}
-
-@media (--compact) {
-  /* The mini bar keeps cover, title and play; Add to playlist joins the
-     controls when the bar is expanded. */
-  .bar:not([data-expanded]) .addToPlaylist {
-    display: none;
-  }
+.miniOpen:focus-visible,
+.miniSkip:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }

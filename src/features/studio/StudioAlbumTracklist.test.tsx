@@ -1,12 +1,21 @@
 import { fireEvent, render, screen, within } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
+import { createStudioPlayerTestValue } from "../../test/studioPlayerTestValue";
 import { toReleaseView } from "./api/studio.adapters";
 import {
   StudioPlayerContext,
   type StudioPlayerValue,
 } from "./player/studioPlayerContext";
 import { StudioAlbumTracklist } from "./StudioAlbumTracklist";
+
+const playback = vi.hoisted(() => ({ hideExplicit: false }));
+vi.mock("./api/useStudioPlaybackPreferences", async (importOriginal) => ({
+  ...(await importOriginal<
+    typeof import("./api/useStudioPlaybackPreferences")
+  >()),
+  useStudioHideExplicit: () => playback.hideExplicit,
+}));
 
 const release = toReleaseView({
   id: "r1",
@@ -25,6 +34,8 @@ const release = toReleaseView({
   },
   description: null,
   genre: null,
+  mood: null,
+  scene: null,
   status: "published",
   publishedAt: null,
   tracks: [
@@ -56,13 +67,15 @@ const release = toReleaseView({
   isOwner: false,
   rightsConfirmedAt: null,
   takedownReason: null,
+  sceneId: null,
+  personaCredits: [],
 });
 
 function renderTracklist(overrides: Partial<StudioPlayerValue> = {}) {
   const value: StudioPlayerValue = {
-    queue: [],
-    currentIndex: 0,
+    ...createStudioPlayerTestValue(),
     status: "idle",
+    radio: null,
     currentItem: null,
     hasPrevious: false,
     hasNext: false,
@@ -133,5 +146,35 @@ describe("StudioAlbumTracklist: add to playlist", () => {
     expect(
       screen.getByRole("button", { name: "Add Pending to a playlist" }),
     ).toHaveAttribute("aria-disabled", "true");
+  });
+});
+
+describe("StudioAlbumTracklist: hidden explicit tracks", () => {
+  afterEach(() => {
+    playback.hideExplicit = false;
+  });
+
+  it("greys an explicit track with no play button while it is hidden", async () => {
+    playback.hideExplicit = true;
+    renderTracklist();
+    expect(
+      await screen.findByText("Hidden by your settings"),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: /play pier/i }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /play tide/i }),
+    ).toBeInTheDocument();
+  });
+
+  it("brings the play button back when the setting is off", async () => {
+    renderTracklist();
+    expect(
+      await screen.findByRole("button", { name: /play pier/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByText("Hidden by your settings"),
+    ).not.toBeInTheDocument();
   });
 });

@@ -6,6 +6,10 @@ const TopicsAdminPage = lazyNamed(
   () => import("./TopicsAdminPage"),
   "TopicsAdminPage",
 );
+const StudioAdminPage = lazyNamed(
+  () => import("./StudioAdminPage"),
+  "StudioAdminPage",
+);
 const AdminMarketingVideosPage = lazyNamed(
   () => import("./marketingVideos/AdminMarketingVideosPage"),
   "AdminMarketingVideosPage",
@@ -391,6 +395,7 @@ export function adminRoutes() {
       {/* SOC-01: the topic directory has real rows now (seeded by migration),
           so staff need somewhere to curate them. */}
       <Route path={routes.adminTopics} element={<TopicsAdminPage />} />
+      <Route path={routes.adminStudio} element={<StudioAdminPage />} />
       <Route
         path={routes.adminCommunityTagRequests}
         element={<AdminCommunityTagRequestsPage />}

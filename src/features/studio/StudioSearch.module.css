@@ -34,16 +34,23 @@ li.trackRow:first-child {
   }
 }
 
-/* Studio v2: the genre select beside the type filter. */
-.genreField {
+/* The two selects sit on one line and wrap under each other on a phone. */
+.facets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin: 0 0 18px;
+}
+
+/* The genre and mood selects beside the type filter. */
+.facetField {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  margin: 0 0 18px;
   font-size: var(--text-13);
 }
 
-.genreField select {
+.facetField select {
   min-height: var(--tap-min);
   padding: 0 12px;
   border: 1px solid rgba(var(--studio-ink-rgb), 0.4);
@@ -54,11 +61,31 @@ li.trackRow:first-child {
   font: inherit;
 }
 /* The native option list follows the app theme with the page. */
-:global([data-theme="dark"]) .genreField select {
+:global([data-theme="dark"]) .facetField select {
   color-scheme: dark;
 }
 
-.genreField select:focus-visible {
+/* Stacked on a phone, the two labels differ in width ("Género",
+   "Ambiente"), so a shared label column starts both selects at one x. */
+@media (--sm) {
+  .facets {
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr);
+    align-items: center;
+    gap: 8px;
+  }
+
+  .facetField {
+    display: contents;
+  }
+
+  .facetField select {
+    justify-self: start;
+    max-width: 100%;
+  }
+}
+
+.facetField select:focus-visible {
   outline: var(--focus-ring);
   outline-offset: var(--focus-ring-offset);
   box-shadow: var(--ring-cream);

@@ -1,0 +1,184 @@
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.toggle {
+  display: flex;
+  min-block-size: var(--tap-min);
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+  border: none;
+  background: none;
+  color: var(--studio-text);
+  font-size: var(--text-14);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.count {
+  font-weight: 400;
+  color: var(--studio-text-muted);
+}
+
+.chevron {
+  transition-property: transform;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+.chevron[data-open] {
+  transform: rotate(180deg);
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-bottom: 4px;
+}
+
+.hint,
+.label {
+  margin: 0;
+  font-size: var(--text-12);
+  color: var(--studio-text-muted);
+}
+
+.rows {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 6.5em minmax(0, 2fr) minmax(0, 1.4fr) auto;
+  align-items: center;
+  gap: 8px;
+}
+
+/* An episode row has no artist field. */
+.rowNoArtist {
+  grid-template-columns: 6.5em minmax(0, 1fr) auto;
+}
+
+.row input,
+.paste textarea {
+  min-width: 0;
+  min-block-size: var(--tap-min);
+  padding: 8px 10px;
+  border: 1px solid rgba(var(--studio-ink-rgb), 0.18);
+  border-radius: var(--radius-8);
+  background: var(--studio-surface);
+  color: var(--studio-text);
+  font: inherit;
+  font-size: var(--text-14);
+}
+
+.time {
+  font-variant-numeric: tabular-nums;
+}
+
+.row input[aria-invalid="true"] {
+  border-color: var(--studio-accent-text);
+}
+
+.rowActions {
+  display: flex;
+}
+
+.rowActions button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--tap-min);
+  height: var(--tap-min);
+  border: none;
+  border-radius: var(--radius-pill);
+  background: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.rowActions button[aria-disabled="true"] {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.rowErrors {
+  grid-column: 1 / -1;
+}
+
+.error {
+  margin: 0;
+  font-size: var(--text-12);
+  color: var(--studio-accent-soft-text);
+}
+
+.linkButton {
+  display: inline-flex;
+  min-block-size: var(--tap-min);
+  align-items: center;
+  gap: 6px;
+  align-self: flex-start;
+  padding: 6px 0;
+  border: none;
+  background: none;
+  color: var(--studio-accent-text);
+  font-size: var(--text-13);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.paste {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.pastePanel {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.problems {
+  font-size: var(--text-12);
+  color: var(--studio-text-muted);
+}
+
+.problems ul {
+  margin: 4px 0 0;
+  padding-inline-start: 18px;
+}
+
+.toggle:focus-visible,
+.linkButton:focus-visible,
+.rowActions button:focus-visible,
+.row input:focus-visible,
+.paste textarea:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+@media (--compact) {
+  .row {
+    grid-template-columns: 6.5em minmax(0, 1fr);
+  }
+
+  .row .artist {
+    grid-column: 1 / -1;
+  }
+
+  .rowActions {
+    grid-column: 1 / -1;
+    justify-content: flex-end;
+  }
+}

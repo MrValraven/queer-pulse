@@ -40,11 +40,140 @@
   border-color: rgba(var(--line-rgb), 0.22);
 }
 
+/* "+N more": a quiet pill that reads as the row's last item and still looks
+   pressable. While a page loads the label keeps its width under a spinner. */
 .more {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font: inherit;
   font-size: var(--text-13);
   font-weight: 600;
-  color: var(--ink-40);
-  padding: 4px 6px;
+  color: var(--ink-60);
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    border-color 0.15s var(--ease),
+    color 0.15s var(--ease);
+}
+
+.more:hover {
+  color: var(--ink);
+  border-color: rgba(var(--line-rgb), 0.22);
+}
+
+.more:focus-visible,
+.textButton:focus-visible,
+.chip:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.more[aria-disabled="true"] {
+  cursor: progress;
+}
+
+.moreLabelHidden {
+  visibility: hidden;
+}
+
+.moreSpinner {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+}
+
+/* The height animator around the one list (see GoingHeightFrame): it gets
+   an explicit pixel height from a ResizeObserver and eases to it. The
+   reduced-motion rule in base.css makes the move instant. */
+.frame {
+  transition: height 0.28s var(--ease);
+}
+
+.frameContent {
+  display: flow-root;
+}
+
+/* Revealed chips, the load-more pill and the footer fade in as they land,
+   and fade out in place after "Show less" before they unmount. */
+.entering {
+  animation: goingFadeIn 0.28s var(--ease) both;
+}
+
+.leaving {
+  /* Accelerating, so the fade reaches zero right as the timer unmounts the
+     chips and the frame starts shrinking, with no blank beat between. */
+  animation: goingFadeOut 0.15s var(--ease-in) both;
+  pointer-events: none;
+}
+
+@keyframes goingFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes goingFadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 12px;
+  padding-top: 10px;
+}
+
+.privateLine {
+  font-size: var(--text-13);
+  color: var(--ink-60);
+}
+
+.errorLine {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 12px;
+  margin: 0;
+  padding-top: 10px;
+  font-size: var(--text-13);
+  color: var(--ink-60);
+}
+
+/* "Show less" and "Try again": inline text actions in the row's own voice. */
+.textButton {
+  font: inherit;
+  font-size: var(--text-13);
+  font-weight: 600;
+  color: var(--ink-60);
+  background: none;
+  border: none;
+  padding: 0;
+  border-radius: var(--radius-4);
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-color: rgba(var(--line-rgb), 0.22);
+  text-underline-offset: 3px;
+  transition: color 0.15s var(--ease);
+}
+
+.textButton:hover {
+  color: var(--ink);
 }
 
 /* The "Host" / "Co-host" chip beside a first name: the shared feature chip,

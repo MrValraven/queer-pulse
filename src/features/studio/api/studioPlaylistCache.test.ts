@@ -29,6 +29,8 @@ const card = {
   },
   publishedAt: null,
   genre: null,
+  mood: null,
+  scene: null,
 };
 const track = (id: string) => ({
   id,

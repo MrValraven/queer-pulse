@@ -87,6 +87,8 @@ export const shared: Catalog = {
     "How far you got through onboarding, and the status of a join request you're waiting on.",
   "consent.storage.drafts.purpose":
     "Anything you started writing and haven't posted: messages, forum posts, stories, job ads, listings, a community you're setting up.",
+  "consent.storage.studioEpisodes.purpose":
+    "Remembers which Studio episodes you played, where you stopped and your playback speed. It stays on this device and clears when you sign out.",
   "consent.storage.outbox.purpose":
     "Messages you sent while offline, held here until they reach the server, plus your per-conversation settings.",
   "consent.storage.yourLists.purpose":
@@ -300,6 +302,7 @@ export const shared: Catalog = {
   "adminNav.items.intakes": "Intakes & messages",
   "adminNav.items.safeSpaces": "Safe spaces",
   "adminNav.items.topics": "Topics",
+  "adminNav.items.studio": "Studio discovery",
   "adminNav.items.listings": "Listings",
   // `/admin/listings/new`: staff authoring a listing for a place that
   // has not joined yet.
@@ -660,6 +663,7 @@ export const shared: Catalog = {
   "mediaRef.card-background": "Members card",
   "mediaRef.cinema-cover": "Cinema title",
   "mediaRef.studio-cover": "Studio release cover",
+  "mediaRef.persona-post": "Persona update",
   "mediaRef.landlord": "Landlord",
   "mediaRef.company-work": "Company",
   "mediaRef.housing": "Housing",

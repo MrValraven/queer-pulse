@@ -9,28 +9,6 @@ import type { TFunction } from "../../shared/i18n/types";
  * is memoized in `StudioAboutPage.tsx` / `StudioAboutSections.tsx`.
  */
 
-export const HERO_KEYS = {
-  eyebrow: "studio:about.hero.eyebrow",
-  title: "studio:about.hero.title",
-  lede: "studio:about.hero.lede",
-};
-
-export interface AboutHero {
-  eyebrow: string;
-  title: ReactNode;
-  lede: ReactNode;
-}
-
-export function buildHero(t: TFunction): AboutHero {
-  return {
-    eyebrow: t(HERO_KEYS.eyebrow),
-    title: (
-      <Translation i18nKey={HERO_KEYS.title} components={{ em: <em /> }} />
-    ),
-    lede: <Translation i18nKey={HERO_KEYS.lede} components={{ em: <em /> }} />,
-  };
-}
-
 /** The three cells in the rate band (section 02). */
 export interface RateCell {
   value: ReactNode;
@@ -195,36 +173,8 @@ export function buildSkeptics(t: TFunction): Skeptic[] {
   ];
 }
 
-export interface AboutCta {
-  title: ReactNode;
-  body: string;
-  join: string;
-  ledger: string;
-}
-
-export function buildCta(t: TFunction): AboutCta {
-  return {
-    title: (
-      <Translation
-        i18nKey="studio:about.cta.title"
-        components={{ em: <em /> }}
-      />
-    ),
-    body: t("studio:about.cta.body"),
-    join: t("studio:about.cta.join"),
-    ledger: t("studio:about.cta.ledger"),
-  };
-}
-
 export interface AboutData {
-  hero: AboutHero;
-  rateCells: RateCell[];
-  tiers: Tier[];
-  tierFoot: ReactNode;
-  skeptics: Skeptic[];
-  cta: AboutCta;
   sectionNum: {
-    whatItIs: string;
     rate: string;
     ceiling: string;
     governance: string;
@@ -234,14 +184,7 @@ export interface AboutData {
 
 export function buildAboutData(t: TFunction): AboutData {
   return {
-    hero: buildHero(t),
-    rateCells: buildRateCells(t),
-    tiers: buildTiers(t),
-    tierFoot: buildTierFoot(),
-    skeptics: buildSkeptics(t),
-    cta: buildCta(t),
     sectionNum: {
-      whatItIs: t("studio:about.sec.whatItIs.num"),
       rate: t("studio:about.sec.rate.num"),
       ceiling: t("studio:about.sec.ceiling.num"),
       governance: t("studio:about.sec.governance.num"),
@@ -249,3 +192,31 @@ export function buildAboutData(t: TFunction): AboutData {
     },
   };
 }
+
+// ── Studio open pages: the live About (spec section 3.3) ───────────────────
+
+/** One numbered section of the live About: keys only. */
+export interface AboutLiveSection {
+  id: string;
+  numKey: string;
+  headingKey: string;
+  paragraphKeys: string[];
+}
+
+const aboutLive = (id: string, paragraphCount: number): AboutLiveSection => ({
+  id,
+  numKey: `studio:aboutLive.sec.${id}.num`,
+  headingKey: `studio:aboutLive.sec.${id}.heading`,
+  paragraphKeys: Array.from(
+    { length: paragraphCount },
+    (_, index) => `studio:aboutLive.sec.${id}.p${index + 1}`,
+  ),
+});
+
+export const ABOUT_LIVE_SECTIONS: AboutLiveSection[] = [
+  aboutLive("today", 2),
+  aboutLive("privacy", 2),
+  aboutLive("control", 1),
+  aboutLive("personas", 1),
+  aboutLive("next", 1),
+];

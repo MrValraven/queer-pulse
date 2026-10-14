@@ -18,6 +18,7 @@ import { SubprofileFollow } from "../subprofiles/SubprofileFollow";
 import type { StudioArtistView } from "./api/studio.adapters";
 import { useStudioPlayer } from "./player/studioPlayerContext";
 import { ARTIST_SHOWCASE } from "./studioArtist.data";
+import { StudioArtistOverflow } from "./StudioArtistOverflow";
 import { StudioDetailHero } from "./StudioDetailHero";
 import { useStudioShowcase } from "./useStudioShowcase";
 import styles from "./studio.module.css";
@@ -77,7 +78,9 @@ export function StudioArtistHero({
       kind={[t(person.kindLabelKey), person.city].filter(Boolean).join(" · ")}
       title={<span ref={titleRef}>{person.name}</span>}
       by={[
-        t("studio:artistPage.releaseCount", { count: releaseCount }),
+        person.format === "podcast"
+          ? t("studio:artist.showCount", { count: releaseCount })
+          : t("studio:artistPage.releaseCount", { count: releaseCount }),
         t("studio:artistPage.followerCount", { count: artist.followerCount }),
       ].join(" · ")}
       actions={
@@ -140,6 +143,9 @@ export function StudioArtistHero({
           >
             {t("studio:detail.shareCta")}
           </button>
+          {!artist.isOwner && (
+            <StudioArtistOverflow subprofileId={person.id} name={person.name} />
+          )}
         </>
       }
     >

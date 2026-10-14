@@ -3,13 +3,13 @@ import { FiArrowRight } from "react-icons/fi";
 import { routes } from "../../app/routeMap";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
-import { ALBUM } from "./studioAlbum.data";
 import { ARTIST_SHOWCASE } from "./studioArtist.data";
-import { DAY_MONTH, fixtureDate } from "./studioFixtureDate";
 import styles from "./studio.module.css";
 import { StudioEuroAmount } from "./StudioEuroAmount";
 
-/** The money side of an artist page: demo only (`useStudioShowcase`). */
+/** The money side of an artist page: demo only (`useStudioShowcase`).
+ *  The page owns the column and adds the live Upcoming and Support cards
+ *  after these. */
 export function StudioArtistSidebar({
   artistName,
   onTip,
@@ -21,7 +21,7 @@ export function StudioArtistSidebar({
   const formatters = useFormat();
   const stats = ARTIST_SHOWCASE.sidebarStats;
   return (
-    <div className={styles.sideCol}>
+    <>
       <div className={styles.buyCard}>
         <div className={styles.eb}>
           {t("studio:artist.sidebar.sustainEyebrow", { artist: artistName })}
@@ -90,26 +90,6 @@ export function StudioArtistSidebar({
           {t("studio:detail.fullLedgerCta")} <FiArrowRight aria-hidden />
         </Link>
       </div>
-
-      <div className={styles.sideCard}>
-        <div className={styles.eb}>
-          {t("studio:artist.sidebar.upcomingHeading")}
-        </div>
-        <div className={styles.lrow}>
-          <span className={styles.k}>
-            {t("studio:artist.sidebar.premiereLabel")} · <em>{ALBUM.title}</em>
-            <br />
-            {formatters.date(
-              fixtureDate(ARTIST_SHOWCASE.premiereDateIso),
-              DAY_MONTH,
-            )}{" "}
-            · {ARTIST_SHOWCASE.premiereTime}
-          </span>
-          <Link to={routes.rsvp} className={styles.cta}>
-            {t("studio:artist.sidebar.rsvpCta")}
-          </Link>
-        </div>
-      </div>
-    </div>
+    </>
   );
 }

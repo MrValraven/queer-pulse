@@ -1456,5 +1456,76 @@ export const notifications: Catalog = {
   "type.studio_release_published.meta": "Artist you follow",
   "type.studio_release_published.subprofileNameFallback": "Someone you follow",
   "type.studio_release_published.releaseTitleFallback": "a new release",
+  // Studio artist kinds. A persona this member follows published an episode
+  // of a show. Names the persona only (no actor key). One row per show:
+  // `formatNotification` sets `count` from `otherActorCount`.
+  "type.studio_episode_published.text":
+    "{subprofileName} published {trackTitle} on {releaseTitle}.",
+  "type.studio_episode_published.text_one":
+    "{subprofileName} published {trackTitle} on {releaseTitle}.",
+  "type.studio_episode_published.text_other":
+    "{subprofileName} published {count} new episodes of {releaseTitle}.",
+  "type.studio_episode_published.textSameName":
+    "{subprofileName} published {trackTitle}.",
+  "type.studio_episode_published.textSameName_one":
+    "{subprofileName} published {trackTitle}.",
+  "type.studio_episode_published.textSameName_other":
+    "{subprofileName} published {count} new episodes.",
+  "type.studio_episode_published.meta": "Podcast you follow",
+  "type.studio_episode_published.subprofileNameFallback": "Someone you follow",
+  "type.studio_episode_published.releaseTitleFallback": "a show you follow",
+  "type.studio_episode_published.trackTitleFallback": "a new episode",
+  // Studio v3. A musician or DJ persona this member follows posted an update.
+  // Names the persona only (no actor key). Bundled on the persona:
+  // `formatNotification` sets `count` from `otherActorCount`. The one-post
+  // line ends on the member's own words, so it adds no full stop.
+  "type.persona_post.text": "{subprofileName} posted an update: {excerpt}",
+  "type.persona_post.text_one": "{subprofileName} posted an update: {excerpt}",
+  "type.persona_post.text_other": "{subprofileName} posted {count} updates.",
+  "type.persona_post.meta": "Persona you follow",
+  "type.persona_post.subprofileNameFallback": "Someone you follow",
+  "type.persona_post.excerptFallback": "open it to read the rest",
+  "actions.readUpdate": "Read the update",
+  // Studio open pages. Our team took one of the member's releases down, or
+  // decided on their dispute. No actor; the reason and the staff reply are
+  // read on the release page, which the row opens.
+  "type.studio_release_taken_down.text":
+    "{releaseTitle} was taken down after a report.",
+  "type.studio_release_taken_down.meta": "Studio release",
+  "type.studio_release_taken_down.releaseTitleFallback": "One of your releases",
+  "type.studio_release_dispute_decided.text":
+    "Our team decided on your dispute about {releaseTitle}.",
+  "type.studio_release_dispute_decided.meta": "Studio dispute",
+  "type.studio_release_dispute_decided.releaseTitleFallback": "your release",
   "actions.listenNow": "Listen now",
+  // Studio discovery: persona credits. The role arrives as a slug and is
+  // named through the studio role labels (notificationKindCopy.ts). A
+  // request row bundles on the credited persona: `formatNotification` sets
+  // `count` from `otherActorCount`, so a bundle reads as several requests.
+  "type.studio_credit_requested.text":
+    "{requestingPersonaName} credited {creditedPersonaName} as {role} on {trackTitle}.",
+  "type.studio_credit_requested.text_one":
+    "{requestingPersonaName} credited {creditedPersonaName} as {role} on {trackTitle}.",
+  "type.studio_credit_requested.text_other":
+    "{creditedPersonaName} has {count} new credit requests.",
+  "type.studio_credit_requested.meta": "Credit request",
+  "type.studio_credit_requested.requestingPersonaNameFallback": "A persona",
+  "type.studio_credit_requested.creditedPersonaNameFallback": "your persona",
+  "type.studio_credit_requested.trackTitleFallback": "a track",
+  "type.studio_credit_requested.roleFallback": "a collaborator",
+  "type.studio_credit_accepted.text":
+    "{creditedPersonaName} accepted the credit as {role} on {trackTitle}.",
+  "type.studio_credit_accepted.meta": "Credit accepted",
+  "type.studio_credit_accepted.creditedPersonaNameFallback": "A persona",
+  "type.studio_credit_accepted.trackTitleFallback": "your track",
+  "type.studio_credit_accepted.roleFallback": "a collaborator",
+  "studioCreditRole.featured": "Featured",
+  "studioCreditRole.producer": "Producer",
+  "studioCreditRole.coWriter": "Co-writer",
+  "studioCreditRole.mixing": "Mixing",
+  "studioCreditRole.mastering": "Mastering",
+  "studioCreditRole.remix": "Remix",
+  "studioCreditRole.coverArt": "Cover art",
+  "studioCreditRole.other": "Other",
+  "actions.reviewCredit": "Review credit",
 };

@@ -12,9 +12,18 @@ const ACCEPT = ".mp3,.m4a,audio/mpeg,audio/mp4";
 export function DropZone({
   onFiles,
   isDisabled,
+  acceptsKey = "studio:uploadFlow.files.accepts",
+  titleKey = "studio:uploadFlow.files.dropTitle",
+  chooseKey = "studio:uploadFlow.files.chooseCta",
 }: {
   onFiles: (files: File[]) => void;
   isDisabled: boolean;
+  /** Artist kinds: the accepts line of the release's format. */
+  acceptsKey?: string;
+  /** The drop title, for a zone with its own wording (an episode's). */
+  titleKey?: string;
+  /** The choose button's label key. */
+  chooseKey?: string;
 }) {
   const { t } = useTranslation();
   const inputId = useId();
@@ -49,16 +58,10 @@ export function DropZone({
         <FiUpload aria-hidden />
       </div>
       <h3>
-        <Translation
-          i18nKey="studio:uploadFlow.files.dropTitle"
-          components={{ em: <em /> }}
-        />
+        <Translation i18nKey={titleKey} components={{ em: <em /> }} />
       </h3>
       <p id={hintId} className={s.uploadTypes}>
-        <Translation
-          i18nKey="studio:uploadFlow.files.accepts"
-          components={{ em: <em /> }}
-        />
+        <Translation i18nKey={acceptsKey} components={{ em: <em /> }} />
       </p>
       <input
         ref={inputRef}
@@ -69,7 +72,7 @@ export function DropZone({
         multiple
         disabled={isDisabled}
         tabIndex={-1}
-        aria-label={t("studio:uploadFlow.files.chooseCta")}
+        aria-label={t(chooseKey)}
         aria-describedby={hintId}
         onChange={(event) => {
           onFiles(Array.from(event.target.files ?? []));
@@ -84,7 +87,7 @@ export function DropZone({
         aria-describedby={hintId}
         onClick={() => inputRef.current?.click()}
       >
-        {t("studio:uploadFlow.files.chooseCta")}
+        {t(chooseKey)}
       </button>
     </div>
   );

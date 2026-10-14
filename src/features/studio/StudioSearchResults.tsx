@@ -5,7 +5,7 @@ import { EmptyState } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { StudioSearchView } from "./api/studio.adapters";
-import type { StudioSearchType } from "./api/studio.types";
+import type { StudioFormat, StudioSearchType } from "./api/studio.types";
 import { StudioArtistCard } from "./StudioArtistCard";
 import { StudioPlaylistCard } from "./StudioPlaylistCard";
 import { StudioReleaseCard } from "./StudioReleaseCard";
@@ -40,11 +40,14 @@ export function StudioSearchResults({
   result,
   query,
   type,
+  format = null,
   onClear,
 }: {
   result: StudioSearchView;
   query: string;
   type: StudioSearchType;
+  /** The format the result answers: Podcasts heads the section Episodes. */
+  format?: StudioFormat | null;
   onClear: () => void;
 }) {
   const { t } = useTranslation();
@@ -77,7 +80,13 @@ export function StudioSearchResults({
           </ResultSection>
         )}
       {(type === "all" || type === "tracks") && result.tracks.length > 0 && (
-        <ResultSection titleKey="studio:searchPage.section.tracks">
+        <ResultSection
+          titleKey={
+            format === "podcast"
+              ? "studio:searchPage.episodesHeading"
+              : "studio:searchPage.section.tracks"
+          }
+        >
           <ol className={`${styles.setCard} ${searchStyles.trackList}`}>
             {result.tracks.map((track) => (
               <StudioSearchTrackRow key={track.id} track={track} />

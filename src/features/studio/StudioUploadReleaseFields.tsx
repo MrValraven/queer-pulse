@@ -1,23 +1,32 @@
 import { useId } from "react";
-import { Select } from "../../shared/components/ui";
+import { Collapse, Select } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   STUDIO_GENRE_LABEL_KEY,
   STUDIO_RELEASE_TYPE_LABEL_KEY,
+  formatOfKind,
 } from "./api/studio.adapters";
 import {
+  STUDIO_BUY_URL_MAX,
   STUDIO_GENRES,
   STUDIO_LIMITS,
+  STUDIO_MOODS,
   STUDIO_RELEASE_TYPES_BY_KIND,
   type StudioGenre,
+  type StudioMood,
 } from "./api/studio.types";
-import { releaseFormErrors } from "./studioUploadDraft.data";
+import { StudioUploadSceneField } from "./StudioUploadSceneField";
+import { STUDIO_MOOD_LABEL_KEY } from "./studioDiscoveryLabels";
+import {
+  releaseFieldCopyOf,
+  releaseFormErrors,
+} from "./studioUploadDraft.data";
 import type { StudioUploadDraft } from "./useStudioUploadDraft";
 import s from "./creator.module.css";
 
-/** The release's own details: type, title, genre, date and liner notes, all
- *  controlled by the draft. The type choice hides for a DJ persona (mix is
- *  its only type). */
+/** The release's own details, controlled by the draft. The type choice hides
+ *  when the persona has one type (a DJ's mix, a podcaster's show); a show
+ *  reads Show name and About the show and has no genre, mood or scene. */
 export function StudioUploadReleaseFields({
   draft,
 }: {
@@ -27,19 +36,28 @@ export function StudioUploadReleaseFields({
   const titleId = useId();
   const titleErrorId = useId();
   const genreId = useId();
+  const moodId = useId();
   const dateId = useId();
   const descriptionId = useId();
   const descriptionCountId = useId();
   const descriptionErrorId = useId();
+  const buyUrlId = useId();
+  const buyUrlHintId = useId();
+  const buyUrlErrorId = useId();
   const typeLegendId = useId();
   const { form, setField } = draft;
   const errors = draft.shouldShowErrors ? releaseFormErrors(form) : {};
-  const allowedTypes =
-    STUDIO_RELEASE_TYPES_BY_KIND[draft.persona?.kind ?? "musician"];
+  // Artist kinds: the types and the field names follow the persona's format.
+  const allowedTypes = draft.persona
+    ? STUDIO_RELEASE_TYPES_BY_KIND[draft.persona.kind]
+    : [];
+  const fieldCopy = releaseFieldCopyOf(
+    draft.persona ? formatOfKind(draft.persona.kind) : "music",
+  );
 
   return (
     <>
-      {allowedTypes.length > 1 && (
+      <Collapse isOpen={allowedTypes.length > 1}>
         <fieldset className={s.field} aria-labelledby={typeLegendId}>
           <legend id={typeLegendId}>
             {t("studio:uploadFlow.release.typeLabel")}
@@ -59,11 +77,9 @@ export function StudioUploadReleaseFields({
             ))}
           </div>
         </fieldset>
-      )}
+      </Collapse>
       <div className={s.field}>
-        <label htmlFor={titleId}>
-          {t("studio:upload.metadata.field.title")}
-        </label>
+        <label htmlFor={titleId}>{t(fieldCopy.titleLabelKey)}</label>
         <input
           id={titleId}
           type="text"
@@ -80,25 +96,50 @@ export function StudioUploadReleaseFields({
           </p>
         )}
       </div>
-      <div className={s.field}>
-        <label htmlFor={genreId}>
-          {t("studio:upload.metadata.field.genre")}
-        </label>
-        <Select
-          id={genreId}
-          options={[
-            { value: "", label: t("studio:uploadFlow.release.genreNone") },
-            ...STUDIO_GENRES.map((genre) => ({
-              value: genre,
-              label: t(STUDIO_GENRE_LABEL_KEY[genre]),
-            })),
-          ]}
-          value={form.genre}
-          onChange={(value) =>
-            setField("genre", (value ?? "") as StudioGenre | "")
-          }
+      <Collapse isOpen={fieldCopy.isGenreShown}>
+        <div className={s.field}>
+          <label htmlFor={genreId}>
+            {t("studio:upload.metadata.field.genre")}
+          </label>
+          <Select
+            id={genreId}
+            options={[
+              { value: "", label: t("studio:uploadFlow.release.genreNone") },
+              ...STUDIO_GENRES.map((genre) => ({
+                value: genre,
+                label: t(STUDIO_GENRE_LABEL_KEY[genre]),
+              })),
+            ]}
+            value={form.genre}
+            onChange={(value) =>
+              setField("genre", (value ?? "") as StudioGenre | "")
+            }
+          />
+        </div>
+        <div className={s.field}>
+          <label htmlFor={moodId}>
+            {t("studio:uploadFlow.release.moodLabel")}
+          </label>
+          <Select
+            id={moodId}
+            options={[
+              { value: "", label: t("studio:uploadFlow.release.moodNone") },
+              ...STUDIO_MOODS.map((mood) => ({
+                value: mood,
+                label: t(STUDIO_MOOD_LABEL_KEY[mood]),
+              })),
+            ]}
+            value={form.mood}
+            onChange={(value) =>
+              setField("mood", (value ?? "") as StudioMood | "")
+            }
+          />
+        </div>
+        <StudioUploadSceneField
+          value={form.sceneId}
+          onChange={(sceneId) => setField("sceneId", sceneId)}
         />
-      </div>
+      </Collapse>
       <div className={s.field}>
         <label htmlFor={dateId}>
           {t("studio:uploadFlow.release.dateLabel")}
@@ -113,7 +154,7 @@ export function StudioUploadReleaseFields({
       </div>
       <div className={s.field}>
         <label htmlFor={descriptionId}>
-          {t("studio:uploadFlow.release.descriptionLabel")}
+          {t(fieldCopy.descriptionLabelKey)}
         </label>
         <textarea
           id={descriptionId}
@@ -138,6 +179,33 @@ export function StudioUploadReleaseFields({
         {errors.description && (
           <p id={descriptionErrorId} className={s.fieldError}>
             {t(errors.description)}
+          </p>
+        )}
+      </div>
+      <div className={s.field}>
+        <label htmlFor={buyUrlId}>
+          {t("studio:uploadFlow.v3.buyUrlLabel")}
+        </label>
+        <input
+          id={buyUrlId}
+          type="text"
+          inputMode="url"
+          autoComplete="url"
+          value={form.buyUrl}
+          maxLength={STUDIO_BUY_URL_MAX}
+          placeholder="https://"
+          aria-invalid={errors.buyUrl ? true : undefined}
+          aria-describedby={[buyUrlHintId, errors.buyUrl && buyUrlErrorId]
+            .filter(Boolean)
+            .join(" ")}
+          onChange={(event) => setField("buyUrl", event.target.value)}
+        />
+        <p id={buyUrlHintId} className={s.fhint}>
+          {t("studio:uploadFlow.v3.buyUrlHint")}
+        </p>
+        {errors.buyUrl && (
+          <p id={buyUrlErrorId} className={s.fieldError}>
+            {t(errors.buyUrl)}
           </p>
         )}
       </div>

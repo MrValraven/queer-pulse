@@ -7,6 +7,7 @@ import {
 } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
+import { createStudioPlayerTestValue } from "../../test/studioPlayerTestValue";
 import { resetDemoPlaylists } from "./api/studioDemoPlaylists";
 import {
   StudioPlayerContext,
@@ -14,14 +15,25 @@ import {
 } from "./player/studioPlayerContext";
 import { StudioCollectionPage } from "./StudioCollectionPage";
 
-beforeEach(() => resetDemoPlaylists());
+const playback = vi.hoisted(() => ({ hideExplicit: false }));
+vi.mock("./api/useStudioPlaybackPreferences", async (importOriginal) => ({
+  ...(await importOriginal<
+    typeof import("./api/useStudioPlaybackPreferences")
+  >()),
+  useStudioHideExplicit: () => playback.hideExplicit,
+}));
+
+beforeEach(() => {
+  resetDemoPlaylists();
+  playback.hideExplicit = false;
+});
 
 function renderPage(playlistId: string) {
   const playTracks = vi.fn(() => Promise.resolve());
   const player = {
-    queue: [],
-    currentIndex: 0,
+    ...createStudioPlayerTestValue(),
     status: "idle",
+    radio: null,
     currentItem: null,
     hasPrevious: false,
     hasNext: false,
@@ -48,14 +60,14 @@ function renderPage(playlistId: string) {
 }
 
 describe("playlist page (demo)", () => {
-  it("shows the owner every entry, an unavailable one greyed with Remove only", async () => {
+  it("shows the owner every entry, a withdrawn one greyed with Remove only", async () => {
     renderPage("demo-playlist-kitchen-tapes");
     expect(
       await screen.findByRole("heading", { level: 1, name: "Kitchen tapes" }),
     ).toBeInTheDocument();
     const list = screen.getByRole("list", { name: /tracks in kitchen tapes/i });
     expect(within(list).getAllByRole("listitem")).toHaveLength(5);
-    expect(within(list).getByText("No longer available")).toBeInTheDocument();
+    expect(within(list).getByText("Withdrawn")).toBeInTheDocument();
     expect(
       within(list).getByRole("button", {
         name: "Remove entry 3 from the playlist",
@@ -108,9 +120,7 @@ describe("playlist page (demo)", () => {
       name: /tracks in kitchen tapes/i,
     });
     const rows = within(list).getAllByRole("listitem");
-    const unavailableRow = within(list)
-      .getByText("No longer available")
-      .closest("li");
+    const unavailableRow = within(list).getByText("Withdrawn").closest("li");
     expect(unavailableRow).not.toBeNull();
     expect(unavailableRow?.querySelector('[draggable="true"]')).toBeNull();
     expect(rows[0]?.querySelector('[draggable="true"]')).not.toBeNull();
@@ -161,5 +171,32 @@ describe("playlist page (demo)", () => {
     expect(
       await screen.findByText("We can't find that in Studio"),
     ).toBeInTheDocument();
+  });
+
+  it("reads any other loss as No longer available, with Remove", async () => {
+    renderPage("demo-playlist-for-the-group-chat");
+    const list = await screen.findByRole("list", {
+      name: /tracks in for the group chat/i,
+    });
+    expect(within(list).getByText("No longer available")).toBeInTheDocument();
+    expect(
+      within(list).getByRole("button", {
+        name: "Remove entry 3 from the playlist",
+      }),
+    ).toBeInTheDocument();
+  });
+
+  it("greys a hidden explicit track with no play button", async () => {
+    playback.hideExplicit = true;
+    renderPage("demo-playlist-dyke-bar-standards");
+    const list = await screen.findByRole("list", {
+      name: /tracks in lisbon dyke-bar standards/i,
+    });
+    expect(
+      within(list).getByText("Hidden by your settings"),
+    ).toBeInTheDocument();
+    expect(
+      within(list).queryByRole("button", { name: "Play A Beja" }),
+    ).not.toBeInTheDocument();
   });
 });

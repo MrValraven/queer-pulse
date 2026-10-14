@@ -33,7 +33,12 @@ describe("Studio v2 read hooks (demo)", () => {
   it("lists the genres that have releases", async () => {
     const { result } = renderHook(() => useStudioGenres(), { wrapper });
     await waitFor(() =>
-      expect(result.current.genres).toEqual(["fado", "electronic", "folk"]),
+      expect(result.current.genres).toEqual([
+        "fado",
+        "electronic",
+        "folk",
+        "spoken-word",
+      ]),
     );
   });
 
@@ -118,17 +123,23 @@ describe("Studio v2 read hooks (demo)", () => {
     );
   });
 
-  it("treats the legacy seed flag as seeded and migrates it", () => {
+  it("clears older seed flags and reseeds the current fixture", () => {
     window.localStorage.setItem("qp-demo-studio-library-seeded", "1");
+    window.localStorage.setItem("qp.demo.studioLibrarySeeded.v1", "1");
     const { result } = renderHook(
       () => useStudioLibrarySaves("studio_release"),
       { wrapper },
     );
-    expect(result.current).toEqual([]);
+    expect(result.current.map((item) => item.title)).toContain(
+      "Cidade dos santos",
+    );
     expect(
       window.localStorage.getItem("qp-demo-studio-library-seeded"),
     ).toBeNull();
-    expect(window.localStorage.getItem("qp.demo.studioLibrarySeeded.v1")).toBe(
+    expect(
+      window.localStorage.getItem("qp.demo.studioLibrarySeeded.v1"),
+    ).toBeNull();
+    expect(window.localStorage.getItem("qp.demo.studioLibrarySeeded.v2")).toBe(
       "1",
     );
   });

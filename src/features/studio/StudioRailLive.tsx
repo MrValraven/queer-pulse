@@ -3,17 +3,28 @@ import { routes } from "../../app/routeMap";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useStudioAccess } from "./api/useStudioAccess";
 import { RailGroup, railClass } from "./StudioRailGroup";
-import { LIVE_RAIL_LINKS } from "./studioRailLive.data";
+import {
+  LIVE_RAIL_FLAG_REVIEW_LINK,
+  LIVE_RAIL_LINKS,
+  LIVE_RAIL_UTILITY_LINKS,
+} from "./studioRailLive.data";
+import { useIsStudioStaff } from "./useIsStudioStaff";
 import { studioUploadPath } from "./studioPaths";
 import styles from "./studio.module.css";
 
-/** The rail a granted member sees: Home, Search, Library and Open calls,
- *  plus Upload, Your numbers and one "Your releases" link per musician or DJ
- *  persona they own. */
+/** The rail a granted member sees: Home, Search, Library, Open calls and the
+ *  Solidarity fund; Upload, Your numbers, Press kit and one "Your releases" link per
+ *  musician or DJ persona they own; and Help and info (Help, About Studio,
+ *  Rights and takedowns, Studio terms, Accessibility, plus Flag review for
+ *  staff). */
 export function StudioRailLive() {
   const { t } = useTranslation();
   const location = useLocation();
   const { uploadablePersonas } = useStudioAccess();
+  const isStaff = useIsStudioStaff();
+  const utilityLinks = isStaff
+    ? [...LIVE_RAIL_UTILITY_LINKS, LIVE_RAIL_FLAG_REVIEW_LINK]
+    : LIVE_RAIL_UTILITY_LINKS;
   const openArtistId =
     location.pathname === routes.studioArtist
       ? new URLSearchParams(location.search).get("id")
@@ -37,6 +48,9 @@ export function StudioRailLive() {
                 {t("studio:rail.v2.yourNumbers")}
               </span>
             </NavLink>
+            <NavLink to={routes.studioPressEdit} className={railClass}>
+              <span className={styles.nm}>{t("studio:rail.v3.pressKit")}</span>
+            </NavLink>
             {uploadablePersonas.map((persona) => {
               const isActive = openArtistId === persona.id;
               return (
@@ -55,6 +69,14 @@ export function StudioRailLive() {
           </div>
         </>
       )}
+      <div className={styles.railDivider} />
+      <nav
+        className={styles.railGrp}
+        aria-label={t("studio:rail.live.utilityLabel")}
+      >
+        <h5>{t("studio:rail.live.utilityLabel")}</h5>
+        <RailGroup items={utilityLinks} />
+      </nav>
     </>
   );
 }

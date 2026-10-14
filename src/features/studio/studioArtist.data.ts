@@ -1,4 +1,5 @@
 import { routes } from "../../app/routeMap";
+import type { StudioFormat } from "./api/studio.types";
 
 export const heroImage =
   "https://images.unsplash.com/photo-1695270918704-2c788f9e3cbf?q=80&w=600&auto=format&fit=crop";
@@ -13,12 +14,27 @@ export const TABS = [
 ] as const;
 export type ArtistTabId = (typeof TABS)[number]["id"];
 
+const MUSIC_TAB_LABEL_KEY_BY_FORMAT: Record<StudioFormat, string> = {
+  music: "studio:artist.tabs.music",
+  podcast: "studio:artist.tabs.podcast",
+  spoken_word: "studio:artist.tabs.spokenWord",
+  performance: "studio:artist.tabs.performance",
+};
+
+/** The tabs of an artist page: the first tab carries the artist's format. */
+export function artistTabsOf(
+  format: StudioFormat,
+): { id: ArtistTabId; labelKey: string }[] {
+  return TABS.map((tab) =>
+    tab.id === "music"
+      ? { id: tab.id, labelKey: MUSIC_TAB_LABEL_KEY_BY_FORMAT[format] }
+      : { id: tab.id, labelKey: tab.labelKey },
+  );
+}
+
 /** Demo-only sidebar and hero figures, moved here from the components. */
 export const ARTIST_SHOWCASE = {
   subscribeAmount: 3,
-  /** `yyyy-mm-dd`, formatted in the active locale; the clock time stays literal. */
-  premiereDateIso: "2026-06-10",
-  premiereTime: "21:00 Lisbon",
   sidebarStats: {
     plays: 36400,
     earningsStreaming: 1820,

@@ -1,0 +1,341 @@
+.iconButton,
+.playButton {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.iconButton {
+  width: var(--tap-min);
+  height: var(--tap-min);
+  border-radius: var(--radius-pill);
+  font-size: var(--text-18);
+  transition-property: background-color, color;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+/* A hit area of at least --tap-min around a control drawn smaller (the
+   bar's play button, the timer chip); never shrinks a larger one. */
+.playButton::before,
+.chip::before {
+  content: "";
+  position: absolute;
+  inset-block: min(0px, calc((100% - var(--tap-min)) / 2));
+  inset-inline: min(0px, calc((100% - var(--tap-min)) / 2));
+}
+
+.iconButton[aria-pressed="true"],
+.iconButton[data-mode="all"],
+.iconButton[data-mode="one"] {
+  color: var(--studio-accent-text);
+}
+
+.iconButton[aria-disabled="true"] {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.repeatOne {
+  position: absolute;
+  inset-block-start: 6px;
+  inset-inline-end: 6px;
+  font-size: var(--text-9);
+  font-weight: 700;
+  line-height: 1;
+}
+
+.transport {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.playButton {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--studio-ink-rgb), 0.92);
+  color: var(--studio-surface-rail);
+  font-size: var(--text-18);
+}
+
+.transport[data-size="large"] {
+  gap: 20px;
+}
+
+.transport[data-size="large"] .playButton {
+  width: 64px;
+  height: 64px;
+  font-size: var(--text-28);
+}
+
+.volume {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.volumeSlider {
+  width: 96px;
+  min-block-size: var(--tap-min);
+  accent-color: var(--studio-accent-text);
+}
+
+.chip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border: none;
+  border-radius: var(--radius-pill);
+  font-size: var(--text-12);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: var(--studio-accent-chip-text);
+  background: rgba(var(--accent-rgb), 0.14);
+  cursor: pointer;
+}
+
+.popoverWrap {
+  position: relative;
+  display: inline-flex;
+}
+
+.popover {
+  position: absolute;
+  inset-inline-end: 0;
+  z-index: var(--z-popover);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: min(300px, calc(100vw - 32px));
+  padding: 12px;
+  border-radius: var(--radius-12);
+  background: var(--studio-surface-rail);
+  color: var(--studio-text);
+  border: 1px solid rgba(var(--studio-ink-rgb), 0.12);
+  box-shadow: var(--shadow-panel);
+  /* Set from the trigger's rect on open (useStudioPopoverFit). */
+  translate: var(--popover-shift-x, 0px) 0;
+  max-block-size: var(--popover-max-block-size, calc(100dvh - 2rem));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.popover[data-placement="up"] {
+  bottom: calc(100% + 8px);
+}
+
+.popover[data-placement="down"] {
+  top: calc(100% + 8px);
+}
+
+.popoverHeading {
+  margin: 0;
+  font-size: var(--text-12);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--studio-text-muted);
+}
+
+.options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.option {
+  min-block-size: var(--tap-min);
+  padding: 7px 12px;
+  border: 1px solid rgba(var(--studio-ink-rgb), 0.16);
+  border-radius: var(--radius-pill);
+  background: none;
+  color: inherit;
+  font-family: inherit;
+  font-size: var(--text-13);
+  cursor: pointer;
+}
+
+.setting {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.settingRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: var(--text-14);
+}
+
+.settingRow input {
+  flex: 1;
+  min-inline-size: 0;
+  min-block-size: var(--tap-min);
+  accent-color: var(--studio-accent-text);
+}
+
+.settingValue {
+  flex: none;
+  min-inline-size: 9ch;
+  font-variant-numeric: tabular-nums;
+  text-align: end;
+  color: var(--studio-text-muted);
+}
+
+.settingRow input[aria-disabled="true"] {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.settingHint {
+  margin: 0;
+  font-size: var(--text-12);
+  color: var(--studio-text-muted);
+}
+
+.switchRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  min-block-size: var(--tap-min);
+  padding: 0;
+  border: none;
+  background: none;
+  color: inherit;
+  font-size: var(--text-14);
+  text-align: start;
+  cursor: pointer;
+}
+
+.switchTrack {
+  position: relative;
+  flex: none;
+  width: 36px;
+  height: 20px;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--studio-ink-rgb), 0.24);
+  transition-property: background-color;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+.switchTrack::after {
+  content: "";
+  position: absolute;
+  inset-block-start: 2px;
+  inset-inline-start: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--studio-surface-rail);
+  transition-property: transform;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+.switchRow[aria-checked="true"] .switchTrack {
+  background: var(--studio-accent-text);
+}
+
+.switchRow[aria-checked="true"] .switchTrack::after {
+  transform: translateX(16px);
+}
+
+.switchRow:dir(rtl)[aria-checked="true"] .switchTrack::after {
+  transform: translateX(-16px);
+}
+
+@media (hover: hover) {
+  .iconButton:not([aria-disabled="true"]):hover,
+  .option:hover {
+    background: rgba(var(--studio-ink-rgb), 0.08);
+  }
+}
+
+.iconButton:focus-visible,
+.playButton:focus-visible,
+.chip:focus-visible,
+.option:focus-visible,
+.switchRow:focus-visible,
+.volumeSlider:focus-visible,
+.settingRow input:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* Studio artist kinds: skip 15/30 on episodes. The ring is drawn at 22px
+   so its 8px digits sit inside it, centred on the ring's middle (the
+   button's centre). The swap with Previous and Next fades through
+   StudioTransport's slot motion. */
+.skip {
+  position: relative;
+  font-family: inherit;
+}
+
+.skip svg {
+  font-size: var(--text-22);
+}
+
+.skipSeconds {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-family: inherit;
+  font-size: var(--text-8);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  pointer-events: none;
+}
+
+/* One transport slot: a button and the one replacing it share the same
+   44px cell while one fades out and the other in. */
+.transportSlot {
+  display: inline-grid;
+  flex: none;
+}
+
+.transportSlotItem {
+  grid-area: 1 / 1;
+  display: inline-flex;
+}
+
+.transportSlotItem[data-leaving] {
+  pointer-events: none;
+}
+
+.speedHeading {
+  margin: 0;
+  font-size: var(--text-14);
+}
+
+.speedOptions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 6px 0;
+}
+
+/* The chosen speed reads by weight and fill as well as colour. */
+.speedOptions .option[aria-checked="true"] {
+  border-color: var(--accent);
+  background: rgba(var(--studio-ink-rgb), 0.12);
+  color: var(--studio-accent-text);
+  font-weight: 600;
+}

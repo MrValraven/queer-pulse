@@ -96,7 +96,11 @@ export type ReportSubjectType =
   // Studio v1 (2026-10-08): ONE published Studio release, addressed by its
   // uuid. Staff take it down and restore it from the report drawer's Studio
   // panel. Mirrors the backend `ReportSubjectType.StudioRelease`.
-  | "studio_release";
+  | "studio_release"
+  // Studio v3 (2026-10-13): ONE persona post (an "update"), addressed by its
+  // uuid. Staff remove it from the report drawer's post panel. Mirrors the
+  // backend `ReportSubjectType.PersonaPost`.
+  | "persona_post";
 
 export type ReasonCode =
   | "outing"
@@ -540,6 +544,20 @@ export const SUBJECT_REASONS: Record<ReportSubjectType, ReasonCode[]> = {
     "hate_speech",
     "impersonation",
     "copyright",
+    "discrimination",
+    "spam",
+    "other",
+  ],
+  // A persona post (Studio v3). Order as the backend's reason catalogue
+  // lists it. The live list comes from GET /reports/reasons; this is the
+  // fallback. `outing` and `doxxing` lead because a post can name people or
+  // places.
+  persona_post: [
+    "outing",
+    "doxxing",
+    "harassment",
+    "hate_speech",
+    "impersonation",
     "discrimination",
     "spam",
     "other",

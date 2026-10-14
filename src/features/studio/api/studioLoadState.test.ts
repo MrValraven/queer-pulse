@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { ApiError } from "../../../shared/api/client";
+import { queryClient } from "../../../shared/api/queryClient";
 import { studioLoadStateOf } from "./studioLoadState";
 
 const base = {
@@ -54,5 +55,66 @@ describe("studioLoadStateOf", () => {
     const refetch = vi.fn(() => Promise.resolve());
     studioLoadStateOf({ ...base, refetch }, false).retry();
     expect(refetch).toHaveBeenCalledTimes(1);
+  });
+});
+
+const withdrawnBody = {
+  statusCode: 410,
+  code: "studio_release_withdrawn",
+  message: "This release was withdrawn.",
+  error: "Gone",
+};
+
+describe("studioLoadStateOf: withdrawn releases", () => {
+  it("reads a 410 studio_release_withdrawn as withdrawn", () => {
+    const state = studioLoadStateOf(
+      {
+        ...base,
+        errorUpdateCount: 1,
+        error: new ApiError(410, "Gone", withdrawnBody),
+      },
+      false,
+    );
+    expect(state).toMatchObject({
+      isWithdrawn: true,
+      isNotFound: false,
+      isError: false,
+      isLoading: false,
+    });
+  });
+
+  it("treats a 410 without the Studio code as a failure with Retry", () => {
+    const state = studioLoadStateOf(
+      { ...base, errorUpdateCount: 1, error: new ApiError(410, "Gone") },
+      false,
+    );
+    expect(state).toMatchObject({ isWithdrawn: false, isError: true });
+  });
+
+  it("keeps a 404 as not found", () => {
+    const state = studioLoadStateOf(
+      { ...base, errorUpdateCount: 1, error: new ApiError(404, "Not found") },
+      false,
+    );
+    expect(state).toMatchObject({ isNotFound: true, isWithdrawn: false });
+  });
+
+  it("keeps a loaded release on screen when a refetch answers 410", () => {
+    const state = studioLoadStateOf(
+      {
+        ...base,
+        errorUpdateCount: 1,
+        error: new ApiError(410, "Gone", withdrawnBody),
+      },
+      true,
+    );
+    expect(state.isWithdrawn).toBe(false);
+  });
+
+  it("never retries a withdrawn or missing release", () => {
+    const retry = queryClient.getDefaultOptions().queries?.retry;
+    if (typeof retry !== "function") throw new Error("expected a retry rule");
+    expect(retry(0, new ApiError(410, "Gone", withdrawnBody))).toBe(false);
+    expect(retry(0, new ApiError(404, "Not found"))).toBe(false);
   });
 });

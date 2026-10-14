@@ -73,7 +73,7 @@
   width: 19px;
   height: 19px;
 }
-.p h4 {
+.p h3 {
   font-family: var(--serif);
   font-weight: 400;
   font-size: var(--text-19);
@@ -81,7 +81,7 @@
   letter-spacing: -0.01em;
   margin-bottom: 8px;
 }
-.p h4 em {
+.p h3 em {
   font-style: italic;
   color: var(--studio-accent-text);
 }
@@ -141,14 +141,14 @@
 .ri {
   min-width: 0;
 }
-.ri h5 {
+.ri h3 {
   font-family: var(--serif);
   font-weight: 400;
   font-size: var(--text-19);
   color: rgba(var(--studio-ink-rgb), 1);
   letter-spacing: -0.01em;
 }
-.ri h5 em {
+.ri h3 em {
   font-style: italic;
   color: var(--studio-accent-text);
 }
@@ -268,7 +268,7 @@
   padding: 26px 28px;
   margin-top: 36px;
 }
-.foot h4 {
+.foot h3 {
   font-family: var(--serif);
   font-weight: 400;
   font-size: var(--text-21);
@@ -276,7 +276,7 @@
   letter-spacing: -0.01em;
   margin-bottom: 10px;
 }
-.foot h4 em {
+.foot h3 em {
   font-style: italic;
   color: var(--studio-accent-text);
 }
@@ -462,4 +462,32 @@
   50% {
     box-shadow: 0 0 0 5px rgba(245, 158, 11, 0.08);
   }
+}
+
+/* ── Live sections (Studio open pages) ── */
+.liveSections {
+  display: grid;
+  gap: 28px;
+  max-width: 68ch;
+  margin: 8px 0 32px;
+}
+.liveSec h2 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: var(--text-22);
+  color: var(--studio-text);
+  margin-bottom: 8px;
+}
+.liveSec h2 em {
+  font-style: italic;
+  color: var(--studio-accent-text);
+}
+.liveSec p {
+  max-width: 48ch;
+  font-size: var(--text-15);
+  line-height: 1.7;
+  color: var(--studio-text-muted);
+}
+.liveCta {
+  margin-bottom: 48px;
 }

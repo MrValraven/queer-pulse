@@ -1,9 +1,11 @@
 import { Link } from "react-router-dom";
 import { ImageSlot } from "../../shared/components/ui";
+import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { StudioReleaseCardView } from "./api/studio.adapters";
 import type { StudioReleaseStatus } from "./api/studio.types";
-import { studioUploadPath } from "./studioPaths";
+import { studioEpisodeUploadPath, studioUploadPath } from "./studioPaths";
+import { outDateOf } from "./studioUpcoming";
 import ownerStyles from "./StudioArtistOwner.module.css";
 
 export interface OwnerRow {
@@ -11,14 +13,18 @@ export interface OwnerRow {
   status: StudioReleaseStatus;
   statusLabelKey: string;
   takedownReason: string | null;
+  /** Set while scheduled (Studio v3). */
+  publishAt: string | null;
 }
 
-export type OwnerAction = "publish" | "unpublish" | "delete";
+export type OwnerAction = "publish" | "unpublish" | "delete" | "previewLink";
 
 /** One of the artist's own releases with the actions its status allows:
- *  a draft can be edited, published or deleted; a published release can be
- *  edited or unpublished; a taken-down one shows staff's reason. A busy
- *  button stays focusable (aria-disabled) and ignores presses. */
+ *  a draft can be edited, previewed by link, published or deleted; a
+ *  scheduled release can be edited or previewed by link; a published
+ *  release can be edited or unpublished; a taken-down one shows staff's
+ *  reason. A busy button stays focusable (aria-disabled) and ignores
+ *  presses. */
 export function StudioOwnerReleaseRow({
   row,
   isBusy,
@@ -31,7 +37,10 @@ export function StudioOwnerReleaseRow({
   onAction: (action: OwnerAction, row: OwnerRow) => void;
 }) {
   const { t } = useTranslation();
+  const formatters = useFormat();
   const { release, status } = row;
+  const outLine =
+    status === "scheduled" ? outDateOf(row.publishAt, formatters) : null;
 
   function actionButton(
     action: OwnerAction,
@@ -72,6 +81,11 @@ export function StudioOwnerReleaseRow({
         <span className={ownerStyles.status} data-status={status}>
           {t(row.statusLabelKey)}
         </span>
+        {outLine && (
+          <span className={ownerStyles.when}>
+            {t("studio:upcoming.outOn", outLine)}
+          </span>
+        )}
         {status === "taken_down" && row.takedownReason && (
           <p className={ownerStyles.reason}>
             {t("studio:owner.takedownReason", { reason: row.takedownReason })}
@@ -93,6 +107,25 @@ export function StudioOwnerReleaseRow({
             {t("studio:owner.edit")}
           </Link>
         )}
+        {/* Studio artist kinds: episodes are added one by one once the show
+            is live (spec 6.2). A scheduled show offers Edit only. */}
+        {release.isShow && status === "published" && (
+          <Link
+            to={studioEpisodeUploadPath(release.id)}
+            className={ownerStyles.action}
+            aria-label={t("studio:owner.addEpisodeAria", {
+              title: release.title,
+            })}
+          >
+            {t("studio:show.addEpisodeCta")}
+          </Link>
+        )}
+        {(status === "draft" || status === "scheduled") &&
+          actionButton(
+            "previewLink",
+            "studio:owner.v3.previewLink",
+            "studio:owner.v3.previewLinkAria",
+          )}
         {status === "draft" &&
           actionButton(
             "publish",

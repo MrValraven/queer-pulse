@@ -1,164 +1,188 @@
-import { useMemo, useState } from "react";
-import { Link } from "react-router-dom";
-import {
-  FiFileText,
-  FiUser,
-  FiDollarSign,
-  FiMail,
-  FiMessageCircle,
-  FiCheckCircle,
-  FiArrowRight,
-} from "react-icons/fi";
-import { Button } from "../../shared/components/ui";
-import { useToast } from "../../shared/components/feedback/useToast";
-import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useMemo, useRef, useState } from "react";
+import { FiFileText, FiMusic, FiSearch, FiShield, FiX } from "react-icons/fi";
+import { useMotionPrefs } from "../../app/providers/motionPrefs";
+import { Button, Collapse, EmptyState } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
-import { StudioShell } from "./StudioShell";
+import { useTranslation } from "../../shared/i18n/useTranslation";
+import { StudioHelpContact } from "./StudioHelpContact";
 import { StudioHelpFaq } from "./StudioHelpFaq";
+import { StudioShell } from "./StudioShell";
 import {
-  buildHelpCats,
-  buildHelpSections,
-  buildContactCards,
-  type HelpCat,
-  type ContactCard,
+  HELP_CATEGORY_CARDS,
+  LIVE_HELP_SECTIONS,
+  SHOWCASE_HELP_SECTION,
+  helpSectionAnchor,
+  type HelpCategoryCard,
 } from "./studioHelp.data";
+import { filterHelpSections } from "./studioHelpSearch";
+import { useStudioShowcase } from "./useStudioShowcase";
 import s from "./StudioHelpPage.module.css";
 
-// Status page domain — never translated, not routed through the catalog.
-const STATUS_DOMAIN = "status.queerpulse.org";
-
-const CAT_ICON = {
-  note: FiFileText,
-  user: FiUser,
-  coin: FiDollarSign,
+const CATEGORY_ICON = {
+  listening: FiMusic,
+  sharing: FiFileText,
+  safety: FiShield,
 } as const;
 
-const CONTACT_ICON = {
-  mail: FiMail,
-  chat: FiMessageCircle,
-  check: FiCheckCircle,
-} as const;
-
-function jump(id: string) {
-  document.getElementById(id)?.scrollIntoView({
-    behavior: "smooth",
-    block: "start",
-  });
-}
-
-function CategoryCard({ cat }: { cat: HelpCat }) {
-  const Icon = CAT_ICON[cat.icon];
+function CategoryCard({ card }: { card: HelpCategoryCard }) {
+  const { t } = useTranslation();
+  const { reducedMotion } = useMotionPrefs();
+  const Icon = CATEGORY_ICON[card.target];
   return (
-    <button type="button" className={s.cat} onClick={() => jump(cat.target)}>
+    <button
+      type="button"
+      className={s.cat}
+      onClick={() => {
+        const section = document.getElementById(helpSectionAnchor(card.target));
+        section?.scrollIntoView({
+          behavior: reducedMotion ? "auto" : "smooth",
+          block: "start",
+        });
+        section?.querySelector("h2")?.focus({ preventScroll: true });
+      }}
+    >
       <Icon className={s.catIcon} aria-hidden />
-      <h4>{cat.heading}</h4>
-      <p>{cat.blurb}</p>
+      <span className={s.catHeading}>
+        <Translation i18nKey={card.headingKey} components={{ em: <em /> }} />
+      </span>
+      <span className={s.catBlurb}>{t(card.blurbKey)}</span>
     </button>
   );
 }
 
-function ContactCardItem({ card }: { card: ContactCard }) {
-  const { showToast } = useToast();
-  const Icon = CONTACT_ICON[card.icon];
-  return (
-    <div className={`${s.cc} ${card.jade ? s.ccJade : ""}`}>
-      <Icon className={s.ccIcon} aria-hidden />
-      <h4>{card.title}</h4>
-      <p>{card.body}</p>
-      {card.to ? (
-        <Link to={card.to} className={s.bt}>
-          {card.action} <FiArrowRight aria-hidden />
-        </Link>
-      ) : (
-        <button
-          type="button"
-          className={s.bt}
-          onClick={() => showToast(card.toast!, "info")}
-        >
-          {card.action}
-        </button>
-      )}
-    </div>
-  );
-}
-
+/** Studio Help: one honest base in both modes, the money answers and the
+ *  status line in the demo only (spec section 3.2). */
 export function StudioHelpPage() {
   const { t } = useTranslation();
-  const { showToast } = useToast();
+  const isShowcase = useStudioShowcase();
   const [query, setQuery] = useState("");
-  const helpCats = useMemo(() => buildHelpCats(t), [t]);
-  const helpSections = useMemo(() => buildHelpSections(t), [t]);
-  const contactCards = useMemo(() => buildContactCards(t), [t]);
-
-  function onSearch(e: React.FormEvent) {
-    e.preventDefault();
-    showToast(t("studio:help.searchingToast"), "info");
-  }
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  const sections = useMemo(
+    () =>
+      isShowcase
+        ? [...LIVE_HELP_SECTIONS, SHOWCASE_HELP_SECTION]
+        : LIVE_HELP_SECTIONS,
+    [isShowcase],
+  );
+  const visibleSections = useMemo(
+    () => filterHelpSections(sections, query, t),
+    [sections, query, t],
+  );
+  const visibleIds = useMemo(
+    () =>
+      new Set(
+        visibleSections.flatMap((section) =>
+          section.items.map((item) => item.id),
+        ),
+      ),
+    [visibleSections],
+  );
+  const isSearching = query.trim().length > 0;
+  const trimmedQuery = query.trim();
+  // Keep the last non-empty query so the empty-state title does not flash
+  // `Nothing matches ""` while its Collapse folds after Clear.
+  const [heldQuery, setHeldQuery] = useState("");
+  if (trimmedQuery && trimmedQuery !== heldQuery) setHeldQuery(trimmedQuery);
 
   return (
     <StudioShell>
       <div className={s.wrap}>
-        <div className={s.pageH}>
-          <div className={s.eb}>{t("studio:help.hero.eyebrow")}</div>
+        <header className={s.pageH}>
+          <div className={s.eb}>{t("studio:helpLive.hero.eyebrow")}</div>
           <h1>
             <Translation
-              i18nKey="studio:help.hero.title"
+              i18nKey="studio:helpLive.hero.title"
               components={{ em: <em /> }}
             />
           </h1>
-          <div className={s.dek}>{t("studio:help.hero.dek")}</div>
-        </div>
+          <div className={s.dek}>{t("studio:helpLive.hero.dek")}</div>
+        </header>
 
         <div className={s.hpWrap}>
-          <form className={s.search} onSubmit={onSearch}>
+          <form
+            role="search"
+            className={s.search}
+            onSubmit={(event) => event.preventDefault()}
+          >
             <input
+              ref={searchInputRef}
+              type="search"
               value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder={t("studio:help.searchPlaceholder")}
-              aria-label={t("studio:help.searchAria")}
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder={t("studio:helpLive.search.placeholder")}
+              aria-label={t("studio:helpLive.search.label")}
             />
-            <Button type="submit" variant="primary">
-              {t("studio:help.searchCta")}
-            </Button>
+            <div
+              className={[s.clear, isSearching && s.clearShown]
+                .filter(Boolean)
+                .join(" ")}
+              inert={!isSearching}
+            >
+              <div className={s.clearInner}>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  aria-label={t("studio:helpLive.search.clearCta")}
+                  onClick={() => {
+                    setQuery("");
+                    searchInputRef.current?.focus();
+                  }}
+                >
+                  <FiX className={s.clearIcon} aria-hidden />
+                  <span className={s.clearText}>
+                    {t("studio:helpLive.search.clearCta")}
+                  </span>
+                </Button>
+              </div>
+            </div>
           </form>
+          <p role="status" className={s.resultCount}>
+            {isSearching
+              ? t("studio:helpLive.search.resultCount", {
+                  count: visibleIds.size,
+                })
+              : ""}
+          </p>
 
-          <div className={s.cats}>
-            {helpCats.map((cat) => (
-              <CategoryCard key={cat.target} cat={cat} />
-            ))}
-          </div>
-
-          {helpSections.map((sec) => (
-            <section key={sec.id} id={sec.id} className={s.sec}>
-              <h2>{sec.heading}</h2>
-              <StudioHelpFaq items={sec.items} />
-            </section>
-          ))}
-
-          <section className={s.sec}>
-            <h2>
-              <Translation
-                i18nKey="studio:help.stillStuck.title"
-                components={{ em: <em /> }}
-              />
-            </h2>
-            <div className={s.contact}>
-              {contactCards.map((card, i) => (
-                <ContactCardItem key={i} card={card} />
+          <Collapse isOpen={!isSearching}>
+            <div className={s.cats}>
+              {HELP_CATEGORY_CARDS.map((card) => (
+                <CategoryCard key={card.target} card={card} />
               ))}
             </div>
-            <div className={s.status}>
-              <span className={s.dot} />
-              {t("studio:help.statusOperational")}{" "}
-              <a
-                href="https://status.queerpulse.org"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {STATUS_DOMAIN}
-              </a>
-            </div>
-          </section>
+          </Collapse>
+
+          {sections.map((section) => (
+            <Collapse
+              key={section.id}
+              isOpen={visibleSections.some(
+                (visible) => visible.id === section.id,
+              )}
+            >
+              <section id={helpSectionAnchor(section.id)} className={s.sec}>
+                <h2 tabIndex={-1}>
+                  <Translation
+                    i18nKey={section.headingKey}
+                    components={{ em: <em /> }}
+                  />
+                </h2>
+                <StudioHelpFaq items={section.items} visibleIds={visibleIds} />
+              </section>
+            </Collapse>
+          ))}
+
+          <Collapse isOpen={isSearching && visibleIds.size === 0}>
+            <EmptyState
+              icon={<FiSearch />}
+              title={t("studio:helpLive.search.emptyTitle", {
+                query: trimmedQuery || heldQuery,
+              })}
+              description={t("studio:helpLive.search.emptyBody")}
+              headingLevel={2}
+            />
+          </Collapse>
+
+          <StudioHelpContact />
         </div>
       </div>
     </StudioShell>

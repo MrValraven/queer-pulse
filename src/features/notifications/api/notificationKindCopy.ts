@@ -2,6 +2,7 @@ import type { Formatters } from "../../../shared/i18n/format";
 import type { TFunction, TranslateOptions } from "../../../shared/i18n/types";
 import { OPEN_CALLS_TOPIC_TAG } from "../../forum/funding/funding.data";
 import { formatLisbonDeadline } from "../../forum/funding/fundingDates";
+import { STUDIO_CREDIT_ROLES } from "../../studio/api/studio.types";
 import type { NotifType } from "../notifications.types";
 
 /**
@@ -77,7 +78,27 @@ export type LifecycleNotificationKind =
   // Studio v2. A persona the member follows published a release in Studio.
   // Bundled on the persona; the payload names the persona and the newest
   // release, and carries no actor (the human behind a persona stays unnamed).
-  | "studio_release_published";
+  | "studio_release_published"
+  // Studio open pages. Our team took one of the member's releases down, or
+  // decided on their dispute about one. Always delivered, no actor. The
+  // payload names the release only (`releaseId`, `releaseTitle`, and
+  // `outcome` on a decision); the reason and the reply are read on the
+  // release page, which the row opens.
+  | "studio_release_taken_down"
+  | "studio_release_dispute_decided"
+  // Studio discovery. A persona of the member's was credited on a track, or
+  // a credit the member's persona asked for was accepted. Both carry persona
+  // names only; the member behind either persona never reaches the payload.
+  | "studio_credit_requested"
+  | "studio_credit_accepted"
+  // Studio v3. A musician or DJ persona the member follows posted an update.
+  // Bundled on the persona; the payload names the persona and carries the
+  // first 80 characters of the newest post, and no actor.
+  | "persona_post"
+  // Studio artist kinds. A persona the member follows published an episode
+  // of a podcast show. Bundled like studio_release_published; the payload
+  // names the persona, the show and the newest episode, and no actor.
+  | "studio_episode_published";
 
 /**
  * Which tab each of these kinds files under, following the neighbours already
@@ -141,6 +162,19 @@ export const LIFECYCLE_KIND_CATEGORY: Record<
   // New music from a persona the member follows, the same tab as
   // persona_update.
   studio_release_published: "community",
+  // An update from a persona the member follows, the same tab as
+  // studio_release_published.
+  persona_post: "community",
+  // A new episode from a persona the member follows, beside new releases.
+  studio_episode_published: "community",
+  // The platform's word on the member's own release, the same tab as
+  // moderation_outcome.
+  studio_release_taken_down: "platform",
+  studio_release_dispute_decided: "platform",
+  // Requests about a persona the member owns, the same tab as
+  // subprofile_invite.
+  studio_credit_requested: "community",
+  studio_credit_accepted: "community",
 };
 
 export function isLifecycleKind(
@@ -321,6 +355,30 @@ const TOKEN_FIELDS: Partial<Record<LifecycleNotificationKind, string[]>> = {
   funding_deadline_soon: ["threadTitle"],
   funding_deadline_changed: ["threadTitle"],
   studio_release_published: ["subprofileName", "releaseTitle"],
+  persona_post: ["subprofileName", "excerpt"],
+  studio_episode_published: ["subprofileName", "releaseTitle", "trackTitle"],
+  // The title opens the takedown sentence and closes the decision one; a
+  // row missing it reads "One of your releases" or "your release" there.
+  studio_release_taken_down: ["releaseTitle"],
+  studio_release_dispute_decided: ["releaseTitle"],
+  studio_credit_requested: [
+    "requestingPersonaName",
+    "creditedPersonaName",
+    "trackTitle",
+  ],
+  studio_credit_accepted: ["creditedPersonaName", "trackTitle"],
+};
+
+/** Studio credit role slug to its `notifications:studioCreditRole.*` key. */
+const STUDIO_CREDIT_ROLE_CATALOG_KEY: Record<string, string> = {
+  featured: "featured",
+  producer: "producer",
+  "co-writer": "coWriter",
+  mixing: "mixing",
+  mastering: "mastering",
+  remix: "remix",
+  "cover-art": "coverArt",
+  other: "other",
 };
 
 /**
@@ -353,6 +411,19 @@ export function applyLifecycleTokens(
     tokens[field] =
       payloadString(payload, field) ??
       t(`notifications:type.${type}.${field}Fallback`);
+  }
+  if (type === "studio_credit_requested" || type === "studio_credit_accepted") {
+    // The role arrives as a slug and reads in the member's language through
+    // the notifications catalog's own role labels (the studio namespace is
+    // not loaded on the bell); a slug this client cannot name reads as the
+    // kind's fallback phrase.
+    const role = payloadString(payload, "role");
+    tokens.role =
+      role && (STUDIO_CREDIT_ROLES as readonly string[]).includes(role)
+        ? t(
+            `notifications:studioCreditRole.${STUDIO_CREDIT_ROLE_CATALOG_KEY[role]}`,
+          )
+        : t(`notifications:type.${type}.roleFallback`);
   }
   if (type === "listing_edit_suggestion_accepted") {
     // `field` arrives as a machine value (`hours`); the copy needs the
@@ -401,4 +472,18 @@ export function openCallsTopicLabel(
   return payloadString(payload, "topicSlug") === OPEN_CALLS_TOPIC_TAG
     ? t("notifications:type.topic_new_post.openCallsLabel")
     : null;
+}
+
+/** The text key of a row: a persona that shares its show's name reads
+ *  "Late Bloomers published X." (studio_episode_published only; the plural
+ *  forms follow `count`). The fallbacks differ, so equal tokens are real names. */
+export function textVariantOf(
+  type: string,
+  tokens: TranslateOptions,
+): "text" | "textSameName" {
+  return type === "studio_episode_published" &&
+    typeof tokens.subprofileName === "string" &&
+    tokens.subprofileName === tokens.releaseTitle
+    ? "textSameName"
+    : "text";
 }

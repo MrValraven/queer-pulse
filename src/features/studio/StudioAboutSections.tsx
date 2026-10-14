@@ -89,7 +89,7 @@ export function Skeptics() {
     <div className={s.skeptic}>
       {skeptics.map((item, i) => (
         <div key={i} className={s.sk}>
-          <h4>{item.q}</h4>
+          <h3>{item.q}</h3>
           <p>{item.a}</p>
         </div>
       ))}

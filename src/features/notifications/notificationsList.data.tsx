@@ -3,7 +3,10 @@ import {
   FiArchive,
   FiAward,
   FiClipboard,
+  FiFlag,
   FiHome,
+  FiMessageSquare,
+  FiMic,
   FiMusic,
   FiStar,
   FiTag,
@@ -290,6 +293,9 @@ function buildUnreadNotifications(
       ],
     },
     buildStudioReleaseNotification(t, fmt),
+    buildStudioEpisodeNotification(t, fmt),
+    buildPersonaPostNotification(t, fmt),
+    ...buildStudioCreditNotifications(t, fmt),
     ...buildUnreadActivityNotifications(t, fmt),
   ];
 }
@@ -321,6 +327,153 @@ function buildStudioReleaseNotification(
       },
     ],
   };
+}
+
+function buildStudioEpisodeNotification(
+  t: TFunction,
+  fmt: Formatters,
+): DemoNotificationRow {
+  return {
+    // The demo counterpart of the live `studio_episode_published` row
+    // (Studio artist kinds). It reuses the live keys and names the persona
+    // only.
+    id: 25,
+    type: "community",
+    unread: true,
+    icon: { Glyph: FiMic, background: "rgba(var(--plum-rgb), .07)" },
+    text: t("notifications:type.studio_episode_published.text", {
+      subprofileName: "Late Bloomers",
+      trackTitle: "Chosen family dinners",
+      releaseTitle: "Late Bloomers",
+      count: 1,
+    }),
+    meta: t("notifications:type.studio_episode_published.meta"),
+    time: fmt.relativeTime(-1, "day"),
+    createdAtIso: agoIso(1, "day"),
+    actions: [
+      {
+        label: t("notifications:actions.listenNow"),
+        variant: "ghost",
+        href: "/studio/track?id=demo-episode-late-bloomers-03",
+      },
+    ],
+  };
+}
+
+function buildPersonaPostNotification(
+  t: TFunction,
+  fmt: Formatters,
+): DemoNotificationRow {
+  return {
+    // The demo counterpart of the live `persona_post` row (Studio v3).
+    id: 24,
+    type: "community",
+    unread: true,
+    icon: { Glyph: FiMessageSquare, background: "rgba(var(--plum-rgb), .07)" },
+    text: t("notifications:type.persona_post.text", {
+      subprofileName: "NIGHTFORM",
+      excerpt: "new single in nine days, Night bus, the long version",
+      count: 1,
+    }),
+    meta: t("notifications:type.persona_post.meta"),
+    time: fmt.relativeTime(-5, "hour"),
+    createdAtIso: agoIso(5, "hour"),
+    actions: [
+      {
+        label: t("notifications:actions.readUpdate"),
+        variant: "ghost",
+        href: "/p/nightform#updates",
+      },
+    ],
+  };
+}
+
+function buildStudioCreditNotifications(
+  t: TFunction,
+  fmt: Formatters,
+): DemoNotificationRow[] {
+  // The demo counterparts of the live credit rows. They reuse the live keys
+  // and name personas only.
+  return [
+    {
+      id: 22,
+      type: "community",
+      unread: true,
+      icon: { Glyph: FiAward, background: "rgba(var(--plum-rgb), .07)" },
+      text: t("notifications:type.studio_credit_requested.text", {
+        requestingPersonaName: "LeChatDashinko",
+        creditedPersonaName: "Mariana Sol",
+        trackTitle: "Bicha, with love",
+        role: t("notifications:studioCreditRole.featured"),
+        count: 1,
+      }),
+      meta: t("notifications:type.studio_credit_requested.meta"),
+      time: fmt.relativeTime(-1, "day"),
+      createdAtIso: agoIso(1, "day"),
+      actions: [
+        {
+          label: t("notifications:actions.reviewCredit"),
+          variant: "ghost",
+          href: routes.studioCredits,
+        },
+      ],
+    },
+    {
+      id: 23,
+      type: "community",
+      unread: false,
+      icon: { Glyph: FiAward, background: "rgba(var(--plum-rgb), .07)" },
+      text: t("notifications:type.studio_credit_accepted.text", {
+        creditedPersonaName: "NIGHTFORM",
+        trackTitle: "Carta para a santa",
+        role: t("notifications:studioCreditRole.producer"),
+      }),
+      meta: t("notifications:type.studio_credit_accepted.meta"),
+      time: fmt.relativeTime(-3, "day"),
+      createdAtIso: agoIso(3, "day"),
+    },
+  ];
+}
+
+/** The demo counterparts of the live Studio takedown notices. They reuse the
+ *  live keys and open the demo owner's taken-down release, where the
+ *  dispute panel is. */
+function buildStudioOwnerNotifications(
+  t: TFunction,
+  fmt: Formatters,
+): DemoNotificationRow[] {
+  const releaseHref = "/studio/album?id=demo-release-taken-down-bairro";
+  return [
+    {
+      id: 21,
+      type: "platform",
+      unread: false,
+      icon: {
+        Glyph: FiMessageSquare,
+        background: "rgba(var(--plum-rgb), .07)",
+      },
+      text: t("notifications:type.studio_release_dispute_decided.text", {
+        releaseTitle: "Bairro antigo",
+      }),
+      meta: t("notifications:type.studio_release_dispute_decided.meta"),
+      time: fmt.relativeTime(-2, "day"),
+      createdAtIso: agoIso(2, "day"),
+      sourceHref: releaseHref,
+    },
+    {
+      id: 20,
+      type: "platform",
+      unread: false,
+      icon: { Glyph: FiFlag, background: "rgba(var(--plum-rgb), .07)" },
+      text: t("notifications:type.studio_release_taken_down.text", {
+        releaseTitle: "Bairro antigo",
+      }),
+      meta: t("notifications:type.studio_release_taken_down.meta"),
+      time: fmt.relativeTime(-3, "day"),
+      createdAtIso: agoIso(3, "day"),
+      sourceHref: releaseHref,
+    },
+  ];
 }
 
 function buildReadNotifications(
@@ -428,7 +581,7 @@ function buildReadNotifications(
 /**
  * Composes the demo feed from its two order-preserving sections — the unread
  * rows (ids 2-7, 13, 14, 15, 16, 18) followed by the already-read rows (ids 8,
- * 9, 11, 12). Splitting the builder by read-state keeps each section small.
+ * 9, 11, 12, 20, 21). Splitting the builder by read-state keeps each section small.
  * (Ids 1 and 10 were private-message rows, removed when the "messages"
  * category was retired.) Every row starts in the bell; `useNotifications`
  * flags the rows hidden from it this session.
@@ -439,6 +592,7 @@ export function buildNotifications(
 ): Notification[] {
   return [
     ...buildUnreadNotifications(t, fmt),
+    ...buildStudioOwnerNotifications(t, fmt),
     ...buildReadNotifications(t, fmt),
   ].map((row) => ({ ...row, isHiddenFromBell: false }));
 }

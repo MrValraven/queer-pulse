@@ -150,6 +150,18 @@ export const gatherings: Catalog = {
   "gathering.attendeesPreview.hostTag": "Organização",
   "gathering.attendeesPreview.cohostTag": "Coorganização",
   "gathering.attendeesPreview.moreLabel": "+{count} mais",
+  "gathering.attendeesPreview.moreAriaLabel_one":
+    "Mostrar mais {count} pessoa que vai",
+  "gathering.attendeesPreview.moreAriaLabel_other":
+    "Mostrar mais {count} pessoas que vão",
+  "gathering.attendeesPreview.showLess": "Mostrar menos",
+  "gathering.attendeesPreview.goingPrivately_one":
+    "Mais {count} pessoa vai em privado",
+  "gathering.attendeesPreview.goingPrivately_other":
+    "Mais {count} pessoas vão em privado",
+  "gathering.attendeesPreview.loadError":
+    "Não conseguimos carregar toda a gente que vai.",
+  "gathering.attendeesPreview.retry": "Tentar de novo",
 
   // GatheringSuccessPanel
   "successPanel.ariaLabel": "Confirmação",

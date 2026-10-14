@@ -13,9 +13,13 @@ import {
   type StudioArtistDTO,
   type StudioArtistStatsDTO,
   type StudioErrorCode,
+  type StudioFormat,
+  type StudioFormatsDTO,
   type StudioGenre,
   type StudioGenresDTO,
+  type StudioLatestEpisodesPageDTO,
   type StudioMeDTO,
+  type StudioMood,
   type StudioPageDTO,
   type StudioReleaseCardDTO,
   type StudioReleaseDTO,
@@ -40,10 +44,14 @@ export const getStudioMe = () => apiGet<StudioMeDTO>("/studio/me");
 export function getStudioReleases(
   cursor: string | null,
   genre: StudioGenre | null = null,
+  mood: StudioMood | null = null,
+  format: StudioFormat | null = null,
 ) {
   const params = new URLSearchParams();
   if (cursor) params.set("cursor", cursor);
   if (genre) params.set("genre", genre);
+  if (mood) params.set("mood", mood);
+  if (format) params.set("format", format);
   const query = params.toString();
   return apiGet<StudioPageDTO<StudioReleaseCardDTO>>(
     `/studio/releases${query ? `?${query}` : ""}`,
@@ -55,10 +63,14 @@ export function searchStudio(
   type: StudioSearchType,
   genre: StudioGenre | null,
   signal?: AbortSignal,
+  mood: StudioMood | null = null,
+  format: StudioFormat | null = null,
 ) {
   const params = new URLSearchParams({ q: query });
   if (type !== "all") params.set("type", type);
   if (genre) params.set("genre", genre);
+  if (mood) params.set("mood", mood);
+  if (format) params.set("format", format);
   return apiGet<StudioSearchResultDTO>(
     `/studio/search?${params.toString()}`,
     undefined,
@@ -78,6 +90,17 @@ export const getStudioTrack = (trackId: string) =>
 
 /** Genres with at least one listenable published release (no counts). */
 export const getStudioGenres = () => apiGet<StudioGenresDTO>("/studio/genres");
+
+/** Artist kinds: formats with published content, in map order. */
+export const getStudioFormats = () =>
+  apiGet<StudioFormatsDTO>("/studio/formats");
+
+/** Artist kinds: the newest published episodes across listenable shows. The
+ *  home shelf reads one page. */
+export const getStudioLatestEpisodes = (limit: number) =>
+  apiGet<StudioLatestEpisodesPageDTO>(
+    `/studio/episodes/latest?limit=${encodeURIComponent(String(limit))}`,
+  );
 
 /** Owners and co-owners only; anyone else gets a 404. */
 export const getStudioArtistStats = (subprofileId: string) =>
@@ -127,6 +150,10 @@ export const putStudioTrackOrder = (releaseId: string, trackIds: string[]) =>
 export const confirmStudioTrackAudio = (trackId: string, key: string) =>
   apiPost<StudioTrackDTO>(`/studio/tracks/${segment(trackId)}/audio`, { key });
 
+/** Artist kinds: publishes one draft episode of a live show. */
+export const publishStudioTrack = (trackId: string) =>
+  apiPost<StudioTrackDTO>(`/studio/tracks/${segment(trackId)}/publish`);
+
 export const publishStudioRelease = (releaseId: string) =>
   apiPost<StudioReleaseDTO>(`/studio/releases/${segment(releaseId)}/publish`);
 
@@ -146,8 +173,20 @@ export function studioErrorCodeOf(error: unknown): StudioErrorCode | null {
     : null;
 }
 
-/** A missing release or track, or a draft or taken-down one asked for by
- *  someone who does not own it: the contract answers all of them with 404. */
+/** A missing release or track, a draft, or one whose persona is gone, asked
+ *  for by someone who does not own it: the contract answers all of them with
+ *  404. A release our team took down answers 410 (`isStudioWithdrawn`). */
 export function isStudioNotFound(error: unknown): boolean {
   return error instanceof ApiError && error.status === 404;
+}
+
+/** A taken-down release, or one of its tracks, asked for by a listener: the
+ *  server answers 410 with `code: studio_release_withdrawn` and names
+ *  nothing else. A 410 without that code is an ordinary failure. */
+export function isStudioWithdrawn(error: unknown): boolean {
+  return (
+    error instanceof ApiError &&
+    error.status === 410 &&
+    studioErrorCodeOf(error) === "studio_release_withdrawn"
+  );
 }

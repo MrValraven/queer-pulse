@@ -26,6 +26,10 @@
  *      (`subprofiles/professionKinds.data.ts`) names only listed professions
  *      and backend kinds, and every listed profession is either mapped or
  *      deliberately left out
+ *  10. Studio artist kinds: backend `STUDIO_FORMAT_BY_KIND` against the
+ *      frontend mirror in `src/features/studio/api/studio.types.ts`, kind by
+ *      kind, format by format and in order; every kind in it is a backend
+ *      persona kind; and `STUDIO_GENRES` matches on both sides
  *
  * Exit codes: 0 in sync, 1 on any difference, 2 when the backend repo is not
  * checked out beside this one. It stays out of `build-gates.mjs` because the
@@ -74,6 +78,11 @@ const SOURCE_PATHS = {
   frontendCrosswalk: join(
     frontendRoot,
     "src/features/subprofiles/professionKinds.data.ts",
+  ),
+  backendStudioConstants: join(backendRoot, "src/studio/studio.constants.ts"),
+  frontendStudioTypes: join(
+    frontendRoot,
+    "src/features/studio/api/studio.types.ts",
   ),
   membersEnglish: join(frontendRoot, "src/shared/i18n/catalogs/en/members.ts"),
   membersPortuguese: join(
@@ -197,6 +206,81 @@ function compareOrderedIds(context, backendIds, frontendIds) {
       `${context}: order differs from position ${firstOrderMismatch} (backend "${sharedBackendOrder[firstOrderMismatch]}", frontend "${sharedFrontendOrder[firstOrderMismatch]}")`,
     );
   }
+}
+
+/**
+ * The initializer of `export const <name> = ...` in a TypeScript file, read
+ * with the parser (the backend constants file imports Nest, so it cannot be
+ * transpiled and imported here). `as const`, `satisfies` and parentheses are
+ * looked through.
+ */
+function exportedInitializer(sourcePath, name) {
+  if (!existsSync(sourcePath)) {
+    differences.push(`${name}: file not found at ${sourcePath}`);
+    return undefined;
+  }
+  const sourceFile = ts.createSourceFile(
+    sourcePath,
+    readFileSync(sourcePath, "utf8"),
+    ts.ScriptTarget.ES2022,
+    true,
+  );
+  for (const statement of sourceFile.statements) {
+    if (!ts.isVariableStatement(statement)) continue;
+    for (const declaration of statement.declarationList.declarations) {
+      if (!ts.isIdentifier(declaration.name)) continue;
+      if (declaration.name.text !== name || !declaration.initializer) continue;
+      let expression = declaration.initializer;
+      while (
+        ts.isAsExpression(expression) ||
+        ts.isSatisfiesExpression(expression) ||
+        ts.isParenthesizedExpression(expression)
+      ) {
+        expression = expression.expression;
+      }
+      return expression;
+    }
+  }
+  differences.push(`${name}: not declared in ${sourcePath}`);
+  return undefined;
+}
+
+/** The `key: "value"` pairs of an exported object literal, in source order. */
+function readStringPairs(sourcePath, name) {
+  const expression = exportedInitializer(sourcePath, name);
+  if (!expression) return undefined;
+  if (!ts.isObjectLiteralExpression(expression)) {
+    differences.push(`${name}: not an object literal in ${sourcePath}`);
+    return undefined;
+  }
+  const pairs = [];
+  for (const property of expression.properties) {
+    const isPair =
+      ts.isPropertyAssignment(property) &&
+      (ts.isIdentifier(property.name) || ts.isStringLiteral(property.name)) &&
+      ts.isStringLiteral(property.initializer);
+    if (!isPair) {
+      differences.push(
+        `${name}: an entry in ${sourcePath} is not a plain "kind: format" pair`,
+      );
+      continue;
+    }
+    pairs.push([property.name.text, property.initializer.text]);
+  }
+  return pairs;
+}
+
+/** The string items of an exported array literal, in order. */
+function readStringArray(sourcePath, name) {
+  const expression = exportedInitializer(sourcePath, name);
+  if (!expression) return undefined;
+  if (!ts.isArrayLiteralExpression(expression)) {
+    differences.push(`${name}: not an array literal in ${sourcePath}`);
+    return undefined;
+  }
+  return expression.elements
+    .filter((element) => ts.isStringLiteral(element))
+    .map((element) => element.text);
 }
 
 /** Record a missing or empty label for `key` in each named catalog. */
@@ -443,6 +527,42 @@ try {
     }
   }
 
+  // 10. Studio artist kinds: the persona kind → format map and the genres.
+  const backendFormatPairs = readStringPairs(
+    SOURCE_PATHS.backendStudioConstants,
+    "STUDIO_FORMAT_BY_KIND",
+  );
+  const frontendFormatPairs = readStringPairs(
+    SOURCE_PATHS.frontendStudioTypes,
+    "STUDIO_FORMAT_BY_KIND",
+  );
+  if (backendFormatPairs && frontendFormatPairs) {
+    compareOrderedIds(
+      "Studio format kinds",
+      backendFormatPairs.map(([kind]) => kind),
+      frontendFormatPairs.map(([kind]) => kind),
+    );
+    const frontendFormatByKind = Object.fromEntries(frontendFormatPairs);
+    for (const [kind, format] of backendFormatPairs) {
+      const frontendFormat = frontendFormatByKind[kind];
+      if (frontendFormat !== undefined && frontendFormat !== format) {
+        differences.push(
+          `Studio format of "${kind}": backend "${format}", frontend "${frontendFormat}"`,
+        );
+      }
+      if (!(kind in backendSectionsByKind)) {
+        differences.push(
+          `Studio format kinds: "${kind}" is not a backend persona kind`,
+        );
+      }
+    }
+  }
+  compareOrderedIds(
+    "Studio genres",
+    readStringArray(SOURCE_PATHS.backendStudioConstants, "STUDIO_GENRES"),
+    readStringArray(SOURCE_PATHS.frontendStudioTypes, "STUDIO_GENRES"),
+  );
+
   if (differences.length > 0) {
     for (const difference of differences) console.error(difference);
     console.error(
@@ -452,7 +572,7 @@ try {
   } else {
     const professionCount = Object.values(frontendByField).flat().length;
     console.log(
-      `work taxonomy in sync (${Object.keys(frontendByField).length} fields, ${professionCount} professions, ${jobFieldIds.length} job fields, ${Object.keys(frontendSectionsByKind).length} persona kinds, ${Object.keys(kindsByProfession).length} professions mapped to persona kinds)`,
+      `work taxonomy in sync (${Object.keys(frontendByField).length} fields, ${professionCount} professions, ${jobFieldIds.length} job fields, ${Object.keys(frontendSectionsByKind).length} persona kinds, ${Object.keys(kindsByProfession).length} professions mapped to persona kinds, ${frontendFormatPairs?.length ?? 0} Studio artist kinds)`,
     );
   }
 } finally {

@@ -57,6 +57,7 @@ export const REPORT_SUBJECT_LABEL_KEY: Record<ReportSubjectType, string> = {
   identity: "safety:myReports.subject.identity",
   group_listing: "safety:myReports.subject.group_listing",
   studio_release: "safety:myReports.subject.studio_release",
+  persona_post: "safety:myReports.subject.persona_post",
 };
 
 /** Demo-mode fallback for `useMyReports` — a few plausible entries so the page

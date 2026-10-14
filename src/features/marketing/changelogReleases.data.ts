@@ -15,9 +15,17 @@ export const CHANGELOG_RELEASE_NOTES: Record<
   string,
   { highlights: string[]; pushes?: number }
 > = {
+  "14 Oct 2026": {
+    highlights: [
+      "studio-artist-kinds",
+      "studio-listening",
+      "studio-v3-artist-tools",
+    ],
+    pushes: 4,
+  },
   "13 Oct 2026": {
     highlights: ["studio-v2", "marketing-flyers", "search-first-work-picker"],
-    pushes: 5,
+    pushes: 7,
   },
   "12 Oct 2026": {
     highlights: [

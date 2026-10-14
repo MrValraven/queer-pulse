@@ -1,0 +1,169 @@
+/* The press kit editor: one reading column under the creator hero. */
+.body {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 30px 16px;
+}
+
+.personaPick {
+  max-width: 320px;
+  margin: 18px auto 0;
+  padding: 0 16px;
+}
+
+.form {
+  min-width: 0;
+}
+
+.cardTitle {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: var(--text-18);
+  color: var(--studio-text);
+  letter-spacing: -0.012em;
+}
+
+.cardTitle em {
+  font-style: italic;
+  color: var(--studio-jade-text);
+}
+
+.group {
+  margin: 0 0 18px;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
+.legend {
+  padding: 0;
+  margin-bottom: 8px;
+  font-size: var(--text-12-5);
+  font-weight: 600;
+  color: var(--studio-text);
+}
+
+.label {
+  display: block;
+  margin: 12px 0 6px;
+  font-size: var(--text-12-5);
+  font-weight: 600;
+  color: var(--studio-text);
+}
+
+.hint {
+  margin: 0 0 10px;
+  font-size: var(--text-12);
+  color: var(--studio-text-muted);
+}
+
+.lineError {
+  margin: 8px 0 0;
+  font-size: var(--text-12);
+  color: var(--studio-accent-soft-text);
+}
+
+.picker {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.chosen,
+.quoteList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Rows fold their height away on removal. The space below each row is a
+   margin inside its flow-root item, so it folds with the row. */
+.chosenRow {
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: var(--tap-min);
+  padding: 4px 6px 4px 12px;
+  border-radius: var(--radius-10);
+  background: rgba(var(--studio-ink-rgb), 0.05);
+}
+
+.chosenText {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.chosenTitle {
+  font-weight: 600;
+  color: var(--studio-text);
+  overflow-wrap: anywhere;
+}
+
+.chosenRow[data-state="unavailable"] .chosenTitle,
+.chosenRow[data-state="pending"] .chosenTitle {
+  font-weight: 500;
+  font-style: italic;
+  color: var(--studio-text-muted);
+}
+
+.chosenMeta {
+  font-size: var(--text-12);
+  color: var(--studio-text-muted);
+  overflow-wrap: anywhere;
+}
+
+.iconButton {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: var(--tap-min);
+  height: var(--tap-min);
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: none;
+  color: var(--studio-text);
+  cursor: pointer;
+  transition-property: background-color, opacity;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease-std);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .iconButton:not([aria-disabled="true"]):hover {
+    background: rgba(var(--studio-ink-rgb), 0.08);
+  }
+}
+
+.iconButton[aria-disabled="true"] {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.iconButton:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.quotes {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.quoteRow {
+  margin-bottom: 10px;
+  padding: 12px 14px;
+  border-radius: var(--radius-12);
+  border: 1px solid rgba(var(--studio-ink-rgb), 0.18);
+}
+
+.quoteRow textarea {
+  resize: vertical;
+}

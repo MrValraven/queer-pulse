@@ -22,7 +22,7 @@ export function StudioAlbumSidebar({
   const { t } = useTranslation();
   const fmt = useFormat();
   return (
-    <div className={styles.sideCol}>
+    <>
       <div className={styles.buyCard}>
         <div className={styles.eb}>{t("studio:album.sidebar.buyEyebrow")}</div>
         <div className={styles.price}>
@@ -101,6 +101,6 @@ export function StudioAlbumSidebar({
           {t("studio:detail.fullLedgerCta")} <FiArrowRight aria-hidden />
         </Link>
       </div>
-    </div>
+    </>
   );
 }

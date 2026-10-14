@@ -22,11 +22,12 @@ vi.mock("./api/studioDemoApi", async (importOriginal) => {
     demoStudioReleasesPage: (
       cursor: string | null,
       genre: Parameters<typeof original.demoStudioReleasesPage>[1],
+      mood: Parameters<typeof original.demoStudioReleasesPage>[2],
     ) => {
       if (pageControl.shouldFail) throw new Error("browse failed");
       if (pageControl.isEmpty)
         return { items: [], pageInfo: { nextCursor: null, hasMore: false } };
-      return original.demoStudioReleasesPage(cursor, genre);
+      return original.demoStudioReleasesPage(cursor, genre, mood);
     },
   };
 });
@@ -63,7 +64,7 @@ describe("genre browsing (demo)", () => {
   it("asks for a genre when none is chosen", async () => {
     renderAt("/studio/browse");
     expect(
-      await screen.findByText("Pick a genre to see its releases"),
+      await screen.findByText("Pick a genre or a mood to see its releases"),
     ).toBeInTheDocument();
   });
 
@@ -96,7 +97,7 @@ describe("genre browsing (demo)", () => {
       await screen.findByRole("button", { name: /try again|retry/i }),
     ).toBeInTheDocument();
     expect(
-      screen.queryByText("Pick a genre to see its releases"),
+      screen.queryByText("Pick a genre or a mood to see its releases"),
     ).not.toBeInTheDocument();
     expect(screen.queryByText(/genres show up here/i)).not.toBeInTheDocument();
   });
@@ -110,5 +111,73 @@ describe("genre browsing (demo)", () => {
     expect(
       await screen.findByRole("link", { name: "Electronic" }),
     ).toHaveAttribute("href", "/studio/browse?genre=electronic");
+  });
+
+  it("browses by mood alone, with the Any genre chip current", async () => {
+    renderAt("/studio/browse?mood=tender");
+    const grid = await screen.findByRole("region", {
+      name: "Tender releases",
+    });
+    expect(
+      within(grid).getByRole("link", { name: "The kitchen in April" }),
+    ).toBeInTheDocument();
+    expect(
+      await screen.findByRole("link", { name: "Any genre", current: "page" }),
+    ).toHaveAttribute("href", "/studio/browse?mood=tender");
+  });
+
+  it("keeps the other filter on every chip", async () => {
+    renderAt("/studio/browse?genre=fado&mood=tender");
+    expect(await screen.findByRole("link", { name: "Folk" })).toHaveAttribute(
+      "href",
+      "/studio/browse?genre=folk&mood=tender",
+    );
+    // The mood row reads its own list, so it lands on its own clock.
+    expect(
+      await screen.findByRole("link", { name: "Tender", current: "page" }),
+    ).toHaveAttribute("href", "/studio/browse?genre=fado&mood=tender");
+    expect(
+      await screen.findByRole("link", { name: "Any mood" }),
+    ).toHaveAttribute("href", "/studio/browse?genre=fado");
+  });
+
+  it("names both filters when nothing matches", async () => {
+    pageControl.isEmpty = true;
+    renderAt("/studio/browse?genre=fado&mood=tender");
+    expect(
+      await screen.findByText(
+        "Nothing in Fado / contemporary with the mood Tender yet",
+      ),
+    ).toBeInTheDocument();
+  });
+
+  it("offers one Play radio button per chosen filter", async () => {
+    renderAt("/studio/browse?genre=fado&mood=tender");
+    expect(
+      await screen.findByRole("button", {
+        name: "Play Fado / contemporary radio",
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Play Tender radio" }),
+    ).toBeInTheDocument();
+  });
+
+  it("offers no radio before a filter is chosen", async () => {
+    renderAt("/studio/browse");
+    await screen.findByText("Pick a genre or a mood to see its releases");
+    expect(screen.queryByRole("button", { name: /radio/i })).toBeNull();
+  });
+
+  it("adds a mood row after the genres", async () => {
+    render(
+      <TestProviders initialEntries={["/studio"]}>
+        <StudioHomeGenres />
+      </TestProviders>,
+    );
+    const moods = await screen.findByRole("navigation", { name: "Moods" });
+    expect(
+      within(moods).getByRole("link", { name: "Late night" }),
+    ).toHaveAttribute("href", "/studio/browse?mood=late-night");
   });
 });

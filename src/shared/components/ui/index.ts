@@ -1,5 +1,6 @@
 export { Button, type ButtonVariant, type ButtonSize } from "./Button";
 export { Collapse } from "./Collapse";
+export { CollapseListItem } from "./CollapseListItem";
 export { IconButton } from "./IconButton";
 export { Card } from "./Card";
 export { Tag, TagRow, KindChip, type ChipKind } from "./Tag";

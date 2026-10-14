@@ -199,6 +199,21 @@
   }
 }
 
+/* Dark danger: the cream label on the lifted --danger (#e34646) is only
+   3.63:1, so the fill takes --danger-pressed (fixed #a01818, 7.2:1 under the
+   cream label) in both states and hover deepens it with a filter. Light is
+   unchanged. */
+:global([data-theme="dark"]) .danger {
+  background: var(--danger-pressed);
+}
+@media (hover: hover) {
+  :global([data-theme="dark"])
+    .danger:hover:not(:disabled):not([aria-disabled="true"]) {
+    background: var(--danger-pressed);
+    filter: brightness(0.9);
+  }
+}
+
 /* Soft: tonal coral. A flat tint with no border, shadow or hover lift, for a
    secondary action that still carries the brand. The label is --accent-text:
    --accent-ink over this tint is only 3.74:1 on paper, where --accent-text is

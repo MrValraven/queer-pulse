@@ -1,0 +1,133 @@
+.heading {
+  margin: 0 0 12px;
+  font-family: var(--serif);
+  font-size: var(--text-19);
+  color: var(--studio-text);
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr);
+  gap: 6px 12px;
+  align-items: center;
+}
+
+.cover {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-8);
+  overflow: hidden;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.title {
+  font-weight: 600;
+  color: var(--studio-text);
+  text-decoration: none;
+}
+
+.when {
+  font-size: var(--text-12-5);
+  color: var(--studio-text-muted);
+}
+
+.rowNotify,
+.edit {
+  grid-column: 2;
+  justify-self: start;
+}
+
+.edit {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: var(--tap-min);
+  padding: 0 14px;
+  border: 1px solid rgba(var(--studio-ink-rgb), 0.24);
+  border-radius: var(--radius-pill);
+  background: none;
+  color: var(--studio-text);
+  font: inherit;
+  font-size: var(--text-13);
+  text-decoration: none;
+  cursor: pointer;
+  transition-property: background-color, border-color;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+/* Its own line under the buttons: the card's second column, and a full
+   line after the hero's other actions (order and basis), so the line folds
+   open below them and nothing beside Notify me moves. */
+.status {
+  grid-column: 2;
+  flex-basis: 100%;
+  order: 1;
+  font-size: var(--text-12-5);
+  color: var(--studio-text-muted);
+}
+
+.statusText {
+  margin: 0;
+}
+
+/* Reserved: one line of height always, text fades with opacity only. */
+.statusReserved {
+  min-height: 1.4em;
+  line-height: 1.4;
+  opacity: 0;
+  transition: opacity var(--dur-base) var(--ease);
+}
+
+.statusReserved[data-is-shown] {
+  opacity: 1;
+}
+
+/* The shared ghost Button carries the shape, focus ring and disabled look;
+   the element selector outranks its size rule so phones keep a 44px target. */
+button.notify[aria-pressed="true"],
+button.notify[aria-pressed="true"]:hover:not(:disabled):not(
+    [aria-disabled="true"]
+  ),
+button.notify[aria-pressed="true"]:focus-visible {
+  border-color: var(--accent);
+  background: rgba(var(--accent-rgb), 0.1);
+}
+
+@media (--sm) {
+  button.notify {
+    min-height: var(--tap-min);
+  }
+}
+
+.edit:focus-visible,
+.title:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.note {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 32px;
+  padding: 16px 18px;
+  border-radius: var(--radius-12);
+  background: rgba(var(--studio-ink-rgb), 0.04);
+  color: var(--studio-text-muted);
+}

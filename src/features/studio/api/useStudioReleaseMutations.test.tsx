@@ -38,6 +38,8 @@ function artistViewOf(published: StudioReleaseView[]): StudioArtistView {
     followerCount: 0,
     isFollowing: false,
     playlists: [],
+    supportLinks: [],
+    upcoming: [],
   };
 }
 
@@ -161,6 +163,18 @@ describe("release mutations keep the lists in step", () => {
     expect(keys).toContainEqual(["studio", "trackPlaylists"]);
     expect(keys).toContainEqual(["studio", "search"]);
     expect(keys).toContainEqual(["studio", "stats"]);
+  });
+
+  it("invalidates the press kit after a live delete", async () => {
+    demoState.demoMode = false;
+    deleteStudioRelease.mockResolvedValue(undefined);
+    const { queryClient, wrapper } = setup();
+    const invalidate = vi.spyOn(queryClient, "invalidateQueries");
+    const { result } = renderHook(() => useDeleteStudioRelease(), { wrapper });
+    await act(() => result.current.mutateAsync({ releaseId: "r1" }));
+    await waitFor(() => expect(invalidate).toHaveBeenCalled());
+    const keys = invalidate.mock.calls.map((call) => call[0]?.queryKey);
+    expect(keys).toContainEqual(["studio", "studioPressKit"]);
   });
 
   it("leaves the demo playlist and stats caches alone after a demo delete", async () => {

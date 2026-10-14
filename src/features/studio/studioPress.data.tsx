@@ -3,14 +3,6 @@ import { Translation } from "../../shared/i18n/Translation";
 import type { TFunction } from "../../shared/i18n/types";
 import { StudioNumber } from "./StudioNumber";
 
-/** Round hero portrait for Mariana Sol (Unsplash). */
-export const PRESS_PORTRAIT =
-  "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=600&q=80";
-
-/** Latest-release cover art. */
-export const PRESS_COVER =
-  "https://images.unsplash.com/photo-1518609878373-06d740f60d8b?auto=format&fit=crop&w=600&q=80";
-
 /** Four hi-res press photos (each carries a hover download hint).
  *  `captionKey` is a `studioShowcase` catalog key (Pattern A). */
 export const PRESS_PHOTOS: { src: string; captionKey: string }[] = [
@@ -65,71 +57,10 @@ export const PRESS_FACTS: { labelKey: string; value: ReactNode }[] = [
   { labelKey: "studio:press.fact.forFansOf", value: "Cesária, Anohni" },
 ];
 
-/** Short + long bios. Each key carries `<em>` runs: the page renders them
- *  through `<Translation>`, the clipboard gets `buildBioCopy(t)`. */
-export const BIO_SHORT_KEY = "studioShowcase:press.bio.short";
-export const BIO_LONG_KEYS = [
-  "studioShowcase:press.bio.long.p1",
-  "studioShowcase:press.bio.long.p2",
-];
-
 /** Drop the `<em>` markers from a resolved catalog string (clipboard text). */
 export function stripEmphasis(text: string): string {
   return text.replace(/<\/?em>/g, "");
 }
-
-/** Both bios as plain text, paragraphs separated by a blank line. */
-export function buildBioCopy(t: TFunction): string {
-  return [BIO_SHORT_KEY, ...BIO_LONG_KEYS]
-    .map((key) => stripEmphasis(t(key)))
-    .join("\n\n");
-}
-
-/** Selected-press pull quotes. Outlet names stay literal; the medium after
- *  the dot comes from the catalog. */
-export const PRESS_QUOTES: { quoteKey: string; source: ReactNode }[] = [
-  {
-    quoteKey: "studioShowcase:press.quotes.shape",
-    source: (
-      <>
-        Shape <em>· Lisbon</em>
-      </>
-    ),
-  },
-  {
-    quoteKey: "studioShowcase:press.quotes.wire",
-    source: (
-      <>
-        The Wire{" "}
-        <em>
-          · <Translation i18nKey="studioShowcase:press.quotes.medium.print" />
-        </em>
-      </>
-    ),
-  },
-  {
-    quoteKey: "studioShowcase:press.quotes.pitchfork",
-    source: (
-      <>
-        Pitchfork{" "}
-        <em>
-          · <Translation i18nKey="studioShowcase:press.quotes.medium.feature" />
-        </em>
-      </>
-    ),
-  },
-  {
-    quoteKey: "studioShowcase:press.quotes.gayTimes",
-    source: (
-      <>
-        Gay Times{" "}
-        <em>
-          · <Translation i18nKey="studioShowcase:press.quotes.medium.review" />
-        </em>
-      </>
-    ),
-  },
-];
 
 const BOOKING_EMAIL = "bookings@marianasol.pt";
 const PRONOUNCE_GUIDE = "mah-ree-AH-nah SOL";
@@ -183,3 +114,9 @@ export function buildBoilerplate(t: TFunction): BoilerplateRow[] {
     },
   ];
 }
+
+/** The watermarked preview's track (a proper noun, kept literal). */
+export const PREVIEW_TRACK_TITLE = { pre: "Carta para a ", em: "santa" };
+
+/** The demo's press contact, named in the showcase contact line. */
+export const PRESS_CONTACT_EMAIL = "press@marianasol.pt";

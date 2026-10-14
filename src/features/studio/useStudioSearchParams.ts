@@ -1,19 +1,25 @@
 import { useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
-import { isStudioGenre } from "./api/studio.adapters";
+import {
+  isStudioFormat,
+  isStudioGenre,
+  isStudioMood,
+} from "./api/studio.adapters";
 import {
   STUDIO_SEARCH_TYPES,
+  type StudioFormat,
   type StudioGenre,
+  type StudioMood,
   type StudioSearchType,
 } from "./api/studio.types";
 
 const KNOWN_TYPES: ReadonlySet<string> = new Set(STUDIO_SEARCH_TYPES);
 
-/** The query, the filter and the genre live in the URL (`?q=`, `?type=`,
- *  `?genre=`), so a search can be shared and reloaded. A filter change, a
- *  genre change, Clear and a submitted search add a history entry, so Back
- *  walks them; typing writes the query with `isReplace`, so a half-typed word
- *  never fills the history. */
+/** The query, the filter, the genre and the mood live in the URL (`?q=`,
+ *  `?type=`, `?genre=`, `?mood=`, `?format=`), so a search can be shared and reloaded.
+ *  A filter change, a genre or mood change, Clear and a submitted search add
+ *  a history entry, so Back walks them; typing writes the query with
+ *  `isReplace`, so a half-typed word never fills the history. */
 export function useStudioSearchParams() {
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get("q") ?? "";
@@ -24,6 +30,12 @@ export function useStudioSearchParams() {
   const genreParam = searchParams.get("genre");
   const genre: StudioGenre | null = isStudioGenre(genreParam)
     ? genreParam
+    : null;
+  const moodParam = searchParams.get("mood");
+  const mood: StudioMood | null = isStudioMood(moodParam) ? moodParam : null;
+  const formatParam = searchParams.get("format");
+  const format: StudioFormat | null = isStudioFormat(formatParam)
+    ? formatParam
     : null;
 
   const update = useCallback(
@@ -54,6 +66,8 @@ export function useStudioSearchParams() {
     query,
     type,
     genre,
+    mood,
+    format,
     setQuery,
     setType: (nextType: StudioSearchType) =>
       update(
@@ -70,11 +84,29 @@ export function useStudioSearchParams() {
           nextGenre ? params.set("genre", nextGenre) : params.delete("genre"),
         false,
       ),
+    /** A history entry, like a filter change. */
+    setMood: (nextMood: StudioMood | null) =>
+      update(
+        (params) =>
+          nextMood ? params.set("mood", nextMood) : params.delete("mood"),
+        false,
+      ),
+    /** A history entry, like a filter change (Studio artist kinds). */
+    setFormat: (nextFormat: StudioFormat | null) =>
+      update(
+        (params) =>
+          nextFormat
+            ? params.set("format", nextFormat)
+            : params.delete("format"),
+        false,
+      ),
     clear: () =>
       update((params) => {
         params.delete("q");
         params.delete("type");
         params.delete("genre");
+        params.delete("mood");
+        params.delete("format");
       }, false),
   };
 }

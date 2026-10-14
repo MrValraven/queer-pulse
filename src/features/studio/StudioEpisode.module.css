@@ -1,0 +1,75 @@
+/* Carries the hidden-track greying onto the hero without a box of its own. */
+.heroFrame {
+  display: contents;
+}
+
+/* The hero's action groups: each wraps to a new line whole, so a narrow
+   width never strands Share or the start time. */
+.actionGroup,
+.actionPair {
+  display: flex;
+  align-items: center;
+  gap: inherit;
+}
+
+.actionGroup {
+  flex-wrap: wrap;
+}
+
+.notes,
+.sources {
+  max-width: 68ch;
+  margin: 0 0 32px;
+}
+
+.notes h2,
+.sources h2 {
+  margin: 0 0 12px;
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: var(--text-28);
+  color: var(--studio-text);
+}
+
+.notes p {
+  margin: 0 0 12px;
+  color: var(--studio-text);
+  overflow-wrap: anywhere;
+}
+
+.link {
+  color: var(--studio-accent-text);
+}
+
+.external {
+  margin-left: 2px;
+  vertical-align: -1px;
+}
+
+.time {
+  padding: 0 4px;
+  border: 0;
+  border-radius: var(--radius-4);
+  background: rgba(var(--studio-ink-rgb), 0.08);
+  color: var(--studio-accent-text);
+  font: inherit;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+}
+
+.link:focus-visible,
+.time:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.sources ul {
+  margin: 0;
+  padding-left: 1.2em;
+  color: var(--studio-text);
+}
+
+.sources li + li {
+  margin-top: 4px;
+}

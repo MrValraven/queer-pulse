@@ -86,6 +86,7 @@ export const safety: Catalog = {
   "myReports.subject.identity": "About a business chat",
   "myReports.subject.group_listing": "About a room in a housing group",
   "myReports.subject.studio_release": "About a Studio release",
+  "myReports.subject.persona_post": "About a persona update",
   "report.guide.meta.title": "How reporting works on QueerPulse",
   "report.guide.meta.description":
     "What happens after you submit a report on QueerPulse: our review process, the principles behind every decision, and a public log of past moderation outcomes.",

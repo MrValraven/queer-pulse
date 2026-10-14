@@ -587,6 +587,31 @@ export const OTHER_REPORTS: ModReport[] = [
     risk: { tone: "amber", key: "admin:moderation.risk.medium" },
     slaDueAt: new Date(Date.now() + 300 * 60_000).toISOString(),
   },
+  // Studio v3 demo: a report on a persona post, so demo admin shows the
+  // queue thumbnail and the drawer's Remove post panel.
+  {
+    id: "r-persona-post",
+    subjectType: "persona_post",
+    // Mariana's third post carries a photo, for the thumbnail and the
+    // drawer's photo.
+    subjectId: "demo-post-mariana-3",
+    severity: "low",
+    category: "Spam",
+    chips: [{ tone: "amber", labelKey: "admin:moderation.category.spam" }],
+    // As the live mapping builds it: the reason as the title, the
+    // resolver's "<persona>: <body>" excerpt as the preview, and the
+    // persona's creator as the reported member (moderator-only).
+    title: "Spam",
+    preview:
+      "Mariana Sol: track 9 has a new version now with the whole recording of my grandmother humming and thank you for every save this month honestly",
+    reporterName: "Rui C.",
+    reportedName: "tiago",
+    priorReports: { kind: "count", count: 0 },
+    reporterCredibility: { kind: "new" },
+    age: "3h",
+    risk: { tone: "amber", key: "admin:moderation.risk.medium" },
+    slaDueAt: new Date(Date.now() + 600 * 60_000).toISOString(),
+  },
   // PRD-360 / PRD-361 demo: a message report on an unsent photo, so demo mode
   // shows the message evidence block and the audited conversation viewer
   // (fixture in `adminReportConversationContext.data.ts`).
@@ -1307,12 +1332,14 @@ export const MOD_ACTIONS: ModAction[] = [
  *
  * A `studio_release` is taken down and restored from its own panel
  * (AdminStudioReleaseActions), so the generic hide and remove tiles stay off it.
+ * A `persona_post` is removed from its own panel (AdminPersonaPostActions).
  */
 const SUBJECT_TYPES_WITHOUT_CONTENT = new Set<ReportSubjectType>([
   "venue",
   "conversation",
   "identity",
   "studio_release",
+  "persona_post",
 ]);
 
 export function modActionsFor(subjectType: ReportSubjectType): ModAction[] {

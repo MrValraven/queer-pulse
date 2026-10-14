@@ -1,100 +1,71 @@
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
-  createElementAudioEngine,
+  createSimulatedAudioEngine,
   type StudioAudioEvent,
 } from "./studioAudioEngine";
 
-/** Just enough of an <audio> element: real events, recorded calls. */
-function createStubElement() {
-  const element = Object.assign(new EventTarget(), {
-    src: "",
-    currentTime: 0,
-    duration: Number.NaN,
-    error: null as MediaError | null,
-    playResult: Promise.resolve(),
-    getAttribute: (name: string): string | null =>
-      name === "src" && element.src ? element.src : null,
-    removeAttribute: (name: string): void => {
-      if (name === "src") element.src = "";
-    },
-    load: vi.fn(),
-    pause: vi.fn(),
-    play: vi.fn((): Promise<void> => element.playResult),
-  });
-  return element;
-}
+beforeEach(() => vi.useFakeTimers());
+afterEach(() => vi.useRealTimers());
 
-function setup() {
-  const element = createStubElement();
-  const engine = createElementAudioEngine(
-    element as unknown as HTMLAudioElement,
-  );
+function setup(duration = 10) {
+  const engine = createSimulatedAudioEngine(() => duration);
   const events: StudioAudioEvent[] = [];
   engine.subscribe((event) => events.push(event));
-  return { element, engine, events };
+  return { engine, events };
 }
 
-describe("createElementAudioEngine", () => {
-  it("applies only the latest load's start position", () => {
-    const { element, engine } = setup();
-    engine.load("https://stream.example/a", 42);
-    engine.load("https://stream.example/b", 0);
-    element.dispatchEvent(new Event("loadedmetadata"));
-    expect(element.currentTime).toBe(0);
-  });
-
-  it("resumes a refreshed source at its start position", () => {
-    const { element, engine } = setup();
-    engine.load("https://stream.example/a", 42);
-    element.dispatchEvent(new Event("loadedmetadata"));
-    expect(element.currentTime).toBe(42);
-  });
-
-  it("drops a pending start position on reset", () => {
-    const { element, engine } = setup();
-    engine.load("https://stream.example/a", 42);
-    engine.reset();
-    element.dispatchEvent(new Event("loadedmetadata"));
-    expect(element.currentTime).toBe(0);
-  });
-
-  it("reports a broken source once when play() rejects for it too", async () => {
-    const { element, engine, events } = setup();
-    engine.load("https://stream.example/a", 0);
-    element.error = { code: 4 } as MediaError;
-    element.playResult = Promise.reject(
-      new DOMException("Unsupported source", "NotSupportedError"),
-    );
-    element.dispatchEvent(new Event("error"));
+describe("createSimulatedAudioEngine", () => {
+  it("runs a clock while playing and ends on time", async () => {
+    const { engine, events } = setup(1);
+    engine.load("", 0, 0);
     await engine.play();
-    expect(events.filter((event) => event.type === "failed")).toHaveLength(1);
+    vi.advanceTimersByTime(1250);
+    expect(events.some((event) => event.type === "ended")).toBe(true);
   });
 
-  it("reads a refused autoplay as blocked", async () => {
-    const { element, engine, events } = setup();
-    engine.load("https://stream.example/a", 0);
-    element.playResult = Promise.reject(
-      new DOMException("Needs a gesture", "NotAllowedError"),
-    );
+  it("swaps to the preloaded track from zero and keeps playing", async () => {
+    const { engine, events } = setup(10);
+    engine.load("", 5, 0);
     await engine.play();
-    expect(events).toEqual([{ type: "blocked" }]);
+    engine.preload("", 0);
+    expect(engine.hasPreload()).toBe(true);
+    engine.handover("gapless");
+    expect(engine.hasPreload()).toBe(false);
+    expect(events.at(-1)).toEqual({ type: "time", seconds: 0 });
+    vi.advanceTimersByTime(500);
+    expect(events.at(-1)).toEqual({ type: "time", seconds: 0.5 });
   });
 
-  it("stays quiet when a newer load cuts a play short", async () => {
-    const { element, engine, events } = setup();
-    engine.load("https://stream.example/a", 0);
-    element.playResult = Promise.reject(
-      new DOMException("Replaced", "AbortError"),
-    );
+  it("moves the clock at the playback rate it is given", async () => {
+    const { engine, events } = setup(100);
+    engine.setPlaybackRate?.(2);
+    engine.load("", 0, 0);
     await engine.play();
-    expect(events).toEqual([]);
+    vi.advanceTimersByTime(500);
+    expect(events.at(-1)).toEqual({ type: "time", seconds: 1 });
+    engine.setPlaybackRate?.(1);
+    vi.advanceTimersByTime(500);
+    expect(events.at(-1)).toEqual({ type: "time", seconds: 1.5 });
   });
 
-  it("stops listening to the element once disposed", () => {
-    const { element, engine, events } = setup();
-    engine.dispose?.();
-    element.dispatchEvent(new Event("ended"));
-    element.dispatchEvent(new Event("timeupdate"));
-    expect(events).toEqual([]);
+  it("finishes a fade on time and reports a cancelled one", async () => {
+    const { engine } = setup(100);
+    const finished = engine.fadeOut(10);
+    vi.advanceTimersByTime(10_000);
+    await expect(finished).resolves.toBe(true);
+    const cancelled = engine.fadeOut(10);
+    engine.cancelFadeOut();
+    await expect(cancelled).resolves.toBe(false);
+  });
+
+  it("works every control in demo and never enters plain mode", () => {
+    const { engine } = setup();
+    engine.unlock();
+    engine.setVolume(0.3);
+    engine.setMuted(true);
+    engine.setLoudnessEven(false);
+    expect(engine.enterPlainMode()).toBe(false);
+    expect(engine.isPlainMode()).toBe(false);
+    expect(engine.remote).toBeNull();
   });
 });

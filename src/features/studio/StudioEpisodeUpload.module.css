@@ -1,0 +1,89 @@
+/* Episode mode spans the whole body grid (the release flow's sidebar column
+   has nothing to show here). */
+.main {
+  grid-column: 1 / -1;
+  min-width: 0;
+}
+
+.form {
+  max-width: 720px;
+}
+
+.form input[type="text"],
+.form textarea {
+  width: 100%;
+}
+
+.chapters {
+  margin: 12px 0;
+}
+
+.readChapters {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: var(--tap-min);
+  padding: 0 14px;
+  border: 1px solid rgba(var(--studio-ink-rgb), 0.2);
+  border-radius: var(--radius-pill);
+  background: none;
+  color: var(--studio-text);
+  font: inherit;
+  font-size: var(--text-13);
+  cursor: pointer;
+}
+
+.readChapters[aria-disabled="true"] {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.readChapters:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.status,
+.hint {
+  min-height: 1.4em;
+  margin: 4px 0;
+  font-size: var(--text-13);
+  color: var(--studio-text-muted);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.audio {
+  max-width: 720px;
+}
+
+.audio h2 {
+  margin: 0 0 12px;
+  font-size: var(--text-16);
+  color: var(--studio-text);
+}
+
+.progress {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 24px;
+  border: 1px dashed rgba(var(--studio-ink-rgb), 0.3);
+  border-radius: var(--radius-12);
+}
+
+.progress p {
+  margin: 0;
+  color: var(--studio-text);
+}
+
+.progress progress {
+  width: 100%;
+  accent-color: var(--accent);
+}

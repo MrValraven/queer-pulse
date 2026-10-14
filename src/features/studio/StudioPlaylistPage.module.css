@@ -118,16 +118,25 @@
 }
 
 @media (--sm) {
+  /* Phones: the title spans to the end of the first line; the second line
+     holds the owner's controls and, at its end, the duration cell with the
+     track menu. */
   .rowOwner {
-    grid-template-columns: 20px 24px 36px minmax(0, 1fr);
+    grid-template-columns: 20px 24px 36px minmax(0, 1fr) auto;
+  }
+
+  .rowOwner .main {
+    grid-column: 4 / -1;
   }
 
   .rowOwner .duration {
-    display: none;
+    grid-row: 2;
+    grid-column: 5;
   }
 
   .rowOwner .controls {
-    grid-column: 3 / -1;
+    grid-row: 2;
+    grid-column: 1 / 5;
     justify-content: flex-end;
   }
 }

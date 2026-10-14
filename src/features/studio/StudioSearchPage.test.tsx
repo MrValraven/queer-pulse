@@ -14,6 +14,7 @@ import {
 } from "./player/studioPlayerContext";
 import { StudioSearchTrackRow } from "./StudioSearchTrackRow";
 import { TestProviders } from "../../test/TestProviders";
+import { createStudioPlayerTestValue } from "../../test/studioPlayerTestValue";
 import { StudioSearchPage } from "./StudioSearchPage";
 
 describe("StudioSearchPage (demo fixture)", () => {
@@ -161,6 +162,8 @@ describe("StudioSearchTrackRow", () => {
             },
             publishedAt: "2026-04-12T10:00:00.000Z",
             genre: null,
+            mood: null,
+            scene: null,
           },
         },
       ],
@@ -168,9 +171,9 @@ describe("StudioSearchTrackRow", () => {
     const track = view.tracks[0];
     if (!track) throw new Error("fixture has no track");
     const value = {
-      queue: [],
-      currentIndex: 0,
+      ...createStudioPlayerTestValue(),
       status: "idle",
+      radio: null,
       currentItem: null,
       hasPrevious: false,
       hasNext: false,
@@ -284,5 +287,97 @@ describe("StudioSearchPage (v2)", () => {
     expect(
       within(releases).queryByRole("link", { name: "Bicha, with love" }),
     ).not.toBeInTheDocument();
+  });
+
+  it("narrows releases by the mood in the URL", async () => {
+    render(
+      <TestProviders
+        initialEntries={["/studio/search?q=a&type=releases&mood=sweaty"]}
+      >
+        <StudioSearchPage />
+      </TestProviders>,
+    );
+    expect(screen.getByRole("combobox", { name: "Mood" })).toHaveValue(
+      "sweaty",
+    );
+    const releases = await screen.findByRole("region", { name: /releases/i });
+    expect(
+      within(releases).getByRole("link", { name: "Bicha, with love" }),
+    ).toBeInTheDocument();
+    expect(
+      within(releases).queryByRole("link", { name: "Cidade dos santos" }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("writes a chosen mood into the URL", async () => {
+    render(
+      <TestProviders initialEntries={["/studio/search?q=a"]}>
+        <StudioSearchPage />
+      </TestProviders>,
+    );
+    fireEvent.change(screen.getByRole("combobox", { name: "Mood" }), {
+      target: { value: "melancholy" },
+    });
+    await waitFor(() =>
+      expect(screen.getByRole("combobox", { name: "Mood" })).toHaveValue(
+        "melancholy",
+      ),
+    );
+    const releases = await screen.findByRole("region", { name: /releases/i });
+    expect(
+      await within(releases).findByRole("link", { name: "Cidade dos santos" }),
+    ).toBeInTheDocument();
+    expect(
+      within(releases).queryByRole("link", { name: "Bicha, with love" }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("shows the title once when the artist is named like the release", () => {
+    const view = toSearchView({
+      releases: [],
+      artists: [],
+      playlists: [],
+      tracks: [
+        {
+          id: "t2",
+          position: 1,
+          title: "Chosen family dinners",
+          durationSeconds: 1800,
+          isExplicit: false,
+          hasAudio: true,
+          release: {
+            id: "r10",
+            title: "Late Bloomers",
+            type: "podcast",
+            coverUrl: null,
+            releasedOn: "2026-04-12",
+            trackCount: 3,
+            totalDurationSeconds: 600,
+            artist: {
+              id: "p2",
+              handle: "late-bloomers",
+              name: "Late Bloomers",
+              kind: "podcaster",
+              avatarUrl: null,
+            },
+            publishedAt: "2026-04-12T10:00:00.000Z",
+            genre: null,
+            mood: null,
+            scene: null,
+          },
+        },
+      ],
+    });
+    const track = view.tracks[0];
+    if (!track) throw new Error("fixture has no track");
+    render(
+      <TestProviders>
+        <ol>
+          <StudioSearchTrackRow track={track} />
+        </ol>
+      </TestProviders>,
+    );
+    expect(screen.getByText("Late Bloomers")).toBeInTheDocument();
+    expect(screen.queryByText("Late Bloomers · Late Bloomers")).toBeNull();
   });
 });

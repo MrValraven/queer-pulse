@@ -80,6 +80,56 @@ describe("studioRoutes", () => {
     expect(screen.getByText(page)).toBeInTheDocument();
   });
 
+  it.each([
+    ["/studio/help", "StudioHelpPage"],
+    ["/studio/about", "StudioAboutPage"],
+    ["/studio/terms", "StudioTermsPage"],
+    ["/studio/accessibility", "StudioAccessibilityPage"],
+    ["/studio/rights", "StudioRightsPage"],
+    ["/studio/withdrawn", "StudioWithdrawnPage"],
+    ["/studio/settings", "StudioSettingsPage"],
+    ["/studio/flag-review", "StudioFlagReviewPage"],
+  ])("opens %s for a granted member (open pages)", (path, page) => {
+    renderAt(path, { ...live, hasStudioAccess: true });
+    expect(screen.getByText(page)).toBeInTheDocument();
+  });
+
+  it.each([
+    ["/studio/press?id=p1", "StudioPressPage"],
+    ["/studio/press/edit?persona=p1", "StudioPressEditPage"],
+    ["/studio/press/print?id=p1", "StudioOneSheetPage"],
+    [`/studio/preview/${"a".repeat(64)}`, "StudioPreviewPage"],
+  ])("opens %s for a granted member (Studio v3)", (path, page) => {
+    renderAt(path, { ...live, hasStudioAccess: true });
+    expect(screen.getByText(page)).toBeInTheDocument();
+  });
+
+  it("opens the preview and the editor in the demo too", () => {
+    const demo = {
+      demoMode: true,
+      hasStudioAccess: true,
+      isStudioAccessPending: false,
+    };
+    const preview = renderAt(`/studio/preview/${"a".repeat(64)}`, demo);
+    expect(screen.getByText("StudioPreviewPage")).toBeInTheDocument();
+    preview.unmount();
+    renderAt("/studio/press/edit?persona=p1", demo);
+    expect(screen.getByText("StudioPressEditPage")).toBeInTheDocument();
+  });
+
+  it("keeps a preview link behind the grant", () => {
+    renderAt(`/studio/preview/${"a".repeat(64)}`, {
+      ...live,
+      hasStudioAccess: false,
+    });
+    expect(screen.getByText("StudioComingSoonPage")).toBeInTheDocument();
+  });
+
+  it("keeps Studio's own notifications page redirecting to Studio home", () => {
+    renderAt("/studio/notifications", { ...live, hasStudioAccess: true });
+    expect(screen.getByText("StudioPage")).toBeInTheDocument();
+  });
+
   it("keeps council and triage redirecting to Studio home", () => {
     renderAt("/studio/council", { ...live, hasStudioAccess: true });
     expect(screen.getByText("StudioPage")).toBeInTheDocument();
@@ -92,5 +142,36 @@ describe("studioRoutes", () => {
       isStudioAccessPending: false,
     });
     expect(screen.getByText("StudioBrowsePage")).toBeInTheDocument();
+  });
+
+  it("opens the scene page and the credits inbox for a granted member", () => {
+    const granted = { ...live, hasStudioAccess: true };
+    const scene = renderAt("/studio/scene?slug=mouraria-fado", granted);
+    expect(screen.getByText("StudioScenePage")).toBeInTheDocument();
+    scene.unmount();
+    renderAt("/studio/credits", granted);
+    expect(screen.getByText("StudioCreditsPage")).toBeInTheDocument();
+  });
+
+  it("keeps both behind the teaser for a member without a grant", () => {
+    const ungranted = { ...live, hasStudioAccess: false };
+    const scene = renderAt("/studio/scene?slug=mouraria-fado", ungranted);
+    expect(screen.getByText("StudioComingSoonPage")).toBeInTheDocument();
+    scene.unmount();
+    renderAt("/studio/credits", ungranted);
+    expect(screen.getByText("StudioComingSoonPage")).toBeInTheDocument();
+  });
+
+  it("serves both pages in demo mode", () => {
+    const demo = {
+      demoMode: true,
+      hasStudioAccess: true,
+      isStudioAccessPending: false,
+    };
+    const scene = renderAt("/studio/scene?slug=mouraria-fado", demo);
+    expect(screen.getByText("StudioScenePage")).toBeInTheDocument();
+    scene.unmount();
+    renderAt("/studio/credits", demo);
+    expect(screen.getByText("StudioCreditsPage")).toBeInTheDocument();
   });
 });

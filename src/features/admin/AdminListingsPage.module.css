@@ -32,6 +32,40 @@
   );
 }
 
+/* A view segment's label and its pending-count badge (ListingViewLabel). The
+   slot animates its own width and opacity open from nothing, so it clips the
+   pill while it grows; the pill is the same shape and type as the admin rail's
+   count (`.navCount`, AdminShell.module.css) at the tab strip's size
+   (`.tabCount`, adminUi.module.css). */
+.viewLabel {
+  display: inline-flex;
+  align-items: center;
+}
+.viewCountSlot {
+  display: inline-flex;
+  overflow: hidden;
+}
+/* Amber means "waiting", the same tone as the rail's Listings pill. The fill
+   is light in both themes, so the figure on it stays plum in both: about 8:1
+   over amber, on the white selected segment and on the tray alike. */
+.viewCount {
+  display: inline-flex;
+  justify-content: center;
+  /* The gap a segment leaves between its parts (`.segBtn`, Controls.module.css),
+     inside the clipping slot so it opens and closes with the pill. */
+  margin-inline-start: 7px;
+  min-width: 20px;
+  padding: 1px 6px;
+  border-radius: var(--radius-pill);
+  background: var(--amber);
+  /* css-scale-allow: non-flipping-text */
+  color: var(--plum);
+  font-size: var(--text-11);
+  font-weight: 700;
+  line-height: 1.4;
+  font-variant-numeric: tabular-nums;
+}
+
 /* The view switcher (Submissions / Edit suggestions / Ownership claims) is
    wider than a phone. Its FadeIn wrapper becomes a horizontal scroller with a
    hidden scrollbar, padded so a segment's focus ring (3px outline at a 3px

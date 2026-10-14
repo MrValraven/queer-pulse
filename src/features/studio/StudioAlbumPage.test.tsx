@@ -5,9 +5,13 @@ import {
   waitFor,
   within,
 } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { useLocation } from "react-router-dom";
+import { beforeEach, describe, expect, it } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
+import { resetDemoCreditLedger } from "./api/studioDemoCreditLedger";
 import { StudioAlbumPage } from "./StudioAlbumPage";
+
+beforeEach(() => resetDemoCreditLedger());
 
 describe("StudioAlbumPage (demo fixture)", () => {
   it("formats the hero facts from data", async () => {
@@ -35,7 +39,7 @@ describe("StudioAlbumPage (demo fixture)", () => {
       </TestProviders>,
     );
     fireEvent.click(
-      await screen.findByRole("button", { name: /more actions/i }),
+      await screen.findByRole("button", { name: /^more actions$/i }),
     );
     fireEvent.click(screen.getByRole("menuitem", { name: /report release/i }));
     expect(await screen.findByRole("dialog")).toBeInTheDocument();
@@ -48,7 +52,7 @@ describe("StudioAlbumPage (demo fixture)", () => {
       </TestProviders>,
     );
     const trigger = await screen.findByRole("button", {
-      name: /more actions/i,
+      name: /^more actions$/i,
     });
     fireEvent.click(trigger);
     fireEvent.click(screen.getByRole("menuitem", { name: /report release/i }));
@@ -88,7 +92,64 @@ describe("StudioAlbumPage (demo fixture)", () => {
       screen.queryByRole("button", { name: /^save$/i }),
     ).not.toBeInTheDocument();
     expect(
-      screen.queryByRole("button", { name: /more actions/i }),
+      screen.queryByRole("button", { name: /^more actions$/i }),
+    ).not.toBeInTheDocument();
+    // A taken-down release streams nothing, so its rows carry no track menu.
+    expect(
+      screen.queryByRole("button", { name: /^more actions for /i }),
+    ).not.toBeInTheDocument();
+  });
+});
+
+function LocationProbe() {
+  const location = useLocation();
+  return (
+    <output data-testid="location">
+      {location.pathname + location.search}
+    </output>
+  );
+}
+
+describe("StudioAlbumPage: a release our team took down", () => {
+  it("shows the withdrawn view in place, at the same URL", async () => {
+    render(
+      <TestProviders
+        initialEntries={["/studio/album?id=demo-release-withdrawn"]}
+      >
+        <StudioAlbumPage />
+        <LocationProbe />
+      </TestProviders>,
+    );
+    expect(
+      await screen.findByRole("heading", {
+        level: 1,
+        name: "This release was withdrawn",
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: "Back to Studio home" }),
+    ).toHaveAttribute("href", "/studio");
+    expect(
+      screen.getByRole("link", { name: "How takedowns work" }),
+    ).toHaveAttribute("href", "/studio/rights");
+    expect(screen.getByTestId("location")).toHaveTextContent(
+      "/studio/album?id=demo-release-withdrawn",
+    );
+  });
+
+  it("keeps the not-found state for a release that does not exist", async () => {
+    render(
+      <TestProviders initialEntries={["/studio/album?id=demo-release-nope"]}>
+        <StudioAlbumPage />
+      </TestProviders>,
+    );
+    expect(
+      await screen.findByRole("heading", {
+        name: "We can't find that in Studio",
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByText("This release was withdrawn"),
     ).not.toBeInTheDocument();
   });
 });

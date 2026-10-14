@@ -1,6 +1,11 @@
 import { useEffect } from "react";
 import { FiX } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import {
+  clearStudioEpisodeMemory,
+  endStudioEpisodeSaving,
+} from "../studio/player/studioEpisodeMemory";
+import { endStudioQueueSaving } from "../studio/player/studioQueueStorage";
 import styles from "./QuickExit.module.css";
 
 const SAFE_DESTINATION = "https://www.google.com";
@@ -22,6 +27,15 @@ const HISTORY_BURY_DEPTH = 30;
  * out.
  */
 function leaveNow() {
+  // Forget the Studio player's queue saved in this tab first, and stop it
+  // being saved again by the pagehide the leave itself fires (it never
+  // throws), so nothing about the visit stays behind in session storage.
+  endStudioQueueSaving();
+  // The same for Studio's episode memory (played marks, saved places and
+  // speed, for every member on this device): remove it, then stop the
+  // tracker's pagehide save from writing it back as the page goes.
+  clearStudioEpisodeMemory();
+  endStudioEpisodeSaving();
   // History scrub: replace() alone only neutralises the current page, leaving
   // earlier QueerPulse pages reachable with Back. Stack sentinel entries first
   // to bury that trail, then replace the top of the stack with the external

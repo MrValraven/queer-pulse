@@ -1,5 +1,6 @@
 import { useId, useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
+import { AnimatePresence } from "motion/react";
 import { ConfirmDialog } from "../../shared/components/ui";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -16,9 +17,10 @@ import {
   type OwnerAction,
   type OwnerRow,
 } from "./StudioOwnerReleaseRow";
+import { StudioPreviewLinkDialog } from "./StudioPreviewLinkDialog";
 import ownerStyles from "./StudioArtistOwner.module.css";
 
-type ConfirmedAction = Exclude<OwnerAction, "publish">;
+type ConfirmedAction = Exclude<OwnerAction, "publish" | "previewLink">;
 
 function ownerRowsOf(artist: StudioArtistView): OwnerRow[] {
   return [
@@ -27,19 +29,22 @@ function ownerRowsOf(artist: StudioArtistView): OwnerRow[] {
       status: release.status,
       statusLabelKey: release.statusLabelKey,
       takedownReason: release.takedownReason,
+      publishAt: release.publishAt,
     })),
     ...[...artist.releases, ...artist.singles].map((release) => ({
       release,
       status: "published" as const,
       statusLabelKey: "studio:releaseStatus.published",
       takedownReason: null,
+      publishAt: null,
     })),
   ];
 }
 
-/** The owner's own releases: drafts and taken-down ones (from ownerReleases)
- *  then published ones. One confirm dialog lives here, outside the rows, so a
- *  row leaving the list after a delete never unmounts its own dialog. After
+/** The owner's own releases: drafts, scheduled and taken-down ones (from
+ *  ownerReleases) then published ones. One confirm dialog and the preview
+ *  link dialog live here, outside the rows, so a row changing or leaving the
+ *  list never unmounts its own dialog. After
  *  an action focus lands on the panel heading; a delete that empties the list
  *  removes the panel too, so `onListEmptied` hands focus to the page. */
 export function StudioArtistOwnerPanel({
@@ -61,6 +66,7 @@ export function StudioArtistOwnerPanel({
     action: ConfirmedAction;
     row: OwnerRow;
   } | null>(null);
+  const [previewRow, setPreviewRow] = useState<OwnerRow | null>(null);
   const [rowErrors, setRowErrors] = useState<Record<string, string>>({});
   // The ref guards against a second press before React re-renders; the state
   // copy drives aria-disabled on the rows and the dialog's loading flag.
@@ -108,7 +114,8 @@ export function StudioArtistOwnerPanel({
   }
 
   function handleAction(action: OwnerAction, row: OwnerRow) {
-    if (action === "publish") void run(action, row);
+    if (action === "previewLink") setPreviewRow(row);
+    else if (action === "publish") void run(action, row);
     else setPending({ action, row });
   }
 
@@ -161,6 +168,16 @@ export function StudioArtistOwnerPanel({
             : t("studio:owner.unpublishConfirm")
         }
       />
+      <AnimatePresence>
+        {previewRow && (
+          <StudioPreviewLinkDialog
+            key={previewRow.release.id}
+            releaseId={previewRow.release.id}
+            releaseTitle={previewRow.release.title}
+            onClose={() => setPreviewRow(null)}
+          />
+        )}
+      </AnimatePresence>
     </section>
   );
 }

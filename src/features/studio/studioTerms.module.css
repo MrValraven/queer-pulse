@@ -83,7 +83,7 @@
   width: 22px;
   height: 22px;
 }
-.dealCard h4 {
+.dealCard h3 {
   font-family: var(--serif);
   font-weight: 400;
   font-size: var(--text-19);
@@ -91,7 +91,7 @@
   letter-spacing: -0.01em;
   margin-bottom: 8px;
 }
-.dealCard h4 em {
+.dealCard h3 em {
   font-style: italic;
   color: var(--studio-accent-text);
 }
@@ -151,9 +151,17 @@
   text-decoration: underline;
   text-underline-offset: 2px;
 }
+.liveSec p {
+  max-width: 48ch;
+}
 .muted {
   color: var(--text-40) !important;
   font-size: var(--text-14) !important;
+}
+.muted a {
+  color: var(--studio-accent-text);
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 .muted em {
   color: var(--studio-jade-text);
@@ -199,7 +207,7 @@
   display: inline-block;
   margin-bottom: 12px;
 }
-.lic h4 {
+.lic h3 {
   font-family: var(--serif);
   font-weight: 400;
   font-size: var(--text-17);
@@ -207,7 +215,7 @@
   letter-spacing: -0.01em;
   margin-bottom: 14px;
 }
-.lic h4 em {
+.lic h3 em {
   font-style: italic;
   color: var(--studio-accent-text);
 }
@@ -261,7 +269,7 @@
   flex: 1;
   min-width: 240px;
 }
-.mt h4 {
+.mt h2 {
   font-family: var(--serif);
   font-weight: 400;
   font-size: var(--text-18);

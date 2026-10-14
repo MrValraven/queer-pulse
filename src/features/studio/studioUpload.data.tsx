@@ -169,9 +169,9 @@ export function buildUploadSideInfo(t: TFunction) {
   ];
 }
 
-/** The live sidebar: what v1 really does with a file (kept as uploaded, no
- *  loudness work, no ISRC). */
-export function buildUploadSideInfoLive(t: TFunction) {
+/** The live sidebar: what Studio really does with a file (kept as uploaded,
+ *  loudness measured as it uploads, no ISRC). */
+export function buildUploadSideInfoLive(t: TFunction, isShow = false) {
   return [
     {
       eyebrow: t("studio:uploadFlow.side.eyebrow"),
@@ -190,12 +190,21 @@ export function buildUploadSideInfoLive(t: TFunction) {
         },
         {
           label: t("studio:uploadFlow.side.size.label"),
-          value: t("studio:uploadFlow.side.size.value"),
+          value: t(
+            isShow
+              ? "studio:uploadFlow.side.size.valueShow"
+              : "studio:uploadFlow.side.size.value",
+          ),
           em: false,
         },
         {
           label: t("studio:uploadFlow.side.listeners.label"),
           value: t("studio:uploadFlow.side.listeners.value"),
+          em: false,
+        },
+        {
+          label: t("studio:uploadFlow.side.loudness.label"),
+          value: t("studio:uploadFlow.side.loudness.value"),
           em: false,
         },
       ],

@@ -40,6 +40,9 @@ export const AUDIT_ACTION_LABEL_KEY: Partial<Record<string, string>> = {
   studio_access_revoked: "admin:moderation.action.studioAccessRevoked",
   studio_release_taken_down: "admin:moderation.action.studioReleaseTakenDown",
   studio_release_restored: "admin:moderation.action.studioReleaseRestored",
+  // Studio v3: staff removed a reported persona post. Names the persona
+  // only, like the release takedown rows.
+  persona_post_removed: "admin:moderation.action.personaPostRemoved",
 };
 
 /** The moderator-facing label for one audit entry. An unmapped code falls

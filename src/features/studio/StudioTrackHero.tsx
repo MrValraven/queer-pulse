@@ -1,11 +1,18 @@
+import { useSearchParams } from "react-router-dom";
 import { FiCheck, FiHeart, FiPause, FiPlay, FiPlus } from "react-icons/fi";
 import { ImageSlot } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
-import type { StudioTrackView } from "./api/studio.adapters";
+import { formatTrackTime, type StudioTrackView } from "./api/studio.adapters";
+import { useStudioHideExplicit } from "./api/useStudioPlaybackPreferences";
 import { useStudioPlayer } from "./player/studioPlayerContext";
+import { parseStartSeconds } from "./player/studioTimestampLink";
+import { StudioTrackMenu } from "./player/ui/StudioTrackMenu";
 import { StudioAddToPlaylistButton } from "./StudioAddToPlaylistButton";
+import { StudioHiddenTrackNote } from "./StudioHiddenTrack";
+import hiddenCss from "./StudioHiddenTrack.module.css";
+import heroStyles from "./StudioTrackHero.module.css";
 import { useStudioSaveToggle } from "./useStudioSaveToggle";
 import { useStudioShowcase } from "./useStudioShowcase";
 import ss from "./studio.module.css";
@@ -32,9 +39,23 @@ export function StudioTrackHero({
   });
   const isCurrent = player.isCurrentTrack(track.id);
   const isPlaying = isCurrent && player.status === "playing";
+  const isHidden = useStudioHideExplicit() && track.isExplicit;
+  const [searchParams] = useSearchParams();
+  // A shared timestamp link (?t=) applies until this track is the current
+  // one; a hidden track or one without audio has no play to carry it.
+  const startAtSeconds =
+    isCurrent || isHidden || !track.hasAudio
+      ? null
+      : parseStartSeconds(searchParams, track.durationSeconds);
+  const startLabel =
+    startAtSeconds === null ? null : (formatTrackTime(startAtSeconds) ?? null);
 
   return (
-    <section className={`${ss.hero} ${ss.heroTight}`}>
+    <section
+      className={[ss.hero, ss.heroTight, isHidden && hiddenCss.hidden]
+        .filter(Boolean)
+        .join(" ")}
+    >
       <div className={ss.heroInner}>
         <div className={ss.heroArt}>
           <ImageSlot
@@ -75,25 +96,44 @@ export function StudioTrackHero({
                 <span>{t("studio:release.explicit")}</span>
               </>
             )}
+            {isHidden && <StudioHiddenTrackNote />}
           </div>
           <div className={ss.heroActions}>
-            <button
-              type="button"
-              className={ss.playBig}
-              disabled={!track.hasAudio}
-              aria-label={
-                isPlaying
-                  ? t("studio:release.pauseTrack", { title: track.title })
-                  : t("studio:release.playTrack", { title: track.title })
-              }
-              onClick={() =>
-                isCurrent
-                  ? player.togglePlay()
-                  : void player.playRelease(track.releaseId, track.id)
-              }
-            >
-              {isPlaying ? <FiPause aria-hidden /> : <FiPlay aria-hidden />}
-            </button>
+            {!isHidden && (
+              <button
+                type="button"
+                className={ss.playBig}
+                disabled={!track.hasAudio}
+                aria-label={
+                  startLabel
+                    ? t("studio:player.playFromAria", {
+                        title: track.title,
+                        time: startLabel,
+                      })
+                    : isPlaying
+                      ? t("studio:release.pauseTrack", { title: track.title })
+                      : t("studio:release.playTrack", { title: track.title })
+                }
+                onClick={() => {
+                  if (isCurrent) player.togglePlay();
+                  else if (startAtSeconds === null)
+                    void player.playRelease(track.releaseId, track.id);
+                  else
+                    void player.playRelease(
+                      track.releaseId,
+                      track.id,
+                      startAtSeconds,
+                    );
+                }}
+              >
+                {isPlaying ? <FiPause aria-hidden /> : <FiPlay aria-hidden />}
+              </button>
+            )}
+            {startLabel && (
+              <span className={heroStyles.playFromLabel} aria-hidden="true">
+                {t("studio:player.playFrom", { time: startLabel })}
+              </span>
+            )}
             <button
               type="button"
               aria-pressed={save.isSaved}
@@ -114,6 +154,15 @@ export function StudioTrackHero({
               trackIds={track.hasAudio ? [track.id] : []}
               subjectTitle={track.title}
               label={t("studio:playlist.add.trackCta")}
+            />
+            <StudioTrackMenu
+              track={{
+                id: track.id,
+                title: track.title,
+                href: track.href,
+                hasAudio: track.hasAudio,
+                isExplicit: track.isExplicit,
+              }}
             />
             {isShowcase && (
               <button type="button" className={ss.tip} onClick={onTip}>

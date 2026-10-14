@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Button, ConfirmDialog, ImageSlot } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { STUDIO_LIMITS } from "../studio/api/studio.types";
+import { studioErrorMessageKeyOf } from "../studio/studioErrors.data";
 import type { ModReport } from "./adminModeration.data";
 import {
   useRestoreStudioRelease,
@@ -26,6 +27,7 @@ export function AdminStudioReleaseActions({ report }: { report: ModReport }) {
   const [lastAction, setLastAction] = useState<"takenDown" | "restored" | null>(
     null,
   );
+  const [restoreErrorKey, setRestoreErrorKey] = useState<string | null>(null);
   const actionRowRef = useRef<HTMLDivElement>(null);
   const shouldFocusSwappedButton = useRef(false);
   const release = staffView.data ?? null;
@@ -120,13 +122,15 @@ export function AdminStudioReleaseActions({ report }: { report: ModReport }) {
         role="status"
         className={`${studioStyles.status} ${studioStyles.panelNote}`}
       >
-        {lastAction === "takenDown"
-          ? t("admin:moderation.studioRelease.takenDownNote")
-          : lastAction === "restored"
-            ? release.status === "published"
-              ? t("admin:moderation.studioRelease.restoredNote")
-              : t("admin:moderation.studioRelease.restoredDraftNote")
-            : ""}
+        {restoreErrorKey && isTakenDown
+          ? t(restoreErrorKey)
+          : lastAction === "takenDown"
+            ? t("admin:moderation.studioRelease.takenDownNote")
+            : lastAction === "restored"
+              ? release.status === "published"
+                ? t("admin:moderation.studioRelease.restoredNote")
+                : t("admin:moderation.studioRelease.restoredDraftNote")
+              : ""}
       </p>
       <div
         ref={actionRowRef}
@@ -139,6 +143,7 @@ export function AdminStudioReleaseActions({ report }: { report: ModReport }) {
             aria-disabled={restore.isPending || undefined}
             onClick={() => {
               if (!restore.isPending) {
+                setRestoreErrorKey(null);
                 restore.mutate(
                   { releaseId: report.subjectId },
                   {
@@ -146,6 +151,8 @@ export function AdminStudioReleaseActions({ report }: { report: ModReport }) {
                       shouldFocusSwappedButton.current = true;
                       setLastAction("restored");
                     },
+                    onError: (error) =>
+                      setRestoreErrorKey(studioErrorMessageKeyOf(error)),
                   },
                 );
               }
@@ -173,6 +180,7 @@ export function AdminStudioReleaseActions({ report }: { report: ModReport }) {
               onSuccess: () => {
                 shouldFocusSwappedButton.current = true;
                 setLastAction("takenDown");
+                setRestoreErrorKey(null);
                 setIsTakingDown(false);
                 setReason("");
               },

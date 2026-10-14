@@ -11,7 +11,25 @@ import { ApiError } from "../../shared/api/client";
 import type { StudioTrackRowView } from "./api/studio.adapters";
 import { StudioAudioUploadError } from "./api/studioAudioUpload";
 import { FileList } from "./StudioUploadFileList";
+import type { StudioUploadAnalysis } from "./upload/useStudioUploadAnalysis";
 import { useStudioTrackUploads } from "./useStudioTrackUploads";
+
+const NO_ANALYSIS: StudioUploadAnalysis = {
+  statusOf: () => null,
+  analysisOf: () => null,
+  fileOf: () => null,
+  measuredTrackIds: new Set(),
+  hasPendingAnalysis: false,
+};
+
+/** The Listening props FileList needs: a single, nothing measured. */
+const LISTENING_PROPS = {
+  analysis: NO_ANALYSIS,
+  storedLoudness: new Map(),
+  backfillCount: 0,
+  releaseType: "single" as const,
+  format: "music" as const,
+};
 
 const createTrack = vi.fn();
 const confirmAudio = vi.fn();
@@ -402,7 +420,13 @@ describe("useStudioTrackUploads queueing, order and focus", () => {
         trackRow("b", "B"),
       ]);
       return (
-        <FileList uploads={uploads} releaseId="r1" isStructureLocked={false} />
+        <FileList
+          uploads={uploads}
+          releaseId="r1"
+          releaseTitle="Salt water"
+          isPublished={false}
+          {...LISTENING_PROPS}
+        />
       );
     }
     render(<Harness />);

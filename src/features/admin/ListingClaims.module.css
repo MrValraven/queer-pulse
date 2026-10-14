@@ -1,0 +1,222 @@
+/* ── Ownership claims queue ──────────────────────────────────────────────
+   The "Ownership claims" view of /admin/listings, built as the same kind of
+   surface as the Submissions queue (`.queuePanel` in
+   AdminListingsPage.module.css): one paper panel holding a head (what this
+   queue is, plus the status tabs), then the body (skeleton, error, empty
+   state, or the rows). The panel is the `listingClaims` inline-size container
+   the row layout queries, so an open admin sidebar never desyncs it. */
+.panel {
+  margin-top: 16px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-card);
+  container-type: inline-size;
+  container-name: listingClaims;
+}
+
+.panelHead {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 18px 18px 16px;
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+.intro {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 0;
+  max-width: 62ch;
+  font-size: var(--text-14);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+.introIcon {
+  flex: none;
+  margin-top: 3px;
+  color: var(--accent-text);
+}
+
+/* The error and empty states get room to breathe inside the panel body. */
+.panelMessage {
+  padding: 8px 18px 24px;
+}
+
+.loadMore {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+/* ── Rows ──────────────────────────────────────────────────────────────── */
+.rows {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* The animated wrapper of one row. Hairlines sit between rows; the panel
+   head draws the line above the first one. */
+.rowItem + .rowItem .row {
+  border-top: 1px solid rgba(var(--line-rgb), 0.07);
+}
+
+.row {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+  padding: 18px;
+}
+
+.rowText {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.rowTop {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 10px;
+}
+
+.rowTitle {
+  margin: 0;
+  min-width: 0;
+  font-family: var(--serif);
+  font-size: var(--text-17);
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.rowTitleLink {
+  color: inherit;
+  text-decoration: none;
+  border-radius: var(--radius-4);
+}
+@media (hover: hover) {
+  .rowTitleLink:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+  }
+}
+
+.rowMeta {
+  margin: 4px 0 0;
+  font-size: var(--text-13);
+  line-height: 1.45;
+  color: var(--ink-60);
+}
+
+.rowRef {
+  color: var(--ink-40);
+  font-variant-numeric: tabular-nums;
+}
+
+.claimant {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+  font-size: var(--text-13-5);
+  color: var(--ink-60);
+}
+
+.claimantName {
+  font-weight: 600;
+  color: var(--text-strong);
+}
+
+.claimantLink {
+  font-weight: 600;
+  color: var(--text-strong);
+  text-decoration: underline;
+  text-decoration-color: rgba(var(--line-rgb), 0.3);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  border-radius: var(--radius-4);
+}
+@media (hover: hover) {
+  .claimantLink:hover {
+    text-decoration-color: currentColor;
+  }
+}
+
+/* The claimant's own words, set apart as a labelled quote so a moderator
+   reads them as the member's account of things. */
+.note {
+  margin: 12px 0 0;
+  padding: 10px 14px 12px;
+  max-width: 68ch;
+  background: rgba(var(--line-rgb), 0.03);
+  border-left: 3px solid rgba(var(--accent-rgb), 0.5);
+  border-radius: 0 var(--radius-12) var(--radius-12) 0;
+}
+
+.noteLabel {
+  font-size: var(--text-11-5);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
+
+.noteQuote {
+  margin: 4px 0 0;
+  font-family: var(--serif);
+  font-size: var(--text-15);
+  font-style: italic;
+  line-height: 1.5;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.rowActions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: none;
+}
+
+/* A narrow panel (a phone, in practice) drops the actions below the text and
+   lets the two buttons share the full width. */
+@container listingClaims (max-width: 600px) {
+  .row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+  }
+
+  .rowActions > * {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+}
+
+/* A phone-width panel cannot fit both full labels side by side (PT runs
+   longest), so the actions stack, primary on top. */
+@container listingClaims (max-width: 420px) {
+  .rowActions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+/* ── Skeleton rows, shaped like the real ones ──────────────────────────── */
+.skeletonLines {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.skeletonClaimant {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 6px;
+}

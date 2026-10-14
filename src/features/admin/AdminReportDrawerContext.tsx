@@ -328,24 +328,31 @@ export function ReportContextFallback({ report }: { report: ModReport }) {
   // Demo fixtures only. See `ReportContext`.
   const demoPortrait = useDemoPortrait();
   const anonReporter = isAnonymousReporter(report.reporterName);
+  const isPersonaPost = report.subjectType === "persona_post";
   const reportedInitials = (
     report.reportedName.replace(/^@/, "")[0] ?? "?"
   ).toUpperCase();
   return (
     <>
-      <section className={styles.dSec}>
-        <h3 className={styles.dSecLabel}>
-          {t("admin:moderation.reportDrawer.contentTitle")}
-        </h3>
-        <p className={styles.dContentAuthor}>{report.reportedName}</p>
-        <blockquote className={styles.dExcerpt}>{report.preview}</blockquote>
-        {/* The fallback names somebody too, so it needs the same warning. */}
-        <AmbiguousAuthorsNote subjectType={report.subjectType} />
-        <p className={styles.dTransparency}>
-          <FiInfo aria-hidden />{" "}
-          {t("admin:moderation.reportDrawer.limitedContext")}
-        </p>
-      </section>
+      {/* A persona_post report carries its own "Reported update" panel
+          below, which names the persona and shows the body and photo, and
+          "People involved" names the reported member, so this section would
+          only be a stub. */}
+      {!isPersonaPost && (
+        <section className={styles.dSec}>
+          <h3 className={styles.dSecLabel}>
+            {t("admin:moderation.reportDrawer.contentTitle")}
+          </h3>
+          <p className={styles.dContentAuthor}>{report.reportedName}</p>
+          <blockquote className={styles.dExcerpt}>{report.preview}</blockquote>
+          {/* The fallback names somebody too, so it needs the same warning. */}
+          <AmbiguousAuthorsNote subjectType={report.subjectType} />
+          <p className={styles.dTransparency}>
+            <FiInfo aria-hidden />{" "}
+            {t("admin:moderation.reportDrawer.limitedContext")}
+          </p>
+        </section>
+      )}
 
       <section className={styles.dSec}>
         <h3 className={styles.dSecLabel}>

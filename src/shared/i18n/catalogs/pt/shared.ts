@@ -79,6 +79,8 @@ export const shared: Catalog = {
     "Até onde chegaste na entrada na plataforma, e o estado de um pedido de adesão que aguarda resposta.",
   "consent.storage.drafts.purpose":
     "Tudo o que começaste a escrever e ainda não publicaste: mensagens, publicações no fórum, histórias, anúncios de emprego, listagens, uma comunidade que estás a criar.",
+  "consent.storage.studioEpisodes.purpose":
+    "Guarda que episódios do Studio ouviste, onde paraste e a velocidade de reprodução. Fica neste dispositivo e apaga-se quando terminas sessão.",
   "consent.storage.outbox.purpose":
     "Mensagens que enviaste sem ligação, guardadas aqui até chegarem ao servidor, mais as tuas definições de cada conversa.",
   "consent.storage.yourLists.purpose":
@@ -278,6 +280,7 @@ export const shared: Catalog = {
   "adminNav.items.intakes": "Submissões e mensagens",
   "adminNav.items.safeSpaces": "Espaços seguros",
   "adminNav.items.topics": "Tópicos",
+  "adminNav.items.studio": "Descoberta no Studio",
   "adminNav.items.listings": "Espaços",
   // `/admin/listings/new`: a equipa escreve sobre um espaço que ainda
   // não se juntou.
@@ -617,6 +620,7 @@ export const shared: Catalog = {
   "mediaRef.card-background": "Cartão de sócio",
   "mediaRef.cinema-cover": "Título de cinema",
   "mediaRef.studio-cover": "Capa de lançamento do Studio",
+  "mediaRef.persona-post": "Novidade de persona",
   "mediaRef.landlord": "Senhorio",
   "mediaRef.company-work": "Empresa",
   "mediaRef.housing": "Habitação",

@@ -3405,6 +3405,8 @@ export const marketing: Catalog = {
   "changelog.release.count.infrastructure_other":
     "{count} infrastructure changes",
   // Release headlines, one per shipping day (see changelogReleases.ts).
+  "changelog.releases.2026-10-14.headline":
+    "Studio adds podcasts, spoken word and performance audio, moods, scenes, staff picks, genre and mood radio, persona credits, a full player, scheduled releases and press kits.",
   "changelog.releases.2026-10-13.headline":
     "Studio gains playlists, follows and genre browsing, admin Marketing gets printable flyers, and you find your work by typing it.",
   "changelog.releases.2026-10-12.headline":
@@ -3856,6 +3858,33 @@ export const marketing: Catalog = {
     "Clearer Studio pages, steady track order",
   "changelog.entries.studio-v2-fixes.body":
     "Studio pages read clearly on phones and in Portuguese, and removing a failed upload keeps your track order.",
+  "changelog.entries.studio-artist-kinds.title":
+    "Podcasts, spoken word and performance audio in Studio",
+  "changelog.entries.studio-artist-kinds.body":
+    "Podcasters, poets and performers release in Studio: shows with episodes, transcripts and credited sources.",
+  "changelog.entries.studio-listening.title": "A full player in Studio",
+  "changelog.entries.studio-listening.body":
+    "A queue, a Now playing screen, synced lyrics, chapters for mixes, a waveform, even loudness, crossfade, a sleep timer and keyboard shortcuts.",
+  "changelog.entries.studio-v3-artist-tools.title":
+    "Scheduled releases, press kits and updates in Studio",
+  "changelog.entries.studio-v3-artist-tools.body":
+    "Schedule releases with Notify me, share private previews, add buy links, print a one-sheet and post updates.",
+  "changelog.entries.studio-discovery.title":
+    "Discover Studio music by mood, scene and staff picks",
+  "changelog.entries.studio-discovery.body":
+    "Play genre or mood radio, and credit personas on your tracks once the credited artist accepts.",
+  "changelog.entries.studio-open-pages.title":
+    "Studio help, rights and settings are open",
+  "changelog.entries.studio-open-pages.body":
+    "Help, Rights, Terms and Settings now work for everyone with Studio access, a withdrawn release explains itself, and artists can dispute a takedown.",
+  "changelog.entries.see-everyone-going.title":
+    "See everyone going to an event",
+  "changelog.entries.see-everyone-going.body":
+    'Tap "+N more" under Who\'s going to open the rest of the list right there, minus anyone going privately.',
+  "changelog.entries.pending-ownership-claims-count.title":
+    "Waiting ownership claims show a count",
+  "changelog.entries.pending-ownership-claims-count.body":
+    "The admin rail and the claims tab count claims that wait, and approving one now asks you to confirm first.",
   "changelog.entries.balanced-headline-wraps.title":
     "Headlines no longer strand their last word",
   "changelog.entries.balanced-headline-wraps.body":

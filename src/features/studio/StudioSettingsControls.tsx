@@ -6,27 +6,25 @@ export function Toggle({
   on,
   onToggle,
   label,
+  isDisabled = false,
 }: {
   on: boolean;
   onToggle: () => void;
-  /** Accessible name for the switch — the setting it controls (the caller's
+  /** Accessible name for the switch: the setting it controls (the caller's
    *  adjacent heading). Passed by the caller because this primitive is reused
    *  across every setting and cannot know which one it toggles. */
   label?: string;
+  /** Until the stored row has loaded a switch does nothing. */
+  isDisabled?: boolean;
 }) {
   return (
-    <div
+    <button
+      type="button"
       className={`${s.tgSw} ${on ? s.tgSwOn : ""}`}
-      onClick={onToggle}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          onToggle();
-        }
-      }}
+      onClick={isDisabled ? undefined : onToggle}
       role="switch"
-      tabIndex={0}
       aria-checked={on}
+      aria-disabled={isDisabled || undefined}
       aria-label={label}
     />
   );
@@ -86,10 +84,10 @@ export function RadioCards({
         >
           <div className={s.rdot} />
           <div>
-            <h5>
+            <h4>
               {t(o.labelKey)}
               {o.badgeKey && <span className={s.badge}>{t(o.badgeKey)}</span>}
-            </h5>
+            </h4>
             <p>{t(o.subKey)}</p>
           </div>
         </div>

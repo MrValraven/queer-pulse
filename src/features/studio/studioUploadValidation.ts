@@ -9,6 +9,7 @@ import {
   STUDIO_LIMITS,
   type StudioAudioContentType,
   type StudioErrorCode,
+  type StudioFormat,
 } from "./api/studio.types";
 import { studioErrorMessageKeyOf } from "./studioErrors.data";
 
@@ -57,13 +58,34 @@ export function titleFromFileName(fileName: string): string {
   return title || "Untitled";
 }
 
-export function validateAudioFiles(files: File[], existingCount: number) {
+/** Artist kinds: podcast-format personas upload up to 250 MB a file. */
+export function audioMaxBytesFor(format: StudioFormat): number {
+  return format === "podcast"
+    ? STUDIO_LIMITS.audioMaxBytesPodcast
+    : STUDIO_LIMITS.audioMaxBytes;
+}
+
+/** The rejection line, with the cap of the release's format. */
+export function fileRejectionKeyOf(
+  reason: FileRejectionReason,
+  format: StudioFormat,
+): string {
+  return reason === "size" && format === "podcast"
+    ? "studio:uploadFlow.files.rejectSizePodcast"
+    : FILE_REJECTION_KEY[reason];
+}
+
+export function validateAudioFiles(
+  files: File[],
+  existingCount: number,
+  maxBytes: number = STUDIO_LIMITS.audioMaxBytes,
+) {
   const accepted: { file: File; contentType: StudioAudioContentType }[] = [];
   const rejected: { fileName: string; reason: FileRejectionReason }[] = [];
   for (const file of files) {
     const contentType = audioContentTypeOf(file);
     if (!contentType) rejected.push({ fileName: file.name, reason: "type" });
-    else if (file.size > STUDIO_LIMITS.audioMaxBytes)
+    else if (file.size > maxBytes)
       rejected.push({ fileName: file.name, reason: "size" });
     else if (
       existingCount + accepted.length >=
@@ -120,9 +142,11 @@ export function isRetryableUploadError(error: unknown): boolean {
   return code === null || !HARD_ERROR_CODES.has(code);
 }
 
-/** The line a row shows when removing its track failed. */
+/** The line a row shows when removing its track failed. The last playable
+ *  track of a published release stays (409, Studio v3). */
 export function removeErrorKeyOf(error: unknown): string {
-  return isAccountRestricted(error)
-    ? ACCOUNT_RESTRICTED_COPY.key
-    : "studio:uploadFlow.files.errorRemove";
+  if (isAccountRestricted(error)) return ACCOUNT_RESTRICTED_COPY.key;
+  if (studioErrorCodeOf(error) === "studio_release_needs_playable_track")
+    return "studio:errors.releaseNeedsPlayableTrack";
+  return "studio:uploadFlow.files.errorRemove";
 }

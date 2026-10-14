@@ -372,38 +372,14 @@ export const studioShowcase: Catalog = {
     "{amount} dos teus arredondamentos foram para apoio de emergência este trimestre",
 
   // ── Press: hero (StudioPressPage) ──
-  "press.hero.tagline":
-    "Fado que recusa a igreja. <em>Um hino para quem partiu e para quem ficou.</em>",
   "press.facts.pronounsValue": "ela / dela",
   "press.facts.playsValue": "<em>{plays}</em> no Studio",
-
-  // ── Press: bio (StudioPressPage) ──
-  "press.bio.short":
-    "Mariana Sol é cantora e compositora, nascida em Sintra, e trabalha na fronteira entre o fado e a canção devocional. O seu álbum de 2026, <em>Cidade dos santos</em>, foi ouvido 142 000 vezes na cooperativa QueerPulse e pagou-lhe 7100 € diretamente.",
-  "press.bio.long.p1":
-    "Mariana Sol cresceu nas colinas acima de Sintra, numa casa onde a avó cantava o terço como uma canção de amor perdido. Escreve <em>fado que recusa a igreja</em>: hinos para congregações queer que nunca tiveram um edifício.",
-  "press.bio.long.p2":
-    "O disco de estreia, <em>Cidade dos santos</em> (2026), chegou ao QueerPulse Studio, a cooperativa que pertence a quem ouve, onde mantém os seus masters e 80% de cada reprodução. Às quartas-feiras apresenta a sala ao vivo a partir de uma garagem convertida, com gorjetas em tempo real de várias centenas de pessoas a ouvir.",
 
   // ── Press: photos (StudioPressPage) ──
   "press.photos.liveGarage": "Ao vivo · garagem convertida",
   "press.photos.portraitSintra": "Retrato · colinas de Sintra",
   "press.photos.studioSession": "Estúdio · Cidade dos santos",
   "press.photos.portraitMono": "Retrato · preto e branco",
-
-  // ── Press: latest release (StudioPressPage) ──
-  "press.release.meta": "Álbum · 11 faixas · lançado a 14 mar 2026 · CC-BY-NC",
-
-  // ── Press: selected press (StudioPressPage) ──
-  "press.quotes.shape":
-    "O disco mais devastador a sair do underground queer ibérico nesta década",
-  "press.quotes.wire": "A Sol canta como quem negoceia com Deus e ganha",
-  "press.quotes.pitchfork":
-    "A prova de que o modelo cooperativo produz arte além de folhas de cálculo",
-  "press.quotes.gayTimes": "Vais chorar numa língua que não falas",
-  "press.quotes.medium.print": "papel",
-  "press.quotes.medium.feature": "reportagem",
-  "press.quotes.medium.review": "crítica",
 
   // ── Press: facts and boilerplate (StudioPressPage) ──
   "press.boilerplate.fullNameValue": "Mariana Sol (n. 1996, Sintra)",

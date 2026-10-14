@@ -43,3 +43,29 @@
   margin: 0 0 24px;
   color: var(--text60);
 }
+
+.radioActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+/* A long station name ("Ouvir a rádio Fado / contemporâneo") wraps inside
+   the button on a phone, so the button stays within the column. */
+.radioActions .radioButton {
+  max-width: 100%;
+  white-space: normal;
+  text-align: start;
+  line-height: 1.25;
+}
+
+.radioActions .radioButton svg {
+  flex: none;
+}
+
+.radioError {
+  margin: 8px 0 0;
+  color: var(--studio-accent-text);
+  font-size: var(--text-13);
+}

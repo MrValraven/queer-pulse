@@ -26,11 +26,13 @@ vi.mock("./api/useStudioAccess", async (importOriginal) => {
       if (control.shouldSwapPersona)
         return {
           ...access,
-          uploadablePersonas: access.uploadablePersonas.map((persona) => ({
-            ...persona,
-            id: "demo-persona-someone-else",
-            name: "Someone Else",
-          })),
+          uploadablePersonas: access.uploadablePersonas.map(
+            (persona, index) => ({
+              ...persona,
+              id: `demo-persona-someone-else-${index}`,
+              name: `Someone Else ${index}`,
+            }),
+          ),
         };
       return access;
     },

@@ -1,4 +1,6 @@
-import type { ReactNode } from "react";
+import type { ReactElement, ReactNode } from "react";
+import { Link } from "react-router-dom";
+import { routes } from "../../app/routeMap";
 import { Translation } from "../../shared/i18n/Translation";
 import type { TFunction } from "../../shared/i18n/types";
 
@@ -194,3 +196,35 @@ export function buildLicences(t: TFunction): Licence[] {
     },
   ];
 }
+
+// ── Studio open pages: the live Studio addendum (spec section 3.4) ─────────
+
+export interface TermsLiveSection {
+  id: string;
+  numKey: string;
+  headingKey: string;
+  paragraphs: { key: string; components?: Record<string, ReactElement> }[];
+}
+
+const termsSection = (
+  id: string,
+  paragraphs: TermsLiveSection["paragraphs"],
+): TermsLiveSection => ({
+  id,
+  numKey: `studio:termsLive.sec.${id}.num`,
+  headingKey: `studio:termsLive.sec.${id}.heading`,
+  paragraphs,
+});
+
+export const TERMS_LIVE_SECTIONS: TermsLiveSection[] = [
+  termsSection("rights", [{ key: "studio:termsLive.sec.rights.p1" }]),
+  termsSection("visible", [{ key: "studio:termsLive.sec.visible.p1" }]),
+  termsSection("stored", [
+    { key: "studio:termsLive.sec.stored.p1" },
+    {
+      key: "studio:termsLive.sec.stored.p2",
+      components: { a: <Link to={routes.privacy} /> },
+    },
+  ]),
+  termsSection("takedown", [{ key: "studio:termsLive.sec.takedown.p1" }]),
+];

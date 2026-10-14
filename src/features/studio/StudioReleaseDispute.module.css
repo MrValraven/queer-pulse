@@ -1,0 +1,111 @@
+/* The owner's dispute panel: its own row under the album hero, so the form
+   opening never moves the cover. */
+.panel {
+  max-width: 60ch;
+  margin: 0 0 32px;
+  padding: 18px 20px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-14);
+  background: rgba(var(--studio-ink-rgb), 0.04);
+}
+
+.heading {
+  margin: 0 0 8px;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: var(--text-19);
+  color: var(--studio-text);
+}
+
+.intro,
+.meta {
+  margin: 0 0 12px;
+  font-size: var(--text-14);
+  line-height: 1.6;
+  color: var(--studio-text-muted);
+}
+
+.status,
+.outcome {
+  padding: 4px 0 8px;
+}
+
+.heading:focus-visible,
+.status:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-radius: var(--radius-6);
+}
+
+.statusLine {
+  margin: 0 0 8px;
+}
+
+/* The state chip that leads each dispute state. */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  font-size: var(--text-14);
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.chip svg {
+  flex: none;
+}
+
+.chipOpen {
+  color: var(--studio-text);
+  background: rgba(var(--studio-ink-rgb), 0.08);
+}
+
+.chipUpheld {
+  color: var(--studio-jade-chip-text);
+  background: rgba(var(--jade-rgb), 0.14);
+}
+
+.chipRejected {
+  color: var(--studio-text);
+  box-shadow: inset 0 0 0 1px rgba(var(--studio-ink-rgb), 0.2);
+}
+
+/* Sent and decided dates, straight under the state chip. */
+.dates {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 16px;
+  margin: 0 0 12px;
+  font-size: var(--text-14);
+  line-height: 1.6;
+  color: var(--studio-text-muted);
+}
+
+.label {
+  margin: 10px 0 4px;
+  font-size: var(--text-12);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--studio-text-muted);
+}
+
+.quote {
+  margin: 0 0 8px;
+  padding-left: 12px;
+  border-left: 2px solid rgba(var(--studio-ink-rgb), 0.2);
+  white-space: pre-wrap;
+  color: var(--studio-text);
+}
+
+.formArea {
+  padding-top: 4px;
+}
+
+.form {
+  display: grid;
+  gap: 12px;
+  margin-top: 12px;
+}

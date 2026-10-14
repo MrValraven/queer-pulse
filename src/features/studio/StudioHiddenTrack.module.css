@@ -1,0 +1,65 @@
+/* A track hidden by "Hide explicit tracks": greyed by colour (opacity
+   would drop the text below contrast), with no play control. */
+.number {
+  display: inline-grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  font-family: var(--serif);
+  color: var(--studio-text-muted);
+}
+
+.note {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 2px;
+  font-size: var(--text-12);
+  color: var(--studio-text-muted);
+}
+
+.noteIcon {
+  flex: none;
+}
+
+.noteLink {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.noteLink:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+@media (hover: hover) {
+  .noteLink:hover {
+    color: var(--text);
+  }
+}
+
+/* A hidden cover is fully greyed and dimmed. */
+.hidden img {
+  filter: grayscale(1);
+  opacity: 0.5;
+}
+
+/* A hidden search row has no play cell, so its grid starts at the cover.
+   Doubled class so it beats the search row's own column template. */
+li.hidden.hiddenSearchRow {
+  grid-template-columns: 36px minmax(0, 1fr) auto auto;
+}
+
+@media (--sm) {
+  li.hidden.hiddenSearchRow {
+    grid-template-columns: 36px minmax(0, 1fr) auto;
+  }
+}
+
+.hidden h1,
+.hidden h5,
+.hidden h5 a {
+  color: var(--studio-text-muted);
+}

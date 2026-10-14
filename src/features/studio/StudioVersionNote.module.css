@@ -1,0 +1,71 @@
+.panel {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 16px 18px;
+  border-radius: var(--radius-12);
+  border: 1px solid rgba(var(--accent-rgb), 0.4);
+  background: rgba(var(--accent-rgb), 0.06);
+}
+
+.heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: var(--text-17);
+  color: var(--studio-text);
+}
+
+.body,
+.count,
+.error {
+  margin: 0;
+}
+
+.body {
+  color: var(--studio-text-muted);
+}
+
+.label {
+  font-size: var(--text-12-5);
+  font-weight: 600;
+  color: var(--studio-text);
+}
+
+.note {
+  width: 100%;
+  font: inherit;
+  color: inherit;
+  background: rgba(var(--studio-ink-rgb), 0.04);
+  border: 1px solid rgba(var(--studio-ink-rgb), 0.45);
+  border-radius: var(--radius-10);
+  padding: 10px 12px;
+}
+
+.note:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.count {
+  font-size: var(--text-12);
+  color: var(--studio-text-muted);
+}
+
+.error {
+  font-size: var(--text-12-5);
+  color: var(--studio-accent-soft-text);
+}
+
+/* The upload page's "Version note saved" line, shown where the panel folded
+   away so a sighted member sees the save land too. */
+.savedStatus {
+  margin: 0;
+  font-size: var(--text-12-5);
+  color: var(--studio-jade-text);
+}

@@ -1423,5 +1423,70 @@ export const notifications: Catalog = {
   "type.studio_release_published.meta": "Artista que segues",
   "type.studio_release_published.subprofileNameFallback": "Alguém que segues",
   "type.studio_release_published.releaseTitleFallback": "um lançamento novo",
+  // Studio, tipos de artista: ver a nota no bloco EN.
+  "type.studio_episode_published.text":
+    "{subprofileName} publicou {trackTitle} em {releaseTitle}.",
+  "type.studio_episode_published.text_one":
+    "{subprofileName} publicou {trackTitle} em {releaseTitle}.",
+  "type.studio_episode_published.text_other":
+    "{subprofileName} publicou {count} episódios novos de {releaseTitle}.",
+  "type.studio_episode_published.textSameName":
+    "{subprofileName} publicou {trackTitle}.",
+  "type.studio_episode_published.textSameName_one":
+    "{subprofileName} publicou {trackTitle}.",
+  "type.studio_episode_published.textSameName_other":
+    "{subprofileName} publicou {count} episódios novos.",
+  "type.studio_episode_published.meta": "Podcast que segues",
+  "type.studio_episode_published.subprofileNameFallback": "Alguém que segues",
+  "type.studio_episode_published.releaseTitleFallback": "um podcast que segues",
+  "type.studio_episode_published.trackTitleFallback": "um episódio novo",
+  // Studio v3: ver a nota no bloco EN.
+  "type.persona_post.text": "{subprofileName} publicou uma novidade: {excerpt}",
+  "type.persona_post.text_one":
+    "{subprofileName} publicou uma novidade: {excerpt}",
+  "type.persona_post.text_other":
+    "{subprofileName} publicou {count} novidades.",
+  "type.persona_post.meta": "Persona que segues",
+  "type.persona_post.subprofileNameFallback": "Alguém que segues",
+  "type.persona_post.excerptFallback": "abre para leres o resto",
+  "actions.readUpdate": "Ler a novidade",
+  // Studio, páginas abertas: ver a nota no bloco EN. Sem autor.
+  "type.studio_release_taken_down.text":
+    "{releaseTitle} foi retirado depois de uma denúncia.",
+  "type.studio_release_taken_down.meta": "Lançamento no Studio",
+  "type.studio_release_taken_down.releaseTitleFallback":
+    "Um dos teus lançamentos",
+  "type.studio_release_dispute_decided.text":
+    "A nossa equipa decidiu sobre a tua contestação de {releaseTitle}.",
+  "type.studio_release_dispute_decided.meta": "Contestação no Studio",
+  "type.studio_release_dispute_decided.releaseTitleFallback":
+    "o teu lançamento",
   "actions.listenNow": "Ouvir agora",
+  // Descoberta no Studio: créditos de personas. Ver a nota no bloco EN.
+  "type.studio_credit_requested.text":
+    "{requestingPersonaName} creditou {creditedPersonaName} como {role} em {trackTitle}.",
+  "type.studio_credit_requested.text_one":
+    "{requestingPersonaName} creditou {creditedPersonaName} como {role} em {trackTitle}.",
+  "type.studio_credit_requested.text_other":
+    "{creditedPersonaName} tem {count} pedidos de crédito novos.",
+  "type.studio_credit_requested.meta": "Pedido de crédito",
+  "type.studio_credit_requested.requestingPersonaNameFallback": "Uma persona",
+  "type.studio_credit_requested.creditedPersonaNameFallback": "a tua persona",
+  "type.studio_credit_requested.trackTitleFallback": "uma faixa",
+  "type.studio_credit_requested.roleFallback": "colaboração",
+  "type.studio_credit_accepted.text":
+    "{creditedPersonaName} aceitou o crédito como {role} em {trackTitle}.",
+  "type.studio_credit_accepted.meta": "Crédito aceite",
+  "type.studio_credit_accepted.creditedPersonaNameFallback": "Uma persona",
+  "type.studio_credit_accepted.trackTitleFallback": "a tua faixa",
+  "type.studio_credit_accepted.roleFallback": "colaboração",
+  "studioCreditRole.featured": "Participação",
+  "studioCreditRole.producer": "Produção",
+  "studioCreditRole.coWriter": "Coautoria",
+  "studioCreditRole.mixing": "Mistura",
+  "studioCreditRole.mastering": "Masterização",
+  "studioCreditRole.remix": "Remistura",
+  "studioCreditRole.coverArt": "Capa",
+  "studioCreditRole.other": "Outro papel",
+  "actions.reviewCredit": "Ver crédito",
 };

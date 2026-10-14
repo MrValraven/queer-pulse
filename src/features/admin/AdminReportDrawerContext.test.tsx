@@ -1,8 +1,11 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
-import { ReportContext } from "./AdminReportDrawerContext";
-import type { ReportDetail } from "./adminModeration.data";
+import {
+  ReportContext,
+  ReportContextFallback,
+} from "./AdminReportDrawerContext";
+import type { ModReport, ReportDetail } from "./adminModeration.data";
 
 /**
  * Business mailboxes, design section 9 (I2 fix): the report drawer must name
@@ -75,5 +78,45 @@ describe("ReportContext sentAsIdentity", () => {
     expect(
       await screen.findByText("Sent as Deleted identity"),
     ).toBeInTheDocument();
+  });
+});
+
+describe("ReportContextFallback", () => {
+  function fallbackReport(subjectType: ModReport["subjectType"]): ModReport {
+    return {
+      id: "r-fb",
+      subjectType,
+      preview: "the body of the reported text",
+      reporterName: "@watcher",
+      reportedName: "@poster",
+    } as ModReport;
+  }
+
+  it("keeps the body and the limited-context note for an ordinary report", async () => {
+    render(<ReportContextFallback report={fallbackReport("message")} />, {
+      wrapper: TestProviders,
+    });
+
+    expect(
+      await screen.findByText("the body of the reported text"),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(/came in without the full thread/),
+    ).toBeInTheDocument();
+  });
+
+  it("skips the body and the note for a persona_post report", async () => {
+    render(<ReportContextFallback report={fallbackReport("persona_post")} />, {
+      wrapper: TestProviders,
+    });
+
+    expect(await screen.findByText("People involved")).toBeInTheDocument();
+    expect(screen.queryByText("Reported content")).not.toBeInTheDocument();
+    expect(
+      screen.queryByText("the body of the reported text"),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByText(/came in without the full thread/),
+    ).not.toBeInTheDocument();
   });
 });

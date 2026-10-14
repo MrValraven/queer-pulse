@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { ApiError } from "../../../shared/api/client";
 import { studioErrorCodeOf } from "./studio.api";
 import { DEMO_ARTISTS, DEMO_RELEASES } from "./studioDemo.data";
+import { DEMO_DRAFT_EPISODE_ID } from "./studioDemoFormats.data";
 import { DEMO_DEFAULT_PLAYLIST_ID } from "../studioCollection.data";
 import {
   demoAddPlaylistTracks,
@@ -33,9 +34,14 @@ describe("demo playlist store", () => {
     const unavailable = kitchen.entries.filter((entry) => !entry.isAvailable);
     expect(unavailable).toHaveLength(1);
     expect(unavailable[0]?.track).toBeNull();
+    expect(unavailable[0]?.unavailableReason).toBe("withdrawn");
     expect(kitchen.entries.map((entry) => entry.position)).toEqual([
       1, 2, 3, 4, 5,
     ]);
+    const groupChat = demoStudioPlaylist("demo-playlist-for-the-group-chat");
+    const gone = groupChat.entries.filter((entry) => !entry.isAvailable);
+    expect(gone).toHaveLength(1);
+    expect(gone[0]?.unavailableReason).toBeUndefined();
     const standards = demoStudioPlaylist(DEMO_DEFAULT_PLAYLIST_ID);
     expect(standards.isOwner).toBe(false);
     expect(standards.visibility).toBeNull();
@@ -202,5 +208,34 @@ describe("demo playlist store", () => {
       expect(error).toBeInstanceOf(ApiError);
       expect((error as ApiError).status).toBe(400);
     }
+  });
+});
+
+describe("demo playlist store, format tracks", () => {
+  it("adds a published episode to a playlist", () => {
+    const after = demoAddPlaylistTracks("demo-playlist-for-the-group-chat", [
+      "demo-episode-late-bloomers-01",
+    ]);
+    expect(after.entries.at(-1)?.track?.id).toBe(
+      "demo-episode-late-bloomers-01",
+    );
+    expect(after.entries.at(-1)?.isAvailable).toBe(true);
+  });
+
+  it("refuses a draft episode with 422 and changes nothing", () => {
+    const before = demoStudioPlaylist("demo-playlist-for-the-group-chat");
+    try {
+      demoAddPlaylistTracks("demo-playlist-for-the-group-chat", [
+        DEMO_DRAFT_EPISODE_ID,
+      ]);
+      throw new Error("expected a refusal");
+    } catch (error) {
+      expect(studioErrorCodeOf(error)).toBe(
+        "studio_playlist_track_unavailable",
+      );
+    }
+    expect(
+      demoStudioPlaylist("demo-playlist-for-the-group-chat").entries,
+    ).toHaveLength(before.entries.length);
   });
 });

@@ -1,5 +1,7 @@
 import type { StudioReleaseView } from "./api/studio.adapters";
 import { StudioAlbumTracklist } from "./StudioAlbumTracklist";
+import { StudioReleaseChapters } from "./player/ui/StudioReleaseChapters";
+import { StudioReleaseCreditsSummary } from "./StudioReleaseCreditsSummary";
 import type { AlbumTabId } from "./studioAlbum.data";
 import styles from "./studio.module.css";
 import releaseStyles from "./StudioRelease.module.css";
@@ -27,5 +29,11 @@ export function StudioAlbumMain({
       </div>
     );
   }
-  return <StudioAlbumTracklist release={release} />;
+  return (
+    <>
+      <StudioAlbumTracklist release={release} />
+      <StudioReleaseChapters release={release} />
+      <StudioReleaseCreditsSummary credits={release.personaCredits} />
+    </>
+  );
 }

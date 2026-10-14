@@ -119,7 +119,7 @@ function isSignedOutFailure(error: unknown): boolean {
  * Read failures the classification above already calls expected, so they must
  * never reach error monitoring: the signed-out 401, plus a 404 for a resource
  * that is genuinely gone (the page owns its empty state, and a member opening
- * a deleted thread is normal traffic).
+ * a deleted thread is normal traffic), and a Studio release's coded 410.
  *
  * A PLATFORM_LOCKED 503 is deliberately absent. It is silent on screen only
  * because the maintenance screen replaces the toast, and an event telling us a
@@ -127,7 +127,24 @@ function isSignedOutFailure(error: unknown): boolean {
  */
 function isExpectedQueryFailure(error: unknown): boolean {
   if (isSignedOutFailure(error)) return true;
+  if (isStudioWithdrawnFailure(error)) return true;
   return error instanceof ApiError && error.status === 404;
+}
+
+/**
+ * A Studio release our team took down answers 410 with the body code
+ * `studio_release_withdrawn`; the page renders its withdrawn view, so a
+ * listener opening one is normal traffic. A 410 with any other body stays
+ * reportable.
+ */
+function isStudioWithdrawnFailure(error: unknown): boolean {
+  if (!(error instanceof ApiError) || error.status !== 410) return false;
+  const body = error.data;
+  return (
+    typeof body === "object" &&
+    body !== null &&
+    (body as { code?: unknown }).code === "studio_release_withdrawn"
+  );
 }
 
 /**

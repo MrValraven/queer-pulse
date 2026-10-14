@@ -1,4 +1,8 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  useQuery,
+  useQueryClient,
+  type QueryClient,
+} from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import {
   toReleaseView,
@@ -8,6 +12,8 @@ import type {
   StudioAccessGrantDTO,
   StudioReleaseDTO,
 } from "../../studio/api/studio.types";
+import { demoWithdrawalStatus } from "../../studio/api/studioDemoMutations";
+import { studioKeys } from "../../studio/api/studioQueryKeys";
 import { DEMO_STUDIO_GRANTS } from "../adminStudio.data";
 import {
   getMemberStudioAccess,
@@ -96,17 +102,65 @@ function demoReleaseIn(
     },
     description: null,
     genre: null,
+    mood: null,
+    scene: null,
     status,
     publishedAt: status === "published" ? new Date().toISOString() : null,
     tracks: [],
     isOwner: false,
     rightsConfirmedAt: null,
     takedownReason: reason,
+    sceneId: null,
+    personaCredits: [],
   });
 }
 
 const staffReleaseKey = (demoMode: boolean, releaseId: string) =>
   ["admin-studio", "release", demoMode, releaseId] as const;
+
+/** Every takedown resolves every open report about the release on the
+ *  server, and a takedown or restore moves it in or out of Withdrawn, so the
+ *  moderation queue and the three Studio review queues (both modes) read
+ *  again. Live, every reader of the release reads again too: its page, its
+ *  tracks, the lists that show it and the open report's detail. The demo
+ *  keeps those caches, since a re-read would answer the fixtures and drop
+ *  the session's edits. */
+function refreshStaffReviewQueues(
+  queryClient: QueryClient,
+  demoMode: boolean,
+): void {
+  void queryClient.invalidateQueries({ queryKey: ["mod-reports"] });
+  for (const queueDemoMode of [false, true])
+    for (const queryKey of [
+      studioKeys.reviewReports(queueDemoMode),
+      studioKeys.reviewDisputes(queueDemoMode),
+      studioKeys.reviewWithdrawn(queueDemoMode),
+    ])
+      void queryClient.invalidateQueries({ queryKey });
+  if (demoMode) return;
+  void queryClient.invalidateQueries({ queryKey: ["mod-report"] });
+  void queryClient.invalidateQueries({ queryKey: ["studio", "release"] });
+  void queryClient.invalidateQueries({ queryKey: ["studio", "track"] });
+  // A dynamic import, so the admin chunk does not carry the Studio release
+  // mutations (and the demo store they import).
+  void import("../../studio/api/useStudioReleaseMutations")
+    .then(({ refreshReleaseLists }) =>
+      refreshReleaseLists(queryClient, false, undefined),
+    )
+    // A chunk load failure only delays the list refresh to the next read.
+    .catch(() => undefined);
+}
+
+/** The demo keeps owner and upcoming lists in step with the written release
+ *  (a dynamic import, as above, so the admin chunk stays free of it). */
+function syncDemoLists(queryClient: QueryClient, release: StudioReleaseView) {
+  void import("../../studio/api/useStudioReleaseMutations")
+    .then(({ syncDemoReleaseLists }) =>
+      syncDemoReleaseLists(queryClient, release, false),
+    )
+    // A chunk load failure only delays the list refresh to the next read.
+    .catch(() => undefined);
+}
 
 /** GET /admin/studio/releases/:id. Demo reads the Studio fixture (dynamic
  *  import, so the admin chunk does not carry it) and falls back to a blank
@@ -152,17 +206,18 @@ export function useTakeDownStudioRelease() {
       );
       return current
         ? {
-            ...current,
-            status: "taken_down",
-            statusLabelKey: "studio:releaseStatus.taken_down",
+            ...demoWithdrawalStatus(current, "taken_down"),
             takedownReason: reason,
           }
         : demoReleaseIn(releaseId, "taken_down", reason);
     },
     live: async ({ releaseId, reason }) =>
       toReleaseView(await takeDownStudioRelease(releaseId, reason)),
-    onSuccess: (release) =>
-      queryClient.setQueryData(staffReleaseKey(demoMode, release.id), release),
+    onSuccess: (release) => {
+      queryClient.setQueryData(staffReleaseKey(demoMode, release.id), release);
+      if (demoMode) syncDemoLists(queryClient, release);
+      refreshStaffReviewQueues(queryClient, demoMode);
+    },
   });
 }
 
@@ -176,6 +231,9 @@ export function useRestoreStudioRelease() {
   >({
     demoMode,
     mutationKey: ["admin-studio", "restore"],
+    // The moderation console shows the refusal itself, in the Studio error
+    // map's words (a release with an open dispute restores from Disputes).
+    meta: { silentError: true },
     // As the server: back to published only if it was live when taken down.
     demoResult: ({ releaseId }) => {
       const current = queryClient.getQueryData<StudioReleaseView>(
@@ -184,15 +242,16 @@ export function useRestoreStudioRelease() {
       if (!current) return demoReleaseIn(releaseId, "published", null);
       const status = current.publishedAt ? "published" : "draft";
       return {
-        ...current,
-        status,
-        statusLabelKey: `studio:releaseStatus.${status}`,
+        ...demoWithdrawalStatus(current, status),
         takedownReason: null,
       };
     },
     live: async ({ releaseId }) =>
       toReleaseView(await restoreStudioRelease(releaseId)),
-    onSuccess: (release) =>
-      queryClient.setQueryData(staffReleaseKey(demoMode, release.id), release),
+    onSuccess: (release) => {
+      queryClient.setQueryData(staffReleaseKey(demoMode, release.id), release);
+      if (demoMode) syncDemoLists(queryClient, release);
+      refreshStaffReviewQueues(queryClient, demoMode);
+    },
   });
 }

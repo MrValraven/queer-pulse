@@ -6,6 +6,7 @@ import { useJoinRequests } from "../../../features/admin/api/useJoinRequests";
 import { usePartnerApplications } from "../../../features/marketing/api/usePartnerApplications";
 import { useVerificationRequests } from "../../../features/admin/api/useAdminVerifications";
 import { useAdminJoinRequests } from "../../../features/admin/api/useAdminHousingCoops";
+import { useListingClaims } from "../../../features/admin/api/useListingClaims";
 import { useMyStaffRoles } from "../../../features/auth/api/useMyStaffRoles";
 import type { AdminNavBadgeCounts } from "./adminNavMatching";
 
@@ -46,6 +47,8 @@ export function useAdminNavBadges(): AdminNavBadgeCounts {
   //   `/admin/partners/applications`: `@Roles(Admin)` or the `partnerships`
   //     staff grant (`RolesOrStaffGuard`).
   //   `/admin/housing/join-requests`, `/admin/overview`: `@Roles(Admin)` alone.
+  //   `/admin/listings/claims`: `@Roles(Moderator, Admin)` or the
+  //     `directory_moderator` staff grant (`RolesOrStaffGuard`).
   // A disabled query's badge reads 0 whatever its cache entry holds.
   const { role } = useAuth();
   const { demoMode } = useDemoMode();
@@ -59,6 +62,8 @@ export function useAdminNavBadges(): AdminNavBadgeCounts {
   const hasModeratorQueueAccess =
     hasAdminOverviewAccess || role === "moderator";
   const hasPartnerApplicationsAccess = staffRoles.includes("partnerships");
+  const hasListingClaimsAccess =
+    hasModeratorQueueAccess || staffRoles.includes("directory_moderator");
   const overview = useAdminOverview({ isEnabled: hasAdminOverviewAccess });
   const modReports = useModReports(
     undefined,
@@ -81,6 +86,18 @@ export function useAdminNavBadges(): AdminNavBadgeCounts {
   // and could read zero while people waited.
   const housingCoopJoinRequests = useAdminJoinRequests({
     isEnabled: hasAdminOverviewAccess,
+  });
+
+  // Pending "claim this listing" requests on /admin/listings. Same query key
+  // the page's Ownership claims view uses, so the two share one cache entry
+  // and an approve or decline there (which invalidates that key) drops this
+  // pill too. `total` is the server's count of the whole pending queue, so a
+  // queue longer than one page still reads its real size (ENG-41). The class
+  // guard on `AdminListingsController` admits a moderator, an admin and a
+  // `directory_moderator` grant holder, and nobody else, so the query only
+  // runs for those three (and in demo mode, which reads the fixture).
+  const listingClaims = useListingClaims({
+    isEnabled: hasListingClaimsAccess,
   });
 
   // Phase 2's review queue is live, so the badge counts the actual review-queue
@@ -113,5 +130,6 @@ export function useAdminNavBadges(): AdminNavBadgeCounts {
     partnerships: hasPartnerApplicationsAccess ? pendingApplicationCount : 0,
     verifications: hasModeratorQueueAccess ? pendingRequestCount : 0,
     housingCoops: hasAdminOverviewAccess ? housingCoopJoinRequests.total : 0,
+    listingClaims: hasListingClaimsAccess ? listingClaims.total : 0,
   };
 }

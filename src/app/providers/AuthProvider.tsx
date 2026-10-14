@@ -22,6 +22,8 @@ import { clearStoredGatheringDrafts } from "../../features/gatherings/createGath
 import { clearQuestionnaireDrafts } from "../../features/goTogether/questionnaire/questionnaireDraftStorage";
 import { clearDraftsForScope } from "../../features/messages/drafts";
 import { clearOutboxForScope } from "../../features/messages/outbox";
+import { clearStudioEpisodeMemory } from "../../features/studio/player/studioEpisodeMemory";
+import { clearStudioQueueSnapshots } from "../../features/studio/player/studioQueueStorage";
 import { logoutAndDetachPush } from "../../features/push/detachPushOnSignOut";
 import { purgeMessagingCache } from "../../shared/api/queryPersistence/messagingCachePersistence";
 import { getInitialDemoLoggedIn, useDemoSession } from "./useDemoSession";
@@ -176,6 +178,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // The same for an unsaved Go together questionnaire: its answers are
     // sensitive, so the next member in this tab never inherits them.
     clearQuestionnaireDrafts();
+    // And the Studio player's saved queue for this tab, whoever played it.
+    clearStudioQueueSnapshots();
+    // Studio artist kinds: played episodes, saved places and speed go with
+    // the saved queue, for every member on this device (spec 5.7).
+    clearStudioEpisodeMemory();
     // And every unsent DM: the offline outbox and each composer draft, for the
     // signing-out member's own scope (ENG-404). Runs here so the wipe happens
     // whether or not the Messages page is mounted to see the scope change.

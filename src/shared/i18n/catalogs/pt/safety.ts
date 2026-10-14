@@ -88,6 +88,7 @@ export const safety: Catalog = {
   "myReports.subject.identity": "Sobre uma conversa com um negócio",
   "myReports.subject.group_listing": "Sobre um quarto num grupo de habitação",
   "myReports.subject.studio_release": "Sobre um lançamento do Studio",
+  "myReports.subject.persona_post": "Sobre uma novidade de persona",
   "report.guide.meta.title": "Como funciona a denúncia na QueerPulse",
   "report.guide.meta.description":
     "O que acontece depois de submeteres uma denúncia na QueerPulse: o nosso processo de análise, os princípios por trás de cada decisão, e um registo público de decisões de moderação anteriores.",

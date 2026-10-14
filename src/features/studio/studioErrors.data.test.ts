@@ -30,4 +30,10 @@ describe("studioErrorMessageKeyOf", () => {
     );
     expect(studioErrorMessageKeyOf(undefined)).toBe("studio:errors.generic");
   });
+
+  it("gives chapters outside the audio their own line", () => {
+    expect(
+      studioErrorMessageKeyOf(refusal(422, "studio_chapters_out_of_range")),
+    ).toBe("studio:chapters.error.outOfRange");
+  });
 });

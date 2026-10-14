@@ -2,6 +2,7 @@ import { QueryClient } from "@tanstack/react-query";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
+import { createStudioPlayerTestValue } from "../../test/studioPlayerTestValue";
 import { toArtistView, type StudioArtistView } from "./api/studio.adapters";
 import { studioKeys } from "./api/studioQueryKeys";
 import {
@@ -35,6 +36,8 @@ const card = (
   artist: artistRef,
   publishedAt,
   genre: null,
+  mood: null,
+  scene: null,
 });
 
 // Published newest first by the server; the member-entered dates disagree.
@@ -53,9 +56,9 @@ const artist = toArtistView({
 function renderHero(view: StudioArtistView, queryClient = new QueryClient()) {
   const playReleases = vi.fn(() => Promise.resolve());
   const player = {
-    queue: [],
-    currentIndex: 0,
+    ...createStudioPlayerTestValue(),
     status: "idle",
+    radio: null,
     currentItem: null,
     hasPrevious: false,
     hasNext: false,

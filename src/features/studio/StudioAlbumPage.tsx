@@ -13,15 +13,21 @@ import {
   StudioLoadError,
   StudioNotFound,
 } from "./StudioLoadStates";
+import { StudioReleaseSupportCard } from "./StudioReleaseSupportCard";
+import { StudioReleaseVersions } from "./StudioReleaseVersions";
 import { StudioShell } from "./StudioShell";
+import { StudioShowPage } from "./StudioShowPage";
+import { StudioWithdrawnView } from "./StudioWithdrawnView";
 import { StudioTablist } from "./StudioTablist";
 import { StudioTipModal } from "./StudioTipModal";
+import { StudioUpcomingNote } from "./StudioUpcomingNote";
 import { TABS, type AlbumTabId } from "./studioAlbum.data";
 import { useStudioShowcase } from "./useStudioShowcase";
 import styles from "./studio.module.css";
 import kit from "./studioKit.module.css";
 
-/** A release (album, EP, single or mix), at the route the Album page always had. */
+/** A release (album, EP, single, mix, edit or lip-sync mix) at the route the
+ *  Album page always had; a podcast show renders StudioShowPage. */
 export function StudioAlbumPage() {
   const { t } = useTranslation();
   const [searchParams] = useSearchParams();
@@ -36,6 +42,12 @@ export function StudioAlbumPage() {
   const [isTipOpen, setIsTipOpen] = useState(false);
   const [isReporting, setIsReporting] = useState(false);
 
+  if (loadState.isWithdrawn)
+    return (
+      <StudioShell>
+        <StudioWithdrawnView />
+      </StudioShell>
+    );
   if (loadState.isNotFound)
     return (
       <StudioShell>
@@ -55,6 +67,26 @@ export function StudioAlbumPage() {
       </StudioShell>
     );
 
+  // Studio artist kinds: a podcast show has its own page at the same route
+  // (spec 5.2).
+  if (release.type === "podcast")
+    return (
+      <StudioShell>
+        <StudioShowPage
+          release={release}
+          onReport={() => setIsReporting(true)}
+        />
+        {isReporting && (
+          <ReportListingModal
+            subjectType="studio_release"
+            subjectId={release.id}
+            subjectName={release.title}
+            onClose={() => setIsReporting(false)}
+          />
+        )}
+      </StudioShell>
+    );
+
   const isPublished = release.status === "published";
   // A tab shows only with something in it: a draft with no tracks and no
   // liner notes shows its hero and status line with no tablist.
@@ -67,7 +99,12 @@ export function StudioAlbumPage() {
   const activeTab = visibleTabs.some((tabItem) => tabItem.id === chosenTab)
     ? (chosenTab ?? "tracklist")
     : (visibleTabs[0]?.id ?? "tracklist");
-  const hasSidebar = isShowcase && isPublished;
+  // Live: the side column carries the buy link and the support links (Studio
+  // v3); the demo keeps its money cards above them.
+  const hasSupport =
+    release.buyLink !== null || release.supportLinks.length > 0;
+  const hasSidebar = isPublished && (isShowcase || hasSupport);
+  const isUpcomingForViewer = release.isUpcoming && !release.isOwner;
   return (
     <StudioShell>
       <StudioAlbumHero
@@ -75,6 +112,8 @@ export function StudioAlbumPage() {
         onTip={() => setIsTipOpen(true)}
         onReport={() => setIsReporting(true)}
       />
+      <StudioReleaseVersions release={release} />
+      {isUpcomingForViewer && <StudioUpcomingNote release={release} />}
       {visibleTabs.length > 0 && (
         <StudioTablist
           tabs={visibleTabs}
@@ -94,10 +133,15 @@ export function StudioAlbumPage() {
             </div>
           )}
           {hasSidebar && (
-            <StudioAlbumSidebar
-              artistName={release.artist.name}
-              onTip={() => setIsTipOpen(true)}
-            />
+            <div className={styles.sideCol}>
+              {isShowcase && (
+                <StudioAlbumSidebar
+                  artistName={release.artist.name}
+                  onTip={() => setIsTipOpen(true)}
+                />
+              )}
+              <StudioReleaseSupportCard release={release} />
+            </div>
           )}
         </section>
       )}

@@ -1,19 +1,27 @@
 import { useId } from "react";
-import { LoadMoreFooter } from "../../shared/components/ui";
+import { Collapse, LoadMoreFooter } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { StudioReleasesResult } from "./api/useStudioReleases";
+import { StudioLoadError } from "./StudioLoadStates";
 import { StudioReleaseCard } from "./StudioReleaseCard";
 import { StudioCardGridSkeleton } from "./StudioSkeletons";
 import styles from "./studio.module.css";
 import kit from "./studioKit.module.css";
 
-/** Every release after the hero's, cursor-paginated with Show more. A failed
- *  page keeps what is on screen and turns the button into Retry. */
+/** Every release except the hero's, cursor-paginated with Show more. A
+ *  failed page keeps what is on screen and turns the button into Retry. */
 export function StudioNewReleases({
   releasesResult,
+  heroReleaseId,
+  isHeroSettled,
 }: {
   releasesResult: StudioReleasesResult;
+  /** The hero's release (featured or newest); null when the hero is empty. */
+  heroReleaseId: string | null;
+  /** False while curation loads: the grid holds its skeleton so the hero's
+   *  release never flickers in and out of it. */
+  isHeroSettled: boolean;
 }) {
   const { t } = useTranslation();
   const headingId = useId();
@@ -25,10 +33,18 @@ export function StudioNewReleases({
     isFetchNextPageError,
     fetchNextPage,
   } = releasesResult;
-  const gridReleases = releases.slice(1);
+  const gridReleases = releases.filter(
+    (release) => release.id !== heroReleaseId,
+  );
+  const isGridLoading = loadState.isLoading || !isHeroSettled;
+  if (loadState.isError && heroReleaseId !== null)
+    return (
+      <section className={styles.row}>
+        <StudioLoadError loadState={loadState} />
+      </section>
+    );
   if (loadState.isError || loadState.isNotFound) return null;
-  if (!loadState.isLoading && gridReleases.length === 0 && !hasMore)
-    return null;
+  if (!isGridLoading && gridReleases.length === 0 && !hasMore) return null;
 
   return (
     <section className={styles.row} aria-labelledby={headingId}>
@@ -40,7 +56,7 @@ export function StudioNewReleases({
           />
         </h2>
       </div>
-      {loadState.isLoading ? (
+      {isGridLoading ? (
         <StudioCardGridSkeleton count={8} className={styles.rowGrid} />
       ) : (
         <div className={styles.rowGrid}>
@@ -49,7 +65,7 @@ export function StudioNewReleases({
           ))}
         </div>
       )}
-      {(hasMore || isFetchNextPageError) && (
+      <Collapse isOpen={!isGridLoading && (hasMore || isFetchNextPageError)}>
         <div className={kit.moreFooter}>
           <LoadMoreFooter
             isFetchingNextPage={isFetchingNextPage}
@@ -60,7 +76,7 @@ export function StudioNewReleases({
             errorMessage={t("studio:home.newReleases.loadMoreError")}
           />
         </div>
-      )}
+      </Collapse>
     </section>
   );
 }

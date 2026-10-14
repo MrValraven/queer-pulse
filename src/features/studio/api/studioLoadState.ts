@@ -1,4 +1,4 @@
-import { isStudioNotFound } from "./studio.api";
+import { isStudioNotFound, isStudioWithdrawn } from "./studio.api";
 
 /** The subset of a React Query result the Studio pages branch on. */
 export interface StudioQueryLike {
@@ -15,9 +15,12 @@ export interface StudioLoadState {
    *  Retry runs, so the error panel (and the focus on its button) stays. */
   isError: boolean;
   isRetrying: boolean;
-  /** The server answered 404: missing, or a draft or taken-down release
+  /** The server answered 404: missing, a draft, or a persona that is gone,
    *  for someone who does not own it. */
   isNotFound: boolean;
+  /** The server answered 410 `studio_release_withdrawn`: our team took the
+   *  release down. The page shows the withdrawn view at the same URL. */
+  isWithdrawn: boolean;
   retry: () => void;
 }
 
@@ -26,18 +29,23 @@ export interface StudioLoadState {
  * "Show more" also sets `isError` on an infinite query, and that must never
  * wipe the pages already loaded. A never-loaded query that failed is gated on
  * `errorUpdateCount`, which survives React Query's reset to pending on Retry.
+ * The global retry rule never repeats a 4xx, so a 404 or 410 lands at once.
  */
 export function studioLoadStateOf(
   query: StudioQueryLike,
   hasData: boolean,
 ): StudioLoadState {
   const hasFailed = query.errorUpdateCount > 0;
-  const isNotFound = !hasData && hasFailed && isStudioNotFound(query.error);
+  const hasNothing = !hasData && hasFailed;
+  const isWithdrawn = hasNothing && isStudioWithdrawn(query.error);
+  const isNotFound =
+    hasNothing && !isWithdrawn && isStudioNotFound(query.error);
   return {
     isLoading: !hasData && !hasFailed,
-    isError: !hasData && hasFailed && !isNotFound,
-    isRetrying: !hasData && hasFailed && query.isFetching,
+    isError: hasNothing && !isNotFound && !isWithdrawn,
+    isRetrying: hasNothing && query.isFetching,
     isNotFound,
+    isWithdrawn,
     retry: () => {
       void query.refetch();
     },
@@ -50,5 +58,6 @@ export const STUDIO_NOT_FOUND_STATE: StudioLoadState = {
   isError: false,
   isRetrying: false,
   isNotFound: true,
+  isWithdrawn: false,
   retry: () => {},
 };

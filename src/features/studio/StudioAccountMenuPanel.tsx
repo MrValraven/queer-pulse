@@ -16,6 +16,7 @@ import {
   type StudioAccountMenuItem,
 } from "./studioAccountMenu.data";
 import styles from "./StudioAccountMenu.module.css";
+import { StudioCreditsBadge } from "./StudioCreditsBadge";
 
 /** The open panel of {@link StudioAccountMenu}: the member's header, the
  *  library, their artist pages, the creator pages, the theme switch, and the
@@ -173,6 +174,7 @@ function StudioAccountMenuLink({
     <Link to={item.to} className={styles.item} onClick={onNavigate}>
       <Icon aria-hidden className={styles.itemIcon} />
       <span className={styles.itemLabel}>{t(item.labelKey)}</span>
+      {item.badge === "creditRequests" && <StudioCreditsBadge />}
     </Link>
   );
 }

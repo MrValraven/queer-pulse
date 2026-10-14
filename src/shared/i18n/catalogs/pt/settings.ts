@@ -278,7 +278,7 @@ export const settings: Catalog = {
   // PRD-208. Paralelo a topicFollows acima, ver a nota no catálogo EN.
   "notifications.volume.personaFollows.title": "Personas que segues",
   "notifications.volume.personaFollows.desc":
-    "Trabalho novo de uma persona que escolheste seguir",
+    "Trabalho novo e novidades de uma persona que escolheste seguir",
   "notifications.volume.recognition.title": "Reconhecimento",
   "notifications.volume.recognition.desc":
     "Níveis, distintivos, apoios, créditos e novos seguidores",

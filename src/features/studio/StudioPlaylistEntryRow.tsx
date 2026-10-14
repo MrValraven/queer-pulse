@@ -13,6 +13,13 @@ import { useMotionPrefs } from "../../app/providers/motionPrefs";
 import { ImageSlot } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { StudioPlaylistEntryView } from "./api/studio.adapters";
+import { useStudioHideExplicit } from "./api/useStudioPlaybackPreferences";
+import { StudioTrackMenu } from "./player/ui/StudioTrackMenu";
+import {
+  StudioHiddenTrackNote,
+  StudioHiddenTrackNumber,
+} from "./StudioHiddenTrack";
+import hiddenCss from "./StudioHiddenTrack.module.css";
 import styles from "./studio.module.css";
 import kit from "./studioKit.module.css";
 import releaseStyles from "./StudioRelease.module.css";
@@ -131,14 +138,22 @@ function EntryControls({
 
 /** One playlist entry: play inside the playlist, open the track, and for
  *  the owner a drag handle, Move up, Move down and Remove. An unavailable
- *  entry (owner only) reads "No longer available" and offers Remove only.
- *  Rows glide to a new place and fade out on removal. */
+ *  entry (owner only) reads Withdrawn when our team took its release down,
+ *  else No longer available, and offers Remove only. An explicit track
+ *  hidden by the member's settings shows its number in place of the play
+ *  button. Rows glide to a new place and fade out on removal. */
 export function StudioPlaylistEntryRow(props: StudioPlaylistEntryRowProps) {
   const { t } = useTranslation();
   const { reducedMotion } = useMotionPrefs();
   const { entry, isOwner, isBusy, isCurrent, isPlaying } = props;
+  const shouldHideExplicit = useStudioHideExplicit();
   const track = entry.track;
-  const title = track?.title ?? t("studio:playlist.row.unavailable");
+  const isHidden = shouldHideExplicit && track?.isExplicit === true;
+  const unavailableLabel =
+    entry.unavailableReason === "withdrawn"
+      ? t("studio:withdrawnLive.rowLabel")
+      : t("studio:playlist.row.unavailable");
+  const title = track?.title ?? unavailableLabel;
   return (
     <m.li
       layout="position"
@@ -149,6 +164,7 @@ export function StudioPlaylistEntryRow(props: StudioPlaylistEntryRowProps) {
         css.row,
         isOwner && css.rowOwner,
         !entry.isAvailable && css.rowUnavailable,
+        isHidden && hiddenCss.hidden,
         isCurrent && styles.setRowNow,
       ]
         .filter(Boolean)
@@ -179,7 +195,7 @@ export function StudioPlaylistEntryRow(props: StudioPlaylistEntryRowProps) {
           // An unavailable entry cannot move: the empty cell keeps the grid.
           <span className={css.handle} aria-hidden />
         ))}
-      {track ? (
+      {track && !isHidden ? (
         <button
           type="button"
           className={releaseStyles.rowPlay}
@@ -200,6 +216,8 @@ export function StudioPlaylistEntryRow(props: StudioPlaylistEntryRowProps) {
             {isPlaying ? <FiPause /> : <FiPlay />}
           </span>
         </button>
+      ) : track ? (
+        <StudioHiddenTrackNumber position={entry.position} />
       ) : (
         <span className={css.position} aria-hidden>
           {entry.position}
@@ -230,9 +248,21 @@ export function StudioPlaylistEntryRow(props: StudioPlaylistEntryRowProps) {
             {`${track.release.artist.name} · ${track.release.title}`}
           </div>
         )}
+        {isHidden && <StudioHiddenTrackNote />}
       </div>
-      <div className={`${styles.tm} ${css.duration}`}>
+      <div className={`${styles.tm} ${css.duration} ${releaseStyles.timeCell}`}>
         {track?.durationLabel ?? ""}
+        {track && (
+          <StudioTrackMenu
+            track={{
+              id: track.id,
+              title: track.title,
+              href: track.href,
+              hasAudio: track.hasAudio,
+              isExplicit: track.isExplicit,
+            }}
+          />
+        )}
       </div>
       {isOwner && <EntryControls {...props} title={title} />}
     </m.li>

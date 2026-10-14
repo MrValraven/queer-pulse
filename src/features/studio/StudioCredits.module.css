@@ -1,0 +1,146 @@
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 30px;
+}
+
+@media (--md) {
+  .body {
+    padding: 20px 16px;
+  }
+}
+
+.section {
+  padding: 20px 22px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-14);
+  background: var(--surface);
+}
+
+.sectionTitle {
+  margin: 0 0 12px;
+  font-family: var(--serif);
+  font-size: var(--text-18);
+  font-weight: 400;
+  color: var(--text);
+}
+
+.sectionTitle em {
+  font-style: italic;
+  color: var(--studio-jade-text);
+}
+
+.sectionTitle:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.rows {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  border-top: 1px solid var(--line);
+}
+
+.cover {
+  flex: none;
+  width: 48px;
+  height: 48px;
+}
+
+.rowText {
+  flex: 1 1 220px;
+  min-width: 0;
+}
+
+.line {
+  margin: 0;
+  font-size: var(--text-14);
+  line-height: 1.4;
+  color: var(--text);
+  overflow-wrap: anywhere;
+}
+
+.releaseLine {
+  margin: 2px 0 0;
+  font-size: var(--text-12);
+  color: var(--studio-text-muted);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.error {
+  margin: 0;
+  font-size: var(--text-13);
+  color: var(--studio-accent-text);
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  margin-left: 6px;
+  padding: 0 5px;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--accent-rgb), 0.16);
+  color: var(--studio-accent-chip-text);
+  font-size: var(--text-11);
+  font-weight: 700;
+}
+
+/* The creator nav's current pill is inverted (`--bg` text on `--text`,
+   creator.module.css .navItemActive), so its badge inverts too and keeps
+   its contrast in both themes. */
+[aria-current="page"] > .badge {
+  background: var(--bg);
+  color: var(--text);
+}
+
+.inlineLink,
+.personaChip {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition-property: color;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+/* The requesting persona's name, linked only for a listenable persona. */
+.personaChip {
+  font-weight: 600;
+}
+
+.inlineLink:focus-visible,
+.personaChip:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+@media (hover: hover) {
+  .inlineLink:hover,
+  .personaChip:hover {
+    color: var(--studio-accent-text);
+  }
+}

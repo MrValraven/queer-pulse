@@ -126,7 +126,14 @@ export const DEMO_PLAYLIST_SEEDS: DemoPlaylistSeed[] = [
     creditPersonaId: null,
     creditMember: DEMO_VIEWER_MEMBER,
     creditMemberSlug: DEMO_VIEWER_MEMBER_SLUG,
-    trackIds: ["demo-track-home-2-01", "demo-track-home-4-01"],
+    // The last one points at a track that is gone for another reason, so the
+    // demo shows a plain "No longer available" row beside Kitchen tapes'
+    // withdrawn one.
+    trackIds: [
+      "demo-track-home-2-01",
+      "demo-track-home-4-01",
+      "demo-track-gone-01",
+    ],
     updatedAt: "2026-10-10T20:00:00.000Z",
   },
 ];

@@ -17,6 +17,7 @@ import {
 import {
   businessPath,
   communityPath,
+  personaUpdatesPath,
   routes,
   thread,
 } from "../../../app/routeMap";
@@ -33,7 +34,7 @@ import { writerTabHref } from "../../magazine/writerTabs";
 import { communityPostPath } from "../../communities/communityPostPath";
 import { barterProposalsPath } from "../../economy/barterProposals.paths";
 import { adminQueueRoute } from "./adminQueueRoutes";
-import { studioReleasePath } from "../../studio/studioPaths";
+import { studioReleasePath, studioTrackPath } from "../../studio/studioPaths";
 import {
   lifecycleSourceHref,
   personaImportHref,
@@ -325,6 +326,40 @@ const PERSONALIZED_KINDS = new Set<NotificationKind>([
   "forum_co_author_credit",
 ]);
 
+/**
+ * Kinds whose own copy already counts their bundled rows, so the row adds no
+ * "and 3 others" suffix: `admin_queue_item`, `studio_release_published`,
+ * `studio_credit_requested`, `persona_post` and `studio_episode_published`.
+ */
+const OWN_BUNDLE_COUNT_KINDS: ReadonlySet<string> = new Set([
+  "admin_queue_item",
+  "studio_release_published",
+  "studio_credit_requested",
+  "persona_post",
+  "studio_episode_published",
+]);
+
+/**
+ * Studio artist kinds: the one action of a `studio_episode_published` row,
+ * straight to the episode. A payload without a track id has no action and the
+ * row stays.
+ */
+function studioEpisodeActionsOf(
+  dto: NotificationDTO,
+  t: TFunction,
+): Notification["actions"] | undefined {
+  if (dto.type !== "studio_episode_published") return undefined;
+  const trackId = (dto.payload as { trackId?: unknown } | null)?.trackId;
+  if (typeof trackId !== "string" || !trackId) return undefined;
+  return [
+    {
+      label: t("notifications:actions.listenNow"),
+      variant: "primary",
+      href: studioTrackPath(trackId),
+    },
+  ];
+}
+
 export function notificationDtoToView(
   dto: NotificationDTO,
   t: TFunction,
@@ -365,9 +400,10 @@ export function notificationDtoToView(
     // waiting for a look"), so `NotificationItem` must not also append the
     // generic "and 3 others" bundle suffix on top of it: that would both
     // double-count and speak about people where none are named.
-    // `studio_release_published` counts its bundled releases in its own copy too.
-    hasOwnBundleCount:
-      kind === "admin_queue_item" || kind === "studio_release_published",
+    // `studio_release_published`, `studio_credit_requested` and
+    // `studio_episode_published` count their
+    // bundled rows in their own copy too.
+    hasOwnBundleCount: kind !== null && OWN_BUNDLE_COUNT_KINDS.has(kind),
     time: formatTime(dto.createdAt, fmt),
     createdAtIso: dto.createdAt,
   };
@@ -586,6 +622,37 @@ export function notificationDtoToView(
         },
       ];
     }
+  }
+
+  // Studio artist kinds: one action, straight to the episode.
+  view.actions = studioEpisodeActionsOf(dto, t) ?? view.actions;
+
+  // Studio v3: one action, straight to the persona's Updates block. A
+  // payload without an address drops the action and keeps the row.
+  if (dto.type === "persona_post") {
+    const handle = (dto.payload as { subprofileSlugOrHandle?: unknown } | null)
+      ?.subprofileSlugOrHandle;
+    if (typeof handle === "string" && handle) {
+      view.actions = [
+        {
+          label: t("notifications:actions.readUpdate"),
+          variant: "primary",
+          href: personaUpdatesPath(handle),
+        },
+      ];
+    }
+  }
+
+  // Studio discovery: one action, straight to the credits inbox, where the
+  // member accepts or declines.
+  if (dto.type === "studio_credit_requested") {
+    view.actions = [
+      {
+        label: t("notifications:actions.reviewCredit"),
+        variant: "primary",
+        href: routes.studioCredits,
+      },
+    ];
   }
 
   return view;

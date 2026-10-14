@@ -148,6 +148,7 @@
 
 .releaseCellInner {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 6px;
 }
@@ -242,5 +243,21 @@
   .trackTable th {
     padding-block: 10px;
     padding-inline: 56px 4px;
+  }
+}
+
+/* Studio v3: Notify me holders on a scheduled release. */
+.reminders {
+  flex-basis: 100%;
+  /* Lines up under the title: the expand button's width plus the row gap. */
+  padding-inline-start: calc(var(--tap-min) + 6px);
+  font-size: var(--text-12);
+  color: var(--studio-text-muted);
+}
+
+@media (--sm) {
+  .reminders {
+    padding-inline-start: 0;
+    white-space: nowrap;
   }
 }

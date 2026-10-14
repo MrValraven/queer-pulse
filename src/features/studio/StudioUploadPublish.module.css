@@ -69,9 +69,14 @@
   color: var(--studio-accent-soft-text);
 }
 
+.publishSlot {
+  margin-inline-start: auto;
+}
+
 .stepNav {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   justify-content: space-between;
   gap: 12px;
   padding-top: 6px;

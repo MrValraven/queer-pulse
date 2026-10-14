@@ -54,16 +54,20 @@ describe("library (demo)", () => {
     ).toBeInTheDocument();
   });
 
-  it("lists saved releases, an unavailable one included and unlinked", async () => {
+  it("links a withdrawn save to its release and leaves another lost save unlinked", async () => {
     renderAt("/studio/library");
     fireEvent.click(screen.getByRole("tab", { name: "Releases" }));
     const panel = await screen.findByRole("tabpanel");
     expect(
       within(panel).getByRole("link", { name: "Cidade dos santos" }),
     ).toBeInTheDocument();
-    expect(within(panel).getByText("Bairro antigo")).toBeInTheDocument();
     expect(
-      within(panel).queryByRole("link", { name: "Bairro antigo" }),
+      within(panel).getByRole("link", { name: "Bairro antigo" }),
+    ).toHaveAttribute("href", "/studio/album?id=demo-release-withdrawn");
+    expect(within(panel).getByText("Withdrawn")).toBeInTheDocument();
+    expect(within(panel).getByText("Demo tape, 2019")).toBeInTheDocument();
+    expect(
+      within(panel).queryByRole("link", { name: "Demo tape, 2019" }),
     ).not.toBeInTheDocument();
     expect(within(panel).getByText("No longer available")).toBeInTheDocument();
   });

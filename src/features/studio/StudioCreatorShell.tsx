@@ -10,6 +10,7 @@ import { StudioAccountMenu } from "./StudioAccountMenu";
 import { useStudioShowcase } from "./useStudioShowcase";
 import { useStudioShellSignal } from "./useStudioShellSignal";
 import { NAV } from "./StudioCreatorShell.data";
+import { StudioCreditsBadge } from "./StudioCreditsBadge";
 import s from "./creator.module.css";
 import shellStyles from "./StudioShell.module.css";
 
@@ -65,6 +66,7 @@ export function StudioCreatorShell({
                       ? item.labelKey
                       : (item.liveLabelKey ?? item.labelKey),
                   )}
+                  {item.badge === "creditRequests" && <StudioCreditsBadge />}
                 </NavLink>
               );
             },

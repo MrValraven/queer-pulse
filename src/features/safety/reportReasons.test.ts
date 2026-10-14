@@ -194,6 +194,8 @@ describe("SUBJECT_REASONS", () => {
       "conversation",
       "identity",
       "group_listing",
+      "studio_release",
+      "persona_post",
     ];
     expect(Object.keys(SUBJECT_REASONS).sort()).toEqual(
       [...backendSubjectTypes].sort(),

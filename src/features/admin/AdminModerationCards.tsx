@@ -21,6 +21,7 @@ import {
   priorReportsText,
   reporterCredibilityText,
 } from "./adminModeration.data";
+import { AdminPersonaPostThumb } from "./AdminPersonaPostThumb";
 import { AdminStudioReleaseThumb } from "./AdminStudioReleaseThumb";
 import studioStyles from "./AdminStudio.module.css";
 import { ageLabelOf, type ModReportView } from "./moderationAge";
@@ -121,9 +122,14 @@ export function ReportCard({
         </span>
 
         <span className={styles.reportTitle}>
-          {report.subjectType === "studio_release" ? (
+          {report.subjectType === "studio_release" ||
+          report.subjectType === "persona_post" ? (
             <span className={studioStyles.titleRow}>
-              <AdminStudioReleaseThumb releaseId={report.subjectId} />
+              {report.subjectType === "studio_release" ? (
+                <AdminStudioReleaseThumb releaseId={report.subjectId} />
+              ) : (
+                <AdminPersonaPostThumb postId={report.subjectId} />
+              )}
               <span className={studioStyles.titleText}>
                 {report.title} {report.titleEm && <em>{report.titleEm}</em>}{" "}
                 {report.titleAfter}

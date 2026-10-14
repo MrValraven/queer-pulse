@@ -1,7 +1,10 @@
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
+import { STUDIO_RELEASE_STATUS_LABEL_KEY } from "./api/studio.adapters";
+import type { StudioArtistStatsView } from "./api/studio.adapters";
 import { StudioDashboardPage } from "./StudioDashboardPage";
+import { StudioNumbersTable } from "./StudioNumbersTable";
 
 const control = vi.hoisted(() => ({ hasNoPersona: false }));
 vi.mock("./useStudioShowcase", () => ({ useStudioShowcase: () => false }));
@@ -65,6 +68,44 @@ describe("Your numbers (demo stats, live layout)", () => {
     ).toHaveAttribute("aria-expanded", "true");
     expect(
       await screen.findByRole("rowheader", { name: /carta para a santa/i }),
+    ).toBeInTheDocument();
+  });
+
+  it("shows how many members wait for a scheduled release", async () => {
+    renderPage();
+    const row = await screen.findByRole("rowheader", { name: /maré alta/i });
+    expect(within(row).getByText("Scheduled")).toBeInTheDocument();
+    expect(within(row).getByText("Waiting for it: 12")).toBeInTheDocument();
+  });
+
+  it("reads Fewer than 5 for a scheduled release with a withheld reminder count", () => {
+    const release = {
+      id: "release-1",
+      title: "Maré alta",
+      href: "/studio/album?id=release-1",
+    };
+    const stats = {
+      subprofileId: "persona-1",
+      followerCount: 0,
+      releases: [
+        {
+          release,
+          status: "scheduled",
+          statusLabelKey: STUDIO_RELEASE_STATUS_LABEL_KEY.scheduled,
+          saves: { value: 0, isBelowThreshold: false },
+          playlistInclusions: { value: 0, isBelowThreshold: false },
+          tracks: [],
+          reminders: { value: null, isBelowThreshold: true },
+        },
+      ],
+    } as unknown as StudioArtistStatsView;
+    render(
+      <TestProviders>
+        <StudioNumbersTable stats={stats} personaName="Mariana Sol" />
+      </TestProviders>,
+    );
+    expect(
+      screen.getByText("Waiting for it: Fewer than 5"),
     ).toBeInTheDocument();
   });
 

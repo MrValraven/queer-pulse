@@ -2,19 +2,22 @@ import { FiArrowRight } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { STUDIO_RELEASE_TYPES_BY_KIND } from "./api/studio.types";
+import { formatOfKind } from "./api/studio.adapters";
 import { CoverArt } from "./StudioUploadCoverArt";
+import { personaSwitchPatch } from "./studioUploadDraft.data";
 import { StudioUploadPersonaPicker } from "./StudioUploadPersonaPicker";
 import { StudioUploadReleaseFields } from "./StudioUploadReleaseFields";
 import type { StudioUploadDraft } from "./useStudioUploadDraft";
 import s from "./creator.module.css";
 
 /** The release step: persona, details and cover. Leaving it creates the
- *  draft; after that a draft's edits save themselves, and a published
- *  release's edits save on "Save changes". */
+ *  draft; after that a draft's edits save themselves, and a published or
+ *  scheduled release's edits save on "Save changes". */
 export function MetadataStep({ draft }: { draft: StudioUploadDraft }) {
   const { t } = useTranslation();
-  const isPublished = draft.isStructureLocked;
+  const isPublished = draft.hasLiveDetails;
+  const isShow =
+    draft.persona !== null && formatOfKind(draft.persona.kind) === "podcast";
   let saveStatus = "";
   if (draft.saveErrorKey) saveStatus = t(draft.saveErrorKey);
   else if (draft.isSaving) saveStatus = t("studio:uploadFlow.saving");
@@ -27,7 +30,11 @@ export function MetadataStep({ draft }: { draft: StudioUploadDraft }) {
       <div className={s.cardH}>
         <h3>
           <Translation
-            i18nKey="studio:uploadFlow.release.heading"
+            i18nKey={
+              isShow
+                ? "studio:uploadFlow.release.headingShow"
+                : "studio:uploadFlow.release.heading"
+            }
             components={{ em: <em /> }}
           />
         </h3>
@@ -41,10 +48,13 @@ export function MetadataStep({ draft }: { draft: StudioUploadDraft }) {
         isLocked={draft.release !== null}
         onChange={(persona) => {
           draft.setField("subprofileId", persona.id);
-          draft.setField(
-            "type",
-            STUDIO_RELEASE_TYPES_BY_KIND[persona.kind][0] ?? "single",
-          );
+          // Artist kinds: type, genre preset and a show's empty genre, mood
+          // and scene all follow the persona.
+          const patch = personaSwitchPatch(persona.kind, draft.form);
+          draft.setField("type", patch.type);
+          draft.setField("genre", patch.genre);
+          draft.setField("mood", patch.mood);
+          draft.setField("sceneId", patch.sceneId);
         }}
       />
       <StudioUploadReleaseFields draft={draft} />
@@ -68,7 +78,11 @@ export function MetadataStep({ draft }: { draft: StudioUploadDraft }) {
           onClick={() => void draft.continueToTracks()}
           aria-disabled={draft.isSaving || undefined}
         >
-          {t("studio:uploadFlow.release.continueCta")}{" "}
+          {t(
+            isShow
+              ? "studio:uploadFlow.release.continueCtaShow"
+              : "studio:uploadFlow.release.continueCta",
+          )}{" "}
           <FiArrowRight aria-hidden />
         </Button>
         <p className={s.saveStatus} role="status">

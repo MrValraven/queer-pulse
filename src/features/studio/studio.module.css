@@ -101,7 +101,7 @@
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--text40);
+  color: var(--studio-text-muted);
   padding: 0 22px 8px;
 }
 .railItem {

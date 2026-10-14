@@ -207,3 +207,15 @@ export const RELEASES: Release[] = [
     state: "live",
   },
 ];
+
+// ── Studio open pages: the live Rights page (spec section 3.6) ────────────
+
+export const RIGHTS_LIVE_SECTIONS: {
+  id: string;
+  headingKey: string;
+  bodyKey: string;
+}[] = ["checkbox", "report", "dispute", "unpublish"].map((id) => ({
+  id,
+  headingKey: `studio:rightsLive.sec.${id}.heading`,
+  bodyKey: `studio:rightsLive.sec.${id}.body`,
+}));

@@ -1,0 +1,237 @@
+.about {
+  max-width: 68ch;
+  margin: 0 0 32px;
+}
+
+.about h2,
+.listHead h2 {
+  margin: 0 0 12px;
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: var(--text-28);
+  color: var(--studio-text);
+}
+
+.about p {
+  margin: 0;
+  color: var(--studio-text-muted);
+  white-space: pre-wrap;
+}
+
+.support {
+  max-width: 68ch;
+  margin: 0 0 32px;
+}
+
+.support:empty {
+  display: none;
+}
+
+.episodes {
+  padding-bottom: 40px;
+}
+
+.listHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 18px;
+  margin-bottom: 16px;
+}
+
+.listHead h2 {
+  margin: 0;
+}
+
+.sort {
+  display: inline-flex;
+  gap: 4px;
+  padding: 4px;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--studio-ink-rgb), 0.06);
+}
+
+.sortButton,
+.action,
+.add {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: var(--tap-min);
+  padding: 0 14px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: none;
+  color: var(--studio-text);
+  font: inherit;
+  font-size: var(--text-13);
+  text-decoration: none;
+  cursor: pointer;
+  transition-property: background-color, color;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+.sortButton[aria-pressed="true"] {
+  background: var(--studio-surface);
+  color: var(--studio-accent-text);
+}
+
+.action,
+.add {
+  border: 1px solid rgba(var(--studio-ink-rgb), 0.2);
+}
+
+.add {
+  margin-left: auto;
+}
+
+.sortButton:focus-visible,
+.action:focus-visible,
+.add:focus-visible,
+.play:focus-visible,
+.title a:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.empty {
+  margin: 0 0 16px;
+  color: var(--studio-text-muted);
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.item {
+  display: flow-root;
+}
+
+.item[data-is-moving] {
+  position: relative;
+  z-index: 1;
+  background: var(--studio-surface);
+}
+
+.item + .item {
+  border-top: 1px solid rgba(var(--studio-ink-rgb), 0.1);
+}
+
+.episode {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 12px 16px;
+  align-items: start;
+  padding: 16px 0;
+}
+
+.episode[aria-current="true"] .title a {
+  color: var(--studio-accent-text);
+}
+
+.play,
+.playSpacer {
+  width: var(--tap-min);
+  height: var(--tap-min);
+}
+
+.play {
+  display: inline-grid;
+  place-items: center;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+  color: var(--studio-surface);
+  cursor: pointer;
+}
+
+.body {
+  min-width: 0;
+}
+
+.eyebrow {
+  margin: 0;
+  font-size: var(--text-12);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--studio-text-muted);
+}
+
+.draftChip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--studio-ink-rgb), 0.08);
+  color: var(--studio-text);
+}
+
+.title {
+  margin: 4px 0;
+  font-size: var(--text-16);
+  font-weight: 600;
+}
+
+.title a {
+  color: var(--studio-text);
+  text-decoration: none;
+  transition-property: color;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+.facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  margin: 0;
+  font-size: var(--text-13);
+  color: var(--studio-text-muted);
+}
+
+.played {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--studio-accent-text);
+}
+
+.hiddenNote {
+  margin: 6px 0 0;
+  font-size: var(--text-13);
+}
+
+.excerpt {
+  display: -webkit-box;
+  margin: 8px 0 0;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  font-size: var(--text-14);
+  color: var(--studio-text-muted);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+}
+
+.draftsHeading {
+  margin: 24px 0 8px;
+  font-size: var(--text-16);
+  color: var(--studio-text);
+}
+
+@media (max-width: 560px) {
+  .episode {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .actions {
+    grid-column: 2;
+  }
+}

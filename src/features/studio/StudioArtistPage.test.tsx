@@ -6,14 +6,17 @@ import {
   within,
 } from "@testing-library/react";
 import { QueryClient } from "@tanstack/react-query";
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
 import { toArtistView } from "./api/studio.adapters";
 import { demoStudioArtist } from "./api/studioDemoApi";
+import { resetDemoCreditLedger } from "./api/studioDemoCreditLedger";
 import { DEMO_ARTIST_MARIANA } from "./api/studioDemoMe.data";
 import { studioKeys } from "./api/studioQueryKeys";
 import { StudioArtistMain } from "./StudioArtistMain";
 import { StudioArtistPage } from "./StudioArtistPage";
+
+beforeEach(() => resetDemoCreditLedger());
 
 describe("StudioArtistPage (demo fixture)", () => {
   it("shows the artist from data with a working tablist", async () => {
@@ -179,6 +182,83 @@ describe("StudioArtistPage (demo fixture)", () => {
   });
 });
 
+describe("StudioArtistPage artist tools (demo fixture)", () => {
+  it("shows a visitor the Upcoming card with Notify me and the support links", async () => {
+    render(
+      <TestProviders initialEntries={["/studio/artist?id=sp-diogo-nightform"]}>
+        <StudioArtistPage />
+      </TestProviders>,
+    );
+    const upcoming = await screen.findByRole("region", { name: "Upcoming" });
+    expect(
+      within(upcoming).getByText("Night bus (extended)"),
+    ).toBeInTheDocument();
+    expect(
+      within(upcoming).getByRole("button", {
+        name: "Notify me when Night bus (extended) is out",
+      }),
+    ).toBeInTheDocument();
+    const support = screen.getByRole("region", { name: "Support NIGHTFORM" });
+    expect(
+      within(support).getByRole("link", { name: /bandcamp/i }),
+    ).toHaveAttribute("target", "_blank");
+  });
+
+  it("puts Press kit in a visitor's overflow menu", async () => {
+    render(
+      <TestProviders initialEntries={["/studio/artist?id=sp-diogo-nightform"]}>
+        <StudioArtistPage />
+      </TestProviders>,
+    );
+    fireEvent.click(
+      await screen.findByRole("button", { name: "More about NIGHTFORM" }),
+    );
+    expect(
+      await screen.findByRole("menuitem", { name: "Press kit" }),
+    ).toHaveAttribute("href", "/studio/press?id=sp-diogo-nightform");
+  });
+
+  it("shows the persona's updates in the About tab", async () => {
+    render(
+      <TestProviders initialEntries={["/studio/artist?id=sp-diogo-nightform"]}>
+        <StudioArtistPage />
+      </TestProviders>,
+    );
+    fireEvent.click(await screen.findByRole("tab", { name: "About" }));
+    expect(
+      await screen.findByRole("heading", { name: "Updates" }),
+    ).toBeInTheDocument();
+    expect(
+      await screen.findByText(
+        "new single in nine days, Night bus, the long version",
+      ),
+    ).toBeInTheDocument();
+  });
+
+  it("gives the owner Edit on an upcoming release, without Notify me", async () => {
+    render(
+      <TestProviders
+        initialEntries={["/studio/artist?id=demo-persona-mariana-sol"]}
+      >
+        <StudioArtistPage />
+      </TestProviders>,
+    );
+    const upcoming = await screen.findByRole("region", { name: "Upcoming" });
+    expect(
+      within(upcoming).getByRole("link", { name: "Edit Maré alta" }),
+    ).toHaveAttribute(
+      "href",
+      "/studio/upload?release=demo-release-scheduled-mare-alta",
+    );
+    expect(
+      within(upcoming).queryByRole("button", { name: /notify me/i }),
+    ).toBeNull();
+    expect(
+      screen.queryByRole("button", { name: "More about Mariana Sol" }),
+    ).toBeNull();
+  });
+});
+
 describe("StudioArtistMain playlists", () => {
   it("lists the persona's public playlists under a Public playlists heading", () => {
     const artistView = toArtistView(demoStudioArtist(DEMO_ARTIST_MARIANA.id));
@@ -210,5 +290,55 @@ describe("StudioArtistMain playlists", () => {
     expect(
       screen.queryByRole("heading", { level: 2, name: "Public playlists" }),
     ).not.toBeInTheDocument();
+  });
+});
+
+describe("artist discovery (demo)", () => {
+  it("lists the releases an artist appears on, with the roles, and related artists", async () => {
+    render(
+      <TestProviders initialEntries={["/studio/artist?id=sp-diogo-nightform"]}>
+        <StudioArtistPage />
+      </TestProviders>,
+    );
+    const appearsOn = await screen.findByRole("region", { name: "Appears on" });
+    expect(
+      within(appearsOn).getByRole("link", { name: "Cidade dos santos" }),
+    ).toBeInTheDocument();
+    expect(
+      within(appearsOn).getByText("Mariana Sol · Producer"),
+    ).toBeInTheDocument();
+    const related = await screen.findByRole("region", {
+      name: "Related artists",
+    });
+    const relatedNames = within(related)
+      .getAllByRole("link")
+      .map((link) => link.textContent ?? "");
+    expect(relatedNames[0]).toMatch(/Mariana Sol/);
+    expect(relatedNames).toHaveLength(4);
+  });
+
+  it("folds Appears on away for an artist with no accepted credits", async () => {
+    const queryClient = new QueryClient({
+      defaultOptions: { queries: { retry: false } },
+    });
+    render(
+      <TestProviders
+        queryClient={queryClient}
+        initialEntries={["/studio/artist?id=sp-jordan-lechatdashinko"]}
+      >
+        <StudioArtistPage />
+      </TestProviders>,
+    );
+    await screen.findByRole("region", { name: "Related artists" });
+    // The two reads land on their own clocks: wait for the Appears on answer
+    // itself before reading the fold.
+    await waitFor(() =>
+      expect(
+        queryClient.getQueryState(
+          studioKeys.appearsOn(true, "sp-jordan-lechatdashinko"),
+        )?.status,
+      ).toBe("success"),
+    );
+    expect(screen.queryByRole("region", { name: "Appears on" })).toBeNull();
   });
 });

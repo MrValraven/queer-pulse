@@ -1,0 +1,118 @@
+.banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  /* The hero adds its own 40px of top padding: the banner takes the top
+     spacing and pulls the hero up so both read as one block. */
+  margin: 24px 0 -16px;
+  padding: 12px 16px;
+  border-radius: var(--radius-12);
+  border: 1px solid rgba(var(--accent-rgb), 0.4);
+  background: rgba(var(--accent-rgb), 0.08);
+  color: var(--studio-text);
+  font-size: var(--text-14);
+}
+
+/* The lock keeps its size when the banner wraps on a narrow phone. */
+.banner svg {
+  flex-shrink: 0;
+}
+
+@media (--md) {
+  .banner {
+    margin: 16px 0 -24px;
+  }
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  padding-bottom: 40px;
+}
+
+.tracks {
+  list-style: none;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  background: rgba(var(--studio-ink-rgb), 0.04);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-18);
+  padding: 12px 26px;
+}
+
+@media (--md) {
+  .tracks {
+    padding-inline: 14px;
+  }
+}
+
+.track {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  padding: 8px 0;
+  border-top: 1px solid var(--line);
+}
+
+/* The card's own padding frames the first row. */
+.track:first-child {
+  border-top: none;
+}
+
+.track[aria-current="true"] {
+  background: rgba(var(--accent-rgb), 0.08);
+  border-radius: var(--radius-8);
+}
+
+.trackPlay {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: var(--tap-min);
+  min-height: var(--tap-min);
+  padding: 0 8px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: none;
+  color: var(--studio-text);
+  cursor: pointer;
+}
+
+.trackPlay:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.trackPlay[aria-disabled="true"] {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.trackNumber {
+  min-width: 2ch;
+  color: var(--studio-text-muted);
+}
+
+.trackText {
+  min-width: 0;
+}
+
+.trackTitle {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.trackTitleHidden {
+  color: var(--studio-text-muted);
+}
+
+.trackTime {
+  font-size: var(--text-13);
+  color: var(--studio-text-muted);
+}

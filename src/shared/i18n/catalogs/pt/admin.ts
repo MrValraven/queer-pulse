@@ -2244,6 +2244,10 @@ export const admin: Catalog = {
 
   // ── Sugestões de edição ──────────────────────────────────────────────────────
   "editSuggestions.empty": "Sem correções neste filtro, por agora.",
+  "editSuggestions.pendingCount_one": "{count} sugestão à espera",
+  "editSuggestions.pendingCount_other": "{count} sugestões à espera",
+  "editSuggestions.pendingCountAtLeast":
+    "Pelo menos {count} sugestões à espera",
   "editSuggestions.loadError.title": "As correções não carregaram",
   "editSuggestions.loadError.body":
     "A falha é do nosso lado, por isso nada aparece porque nada chegou. Pode haver pessoas à espera de uma correção. Tenta de novo.",
@@ -3271,6 +3275,18 @@ export const admin: Catalog = {
     "Mensagem oficial enviada",
   "governance.audit.actionType.official_broadcast_sent":
     "Mensagem oficial enviada a todos",
+  // Decisões da equipa no Studio.
+  "governance.audit.actionType.studio_access_granted": "Acesso ao Studio dado",
+  "governance.audit.actionType.studio_access_revoked":
+    "Acesso ao Studio retirado",
+  "governance.audit.actionType.studio_release_taken_down":
+    "Lançamento do Studio retirado",
+  "governance.audit.actionType.studio_release_restored":
+    "Lançamento do Studio reposto",
+  "governance.audit.actionType.studio_release_dispute_upheld":
+    "Contestação do Studio aceite",
+  "governance.audit.actionType.studio_release_dispute_rejected":
+    "Contestação do Studio recusada",
   "governance.audit.range.today": "Hoje",
   "governance.audit.range.week": "Esta semana",
   "governance.audit.range.quarter": "Este trimestre",
@@ -4928,14 +4944,9 @@ export const admin: Catalog = {
     "{name} passou a ter o selo de negócio queer verificado.",
   "adminListings.queerOwned.toast.unverified":
     "Retirámos o selo de negócio queer verificado a {name}.",
-  "listingClaims.empty": "Sem reivindicações neste filtro, por agora.",
   "listingClaims.loadError.title": "A fila de reivindicações não carregou",
   "listingClaims.loadError.body":
     "A falha é do nosso lado, por isso a fila está vazia porque nada chegou. Pode haver reivindicações pendentes. Tenta de novo.",
-  "listingClaims.claimedBy": "Reivindicado por {name}",
-  "listingClaims.unknownClaimant": "um membro desconhecido",
-  "listingClaims.approveCta": "Aprovar",
-  "listingClaims.declineCta": "Recusar",
   "communities.grid.truncatedNotice":
     "A leitura das denúncias atingiu o limite. Podem faltar denúncias recentes nestes números de saúde.",
   "communities.queue.truncatedNotice":
@@ -5286,6 +5297,38 @@ export const admin: Catalog = {
   "listingClaims.pendingCount_other": "{count} reivindicações à espera",
   "listingClaims.loadMore": "Carregar mais reivindicações",
   "listingClaims.loadingMore": "A carregar…",
+  "listingClaims.intro":
+    "Membros que dizem gerir um espaço listado aqui. Se aprovares, a ficha passa a ser deles.",
+  "listingClaims.emptyState.pending.title": "Nenhuma reivindicação à espera",
+  "listingClaims.emptyState.pending.body":
+    "Quando um membro diz que gere um espaço do diretório, a reivindicação chega aqui para reveres.",
+  "listingClaims.emptyState.approved.title":
+    "Ainda não há reivindicações aprovadas",
+  "listingClaims.emptyState.approved.body":
+    "As reivindicações que aprovares aparecem aqui enquanto esta página estiver aberta.",
+  "listingClaims.emptyState.declined.title":
+    "Ainda não há reivindicações recusadas",
+  "listingClaims.emptyState.declined.body":
+    "As reivindicações que recusares aparecem aqui enquanto esta página estiver aberta.",
+  "listingClaims.emptyState.all.title": "Nada para rever",
+  "listingClaims.emptyState.all.body":
+    "Aqui aparecem as reivindicações pendentes e as que decidires enquanto esta página estiver aberta.",
+  "listingClaims.row.filed": "Enviada a {date}",
+  "listingClaims.row.waiting_one": "À espera há {count} dia",
+  "listingClaims.row.waiting_other": "À espera há {count} dias",
+  "listingClaims.row.waited_one": "Esperou {count} dia",
+  "listingClaims.row.waited_other": "Esperou {count} dias",
+  "listingClaims.row.claimantLabel": "Reivindicada por",
+  "listingClaims.row.formerMember": "um membro que entretanto saiu",
+  "listingClaims.row.noteLabel": "A nota que deixou",
+  "listingClaims.row.openListingAria": "Abrir {name} no editor de fichas",
+  "listingClaims.row.approveCta": "Aprovar reivindicação",
+  "listingClaims.row.approveAria": "Aprovar reivindicação de {name}",
+  "listingClaims.row.declineCta": "Recusar reivindicação",
+  "listingClaims.row.declineAria": "Recusar reivindicação de {name}",
+  "listingClaims.approveConfirm.title": "Aprovar a reivindicação de {listing}?",
+  "listingClaims.approveConfirm.body":
+    "Isto torna {claimant} responsável por {listing}, com acesso para editar a página a partir daí.",
   "governance.overview.health.stat.activeMembers": "Pessoas ativas",
   "governance.overview.health.stat.retention": "Taxa de retenção de pessoas",
   "governance.overview.health.stat.reportsFiled":
@@ -8058,11 +8101,29 @@ export const admin: Catalog = {
   "moderation.studioRelease.loadFailed":
     "Não conseguimos carregar este lançamento",
   "moderation.studioRelease.thumbAlt": "Capa de {title}",
+  // ── Studio v3 artist tools (2026-10-13) ──────────────────────────────────────
+  "moderation.personaPost.heading": "Novidade denunciada",
+  "moderation.personaPost.subject": "Uma novidade publicada por {persona}",
+  "moderation.personaPost.removeCta": "Remover novidade",
+  "moderation.personaPost.removeTitle": "Remover esta novidade?",
+  "moderation.personaPost.removeBody":
+    "A novidade sai da página da persona de vez e a foto é apagada. Fica um registo na auditoria",
+  "moderation.personaPost.reasonLabel": "Motivo para o registo",
+  "moderation.personaPost.removedNote":
+    "Novidade removida. Quem segue a persona já não a vê",
+  "moderation.personaPost.goneNote":
+    "Esta novidade já não existe, não há nada para remover",
+  "moderation.personaPost.loadFailed":
+    "Não conseguimos carregar a novidade denunciada",
+  "moderation.personaPost.retry": "Carrega a novidade outra vez",
+  "moderation.personaPost.photoAlt": "Foto na novidade de {persona}",
+  "moderation.personaPost.linkLabel": "Link",
   "moderation.category.copyright": "Direitos de autor",
   "moderation.action.studioAccessGranted": "Deu acesso ao Studio",
   "moderation.action.studioAccessRevoked": "Retirou o acesso ao Studio",
   "moderation.action.studioReleaseTakenDown": "Retirou um lançamento do Studio",
   "moderation.action.studioReleaseRestored": "Repôs um lançamento do Studio",
+  "moderation.action.personaPostRemoved": "Removeu uma publicação de persona",
   "ambassadors.loadMore": "Ver mais",
   "ambassadors.loadingMore": "A carregar…",
   "ambassadors.loadMoreError":
@@ -8279,4 +8340,123 @@ export const admin: Catalog = {
   "listingDrafts.message.cancel": "Cancelar",
   "listingDrafts.message.sent": "Enviada a {name}.",
   "listingDrafts.message.action": "enviar a tua mensagem",
+  // ── Consola da descoberta no Studio (/admin/studio) ───────────────────────
+  "studioAdmin.eyebrow": "Studio",
+  "studioAdmin.title": "Descoberta no <em>Studio</em>",
+  "studioAdmin.sub":
+    "Define o lançamento em destaque, arruma as duas prateleiras e gere as cenas da página inicial do Studio",
+  "studioAdmin.tabs.shelves": "Prateleiras",
+  "studioAdmin.tabs.scenes": "Cenas",
+  "studioAdmin.loadError":
+    "Não foi possível carregar a descoberta do Studio. Tenta outra vez",
+  "studioAdmin.searchError": "Essa pesquisa não carregou",
+  "studioAdmin.retryCta": "Tentar outra vez",
+  "studioAdmin.saveError": "Essa alteração não ficou guardada. Tenta outra vez",
+  "studioAdmin.forbidden": "A tua conta não pode abrir a descoberta no Studio",
+  "studioAdmin.shelf.featured": "Em destaque",
+  "studioAdmin.shelf.staff_picks": "Escolhas da equipa",
+  "studioAdmin.shelf.new_this_week": "Novidades da semana",
+  "studioAdmin.shelf.count": "{count} de {max}",
+  "studioAdmin.shelf.empty": "Ainda não há nada nesta prateleira",
+  "studioAdmin.shelf.full": "Esta prateleira está cheia",
+  "studioAdmin.shelf.addCta.featured": "Definir lançamento em destaque",
+  "studioAdmin.shelf.addCta.staff_picks": "Juntar às Escolhas da equipa",
+  "studioAdmin.shelf.addCta.new_this_week": "Juntar às Novidades da semana",
+  "studioAdmin.pick.added": "Na prateleira {age}",
+  "studioAdmin.pick.onShelf": "Já está nesta prateleira",
+  "studioAdmin.pick.notListenable":
+    "Escondido de quem ouve: este lançamento não pode tocar agora",
+  "studioAdmin.pick.noNote": "Sem nota",
+  "studioAdmin.pick.editNoteCta": "Editar nota",
+  "studioAdmin.pick.editNoteAria": "Editar nota de {title}",
+  "studioAdmin.pick.removeCta": "Remover escolha",
+  "studioAdmin.pick.removeAria": "Remover escolha {title} de {shelf}",
+  "studioAdmin.moveUpCta": "Subir",
+  "studioAdmin.moveDownCta": "Descer",
+  "studioAdmin.moveUpAria": "Subir: {name}",
+  "studioAdmin.moveDownAria": "Descer: {name}",
+  "studioAdmin.dragAria": "Arrasta {name} para mudar a ordem",
+  "studioAdmin.moved": "{name} está agora na posição {position}",
+  "studioAdmin.pickDialog.title": "Juntar um lançamento a {shelf}",
+  "studioAdmin.pickDialog.titleFeatured": "Definir o lançamento em destaque",
+  "studioAdmin.pickDialog.searchLabel": "Procurar lançamentos publicados",
+  "studioAdmin.pickDialog.searchHint":
+    "Procura pelo título do lançamento ou pelo nome de quem o fez",
+  "studioAdmin.pickDialog.searching": "A procurar",
+  "studioAdmin.pickDialog.noResults": "Nenhum lançamento publicado corresponde",
+  "studioAdmin.pickDialog.resultsLabel": "Lançamentos encontrados",
+  "studioAdmin.pickDialog.chosen": "Escolha: {title}",
+  "studioAdmin.pickDialog.noteLabel": "Nota (opcional)",
+  "studioAdmin.pickDialog.noteHint":
+    "Uma linha, até 140 caracteres, mostrada por baixo do lançamento",
+  "studioAdmin.pickDialog.submitCta": "Juntar lançamento",
+  "studioAdmin.pickDialog.submitFeaturedCta": "Pôr em destaque",
+  "studioAdmin.pickDialog.chooseFirst": "Escolhe primeiro um lançamento",
+  "studioAdmin.noteDialog.title": "Editar a nota de {title}",
+  "studioAdmin.noteDialog.saveCta": "Guardar nota",
+  "studioAdmin.toast.pickAdded": "{title} está em {shelf}",
+  "studioAdmin.toast.pickRemoved": "{title} saiu de {shelf}",
+  "studioAdmin.toast.noteSaved": "Nota guardada",
+  "studioAdmin.scenes.newCta": "Nova cena",
+  "studioAdmin.scenes.empty": "Ainda não há cenas",
+  "studioAdmin.scenes.activeHeading": "Ativas",
+  "studioAdmin.scenes.archivedHeading": "Arquivadas",
+  "studioAdmin.scenes.releaseCount_one": "{count} lançamento",
+  "studioAdmin.scenes.releaseCount_other": "{count} lançamentos",
+  "studioAdmin.scenes.pinnedCount_one": "{count} evento fixado",
+  "studioAdmin.scenes.pinnedCount_other": "{count} eventos fixados",
+  "studioAdmin.scenes.editCta": "Editar cena",
+  "studioAdmin.scenes.editAria": "Editar cena {name}",
+  "studioAdmin.scenes.archiveCta": "Arquivar cena",
+  "studioAdmin.scenes.archiveAria": "Arquivar cena {name}",
+  "studioAdmin.scenes.restoreCta": "Restaurar cena",
+  "studioAdmin.scenes.restoreAria": "Restaurar cena {name}",
+  "studioAdmin.scenes.manageCta": "Eventos e lançamentos",
+  "studioAdmin.scenes.manageAria": "Eventos e lançamentos: {name}",
+  "studioAdmin.sceneDialog.createTitle": "Nova cena",
+  "studioAdmin.sceneDialog.editTitle": "Editar {name}",
+  "studioAdmin.sceneDialog.nameLabel": "Nome",
+  "studioAdmin.sceneDialog.cityLabel": "Cidade",
+  "studioAdmin.sceneDialog.slugLabel": "Endereço",
+  "studioAdmin.sceneDialog.slugHint":
+    "Letras minúsculas, algarismos e hífenes simples. Deixa vazio para o criar a partir do nome",
+  "studioAdmin.sceneDialog.blurbLabel": "Descrição",
+  "studioAdmin.sceneDialog.blurbCount": "{count} de {max}",
+  "studioAdmin.sceneDialog.coverLabel": "Capa",
+  "studioAdmin.sceneDialog.coverPlaceholder": "Capa da cena",
+  "studioAdmin.sceneDialog.createCta": "Criar cena",
+  "studioAdmin.sceneDialog.saveCta": "Guardar cena",
+  "studioAdmin.sceneDialog.nameRequired": "Dá um nome à cena",
+  "studioAdmin.sceneDialog.cityRequired": "Indica a cidade",
+  "studioAdmin.sceneDialog.slugInvalid":
+    "Usa entre 2 e 60 letras minúsculas, algarismos e hífenes simples",
+  "studioAdmin.toast.sceneCreated": "Cena {name} criada",
+  "studioAdmin.toast.sceneSaved": "Cena guardada",
+  "studioAdmin.toast.sceneArchived": "Cena {name} arquivada",
+  "studioAdmin.toast.sceneRestored": "Cena {name} restaurada",
+  "studioAdmin.sceneSheet.title": "{name}: eventos e lançamentos",
+  "studioAdmin.sceneSheet.events.heading": "Eventos fixados",
+  "studioAdmin.sceneSheet.events.hint":
+    "Os eventos fixados aparecem ao lado dos eventos que as personas da cena indicam",
+  "studioAdmin.sceneSheet.events.searchLabel": "Procurar próximos eventos",
+  "studioAdmin.sceneSheet.events.resultsLabel": "Eventos encontrados",
+  "studioAdmin.sceneSheet.events.noResults":
+    "Nenhum próximo evento corresponde",
+  "studioAdmin.sceneSheet.events.empty": "Não há eventos fixados",
+  "studioAdmin.sceneSheet.events.past": "Já passou",
+  "studioAdmin.sceneSheet.events.pinCta": "Fixar evento",
+  "studioAdmin.sceneSheet.events.pinAria": "Fixar evento {title}",
+  "studioAdmin.sceneSheet.events.unpinCta": "Desafixar evento",
+  "studioAdmin.sceneSheet.events.unpinAria": "Desafixar evento {title}",
+  "studioAdmin.sceneSheet.releases.heading": "Lançamentos nesta cena",
+  "studioAdmin.sceneSheet.releases.empty": "Não há lançamentos nesta cena",
+  "studioAdmin.sceneSheet.releases.removeCta": "Tirar da cena",
+  "studioAdmin.sceneSheet.releases.removeAria": "Tirar da cena: {title}",
+  "studioAdmin.sceneSheet.releases.showMore": "Mostrar mais lançamentos",
+  "studioAdmin.sceneSheet.releases.loadingMore": "A carregar mais lançamentos",
+  "studioAdmin.sceneSheet.releases.loadMoreError":
+    "Não foi possível carregar mais lançamentos",
+  "studioAdmin.toast.eventPinned": "Evento fixado",
+  "studioAdmin.toast.eventUnpinned": "Evento desafixado",
+  "studioAdmin.toast.releaseRemoved": "{title} saiu da cena",
 };

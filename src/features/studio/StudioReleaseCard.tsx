@@ -3,7 +3,10 @@ import { Link } from "react-router-dom";
 import { FiPause, FiPlay } from "react-icons/fi";
 import { ImageSlot } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import type { StudioReleaseCardView } from "./api/studio.adapters";
+import {
+  releaseMetaLine,
+  type StudioReleaseCardView,
+} from "./api/studio.adapters";
 import { useStudioPlayer } from "./player/studioPlayerContext";
 import styles from "./studio.module.css";
 import kit from "./studioKit.module.css";
@@ -71,12 +74,7 @@ export function StudioReleaseCard({
           {release.title}
         </Link>
       </h4>
-      <div className={styles.meta}>
-        {meta ??
-          [release.artist.name, release.releaseYear]
-            .filter(Boolean)
-            .join(" · ")}
-      </div>
+      <div className={styles.meta}>{meta ?? releaseMetaLine(release)}</div>
     </article>
   );
 }

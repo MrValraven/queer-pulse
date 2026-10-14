@@ -1,0 +1,193 @@
+.page {
+  min-height: 100svh;
+  padding: 24px 16px var(--section-y-64);
+  background: var(--studio-surface);
+  color: var(--studio-text);
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
+  max-width: 210mm;
+  margin: 0 auto 18px;
+}
+
+.toolbarHint {
+  margin: 0;
+  font-size: var(--text-12-5);
+  color: var(--studio-text-muted);
+}
+
+/* `safe center` keeps the sheet's left edge reachable when the A4 width
+   overflows a phone screen and the row scrolls sideways. */
+.printRoot {
+  display: flex;
+  justify-content: safe center;
+  overflow-x: auto;
+}
+
+/* The page edge on screen is a 1px border: Chromium's PDF output draws a
+   blurred box-shadow as a hard square, so the sheet carries none. */
+.sheet {
+  box-sizing: border-box;
+  flex-shrink: 0;
+  width: 210mm;
+  min-height: 297mm;
+  padding: 16mm 16mm 12mm;
+  display: flex;
+  flex-direction: column;
+  gap: 10mm;
+  background: var(--paper);
+  color: var(--ink);
+  border: 1px solid rgba(var(--line-rgb), 0.16);
+  font-family: var(--sans);
+  font-size: var(--text-13);
+  line-height: 1.5;
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  gap: 8mm;
+}
+
+.portrait,
+.initials {
+  width: 34mm;
+  height: 34mm;
+  flex-shrink: 0;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.initials {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(var(--accent-rgb), 0.16);
+  font-family: var(--serif);
+  font-size: var(--text-28);
+}
+
+.name {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: var(--text-36);
+  line-height: 1.05;
+}
+
+.kind {
+  margin: 2mm 0 0;
+  color: var(--ink-60);
+}
+
+.pitch {
+  margin: 3mm 0 0;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: var(--text-17);
+}
+
+.columns {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 52mm;
+  gap: 10mm;
+  flex: 1;
+}
+
+.main,
+.side {
+  display: flex;
+  flex-direction: column;
+  gap: 7mm;
+  min-width: 0;
+}
+
+.heading {
+  margin: 0 0 2mm;
+  font-size: var(--text-11);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent-text);
+}
+
+.bio {
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+.tracks,
+.releases,
+.links {
+  margin: 0;
+  padding-left: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5mm;
+}
+
+.tracks {
+  padding-left: 5mm;
+  list-style: decimal;
+}
+
+.links {
+  overflow-wrap: anywhere;
+}
+
+.muted {
+  color: var(--ink-60);
+}
+
+.contact {
+  margin: 0;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.qr {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2mm;
+}
+
+/* A screen under 640px shows the whole A4 sheet scaled to its width (the
+   page keeps 16px each side). Zoom scales the layout box too, so the row
+   has nothing left to scroll. The stepped values serve a browser without
+   length division in calc(); print keeps the sheet at full size. */
+@media screen and (max-width: 639px) {
+  .sheet {
+    zoom: 0.56;
+  }
+}
+
+@media screen and (max-width: 479px) {
+  .sheet {
+    zoom: 0.41;
+  }
+}
+
+@media screen and (max-width: 359px) {
+  .sheet {
+    zoom: 0.36;
+  }
+}
+
+@media screen and (max-width: 639px) {
+  .sheet {
+    zoom: calc((100vw - 32px) / 210mm);
+  }
+}
+
+.qrCaption {
+  margin: 0;
+  font-size: var(--text-11);
+  color: var(--ink-60);
+  overflow-wrap: anywhere;
+}

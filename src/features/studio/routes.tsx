@@ -3,6 +3,7 @@ import { routes } from "../../app/routeMap";
 import { lazyNamed } from "../../app/routeHelpers";
 import { STUDIO_DEFERRED_PATHS } from "./studioGate.data";
 import { StudioGateSkeleton } from "./StudioGateSkeleton";
+import { STUDIO_PREVIEW_ROUTE } from "./studioPaths";
 
 const StudioPage = lazyNamed(() => import("./StudioPage"), "StudioPage");
 const StudioAlbumPage = lazyNamed(
@@ -40,6 +41,14 @@ const StudioCollectionPage = lazyNamed(
 const StudioBrowsePage = lazyNamed(
   () => import("./StudioBrowsePage"),
   "StudioBrowsePage",
+);
+const StudioScenePage = lazyNamed(
+  () => import("./StudioScenePage"),
+  "StudioScenePage",
+);
+const StudioCreditsPage = lazyNamed(
+  () => import("./StudioCreditsPage"),
+  "StudioCreditsPage",
 );
 const StudioSetPage = lazyNamed(
   () => import("./StudioSetPage"),
@@ -125,6 +134,18 @@ const StudioPressPage = lazyNamed(
   () => import("./StudioPressPage"),
   "StudioPressPage",
 );
+const StudioPressEditPage = lazyNamed(
+  () => import("./StudioPressEditPage"),
+  "StudioPressEditPage",
+);
+const StudioOneSheetPage = lazyNamed(
+  () => import("./StudioOneSheetPage"),
+  "StudioOneSheetPage",
+);
+const StudioPreviewPage = lazyNamed(
+  () => import("./StudioPreviewPage"),
+  "StudioPreviewPage",
+);
 const StudioEndCardPage = lazyNamed(
   () => import("./StudioEndCardPage"),
   "StudioEndCardPage",
@@ -187,6 +208,8 @@ function demoStudioRoutes() {
       <Route path={routes.studioSet} element={<StudioSetPage />} />
       <Route path={routes.studioSearch} element={<StudioSearchPage />} />
       <Route path={routes.studioBrowse} element={<StudioBrowsePage />} />
+      <Route path={routes.studioScene} element={<StudioScenePage />} />
+      <Route path={routes.studioCredits} element={<StudioCreditsPage />} />
       <Route path={routes.studioLibrary} element={<StudioLibraryPage />} />
       <Route path={routes.studioCheckout} element={<StudioCheckoutPage />} />
       <Route path="/studio/sheet-store" element={<StudioSheetStorePage />} />
@@ -209,7 +232,7 @@ function demoStudioRoutes() {
       <Route path="/studio/404" element={<Studio404Page />} />
       <Route path="/studio/500" element={<Studio500Page />} />
       <Route path="/studio/sign-in" element={<StudioSignInPage />} />
-      <Route path="/studio/settings" element={<StudioSettingsPage />} />
+      <Route path={routes.studioSettings} element={<StudioSettingsPage />} />
       <Route path={routes.studioAbout} element={<StudioAboutPage />} />
       <Route
         path={routes.studioAccessibility}
@@ -218,6 +241,9 @@ function demoStudioRoutes() {
       <Route path={routes.studioTerms} element={<StudioTermsPage />} />
       <Route path={routes.studioHelp} element={<StudioHelpPage />} />
       <Route path={routes.studioPress} element={<StudioPressPage />} />
+      <Route path={routes.studioPressEdit} element={<StudioPressEditPage />} />
+      <Route path={routes.studioPressPrint} element={<StudioOneSheetPage />} />
+      <Route path={STUDIO_PREVIEW_ROUTE} element={<StudioPreviewPage />} />
       <Route path={routes.studioEndCard} element={<StudioEndCardPage />} />
       <Route
         path={routes.studioNotifications}
@@ -233,10 +259,13 @@ function demoStudioRoutes() {
   );
 }
 
-/** Studio for a granted member: listen, search, browse, upload, playlists and
- *  the library, Your numbers, open calls and the solidarity page. Deferred
- *  pages bounce to Studio home; anything else under /studio is the Studio
- *  404. */
+/** Studio for a granted member: listen, search, browse by genre and mood,
+ *  scenes, upload with persona credits, the credits inbox, playlists and
+ *  the library, Your numbers, open calls, the solidarity page, Help, About,
+ *  Terms, Accessibility, Rights, the withdrawn view, Settings and (for
+ *  staff) Flag review. Studio v3 adds the press kit, its editor and
+ *  one-sheet, and private preview links. Deferred pages bounce to Studio
+ *  home; anything else under /studio is the Studio 404. */
 function grantedStudioRoutes() {
   return (
     <>
@@ -247,6 +276,8 @@ function grantedStudioRoutes() {
       <Route path={routes.studioSearch} element={<StudioSearchPage />} />
       <Route path={routes.studioUpload} element={<StudioUploadPage />} />
       <Route path={routes.studioBrowse} element={<StudioBrowsePage />} />
+      <Route path={routes.studioScene} element={<StudioScenePage />} />
+      <Route path={routes.studioCredits} element={<StudioCreditsPage />} />
       <Route
         path={routes.studioCollection}
         element={<StudioCollectionPage />}
@@ -257,6 +288,24 @@ function grantedStudioRoutes() {
       <Route
         path={routes.studioSolidarityFund}
         element={<StudioSolidarityFundPage />}
+      />
+      <Route path={routes.studioPress} element={<StudioPressPage />} />
+      <Route path={routes.studioPressEdit} element={<StudioPressEditPage />} />
+      <Route path={routes.studioPressPrint} element={<StudioOneSheetPage />} />
+      <Route path={STUDIO_PREVIEW_ROUTE} element={<StudioPreviewPage />} />
+      <Route path={routes.studioHelp} element={<StudioHelpPage />} />
+      <Route path={routes.studioAbout} element={<StudioAboutPage />} />
+      <Route path={routes.studioTerms} element={<StudioTermsPage />} />
+      <Route
+        path={routes.studioAccessibility}
+        element={<StudioAccessibilityPage />}
+      />
+      <Route path={routes.studioRights} element={<StudioRightsPage />} />
+      <Route path={routes.studioWithdrawn} element={<StudioWithdrawnPage />} />
+      <Route path={routes.studioSettings} element={<StudioSettingsPage />} />
+      <Route
+        path={routes.studioFlagReview}
+        element={<StudioFlagReviewPage />}
       />
       <Route path="/studio/404" element={<Studio404Page />} />
       <Route path="/studio/500" element={<Studio500Page />} />

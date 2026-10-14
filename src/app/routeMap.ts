@@ -58,6 +58,9 @@ export const routes = {
   /** SOC-01: the topic directory console (`TopicsAdminPage`). Create, edit,
    *  archive and delete the topics behind `/topics` and `/topic/:tag`. */
   adminTopics: "/admin/topics",
+  /** Studio discovery: the featured hero, the two shelves and the scenes
+   *  (`StudioAdminPage`). Moderator and Admin. */
+  adminStudio: "/admin/studio",
   adminLanding: "/admin/landing",
   adminPressKit: "/admin/press-kit",
   adminMarketingVideos: "/admin/marketing-videos",
@@ -438,11 +441,13 @@ export const routes = {
   studioBrowse: "/studio/browse",
   studioCheckout: "/studio/checkout",
   studioCollection: "/studio/collection",
+  studioCredits: "/studio/credits",
   studioDashboard: "/studio/dashboard",
   studioE: "/studio",
   studioLanding: "/studio",
   studioLibrary: "/studio/library",
   studioLive: "/studio/live",
+  studioScene: "/studio/scene",
   studioSearch: "/studio/search",
   studioSet: "/studio/set",
   studioSheetStore: "/studio/sheet-store",
@@ -521,6 +526,9 @@ export const routes = {
   studioTerms: "/studio/terms",
   studioHelp: "/studio/help",
   studioPress: "/studio/press",
+  studioPressEdit: "/studio/press/edit",
+  studioPressPrint: "/studio/press/print",
+  studioPreview: "/studio/preview",
   studioEndCard: "/studio/end-card",
   studioNotifications: "/studio/notifications",
   studioReceipt: "/studio/receipt",
@@ -577,6 +585,12 @@ export const subprofileEditPath = (id: string) =>
   `/account/subprofiles/${id}/edit`;
 /** Any persona's public page by its handle. */
 export const personaPath = (handle: string) => `/p/${handle}`;
+/** The persona page's Updates block (Studio v3 persona posts). */
+export const personaUpdatesPath = (handle: string) =>
+  `${personaPath(handle)}#updates`;
+/** The persona editor on the pane that holds the social links. */
+export const subprofileLinksEditPath = (id: string) =>
+  `${subprofileEditPath(id)}?pane=presence`;
 /** Legacy address of a linked persona; only built as a fallback for one with
  *  no handle yet, and redirected to `/p/<handle>` when it has one. */
 export const nestedPersonaPath = (ownerSlug: string, slug: string) =>

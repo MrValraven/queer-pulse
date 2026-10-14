@@ -129,7 +129,6 @@ const PUBLIC_EXCEPTIONS = [
   "/studio/accessibility",
   "/studio/terms",
   "/studio/help",
-  "/studio/press",
   "/studio/end-card",
 ];
 

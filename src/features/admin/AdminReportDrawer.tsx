@@ -16,6 +16,7 @@ import {
 } from "./AdminReportDrawerDecision";
 import { AdminReportDrawerHead } from "./AdminReportDrawerHead";
 import { ReportedPhotoEvidence } from "./AdminReportPhotoEvidence";
+import { AdminPersonaPostActions } from "./AdminPersonaPostActions";
 import { AdminStudioReleaseActions } from "./AdminStudioReleaseActions";
 import {
   MIN_MEMBER_FACING_NOTE_LENGTH,
@@ -120,6 +121,9 @@ export function AdminReportDrawer({
 
       {report.subjectType === "studio_release" && (
         <AdminStudioReleaseActions report={report} />
+      )}
+      {report.subjectType === "persona_post" && (
+        <AdminPersonaPostActions report={report} />
       )}
 
       <ReportDrawerActionGrid

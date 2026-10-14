@@ -4,10 +4,14 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { useStudioAccess } from "./api/useStudioAccess";
+import { useIsStudioStaff } from "./useIsStudioStaff";
 import { useStudioShowcase } from "./useStudioShowcase";
 import { SUSTAINER_SINCE_DATE, YEARLY_GIVING } from "./studioShell.data";
 import {
+  SHEET_FLAG_REVIEW_LINK,
   SHEET_LIVE_LINKS,
+  SHEET_LIVE_UTILITY_LINKS,
+  SHEET_PRESS_KIT_LINK,
   SHEET_SHOWCASE_GROUPS,
   SHEET_UPLOAD_LINK,
   type StudioNavSheetLink,
@@ -25,9 +29,13 @@ export function StudioNavSheetLinks({
   const { t } = useTranslation();
   const isShowcase = useStudioShowcase();
   const { uploadablePersonas } = useStudioAccess();
+  const isStaff = useIsStudioStaff();
+  const utilityLinks = isStaff
+    ? [...SHEET_LIVE_UTILITY_LINKS, SHEET_FLAG_REVIEW_LINK]
+    : SHEET_LIVE_UTILITY_LINKS;
   const liveLinks =
     uploadablePersonas.length > 0
-      ? [...SHEET_LIVE_LINKS, SHEET_UPLOAD_LINK]
+      ? [...SHEET_LIVE_LINKS, SHEET_UPLOAD_LINK, SHEET_PRESS_KIT_LINK]
       : SHEET_LIVE_LINKS;
 
   return (
@@ -45,11 +53,18 @@ export function StudioNavSheetLinks({
           <SheetGivingNote />
         </>
       ) : (
-        <SheetLinkGroup
-          labelKey="studio:shell.sheet.more"
-          links={liveLinks}
-          onNavigate={onNavigate}
-        />
+        <>
+          <SheetLinkGroup
+            labelKey="studio:shell.sheet.more"
+            links={liveLinks}
+            onNavigate={onNavigate}
+          />
+          <SheetLinkGroup
+            labelKey="studio:rail.live.utilityLabel"
+            links={utilityLinks}
+            onNavigate={onNavigate}
+          />
+        </>
       )}
     </nav>
   );

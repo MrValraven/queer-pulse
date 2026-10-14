@@ -30,6 +30,10 @@
   --z-preview-bar: 30;
   /* App chrome: the nav bar and the mobile bottom tab bar. */
   --z-nav: 100;
+  /* Studio's floating queue panel. It sits under the fixed player bar (whose
+     own stacking context is `--z-nav`) so the bar's More popover can open over
+     it, and over normal page content. */
+  --z-studio-side-panel: 90;
   /* Anchored popovers: dropdown menus, comboboxes, tooltips. Above nav so a
      menu opened from the nav is not clipped by it. */
   --z-popover: 200;

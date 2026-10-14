@@ -1,30 +1,51 @@
 import type { QueryClient } from "@tanstack/react-query";
 import type { RefObject } from "react";
 import { onStudioAccessLost } from "../api/studioQueryKeys";
-import { fetchStudioStream } from "../api/studioStream";
-import type { StudioAudioEngine, StudioAudioEvent } from "./studioAudioEngine";
+import {
+  fetchStudioStream,
+  rememberStreamAnalysis,
+  streamAnalysisOf,
+} from "../api/studioStream";
 import type {
-  StudioPlayerClock,
-  StudioPlayerState,
+  StudioAudioEngine,
+  StudioAudioEvent,
+  StudioHandoverMode,
+} from "./studioAudioEngine";
+import type {
+  StudioDeckControls,
+  StudioPreloadedStream,
+} from "./studioDeckPreload";
+import { trackGainDb } from "./studioLoudness";
+import type {
+  StudioPlaybackSettings,
+  StudioPlaybackStatus,
   StudioQueueItem,
 } from "./studioPlayerContext";
+import {
+  peekNext,
+  type StudioQueueAction,
+  type StudioQueueState,
+} from "./studioQueueReducer";
+import type { StudioQueueSnapshot } from "./studioQueueStorage";
 
-export const IDLE: StudioPlayerState = {
-  queue: [],
-  currentIndex: 0,
-  status: "idle",
-};
-export const STOPPED_CLOCK: StudioPlayerClock = {
+export interface StudioPlayhead {
+  currentTime: number;
+  duration: number | null;
+}
+export const STOPPED_PLAYHEAD: StudioPlayhead = {
   currentTime: 0,
   duration: null,
 };
 
 export interface PlaybackRefs {
-  stateRef: RefObject<StudioPlayerState>;
-  clockRef: RefObject<StudioPlayerClock>;
+  queueRef: RefObject<StudioQueueState>;
+  statusRef: RefObject<StudioPlaybackStatus>;
+  playheadRef: RefObject<StudioPlayhead>;
   engineRef: RefObject<StudioAudioEngine | null>;
   expiresAtRef: RefObject<number>;
   refreshCountRef: RefObject<number>;
+  /** Plain mode is tried once per engine. */
+  hasTriedPlainModeRef: RefObject<boolean>;
   loadTokenRef: RefObject<number>;
   /** The load token whose source the engine holds. Events count only while
    *  it matches loadTokenRef, so a superseded source cannot move the queue. */
@@ -32,125 +53,386 @@ export interface PlaybackRefs {
   /** Where a refresh or Retry picks up: the load's start, then the playhead
    *  while it plays, or the last seek. */
   resumeAtRef: RefObject<number>;
+  /** Bumped by what the member asks for (stop, next, previous, a jump, a new
+   *  queue) and by a reset. A release read still loading gives way to it; a
+   *  natural swap to the next track leaves it alone. */
+  intentTokenRef: RefObject<number>;
 }
 
-/**
- * Loading, failure, engine events, seek and stop for useStudioPlayback. Every
- * read goes through the refs, so a command built on an older render still
- * acts on the latest queue and playhead.
- */
-export function createPlaybackCommands(
-  refs: PlaybackRefs,
-  commit: (patch: Partial<StudioPlayerState>) => void,
-  tick: (patch: Partial<StudioPlayerClock>) => void,
-  demoMode: boolean,
-  queryClient: QueryClient,
-) {
-  const {
-    stateRef,
-    clockRef,
-    engineRef,
-    expiresAtRef,
-    refreshCountRef,
-    loadTokenRef,
-    sourceTokenRef,
-    resumeAtRef,
-  } = refs;
+export interface PlaybackEffects {
+  dispatch: (action: StudioQueueAction) => StudioQueueState;
+  setStatus: (status: StudioPlaybackStatus) => void;
+  tick: (patch: Partial<StudioPlayhead>) => void;
+  decks: StudioDeckControls;
+  sleep: {
+    onTime: (seconds: number, durationSeconds: number | null) => void;
+    consumeTrackEnd: () => boolean;
+    cancelSleepTimer: () => void;
+  };
+  /** Autoplay next and hide explicit, read at event time (contract F.2). */
+  readPlaybackSettings: () => StudioPlaybackSettings;
+  demoMode: boolean;
+  queryClient: QueryClient;
+}
 
-  async function loadTrack(
-    queue: StudioQueueItem[],
-    index: number,
+/** Hide explicit switched on while a radio plays (contract F.2): explicit
+ *  entries leave the radio's source and its pool, so the reducer's refill
+ *  keeps the radio going past an explicit tail. The entry that plays now
+ *  finishes and keeps its place in both orders (shuffle off finds it); it
+ *  leaves once the next track plays. The same state comes back when nothing
+ *  changes. */
+export function withoutHiddenRadioItems(
+  state: StudioQueueState,
+): StudioQueueState {
+  if (state.source?.kind !== "radio") return state;
+  const currentEntryId = state.current?.queueEntryId ?? null;
+  const isKept = (item: StudioQueueItem) =>
+    !item.isExplicit || item.queueEntryId === currentEntryId;
+  const sourceItems = state.sourceItems.filter(isKept);
+  const originalSourceItems = state.originalSourceItems.filter(isKept);
+  const isUnchanged =
+    sourceItems.length === state.sourceItems.length &&
+    originalSourceItems.length === state.originalSourceItems.length;
+  if (isUnchanged) return state;
+  const keptBeforeOrAtIndex = state.sourceItems
+    .slice(0, state.sourceIndex + 1)
+    .filter(isKept).length;
+  return {
+    ...state,
+    sourceItems,
+    originalSourceItems,
+    sourceIndex: keptBeforeOrAtIndex - 1,
+  };
+}
+
+/** Loading a track: the stream read, the refresh, the plain-mode retry. */
+function createTrackLoader(refs: PlaybackRefs, effects: PlaybackEffects) {
+  function beginTrack(item: StudioQueueItem, startAtSeconds: number): number {
+    refs.loadTokenRef.current += 1;
+    refs.resumeAtRef.current = startAtSeconds;
+    effects.decks.noteTrackStarted();
+    effects.tick({
+      currentTime: startAtSeconds,
+      duration: item.durationSeconds,
+    });
+    return refs.loadTokenRef.current;
+  }
+
+  async function loadEntry(
+    item: StudioQueueItem,
     startAtSeconds: number,
-  ) {
-    const item = queue[index];
-    const engine = engineRef.current;
-    if (!item || !engine) return;
-    loadTokenRef.current += 1;
-    const token = loadTokenRef.current;
+    shouldPlay = true,
+  ): Promise<void> {
+    const engine = refs.engineRef.current;
+    if (!engine) return;
+    const token = beginTrack(item, startAtSeconds);
     // Silence the old source while the new URL loads; its events no longer
     // match the token, so they are dropped.
     engine.pause();
-    resumeAtRef.current = startAtSeconds;
-    commit({ queue, currentIndex: index, status: "loading" });
-    tick({ currentTime: startAtSeconds, duration: item.durationSeconds });
+    effects.decks.cancelPreload();
+    if (!shouldPlay) {
+      // Cued: the stream is read when the member presses play.
+      refs.expiresAtRef.current = 0;
+      engine.reset();
+      effects.setStatus("paused");
+      return;
+    }
+    effects.setStatus("loading");
     try {
-      const stream = await fetchStudioStream(demoMode, item.trackId);
-      if (token !== loadTokenRef.current) return;
-      expiresAtRef.current = Date.parse(stream.expiresAt);
-      sourceTokenRef.current = token;
-      engine.load(stream.url, startAtSeconds);
-      await engine.play();
+      // A preview entry reads its stream through its preview link (v3).
+      const stream = await fetchStudioStream(
+        effects.demoMode,
+        item.trackId,
+        item.previewToken,
+      );
+      // Every fetch refreshes the cached analysis, so an empty analysis
+      // written earlier gives way to the measured one.
+      const analysis = streamAnalysisOf(stream);
+      rememberStreamAnalysis(
+        effects.queryClient,
+        effects.demoMode,
+        item.trackId,
+        analysis,
+      );
+      if (token !== refs.loadTokenRef.current) return;
+      refs.expiresAtRef.current = Date.parse(stream.expiresAt);
+      refs.sourceTokenRef.current = token;
+      engine.load(stream.url, startAtSeconds, trackGainDb(analysis));
     } catch (error) {
       // A withdrawn grant re-reads GET /studio/me; the gate then shows the
       // teaser and the player stops.
-      onStudioAccessLost(queryClient, error);
-      if (token === loadTokenRef.current) fail();
+      onStudioAccessLost(effects.queryClient, error);
+      if (token === refs.loadTokenRef.current) fail("stream");
+      return;
     }
+    await engine.play();
   }
 
   function reloadCurrent() {
-    void loadTrack(
-      stateRef.current.queue,
-      stateRef.current.currentIndex,
-      resumeAtRef.current,
-    );
+    const current = refs.queueRef.current.current;
+    if (current) void loadEntry(current, refs.resumeAtRef.current);
   }
 
-  /** One silent refresh of the signed URL, resuming at the same second; a
-   *  second failure in a row shows the error with Retry. */
-  function fail() {
-    if (refreshCountRef.current >= 1) {
-      commit({ status: "error" });
+  /** One silent refresh of the signed URL, resuming at the same second. A
+   *  second media failure retries once on plain elements (the CORS fallback);
+   *  after that, or for a failed stream read, the error shows with Retry. */
+  function fail(reason: "stream" | "media") {
+    if (refs.refreshCountRef.current < 1) {
+      refs.refreshCountRef.current += 1;
+      reloadCurrent();
       return;
     }
-    refreshCountRef.current += 1;
-    reloadCurrent();
+    const engine = refs.engineRef.current;
+    if (
+      reason === "media" &&
+      !refs.hasTriedPlainModeRef.current &&
+      engine?.enterPlainMode()
+    ) {
+      refs.hasTriedPlainModeRef.current = true;
+      reloadCurrent();
+      return;
+    }
+    effects.setStatus("error");
   }
 
-  function handleEvent(event: StudioAudioEvent) {
-    if (sourceTokenRef.current !== loadTokenRef.current) return;
-    const { status } = stateRef.current;
-    if (event.type === "time") {
-      if (status === "playing") resumeAtRef.current = event.seconds;
-      tick({ currentTime: event.seconds });
-    } else if (event.type === "duration") tick({ duration: event.seconds });
-    else if (event.type === "playing") {
-      refreshCountRef.current = 0;
-      commit({ status: "playing" });
-    } else if (event.type === "paused") {
-      if (status === "playing") commit({ status: "paused" });
-    } else if (event.type === "blocked") {
-      if (status === "playing" || status === "loading")
-        commit({ status: "paused" });
-    } else if (event.type === "ended") {
-      const { queue, currentIndex } = stateRef.current;
-      if (currentIndex + 1 < queue.length)
-        void loadTrack(queue, currentIndex + 1, 0);
-      else commit({ status: "paused" });
-    } else fail();
+  function handoverTo(
+    item: StudioQueueItem,
+    preload: StudioPreloadedStream,
+    mode: StudioHandoverMode,
+  ) {
+    const engine = refs.engineRef.current;
+    if (!engine) return;
+    const token = beginTrack(item, 0);
+    refs.sourceTokenRef.current = token;
+    refs.expiresAtRef.current = preload.expiresAtMs;
+    refs.refreshCountRef.current = 0;
+    engine.handover(mode);
   }
 
-  function retry() {
-    refreshCountRef.current = 0;
-    reloadCurrent();
+  /** A track that ends with nothing to play next. engine.pause brings the
+   *  level back up after a sleep fade (and stays quiet on an ended element),
+   *  and the next Play, or a reload after the URL expires, starts at 0. */
+  function endPaused() {
+    refs.engineRef.current?.pause();
+    refs.resumeAtRef.current = 0;
+    effects.setStatus("paused");
   }
+
+  function replayCurrent(shouldPlay: boolean) {
+    const engine = refs.engineRef.current;
+    if (!engine) return;
+    refs.resumeAtRef.current = 0;
+    effects.decks.noteTrackStarted();
+    effects.tick({ currentTime: 0 });
+    engine.seek(0);
+    if (shouldPlay) {
+      void engine.play();
+      return;
+    }
+    engine.pause();
+    effects.setStatus("paused");
+  }
+
+  return {
+    beginTrack,
+    loadEntry,
+    reloadCurrent,
+    fail,
+    handoverTo,
+    replayCurrent,
+    endPaused,
+  };
+}
+
+/** The engine events that move playback, read for the current source only. */
+function createEventHandler(
+  refs: PlaybackRefs,
+  effects: PlaybackEffects,
+  loader: ReturnType<typeof createTrackLoader>,
+  advance: (isManual: boolean, shouldPlay?: boolean) => void,
+) {
+  function onEnded() {
+    // The sleep timer's end of track is read before any handover, so the
+    // next track is cued and stays silent.
+    const isStoppingForSleep = effects.sleep.consumeTrackEnd();
+    // Autoplay next off (contract F.2): the track ends paused and nothing is
+    // dispatched; repeat one still replays it.
+    const isRepeatOne = refs.queueRef.current.repeat === "one";
+    if (!effects.readPlaybackSettings().autoplayNext && !isRepeatOne) {
+      loader.endPaused();
+      return;
+    }
+    advance(false, !isStoppingForSleep);
+  }
+
+  return function handleEvent(event: StudioAudioEvent) {
+    switch (event.type) {
+      // The decks hook keeps these: casting state, the dropped preload and
+      // the plain-mode flag. Plain mode also counts as tried for this engine.
+      case "remote":
+      case "preloadFailed":
+        return;
+      case "plainMode":
+        refs.hasTriedPlainModeRef.current = true;
+        return;
+    }
+    if (refs.sourceTokenRef.current !== refs.loadTokenRef.current) return;
+    const status = refs.statusRef.current;
+    switch (event.type) {
+      case "time":
+        if (status === "playing") refs.resumeAtRef.current = event.seconds;
+        effects.tick({ currentTime: event.seconds });
+        effects.sleep.onTime(event.seconds, refs.playheadRef.current.duration);
+        return;
+      case "duration":
+        effects.tick({ duration: event.seconds });
+        return;
+      case "playing":
+        refs.refreshCountRef.current = 0;
+        effects.setStatus("playing");
+        return;
+      case "paused":
+        if (status === "playing") effects.setStatus("paused");
+        return;
+      case "blocked":
+        if (status === "playing" || status === "loading")
+          effects.setStatus("paused");
+        return;
+      case "ended":
+        onEnded();
+        return;
+      case "failed":
+        loader.fail("media");
+        return;
+    }
+  };
+}
+
+/**
+ * Loading, failure, engine events, the queue's moves, seek and reset for
+ * useStudioPlayback. Every read goes through the refs, so commands built on
+ * an older render still act on the latest queue and playhead.
+ */
+export function createPlaybackCommands(
+  refs: PlaybackRefs,
+  effects: PlaybackEffects,
+) {
+  const loader = createTrackLoader(refs, effects);
+
+  /** The next track: a gapless swap when it is preloaded and fresh, else a
+   *  normal load (playing, or cued for the sleep timer's end of track). */
+  function advance(isManual: boolean, shouldPlay = true) {
+    const before = refs.queueRef.current;
+    const { hideExplicit } = effects.readPlaybackSettings();
+    const upcoming = peekNext(before, isManual, hideExplicit);
+    if (!upcoming) {
+      if (!isManual) loader.endPaused();
+      return;
+    }
+    const after = effects.dispatch(
+      isManual
+        ? { type: "next", hideExplicit }
+        : { type: "trackEnded", hideExplicit },
+    );
+    if (upcoming.queueEntryId === before.current?.queueEntryId) {
+      loader.replayCurrent(shouldPlay);
+      return;
+    }
+    const current = after.current;
+    if (!current) return;
+    refs.refreshCountRef.current = 0;
+    // A natural end was playing by definition (the element may have
+    // reported a pause first); a skip swaps only while the track plays.
+    const wasPlaying = !isManual || refs.statusRef.current === "playing";
+    const preload =
+      shouldPlay && wasPlaying
+        ? effects.decks.takePreload(current.queueEntryId)
+        : null;
+    if (preload) loader.handoverTo(current, preload, "gapless");
+    else void loader.loadEntry(current, 0, shouldPlay);
+  }
+
+  function crossfadeTo(
+    next: StudioQueueItem,
+    preload: StudioPreloadedStream,
+    crossfadeSeconds: number,
+  ) {
+    const { hideExplicit } = effects.readPlaybackSettings();
+    // The queue moves only when the faded-in entry is still the next one.
+    const upcoming = peekNext(refs.queueRef.current, false, hideExplicit);
+    if (upcoming?.queueEntryId !== next.queueEntryId) {
+      effects.decks.cancelPreload();
+      return;
+    }
+    effects.dispatch({ type: "trackEnded", hideExplicit });
+    loader.handoverTo(next, preload, { crossfadeSeconds });
+  }
+
+  const handleEvent = createEventHandler(refs, effects, loader, advance);
 
   function seek(seconds: number) {
-    const ceiling = clockRef.current.duration ?? Math.max(seconds, 0);
+    const ceiling = refs.playheadRef.current.duration ?? Math.max(seconds, 0);
     const target = Math.min(Math.max(0, seconds), ceiling);
-    engineRef.current?.seek(target);
-    resumeAtRef.current = target;
-    tick({ currentTime: target });
+    // Before the engine's seek: the simulated engine emits its time event
+    // inside seek, and that event already checks the crossfade window.
+    effects.decks.noteSeek(target);
+    refs.engineRef.current?.seek(target);
+    refs.resumeAtRef.current = target;
+    effects.tick({ currentTime: target });
   }
 
-  function stop() {
-    loadTokenRef.current += 1;
-    refreshCountRef.current = 0;
-    resumeAtRef.current = 0;
-    engineRef.current?.reset();
-    commit(IDLE);
-    tick(STOPPED_CLOCK);
+  /** Stop, sign-out, an emptied queue and a demo/live switch: the sleep
+   *  timer goes with the queue. */
+  function resetPlayback() {
+    effects.sleep.cancelSleepTimer();
+    refs.intentTokenRef.current += 1;
+    refs.loadTokenRef.current += 1;
+    refs.refreshCountRef.current = 0;
+    refs.resumeAtRef.current = 0;
+    refs.expiresAtRef.current = 0;
+    effects.decks.cancelPreload();
+    refs.engineRef.current?.reset();
+    effects.dispatch({ type: "reset" });
+    effects.setStatus("idle");
+    effects.tick(STOPPED_PLAYHEAD);
   }
 
-  return { loadTrack, reloadCurrent, handleEvent, retry, seek, stop };
+  function dropHiddenRadioItems() {
+    const before = refs.queueRef.current;
+    const filtered = withoutHiddenRadioItems(before);
+    if (filtered === before) return;
+    effects.dispatch({ type: "restore", state: filtered });
+    // A move that changes nothing still runs the reducer's radio refill, for
+    // a radio whose remaining entries were all explicit.
+    effects.dispatch({ type: "moveUpcomingSource", fromIndex: -1, toIndex: 0 });
+  }
+
+  /** A saved queue comes back paused at its second; the stream is read on
+   *  play (an expired-at of 0 makes togglePlay reload). */
+  function restoreCued(snapshot: StudioQueueSnapshot) {
+    const current = snapshot.state.current;
+    if (!current) return;
+    effects.dispatch({ type: "restore", state: snapshot.state });
+    loader.beginTrack(current, snapshot.positionSeconds);
+    refs.expiresAtRef.current = 0;
+    effects.setStatus("paused");
+  }
+
+  return {
+    loadEntry: loader.loadEntry,
+    reloadCurrent: loader.reloadCurrent,
+    retry: () => {
+      refs.refreshCountRef.current = 0;
+      loader.reloadCurrent();
+    },
+    advance,
+    crossfadeTo,
+    handleEvent,
+    seek,
+    resetPlayback,
+    restoreCued,
+    dropHiddenRadioItems,
+  };
 }
+
+export type PlaybackCommands = ReturnType<typeof createPlaybackCommands>;

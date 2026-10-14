@@ -281,7 +281,7 @@ export const settings: Catalog = {
   // trailing period, matching every other row in this list.
   "notifications.volume.personaFollows.title": "Personas you follow",
   "notifications.volume.personaFollows.desc":
-    "New work from a persona you chose to follow",
+    "New work and updates from a persona you chose to follow",
   "notifications.volume.recognition.title": "Recognition",
   "notifications.volume.recognition.desc":
     "Levels, badges, endorsements, credits, and new followers",

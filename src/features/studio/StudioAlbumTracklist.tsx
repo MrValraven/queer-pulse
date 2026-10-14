@@ -4,8 +4,15 @@ import { ImageSlot } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import type { StudioReleaseView } from "./api/studio.adapters";
+import { useStudioHideExplicit } from "./api/useStudioPlaybackPreferences";
 import { useStudioPlayer } from "./player/studioPlayerContext";
+import { StudioTrackMenu } from "./player/ui/StudioTrackMenu";
 import { StudioAddToPlaylistButton } from "./StudioAddToPlaylistButton";
+import {
+  StudioHiddenTrackNote,
+  StudioHiddenTrackNumber,
+} from "./StudioHiddenTrack";
+import hiddenCss from "./StudioHiddenTrack.module.css";
 import { useStudioShowcase } from "./useStudioShowcase";
 import styles from "./studio.module.css";
 import kit from "./studioKit.module.css";
@@ -24,9 +31,14 @@ export function StudioAlbumTracklist({
   const formatters = useFormat();
   const player = useStudioPlayer();
   const isShowcase = useStudioShowcase();
+  const hideExplicit = useStudioHideExplicit();
   // The server refuses every stream on a taken-down release, owners included.
   const isStreamable = release.status !== "taken_down";
   const isPublished = release.status === "published";
+  // A preview read through its private link shows its rows without the
+  // track menu (agreed with Studio v3), and so does a taken-down release,
+  // which streams nothing.
+  const hasTrackMenu = !release.isPreview && isStreamable;
 
   return (
     <ol
@@ -37,36 +49,45 @@ export function StudioAlbumTracklist({
         const isCurrent = player.isCurrentTrack(track.id);
         const isPlaying = isCurrent && player.status === "playing";
         const isPlayBlocked = !isStreamable || !track.hasAudio;
+        const isHidden = hideExplicit && track.isExplicit;
         return (
           <li
             key={track.id}
-            className={[styles.setRow, isCurrent && styles.setRowNow]
+            className={[
+              styles.setRow,
+              isCurrent && styles.setRowNow,
+              isHidden && hiddenCss.hidden,
+            ]
               .filter(Boolean)
               .join(" ")}
             aria-current={isCurrent ? "true" : undefined}
           >
-            <button
-              type="button"
-              className={releaseStyles.rowPlay}
-              aria-disabled={isPlayBlocked || undefined}
-              aria-label={
-                isPlaying
-                  ? t("studio:release.pauseTrack", { title: track.title })
-                  : t("studio:release.playTrack", { title: track.title })
-              }
-              onClick={() => {
-                if (isPlayBlocked) return;
-                if (isCurrent) player.togglePlay();
-                else void player.playRelease(release.id, track.id);
-              }}
-            >
-              <span className={releaseStyles.rowNumber} aria-hidden>
-                {track.position}
-              </span>
-              <span className={releaseStyles.rowIcon} aria-hidden>
-                {isPlaying ? <FiPause /> : <FiPlay />}
-              </span>
-            </button>
+            {isHidden ? (
+              <StudioHiddenTrackNumber position={track.position} />
+            ) : (
+              <button
+                type="button"
+                className={releaseStyles.rowPlay}
+                aria-disabled={isPlayBlocked || undefined}
+                aria-label={
+                  isPlaying
+                    ? t("studio:release.pauseTrack", { title: track.title })
+                    : t("studio:release.playTrack", { title: track.title })
+                }
+                onClick={() => {
+                  if (isPlayBlocked) return;
+                  if (isCurrent) player.togglePlay();
+                  else void player.playRelease(release.id, track.id);
+                }}
+              >
+                <span className={releaseStyles.rowNumber} aria-hidden>
+                  {track.position}
+                </span>
+                <span className={releaseStyles.rowIcon} aria-hidden>
+                  {isPlaying ? <FiPause /> : <FiPlay />}
+                </span>
+              </button>
+            )}
             <div className={styles.srCov}>
               <ImageSlot
                 src={release.coverUrl ?? undefined}
@@ -92,9 +113,13 @@ export function StudioAlbumTracklist({
                 )}
               </h5>
               <div className={styles.who}>
-                {isCurrent
-                  ? t("studio:release.nowPlaying")
-                  : release.artist.name}
+                {isHidden ? (
+                  <StudioHiddenTrackNote />
+                ) : isCurrent ? (
+                  t("studio:release.nowPlaying")
+                ) : (
+                  release.artist.name
+                )}
               </div>
             </div>
             <div className={`${styles.pay} ${releaseStyles.payColumn}`}>
@@ -113,6 +138,17 @@ export function StudioAlbumTracklist({
                     title: track.title,
                   })}
                   className={releaseStyles.rowAdd}
+                />
+              )}
+              {hasTrackMenu && (
+                <StudioTrackMenu
+                  track={{
+                    id: track.id,
+                    title: track.title,
+                    href: track.href,
+                    hasAudio: track.hasAudio,
+                    isExplicit: track.isExplicit,
+                  }}
                 />
               )}
             </div>

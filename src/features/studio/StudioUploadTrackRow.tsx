@@ -1,4 +1,4 @@
-import { useState, type DragEvent } from "react";
+import { useRef, useState, type DragEvent, type RefObject } from "react";
 import {
   FiArrowDown,
   FiArrowUp,
@@ -6,7 +6,9 @@ import {
   FiRefreshCw,
   FiTrash2,
 } from "react-icons/fi";
+import { Collapse } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import type { StudioReleaseType } from "./api/studio.types";
 import { StudioUploadTrackDetails } from "./StudioUploadTrackDetails";
 import type { UploadRow } from "./useStudioTrackUploads";
 import tracksStyles from "./StudioUploadTracks.module.css";
@@ -48,8 +50,8 @@ function RowActions({
   isFirst,
   isLast,
   canReorder,
-  isStructureLocked,
   isEditing,
+  editButtonRef,
   registerControl,
   onMove,
   onRetry,
@@ -61,8 +63,9 @@ function RowActions({
   isFirst: boolean;
   isLast: boolean;
   canReorder: boolean;
-  isStructureLocked: boolean;
   isEditing: boolean;
+  /** Edit details takes focus back when the details panel closes. */
+  editButtonRef: RefObject<HTMLButtonElement | null>;
   registerControl: RegisterControl;
   onMove: (offset: -1 | 1) => void;
   onRetry: () => void;
@@ -74,43 +77,40 @@ function RowActions({
   const isMoveDownBlocked = !canReorder || isLast;
   return (
     <div className={tracksStyles.actions}>
-      {!isStructureLocked && (
-        <>
-          <button
-            ref={(element) => registerControl("moveUp", element)}
-            type="button"
-            aria-disabled={isMoveUpBlocked || undefined}
-            onClick={() => {
-              if (!isMoveUpBlocked) onMove(-1);
-            }}
-            aria-label={t("studio:uploadFlow.files.moveUp", label)}
-          >
-            <FiArrowUp aria-hidden />
-          </button>
-          <button
-            ref={(element) => registerControl("moveDown", element)}
-            type="button"
-            aria-disabled={isMoveDownBlocked || undefined}
-            onClick={() => {
-              if (!isMoveDownBlocked) onMove(1);
-            }}
-            aria-label={t("studio:uploadFlow.files.moveDown", label)}
-          >
-            <FiArrowDown aria-hidden />
-          </button>
-          {row.stage === "failed" && row.isRetryable && (
-            <button
-              type="button"
-              onClick={onRetry}
-              aria-label={t("studio:uploadFlow.files.retry", label)}
-            >
-              <FiRefreshCw aria-hidden />
-            </button>
-          )}
-        </>
+      <button
+        ref={(element) => registerControl("moveUp", element)}
+        type="button"
+        aria-disabled={isMoveUpBlocked || undefined}
+        onClick={() => {
+          if (!isMoveUpBlocked) onMove(-1);
+        }}
+        aria-label={t("studio:uploadFlow.files.moveUp", label)}
+      >
+        <FiArrowUp aria-hidden />
+      </button>
+      <button
+        ref={(element) => registerControl("moveDown", element)}
+        type="button"
+        aria-disabled={isMoveDownBlocked || undefined}
+        onClick={() => {
+          if (!isMoveDownBlocked) onMove(1);
+        }}
+        aria-label={t("studio:uploadFlow.files.moveDown", label)}
+      >
+        <FiArrowDown aria-hidden />
+      </button>
+      {row.stage === "failed" && row.isRetryable && (
+        <button
+          type="button"
+          onClick={onRetry}
+          aria-label={t("studio:uploadFlow.files.retry", label)}
+        >
+          <FiRefreshCw aria-hidden />
+        </button>
       )}
       {row.trackId && (
         <button
+          ref={editButtonRef}
           type="button"
           aria-expanded={isEditing}
           aria-label={t("studio:uploadFlow.files.editDetailsFor", label)}
@@ -119,16 +119,14 @@ function RowActions({
           {t("studio:uploadFlow.files.editDetails")}
         </button>
       )}
-      {!isStructureLocked && (
-        <button
-          ref={(element) => registerControl("remove", element)}
-          type="button"
-          onClick={onRemove}
-          aria-label={t("studio:uploadFlow.files.remove", label)}
-        >
-          <FiTrash2 aria-hidden />
-        </button>
-      )}
+      <button
+        ref={(element) => registerControl("remove", element)}
+        type="button"
+        onClick={onRemove}
+        aria-label={t("studio:uploadFlow.files.remove", label)}
+      >
+        <FiTrash2 aria-hidden />
+      </button>
     </div>
   );
 }
@@ -139,7 +137,6 @@ export function StudioUploadTrackRow({
   rowCount,
   releaseId,
   canReorder,
-  isStructureLocked,
   registerControl,
   onMove,
   onDropAt,
@@ -147,25 +144,32 @@ export function StudioUploadTrackRow({
   onRemove,
   onRename,
   onDropFiles,
+  isMeasuring,
+  releaseType,
+  localFile,
 }: {
   row: UploadRow;
   index: number;
   rowCount: number;
   releaseId: string;
   canReorder: boolean;
-  isStructureLocked: boolean;
   registerControl: RegisterControl;
   onMove: (offset: -1 | 1) => void;
   onDropAt: (draggedLocalId: string) => void;
   onRetry: () => void;
   onRemove: () => void;
   onRename: (title: string) => void;
-  /** Audio files dropped on a row join the list; absent on a locked list,
-   *  where a file drop is left to the browser. */
+  /** Audio files dropped on a row join the list. */
   onDropFiles?: (files: File[]) => void;
+  /** The row's file is being measured (spec 8.1). */
+  isMeasuring: boolean;
+  releaseType: StudioReleaseType;
+  /** The file picked for this row this session, for the timing tap-along. */
+  localFile: File | null;
 }) {
   const { t } = useTranslation();
   const [isEditing, setIsEditing] = useState(false);
+  const editButtonRef = useRef<HTMLButtonElement>(null);
   const label = { title: row.title, position: index + 1 };
 
   return (
@@ -205,6 +209,13 @@ export function StudioUploadTrackRow({
           {row.durationLabel && row.stage === "ready"
             ? ` · ${row.durationLabel}`
             : ""}
+          <span
+            className={tracksStyles.measuring}
+            data-visible={isMeasuring || undefined}
+            aria-hidden={!isMeasuring || undefined}
+          >
+            {` · ${t("studio:upload.loudness.measuring")}`}
+          </span>
         </span>
         {(row.stage === "uploading" || row.stage === "confirming") && (
           <progress
@@ -226,24 +237,34 @@ export function StudioUploadTrackRow({
         isFirst={index === 0}
         isLast={index === rowCount - 1}
         canReorder={canReorder}
-        isStructureLocked={isStructureLocked}
         isEditing={isEditing}
+        editButtonRef={editButtonRef}
         registerControl={registerControl}
         onMove={onMove}
         onRetry={onRetry}
         onRemove={onRemove}
         onToggleEditing={() => setIsEditing((wasEditing) => !wasEditing)}
       />
-      {isEditing && row.trackId && (
-        <StudioUploadTrackDetails
-          trackId={row.trackId}
-          releaseId={releaseId}
-          onDone={(savedTitle) => {
-            if (savedTitle) onRename(savedTitle);
-            setIsEditing(false);
-          }}
-        />
-      )}
+      {/* The panel turns inert as it folds away, so Save and Cancel hand
+          focus back to Edit details. */}
+      <Collapse
+        isOpen={isEditing && Boolean(row.trackId)}
+        className={tracksStyles.detailsSlot}
+      >
+        {row.trackId && (
+          <StudioUploadTrackDetails
+            trackId={row.trackId}
+            releaseId={releaseId}
+            releaseType={releaseType}
+            localFile={localFile}
+            onDone={(savedTitle) => {
+              if (savedTitle) onRename(savedTitle);
+              setIsEditing(false);
+              editButtonRef.current?.focus();
+            }}
+          />
+        )}
+      </Collapse>
     </li>
   );
 }

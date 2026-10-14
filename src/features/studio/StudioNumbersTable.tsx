@@ -47,6 +47,13 @@ function ReleaseRows({
             {row.status !== "published" && (
               <span className={css.status}>{t(row.statusLabelKey)}</span>
             )}
+            {row.reminders && (
+              <span className={css.reminders}>
+                {t("studio:numbers.reminders", {
+                  value: formatStudioCount(row.reminders, t, fmt),
+                })}
+              </span>
+            )}
           </span>
         </th>
         <td>{formatStudioCount(row.saves, t, fmt)}</td>

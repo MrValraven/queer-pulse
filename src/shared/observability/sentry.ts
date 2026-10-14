@@ -131,23 +131,37 @@ export function setMonitoringConsent(granted: boolean): void {
 
 /**
  * Substrings matched against each breadcrumb URL, target and message. The
- * first three cover API requests (stream, release and playlist reads); the
- * last three cover the page routes a member opens to play a track, an album
- * or a playlist.
+ * API entries cover stream, release, playlist, radio, format, episode,
+ * preview and press kit reads (a radio read names the genre or mood a member listens to); the page
+ * entries cover the routes a member opens to play a track, an album, a
+ * playlist, a scene or a private preview, and the press kit pages (who opens
+ * a preview link or a press kit is never recorded).
  */
 const PRIVATE_BREADCRUMB_PATHS = [
   "/studio/tracks/",
   "/studio/releases/",
   "/studio/playlists/",
+  "/studio/previews/",
+  "/studio/radio",
+  // Studio artist kinds: the format list a member browses and the episode
+  // shelf (POST /studio/tracks/:id/publish is covered by "/studio/tracks/").
+  "/studio/formats",
+  "/studio/episodes/",
+  "/press-kit",
   "/studio/track?id=",
   "/studio/album?id=",
   "/studio/collection?id=",
+  "/studio/scene",
+  "/studio/preview/",
+  "/studio/press?id=",
+  "/studio/press/print?id=",
+  "/studio/press/edit",
 ];
 
 /**
  * Drops the SDK's default fetch, xhr and navigation breadcrumbs that name a
- * Studio track, release or playlist URL (a stream request or a page visit
- * there would show up on a later error event as a play history). Every other
+ * Studio track, release or playlist URL (a stream request, radio read or
+ * page visit there would show up on a later error event as a play history). Every other
  * breadcrumb passes through unchanged.
  */
 export function dropStudioPlayBreadcrumb(

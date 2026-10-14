@@ -151,7 +151,7 @@
 }
 
 /* Phones: row one is the brand, the Creator chip and the avatar; row two is
-   the sub-nav (scrolling sideways on the narrowest screens) with the public
+   the sub-nav (wrapping to a second line on the narrowest screens) with the public
    page link at its end, which drops to a third row when the nav fills the
    width. Every label stays on one line. */
 @media (--md) {
@@ -186,15 +186,14 @@
     order: 2;
     flex: 1 1 auto;
     min-width: 0;
-    /* The padding keeps a focused item's ring inside the scroller; the
+    /* The padding keeps a focused item's ring inside the nav; the
        negative start margin lines the first item up with the brand. */
     margin: 6px 0 0 -4px;
     padding: 4px;
-    overflow-x: auto;
-    scrollbar-width: none;
-  }
-  .subnav::-webkit-scrollbar {
-    display: none;
+    /* The items wrap onto a second line when they outgrow the row. A
+       hidden scroller left Payouts wholly past the edge at 360px, where
+       an edge fade has nothing to fade, so every item stays in view. */
+    flex-wrap: wrap;
   }
   .navItem {
     flex: none;
@@ -1563,21 +1562,6 @@ fieldset.field legend {
   gap: 10px;
 }
 
-.lockedNote {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 10px;
-  padding: 14px 16px;
-  border-radius: var(--radius-10);
-  border: 1px solid rgba(var(--accent-rgb), 0.4);
-  background: rgba(var(--accent-rgb), 0.06);
-}
-
-.lockedNote p {
-  margin: 0;
-}
-
 .saveStatus {
   margin: 0;
   font-size: var(--text-12);
@@ -1592,4 +1576,10 @@ fieldset.field legend {
   border: 1px solid rgba(var(--studio-ink-rgb), 0.45);
   border-radius: var(--radius-10);
   padding: 10px 12px;
+}
+
+/* A refused field shows it at rest as well as on focus. */
+.field input[aria-invalid="true"],
+.field textarea[aria-invalid="true"] {
+  border-color: var(--danger);
 }

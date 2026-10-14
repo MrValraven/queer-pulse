@@ -234,6 +234,16 @@ function domainOf(value: string): string | undefined {
   }
 }
 
+/** A Bandcamp artist subdomain ("you.bandcamp.com", with or without a scheme
+ *  or a path). "www.bandcamp.com" keeps the handle path it had before. */
+const BANDCAMP_SUBDOMAIN = /^(https?:\/\/)?[a-z0-9-]+\.bandcamp\.com(\/|$)/i;
+
+function bandcampSubdomainHost(value: string): string | undefined {
+  if (!BANDCAMP_SUBDOMAIN.test(value)) return undefined;
+  const host = domainOf(value);
+  return host && host.toLowerCase() !== "bandcamp.com" ? host : undefined;
+}
+
 /** A short, human-friendly label for a stored link, for read-mode chips: the
  *  bare handle for handle platforms ("https://github.com/you" → "you"), the
  *  bare domain for a website or other link ("https://you.com/#/" → "you.com"),
@@ -244,6 +254,10 @@ export function socialDisplayLabel(platform: string, value: string): string {
   if (!trimmed) return trimmed;
   if (platform === "email") return trimmed.replace(/^mailto:/i, "");
   if (platform === "mastodon") return trimmed;
+  if (platform === "bandcamp") {
+    const bandcampHost = bandcampSubdomainHost(trimmed);
+    if (bandcampHost) return bandcampHost;
+  }
 
   const meta = socialPlatform(platform);
   if (meta.hrefPrefix) {
@@ -276,6 +290,9 @@ export function socialHref(
   if (!trimmed) return undefined;
   if (platform === "email") return `mailto:${trimmed.replace(/^mailto:/, "")}`;
   if (/^https?:\/\//i.test(trimmed)) return trimmed;
+  // An artist subdomain carries its own host: "you.bandcamp.com" links there.
+  if (platform === "bandcamp" && bandcampSubdomainHost(trimmed))
+    return `https://${trimmed}`;
   const meta = socialPlatform(platform);
   if (meta.hrefPrefix) {
     // Members routinely paste the whole path ("github.com/you") into a field

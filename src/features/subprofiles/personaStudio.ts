@@ -4,15 +4,37 @@ import type {
 } from "../studio/api/studio.adapters";
 import { useStudioAccess } from "../studio/api/useStudioAccess";
 import { useStudioArtist } from "../studio/api/useStudioArtist";
-import type { SubprofileKind } from "./api/subprofiles.api";
+import {
+  isStudioArtistPersonaKind,
+  type StudioArtistPersonaKind,
+} from "../studio/api/studio.types";
+import type { SubprofileKind, SubprofileSection } from "./api/subprofiles.api";
+
+/** The persona section a Studio release shows in, for every Studio artist
+ *  kind (spec 2). A kind added to STUDIO_FORMAT_BY_KIND fails to compile
+ *  here until it has a section. */
+const STUDIO_SECTION_BY_KIND: Record<
+  StudioArtistPersonaKind,
+  SubprofileSection
+> = {
+  musician: "discography",
+  dj: "mixes",
+  podcaster: "episodes",
+  podcast_producer: "productions",
+  poet: "poems",
+  spoken_word: "pieces",
+  drag: "shows",
+  performer: "reel",
+  dancer: "reel",
+  voguer: "balls",
+  burlesque: "acts",
+};
 
 /** The persona section a Studio release belongs in, by persona kind. */
 export function studioSectionFor(
   kind: SubprofileKind,
-): "discography" | "mixes" | null {
-  if (kind === "musician") return "discography";
-  if (kind === "dj") return "mixes";
-  return null;
+): SubprofileSection | null {
+  return isStudioArtistPersonaKind(kind) ? STUDIO_SECTION_BY_KIND[kind] : null;
 }
 
 export interface PersonaStudioContent {
@@ -28,7 +50,7 @@ const NO_STUDIO_CONTENT: PersonaStudioContent = { releases: [], playlists: [] };
  * in the editor preview alike (Studio v2). Drafts and taken-down releases
  * never show: the artist read lists them apart, in ownerReleases, and this
  * reads the published list only. Nothing at all, and no request, for a
- * viewer without a grant or a persona that is not a musician or DJ.
+ * viewer without a grant or a persona of a kind that does not release in Studio.
  */
 export function usePersonaStudio(persona: {
   id: string;

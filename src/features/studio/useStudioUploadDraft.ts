@@ -10,7 +10,6 @@ import { useStudioAccess } from "./api/useStudioAccess";
 import { useStudioRelease } from "./api/useStudioRelease";
 import {
   useCreateStudioRelease,
-  useUnpublishStudioRelease,
   useUpdateStudioRelease,
 } from "./api/useStudioReleaseMutations";
 import { studioErrorMessageKeyOf } from "./studioErrors.data";
@@ -27,7 +26,7 @@ const AUTOSAVE_DELAY_MS = 800;
 
 export interface StudioUploadDraft {
   /** The step on screen: Release until the draft exists, and Tracks when a
-   *  published release (or a 409 that locked it) asks for Publish. */
+   *  published release asks for Publish. */
   step: UploadStepId;
   canReach: (step: UploadStepId) => boolean;
   goTo: (step: UploadStepId) => void;
@@ -45,12 +44,13 @@ export interface StudioUploadDraft {
   saveErrorKey: string | null;
   shouldShowErrors: boolean;
   continueToTracks: () => Promise<void>;
-  /** Published: details save on "Save changes", the track list is locked. */
-  isStructureLocked: boolean;
+  /** Published: there is no Publish step; tracks still change (Studio v3). */
+  isPublished: boolean;
+  /** Published or scheduled: details save on "Save changes", so a half-typed
+   *  title never reaches the live page or breaks the publish rule. */
+  hasLiveDetails: boolean;
   /** Taken down: nothing edits. */
   isTakenDown: boolean;
-  /** Resolves true once the release is back to a draft. */
-  unpublishToEdit: () => Promise<boolean>;
   /** A published release's details differ from what is saved. */
   hasUnsavedChanges: boolean;
   /** "Save changes" went through and nothing was edited since. */
@@ -89,7 +89,10 @@ function useDraftAutosave(
   useEffect(() => {
     if (!release || release.status !== "draft" || debouncedForm !== form)
       return;
-    if (releaseFormErrors(debouncedForm).title) return;
+    // A half-typed title or buy link waits for the member: the server
+    // refuses both (400), so they never autosave.
+    const errors = releaseFormErrors(debouncedForm);
+    if (errors.title || errors.buyUrl) return;
     const body = patchFromForm(debouncedForm, release);
     if (Object.keys(body).length === 0) return;
     update.mutate(
@@ -114,7 +117,6 @@ export function useStudioUploadDraft(): StudioUploadDraft {
   });
   const create = useCreateStudioRelease();
   const update = useUpdateStudioRelease();
-  const unpublish = useUnpublishStudioRelease();
   const [form, setForm] = useState<ReleaseFormValues>(() =>
     defaultReleaseForm(uploadablePersonas[0]),
   );
@@ -125,6 +127,8 @@ export function useStudioUploadDraft(): StudioUploadDraft {
   const [publishedRelease, setPublishedRelease] =
     useState<StudioReleaseView | null>(null);
   const [seededReleaseId, setSeededReleaseId] = useState<string | null>(null);
+  // The saved release date the form last followed (see the reseed below).
+  const [seededReleasedOn, setSeededReleasedOn] = useState<string | null>(null);
   const [trackedReleaseId, setTrackedReleaseId] = useState(releaseId);
   const isMountedRef = useRef(false);
   const isCreatingRef = useRef(false);
@@ -134,8 +138,9 @@ export function useStudioUploadDraft(): StudioUploadDraft {
       isMountedRef.current = false;
     };
   }, []);
-  const isSaving = create.isPending || update.isPending || unpublish.isPending;
-  const isStructureLocked = release?.status === "published";
+  const isSaving = create.isPending || update.isPending;
+  const isPublished = release?.status === "published";
+  const hasLiveDetails = isPublished || release?.status === "scheduled";
   const isTakenDown = release?.status === "taken_down";
 
   // Back at /studio/upload with no ?release= ("Upload another release"):
@@ -150,13 +155,29 @@ export function useStudioUploadDraft(): StudioUploadDraft {
       setHasSavedChanges(false);
       setPublishedRelease(null);
       setSeededReleaseId(null);
+      setSeededReleasedOn(null);
     }
   }
 
   // Seed the form once from a release opened for editing.
   if (release && seededReleaseId !== release.id) {
     setSeededReleaseId(release.id);
+    setSeededReleasedOn(release.releasedOn);
     setForm(formFromRelease(release));
+  } else if (release && release.releasedOn !== seededReleasedOn) {
+    // The server moves the release date by itself: scheduling fills an empty
+    // one (and a new date moves it), Cancel schedule clears a filled one and
+    // Publish now sets today. The field follows the saved value while it
+    // still shows the last one, so a member's unsaved typing stays and the
+    // next save sends no stale date back.
+    const previousSaved = seededReleasedOn ?? "";
+    const nextSaved = release.releasedOn ?? "";
+    setSeededReleasedOn(release.releasedOn);
+    setForm((previous) =>
+      previous.releasedOn === previousSaved
+        ? { ...previous, releasedOn: nextSaved }
+        : previous,
+    );
   }
 
   // A persona picked after the first render (access answered late). Merged,
@@ -194,16 +215,14 @@ export function useStudioUploadDraft(): StudioUploadDraft {
 
   const canReach = (target: UploadStepId) =>
     target === "release" ||
-    (release !== null &&
-      !isTakenDown &&
-      (target === "tracks" || !isStructureLocked));
+    (release !== null && !isTakenDown && (target === "tracks" || !isPublished));
 
   async function continueToTracks() {
     // The button stays focusable while busy (aria-disabled), so a second
     // press lands here: one create per draft.
-    if (isCreatingRef.current || unpublish.isPending) return;
+    if (isCreatingRef.current) return;
     const errors = releaseFormErrors(form);
-    if (errors.title || errors.description) {
+    if (errors.title || errors.description || errors.buyUrl) {
       setShouldShowErrors(true);
       return;
     }
@@ -221,6 +240,7 @@ export function useStudioUploadDraft(): StudioUploadDraft {
         // URL they moved to stays theirs.
         if (!isMountedRef.current) return;
         setSeededReleaseId(current.id);
+        setSeededReleasedOn(current.releasedOn);
         const createdId = current.id;
         setSearchParams(
           (previous) => {
@@ -247,7 +267,7 @@ export function useStudioUploadDraft(): StudioUploadDraft {
   async function saveChanges() {
     if (!release || isSaving || !hasChanges(form, release)) return;
     const errors = releaseFormErrors(form);
-    if (errors.title || errors.description) {
+    if (errors.title || errors.description || errors.buyUrl) {
       setShouldShowErrors(true);
       return;
     }
@@ -259,19 +279,6 @@ export function useStudioUploadDraft(): StudioUploadDraft {
       setHasSavedChanges(true);
     } catch (error) {
       reportError(error);
-    }
-  }
-
-  async function unpublishToEdit() {
-    if (!release || isSaving) return false;
-    setSaveErrorKey(null);
-    try {
-      await unpublish.mutateAsync({ releaseId: release.id });
-      setSaveErrorKey(null);
-      return true;
-    } catch (error) {
-      reportError(error);
-      return false;
     }
   }
 
@@ -287,7 +294,7 @@ export function useStudioUploadDraft(): StudioUploadDraft {
     step:
       release === null
         ? "release"
-        : requestedStep === "publish" && isStructureLocked
+        : requestedStep === "publish" && isPublished
           ? "tracks"
           : requestedStep,
     canReach,
@@ -308,9 +315,9 @@ export function useStudioUploadDraft(): StudioUploadDraft {
     saveErrorKey,
     shouldShowErrors,
     continueToTracks,
-    isStructureLocked,
+    isPublished,
+    hasLiveDetails,
     isTakenDown,
-    unpublishToEdit,
     hasUnsavedChanges: release !== null && hasChanges(form, release),
     hasSavedChanges,
     saveChanges,

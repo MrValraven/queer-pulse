@@ -2,6 +2,7 @@ import {
   routes,
   businessPath,
   personaPath,
+  personaUpdatesPath,
   communityPath,
 } from "../../app/routeMap";
 import { gatheringPath } from "../../features/gatherings/data";
@@ -40,7 +41,8 @@ export type MediaReferenceType =
   | "message-photo" // Message.attachment (a photo sent in a conversation)
   | "press-contact" // PressContact.avatarUrl
   | "sticker" // Sticker.storageKey
-  | "studio-cover"; // StudioRelease.coverKey
+  | "studio-cover" // StudioRelease.coverKey
+  | "persona-post"; // SubprofilePost.imageKey (Studio v3; label is the post body)
 
 /** One place an uploaded image is referenced. The backend owns `entityId`/
  *  `label`/`slug`; the frontend owns turning `type` into a localized label
@@ -139,6 +141,11 @@ export function mediaReferenceHref(reference: MediaReference): string | null {
       return entityId
         ? `${routes.studioAlbum}?id=${encodeURIComponent(entityId)}`
         : null;
+    // A persona post's photo. The backend sends no slug for this type, so
+    // it renders as a label; a slug, if one ever arrives, opens the persona
+    // page's Updates block.
+    case "persona-post":
+      return slug ? personaUpdatesPath(slug) : null;
     case "landlord":
       return slug ? `/work/landlord/${slug}` : null;
     case "company-work":

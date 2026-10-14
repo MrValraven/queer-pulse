@@ -1,0 +1,9 @@
+/* "Play from 1:23" beside the hero play button when a shared link
+   carries a start time. */
+.playFromLabel {
+  align-self: center;
+  font-size: var(--text-14);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--studio-accent-text);
+}

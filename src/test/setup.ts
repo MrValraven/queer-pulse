@@ -3,6 +3,7 @@ import { afterEach, beforeEach, expect, vi } from "vitest";
 import { cleanup } from "@testing-library/react";
 import * as axeMatchers from "vitest-axe/matchers.js";
 import { resetMswSubprofileEditVersions } from "./msw/subprofiles.handlers";
+import { resetDemoListeningStore } from "../features/studio/api/studioDemoListening";
 
 // ── axe-core matcher ─────────────────────────────────────────────────────────
 // Registers `expect(results).toHaveNoViolations()` for every suite. The `axe()`
@@ -127,4 +128,20 @@ afterEach(() => {
   vi.unstubAllGlobals();
   vi.unstubAllEnvs();
   resetMswSubprofileEditVersions();
+  // The Studio player saves its queue (sessionStorage) and its device
+  // preferences (localStorage); one test's saved queue must never reach the
+  // next test's provider.
+  try {
+    const sessionKeys: string[] = [];
+    for (let index = 0; index < window.sessionStorage.length; index += 1) {
+      const key = window.sessionStorage.key(index);
+      if (key?.startsWith("studio.queue.")) sessionKeys.push(key);
+    }
+    sessionKeys.forEach((key) => window.sessionStorage.removeItem(key));
+    window.localStorage.removeItem("studio.player.preferences");
+  } catch {
+    // A test that blocked storage left nothing behind.
+  }
+  // Demo PATCH and audio-confirm writes live in a module-level store.
+  resetDemoListeningStore();
 });

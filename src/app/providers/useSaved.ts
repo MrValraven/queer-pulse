@@ -32,6 +32,14 @@ export type SavedKind =
  */
 export type SavedItemAvailability = "available" | "unavailable";
 
+/**
+ * The one cause the API names, and only for Studio releases and tracks our
+ * team took down after a report: those keep their `href`, whose page explains
+ * what happened without saying more. Every other unavailable save carries no
+ * reason and no href, as above.
+ */
+export type SavedItemUnavailableReason = "withdrawn";
+
 export interface SavedItem {
   /** Stable unique id, conventionally `${kind}:${slug}`. */
   id: string;
@@ -40,7 +48,10 @@ export interface SavedItem {
   /**
    * Original design href or router path; pass through linkToPath() when
    * rendering. `null` when the subject can no longer be opened, which the API
-   * pairs with `availability: "unavailable"`. Never render a link off this
+   * pairs with `availability: "unavailable"`; the one exception is a withdrawn
+   * Studio save, which keeps its href (see `unavailableReason`). An unavailable
+   * save names a cause only through `unavailableReason`, and only for a Studio
+   * takedown; any other cause stays unnamed on purpose. Never render a link off this
    * without checking `availability` too.
    */
   href?: string | null;
@@ -52,6 +63,9 @@ export interface SavedItem {
   readTime?: string;
   /** Whether the subject can still be opened. Absent means available. */
   availability?: SavedItemAvailability;
+  /** Set only with `availability: "unavailable"`, see
+   *  `SavedItemUnavailableReason`. */
+  unavailableReason?: SavedItemUnavailableReason;
 }
 
 /**

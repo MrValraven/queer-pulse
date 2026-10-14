@@ -195,6 +195,19 @@ export const STORAGE_INVENTORY: StorageEntry[] = [
       "app/providers/DraftsProvider.tsx, features/messages/drafts.ts, features/forum/forumDraftSnapshot.ts, features/economy/usePostJobForm.ts, features/magazine/useStoryDraft.ts, features/marketing/listBusiness/*",
   },
   {
+    id: "studioEpisodes",
+    names: [
+      "studio.episodeMemory.<member id>",
+      "studio.episodeSpeed.<member id>",
+    ],
+    kind: "localStorage",
+    category: "functional",
+    purposeKey: `${NS}.studioEpisodes.purpose`,
+    lifetimeKey: `${NS}.lifetime.untilCleared`,
+    sourceHint:
+      "features/studio/player/studioEpisodeMemory.ts (cleared on sign-out, Quick Exit and loss of Studio access)",
+  },
+  {
     id: "outbox",
     names: [
       "qp.messages.outbox.v1",
@@ -299,7 +312,7 @@ export const STORAGE_INVENTORY: StorageEntry[] = [
       "qp:demo:roadmap:v2",
       "qp-employer-affiliation",
       "qp-posted-jobs",
-      "qp.demo.studioLibrarySeeded.v1",
+      "qp.demo.studioLibrarySeeded.v2",
     ],
     kind: "localStorage",
     category: "functional",

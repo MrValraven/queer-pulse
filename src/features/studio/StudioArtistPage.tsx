@@ -6,7 +6,10 @@ import { useStudioArtist } from "./api/useStudioArtist";
 import { StudioArtistHero } from "./StudioArtistHero";
 import { StudioArtistMain } from "./StudioArtistMain";
 import { StudioArtistOwnerPanel } from "./StudioArtistOwnerPanel";
+import { StudioArtistOwnerTools } from "./StudioArtistOwnerTools";
 import { StudioArtistSidebar } from "./StudioArtistSidebar";
+import { StudioArtistSupportCard } from "./StudioArtistSupportCard";
+import { StudioArtistUpcomingCard } from "./StudioArtistUpcomingCard";
 import {
   StudioDetailSkeleton,
   StudioLoadError,
@@ -15,7 +18,7 @@ import {
 import { StudioShell } from "./StudioShell";
 import { StudioTablist } from "./StudioTablist";
 import { StudioTipModal } from "./StudioTipModal";
-import { TABS, type ArtistTabId } from "./studioArtist.data";
+import { artistTabsOf, type ArtistTabId } from "./studioArtist.data";
 import { useStudioShowcase } from "./useStudioShowcase";
 import styles from "./studio.module.css";
 import kit from "./studioKit.module.css";
@@ -60,6 +63,12 @@ export function StudioArtistPage() {
     );
 
   const name = artist.artist.name;
+  // Live gets a side column once there is something for it (Studio v3).
+  const hasSide =
+    isShowcase ||
+    artist.upcoming.length > 0 ||
+    artist.supportLinks.length > 0 ||
+    artist.isOwner;
   return (
     <StudioShell>
       <StudioArtistHero
@@ -73,22 +82,29 @@ export function StudioArtistPage() {
           onListEmptied={focusPageHeading}
         />
       )}
+      {artist.isOwner && <StudioArtistOwnerTools artist={artist} />}
       <StudioTablist
-        tabs={TABS}
+        tabs={artistTabsOf(artist.artist.format)}
         activeId={tab}
         onChange={setTab}
         idPrefix={tabsId}
         label={t("studio:artistPage.tabsLabel", { name })}
       />
-      <section className={isShowcase ? styles.detailGrid : kit.detailSingle}>
+      <section className={hasSide ? styles.detailGrid : kit.detailSingle}>
         <div {...tabPanelProps(tabsId, tab)} className={kit.panel}>
           <StudioArtistMain tab={tab} artist={artist} />
         </div>
-        {isShowcase && (
-          <StudioArtistSidebar
-            artistName={name}
-            onTip={() => setIsTipOpen(true)}
-          />
+        {hasSide && (
+          <div className={styles.sideCol}>
+            {isShowcase && (
+              <StudioArtistSidebar
+                artistName={name}
+                onTip={() => setIsTipOpen(true)}
+              />
+            )}
+            <StudioArtistUpcomingCard artist={artist} />
+            <StudioArtistSupportCard artist={artist} />
+          </div>
         )}
       </section>
       {isShowcase && isTipOpen && (

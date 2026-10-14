@@ -392,6 +392,9 @@ export interface AttendeeRow {
   background: string;
   color: string;
   name: string;
+  /** Their own first name, for surfaces that show only that (the event
+   *  page's "Who's going" chips). Absent on demo mock rows. */
+  firstName?: string;
   /** Their profile photo, when their photo visibility lets this viewer see
    *  it. Absent means the initials stand in. */
   avatarUrl?: string;
@@ -463,6 +466,7 @@ export function attendeeToRow(dto: AttendeeDTO, index: number): AttendeeRow {
     background: tint.background,
     color: tint.color,
     name: `${dto.firstName} ${dto.lastName}`.trim(),
+    firstName: dto.firstName,
     // `null` when their photo visibility hides it from this viewer.
     avatarUrl: dto.avatarUrl ?? undefined,
     // The pronouns the attendee gave on their RSVP (Create Gathering v2).

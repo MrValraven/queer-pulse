@@ -18,8 +18,12 @@ import {
   type UpdateStudioPlaylistBody,
 } from "./studio.types";
 import { demoReleaseCard } from "./studioDemoCards";
-import { DEMO_ARTISTS, DEMO_RELEASES } from "./studioDemo.data";
-import { DEMO_ARTIST_MARIANA } from "./studioDemoMe.data";
+import { DEMO_RELEASES, DEMO_WITHDRAWN_TRACK_IDS } from "./studioDemo.data";
+import {
+  DEMO_FORMAT_RELEASES,
+  demoAllArtists,
+  isDemoOwnedPersona,
+} from "./studioDemoFormats.data";
 
 /** The demo's playlists, held in memory for the session. A write here is
  *  what the next read returns, the way the live server answers. Demo only:
@@ -90,14 +94,28 @@ resetDemoPlaylists();
 /** Every published demo track with its release card: what a viewer can open.
  *  Read per call so a fixture edit shows up. */
 const publishedTracks = () =>
-  new Map<string, StudioPlaylistTrackDTO>(
-    DEMO_RELEASES.flatMap((release) =>
+  new Map<string, StudioPlaylistTrackDTO>([
+    ...DEMO_RELEASES.flatMap((release) =>
       release.tracks.map(
         (track) =>
           [track.id, { ...track, release: demoReleaseCard(release) }] as const,
       ),
     ),
-  );
+    // Episodes, spoken word and performance tracks: a draft episode is left out.
+    ...DEMO_FORMAT_RELEASES.filter(
+      (release) => release.status === "published",
+    ).flatMap((release) =>
+      release.tracks
+        .filter((track) => track.isDraft !== true)
+        .map(
+          (track) =>
+            [
+              track.id,
+              { ...track, release: demoReleaseCard(release) },
+            ] as const,
+        ),
+    ),
+  ]);
 
 const byUpdatedDesc = (left: DemoPlaylist, right: DemoPlaylist) =>
   right.updatedAt.localeCompare(left.updatedAt);
@@ -109,8 +127,9 @@ const isVisible = (playlist: DemoPlaylist) =>
 
 const creditPersonaOf = (playlist: DemoPlaylist) =>
   playlist.creditPersonaId
-    ? (DEMO_ARTISTS.find((artist) => artist.id === playlist.creditPersonaId) ??
-      null)
+    ? (demoAllArtists().find(
+        (artist) => artist.id === playlist.creditPersonaId,
+      ) ?? null)
     : null;
 
 /** A persona credit whose persona can no longer be resolved. The server
@@ -141,6 +160,10 @@ function toDto(playlist: DemoPlaylist): StudioPlaylistDTO {
     addedAt: row.entry.addedAt,
     isAvailable: row.track !== null,
     track: row.track,
+    // As the server: the reason travels only for a release takedown.
+    ...(row.track === null && DEMO_WITHDRAWN_TRACK_IDS.has(row.entry.trackId)
+      ? { unavailableReason: "withdrawn" as const }
+      : {}),
   }));
   const playable = entries.flatMap((entry) =>
     entry.track?.hasAudio ? [entry.track] : [],
@@ -306,7 +329,8 @@ export function demoCreatePlaylist(
   if (ownedCount >= STUDIO_PLAYLIST_LIMITS.playlistsPerMember)
     throw refused(409, "studio_playlist_limit");
   const creditPersonaId = body.creditSubprofileId ?? null;
-  if (creditPersonaId && creditPersonaId !== DEMO_ARTIST_MARIANA.id)
+  // The demo viewer may credit any persona they can upload as.
+  if (creditPersonaId && !isDemoOwnedPersona(creditPersonaId))
     throw refused(422, "studio_playlist_credit_not_allowed");
   const playlist: DemoPlaylist = {
     id: nextDemoId("demo-playlist"),
@@ -336,7 +360,7 @@ export function demoUpdatePlaylist(
   if (body.creditSubprofileId !== undefined) {
     if (
       body.creditSubprofileId !== null &&
-      body.creditSubprofileId !== DEMO_ARTIST_MARIANA.id
+      !isDemoOwnedPersona(body.creditSubprofileId)
     )
       throw refused(422, "studio_playlist_credit_not_allowed");
     playlist.creditPersonaId = body.creditSubprofileId;

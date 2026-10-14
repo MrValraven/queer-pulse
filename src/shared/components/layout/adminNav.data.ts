@@ -51,7 +51,12 @@ import { currentUser } from "../../../features/members/data/demoCurrentUser";
 
 /** Live pending-count source for a nav pill, resolved in AdminSidebar. */
 export type AdminNavBadge =
-  "moderation" | "members" | "partnerships" | "verifications" | "housingCoops";
+  | "moderation"
+  | "members"
+  | "partnerships"
+  | "verifications"
+  | "housingCoops"
+  | "listingClaims";
 
 export interface AdminNavItem {
   /** Catalog key for the visible label — resolve with `t()`. */
@@ -128,9 +133,9 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
         // because it answers "does anything have to happen today", which the
         // rest of this rail needed about fifteen page loads to answer.
         //
-        // No `badge`. `AdminNavBadge` is a closed union of the five counts
+        // No `badge`. `AdminNavBadge` is a closed union of the six counts
         // `useAdminNavBadges` resolves, and none of them is this endpoint's
-        // overdue total. Wiring a sixth would mean mounting `useAdminQueues()`
+        // overdue total. Wiring a seventh would mean mounting `useAdminQueues()`
         // on every admin page, which is up to 30 aggregates per load for a
         // number the rail cannot usefully summarise.
         //
@@ -183,7 +188,7 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
         // triaged here.
         //
         // Deliberately without a `badge`. `AdminNavBadge` is a closed union of
-        // the five queues `useAdminNavBadges` resolves, and none of them counts
+        // the six queues `useAdminNavBadges` resolves, and none of them counts
         // intakes or inquiries; borrowing one would put another queue's number
         // on this link. Widening it into a per-queue registry is OPS-01's job,
         // so this ships honest and unbadged rather than half-building that.
@@ -214,7 +219,7 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
         // picture, and this is where that question is answered. Filed under
         // Trust & safety beside the queues it comes out of.
         //
-        // No `badge`: `AdminNavBadge` is a closed union of the five queues
+        // No `badge`: `AdminNavBadge` is a closed union of the six queues
         // `useAdminNavBadges` resolves, and none of them counts escalations, so
         // any number here would be borrowed from another queue and would lie.
         labelKey: "admin:banEvasionEscalations.navLabel",
@@ -355,6 +360,12 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
         to: routes.adminListings,
         capabilities: ["directory_moderator"],
         icon: FiFileText,
+        // Pending ownership claims. A member claiming a listing as theirs
+        // waits on staff, and nothing else in the console said one had come
+        // in. The pill counts the claims queue only: submissions in review
+        // have their own tabbed counts on the page itself.
+        badge: "listingClaims",
+        tone: "warn",
         // Exact match only, the same reason the resource-guide console below
         // takes it: the create page sits at `/admin/listings/new`, so prefix
         // matching lit both rows at once while only one was open.
@@ -447,6 +458,16 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
         to: routes.adminGuideFeedback,
         capabilities: ["resource_curator"],
         icon: FiThumbsUp,
+      },
+      {
+        // Studio discovery (/admin/studio): the featured release, the two
+        // shelves and the scenes on Studio home. Both controllers are
+        // `@Roles(Moderator, Admin)` with no `@StaffRoles`, and the path sits
+        // in `MOD_ACCESSIBLE_ADMIN_PATTERNS`, so it carries no
+        // `capabilities` and no `isAdminOnly`.
+        labelKey: "shared:adminNav.items.studio",
+        to: routes.adminStudio,
+        icon: FiRadio,
       },
     ],
   },

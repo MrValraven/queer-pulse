@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { FiSearch } from "react-icons/fi";
+import { Collapse } from "../../shared/components/ui";
 import { useDebouncedValue } from "../../shared/hooks/useDebouncedValue";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -8,12 +9,18 @@ import { useStudioReleases } from "./api/useStudioReleases";
 import { useStudioSearch } from "./api/useStudioSearch";
 import {
   STUDIO_LIMITS,
+  type StudioFormat,
   type StudioGenre,
+  type StudioMood,
   type StudioSearchType,
 } from "./api/studio.types";
 import { StudioLoadError } from "./StudioLoadStates";
 import { StudioReleaseCard } from "./StudioReleaseCard";
-import { StudioSearchGenreSelect } from "./StudioSearchGenreSelect";
+import {
+  StudioSearchFormatSelect,
+  StudioSearchGenreSelect,
+  StudioSearchMoodSelect,
+} from "./StudioSearchGenreSelect";
 import { StudioSearchFilters } from "./StudioSearchFilters";
 import { StudioSearchResults } from "./StudioSearchResults";
 import { StudioShell } from "./StudioShell";
@@ -23,6 +30,7 @@ import { useStudioSearchParams } from "./useStudioSearchParams";
 import { useStudioShowcase } from "./useStudioShowcase";
 import ss from "./studio.module.css";
 import s from "./studioPages.module.css";
+import css from "./StudioSearch.module.css";
 
 const FEATURED_COUNT = 8;
 
@@ -31,20 +39,43 @@ interface ShownSearch {
   query: string;
   type: StudioSearchType;
   genre: StudioGenre | null;
+  mood: StudioMood | null;
+  format: StudioFormat | null;
 }
 
 export function StudioSearchPage() {
   const { t } = useTranslation();
   const isShowcase = useStudioShowcase();
   const searchInputRef = useRef<HTMLInputElement>(null);
-  const { query, type, genre, setQuery, setType, setGenre, clear } =
-    useStudioSearchParams();
+  const {
+    query,
+    type,
+    genre,
+    mood,
+    format,
+    setQuery,
+    setType,
+    setGenre,
+    setMood,
+    setFormat,
+    clear,
+  } = useStudioSearchParams();
   // typedDraft is null while the input follows the URL, and holds the text
   // the member is typing until the URL catches up or changes.
   const [typedDraft, setTypedDraft] = useState<string | null>(null);
   const draft = typedDraft ?? query;
   const debouncedDraft = useDebouncedValue(draft, 300);
-  const { result, loadState, isIdle } = useStudioSearch(query, type, genre);
+  // Podcasts carry no genre or mood: under Podcasts those filters drop.
+  const isPodcast = format === "podcast";
+  const searchedGenre = isPodcast ? null : genre;
+  const searchedMood = isPodcast ? null : mood;
+  const { result, loadState, isIdle } = useStudioSearch(
+    query,
+    type,
+    searchedGenre,
+    searchedMood,
+    format,
+  );
   const featured = useStudioReleases();
 
   const [seenQuery, setSeenQuery] = useState(query);
@@ -60,13 +91,22 @@ export function StudioSearchPage() {
   const trimmedQuery = query.trim();
   const [shownSearch, setShownSearch] = useState<ShownSearch | null>(null);
   if (result && shownSearch?.result !== result)
-    setShownSearch({ result, query: trimmedQuery, type, genre });
+    setShownSearch({
+      result,
+      query: trimmedQuery,
+      type,
+      genre: searchedGenre,
+      mood: searchedMood,
+      format,
+    });
   const shown = result && shownSearch?.result === result ? shownSearch : null;
   const isRefreshing =
     shown !== null &&
     (shown.query !== trimmedQuery ||
       shown.type !== type ||
-      shown.genre !== genre);
+      shown.genre !== searchedGenre ||
+      shown.mood !== searchedMood ||
+      shown.format !== format);
 
   // The input writes the URL once the typing has paused on the current text;
   // the URL (Back, the topbar search) writes the input through the derived draft.
@@ -111,7 +151,19 @@ export function StudioSearchPage() {
         />
       </form>
       <StudioSearchFilters type={type} onChange={setType} />
-      {!isIdle && <StudioSearchGenreSelect value={genre} onChange={setGenre} />}
+      <Collapse isOpen={!isIdle}>
+        <>
+          <Collapse isOpen={!isPodcast}>
+            <div className={css.facets}>
+              <StudioSearchGenreSelect value={genre} onChange={setGenre} />
+              <StudioSearchMoodSelect value={mood} onChange={setMood} />
+            </div>
+          </Collapse>
+          <div className={css.facets}>
+            <StudioSearchFormatSelect value={format} onChange={setFormat} />
+          </div>
+        </>
+      </Collapse>
       {isShowcase && isIdle && (
         <div className={s.chips}>
           {RECENT.map((term) => (
@@ -170,6 +222,7 @@ export function StudioSearchPage() {
             result={shown.result}
             query={shown.query}
             type={shown.type}
+            format={shown.format}
             onClear={() => {
               setTypedDraft(null);
               clear();

@@ -1,11 +1,14 @@
 import type { ReactNode } from "react";
 import { FiSlash, FiUserPlus } from "react-icons/fi";
+import { useSearchParams } from "react-router-dom";
 import { EmptyState } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { formatOfKind } from "./api/studio.adapters";
 import { useStudioAccess } from "./api/useStudioAccess";
 import { StudioCreatorShell } from "./StudioCreatorShell";
+import { StudioEpisodeUploadPage } from "./StudioEpisodeUploadPage";
 import {
   StudioDetailSkeleton,
   StudioLoadError,
@@ -17,8 +20,18 @@ import { UPLOAD_STEPS } from "./studioUpload.data";
 import { useStudioUploadDraft } from "./useStudioUploadDraft";
 import s from "./creator.module.css";
 
-/** /studio/upload starts a release; /studio/upload?release=<id> edits one. */
+/** /studio/upload starts a release; /studio/upload?release=<id> edits one;
+ *  `&episode=` opens episode mode on a show (Studio artist kinds). */
 export function StudioUploadPage() {
+  const [searchParams] = useSearchParams();
+  return searchParams.get("episode") !== null ? (
+    <StudioEpisodeUploadPage />
+  ) : (
+    <StudioReleaseUploadPage />
+  );
+}
+
+function StudioReleaseUploadPage() {
   const { t } = useTranslation();
   const { uploadablePersonas } = useStudioAccess();
   const draft = useStudioUploadDraft();
@@ -34,6 +47,10 @@ export function StudioUploadPage() {
   const shownStep = UPLOAD_STEPS.find(
     (stepItem) => stepItem.id === (draft.release ? draft.step : "release"),
   );
+
+  const isShow = draft.persona
+    ? formatOfKind(draft.persona.kind) === "podcast"
+    : false;
 
   let body: ReactNode;
   // Only a new release needs a persona to upload as. An owner whose persona
@@ -53,6 +70,9 @@ export function StudioUploadPage() {
     );
   } else if (
     editState?.isNotFound ||
+    // A withdrawn release opened here by someone who does not own it: the
+    // editor has nothing to offer them, so it reads as not found.
+    editState?.isWithdrawn ||
     (draft.release && !draft.release.isOwner)
   ) {
     body = <StudioNotFound />;
@@ -90,7 +110,7 @@ export function StudioUploadPage() {
             <h2 className="visuallyHidden">{t(shownStep.nmKey)}</h2>
           )}
           <UploadMainCol draft={draft} />
-          <UploadSidebar />
+          <UploadSidebar release={draft.release} isShow={isShow} />
         </section>
       </>
     );
@@ -110,7 +130,13 @@ export function StudioUploadPage() {
               components={{ em: <em /> }}
             />
           </h1>
-          <div className={s.sub}>{t("studio:uploadFlow.hero.sub")}</div>
+          <div className={s.sub}>
+            {t(
+              isShow
+                ? "studio:uploadFlow.hero.subShow"
+                : "studio:uploadFlow.hero.sub",
+            )}
+          </div>
         </div>
       </section>
       {body}

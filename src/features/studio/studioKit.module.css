@@ -111,6 +111,13 @@
   margin-top: -4px;
 }
 
+/* A phone tab is a 44px touch target. */
+@media (--md) {
+  .tab {
+    min-height: 44px;
+  }
+}
+
 /* A hero link that sits among the pill buttons. */
 .pillLink {
   display: inline-flex;

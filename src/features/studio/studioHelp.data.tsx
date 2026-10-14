@@ -1,292 +1,171 @@
-import type { ReactNode } from "react";
+import type { ReactElement } from "react";
 import { Link } from "react-router-dom";
 import { routes } from "../../app/routeMap";
-import { Translation } from "../../shared/i18n/Translation";
-import type { TFunction } from "../../shared/i18n/types";
+import { studioUploadPath } from "./studioPaths";
 
 /**
- * Content for the Studio Help page. Platform-authored chrome (never fetched —
- * see `docs/i18n/extraction-brief.md` §1). Pattern B: `buildHelpCats(t)` /
- * `buildHelpSections(t)` / `buildContactCards(t)` are memoized in the
- * consumer.
+ * Content for Studio Help. Platform chrome: every string is a catalog key,
+ * and `answerComponents` fills the tags an answer carries. The live sections
+ * say only what Studio does today (spec section 3.2); the money section is
+ * the demo's showcase.
  */
 
-/** A single FAQ entry. `id` is used both as React key and accordion open-id. */
-export interface FaqItem {
+export type HelpSectionId = "listening" | "sharing" | "safety" | "money";
+
+export interface HelpFaqEntry {
+  /** Stable: the accordion's open id and the React key. */
   id: string;
-  q: string;
-  a: ReactNode;
+  questionKey: string;
+  answerKey: string;
+  answerComponents?: Record<string, ReactElement>;
 }
 
-/** A top-of-page category card that jumps to a section. */
-export interface HelpCat {
-  target: string;
-  heading: ReactNode;
-  blurb: string;
-  icon: "note" | "user" | "coin";
+export interface HelpSectionData {
+  id: HelpSectionId;
+  headingKey: string;
+  items: HelpFaqEntry[];
 }
 
-/** A FAQ section: heading (carries the coral <em>) + its items. */
-export interface HelpSection {
-  id: string;
-  heading: ReactNode;
-  items: FaqItem[];
+export interface HelpCategoryCard {
+  target: Exclude<HelpSectionId, "money">;
+  headingKey: string;
+  blurbKey: string;
 }
 
-export function buildHelpCats(t: TFunction): HelpCat[] {
-  return [
-    {
-      target: "listening",
-      heading: (
-        <Translation
-          i18nKey="studio:help.cat.listening.heading"
-          components={{ em: <em /> }}
-        />
-      ),
-      blurb: t("studio:help.cat.listening.blurb"),
-      icon: "note",
-    },
-    {
-      target: "account",
-      heading: (
-        <Translation
-          i18nKey="studio:help.cat.account.heading"
-          components={{ em: <em /> }}
-        />
-      ),
-      blurb: t("studio:help.cat.account.blurb"),
-      icon: "user",
-    },
-    {
-      target: "artists",
-      heading: (
-        <Translation
-          i18nKey="studio:help.cat.artists.heading"
-          components={{ em: <em /> }}
-        />
-      ),
-      blurb: t("studio:help.cat.artists.blurb"),
-      icon: "coin",
-    },
-  ];
-}
-
-export function buildHelpSections(t: TFunction): HelpSection[] {
-  return [
-    {
-      id: "listening",
-      heading: (
-        <Translation
-          i18nKey="studio:help.cat.listening.heading"
-          components={{ em: <em /> }}
-        />
-      ),
-      items: [
-        {
-          id: "money-go",
-          q: t("studio:help.faq.moneyGo.q"),
-          a: (
-            <Translation
-              i18nKey="studio:help.faq.moneyGo.a"
-              components={{
-                strong: <strong />,
-                em: <em />,
-                a: <Link to={routes.governance} />,
-              }}
-            />
-          ),
-        },
-        {
-          id: "tip-no-account",
-          q: t("studio:help.faq.tipNoAccount.q"),
-          a: (
-            <Translation
-              i18nKey="studio:help.faq.tipNoAccount.a"
-              components={{ em: <em /> }}
-            />
-          ),
-        },
-        {
-          id: "tip-notes-private",
-          q: t("studio:help.faq.tipNotesPrivate.q"),
-          a: (
-            <Translation
-              i18nKey="studio:help.faq.tipNotesPrivate.a"
-              components={{
-                strong: <strong />,
-                a: <Link to={routes.studioSettings} />,
-              }}
-            />
-          ),
-        },
-        {
-          id: "listening-history",
-          q: t("studio:help.faq.listeningHistory.q"),
-          a: (
-            <Translation
-              i18nKey="studio:help.faq.listeningHistory.a"
-              components={{ em: <em /> }}
-            />
-          ),
-        },
-      ],
-    },
-    {
-      id: "account",
-      heading: (
-        <Translation
-          i18nKey="studio:help.cat.account.heading"
-          components={{ em: <em /> }}
-        />
-      ),
-      items: [
-        {
-          id: "7-vs-11",
-          q: t("studio:help.faq.priceDiff.q"),
-          a: (
-            <Translation
-              i18nKey="studio:help.faq.priceDiff.a"
-              components={{ strong: <strong /> }}
-            />
-          ),
-        },
-        {
-          id: "cancel",
-          q: t("studio:help.faq.cancel.q"),
-          a: (
-            <Translation
-              i18nKey="studio:help.faq.cancel.a"
-              components={{ a: <Link to={routes.studioSettings} /> }}
-            />
-          ),
-        },
-        {
-          id: "data-sold",
-          q: t("studio:help.faq.dataSold.q"),
-          a: (
-            <Translation
-              i18nKey="studio:help.faq.dataSold.a"
-              components={{
-                strong: <strong />,
-                a: <Link to={routes.studioTerms} />,
-              }}
-            />
-          ),
-        },
-      ],
-    },
-    {
-      id: "artists",
-      heading: (
-        <Translation
-          i18nKey="studio:help.cat.artists.heading"
-          components={{ em: <em /> }}
-        />
-      ),
-      items: [
-        {
-          id: "get-paid",
-          q: t("studio:help.faq.getPaid.q"),
-          a: (
-            <Translation
-              i18nKey="studio:help.faq.getPaid.a"
-              components={{ em: <em />, a: <Link to={routes.studioPayouts} /> }}
-            />
-          ),
-        },
-        {
-          id: "keep-masters",
-          q: t("studio:help.faq.keepMasters.q"),
-          a: (
-            <Translation
-              i18nKey="studio:help.faq.keepMasters.a"
-              components={{
-                strong: <strong />,
-                a: <Link to={routes.studioRights} />,
-              }}
-            />
-          ),
-        },
-        {
-          id: "realistic-earn",
-          q: t("studio:help.faq.realisticEarn.q"),
-          a: (
-            <Translation
-              i18nKey="studio:help.faq.realisticEarn.a"
-              components={{ a: <Link to={routes.studioAbout} /> }}
-            />
-          ),
-        },
-      ],
-    },
-  ];
-}
-
-/** A "still stuck?" contact card. */
-export interface ContactCard {
-  icon: "mail" | "chat" | "check";
-  jade?: boolean;
-  title: ReactNode;
-  body: ReactNode;
-  action: string;
+export interface HelpContactCard {
+  id: "team" | "email" | "platform";
+  titleKey: string;
+  bodyKey: string;
+  actionKey: string;
+  /** An in-app route, or `href` for the inbox. */
   to?: string;
-  toast?: string;
+  href?: string;
+  isJade?: boolean;
 }
 
-export function buildContactCards(t: TFunction): ContactCard[] {
-  return [
-    {
-      icon: "mail",
-      title: (
-        <Translation
-          i18nKey="studio:help.contact.email.title"
-          components={{ em: <em /> }}
-        />
-      ),
-      body: (
-        <>
-          <em>hello@queerpulse.com</em>
-          <br />
-          {t("studio:help.contact.email.replyLine")}
-        </>
-      ),
-      action: t("studio:help.contact.email.action"),
-      toast: t("studio:help.contact.email.toast"),
-    },
-    {
-      icon: "chat",
-      title: (
-        <Translation
-          i18nKey="studio:help.contact.forum.title"
-          components={{ em: <em /> }}
-        />
-      ),
-      body: (
-        <Translation
-          i18nKey="studio:help.contact.forum.body"
-          components={{ em: <em /> }}
-        />
-      ),
-      action: t("studio:help.contact.forum.action"),
-      toast: t("studio:help.contact.forum.toast"),
-    },
-    {
-      icon: "check",
-      jade: true,
-      title: (
-        <Translation
-          i18nKey="studio:help.contact.access.title"
-          components={{ em: <em /> }}
-        />
-      ),
-      body: (
-        <Translation
-          i18nKey="studio:help.contact.access.body"
-          components={{ em: <em /> }}
-        />
-      ),
-      action: t("studio:help.contact.access.action"),
-      to: routes.studioAccessibility,
-    },
-  ];
-}
+/** The DOM id a section carries, for the category cards to jump to. */
+export const helpSectionAnchor = (id: HelpSectionId) => `help-${id}`;
+
+const faq = (
+  id: string,
+  keyBase: string,
+  answerComponents?: Record<string, ReactElement>,
+): HelpFaqEntry => ({
+  id,
+  questionKey: `${keyBase}.q`,
+  answerKey: `${keyBase}.a`,
+  answerComponents,
+});
+
+export const LIVE_HELP_SECTIONS: HelpSectionData[] = [
+  {
+    id: "listening",
+    headingKey: "studio:helpLive.cat.listening.heading",
+    items: [
+      faq("what-is-studio", "studio:helpLive.faq.whatIsStudio"),
+      faq("tracking", "studio:helpLive.faq.tracking"),
+      faq("saving", "studio:helpLive.faq.saving", {
+        a: <Link to={routes.studioLibrary} />,
+      }),
+      faq("player-settings", "studio:helpLive.faq.playerSettings", {
+        a: <Link to={routes.studioSettings} />,
+      }),
+    ],
+  },
+  {
+    id: "sharing",
+    headingKey: "studio:helpLive.cat.sharing.heading",
+    items: [
+      faq("uploading", "studio:helpLive.faq.uploading", {
+        a: <Link to={studioUploadPath()} />,
+      }),
+      faq("rights-checkbox", "studio:helpLive.faq.rightsCheckbox"),
+      faq("stats", "studio:helpLive.faq.stats", {
+        a: <Link to={routes.studioDashboard} />,
+      }),
+    ],
+  },
+  {
+    id: "safety",
+    headingKey: "studio:helpLive.cat.safety.heading",
+    items: [
+      faq("reporting", "studio:helpLive.faq.reporting"),
+      faq("takedown", "studio:helpLive.faq.takedown"),
+      faq("dispute", "studio:helpLive.faq.dispute", {
+        a: <Link to={routes.studioRights} />,
+      }),
+    ],
+  },
+];
+
+/** Demo only: the co-op's money answers, under their original keys. */
+export const SHOWCASE_HELP_SECTION: HelpSectionData = {
+  id: "money",
+  headingKey: "studio:helpLive.cat.money.heading",
+  items: [
+    faq("money-go", "studio:help.faq.moneyGo", {
+      strong: <strong />,
+      em: <em />,
+      a: <Link to={routes.governance} />,
+    }),
+    faq("tip-no-account", "studio:help.faq.tipNoAccount", { em: <em /> }),
+    faq("tip-notes-private", "studio:help.faq.tipNotesPrivate", {
+      strong: <strong />,
+      a: <Link to={routes.studioSettings} />,
+    }),
+    faq("price-diff", "studio:help.faq.priceDiff", { strong: <strong /> }),
+    faq("cancel", "studio:help.faq.cancel", {
+      a: <Link to={routes.studioSettings} />,
+    }),
+    faq("get-paid", "studio:help.faq.getPaid", {
+      em: <em />,
+      a: <Link to={routes.studioPayouts} />,
+    }),
+    faq("realistic-earn", "studio:help.faq.realisticEarn", {
+      a: <Link to={routes.studioAbout} />,
+    }),
+  ],
+};
+
+export const HELP_CATEGORY_CARDS: HelpCategoryCard[] = [
+  {
+    target: "listening",
+    headingKey: "studio:helpLive.cat.listening.heading",
+    blurbKey: "studio:helpLive.cat.listening.blurb",
+  },
+  {
+    target: "sharing",
+    headingKey: "studio:helpLive.cat.sharing.heading",
+    blurbKey: "studio:helpLive.cat.sharing.blurb",
+  },
+  {
+    target: "safety",
+    headingKey: "studio:helpLive.cat.safety.heading",
+    blurbKey: "studio:helpLive.cat.safety.blurb",
+  },
+];
+
+export const HELP_CONTACT_CARDS: HelpContactCard[] = [
+  {
+    id: "team",
+    titleKey: "studio:helpLive.contact.team.title",
+    bodyKey: "studio:helpLive.contact.team.body",
+    actionKey: "studio:helpLive.contact.team.action",
+    to: routes.contact,
+  },
+  {
+    id: "email",
+    titleKey: "studio:helpLive.contact.email.title",
+    bodyKey: "studio:helpLive.contact.email.body",
+    actionKey: "studio:helpLive.contact.email.action",
+    href: "mailto:hello@queerpulse.com",
+  },
+  {
+    id: "platform",
+    titleKey: "studio:helpLive.contact.platform.title",
+    bodyKey: "studio:helpLive.contact.platform.body",
+    actionKey: "studio:helpLive.contact.platform.action",
+    to: routes.help,
+    isJade: true,
+  },
+];

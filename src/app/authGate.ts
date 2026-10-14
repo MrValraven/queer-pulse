@@ -184,14 +184,14 @@ const PUBLIC_EXCEPTIONS: string[] = [
   "/studio/500",
   "/studio/off-air",
   // The studio's public shopfront: the logged-out landing renders at /studio
-  // itself, and the outward-facing info/press pages stay readable without a
-  // session so prospective members and press can reach them.
+  // itself, and the outward-facing info pages stay readable without a session
+  // so prospective members can reach them. The press kit is for granted
+  // members only (Studio v3); its printed one-sheet is what reaches press.
   "/studio",
   "/studio/about",
   "/studio/accessibility",
   "/studio/terms",
   "/studio/help",
-  "/studio/press",
   "/studio/end-card",
 ];
 
@@ -415,6 +415,13 @@ const MOD_ACCESSIBLE_ADMIN_PATTERNS: string[] = [
   // opening it sees the staff-action trail they already read at /mod/audit.
   // No `/*` sibling: the page has no child routes.
   routes.adminLog,
+  // Studio discovery. `AdminStudioCurationController` and
+  // `AdminStudioScenesController` are `@Roles(Moderator, Admin)` with no
+  // `@StaffRoles`, so moderators keep the Studio home shelves and scenes
+  // with admins. No grant opens it, so it stays out of
+  // CAPABILITY_ELEVATED_PATTERNS.
+  routes.adminStudio,
+  `${routes.adminStudio}/*`,
 ];
 
 /**

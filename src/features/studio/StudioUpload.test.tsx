@@ -40,6 +40,10 @@ describe("StudioUploadPage steps", () => {
     fireEvent.change(await screen.findByLabelText(/release title/i), {
       target: { value: "Cartas ao mar" },
     });
+    expect(screen.getByRole("radio", { name: /Mariana Sol/ })).toBeChecked();
+    expect(
+      screen.getByRole("radio", { name: /Late Bloomers/ }),
+    ).not.toBeChecked();
     fireEvent.click(screen.getByRole("button", { name: /save and continue/i }));
     expect(
       await screen.findByRole("button", { name: /choose audio files/i }),
@@ -49,7 +53,7 @@ describe("StudioUploadPage steps", () => {
     ).toBeInTheDocument();
   });
 
-  it("locks a published release's track list behind Unpublish", async () => {
+  it("opens a published release's track list with the drop zone and keeps Publish closed", async () => {
     render(
       <TestProviders
         initialEntries={[
@@ -63,19 +67,68 @@ describe("StudioUploadPage steps", () => {
       await screen.findByRole("button", { name: /save and continue/i }),
     );
     expect(
-      await screen.findByRole("button", {
-        name: /unpublish to change tracks/i,
-      }),
+      await screen.findByRole("button", { name: /choose audio files/i }),
     ).toBeInTheDocument();
     expect(
-      screen.queryByRole("button", { name: /choose audio files/i }),
+      screen.queryByRole("button", { name: /unpublish to change tracks/i }),
     ).not.toBeInTheDocument();
-    // Scoped to the stepper: "Unpublish to change tracks" also says publish.
     const publishStep = within(
       screen.getByRole("list", { name: /upload steps/i }),
     ).getByRole("button", { name: /publish/i });
     expect(publishStep).toBeDisabled();
     expect(publishStep).not.toHaveAttribute("aria-current");
+  });
+
+  it("asks before removing a published release's track, then opens the version note panel", async () => {
+    render(
+      <TestProviders
+        initialEntries={[
+          "/studio/upload?release=demo-release-cidade-dos-santos",
+        ]}
+      >
+        <StudioUploadPage />
+      </TestProviders>,
+    );
+    fireEvent.click(
+      await screen.findByRole("button", { name: /save and continue/i }),
+    );
+    const removeFirst = await screen.findByRole("button", {
+      name: /remove track 1,/i,
+    });
+    expect(screen.queryByLabelText("Version note")).not.toBeInTheDocument();
+    fireEvent.click(removeFirst);
+    fireEvent.click(
+      await screen.findByRole("button", { name: "Remove track" }),
+    );
+    expect(await screen.findByLabelText("Version note")).toBeInTheDocument();
+    expect(
+      screen.getByRole("region", { name: "You changed the tracks" }),
+    ).toBeInTheDocument();
+  });
+
+  it("holds the release step on a buy link without https until it is cleared", async () => {
+    render(
+      <TestProviders initialEntries={["/studio/upload"]}>
+        <StudioUploadPage />
+      </TestProviders>,
+    );
+    fireEvent.change(await screen.findByLabelText(/release title/i), {
+      target: { value: "Cartas ao mar" },
+    });
+    const buyLink = screen.getByLabelText(/buy link/i);
+    fireEvent.change(buyLink, { target: { value: "http://shop.example" } });
+    fireEvent.click(screen.getByRole("button", { name: /save and continue/i }));
+    expect(
+      await screen.findByText("Use a full link starting with https://"),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /release/i, current: "step" }),
+    ).toBeInTheDocument();
+    fireEvent.change(buyLink, { target: { value: "" } });
+    fireEvent.click(screen.getByRole("button", { name: /save and continue/i }));
+    expect(
+      await screen.findByRole("button", { name: /choose audio files/i }),
+    ).toBeInTheDocument();
   });
 
   it("shows staff's reason and nothing to edit for a taken-down release", async () => {

@@ -48,36 +48,101 @@
 }
 
 .hpWrap {
+  container-type: inline-size;
   margin-top: 32px;
 }
 
 /* Search */
 .search {
   display: flex;
-  gap: 10px;
+  align-items: center;
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--radius-pill);
   padding: 8px 8px 8px 22px;
   margin-bottom: 36px;
 }
+.search:focus-within {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
 .search input {
   flex: 1;
+  min-width: 0;
   background: none;
   border: none;
   outline: none;
   font-family: var(--sans);
-  font-size: var(--text-15);
+  font-size: var(--text-16);
   color: rgba(var(--studio-ink-rgb), 1);
 }
 .search input::placeholder {
   color: var(--text-40);
 }
+.search input::-webkit-search-cancel-button {
+  display: none;
+  -webkit-appearance: none;
+}
+/* Clear: slides in and out with the query (grid 0fr to 1fr), never clipped. */
+.clear {
+  display: grid;
+  grid-template-columns: 0fr;
+  flex: none;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    grid-template-columns 0.24s var(--ease),
+    opacity 0.2s var(--ease),
+    visibility 0s linear 0.24s;
+}
+.clearShown {
+  grid-template-columns: 1fr;
+  opacity: 1;
+  visibility: visible;
+  transition:
+    grid-template-columns 0.24s var(--ease),
+    opacity 0.2s var(--ease),
+    visibility 0s;
+}
+.clearInner {
+  --clear-ring-reach: calc(var(--focus-ring-offset) * 2);
+
+  min-width: 0;
+  overflow: hidden;
+  padding: var(--clear-ring-reach);
+  padding-inline-start: calc(10px + var(--clear-ring-reach));
+  margin: calc(var(--clear-ring-reach) * -1);
+}
+.clearIcon {
+  display: none;
+}
 .search input:focus-visible {
-  outline: var(--focus-ring);
-  outline-offset: var(--focus-ring-offset);
-  box-shadow: var(--ring-cream);
-  border-radius: var(--radius-4);
+  outline: none;
+  box-shadow: none;
+}
+@media (--md) {
+  .clearInner button {
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0;
+    justify-content: center;
+  }
+  .clearIcon {
+    display: block;
+  }
+  .clearText {
+    display: none;
+  }
+}
+.clearInner > * {
+  white-space: nowrap;
+}
+.resultCount {
+  min-height: 1.5em;
+  margin: 8px 4px 0;
+  font-size: var(--text-13);
+  color: var(--studio-text-muted);
 }
 
 /* Category cards */
@@ -118,18 +183,20 @@
   color: var(--studio-accent-text);
   margin-bottom: 14px;
 }
-.cat h4 {
+.catHeading {
+  display: block;
   font-family: var(--serif);
   font-weight: 400;
   font-size: var(--text-19);
   color: rgba(var(--studio-ink-rgb), 1);
   letter-spacing: -0.01em;
 }
-.cat h4 em {
+.catHeading em {
   font-style: italic;
   color: var(--studio-accent-text);
 }
-.cat p {
+.catBlurb {
+  display: block;
   font-size: var(--text-13);
   color: var(--text-40);
   margin-top: 6px;
@@ -159,6 +226,10 @@
 }
 .faqItem {
   border-bottom: 1px solid var(--line);
+}
+.faqHeading {
+  margin: 0;
+  font: inherit;
 }
 .faqQ {
   display: flex;
@@ -200,21 +271,6 @@
   transform: rotate(135deg);
 }
 
-.faqA {
-  overflow: hidden;
-  max-height: 0;
-  opacity: 0;
-  transition:
-    max-height 0.32s var(--ease),
-    opacity 0.28s var(--ease);
-}
-.faqAOpen {
-  /* 480px at a 16px root. Root-relative so the collapse cap grows with the
-     answer text and a long answer stays whole at a raised font size. */
-  max-height: 30rem;
-  opacity: 1;
-  animation: helpFadeUp 0.32s var(--ease);
-}
 .faqAInner {
   padding: 0 4px 22px;
   font-size: var(--text-15);
@@ -265,17 +321,17 @@
 .ccJade .ccIcon {
   color: var(--studio-jade-text);
 }
-.cc h4 {
+.cc h3 {
   font-family: var(--serif);
   font-weight: 400;
   font-size: var(--text-18);
   color: rgba(var(--studio-ink-rgb), 1);
 }
-.cc h4 em {
+.cc h3 em {
   font-style: italic;
   color: var(--studio-accent-text);
 }
-.ccJade h4 em {
+.ccJade h3 em {
   color: var(--studio-jade-text);
 }
 .cc p {
@@ -290,7 +346,11 @@
 }
 
 .bt {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 44px;
   font-family: var(--sans);
   font-size: var(--text-13);
   font-weight: 600;
@@ -345,28 +405,20 @@
   box-shadow: var(--ring-jade);
 }
 
-@media (--lg) {
-  .cats,
+/* The rail narrows the column, so size by the column and not the viewport. */
+@container (max-width: 840px) {
   .contact {
     grid-template-columns: 1fr;
   }
 }
-
-@keyframes helpFadeUp {
-  from {
-    transform: translateY(6px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
+@container (max-width: 640px) {
+  .cats {
+    grid-template-columns: 1fr;
   }
 }
 @media (prefers-reduced-motion: reduce) {
   .cat,
-  .faqIcon,
-  .faqA,
-  .faqAOpen {
+  .faqIcon {
     transition: none;
     animation: none;
   }

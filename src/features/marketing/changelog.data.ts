@@ -63,6 +63,53 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "studio-artist-kinds",
+        category: "feature",
+        date: "14 Oct 2026",
+        ...entryKeys("studio-artist-kinds"),
+        tag: { labelKey: "marketing:changelog.tag.studio", to: routes.studio },
+      },
+      {
+        id: "studio-listening",
+        category: "feature",
+        date: "14 Oct 2026",
+        ...entryKeys("studio-listening"),
+        tag: { labelKey: "marketing:changelog.tag.studio", to: routes.studio },
+      },
+      {
+        id: "studio-v3-artist-tools",
+        category: "feature",
+        date: "14 Oct 2026",
+        ...entryKeys("studio-v3-artist-tools"),
+        tag: { labelKey: "marketing:changelog.tag.studio", to: routes.studio },
+      },
+      {
+        id: "studio-discovery",
+        category: "feature",
+        date: "14 Oct 2026",
+        ...entryKeys("studio-discovery"),
+        tag: { labelKey: "marketing:changelog.tag.studio", to: routes.studio },
+      },
+      {
+        id: "studio-open-pages",
+        category: "feature",
+        date: "13 Oct 2026",
+        ...entryKeys("studio-open-pages"),
+        tag: { labelKey: "marketing:changelog.tag.studio", to: routes.studio },
+      },
+      {
+        id: "see-everyone-going",
+        category: "improvement",
+        date: "13 Oct 2026",
+        ...entryKeys("see-everyone-going"),
+      },
+      {
+        id: "pending-ownership-claims-count",
+        category: "improvement",
+        date: "13 Oct 2026",
+        ...entryKeys("pending-ownership-claims-count"),
+      },
+      {
         id: "balanced-headline-wraps",
         category: "fix",
         date: "13 Oct 2026",

@@ -132,6 +132,26 @@ const en: Record<string, string> = {
   // fallback directly.
   "push:studioReleasePublished.title": "New from an artist you follow",
   "push:studioReleasePublished.body": "{persona} released {title}",
+  // Studio artist kinds: a persona the member follows published an episode.
+  // Names the persona, the show and the episode. These two MUST stay word for
+  // word the English fallbacks the backend sender sets, because iOS renders
+  // the fallback directly.
+  "push:studioEpisodePublished.title": "New episode of {show}",
+  "push:studioEpisodePublished.body": "{persona}: {episode}",
+  // Studio v3: a persona the member follows posted an update. The title is
+  // the persona's name and the body the post's first 80 characters. These
+  // MUST stay word for word the English fallbacks the backend sender sets.
+  "push:personaPost.title": "{persona}",
+  "push:personaPost.body": "{excerpt}",
+  // Studio discovery: persona credits. Persona names only. These four MUST
+  // stay word for word the English fallbacks the backend sender sets
+  // (rich-push-copy.ts), because iOS renders the fallback directly. The role
+  // stays out: push params carry no translated label.
+  "push:studioCreditRequested.title": "New credit request",
+  "push:studioCreditRequested.body":
+    "{requester} credited {persona} on {track}",
+  "push:studioCreditAccepted.title": "Credit accepted",
+  "push:studioCreditAccepted.body": "{persona} accepted your credit on {track}",
   // Shown INSTEAD of the real title/body when the member has turned on
   // "hide previews" (see pushPrivacy.ts). Says something arrived without
   // naming who it is from or what it said.
@@ -315,6 +335,19 @@ const pt: Record<string, string> = {
   // Studio v2: ver a nota no bloco EN.
   "push:studioReleasePublished.title": "Novidade de quem segues",
   "push:studioReleasePublished.body": "{persona} lançou {title}",
+  // Studio, tipos de artista: ver a nota no bloco EN.
+  "push:studioEpisodePublished.title": "Novo episódio de {show}",
+  "push:studioEpisodePublished.body": "{persona}: {episode}",
+  // Studio v3: ver a nota no bloco EN.
+  "push:personaPost.title": "{persona}",
+  "push:personaPost.body": "{excerpt}",
+  // Descoberta no Studio: ver a nota no bloco EN.
+  "push:studioCreditRequested.title": "Novo pedido de crédito",
+  "push:studioCreditRequested.body":
+    "{requester} creditou {persona} em {track}",
+  "push:studioCreditAccepted.title": "Crédito aceite",
+  "push:studioCreditAccepted.body":
+    "{persona} aceitou o teu crédito em {track}",
   "push:preview.hidden.title": "QueerPulse",
   "push:preview.hidden.body": "Tens uma notificação nova.",
   "push:preview.hidden.message": "Tens uma mensagem nova.",

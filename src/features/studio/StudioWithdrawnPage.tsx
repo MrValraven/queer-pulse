@@ -5,6 +5,8 @@ import { Translation } from "../../shared/i18n/Translation";
 import { StudioShell } from "./StudioShell";
 import { routes } from "../../app/routeMap";
 import { STILL_AVAILABLE, type WithdrawnCard } from "./studioWithdrawn.data";
+import { StudioWithdrawnView, WithdrawnCoverArt } from "./StudioWithdrawnView";
+import { useStudioShowcase } from "./useStudioShowcase";
 import s from "./StudioWithdrawnPage.module.css";
 
 const tagClass: Record<NonNullable<WithdrawnCard["tag"]>, string> = {
@@ -79,25 +81,19 @@ function StillCard({ card }: { card: WithdrawnCard }) {
 
 export function StudioWithdrawnPage() {
   const { t } = useTranslation();
+  const isShowcase = useStudioShowcase();
+  // Live: the same view an album or track URL shows, with no release named.
+  if (!isShowcase)
+    return (
+      <StudioShell>
+        <StudioWithdrawnView />
+      </StudioShell>
+    );
   return (
     <StudioShell>
       <div className={s.wrap}>
         <div className={s.hero}>
-          <div className={s.cover} aria-hidden="true">
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={1.6}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M9 18V5l12-2v13" />
-              <circle cx={6} cy={18} r={3} />
-              <circle cx={18} cy={16} r={3} />
-              <line x1={2} y1={2} x2={22} y2={22} />
-            </svg>
-          </div>
+          <WithdrawnCoverArt />
           <div className={s.eb}>{t("studio:withdrawn.hero.eyebrow")}</div>
           <h1>
             <Translation
