@@ -1,0 +1,224 @@
+/* The tattoo page's booking and care blocks: styles, booking, prices,
+   comfort, hygiene and aftercare. */
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+}
+
+.chips,
+.checks,
+.facts,
+.steps,
+.credentials {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.line {
+  margin: 0;
+  font-size: var(--text-14);
+  line-height: 1.5;
+  color: var(--ink-60);
+  overflow-wrap: anywhere;
+}
+
+/* Label and value pairs (colour, smallest size): the label in the
+   subheading voice, the value as body text. */
+.pairs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 32px;
+  margin: 0;
+}
+
+.pair {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.pairLabel {
+  font-size: var(--text-12);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+
+.pairValue {
+  margin: 0;
+  font-size: var(--text-15);
+  line-height: 1.5;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.subheading {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: var(--text-12);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.checks {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr));
+  gap: 8px 16px;
+}
+
+.check {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: var(--text-14);
+  line-height: 1.5;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.checkIcon {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  margin-top: 3px;
+  color: var(--accent-deep);
+}
+
+:global([data-theme="dark"]) .checkIcon {
+  color: var(--accent-soft);
+}
+
+.plainList {
+  margin: 0;
+  padding-left: 18px;
+  font-size: var(--text-14);
+  line-height: 1.6;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.facts {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.fact {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 10px;
+  font-size: var(--text-15);
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+.factNote {
+  flex-basis: 100%;
+  font-size: var(--text-14);
+  color: var(--ink-60);
+  overflow-wrap: anywhere;
+}
+
+.pill {
+  padding: 3px 10px;
+  font-size: var(--text-12);
+  font-weight: 700;
+  color: var(--ink-60);
+  background: var(--wash);
+  border-radius: var(--radius-tag);
+}
+
+.steps {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  counter-reset: aftercare-step;
+}
+
+.step {
+  position: relative;
+  padding-left: 36px;
+  counter-increment: aftercare-step;
+}
+
+.step::before {
+  content: counter(aftercare-step);
+  position: absolute;
+  top: 1px;
+  left: 0;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  font-size: var(--text-12);
+  font-weight: 700;
+  color: var(--accent-deep);
+  background: var(--wash);
+  border-radius: var(--radius-avatar);
+}
+
+:global([data-theme="dark"]) .step::before {
+  color: var(--accent-soft);
+}
+
+.stepTitle {
+  margin: 0;
+  font-size: var(--text-15);
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--text-strong);
+  overflow-wrap: anywhere;
+}
+
+.credential {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+  padding-block: 12px;
+}
+
+.credential + .credential {
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+.credentialText {
+  min-width: 0;
+}
+
+.credentialMeta {
+  margin: 2px 0 0;
+  font-size: var(--text-caption);
+  line-height: 1.5;
+  color: var(--ink-60);
+  overflow-wrap: anywhere;
+}

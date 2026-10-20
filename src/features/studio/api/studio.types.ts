@@ -1,3 +1,9 @@
+import {
+  STUDIO_SAFETY_ERROR_CODES,
+  type StudioContentWarningId,
+  type StudioOwnerClaimDTO,
+} from "./studioSafety.types";
+
 // Studio v1 wire contract (QUEERPULSE-STUDIO-V1-CONTRACT-2026-10-08.md).
 // The vocabularies are the same strings the backend uses; keep them in step.
 
@@ -105,6 +111,13 @@ export const STUDIO_PLAYLIST_LIMITS = {
   trackPlaylistsMax: 6,
   /** Liked songs: rows per page of `GET /studio/playlists/liked`. */
   likedTracksPerPage: 100,
+  /** Collaborative playlists: invited plus active editors on one playlist. */
+  editorsMax: 10,
+  /** The most co-owners `GET :id/editor-candidates` answers with. */
+  editorCandidatesMax: 50,
+  /** How often an open collaborative playlist reads itself again while the
+   *  tab is visible. */
+  collaborativeRefreshMs: 30_000,
 } as const;
 
 // Studio v3 artist tools vocabularies
@@ -345,6 +358,19 @@ export const STUDIO_ERROR_CODES = [
   "studio_episode_order_locked",
   "studio_not_a_podcast",
   "studio_episode_limit",
+  // Studio collaborative playlists (contract 2026-10-14).
+  "studio_playlist_not_found",
+  "studio_playlist_owner_only",
+  "studio_playlist_editor_source_mismatch",
+  "studio_playlist_editor_cap",
+  "studio_playlist_editor_ineligible",
+  "studio_playlist_invite_unavailable",
+  "studio_playlist_invite_not_found",
+  "studio_playlist_credit_change_removes_editors",
+  "studio_playlist_entry_not_found",
+  "studio_playlist_editor_not_found",
+  // Studio safety and moderation (contract "Error codes").
+  ...STUDIO_SAFETY_ERROR_CODES,
 ] as const;
 export type StudioErrorCode = (typeof STUDIO_ERROR_CODES)[number];
 
@@ -367,6 +393,16 @@ export interface StudioCreditDTO {
 }
 
 export interface StudioTrackSummaryDTO {
+  /** Studio safety: the artist and staff union, de-duplicated, D7 order. */
+  contentWarnings?: StudioContentWarningId[];
+  /** Studio safety: true while a copyright claim holds the track offline. */
+  isWithheld?: boolean;
+  /** Owner rows only: what PATCH contentWarnings set. */
+  artistContentWarnings?: StudioContentWarningId[];
+  /** Owner rows only: our team's warnings, locked chips "Added by our team". */
+  staffContentWarnings?: StudioContentWarningId[];
+  /** Owner rows only: our team marked the track explicit. */
+  isExplicitLocked?: boolean;
   id: string;
   /** 1-based and contiguous. */
   position: number;
@@ -418,6 +454,9 @@ export interface StudioReleaseCardDTO {
 }
 
 export interface StudioReleaseDTO extends StudioReleaseCardDTO {
+  /** Studio safety: owner only, every track's claims, newest acceptedAt
+   *  first; [] for listeners and staff. */
+  claims?: StudioOwnerClaimDTO[];
   description: string | null;
   status: StudioReleaseStatus;
   tracks: StudioTrackSummaryDTO[];
@@ -464,6 +503,8 @@ export interface StudioReleaseDTO extends StudioReleaseCardDTO {
 }
 
 export interface StudioTrackDTO extends StudioTrackSummaryDTO {
+  /** Studio safety: owner only; [] for everyone else. */
+  claims?: StudioOwnerClaimDTO[];
   releaseId: string;
   credits: StudioCreditDTO[];
   lyrics: string | null;
@@ -574,6 +615,9 @@ export interface CreateStudioTrackBody {
 }
 
 export interface UpdateStudioTrackBody {
+  /** Studio safety: replaces the artist list; [] clears it. The staff list
+   *  is never touched by this route. */
+  contentWarnings?: StudioContentWarningId[];
   title?: string;
   credits?: StudioCreditDTO[];
   lyrics?: string | null;
@@ -620,6 +664,11 @@ export interface StudioPlaylistCardDTO {
   isOwner: boolean;
   /** Owner only; null for everyone else. */
   visibility: StudioPlaylistVisibility | null;
+  /** Collaborative playlists: the viewer's role, null for everyone else.
+   *  Optional so an older backend reads as before (the owner flag alone). */
+  role?: StudioPlaylistRole | null;
+  /** Active editors, for the owner and editors; null for everyone else. */
+  editorCount?: number | null;
 }
 
 export type StudioPlaylistTrackDTO = StudioTrackSummaryDTO & {
@@ -638,6 +687,8 @@ export interface StudioPlaylistEntryDTO {
   /** Owner only, with isAvailable false: set when the cause is a release
    *  takedown. Every other cause sends nothing. */
   unavailableReason?: StudioUnavailableReason;
+  /** Who added the entry; sent to the owner and editors only. */
+  addedBy?: StudioPlaylistPersonDTO | null;
 }
 
 /** One row of Liked songs (`GET /studio/playlists/liked`): the member's own
@@ -664,6 +715,8 @@ export interface StudioPlaylistDTO extends StudioPlaylistCardDTO {
   entries: StudioPlaylistEntryDTO[];
   /** Owner only. */
   creditSubprofileId: string | null;
+  /** The open invite; sent to the invitee only. */
+  invite?: StudioPlaylistInviteDTO | null;
 }
 
 /** Slugs from STUDIO_GENRES with at least one listenable published
@@ -714,6 +767,77 @@ export interface UpdateStudioPlaylistBody {
   description?: string;
   visibility?: StudioPlaylistVisibility;
   creditSubprofileId?: string | null;
+  /** Sent again after a 409 `studio_playlist_credit_change_removes_editors`,
+   *  once the owner agreed to remove the named editors. */
+  confirmEditorRemoval?: boolean;
+}
+
+// ── Studio collaborative playlists (QUEERPULSE-STUDIO-COLLAB-PLAYLISTS-CONTRACT-2026-10-14.md) ──
+
+export const STUDIO_PLAYLIST_ROLES = ["owner", "editor", "invitee"] as const;
+export type StudioPlaylistRole = (typeof STUDIO_PLAYLIST_ROLES)[number];
+/** Ended rows never leave the server. */
+export type StudioPlaylistEditorStatus = "invited" | "active";
+export type StudioPlaylistEditorSource = "member_invite" | "persona_co_owner";
+export type StudioPlaylistInviteResponse = "accept" | "decline";
+
+/** A member as the owner and editors see them. No user id on the wire. */
+export interface StudioPlaylistPersonDTO {
+  /** "" for a member with no profile row: rendered without a link. */
+  slug: string;
+  displayName: string;
+  avatarUrl: string | null;
+}
+
+export interface StudioPlaylistEditorDTO {
+  /** Opaque row id: what `DELETE :id/editors/:editorId` names. */
+  editorId: string;
+  member: StudioPlaylistPersonDTO;
+  status: StudioPlaylistEditorStatus;
+  source: StudioPlaylistEditorSource;
+  invitedAt: string;
+}
+
+/** `GET` and `POST /studio/playlists/:id/editors`. The owner gets invited and
+ *  active rows, an editor the active ones; ordered by invite time. */
+export interface StudioPlaylistEditorListDTO {
+  items: StudioPlaylistEditorDTO[];
+}
+
+export interface StudioPlaylistEditorCandidateDTO {
+  member: StudioPlaylistPersonDTO;
+  isEditor: boolean;
+}
+
+/** `GET /studio/playlists/:id/editor-candidates?q=`: the credit persona's
+ *  co-owners minus the owner, at most 50. */
+export interface StudioPlaylistEditorCandidatesDTO {
+  items: StudioPlaylistEditorCandidateDTO[];
+}
+
+export interface StudioPlaylistInviteDTO {
+  invitedBy: StudioPlaylistPersonDTO;
+  invitedAt: string;
+}
+
+export interface InviteStudioPlaylistEditorsBody {
+  memberSlugs: string[];
+}
+
+export interface RespondStudioPlaylistInviteBody {
+  response: StudioPlaylistInviteResponse;
+}
+
+/** 422 `studio_playlist_editor_ineligible`: every slug that failed a check. */
+export interface StudioEditorIneligibleErrorBody {
+  code: "studio_playlist_editor_ineligible";
+  memberSlugs: string[];
+}
+
+/** 409 `studio_playlist_credit_change_removes_editors`: who would lose access. */
+export interface StudioCreditChangeRemovesEditorsErrorBody {
+  code: "studio_playlist_credit_change_removes_editors";
+  editors: StudioPlaylistPersonDTO[];
 }
 
 // ── Studio open pages (QUEERPULSE-STUDIO-OPEN-DEMO-PAGES-DESIGN-2026-10-13.md) ──
@@ -761,6 +885,10 @@ export interface CreateStudioDisputeBody {
 /** GET and PUT /me/studio-playback. GET answers the defaults without
  *  creating a row; PUT takes any subset, and null or out of range is a 400. */
 export interface StudioPlaybackPreferencesDTO {
+  /** Studio safety (spec 6.3): pause before a warned track. Default true;
+   *  optional so stored rows and fixtures from before it stay valid, and a
+   *  missing value reads as on. */
+  askBeforeWarnings?: boolean;
   autoplayNext: boolean;
   hideExplicit: boolean;
   /** Whole seconds, 0 (off) to STUDIO_CROSSFADE_MAX_SECONDS. */
@@ -775,6 +903,7 @@ export const DEFAULT_STUDIO_PLAYBACK: StudioPlaybackPreferencesDTO = {
   autoplayNext: true,
   hideExplicit: false,
   crossfadeSeconds: 0,
+  askBeforeWarnings: true,
 };
 
 /** A release as the flag-review cards show it: the release card plus the
@@ -943,6 +1072,8 @@ export type StudioAppearsOnCardDTO = StudioReleaseCardDTO & {
 
 /** Everything the player needs for one queue item without a release read. */
 export interface StudioRadioItemDTO {
+  /** Studio safety: for the player gate on a radio extension. */
+  contentWarnings?: StudioContentWarningId[];
   trackId: string;
   title: string;
   /** Always set: only tracks with confirmed audio are returned. */
@@ -1095,7 +1226,14 @@ export interface StudioChapterInput {
 export type StudioOwnerTrackFields = Required<
   Pick<
     StudioTrackSummaryDTO,
-    "hasAnalysis" | "loudnessLufs" | "peakDb" | "syncedLyrics" | "chapters"
+    | "hasAnalysis"
+    | "loudnessLufs"
+    | "peakDb"
+    | "syncedLyrics"
+    | "chapters"
+    | "artistContentWarnings"
+    | "staffContentWarnings"
+    | "isExplicitLocked"
   >
 >;
 

@@ -243,6 +243,50 @@ function refreshStudioReleaseOnNotice(
   });
 }
 
+const STUDIO_OWNER_CLAIM_NOTICES: ReadonlySet<string> = new Set([
+  "studio_copyright_claim_accepted",
+  "studio_copyright_claim_withdrawn",
+  "studio_track_marked",
+]);
+const STUDIO_CLAIMANT_CLAIM_NOTICES: ReadonlySet<string> = new Set([
+  "studio_copyright_claim_declined",
+  "studio_copyright_claim_countered",
+]);
+
+/** Studio safety: a claim or a mark changed one of the member's tracks, so
+ *  the release and the track they may have open read again; a claimant's
+ *  claims list reads again when their claim moved. The keys mirror
+ *  `studioKeys.release/track` and `studioSafetyKeys.myClaims` with demoMode
+ *  false (the socket only runs live), written out so this shared module
+ *  does not import the Studio API. */
+function refreshStudioClaimOnNotice(
+  queryClient: QueryClient,
+  notification: ServerToClientEvents["notification:new"],
+): void {
+  const { type, payload } = notification;
+  const isDecided = type === "studio_copyright_claim_decided";
+  const isOwnerNotice =
+    STUDIO_OWNER_CLAIM_NOTICES.has(type) ||
+    (isDecided && payload.recipientRole === "owner");
+  const isClaimantNotice =
+    STUDIO_CLAIMANT_CLAIM_NOTICES.has(type) ||
+    (isDecided && payload.recipientRole === "claimant");
+  if (isClaimantNotice)
+    void queryClient.invalidateQueries({
+      queryKey: ["studio", "claims", "mine", false],
+    });
+  if (!isOwnerNotice) return;
+  const { releaseId, trackId } = payload;
+  if (typeof releaseId === "string" && releaseId)
+    void queryClient.invalidateQueries({
+      queryKey: ["studio", "release", false, releaseId],
+    });
+  if (typeof trackId === "string" && trackId)
+    void queryClient.invalidateQueries({
+      queryKey: ["studio", "track", false, trackId],
+    });
+}
+
 /**
  * Opens one socket to `/chat` and funnels every frame through cache
  * invalidation, so the socket never has to know a page's component tree — only
@@ -1212,6 +1256,7 @@ class RealtimeClient {
         void this.qc.invalidateQueries({ queryKey: ["mentions", false] });
       }
       refreshStudioReleaseOnNotice(this.qc, notification);
+      refreshStudioClaimOnNotice(this.qc, notification);
     });
     // Another tab or device of this same member read or dismissed rows
     // (mark one read, mark all read, mentions mark all read, dismiss). The

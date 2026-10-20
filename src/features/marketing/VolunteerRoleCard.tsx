@@ -2,8 +2,11 @@ import { Link } from "react-router-dom";
 import { FiArrowRight } from "react-icons/fi";
 import { FadeIn, SkeletonLine } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { routes } from "../../app/routeMap";
 import type { VolunteerOpportunity } from "./volunteerOpportunities.types";
+import {
+  volunteerOpportunityPath,
+  type OpportunityBackState,
+} from "./volunteerPaths";
 import { causeLabelKey } from "./causes.data";
 import s from "./VolunteerPage.module.css";
 
@@ -48,12 +51,16 @@ export interface VolunteerRoleCardProps {
   opportunity: VolunteerOpportunity;
   /** Staggered entrance delay in milliseconds. */
   delay: number;
+  /** Router state handed to the detail page, so its back link can return to
+   *  the community Volunteering tab the card was opened from. */
+  detailLinkState?: OpportunityBackState;
 }
 
 /** One open role in the volunteering grid. */
 export function VolunteerRoleCard({
   opportunity,
   delay,
+  detailLinkState,
 }: VolunteerRoleCardProps) {
   const { t } = useTranslation();
   const communityAvatarUrl = opportunity.community?.avatarUrl;
@@ -89,9 +96,8 @@ export function VolunteerRoleCard({
           )}
           <div>
             <div className={s.orgName}>{opportunity.org}</div>
-            {/* Joined with a middot rather than a comma so it reads as a set
-                of tags. Order is the poster's; the avatar beside it is tinted
-                from the first. */}
+            {/* Joined with a middot so it reads as a set of tags. Order is
+                the poster's; the avatar beside it is tinted from the first. */}
             <div className={s.orgCause}>
               {opportunity.causes
                 .map((cause) => t(causeLabelKey(cause)))
@@ -122,7 +128,8 @@ export function VolunteerRoleCard({
           <span className={s.time}>{opportunity.time}</span>
           <Link
             className={s.express}
-            to={`${routes.volunteer}/opportunity/${opportunity.slug}`}
+            to={volunteerOpportunityPath(opportunity.slug)}
+            state={detailLinkState}
           >
             {t("marketing:volunteer.card.seeRole")} <FiArrowRight aria-hidden />
           </Link>

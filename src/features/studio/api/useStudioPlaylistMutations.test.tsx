@@ -16,6 +16,7 @@ import {
   useCreateStudioPlaylist,
   useRemoveStudioPlaylistEntry,
   useReorderStudioPlaylist,
+  useUpdateStudioPlaylist,
 } from "./useStudioPlaylistMutations";
 
 const mode = vi.hoisted(() => ({ demoMode: false }));
@@ -32,14 +33,14 @@ vi.mock("./studioDemoPlaylists", () => demoStore);
 const api = vi.hoisted(() => ({
   addStudioPlaylistTracks: vi.fn(),
   createStudioPlaylist: vi.fn(),
+  getStudioPlaylist: vi.fn(),
   putStudioPlaylistOrder: vi.fn(),
   removeStudioPlaylistEntry: vi.fn(),
+  updateStudioPlaylist: vi.fn(),
 }));
 vi.mock("./studioPlaylists.api", () => ({
   ...api,
-  updateStudioPlaylist: vi.fn(),
   deleteStudioPlaylist: vi.fn(),
-  getStudioPlaylist: vi.fn(),
 }));
 
 const dto: StudioPlaylistDTO = {
@@ -126,8 +127,10 @@ beforeEach(() => {
   api.addStudioPlaylistTracks.mockReset();
   demoStore.demoAddPlaylistTracks.mockReset();
   api.createStudioPlaylist.mockReset();
+  api.getStudioPlaylist.mockReset();
   api.putStudioPlaylistOrder.mockReset();
   api.removeStudioPlaylistEntry.mockReset();
+  api.updateStudioPlaylist.mockReset();
   demoStore.demoReorderPlaylist.mockReset();
   demoStore.demoStudioPlaylist.mockReset();
 });
@@ -277,5 +280,117 @@ describe("playlist writes", () => {
     expect(
       queryClient.getQueryData(studioKeys.playlist(false, "playlist-2")),
     ).toMatchObject({ name: "Fresh" });
+  });
+});
+
+describe("removing an entry another editor already removed", () => {
+  it("reads the playlist again and settles as a removal", async () => {
+    mode.demoMode = false;
+    api.removeStudioPlaylistEntry.mockRejectedValueOnce(
+      new ApiError(404, "gone", {
+        statusCode: 404,
+        code: "studio_playlist_entry_not_found",
+      }),
+    );
+    api.getStudioPlaylist.mockResolvedValueOnce({
+      ...dto,
+      entries: dto.entries.filter((entry) => entry.entryId !== "a"),
+    });
+    const queryClient = new QueryClient({
+      defaultOptions: { queries: { retry: false } },
+    });
+    const { result } = renderHook(() => useRemoveStudioPlaylistEntry(), {
+      wrapper: ({ children }: { children: ReactNode }) => (
+        <QueryClientProvider client={queryClient}>
+          {children}
+        </QueryClientProvider>
+      ),
+    });
+    let settled: StudioPlaylistView | undefined;
+    await act(async () => {
+      settled = await result.current.mutateAsync({
+        playlistId: "playlist-1",
+        entryId: "a",
+      });
+    });
+    expect(settled?.entries.map((entry) => entry.entryId)).toEqual(["b"]);
+    expect(
+      queryClient.getQueryData<StudioPlaylistView>(
+        studioKeys.playlist(false, "playlist-1"),
+      )?.entries,
+    ).toHaveLength(1);
+  });
+
+  it("still fails on any other refusal", async () => {
+    mode.demoMode = false;
+    api.removeStudioPlaylistEntry.mockRejectedValueOnce(
+      new ApiError(403, "owner only", {
+        statusCode: 403,
+        code: "studio_playlist_owner_only",
+      }),
+    );
+    const queryClient = new QueryClient({
+      defaultOptions: { queries: { retry: false } },
+    });
+    const { result } = renderHook(() => useRemoveStudioPlaylistEntry(), {
+      wrapper: ({ children }: { children: ReactNode }) => (
+        <QueryClientProvider client={queryClient}>
+          {children}
+        </QueryClientProvider>
+      ),
+    });
+    await expect(
+      result.current.mutateAsync({ playlistId: "playlist-1", entryId: "a" }),
+    ).rejects.toBeInstanceOf(ApiError);
+  });
+});
+
+describe("changing a playlist's credit", () => {
+  const editorKeys = [
+    studioKeys.playlistEditors(false, dto.id),
+    studioKeys.playlistEditorCandidatesAll(false, dto.id),
+  ];
+  const seedEditorCaches = (queryClient: QueryClient) => {
+    for (const queryKey of editorKeys) queryClient.setQueryData(queryKey, []);
+  };
+  const invalidatedOf = (queryClient: QueryClient) =>
+    editorKeys.map(
+      (queryKey) => queryClient.getQueryState(queryKey)?.isInvalidated,
+    );
+
+  it("reads the editors and the co-owner checklist again after a credit change", async () => {
+    const { queryClient, wrapper } = setup();
+    seedEditorCaches(queryClient);
+    api.updateStudioPlaylist.mockResolvedValue({
+      ...dto,
+      creditSubprofileId: "persona-1",
+    });
+    const { result } = renderHook(() => useUpdateStudioPlaylist(), {
+      wrapper,
+    });
+    await act(() =>
+      result.current.mutateAsync({
+        playlistId: dto.id,
+        body: { creditSubprofileId: "persona-1" },
+      }),
+    );
+    expect(invalidatedOf(queryClient)).toEqual([true, true]);
+  });
+
+  it("leaves the editor caches alone on a rename", async () => {
+    const { queryClient, wrapper } = setup();
+    seedEditorCaches(queryClient);
+    api.updateStudioPlaylist.mockResolvedValue({ ...dto, name: "Day bus" });
+    const { result } = renderHook(() => useUpdateStudioPlaylist(), {
+      wrapper,
+    });
+    await act(() =>
+      result.current.mutateAsync({
+        playlistId: dto.id,
+        body: { name: "Day bus" },
+      }),
+    );
+    expect(invalidatedOf(queryClient)).toEqual([false, false]);
+    expect(cachedView(queryClient)?.name).toBe("Day bus");
   });
 });

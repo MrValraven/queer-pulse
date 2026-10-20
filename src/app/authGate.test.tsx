@@ -4,6 +4,7 @@ import { MemoryRouter } from "react-router-dom";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { MemberRole } from "../features/auth/api/auth.api";
 import {
+  isComingSoonPath,
   isGatedPath,
   requiredCapability,
   useAuthGateRedirect,
@@ -440,5 +441,34 @@ describe("useAuthGateRedirect: mod-accessible admin pages", () => {
       wrapper: wrapperAt(routes.adminModeration),
     });
     expect(result.current).toBeNull();
+  });
+});
+
+describe("Pulse Live gates", () => {
+  afterEach(() => vi.unstubAllEnvs());
+  it("keeps the player screen for signed-in members", () => {
+    expect(isGatedPath("/play")).toBe(true);
+    expect(isGatedPath("/play/QZ7KP4")).toBe(true);
+  });
+  it("hides every Pulse Live path in a built live app until launch", () => {
+    vi.stubEnv("DEV", false);
+    expect(isComingSoonPath("/play")).toBe(true);
+    expect(isComingSoonPath("/play/QZ7KP4")).toBe(true);
+    expect(
+      isComingSoonPath("/gatherings/pride-brunch-jun-abcde/quizshow/screen"),
+    ).toBe(true);
+    expect(isComingSoonPath("/gatherings/pride-brunch-jun-abcde/manage")).toBe(
+      false,
+    );
+  });
+  it("shows Pulse Live in a built demo", () => {
+    vi.stubEnv("DEV", false);
+    expect(isComingSoonPath("/play", { isDemoMode: true })).toBe(false);
+    expect(
+      isComingSoonPath("/gatherings/pride-brunch-jun-abcde/quizshow/remote", {
+        isDemoMode: true,
+      }),
+    ).toBe(false);
+    expect(isComingSoonPath("/economy", { isDemoMode: true })).toBe(true);
   });
 });

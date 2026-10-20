@@ -4,15 +4,18 @@ import {
   DEMO_TRUST_GRAPH_DATA,
   searchDemoTrustNetworkMembers,
 } from "../adminVouchGraph.data";
+import { DEMO_TRUST_NETWORK_SUMMARY } from "../adminVouchGraphCases.data";
 import type { TrustGraphData } from "../trustGraph/trustGraphModel";
 import {
   getAdminTrustNetwork,
+  getAdminTrustNetworkSummary,
   searchTrustNetworkMembers,
   type TrustNetworkMemberSearchResultDTO,
+  type TrustNetworkSummaryDTO,
 } from "./adminTrustNetwork.api";
 import { trustNetworkDtoToData } from "./adminTrustNetwork.adapters";
 
-/** Shortest term the member-finder fires on — a 1-char ILIKE would match
+/** Shortest term the member-finder fires on: a 1-char ILIKE would match
  *  almost everyone. Mirrors the admin media console's uploader search. */
 const MIN_SEARCH_LENGTH = 2;
 
@@ -22,7 +25,7 @@ const MIN_SEARCH_LENGTH = 2;
  * fetches `/admin/trust-network` and adapts it.
  *
  * `focus`, when set, pins that member's slug into the returned node set even
- * when their join date falls outside the graph's node cap — so opening the
+ * when their join date falls outside the graph's node cap, so opening the
  * modal for an older member (from `AdminMemberDrawer`, or after picking a
  * member-finder result) never renders "not found" (ADM-10). Demo mode
  * ignores it: the fixture graph is small and already includes everyone.
@@ -40,9 +43,28 @@ export function useTrustNetwork(focus?: string) {
 }
 
 /**
- * Typeahead behind the graph modal's "find a member" search box (ADM-10) —
- * lets an admin locate a member outside the MAX_NODES join-date window
- * instead of only ever seeing the newest ones. Disabled until the term
+ * Open trust case count and the member the graph should open on, behind the
+ * Members header badge. Demo mode returns the colocated fixture summary;
+ * live mode reads `/admin/trust-network/summary`. Fetches only while `isEnabled`, so
+ * non-admin shells never call the admin endpoint.
+ */
+export function useTrustNetworkSummary({ isEnabled }: { isEnabled: boolean }) {
+  const { demoMode } = useDemoMode();
+  return useQuery<TrustNetworkSummaryDTO>({
+    queryKey: ["admin-trust-network", "summary", demoMode],
+    enabled: isEnabled,
+    staleTime: 60_000,
+    queryFn: async () => {
+      if (demoMode) return DEMO_TRUST_NETWORK_SUMMARY;
+      return getAdminTrustNetworkSummary();
+    },
+  });
+}
+
+/**
+ * Typeahead behind the graph modal's "find a member" search box (ADM-10).
+ * Lets an admin locate any member, older ones outside the MAX_NODES
+ * join-date window included. Disabled until the term
  * reaches `MIN_SEARCH_LENGTH`; `placeholderData` keeps the last results on
  * screen while the next keystroke's request is in flight (mirrors
  * `useAdminMediaUploaders`).

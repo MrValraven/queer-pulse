@@ -216,6 +216,24 @@
 .avatarField {
   align-items: flex-start;
 }
+/* A poster-aware field (an event cover) is an inline-size container, so a
+   poster's slot height can be written against the field's width (`cqi`) and
+   still animate from the base strip height to the poster's own height. */
+.posterField {
+  container-type: inline-size;
+}
+/* Its width, height and radius ride inline on the slot; this only animates
+   the height as a poster grows the slot and as it eases back. */
+.posterSlot {
+  transition-property: height;
+  transition-duration: var(--dur-slow);
+  transition-timing-function: var(--ease);
+}
+@media (prefers-reduced-motion: reduce) {
+  .posterSlot {
+    transition-property: none;
+  }
+}
 .imgActions {
   display: flex;
   gap: 8px;

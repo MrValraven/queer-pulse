@@ -1221,37 +1221,6 @@ export const studio: Catalog = {
     "Passed with your sentence, sent to {artistName}",
   "triage.detail.toast.addedToSlate": "Added to the next slate",
 
-  // ── Flag review (StudioFlagReviewPage + Card) ──────────────────────────────
-  // Chrome only. The demo's mock content for this page lives in studioShowcase
-  // (translated); proper nouns and figures stay in the data files.
-  // The `verb` stored on resolve is a stable id, shown through RESOLUTION_LABELS (§5.1).
-  "flagReview.header.eyebrow": "Council · flag review",
-  "flagReview.header.title": "When someone <em>flags</em> something.",
-  "flagReview.header.dek":
-    "Listeners can flag a release for uncleared samples, missing credits, or misattribution. A curator claims each one, the named artist gets to respond, and <em>every decision is logged with a reason</em>. Nothing is taken down silently.",
-
-  "flagReview.resolvedTag": "Resolved · {verb}",
-  "flagReview.dismissedClearedTag": "Dismissed · cleared",
-  "flagReview.playAria": "Play",
-  "flagReview.claimReviewCta": "Claim & review",
-  "flagReview.dismissCta": "Dismiss",
-  "flagReview.correctLineupCta": "Correct lineup",
-  "flagReview.requestFixCta": "Request fix",
-  "flagReview.holdUntilFixedCta": "Hold until fixed",
-
-  "flagReview.resolution.dismissed": "dismissed",
-  "flagReview.resolution.corrected": "corrected",
-  "flagReview.resolution.held": "held",
-
-  "flagReview.toast.claimed": "Claimed. It's yours to review",
-  "flagReview.toast.lineupConfirmed": "Lineup confirmed accurate",
-  "flagReview.toast.lineupCorrected": "Lineup corrected",
-  "flagReview.toast.dismissedCreditsConfirmed":
-    "Flag dismissed. Credits confirmed correct",
-  "flagReview.toast.correctionRequested":
-    "Correction requested from the artist",
-  "flagReview.toast.heldUntilCorrected": "Held until corrected",
-
   // ── Live room (StudioLivePage + LiveNow + LiveChat) ────────────────────────
   // Chrome only. The demo's mock content for this page lives in studioShowcase
   // (translated); proper nouns and figures stay in the data files.
@@ -1691,7 +1660,6 @@ export const studio: Catalog = {
   // ── no-literal-string sweep: misc chrome eyebrows/labels ──────────────────
   "album.sidebar.splitHint":
     "If you buy at {price}: <em>{artistShare} to {artist}</em>, {solidarityShare} to the solidarity fund, {platformShare} to the platform, processing absorbed.",
-  "flagReview.reviewedByLine": "Reviewed by <em>{reviewer}</em>",
   "set.page.programmedByEyebrow": "Set · programmed by {curator}",
   "sheet.checkout.leadSheetLabel": "Lead sheet: {title}",
   // ── Studio v1 (2026-10-08) ─────────────────────────────────────────────────
@@ -1705,6 +1673,11 @@ export const studio: Catalog = {
   "releaseStatus.draft": "Draft",
   "releaseStatus.published": "Published",
   "releaseStatus.taken_down": "Taken down",
+  // CreatorDraftNotice in the release and draft episode editors
+  "creatorDraftNote.body":
+    "Our team can see this release while it's a draft or scheduled, so we can help if you get stuck",
+  "creatorDraftNote.episodeBody":
+    "Our team can see this episode while it's a draft, so we can help if you get stuck",
   "genre.pop": "Pop",
   "genre.hipHop": "Hip-hop",
   "genre.rAndB": "R&B",
@@ -1755,7 +1728,7 @@ export const studio: Catalog = {
     "The track list changed. Reload the page and try again",
   "errors.trackLimit": "A release holds up to 50 tracks",
   "errors.audioUnreadable":
-    "We couldn't read this file. Try another MP3 or M4A",
+    "We couldn't read this file. Try another MP3, M4A, WAV or AIFF",
   "errors.audioWrongOwner": "That file belongs to another persona",
   "shell.searchLabel": "Search Studio",
   "shell.searchPlaceholderLive": "search artists, releases, tracks…",
@@ -1853,7 +1826,7 @@ export const studio: Catalog = {
   "playerBar.close": "Close player",
   "uploadFlow.hero.title": "Put your music <em>out.</em>",
   "uploadFlow.hero.sub":
-    "Three steps: the release, its tracks, then publish. MP3 or M4A, up to 50 MB a track",
+    "Three steps: the release, its tracks, then publish. MP3, M4A, WAV or AIFF, up to 50 MB a track",
   "uploadFlow.steps.label": "Upload steps",
   "uploadFlow.steps.release.nm": "Release",
   "uploadFlow.steps.release.sub": "· title · cover · details",
@@ -1887,13 +1860,15 @@ export const studio: Catalog = {
   "uploadFlow.backToRelease": "Back to the release",
   "uploadFlow.continueToPublish": "Continue to publish",
   "uploadFlow.backToTracks": "Back to tracks",
-  "uploadFlow.files.dropTitle": "Drop <em>MP3 or M4A</em> files here",
+  "uploadFlow.files.dropTitle":
+    "Drop <em>MP3, M4A, WAV or AIFF</em> files here",
   "uploadFlow.files.accepts":
-    "accepts · <em>MP3 · M4A</em> · up to 50 MB a track · up to 50 tracks",
+    "accepts · <em>MP3 · M4A · WAV · AIFF</em> · up to 50 MB a track · up to 50 tracks",
   "uploadFlow.files.chooseCta": "Choose audio files",
   "uploadFlow.files.empty": "No tracks yet. Add audio files to start",
   "uploadFlow.files.listLabel": "Tracks in this release",
-  "uploadFlow.files.rejectType": "{fileName} isn't an MP3 or M4A file",
+  "uploadFlow.files.rejectType":
+    "{fileName} isn't a file Studio can read. Use MP3, M4A, WAV or AIFF",
   "uploadFlow.files.rejectSize": "{fileName} is over 50 MB",
   "uploadFlow.files.rejectLimit":
     "{fileName} wasn't added: a release holds up to 50 tracks",
@@ -1909,6 +1884,18 @@ export const studio: Catalog = {
   "uploadFlow.files.stage.noAudio": "No audio yet",
   "uploadFlow.files.progressLabel":
     "Upload progress for track {position}, {title}",
+  "uploadFlow.files.stage.converting": "Converting to MP3",
+  "uploadFlow.files.convertingHint": "Keep this tab open while it converts",
+  "uploadFlow.files.convertProgressLabel":
+    "Converting track {position}, {title}, to MP3",
+  "uploadFlow.files.errorTooLong":
+    "This file is too long to convert. It can run up to {maxMinutes} minutes",
+  "uploadFlow.files.errorUnsupported":
+    "We can't read this file. Export it as WAV, AIFF, MP3 or M4A",
+  "uploadFlow.files.errorConvert":
+    "We couldn't convert this file. Try again, or export it as MP3",
+  "uploadFlow.files.wavNote":
+    "WAV and AIFF files are converted to MP3 in your browser before they upload",
   "uploadFlow.files.moveUp": "Move track {position}, {title}, up",
   "uploadFlow.files.moveDown": "Move track {position}, {title}, down",
   "uploadFlow.files.retry": "Retry track {position}, {title}",
@@ -1950,11 +1937,11 @@ export const studio: Catalog = {
     "To upload, you need a published persona set to Open to everyone, of one of these kinds: musician, DJ, podcaster, podcast producer, poet, spoken word artist, drag performer, performer, dancer, ballroom and vogue, or burlesque performer. Set one up, then come back",
   "uploadFlow.noPersona.cta": "Go to your personas",
   "uploadFlow.side.eyebrow": "What happens to your files",
-  "uploadFlow.side.title": "Your files, <em>kept as they are</em>",
+  "uploadFlow.side.title": "Your files, <em>ready to play</em>",
   "uploadFlow.side.body":
-    "We store your audio as you upload it and stream it only to members with Studio access. Nobody can download it",
+    "We store MP3 and M4A files as you upload them, and WAV and AIFF as the MP3 your browser makes. Only members with Studio access can stream them, and nobody can download them",
   "uploadFlow.side.formats.label": "Formats",
-  "uploadFlow.side.formats.value": "MP3 · M4A",
+  "uploadFlow.side.formats.value": "MP3 · M4A · WAV · AIFF",
   "uploadFlow.side.size.label": "Per track",
   "uploadFlow.side.size.value": "up to 50 MB",
   "uploadFlow.side.listeners.label": "Who can listen",
@@ -1969,8 +1956,7 @@ export const studio: Catalog = {
   "errors.playlistLimit":
     "You can keep up to 100 playlists. Delete one to make another",
   "errors.playlistTrackLimit": "A playlist holds up to 500 tracks",
-  "errors.playlistOrderMismatch":
-    "The playlist changed. Reload the page and try again",
+  "errors.playlistOrderMismatch": "This playlist just changed. Try again",
   "errors.playlistCreditNotAllowed":
     "That persona can't be credited right now. Show it as you, or pick another persona",
   "errors.playlistTrackUnavailable": "That track can't be added right now",
@@ -2251,6 +2237,26 @@ export const studio: Catalog = {
     "This release has a dispute waiting. Restore it from Disputes",
   "errors.takedownReportMismatch": "That report isn't about this release",
   "errors.takedownReportNotOpen": "That report was already handled",
+  "errors.trackWithheld": "This track is unavailable",
+  "errors.trackExplicitLocked":
+    "Our team marked this track explicit, so it stays marked",
+  "errors.useCopyrightClaim": "Copyright claims have their own form",
+  "errors.claimOwnTrack":
+    "You can't file a copyright claim about your own track",
+  "errors.claimExists": "You already have an open claim about this track",
+  "errors.claimLimit": "You can have up to 10 open claims at a time",
+  "errors.claimNotCountered":
+    "You can reply once the artist sends a counter-notice",
+  "errors.claimAlreadyReplied": "You already replied to this counter-notice",
+  "errors.claimNotLive": "This claim is already closed",
+  "errors.claimNotAccepted":
+    "A counter-notice goes in once, while the track is held",
+  "errors.claimNotSubmitted": "Our team already checked this claim",
+  "errors.claimNotDecidable":
+    "Our team can uphold or reject a claim once it is accepted",
+  "errors.trackReportMismatch":
+    "That report isn't a Studio report about this track",
+  "errors.trackReportNotOpen": "That report was already handled",
 
   "helpLive.hero.eyebrow": "Studio help",
   "helpLive.hero.title": "How can we <em>help</em>?",
@@ -2367,13 +2373,15 @@ export const studio: Catalog = {
   "termsLive.sec.stored.num": "03: what Studio stores",
   "termsLive.sec.stored.heading": "What we <em>keep</em>",
   "termsLive.sec.stored.p1":
-    "Studio stores your releases with their audio and artwork, your saves, playlists and follows, your player settings, and any dispute you send along with our team's reply. It keeps no record of what you play: no play counts and no listening history.",
+    "Studio stores your releases with their audio and artwork, your saves, playlists and follows, your player settings, any dispute you send along with our team's reply, and any copyright claim or counter-notice you send along with our team's decision. It keeps no record of what you play: no play counts and no listening history.",
   "termsLive.sec.stored.p2":
     "Everything Studio stores about you is covered by the QueerPulse <a>privacy policy</a>.",
   "termsLive.sec.takedown.num": "04: takedowns and disputes",
   "termsLive.sec.takedown.heading": "If something <em>goes wrong</em>",
   "termsLive.sec.takedown.p1":
     "You can unpublish your own release at any time. If a member reports a release, our team reviews it and may take it down. You see their reason on the release page and can dispute it there, one dispute at a time and up to three for each release. Our team replies on the release, and if they agree, it comes back.",
+  "termsLive.sec.takedown.claims":
+    "A copyright claim about a single track has its own form, open to signed-in members. Filing it changes nothing until our team accepts it. Then that track alone goes offline, and its artist can send one counter-notice, which the claimant can answer once. The artist reads the claim without learning who filed it. Once a claim is accepted, our team can decide it at any point: upholding it keeps the track offline, and rejecting it brings the track back unless another claim holds it. Until that final decision, the claimant can withdraw the claim.",
   "termsLive.questions":
     "Questions about these terms? Write to <a>hello@queerpulse.com</a> or <link>contact our team</link>.",
   "termsLive.full.title": "The full terms",
@@ -2429,7 +2437,7 @@ export const studio: Catalog = {
   "rightsLive.eyebrow": "Rights and takedowns",
   "rightsLive.title": "How rights <em>work</em> in Studio",
   "rightsLive.dek":
-    "What you confirm when you publish, what happens after a report, and how to dispute a takedown.",
+    "What you confirm when you publish, what happens after a report or a copyright claim, and how to dispute a takedown.",
   "rightsLive.sec.checkbox.heading": "The rights <em>checkbox</em>",
   "rightsLive.sec.checkbox.body":
     "Before publishing, you confirm that you own or control the rights to every recording and composition in the release, and that the credits are accurate.",
@@ -2439,6 +2447,9 @@ export const studio: Catalog = {
   "rightsLive.sec.dispute.heading": "How to <em>dispute</em>",
   "rightsLive.sec.dispute.body":
     "Open your release. Under the takedown reason, write a note to our team and send it. Their reply appears on the release, and if they agree, it comes back. You can dispute each release up to three times, one at a time.",
+  "rightsLive.sec.claims.heading": "Copyright <em>claims</em>",
+  "rightsLive.sec.claims.body":
+    "Signed-in members file a copyright claim from Report track on the track itself. Nothing changes while our team checks it. If our team accepts it, only that track goes offline, and its artist can send one counter-notice, which the claimant can answer once. The artist reads the claim without learning who filed it. Our team can uphold or reject an accepted claim at any point, and both sides read why. Until that final decision, the claimant can withdraw it.",
   "rightsLive.sec.unpublish.heading": "Unpublish <em>any time</em>",
   "rightsLive.sec.unpublish.body":
     "You can unpublish your own release from your artist page whenever you like. It goes back to a draft that only you and the persona's co-owners can see.",
@@ -2475,6 +2486,131 @@ export const studio: Catalog = {
   "dispute.decidedOn": "Decided {date}",
   "dispute.limitReached": "This release has used all three disputes.",
 
+  "claimPanel.heading": "Copyright claim",
+  "claimPanel.trackLabel": "About {title}",
+  "claimPanel.withheldBanner":
+    "This track is offline while our team reviews a copyright claim",
+  "claimPanel.acceptedOn": "Held since {date}",
+  "claimPanel.acceptedDate": "Accepted {date}",
+  "claimPanel.withheldBannerRelease_one":
+    "One track on this release is offline while our team reviews a copyright claim",
+  "claimPanel.withheldBannerRelease_other":
+    "{count} tracks on this release are offline while our team reviews copyright claims",
+  "claimPanel.offlineTag": "Offline",
+  "claims.ownerStatus.accepted": "Offline while our team reviews",
+  "claims.ownerStatus.countered": "Counter-notice sent",
+  "claims.ownerStatus.upheld": "Claim upheld",
+  "claims.ownerStatus.rejected": "Claim rejected, back online",
+  "claims.staffStatus.submitted": "New",
+  "claims.staffStatus.accepted": "Waiting for the artist",
+  "claims.staffStatus.countered": "Counter-notice in",
+  "claims.staffStatus.declined": "Declined",
+  "claims.staffStatus.upheld": "Upheld",
+  "claims.staffStatus.rejected": "Rejected",
+  "claims.staffStatus.withdrawn": "Withdrawn",
+  "claimPanel.claimedWork": "Claimed original",
+  "claimPanel.claimedDetails": "What the claim says",
+  "claimPanel.originalLink": "Open the original",
+  "claimPanel.filedByLabel": "Who filed it",
+  "claimPanel.claimantRole.rights_holder": "The rights holder",
+  "claimPanel.claimantRole.authorised": "Someone the rights holder authorised",
+  "claimPanel.counterOpenCta": "Write a counter-notice",
+  "claimPanel.counterCloseCta": "Close the counter-notice form",
+  "claimPanel.counterLabel": "Your counter-notice",
+  "claimPanel.counterHint":
+    "Say why this track is yours to publish. You can send one, and our team reads it before deciding",
+  "claimPanel.counterGoodFaith":
+    "I believe in good faith that this track was taken offline by mistake",
+  "claimPanel.counterRequired": "Write your counter-notice before you send it",
+  "claimPanel.goodFaithRequired": "Tick the statement to send it",
+  "claimPanel.counterCta": "Send counter-notice",
+  "claimPanel.counterSending": "Sending counter-notice",
+  "claimPanel.counterSentToast": "Counter-notice sent to our team",
+  "claimPanel.claimantReplyHeading": "Reply from the claimant",
+  "claimPanel.reviewing":
+    "Our team is reviewing the claim and your counter-notice",
+  "claimPanel.outcome.upheld":
+    "Our team upheld the claim. The track stays offline",
+  "claimPanel.outcome.rejected":
+    "Our team rejected the claim. The track is back online",
+  "claimPanel.decidedOn": "Decided {date}",
+  "claimPanel.staffNoteHeading": "Note from our team",
+
+  "claims.form.eyebrow": "Studio rights",
+  "claims.form.title": "Copyright claim",
+  "claims.form.dek":
+    "Tell our team which work this track copies. Nothing changes for listeners until our team checks it",
+  "claims.form.subject": "About {title} by {artist}",
+  "claims.form.subjectUnknown": "About a Studio track",
+  "claims.form.pickTrack": "Which track is the claim about?",
+  "claims.form.pickTrackRow": "{number}. {title}",
+  "claims.form.pickTrackLoading": "Loading the tracks",
+  "claims.form.pickTrackError":
+    "We couldn't load the tracks. Try again in a moment",
+  "claims.form.pickTrackEmpty":
+    "No track on this release can take a claim right now",
+  "claims.form.roleLegend": "Who are you to this work?",
+  "claims.form.role.rightsHolder": "I am the rights holder",
+  "claims.form.role.authorised": "I'm authorised by the rights holder",
+  "claims.form.originalWork.label": "Original work (title and creator)",
+  "claims.form.originalLink.label": "Link to the original (optional)",
+  "claims.form.originalLink.hint": "A web address that starts with https://",
+  "claims.form.details.label": "What the track copies and where",
+  "claims.form.details.hint": "Timestamps help our team find it",
+  "claims.form.goodFaith":
+    "I believe in good faith that this use is not authorised, and the details I've given are accurate",
+  "claims.form.submit": "Send claim",
+  "claims.form.sending": "Sending claim",
+  "claims.form.sent": "Claim sent. Our team will check it",
+  "claims.form.throttled":
+    "You've sent several claims in the last hour. Try again later",
+  "claims.form.trackGone": "That track isn't on Studio anymore",
+  "claims.form.error.roleRequired": "Pick who you are to this work",
+  "claims.form.error.originalWorkRequired": "Name the original work",
+  "claims.form.error.originalWorkTooLong":
+    "Keep the original work under 200 characters",
+  "claims.form.error.linkInvalid": "Use a link that starts with https://",
+  "claims.form.error.linkTooLong": "Keep the link under 500 characters",
+  "claims.form.error.detailsRequired": "Say what the track copies",
+  "claims.form.error.detailsTooLong": "Keep the details under 2000 characters",
+  "claims.form.error.goodFaithRequired": "Tick the statement to send the claim",
+  "claims.form.error.pickTrack": "Pick the track first",
+  "claims.mine.title": "Your copyright claims",
+  "claims.mine.dek":
+    "What you filed, what the artist answered and what our team decided",
+  "claims.mine.empty": "You haven't filed any claims",
+  "claims.mine.emptyBody":
+    "To file one, open the track and choose Report track",
+  "claims.mine.emptyCta": "How claims work",
+  "claims.mine.status.submitted": "Waiting for our team",
+  "claims.mine.status.accepted": "Accepted",
+  "claims.mine.status.declined": "Declined",
+  "claims.mine.status.countered": "Counter-notice sent",
+  "claims.mine.status.upheld": "Upheld",
+  "claims.mine.status.rejected": "Rejected",
+  "claims.mine.status.withdrawn": "Withdrawn",
+  "claims.mine.filedOn": "Filed {date}",
+  "claims.mine.counterHeading": "The artist's counter-notice",
+  "claims.mine.yourReplyHeading": "Your reply",
+  "claims.mine.staffNoteHeading": "Note from our team",
+  "claims.mine.replyCta": "Write a reply",
+  "claims.mine.replyCloseCta": "Close the reply form",
+  "claims.mine.replyLabel": "Your reply to the counter-notice",
+  "claims.mine.replyHint":
+    "You can reply once. Our team reads it before deciding",
+  "claims.mine.replyRequired": "Write your reply before you send it",
+  "claims.mine.replySend": "Send reply",
+  "claims.mine.replySending": "Sending reply",
+  "claims.mine.replySentToast": "Reply sent to our team",
+  "claims.mine.withdrawCta": "Withdraw claim",
+  "claims.mine.withdrawConfirm": "Withdraw this claim?",
+  "claims.mine.withdrawBody":
+    "Our team stops reviewing it, and a track it holds offline comes back unless another claim holds it",
+  "claims.mine.withdrawnToast": "Claim withdrawn",
+  "claims.mine.loadMore": "Show more claims",
+  "claims.mine.loadingMore": "Loading more claims",
+  "claims.mine.loadError": "We couldn't load your claims",
+
   "settingsLive.eyebrow": "Your Studio settings",
   "settingsLive.title": "How Studio <em>plays</em> for you",
   "settingsLive.dek":
@@ -2497,6 +2633,15 @@ export const studio: Catalog = {
   "settingsLive.hideExplicit.heading": "Hide explicit tracks",
   "settingsLive.hideExplicit.body":
     "Tracks marked explicit leave your queue and show greyed out in lists. Turn it off to bring them back straight away.",
+  "settingsLive.askBeforeWarnings.heading": "Ask before warned tracks",
+  "settingsLive.askBeforeWarnings.body":
+    "We'll pause before a track tagged with a content warning and ask first.",
+  "settingsLive.claims.label": "Rights",
+  "settingsLive.claims.title": "Your <em>claims</em>",
+  "settingsLive.claims.heading": "Copyright claims",
+  "settingsLive.claims.body":
+    "The copyright claims you filed about Studio tracks, and what happened to each.",
+  "settingsLive.claims.cta": "Open your claims",
   "settingsLive.theme.label": "Theme",
   "settingsLive.theme.title": "How Studio <em>looks</em>",
   "settingsLive.theme.dark.heading": "Dark mode",
@@ -2505,6 +2650,21 @@ export const studio: Catalog = {
   "settingsLive.saveError": "We couldn't save that setting. Try again",
 
   "hiddenTrack.label": "Hidden by your settings",
+  "contentWarnings.pickerLabel": "Content warnings",
+  "contentWarnings.pickerHint": "Listeners see these before a track plays",
+  "contentWarnings.lockedChip": "Added by our team",
+  "contentWarnings.lockedGroupLabel": "Warnings our team added",
+  explicitLocked: "Marked explicit by our team",
+  "track.withheld.title": "This track is unavailable",
+  "track.withheld.body":
+    "It can't be played right now. The rest of Studio is still here",
+  "album.trackUnavailable": "Unavailable",
+  "album.trackUnavailableAria": "Track {number} is unavailable",
+  "report.trackCta": "Report track",
+  "player.gate.waiting": "Waiting: {title}",
+  "player.gate.warning": "Warning: {themes}",
+  "player.gate.play": "Play it",
+  "player.gate.skip": "Skip track",
 
   "flagReviewLive.eyebrow": "Staff · Studio review",
   "flagReviewLive.title": "Studio <em>reports</em> and disputes",
@@ -2561,6 +2721,68 @@ export const studio: Catalog = {
   "flagReviewLive.loadMore": "Show more",
   "flagReviewLive.loadingMore": "Loading more",
   "flagReviewLive.loadMoreError": "We couldn't load more. Try again",
+  "flagReviewLive.tabs.claims": "Claims",
+  "flagReviewLive.claims.badge_one": "{count} claim waiting",
+  "flagReviewLive.claims.badge_other": "{count} claims waiting",
+  "flagReviewLive.claims.emptyTitle": "No claims waiting",
+  "flagReviewLive.claims.emptyBody":
+    "New copyright claims and counter-notices show up here",
+  "flagReviewLive.claims.claimantLabel": "Claimant",
+  "flagReviewLive.claims.trackLabel": "Track",
+  "flagReviewLive.claims.trackLine": "Track {number}: {title}",
+  "flagReviewLive.claims.accept": "Accept claim",
+  "flagReviewLive.claims.decline": "Decline claim",
+  "flagReviewLive.claims.uphold": "Uphold claim",
+  "flagReviewLive.claims.reject": "Reject claim",
+  "flagReviewLive.claims.noteLabel": "Note to both sides",
+  "flagReviewLive.claims.declineNoteLabel": "Note to the claimant",
+  "flagReviewLive.claims.acceptedHeading": "Accepted, waiting for the artist",
+  "flagReviewLive.claims.acceptedEmptyTitle": "No claims waiting for an artist",
+  "flagReviewLive.claims.acceptedEmptyBody":
+    "Claims you accept wait here for the artist's counter-notice, and you can uphold or reject them at any time",
+  "flagReviewLive.claims.availabilityLabel": "Right now",
+  "flagReviewLive.claims.withheldFact": "Offline for listeners",
+  "flagReviewLive.claims.dialog.acceptTitle": "Accept the claim about {title}?",
+  "flagReviewLive.claims.dialog.acceptBody":
+    "The track goes offline for listeners and the artist can send a counter-notice",
+  "flagReviewLive.claims.dialog.declineTitle":
+    "Decline the claim about {title}?",
+  "flagReviewLive.claims.dialog.declineBody":
+    "The track stays online and the claimant reads your note",
+  "flagReviewLive.claims.dialog.upholdTitle": "Uphold the claim about {title}?",
+  "flagReviewLive.claims.dialog.upholdBody":
+    "The track stays offline and both sides read your note",
+  "flagReviewLive.claims.dialog.rejectTitle": "Reject the claim about {title}?",
+  "flagReviewLive.claims.dialog.rejectBody":
+    "The track comes back unless another claim holds it, and both sides read your note",
+  "flagReviewLive.claims.toast.accepted":
+    "{title} is offline while the claim is open",
+  "flagReviewLive.claims.toast.declined": "Claim declined",
+  "flagReviewLive.claims.toast.upheld": "Claim upheld",
+  "flagReviewLive.claims.toast.rejected": "Claim rejected",
+  "flagReviewLive.trackReports.heading": "Track reports",
+  "flagReviewLive.trackReports.emptyTitle": "No open track reports",
+  "flagReviewLive.trackReports.emptyBody":
+    "New reports about single tracks show up here",
+  "flagReviewLive.trackReports.unknownTrack": "A Studio track",
+  "flagReviewLive.trackReports.currentLabel": "Current marks",
+  "flagReviewLive.trackReports.markExplicit": "Mark track explicit",
+  "flagReviewLive.trackReports.addWarning": "Add content warning",
+  "flagReviewLive.trackReports.dialog.markExplicitTitle":
+    "Mark {title} explicit?",
+  "flagReviewLive.trackReports.dialog.markExplicitBody":
+    "The artist can't unmark it, the report closes and the owners hear from our team",
+  "flagReviewLive.trackReports.dialog.warningTitle":
+    "Add a content warning to {title}",
+  "flagReviewLive.trackReports.dialog.warningBody":
+    "Listeners see it before the track plays, and the artist can't remove it",
+  "flagReviewLive.trackReports.dialog.warningConfirm": "Add warning",
+  "flagReviewLive.trackReports.dialog.warningConfirmPending": "Adding…",
+  "flagReviewLive.trackReports.dialog.dismissBody":
+    "The track stays as it is and the report closes",
+  "flagReviewLive.trackReports.toast.markedExplicit":
+    "{title} is marked explicit",
+  "flagReviewLive.trackReports.toast.warningAdded": "Warning added to {title}",
 
   "rail.live.utilityLabel": "Help and info",
   "rail.live.help": "Help",
@@ -3005,6 +3227,16 @@ export const studio: Catalog = {
   "trackMenu.addedToast": "Added to your queue",
   "trackMenu.linkCopiedToast": "Link copied",
   "trackMenu.queueFailedToast": "This track can't join your queue right now",
+  "trackMenu.sendInMessage": "Send in a message",
+  // ── Studio rich cards: the card a shared link becomes (features/studio/share/) ──
+  "share.card.teaser": "From QueerPulse Studio, open to members with access",
+  "share.card.withdrawn": "This release was withdrawn",
+  "share.card.unavailable": "Not available",
+  "share.card.loading": "Loading from Studio",
+  "share.card.byline": "By {name}",
+  "share.card.openAria": "Open {title} in Studio",
+  "share.card.removeCta": "Remove Studio link",
+  "share.card.hiddenNote": "Hidden by your settings",
   // Chapters: listener lists, errors (contract A.7, D) and the editor
   "chapters.listHeading": "Tracklist",
   "chapters.listHeadingFor": "Tracklist for {title}",
@@ -3195,7 +3427,7 @@ export const studio: Catalog = {
   "uploadFlow.files.countLabel": "{count} of {max}",
   "uploadFlow.files.rejectSizePodcast": "{fileName} is over 250 MB",
   "uploadFlow.files.acceptsPodcast":
-    "accepts · <em>MP3 · M4A</em> · up to 250 MB an episode",
+    "accepts · <em>MP3 · M4A · WAV · AIFF</em> · up to 250 MB an episode",
   "episodeUpload.newTitle": "New <em>episode</em>",
   "episodeUpload.editTitle": "Edit <em>episode</em>",
   "episodeUpload.forShow": "For {show}",
@@ -3203,6 +3435,8 @@ export const studio: Catalog = {
   "episodeUpload.titleLabel": "Episode title",
   "episodeUpload.explicitLabel": "This episode has explicit content",
   "episodeUpload.uploading": "Uploading {fileName}",
+  "episodeUpload.converting": "Converting {fileName} to MP3, {percent}%",
+  "episodeUpload.convertingLabel": "Converting {fileName} to MP3",
   "episodeUpload.processing": "Reading the audio",
   "episodeUpload.uploadFailed": "The upload stopped. Choose the file again",
   "episodeUpload.chaptersFromNotesCta": "Read chapters from the notes",
@@ -3241,14 +3475,14 @@ export const studio: Catalog = {
   "errors.notAPodcast": "Episodes belong to podcast shows",
   "errors.episodeLimit": "A show holds at most 500 episodes",
   "uploadFlow.hero.subShow":
-    "Three steps: the show, its episodes, then publish. MP3 or M4A, up to 250 MB an episode",
+    "Three steps: the show, its episodes, then publish. MP3, M4A, WAV or AIFF, up to 250 MB an episode",
   "uploadFlow.side.size.valueShow": "up to 250 MB an episode",
   "uploadFlow.release.headingShow": "The <em>show</em>",
   "uploadFlow.release.continueCtaShow": "Save and continue to episodes",
   "facts.episodeCount_one": "{count} episode",
   "facts.episodeCount_other": "{count} episodes",
   "episodeUpload.eyebrow": "New episode · upload",
-  "episodeUpload.dropTitle": "Drop an MP3 or M4A file here",
+  "episodeUpload.dropTitle": "Drop an MP3, M4A, WAV or AIFF file here",
   "episodeUpload.chooseFile": "Choose an audio file",
   "chapters.editor.hintEpisode": "Mark where each part of the episode starts",
   "chapters.editor.pasteEpisode": "Paste chapters",
@@ -3258,4 +3492,97 @@ export const studio: Catalog = {
   "artist.tabs.podcast": "Shows",
   "artist.tabs.spokenWord": "Spoken word",
   "artist.tabs.performance": "Performance",
+  // ── Studio collaborative playlists (2026-10-14) ─────────────────────────────
+  "errors.playlistNotFound": "This playlist isn't available anymore",
+  "errors.playlistOwnerOnly": "Only the playlist's owner can do that",
+  "errors.playlistEditorSourceMismatch":
+    "This playlist changed. Reload the page and try again",
+  "errors.playlistEditorCap":
+    "A playlist can have up to 10 editors and invites",
+  "errors.playlistEditorIneligible":
+    "Some of these people can't be invited right now",
+  "errors.playlistInviteUnavailable": "This invite isn't available anymore",
+  "errors.playlistInviteNotFound":
+    "This invite was already answered or withdrawn",
+  "errors.playlistCreditChangeRemovesEditors":
+    "Changing who it shows as removes some editors",
+  "errors.playlistEntryNotFound": "That track was already removed",
+  "errors.playlistEditorNotFound": "That editor was already removed",
+  "playlist.page.manageEditors": "Manage editors",
+  "playlist.page.leavePlaylist": "Leave playlist",
+  "playlist.collab.chip": "Collaborative",
+  "playlist.collab.openAria_one":
+    "Collaborative playlist with {count} editor. See who edits it",
+  "playlist.collab.openAria_other":
+    "Collaborative playlist with {count} editors. See who edits it",
+  "playlist.collab.moreCount": "+{count}",
+  "playlist.row.addedBy": "Added by {name}",
+  "playlist.invite.bannerTitle": "{name} invited you to edit this playlist",
+  "playlist.invite.bannerBody":
+    "Editors can add, remove and reorder tracks, and change the name and description",
+  "playlist.invite.acceptCta": "Accept",
+  "playlist.invite.declineCta": "Decline",
+  "playlist.invite.acceptedToast": "You can now edit {name}",
+  "playlist.invite.declinedToast": "Invite declined",
+  "playlist.invite.cardChip": "Invited",
+  "playlist.editors.title": "Editors",
+  "playlist.editors.ownerSubMember":
+    "Editors can add, remove and reorder tracks, and change the name and description. Who can open it, who it shows as and deleting it stay with you",
+  "playlist.editors.ownerSubPersona":
+    "Pick which co-owners of {persona} can edit this playlist",
+  "playlist.editors.editorSub": "Everyone who can edit this playlist",
+  "playlist.editors.listLabel": "Editors of {name}",
+  "playlist.editors.loadingLabel": "Loading editors",
+  "playlist.editors.pendingLabel": "Invite sent",
+  "playlist.editors.removeCta": "Remove editor",
+  "playlist.editors.removeAria": "Remove {name} as an editor",
+  "playlist.editors.cancelInviteCta": "Cancel invite",
+  "playlist.editors.cancelInviteAria": "Cancel the invite to {name}",
+  "playlist.editors.removeConfirmTitle": "Remove {name} as an editor?",
+  "playlist.editors.removeConfirmBody":
+    "The tracks they added stay in the playlist",
+  "playlist.editors.removedToast": "{name} can't edit this playlist anymore",
+  "playlist.editors.inviteCancelledToast": "Invite cancelled",
+  "playlist.editors.inviteCta": "Invite editors",
+  "playlist.editors.emptyTitle": "Nobody else edits this playlist yet",
+  "playlist.editors.emptyBody": "Invite connections to add tracks with you",
+  "playlist.editors.loadError": "We couldn't load the editors",
+  "playlist.editors.slotsUsed": "{count} of {max} places taken",
+  "playlist.editors.slotsFull":
+    "All {max} places are taken. Remove an editor or cancel an invite to invite someone new",
+  "playlist.editors.invite.title": "Invite editors",
+  "playlist.editors.invite.searchLabel": "Search your connections",
+  "playlist.editors.invite.loadingPeople": "Loading your connections",
+  "playlist.editors.invite.noConnections": "Your connections show up here",
+  "playlist.editors.invite.loadError": "We couldn't load your connections",
+  "playlist.editors.invite.allListed":
+    "Everyone listed already edits this playlist or has an invite",
+  "playlist.editors.invite.sendDefaultCta": "Send invites",
+  "playlist.editors.invite.sendCta_one": "Send {count} invite",
+  "playlist.editors.invite.sendCta_other": "Send {count} invites",
+  "playlist.editors.invite.backCta": "Back to editors",
+  "playlist.editors.invite.sentToast_one": "Invite sent",
+  "playlist.editors.invite.sentToast_other": "{count} invites sent",
+  "playlist.editors.invite.ineligible":
+    "{names} can't be invited right now. Untick them and try again",
+  "playlist.editors.coOwners.listLabel": "Co-owners of {persona}",
+  "playlist.editors.coOwners.searchLabel": "Search co-owners",
+  "playlist.editors.coOwners.empty": "{persona} has no other co-owners",
+  "playlist.editors.coOwners.noMatch": "No co-owner matches that search",
+  "playlist.editors.coOwners.addedToast": "{name} can now edit this playlist",
+  "playlist.editors.coOwners.loadError": "We couldn't load the co-owners",
+  "playlist.leave.title": "Leave {name}?",
+  "playlist.leave.body": "You'll stop editing it. The tracks you added stay",
+  "playlist.leave.confirmCta": "Leave playlist",
+  "playlist.leave.leftToast": "You left {name}",
+  "playlist.creditChange.title": "Change who it shows as?",
+  "playlist.creditChange.body_one":
+    "{names} will stop editing this playlist. The tracks they added stay",
+  "playlist.creditChange.body_other":
+    "{names} will stop editing this playlist. The tracks they added stay",
+  "playlist.creditChange.bodyUnnamed":
+    "Some editors will stop editing this playlist. The tracks they added stay",
+  "playlist.creditChange.confirmCta": "Change and remove editors",
+  "playlist.add.addToCollaborativeAria":
+    "Add to {name}, a collaborative playlist",
 };

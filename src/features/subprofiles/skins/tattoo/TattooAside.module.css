@@ -1,0 +1,164 @@
+/* The tattoo page's booking asides: the sticky sidebar beside the main
+   column, and the phone booking bar.
+
+   The sidebar's breakpoint is a CONTAINER query against `.pp` (an
+   inline-size container), so the editor's narrow preview drops it too. The
+   phone bar is portaled to <body>, outside that container, so it uses the
+   viewport `--mobile` media query (860px) instead. */
+
+/* ── Sidebar ── */
+.sidebar {
+  position: sticky;
+  top: calc(var(--sticky-top) + 16px);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+
+@container (max-width: 859.98px) {
+  .sidebar {
+    display: none;
+  }
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  min-width: 0;
+  padding: 20px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-panel);
+  box-shadow: var(--shadow-e1);
+}
+
+/* The card's h2, dressed as an eyebrow. */
+.label {
+  margin: 0 0 4px;
+  font-family: var(--sans);
+  font-size: var(--text-10-5);
+  font-weight: 700;
+  line-height: 1.4;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+
+.title {
+  margin: 0;
+  font-size: var(--text-15);
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.body {
+  margin: 0;
+  font-size: var(--text-13-5);
+  line-height: 1.55;
+  color: var(--ink-60);
+  overflow-wrap: anywhere;
+}
+
+.price {
+  margin: 4px 0 0;
+  font-family: var(--serif);
+  font-size: var(--text-22);
+  font-weight: 500;
+  line-height: 1.2;
+  color: var(--ink);
+}
+
+.fullButton {
+  width: 100%;
+  margin-top: 8px;
+  justify-content: center;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 4px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.chip {
+  padding: 3px 10px;
+  font-size: var(--text-12);
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--ink);
+  background: var(--wash);
+  border-radius: var(--radius-pill);
+}
+
+/* ── Phone booking bar (portaled to <body>) ── */
+.bar {
+  display: none;
+}
+
+@media (--mobile) {
+  .bar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    /* Above the tab bar (its height and the home indicator live in
+       --bottom-inset) and above the consent banner on a first visit, whose
+       inset already spans the tab bar, so `max` counts neither twice. */
+    bottom: max(var(--bottom-inset, 0px), var(--consent-inset, 0px));
+    z-index: var(--z-sticky);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-sizing: border-box;
+    padding: 10px 16px;
+    /* The home indicator, when no tab bar or banner already lifts the bar
+       clear of it. */
+    padding-bottom: calc(
+      10px +
+        max(0px, env(safe-area-inset-bottom, 0px) - var(--bottom-inset, 0px))
+    );
+    /* Opaque, as the tab bar under it: page text never shows through.
+       `--cream` flips with the theme. */
+    background: var(--cream);
+    border-top: 1px solid var(--line);
+  }
+}
+
+/* One row: the status pill gives way first (it wraps its date under the
+   label), so the button keeps its full label. */
+.barStatus {
+  display: flex;
+  flex: 1 1 0;
+  align-items: center;
+  min-width: 0;
+}
+
+.barCta {
+  display: flex;
+  flex: none;
+  max-width: 60%;
+}
+
+/* The button shrinks with the bar and truncates its label before it pushes
+   past the screen edge (long Portuguese labels at 320px). */
+.barCta > button {
+  display: block;
+  max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  line-height: 22px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.barCta > button > svg {
+  margin-right: 2px;
+  vertical-align: -0.125em;
+}

@@ -151,6 +151,10 @@ export interface CommunityDetailDTO extends CommunityCardDTO {
    *  control read this field. Optional so an older backend still types; the
    *  adapters then fall back to `myRole != null`. */
   isRosterMember?: boolean;
+  /** How many ways to support this community lists, so the page decides the
+   *  Support tab and sidebar card without fetching the values. Optional so an
+   *  older backend reads as 0. */
+  givingMethodCount?: number;
 }
 
 /** One item of `GET /communities/:slug/subcommunities`: a discover card plus

@@ -94,6 +94,7 @@ export function SkinLinesControl({
               index: index + 1,
             })}
             describedBy={keyHintId}
+            maxLength={control.maxLength}
             onEdit={(next) => rows.update(index, next)}
             {...lineKeys.fieldHandlers(index)}
           />

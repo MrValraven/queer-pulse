@@ -13,10 +13,36 @@ import {
 
 export type SkinTextCheck = NonNullable<SkinBlockControl["validate"]>;
 
+const FIRST_YEAR = 1900;
+
+/** The backend's literal rule for a link field: a trimmed value that starts
+ *  with `https://` and parses with a dotted host. */
+function parseHttpsUrl(value: string): string | null {
+  const trimmed = value.trim();
+  if (!trimmed.startsWith("https://")) return null;
+  try {
+    return new URL(trimmed).hostname.includes(".") ? trimmed : null;
+  } catch {
+    return null;
+  }
+}
+
+/** Four digits from 1900 to the current year. */
+function parseYear(value: string): string | null {
+  const trimmed = value.trim();
+  if (!/^\d{4}$/.test(trimmed)) return null;
+  const year = Number(trimmed);
+  return year >= FIRST_YEAR && year <= new Date().getFullYear()
+    ? trimmed
+    : null;
+}
+
 /** The public page's own parsers: each returns null for a value it drops. */
 const CHECK_PARSER: Record<SkinTextCheck, (value: string) => string | null> = {
   email: emailHref,
   url: websiteHref,
+  httpsUrl: parseHttpsUrl,
+  year: parseYear,
 };
 
 /** Whether `value` passes the control's `validate` check. A control without

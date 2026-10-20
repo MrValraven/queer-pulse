@@ -20,12 +20,11 @@ import { RELATIONSHIPS, type VouchRelationship } from "./vouchMember.data";
 import type { AuthUser } from "../auth/api/auth.api";
 import styles from "./ProfilePage.module.css";
 
-/** Diameter of one voucher face, in px. Also the `Avatar` `size` below. */
+/** Default diameter of one voucher face, in px (the desktop hero). */
 const FACE_SIZE = 52;
-/** How far each face slides under the one before it, in px. */
+/** How far each face slides under the one before it at `FACE_SIZE`, in px.
+ *  A smaller `faceSize` scales it down in proportion. */
 const FACE_OVERLAP = 12;
-/** Distance between two face centres in the stack, in px. */
-const FACE_STEP = FACE_SIZE - FACE_OVERLAP;
 
 /**
  * Labels for the read-only "texture" chips on this row — distinct from
@@ -89,19 +88,28 @@ function resolveSelfFace(
  * screen reader that walks the row. The stack is never decorative: the faces
  * ARE the content of this row.
  */
-function VoucherFaceStack({ faces }: { faces: VoucherFace[] }) {
+function VoucherFaceStack({
+  faces,
+  faceSize,
+}: {
+  faces: VoucherFace[];
+  faceSize: number;
+}) {
   const { t } = useTranslation();
+  const faceOverlap = Math.round((faceSize * FACE_OVERLAP) / FACE_SIZE);
+  // Distance between two face centres in the stack, in px.
+  const faceStep = faceSize - faceOverlap;
   return (
     <div className={styles.vouchFaces}>
       {faces.map((face, index) => {
         const stackStyle = {
-          marginLeft: index === 0 ? 0 : -FACE_OVERLAP,
+          marginLeft: index === 0 ? 0 : -faceOverlap,
           zIndex: faces.length - index,
           // How much room the name tooltip has to its left before it would
           // run past the start of the stack, where `.phero`'s
           // `overflow-x: clip` slices it off. The CSS centres the bubble on
           // this face but never shifts it further left than this value.
-          "--vouch-tip-room": `${index * FACE_STEP + FACE_SIZE / 2}px`,
+          "--vouch-tip-room": `${index * faceStep + faceSize / 2}px`,
         } as CSSProperties;
         // An anonymous voucher has no slug — render an un-linked face with
         // a generic name so the identity is never exposed or navigable.
@@ -125,7 +133,7 @@ function VoucherFaceStack({ faces }: { faces: VoucherFace[] }) {
               <Avatar
                 initials={face.initials}
                 tint={face.tint}
-                size={FACE_SIZE}
+                size={faceSize}
                 alt={anonymousName}
               />
             </span>
@@ -147,7 +155,7 @@ function VoucherFaceStack({ faces }: { faces: VoucherFace[] }) {
             <Avatar
               initials={face.initials}
               tint={face.tint}
-              size={FACE_SIZE}
+              size={faceSize}
               src={face.avatarUrl}
               alt={face.name}
             />
@@ -162,7 +170,10 @@ function VoucherFaceStack({ faces }: { faces: VoucherFace[] }) {
  * The hero's vouch row: overlapping voucher avatars and the "Vouched for by …"
  * caption. Extracted from `ProfileHero` so that component stays under the line
  * cap. `realSelf`/`isSelf` are resolved by the caller against the authenticated
- * user.
+ * user. Mounted twice: in `ProfileHeroMain` on desktop and in
+ * `MobileProfileHeader` on mobile, which passes `className` and a smaller
+ * `faceSize` to fit the narrow column. Both are optional and leave the desktop
+ * row as it was when omitted.
  *
  * There are three things this row can be looking at, and only one of them means
  * nobody has vouched:
@@ -183,10 +194,20 @@ export function HeroVouchRow({
   profile,
   realSelf,
   isSelf,
+  className,
+  faceSize = FACE_SIZE,
+  isMutualsChipShown = true,
 }: {
   profile: MemberProfile;
   realSelf: boolean;
   isSelf: boolean;
+  /** Extra class merged onto the row, for a caller's layout overrides. */
+  className?: string;
+  /** Diameter of one voucher face, in px. Defaults to the desktop size. */
+  faceSize?: number;
+  /** Whether the "N mutuals" chip renders. Mobile passes false because
+   *  `ProfileMutualsCard` sits right below this row and already names them. */
+  isMutualsChipShown?: boolean;
 }) {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
@@ -198,13 +219,13 @@ export function HeroVouchRow({
   // social-proof signal, folded into this row's terse "N mutual" texture
   // chip (mirrors `ProfileMutualsCard`'s own framing up in the hero, which
   // names the mutuals instead of just counting them), so it never renders on
-  // the viewer's own profile. `useProfileMutuals` shares its query key with
-  // `ProfileMutualsCard` when both are mounted, so React Query dedupes the
-  // network request rather than firing it twice.
+  // the viewer's own profile. A caller that hides the chip skips the fetch
+  // too. `useProfileMutuals` shares its query key with `ProfileMutualsCard`
+  // when both are mounted, so React Query dedupes the network request.
   const { data: mutuals } = useProfileMutuals(
-    isSelf ? undefined : profile.slug,
+    isSelf || !isMutualsChipShown ? undefined : profile.slug,
   );
-  const mutualsCount = mutuals?.count ?? 0;
+  const mutualsCount = isMutualsChipShown ? (mutuals?.count ?? 0) : 0;
 
   // "N members you know vouched for them" (SOC-15), already gated by the
   // backend: null when the viewer IS this member, and when this member hid
@@ -272,6 +293,9 @@ export function HeroVouchRow({
   // is "hidden from the person currently looking", which is never the owner.
   const isRosterHidden = profile.vouchersVisible === false;
   const isRosterHiddenFromViewer = isRosterHidden && !isSelf;
+  const rowClassName = className
+    ? `${styles.vouchRow} ${className}`
+    : styles.vouchRow;
 
   if (faces.length === 0) {
     // No faces to draw. Whether that means "nobody has vouched" is decided by
@@ -279,7 +303,7 @@ export function HeroVouchRow({
     // empty with a real number attached, and asking for a vouch there would be
     // soliciting on a falsehood the trust row directly below contradicts.
     return (
-      <div className={styles.vouchRow}>
+      <div className={rowClassName}>
         <div className={styles.vouchText}>
           {vouchCount > 0 ? (
             <>
@@ -327,8 +351,8 @@ export function HeroVouchRow({
   ).slice(0, 3);
 
   return (
-    <div className={styles.vouchRow}>
-      <VoucherFaceStack faces={faces} />
+    <div className={rowClassName}>
+      <VoucherFaceStack faces={faces} faceSize={faceSize} />
       <div className={styles.vouchText}>
         <Translation
           i18nKey="members:hero.vouch.by"

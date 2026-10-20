@@ -1,10 +1,18 @@
 import type { LinkPreviewResponse } from "../../../shared/contracts/contracts";
 import { useDirectoryPlace } from "../../marketing/api/useDirectory";
 import type { DirectoryPlace } from "../../marketing/directoryPlaces";
-import { internalPlaceSlug } from "../internalLinkTargets";
+import {
+  parseStudioLink,
+  type StudioLinkTarget,
+} from "../../studio/share/studioLinkTarget";
+import { internalPlaceSlug, isOwnStudioUrl } from "../internalLinkTargets";
 import { hasPreviewContent, useLinkPreview } from "./useLinkPreview";
 
 export interface MessageLinkCardState {
+  /** Set when `url` is a Studio track, release or playlist link: the caller
+   *  renders the Studio card. Every own-origin `/studio` URL (cards, artist
+   *  pages, preview links) skips the OpenGraph unfurl entirely. */
+  studioTarget: StudioLinkTarget | null;
   /** The place slug when `url` is a QueerPulse directory place link AND that
    *  place resolved; `null` for every other link, including a place link
    *  whose slug turned out not to exist (see `hasContent`'s doc). Callers
@@ -40,26 +48,46 @@ export interface MessageLinkCardState {
  * so calling it unconditionally, rather than only for a place link, keeps
  * this a single hook with a stable call order regardless of which kind of
  * link the message carries.
+ *
+ * An own-origin `/studio` URL (`isOwnStudioUrl`) branches off first: a
+ * track, release or playlist link comes back as `studioTarget` for the
+ * caller's Studio card, settled at once (`isLoading` false, `hasContent`
+ * true), and any other Studio URL (an artist page, a preview link) settles
+ * with nothing to show, so its text stays as typed. Either way the URL goes
+ * to neither the place lookup nor `GET /link-preview`: a preview token is a
+ * bearer secret.
  */
 export function useMessageLinkCard(url: string | null): MessageLinkCardState {
-  const placeSlug = url ? internalPlaceSlug(url) : null;
+  // Branches before the place and OpenGraph paths, so a Studio URL is never
+  // sent to GET /link-preview (spec section 2; a preview token is a bearer
+  // secret).
+  const isOwnStudio = url !== null && isOwnStudioUrl(url);
+  const studioTarget = isOwnStudio && url ? parseStudioLink(url) : null;
+  const placeSlug = url && !isOwnStudio ? internalPlaceSlug(url) : null;
   const isPlaceLink = placeSlug !== null;
   const placeQuery = useDirectoryPlace(placeSlug ?? undefined);
   const isPlaceSettled = !isPlaceLink || !placeQuery.isLoading;
   const isPlaceResolved = isPlaceLink && isPlaceSettled && !!placeQuery.place;
-  const needsOgFallback = !isPlaceLink || (isPlaceSettled && !isPlaceResolved);
+  const needsOgFallback =
+    !isOwnStudio && (!isPlaceLink || (isPlaceSettled && !isPlaceResolved));
   const ogPreviewQuery = useLinkPreview(needsOgFallback ? url : null);
   const isOgResolved = hasPreviewContent(ogPreviewQuery.data);
 
-  const isLoading = isPlaceLink
-    ? placeQuery.isLoading || (needsOgFallback && ogPreviewQuery.isLoading)
-    : ogPreviewQuery.isLoading;
+  const isLoading = isOwnStudio
+    ? false
+    : isPlaceLink
+      ? placeQuery.isLoading || (needsOgFallback && ogPreviewQuery.isLoading)
+      : ogPreviewQuery.isLoading;
 
   return {
+    studioTarget,
     placeSlug: isPlaceResolved ? placeSlug : null,
     place: placeQuery.place,
-    ogPreview: ogPreviewQuery.data,
+    ogPreview: needsOgFallback ? ogPreviewQuery.data : undefined,
     isLoading,
-    hasContent: isPlaceResolved || (needsOgFallback && isOgResolved),
+    hasContent:
+      studioTarget !== null ||
+      isPlaceResolved ||
+      (needsOgFallback && isOgResolved),
   };
 }

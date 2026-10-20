@@ -68,16 +68,16 @@ export const marketing: Catalog = {
   "about.stand.p1":
     "Intersectionality is the whole of queer politics. Race, class, disability, migration status, and gender all shape who gets safety and who gets asked to wait for it. A platform that serves only white, cis, able-bodied, documented, comfortable queer people has misunderstood the word community.",
   "about.stand.p2":
-    "That belief has to cost us something to be real. It shapes who we invite, who moderates, whose complaints get taken seriously, and which struggles we are willing to name out loud when naming them is expensive.",
+    "We act on it in who we invite, who moderates, whose complaints we take seriously, and which struggles we name out loud, even when that loses us money or members.",
   "about.stand.intersectionalityLink":
     "Read how members describe living at those intersections",
   "about.stand.trans.title": "On trans lives",
   "about.stand.trans.p1":
-    "Trans women are women. Trans men are men. Nonbinary people are nonbinary, and intersex people exist. We hold none of that tentatively, and none of it is open for debate on this platform.",
+    "Trans women are women. Trans men are men. Nonbinary people are nonbinary, and intersex people exist. None of this is up for debate here.",
   "about.stand.trans.p2":
-    "There is a project that claims to speak for LGB people while lobbying against the T. It arrives dressed as a defence of women, or of children, or of same-sex attraction, and it works by asking everyone else to treat trans membership of this community as an open question. We treat it as settled. A group organising to split the T away from the rest of us is organising against our members, and we will name it as that.",
+    "There is a project that claims to speak for LGB people while lobbying against the T. It usually presents itself as protecting women, children, or same-sex attraction, and it asks everyone else to treat trans people's place in this community as an open question. For us it is settled. A group working to split the T away from the rest of us is working against our members, and we will say so.",
   "about.stand.trans.p3":
-    "The move is a familiar one. Pinkwashing borrows our rights to make a state look civilised; this borrows women's safety to make exclusion look like protection. Both spend somebody else's dignity to buy respectability.",
+    "It works like pinkwashing. Pinkwashing uses our rights to make a state look civilised, and this uses women's safety to make excluding trans people look like protection.",
   "about.stand.trans.commitment.notADebate.title":
     "Trans membership is not a debate topic.",
   "about.stand.trans.commitment.notADebate.body":
@@ -85,19 +85,19 @@ export const marketing: Catalog = {
   "about.stand.trans.commitment.exclusion.title":
     "Trans-exclusionary advocacy is a Code of Conduct violation.",
   "about.stand.trans.commitment.exclusion.body":
-    "Criticising a state is political speech. Campaigning to remove a class of member is something else, and calling it gender-critical leaves it exactly what it was.",
+    'Criticising a state is political speech. Campaigning to push trans members out breaks the Code of Conduct, whatever name it goes by, "gender-critical" included.',
   "about.stand.trans.commitment.exclusion.link": "Read the guidelines",
   "about.stand.trans.commitment.selfId.title":
     "Self-identification is the standard here.",
   "about.stand.trans.commitment.selfId.body":
-    "No member is asked to prove their gender, to a moderator or to anyone else, at any point.",
+    "Nobody here will ask you to prove your gender, moderators included.",
   "about.stand.trans.commitment.selfId.link": "Read the trans healthcare guide",
   "about.stand.position.sexWork.title": "Sex work is work.",
   "about.stand.position.sexWork.body":
-    "Sex workers are members here on the same terms as everyone else. Decriminalisation is the position that keeps people alive, and the politics that wants sex workers out of queer spaces runs on the same engine as the politics that wants trans people out of them.",
+    "Sex workers are members here on the same terms as everyone else. We back decriminalisation because it keeps sex workers alive. The people who want sex workers out of queer spaces usually want trans people out too, and they use the same arguments.",
   "about.stand.position.migration.title": "Migration is a queer issue.",
   "about.stand.position.migration.body":
-    "Queer people move to survive. Portugal's asylum and residency system is slow in ways that ruin lives, and racism toward Brazilian, PALOP, and South Asian members shows up in queer spaces here as readily as anywhere else. A far right that has grown fast in this country wants all of it worse.",
+    "Queer people move to survive. Portugal's asylum and residency system is slow in ways that ruin lives, and racism toward Brazilian, PALOP, and South Asian members shows up in queer spaces here as readily as anywhere else. The far right, which has grown fast in Portugal, wants to make all of this worse.",
   "about.stand.position.migration.link": "Read the intersectionality guide",
   "about.stand.position.hiv.title": "U = U, and serophobia is discrimination.",
   "about.stand.position.hiv.body":
@@ -105,12 +105,12 @@ export const marketing: Catalog = {
   "about.stand.position.hiv.link": "Sexual health resources",
   "about.stand.principle.title": "When we speak, and when we don't",
   "about.stand.principle.body":
-    "We speak where our community is directly implicated, and where queer identity is being used as cover for harm. That is the whole test. It is why these positions are on this page and most of the news is not, and it is the standard to hold us to when you think we have gone quiet about something we should not have.",
+    "We speak up when our community is directly affected, or when someone uses queer identity to cover for harm. That's why these positions are on this page and most of the news isn't. If you think we've gone quiet on something we shouldn't have, hold us to this test.",
   "about.stand.palestine.title": "On Palestine",
   "about.stand.palestine.p1":
-    "Israel is committing a genocide against Palestinians in Gaza. We say it plainly, because the pressure to soften it is the point. QueerPulse stands with Palestinians, and with everyone working toward an end to the occupation and the siege.",
+    "Israel is committing a genocide against Palestinians in Gaza. We say it plainly because there is a lot of pressure to soften it. QueerPulse stands with Palestinians, and with everyone working toward an end to the occupation and the siege.",
   "about.stand.palestine.p2":
-    "We also refuse the use of our lives as cover for it. Pinkwashing holds LGBTQ+ rights up as proof that a state is civilised while that same state bombs, starves, and displaces. Our safety has never been an argument for anyone else's destruction, and we will not lend it out as one.",
+    "We also refuse to let our lives be used as cover for it. Pinkwashing points to LGBTQ+ rights as proof that a state is civilised while the same state bombs, starves, and displaces people. Queer safety is no excuse for destroying anyone else, and we won't let it be used as one.",
   "about.stand.commitment.speech.title": "Palestine advocacy is welcome here.",
   "about.stand.commitment.speech.body":
     "Criticising a state, its military, or its ideology is political speech, and we moderate it as such. Antisemitism and anti-Palestinian racism are both Code of Conduct breaches, enforced the same way.",
@@ -3116,29 +3116,36 @@ export const marketing: Catalog = {
   "listBusiness.baseline.noticeBody":
     "It stands for as long as the listing does, so there is nothing to change here. Every business in the directory has agreed to the same thing.",
 
-  // ── Local autosave for the owner editor. It OFFERS a copy saved on this
-  //    device; the form stays exactly what the server returned until the owner
-  //    presses restore, so nothing published is ever quietly replaced.
+  // ── Server draft for the owner editor. It OFFERS the listing_edit creator
+  //    draft; the form stays exactly what the live listing holds until the
+  //    owner presses restore, so nothing published is ever quietly replaced.
   "listBusiness.editor.restore.title": "You have unsaved changes from {when}",
   "listBusiness.editor.restore.sub":
-    "They were saved on this device and never sent. Your live listing has not changed.",
+    "We kept them as a draft. Your live listing has not changed.",
   "listBusiness.editor.restore.serverChanged":
     "Careful: this listing has been updated since those changes were saved, so bringing them back would replace the newer wording.",
   "listBusiness.editor.restore.restoreCta": "Bring them back",
   "listBusiness.editor.restore.discardCta": "Discard them",
   "listBusiness.editor.restore.justNow": "a moment ago",
   "listBusiness.editor.restore.unknownWhen": "an earlier session",
-  // Restore review: the diff a saved local copy would bring back, per area.
+  "listBusiness.editor.restore.discardError":
+    "We couldn't discard the saved edits. Try again",
+  "listBusiness.editor.draftClearError":
+    "Your edits are saved. We couldn't delete their draft copy, and it goes by itself within 90 days",
+  // CreatorDraftNotice beside the listing editor's save state
+  "creatorDraftNote.body":
+    "Our team can see your edits before you save them, so we can help if you get stuck",
+  // Restore review: the diff a saved draft would bring back, per area.
   "listBusiness.editor.restore.review.title":
     "Bring back your unsaved changes?",
   "listBusiness.editor.restore.review.sub":
-    "Saved on this device {when}. Tick the areas you want back.",
+    "Saved {when}. Tick the areas you want back.",
   "listBusiness.editor.restore.review.selectAll": "Select all",
   "listBusiness.editor.restore.review.clearAll": "Clear all",
   "listBusiness.editor.restore.review.changeCount_one": "{count} change",
   "listBusiness.editor.restore.review.changeCount_other": "{count} changes",
   "listBusiness.editor.restore.review.areaKept":
-    "Left out: this area stays as it is now, and its saved changes are dropped from this device.",
+    "Left out: this area stays as it is now, and its saved changes are dropped from the draft.",
   "listBusiness.editor.restore.review.legend.now": "On screen now",
   "listBusiness.editor.restore.review.legend.back": "Comes back",
   "listBusiness.editor.restore.review.legend.spoken":
@@ -3405,6 +3412,8 @@ export const marketing: Catalog = {
   "changelog.release.count.infrastructure_other":
     "{count} infrastructure changes",
   // Release headlines, one per shipping day (see changelogReleases.ts).
+  "changelog.releases.2026-10-19.headline":
+    "Tattoo artists get bookable pages, Studio music plays in chats, plus copyright claims.",
   "changelog.releases.2026-10-14.headline":
     "Studio adds podcasts, spoken word and performance audio, moods, scenes, staff picks, genre and mood radio, persona credits, a full player, scheduled releases and press kits.",
   "changelog.releases.2026-10-13.headline":
@@ -3555,6 +3564,68 @@ export const marketing: Catalog = {
     "QueerPulse goes live with its core pages and community navigation.",
   "changelog.tag.report": "Open the report form",
   "changelog.tag.changelog": "See the changelog",
+  "changelog.entries.community-giving.title": "Communities get a Support tab",
+  "changelog.entries.community-giving.body":
+    "Owners list donation links, MB WAY numbers and IBANs, and anyone can open or copy them in one tap.",
+  "changelog.entries.mobile-profile-trust.title":
+    "Phone profiles show who vouched and who you both know",
+  "changelog.entries.mobile-profile-trust.body":
+    "Under the bio you now see the faces and names behind each vouch, plus your mutual connections.",
+  "changelog.entries.studio-safety-moderation.title":
+    "Studio adds content warnings and copyright claims",
+  "changelog.entries.studio-safety-moderation.body":
+    "Tracks can carry a warning that asks before playing, and our team reviews each copyright claim.",
+  "changelog.entries.community-volunteering-tab.title":
+    "Find volunteer roles inside each community",
+  "changelog.entries.community-volunteering-tab.body":
+    "A Volunteering tab lists a community's open roles, and the people who run it can post one from there.",
+  "changelog.entries.volunteer-closed-signups.title":
+    "Closed volunteer roles stop taking sign-ups",
+  "changelog.entries.volunteer-closed-signups.body":
+    "Roles posted by private communities also stay off the public volunteering board.",
+  "changelog.entries.admin-creator-drafts.title":
+    "Creator drafts in the admin dashboard",
+  "changelog.entries.admin-creator-drafts.body":
+    "Admins preview unfinished community, persona and business drafts and can message the owner to help.",
+  "changelog.entries.drafts-saved-to-your-account.title":
+    "Drafts follow you across devices",
+  "changelog.entries.drafts-saved-to-your-account.body":
+    "Event, community and listing edit drafts now save to your account, so another device picks them up.",
+  "changelog.entries.trust-network-rebuilt-for-admins.title":
+    "Trust network rebuilt for safety reviews",
+  "changelog.entries.trust-network-rebuilt-for-admins.body":
+    "Case triage with reasons, an invite tree, filters, a list view, share links and a layout that works on phones.",
+  "changelog.entries.tattoo-artist-pages.title":
+    "Tattoo artists get a page to book from",
+  "changelog.entries.tattoo-artist-pages.body":
+    "Books status, prices, healed and scar work, guest spots and a shop, with client photos blurred until tapped.",
+  "changelog.entries.business-team.title": "Meet the team on business pages",
+  "changelog.entries.business-team.body":
+    "Businesses show the personas who work there, and each persona links back to where it works.",
+  "changelog.entries.studio-wav-aiff-uploads.title":
+    "Upload WAV and AIFF masters to Studio",
+  "changelog.entries.studio-wav-aiff-uploads.body":
+    "Drop WAV or AIFF masters into Studio and your browser turns them into MP3 before they upload.",
+  "changelog.entries.studio-rich-cards.title":
+    "Share Studio music into chats and posts",
+  "changelog.entries.studio-rich-cards.body":
+    "Tracks, releases and playlists play right inside DMs, groups, posts, the feed, the forum and persona pages.",
+  "changelog.entries.studio-collaborative-playlists.title":
+    "Edit Studio playlists together",
+  "changelog.entries.studio-collaborative-playlists.body":
+    "Invite connections or your persona's co-owners to edit a Studio playlist with you.",
+  "changelog.entries.event-cover-posters.title":
+    "Event covers take vertical posters",
+  "changelog.entries.event-cover-posters.body":
+    "Upload your event's poster as the cover and it shows in full, framed by a soft blur of itself.",
+  "changelog.entries.event-description-limit.title":
+    "Event descriptions stop at 1,200 characters",
+  "changelog.entries.event-description-limit.body":
+    "The counter and the server use the same limit, so what you write fits the board card.",
+  "changelog.entries.feed-connect-shows-pending.title":
+    "Feed cards show Pending after you ask to connect",
+  "changelog.entries.feed-connect-shows-pending.body":
+    "A refresh no longer resets the button to Connect, and tapping it shows the request already waiting.",
   "changelog.entries.chat-stays-with-the-newest-message.title":
     "Messages stay on screen while you type on iPhone",
   "changelog.entries.chat-stays-with-the-newest-message.body":
@@ -9556,6 +9627,7 @@ export const marketing: Catalog = {
   //    else on this page (headings, buttons, static labels) is chrome and is
   //    translated below.
   "volunteerDetail.backCta": "All volunteer opportunities",
+  "volunteerDetail.backToCommunity": "Back to {community}",
   "volunteerDetail.meta.title":
     "{role} with {org}: volunteer through QueerPulse",
   "volunteerDetail.meta.loadingTitle": "Loading a volunteer role · QueerPulse",
@@ -9563,6 +9635,8 @@ export const marketing: Catalog = {
     "You've already signed up for this role.",
   "volunteerDetail.error.full":
     "This opportunity just filled up, every spot is taken.",
+  "volunteerDetail.error.closed":
+    "This opportunity has closed, so it is no longer taking sign-ups.",
   "volunteerDetail.error.alreadyOrFull":
     "You've already signed up, or this opportunity is now full.",
   "volunteerDetail.error.generic":
@@ -12703,4 +12777,103 @@ export const marketing: Catalog = {
   "changelog.entries.sharper-staff-tools.title": "Sharper tools for the team",
   "changelog.entries.sharper-staff-tools.body":
     "Moderators see housing evidence, safety inquiries get their own queue, and guides edit section by section.",
+
+  // ── Meet the team on business pages (2026-10-19) ──
+  "directory.detail.team.title": "Meet the <em>team</em>",
+  "directory.detail.team.sub":
+    "The personas who work here. Tap one to open their page",
+  "directory.detail.team.showAll": "Show all {count}",
+  "directory.detail.team.showFewer": "Show fewer",
+  "listBusiness.editor.section.team": "Team",
+  "listBusiness.editor.nav.awaitingCount_one":
+    "{count} waiting for your answer",
+  "listBusiness.editor.nav.awaitingCount_other":
+    "{count} waiting for your answer",
+  "listBusiness.team.intro":
+    "Show the personas who work here on your page. A persona appears once whoever runs it says yes",
+  "listBusiness.team.notLiveNotice":
+    "Your listing needs to be live and shown in the directory before you can invite or approve anyone",
+  "listBusiness.team.search.label": "Find a persona by name or @handle",
+  "listBusiness.team.search.placeholder": "Name or @handle",
+  "listBusiness.team.search.hint": "Type at least 2 characters",
+  "listBusiness.team.search.empty": "No published persona matches that",
+  "listBusiness.team.search.loadError":
+    "We couldn't search right now. Try again",
+  "listBusiness.team.search.resultCount_one": "{count} persona found",
+  "listBusiness.team.search.resultCount_other": "{count} personas found",
+  "listBusiness.team.candidate.pending": "Waiting for an answer",
+  "listBusiness.team.candidate.accepted": "On the team",
+  "listBusiness.team.candidate.askedYou": "Asked to join",
+  "listBusiness.team.roleLabel.label": "Role on your page (optional)",
+  "listBusiness.team.roleLabel.placeholder": "Resident artist",
+  "listBusiness.team.roleLabel.hint": "One line, up to 40 characters",
+  "listBusiness.team.inviteCta": "Invite to team",
+  "listBusiness.team.inviteAria": "Invite to team: {name}",
+  "listBusiness.team.inviteHeading": "Invite a persona",
+  "listBusiness.team.requests.heading": "Asking to join",
+  "listBusiness.team.approveCta": "Approve",
+  "listBusiness.team.approveAria": "Approve {name}",
+  "listBusiness.team.declineCta": "Decline",
+  "listBusiness.team.declineAria": "Decline {name}",
+  "listBusiness.team.invites.heading": "Invites sent",
+  "listBusiness.team.cancelInviteCta": "Cancel invite",
+  "listBusiness.team.cancelInviteAria": "Cancel invite: {name}",
+  "listBusiness.team.accepted.heading": "On your page",
+  "listBusiness.team.accepted.count": "{count} of {max}",
+  "listBusiness.team.accepted.empty":
+    "Nobody shows on your page yet. Invite a persona, or approve a request",
+  "listBusiness.team.moveUpAria": "Move {name} up",
+  "listBusiness.team.moveDownAria": "Move {name} down",
+  "listBusiness.team.movedStatus": "{name} is now {position} of {count}",
+  "listBusiness.team.editRoleCta": "Edit role",
+  "listBusiness.team.editRoleAria": "Edit role: {name}",
+  "listBusiness.team.saveRoleCta": "Save role",
+  "listBusiness.team.cancelEditCta": "Cancel",
+  "listBusiness.team.removeCta": "Remove from team",
+  "listBusiness.team.removeAria": "Remove from team: {name}",
+  "listBusiness.team.removeConfirm.title": "Remove {name} from your team?",
+  "listBusiness.team.removeConfirm.titleHidden":
+    "Remove this persona from your team?",
+  "listBusiness.team.removeConfirm.body":
+    "This persona stops showing on your page straight away. You can invite it again later",
+  "listBusiness.team.hiddenPersona.name":
+    "A persona that isn't visible right now",
+  "listBusiness.team.hiddenPersona.hint":
+    "It shows on your page again once it's visible",
+  "listBusiness.team.toast.invited": "Invite sent",
+  "listBusiness.team.toast.added": "Added to your team",
+  "listBusiness.team.toast.declined": "Request declined",
+  "listBusiness.team.toast.cancelled": "Invite cancelled",
+  "listBusiness.team.toast.removed": "Removed from your team",
+  "listBusiness.team.toast.roleSaved": "Role saved",
+  "listingTeam.errors.personaNotFound": "We couldn't find that persona",
+  "listingTeam.errors.listingNotFound":
+    "We couldn't find that business. It may be hidden right now",
+  "listingTeam.errors.linkGone": "This was already answered or withdrawn",
+  "listingTeam.errors.personaIneligible":
+    "This persona can join a team once it's published, has a handle and is visible to members or everyone",
+  "listingTeam.errors.listingNotLive":
+    "The business needs to be live and shown in the directory first",
+  "listingTeam.errors.alreadyPendingInvite":
+    "An invite for this persona is already waiting for an answer",
+  "listingTeam.errors.alreadyPendingRequest":
+    "A request from this persona is already waiting for an answer",
+  "listingTeam.errors.alreadyAccepted": "This persona is already on the team",
+  "listingTeam.errors.cooldown":
+    "This was declined recently. You can ask again from {date}",
+  "listingTeam.errors.cooldownLater":
+    "This was declined recently. You can ask again later",
+  "listingTeam.errors.teamFull":
+    "This team is full. A business can show up to {max} personas",
+  "listingTeam.errors.pendingFullListing":
+    "You have {max} invites and requests waiting. Answer or cancel some before sending more",
+  "listingTeam.errors.pendingFullPersona":
+    "This business has too many requests waiting right now. Try again later",
+  "listingTeam.errors.personaFull":
+    "This persona is already on {max} teams, the most it can join",
+  "listingTeam.errors.personaRequestsFull":
+    "This persona has {max} requests waiting. Cancel one to send another",
+  "listingTeam.errors.notAccepted": "This link already ended",
+  "listingTeam.errors.orderMismatch": "The team just changed. Try again",
+  "listingTeam.errors.generic": "Something went wrong. Try again",
 };

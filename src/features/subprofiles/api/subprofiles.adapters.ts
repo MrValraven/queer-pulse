@@ -5,6 +5,7 @@ import type {
   AffiliationDTO,
   AvailabilityKey,
   CollaboratorDTO,
+  FlashDayEventRef,
   GigState,
   ItemStructured,
   LinkVisibility,
@@ -20,6 +21,8 @@ import type {
   Visibility,
   WorkState,
 } from "./subprofiles.api";
+import type { ListingWorksAtView } from "../../marketing/listBusiness/api/listingTeam.types";
+import { toListingWorksAtViews } from "../../marketing/listBusiness/api/listingTeam.adapters";
 import { SECTION_META, sectionsForKind } from "../subprofile-kinds";
 import {
   ACCENT_OPTIONS,
@@ -70,6 +73,8 @@ export interface SubprofileItemView {
   edition: string | null;
   workState: WorkState | null;
   structured: ItemStructured | null;
+  /** Output only (`flash_days`). Never sent back on save. */
+  linkedEvent?: FlashDayEventRef | null;
 }
 
 /** A section grouped for rendering/editing: its metadata + ordered items.
@@ -167,6 +172,8 @@ export interface PublicSubprofileView {
   sections: SubprofileSectionView[];
   featured: SubprofileItemView | null;
   affiliations: AffiliationDTO[];
+  /** Businesses this persona is on the team of; every adapter path sets it. */
+  worksAt?: ListingWorksAtView[];
   endorsementCount: number;
   viewerEndorsed: boolean;
   followerCount: number;
@@ -217,6 +224,7 @@ export function itemToView(dto: SubprofileItemDTO): SubprofileItemView {
     edition: dto.edition ?? null,
     workState: dto.workState ?? null,
     structured: dto.structured ?? null,
+    ...("linkedEvent" in dto ? { linkedEvent: dto.linkedEvent } : {}),
   };
 }
 
@@ -316,6 +324,7 @@ export function publicSubprofileToView(
     sections: buildSections(dto.items, dto.kind),
     featured: findFeatured(dto.items),
     affiliations: dto.affiliations ?? [],
+    worksAt: toListingWorksAtViews(dto.worksAt),
     endorsementCount: dto.endorsementCount,
     viewerEndorsed: dto.viewerEndorsed,
     followerCount: dto.followerCount,

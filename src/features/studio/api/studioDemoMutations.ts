@@ -35,6 +35,11 @@ import {
 } from "./studioDemoListening";
 import { demoRevokePreviewLink } from "./studioDemoArtistTools";
 import { DEMO_STUDIO_ME } from "./studioDemoMe.data";
+import {
+  demoEffectiveWarnings,
+  demoIsExplicitLocked,
+  demoSetArtistWarnings,
+} from "./studioDemoSafety";
 import { demoSceneRefById } from "./studioDemoScenes.data";
 import type { StudioGenre } from "./studio.types";
 
@@ -191,13 +196,19 @@ export function demoUpdateTrack(
 ): StudioTrackView {
   // The server's listening rules first: a refusal throws before anything
   // changes.
+  // Studio safety: our team's explicit mark holds, as the server's 409.
+  if (body.isExplicit === false && demoIsExplicitLocked(track.id))
+    throw studioRefusal(409, "studio_track_explicit_locked");
   const stored = demoApplyListeningPatch(track, body);
+  if (body.contentWarnings !== undefined)
+    demoSetArtistWarnings(track.id, body.contentWarnings);
   const notes =
     body.notes === undefined ? track.notes : body.notes?.trim() || null;
   return {
     ...track,
     title: body.title ?? track.title,
     isExplicit: body.isExplicit ?? track.isExplicit,
+    contentWarnings: demoEffectiveWarnings(track.id),
     credits: body.credits ?? track.credits,
     lyricStanzas:
       body.lyrics === undefined

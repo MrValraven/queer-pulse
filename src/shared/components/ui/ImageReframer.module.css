@@ -76,6 +76,28 @@
   }
 }
 
+/* A portrait frame (a poster on Original) in the desktop dialog. At 420px
+   wide a 4:5 frame is 525px tall, and the dialog (capped at the smaller of
+   86svh and 760px) also holds the head, the ratio chips, two 14px gaps, the
+   zoom row, the body padding and the footer: about 257px around the frame,
+   so at 1440x900 the body scrolled by about 22px and the zoom row slid under
+   the footer. The frame's height is capped at the dialog cap less 17.5rem,
+   which leaves about 23px of slack, and never past the base 60vh. The width
+   cap follows from the frame's ratio (`--frame-aspect`, set inline), so the
+   frame shrinks as a whole instead of squashing. The 160px floor holds on a
+   very short window, where the body scrolls and the footer stays pinned.
+   The phone bottom sheet keeps the base rules. */
+@media (min-width: 720px) {
+  .frameTall {
+    --tall-frame-cap: min(
+      60vh,
+      max(160px, calc(min(86svh, 760px) - 17.5rem))
+    );
+    max-width: min(420px, calc(var(--tall-frame-cap) * var(--frame-aspect)));
+    max-height: var(--tall-frame-cap);
+  }
+}
+
 /* Soft circle guide for round avatars: dims the corners the circle crops
    away and draws a ring. It takes no pointer input, so drags pass through to
    the frame. --scrim-rgb and --cream-rgb hold the same dark and light
@@ -253,7 +275,7 @@
   }
 }
 
-/* Dark theme — the zoom slider's track is a --plum-rgb tint, which does not
+/* Dark theme: the zoom slider's track is a --plum-rgb tint, which does not
    flip, so the track disappears and only the thumb remains. */
 :global([data-theme="dark"]) .zoomRange::-webkit-slider-runnable-track {
   background: rgba(var(--cream-rgb), 0.2);

@@ -1,5 +1,8 @@
 import { Link } from "react-router-dom";
-import { ImageSlot, type ImageSlotTint } from "../../../shared/components/ui";
+import {
+  PosterAwareImageSlot,
+  type ImageSlotTint,
+} from "../../../shared/components/ui";
 import { useFormat } from "../../../shared/i18n/format";
 import type { CalendarEvent } from "../data";
 import { eventZoneFormat } from "../eventTimezone";
@@ -44,7 +47,8 @@ export interface EventTicketCardProps {
 }
 
 /** The ticket's 4:3 cover with its stamp, ribbon, scrim and bottom badges.
- *  A gathering with no photo wears the branded `EventCoverFallback` field,
+ *  A landscape photo fills it; a poster shows whole over its own blurred
+ *  backdrop. A gathering with no photo wears the branded `EventCoverFallback` field,
  *  which is dark enough on its own, so the scrim is skipped there. */
 function TicketMedia({
   event,
@@ -60,7 +64,7 @@ function TicketMedia({
     <span className={styles.media}>
       {hasCover ? (
         <>
-          <ImageSlot
+          <PosterAwareImageSlot
             src={sizedCover(event.coverImageUrl, TICKET_COVER_WIDTH)}
             alt=""
             tint={tint}
@@ -70,6 +74,7 @@ function TicketMedia({
             radius={0}
             loading={isPriority ? "eager" : "lazy"}
             fetchPriority={isPriority ? "high" : undefined}
+            className={styles.coverImage}
             style={{ position: "absolute", inset: 0 }}
           />
           <span className={styles.scrim} aria-hidden />

@@ -3,6 +3,7 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import { AdminPageHeader } from "./ui";
+import styles from "./AdminMembersPage.module.css";
 
 /**
  * The members page header, split out of `AdminMembersPage` to keep that page
@@ -16,15 +17,23 @@ export function AdminMembersHeader({
   total,
   pendingCount,
   onOpenSuppression,
+  trustCaseCount,
+  isTrustNetworkAvailable,
+  onOpenTrustNetwork,
 }: {
   /** The directory size, once the roster has answered. */
   total: number | undefined;
   /** Pending join requests, once that read has answered. */
   pendingCount: number | undefined;
   onOpenSuppression: () => void;
+  /** Open trust cases, once the summary read has answered. */
+  trustCaseCount: number | undefined;
+  isTrustNetworkAvailable: boolean;
+  onOpenTrustNetwork: () => void;
 }) {
   const { t } = useTranslation();
   const fmt = useFormat();
+  const hasTrustCases = trustCaseCount !== undefined && trustCaseCount > 0;
   return (
     <AdminPageHeader
       eyebrow={t("admin:members.header.eyebrow")}
@@ -49,6 +58,30 @@ export function AdminMembersHeader({
       }
       actions={
         <>
+          {isTrustNetworkAvailable && (
+            <Button
+              variant="ghost"
+              size="md"
+              className={styles.trustCta}
+              onClick={onOpenTrustNetwork}
+            >
+              {t("admin:members.header.trustNetworkCta")}
+              <span
+                className={styles.trustBadge}
+                data-visible={hasTrustCases}
+                aria-hidden
+              >
+                {hasTrustCases ? fmt.number(trustCaseCount) : null}
+              </span>
+              {hasTrustCases && (
+                <span className="visuallyHidden">
+                  {t("admin:members.header.trustNetworkBadgeAria", {
+                    count: trustCaseCount,
+                  })}
+                </span>
+              )}
+            </Button>
+          )}
           <Button variant="ghost" size="md" onClick={onOpenSuppression}>
             {t("admin:recovery.suppression.openCta")}
           </Button>

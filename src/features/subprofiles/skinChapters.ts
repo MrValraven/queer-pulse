@@ -1,14 +1,16 @@
 import type { SubprofileKind } from "./api/subprofiles.api";
 import type { SkinChapterDescriptor } from "./skinBlockFields.data";
 import { deriveSkinChapters } from "./derivedSkinChapters";
+import { TATTOO_CHAPTERS } from "./tattooEditorChapters.data";
 import { THERAPIST_CHAPTERS } from "./therapistEditorChapters.data";
 
-/** Kinds whose Page blocks chapters are written by hand. Every other kind's
- *  are derived from its sections and family blocks. */
+/** Kinds whose Page blocks chapters are written by hand (the therapist and
+ *  the tattoo artist). Every other kind's are derived from its sections and family blocks. */
 const HAND_WRITTEN_CHAPTERS: Partial<
   Record<SubprofileKind, SkinChapterDescriptor[]>
 > = {
   therapist: THERAPIST_CHAPTERS,
+  tattoo_artist: TATTOO_CHAPTERS,
 };
 
 /** Derived chapters are pure data; build each kind's once. */

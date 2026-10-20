@@ -21,15 +21,34 @@ export function toDisplayAmount(stored: string): string {
   return stored.replace(NON_AMOUNT_CHARACTERS, "");
 }
 
-/** The next amount after an edit, or null to refuse it. Stray characters
+/** The next amount after an edit, or null to refuse it. With
+ *  `maxIntegerDigits`, an amount whose whole part grows past the cap is
+ *  refused too. Stray characters
  *  ("65€") are dropped; a second separator or a third decimal is refused
  *  whole, so digits on either side of a separator never merge. A deletion
  *  is always accepted, so a legacy value that breaks the pattern can still
  *  be cleared. */
-export function nextAmount(typed: string, previous: string): string | null {
+export function nextAmount(
+  typed: string,
+  previous: string,
+  maxIntegerDigits?: number,
+): string | null {
   const cleaned = typed.replace(NON_AMOUNT_CHARACTERS, "");
-  if (AMOUNT_PATTERN.test(cleaned)) return cleaned;
-  return cleaned.length < previous.length ? cleaned : null;
+  const isDeletion = cleaned.length < previous.length;
+  if (!AMOUNT_PATTERN.test(cleaned)) return isDeletion ? cleaned : null;
+  if (
+    maxIntegerDigits !== undefined &&
+    !isDeletion &&
+    integerDigitCount(cleaned) > maxIntegerDigits
+  ) {
+    return null;
+  }
+  return cleaned;
+}
+
+/** How many digits sit before the decimal separator. */
+function integerDigitCount(amount: string): number {
+  return amount.split(/[.,]/)[0]!.length;
 }
 
 /** The stored string at a control's path ("" while empty). A number from

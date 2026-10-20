@@ -1,4 +1,10 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import {
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
 import { toPlaylistView } from "./api/studio.adapters";
@@ -178,11 +184,124 @@ describe("StudioPlaylistDialog", () => {
   });
 });
 
-function renderEdit(playlistId: string, onSaved = vi.fn()) {
+describe("StudioPlaylistDialog, collaborative playlists", () => {
+  it("lets an editor change the name and description only", async () => {
+    const onSaved = renderEdit("demo-playlist-tour-diary");
+    expect(
+      screen.queryByRole("group", { name: "Show as" }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("group", { name: "Who can open it" }),
+    ).not.toBeInTheDocument();
+    fireEvent.change(screen.getByRole("textbox", { name: /name/i }), {
+      target: { value: "Tour diary 2026" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Save details" }));
+    await waitFor(() => expect(onSaved).toHaveBeenCalled());
+    expect(updateSpy.mock.calls[0]?.[1]).toEqual({ name: "Tour diary 2026" });
+  });
+
+  it("sends only the description when another editor renames the playlist while the dialog is open", async () => {
+    const onSaved = vi.fn();
+    const opened = toPlaylistView(
+      demoStudioPlaylist("demo-playlist-tour-diary"),
+    );
+    const { rerender } = render(
+      <TestProviders>
+        <StudioPlaylistDialog
+          mode="edit"
+          playlist={opened}
+          onClose={vi.fn()}
+          onSaved={onSaved}
+        />
+      </TestProviders>,
+    );
+    rerender(
+      <TestProviders>
+        <StudioPlaylistDialog
+          mode="edit"
+          playlist={{ ...opened, name: "Renamed by another editor" }}
+          onClose={vi.fn()}
+          onSaved={onSaved}
+        />
+      </TestProviders>,
+    );
+    fireEvent.change(screen.getByRole("textbox", { name: /description/i }), {
+      target: { value: "Songs from the road" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Save details" }));
+    await waitFor(() => expect(onSaved).toHaveBeenCalled());
+    expect(updateSpy.mock.calls[0]?.[1]).toEqual({
+      description: "Songs from the road",
+    });
+  });
+
+  it("asks before a credit change removes editors, then sends the same edit with the flag", async () => {
+    const onSaved = renderEdit("demo-playlist-cartas-que-voltam");
+    fireEvent.click(screen.getByRole("radio", { name: "You" }));
+    fireEvent.click(screen.getByRole("button", { name: "Save details" }));
+    const confirm = await screen.findByRole("dialog", {
+      name: "Change who it shows as?",
+    });
+    expect(
+      within(confirm).getByText(
+        "Rita Varela will stop editing this playlist. The tracks they added stay",
+      ),
+    ).toBeInTheDocument();
+    expect(onSaved).not.toHaveBeenCalled();
+    fireEvent.click(
+      within(confirm).getByRole("button", {
+        name: "Change and remove editors",
+      }),
+    );
+    await waitFor(() => expect(onSaved).toHaveBeenCalled());
+    expect(updateSpy.mock.calls.map((call): unknown => call[1])).toEqual([
+      { creditSubprofileId: null },
+      { creditSubprofileId: null, confirmEditorRemoval: true },
+    ]);
+  });
+
+  it("keeps the playlist as it was when the owner cancels", async () => {
+    const onSaved = renderEdit("demo-playlist-cartas-que-voltam");
+    fireEvent.click(screen.getByRole("radio", { name: "You" }));
+    fireEvent.click(screen.getByRole("button", { name: "Save details" }));
+    const confirm = await screen.findByRole("dialog", {
+      name: "Change who it shows as?",
+    });
+    fireEvent.click(within(confirm).getByRole("button", { name: "Cancel" }));
+    await waitFor(() =>
+      expect(
+        screen.queryByRole("dialog", { name: "Change who it shows as?" }),
+      ).not.toBeInTheDocument(),
+    );
+    expect(updateSpy).toHaveBeenCalledTimes(1);
+    expect(onSaved).not.toHaveBeenCalled();
+    expect(
+      demoStudioPlaylist("demo-playlist-cartas-que-voltam").credit.persona
+        ?.name,
+    ).toBe("Mariana Sol");
+  });
+
+  it("tells the owner a persona playlist for connections stays off its page when changing who can open it", async () => {
+    renderEdit("demo-playlist-cartas-que-voltam", vi.fn(), "visibility");
+    fireEvent.click(screen.getByRole("radio", { name: /connections only/i }));
+    expect(
+      await screen.findByText(
+        "Your connections can open it by link. It stays off Mariana Sol's page, so nobody learns who runs Mariana Sol",
+      ),
+    ).toBeInTheDocument();
+  });
+});
+
+function renderEdit(
+  playlistId: string,
+  onSaved = vi.fn(),
+  mode: "edit" | "visibility" = "edit",
+) {
   render(
     <TestProviders>
       <StudioPlaylistDialog
-        mode="edit"
+        mode={mode}
         playlist={toPlaylistView(demoStudioPlaylist(playlistId))}
         onClose={vi.fn()}
         onSaved={onSaved}

@@ -72,6 +72,12 @@ vi.mock("../../../shared/ambassadors/MemberAmbassadorTag", () => ({
   MemberAmbassadorTag: () => null,
 }));
 
+// A Studio URL in the preview renders the lazy Studio card, which needs the
+// Studio providers this suite doesn't mount.
+vi.mock("../../studio/share/LazyStudioShareCard", () => ({
+  LazyStudioShareCard: () => null,
+}));
+
 const FAKE_CATALOG: Record<string, string> = {
   "messages:share.modalTitle": "Send in a message",
   "messages:share.searchPlaceholder": "Search conversations",
@@ -250,5 +256,62 @@ describe("ShareToChatModal", () => {
     expect(
       await screen.findByText("Sent to 1 of 2. Didn't reach Kai Rivers."),
     ).toBeInTheDocument();
+  });
+
+  it("says in one line when the account behind a persona will show", () => {
+    mockConversations.value = [
+      makeConversation({ id: "conv-1", name: "Ana Beach" }),
+    ];
+    renderModal(
+      <ShareToChatModal
+        url="/studio/album?id=r1"
+        title="Salt water"
+        kind="studio"
+        identityNote="Sending this from your account shows them you run NIGHTFORM"
+        onClose={vi.fn()}
+      />,
+    );
+    expect(
+      screen.getByText(
+        "Sending this from your account shows them you run NIGHTFORM",
+      ),
+    ).toBeInTheDocument();
+  });
+
+  it("announces the identity note as the Send button's description", () => {
+    mockConversations.value = [
+      makeConversation({ id: "conv-1", name: "Ana Beach" }),
+    ];
+    renderModal(
+      <ShareToChatModal
+        url="/studio/album?id=r1"
+        title="Salt water"
+        kind="studio"
+        identityNote="Sending this from your account shows them you run NIGHTFORM"
+        onClose={vi.fn()}
+      />,
+    );
+    expect(
+      screen.getByRole("button", { name: "Send" }),
+    ).toHaveAccessibleDescription(
+      "Sending this from your account shows them you run NIGHTFORM",
+    );
+  });
+
+  it("leaves the Send button undescribed without an identity note", () => {
+    mockConversations.value = [
+      makeConversation({ id: "conv-1", name: "Ana Beach" }),
+    ];
+    renderModal(
+      <ShareToChatModal
+        url="/gatherings/pride-picnic"
+        title="Pride Picnic"
+        kind="gathering"
+        onClose={vi.fn()}
+      />,
+    );
+    expect(screen.getByRole("button", { name: "Send" })).not.toHaveAttribute(
+      "aria-describedby",
+    );
   });
 });

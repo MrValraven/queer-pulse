@@ -1,29 +1,47 @@
 import { useEffect, useState } from "react";
 import { FiCamera, FiTrash2 } from "react-icons/fi";
-import { ConfirmDialog, ImageSlot } from "../../shared/components/ui";
+import {
+  ConfirmDialog,
+  ImageSlot,
+  isPosterShaped,
+  PosterAwareImageSlot,
+} from "../../shared/components/ui";
 import type { CropRect } from "../../shared/components/ui/cropGeometry";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { type UploadKind } from "../members/api/useUploadImage";
 import { PhotoPickerModal } from "../members/PhotoPickerModal";
 import styles from "./SubprofileEditor.module.css";
 
+/** The tallest a poster-aware slot grows for a poster-shaped file. */
+const POSTER_SLOT_MAX_HEIGHT = 320;
+
+/**
+ * A poster's slot height: the poster at the slot's full width (`cqi` of the
+ * field, which is an inline-size container in poster mode), capped at
+ * `POSTER_SLOT_MAX_HEIGHT` and never shorter than the slot's base `size`.
+ */
+function posterSlotHeight(posterAspect: number, baseHeight: number): string {
+  const heightAtFullWidth = (100 / posterAspect).toFixed(3);
+  return `max(${baseHeight}px, min(${POSTER_SLOT_MAX_HEIGHT}px, ${heightAtFullWidth}cqi))`;
+}
+
 interface ImageUploadFieldProps {
   value: string;
   /** Saved reframe crop for `value` (the currently-committed image), shown
    *  until a fresh pick this session supersedes it. Pass this ONLY when the
    *  rendered slot's box is locked to the crop's own pixel aspect (e.g. a
-   *  `circle` avatar slot where `width === height`) — never for a freeform
+   *  `circle` avatar slot where `width === height`). Never pass it for a freeform
    *  (work-image) slot, whose box aspect doesn't match an arbitrary crop. */
   crop?: CropRect;
   /** Saved crop for `value` rendered as a FOCAL POINT rather than an exact
-   *  frame — for a non-circle slot (the cover), whose box aspect never matches
+   *  frame, for a non-circle slot (the cover), whose box aspect never matches
    *  the crop's. Superseded by a fresh pick's own crop while one is showing. */
   focus?: CropRect;
   onChange: (key: string) => void;
   /**
    * Optional: report the local, immediately-renderable preview URL to the
    * parent (or `null` on clear). `onChange` only surfaces the storage `key`,
-   * which is NOT fetchable — so a live preview elsewhere (e.g. the persona
+   * which is NOT fetchable, so a live preview elsewhere (e.g. the persona
    * editor's docked card) has nothing to show for a freshly picked image until
    * it's saved and the backend resolves a display URL. Wire this to render the
    * pick instantly there too. For a device upload the URL is a `blob:` URL; for
@@ -34,10 +52,10 @@ interface ImageUploadFieldProps {
    * Optional: report a key that was FRESHLY UPLOADED from the device through
    * this field (never one reused from the member's photo library). Wire this
    * where the editor should be able to undo the upload if the member backs out
-   * without saving — see `useDiscardableUploads`.
+   * without saving; see `useDiscardableUploads`.
    */
   onUploaded?: (key: string) => void;
-  /** Which upload surface — sets size/dimension limits (avatar vs work image). */
+  /** Which upload surface; sets size/dimension limits (avatar vs work image). */
   kind: UploadKind;
   circle?: boolean;
   size?: number;
@@ -48,21 +66,27 @@ interface ImageUploadFieldProps {
   /** Opens the reframer on the Square ratio chip, and renders the slot as a
    *  square of `size` (a Studio release cover). Off by default. */
   isSquare?: boolean;
+  /** Shows a portrait or square file whole over a blurred backdrop instead of
+   *  cropping it to the slot (an event cover, which may be a poster). Once
+   *  such a file loads, the slot grows from `size` to up to 320px tall so the
+   *  poster reads, and eases back to `size` for a landscape file, a cleared
+   *  slot or a reverted pick. Ignored for a `circle` slot. Off by default. */
+  isPosterAware?: boolean;
 }
 
 /**
  * Image picker used across the editor: an image slot plus add / change / remove.
- * The actual sourcing — upload-from-device OR reuse a past upload (with delete) —
+ * The actual sourcing (upload-from-device OR reuse a past upload, with delete)
  * happens in the shared `PhotoPickerModal`; this component only opens it and
  * applies the result. It shows the picked preview for an instant render and
- * calls `onChange` with the storage `key` — the value that actually gets
+ * calls `onChange` with the storage `key`, the value that actually gets
  * persisted.
  *
  * The preview is tied to the `value` prop rather than kept as free-floating
  * local state: a pick is only shown while the parent still holds the `key` it
  * was picked for. The moment the parent reverts `value` (a Discard / baseline
  * revert, which the parent drives without re-notifying this field), the pick
- * no longer matches and the field snaps back to the reverted value — and the
+ * no longer matches and the field snaps back to the reverted value, and the
  * stale `blob:` URL is revoked. Without this, a discarded pick would linger on
  * screen forever.
  */
@@ -79,6 +103,7 @@ export function ImageUploadField({
   placeholder,
   isRemovable = true,
   isSquare = false,
+  isPosterAware = false,
 }: ImageUploadFieldProps) {
   const { t } = useTranslation();
   const [pickerOpen, setPickerOpen] = useState(false);
@@ -92,11 +117,18 @@ export function ImageUploadField({
   } | null>(null);
   const resolvedPlaceholder =
     placeholder ?? t("subprofiles:imageUpload.defaultPlaceholder");
+  // The last poster-shaped file the poster-aware slot measured, and its
+  // width over height. It only applies while that file is the one shown, so
+  // a landscape pick, a clear or a revert drops the slot back to `size`.
+  const [measuredPoster, setMeasuredPoster] = useState<{
+    src: string;
+    aspect: number;
+  } | null>(null);
 
   // A pick only shows while the parent still holds the key it was picked for;
   // once the parent reverts `value` (Discard / baseline revert) it's stale and
   // hidden. Its blob URL is revoked when the pick is replaced or on unmount (the
-  // cleanup below) — never left showing, never leaked.
+  // cleanup below), so it is never left showing and never leaked.
   const previewUrl = pick && pick.key === value ? pick.url : null;
   // The crop to render: a fresh pick's own crop while it's showing, else the
   // saved crop the parent passed in for the currently-committed `value`.
@@ -114,7 +146,7 @@ export function ImageUploadField({
   }, [pick]);
 
   function handlePick(key: string, newPreviewUrl: string, newCrop?: CropRect) {
-    // Single-slot field — replacing `pick` revokes the previous blob via the
+    // Single-slot field: replacing `pick` revokes the previous blob via the
     // effect cleanup above.
     setPick({ key, url: newPreviewUrl, crop: newCrop });
     onChange(key);
@@ -125,7 +157,7 @@ export function ImageUploadField({
   }
 
   function clear() {
-    // Clearing changes `value` to "", which makes the current pick stale — the
+    // Clearing changes `value` to "", which makes the current pick stale; the
     // derived `previewUrl` stops showing it; its blob is revoked on the next
     // pick or on unmount.
     onChange("");
@@ -133,30 +165,57 @@ export function ImageUploadField({
   }
 
   const displayedValue = previewUrl ?? value;
+  const isPosterSlot = isPosterAware && !circle;
+  const posterAspect =
+    isPosterSlot && displayedValue && measuredPoster?.src === displayedValue
+      ? measuredPoster.aspect
+      : null;
+  const slotProps = {
+    tint: "plum",
+    shape: circle ? "circle" : "rounded",
+    src: displayedValue || undefined,
+    width: circle || isSquare ? size : "100%",
+    height: posterAspect === null ? size : posterSlotHeight(posterAspect, size),
+    radius: 14,
+    placeholder: resolvedPlaceholder,
+    // `circle` is the only mode where width===height, matching a locked
+    // 1:1 avatar crop's own pixel aspect. The non-circle mode (cover /
+    // work-image) box isn't guaranteed to match its crop's aspect, so it
+    // always renders uncropped regardless of what the caller passed in.
+    crop: circle ? displayedCrop : undefined,
+    // The non-circle (cover) slot renders the crop as a focal point: its
+    // box is a fixed-height strip that never matches the crop's aspect, so
+    // an exact `crop` here would distort it.
+    focus: circle ? undefined : displayedFocus,
+  } as const;
 
   return (
     <div
-      className={`${styles.imgField} ${circle ? styles.avatarField : ""}`}
+      className={[
+        styles.imgField,
+        circle && styles.avatarField,
+        isPosterSlot && styles.posterField,
+      ]
+        .filter(Boolean)
+        .join(" ")}
       aria-busy={pickerOpen || undefined}
     >
-      <ImageSlot
-        tint="plum"
-        shape={circle ? "circle" : "rounded"}
-        src={displayedValue || undefined}
-        width={circle || isSquare ? size : "100%"}
-        height={size}
-        radius={14}
-        placeholder={resolvedPlaceholder}
-        // `circle` is the only mode where width===height, matching a locked
-        // 1:1 avatar crop's own pixel aspect — the non-circle mode (cover /
-        // work-image) box isn't guaranteed to match its crop's aspect, so it
-        // always renders uncropped regardless of what the caller passed in.
-        crop={circle ? displayedCrop : undefined}
-        // The non-circle (cover) slot renders the crop as a focal point — its
-        // box is a fixed-height strip that never matches the crop's aspect, so
-        // an exact `crop` here would distort it.
-        focus={circle ? undefined : displayedFocus}
-      />
+      {isPosterSlot ? (
+        <PosterAwareImageSlot
+          {...slotProps}
+          className={styles.posterSlot}
+          onNaturalSize={({ width, height }) => {
+            if (displayedValue && isPosterShaped(width, height)) {
+              setMeasuredPoster({
+                src: displayedValue,
+                aspect: width / height,
+              });
+            }
+          }}
+        />
+      ) : (
+        <ImageSlot {...slotProps} />
+      )}
       <div className={styles.imgActions}>
         <button
           type="button"

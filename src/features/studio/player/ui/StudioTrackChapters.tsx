@@ -3,6 +3,7 @@ import type {
   StudioChapterView,
   StudioTrackView,
 } from "../../api/studio.adapters";
+import { useStudioHideExplicit } from "../../api/useStudioPlaybackPreferences";
 import { markExplicitStart } from "../studioEpisodePlay";
 import { useStudioPlayer, useStudioPlayerClock } from "../studioPlayerContext";
 import { StudioChapterList } from "./StudioChapterList";
@@ -15,7 +16,10 @@ export function StudioTrackChapters({
   heading,
   isHeadingHidden = false,
 }: {
-  track: Pick<StudioTrackView, "id" | "title" | "releaseId" | "chapters">;
+  track: Pick<
+    StudioTrackView,
+    "id" | "title" | "releaseId" | "chapters" | "isExplicit" | "hasAudio"
+  >;
   heading?: string;
   /** Keeps the heading for screen readers when a tab already names the section. */
   isHeadingHidden?: boolean;
@@ -23,6 +27,9 @@ export function StudioTrackChapters({
   const { t } = useTranslation();
   const player = useStudioPlayer();
   const { currentChapterIndex } = useStudioPlayerClock();
+  const hideExplicit = useStudioHideExplicit();
+  // Spec 7: a hidden explicit track, or one without audio, starts nowhere.
+  const isPlayBlocked = !track.hasAudio || (hideExplicit && track.isExplicit);
   if (!track.chapters || track.chapters.length === 0) return null;
   const isCurrent = player.isCurrentTrack(track.id);
   // A chapter names where to start (0:00 included): on the loaded track it
@@ -31,7 +38,7 @@ export function StudioTrackChapters({
     if (isCurrent) {
       markExplicitStart(player.currentItem?.queueEntryId ?? null);
       player.seek(chapter.startSeconds);
-    } else
+    } else if (!isPlayBlocked)
       void player.playRelease(track.releaseId, track.id, chapter.startSeconds);
   };
   return (

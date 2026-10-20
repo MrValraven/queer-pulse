@@ -324,6 +324,13 @@ const PERSONALIZED_KINDS = new Set<NotificationKind>([
   // generic `.text` ("You were credited as co-author on …"). The named copy
   // keeps `{threadTitle}`, which rides in on `actor.textValues`.
   "forum_co_author_credit",
+  // Studio collaborative playlists. Each carries the counterpart member as
+  // its actor; the named copy keeps `{playlistName}` (and `{personaName}` on
+  // a pick), which ride in on `actor.textValues`.
+  "studio_playlist_editor_invite",
+  "studio_playlist_editor_invite_accepted",
+  "studio_playlist_editor_invite_declined",
+  "studio_playlist_editor_added",
 ]);
 
 /**
@@ -653,6 +660,28 @@ export function notificationDtoToView(
         href: routes.studioCredits,
       },
     ];
+  }
+
+  // Meet the team: one action on an invite or a request, straight to the
+  // pane that answers it. A row without a destination keeps no action.
+  if (
+    dto.type === "listing_team_invite" ||
+    dto.type === "listing_team_request"
+  ) {
+    const teamHref = lifecycleSourceHref(dto.type, dto.payload)?.href;
+    if (teamHref) {
+      view.actions = [
+        {
+          label: t(
+            dto.type === "listing_team_invite"
+              ? "notifications:actions.reviewTeamInvite"
+              : "notifications:actions.reviewTeamRequest",
+          ),
+          variant: "primary",
+          href: teamHref,
+        },
+      ];
+    }
   }
 
   return view;

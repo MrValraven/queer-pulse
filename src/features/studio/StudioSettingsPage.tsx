@@ -1,5 +1,6 @@
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { StudioSettingsClaimsLink } from "./StudioSettingsClaimsLink";
 import { StudioPlaybackSettings } from "./StudioSettingsPlayback";
 import {
   AudioSection,
@@ -33,6 +34,7 @@ export function StudioSettingsPage() {
 
       <div className={s.wrap}>
         <StudioPlaybackSettings />
+        <StudioSettingsClaimsLink />
         {isShowcase && (
           <>
             <AudioSection />

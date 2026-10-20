@@ -5,6 +5,7 @@ import { FadeIn, SuccessPanel } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
+import { volunteerOpportunityPath } from "./volunteerPaths";
 import { usePostOpportunityForm } from "./usePostOpportunityForm";
 import { useCreateOpportunity } from "./api/useOpportunityMutations";
 import { PostVolunteerOpportunityForm } from "./PostVolunteerOpportunityForm";
@@ -28,7 +29,7 @@ export function CreateOpportunityFlow() {
     create.mutate(form.toDto(), {
       onSuccess: (res) => {
         if (res.slug) {
-          void navigate(`${routes.volunteer}/opportunity/${res.slug}`);
+          void navigate(volunteerOpportunityPath(res.slug));
         } else {
           window.scrollTo({ top: 0, behavior: "smooth" });
         }

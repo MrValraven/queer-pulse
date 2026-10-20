@@ -26,6 +26,11 @@ export const REASON_CATEGORY_KEY: Partial<Record<ReasonCode, string>> = {
   venue_staff: "admin:moderation.category.venue",
   venue_accessibility: "admin:moderation.category.venue",
   copyright: "admin:moderation.category.copyright",
+  // Studio safety: hateful lyrics triage as hate speech (the backend maps
+  // them to `hate_speech` for severity); an unmarked explicit track is
+  // "Other".
+  hateful_lyrics: "admin:moderation.category.hateSpeech",
+  untagged_explicit: "admin:moderation.category.other",
   other: "admin:moderation.category.other",
 };
 

@@ -5,6 +5,7 @@ import {
   waitFor,
   within,
 } from "@testing-library/react";
+import { Route, Routes } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
 import { createStudioPlayerTestValue } from "../../test/studioPlayerTestValue";
@@ -205,5 +206,110 @@ describe("playlist page (demo)", () => {
     expect(
       within(list).queryByRole("button", { name: "Play A Beja" }),
     ).not.toBeInTheDocument();
+  });
+});
+
+describe("collaborative playlists (demo)", () => {
+  function renderRoutedPage(playlistId: string) {
+    render(
+      <TestProviders initialEntries={[`/studio/collection?id=${playlistId}`]}>
+        <Routes>
+          <Route path="/studio/collection" element={<StudioCollectionPage />} />
+          <Route path="/studio/library" element={<p>Library page</p>} />
+        </Routes>
+      </TestProviders>,
+    );
+  }
+
+  it("shows an invitee the banner, and Accept makes them an editor", async () => {
+    renderRoutedPage("demo-playlist-pride-warm-up");
+    expect(
+      await screen.findByRole("heading", {
+        name: "Catarina Vaz invited you to edit this playlist",
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: "Playlist actions" }),
+    ).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Accept" }));
+    expect(
+      await screen.findByText("You can now edit Pride warm-up"),
+    ).toBeInTheDocument();
+    await waitFor(() =>
+      expect(
+        screen.queryByRole("heading", {
+          name: "Catarina Vaz invited you to edit this playlist",
+        }),
+      ).not.toBeInTheDocument(),
+    );
+    expect(
+      screen.getByRole("button", { name: "Playlist actions" }),
+    ).toBeInTheDocument();
+  });
+
+  it("moves focus to Playlist actions after Accept", async () => {
+    renderRoutedPage("demo-playlist-pride-warm-up");
+    const accept = await screen.findByRole("button", { name: "Accept" });
+    accept.focus();
+    fireEvent.click(accept);
+    await waitFor(() =>
+      expect(
+        screen.getByRole("button", { name: "Playlist actions" }),
+      ).toHaveFocus(),
+    );
+    await waitFor(() =>
+      expect(
+        screen.queryByRole("button", { name: "Save Pride warm-up" }),
+      ).not.toBeInTheDocument(),
+    );
+  });
+
+  it("leaves for the library after Decline", async () => {
+    renderRoutedPage("demo-playlist-pride-warm-up");
+    fireEvent.click(await screen.findByRole("button", { name: "Decline" }));
+    expect(await screen.findByText("Library page")).toBeInTheDocument();
+    expect(await screen.findByText("Invite declined")).toBeInTheDocument();
+  });
+
+  it("lets an editor leave through the menu", async () => {
+    renderRoutedPage("demo-playlist-tour-diary");
+    fireEvent.click(
+      await screen.findByRole("button", { name: "Playlist actions" }),
+    );
+    fireEvent.click(
+      await screen.findByRole("menuitem", { name: "Leave playlist" }),
+    );
+    const confirm = await screen.findByRole("dialog", {
+      name: "Leave Tour diary?",
+    });
+    fireEvent.click(
+      within(confirm).getByRole("button", { name: "Leave playlist" }),
+    );
+    expect(await screen.findByText("Library page")).toBeInTheDocument();
+    expect(await screen.findByText("You left Tour diary")).toBeInTheDocument();
+  });
+
+  it("opens the editors from Manage editors for the owner", async () => {
+    renderRoutedPage("demo-playlist-for-the-group-chat");
+    fireEvent.click(
+      await screen.findByRole("button", { name: "Playlist actions" }),
+    );
+    fireEvent.click(
+      await screen.findByRole("menuitem", { name: "Manage editors" }),
+    );
+    const sheet = await screen.findByRole("dialog", { name: "Editors" });
+    expect(within(sheet).getByText("Luísa Gomes")).toBeInTheDocument();
+    expect(within(sheet).getByText("Invite sent")).toBeInTheDocument();
+  });
+
+  it("opens the editors from the chip for an editor", async () => {
+    renderRoutedPage("demo-playlist-tour-diary");
+    fireEvent.click(
+      await screen.findByRole("button", {
+        name: "Collaborative playlist with 1 editor. See who edits it",
+      }),
+    );
+    const sheet = await screen.findByRole("dialog", { name: "Editors" });
+    expect(within(sheet).getByText("Tiago Costa")).toBeInTheDocument();
   });
 });

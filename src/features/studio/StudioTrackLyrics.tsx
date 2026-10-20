@@ -13,6 +13,7 @@ import {
   useStudioPlayerClock,
 } from "./player/studioPlayerContext";
 import { StudioSyncedLyrics } from "./player/ui/StudioSyncedLyrics";
+import { StudioWarnedContent } from "./StudioWarnedContent";
 import { useStudioShowcase } from "./useStudioShowcase";
 import trackStyles from "./track.module.css";
 
@@ -59,30 +60,37 @@ export function StudioTrackLyrics({ track }: { track: StudioTrackView }) {
           )}
         </h3>
       </div>
-      {syncedLines && syncedLines.length > 0 ? (
-        <CurrentSyncedLyrics lines={syncedLines} />
-      ) : track.lyricStanzas.length > 0 ? (
-        <div className={trackStyles.lyric} lang="und">
-          {track.lyricStanzas.map((lines, stanzaIndex) => (
-            <p key={stanzaIndex} className={trackStyles.stanza}>
-              {lines.map((line, lineIndex) => (
-                <Fragment key={lineIndex}>
-                  {line}
-                  {lineIndex < lines.length - 1 && <br />}
-                </Fragment>
-              ))}
-            </p>
-          ))}
-        </div>
-      ) : (
-        <p className={trackStyles.noLyrics}>
-          {t(
-            isTranscript
-              ? "studio:trackPage.noTranscript"
-              : "studio:trackPage.noLyrics",
-          )}
-        </p>
-      )}
+      {/* Keyed by the track, so another track's page starts covered. */}
+      <StudioWarnedContent
+        key={track.id}
+        trackId={track.id}
+        warnings={track.contentWarnings}
+      >
+        {syncedLines && syncedLines.length > 0 ? (
+          <CurrentSyncedLyrics lines={syncedLines} />
+        ) : track.lyricStanzas.length > 0 ? (
+          <div className={trackStyles.lyric} lang="und">
+            {track.lyricStanzas.map((lines, stanzaIndex) => (
+              <p key={stanzaIndex} className={trackStyles.stanza}>
+                {lines.map((line, lineIndex) => (
+                  <Fragment key={lineIndex}>
+                    {line}
+                    {lineIndex < lines.length - 1 && <br />}
+                  </Fragment>
+                ))}
+              </p>
+            ))}
+          </div>
+        ) : (
+          <p className={trackStyles.noLyrics}>
+            {t(
+              isTranscript
+                ? "studio:trackPage.noTranscript"
+                : "studio:trackPage.noLyrics",
+            )}
+          </p>
+        )}
+      </StudioWarnedContent>
       {isLeadSheetShown && (
         <div className={trackStyles.lyrFoot}>
           <Link to={routes.studioSheetStore}>

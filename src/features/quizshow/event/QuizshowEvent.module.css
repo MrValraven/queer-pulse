@@ -1,0 +1,159 @@
+.section {
+  margin-block: var(--gap-sm);
+}
+
+.banner,
+.results {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+  padding: var(--gap-sm) var(--gap-grid);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow: var(--shadow-e1);
+}
+
+.banner {
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  border-color: rgba(var(--accent-rgb), 0.35);
+  background: rgba(var(--accent-rgb), 0.1);
+}
+
+.bannerIcon {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-pill);
+  background: var(--accent-fill);
+  color: rgba(var(--cream-rgb), 1);
+  font-size: var(--text-20);
+}
+
+.bannerText {
+  flex: 1 1 14rem;
+  min-width: 0;
+}
+
+.bannerTitle,
+.resultsTitle,
+.recapTitle {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-subhead);
+  color: var(--ink);
+}
+
+.bannerBody,
+.recapSub,
+.counts,
+.recapTotals {
+  margin: 0;
+  font-size: var(--text-caption);
+  color: var(--ink-60);
+}
+
+.podium,
+.recapList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.podiumRow {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-xs);
+  padding: var(--gap-xs) var(--gap-sm);
+  border-radius: var(--radius-12);
+  background: rgba(var(--ink-rgb), 0.05);
+}
+
+.podiumRow[data-mine] {
+  background: rgba(var(--accent-rgb), 0.14);
+}
+
+.podiumPlace {
+  min-width: 2.5rem;
+  font-size: var(--text-label);
+  color: var(--ink-60);
+}
+
+.podiumName {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font-size: var(--text-body);
+}
+
+.podiumScore,
+.ownScore {
+  font-size: var(--text-caption);
+  color: var(--ink-60);
+}
+
+.ownPlacing {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gap-xs);
+  margin: 0;
+  font-size: var(--text-body);
+}
+
+.resultsActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap-xs);
+}
+
+.recap {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+  padding-block-start: var(--gap-sm);
+  border-block-start: 1px solid var(--line);
+}
+
+.recapRow {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+  padding-block: var(--gap-xs);
+  border-block-end: 1px solid var(--line);
+}
+
+.recapPrompt {
+  font-size: var(--text-body-sm);
+  overflow-wrap: anywhere;
+}
+
+.recapBar {
+  display: block;
+  height: 8px;
+  overflow: hidden;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--ink-rgb), 0.08);
+}
+
+.recapBarFill {
+  display: block;
+  height: 100%;
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+}
+
+.recapFigures,
+.recapTag {
+  font-size: var(--text-caption);
+  color: var(--ink-60);
+}

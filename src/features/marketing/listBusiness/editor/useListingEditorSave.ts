@@ -11,9 +11,9 @@ import pageStyles from "../ListBusinessPage.module.css";
 /**
  * The owner editor's two ways to send an edit: the save bar's Save (`save`)
  * and the leave dialog's "Save and leave" (`saveAndLeave`). Both check the
- * same required fields, clear the local autosave, PATCH through `saveEdit`,
- * and route a failure the same way (a 400/422 names a field, anything else
- * toasts).
+ * same required fields, PATCH through `saveEdit`, clear the draft only once
+ * that PATCH succeeded, and route a failure the same way (a 400/422 names a
+ * field, anything else toasts).
  *
  * They differ only in what the page does meanwhile. `save` swaps to the
  * sending panel and `saveEdit` navigates on success. `saveAndLeave` keeps the
@@ -66,10 +66,11 @@ export function useListingEditorSave({
     setServerError(null);
     setIsSaving(true);
     try {
-      // Clear the local copy the moment the edit is genuinely on the server:
-      // holding it any longer would offer to "restore" what is now published.
-      clearAutosave();
       await editSave.saveEdit(draft);
+      // Clear the draft once the edit is genuinely on the server: holding it
+      // any longer would offer to "restore" what is now published. A failed
+      // PATCH skips this, so the server draft stays and autosave goes on.
+      clearAutosave();
     } catch (error) {
       if (!isMountedRef.current) return;
       setIsSaving(false);
@@ -83,8 +84,8 @@ export function useListingEditorSave({
     if (missing.length > 0) return false;
     setServerError(null);
     try {
-      clearAutosave();
       await editSave.saveEdit(draft, { shouldNavigate: false });
+      clearAutosave();
       return true;
     } catch (error) {
       if (isMountedRef.current) showSaveFailure(error);

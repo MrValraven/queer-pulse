@@ -11,6 +11,7 @@ function StudioShortcutsSheet({ onClose }: { onClose: () => void }) {
       title={t("studio:shortcuts.title")}
       sub={t("studio:shortcuts.dek")}
       onClose={onClose}
+      isStudioPlayerSurface
       footer={
         <Button onClick={onClose}>{t("studio:shortcuts.closeCta")}</Button>
       }

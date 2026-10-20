@@ -1,4 +1,5 @@
 import { isStudioNotFound, isStudioWithdrawn } from "./studio.api";
+import { isStudioTrackWithheld } from "./studioSafety.api";
 
 /** The subset of a React Query result the Studio pages branch on. */
 export interface StudioQueryLike {
@@ -21,6 +22,10 @@ export interface StudioLoadState {
   /** The server answered 410 `studio_release_withdrawn`: our team took the
    *  release down. The page shows the withdrawn view at the same URL. */
   isWithdrawn: boolean;
+  /** Studio safety: the server answered 410 `studio_track_withheld`. The
+   *  track page shows its withheld view, which names nothing. Optional so
+   *  states built by hand in older tests stay valid. */
+  isTrackWithheld?: boolean;
   retry: () => void;
 }
 
@@ -38,14 +43,19 @@ export function studioLoadStateOf(
   const hasFailed = query.errorUpdateCount > 0;
   const hasNothing = !hasData && hasFailed;
   const isWithdrawn = hasNothing && isStudioWithdrawn(query.error);
+  const isTrackWithheld = hasNothing && isStudioTrackWithheld(query.error);
   const isNotFound =
-    hasNothing && !isWithdrawn && isStudioNotFound(query.error);
+    hasNothing &&
+    !isWithdrawn &&
+    !isTrackWithheld &&
+    isStudioNotFound(query.error);
   return {
     isLoading: !hasData && !hasFailed,
-    isError: hasNothing && !isNotFound && !isWithdrawn,
+    isError: hasNothing && !isNotFound && !isWithdrawn && !isTrackWithheld,
     isRetrying: hasNothing && query.isFetching,
     isNotFound,
     isWithdrawn,
+    isTrackWithheld,
     retry: () => {
       void query.refetch();
     },
@@ -59,5 +69,6 @@ export const STUDIO_NOT_FOUND_STATE: StudioLoadState = {
   isRetrying: false,
   isNotFound: true,
   isWithdrawn: false,
+  isTrackWithheld: false,
   retry: () => {},
 };

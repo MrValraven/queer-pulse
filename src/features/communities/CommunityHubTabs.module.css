@@ -411,6 +411,7 @@
   line-height: 1.6;
   color: var(--ink-60);
   margin: 0;
+  max-width: 60ch;
 }
 .hostCtaQuiet {
   display: flex;

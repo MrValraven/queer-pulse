@@ -6,6 +6,7 @@ import { ReportReplyModal } from "../forum/ReportReplyModal";
 import type { Person, Reply, Thread as ThreadData } from "./communityDetails";
 import { AV_CLASS } from "./communityAvatar";
 import { CommunityThreadHead } from "./CommunityThreadHead";
+import { CommunityThreadOpText } from "./CommunityThreadOpText";
 import { CommunityInlineTextEditor } from "./CommunityInlineTextEditor";
 import { CommunityFrozenComposerNotice } from "./CommunityFrozenComposerNotice";
 import { CommunityHistoryModal } from "./CommunityHistoryModal";
@@ -133,9 +134,7 @@ export function CommunityThread({
                 onSave={saveOpEdit}
               />
             ) : (
-              <p className={styles.postText}>
-                <MentionText text={opBody} />
-              </p>
+              <CommunityThreadOpText text={opBody} />
             )}
             {replies.map((threadReply) => (
               <ThreadReplyRow

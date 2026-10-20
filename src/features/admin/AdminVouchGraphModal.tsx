@@ -1,517 +1,130 @@
 import {
-  Fragment,
+  memo,
+  useCallback,
   useEffect,
   useId,
   useRef,
   useState,
   type ReactNode,
 } from "react";
-import { createPortal } from "react-dom";
-import {
-  FiChevronRight,
-  FiLock,
-  FiPlay,
-  FiSearch,
-  FiUser,
-  FiX,
-} from "react-icons/fi";
+import { AnimatePresence, m } from "motion/react";
+import { FiUser } from "react-icons/fi";
+import { useMotionPrefs } from "../../app/providers/motionPrefs";
 import { useScrollLock } from "../../shared/hooks";
 import { LoadErrorState, SkeletonLine } from "../../shared/components/ui";
 import {
   pushModal,
   popModal,
   isTopmostModal,
-  useInertWhileCovered,
 } from "../../shared/components/ui/modalStack";
-import { AdminArrowSeparator } from "./ui/AdminInlineMarkers";
+import { useModalExit } from "../../shared/components/ui/useModalExit";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useFormat } from "../../shared/i18n/format";
-import { VouchGraphCanvas } from "./VouchGraphCanvas";
-import { VouchGraphCiteDialog } from "./VouchGraphCiteDialog";
-import { VouchGraphInspector } from "./VouchGraphInspector";
-import { TrustNetworkMemberFinder } from "./TrustNetworkMemberFinder";
-import { useVouchGraph, type VouchMode } from "./useVouchGraph";
-import { useVouchGraphInspectorActions } from "./useVouchGraphInspectorActions";
+import { GraphModalShell, GraphModalStatus } from "./GraphModalShell";
+import { VouchGraphModalLayout } from "./VouchGraphModalLayout";
 import { useTrustNetwork } from "./api/useTrustNetwork";
 import { TrustGraphProvider } from "./trustGraph/TrustGraphContext";
-import { useTrustGraph } from "./trustGraph/useTrustGraph";
-import { monthDate, type TrustGraph } from "./trustGraph/trustGraphModel";
-import styles from "./AdminVouchGraph.module.css";
+import { useTrustNetworkUrl } from "./useTrustNetworkUrl";
+import type { VouchGraphUrlView } from "./vouchGraph.types";
+import styles from "./vouchGraphInspector.module.css";
+import shellStyles from "./vouchGraphShell.module.css";
 
-/** `admin:vouchGraph.modes.*` catalog keys, resolved with `t()`. */
-const MODE_KEYS: { key: VouchMode; labelKey: string }[] = [
-  { key: "plain", labelKey: "vouchGraph.modes.network" },
-  { key: "clusters", labelKey: "vouchGraph.modes.scenes" },
-  { key: "safety", labelKey: "vouchGraph.modes.safety" },
-];
+const CONTENT_FADE_SECONDS = 0.16;
+const CONTENT_FADE_EASE = [0.22, 0.68, 0.16, 1] as const;
 
-function PathBar({
-  pathA,
-  pathB,
-  onClear,
-}: {
-  pathA: string | null;
-  pathB: string | null;
-  onClear: () => void;
-}) {
-  const { t } = useTranslation();
-  const graph = useTrustGraph();
-  if (!pathA) return null;
-  let content;
-  if (pathA && pathB) {
-    const path = graph.shortestPath(pathA, pathB);
-    content = path ? (
-      <span>
-        <b>{t("admin:vouchGraph.pathbar.stepPath", { count: path.length })}</b>{" "}
-        {path.map((id, step) => (
-          <Fragment key={`${id}-${step}`}>
-            {step > 0 && <AdminArrowSeparator />}
-            {graph.peopleById[id]!.initials}
-          </Fragment>
-        ))}
-      </span>
-    ) : (
-      <span>
-        {t("admin:vouchGraph.pathbar.noPath", {
-          a: graph.peopleById[pathA]!.initials,
-          b: graph.peopleById[pathB]!.initials,
-        })}
-      </span>
-    );
-  } else {
-    content = (
-      <span>
-        {t("admin:vouchGraph.pathbar.fromHint", {
-          name: graph.peopleById[pathA]!.initials,
-        })}
-      </span>
-    );
-  }
-  return (
-    <div className={styles.pathbar}>
-      {content}
-      <button type="button" onClick={onClear}>
-        {t("admin:vouchGraph.pathbar.clear")}
-      </button>
-    </div>
-  );
-}
-
-function Legend({ mode }: { mode: VouchMode }) {
-  const { t } = useTranslation();
-  const graph = useTrustGraph();
-  if (mode === "clusters") {
-    return (
-      <div className={styles.legend}>
-        {graph.scenes.map((s) => (
-          <span key={s.id} className={styles.leg}>
-            <span className={styles.legDot} style={{ background: s.color }} />
-            {s.label}
-          </span>
-        ))}
-      </div>
-    );
-  }
-  if (mode === "safety") {
-    return (
-      <div className={styles.legend}>
-        <span className={styles.leg}>
-          <span
-            className={styles.legDot}
-            style={{ background: "var(--danger)" }}
-          />
-          {t("admin:vouchGraph.legend.safety.ring")}
-        </span>
-        <span className={styles.leg}>
-          <span
-            className={styles.legDot}
-            style={{ background: "var(--amber)" }}
-          />
-          {t("admin:vouchGraph.legend.safety.isolated")}
-        </span>
-        <span className={styles.leg}>
-          <span
-            className={styles.legDot}
-            style={{ background: "var(--accent-ink)" }}
-          />
-          {t("admin:vouchGraph.legend.safety.reported")}
-        </span>
-        <span className={styles.leg}>
-          <span className={styles.legDash} />
-          {t("admin:vouchGraph.legend.safety.withdrawn")}
-        </span>
-      </div>
-    );
-  }
-  return (
-    <div className={styles.legend}>
-      <span className={styles.leg}>
-        <span className={styles.legDot} style={{ background: "var(--jade)" }} />
-        {t("admin:vouchGraph.legend.plain.trusted")}
-      </span>
-      <span className={styles.leg}>
-        <span className={styles.legRing} />
-        {t("admin:vouchGraph.legend.plain.verified")}
-      </span>
-      <span className={styles.leg}>
-        <span className={styles.legBond} />
-        {t("admin:vouchGraph.legend.plain.mutual")}
-      </span>
-      <span className={styles.leg}>
-        <span className={styles.legLineInvite} />
-        {t("admin:vouchGraph.legend.plain.invited")}
-      </span>
-      <span className={styles.leg}>
-        <span className={styles.legLineVouch} />
-        {t("admin:vouchGraph.legend.plain.vouched")}
-      </span>
-      <span className={styles.leg}>
-        <span className={styles.legLineWithdrawn} />
-        {t("admin:vouchGraph.legend.plain.withdrawn")}
-      </span>
-      <span className={styles.leg}>
-        <span className={styles.legHatch} />
-        {t("admin:vouchGraph.legend.plain.anonymous")}
-      </span>
-      <span className={styles.leg}>
-        <FiLock aria-hidden /> {t("admin:vouchGraph.legend.plain.private")}
-      </span>
-    </div>
-  );
-}
-
-/** Thin overlay + close-button chrome shared by the loading/empty states,
- *  before the real graph shell (header/canvas/footer) can be rendered. */
-function GraphModalShell({
-  onClose,
-  children,
-}: {
+interface AdminVouchGraphModalProps {
+  initialView: VouchGraphUrlView;
   onClose: () => void;
-  children: ReactNode;
-}) {
-  const { t } = useTranslation();
-  const closeButtonRef = useRef<HTMLButtonElement>(null);
-  // Claims focus into the dialog on mount, ahead of the `useInertWhileCovered`
-  // call below: this opens from a control inside another dialog/drawer (e.g.
-  // AdminMemberDrawer's "View network"), and that layer goes `inert` the
-  // moment this one registers, which force-blurs whatever had focus to
-  // `<body>` if nothing here has claimed it first. Restores focus to that
-  // control when this dialog unmounts. Deliberately not the full `useDismiss`
-  // (no Tab trap, no Escape change): this graph modal keeps its own
-  // hand-rolled Escape listener (see `AdminVouchGraphModal` below).
-  useEffect(() => {
-    const previouslyFocused = document.activeElement as HTMLElement | null;
-    closeButtonRef.current?.focus();
-    return () => {
-      previouslyFocused?.focus?.();
-    };
-  }, []);
-  // A dialog opened on top (e.g. AdminMemberDrawer's own overlays, or a
-  // confirm) makes this shell inert until it closes, so assistive tech
-  // reaches only the top dialog (mirrors the shared Modal in
-  // shared/components/ui/Modal.tsx). No exit animation here, so it is never
-  // "closing".
-  const overlayRef = useRef<HTMLDivElement>(null);
-  useInertWhileCovered(overlayRef, false);
-  return createPortal(
-    <div
-      ref={overlayRef}
-      className={styles.overlay}
-      role="presentation"
-      onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
-      }}
-    >
-      <div
-        className={styles.shell}
-        role="dialog"
-        aria-modal="true"
-        aria-label={t("admin:vouchGraph.modal.ariaLabel")}
-      >
-        <button
-          ref={closeButtonRef}
-          type="button"
-          className={styles.close}
-          onClick={onClose}
-          aria-label={t("admin:common.close")}
-        >
-          <FiX />
-        </button>
-        {children}
-      </div>
-    </div>,
-    document.body,
-  );
 }
 
 /**
- * The inspector plus its "Cite" confirm dialog (ADM-9). Owns
- * `useVouchGraphInspectorActions` itself so `GraphModalInner` stays under the
- * repo's 200-line component limit. Extracted rather than inlined because the
- * dialog needs the same action-state (`citingId`/`citeFromGraph`) the
- * inspector's "Cite" button opens it from.
+ * The trust network modal. `useTrustNetworkUrl` re-renders on every `tn*`
+ * write, so it lives in this thin wrapper and the memoised content below
+ * only ever sees stable props: writing the view to the URL never re-renders
+ * the graph. `initialView` is read once, at mount; later URL writes come
+ * from this modal itself.
  */
-function InspectorPanel({
-  graph,
-  g,
-}: {
-  graph: TrustGraph;
-  g: ReturnType<typeof useVouchGraph>;
-}) {
-  const {
-    verifyFromGraph,
-    verifyingId,
-    openInModeration,
-    citingId,
-    openCite,
-    closeCite,
-    citeFromGraph,
-    citing,
-  } = useVouchGraphInspectorActions(graph);
-
-  return (
-    <>
-      <VouchGraphInspector
-        sel={g.sel}
-        activeEdgeId={g.timeCut < g.eventCount ? g.activeEdgeId : null}
-        expanded={g.sel ? g.expanded.has(g.sel) : false}
-        onGo={g.select}
-        onExpand={g.toggleExpand}
-        onVerify={verifyFromGraph}
-        verifying={verifyingId !== null && verifyingId === g.sel}
-        onOpenModeration={openInModeration}
-        onCite={openCite}
-        onCloseSheet={() => g.select(null)}
+export const AdminVouchGraphModal = memo(
+  function AdminVouchGraphModal({
+    initialView,
+    onClose,
+  }: AdminVouchGraphModalProps) {
+    const { sync, cancel } = useTrustNetworkUrl();
+    const [mountView] = useState(initialView);
+    const onCloseRef = useRef(onClose);
+    useEffect(() => {
+      onCloseRef.current = onClose;
+    }, [onClose]);
+    // Drops this modal's pending sync before the parent clears the `tn*`
+    // params, so a debounced write cannot land after the close and reopen
+    // the network.
+    const close = useCallback(() => {
+      cancel();
+      onCloseRef.current();
+    }, [cancel]);
+    return (
+      <TrustNetworkModalContent
+        initialView={mountView}
+        sync={sync}
+        close={close}
       />
-      {citingId && (
-        <VouchGraphCiteDialog
-          focusId={g.focus}
-          personId={citingId}
-          onClose={closeCite}
-          onCite={citeFromGraph}
-          citing={citing}
-        />
-      )}
-    </>
-  );
-}
+    );
+  },
+  (previous, next) => previous.onClose === next.onClose,
+);
 
-function GraphModalInner({
-  focusSlug,
-  onClose,
-  memberSearch,
-  onMemberSearchChange,
-  onJumpToMember,
+const TrustNetworkModalContent = memo(function TrustNetworkModalContent({
+  initialView,
+  sync,
+  close,
 }: {
-  focusSlug: string;
-  onClose: () => void;
-  memberSearch: string;
-  onMemberSearchChange: (value: string) => void;
-  onJumpToMember: (slug: string) => void;
+  initialView: VouchGraphUrlView;
+  sync: (view: VouchGraphUrlView) => void;
+  close: () => void;
 }) {
   const { t } = useTranslation();
-  const fmt = useFormat();
-  const graph = useTrustGraph();
-  const g = useVouchGraph(graph, focusSlug);
-  const focusPerson = graph.peopleById[g.focus]!;
-  const closeButtonRef = useRef<HTMLButtonElement>(null);
-  // Claims focus into the dialog on mount, ahead of the `useInertWhileCovered`
-  // call below (see the matching comment on `GraphModalShell` above for why):
-  // this opens from a control inside another dialog/drawer, and that layer
-  // goes `inert` the moment this one registers, which force-blurs whatever
-  // had focus if nothing here has claimed it first. Restores focus to that
-  // control when this dialog unmounts (including the loading-to-loaded
-  // handoff from `GraphModalShell`, and a member-finder jump's remount).
-  // Deliberately not the full `useDismiss` (no Tab trap, no Escape change).
-  useEffect(() => {
-    const previouslyFocused = document.activeElement as HTMLElement | null;
-    closeButtonRef.current?.focus();
-    return () => {
-      previouslyFocused?.focus?.();
-    };
-  }, []);
-  // The inspector's own "Cite" confirm (InspectorPanel below) opens on top of
-  // this shell, and so can AdminMemberDrawer's other overlays underneath it
-  // in the stack. Either one makes this shell inert until it closes, so
-  // assistive tech reaches only the top dialog (mirrors the shared Modal in
-  // shared/components/ui/Modal.tsx). No exit animation here, so it is never
-  // "closing".
-  const overlayRef = useRef<HTMLDivElement>(null);
-  useInertWhileCovered(overlayRef, false);
-
-  return createPortal(
-    <div
-      ref={overlayRef}
-      className={styles.overlay}
-      role="presentation"
-      onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
-      }}
-    >
-      <div
-        className={styles.shell}
-        role="dialog"
-        aria-modal="true"
-        aria-label={t("admin:vouchGraph.modal.ariaLabel")}
-      >
-        <header className={styles.top}>
-          <div className={styles.titleBlock}>
-            <span className={styles.eyebrow}>
-              {t("admin:vouchGraph.modal.eyebrow")}
-            </span>
-            <div className={styles.h}>
-              {focusPerson.name}{" "}
-              <span className={styles.pron}>{focusPerson.pronoun}</span>
-            </div>
-          </div>
-
-          <div className={styles.crumbs}>
-            {g.crumbs.map((id, i) => (
-              <Fragment key={`${id}-${i}`}>
-                <button
-                  type="button"
-                  className={styles.crumb}
-                  onClick={() => g.gotoCrumb(i)}
-                >
-                  {graph.peopleById[id]!.initials}
-                </button>
-                <span className={styles.crumbSep} aria-hidden>
-                  <FiChevronRight />
-                </span>
-              </Fragment>
-            ))}
-            <span className={`${styles.crumb} ${styles.crumbCur}`}>
-              {focusPerson.initials}
-            </span>
-          </div>
-
-          <div className={styles.search}>
-            <FiSearch aria-hidden />
-            <input
-              value={g.search}
-              onChange={(e) => g.setSearch(e.target.value)}
-              placeholder={t("admin:vouchGraph.modal.searchPlaceholder")}
-              aria-label={t("admin:vouchGraph.modal.searchAriaLabel")}
-            />
-          </div>
-
-          <div className={styles.modes}>
-            {MODE_KEYS.map((m) => (
-              <button
-                key={m.key}
-                type="button"
-                className={`${styles.mode}${g.mode === m.key ? ` ${styles.modeOn}` : ""}`}
-                onClick={() => g.changeMode(m.key)}
-              >
-                {t(`admin:${m.labelKey}`)}
-              </button>
-            ))}
-          </div>
-
-          <button
-            ref={closeButtonRef}
-            type="button"
-            className={styles.close}
-            onClick={onClose}
-            aria-label={t("admin:common.close")}
-          >
-            <FiX />
-          </button>
-        </header>
-
-        <TrustNetworkMemberFinder
-          value={memberSearch}
-          onChange={onMemberSearchChange}
-          onPick={onJumpToMember}
-        />
-
-        <div className={styles.main}>
-          <VouchGraphCanvas
-            visIds={g.visIds}
-            visEdges={g.visEdges}
-            focus={g.focus}
-            mode={g.mode}
-            sel={g.sel}
-            pathNodes={g.pathNodes}
-            pathEdges={g.pathEdges}
-            search={g.search}
-            onSelect={g.select}
-            onRecenter={g.recenter}
-            onPickPath={g.pickPath}
-          >
-            <PathBar pathA={g.pathA} pathB={g.pathB} onClear={g.clearPath} />
-          </VouchGraphCanvas>
-
-          <InspectorPanel graph={graph} g={g} />
-        </div>
-
-        <footer className={styles.bottom}>
-          <Legend mode={g.mode} />
-          {graph.truncated && (
-            <span className={styles.leg}>
-              {t("admin:vouchGraph.modal.truncatedNotice")}
-            </span>
-          )}
-          <div className={styles.timeWrap}>
-            <button
-              type="button"
-              className={styles.replay}
-              onClick={g.replay}
-              disabled={g.replaying}
-            >
-              <FiPlay aria-hidden /> {t("admin:vouchGraph.modal.replayCta")}
-            </button>
-            <input
-              type="range"
-              min={0}
-              max={g.eventCount}
-              step={1}
-              value={g.timeCut}
-              onChange={(e) => g.setTime(Number(e.target.value))}
-              aria-label={t("admin:vouchGraph.modal.timeCutAriaLabel")}
-              disabled={g.eventCount === 0}
-            />
-            <span className={styles.timeLbl}>
-              {g.currentEvent ? (
-                <>
-                  <b>{graph.peopleById[g.currentEvent.to]?.name}</b> ·{" "}
-                  {t(
-                    `admin:vouchGraph.edgeKind.${g.currentEvent.kind ?? "vouch"}`,
-                  )}{" "}
-                  ·{" "}
-                  {fmt.date(monthDate(g.currentEvent.date), {
-                    month: "short",
-                    year: "numeric",
-                  })}
-                </>
-              ) : (
-                t("admin:vouchGraph.modal.replayStart")
-              )}
-            </span>
-          </div>
-        </footer>
-      </div>
-    </div>,
-    document.body,
-  );
-}
-
-export function AdminVouchGraphModal({
-  focusSlug,
-  onClose,
-}: {
-  focusSlug: string;
-  onClose: () => void;
-}) {
-  const { t } = useTranslation();
+  const { reducedMotion } = useMotionPrefs();
   useScrollLock();
-  // The member the graph is currently centered on. It starts as the member the
-  // drawer opened for, but the member-finder (ADM-10) can jump it to anyone.
-  const [activeFocus, setActiveFocus] = useState(focusSlug);
-  const [memberSearch, setMemberSearch] = useState("");
+  // The one exit for every state: Escape, the scrim, each close button and
+  // the top bar all go through `exit.close`, which is silenced mid-exit.
+  const exit = useModalExit(close);
+  const { isClosing } = exit;
+  // The view the layout mounts with: read once from the URL, then replaced
+  // only by a jump to a member outside the loaded graph (ADM-10). Each jump
+  // bumps `jumpCount`, which remounts the layout on the new view.
+  const [mountedView, setMountedView] = useState(initialView);
+  const [jumpCount, setJumpCount] = useState(0);
+  const lastViewRef = useRef(initialView);
+  const activeFocus = mountedView.focus;
+
+  const handleViewChange = useCallback(
+    (view: VouchGraphUrlView) => {
+      lastViewRef.current = view;
+      sync(view);
+    },
+    [sync],
+  );
+
+  // A jump keeps the tab, filters and list view, and starts a fresh
+  // selection and path on the new member.
+  const jumpToMember = useCallback(
+    (slug: string) => {
+      const nextView: VouchGraphUrlView = {
+        ...lastViewRef.current,
+        focus: slug,
+        selectedId: slug,
+        pathA: null,
+        pathB: null,
+      };
+      lastViewRef.current = nextView;
+      setMountedView(nextView);
+      setJumpCount((count) => count + 1);
+      sync(nextView);
+    },
+    [sync],
+  );
   // `focus` pins `activeFocus` into the fetched node set even when their join
   // date falls outside the graph's cap, so both the initial member and any
-  // member-finder pick always resolve (ADM-10).
+  // "All members" search pick always resolve (ADM-10).
   const {
     data,
     isLoading,
@@ -535,31 +148,34 @@ export function AdminVouchGraphModal({
   }, [graphModalId]);
 
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && isTopmostModal(graphModalId)) onClose();
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key !== "Escape" || isClosing) return;
+      if (isTopmostModal(graphModalId)) close();
     };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
-  }, [onClose, graphModalId]);
+  }, [close, graphModalId, isClosing]);
 
-  // Checked before the loading branch below. `isLoading` goes false on a
-  // failure while `data` stays undefined, so without this the modal held its
+  // The error check runs before the loading one. `isLoading` goes false on a
+  // failure while `data` stays undefined, so without it the modal held its
   // loading skeleton forever and never said anything had gone wrong (DES-22).
+  let contentKey: string;
+  let content: ReactNode;
   if (hasTrustNetworkError && !data) {
-    return (
-      <GraphModalShell onClose={onClose}>
+    contentKey = "error";
+    content = (
+      <GraphModalStatus onClose={exit.close}>
         <LoadErrorState
           onRetry={() => void refetchTrustNetwork()}
           title={t("admin:vouchGraph.loadError.title")}
           description={t("admin:vouchGraph.loadError.body")}
         />
-      </GraphModalShell>
+      </GraphModalStatus>
     );
-  }
-
-  if (isLoading || !data) {
-    return (
-      <GraphModalShell onClose={onClose}>
+  } else if (isLoading || !data) {
+    contentKey = "loading";
+    content = (
+      <GraphModalStatus onClose={exit.close}>
         <div className={styles.insEmpty} aria-busy="true">
           <h4>{t("admin:vouchGraph.modal.loadingTitle")}</h4>
           <SkeletonLine
@@ -567,13 +183,12 @@ export function AdminVouchGraphModal({
             style={{ marginTop: 16, borderRadius: 16 }}
           />
         </div>
-      </GraphModalShell>
+      </GraphModalStatus>
     );
-  }
-
-  if (!data.peopleById[activeFocus]) {
-    return (
-      <GraphModalShell onClose={onClose}>
+  } else if (!data.peopleById[activeFocus]) {
+    contentKey = "empty";
+    content = (
+      <GraphModalStatus onClose={exit.close}>
         <div className={styles.insEmpty}>
           <span className={styles.insEmptyIc}>
             <FiUser aria-hidden />
@@ -581,26 +196,45 @@ export function AdminVouchGraphModal({
           <h4>{t("admin:vouchGraph.modal.emptyTitle")}</h4>
           <p>{t("admin:vouchGraph.modal.emptyBody")}</p>
         </div>
-      </GraphModalShell>
+      </GraphModalStatus>
+    );
+  } else {
+    // The key remounts the whole inner view (crumbs, expanded, selection)
+    // on every jump to a member outside the graph, which suits a jump
+    // across the platform.
+    contentKey = `graph-${jumpCount}`;
+    content = (
+      <TrustGraphProvider data={data}>
+        <VouchGraphModalLayout
+          initialView={mountedView}
+          onClose={exit.close}
+          onJumpToMember={jumpToMember}
+          onViewChange={handleViewChange}
+        />
+      </TrustGraphProvider>
     );
   }
 
+  // One shell for every state, so loading to loaded and a member jump keep
+  // the overlay and shell in place and only the content fades across. Each
+  // state fills the shell through the stage view's absolute column.
   return (
-    <TrustGraphProvider data={data}>
-      <GraphModalInner
-        // Remounts the whole inner view (crumbs/expanded/selection reset)
-        // when the member-finder jumps to a different member, which suits a
-        // jump across the platform rather than a within-network recenter.
-        key={activeFocus}
-        focusSlug={activeFocus}
-        onClose={onClose}
-        memberSearch={memberSearch}
-        onMemberSearchChange={setMemberSearch}
-        onJumpToMember={(slug) => {
-          setActiveFocus(slug);
-          setMemberSearch("");
-        }}
-      />
-    </TrustGraphProvider>
+    <GraphModalShell exit={exit}>
+      <AnimatePresence initial={false} mode="wait">
+        <m.div
+          key={contentKey}
+          className={shellStyles.stageView}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{
+            duration: reducedMotion ? 0 : CONTENT_FADE_SECONDS,
+            ease: CONTENT_FADE_EASE,
+          }}
+        >
+          {content}
+        </m.div>
+      </AnimatePresence>
+    </GraphModalShell>
   );
-}
+});

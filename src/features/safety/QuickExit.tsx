@@ -6,6 +6,8 @@ import {
   endStudioEpisodeSaving,
 } from "../studio/player/studioEpisodeMemory";
 import { endStudioQueueSaving } from "../studio/player/studioQueueStorage";
+import { clearStudioWarningConsent } from "../studio/player/studioWarningGate";
+import { clearStudioTrackReveals } from "../forum/forumWarnings.helpers";
 import styles from "./QuickExit.module.css";
 
 const SAFE_DESTINATION = "https://www.google.com";
@@ -36,6 +38,10 @@ function leaveNow() {
   // tracker's pagehide save from writing it back as the page goes.
   clearStudioEpisodeMemory();
   endStudioEpisodeSaving();
+  // Studio safety: and the warned tracks this tab agreed to hear, with the
+  // lyrics and show notes it uncovered.
+  clearStudioWarningConsent();
+  clearStudioTrackReveals();
   // History scrub: replace() alone only neutralises the current page, leaving
   // earlier QueerPulse pages reachable with Back. Stack sentinel entries first
   // to bury that trail, then replace the top of the stack with the external

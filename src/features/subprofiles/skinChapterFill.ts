@@ -35,7 +35,8 @@ function findControl(
 }
 
 /** What a watched control currently holds: its stored string, else its own
- *  `defaultValue` (what the public page assumes), else "". */
+ *  `defaultValue` (what the public page assumes), else "".
+ *  A stored boolean (a `toggle`) reads as "true" or "false". */
 function watchedValue(
   path: string,
   editor: ValueReader,
@@ -43,6 +44,7 @@ function watchedValue(
 ): string {
   const stored = editor.getValue(path);
   if (typeof stored === "string") return stored;
+  if (typeof stored === "boolean") return stored ? "true" : "false";
   return findControl(path, chapters)?.defaultValue ?? "";
 }
 
@@ -96,11 +98,18 @@ function isFilledValue(value: unknown): boolean {
  *  A section list counts once its section holds a row of any kind, so a
  *  gallery photo with no title or description still fills it.
  *  The availability calendar counts once it has a start date, the one field
- *  the page needs to place its cells. */
+ *  the page needs to place its cells.
+ *  A toggle counts only while it is on; a date once it holds a day. */
 export function isControlFilled(
   control: SkinBlockControl,
   editor: ValueReader,
 ): boolean {
+  if (control.kind === "toggle") {
+    return editor.getValue(control.path) === true;
+  }
+  if (control.kind === "date") {
+    return isNonBlankString(editor.getValue(control.path));
+  }
   if (control.kind === "sectionList") {
     return (
       control.section !== undefined &&

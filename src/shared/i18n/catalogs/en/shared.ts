@@ -326,6 +326,7 @@ export const shared: Catalog = {
   "adminNav.items.resourceSuggestions": "Resource suggestions",
   "adminNav.items.communityTagRequests": "Community tag requests",
   "adminNav.items.communitySpaceRequests": "Space requests",
+  "adminNav.items.creatorDrafts": "Creator drafts",
   "adminNav.items.housingGroups": "Housing groups",
   "adminNav.items.housingCoops": "Housing co-ops",
   // Reused by footer.data.ts BASE_LINKS and navMenus.ts About > Mission column.
@@ -664,6 +665,7 @@ export const shared: Catalog = {
   "mediaRef.cinema-cover": "Cinema title",
   "mediaRef.studio-cover": "Studio release cover",
   "mediaRef.persona-post": "Persona update",
+  "mediaRef.quizshow-question": "Live game question",
   "mediaRef.landlord": "Landlord",
   "mediaRef.company-work": "Company",
   "mediaRef.housing": "Housing",
@@ -784,7 +786,42 @@ export const shared: Catalog = {
     "Use a full web address like https://example.com, or an email address like mailto:hello@example.com.",
   "richText.slashMenuAria": "Insert a block",
 
+  // ── Creator draft autosave (src/features/creatorDrafts) ──
+  // The save line and the conflict strip shared by the event, community and
+  // listing editors.
+  "creatorDraft.status.saving": "Saving",
+  "creatorDraft.status.savedJustNow": "Saved just now",
+  "creatorDraft.status.savedMinutes_one": "Saved {count} min ago",
+  "creatorDraft.status.savedMinutes_other": "Saved {count} min ago",
+  "creatorDraft.status.savedHours_one": "Saved {count} h ago",
+  "creatorDraft.status.savedHours_other": "Saved {count} h ago",
+  "creatorDraft.status.savedDays_one": "Saved {count} day ago",
+  "creatorDraft.status.savedDays_other": "Saved {count} days ago",
+  "creatorDraft.status.retrying": "Not saved, retrying",
+  "creatorDraft.status.tooLarge":
+    "This draft is too long to save. Try trimming it",
+  "creatorDraft.status.notSaved": "Not saved",
+  "creatorDraft.status.conflict": "Saving paused",
+  "creatorDraft.conflict.title": "This draft was saved somewhere else",
+  "creatorDraft.conflict.body":
+    "Another tab or device saved a newer version. Pick the one to keep. What you typed here stays until you choose",
+  "creatorDraft.conflict.loadNewer": "Load the newer draft",
+  "creatorDraft.conflict.keepThisVersion": "Keep this version",
+  "creatorDraft.conflict.loadFailed":
+    "We couldn't load the newer draft. Try again, or keep this version",
+  "creatorDraft.conflict.goneTitle": "This draft was closed somewhere else",
+  "creatorDraft.conflict.goneBody":
+    "Another tab or device published or discarded it, or it expired. What you typed here stays, and Keep this version saves it again",
+
   // Messaging inbox and entry points (scan section 5, 2026-09-15)
   "tabs.labelWithCount": "{label}, {count}",
   "pullToRefresh.failed": "Refresh failed. Try again in a moment.",
+  // Studio rich cards: what a shared Studio link is called where the card
+  // itself does not show (reply quotes, inbox rows, the card's eyebrow).
+  "studioShare.track": "Studio track",
+  "studioShare.release": "Studio release",
+  "studioShare.playlist": "Studio playlist",
+  "studioShare.unavailable": "Not available",
+  "apiError.quizshowAdultsRounds":
+    "This event's live game has adults rounds. Change their label in the Live game tab first, then turn off 18+",
 };

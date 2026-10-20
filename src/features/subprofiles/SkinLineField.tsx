@@ -22,6 +22,7 @@ export function SkinLineField({
   placeholder,
   ariaLabel,
   describedBy,
+  maxLength,
   onEdit,
   onKeyDown,
   onPaste,
@@ -31,6 +32,7 @@ export function SkinLineField({
   placeholder: string | undefined;
   ariaLabel: string;
   describedBy: string | undefined;
+  maxLength?: number;
   onEdit: (next: string) => void;
   onKeyDown: (event: KeyboardEvent<LineField>) => void;
   onPaste: (event: ClipboardEvent<LineField>) => void;
@@ -41,6 +43,7 @@ export function SkinLineField({
   const sharedProps = {
     value,
     placeholder,
+    maxLength,
     "aria-label": ariaLabel,
     "aria-describedby": describedBy,
     "aria-keyshortcuts": "Alt+ArrowUp Alt+ArrowDown",

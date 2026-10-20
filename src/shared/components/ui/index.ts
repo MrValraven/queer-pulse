@@ -21,6 +21,7 @@ export {
   type LoadMoreButtonProps,
 } from "./LoadMoreFooter";
 export { ImageSlot, type ImageSlotTint } from "./ImageSlot";
+export { PosterAwareImageSlot, isPosterShaped } from "./PosterAwareImageSlot";
 export { Reveal } from "./Reveal";
 export { FadeIn } from "./FadeIn";
 export { Outro } from "./Outro";

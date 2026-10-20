@@ -303,6 +303,26 @@
      vignetted edges so letterbox bands read as part of the frame. Fixed in
      both themes, like --plum-deep. */
   --film-ground: #1a0e24;
+
+  /* ── Pulse Live (quizshow): team shapes and answer tiles ── */
+  /* Okabe-Ito based fills, each paired with an ink that meets 4.5:1 on it.
+     Shape carries the meaning too, so colour is never the only cue. */
+  --quizshow-circle: #e69f00;
+  --quizshow-circle-ink: #1a1030;
+  --quizshow-triangle: #b34700;
+  --quizshow-triangle-ink: #ffffff;
+  --quizshow-square: #00785a;
+  --quizshow-square-ink: #ffffff;
+  --quizshow-diamond: #005c91;
+  --quizshow-diamond-ink: #ffffff;
+  --quizshow-star: #a04e80;
+  --quizshow-star-ink: #ffffff;
+  --quizshow-hexagon: #56b4e9;
+  --quizshow-hexagon-ink: #1a1030;
+  --quizshow-heart: #a8285c;
+  --quizshow-heart-ink: #ffffff;
+  --quizshow-moon: #5546b8;
+  --quizshow-moon-ink: #ffffff;
 }
 
 /* ── Dark mode overrides ── */
@@ -399,4 +419,22 @@
   --studio-accent-chip-text: var(--accent-soft);
   --studio-jade-chip-text: var(--jade-light);
   --studio-hero-glow: rgba(var(--jade-rgb), 0.14);
+
+  /* Pulse Live (quizshow): lighter fills on one dark ink. */
+  --quizshow-circle: #f0b33c;
+  --quizshow-triangle: #f2884a;
+  --quizshow-square: #3ccb9d;
+  --quizshow-diamond: #5aa9e6;
+  --quizshow-star: #e3a1c8;
+  --quizshow-hexagon: #7cc8f0;
+  --quizshow-heart: #ea7ba6;
+  --quizshow-moon: #a397f2;
+  --quizshow-circle-ink: #160c24;
+  --quizshow-triangle-ink: #160c24;
+  --quizshow-square-ink: #160c24;
+  --quizshow-diamond-ink: #160c24;
+  --quizshow-star-ink: #160c24;
+  --quizshow-hexagon-ink: #160c24;
+  --quizshow-heart-ink: #160c24;
+  --quizshow-moon-ink: #160c24;
 }

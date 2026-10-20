@@ -1,10 +1,10 @@
 /* FeaturedEventCard: the "Next up" poster hero. A full-width --paper card on
    the --cream page: from 900px up the cover fills the leading half or more of
    the card edge to edge; below that it stacks on top as a wide band, 8:3 on
-   phones and 21:9 on tablets (never taller than 26% of the viewport), with
-   the cream date stub pinned to it. A blurred copy of the same
-   cover glows behind the card, so each lead tints the page with its own
-   colours. FeaturedEventSkeleton reuses these classes, so the loading box and
+   phones and 21:9 on tablets (never taller than 26% of the viewport, and
+   about 300px for a poster-shaped cover), with the cream date stub pinned to
+   it. A blurred copy of the same cover glows behind the card, so each lead
+   tints the page with its own colours. FeaturedEventSkeleton reuses these classes, so the loading box and
    the loaded one are the same size. */
 
 /* The full-width band the hero lives in. It owns the space below the card, so
@@ -130,6 +130,9 @@
   block-size: min(calc(100cqi * 3 / 8), 26svh);
   overflow: hidden;
   background: rgba(var(--plum-rgb), 0.06);
+  transition-property: block-size;
+  transition-duration: var(--dur-slow);
+  transition-timing-function: var(--ease);
 }
 
 @media (--md-up) {
@@ -138,18 +141,38 @@
   }
 }
 
+/* A poster-shaped cover in the stacked band would show as a narrow column a
+   third of the card wide, so once the file measures as one the band grows to
+   300px (at most half the viewport, so a landscape phone keeps the call to
+   action in reach) and the poster reads at a useful size. The box reserves
+   the band first and animates to the taller height; the date stub, the
+   ribbon and the glow are all pinned to the band, so they follow it. On a
+   tablet the band never shrinks below its own 21:9 height. */
+.media.mediaPoster {
+  block-size: min(300px, 50svh);
+}
+
+@media (--md-up) {
+  .media.mediaPoster {
+    block-size: max(min(calc(100cqi * 9 / 21), 26svh), min(300px, 50svh));
+  }
+}
+
 /* Side by side, the cover's width is its grid track and its height is the
    row's: a floor that grows with the viewport, stretched further by a copy
    column taller than that. */
 @media (--wide-up) {
-  .media {
+  .media,
+  .media.mediaPoster {
     align-self: stretch;
     block-size: auto;
     min-block-size: clamp(18rem, 32vw, 30rem);
   }
 }
 
-.media img {
+/* The cover slot's own frame zooms on hover, so a poster's sharp image and
+   its blurred backdrop move as one, and the backdrop keeps its own scale. */
+.coverImage {
   transition-property: transform;
   transition-duration: var(--dur-reveal);
   transition-timing-function: var(--ease-out);
@@ -412,17 +435,18 @@
 
 /* ── Hover ── */
 @media (hover: hover) and (pointer: fine) {
-  .card:hover .media img {
+  .card:hover .coverImage {
     transform: scale(1.05);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .media img {
+  .media,
+  .coverImage {
     transition-property: none;
   }
 
-  .card:hover .media img {
+  .card:hover .coverImage {
     transform: none;
   }
 }

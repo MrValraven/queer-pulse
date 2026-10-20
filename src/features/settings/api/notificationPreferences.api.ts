@@ -25,6 +25,7 @@ export const NOTIFICATION_PREFERENCE_CATEGORY = {
   listings: "listings",
   opportunities: "opportunities",
   magazine: "magazine",
+  quizshow: "quizshow",
 } as const;
 
 export type NotificationPreferenceCategory =

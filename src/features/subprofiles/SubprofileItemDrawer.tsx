@@ -16,6 +16,8 @@ import { ItemRevisionHistoryModal } from "./rights/ItemRevisionHistoryModal";
 import { ItemDrawerSettings } from "./ItemDrawerSettings";
 import { ItemDrawerFooter } from "./ItemDrawerFooter";
 import { itemDrawerSaveState } from "./itemDrawerSave";
+import { isTattooItemSection } from "./skins/tattoo/tattooVocab.data";
+import { tattooItemBlockReasonKey } from "./skins/tattoo/editor/tattooItemDraft";
 import styles from "./SubprofileEditor.module.css";
 
 interface SubprofileItemDrawerProps {
@@ -34,6 +36,46 @@ interface SubprofileItemDrawerProps {
   authorName: string;
   onSave: (item: SubprofileItemView) => void;
   onClose: () => void;
+}
+
+/** The row the server holds for this item (`original`, else the item
+ *  itself), and whether it has none yet. A row with an id counts as stored:
+ *  a Save all gives section rows new server ids while the working rows keep
+ *  theirs, and after that save the working row equals what the server holds.
+ *  A row added in this editor session has no id, so its photos need the
+ *  consent tick like a new one. */
+function useStoredBaseline(
+  item: SubprofileItemView,
+  isNew: boolean,
+): { original: SubprofileItemView; isUnsaved: boolean } {
+  const { subprofile } = useSubprofileEditorContext();
+  const storedItem = item.id
+    ? subprofile.sections
+        .find((stored) => stored.section === item.section)
+        ?.items.find((stored) => stored.id === item.id)
+    : undefined;
+  return {
+    original: storedItem ?? item,
+    isUnsaved: isNew || !item.id,
+  };
+}
+
+/** The first thing stopping Save, as a status key, else null. A gallery photo
+ *  is its image; everything else needs a title; a tattoo item then follows
+ *  its own rules, with consent judged against the stored row. */
+function missingRequiredKeyFor(
+  draft: SubprofileItemView,
+  original: SubprofileItemView,
+  isUnsaved: boolean,
+): string | null {
+  if (draft.section === "gallery") {
+    return draft.imageUrl?.trim()
+      ? null
+      : "subprofiles:itemDrawer.status.needsPhoto";
+  }
+  if (!draft.title.trim()) return "subprofiles:itemDrawer.status.needsTitle";
+  if (!isTattooItemSection(draft.section)) return null;
+  return tattooItemBlockReasonKey(draft, original, isUnsaved);
 }
 
 /**
@@ -121,15 +163,8 @@ export function SubprofileItemDrawer({
     setDraft((cur) => ({ ...cur, ...p }));
   }
 
-  // A gallery photo is its image; everything else needs a title.
-  const missingRequiredKey =
-    section.section === "gallery"
-      ? draft.imageUrl?.trim()
-        ? null
-        : "subprofiles:itemDrawer.status.needsPhoto"
-      : draft.title.trim()
-        ? null
-        : "subprofiles:itemDrawer.status.needsTitle";
+  const { original, isUnsaved } = useStoredBaseline(item, isNew);
+  const missingRequiredKey = missingRequiredKeyFor(draft, original, isUnsaved);
   const canSave =
     itemDrawerSaveState({
       isNew,
@@ -200,6 +235,8 @@ export function SubprofileItemDrawer({
           <div className="drawer-main">
             <SubprofileItemDrawerFields
               draft={draft}
+              original={original}
+              isNew={isUnsaved}
               fields={section.fields}
               onPatch={patch}
             />

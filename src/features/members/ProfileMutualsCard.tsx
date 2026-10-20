@@ -8,18 +8,27 @@ import { useProfileMutuals } from "./api/useProfileMutuals";
 import styles from "./ProfileMutualsCard.module.css";
 
 /**
- * Visitor-only "You both know X and Y" card, floating beside the hero text
- * (`ProfileHero` in `ProfileSections.tsx`) in the space the decorative hero
- * blob would otherwise leave empty. Renders nothing while loading, on error,
- * or when there are no mutuals — this is a light social-proof cue, not a
- * section that needs its own empty state.
+ * Visitor-only "You both know X and Y" card. On desktop it floats beside the
+ * hero text (`ProfileHero` in `ProfileSections.tsx`) in the space the
+ * decorative hero blob would otherwise leave empty; on mobile
+ * `MobileProfileHeader` stacks it full width under the vouch row, passing
+ * `className` to lift the desktop width limits. Renders nothing while
+ * loading, on error, or when there are no mutuals: it is a light social-proof
+ * cue and needs no empty state of its own.
  *
  * Deliberately has no "ask X to introduce you" action: that copy implies a
  * warm-intro request flow (messaging a third party about an intro) that
  * doesn't exist anywhere in this codebase. Building one is out of scope here;
  * the card states the mutual connection and stops.
  */
-export function ProfileMutualsCard({ slug }: { slug: string }) {
+export function ProfileMutualsCard({
+  slug,
+  className,
+}: {
+  slug: string;
+  /** Extra class merged onto the card, for a caller's layout overrides. */
+  className?: string;
+}) {
   const { t } = useTranslation();
   const { data } = useProfileMutuals(slug);
   if (!data || data.count === 0 || data.members.length === 0) return null;
@@ -35,7 +44,7 @@ export function ProfileMutualsCard({ slug }: { slug: string }) {
 
   return (
     <aside
-      className={styles.card}
+      className={className ? `${styles.card} ${className}` : styles.card}
       aria-label={t("members:profile.mutuals.title")}
     >
       <span className={styles.title}>{t("members:profile.mutuals.title")}</span>

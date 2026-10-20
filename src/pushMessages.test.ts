@@ -445,3 +445,186 @@ describe("studio episode push copy", () => {
     });
   });
 });
+
+describe("Studio share push copy", () => {
+  const kinds = ["track", "release", "playlist"] as const;
+  const keysOf = (kind: (typeof kinds)[number]) =>
+    [
+      "push:messages.studio",
+      "push:messages.group.studio",
+      "push:messages.group.mention.studio",
+    ].flatMap((prefix) => [`${prefix}.${kind}`, `${prefix}.${kind}WithNote`]);
+
+  it("has all 18 keys in both languages", () => {
+    const keys = kinds.flatMap(keysOf);
+    expect(keys).toHaveLength(18);
+    for (const key of keys) {
+      expect(CATALOG.en[key]).toBeDefined();
+      expect(CATALOG.pt[key]).toBeDefined();
+    }
+  });
+
+  it("names the kind and the note and no title", () => {
+    expect(
+      formatPushCopy(
+        {
+          title: "Ana",
+          body: "Shared a track from Studio: ouve isto",
+          l10n: {
+            bodyKey: "push:messages.studio.trackWithNote",
+            params: { note: "ouve isto" },
+          },
+        },
+        "pt",
+      ).body,
+    ).toBe("Partilhou uma faixa do Studio: ouve isto");
+  });
+
+  it("names the sender in a group", () => {
+    expect(
+      formatPushCopy(
+        {
+          title: "Porto Mentoring Circle",
+          body: "Maria shared a playlist from Studio",
+          l10n: {
+            bodyKey: "push:messages.group.studio.playlist",
+            params: { name: "Maria" },
+          },
+        },
+        "en",
+      ).body,
+    ).toBe("Maria shared a playlist from Studio");
+  });
+
+  it("folds a mention into the same push", () => {
+    expect(
+      formatPushCopy(
+        {
+          title: "Porto Mentoring Circle",
+          body: "Maria mentioned you and shared a release from Studio",
+          l10n: {
+            bodyKey: "push:messages.group.mention.studio.release",
+            params: { name: "Maria" },
+          },
+        },
+        "pt",
+      ).body,
+    ).toBe("Maria mencionou-te e partilhou um lançamento do Studio");
+  });
+});
+
+describe("collaborative playlist push copy", () => {
+  it("names the owner and the playlist in both languages", () => {
+    const inviteSource = {
+      title: "Playlist invite",
+      body: "Catarina Vaz invited you to edit Pride warm-up",
+      l10n: {
+        titleKey: "push:studioPlaylistEditorInvite.title",
+        bodyKey: "push:studioPlaylistEditorInvite.body",
+        params: { name: "Catarina Vaz", playlist: "Pride warm-up" },
+      },
+    };
+    expect(formatPushCopy(inviteSource, "en")).toEqual({
+      title: "Playlist invite",
+      body: "Catarina Vaz invited you to edit Pride warm-up",
+    });
+    expect(formatPushCopy(inviteSource, "pt")).toEqual({
+      title: "Convite para playlist",
+      body: "Catarina Vaz convidou-te para editar Pride warm-up",
+    });
+    const addedSource = {
+      title: "You can edit a playlist",
+      body: "Rita Varela added you as an editor of Tour diary (Mariana Sol)",
+      l10n: {
+        titleKey: "push:studioPlaylistEditorAdded.title",
+        bodyKey: "push:studioPlaylistEditorAdded.body",
+        params: {
+          name: "Rita Varela",
+          playlist: "Tour diary",
+          persona: "Mariana Sol",
+        },
+      },
+    };
+    expect(formatPushCopy(addedSource, "en")).toEqual({
+      title: "You can edit a playlist",
+      body: "Rita Varela added you as an editor of Tour diary (Mariana Sol)",
+    });
+    expect(formatPushCopy(addedSource, "pt")).toEqual({
+      title: "Podes editar uma playlist",
+      body: "Rita Varela deu-te acesso para editar Tour diary (Mariana Sol)",
+    });
+  });
+
+  it("resolves the three team pushes in EN and PT", () => {
+    const params = { persona: "Agulha Lenta", listing: "Tinta Viva" };
+    const copyFor = (kind: string, language: "en" | "pt") =>
+      formatPushCopy(
+        {
+          title: "x",
+          body: "y",
+          l10n: {
+            titleKey: `push:${kind}.title`,
+            bodyKey: `push:${kind}.body`,
+            params,
+          },
+        },
+        language,
+      );
+    expect(copyFor("listingTeamRequest", "en")).toEqual({
+      title: "Team request",
+      body: "Agulha Lenta asked to join the team at Tinta Viva",
+    });
+    expect(copyFor("listingTeamRequest", "pt")).toEqual({
+      title: "Pedido para a equipa",
+      body: "Agulha Lenta pediu para entrar na equipa de Tinta Viva",
+    });
+    expect(copyFor("listingTeamInvite", "en")).toEqual({
+      title: "Team invite",
+      body: "Tinta Viva invited Agulha Lenta to join the team",
+    });
+    expect(copyFor("listingTeamInvite", "pt")).toEqual({
+      title: "Convite para a equipa",
+      body: "Tinta Viva convidou Agulha Lenta para a equipa",
+    });
+    expect(copyFor("listingTeamAccepted", "en")).toEqual({
+      title: "Team link confirmed",
+      body: "Agulha Lenta is now on the team at Tinta Viva",
+    });
+    expect(copyFor("listingTeamAccepted", "pt")).toEqual({
+      title: "Ligação à equipa confirmada",
+      body: "Agulha Lenta faz agora parte da equipa de Tinta Viva",
+    });
+  });
+});
+
+describe("Pulse Live push copy", () => {
+  const pulseLiveLocalization = {
+    titleKey: "push:quizshow.starting.title",
+    bodyKey: "push:quizshow.starting.body",
+    params: { event: "Pride Quiz", code: "QZ7KP4" },
+  };
+
+  it("words the Pulse Live push in English", () => {
+    expect(
+      formatPushCopy(
+        { title: "x", body: "y", l10n: pulseLiveLocalization },
+        "en",
+      ),
+    ).toEqual({
+      title: "Pulse Live is starting",
+      body: "Pride Quiz live game is starting, join with code QZ7KP4",
+    });
+  });
+
+  it("words it in Portuguese", () => {
+    expect(
+      formatPushCopy(
+        { title: "x", body: "y", l10n: pulseLiveLocalization },
+        "pt",
+      ),
+    ).toEqual({
+      title: "O Pulse Live está a começar",
+      body: "O jogo ao vivo de Pride Quiz está a começar, entra com o código QZ7KP4",
+    });
+  });
+});

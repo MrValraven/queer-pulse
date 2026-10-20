@@ -5,7 +5,8 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import s from "./creator.module.css";
 import tracksStyles from "./StudioUploadTracks.module.css";
 
-const ACCEPT = ".mp3,.m4a,audio/mpeg,audio/mp4";
+const ACCEPT =
+  ".mp3,.m4a,audio/mpeg,audio/mp4,.wav,.wave,.aif,.aiff,.aifc,audio/wav,audio/x-wav,audio/aiff,audio/x-aiff";
 
 /** A real file input behind a visible button, so Tab, Enter and Space open
  *  the picker; dropping files anywhere on the zone adds them too. */
@@ -15,6 +16,7 @@ export function DropZone({
   acceptsKey = "studio:uploadFlow.files.accepts",
   titleKey = "studio:uploadFlow.files.dropTitle",
   chooseKey = "studio:uploadFlow.files.chooseCta",
+  noteKey = "studio:uploadFlow.files.wavNote",
 }: {
   onFiles: (files: File[]) => void;
   isDisabled: boolean;
@@ -24,10 +26,13 @@ export function DropZone({
   titleKey?: string;
   /** The choose button's label key. */
   chooseKey?: string;
+  /** The line under the zone that says WAV and AIFF convert in the browser. */
+  noteKey?: string;
 }) {
   const { t } = useTranslation();
   const inputId = useId();
   const hintId = useId();
+  const noteId = useId();
   const inputRef = useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = useState(false);
 
@@ -38,57 +43,62 @@ export function DropZone({
   }
 
   return (
-    <div
-      className={[s.dropzone, isDragging && tracksStyles.dropActive]
-        .filter(Boolean)
-        .join(" ")}
-      onDragOver={(event) => {
-        event.preventDefault();
-        if (!isDisabled && event.dataTransfer.types.includes("Files"))
-          setIsDragging(true);
-      }}
-      onDragLeave={(event) => {
-        // Moving between the zone's own children keeps the highlight.
-        if (!event.currentTarget.contains(event.relatedTarget as Node | null))
-          setIsDragging(false);
-      }}
-      onDrop={handleDrop}
-    >
-      <div className={s.uploadIcon}>
-        <FiUpload aria-hidden />
-      </div>
-      <h3>
-        <Translation i18nKey={titleKey} components={{ em: <em /> }} />
-      </h3>
-      <p id={hintId} className={s.uploadTypes}>
-        <Translation i18nKey={acceptsKey} components={{ em: <em /> }} />
-      </p>
-      <input
-        ref={inputRef}
-        id={inputId}
-        className={tracksStyles.fileInput}
-        type="file"
-        accept={ACCEPT}
-        multiple
-        disabled={isDisabled}
-        tabIndex={-1}
-        aria-label={t(chooseKey)}
-        aria-describedby={hintId}
-        onChange={(event) => {
-          onFiles(Array.from(event.target.files ?? []));
-          event.target.value = "";
+    <div className={tracksStyles.dropZoneWithNote}>
+      <div
+        className={[s.dropzone, isDragging && tracksStyles.dropActive]
+          .filter(Boolean)
+          .join(" ")}
+        onDragOver={(event) => {
+          event.preventDefault();
+          if (!isDisabled && event.dataTransfer.types.includes("Files"))
+            setIsDragging(true);
         }}
-      />
-      <button
-        type="button"
-        className={tracksStyles.chooseButton}
-        data-upload-choose=""
-        disabled={isDisabled}
-        aria-describedby={hintId}
-        onClick={() => inputRef.current?.click()}
+        onDragLeave={(event) => {
+          // Moving between the zone's own children keeps the highlight.
+          if (!event.currentTarget.contains(event.relatedTarget as Node | null))
+            setIsDragging(false);
+        }}
+        onDrop={handleDrop}
       >
-        {t(chooseKey)}
-      </button>
+        <div className={s.uploadIcon}>
+          <FiUpload aria-hidden />
+        </div>
+        <h3>
+          <Translation i18nKey={titleKey} components={{ em: <em /> }} />
+        </h3>
+        <p id={hintId} className={s.uploadTypes}>
+          <Translation i18nKey={acceptsKey} components={{ em: <em /> }} />
+        </p>
+        <input
+          ref={inputRef}
+          id={inputId}
+          className={tracksStyles.fileInput}
+          type="file"
+          accept={ACCEPT}
+          multiple
+          disabled={isDisabled}
+          tabIndex={-1}
+          aria-label={t(chooseKey)}
+          aria-describedby={`${hintId} ${noteId}`}
+          onChange={(event) => {
+            onFiles(Array.from(event.target.files ?? []));
+            event.target.value = "";
+          }}
+        />
+        <button
+          type="button"
+          className={tracksStyles.chooseButton}
+          data-upload-choose=""
+          disabled={isDisabled}
+          aria-describedby={`${hintId} ${noteId}`}
+          onClick={() => inputRef.current?.click()}
+        >
+          {t(chooseKey)}
+        </button>
+      </div>
+      <p id={noteId} className={tracksStyles.wavNote}>
+        {t(noteKey)}
+      </p>
     </div>
   );
 }

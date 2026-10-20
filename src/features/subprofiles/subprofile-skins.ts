@@ -183,6 +183,12 @@ export const VISUAL_SECTIONS: readonly SubprofileSection[] = [
   "pieces",
   "flash",
   "healed",
+  // Tattoo artist
+  "wanna_dos",
+  "cover_ups",
+  "scar_work",
+  "flash_days",
+  "shop",
   "strips",
   "games",
   "models",

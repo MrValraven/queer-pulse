@@ -127,10 +127,12 @@ describe("useStudioPlayerPreferences", () => {
     expect(hook.result.current.playbackSettings).toEqual({
       autoplayNext: false,
       hideExplicit: true,
+      askBeforeWarnings: true,
     });
     expect(hook.result.current.readPlaybackSettings()).toEqual({
       autoplayNext: false,
       hideExplicit: true,
+      askBeforeWarnings: true,
     });
   });
 

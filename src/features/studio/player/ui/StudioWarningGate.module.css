@@ -1,0 +1,102 @@
+/* The warning gate. The wrapper takes no box, so in the bar's and the mini
+   player's grids only the open row counts (Collapse renders nothing while
+   closed), and that row spans the grid like the bar's error line. */
+.gate {
+  display: contents;
+}
+
+.row {
+  grid-column: 1 / -1;
+}
+
+.card {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  padding: 8px 0 4px;
+  color: var(--studio-text);
+}
+
+.icon {
+  flex: none;
+  color: var(--studio-accent-text);
+  font-size: var(--text-18);
+}
+
+.text {
+  flex: 1 1 200px;
+  min-inline-size: 0;
+}
+
+.next {
+  margin: 0;
+  font-size: var(--text-14);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.warning {
+  margin: 2px 0 0;
+  font-size: var(--text-13);
+  color: var(--studio-text-muted);
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+.play,
+.skip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-block-size: var(--tap-min);
+  padding: 0 16px;
+  border-radius: var(--radius-pill);
+  /* Buttons do not inherit the page font on their own. */
+  font: inherit;
+  font-size: var(--text-14);
+  font-weight: 600;
+  cursor: pointer;
+  /* The bar's press and hover values. */
+  transition-property: transform, background-color;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+.play {
+  border: 0;
+  background: var(--accent);
+  color: var(--studio-bg);
+}
+
+.skip {
+  border: 1px solid rgba(var(--studio-ink-rgb), 0.16);
+  background: none;
+  color: var(--studio-text);
+}
+
+@media (hover: hover) {
+  .play:hover {
+    transform: scale(1.04);
+  }
+
+  .skip:hover {
+    background: rgba(var(--studio-ink-rgb), 0.08);
+  }
+}
+
+/* After the hover rules, so a held press wins over the hover lift. */
+.play:active,
+.skip:active {
+  transform: scale(0.94);
+}
+
+.play:focus-visible,
+.skip:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}

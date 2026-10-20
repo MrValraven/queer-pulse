@@ -218,6 +218,43 @@ export function demoMessageToResponse(
   };
 }
 
+/** A message the demo viewer just sent from outside the thread (the "Send in
+ *  a message" picker), in the shape the server would answer with. */
+export function demoOutgoingMessageResponse(
+  conversationId: string,
+  body: string,
+  clientMessageId: string,
+  createdAt: string,
+): MessageResponse {
+  const conversation = findDemoConversation(conversationId);
+  const sender = conversation?.viewerMemberKey
+    ? { ...DEMO_VIEWER, handle: conversation.viewerMemberKey }
+    : DEMO_VIEWER;
+  return {
+    id: `demo-share-${clientMessageId}`,
+    conversationId,
+    body,
+    sender,
+    createdAt,
+    editedAt: null,
+    reactions: normalizedReactions(undefined),
+    deletedAt: null,
+    deliveredAt: null,
+    clientMessageId,
+    forwarded: false,
+    pinnedAt: null,
+    starred: false,
+    canPin: false,
+    canEdit: true,
+    canDelete: true,
+    canReport: false,
+    replyTo: null,
+    kind: "user",
+    attachment: null,
+    systemEvent: null,
+  };
+}
+
 function seededNewestFirst(conversationId: string): MessageResponse[] {
   const conversation = findDemoConversation(conversationId);
   if (!conversation) return [];

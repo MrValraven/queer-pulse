@@ -15,6 +15,13 @@ export const CHANGELOG_RELEASE_NOTES: Record<
   string,
   { highlights: string[]; pushes?: number }
 > = {
+  "19 Oct 2026": {
+    highlights: [
+      "tattoo-artist-pages",
+      "studio-rich-cards",
+      "studio-safety-moderation",
+    ],
+  },
   "14 Oct 2026": {
     highlights: [
       "studio-artist-kinds",

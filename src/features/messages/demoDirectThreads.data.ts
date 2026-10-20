@@ -263,6 +263,23 @@ export const priyaConversation: Conversation = demoConversation({
   lastMessageSenderHandle: "tiago",
   unread: false,
   messages: demoThread([
+    // Studio rich cards: a shared track with a note (it starts at 0:42), and
+    // one whose release our team took down. The ids are demo Studio ids
+    // (features/studio/api/studioDemoMe.data.ts,
+    // features/studio/api/studioDemo.data.ts), written out so this registry
+    // never imports the Studio chunk.
+    {
+      id: "demo-msg-priya-studio-001",
+      from: "them",
+      text: "this one made me think of our kitchen dance nights and the bit at 0:42 got me on the tram\nhttps://queerpulse.com/studio/track?id=demo-track-cidade-dos-santos-06&t=42",
+      at: minutesAgo(190),
+    },
+    {
+      id: "demo-msg-priya-studio-002",
+      from: "me",
+      text: "ok obsessed and there was an older live one too i think\nhttps://queerpulse.com/studio/track?id=demo-track-withdrawn-01",
+      at: minutesAgo(184),
+    },
     {
       id: "demo-msg-priya-001",
       from: "them",

@@ -75,16 +75,16 @@ export const marketing: Catalog = {
   "about.stand.p1":
     "A interseccionalidade é a totalidade da política queer. Raça, classe, deficiência, estatuto migratório e género determinam quem tem segurança e a quem se pede que espere por ela. Uma plataforma que serve apenas pessoas queer brancas, cis, sem deficiência, com documentos e com conforto material percebeu mal a palavra comunidade.",
   "about.stand.p2":
-    "Para ser real, esta convicção tem de nos custar alguma coisa. Molda quem convidamos, quem modera, que queixas são levadas a sério, e que lutas temos coragem de nomear em voz alta quando nomeá-las é caro.",
+    "Pomos isto em prática em quem convidamos, em quem modera, nas queixas que levamos a sério e nas lutas que nomeamos em voz alta, mesmo quando isso nos custa dinheiro ou pessoas membras.",
   "about.stand.intersectionalityLink":
     "Lê como as pessoas membras descrevem viver nestas interseções",
   "about.stand.trans.title": "Sobre as vidas trans",
   "about.stand.trans.p1":
-    "As mulheres trans s\u00e3o mulheres. Os homens trans s\u00e3o homens. As pessoas n\u00e3o-bin\u00e1rias s\u00e3o n\u00e3o-bin\u00e1rias, e as pessoas intersexo existem. N\u00e3o afirmamos nada disto a meio-g\u00e1s, e nada disto est\u00e1 em discuss\u00e3o nesta plataforma.",
+    "As mulheres trans são mulheres. Os homens trans são homens. As pessoas não-binárias são não-binárias, e as pessoas intersexo existem. Nada disto está em debate aqui.",
   "about.stand.trans.p2":
-    "H\u00e1 um projeto que diz falar em nome das pessoas LGB enquanto faz press\u00e3o contra o T. Apresenta-se como defesa das mulheres, ou das crian\u00e7as, ou da atra\u00e7\u00e3o pelo mesmo sexo, e funciona pedindo a toda a gente que trate a presen\u00e7a de pessoas trans nesta comunidade como uma quest\u00e3o em aberto. Para n\u00f3s est\u00e1 fechada. Um grupo que se organiza para separar o T do resto de n\u00f3s est\u00e1 a organizar-se contra as nossas pessoas membras, e \u00e9 assim que lhe chamamos.",
+    "Há um projeto que diz falar em nome das pessoas LGB enquanto faz pressão contra o T. Costuma apresentar-se como proteção das mulheres, das crianças ou da atração pelo mesmo sexo, e pede a toda a gente que trate o lugar das pessoas trans nesta comunidade como uma questão em aberto. Para nós, é assunto arrumado. Um grupo que trabalha para separar o T do resto de nós está a trabalhar contra as nossas pessoas membras, e vamos dizê-lo.",
   "about.stand.trans.p3":
-    "O movimento \u00e9 conhecido. O pinkwashing pede emprestados os nossos direitos para fazer um Estado parecer civilizado; isto pede emprestada a seguran\u00e7a das mulheres para fazer a exclus\u00e3o parecer prote\u00e7\u00e3o. Ambos gastam a dignidade de outra pessoa para comprar respeitabilidade.",
+    "Funciona como o pinkwashing. O pinkwashing usa os nossos direitos para fazer um Estado parecer civilizado, e isto usa a segurança das mulheres para fazer a exclusão das pessoas trans parecer proteção.",
   "about.stand.trans.commitment.notADebate.title":
     "A presen\u00e7a de pessoas trans n\u00e3o \u00e9 tema de debate.",
   "about.stand.trans.commitment.notADebate.body":
@@ -92,21 +92,21 @@ export const marketing: Catalog = {
   "about.stand.trans.commitment.exclusion.title":
     "A defesa da exclus\u00e3o de pessoas trans \u00e9 uma violação do C\u00f3digo de Conduta.",
   "about.stand.trans.commitment.exclusion.body":
-    "Criticar um Estado \u00e9 discurso pol\u00edtico. Fazer campanha para retirar uma classe inteira de pessoas membras \u00e9 outra coisa, e chamar-lhe cr\u00edtica de g\u00e9nero deixa-a exatamente como estava.",
+    'Criticar um Estado é discurso político. Fazer campanha para pôr pessoas membras trans de fora viola o Código de Conduta, chame-se o que se chamar, "crítica de género" incluída.',
   "about.stand.trans.commitment.exclusion.link": "L\u00ea as diretrizes",
   "about.stand.trans.commitment.selfId.title":
     "A autodetermina\u00e7\u00e3o \u00e9 a norma aqui.",
   "about.stand.trans.commitment.selfId.body":
-    "Nunca se pede a ningu\u00e9m que prove o seu g\u00e9nero, nem \u00e0 modera\u00e7\u00e3o nem a mais ningu\u00e9m, em momento algum.",
+    "Aqui ninguém te vai pedir que proves o teu género, e isso inclui a moderação.",
   "about.stand.trans.commitment.selfId.link":
     "L\u00ea o guia de sa\u00fade trans",
   "about.stand.position.sexWork.title": "Trabalho sexual \u00e9 trabalho.",
   "about.stand.position.sexWork.body":
-    "As pessoas trabalhadoras do sexo s\u00e3o membras aqui nos mesmos termos que toda a gente. A descriminaliza\u00e7\u00e3o \u00e9 a posi\u00e7\u00e3o que mant\u00e9m pessoas vivas, e a pol\u00edtica que quer o trabalho sexual fora dos espa\u00e7os queer funciona com o mesmo motor da que quer as pessoas trans fora deles.",
+    "As pessoas trabalhadoras do sexo são membras aqui nos mesmos termos que toda a gente. Defendemos a descriminalização porque é o que as mantém vivas. Quem as quer fora dos espaços queer costuma querer as pessoas trans fora também, e usa os mesmos argumentos.",
   "about.stand.position.migration.title":
     "A migra\u00e7\u00e3o \u00e9 uma quest\u00e3o queer.",
   "about.stand.position.migration.body":
-    "As pessoas queer migram para sobreviver. O sistema de asilo e resid\u00eancia em Portugal \u00e9 lento de formas que estragam vidas, e o racismo contra pessoas brasileiras, dos PALOP e do sul da \u00c1sia aparece nos espa\u00e7os queer daqui com a mesma facilidade que em qualquer outro lado. Uma extrema-direita que cresceu depressa neste pa\u00eds quer tudo isto pior.",
+    "As pessoas queer migram para sobreviver. O sistema de asilo e residência em Portugal é lento de formas que estragam vidas, e o racismo contra pessoas brasileiras, dos PALOP e do sul da Ásia aparece nos espaços queer daqui com a mesma facilidade que em qualquer outro lado. A extrema-direita, que cresceu depressa em Portugal, quer tornar tudo isto ainda pior.",
   "about.stand.position.migration.link":
     "L\u00ea o guia de interseccionalidade",
   "about.stand.position.hiv.title":
@@ -116,12 +116,12 @@ export const marketing: Catalog = {
   "about.stand.position.hiv.link": "Recursos de sa\u00fade sexual",
   "about.stand.principle.title": "Quando falamos, e quando n\u00e3o falamos",
   "about.stand.principle.body":
-    "Falamos onde a nossa comunidade est\u00e1 diretamente implicada, e onde a identidade queer est\u00e1 a ser usada como cobertura para fazer mal. O teste \u00e9 esse. \u00c9 por isso que estas posi\u00e7\u00f5es est\u00e3o nesta p\u00e1gina e a maior parte das not\u00edcias n\u00e3o est\u00e1, e \u00e9 a norma pela qual nos podes responsabilizar quando achares que nos cal\u00e1mos sobre algo em que n\u00e3o dev\u00edamos ter-nos calado.",
+    "Falamos quando a nossa comunidade é diretamente afetada, ou quando alguém usa a identidade queer para disfarçar o mal que faz. É por isso que estas posições estão nesta página e a maior parte das notícias não está. Se achas que nos calámos sobre alguma coisa quando devíamos ter falado, pede-nos contas com este teste.",
   "about.stand.palestine.title": "Sobre a Palestina",
   "about.stand.palestine.p1":
-    "Israel está a cometer um genocídio contra o povo palestiniano em Gaza. Dizemo-lo com todas as letras, porque a pressão para suavizar isto é precisamente o problema. A QueerPulse está ao lado do povo palestiniano, e de quem trabalha pelo fim da ocupação e do cerco.",
+    "Israel está a cometer um genocídio contra o povo palestiniano em Gaza. Dizemo-lo com todas as letras porque há muita pressão para suavizar isto. A QueerPulse está ao lado do povo palestiniano, e de toda a gente que trabalha pelo fim da ocupação e do cerco.",
   "about.stand.palestine.p2":
-    "Recusamos também que as nossas vidas sirvam de cobertura para isso. O pinkwashing pega nos direitos LGBTQ+ e ergue-os como prova de que um Estado é civilizado enquanto esse mesmo Estado bombardeia, esfomeia e desloca populações. A nossa segurança nunca foi um argumento para a destruição de ninguém, e não a emprestamos para esse fim.",
+    "Também recusamos que as nossas vidas sirvam de cobertura para isso. O pinkwashing aponta os direitos LGBTQ+ como prova de que um Estado é civilizado enquanto esse mesmo Estado bombardeia, esfomeia e desloca pessoas. A segurança queer não é desculpa para destruir ninguém, e fazemos frente a quem a tente usar assim.",
   "about.stand.commitment.speech.title":
     "A defesa da Palestina é bem-vinda aqui.",
   "about.stand.commitment.speech.body":
@@ -3193,30 +3193,37 @@ export const marketing: Catalog = {
   "listBusiness.baseline.noticeBody":
     "Mantém-se enquanto o anúncio existir, por isso não há nada para mudar aqui. Todos os negócios do diretório concordaram com o mesmo.",
 
-  // ── Guardado automático local do editor. OFERECE uma cópia guardada neste
-  //    dispositivo; o formulário mantém-se igual ao que o servidor devolveu
-  //    até a pessoa carregar em repor, por isso nada publicado é substituído
-  //    em silêncio.
+  // ── Rascunho no servidor para o editor da pessoa responsável. OFERECE o
+  //    rascunho listing_edit; o formulário mantém-se igual ao anúncio
+  //    publicado até a pessoa carregar em repor, por isso nada publicado é
+  //    substituído em silêncio.
   "listBusiness.editor.restore.title": "Tens alterações por guardar de {when}",
   "listBusiness.editor.restore.sub":
-    "Ficaram guardadas neste dispositivo e nunca foram enviadas. O teu anúncio publicado não mudou.",
+    "Guardámo-las como rascunho. O teu anúncio publicado não mudou.",
   "listBusiness.editor.restore.serverChanged":
     "Atenção: este anúncio foi atualizado depois de essas alterações terem sido guardadas, por isso reposicioná-las substituiria o texto mais recente.",
   "listBusiness.editor.restore.restoreCta": "Repor",
   "listBusiness.editor.restore.discardCta": "Descartar",
   "listBusiness.editor.restore.justNow": "há instantes",
   "listBusiness.editor.restore.unknownWhen": "uma sessão anterior",
-  // Restore review: the diff a saved local copy would bring back, per area.
+  "listBusiness.editor.restore.discardError":
+    "Não conseguimos descartar as alterações guardadas. Tenta outra vez",
+  "listBusiness.editor.draftClearError":
+    "As tuas alterações estão guardadas. Não conseguimos apagar o rascunho, que desaparece sozinho dentro de 90 dias",
+  // CreatorDraftNotice junto ao estado de gravação do editor de espaços
+  "creatorDraftNote.body":
+    "A nossa equipa pode ver as tuas alterações antes de as guardares e dar-te uma mão se precisares",
+  // Restore review: the diff a saved draft would bring back, per area.
   "listBusiness.editor.restore.review.title":
     "Trazer de volta as alterações por guardar?",
   "listBusiness.editor.restore.review.sub":
-    "Guardadas neste dispositivo {when}. Marca as áreas que queres de volta.",
+    "Guardadas {when}. Marca as áreas que queres de volta.",
   "listBusiness.editor.restore.review.selectAll": "Marcar todas",
   "listBusiness.editor.restore.review.clearAll": "Desmarcar todas",
   "listBusiness.editor.restore.review.changeCount_one": "{count} alteração",
   "listBusiness.editor.restore.review.changeCount_other": "{count} alterações",
   "listBusiness.editor.restore.review.areaKept":
-    "Fica de fora: esta área mantém-se como está agora, e as alterações guardadas para ela são apagadas deste dispositivo.",
+    "Fica de fora: esta área mantém-se como está agora, e as alterações guardadas para ela são apagadas do rascunho.",
   "listBusiness.editor.restore.review.legend.now": "No ecrã agora",
   "listBusiness.editor.restore.review.legend.back": "Volta",
   "listBusiness.editor.restore.review.legend.spoken":
@@ -3490,6 +3497,8 @@ export const marketing: Catalog = {
   "changelog.release.count.infrastructure_other":
     "{count} alterações de infraestrutura",
   // Release headlines, one per shipping day (see changelogReleases.ts).
+  "changelog.releases.2026-10-19.headline":
+    "Tatuadores ganham páginas para marcar, música do Studio nos chats e reclamações de direitos.",
   "changelog.releases.2026-10-14.headline":
     "O Studio ganha podcasts, spoken word e áudio de performance, ambientes, cenas, escolhas da equipa, rádio de género ou ambiente, créditos de personas, um leitor completo, lançamentos agendados e kits de imprensa.",
   "changelog.releases.2026-10-13.headline":
@@ -3640,6 +3649,70 @@ export const marketing: Catalog = {
     "A QueerPulse arranca com as suas páginas principais e a navegação da comunidade.",
   "changelog.tag.report": "Abrir o formulário de denúncia",
   "changelog.tag.changelog": "Ver o registo de alterações",
+  "changelog.entries.community-giving.title":
+    "As comunidades ganham um separador Apoiar",
+  "changelog.entries.community-giving.body":
+    "Quem gere a comunidade lista links de donativos, números MB WAY e IBANs, e qualquer pessoa os abre ou copia num toque.",
+  "changelog.entries.mobile-profile-trust.title":
+    "Perfis no telemóvel mostram quem deu voto de confiança e quem conheces em comum",
+  "changelog.entries.mobile-profile-trust.body":
+    "Por baixo da bio vês agora as caras e os nomes de cada voto de confiança e as vossas conexões em comum.",
+  "changelog.entries.studio-safety-moderation.title":
+    "O Studio ganha avisos de conteúdo e reivindicações de direitos",
+  "changelog.entries.studio-safety-moderation.body":
+    "As faixas podem levar um aviso que pergunta antes de tocar, e a nossa equipa analisa cada reivindicação de direitos.",
+  "changelog.entries.community-volunteering-tab.title":
+    "Encontra funções de voluntariado em cada comunidade",
+  "changelog.entries.community-volunteering-tab.body":
+    "O separador Voluntariado mostra as funções abertas de uma comunidade, e quem a gere pode publicar uma ali.",
+  "changelog.entries.volunteer-closed-signups.title":
+    "As funções de voluntariado fechadas deixam de aceitar inscrições",
+  "changelog.entries.volunteer-closed-signups.body":
+    "As funções publicadas por comunidades privadas também ficam fora do quadro público de voluntariado.",
+  "changelog.entries.admin-creator-drafts.title":
+    "Rascunhos em curso no painel de administração",
+  "changelog.entries.admin-creator-drafts.body":
+    "Quem administra pré-visualiza rascunhos por acabar de comunidades, personas e negócios e pode escrever a quem os criou.",
+  "changelog.entries.drafts-saved-to-your-account.title":
+    "Os rascunhos seguem-te entre dispositivos",
+  "changelog.entries.drafts-saved-to-your-account.body":
+    "Rascunhos de eventos, comunidades e alterações de anúncios ficam na tua conta e abrem noutro dispositivo.",
+  "changelog.entries.trust-network-rebuilt-for-admins.title":
+    "Rede de confiança refeita para a moderação",
+  "changelog.entries.trust-network-rebuilt-for-admins.body":
+    "Casos para rever com motivos, árvore de convites, filtros, vista em lista, ligações para partilhar e versão para telemóvel.",
+  "changelog.entries.tattoo-artist-pages.title":
+    "Tatuadores ganham uma página para marcarem sessões",
+  "changelog.entries.tattoo-artist-pages.body":
+    "Estado da agenda, preços, trabalho cicatrizado e de cicatrizes, guest spots e loja, com fotos desfocadas até tocares.",
+  "changelog.entries.business-team.title":
+    "Conhece a equipa nas páginas de negócios",
+  "changelog.entries.business-team.body":
+    "Os negócios mostram as personas que lá trabalham, e cada persona mostra onde trabalha.",
+  "changelog.entries.studio-wav-aiff-uploads.title":
+    "Envia masters WAV e AIFF para o Studio",
+  "changelog.entries.studio-wav-aiff-uploads.body":
+    "Larga masters WAV ou AIFF no Studio e o teu navegador converte-os em MP3 antes do envio.",
+  "changelog.entries.studio-rich-cards.title":
+    "Partilha música do Studio em conversas e publicações",
+  "changelog.entries.studio-rich-cards.body":
+    "Faixas, lançamentos e playlists tocam dentro das mensagens, grupos, publicações, feed, fórum e páginas de personas.",
+  "changelog.entries.studio-collaborative-playlists.title":
+    "Edita playlists do Studio em conjunto",
+  "changelog.entries.studio-collaborative-playlists.body":
+    "Convida conexões ou quem gere a tua persona contigo para editarem uma playlist do Studio.",
+  "changelog.entries.event-cover-posters.title":
+    "As capas dos eventos aceitam cartazes verticais",
+  "changelog.entries.event-cover-posters.body":
+    "Carrega o cartaz do teu evento como capa e ele aparece inteiro, rodeado por uma versão desfocada de si.",
+  "changelog.entries.event-description-limit.title":
+    "As descrições de eventos param nos 1200 caracteres",
+  "changelog.entries.event-description-limit.body":
+    "O contador e o servidor usam o mesmo limite, por isso o que escreves cabe no cartão do quadro.",
+  "changelog.entries.feed-connect-shows-pending.title":
+    "Os cartões do feed mostram Pendente depois de pedires para conectar",
+  "changelog.entries.feed-connect-shows-pending.body":
+    "Atualizar a página já não volta a pôr o botão em Conectar, e ao tocá-lo vês o pedido que já está à espera.",
   "changelog.entries.chat-stays-with-the-newest-message.title":
     "As mensagens ficam no ecrã enquanto escreves no iPhone",
   "changelog.entries.chat-stays-with-the-newest-message.body":
@@ -9691,6 +9764,7 @@ export const marketing: Catalog = {
   //    futuro. Todo o resto nesta página (títulos, botões, etiquetas fixas)
   //    é chrome e está traduzido abaixo.
   "volunteerDetail.backCta": "Todas as oportunidades de voluntariado",
+  "volunteerDetail.backToCommunity": "Voltar a {community}",
   "volunteerDetail.meta.title":
     "{role} com {org}: voluntariado pela QueerPulse",
   "volunteerDetail.meta.loadingTitle":
@@ -9698,6 +9772,8 @@ export const marketing: Catalog = {
   "volunteerDetail.error.alreadySignedUp": "Já te inscreveste nesta função.",
   "volunteerDetail.error.full":
     "Esta oportunidade acabou de ficar completa: todas as vagas estão ocupadas.",
+  "volunteerDetail.error.closed":
+    "Esta oportunidade fechou e já não aceita inscrições.",
   "volunteerDetail.error.alreadyOrFull":
     "Já te inscreveste, ou esta oportunidade já está completa.",
   "volunteerDetail.error.generic":
@@ -12855,4 +12931,105 @@ export const marketing: Catalog = {
     "Ferramentas mais afinadas para a equipa",
   "changelog.entries.sharper-staff-tools.body":
     "A moderação vê provas de habitação, pedidos de segurança têm fila própria e os guias editam-se secção a secção.",
+
+  // ── Meet the team on business pages (2026-10-19) ──
+  "directory.detail.team.title": "Conhece a <em>equipa</em>",
+  "directory.detail.team.sub":
+    "As personas que trabalham aqui. Toca numa para abrires a página dela",
+  "directory.detail.team.showAll": "Mostrar todas ({count})",
+  "directory.detail.team.showFewer": "Mostrar menos",
+  "listBusiness.editor.section.team": "Equipa",
+  "listBusiness.editor.nav.awaitingCount_one":
+    "{count} à espera da tua resposta",
+  "listBusiness.editor.nav.awaitingCount_other":
+    "{count} à espera da tua resposta",
+  "listBusiness.team.intro":
+    "Mostra na tua página as personas que trabalham aqui. Uma persona aparece quando quem a gere aceita",
+  "listBusiness.team.notLiveNotice":
+    "A tua listagem tem de estar publicada e visível no diretório antes de poderes convidar ou aprovar alguém",
+  "listBusiness.team.search.label": "Procura uma persona pelo nome ou @handle",
+  "listBusiness.team.search.placeholder": "Nome ou @handle",
+  "listBusiness.team.search.hint": "Escreve pelo menos 2 caracteres",
+  "listBusiness.team.search.empty":
+    "Nenhuma persona publicada corresponde a isso",
+  "listBusiness.team.search.loadError":
+    "Não conseguimos pesquisar agora. Tenta outra vez",
+  "listBusiness.team.search.resultCount_one": "{count} persona encontrada",
+  "listBusiness.team.search.resultCount_other": "{count} personas encontradas",
+  "listBusiness.team.candidate.pending": "À espera de resposta",
+  "listBusiness.team.candidate.accepted": "Na equipa",
+  "listBusiness.team.candidate.askedYou": "Pediu para entrar",
+  "listBusiness.team.roleLabel.label": "Função na tua página (opcional)",
+  "listBusiness.team.roleLabel.placeholder": "Artista residente",
+  "listBusiness.team.roleLabel.hint": "Uma linha, até 40 caracteres",
+  "listBusiness.team.inviteCta": "Convidar para a equipa",
+  "listBusiness.team.inviteAria": "Convidar para a equipa: {name}",
+  "listBusiness.team.inviteHeading": "Convidar uma persona",
+  "listBusiness.team.requests.heading": "Pedidos para entrar",
+  "listBusiness.team.approveCta": "Aprovar",
+  "listBusiness.team.approveAria": "Aprovar {name}",
+  "listBusiness.team.declineCta": "Recusar",
+  "listBusiness.team.declineAria": "Recusar {name}",
+  "listBusiness.team.invites.heading": "Convites enviados",
+  "listBusiness.team.cancelInviteCta": "Cancelar convite",
+  "listBusiness.team.cancelInviteAria": "Cancelar convite: {name}",
+  "listBusiness.team.accepted.heading": "Na tua página",
+  "listBusiness.team.accepted.count": "{count} de {max}",
+  "listBusiness.team.accepted.empty":
+    "Ainda não aparece ninguém na tua página. Convida uma persona ou aprova um pedido",
+  "listBusiness.team.moveUpAria": "Subir {name}",
+  "listBusiness.team.moveDownAria": "Descer {name}",
+  "listBusiness.team.movedStatus": "{name} está agora em {position} de {count}",
+  "listBusiness.team.editRoleCta": "Editar função",
+  "listBusiness.team.editRoleAria": "Editar função: {name}",
+  "listBusiness.team.saveRoleCta": "Guardar função",
+  "listBusiness.team.cancelEditCta": "Cancelar",
+  "listBusiness.team.removeCta": "Remover da equipa",
+  "listBusiness.team.removeAria": "Remover da equipa: {name}",
+  "listBusiness.team.removeConfirm.title": "Remover {name} da tua equipa?",
+  "listBusiness.team.removeConfirm.titleHidden":
+    "Remover esta persona da tua equipa?",
+  "listBusiness.team.removeConfirm.body":
+    "Esta persona deixa de aparecer na tua página de imediato. Podes voltar a convidá-la mais tarde",
+  "listBusiness.team.hiddenPersona.name":
+    "Uma persona que não está visível de momento",
+  "listBusiness.team.hiddenPersona.hint":
+    "Volta a aparecer na tua página quando ficar visível",
+  "listBusiness.team.toast.invited": "Convite enviado",
+  "listBusiness.team.toast.added": "Adicionada à tua equipa",
+  "listBusiness.team.toast.declined": "Pedido recusado",
+  "listBusiness.team.toast.cancelled": "Convite cancelado",
+  "listBusiness.team.toast.removed": "Removida da tua equipa",
+  "listBusiness.team.toast.roleSaved": "Função guardada",
+  "listingTeam.errors.personaNotFound": "Não encontrámos essa persona",
+  "listingTeam.errors.listingNotFound":
+    "Não encontrámos esse negócio. Pode estar escondido de momento",
+  "listingTeam.errors.linkGone": "Isto já foi respondido ou retirado",
+  "listingTeam.errors.personaIneligible":
+    "Esta persona pode entrar numa equipa quando estiver publicada, tiver um handle e estiver visível para membros ou para toda a gente",
+  "listingTeam.errors.listingNotLive":
+    "O negócio tem de estar publicado e visível no diretório primeiro",
+  "listingTeam.errors.alreadyPendingInvite":
+    "Já há um convite a esta persona à espera de resposta",
+  "listingTeam.errors.alreadyPendingRequest":
+    "Já há um pedido desta persona à espera de resposta",
+  "listingTeam.errors.alreadyAccepted": "Esta persona já faz parte da equipa",
+  "listingTeam.errors.cooldown":
+    "Isto foi recusado há pouco tempo. Podes voltar a pedir a partir de {date}",
+  "listingTeam.errors.cooldownLater":
+    "Isto foi recusado há pouco tempo. Podes voltar a pedir mais tarde",
+  "listingTeam.errors.teamFull":
+    "Esta equipa está completa. Um negócio pode mostrar até {max} personas",
+  "listingTeam.errors.pendingFullListing":
+    "Tens {max} convites e pedidos à espera. Responde ou cancela alguns antes de enviares mais",
+  "listingTeam.errors.pendingFullPersona":
+    "Este negócio tem demasiados pedidos à espera de momento. Tenta mais tarde",
+  "listingTeam.errors.personaFull":
+    "Esta persona já está em {max} equipas, o máximo possível",
+  "listingTeam.errors.personaRequestsFull":
+    "Esta persona tem {max} pedidos à espera. Cancela um para enviar outro",
+  "listingTeam.errors.notAccepted": "Esta ligação já terminou",
+  "listingTeam.errors.orderMismatch":
+    "A equipa acabou de mudar. Tenta outra vez",
+  "listingTeam.errors.generic": "Algo correu mal. Tenta outra vez",
 };

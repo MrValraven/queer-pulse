@@ -8,6 +8,8 @@ import {
   type StudioQueueSnapshot,
 } from "./studioQueueStorage";
 import { clearStudioEpisodeMemory } from "./studioEpisodeMemory";
+import { clearStudioTrackReveals } from "../../forum/forumWarnings.helpers";
+import { clearStudioWarningConsent } from "./studioWarningGate";
 
 const POSITION_SAVE_INTERVAL_MS = 5000;
 
@@ -90,6 +92,10 @@ export function useStudioQueuePersistence(
       // Studio artist kinds: losing Studio access clears the episode memory
       // with the saved queue (spec 5.7).
       clearStudioEpisodeMemory();
+      // Studio safety: the warning consent and the uncovered lyrics go with
+      // the listener memory.
+      clearStudioWarningConsent();
+      clearStudioTrackReveals();
     }
   }, [memberId, isSessionSettled, hasAccess]);
 
@@ -100,6 +106,8 @@ export function useStudioQueuePersistence(
     restoredPositionRef.current = null;
     isAwaitingResetRef.current = true;
     optionsRef.current.onReset();
+    clearStudioWarningConsent();
+    clearStudioTrackReveals();
   }, [memberId]);
 
   useEffect(() => {

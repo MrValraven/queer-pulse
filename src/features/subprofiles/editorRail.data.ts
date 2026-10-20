@@ -1,6 +1,7 @@
 import type { IconType } from "react-icons";
 import {
   FiAtSign,
+  FiBriefcase,
   FiCheckCircle,
   FiGlobe,
   FiLayout,
@@ -37,6 +38,7 @@ export type EditorPaneKey =
   | `section:${SubprofileSection}`
   | typeof FEED_IMPORT_PANE
   | "affiliations"
+  | "works-at"
   | "owners"
   | "publish";
 
@@ -105,6 +107,8 @@ export interface EditorRailEntry {
   icon: IconType;
   /** Right-aligned `.rail-n` count, already formatted (item count / ready-of-total). */
   badge?: string;
+  /** Waiting-for-you count, drawn as a coral pill. Set only above zero. */
+  attentionCount?: number;
   /**
    * When set, the row renders the draft-readiness `.ring` graphic in place of
    * its `icon` (and no `badge`) — matching the design's "Get it live" Publish
@@ -137,7 +141,9 @@ export interface EditorRailGroup {
  */
 export function buildEditorRailGroups(
   subprofile: SubprofileView,
+  options: { worksAtAttentionCount?: number } = {},
 ): EditorRailGroup[] {
+  const worksAtAttentionCount = options.worksAtAttentionCount ?? 0;
   const readiness = estimateDraftReadiness(subprofile);
   const sectionsInBlocks = sectionsInPageBlocks(subprofile.kind);
 
@@ -208,6 +214,14 @@ export function buildEditorRailGroups(
           key: "affiliations",
           labelKey: "subprofiles:affiliationsEditor.title",
           icon: FiMapPin,
+        },
+        {
+          key: "works-at",
+          labelKey: "subprofiles:worksAtEditor.title",
+          icon: FiBriefcase,
+          ...(worksAtAttentionCount > 0
+            ? { attentionCount: worksAtAttentionCount }
+            : {}),
         },
         { key: "owners", labelKey: "subprofiles:owners.title", icon: FiUsers },
       ],

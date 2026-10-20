@@ -108,6 +108,9 @@ function StudioNowPlayingOverlay({ onNavigate }: { onNavigate: () => void }) {
     <m.div
       ref={layerRef}
       className={styles.layer}
+      // Portalled out of the bar, so it carries its own marker: Sentry drops
+      // the clicks made in here (dropStudioPlayBreadcrumb).
+      data-studio-player=""
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}

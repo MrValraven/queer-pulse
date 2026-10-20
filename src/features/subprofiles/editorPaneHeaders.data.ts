@@ -47,6 +47,10 @@ export const PANE_HEADER: Partial<Record<EditorPaneKey, PaneHeaderCopy>> = {
     titleKey: "subprofiles:affiliationsEditor.title",
     ledeKey: "subprofiles:affiliationsEditor.note",
   },
+  "works-at": {
+    titleKey: "subprofiles:worksAtEditor.title",
+    ledeKey: "subprofiles:worksAtEditor.note",
+  },
   owners: {
     titleKey: "subprofiles:owners.title",
     ledeKey: "subprofiles:owners.note",

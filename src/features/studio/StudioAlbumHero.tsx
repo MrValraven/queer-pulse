@@ -4,6 +4,7 @@ import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { StudioReleaseView } from "./api/studio.adapters";
 import { StudioAlbumHeroActions } from "./StudioAlbumHeroActions";
+import { StudioReleaseClaimPanels } from "./StudioClaimPanels";
 import { StudioDetailHero } from "./StudioDetailHero";
 import { StudioReleaseDisputePanel } from "./StudioReleaseDisputePanel";
 import { releaseFactsLine } from "./studioFacts";
@@ -94,6 +95,8 @@ export function StudioAlbumHero({
       {/* Its own row under the hero: the hero bottom-aligns the cover with
         the text column, so a form opening inside it pushed the cover down. */}
       <StudioReleaseDisputePanel release={release} />
+      {/* Studio safety: the owner's copyright claims, beside the dispute. */}
+      <StudioReleaseClaimPanels release={release} />
     </>
   );
 }

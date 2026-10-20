@@ -4,6 +4,28 @@ import {
 } from "../../shared/api/errorMessage";
 import { studioErrorCodeOf } from "./api/studio.api";
 import type { StudioErrorCode } from "./api/studio.types";
+import type { StudioSafetyErrorCode } from "./api/studioSafety.types";
+
+/** Studio safety and moderation: one message per new contract code. */
+export const STUDIO_SAFETY_ERROR_MESSAGE_KEY: Record<
+  StudioSafetyErrorCode,
+  string
+> = {
+  studio_track_withheld: "studio:errors.trackWithheld",
+  studio_track_explicit_locked: "studio:errors.trackExplicitLocked",
+  studio_use_copyright_claim: "studio:errors.useCopyrightClaim",
+  studio_claim_own_track: "studio:errors.claimOwnTrack",
+  studio_claim_exists: "studio:errors.claimExists",
+  studio_claim_limit: "studio:errors.claimLimit",
+  studio_claim_not_countered: "studio:errors.claimNotCountered",
+  studio_claim_already_replied: "studio:errors.claimAlreadyReplied",
+  studio_claim_not_live: "studio:errors.claimNotLive",
+  studio_claim_not_accepted: "studio:errors.claimNotAccepted",
+  studio_claim_not_submitted: "studio:errors.claimNotSubmitted",
+  studio_claim_not_decidable: "studio:errors.claimNotDecidable",
+  studio_track_report_mismatch: "studio:errors.trackReportMismatch",
+  studio_track_report_not_open: "studio:errors.trackReportNotOpen",
+};
 
 /** One message per contract error code. The publish codes reuse the publish
  *  checklist's lines, so a refusal reads the same as the checklist. */
@@ -71,6 +93,20 @@ export const STUDIO_ERROR_MESSAGE_KEY: Record<StudioErrorCode, string> = {
   studio_episode_order_locked: "studio:errors.episodeOrderLocked",
   studio_not_a_podcast: "studio:errors.notAPodcast",
   studio_episode_limit: "studio:errors.episodeLimit",
+  // Studio collaborative playlists.
+  studio_playlist_not_found: "studio:errors.playlistNotFound",
+  studio_playlist_owner_only: "studio:errors.playlistOwnerOnly",
+  studio_playlist_editor_source_mismatch:
+    "studio:errors.playlistEditorSourceMismatch",
+  studio_playlist_editor_cap: "studio:errors.playlistEditorCap",
+  studio_playlist_editor_ineligible: "studio:errors.playlistEditorIneligible",
+  studio_playlist_invite_unavailable: "studio:errors.playlistInviteUnavailable",
+  studio_playlist_invite_not_found: "studio:errors.playlistInviteNotFound",
+  studio_playlist_credit_change_removes_editors:
+    "studio:errors.playlistCreditChangeRemovesEditors",
+  studio_playlist_entry_not_found: "studio:errors.playlistEntryNotFound",
+  studio_playlist_editor_not_found: "studio:errors.playlistEditorNotFound",
+  ...STUDIO_SAFETY_ERROR_MESSAGE_KEY,
 };
 
 export function studioErrorMessageKey(code: StudioErrorCode | null): string {

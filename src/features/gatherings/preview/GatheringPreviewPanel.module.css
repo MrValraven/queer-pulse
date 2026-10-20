@@ -131,11 +131,25 @@
   overflow: hidden;
   background: rgba(var(--accent-rgb), 0.12);
   border-radius: var(--radius-18) var(--radius-18) 0 0;
+  transition-property: height;
+  transition-duration: var(--dur-slow);
+  transition-timing-function: var(--ease);
+}
+/* A portrait or square cover file grows the strip so the whole poster reads
+   at a useful size; a landscape file and the placeholder keep 110px. */
+.coverPoster {
+  height: 220px;
 }
 .cover img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+/* The photo's slot fills the cover edge to edge: the cover's own tint and
+   rounded top already frame it, so the slot drops its hairline and fill. */
+.cover .coverImage {
+  border: 0;
+  background: none;
 }
 .coverPlaceholder {
   display: flex;
@@ -494,5 +508,8 @@
 @media (prefers-reduced-motion: reduce) {
   .bump {
     animation: none;
+  }
+  .cover {
+    transition-property: none;
   }
 }

@@ -40,9 +40,24 @@ export const AUDIT_ACTION_LABEL_KEY: Partial<Record<string, string>> = {
   studio_access_revoked: "admin:moderation.action.studioAccessRevoked",
   studio_release_taken_down: "admin:moderation.action.studioReleaseTakenDown",
   studio_release_restored: "admin:moderation.action.studioReleaseRestored",
+  // Studio safety: the trail names only the claim and the track.
+  studio_track_marked_explicit:
+    "admin:moderation.action.studioTrackMarkedExplicit",
+  studio_track_warning_added: "admin:moderation.action.studioTrackWarningAdded",
+  studio_copyright_claim_accepted:
+    "admin:moderation.action.studioCopyrightClaimAccepted",
+  studio_copyright_claim_declined:
+    "admin:moderation.action.studioCopyrightClaimDeclined",
+  studio_copyright_claim_upheld:
+    "admin:moderation.action.studioCopyrightClaimUpheld",
+  studio_copyright_claim_rejected:
+    "admin:moderation.action.studioCopyrightClaimRejected",
   // Studio v3: staff removed a reported persona post. Names the persona
   // only, like the release takedown rows.
   persona_post_removed: "admin:moderation.action.personaPostRemoved",
+  // A staff look at an unfinished creator draft; the note names only the kind
+  // and the id.
+  creator_draft_viewed: "admin:moderation.action.creatorDraftViewed",
 };
 
 /** The moderator-facing label for one audit entry. An unmapped code falls

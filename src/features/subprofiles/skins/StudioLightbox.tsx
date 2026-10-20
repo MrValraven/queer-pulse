@@ -7,6 +7,8 @@ import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { workMeta } from "../personaSkinRender";
 import { useLightboxDialog } from "../useLightboxDialog";
 import { WorkRightsFooter } from "../rights/WorkRightsFooter";
+import { BlurredPhoto } from "../BlurredPhoto";
+import { isItemPhotoBlurred } from "./tattoo/tattooItemImages";
 import type { SubprofileItemView } from "../api/subprofiles.adapters";
 
 export interface StudioLightboxProps {
@@ -17,6 +19,9 @@ export interface StudioLightboxProps {
   onClose: () => void;
   /** `-1` for previous, `1` for next — the caller owns/clamps the index. */
   onMove: (delta: number) => void;
+  /** The "Plate 01" line over the title. A tattoo artist's page turns it
+   *  off; the "1 / 12" count still says where the viewer is. */
+  hasPlateLabel?: boolean;
 }
 
 /**
@@ -41,6 +46,7 @@ export function StudioLightbox({
   index,
   onClose,
   onMove,
+  hasPlateLabel = true,
 }: StudioLightboxProps) {
   const { t } = useTranslation();
   useScrollLock();
@@ -55,6 +61,16 @@ export function StudioLightbox({
   const plateLabel = t("subprofiles:skinExtras.studio.plateLabel", {
     n: String(index + 1).padStart(2, "0"),
   });
+  const isPhotoBlurred = item.imageUrl !== "" && isItemPhotoBlurred(item);
+  const lightboxImage = (
+    <ImageSlot
+      src={item.imageUrl || undefined}
+      alt={item.title}
+      radius={0}
+      height="100%"
+      tint="plum"
+    />
+  );
 
   return createPortal(
     <div
@@ -85,16 +101,19 @@ export function StudioLightbox({
       )}
       <figure className="lb-figure">
         <div className="lb-art">
-          <ImageSlot
-            src={item.imageUrl || undefined}
-            alt={item.title}
-            radius={0}
-            height="100%"
-            tint="plum"
-          />
+          {isPhotoBlurred ? (
+            // Keyed by the photo URL: moving to the next work remounts the
+            // frame, so each photo paints in its own reveal state with no
+            // blur transition.
+            <BlurredPhoto isBlurred revealKey={item.imageUrl}>
+              {lightboxImage}
+            </BlurredPhoto>
+          ) : (
+            lightboxImage
+          )}
         </div>
         <figcaption>
-          <span className="plate-n">{plateLabel}</span>
+          {hasPlateLabel && <span className="plate-n">{plateLabel}</span>}
           <b>{item.title}</b>
           {meta && <span>{meta}</span>}
           {item.description && (

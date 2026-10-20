@@ -1,12 +1,22 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useToast } from "../../shared/components/feedback/useToast";
 import type { TFunction } from "../../shared/i18n/types";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { safeStorage } from "../../shared/storage/safeStorage";
+import type {
+  CreatorDraftConflict,
+  CreatorDraftResponse,
+  CreatorDraftSlot,
+} from "../creatorDrafts/api/creatorDrafts.types";
 import {
-  DRAFT_CLOCK_TICK_MS,
-  DRAFT_SAVE_DELAY_MS,
-} from "./createGathering.data";
+  useCreatorDraftAutosave,
+  type CreatorDraftSaveStatus,
+} from "../creatorDrafts/api/useCreatorDraftAutosave";
+import { DRAFT_CLOCK_TICK_MS } from "./createGathering.data";
+import {
+  eventDraftProgress,
+  isEventDraftMadeFor,
+} from "./createGatheringDraftProgress";
 import { removeStoredDraft } from "./createGatheringDraftStorage";
 import { findFormat, OTHER_FORMAT_KEY } from "./gatheringCatalog";
 import type { GatheringDraftSnapshot, GatheringForm } from "./useGatheringForm";
@@ -18,12 +28,14 @@ export {
 } from "./createGatheringDraftStorage";
 
 /**
- * The create wizard's draft: saved to this browser as the host types, offered
- * back on the next visit.
+ * The create wizard's draft: saved to the member's account through the shared
+ * creator draft autosave as the host types, offered back on the next visit.
  *
- * Every storage access goes through `safeStorage` (each call is its own
- * try/catch) and every parse sits in a try/catch, so blocked site data or a
- * corrupt entry degrades to "no draft".
+ * A copy an older release kept in this browser is offered once when the
+ * account slot is empty, uploaded on resume and then deleted here. Reading it
+ * goes through `safeStorage` (each call is its own try/catch) and the parse
+ * sits in a try/catch, so blocked site data or a corrupt entry degrades to
+ * "no draft". Nothing is written to browser storage any more.
  */
 
 const MILLISECONDS_PER_MINUTE = 60_000;
@@ -38,7 +50,13 @@ interface StoredDraft {
 }
 
 export type DraftSaveStatus =
-  { kind: "idle" } | { kind: "saving" } | { kind: "saved"; minutesAgo: number };
+  | { kind: "idle" }
+  | { kind: "saving" }
+  | { kind: "saved"; minutesAgo: number }
+  | { kind: "retrying" }
+  | { kind: "tooLarge" }
+  | { kind: "notSaved" }
+  | { kind: "conflict" };
 
 export interface DraftResumeOffer {
   /** The draft's title, else its format, else "Untitled draft". */
@@ -96,10 +114,144 @@ function draftLabel(snapshot: GatheringDraftSnapshot, t: TFunction): string {
     : t("gatherings:create.v2.draft.untitled");
 }
 
+/** The event wizard's one account slot. */
+const EVENT_DRAFT_SLOT: CreatorDraftSlot = { kind: "event", listingRef: null };
+
+/** Whole minutes from `fromMs` to `nowMs`; zero for a future or unknown time. */
+function minutesSince(fromMs: number, nowMs: number): number {
+  if (Number.isNaN(fromMs)) return 0;
+  return Math.max(0, Math.floor((nowMs - fromMs) / MILLISECONDS_PER_MINUTE));
+}
+
+/** A stored payload read as the wizard's snapshot, or null when it is not one. */
+function snapshotFromPayload(
+  payload: Record<string, unknown>,
+): GatheringDraftSnapshot | null {
+  return typeof payload.title === "string"
+    ? (payload as unknown as GatheringDraftSnapshot)
+    : null;
+}
+
+/** A draft waiting for the host's answer: the account copy or an old local one. */
+interface EventDraftOfferSource {
+  snapshot: GatheringDraftSnapshot;
+  /** Epoch milliseconds; NaN when the time cannot be read. */
+  savedAtMs: number;
+  isLegacy: boolean;
+}
+
+function serverOfferSource(
+  serverDraft: CreatorDraftResponse | null | undefined,
+): EventDraftOfferSource | null {
+  if (!serverDraft) return null;
+  const snapshot = snapshotFromPayload(serverDraft.payload);
+  if (snapshot === null) return null;
+  return {
+    snapshot,
+    savedAtMs: Date.parse(serverDraft.savedAt),
+    isLegacy: false,
+  };
+}
+
+function legacyOfferSource(
+  storedDraft: StoredDraft | null,
+): EventDraftOfferSource | null {
+  if (storedDraft === null) return null;
+  return {
+    snapshot: storedDraft.snapshot,
+    savedAtMs: storedDraft.savedAt,
+    isLegacy: true,
+  };
+}
+
+/**
+ * Which draft the resume strip offers, and whether saving has to wait for an
+ * answer. The account copy comes first; an old local copy is offered only
+ * while the account slot is empty.
+ */
+function useEventDraftOffer({
+  serverDraft,
+  legacyStorageKey,
+  shouldOfferResume,
+  communitySlugParam,
+}: {
+  serverDraft: CreatorDraftResponse | null | undefined;
+  legacyStorageKey: string;
+  shouldOfferResume: boolean;
+  communitySlugParam: string;
+}) {
+  const [loadedKey, setLoadedKey] = useState(legacyStorageKey);
+  const [legacyDraft, setLegacyDraft] = useState(() =>
+    readStoredDraft(legacyStorageKey),
+  );
+  const [isOfferAnswered, setIsOfferAnswered] = useState(false);
+  // The member id can resolve after the first render. Re-read the old local
+  // slot for the new key during render, React's pattern for state that
+  // follows a prop, and ask again about whatever that slot holds.
+  if (loadedKey !== legacyStorageKey) {
+    setLoadedKey(legacyStorageKey);
+    setLegacyDraft(readStoredDraft(legacyStorageKey));
+    setIsOfferAnswered(false);
+  }
+
+  const source =
+    serverOfferSource(serverDraft) ?? legacyOfferSource(legacyDraft);
+  // Any draft still unanswered holds saving: while the strip is open, and
+  // also on a visit that does not offer it at all (a `?duplicate=` visit, or
+  // a `?community=` link for another community). Saving then would replace
+  // a draft the host has not chosen to give up.
+  const hasUnansweredOffer = source !== null && !isOfferAnswered;
+  // The strip waits for the account read, so an old local copy never shows
+  // first and then swaps for the account copy.
+  const isOfferOpen =
+    hasUnansweredOffer &&
+    serverDraft !== undefined &&
+    shouldOfferResume &&
+    (!communitySlugParam ||
+      source.snapshot.communitySlug === communitySlugParam);
+
+  return {
+    source,
+    hasUnansweredOffer,
+    isOfferOpen,
+    markAnswered: () => setIsOfferAnswered(true),
+    /** Delete the old local copy from this browser. */
+    dropLegacy: () => {
+      removeStoredDraft(legacyStorageKey);
+      setLegacyDraft(null);
+    },
+  };
+}
+
+/** The clock "Saved 3 min ago" reads, ticking while a save is shown. */
+function useDraftClock(isTicking: boolean): number {
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => {
+    if (!isTicking) return;
+    const interval = window.setInterval(
+      () => setNow(Date.now()),
+      DRAFT_CLOCK_TICK_MS,
+    );
+    return () => window.clearInterval(interval);
+  }, [isTicking]);
+  return now;
+}
+
+function eventSaveStatus(
+  status: CreatorDraftSaveStatus,
+  now: number,
+): DraftSaveStatus {
+  if (status.kind !== "saved") return status;
+  return {
+    kind: "saved",
+    minutesAgo: minutesSince(Date.parse(status.savedAt), now),
+  };
+}
+
 export interface CreateGatheringDraftOptions {
   form: GatheringForm;
-  /** From `createGatheringDraftKey(memberId)`. */
-  storageKey: string;
+  /** From `createGatheringDraftKey(memberId)`: the old local copy, offered once. */
+  legacyStorageKey: string;
   /** False on a `?duplicate=` visit: the seed lands asynchronously and would
    *  overwrite whatever a resume restored. */
   shouldOfferResume: boolean;
@@ -107,115 +259,138 @@ export interface CreateGatheringDraftOptions {
    *  offered, since resuming it would silently replace that pick. */
   communitySlugParam: string;
   /** False while publishing and after it, so the draft slot stays clear once
-   *  the gathering is published. */
+   *  the event is published. */
   isSavingEnabled: boolean;
 }
 
 export function useCreateGatheringDraft({
   form,
-  storageKey,
+  legacyStorageKey,
   shouldOfferResume,
   communitySlugParam,
   isSavingEnabled,
-}: CreateGatheringDraftOptions) {
+}: CreateGatheringDraftOptions): {
+  saveStatus: DraftSaveStatus;
+  resumeOffer: DraftResumeOffer | null;
+  resume: () => void;
+  startFresh: () => void;
+  conflict: CreatorDraftConflict | null;
+  isConflictBusy: boolean;
+  loadNewer: () => void;
+  keepThisVersion: () => void;
+  /** After a publish: drops the client copy and the old local key. */
+  forget: () => void;
+  isNoteShown: boolean;
+} {
   const { t } = useTranslation();
   const { showToast } = useToast();
-  const [loadedKey, setLoadedKey] = useState(storageKey);
-  const [storedDraft, setStoredDraft] = useState(() =>
-    readStoredDraft(storageKey),
-  );
-  const [isOfferDismissed, setIsOfferDismissed] = useState(false);
-  // The member id can resolve after the first render. Re-read the slot for
-  // the new key during render, React's pattern for state that follows a prop.
-  if (loadedKey !== storageKey) {
-    setLoadedKey(storageKey);
-    setStoredDraft(readStoredDraft(storageKey));
-    setIsOfferDismissed(false);
+  // The engine's settled read, undefined while it loads. Kept as state so
+  // saving waits for the offer this read decides.
+  const [knownServerDraft, setKnownServerDraft] = useState<
+    CreatorDraftResponse | null | undefined
+  >(undefined);
+  const offer = useEventDraftOffer({
+    serverDraft: knownServerDraft,
+    legacyStorageKey,
+    shouldOfferResume,
+    communitySlugParam,
+  });
+  const { progress, missing } = eventDraftProgress(form);
+  const autosave = useCreatorDraftAutosave({
+    slot: EVENT_DRAFT_SLOT,
+    payload: form.dirty ? { ...form.draftSnapshot } : null,
+    progress,
+    missing,
+    isEnabled:
+      isSavingEnabled &&
+      knownServerDraft !== undefined &&
+      !offer.hasUnansweredOffer,
+  });
+  const latestServerDraft = autosave.isServerDraftLoading
+    ? undefined
+    : autosave.serverDraft;
+  if (latestServerDraft !== knownServerDraft) {
+    setKnownServerDraft(latestServerDraft);
   }
+  const now = useDraftClock(autosave.status.kind === "saved");
 
-  const isOfferOpen =
-    storedDraft !== null &&
-    shouldOfferResume &&
-    !isOfferDismissed &&
-    (!communitySlugParam ||
-      storedDraft.snapshot.communitySlug === communitySlugParam);
-
-  // `draftSnapshot` is a fresh object every render, so the effect keys on its
-  // serialized form. Saving waits while a stored draft is still unanswered:
-  // while the resume offer is open, and also on a visit that does not offer it
-  // at all (a `?duplicate=` visit, or a `?community=` link for another
-  // community). Writing then would replace a draft the host has not chosen to
-  // give up. Resuming or starting fresh answers it.
-  const serializedSnapshot = JSON.stringify(form.draftSnapshot);
-  const [savedSnapshot, setSavedSnapshot] = useState<string | null>(null);
-  const [lastSavedAt, setLastSavedAt] = useState<number | null>(null);
-  const [now, setNow] = useState(() => Date.now());
-  const hasUnansweredStoredDraft = storedDraft !== null && !isOfferDismissed;
-  const shouldSave = isSavingEnabled && !hasUnansweredStoredDraft && form.dirty;
-
+  // A resumed draft uploads on the next autosave. The old local copy stays
+  // until that upload reports its first "saved", so a failed upload keeps it.
+  const isLegacyClearPendingRef = useRef(false);
+  const isSaved = autosave.status.kind === "saved";
+  const { dropLegacy } = offer;
   useEffect(() => {
-    if (!shouldSave || serializedSnapshot === savedSnapshot) return;
-    const timer = window.setTimeout(() => {
-      const savedAt = Date.now();
-      safeStorage.set(
-        storageKey,
-        `{"version":1,"savedAt":${savedAt},"snapshot":${serializedSnapshot}}`,
-      );
-      setSavedSnapshot(serializedSnapshot);
-      setLastSavedAt(savedAt);
-      setNow(savedAt);
-    }, DRAFT_SAVE_DELAY_MS);
-    return () => window.clearTimeout(timer);
-  }, [shouldSave, serializedSnapshot, savedSnapshot, storageKey]);
-
-  useEffect(() => {
-    if (lastSavedAt === null) return;
-    const interval = window.setInterval(
-      () => setNow(Date.now()),
-      DRAFT_CLOCK_TICK_MS,
-    );
-    return () => window.clearInterval(interval);
-  }, [lastSavedAt]);
-
-  const saveStatus: DraftSaveStatus =
-    shouldSave && serializedSnapshot !== savedSnapshot
-      ? { kind: "saving" }
-      : lastSavedAt !== null
-        ? {
-            kind: "saved",
-            minutesAgo: Math.max(
-              0,
-              Math.floor((now - lastSavedAt) / MILLISECONDS_PER_MINUTE),
-            ),
-          }
-        : { kind: "idle" };
+    if (!isLegacyClearPendingRef.current || !isSaved) return;
+    isLegacyClearPendingRef.current = false;
+    dropLegacy();
+  }, [isSaved, dropLegacy]);
 
   const resumeOffer: DraftResumeOffer | null =
-    isOfferOpen && storedDraft
+    offer.isOfferOpen && offer.source
       ? {
-          label: draftLabel(storedDraft.snapshot, t),
-          ageMinutes: Math.max(
-            0,
-            Math.floor((now - storedDraft.savedAt) / MILLISECONDS_PER_MINUTE),
-          ),
+          label: draftLabel(offer.source.snapshot, t),
+          ageMinutes: minutesSince(offer.source.savedAtMs, now),
         }
       : null;
 
-  /** Put the stored draft back. The pledges start unticked, since the
+  /** Put the offered draft back. The pledges start unticked, since the
    *  snapshot holds form fields only. A field an older snapshot lacks keeps
-   *  the form's value. */
+   *  the form's value. The old local copy leaves this browser on the first
+   *  save after a resume from a legacy copy, so a failed upload keeps it. A
+   *  draft that came from the server leaves no local copy to wait on. */
   const resume = () => {
-    if (!storedDraft) return;
-    form.restoreDraft({ ...form.draftSnapshot, ...storedDraft.snapshot });
-    setIsOfferDismissed(true);
+    const { source } = offer;
+    if (!source) return;
+    form.restoreDraft({ ...form.draftSnapshot, ...source.snapshot });
+    offer.markAnswered();
+    if (source.isLegacy === false) offer.dropLegacy();
+    else isLegacyClearPendingRef.current = true;
     showToast(t("gatherings:create.v2.toast.draftResumed"), "success");
   };
 
-  /** Throw the stored draft away and keep the empty form. */
+  /** Throw the offered draft away and keep the form as it is. An account
+   *  copy is deleted on the server; when that fails the host hears it, and
+   *  the next save replaces the old copy anyway. */
   const startFresh = () => {
-    removeStoredDraft(storageKey);
-    setStoredDraft(null);
+    const isServerSource = offer.source?.isLegacy === false;
+    offer.markAnswered();
+    offer.dropLegacy();
+    if (!isServerSource) return;
+    autosave.discard().catch(() => {
+      showToast(t("gatherings:create.v2.toast.draftDiscardFailed"), "error");
+    });
   };
 
-  return { saveStatus, resumeOffer, resume, startFresh };
+  /** Restore the newer account copy. An emptied slot keeps the typed event. */
+  const loadNewer = () => {
+    void autosave
+      .loadNewer({
+        isReadable: (payload) => snapshotFromPayload(payload) !== null,
+      })
+      .then((newerDraft) => {
+        const snapshot =
+          newerDraft === null ? null : snapshotFromPayload(newerDraft.payload);
+        if (snapshot !== null) {
+          form.restoreDraft({ ...form.draftSnapshot, ...snapshot });
+        }
+      });
+  };
+
+  const forget = () => {
+    autosave.forget();
+    offer.dropLegacy();
+  };
+
+  return {
+    saveStatus: eventSaveStatus(autosave.status, now),
+    resumeOffer,
+    resume,
+    startFresh,
+    conflict: autosave.conflict,
+    isConflictBusy: autosave.isConflictBusy,
+    loadNewer,
+    keepThisVersion: autosave.keepThisVersion,
+    forget,
+    isNoteShown: isEventDraftMadeFor(form.draftSnapshot),
+  };
 }

@@ -48,6 +48,12 @@ interface ModalProps {
    *  assistive tech, and the title, close button and footer stay put. Off by
    *  default, so every other dialog keeps its layout with the keyboard up. */
   shouldCollapseSubWithKeyboard?: boolean;
+  /** For a Studio dialog that can open from the app-wide player (the
+   *  playlist picker, say): puts `data-studio-player` on the scrim, so
+   *  Sentry drops the clicks made in it (see dropStudioPlayBreadcrumb). The
+   *  dialog portals to <body>, out of the bar's own marker, so it needs this
+   *  one. Off by default, so every other dialog keeps its breadcrumbs. */
+  isStudioPlayerSurface?: boolean;
 }
 
 /**
@@ -68,6 +74,7 @@ export function Modal({
   children,
   initialFocusRef,
   shouldCollapseSubWithKeyboard = false,
+  isStudioPlayerSurface = false,
 }: ModalProps) {
   const { t } = useTranslation();
   // Plays the exit when an AnimatePresence parent removes this dialog; a
@@ -96,6 +103,7 @@ export function Modal({
         .filter(Boolean)
         .join(" ")}
       role="presentation"
+      data-studio-player={isStudioPlayerSurface ? "" : undefined}
       {...scrimProps}
     >
       <div

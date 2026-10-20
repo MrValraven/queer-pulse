@@ -271,3 +271,39 @@ export function previewMessageChime(): void {
     // Best-effort: the preview is a courtesy.
   }
 }
+
+/** One enveloped sine, for other short cues built from the chime's voice. */
+export type ChimeNoteOptions = NoteOptions;
+
+/**
+ * The shared context and its output chain for other short cues. null until a
+ * gesture made the context, or while it is not running. Never creates or
+ * resumes the context.
+ */
+export function runningChimeOutput(): {
+  context: AudioContext;
+  input: AudioNode;
+} | null {
+  try {
+    const context = sharedContext;
+    if (!context || context.state !== "running") return null;
+    outputChain ??= buildOutputChain(context);
+    return { context, input: outputChain.input };
+  } catch {
+    return null;
+  }
+}
+
+/** One enveloped sine: soft attack, exponential decay, stops after its tail. */
+export function playChimeNote(
+  context: AudioContext,
+  destination: AudioNode,
+  options: ChimeNoteOptions,
+): void {
+  playNote(context, destination, options);
+}
+
+/** Equal-temperament frequency for a semitone offset from A4 (440 Hz). */
+export function chimeNoteFrequency(semitonesFromA4: number): number {
+  return noteFrequency(semitonesFromA4);
+}

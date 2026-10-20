@@ -64,6 +64,39 @@ const en: Record<string, string> = {
   "push:messages.group.mention.gif": "{name} mentioned you: GIF",
   "push:messages.group.mention.document": "{name} mentioned you: Document",
   "push:messages.group.mention.sticker": "{name} mentioned you: Sticker",
+  // Studio rich cards: a message whose body carries a Studio link. LOCKSTEP
+  // with Plan 1 (push.listener.ts, rich-push-copy.ts). The copy names only
+  // the kind and the sender's note. `{note}` is the
+  // text without the link, at most 120 characters.
+  "push:messages.studio.track": "Shared a track from Studio",
+  "push:messages.studio.trackWithNote": "Shared a track from Studio: {note}",
+  "push:messages.studio.release": "Shared a release from Studio",
+  "push:messages.studio.releaseWithNote":
+    "Shared a release from Studio: {note}",
+  "push:messages.studio.playlist": "Shared a playlist from Studio",
+  "push:messages.studio.playlistWithNote":
+    "Shared a playlist from Studio: {note}",
+  "push:messages.group.studio.track": "{name} shared a track from Studio",
+  "push:messages.group.studio.trackWithNote":
+    "{name} shared a track from Studio: {note}",
+  "push:messages.group.studio.release": "{name} shared a release from Studio",
+  "push:messages.group.studio.releaseWithNote":
+    "{name} shared a release from Studio: {note}",
+  "push:messages.group.studio.playlist": "{name} shared a playlist from Studio",
+  "push:messages.group.studio.playlistWithNote":
+    "{name} shared a playlist from Studio: {note}",
+  "push:messages.group.mention.studio.track":
+    "{name} mentioned you and shared a track from Studio",
+  "push:messages.group.mention.studio.trackWithNote":
+    "{name} mentioned you and shared a track from Studio: {note}",
+  "push:messages.group.mention.studio.release":
+    "{name} mentioned you and shared a release from Studio",
+  "push:messages.group.mention.studio.releaseWithNote":
+    "{name} mentioned you and shared a release from Studio: {note}",
+  "push:messages.group.mention.studio.playlist":
+    "{name} mentioned you and shared a playlist from Studio",
+  "push:messages.group.mention.studio.playlistWithNote":
+    "{name} mentioned you and shared a playlist from Studio: {note}",
   "push:test.title": "Test notification",
   "push:test.body": "This is a test. Your notifications are working.",
   "push:connection.request.title": "New connection request",
@@ -152,6 +185,29 @@ const en: Record<string, string> = {
     "{requester} credited {persona} on {track}",
   "push:studioCreditAccepted.title": "Credit accepted",
   "push:studioCreditAccepted.body": "{persona} accepted your credit on {track}",
+  // Studio collaborative playlists: an invite to a member-credited playlist,
+  // and a co-owner picked as an editor of a persona-credited one. These four
+  // MUST stay word for word the English fallbacks the backend sender sets,
+  // because iOS renders the fallback directly.
+  "push:studioPlaylistEditorInvite.title": "Playlist invite",
+  "push:studioPlaylistEditorInvite.body":
+    "{name} invited you to edit {playlist}",
+  "push:studioPlaylistEditorAdded.title": "You can edit a playlist",
+  "push:studioPlaylistEditorAdded.body":
+    "{name} added you as an editor of {playlist} ({persona})",
+  // Pulse Live: one push when an organiser opens the lobby. MUST stay word for word the backend's rich-push-copy.ts, in both languages.
+  "push:quizshow.starting.title": "Pulse Live is starting",
+  "push:quizshow.starting.body":
+    "{event} live game is starting, join with code {code}",
+  // Meet the team. These MUST stay word for word the English fallbacks the
+  // backend sender sets, because iOS renders the fallback directly.
+  "push:listingTeamInvite.title": "Team invite",
+  "push:listingTeamInvite.body": "{listing} invited {persona} to join the team",
+  "push:listingTeamRequest.title": "Team request",
+  "push:listingTeamRequest.body":
+    "{persona} asked to join the team at {listing}",
+  "push:listingTeamAccepted.title": "Team link confirmed",
+  "push:listingTeamAccepted.body": "{persona} is now on the team at {listing}",
   // Shown INSTEAD of the real title/body when the member has turned on
   // "hide previews" (see pushPrivacy.ts). Says something arrived without
   // naming who it is from or what it said.
@@ -289,6 +345,37 @@ const pt: Record<string, string> = {
   "push:messages.group.mention.gif": "{name} mencionou-te: GIF",
   "push:messages.group.mention.document": "{name} mencionou-te: Documento",
   "push:messages.group.mention.sticker": "{name} mencionou-te: Sticker",
+  "push:messages.studio.track": "Partilhou uma faixa do Studio",
+  "push:messages.studio.trackWithNote": "Partilhou uma faixa do Studio: {note}",
+  "push:messages.studio.release": "Partilhou um lançamento do Studio",
+  "push:messages.studio.releaseWithNote":
+    "Partilhou um lançamento do Studio: {note}",
+  "push:messages.studio.playlist": "Partilhou uma playlist do Studio",
+  "push:messages.studio.playlistWithNote":
+    "Partilhou uma playlist do Studio: {note}",
+  "push:messages.group.studio.track": "{name} partilhou uma faixa do Studio",
+  "push:messages.group.studio.trackWithNote":
+    "{name} partilhou uma faixa do Studio: {note}",
+  "push:messages.group.studio.release":
+    "{name} partilhou um lançamento do Studio",
+  "push:messages.group.studio.releaseWithNote":
+    "{name} partilhou um lançamento do Studio: {note}",
+  "push:messages.group.studio.playlist":
+    "{name} partilhou uma playlist do Studio",
+  "push:messages.group.studio.playlistWithNote":
+    "{name} partilhou uma playlist do Studio: {note}",
+  "push:messages.group.mention.studio.track":
+    "{name} mencionou-te e partilhou uma faixa do Studio",
+  "push:messages.group.mention.studio.trackWithNote":
+    "{name} mencionou-te e partilhou uma faixa do Studio: {note}",
+  "push:messages.group.mention.studio.release":
+    "{name} mencionou-te e partilhou um lançamento do Studio",
+  "push:messages.group.mention.studio.releaseWithNote":
+    "{name} mencionou-te e partilhou um lançamento do Studio: {note}",
+  "push:messages.group.mention.studio.playlist":
+    "{name} mencionou-te e partilhou uma playlist do Studio",
+  "push:messages.group.mention.studio.playlistWithNote":
+    "{name} mencionou-te e partilhou uma playlist do Studio: {note}",
   "push:test.title": "Notificação de teste",
   "push:test.body": "Isto é um teste. As tuas notificações estão a funcionar.",
   "push:connection.request.title": "Novo pedido de conexão",
@@ -348,6 +435,23 @@ const pt: Record<string, string> = {
   "push:studioCreditAccepted.title": "Crédito aceite",
   "push:studioCreditAccepted.body":
     "{persona} aceitou o teu crédito em {track}",
+  "push:studioPlaylistEditorInvite.title": "Convite para playlist",
+  "push:studioPlaylistEditorInvite.body":
+    "{name} convidou-te para editar {playlist}",
+  "push:studioPlaylistEditorAdded.title": "Podes editar uma playlist",
+  "push:studioPlaylistEditorAdded.body":
+    "{name} deu-te acesso para editar {playlist} ({persona})",
+  "push:quizshow.starting.title": "O Pulse Live está a começar",
+  "push:quizshow.starting.body":
+    "O jogo ao vivo de {event} está a começar, entra com o código {code}",
+  "push:listingTeamInvite.title": "Convite para a equipa",
+  "push:listingTeamInvite.body": "{listing} convidou {persona} para a equipa",
+  "push:listingTeamRequest.title": "Pedido para a equipa",
+  "push:listingTeamRequest.body":
+    "{persona} pediu para entrar na equipa de {listing}",
+  "push:listingTeamAccepted.title": "Ligação à equipa confirmada",
+  "push:listingTeamAccepted.body":
+    "{persona} faz agora parte da equipa de {listing}",
   "push:preview.hidden.title": "QueerPulse",
   "push:preview.hidden.body": "Tens uma notificação nova.",
   "push:preview.hidden.message": "Tens uma mensagem nova.",

@@ -86,6 +86,17 @@ export type LifecycleNotificationKind =
   // release page, which the row opens.
   | "studio_release_taken_down"
   | "studio_release_dispute_decided"
+  // Studio safety. A copyright claim about a track: accepted (to the owners;
+  // the track is withheld), declined and countered (to the claimant),
+  // decided (to both; `recipientRole` and `outcome` pick the sentence),
+  // withdrawn (to the owners), and our team marking a track (`change`).
+  // In-app only, always delivered, no actor; payloads name the track only.
+  | "studio_copyright_claim_accepted"
+  | "studio_copyright_claim_declined"
+  | "studio_copyright_claim_countered"
+  | "studio_copyright_claim_decided"
+  | "studio_copyright_claim_withdrawn"
+  | "studio_track_marked"
   // Studio discovery. A persona of the member's was credited on a track, or
   // a credit the member's persona asked for was accepted. Both carry persona
   // names only; the member behind either persona never reaches the payload.
@@ -98,7 +109,18 @@ export type LifecycleNotificationKind =
   // Studio artist kinds. A persona the member follows published an episode
   // of a podcast show. Bundled like studio_release_published; the payload
   // names the persona, the show and the newest episode, and no actor.
-  | "studio_episode_published";
+  | "studio_episode_published"
+  // Studio collaborative playlists. The counterpart member is the actor (the
+  // owner on an invite or a pick, the invitee on an answer); the payload
+  // names the playlist, and the persona on a pick.
+  | "studio_playlist_editor_invite"
+  | "studio_playlist_editor_invite_accepted"
+  | "studio_playlist_editor_invite_declined"
+  | "studio_playlist_editor_added"
+  // Meet the team: the payload names a persona and a listing only.
+  | "listing_team_invite"
+  | "listing_team_request"
+  | "listing_team_accepted";
 
 /**
  * Which tab each of these kinds files under, following the neighbours already
@@ -171,10 +193,27 @@ export const LIFECYCLE_KIND_CATEGORY: Record<
   // moderation_outcome.
   studio_release_taken_down: "platform",
   studio_release_dispute_decided: "platform",
+  // Our team's word on a claim or a track, the same tab as the takedowns.
+  studio_copyright_claim_accepted: "platform",
+  studio_copyright_claim_declined: "platform",
+  studio_copyright_claim_countered: "platform",
+  studio_copyright_claim_decided: "platform",
+  studio_copyright_claim_withdrawn: "platform",
+  studio_track_marked: "platform",
   // Requests about a persona the member owns, the same tab as
   // subprofile_invite.
   studio_credit_requested: "community",
   studio_credit_accepted: "community",
+  // Invitations between members and persona co-owner news, the same tab as
+  // subprofile_invite.
+  studio_playlist_editor_invite: "community",
+  studio_playlist_editor_invite_accepted: "community",
+  studio_playlist_editor_invite_declined: "community",
+  studio_playlist_editor_added: "community",
+  // Meet the team: the payload names a persona and a listing only.
+  listing_team_invite: "community",
+  listing_team_request: "community",
+  listing_team_accepted: "community",
 };
 
 export function isLifecycleKind(
@@ -192,6 +231,11 @@ export function isLifecycleKind(
 const OUTCOME_FIELDS: Partial<
   Record<LifecycleNotificationKind, { field: string; values: string[] }>
 > = {
+  // Studio safety: what our team changed on the track.
+  studio_track_marked: {
+    field: "change",
+    values: ["explicit", "content_warning"],
+  },
   forum_thread_reviewed: {
     field: "decision",
     values: ["approved", "rejected"],
@@ -287,6 +331,17 @@ export function lifecycleKeyFor(type: string, payload: unknown): string {
       (payload as { youAreNowOwner?: unknown } | null)?.youAreNowOwner === true;
     return isYou ? `${type}.you` : type;
   }
+  // Studio safety: one kind reaches two audiences, so the row names its
+  // audience and the outcome picks the sentence; anything else reads the
+  // kind's neutral sentence.
+  if (type === "studio_copyright_claim_decided") {
+    const role = payloadString(payload, "recipientRole");
+    const outcome = payloadString(payload, "outcome");
+    const isKnown =
+      (role === "owner" || role === "claimant") &&
+      (outcome === "upheld" || outcome === "rejected");
+    return isKnown ? `${type}.${role}.${outcome}` : type;
+  }
   const named = NAMED_VARIANTS[type];
   if (named) {
     return payloadString(payload, named.field)
@@ -361,12 +416,28 @@ const TOKEN_FIELDS: Partial<Record<LifecycleNotificationKind, string[]>> = {
   // row missing it reads "One of your releases" or "your release" there.
   studio_release_taken_down: ["releaseTitle"],
   studio_release_dispute_decided: ["releaseTitle"],
+  // Studio safety: every sentence names the track; a row missing it reads
+  // the kind's fallback phrase.
+  studio_copyright_claim_accepted: ["trackTitle"],
+  studio_copyright_claim_declined: ["trackTitle"],
+  studio_copyright_claim_countered: ["trackTitle"],
+  studio_copyright_claim_decided: ["trackTitle"],
+  studio_copyright_claim_withdrawn: ["trackTitle"],
+  studio_track_marked: ["trackTitle"],
   studio_credit_requested: [
     "requestingPersonaName",
     "creditedPersonaName",
     "trackTitle",
   ],
   studio_credit_accepted: ["creditedPersonaName", "trackTitle"],
+  studio_playlist_editor_invite: ["playlistName"],
+  studio_playlist_editor_invite_accepted: ["playlistName"],
+  studio_playlist_editor_invite_declined: ["playlistName"],
+  studio_playlist_editor_added: ["playlistName", "personaName"],
+  // Meet the team: the payload names a persona and a listing only.
+  listing_team_invite: ["listingName", "personaName"],
+  listing_team_request: ["listingName", "personaName"],
+  listing_team_accepted: ["listingName", "personaName"],
 };
 
 /** Studio credit role slug to its `notifications:studioCreditRole.*` key. */

@@ -73,15 +73,16 @@ describe("flag review: who sees it", () => {
     expect(await screen.findByText("Track not found")).toBeInTheDocument();
   });
 
-  it("keeps the showcase flags in the demo", async () => {
+  it("shows the live review and its tabs in the demo", async () => {
     access.isShowcase = true;
     renderReview();
     expect(
       await screen.findByRole("heading", {
         level: 1,
-        name: /when someone flags something/i,
+        name: /studio reports and disputes/i,
       }),
     ).toBeInTheDocument();
+    expect(await screen.findByRole("tab", { name: "Disputes" })).toBeVisible();
   });
 });
 

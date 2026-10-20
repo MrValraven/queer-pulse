@@ -87,6 +87,12 @@ export function SubprofilePage() {
     isForwardingToMovedAddress;
   const lightbox = useStudioLightbox(
     result.state === "ok" ? result.data.sections : undefined,
+    result.state === "ok"
+      ? {
+          kind: result.data.kind,
+          featuredId: result.data.featured?.id ?? null,
+        }
+      : undefined,
   );
   // `result` is a fresh object each render, so depending on it defeats the
   // memo. Depend on the stable `sections` reference the query cache holds.
@@ -192,6 +198,7 @@ export function SubprofilePage() {
           index={lightbox.index}
           onClose={lightbox.close}
           onMove={lightbox.move}
+          hasPlateLabel={data.kind !== "tattoo_artist"}
         />
       )}
 

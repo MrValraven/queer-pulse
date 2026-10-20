@@ -336,6 +336,16 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
         capabilities: ["communities"],
         icon: FiBookOpen,
       },
+      {
+        // Creator drafts. `@Roles(Admin)` alone on the backend, so no grant
+        // reaches it: `isAdminOnly` and zero `capabilities`. The badge stays off on purpose:
+        // a draft waits on its creator, and the admin queues rule counts only
+        // what waits on staff.
+        labelKey: "shared:adminNav.items.creatorDrafts",
+        to: routes.adminCreatorDrafts,
+        icon: FiEdit3,
+        isAdminOnly: true,
+      },
     ],
   },
   {

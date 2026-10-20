@@ -4,6 +4,7 @@ import { StudioAudioUploadError } from "./api/studioAudioUpload";
 import {
   audioContentTypeOf,
   audioMaxBytesFor,
+  conversionFailureOf,
   fileRejectionKeyOf,
   isRetryableUploadError,
   removeErrorKeyOf,
@@ -152,5 +153,69 @@ describe("the audio cap by format", () => {
     expect(fileRejectionKeyOf("size", "music")).toBe(
       "studio:uploadFlow.files.rejectSize",
     );
+  });
+});
+
+describe("WAV and AIFF files", () => {
+  it("accepts them by extension or type, to convert to MP3", () => {
+    const { accepted, rejected } = validateAudioFiles(
+      [
+        fileOf("take.wav", "audio/wav"),
+        fileOf("take.WAV", ""),
+        fileOf("mix.aif", "application/octet-stream"),
+        fileOf("mix.aiff", "audio/x-aiff"),
+        fileOf("demo.aifc", ""),
+        fileOf("noext", "audio/vnd.wave"),
+      ],
+      0,
+    );
+    expect(rejected).toEqual([]);
+    expect(
+      accepted.map((entry) => [entry.contentType, entry.needsConversion]),
+    ).toEqual(Array.from({ length: 6 }, () => ["audio/mpeg", true]));
+  });
+
+  it("skips the size check, because the cap applies to the MP3", () => {
+    const master = sized("master.wav", "audio/wav", 300 * 1024 * 1024);
+    expect(validateAudioFiles([master], 0).accepted[0]?.needsConversion).toBe(
+      true,
+    );
+  });
+
+  it("keeps MP3 and M4A as they were", () => {
+    const { accepted } = validateAudioFiles(
+      [fileOf("a.mp3", "audio/mpeg"), fileOf("a.m4a", "")],
+      0,
+    );
+    expect(
+      accepted.map((entry) => [entry.contentType, entry.needsConversion]),
+    ).toEqual([
+      ["audio/mpeg", false],
+      ["audio/mp4", false],
+    ]);
+  });
+
+  it("lets a recognised MP3 name win over a WAV type from the browser", () => {
+    const { accepted } = validateAudioFiles(
+      [new File([], "song.mp3", { type: "audio/wav" })],
+      0,
+    );
+    expect(
+      accepted.map((entry) => [entry.contentType, entry.needsConversion]),
+    ).toEqual([["audio/mpeg", false]]);
+  });
+
+  it("names each conversion failure and whether Retry can fix it", () => {
+    expect(conversionFailureOf({ reason: "tooLong", maxMinutes: 53 })).toEqual({
+      errorKey: "studio:uploadFlow.files.errorTooLong",
+      errorValues: { maxMinutes: 53 },
+      isRetryable: false,
+    });
+    expect(conversionFailureOf({ reason: "unsupported" })).toEqual({
+      errorKey: "studio:uploadFlow.files.errorUnsupported",
+      errorValues: null,
+      isRetryable: false,
+    });
+    expect(conversionFailureOf({ reason: "failed" }).isRetryable).toBe(true);
   });
 });

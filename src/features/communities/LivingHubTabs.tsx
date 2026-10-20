@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import { FiEyeOff } from "react-icons/fi";
 import { FadeIn, Tabs } from "../../shared/components/ui";
@@ -15,7 +16,15 @@ import { EventsTab } from "./EventsTab";
 import { AboutResourcesTab } from "./AboutResourcesTab";
 import { ModToolsTab } from "./ModToolsTab";
 import { SpacesTab } from "./SpacesTab";
+import { VolunteeringTab } from "./VolunteeringTab";
+import { CommunityGivingTab } from "./giving/CommunityGivingTab";
+import { useGivingTab } from "./giving/useGivingTab";
 import { isCommunityStaff } from "./communityStaff";
+import { useActiveTabInView } from "./useActiveTabInView";
+import {
+  useVolunteeringTab,
+  type VolunteeringTabState,
+} from "./useVolunteeringTab";
 import styles from "./CommunityDetailPage.module.css";
 
 type Tab =
@@ -23,8 +32,10 @@ type Tab =
   | "discussion"
   | "members"
   | "events"
+  | "volunteering"
   | "spaces"
   | "about"
+  | "giving"
   | "modtools";
 
 const TABS: Tab[] = [
@@ -32,15 +43,29 @@ const TABS: Tab[] = [
   "discussion",
   "members",
   "events",
+  "volunteering",
   "spaces",
   "about",
+  "giving",
   "modtools",
 ];
 const isTab = (value: string | null): value is Tab =>
   value != null && (TABS as string[]).includes(value);
 
+/** The search params with `?tab=` pointing at `next`, every other param
+ *  kept. Pulse is the default tab, so it drops the param. `?mod=` addresses
+ *  a pane inside Mod tools and means nothing anywhere else, so it leaves
+ *  with the tab and stays out of the URL of every tab a mod visits later. */
+function paramsWithTab(previous: URLSearchParams, next: Tab): URLSearchParams {
+  const params = new URLSearchParams(previous);
+  if (next === "pulse") params.delete("tab");
+  else params.set("tab", next);
+  if (next !== "modtools") params.delete("mod");
+  return params;
+}
+
 /** A founder/edit-modal feature id is "on" when the community's `features`
- *  array includes it — or when the array itself is absent (demo mock data
+ *  array includes it, or when the array itself is absent (demo mock data
  *  seeded before this field existed defaults every feature on, matching the
  *  hub's behaviour before tabs were gated). */
 function featureOn(features: string[] | undefined, id: string): boolean {
@@ -59,6 +84,7 @@ export function LivingHubTabs({
   discussionPaging,
   rosterPaging,
   communityPulse,
+  givingMethodCount,
 }: {
   community: Community;
   info: CommunityDetail;
@@ -73,6 +99,7 @@ export function LivingHubTabs({
   /** Live-mode events source + loading/error state for the Events tab (inert
    *  in demo, where the tab reads `living.events` directly). */
   communityPulse: CommunityPulseResult;
+  givingMethodCount: number;
 }) {
   const { t } = useTranslation();
   // The active tab lives in the URL (?tab=), so a tab is deep-linkable,
@@ -83,19 +110,9 @@ export function LivingHubTabs({
     ? (searchParams.get("tab") as Tab)
     : "pulse";
   const setTab = (next: Tab) =>
-    setSearchParams(
-      (prev) => {
-        const params = new URLSearchParams(prev);
-        if (next === "pulse") params.delete("tab");
-        else params.set("tab", next);
-        // `?mod=` addresses a pane inside Mod tools and means nothing
-        // anywhere else, so it leaves with the tab rather than trailing
-        // along in the URL of every tab a mod visits afterwards.
-        if (next !== "modtools") params.delete("mod");
-        return params;
-      },
-      { replace: true },
-    );
+    setSearchParams((previous) => paramsWithTab(previous, next), {
+      replace: true,
+    });
 
   // Owner, co-owner and moderator all speak for the community: they get the
   // Mod tools tab, they see a tab the founder hid, and they may post an
@@ -106,8 +123,8 @@ export function LivingHubTabs({
   const isStaff = isCommunityStaff(role);
   // The founder's "events"/"roster" feature toggles (plus "show roster to
   // members" for roster specifically) decide whether each tab is really on.
-  // An owner/mod who turned one off still sees it themselves — with a
-  // "hidden from members" note below — everyone else just doesn't get the
+  // An owner/mod who turned one off still sees it themselves, with a
+  // "hidden from members" note below; everyone else just doesn't get the
   // tab. `living.features`/`rosterVisible` are `undefined` for demo mock data
   // seeded before these fields existed, which `featureOn`/the `?? true`
   // default treat as "on" (today's unchanged behaviour).
@@ -124,6 +141,35 @@ export function LivingHubTabs({
   const showSpaces =
     living.parent === null &&
     (living.allowsSubcommunities || living.subcommunityCount > 0);
+  // Open volunteer opportunities: staff always see the tab, everyone else
+  // once there is one to sign up for. Spaces skip it (`useVolunteeringTab`).
+  const volunteering = useVolunteeringTab({
+    living,
+    isMember,
+    isStaff,
+    isRequestedTab: tab === "volunteering",
+  });
+  // A `?tab=volunteering` link whose tab turns out hidden (nothing open, or
+  // the viewer may not read it) drops the param once the answer settles. A
+  // refresh then opens on Pulse without replaying the skeleton, and a later
+  // refetch that finds an opportunity leaves the viewer where they are.
+  const isStaleVolunteeringParam =
+    tab === "volunteering" &&
+    !volunteering.isLoading &&
+    !volunteering.isVisible;
+  const hasDroppedStaleParamRef = useRef(false);
+  useEffect(() => {
+    if (!isStaleVolunteeringParam) {
+      hasDroppedStaleParamRef.current = false;
+      return;
+    }
+    if (hasDroppedStaleParamRef.current) return;
+    hasDroppedStaleParamRef.current = true;
+    setSearchParams((previous) => paramsWithTab(previous, "pulse"), {
+      replace: true,
+    });
+  }, [isStaleVolunteeringParam, setSearchParams]);
+  const giving = useGivingTab({ role, givingMethodCount, living });
 
   const baseTabs: { id: Tab; label: string }[] = [
     { id: "pulse", label: t("communities:detail.tabs.pulse") },
@@ -134,10 +180,21 @@ export function LivingHubTabs({
     ...(showEvents
       ? [{ id: "events" as Tab, label: t("communities:detail.tabs.events") }]
       : []),
+    ...(volunteering.isVisible
+      ? [
+          {
+            id: "volunteering" as Tab,
+            label: t("communities:detail.tabs.volunteering"),
+          },
+        ]
+      : []),
     ...(showSpaces
       ? [{ id: "spaces" as Tab, label: t("communities:detail.tabs.spaces") }]
       : []),
     { id: "about", label: t("communities:detail.tabs.about") },
+    ...(giving.isGivingVisible
+      ? [{ id: "giving" as Tab, label: t("communities:detail.tabs.giving") }]
+      : []),
   ];
   const tabs = isStaff
     ? [
@@ -150,16 +207,22 @@ export function LivingHubTabs({
   const active: Tab =
     (tab === "modtools" && !isStaff) ||
     (tab === "events" && !showEvents) ||
+    (tab === "volunteering" && !volunteering.isVisible) ||
+    (tab === "giving" && !giving.isGivingVisible) ||
     (tab === "members" && !showMembers) ||
     (tab === "spaces" && !showSpaces)
       ? "pulse"
       : tab;
+  // On a phone the strip scrolls sideways; keep the active tab on screen.
+  const tabStripRef = useRef<HTMLDivElement>(null);
+  useActiveTabInView(tabStripRef, active);
 
   const count: Partial<Record<Tab, number>> = {
     pulse: living.pinned.length + living.pulse.length,
     discussion: threads.length,
     members: living.stats.members,
     events: living.events.filter((e) => !e.past).length,
+    volunteering: volunteering.total,
     // No count on the Spaces tab: which spaces a viewer may see depends on
     // their standing in each private space, so the tab shows no number.
     modtools:
@@ -171,7 +234,7 @@ export function LivingHubTabs({
       {/* This wrapper does real layout work: on a phone it turns the
           underline tabs into one horizontal scroll strip, so they keep to a
           single row. */}
-      <div className={styles.tabScroller}>
+      <div id="community-tabs" ref={tabStripRef} className={styles.tabScroller}>
         <Tabs
           className={styles.tabs}
           variant="underline"
@@ -201,6 +264,8 @@ export function LivingHubTabs({
         discussionPaging={discussionPaging}
         rosterPaging={rosterPaging}
         communityPulse={communityPulse}
+        volunteering={volunteering}
+        canEditGiving={giving.canEditGiving}
       />
     </div>
   );
@@ -225,6 +290,8 @@ function LivingHubTabContent({
   discussionPaging,
   rosterPaging,
   communityPulse,
+  volunteering,
+  canEditGiving,
 }: {
   active: Tab;
   isStaff: boolean;
@@ -241,6 +308,8 @@ function LivingHubTabContent({
   discussionPaging: PulsePaging;
   rosterPaging: PulsePaging;
   communityPulse: CommunityPulseResult;
+  volunteering: VolunteeringTabState;
+  canEditGiving: boolean;
 }) {
   const { t } = useTranslation();
   return (
@@ -297,6 +366,14 @@ function LivingHubTabContent({
           onRetry={communityPulse.refetch}
         />
       )}
+      {active === "volunteering" && (
+        <VolunteeringTab
+          slug={living.slug}
+          name={community.name}
+          isStaff={isStaff}
+          volunteering={volunteering}
+        />
+      )}
       {active === "spaces" && (
         <SpacesTab
           living={living}
@@ -310,6 +387,13 @@ function LivingHubTabContent({
           living={living}
           role={role}
           isMember={isMember}
+        />
+      )}
+      {active === "giving" && (
+        <CommunityGivingTab
+          slug={living.slug}
+          communityName={community.name}
+          canEdit={canEditGiving}
         />
       )}
       {active === "modtools" && (

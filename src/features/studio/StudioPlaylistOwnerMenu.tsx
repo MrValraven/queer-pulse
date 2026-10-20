@@ -6,19 +6,28 @@ import { useOutsideDismiss } from "../../shared/hooks/useOutsideDismiss";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import releaseStyles from "./StudioRelease.module.css";
 
-const ITEMS = [
+const OWNER_ITEMS = [
   { id: "edit", labelKey: "studio:playlist.page.editDetails" },
   { id: "visibility", labelKey: "studio:playlist.page.changeVisibility" },
+  { id: "manageEditors", labelKey: "studio:playlist.page.manageEditors" },
   { id: "delete", labelKey: "studio:playlist.page.deletePlaylist" },
 ] as const;
-type OwnerAction = (typeof ITEMS)[number]["id"];
+const EDITOR_ITEMS = [
+  { id: "edit", labelKey: "studio:playlist.page.editDetails" },
+  { id: "leave", labelKey: "studio:playlist.page.leavePlaylist" },
+] as const;
+type OwnerAction =
+  (typeof OWNER_ITEMS)[number]["id"] | (typeof EDITOR_ITEMS)[number]["id"];
 
-/** The owner's playlist menu: Edit details, Change visibility, Delete
- *  playlist. Arrow keys move through it, Escape and a click outside close it
- *  and focus returns to the trigger before a dialog opens. It fades. */
+/** The playlist menu. The owner gets Edit details, Change visibility,
+ *  Manage editors and Delete playlist; an editor gets Edit details and Leave
+ *  playlist. Arrow keys move through it, Escape and a click outside close
+ *  it, and focus returns to the trigger before a dialog opens. It fades. */
 export function StudioPlaylistOwnerMenu({
+  role,
   onAction,
 }: {
+  role: "owner" | "editor";
   onAction: (action: OwnerAction) => void;
 }) {
   const { t } = useTranslation();
@@ -28,6 +37,7 @@ export function StudioPlaylistOwnerMenu({
   const wrapRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const itemRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const items = role === "owner" ? OWNER_ITEMS : EDITOR_ITEMS;
   const close = () => {
     setIsOpen(false);
     triggerRef.current?.focus();
@@ -40,23 +50,25 @@ export function StudioPlaylistOwnerMenu({
   }, [isOpen]);
 
   function moveFocus(event: KeyboardEvent<HTMLDivElement>) {
-    const items = itemRefs.current.filter(
+    const menuItems = itemRefs.current.filter(
       (item): item is HTMLButtonElement => item !== null,
     );
-    const current = items.indexOf(document.activeElement as HTMLButtonElement);
+    const current = menuItems.indexOf(
+      document.activeElement as HTMLButtonElement,
+    );
     const nextIndex =
       event.key === "ArrowDown"
-        ? (current + 1) % items.length
+        ? (current + 1) % menuItems.length
         : event.key === "ArrowUp"
-          ? (current - 1 + items.length) % items.length
+          ? (current - 1 + menuItems.length) % menuItems.length
           : event.key === "Home"
             ? 0
             : event.key === "End"
-              ? items.length - 1
+              ? menuItems.length - 1
               : null;
     if (nextIndex === null) return;
     event.preventDefault();
-    items[nextIndex]?.focus();
+    menuItems[nextIndex]?.focus();
   }
 
   return (
@@ -93,7 +105,7 @@ export function StudioPlaylistOwnerMenu({
             transition={{ duration: reducedMotion ? 0 : 0.16, ease: "easeOut" }}
             onKeyDown={moveFocus}
           >
-            {ITEMS.map((item, index) => (
+            {items.map((item, index) => (
               <button
                 key={item.id}
                 type="button"

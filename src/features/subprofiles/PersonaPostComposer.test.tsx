@@ -14,6 +14,30 @@ vi.mock("./api/usePersonaPostMutations", () => ({
   useUpdatePersonaPost: () => ({ mutateAsync: updatePost, isPending: false }),
 }));
 
+vi.mock("../studio/share/LazyStudioShareCard", () => ({
+  LazyStudioShareCard: ({
+    target,
+    surface,
+    onRemove,
+  }: {
+    target: { kind: string };
+    surface: string;
+    onRemove?: () => void;
+  }) => (
+    <div
+      data-testid="studio-card"
+      data-kind={target.kind}
+      data-surface={surface}
+    >
+      {onRemove && (
+        <button type="button" onClick={onRemove}>
+          remove card
+        </button>
+      )}
+    </div>
+  ),
+}));
+
 const savedPost: PersonaPostView = {
   id: "post-1",
   body: "Rehearsal tonight",
@@ -272,5 +296,42 @@ describe("PersonaPostComposer edits", () => {
       }),
     );
     await waitFor(() => expect(onDone).toHaveBeenCalledTimes(1));
+  });
+
+  it("previews a Studio link with one remove control, the Remove link toggle", async () => {
+    renderComposer();
+    fireEvent.change(await screen.findByLabelText("Your update"), {
+      target: { value: "out now" },
+    });
+    const addLink = screen.getByRole("button", { name: "Add link" });
+    fireEvent.click(addLink);
+    const linkField = screen.getByPlaceholderText("https://");
+    fireEvent.change(linkField, {
+      target: {
+        value:
+          "https://queerpulse.com/studio/album?id=3f0c2a52-8d1e-4c6b-9a57-2b7f1e9d4c10",
+      },
+    });
+    expect(screen.getByTestId("studio-card")).toHaveAttribute(
+      "data-surface",
+      "composer",
+    );
+    expect(screen.queryByRole("button", { name: "remove card" })).toBeNull();
+    fireEvent.click(addLink);
+    expect(addLink).toHaveAccessibleName("Add link");
+    fireEvent.click(addLink);
+    expect(screen.getByPlaceholderText("https://")).toHaveValue("");
+  });
+
+  it("previews only an absolute https Studio link, the form the save takes", async () => {
+    renderComposer();
+    await screen.findByLabelText("Your update");
+    fireEvent.click(screen.getByRole("button", { name: "Add link" }));
+    fireEvent.change(screen.getByPlaceholderText("https://"), {
+      target: {
+        value: "/studio/album?id=3f0c2a52-8d1e-4c6b-9a57-2b7f1e9d4c10",
+      },
+    });
+    expect(screen.queryByTestId("studio-card")).toBeNull();
   });
 });

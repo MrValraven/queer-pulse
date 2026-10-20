@@ -1409,4 +1409,7 @@ export const settings: Catalog = {
   "dataExport.type.goTogether.label": "Go together answers",
   "dataExport.type.goTogether.sub":
     "Your friendship questionnaire answers and host question replies",
+  "notifications.volume.quizshow.title": "Pulse Live is starting",
+  "notifications.volume.quizshow.desc":
+    "When a host opens the live game at an event you're going to",
 };

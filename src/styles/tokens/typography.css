@@ -30,6 +30,13 @@
      it stops at 36px. */
   --text-poster-title-stacked: min(var(--text-poster-title), var(--text-36));
 
+  /* Pulse Live big screen: read from across a bar, so sizes follow the screen
+     height. vh keeps a 1080p TV at 48px or more whatever its width. */
+  --text-screen-code: clamp(4rem, 12vh, 10rem);
+  --text-screen-question: clamp(3rem, 6vh, 5rem); /* 48 to 80px, 65px at 1080p */
+  --text-screen-answer: clamp(2rem, 4vh, 3.5rem); /* 43px at 1080p */
+  --text-screen-label: clamp(1.5rem, 3vh, 2.25rem);
+
   /* The role names (--text-body, --text-caption, --text-label, --text-eyebrow,
      --text-subhead) are defined ONCE, at the bottom of this file, where they
      alias the numeric scale. They used to be declared here too, as raw px, and

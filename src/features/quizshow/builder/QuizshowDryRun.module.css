@@ -1,0 +1,50 @@
+/* The try-out draws the presenter stage at TV size on a 16:9 canvas as tall
+   as the viewport (so the stage's vh based type reads as it does on the TV),
+   then scales that canvas down into the frame. */
+
+.frame {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  margin-inline: auto;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-12);
+  background: var(--cream);
+}
+
+.canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  width: calc(100svh * 16 / 9);
+  height: 100svh;
+  overflow: hidden;
+  background: var(--cream);
+  color: var(--ink);
+  font-family: var(--sans);
+  transform-origin: top left;
+}
+
+/* Nobody joins a try-out, so the lobby's roster takes the whole width. */
+.canvas [data-join-hidden="true"] {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+/* On a desktop dialog the body is the space between the header and the
+   footer. It becomes a size container so the 16:9 frame takes the largest
+   size that fits both its width and its height, and the body never scrolls
+   on a short window. The scaled canvas follows the frame. The phone sheet
+   keeps the full-width frame, whose height is set by its width. */
+@media (min-width: 720px) {
+  .body {
+    container-type: size;
+    overflow: hidden;
+  }
+
+  .body .frame {
+    width: min(100cqw, 100cqh * 16 / 9);
+  }
+}

@@ -42,9 +42,10 @@ export function applyPreferences(
 }
 
 /** The player's settings: volume, mute and even loudness on this device
- *  (localStorage); crossfade length, autoplay next and hide explicit from the
- *  member's server setting (Open pages' useStudioPlaybackPreferences, contract
- *  F.2). Changes reach the engine as they happen. */
+ *  (localStorage); crossfade length, autoplay next, hide explicit and ask
+ *  before warned tracks from the member's server setting (Open pages'
+ *  useStudioPlaybackPreferences, contract F.2). Changes reach the engine as
+ *  they happen. */
 export function useStudioPlayerPreferences(
   engineRef: RefObject<StudioAudioEngine | null>,
 ): StudioPlayerPreferenceControls {
@@ -66,6 +67,8 @@ export function useStudioPlayerPreferences(
     setIsSaveSent(false);
   }
   const { autoplayNext, hideExplicit } = server.preferences;
+  // Studio safety: on unless the member switched it off.
+  const askBeforeWarnings = server.preferences.askBeforeWarnings !== false;
   const crossfadeSeconds =
     pendingCrossfade ?? server.preferences.crossfadeSeconds;
   const preferences = useMemo<StudioPlayerPreferences>(
@@ -73,8 +76,8 @@ export function useStudioPlayerPreferences(
     [local, crossfadeSeconds],
   );
   const playbackSettings = useMemo<StudioPlaybackSettings>(
-    () => ({ autoplayNext, hideExplicit }),
-    [autoplayNext, hideExplicit],
+    () => ({ autoplayNext, hideExplicit, askBeforeWarnings }),
+    [autoplayNext, hideExplicit, askBeforeWarnings],
   );
   const latestRef = useRef({ preferences, playbackSettings, server });
   useEffect(() => {

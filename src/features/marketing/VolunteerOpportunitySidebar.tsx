@@ -14,6 +14,7 @@ import { VolunteerSignupsCard } from "./VolunteerSignupsCard";
 import { VolunteerSignupModal } from "./VolunteerSignupModal";
 import { VolunteerOrganizationCard } from "./VolunteerOrganizationCard";
 import { routes } from "../../app/routeMap";
+import { volunteerOpportunityPath } from "./volunteerPaths";
 import styles from "./VolunteerOpportunityPage.module.css";
 
 const MESSAGES = routes.messages;
@@ -128,7 +129,7 @@ function AlternativesCard({
         {alternatives.map((alternative) => (
           <Link
             key={alternative.slug}
-            to={`${routes.volunteer}/opportunity/${alternative.slug}`}
+            to={volunteerOpportunityPath(alternative.slug)}
           >
             <FiArrowRight aria-hidden /> {alternative.role} · {alternative.org}
           </Link>

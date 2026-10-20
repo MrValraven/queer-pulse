@@ -1,0 +1,49 @@
+/* The tattoo page shell: the main column and the sticky sidebar.
+
+   The two-column layout is a CONTAINER query against `.pp` (an inline-size
+   container), so the editor's narrow preview reads as one column. The phone
+   bar is portaled to <body>, so the bottom clearance paired with it uses the
+   viewport `--mobile` media query (860px). */
+
+.page {
+  position: relative;
+  padding-top: 24px;
+}
+
+.columns {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 34px;
+  align-items: start;
+  margin-top: 24px;
+}
+
+@container (min-width: 860px) {
+  .columns[data-has-side] {
+    grid-template-columns: minmax(0, 1fr) 300px;
+  }
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.spotlight {
+  min-width: 0;
+  margin-bottom: 12px;
+}
+
+@media (--mobile) {
+  /* Space under the page's last line so the fixed bar never covers it. The
+     shared rights footer renders after `.page`, as the last child of the
+     persona page's `.wrap`, so the clearance goes on that `.wrap`. The safe
+     area term mirrors the bar's own bottom padding. */
+  :global(.wrap):has(> .page[data-mobile-bar]) {
+    padding-bottom: calc(
+      var(--section-y-88) +
+        max(0px, env(safe-area-inset-bottom, 0px) - var(--bottom-inset, 0px))
+    );
+  }
+}

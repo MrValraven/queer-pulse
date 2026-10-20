@@ -525,7 +525,7 @@ function useGatheringSchedule() {
  * because of that rule; the family is what starts it.
  */
 function useGatheringFormatState(
-  onFamilySelected?: (family: GatheringFamily) => void,
+  onFamilySelected?: (family: GatheringFamily, formatKey: string) => void,
 ) {
   // A gathering is described by a FAMILY (a closed nine-value set that drives
   // behaviour) and a FORMAT inside it (a curated key, or `"other"` plus the
@@ -594,12 +594,13 @@ function useGatheringFormatState(
       }
     }
     setFormatDetails(
-      (previous) => stripDisallowedDetails(nextFamily, previous) ?? {},
+      (previous) =>
+        stripDisallowedDetails(nextFamily, previous, nextFormat) ?? {},
     );
     // The fields outside this hook that a family also sets (the RSVP cutoff,
     // and the themes ruling R6 hides). Same coupling rule, applied by their
     // own hook: see `useGatheringCareState.applyFamilyToCare`.
-    onFamilySelected?.(nextFamily);
+    onFamilySelected?.(nextFamily, nextFormat);
   };
 
   /** Switching family in the family row alone: the format goes with it, since
@@ -655,7 +656,11 @@ function useGatheringFormatState(
     // family there and the whole bag strips to nothing.
     const appliedFamily = catalogFormat?.family ?? seededFamily ?? null;
     setFormatDetails(
-      stripDisallowedDetails(appliedFamily, seed.formatDetails) ?? {},
+      stripDisallowedDetails(
+        appliedFamily,
+        seed.formatDetails,
+        catalogFormat?.key ?? null,
+      ) ?? {},
     );
     // A duplicate copies the source's answer, and copying it counts as the
     // host having one: the family default must not overwrite a setting the
@@ -726,6 +731,7 @@ function useGatheringFormatState(
   const submittedFormatDetails = stripDisallowedDetails(
     family || null,
     formatDetails,
+    format,
   );
 
   return {
@@ -822,11 +828,14 @@ function useGatheringCareState() {
 
   /** What picking a family does to these fields. Called from `selectFormat`
    *  and nowhere else. */
-  const applyFamilyToCare = (nextFamily: GatheringFamily) => {
+  const applyFamilyToCare = (
+    nextFamily: GatheringFamily,
+    nextFormat?: string,
+  ) => {
     if (!isRsvpCutoffTouched) {
       setRsvpCutoffValue(defaultRsvpCutoffForFamily(nextFamily));
     }
-    const hiddenThemeKeys = hiddenThemeKeysForFamily(nextFamily);
+    const hiddenThemeKeys = hiddenThemeKeysForFamily(nextFamily, nextFormat);
     if (hiddenThemeKeys.length > 0) {
       setThemes((previous) =>
         previous.filter((theme) => !hiddenThemeKeys.includes(theme)),
@@ -1422,7 +1431,10 @@ export function useGatheringForm(initial: GatheringFormInitial = {}) {
 
   /** Ruling R6: the theme chips to hide, because the chosen family's own
    *  details already ask the same question. */
-  const hiddenThemeKeys = hiddenThemeKeysForFamily(formatState.family);
+  const hiddenThemeKeys = hiddenThemeKeysForFamily(
+    formatState.family,
+    formatState.format,
+  );
 
   /** Add or remove one would-be co-host. Matched on the slug, so removing a
    *  person works whichever copy of their display data the caller holds. */

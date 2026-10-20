@@ -2,6 +2,7 @@ import { useEffect, useId, useRef, useState } from "react";
 import { AnimatePresence, m } from "motion/react";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useMotionPrefs } from "../../app/providers/motionPrefs";
+import { Collapse } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { StudioReleaseView } from "./api/studio.adapters";
 import { STUDIO_LIMITS } from "./api/studio.types";
@@ -12,13 +13,16 @@ import {
 } from "./api/studioAudioUpload";
 import { useConfirmStudioTrackAudio } from "./api/useStudioTrackMutations";
 import { DropZone } from "./StudioUploadDropZone";
+import { conversionBarOf, uploadBarOf } from "./studioRowConversion";
 import { createProgressReporter } from "./studioUploadQueue";
 import {
+  conversionFailureOf,
   fileRejectionKeyOf,
   uploadErrorKeyOf,
   validateAudioFiles,
   type FileRejectionReason,
 } from "./studioUploadValidation";
+import { convertToMp3 } from "./upload/convert/studioWavConverter";
 import { useStudioTrackUploads } from "./useStudioTrackUploads";
 import css from "./StudioEpisodeUpload.module.css";
 
@@ -26,17 +30,19 @@ type Translate = ReturnType<typeof useTranslation>["t"];
 
 /** A failed upload's line. A file over the cap reads the 250 MB wording; the
  *  generic failure asks for the file again; a refusal with its own line
- *  (the 500 episode cap, a restriction) keeps it. */
+ *  (the 500 episode cap, a restriction, a conversion) keeps it, with the
+ *  values it needs. */
 function failureLineOf(
   t: Translate,
   errorKey: string | null,
   fileName: string,
+  errorValues: Record<string, number> | null = null,
 ) {
   if (errorKey === "studio:uploadFlow.files.errorTooLarge")
     return t("studio:uploadFlow.files.rejectSizePodcast", { fileName });
   if (!errorKey || errorKey === "studio:uploadFlow.files.errorUpload")
     return t("studio:episodeUpload.uploadFailed");
-  return t(errorKey);
+  return t(errorKey, errorValues ?? undefined);
 }
 
 const rejectionLineOf = (
@@ -49,12 +55,38 @@ const rejectionLineOf = (
 
 interface EpisodeAudioProgress {
   fileName: string;
+  /** The stage's own 0..100 percent (the converting line shows it). */
   progress: number;
+  /** The bar's value: a converted file's one bar, 0..50 then 50..100. */
+  barPercent: number;
   isConfirming: boolean;
+  /** The browser is turning a WAV or AIFF into MP3 before the upload. */
+  isConverting: boolean;
 }
 
-/** The episode's one drop zone, or the upload's progress in its place (a
- *  keyed fade), with the outcome lines in a live region. */
+/** The visible line (with the percent while converting) and the bar's name. */
+function progressLinesOf(t: Translate, progress: EpisodeAudioProgress | null) {
+  if (!progress) return { visibleLine: "", progressLabel: "" };
+  const { fileName } = progress;
+  if (progress.isConverting)
+    return {
+      visibleLine: t("studio:episodeUpload.converting", {
+        fileName,
+        percent: progress.progress,
+      }),
+      progressLabel: t("studio:episodeUpload.convertingLabel", { fileName }),
+    };
+  const uploadingLine = t("studio:episodeUpload.uploading", { fileName });
+  return {
+    visibleLine: progress.isConfirming
+      ? t("studio:episodeUpload.processing")
+      : uploadingLine,
+    progressLabel: uploadingLine,
+  };
+}
+
+/** The episode's one drop zone, or the conversion and upload progress in its
+ *  place (a keyed fade), with the outcome lines in a live region. */
 function EpisodeAudioZone({
   progress,
   onFile,
@@ -70,9 +102,7 @@ function EpisodeAudioZone({
   const [extraFilesKeptName, setExtraFilesKeptName] = useState<string | null>(
     null,
   );
-  const uploadingLine = progress
-    ? t("studio:episodeUpload.uploading", { fileName: progress.fileName })
-    : "";
+  const { visibleLine, progressLabel } = progressLinesOf(t, progress);
   return (
     <section className={css.audio} aria-labelledby={headingId}>
       <h2 id={headingId}>{t("studio:episodeUpload.audioHeading")}</h2>
@@ -86,16 +116,17 @@ function EpisodeAudioZone({
         >
           {progress ? (
             <div className={css.progress}>
-              <p>
-                {progress.isConfirming
-                  ? t("studio:episodeUpload.processing")
-                  : uploadingLine}
-              </p>
+              <p>{visibleLine}</p>
               <progress
-                value={progress.progress}
+                value={progress.barPercent}
                 max={100}
-                aria-label={uploadingLine}
+                aria-label={progressLabel}
               />
+              <Collapse isOpen={progress.isConverting}>
+                <p className={css.convertingHint}>
+                  {t("studio:uploadFlow.files.convertingHint")}
+                </p>
+              </Collapse>
             </div>
           ) : (
             <DropZone
@@ -131,8 +162,9 @@ function EpisodeAudioZone({
 }
 
 /** One drop zone for a new episode (spec 6.2). The draft episode is created
- *  and its audio uploaded; once the audio is confirmed the page moves to the
- *  episode's own address (leaving earlier would abort the upload). */
+ *  and its audio uploaded (a WAV or AIFF converts first); once the audio is
+ *  confirmed the page moves to the episode's own address (leaving earlier
+ *  would abort the upload). */
 export function StudioEpisodeAudioStep({
   release,
   onReady,
@@ -160,8 +192,12 @@ export function StudioEpisodeAudioStep({
           ? null
           : {
               fileName,
-              progress: row.progress,
+              // The row's progress is the bar; converting shows its own percent.
+              progress:
+                row.stage === "converting" ? row.progress * 2 : row.progress,
+              barPercent: row.progress,
               isConfirming: row.stage === "confirming",
+              isConverting: row.stage === "converting",
             }
       }
       onFile={(file) => {
@@ -169,7 +205,9 @@ export function StudioEpisodeAudioStep({
         uploads.addFiles([file]);
       }}
       lines={[
-        ...(isFailed ? [failureLineOf(t, row.errorKey, fileName)] : []),
+        ...(isFailed
+          ? [failureLineOf(t, row.errorKey, fileName, row.errorValues ?? null)]
+          : []),
         ...uploads.rejections.map((rejection) => rejectionLineOf(t, rejection)),
       ]}
     />
@@ -177,8 +215,9 @@ export function StudioEpisodeAudioStep({
 }
 
 /** Uploads and confirms audio for an episode that exists without it (an
- *  upload that stopped). The confirmed track lands in the track cache, so
- *  the form reads its audio from there. Unmounting aborts the upload. */
+ *  upload that stopped); a WAV or AIFF converts first. The confirmed track
+ *  lands in the track cache, so the form reads its audio from there.
+ *  Unmounting aborts the conversion and the upload. */
 function useEpisodeAudioAttach(release: StudioReleaseView, trackId: string) {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
@@ -186,7 +225,48 @@ function useEpisodeAudioAttach(release: StudioReleaseView, trackId: string) {
   const [progress, setProgress] = useState<EpisodeAudioProgress | null>(null);
   const [lines, setLines] = useState<string[]>([]);
   const handleRef = useRef<StudioAudioUploadHandle | null>(null);
-  useEffect(() => () => handleRef.current?.abort(), []);
+  const conversionRef = useRef<AbortController | null>(null);
+  useEffect(
+    () => () => {
+      handleRef.current?.abort();
+      conversionRef.current?.abort();
+    },
+    [],
+  );
+
+  /** The MP3 to upload, or null once the failure line is set. An aborted
+   *  conversion never settles, so nothing runs after an unmount. */
+  async function convertFirst(file: File): Promise<File | null> {
+    const fileName = file.name;
+    const controller = new AbortController();
+    conversionRef.current = controller;
+    const showConverting = (percent: number) =>
+      setProgress({
+        fileName,
+        progress: percent,
+        barPercent: conversionBarOf(percent),
+        isConfirming: false,
+        isConverting: true,
+      });
+    showConverting(0);
+    const reportProgress = createProgressReporter(showConverting);
+    const result = await convertToMp3(
+      file,
+      STUDIO_LIMITS.audioMaxBytesPodcast,
+      {
+        signal: controller.signal,
+        onProgress: (fraction) => reportProgress(fraction * 100),
+      },
+    );
+    conversionRef.current = null;
+    if (result.ok) return result.file;
+    const failure = conversionFailureOf(result);
+    setProgress(null);
+    setLines([
+      failureLineOf(t, failure.errorKey, fileName, failure.errorValues),
+    ]);
+    return null;
+  }
 
   async function attach(file: File) {
     const { accepted, rejected } = validateAudioFiles(
@@ -198,21 +278,32 @@ function useEpisodeAudioAttach(release: StudioReleaseView, trackId: string) {
     const [first] = accepted;
     if (!first) return;
     const fileName = file.name;
-    setProgress({ fileName, progress: 0, isConfirming: false });
+    const uploadFile = first.needsConversion ? await convertFirst(file) : file;
+    if (!uploadFile) return;
+    const wasConverted = first.needsConversion;
+    const showUploading = (percent: number, isConfirming: boolean) =>
+      setProgress({
+        fileName,
+        progress: percent,
+        barPercent: uploadBarOf(percent, wasConverted),
+        isConfirming,
+        isConverting: false,
+      });
+    showUploading(0, false);
     try {
       const handle = uploadStudioAudio({
         demoMode,
         subprofileId: release.artist.id,
-        file,
+        file: uploadFile,
         contentType: first.contentType,
         onProgress: createProgressReporter((percent) =>
-          setProgress({ fileName, progress: percent, isConfirming: false }),
+          showUploading(percent, false),
         ),
       });
       handleRef.current = handle;
       const key = await handle.promise;
       handleRef.current = null;
-      setProgress({ fileName, progress: 100, isConfirming: true });
+      showUploading(100, true);
       await confirmAudio.mutateAsync({ trackId, releaseId: release.id, key });
     } catch (error) {
       handleRef.current = null;

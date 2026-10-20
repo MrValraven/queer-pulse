@@ -1,0 +1,724 @@
+/* Pulse Live presenter screen. Sized for distance on the TV (`.screen`) and
+   shrunk for the remote's preview (`.preview`); every piece reads the custom
+   properties below, so one class switches the whole stage. */
+
+/* A fixed viewport: the TV never scrolls, so every view fits 100svh and its
+   flex and grid children carry min-height: 0 to shrink into it. */
+.page {
+  display: flex;
+  flex-direction: column;
+  height: 100svh;
+  overflow: hidden;
+  background: var(--cream);
+  color: var(--ink);
+  font-family: var(--sans);
+}
+
+.pageBody {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+}
+
+/* Messages: the page refused, or no game is open */
+.message {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap-lg);
+  padding: var(--gap-lg);
+  text-align: center;
+}
+
+.messageTitle {
+  max-width: 32ch;
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-title);
+  line-height: var(--lh-title);
+  text-wrap: balance;
+}
+
+/* Toolbar: fixed top right, portaled to the body */
+.toolbar {
+  position: fixed;
+  top: max(var(--gap-sm), env(safe-area-inset-top));
+  inset-inline-end: max(var(--gap-sm), env(safe-area-inset-right));
+  z-index: var(--z-sticky);
+  display: flex;
+  gap: var(--gap-xs);
+  padding: var(--gap-xs);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--paper) 88%, transparent);
+  color: var(--ink);
+  opacity: 1;
+  transition-property: opacity;
+  transition-duration: var(--dur-slow);
+  transition-timing-function: var(--ease);
+}
+
+.toolbar[data-faded="true"] {
+  opacity: 0;
+}
+
+.toolbarIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Stage sizes. The stage is a size container, so widths read the stage
+   (cqw) and follow the scaled 1280x720 canvas in the remote's preview and in
+   Try it the same way they follow the TV. Heights read --screen-vh: one
+   viewport percent on a real screen, one percent of 720px on a fixed canvas. */
+.stage {
+  --screen-vh: 1vh;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  container-type: inline-size;
+}
+
+.screen {
+  --screen-question: var(--text-screen-question);
+  --screen-answer: var(--text-screen-answer);
+  --screen-label: var(--text-screen-label);
+  --screen-code: var(--text-screen-code);
+  --screen-gap: var(--gap-lg);
+  --screen-pad: clamp(
+    var(--gap-grid),
+    calc(4 * var(--screen-vh)),
+    calc(var(--gap-lg) * 2)
+  );
+  --screen-picture-max: calc(38 * var(--screen-vh));
+  /* Answer tiles here: lower than the stage piece's own 20vh, so two rows of
+     tiles, the prompt and the countdown fit 1080p. */
+  --screen-tile-min: calc(11 * var(--screen-vh));
+  --screen-row-min: calc(7 * var(--screen-vh));
+  --screen-row-pad: var(--gap-sm);
+  /* A party picture shrinks once the captions or the reveal arrive below it. */
+  --screen-picture-party: calc(16 * var(--screen-vh));
+  /* Vote cards: a fixed column count per density, type sized from the
+     screen height, three lines at most. 12 captions sit in four columns, 24
+     in six and 32 in eight, under the picture or a two-line prompt, at 1080p
+     and at 720p. */
+  --screen-vote-columns: 4;
+  --screen-vote-text: min(var(--screen-answer), calc(3 * var(--screen-vh)));
+  --screen-vote-gap: min(var(--gap-sm), calc(1 * var(--screen-vh)));
+  --screen-vote-pad-block: min(var(--gap-xs), calc(0.8 * var(--screen-vh)));
+  --screen-vote-pad-inline: min(var(--gap-sm), calc(1.3 * var(--screen-vh)));
+}
+
+.preview {
+  --screen-question: var(--text-16);
+  --screen-answer: var(--text-12);
+  --screen-label: var(--text-10);
+  --screen-code: var(--text-22);
+  --screen-gap: var(--gap-xs);
+  --screen-pad: var(--gap-xs);
+  --screen-picture-max: 5rem;
+  --screen-tile-min: 2.5rem;
+  --screen-row-min: 1.75rem;
+  --screen-row-pad: var(--gap-xs);
+  --screen-picture-party: 3rem;
+  --screen-vote-columns: 4;
+  --screen-vote-text: var(--screen-answer);
+  --screen-vote-gap: var(--gap-xs);
+  --screen-vote-pad-block: var(--gap-xs);
+  --screen-vote-pad-inline: var(--gap-xs);
+}
+
+.view {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  /* Safe: a view taller than the screen keeps its top in view and scrolls from there. */
+  justify-content: safe center;
+  box-sizing: border-box;
+  min-width: 0;
+  min-height: 0;
+  overflow: auto;
+  padding: var(--screen-pad);
+}
+
+.centred {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+}
+
+.muted {
+  color: var(--ink-60);
+}
+
+/* Lobby */
+.lobby {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+  align-items: center;
+  gap: calc(var(--screen-gap) * 2);
+}
+
+.lobbyJoin {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--screen-gap);
+  min-width: 0;
+  text-align: center;
+}
+
+.qr {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius-16);
+}
+
+.joinAt {
+  margin: 0;
+  font-size: var(--screen-label);
+  font-weight: 600;
+}
+
+.codeLabel {
+  margin: 0;
+  color: var(--ink-60);
+  font-size: var(--screen-label);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+}
+
+.joinCode {
+  margin: 0;
+  /* Six letters in a two-fifths column: the width cap keeps them inside it. */
+  font-size: min(var(--screen-code), 6.5cqw);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  letter-spacing: 0.14em;
+  /* Letter spacing trails the last letter too; this pulls the code back to centre. */
+  margin-inline-end: -0.14em;
+}
+
+.lobbyRoster {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+  min-width: 0;
+}
+
+.lobbyTitle,
+.boardTitle,
+.thanksTitle {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--screen-question);
+  line-height: var(--lh-title);
+  text-wrap: balance;
+}
+
+.playerCount {
+  margin: 0;
+  color: var(--ink-60);
+  font-size: var(--screen-label);
+}
+
+.teamList,
+.playerList,
+.roundList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap-xs);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.teamList,
+.roundList {
+  flex-direction: column;
+}
+
+/* More than four teams: two columns of rows in a smaller type, so eight
+   teams take the height of four. */
+.screen .teamList[data-columns="two"] {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: var(--screen-gap);
+}
+
+.screen .teamList[data-columns="two"] .teamRow {
+  font-size: min(var(--screen-answer), calc(3 * var(--screen-vh)));
+  line-height: 1.2;
+}
+
+/* Solo lobby: the player chips and the "+N more" line fold together. */
+.lobbyPlayers {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+}
+
+.teamRow {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm);
+  font-size: var(--screen-answer);
+}
+
+.teamName {
+  min-width: 0;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.playerChip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gap-xs);
+  padding: var(--gap-xs) var(--gap-sm);
+  border-radius: var(--radius-pill);
+  background: rgba(var(--ink-rgb), 0.08);
+  font-size: var(--screen-label);
+  font-weight: 600;
+}
+
+.roundsTitle {
+  margin: 0;
+  color: var(--ink-60);
+  font-size: var(--screen-label);
+  font-weight: 600;
+}
+
+.roundRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gap-xs) var(--gap-sm);
+  font-size: var(--screen-label);
+}
+
+.roundNumber {
+  min-width: 1.4em;
+  color: var(--ink-60);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.roundTitle {
+  min-width: 0;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.chip {
+  padding: 0.1em 0.6em;
+  border: 1px solid var(--line-2);
+  border-radius: var(--radius-pill);
+  color: var(--ink-60);
+}
+
+.chipLabel {
+  border-color: var(--accent);
+  color: var(--ink);
+}
+
+/* Question and party */
+.question {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--screen-gap);
+  min-width: 0;
+  min-height: 0;
+}
+
+/* Picture, answers and the distribution as fixed columns side by side, the
+   same from `read` to `reveal`, so nothing changes width when the bars arrive. */
+.questionBody {
+  display: grid;
+  flex: 1 1 auto;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  grid-template-rows: minmax(0, 1fr);
+  /* Top-aligned: a tall answer list grows down into its own column and never
+     up over the prompt. */
+  align-items: start;
+  gap: var(--screen-gap);
+  min-height: 0;
+}
+
+.answers {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+  min-width: 0;
+  min-height: 0;
+  /* The answers own any overflow: the column scrolls inside the row it has. */
+  max-height: 100%;
+  overflow-y: auto;
+}
+
+/* Beside a picture the answers stack in one column, each tile one line tall,
+   so a proper noun such as "Greenwich Village" keeps its words whole and the
+   rows line up with the distribution bars. */
+.questionBody[data-has-picture="true"] {
+  --screen-tile-min: 0px;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 3fr) minmax(0, 2fr);
+}
+
+.questionBody[data-has-picture="true"] .tileGrid {
+  grid-template-columns: minmax(0, 1fr);
+  /* Four stacked tiles: 4 x 111 + 3 x 14 = 486 at 1080p, inside the 508
+     an open question keeps for them while the Paused line shows. */
+  gap: var(--gap-sm);
+}
+
+.questionBody > .picture {
+  align-self: start;
+}
+
+/* The tile reads its type size from the stage piece's own property; the
+   screen sets it from --screen-answer, so a short screen can shrink it. */
+.screen .tileGrid > li > *,
+.screen .tileColumn > li > * {
+  --stage-main: var(--screen-answer);
+}
+
+.revealColumn {
+  min-width: 0;
+}
+
+.eyebrow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap-xs) var(--screen-gap);
+  margin: 0;
+  color: var(--ink-60);
+  font-size: var(--screen-label);
+  font-weight: 600;
+}
+
+.prompt {
+  max-width: 40ch;
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--screen-question);
+  line-height: var(--lh-title);
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+}
+
+.picture {
+  align-self: center;
+  justify-self: center;
+  max-width: 100%;
+  max-height: min(var(--screen-picture-max), 100%);
+  border-radius: var(--radius-16);
+  object-fit: contain;
+}
+
+.picture[data-size="compact"] {
+  max-height: min(var(--screen-picture-party), 100%);
+}
+
+.tileGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--screen-gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tileColumn {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* The tile sets its own --stage-tile-min; this one-class-deeper selector
+   overrides it on the tile itself, from this module's custom properties. */
+.tileGrid > li > * {
+  --stage-tile-min: var(--screen-tile-min);
+}
+
+.tileColumn > li > * {
+  --stage-tile-min: var(--screen-row-min);
+  --stage-pad: var(--screen-row-pad);
+}
+
+.answerOnPhone {
+  margin: 0;
+  padding: var(--screen-pad);
+  border-radius: var(--radius-16);
+  background: rgba(var(--ink-rgb), 0.06);
+  font-size: var(--screen-answer);
+  font-weight: 600;
+}
+
+.answerOnPhoneBody {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+  margin: 0;
+}
+
+.playerAvatar {
+  display: inline-flex;
+}
+
+.counter,
+.checking {
+  margin: 0;
+  font-size: var(--screen-label);
+  font-weight: 600;
+}
+
+.checking {
+  color: var(--ink-60);
+}
+
+.voteGrid {
+  display: grid;
+  grid-template-columns: repeat(var(--screen-vote-columns), minmax(0, 1fr));
+  gap: var(--screen-vote-gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--screen-vote-text);
+  line-height: 1.2;
+}
+
+/* 13 to 24 captions: four rows of six. */
+.screen .voteGrid[data-density="many"] {
+  --screen-vote-columns: 6;
+  --screen-vote-text: min(var(--screen-answer), calc(2.3 * var(--screen-vh)));
+}
+
+/* 25 or more (a Lie Detector vote with 30 players has 31): four rows of eight. */
+.screen .voteGrid[data-density="packed"] {
+  --screen-vote-columns: 8;
+  --screen-vote-text: min(var(--screen-answer), calc(2.3 * var(--screen-vh)));
+}
+
+.voteCard {
+  display: flex;
+  box-sizing: border-box;
+  height: 100%;
+  align-items: flex-start;
+  gap: var(--screen-vote-pad-block);
+  padding: var(--screen-vote-pad-block) var(--screen-vote-pad-inline);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-16);
+  background: rgba(var(--ink-rgb), 0.04);
+}
+
+/* The number sits on the first line of the caption, one line tall. */
+.voteNumber {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.6em;
+  height: 1.6em;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--ink-rgb), 0.12);
+  font-size: 0.8em;
+  font-weight: 700;
+}
+
+/* "+N more" in the last slot of a full grid: card-sized, so the grid keeps
+   its four rows. */
+.voteMore {
+  display: flex;
+  box-sizing: border-box;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: var(--screen-vote-pad-block) var(--screen-vote-pad-inline);
+  border: 1px dashed var(--line-2);
+  border-radius: var(--radius-16);
+  color: var(--ink-60);
+  font-weight: 700;
+}
+
+/* Three lines at most, ending in an ellipsis. The clamp is visual only: the
+   whole caption stays in the text, so a screen reader reads all of it, and
+   every player reads it in full on their phone. */
+.voteText {
+  display: -webkit-box;
+  min-width: 0;
+  overflow: hidden;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+}
+
+/* The party reveal on the TV: up to eight entries in two columns, the
+   "+N more" line across both. The distribution sets its own sizes on its
+   root; this one-class-deeper selector sizes them from the screen height. */
+.screen .partyReveal > div {
+  --stage-main: min(var(--screen-answer), calc(3 * var(--screen-vh)));
+  --stage-label: min(var(--screen-label), calc(2.4 * var(--screen-vh)));
+  --stage-pad: min(var(--gap-sm), calc(1.3 * var(--screen-vh)));
+  --stage-gap: min(var(--gap-sm), calc(1.3 * var(--screen-vh)));
+  line-height: 1.2;
+}
+
+.screen .partyReveal ul {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  column-gap: var(--screen-gap);
+}
+
+.screen .partyReveal ul > li:has(> p) {
+  grid-column: 1 / -1;
+}
+
+/* Scores, podium, thank-you */
+.board {
+  display: flex;
+  flex-direction: column;
+  gap: var(--screen-gap);
+  width: 100%;
+  max-width: 64rem;
+  margin-inline: auto;
+}
+
+/* Scores and the leaderboard on the TV: rows sized from the screen height,
+   so the top ten fit 1080p and 720p under the title. */
+.screen .scoresBoard li {
+  padding-block: min(var(--gap-sm), calc(1.2 * var(--screen-vh)));
+  font-size: min(var(--screen-answer), calc(3.4 * var(--screen-vh)));
+  line-height: 1.2;
+}
+
+.thanks {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--screen-gap);
+  text-align: center;
+}
+
+.thanksNext {
+  margin: 0;
+  color: var(--ink-60);
+  font-size: var(--screen-answer);
+}
+
+/* A shorter screen (720p): smaller lobby chips and rounds, so 12 players,
+   the "+N" line and five rounds fit beside the code without scrolling.
+   Answers, team rows and gaps shrink too, so a question with a picture and
+   two rows of tiles fits above the countdown. */
+@media (max-height: 50rem) {
+  .screen {
+    --screen-answer: var(--text-24);
+    --screen-gap: var(--gap-grid);
+    --screen-tile-min: calc(8 * var(--screen-vh));
+    --screen-picture-max: calc(26 * var(--screen-vh));
+  }
+
+  .screen .questionBody[data-has-picture="true"] {
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 3fr) minmax(0, 1.5fr);
+  }
+
+  /* 720p: slimmer stacked tiles, 4 x 56 + 3 x 9 = 253, inside the 293 an
+     open question keeps for them while the Paused line shows. */
+  .screen .questionBody[data-has-picture="true"] .tileGrid {
+    gap: var(--gap-xs);
+  }
+
+  .screen .questionBody[data-has-picture="true"] .tileGrid > li > * {
+    --stage-pad: var(--gap-xs) var(--gap-sm);
+  }
+
+  .screen .playerChip {
+    padding: var(--gap-xs) var(--gap-sm);
+    font-size: var(--text-16);
+  }
+
+  .screen .roundRow,
+  .screen .roundsTitle,
+  .screen .playerCount {
+    font-size: var(--text-18);
+  }
+
+  .screen .qr {
+    width: min(100%, calc(36 * var(--screen-vh)));
+  }
+}
+
+/* A narrow real window stacks the lobby and the tiles. A fixed canvas is
+   1280 wide whatever window holds it, so it keeps the desktop columns. */
+@media (max-width: 48rem) {
+  .screen:not([data-fixed-canvas="true"]) .lobby {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .screen:not([data-fixed-canvas="true"]) .tileGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* The fixed 1280x720 canvas (the remote's preview, Try it): the 720p values
+   of the max-height query above and of the screen type tokens, whatever the
+   window holding the canvas. Keep these in step with that query. */
+.stage[data-fixed-canvas="true"] {
+  --screen-vh: 7.2px;
+  --text-screen-question: var(--text-48);
+  --text-screen-answer: var(--text-32);
+  --text-screen-label: var(--text-24);
+  --text-screen-code: calc(12 * var(--screen-vh));
+  --screen-answer: var(--text-24);
+  --screen-gap: var(--gap-grid);
+  --screen-tile-min: calc(8 * var(--screen-vh));
+  --screen-picture-max: calc(26 * var(--screen-vh));
+}
+
+.stage[data-fixed-canvas="true"] .questionBody[data-has-picture="true"] {
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 3fr) minmax(0, 1.5fr);
+}
+
+.stage[data-fixed-canvas="true"] .questionBody[data-has-picture="true"] .tileGrid {
+  gap: var(--gap-xs);
+}
+
+.stage[data-fixed-canvas="true"]
+  .questionBody[data-has-picture="true"]
+  .tileGrid
+  > li
+  > * {
+  --stage-pad: var(--gap-xs) var(--gap-sm);
+}
+
+.stage[data-fixed-canvas="true"] .playerChip {
+  padding: var(--gap-xs) var(--gap-sm);
+  font-size: var(--text-16);
+}
+
+.stage[data-fixed-canvas="true"] .roundRow,
+.stage[data-fixed-canvas="true"] .roundsTitle,
+.stage[data-fixed-canvas="true"] .playerCount {
+  font-size: var(--text-18);
+}
+
+.stage[data-fixed-canvas="true"] .qr {
+  width: min(100%, calc(36 * var(--screen-vh)));
+}

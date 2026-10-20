@@ -11,6 +11,7 @@ import {
   TABLE_FORMAT_LABEL_KEY,
   TABLE_VIBE_LABEL_KEY,
 } from "./questTable.data";
+import { tattooStatusLabelKey } from "./skins/tattoo/tattooBooksStatus";
 import type { AccentKey, SubprofileCardDTO } from "./api/subprofiles.api";
 import styles from "./SubprofileCard.module.css";
 
@@ -66,6 +67,12 @@ export function SubprofileCard({
   const accent = (card.accent as AccentKey | null) ?? DEFAULT_ACCENT;
   const family = skinFor(card.kind);
   const isOpenToCollabs = card.availability === "open_to_collabs";
+  // A tattoo card reads "Books open" (the backend keeps availability in step
+  // with the books status); every other kind keeps "Open to collabs".
+  const openChipLabelKey =
+    card.kind === "tattoo_artist"
+      ? tattooStatusLabelKey("open")
+      : "subprofiles:card.openToCollabs";
   const hasSocials = card.socialCount > 0;
   const hasFollowers = card.followerCount > 0;
   const visibleTags = card.tags.slice(0, CARD_TAG_CAP);
@@ -159,7 +166,7 @@ export function SubprofileCard({
             {isOpenToCollabs && (
               <span className={styles.availabilityChip}>
                 <span className={styles.dot} aria-hidden />
-                {t("subprofiles:card.openToCollabs")}
+                {t(openChipLabelKey)}
               </span>
             )}
             {hasFollowers && (

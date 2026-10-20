@@ -1,6 +1,9 @@
 import { FiArrowRight } from "react-icons/fi";
 import { Link } from "react-router-dom";
-import { ImageSlot, type ImageSlotTint } from "../../../shared/components/ui";
+import {
+  PosterAwareImageSlot,
+  type ImageSlotTint,
+} from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useFormat } from "../../../shared/i18n/format";
 import type { CalendarEvent } from "../data";
@@ -32,9 +35,10 @@ export interface EventAgendaRowProps {
   isPriority?: boolean;
 }
 
-/** The 16:9 cover. Below 640px it becomes the top of a stacked card, and the
- *  stamp moves onto it as a cream stub; the stylesheet decides which of the
- *  two stamps shows. A gathering with no photo wears the branded
+/** The 16:9 cover. A landscape photo fills it; a poster shows whole over its
+ *  own blurred backdrop. Below 640px it becomes the top of a stacked card, and
+ *  the stamp moves onto it as a cream stub; the stylesheet decides which of
+ *  the two stamps shows. A gathering with no photo wears the branded
  *  `EventCoverFallback` field. */
 function AgendaCover({
   event,
@@ -48,7 +52,7 @@ function AgendaCover({
   return (
     <span className={styles.cover}>
       {event.coverImageUrl ? (
-        <ImageSlot
+        <PosterAwareImageSlot
           src={sizedCover(event.coverImageUrl, AGENDA_COVER_WIDTH)}
           alt=""
           tint={tint}
@@ -58,6 +62,7 @@ function AgendaCover({
           radius={0}
           loading={isPriority ? "eager" : "lazy"}
           fetchPriority={isPriority ? "high" : undefined}
+          className={styles.coverImage}
           style={{ position: "absolute", inset: 0 }}
         />
       ) : (

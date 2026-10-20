@@ -200,49 +200,6 @@ export const studioShowcase: Catalog = {
     "{original} · tradução para {target} pedida",
   "triage.detail.file.soleSplit": "100% {name} · sem colaborações",
 
-  // ── Flag review: flag cards (StudioFlagReviewPage, rendered by StudioFlagCard) ──
-  "flagReview.flag.who.uploadedWeeksAgo_one":
-    "{artist} · single · carregado há {count} semana",
-  "flagReview.flag.who.uploadedWeeksAgo_other":
-    "{artist} · single · carregado há {count} semanas",
-  "flagReview.flag.who.uploadedMonthsAgo_one":
-    "{artist} · single · carregado há {count} mês",
-  "flagReview.flag.who.uploadedMonthsAgo_other":
-    "{artist} · single · carregado há {count} meses",
-  "flagReview.flag.who.recordedLive_one":
-    "Gravado ao vivo · {venue} · {count} artista",
-  "flagReview.flag.who.recordedLive_other":
-    "Gravado ao vivo · {venue} · {count} artistas",
-  "flagReview.flag.cat.unclearedSample": "Possível amostra não autorizada",
-  "flagReview.flag.cat.creditOrSplit": "Crédito ou divisão errada / em falta",
-  "flagReview.flag.cat.misattribution": "Artista não é quem diz ser",
-  "flagReview.flag.reason.fieldRecording":
-    '"Há uma gravação de campo por baixo da segunda metade que parece tirada de um arquivo conhecido. <em>Vale a pena ver se está autorizada</em> antes de continuar a render"',
-  "flagReview.flag.reason.uncreditedVocal":
-    '"A remistura credita {artist} mas a voz original é de alguém que não aparece nos créditos. <em>A tabela de divisões nem menciona essa pessoa.</em> Devia estar a ser paga"',
-  "flagReview.flag.reason.missingPerformer":
-    '"Tenho quase a certeza de que esta gravação ao vivo inclui alguém que nem esteve lá nessa noite. <em>Pode ter sido um engano inocente</em> na formação"',
-  "flagReview.flag.flaggedBy_one": "Sinalizado por {count} ouvinte",
-  "flagReview.flag.flaggedBy_other": "Sinalizado por {count} ouvintes",
-  "flagReview.flag.rmeta.artistNotified":
-    "pedimos à pessoa artista que responda",
-  "flagReview.flag.rmeta.namedArtistNotified":
-    "pedimos à pessoa artista identificada que responda",
-  "flagReview.flag.rmeta.unclaimedInQueue_one":
-    "por reclamar · na fila há {count} dia",
-  "flagReview.flag.rmeta.unclaimedInQueue_other":
-    "por reclamar · na fila há {count} dias",
-  "flagReview.flag.claimedBy":
-    "Reclamado por <em>{curator}</em> · à espera da resposta da pessoa artista",
-  "flagReview.flag.unclaimed":
-    "Por reclamar · qualquer pessoa da curadoria pode pegar nele",
-  "flagReview.flag.decideBy": "decidir até {date}",
-
-  // ── Flag review: resolved card (StudioFlagReviewPage) ──
-  "flagReview.resolved.reporterLine": "{name} · resolvido a {date}",
-  "flagReview.resolved.note":
-    "explicámos a quem sinalizou que a amostra é do domínio público, com link",
-
   // ── Program: header and publish bar (StudioProgramPage) ──
   "program.header.dateRange": "15 a 21 de junho",
   "program.publishBar.publishDate": "seg., 15 de junho, 12:00 (hora de Lisboa)",

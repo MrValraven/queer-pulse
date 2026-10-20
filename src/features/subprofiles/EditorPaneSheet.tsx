@@ -1,5 +1,7 @@
 import { Fragment } from "react";
+import { AnimatePresence, m } from "motion/react";
 import { FiCheck } from "react-icons/fi";
+import { useMotionPrefs } from "../../app/providers/motionPrefs";
 import { ModalSheet } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { EditorPaneKey, EditorRailGroup } from "./editorRail.data";
@@ -41,6 +43,7 @@ export function EditorPaneSheet({
   // persona, but the ring must track the live editor snapshot so it reads the
   // same as the Publish pane's own ring while edits are still unsaved.
   const liveReadiness = estimateEditorReadiness(editor);
+  const { reducedMotion } = useMotionPrefs();
 
   return (
     <ModalSheet
@@ -78,6 +81,25 @@ export function EditorPaneSheet({
                     {entry.badge !== undefined && (
                       <span className="ed-panes-n">{entry.badge}</span>
                     )}
+                    <AnimatePresence initial={false}>
+                      {entry.attentionCount !== undefined && (
+                        <m.span
+                          key="attention"
+                          className="ed-panes-attention"
+                          role="img"
+                          aria-label={t(
+                            "subprofiles:editorRail.attentionCount",
+                            { count: entry.attentionCount },
+                          )}
+                          initial={{ opacity: 0, scale: 0.8 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          exit={{ opacity: 0, scale: 0.8 }}
+                          transition={{ duration: reducedMotion ? 0 : 0.18 }}
+                        >
+                          {entry.attentionCount}
+                        </m.span>
+                      )}
+                    </AnimatePresence>
                     {/* The active row already reads as current to AT through
                       `aria-current`; this tick is the visual echo of it, so it
                       is decorative rather than another announced label. */}
@@ -98,5 +120,39 @@ export function EditorPaneSheet({
         ))}
       </nav>
     </ModalSheet>
+  );
+}
+
+/** The coral dot on the phone pane trigger (`EditorPaneSwitcher`) while any
+ *  pane holds answers waiting for the owner, so the closed sheet still shows
+ *  where to look. It fades in and out with the same motion as the pills. */
+export function EditorPaneAttentionDot({
+  groups,
+}: {
+  groups: EditorRailGroup[];
+}) {
+  const { t } = useTranslation();
+  const { reducedMotion } = useMotionPrefs();
+  const attentionTotal = groups
+    .flatMap((group) => group.entries)
+    .reduce((total, entry) => total + (entry.attentionCount ?? 0), 0);
+
+  return (
+    <AnimatePresence initial={false}>
+      {attentionTotal > 0 && (
+        <m.span
+          key="pane-attention"
+          className="ed-switch-attention"
+          role="img"
+          aria-label={t("subprofiles:editorRail.attentionCount", {
+            count: attentionTotal,
+          })}
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.8 }}
+          transition={{ duration: reducedMotion ? 0 : 0.18 }}
+        />
+      )}
+    </AnimatePresence>
   );
 }

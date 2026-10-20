@@ -8,6 +8,12 @@ import {
   renderWithPlayer,
 } from "./studioPlayerTestHarness";
 
+vi.mock("../../share/StudioShareToChatModal", () => ({
+  StudioShareToChatModal: ({ title }: { title: string }) => (
+    <div role="dialog" aria-label={`Send ${title}`} />
+  ),
+}));
+
 const TRACK = {
   id: "t9",
   title: "Lighthouse",
@@ -180,6 +186,42 @@ describe("StudioTrackMenu", () => {
       ),
     );
     expect(await screen.findByText("Link copied")).toBeInTheDocument();
+  });
+
+  it("offers Send in a message between Add to queue and Copy link", async () => {
+    renderWithPlayer(<StudioTrackMenu track={TRACK} />);
+    await openMenu();
+    const labels = screen
+      .getAllByRole("menuitem")
+      .map((item) => item.textContent);
+    expect(labels).toEqual([
+      "Play next",
+      "Add to queue",
+      "Send in a message",
+      "Copy link",
+    ]);
+  });
+
+  it("opens the picker for this track", async () => {
+    renderWithPlayer(<StudioTrackMenu track={TRACK} />);
+    await openMenu();
+    fireEvent.click(
+      screen.getByRole("menuitem", { name: "Send in a message" }),
+    );
+    expect(
+      await screen.findByRole("dialog", { name: "Send Lighthouse" }),
+    ).toBeInTheDocument();
+  });
+
+  it("hides Send in a message while a preview of this track plays", async () => {
+    const player = createStudioPlayerValue({
+      currentItem: queueItem({ trackId: "t9", previewToken: "b".repeat(64) }),
+    });
+    renderWithPlayer(<StudioTrackMenu track={TRACK} />, { player });
+    await openMenu();
+    expect(
+      screen.queryByRole("menuitem", { name: "Send in a message" }),
+    ).toBeNull();
   });
 });
 

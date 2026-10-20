@@ -13,6 +13,7 @@ import {
   type ReactNode,
 } from "react";
 import { apiAvailable, demoConfigured } from "../../shared/api/config";
+import { setDemoModeRuntime } from "../../shared/api/demoModeRuntime";
 import { isSandbox } from "../../shared/sandbox/sandbox";
 
 interface DemoModeValue {
@@ -63,7 +64,12 @@ function readInitial(): boolean {
  *   admin role-guard bypass in `authGate.ts` is safe by construction.
  */
 export function DemoModeProvider({ children }: { children: ReactNode }) {
-  const [demoMode, setDemoModeState] = useState<boolean>(readInitial);
+  const [demoMode, setDemoModeState] = useState<boolean>(() => {
+    const initial = readInitial();
+    // Hook-free readers (the Studio link parser) see the same flag at once.
+    setDemoModeRuntime(initial);
+    return initial;
+  });
 
   useEffect(() => {
     if (!toggleable) return;
@@ -75,7 +81,9 @@ export function DemoModeProvider({ children }: { children: ReactNode }) {
   }, [demoMode]);
 
   const setDemoMode = useCallback((b: boolean) => {
-    if (toggleable) setDemoModeState(b);
+    if (!toggleable) return;
+    setDemoModeRuntime(b);
+    setDemoModeState(b);
   }, []);
 
   const value = useMemo<DemoModeValue>(

@@ -7,9 +7,14 @@ import {
   type KeyboardEvent,
 } from "react";
 import { createPortal } from "react-dom";
+import { AnimatePresence } from "motion/react";
 import { FiShare2 } from "react-icons/fi";
+import { lazyModal } from "../../../app/providers/lazyModal";
+import { ModalLoadBoundary } from "../../../app/providers/ModalLoadBoundary";
+import { useMotionPrefs } from "../../../app/providers/motionPrefs";
 import { IconButton, Tooltip } from "../../../shared/components/ui";
 import { useAnchoredPopover } from "../../../shared/components/ui/useAnchoredPopover";
+import { useExitTransition } from "../../../shared/hooks/useExitTransition";
 import { useOutsideDismiss } from "../../../shared/hooks/useOutsideDismiss";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { ShareMenuItem } from "./ShareMenuItem";
@@ -19,14 +24,31 @@ import type {
   ShareMenuTriggerRenderProps,
 } from "./shareMenu.types";
 import { MENU_ITEM_SELECTOR, moveMenuFocus } from "./shareMenuFocus";
+import { toAbsoluteShareUrl } from "./shareToChat.helpers";
 import { useShareMenuItems } from "./useShareMenuItems";
 import { useShareToChat } from "./useShareToChat";
+import { useShareToCommunityPicker } from "./useShareToCommunityPicker";
 import styles from "./ShareMenu.module.css";
+
+// Lazy: the community modal only matters on Studio menus, so its chunk stays
+// out of every page that shows a Share button. Opening a menu that offers it
+// starts the download, so the modal is ready by the time the item is picked.
+// A failed load closes the modal with the shared error toast
+// (`ModalLoadBoundary`) and the next open tries the network again.
+const loadShareToCommunityModal = () =>
+  import("../../economy/ShareToCommunityModal");
+const shareToCommunityModal = lazyModal(() =>
+  loadShareToCommunityModal().then((module) => module.ShareToCommunityModal),
+);
+
+/** The menu's fade out, matching `.menuClosing` in ShareMenu.module.css. */
+const MENU_EXIT_MS = 90;
 
 /**
  * Every way to pass something on, behind one Share trigger: a message inside
- * QueerPulse, WhatsApp, the device's share sheet, the composed message and
- * the bare link (`useShareMenuItems` lists them). The caller describes the
+ * QueerPulse, a post in one of your communities (Studio links), WhatsApp,
+ * the device's share sheet, the composed message and the bare link
+ * (`useShareMenuItems` lists them). The caller describes the
  * thing once in `content`.
  *
  * ```tsx
@@ -53,11 +75,23 @@ export function ShareMenu({
   tone,
   tooltipPlacement = "bottom",
   renderTrigger,
+  shouldOfferSendInMessage = true,
+  identityNote,
 }: ShareMenuProps) {
   const { t } = useTranslation();
   const shareToChat = useShareToChat();
-  const items = useShareMenuItems(content, shareToChat);
+  const shareToCommunity = useShareToCommunityPicker(content);
+  const items = useShareMenuItems(content, shareToChat, {
+    shouldOfferSendInMessage,
+    shareToCommunity,
+  });
   const [isOpen, setIsOpen] = useState(false);
+  // Every close fades the menu out; reduced motion unmounts it on the spot.
+  const { reducedMotion } = useMotionPrefs();
+  const { isMounted, isExiting } = useExitTransition(
+    isOpen,
+    reducedMotion ? 0 : MENU_EXIT_MS,
+  );
   // Reaches the real <button>: IconButton spreads `ref`, Tooltip adds a span.
   const triggerRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -65,6 +99,14 @@ export function ShareMenu({
   const placement = useAnchoredPopover(triggerRef, menuRef, isOpen);
   const isPlaced = placement !== null;
   const shareLabel = triggerLabel ?? t("messages:shareMenu.triggerLabel");
+  // Bumped on a failed load: the fresh boundary drops its error state, so
+  // the next open renders the retried modal.
+  const [communityLoadFailureCount, setCommunityLoadFailureCount] = useState(0);
+  const onCommunityModalLoadFailure = () => {
+    shareToCommunityModal.retryAfterFailure();
+    setCommunityLoadFailureCount((count) => count + 1);
+    shareToCommunity.close();
+  };
 
   // The menu is hidden for the one commit before its first measurement, and a
   // hidden element refuses focus, so the first item takes it once placed.
@@ -113,7 +155,12 @@ export function ShareMenu({
       "aria-haspopup": "menu",
       "aria-expanded": isOpen,
       "aria-controls": isOpen ? menuId : undefined,
-      onClick: () => setIsOpen((wasOpen) => !wasOpen),
+      onClick: () => {
+        if (!isOpen && shareToCommunity.canShare) {
+          void loadShareToCommunityModal().catch(() => {});
+        }
+        setIsOpen((wasOpen) => !wasOpen);
+      },
     },
   };
 
@@ -138,7 +185,7 @@ export function ShareMenu({
           </Tooltip>
         </span>
       )}
-      {isOpen &&
+      {isMounted &&
         createPortal(
           <div
             id={menuId}
@@ -149,14 +196,19 @@ export function ShareMenu({
               menuLabel ??
               t("messages:shareMenu.menuAria", { title: content.title })
             }
-            className={
+            className={[
               placement === null
                 ? styles.menuUnplaced
                 : placement.isFlipped
                   ? styles.menuFlipped
-                  : styles.menu
-            }
+                  : styles.menu,
+              isExiting && styles.menuClosing,
+            ]
+              .filter(Boolean)
+              .join(" ")}
             style={placement?.style}
+            // Fading out: out of the tab order and the accessibility tree.
+            inert={isExiting || undefined}
             onKeyDown={onMenuKeyDown}
             onBlur={onMenuBlur}
           >
@@ -171,14 +223,41 @@ export function ShareMenu({
           document.body,
         )}
       {/* Outside the menu, so closing the menu leaves the picker mounted. */}
-      {shareToChat.isOpen && (
-        <ShareToChatModal
-          url={content.path}
-          title={content.title}
-          kind={content.kind}
-          onClose={shareToChat.close}
-        />
-      )}
+      <AnimatePresence>
+        {shareToChat.isOpen && (
+          <ShareToChatModal
+            key="share-to-chat"
+            url={content.path}
+            title={content.title}
+            kind={content.kind}
+            identityNote={identityNote}
+            onClose={shareToChat.close}
+          />
+        )}
+      </AnimatePresence>
+      <ModalLoadBoundary
+        key={communityLoadFailureCount}
+        onFailure={onCommunityModalLoadFailure}
+      >
+        <AnimatePresence>
+          {shareToCommunity.isOpen && (
+            <shareToCommunityModal.Component
+              key="share-to-community"
+              title={content.title}
+              url={toAbsoluteShareUrl(content.path)}
+              defaultNote={t("messages:shareToCommunity.studioDefaultNote")}
+              notice={
+                shareToCommunity.ownPersonaName
+                  ? t("messages:shareToCommunity.ownPersonaNote", {
+                      persona: shareToCommunity.ownPersonaName,
+                    })
+                  : undefined
+              }
+              onClose={shareToCommunity.close}
+            />
+          )}
+        </AnimatePresence>
+      </ModalLoadBoundary>
     </>
   );
 }

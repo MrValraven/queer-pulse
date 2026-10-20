@@ -1,5 +1,6 @@
-import { useMemo, useState } from "react";
+import { useId, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { FiInfo } from "react-icons/fi";
 import {
   Button,
   EmptyState,
@@ -29,7 +30,30 @@ export interface ShareToChatModalProps {
   url: string;
   title: string;
   kind: ShareableKind;
+  /** One line under the note, e.g. that the member's account shows who runs a persona. */
+  identityNote?: string;
   onClose: () => void;
+}
+
+/** The picker with no personal conversation to share into yet. */
+function ShareToChatEmptyModal({
+  title,
+  onClose,
+}: Pick<ShareToChatModalProps, "title" | "onClose">) {
+  const { t } = useTranslation();
+  return (
+    <Modal
+      title={t("messages:share.modalTitle")}
+      eyebrow={title}
+      onClose={onClose}
+    >
+      <EmptyState
+        title={t("messages:share.emptyTitle")}
+        description={t("messages:share.emptyDescription")}
+        action={{ label: t("messages:share.emptyCta"), to: routes.messages }}
+      />
+    </Modal>
+  );
 }
 
 /**
@@ -56,6 +80,7 @@ export function ShareToChatModal({
   url,
   title,
   kind,
+  identityNote,
   onClose,
 }: ShareToChatModalProps) {
   const { t } = useTranslation();
@@ -67,6 +92,7 @@ export function ShareToChatModal({
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [note, setNote] = useState("");
   const [isSending, setIsSending] = useState(false);
+  const identityNoteId = useId();
 
   const shareable = useMemo(
     () => conversations.filter(isConversationShareable),
@@ -74,7 +100,7 @@ export function ShareToChatModal({
   );
   // Adapt each conversation into the shape `MemberSelectList` already knows
   // how to render, reusing the same searchable multi-select the new-group
-  // picker uses rather than forking a second one (PRD-347). A group's
+  // picker uses, so one picker serves both (PRD-347). A group's
   // secondary line is its member count (mirroring the forward picker's
   // `ForwardRecipientRow`); a DM's is the counterpart's pronouns.
   const people = useMemo<MemberSelectPerson[]>(
@@ -159,19 +185,7 @@ export function ShareToChatModal({
   }
 
   if (shareable.length === 0) {
-    return (
-      <Modal
-        title={t("messages:share.modalTitle")}
-        eyebrow={title}
-        onClose={onClose}
-      >
-        <EmptyState
-          title={t("messages:share.emptyTitle")}
-          description={t("messages:share.emptyDescription")}
-          action={{ label: t("messages:share.emptyCta"), to: routes.messages }}
-        />
-      </Modal>
-    );
+    return <ShareToChatEmptyModal title={title} onClose={onClose} />;
   }
 
   const kindLabel = t(`messages:share.kind.${kind}`);
@@ -192,6 +206,7 @@ export function ShareToChatModal({
             variant="primary"
             onClick={() => void handleSend()}
             disabled={selected.size === 0 || isSending}
+            aria-describedby={identityNote ? identityNoteId : undefined}
           >
             {isSending
               ? t("messages:share.sendingCta")
@@ -238,6 +253,12 @@ export function ShareToChatModal({
               max: MAX_NOTE_LENGTH,
             })}
           </span>
+          {identityNote && (
+            <p id={identityNoteId} className={styles.identityNote}>
+              <FiInfo aria-hidden className={styles.identityIcon} />
+              <span>{identityNote}</span>
+            </p>
+          )}
         </div>
         <div className={styles.previewColumn}>
           <ShareToChatPreview recipients={recipients} body={shareBody} />

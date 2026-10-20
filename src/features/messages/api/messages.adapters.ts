@@ -2,6 +2,7 @@ import { initialsOf, tintForSlug } from "../../../shared/api/refs";
 import { activeLocale, detectLanguage } from "../../../shared/i18n/locale";
 import { stickerLabelIn } from "../../stickers/stickerLocale";
 import { readableAttachmentBody } from "../legacyMessageBody";
+import { studioSharePreviewText } from "../studioSharePreview";
 import type { AvatarTint } from "../../../shared/components/ui/Avatar";
 import type { TFunction } from "../../../shared/i18n/types";
 import type { ChatMessage, Conversation, GroupMemberView } from "../data";
@@ -192,6 +193,19 @@ export function messageDisplayText(
   return readableAttachmentBody(message.kind, message.body, { t });
 }
 
+/** The inbox row's text for one message: `messageDisplayText`, with a Studio
+ *  link swapped for its label after the note (Studio rich cards). Only a
+ *  member's own words can carry a link. */
+export function inboxPreviewText(
+  message: MessageResponse,
+  t?: TFunction,
+): string {
+  const displayText = messageDisplayText(message, t);
+  return message.kind === "user"
+    ? studioSharePreviewText(displayText, t)
+    : displayText;
+}
+
 /** The business a moved note names, kept only while that business still
  *  resolves: a deleted one (`isFormerMailbox`) carries the English fallback
  *  label, so its note reads the unnamed line. */
@@ -247,7 +261,7 @@ function groupPreview(
   if (last.kind === "system") {
     return first ? `${first} ${last.body}` : last.body;
   }
-  const displayText = messageDisplayText(last, t);
+  const displayText = inboxPreviewText(last, t);
   return first ? `${first}: ${displayText}` : displayText;
 }
 
@@ -259,7 +273,7 @@ export function previewForMessage(
   isGroup: boolean,
   message: MessageResponse,
 ): string {
-  return isGroup ? groupPreview(message) : messageDisplayText(message);
+  return isGroup ? groupPreview(message) : inboxPreviewText(message);
 }
 
 /** Inbox preview for a DIRECT thread's last message: the localized system
@@ -287,7 +301,7 @@ function directPreview(
       t,
     );
   }
-  return messageDisplayText(lastMessage, t);
+  return inboxPreviewText(lastMessage, t);
 }
 
 /** The business side of a row's last message, every key always present. */
@@ -365,7 +379,7 @@ function groupConversationToView(
     // the last message, without re-parsing `groupPreview`'s formatted string.
     lastMessageSenderHandle: dto.lastMessage?.sender.handle || undefined,
     lastMessageBody: dto.lastMessage
-      ? messageDisplayText(dto.lastMessage, t)
+      ? inboxPreviewText(dto.lastMessage, t)
       : undefined,
     lastMessageIsSystem: dto.lastMessage?.kind === "system",
     ...lastMessageMailboxFields(dto.lastMessage),
@@ -481,7 +495,7 @@ export function conversationToView(
     // still needs to know WHO sent it to show "You: " when the viewer did.
     lastMessageSenderHandle: dto.lastMessage?.sender.handle || undefined,
     lastMessageBody: dto.lastMessage
-      ? messageDisplayText(dto.lastMessage, t)
+      ? inboxPreviewText(dto.lastMessage, t)
       : undefined,
     lastMessageIsSystem: dto.lastMessage?.kind === "system",
     ...lastMessageMailboxFields(dto.lastMessage),

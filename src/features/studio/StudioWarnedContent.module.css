@@ -1,0 +1,21 @@
+/* The forum's "Show it anyway" control, on the Studio surface. */
+.reveal {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-block-size: var(--tap-min);
+  margin: 0 0 12px;
+  padding: 0 14px;
+  border: 1px solid rgba(var(--studio-ink-rgb), 0.16);
+  border-radius: var(--radius-pill);
+  background: none;
+  color: var(--studio-text);
+  font-size: var(--text-14);
+  cursor: pointer;
+}
+
+.reveal:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}

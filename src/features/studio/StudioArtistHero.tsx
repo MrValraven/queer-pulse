@@ -8,18 +8,21 @@ import {
   FiPlus,
 } from "react-icons/fi";
 import { ImageSlot } from "../../shared/components/ui";
-import { useShareLink } from "../../shared/hooks";
 import { useSocial } from "../../app/providers/useSocial";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
+import { ShareMenu } from "../messages/share/ShareMenu";
 import { SubprofileFollow } from "../subprofiles/SubprofileFollow";
 import type { StudioArtistView } from "./api/studio.adapters";
 import { useStudioPlayer } from "./player/studioPlayerContext";
 import { ARTIST_SHOWCASE } from "./studioArtist.data";
 import { StudioArtistOverflow } from "./StudioArtistOverflow";
 import { StudioDetailHero } from "./StudioDetailHero";
+import { studioShareTrigger } from "./share/StudioShareMenu";
+import { studioIdentityNote } from "./share/studioShareContent";
+import { studioArtistPath } from "./studioPaths";
 import { useStudioShowcase } from "./useStudioShowcase";
 import styles from "./studio.module.css";
 import kit from "./studioKit.module.css";
@@ -44,10 +47,6 @@ export function StudioArtistHero({
   const isShowcase = useStudioShowcase();
   const { isFollowing, toggleFollow } = useSocial();
   const { showToast } = useToast();
-  const { share } = useShareLink({
-    copied: t("studio:detail.linkCopiedToast"),
-    failed: t("studio:detail.copyFailedToast"),
-  });
   const person = artist.artist;
   // The server sends releases published newest first (published_at desc,
   // id desc); Play all keeps that order as it stands.
@@ -137,12 +136,22 @@ export function StudioArtistHero({
               isOwnerViewing={artist.isOwner}
             />
           )}
-          <button
-            type="button"
-            onClick={() => void share(window.location.href)}
-          >
-            {t("studio:detail.shareCta")}
-          </button>
+          {/* Artist links stay plain links with no card; the owner sees the
+              identity note because the link pairs their account with the
+              persona. */}
+          <ShareMenu
+            content={{
+              path: studioArtistPath(person.id),
+              title: person.name,
+              kind: "studio",
+              text: person.name,
+            }}
+            identityNote={studioIdentityNote(
+              t,
+              artist.isOwner ? person.name : null,
+            )}
+            renderTrigger={studioShareTrigger(t("studio:detail.shareCta"))}
+          />
           {!artist.isOwner && (
             <StudioArtistOverflow subprofileId={person.id} name={person.name} />
           )}

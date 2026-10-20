@@ -1,11 +1,13 @@
 import { useEffect, useId, useRef } from "react";
-import { FiArrowRight, FiCheck } from "react-icons/fi";
+import { FiArrowRight, FiCheck, FiEdit3 } from "react-icons/fi";
 import { routes } from "../../app/routeMap";
 import { Button } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { gatheringPath } from "./data";
+import { useIsQuizshowVisible } from "../quizshow/quizshowLaunch";
+import { DEMO_GATHERING_SLUGS, gatheringPath } from "./data";
 import { gatheringOccurrences } from "./gatheringOccurrences";
+import { manageGatheringPath } from "./gatheringPaths";
 import { GatheringPreviewPanel } from "./preview/GatheringPreviewPanel";
 import { ShareKitRow } from "./shareKit/ShareKitRow";
 import type { GatheringForm } from "./useGatheringForm";
@@ -36,6 +38,7 @@ export function CreateGatheringSuccess({
   const { t } = useTranslation();
   const headingId = useId();
   const headingRef = useRef<HTMLHeadingElement>(null);
+  const isQuizshowVisible = useIsQuizshowVisible();
   // The publish button that held focus is gone with the wizard. Focus moves
   // to the heading so a screen reader starts reading from the announcement.
   useEffect(() => {
@@ -75,6 +78,18 @@ export function CreateGatheringSuccess({
             </div>
           )}
           <div className={styles.actions}>
+            {form.format === "quiz" && isQuizshowVisible && (
+              <Button
+                to={manageGatheringPath(
+                  createdSlug ?? DEMO_GATHERING_SLUGS.manage,
+                  "quizshow",
+                )}
+                variant="ghost-dark"
+              >
+                <FiEdit3 aria-hidden />{" "}
+                {t("gatherings:create.success.quizshowCta")}
+              </Button>
+            )}
             <Button to={routes.gatherings} variant="ghost-dark">
               {t("gatherings:create.success.viewCta")}{" "}
               <FiArrowRight aria-hidden />

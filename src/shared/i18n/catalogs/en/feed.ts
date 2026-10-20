@@ -273,6 +273,9 @@ export const feed: Catalog = {
   "memberCard.action.sayHi": "Say hi",
   "memberCard.action.sayHiAria": "Say hi to {name}",
   "memberCard.action.connectAria": "Connect with {name}",
+  "memberCard.action.pending": "Pending",
+  "memberCard.action.pendingAria":
+    "Your request to connect with {name} is pending",
   "memberCard.emptyPrompt": "Just arrived. A quick hello goes a long way.",
   "memberCard.emptyPromptConnected":
     "Already connected. Say hi and welcome them in.",

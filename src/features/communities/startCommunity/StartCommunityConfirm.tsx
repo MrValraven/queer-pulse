@@ -66,12 +66,13 @@ export function StepConfirm({
   onHandleChange?: () => void;
 }) {
   const { t } = useTranslation();
-  const { draft, set } = form;
+  const { draft, set, prefill } = form;
 
   // Pre-fill the handle from the name the first time they reach this step.
+  // A prefill is no edit, so reopening a draft on this chapter saves nothing.
   useEffect(() => {
     if (!draft.handle.trim() && draft.name.trim()) {
-      set({ handle: slugify(draft.name) });
+      prefill({ handle: slugify(draft.name) });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

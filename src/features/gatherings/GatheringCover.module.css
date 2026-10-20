@@ -1,0 +1,22 @@
+/* The host's cover at the top of the main column (GatheringCover). The
+   wrapper is an inline-size container, so the cover's height can be written
+   against the column's width (`cqi`) and still animate between two lengths:
+   the 2:1 banner it reserves first, and a poster's own taller height. */
+.frame {
+  container-type: inline-size;
+  margin-bottom: var(--gap-lg);
+}
+
+/* Its width, height and radius ride inline on the slot; this only animates
+   the height when a poster is detected after the banner box was reserved. */
+.cover {
+  transition-property: height;
+  transition-duration: var(--dur-slow);
+  transition-timing-function: var(--ease);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cover {
+    transition-property: none;
+  }
+}

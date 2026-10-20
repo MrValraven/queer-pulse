@@ -1,0 +1,280 @@
+/* The player's chromeless pages: code, name, lobby and end screens. */
+.page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+  min-height: 100svh;
+  min-height: 100dvh;
+  padding-block-start: max(var(--gap-sm), env(safe-area-inset-top));
+  padding-block-end: max(var(--gap-lg), env(safe-area-inset-bottom));
+  padding-inline-start: max(var(--gap-sm), env(safe-area-inset-left));
+  padding-inline-end: max(var(--gap-sm), env(safe-area-inset-right));
+  background: var(--cream);
+  color: var(--ink);
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+  width: 100%;
+  max-width: 32rem;
+  min-width: 0;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-heading);
+  font-weight: 600;
+  line-height: 1.15;
+  color: var(--text-strong);
+}
+
+.lead {
+  margin: 0;
+  font-size: var(--text-body);
+  line-height: 1.5;
+  color: var(--ink-60);
+  max-inline-size: 60ch;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+}
+
+.form .codeInput {
+  font-size: var(--text-subhead);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.groupLegend {
+  padding: 0;
+  margin-block-end: var(--gap-xs);
+  font-size: var(--text-label);
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+
+/* A radio the whole row answers to: the input is visually hidden, the body draws the state. */
+.choiceInput {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  opacity: 0;
+}
+
+.choiceList {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.choiceRow {
+  padding-block-end: var(--gap-xs);
+}
+
+.choice {
+  position: relative;
+  display: block;
+}
+
+.choiceBody {
+  display: flex;
+  font-weight: 600;
+  align-items: center;
+  gap: var(--gap-xs);
+  box-sizing: border-box;
+  min-height: 44px;
+  padding: var(--gap-xs) var(--gap-sm);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-16);
+  background: var(--paper);
+  cursor: pointer;
+  transition-property: transform, opacity;
+  transition-duration: var(--dur-base);
+  transition-timing-function: var(--ease);
+}
+
+.choiceInput:checked + .choiceBody {
+  border-color: var(--accent);
+  box-shadow: var(--ring-accent);
+}
+
+.choiceInput:focus-visible + .choiceBody {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.choiceInput[aria-disabled="true"] + .choiceBody {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.choiceName {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font-weight: 600;
+}
+
+.choiceMeta {
+  flex-shrink: 0;
+  font-size: var(--text-caption);
+  color: var(--ink-60);
+}
+
+.shapeGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--gap-xs);
+}
+
+.shapeBody {
+  justify-content: center;
+  padding-inline: 0;
+}
+
+.newTeam {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+  padding-block-start: var(--gap-xs);
+}
+
+.toggleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap-sm);
+  min-height: 44px;
+}
+
+.toggleLabel {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  min-height: var(--tap-min);
+  font-size: var(--text-body);
+  font-weight: 600;
+}
+
+.hint {
+  margin: 0;
+  font-size: var(--text-caption);
+  line-height: 1.45;
+  color: var(--ink-60);
+}
+
+.errorLine {
+  margin: 0;
+  font-size: var(--text-caption);
+  font-weight: 600;
+  line-height: 1.45;
+  color: var(--accent-text);
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+  padding: var(--gap-sm);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  background: var(--paper);
+}
+
+.nameLine {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap-sm);
+}
+
+.screenName {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font-family: var(--serif);
+  font-size: var(--text-subhead);
+  font-weight: 600;
+}
+
+.teamLine {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-xs);
+  margin: 0;
+  font-size: var(--text-body);
+  font-weight: 600;
+}
+
+.statusLine {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-xs);
+  margin: 0;
+  font-size: var(--text-body);
+  font-weight: 600;
+  color: var(--jade-text);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap-xs);
+}
+
+.endStack {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--gap-sm);
+}
+
+.place {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-subhead);
+  font-weight: 600;
+  color: var(--accent-text);
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 50svh;
+  color: var(--ink-60);
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}

@@ -21,6 +21,8 @@ import {
 } from "./StudioHiddenTrack";
 import hiddenCss from "./StudioHiddenTrack.module.css";
 import { StudioLikeButton } from "./StudioLikeButton";
+import { StudioPlaylistAddedBy } from "./StudioPlaylistAddedBy";
+import { StudioTrackWarningPill } from "./StudioTrackWarningPill";
 import styles from "./studio.module.css";
 import kit from "./studioKit.module.css";
 import releaseStyles from "./StudioRelease.module.css";
@@ -48,7 +50,10 @@ interface StudioPlaylistEntryRowProps {
   entry: StudioPlaylistEntryView;
   index: number;
   rowCount: number;
-  isOwner: boolean;
+  /** The owner or an editor: a drag handle, Move up, Move down and Remove. */
+  hasEditRights: boolean;
+  /** The playlist has editors: each row says who added it. */
+  isCollaborative: boolean;
   /** A playlist write is saving (a move or a removal): moves, drags and
    *  Remove wait, and aria-disabled keeps focus on the pressed button. */
   isBusy: boolean;
@@ -138,8 +143,9 @@ function EntryControls({
 }
 
 /** One playlist entry: play inside the playlist, open the track, and for
- *  the owner a drag handle, Move up, Move down and Remove. An unavailable
- *  entry (owner only) reads Withdrawn when our team took its release down,
+ *  the owner and editors a drag handle, Move up, Move down and Remove, and
+ *  on a collaborative playlist who added it. An unavailable entry (owner and
+ *  editors only) reads Withdrawn when our team took its release down,
  *  else No longer available, and offers Remove only. An explicit track
  *  hidden by the member's settings shows its number in place of the play
  *  button. Every row with playable audio carries the Like heart. Rows
@@ -147,7 +153,14 @@ function EntryControls({
 export function StudioPlaylistEntryRow(props: StudioPlaylistEntryRowProps) {
   const { t } = useTranslation();
   const { reducedMotion } = useMotionPrefs();
-  const { entry, isOwner, isBusy, isCurrent, isPlaying } = props;
+  const {
+    entry,
+    hasEditRights,
+    isCollaborative,
+    isBusy,
+    isCurrent,
+    isPlaying,
+  } = props;
   const shouldHideExplicit = useStudioHideExplicit();
   const track = entry.track;
   const isHidden = shouldHideExplicit && track?.isExplicit === true;
@@ -164,7 +177,7 @@ export function StudioPlaylistEntryRow(props: StudioPlaylistEntryRowProps) {
       className={[
         styles.setRow,
         css.row,
-        isOwner && css.rowOwner,
+        hasEditRights && css.rowOwner,
         !entry.isAvailable && css.rowUnavailable,
         isHidden && hiddenCss.hidden,
         isCurrent && styles.setRowNow,
@@ -173,17 +186,17 @@ export function StudioPlaylistEntryRow(props: StudioPlaylistEntryRowProps) {
         .join(" ")}
       aria-current={isCurrent ? "true" : undefined}
       onDragOver={(event) => {
-        if (isOwner && event.dataTransfer.types.includes(ENTRY_DRAG_TYPE))
+        if (hasEditRights && event.dataTransfer.types.includes(ENTRY_DRAG_TYPE))
           event.preventDefault();
       }}
       onDrop={(event) => {
         const draggedEntryId = event.dataTransfer.getData(ENTRY_DRAG_TYPE);
-        if (!isOwner || !draggedEntryId) return;
+        if (!hasEditRights || !draggedEntryId) return;
         event.preventDefault();
         props.onDropAt(draggedEntryId);
       }}
     >
-      {isOwner &&
+      {hasEditRights &&
         (entry.isAvailable ? (
           <span
             className={css.handle}
@@ -250,7 +263,11 @@ export function StudioPlaylistEntryRow(props: StudioPlaylistEntryRowProps) {
             {`${track.release.artist.name} · ${track.release.title}`}
           </div>
         )}
+        <StudioTrackWarningPill warnings={track?.contentWarnings} />
         {isHidden && <StudioHiddenTrackNote />}
+        {isCollaborative && entry.addedBy && (
+          <StudioPlaylistAddedBy person={entry.addedBy} />
+        )}
       </div>
       <div className={`${styles.tm} ${css.duration} ${releaseStyles.timeCell}`}>
         <span className={releaseStyles.timeLabel}>
@@ -275,11 +292,14 @@ export function StudioPlaylistEntryRow(props: StudioPlaylistEntryRowProps) {
               href: track.href,
               hasAudio: track.hasAudio,
               isExplicit: track.isExplicit,
+              artistId: track.release.artist.id,
+              isPublished: track.release.publishedAt !== null,
+              isWithheld: track.isWithheld,
             }}
           />
         )}
       </div>
-      {isOwner && <EntryControls {...props} title={title} />}
+      {hasEditRights && <EntryControls {...props} title={title} />}
     </m.li>
   );
 }

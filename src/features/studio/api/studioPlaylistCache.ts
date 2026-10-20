@@ -33,6 +33,10 @@ export function cardOfPlaylist(
     visibilityLabelKey: playlist.visibilityLabelKey,
     href: playlist.href,
     savedId: playlist.savedId,
+    role: playlist.role,
+    hasEditRights: playlist.hasEditRights,
+    editorCount: playlist.editorCount,
+    isCollaborative: playlist.isCollaborative,
   };
 }
 
@@ -126,7 +130,9 @@ export function movedEntryIdsTo(
 }
 
 /** Write a playlist into the caches that show it: its own key, and for the
- *  owner its card at the top of "your playlists" (newest updated first). */
+ *  owner, an editor or an invitee its card at the top of "your playlists"
+ *  (newest updated first; `GET mine` holds edited playlists and invited
+ *  seats too). A listener's card leaves "your playlists" when present. */
 export function storePlaylist(
   queryClient: QueryClient,
   demoMode: boolean,
@@ -136,16 +142,19 @@ export function storePlaylist(
     studioKeys.playlist(demoMode, playlist.id),
     playlist,
   );
-  if (!playlist.isOwner) return;
-  const card = cardOfPlaylist(playlist);
+  const isInMine = playlist.hasEditRights || playlist.role === "invitee";
+  const card = isInMine ? cardOfPlaylist(playlist) : null;
   queryClient.setQueryData<MinePages>(
     studioKeys.myPlaylists(demoMode),
     (data) =>
       data && {
         ...data,
         pages: data.pages.map((page, index) => {
-          const items = page.items.filter((item) => item.id !== card.id);
-          return { ...page, items: index === 0 ? [card, ...items] : items };
+          const items = page.items.filter((item) => item.id !== playlist.id);
+          return {
+            ...page,
+            items: card && index === 0 ? [card, ...items] : items,
+          };
         }),
       },
   );

@@ -94,3 +94,24 @@
     position: static;
   }
 }
+
+/* Studio rich cards: the one line that says the member's account will show
+   who runs the persona behind what they send. Full ink with an info mark, so
+   it reads as something to know before Send. */
+.identityNote {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 8px 0 0;
+  font-size: var(--text-13);
+  line-height: 1.4;
+  color: var(--ink);
+}
+/* Sized to the text and dropped onto the first line's centre. */
+.identityIcon {
+  flex: none;
+  inline-size: 1em;
+  block-size: 1em;
+  margin-block-start: 0.2em;
+  color: var(--ink-60);
+}

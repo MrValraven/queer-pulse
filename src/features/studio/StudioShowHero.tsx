@@ -3,7 +3,6 @@ import { AnimatePresence, m } from "motion/react";
 import { FiCheck, FiPause, FiPlay, FiPlus } from "react-icons/fi";
 import { useMotionPrefs } from "../../app/providers/motionPrefs";
 import { ImageSlot } from "../../shared/components/ui";
-import { useShareLink } from "../../shared/hooks";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { SubprofileFollow } from "../subprofiles/SubprofileFollow";
@@ -13,10 +12,12 @@ import { useStudioArtist } from "./api/useStudioArtist";
 import { playEpisode } from "./player/studioEpisodePlay";
 import { useStudioPlayer } from "./player/studioPlayerContext";
 import { queueItemFromEpisode, showQueueSource } from "./player/studioQueue";
+import { StudioReleaseClaimPanels } from "./StudioClaimPanels";
 import { StudioDetailHero } from "./StudioDetailHero";
 import { StudioNotifyMeButton } from "./StudioNotifyMeButton";
 import { StudioReleaseDisputePanel } from "./StudioReleaseDisputePanel";
 import { StudioReleaseOverflow } from "./StudioReleaseOverflow";
+import { StudioShareMenu } from "./share/StudioShareMenu";
 import { outDateOf } from "./studioUpcoming";
 import { useStudioSaveToggle } from "./useStudioSaveToggle";
 import styles from "./studio.module.css";
@@ -42,10 +43,6 @@ export function StudioShowHero({
   const { reducedMotion } = useMotionPrefs();
   const player = useStudioPlayer();
   const { artist } = useStudioArtist(release.artist.id, { isSilent: true });
-  const { share } = useShareLink({
-    copied: t("studio:detail.linkCopiedToast"),
-    failed: t("studio:detail.copyFailedToast"),
-  });
   const save = useStudioSaveToggle({
     savedId: release.savedId,
     kind: "studio_release",
@@ -187,12 +184,15 @@ export function StudioShowHero({
               </button>
             )}
             {isShareable && (
-              <button
-                type="button"
-                onClick={() => void share(window.location.href)}
-              >
-                {t("studio:detail.shareCta")}
-              </button>
+              <StudioShareMenu
+                target={{
+                  kind: "release",
+                  id: release.id,
+                  startAtSeconds: null,
+                }}
+                title={release.title}
+                triggerLabel={t("studio:detail.shareCta")}
+              />
             )}
             {isShareable && !release.isOwner && (
               <StudioReleaseOverflow onReport={onReport} />
@@ -201,6 +201,8 @@ export function StudioShowHero({
         }
       />
       <StudioReleaseDisputePanel release={release} />
+      {/* Studio safety: the owner's copyright claims, beside the dispute. */}
+      <StudioReleaseClaimPanels release={release} />
     </>
   );
 }

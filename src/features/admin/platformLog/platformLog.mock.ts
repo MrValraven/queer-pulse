@@ -150,6 +150,13 @@ function buildDemoPlatformLog(now: number): PlatformLogEntryDTO[] {
       target: asMember(SAM),
       note: "Needed the messages around the open harassment report.",
     }),
+    row("mod:d8b", 400, {
+      category: "staff",
+      kind: "mod.creator_draft_viewed",
+      actor: JULIA,
+      params: { draftKind: "event" },
+      subject: { label: "", route: "/admin/creator-drafts" },
+    }),
     row("join:d9", 480, {
       category: "members",
       kind: "member.joined",

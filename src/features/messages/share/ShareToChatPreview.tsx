@@ -7,6 +7,11 @@ import { MessageLinkCard } from "../MessageLinkCard";
 import { firstLinkUrl, renderWithLinks } from "../linkify";
 import { resolveChatPlaceLink } from "../chatPlaceLink";
 import { useWallpaper } from "../wallpaper";
+import { LazyStudioShareCard } from "../../studio/share/LazyStudioShareCard";
+import {
+  findStudioLink,
+  textWithoutStudioLink,
+} from "../../studio/share/studioLinkTarget";
 import styles from "./ShareToChatPreview.module.css";
 
 export type ShareRecipient = Pick<
@@ -36,6 +41,9 @@ export interface ShareToChatPreviewProps {
  * around it, and the note (if any) sits in its own small caption bubble
  * directly under it, styled like `.attachmentCaptionSent`; every other link
  * keeps today's single plum bubble with the OG card and note together.
+ * A Studio track, release or playlist link shows the live Studio card the
+ * same way, with the note under it and the URL hidden, as `StudioShareBubble`
+ * renders it once sent.
  * Styling is a local miniature, following `WallpaperPreview`, so the real
  * bubble classes (avatars, receipts, reaction slots) stay out of this chunk.
  *
@@ -59,7 +67,9 @@ export function ShareToChatPreview({
     void import("../chat-wallpaper.css");
   }, []);
 
-  const previewUrl = firstLinkUrl(body);
+  // Same choice `TextBubble` makes, so the preview and the sent bubble agree.
+  const studioMatch = findStudioLink(body);
+  const previewUrl = studioMatch?.url ?? firstLinkUrl(body);
   const linkCard = useMessageLinkCard(previewUrl);
   // Same swap `TextBubble` applies (MessageBubbleBody.tsx), through the same
   // `resolveChatPlaceLink` helper, so a place share's live preview can never
@@ -76,8 +86,16 @@ export function ShareToChatPreview({
   const isLinkOnlyMessage =
     !!previewUrl &&
     (trimmedBody === previewUrl || `https://${trimmedBody}` === previewUrl);
-  const isPreviewResolved = !linkCard.isLoading && linkCard.hasContent;
+  // A bare `www.` Studio link stays text, as it does in `TextBubble`.
+  const isPreviewResolved =
+    !linkCard.isLoading &&
+    linkCard.hasContent &&
+    (studioMatch !== null || linkCard.studioTarget === null);
   const shouldRenderText = !(isLinkOnlyMessage && isPreviewResolved);
+  const studioTarget = studioMatch ? linkCard.studioTarget : null;
+  const studioCaption = studioMatch
+    ? textWithoutStudioLink(body, studioMatch)
+    : "";
 
   return (
     <section className={styles.preview} aria-labelledby={labelId}>
@@ -112,7 +130,21 @@ export function ShareToChatPreview({
         data-wallpaper-pattern={wallpaper.pattern}
         inert
       >
-        {placeLink ? (
+        {studioTarget ? (
+          <>
+            <div className={styles.placeGroup}>
+              <LazyStudioShareCard target={studioTarget} surface="chat" />
+              {studioCaption && (
+                <div className={styles.placeCaption}>
+                  {renderWithLinks(studioCaption)}
+                </div>
+              )}
+            </div>
+            <span className={styles.placeTime}>
+              {t("messages:share.previewTime")}
+            </span>
+          </>
+        ) : placeLink ? (
           <>
             <div className={styles.placeGroup}>
               <MessageLinkCard url={placeLink.url} state={linkCard} isSent />

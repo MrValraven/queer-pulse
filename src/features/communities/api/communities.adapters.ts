@@ -4,6 +4,8 @@ import type { Formatters } from "../../../shared/i18n/format";
 import { activeLocale } from "../../../shared/i18n/locale";
 import type { TFunction } from "../../../shared/i18n/types";
 import { gatheringWhen } from "../../gatherings/gatheringSchedule";
+import { splitStudioPostText } from "../../studio/share/studioPostText";
+import { studioShareLabelKey } from "../../studio/share/studioShareLabel";
 import type { Community } from "../../homepage/data/types";
 import type {
   CommunityDetail,
@@ -280,6 +282,8 @@ export function detailDtoToLiving(dto: CommunityDetailDTO): LivingCommunity {
     inheritedRules: dto.inheritedRules ?? null,
     allowsSubcommunities: dto.allowsSubcommunities ?? false,
     subcommunityCount: dto.subcommunityCount ?? 0,
+    givingMethodCount: dto.givingMethodCount ?? 0,
+    isArchived: dto.archived ?? false,
   };
 }
 
@@ -420,13 +424,24 @@ export function communityReportToModReport(dto: CommunityReportDTO): ModReport {
 }
 
 /** The post body's first line, trimmed, as the discussion thread's heading.
- *  Community posts have no title (sub-project #2 decision: derive from body). */
-function headingFromBody(body: string): string {
+ *  Community posts have no title (sub-project #2 decision: derive from body).
+ *  A shared Studio link stays out of it; a post that is only the link takes
+ *  the card's label ("Studio release"). */
+export function threadHeadingFromBody(
+  body: string,
+  translate: TFunction,
+): string {
+  const { target, visibleText } = splitStudioPostText(body, {
+    isMarkdown: false,
+  });
   const firstLine =
-    body
+    visibleText
       .split("\n")
       .map((line) => line.trim())
-      .find(Boolean) ?? body.trim();
+      .find(Boolean) ?? visibleText.trim();
+  if (!firstLine && target) {
+    return translate(studioShareLabelKey(target.kind));
+  }
   return firstLine.length > 120 ? `${firstLine.slice(0, 119)}…` : firstLine;
 }
 
@@ -462,7 +477,7 @@ export function replyDtoToThreadReply(
 /** A community `Post` → the Discussion widget's `Thread` view-model. Heading is
  *  the first body line; `votes` is the Heart-reaction count (the discussion
  *  upvote arrow maps to a Heart toggle). */
-export function postToThread(post: Post): Thread {
+export function postToThread(post: Post, translate: TFunction): Thread {
   const heart = post.reactions.find((reaction) => reaction.key === "heart");
   return {
     id: post.id,
@@ -470,7 +485,7 @@ export function postToThread(post: Post): Thread {
     voted: heart?.reacted ?? false,
     pinned: post.pinned ?? false,
     createdAt: post.createdAt,
-    title: headingFromBody(post.body),
+    title: threadHeadingFromBody(post.body, translate),
     author: post.author,
     time: post.time,
     replyCount: post.replyCount ?? post.replies.length,

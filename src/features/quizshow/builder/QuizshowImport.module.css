@@ -1,0 +1,126 @@
+.emptyCard {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--gap-sm);
+  padding: var(--gap-lg);
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+}
+
+.emptyTitle {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: var(--text-22);
+  color: var(--ink);
+}
+
+.emptyBody {
+  margin: 0;
+  max-width: 60ch;
+  font-size: var(--text-body);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gap-xs);
+}
+
+.seriesShortcut {
+  flex-basis: 100%;
+}
+
+.seriesRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gap-xs);
+  padding-block-end: var(--gap-xs);
+}
+
+.seriesHint {
+  font-size: var(--text-caption);
+  color: var(--ink-60);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap-sm);
+  margin-block-end: var(--gap-xs);
+  padding: var(--gap-sm);
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-16);
+}
+
+.rowText {
+  display: flex;
+  flex: 1 1 14rem;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.rowTitle {
+  margin: 0;
+  font-size: var(--text-body);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.rowMeta {
+  margin: 0;
+  font-size: var(--text-caption);
+  line-height: 1.45;
+  color: var(--ink-60);
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tag {
+  padding: 2px 9px;
+  font-size: var(--text-caption);
+  color: var(--ink);
+  background: rgba(var(--ink-rgb), 0.06);
+  border-radius: var(--radius-pill);
+}
+
+.tagWarning {
+  background: rgba(var(--accent-rgb), 0.14);
+}
+
+.emptyNote {
+  margin: 0;
+  padding: var(--gap-sm) 0;
+  font-size: var(--text-body);
+  color: var(--ink-60);
+}
+
+.skeletonRow {
+  margin-block-end: var(--gap-xs);
+}

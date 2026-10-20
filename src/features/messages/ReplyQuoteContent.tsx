@@ -1,8 +1,10 @@
 // src/features/messages/ReplyQuoteContent.tsx
 import { useState } from "react";
-import { FiFile, FiImage, FiSmile } from "react-icons/fi";
+import { FiFile, FiImage, FiMusic, FiSmile } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { MentionText } from "../../shared/mentions/MentionText";
+import { studioShareLabelKey } from "../studio/share/studioShareLabel";
+import { studioKindInQuoteSnippet } from "./internalLinkTargets";
 import type { ReplyQuoteSource } from "./replyQuoteSource";
 import styles from "./MessagesPage.module.css";
 
@@ -19,7 +21,7 @@ export interface ReplyQuoteClassNames {
 /** The inside of a reply quote, shared by the in-bubble quote and the
  *  composer's reply preview: the sender's name over a kind-aware snippet line
  *  (a photo/GIF kind label, a document's file name, a sticker's own generic
- *  label, the deleted copy, or the text with its mentions) and, for a photo,
+ *  label, a Studio share's kind label, the deleted copy, or the text with its mentions) and, for a photo,
  *  GIF or sticker, a small square thumbnail on the trailing side.
  *
  *  Returned as a fragment (text column, then thumbnail) so each caller keeps
@@ -68,7 +70,17 @@ export function ReplyQuoteContent({
       </>
     );
   } else {
-    snippet = <MentionText text={source.text} />;
+    // A shared Studio link reads as its kind, with no title (that would need
+    // a Studio read per quote) and no half-cut URL.
+    const studioKind = studioKindInQuoteSnippet(source.text);
+    snippet = studioKind ? (
+      <>
+        <FiMusic aria-hidden className={styles.replyQuoteKindIcon} />
+        {t(studioShareLabelKey(studioKind))}
+      </>
+    ) : (
+      <MentionText text={source.text} />
+    );
   }
   const thumbnailUrl =
     !source.isDeleted && (isMedia || isSticker) ? source.thumbnailUrl : null;

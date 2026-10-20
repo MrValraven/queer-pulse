@@ -60,4 +60,16 @@ describe("subprofile-skins", () => {
     expect(SKIN_OF.podcast_producer).toBe("stage");
     expect(SKIN_OF.radio_host).toBe("stage");
   });
+
+  it("lists the tattoo image sections as visual and leaves projects in progress out", () => {
+    for (const section of [
+      "wanna_dos",
+      "cover_ups",
+      "scar_work",
+      "flash_days",
+      "shop",
+    ] as const)
+      expect(VISUAL_SECTIONS).toContain(section);
+    expect(VISUAL_SECTIONS).not.toContain("in_progress");
+  });
 });

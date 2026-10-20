@@ -303,6 +303,15 @@
   flex: none;
   color: var(--ink-40);
 }
+/* Any pane waiting on the owner marks the closed picker too
+   (EditorPaneAttentionDot). */
+.ed-switch-attention {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-pill);
+  background: var(--accent-fill);
+}
 
 /* ── pane picker sheet (EditorPaneSheet) ─────────────────────────────────── */
 .ed-panes-title {
@@ -373,6 +382,17 @@
 .ed-panes-n {
   font-size: var(--text-13);
   opacity: 0.6;
+}
+.ed-panes-attention {
+  min-width: 20px;
+  padding: 1px 6px;
+  border-radius: var(--radius-pill);
+  background: var(--accent-fill);
+  color: rgb(var(--cream-rgb));
+  font-size: var(--text-11);
+  font-weight: 700;
+  line-height: 1.5;
+  text-align: center;
 }
 
 .ed-rail {
@@ -463,6 +483,40 @@
   margin-left: auto;
   font-size: var(--text-12);
   opacity: 0.6;
+}
+/* The waiting-for-you pill sits on the row's right edge, and moves to the
+   icon's corner on the icon strip, so it stays visible there. */
+.ed-rail button:has(> .rail-attention) {
+  position: relative;
+}
+/* `.rail-attention` places the pill; `.rail-attention-pill` draws it and
+   carries the fade in and out (EditorRail), so its scale never overwrites the
+   centring transform here. */
+.ed-rail .rail-attention {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  transition-property: top, right, transform;
+  transition-duration: var(--dur-base);
+  transition-timing-function: var(--ease);
+}
+.ed-rail .rail-attention-pill {
+  display: block;
+  min-width: 18px;
+  padding: 0 5px;
+  border-radius: var(--radius-pill);
+  background: var(--accent-fill);
+  color: rgb(var(--cream-rgb));
+  font-size: var(--text-11);
+  font-weight: 700;
+  line-height: 1.6;
+  text-align: center;
+}
+.ed[data-rail="collapsed"] .ed-rail .rail-attention {
+  top: 5px;
+  right: 2px;
+  transform: none;
 }
 .ed-rail .rail-head {
   font-size: var(--text-11);

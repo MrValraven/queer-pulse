@@ -4,6 +4,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { SubprofileItemView } from "./api/subprofiles.adapters";
 import { CollaboratorPicker } from "./CollaboratorPicker";
 import { ProtectWorkSection } from "./rights/ProtectWorkSection";
+import { isTattooBodyPhotoSection } from "./skins/tattoo/tattooVocab.data";
 import styles from "./ItemDrawerSettings.module.css";
 
 /**
@@ -74,8 +75,10 @@ export function ItemDrawerSettings({
 }) {
   const { t } = useTranslation();
   // A gallery photo has no collaborators and the public view never shows
-  // them; with no spotlight either, the rail would be empty.
-  const hasCollaborators = draft.section !== "gallery";
+  // them; with no spotlight either, the rail would be empty. A tattoo body
+  // photo is the client's skin, so it carries no collaborators either.
+  const hasCollaborators =
+    draft.section !== "gallery" && !isTattooBodyPhotoSection(draft.section);
   if (!canFeature && !hasCollaborators && isNew) return null;
   return (
     <aside

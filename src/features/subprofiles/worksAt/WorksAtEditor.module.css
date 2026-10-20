@@ -1,0 +1,128 @@
+/* Layout for SubprofileWorksAtEditor / WorksAtLinkRow. Tokens only. */
+
+.pane {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-grid);
+  min-width: 0;
+}
+
+.notice {
+  margin: 0;
+  padding: var(--gap-xs) var(--gap-sm);
+  border-radius: var(--radius-10);
+  background: var(--wash);
+  font-size: var(--text-14);
+  line-height: 1.55;
+  color: var(--ink-60);
+  overflow-wrap: anywhere;
+}
+
+.group,
+.foldingGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+  min-width: 0;
+}
+
+/* Invites and requests leave the layout once their last row has folded away. */
+.foldingGroup:not(:has(li)) {
+  display: none;
+}
+
+.heading {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: var(--text-11);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
+
+/* Takes focus back after a row leaves its list. */
+.heading:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-radius: var(--radius-4);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.list:empty {
+  display: none;
+}
+
+.item {
+  padding-block: var(--gap-xs);
+  border-bottom: 1px solid var(--line);
+}
+
+/* The refusal folds in under the row; its spacing sits inside the fold. */
+.item [role="alert"] {
+  padding-top: 6px;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gap-xs) 12px;
+  min-width: 0;
+}
+
+.text {
+  display: flex;
+  flex: 1 1 160px;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.name {
+  font-size: var(--text-15);
+  font-weight: 600;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+  text-decoration: none;
+}
+
+a.name:hover {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+a.name:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-radius: var(--radius-4);
+}
+
+.meta {
+  font-size: var(--text-13);
+  line-height: 1.45;
+  color: var(--ink-60);
+  overflow-wrap: anywhere;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.empty {
+  margin: 0;
+  font-size: var(--text-14);
+  line-height: 1.55;
+  color: var(--ink-60);
+}

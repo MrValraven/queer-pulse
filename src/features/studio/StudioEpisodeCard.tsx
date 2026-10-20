@@ -1,12 +1,14 @@
 import { Link } from "react-router-dom";
 import { FiPause, FiPlay } from "react-icons/fi";
-import { ImageSlot } from "../../shared/components/ui";
+import { Collapse, ImageSlot } from "../../shared/components/ui";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { StudioLatestEpisodeView } from "./api/studio.adapters";
+import { useStudioHideExplicit } from "./api/useStudioPlaybackPreferences";
 import { playEpisode } from "./player/studioEpisodePlay";
 import { useStudioPlayer } from "./player/studioPlayerContext";
 import { queueItemFromEpisode, showQueueSource } from "./player/studioQueue";
+import { StudioHiddenTrackNote } from "./StudioHiddenTrack";
 import styles from "./studio.module.css";
 import kit from "./studioKit.module.css";
 import css from "./StudioFormats.module.css";
@@ -42,6 +44,10 @@ export function StudioEpisodeCard({
   const publishedAt = track.publishedAt ? new Date(track.publishedAt) : null;
   const isCurrent = player.isCurrentTrack(track.id);
   const isPlaying = isCurrent && player.status === "playing";
+  // Spec 7: the card honours "Hide explicit tracks" and plays only with
+  // audio, like every other row.
+  const isHidden = useStudioHideExplicit() && track.isExplicit;
+  const isPlayBlocked = !track.hasAudio || isHidden;
   return (
     <article className={styles.card}>
       <div className={kit.coverArea}>
@@ -67,6 +73,7 @@ export function StudioEpisodeCard({
           type="button"
           className={`${styles.playFab} ${kit.cardPlay}`}
           data-current={isCurrent || undefined}
+          aria-disabled={(!isCurrent && isPlayBlocked) || undefined}
           aria-label={t(
             isPlaying
               ? "studio:episodeCard.pauseAria"
@@ -75,7 +82,7 @@ export function StudioEpisodeCard({
           )}
           onClick={() => {
             if (isCurrent) player.togglePlay();
-            else
+            else if (!isPlayBlocked)
               void playEpisode(
                 player,
                 queueItemFromEpisode(track, release),
@@ -102,6 +109,9 @@ export function StudioEpisodeCard({
           </span>
         )}
       </div>
+      <Collapse isOpen={isHidden}>
+        <StudioHiddenTrackNote />
+      </Collapse>
     </article>
   );
 }

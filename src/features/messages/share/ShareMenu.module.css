@@ -58,6 +58,22 @@
   pointer-events: none;
 }
 
+/* Leaving: opacity only, shorter than the entrance, the same leave
+   `AccountMenu` plays. The duration mirrors MENU_EXIT_MS in ShareMenu.tsx,
+   which owns the unmount and drops it to zero under reduced motion. Combined
+   with the placed class, so it comes after `.menu` and its `animation` wins.
+   `pointer-events` lets a second press during the fade reach the page. */
+.menuClosing {
+  animation: shareMenuOut 90ms var(--ease-in) forwards;
+  pointer-events: none;
+}
+/* No `from`: a close mid-entrance fades from wherever the panel already is. */
+@keyframes shareMenuOut {
+  to {
+    opacity: 0;
+  }
+}
+
 .item {
   display: flex;
   align-items: center;

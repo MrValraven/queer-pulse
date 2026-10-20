@@ -1,7 +1,13 @@
+import { AnimatePresence, m } from "motion/react";
+import { useMotionPrefs } from "../../../../app/providers/motionPrefs";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import type { MissingField } from "../listBusiness.data";
 import { countMissingInSection } from "./listingEditorMissing";
-import type { ListingEditorSectionDefinition } from "./listingEditor.data";
+import type {
+  ListingEditorSectionDefinition,
+  ListingEditorSectionKey,
+} from "./listingEditor.data";
+import teamStyles from "../team/ListingTeam.module.css";
 import styles from "./ListingEditor.module.css";
 
 /**
@@ -16,14 +22,18 @@ export function ListingEditorSectionNav({
   sections,
   activeSectionId,
   missing,
+  sectionBadges,
   onJump,
 }: {
   sections: ListingEditorSectionDefinition[];
   activeSectionId: string;
   missing: MissingField[];
+  /** Counts of answers waiting inside a section, shown as a coral pill. */
+  sectionBadges?: Partial<Record<ListingEditorSectionKey, number>>;
   onJump: (sectionId: string) => void;
 }) {
   const { t } = useTranslation();
+  const { reducedMotion } = useMotionPrefs();
 
   return (
     <nav
@@ -37,6 +47,7 @@ export function ListingEditorSectionNav({
         {sections.map((section) => {
           const isActive = section.id === activeSectionId;
           const missingCount = countMissingInSection(missing, section.anchors);
+          const attentionCount = sectionBadges?.[section.key] ?? 0;
           return (
             <li key={section.id}>
               <button
@@ -65,6 +76,25 @@ export function ListingEditorSectionNav({
                     {missingCount}
                   </span>
                 )}
+                <AnimatePresence initial={false}>
+                  {attentionCount > 0 && (
+                    <m.span
+                      key="attention"
+                      className={teamStyles.navBadgeAttention}
+                      role="img"
+                      aria-label={t(
+                        "marketing:listBusiness.editor.nav.awaitingCount",
+                        { count: attentionCount },
+                      )}
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.8 }}
+                      transition={{ duration: reducedMotion ? 0 : 0.18 }}
+                    >
+                      {attentionCount}
+                    </m.span>
+                  )}
+                </AnimatePresence>
               </button>
             </li>
           );

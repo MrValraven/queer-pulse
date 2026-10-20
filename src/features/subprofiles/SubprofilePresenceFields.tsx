@@ -17,6 +17,7 @@ import {
   THERAPIST_AVAILABILITY_LABEL_KEYS,
 } from "./subprofilePresence.data";
 import styles from "./SubprofilePresenceFields.module.css";
+import { TattooBooksStatusLine } from "./skins/tattoo/editor/TattooBooksStatusLine";
 import { useEditorPersonaKind } from "./useEditorPersonaKind";
 
 interface SubprofilePresenceFieldsProps {
@@ -49,7 +50,9 @@ interface SubprofilePresenceFieldsProps {
  * controlled: the parent owns state and the PATCH. For a therapist the cover
  * is a thin band above the profile, the availability follows the status set
  * in Page blocks, and the button is the "Book the free call" one, so those
- * fields explain themselves in that kind's terms.
+ * fields explain themselves in that kind's terms. For a tattoo artist the
+ * books status sets the availability, so the field shows that status
+ * (`TattooBooksStatusLine`).
  */
 export function SubprofilePresenceFields({
   coverUrl,
@@ -69,7 +72,9 @@ export function SubprofilePresenceFields({
   ctaMismatch,
 }: SubprofilePresenceFieldsProps) {
   const { t } = useTranslation();
-  const isTherapist = useEditorPersonaKind() === "therapist";
+  const personaKind = useEditorPersonaKind();
+  const isTherapist = personaKind === "therapist";
+  const isTattooArtist = personaKind === "tattoo_artist";
 
   return (
     <>
@@ -161,24 +166,33 @@ export function SubprofilePresenceFields({
             : undefined
         }
       >
-        <Select
-          options={[
-            { value: "", label: t("subprofiles:metaForm.availabilityUnset") },
-            ...AVAILABILITY_OPTIONS.map((option) => ({
-              value: option.value,
-              // Therapists read the same words as their page's status pill.
-              label: t(
-                isTherapist
-                  ? THERAPIST_AVAILABILITY_LABEL_KEYS[option.value]
-                  : option.labelKey,
-              ),
-            })),
-          ]}
-          value={availability}
-          onChange={(value) =>
-            onAvailabilityChange((value ?? "") as AvailabilityKey | "")
-          }
-        />
+        {/* A tattoo artist's books status sets the availability, so the
+            field reads that status and links to the Booking chapter. */}
+        {isTattooArtist ? (
+          <TattooBooksStatusLine />
+        ) : (
+          <Select
+            options={[
+              {
+                value: "",
+                label: t("subprofiles:metaForm.availabilityUnset"),
+              },
+              ...AVAILABILITY_OPTIONS.map((option) => ({
+                value: option.value,
+                // Therapists read the same words as their page's status pill.
+                label: t(
+                  isTherapist
+                    ? THERAPIST_AVAILABILITY_LABEL_KEYS[option.value]
+                    : option.labelKey,
+                ),
+              })),
+            ]}
+            value={availability}
+            onChange={(value) =>
+              onAvailabilityChange((value ?? "") as AvailabilityKey | "")
+            }
+          />
+        )}
       </FormField>
 
       <SubprofilePresenceCtaFields

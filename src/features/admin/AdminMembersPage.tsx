@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { AnimatePresence } from "motion/react";
 import { FadeIn } from "../../shared/components/ui";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
 import { Translation } from "../../shared/i18n/Translation";
@@ -16,6 +17,9 @@ import {
   type StatusFilter,
 } from "./AdminMembersSearchControls";
 import { AdminEmailSuppressionModal } from "./AdminEmailSuppressionModal";
+import { AdminVouchGraphModal } from "./AdminVouchGraphModal";
+import { useTrustNetworkSummary } from "./api/useTrustNetwork";
+import { useTrustNetworkUrl } from "./useTrustNetworkUrl";
 import { useAdminMembers, useAdminFlagged } from "./api/useAdminMembers";
 import { useJoinRequests } from "./api/useJoinRequests";
 import { hasFailedWithoutData } from "./queryLoadFailure";
@@ -34,15 +38,15 @@ export function AdminMembersPage() {
   const [search, setSearch] = useState("");
   // Only the selected member's id is held here. The drawer reads the member
   // object back out of the live roster below, so a verify/restrict that
-  // refetches the list updates the open drawer instead of leaving it pinned to
+  // refetches the list updates the open drawer, which never stays pinned to
   // the row object as it looked when it was clicked.
   const [selectedMemberId, setSelectedMemberId] = useState<string | null>(null);
   // The flagged queue lists people who are usually not on the loaded roster
-  // page, so its selection is fetched by id instead of resolved from `members`
-  // below. Both feed the one drawer at the bottom of this page.
+  // page, so its selection is fetched by id (the `members` list below cannot
+  // resolve it). Both feed the one drawer at the bottom of this page.
   const flaggedSelection = useAdminMemberCardSelection();
   // The erasure suppression list belongs to no member (the account it protected
-  // was erased), so it opens from the page header rather than a member drawer.
+  // was erased), so it opens from the page header.
   const [isSuppressionOpen, setIsSuppressionOpen] = useState(false);
 
   // The search runs on the server across every page (see `useAdminMembers`),
@@ -58,6 +62,9 @@ export function AdminMembersPage() {
   const pendingCount = pendingQuery.data?.length;
   const flaggedCount = flaggedQuery.data?.length;
   const hasRosterTotal = roster.data !== undefined;
+  // The page is admin-only, so the trust network summary is always enabled.
+  const trustSummary = useTrustNetworkSummary({ isEnabled: true });
+  const trustNetworkUrl = useTrustNetworkUrl();
 
   // Resolved from the roster on every render, so the drawer always shows the
   // member as the list currently has them.
@@ -68,10 +75,10 @@ export function AdminMembersPage() {
 
   // A member who leaves the roster (filtered out, or gone after a refetch)
   // takes the drawer with them, and the stale id is dropped so they can't pop
-  // back open later. Adjusted during render (rather than in an effect): the
-  // condition is derived entirely from render-available values, and clearing
-  // it here means the current render already reflects the closed drawer
-  // instead of painting a stale one first. `selectedMemberId !== null` is
+  // back open later. Adjusted during render (an effect would lag a frame):
+  // the condition is derived entirely from render-available values, and
+  // clearing it here means the current render already reflects the closed
+  // drawer, with no stale frame painted first. `selectedMemberId !== null` is
   // false on the next render, so this terminates.
   if (
     selectedMemberId !== null &&
@@ -119,6 +126,15 @@ export function AdminMembersPage() {
           total={hasRosterTotal ? total : undefined}
           pendingCount={pendingCount}
           onOpenSuppression={() => setIsSuppressionOpen(true)}
+          trustCaseCount={trustSummary.data?.openCaseCount}
+          isTrustNetworkAvailable={Boolean(trustSummary.data?.entrySlug)}
+          onOpenTrustNetwork={() => {
+            if (trustSummary.data?.entrySlug) {
+              trustNetworkUrl.open(trustSummary.data.entrySlug, {
+                mode: "safety",
+              });
+            }
+          }}
         />
       </FadeIn>
 
@@ -162,6 +178,18 @@ export function AdminMembersPage() {
       {!drawerMember && flaggedSelection.isPending && (
         <AdminMemberCardLoadingDrawer onClose={closeDrawer} />
       )}
+      {/* The network shell plays its exit before it unmounts. */}
+      <AnimatePresence>
+        {trustNetworkUrl.openView &&
+          !drawerMember &&
+          !flaggedSelection.isPending && (
+            <AdminVouchGraphModal
+              key="trust-network"
+              initialView={trustNetworkUrl.openView}
+              onClose={trustNetworkUrl.close}
+            />
+          )}
+      </AnimatePresence>
       {isSuppressionOpen && (
         <AdminEmailSuppressionModal
           onClose={() => setIsSuppressionOpen(false)}

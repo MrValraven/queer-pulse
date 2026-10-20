@@ -2,7 +2,8 @@ import { Link } from "react-router-dom";
 import { FiBriefcase, FiMessageCircle } from "react-icons/fi";
 import { SkeletonLine } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { routes, thread as threadPath } from "../../app/routeMap";
+import { thread as threadPath } from "../../app/routeMap";
+import { volunteerOpportunityPath } from "../marketing/volunteerPaths";
 import type { CommunityPulseResult } from "./api/useCommunityPulse";
 import styles from "./CommunityDetailPage.module.css";
 
@@ -96,7 +97,7 @@ export function CommunityPulseSidebarCards({
             opportunities.map((opp) => (
               <Link
                 key={opp.slug}
-                to={`${routes.volunteer}/opportunity/${opp.slug}`}
+                to={volunteerOpportunityPath(opp.slug)}
                 className={styles.sbRelItem}
               >
                 <div

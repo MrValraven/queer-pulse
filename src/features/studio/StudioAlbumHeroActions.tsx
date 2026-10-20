@@ -1,13 +1,15 @@
 import { FiCheck, FiHeart, FiPause, FiPlay, FiPlus } from "react-icons/fi";
-import { useShareLink } from "../../shared/hooks";
+import { Collapse } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { StudioReleaseView } from "./api/studio.adapters";
 import { useStudioHideExplicit } from "./api/useStudioPlaybackPreferences";
 import { useStudioPlayer } from "./player/studioPlayerContext";
 import { queueFromRelease } from "./player/studioQueue";
 import { StudioAddToPlaylistButton } from "./StudioAddToPlaylistButton";
+import { StudioHiddenTrackNote } from "./StudioHiddenTrack";
 import { StudioNotifyMeButton } from "./StudioNotifyMeButton";
 import { StudioReleaseOverflow } from "./StudioReleaseOverflow";
+import { StudioShareMenu } from "./share/StudioShareMenu";
 import { useStudioSaveToggle } from "./useStudioSaveToggle";
 import { useStudioShowcase } from "./useStudioShowcase";
 import styles from "./studio.module.css";
@@ -31,10 +33,6 @@ export function StudioAlbumHeroActions({
   const { t } = useTranslation();
   const player = useStudioPlayer();
   const isShowcase = useStudioShowcase();
-  const { share } = useShareLink({
-    copied: t("studio:detail.linkCopiedToast"),
-    failed: t("studio:detail.copyFailedToast"),
-  });
   const save = useStudioSaveToggle({
     savedId: release.savedId,
     kind: "studio_release",
@@ -95,6 +93,19 @@ export function StudioAlbumHeroActions({
           {isPlaying ? <FiPause aria-hidden /> : <FiPlay aria-hidden />}
         </button>
       )}
+      {/* Spec 7: every playable track is explicit and hidden, so Play is
+          disabled; the release says why. */}
+      <Collapse
+        isOpen={
+          !isUpcomingForViewer &&
+          isStreamable &&
+          hideExplicit &&
+          audibleQueue.length === 0 &&
+          release.playableTrackCount > 0
+        }
+      >
+        <StudioHiddenTrackNote />
+      </Collapse>
       {isUpcomingForViewer && (
         <StudioNotifyMeButton
           releaseId={release.id}
@@ -137,9 +148,11 @@ export function StudioAlbumHeroActions({
         </button>
       )}
       {(isPublished || release.isUpcoming) && !isPreview && (
-        <button type="button" onClick={() => void share(window.location.href)}>
-          {t("studio:detail.shareCta")}
-        </button>
+        <StudioShareMenu
+          target={{ kind: "release", id: release.id, startAtSeconds: null }}
+          title={release.title}
+          triggerLabel={t("studio:detail.shareCta")}
+        />
       )}
       {/* The server accepts a report on a published or scheduled release
           (granted members see a scheduled release's title, cover and

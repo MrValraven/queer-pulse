@@ -1,8 +1,10 @@
-import { useId, useState } from "react";
+import { useId, useState, type ReactNode } from "react";
 import { tabIds, tabPanelProps } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { StudioReviewTab } from "./api/studioFlagReview.adapters";
+import { StudioReviewClaimsBadge } from "./StudioReviewClaimsBadge";
+import { StudioReviewClaimsPanel } from "./StudioReviewClaimsPanel";
 import {
   StudioReviewDisputesPanel,
   StudioReviewReportsPanel,
@@ -14,16 +16,26 @@ import css from "./StudioFlagReview.module.css";
 
 const REVIEW_TAB_LABEL_KEY: Record<StudioReviewTab, string> = {
   reports: "studio:flagReviewLive.tabs.reports",
+  claims: "studio:flagReviewLive.tabs.claims",
   disputes: "studio:flagReviewLive.tabs.disputes",
   withdrawn: "studio:flagReviewLive.tabs.withdrawn",
 };
 
-const REVIEW_TABS: { id: StudioReviewTab; labelKey: string }[] = (
-  ["reports", "disputes", "withdrawn"] as const
-).map((id) => ({ id, labelKey: REVIEW_TAB_LABEL_KEY[id] }));
+// Studio safety: the Claims tab carries a count while claims wait for our
+// team (the rule: a badge when there is something to review).
+const REVIEW_TABS: {
+  id: StudioReviewTab;
+  labelKey: string;
+  badge?: ReactNode;
+}[] = (["reports", "claims", "disputes", "withdrawn"] as const).map((id) => ({
+  id,
+  labelKey: REVIEW_TAB_LABEL_KEY[id],
+  badge: id === "claims" ? <StudioReviewClaimsBadge /> : undefined,
+}));
 
 const REVIEW_PANELS = {
   reports: StudioReviewReportsPanel,
+  claims: StudioReviewClaimsPanel,
   disputes: StudioReviewDisputesPanel,
   withdrawn: StudioReviewWithdrawnPanel,
 } as const;

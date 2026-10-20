@@ -1332,6 +1332,19 @@
   flex-wrap: wrap;
 }
 
+/* ---- draft save line + team note, under the panel actions ---- */
+.draftStatus {
+  display: grid;
+  gap: var(--gap-xs);
+  margin-top: var(--gap-sm);
+}
+
+/* ---- skeleton while the saved draft loads ---- */
+.wizardLoading {
+  display: grid;
+  gap: var(--gap-sm);
+}
+
 /* ---- opening / sending ---- */
 .statusPanel {
   padding: var(--section-y-80) 0;

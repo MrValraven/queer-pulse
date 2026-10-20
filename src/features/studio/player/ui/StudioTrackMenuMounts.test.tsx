@@ -73,11 +73,13 @@ describe("track menu mounts", () => {
             addedAt: "2026-10-01T00:00:00.000Z",
             isAvailable: true,
             unavailableReason: null,
+            addedBy: null,
             track: firstTrack,
           }}
           index={0}
           rowCount={1}
-          isOwner={false}
+          hasEditRights={false}
+          isCollaborative={false}
           isBusy={false}
           isCurrent={false}
           isPlaying={false}

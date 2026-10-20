@@ -19,6 +19,8 @@ function blockEnterKey(event: KeyboardEvent<HTMLTextAreaElement>) {
 const CHECK_MESSAGE_KEY: Record<SkinTextCheck, string> = {
   email: "subprofiles:skinControl.validate.email",
   url: "subprofiles:skinControl.validate.url",
+  httpsUrl: "subprofiles:skinControl.validate.httpsUrl",
+  year: "subprofiles:skinControl.validate.year",
 };
 
 /**

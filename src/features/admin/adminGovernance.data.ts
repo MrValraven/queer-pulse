@@ -130,6 +130,7 @@ export const ACTION_TONE: Record<AuditType, AdminTone> &
   message_deleted_by_staff: "ghost",
   official_message_sent: "ghost",
   official_broadcast_sent: "ghost",
+  creator_draft_viewed: "ghost",
 };
 
 export interface AuditEntry {

@@ -5,7 +5,7 @@ import {
   duplicatePreview,
   type DuplicateMutations,
 } from "./subprofileDuplicate";
-import { subprofileToView } from "./api/subprofiles.adapters";
+import { itemsToInputDto, subprofileToView } from "./api/subprofiles.adapters";
 import type { SubprofileDTO, SubprofileItemDTO } from "./api/subprofiles.api";
 
 /**
@@ -132,13 +132,167 @@ describe("duplicatePreview", () => {
       itemCount: 2,
       affiliationCount: 1,
       includesIdentity: true,
+      leftOutBodyPhotoCount: 0,
     });
     expect(duplicatePreview(source, "content")).toEqual({
       linkCount: 2,
       itemCount: 2,
       affiliationCount: 0,
       includesIdentity: false,
+      leftOutBodyPhotoCount: 0,
     });
+  });
+});
+
+/** A tattoo artist source whose items are the given rows, plus one flash
+ *  sheet that sits outside the body-photo sections. */
+function makeTattooSourceView(items: SubprofileItemDTO[]) {
+  const dto: SubprofileDTO = {
+    id: "sp-tattoo-source",
+    kind: "tattoo_artist",
+    slug: "inkwell-mariana",
+    handle: "inkwell-mariana",
+    displayName: "Inkwell Mariana",
+    avatarUrl: null,
+    tagline: "Fine line and botanicals",
+    bio: null,
+    coverUrl: null,
+    accent: "violet",
+    availability: "booking",
+    ctaLabel: null,
+    ctaUrl: null,
+    socialLinks: [],
+    linkVisibility: "linked",
+    visibility: "open",
+    status: "published",
+    position: 0,
+    items: [
+      makeItem({
+        id: "flash-1",
+        section: "flash",
+        title: "Fern sprig",
+        imageUrl: "work-image/u1/fern.jpg",
+      }),
+      ...items,
+    ],
+    affiliations: [],
+    endorsementCount: 0,
+    followerCount: 0,
+  };
+  return subprofileToView(dto);
+}
+
+describe("persona duplicate of client photos", () => {
+  it("leaves healed photos without consent out of the copy", () => {
+    const source = makeTattooSourceView([
+      makeItem({
+        id: "healed-consented",
+        section: "healed",
+        title: "Peony sleeve",
+        imageUrl: "work-image/u1/peony.jpg",
+        structured: { photo: { hasClientConsent: true, isBlurred: false } },
+      }),
+      makeItem({
+        id: "healed-legacy",
+        section: "healed",
+        title: "Swallow",
+        imageUrl: "work-image/u1/swallow.jpg",
+      }),
+    ]);
+
+    const plan = buildDuplicatePlan(source, "content");
+    const healed = plan.sections.find((entry) => entry.section === "healed");
+    expect(healed?.items.map((item) => item.title)).toEqual(["Peony sleeve"]);
+    // Flash sits outside the consent rule, so it travels as before.
+    const flash = plan.sections.find((entry) => entry.section === "flash");
+    expect(flash?.items.map((item) => item.title)).toEqual(["Fern sprig"]);
+
+    const preview = duplicatePreview(source, "content");
+    expect(preview.leftOutBodyPhotoCount).toBe(1);
+    expect(preview.itemCount).toBe(2);
+  });
+
+  it("copies a section whose rows all have consent unchanged", () => {
+    const source = makeTattooSourceView([
+      makeItem({
+        id: "healed-first",
+        section: "healed",
+        title: "Peony sleeve",
+        imageUrl: "work-image/u1/peony.jpg",
+        structured: { photo: { hasClientConsent: true, isBlurred: false } },
+      }),
+      makeItem({
+        id: "healed-second",
+        section: "healed",
+        title: "Swallow",
+        imageUrl: "work-image/u1/swallow.jpg",
+        structured: {
+          healed: { healedFor: "2 years" },
+          photo: { hasClientConsent: true, isBlurred: true },
+        },
+      }),
+    ]);
+    const healedSource = source.sections.find(
+      (entry) => entry.section === "healed",
+    );
+
+    const plan = buildDuplicatePlan(source, "full");
+    const healed = plan.sections.find((entry) => entry.section === "healed");
+    expect(healed?.items).toEqual(itemsToInputDto(healedSource?.items ?? []));
+    expect(healed?.items).toHaveLength(2);
+
+    const preview = duplicatePreview(source, "full");
+    expect(preview.leftOutBodyPhotoCount).toBe(0);
+    expect(preview.itemCount).toBe(3);
+  });
+
+  it("drops flash day event links from the copy and keeps date and place", () => {
+    const source = makeTattooSourceView([
+      makeItem({
+        id: "flash-day-linked",
+        section: "flash_days",
+        title: "Flash day",
+        date: "2026-11-14",
+        subtitle: "Jardim da Estrela",
+        structured: {
+          flashDay: {
+            eventSlug: "trans-joy-picnic",
+            cause: "Proceeds to ILGA Portugal",
+          },
+        },
+      }),
+      makeItem({
+        id: "flash-day-slug-only",
+        section: "flash_days",
+        title: "Fundraiser",
+        date: "2026-12-05",
+        subtitle: "Casa Tinta Viva",
+        structured: { flashDay: { eventSlug: "stone-butch-blues" } },
+      }),
+    ]);
+
+    const plan = buildDuplicatePlan(source, "full");
+    const flashDays = plan.sections.find(
+      (entry) => entry.section === "flash_days",
+    );
+    expect(flashDays?.items).toEqual([
+      {
+        title: "Flash day",
+        subtitle: "Jardim da Estrela",
+        date: "2026-11-14",
+        structured: { flashDay: { cause: "Proceeds to ILGA Portugal" } },
+      },
+      {
+        title: "Fundraiser",
+        subtitle: "Casa Tinta Viva",
+        date: "2026-12-05",
+      },
+    ]);
+    // The flash sheet outside flash_days travels as it was.
+    const flash = plan.sections.find((entry) => entry.section === "flash");
+    expect(flash?.items).toEqual([
+      { title: "Fern sprig", imageUrl: "work-image/u1/fern.jpg" },
+    ]);
   });
 });
 

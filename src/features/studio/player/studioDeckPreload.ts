@@ -22,6 +22,7 @@ import type {
   StudioRemoteState,
 } from "./studioPlayerContext";
 import { peekNext, type StudioQueueState } from "./studioQueueReducer";
+import { isWarningGated, warningGateOf } from "./studioWarningGate";
 
 export interface StudioPreloadedStream {
   queueEntryId: string;
@@ -115,15 +116,17 @@ export function createDeckPreloader(
       const analysis = streamAnalysisOf(stream);
       rememberStreamAnalysis(queryClient, demoMode, next.trackId, analysis);
       const sources = refs.sourcesRef.current;
+      const settings = sources.readPlaybackSettings();
       const latestNext = peekNext(
         sources.readQueue(),
         false,
-        sources.readPlaybackSettings().hideExplicit,
+        settings.hideExplicit,
       );
       const isStale =
         token !== preloadToken ||
         refs.engineRef.current !== engine ||
-        latestNext?.queueEntryId !== next.queueEntryId;
+        latestNext?.queueEntryId !== next.queueEntryId ||
+        isWarningGated(next, warningGateOf(settings));
       if (isStale) return;
       // The engine applies this gain only while "Even out loudness" is on.
       const gainDb = trackGainDb(analysis);
@@ -185,6 +188,13 @@ export function createDeckPreloader(
     const current = queue.current;
     const next = peekNext(queue, false, settings.hideExplicit);
     if (!refs.engineRef.current || !current || !next) return;
+    // Studio safety (spec 6.3): a warned next track waits for Play it, so
+    // nothing pre-buffers or crossfades into it; a preload made before the
+    // gate applied is let go.
+    if (isWarningGated(next, warningGateOf(settings))) {
+      if (preload !== null || attemptedEntryId !== null) cancelPreload();
+      return;
+    }
     // Artist kinds: no preload next to an episode, so neither a crossfade
     // nor a gapless swap joins an episode to its neighbour (spec 5.6).
     if (isEpisodeTransition(current, next)) return;

@@ -1,7 +1,12 @@
+import { useContext } from "react";
 import type { IconType } from "react-icons";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { SkinBlockControl } from "./skinBlockFields.data";
 import type { SubprofileSkinBlocksEditor } from "./useSubprofileSkinBlocksEditor";
+import {
+  SubprofileEditorContext,
+  type SubprofileEditorContextValue,
+} from "./subprofileEditorContext";
 import { choiceSelection, type ChoiceOptionLabel } from "./skinChoiceSelection";
 
 const LEGACY_HELPER_KEY =
@@ -17,6 +22,23 @@ export interface ChoiceChipItem extends ChoiceOptionLabel {
   /** Tiles only: the option's translated `descriptionKey`, and its icon. */
   description?: string;
   icon?: IconType;
+}
+
+/** Whether an option's `offeredWhen` gate holds. No editor context offers
+ *  everything. */
+function isOptionOffered(
+  gate: string | undefined,
+  context: SubprofileEditorContextValue | null,
+): boolean {
+  if (!gate || !context) return true;
+  if (gate === "instagramLink") {
+    return context.socialRows.some(
+      (row) => row.platform === "instagram" && row.urlOrHandle.trim() !== "",
+    );
+  }
+  if (gate === "publishedPage")
+    return context.subprofile.status === "published";
+  return true;
 }
 
 /**
@@ -37,10 +59,17 @@ export function useSkinChoiceChips(
   editor: SubprofileSkinBlocksEditor,
 ) {
   const { t } = useTranslation();
+  const editorContext = useContext(SubprofileEditorContext);
   const isMulti = control.kind === "multiChoice";
-  const options: ChoiceOptionLabel[] = (control.options ?? []).map(
-    (option) => ({ value: option.value, label: t(option.labelKey) }),
+  // An option whose gate fails is left out; a value stored for it still
+  // shows as an extra chip.
+  const offeredOptions = (control.options ?? []).filter((option) =>
+    isOptionOffered(option.offeredWhen, editorContext),
   );
+  const options: ChoiceOptionLabel[] = offeredOptions.map((option) => ({
+    value: option.value,
+    label: t(option.labelKey),
+  }));
   const optionValues = options.map((option) => option.value);
   const { selectedValues, extraValues } = choiceSelection(
     editor.getValue(control.path),
@@ -54,7 +83,7 @@ export function useSkinChoiceChips(
     typeof legacyStored === "string" ? legacyStored.trim() : "";
   const items: ChoiceChipItem[] = [
     ...extraValues.map((value) => ({ value, label: value, isExtra: true })),
-    ...(control.options ?? []).map((option, index) => ({
+    ...offeredOptions.map((option, index) => ({
       ...options[index]!,
       isExtra: false,
       description: option.descriptionKey ? t(option.descriptionKey) : undefined,

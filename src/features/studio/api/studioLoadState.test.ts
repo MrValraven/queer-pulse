@@ -118,3 +118,27 @@ describe("studioLoadStateOf: withdrawn releases", () => {
     expect(retry(0, new ApiError(404, "Not found"))).toBe(false);
   });
 });
+
+describe("studioLoadStateOf, Studio safety", () => {
+  it("names a withheld track apart from a withdrawn release and an error", () => {
+    const state = studioLoadStateOf(
+      {
+        ...base,
+        errorUpdateCount: 1,
+        error: new ApiError(410, "Gone", {
+          statusCode: 410,
+          code: "studio_track_withheld",
+          message: "This track is unavailable.",
+          error: "Gone",
+        }),
+      },
+      false,
+    );
+    expect(state).toMatchObject({
+      isTrackWithheld: true,
+      isWithdrawn: false,
+      isNotFound: false,
+      isError: false,
+    });
+  });
+});

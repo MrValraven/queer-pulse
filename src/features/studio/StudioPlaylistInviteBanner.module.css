@@ -1,0 +1,55 @@
+/* The invitee's banner on a playlist page. Studio roles only, so it reads in
+   light and dark Studio. */
+
+.banner {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  margin: 20px 0 0;
+  padding: 14px 16px;
+  border: 1px solid rgba(var(--studio-ink-rgb), 0.12);
+  border-radius: var(--radius-14);
+  background: rgba(var(--studio-ink-rgb), 0.04);
+}
+
+.face {
+  display: inline-flex;
+}
+
+.text {
+  min-width: 0;
+}
+
+.title {
+  margin: 0;
+  color: var(--studio-text);
+  font-size: var(--text-16);
+  font-weight: 600;
+}
+
+.body {
+  margin: 4px 0 0;
+  color: var(--studio-text-muted);
+  font-size: var(--text-13);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+@media (--compact) {
+  .banner {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .actions {
+    grid-column: 1 / -1;
+  }
+
+  .actions > * {
+    flex: 1;
+  }
+}

@@ -1,4 +1,6 @@
 import {
+  businessPath,
+  personaPath,
   personaUpdatesPath,
   routes,
   subprofileEditPath,
@@ -6,7 +8,12 @@ import {
 import { MY_HOUSING_LISTINGS_PATH } from "../../economy/housing.data";
 import { gatheringPath } from "../../gatherings/data";
 import { listingCorrectionContactPath } from "../../marketing/contactPrefill";
-import { studioReleasePath, studioTrackPath } from "../../studio/studioPaths";
+import { studioClaimsPath } from "../../studio/studioClaimPaths";
+import {
+  studioPlaylistPath,
+  studioReleasePath,
+  studioTrackPath,
+} from "../../studio/studioPaths";
 
 /**
  * A landlord's public page. The route is declared as the literal
@@ -26,6 +33,19 @@ export function personaImportHref(
   const subprofileId = slugOf(payload, "subprofileId");
   return subprofileId
     ? `${subprofileEditPath(subprofileId)}?pane=import`
+    : routes.subprofilesDashboard;
+}
+
+/** The Team section of a listing editor, where a manager answers requests. */
+export function listingTeamEditorHref(listingRef: string): string {
+  const encodedListingRef = encodeURIComponent(listingRef);
+  return `${routes.listBusinessEdit.replace(":ref", encodedListingRef)}#lb-editor-team`;
+}
+
+/** The Works at pane of a persona editor, where a persona answers invites. */
+function personaWorksAtHref(subprofileId: string | undefined): string {
+  return subprofileId
+    ? `${subprofileEditPath(subprofileId)}?pane=works-at`
     : routes.subprofilesDashboard;
 }
 
@@ -165,6 +185,43 @@ export function lifecycleSourceHref(
         href: trackId ? studioTrackPath(trackId) : routes.studioCredits,
       };
     }
+    // Studio collaborative playlists: every row opens the playlist, where an
+    // invitee meets the invite banner. A row without an id opens the library.
+    case "studio_playlist_editor_invite":
+    case "studio_playlist_editor_invite_accepted":
+    case "studio_playlist_editor_invite_declined":
+    case "studio_playlist_editor_added": {
+      const playlistId = slugOf(payload, "playlistId");
+      return {
+        href: playlistId
+          ? studioPlaylistPath(playlistId)
+          : routes.studioLibrary,
+      };
+    }
+    // Meet the team: an invite opens the persona's Works at pane, a request
+    // opens the listing's Team section (a missing listing ref leaves the row
+    // without a destination). An accepted link opens the management surface
+    // of the side that started it.
+    case "listing_team_invite":
+      return { href: personaWorksAtHref(slugOf(payload, "subprofileId")) };
+    case "listing_team_request": {
+      const listingRef = slugOf(payload, "listingRef");
+      return {
+        href: listingRef ? listingTeamEditorHref(listingRef) : undefined,
+      };
+    }
+    case "listing_team_accepted": {
+      if (payload?.initiatedBy === "listing") {
+        const listingRef = slugOf(payload, "listingRef");
+        const listingSlug = slugOf(payload, "listingSlug");
+        if (listingRef) return { href: listingTeamEditorHref(listingRef) };
+        return { href: listingSlug ? businessPath(listingSlug) : undefined };
+      }
+      const subprofileId = slugOf(payload, "subprofileId");
+      const personaHandle = slugOf(payload, "personaHandle");
+      if (subprofileId) return { href: personaWorksAtHref(subprofileId) };
+      return { href: personaHandle ? personaPath(personaHandle) : undefined };
+    }
     // Studio open pages: the owner reads our team's reason, and any reply to
     // their dispute, on the release itself.
     case "studio_release_taken_down":
@@ -173,6 +230,25 @@ export function lifecycleSourceHref(
       return {
         href: releaseId ? studioReleasePath(releaseId) : routes.studio,
       };
+    }
+    // Studio safety: owners read the banner, the claim panel and our
+    // team's marks on the track page; a claimant follows the claim on their
+    // claims list.
+    case "studio_copyright_claim_accepted":
+    case "studio_copyright_claim_withdrawn":
+    case "studio_track_marked": {
+      const trackId = slugOf(payload, "trackId");
+      return { href: trackId ? studioTrackPath(trackId) : routes.studio };
+    }
+    case "studio_copyright_claim_declined":
+    case "studio_copyright_claim_countered":
+      return { href: studioClaimsPath(slugOf(payload, "claimId")) };
+    case "studio_copyright_claim_decided": {
+      if (payload?.recipientRole === "owner") {
+        const trackId = slugOf(payload, "trackId");
+        return { href: trackId ? studioTrackPath(trackId) : routes.studio };
+      }
+      return { href: studioClaimsPath(slugOf(payload, "claimId")) };
     }
     case "persona_import_ready":
       return { href: personaImportHref(payload) };

@@ -1,8 +1,9 @@
-import { render, screen, within } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
 import { ListingDraftRows } from "./ListingDraftRows";
+import { ListingDraftsSection } from "./ListingDraftsSection";
 import type { AdminListingDraftDTO } from "./api/adminListingDrafts.api";
 
 const DAY_MS = 86_400_000;
@@ -96,10 +97,34 @@ describe("ListingDraftRows", () => {
     );
   });
 
+  it("closes the message modal with its exit animation", async () => {
+    const user = userEvent.setup();
+    renderRows([makeDraft()]);
+    await user.click(
+      await screen.findByRole("button", { name: /Message Marta/ }),
+    );
+    expect(await screen.findByRole("dialog")).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: /Cancel/ }));
+    await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
+  });
+
   it("renders the empty line when nobody has a draft open", async () => {
     renderRows([]);
     expect(
       await screen.findByText("No unfinished drafts right now."),
     ).toBeInTheDocument();
+  });
+});
+
+describe("ListingDraftsSection", () => {
+  it("links the tab to every unfinished draft", async () => {
+    render(
+      <TestProviders>
+        <ListingDraftsSection />
+      </TestProviders>,
+    );
+    expect(
+      await screen.findByRole("link", { name: /Open creator drafts/ }),
+    ).toHaveAttribute("href", "/admin/creator-drafts?kind=listing");
   });
 });

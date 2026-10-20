@@ -166,3 +166,18 @@
     justify-content: flex-start;
   }
 }
+
+/* Collaborative playlists: who added the track, for the owner and editors. */
+.addedBy {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 2px;
+  color: var(--studio-text-muted);
+  font-size: var(--text-12);
+}
+
+.addedByFace {
+  display: inline-flex;
+  flex: none;
+}

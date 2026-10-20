@@ -958,10 +958,16 @@ export const messages: Catalog = {
   "share.kind.directory": "place",
   "share.kind.gathering": "event",
   "share.kind.generic": "thing",
+  // A Studio track, release, playlist or artist page (Studio rich cards).
+  "share.kind.studio": "find",
   "share.previewLabel": "Preview",
   "share.previewTo": "To",
   "share.previewEmptyRecipients": "Pick someone to send this to",
   "share.previewTime": "now",
+  // The picker's one line when the member owns the persona behind what they
+  // send (Studio rich cards): their account name travels with the message.
+  "share.identityNote":
+    "Sending this from your account shows them you run {persona}",
   // The Share menu (messages/share/ShareMenu) on gatherings and other pages:
   // every way to pass a thing on. "Send in a message" reuses share.cta.
   "shareMenu.triggerLabel": "Share",
@@ -973,6 +979,11 @@ export const messages: Catalog = {
   "shareMenu.opensInNewTab": "(opens in a new tab)",
   "shareMenu.messageCopiedToast": "Message copied",
   "shareMenu.linkCopiedToast": "Link copied",
+  "shareMenu.shareToCommunity": "Share to a community",
+  "shareToCommunity.studioDefaultNote":
+    "Been playing this on Studio and I think some of you will love it",
+  "shareToCommunity.ownPersonaNote":
+    "Posting this from your account shows everyone in that community that you run {persona}",
   "shareMenu.copyFallbackToast":
     "Your browser wouldn't let us copy the message. Here is the link: {url}",
   "shareMenu.linkCopyFallbackToast":

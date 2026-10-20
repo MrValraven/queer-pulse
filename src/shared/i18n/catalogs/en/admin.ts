@@ -411,6 +411,9 @@ export const admin: Catalog = {
     "opened a reported attachment",
   "platformLog.kind.mod.report_message_attachment_viewed.target":
     "opened an attachment reported about",
+  "platformLog.kind.mod.creator_draft_viewed": "viewed a creator draft",
+  "platformLog.kind.mod.creator_draft_viewed.target":
+    "viewed a creator draft of",
   "platformLog.kind.mod.thread_locked": "locked a forum thread",
   "platformLog.kind.mod.thread_locked.target": "locked a thread by",
   "platformLog.kind.mod.thread_unlocked": "unlocked a forum thread",
@@ -626,6 +629,9 @@ export const admin: Catalog = {
   "members.header.subNoCount":
     "Each row is a member someone trusted enough to bring in. Pronouns and chosen names are the only names shown here.",
   "members.header.exportCta": "Export",
+  "members.header.trustNetworkCta": "Open trust network",
+  "members.header.trustNetworkBadgeAria_one": "{count} trust case to review",
+  "members.header.trustNetworkBadgeAria_other": "{count} trust cases to review",
   "members.filterAriaLabel": "Filter members",
   "members.searchPlaceholder": "Search by name…",
   "members.searchAriaLabel": "Search members by name or pronoun",
@@ -3274,6 +3280,7 @@ export const admin: Catalog = {
   // (`official-messages.constants.ts`). Toned ghost in `ACTION_TONE`.
   "governance.audit.actionType.conversation_context_viewed":
     "Conversation context viewed",
+  "governance.audit.actionType.creator_draft_viewed": "Creator draft viewed",
   "governance.audit.actionType.message_deleted_by_staff":
     "Message deleted for everyone",
   "governance.audit.actionType.official_message_sent": "Official message sent",
@@ -3290,6 +3297,18 @@ export const admin: Catalog = {
     "Studio dispute upheld",
   "governance.audit.actionType.studio_release_dispute_rejected":
     "Studio dispute rejected",
+  "governance.audit.actionType.studio_track_marked_explicit":
+    "Studio track marked explicit",
+  "governance.audit.actionType.studio_track_warning_added":
+    "Studio content warning added",
+  "governance.audit.actionType.studio_copyright_claim_accepted":
+    "Copyright claim accepted",
+  "governance.audit.actionType.studio_copyright_claim_declined":
+    "Copyright claim declined",
+  "governance.audit.actionType.studio_copyright_claim_upheld":
+    "Copyright claim upheld",
+  "governance.audit.actionType.studio_copyright_claim_rejected":
+    "Copyright claim rejected",
   "governance.audit.range.today": "Today",
   "governance.audit.range.week": "This week",
   "governance.audit.range.quarter": "This quarter",
@@ -3469,10 +3488,11 @@ export const admin: Catalog = {
   "vouchGraph.modes.safety": "Safety",
   "vouchGraph.pathbar.stepPath_one": "{count}-step trust path:",
   "vouchGraph.pathbar.stepPath_other": "{count}-step trust path:",
-  "vouchGraph.pathbar.noPath": "No trust path between {a} and {b}",
+  "vouchGraph.pathbar.noPath":
+    "No active trust path between {a} and {b} at this point in the timeline",
   "vouchGraph.pathbar.fromHint":
     "Path from {name}. Shift-click a second person",
-  "vouchGraph.pathbar.clear": "clear",
+  "vouchGraph.pathbar.clearCta": "Clear path",
 
   "vouchGraph.legend.safety.ring": "Suspected ring",
   "vouchGraph.legend.safety.isolated": "Trust-isolated",
@@ -3498,8 +3518,7 @@ export const admin: Catalog = {
 
   "vouchGraph.modal.ariaLabel": "Trust network",
   "vouchGraph.modal.eyebrow": "Trust network",
-  "vouchGraph.modal.searchPlaceholder": "Find a member…",
-  "vouchGraph.modal.searchAriaLabel": "Find a member",
+  "vouchGraph.modal.legendToggle": "Legend",
   "vouchGraph.modal.replayCta": "Replay",
   "vouchGraph.modal.replayStart": "Before anyone connected",
   "vouchGraph.modal.timeCutAriaLabel": "Connection timeline",
@@ -3512,21 +3531,16 @@ export const admin: Catalog = {
   "vouchGraph.modal.emptyBody":
     "This member doesn't have any vouches on record.",
   "vouchGraph.modal.truncatedNotice":
-    "Showing the 500 most recent members. Search above to find someone older.",
-  "vouchGraph.memberFinder.placeholder": "Search all members…",
-  "vouchGraph.memberFinder.ariaLabel": "Search all members",
-  "vouchGraph.memberFinder.empty": "No members found.",
+    "Showing the 500 members closest to {name}. Search to reach anyone else.",
 
   "vouchGraph.inspector.emptyTitle": "Pick anyone",
   "vouchGraph.inspector.emptyBody":
     "Click a node to read who trusts them and what that trust is built on. Double-click to walk the network from there.",
   "vouchGraph.inspector.sealed": "Legacy identity sealed, chosen name only",
   "vouchGraph.inspector.ringBanner.title": "Part of a suspected vouch ring",
-  "vouchGraph.inspector.ringBanner.body":
-    "Five accounts created within an hour, vouching only for each other: a closed loop with no outside trust.",
   "vouchGraph.inspector.isolationBanner.title": "Trust isolation",
   "vouchGraph.inspector.isolationBanner.body":
-    "Every vouch this member holds comes from new or flagged accounts. Verify with extra care.",
+    "Every vouch this member holds comes from accounts that are new to our community or flagged. Verify with extra care.",
   "vouchGraph.inspector.reportsBanner.title_one": "{count} report on record",
   "vouchGraph.inspector.reportsBanner.title_other": "{count} reports on record",
   "vouchGraph.inspector.reportsBanner.body":
@@ -3534,12 +3548,6 @@ export const admin: Catalog = {
   "vouchGraph.inspector.privateBanner.title": "Network kept private",
   "vouchGraph.inspector.privateBanner.body":
     "This member has chosen to hide their vouch graph. Respect it. Don't work around it.",
-  "vouchGraph.inspector.vouchesIn": "vouches in",
-  "vouchGraph.inspector.vouchesOut": "vouches out",
-  "vouchGraph.inspector.joined": "joined",
-  "vouchGraph.inspector.vouchedForBy": "Vouched for by",
-  "vouchGraph.inspector.hasVouchedFor": "Has vouched for",
-  "vouchGraph.inspector.withdrawn": "Withdrawn",
   "vouchGraph.inspector.none": "None yet.",
   "vouchGraph.inspector.mutualTag": "mutual",
   "vouchGraph.inspector.affectedTitle": "If you removed {name}",
@@ -3547,12 +3555,6 @@ export const admin: Catalog = {
     "{count} member would lose a vouch from them.",
   "vouchGraph.inspector.affectedCount_other":
     "{count} members would lose a vouch from them.",
-  "vouchGraph.inspector.affectedPendingNote":
-    " Including pending members who rely on it.",
-  "vouchGraph.inspector.ownVouchesStay_one":
-    "Their own {count} vouch stays valid. Weigh the human cost before acting.",
-  "vouchGraph.inspector.ownVouchesStay_other":
-    "Their own {count} vouches stay valid. Weigh the human cost before acting.",
   "vouchGraph.inspector.useAsVerificationCta": "Use as verification basis",
   "vouchGraph.inspector.verifiedCta": "Verified",
   "vouchGraph.inspector.citeCta": "Cite",
@@ -3600,6 +3602,247 @@ export const admin: Catalog = {
   "vouchGraph.preview.legend.inbound": "Trusts them",
   "vouchGraph.preview.legend.outbound": "They vouch for",
   "vouchGraph.preview.legend.mutual": "Mutual",
+  "vouchGraph.modes.invites": "Invites",
+  "vouchGraph.modes.safetyBadgeAria_one": "{count} case to review",
+  "vouchGraph.modes.safetyBadgeAria_other": "{count} cases to review",
+  "vouchGraph.modes.ariaLabel": "Network view",
+  "vouchGraph.search.placeholder": "Find a member…",
+  "vouchGraph.search.ariaLabel":
+    "Find a member in this graph or across QueerPulse",
+  "vouchGraph.search.groupInGraph": "In this graph",
+  "vouchGraph.search.groupAllMembers": "All members",
+  "vouchGraph.search.noMatches": "No members match that name.",
+  "vouchGraph.search.searching": "Searching all members…",
+  "vouchGraph.search.typeMore": "Type two letters to search all members.",
+  "vouchGraph.search.matchCount_one": "{count} match in this graph",
+  "vouchGraph.search.matchCount_other": "{count} matches in this graph",
+  "vouchGraph.search.clearCta": "Clear search",
+  "vouchGraph.filters.openCta": "Filter network",
+  "vouchGraph.filters.activeCount_one": "{count} filter on",
+  "vouchGraph.filters.activeCount_other": "{count} filters on",
+  "vouchGraph.filters.title": "Filter the network",
+  "vouchGraph.filters.standing": "Standing",
+  "vouchGraph.filters.standing.trusted": "Trusted",
+  "vouchGraph.filters.standing.warned": "Warned",
+  "vouchGraph.filters.standing.new": "New",
+  "vouchGraph.filters.standing.flagged": "Flagged",
+  "vouchGraph.filters.scene": "Scene",
+  "vouchGraph.filters.sceneAll": "All scenes",
+  "vouchGraph.filters.verifiedOnly": "Verified members only",
+  "vouchGraph.filters.dateRange": "Connected between",
+  "vouchGraph.filters.dateFrom": "From",
+  "vouchGraph.filters.dateTo": "To",
+  "vouchGraph.filters.edgeKinds": "Connection type",
+  "vouchGraph.filters.edgeKind.invite": "Invites",
+  "vouchGraph.filters.edgeKind.vouch": "Vouches",
+  "vouchGraph.filters.edgeKind.mutual": "Mutual vouches",
+  "vouchGraph.filters.hideWithdrawn": "Hide withdrawn vouches",
+  "vouchGraph.filters.clearCta": "Clear filters",
+  "vouchGraph.filters.closeCta": "Close filters",
+  "vouchGraph.filters.emptyResult":
+    "No one matches these filters. Clear a filter to see more of the network.",
+  "vouchGraph.actions.listViewCta": "View as list",
+  "vouchGraph.actions.graphViewCta": "View as graph",
+  "vouchGraph.actions.copyLinkCta": "Copy view link",
+  "vouchGraph.actions.copyLinkToast":
+    "Link copied. Anyone on the admin team can open this view.",
+  "vouchGraph.actions.copyLinkFailedToast":
+    "Couldn't copy the link. Copy it from the address bar.",
+  "vouchGraph.actions.downloadPngCta": "Download PNG",
+  "vouchGraph.actions.downloadSvgCta": "Download SVG",
+  "vouchGraph.actions.exportFailedToast":
+    "The image didn't download. Try again.",
+  "vouchGraph.actions.menuAriaLabel": "View options",
+  "vouchGraph.actions.shareMenuCta": "Share or download this view",
+  "vouchGraph.modal.replayFull_one": "Full network · {count} connection",
+  "vouchGraph.modal.replayFull_other": "Full network · {count} connections",
+  "vouchGraph.canvas.hint.keyboard":
+    "Keys: Enter selects · Shift+Enter picks a path end · W walks the network from there",
+  "vouchGraph.canvas.hint.plainNoPath":
+    "Drag to move · scroll to zoom · double-click to walk",
+  "vouchGraph.canvas.hint.touch":
+    "Drag to move · tap to select · double tap to walk the network from there · zoom with the buttons",
+  "vouchGraph.canvas.hint.toggle": "Show graph tips",
+  "vouchGraph.canvas.bubbleLabel_one": "{count} invited",
+  "vouchGraph.canvas.bubbleLabel_other": "{count} invited",
+  "vouchGraph.canvas.bubbleAria_one": "Show {count} member invited by {name}",
+  "vouchGraph.canvas.bubbleAria_other":
+    "Show {count} members invited by {name}",
+  "vouchGraph.canvas.bubbleCollapseLabel": "Hide invited",
+  "vouchGraph.canvas.bubbleCollapseAria_one":
+    "Hide the {count} member invited by {name}",
+  "vouchGraph.canvas.bubbleCollapseAria_other":
+    "Hide the {count} members invited by {name}",
+  "vouchGraph.canvas.svgLabel": "Trust network graph for {name}",
+  "vouchGraph.tooltip.hintKeyboard": "Enter to inspect · W to walk from here",
+  "vouchGraph.summary.people_one": "{name}'s network shows {count} person.",
+  "vouchGraph.summary.people_other": "{name}'s network shows {count} people.",
+  "vouchGraph.summary.relations":
+    "Mutual: {mutual}. Vouched for {name}: {vouchedBy}. Vouched for by {name}: {vouchedFor}. Invited by {name}: {invited}.",
+  "vouchGraph.summary.cases_one": "{count} safety flag in view.",
+  "vouchGraph.summary.cases_other": "{count} safety flags in view.",
+  "vouchGraph.summary.path": "Trust path: {sentence}",
+  "vouchGraph.path.first.vouch": "{from} vouched for {to}",
+  "vouchGraph.path.first.invite": "{from} invited {to}",
+  "vouchGraph.path.first.vouchBackward": "{from} was vouched for by {to}",
+  "vouchGraph.path.first.inviteBackward": "{from} was invited by {to}",
+  "vouchGraph.path.next.vouch": "who vouched for {to}",
+  "vouchGraph.path.next.invite": "who invited {to}",
+  "vouchGraph.path.next.vouchBackward": "who was vouched for by {to}",
+  "vouchGraph.path.next.inviteBackward": "who was invited by {to}",
+  "vouchGraph.path.undirected": "Undirected path: {sentence}",
+  "vouchGraph.window.underHour": "an hour",
+  "vouchGraph.window.hours_one": "{count} hour",
+  "vouchGraph.window.hours_other": "{count} hours",
+  "vouchGraph.window.days_one": "{count} day",
+  "vouchGraph.window.days_other": "{count} days",
+  "vouchGraph.inspector.accountKind.founder": "Founding member",
+  "vouchGraph.inspector.accountKind.staff": "Staff",
+  "vouchGraph.inspector.accountKind.system": "Platform account",
+  "vouchGraph.inspector.ringBanner.bodyWindow_one":
+    "{count} account created within {window}, vouching only inside the loop: a closed loop with no outside trust.",
+  "vouchGraph.inspector.ringBanner.bodyWindow_other":
+    "{count} accounts created within {window}, vouching only for each other: a closed loop with no outside trust.",
+  "vouchGraph.inspector.ringBanner.sharedVouchers":
+    "Also vouched for by {names}.",
+  "vouchGraph.inspector.ringBanner.noSharedVouchers":
+    "No one outside the loop vouches for them.",
+  "vouchGraph.inspector.ringBanner.showLoopCta": "Show the loop",
+  "vouchGraph.inspector.isolationBanner.causesTitle": "Their vouches come from",
+  "vouchGraph.inspector.isolationBanner.reason.new_one":
+    "joined in the last day",
+  "vouchGraph.inspector.isolationBanner.reason.new_other":
+    "joined in the last {count} days",
+  "vouchGraph.inspector.isolationBanner.reason.flagged": "flagged",
+  "vouchGraph.inspector.isolationBanner.reason.ring": "in a suspected ring",
+  "vouchGraph.inspector.isolationBanner.causeLine": "{name} ({reason})",
+  "vouchGraph.inspector.trackRecord.title": "Track record",
+  "vouchGraph.inspector.trackRecord.given_one": "Vouched for {count} member",
+  "vouchGraph.inspector.trackRecord.given_other": "Vouched for {count} members",
+  "vouchGraph.inspector.trackRecord.flagged_one":
+    "{count} later flagged or suspended",
+  "vouchGraph.inspector.trackRecord.flagged_other":
+    "{count} later flagged or suspended",
+  "vouchGraph.inspector.trackRecord.clean": "None later flagged or suspended",
+  "vouchGraph.inspector.trackRecord.compact":
+    "{flagged} of {given} later flagged or suspended",
+  "vouchGraph.inspector.affected.soleTitle_one":
+    "{count} would lose their only vouch:",
+  "vouchGraph.inspector.affected.soleTitle_other":
+    "{count} would lose their only vouch:",
+  "vouchGraph.inspector.affected.more_one": "and {count} more",
+  "vouchGraph.inspector.affected.more_other": "and {count} more",
+  "vouchGraph.inspector.affected.pendingNote_one":
+    "{count} of them is a pending member who relies on this vouch.",
+  "vouchGraph.inspector.affected.pendingNote_other":
+    "{count} of them are pending members who rely on this vouch.",
+  "vouchGraph.inspector.affected.receivedStay_one":
+    "The {count} vouch they received stays on record.",
+  "vouchGraph.inspector.affected.receivedStay_other":
+    "The {count} vouches they received stay on record.",
+  "vouchGraph.inspector.affected.weighCost":
+    "Weigh the human cost before acting.",
+  "vouchGraph.inspector.story.title": "How they're connected",
+  "vouchGraph.inspector.story.vouchedByList": "Vouched for by {names}",
+  "vouchGraph.inspector.story.voucher.plain": "{name} ({when})",
+  "vouchGraph.inspector.story.voucher.verified": "{name} (verified, {when})",
+  "vouchGraph.inspector.story.lead.invitedBy": "Invited by {name} in {when}",
+  "vouchGraph.inspector.story.more.invitedBy": "invited by {name}",
+  "vouchGraph.inspector.joinPath.title": "How {name} joined",
+  "vouchGraph.inspector.joinPath.founder":
+    "Founding member, here since the start",
+  "vouchGraph.inspector.joinPath.invite": "Invited by {name}",
+  "vouchGraph.inspector.joinPath.application": "Application approved by {name}",
+  "vouchGraph.inspector.joinPath.applicationNoReviewer": "Application approved",
+  "vouchGraph.inspector.joinPath.unknown":
+    "We don't have a record of how they joined",
+  "vouchGraph.inspector.joinPath.joinedOn": "Joined {when}",
+  "vouchGraph.inspector.joinPath.noVouches":
+    "No vouches yet, given or received.",
+  "vouchGraph.inspector.joinPath.showInviterCta": "Show {name} in the network",
+  "vouchGraph.inspector.sheet.expandAria": "Show more about this member",
+  "vouchGraph.inspector.sheet.collapseAria": "Show less",
+  "vouchGraph.inspector.tabs.ariaLabel": "Connections",
+  "vouchGraph.inspector.tabs.vouchedByLabel": "Vouched by",
+  "vouchGraph.inspector.tabs.vouchedForLabel": "Vouched for",
+  "vouchGraph.inspector.tabs.invitedLabel": "Invited",
+  "vouchGraph.inspector.chip.mutual": "Mutual",
+  "vouchGraph.inspector.chip.invitedThem": "Invited them",
+  "vouchGraph.inspector.list.searchPlaceholder": "Filter by name…",
+  "vouchGraph.inspector.list.searchAriaLabel":
+    "Filter these connections by name",
+  "vouchGraph.inspector.list.sortLabel": "Sort",
+  "vouchGraph.inspector.list.sort.name": "Name A to Z",
+  "vouchGraph.inspector.list.sort.newest": "Newest first",
+  "vouchGraph.inspector.list.sort.oldest": "Oldest first",
+  "vouchGraph.inspector.list.noMatches": "No one by that name here.",
+  "vouchGraph.inspector.list.withdrawnTag": "Withdrawn",
+  "vouchGraph.inspector.list.outsideView_one": "{count} more outside this view",
+  "vouchGraph.inspector.list.outsideView_other":
+    "{count} more outside this view",
+  "vouchGraph.triage.title": "Cases to review",
+  "vouchGraph.triage.count_one": "{count} open case",
+  "vouchGraph.triage.count_other": "{count} open cases",
+  "vouchGraph.triage.empty":
+    "Nothing to review right now. Rings, isolated members and flagged accounts show up here.",
+  "vouchGraph.triage.listAriaLabel": "Cases ranked by urgency",
+  "vouchGraph.triage.kind.ring": "Suspected ring",
+  "vouchGraph.triage.kind.isolated": "Trust isolation",
+  "vouchGraph.triage.kind.flagged": "Flagged account",
+  "vouchGraph.triage.reason.ring_one":
+    "{count} account created within {window}",
+  "vouchGraph.triage.reason.ring_other":
+    "{count} accounts created within {window}",
+  "vouchGraph.triage.reason.ringNoWindow_one": "{count} account created",
+  "vouchGraph.triage.reason.ringNoWindow_other": "{count} accounts created",
+  "vouchGraph.triage.reason.isolated_one":
+    "Their only vouch comes from a new or flagged account",
+  "vouchGraph.triage.reason.isolated_other":
+    "All {count} vouches come from new or flagged accounts",
+  "vouchGraph.triage.reason.flagged_one": "{count} open report",
+  "vouchGraph.triage.reason.flagged_other": "{count} open reports",
+  "vouchGraph.triage.rowAria": "Focus the network on {name}: {reason}",
+  "vouchGraph.triage.outsideView": "Outside this view",
+  "vouchGraph.compare.title": "Comparing {a} and {b}",
+  "vouchGraph.compare.pathTitle": "Trust path",
+  "vouchGraph.compare.sharedVouchers": "Shared vouchers",
+  "vouchGraph.compare.noSharedVouchers": "No one vouches for both.",
+  "vouchGraph.compare.joinGap_one": "Joined {count} day apart",
+  "vouchGraph.compare.joinGap_other": "Joined {count} days apart",
+  "vouchGraph.compare.joinGapSameDay": "Joined on the same day",
+  "vouchGraph.compare.sharedScenes": "Shared scenes",
+  "vouchGraph.compare.noSharedScenes": "No scenes in common.",
+  "vouchGraph.compare.clearCta": "Clear comparison",
+  "vouchGraph.inviteTree.title": "Who invited whom",
+  "vouchGraph.inviteTree.groupFounders": "Founding members",
+  "vouchGraph.inviteTree.groupOutside": "Invited by someone outside this view",
+  "vouchGraph.inviteTree.groupApplications": "Joined by application",
+  "vouchGraph.inviteTree.groupUnknown": "No join record",
+  "vouchGraph.inviteTree.invitedCount_one": "invited {count}",
+  "vouchGraph.inviteTree.invitedCount_other": "invited {count}",
+  "vouchGraph.inviteTree.expandAria_one":
+    "Show {count} member invited by {name}",
+  "vouchGraph.inviteTree.expandAria_other":
+    "Show {count} members invited by {name}",
+  "vouchGraph.inviteTree.collapseAria": "Hide the members invited by {name}",
+  "vouchGraph.inviteTree.showInNetworkCta": "Show in network",
+  "vouchGraph.inviteTree.empty": "No invites in this view yet.",
+  "vouchGraph.listView.caption": "Everyone in {name}'s network view",
+  "vouchGraph.listView.col.name": "Member",
+  "vouchGraph.listView.col.relation": "Connection",
+  "vouchGraph.listView.col.standing": "Standing",
+  "vouchGraph.listView.col.joined": "Joined",
+  "vouchGraph.listView.col.flags": "Flags",
+  "vouchGraph.listView.relation.focus": "In focus",
+  "vouchGraph.listView.relation.mutual": "Mutual vouch",
+  "vouchGraph.listView.relation.vouchedBy": "Vouches for {name}",
+  "vouchGraph.listView.relation.vouchedFor": "Vouched for by {name}",
+  "vouchGraph.listView.relation.invited": "Invited by {name}",
+  "vouchGraph.listView.relation.withdrawnOnly": "Withdrawn vouch",
+  "vouchGraph.listView.relation.secondHop": "Second-degree connection",
+  "vouchGraph.listView.selectAria": "Select {name}",
+  "vouchGraph.listView.sortByNameCta": "Sort by name",
+  "vouchGraph.citeDialog.viewLinkLine": "Trust network view: {url}",
 
   // ── Platform settings (/admin/settings) ───────────────────────────────────
   "settings.breadcrumb": "Settings",
@@ -5215,6 +5458,7 @@ export const admin: Catalog = {
   "moderation.action.messageDeletedByStaff": "Deleted a message for everyone",
   "moderation.action.reportMessageAttachmentViewed":
     "Opened the file attached to the reported message",
+  "moderation.action.creatorDraftViewed": "Viewed a creator draft",
   "moderation.oldestNote_one":
     "Showing {count} open report · the oldest landed {oldest}",
   "moderation.oldestNote_other":
@@ -8052,6 +8296,17 @@ export const admin: Catalog = {
   "moderation.action.studioAccessRevoked": "Revoked Studio access",
   "moderation.action.studioReleaseTakenDown": "Took down a Studio release",
   "moderation.action.studioReleaseRestored": "Restored a Studio release",
+  "moderation.action.studioTrackMarkedExplicit":
+    "Marked a Studio track explicit",
+  "moderation.action.studioTrackWarningAdded":
+    "Added a content warning to a Studio track",
+  "moderation.action.studioCopyrightClaimAccepted":
+    "Accepted a copyright claim",
+  "moderation.action.studioCopyrightClaimDeclined":
+    "Declined a copyright claim",
+  "moderation.action.studioCopyrightClaimUpheld": "Upheld a copyright claim",
+  "moderation.action.studioCopyrightClaimRejected":
+    "Rejected a copyright claim",
   "moderation.action.personaPostRemoved": "Removed a persona post",
   "ambassadors.loadMore": "Load more",
   "ambassadors.loadingMore": "Loading…",
@@ -8228,6 +8483,7 @@ export const admin: Catalog = {
     "Listings members started but haven't sent yet. You see the name and how far they got. Offer a hand if someone looks stuck, or finish the business details as a team listing they can accept.",
   "listingDrafts.count_one": "{count} draft in progress",
   "listingDrafts.count_other": "{count} drafts in progress",
+  "listingDrafts.creatorDraftsLink": "Open creator drafts",
   "listingDrafts.empty": "No unfinished drafts right now.",
   "listingDrafts.loadError.title": "The drafts list didn't load",
   "listingDrafts.loadError.body":
@@ -8263,6 +8519,161 @@ export const admin: Catalog = {
   "listingDrafts.message.cancel": "Cancel",
   "listingDrafts.message.sent": "Sent to {name}.",
   "listingDrafts.message.action": "send your message",
+  // ── Creator drafts (Admin only, /admin/creator-drafts) ─────────────────────
+  // Unfinished events, communities, personas, Studio work and listing edits.
+  // `missing.<kind>.<code>` labels the server's still-missing codes; a code
+  // with no key here folds into `missing.other`.
+  "creatorDrafts.title": "Creator <em>drafts</em>",
+  "creatorDrafts.header.eyebrow": "Help in progress",
+  "creatorDrafts.header.title": "Drafts people <em>are building</em>",
+  "creatorDrafts.header.sub":
+    "Unfinished pages from communities, personas and businesses. Open one to see it as the public would. If someone seems stuck, reach out",
+  "creatorDrafts.filter.all": "All",
+  "creatorDrafts.kind.persona": "Persona",
+  "creatorDrafts.kind.studio_release": "Studio release",
+  "creatorDrafts.kind.studio_episode": "Podcast episode",
+  "creatorDrafts.kind.listing": "New listing",
+  "creatorDrafts.kind.event": "Event",
+  "creatorDrafts.kind.listing_edit": "Listing edit",
+  "creatorDrafts.kind.community": "Community",
+  "creatorDrafts.count_one": "{count} draft in progress",
+  "creatorDrafts.count_other": "{count} drafts in progress",
+  "creatorDrafts.untitled": "Untitled",
+  "creatorDrafts.madeFor.community": "For {name}",
+  "creatorDrafts.madeFor.listing": "For {name}",
+  "creatorDrafts.madeFor.persona": "As {name}",
+  "creatorDrafts.startedBy": "Started by {name}",
+  "creatorDrafts.unknownOwner": "someone whose account is gone",
+  "creatorDrafts.lastSaved": "Last saved {date}",
+  "creatorDrafts.progress": "{done} of {total} steps",
+  "creatorDrafts.moreMissing": "+{count} more",
+  "creatorDrafts.empty": "Nobody has a draft open right now",
+  "creatorDrafts.loadError.title": "We couldn't load the drafts",
+  "creatorDrafts.loadError.body": "Check your connection and try again",
+  "creatorDrafts.loadMore": "Show more drafts",
+  "creatorDrafts.loadingMore": "Loading",
+  "creatorDrafts.emptyKind": "Nobody has a draft open under {kind} right now",
+  "creatorDrafts.detail.eyebrow": "Creator draft",
+  "creatorDrafts.detail.sub":
+    "A read-only preview of what the public would see if this went live today",
+  "creatorDrafts.detail.logged":
+    "Opening a draft is recorded in the Platform log",
+  "creatorDrafts.detail.loadError.title": "This draft didn't load",
+  "creatorDrafts.detail.loadError.body": "Check your connection and try again",
+  "creatorDrafts.strip.label": "Unfinished draft details",
+  "creatorDrafts.strip.unfinished": "Unfinished",
+  "creatorDrafts.strip.kind": "Kind",
+  "creatorDrafts.strip.owner": "Owner",
+  "creatorDrafts.strip.noOwner": "Someone whose account is gone",
+  "creatorDrafts.strip.lastSaved": "Last saved",
+  "creatorDrafts.strip.progress": "Progress",
+  "creatorDrafts.strip.missing": "Still missing",
+  "creatorDrafts.strip.nothingMissing": "Everything needed is filled in",
+  "creatorDrafts.messageCta": "Message {name}",
+  "creatorDrafts.profileCta": "View profile",
+  "creatorDrafts.openLiveListing": "Open the live listing",
+  "creatorDrafts.backToList": "Back to creator drafts",
+  "creatorDrafts.notFound.title": "This draft is no longer here",
+  "creatorDrafts.notFound.body":
+    "It may have been published, discarded or left long enough to expire",
+  "creatorDrafts.message.template":
+    "Hi {firstName}! We noticed you started {name} on QueerPulse. If something got in the way, or you'd like a hand finishing it, just reply here and we'll help. No rush at all.",
+  "creatorDrafts.message.templateUntitled":
+    "Hi {firstName}! We noticed you started something on QueerPulse. If something got in the way, or you'd like a hand finishing it, just reply here and we'll help. No rush at all.",
+  "creatorDrafts.message.editTemplate":
+    "Hi {firstName}! We noticed you have unsaved changes to {name} on QueerPulse. If something got in the way, or you'd like a hand finishing them, just reply here and we'll help. No rush at all.",
+  "creatorDrafts.message.editTemplateUntitled":
+    "Hi {firstName}! We noticed you have unsaved changes to your listing on QueerPulse. If something got in the way, or you'd like a hand finishing them, just reply here and we'll help. No rush at all.",
+  "creatorDrafts.preview.label":
+    "Preview of this draft as the public would see it",
+  "creatorDrafts.preview.inertToast":
+    "This is a preview. Buttons and links do nothing here",
+  "creatorDrafts.preview.episodeMissing": "This episode has no preview yet",
+  "creatorDrafts.missing.other": "Something else",
+  "creatorDrafts.missing.event.what": "What it is",
+  "creatorDrafts.missing.event.whenWhere": "When and where",
+  "creatorDrafts.missing.event.who": "Who it's for",
+  "creatorDrafts.missing.event.access": "Access",
+  "creatorDrafts.missing.event.care": "Care",
+  "creatorDrafts.missing.community.open": "Getting started",
+  "creatorDrafts.missing.community.why": "Why it exists",
+  "creatorDrafts.missing.community.who": "Who it's for",
+  "creatorDrafts.missing.community.safety": "Safety",
+  "creatorDrafts.missing.community.running": "How it runs",
+  "creatorDrafts.missing.community.tone": "Tone",
+  "creatorDrafts.missing.community.feeling": "Look and feel",
+  "creatorDrafts.missing.community.people": "First people",
+  "creatorDrafts.missing.community.confirm": "Final check",
+  "creatorDrafts.missing.persona.handle_invalid": "Address needs fixing",
+  "creatorDrafts.missing.persona.handle_taken": "Address is taken",
+  "creatorDrafts.missing.persona.handle_reserved": "Address is reserved",
+  "creatorDrafts.missing.persona.handle_names_owner": "Address names the owner",
+  "creatorDrafts.missing.persona.handle_is_kind":
+    "Address clashes with a persona type",
+  "creatorDrafts.missing.persona.avatar_missing": "Profile picture",
+  "creatorDrafts.missing.persona.bio_too_short": "Longer bio",
+  "creatorDrafts.missing.persona.not_enough_items": "More items",
+  "creatorDrafts.missing.persona.blocked_terms": "Words we can't publish",
+  "creatorDrafts.missing.studio_release.studio_publish_missing_title": "Title",
+  "creatorDrafts.missing.studio_release.studio_publish_missing_cover":
+    "Cover art",
+  "creatorDrafts.missing.studio_release.studio_publish_missing_rights":
+    "Rights confirmation",
+  "creatorDrafts.missing.studio_release.studio_publish_missing_tracks":
+    "Tracks",
+  "creatorDrafts.missing.studio_release.studio_publish_tracks_pending":
+    "Tracks still processing",
+  "creatorDrafts.missing.studio_release.studio_publish_missing_sources":
+    "Audio files",
+  // Listing edit codes are the editor's ANCHOR keys
+  // (`listingEditMissingCodes.ts`), labelled with the listing form's own words.
+  "creatorDrafts.missing.listing_edit.name": "Business name",
+  "creatorDrafts.missing.listing_edit.cats": "Categories",
+  "creatorDrafts.missing.listing_edit.hood": "Neighbourhood",
+  "creatorDrafts.missing.listing_edit.price": "Price band",
+  "creatorDrafts.missing.listing_edit.blurb": "Short description",
+  "creatorDrafts.missing.listing_edit.tagline": "Tagline",
+  "creatorDrafts.missing.listing_edit.whatItIs": "Description",
+  "creatorDrafts.missing.listing_edit.langs": "Languages spoken",
+  "creatorDrafts.missing.listing_edit.attributes": "Details and amenities",
+  "creatorDrafts.missing.listing_edit.highlights": "Card highlights",
+  "creatorDrafts.missing.listing_edit.inclusionPractices":
+    "Inclusion practices",
+  "creatorDrafts.missing.listing_edit.saferSpacePolicyUrl":
+    "Safer-space policy link",
+  "creatorDrafts.missing.listing_edit.langsOther": "Other languages",
+  "creatorDrafts.missing.listing_edit.entryMode": "How people get in",
+  "creatorDrafts.missing.listing_edit.coverPolicy": "Entry",
+  "creatorDrafts.missing.listing_edit.coverFreeBefore": "Free entry until",
+  "creatorDrafts.missing.listing_edit.waysToPay": "Ways to pay in person",
+  "creatorDrafts.missing.listing_edit.nifInvoices": "NIF invoices",
+  "creatorDrafts.missing.listing_edit.address": "Address",
+  "creatorDrafts.missing.listing_edit.online": "Where people find it",
+  "creatorDrafts.missing.listing_edit.city": "Based in",
+  "creatorDrafts.missing.listing_edit.hasOnlineShop": "Also sells online",
+  "creatorDrafts.missing.listing_edit.mainLink": "Main link",
+  "creatorDrafts.missing.listing_edit.moreLinks": "More links",
+  "creatorDrafts.missing.listing_edit.fulfilment": "How people get it",
+  "creatorDrafts.missing.listing_edit.pickupNote": "Pick-up note",
+  "creatorDrafts.missing.listing_edit.shipsFrom": "Ships from",
+  "creatorDrafts.missing.listing_edit.payments": "Ways to pay",
+  "creatorDrafts.missing.listing_edit.sessionFormats": "Session formats",
+  "creatorDrafts.missing.listing_edit.registration":
+    "Professional registration",
+  "creatorDrafts.missing.listing_edit.replyNote": "Replies and dispatch",
+  "creatorDrafts.missing.listing_edit.whereYouWork": "Where it works",
+  "creatorDrafts.missing.listing_edit.meetingPoint": "Meeting point",
+  "creatorDrafts.missing.listing_edit.byAppointment": "By appointment only",
+  "creatorDrafts.missing.listing_edit.hours": "Opening hours",
+  "creatorDrafts.missing.listing_edit.hoursNote": "Hours note",
+  "creatorDrafts.missing.listing_edit.hoursExceptions":
+    "Holiday and special-date hours",
+  "creatorDrafts.missing.listing_edit.social": "Contact links",
+  "creatorDrafts.missing.listing_edit.cover": "Cover photo",
+  "creatorDrafts.missing.listing_edit.photos": "Photos",
+  "creatorDrafts.missing.listing_edit.pricingMode": "What the page shows",
+  "creatorDrafts.missing.listing_edit.services": "Services and prices",
+  "creatorDrafts.missing.listing_edit.accessibility": "Accessibility answers",
   // ── Studio discovery console (/admin/studio) ──────────────────────────────
   "studioAdmin.eyebrow": "Studio",
   "studioAdmin.title": "Studio <em>discovery</em>",

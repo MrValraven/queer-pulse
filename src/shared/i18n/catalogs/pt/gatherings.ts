@@ -732,6 +732,10 @@ export const gatherings: Catalog = {
   // DraftResumeStrip.tsx / useCreateGatheringDraft.ts: saving and resuming a draft
   "create.v2.saved.saving": "A guardar…",
   "create.v2.saved.label": "Guardado · {age}",
+  "create.v2.saved.retrying": "Por guardar, a tentar outra vez",
+  "create.v2.saved.tooLarge": "Demasiado longo para guardar",
+  "create.v2.saved.notSaved": "Por guardar",
+  "create.v2.saved.conflict": "Em pausa até escolheres",
   "create.v2.draft.age.justNow": "agora mesmo",
   "create.v2.draft.age.minutes_one": "{count} min",
   "create.v2.draft.age.minutes_other": "{count} min",
@@ -745,6 +749,11 @@ export const gatherings: Catalog = {
   "create.v2.draft.resume": "Retomar",
   "create.v2.draft.startFresh": "Começar de novo",
   "create.v2.toast.draftResumed": "Rascunho retomado",
+  "create.v2.toast.draftDiscardFailed":
+    "Não conseguimos apagar o teu rascunho antigo. Continua guardado",
+  // CreatorDraftNotice no assistente de eventos
+  "creatorDraftNote.body":
+    "A nossa equipa pode ver este rascunho de evento e dar-te uma mão se precisares",
 
   // usePublishGathering.ts: a co-host invite that did not go out after publishing
   "create.v2.toast.cohostInviteFailed_one":
@@ -939,9 +948,9 @@ export const gatherings: Catalog = {
   "create.v2.what.suggestion.inHood": "{format} em {hood}",
   "create.v2.what.suggestion.firstEdition": "{format}: primeira edição",
   "create.v2.what.coverLabel": "Imagem de capa",
-  "create.v2.what.coverPlaceholder": "Adiciona uma foto de capa",
+  "create.v2.what.coverPlaceholder": "Adiciona uma foto de capa ou o cartaz",
   "create.v2.what.coverHint":
-    "Os cartões com foto destacam-se no quadro. Sem foto, o teu cartão fica na cor do teu formato.",
+    "Os cartões com foto destacam-se no quadro, e um cartaz vertical aparece inteiro. Sem foto, o teu cartão fica na cor do teu formato.",
   "create.v2.what.themesLabel": "Temas",
   "create.v2.what.themesHint": "Aparecem no teu cartão. Escolhe até três.",
   "create.v2.what.descriptionOverBudget":
@@ -2305,4 +2314,10 @@ export const gatherings: Catalog = {
   "collabInvite.pastTitle": "Este evento já aconteceu",
   "collabInvite.pastDescription": "O convite fechou quando {title} aconteceu.",
   "collabInvite.viewGatheringCta": "Ver evento",
+  "manage.tabs.quizshow": "Jogo ao vivo",
+  "create.success.quizshowCta": "Escreve o teu quiz",
+  "create.toast.quizshowCopyNeedsAdultsEvent":
+    "O teu evento está publicado. O quiz tem rondas para adultos, por isso torna o evento 18+ e copia o quiz no separador Jogo ao vivo",
+  "create.toast.quizshowCopyFailed":
+    "O teu evento está publicado. O quiz não veio com ele, por isso copia-o no separador Jogo ao vivo",
 };

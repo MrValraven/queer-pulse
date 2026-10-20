@@ -59,7 +59,9 @@
   background: rgba(var(--plum-rgb), 0.06);
 }
 
-.media img,
+/* The cover slot's own frame zooms on hover, so a poster's sharp image and
+   its blurred backdrop move as one, and the backdrop keeps its own scale. */
+.coverImage,
 .media [data-cover-fallback] {
   transition: transform var(--dur-slow) var(--ease);
 }
@@ -262,7 +264,7 @@
     opacity: 1;
   }
 
-  .card:hover .media img,
+  .card:hover .coverImage,
   .card:hover .media [data-cover-fallback] {
     transform: scale(1.04);
   }
@@ -286,13 +288,13 @@
 
 @media (prefers-reduced-motion: reduce) {
   .card,
-  .media img,
+  .coverImage,
   .media [data-cover-fallback] {
     transition-property: none;
   }
 
   .card:hover,
-  .card:hover .media img,
+  .card:hover .coverImage,
   .card:hover .media [data-cover-fallback],
   .card:hover .cta,
   .card:focus-visible .cta {

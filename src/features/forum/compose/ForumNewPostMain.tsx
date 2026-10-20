@@ -26,6 +26,7 @@ import { ForumNewPostSections } from "./ForumNewPostSections";
 import { emptyPoll } from "./useComposeThreadState";
 import type { ComposeAudience, PublishMode } from "./composeThread.types";
 import type { ComposeThreadPage } from "./useComposeThreadPage";
+import { StudioComposerPreview } from "../../studio/share/StudioComposerPreview";
 import styles from "./ForumNewPostPage.module.css";
 
 // ── The writing column ──────────────────────────────────────────────────────
@@ -150,6 +151,11 @@ export function ForumNewPostMain({
               error={photos.error}
             />
           }
+        />
+        <StudioComposerPreview
+          text={state.body}
+          onTextChange={setters.setBody}
+          fieldRef={bodyRef}
         />
 
         {state.kind === "ask" && (

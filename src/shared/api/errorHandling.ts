@@ -69,6 +69,18 @@ const COPY = {
   },
 } satisfies Record<string, ErrorCopy>;
 
+/** Coded refusals the member reads in their own language, ahead of the
+ *  backend's English sentence. Additive: one entry per code. */
+const CODED_COPY: Readonly<Record<string, ErrorCopy>> = {
+  // PATCH /events/:slug would leave a quiz with adults rounds on an event
+  // that is no longer 18+ (quizshow contract, section 3).
+  quizshow_quiz_has_adults_rounds: {
+    key: "shared:apiError.quizshowAdultsRounds",
+    fallback:
+      "This event's live game has adults rounds. Change their label in the Live game tab first, then turn off 18+",
+  },
+};
+
 /** A `reasonFor` string is final as it stands: the backend's own sentence in
  *  English, or the translated status line `reasonFor` picks for every other
  *  language (PRD-467). */
@@ -81,6 +93,12 @@ function resolve(copy: ErrorCopy | string): string {
 function messageFor(error: unknown): string | null {
   if (error instanceof ApiError) {
     if (error.status === 401) return null; // auth refresh / onAuthLost owns this
+    const errorCode = (error.data as { code?: unknown } | null)?.code;
+    const codedCopy =
+      typeof errorCode === "string" && Object.hasOwn(CODED_COPY, errorCode)
+        ? CODED_COPY[errorCode]
+        : undefined;
+    if (codedCopy) return resolve(codedCopy);
     if (
       error.status === 503 &&
       (error.data as { code?: string } | null)?.code === "PLATFORM_LOCKED"
@@ -131,20 +149,21 @@ function isExpectedQueryFailure(error: unknown): boolean {
   return error instanceof ApiError && error.status === 404;
 }
 
-/**
- * A Studio release our team took down answers 410 with the body code
- * `studio_release_withdrawn`; the page renders its withdrawn view, so a
- * listener opening one is normal traffic. A 410 with any other body stays
- * reportable.
- */
+/** Coded 410s a Studio page renders as its own view: a release our team
+ *  took down, and (Studio safety) a track a copyright claim holds offline.
+ *  A listener opening one is normal traffic; a 410 with any other body
+ *  stays reportable. */
+const EXPECTED_STUDIO_GONE_CODES: ReadonlySet<string> = new Set([
+  "studio_release_withdrawn",
+  "studio_track_withheld",
+]);
+
 function isStudioWithdrawnFailure(error: unknown): boolean {
   if (!(error instanceof ApiError) || error.status !== 410) return false;
   const body = error.data;
-  return (
-    typeof body === "object" &&
-    body !== null &&
-    (body as { code?: unknown }).code === "studio_release_withdrawn"
-  );
+  if (typeof body !== "object" || body === null) return false;
+  const code = (body as { code?: unknown }).code;
+  return typeof code === "string" && EXPECTED_STUDIO_GONE_CODES.has(code);
 }
 
 /**

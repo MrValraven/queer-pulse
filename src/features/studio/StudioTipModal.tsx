@@ -56,6 +56,9 @@ export function StudioTipModal({
     <div
       className={styles.overlay}
       role="presentation"
+      // The player bar opens this too, from any page: the marker makes Sentry
+      // drop the clicks made in here (dropStudioPlayBreadcrumb).
+      data-studio-player=""
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}

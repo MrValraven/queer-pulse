@@ -1,0 +1,267 @@
+.tabs {
+  margin-bottom: 14px;
+  container-type: inline-size;
+}
+
+/* One even row at every width: tabs size to their labels and share the
+   spare room, a long label (PT "Votos recebidos") ellipsizes and the count
+   always stays whole. */
+.tabList {
+  position: relative;
+  display: flex;
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.12);
+}
+.tabButton {
+  display: flex;
+  flex: 1 1 auto;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  padding: 9px 6px;
+  border: none;
+  background: none;
+  font-size: var(--text-12);
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--ink-60);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition-property: color;
+  transition-duration: var(--dur-fast);
+}
+.tabLabel {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.tabCount {
+  flex: none;
+  font-variant-numeric: tabular-nums;
+}
+/* A narrow rail (the 340px desktop inspector) tightens the type and
+   padding first, so most labels fit before any ellipsis. */
+@container (max-width: 320px) {
+  .tabButton {
+    gap: 3px;
+    padding-inline: 3px;
+    font-size: var(--text-11-5);
+  }
+}
+/* Phone sheet and touch screens: full tap targets. */
+@media (max-width: 920px), (pointer: coarse) {
+  .tabButton {
+    min-height: var(--tap-min);
+  }
+}
+.tabButton[aria-selected="true"] {
+  color: var(--text-strong);
+}
+.tabButton:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+/* A 1px bar placed by useTabIndicator: translateX to the tab's left edge,
+   scaleX to its width, so the slide stays on the compositor. */
+.tabIndicator {
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  width: 1px;
+  height: 2px;
+  background: var(--accent);
+  transform-origin: left center;
+  transition-property: transform;
+  transition-duration: var(--dur-base);
+  transition-timing-function: cubic-bezier(0.22, 0.68, 0.16, 1);
+}
+
+.controls {
+  display: flex;
+  gap: 8px;
+  margin: 10px 0 6px;
+}
+.search {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+}
+.searchIcon {
+  position: absolute;
+  top: 50%;
+  left: 9px;
+  transform: translateY(-50%);
+  color: var(--ink-40);
+  pointer-events: none;
+}
+.searchInput,
+.sortSelect {
+  height: 2.2rem;
+  border: 1px solid rgba(var(--line-rgb), 0.16);
+  border-radius: var(--radius-10);
+  background: transparent;
+  font-size: var(--text-12-5);
+  color: var(--text-strong);
+}
+.searchInput {
+  width: 100%;
+  padding: 0 10px 0 28px;
+}
+.sortSelect {
+  flex: none;
+  max-width: 45%;
+  padding: 0 8px;
+}
+.searchInput:focus-visible,
+.sortSelect:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.panel {
+  animation: panelFade var(--dur-base) ease-out;
+}
+@keyframes panelFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .panel {
+    animation: none;
+  }
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+}
+.listScroll {
+  display: block;
+  max-height: 22rem;
+  padding: 6px;
+  margin: -6px;
+  overflow-y: auto;
+}
+.virtualCanvas {
+  position: relative;
+  width: 100%;
+}
+.virtualRow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+
+.row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  width: 100%;
+  padding: 7px;
+  border: none;
+  border-radius: var(--radius-10);
+  background: none;
+  cursor: pointer;
+  text-align: left;
+  transition-property: background-color, box-shadow;
+  transition-duration: var(--dur-fast);
+}
+@media (hover: hover) {
+  .row:hover {
+    background: rgba(var(--plum-rgb), 0.04);
+  }
+}
+.row:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+.rowHover {
+  background: rgba(var(--plum-rgb), 0.07);
+}
+.rowActive {
+  background: rgba(var(--accent-rgb), 0.12);
+  box-shadow: inset 0 0 0 1px rgba(var(--accent-rgb), 0.4);
+}
+.rowWithdrawn {
+  opacity: 0.55;
+}
+.rowWithdrawn .name {
+  text-decoration: line-through;
+}
+
+.avatar {
+  width: 2.727em;
+  height: 2.727em;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-9);
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: var(--text-11);
+}
+.rowText {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.nameLine {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px;
+}
+.name {
+  font-size: var(--text-13-5);
+  font-weight: 600;
+  color: var(--text-strong);
+}
+.withdrawnTag {
+  font-size: var(--text-11);
+  color: var(--ink-60);
+}
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.chip {
+  padding: 1px 7px;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--accent-rgb), 0.1);
+  font-size: var(--text-11);
+  font-weight: 600;
+  color: var(--accent-ink);
+}
+.chipMutual {
+  background: rgba(var(--jade-rgb), 0.14);
+  color: var(--jade);
+}
+.reason {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: var(--text-12);
+  color: var(--ink-60);
+  line-height: 1.4;
+}
+
+.empty {
+  margin: 6px 0;
+  font-size: var(--text-12-5);
+  color: var(--ink-40);
+}
+.footnote {
+  margin: 6px 7px 0;
+  font-size: var(--text-12);
+  color: var(--ink-60);
+}

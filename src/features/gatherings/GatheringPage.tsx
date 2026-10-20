@@ -20,6 +20,7 @@ import { GatheringMoreRail } from "./GatheringMoreRail";
 import { GatheringLineup } from "./GatheringLineup";
 import { GatheringPerformerNudge } from "./GatheringPerformerNudge";
 import { GoingAttendeesPreview } from "./GoingAttendeesPreview";
+import { QuizshowEventSection } from "../quizshow/event/QuizshowEventSection";
 import { GoTogetherCard } from "../goTogether/card/GoTogetherCard";
 import { GoTogetherCardPreview } from "../goTogether/card/GoTogetherCardPreview";
 import { moveFocusTo } from "../goTogether/card/goTogetherCardFocus";
@@ -304,6 +305,7 @@ function GatheringDetailBody({
                 isViewerHost={isViewerHost}
               />
 
+              <QuizshowEventSection gathering={gathering} />
               <GoingAttendeesPreview gathering={gathering} />
               {/* Go together reads the optimistic RSVP, so the card shows the
                   moment a member says they're going (demo has no server). */}

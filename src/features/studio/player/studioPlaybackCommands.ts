@@ -1,6 +1,7 @@
 import type { QueryClient } from "@tanstack/react-query";
 import type { RefObject } from "react";
 import { onStudioAccessLost } from "../api/studioQueryKeys";
+import { isStudioTrackWithheld } from "../api/studioSafety.api";
 import {
   fetchStudioStream,
   rememberStreamAnalysis,
@@ -27,6 +28,7 @@ import {
   type StudioQueueState,
 } from "./studioQueueReducer";
 import type { StudioQueueSnapshot } from "./studioQueueStorage";
+import { isWarningGated, warningGateOf } from "./studioWarningGate";
 
 export interface StudioPlayhead {
   currentTime: number;
@@ -106,7 +108,12 @@ export function withoutHiddenRadioItems(
 }
 
 /** Loading a track: the stream read, the refresh, the plain-mode retry. */
-function createTrackLoader(refs: PlaybackRefs, effects: PlaybackEffects) {
+function createTrackLoader(
+  refs: PlaybackRefs,
+  effects: PlaybackEffects,
+  /** Studio safety: a queued track our team withheld since it was queued. */
+  onWithheld: (item: StudioQueueItem) => void,
+) {
   function beginTrack(item: StudioQueueItem, startAtSeconds: number): number {
     refs.loadTokenRef.current += 1;
     refs.resumeAtRef.current = startAtSeconds;
@@ -162,14 +169,24 @@ function createTrackLoader(refs: PlaybackRefs, effects: PlaybackEffects) {
       // A withdrawn grant re-reads GET /studio/me; the gate then shows the
       // teaser and the player stops.
       onStudioAccessLost(effects.queryClient, error);
-      if (token === refs.loadTokenRef.current) fail("stream");
+      if (token !== refs.loadTokenRef.current) return;
+      // Studio safety (spec 5.3): a track withheld since it was queued
+      // leaves the queue and playback moves on, like a hidden track.
+      if (isStudioTrackWithheld(error)) {
+        onWithheld(item);
+        return;
+      }
+      fail("stream");
       return;
     }
     await engine.play();
   }
 
   function reloadCurrent() {
-    const current = refs.queueRef.current.current;
+    const queue = refs.queueRef.current;
+    // Studio safety: a warned track that waits loads only through Play it.
+    if (queue.pendingWarning) return;
+    const current = queue.current;
     if (current) void loadEntry(current, refs.resumeAtRef.current);
   }
 
@@ -317,30 +334,39 @@ export function createPlaybackCommands(
   refs: PlaybackRefs,
   effects: PlaybackEffects,
 ) {
-  const loader = createTrackLoader(refs, effects);
+  const loader = createTrackLoader(refs, effects, dropWithheld);
 
   /** The next track: a gapless swap when it is preloaded and fresh, else a
    *  normal load (playing, or cued for the sleep timer's end of track). */
   function advance(isManual: boolean, shouldPlay = true) {
     const before = refs.queueRef.current;
-    const { hideExplicit } = effects.readPlaybackSettings();
+    const settings = effects.readPlaybackSettings();
+    const { hideExplicit } = settings;
     const upcoming = peekNext(before, isManual, hideExplicit);
     if (!upcoming) {
       if (!isManual) loader.endPaused();
       return;
     }
+    const gate = warningGateOf(settings);
     const after = effects.dispatch(
       isManual
-        ? { type: "next", hideExplicit }
-        : { type: "trackEnded", hideExplicit },
+        ? { type: "next", hideExplicit, gate }
+        : { type: "trackEnded", hideExplicit, gate },
     );
     if (upcoming.queueEntryId === before.current?.queueEntryId) {
-      loader.replayCurrent(shouldPlay);
+      // A warned entry that waits stays paused at its start.
+      loader.replayCurrent(shouldPlay && !after.pendingWarning);
       return;
     }
     const current = after.current;
     if (!current) return;
     refs.refreshCountRef.current = 0;
+    // Spec 6.3: a warned track waits for Play it. It is cued, so no stream
+    // is read and nothing about it is pre-buffered.
+    if (after.pendingWarning) {
+      void loader.loadEntry(current, 0, false);
+      return;
+    }
     // A natural end was playing by definition (the element may have
     // reported a pause first); a skip swaps only while the track plays.
     const wasPlaying = !isManual || refs.statusRef.current === "playing";
@@ -357,14 +383,20 @@ export function createPlaybackCommands(
     preload: StudioPreloadedStream,
     crossfadeSeconds: number,
   ) {
-    const { hideExplicit } = effects.readPlaybackSettings();
-    // The queue moves only when the faded-in entry is still the next one.
+    const settings = effects.readPlaybackSettings();
+    const { hideExplicit } = settings;
+    const gate = warningGateOf(settings);
+    // The queue moves only when the faded-in entry is still the next one,
+    // and never into a warned track that waits for Play it.
     const upcoming = peekNext(refs.queueRef.current, false, hideExplicit);
-    if (upcoming?.queueEntryId !== next.queueEntryId) {
+    if (
+      upcoming?.queueEntryId !== next.queueEntryId ||
+      isWarningGated(next, gate)
+    ) {
       effects.decks.cancelPreload();
       return;
     }
-    effects.dispatch({ type: "trackEnded", hideExplicit });
+    effects.dispatch({ type: "trackEnded", hideExplicit, gate });
     loader.handoverTo(next, preload, { crossfadeSeconds });
   }
 
@@ -397,10 +429,32 @@ export function createPlaybackCommands(
     effects.tick(STOPPED_PLAYHEAD);
   }
 
+  /** A queued track our team withheld since: it leaves the queue, and the
+   *  next playable item loads (or waits at the gate). An emptied queue
+   *  stops. */
+  function dropWithheld(item: StudioQueueItem) {
+    const settings = effects.readPlaybackSettings();
+    const after = effects.dispatch({
+      type: "remove",
+      queueEntryId: item.queueEntryId,
+      hideExplicit: settings.hideExplicit,
+      gate: warningGateOf(settings),
+    });
+    const next = after.current;
+    if (!next) {
+      resetPlayback();
+      return;
+    }
+    refs.refreshCountRef.current = 0;
+    void loader.loadEntry(next, 0, !after.pendingWarning);
+  }
+
   function dropHiddenRadioItems() {
     const before = refs.queueRef.current;
     const filtered = withoutHiddenRadioItems(before);
     if (filtered === before) return;
+    // No gate: only upcoming radio entries go, the current entry never
+    // changes here, so the state keeps its own warning question.
     effects.dispatch({ type: "restore", state: filtered });
     // A move that changes nothing still runs the reducer's radio refill, for
     // a radio whose remaining entries were all explicit.
@@ -412,10 +466,21 @@ export function createPlaybackCommands(
   function restoreCued(snapshot: StudioQueueSnapshot) {
     const current = snapshot.state.current;
     if (!current) return;
-    effects.dispatch({ type: "restore", state: snapshot.state });
-    loader.beginTrack(current, snapshot.positionSeconds);
+    // A restored warned track asks again: this tab's consent is new.
+    const restored = effects.dispatch({
+      type: "restore",
+      state: snapshot.state,
+      gate: warningGateOf(effects.readPlaybackSettings()),
+    });
     refs.expiresAtRef.current = 0;
     effects.setStatus("paused");
+    if (restored.pendingWarning) {
+      // It waits for Play it, which starts it at 0:00. No track begins.
+      refs.resumeAtRef.current = 0;
+      effects.tick({ currentTime: 0, duration: current.durationSeconds });
+      return;
+    }
+    loader.beginTrack(current, snapshot.positionSeconds);
   }
 
   return {

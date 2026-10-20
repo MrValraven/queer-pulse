@@ -118,6 +118,15 @@ const StudioSettingsPage = lazyNamed(
   () => import("./StudioSettingsPage"),
   "StudioSettingsPage",
 );
+// Studio safety: the claim form and the claimant's claims.
+const StudioClaimNewPage = lazyNamed(
+  () => import("./StudioClaimNewPage"),
+  "StudioClaimNewPage",
+);
+const StudioMyClaimsPage = lazyNamed(
+  () => import("./StudioMyClaimsPage"),
+  "StudioMyClaimsPage",
+);
 const StudioAboutPage = lazyNamed(
   () => import("./StudioAboutPage"),
   "StudioAboutPage",
@@ -238,6 +247,8 @@ function demoStudioRoutes() {
       <Route path="/studio/500" element={<Studio500Page />} />
       <Route path="/studio/sign-in" element={<StudioSignInPage />} />
       <Route path={routes.studioSettings} element={<StudioSettingsPage />} />
+      <Route path={routes.studioClaimNew} element={<StudioClaimNewPage />} />
+      <Route path={routes.studioClaims} element={<StudioMyClaimsPage />} />
       <Route path={routes.studioAbout} element={<StudioAboutPage />} />
       <Route
         path={routes.studioAccessibility}
@@ -309,6 +320,8 @@ function grantedStudioRoutes() {
       <Route path={routes.studioRights} element={<StudioRightsPage />} />
       <Route path={routes.studioWithdrawn} element={<StudioWithdrawnPage />} />
       <Route path={routes.studioSettings} element={<StudioSettingsPage />} />
+      <Route path={routes.studioClaimNew} element={<StudioClaimNewPage />} />
+      <Route path={routes.studioClaims} element={<StudioMyClaimsPage />} />
       <Route
         path={routes.studioFlagReview}
         element={<StudioFlagReviewPage />}
@@ -344,7 +357,13 @@ export function studioRoutes({
     return <Route path="/studio/*" element={<StudioGateSkeleton />} />;
   }
   if (!hasStudioAccess) {
-    return <Route path="/studio/*" element={<StudioComingSoonPage />} />;
+    // A claimant who lost the grant can still follow their claims.
+    return (
+      <>
+        <Route path={routes.studioClaims} element={<StudioMyClaimsPage />} />
+        <Route path="/studio/*" element={<StudioComingSoonPage />} />
+      </>
+    );
   }
   return grantedStudioRoutes();
 }

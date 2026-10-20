@@ -1,9 +1,18 @@
 /* ============================================================
-   Admin — Vouch graph (the full trust-network experience).
+   Admin: vouch graph (the full trust-network experience).
    Static trust network + pure graph helpers. No React here.
    ============================================================ */
 
 import { portrait } from "./adminPeople.data";
+import { DENSE_EDGES, DENSE_PEOPLE } from "./adminVouchGraphDense.data";
+import {
+  DEMO_CASES,
+  DEMO_NEW_ACCOUNT_WINDOW_DAYS,
+  DEMO_OPEN_CASE_COUNT,
+  DEMO_PLATFORM_STARTED_AT,
+  DEMO_RINGS,
+  RING_MEMBER_JOINED_AT,
+} from "./adminVouchGraphCases.data";
 
 export type VouchTone =
   "coral" | "jade" | "violet" | "amber" | "plum" | "danger";
@@ -12,12 +21,12 @@ export type SceneKey =
 export type Standing = "trusted" | "warned" | "new" | "flagged";
 
 export interface Scene {
-  /** Real community/scene name (content) — undefined for the one chrome
+  /** Real community/scene name (content), undefined for the one chrome
    *  exception ("ring"), which sets `labelKey` instead. */
   label?: string;
-  /** Set only for the "ring" entry: a system-generated category, not a real
-   *  community name, so it resolves through the catalog like the same label
-   *  in the "Safety" legend (`vouchGraph.legend.safety.ring`). */
+  /** Set only for the "ring" entry: a system-generated category label, so it
+   *  resolves through the catalog like the same label in the "Safety" legend
+   *  (`vouchGraph.legend.safety.ring`). */
   labelKey?: string;
   /** token-backed series colour for the "Scenes" overlay + legend */
   color: string;
@@ -37,7 +46,7 @@ export const SCENES: Record<SceneKey, Scene> = {
 
 /**
  * Fixed sector each community is pulled toward, so the force layout organises
- * into readable clusters instead of one tangle. Evenly spread around the focus.
+ * into readable clusters. Evenly spread around the focus.
  */
 const ANCHOR_R = 215;
 const SCENE_ANGLE: Record<SceneKey, number> = {
@@ -79,7 +88,7 @@ export interface VouchPerson {
   anon?: boolean;
 }
 
-export const PEOPLE: VouchPerson[] = [
+const BASE_PEOPLE: VouchPerson[] = [
   {
     id: "ines",
     name: "Inês Martins",
@@ -100,7 +109,7 @@ export const PEOPLE: VouchPerson[] = [
     joined: "2024-01",
     standing: "trusted",
     scene: "tf",
-    role: "Nurse · mutual-aid lead",
+    role: "Nurse",
   },
   {
     id: "devon",
@@ -156,7 +165,7 @@ export const PEOPLE: VouchPerson[] = [
     joined: "2023-11",
     standing: "trusted",
     scene: "elders",
-    role: "Elder · memory-keeper",
+    role: "Elder",
   },
   {
     id: "vera",
@@ -178,7 +187,7 @@ export const PEOPLE: VouchPerson[] = [
     joined: "2026-05",
     standing: "new",
     scene: "tf",
-    role: "Pending verification",
+    role: "",
   },
   {
     id: "nadia",
@@ -189,7 +198,7 @@ export const PEOPLE: VouchPerson[] = [
     joined: "2026-01",
     standing: "new",
     scene: "creatives",
-    role: "Pending verification",
+    role: "",
   },
   {
     id: "rui",
@@ -200,7 +209,7 @@ export const PEOPLE: VouchPerson[] = [
     joined: "2026-06",
     standing: "new",
     scene: "creatives",
-    role: "Pending verification",
+    role: "",
   },
   {
     id: "pcosta",
@@ -223,63 +232,63 @@ export const PEOPLE: VouchPerson[] = [
     joined: "2024-02",
     standing: "trusted",
     scene: "tf",
-    role: "Keeps their network private",
+    role: "",
     private: true,
   },
   {
     id: "a1",
     name: "@new_4471",
-    pronoun: "not shared",
+    pronoun: "",
     initials: "a1",
     tone: "danger",
     joined: "2026-06",
     standing: "flagged",
     scene: "ring",
-    role: "New account · 0 outside trust",
+    role: "",
   },
   {
     id: "a2",
     name: "@new_4472",
-    pronoun: "not shared",
+    pronoun: "",
     initials: "a2",
     tone: "danger",
     joined: "2026-06",
     standing: "flagged",
     scene: "ring",
-    role: "New account",
+    role: "",
   },
   {
     id: "a3",
     name: "@new_4473",
-    pronoun: "not shared",
+    pronoun: "",
     initials: "a3",
     tone: "danger",
     joined: "2026-06",
     standing: "flagged",
     scene: "ring",
-    role: "New account",
+    role: "",
   },
   {
     id: "a4",
     name: "@new_4474",
-    pronoun: "not shared",
+    pronoun: "",
     initials: "a4",
     tone: "danger",
     joined: "2026-06",
     standing: "flagged",
     scene: "ring",
-    role: "New account",
+    role: "",
   },
   {
     id: "a5",
     name: "@new_4475",
-    pronoun: "not shared",
+    pronoun: "",
     initials: "a5",
     tone: "danger",
     joined: "2026-06",
     standing: "flagged",
     scene: "ring",
-    role: "New account",
+    role: "",
   },
   {
     id: "lone",
@@ -290,7 +299,7 @@ export const PEOPLE: VouchPerson[] = [
     joined: "2026-06",
     standing: "new",
     scene: "creatives",
-    role: "Vouched only by new accounts",
+    role: "",
   },
   {
     id: "anon",
@@ -301,10 +310,47 @@ export const PEOPLE: VouchPerson[] = [
     joined: "2025-01",
     standing: "trusted",
     scene: "tf",
-    role: "Identity shielded",
+    role: "",
     anon: true,
   },
+  // Members the admin members list also shows, so their drawers open a graph.
+  {
+    id: "nightowl",
+    name: "@nightowl",
+    pronoun: "they/them",
+    initials: "N",
+    tone: "plum",
+    joined: "2024-09",
+    standing: "flagged",
+    scene: "nightlife",
+    role: "Member",
+    reports: 4,
+  },
+  {
+    id: "anon_4471",
+    name: "@anon_4471",
+    pronoun: "",
+    initials: "A",
+    tone: "plum",
+    joined: "2026-10",
+    standing: "flagged",
+    scene: "newly",
+    role: "",
+  },
+  {
+    id: "coin_daily",
+    name: "@coin_daily",
+    pronoun: "",
+    initials: "CD",
+    tone: "amber",
+    joined: "2026-10",
+    standing: "new",
+    scene: "newly",
+    role: "",
+  },
 ];
+
+export const PEOPLE: VouchPerson[] = [...BASE_PEOPLE, ...DENSE_PEOPLE];
 
 export const personById: Record<string, VouchPerson> = Object.fromEntries(
   PEOPLE.map((p) => [p.id, p]),
@@ -430,9 +476,9 @@ const RAW_EDGES: Omit<VouchEdge, "id">[] = [
     date: "2025-09",
     reason: "Withdrawn after a falling-out.",
   },
-  { from: "pcosta", to: "theo", date: "2025-10" },
+  { from: "pcosta", to: "theo", mutual: true, date: "2025-10" },
   { from: "theo", to: "pcosta", mutual: true, date: "2025-10" },
-  // suspected ring — a closed loop of new accounts
+  // suspected ring: a closed loop of new accounts
   { from: "a1", to: "a2", date: "2026-06" },
   { from: "a2", to: "a3", date: "2026-06" },
   { from: "a3", to: "a4", date: "2026-06" },
@@ -443,12 +489,19 @@ const RAW_EDGES: Omit<VouchEdge, "id">[] = [
   // isolation: @lone.star vouched only by ring-adjacent new accounts
   { from: "a1", to: "lone", date: "2026-06" },
   { from: "a2", to: "lone", date: "2026-06" },
+  // flagged and new members reachable from the members list
+  { from: "theo", to: "nightowl", date: "2024-10" },
+  { from: "mara", to: "nightowl", date: "2024-11" },
+  { from: "kai", to: "coin_daily", date: "2026-10" },
 ];
 
-export const EDGES: VouchEdge[] = RAW_EDGES.map((e) => ({
-  ...e,
-  id: `${e.from}>${e.to}`,
-}));
+export const EDGES: VouchEdge[] = [
+  ...RAW_EDGES.map((rawEdge) => ({
+    ...rawEdge,
+    id: `${rawEdge.from}>${rawEdge.to}`,
+  })),
+  ...DENSE_EDGES,
+];
 
 // ── Pure graph helpers ──────────────────────────────────────────────────────
 
@@ -493,15 +546,18 @@ export function portraitByInitials(initials: string): string | undefined {
 // ── Demo TrustGraphData adapter ─────────────────────────────────────────────
 // Adapts this file's fixtures (PEOPLE/EDGES/SCENES/SCENE_ANCHOR/personById)
 // into the shape `createTrustGraph` expects, so demo mode can share the same
-// graph model as live mode. `Scene` is aliased to `TrustScene` — this file
+// graph model as live mode. `Scene` is aliased to `TrustScene`; this file
 // already declares its own (unrelated) local `Scene` interface above.
 
 import {
   ymValue,
+  type JoinPath,
   type Scene as TrustScene,
+  type TrackRecord,
   type TrustGraphData,
   type VouchEdge as ModelEdge,
   type VouchPerson as ModelPerson,
+  type WeakVoucher,
 } from "./trustGraph/trustGraphModel";
 import type { TrustNetworkMemberSearchResultDTO } from "./api/adminTrustNetwork.api";
 
@@ -513,30 +569,148 @@ const DEMO_SCENES: TrustScene[] = Object.entries(SCENES).map(
   }),
 );
 
-const DEMO_PEOPLE: ModelPerson[] = PEOPLE.map((person) => ({
-  id: person.id,
-  // Demo has no separate account id — the fixture's slug-shaped `id` stands
-  // in for it. `useVerifyMember`'s demo path never validates the shape.
-  userId: person.id,
-  name: person.name,
-  pronoun: person.pronoun,
-  initials: person.initials,
-  tone:
-    person.tone === "danger" ? "coral" : (person.tone as ModelPerson["tone"]),
-  joined: person.joined,
-  standing: person.standing,
-  // ADM-23: the fixture's "ring" scene IS the seed's 5-account self-vouching
-  // loop (a1…a5, below) — real cycle detection would find exactly this shape
-  // server-side, so demo mode reuses the same fixture flag rather than
-  // re-running the algorithm over static data.
-  inRing: person.scene === "ring",
-  sceneId: person.scene,
-  role: person.role,
-  reports: person.reports,
-  private: person.private,
-  verified: person.standing === "trusted",
-  avatarUrl: portrait(person.name) ?? null,
-}));
+const FOUNDER_IDS = ["ines", "sofia", "lurdes"];
+const SECOND_SCENE_IDS: Record<string, string> = {
+  ines: "creatives",
+  devon: "tf",
+  mara: "tf",
+};
+const REVIEWER_ID = "ines";
+const JOIN_DAY_STEP = 7;
+const JOIN_DAY_SPAN = 27;
+const JOIN_TIME_SUFFIX = "T10:00:00.000Z";
+const ANON_JOINED_AT = "2026-10-19T08:00:00.000Z";
+
+function padDay(value: number): string {
+  return value < 10 ? `0${value}` : `${value}`;
+}
+
+/** Full ISO join time: a deterministic day inside the member's join month. */
+function joinedAtFor(person: VouchPerson, personIndex: number): string {
+  const ringJoinedAt = RING_MEMBER_JOINED_AT[person.id];
+  if (ringJoinedAt) return ringJoinedAt;
+  if (person.id === "anon_4471") return ANON_JOINED_AT;
+  const day = ((personIndex * JOIN_DAY_STEP) % JOIN_DAY_SPAN) + 1;
+  return `${person.joined}-${padDay(day)}${JOIN_TIME_SUFFIX}`;
+}
+
+function accountKindFor(personId: string): ModelPerson["accountKind"] {
+  return FOUNDER_IDS.includes(personId) ? "founder" : "member";
+}
+
+/** The edge that brought a member onto the platform, when there is one. */
+const INVITE_EDGE_BY_MEMBER_ID: Record<string, VouchEdge> = Object.fromEntries(
+  EDGES.filter((edge) => edge.kind === "invite").map((edge) => [edge.to, edge]),
+);
+
+function joinPathFor(person: VouchPerson, joinedAt: string): JoinPath {
+  if (FOUNDER_IDS.includes(person.id)) {
+    return { kind: "founder", byId: null, byName: null, at: joinedAt };
+  }
+  if (person.anon) {
+    return { kind: "unknown", byId: null, byName: null, at: null };
+  }
+  const inviteEdge = INVITE_EDGE_BY_MEMBER_ID[person.id];
+  const inviter = inviteEdge ? personById[inviteEdge.from] : undefined;
+  if (inviter) {
+    return {
+      kind: "invite",
+      byId: inviter.id,
+      byName: inviter.name,
+      at: joinedAt,
+    };
+  }
+  return {
+    kind: "application",
+    byId: REVIEWER_ID,
+    byName: personById[REVIEWER_ID]!.name,
+    at: joinedAt,
+  };
+}
+
+/** Distinct members linked to `personId` in one direction. A mutual edge
+ *  carries trust both ways, so it counts for both sides, the same as live's
+ *  pair of rows; each other member counts once. */
+function trustPartnerIds(
+  personId: string,
+  direction: "inbound" | "outbound",
+  shouldIncludeWithdrawn: boolean,
+): Set<string> {
+  const partnerIds = new Set<string>();
+  for (const edge of EDGES) {
+    if (edge.from === edge.to) continue;
+    if (edge.withdrawn && !shouldIncludeWithdrawn) continue;
+    const isMutual = edge.mutual === true;
+    const isOnSide =
+      direction === "inbound"
+        ? edge.to === personId || (isMutual && edge.from === personId)
+        : edge.from === personId || (isMutual && edge.to === personId);
+    if (!isOnSide) continue;
+    partnerIds.add(edge.from === personId ? edge.to : edge.from);
+  }
+  return partnerIds;
+}
+
+/** Live counts every vouch ever given, withdrawn ones included. */
+function trackRecordFor(personId: string): TrackRecord {
+  const voucheeIds = trustPartnerIds(personId, "outbound", true);
+  let laterFlaggedCount = 0;
+  voucheeIds.forEach((voucheeId) => {
+    if (personById[voucheeId]?.standing === "flagged") laterFlaggedCount += 1;
+  });
+  return { vouchesGiven: voucheeIds.size, laterFlaggedCount };
+}
+
+function countActiveEdges(
+  personId: string,
+  direction: "inbound" | "outbound",
+): number {
+  return trustPartnerIds(personId, direction, false).size;
+}
+
+function weakRingVoucher(personId: string): WeakVoucher {
+  return { id: personId, name: personById[personId]!.name, reason: "ring" };
+}
+
+const ISOLATED_BY: Record<string, WeakVoucher[]> = {
+  lone: [weakRingVoucher("a1"), weakRingVoucher("a2")],
+};
+
+const DEMO_PEOPLE: ModelPerson[] = PEOPLE.map((person, personIndex) => {
+  const joinedAt = joinedAtFor(person, personIndex);
+  const secondSceneId = SECOND_SCENE_IDS[person.id];
+  return {
+    id: person.id,
+    // Demo has no separate account id; the fixture's slug-shaped `id` stands
+    // in for it. `useVerifyMember`'s demo path never validates the shape.
+    userId: person.id,
+    name: person.name,
+    pronoun: person.pronoun,
+    initials: person.initials,
+    tone: person.tone === "danger" ? "coral" : person.tone,
+    joined: person.joined,
+    joinedAt,
+    standing: person.standing,
+    // ADM-23: the fixture's "ring" scene IS the seed's 5-account self-vouching
+    // loop (a1…a5, below). Real cycle detection would find exactly this shape
+    // server-side, so demo mode reuses the same fixture flag.
+    inRing: person.scene === "ring",
+    ringId: person.scene === "ring" ? "ring:a1" : null,
+    sceneId: person.scene,
+    sceneIds: secondSceneId ? [person.scene, secondSceneId] : [person.scene],
+    role: person.role,
+    reports: person.reports,
+    private: person.private,
+    verified: person.standing === "trusted",
+    avatarUrl: portrait(person.name) ?? null,
+    accountKind: accountKindFor(person.id),
+    isolatedBy: ISOLATED_BY[person.id] ?? [],
+    joinPath: joinPathFor(person, joinedAt),
+    trackRecord: trackRecordFor(person.id),
+    activeInboundCount: countActiveEdges(person.id, "inbound"),
+    activeOutboundCount: countActiveEdges(person.id, "outbound"),
+  };
+});
 
 const DEMO_EDGES: ModelEdge[] = EDGES.map((edge) => ({
   id: edge.id,
@@ -565,6 +739,11 @@ export const DEMO_TRUST_GRAPH_DATA: TrustGraphData = {
   tMin: Math.min(...DEMO_EDGES.map((e) => ymValue(e.date))),
   tMax: Math.max(...DEMO_EDGES.map((e) => ymValue(e.date))),
   truncated: false,
+  rings: DEMO_RINGS,
+  cases: DEMO_CASES,
+  openCaseCount: DEMO_OPEN_CASE_COUNT,
+  platformStartedAt: DEMO_PLATFORM_STARTED_AT,
+  newAccountWindowDays: DEMO_NEW_ACCOUNT_WINDOW_DAYS,
 };
 
 /**

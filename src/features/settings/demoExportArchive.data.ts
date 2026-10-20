@@ -40,7 +40,7 @@ export const CATEGORY_ARCHIVE_KEYS: Record<string, readonly string[]> = {
     "communityRequests",
     "feedPreferences",
   ],
-  events: ["events", "eventPreferences", "eventParticipation"],
+  events: ["events", "eventPreferences", "eventParticipation", "quizshowPlays"],
   goTogether: ["go-together"],
   connections: [
     "connections",
@@ -82,6 +82,13 @@ export const CATEGORY_ARCHIVE_KEYS: Record<string, readonly string[]> = {
     "collections",
     "drafts",
     "studioReleaseReminders",
+    // Studio collaborative playlists: the member's editor seats and the
+    // tracks they added to playlists they do not own.
+    "studioPlaylistSeats",
+    "studioPlaylistAdditions",
+    // Creator drafts: the member's own event, listing edit and community
+    // wizard drafts (one row per live server draft).
+    "creatorDrafts",
   ],
   notifications: ["notifications", "pushDevices", "notificationPreferences"],
   consent: ["consent", "policyAcceptances", "policyStatus"],
@@ -163,6 +170,67 @@ function demoContentFor(archiveKey: string): unknown {
           linkUrl: null,
           createdAt: now,
           editedAt: null,
+        },
+      ];
+    case "studioPlaylistSeats":
+      return [
+        {
+          playlistName: "Tour diary",
+          status: "active",
+          source: "persona_co_owner",
+          invitedAt: "2026-10-12T10:00:00.000Z",
+          acceptedAt: "2026-10-12T10:00:00.000Z",
+          endedAt: null,
+        },
+        {
+          playlistName: "Pride warm-up",
+          status: "invited",
+          source: "member_invite",
+          invitedAt: "2026-10-14T08:00:00.000Z",
+          acceptedAt: null,
+          endedAt: null,
+        },
+      ];
+    case "studioPlaylistAdditions":
+      return [
+        {
+          playlistName: "Tour diary",
+          trackTitle: "Devoção",
+          addedAt: "2026-10-13T19:00:00.000Z",
+        },
+      ];
+    case "quizshowPlays":
+      return [
+        {
+          // A real demo event: the past one whose Pulse Live results demo keeps.
+          eventTitle: "Co-op Info Night: Buying a Building Together",
+          eventSlug: "coop-info-night",
+          startedAt: now,
+          screenName: currentUser.first,
+          teamName: null,
+          score: 6420,
+          wasRemoved: false,
+          answers: [
+            {
+              questionPrompt: {
+                en: "Which song won Eurovision for Portugal in 2017?",
+                pt: "Que canção deu a vitória a Portugal na Eurovisão em 2017?",
+              },
+              answer: { type: "type_answer", text: "Amar pelos dois" },
+              pointsAwarded: 870,
+              receivedAt: now,
+            },
+          ],
+          votes: [
+            {
+              questionPrompt: {
+                en: "Which of these is the real Pride fact?",
+                pt: "Qual destes é o facto verdadeiro do Orgulho?",
+              },
+              votedForTruth: true,
+              votedAt: now,
+            },
+          ],
         },
       ];
     case "flatmateProfile":

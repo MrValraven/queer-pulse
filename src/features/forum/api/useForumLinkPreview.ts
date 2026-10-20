@@ -5,6 +5,7 @@ import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import type { LinkPreviewResponse } from "../../../shared/contracts/contracts";
 import { getLinkPreview } from "../../messages/api/link-preview.api";
 import { demoLinkPreview } from "../../messages/linkPreview.data";
+import { isOwnStudioUrl } from "../../messages/internalLinkTargets";
 
 /**
  * Link unfurls for forum posts (PRD-171).
@@ -134,11 +135,15 @@ function loadLinkPreview(url: string): Promise<LinkPreviewResponse> {
  */
 export function useForumLinkPreview(url: string | null) {
   const { demoMode } = useDemoMode();
+  // Every own Studio URL stays off `/link-preview`: a card link becomes the
+  // Studio card, a `/studio/preview/<token>` link is a bearer secret, and an
+  // artist page would only unfurl the app shell.
+  const isOwnStudioLink = url !== null && isOwnStudioUrl(url);
   return useQuery<LinkPreviewResponse>({
     // Deliberately the SAME key the messaging hook uses, so a link shared in
     // both places is fetched once.
     queryKey: ["link-preview", url, demoMode],
-    enabled: !!url,
+    enabled: !!url && !isOwnStudioLink,
     queryFn: async () => {
       const target = url as string;
       // Demo has no network at all: the prototype synthesizes its card.
@@ -155,23 +160,27 @@ export function useForumLinkPreview(url: string | null) {
 // the brackets/quotes that wrap a link rather than belong to it; the trailing
 // trim then drops sentence punctuation, so "see https://example.com/page." does
 // not request a URL with a full stop glued to it.
-const URL_PATTERN = /https?:\/\/[^\s<>"'`)\]}]+/i;
+const URL_PATTERN = /https?:\/\/[^\s<>"'`)\]}]+/gi;
 const TRAILING_PUNCTUATION = /[.,;:!?]+$/;
 
 /**
- * The FIRST http(s) URL across a post's paragraphs, or null.
+ * The FIRST http(s) URL across a post's paragraphs that is worth an OpenGraph
+ * card, or null.
  *
  * First, and only the first: a resource-sharing post can carry a dozen links,
  * and one card under it is a preview while twelve is a wall. This is also the
- * per-post half of the rate discipline described at the top of this file.
+ * per-post half of the rate discipline described at the top of this file. Every
+ * own Studio URL is passed over: a card link gets the Studio card
+ * (`forumPostLink`), and a preview or artist link keeps its plain text.
  */
 export function firstLinkIn(paragraphs: string[]): string | null {
   for (const paragraph of paragraphs) {
-    const match = URL_PATTERN.exec(paragraph);
-    if (!match) continue;
-    const candidate = match[0].replace(TRAILING_PUNCTUATION, "");
-    if (candidate.length > 2048) continue;
-    return candidate;
+    for (const match of paragraph.matchAll(URL_PATTERN)) {
+      const candidate = match[0].replace(TRAILING_PUNCTUATION, "");
+      if (candidate.length > 2048) continue;
+      if (isOwnStudioUrl(candidate)) continue;
+      return candidate;
+    }
   }
   return null;
 }

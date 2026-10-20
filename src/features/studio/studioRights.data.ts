@@ -214,7 +214,7 @@ export const RIGHTS_LIVE_SECTIONS: {
   id: string;
   headingKey: string;
   bodyKey: string;
-}[] = ["checkbox", "report", "dispute", "unpublish"].map((id) => ({
+}[] = ["checkbox", "report", "dispute", "claims", "unpublish"].map((id) => ({
   id,
   headingKey: `studio:rightsLive.sec.${id}.heading`,
   bodyKey: `studio:rightsLive.sec.${id}.body`,

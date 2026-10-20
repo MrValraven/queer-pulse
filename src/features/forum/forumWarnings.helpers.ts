@@ -43,6 +43,21 @@ export function contentWarningLabels(
  */
 const revealedThreadKeys = new Set<string>();
 
+/** The prefix of a Studio track's reveal key (StudioWarnedContent). */
+export const STUDIO_TRACK_REVEAL_PREFIX = "studio-track:";
+
+/**
+ * Forget every Studio track this tab uncovered, so the next member here
+ * (after a sign-out, a quick exit or a lost Studio grant) starts covered
+ * again. Forum thread reveals stay as they are.
+ */
+export function clearStudioTrackReveals(): void {
+  for (const revealKey of [...revealedThreadKeys]) {
+    if (revealKey.startsWith(STUDIO_TRACK_REVEAL_PREFIX))
+      revealedThreadKeys.delete(revealKey);
+  }
+}
+
 /**
  * The reveal state for one thread's warned content.
  *

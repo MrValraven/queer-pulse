@@ -12,6 +12,7 @@ import { KIND_LABEL_KEYS, personaNameBesideCraft } from "./subprofile-kinds";
 import { usePersonaMotion } from "./usePersonaMotion";
 import { PracticeBody } from "./skins/PracticeBody";
 import { TherapistBody } from "./skins/therapist/TherapistBody";
+import { TattooBody } from "./skins/tattoo/TattooBody";
 // The global `.pp*` skin styles for the whole persona tree. Imported here (the
 // lazy renderer shared by the public page AND the editor preview) rather than
 // globally, so Vite folds ~its weight into the persona route chunk instead of
@@ -101,9 +102,18 @@ export function SubprofilePageBody({
       )}
 
       <div className="wrap">
-        {/* The therapist kind has its own layout; the other practice kinds
-            keep PracticeBody. */}
-        {data.kind === "therapist" ? (
+        {/* The tattoo artist and therapist kinds have their own layouts; the
+            other practice kinds keep PracticeBody. */}
+        {data.kind === "tattoo_artist" ? (
+          <TattooBody
+            key={data.id}
+            data={data}
+            mode={mode}
+            onAction={onAction}
+            onOpenWorkItem={onOpenWorkItem}
+            onOpenGalleryPhoto={onOpenGalleryPhoto}
+          />
+        ) : data.kind === "therapist" ? (
           // Keyed on the persona, so state held for one therapist (a capacity
           // the owner just saved) never carries over to the next.
           <TherapistBody

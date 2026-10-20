@@ -302,6 +302,22 @@ const HUB_PULSE: Post[] = [
     communitySlug: "trans-hub",
   },
   {
+    id: "hub-p-studio",
+    author: P("jonas"),
+    kind: "post",
+    body: "Coro de Outubro put a new song up on Studio and it had me crying on the 28 tram so consider yourselves warned\n\nhttps://queerpulse.com/studio/album?id=demo-release-home-3",
+    reactions: rx(["heart", 14, true], ["celebrate", 5]),
+    replies: [
+      {
+        author: P("kai"),
+        text: "the bit where everyone comes in at once got me too",
+        time: "2h",
+      },
+    ],
+    time: "3h",
+    communitySlug: "trans-hub",
+  },
+  {
     id: "hub-p2",
     author: P("catarina-vaz"),
     kind: "post",

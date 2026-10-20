@@ -16,12 +16,14 @@ import { useDeleteListingExit } from "./useDeleteListingExit";
 import { useEditorHashLanding } from "./useEditorHashLanding";
 import { useListingEditorAutosave } from "./useListingEditorAutosave";
 import { useListingEditorSave } from "./useListingEditorSave";
+import { useListingEditorSectionBadges } from "./useListingEditorSectionBadges";
 import { ListingEditorLivePreview } from "./ListingEditorLivePreview";
 import { ListingEditorNotices } from "./ListingEditorNotices";
 import { ListingEditorPreviewModal } from "./ListingEditorPreviewModal";
 import { ListingEditorSaveBar } from "./ListingEditorSaveBar";
 import { ListingEditorSections } from "./ListingEditorSections";
 import { ListingEditorSectionNav } from "./ListingEditorSectionNav";
+import { resetKeepingPreviews } from "./resetKeepingPreviews";
 import { useRestoreReview } from "./restoreDiff/useRestoreReview";
 import pageStyles from "../ListBusinessPage.module.css";
 import styles from "./ListingEditor.module.css";
@@ -45,6 +47,7 @@ import styles from "./ListingEditor.module.css";
 export function ListingEditor({ listing }: { listing: ManagedListingDTO }) {
   const { profile } = useProfileData();
   const prefersReducedMotion = usePrefersReducedMotion();
+  const sectionBadges = useListingEditorSectionBadges(listing.ref);
   const userName = `${profile.first} ${profile.last}`;
   // Stable across renders so the form's dirty comparison and the unsaved guard
   // both measure against the version that actually loaded.
@@ -85,13 +88,19 @@ export function ListingEditor({ listing }: { listing: ManagedListingDTO }) {
     () => JSON.stringify(draft) !== JSON.stringify(initialDraft),
     [draft, initialDraft],
   );
-  // A long edit had one exit before this: save everything or lose it. This
-  // local copy is per listing and member, and only ever offered for restore.
+  // The ref the form was seeded from: the form keeps its first draft for the
+  // editor's life, so the draft slot stays paired with that same listing.
+  const [formListingRef] = useState(listing.ref);
+  // A long edit had one exit before this: save everything or lose it. The
+  // server draft is per listing and member, and offered for restore on
+  // arrival. "Load the newer draft" after a conflict puts it in the form.
   const autosave = useListingEditorAutosave({
-    listingRef: listing.ref,
+    listingRef: formListingRef,
     draft,
     initialDraft,
     isDirty,
+    missing,
+    applyDraft: (nextDraft) => resetKeepingPreviews(form, nextDraft),
   });
   const { restorable } = autosave;
   // "Bring them back" opens a per-area review before the form changes.
@@ -101,7 +110,9 @@ export function ListingEditor({ listing }: { listing: ManagedListingDTO }) {
     sections,
     prefersReducedMotion,
   });
-  const deleteExit = useDeleteListingExit(listing, autosave.clearAutosave);
+  // A deleted listing takes its draft with it on the server, so the delete
+  // exit drops the client copy with no request.
+  const deleteExit = useDeleteListingExit(listing, autosave.forgetAutosave);
   const { isSaving, serverError, dismissServerError, save, saveAndLeave } =
     useListingEditorSave({
       listing,
@@ -136,6 +147,10 @@ export function ListingEditor({ listing }: { listing: ManagedListingDTO }) {
           restorable={restorable}
           onRestore={restoreReview.open}
           onDiscardRestorable={autosave.discardRestorable}
+          conflict={autosave.conflict}
+          isConflictBusy={autosave.isConflictBusy}
+          onLoadNewer={autosave.loadNewer}
+          onKeepThisVersion={autosave.keepThisVersion}
           serverError={serverError}
           onDismissServerError={dismissServerError}
         />
@@ -146,6 +161,7 @@ export function ListingEditor({ listing }: { listing: ManagedListingDTO }) {
               sections={sections}
               activeSectionId={activeSectionId}
               missing={missing}
+              sectionBadges={sectionBadges}
               onJump={jumpToSection}
             />
 
@@ -161,6 +177,7 @@ export function ListingEditor({ listing }: { listing: ManagedListingDTO }) {
                 missing={missing}
                 isDirty={isDirty}
                 isSaving={isSaving}
+                draftStatus={autosave.status}
                 onPreview={() => setIsPreviewOpen(true)}
                 onSave={() => void save()}
               />

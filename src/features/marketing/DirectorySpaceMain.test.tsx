@@ -8,7 +8,7 @@ import { DemoModeProvider } from "../../app/providers/DemoModeProvider";
 import { AuthProvider } from "../../app/providers/AuthProvider";
 import { ToastProvider } from "../../shared/components/feedback/ToastProvider";
 import { DirectorySpaceMain } from "./DirectorySpaceMain";
-import { DIRECTORY_PLACES } from "./directoryPlaces";
+import { DIRECTORY_PLACES, getPlace } from "./directoryPlaces";
 
 // The main column now carries the "Where it is" block, whose mini-map builds a
 // real maplibre-gl instance backed by WebGL, and jsdom has no implementation of
@@ -74,5 +74,56 @@ describe("DirectorySpaceMain hours", () => {
 
     expect(screen.queryByText(/open now/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/closed now/i)).not.toBeInTheDocument();
+  });
+});
+
+describe("DirectorySpaceMain team", () => {
+  function makeTeam() {
+    return [1, 2, 3].map((index) => ({
+      persona: {
+        id: `persona-${index}`,
+        handle: `persona-${index}`,
+        displayName: `Persona Number ${index}`,
+        kind: "tattoo_artist" as const,
+        kindLabelKey: "subprofiles:kind.tattoo_artist",
+        avatarUrl: null,
+        initials: "PN",
+        href: `/p/persona-${index}`,
+      },
+      roleLabel: null,
+    }));
+  }
+
+  it("puts Meet the team right after What's here", async () => {
+    const place = { ...getPlace("tinta-viva")!, team: makeTeam() };
+
+    renderMain(<DirectorySpaceMain place={place} preview />);
+
+    const teamHeading = await screen.findByRole("heading", {
+      name: "Meet the team",
+    });
+    const whatsHereHeading = screen.getByRole("heading", {
+      name: /What.s here|What to expect/,
+    });
+    const hoursHeading = screen.getByRole("heading", { name: /^Hours/ });
+    expect(
+      whatsHereHeading.compareDocumentPosition(teamHeading) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+    expect(
+      teamHeading.compareDocumentPosition(hoursHeading) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+  });
+
+  it("shows no team heading for a listing without a team", async () => {
+    renderMain(<DirectorySpaceMain place={DIRECTORY_PLACES[0]!} preview />);
+
+    expect(
+      await screen.findByRole("heading", { name: /^Hours/ }),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole("heading", { name: "Meet the team" }),
+    ).not.toBeInTheDocument();
   });
 });

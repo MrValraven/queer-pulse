@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useCommunityPosts, type PulsePaging } from "./useCommunityPosts";
 import { postToThread } from "./communities.adapters";
 import type { Thread } from "../communityDetails";
@@ -14,6 +15,7 @@ export function useCommunityDiscussions(slug: string | undefined): {
   threads: Thread[];
   paging: PulsePaging;
 } {
+  const { t } = useTranslation();
   const {
     pinned,
     pulse,
@@ -26,8 +28,8 @@ export function useCommunityDiscussions(slug: string | undefined): {
   } = useCommunityPosts(slug);
 
   const threads = useMemo<Thread[]>(
-    () => [...pinned, ...pulse].map(postToThread),
-    [pinned, pulse],
+    () => [...pinned, ...pulse].map((post) => postToThread(post, t)),
+    [pinned, pulse, t],
   );
 
   return {

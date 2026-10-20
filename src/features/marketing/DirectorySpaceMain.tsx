@@ -3,6 +3,7 @@ import { type VisitPlacement } from "./useDirectoryVisitPlacement";
 import { DirectoryHoursSection } from "./DirectoryHoursSection";
 import { DirectoryVisitSection } from "./DirectoryVisitSection";
 import { DirectoryAboutSection } from "./DirectoryAboutSection";
+import { DirectoryTeamSection } from "./DirectoryTeamSection";
 import { DirectoryGettingInSection } from "./DirectoryGettingInSection";
 import { DirectoryServicesSection } from "./DirectoryServicesSection";
 import { DirectoryMenuSection } from "./DirectoryMenuSection";
@@ -40,6 +41,8 @@ interface Props {
  *    inclusion practices. Their description sits in the header right above
  *    the gallery, and this list is its continuation, so nothing comes between
  *    the two.
+ *    Right after it, "Meet the team": the personas who work here, when the
+ *    owner has any.
  * 2. Is it open, or how do I buy? The hours for a place (the live status
  *    chip, the weekly grid, the dated exceptions and the freshness stamp),
  *    "Ordering & delivery" for anything that sells online.
@@ -76,6 +79,7 @@ export function DirectorySpaceMain({
         ownerRef={ownerRef}
         preview={preview}
       />
+      <DirectoryTeamSection place={place} />
       {/* An online-only business has no hours: its ordering block takes the
           spot. A place that also sells online keeps its hours and follows
           them with the block. */}

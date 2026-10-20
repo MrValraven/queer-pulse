@@ -7,10 +7,13 @@ import { estimateDraftReadiness } from "./subprofileDraftReadiness";
 import { LINK_BADGE, splitByProfileVisibility } from "./mySubprofiles.data";
 import {
   accentTintStyle,
-  AVAILABILITY_OPTIONS,
   AVAILABILITY_PILL_TONE,
   DEFAULT_ACCENT,
 } from "./subprofilePresence.data";
+import {
+  availabilityLabelKeyFor,
+  availabilityToneKeyFor,
+} from "./skins/tattoo/tattooBooksStatus";
 import type { SubprofileView } from "./api/subprofiles.adapters";
 import styles from "./SideRow.module.css";
 
@@ -65,11 +68,20 @@ export function SideRow({ view, footer, leading }: SideRowProps) {
   const isOnProfile =
     splitByProfileVisibility([view]).shownOnProfile.length > 0;
   const tie = LINK_BADGE[view.linkVisibility];
-  const availability = view.availability
-    ? AVAILABILITY_OPTIONS.find((option) => option.value === view.availability)
-    : undefined;
-  const hasChips =
-    !isOnProfile || Boolean(availability) || view.memberCount > 1;
+  const availabilityLabelKey = availabilityLabelKeyFor(
+    view.kind,
+    view.availability,
+    view.skinData,
+  );
+  const availabilityToneKey = availabilityToneKeyFor(
+    view.kind,
+    view.availability,
+    view.skinData,
+  );
+  const hasAvailabilityChip = Boolean(
+    availabilityLabelKey && availabilityToneKey,
+  );
+  const hasChips = !isOnProfile || hasAvailabilityChip || view.memberCount > 1;
 
   const rowClassName = [styles.row, isDraft && styles.draft]
     .filter(Boolean)
@@ -115,17 +127,17 @@ export function SideRow({ view, footer, leading }: SideRowProps) {
                     {t(tie.labelKey)}
                   </span>
                 )}
-                {availability && (
+                {availabilityLabelKey && availabilityToneKey && (
                   <span
                     className={[
                       styles.chip,
-                      CHIP_TONE[AVAILABILITY_PILL_TONE[availability.value]],
+                      CHIP_TONE[AVAILABILITY_PILL_TONE[availabilityToneKey]],
                     ]
                       .filter(Boolean)
                       .join(" ")}
                   >
                     <span className={styles.chipDot} aria-hidden />
-                    {t(availability.labelKey)}
+                    {t(availabilityLabelKey)}
                   </span>
                 )}
                 {view.memberCount > 1 && (

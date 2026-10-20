@@ -1,0 +1,69 @@
+.note {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--icon-gap-inline);
+  margin: 0;
+  font-size: var(--text-14);
+  color: var(--ink-60);
+}
+
+.noteIcon {
+  flex: none;
+  margin-block-start: 0.2em;
+}
+
+.saveLine {
+  margin: 0;
+  font-size: var(--text-14);
+  color: var(--ink-60);
+}
+
+/* Stays mounted where the strip was, so focus has a place to land while the
+   strip folds away. Only script focuses it (tabindex -1), and it holds no
+   control of its own, so it draws no ring around the folding strip. */
+.conflictAnchor:focus {
+  outline: none;
+}
+
+/* The bottom margin sits inside the Collapse (a flow-root), so the gap to the
+   card below folds away with the strip. */
+.conflict {
+  display: grid;
+  gap: var(--gap-xs);
+  margin-block-end: var(--gap-sm);
+  padding: var(--gap-sm);
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-badge);
+}
+
+.conflictTitle {
+  margin: 0;
+  font-size: var(--text-15);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.conflictBody {
+  margin: 0;
+  font-size: var(--text-14);
+  color: var(--ink-60);
+}
+
+/* The FormField error colour: a Load the newer draft click that did not load it. */
+.conflictFailure {
+  margin: 0;
+  font-size: var(--text-14);
+  color: var(--accent-text);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gap-xs);
+}
+
+.actionCollapse {
+  display: flex;
+}

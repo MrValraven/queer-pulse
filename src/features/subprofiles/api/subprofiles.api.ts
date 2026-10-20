@@ -6,7 +6,23 @@ import {
   apiDelete,
 } from "../../../shared/api/client";
 import type { PoemBlock, PoemVersion } from "../poem/poemModel";
+import type {
+  TattooBookingRoute,
+  TattooBooksStatus,
+  TattooColour,
+  TattooComfortOption,
+  TattooConsultation,
+  TattooCoverUpType,
+  TattooFlashAvailability,
+  TattooGuestSpotType,
+  TattooHygienePractice,
+  TattooScarWorkType,
+  TattooShopProductType,
+  TattooSkinTone,
+  TattooWhatToSend,
+} from "../skins/tattoo/tattooVocab.data";
 import type { CropRect } from "../../../shared/components/ui/cropGeometry";
+import type { ListingWorksAtDTO } from "../../marketing/listBusiness/api/listingTeam.types";
 
 // ── Wire DTOs (contract C3) ──────────────────────────────────────────────────
 // These types are IDENTICAL to the backend `subprofile-response.ts` views. Keep
@@ -356,7 +372,15 @@ export type SubprofileSection =
   | "puzzles"
   | "episodes"
   | "roles"
-  | "works";
+  | "works"
+  // Tattoo artist (+7)
+  | "cover_ups"
+  | "scar_work"
+  | "in_progress"
+  | "wanna_dos"
+  | "guest_spots"
+  | "flash_days"
+  | "shop";
 
 export type GigState = "sold_out" | "cancelled" | "guest";
 export type WorkState = "shipped" | "archived" | "in_progress";
@@ -409,6 +433,76 @@ export interface ItemStructured {
    *  `PoemVersion`. Absent for single-version poems saved before this existed
    *  (they read as one default version via `normalizePoemVersions`). */
   poemVersions?: PoemVersion[] | null;
+  /** Tattoo artist item keys. The server whitelists them per section. */
+  flash?: TattooFlashFields | null;
+  healed?: TattooHealedFields | null;
+  photo?: TattooPhotoFlags | null;
+  coverUp?: TattooCoverUpFields | null;
+  scarWork?: TattooScarWorkFields | null;
+  sessions?: TattooSession[] | null;
+  spot?: TattooSpotFields | null;
+  flashDay?: TattooFlashDayFields | null;
+  shop?: TattooShopFields | null;
+}
+
+export interface TattooFlashFields {
+  /** `flash` only. */
+  availability?: TattooFlashAvailability;
+  /** Free text, "8 cm". */
+  size?: string;
+  /** `TATTOO_PRICE_PATTERN`, `flash` only. */
+  price?: string;
+  placements?: string[];
+}
+export interface TattooHealedFields {
+  healedFor?: string;
+  placement?: string;
+  skinTone?: TattooSkinTone;
+}
+export interface TattooPhotoFlags {
+  /** Owner-only. Stripped from public DTOs. */
+  hasClientConsent?: boolean;
+  /** Absent reads as true in `scar_work`, false in the other body-photo sections. */
+  isBlurred?: boolean;
+}
+export interface TattooCoverUpFields {
+  type: TattooCoverUpType;
+  beforeImageUrl: string;
+}
+export interface TattooScarWorkFields {
+  type: TattooScarWorkType;
+}
+export interface TattooSession {
+  imageUrl: string;
+  /** ISO date or "". */
+  date?: string;
+  note?: string;
+}
+export interface TattooSpotFields {
+  type: TattooGuestSpotType;
+  /** ISO date or "", on or after the item date. */
+  endDate?: string;
+}
+export interface TattooFlashDayFields {
+  eventSlug?: string;
+  cause?: string;
+}
+export interface TattooShopFields {
+  type: TattooShopProductType;
+  /** `TATTOO_PRICE_PATTERN`. */
+  price?: string;
+}
+
+/** A public event an owner may link from a flash day (output only). */
+export interface FlashDayEventRef {
+  slug: string;
+  title: string;
+  startsAt: string;
+  endsAt: string | null;
+  venue: string | null;
+  neighbourhood: string | null;
+  isOnline: boolean;
+  imageUrl: string | null;
 }
 
 /** Practice skin (therapist): tri-state for one availability slot. */
@@ -536,6 +630,64 @@ export interface CardTableSummary {
 
 /** Persona-level skin blocks (subprofiles.skin_data). Only the keys relevant to the
  *  persona's derived skin are populated. Display data — present on the public view too. */
+export interface TattooBooksFacts {
+  status?: TattooBooksStatus;
+  /** ISO date. */
+  nextOpening?: string;
+  waitNote?: string;
+}
+export interface TattooBooking {
+  route?: TattooBookingRoute;
+  /** Shown when route is "email". */
+  email?: string;
+  /** Shown when route is "form_link". https:// only. */
+  formUrl?: string;
+  whatToSend?: TattooWhatToSend[];
+  consultation?: TattooConsultation;
+  replyTime?: string;
+}
+export interface TattooStyleFacts {
+  /** `TattooStyle` ids or the artist's own words, in stored order. */
+  styles?: string[];
+  colour?: TattooColour;
+  minSize?: string;
+  doesNotDo?: string[];
+}
+export interface TattooPrices {
+  minimum?: string;
+  hourly?: string;
+  dayRate?: string;
+  deposit?: { amount?: string; isRefundable?: boolean; note?: string };
+  cancellation?: string;
+  touchUps?: { isFree?: boolean; months?: string };
+}
+export interface TattooComfort {
+  options?: TattooComfortOption[];
+  note?: string;
+}
+export interface TattooHygiene {
+  practices?: TattooHygienePractice[];
+}
+export interface TattooScarWorkIntro {
+  intro?: string;
+  hasFreeConsult?: boolean;
+  hasReducedPrice?: boolean;
+  reducedPriceNote?: string;
+}
+export interface TattooStudio {
+  city?: string;
+  isPrivateStudio?: boolean;
+  isByAppointmentOnly?: boolean;
+}
+export interface TattooLineage {
+  trainedWith?: string;
+  /** 4-digit year. */
+  tattooingSince?: string;
+  isTakingApprentices?: boolean;
+  apprenticeNote?: string;
+  teaches?: string[];
+}
+
 export interface SkinData {
   /** Owner display preference: fade the cover banner into the page background
    *  at its bottom edge (see `.pp[data-cover-bleed]` in persona-skins.css). */
@@ -711,6 +863,16 @@ export interface SkinData {
     price?: string;
     note?: string;
   };
+  /** Tattoo artist blocks. `null` means the owner cleared the block. */
+  tattoo?: TattooBooksFacts | null;
+  tattooBooking?: TattooBooking | null;
+  tattooStyles?: TattooStyleFacts | null;
+  tattooPrices?: TattooPrices | null;
+  tattooComfort?: TattooComfort | null;
+  tattooHygiene?: TattooHygiene | null;
+  tattooScarWork?: TattooScarWorkIntro | null;
+  tattooStudio?: TattooStudio | null;
+  tattooLineage?: TattooLineage | null;
 }
 
 export interface SubprofileItemDTO {
@@ -737,6 +899,8 @@ export interface SubprofileItemDTO {
   edition?: string | null;
   workState?: WorkState | null;
   structured?: ItemStructured | null;
+  /** Output only, `flash_days` items only. The input DTO has no such key. */
+  linkedEvent?: FlashDayEventRef | null;
 }
 
 /** Owner-facing (full), returned by GET /subprofiles/mine, GET /subprofiles/:id,
@@ -837,6 +1001,9 @@ export interface SubprofilePublicDTO {
   status: SubprofileStatus;
   items: SubprofileItemDTO[];
   affiliations: AffiliationDTO[]; // event/community links ("Part of")
+  /** Businesses this persona is on the team of. Single reads only; lists carry
+   *  []. Optional here for deploy order. */
+  worksAt?: ListingWorksAtDTO[];
   ownerSlug?: string; // linked only
   ownerName?: string; // linked only
   endorsementCount: number;
@@ -1092,6 +1259,15 @@ export const replaceAffiliations = (
 export const getAffiliationOptions = (id: string, signal?: AbortSignal) =>
   apiGet<AffiliationOptionDTO[]>(
     `/subprofiles/${id}/affiliation-options`,
+    undefined,
+    undefined,
+    signal,
+  );
+
+/** The events this persona may link from a flash day (owner/co-owner only). */
+export const getFlashDayEventOptions = (id: string, signal?: AbortSignal) =>
+  apiGet<FlashDayEventRef[]>(
+    `/subprofiles/${id}/flash-day-event-options`,
     undefined,
     undefined,
     signal,

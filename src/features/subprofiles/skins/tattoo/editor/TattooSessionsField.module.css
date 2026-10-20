@@ -1,0 +1,70 @@
+/* The tattoo in-progress sessions list: one card per session. */
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Matches the FormField eyebrow label. */
+.label {
+  margin: 0;
+  font-size: var(--text-11-5);
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.row {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 12px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-badge);
+}
+
+.rowHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.rowTitle {
+  margin: 0;
+  font-size: var(--text-13);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.full {
+  margin: 0;
+  font-size: var(--text-13);
+  color: var(--ink-60);
+}
+
+.note {
+  width: 100%;
+}
+
+/* The day field wears the same cream control as the note beside it (the
+   FormField input look); the shared date field itself draws a paper box. */
+.sessionDate > div:first-child {
+  box-sizing: border-box;
+  height: 48px;
+  padding: 0 15px;
+  background: var(--cream);
+  border: 1.5px solid rgba(var(--line-rgb), 0.5);
+  border-radius: var(--radius-12);
+}

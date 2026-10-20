@@ -2,6 +2,8 @@ import { useId, useState } from "react";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useFormat } from "../../../shared/i18n/format";
 import { toPlainText } from "../../../shared/markdown";
+import { StudioPostCard } from "../../studio/share/StudioPostCard";
+import { splitStudioPostText } from "../../studio/share/studioPostText";
 import { firstLinkIn } from "./composeText";
 import { PreviewAudience, PreviewByline } from "./ComposePreviewByline";
 import {
@@ -89,12 +91,15 @@ export function ComposePreviewCard({
   const excerptId = useId();
   const [isWarningRevealed, setWarningRevealed] = useState(false);
 
-  const excerpt = toPlainText(body).slice(0, EXCERPT_MAX_LENGTH);
+  // A Studio card link leaves the excerpt and shows as the card it becomes.
+  const { target: studioTarget, visibleText } = splitStudioPostText(body);
+  const excerpt = toPlainText(visibleText).slice(0, EXCERPT_MAX_LENGTH);
   // Only a written excerpt is covered. Blurring the placeholder would hide a
   // sentence explaining what the excerpt is, which helps nobody.
   const hasCoverableExcerpt = contentWarnings.length > 0 && excerpt.length > 0;
   const isExcerptCovered = hasCoverableExcerpt && !isWarningRevealed;
-  const linkHost = hostOf(firstLinkIn(body));
+  // One card per post, as the thread draws it: the Studio card wins.
+  const linkHost = studioTarget ? null : hostOf(firstLinkIn(body));
   const hasBadges = !!category || tags.length > 0 || contentWarnings.length > 0;
   const hasPollOptions =
     !!poll && poll.options.some((option) => option.trim().length > 0);
@@ -176,6 +181,16 @@ export function ComposePreviewCard({
           formatNumber={format.number}
         />
       </article>
+
+      <PreviewSlot isOpen={studioTarget !== null}>
+        {studioTarget && (
+          <StudioPostCard
+            key={`${studioTarget.kind}:${studioTarget.id}`}
+            target={studioTarget}
+            isInteractive={false}
+          />
+        )}
+      </PreviewSlot>
 
       <PreviewSlot isOpen={!!linkHost}>
         {linkHost && <LinkUnfurlPlaceholder host={linkHost} translate={t} />}

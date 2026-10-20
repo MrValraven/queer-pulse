@@ -10,7 +10,7 @@ import {
 import { ownerStewardFrom } from "./useCommunityForm";
 import { useConnectionsList } from "../../connect/api/useConnectionsList";
 import { useAuth } from "../../../app/providers/authContext";
-import { AvatarStack } from "../../../shared/components/ui";
+import { AvatarStack, Collapse } from "../../../shared/components/ui";
 import styles from "./StartCommunityPage.module.css";
 
 const COVER: Record<TintKey, string> = {
@@ -35,6 +35,8 @@ export function StartCommunityPreview({
   draft,
   avatarPreviewUrl,
   coverPreviewUrl,
+  shouldShowFoundingMembers = true,
+  shouldShowWizardChrome = true,
 }: {
   draft: CommunityDraft;
   /** A locally renderable URL for the avatar picked on chapter 6, when one was
@@ -47,6 +49,14 @@ export function StartCommunityPreview({
    *  draft, or no cover at all) leaves the tint gradient showing, which is what
    *  a coverless community's real card falls back to. */
   coverPreviewUrl?: string | null;
+  /** Defaults to true. False folds the founding members roster away and
+   *  skips the connections read behind it: staff previewing someone else's
+   *  draft would otherwise see themselves as the founder. */
+  shouldShowFoundingMembers?: boolean;
+  /** Defaults to true. False drops the wizard's own frame: the sticky column
+   *  (hidden below 980px), the "Live preview" label and the note under the
+   *  card. A staff preview shows the card alone. */
+  shouldShowWizardChrome?: boolean;
 }) {
   const { t } = useTranslation();
   const { user } = useAuth();
@@ -57,7 +67,9 @@ export function StartCommunityPreview({
   // through the static `connections.data` registry instead meant a live
   // founder's real picks silently vanished from this preview, and a live slug
   // that happened to collide with a mock one put a stranger's face here.
-  const { views: connections } = useConnectionsList("all");
+  const { views: connections } = useConnectionsList("all", {
+    isEnabled: shouldShowFoundingMembers,
+  });
   const invited = draft.invites
     .map((slug) => connections.find((view) => view.slug === slug))
     .filter((view): view is (typeof connections)[number] => Boolean(view))
@@ -76,12 +88,16 @@ export function StartCommunityPreview({
     (f) => draft.features.includes(f.id) && f.id !== "discussion",
   );
 
+  const RootTag = shouldShowWizardChrome ? "aside" : "div";
+
   return (
-    <aside className={styles.previewCol}>
-      <div className={styles.pvHead}>
-        <span className={styles.pvDot} />{" "}
-        {t("communities:start.preview.liveLabel")}
-      </div>
+    <RootTag className={shouldShowWizardChrome ? styles.previewCol : undefined}>
+      {shouldShowWizardChrome && (
+        <div className={styles.pvHead}>
+          <span className={styles.pvDot} />{" "}
+          {t("communities:start.preview.liveLabel")}
+        </div>
+      )}
 
       {!draft.name.trim() ? (
         <div className={styles.cpvEmpty}>
@@ -157,26 +173,32 @@ export function StartCommunityPreview({
               </div>
             )}
 
-            <div className={styles.cpvSub}>
-              <div className={styles.cpvSubH}>
-                <span>{t("communities:start.preview.foundingMembers")}</span>
-                <span>{roster.length}</span>
+            <Collapse isOpen={shouldShowFoundingMembers}>
+              <div className={styles.cpvSub}>
+                <div className={styles.cpvSubH}>
+                  <span>{t("communities:start.preview.foundingMembers")}</span>
+                  <span>{roster.length}</span>
+                </div>
+                <AvatarStack
+                  className={styles.cpvRoster}
+                  size={34}
+                  avatars={roster.slice(0, 6).map((m) => ({
+                    initials: m.initials,
+                    src: m.src,
+                    tint: m.tint,
+                  }))}
+                />
               </div>
-              <AvatarStack
-                className={styles.cpvRoster}
-                size={34}
-                avatars={roster.slice(0, 6).map((m) => ({
-                  initials: m.initials,
-                  src: m.src,
-                  tint: m.tint,
-                }))}
-              />
-            </div>
+            </Collapse>
           </div>
         </div>
       )}
 
-      <p className={styles.pvFoot}>{t("communities:start.preview.footNote")}</p>
-    </aside>
+      {shouldShowWizardChrome && (
+        <p className={styles.pvFoot}>
+          {t("communities:start.preview.footNote")}
+        </p>
+      )}
+    </RootTag>
   );
 }

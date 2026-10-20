@@ -1,0 +1,288 @@
+/* B4 invite tree: an indented outline that takes the canvas's place in the
+   Invites tab. HTML throughout, so it reads on phones and with a screen
+   reader the same way it reads on desktop. */
+
+.panel {
+  height: 100%;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 18px 20px 24px;
+}
+
+.title {
+  margin: 0 0 12px;
+  font-family: var(--serif);
+  font-size: var(--text-18);
+  font-weight: 600;
+  color: var(--text-strong);
+}
+
+.empty {
+  margin: 0 0 12px;
+  font-size: var(--text-12-5);
+  color: var(--ink-60);
+}
+
+.tree,
+.rootList,
+.group {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.rootList {
+  padding-bottom: 8px;
+}
+.group {
+  margin-inline-start: 18px;
+  padding-inline-start: 8px;
+  border-inline-start: 1px solid rgba(var(--line-rgb), 0.12);
+}
+
+.item {
+  outline: none;
+}
+.item:focus-visible > .row,
+.item:focus-visible > .groupRow {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.groupRow {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 8px 6px;
+  border-radius: var(--radius-10);
+  cursor: pointer;
+  transition-property: background-color;
+  transition-duration: var(--dur-fast);
+}
+.groupLabel {
+  flex: 1;
+  min-width: 0;
+  font-size: var(--text-12);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--text-strong);
+}
+.groupCount {
+  flex: none;
+  font-size: var(--text-11-5);
+  font-weight: 600;
+  color: var(--ink-60);
+}
+
+.row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 6px 8px 6px 4px;
+  border-inline-start: 3px solid transparent;
+  border-radius: var(--radius-10);
+  cursor: pointer;
+  transition-property: background-color, border-color;
+  transition-duration: var(--dur-fast);
+}
+/* Hover tints only plain rows, so the focus and selected states keep
+   their own background under the pointer. */
+@media (hover: hover) {
+  .row:not(.rowFocus):not(.rowSelected):hover,
+  .groupRow:hover {
+    background: rgba(var(--plum-rgb), 0.04);
+  }
+}
+.rowFocus {
+  border-inline-start-color: var(--accent);
+  background: rgba(var(--accent-rgb), 0.06);
+}
+.rowSelected,
+.rowFocus.rowSelected {
+  background: rgba(var(--accent-rgb), 0.14);
+}
+
+.toggle,
+.toggleSpacer {
+  flex: none;
+  width: 1.5rem;
+  height: 1.5rem;
+}
+.toggle {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-6);
+  background: none;
+  color: var(--ink-60);
+  cursor: pointer;
+}
+.toggle svg {
+  transition-property: transform;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+.toggle[data-expanded="true"] svg {
+  transform: rotate(90deg);
+}
+
+.text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.nameLine {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  min-width: 0;
+}
+.name {
+  overflow: hidden;
+  font-size: var(--text-13);
+  font-weight: 600;
+  color: var(--text-strong);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.rowSelected .name {
+  font-weight: 700;
+}
+
+.standingDot {
+  flex: none;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--ink-40);
+}
+.standingDot[data-standing="trusted"] {
+  background: var(--jade);
+}
+.standingDot[data-standing="warned"] {
+  background: var(--amber);
+}
+.standingDot[data-standing="flagged"] {
+  background: var(--danger);
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 6px;
+  font-size: var(--text-11-5);
+  line-height: 1.4;
+  color: var(--ink-60);
+}
+.metaPart + .metaPart::before {
+  content: "\00B7";
+  margin-inline-end: 6px;
+  color: var(--ink-40);
+}
+.metaPart[data-tone="warn"] {
+  font-weight: 600;
+  color: var(--danger);
+}
+
+.showInNetwork {
+  position: relative;
+  display: inline-flex;
+  flex: none;
+  gap: 5px;
+  align-items: center;
+  padding: 5px 9px;
+  border: 1px solid rgba(var(--line-rgb), 0.16);
+  border-radius: var(--radius-pill);
+  background: none;
+  font-size: var(--text-11-5);
+  font-weight: 600;
+  color: var(--text-strong);
+  cursor: pointer;
+  transition-property: opacity, background-color;
+  transition-duration: var(--dur-fast);
+}
+.showInNetwork:focus-visible,
+.toggle:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* On a pointer device the action shows on the row being looked at; touch
+   screens keep it visible on every row. */
+@media (hover: hover) {
+  .showInNetwork {
+    opacity: 0;
+  }
+  .row:hover .showInNetwork,
+  .rowFocus .showInNetwork,
+  .rowSelected .showInNetwork,
+  .item:focus > .row .showInNetwork,
+  .showInNetwork:focus-visible {
+    opacity: 1;
+  }
+  .showInNetwork:hover {
+    background: rgba(var(--plum-rgb), 0.06);
+  }
+}
+
+/* Touch screens: the chevron and the icon-only action keep their drawn size
+   and get a 44px hit area around it. */
+@media (pointer: coarse) {
+  .toggle::before,
+  .showInNetwork::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 2.75rem;
+    height: 2.75rem;
+    transform: translate(-50%, -50%);
+  }
+  .groupRow {
+    min-height: 2.75rem;
+  }
+}
+
+/* Phones and touch tablets: the button itself is 44px tall and
+   carries its own hit area. Only the phone drops the label to an icon. */
+@media (max-width: 520px), (pointer: coarse) {
+  .showInNetwork {
+    justify-content: center;
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+  }
+}
+@media (max-width: 520px) {
+  .showInNetwork {
+    padding: 0;
+  }
+}
+
+@media (max-width: 520px) {
+  .panel {
+    padding: 14px 12px 20px;
+  }
+  .showInNetwork span {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

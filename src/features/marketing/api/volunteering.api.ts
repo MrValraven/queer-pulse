@@ -194,6 +194,19 @@ export async function getOpportunities(
   return toItemsPage(res);
 }
 
+/** GET /communities/:slug/volunteering: one community's open opportunities,
+ *  newest first. `items` is capped server-side; `total` counts every open
+ *  one, so a page can say it is showing the newest few. */
+export interface CommunityOpportunitiesDTO {
+  items: OpportunityCardDTO[];
+  total: number;
+}
+
+export const getCommunityOpportunities = (slug: string) =>
+  apiGet<CommunityOpportunitiesDTO>(
+    `/communities/${encodeURIComponent(slug)}/volunteering`,
+  );
+
 export const getOpportunity = (slug: string) =>
   apiGet<OpportunityDetailDTO>(`/volunteering/${slug}`);
 

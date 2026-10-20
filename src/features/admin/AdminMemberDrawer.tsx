@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { AnimatePresence } from "motion/react";
 import { AdminDrawer } from "./ui";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useToast } from "../../shared/components/feedback/useToast";
@@ -23,6 +24,7 @@ import {
   RESTRICT_REASON_TO_CODE,
 } from "./adminMemberModals.utils";
 import { useAdminMember, useRestrictMember } from "./api/useAdminMembers";
+import { useTrustNetworkUrl } from "./useTrustNetworkUrl";
 import { type AdminMember } from "./adminMembers.data";
 
 interface Props {
@@ -41,9 +43,15 @@ export function AdminMemberDrawer({ member, onClose }: Props) {
   // drawer no longer offers a "Remove member" flow that could only ever error:
   // a permanent ban IS the platform's most severe action, and it is real,
   // audited and appealable.
-  const [modal, setModal] = useState<
-    "message" | "restrict" | "ban" | "network" | null
-  >(null);
+  const [modal, setModal] = useState<"message" | "restrict" | "ban" | null>(
+    null,
+  );
+  // The trust network opens through the `tn*` URL params (B9), so the open
+  // view survives a reload and its link can be shared. The drawer shows it
+  // only once this drawer opened it: a `tn` left over from an earlier visit
+  // belongs to the page's own deep-link mount.
+  const trustNetworkUrl = useTrustNetworkUrl();
+  const [hasOpenedNetwork, setHasOpenedNetwork] = useState(false);
   const { data: detail, isLoading } = useAdminMember(member);
   const restrictMutation = useRestrictMember();
   const first = firstName(member.name);
@@ -84,10 +92,13 @@ export function AdminMemberDrawer({ member, onClose }: Props) {
             <MemberOverviewSections
               detail={detail}
               memberName={member.name}
-              onOpenNetwork={() => setModal("network")}
+              onOpenNetwork={() => {
+                setHasOpenedNetwork(true);
+                trustNetworkUrl.open(member.slug);
+              }}
             />
             <ModerationTimeline entries={detail.moderationTimeline} />
-            {/* On demand, never on open: see AdminMemberBanEvasionCheck. */}
+            {/* Runs only when asked: see AdminMemberBanEvasionCheck. */}
             <AdminMemberBanEvasionCheck memberId={member.id} />
           </>
         )}
@@ -95,12 +106,19 @@ export function AdminMemberDrawer({ member, onClose }: Props) {
         <SealedIdentity />
       </AdminDrawer>
 
-      {modal === "network" && (
-        <AdminVouchGraphModal
-          focusSlug={member.slug}
-          onClose={() => setModal(null)}
-        />
-      )}
+      {/* The network shell plays its exit before it unmounts. */}
+      <AnimatePresence>
+        {hasOpenedNetwork && trustNetworkUrl.openView && (
+          <AdminVouchGraphModal
+            key="trust-network"
+            initialView={trustNetworkUrl.openView}
+            onClose={() => {
+              setHasOpenedNetwork(false);
+              trustNetworkUrl.close();
+            }}
+          />
+        )}
+      </AnimatePresence>
 
       {modal === "message" && (
         <MessageModal
@@ -127,7 +145,7 @@ export function AdminMemberDrawer({ member, onClose }: Props) {
           }
           onApply={(selection) => {
             if (demoMode) {
-              // Demo keeps the simulated flow with an Undo affordance — the
+              // Demo keeps the simulated flow with an Undo affordance: the
               // roster is regenerated from fixtures, so nothing persists.
               setModal(null);
               onClose();
@@ -150,10 +168,9 @@ export function AdminMemberDrawer({ member, onClose }: Props) {
               );
               return;
             }
-            // Live: a real platform-wide restriction. No Undo affordance — the
+            // Live: a real platform-wide restriction with no Undo toast. The
             // drawer's Suspension section (Lift suspension) is the honest way
-            // back, not a toast button. Errors surface via the global
-            // mutation-error toast.
+            // back. Errors surface via the global mutation-error toast.
             restrictMutation.mutate(
               {
                 memberId: member.id,

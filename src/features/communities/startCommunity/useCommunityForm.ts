@@ -53,6 +53,45 @@ export function emptyDraft(owner: Steward): CommunityDraft {
   };
 }
 
+/** The catalog keys each chapter still needs before the founder can move on. */
+function missingByStepFor(draft: CommunityDraft): Record<number, string[]> {
+  const missingByStep: Record<number, string[]> = {
+    0: [],
+    1: [],
+    2: [],
+    3: [],
+    4: [],
+    5: [],
+    6: [],
+    7: [],
+    8: [],
+  };
+  // 1 · why
+  if (!draft.name.trim())
+    missingByStep[1]!.push("communities:start.missing.name");
+  if (!draft.purpose.trim())
+    missingByStep[1]!.push("communities:start.missing.purpose");
+  if (!draft.type) missingByStep[1]!.push("communities:start.missing.category");
+  // 2 · who
+  if (!draft.whoFor.trim())
+    missingByStep[2]!.push("communities:start.missing.whoFor");
+  // 3 · safety
+  if (!draft.accessTier)
+    missingByStep[3]!.push("communities:start.missing.access");
+  // 5 · tone
+  if (!draft.rules.length)
+    missingByStep[5]!.push("communities:start.missing.rules");
+  // 6 · feeling
+  if (!draft.tagline.trim())
+    missingByStep[6]!.push("communities:start.missing.tagline");
+  // 8 · confirm
+  if (!draft.handle.trim())
+    missingByStep[8]!.push("communities:start.missing.handle");
+  if (!draft.consent)
+    missingByStep[8]!.push("communities:start.missing.consent");
+  return missingByStep;
+}
+
 /** All Start-a-Community wizard state + setters, shared by page and panels. */
 export function useCommunityForm(initial?: CommunityDraft) {
   const { user } = useAuth();
@@ -75,6 +114,12 @@ export function useCommunityForm(initial?: CommunityDraft) {
   // private storage key in live mode, so the sticky card preview renders this
   // session-only URL instead, and it stays out of the parked draft.
   const [coverPreviewUrl, setCoverPreviewUrl] = useState<string | null>(null);
+  // True once the founder changes something through a setter below. The owner
+  // sync effect writes the draft directly, so a reopened draft only autosaves
+  // after a real edit. It never turns back off: an empty payload after a save
+  // would delete the server draft.
+  const [hasEdited, setHasEdited] = useState(false);
+  const markEdited = useCallback(() => setHasEdited(true), []);
 
   // In live mode `user` resolves after GET /auth/me settles, so the owner
   // steward seeded at init may start as a placeholder; keep the locked owner
@@ -100,6 +145,11 @@ export function useCommunityForm(initial?: CommunityDraft) {
   }, [owner]);
 
   const set = useCallback((patch: Partial<CommunityDraft>) => {
+    setHasEdited(true);
+    setDraft((d) => ({ ...d, ...patch }));
+  }, []);
+  /** Fills a field for the founder (the handle from the name) without counting as their edit. */
+  const prefill = useCallback((patch: Partial<CommunityDraft>) => {
     setDraft((d) => ({ ...d, ...patch }));
   }, []);
 
@@ -113,6 +163,7 @@ export function useCommunityForm(initial?: CommunityDraft) {
 
   /* stewards (owner is locked) */
   const addSteward = useCallback((s: Steward) => {
+    setHasEdited(true);
     setDraft((d) =>
       d.stewards.some((x) => x.key === s.key)
         ? d
@@ -120,6 +171,7 @@ export function useCommunityForm(initial?: CommunityDraft) {
     );
   }, []);
   const removeSteward = useCallback((key: string) => {
+    setHasEdited(true);
     setDraft((d) =>
       key === "owner"
         ? d
@@ -129,6 +181,7 @@ export function useCommunityForm(initial?: CommunityDraft) {
   /* features (locked ones can't toggle off) */
   const toggleFeature = useCallback((id: string, locked?: boolean) => {
     if (locked) return;
+    setHasEdited(true);
     setDraft((d) => ({
       ...d,
       features: d.features.includes(id)
@@ -139,6 +192,7 @@ export function useCommunityForm(initial?: CommunityDraft) {
 
   /* covenant rules */
   const toggleRule = useCallback((rule: string) => {
+    setHasEdited(true);
     setDraft((d) => ({
       ...d,
       rules: d.rules.includes(rule)
@@ -149,6 +203,7 @@ export function useCommunityForm(initial?: CommunityDraft) {
   const addRule = useCallback((raw: string) => {
     const r = raw.trim();
     if (!r) return;
+    setHasEdited(true);
     setDraft((d) =>
       d.rules.includes(r) ? d : { ...d, rules: [...d.rules, r] },
     );
@@ -156,6 +211,7 @@ export function useCommunityForm(initial?: CommunityDraft) {
 
   /* invite seeds */
   const toggleInvite = useCallback((key: string) => {
+    setHasEdited(true);
     setDraft((d) => ({
       ...d,
       invites: d.invites.includes(key)
@@ -165,6 +221,7 @@ export function useCommunityForm(initial?: CommunityDraft) {
   }, []);
 
   const setTint = useCallback((tint: TintKey) => {
+    setHasEdited(true);
     setDraft((d) => ({ ...d, tint }));
   }, []);
 
@@ -172,35 +229,7 @@ export function useCommunityForm(initial?: CommunityDraft) {
      Each entry is a catalog key (chrome, resolved by `t()` where the chips
      render — see `PanelActions` in `StartCommunityChrome.tsx`), not raw text,
      so a language switch never leaves stale English baked into form state. */
-  const missing = useMemo(() => {
-    const s: Record<number, string[]> = {
-      0: [],
-      1: [],
-      2: [],
-      3: [],
-      4: [],
-      5: [],
-      6: [],
-      7: [],
-      8: [],
-    };
-    // 1 · why
-    if (!draft.name.trim()) s[1]!.push("communities:start.missing.name");
-    if (!draft.purpose.trim()) s[1]!.push("communities:start.missing.purpose");
-    if (!draft.type) s[1]!.push("communities:start.missing.category");
-    // 2 · who
-    if (!draft.whoFor.trim()) s[2]!.push("communities:start.missing.whoFor");
-    // 3 · safety
-    if (!draft.accessTier) s[3]!.push("communities:start.missing.access");
-    // 5 · tone
-    if (!draft.rules.length) s[5]!.push("communities:start.missing.rules");
-    // 6 · feeling
-    if (!draft.tagline.trim()) s[6]!.push("communities:start.missing.tagline");
-    // 8 · confirm
-    if (!draft.handle.trim()) s[8]!.push("communities:start.missing.handle");
-    if (!draft.consent) s[8]!.push("communities:start.missing.consent");
-    return s;
-  }, [draft]);
+  const missing = useMemo(() => missingByStepFor(draft), [draft]);
 
   const canAdvance = useStepGate(missing);
 
@@ -229,7 +258,10 @@ export function useCommunityForm(initial?: CommunityDraft) {
     coverPreviewUrl,
     setCoverPreviewUrl,
     isDirty,
+    hasEdited,
+    markEdited,
     set,
+    prefill,
     reset,
     addSteward,
     removeSteward,

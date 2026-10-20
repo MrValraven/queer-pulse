@@ -353,6 +353,21 @@ export const communities: Catalog = {
   "detail.tabs.events": "Events",
   "detail.tabs.modtools": "Mod tools",
   "detail.tabs.spaces": "Spaces",
+  "detail.tabs.volunteering": "Volunteering",
+  "detail.tabs.giving": "Support",
+
+  // ── Volunteering tab (VolunteeringTab) ────────────────────────────────────
+  "detail.volunteering.heading": "Open opportunities",
+  "detail.volunteering.empty": "No open opportunities right now.",
+  "detail.volunteering.post.lead":
+    "You help run this community, so you can ask people for a hand. Say what needs doing, how much time it takes and how many people you need.",
+  "detail.volunteering.post.cta": "Post an opportunity here",
+  "detail.volunteering.showingNewest":
+    "Showing the {shown} newest of {total} open opportunities.",
+  "detail.volunteering.error.title": "We couldn't load the opportunities",
+  "detail.volunteering.error.description":
+    "Something went wrong reaching this community's volunteering board. Try again in a moment.",
+  "detail.volunteering.error.retryCta": "Try again",
   // Shown to an owner/mod on a tab they've hidden from members (the
   // "events"/"roster" feature toggles, or "show roster to members").
   "detail.hiddenFromMembers":
@@ -1170,6 +1185,8 @@ export const communities: Catalog = {
   "detail.modtools.history.field.whoFor": "Who it is for",
   "detail.modtools.history.field.tagline": "Tagline",
   "detail.modtools.history.field.nowReading": "Now reading",
+  "detail.modtools.history.field.givingIntro": "Support intro",
+  "detail.modtools.history.field.givingMethods": "Ways to support",
   "detail.modtools.history.field.accessTier": "Who can join",
   "detail.modtools.history.field.rosterVisible": "Roster visible",
   "detail.modtools.history.field.features": "Features",
@@ -1346,6 +1363,81 @@ export const communities: Catalog = {
   "detail.resources.form.cancelCta": "Cancel",
   "detail.resources.form.saveCta": "Save",
   "detail.resources.form.savingCta": "Saving…",
+
+  // ── Support tab and sidebar card (giving) ─────────────────────────────────
+  "detail.giving.heading": "Support {name}",
+  "detail.giving.listLabel": "Ways to support {name}",
+  "detail.giving.kind.link": "Link",
+  "detail.giving.kind.mbway": "MB WAY",
+  "detail.giving.kind.iban": "IBAN",
+  "detail.giving.opensInNewTab": "(opens in a new tab)",
+  "detail.giving.copy.mbwayCta": "Copy number",
+  "detail.giving.copy.ibanCta": "Copy IBAN",
+  "detail.giving.copy.mbwayAria": "Copy number for {label}",
+  "detail.giving.copy.ibanAria": "Copy IBAN for {label}",
+  "detail.giving.copy.mbwayCopiedToast": "MB WAY number copied",
+  "detail.giving.copy.ibanCopiedToast": "IBAN copied",
+  "detail.giving.copy.errorToast":
+    "Couldn't copy. Select the text and copy it yourself.",
+  "detail.giving.footer.notice":
+    "Money sent here goes straight to {name}, outside QueerPulse. We never handle it and keep no record of who gives.",
+  "detail.giving.footer.updated": "Updated {date}",
+  "detail.giving.empty.title": "No ways to support yet",
+  "detail.giving.empty.body":
+    "Add a link, an MB WAY number or an IBAN so people know how to help.",
+  "detail.giving.empty.viewer":
+    "This community hasn't listed any ways to support yet.",
+  "detail.giving.editCta": "Edit ways to support",
+  "detail.giving.sidebar.cta": "See ways to support",
+  "detail.giving.sidebar.more": "{count} more",
+  "detail.giving.editor.introLabel": "What the support goes to",
+  "detail.giving.editor.introHelper":
+    "One or two lines, up to {max} characters.",
+  "detail.giving.editor.introPlaceholder":
+    "Rent for our space and snacks at every event",
+  "detail.giving.editor.methodsLabel": "Ways to support",
+  "detail.giving.editor.rowLegend": "Way to support {count}",
+  "detail.giving.editor.kindLabel": "Type",
+  "detail.giving.editor.valueLabel.link": "Link",
+  "detail.giving.editor.valueLabel.mbway": "MB WAY phone number",
+  "detail.giving.editor.valueLabel.iban": "IBAN",
+  "detail.giving.editor.valuePlaceholder.link":
+    "https://ko-fi.com/yourcommunity",
+  "detail.giving.editor.valuePlaceholder.mbway": "912 345 678",
+  "detail.giving.editor.valuePlaceholder.iban":
+    "PT50 0002 0123 1234 5678 9015 4",
+  "detail.giving.editor.labelLabel": "Name (optional)",
+  "detail.giving.editor.labelHelper": "Shown in place of the platform name.",
+  "detail.giving.editor.noteLabel": "Note (optional)",
+  "detail.giving.editor.noteHelper": "For example, the account holder's name.",
+  "detail.giving.editor.moveUpAria": "Move {label} up",
+  "detail.giving.editor.moveDownAria": "Move {label} down",
+  "detail.giving.editor.removeAria": "Remove {label}",
+  "detail.giving.editor.addCta": "Add a way to support",
+  "detail.giving.editor.capReached":
+    "You can list up to {max} ways to support.",
+  "detail.giving.editor.saveCta": "Save changes",
+  "detail.giving.editor.savingCta": "Saving…",
+  "detail.giving.editor.cancelCta": "Cancel",
+  "detail.giving.editor.savedToast": "Support section saved",
+  "detail.giving.editor.errorToast":
+    "Couldn't save the support section. Try again.",
+  "detail.giving.editor.historyNote":
+    "Each save shows up in Mod tools, under History.",
+  "detail.giving.editor.demoNote":
+    "In the demo, your changes last until you reload the page.",
+  "detail.giving.editor.discardTitle": "Discard your changes?",
+  "detail.giving.editor.discardBody": "What you typed here will be lost.",
+  "detail.giving.editor.discardCta": "Discard changes",
+  "detail.giving.editor.keepEditingCta": "Keep editing",
+  "detail.giving.editor.editingTitle": "Edit ways to support",
+  "detail.giving.error.required": "Fill this in, or remove this row.",
+  "detail.giving.error.link": "Use a full link that starts with https://.",
+  "detail.giving.error.mbway":
+    "Use a Portuguese mobile number, like 912 345 678.",
+  "detail.giving.error.iban":
+    "This IBAN doesn't look right. Check the country code and the digits.",
+  "detail.giving.error.tooLong": "Keep it to {max} characters or fewer.",
 
   // ── Badges: role pills, access-tier pills, reaction bar ───────────────────
   "badges.role.owner": "Owner",
@@ -1785,6 +1877,11 @@ export const communities: Catalog = {
   // ── Toasts (StartCommunityPage) ───────────────────────────────────────────
   "start.toast.createError": "Couldn't open your community. Try again.",
   "start.toast.created": "{name} is live. Welcome, steward",
+  "start.toast.draftDiscardError":
+    "We couldn't delete your old draft. It's still saved",
+  // CreatorDraftNotice beside the wizard's save line
+  "creatorDraftNote.body":
+    "Our team can see this draft of your community page, so we can help if you get stuck. People you invite stay private",
 
   // ── Adapter-composed chrome (api/communities.adapters.ts, useAllCommunities.ts) ──
   // Fused mock-string trap: the phrase is chrome even though the mock/live data

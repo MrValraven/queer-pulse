@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { toPlaylistView, type StudioPlaylistView } from "./studio.adapters";
+import { studioErrorCodeOf } from "./studio.api";
 import type {
   CreateStudioPlaylistBody,
   UpdateStudioPlaylistBody,
@@ -23,8 +24,11 @@ import {
 } from "./studioPlaylists.api";
 import { studioKeys } from "./studioQueryKeys";
 
-// Every write is owner-only on the server (a 404 for anyone else) and each
-// caller says what went wrong in its own words, so the global toast stays off.
+// The server answers each write by the caller's seat: editors add, remove,
+// reorder and rename; visibility, the credit and deleting stay with the
+// owner (a 403 `studio_playlist_owner_only` for an editor); a member without
+// a seat gets a 404. Each caller says what went wrong in its own
+// words, so the global toast stays off.
 const SILENT = { silentError: true } as const;
 
 const demoStore = () => import("./studioDemoPlaylists");
@@ -59,8 +63,11 @@ export function useCreateStudioPlaylist() {
   });
 }
 
+/** A credit change can end editor seats and moves where co-owner
+ *  candidates come from, so the editors list and the co-owner checklist
+ *  read again. */
 export function useUpdateStudioPlaylist() {
-  const { demoMode, keep } = useStore();
+  const { demoMode, queryClient, keep } = useStore();
   return useMutation<
     StudioPlaylistView,
     Error,
@@ -73,7 +80,15 @@ export function useUpdateStudioPlaylist() {
           ? (await demoStore()).demoUpdatePlaylist(playlistId, body)
           : await updateStudioPlaylist(playlistId, body),
       ),
-    onSuccess: keep,
+    onSuccess: (playlist, { playlistId, body }) => {
+      keep(playlist);
+      if (body.creditSubprofileId === undefined) return;
+      for (const queryKey of [
+        studioKeys.playlistEditors(demoMode, playlistId),
+        studioKeys.playlistEditorCandidatesAll(demoMode, playlistId),
+      ])
+        void queryClient.invalidateQueries({ queryKey });
+    },
   });
 }
 
@@ -156,12 +171,24 @@ export function useRemoveStudioPlaylistEntry() {
   >({
     meta: SILENT,
     mutationFn: async ({ playlistId, entryId }) => {
-      if (demoMode) {
-        const store = await demoStore();
-        store.demoRemovePlaylistEntry(playlistId, entryId);
-        return toPlaylistView(store.demoStudioPlaylist(playlistId));
+      const store = demoMode ? await demoStore() : null;
+      const readNow = async () =>
+        toPlaylistView(
+          store
+            ? store.demoStudioPlaylist(playlistId)
+            : await getStudioPlaylist(playlistId),
+        );
+      try {
+        if (store) store.demoRemovePlaylistEntry(playlistId, entryId);
+        else await removeStudioPlaylistEntry(playlistId, entryId);
+      } catch (error) {
+        // Another editor removed it first: the row is gone either way, so
+        // read the playlist as it is now and settle as a removal (spec 3.6).
+        if (studioErrorCodeOf(error) !== "studio_playlist_entry_not_found")
+          throw error;
+        return readNow();
       }
-      await removeStudioPlaylistEntry(playlistId, entryId);
+      if (store) return readNow();
       // 204: the server recompacted the positions; the cached view does the
       // same without a round trip, and reads the playlist only when absent.
       // The server also moved updatedAt to now, which puts the card first in
@@ -174,7 +201,7 @@ export function useRemoveStudioPlaylistEntry() {
             ...withoutEntry(cached, entryId),
             updatedAt: new Date().toISOString(),
           }
-        : toPlaylistView(await getStudioPlaylist(playlistId));
+        : readNow();
     },
     onSuccess: keep,
   });

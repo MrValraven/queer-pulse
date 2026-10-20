@@ -958,10 +958,13 @@ export const messages: Catalog = {
   "share.kind.directory": "espaço",
   "share.kind.gathering": "evento",
   "share.kind.generic": "isto",
+  "share.kind.studio": "achado",
   "share.previewLabel": "Pré-visualização",
   "share.previewTo": "Para",
   "share.previewEmptyRecipients": "Escolhe alguém para enviar isto",
   "share.previewTime": "agora",
+  "share.identityNote":
+    "Ao enviares isto da tua conta, quem recebe fica a saber que geres {persona}",
   // O menu Partilhar (messages/share/ShareMenu) nos convívios e noutras
   // páginas: todas as formas de passar algo. "Enviar numa mensagem" usa share.cta.
   "shareMenu.triggerLabel": "Partilhar",
@@ -973,6 +976,11 @@ export const messages: Catalog = {
   "shareMenu.opensInNewTab": "(abre num novo separador)",
   "shareMenu.messageCopiedToast": "Mensagem copiada",
   "shareMenu.linkCopiedToast": "Link copiado",
+  "shareMenu.shareToCommunity": "Partilhar numa comunidade",
+  "shareToCommunity.studioDefaultNote":
+    "Tenho andado a ouvir isto no Studio e acho que alguns de vocês vão adorar",
+  "shareToCommunity.ownPersonaNote":
+    "Publicar isto a partir da tua conta mostra a toda a gente nessa comunidade que és tu quem gere {persona}",
   "shareMenu.copyFallbackToast":
     "O teu navegador não nos deixou copiar a mensagem. Aqui fica o link: {url}",
   "shareMenu.linkCopyFallbackToast":

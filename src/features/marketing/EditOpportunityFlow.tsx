@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { EmptyState, SkeletonCard } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { routes } from "../../app/routeMap";
 import { useOpportunity } from "./api/useOpportunity";
 import {
   useOrganizationOptions,
@@ -21,6 +20,7 @@ import {
   rememberEditedOpportunity,
   type EditedOpportunityState,
 } from "./editedOpportunityHandoff";
+import { volunteerOpportunityPath } from "./volunteerPaths";
 
 /** The organisation the opportunity is already linked to, as picker options,
  *  so the link stays selectable after its poster stops running that
@@ -50,7 +50,7 @@ function pinnedOrganizationsFor(
  *  exist) sees a blocked state instead of an empty/default form. */
 export function EditOpportunityFlow({ slug }: { slug: string }) {
   const { t } = useTranslation();
-  const detailPath = `${routes.volunteer}/opportunity/${slug}`;
+  const detailPath = volunteerOpportunityPath(slug);
   const { data, isPending } = useOpportunity(slug);
 
   // `isPending` also covers the query parked on the session check.

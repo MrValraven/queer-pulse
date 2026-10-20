@@ -48,5 +48,6 @@ export function feedItemToPost(item: FeedItem, fmt: Formatters): FeedPost {
     replies: [],
     link: item.link,
     avatarUrl: actor?.avatarUrl ?? null,
+    studioLink: item.studioLink,
   };
 }

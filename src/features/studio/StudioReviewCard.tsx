@@ -1,8 +1,7 @@
 import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { routes } from "../../app/routeMap";
-import { Button, ImageSlot } from "../../shared/components/ui";
-import { useFormat } from "../../shared/i18n/format";
+import { Button, Collapse, ImageSlot } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useStaffStudioRelease } from "../admin/api/useAdminStudio";
 import type { StudioReleaseCardView } from "./api/studio.adapters";
@@ -12,26 +11,15 @@ import type {
   StudioReviewWithdrawnView,
 } from "./api/studioFlagReview.adapters";
 import css from "./StudioFlagReview.module.css";
+import { useReviewDate } from "./useReviewDate";
 
-type TitleRef = (element: HTMLElement | null) => void;
-
-const DATE_FORMAT = {
-  day: "numeric",
-  month: "short",
-  year: "numeric",
-} as const;
-
-function useReviewDate() {
-  const format = useFormat();
-  return (iso: string | null) =>
-    iso ? format.date(new Date(iso), DATE_FORMAT) : "";
-}
+export type TitleRef = (element: HTMLElement | null) => void;
 
 /** The release a card is about, its facts and its decisions. The title
  *  takes focus when the card above it leaves. Its link opens the album
  *  route, where staff are listeners: a taken-down release shows them the
  *  withdrawn view ("Open in moderation" carries the report detail). */
-function ReviewCardFrame({
+export function ReviewCardFrame({
   release,
   titleRef,
   chip,
@@ -82,19 +70,30 @@ function ReviewCardFrame({
   );
 }
 
-function ReviewFact({
+/** One label and value on a card. With `isShown`, the fact folds in and
+ *  out (a fact that only applies some of the time); without it, it always
+ *  shows. */
+export function ReviewFact({
   labelKey,
   children,
+  isShown,
 }: {
   labelKey: string;
   children: ReactNode;
+  isShown?: boolean;
 }) {
   const { t } = useTranslation();
-  return (
-    <div className={css.fact}>
+  const content = (
+    <>
       <dt className={css.factLabel}>{t(labelKey)}</dt>
       <dd className={css.factValue}>{children}</dd>
-    </div>
+    </>
+  );
+  if (isShown === undefined) return <div className={css.fact}>{content}</div>;
+  return (
+    <Collapse isOpen={isShown} className={css.fact}>
+      {content}
+    </Collapse>
   );
 }
 

@@ -29,6 +29,7 @@ import {
   studioRefusal,
 } from "./studioDemoMutations";
 import { notesExcerpt } from "./studioEpisodes";
+import { contentWarningsOf } from "./studioSafetyFields";
 import { refreshReleaseLists } from "./useStudioReleaseMutations";
 import { studioKeys } from "./studioQueryKeys";
 import { forgetStreamAnalysis, rememberStreamAnalysis } from "./studioStream";
@@ -39,7 +40,12 @@ const SILENT = { silentError: true } as const;
 type OwnerRowPatch = Partial<
   Pick<
     StudioOwnerTrackRowView,
-    "hasAnalysis" | "loudnessLufs" | "peakDb" | "syncedLyrics" | "chapters"
+    | "hasAnalysis"
+    | "loudnessLufs"
+    | "peakDb"
+    | "syncedLyrics"
+    | "chapters"
+    | "artistContentWarnings"
   >
 >;
 
@@ -60,6 +66,10 @@ function syncOwnerTracks(
       ...row,
       // Plan 3's X5: a rewrite of the cached rows keeps the owner fields.
       hasAnalysis: previous?.hasAnalysis ?? false,
+      // Studio safety: the owner's two warning lists and the lock.
+      artistContentWarnings: previous?.artistContentWarnings ?? [],
+      staffContentWarnings: previous?.staffContentWarnings ?? [],
+      isExplicitLocked: previous?.isExplicitLocked ?? false,
       loudnessLufs: previous?.loudnessLufs ?? null,
       peakDb: previous?.peakDb ?? null,
       syncedLyrics: previous?.syncedLyrics ?? null,
@@ -202,6 +212,9 @@ const upsert =
       publishedAt: track.publishedAt,
       isDraft: track.isDraft,
       notesExcerpt: notesExcerpt(track.notes),
+      // Studio safety: a title edit keeps the pill and the withheld state.
+      contentWarnings: track.contentWarnings,
+      isWithheld: track.isWithheld,
     };
     const exists = tracks.some((candidate) => candidate.id === track.id);
     return exists
@@ -306,6 +319,10 @@ export function useUpdateStudioTrack() {
       if (body.syncedLyrics !== undefined)
         patch.syncedLyrics = track.syncedLyrics;
       if (body.chapters !== undefined) patch.chapters = track.chapters;
+      // The answer carries the union only, so the owner row's artist list
+      // comes from what was sent (stored in D7 order).
+      if (body.contentWarnings !== undefined)
+        patch.artistContentWarnings = contentWarningsOf(body.contentWarnings);
       if (analysis) {
         patch.hasAnalysis =
           analysis.waveformPeaks !== null &&

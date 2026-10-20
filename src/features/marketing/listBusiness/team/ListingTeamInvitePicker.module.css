@@ -1,0 +1,86 @@
+.picker {
+  display: grid;
+  gap: var(--gap-sm);
+  min-width: 0;
+}
+
+.note {
+  margin: 0;
+  color: var(--ink-60);
+  font-size: var(--text-13);
+  overflow-wrap: anywhere;
+}
+
+.errorLine {
+  margin: 0;
+  color: var(--accent-text);
+  font-size: var(--text-13);
+  overflow-wrap: anywhere;
+}
+
+.heading {
+  margin: 0;
+  color: var(--text-strong);
+  font-size: var(--text-15);
+  font-weight: 600;
+}
+
+.item {
+  min-width: 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.results {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  min-width: 0;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--gap-sm);
+  padding: var(--gap-xs) 0;
+  min-width: 0;
+}
+
+.rowText {
+  display: grid;
+  min-width: 0;
+}
+
+.rowName {
+  color: var(--text-strong);
+  font-size: var(--text-14);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.rowMeta {
+  color: var(--ink-60);
+  font-size: var(--text-12-5);
+  overflow-wrap: anywhere;
+}
+
+.rowAction {
+  white-space: nowrap;
+}
+
+.chip {
+  justify-self: end;
+  min-width: 0;
+}
+
+@media (max-width: 560px) {
+  .row {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .rowAction,
+  .chip {
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
+}

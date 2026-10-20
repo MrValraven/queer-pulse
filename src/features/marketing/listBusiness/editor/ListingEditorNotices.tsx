@@ -1,3 +1,5 @@
+import type { CreatorDraftConflict } from "../../../creatorDrafts/api/creatorDrafts.types";
+import { CreatorDraftConflictStrip } from "../../../creatorDrafts/CreatorDraftConflictStrip";
 import { EditListingStatusHeader } from "../../EditListingStatusHeader";
 import type { ManagedListingDTO } from "../api/listings.api";
 import { CoManagerRoleBanner } from "../coManagers/CoManagerRoleBanner";
@@ -23,14 +25,23 @@ export function ListingEditorNotices({
   restorable,
   onRestore,
   onDiscardRestorable,
+  conflict,
+  isConflictBusy,
+  onLoadNewer,
+  onKeepThisVersion,
   serverError,
   onDismissServerError,
 }: {
   listing: ManagedListingDTO;
-  /** A local copy of an unfinished edit, when one is going spare. */
+  /** A stored copy of an unfinished edit, when one is going spare. */
   restorable: RestorableEditDraft | null;
   onRestore: () => void;
   onDiscardRestorable: () => void;
+  /** Another tab or device saved the draft since: autosave waits for a choice. */
+  conflict: CreatorDraftConflict | null;
+  isConflictBusy: boolean;
+  onLoadNewer: () => void;
+  onKeepThisVersion: () => void;
   serverError: string | null;
   onDismissServerError: () => void;
 }) {
@@ -58,6 +69,13 @@ export function ListingEditorNotices({
           onDiscard={onDiscardRestorable}
         />
       )}
+      <CreatorDraftConflictStrip
+        isOpen={conflict !== null}
+        isBusy={isConflictBusy}
+        isServerDraftGone={conflict?.revision === null}
+        onLoadNewer={onLoadNewer}
+        onKeepThisVersion={onKeepThisVersion}
+      />
       {serverError && (
         <WizardServerError
           message={serverError}

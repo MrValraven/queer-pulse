@@ -422,6 +422,9 @@ export const admin: Catalog = {
     "abriu um anexo denunciado",
   "platformLog.kind.mod.report_message_attachment_viewed.target":
     "abriu um anexo denunciado sobre",
+  "platformLog.kind.mod.creator_draft_viewed": "abriu um rascunho em curso",
+  "platformLog.kind.mod.creator_draft_viewed.target":
+    "abriu um rascunho em curso de",
   "platformLog.kind.mod.thread_locked": "trancou um tópico",
   "platformLog.kind.mod.thread_locked.target": "trancou um tópico de",
   "platformLog.kind.mod.thread_unlocked": "destrancou um tópico",
@@ -651,6 +654,11 @@ export const admin: Catalog = {
   "members.header.subNoCount":
     "Cada linha é uma pessoa em quem alguém confiou o suficiente para a trazer. Pronomes e nomes escolhidos são os únicos nomes mostrados aqui.",
   "members.header.exportCta": "Exportar",
+  "members.header.trustNetworkCta": "Abrir rede de confiança",
+  "members.header.trustNetworkBadgeAria_one":
+    "{count} caso de confiança para rever",
+  "members.header.trustNetworkBadgeAria_other":
+    "{count} casos de confiança para rever",
   "members.filterAriaLabel": "Filtrar pessoas",
   "members.searchPlaceholder": "Pesquisar por nome…",
   "members.searchAriaLabel": "Pesquisar pessoas por nome ou pronome",
@@ -3269,6 +3277,8 @@ export const admin: Catalog = {
   // Ações da equipa nas mensagens e mensagens oficiais.
   "governance.audit.actionType.conversation_context_viewed":
     "Contexto da conversa consultado",
+  "governance.audit.actionType.creator_draft_viewed":
+    "Rascunho em curso aberto",
   "governance.audit.actionType.message_deleted_by_staff":
     "Mensagem apagada para toda a gente",
   "governance.audit.actionType.official_message_sent":
@@ -3287,6 +3297,18 @@ export const admin: Catalog = {
     "Contestação do Studio aceite",
   "governance.audit.actionType.studio_release_dispute_rejected":
     "Contestação do Studio recusada",
+  "governance.audit.actionType.studio_track_marked_explicit":
+    "Faixa do Studio marcada como explícita",
+  "governance.audit.actionType.studio_track_warning_added":
+    "Aviso de conteúdo do Studio adicionado",
+  "governance.audit.actionType.studio_copyright_claim_accepted":
+    "Reivindicação de direitos de autor aceite",
+  "governance.audit.actionType.studio_copyright_claim_declined":
+    "Reivindicação de direitos de autor recusada",
+  "governance.audit.actionType.studio_copyright_claim_upheld":
+    "Reivindicação de direitos de autor mantida",
+  "governance.audit.actionType.studio_copyright_claim_rejected":
+    "Reivindicação de direitos de autor rejeitada",
   "governance.audit.range.today": "Hoje",
   "governance.audit.range.week": "Esta semana",
   "governance.audit.range.quarter": "Este trimestre",
@@ -3457,13 +3479,14 @@ export const admin: Catalog = {
     "A falha é do nosso lado, por isso o grafo está vazio porque nada chegou. Tenta de novo.",
   "vouchGraph.modes.scenes": "Cenas",
   "vouchGraph.modes.safety": "Segurança",
-  "vouchGraph.pathbar.stepPath_one": "caminho de confiança de {count} passo:",
+  "vouchGraph.pathbar.stepPath_one": "Caminho de confiança de {count} passo:",
   "vouchGraph.pathbar.stepPath_other":
-    "caminho de confiança de {count} passos:",
-  "vouchGraph.pathbar.noPath": "Sem caminho de confiança entre {a} e {b}",
+    "Caminho de confiança de {count} passos:",
+  "vouchGraph.pathbar.noPath":
+    "Sem caminho de confiança ativo entre {a} e {b} neste ponto da cronologia",
   "vouchGraph.pathbar.fromHint":
     "Caminho a partir de {name}. Shift-clique numa segunda pessoa",
-  "vouchGraph.pathbar.clear": "limpar",
+  "vouchGraph.pathbar.clearCta": "Limpar caminho",
 
   "vouchGraph.legend.safety.ring": "Anel suspeito",
   "vouchGraph.legend.safety.isolated": "Isolada em confiança",
@@ -3489,8 +3512,7 @@ export const admin: Catalog = {
 
   "vouchGraph.modal.ariaLabel": "Rede de confiança",
   "vouchGraph.modal.eyebrow": "Rede de confiança",
-  "vouchGraph.modal.searchPlaceholder": "Encontrar uma pessoa…",
-  "vouchGraph.modal.searchAriaLabel": "Encontrar uma pessoa",
+  "vouchGraph.modal.legendToggle": "Legenda",
   "vouchGraph.modal.replayCta": "Rever",
   "vouchGraph.modal.replayStart": "Antes de qualquer voto de confiança",
   "vouchGraph.modal.timeCutAriaLabel": "Linha do tempo dos votos de confiança",
@@ -3503,10 +3525,7 @@ export const admin: Catalog = {
   "vouchGraph.modal.emptyBody":
     "Esta pessoa ainda não tem votos de confiança registados.",
   "vouchGraph.modal.truncatedNotice":
-    "A mostrar os 500 membros mais recentes. Procura acima para encontrar alguém mais antigo.",
-  "vouchGraph.memberFinder.placeholder": "Procurar todos os membros…",
-  "vouchGraph.memberFinder.ariaLabel": "Procurar todos os membros",
-  "vouchGraph.memberFinder.empty": "Nenhum membro encontrado.",
+    "A mostrar os 500 membros mais próximos de {name}. Procura para chegares a mais alguém.",
 
   "vouchGraph.inspector.emptyTitle": "Escolhe alguém",
   "vouchGraph.inspector.emptyBody":
@@ -3515,11 +3534,9 @@ export const admin: Catalog = {
     "Identidade anterior selada, só o nome escolhido",
   "vouchGraph.inspector.ringBanner.title":
     "Parte de um anel de votos de confiança suspeito",
-  "vouchGraph.inspector.ringBanner.body":
-    "Cinco contas criadas numa hora, a darem votos de confiança apenas entre si: um ciclo fechado sem confiança externa.",
   "vouchGraph.inspector.isolationBanner.title": "Isolamento de confiança",
   "vouchGraph.inspector.isolationBanner.body":
-    "Todos os votos de confiança que esta pessoa tem vêm de contas novas ou sinalizadas. Verifica com cuidado redobrado.",
+    "Todos os votos de confiança desta pessoa vêm de contas novas na nossa comunidade ou sinalizadas. Verifica com cuidado redobrado.",
   "vouchGraph.inspector.reportsBanner.title_one": "{count} denúncia registada",
   "vouchGraph.inspector.reportsBanner.title_other":
     "{count} denúncias registadas",
@@ -3528,12 +3545,6 @@ export const admin: Catalog = {
   "vouchGraph.inspector.privateBanner.title": "Rede mantida privada",
   "vouchGraph.inspector.privateBanner.body":
     "Esta pessoa escolheu esconder a sua rede de votos de confiança. Respeita isso. Não tentes contornar.",
-  "vouchGraph.inspector.vouchesIn": "votos de confiança recebidos",
-  "vouchGraph.inspector.vouchesOut": "votos de confiança dados",
-  "vouchGraph.inspector.joined": "entrou",
-  "vouchGraph.inspector.vouchedForBy": "Com voto de confiança de",
-  "vouchGraph.inspector.hasVouchedFor": "Deu um voto de confiança a",
-  "vouchGraph.inspector.withdrawn": "Retirados",
   "vouchGraph.inspector.none": "Ainda nenhum.",
   "vouchGraph.inspector.mutualTag": "mútuo",
   "vouchGraph.inspector.affectedTitle": "Se removesses {name}",
@@ -3541,12 +3552,6 @@ export const admin: Catalog = {
     "{count} pessoa perderia um voto de confiança desta pessoa.",
   "vouchGraph.inspector.affectedCount_other":
     "{count} pessoas perderiam um voto de confiança desta pessoa.",
-  "vouchGraph.inspector.affectedPendingNote":
-    " Incluindo pessoas pendentes que dependem dele.",
-  "vouchGraph.inspector.ownVouchesStay_one":
-    "O voto de confiança que ela deu continua válido. Pesa o custo humano antes de agires.",
-  "vouchGraph.inspector.ownVouchesStay_other":
-    "Os {count} votos de confiança que ela deu continuam válidos. Pesa o custo humano antes de agires.",
   "vouchGraph.inspector.useAsVerificationCta": "Usar como base de verificação",
   "vouchGraph.inspector.verifiedCta": "Verificado",
   "vouchGraph.inspector.citeCta": "Citar",
@@ -3596,6 +3601,261 @@ export const admin: Catalog = {
   "vouchGraph.preview.legend.inbound": "Confiam nesta pessoa",
   "vouchGraph.preview.legend.outbound": "Esta pessoa dá votos de confiança",
   "vouchGraph.preview.legend.mutual": "Mútuo",
+  "vouchGraph.modes.invites": "Convites",
+  "vouchGraph.modes.safetyBadgeAria_one": "{count} caso para rever",
+  "vouchGraph.modes.safetyBadgeAria_other": "{count} casos para rever",
+  "vouchGraph.modes.ariaLabel": "Vista da rede",
+  "vouchGraph.search.placeholder": "Procurar membro…",
+  "vouchGraph.search.ariaLabel":
+    "Encontra uma pessoa neste grafo ou em toda a QueerPulse",
+  "vouchGraph.search.groupInGraph": "Neste grafo",
+  "vouchGraph.search.groupAllMembers": "Todos os membros",
+  "vouchGraph.search.noMatches": "Nenhum membro corresponde a esse nome.",
+  "vouchGraph.search.searching": "A procurar em todos os membros…",
+  "vouchGraph.search.typeMore":
+    "Escreve duas letras para procurar em todos os membros.",
+  "vouchGraph.search.matchCount_one": "{count} correspondência neste grafo",
+  "vouchGraph.search.matchCount_other": "{count} correspondências neste grafo",
+  "vouchGraph.search.clearCta": "Limpar pesquisa",
+  "vouchGraph.filters.openCta": "Filtrar rede",
+  "vouchGraph.filters.activeCount_one": "{count} filtro ativo",
+  "vouchGraph.filters.activeCount_other": "{count} filtros ativos",
+  "vouchGraph.filters.title": "Filtrar a rede",
+  "vouchGraph.filters.standing": "Estado",
+  "vouchGraph.filters.standing.trusted": "De confiança",
+  "vouchGraph.filters.standing.warned": "Com aviso",
+  "vouchGraph.filters.standing.new": "Nova",
+  "vouchGraph.filters.standing.flagged": "Sinalizada",
+  "vouchGraph.filters.scene": "Cena",
+  "vouchGraph.filters.sceneAll": "Todas as cenas",
+  "vouchGraph.filters.verifiedOnly": "Só membros verificados",
+  "vouchGraph.filters.dateRange": "Conexões entre",
+  "vouchGraph.filters.dateFrom": "De",
+  "vouchGraph.filters.dateTo": "Até",
+  "vouchGraph.filters.edgeKinds": "Tipo de conexão",
+  "vouchGraph.filters.edgeKind.invite": "Convites",
+  "vouchGraph.filters.edgeKind.vouch": "Votos de confiança",
+  "vouchGraph.filters.edgeKind.mutual": "Votos de confiança mútuos",
+  "vouchGraph.filters.hideWithdrawn": "Esconder votos de confiança retirados",
+  "vouchGraph.filters.clearCta": "Limpar filtros",
+  "vouchGraph.filters.closeCta": "Fechar filtros",
+  "vouchGraph.filters.emptyResult":
+    "Ninguém corresponde a estes filtros. Limpa um filtro para veres mais da rede.",
+  "vouchGraph.actions.listViewCta": "Ver como lista",
+  "vouchGraph.actions.graphViewCta": "Ver como grafo",
+  "vouchGraph.actions.copyLinkCta": "Copiar link da vista",
+  "vouchGraph.actions.copyLinkToast":
+    "Link copiado. Qualquer pessoa da equipa de administração pode abrir esta vista.",
+  "vouchGraph.actions.copyLinkFailedToast":
+    "Não deu para copiar o link. Copia-o da barra de endereço.",
+  "vouchGraph.actions.downloadPngCta": "Descarregar PNG",
+  "vouchGraph.actions.downloadSvgCta": "Descarregar SVG",
+  "vouchGraph.actions.exportFailedToast":
+    "A imagem não foi descarregada. Tenta de novo.",
+  "vouchGraph.actions.menuAriaLabel": "Opções da vista",
+  "vouchGraph.actions.shareMenuCta": "Partilhar ou descarregar esta vista",
+  "vouchGraph.modal.replayFull_one": "Rede completa · {count} conexão",
+  "vouchGraph.modal.replayFull_other": "Rede completa · {count} conexões",
+  "vouchGraph.canvas.hint.keyboard":
+    "Teclas: Enter seleciona · Shift+Enter escolhe um extremo do caminho · W percorre a rede a partir daí",
+  "vouchGraph.canvas.hint.plainNoPath":
+    "Arrasta para mover · roda para ampliar · duplo clique para percorrer",
+  "vouchGraph.canvas.hint.touch":
+    "Arrasta para mover · toca para selecionar · toca duas vezes para percorrer a rede a partir daí · amplia com os botões",
+  "vouchGraph.canvas.hint.toggle": "Mostrar dicas do grafo",
+  "vouchGraph.canvas.bubbleLabel_one": "{count} convite",
+  "vouchGraph.canvas.bubbleLabel_other": "{count} convites",
+  "vouchGraph.canvas.bubbleAria_one":
+    "Mostrar {count} pessoa que entrou com um convite de {name}",
+  "vouchGraph.canvas.bubbleAria_other":
+    "Mostrar {count} pessoas que entraram com um convite de {name}",
+  "vouchGraph.canvas.bubbleCollapseLabel": "Esconder convites",
+  "vouchGraph.canvas.bubbleCollapseAria_one":
+    "Esconder a {count} pessoa que entrou com um convite de {name}",
+  "vouchGraph.canvas.bubbleCollapseAria_other":
+    "Esconder as {count} pessoas que entraram com um convite de {name}",
+  "vouchGraph.canvas.svgLabel": "Grafo da rede de confiança de {name}",
+  "vouchGraph.tooltip.hintKeyboard":
+    "Enter para inspecionar · W para percorrer a partir daqui",
+  "vouchGraph.summary.people_one": "A rede de {name} mostra {count} pessoa.",
+  "vouchGraph.summary.people_other": "A rede de {name} mostra {count} pessoas.",
+  "vouchGraph.summary.relations":
+    "Mútuos: {mutual}. Deram um voto de confiança a {name}: {vouchedBy}. Receberam um voto de confiança de {name}: {vouchedFor}. Entraram com um convite de {name}: {invited}.",
+  "vouchGraph.summary.cases_one": "{count} alerta de segurança à vista.",
+  "vouchGraph.summary.cases_other": "{count} alertas de segurança à vista.",
+  "vouchGraph.summary.path": "Caminho de confiança: {sentence}",
+  "vouchGraph.path.first.vouch": "{from} deu um voto de confiança a {to}",
+  "vouchGraph.path.first.invite": "{from} convidou {to}",
+  "vouchGraph.path.first.vouchBackward":
+    "{from} recebeu um voto de confiança de {to}",
+  "vouchGraph.path.first.inviteBackward":
+    "{from} entrou com um convite de {to}",
+  "vouchGraph.path.next.vouch": "que deu um voto de confiança a {to}",
+  "vouchGraph.path.next.invite": "que convidou {to}",
+  "vouchGraph.path.next.vouchBackward":
+    "que recebeu um voto de confiança de {to}",
+  "vouchGraph.path.next.inviteBackward": "que entrou com um convite de {to}",
+  "vouchGraph.path.undirected": "Caminho sem direção: {sentence}",
+  "vouchGraph.window.underHour": "uma hora",
+  "vouchGraph.window.hours_one": "{count} hora",
+  "vouchGraph.window.hours_other": "{count} horas",
+  "vouchGraph.window.days_one": "{count} dia",
+  "vouchGraph.window.days_other": "{count} dias",
+  "vouchGraph.inspector.accountKind.founder": "Membro fundador",
+  "vouchGraph.inspector.accountKind.staff": "Equipa",
+  "vouchGraph.inspector.accountKind.system": "Conta da plataforma",
+  "vouchGraph.inspector.ringBanner.bodyWindow_one":
+    "{count} conta criada em {window}, a dar votos de confiança só dentro do ciclo: um ciclo fechado sem confiança externa.",
+  "vouchGraph.inspector.ringBanner.bodyWindow_other":
+    "{count} contas criadas em {window}, a darem votos de confiança apenas entre si: um ciclo fechado sem confiança externa.",
+  "vouchGraph.inspector.ringBanner.sharedVouchers":
+    "Também receberam votos de confiança de {names}.",
+  "vouchGraph.inspector.ringBanner.noSharedVouchers":
+    "Ninguém fora do ciclo lhes dá um voto de confiança.",
+  "vouchGraph.inspector.ringBanner.showLoopCta": "Mostrar o ciclo",
+  "vouchGraph.inspector.isolationBanner.causesTitle":
+    "Os votos de confiança vêm de",
+  "vouchGraph.inspector.isolationBanner.reason.new_one": "entrou no último dia",
+  "vouchGraph.inspector.isolationBanner.reason.new_other":
+    "entrou nos últimos {count} dias",
+  "vouchGraph.inspector.isolationBanner.reason.flagged": "sinalizada",
+  "vouchGraph.inspector.isolationBanner.reason.ring": "num anel suspeito",
+  "vouchGraph.inspector.isolationBanner.causeLine": "{name} ({reason})",
+  "vouchGraph.inspector.trackRecord.title": "Historial",
+  "vouchGraph.inspector.trackRecord.given_one":
+    "Deu um voto de confiança a {count} pessoa",
+  "vouchGraph.inspector.trackRecord.given_other":
+    "Deu votos de confiança a {count} pessoas",
+  "vouchGraph.inspector.trackRecord.flagged_one":
+    "{count} sinalizada ou suspensa depois",
+  "vouchGraph.inspector.trackRecord.flagged_other":
+    "{count} sinalizadas ou suspensas depois",
+  "vouchGraph.inspector.trackRecord.clean":
+    "Nenhuma sinalizada ou suspensa depois",
+  "vouchGraph.inspector.trackRecord.compact":
+    "{flagged} de {given} sinalizadas ou suspensas depois",
+  "vouchGraph.inspector.affected.soleTitle_one":
+    "{count} pessoa perderia o único voto de confiança:",
+  "vouchGraph.inspector.affected.soleTitle_other":
+    "{count} pessoas perderiam o único voto de confiança:",
+  "vouchGraph.inspector.affected.more_one": "e mais {count}",
+  "vouchGraph.inspector.affected.more_other": "e mais {count}",
+  "vouchGraph.inspector.affected.pendingNote_one":
+    "{count} delas é uma pessoa pendente que depende deste voto de confiança.",
+  "vouchGraph.inspector.affected.pendingNote_other":
+    "{count} delas são pessoas pendentes que dependem deste voto de confiança.",
+  "vouchGraph.inspector.affected.receivedStay_one":
+    "O voto de confiança que recebeu fica registado.",
+  "vouchGraph.inspector.affected.receivedStay_other":
+    "Os {count} votos de confiança que recebeu ficam registados.",
+  "vouchGraph.inspector.affected.weighCost":
+    "Pesa o custo humano antes de agires.",
+  "vouchGraph.inspector.story.title": "Como se conecta à rede",
+  "vouchGraph.inspector.story.vouchedByList":
+    "Recebeu um voto de confiança de {names}",
+  "vouchGraph.inspector.story.voucher.plain": "{name} ({when})",
+  "vouchGraph.inspector.story.voucher.verified":
+    "{name} (identidade verificada, {when})",
+  "vouchGraph.inspector.story.lead.invitedBy":
+    "Entrou com um convite de {name} em {when}",
+  "vouchGraph.inspector.story.more.invitedBy":
+    "entrou com um convite de {name}",
+  "vouchGraph.inspector.joinPath.title": "Como {name} entrou",
+  "vouchGraph.inspector.joinPath.founder": "Membro fundador, cá desde o início",
+  "vouchGraph.inspector.joinPath.invite": "Entrou com um convite de {name}",
+  "vouchGraph.inspector.joinPath.application":
+    "Candidatura aprovada por {name}",
+  "vouchGraph.inspector.joinPath.applicationNoReviewer": "Candidatura aprovada",
+  "vouchGraph.inspector.joinPath.unknown": "Não temos registo de como entrou",
+  "vouchGraph.inspector.joinPath.joinedOn": "Entrou em {when}",
+  "vouchGraph.inspector.joinPath.noVouches":
+    "Ainda sem votos de confiança, dados ou recebidos.",
+  "vouchGraph.inspector.joinPath.showInviterCta": "Mostrar {name} na rede",
+  "vouchGraph.inspector.sheet.expandAria": "Mostrar mais sobre esta pessoa",
+  "vouchGraph.inspector.sheet.collapseAria": "Mostrar menos",
+  "vouchGraph.inspector.tabs.ariaLabel": "Conexões",
+  "vouchGraph.inspector.tabs.vouchedByLabel": "Votos recebidos",
+  "vouchGraph.inspector.tabs.vouchedForLabel": "Votos dados",
+  "vouchGraph.inspector.tabs.invitedLabel": "Convites",
+  "vouchGraph.inspector.chip.mutual": "Mútuo",
+  "vouchGraph.inspector.chip.invitedThem": "Convidou esta pessoa",
+  "vouchGraph.inspector.list.searchPlaceholder": "Filtrar por nome…",
+  "vouchGraph.inspector.list.searchAriaLabel":
+    "Filtrar estas conexões por nome",
+  "vouchGraph.inspector.list.sortLabel": "Ordenar",
+  "vouchGraph.inspector.list.sort.name": "Nome de A a Z",
+  "vouchGraph.inspector.list.sort.newest": "Mais recentes primeiro",
+  "vouchGraph.inspector.list.sort.oldest": "Mais antigos primeiro",
+  "vouchGraph.inspector.list.noMatches": "Ninguém com esse nome aqui.",
+  "vouchGraph.inspector.list.withdrawnTag": "Retirado",
+  "vouchGraph.inspector.list.outsideView_one": "Mais {count} fora desta vista",
+  "vouchGraph.inspector.list.outsideView_other":
+    "Mais {count} fora desta vista",
+  "vouchGraph.triage.title": "Casos para rever",
+  "vouchGraph.triage.count_one": "{count} caso aberto",
+  "vouchGraph.triage.count_other": "{count} casos abertos",
+  "vouchGraph.triage.empty":
+    "Nada para rever neste momento. Anéis, pessoas isoladas e contas sinalizadas aparecem aqui.",
+  "vouchGraph.triage.listAriaLabel": "Casos por ordem de urgência",
+  "vouchGraph.triage.kind.ring": "Anel suspeito",
+  "vouchGraph.triage.kind.isolated": "Isolamento de confiança",
+  "vouchGraph.triage.kind.flagged": "Conta sinalizada",
+  "vouchGraph.triage.reason.ring_one": "{count} conta criada em {window}",
+  "vouchGraph.triage.reason.ring_other": "{count} contas criadas em {window}",
+  "vouchGraph.triage.reason.ringNoWindow_one": "{count} conta criada",
+  "vouchGraph.triage.reason.ringNoWindow_other": "{count} contas criadas",
+  "vouchGraph.triage.reason.isolated_one":
+    "O único voto de confiança vem de uma conta nova ou sinalizada",
+  "vouchGraph.triage.reason.isolated_other":
+    "Os {count} votos de confiança vêm de contas novas ou sinalizadas",
+  "vouchGraph.triage.reason.flagged_one": "{count} denúncia aberta",
+  "vouchGraph.triage.reason.flagged_other": "{count} denúncias abertas",
+  "vouchGraph.triage.rowAria": "Centrar a rede em {name}: {reason}",
+  "vouchGraph.triage.outsideView": "Fora desta vista",
+  "vouchGraph.compare.title": "A comparar {a} e {b}",
+  "vouchGraph.compare.pathTitle": "Caminho de confiança",
+  "vouchGraph.compare.sharedVouchers": "Votos de confiança em comum",
+  "vouchGraph.compare.noSharedVouchers":
+    "Ninguém dá um voto de confiança às duas pessoas.",
+  "vouchGraph.compare.joinGap_one": "Entraram com {count} dia de diferença",
+  "vouchGraph.compare.joinGap_other": "Entraram com {count} dias de diferença",
+  "vouchGraph.compare.joinGapSameDay": "Entraram no mesmo dia",
+  "vouchGraph.compare.sharedScenes": "Cenas em comum",
+  "vouchGraph.compare.noSharedScenes": "Nenhuma cena em comum.",
+  "vouchGraph.compare.clearCta": "Limpar comparação",
+  "vouchGraph.inviteTree.title": "Quem convidou quem",
+  "vouchGraph.inviteTree.groupFounders": "Membros fundadores",
+  "vouchGraph.inviteTree.groupOutside":
+    "Com convite de alguém fora desta vista",
+  "vouchGraph.inviteTree.groupApplications": "Entraram por candidatura",
+  "vouchGraph.inviteTree.groupUnknown": "Sem registo de entrada",
+  "vouchGraph.inviteTree.invitedCount_one": "convidou {count}",
+  "vouchGraph.inviteTree.invitedCount_other": "convidou {count}",
+  "vouchGraph.inviteTree.expandAria_one":
+    "Mostrar {count} pessoa que entrou com um convite de {name}",
+  "vouchGraph.inviteTree.expandAria_other":
+    "Mostrar {count} pessoas que entraram com um convite de {name}",
+  "vouchGraph.inviteTree.collapseAria":
+    "Esconder as pessoas que entraram com um convite de {name}",
+  "vouchGraph.inviteTree.showInNetworkCta": "Mostrar na rede",
+  "vouchGraph.inviteTree.empty": "Ainda não há convites nesta vista.",
+  "vouchGraph.listView.caption": "Todas as pessoas na vista da rede de {name}",
+  "vouchGraph.listView.col.name": "Membro",
+  "vouchGraph.listView.col.relation": "Conexão",
+  "vouchGraph.listView.col.standing": "Estado",
+  "vouchGraph.listView.col.joined": "Entrou",
+  "vouchGraph.listView.col.flags": "Alertas",
+  "vouchGraph.listView.relation.focus": "Em foco",
+  "vouchGraph.listView.relation.mutual": "Voto de confiança mútuo",
+  "vouchGraph.listView.relation.vouchedBy": "Dá um voto de confiança a {name}",
+  "vouchGraph.listView.relation.vouchedFor":
+    "Recebe um voto de confiança de {name}",
+  "vouchGraph.listView.relation.invited": "Entrou com um convite de {name}",
+  "vouchGraph.listView.relation.withdrawnOnly": "Voto de confiança retirado",
+  "vouchGraph.listView.relation.secondHop": "Conexão de segundo grau",
+  "vouchGraph.listView.selectAria": "Selecionar {name}",
+  "vouchGraph.listView.sortByNameCta": "Ordenar por nome",
+  "vouchGraph.citeDialog.viewLinkLine": "Vista da rede de confiança: {url}",
 
   // ── Definições da plataforma (/admin/settings) ────────────────────────────
   "settings.breadcrumb": "Definições",
@@ -5233,6 +5493,7 @@ export const admin: Catalog = {
     "Apagou uma mensagem para toda a gente",
   "moderation.action.reportMessageAttachmentViewed":
     "Abriu o ficheiro anexado à mensagem denunciada",
+  "moderation.action.creatorDraftViewed": "Abriu um rascunho em curso",
   "moderation.oldestNote_one":
     "A mostrar {count} denúncia em aberto · a mais antiga chegou {oldest}",
   "moderation.oldestNote_other":
@@ -8123,6 +8384,18 @@ export const admin: Catalog = {
   "moderation.action.studioAccessRevoked": "Retirou o acesso ao Studio",
   "moderation.action.studioReleaseTakenDown": "Retirou um lançamento do Studio",
   "moderation.action.studioReleaseRestored": "Repôs um lançamento do Studio",
+  "moderation.action.studioTrackMarkedExplicit":
+    "Marcou uma faixa do Studio como explícita",
+  "moderation.action.studioTrackWarningAdded":
+    "Adicionou um aviso de conteúdo a uma faixa do Studio",
+  "moderation.action.studioCopyrightClaimAccepted":
+    "Aceitou uma reivindicação de direitos de autor",
+  "moderation.action.studioCopyrightClaimDeclined":
+    "Recusou uma reivindicação de direitos de autor",
+  "moderation.action.studioCopyrightClaimUpheld":
+    "Manteve uma reivindicação de direitos de autor",
+  "moderation.action.studioCopyrightClaimRejected":
+    "Rejeitou uma reivindicação de direitos de autor",
   "moderation.action.personaPostRemoved": "Removeu uma publicação de persona",
   "ambassadors.loadMore": "Ver mais",
   "ambassadors.loadingMore": "A carregar…",
@@ -8305,6 +8578,7 @@ export const admin: Catalog = {
     "Espaços que as pessoas começaram a registar mas ainda não enviaram. Vês o nome e até onde chegaram. Oferece ajuda se uma pessoa parecer ter encontrado alguma dificuldade, ou termina os dados do negócio como um espaço da equipa que ela pode aceitar.",
   "listingDrafts.count_one": "{count} rascunho em curso",
   "listingDrafts.count_other": "{count} rascunhos em curso",
+  "listingDrafts.creatorDraftsLink": "Abrir rascunhos em curso",
   "listingDrafts.empty": "Sem rascunhos por acabar, por agora.",
   "listingDrafts.loadError.title": "A lista de rascunhos não carregou",
   "listingDrafts.loadError.body":
@@ -8340,6 +8614,164 @@ export const admin: Catalog = {
   "listingDrafts.message.cancel": "Cancelar",
   "listingDrafts.message.sent": "Enviada a {name}.",
   "listingDrafts.message.action": "enviar a tua mensagem",
+  // ── Rascunhos em curso (só Admin, /admin/creator-drafts) ──────────────────
+  // Eventos, comunidades, personas, trabalho no Studio e edições de espaços
+  // por acabar. `missing.<kind>.<code>` dá nome ao que ainda falta; um código
+  // sem chave aqui junta-se em `missing.other`.
+  "creatorDrafts.title": "Rascunhos <em>em curso</em>",
+  "creatorDrafts.header.eyebrow": "Ajuda a caminho",
+  "creatorDrafts.header.title": "Rascunhos que estão <em>a nascer</em>",
+  "creatorDrafts.header.sub":
+    "Páginas por acabar de comunidades, personas e negócios. Abre uma para a veres como o público a veria. Se alguém parecer ter encravado, escreve-lhe",
+  "creatorDrafts.filter.all": "Todos",
+  "creatorDrafts.kind.persona": "Persona",
+  "creatorDrafts.kind.studio_release": "Lançamento no Studio",
+  "creatorDrafts.kind.studio_episode": "Episódio de podcast",
+  "creatorDrafts.kind.listing": "Novo espaço",
+  "creatorDrafts.kind.event": "Evento",
+  "creatorDrafts.kind.listing_edit": "Edição de espaço",
+  "creatorDrafts.kind.community": "Comunidade",
+  "creatorDrafts.count_one": "{count} rascunho em curso",
+  "creatorDrafts.count_other": "{count} rascunhos em curso",
+  "creatorDrafts.untitled": "Sem título",
+  "creatorDrafts.madeFor.community": "Para {name}",
+  "creatorDrafts.madeFor.listing": "Para {name}",
+  "creatorDrafts.madeFor.persona": "Como {name}",
+  "creatorDrafts.startedBy": "Começado por {name}",
+  "creatorDrafts.unknownOwner": "alguém cuja conta já não existe",
+  "creatorDrafts.lastSaved": "Guardado pela última vez a {date}",
+  "creatorDrafts.progress": "{done} de {total} passos",
+  "creatorDrafts.moreMissing": "+{count}",
+  "creatorDrafts.empty": "Neste momento ninguém tem um rascunho aberto",
+  "creatorDrafts.loadError.title": "Não conseguimos carregar os rascunhos",
+  "creatorDrafts.loadError.body": "Verifica a ligação e tenta outra vez",
+  "creatorDrafts.loadMore": "Mostrar mais rascunhos",
+  "creatorDrafts.loadingMore": "A carregar",
+  "creatorDrafts.emptyKind":
+    "Neste momento ninguém tem um rascunho aberto do tipo {kind}",
+  "creatorDrafts.detail.eyebrow": "Rascunho em curso",
+  "creatorDrafts.detail.sub":
+    "Uma pré-visualização só de leitura do que o público veria se isto fosse publicado hoje",
+  "creatorDrafts.detail.logged":
+    "Abrir um rascunho fica anotado no Registo da plataforma",
+  "creatorDrafts.detail.loadError.title": "Este rascunho não carregou",
+  "creatorDrafts.detail.loadError.body": "Verifica a ligação e tenta outra vez",
+  "creatorDrafts.strip.label": "Detalhes do rascunho por acabar",
+  "creatorDrafts.strip.unfinished": "Por acabar",
+  "creatorDrafts.strip.kind": "Tipo",
+  "creatorDrafts.strip.owner": "Quem criou",
+  "creatorDrafts.strip.noOwner": "Alguém cuja conta já não existe",
+  "creatorDrafts.strip.lastSaved": "Última gravação",
+  "creatorDrafts.strip.progress": "Progresso",
+  "creatorDrafts.strip.missing": "Ainda falta",
+  "creatorDrafts.strip.nothingMissing": "Já está tudo preenchido",
+  "creatorDrafts.messageCta": "Escrever a {name}",
+  "creatorDrafts.profileCta": "Ver perfil",
+  "creatorDrafts.openLiveListing": "Abrir o espaço público",
+  "creatorDrafts.backToList": "Voltar aos rascunhos em curso",
+  "creatorDrafts.notFound.title": "Este rascunho já não está aqui",
+  "creatorDrafts.notFound.body":
+    "Pode ter sido publicado, apagado ou ficado parado tempo suficiente para expirar",
+  "creatorDrafts.message.template":
+    "Olá, {firstName}! Vimos que começaste {name} na QueerPulse. Se alguma coisa te travou, ou se quiseres ajuda para acabar, responde aqui e ajudamos. Sem pressa nenhuma.",
+  "creatorDrafts.message.templateUntitled":
+    "Olá, {firstName}! Vimos que começaste uma coisa na QueerPulse. Se alguma coisa te travou, ou se quiseres ajuda para acabar, responde aqui e ajudamos. Sem pressa nenhuma.",
+  "creatorDrafts.message.editTemplate":
+    "Olá, {firstName}! Vimos que tens alterações por guardar em {name} na QueerPulse. Se alguma coisa te travou, ou se quiseres ajuda para as acabar, responde aqui e ajudamos. Sem pressa nenhuma.",
+  "creatorDrafts.message.editTemplateUntitled":
+    "Olá, {firstName}! Vimos que tens alterações por guardar no teu espaço na QueerPulse. Se alguma coisa te travou, ou se quiseres ajuda para as acabar, responde aqui e ajudamos. Sem pressa nenhuma.",
+  "creatorDrafts.preview.label":
+    "Pré-visualização deste rascunho como o público o veria",
+  "creatorDrafts.preview.inertToast":
+    "Isto é uma pré-visualização. Aqui os botões e as ligações não fazem nada",
+  "creatorDrafts.preview.episodeMissing":
+    "Este episódio ainda não tem pré-visualização",
+  "creatorDrafts.missing.other": "Outra coisa",
+  "creatorDrafts.missing.event.what": "O que é",
+  "creatorDrafts.missing.event.whenWhere": "Quando e onde",
+  "creatorDrafts.missing.event.who": "Para quem é",
+  "creatorDrafts.missing.event.access": "Acessibilidade",
+  "creatorDrafts.missing.event.care": "Cuidado",
+  "creatorDrafts.missing.community.open": "Começar",
+  "creatorDrafts.missing.community.why": "Porque é que existe",
+  "creatorDrafts.missing.community.who": "Para quem é",
+  "creatorDrafts.missing.community.safety": "Segurança",
+  "creatorDrafts.missing.community.running": "Como funciona",
+  "creatorDrafts.missing.community.tone": "Tom",
+  "creatorDrafts.missing.community.feeling": "Aspeto",
+  "creatorDrafts.missing.community.people": "Primeiras pessoas",
+  "creatorDrafts.missing.community.confirm": "Última revisão",
+  "creatorDrafts.missing.persona.handle_invalid": "Endereço por corrigir",
+  "creatorDrafts.missing.persona.handle_taken": "Endereço ocupado",
+  "creatorDrafts.missing.persona.handle_reserved": "Endereço reservado",
+  "creatorDrafts.missing.persona.handle_names_owner":
+    "Endereço com o nome de quem criou",
+  "creatorDrafts.missing.persona.handle_is_kind":
+    "Endereço igual a um tipo de persona",
+  "creatorDrafts.missing.persona.avatar_missing": "Foto de perfil",
+  "creatorDrafts.missing.persona.bio_too_short": "Bio mais longa",
+  "creatorDrafts.missing.persona.not_enough_items": "Mais itens",
+  "creatorDrafts.missing.persona.blocked_terms": "Palavras que não publicamos",
+  "creatorDrafts.missing.studio_release.studio_publish_missing_title": "Título",
+  "creatorDrafts.missing.studio_release.studio_publish_missing_cover": "Capa",
+  "creatorDrafts.missing.studio_release.studio_publish_missing_rights":
+    "Confirmação de direitos",
+  "creatorDrafts.missing.studio_release.studio_publish_missing_tracks":
+    "Faixas",
+  "creatorDrafts.missing.studio_release.studio_publish_tracks_pending":
+    "Faixas ainda a processar",
+  "creatorDrafts.missing.studio_release.studio_publish_missing_sources":
+    "Ficheiros de áudio",
+  // Os códigos das edições de espaços são as chaves ANCHOR do editor
+  // (`listingEditMissingCodes.ts`), com as palavras do próprio formulário.
+  "creatorDrafts.missing.listing_edit.name": "Nome do negócio",
+  "creatorDrafts.missing.listing_edit.cats": "Categorias",
+  "creatorDrafts.missing.listing_edit.hood": "Bairro",
+  "creatorDrafts.missing.listing_edit.price": "Escalão de preço",
+  "creatorDrafts.missing.listing_edit.blurb": "Descrição curta",
+  "creatorDrafts.missing.listing_edit.tagline": "Lema",
+  "creatorDrafts.missing.listing_edit.whatItIs": "Descrição",
+  "creatorDrafts.missing.listing_edit.langs": "Idiomas falados",
+  "creatorDrafts.missing.listing_edit.attributes": "Detalhes e comodidades",
+  "creatorDrafts.missing.listing_edit.highlights": "Destaques do cartão",
+  "creatorDrafts.missing.listing_edit.inclusionPractices":
+    "Práticas de inclusão",
+  "creatorDrafts.missing.listing_edit.saferSpacePolicyUrl":
+    "Link da política de espaço seguro",
+  "creatorDrafts.missing.listing_edit.langsOther": "Outros idiomas",
+  "creatorDrafts.missing.listing_edit.entryMode": "Como se entra",
+  "creatorDrafts.missing.listing_edit.coverPolicy": "Entrada",
+  "creatorDrafts.missing.listing_edit.coverFreeBefore": "Entrada livre até",
+  "creatorDrafts.missing.listing_edit.waysToPay":
+    "Formas de pagamento no local",
+  "creatorDrafts.missing.listing_edit.nifInvoices": "Faturas com NIF",
+  "creatorDrafts.missing.listing_edit.address": "Morada",
+  "creatorDrafts.missing.listing_edit.online": "Onde as pessoas o encontram",
+  "creatorDrafts.missing.listing_edit.city": "Com base em",
+  "creatorDrafts.missing.listing_edit.hasOnlineShop": "Também vende online",
+  "creatorDrafts.missing.listing_edit.mainLink": "Link principal",
+  "creatorDrafts.missing.listing_edit.moreLinks": "Mais links",
+  "creatorDrafts.missing.listing_edit.fulfilment": "Como o recebem",
+  "creatorDrafts.missing.listing_edit.pickupNote": "Nota de recolha",
+  "creatorDrafts.missing.listing_edit.shipsFrom": "Envia a partir de",
+  "creatorDrafts.missing.listing_edit.payments": "Formas de pagamento",
+  "creatorDrafts.missing.listing_edit.sessionFormats": "Formatos das sessões",
+  "creatorDrafts.missing.listing_edit.registration": "Registo profissional",
+  "creatorDrafts.missing.listing_edit.replyNote": "Respostas e envios",
+  "creatorDrafts.missing.listing_edit.whereYouWork": "Onde trabalha",
+  "creatorDrafts.missing.listing_edit.meetingPoint": "Ponto de encontro",
+  "creatorDrafts.missing.listing_edit.byAppointment": "Só por marcação",
+  "creatorDrafts.missing.listing_edit.hours": "Horário de funcionamento",
+  "creatorDrafts.missing.listing_edit.hoursNote": "Nota sobre o horário",
+  "creatorDrafts.missing.listing_edit.hoursExceptions":
+    "Horário em feriados e datas especiais",
+  "creatorDrafts.missing.listing_edit.social": "Contactos e redes sociais",
+  "creatorDrafts.missing.listing_edit.cover": "Foto de capa",
+  "creatorDrafts.missing.listing_edit.photos": "Fotos",
+  "creatorDrafts.missing.listing_edit.pricingMode": "O que a página mostra",
+  "creatorDrafts.missing.listing_edit.services": "Serviços e preços",
+  "creatorDrafts.missing.listing_edit.accessibility":
+    "Respostas de acessibilidade",
   // ── Consola da descoberta no Studio (/admin/studio) ───────────────────────
   "studioAdmin.eyebrow": "Studio",
   "studioAdmin.title": "Descoberta no <em>Studio</em>",

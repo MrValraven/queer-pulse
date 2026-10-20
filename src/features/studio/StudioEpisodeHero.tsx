@@ -1,7 +1,6 @@
 import { Link, useSearchParams } from "react-router-dom";
 import { FiPause, FiPlay } from "react-icons/fi";
 import { ImageSlot } from "../../shared/components/ui";
-import { useShareLink } from "../../shared/hooks";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { formatTrackTime, type StudioTrackView } from "./api/studio.adapters";
@@ -13,6 +12,7 @@ import { parseStartSeconds } from "./player/studioTimestampLink";
 import { StudioTrackMenu } from "./player/ui/StudioTrackMenu";
 import { StudioAddToPlaylistButton } from "./StudioAddToPlaylistButton";
 import { StudioDetailHero } from "./StudioDetailHero";
+import { StudioShareMenu } from "./share/StudioShareMenu";
 import css from "./StudioEpisode.module.css";
 import { StudioHiddenTrackNote } from "./StudioHiddenTrack";
 import hiddenCss from "./StudioHiddenTrack.module.css";
@@ -110,10 +110,6 @@ function EpisodeHeroActions({
   const { t } = useTranslation();
   const [searchParams] = useSearchParams();
   const player = useStudioPlayer();
-  const { share } = useShareLink({
-    copied: t("studio:detail.linkCopiedToast"),
-    failed: t("studio:detail.copyFailedToast"),
-  });
   const likeSubject = {
     trackId: track.id,
     title: track.title,
@@ -198,15 +194,17 @@ function EpisodeHeroActions({
                   href: track.href,
                   hasAudio: track.hasAudio,
                   isExplicit: track.isExplicit,
+                  artistId: track.release.artist.id,
+                  isPublished: track.release.publishedAt !== null,
+                  isWithheld: track.isWithheld,
                 }}
               />
             )}
-            <button
-              type="button"
-              onClick={() => void share(window.location.href)}
-            >
-              {t("studio:detail.shareCta")}
-            </button>
+            <StudioShareMenu
+              target={{ kind: "track", id: track.id, startAtSeconds: null }}
+              title={track.title}
+              triggerLabel={t("studio:detail.shareCta")}
+            />
           </div>
         </div>
       )}

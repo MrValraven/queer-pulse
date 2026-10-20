@@ -419,8 +419,9 @@ export const THEME_DETAIL_OVERLAPS: readonly {
 /** The theme keys this family's own detail questions already cover. */
 export function hiddenThemeKeysForFamily(
   family: GatheringFamily | "" | null | undefined,
+  formatKey?: string | null,
 ): GatheringThemeKey[] {
-  const askedDetailKeys = allowedDetailKeys(family || null);
+  const askedDetailKeys = allowedDetailKeys(family || null, formatKey);
   return THEME_DETAIL_OVERLAPS.filter((overlap) =>
     askedDetailKeys.includes(overlap.detailKey),
   ).map((overlap) => overlap.theme);

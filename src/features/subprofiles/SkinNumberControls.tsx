@@ -27,6 +27,11 @@ interface NumberInputProps {
   "aria-describedby"?: string;
 }
 
+/** The money input also takes the longest whole part it accepts. */
+interface MoneyInputProps extends NumberInputProps {
+  maxIntegerDigits?: number;
+}
+
 /** A label that already names the currency ("Standard fee (euros)"). */
 const NAMES_CURRENCY = /euro|€/i;
 
@@ -89,8 +94,9 @@ export function MoneyInput({
   "aria-label": ariaLabel,
   "aria-describedby": describedBy,
   value,
+  maxIntegerDigits,
   ...props
-}: NumberInputProps) {
+}: MoneyInputProps) {
   const { t } = useTranslation();
   const currencyId = useId();
   const hasOwnName = Boolean(ariaLabel);
@@ -109,7 +115,9 @@ export function MoneyInput({
       shellClassName={styles.moneyShell}
       suffix="€"
       inputMode="decimal"
-      toValue={nextAmount}
+      toValue={(typed, previous) =>
+        nextAmount(typed, previous, maxIntegerDigits)
+      }
       aria-label={accessibleName}
       aria-describedby={description}
     >
@@ -123,13 +131,20 @@ export function MoneyInput({
 }
 
 /** A whole number (places, people waiting) in a compact box. */
-export function CountInput(props: NumberInputProps) {
+export function CountInput({ maxIntegerDigits, ...props }: MoneyInputProps) {
   return (
     <AmountInput
       {...props}
       shellClassName={styles.countShell}
       inputMode="numeric"
-      toValue={toWholeDigits}
+      toValue={(typed, previous) => {
+        const digits = toWholeDigits(typed);
+        const isTooLong =
+          maxIntegerDigits !== undefined &&
+          digits.length > maxIntegerDigits &&
+          digits.length >= previous.length;
+        return isTooLong ? null : digits;
+      }}
     />
   );
 }
@@ -153,7 +168,9 @@ function SkinDigitsControl({
   editor,
   isLabelHidden = false,
   Input,
-}: SkinScalarControlProps & { Input: typeof MoneyInput }) {
+}: SkinScalarControlProps & {
+  Input: (props: MoneyInputProps) => ReactNode;
+}) {
   const { t } = useTranslation();
   const placeholder = useRefinedPlaceholder(control.placeholderKey);
   const isMoney = control.kind === "money";
@@ -172,6 +189,7 @@ function SkinDigitsControl({
           value={readStored(editor, control.path)}
           onChange={(next) => editor.setValue(control.path, next)}
           placeholder={placeholder}
+          maxIntegerDigits={control.maxIntegerDigits}
           className={refinedStyles.amountShell}
           inputClassName={[
             field.inputClassName,

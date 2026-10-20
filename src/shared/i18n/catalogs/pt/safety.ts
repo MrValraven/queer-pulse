@@ -89,6 +89,7 @@ export const safety: Catalog = {
   "myReports.subject.group_listing": "Sobre um quarto num grupo de habitação",
   "myReports.subject.studio_release": "Sobre um lançamento do Studio",
   "myReports.subject.persona_post": "Sobre uma novidade de persona",
+  "myReports.subject.studio_track": "Sobre uma faixa do Studio",
   "report.guide.meta.title": "Como funciona a denúncia na QueerPulse",
   "report.guide.meta.description":
     "O que acontece depois de submeteres uma denúncia na QueerPulse: o nosso processo de análise, os princípios por trás de cada decisão, e um registo público de decisões de moderação anteriores.",
@@ -297,6 +298,8 @@ export const safety: Catalog = {
   "reason.unwantedContact": "Contacto indesejado depois de pedido para parar",
   "reason.impersonation": "Falsa identidade ou personificação",
   "reason.copyright": "Usa música ou arte de outra pessoa sem autorização",
+  "reason.hatefulLyrics": "Letras de ódio",
+  "reason.untaggedExplicit": "Explícita e sem marcação",
   "reason.discrimination": "Discriminação ou uso do género errado",
   "reason.spam": "Spam ou autopromoção",
   "reason.offTopic": "Fora do tópico ou perturbador",
@@ -1247,4 +1250,5 @@ export const safety: Catalog = {
     "Podes gerir {name} e todas as pessoas que bloqueaste quando quiseres.",
   "blockMute.blocked.unblockedNoConnectionToast":
     "Desbloqueaste {name}. Não tinham conexão antes, por isso envia um pedido se quiseres voltar a enviar mensagens.",
+  "myReports.subject.quizshow_answer": "Sobre uma resposta do Pulse Live",
 };

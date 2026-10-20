@@ -79,11 +79,15 @@ export function useStudioMediaSession(
     const session = mediaSession();
     if (!session || !item) return;
     const isPlaying = player.status === "playing";
+    // Studio safety (spec 6.3): a lock screen, a headset or a car sends play
+    // with no warning in view, so play waits while a warned track asks.
+    // Only the on-screen Play it answers the question.
+    const isWarningPending = player.pendingWarning !== null;
     const handlers: [MediaSessionAction, MediaSessionActionHandler | null][] = [
       [
         "play",
         () => {
-          if (!isPlaying) player.togglePlay();
+          if (!isPlaying && !isWarningPending) player.togglePlay();
         },
       ],
       [

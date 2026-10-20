@@ -1,5 +1,8 @@
 import { Link } from "react-router-dom";
-import { ImageSlot, type ImageSlotTint } from "../../../shared/components/ui";
+import {
+  PosterAwareImageSlot,
+  type ImageSlotTint,
+} from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useFormat, type Formatters } from "../../../shared/i18n/format";
 import type { TFunction } from "../../../shared/i18n/types";
@@ -64,11 +67,13 @@ function DateChip({
 }
 
 /**
- * The shared poster-forward event card — Studio `.heroArt` pattern (aspect-ratio
+ * The shared poster-forward event card, on the Studio `.heroArt` pattern (aspect-ratio
  * frame + overflow-hidden + absolutely-positioned image fill) with a plum scrim
  * and cream overlay text for `lead`/`featured`/`compact`; a plain thumb-beside-text
- * row for `list`. One `<Link>` per card; `aria-label` pins the accessible name to
- * the event title regardless of how much text sits inside.
+ * row for `list`. A landscape cover fills the frame; a poster shows whole over
+ * its own blurred backdrop, in every variant. One `<Link>` per card; `aria-label`
+ * pins the accessible name to the event title regardless of how much text sits
+ * inside.
  */
 export function EventPosterCard({
   event,
@@ -96,6 +101,7 @@ export function EventPosterCard({
     radius: 0,
     loading,
     fetchPriority: priority ? ("high" as const) : undefined,
+    className: styles.coverImage,
     style: { position: "absolute", inset: 0 } as const,
   };
 
@@ -107,7 +113,7 @@ export function EventPosterCard({
         className={`${styles.link} ${styles.list}`}
       >
         <span className={styles.thumb}>
-          <ImageSlot {...imageProps} />
+          <PosterAwareImageSlot {...imageProps} />
         </span>
         <span className={styles.listBody}>
           <span className={styles.badgeRow}>
@@ -135,7 +141,7 @@ export function EventPosterCard({
         className={`${styles.link} ${styles.compact}`}
       >
         <span className={styles.thumb}>
-          <ImageSlot {...imageProps} />
+          <PosterAwareImageSlot {...imageProps} />
         </span>
         <span className={styles.compactBody}>
           <span className={styles.compactTitle}>{event.title}</span>
@@ -156,7 +162,7 @@ export function EventPosterCard({
       className={`${styles.link} ${styles[variant]}`}
     >
       <span className={styles.frame}>
-        <ImageSlot {...imageProps} />
+        <PosterAwareImageSlot {...imageProps} />
         <span className={styles.scrim} aria-hidden />
         <span className={styles.scrimHover} aria-hidden />
         {showRibbon && <WhenRibbon event={event} now={effectiveNow} />}

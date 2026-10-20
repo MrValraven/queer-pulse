@@ -1,5 +1,7 @@
 import { Fragment } from "react";
+import { AnimatePresence, m } from "motion/react";
 import { FiChevronsLeft } from "react-icons/fi";
+import { useMotionPrefs } from "../../app/providers/motionPrefs";
 import { Tooltip } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { EditorPaneKey, EditorRailGroup } from "./editorRail.data";
@@ -60,6 +62,7 @@ export function EditorRail({
   // edits included), matching the Publish pane's ring — `buildEditorRailGroups`
   // seeds it off the saved persona, so override with the live count here.
   const liveReadiness = estimateEditorReadiness(editor);
+  const { reducedMotion } = useMotionPrefs();
   const toggleLabel = isCollapsed
     ? t("subprofiles:editorRail.expand")
     : t("subprofiles:editorRail.collapse");
@@ -101,6 +104,33 @@ export function EditorRail({
                     {entry.badge !== undefined && (
                       <span className="rail-label rail-n">{entry.badge}</span>
                     )}
+                    {/* The outer span holds the pill's place on the row (its
+                      CSS transform glides it to the icon's corner on fold);
+                      the inner pill owns the fade, so the two transforms
+                      never fight. */}
+                    <AnimatePresence initial={false}>
+                      {entry.attentionCount !== undefined && (
+                        <span
+                          key="attention"
+                          className="rail-attention"
+                          role="img"
+                          aria-label={t(
+                            "subprofiles:editorRail.attentionCount",
+                            { count: entry.attentionCount },
+                          )}
+                        >
+                          <m.span
+                            className="rail-attention-pill"
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.8 }}
+                            transition={{ duration: reducedMotion ? 0 : 0.18 }}
+                          >
+                            {entry.attentionCount}
+                          </m.span>
+                        </span>
+                      )}
+                    </AnimatePresence>
                   </button>
                 </Tooltip>
                 {entry.chapters && (

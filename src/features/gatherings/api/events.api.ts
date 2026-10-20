@@ -6,6 +6,7 @@ import {
   apiDelete,
 } from "../../../shared/api/client";
 import { toItemsPage } from "../../../shared/api/pagination";
+import type { QuizshowEventDetail } from "../../../shared/contracts/quizshow";
 import type { GuestPreviewRole } from "../guestPreview/guestPreview";
 import type { AccessTier } from "../../communities/membership.types";
 import type { FormatDetails, GatheringFamily } from "../gatheringCatalog";
@@ -390,6 +391,8 @@ export interface EventDetailDTO extends EventCardDTO {
   rsvpQuestions?: Partial<RsvpQuestions> | null;
   /** The host's own extra RSVP question, or `null`. */
   customRsvpQuestion?: string | null;
+  /** Pulse Live. `null` while the feature is off; absent from an older server. Detail only. */
+  quizshow?: QuizshowEventDetail | null;
 }
 
 /** The attendee's answer to "Who can see you're going?" (PRD-414): `everyone`

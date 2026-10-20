@@ -1,7 +1,11 @@
 import {
   itemsToInputDto,
+  type SubprofileItemView,
   type SubprofileView,
 } from "./api/subprofiles.adapters";
+import { itemImageUrls } from "./skins/tattoo/tattooItemImages";
+import { prepareTattooItemsForSave } from "./skins/tattoo/tattooSaveGraph";
+import { isTattooBodyPhotoSection } from "./skins/tattoo/tattooVocab.data";
 import type {
   AffiliationInputDTO,
   AffiliationOptionDTO,
@@ -34,20 +38,51 @@ export interface DuplicatePreview {
   itemCount: number;
   affiliationCount: number;
   includesIdentity: boolean;
+  /** Client photos the copy leaves on the source persona, since their
+   *  consent is unconfirmed. Zero for every kind without body-photo sections. */
+  leftOutBodyPhotoCount: number;
+}
+
+/** A tattoo body-photo item that holds an image without confirmed client
+ *  consent. The copy starts with no stored photos, so the backend would
+ *  refuse its whole section with CLIENT_CONSENT_REQUIRED: it stays behind. */
+function isLeftOutBodyPhoto(
+  section: SubprofileSection,
+  item: SubprofileItemView,
+): boolean {
+  return (
+    isTattooBodyPhotoSection(section) &&
+    itemImageUrls(item).length > 0 &&
+    item.structured?.photo?.hasClientConsent !== true
+  );
 }
 
 /** Build the copy payloads from a source persona for the chosen mode.
  *  Section items reuse the editor's `itemsToInputDto` so featured/tags/
- *  collaborators all travel. Empty strings become nulls for the meta patch. */
+ *  collaborators all travel. Empty strings become nulls for the meta patch.
+ *  Client photos without confirmed consent stay on the source persona.
+ *  Flash day event links stay behind too: the copy's link status is picked
+ *  in the create form, and an unlinked copy would have the whole flash_days
+ *  section refused. Each entry keeps its own date and place. */
 export function buildDuplicatePlan(
   source: SubprofileView,
   mode: CopyMode,
 ): DuplicatePlan {
   const sections = source.sections
+    .map((section) => ({
+      section: section.section,
+      items: section.items.filter(
+        (item) => !isLeftOutBodyPhoto(section.section, item),
+      ),
+    }))
     .filter((section) => section.items.length > 0)
     .map((section) => ({
       section: section.section,
-      items: itemsToInputDto(section.items),
+      items: prepareTattooItemsForSave(
+        section.section,
+        itemsToInputDto(section.items),
+        { isUnlinked: true },
+      ),
     }));
   // Copy the array (don't alias source.socialLinks) so a caller mutating
   // plan.socialLinks can never reach back into the source view model.
@@ -84,20 +119,30 @@ export function buildDuplicatePlan(
   return { kind: source.kind, meta, socialLinks, sections, affiliations };
 }
 
-/** Counts driving the preview summary; affiliations/identity only in full mode. */
+/** Counts driving the preview summary; affiliations/identity only in full mode.
+ *  `itemCount` is what the copy carries, so client photos left behind count
+ *  in `leftOutBodyPhotoCount` alone. */
 export function duplicatePreview(
   source: SubprofileView,
   mode: CopyMode,
 ): DuplicatePreview {
-  const itemCount = source.sections.reduce(
+  const totalItemCount = source.sections.reduce(
     (total, section) => total + section.items.length,
+    0,
+  );
+  const leftOutBodyPhotoCount = source.sections.reduce(
+    (total, section) =>
+      total +
+      section.items.filter((item) => isLeftOutBodyPhoto(section.section, item))
+        .length,
     0,
   );
   return {
     linkCount: source.socialLinks.length,
-    itemCount,
+    itemCount: totalItemCount - leftOutBodyPhotoCount,
     affiliationCount: mode === "full" ? source.affiliations.length : 0,
     includesIdentity: mode === "full",
+    leftOutBodyPhotoCount,
   };
 }
 

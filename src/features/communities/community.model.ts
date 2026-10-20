@@ -263,6 +263,12 @@ export interface LivingCommunity {
   allowsSubcommunities: boolean;
   /** How many spaces this community hosts. 0 on a space. */
   subcommunityCount: number;
+  /** How many ways to support this community lists. Live only; demo derives
+   *  the count from the session giving data. */
+  givingMethodCount?: number;
+  /** True once an owner has archived the community. Live only, and only ever
+   *  sent to its owner/mods; `undefined` (demo data) reads as not archived. */
+  isArchived?: boolean;
 }
 
 /** The subcommunity fields of a `LivingCommunity`. The demo registry

@@ -9,6 +9,13 @@ import { COVER_SLOT_HEIGHT } from "../steps/whatChapter.data";
  * `event-cover` upload kind), shared by the create wizard and the edit-details
  * modal.
  *
+ * A cover may be a landscape banner or the event's portrait or square poster.
+ * The slot is poster-aware, so a poster shows whole over a blurred backdrop
+ * here exactly as it does on the cards and the detail page, and the reframer
+ * opens on the whole image (see `CROP_CONFIG`). A poster also grows the slot
+ * from the `COVER_SLOT_HEIGHT` strip to a readable poster height, and a
+ * landscape file or an empty slot keeps the strip.
+ *
  * `value` is what the payload sends: a storage key the host picked, or the
  * resolved URL a saved gathering arrived with. `onPreviewChange` reports what
  * a preview can paint straight away.
@@ -61,6 +68,7 @@ export function CoverUpload({
         }
         onUploaded={track}
         size={COVER_SLOT_HEIGHT}
+        isPosterAware
         placeholder={t("gatherings:create.v2.what.coverPlaceholder")}
       />
     </div>

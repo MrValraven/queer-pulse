@@ -1,0 +1,63 @@
+/* The sidebar's support card. The surface, label, rows and button width come
+   from the shared sidebar classes in CommunityDetailPage.module.css; this
+   module adds only what is particular to the card. */
+
+/* What the support goes to, held to two lines so the card stays as quiet as
+   its neighbours. The full intro lives on the Support tab. */
+.intro {
+  font-size: var(--text-13);
+  line-height: 1.55;
+  color: var(--ink-60);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  margin-block-end: 6px;
+}
+
+/* A plain list of names: no dividers or row padding, so nothing here reads
+   as a link. The card's button is the one way on to the Support tab. */
+.methods {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-block: 4px 0;
+}
+
+.method {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-xs);
+  min-width: 0;
+  font-size: var(--text-13-5);
+  color: var(--text-strong);
+}
+
+.methodIcon {
+  flex: none;
+  width: 1.1em;
+  height: 1.1em;
+  color: var(--accent-ink);
+}
+
+/* A long owner label or bare link host truncates instead of widening the
+   sidebar. */
+.methodName {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.more {
+  font-size: var(--text-12);
+  color: var(--ink-40);
+  padding-block-start: 4px;
+}
+
+.cta {
+  margin-block-start: var(--gap-sm);
+}

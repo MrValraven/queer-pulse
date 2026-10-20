@@ -1,4 +1,9 @@
-import { ImageSlot, type ImageSlotTint } from "../../../shared/components/ui";
+import { useState } from "react";
+import {
+  isPosterShaped,
+  PosterAwareImageSlot,
+  type ImageSlotTint,
+} from "../../../shared/components/ui";
 import type { CalendarEvent } from "../data";
 import { sizedCover } from "./coverUrl";
 import { WhenRibbon } from "./eventCardParts";
@@ -19,8 +24,12 @@ const GLOW_COVER_WIDTH = 128;
  * ("Tonight", "Happening now", "This weekend" ...) on a coral fill. Every
  * bucket shows here: the lead is the one gathering on the page that earns
  * the reminder, whatever its date. It sits above the fold, so it loads eager
- * at high priority. A coverless lead gets the drawn family fallback, and
- * while the hero is stacked the cover also carries the cream date stub.
+ * at high priority. A landscape cover fills the column edge to edge; a
+ * poster shows whole over its own blurred backdrop, and once the file
+ * measures as one the stacked strip grows taller so the poster stays readable
+ * (side by side, the column already has the height). A coverless lead gets the
+ * drawn family fallback, and while the hero is stacked the cover also carries
+ * the cream date stub.
  */
 export function FeaturedEventMedia({
   lead,
@@ -29,13 +38,20 @@ export function FeaturedEventMedia({
   lead: CalendarEvent;
   now: Date;
 }) {
+  const [posterSrc, setPosterSrc] = useState<string | null>(null);
   const tint: ImageSlotTint =
     lead.orgColor === "var(--accent)" ? "coral" : "plum";
+  const coverSrc = lead.coverImageUrl;
+  const isPoster = posterSrc !== null && posterSrc === coverSrc;
   return (
-    <div className={styles.media}>
-      {lead.coverImageUrl ? (
-        <ImageSlot
-          src={lead.coverImageUrl}
+    <div
+      className={
+        isPoster ? `${styles.media} ${styles.mediaPoster}` : styles.media
+      }
+    >
+      {coverSrc ? (
+        <PosterAwareImageSlot
+          src={coverSrc}
           srcSize={HERO_COVER_WIDTH}
           alt=""
           tint={tint}
@@ -45,7 +61,11 @@ export function FeaturedEventMedia({
           radius={0}
           loading="eager"
           fetchPriority="high"
+          className={styles.coverImage}
           style={{ position: "absolute", inset: 0 }}
+          onNaturalSize={({ width, height }) => {
+            if (isPosterShaped(width, height)) setPosterSrc(coverSrc);
+          }}
         />
       ) : (
         <EventCoverFallback event={lead} size="hero" />

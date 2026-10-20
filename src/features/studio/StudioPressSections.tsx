@@ -1,12 +1,14 @@
 import type { ReactNode } from "react";
 import { FiCopy, FiExternalLink, FiPause, FiPlay } from "react-icons/fi";
-import { Button } from "../../shared/components/ui";
+import { Button, Collapse } from "../../shared/components/ui";
 import { useShareLink } from "../../shared/hooks";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { StudioPressKitView } from "./api/studio.adapters";
+import { useStudioHideExplicit } from "./api/useStudioPlaybackPreferences";
 import { useStudioPlayer } from "./player/studioPlayerContext";
 import { queueFromTracks } from "./player/studioQueue";
+import { StudioHiddenTrackNote } from "./StudioHiddenTrack";
 import { StudioReleaseCard } from "./StudioReleaseCard";
 import { releaseFactsLine } from "./studioFacts";
 import styles from "./StudioPressSections.module.css";
@@ -49,6 +51,7 @@ export function PressBestTracks({
 }) {
   const { t } = useTranslation();
   const player = useStudioPlayer();
+  const hideExplicit = useStudioHideExplicit();
   if (pressKit.featuredTracks.length === 0)
     return pressKit.isOwner ? (
       <PressOwnerEmpty titleKey="studio:pressKit.section.bestTracks" />
@@ -69,6 +72,8 @@ export function PressBestTracks({
         {pressKit.featuredTracks.map((track) => {
           const isCurrent = player.isCurrentTrack(track.id);
           const isPlaying = isCurrent && player.status === "playing";
+          const isHidden = hideExplicit && track.isExplicit;
+          const isPlayBlocked = !track.hasAudio || isHidden;
           return (
             <li
               key={track.id}
@@ -78,6 +83,7 @@ export function PressBestTracks({
               <button
                 type="button"
                 className={styles.trackPlay}
+                aria-disabled={(!isCurrent && isPlayBlocked) || undefined}
                 aria-label={t(
                   isPlaying
                     ? "studio:release.pauseTrack"
@@ -86,19 +92,23 @@ export function PressBestTracks({
                 )}
                 onClick={() => {
                   if (isCurrent) player.togglePlay();
-                  else void player.playTracks(queue, track.id);
+                  else if (!isPlayBlocked)
+                    void player.playTracks(queue, track.id);
                 }}
               >
                 {isPlaying ? <FiPause aria-hidden /> : <FiPlay aria-hidden />}
               </button>
-              <span className={styles.trackText}>
+              <div className={styles.trackText}>
                 <span className={styles.trackTitle}>{track.title}</span>
                 <span className={styles.trackMeta}>
                   {[track.release.title, track.durationLabel]
                     .filter(Boolean)
                     .join(" · ")}
                 </span>
-              </span>
+                <Collapse isOpen={isHidden}>
+                  <StudioHiddenTrackNote />
+                </Collapse>
+              </div>
             </li>
           );
         })}

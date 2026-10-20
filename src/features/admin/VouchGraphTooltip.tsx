@@ -1,5 +1,13 @@
+import { useState } from "react";
+import { useExitTransition, usePrefersReducedMotion } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import styles from "./AdminVouchGraph.module.css";
+import styles from "./vouchGraphCanvas.module.css";
+
+/** Which hint line a node tooltip shows: pointer gestures or keyboard keys. */
+export type TipHintKind = "pointer" | "keyboard";
+
+/** Matches the `.tipLeaving` animation length (var(--dur-fast)). */
+const TIP_EXIT_MS = 150;
 
 export type TipData =
   | {
@@ -10,6 +18,7 @@ export type TipData =
       vouchesIn: number;
       vouchesOut: number;
       joined: string;
+      hintKind: TipHintKind;
     }
   | {
       kind: "edge";
@@ -21,17 +30,60 @@ export type TipData =
       withdrawn?: boolean;
     };
 
+/** `ownerIds`: the node, or both ends of the edge, the tip describes; the
+ *  canvas drops the tip when one of them leaves the laid-out set. */
+export type TipState = {
+  data: TipData;
+  x: number;
+  y: number;
+  ownerIds: string[];
+} | null;
+
 interface Props {
+  tip: TipState;
+}
+
+/** Floating tooltip for nodes and edges, beside the cursor or, on keyboard
+ *  focus, beside the node. Pointer-events: none. It keeps the last tip on
+ *  screen while it fades out. */
+export function VouchGraphTooltip({ tip: currentTip }: Props) {
+  const isReducedMotion = usePrefersReducedMotion();
+  const [lastTip, setLastTip] = useState<TipState>(currentTip);
+  if (currentTip && currentTip !== lastTip) setLastTip(currentTip);
+  const { isMounted, isExiting } = useExitTransition(
+    !!currentTip,
+    isReducedMotion ? 0 : TIP_EXIT_MS,
+  );
+  const shownTip = currentTip ?? lastTip;
+  if (!isMounted || !shownTip) return null;
+  return (
+    <VouchGraphTooltipBody
+      tip={shownTip.data}
+      x={shownTip.x}
+      y={shownTip.y}
+      isExiting={isExiting}
+    />
+  );
+}
+
+function VouchGraphTooltipBody({
+  tip,
+  x,
+  y,
+  isExiting,
+}: {
   tip: TipData;
   x: number;
   y: number;
-}
-
-/** Floating, cursor-following tooltip for nodes and edges. Pointer-events: none. */
-export function VouchGraphTooltip({ tip, x, y }: Props) {
+  isExiting: boolean;
+}) {
   const { t } = useTranslation();
   return (
-    <div className={styles.tip} style={{ left: x, top: y }} role="tooltip">
+    <div
+      className={isExiting ? `${styles.tip} ${styles.tipLeaving}` : styles.tip}
+      style={{ left: x, top: y }}
+      role="tooltip"
+    >
       {tip.kind === "node" ? (
         <>
           <div className={styles.tipName}>
@@ -49,7 +101,9 @@ export function VouchGraphTooltip({ tip, x, y }: Props) {
             · {t("admin:vouchGraph.tooltip.joinedPrefix", { when: tip.joined })}
           </div>
           <div className={styles.tipHint}>
-            {t("admin:vouchGraph.tooltip.hint")}
+            {tip.hintKind === "keyboard"
+              ? t("admin:vouchGraph.tooltip.hintKeyboard")
+              : t("admin:vouchGraph.tooltip.hint")}
           </div>
         </>
       ) : (

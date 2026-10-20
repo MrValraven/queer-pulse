@@ -184,3 +184,15 @@ describe("the photos section", () => {
     ).toBe(1);
   });
 });
+
+describe("the Team section", () => {
+  it("puts Team right after Who can edit for owners and co-managers", () => {
+    for (const isCoManagerView of [false, true]) {
+      const keys = editorSectionsFor(isCoManagerView).map(
+        (section) => section.key,
+      );
+      expect(keys[keys.indexOf("coManagers") + 1]).toBe("team");
+    }
+    expect(editorSectionByKeyFor(false).team.id).toBe("lb-editor-team");
+  });
+});

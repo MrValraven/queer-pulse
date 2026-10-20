@@ -8,15 +8,18 @@ import {
   FiMessageSquare,
   FiMic,
   FiMusic,
+  FiShield,
   FiStar,
   FiTag,
   FiUserX,
 } from "react-icons/fi";
 import { communityPath, routes } from "../../app/routeMap";
 import { memberName } from "../members/data/members";
+import { studioPlaylistPath } from "../studio/studioPaths";
 import { Translation } from "../../shared/i18n/Translation";
 import type { Formatters } from "../../shared/i18n/format";
 import type { TFunction } from "../../shared/i18n/types";
+import { buildListingTeamNotifications } from "./listingTeamNotifications.data";
 import type { Notification } from "./notifications.types";
 import {
   buildUnreadActivityNotifications,
@@ -435,6 +438,103 @@ function buildStudioCreditNotifications(
   ];
 }
 
+/** One demo collaborative playlist row, named the way the live adapter names
+ *  it: the counterpart member as a profile link through `actor`, the playlist
+ *  from the payload. It opens the demo playlist it is about
+ *  (studioCollection.data.ts). */
+function studioPlaylistEditorRow(
+  t: TFunction,
+  fmt: Formatters,
+  row: {
+    id: number;
+    kind: string;
+    isUnread: boolean;
+    memberSlug: string;
+    initials: string;
+    playlistId: string;
+    textValues: Record<string, string>;
+    age: { amount: number; unit: keyof typeof UNIT_MS };
+  },
+): DemoNotificationRow {
+  return {
+    id: row.id,
+    type: "community",
+    unread: row.isUnread,
+    avatar: { initials: row.initials, tint: "plum" },
+    actorSlug: row.memberSlug,
+    actor: {
+      name: memberName(row.memberSlug),
+      href: `${routes.members}/${row.memberSlug}`,
+      textKey: `notifications:type.${row.kind}.textNamed`,
+      textValues: row.textValues,
+    },
+    text: t(`notifications:type.${row.kind}.text`, row.textValues),
+    meta: t(`notifications:type.${row.kind}.meta`),
+    time: fmt.relativeTime(-row.age.amount, row.age.unit),
+    createdAtIso: agoIso(row.age.amount, row.age.unit),
+    sourceHref: studioPlaylistPath(row.playlistId),
+  };
+}
+
+/** The unread demo counterparts of the live collaborative playlist rows
+ *  (ids 26 and 29). */
+function buildUnreadStudioPlaylistEditorNotifications(
+  t: TFunction,
+  fmt: Formatters,
+): DemoNotificationRow[] {
+  return [
+    studioPlaylistEditorRow(t, fmt, {
+      id: 26,
+      kind: "studio_playlist_editor_invite",
+      isUnread: true,
+      memberSlug: "catarina-vaz",
+      initials: "CV",
+      playlistId: "demo-playlist-pride-warm-up",
+      textValues: { playlistName: "Pride warm-up" },
+      age: { amount: 2, unit: "hour" },
+    }),
+    studioPlaylistEditorRow(t, fmt, {
+      id: 29,
+      kind: "studio_playlist_editor_added",
+      isUnread: true,
+      memberSlug: "rita",
+      initials: "RV",
+      playlistId: "demo-playlist-tour-diary",
+      textValues: { playlistName: "Tour diary", personaName: "Mariana Sol" },
+      age: { amount: 1, unit: "day" },
+    }),
+  ];
+}
+
+/** The already-read demo counterparts (ids 27 and 28): an invitee's answers. */
+function buildReadStudioPlaylistEditorNotifications(
+  t: TFunction,
+  fmt: Formatters,
+): DemoNotificationRow[] {
+  return [
+    studioPlaylistEditorRow(t, fmt, {
+      id: 27,
+      kind: "studio_playlist_editor_invite_accepted",
+      isUnread: false,
+      memberSlug: "jonas",
+      initials: "JF",
+      playlistId: "demo-playlist-for-the-group-chat",
+      textValues: { playlistName: "For the group chat" },
+      age: { amount: 3, unit: "day" },
+    }),
+    studioPlaylistEditorRow(t, fmt, {
+      id: 28,
+      kind: "studio_playlist_editor_invite_declined",
+      isUnread: false,
+      memberSlug: "sofia-castano",
+      initials: "SC",
+      playlistId: "demo-playlist-for-the-group-chat",
+      textValues: { playlistName: "For the group chat" },
+      age: { amount: 4, unit: "day" },
+    }),
+  ];
+}
+
 /** The demo counterparts of the live Studio takedown notices. They reuse the
  *  live keys and open the demo owner's taken-down release, where the
  *  dispute panel is. */
@@ -444,6 +544,32 @@ function buildStudioOwnerNotifications(
 ): DemoNotificationRow[] {
   const releaseHref = "/studio/album?id=demo-release-taken-down-bairro";
   return [
+    {
+      id: 30,
+      type: "platform",
+      unread: true,
+      icon: { Glyph: FiShield, background: "rgba(var(--plum-rgb), .07)" },
+      text: t("notifications:type.studio_copyright_claim_accepted.text", {
+        trackTitle: "Vela acesa",
+      }),
+      meta: t("notifications:type.studio_copyright_claim_accepted.meta"),
+      time: fmt.relativeTime(-4, "day"),
+      createdAtIso: agoIso(4, "day"),
+      sourceHref: "/studio/track?id=demo-track-mariana-3-02",
+    },
+    {
+      id: 31,
+      type: "platform",
+      unread: false,
+      icon: { Glyph: FiShield, background: "rgba(var(--plum-rgb), .07)" },
+      text: t("notifications:type.studio_track_marked.explicit.text", {
+        trackTitle: "A Beja",
+      }),
+      meta: t("notifications:type.studio_track_marked.explicit.meta"),
+      time: fmt.relativeTime(-5, "day"),
+      createdAtIso: agoIso(5, "day"),
+      sourceHref: "/studio/track?id=demo-track-mariana-2-02",
+    },
     {
       id: 21,
       type: "platform",
@@ -579,9 +705,11 @@ function buildReadNotifications(
 }
 
 /**
- * Composes the demo feed from its two order-preserving sections — the unread
- * rows (ids 2-7, 13, 14, 15, 16, 18) followed by the already-read rows (ids 8,
- * 9, 11, 12, 20, 21). Splitting the builder by read-state keeps each section small.
+ * Composes the demo feed from its builders, in this order: the unread rows
+ * (ids 2-7, 13, 14, 15, 16, 18), the unread collaborative playlist rows (ids
+ * 26 and 29), the Studio owner notices, the read collaborative playlist rows
+ * (ids 27 and 28), then the already-read rows (ids 8, 9, 11, 12, 20, 21).
+ * Splitting the builders by read-state keeps each one small.
  * (Ids 1 and 10 were private-message rows, removed when the "messages"
  * category was retired.) Every row starts in the bell; `useNotifications`
  * flags the rows hidden from it this session.
@@ -592,11 +720,16 @@ export function buildNotifications(
 ): Notification[] {
   return [
     ...buildUnreadNotifications(t, fmt),
+    ...buildUnreadStudioPlaylistEditorNotifications(t, fmt),
+    ...buildListingTeamNotifications(t, fmt),
     ...buildStudioOwnerNotifications(t, fmt),
+    ...buildReadStudioPlaylistEditorNotifications(t, fmt),
     ...buildReadNotifications(t, fmt),
   ].map((row) => ({ ...row, isHiddenFromBell: false }));
 }
 
 /** Ids of demo rows that start unread — used for the bell badge count without
  * needing `t`/`fmt` (the count only depends on the `unread` flag, not copy). */
-export const DEMO_UNREAD_IDS = [2, 3, 13, 14, 15, 16, 4, 5, 6, 7, 18];
+export const DEMO_UNREAD_IDS = [
+  2, 3, 13, 14, 15, 16, 4, 5, 6, 7, 18, 26, 29, 32,
+];

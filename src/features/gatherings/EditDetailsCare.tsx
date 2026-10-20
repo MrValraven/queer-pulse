@@ -69,6 +69,7 @@ export function EditDetailsCare({
           {({ labelId, hintId }) => (
             <ThemeChips
               family={draft.gatheringFamily}
+              formatKey={draft.format}
               selectedThemes={selectedThemes}
               onToggle={toggleTheme}
               labelledBy={labelId}

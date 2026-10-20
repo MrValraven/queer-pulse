@@ -226,5 +226,10 @@ export const TERMS_LIVE_SECTIONS: TermsLiveSection[] = [
       components: { a: <Link to={routes.privacy} /> },
     },
   ]),
-  termsSection("takedown", [{ key: "studio:termsLive.sec.takedown.p1" }]),
+  termsSection("takedown", [
+    { key: "studio:termsLive.sec.takedown.p1" },
+    // Studio safety: the copyright claim section (flagged for legal review
+    // in the handover, like p1).
+    { key: "studio:termsLive.sec.takedown.claims" },
+  ]),
 ];

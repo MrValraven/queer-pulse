@@ -1,10 +1,7 @@
-import type {
-  PointerEvent as ReactPointerEvent,
-  MouseEvent as ReactMouseEvent,
-  KeyboardEvent as ReactKeyboardEvent,
-} from "react";
+import type { CSSProperties } from "react";
+import type { NodeHandlers } from "./vouchCanvas.helpers";
 import type { VouchPerson } from "./trustGraph/trustGraphModel";
-import styles from "./AdminVouchGraph.module.css";
+import styles from "./vouchGraphCanvas.module.css";
 
 interface NodeProps {
   person: VouchPerson;
@@ -15,75 +12,81 @@ interface NodeProps {
   /** portrait URL, when the member has one */
   photo?: string;
   className: string;
-  nodeRef: (el: SVGGElement | null) => void;
-  onPointerDown: (e: ReactPointerEvent<SVGGElement>) => void;
-  onPointerMove: (e: ReactPointerEvent<SVGGElement>) => void;
-  onPointerUp: (e: ReactPointerEvent<SVGGElement>) => void;
-  onPointerEnter: (e: ReactPointerEvent<SVGGElement>) => void;
-  onPointerLeave: () => void;
-  onDoubleClick: (e: ReactMouseEvent<SVGGElement>) => void;
-  onKeyDown: (e: ReactKeyboardEvent<SVGGElement>) => void;
+  isSelected: boolean;
+  nodeRef: (element: SVGGElement | null) => void;
+  /** Absent while the node fades out: it is then inert and hidden from AT. */
+  handlers?: NodeHandlers;
 }
 
 /** A single node in the trust graph: halo, disc, identity glyph, verified tick, name. */
 export function VouchGraphNode({
   person,
-  radius: r,
+  radius,
   isFocus,
   fill,
   stroke,
   photo,
   className,
+  isSelected,
   nodeRef,
-  onPointerDown,
-  onPointerMove,
-  onPointerUp,
-  onPointerEnter,
-  onPointerLeave,
-  onDoubleClick,
-  onKeyDown,
+  handlers,
 }: NodeProps) {
   const verified = !!person.verified;
   const showPhoto = !!photo && !person.private;
+  const isInteractive = !!handlers;
+  // The touch hit circle scales from the node's own radius (CSS reads it).
+  const hitStyle = { "--vg-node-r": radius } as CSSProperties;
 
   return (
     <g
-      ref={nodeRef}
+      ref={(element) => {
+        nodeRef(element);
+        // `inert` is missing from React's SVG prop types; set it directly.
+        element?.toggleAttribute("inert", !isInteractive);
+      }}
       className={className}
-      role="button"
-      tabIndex={0}
+      role={isInteractive ? "button" : undefined}
+      tabIndex={isInteractive ? 0 : undefined}
+      aria-hidden={isInteractive ? undefined : true}
+      aria-pressed={isInteractive ? isSelected : undefined}
       aria-label={person.role ? `${person.name}, ${person.role}` : person.name}
-      onPointerDown={onPointerDown}
-      onPointerMove={onPointerMove}
-      onPointerUp={onPointerUp}
-      onPointerEnter={onPointerEnter}
-      onPointerLeave={onPointerLeave}
-      onDoubleClick={onDoubleClick}
-      onKeyDown={onKeyDown}
+      {...handlers}
     >
-      {/* inner group carries the entrance animation; positioning lives on the outer <g> */}
+      {/* invisible hit circle: 44px on screen on touch screens */}
+      <circle className={styles.hit} r={radius} style={hitStyle} />
+      {/* inner group carries the entrance animation and the hover lift; positioning lives on the outer <g> */}
       <g className={styles.nodeInner}>
-        <circle className={styles.halo} r={r + 7} />
+        <circle className={styles.halo} r={radius + 7} />
         {/* opaque backing so edges never show through / cross the disc */}
-        <circle className={styles.nodeBg} r={r} />
+        <circle className={styles.nodeBg} r={radius} />
 
         {showPhoto ? (
           <>
             <image
               href={photo}
-              x={-r}
-              y={-r}
-              width={r * 2}
-              height={r * 2}
-              clipPath={`url(#vgClip${Math.round(r)})`}
+              x={-radius}
+              y={-radius}
+              width={radius * 2}
+              height={radius * 2}
+              clipPath={`url(#vgClip${Math.round(radius)})`}
               preserveAspectRatio="xMidYMid slice"
               className={styles.photo}
             />
-            <circle className={styles.disc} r={r} fill="none" stroke={stroke} />
+            <circle
+              className={styles.disc}
+              r={radius}
+              fill="none"
+              stroke={stroke}
+            />
           </>
         ) : (
           <>
-            <circle className={styles.disc} r={r} fill={fill} stroke={stroke} />
+            <circle
+              className={styles.disc}
+              r={radius}
+              fill={fill}
+              stroke={stroke}
+            />
             {person.private ? (
               <g
                 className={styles.lock}
@@ -92,21 +95,21 @@ export function VouchGraphNode({
                 strokeWidth={1.6}
               >
                 <rect
-                  x={-r * 0.3}
-                  y={-r * 0.02}
-                  width={r * 0.6}
-                  height={r * 0.46}
+                  x={-radius * 0.3}
+                  y={-radius * 0.02}
+                  width={radius * 0.6}
+                  height={radius * 0.46}
                   rx={2}
                 />
                 <path
-                  d={`M ${-r * 0.18} ${-r * 0.02} V ${-r * 0.22} a ${r * 0.18} ${r * 0.18} 0 0 1 ${r * 0.36} 0 V ${-r * 0.02}`}
+                  d={`M ${-radius * 0.18} ${-radius * 0.02} V ${-radius * 0.22} a ${radius * 0.18} ${radius * 0.18} 0 0 1 ${radius * 0.36} 0 V ${-radius * 0.02}`}
                 />
               </g>
             ) : (
               <text
                 className={styles.init}
-                dy={r / 3}
-                fontSize={isFocus ? r * 0.7 : r * 0.8}
+                dy={radius / 3}
+                fontSize={isFocus ? radius * 0.7 : radius * 0.8}
                 fill={stroke}
               >
                 {person.initials}
@@ -117,15 +120,20 @@ export function VouchGraphNode({
 
         {verified && (
           <>
-            <circle className={styles.vb} cx={r * 0.72} cy={r * 0.72} r={5} />
+            <circle
+              className={styles.vb}
+              cx={radius * 0.72}
+              cy={radius * 0.72}
+              r={5}
+            />
             <path
               className={styles.vbt}
-              d={`M ${r * 0.72 - 2.3} ${r * 0.72} l 1.6 1.6 l 3 -3.4`}
+              d={`M ${radius * 0.72 - 2.3} ${radius * 0.72} l 1.6 1.6 l 3 -3.4`}
             />
           </>
         )}
       </g>
-      <text className={styles.nodeName} dy={r + 16} fontSize={12}>
+      <text className={styles.nodeName} dy={radius + 16} fontSize={12}>
         {person.name.length > 16 ? `${person.name.slice(0, 15)}…` : person.name}
       </text>
     </g>

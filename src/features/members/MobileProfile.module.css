@@ -557,6 +557,36 @@
   line-height: 1.2;
 }
 
+/* ── Trust pair (HeroVouchRow + ProfileMutualsCard in MobileProfileHeader) ─
+   Both are the desktop components, restyled through their `className` prop.
+   `.mheader` raises specificity so these win over the desktop rules in
+   ProfilePage.module.css / ProfileMutualsCard.module.css whatever order the
+   bundler emits them in. The vouch row stacks its faces above the caption so
+   the caption gets the full column width, and drops the desktop's large top
+   margin since the header's flex gap already spaces it. */
+.mheader .trustVouchRow {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--gap-xs);
+  margin-top: 0;
+  padding-top: var(--gap-sm);
+  /* Thin ring, as on the mutuals card's faces; cream read heavy in dark mode at 40px. */
+  --vouch-face-ring: var(--ring-paper);
+}
+
+.mheader .trustVouchRow > :last-child {
+  font-size: var(--text-14);
+}
+
+.mheader .trustMutualsCard {
+  flex: none;
+  min-width: 0;
+  max-width: none;
+  width: 100%;
+  gap: var(--gap-xs);
+  padding: var(--gap-sm) var(--gap-grid);
+}
+
 /* ── Dark-mode hairline fix ───────────────────────────────────────────────
    .statRow / .statColumn write their border as a literal plum rgba() (the
    pre-token-system convention still used by ProfilePage.module.css's own

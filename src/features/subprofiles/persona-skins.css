@@ -986,6 +986,38 @@ button.pp-row {
      shares it. Fills below keep using raw --sk-tint. */
   --sk-text: color-mix(in srgb, var(--sk-tint) 65%, rgb(var(--cream-rgb)));
 }
+/* A Studio share card (`StudioShareCardFrame`, any surface) on the three
+   skins whose ground is dark in BOTH themes: stage, chart and chair. Each
+   remaps the text tokens to light ink but leaves `--paper` white in the light
+   theme, so the card painted cream type on a white surface. The card pins its
+   own dark surface (a step of cream over the skin's ground, the lift the dark
+   theme's paper takes over its page) with the dark theme's ink, hairline and
+   wash values. `--line` and `--wash` are restated because their root values
+   already resolved against the plum `--line-rgb`. */
+.pp[data-skin="stage"] [data-studio-share-frame] {
+  --studio-card-ground: var(--skin-stage-ground);
+}
+.pp[data-skin="chart"] [data-studio-share-frame] {
+  --studio-card-ground: var(--skin-chart-ground);
+}
+.pp[data-skin="chair"] [data-studio-share-frame] {
+  --studio-card-ground: var(--skin-chair-ground);
+}
+.pp:is([data-skin="stage"], [data-skin="chart"], [data-skin="chair"])
+  [data-studio-share-frame] {
+  --paper: color-mix(
+    in srgb,
+    rgb(var(--cream-rgb)) 7%,
+    var(--studio-card-ground)
+  );
+  --ink: rgba(var(--cream-rgb), 0.92);
+  --text-strong: rgba(var(--cream-rgb), 0.92);
+  --ink-60: rgba(var(--cream-rgb), 0.62);
+  --ink-40: rgba(var(--cream-rgb), 0.61);
+  --line-rgb: var(--cream-rgb);
+  --line: rgba(var(--cream-rgb), 0.14);
+  --wash: rgba(var(--cream-rgb), 0.05);
+}
 .pp[data-skin="stage"] .pp-cover {
   --pp-cover-h: clamp(180px, 26cqw, 300px);
 }

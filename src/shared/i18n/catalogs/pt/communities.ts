@@ -341,6 +341,22 @@ export const communities: Catalog = {
   "detail.tabs.events": "Eventos",
   "detail.tabs.modtools": "Ferramentas de moderação",
   "detail.tabs.spaces": "Espaços",
+  "detail.tabs.volunteering": "Voluntariado",
+  "detail.tabs.giving": "Apoiar",
+
+  // ── Volunteering tab (VolunteeringTab) ────────────────────────────────────
+  "detail.volunteering.heading": "Oportunidades abertas",
+  "detail.volunteering.empty": "Neste momento não há oportunidades abertas.",
+  "detail.volunteering.post.lead":
+    "Ajudas a gerir esta comunidade, por isso podes pedir uma mão às pessoas. Diz o que é preciso fazer, quanto tempo leva e quantas pessoas precisas.",
+  "detail.volunteering.post.cta": "Publicar uma oportunidade aqui",
+  "detail.volunteering.showingNewest":
+    "A mostrar as {shown} mais recentes de {total} oportunidades abertas.",
+  "detail.volunteering.error.title":
+    "Não foi possível carregar as oportunidades",
+  "detail.volunteering.error.description":
+    "Algo correu mal ao abrir o quadro de voluntariado desta comunidade. Tenta de novo daqui a pouco.",
+  "detail.volunteering.error.retryCta": "Tentar novamente",
   // Mostrado a um dono/moderador num separador escondido dos membros.
   "detail.hiddenFromMembers":
     "Escondido dos membros. Só donos e moderadores veem este separador.",
@@ -1140,6 +1156,8 @@ export const communities: Catalog = {
   "detail.modtools.history.field.whoFor": "Para quem é",
   "detail.modtools.history.field.tagline": "Frase de apresentação",
   "detail.modtools.history.field.nowReading": "A ler agora",
+  "detail.modtools.history.field.givingIntro": "Introdução do apoio",
+  "detail.modtools.history.field.givingMethods": "Formas de apoiar",
   "detail.modtools.history.field.accessTier": "Quem pode entrar",
   "detail.modtools.history.field.rosterVisible": "Lista de pessoas visível",
   "detail.modtools.history.field.features": "Funcionalidades",
@@ -1322,6 +1340,82 @@ export const communities: Catalog = {
   "detail.resources.form.cancelCta": "Cancelar",
   "detail.resources.form.saveCta": "Guardar",
   "detail.resources.form.savingCta": "A guardar…",
+
+  // ── Separador e cartão lateral Apoiar (giving) ────────────────────────────
+  "detail.giving.heading": "Apoiar {name}",
+  "detail.giving.listLabel": "Formas de apoiar {name}",
+  "detail.giving.kind.link": "Link",
+  "detail.giving.kind.mbway": "MB WAY",
+  "detail.giving.kind.iban": "IBAN",
+  "detail.giving.opensInNewTab": "(abre num novo separador)",
+  "detail.giving.copy.mbwayCta": "Copiar número",
+  "detail.giving.copy.ibanCta": "Copiar IBAN",
+  "detail.giving.copy.mbwayAria": "Copiar número de {label}",
+  "detail.giving.copy.ibanAria": "Copiar IBAN de {label}",
+  "detail.giving.copy.mbwayCopiedToast": "Número MB WAY copiado",
+  "detail.giving.copy.ibanCopiedToast": "IBAN copiado",
+  "detail.giving.copy.errorToast":
+    "Não foi possível copiar. Seleciona o texto e copia-o tu.",
+  "detail.giving.footer.notice":
+    "O dinheiro enviado aqui vai diretamente para {name}, fora da QueerPulse. Nunca passa por nós e não guardamos registo de quem contribui.",
+  "detail.giving.footer.updated": "Atualizado a {date}",
+  "detail.giving.empty.title": "Ainda não há formas de apoiar",
+  "detail.giving.empty.body":
+    "Adiciona um link, um número MB WAY ou um IBAN para as pessoas saberem como ajudar.",
+  "detail.giving.empty.viewer":
+    "Esta comunidade ainda não indicou formas de apoiar.",
+  "detail.giving.editCta": "Editar formas de apoiar",
+  "detail.giving.sidebar.cta": "Ver formas de apoiar",
+  "detail.giving.sidebar.more": "mais {count}",
+  "detail.giving.editor.introLabel": "Para que serve o apoio",
+  "detail.giving.editor.introHelper":
+    "Uma ou duas linhas, até {max} caracteres.",
+  "detail.giving.editor.introPlaceholder":
+    "Renda do nosso espaço e lanches em cada evento",
+  "detail.giving.editor.methodsLabel": "Formas de apoiar",
+  "detail.giving.editor.rowLegend": "Forma de apoiar {count}",
+  "detail.giving.editor.kindLabel": "Tipo",
+  "detail.giving.editor.valueLabel.link": "Link",
+  "detail.giving.editor.valueLabel.mbway": "Número de telemóvel MB WAY",
+  "detail.giving.editor.valueLabel.iban": "IBAN",
+  "detail.giving.editor.valuePlaceholder.link":
+    "https://ko-fi.com/atuacomunidade",
+  "detail.giving.editor.valuePlaceholder.mbway": "912 345 678",
+  "detail.giving.editor.valuePlaceholder.iban":
+    "PT50 0002 0123 1234 5678 9015 4",
+  "detail.giving.editor.labelLabel": "Nome (opcional)",
+  "detail.giving.editor.labelHelper": "Aparece no lugar do nome da plataforma.",
+  "detail.giving.editor.noteLabel": "Nota (opcional)",
+  "detail.giving.editor.noteHelper":
+    "Por exemplo, o nome de quem é titular da conta.",
+  "detail.giving.editor.moveUpAria": "Mover {label} para cima",
+  "detail.giving.editor.moveDownAria": "Mover {label} para baixo",
+  "detail.giving.editor.removeAria": "Remover {label}",
+  "detail.giving.editor.addCta": "Adicionar uma forma de apoiar",
+  "detail.giving.editor.capReached":
+    "Podes indicar até {max} formas de apoiar.",
+  "detail.giving.editor.saveCta": "Guardar alterações",
+  "detail.giving.editor.savingCta": "A guardar…",
+  "detail.giving.editor.cancelCta": "Cancelar",
+  "detail.giving.editor.savedToast": "Secção de apoio guardada",
+  "detail.giving.editor.errorToast":
+    "Não foi possível guardar a secção de apoio. Tenta de novo.",
+  "detail.giving.editor.historyNote":
+    "Cada alteração guardada fica registada em Ferramentas de moderação, no Histórico.",
+  "detail.giving.editor.demoNote":
+    "Na demonstração, as alterações duram até recarregares a página.",
+  "detail.giving.editor.discardTitle": "Descartar as alterações?",
+  "detail.giving.editor.discardBody": "O que escreveste aqui vai perder-se.",
+  "detail.giving.editor.discardCta": "Descartar alterações",
+  "detail.giving.editor.keepEditingCta": "Continuar a editar",
+  "detail.giving.editor.editingTitle": "Editar formas de apoiar",
+  "detail.giving.error.required": "Preenche este campo ou remove esta linha.",
+  "detail.giving.error.link": "Usa um link completo que comece por https://.",
+  "detail.giving.error.mbway":
+    "Usa um número de telemóvel português, como 912 345 678.",
+  "detail.giving.error.iban":
+    "Este IBAN não parece estar correto. Confirma o código do país e os dígitos.",
+  "detail.giving.error.tooLong": "Usa no máximo {max} caracteres.",
 
   // ── Distintivos: papéis, níveis de acesso, barra de reações ───────────────
   "badges.role.owner": "Responsável",
@@ -1766,6 +1860,11 @@ export const communities: Catalog = {
   "start.toast.createError":
     "Não foi possível abrir a tua comunidade. Tenta novamente.",
   "start.toast.created": "{name} está no ar. Bem-vinde, responsável",
+  "start.toast.draftDiscardError":
+    "Não conseguimos apagar o teu rascunho antigo. Continua guardado",
+  // CreatorDraftNotice junto à linha de gravação do assistente
+  "creatorDraftNote.body":
+    "A nossa equipa pode ver este rascunho da página da tua comunidade e dar-te uma mão se precisares. Quem convidas não aparece à nossa equipa",
 
   // ── Texto composto no adaptador (api/communities.adapters.ts, useAllCommunities.ts) ──
   "common.count.members_one": "{count} pessoa",

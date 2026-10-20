@@ -27,6 +27,7 @@ import {
 } from "./StudioPlayerControls";
 import { StudioSleepTimerChip } from "./StudioSleepTimer";
 import { StudioVolumeControl } from "./StudioVolumeControl";
+import { StudioWarningGate } from "./StudioWarningGate";
 import { STUDIO_QUEUE_BUTTON_ID } from "./studioQueueMoves";
 import styles from "../../StudioPlayer.module.css";
 
@@ -167,7 +168,8 @@ export function StudioPlayerBar({ item }: { item: StudioQueueItem }) {
   return (
     <>
       <StudioPlayerNow item={item} />
-      <div className={styles.controls}>
+      {/* The warning gate moves focus to this transport's play button. */}
+      <div className={styles.controls} data-studio-transport="">
         <StudioShuffleButton />
         <StudioTransport size="bar" />
         <StudioRepeatButton />
@@ -177,6 +179,8 @@ export function StudioPlayerBar({ item }: { item: StudioQueueItem }) {
       </div>
       <StudioPlayerTools />
       <StudioPlayerStatus />
+      {/* Studio safety: the pause before a warned track (spec 6.3). */}
+      <StudioWarningGate />
       {isShowcase && <StudioPlayerShowcase artistName={item.artistName} />}
     </>
   );

@@ -12,12 +12,14 @@ import listStyles from "./SkinListControls.module.css";
 export function SkinAutoGrowTextarea({
   value,
   placeholder,
+  maxLength,
   onChange,
   className = listStyles.autoGrowTextarea,
   ...wiring
 }: {
   value: string;
   placeholder?: string;
+  maxLength?: number;
   onChange: (value: string) => void;
   className?: string;
   id?: string;
@@ -35,6 +37,7 @@ export function SkinAutoGrowTextarea({
       rows={IS_FIELD_SIZING_SUPPORTED ? undefined : 3}
       value={value}
       placeholder={placeholder}
+      maxLength={maxLength}
       onChange={(event) => onChange(event.target.value)}
     />
   );

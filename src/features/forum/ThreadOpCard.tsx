@@ -6,7 +6,6 @@ import { MarkdownLite } from "../../shared/markdown";
 import { RollingNumber } from "../../shared/components/ui/RollingNumber";
 import { useFormat } from "../../shared/i18n/format";
 import { ForumPostPhotos } from "./ForumPostPhotos";
-import { ForumLinkPreview } from "./ForumLinkPreview";
 import {
   ContentWarningPill,
   ContentWarningReveal,
@@ -15,7 +14,9 @@ import { useContentWarningReveal } from "./forumWarnings.helpers";
 import { ThreadOpCardHead } from "./ThreadOpCardHead";
 import { ThreadOpMeta, ThreadStateNotice } from "./ThreadOpNotices";
 import { ThreadPollCard } from "./ThreadPollCard";
-import { firstLinkIn, useInViewOnce } from "./api/useForumLinkPreview";
+import { useInViewOnce } from "./api/useForumLinkPreview";
+import { forumPostLink } from "./forumPostLink";
+import { ForumPostLinkCard } from "./ForumPostLinkCard";
 import styles from "./ThreadPage.module.css";
 
 export function ThreadOpCard({
@@ -87,7 +88,7 @@ export function ThreadOpCard({
   // PRD-171: unfurl the first link in the opening post, and only once the card
   // is near the viewport (see `useForumLinkPreview` on the shared rate budget).
   const { ref: bodyRef, isInView } = useInViewOnce<HTMLDivElement>();
-  const firstLink = firstLinkIn(body);
+  const postLink = forumPostLink(body);
 
   // The author's warnings cover the post until a reader chooses otherwise, and
   // that choice is remembered for this thread for the rest of the session. A
@@ -163,13 +164,13 @@ export function ThreadOpCard({
         ) : (
           <>
             {/* `body` is the paragraph array the adapters split the raw post
-                into, and `join("\n")` is the exact inverse the edit flow
-                already relies on (`ThreadOpSection` seeds the editor with
-                `opBody.join("\n")`). Reassembling it here is what lets one
-                markdown-lite pass see the lists, quotes and headings that span
-                more than a single paragraph, and keeps the composer's preview
-                and the published post rendering the same source. */}
-            <MarkdownLite text={body.join("\n")} />
+                into. `forumPostLink` reassembles it with `join("\n")`, the
+                exact inverse the edit flow relies on (`ThreadOpSection` still
+                seeds the editor with the raw `opBody.join("\n")`), and takes
+                out a Studio link that stands on its own, which renders as
+                the card below. One markdown-lite pass over the whole body
+                sees the lists, quotes and headings that span paragraphs. */}
+            <MarkdownLite text={postLink.visibleText} />
             {/* ONE gallery. The backend has already folded the legacy single
                 `opImage` into it, so that field is only reached for on a demo
                 fixture, which never went through the reconciliation. */}
@@ -177,7 +178,7 @@ export function ThreadOpCard({
               photos={thread.opPhotos}
               legacyImage={thread.opImage}
             />
-            <ForumLinkPreview url={firstLink} isEnabled={isInView} />
+            <ForumPostLinkCard link={postLink} isEnabled={isInView} />
           </>
         )}
       </div>

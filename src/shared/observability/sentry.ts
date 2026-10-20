@@ -139,7 +139,9 @@ export function setMonitoringConsent(granted: boolean): void {
  * a Studio like or save (`PUT`/`DELETE /me/saved/studio_track:<id>`), which
  * names the track a member liked, and the items entry covers adding a Studio
  * track, release or playlist to a saved list
- * (`/me/saved/lists/<id>/items/studio_<kind>:<id>`).
+ * (`/me/saved/lists/<id>/items/studio_<kind>:<id>`). The giving entries cover
+ * a community's support section read and save and the page with its Support
+ * tab open, so who opens or saves a support section is never recorded.
  */
 const PRIVATE_BREADCRUMB_PATHS = [
   "/studio/tracks/",
@@ -162,17 +164,52 @@ const PRIVATE_BREADCRUMB_PATHS = [
   "/studio/press/edit",
   "/me/saved/studio_",
   "/items/studio_",
+  // Community support section: who opens or saves a community's support
+  // section is never recorded. The API path covers the GET and the PUT, the
+  // query covers the page URL with the Support tab open.
+  "/giving",
+  "tab=giving",
+  // Creator drafts: a member's own autosave and the Admin-only staff views
+  // (API path and page URL alike) stay out of every breadcrumb. The
+  // listing drafts read matches the backend helper.
+  "/me/creator-drafts",
+  "/admin/creator-drafts",
+  "/admin/listing-drafts",
+  // Mention name lookups: the refs a page asks to name (a bio's, a thread's,
+  // a persona hero's) stay out of every breadcrumb, so a staff preview of a
+  // draft persona never leaves its slugs on a later error event.
+  "/mentions/names",
 ];
 
 /**
  * Drops the SDK's default fetch, xhr and navigation breadcrumbs that name a
  * Studio track, release or playlist URL (a stream request, radio read or
- * page visit there would show up on a later error event as a play history). Every other
- * breadcrumb passes through unchanged.
+ * page visit there would show up on a later error event as a play history).
+ * While the page is in Studio it also drops every `ui.*` breadcrumb (clicks
+ * and key presses): their element text and labels name the tracks, warnings
+ * and reports a member pressed. The same holds while a community's Support
+ * tab (`tab=giving`) is open: the copy, move and remove buttons there carry
+ * the owner's method labels. The player mounts app-wide, so on every other
+ * page a `ui.*` breadcrumb is dropped too when the SDK's hint names a DOM
+ * event whose target sits inside a `data-studio-player` surface (the bar,
+ * the mini player, Now playing, the queue panel and the dialogs they open):
+ * a Like, a Play it or a track row there names what the member listens to.
+ * A missing hint, a missing event or a target that is no Element (a text
+ * node, the window, the document) leaves the breadcrumb to the rules above.
+ * Every other breadcrumb passes through unchanged.
  */
 export function dropStudioPlayBreadcrumb(
   breadcrumb: Sentry.Breadcrumb,
+  hint?: Sentry.BreadcrumbHint,
 ): Sentry.Breadcrumb | null {
+  if (
+    breadcrumb.category?.startsWith("ui.") &&
+    (isOnStudioPage() ||
+      isOnCommunityGivingTab() ||
+      isFromStudioPlayerSurface(hint))
+  ) {
+    return null;
+  }
   const candidates = [
     breadcrumb.data?.url,
     breadcrumb.data?.to,
@@ -181,6 +218,39 @@ export function dropStudioPlayBreadcrumb(
   ];
   const isPrivate = candidates.some(isPrivateObservabilityUrl);
   return isPrivate ? null : breadcrumb;
+}
+
+/** True while the page's path is under /studio (outside a browser, false). */
+function isOnStudioPage(): boolean {
+  const pathname =
+    typeof window === "undefined" ? "" : (window.location?.pathname ?? "");
+  return pathname === "/studio" || pathname.startsWith("/studio/");
+}
+
+/** True while the page's query has `tab=giving`, a community's Support tab
+ *  and its editor (outside a browser, false). */
+function isOnCommunityGivingTab(): boolean {
+  const search =
+    typeof window === "undefined" ? "" : (window.location?.search ?? "");
+  return new URLSearchParams(search).get("tab") === "giving";
+}
+
+/** The marker on the outermost element of every player surface, portalled
+ *  ones included (a portal escapes the bar's own marker). */
+const STUDIO_PLAYER_SELECTOR = "[data-studio-player]";
+
+/** True when the breadcrumb's DOM event (the SDK passes it as `hint.event`)
+ *  was aimed at an element inside a player surface. False for a missing hint
+ *  or event and for a target that is no Element (outside a browser, false). */
+function isFromStudioPlayerSurface(hint?: Sentry.BreadcrumbHint): boolean {
+  const domEvent: unknown = hint?.event;
+  if (typeof domEvent !== "object" || domEvent === null) return false;
+  if (!("target" in domEvent)) return false;
+  const target = domEvent.target;
+  if (typeof Element === "undefined" || !(target instanceof Element)) {
+    return false;
+  }
+  return target.closest(STUDIO_PLAYER_SELECTOR) !== null;
 }
 
 /**

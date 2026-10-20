@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { FiChevronDown, FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { EditorPaneKey, EditorRailGroup } from "./editorRail.data";
-import { EditorPaneSheet } from "./EditorPaneSheet";
+import { EditorPaneAttentionDot, EditorPaneSheet } from "./EditorPaneSheet";
 import { EditorSwitchPreviewButton } from "./EditorSwitchPreviewButton";
 import type { EditorPaneState } from "./useEditorPane";
 import { useSkinChapter } from "./useSkinChapter";
@@ -166,6 +166,7 @@ export function EditorPaneSwitcher({
                 ? t(activeEntry.labelKey)
                 : null}
             <FiChevronDown size={16} aria-hidden />
+            <EditorPaneAttentionDot groups={groups} />
           </span>
         </button>
 

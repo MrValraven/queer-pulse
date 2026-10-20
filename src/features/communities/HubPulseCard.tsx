@@ -8,6 +8,8 @@ import { communityPath } from "../../app/routeMap";
 import type { Post } from "./community.model";
 import { photoOf } from "./communityPeople";
 import { useCommunityTime } from "./communityTime";
+import { splitStudioPostText } from "../studio/share/studioPostText";
+import { studioShareLabelKey } from "../studio/share/studioShareLabel";
 import styles from "./CommunitiesHomePage.module.css";
 
 export interface HubPost {
@@ -30,6 +32,13 @@ export function HubPulseCard({ item }: { item: HubPost }) {
   const communityTime = useCommunityTime();
   const { post, communityName, communitySlug, parentName = null } = item;
   const reactionTotal = post.reactions.reduce((sum, r) => sum + r.count, 0);
+  // A link-only post reads as its card's label ("Studio release"); a post
+  // with neither words nor a link renders no body line at all.
+  const { target, visibleText } = splitStudioPostText(post.body, {
+    isMarkdown: false,
+  });
+  const bodyText =
+    visibleText || (target ? t(studioShareLabelKey(target.kind)) : "");
   return (
     <article className={styles.pulseCard}>
       <Link to={communityPath(communitySlug)} className={styles.pulseFrom}>
@@ -58,7 +67,7 @@ export function HubPulseCard({ item }: { item: HubPost }) {
           <div className={styles.pulseTime}>{communityTime.ago(post)}</div>
         </div>
       </div>
-      <p className={styles.pulseBody}>{post.body}</p>
+      {bodyText && <p className={styles.pulseBody}>{bodyText}</p>}
       <div className={styles.pulseFoot}>
         <span className={styles.pulseStat}>
           <FiHeart aria-hidden /> {reactionTotal}

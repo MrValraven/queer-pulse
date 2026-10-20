@@ -1,0 +1,77 @@
+/* PosterAwareImageSlot: a poster-shaped file shows whole over a blurred,
+   dimmed copy of itself. Layers inside the ImageSlot frame, bottom to top:
+   the backdrop (0) and the sharp poster (1, its inline style). `isolation`
+   keeps those z-indexes inside the frame. */
+.poster {
+  isolation: isolate;
+}
+
+/* A file that arrives after mount stays hidden until it is measured, so the
+   slot's tint shows meanwhile. The slot's own <img> is the frame's first
+   child; a caller's extra layers after it are left alone. */
+.awaiting > img:first-child {
+  opacity: 0;
+}
+
+/* Once measured, the file fades in already in its final treatment, the
+   poster's backdrop together with it. A file complete at mount never gets
+   this class. The fill is `backwards` so nothing holds the opacity after. */
+.reveal > img:first-child,
+.reveal > .backdrop {
+  animation: reveal var(--dur-slow) var(--ease-std) backwards;
+}
+
+@keyframes reveal {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Decorative: the same image filling the frame, heavily blurred and scaled up
+   so the soft edges the blur leaves never show inside the frame. */
+.backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.backdrop img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: blur(24px) saturate(1.2);
+  transform: scale(1.15);
+}
+
+/* The dim keeps the sharp poster reading clearly on top. On the light theme
+   it is a light wash of the scrim colour over a saturated blur, so a vivid
+   poster keeps its colour and a pale one keeps its tone on the cream page. */
+.backdrop::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(var(--scrim-rgb), 0.25);
+}
+
+/* The dark theme keeps the plain blur under the soft scrim, which sits the
+   backdrop back on the dark page. */
+:global([data-theme="dark"]) .backdrop img {
+  filter: blur(24px);
+}
+
+:global([data-theme="dark"]) .backdrop::after {
+  background: var(--scrim-soft);
+}
+
+/* No fade: a measured file appears at once, and nothing is left mounted. */
+@media (prefers-reduced-motion: reduce) {
+  .reveal > img:first-child,
+  .reveal > .backdrop {
+    animation: none;
+  }
+}

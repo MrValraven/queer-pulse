@@ -56,6 +56,13 @@
   align-self: flex-start;
   margin-top: 4px;
 }
+/* Takes the add button's place once a list reaches its cap. */
+.listFull {
+  display: block;
+  margin-top: 4px;
+  font-size: var(--text-14);
+  color: var(--ink-60);
+}
 
 /* ── Grip and tool buttons ──────────────────────────────────────────────── */
 /* A span, or a button when the grip also opens the move menu

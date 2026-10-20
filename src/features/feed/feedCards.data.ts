@@ -47,7 +47,8 @@ export const DEMO_MEMBER = {
  *  `GATHERINGS["queer-book-club"]` record; `going`/`capacity`/`price`/`tags`
  *  are scripted card enrichment. So is `coverImageUrl`: that record carries no
  *  cover, and the card needs one to show the cover banner a live gathering
- *  with a photo gets. */
+ *  with a photo gets. It is a 4:5 portrait poster, so demo mode shows the
+ *  banner's poster treatment (whole poster over its blurred backdrop). */
 export const DEMO_GATHERING = {
   slug: "queer-book-club",
   day: "19",
@@ -56,7 +57,7 @@ export const DEMO_GATHERING = {
   venue: "LX Factory, Alcântara",
   host: "QueerPulse",
   coverImageUrl:
-    "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?q=80&w=1200&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?q=80&w=1080&h=1350&auto=format&fit=crop",
   quote:
     "This month: a queer classic in the courtyard. Come even if you didn't finish. Nobody checks.",
   going: 12,

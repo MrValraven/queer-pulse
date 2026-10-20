@@ -1,6 +1,7 @@
 import { matchPath, useLocation } from "react-router-dom";
 import { useAuth, type AuthContextValue } from "./providers/authContext";
 import { useDemoMode } from "./providers/DemoModeProvider";
+import { IS_QUIZSHOW_LAUNCHED } from "../features/quizshow/quizshowLaunch";
 import { isStandaloneLaunch } from "./providers/standaloneLaunch";
 import { linkToPath, routes } from "./routeMap";
 import { LEGACY_REDIRECTS } from "./routes.redirects.data";
@@ -87,6 +88,9 @@ const GATED_PATTERNS: string[] = [
   "/rsvp",
   "/host",
   "/create-gathering",
+  // Pulse Live's player screen (quizshow), members only. The presenter and the remote sit under /gatherings/* above.
+  "/play",
+  "/play/*",
   // A guest community's collab invite (`/collab-invites/:inviteId`), read
   // and answered by that community's owners, co-owners and mods.
   "/collab-invites",
@@ -214,6 +218,13 @@ function matchesAny(pathname: string, patterns: string[]): boolean {
  * `isComingSoonPath`.
  */
 // "/work/grants" left this list on 2026-10-05: it now redirects to the live Funding & Grants view, and this gate runs before any redirect.
+// Pulse Live (quizshow) stays hidden in built live apps until launch. The list empties itself when `IS_QUIZSHOW_LAUNCHED` flips to true.
+const QUIZSHOW_COMING_SOON_PATTERNS: string[] = [
+  "/play",
+  "/play/*",
+  "/gatherings/:slug/quizshow/*",
+];
+
 const COMING_SOON_PATTERNS: string[] = [
   // Career column
   "/account/work",
@@ -233,6 +244,7 @@ const COMING_SOON_PATTERNS: string[] = [
   "/work/offer",
   "/economy",
   "/economy/*",
+  ...(IS_QUIZSHOW_LAUNCHED ? [] : QUIZSHOW_COMING_SOON_PATTERNS),
 ];
 
 /**
@@ -240,16 +252,27 @@ const COMING_SOON_PATTERNS: string[] = [
  * should be hidden. Always false in local development so the area stays
  * reachable while it's being built.
  */
-export function isComingSoonPath(pathname: string): boolean {
+export function isComingSoonPath(
+  pathname: string,
+  options?: { isDemoMode?: boolean },
+): boolean {
   if (import.meta.env.DEV) return false;
+  if (
+    options?.isDemoMode &&
+    matchesAny(pathname, QUIZSHOW_COMING_SOON_PATTERNS)
+  )
+    return false;
   return matchesAny(pathname, COMING_SOON_PATTERNS);
 }
 
 /** The link-href form of `isComingSoonPath` (see `isGatedLink`). */
-export function isComingSoonLink(href: string): boolean {
+export function isComingSoonLink(
+  href: string,
+  options?: { isDemoMode?: boolean },
+): boolean {
   const path = linkToPath(href).split(/[?#]/)[0] || "/";
   if (!path.startsWith("/")) return false; // external / mailto / tel
-  return isComingSoonPath(path);
+  return isComingSoonPath(path, options);
 }
 
 /**

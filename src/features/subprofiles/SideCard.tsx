@@ -8,10 +8,13 @@ import { SideStatusPill } from "./SideStatusPill";
 import { LINK_BADGE } from "./mySubprofiles.data";
 import {
   accentTintStyle,
-  AVAILABILITY_OPTIONS,
   AVAILABILITY_PILL_TONE,
   DEFAULT_ACCENT,
 } from "./subprofilePresence.data";
+import {
+  availabilityLabelKeyFor,
+  availabilityToneKeyFor,
+} from "./skins/tattoo/tattooBooksStatus";
 import type { SubprofileView } from "./api/subprofiles.adapters";
 
 interface SideCardProps {
@@ -41,9 +44,16 @@ export function SideCard({ view, footer }: SideCardProps) {
   const isDraft = view.status === "draft";
   const { readyCount, totalCount } = estimateDraftReadiness(view);
   const tie = LINK_BADGE[view.linkVisibility];
-  const availability = view.availability
-    ? AVAILABILITY_OPTIONS.find((option) => option.value === view.availability)
-    : undefined;
+  const availabilityLabelKey = availabilityLabelKeyFor(
+    view.kind,
+    view.availability,
+    view.skinData,
+  );
+  const availabilityToneKey = availabilityToneKeyFor(
+    view.kind,
+    view.availability,
+    view.skinData,
+  );
 
   return (
     <article className={isDraft ? "side side-draft" : "side"}>
@@ -74,11 +84,11 @@ export function SideCard({ view, footer }: SideCardProps) {
 
         <div className="side-pills">
           <span className="pill">{t(tie.labelKey)}</span>
-          {availability && (
+          {availabilityLabelKey && availabilityToneKey && (
             <span
-              className={`pill ${AVAILABILITY_PILL_TONE[availability.value]}`}
+              className={`pill ${AVAILABILITY_PILL_TONE[availabilityToneKey]}`}
             >
-              {t(availability.labelKey)}
+              {t(availabilityLabelKey)}
             </span>
           )}
         </div>

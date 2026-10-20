@@ -1244,36 +1244,6 @@ export const studio: Catalog = {
     "Recusado com a tua frase, enviado a {artistName}",
   "triage.detail.toast.addedToSlate": "Adicionado à próxima seleção",
 
-  // ── Revisão de sinalizações (StudioFlagReviewPage + Card) ─────────────────
-  // Só chrome. O conteúdo fictício da demonstração desta página vive em
-  // studioShowcase (traduzido); nomes próprios e números ficam nos ficheiros de dados.
-  // O `verb` guardado ao resolver é um id estável, mostrado através de RESOLUTION_LABELS (§5.1).
-  "flagReview.header.eyebrow": "Conselho · revisão de sinalizações",
-  "flagReview.header.title": "Quando alguém <em>sinaliza</em> algo.",
-  "flagReview.header.dek":
-    "Quem ouve pode sinalizar um lançamento por amostras não autorizadas, créditos em falta ou atribuição incorreta. Uma pessoa da curadoria reclama cada caso, a pessoa artista identificada pode responder, e <em>cada decisão fica registada com um motivo</em>. Nada é removido em silêncio.",
-
-  "flagReview.resolvedTag": "Resolvido · {verb}",
-  "flagReview.dismissedClearedTag": "Recusado · esclarecido",
-  "flagReview.playAria": "Reproduzir",
-  "flagReview.claimReviewCta": "Reclamar e rever",
-  "flagReview.dismissCta": "Recusar",
-  "flagReview.correctLineupCta": "Corrigir a formação",
-  "flagReview.requestFixCta": "Pedir correção",
-  "flagReview.holdUntilFixedCta": "Reter até corrigir",
-
-  "flagReview.resolution.dismissed": "recusado",
-  "flagReview.resolution.corrected": "corrigido",
-  "flagReview.resolution.held": "retido",
-
-  "flagReview.toast.claimed": "Reclamado. É teu para rever",
-  "flagReview.toast.lineupConfirmed": "Formação confirmada como exata",
-  "flagReview.toast.lineupCorrected": "Formação corrigida",
-  "flagReview.toast.dismissedCreditsConfirmed":
-    "Sinalização recusada. Créditos confirmados como corretos",
-  "flagReview.toast.correctionRequested": "Correção pedida à pessoa artista",
-  "flagReview.toast.heldUntilCorrected": "Retido até corrigir",
-
   // ── Sala ao vivo (StudioLivePage + LiveNow + LiveChat) ────────────────────
   // Só chrome. O conteúdo fictício da demonstração desta página vive em
   // studioShowcase (traduzido); nomes próprios e números ficam nos ficheiros de dados.
@@ -1704,7 +1674,6 @@ export const studio: Catalog = {
   // ── sweep no-literal-string: eyebrows/etiquetas diversas ──────────────────
   "album.sidebar.splitHint":
     "Se comprares por {price}: <em>{artistShare} para {artist}</em>, {solidarityShare} para o fundo de solidariedade, {platformShare} para a plataforma, processamento absorvido.",
-  "flagReview.reviewedByLine": "Revisto por <em>{reviewer}</em>",
   "set.page.programmedByEyebrow": "Set · com curadoria de {curator}",
   "sheet.checkout.leadSheetLabel": "Partitura principal: {title}",
   // ── Studio v1 (2026-10-08) ─────────────────────────────────────────────────
@@ -1718,6 +1687,11 @@ export const studio: Catalog = {
   "releaseStatus.draft": "Rascunho",
   "releaseStatus.published": "Publicado",
   "releaseStatus.taken_down": "Retirado",
+  // CreatorDraftNotice nos editores de lançamentos e de episódios em rascunho
+  "creatorDraftNote.body":
+    "A nossa equipa pode ver este lançamento enquanto está em rascunho ou está agendado e dar-te uma mão se precisares",
+  "creatorDraftNote.episodeBody":
+    "A nossa equipa pode ver este episódio enquanto está em rascunho e dar-te uma mão se precisares",
   "genre.pop": "Pop",
   "genre.hipHop": "Hip-hop",
   "genre.rAndB": "R&B",
@@ -1771,7 +1745,7 @@ export const studio: Catalog = {
     "A lista de faixas mudou. Recarrega a página e tenta de novo",
   "errors.trackLimit": "Um lançamento leva até 50 faixas",
   "errors.audioUnreadable":
-    "Não conseguimos ler este ficheiro. Experimenta outro MP3 ou M4A",
+    "Não conseguimos ler este ficheiro. Experimenta outro MP3, M4A, WAV ou AIFF",
   "errors.audioWrongOwner": "Esse ficheiro pertence a outra persona",
   "shell.searchLabel": "Pesquisar no Studio",
   "shell.searchPlaceholderLive": "pesquisar artistas, lançamentos, faixas…",
@@ -1870,7 +1844,7 @@ export const studio: Catalog = {
   "playerBar.close": "Fechar leitor",
   "uploadFlow.hero.title": "Põe a tua música <em>cá fora.</em>",
   "uploadFlow.hero.sub":
-    "Três passos: o lançamento, as faixas e a publicação. MP3 ou M4A, até 50 MB por faixa",
+    "Três passos: o lançamento, as faixas e a publicação. MP3, M4A, WAV ou AIFF, até 50 MB por faixa",
   "uploadFlow.steps.label": "Passos do carregamento",
   "uploadFlow.steps.release.nm": "Lançamento",
   "uploadFlow.steps.release.sub": "· título · capa · detalhes",
@@ -1904,14 +1878,16 @@ export const studio: Catalog = {
   "uploadFlow.backToRelease": "Voltar ao lançamento",
   "uploadFlow.continueToPublish": "Continuar para publicar",
   "uploadFlow.backToTracks": "Voltar às faixas",
-  "uploadFlow.files.dropTitle": "Larga aqui ficheiros <em>MP3 ou M4A</em>",
+  "uploadFlow.files.dropTitle":
+    "Larga aqui ficheiros <em>MP3, M4A, WAV ou AIFF</em>",
   "uploadFlow.files.accepts":
-    "aceita · <em>MP3 · M4A</em> · até 50 MB por faixa · até 50 faixas",
+    "aceita · <em>MP3 · M4A · WAV · AIFF</em> · até 50 MB por faixa · até 50 faixas",
   "uploadFlow.files.chooseCta": "Escolher ficheiros de áudio",
   "uploadFlow.files.empty":
     "Ainda não há faixas. Adiciona ficheiros de áudio para começar",
   "uploadFlow.files.listLabel": "Faixas deste lançamento",
-  "uploadFlow.files.rejectType": "{fileName} não é um ficheiro MP3 ou M4A",
+  "uploadFlow.files.rejectType":
+    "O Studio não consegue ler {fileName}. Usa MP3, M4A, WAV ou AIFF",
   "uploadFlow.files.rejectSize": "{fileName} tem mais de 50 MB",
   "uploadFlow.files.rejectLimit":
     "{fileName} não entrou: um lançamento leva até 50 faixas",
@@ -1928,6 +1904,19 @@ export const studio: Catalog = {
   "uploadFlow.files.stage.noAudio": "Ainda sem áudio",
   "uploadFlow.files.progressLabel":
     "Progresso do carregamento da faixa {position}, {title}",
+  "uploadFlow.files.stage.converting": "A converter para MP3",
+  "uploadFlow.files.convertingHint":
+    "Mantém este separador aberto enquanto converte",
+  "uploadFlow.files.convertProgressLabel":
+    "A converter a faixa {position}, {title}, para MP3",
+  "uploadFlow.files.errorTooLong":
+    "Este ficheiro é demasiado longo para converter. Pode ter até {maxMinutes} minutos",
+  "uploadFlow.files.errorUnsupported":
+    "Não conseguimos ler este ficheiro. Exporta-o em WAV, AIFF, MP3 ou M4A",
+  "uploadFlow.files.errorConvert":
+    "Não conseguimos converter este ficheiro. Tenta de novo ou exporta-o em MP3",
+  "uploadFlow.files.wavNote":
+    "Os ficheiros WAV e AIFF passam a MP3 no teu navegador antes de serem enviados",
   "uploadFlow.files.moveUp": "Subir a faixa {position}, {title}",
   "uploadFlow.files.moveDown": "Descer a faixa {position}, {title}",
   "uploadFlow.files.retry": "Tentar de novo a faixa {position}, {title}",
@@ -1970,11 +1959,11 @@ export const studio: Catalog = {
     "Para carregar, precisas de uma persona publicada e aberta a todas as pessoas, de um destes tipos: música, DJ, podcast, produção de podcast, poesia, spoken word, arte drag, performance, dança, ballroom e vogue ou burlesco. Prepara uma e volta",
   "uploadFlow.noPersona.cta": "Ir para as tuas personas",
   "uploadFlow.side.eyebrow": "O que acontece aos teus ficheiros",
-  "uploadFlow.side.title": "Os teus ficheiros, <em>tal como estão</em>",
+  "uploadFlow.side.title": "Os teus ficheiros, <em>prontos a ouvir</em>",
   "uploadFlow.side.body":
-    "Guardamos o teu áudio tal como o carregas e só o transmitimos a quem tem acesso ao Studio. Ninguém o pode descarregar",
+    "Guardamos os ficheiros MP3 e M4A tal como os carregas, e os WAV e AIFF como o MP3 que o teu navegador cria. Só quem tem acesso ao Studio os pode ouvir, e ninguém os pode descarregar",
   "uploadFlow.side.formats.label": "Formatos",
-  "uploadFlow.side.formats.value": "MP3 · M4A",
+  "uploadFlow.side.formats.value": "MP3 · M4A · WAV · AIFF",
   "uploadFlow.side.size.label": "Por faixa",
   "uploadFlow.side.size.value": "até 50 MB",
   "uploadFlow.side.listeners.label": "Quem pode ouvir",
@@ -1990,17 +1979,17 @@ export const studio: Catalog = {
     "Podes ter até 100 playlists. Apaga uma para criares outra",
   "errors.playlistTrackLimit": "Uma playlist leva até 500 faixas",
   "errors.playlistOrderMismatch":
-    "A playlist mudou. Recarrega a página e tenta outra vez",
+    "Esta playlist acabou de mudar. Tenta outra vez",
   "errors.playlistCreditNotAllowed":
     "Essa persona não pode ser creditada agora. Mostra-a como tu, ou escolhe outra persona",
   "errors.playlistTrackUnavailable": "Essa faixa não pode ser adicionada agora",
   "playlist.visibility.public": "Pública",
-  "playlist.visibility.connections": "Só ligações",
+  "playlist.visibility.connections": "Só conexões",
   "playlist.visibility.private": "Privada",
   "playlist.visibility.publicHint":
     "Qualquer pessoa com acesso ao Studio a pode encontrar",
   "playlist.visibility.connectionsHint":
-    "Só as tuas ligações com acesso ao Studio a podem abrir",
+    "Só as tuas conexões com acesso ao Studio a podem abrir",
   "playlist.visibility.privateHint": "Só tu",
   "playlist.dialog.createTitle": "Nova playlist",
   "playlist.dialog.editTitle": "Editar detalhes",
@@ -2017,7 +2006,7 @@ export const studio: Catalog = {
   "playlist.dialog.creditPersonaHint":
     "Aparece na página Studio de {name} enquanto for pública",
   "playlist.dialog.linkOnlyNote":
-    "As tuas ligações podem abri-la pelo link. Fica fora da página de {name}, para ninguém ficar a saber quem gere {name}",
+    "As tuas conexões podem abri-la pelo link. Fica fora da página de {name}, para ninguém ficar a saber quem gere {name}",
   "playlist.dialog.createCta": "Criar playlist",
   "playlist.dialog.saveDetailsCta": "Guardar detalhes",
   "playlist.dialog.saveVisibilityCta": "Guardar visibilidade",
@@ -2276,6 +2265,27 @@ export const studio: Catalog = {
     "Este lançamento tem uma contestação à espera. Repõe-o a partir de Contestações",
   "errors.takedownReportMismatch": "Essa denúncia não é sobre este lançamento",
   "errors.takedownReportNotOpen": "Essa denúncia já foi tratada",
+  "errors.trackWithheld": "Esta faixa não está disponível",
+  "errors.trackExplicitLocked":
+    "A nossa equipa marcou esta faixa como explícita, por isso continua marcada",
+  "errors.useCopyrightClaim":
+    "As reivindicações de direitos de autor têm um formulário próprio",
+  "errors.claimOwnTrack":
+    "Não podes enviar uma reivindicação sobre uma faixa tua",
+  "errors.claimExists": "Já tens uma reivindicação aberta sobre esta faixa",
+  "errors.claimLimit": "Podes ter até 10 reivindicações abertas ao mesmo tempo",
+  "errors.claimNotCountered":
+    "Podes responder quando a pessoa artista enviar uma contranotificação",
+  "errors.claimAlreadyReplied": "Já respondeste a esta contranotificação",
+  "errors.claimNotLive": "Esta reivindicação já está fechada",
+  "errors.claimNotAccepted":
+    "A contranotificação só se envia uma vez, enquanto a faixa está retida",
+  "errors.claimNotSubmitted": "A nossa equipa já verificou esta reivindicação",
+  "errors.claimNotDecidable":
+    "A nossa equipa só pode manter ou rejeitar uma reivindicação depois de a aceitar",
+  "errors.trackReportMismatch":
+    "Essa denúncia não é sobre esta faixa do Studio",
+  "errors.trackReportNotOpen": "Essa denúncia já foi tratada",
 
   "helpLive.hero.eyebrow": "Ajuda do Studio",
   "helpLive.hero.title": "Como te podemos <em>ajudar</em>?",
@@ -2306,7 +2316,7 @@ export const studio: Catalog = {
   "helpLive.faq.saving.q":
     "Como funcionam os guardados, as playlists e seguir artistas?",
   "helpLive.faq.saving.a":
-    "Guarda qualquer lançamento e fica à tua espera na tua <a>biblioteca</a>. Toca no coração de uma faixa e ela vai para as Músicas de que gostas, que só tu vês. Uma playlist pode ser Pública, Só ligações ou Privada, e podes mudar isso quando quiseres. Segue artistas a partir da página de cada artista para saberes quando lançam algo novo.",
+    "Guarda qualquer lançamento e fica à tua espera na tua <a>biblioteca</a>. Toca no coração de uma faixa e ela vai para as Músicas de que gostas, que só tu vês. Uma playlist pode ser Pública, Só conexões ou Privada, e podes mudar isso quando quiseres. Segue artistas a partir da página de cada artista para saberes quando lançam algo novo.",
   "helpLive.faq.playerSettings.q":
     "Posso mudar a forma como o leitor funciona?",
   "helpLive.faq.playerSettings.a":
@@ -2392,17 +2402,19 @@ export const studio: Catalog = {
   "termsLive.sec.visible.num": "02: o que os membros veem",
   "termsLive.sec.visible.heading": "O que fica <em>visível</em>",
   "termsLive.sec.visible.p1":
-    "Membros com acesso ao Studio veem os teus lançamentos e faixas, o teu nome artístico e as tuas playlists públicas. Uma playlist definida como Só ligações ou Privada fica com as pessoas que essa opção permite.",
+    "Membros com acesso ao Studio veem os teus lançamentos e faixas, o teu nome artístico e as tuas playlists públicas. Uma playlist definida como Só conexões ou Privada fica com as pessoas que essa opção permite.",
   "termsLive.sec.stored.num": "03: o que o Studio guarda",
   "termsLive.sec.stored.heading": "O que <em>guardamos</em>",
   "termsLive.sec.stored.p1":
-    "O Studio guarda os teus lançamentos com o áudio e as capas, os teus guardados, playlists e artistas que segues, as definições do leitor, e as contestações que envias com a resposta da nossa equipa. Não guarda nenhum registo do que ouves: nem contagens de audições, nem histórico.",
+    "O Studio guarda os teus lançamentos com o áudio e as capas, os teus guardados, playlists e artistas que segues, as definições do leitor, as contestações que envias com a resposta da nossa equipa, e as reivindicações de direitos de autor e contranotificações que envias com a decisão da nossa equipa. Não guarda nenhum registo do que ouves: nem contagens de audições, nem histórico.",
   "termsLive.sec.stored.p2":
     "Tudo o que o Studio guarda sobre ti está coberto pela <a>política de privacidade</a> do QueerPulse.",
   "termsLive.sec.takedown.num": "04: retiradas e contestações",
   "termsLive.sec.takedown.heading": "Se algo <em>correr mal</em>",
   "termsLive.sec.takedown.p1":
     "Podes despublicar o teu lançamento quando quiseres. Se um membro denunciar um lançamento, a nossa equipa analisa-o e pode retirá-lo. Vês o motivo na página do lançamento e podes contestá-lo aí, uma contestação de cada vez e até três por lançamento. A nossa equipa responde no lançamento e, se concordar, ele volta.",
+  "termsLive.sec.takedown.claims":
+    "Uma reivindicação de direitos de autor sobre uma faixa tem um formulário próprio, aberto a quem tem sessão iniciada. Enviá-la não muda nada até a nossa equipa a aceitar. Aí só essa faixa fica offline, e a pessoa artista pode enviar uma contranotificação, a que quem fez a reivindicação pode responder uma vez. A pessoa artista lê a reivindicação sem saber quem a fez. Depois de aceitar uma reivindicação, a nossa equipa pode decidi-la a qualquer momento: mantê-la deixa a faixa offline, e rejeitá-la traz a faixa de volta, a não ser que outra reivindicação a retenha. Até à decisão final, quem fez a reivindicação pode retirá-la.",
   "termsLive.questions":
     "Dúvidas sobre estes termos? Escreve para <a>hello@queerpulse.com</a> ou <link>fala com a nossa equipa</link>.",
   "termsLive.full.title": "Os termos completos",
@@ -2460,7 +2472,7 @@ export const studio: Catalog = {
   "rightsLive.eyebrow": "Direitos e retiradas",
   "rightsLive.title": "Como funcionam os <em>direitos</em> no Studio",
   "rightsLive.dek":
-    "O que confirmas quando publicas, o que acontece depois de uma denúncia e como contestar uma retirada.",
+    "O que confirmas quando publicas, o que acontece depois de uma denúncia ou de uma reivindicação de direitos de autor e como contestar uma retirada.",
   "rightsLive.sec.checkbox.heading": "A caixa de <em>direitos</em>",
   "rightsLive.sec.checkbox.body":
     "Antes de publicar, confirmas que és titular ou controlas os direitos de todas as gravações e composições do lançamento, e que os créditos estão certos.",
@@ -2470,6 +2482,10 @@ export const studio: Catalog = {
   "rightsLive.sec.dispute.heading": "Como <em>contestar</em>",
   "rightsLive.sec.dispute.body":
     "Abre o teu lançamento. Por baixo do motivo da retirada, escreve uma nota para a nossa equipa e envia-a. A resposta aparece no lançamento e, se a equipa concordar, o lançamento volta. Podes contestar cada lançamento até três vezes, uma de cada vez.",
+  "rightsLive.sec.claims.heading":
+    "Reivindicações de <em>direitos de autor</em>",
+  "rightsLive.sec.claims.body":
+    "Quem tem sessão iniciada envia uma reivindicação de direitos de autor a partir de Denunciar faixa, na própria faixa. Nada muda enquanto a nossa equipa a verifica. Se a nossa equipa a aceitar, só essa faixa fica offline, e a pessoa artista pode enviar uma contranotificação, a que quem fez a reivindicação pode responder uma vez. A pessoa artista lê a reivindicação sem saber quem a fez. A nossa equipa pode manter ou rejeitar uma reivindicação aceite a qualquer momento, e as duas partes leem porquê. Até essa decisão final, quem fez a reivindicação pode retirá-la.",
   "rightsLive.sec.unpublish.heading": "Despublica <em>quando quiseres</em>",
   "rightsLive.sec.unpublish.body":
     "Podes despublicar o teu lançamento na tua página de artista sempre que quiseres. Volta a ser um rascunho que só tu e quem partilha a persona contigo conseguem ver.",
@@ -2506,6 +2522,136 @@ export const studio: Catalog = {
   "dispute.decidedOn": "Decidida a {date}",
   "dispute.limitReached": "Este lançamento já usou as três contestações.",
 
+  "claimPanel.heading": "Reivindicação de direitos de autor",
+  "claimPanel.trackLabel": "Sobre {title}",
+  "claimPanel.withheldBanner":
+    "Esta faixa está offline enquanto a nossa equipa analisa uma reivindicação de direitos de autor",
+  "claimPanel.acceptedOn": "Retida desde {date}",
+  "claimPanel.acceptedDate": "Aceite a {date}",
+  "claimPanel.withheldBannerRelease_one":
+    "Uma faixa deste lançamento está offline enquanto a nossa equipa analisa uma reivindicação de direitos de autor",
+  "claimPanel.withheldBannerRelease_other":
+    "{count} faixas deste lançamento estão offline enquanto a nossa equipa analisa reivindicações de direitos de autor",
+  "claimPanel.offlineTag": "Offline",
+  "claims.ownerStatus.accepted": "Offline enquanto a nossa equipa analisa",
+  "claims.ownerStatus.countered": "Contranotificação enviada",
+  "claims.ownerStatus.upheld": "Reivindicação mantida",
+  "claims.ownerStatus.rejected": "Reivindicação rejeitada, de volta online",
+  "claims.staffStatus.submitted": "Nova",
+  "claims.staffStatus.accepted": "À espera da pessoa artista",
+  "claims.staffStatus.countered": "Contranotificação recebida",
+  "claims.staffStatus.declined": "Recusada",
+  "claims.staffStatus.upheld": "Mantida",
+  "claims.staffStatus.rejected": "Rejeitada",
+  "claims.staffStatus.withdrawn": "Retirada",
+  "claimPanel.claimedWork": "Original reivindicado",
+  "claimPanel.claimedDetails": "O que diz a reivindicação",
+  "claimPanel.originalLink": "Abrir o original",
+  "claimPanel.filedByLabel": "Quem a enviou",
+  "claimPanel.claimantRole.rights_holder": "Quem detém os direitos",
+  "claimPanel.claimantRole.authorised":
+    "Alguém autorizado por quem detém os direitos",
+  "claimPanel.counterOpenCta": "Escrever uma contranotificação",
+  "claimPanel.counterCloseCta": "Fechar o formulário de contranotificação",
+  "claimPanel.counterLabel": "A tua contranotificação",
+  "claimPanel.counterHint":
+    "Diz porque é que podes publicar esta faixa. Podes enviar uma, e a nossa equipa lê-a antes de decidir",
+  "claimPanel.counterGoodFaith":
+    "Acredito de boa-fé que esta faixa foi posta offline por engano",
+  "claimPanel.counterRequired":
+    "Escreve a tua contranotificação antes de a enviares",
+  "claimPanel.goodFaithRequired": "Marca a declaração para a enviares",
+  "claimPanel.counterCta": "Enviar contranotificação",
+  "claimPanel.counterSending": "A enviar a contranotificação",
+  "claimPanel.counterSentToast": "Contranotificação enviada à nossa equipa",
+  "claimPanel.claimantReplyHeading": "Resposta de quem fez a reivindicação",
+  "claimPanel.reviewing":
+    "A nossa equipa está a analisar a reivindicação e a tua contranotificação",
+  "claimPanel.outcome.upheld":
+    "A nossa equipa manteve a reivindicação. A faixa continua offline",
+  "claimPanel.outcome.rejected":
+    "A nossa equipa rejeitou a reivindicação. A faixa voltou a estar online",
+  "claimPanel.decidedOn": "Decidida a {date}",
+  "claimPanel.staffNoteHeading": "Nota da nossa equipa",
+
+  "claims.form.eyebrow": "Direitos no Studio",
+  "claims.form.title": "Reivindicação de direitos de autor",
+  "claims.form.dek":
+    "Diz à nossa equipa que obra esta faixa copia. Nada muda para quem ouve até a nossa equipa verificar",
+  "claims.form.subject": "Sobre {title} de {artist}",
+  "claims.form.subjectUnknown": "Sobre uma faixa do Studio",
+  "claims.form.pickTrack": "Sobre que faixa é a reivindicação?",
+  "claims.form.pickTrackRow": "{number}. {title}",
+  "claims.form.pickTrackLoading": "A carregar as faixas",
+  "claims.form.pickTrackError":
+    "Não conseguimos carregar as faixas. Tenta outra vez daqui a pouco",
+  "claims.form.pickTrackEmpty":
+    "Nenhuma faixa deste lançamento pode receber uma reivindicação agora",
+  "claims.form.roleLegend": "Qual é a tua ligação a esta obra?",
+  "claims.form.role.rightsHolder": "Sou quem detém os direitos",
+  "claims.form.role.authorised": "Tenho autorização de quem detém os direitos",
+  "claims.form.originalWork.label": "Obra original (título e autoria)",
+  "claims.form.originalLink.label": "Link para o original (opcional)",
+  "claims.form.originalLink.hint": "Um endereço web que começa por https://",
+  "claims.form.details.label": "O que a faixa copia e onde",
+  "claims.form.details.hint":
+    "Os minutos e segundos ajudam a nossa equipa a encontrar",
+  "claims.form.goodFaith":
+    "Acredito de boa-fé que este uso não está autorizado e que os detalhes que dei estão corretos",
+  "claims.form.submit": "Enviar reivindicação",
+  "claims.form.sending": "A enviar a reivindicação",
+  "claims.form.sent": "Reivindicação enviada. A nossa equipa vai verificá-la",
+  "claims.form.throttled":
+    "Enviaste várias reivindicações na última hora. Tenta mais tarde",
+  "claims.form.trackGone": "Essa faixa já não está no Studio",
+  "claims.form.error.roleRequired": "Escolhe a tua ligação a esta obra",
+  "claims.form.error.originalWorkRequired": "Indica a obra original",
+  "claims.form.error.originalWorkTooLong":
+    "Usa menos de 200 caracteres na obra original",
+  "claims.form.error.linkInvalid": "Usa um link que comece por https://",
+  "claims.form.error.linkTooLong": "Usa um link com menos de 500 caracteres",
+  "claims.form.error.detailsRequired": "Diz o que a faixa copia",
+  "claims.form.error.detailsTooLong":
+    "Usa menos de 2000 caracteres nos detalhes",
+  "claims.form.error.goodFaithRequired":
+    "Marca a declaração para enviares a reivindicação",
+  "claims.form.error.pickTrack": "Escolhe primeiro a faixa",
+  "claims.mine.title": "As tuas reivindicações de direitos de autor",
+  "claims.mine.dek":
+    "O que enviaste, o que a pessoa artista respondeu e o que a nossa equipa decidiu",
+  "claims.mine.empty": "Ainda não enviaste nenhuma reivindicação",
+  "claims.mine.emptyBody":
+    "Para enviares uma, abre a faixa e escolhe Denunciar faixa",
+  "claims.mine.emptyCta": "Como funcionam as reivindicações",
+  "claims.mine.status.submitted": "À espera da nossa equipa",
+  "claims.mine.status.accepted": "Aceite",
+  "claims.mine.status.declined": "Recusada",
+  "claims.mine.status.countered": "Contranotificação enviada",
+  "claims.mine.status.upheld": "Mantida",
+  "claims.mine.status.rejected": "Rejeitada",
+  "claims.mine.status.withdrawn": "Retirada",
+  "claims.mine.filedOn": "Enviada a {date}",
+  "claims.mine.counterHeading": "A contranotificação da pessoa artista",
+  "claims.mine.yourReplyHeading": "A tua resposta",
+  "claims.mine.staffNoteHeading": "Nota da nossa equipa",
+  "claims.mine.replyCta": "Escrever uma resposta",
+  "claims.mine.replyCloseCta": "Fechar o formulário de resposta",
+  "claims.mine.replyLabel": "A tua resposta à contranotificação",
+  "claims.mine.replyHint":
+    "Podes responder uma vez. A nossa equipa lê-a antes de decidir",
+  "claims.mine.replyRequired": "Escreve a tua resposta antes de a enviares",
+  "claims.mine.replySend": "Enviar resposta",
+  "claims.mine.replySending": "A enviar a resposta",
+  "claims.mine.replySentToast": "Resposta enviada à nossa equipa",
+  "claims.mine.withdrawCta": "Retirar reivindicação",
+  "claims.mine.withdrawConfirm": "Retirar esta reivindicação?",
+  "claims.mine.withdrawBody":
+    "A nossa equipa deixa de a analisar, e uma faixa que ela mantenha offline volta, a não ser que outra reivindicação a retenha",
+  "claims.mine.withdrawnToast": "Reivindicação retirada",
+  "claims.mine.loadMore": "Mostrar mais reivindicações",
+  "claims.mine.loadingMore": "A carregar mais reivindicações",
+  "claims.mine.loadError": "Não conseguimos carregar as tuas reivindicações",
+
   "settingsLive.eyebrow": "As tuas definições do Studio",
   "settingsLive.title": "Como o Studio <em>toca</em> para ti",
   "settingsLive.dek":
@@ -2528,6 +2674,16 @@ export const studio: Catalog = {
   "settingsLive.hideExplicit.heading": "Esconder faixas explícitas",
   "settingsLive.hideExplicit.body":
     "As faixas marcadas como explícitas saem da tua fila e aparecem esbatidas nas listas. Desliga para as veres de novo de imediato.",
+  "settingsLive.askBeforeWarnings.heading":
+    "Perguntar antes de faixas com aviso",
+  "settingsLive.askBeforeWarnings.body":
+    "Paramos antes de uma faixa com aviso de conteúdo e perguntamos primeiro.",
+  "settingsLive.claims.label": "Direitos",
+  "settingsLive.claims.title": "As tuas <em>reivindicações</em>",
+  "settingsLive.claims.heading": "Reivindicações de direitos de autor",
+  "settingsLive.claims.body":
+    "As reivindicações de direitos de autor que enviaste sobre faixas do Studio, e o que aconteceu a cada uma.",
+  "settingsLive.claims.cta": "Abrir as tuas reivindicações",
   "settingsLive.theme.label": "Tema",
   "settingsLive.theme.title": "O aspeto do <em>Studio</em>",
   "settingsLive.theme.dark.heading": "Modo escuro",
@@ -2537,6 +2693,22 @@ export const studio: Catalog = {
     "Não conseguimos guardar essa definição. Tenta outra vez",
 
   "hiddenTrack.label": "Escondida pelas tuas definições",
+  "contentWarnings.pickerLabel": "Avisos de conteúdo",
+  "contentWarnings.pickerHint":
+    "Quem ouve vê estes avisos antes de a faixa tocar",
+  "contentWarnings.lockedChip": "Adicionado pela nossa equipa",
+  "contentWarnings.lockedGroupLabel": "Avisos que a nossa equipa adicionou",
+  explicitLocked: "Marcada como explícita pela nossa equipa",
+  "track.withheld.title": "Esta faixa não está disponível",
+  "track.withheld.body":
+    "Não pode ser tocada agora. O resto do Studio continua aqui",
+  "album.trackUnavailable": "Indisponível",
+  "album.trackUnavailableAria": "A faixa {number} está indisponível",
+  "report.trackCta": "Denunciar faixa",
+  "player.gate.waiting": "À espera: {title}",
+  "player.gate.warning": "Aviso: {themes}",
+  "player.gate.play": "Tocar",
+  "player.gate.skip": "Saltar faixa",
 
   "flagReviewLive.eyebrow": "Equipa · revisão do Studio",
   "flagReviewLive.title": "<em>Denúncias</em> e contestações do Studio",
@@ -2595,6 +2767,76 @@ export const studio: Catalog = {
   "flagReviewLive.loadingMore": "A carregar mais",
   "flagReviewLive.loadMoreError":
     "Não conseguimos carregar mais. Tenta outra vez",
+  "flagReviewLive.tabs.claims": "Reivindicações",
+  "flagReviewLive.claims.badge_one": "{count} reivindicação à espera",
+  "flagReviewLive.claims.badge_other": "{count} reivindicações à espera",
+  "flagReviewLive.claims.emptyTitle": "Nenhuma reivindicação à espera",
+  "flagReviewLive.claims.emptyBody":
+    "Novas reivindicações e contranotificações aparecem aqui",
+  "flagReviewLive.claims.claimantLabel": "Quem fez a reivindicação",
+  "flagReviewLive.claims.trackLabel": "Faixa",
+  "flagReviewLive.claims.trackLine": "Faixa {number}: {title}",
+  "flagReviewLive.claims.accept": "Aceitar reivindicação",
+  "flagReviewLive.claims.decline": "Recusar reivindicação",
+  "flagReviewLive.claims.uphold": "Manter reivindicação",
+  "flagReviewLive.claims.reject": "Rejeitar reivindicação",
+  "flagReviewLive.claims.noteLabel": "Nota para as duas partes",
+  "flagReviewLive.claims.declineNoteLabel":
+    "Nota para quem fez a reivindicação",
+  "flagReviewLive.claims.acceptedHeading":
+    "Aceites, à espera da pessoa artista",
+  "flagReviewLive.claims.acceptedEmptyTitle":
+    "Nenhuma reivindicação à espera de uma pessoa artista",
+  "flagReviewLive.claims.acceptedEmptyBody":
+    "As reivindicações que aceitas esperam aqui pela contranotificação da pessoa artista, e podes mantê-las ou rejeitá-las a qualquer momento",
+  "flagReviewLive.claims.availabilityLabel": "Neste momento",
+  "flagReviewLive.claims.withheldFact": "Offline para quem ouve",
+  "flagReviewLive.claims.dialog.acceptTitle":
+    "Aceitar a reivindicação sobre {title}?",
+  "flagReviewLive.claims.dialog.acceptBody":
+    "A faixa fica offline para quem ouve e a pessoa artista pode enviar uma contranotificação",
+  "flagReviewLive.claims.dialog.declineTitle":
+    "Recusar a reivindicação sobre {title}?",
+  "flagReviewLive.claims.dialog.declineBody":
+    "A faixa continua online e quem fez a reivindicação lê a tua nota",
+  "flagReviewLive.claims.dialog.upholdTitle":
+    "Manter a reivindicação sobre {title}?",
+  "flagReviewLive.claims.dialog.upholdBody":
+    "A faixa continua offline e as duas partes leem a tua nota",
+  "flagReviewLive.claims.dialog.rejectTitle":
+    "Rejeitar a reivindicação sobre {title}?",
+  "flagReviewLive.claims.dialog.rejectBody":
+    "A faixa volta, a não ser que outra reivindicação a retenha, e as duas partes leem a tua nota",
+  "flagReviewLive.claims.toast.accepted":
+    "{title} está offline enquanto a reivindicação estiver aberta",
+  "flagReviewLive.claims.toast.declined": "Reivindicação recusada",
+  "flagReviewLive.claims.toast.upheld": "Reivindicação mantida",
+  "flagReviewLive.claims.toast.rejected": "Reivindicação rejeitada",
+  "flagReviewLive.trackReports.heading": "Denúncias de faixas",
+  "flagReviewLive.trackReports.emptyTitle":
+    "Nenhuma denúncia de faixa em aberto",
+  "flagReviewLive.trackReports.emptyBody":
+    "Novas denúncias sobre faixas aparecem aqui",
+  "flagReviewLive.trackReports.unknownTrack": "Uma faixa do Studio",
+  "flagReviewLive.trackReports.currentLabel": "Marcações atuais",
+  "flagReviewLive.trackReports.markExplicit": "Marcar faixa como explícita",
+  "flagReviewLive.trackReports.addWarning": "Adicionar aviso de conteúdo",
+  "flagReviewLive.trackReports.dialog.markExplicitTitle":
+    "Marcar {title} como explícita?",
+  "flagReviewLive.trackReports.dialog.markExplicitBody":
+    "A pessoa artista não a pode desmarcar, a denúncia fecha e quem gere a persona recebe um aviso da nossa equipa",
+  "flagReviewLive.trackReports.dialog.warningTitle":
+    "Adicionar um aviso de conteúdo a {title}",
+  "flagReviewLive.trackReports.dialog.warningBody":
+    "Quem ouve vê-o antes de a faixa tocar, e a pessoa artista não o pode remover",
+  "flagReviewLive.trackReports.dialog.warningConfirm": "Adicionar aviso",
+  "flagReviewLive.trackReports.dialog.warningConfirmPending": "A adicionar…",
+  "flagReviewLive.trackReports.dialog.dismissBody":
+    "A faixa fica como está e a denúncia fecha",
+  "flagReviewLive.trackReports.toast.markedExplicit":
+    "{title} está marcada como explícita",
+  "flagReviewLive.trackReports.toast.warningAdded":
+    "Aviso adicionado a {title}",
 
   "rail.live.utilityLabel": "Ajuda e informação",
   "rail.live.help": "Ajuda",
@@ -3046,6 +3288,15 @@ export const studio: Catalog = {
   "trackMenu.addedToast": "Adicionaste à tua fila",
   "trackMenu.linkCopiedToast": "Link copiado",
   "trackMenu.queueFailedToast": "Esta faixa não pode entrar na tua fila agora",
+  "trackMenu.sendInMessage": "Enviar numa mensagem",
+  "share.card.teaser": "Do QueerPulse Studio, aberto a quem tem acesso",
+  "share.card.withdrawn": "Este lançamento foi retirado",
+  "share.card.unavailable": "Indisponível",
+  "share.card.loading": "A carregar do Studio",
+  "share.card.byline": "De {name}",
+  "share.card.openAria": "Abrir {title} no Studio",
+  "share.card.removeCta": "Remover link do Studio",
+  "share.card.hiddenNote": "Escondida pelas tuas definições",
   // Chapters: listener lists, errors (contract A.7, D) and the editor
   "chapters.listHeading": "Alinhamento",
   "chapters.listHeadingFor": "Alinhamento de {title}",
@@ -3241,7 +3492,7 @@ export const studio: Catalog = {
   "uploadFlow.files.countLabel": "{count} de {max}",
   "uploadFlow.files.rejectSizePodcast": "{fileName} tem mais de 250 MB",
   "uploadFlow.files.acceptsPodcast":
-    "aceita · <em>MP3 · M4A</em> · até 250 MB por episódio",
+    "aceita · <em>MP3 · M4A · WAV · AIFF</em> · até 250 MB por episódio",
   "episodeUpload.newTitle": "Episódio <em>novo</em>",
   "episodeUpload.editTitle": "Editar <em>episódio</em>",
   "episodeUpload.forShow": "Para {show}",
@@ -3249,6 +3500,8 @@ export const studio: Catalog = {
   "episodeUpload.titleLabel": "Título do episódio",
   "episodeUpload.explicitLabel": "Este episódio tem conteúdo explícito",
   "episodeUpload.uploading": "A carregar {fileName}",
+  "episodeUpload.converting": "A converter {fileName} para MP3, {percent}%",
+  "episodeUpload.convertingLabel": "A converter {fileName} para MP3",
   "episodeUpload.processing": "A ler o áudio",
   "episodeUpload.uploadFailed":
     "O carregamento parou. Escolhe o ficheiro outra vez",
@@ -3289,14 +3542,14 @@ export const studio: Catalog = {
   "errors.notAPodcast": "Os episódios pertencem a podcasts",
   "errors.episodeLimit": "Um podcast tem no máximo 500 episódios",
   "uploadFlow.hero.subShow":
-    "Três passos: o podcast, os episódios e a publicação. MP3 ou M4A, até 250 MB por episódio",
+    "Três passos: o podcast, os episódios e a publicação. MP3, M4A, WAV ou AIFF, até 250 MB por episódio",
   "uploadFlow.side.size.valueShow": "até 250 MB por episódio",
   "uploadFlow.release.headingShow": "O <em>podcast</em>",
   "uploadFlow.release.continueCtaShow": "Guardar e seguir para os episódios",
   "facts.episodeCount_one": "{count} episódio",
   "facts.episodeCount_other": "{count} episódios",
   "episodeUpload.eyebrow": "Novo episódio · carregar",
-  "episodeUpload.dropTitle": "Larga aqui um ficheiro MP3 ou M4A",
+  "episodeUpload.dropTitle": "Larga aqui um ficheiro MP3, M4A, WAV ou AIFF",
   "episodeUpload.chooseFile": "Escolher um ficheiro de áudio",
   "chapters.editor.hintEpisode": "Marca onde começa cada parte do episódio",
   "chapters.editor.pasteEpisode": "Colar capítulos",
@@ -3306,4 +3559,102 @@ export const studio: Catalog = {
   "artist.tabs.podcast": "Podcasts",
   "artist.tabs.spokenWord": "Spoken word",
   "artist.tabs.performance": "Performance",
+  // ── Playlists colaborativas (2026-10-14) ────────────────────────────────────
+  "errors.playlistNotFound": "Esta playlist já não está disponível",
+  "errors.playlistOwnerOnly": "Só quem criou a playlist pode fazer isso",
+  "errors.playlistEditorSourceMismatch":
+    "Esta playlist mudou. Recarrega a página e tenta outra vez",
+  "errors.playlistEditorCap":
+    "Uma playlist pode ter até 10 pessoas a editar ou convidadas",
+  "errors.playlistEditorIneligible":
+    "Algumas destas pessoas não podem ser convidadas agora",
+  "errors.playlistInviteUnavailable": "Este convite já não está disponível",
+  "errors.playlistInviteNotFound": "Este convite já foi respondido ou retirado",
+  "errors.playlistCreditChangeRemovesEditors":
+    "Mudar quem aparece na playlist tira o acesso a algumas pessoas que a editam",
+  "errors.playlistEntryNotFound": "Essa faixa já tinha saído",
+  "errors.playlistEditorNotFound":
+    "Esse acesso de edição já tinha sido removido",
+  "playlist.page.manageEditors": "Gerir quem edita",
+  "playlist.page.leavePlaylist": "Sair da playlist",
+  "playlist.collab.chip": "Colaborativa",
+  "playlist.collab.openAria_one":
+    "Playlist colaborativa com {count} pessoa a editar. Ver quem edita",
+  "playlist.collab.openAria_other":
+    "Playlist colaborativa com {count} pessoas a editar. Ver quem edita",
+  "playlist.collab.moreCount": "+{count}",
+  "playlist.row.addedBy": "Adicionada por {name}",
+  "playlist.invite.bannerTitle": "{name} convidou-te para editar esta playlist",
+  "playlist.invite.bannerBody":
+    "Quem edita pode adicionar, tirar e reordenar faixas, e mudar o nome e a descrição",
+  "playlist.invite.acceptCta": "Aceitar",
+  "playlist.invite.declineCta": "Recusar",
+  "playlist.invite.acceptedToast": "Agora podes editar {name}",
+  "playlist.invite.declinedToast": "Convite recusado",
+  "playlist.invite.cardChip": "Convite",
+  "playlist.editors.title": "Quem edita",
+  "playlist.editors.ownerSubMember":
+    "Quem edita pode adicionar, tirar e reordenar faixas, e mudar o nome e a descrição. Quem pode abrir, quem aparece e apagar a playlist ficam contigo",
+  "playlist.editors.ownerSubPersona":
+    "Escolhe quem gere {persona} contigo e pode editar esta playlist",
+  "playlist.editors.editorSub":
+    "Todas as pessoas que podem editar esta playlist",
+  "playlist.editors.listLabel": "Quem edita {name}",
+  "playlist.editors.loadingLabel": "A carregar quem edita",
+  "playlist.editors.pendingLabel": "Convite enviado",
+  "playlist.editors.removeCta": "Remover acesso de edição",
+  "playlist.editors.removeAria": "Remover o acesso de edição de {name}",
+  "playlist.editors.cancelInviteCta": "Cancelar convite",
+  "playlist.editors.cancelInviteAria": "Cancelar o convite a {name}",
+  "playlist.editors.removeConfirmTitle":
+    "Remover o acesso de edição de {name}?",
+  "playlist.editors.removeConfirmBody":
+    "As faixas que adicionou ficam na playlist",
+  "playlist.editors.removedToast": "{name} já não pode editar esta playlist",
+  "playlist.editors.inviteCancelledToast": "Convite cancelado",
+  "playlist.editors.inviteCta": "Convidar para editar",
+  "playlist.editors.emptyTitle": "Ainda só tu editas esta playlist",
+  "playlist.editors.emptyBody":
+    "Convida conexões para adicionarem faixas contigo",
+  "playlist.editors.loadError": "Não conseguimos carregar quem edita",
+  "playlist.editors.slotsUsed": "{count} de {max} lugares ocupados",
+  "playlist.editors.slotsFull":
+    "Os {max} lugares estão ocupados. Remove um acesso ou cancela um convite para convidares outra pessoa",
+  "playlist.editors.invite.title": "Convidar para editar",
+  "playlist.editors.invite.searchLabel": "Procurar nas tuas conexões",
+  "playlist.editors.invite.loadingPeople": "A carregar as tuas conexões",
+  "playlist.editors.invite.noConnections": "As tuas conexões aparecem aqui",
+  "playlist.editors.invite.loadError":
+    "Não conseguimos carregar as tuas conexões",
+  "playlist.editors.invite.allListed":
+    "Todas as pessoas da lista já editam esta playlist ou têm convite",
+  "playlist.editors.invite.sendDefaultCta": "Enviar convites",
+  "playlist.editors.invite.sendCta_one": "Enviar {count} convite",
+  "playlist.editors.invite.sendCta_other": "Enviar {count} convites",
+  "playlist.editors.invite.backCta": "Voltar a quem edita",
+  "playlist.editors.invite.sentToast_one": "Convite enviado",
+  "playlist.editors.invite.sentToast_other": "{count} convites enviados",
+  "playlist.editors.invite.ineligible":
+    "Não dá para convidar {names} agora. Desmarca e tenta outra vez",
+  "playlist.editors.coOwners.listLabel": "Quem gere {persona}",
+  "playlist.editors.coOwners.searchLabel": "Procurar quem gere a persona",
+  "playlist.editors.coOwners.empty": "Mais ninguém gere {persona} contigo",
+  "playlist.editors.coOwners.noMatch": "Ninguém corresponde a essa pesquisa",
+  "playlist.editors.coOwners.addedToast": "{name} já pode editar esta playlist",
+  "playlist.editors.coOwners.loadError":
+    "Não conseguimos carregar quem gere a persona",
+  "playlist.leave.title": "Sair de {name}?",
+  "playlist.leave.body": "Deixas de a editar. As faixas que adicionaste ficam",
+  "playlist.leave.confirmCta": "Sair da playlist",
+  "playlist.leave.leftToast": "Saíste de {name}",
+  "playlist.creditChange.title": "Mudar quem aparece na playlist?",
+  "playlist.creditChange.body_one":
+    "{names} deixa de editar esta playlist. As faixas que adicionou ficam",
+  "playlist.creditChange.body_other":
+    "{names} deixam de editar esta playlist. As faixas que adicionaram ficam",
+  "playlist.creditChange.bodyUnnamed":
+    "Algumas pessoas deixam de editar esta playlist. As faixas que adicionaram ficam",
+  "playlist.creditChange.confirmCta": "Mudar e remover acessos",
+  "playlist.add.addToCollaborativeAria":
+    "Adicionar a {name}, uma playlist colaborativa",
 };

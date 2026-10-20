@@ -21,6 +21,7 @@ export type ListingEditorSectionKey =
   | "photos"
   | "aboutYou"
   | "coManagers"
+  | "team"
   | "permissions"
   | "history"
   | "dangerZone";
@@ -142,6 +143,14 @@ export const LISTING_EDITOR_SECTIONS: ListingEditorSectionDefinition[] = [
     labelKey: "marketing:listBusiness.editor.section.whoCanEdit",
     // Inviting and stepping down take effect the moment they are pressed, so
     // nothing here can ever be a field the save bar is still waiting on.
+    anchors: [],
+  },
+  {
+    key: "team",
+    id: "lb-editor-team",
+    labelKey: "marketing:listBusiness.editor.section.team",
+    // Approving, declining, ordering and removing take effect when pressed, so
+    // nothing here waits on the save bar.
     anchors: [],
   },
   {

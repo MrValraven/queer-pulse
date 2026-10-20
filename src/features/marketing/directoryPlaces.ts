@@ -32,6 +32,8 @@ import type {
 } from "./listBusiness/listingFacts.data";
 import { ONLINE_DIRECTORY_PLACES } from "./directoryOnlinePlaces.data";
 import { MOBILE_DIRECTORY_PLACES } from "./directoryMobilePlaces.data";
+import { TEAM_DIRECTORY_PLACES } from "./directoryTeamPlaces.data";
+import type { ListingTeamMemberView } from "./listBusiness/api/listingTeam.types";
 
 export type Tint = "coral" | "jade" | "plum";
 
@@ -410,6 +412,11 @@ export interface DirectoryPlace {
    * unremarkable state, never an error.
    */
   questions?: ListingPublicQuestion[];
+  /**
+   * The accepted, viewer-visible team members in page order. Absent on
+   * fixtures: `useDirectoryPlace` overlays it from the demo store.
+   */
+  team?: ListingTeamMemberView[];
   /** Count of members who saved this listing (a backend-only field). Absent for
    * most demo places (the "hidden when absent" path); a few carry a seeded
    * value so the trust signal is visible in demo mode too. */
@@ -2314,6 +2321,8 @@ export const DIRECTORY_PLACES: DirectoryPlace[] = [
   ...ONLINE_DIRECTORY_PLACES,
   // Businesses with no premises: out and about.
   ...MOBILE_DIRECTORY_PLACES,
+  // Businesses with a team: the "Meet the team" section.
+  ...TEAM_DIRECTORY_PLACES,
 ];
 
 // Enrich every member-authored review with its author's profile slug + photo so

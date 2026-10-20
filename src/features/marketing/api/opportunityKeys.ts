@@ -29,6 +29,13 @@ export const opportunityKeys = {
   list: (params: { cause?: Cause; commit?: Commit }, demoMode: boolean) =>
     ["opportunities", params, demoMode] as const,
 
+  /** A community's Volunteering tab: its open opportunities. Create, edit,
+   *  close and an applicant decision can each change which are open (or how
+   *  full they are), so those mutations invalidate the root. */
+  communityRoot: ["community-opportunities"] as const,
+  community: (slug: string, demoMode: boolean) =>
+    ["community-opportunities", slug, demoMode] as const,
+
   signupsRoot: ["opportunity-signups"] as const,
   signups: (slug: string | undefined, demoMode: boolean) =>
     ["opportunity-signups", slug, demoMode] as const,

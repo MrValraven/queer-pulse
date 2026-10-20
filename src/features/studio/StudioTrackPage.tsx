@@ -14,13 +14,17 @@ import { StudioShowNotes } from "./StudioShowNotes";
 import { StudioWithdrawnView } from "./StudioWithdrawnView";
 import { StudioTipModal } from "./StudioTipModal";
 import { StudioTrackChapters } from "./player/ui/StudioTrackChapters";
+import { StudioTrackClaimPanels } from "./StudioClaimPanels";
 import { StudioTrackHero } from "./StudioTrackHero";
 import { StudioTrackInSet } from "./StudioTrackInSet";
 import { StudioTrackLyrics } from "./StudioTrackLyrics";
 import { StudioTrackMore } from "./StudioTrackMore";
 import { StudioTrackPlaylists } from "./StudioTrackPlaylists";
+import { StudioTrackSafetyRow } from "./StudioTrackSafetyRow";
 import { StudioTrackSidebar } from "./StudioTrackSidebar";
 import { StudioTrackSources } from "./StudioTrackSources";
+import { StudioTrackWithheldView } from "./StudioTrackWithheldView";
+import { StudioWithheldBanner } from "./StudioWithheldBanner";
 import { useStudioShowcase } from "./useStudioShowcase";
 import trackStyles from "./track.module.css";
 
@@ -31,6 +35,13 @@ export function StudioTrackPage() {
   const isShowcase = useStudioShowcase();
   const [isTipOpen, setIsTipOpen] = useState(false);
 
+  // Studio safety: a listener's withheld track (410, names nothing).
+  if (loadState.isTrackWithheld)
+    return (
+      <StudioShell>
+        <StudioTrackWithheldView />
+      </StudioShell>
+    );
   if (loadState.isWithdrawn)
     return (
       <StudioShell>
@@ -95,6 +106,13 @@ export function StudioTrackPage() {
       ) : (
         <StudioTrackHero track={track} onTip={() => setIsTipOpen(true)} />
       )}
+      {/* Straight after the hero, so the warning pill lines up under the
+          title and details (StudioClaimPanel.module.css .safetyRow). */}
+      <StudioTrackSafetyRow track={track} />
+      <StudioWithheldBanner
+        isShown={(track.claims ?? []).some((claim) => claim.isHolding)}
+      />
+      <StudioTrackClaimPanels track={track} />
       <StudioShowNotes track={track} />
       {track.release.isShow && (
         <StudioTrackChapters

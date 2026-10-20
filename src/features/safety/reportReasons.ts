@@ -97,10 +97,17 @@ export type ReportSubjectType =
   // uuid. Staff take it down and restore it from the report drawer's Studio
   // panel. Mirrors the backend `ReportSubjectType.StudioRelease`.
   | "studio_release"
+  // Studio safety (2026-10-14): ONE Studio track, addressed by its uuid.
+  // Staff mark it explicit, add a content warning, or take its release down
+  // from the flag review's Track reports. A `copyright` reason routes to the
+  // claim form and is never filed. Mirrors `ReportSubjectType.StudioTrack`.
+  | "studio_track"
   // Studio v3 (2026-10-13): ONE persona post (an "update"), addressed by its
   // uuid. Staff remove it from the report drawer's post panel. Mirrors the
   // backend `ReportSubjectType.PersonaPost`.
-  | "persona_post";
+  | "persona_post"
+  // Pulse Live (2026-10-19): ONE player-written answer in a live game (a party answer), addressed by its uuid. Hosts hide it in the game; staff act on the account. Mirrors the backend ReportSubjectType.QuizshowAnswer.
+  | "quizshow_answer";
 
 export type ReasonCode =
   | "outing"
@@ -131,6 +138,11 @@ export type ReasonCode =
   // blank title on a live row.
   | "listing_dispute"
   | "listing_owner_notify"
+  // Studio safety: lyrics that attack people for who they are (severity and
+  // transparency read it as `hate_speech`), and an explicit track the
+  // artist left unmarked.
+  | "hateful_lyrics"
+  | "untagged_explicit"
   // Someone else's music or artwork used without permission (Studio v1).
   | "copyright"
   | "other";
@@ -159,6 +171,8 @@ export const REASON_LABELS: Record<ReasonCode, string> = {
   listing_dispute: "Dispute or claim of a business listing",
   listing_owner_notify: "Owner outreach: suggested listing",
   copyright: "Uses someone else's music or artwork without permission",
+  hateful_lyrics: "Hateful lyrics",
+  untagged_explicit: "Explicit but not marked",
   other: "Something else, explained in detail",
 };
 
@@ -191,6 +205,8 @@ export const REASON_LABEL_KEYS: Record<ReasonCode, string> = {
   listing_dispute: "safety:reason.listingDispute",
   listing_owner_notify: "safety:reason.listingOwnerNotify",
   copyright: "safety:reason.copyright",
+  hateful_lyrics: "safety:reason.hatefulLyrics",
+  untagged_explicit: "safety:reason.untaggedExplicit",
   other: "safety:reason.other",
 };
 
@@ -545,7 +561,21 @@ export const SUBJECT_REASONS: Record<ReportSubjectType, ReasonCode[]> = {
     "impersonation",
     "copyright",
     "discrimination",
+    "untagged_explicit",
     "spam",
+    "other",
+  ],
+  // A Studio track (Studio safety). Order as the backend's reason catalogue
+  // lists it. `copyright` stays offered so the report modal can route it to
+  // the claim form; filing it answers 422 `studio_use_copyright_claim`.
+  studio_track: [
+    "hateful_lyrics",
+    "untagged_explicit",
+    "impersonation",
+    "harassment",
+    "outing",
+    "spam",
+    "copyright",
     "other",
   ],
   // A persona post (Studio v3). Order as the backend's reason catalogue
@@ -558,6 +588,17 @@ export const SUBJECT_REASONS: Record<ReportSubjectType, ReasonCode[]> = {
     "harassment",
     "hate_speech",
     "impersonation",
+    "discrimination",
+    "spam",
+    "other",
+  ],
+  // A player-written answer in a Pulse Live game. Order as the backend's
+  // reason catalogue lists it.
+  quizshow_answer: [
+    "outing",
+    "doxxing",
+    "harassment",
+    "hate_speech",
     "discrimination",
     "spam",
     "other",

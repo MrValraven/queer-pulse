@@ -127,27 +127,35 @@ export function useConversations(scope: ConversationListScope | null) {
         // survives this refetch and a reload, see conversationPrefs.ts. The
         // whole seeded list is one page; there is nothing to page through.
         setPageCursor(NO_MORE_PAGES);
-        const [mockConversations, { readDemoIdentityBlocks }] =
-          await Promise.all([
-            loadDemoConversations(),
-            import("../../social/api/identityBlocks.data"),
-          ]);
+        const [
+          mockConversations,
+          { readDemoIdentityBlocks },
+          { withLandedDemoShares },
+        ] = await Promise.all([
+          loadDemoConversations(),
+          import("../../social/api/identityBlocks.data"),
+          import("../share/demoShareSend"),
+        ]);
         // I-2: mirrors the live backend (`mailbox-seats.ts`), which drops a
         // blocked identity's threads from every read for both sides.
         const blockedIdentityIds = new Set(
           readDemoIdentityBlocks(queryClient).map((block) => block.identity.id),
         );
-        return applyConversationPrefs(
-          mockConversations.filter(
-            (conversation) => !deletedIds.has(conversation.id),
-          ),
-        )
-          .filter((conversation) => belongsToMailbox(conversation, scope))
-          .filter(
-            (conversation) =>
-              !isBlockedByIdentity(conversation, blockedIdentityIds),
+        // A demo share sent from "Send in a message" keeps its preview and
+        // its place at the top across this rebuild from the seed.
+        return withLandedDemoShares(
+          applyConversationPrefs(
+            mockConversations.filter(
+              (conversation) => !deletedIds.has(conversation.id),
+            ),
           )
-          .map((conversation) => withMailboxSeat(conversation, scope));
+            .filter((conversation) => belongsToMailbox(conversation, scope))
+            .filter(
+              (conversation) =>
+                !isBlockedByIdentity(conversation, blockedIdentityIds),
+            )
+            .map((conversation) => withMailboxSeat(conversation, scope)),
+        );
       }
       const page = await getConversationsPage({
         limit: CONVERSATIONS_PAGE_SIZE,

@@ -246,6 +246,9 @@ export interface FeedPost {
    *  `FeedItem.actor.avatarUrl`. Demo posts omit it — `CommunityPostCard`
    *  falls back to initials. */
   avatarUrl?: string | null;
+  /** Mapped from the feed API's `FeedItem.studioLink`. Demo posts omit it,
+   *  and `CommunityPostCard` then reads their full mock body for a link. */
+  studioLink?: string | null;
 }
 
 export const FEED_POST: FeedPost = {

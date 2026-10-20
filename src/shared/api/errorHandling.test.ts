@@ -78,6 +78,20 @@ describe("handleQueryError", () => {
     expect(logError).toHaveBeenCalledOnce();
   });
 
+  it("files no monitoring event for a withheld Studio track", () => {
+    handleQueryError(
+      new ApiError(410, "This track is unavailable.", {
+        statusCode: 410,
+        code: "studio_track_withheld",
+        message: "This track is unavailable.",
+        error: "Gone",
+      }),
+      query,
+    );
+    expect(logError).not.toHaveBeenCalled();
+    expect(emit).not.toHaveBeenCalled();
+  });
+
   it("stays silent for a PLATFORM_LOCKED 503 (the lock provider owns that screen)", () => {
     // ToastProvider sits ABOVE PlatformLockProvider, so its viewport renders
     // over the maintenance screen. Without this carve-out a lockdown starting
@@ -236,6 +250,24 @@ describe("handleMutationError", () => {
 
 // PRD-467: the mutation toast speaks the member's language for a 4xx whose
 // backend sentence is English only.
+describe("handleMutationError with a coded refusal", () => {
+  it("names the Live game tab when an event edit would strand adults rounds", () => {
+    handleMutationError(
+      new ApiError(409, "Quiz has adults rounds", {
+        code: "quizshow_quiz_has_adults_rounds",
+      }),
+      undefined,
+      undefined,
+      { options: {} },
+    );
+    expect(emit).toHaveBeenCalledWith(
+      "This event's live game has adults rounds. Change their label in the Live game tab first, then turn off 18+",
+      "error",
+      6000,
+    );
+  });
+});
+
 describe("handleMutationError with a non-English locale", () => {
   afterEach(() => {
     setErrorReasonLocale(null);

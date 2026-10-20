@@ -236,6 +236,13 @@
   padding: 8px 16px;
   cursor: pointer;
   white-space: nowrap;
+  /* The 44px tap floor. The label and its arrow stay centred in the taller
+     pill, with the arrow keeping a word space's distance from the text. */
+  min-block-size: var(--tap-min);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--icon-gap-inline);
 }
 
 @media (--wide) {

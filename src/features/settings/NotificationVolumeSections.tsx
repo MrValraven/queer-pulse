@@ -6,7 +6,9 @@ import {
   useSetCommunityNotificationLevel,
 } from "../communities/api/useCommunityPreferences";
 import type { CommunityNotificationLevel } from "../communities/api/communityPreferences.api";
+import { useIsQuizshowVisible } from "../quizshow/quizshowLaunch";
 import { NOTIFICATION_CATEGORY_GROUPS } from "./NotificationVolume.data";
+import { NOTIFICATION_PREFERENCE_CATEGORY } from "./api/notificationPreferences.api";
 import {
   QUIET_HOURS_WINDOWS,
   formatMinuteOfDay,
@@ -110,20 +112,28 @@ function ReminderLeadRow() {
 export function NotificationCategorySections() {
   const { t } = useTranslation();
   const { isEnabled, setEnabled } = useNotificationPreferences();
+  const isQuizshowVisible = useIsQuizshowVisible();
   return (
     <>
       {NOTIFICATION_CATEGORY_GROUPS.map((group) => (
         <Section key={group.id} label={t(group.labelKey)}>
           <ToggleList>
-            {group.rows.map((categoryRow) => (
-              <ConsentToggleRow
-                key={categoryRow.category}
-                title={t(categoryRow.titleKey)}
-                description={t(categoryRow.descKey)}
-                checked={isEnabled(categoryRow.category)}
-                onChange={(next) => setEnabled(categoryRow.category, next)}
-              />
-            ))}
+            {group.rows
+              .filter(
+                (categoryRow) =>
+                  isQuizshowVisible ||
+                  categoryRow.category !==
+                    NOTIFICATION_PREFERENCE_CATEGORY.quizshow,
+              )
+              .map((categoryRow) => (
+                <ConsentToggleRow
+                  key={categoryRow.category}
+                  title={t(categoryRow.titleKey)}
+                  description={t(categoryRow.descKey)}
+                  checked={isEnabled(categoryRow.category)}
+                  onChange={(next) => setEnabled(categoryRow.category, next)}
+                />
+              ))}
           </ToggleList>
           {group.id === "gatherings" && <ReminderLeadRow />}
         </Section>

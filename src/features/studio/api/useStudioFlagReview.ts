@@ -31,6 +31,7 @@ import { type StudioReleaseView } from "./studio.adapters";
 import { demoWithdrawalStatus } from "./studioDemoMutations";
 import { studioLoadStateOf, type StudioLoadState } from "./studioLoadState";
 import { studioKeys } from "./studioQueryKeys";
+import { studioSafetyKeys } from "./studioSafetyQueryKeys";
 import {
   refreshReleaseLists,
   syncDemoReleaseLists,
@@ -50,7 +51,7 @@ export interface StudioReviewList<Item> {
 
 type ReviewPages<Item> = InfiniteData<StudioReviewPage<Item>, string | null>;
 
-function useReviewList<Item>(
+export function useReviewList<Item>(
   queryKey: QueryKey,
   readPage: (cursor: string | null) => Promise<StudioReviewPage<Item>>,
 ): StudioReviewList<Item> {
@@ -116,7 +117,9 @@ export function useStudioReviewWithdrawn(): StudioReviewList<StudioReviewWithdra
   });
 }
 
-async function sendReviewAction(action: StudioReviewAction): Promise<void> {
+export async function sendReviewAction(
+  action: StudioReviewAction,
+): Promise<void> {
   switch (action.kind) {
     case "takeDown":
       await takeDownStudioRelease(
@@ -144,7 +147,7 @@ async function sendReviewAction(action: StudioReviewAction): Promise<void> {
   }
 }
 
-function removeFromList<Item>(
+export function removeFromList<Item>(
   queryClient: QueryClient,
   queryKey: QueryKey,
   isRemoved: (item: Item) => boolean,
@@ -180,7 +183,7 @@ function updateInList<Item>(
   );
 }
 
-/** Re-reads all three queues and the moderation console's queue. */
+/** Re-reads every Studio review queue, the claim counts and the moderation console's queue. */
 export function refreshReviewQueues(
   queryClient: QueryClient,
   demoMode: boolean,
@@ -189,6 +192,10 @@ export function refreshReviewQueues(
     studioKeys.reviewReports(demoMode),
     studioKeys.reviewDisputes(demoMode),
     studioKeys.reviewWithdrawn(demoMode),
+    // Studio safety: a takedown also closes the release's track reports.
+    studioSafetyKeys.reviewTrackReports(demoMode),
+    studioSafetyKeys.reviewClaims(demoMode),
+    studioSafetyKeys.reviewClaimCounts(demoMode),
     ["mod-reports"],
   ])
     void queryClient.invalidateQueries({ queryKey });

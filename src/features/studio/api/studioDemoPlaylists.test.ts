@@ -22,9 +22,23 @@ import {
 beforeEach(() => resetDemoPlaylists());
 
 describe("demo playlist store", () => {
-  it("lists only the viewer's own playlists, newest updated first", () => {
+  it("lists the playlists the viewer owns, edits or is invited to, newest updated first", () => {
     const page = demoMyPlaylistsPage(null);
-    expect(page.items.every((card) => card.isOwner)).toBe(true);
+    expect(
+      page.items.every(
+        (card) =>
+          card.role === "owner" ||
+          card.role === "editor" ||
+          card.role === "invitee",
+      ),
+    ).toBe(true);
+    const ids = page.items.map((card) => card.id);
+    expect(ids).toContain("demo-playlist-tour-diary");
+    expect(ids).toContain("demo-playlist-pride-warm-up");
+    const prideCard = page.items.find(
+      (card) => card.id === "demo-playlist-pride-warm-up",
+    );
+    expect(prideCard?.role).toBe("invitee");
     const updated = page.items.map((card) => card.updatedAt);
     expect([...updated].sort().reverse()).toEqual(updated);
   });
@@ -158,12 +172,100 @@ describe("demo playlist store", () => {
     expect(after.entries.map((entry) => entry.position)).toEqual([1, 2, 3, 4]);
   });
 
-  it("refuses writes to someone else's playlist with a 404", () => {
-    expect(() =>
-      demoUpdatePlaylist(DEMO_DEFAULT_PLAYLIST_ID, { name: "Mine now" }),
-    ).toThrow(ApiError);
+  it("refuses a listener's write with 403 owner only", () => {
+    try {
+      demoUpdatePlaylist(DEMO_DEFAULT_PLAYLIST_ID, { name: "Mine now" });
+      throw new Error("expected a refusal");
+    } catch (error) {
+      expect((error as ApiError).status).toBe(403);
+      expect(studioErrorCodeOf(error)).toBe("studio_playlist_owner_only");
+    }
+  });
+});
+
+describe("demo playlist store, editors", () => {
+  it("shows an editor the unavailable entry too, with who added each one", () => {
+    const tour = demoStudioPlaylist("demo-playlist-tour-diary");
+    expect(tour.role).toBe("editor");
+    expect(tour.isOwner).toBe(false);
+    expect(tour.visibility).toBeNull();
+    expect(tour.editorCount).toBe(1);
+    expect(tour.entries).toHaveLength(4);
+    expect(tour.entries.filter((entry) => !entry.isAvailable)).toHaveLength(1);
+    expect(tour.entries[1]?.addedBy?.displayName).toBe("Tiago Costa");
   });
 
+  it("gives an invitee the invite and no attribution", () => {
+    const pride = demoStudioPlaylist("demo-playlist-pride-warm-up");
+    expect(pride.role).toBe("invitee");
+    expect(pride.invite?.invitedBy.displayName).toBe("Catarina Vaz");
+    expect(pride.editorCount).toBeNull();
+    expect(pride.entries.every((entry) => entry.addedBy === null)).toBe(true);
+  });
+
+  it("lets an editor rename and add, and stamps who added", () => {
+    const renamed = demoUpdatePlaylist("demo-playlist-tour-diary", {
+      name: "Tour diary 2026",
+    });
+    expect(renamed.name).toBe("Tour diary 2026");
+    const after = demoAddPlaylistTracks("demo-playlist-tour-diary", [
+      "demo-track-cidade-dos-santos-01",
+    ]);
+    expect(after.entries.at(-1)?.addedBy?.slug).toBe("tiago");
+  });
+
+  it("refuses an editor's visibility or credit change with 403", () => {
+    for (const body of [
+      { visibility: "public" as const },
+      { creditSubprofileId: null },
+    ]) {
+      try {
+        demoUpdatePlaylist("demo-playlist-tour-diary", body);
+        throw new Error("expected a refusal");
+      } catch (error) {
+        expect(studioErrorCodeOf(error)).toBe("studio_playlist_owner_only");
+      }
+    }
+  });
+
+  it("asks before a credit change removes editors, then removes them", () => {
+    try {
+      demoUpdatePlaylist("demo-playlist-cartas-que-voltam", {
+        creditSubprofileId: null,
+      });
+      throw new Error("expected a refusal");
+    } catch (error) {
+      expect(studioErrorCodeOf(error)).toBe(
+        "studio_playlist_credit_change_removes_editors",
+      );
+      expect(
+        ((error as ApiError).data as { editors: { slug: string }[] }).editors,
+      ).toEqual([
+        { slug: "rita", displayName: "Rita Varela", avatarUrl: null },
+      ]);
+    }
+    const changed = demoUpdatePlaylist("demo-playlist-cartas-que-voltam", {
+      creditSubprofileId: null,
+      confirmEditorRemoval: true,
+    });
+    expect(changed.editorCount).toBe(0);
+    expect(changed.credit.member?.slug).toBe("tiago");
+    expect(
+      changed.entries.some((entry) => entry.addedBy?.slug === "rita"),
+    ).toBe(false);
+  });
+
+  it("answers a remove of an entry already gone with 404 entry not found", () => {
+    try {
+      demoRemovePlaylistEntry("demo-playlist-kitchen-tapes", "no-such-entry");
+      throw new Error("expected a refusal");
+    } catch (error) {
+      expect(studioErrorCodeOf(error)).toBe("studio_playlist_entry_not_found");
+    }
+  });
+});
+
+describe("demo playlist store, lists and adds", () => {
   it("lists public playlists only on artist pages, track pages and search", () => {
     expect(
       demoArtistPlaylistCards("demo-persona-mariana-sol").map(

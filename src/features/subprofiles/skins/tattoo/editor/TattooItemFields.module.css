@@ -1,0 +1,94 @@
+/* Tattoo item drawer fields: consent tick, blur switch, legacy line. Tokens only. */
+
+.photoFields {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 4px;
+}
+
+/* The tick follows the app's checkbox pattern: a visually hidden native input
+   inside its label, a square indicator beside the text, a 44px target. */
+.consentRow {
+  position: relative;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: var(--tap-min);
+  padding: 8px 10px;
+  font-size: var(--text-13-5);
+  line-height: 1.5;
+  color: var(--ink);
+  border-radius: var(--radius-8);
+  cursor: pointer;
+}
+
+.consentRow:has(input:focus-visible) {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.consentIndicator {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  color: var(--ink-60);
+}
+
+.consentRow:has(input:checked) .consentIndicator {
+  color: var(--text-strong);
+}
+
+.consentText {
+  min-width: 0;
+}
+
+.requiredMark {
+  margin-inline-start: 2px;
+  color: var(--accent);
+  opacity: 0;
+  transition-property: opacity;
+  transition-duration: var(--dur-fast, 150ms);
+}
+
+.requiredMarkOn {
+  opacity: 1;
+}
+
+.helper {
+  margin: 0;
+  font-size: var(--text-13);
+  line-height: 1.55;
+  color: var(--ink-60);
+}
+
+.legacyLine {
+  margin: 0;
+  font-size: var(--text-13);
+  line-height: 1.55;
+  color: var(--accent);
+}
+
+.blurRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: var(--text-13-5);
+  color: var(--ink);
+}
+
+.blurGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.groupLabel {
+  display: block;
+  margin-bottom: 6px;
+  font-size: var(--text-13);
+  font-weight: 600;
+  color: var(--ink);
+}

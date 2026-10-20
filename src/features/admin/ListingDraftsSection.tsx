@@ -1,9 +1,11 @@
+import { FiEdit3 } from "react-icons/fi";
 import {
   Button,
   FadeIn,
   LoadErrorState,
   SkeletonLine,
 } from "../../shared/components/ui";
+import { adminCreatorDraftsPath } from "../../app/routeMap";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useAdminListingDrafts } from "./api/useAdminListingDrafts";
 import { ListingDraftRows } from "./ListingDraftRows";
@@ -32,6 +34,15 @@ export function ListingDraftsSection() {
   return (
     <FadeIn delay={80}>
       <p className={styles.queueCount}>{t("admin:listingDrafts.intro")}</p>
+      <p className={styles.queueCount}>
+        <Button
+          variant="ghost"
+          size="sm"
+          to={adminCreatorDraftsPath("listing")}
+        >
+          <FiEdit3 aria-hidden /> {t("admin:listingDrafts.creatorDraftsLink")}
+        </Button>
+      </p>
       {isLoading ? (
         <DraftRowsSkeleton />
       ) : isError ? (

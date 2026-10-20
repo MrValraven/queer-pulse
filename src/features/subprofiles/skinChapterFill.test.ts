@@ -130,3 +130,80 @@ describe("isControlVisible for a retired control", () => {
     });
   });
 });
+
+const privateStudioControl: SkinBlockControl = {
+  path: "tattooStudio.isPrivateStudio",
+  kind: "toggle",
+  labelKey: "subprofiles:skinBlock.tattoo.tattooStudio.isPrivateStudio",
+};
+
+const nextOpeningControl: SkinBlockControl = {
+  path: "tattoo.nextOpening",
+  kind: "date",
+  labelKey: "subprofiles:skinBlock.tattoo.tattoo.nextOpening",
+};
+
+const hasReducedPriceControl: SkinBlockControl = {
+  path: "tattooScarWork.hasReducedPrice",
+  kind: "toggle",
+  labelKey: "subprofiles:skinBlock.tattoo.tattooScarWork.hasReducedPrice",
+};
+
+const reducedPriceNoteControl: SkinBlockControl = {
+  path: "tattooScarWork.reducedPriceNote",
+  kind: "text",
+  labelKey: "subprofiles:skinBlock.tattoo.tattooScarWork.reducedPriceNote",
+  showWhen: { path: "tattooScarWork.hasReducedPrice", values: ["true"] },
+};
+
+const scarWorkChapter: SkinChapterDescriptor = {
+  key: "scarCoverUps",
+  titleKey: "subprofiles:skinBlock.tattoo.chapter.scarCoverUps.title",
+  ledeKey: "subprofiles:skinBlock.tattoo.chapter.scarCoverUps.lede",
+  groups: [{ controls: [hasReducedPriceControl, reducedPriceNoteControl] }],
+};
+
+describe("toggle and date controls", () => {
+  it("counts a toggle only when it is on", () => {
+    const path = privateStudioControl.path;
+    expect(
+      isControlFilled(privateStudioControl, readerOf({ [path]: true })),
+    ).toBe(true);
+    expect(
+      isControlFilled(privateStudioControl, readerOf({ [path]: false })),
+    ).toBe(false);
+    expect(isControlFilled(privateStudioControl, readerOf({}))).toBe(false);
+  });
+
+  it("counts a date once it holds a day", () => {
+    const path = nextOpeningControl.path;
+    expect(
+      isControlFilled(nextOpeningControl, readerOf({ [path]: "2026-11-03" })),
+    ).toBe(true);
+    expect(isControlFilled(nextOpeningControl, readerOf({ [path]: "" }))).toBe(
+      false,
+    );
+  });
+
+  it("shows a control that waits on a toggle", () => {
+    const chapters = [scarWorkChapter];
+    const path = hasReducedPriceControl.path;
+    expect(
+      isControlVisible(
+        reducedPriceNoteControl,
+        readerOf({ [path]: true }),
+        chapters,
+      ),
+    ).toBe(true);
+    expect(
+      isControlVisible(
+        reducedPriceNoteControl,
+        readerOf({ [path]: false }),
+        chapters,
+      ),
+    ).toBe(false);
+    expect(
+      isControlVisible(reducedPriceNoteControl, readerOf({}), chapters),
+    ).toBe(false);
+  });
+});

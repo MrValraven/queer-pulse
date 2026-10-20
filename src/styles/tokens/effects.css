@@ -46,6 +46,7 @@
   /* ── Blur ── */
   --blur-nav: blur(18px) saturate(1.5); /* floating nav glass */
   --blur-overlay: blur(5px); /* search/modal backdrop */
+  --photo-blur: 28px; /* artist-blurred body photos, BlurredPhoto */
 }
 
 /* ── Scroll reveal ── */

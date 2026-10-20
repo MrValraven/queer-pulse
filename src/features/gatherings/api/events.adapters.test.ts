@@ -329,6 +329,28 @@ describe("detailToGathering care and access", () => {
     });
     expect(gathering.customRsvpQuestion).toBeNull();
   });
+
+  it("carries the Pulse Live summary and reads its absence as off", () => {
+    const baseDetail = {
+      slug: "quiz-night",
+      title: "Quiz night",
+      startAt: "2026-10-10T19:00:00.000Z",
+    };
+    const quizshow = {
+      hasQuiz: true,
+      liveSessionCode: "QZ7KP4",
+      hasResults: false,
+    };
+
+    const withSummary = detailToGathering(
+      { ...baseDetail, quizshow },
+      passthroughTranslate,
+    );
+    const withoutField = detailToGathering(baseDetail, passthroughTranslate);
+
+    expect(withSummary.quizshow).toEqual(quizshow);
+    expect(withoutField.quizshow).toBeNull();
+  });
 });
 
 describe("cardToCalendarEvent care and access", () => {

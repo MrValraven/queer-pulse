@@ -12,6 +12,7 @@ import {
   type StudioReleaseType,
   type StudioSource,
 } from "./api/studio.types";
+import { useStudioOwnerTrackSafety } from "./api/useStudioOwnerTrackSafety";
 import { useStudioTrack } from "./api/useStudioTrack";
 import { useUpdateStudioTrack } from "./api/useStudioTrackMutations";
 import { StudioPersonaCreditsEditor } from "./StudioPersonaCreditsEditor";
@@ -24,6 +25,8 @@ import {
   focusFirstIncompleteSource,
   isIncompleteSource,
 } from "./studioSources";
+import { StudioTrackSafetyFields } from "./StudioTrackSafetyFields";
+import { useTrackSafetyDraft } from "./useTrackSafetyDraft";
 import { StudioTrackSourcesField } from "./StudioTrackSourcesField";
 import {
   StudioTrackNotesField,
@@ -217,7 +220,8 @@ export function StudioUploadTrackDetails({
   const lyricsId = useId();
   const [title, setTitle] = useState<string | null>(null);
   const [lyrics, setLyrics] = useState<string | null>(null);
-  const [isExplicit, setIsExplicit] = useState<boolean | null>(null);
+  const safety = useStudioOwnerTrackSafety(releaseId, trackId);
+  const safetyDraft = useTrackSafetyDraft(safety, track?.isExplicit ?? false);
   const [credits, setCredits] = useState<CreditRow[] | null>(null);
   const { saveError, showSaveError, clearSaveError, clearChapterSummary } =
     useSaveError();
@@ -243,7 +247,6 @@ export function StudioUploadTrackDetails({
   const titleValue = title ?? storedTitle;
   const lyricsValue =
     lyrics ?? track.lyricStanzas.map((lines) => lines.join("\n")).join("\n\n");
-  const explicitValue = isExplicit ?? track.isExplicit;
   const creditRows = credits ?? storedCreditRows(track.credits);
   const syncedValue =
     syncedLyrics === undefined ? track.syncedLyrics : syncedLyrics;
@@ -304,7 +307,8 @@ export function StudioUploadTrackDetails({
         body: {
           title: savedTitle,
           lyrics: lyricsToSave || null,
-          isExplicit: explicitValue,
+          isExplicit: safetyDraft.explicitValue,
+          ...safetyDraft.warningsPatch,
           credits: cleanCredits,
           ...artistKind.saveFields(),
           ...timingAndChapterFields(
@@ -366,14 +370,16 @@ export function StudioUploadTrackDetails({
         }
         onChange={changeTimings}
       />
-      <label className={tracksStyles.checkbox}>
-        <input
-          type="checkbox"
-          checked={explicitValue}
-          onChange={(event) => setIsExplicit(event.target.checked)}
-        />{" "}
-        {t("studio:uploadFlow.files.explicitLabel")}
-      </label>
+      <StudioTrackSafetyFields
+        explicitLabel={t("studio:uploadFlow.files.explicitLabel")}
+        isExplicit={safetyDraft.explicitValue}
+        isExplicitLocked={safety.isExplicitLocked}
+        onExplicitChange={safetyDraft.setIsExplicit}
+        contentWarnings={safetyDraft.warningsValue}
+        staffContentWarnings={safety.staffContentWarnings}
+        onContentWarningsChange={safetyDraft.setContentWarnings}
+        checkboxClassName={tracksStyles.checkbox}
+      />
       <StudioChaptersEditor
         rows={chapterRowsValue}
         onChange={changeChapters}

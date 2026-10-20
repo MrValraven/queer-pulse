@@ -197,48 +197,6 @@ export const studioShowcase: Catalog = {
     "{original} · {target} translation requested",
   "triage.detail.file.soleSplit": "100% {name} · no collabs",
 
-  // ── Flag review: flag cards (StudioFlagReviewPage, rendered by StudioFlagCard) ──
-  "flagReview.flag.who.uploadedWeeksAgo_one":
-    "{artist} · single · uploaded {count} week ago",
-  "flagReview.flag.who.uploadedWeeksAgo_other":
-    "{artist} · single · uploaded {count} weeks ago",
-  "flagReview.flag.who.uploadedMonthsAgo_one":
-    "{artist} · single · uploaded {count} month ago",
-  "flagReview.flag.who.uploadedMonthsAgo_other":
-    "{artist} · single · uploaded {count} months ago",
-  "flagReview.flag.who.recordedLive_one":
-    "Recorded live · {venue} · {count} artist",
-  "flagReview.flag.who.recordedLive_other":
-    "Recorded live · {venue} · {count} artists",
-  "flagReview.flag.cat.unclearedSample": "Possible uncleared sample",
-  "flagReview.flag.cat.creditOrSplit": "Wrong / missing credit or split",
-  "flagReview.flag.cat.misattribution": "Not the artist it claims to be",
-  "flagReview.flag.reason.fieldRecording":
-    "\"There's a field recording under the second half that sounds lifted from a known archive. <em>Worth checking it's cleared</em> before it keeps earning\"",
-  "flagReview.flag.reason.uncreditedVocal":
-    '"The remix credits {artist} but the original vocal is by someone uncredited. <em>The split table doesn\'t list them.</em> They should be getting paid"',
-  "flagReview.flag.reason.missingPerformer":
-    '"Pretty sure this live tape lists a performer who wasn\'t actually there that night. <em>Could be an honest mistake</em> in the lineup"',
-  "flagReview.flag.flaggedBy_one": "Flagged by {count} listener",
-  "flagReview.flag.flaggedBy_other": "Flagged by {count} listeners",
-  "flagReview.flag.rmeta.artistNotified":
-    "the artist has been notified to respond",
-  "flagReview.flag.rmeta.namedArtistNotified":
-    "the named artist has been notified to respond",
-  "flagReview.flag.rmeta.unclaimedInQueue_one":
-    "unclaimed · in the queue {count} day",
-  "flagReview.flag.rmeta.unclaimedInQueue_other":
-    "unclaimed · in the queue {count} days",
-  "flagReview.flag.claimedBy":
-    "Claimed by <em>{curator}</em> · awaiting artist reply",
-  "flagReview.flag.unclaimed": "Unclaimed · any curator can take it",
-  "flagReview.flag.decideBy": "decide by {date}",
-
-  // ── Flag review: resolved card (StudioFlagReviewPage) ──
-  "flagReview.resolved.reporterLine": "{name} · resolved {date}",
-  "flagReview.resolved.note":
-    "reporter was told the sample is public-domain, with a link",
-
   // ── Program: header and publish bar (StudioProgramPage) ──
   "program.header.dateRange": "15 to 21 June",
   "program.publishBar.publishDate": "Mon 15 Jun, 12:00 Lisbon",

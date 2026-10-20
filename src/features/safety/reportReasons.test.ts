@@ -196,9 +196,44 @@ describe("SUBJECT_REASONS", () => {
       "group_listing",
       "studio_release",
       "persona_post",
+      "studio_track",
     ];
     expect(Object.keys(SUBJECT_REASONS).sort()).toEqual(
       [...backendSubjectTypes].sort(),
     );
+  });
+});
+
+describe("SUBJECT_REASONS for Studio (safety and moderation contract)", () => {
+  it("mirrors the backend catalogue for a Studio track", () => {
+    expect(SUBJECT_REASONS.studio_track).toEqual([
+      "hateful_lyrics",
+      "untagged_explicit",
+      "impersonation",
+      "harassment",
+      "outing",
+      "spam",
+      "copyright",
+      "other",
+    ]);
+  });
+
+  it("offers untagged_explicit on a release, with other last", () => {
+    expect(SUBJECT_REASONS.studio_release).toContain("untagged_explicit");
+    expect(SUBJECT_REASONS.studio_release.at(-1)).toBe("other");
+  });
+});
+
+describe("SUBJECT_REASONS for Pulse Live", () => {
+  it("offers the Pulse Live answer reasons in the backend's order", () => {
+    expect(SUBJECT_REASONS.quizshow_answer).toEqual([
+      "outing",
+      "doxxing",
+      "harassment",
+      "hate_speech",
+      "discrimination",
+      "spam",
+      "other",
+    ]);
   });
 });

@@ -16,6 +16,7 @@ import {
 } from "./StudioPlayerControls";
 import { StudioSleepTimerChip } from "./StudioSleepTimer";
 import { StudioVolumeControl } from "./StudioVolumeControl";
+import { StudioWarningGate } from "./StudioWarningGate";
 import styles from "./StudioNowPlaying.module.css";
 
 /** Title and artist. A private preview names them as plain text: its pages
@@ -83,7 +84,7 @@ export function StudioNowPlayingStage({
 }) {
   const player = useStudioPlayer();
   return (
-    <div className={styles.stage}>
+    <div className={styles.stage} data-studio-player-surface="">
       <div className={styles.cover}>
         <ImageSlot
           src={item.coverUrl ?? undefined}
@@ -97,7 +98,8 @@ export function StudioNowPlayingStage({
       </div>
       <StageMeta item={item} onNavigate={onNavigate} />
       <StudioPlayerSeek onSeek={player.seek} size="large" />
-      <div className={styles.controlsRow}>
+      {/* The warning gate moves focus to this transport's play button. */}
+      <div className={styles.controlsRow} data-studio-transport="">
         <StudioShuffleButton />
         <StudioTransport size="large" />
         <StudioRepeatButton />
@@ -108,6 +110,8 @@ export function StudioNowPlayingStage({
       <div className={styles.status}>
         <StudioPlayerStatus />
       </div>
+      {/* Studio safety: the pause before a warned track (spec 6.3). */}
+      <StudioWarningGate />
       {/* Both popovers open upward: this row sits low on the sheet. */}
       <div className={styles.toolsRow}>
         <StudioCastButton />

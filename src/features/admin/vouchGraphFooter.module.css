@@ -1,0 +1,181 @@
+/* ── Footer: legend + time ──────────────────────────────── */
+.bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+  flex: none;
+  min-width: 0;
+  padding: 13px 22px;
+  padding-bottom: max(13px, env(safe-area-inset-bottom));
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
+  background: var(--paper);
+}
+.legend {
+  display: flex;
+  gap: 8px 14px;
+  flex-wrap: wrap;
+}
+.legendCollapse {
+  min-width: 0;
+}
+.legendToggle {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  gap: 6px;
+  min-height: 44px;
+  padding: 0 4px;
+  border: none;
+  background: none;
+  color: var(--ink-60);
+  font-family: var(--sans);
+  font-size: var(--text-12);
+  font-weight: 600;
+  cursor: pointer;
+}
+.legendToggle:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  border-radius: var(--radius-pill);
+}
+.legendChevron {
+  transition-property: transform;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: ease-out;
+}
+.legendChevronOpen {
+  transform: rotate(180deg);
+}
+.leg.legHidden {
+  max-width: 0;
+  margin-right: -14px;
+  opacity: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.leg {
+  max-width: 320px;
+  transition-property: max-width, margin-right, opacity;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: ease-out;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: var(--text-12);
+  font-weight: 500;
+  color: var(--ink-60);
+  white-space: nowrap;
+}
+.truncated {
+  white-space: normal;
+}
+.legDot {
+  width: 12px;
+  height: 12px;
+  flex: none;
+  border-radius: 50%;
+}
+.legDash {
+  width: 12px;
+  height: 12px;
+  flex: none;
+  border: 1.5px dashed var(--danger);
+}
+.legRing {
+  width: 12px;
+  height: 12px;
+  flex: none;
+  border-radius: 50%;
+  border: 2px solid var(--jade);
+}
+.legBond {
+  width: 18px;
+  height: 3px;
+  flex: none;
+  border-radius: var(--radius-2);
+  background: var(--jade);
+}
+.legLineInvite {
+  width: 18px;
+  height: 3px;
+  flex: none;
+  border-radius: var(--radius-2);
+  background: rgba(var(--amber-rgb), 0.85);
+}
+.legLineVouch {
+  width: 18px;
+  height: 3px;
+  flex: none;
+  border-radius: var(--radius-2);
+  background: rgba(var(--line-rgb), 0.6);
+}
+.legLineWithdrawn {
+  width: 18px;
+  height: 0;
+  flex: none;
+  border-top: 2px dashed rgba(var(--danger-rgb), 0.7);
+}
+.legHatch {
+  width: 12px;
+  height: 12px;
+  flex: none;
+  border-radius: var(--radius-3);
+  border: 1px solid rgba(var(--line-rgb), 0.45);
+  background: repeating-linear-gradient(
+    45deg,
+    rgba(var(--line-rgb), 0.12),
+    rgba(var(--line-rgb), 0.12) 2px,
+    rgba(var(--line-rgb), 0.45) 2px,
+    rgba(var(--line-rgb), 0.45) 4px
+  );
+}
+
+.timeCollapse {
+  min-width: 0;
+}
+.timeWrap {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+}
+.timeWrap input[type="range"] {
+  flex: 1 1 8rem;
+  min-width: 0;
+  max-width: 28rem;
+  accent-color: var(--accent);
+}
+.timeLbl {
+  flex: 1 1 10rem;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: var(--text-13);
+  color: var(--ink-60);
+}
+.replay {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 13px;
+  border: none;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--accent-rgb), 0.1);
+  color: var(--accent-ink);
+  font-family: var(--sans);
+  font-size: var(--text-12);
+  font-weight: 600;
+  cursor: pointer;
+}
+@media (hover: hover) {
+  .replay:hover {
+    background: rgba(var(--accent-rgb), 0.18);
+  }
+}
+.replay:disabled {
+  opacity: 0.5;
+  cursor: default;
+}

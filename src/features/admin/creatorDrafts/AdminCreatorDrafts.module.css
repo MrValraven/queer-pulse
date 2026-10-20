@@ -1,0 +1,124 @@
+/* The creator drafts list (AdminCreatorDraftsPage + AdminCreatorDraftRow).
+   Matches the listing drafts rows so the two draft queues read as one family. */
+
+.statusLine {
+  margin: var(--gap-grid) 0 0;
+  font-size: var(--text-13);
+  color: var(--ink-60);
+}
+
+/* Rows carry their own spacing (the card's block-end margin) so a row that
+   leaves folds its gap away with it inside CollapseListItem. */
+.rows {
+  margin: var(--gap-sm) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* The empty panel sits where the rows would start. */
+.empty {
+  margin-block-start: var(--gap-sm);
+}
+
+.skeletonRows {
+  display: grid;
+  gap: var(--gap-xs);
+  margin-block-start: var(--gap-sm);
+}
+
+.loadMore {
+  display: flex;
+  justify-content: center;
+  margin-block-start: var(--gap-grid);
+}
+
+.card {
+  display: grid;
+  gap: var(--gap-xs);
+  margin-block-end: var(--gap-xs);
+  padding: var(--gap-sm) var(--gap-grid);
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-card);
+}
+
+.cardTop {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gap-xs);
+  min-width: 0;
+}
+
+.titleLink {
+  min-width: 0;
+  font-family: var(--serif);
+  font-size: var(--text-17);
+  font-weight: 600;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+  text-decoration: underline;
+  text-decoration-color: rgba(var(--line-rgb), 0.35);
+  text-underline-offset: 3px;
+  border-radius: var(--radius-tag);
+  transition-property: text-decoration-color;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+.titleLink:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .titleLink:hover {
+    text-decoration-color: var(--accent);
+  }
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--icon-gap-inline) var(--gap-sm);
+  margin: 0;
+  font-size: var(--text-13-5);
+  color: var(--ink-60);
+}
+
+.metaItem {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.owner {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-xs);
+  min-width: 0;
+  font-size: var(--text-13-5);
+  color: var(--ink);
+}
+
+.ownerName {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.missing {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--icon-gap-inline);
+  margin: 0;
+  font-size: var(--text-13);
+}
+
+.missingLabel {
+  color: var(--ink-60);
+}
+
+.missingMore {
+  color: var(--ink-60);
+}

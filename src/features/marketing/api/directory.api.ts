@@ -5,6 +5,7 @@ import {
   apiPost,
 } from "../../../shared/api/client";
 import type { ItemsPage } from "../../../shared/api/pagination";
+import type { ListingTeamMemberPublicDTO } from "../listBusiness/api/listingTeam.types";
 import type { CropRect } from "../../../shared/components/ui/cropGeometry";
 import {
   validateDirectoryDetail,
@@ -432,6 +433,9 @@ export interface DirectoryDetailDTO extends DirectoryCardDTO {
    * the backend. Optional on the wire: a payload predating the public-questions
    * work carries none, and the Q&A section then reads as "no questions yet". */
   questions?: ListingPublicQuestionDTO[];
+  /** Accepted, viewer-visible team personas in page order, at most 40. The
+   *  backend always sends it; optional here for deploy order. */
+  team?: ListingTeamMemberPublicDTO[];
   /** Upcoming events at this venue. `startAt` is ISO; the FE composes `when`.
    * `id`/`slug` deep-link into the Events Hub (`/events/:slug`). `role` is
    * `runBy` when this listing runs the gathering; absent from an older

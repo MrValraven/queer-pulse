@@ -122,14 +122,15 @@ export const UPLOAD_LIMITS: Record<UploadKind, UploadLimit> = {
     minWidth: 1200,
     minHeight: 600,
   },
-  // A gathering's cover (`Event.coverImageUrl`). The same 2:1 banner a
-  // community cover is, on the board card and the detail hero, so it takes
-  // exactly the community cover's constraints. Mirrors the backend's
-  // `event-cover` upload kind.
+  // A gathering's cover (`Event.coverImageUrl`): a landscape banner or the
+  // event's own poster, which every cover renderer shows whole over a blurred
+  // backdrop (`PosterAwareImageSlot`). 600px on each edge lets a 1080x1350
+  // portrait poster and a 1200x600 banner both through. The backend sets no
+  // minimum for its `event-cover` upload kind; the 10 MB cap mirrors it.
   "event-cover": {
     maxBytes: 10 * MB,
     maxLabel: "10 MB",
-    minWidth: 1200,
+    minWidth: 600,
     minHeight: 600,
   },
   // A community's square identity mark, shown beside its name next to the wide
@@ -219,7 +220,8 @@ const MAX_DIMENSION_PX: Record<UploadKind, number> = {
   // Menu text has to stay readable, so the wide-hero cap.
   "listing-menu": 2560,
   "community-cover": 2560,
-  // The same full-bleed 2:1 banner as a community cover.
+  // A full-width detail hero like a community cover, or a poster shown up
+  // to 560px tall; the wide-hero cap keeps either sharp.
   "event-cover": 2560,
   // A square identity mark, never a hero: the same 1600px cap the other
   // avatars get rather than the wide-banner one above it.
@@ -809,7 +811,8 @@ export interface AspectConfig {
  * kind's rendered shape (avatars/group avatars are always circular/square
  * crops; story/community covers and listing photos are full-bleed 2:1
  * banners). Work images and gathering photos render at whatever aspect the
- * member frames, so they stay freeform.
+ * member frames, so they stay freeform, and so do event covers, which render
+ * the whole file whatever its shape.
  */
 export const CROP_CONFIG: Record<UploadKind, AspectConfig> = {
   avatar: { aspect: 1, aspectLabel: "1:1", allowFreeform: false },
@@ -824,8 +827,11 @@ export const CROP_CONFIG: Record<UploadKind, AspectConfig> = {
   // the centre of the crop rather than the centre of the file.
   "persona-cover": { aspect: 3, aspectLabel: "3:1", allowFreeform: false },
   "community-cover": { aspect: 2, aspectLabel: "2:1", allowFreeform: false },
-  // A gathering cover renders as the same 2:1 banner as a community cover.
-  "event-cover": { aspect: 2, aspectLabel: "2:1", allowFreeform: false },
+  // An event cover is a landscape banner or a portrait or square poster, and
+  // no cover renderer reads the saved crop: a landscape file fills its frame
+  // and a poster shows whole. The reframer opens on "Original" (the whole
+  // image) with the Square chip beside it.
+  "event-cover": { aspect: "free", aspectLabel: "free", allowFreeform: true },
   // The community's square mark renders in a circle/rounded square slot, so it
   // locks to 1:1 exactly like a member or group avatar.
   "community-avatar": { aspect: 1, aspectLabel: "1:1", allowFreeform: false },

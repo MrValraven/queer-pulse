@@ -1,0 +1,270 @@
+/* A community's support section, read-only: the method rows (link and copy)
+   and the read view around them (head, intro, notice, last update, empty
+   state). The editor keeps its own rules in GivingEditor.module.css. */
+
+.list {
+  --giving-row-pad-inline: 10px;
+  --giving-icon-size: 18px;
+  --giving-row-gap: 10px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.item {
+  min-width: 0;
+}
+
+/* ── One row: icon, title over a subtitle or value, then the action ─────── */
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--giving-row-gap);
+  min-width: 0;
+  min-height: var(--tap-min);
+  padding: 6px var(--giving-row-pad-inline);
+  border-radius: var(--radius-10);
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.icon {
+  flex-shrink: 0;
+  width: var(--giving-icon-size);
+  height: var(--giving-icon-size);
+  color: var(--ink-60);
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.title {
+  font-weight: 600;
+  font-size: var(--text-14-5);
+  overflow-wrap: anywhere;
+}
+
+.subtitle {
+  font-size: var(--text-12-5);
+  color: var(--ink-60);
+  overflow-wrap: anywhere;
+}
+
+/* ── Link row ─────────────────────────────────────────────────────────── */
+.linkRow {
+  transition-property: background-color;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+@media (hover: hover) {
+  .linkRow:hover {
+    background: rgba(var(--line-rgb), 0.06);
+  }
+}
+
+.external {
+  flex-shrink: 0;
+  margin-inline-start: auto;
+  color: var(--ink-60);
+}
+
+/* ── Copy row: the button wraps under the value on a narrow card, so a
+   long IBAN keeps the full width and never pushes the page sideways. The
+   text's own width is its basis, so the content decides the break: an
+   MB WAY number keeps its button inline on a phone, an IBAN wraps. ───── */
+.copyRow {
+  --giving-copy-indent: calc(var(--giving-icon-size) + var(--giving-row-gap));
+  flex-wrap: wrap;
+  row-gap: 6px;
+}
+
+/* The negative end margin cancels the button's indent while the two share
+   a line, so the indent costs no width there; the max-width keeps a
+   wrapped text inside the row. */
+.copyRow .text {
+  flex: 1 1 auto;
+  max-width: calc(100% - var(--giving-copy-indent));
+  margin-inline-end: calc(-1 * var(--giving-copy-indent));
+}
+
+.value {
+  font-size: var(--text-14);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+  overflow-wrap: anywhere;
+  /* One tap selects the whole value, the way out when copying fails. */
+  -webkit-user-select: all;
+  user-select: all;
+}
+
+.copyRow .copyButton {
+  flex: none;
+  /* Inline, the growing text already pushes the button to the row's end.
+     Wrapped, this indent puts it under the value, in the text column, so
+     value, button and note read down one left edge (the note pads to the
+     same line). */
+  margin-inline-start: var(--giving-copy-indent);
+  min-height: var(--tap-min);
+}
+
+.copyRow .copyButton[data-copied] {
+  color: var(--jade-text);
+  border-color: rgba(var(--jade-rgb), 0.6);
+  background: rgba(var(--jade-rgb), 0.12);
+}
+
+/* The ghost hover would repaint the confirmation while the pointer still
+   rests on the button; the jade stays until the copied state ends. The
+   :not(:disabled) outranks the ghost hover in either theme. */
+@media (hover: hover) {
+  .copyRow .copyButton[data-copied]:hover:not(:disabled) {
+    color: var(--jade-text);
+    border-color: rgba(var(--jade-rgb), 0.6);
+    background: rgba(var(--jade-rgb), 0.12);
+  }
+}
+
+.linkRow:focus-visible,
+.copyRow .copyButton:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* Lines up with the row's text, past the icon. */
+.note {
+  margin: 2px 0 0;
+  padding-inline: calc(
+      var(--giving-row-pad-inline) + var(--giving-icon-size) +
+        var(--giving-row-gap)
+    )
+    var(--giving-row-pad-inline);
+  font-size: var(--text-12-5);
+  line-height: 1.5;
+  color: var(--ink-60);
+  overflow-wrap: anywhere;
+}
+
+/* ── Read view around the list (CommunityGivingReadView, the tab) ─────── */
+.head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.editCta {
+  gap: 6px;
+  flex: none;
+  font-size: var(--text-12-5);
+  color: var(--ink-60);
+  /* A full tap target with the same compact type and side padding; the
+     height comes from min-height, so no block padding. */
+  min-height: var(--tap-min);
+  padding: 0 11px;
+  border-radius: var(--radius-9);
+  border: 1.5px solid rgba(var(--line-rgb), 0.14);
+  background: transparent;
+}
+
+.editCta svg {
+  width: 13px;
+  height: 13px;
+}
+
+@media (hover: hover) {
+  .editCta:hover:not(:disabled) {
+    border-color: var(--accent);
+    color: var(--accent-ink);
+  }
+}
+
+.intro {
+  margin: 0 0 14px;
+  max-width: 65ch;
+  font-size: var(--text-14-5);
+  line-height: 1.6;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+  white-space: pre-line;
+}
+
+.notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 16px 0 0;
+  max-width: 65ch;
+  font-size: var(--text-12-5);
+  line-height: 1.55;
+  color: var(--ink-60);
+}
+
+.notice svg {
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+  margin-top: 2px;
+}
+
+.updated {
+  margin: 6px 0 0;
+  font-size: var(--text-12);
+  color: var(--ink-60);
+}
+
+.empty {
+  margin: 0 0 8px;
+  max-width: 65ch;
+  font-size: var(--text-13-5);
+  line-height: 1.6;
+  color: var(--ink-60);
+}
+
+/* ── The tab around it all (CommunityGivingTab) ───────────────────────── */
+/* The sidebar card scrolls the panel into view; it lands below whatever
+   fixed nav the current layout has. */
+.panel {
+  scroll-margin-block-start: var(--sticky-top);
+}
+
+/* The heading takes focus after that scroll, never a ring for a mouse. */
+.panelHeading:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.loading {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 65ch;
+}
+
+.emptyOwner {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  padding-block-end: 4px;
+}
+
+.emptyTitle {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-17);
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.emptyOwner .empty {
+  margin-block-end: 10px;
+}

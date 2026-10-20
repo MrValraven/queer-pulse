@@ -17,6 +17,11 @@ import type { SubprofileMetaEditor } from "./useSubprofileMetaEditor";
 import type { SubprofileSkinBlocksEditor } from "./useSubprofileSkinBlocksEditor";
 import type { EditorRowsState } from "./useEditorRowsState";
 import { CAPACITY_OPTIONS } from "./skins/therapist/therapistHero.data";
+import {
+  availabilityForTattooStatus,
+  prepareTattooItemsForSave,
+  tattooRefusalCopy,
+} from "./skins/tattoo/tattooSaveGraph";
 import type {
   EditorEditVersionControls,
   SocialRow,
@@ -81,7 +86,7 @@ const hasRowChange = (counts: RowDiffCounts) =>
 
 /** The persona writes the save steps call, from `useSubprofileMutations` and
  *  `useAffiliations`. */
-type SaveMutations = Pick<
+export type SaveMutations = Pick<
   ReturnType<typeof useSubprofileMutations>,
   "update" | "replaceSection" | "replaceSocials"
 > & { replaceAffiliations: ReturnType<typeof useAffiliations>["replace"] };
@@ -135,7 +140,8 @@ function availabilityForTherapistStatus(
 
 /**
  * The meta half of the persona PATCH, captured at save time: the meta patch,
- * any availability a therapist status change implies, and the commit that
+ * any availability a therapist status change implies (for a tattoo artist,
+ * the availability its books status pairs with), and the commit that
  * advances the meta baseline to exactly what was PATCHed (keys typed while the
  * request is in flight stay dirty). A synced availability joins that baseline
  * and the presence field, so a later meta save does not send the old value.
@@ -146,11 +152,14 @@ function metaSaveParts(
   skinBlocks: SubprofileSkinBlocksEditor,
 ) {
   const metaPatch = meta.buildMetaPatch(); // null when no meta field changed
-  const syncedAvailability = availabilityForTherapistStatus(
-    subprofile,
-    meta,
-    skinBlocks,
-  );
+  const syncedAvailability =
+    availabilityForTherapistStatus(subprofile, meta, skinBlocks) ??
+    // The books status pairing compares against the draft availability.
+    availabilityForTattooStatus(
+      subprofile.kind,
+      skinBlocks.getValue("tattoo.status"),
+      meta.availability,
+    );
   const savedMetaSnapshot = syncedAvailability
     ? { ...meta.metaSnapshot(), availability: syncedAvailability }
     : meta.metaSnapshot();
@@ -177,7 +186,7 @@ function metaSaveParts(
  * advances that area's baseline to exactly what was sent, so rows typed while
  * the chain runs stay dirty.
  */
-function buildSaveSteps(
+export function buildSaveSteps(
   subprofile: SubprofileView,
   meta: SubprofileMetaEditor,
   skinBlocks: SubprofileSkinBlocksEditor,
@@ -192,6 +201,10 @@ function buildSaveSteps(
   // The persona every step writes to. An unlink in the PATCH below gives the
   // persona a fresh id (ENG-447), and the steps after it write to that one.
   let personaId = subprofile.id;
+  // Whether the persona is unlinked on the server: the loaded value until the
+  // PATCH below saves, then the one it answers with. A refused unlink leaves
+  // it linked, so a tattoo artist's flash days keep their event links.
+  let isPersonaUnlinked = subprofile.linkVisibility === "unlinked";
 
   // The persona PATCH carries meta fields AND the whole `skinData` column
   // (coverBleed + every editable skin block). The backend REPLACES `skin_data`
@@ -230,6 +243,7 @@ function buildSaveSteps(
           dto: { ...dto, expectedEditVersion },
         });
         personaId = saved.id;
+        isPersonaUnlinked = saved.linkVisibility === "unlinked";
         return saved;
       },
       commit: () => {
@@ -248,12 +262,19 @@ function buildSaveSteps(
       labelKey:
         rows.sectionLabelKeys[section] ?? "subprofiles:pending.area.meta",
       // A section is replaced wholesale, so the precondition is what keeps a
-      // co-owner's items in the same section from being dropped.
+      // co-owner's items in the same section from being dropped. A tattoo
+      // artist's flash days drop their event links once the persona is
+      // unlinked on the server (read when this step runs, after the PATCH),
+      // and sessions with no photo stay out of a project in progress.
       run: (expectedEditVersion) =>
         replaceSection.mutateAsync({
           id: personaId,
           section: section as SubprofileSection,
-          items,
+          items: prepareTattooItemsForSave(
+            section as SubprofileSection,
+            items,
+            { isUnlinked: isPersonaUnlinked },
+          ),
           expectedEditVersion,
         }),
       // The baseline takes the draft as it stands (a blank topic or trailing
@@ -484,10 +505,30 @@ export function useEditorSaveGraph(
     // the server's sentence in English and gives every other language a
     // translated line.
     const rejection = outcome.firstFailure;
+    // A tattoo refusal names the section and item, or the Page blocks field,
+    // the owner has to fix. The field is the control whose path is the
+    // refused path or its longest dot prefix.
+    const controlLabelForPath = (path: string): string | null => {
+      const matchingControls = skinBlocks.chapters
+        .flatMap((chapter) => chapter.groups)
+        .flatMap((group) => group.controls)
+        .filter(
+          (control) =>
+            control.path === path || path.startsWith(`${control.path}.`),
+        )
+        .sort((first, second) => second.path.length - first.path.length);
+      const closestControl = matchingControls[0];
+      return closestControl ? t(closestControl.labelKey) : null;
+    };
+    const tattooCopy = tattooRefusalCopy(rejection, {
+      sectionLabel: t(outcome.failedLabelKeys[0] ?? ""),
+      controlLabelForPath,
+    });
     const refusalKey = personaRefusalMessageKey(rejection);
     const isSingleFailure = failed.length === 1;
-    const detail =
-      refusalKey && (isSingleFailure || isAccountRestricted(rejection))
+    const detail = tattooCopy
+      ? t(tattooCopy.messageKey, tattooCopy.params)
+      : refusalKey && (isSingleFailure || isAccountRestricted(rejection))
         ? t(refusalKey)
         : isSingleFailure &&
             rejection instanceof ApiError &&

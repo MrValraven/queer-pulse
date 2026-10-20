@@ -13,6 +13,7 @@ import {
 } from "./studioDemoFormats.data";
 import { DEMO_ARTIST_MARIANA } from "./studioDemoMe.data";
 import { studioRefusal } from "./studioDemoMutations";
+import { demoTrackWithSafety } from "./studioDemoSafety";
 import {
   demoReleaseCard,
   demoSocialLinksFor,
@@ -72,7 +73,12 @@ function playableTracks(
     const release = releases.find((candidate) => trackOf(candidate, trackId));
     const track = release ? trackOf(release, trackId) : undefined;
     return release && track?.hasAudio
-      ? [{ ...track, release: demoReleaseCard(release) }]
+      ? [
+          {
+            ...demoTrackWithSafety(track, false),
+            release: demoReleaseCard(release),
+          },
+        ]
       : [];
   });
 }
@@ -84,6 +90,7 @@ function fallbackTracks(
   return releases
     .flatMap((release) =>
       release.tracks
+        .map((track) => demoTrackWithSafety(track, false))
         .filter((track) => track.hasAudio)
         .map((track) => ({ ...track, release: demoReleaseCard(release) })),
     )

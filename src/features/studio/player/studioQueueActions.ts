@@ -9,6 +9,7 @@ import {
   randomShuffleSeed,
   type PlayerActionDependencies,
 } from "./studioTransportActions";
+import { consentToWarnedTrack, warningGateOf } from "./studioWarningGate";
 
 const TRACK_STALE_MS = 60_000;
 
@@ -49,7 +50,12 @@ export function createQueueActions(
       return;
     }
     refs.refreshCountRef.current = 0;
-    void commands().loadEntry(current, 0, shouldPlay);
+    // A warned entry an edit moved onto waits, cued, for Play it.
+    void commands().loadEntry(
+      current,
+      0,
+      shouldPlay && !refs.queueRef.current.pendingWarning,
+    );
   }
 
   async function enqueue(
@@ -80,6 +86,8 @@ export function createQueueActions(
     // Hide explicit (contract F.2): an explicit track stays out while hidden.
     if (track.isExplicit && deps.readPlaybackSettings().hideExplicit)
       return false;
+    // Play next and Add to queue name the track: that is consent (D5).
+    consentToWarnedTrack(track.id);
     const previousEntryId = currentEntryId();
     // A new entry on purpose: the same track may sit in the queue twice, and
     // entries already queued keep their ids.
@@ -100,8 +108,13 @@ export function createQueueActions(
     removeEntry: (queueEntryId) => {
       const previousEntryId = currentEntryId();
       const shouldPlay = isActiveStatus(refs.statusRef.current);
-      const { hideExplicit } = deps.readPlaybackSettings();
-      dispatch({ type: "remove", queueEntryId, hideExplicit });
+      const settings = deps.readPlaybackSettings();
+      dispatch({
+        type: "remove",
+        queueEntryId,
+        hideExplicit: settings.hideExplicit,
+        gate: warningGateOf(settings),
+      });
       followCurrent(previousEntryId, shouldPlay);
     },
     clearUserQueue: () => {
@@ -111,6 +124,27 @@ export function createQueueActions(
       // Called synchronously inside the member's click (autoplay rules).
       refs.engineRef.current?.unlock();
       refs.intentTokenRef.current += 1;
+      // A jump in the queue panel names the track: that is consent (D5).
+      // The waiting warned track is the current entry, so it counts too, and
+      // its consent lands before the answer below clears the wait.
+      const queue = refs.queueRef.current;
+      const candidates = [
+        ...(queue.current ? [queue.current] : []),
+        ...queue.userItems,
+        ...queue.sourceItems,
+      ];
+      const target = candidates.find(
+        (item) => item.queueEntryId === queueEntryId,
+      );
+      if (target) consentToWarnedTrack(target.trackId);
+      // A jump onto the warned track that waits answers it: Play it.
+      if (queue.pendingWarning?.queueEntryId === queueEntryId) {
+        const state = dispatch({ type: "consentWarning" });
+        if (!state.current) return;
+        refs.refreshCountRef.current = 0;
+        void commands().loadEntry(state.current, 0);
+        return;
+      }
       const previousEntryId = currentEntryId();
       dispatch({ type: "playEntry", queueEntryId });
       followCurrent(previousEntryId, true);

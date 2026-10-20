@@ -69,7 +69,11 @@ export function EditDetailsFormat({
             ? OTHER_FORMAT_KEY
             : "",
       formatDetails:
-        stripDisallowedDetails(nextFamily || null, draft.formatDetails) ?? {},
+        stripDisallowedDetails(
+          nextFamily || null,
+          draft.formatDetails,
+          findFormat(draft.format)?.family === nextFamily ? draft.format : null,
+        ) ?? {},
     });
   };
 
@@ -117,7 +121,17 @@ export function EditDetailsFormat({
               { value: OTHER_FORMAT_KEY, label: t(OTHER_FORMAT_NAME_KEY) },
             ]}
             value={draft.format}
-            onChange={(value) => onChange({ format: value ?? "" })}
+            onChange={(value) =>
+              onChange({
+                format: value ?? "",
+                formatDetails:
+                  stripDisallowedDetails(
+                    draft.gatheringFamily || null,
+                    draft.formatDetails,
+                    value,
+                  ) ?? {},
+              })
+            }
           />
         </FormField>
       )}
@@ -144,6 +158,7 @@ export function EditDetailsFormat({
       {draft.gatheringFamily !== "" && (
         <FormatDetailsFields
           family={draft.gatheringFamily}
+          formatKey={draft.format}
           details={draft.formatDetails}
           onChange={changeDetail}
         />

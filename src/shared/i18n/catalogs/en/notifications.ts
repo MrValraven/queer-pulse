@@ -1497,6 +1497,50 @@ export const notifications: Catalog = {
     "Our team decided on your dispute about {releaseTitle}.",
   "type.studio_release_dispute_decided.meta": "Studio dispute",
   "type.studio_release_dispute_decided.releaseTitleFallback": "your release",
+  // Studio safety: copyright claims and the marks our team puts on a track.
+  // In-app only, no push copy.
+  "type.studio_copyright_claim_accepted.text":
+    "{trackTitle} is offline while our team reviews a copyright claim.",
+  "type.studio_copyright_claim_accepted.meta": "Studio claim",
+  "type.studio_copyright_claim_accepted.trackTitleFallback":
+    "One of your tracks",
+  "type.studio_copyright_claim_declined.text":
+    "Our team declined your copyright claim about {trackTitle}.",
+  "type.studio_copyright_claim_declined.meta": "Studio claim",
+  "type.studio_copyright_claim_declined.trackTitleFallback": "a Studio track",
+  "type.studio_copyright_claim_countered.text":
+    "The artist sent a counter-notice to your claim about {trackTitle}.",
+  "type.studio_copyright_claim_countered.meta": "Studio claim",
+  "type.studio_copyright_claim_countered.trackTitleFallback": "a Studio track",
+  "type.studio_copyright_claim_decided.text":
+    "Our team decided on the copyright claim about {trackTitle}.",
+  "type.studio_copyright_claim_decided.meta": "Studio claim",
+  "type.studio_copyright_claim_decided.trackTitleFallback": "a Studio track",
+  "type.studio_copyright_claim_decided.owner.upheld.text":
+    "Our team upheld the copyright claim about {trackTitle}.",
+  "type.studio_copyright_claim_decided.owner.upheld.meta": "Studio claim",
+  "type.studio_copyright_claim_decided.owner.rejected.text":
+    "Our team rejected the copyright claim about {trackTitle}. It's back online.",
+  "type.studio_copyright_claim_decided.owner.rejected.meta": "Studio claim",
+  "type.studio_copyright_claim_decided.claimant.upheld.text":
+    "Our team upheld your copyright claim about {trackTitle}.",
+  "type.studio_copyright_claim_decided.claimant.upheld.meta": "Studio claim",
+  "type.studio_copyright_claim_decided.claimant.rejected.text":
+    "Our team rejected your copyright claim about {trackTitle}.",
+  "type.studio_copyright_claim_decided.claimant.rejected.meta": "Studio claim",
+  "type.studio_copyright_claim_withdrawn.text":
+    "The copyright claim about {trackTitle} was withdrawn.",
+  "type.studio_copyright_claim_withdrawn.meta": "Studio claim",
+  "type.studio_copyright_claim_withdrawn.trackTitleFallback": "your track",
+  "type.studio_track_marked.text": "Our team updated {trackTitle}.",
+  "type.studio_track_marked.meta": "Studio track",
+  "type.studio_track_marked.trackTitleFallback": "your track",
+  "type.studio_track_marked.explicit.text":
+    "Our team marked {trackTitle} explicit.",
+  "type.studio_track_marked.explicit.meta": "Studio track",
+  "type.studio_track_marked.content_warning.text":
+    "Our team added a content warning to {trackTitle}.",
+  "type.studio_track_marked.content_warning.meta": "Studio track",
   "actions.listenNow": "Listen now",
   // Studio discovery: persona credits. The role arrives as a slug and is
   // named through the studio role labels (notificationKindCopy.ts). A
@@ -1528,4 +1572,55 @@ export const notifications: Catalog = {
   "studioCreditRole.coverArt": "Cover art",
   "studioCreditRole.other": "Other",
   "actions.reviewCredit": "Review credit",
+  // Studio collaborative playlists. The actor is the counterpart member: the
+  // owner on an invite or a pick, the invitee on an answer. `{name}` comes
+  // from the actor; `{playlistName}` and `{personaName}` from the payload.
+  "type.studio_playlist_editor_invite.text":
+    "You've been invited to edit the playlist {playlistName}.",
+  "type.studio_playlist_editor_invite.textNamed":
+    "<profile>{name}</profile> invited you to edit the playlist {playlistName}.",
+  "type.studio_playlist_editor_invite.meta": "Playlist invite",
+  "type.studio_playlist_editor_invite.playlistNameFallback": "a playlist",
+  "type.studio_playlist_editor_invite_accepted.text":
+    "Someone accepted your invite to edit {playlistName}.",
+  "type.studio_playlist_editor_invite_accepted.textNamed":
+    "<profile>{name}</profile> accepted your invite to edit {playlistName}.",
+  "type.studio_playlist_editor_invite_accepted.meta":
+    "Playlist invite accepted",
+  "type.studio_playlist_editor_invite_accepted.playlistNameFallback":
+    "your playlist",
+  "type.studio_playlist_editor_invite_declined.text":
+    "Someone declined your invite to edit {playlistName}.",
+  "type.studio_playlist_editor_invite_declined.textNamed":
+    "<profile>{name}</profile> declined your invite to edit {playlistName}.",
+  "type.studio_playlist_editor_invite_declined.meta":
+    "Playlist invite declined",
+  "type.studio_playlist_editor_invite_declined.playlistNameFallback":
+    "your playlist",
+  "type.studio_playlist_editor_added.text":
+    "You can now edit {playlistName}, a playlist shown as {personaName}.",
+  "type.studio_playlist_editor_added.textNamed":
+    "<profile>{name}</profile> made you an editor of {playlistName}, shown as {personaName}.",
+  "type.studio_playlist_editor_added.meta": "Playlist editor",
+  "type.studio_playlist_editor_added.playlistNameFallback": "a playlist",
+  "type.studio_playlist_editor_added.personaNameFallback": "your persona",
+
+  // ── Meet the team (2026-10-19) ──
+  "type.listing_team_invite.text":
+    "{listingName} invited {personaName} to its team.",
+  "type.listing_team_invite.meta": "Team invite",
+  "type.listing_team_invite.listingNameFallback": "A business",
+  "type.listing_team_invite.personaNameFallback": "your persona",
+  "type.listing_team_request.text":
+    "{personaName} asked to join the team at {listingName}.",
+  "type.listing_team_request.meta": "Team request",
+  "type.listing_team_request.personaNameFallback": "A persona",
+  "type.listing_team_request.listingNameFallback": "your business",
+  "type.listing_team_accepted.text":
+    "{personaName} is now on the team at {listingName}.",
+  "type.listing_team_accepted.meta": "Now on the team",
+  "type.listing_team_accepted.personaNameFallback": "A persona",
+  "type.listing_team_accepted.listingNameFallback": "a business",
+  "actions.reviewTeamInvite": "Review invite",
+  "actions.reviewTeamRequest": "Review request",
 };

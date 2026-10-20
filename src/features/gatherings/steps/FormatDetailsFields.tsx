@@ -78,16 +78,18 @@ function terrainOptions(t: TFunction) {
  */
 export function FormatDetailsFields({
   family,
+  formatKey,
   details,
   onChange,
   variant = "modal",
 }: {
   family: GatheringFamily;
+  formatKey?: string;
   details: FormatDetails;
   onChange: DetailChangeHandler;
   variant?: "wizard" | "modal";
 }) {
-  const detailKeys = allowedDetailKeys(family);
+  const detailKeys = allowedDetailKeys(family, formatKey);
   if (detailKeys.length === 0) return null;
   return variant === "wizard" ? (
     <WizardDetailFields

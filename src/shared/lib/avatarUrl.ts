@@ -122,16 +122,31 @@ function normalizeUnsplashSrc(
     url.searchParams.set("q", "80");
     return url.toString();
   }
-  const raise = (param: "w" | "h") => {
-    const current = Number(url.searchParams.get(param));
-    if (!Number.isFinite(current) || current < size) {
-      url.searchParams.set(param, String(size));
-    }
-  };
-  raise("w");
-  // Only touch `h` when the URL already constrains height (a square/fixed crop);
-  // width-only URLs stay width-bound so the aspect ratio is preserved.
-  if (url.searchParams.has("h")) raise("h");
+  const currentWidth = Number(url.searchParams.get("w"));
+  const currentHeight = Number(url.searchParams.get("h"));
+  const isWidthBelowSize =
+    !Number.isFinite(currentWidth) || currentWidth < size;
+  if (isWidthBelowSize) url.searchParams.set("w", String(size));
+  // Only touch `h` when the URL already constrains height (a fixed crop), and
+  // then scale it with the width so the crop keeps its shape: a 4:5 poster
+  // stays 4:5 and a square stays square. Width-only URLs stay width-bound.
+  const hasScalableHeight =
+    url.searchParams.has("h") &&
+    Number.isFinite(currentHeight) &&
+    currentHeight > 0 &&
+    Number.isFinite(currentWidth) &&
+    currentWidth > 0;
+  if (isWidthBelowSize && hasScalableHeight) {
+    const scaledHeight = Math.max(
+      1,
+      Math.round((currentHeight * size) / currentWidth),
+    );
+    url.searchParams.set("h", String(scaledHeight));
+  } else if (url.searchParams.has("h") && !hasScalableHeight) {
+    const isHeightBelowSize =
+      !Number.isFinite(currentHeight) || currentHeight < size;
+    if (isHeightBelowSize) url.searchParams.set("h", String(size));
+  }
   if (!url.searchParams.has("auto")) url.searchParams.set("auto", "format");
   return url.toString();
 }

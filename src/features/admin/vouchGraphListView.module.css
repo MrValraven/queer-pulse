@@ -1,0 +1,121 @@
+/* ── List view (E1): the visible members as a table ─────── */
+.wrap {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 6px;
+  background: var(--paper);
+}
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-13);
+  color: var(--ink);
+}
+.caption {
+  padding: 14px 22px 8px;
+  text-align: left;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: var(--text-14);
+  color: var(--ink-60);
+}
+.table th,
+.table td {
+  padding: 9px 22px;
+  text-align: left;
+  vertical-align: middle;
+  font-weight: 500;
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.09);
+}
+.table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--paper);
+  font-size: var(--text-12);
+  font-weight: 600;
+  color: var(--ink-60);
+}
+.isSelected {
+  background: rgba(var(--accent-rgb), 0.08);
+}
+.sortButton,
+.rowButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 6px;
+  margin: -4px -6px;
+  border: none;
+  border-radius: var(--radius-pill);
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition-property: background-color;
+  transition-duration: var(--dur-fast);
+}
+.rowButton {
+  font-weight: 600;
+  color: var(--ink);
+}
+@media (hover: hover) {
+  .sortButton:hover,
+  .rowButton:hover {
+    background: rgba(var(--accent-rgb), 0.12);
+  }
+}
+.sortButton:focus-visible,
+.rowButton:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* Phones: keep the real table (headers stay announced) and let it scroll
+   sideways inside its own wrapper. Cells never break mid-word, and the
+   name column stays pinned so every row keeps its owner in view. */
+@media (max-width: 920px) {
+  .wrap {
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+  .table {
+    width: max-content;
+    min-width: 100%;
+  }
+  .table th,
+  .table td {
+    padding: 6px 14px;
+    white-space: nowrap;
+    overflow-wrap: normal;
+    word-break: normal;
+  }
+  .table tbody th {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    background: var(--paper);
+  }
+  .table tbody .isSelected th {
+    background: var(--paper);
+    box-shadow: inset 0 0 0 100vmax rgba(var(--accent-rgb), 0.08);
+  }
+  .caption {
+    position: sticky;
+    left: 0;
+    padding-inline: 14px;
+    white-space: normal;
+  }
+}
+@media (pointer: coarse) {
+  .sortButton,
+  .rowButton {
+    min-height: 2.75rem;
+    padding-block: 0;
+    margin-block: -0.5rem;
+  }
+}

@@ -1,9 +1,10 @@
-import type { CSSProperties, ReactNode } from "react";
+import { useRef, type CSSProperties, type ReactNode } from "react";
 import { FiImage, FiX } from "react-icons/fi";
 import { Avatar, Button, IconButton, Toggle } from "../../shared/components/ui";
 import type { ButtonVariant } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
+import { StudioComposerPreview } from "../studio/share/StudioComposerPreview";
 import type { Person } from "./communityDetails";
 import { photoOf } from "./communityPeople";
 import type { usePostImageAttach } from "./usePostImageAttach";
@@ -70,6 +71,7 @@ export function CommunityPostComposer({
 }) {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
+  const fieldRef = useRef<HTMLTextAreaElement>(null);
   const {
     image,
     uploading: isUploading,
@@ -94,6 +96,7 @@ export function CommunityPostComposer({
       />
       <div className={styles.field}>
         <textarea
+          ref={fieldRef}
           className={textareaClassName}
           rows={1}
           aria-label={placeholder}
@@ -101,6 +104,11 @@ export function CommunityPostComposer({
           value={value}
           onChange={(event) => onChange(event.target.value)}
           style={{ width: "100%" }}
+        />
+        <StudioComposerPreview
+          text={value}
+          onTextChange={onChange}
+          fieldRef={fieldRef}
         />
         {image && (
           <div className={styles.stagedImage}>

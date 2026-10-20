@@ -10,7 +10,7 @@ import type {
 import {
   groupInitials,
   lastMessageMailboxFields,
-  messageDisplayText,
+  inboxPreviewText,
   previewForMessage,
   timeLabel,
   type ConversationWithPreview,
@@ -412,8 +412,9 @@ export function withLastActivityOf<ConversationRow extends Conversation>(
 }
 
 /** `conversation` with `preview`/`time` and the fields behind them taken
- *  from `message`. */
-function withMessagePreview(
+ *  from `message`. Exported for the demo inbox, which folds a landed demo
+ *  share into its rebuilt rows (`features/messages/share/demoShareSend.ts`). */
+export function withMessagePreview(
   conversation: ConversationWithPreview,
   message: MessageResponse,
 ): ConversationWithPreview {
@@ -432,7 +433,7 @@ function withMessagePreview(
     // delivery-status tick pointing at the PREVIOUS last message until the
     // next full inbox refetch.
     lastMessageSenderHandle: message.sender.handle || undefined,
-    lastMessageBody: messageDisplayText(message),
+    lastMessageBody: inboxPreviewText(message),
     lastMessageIsSystem: message.kind === "system",
     // Business mailboxes: all three keys are written on every patch, so
     // a customer message after a colleague's reply drops that colleague's

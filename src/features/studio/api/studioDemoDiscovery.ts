@@ -17,6 +17,10 @@ import { DEMO_ARTISTS, DEMO_RELEASES } from "./studioDemo.data";
 import { DEMO_LISTED_RELEASES, demoPageOf } from "./studioDemoApi";
 import { demoReleaseCard } from "./studioDemoCards";
 import {
+  demoEffectiveWarnings,
+  demoWithheldTrackIds,
+} from "./studioDemoSafety";
+import {
   DEMO_CURATION_SEED,
   type DemoCuratedPickSeed,
 } from "./studioDemoCuration.data";
@@ -226,13 +230,17 @@ export function demoStudioRadio(filter: StudioRadioFilter): StudioRadioDTO {
   );
   const items = releases.flatMap((release) =>
     release.tracks.flatMap((track) =>
-      track.hasAudio && track.durationSeconds !== null
+      track.hasAudio &&
+      track.durationSeconds !== null &&
+      // Studio safety: the radio leaves a withheld track out.
+      !demoWithheldTrackIds().has(track.id)
         ? [
             {
               trackId: track.id,
               title: track.title,
               durationSeconds: track.durationSeconds,
               isExplicit: track.isExplicit,
+              contentWarnings: demoEffectiveWarnings(track.id),
               releaseId: release.id,
               releaseTitle: release.title,
               coverUrl: release.coverUrl,

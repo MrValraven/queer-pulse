@@ -1,5 +1,6 @@
 import type { Formatters } from "../../../shared/i18n/format";
 import type { DirectoryPlace, Tint } from "../directoryPlaces";
+import { toListingTeamMemberViews } from "../listBusiness/api/listingTeam.adapters";
 import {
   initials,
   normalizeHours,
@@ -359,6 +360,7 @@ export function detailDtoToPlace(
     // Optional on the wire (a payload predating the public-questions work has
     // none): an absent block reads as "nobody has asked anything yet".
     questions: dto.questions ?? [],
+    team: toListingTeamMemberViews(dto.team),
     upcoming: dto.upcoming.map((event) => {
       const startAt = new Date(event.startAt);
       return {

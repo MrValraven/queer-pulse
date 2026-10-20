@@ -1,7 +1,13 @@
+import { useState } from "react";
 import { FiCalendar } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
-import { Avatar, Button, ImageSlot } from "../../shared/components/ui";
+import {
+  Avatar,
+  Button,
+  isPosterShaped,
+  PosterAwareImageSlot,
+} from "../../shared/components/ui";
 import { gatheringPath } from "../gatherings/data";
 import { tintForSlug } from "../../shared/api/refs";
 import { initials, relativeTime } from "./api/feed.adapters";
@@ -23,28 +29,45 @@ import {
   FeedTagRow,
 } from "./FeedCard";
 
-/** The cover banner's rendered height. Passed to `ImageSlot` as a number so
- *  the slot reserves the box before the file arrives and the card never jumps. */
+/** The cover banner's rendered height. Passed to `PosterAwareImageSlot` as a
+ *  number so the slot reserves the box before the file arrives and a
+ *  landscape cover never moves the card. */
 const BANNER_HEIGHT = 160;
+
+/** The banner's height once the cover measures as a poster: tall enough that
+ *  a portrait poster shows at a readable size beside its blurred backdrop,
+ *  on a phone card as well as a desktop one. */
+const POSTER_BANNER_HEIGHT = 280;
 
 /** The widest a feed card's banner is ever rendered, at 2x, for hosts that
  *  can resize on request. */
 const BANNER_SRC_WIDTH = 720;
 
-/** The gathering's cover photo, full bleed across the top of the card. */
+/**
+ * The gathering's cover photo, full bleed across the top of the card. A
+ * landscape cover fills the 160px banner. A poster (portrait or near-square)
+ * shows whole over its blurred backdrop, and once the file measures as one
+ * the banner grows from 160px to 280px so the poster stays readable; a poster
+ * already in the browser's cache opens at the taller height.
+ */
 function GatheringBanner({ src }: { src: string }) {
+  const [posterSrc, setPosterSrc] = useState<string | null>(null);
+  const isPoster = posterSrc === src;
   return (
     <div className={styles.gatheringBanner}>
-      <ImageSlot
+      <PosterAwareImageSlot
         src={src}
-        /* Decorative: the title below names the gathering, so an alt would
+        /* Decorative: the title below names the event, so an alt would
            only repeat it to a screen reader. */
         alt=""
         width="100%"
-        height={BANNER_HEIGHT}
+        height={isPoster ? POSTER_BANNER_HEIGHT : BANNER_HEIGHT}
         srcSize={BANNER_SRC_WIDTH}
         radius={0}
         className={styles.gatheringBannerImage}
+        onNaturalSize={({ width, height }) => {
+          if (isPosterShaped(width, height)) setPosterSrc(src);
+        }}
       />
     </div>
   );

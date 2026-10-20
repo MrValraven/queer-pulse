@@ -1,0 +1,80 @@
+/* Staff previews of creator drafts. Every preview renders the real public
+   tree inside one bordered card; each kind then gives that tree the ground
+   its public page has. */
+
+.frame {
+  max-inline-size: 100%;
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-22);
+  background: var(--paper);
+  color: var(--ink);
+  overflow: hidden;
+}
+
+/* The skinned persona tree (`.pp`) paints its own ground. Containing its
+   layout and paint keeps the skin's full-bleed bands inside the card. */
+.personaFrame {
+  contain: layout paint;
+}
+
+/* The directory page sits on the cream page ground, as it does in the
+   moderator drawer and the owner's preview. */
+.listingFrame {
+  background: var(--cream);
+}
+
+/* An event page lays its parts on a padded column. Inside the card they get
+   the same inset, so the cover and the text keep clear of the border. */
+.eventFrame {
+  padding: var(--card-pad);
+}
+
+/* The community card sits on the page ground at the width the wizard gives
+   it, so it reads as one card set on a page. */
+.communityFrame {
+  padding: var(--card-pad);
+  background: var(--cream);
+}
+
+.communityCard {
+  max-inline-size: min(100%, 24rem);
+  margin-inline: auto;
+}
+
+/* `ListingDraftPreview` sets `hidden` on the "Run by" byline when the draft
+   names nobody. The byline's own rule sets `display`, so this one wins. */
+.listingFrame [hidden] {
+  display: none;
+}
+
+/* The Studio parts read the roles the Studio shell sets on its root
+   (`studio.module.css` `.root`), restated here because the admin page has
+   no Studio shell. They follow the app theme through the --studio-* tokens. */
+.studioFrame {
+  --bg: var(--studio-surface);
+  --rail: var(--studio-surface-rail);
+  --line: rgba(var(--studio-ink-rgb), 0.08);
+  --text: var(--studio-text);
+  --text60: var(--studio-text-muted);
+  --text40: var(--studio-text-faint);
+  --wash: rgba(var(--studio-ink-rgb), 0.05);
+  --line-2: rgba(var(--studio-ink-rgb), 0.22);
+  padding-inline: var(--card-pad);
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* The draft episode, spaced like one row of the show page's episode list. */
+.episode {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+  padding-block: var(--gap-sm);
+  border-block-start: 1px solid var(--line);
+}
+
+.muted {
+  margin: 0;
+  font-size: var(--text-14);
+  color: var(--text60);
+}

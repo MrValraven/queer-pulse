@@ -67,6 +67,21 @@
 .savedSaving .savedDot {
   background: var(--accent);
 }
+/* A save that is retrying, refused or paused: amber words and dot. */
+.savedProblem {
+  color: var(--amber-ink);
+}
+.savedProblem .savedDot {
+  background: var(--amber);
+}
+/* "Our team can see this event draft", under the lead and the saved line.
+   The gap sits on the line inside the Collapse wrapper, so it folds with it. */
+.note {
+  max-width: 46ch;
+}
+.note > p {
+  margin-block-start: var(--gap-xs);
+}
 
 /* ── Action strips (draft resume, "same as last time") ── */
 .strip {

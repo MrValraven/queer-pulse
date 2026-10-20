@@ -1,6 +1,7 @@
 import { gatheringPath, gatheringSlugFromParam } from "./gatheringPaths";
 import { memberName } from "../members/data/members";
 import type { Formatters } from "../../shared/i18n/format";
+import type { QuizshowEventDetail } from "../../shared/contracts/quizshow";
 import type { TFunction, TranslateOptions } from "../../shared/i18n/types";
 import type {
   EventAccessibilityAnswers,
@@ -88,6 +89,8 @@ export interface GatheringDetail {
   /** Live mode only: true when the viewer is the host or a cohost. Drives
    *  organizer-only affordances (e.g. the photo-album upload control). */
   viewerIsOrganizer?: boolean;
+  /** Live mode only; demo reads `quizshowEventDemo.data.ts` through `useQuizshowEventDetail`. */
+  quizshow?: QuizshowEventDetail | null;
   /** Live mode only: whether the viewer has bookmarked ("saved") this event.
    *  Seeds the detail's Save toggle; absent (undefined) in the demo registry,
    *  where the toggle starts un-saved and lives purely in local state. */
@@ -768,7 +771,7 @@ export const gatheringDetails: Record<string, GatheringDetail> = {
     ctaKey: "gatherings:cta.reserveSeat",
     body: "Barry Jenkins' “Moonlight” on a proper screen, followed by a slow conversation in the bar for anyone who wants to stay. Content note: childhood neglect and a scene of homophobic violence. Doors at 7:30, film at 8. Tickets are €8 in advance or on the door; no one is turned away for lack of funds.",
     coverImageUrl:
-      "https://images.unsplash.com/photo-1478720568477-152d9b164e26?q=80&w=1200&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1478720568477-152d9b164e26?q=80&w=1080&h=1350&auto=format&fit=crop",
   },
   "queer-youth-monthly": {
     slug: "queer-youth-monthly",
@@ -1456,7 +1459,7 @@ export const calendarEvents: CalendarEvent[] = [
     ticketed: true,
     priceMin: 8,
     coverImageUrl:
-      "https://images.unsplash.com/photo-1478720568477-152d9b164e26?q=80&w=1200&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1478720568477-152d9b164e26?q=80&w=1080&h=1350&auto=format&fit=crop",
     attendeeCount: 55,
   },
   {

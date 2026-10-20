@@ -1,0 +1,408 @@
+/* Host remote: phone first, one column, a fixed control bar at the bottom. */
+.page {
+  /* Fallback until the bar is measured: two wrapped rows plus the restart note at 320px. */
+  --quizshow-remote-bar-space: 16rem;
+  /* The bar stands on the consent banner or the bottom edge, and its measured
+     height already holds its home indicator padding, so only the banner adds here. */
+  --quizshow-remote-bottom: var(--consent-inset, 0px);
+  display: flex;
+  flex-direction: column;
+  min-height: 100svh;
+  min-height: 100dvh;
+  background: var(--cream);
+  color: var(--ink);
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-grid);
+  box-sizing: border-box;
+  width: min(100%, 40rem);
+  margin-inline: auto;
+  padding-block-start: max(var(--gap-sm), env(safe-area-inset-top, 0px));
+  padding-block-end: calc(
+    var(--quizshow-remote-bar-space) + var(--quizshow-remote-bottom)
+  );
+  padding-inline: max(var(--wrap-px), env(safe-area-inset-left, 0px))
+    max(var(--wrap-px), env(safe-area-inset-right, 0px));
+}
+
+.main:focus {
+  outline: none;
+}
+
+/* One view of the page, and a tighter stack of sections inside it. */
+.view {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-grid);
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+}
+
+/* Header */
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+}
+
+.headerRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap-xs);
+}
+
+.phase {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-28);
+  font-weight: 500;
+  line-height: 1.1;
+}
+
+.iconSwap,
+.fade {
+  display: inline-flex;
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem var(--gap-sm);
+  margin: 0;
+  font-size: var(--text-14);
+  color: var(--ink-60);
+}
+
+.count {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Sections */
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+  padding: var(--gap-sm);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-16);
+  background: rgba(var(--ink-rgb), 0.02);
+}
+
+.sectionTitle {
+  margin: 0;
+  font-size: var(--text-16);
+  font-weight: 700;
+}
+
+.hint {
+  margin: 0;
+  font-size: var(--text-14);
+  line-height: 1.45;
+  color: var(--ink-60);
+}
+
+/* Preview: the stage is laid out on a fixed 1280x720 canvas and scaled into
+   a 16:9 frame, so the lobby and tiles are never clipped. */
+.previewFrame {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-12);
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.previewCanvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  width: 1280px;
+  height: 720px;
+  overflow: hidden;
+  background: var(--cream);
+  color: var(--ink);
+  font-family: var(--sans);
+  transform-origin: top left;
+}
+
+/* Answer key */
+.tiles {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--gap-xs);
+}
+
+.keyText {
+  margin: 0;
+  font-size: var(--text-20);
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.keyList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin: 0;
+  padding-inline-start: 1.5rem;
+  font-size: var(--text-16);
+  font-weight: 600;
+}
+
+.keyLetter {
+  color: var(--ink-60);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Rows (review, favourites, players, teams) */
+.list {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-xs);
+  padding-block: var(--gap-xs);
+  border-block-end: 1px solid var(--line);
+}
+
+.rowBody {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 0;
+}
+
+.rowText {
+  margin: 0;
+  font-size: var(--text-16);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.rowHidden {
+  color: var(--ink-60);
+  text-decoration: line-through;
+}
+
+.rowMeta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem 0.5rem;
+  margin: 0;
+  font-size: var(--text-13-5);
+  color: var(--ink-60);
+}
+
+.score {
+  font-size: var(--text-14-5);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.1rem 0.5rem;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--ink-rgb), 0.07);
+  color: var(--ink);
+  font-size: var(--text-12);
+  font-weight: 600;
+}
+
+.tagAccent {
+  background: rgba(var(--accent-rgb), 0.16);
+  color: var(--accent-ink);
+}
+
+.rowActions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.25rem;
+}
+
+/* Inline team rename */
+.renameForm {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--gap-xs);
+  padding-block: var(--gap-xs);
+}
+
+.field {
+  display: flex;
+  flex: 1 1 12rem;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.label {
+  font-size: var(--text-13-5);
+  font-weight: 600;
+}
+
+.input {
+  box-sizing: border-box;
+  min-height: 44px;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--line-2);
+  border-radius: var(--radius-12);
+  background: var(--paper);
+  color: var(--ink);
+  font: inherit;
+  font-size: var(--text-16);
+}
+
+.input:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.formError {
+  flex-basis: 100%;
+}
+
+.error {
+  margin: 0;
+  font-size: var(--text-14);
+  color: var(--danger);
+}
+
+.error:empty {
+  display: none;
+}
+
+/* Fixed control bar */
+.bar {
+  position: fixed;
+  inset-inline: 0;
+  /* Portaled to body, out of .page's custom properties, so the inset is written
+     here. The background reaches the bottom edge (or the consent banner's top),
+     and the bar's own bottom padding lifts the controls clear of the home indicator. */
+  bottom: var(--consent-inset, 0px);
+  z-index: var(--z-nav);
+  box-sizing: border-box;
+  padding: var(--gap-sm) var(--wrap-px);
+  padding-block-end: calc(
+    var(--gap-sm) +
+      max(0px, env(safe-area-inset-bottom, 0px) - var(--consent-inset, 0px))
+  );
+  border-block-start: 1px solid var(--line);
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow: var(--shadow-e3);
+}
+
+.barInner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+  width: min(100%, 40rem);
+  margin-inline: auto;
+}
+
+.primary {
+  width: 100%;
+  min-height: 56px;
+  font-size: var(--text-18);
+}
+
+.secondaryRow {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.25rem;
+}
+
+.secondaryRow .secondaryButton {
+  flex-direction: column;
+  gap: 0.2rem;
+  width: auto;
+  min-width: 4.75rem;
+  padding: 0.35rem 0.5rem;
+  color: var(--ink);
+  white-space: normal;
+  touch-action: manipulation;
+}
+
+/* The fading face inside a secondary button: icon over label, as the button lays them out. */
+.secondaryFace {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.secondaryLabel {
+  font-size: var(--text-12);
+  font-weight: 600;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.note {
+  margin: 0;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius-12);
+  background: rgba(var(--accent-rgb), 0.12);
+  font-size: var(--text-13-5);
+  line-height: 1.4;
+}
+
+/* Messages: access refused, or no game open */
+.message {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--gap-sm);
+  padding-block: var(--gap-lg);
+}
+
+.messageTitle {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-24);
+  font-weight: 500;
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}

@@ -20,8 +20,9 @@ import { MentionTextarea } from "../../shared/mentions/MentionTextarea";
 import { PostActionsMenu } from "./PostActionsMenu";
 import { type PostMenuAction } from "./usePostAuthorSafety";
 import { ForumPostPhotos } from "./ForumPostPhotos";
-import { ForumLinkPreview } from "./ForumLinkPreview";
-import { firstLinkIn, useInViewOnce } from "./api/useForumLinkPreview";
+import { useInViewOnce } from "./api/useForumLinkPreview";
+import { forumPostLink } from "./forumPostLink";
+import { ForumPostLinkCard } from "./ForumPostLinkCard";
 import { ModeratorByline } from "./ThreadReplies";
 import {
   ReplyCollapseButton,
@@ -111,7 +112,7 @@ export function ThreadReplyItem({
   // reply nears the viewport (see the rate budget in `useForumLinkPreview`),
   // and never inside a collapsed branch, which stays mounted while hidden.
   const { ref: bodyRef, isInView } = useInViewOnce<HTMLDivElement>();
-  const firstLink = firstLinkIn(reply.body);
+  const postLink = forumPostLink(reply.body);
   const isBranchHidden = useIsReplyBranchHidden();
   // Report always lives in the "..." menu. On a phone Quote and the answer
   // mark move there too; one set renders at a time, never a hidden duplicate.
@@ -185,12 +186,13 @@ export function ThreadReplyItem({
                   {reply.quote.text}
                 </div>
               )}
-              {/* Same reassembly as the opening post: `reply.body` is the
-                  split form, and `join("\n")` is what the inline editor below
-                  already treats as the raw body. One markdown-lite pass over
-                  the whole reply is what makes a multi-line list or quote
-                  render as one block. */}
-              <MarkdownLite text={reply.body.join("\n")} />
+              {/* Same reassembly as the opening post: `forumPostLink` joins
+                  the split `reply.body` with `join("\n")` and takes out a
+                  Studio link that stands on its own (the card below shows
+                  it); the inline editor still seeds the raw join. One
+                  markdown-lite pass over the whole reply renders a
+                  multi-line list or quote as one block. */}
+              <MarkdownLite text={postLink.visibleText} />
               {/* ONE gallery, up to four. The backend folds a reply's legacy
                   single `image` into `photos` before it leaves the server, so
                   that field is only reached for on a demo reply or on an
@@ -199,8 +201,8 @@ export function ThreadReplyItem({
                 photos={reply.photos}
                 legacyImage={reply.image}
               />
-              <ForumLinkPreview
-                url={firstLink}
+              <ForumPostLinkCard
+                link={postLink}
                 isEnabled={isInView && !isBranchHidden}
               />
             </div>

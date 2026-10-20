@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   FiAlertTriangle,
   FiCheck,
@@ -9,7 +10,11 @@ import {
   FiShield,
   FiUsers,
 } from "react-icons/fi";
-import { VisibilityBadge } from "../../../shared/components/ui";
+import {
+  isPosterShaped,
+  PosterAwareImageSlot,
+  VisibilityBadge,
+} from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { cx } from "../../../shared/lib/cx";
 import { ACCESSIBILITY_QUESTIONS } from "../../marketing/listBusiness/listingAccessibility.data";
@@ -40,17 +45,41 @@ const COVER_TINT_CLASS: Record<PreviewTint, string | undefined> = {
   plum: styles.coverPlum,
 };
 
-/** The cover photo, or a placeholder tinted by the family. */
+/** The cover photo, or a placeholder tinted by the family. A poster shows
+ *  whole over a blurred copy of itself, as it does on the real card, and the
+ *  cover grows taller while it shows one so the poster reads at this size. */
 export function PreviewCover({ form }: { form: GatheringForm }) {
   const { t } = useTranslation();
+  // The last cover file measured as a poster. It only applies while that file
+  // is the one shown, so a landscape pick or a cleared cover keeps the strip.
+  const [posterSrc, setPosterSrc] = useState<string | null>(null);
   const familyEntry = findFamily(form.family);
   const tint = form.family
     ? COVER_TINT_BY_FAMILY[form.family]
     : DEFAULT_COVER_TINT;
+  const coverSrc = form.coverPreviewUrl;
+  const isPosterCover = Boolean(coverSrc) && posterSrc === coverSrc;
   return (
-    <div className={cx(styles.cover, COVER_TINT_CLASS[tint])}>
-      {form.coverPreviewUrl ? (
-        <img src={form.coverPreviewUrl} alt="" />
+    <div
+      className={cx(
+        styles.cover,
+        COVER_TINT_CLASS[tint],
+        isPosterCover && styles.coverPoster,
+      )}
+    >
+      {coverSrc ? (
+        <PosterAwareImageSlot
+          src={coverSrc}
+          alt=""
+          width="100%"
+          height="100%"
+          radius={0}
+          loading="eager"
+          className={styles.coverImage}
+          onNaturalSize={({ width, height }) => {
+            if (isPosterShaped(width, height)) setPosterSrc(coverSrc);
+          }}
+        />
       ) : (
         <span className={styles.coverPlaceholder}>
           <FiImage aria-hidden />

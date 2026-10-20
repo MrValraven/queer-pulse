@@ -265,8 +265,10 @@
   position: sticky;
   /* Rest on top of the mobile bottom tab bar. `--bottom-inset` is the bar's
      full occupied height (home indicator included) at the mobile breakpoint
-     and 0px on desktop, where the bar is absent. */
-  bottom: var(--bottom-inset, 0px);
+     and 0px on desktop, where the bar is absent. On a first visit the
+     consent banner covers the same strip, so the bar rests on whichever
+     reaches higher (`--consent-inset` is 0 once the banner goes). */
+  bottom: max(var(--bottom-inset, 0px), var(--consent-inset, 0px));
   z-index: var(--z-sticky);
   padding: 14px 18px;
   background: var(--paper);
@@ -285,6 +287,19 @@
   flex-wrap: wrap;
 }
 .saveBarState {
+  font-size: var(--text-13);
+  color: var(--ink-60);
+}
+/* The "our team can see this draft" line under the row: one short line in
+   the bar's smallest step. */
+.saveBarNote {
+  padding-block-start: var(--gap-xs);
+}
+/* Narrow screens: the same line sits in the normal flow just above the bar. */
+.saveBarNoteFlow {
+  padding-block-end: var(--gap-xs);
+}
+.saveBarNote p {
   font-size: var(--text-13);
   color: var(--ink-60);
 }

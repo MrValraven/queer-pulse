@@ -1,0 +1,218 @@
+/* The question editor: stacked fields on the page's own surface, so it reads
+   the same in light and dark. Colours come from the shared tokens. */
+
+.editor {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
+}
+
+.bilingual,
+.answerField,
+.mediaField,
+.selectField {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+/* The picture field's add, change and remove chips reach the 44px tap floor. */
+.mediaField button {
+  min-height: var(--tap-min);
+  min-width: var(--tap-min);
+  justify-content: center;
+}
+
+.languageField {
+  margin-bottom: 0;
+}
+
+.groupLabel {
+  font-size: var(--text-11-5);
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+
+.hint {
+  font-size: var(--text-13);
+  line-height: 1.5;
+  color: var(--ink-60);
+  max-width: 65ch;
+}
+
+.problem {
+  margin: 0;
+  font-size: var(--text-13);
+  color: var(--accent-text);
+}
+
+.scoreRow {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+}
+
+/* Rows that come and go inside CollapseListItem. */
+.rowList {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.optionRow,
+.orderRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding-block: 8px;
+  border-bottom: 1px solid var(--line);
+}
+
+.optionRow > :nth-child(2),
+.orderRow > :nth-child(2) {
+  flex: 1;
+  min-width: 0;
+}
+
+.optionActions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding-top: 24px;
+}
+
+.orderRow {
+  position: relative;
+  background: var(--paper);
+}
+
+.radio {
+  width: 24px;
+  height: 24px;
+  margin: 10px;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.radio:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* Reorder controls */
+.reorder {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding-top: 20px;
+}
+
+.grip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--tap-min);
+  min-height: var(--tap-min);
+  border: none;
+  border-radius: var(--radius-pill);
+  background: none;
+  color: var(--ink-60);
+  cursor: grab;
+  touch-action: none;
+  transition-property: background-color, color;
+  transition-duration: var(--dur-fast);
+}
+
+.grip:active {
+  cursor: grabbing;
+}
+
+.grip:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .grip:hover {
+    background: rgba(var(--ink-rgb), 0.06);
+    color: var(--ink);
+  }
+}
+
+/* True or false cards */
+.cardGroup {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+}
+
+.card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: var(--tap-min);
+  padding: 12px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-14);
+  background: var(--paper);
+  color: var(--ink);
+  font-family: inherit;
+  font-size: var(--text-15);
+  cursor: pointer;
+  transition-property: border-color, background-color;
+  transition-duration: var(--dur-fast);
+}
+
+.cardChecked {
+  border-color: var(--accent);
+  background: rgba(var(--ink-rgb), 0.04);
+  font-weight: 600;
+}
+
+/* Accepted answers */
+.chipList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  max-width: 100%;
+  padding-inline: 14px 4px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  background: var(--paper);
+  font-size: var(--text-14);
+  color: var(--ink);
+}
+
+.chipText {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.addRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.addField {
+  flex: 1;
+  min-width: 0;
+  margin-bottom: 0;
+}

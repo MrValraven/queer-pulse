@@ -8,6 +8,7 @@ import {
   type StudioMeView,
 } from "./studio.adapters";
 import { DEMO_STUDIO_ME } from "./studioDemoMe.data";
+import { isDemoStudioAccessOff } from "./studioDemoAccessSwitch";
 import { studioKeys } from "./studioQueryKeys";
 
 export type StudioAccessStatus = "pending" | "granted" | "denied";
@@ -16,7 +17,7 @@ export interface StudioAccess {
   status: StudioAccessStatus;
   hasAccess: boolean;
   isPending: boolean;
-  /** Musician and DJ personas the member owns or co-owns. Empty without a grant. */
+  /** Studio artist personas the member owns or co-owns. Empty without a grant. */
   uploadablePersonas: StudioArtistRefView[];
 }
 
@@ -55,7 +56,9 @@ function accessOf(view: StudioMeView): StudioAccess {
  * Whether the signed-in member may use Studio (GET /studio/me). The route
  * gate, the nav, the player and the persona sections all read this one
  * query. Demo grants everyone with the demo persona and never asks. A failed
- * read is treated as no grant, which shows the teaser.
+ * read is treated as no grant, which shows the teaser. In demo,
+ * `?studioAccess=off` (`studioDemoAccessSwitch.ts`) reports no grant until
+ * `?studioAccess=on`.
  */
 export function useStudioAccess(): StudioAccess {
   const { demoMode } = useDemoMode();
@@ -69,7 +72,9 @@ export function useStudioAccess(): StudioAccess {
     // The gate falls back to the teaser on a failed read, so no toast.
     meta: { silentError: true },
   });
-  if (demoMode) return DEMO_ACCESS;
+  // `?studioAccess=off` (demo only) shows every surface as a member without
+  // a grant sees it, the Studio teaser card included.
+  if (demoMode) return isDemoStudioAccessOff() ? DENIED : DEMO_ACCESS;
   if (checking) return PENDING;
   if (!loggedIn) return DENIED;
   if (query.data) return accessOf(query.data);

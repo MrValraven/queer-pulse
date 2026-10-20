@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { tabIds, useTablistKeys } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./studio.module.css";
@@ -12,7 +13,7 @@ export function StudioTablist<TabId extends string>({
   idPrefix,
   label,
 }: {
-  tabs: readonly { id: TabId; labelKey: string }[];
+  tabs: readonly { id: TabId; labelKey: string; badge?: ReactNode }[];
   activeId: TabId;
   onChange: (tabId: TabId) => void;
   idPrefix: string;
@@ -43,6 +44,7 @@ export function StudioTablist<TabId extends string>({
             {...tabProps(index, isActive)}
           >
             {t(tab.labelKey)}
+            {tab.badge}
           </button>
         );
       })}

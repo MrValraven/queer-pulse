@@ -9,6 +9,7 @@ import type { LivingCommunity } from "./community.model";
 import type { CommunityRole } from "./membership.types";
 import type { PulsePaging } from "./api/useCommunityPosts";
 import type { CommunityPulseResult } from "./api/useCommunityPulse";
+import { useGivingMethodCount } from "./api/useCommunityGiving";
 import { LivingHubTabs } from "./LivingHubTabs";
 import { FallbackHubTabs } from "./FallbackHubTabs";
 import { CommunitySidebar } from "./CommunitySidebar";
@@ -65,6 +66,12 @@ export function CommunityHubLayout({
     living != null &&
     isCommunityStaff(role) &&
     searchParams.get("tab") === "modtools";
+  // Drives the Support tab and the sidebar card. The fallback hub has no
+  // Support tab, so the card only shows beside a living community (D4).
+  const givingMethodCount = useGivingMethodCount(
+    living?.slug,
+    living?.givingMethodCount ?? 0,
+  );
 
   return (
     <div
@@ -85,6 +92,7 @@ export function CommunityHubLayout({
           discussionPaging={discussionPaging}
           rosterPaging={rosterResult}
           communityPulse={communityPulse}
+          givingMethodCount={givingMethodCount}
         />
       ) : (
         <FallbackHubTabs
@@ -105,6 +113,9 @@ export function CommunityHubLayout({
           detail={detail}
           related={related}
           communityPulse={communityPulse}
+          slug={living?.slug ?? slug}
+          communityName={community.name}
+          givingMethodCount={living ? givingMethodCount : 0}
         />
       )}
     </div>

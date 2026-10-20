@@ -8,6 +8,7 @@ import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { getCommunityPosts, type CommunityPostDTO } from "./communities.api";
 import { postsToPulse } from "./communities.adapters";
 import { getLiving } from "../livingCommunities.data";
+import { useDemoSharedPosts } from "../demoSharedPosts";
 import type { Post } from "../community.model";
 
 /** The Pulse feed's pagination controls, threaded down to the Pulse tab.
@@ -115,12 +116,21 @@ export function useCommunityPosts(
   // Mapped outside `queryFn` (pages stay raw DTOs), so the adapter's
   // translated fallbacks follow a language switch with no refetch.
   const split = useMemo(() => postsToPulse(raw, slug ?? "", t), [raw, slug, t]);
+  // Demo only: this session's "Share to a community" posts sit above the
+  // mock board (see `demoSharedPosts`).
+  const demoSharedPosts = useDemoSharedPosts(demoMode ? slug : undefined);
+  const demoPulse = useMemo(() => {
+    const mockPulse = demoMode ? (getLiving(slug)?.pulse ?? []) : [];
+    return demoSharedPosts.length > 0
+      ? [...demoSharedPosts, ...mockPulse]
+      : mockPulse;
+  }, [demoMode, demoSharedPosts, slug]);
 
   if (demoMode) {
     const living = getLiving(slug);
     return {
       pinned: living?.pinned ?? [],
-      pulse: living?.pulse ?? [],
+      pulse: demoPulse,
       hasNextPage: false,
       fetchNextPage: () => {},
       isFetchingNextPage: false,

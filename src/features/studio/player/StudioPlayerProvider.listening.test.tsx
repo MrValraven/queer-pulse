@@ -387,6 +387,7 @@ describe("server player settings (contract F.2)", () => {
     expect(hook.result.current.player.playbackSettings).toEqual({
       autoplayNext: false,
       hideExplicit: false,
+      askBeforeWarnings: true,
     });
     act(() => hook.result.current.player.next());
     expect(hook.result.current.player.currentItem?.trackId).toBe("t2");

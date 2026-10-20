@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 import type { ErrorEvent } from "@sentry/react";
-import { dropPrivateRequestUrl, dropStudioPlayBreadcrumb } from "./sentry";
+import {
+  dropPrivateRequestUrl,
+  dropStudioPlayBreadcrumb,
+  isPrivateObservabilityUrl,
+} from "./sentry";
 
 describe("dropStudioPlayBreadcrumb", () => {
   it("drops a fetch breadcrumb for a track stream URL", () => {
@@ -123,6 +127,124 @@ describe("dropStudioPlayBreadcrumb", () => {
         data: { url: "/v1/studio/tracks/e1/publish", method: "POST" },
       }),
     ).toBeNull();
+  });
+
+  it("drops every ui breadcrumb while the page is in Studio", () => {
+    const startPath = window.location.pathname;
+    try {
+      for (const studioPath of ["/studio", "/studio/track?id=t1"]) {
+        window.history.pushState(null, "", studioPath);
+        expect(
+          dropStudioPlayBreadcrumb({
+            category: "ui.click",
+            message: "button[aria-label=Report track]",
+          }),
+        ).toBeNull();
+        expect(
+          dropStudioPlayBreadcrumb({ category: "ui.input", message: "input" }),
+        ).toBeNull();
+      }
+    } finally {
+      window.history.pushState(null, "", startPath);
+    }
+  });
+
+  it("keeps ui breadcrumbs outside Studio and other kinds inside it", () => {
+    const startPath = window.location.pathname;
+    try {
+      window.history.pushState(null, "", "/studiopass");
+      const clickCrumb = { category: "ui.click", message: "button.save" };
+      expect(dropStudioPlayBreadcrumb(clickCrumb)).toBe(clickCrumb);
+      window.history.pushState(null, "", "/studio");
+      const consoleCrumb = { category: "console", message: "ready" };
+      expect(dropStudioPlayBreadcrumb(consoleCrumb)).toBe(consoleCrumb);
+    } finally {
+      window.history.pushState(null, "", startPath);
+    }
+  });
+
+  it("drops every ui breadcrumb while a community's Support tab is open", () => {
+    const startPath = window.location.pathname + window.location.search;
+    try {
+      window.history.pushState(null, "", "/communities/runners?tab=giving");
+      expect(
+        dropStudioPlayBreadcrumb({
+          category: "ui.click",
+          message: "button[aria-label=Copy Ko-fi]",
+        }),
+      ).toBeNull();
+      expect(
+        dropStudioPlayBreadcrumb({ category: "ui.input", message: "input" }),
+      ).toBeNull();
+      window.history.pushState(null, "", "/communities/runners?tab=events");
+      const clickCrumb = { category: "ui.click", message: "button.save" };
+      expect(dropStudioPlayBreadcrumb(clickCrumb)).toBe(clickCrumb);
+    } finally {
+      window.history.pushState(null, "", startPath);
+    }
+  });
+});
+
+describe("dropStudioPlayBreadcrumb on a player surface", () => {
+  it("drops a ui breadcrumb aimed inside the player on any page", () => {
+    const startPath = window.location.pathname + window.location.search;
+    try {
+      window.history.pushState(null, "", "/feed");
+      const playerBar = document.createElement("section");
+      playerBar.setAttribute("data-studio-player", "");
+      const likeButton = document.createElement("button");
+      likeButton.setAttribute("aria-label", "Like Night Swim");
+      playerBar.append(likeButton);
+      expect(
+        dropStudioPlayBreadcrumb(
+          {
+            category: "ui.click",
+            message: "section > button[aria-label=Like Night Swim]",
+          },
+          { event: { target: likeButton } },
+        ),
+      ).toBeNull();
+      expect(
+        dropStudioPlayBreadcrumb(
+          { category: "ui.click", message: "section" },
+          { event: { target: playerBar } },
+        ),
+      ).toBeNull();
+    } finally {
+      window.history.pushState(null, "", startPath);
+    }
+  });
+
+  it("keeps a ui breadcrumb aimed outside the player or without a DOM target", () => {
+    const startPath = window.location.pathname + window.location.search;
+    try {
+      window.history.pushState(null, "", "/feed");
+      const saveButton = document.createElement("button");
+      const outsideCrumb = { category: "ui.click", message: "button.save" };
+      expect(
+        dropStudioPlayBreadcrumb(outsideCrumb, {
+          event: { target: saveButton },
+        }),
+      ).toBe(outsideCrumb);
+      const missingHintCrumb = { category: "ui.click", message: "button" };
+      expect(dropStudioPlayBreadcrumb(missingHintCrumb)).toBe(missingHintCrumb);
+      const missingEventCrumb = { category: "ui.click", message: "button" };
+      expect(dropStudioPlayBreadcrumb(missingEventCrumb, {})).toBe(
+        missingEventCrumb,
+      );
+      const playerBar = document.createElement("section");
+      playerBar.setAttribute("data-studio-player", "");
+      const textNode = document.createTextNode("Night Swim");
+      playerBar.append(textNode);
+      for (const target of [textNode, window, document, null]) {
+        const keypressCrumb = { category: "ui.keypress", message: "body" };
+        expect(
+          dropStudioPlayBreadcrumb(keypressCrumb, { event: { target } }),
+        ).toBe(keypressCrumb);
+      }
+    } finally {
+      window.history.pushState(null, "", startPath);
+    }
   });
 });
 
@@ -275,5 +397,32 @@ describe("Studio v3 private paths", () => {
       }),
     );
     expect(event.request).toEqual({ method: "GET" });
+  });
+
+  it("treats creator draft routes and the admin page as private", () => {
+    expect(
+      isPrivateObservabilityUrl("http://api.test/v1/me/creator-drafts/event"),
+    ).toBe(true);
+    expect(
+      isPrivateObservabilityUrl(
+        "http://api.test/v1/admin/creator-drafts/persona/123",
+      ),
+    ).toBe(true);
+    expect(
+      isPrivateObservabilityUrl(
+        "https://queerpulse.pt/admin/creator-drafts?kind=event",
+      ),
+    ).toBe(true);
+    expect(
+      isPrivateObservabilityUrl("http://api.test/v1/admin/listing-drafts/123"),
+    ).toBe(true);
+  });
+
+  it("treats a mention name lookup as private", () => {
+    expect(
+      isPrivateObservabilityUrl(
+        "http://api.test/v1/mentions/names?refs=member%3Adraft-persona",
+      ),
+    ).toBe(true);
   });
 });

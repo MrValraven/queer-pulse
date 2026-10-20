@@ -170,6 +170,14 @@ export const routes = {
   adminResourceSuggestions: "/admin/resource-suggestions",
   adminCommunityTagRequests: "/admin/community-tag-requests",
   adminCommunitySpaceRequests: "/admin/community-space-requests",
+  /** Creator drafts: every open draft a community, persona or business is
+   *  building, Admin only (`AdminCreatorDraftsController` is `@Roles(Admin)`
+   *  alone), so the path stays out of MOD_ACCESSIBLE_ADMIN_PATTERNS and rides
+   *  the blanket `/admin/*` gate. */
+  adminCreatorDrafts: "/admin/creator-drafts",
+  /** One draft's read-only preview (`adminCreatorDraftPath`). Each open writes
+   *  a `creator_draft_viewed` Platform log row. */
+  adminCreatorDraft: "/admin/creator-drafts/:kind/:id",
   adminPartnerApplications: "/admin/partner-applications",
   adminSettings: "/admin/settings",
   adminReports: "/admin/reports",
@@ -301,6 +309,8 @@ export const routes = {
   /** One-time founder bootstrap. Public, and 404s from the API once used. */
   genesis: "/genesis",
   gatherings: "/gatherings",
+  /** Pulse Live's player screen (quizshow): `/play` takes a join code, `/play/:code` plays a session. */
+  play: "/play",
   /** The standalone friend-match questionnaire (F3): `?return=` sends the
    *  member back to the gathering card that opened it. */
   goTogetherQuestionnaire: "/go-together/questionnaire",
@@ -524,6 +534,12 @@ export const routes = {
   studioAbout: "/studio/about",
   studioAccessibility: "/studio/accessibility",
   studioSettings: "/studio/settings",
+  // Studio safety: the claimant's copyright claims (`?claim=<id>` focuses
+  // one) and the claim form (`?track=<id>`, or `?release=<id>` to pick a
+  // track first). Member-gated under /studio/* and de-indexed by robots'
+  // `Disallow: /studio`.
+  studioClaims: "/studio/claims",
+  studioClaimNew: "/studio/claims/new",
   studioTerms: "/studio/terms",
   studioHelp: "/studio/help",
   studioPress: "/studio/press",
@@ -562,6 +578,12 @@ export type RouteKey = keyof typeof routes;
 /** Staff drill-in to a community's mod panel. */
 export const adminCommunityMod = (slug: string) =>
   `/admin/communities/${slug}/mod`;
+/** One creator draft's staff preview page. */
+export const adminCreatorDraftPath = (kind: string, id: string) =>
+  `/admin/creator-drafts/${kind}/${encodeURIComponent(id)}`;
+/** The creator drafts list, optionally filtered to one kind. */
+export const adminCreatorDraftsPath = (kind?: string | null) =>
+  kind ? `/admin/creator-drafts?kind=${kind}` : "/admin/creator-drafts";
 /** Direct mod-panel access for a community moderator. */
 export const modPanel = (slug: string) => `/mod/${slug}`;
 /** A community's printable sheet of membership cards. Owner and mod only. */

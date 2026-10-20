@@ -14,9 +14,11 @@ import type {
 import { queueFromRelease, startIndexFor, toQueueItems } from "./studioQueue";
 import {
   hasPreviousItem,
+  peekNext,
   type StudioQueueAction,
   type StudioQueueState,
 } from "./studioQueueReducer";
+import { consentToWarnedTrack, warningGateOf } from "./studioWarningGate";
 
 export interface PlayerActionDependencies {
   refs: PlaybackRefs;
@@ -68,6 +70,8 @@ export type StudioTransportActions = Pick<
   | "seek"
   | "retry"
   | "stop"
+  | "playWarnedTrack"
+  | "skipWarnedTrack"
 >;
 
 /** Starting a queue: the explicit filter, the reducer's playSource and the
@@ -84,13 +88,21 @@ function createSourceStarter(deps: PlayerActionDependencies) {
   ): Promise<void> {
     // Hide explicit (contract F.2): a new queue leaves explicit tracks out,
     // so a radio's pool holds none either.
-    const visible = deps.readPlaybackSettings().hideExplicit
+    const settings = deps.readPlaybackSettings();
+    const visible = settings.hideExplicit
       ? tracks.filter((track) => !track.isExplicit)
       : tracks;
     const items = toQueueItems(visible);
     if (items.length === 0) return Promise.resolve();
     refs.intentTokenRef.current += 1;
     const startIndex = startIndexFor(items, startTrackId);
+    // Spec 6.3 (D5): pressing Play on a named track is consent to hear it.
+    // A plain Play (a release, a playlist, a radio) asks before a warned
+    // first track.
+    const namedItem = startTrackId
+      ? items.find((item) => item.trackId === startTrackId)
+      : undefined;
+    if (namedItem) consentToWarnedTrack(namedItem.trackId);
     // A named start (0:00 included) wins over an episode's saved place. Set
     // before the dispatch, so the tracker sees it on the entry's first render.
     markExplicitStart(
@@ -104,9 +116,13 @@ function createSourceStarter(deps: PlayerActionDependencies) {
       items,
       startIndex,
       shuffleSeed: randomShuffleSeed(),
+      gate: warningGateOf(settings),
     });
     if (!state.current) return Promise.resolve();
     refs.refreshCountRef.current = 0;
+    // A warned first track waits, cued, for Play it.
+    if (state.pendingWarning)
+      return commands().loadEntry(state.current, startAtSeconds ?? 0, false);
     return commands().loadEntry(state.current, startAtSeconds ?? 0);
   }
 
@@ -181,6 +197,21 @@ export function createTransportActions(
   const unlock = () => refs.engineRef.current?.unlock();
   const starter = createSourceStarter(deps);
 
+  /** Play it (spec 6.3): the member agrees to hear the warned track that
+   *  waits, and it loads and plays from the second it was cued at: an
+   *  episode's show-notes time keeps its place, any other wait cues 0:00. */
+  function playWarned() {
+    const pending = refs.queueRef.current.pendingWarning;
+    if (!pending) return;
+    unlock();
+    refs.intentTokenRef.current += 1;
+    consentToWarnedTrack(pending.trackId);
+    const state = dispatch({ type: "consentWarning" });
+    if (!state.current) return;
+    refs.refreshCountRef.current = 0;
+    void commands().loadEntry(state.current, refs.resumeAtRef.current);
+  }
+
   return {
     playRelease: (releaseId, startTrackId, startAtSeconds) => {
       unlock();
@@ -195,6 +226,11 @@ export function createTransportActions(
       return starter.playTracks(tracks, startTrackId, source, startAtSeconds);
     },
     togglePlay: () => {
+      // Studio safety: Play on a warned track that waits is Play it.
+      if (refs.queueRef.current.pendingWarning) {
+        playWarned();
+        return;
+      }
       const engine = refs.engineRef.current;
       if (!engine || refs.queueRef.current.current === null) return;
       unlock();
@@ -219,7 +255,8 @@ export function createTransportActions(
       if (queue.current === null) return;
       unlock();
       refs.intentTokenRef.current += 1;
-      const { hideExplicit } = deps.readPlaybackSettings();
+      const settings = deps.readPlaybackSettings();
+      const { hideExplicit } = settings;
       if (
         refs.playheadRef.current.currentTime > RESTART_THRESHOLD_SECONDS ||
         !hasPreviousItem(queue, hideExplicit)
@@ -227,10 +264,15 @@ export function createTransportActions(
         commands().seek(0);
         return;
       }
-      const state = dispatch({ type: "previous", hideExplicit });
+      const state = dispatch({
+        type: "previous",
+        hideExplicit,
+        gate: warningGateOf(settings),
+      });
       if (!state.current) return;
       refs.refreshCountRef.current = 0;
-      void commands().loadEntry(state.current, 0);
+      // Back onto a warned track the member skipped: it asks again.
+      void commands().loadEntry(state.current, 0, !state.pendingWarning);
     },
     seek: (seconds) => commands().seek(seconds),
     // Retry can be the gesture that resumes a context an interruption
@@ -242,6 +284,25 @@ export function createTransportActions(
     stop: () => {
       commands().resetPlayback();
       deps.clearSavedQueue();
+    },
+    playWarnedTrack: playWarned,
+    skipWarnedTrack: () => {
+      const queue = refs.queueRef.current;
+      if (!queue.pendingWarning) return;
+      unlock();
+      refs.intentTokenRef.current += 1;
+      refs.refreshCountRef.current = 0;
+      const { hideExplicit } = deps.readPlaybackSettings();
+      // Nothing after it (or repeat all wraps a single entry onto itself):
+      // Skip ends the session, as Stop does.
+      const upcoming = peekNext(queue, true, hideExplicit);
+      const isSelfWrap = upcoming?.queueEntryId === queue.current?.queueEntryId;
+      if (!upcoming || isSelfWrap) {
+        commands().resetPlayback();
+        deps.clearSavedQueue();
+        return;
+      }
+      commands().advance(true);
     },
   };
 }

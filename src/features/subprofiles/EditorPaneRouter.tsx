@@ -20,6 +20,7 @@ import { SubprofileSkinBlocksEditor } from "./SubprofileSkinBlocksEditor";
 import { SubprofileSocialLinksEditor } from "./SubprofileSocialLinksEditor";
 import { SubprofileSectionEditor } from "./SubprofileSectionEditor";
 import { SubprofileAffiliationsEditor } from "./SubprofileAffiliationsEditor";
+import { SubprofileWorksAtEditor } from "./worksAt/SubprofileWorksAtEditor";
 import { SubprofileOwnersPanel } from "./SubprofileOwnersPanel";
 import { SubprofilePublishPanel } from "./SubprofilePublishPanel";
 import { FeedImportPane } from "./feedImport/FeedImportPane";
@@ -217,6 +218,10 @@ export function EditorPaneRouter({
 
       <div hidden={pane !== "affiliations"}>
         <SubprofileAffiliationsEditor subprofile={subprofile} />
+      </div>
+
+      <div hidden={pane !== "works-at"}>
+        <SubprofileWorksAtEditor subprofile={subprofile} />
       </div>
 
       <div hidden={pane !== "owners"}>

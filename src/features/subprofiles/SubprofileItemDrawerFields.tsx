@@ -1,5 +1,10 @@
 import { useState } from "react";
-import { DatePicker, FormField, Select } from "../../shared/components/ui";
+import {
+  Collapse,
+  DatePicker,
+  FormField,
+  Select,
+} from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { SubprofileItemDTO } from "./api/subprofiles.api";
 import type { SubprofileItemView } from "./api/subprofiles.adapters";
@@ -7,6 +12,7 @@ import {
   CREDENTIAL_PHOTO_SECTIONS,
   FIELD_META,
   ITEM_LINKS_SECTIONS,
+  SECTION_IMAGE_PLACEHOLDER_KEYS,
   itemFieldMeta,
 } from "./subprofileEditor.data";
 import { SubprofileItemTextField } from "./SubprofileItemTextField";
@@ -21,6 +27,9 @@ import {
 } from "./richFields.data";
 import { PoemVersionsEditor } from "./poem/PoemVersionsEditor";
 import { poemHasContent } from "./poem/poemBlocks";
+import { TattooItemFields } from "./skins/tattoo/editor/TattooItemFields";
+import { withImagesChanged } from "./skins/tattoo/editor/tattooItemDraft";
+import { isTattooBodyPhotoSection } from "./skins/tattoo/tattooVocab.data";
 
 type Field = keyof SubprofileItemDTO;
 
@@ -188,13 +197,21 @@ function RichFieldControl({
  * (`ItemDrawerSettings`), apart from what the piece itself says.
  * `structured.courses` is intentionally never rendered — it
  * round-trips untouched via `itemsToInputDto` (deferred, see the Phase 3 plan).
+ * A tattoo item section adds its own fields after the rich ones
+ * (`TattooItemFields`), judged against `original`, the row the server holds.
  */
 export function SubprofileItemDrawerFields({
   draft,
+  original = draft,
+  isNew = false,
   fields,
   onPatch,
 }: {
   draft: SubprofileItemView;
+  /** The stored row this draft started from; the drawer always passes it. */
+  original?: SubprofileItemView;
+  /** True while the item has no stored row yet. */
+  isNew?: boolean;
   fields: Field[];
   onPatch: (patch: Partial<SubprofileItemView>) => void;
 }) {
@@ -214,6 +231,19 @@ export function SubprofileItemDrawerFields({
   // A certificate or diploma photo is public on the persona page and often
   // shows a legal name or an ID number, so its field says so up front.
   const isCredentialPhoto = CREDENTIAL_PHOTO_SECTIONS.has(draft.section);
+  // A body photo clears the consent tick when a new photo comes in.
+  const isBodyPhoto = isTattooBodyPhotoSection(draft.section);
+  const imagePlaceholderKey = isCredentialPhoto
+    ? "subprofiles:credentialPhoto.placeholder"
+    : SECTION_IMAGE_PLACEHOLDER_KEYS[draft.section];
+  const isTattooGallery =
+    kind === "tattoo_artist" && draft.section === "gallery";
+  // A cover-up saved with its before photo dropped still saves; this asks
+  // for the photo again until one is added.
+  const isBeforePhotoMissing =
+    !isNew &&
+    draft.section === "cover_ups" &&
+    draft.structured?.coverUp?.beforeImageUrl === "";
 
   return (
     <>
@@ -222,16 +252,25 @@ export function SubprofileItemDrawerFields({
           <ImageUploadField
             value={draft.imageUrl}
             kind="work-image"
-            onChange={(imageUrl) => onPatch({ imageUrl })}
+            onChange={(imageUrl) =>
+              onPatch(
+                isBodyPhoto
+                  ? withImagesChanged(draft, { imageUrl })
+                  : { imageUrl },
+              )
+            }
             placeholder={
-              isCredentialPhoto
-                ? t("subprofiles:credentialPhoto.placeholder")
-                : undefined
+              imagePlaceholderKey ? t(imagePlaceholderKey) : undefined
             }
           />
           {isCredentialPhoto && (
             <p className={styles.linkHelp}>
               {t("subprofiles:credentialPhoto.privacyNote")}
+            </p>
+          )}
+          {isTattooGallery && (
+            <p className={styles.linkHelp}>
+              {t("subprofiles:tattooItem.galleryHelper")}
             </p>
           )}
         </div>
@@ -291,6 +330,18 @@ export function SubprofileItemDrawerFields({
           onPatch={onPatch}
         />
       ))}
+
+      <TattooItemFields
+        draft={draft}
+        original={original}
+        isNew={isNew}
+        onPatch={onPatch}
+      />
+      <Collapse isOpen={isBeforePhotoMissing}>
+        <p className={styles.linkHelp}>
+          {t("subprofiles:tattooItem.nudge.beforePhotoMissing")}
+        </p>
+      </Collapse>
 
       {ITEM_LINKS_SECTIONS.has(draft.section) && (
         <div>

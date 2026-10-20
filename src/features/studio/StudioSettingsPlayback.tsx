@@ -16,7 +16,7 @@ import { StudioLoadError } from "./StudioLoadStates";
 import { Toggle } from "./StudioSettingsControls";
 import s from "./StudioSettingsPage.module.css";
 
-function SettingsSection({
+export function SettingsSection({
   labelKey,
   titleKey,
   children,
@@ -159,6 +159,8 @@ export function StudioPlaybackSettings() {
     useStudioPlaybackPreferences();
   // Until the stored row is on screen the controls only show defaults.
   const isAwaitingRow = isLoading || isError;
+  // Studio safety (spec 6.3): on unless the member switched it off.
+  const isAskingBeforeWarnings = preferences.askBeforeWarnings !== false;
   const { theme, toggleTheme } = useTheme();
   return (
     <>
@@ -196,6 +198,15 @@ export function StudioPlaybackSettings() {
           isLoading={isAwaitingRow}
           onToggle={() =>
             savePreferences({ hideExplicit: !preferences.hideExplicit })
+          }
+        />
+        <ToggleOption
+          headingKey="studio:settingsLive.askBeforeWarnings.heading"
+          bodyKey="studio:settingsLive.askBeforeWarnings.body"
+          isOn={isAskingBeforeWarnings}
+          isLoading={isAwaitingRow}
+          onToggle={() =>
+            savePreferences({ askBeforeWarnings: !isAskingBeforeWarnings })
           }
         />
       </SettingsSection>

@@ -71,6 +71,7 @@ export function SkinRefinedTextField({
               .filter(Boolean)
               .join(" ") || undefined,
           "aria-invalid": isWarningShown || undefined,
+          maxLength: control.maxLength,
           onBlur,
         };
         return isParagraph || isWrapping ? (

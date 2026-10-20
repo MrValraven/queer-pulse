@@ -1,0 +1,15 @@
+/* The Presence pane's books status line for a tattoo artist. Tokens only. */
+
+.line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gap-xs);
+}
+
+.status {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: var(--text-14);
+  color: var(--ink);
+}

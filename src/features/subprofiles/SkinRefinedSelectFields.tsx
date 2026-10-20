@@ -68,6 +68,7 @@ export function SkinRefinedItemFieldInput({
           className={`${refinedSurfaceClassName({ isMultiline: true, isEmpty })} ${styles.autoGrow}`}
           value={value}
           placeholder={examplePlaceholder}
+          maxLength={field.maxLength}
           onChange={onChange}
         />
       ) : (
@@ -76,6 +77,7 @@ export function SkinRefinedItemFieldInput({
           className={refinedSurfaceClassName({ isEmpty })}
           value={value}
           placeholder={examplePlaceholder}
+          maxLength={field.maxLength}
           onChange={(event) => onChange(event.target.value)}
         />
       )}

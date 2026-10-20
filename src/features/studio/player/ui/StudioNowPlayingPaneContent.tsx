@@ -2,6 +2,7 @@ import { Fragment } from "react";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { useStudioAccess } from "../../api/useStudioAccess";
 import { useStudioTrack } from "../../api/useStudioTrack";
+import { StudioWarnedContent } from "../../StudioWarnedContent";
 import {
   useStudioPlayer,
   useStudioPlayerClock,
@@ -66,7 +67,7 @@ function PlainLyrics({
 
 /** Timed lyrics when the player has them. A preview's queue item carries no
  *  lyrics of its own, so without timed lines it says there are none. */
-function LyricsPane({
+function LyricsPaneWords({
   item,
   isTranscript,
 }: {
@@ -89,6 +90,27 @@ function LyricsPane({
   if (item.previewToken)
     return <EmptyNote textKey={noWordsKey(isTranscript)} />;
   return <PlainLyrics trackId={item.trackId} isTranscript={isTranscript} />;
+}
+
+/** A warned track's words stay covered here as on its page (spec 6.2),
+ *  also while the player waits on its warning. Keyed by the track, so the
+ *  next track starts covered. */
+function LyricsPane({
+  item,
+  isTranscript,
+}: {
+  item: StudioQueueItem;
+  isTranscript: boolean;
+}) {
+  return (
+    <StudioWarnedContent
+      key={item.trackId}
+      trackId={item.trackId}
+      warnings={item.contentWarnings}
+    >
+      <LyricsPaneWords item={item} isTranscript={isTranscript} />
+    </StudioWarnedContent>
+  );
 }
 
 function TrackCredits({ trackId }: { trackId: string }) {

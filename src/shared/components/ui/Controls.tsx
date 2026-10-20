@@ -93,6 +93,7 @@ export function Toggle({
   label,
   tone = "jade",
   id,
+  "aria-describedby": ariaDescribedBy,
 }: {
   checked: boolean;
   onChange: (checked: boolean) => void;
@@ -104,11 +105,14 @@ export function Toggle({
    *  `button` is a labelable element, so this is a plain HTML association.
    *  Leaves `aria-label` as the switch's accessible name either way. */
   id?: string;
+  /** Optional id of a help line that describes the switch. */
+  "aria-describedby"?: string;
 }) {
   return (
     <button
       type="button"
       id={id}
+      aria-describedby={ariaDescribedBy}
       role="switch"
       aria-checked={checked}
       aria-label={label}

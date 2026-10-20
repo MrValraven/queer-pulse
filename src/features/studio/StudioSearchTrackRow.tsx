@@ -10,6 +10,7 @@ import { StudioAddToPlaylistButton } from "./StudioAddToPlaylistButton";
 import { StudioHiddenTrackNote } from "./StudioHiddenTrack";
 import hiddenCss from "./StudioHiddenTrack.module.css";
 import { StudioLikeButton } from "./StudioLikeButton";
+import { StudioTrackWarningPill } from "./StudioTrackWarningPill";
 import styles from "./studio.module.css";
 import kit from "./studioKit.module.css";
 import releaseStyles from "./StudioRelease.module.css";
@@ -87,6 +88,7 @@ export function StudioSearchTrackRow({
             ? track.release.title
             : `${track.release.artist.name} · ${track.release.title}`}
         </div>
+        <StudioTrackWarningPill warnings={track.contentWarnings} />
         {isHidden && <StudioHiddenTrackNote />}
       </div>
       <div className={styles.pay} />
@@ -116,6 +118,9 @@ export function StudioSearchTrackRow({
             href: track.href,
             hasAudio: track.hasAudio,
             isExplicit: track.isExplicit,
+            artistId: track.release.artist.id,
+            isPublished: track.release.publishedAt !== null,
+            isWithheld: track.isWithheld,
           }}
         />
       </div>

@@ -1,4 +1,5 @@
 import { useCallback, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useAuth } from "../../app/providers/authContext";
 import { useMyCommunitiesResolving } from "../communities/api/useMyCommunities";
 import { useMyCommunityOptions } from "../communities/api/useMyCommunityOptions";
@@ -14,7 +15,11 @@ import type {
   CreateOpportunityDto,
   UpdateOpportunityDto,
 } from "./api/volunteering.api";
-import type { OrganizationOption } from "./api/useOrganizationOptions";
+import {
+  ORGANISATION_STEWARD_ROLES,
+  type OrganizationOption,
+} from "./api/useOrganizationOptions";
+import { POST_OPPORTUNITY_COMMUNITY_PARAM } from "./volunteerPaths";
 
 /** Re-exported so call sites keep reading the form's own types from the form's
  *  own module. `RequiredField` is defined alongside its labels and control ids
@@ -79,9 +84,15 @@ export function usePostOpportunityForm(
   const [state, setState] = useState<PostOpportunityState>(initial ?? EMPTY);
   const { user } = useAuth();
   const stewardedCommunities = useMyCommunityOptions({
-    roles: ["owner", "mod"],
+    roles: ORGANISATION_STEWARD_ROLES,
   });
   const membershipsResolving = useMyCommunitiesResolving();
+  // `?community=<slug>` (the community Volunteering tab's post button) asks a
+  // new post to start linked to that community. An edit keeps its own link.
+  const [searchParams] = useSearchParams();
+  const requestedCommunitySlug = initial
+    ? null
+    : searchParams.get(POST_OPPORTUNITY_COMMUNITY_PARAM);
 
   // Seed the contact handle + organisation from the poster's own account,
   // each exactly once, by adjusting state during render (React's recommended
@@ -104,7 +115,11 @@ export function usePostOpportunityForm(
   );
   if (!communitySlugPrefilled && !membershipsResolving) {
     setCommunitySlugPrefilled(true);
-    const [stewarded] = stewardedCommunities;
+    // The requested community when the poster stewards it, else their first.
+    const stewarded =
+      stewardedCommunities.find(
+        (community) => community.slug === requestedCommunitySlug,
+      ) ?? stewardedCommunities[0];
     // A name the poster already typed keeps the form in text mode.
     const hasTypedOrg = Boolean(state.org.trim());
     if (

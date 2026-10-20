@@ -1,0 +1,490 @@
+/* ── Inspector ──────────────────────────────────────────── */
+.inspector {
+  width: 340px;
+  flex: none;
+  padding: 22px;
+  border-left: 1px solid rgba(var(--line-rgb), 0.09);
+  background: var(--paper);
+  overflow-y: auto;
+}
+@media (max-width: 920px) {
+  /* No inspector rail on a phone. With nothing selected and no list to show
+     there is nothing to render; a selected member (or the Safety triage list)
+     surfaces as a bottom sheet that opens in a peek and expands on demand. */
+  .inspector[data-state="empty"] {
+    display: none;
+  }
+  .inspector[data-state="open"],
+  .inspector[data-state="list"] {
+    position: absolute;
+    inset: auto 0 0 0;
+    width: auto;
+    /* E3: peek keeps the graph visible above the sheet. */
+    max-height: 38%;
+    /* This IS the ModalSheet role (a node's details surfacing as a bottom
+       sheet), so it takes the same tier as the shared Modal/ModalSheet. */
+    z-index: var(--z-modal);
+    border-left: none;
+    border-top: 1px solid rgba(var(--line-rgb), 0.12);
+    border-radius: var(--radius-20) var(--radius-20) 0 0;
+    /* Upward-cast (negative y-offset) because the elevation scale has
+       downward-only shadows: the sheet is docked to the bottom edge, so its
+       shadow has to fall upward over the canvas it's covering. Kept literal. */
+    box-shadow: 0 -20px 50px -26px rgba(0, 0, 0, 0.5);
+    padding-top: 30px;
+    padding-bottom: max(22px, env(safe-area-inset-bottom));
+    overscroll-behavior: contain;
+    animation: vgSheetIn var(--dur-base) var(--ease-out);
+    transition-property: max-height;
+    transition-duration: var(--dur-base);
+    transition-timing-function: var(--ease-out);
+  }
+  .inspector[data-state="open"][data-sheet="expanded"],
+  .inspector[data-state="list"][data-sheet="expanded"] {
+    max-height: 78%;
+  }
+  /* The X (or Escape) slides the sheet back down before the member is
+     deselected, and clearing a compare pair with nothing else to show does
+     the same before the sheet hides. The component waits for this
+     animation's end in both cases. */
+  .inspector[data-state="open"][data-sheet="closing"],
+  .inspector[data-state="list"][data-sheet="closing"] {
+    animation: vgSheetOut var(--dur-fast) var(--ease-in) forwards;
+    pointer-events: none;
+  }
+  /* The invites tree and the list view keep the sheet closed until the
+     admin picks someone there. An open sheet slides out first (closing),
+     and the sheet slides back in through vgSheetIn once a pick lifts it. */
+  .inspector[data-suppressed="true"]:not([data-sheet="closing"]) {
+    display: none;
+  }
+}
+@keyframes vgSheetIn {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes vgSheetOut {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+  to {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+}
+/* A new member, or the switch between a member and the list, fades the body
+   in so the content change never snaps. */
+.insBody {
+  animation-name: vgBodyIn;
+  animation-duration: var(--dur-fast);
+  animation-timing-function: var(--ease-out);
+}
+@keyframes vgBodyIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .inspector[data-state="open"],
+  .inspector[data-state="list"] {
+    animation: none;
+    transition-duration: 0.01ms;
+  }
+  .insBody {
+    animation: none;
+  }
+}
+
+/* Bottom-sheet affordances: only visible on the phone layout where the
+   inspector becomes a sheet; on desktop it is a persistent rail. */
+.insGrab,
+.insSheetClose {
+  display: none;
+}
+@media (max-width: 920px) {
+  /* The hit area is a full tap target; the visible pill stays small. It
+     reaches past the sheet's top padding into blank header space. */
+  .insGrab {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: var(--tap-min);
+    padding: 0;
+    touch-action: manipulation;
+    border: none;
+    background: none;
+    cursor: pointer;
+  }
+  .insGrab::before {
+    content: "";
+    position: absolute;
+    top: 11px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 42px;
+    height: 4px;
+    border-radius: var(--radius-pill);
+    background: rgba(var(--line-rgb), 0.3);
+  }
+  .insSheetClose {
+    display: flex;
+    position: absolute;
+    top: 4px;
+    right: 8px;
+    width: 44px;
+    height: 44px;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 50%;
+    background: none;
+    color: var(--ink-60);
+    cursor: pointer;
+  }
+  .insSheetClose svg {
+    width: 18px;
+    height: 18px;
+  }
+}
+@media (hover: hover) and (max-width: 920px) {
+  .insSheetClose:hover {
+    background: rgba(var(--plum-rgb), 0.05);
+    color: var(--text-strong);
+  }
+}
+.insGrab:focus-visible,
+.insSheetClose:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+.insHead {
+  display: flex;
+  gap: 13px;
+  align-items: center;
+  margin-bottom: 16px;
+}
+.insHeadText {
+  min-width: 0;
+}
+.insAv {
+  width: 2.778em; /* 50 / 18 */
+  height: 2.778em;
+  flex: none;
+  border-radius: var(--radius-14);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: var(--text-18);
+}
+.insN {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: var(--text-19);
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+  color: var(--text-strong);
+  overflow-wrap: anywhere;
+}
+.insP {
+  margin-top: 3px;
+  font-size: var(--text-12-5);
+  color: var(--ink-60);
+}
+/* Account kind (founder, staff, platform account). Sentence case on purpose. */
+.kindChip {
+  display: inline-block;
+  margin-top: 6px;
+  padding: 2px 9px;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--violet-rgb), 0.12);
+  font-size: var(--text-11-5);
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--text-strong);
+}
+.kindChip[data-kind="founder"] {
+  background: rgba(var(--jade-rgb), 0.14);
+}
+.kindChip[data-kind="system"] {
+  background: rgba(var(--plum-rgb), 0.08);
+}
+.sealed {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+  padding: 9px 12px;
+  border: 1px dashed rgba(var(--line-rgb), 0.18);
+  border-radius: var(--radius-10);
+  background: rgba(var(--plum-rgb), 0.04);
+  font-size: var(--text-11-5);
+  color: var(--ink-60);
+}
+.sealed svg {
+  width: 15px;
+  height: 15px;
+  flex: none;
+}
+
+.flag {
+  margin-bottom: 10px;
+  padding: 11px 13px;
+  border-radius: var(--radius-12);
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.flag b {
+  font-size: var(--text-13);
+  font-weight: 700;
+}
+.flag span {
+  font-size: var(--text-12);
+  line-height: 1.45;
+  color: var(--ink-60);
+}
+.flag_danger {
+  background: rgba(var(--danger-rgb), 0.08);
+}
+.flag_danger b {
+  color: var(--danger);
+}
+.flag_amber {
+  background: rgba(var(--amber-rgb), 0.16);
+}
+.flag_amber b {
+  color: color-mix(in srgb, var(--amber) 65%, var(--ink));
+}
+.flag_coral {
+  background: rgba(var(--accent-rgb), 0.1);
+}
+.flag_coral b {
+  color: var(--accent-ink);
+}
+.flag_plum {
+  background: rgba(var(--plum-rgb), 0.06);
+}
+.flag_plum b {
+  color: var(--text-strong);
+}
+.flag .flagSubTitle {
+  margin-top: 6px;
+  font-weight: 600;
+  color: var(--text-strong);
+}
+.flagActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+.causeList,
+.nameList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+  padding: 0;
+  list-style: none;
+}
+
+/* A member name that selects that member. Sized as a 32px chip so it stays
+   easy to tap inside a banner. */
+.nameButton {
+  min-height: 32px;
+  padding: 4px 11px;
+  border: 1px solid rgba(var(--line-rgb), 0.14);
+  border-radius: var(--radius-pill);
+  background: var(--paper);
+  font: inherit;
+  font-size: var(--text-12);
+  font-weight: 600;
+  color: var(--text-strong);
+  cursor: pointer;
+  text-align: left;
+  transition-property: background-color, border-color;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+@media (hover: hover) {
+  .nameButton:hover {
+    border-color: rgba(var(--line-rgb), 0.26);
+    background: var(--cream);
+  }
+}
+.nameButton:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+.nameText {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  font-size: var(--text-12);
+  color: var(--ink-60);
+}
+
+/* Joined month as a quiet line, the track record card full width below it. */
+.insStats {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 14px 0;
+}
+.joinedLine {
+  font-size: var(--text-12-5);
+  line-height: 1.4;
+  color: var(--ink-60);
+}
+.stat {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+  padding: 10px 12px;
+  border: 1px solid rgba(var(--line-rgb), 0.08);
+  border-radius: var(--radius-11);
+  background: var(--cream);
+}
+.statV {
+  font-family: var(--serif);
+  font-size: var(--text-14-5);
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+  color: var(--text-strong);
+}
+.statL {
+  font-size: var(--text-10-5);
+  font-weight: 600;
+  color: var(--ink-40);
+}
+.statNote {
+  font-size: var(--text-11-5);
+  line-height: 1.4;
+  color: var(--ink-60);
+}
+.statNote[data-tone="warn"] {
+  font-weight: 600;
+  color: var(--danger);
+}
+
+.insT {
+  margin-bottom: 9px;
+  font-size: var(--text-10-5);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
+
+/* D1 story and D3 join path. */
+.infoCard {
+  margin: 0 0 14px;
+  padding: 13px 15px;
+  border: 1px solid rgba(var(--line-rgb), 0.08);
+  border-radius: var(--radius-12);
+  background: var(--cream);
+}
+.infoCardTitle {
+  font-size: var(--text-12);
+  font-weight: 700;
+  color: var(--text-strong);
+}
+.infoCardBody {
+  margin-top: 5px;
+  font-family: var(--serif);
+  font-size: var(--text-14);
+  line-height: 1.45;
+  color: var(--text-strong);
+}
+.infoCardMeta {
+  margin-top: 5px;
+  font-size: var(--text-12-5);
+  line-height: 1.45;
+  color: var(--ink-60);
+}
+
+.affected {
+  margin: 6px 0 16px;
+  padding: 13px 15px;
+  border-radius: var(--radius-12);
+  background: rgba(var(--plum-rgb), 0.04);
+}
+.affected p {
+  margin-top: 6px;
+  font-size: var(--text-12-5);
+  color: var(--ink-60);
+  line-height: 1.55;
+}
+.affected b {
+  color: var(--text-strong);
+}
+.affected h4.insT {
+  margin-bottom: 0;
+}
+.soleBlock {
+  margin-top: 10px;
+}
+.affected .soleTitle {
+  margin-top: 0;
+  font-weight: 600;
+  color: var(--text-strong);
+}
+.insActions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.insEmpty {
+  padding: var(--section-y-48) 16px;
+  text-align: center;
+  color: var(--ink-60);
+}
+.insEmptyIc {
+  width: 2.25em; /* 54 / 24 */
+  height: 2.25em;
+  margin: 0 auto 14px;
+  border-radius: var(--radius-16);
+  background: rgba(var(--plum-rgb), 0.05);
+  color: var(--ink-40);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--text-24);
+}
+.insEmpty h4 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: var(--text-20);
+  color: var(--text-strong);
+}
+.insEmpty p {
+  margin-top: 7px;
+  font-size: var(--text-13);
+  line-height: 1.5;
+}
+
+.pron {
+  font-family: var(--sans);
+  font-size: var(--text-12);
+  font-weight: 500;
+  color: var(--ink-40);
+}

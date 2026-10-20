@@ -13,6 +13,7 @@ import {
   TABLE_VIBES,
   TABLE_VIBE_LABEL_KEY,
 } from "./questTable.data";
+import { TATTOO_BLOCKS } from "./tattooEditorChapters.data";
 import { THERAPIST_BLOCKS } from "./therapistEditorChapters.data";
 
 /**
@@ -77,6 +78,14 @@ import { THERAPIST_BLOCKS } from "./therapistEditorChapters.data";
  *    picker). Its `path` is `"section:<name>"`; it saves with the section's
  *    own rows and derives no `SkinData` block. Every derived chapter uses it
  *    for a kind's sections (`derivedSkinChapters.ts`).
+ *  - `toggle`: an on/off switch, stored as `true` while on. Switching it off
+ *    removes the key, since an absent boolean reads `false` (private studio,
+ *    refundable deposit).
+ *  - `date`: one day from a day picker, stored as `YYYY-MM-DD`; cleared, it
+ *    stores "" (the next books opening).
+ *
+ * A path may go deeper than one sub-field (`"tattooPrices.deposit.amount"`):
+ * the editor reads and writes every level, keeping siblings at each one.
  *
  * All copy is i18n KEYS resolved by the pane via `t(...)`; the intended EN
  * strings live in the build's `b2-i18n-keys.json` (catalogs updated separately).
@@ -101,7 +110,9 @@ export type SkinControlKind =
   | "multiChoice"
   | "multiSelect"
   | "sectionItems"
-  | "sectionList";
+  | "sectionList"
+  | "toggle"
+  | "date";
 
 /** A status dot shown before a `segmented` option's label. */
 export type SkinOptionTone = "jade" | "amber" | "muted";
@@ -118,6 +129,9 @@ export interface SkinSelectOption {
   /** `choice` / `multiChoice` with `optionLayout: "tiles"`: the tile's icon,
    *  shown in place of the hollow indicator. */
   icon?: IconType;
+  /** Offer this option only while the persona has an Instagram link
+   *  (`instagramLink`) or is published (`publishedPage`). */
+  offeredWhen?: "instagramLink" | "publishedPage";
 }
 
 /** One field within a `pairs` or `entries` item (e.g. a first-session step's
@@ -134,6 +148,8 @@ export interface SkinItemFieldDescriptor {
   /** `pairs` only: names offered in a type-ahead list under the input;
    *  typed text is still stored as written. */
   suggestions?: readonly string[];
+  /** The most characters the field takes. */
+  maxLength?: number;
 }
 
 /** Show a control only while another control's value is one of `values`
@@ -198,8 +214,16 @@ export interface SkinBlockControl {
   /** List kinds only: label of the add button (defaults to "Add"). */
   addLabelKey?: string;
   /** `text` only: warn under the field when the value is one the public page
-   *  would drop (it only links a valid email / website). */
-  validate?: "email" | "url";
+   *  would drop (it only links a valid email / website). `httpsUrl` asks for
+   *  a link that starts with https://, `year` for a year from 1900 to now. */
+  validate?: "email" | "url" | "httpsUrl" | "year";
+  /** `text`, `textarea` and `lines`: the most characters a value (a line,
+   *  for `lines`) takes. */
+  maxLength?: number;
+  /** List kinds only: the most items the list takes. */
+  maxItems?: number;
+  /** `money` only: the most digits before the decimal separator. */
+  maxIntegerDigits?: number;
   /** `multiChoice` only: a sibling text path holding the older free-text
    *  answer this control replaces (`therapyFees.payment`). Shown under the
    *  chips while none is ticked, and cleared by the first tick. */
@@ -781,7 +805,9 @@ export const SKIN_BLOCKS_BY_FAMILY: Partial<
  * Kinds with a page layout of their own carry their own block table, checked
  * before the family lookup. A therapist renders the therapist layout, and its
  * table is derived from the chaptered editor (`therapistEditorChapters.data.ts`);
- * the other practice kinds keep `PRACTICE_BLOCKS`. The therapist table leaves
+ * the other practice kinds keep `PRACTICE_BLOCKS`. A tattoo artist renders the
+ * tattoo layout, and its table is derived from the tattoo chapters
+ * (`tattooEditorChapters.data.ts`) the same way. The therapist table leaves
  * out `practical`, `training` and the `availability` grid because that layout
  * never reads them; any stored values stay in `skinData` untouched.
  */
@@ -789,6 +815,7 @@ const SKIN_BLOCKS_BY_KIND: Partial<
   Record<SubprofileKind, SkinBlockDescriptor[]>
 > = {
   therapist: THERAPIST_BLOCKS,
+  tattoo_artist: TATTOO_BLOCKS,
 };
 
 /** The editable skin blocks for a persona's kind: its own table when it has

@@ -1,0 +1,113 @@
+/* ── Creator draft detail ─────────────────────────────────── */
+
+/* The logged line, the strip and the preview stack with the same rhythm. */
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-grid);
+}
+
+/* Quiet: staff should know the open is recorded without it competing with
+   the draft itself. */
+.loggedLine {
+  display: flex;
+  align-items: center;
+  gap: var(--icon-gap-inline);
+  margin: 0;
+  font-size: var(--text-13);
+  color: var(--ink-60);
+}
+
+.loggedLine svg {
+  flex-shrink: 0;
+}
+
+/* ── The strip above the preview ── */
+.strip {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+  padding: var(--card-pad);
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-inline-start: 3px solid var(--accent);
+  border-radius: var(--radius-badge);
+}
+
+.stripTop {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--gap-xs);
+}
+
+.madeFor {
+  font-size: var(--text-14);
+  color: var(--ink);
+}
+
+/* Label above value; the pairs reflow into one column at phone width
+   without a breakpoint. */
+.facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
+  gap: var(--gap-sm) var(--gap-grid);
+  margin: 0;
+}
+
+.fact {
+  display: flex;
+  flex-direction: column;
+  gap: var(--icon-gap-inline);
+  min-width: 0;
+}
+
+.factWide {
+  grid-column: 1 / -1;
+}
+
+.factLabel {
+  font-size: var(--text-12);
+  font-weight: 600;
+  color: var(--ink-60);
+}
+
+.factValue {
+  margin: 0;
+  font-size: var(--text-14);
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.quietValue {
+  color: var(--ink-60);
+}
+
+.owner {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--gap-xs);
+}
+
+.ownerName {
+  min-width: 0;
+}
+
+.chipRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap-xs);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--gap-xs);
+  padding-block-start: var(--gap-sm);
+  border-block-start: 1px solid rgba(var(--line-rgb), 0.09);
+}

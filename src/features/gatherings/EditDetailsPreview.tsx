@@ -1,6 +1,6 @@
 import { useId } from "react";
 import { API_BASE_URL } from "../../shared/api/config";
-import { ImageSlot } from "../../shared/components/ui";
+import { PosterAwareImageSlot } from "../../shared/components/ui";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { CalendarEvent } from "./data";
@@ -110,7 +110,7 @@ function PreviewMedia({
     <div className={styles.media}>
       {coverSrc ? (
         <>
-          <ImageSlot
+          <PosterAwareImageSlot
             src={coverSrc}
             alt=""
             tint="plum"

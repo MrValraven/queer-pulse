@@ -1,8 +1,10 @@
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { Button, Collapse } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { CreatorDraftNotice } from "../creatorDrafts/CreatorDraftNotice";
 import type { StudioReleaseView, StudioTrackView } from "./api/studio.adapters";
 import { STUDIO_LIMITS } from "./api/studio.types";
+import { ownerTrackSafetyOf } from "./api/useStudioOwnerTrackSafety";
 import { useStudioTrack } from "./api/useStudioTrack";
 import {
   usePublishStudioEpisode,
@@ -11,6 +13,8 @@ import {
 import { StudioEpisodeAudioAttach } from "./StudioEpisodeAudioStep";
 import { StudioEpisodeChaptersField } from "./StudioEpisodeChaptersField";
 import { StudioLoadError, StudioNotFound } from "./StudioLoadStates";
+import { StudioTrackSafetyFields } from "./StudioTrackSafetyFields";
+import { useTrackSafetyDraft } from "./useTrackSafetyDraft";
 import {
   StudioTrackNotesField,
   StudioTrackWordsField,
@@ -91,7 +95,8 @@ function EpisodeFields({
   const [title, setTitle] = useState<string | null>(null);
   const [notes, setNotes] = useState<string | null>(null);
   const [transcript, setTranscript] = useState<string | null>(null);
-  const [isExplicit, setIsExplicit] = useState<boolean | null>(null);
+  const safety = ownerTrackSafetyOf(release, trackId);
+  const safetyDraft = useTrackSafetyDraft(safety, track.isExplicit);
   const [chapterRows, setChapterRows] = useState<ChapterDraft[] | null>(null);
   const [isShowingChapterErrors, setIsShowingChapterErrors] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
@@ -115,7 +120,6 @@ function EpisodeFields({
   const transcriptValue =
     transcript ??
     track.lyricStanzas.map((lines) => lines.join("\n")).join("\n\n");
-  const explicitValue = isExplicit ?? track.isExplicit;
   const chapterRowsValue = chapterRows ?? storedChapterRows;
   // The server refuses an episode of a draft or scheduled show.
   const canPublishEpisode =
@@ -149,7 +153,8 @@ function EpisodeFields({
           title: titleValue.trim() || track.title,
           notes: notesValue.trim() || null,
           lyrics: transcriptValue.trim() || null,
-          isExplicit: explicitValue,
+          isExplicit: safetyDraft.explicitValue,
+          ...safetyDraft.warningsPatch,
           ...(chapterRows !== null
             ? {
                 chapters:
@@ -215,14 +220,16 @@ function EpisodeFields({
         value={transcriptValue}
         onChange={setTranscript}
       />
-      <label className={tracksStyles.checkbox}>
-        <input
-          type="checkbox"
-          checked={explicitValue}
-          onChange={(event) => setIsExplicit(event.target.checked)}
-        />{" "}
-        {t("studio:episodeUpload.explicitLabel")}
-      </label>
+      <StudioTrackSafetyFields
+        explicitLabel={t("studio:episodeUpload.explicitLabel")}
+        isExplicit={safetyDraft.explicitValue}
+        isExplicitLocked={safety.isExplicitLocked}
+        onExplicitChange={safetyDraft.setIsExplicit}
+        contentWarnings={safetyDraft.warningsValue}
+        staffContentWarnings={safety.staffContentWarnings}
+        onContentWarningsChange={safetyDraft.setContentWarnings}
+        checkboxClassName={tracksStyles.checkbox}
+      />
       <Collapse isOpen={episodeError.isOpen}>
         <p
           key={episodeError.error?.attempt}
@@ -235,6 +242,10 @@ function EpisodeFields({
       <p role="status" className={css.status}>
         {isSaved ? t("studio:episodeUpload.savedStatus") : ""}
       </p>
+      <CreatorDraftNotice
+        messageKey="studio:creatorDraftNote.episodeBody"
+        isShown={track.publishedAt === null}
+      />
       <Collapse isOpen={canPublishEpisode && !track.hasAudio}>
         <p className={css.hint}>{t("studio:episodeUpload.needsAudio")}</p>
       </Collapse>

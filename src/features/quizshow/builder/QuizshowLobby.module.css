@@ -1,0 +1,247 @@
+.buttonWrap {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.blockedReason {
+  margin: 0;
+  max-width: 36ch;
+  font-size: var(--text-caption);
+  line-height: 1.45;
+  color: var(--ink-60);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.label {
+  font-size: var(--text-13-5);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.modeGroup {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  gap: 0.5rem;
+}
+
+.modeOption {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 2.75rem;
+  padding: 0.7rem 0.85rem;
+  background: var(--cream);
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-12);
+  color: var(--ink);
+  font-family: inherit;
+  font-size: var(--text-14-5);
+  font-weight: 600;
+  text-align: start;
+  cursor: pointer;
+  transition-property: border-color, background-color;
+  transition-duration: 0.2s;
+  transition-timing-function: var(--ease);
+}
+
+.modeOption:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+@media (hover: hover) {
+  .modeOption:hover {
+    border-color: rgba(var(--ink-rgb), 0.28);
+  }
+}
+
+.modeOptionOn {
+  border-color: var(--accent);
+  background: rgba(var(--ink-rgb), 0.04);
+}
+
+.modeIcon {
+  flex-shrink: 0;
+  font-size: var(--text-18);
+  color: var(--accent);
+}
+
+.toggleRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.toggleText {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 0;
+  cursor: pointer;
+}
+
+.toggleLabel {
+  font-size: var(--text-14-5);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.toggleHint {
+  font-size: var(--text-13);
+  line-height: 1.45;
+  color: var(--ink-60);
+}
+
+.feedback {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.6rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-12);
+  background: rgba(var(--ink-rgb), 0.04);
+  color: var(--ink);
+  font-size: var(--text-14);
+}
+
+.feedbackTitle {
+  margin: 0;
+  font-weight: 600;
+}
+
+.errorLine {
+  margin: 0;
+  font-size: var(--text-14);
+  color: var(--ink);
+}
+
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--gap-sm);
+  padding: 1.25rem;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-e1);
+}
+
+.panelMain {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.6rem;
+  min-width: 0;
+}
+
+.panelTitle {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-20);
+  color: var(--ink);
+}
+
+.statusLine {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+  margin: 0;
+  font-size: var(--text-14);
+  color: var(--ink-60);
+}
+
+.status {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.code {
+  font-family: var(--mono);
+  font-size: var(--text-title);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  line-height: 1.1;
+  color: var(--ink);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.note {
+  margin: 0;
+  max-width: 60ch;
+  font-size: var(--text-caption);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+.qr {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  max-width: 9rem;
+}
+
+.qrPlate {
+  display: block;
+  padding: 0.5rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-12);
+  background: rgba(var(--cream-rgb), 1);
+  line-height: 0;
+}
+
+.qrCaption {
+  margin: 0;
+  font-size: var(--text-caption);
+  line-height: 1.4;
+  text-align: center;
+  color: var(--ink-60);
+}
+
+@media (--mobile) {
+  .panel {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .qr {
+    align-items: flex-start;
+    max-width: none;
+  }
+
+  .qrCaption {
+    text-align: start;
+  }
+}

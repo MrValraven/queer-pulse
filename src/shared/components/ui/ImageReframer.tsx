@@ -1,4 +1,5 @@
 import {
+  type CSSProperties,
   type KeyboardEvent as ReactKeyboardEvent,
   type PointerEvent as ReactPointerEvent,
   type SyntheticEvent,
@@ -82,6 +83,14 @@ export default function ImageReframer({
     onChange,
   });
 
+  // A frame taller than it is wide (a portrait file on Original) gets a
+  // desktop height cap that keeps its ratio (see `.frameTall`).
+  const isFrameTall = activeAspectNumber > 0 && activeAspectNumber < 1;
+  const frameStyle = {
+    aspectRatio: String(activeAspectNumber || 1),
+    "--frame-aspect": activeAspectNumber || 1,
+  } as CSSProperties;
+
   function handleImageLoadEvent(event: SyntheticEvent<HTMLImageElement>) {
     handleImageLoad(event.currentTarget);
   }
@@ -137,11 +146,12 @@ export default function ImageReframer({
           className={[
             styles.frame,
             shouldShowShapePreview && styles.frameWithShapePreview,
+            isFrameTall && styles.frameTall,
             isDragging && styles.dragging,
           ]
             .filter(Boolean)
             .join(" ")}
-          style={{ aspectRatio: String(activeAspectNumber || 1) }}
+          style={frameStyle}
           role="group"
           aria-label={t("shared:reframe.frame")}
           aria-describedby={shouldShowShapePreview ? hintId : undefined}

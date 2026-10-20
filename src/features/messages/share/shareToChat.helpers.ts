@@ -6,7 +6,13 @@ import type { Conversation } from "../data";
  * every kind (PRD-347).
  */
 export type ShareableKind =
-  "article" | "listing" | "community" | "directory" | "gathering" | "generic";
+  | "article"
+  | "listing"
+  | "community"
+  | "directory"
+  | "gathering"
+  | "generic"
+  | "studio";
 
 /**
  * Absolute-ize a same-origin path so the message body always carries a link

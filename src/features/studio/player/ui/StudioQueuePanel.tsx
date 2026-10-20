@@ -113,6 +113,9 @@ function StudioQueuePanel({
   return (
     <m.aside
       ref={panelRef}
+      // Portalled out of the bar, so it carries its own marker: Sentry drops
+      // the clicks made in here (dropStudioPlayBreadcrumb).
+      data-studio-player=""
       className={
         isSiteNavShown
           ? `${styles.panel} ${styles.panelBelowNav}`

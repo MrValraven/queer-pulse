@@ -4,7 +4,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { EventHostDTO } from "./api/events.api";
 import type { GatheringDetailsDraft } from "./editDetailsDraft";
 import {
-  MANAGE_GATHERING_TABS,
+  manageGatheringTabOrder,
   MANAGE_TAB_PANEL_ID,
   type ManageGatheringTab,
 } from "./gatheringPaths";
@@ -14,6 +14,7 @@ import { AttendeesTab } from "./ManageAttendeesTab";
 import { MessagesTab } from "./ManageMessagesTab";
 import { SettingsTab } from "./ManageSettingsTab";
 import { CheckinTab } from "./checkin/CheckinTab";
+import { QuizshowBuilderTab } from "../quizshow/builder/QuizshowBuilderTab";
 import type { VenueSelection } from "./VenuePicker";
 import type { RunByListingView, RunBySelection } from "./runByListing";
 import type { RunBySaveOutcome } from "./useGatheringEditSave";
@@ -68,19 +69,22 @@ interface ManageGatheringTabsProps {
   /** The host's own slug, so the Attendees tab can mark the host's row and
    *  keep Remove and Bar off it. Absent in demo, whose roster is all guests. */
   hostSlug?: string;
+  /** The event is a quiz night, so Live game sits second in the tab bar. */
+  isQuizFormat?: boolean;
+  /** Pulse Live is on for this build; Live game hides while it is not. */
+  isQuizshowVisible?: boolean;
   onUpdateSettings?: (patch: {
     allowWaitlist?: boolean;
     showAttendeeCount?: boolean;
   }) => void;
 }
 
-const TAB_ORDER: readonly Tab[] = MANAGE_GATHERING_TABS;
-
 const TAB_LABEL_KEYS: Record<Tab, string> = {
   overview: "gatherings:manage.tabs.overview",
   checkin: "gatherings:manage.tabs.checkin",
   attendees: "gatherings:manage.tabs.attendees",
   messages: "gatherings:manage.tabs.messages",
+  quizshow: "gatherings:manage.tabs.quizshow",
   settings: "gatherings:manage.tabs.settings",
 };
 
@@ -110,9 +114,15 @@ export function ManageGatheringTabs({
   showAttendeeCount,
   customRsvpQuestion,
   hostSlug,
+  isQuizFormat,
+  isQuizshowVisible,
   onUpdateSettings,
 }: ManageGatheringTabsProps) {
   const { t } = useTranslation();
+  const tabOrder = manageGatheringTabOrder({
+    isQuizFormat: isQuizFormat ?? false,
+    isQuizshowVisible: isQuizshowVisible ?? false,
+  });
   // Which way the last switch went, so the incoming panel drifts in from the
   // side its tab sits on (a later tab from the right). Null until the first
   // switch: the panel the page opens on just appears. The tab lives in the
@@ -125,7 +135,7 @@ export function ManageGatheringTabs({
   if (tab !== shownTab) {
     setShownTab(tab);
     setSwitchDirection(
-      TAB_ORDER.indexOf(tab) > TAB_ORDER.indexOf(shownTab)
+      tabOrder.indexOf(tab) > tabOrder.indexOf(shownTab)
         ? "forward"
         : "backward",
     );
@@ -138,7 +148,7 @@ export function ManageGatheringTabs({
       <Tabs
         variant="underline"
         className={styles.tabBar}
-        tabs={TAB_ORDER.map((tabId) => ({
+        tabs={tabOrder.map((tabId) => ({
           id: tabId,
           label: t(TAB_LABEL_KEYS[tabId]),
           icon:
@@ -190,6 +200,9 @@ export function ManageGatheringTabs({
           />
         )}
         {tab === "messages" && <MessagesTab slug={slug} />}
+        {tab === "quizshow" && (
+          <QuizshowBuilderTab slug={slug} eventStartAt={startAt} />
+        )}
         {tab === "settings" && (
           <SettingsTab
             slug={slug}

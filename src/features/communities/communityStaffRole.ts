@@ -34,3 +34,17 @@ export function staffRoleLabelKey(role: CommunityRole | null): string | null {
   if (role === "mod") return "communities:detail.dangerZone.yourRole.mod";
   return null;
 }
+
+/**
+ * Who may edit a community's support section. Live: owner and co-owner (the
+ * backend refuses moderators). Demo: any staff seat, because the demo viewer
+ * is seeded as a moderator on the flagships and owns none of them, and the
+ * editor still has to be reachable there.
+ */
+export function canEditCommunityGiving(
+  role: CommunityRole | null,
+  isDemoMode: boolean,
+): boolean {
+  if (isOwnerRole(role) || isCoOwnerRole(role)) return true;
+  return isDemoMode && role === "mod";
+}

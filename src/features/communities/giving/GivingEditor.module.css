@@ -1,0 +1,119 @@
+/* The support section's inline editor: the intro field, one card per way to
+   support, and the add, notes and save area. Fields stack at phone width;
+   from 560px of editor width the optional name and note sit side by side.
+   The editor is a size container, so it follows the column it sits in. */
+
+.editor {
+  container-type: inline-size;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Same treatment as the shared FormField label, for the list heading. */
+.groupLabel {
+  margin: 0 0 7px;
+  font-size: var(--text-11-5);
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+
+.rows {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Padding and border live on the fieldset, inside the animated li, so they
+   fold away with the row. The bottom margin is the gap between rows and
+   folds with it too. FormField brings its own bottom margin, which pads the
+   card's last field. */
+.row {
+  min-width: 0;
+  margin: 0 0 12px;
+  padding: 14px 14px 0;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-14);
+}
+
+/* The kind picker's label line and its full-width control, spaced like a
+   FormField. */
+.kindField {
+  margin-bottom: 16px;
+}
+
+/* The "Kind" label on the left, the move and remove actions on the right,
+   centred on one line, so the picker below never has to share a row with
+   them and the card keeps one straight edge at phone width. */
+.rowHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+
+/* The label's own bottom margin would push it off the actions' centre line;
+   the head's margin spaces the control instead. */
+.rowHead .groupLabel {
+  margin: 0;
+  min-width: 0;
+}
+
+/* The three icon buttons keep the 44px tap target. */
+.rowActions {
+  display: flex;
+  flex: none;
+  gap: 4px;
+}
+
+.optionalFields {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+@container (min-width: 560px) {
+  .optionalFields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 12px;
+  }
+}
+
+.addArea {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+/* Ghost sm drops the floor to 40px; the Add control keeps the full tap
+   target. Two classes so it wins over `.sm` whatever the load order. */
+.addArea .addButton {
+  min-height: var(--tap-min);
+}
+
+.note {
+  margin: 0 0 8px;
+  max-width: 65ch;
+  font-size: var(--text-13);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+/* Space under the "Edit ways to support" title, above the first field. */
+.editorTitle {
+  margin-block-end: var(--gap-sm);
+}

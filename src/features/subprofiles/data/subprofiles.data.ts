@@ -16,6 +16,12 @@ import {
   THERAPIST_DEMO_SUBPROFILES,
 } from "./therapistDemoSubprofiles.data";
 import { LATE_BLOOMERS } from "./podcastDemoSubprofile.data";
+import { TATTOO_DEMO_SUBPROFILES } from "./tattooDemoSubprofiles.data";
+import { TATTOO_ARTIST_DEMO_SUBPROFILE } from "./tattooArtistDemoSubprofile.data";
+import {
+  demoListingWorksAt,
+  registerDemoTeamPersonaLookup,
+} from "../../marketing/listBusiness/api/listingTeam.demo";
 import type {
   CollaboratorDTO,
   EndorserDTO,
@@ -2895,7 +2901,15 @@ export const DEMO_SUBPROFILES: DemoSubprofile[] = [
   LATE_BLOOMERS,
   ...QUEST_DEMO_SUBPROFILES,
   ...THERAPIST_DEMO_SUBPROFILES,
+  ...TATTOO_DEMO_SUBPROFILES,
+  TATTOO_ARTIST_DEMO_SUBPROFILE,
 ];
+
+// The team store reads the viewer's personas through this lookup.
+registerDemoTeamPersonaLookup(
+  (subprofileId) =>
+    DEMO_SUBPROFILES.find((persona) => persona.id === subprofileId) ?? null,
+);
 
 /** Demo-only edit counters (ENG-451), keyed by persona id. A persona with no
  *  entry is at 0. `mockBumpEditVersion` is the one writer: every demo save the
@@ -3036,6 +3050,7 @@ export function toPublicDto(
     skinData: sp.skinData ?? null,
     removedAt: sp.removedAt ?? null,
     viewerIsMember,
+    worksAt: demoListingWorksAt(sp.id),
   };
   if (sp.linkVisibility === "linked") {
     base.ownerSlug = sp.ownerSlug;

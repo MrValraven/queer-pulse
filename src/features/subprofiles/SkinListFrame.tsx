@@ -4,6 +4,7 @@ import {
   type ReactNode,
   type RefObject,
 } from "react";
+import { Collapse } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { SkinBlockControl } from "./skinBlockFields.data";
 import { SkinListAddButton } from "./SkinListAddButton";
@@ -39,7 +40,8 @@ export interface SkinListFrameProps {
  * The frame every list control shares: the control's label and helper come
  * from `SkinRefinedField` (sentence case, the hint above the rows), and the
  * rows sit in a group named by that label through `aria-labelledby`, with
- * the add button under them. A retired list (`isRetired`) has no add
+ * the add button under them (folded away, with "Up to N" in its place, once
+ * `maxItems` is reached). A retired list (`isRetired`) has no add
  * button: its lines are on their way to another place. A `keyHint` takes
  * the frame's footer, as the chips' key hint does, and shows only while
  * focus is in the list.
@@ -58,6 +60,8 @@ export function SkinListFrame({
 }: SkinListFrameProps) {
   const { t } = useTranslation();
   const [isFocusInside, setIsFocusInside] = useState(false);
+  const isListFull =
+    control.maxItems !== undefined && itemCount >= control.maxItems;
   const handleBlur = (event: FocusEvent<HTMLDivElement>) => {
     const next = event.relatedTarget;
     if (!(next instanceof Node) || !event.currentTarget.contains(next)) {
@@ -92,11 +96,22 @@ export function SkinListFrame({
             {children}
           </div>
           {!control.isRetired && (
-            <SkinListAddButton
-              label={t(control.addLabelKey ?? defaultAddLabelKey)}
-              onAdd={onAdd}
-              buttonRef={addButtonRef}
-            />
+            <>
+              <Collapse isOpen={!isListFull}>
+                <SkinListAddButton
+                  label={t(control.addLabelKey ?? defaultAddLabelKey)}
+                  onAdd={onAdd}
+                  buttonRef={addButtonRef}
+                />
+              </Collapse>
+              <Collapse isOpen={isListFull}>
+                <span className={styles.listFull}>
+                  {t("subprofiles:skinControl.listFull", {
+                    count: control.maxItems,
+                  })}
+                </span>
+              </Collapse>
+            </>
           )}
           {keyHint && (
             <span id={keyHint.id} hidden>

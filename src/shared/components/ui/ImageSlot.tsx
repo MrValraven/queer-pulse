@@ -1,4 +1,10 @@
-import { useState, type CSSProperties } from "react";
+import {
+  useState,
+  type CSSProperties,
+  type ReactNode,
+  type Ref,
+  type SyntheticEvent,
+} from "react";
 import { imagePixelRatio, resolveAvatarSrc } from "../../lib/avatarUrl";
 import { useTranslation } from "../../i18n/useTranslation";
 import {
@@ -63,6 +69,16 @@ interface ImageSlotProps {
    *  image). The slot swaps to its placeholder on its own either way; this
    *  only lets a form tell the member why their photo went away. */
   onLoadError?: () => void;
+  /** Called when a real `src` finishes loading. A file the browser already
+   *  had in memory can be complete before this handler is attached, so a
+   *  caller that needs the natural size should also read `imgRef` on mount. */
+  onLoad?: (event: SyntheticEvent<HTMLImageElement>) => void;
+  /** Ref to the rendered `<img>`, present only while a real image shows. */
+  imgRef?: Ref<HTMLImageElement>;
+  /** Extra layers painted inside the frame after the image, clipped by it
+   *  (`PosterAwareImageSlot` draws a poster's blurred backdrop here). Only
+   *  rendered while a real image shows. */
+  children?: ReactNode;
 }
 
 /**
@@ -118,6 +134,9 @@ export function ImageSlot({
   focus,
   imgStyle,
   onLoadError,
+  onLoad,
+  imgRef,
+  children,
 }: ImageSlotProps) {
   const { t } = useTranslation();
   // Tracks the most recent `src` that failed to load (a 404/broken hotlink),
@@ -160,6 +179,7 @@ export function ImageSlot({
     <div className={cls} style={{ width, height, borderRadius, ...style }}>
       {showImage ? (
         <img
+          ref={imgRef}
           src={resolvedSrc}
           alt={alt}
           loading={loading}
@@ -167,6 +187,7 @@ export function ImageSlot({
           decoding="async"
           referrerPolicy="no-referrer"
           style={cropImgStyle}
+          onLoad={onLoad}
           onError={() => {
             setFailedSrc(src);
             onLoadError?.();
@@ -181,6 +202,7 @@ export function ImageSlot({
           {placeholder ?? t("shared:imageSlot.placeholder")}
         </span>
       )}
+      {showImage && children}
     </div>
   );
 }

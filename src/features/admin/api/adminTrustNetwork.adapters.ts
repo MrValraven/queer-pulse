@@ -1,10 +1,22 @@
 import type {
+  JoinPath,
+  MemberRef,
+  TrustCase,
   TrustGraphData,
+  TrustRing,
   VouchEdge,
   VouchPerson,
+  WeakVoucher,
 } from "../trustGraph/trustGraphModel";
 import { ymValue } from "../trustGraph/trustGraphModel";
-import type { TrustNetworkDTO } from "./adminTrustNetwork.api";
+import type {
+  TrustCaseDTO,
+  TrustJoinPathDTO,
+  TrustMemberRefDTO,
+  TrustNetworkDTO,
+  TrustRingDTO,
+  TrustWeakVoucherDTO,
+} from "./adminTrustNetwork.api";
 
 /** ISO → 'YYYY-MM'. */
 function toMonth(iso: string): string {
@@ -12,6 +24,50 @@ function toMonth(iso: string): string {
 }
 
 const ANCHOR_R = 215;
+
+/** Backend refs carry the slug; the model keys every node by it as `id`. */
+function toMemberRef(ref: TrustMemberRefDTO): MemberRef {
+  return { id: ref.slug, name: ref.name };
+}
+
+function toWeakVoucher(voucher: TrustWeakVoucherDTO): WeakVoucher {
+  return { ...toMemberRef(voucher), reason: voucher.reason };
+}
+
+function toJoinPath(joinPath: TrustJoinPathDTO): JoinPath {
+  return {
+    kind: joinPath.kind,
+    byId: joinPath.bySlug,
+    byName: joinPath.byName,
+    at: joinPath.at,
+  };
+}
+
+function toTrustRing(ring: TrustRingDTO): TrustRing {
+  return {
+    id: ring.id,
+    memberIds: [...ring.memberSlugs],
+    memberCount: ring.memberCount,
+    firstJoinedAt: ring.firstJoinedAt,
+    lastJoinedAt: ring.lastJoinedAt,
+    sharedVouchers: ring.sharedVouchers.map(toMemberRef),
+  };
+}
+
+function toTrustCase(trustCase: TrustCaseDTO): TrustCase {
+  return {
+    id: trustCase.id,
+    kind: trustCase.kind,
+    subjectId: trustCase.subjectSlug,
+    subjectName: trustCase.subjectName,
+    ringId: trustCase.ringId,
+    memberCount: trustCase.memberCount,
+    weakVoucherCount: trustCase.weakVoucherCount,
+    openReportCount: trustCase.openReportCount,
+    windowHours: trustCase.windowHours,
+    score: trustCase.score,
+  };
+}
 
 export function trustNetworkDtoToData(dto: TrustNetworkDTO): TrustGraphData {
   const people: VouchPerson[] = dto.nodes.map((node) => ({
@@ -30,16 +86,32 @@ export function trustNetworkDtoToData(dto: TrustNetworkDTO): TrustGraphData {
     private: node.private,
     verified: node.verified,
     avatarUrl: node.avatarUrl,
+    joinedAt: node.joinedAt,
+    accountKind: node.accountKind,
+    ringId: node.ringId,
+    isolatedBy: node.isolatedBy.map(toWeakVoucher),
+    joinPath: toJoinPath(node.joinPath),
+    trackRecord: {
+      vouchesGiven: node.trackRecord.vouchesGiven,
+      laterFlaggedCount: node.trackRecord.laterFlaggedCount,
+    },
+    activeInboundCount: node.activeInboundCount,
+    activeOutboundCount: node.activeOutboundCount,
+    sceneIds: [...node.sceneIds],
   }));
   const peopleById: Record<string, VouchPerson> = Object.fromEntries(
     people.map((person) => [person.id, person]),
   );
   // Sort by the full ISO `createdAt` before truncating to a month, so the
   // replay timeline (which walks edges in array order within a month) reflects
-  // the real order people connected, not DTO order. ISO strings sort lexically.
+  // the real order people connected. ISO strings sort lexically.
   const edges: VouchEdge[] = [...dto.edges]
-    .sort((a, b) =>
-      a.createdAt < b.createdAt ? -1 : a.createdAt > b.createdAt ? 1 : 0,
+    .sort((earlier, later) =>
+      earlier.createdAt < later.createdAt
+        ? -1
+        : earlier.createdAt > later.createdAt
+          ? 1
+          : 0,
     )
     .map((edge) => ({
       id: edge.id,
@@ -78,5 +150,10 @@ export function trustNetworkDtoToData(dto: TrustNetworkDTO): TrustGraphData {
     tMin,
     tMax,
     truncated: dto.truncated,
+    rings: dto.rings.map(toTrustRing),
+    cases: dto.cases.map(toTrustCase),
+    openCaseCount: dto.openCaseCount,
+    platformStartedAt: dto.platformStartedAt,
+    newAccountWindowDays: dto.newAccountWindowDays,
   };
 }

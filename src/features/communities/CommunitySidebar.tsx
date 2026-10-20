@@ -1,6 +1,6 @@
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { FiArrowRight } from "react-icons/fi";
-import { Avatar, Button } from "../../shared/components/ui";
+import { Avatar, Button, Collapse } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { routes, communityPath } from "../../app/routeMap";
@@ -14,6 +14,8 @@ import { AV_CLASS } from "./communityAvatar";
 import { leadingInitials } from "../../shared/lib/initials";
 import type { CommunityPulseResult } from "./api/useCommunityPulse";
 import { CommunityPulseSidebarCards } from "./CommunityPulseSidebarCards";
+import { CommunityGivingSidebarCard } from "./giving/CommunityGivingSidebarCard";
+import { GIVING_TAB_ID } from "./giving/givingConstants";
 import styles from "./CommunityDetailPage.module.css";
 
 const GATHERING = routes.gatherings;
@@ -29,6 +31,9 @@ export function CommunitySidebar({
   detail,
   related,
   communityPulse,
+  slug,
+  communityName = "",
+  givingMethodCount = 0,
 }: {
   detail: CommunityDetail;
   related: Community[];
@@ -36,9 +41,20 @@ export function CommunitySidebar({
    *  community — renders as two compact cards below "Next gathering" (own
    *  loading/error/empty handling; see `CommunityPulseSidebarCards`). */
   communityPulse: CommunityPulseResult;
+  /** The community's slug, for the support card's own fetch. */
+  slug?: string;
+  communityName?: string;
+  /** How many ways to support the community lists. The support card shows
+   *  only above zero; the page passes 0 without a living hub (D4), since the
+   *  card's button opens a tab only that hub renders. */
+  givingMethodCount?: number;
 }) {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
+  // The support card points at the Support tab, so it folds away while that
+  // tab is open and comes back when the viewer moves to another one.
+  const [searchParams] = useSearchParams();
+  const isGivingTabOpen = searchParams.get("tab") === GIVING_TAB_ID;
   const org = detail.organiser;
   const { connected: isOrganiserConnected, contact: contactOrganiser } =
     useMemberContact(org.slug ?? "");
@@ -151,6 +167,15 @@ export function CommunitySidebar({
           </Button>
         )}
       </div>
+
+      <Collapse
+        isOpen={givingMethodCount > 0 && Boolean(slug) && !isGivingTabOpen}
+      >
+        <CommunityGivingSidebarCard
+          slug={slug ?? ""}
+          communityName={communityName}
+        />
+      </Collapse>
 
       <CommunityPulseSidebarCards pulse={communityPulse} />
 

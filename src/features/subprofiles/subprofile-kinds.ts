@@ -30,8 +30,10 @@ import {
   FiMoon,
   FiPlayCircle,
   FiRadio,
+  FiRefreshCw,
   FiScissors,
   FiSearch,
+  FiShoppingBag,
   FiSmartphone,
   FiStar,
   FiTag,
@@ -342,6 +344,41 @@ export const SECTION_META: Record<SubprofileSection, SectionMeta> = {
     labelKey: "subprofiles:section.healed",
     icon: FiImage,
     fields: ["title", "description", "imageUrl", "date"],
+  },
+  wanna_dos: {
+    labelKey: "subprofiles:section.wanna_dos",
+    icon: FiEdit3,
+    fields: ["title", "description", "imageUrl"],
+  },
+  in_progress: {
+    labelKey: "subprofiles:section.in_progress",
+    icon: FiLayers,
+    fields: ["title", "description"],
+  },
+  cover_ups: {
+    labelKey: "subprofiles:section.cover_ups",
+    icon: FiRefreshCw,
+    fields: ["title", "description", "imageUrl"],
+  },
+  scar_work: {
+    labelKey: "subprofiles:section.scar_work",
+    icon: FiFeather,
+    fields: ["title", "description", "imageUrl"],
+  },
+  guest_spots: {
+    labelKey: "subprofiles:section.guest_spots",
+    icon: FiMapPin,
+    fields: ["title", "subtitle", "date", "url"],
+  },
+  flash_days: {
+    labelKey: "subprofiles:section.flash_days",
+    icon: FiCalendar,
+    fields: ["title", "description", "date", "subtitle", "url", "imageUrl"],
+  },
+  shop: {
+    labelKey: "subprofiles:section.shop",
+    icon: FiShoppingBag,
+    fields: ["title", "description", "imageUrl", "url"],
   },
   books: {
     labelKey: "subprofiles:section.books",

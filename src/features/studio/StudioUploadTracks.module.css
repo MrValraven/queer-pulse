@@ -132,7 +132,26 @@
 .progress {
   width: 100%;
   height: 6px;
+  appearance: none;
+  border: none;
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+  background: rgba(var(--studio-ink-rgb), 0.12);
   accent-color: var(--accent);
+}
+
+.progress::-webkit-progress-bar {
+  background: rgba(var(--studio-ink-rgb), 0.12);
+}
+
+.progress::-webkit-progress-value {
+  background: var(--accent);
+  border-radius: var(--radius-pill);
+}
+
+.progress::-moz-progress-bar {
+  background: var(--accent);
+  border-radius: var(--radius-pill);
 }
 
 .error {
@@ -299,4 +318,31 @@
 .loudList {
   margin: 6px 0 8px;
   padding-inline-start: 18px;
+}
+
+.convertingHint,
+.wavNote {
+  font-size: var(--text-12);
+  color: var(--studio-text-muted);
+}
+
+.convertingHint {
+  margin: 4px 0 0;
+}
+
+.wavNote {
+  margin: 0;
+}
+
+/* The zone and its note read as one block; the parent's gap sits outside. */
+.dropZoneWithNote {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 28px;
+}
+
+/* The shared zone's own bottom margin moves to the wrapper. */
+.dropZoneWithNote > :first-child {
+  margin-bottom: 0;
 }

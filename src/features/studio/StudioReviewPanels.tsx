@@ -32,6 +32,7 @@ import {
 } from "./StudioReviewDialog";
 import { studioErrorMessageKeyOf } from "./studioErrors.data";
 import { StudioReviewList } from "./StudioReviewList";
+import { StudioReviewTrackReports } from "./StudioReviewTrackReports";
 import { useReviewFocus } from "./useReviewFocus";
 
 /** Refusals that mean the card already moved on: the dialog closes and the
@@ -221,6 +222,7 @@ export function StudioReviewReportsPanel({
         )}
       />
       {decision.dialog}
+      <StudioReviewTrackReports tabButtonId={tabButtonId} />
     </>
   );
 }

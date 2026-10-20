@@ -33,9 +33,12 @@ import {
   toGenreList,
   toLatestEpisodeViews,
   toOwnerTrackRowView,
+  toPlaylistCandidateViews,
   toPlaylistCardView,
   toPlaylistCreditView,
+  toPlaylistEditorViews,
   toPlaylistEntryView,
+  toPlaylistPersonView,
   toPlaylistView,
   toPressContactView,
   toPreviewView,
@@ -1332,5 +1335,133 @@ describe("Studio artist kinds: labels, formats, stats and the shelf", () => {
     ]);
     expect(shelf.map((item) => item.track.id)).toEqual(["e1"]);
     expect(shelf[0]?.release.isShow).toBe(true);
+  });
+});
+
+describe("collaborative playlists", () => {
+  const sara = {
+    slug: "sara-marques",
+    displayName: "Sara Marques",
+    avatarUrl: null,
+  };
+  const withAddedBy = (dto: StudioPlaylistDTO): StudioPlaylistDTO => ({
+    ...dto,
+    entries: dto.entries.map((entry) => ({ ...entry, addedBy: sara })),
+  });
+
+  it("reads an older backend's owner flag as the owner role", () => {
+    const card = toPlaylistCardView(playlistDto);
+    expect(card.role).toBe("owner");
+    expect(card.isOwner).toBe(true);
+    expect(card.hasEditRights).toBe(true);
+    expect(card.editorCount).toBe(0);
+    expect(card.isCollaborative).toBe(false);
+  });
+
+  it("gives an editor every entry, the unavailable one included", () => {
+    const view = toPlaylistView({
+      ...withAddedBy(playlistDto),
+      isOwner: false,
+      role: "editor",
+      editorCount: 2,
+      visibility: "public",
+      creditSubprofileId: "persona-1",
+    });
+    expect(view.entries.map((entry) => entry.entryId)).toEqual([
+      "entry-1",
+      "entry-2",
+      "entry-3",
+    ]);
+    expect(view.entries[0]?.addedBy?.name).toBe("Sara Marques");
+    expect(view.entries[0]?.addedBy?.href).toBe("/members/sara-marques");
+    expect(view.isOwner).toBe(false);
+    expect(view.hasEditRights).toBe(true);
+    expect(view.isCollaborative).toBe(true);
+    expect(view.visibility).toBeNull();
+    expect(view.creditSubprofileId).toBeNull();
+  });
+
+  it("drops editor data for an invitee and a listener even when a server sends it", () => {
+    for (const role of ["invitee", null] as const) {
+      const view = toPlaylistView({
+        ...withAddedBy(playlistDto),
+        isOwner: false,
+        role,
+        editorCount: 3,
+      });
+      expect(view.editorCount).toBeNull();
+      expect(view.isCollaborative).toBe(false);
+      expect(view.hasEditRights).toBe(false);
+      expect(view.entries.every((entry) => entry.addedBy === null)).toBe(true);
+      expect(view.entries.map((entry) => entry.entryId)).toEqual([
+        "entry-1",
+        "entry-3",
+      ]);
+    }
+  });
+
+  it("keeps the invite for the invitee only", () => {
+    const invite = { invitedBy: sara, invitedAt: "2026-10-14T09:00:00.000Z" };
+    const asInvitee = toPlaylistView({
+      ...playlistDto,
+      isOwner: false,
+      role: "invitee",
+      invite,
+    });
+    expect(asInvitee.invite?.invitedBy.name).toBe("Sara Marques");
+    const asEditor = toPlaylistView({
+      ...playlistDto,
+      isOwner: false,
+      role: "editor",
+      invite,
+    });
+    expect(asEditor.invite).toBeNull();
+  });
+
+  it("links a person only when they have a profile", () => {
+    const person = toPlaylistPersonView({
+      slug: "",
+      displayName: "  Ana  ",
+      avatarUrl: null,
+    });
+    expect(person.href).toBeNull();
+    expect(person.name).toBe("Ana");
+    expect(person.initials.length).toBeGreaterThan(0);
+  });
+
+  it("marks an unanswered invite as pending and reads candidates", () => {
+    const editors = toPlaylistEditorViews({
+      items: [
+        {
+          editorId: "editor-1",
+          member: sara,
+          status: "invited",
+          source: "member_invite",
+          invitedAt: "2026-10-14T09:00:00.000Z",
+        },
+      ],
+    });
+    expect(editors[0]?.isPending).toBe(true);
+    expect(editors[0]?.editorId).toBe("editor-1");
+    const candidates = toPlaylistCandidateViews({
+      items: [{ member: sara, isEditor: true }],
+    });
+    expect(candidates[0]).toMatchObject({
+      isEditor: true,
+      person: { slug: "sara-marques" },
+    });
+  });
+
+  it("leaves Liked songs rows without an added by", () => {
+    expect(
+      toPlaylistEntryView({
+        entryId: "entry-9",
+        position: 1,
+        addedAt: "2026-10-01T00:00:00.000Z",
+        isAvailable: false,
+        track: null,
+        addedBy: sara,
+      }).addedBy,
+    ).toBeNull();
   });
 });

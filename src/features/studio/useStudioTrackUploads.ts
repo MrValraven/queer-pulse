@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import type { StudioTrackRowView } from "./api/studio.adapters";
 import { studioErrorCodeOf } from "./api/studio.api";
-import type { StudioAudioContentType } from "./api/studio.types";
+import { STUDIO_LIMITS, type StudioAudioContentType } from "./api/studio.types";
 import {
   uploadStudioAudio,
   type StudioAudioUploadHandle,
@@ -22,17 +22,24 @@ import {
   type LatestSender,
 } from "./studioUploadQueue";
 import {
+  convertRowAudio,
+  uploadBarOf,
+  type ConvertibleWork,
+} from "./studioRowConversion";
+import {
   isRetryableUploadError,
   removeErrorKeyOf,
   studioWriteErrorKeyOf,
   titleFromFileName,
   uploadErrorKeyOf,
   validateAudioFiles,
+  type AcceptedAudioFile,
   type FileRejectionReason,
 } from "./studioUploadValidation";
 
 export type UploadRowStage =
   | "queued"
+  | "converting"
   | "creating"
   | "uploading"
   | "confirming"
@@ -48,15 +55,15 @@ export interface UploadRow {
   stage: UploadRowStage;
   progress: number;
   errorKey: string | null;
+  /** Values the error line needs, e.g. the minutes a converted track may run. */
+  errorValues?: Record<string, number> | null;
   durationLabel: string | null;
   /** False when Retry cannot fix the failure; the row then offers Remove. */
   isRetryable: boolean;
 }
 
 /** What a row needs to resume where it failed. Kept out of render state. */
-interface RowWork {
-  file: File;
-  contentType: StudioAudioContentType;
+interface RowWork extends ConvertibleWork {
   uploadedKey: string | null;
   handle: StudioAudioUploadHandle | null;
   isRunning: boolean;
@@ -264,26 +271,37 @@ function useTrackOrder(releaseId: string | null, rowState: UploadRowsState) {
   };
 }
 
-/** Records the work for each accepted file and the row it becomes. */
+/** Records the work for each accepted file and the row it becomes. A WAV
+ *  or AIFF is measured once it is an MP3 (convertRowAudio reports it). */
 function registerAcceptedFiles(
-  accepted: ReturnType<typeof validateAudioFiles>["accepted"],
+  accepted: AcceptedAudioFile[],
   workByRow: Map<string, RowWork>,
-): { acceptedUploads: AcceptedUpload[]; added: UploadRow[] } {
-  const acceptedUploads = accepted.map(({ file, contentType }) => {
+): { measuredNow: AcceptedUpload[]; added: UploadRow[] } {
+  const registered = accepted.map(({ file, contentType, needsConversion }) => {
     const localId = nextLocalId();
     workByRow.set(localId, {
       file,
       contentType,
+      sourceFile: needsConversion ? file : null,
+      needsConversion,
+      wasConverted: false,
+      conversion: null,
       uploadedKey: null,
       handle: null,
       isRunning: false,
     });
-    return { localId, file, contentType };
+    return { localId, file, contentType, needsConversion };
   });
-  const added = acceptedUploads.map(({ localId, file }) =>
-    rowFromFile(localId, file),
-  );
-  return { acceptedUploads, added };
+  return {
+    measuredNow: registered
+      .filter((upload) => !upload.needsConversion)
+      .map(({ localId, file, contentType }) => ({
+        localId,
+        file,
+        contentType,
+      })),
+    added: registered.map(({ localId, file }) => rowFromFile(localId, file)),
+  };
 }
 
 interface RemovalContext {
@@ -333,9 +351,10 @@ async function deleteRemovedRow(
 }
 
 /**
- * Each file runs create track, upload, confirm. Creates run one at a time in
- * list order, so the server's positions match the list; uploads share a few
- * slots, so each presigns just before its PUT. A failure stops the row at
+ * Each file runs convert (WAV and AIFF only), create track, upload,
+ * confirm. Creates run one at a time in list order, so the server's
+ * positions match the list; uploads share a few slots, so each presigns just
+ * before its PUT. A failure stops the row at
  * that stage; Retry resumes there, reusing the created track and, after a
  * failed confirm, the uploaded key, so no retry ever makes a second track.
  * An unreadable file (the server deletes the object) uploads again on Retry.
@@ -368,7 +387,11 @@ export function useStudioTrackUploads(
 
   useEffect(() => {
     const workByRow = workRef.current;
-    return () => workByRow.forEach((work) => work.handle?.abort());
+    return () =>
+      workByRow.forEach((work) => {
+        work.handle?.abort();
+        work.conversion?.abort();
+      });
   }, []);
 
   const isGone = (localId: string) => !isMountedRef.current || !rowOf(localId);
@@ -415,14 +438,19 @@ export function useStudioTrackUploads(
     const releaseSlot = await uploadSlots.acquire();
     try {
       if (isGone(localId)) return null;
-      patchRow(localId, { stage: "uploading", progress: 0 });
+      patchRow(localId, {
+        stage: "uploading",
+        progress: uploadBarOf(0, work.wasConverted),
+      });
       const handle = uploadStudioAudio({
         demoMode,
         subprofileId,
         file: work.file,
         contentType: work.contentType,
         onProgress: createProgressReporter((progress) =>
-          patchRow(localId, { progress }),
+          patchRow(localId, {
+            progress: uploadBarOf(progress, work.wasConverted),
+          }),
         ),
       });
       work.handle = handle;
@@ -439,8 +467,20 @@ export function useStudioTrackUploads(
     if (!work || work.isRunning || !releaseId || !startRow) return;
     const forReleaseId = releaseId;
     work.isRunning = true;
-    patchRow(localId, { stage: "queued", errorKey: null });
+    patchRow(localId, {
+      stage: "queued",
+      progress: work.uploadedKey ? uploadBarOf(100, work.wasConverted) : 0,
+      errorKey: null,
+      errorValues: null,
+    });
     try {
+      const isConverted = await convertRowAudio(localId, work, {
+        maxBytes: options.audioMaxBytes ?? STUDIO_LIMITS.audioMaxBytes,
+        patchRow,
+        isGone,
+        onConverted: (accepted) => options.onFilesAccepted?.([accepted]),
+      });
+      if (!isConverted) return;
       const trackId =
         startRow.trackId ??
         (await createFor(localId, startRow.title, forReleaseId));
@@ -486,13 +526,13 @@ export function useStudioTrackUploads(
         options.audioMaxBytes,
       );
       setRejections(rejected);
-      const { acceptedUploads, added } = registerAcceptedFiles(
+      const { measuredNow, added } = registerAcceptedFiles(
         accepted,
         workRef.current,
       );
       commitRows([...rowsRef.current, ...added]);
       // Spec 8.1: measuring starts together with the upload.
-      options.onFilesAccepted?.(acceptedUploads);
+      options.onFilesAccepted?.(measuredNow);
       added.forEach((row) => void process(row.localId));
     },
     retry: (localId) => void process(localId),
@@ -502,7 +542,9 @@ export function useStudioTrackUploads(
       );
       const row = rowsRef.current[index];
       if (!row) return;
-      workRef.current.get(localId)?.handle?.abort();
+      const work = workRef.current.get(localId);
+      work?.handle?.abort();
+      work?.conversion?.abort();
       workRef.current.delete(localId);
       commitRows(
         rowsRef.current.filter((candidate) => candidate.localId !== localId),

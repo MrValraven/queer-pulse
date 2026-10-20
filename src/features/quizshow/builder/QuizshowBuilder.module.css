@@ -1,0 +1,147 @@
+.tab {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  /* Clears the fixed save bar so the last round never sits under it. */
+  padding-bottom: var(--section-y-96);
+}
+
+.headingRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 14px 24px;
+}
+.headingText {
+  flex: 1 1 320px;
+  min-width: 0;
+}
+.heading {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: var(--text-28);
+  line-height: 1.15;
+  color: var(--ink);
+}
+.lead {
+  margin-top: 6px;
+  max-width: 62ch;
+  font-size: var(--text-14-5);
+  line-height: 1.55;
+  color: var(--ink-60);
+}
+.headingActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.importActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Shown while a refresh of a loaded quiz has failed. */
+.refreshNote {
+  font-size: var(--text-14);
+  line-height: 1.45;
+  color: var(--ink-60);
+}
+
+.skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* The problem list. */
+.problems {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  padding: 16px 18px;
+}
+.problemsTitle {
+  font-size: var(--text-14);
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+.problemList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.problemItem {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px 12px;
+  padding-block: 8px;
+  font-size: var(--text-14);
+  line-height: 1.45;
+  color: var(--ink);
+}
+.problemItem + .problemItem {
+  border-top: 1px solid var(--line);
+}
+.problemText {
+  flex: 1 1 240px;
+  min-width: 0;
+}
+
+/* The save bar, the only fixed UI of the builder. */
+.saveBar {
+  position: fixed;
+  inset-inline: 0;
+  bottom: max(var(--bottom-inset, 0px), var(--consent-inset, 0px));
+  z-index: var(--z-sticky);
+  background: var(--paper);
+  border-top: 1px solid var(--line);
+  box-shadow: var(--shadow-e3);
+  padding: 12px var(--wrap-px);
+}
+.saveBarInner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 20px;
+  max-width: 1100px;
+  margin-inline: auto;
+}
+.saveStatus {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--text-14);
+  font-weight: 600;
+  color: var(--ink);
+}
+.saveDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex: none;
+}
+.saveActions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-inline-start: auto;
+}
+
+@media (--mobile) {
+  .saveActions {
+    flex: 1 1 100%;
+  }
+  .saveActions > * {
+    flex: 1;
+  }
+}

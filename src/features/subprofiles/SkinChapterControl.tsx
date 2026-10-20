@@ -4,6 +4,7 @@ import { SectionListControl } from "./SectionListControl";
 import { SkinAvailabilityGrid } from "./SkinAvailabilityGrid";
 import { SkinChipsControl } from "./SkinChipsControl";
 import { SkinChoiceChipsRefined } from "./SkinChoiceChipsRefined";
+import { SkinDateControl } from "./SkinDateControl";
 import { SkinEntriesControl } from "./SkinEntriesControl";
 import { SkinLinesControl } from "./SkinLinesControl";
 import { SkinMultiSelectControl } from "./SkinMultiSelectControl";
@@ -15,6 +16,7 @@ import { SkinRetiredField } from "./SkinRetiredField";
 import { SkinSegmentedControl } from "./SkinSegmentedControl";
 import { SkinSelectControl } from "./SkinSelectControl";
 import { SkinTextFieldControl } from "./SkinTextFieldControl";
+import { SkinToggleControl } from "./SkinToggleControl";
 import { TherapistTopicsControl } from "./TherapistTopicsControl";
 import { useShownRetiredControl } from "./useShownRetiredControl";
 
@@ -29,7 +31,8 @@ import { useShownRetiredControl } from "./useShownRetiredControl";
  * `SkinChoiceChipsRefined`. `SkinSelectControl` keeps its older look, and no
  * chapter declares a `select` today. A retired control (`isRetired`) sits
  * in `SkinRetiredField`, which adds Clear and, for a list with
- * `moveToSection`, "Move to Credentials".
+ * `moveToSection`, "Move to Credentials". A `toggle` renders the shared
+ * switch (`SkinToggleControl`), a `date` the day picker (`SkinDateControl`).
  */
 export function SkinChapterControl({
   control,
@@ -117,5 +120,11 @@ function ControlByKind({
     // A persona section's item list, edited with the section editor.
     case "sectionList":
       return <SectionListControl control={control} />;
+    // An on/off switch: `true` while on, the key removed when off.
+    case "toggle":
+      return <SkinToggleControl {...props} />;
+    // One day from the day picker, `YYYY-MM-DD`, "" once cleared.
+    case "date":
+      return <SkinDateControl {...props} />;
   }
 }

@@ -6,6 +6,11 @@ import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { photoOf } from "../communities/communityPeople";
 import { communityPostPath } from "../communities/communityPostPath";
 import type { HubPost } from "../communities/HubPulseCard";
+import { LazyStudioShareCard } from "../studio/share/LazyStudioShareCard";
+import {
+  splitStudioPostText,
+  splitStudioSummaryText,
+} from "../studio/share/studioPostText";
 import { FEED_POST, type FeedPost } from "./feed.data";
 import { MoreMenu, ReportModal } from "./FeedModeration";
 import { FeedPostActions, FeedReasonLine } from "./FeedPostActions";
@@ -82,7 +87,12 @@ export function CommunityPostCard({
   const avatarSrc = hub
     ? photoOf(hub.post.author, demoMode)
     : (post.avatarUrl ?? undefined);
-  const body = hub ? hub.post.body : post.body;
+  // A hub item carries the whole body; a live item carries the server's
+  // 220-character summary with the Studio link path beside it, since the cut
+  // often falls inside the URL.
+  const studioText = hub
+    ? splitStudioPostText(hub.post.body, { isMarkdown: false })
+    : splitStudioSummaryText(post.body, post.studioLink);
   // A flat post arrives with an empty `context` (the server leaves its title
   // blank), so the card names the audience in the reader's language on its
   // meta line. It has no community to open, so it carries no footer link.
@@ -154,7 +164,13 @@ export function CommunityPostCard({
               })
         }
       />
-      <FeedQuote>{body}</FeedQuote>
+      {studioText.visibleText && (
+        <FeedQuote>{studioText.visibleText}</FeedQuote>
+      )}
+      {/* LazyStudioShareCard directly: the shell's 12px gap spaces it, and StudioPostCard's margin would double that. */}
+      {studioText.target && (
+        <LazyStudioShareCard target={studioText.target} surface="post" />
+      )}
       <FeedReasonLine
         reason={signals?.reason}
         subject={signals?.reasonSubject}

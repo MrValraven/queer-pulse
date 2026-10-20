@@ -1,251 +1,284 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo } from "react";
 import { useMediaQuery } from "../../shared/hooks/useMediaQuery";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import {
-  ymValue,
-  type TrustGraph,
-  type VouchEdge,
-} from "./trustGraph/trustGraphModel";
+import type { TrustGraph, VouchEdge } from "./trustGraph/trustGraphModel";
+import { findTrustPath, type TrustPath } from "./trustGraph/trustPath";
+import type {
+  CenterRequest,
+  InviteBubble,
+  VouchGraphFilters,
+  VouchGraphUrlView,
+  VouchLayoutKind,
+  VouchMode,
+} from "./vouchGraph.types";
+import { countActiveFilters, EMPTY_FILTERS } from "./vouchGraphFilters";
+import { matchIdsInView } from "./vouchGraphSearch";
+import { useVouchReplay } from "./useVouchReplay";
+import { useVouchGraphViewState } from "./useVouchGraphViewState";
+import { deriveVisibleGraph } from "./vouchVisibility";
 
-export type VouchMode = "plain" | "clusters" | "safety";
+export type { VouchMode };
 
-const REPLAY_STEP_MS = 130;
+export interface VouchGraphController {
+  focus: string;
+  mode: VouchMode;
+  selectedId: string | null;
+  hoveredId: string | null;
+  pathA: string | null;
+  pathB: string | null;
+  filters: VouchGraphFilters;
+  search: string;
+  isListView: boolean;
+  crumbs: string[];
+  expanded: ReadonlySet<string>;
+  expandedBubbles: ReadonlySet<string>;
+  visIds: string[];
+  visEdges: VouchEdge[];
+  bubbles: InviteBubble[];
+  layoutKind: VouchLayoutKind;
+  isFilteredEmpty: boolean;
+  path: TrustPath | null;
+  searchMatchIds: ReadonlySet<string>;
+  highlightedRingId: string | null;
+  centerRequest: CenterRequest | null;
+  activeFilterCount: number;
+  isScenesAvailable: boolean;
+  isCompactViewport: boolean;
+  timeCut: number;
+  eventCount: number;
+  currentEvent: VouchEdge | null;
+  isFullyRevealed: boolean;
+  isReplaying: boolean;
+  activeEdgeId: string | null;
+  isEdgeRevealed: (edgeId: string) => boolean;
+  urlView: VouchGraphUrlView;
+  setSearch: (value: string) => void;
+  setTime: (step: number) => void;
+  select: (id: string | null) => void;
+  setHovered: (id: string | null) => void;
+  centerOn: (id: string) => void;
+  recenter: (id: string) => void;
+  focusCase: (subjectId: string) => void;
+  showRing: (ringId: string) => void;
+  gotoCrumb: (index: number) => void;
+  toggleExpand: (id: string) => void;
+  toggleBubble: (parentId: string) => void;
+  pickPath: (id: string) => void;
+  clearPath: () => void;
+  changeMode: (mode: VouchMode) => void;
+  setFilters: (next: VouchGraphFilters) => void;
+  clearFilters: () => void;
+  setListView: (isOn: boolean) => void;
+  replay: () => void;
+  stopReplay: () => void;
+}
 
 /**
- * All view state for the trust-network modal: focus, expanded neighbourhoods,
- * overlay mode, time cut-off, selection, the two-point trust path, search, and
- * the re-centre breadcrumb trail. Derives the visible node/edge sets from the
- * fetched `graph` (demo fixture or live `/admin/trust-network` data).
+ * The one controller for the trust-network modal: focus, selection, hover,
+ * the two-point trust path, filters, search, expanded neighbourhoods and
+ * invite bubbles, the crumb trail, replay, and centre requests. Derives the
+ * visible node and edge sets from the fetched `graph` (demo fixture or live
+ * `/admin/trust-network` data). `urlView` changes only when the shareable
+ * view changes, so callers sync the URL from it.
  */
-export function useVouchGraph(graph: TrustGraph, initialFocus: string) {
+export function useVouchGraph(
+  graph: TrustGraph,
+  initialView: VouchGraphUrlView,
+  options: { onJumpToMember: (slug: string) => void },
+): VouchGraphController {
   const { t } = useTranslation();
   const { showToast } = useToast();
+  const { onJumpToMember } = options;
+  const isCompactViewport = useMediaQuery("(max-width: 920px)");
+  const [state, dispatch] = useVouchGraphViewState(graph, initialView);
+  const { view, search } = state;
+  const replayState = useVouchReplay(graph);
+  const { isEdgeRevealed } = replayState;
 
-  // On a phone the inspector is a bottom sheet (see the `@media (max-width:
-  // 920px)` block in AdminVouchGraph.module.css), so pre-selecting the focus
-  // node would open that sheet over the whole graph the moment the modal opens.
-  // Start with nothing selected on narrow viewports so the graph is visible and
-  // the sheet only surfaces once a node is tapped; keep the desktop right rail
-  // pre-focused on the member the modal was opened for.
-  const isNarrow = useMediaQuery("(max-width: 920px)");
+  const allPersonIds = useMemo(
+    () => graph.people.map((person) => person.id),
+    [graph],
+  );
+  // Matches across the whole loaded graph pin those members (they skip the
+  // filters and stay out of bubbles); the highlight set is the visible part.
+  const graphSearchMatchIds = useMemo(
+    () => matchIdsInView(graph, allPersonIds, search),
+    [graph, allPersonIds, search],
+  );
+  const pinnedIds = useMemo(() => {
+    const ids = new Set(graphSearchMatchIds);
+    [view.selectedId, view.pathA, view.pathB].forEach((id) => {
+      if (id) ids.add(id);
+    });
+    return ids;
+  }, [graphSearchMatchIds, view.selectedId, view.pathA, view.pathB]);
 
-  const [focus, setFocus] = useState(initialFocus);
-  const [expanded, setExpanded] = useState<Set<string>>(new Set());
-  const [mode, setMode] = useState<VouchMode>("plain");
-  // `timeCut` is a *step index* 0…eventCount: how many connection events are
-  // revealed. 0 = just the focus node, before anyone connected; eventCount =
-  // the whole network. Starts fully revealed.
-  const [timeCut, setTimeCut] = useState(graph.edges.length);
-  const [sel, setSel] = useState<string | null>(isNarrow ? null : initialFocus);
-  const [pathA, setPathA] = useState<string | null>(null);
-  const [pathB, setPathB] = useState<string | null>(null);
-  const [search, setSearch] = useState("");
-  const [crumbs, setCrumbs] = useState<string[]>([]);
-  const [replaying, setReplaying] = useState(false);
-  const replayRef = useRef<number | null>(null);
+  const visible = useMemo(
+    () =>
+      deriveVisibleGraph({
+        graph,
+        focus: view.focus,
+        mode: view.mode,
+        expanded: state.expanded,
+        expandedBubbles: state.expandedBubbles,
+        filters: view.filters,
+        isEdgeRevealed,
+        pinnedIds,
+      }),
+    [
+      graph,
+      view.focus,
+      view.mode,
+      view.filters,
+      state.expanded,
+      state.expandedBubbles,
+      isEdgeRevealed,
+      pinnedIds,
+    ],
+  );
+  const { visIds } = visible;
 
-  const expandedKey = useMemo(() => [...expanded].sort().join(","), [expanded]);
-
-  /**
-   * Every connection as its own event, in true chronological order: one entry
-   * per edge (each edge is one real invite/vouch act), sorted by month then by
-   * the edge's original position so same-month connections keep a stable,
-   * deterministic sequence. Replay walks this list one step at a time — evenly
-   * spaced by *event*, not by calendar distance — so people who joined in the
-   * same month appear as separate, ordered steps instead of one lump, and empty
-   * months never stretch the timeline. (In live mode the adapter emits edges
-   * pre-sorted by full `createdAt`, so original order is real within-month
-   * order too.)
-   */
-  const events = useMemo(() => {
-    return graph.edges
-      .map((edge, index) => ({ edge, index }))
-      .sort((a, b) => {
-        const delta = ymValue(a.edge.date) - ymValue(b.edge.date);
-        return delta !== 0 ? delta : a.index - b.index;
-      })
-      .map((entry) => entry.edge);
-  }, [graph]);
-  const eventCount = events.length;
-  const eventIndexById = useMemo(() => {
-    const map = new Map<string, number>();
-    events.forEach((edge, index) => map.set(edge.id, index));
-    return map;
-  }, [events]);
-
-  /** The connection revealed by the current step (the most recent event), or
-   *  null at step 0 (before anyone connected). Drives the footer label and the
-   *  inspector-row highlight. */
-  const currentEvent = timeCut > 0 ? (events[timeCut - 1] ?? null) : null;
-
-  const { visIds, visEdges } = useMemo(() => {
-    const set = new Set<string>([focus]);
-    graph.neighbors(focus, true).forEach((n) => set.add(n));
-    expanded.forEach((id) =>
-      graph.neighbors(id, true).forEach((n) => set.add(n)),
+  const searchMatchIds = useMemo(() => {
+    const visibleIdSet = new Set(visIds);
+    return new Set(
+      [...graphSearchMatchIds].filter((id) => visibleIdSet.has(id)),
     );
-    if (mode === "safety") {
-      graph.people.forEach((p) => {
-        // Auto-reveal every node the Safety overlay would otherwise dim:
-        // flagged for enforcement reasons, part of a real self-vouching ring
-        // (ADM-23's `inRing`), or trust-isolated.
-        if (p.standing === "flagged" || p.inRing || graph.isIsolated(p.id)) {
-          set.add(p.id);
-        }
-      });
-      [...set].forEach((id) =>
-        graph.neighbors(id, true).forEach((n) => set.add(n)),
-      );
+  }, [graphSearchMatchIds, visIds]);
+
+  const path = useMemo(
+    () =>
+      view.pathA && view.pathB
+        ? findTrustPath(graph, view.pathA, view.pathB, (edge) =>
+            isEdgeRevealed(edge.id),
+          )
+        : null,
+    [graph, view.pathA, view.pathB, isEdgeRevealed],
+  );
+
+  const isScenesAvailable = useMemo(() => {
+    if (view.mode === "clusters") return true;
+    const primarySceneIds = new Set<string>();
+    for (const personId of visIds) {
+      const sceneId = graph.peopleById[personId]?.sceneId;
+      if (sceneId) primarySceneIds.add(sceneId);
+      if (primarySceneIds.size >= 2) return true;
     }
-    // time filter: an edge is revealed once its step is reached; a node stays if
-    // it is the focus or has any revealed edge.
-    const isRevealed = (edge: VouchEdge) =>
-      (eventIndexById.get(edge.id) ?? -1) < timeCut;
-    const ids = [...set].filter(
-      (id) =>
-        id === focus ||
-        graph.edges.some(
-          (e) => (e.from === id || e.to === id) && isRevealed(e),
-        ),
-    );
-    const idSet = new Set(ids);
-    const edges: VouchEdge[] = graph.edges.filter(
-      (e) => idSet.has(e.from) && idSet.has(e.to) && isRevealed(e),
-    );
-    return { visIds: ids, visEdges: edges };
-    // expandedKey stands in for the Set's contents
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [graph, focus, expandedKey, mode, timeCut, eventIndexById]);
+    return false;
+  }, [graph, visIds, view.mode]);
 
-  const { pathNodes, pathEdges } = useMemo(() => {
-    const nodes = new Set<string>();
-    const edges = new Set<string>();
-    if (pathA && pathB) {
-      const path = graph.shortestPath(pathA, pathB);
-      if (path) {
-        path.forEach((id, i) => {
-          nodes.add(id);
-          if (i > 0) {
-            const e = graph.findEdge(path[i - 1]!, path[i]!);
-            if (e) edges.add(e.id);
-          }
-        });
-      }
-    }
-    return { pathNodes: nodes, pathEdges: edges };
-  }, [graph, pathA, pathB]);
+  const selectedRingId = view.selectedId
+    ? (graph.peopleById[view.selectedId]?.ringId ?? null)
+    : null;
 
-  const select = useCallback((id: string | null) => setSel(id), []);
-
+  const select = useCallback(
+    (id: string | null) => dispatch({ type: "select", id }),
+    [dispatch],
+  );
+  const centerOn = useCallback(
+    (id: string) => dispatch({ type: "centerOn", id }),
+    [dispatch],
+  );
   const recenter = useCallback(
     (id: string) => {
       if (graph.peopleById[id]?.private) {
         showToast(t("admin:vouchGraph.modal.privateToast"), "info");
         return;
       }
-      setCrumbs((c) => [...c, focus]);
-      setFocus(id);
-      setExpanded(new Set());
-      setSel(id);
+      dispatch({ type: "recenter", id });
     },
-    [focus, graph, showToast, t],
+    [dispatch, graph, showToast, t],
+  );
+  const focusCase = useCallback(
+    (subjectId: string) => {
+      const subject = graph.peopleById[subjectId];
+      if (!subject) {
+        onJumpToMember(subjectId);
+        return;
+      }
+      // A private subject keeps the current focus: select it to open its
+      // case in the inspector, with no private-network toast.
+      if (subject.private) {
+        select(subjectId);
+        return;
+      }
+      recenter(subjectId);
+    },
+    [graph, onJumpToMember, recenter, select],
+  );
+  const showRing = useCallback(
+    (ringId: string) => {
+      dispatch({ type: "showRing", ringId });
+      const visibleIdSet = new Set(visIds);
+      const firstMemberInView = graph
+        .ringById(ringId)
+        ?.memberIds.find((memberId) => visibleIdSet.has(memberId));
+      if (firstMemberInView) centerOn(firstMemberInView);
+    },
+    [centerOn, dispatch, graph, visIds],
   );
 
-  const gotoCrumb = useCallback((index: number) => {
-    setCrumbs((c) => {
-      const target = c[index];
-      if (target !== undefined) {
-        setFocus(target);
-        setExpanded(new Set());
-        setSel(target);
-      }
-      return c.slice(0, index);
-    });
-  }, []);
-
-  const toggleExpand = useCallback((id: string) => {
-    setExpanded((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
-    });
-  }, []);
-
-  const onPickPath = useCallback(
-    (id: string) => {
-      if (!pathA) {
-        setPathA(id);
-        setPathB(null);
-      } else if (!pathB) {
-        setPathB(id);
-      } else {
-        setPathA(id);
-        setPathB(null);
-      }
-    },
-    [pathA, pathB],
+  const actions = useMemo(
+    () => ({
+      setSearch: (value: string) => dispatch({ type: "setSearch", value }),
+      setHovered: (id: string | null) => dispatch({ type: "setHovered", id }),
+      gotoCrumb: (index: number) => dispatch({ type: "gotoCrumb", index }),
+      toggleExpand: (id: string) => dispatch({ type: "toggleExpand", id }),
+      toggleBubble: (parentId: string) =>
+        dispatch({ type: "toggleBubble", parentId }),
+      pickPath: (id: string) => dispatch({ type: "pickPath", id }),
+      clearPath: () => dispatch({ type: "clearPath" }),
+      changeMode: (mode: VouchMode) => dispatch({ type: "changeMode", mode }),
+      setFilters: (next: VouchGraphFilters) =>
+        dispatch({ type: "setFilters", filters: next }),
+      clearFilters: () =>
+        dispatch({ type: "setFilters", filters: EMPTY_FILTERS }),
+      setListView: (isOn: boolean) => dispatch({ type: "setListView", isOn }),
+    }),
+    [dispatch],
   );
-
-  const clearPath = useCallback(() => {
-    setPathA(null);
-    setPathB(null);
-  }, []);
-
-  const changeMode = useCallback((m: VouchMode) => setMode(m), []);
-
-  const stopReplay = useCallback(() => {
-    if (replayRef.current !== null) {
-      clearInterval(replayRef.current);
-      replayRef.current = null;
-    }
-    setReplaying(false);
-  }, []);
-
-  const replay = useCallback(() => {
-    if (replayRef.current !== null) return;
-    if (eventCount === 0) return;
-    setReplaying(true);
-    setTimeCut(0); // start before anyone connected
-    let step = 0;
-    replayRef.current = window.setInterval(() => {
-      step += 1;
-      setTimeCut(step);
-      if (step >= eventCount) stopReplay();
-    }, REPLAY_STEP_MS);
-  }, [eventCount, stopReplay]);
-
-  useEffect(() => stopReplay, [stopReplay]);
 
   return {
-    focus,
-    mode,
-    timeCut,
-    sel,
-    pathA,
-    pathB,
+    focus: view.focus,
+    mode: view.mode,
+    selectedId: view.selectedId,
+    hoveredId: state.hoveredId,
+    pathA: view.pathA,
+    pathB: view.pathB,
+    filters: view.filters,
     search,
-    crumbs,
-    expanded,
-    replaying,
-    eventCount,
-    currentEvent,
-    activeEdgeId: currentEvent?.id ?? null,
+    isListView: view.isListView,
+    crumbs: state.crumbs,
+    expanded: state.expanded,
+    expandedBubbles: state.expandedBubbles,
     visIds,
-    visEdges,
-    pathNodes,
-    pathEdges,
-    setSearch,
-    setTime: setTimeCut,
+    visEdges: visible.visEdges,
+    bubbles: visible.bubbles,
+    layoutKind: visible.layoutKind,
+    isFilteredEmpty: visible.isFilteredEmpty,
+    path,
+    searchMatchIds,
+    highlightedRingId: state.ringHighlightOverride ?? selectedRingId,
+    centerRequest: state.centerRequest,
+    activeFilterCount: countActiveFilters(view.filters),
+    isScenesAvailable,
+    isCompactViewport,
+    timeCut: replayState.timeCut,
+    eventCount: replayState.eventCount,
+    currentEvent: replayState.currentEvent,
+    isFullyRevealed: replayState.isFullyRevealed,
+    isReplaying: replayState.isReplaying,
+    activeEdgeId: replayState.currentEvent?.id ?? null,
+    isEdgeRevealed,
+    urlView: view,
+    ...actions,
+    setTime: replayState.setTimeCut,
     select,
+    centerOn,
     recenter,
-    gotoCrumb,
-    toggleExpand,
-    pickPath: onPickPath,
-    clearPath,
-    changeMode,
-    replay,
-    stopReplay,
+    focusCase,
+    showRing,
+    replay: replayState.replay,
+    stopReplay: replayState.stopReplay,
   };
 }

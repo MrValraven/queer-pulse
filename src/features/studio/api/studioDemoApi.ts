@@ -61,6 +61,13 @@ import {
 } from "./studioDemoListening";
 import { studioRefusal } from "./studioDemoMutations";
 import {
+  demoOwnerClaimsOfRelease,
+  demoOwnerClaimsOfTrack,
+  demoTrackWithSafety,
+  demoWithheldTrackIds,
+} from "./studioDemoSafety";
+import type { StudioWithheldErrorBody } from "./studioSafety.types";
+import {
   demoCreditSummariesOfRelease,
   demoPublicCreditsOfTrack,
 } from "./studioDemoCredits.data";
@@ -96,6 +103,14 @@ const WITHDRAWN_BODY: StudioWithdrawnErrorBody = {
   error: "Gone",
 };
 const withdrawn = () => new ApiError(410, "Gone", WITHDRAWN_BODY);
+/** Studio safety: a listener reading a withheld track (it names nothing). */
+const WITHHELD_BODY: StudioWithheldErrorBody = {
+  statusCode: 410,
+  code: "studio_track_withheld",
+  message: "This track is unavailable.",
+  error: "Gone",
+};
+const trackWithheld = () => new ApiError(410, "Gone", WITHHELD_BODY);
 
 const allReleases = () => [
   ...DEMO_RELEASES,
@@ -182,7 +197,11 @@ function forViewer(release: StudioReleaseDTO): StudioReleaseDTO {
   const link = release.isOwner ? demoPreviewLinkFor(release.id) : null;
   return {
     ...release,
-    tracks: tracksForViewer(release),
+    tracks: tracksForViewer(release).map((track) =>
+      demoTrackWithSafety(track, release.isOwner),
+    ),
+    // Studio safety: claims reach the owner only.
+    claims: release.isOwner ? demoOwnerClaimsOfRelease(release) : [],
     isReminderSet:
       release.status === "scheduled" && demoIsReminderSet(release.id),
     hasUnnotedChanges: release.isOwner && (release.hasUnnotedChanges ?? false),
@@ -292,6 +311,10 @@ export function demoStudioTrack(trackId: string): StudioTrackDTO {
       (track) => track.id === trackId,
     );
     if (!summary) continue;
+    // Studio safety: a listener's withheld track page is a 410 that names
+    // nothing; the owner reads it with its claims.
+    if (summary.isWithheld === true && !candidate.isOwner)
+      throw trackWithheld();
     const details = DEMO_TRACK_DETAILS[trackId];
     const formatDetails = DEMO_FORMAT_TRACK_DETAILS[trackId];
     const content = DEMO_FORMAT_TRACK_CONTENT[trackId];
@@ -305,6 +328,7 @@ export function demoStudioTrack(trackId: string): StudioTrackDTO {
       ...listeningDetailsOf(trackId),
       release: demoReleaseCard(candidate),
       personaCredits: demoPublicCreditsOfTrack(trackId),
+      claims: candidate.isOwner ? demoOwnerClaimsOfTrack(trackId) : [],
     };
   }
   throw notFound();
@@ -401,9 +425,15 @@ export function demoStudioSearch(
           .flatMap((candidate) =>
             candidate.tracks
               // A draft episode reaches its owner's show page only.
-              .filter((track) => track.isDraft !== true && matches(track.title))
+              .filter(
+                (track) =>
+                  track.isDraft !== true &&
+                  matches(track.title) &&
+                  // Studio safety: search leaves a withheld track out.
+                  !demoWithheldTrackIds().has(track.id),
+              )
               .map((track) => ({
-                ...track,
+                ...demoTrackWithSafety(track, false),
                 release: demoReleaseCard(candidate),
               })),
           )

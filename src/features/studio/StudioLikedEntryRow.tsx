@@ -13,6 +13,7 @@ import {
   StudioHiddenTrackNumber,
 } from "./StudioHiddenTrack";
 import { StudioLikeButton } from "./StudioLikeButton";
+import { StudioTrackWarningPill } from "./StudioTrackWarningPill";
 import hiddenCss from "./StudioHiddenTrack.module.css";
 import styles from "./studio.module.css";
 import kit from "./studioKit.module.css";
@@ -124,6 +125,7 @@ export function StudioLikedEntryRow({
             entry.title
           )}
         </h3>
+        <StudioTrackWarningPill warnings={track?.contentWarnings} />
         {track ? (
           <div className={styles.who}>
             {`${track.release.artist.name} · ${track.release.title}`}
@@ -163,6 +165,9 @@ export function StudioLikedEntryRow({
               href: track.href,
               hasAudio: track.hasAudio,
               isExplicit: track.isExplicit,
+              artistId: track.release.artist.id,
+              isPublished: track.release.publishedAt !== null,
+              isWithheld: track.isWithheld,
             }}
           />
         ) : (

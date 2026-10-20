@@ -1,0 +1,505 @@
+/* Sizes: one set of custom properties per stage size, read by every piece. */
+.screen {
+  --stage-main: var(--text-screen-answer);
+  --stage-label: var(--text-screen-label);
+  --stage-gap: var(--gap-lg);
+  --stage-pad: var(--gap-grid);
+  --stage-track: var(--gap-sm);
+  --stage-tile-min: 20vh;
+  --stage-correct-edge: 6px;
+}
+
+.phone {
+  --stage-main: var(--text-subhead);
+  --stage-label: var(--text-body);
+  --stage-gap: var(--gap-sm);
+  --stage-pad: var(--gap-sm);
+  --stage-track: var(--gap-xs);
+  --stage-tile-min: 64px;
+  --stage-correct-edge: 4px;
+}
+
+.preview {
+  --stage-main: var(--text-16);
+  --stage-label: var(--text-12);
+  --stage-gap: var(--gap-xs);
+  --stage-pad: var(--gap-xs);
+  --stage-track: var(--gap-xs);
+  --stage-tile-min: 40px;
+  --stage-correct-edge: 2px;
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Countdown bar */
+.countdown {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+}
+
+.track {
+  overflow: hidden;
+  height: var(--stage-track);
+  border-radius: var(--radius-pill);
+  background: rgba(var(--ink-rgb), 0.12);
+}
+
+.fill {
+  width: 100%;
+  height: 100%;
+  background: var(--accent);
+  transform-origin: left center;
+  transition-property: transform;
+  transition-duration: 100ms;
+  transition-timing-function: linear;
+}
+
+.fillLow {
+  background: var(--quizshow-triangle);
+}
+
+.fillStill {
+  transition: none;
+}
+
+.countdownNote {
+  min-height: 1lh;
+  font-size: var(--stage-label);
+  color: var(--ink-60);
+}
+
+/* Answer tile */
+.tile {
+  display: flex;
+  align-items: center;
+  gap: min(var(--stage-gap), var(--gap-sm));
+  box-sizing: border-box;
+  min-height: var(--stage-tile-min);
+  padding: var(--stage-pad);
+  border: 0;
+  border-radius: var(--radius-16);
+  background: var(--quizshow-tile-fill);
+  color: var(--quizshow-tile-ink);
+  font: inherit;
+  font-size: var(--stage-main);
+  font-weight: 600;
+  text-align: start;
+  transition-property: opacity, transform;
+  transition-duration: var(--dur-base);
+  transition-timing-function: var(--ease);
+}
+
+button.tile {
+  width: 100%;
+  cursor: pointer;
+}
+
+button.tile[aria-disabled="true"] {
+  cursor: default;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  button.tile:not([aria-disabled="true"]):hover {
+    transform: translateY(-2px);
+  }
+}
+
+button.tile:active:not([aria-disabled="true"]) {
+  transform: scale(0.98);
+}
+
+.tile:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.tileSelected {
+  position: relative;
+}
+
+.tileSelected::after {
+  position: absolute;
+  inset: 4px;
+  border: 4px solid var(--quizshow-tile-ink);
+  border-radius: var(--radius-12);
+  content: "";
+  pointer-events: none;
+}
+
+/* Correct: a jade edge on the tile and a check badge. The coral focus ring
+   stays free for focus, so a focused correct tile shows both. */
+.tileCorrect {
+  position: relative;
+}
+
+.tileCorrect::before {
+  position: absolute;
+  inset: 0;
+  border: var(--stage-correct-edge) solid var(--jade-ink);
+  border-radius: inherit;
+  content: "";
+  pointer-events: none;
+  animation: tileCorrectIn var(--dur-base) var(--ease) both;
+}
+
+.tileCheck {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 1.6em;
+  height: 1.6em;
+  border-radius: var(--radius-pill);
+  background: var(--jade-ink);
+  color: var(--paper);
+  font-size: var(--stage-label);
+  animation: tileCheckIn var(--dur-base) var(--ease) both;
+}
+
+.tileCheck svg {
+  width: 62%;
+  height: 62%;
+  stroke-width: 3;
+}
+
+@keyframes tileCorrectIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes tileCheckIn {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Dimmed: faded and desaturated, with the text still at 3.27:1 or more on
+   every swatch in both themes. */
+.tileDimmed {
+  opacity: 0.75;
+  filter: saturate(0.35);
+}
+
+.letter {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.6em;
+  height: 1.6em;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--ink-rgb), 0.16);
+  font-size: var(--stage-label);
+  font-weight: 700;
+}
+
+.tileText {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+/* Distribution */
+.distribution {
+  display: flex;
+  flex-direction: column;
+  gap: var(--stage-gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--stage-label);
+  color: var(--ink);
+}
+
+.distributionRow {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--stage-gap);
+}
+
+.distributionBar {
+  overflow: hidden;
+  height: var(--stage-track);
+  border-radius: var(--radius-pill);
+  background: rgba(var(--ink-rgb), 0.08);
+}
+
+.distributionBarFill {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--quizshow-bar-fill);
+  transform-origin: left center;
+}
+
+.distributionRowCorrect {
+  font-weight: 700;
+}
+
+.distributionNote {
+  margin: 0;
+  color: var(--ink-60);
+}
+
+.voteEntry {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+  padding: var(--stage-pad);
+  border-radius: var(--radius-16);
+  background: rgba(var(--ink-rgb), 0.06);
+}
+
+.voteText {
+  font-size: var(--stage-main);
+  overflow-wrap: anywhere;
+}
+
+.voteMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap-xs) var(--stage-gap);
+  color: var(--ink-60);
+}
+
+.voteTag {
+  font-weight: 700;
+  color: var(--ink);
+}
+
+/* Leaderboard */
+.leaderboard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--stage-main);
+}
+
+.leaderboardRow {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1.6em auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--stage-gap);
+  padding: var(--stage-pad);
+  border-radius: var(--radius-16);
+  background: rgba(var(--ink-rgb), 0.06);
+}
+
+.leaderboardRowSelf {
+  background: rgba(var(--ink-rgb), 0.14);
+  box-shadow: inset 0 0 0 2px var(--accent);
+}
+
+.rank {
+  font-weight: 700;
+  color: var(--ink-60);
+}
+
+.entrantName {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.score {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Podium */
+.podium {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: end;
+  gap: var(--stage-gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.podiumStep {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--gap-xs);
+  text-align: center;
+}
+
+.podiumFirst {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.podiumSecond {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.podiumThird {
+  grid-column: 3;
+  grid-row: 1;
+}
+
+.podiumName {
+  max-width: 100%;
+  font-size: var(--stage-main);
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.podiumScore {
+  font-size: var(--stage-label);
+  color: var(--ink-60);
+}
+
+.podiumBlock {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 100%;
+  padding-top: var(--stage-pad);
+  border-radius: var(--radius-16) var(--radius-16) 0 0;
+  background: var(--accent-fill);
+  color: rgba(var(--cream-rgb), 1);
+  font-size: var(--stage-main);
+  font-weight: 700;
+}
+
+.podiumBlockFirst {
+  height: calc(var(--stage-main) * 6);
+}
+
+.podiumBlockSecond {
+  height: calc(var(--stage-main) * 4.5);
+  background: color-mix(in srgb, var(--accent-fill) 80%, var(--plum));
+}
+
+.podiumBlockThird {
+  height: calc(var(--stage-main) * 3.2);
+  background: color-mix(in srgb, var(--accent-fill) 60%, var(--plum));
+}
+
+/* Dark: the plum mix sank to 2.54:1 on the page. A lighter stop (plum with
+   some plum tint) lifts it to 3.31:1 and keeps the cream number at 5.35:1.
+   The second rule puts the light mix back in a light subtree of a dark page. */
+:global([data-theme="dark"]) .podiumBlockThird {
+  background: color-mix(
+    in srgb,
+    var(--accent-fill) 60%,
+    color-mix(in srgb, var(--plum) 65%, var(--plum-tint))
+  );
+}
+
+:global([data-theme="dark"]) :global([data-theme="light"]) .podiumBlockThird {
+  background: color-mix(in srgb, var(--accent-fill) 60%, var(--plum));
+}
+
+/* Round card */
+.roundCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--stage-gap);
+  padding: var(--stage-pad);
+  border-radius: var(--radius-16);
+  background: rgba(var(--ink-rgb), 0.06);
+  color: var(--ink);
+}
+
+.roundEyebrow {
+  margin: 0;
+  font-size: var(--stage-label);
+  color: var(--ink-60);
+}
+
+.roundTitle {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--stage-main);
+  line-height: var(--lh-title);
+  overflow-wrap: break-word;
+  text-wrap: balance;
+}
+
+.roundNotes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap-xs) var(--stage-gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--stage-label);
+}
+
+.roundNote {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gap-xs);
+}
+
+/* Connection banner */
+.banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap-xs);
+  padding: var(--gap-xs) var(--gap-sm);
+  background: var(--accent-fill);
+  color: rgba(var(--cream-rgb), 1);
+  font-size: var(--text-body);
+  font-weight: 600;
+}
+
+/* Paused note: one line every surface shares. The size custom property is read
+   when an ancestor sets one; the body size stands in otherwise. */
+.pausedNote {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap-xs);
+  margin: 0;
+  padding: var(--gap-xs) var(--gap-sm);
+  border-radius: var(--radius-pill);
+  background: rgba(var(--ink-rgb), 0.08);
+  color: var(--ink);
+  font-size: var(--stage-label, var(--text-body));
+  font-weight: 700;
+}
+
+/* Vote entries fold in and out as rows; the spacing sits on the entry so it folds with the row. */
+.voteList {
+  gap: 0;
+}
+
+.voteList > li:not(:last-child) > .voteEntry {
+  margin-block-end: var(--stage-gap);
+}

@@ -43,7 +43,9 @@ function addedToastOf(
   return { key: "studio:playlist.add.alreadyThereToast", type: "info" };
 }
 
-/** The playlists once loaded. Liked songs (when offered) leads the list
+/** The playlists once loaded, only those the member can add to (their own and
+ *  the ones they edit; an invitee's card never appears). Liked songs (when
+ *  offered) leads the list
  *  whatever the load state, since it needs no request. */
 function PickerList({
   result,
@@ -59,7 +61,9 @@ function PickerList({
   const { t } = useTranslation();
   const { loadState } = result;
   const playlists =
-    loadState.isLoading || loadState.isError ? [] : result.playlists;
+    loadState.isLoading || loadState.isError
+      ? []
+      : result.playlists.filter((card) => card.hasEditRights);
   const hasRows = Boolean(likedRow) || playlists.length > 0;
   return (
     <>
@@ -80,9 +84,12 @@ function PickerList({
                 className={css.pickerRow}
                 aria-disabled={busyPlaylistId !== null || undefined}
                 aria-busy={busyPlaylistId === card.id || undefined}
-                aria-label={t("studio:playlist.add.addToAria", {
-                  name: card.name,
-                })}
+                aria-label={t(
+                  card.isCollaborative
+                    ? "studio:playlist.add.addToCollaborativeAria"
+                    : "studio:playlist.add.addToAria",
+                  { name: card.name },
+                )}
                 onClick={() => onPick(card)}
               >
                 <span className={css.pickerCover}>
@@ -94,6 +101,11 @@ function PickerList({
                   />
                 </span>
                 <span className={css.pickerName}>{card.name}</span>
+                {card.isCollaborative && (
+                  <span className={css.pickerCollab} aria-hidden>
+                    {t("studio:playlist.collab.chip")}
+                  </span>
+                )}
                 <span className={css.pickerMeta}>
                   {t("studio:facts.trackCount", { count: card.trackCount })}
                 </span>
@@ -193,6 +205,7 @@ export function StudioAddToPlaylistPicker({
         title={t("studio:playlist.add.pickerTitle")}
         sub={subjectTitle}
         onClose={onClose}
+        isStudioPlayerSurface
       >
         <button
           type="button"

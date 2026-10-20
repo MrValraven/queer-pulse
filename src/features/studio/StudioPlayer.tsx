@@ -137,7 +137,9 @@ function useShortcutsBackDismiss(isOpen: boolean, onBack: () => void) {
  * queued and the member has Studio access, and held through its exit when
  * the member closes it (useStudioBarExit). Desktop gets the full bar; at
  * the Studio tab-bar width (880px) a minimal card opens Now playing. The
- * three overlays it hosts portal to <body>.
+ * three overlays it hosts portal to <body>. The bar and every overlay root
+ * carry `data-studio-player`, so Sentry drops the clicks made on them on any
+ * page (dropStudioPlayBreadcrumb).
  */
 export function StudioPlayer({
   barRef,
@@ -163,6 +165,7 @@ export function StudioPlayer({
         aria-label={t("studio:playerBar.regionLabel")}
         data-closing={isClosing || undefined}
         inert={isClosing || undefined}
+        data-studio-player=""
       >
         {isPhone ? (
           <StudioMiniPlayer item={item} />

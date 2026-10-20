@@ -37,7 +37,14 @@ import type {
   StudioPlaylistCardDTO,
   StudioPlaylistCreditDTO,
   StudioPlaylistDTO,
+  StudioPlaylistEditorCandidatesDTO,
+  StudioPlaylistEditorDTO,
+  StudioPlaylistEditorListDTO,
+  StudioPlaylistEditorSource,
+  StudioPlaylistEditorStatus,
   StudioPlaylistEntryDTO,
+  StudioPlaylistPersonDTO,
+  StudioPlaylistRole,
   StudioPlaylistTrackDTO,
   StudioPlaylistVisibility,
   StudioPressKitDTO,
@@ -72,6 +79,13 @@ import {
   STUDIO_SUPPORT_PLATFORMS,
   isStudioArtistPersonaKind,
 } from "./studio.types";
+import {
+  contentWarningsOf,
+  newestAcceptedFirst,
+  toOwnerClaimView,
+  type StudioOwnerClaimView,
+} from "./studioSafetyFields";
+import type { StudioContentWarningId } from "./studioSafety.types";
 
 // View models every Studio page renders. Live and demo both reach the pages
 // through these functions (demo builds wire-shaped DTOs from the mock files
@@ -129,6 +143,13 @@ export interface StudioReleaseCardView {
 }
 
 export interface StudioTrackRowView {
+  /** Studio safety: the effective warnings (artist and staff), D7 order;
+   *  [] for a listener's withheld row. Optional so rows built by hand in
+   *  older code and tests stay valid; a missing value reads as none. */
+  contentWarnings?: StudioContentWarningId[];
+  /** Studio safety: a copyright claim holds the track offline. A listener's
+   *  row then has no title and no audio and reads "Unavailable". */
+  isWithheld?: boolean;
   id: string;
   position: number;
   title: string;
@@ -164,6 +185,11 @@ export interface StudioChapterView {
 
 /** A release track row as its owner sees it in the release editor. */
 export interface StudioOwnerTrackRowView extends StudioTrackRowView {
+  /** Studio safety, owner rows only: what the artist set, what our team
+   *  added (locked chips), and our team's explicit mark. */
+  artistContentWarnings?: StudioContentWarningId[];
+  staffContentWarnings?: StudioContentWarningId[];
+  isExplicitLocked?: boolean;
   /** Peaks, loudness and peak are all stored (the editor backfills the
    *  rest). */
   hasAnalysis: boolean;
@@ -207,6 +233,9 @@ export interface StudioReleaseVersionView {
 }
 
 export interface StudioReleaseView extends StudioReleaseCardView {
+  /** Studio safety: owner only, every track's claims, newest acceptedAt
+   *  first; [] for everyone else. */
+  claims?: StudioOwnerClaimView[];
   description: string | null;
   status: StudioReleaseStatus;
   statusLabelKey: string;
@@ -261,6 +290,8 @@ export interface StudioCreditView {
 }
 
 export interface StudioTrackView extends StudioTrackRowView {
+  /** Studio safety: owner only; [] for everyone else. */
+  claims?: StudioOwnerClaimView[];
   releaseId: string;
   credits: StudioCreditView[];
   /** Lyrics as written, split into stanzas of lines. Empty when none. */
@@ -735,20 +766,30 @@ export function toReleaseCardView(
   };
 }
 
-export function toTrackRowView(dto: StudioTrackSummaryDTO): StudioTrackRowView {
+export function toTrackRowView(
+  dto: StudioTrackSummaryDTO,
+  options: { isOwnerView?: boolean } = {},
+): StudioTrackRowView {
+  // Studio safety: a listener's withheld row names nothing and plays
+  // nothing, whatever a server sends (fail closed). Its id and position
+  // stay, so the numbering holds.
+  const isWithheld = dto.isWithheld === true;
+  const isRedacted = isWithheld && options.isOwnerView !== true;
   return {
     id: dto.id,
     position: dto.position,
-    title: dto.title,
-    durationSeconds: dto.durationSeconds,
-    durationLabel: formatTrackTime(dto.durationSeconds),
-    isExplicit: dto.isExplicit,
-    hasAudio: dto.hasAudio,
+    title: isRedacted ? "" : dto.title,
+    durationSeconds: isRedacted ? null : dto.durationSeconds,
+    durationLabel: isRedacted ? null : formatTrackTime(dto.durationSeconds),
+    isExplicit: isRedacted ? false : dto.isExplicit,
+    hasAudio: isRedacted ? false : dto.hasAudio,
     href: studioTrackPath(dto.id),
     savedId: studioSavedId.track(dto.id),
     publishedAt: dto.publishedAt ?? null,
     isDraft: dto.isDraft === true,
-    notesExcerpt: dto.notesExcerpt ?? null,
+    notesExcerpt: isRedacted ? null : (dto.notesExcerpt ?? null),
+    contentWarnings: isRedacted ? [] : contentWarningsOf(dto.contentWarnings),
+    isWithheld,
   };
 }
 
@@ -758,7 +799,10 @@ export function toOwnerTrackRowView(
   dto: StudioTrackSummaryDTO,
 ): StudioOwnerTrackRowView {
   return {
-    ...toTrackRowView(dto),
+    ...toTrackRowView(dto, { isOwnerView: true }),
+    artistContentWarnings: contentWarningsOf(dto.artistContentWarnings),
+    staffContentWarnings: contentWarningsOf(dto.staffContentWarnings),
+    isExplicitLocked: dto.isExplicitLocked === true,
     hasAnalysis: dto.hasAnalysis ?? false,
     loudnessLufs: dto.loudnessLufs ?? null,
     peakDb: dto.peakDb ?? null,
@@ -848,7 +892,9 @@ export function toReleaseView(dto: StudioReleaseDTO): StudioReleaseView {
     : [...dto.tracks]
         .filter((track) => dto.isOwner || track.isDraft !== true)
         .sort((left, right) => left.position - right.position);
-  const tracks = sortedTracks.map(toTrackRowView);
+  const tracks = sortedTracks.map((track) =>
+    toTrackRowView(track, { isOwnerView: dto.isOwner }),
+  );
   const version = Math.max(1, dto.version ?? 1);
   const versions = (dto.versions ?? []).map(toReleaseVersionView);
   return {
@@ -867,6 +913,10 @@ export function toReleaseView(dto: StudioReleaseDTO): StudioReleaseView {
       dto.isOwner && dto.dispute ? toReleaseDisputeView(dto.dispute) : null,
     canDispute:
       dto.isOwner && dto.status === "taken_down" && dto.canDispute === true,
+    // Studio safety: claims reach the owner only, whatever arrives.
+    claims: dto.isOwner
+      ? (dto.claims ?? []).map(toOwnerClaimView).sort(newestAcceptedFirst)
+      : [],
     sceneId: dto.isOwner ? (dto.sceneId ?? null) : null,
     personaCredits: toReleaseCreditSummaryViews(dto.personaCredits ?? []),
     // Studio v3: an older server leaves these out, so each one defaults.
@@ -905,7 +955,10 @@ const toCreditView = (credit: StudioCreditDTO): StudioCreditView => ({
 
 export function toTrackView(dto: StudioTrackDTO): StudioTrackView {
   return {
-    ...toTrackRowView(dto),
+    // A withheld track answers 200 to its owners only, so a 200 for one is
+    // the owner's view.
+    ...toTrackRowView(dto, { isOwnerView: dto.isWithheld === true }),
+    claims: (dto.claims ?? []).map(toOwnerClaimView).sort(newestAcceptedFirst),
     releaseId: dto.releaseId,
     credits: dto.credits.map(toCreditView),
     lyricStanzas: lyricStanzasOf(dto.lyrics),
@@ -1012,19 +1065,30 @@ export interface StudioPlaylistCardView {
   visibilityLabelKey: string | null;
   href: string;
   savedId: string;
+  /** Collaborative playlists: the viewer's role, null for everyone else. */
+  role: StudioPlaylistRole | null;
+  /** The owner or an active editor: adds, removes and reorders tracks,
+   *  renames and edits the description. */
+  hasEditRights: boolean;
+  /** Active editors, for the owner and editors only. */
+  editorCount: number | null;
+  /** At least one active editor, as the owner or an editor sees it. */
+  isCollaborative: boolean;
 }
 
 export interface StudioPlaylistEntryView {
   entryId: string;
   position: number;
   addedAt: string;
-  /** False only ever reaches the owner: the row reads "No longer
+  /** False only ever reaches the owner and editors: the row reads "No longer
    *  available" and offers Remove only. */
   isAvailable: boolean;
   track: StudioSearchTrackView | null;
-  /** Owner only, on an unavailable entry: "withdrawn" when our team took
+  /** Owner and editors only, on an unavailable entry: "withdrawn" when our team took
    *  its release down (the row reads Withdrawn); null for any other cause. */
   unavailableReason: StudioUnavailableReason | null;
+  /** Who added it; the owner and editors only. */
+  addedBy: StudioPlaylistPersonView | null;
 }
 
 export interface StudioPlaylistView extends StudioPlaylistCardView {
@@ -1035,6 +1099,8 @@ export interface StudioPlaylistView extends StudioPlaylistCardView {
   playableTracks: StudioSearchTrackView[];
   /** Owner only. */
   creditSubprofileId: string | null;
+  /** The invite banner's facts; the invitee only. */
+  invite: StudioPlaylistInviteView | null;
 }
 
 export function toPlaylistCreditView(
@@ -1073,10 +1139,24 @@ export function toPlaylistCreditView(
   };
 }
 
+/** The viewer's role. An older backend without the field reads as before:
+ *  the owner flag alone. */
+export function playlistRoleOf(
+  dto: Pick<StudioPlaylistCardDTO, "role" | "isOwner">,
+): StudioPlaylistRole | null {
+  if (dto.role !== undefined) return dto.role;
+  return dto.isOwner ? "owner" : null;
+}
+
 export function toPlaylistCardView(
   dto: StudioPlaylistCardDTO,
 ): StudioPlaylistCardView {
-  const visibility = dto.isOwner ? dto.visibility : null;
+  const role = playlistRoleOf(dto);
+  const isOwner = role === "owner";
+  const hasEditRights = isOwner || role === "editor";
+  // Attribution stays private: a count that reaches anyone else is dropped.
+  const editorCount = hasEditRights ? Math.max(0, dto.editorCount ?? 0) : null;
+  const visibility = isOwner ? dto.visibility : null;
   return {
     id: dto.id,
     name: dto.name,
@@ -1086,18 +1166,23 @@ export function toPlaylistCardView(
     trackCount: dto.trackCount,
     totalDurationSeconds: dto.totalDurationSeconds,
     updatedAt: dto.updatedAt,
-    isOwner: dto.isOwner,
+    isOwner,
     visibility,
     visibilityLabelKey: visibility
       ? STUDIO_PLAYLIST_VISIBILITY_LABEL_KEY[visibility]
       : null,
     href: studioPlaylistPath(dto.id),
     savedId: studioSavedId.playlist(dto.id),
+    role,
+    hasEditRights,
+    editorCount,
+    isCollaborative: (editorCount ?? 0) > 0,
   };
 }
 
 export function toPlaylistEntryView(
   dto: StudioPlaylistEntryDTO,
+  options: { shouldKeepAddedBy?: boolean } = {},
 ): StudioPlaylistEntryView {
   const isAvailable = dto.isAvailable && dto.track !== null;
   return {
@@ -1107,6 +1192,10 @@ export function toPlaylistEntryView(
     isAvailable,
     track: isAvailable && dto.track ? toSearchTrackView(dto.track) : null,
     unavailableReason: isAvailable ? null : (dto.unavailableReason ?? null),
+    addedBy:
+      options.shouldKeepAddedBy === true && dto.addedBy
+        ? toPlaylistPersonView(dto.addedBy)
+        : null,
   };
 }
 
@@ -1120,17 +1209,105 @@ export function playableTracksOf(
 }
 
 export function toPlaylistView(dto: StudioPlaylistDTO): StudioPlaylistView {
+  const card = toPlaylistCardView(dto);
   const entries = [...dto.entries]
     .sort((left, right) => left.position - right.position)
-    .map(toPlaylistEntryView)
-    .filter((entry) => dto.isOwner || entry.isAvailable);
+    .map((entry) =>
+      toPlaylistEntryView(entry, { shouldKeepAddedBy: card.hasEditRights }),
+    )
+    // The owner and editors keep unavailable entries: a reorder names every
+    // entry once, and they may remove one.
+    .filter((entry) => card.hasEditRights || entry.isAvailable);
   return {
-    ...toPlaylistCardView(dto),
+    ...card,
     description: dto.description,
     entries,
     playableTracks: playableTracksOf(entries),
-    creditSubprofileId: dto.isOwner ? dto.creditSubprofileId : null,
+    creditSubprofileId: card.isOwner ? dto.creditSubprofileId : null,
+    invite:
+      card.role === "invitee" && dto.invite
+        ? {
+            invitedBy: toPlaylistPersonView(dto.invite.invitedBy),
+            invitedAt: dto.invite.invitedAt,
+          }
+        : null,
   };
+}
+
+// ── Studio collaborative playlists ──────────────────────────────────────────
+
+export interface StudioPlaylistPersonView {
+  slug: string;
+  name: string;
+  avatarUrl: string | null;
+  initials: string;
+  tint: ImageSlotTint;
+  /** The member's profile; null for a member with no profile row. */
+  href: string | null;
+}
+
+export interface StudioPlaylistEditorView {
+  /** The row id the owner's remove names; present for every member, a
+   *  member without a profile row included. */
+  editorId: string;
+  person: StudioPlaylistPersonView;
+  status: StudioPlaylistEditorStatus;
+  source: StudioPlaylistEditorSource;
+  invitedAt: string;
+  /** An invite the member has not answered yet; the owner sees these. */
+  isPending: boolean;
+}
+
+export interface StudioPlaylistCandidateView {
+  person: StudioPlaylistPersonView;
+  isEditor: boolean;
+}
+
+export interface StudioPlaylistInviteView {
+  invitedBy: StudioPlaylistPersonView;
+  invitedAt: string;
+}
+
+export function toPlaylistPersonView(
+  dto: StudioPlaylistPersonDTO,
+): StudioPlaylistPersonView {
+  const name = dto.displayName.trim();
+  return {
+    slug: dto.slug,
+    name,
+    avatarUrl: dto.avatarUrl,
+    initials: initialsFromName(name, "QP"),
+    tint: tintForId(dto.slug || name),
+    href: dto.slug ? `${routes.members}/${encodeURIComponent(dto.slug)}` : null,
+  };
+}
+
+export function toPlaylistEditorView(
+  dto: StudioPlaylistEditorDTO,
+): StudioPlaylistEditorView {
+  return {
+    editorId: dto.editorId,
+    person: toPlaylistPersonView(dto.member),
+    status: dto.status,
+    source: dto.source,
+    invitedAt: dto.invitedAt,
+    isPending: dto.status === "invited",
+  };
+}
+
+export function toPlaylistEditorViews(
+  dto: StudioPlaylistEditorListDTO,
+): StudioPlaylistEditorView[] {
+  return dto.items.map(toPlaylistEditorView);
+}
+
+export function toPlaylistCandidateViews(
+  dto: StudioPlaylistEditorCandidatesDTO,
+): StudioPlaylistCandidateView[] {
+  return dto.items.map((item) => ({
+    person: toPlaylistPersonView(item.member),
+    isEditor: item.isEditor,
+  }));
 }
 
 // ── Studio v2: Your numbers ────────────────────────────────────────────────

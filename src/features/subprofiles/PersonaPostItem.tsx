@@ -6,6 +6,8 @@ import { Collapse } from "../../shared/components/ui";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { formatRelative } from "../../shared/lib/date";
+import { parseStudioLink } from "../studio/share/studioLinkTarget";
+import { StudioPostCard } from "../studio/share/StudioPostCard";
 import type { PersonaPostView } from "./api/personaPosts.adapters";
 import { PersonaPostComposer } from "./PersonaPostComposer";
 import { PersonaPostMenu, type PersonaPostMenuItem } from "./PersonaPostMenu";
@@ -20,8 +22,8 @@ const ABSOLUTE_DATE: Intl.DateTimeFormatOptions = {
   minute: "2-digit",
 };
 
-/** The post's own content: body as written, a 4:3 photo frame and a link
- *  card (inert in the editor preview). */
+/** The post's own content: body as written, a 4:3 photo frame, and the
+ *  Studio card or a link card (inert in the editor preview). */
 function PersonaPostContent({
   post,
   isInteractive,
@@ -30,6 +32,9 @@ function PersonaPostContent({
   isInteractive: boolean;
 }) {
   const { t } = useTranslation();
+  // A Studio link gets the Studio card; any other https link keeps the host
+  // card. Signed out, the card shows its no-access state and asks nothing.
+  const studioTarget = post.linkUrl ? parseStudioLink(post.linkUrl) : null;
   return (
     <>
       <p className={styles.postBody}>{post.body}</p>
@@ -46,7 +51,10 @@ function PersonaPostContent({
           />
         </span>
       )}
-      {post.link &&
+      {studioTarget ? (
+        <StudioPostCard target={studioTarget} isInteractive={isInteractive} />
+      ) : (
+        post.link &&
         (isInteractive ? (
           <a
             className={styles.linkCard}
@@ -64,7 +72,8 @@ function PersonaPostContent({
           <span className={styles.linkCard}>
             <span className={styles.linkHost}>{post.link.host}</span>
           </span>
-        ))}
+        ))
+      )}
     </>
   );
 }

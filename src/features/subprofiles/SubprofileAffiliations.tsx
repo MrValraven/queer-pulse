@@ -7,6 +7,7 @@ import type { AffiliationDTO } from "./api/subprofiles.api";
 import { useEndorsers } from "./api/useEndorsers";
 import { canReadPersonaEndorsers } from "./personaEngagement";
 import { AFFILIATION_ROLE_KEYS, affiliationHref } from "./affiliations.data";
+import { SubprofileWorksAt } from "./SubprofileWorksAt";
 import { PracticeReferrals } from "./skins/PracticeBlocks";
 import type { PersonaAction, PersonaViewMode } from "./personaSkinRender";
 import type { PublicSubprofileView } from "./api/subprofiles.adapters";
@@ -87,8 +88,12 @@ export function SubprofileAffiliations({
   const endorsers = endorsersResult?.endorsers ?? [];
   const hasEndo = showEndo && endorsers.length > 0;
   const hasAffiliations = persona.affiliations.length > 0;
+  const worksAt = persona.worksAt ?? [];
+  const hasWorksAt = worksAt.length > 0;
 
-  if (skin !== "practice" && !hasEndo && !hasAffiliations) return null;
+  if (skin !== "practice" && !hasEndo && !hasAffiliations && !hasWorksAt) {
+    return null;
+  }
 
   return (
     <div className="pp-foot">
@@ -159,6 +164,8 @@ export function SubprofileAffiliations({
           </div>
         </div>
       )}
+
+      <SubprofileWorksAt worksAt={worksAt} isInteractive={interactive} />
     </div>
   );
 }

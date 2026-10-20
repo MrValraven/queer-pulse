@@ -79,6 +79,7 @@ export const enNamespaceLoaders: Partial<
   culture: () => import("./en/culture").then((module) => module.culture),
   notifications: () =>
     import("./en/notifications").then((module) => module.notifications),
+  quizshow: () => import("./en/quizshow").then((module) => module.quizshow),
 };
 
 /**
@@ -125,6 +126,7 @@ export const ptNamespaceLoaders: Partial<
   culture: () => import("./pt/culture").then((module) => module.culture),
   notifications: () =>
     import("./pt/notifications").then((module) => module.notifications),
+  quizshow: () => import("./pt/quizshow").then((module) => module.quizshow),
 };
 
 /** Per-language namespace-loader table, keyed the same way `catalogs` is. */
@@ -183,6 +185,7 @@ const en: Record<Namespace, Catalog> = {
   messages: PENDING_CATALOG,
   culture: PENDING_CATALOG,
   notifications: PENDING_CATALOG,
+  quizshow: PENDING_CATALOG,
 };
 
 const pt: Record<Namespace, Catalog> = {
@@ -223,6 +226,7 @@ const pt: Record<Namespace, Catalog> = {
   messages: PENDING_CATALOG,
   culture: PENDING_CATALOG,
   notifications: PENDING_CATALOG,
+  quizshow: PENDING_CATALOG,
 };
 
 /**

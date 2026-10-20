@@ -5,6 +5,7 @@ import {
   type StudioMood,
   type StudioRadioFilter,
 } from "../api/studio.types";
+import { contentWarningsOf } from "../api/studioSafetyFields";
 import type { StudioQueueItem, StudioQueueSource } from "./studioPlayerContext";
 import type { StudioQueueState } from "./studioQueueReducer";
 
@@ -71,7 +72,15 @@ function pickQueueItem(value: unknown): StudioQueueItem | null {
   } = value;
   const { releaseTitle, coverUrl, tint, artistId, artistName, artistHref } =
     value;
-  const { isExplicit, previewToken, isEpisode } = value;
+  const { isExplicit, previewToken, isEpisode, contentWarnings } = value;
+  // Studio safety: known warning ids only, so a restored queue still asks.
+  const warnings = Array.isArray(contentWarnings)
+    ? contentWarningsOf(
+        contentWarnings.filter(
+          (warning): warning is string => typeof warning === "string",
+        ),
+      )
+    : [];
   if (!isText(queueEntryId) || !isText(trackId) || !isText(title)) return null;
   if (!isText(releaseId) || !isText(releaseTitle)) return null;
   if (!isText(artistId) || !isText(artistName)) return null;
@@ -100,6 +109,7 @@ function pickQueueItem(value: unknown): StudioQueueItem | null {
     // Artist kinds: a restored episode keeps its speed and its skips; music
     // and older snapshots carry no key and read as music.
     ...(isEpisode === true ? { isEpisode: true } : {}),
+    ...(warnings.length > 0 ? { contentWarnings: warnings } : {}),
   };
 }
 
@@ -166,6 +176,8 @@ function pickState(value: unknown): StudioQueueState | null {
     sourceIndex,
     isShuffled,
     repeat: repeat as StudioQueueState["repeat"],
+    // The gate is asked again on restore (restoreCued passes a gate).
+    pendingWarning: null,
   };
 }
 
@@ -272,3 +284,6 @@ export function clearStudioQueueSnapshots(): void {
     // Blocked storage holds nothing to clear.
   }
 }
+
+/** Test seam: one saved entry as `readQueueSnapshot` reads it. */
+export const pickQueueItemForTests = pickQueueItem;

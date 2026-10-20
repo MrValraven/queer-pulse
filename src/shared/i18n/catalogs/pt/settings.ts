@@ -1397,4 +1397,7 @@ export const settings: Catalog = {
   "dataExport.type.goTogether.label": "Respostas do Vamos juntes",
   "dataExport.type.goTogether.sub":
     "As tuas respostas ao questionário de amizade e às perguntas de anfitrião",
+  "notifications.volume.quizshow.title": "O Pulse Live está a começar",
+  "notifications.volume.quizshow.desc":
+    "Quando quem organiza abre o jogo ao vivo num evento a que vais",
 };

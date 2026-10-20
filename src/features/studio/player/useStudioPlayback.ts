@@ -19,6 +19,7 @@ import {
   type StudioPlayhead,
 } from "./studioPlaybackCommands";
 import type {
+  StudioPlaybackSettings,
   StudioPlaybackStatus,
   StudioPlayerActions,
   StudioPlayerClock,
@@ -38,6 +39,7 @@ import {
 } from "./studioQueueReducer";
 import { createStableActions } from "./studioStableActions";
 import { createTransportActions } from "./studioTransportActions";
+import { isWarningGated, warningGateOf } from "./studioWarningGate";
 import {
   studioClockIndexes,
   useStudioCurrentTrackDetail,
@@ -106,6 +108,7 @@ function usePlayerValue(input: {
       currentItem: current,
       hasPrevious: hasPreviousItem(queueState, hideExplicit),
       hasNext: peekNext(queueState, true, hideExplicit) !== null,
+      pendingWarning: queueState.pendingWarning ?? null,
       isCurrentRelease: (releaseId) => current?.releaseId === releaseId,
       isCurrentTrack: (trackId) => current?.trackId === trackId,
       preferences,
@@ -147,6 +150,18 @@ function usePlayerValue(input: {
   return { value, clock };
 }
 
+/** The entry to preload: the next one, unless it waits at the warning
+ *  gate (spec 6.3). */
+function ungatedNextEntryId(
+  queueState: StudioQueueState,
+  settings: StudioPlaybackSettings,
+): string | null {
+  const next = peekNext(queueState, false, settings.hideExplicit);
+  return next && !isWarningGated(next, warningGateOf(settings))
+    ? next.queueEntryId
+    : null;
+}
+
 /** The engine's decks, wired to the queue, the preferences and the sleep
  *  timer. Every callback reads the latest render through the decks hook. */
 function useWiredDecks(input: {
@@ -171,12 +186,10 @@ function useWiredDecks(input: {
     engineFactory: input.engineFactory,
     deckRefs: input.deckRefs,
     demoMode,
-    nextEntryId:
-      peekNext(
-        input.queueState,
-        false,
-        preferences.playbackSettings.hideExplicit,
-      )?.queueEntryId ?? null,
+    nextEntryId: ungatedNextEntryId(
+      input.queueState,
+      preferences.playbackSettings,
+    ),
     durationFor: input.readDuration,
     readQueue: input.readQueue,
     readStatus: input.readStatus,

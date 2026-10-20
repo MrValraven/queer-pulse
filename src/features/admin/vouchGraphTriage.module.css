@@ -1,0 +1,208 @@
+/* ── B1 Safety triage list ─────────────────────────────── */
+.triage {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.triageHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 6px 10px;
+}
+.triageTitle {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: var(--text-19);
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+  color: var(--text-strong);
+}
+.triageCount {
+  padding: 2px 9px;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--amber-rgb), 0.2);
+  font-size: var(--text-11-5);
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--amber-ink);
+}
+
+.caseList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* The whole row is one button. */
+.caseRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  width: 100%;
+  min-height: 44px;
+  padding: 11px 13px;
+  border: 1px solid rgba(var(--line-rgb), 0.1);
+  border-radius: var(--radius-12);
+  background: var(--paper);
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition-property: background-color, border-color;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+@media (hover: hover) {
+  .caseRow:hover {
+    border-color: rgba(var(--line-rgb), 0.24);
+    background: var(--cream);
+  }
+}
+.caseRow:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.caseIcon {
+  width: 2em; /* 30 / 15 */
+  height: 2em;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-10);
+  font-size: var(--text-15);
+}
+.caseRow[data-kind="ring"] .caseIcon {
+  background: rgba(var(--danger-rgb), 0.1);
+  color: var(--danger);
+}
+.caseRow[data-kind="flagged"] .caseIcon {
+  background: rgba(var(--accent-rgb), 0.12);
+  color: var(--accent-ink);
+}
+.caseRow[data-kind="isolated"] .caseIcon {
+  background: rgba(var(--amber-rgb), 0.18);
+  color: color-mix(in srgb, var(--amber) 65%, var(--ink));
+}
+
+.caseText {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+}
+.caseKind {
+  font-size: var(--text-10-5);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-40);
+}
+.caseName {
+  font-size: var(--text-13);
+  font-weight: 700;
+  color: var(--text-strong);
+  overflow-wrap: anywhere;
+}
+.caseReason {
+  font-size: var(--text-12);
+  line-height: 1.45;
+  color: var(--ink-60);
+}
+.outsideTag {
+  margin-top: 4px;
+  padding: 1px 8px;
+  border: 1px dashed rgba(var(--line-rgb), 0.24);
+  border-radius: var(--radius-pill);
+  font-size: var(--text-11);
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+.triageEmpty {
+  padding: 28px 12px;
+  text-align: center;
+  font-size: var(--text-12-5);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+.triageEmptyIcon {
+  width: 2.25em; /* 54 / 24 */
+  height: 2.25em;
+  margin: 0 auto 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-16);
+  background: rgba(var(--jade-rgb), 0.12);
+  font-size: var(--text-24);
+  color: var(--jade);
+}
+
+/* ── B6 Compare card ───────────────────────────────────── */
+.compare {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding: 14px 15px;
+  border: 1px solid rgba(var(--line-rgb), 0.1);
+  border-radius: var(--radius-12);
+  background: var(--cream);
+}
+.compareTitle {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: var(--text-16);
+  line-height: 1.25;
+  color: var(--text-strong);
+  overflow-wrap: anywhere;
+}
+.compareBlock {
+  align-self: stretch;
+}
+.compareBlock h4 {
+  margin-bottom: 4px;
+}
+.compareSentence {
+  font-family: var(--serif);
+  font-size: var(--text-14);
+  line-height: 1.45;
+  color: var(--text-strong);
+}
+.compareNote,
+.compareGap {
+  font-size: var(--text-12-5);
+  line-height: 1.45;
+  color: var(--ink-60);
+}
+.compareGap {
+  font-weight: 600;
+  color: var(--text-strong);
+}
+.sceneList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 4px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.sceneLabel {
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--violet-rgb), 0.12);
+  font-size: var(--text-12);
+  font-weight: 600;
+  color: var(--text-strong);
+}

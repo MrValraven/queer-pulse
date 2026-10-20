@@ -5,6 +5,7 @@ import type {
   StudioSyncedLyricView,
 } from "../api/studio.adapters";
 import type { StudioRadioFilter } from "../api/studio.types";
+import type { StudioContentWarningId } from "../api/studioSafety.types";
 
 export interface StudioQueueItem {
   trackId: string;
@@ -29,6 +30,10 @@ export interface StudioQueueItem {
   /** v3: the release's private preview link. Every stream read of this
    *  entry passes it, so a preview plays through the preview route. */
   previewToken?: string;
+  /** Studio safety: the track's content warnings (artist and staff, D7
+   *  order). Optional so older builders, fixtures and saved queues stay
+   *  valid; a missing value reads as none. */
+  contentWarnings?: StudioContentWarningId[];
 }
 
 /** A track ready to queue: every queue field except the entry id, which the
@@ -86,6 +91,9 @@ export interface StudioRemoteState {
 export interface StudioPlaybackSettings {
   autoplayNext: boolean;
   hideExplicit: boolean;
+  /** Studio safety (spec 6.3): pause before a warned track. Missing reads
+   *  as on, the default. */
+  askBeforeWarnings?: boolean;
 }
 
 /** A radio in the browser: the filter it plays and the whole list it
@@ -124,6 +132,12 @@ export interface StudioPlayerActions {
   seek: (seconds: number) => void;
   retry: () => void;
   stop: () => void;
+  /** Studio safety (spec 6.3): Play it. The member agrees to hear the warned
+   *  track that waits; it loads and plays. */
+  playWarnedTrack: () => void;
+  /** Skip: move on to the next playable item (which may ask again), or
+   *  stop when nothing follows. */
+  skipWarnedTrack: () => void;
   /** Resolves false when the track has no playable audio, is explicit while
    *  hidden, or the read fails. */
   playNext: (trackId: string) => Promise<boolean>;
@@ -156,6 +170,9 @@ export interface StudioPlayerValue extends StudioPlayerActions {
   /** Previous has an item to go back to (otherwise it restarts the track). */
   hasPrevious: boolean;
   hasNext: boolean;
+  /** Studio safety: the warned track waiting for Play it or Skip; null
+   *  when nothing waits. It is also `currentItem`, cued. */
+  pendingWarning: StudioQueueItem | null;
   isCurrentRelease: (releaseId: string) => boolean;
   isCurrentTrack: (trackId: string) => boolean;
   preferences: StudioPlayerPreferences;

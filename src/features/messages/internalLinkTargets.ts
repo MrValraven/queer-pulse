@@ -1,4 +1,10 @@
 import { routes } from "../../app/routeMap";
+import {
+  findStudioLink,
+  isStudioLinkBoundary,
+  resolvedOwnOriginUrl,
+  type StudioShareKind,
+} from "../studio/share/studioLinkTarget";
 import { isExternalHref } from "./linkify";
 
 // One trailing slash so a bare "/local/directory" (the grid itself, no slug)
@@ -61,4 +67,95 @@ export function internalPlaceSlug(href: string): string | null {
   } catch {
     return null;
   }
+}
+
+const STUDIO_PATH = /^\/studio(?:\/|$)/i;
+
+function decodedOrSelf(pathname: string): string {
+  try {
+    return decodeURIComponent(pathname);
+  } catch {
+    return pathname;
+  }
+}
+
+/**
+ * Whether `href` points anywhere under `/studio` on this deployment, card or
+ * no card. The chat link-card resolver skips the OpenGraph unfurl for every
+ * such link: an artist page would only unfurl the SPA shell, and a
+ * `/studio/preview/<token>` link is a bearer secret that must never reach
+ * `GET /link-preview`. Case-blind, percent-decoded one pass and with repeated
+ * slashes collapsed. Plan 1's `isOwnOriginStudioUrl` decodes up to three
+ * passes; this check stops at one on purpose, and the server's check is the
+ * backstop for a link encoded more than once. Userinfo on an own origin still
+ * counts as own, so such a link skips the unfurl too.
+ */
+export function isOwnStudioUrl(href: string): boolean {
+  const url = resolvedOwnOriginUrl(href);
+  if (!url) return false;
+  return [url.pathname, decodedOrSelf(url.pathname)].some((pathname) =>
+    STUDIO_PATH.test(pathname.replace(/\/{2,}/g, "/")),
+  );
+}
+
+const STUDIO_KIND_BY_SEGMENT: Readonly<Record<string, StudioShareKind>> = {
+  track: "track",
+  album: "release",
+  collection: "playlist",
+};
+
+// Where a link candidate may start (the grammar's `http://`, `https://` or
+// `/studio/`), and the head a cut Studio link keeps, whatever is left of its
+// id after the cut.
+const LINK_CANDIDATE_START = /https?:\/\/|\/studio\//gi;
+const CUT_STUDIO_LINK_HEAD =
+  /^(?:https?:\/\/[^\s/]+)?\/studio\/(track|album|collection)\?id=/i;
+const WHITESPACE_CHARACTER = /\s/;
+
+/** Where the first link candidate in `run` starts, or -1. The run has no
+ *  whitespace, so that candidate consumes the rest of it, as the grammar's
+ *  scan does: a later start inside it is never a candidate of its own. */
+function firstCandidateStart(run: string): number {
+  for (const candidate of run.matchAll(LINK_CANDIDATE_START)) {
+    const startIndex = candidate.index;
+    if (startIndex === 0 || isStudioLinkBoundary(run.charAt(startIndex - 1))) {
+      return startIndex;
+    }
+  }
+  return -1;
+}
+
+/** The last run of non-whitespace in `text`, found with a linear scan. */
+function lastRunOf(text: string): string {
+  let runStart = text.length;
+  while (
+    runStart > 0 &&
+    !WHITESPACE_CHARACTER.test(text.charAt(runStart - 1))
+  ) {
+    runStart -= 1;
+  }
+  return text.slice(runStart);
+}
+
+/**
+ * The kind of Studio link a reply quote's snippet carries, or null. The
+ * server cuts a snippet at 120 characters, so a note plus a Studio URL often
+ * arrives with half the id; a link cut at the tail still names its kind. The
+ * cut link follows the grammar's candidate boundary, origins and userinfo
+ * rule.
+ */
+export function studioKindInQuoteSnippet(
+  snippet: string,
+): StudioShareKind | null {
+  const match = findStudioLink(snippet);
+  if (match) return match.target.kind;
+  const lastRun = lastRunOf(snippet.trim());
+  const startIndex = firstCandidateStart(lastRun);
+  if (startIndex === -1) return null;
+  const cutLink = lastRun.slice(startIndex);
+  const head = CUT_STUDIO_LINK_HEAD.exec(cutLink);
+  if (!head) return null;
+  const cutUrl = resolvedOwnOriginUrl(cutLink);
+  if (!cutUrl || cutUrl.username !== "" || cutUrl.password !== "") return null;
+  return STUDIO_KIND_BY_SEGMENT[(head[1] ?? "").toLowerCase()] ?? null;
 }

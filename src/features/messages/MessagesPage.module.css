@@ -1253,6 +1253,15 @@
 .runSent .bubbleWrap {
   align-items: flex-end;
 }
+/* A Studio card bubble (`StudioShareBubble`) needs a definite width: the card
+   and its group size themselves as `min(320px, 100%)`, and inside this
+   shrink-to-fit wrap that percentage has nothing to resolve against, so the
+   card collapsed to its cover and the caption wrapped one word per line. The
+   wrap takes the card's own cap against `.runBubbles`, and the `max-width`
+   above still clamps it on a narrow thread. */
+.bubbleWrap:has([data-studio-share-frame="chat"]) {
+  inline-size: min(320px, 100%);
+}
 /* The bubble is a focusable keyboard entry point to the action overlay (Enter /
    Menu key). Show a clear focus ring; focus-within already reveals the hover
    action bar for the same keyboard path. The shared focus-ring TRIPLE (see

@@ -77,3 +77,15 @@
   line-height: 1.55;
   color: rgba(var(--cream-rgb), 0.7);
 }
+
+/* Studio safety: the line that stands in for the detail box while
+   copyright routes to the claim form. */
+.copyrightRoute {
+  margin: 0 0 16px;
+  padding: 12px 14px;
+  border-radius: var(--radius-10);
+  background: rgba(var(--accent-rgb), 0.08);
+  color: var(--text);
+  font-size: var(--text-14);
+  line-height: 1.5;
+}

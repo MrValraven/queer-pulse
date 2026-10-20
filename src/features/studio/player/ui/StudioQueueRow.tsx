@@ -5,6 +5,7 @@ import { useMotionPrefs } from "../../../../app/providers/motionPrefs";
 import { ImageSlot } from "../../../../shared/components/ui";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { useStudioPlayer, type StudioQueueItem } from "../studioPlayerContext";
+import { StudioTrackWarningPill } from "../../StudioTrackWarningPill";
 import styles from "./StudioQueue.module.css";
 
 export type QueueRowControl = "moveUp" | "moveDown" | "remove";
@@ -35,6 +36,7 @@ export function QueueRowSummary({
       <span className={styles.titles}>
         <span className={styles.title}>{item.title}</span>
         <span className={styles.artist}>{item.artistName}</span>
+        <StudioTrackWarningPill warnings={item.contentWarnings} />
         {note ? (
           <span id={noteId} className={styles.hiddenNote}>
             {note}

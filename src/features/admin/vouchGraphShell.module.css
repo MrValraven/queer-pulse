@@ -1,0 +1,886 @@
+/* ============================================================
+   Admin: Vouch graph (full trust-network experience).
+   Token-backed port of the design's qp-vouch styles.
+   ============================================================ */
+
+/* ── Overlay shell ──────────────────────────────────────── */
+.overlay {
+  position: fixed;
+  inset: 0;
+  /* Sits on the modal tier so the Cite dialog's scrim (also --z-modal) can
+     open above it. Stacking relies on DOM order: the graph portal mounts after
+     the drawer, and the cite scrim mounts after the graph. */
+  z-index: var(--z-modal);
+  background: var(--scrim-strong);
+  backdrop-filter: var(--blur-sm);
+  animation: vgOverlayIn var(--dur-base) var(--ease-out);
+}
+.shell {
+  position: absolute;
+  inset: 22px;
+  display: flex;
+  flex-direction: column;
+  background: var(--cream);
+  border-radius: var(--radius-24);
+  overflow: hidden;
+  box-shadow: var(--shadow-e4);
+  animation: vgShellIn var(--dur-slow) var(--ease-out);
+}
+/* The dialog takes focus as the graph opens (VouchGraphModalLayout), only so
+   screen readers hear its name and Tab starts inside. Keyboard focus shows
+   on the controls themselves, so the container keeps its own look and drops
+   the global ring and the 4px radius base.css adds to every focused node. */
+.shell:focus,
+.shell:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-e4);
+  border-radius: var(--radius-24);
+}
+/* Phones: the network takes the whole screen. The shell pads the notch and
+   the home indicator sides; the top bar pads the top inset itself so its
+   surface runs up under the status bar. */
+@media (max-width: 920px) {
+  .shell,
+  .shell:focus,
+  .shell:focus-visible {
+    inset: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .shell {
+    padding-inline: env(safe-area-inset-left) env(safe-area-inset-right);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+@keyframes vgOverlayIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes vgShellIn {
+  from {
+    opacity: 0;
+    transform: scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+/* Exit: the page or drawer removes the network inside AnimatePresence, and
+   the overlay's animation end releases it (useModalExit). */
+.overlay.overlayClosing {
+  pointer-events: none;
+  animation: vgOverlayOut var(--dur-fast) var(--ease-in) forwards;
+}
+.shell.shellClosing {
+  animation: vgShellOut var(--dur-fast) var(--ease-in) forwards;
+}
+@keyframes vgOverlayOut {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes vgShellOut {
+  to {
+    opacity: 0;
+    transform: scale(0.985);
+  }
+}
+
+/* ── Top bar title, crumbs, mode tabs, close ────────────── */
+.eyebrow {
+  font-size: var(--text-10-5);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent-ink);
+}
+.h {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: var(--text-21);
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+  color: var(--text-strong);
+  white-space: nowrap;
+}
+.pron {
+  font-family: var(--sans);
+  font-size: var(--text-12);
+  font-weight: 500;
+  color: var(--ink-40);
+}
+.crumb {
+  width: 2.364em; /* 26 / 11 */
+  height: 2.364em;
+  border: none;
+  border-radius: var(--radius-8);
+  background: rgba(var(--plum-rgb), 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: var(--text-11);
+  color: var(--ink-60);
+  cursor: pointer;
+}
+.crumbSep {
+  display: inline-flex;
+  align-items: center;
+  color: var(--ink-40);
+}
+
+.crumbSep svg {
+  width: 0.95em;
+  height: 0.95em;
+}
+
+/* The track and the active tab are told apart by fill in both themes. The
+   track reads the flipping line channel; the active tab is white paper on
+   light and a lifted wash on dark, where --paper is the bar itself. */
+.modes {
+  display: flex;
+  gap: 3px;
+  padding: 3px;
+  background: rgba(var(--line-rgb), 0.06);
+  border-radius: var(--radius-11);
+}
+.mode {
+  border: none;
+  background: none;
+  cursor: pointer;
+  padding: 7px 13px;
+  border-radius: var(--radius-8);
+  font-family: var(--sans);
+  font-size: var(--text-12-5);
+  font-weight: 600;
+  color: var(--ink-60);
+  transition:
+    color var(--dur-fast),
+    background var(--dur-fast);
+}
+.modeOn {
+  background: var(--paper);
+  color: var(--text-strong);
+  box-shadow: var(--shadow-e2);
+}
+:global([data-theme="dark"]) .modeOn {
+  background: rgba(var(--line-rgb), 0.16);
+  box-shadow: var(--ring-cream-hairline);
+}
+
+.close {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  background: none;
+  cursor: pointer;
+  color: var(--ink-60);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Grows the hit area to the 44px floor without changing the ink: this
+   control is drawn small on purpose. See --tap-min in tokens/spacing.css. */
+.close::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  width: max(100%, var(--tap-min));
+  height: max(100%, var(--tap-min));
+}
+@media (hover: hover) {
+  .close:hover {
+    background: rgba(var(--plum-rgb), 0.05);
+    color: var(--text-strong);
+  }
+}
+
+/* ── Top bar layout (VouchGraphTopBar) ──────────────────── */
+.topBarWrap {
+  position: relative;
+  /* Keeps the search listbox above the stage below. */
+  z-index: var(--z-raised);
+  flex: none;
+  background: var(--paper);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.09);
+}
+.topBar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 16px;
+  padding: 14px 22px;
+}
+.topTitle {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+/* A long name ends in an ellipsis on a narrow bar. */
+.topTitle .h {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.topCrumbs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  row-gap: 4px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.crumbItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding-inline-end: 6px;
+}
+.topSearch {
+  flex: 1 1 220px;
+  max-width: 340px;
+  margin-left: auto;
+}
+.topControls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+/* Phones: three rows, about 140px at 390 wide. Row one is the title with
+   Close pinned top right; row two the mode tabs, which scroll sideways in
+   their own strip when a long language runs out of room; row three the
+   search, the filters button (icon only) and the view actions. The controls
+   wrapper steps aside (display: contents) so each control takes its own
+   place in the bar's order. */
+@media (max-width: 920px) {
+  .topBarWrap {
+    padding-top: env(safe-area-inset-top);
+    /* Lifts the filters sheet and the search list above the inspector's
+       bottom sheet (--z-modal), both of which live in this layer. */
+    z-index: var(--z-modal-nested);
+  }
+  .topBar {
+    gap: 4px 8px;
+    padding: 6px 16px;
+  }
+  .topTitle {
+    order: 0;
+    flex: 1 1 0;
+  }
+  .topTitle .eyebrow {
+    display: block;
+    line-height: 1.3;
+  }
+  .topCrumbs {
+    order: 1;
+  }
+  .topControls {
+    display: contents;
+  }
+  .close {
+    order: 2;
+    flex: none;
+  }
+  .topControls > .modes {
+    order: 3;
+    flex: 1 1 100%;
+    min-width: 0;
+    gap: 2px;
+    padding: 4px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+  }
+  .topControls > .modes::-webkit-scrollbar {
+    display: none;
+  }
+  /* The tabs share out the spare width. The Scenes slot keeps its own
+     width, which it animates as it folds in and out. */
+  .topControls > .modes > .mode {
+    flex: 1 0 auto;
+  }
+  .topControls > .modes .mode {
+    justify-content: center;
+    min-height: 36px;
+    padding-inline: 10px;
+    scroll-snap-align: start;
+  }
+  /* The strip scrolls, so it clips: the ring sits inside the tab. */
+  .topControls > .modes .mode:focus-visible {
+    outline-offset: calc(var(--focus-ring-offset) * -1);
+    box-shadow: none;
+  }
+  .topSearch {
+    order: 4;
+    flex: 1 1 0;
+    max-width: none;
+    margin-left: 0;
+  }
+  .filtersButton {
+    order: 5;
+    justify-content: center;
+    min-width: 36px;
+    padding: 0 10px;
+  }
+  .viewActions {
+    order: 6;
+  }
+  /* The label stays the button's accessible name. */
+  .filtersButtonLabel {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+.crumb:focus-visible,
+.mode:focus-visible,
+.close:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* Mode tabs: room for the Safety count pill. */
+.mode {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+.modeSlot {
+  display: inline-flex;
+  white-space: nowrap;
+}
+.countPill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: var(--radius-pill);
+  font-size: var(--text-10-5);
+  font-weight: 700;
+  line-height: 1;
+}
+.countPillWarn {
+  background: rgba(var(--amber-rgb), 0.2);
+  color: var(--amber-ink);
+}
+/* Dark selected tab: the 20% amber wash over the lifted tab fill reads
+   3.58:1, so the pill turns solid amber with the page ink on it. */
+:global([data-theme="dark"]) .modeOn .countPillWarn {
+  background: var(--amber);
+  color: var(--paper);
+}
+.countPillAccent {
+  background: rgba(var(--accent-rgb), 0.16);
+  color: var(--accent-ink);
+}
+
+/* ── Search combobox ── */
+.searchBox {
+  position: relative;
+  min-width: 0;
+}
+.searchField {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 6px 0 14px;
+  background: var(--cream);
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  border-radius: var(--radius-pill);
+  transition-property: border-color, box-shadow;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+.searchField:focus-within {
+  border-color: var(--accent);
+  box-shadow: var(--ring-cream);
+}
+.searchIcon {
+  flex: none;
+  width: 14px;
+  height: 14px;
+  color: var(--ink-40);
+}
+.searchInput {
+  flex: 1;
+  min-width: 0;
+  height: 36px;
+  border: none;
+  background: none;
+  outline: none;
+  font-family: var(--sans);
+  font-size: var(--text-13);
+  color: var(--ink);
+}
+.searchClear {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 50%;
+  background: none;
+  color: var(--ink-60);
+  cursor: pointer;
+  opacity: 1;
+  transform: none;
+  transition-property: opacity, transform;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+.searchClear[data-visible="false"] {
+  opacity: 0;
+  transform: scale(0.7);
+  pointer-events: none;
+}
+.searchClear:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+@media (hover: hover) {
+  .searchClear:hover {
+    background: rgba(var(--plum-rgb), 0.06);
+    color: var(--text-strong);
+  }
+}
+.searchPopover {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  min-width: min(320px, 100%);
+  z-index: var(--z-popover);
+}
+.searchList {
+  max-height: min(360px, 60vh);
+  overflow-y: auto;
+  padding: 6px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.14);
+  border-radius: var(--radius-16);
+  box-shadow: var(--shadow-e3);
+}
+.searchGroupLabel {
+  padding: 8px 10px 4px;
+  font-size: var(--text-10-5);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+.searchNote {
+  padding: 6px 10px 10px;
+  font-size: var(--text-12-5);
+  color: var(--ink-60);
+}
+.searchOption {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 7px 10px;
+  border: none;
+  border-radius: var(--radius-11);
+  background: none;
+  font: inherit;
+  text-align: left;
+  color: inherit;
+  cursor: pointer;
+  transition-property: background-color;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+.searchOptionActive {
+  background: rgba(var(--accent-rgb), 0.14);
+}
+.searchOptionText {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.searchOptionName {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--text-13);
+  font-weight: 600;
+  color: var(--text-strong);
+}
+.searchOptionHandle {
+  font-size: var(--text-11-5);
+  color: var(--ink-60);
+}
+
+/* ── Filters button + panel ── */
+.filtersButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 36px;
+  padding: 0 13px;
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  border-radius: var(--radius-pill);
+  background: none;
+  font-family: var(--sans);
+  font-size: var(--text-12-5);
+  font-weight: 600;
+  color: var(--ink-60);
+  white-space: nowrap;
+  cursor: pointer;
+  transition-property: background-color, color, border-color;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+.filtersButton svg {
+  width: 14px;
+  height: 14px;
+}
+.filtersButtonOn {
+  border-color: var(--accent);
+  color: var(--text-strong);
+}
+.filtersButton:focus-visible,
+.filtersClose:focus-visible,
+.viewAction:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+@media (hover: hover) {
+  .filtersButton:hover,
+  .filtersClose:hover,
+  .viewAction:hover {
+    background: rgba(var(--plum-rgb), 0.05);
+    color: var(--text-strong);
+  }
+}
+.filtersPanel {
+  padding: 14px 22px 16px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
+}
+.filtersHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.filtersTitle {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-16);
+  font-weight: 500;
+  color: var(--text-strong);
+}
+.filtersClose {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 50%;
+  background: none;
+  color: var(--ink-60);
+  cursor: pointer;
+  transition-property: background-color, color;
+  transition-duration: var(--dur-fast);
+}
+.filtersBody {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 28px;
+}
+.filterGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+.filterLegend {
+  padding: 0;
+  font-size: var(--text-11);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+.filterChecks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+}
+.filterCheck,
+.filterDate,
+.filterSwitchLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: var(--text-13);
+  color: var(--ink);
+  cursor: pointer;
+}
+.filterCheck input {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: var(--accent);
+}
+.filterDates {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+}
+.filterControl {
+  min-height: 34px;
+  padding: 0 10px;
+  border: 1px solid rgba(var(--line-rgb), 0.14);
+  border-radius: var(--radius-10);
+  background: var(--cream);
+  font-family: var(--sans);
+  font-size: var(--text-13);
+  color: var(--ink);
+}
+.filterCheck input:focus-visible,
+.filterControl:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+.filterSwitches {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+}
+.filterSwitch {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.filtersFoot {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 12px;
+}
+/* Wide screens: the panel drops over the top of the stage, so opening it
+   leaves the graph at its size. */
+.filtersDrop {
+  position: absolute;
+  top: 100%;
+  inset-inline: 0;
+  background: var(--paper);
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.09);
+  box-shadow: var(--shadow-e3);
+}
+/* Phones: a bottom sheet above the inspector sheet, over a scrim that keeps
+   the graph in view. Both sit in the top bar's layer (see .topBarWrap). */
+.filtersScrim {
+  position: fixed;
+  inset: 0;
+  background: var(--scrim);
+}
+.filtersSheet {
+  position: fixed;
+  inset: auto 0 0;
+  max-height: 70svh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-inline: env(safe-area-inset-left) env(safe-area-inset-right);
+  background: var(--paper);
+  border-top: 1px solid rgba(var(--line-rgb), 0.12);
+  border-radius: var(--radius-20) var(--radius-20) 0 0;
+}
+/* The sheet takes focus as it rises so Escape and Tab start inside it; the
+   controls inside show the ring. */
+.filtersSheet:focus,
+.filtersSheet:focus-visible {
+  outline: none;
+  box-shadow: none;
+  border-radius: var(--radius-20) var(--radius-20) 0 0;
+}
+@media (max-width: 920px) {
+  .filtersPanel {
+    padding: 16px 16px 14px;
+    border-top: none;
+  }
+  /* 16px keeps iOS from zooming the page when a field takes focus. */
+  .filterControl,
+  .searchInput {
+    font-size: var(--text-16);
+  }
+}
+@media (pointer: coarse) {
+  .filterCheck {
+    min-height: var(--tap-min);
+  }
+}
+/* Phone filters: a switch row is a full 44px tap area, label included. */
+@media (max-width: 920px), (pointer: coarse) {
+  .filterSwitch {
+    min-height: var(--tap-min);
+  }
+  .filterSwitchLabel {
+    flex: 1;
+    align-self: stretch;
+  }
+}
+/* While the phone filters sheet is open, the inspector sheet goes quiet
+   behind it so it never peeks above the filters. */
+@media (max-width: 920px) {
+  .shell:has(.filtersSheet) aside[data-state="open"],
+  .shell:has(.filtersSheet) aside[data-state="list"] {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition-property: opacity, visibility;
+    transition-duration: var(--dur-fast);
+  }
+}
+.filtersClearInactive {
+  opacity: 0.5;
+  cursor: default;
+}
+
+/* Grows the small search clear, panel close and view action buttons to the
+   44px floor on touch screens, same as `.close::after`. */
+.searchClear,
+.filtersClose,
+.crumb,
+.mode,
+.filtersButton {
+  position: relative;
+}
+@media (pointer: coarse) {
+  .viewActions,
+  .viewActionsWide {
+    gap: 8px;
+  }
+  .searchClear::after,
+  .filtersClose::after,
+  .viewAction::after,
+  .crumb::after,
+  .mode::after,
+  .filtersButton::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    translate: -50% -50%;
+    width: max(100%, var(--tap-min));
+    height: max(100%, var(--tap-min));
+  }
+}
+
+/* ── View actions ── */
+.viewActions,
+.viewActionsWide {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+/* Phones fold the link and the downloads into one overflow menu. */
+.viewActionsMenu {
+  display: none;
+}
+.shareMenu {
+  position: relative;
+}
+@media (max-width: 920px) {
+  .viewActionsWide {
+    display: none;
+  }
+  .viewActionsMenu {
+    display: flex;
+  }
+}
+.viewAction {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  min-width: 36px;
+  height: 36px;
+  padding: 0 8px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-pill);
+  background: none;
+  font-family: var(--sans);
+  font-size: var(--text-11-5);
+  font-weight: 700;
+  color: var(--ink-60);
+  cursor: pointer;
+  transition-property: background-color, color, border-color, opacity;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+.viewAction svg {
+  width: 15px;
+  height: 15px;
+}
+.viewActionWide {
+  padding: 0 10px;
+}
+.viewActionOn {
+  border-color: var(--accent);
+  background: rgba(var(--accent-rgb), 0.1);
+  color: var(--text-strong);
+}
+/* The downloads wait while the list or the invite tree is shown. Pointer
+   events stay on so the tooltip still explains why. */
+.viewAction:disabled,
+.viewAction[aria-disabled="true"] {
+  opacity: 0.45;
+  cursor: default;
+}
+
+/* ── Main: stage + inspector ────────────────────────────── */
+.main {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+  min-height: 0;
+}
+/* The stage holds the graph, the list or the invite tree. Each view fills
+   it, so the tree's own panel and the list scroll inside a bounded box. */
+.stageArea {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+.stageView {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+}

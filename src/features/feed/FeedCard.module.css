@@ -330,6 +330,19 @@
 .gatheringBanner .gatheringBannerImage {
   border: 0;
 }
+/* Its height rides inline on the slot; this animates the banner growing from
+   160px to the poster height when the cover measures as a poster after the
+   banner box was reserved. */
+.gatheringBannerImage {
+  transition-property: height;
+  transition-duration: var(--dur-slow);
+  transition-timing-function: var(--ease);
+}
+@media (prefers-reduced-motion: reduce) {
+  .gatheringBannerImage {
+    transition-property: none;
+  }
+}
 
 /* The byline credit inside the card's meta line. Reads as text until it is
    hovered or focused, so the headline stays the card's loudest thing. */

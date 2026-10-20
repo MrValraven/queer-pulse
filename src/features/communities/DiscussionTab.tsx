@@ -15,6 +15,7 @@ import type { Thread as ThreadData } from "./communityDetails";
 import type { PulsePaging } from "./api/useCommunityPosts";
 import { viewerPerson } from "./communityPeople";
 import { useCreatePost } from "./api/useCommunityMutations";
+import { threadHeadingFromBody } from "./api/communities.adapters";
 import { usePostImageAttach } from "./usePostImageAttach";
 import { CommunityThread } from "./CommunityThread";
 import { CommunityFrozenComposerNotice } from "./CommunityFrozenComposerNotice";
@@ -72,7 +73,7 @@ export function DiscussionTab({
   function post() {
     const text = newPost.trim();
     if (!text) return;
-    const heading = text.length > 70 ? `${text.slice(0, 67)}…` : text;
+    const heading = threadHeadingFromBody(text, t);
     // Tag the optimistic entry with a temp id so an errored live POST can roll
     // back exactly this post (and nothing typed since) instead of leaving a
     // phantom thread behind.

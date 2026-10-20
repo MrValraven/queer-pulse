@@ -10,6 +10,9 @@ import { useReportSubmissionError } from "../safety/api/reportSubmissionError";
 import { asReasonCode, useReportReasons } from "../safety/api/useReportReasons";
 import type { ReportSubjectType } from "../safety/reportReasons";
 import { ModalShell, SuccessPanel } from "./ModalKit";
+import { copyrightClaimRouteFor } from "./reportCopyrightRouteFor";
+import { ReportCopyrightRoute } from "./ReportCopyrightRoute";
+import { ReportDetailFields } from "./ReportDetailFields";
 import shell from "./ApplicationModals.module.css";
 import styles from "./ReportListingModal.module.css";
 
@@ -50,6 +53,10 @@ export function ReportListingModal({
   const detailRef = useRef<HTMLTextAreaElement>(null);
   const createReport = useCreateReport();
   const describeReportError = useReportSubmissionError();
+  // Studio safety (spec 4.2): copyright on a Studio track or release opens
+  // the claim form; nothing is filed.
+  const claimRouteHref = copyrightClaimRouteFor(subjectType, subjectId);
+  const isCopyrightRouted = reason === "copyright" && claimRouteHref !== null;
 
   const canSubmit = reason !== null && detail.trim().length >= 10;
   const charsLeft = 10 - detail.trim().length;
@@ -67,7 +74,7 @@ export function ReportListingModal({
   }
 
   const submit = () => {
-    if (createReport.isPending) return;
+    if (isCopyrightRouted || createReport.isPending) return;
     if (!canSubmit || reason === null) {
       // The submit stays focusable while blocked, so a press lands the
       // reporter on the field that still needs them.
@@ -176,47 +183,43 @@ export function ReportListingModal({
             </div>
           </div>
 
-          <div className={shell.field}>
-            <label htmlFor="report-listing-detail">
-              {t("economy:housingListing.reportModal.detailLabel")}
-            </label>
-            <textarea
-              ref={detailRef}
-              id="report-listing-detail"
-              placeholder={t(
-                "economy:housingListing.reportModal.detailPlaceholder",
-              )}
-              value={detail}
-              onChange={(event) => setDetail(event.target.value)}
-            />
-          </div>
-          <div id={missingHintId} className={styles.counter}>
-            {counterText}
-          </div>
-
-          <p className={shell.note}>
-            <Translation
-              i18nKey="economy:housingListing.reportModal.confidentialNote"
-              components={{ strong: <strong /> }}
-            />
-          </p>
+          <ReportCopyrightRoute
+            isShown={isCopyrightRouted}
+            href={claimRouteHref}
+          />
+          <ReportDetailFields
+            isShown={!isCopyrightRouted}
+            detail={detail}
+            onDetailChange={setDetail}
+            detailRef={detailRef}
+            counterText={counterText}
+            missingHintId={missingHintId}
+          />
 
           <div className={shell.foot}>
             <Button variant="ghost" onClick={onClose}>
               {t("economy:housingListing.reportModal.cancelCta")}
             </Button>
-            {/* aria-disabled keeps the submit in the tab order, so the hint
-                it points at is heard and an early press can move focus. */}
-            <Button
-              variant="primary"
-              onClick={submit}
-              aria-disabled={!canSubmit || createReport.isPending}
-              aria-describedby={canSubmit ? undefined : missingHintId}
-            >
-              {createReport.isPending
-                ? t("economy:housingListing.reportModal.submitting")
-                : t("economy:housingListing.reportModal.submitCta")}
-            </Button>
+            {/* Copyright on a Studio track or release: the same slot opens
+                the claim form, so the foot never jumps. */}
+            {isCopyrightRouted && claimRouteHref ? (
+              <Button variant="primary" to={claimRouteHref} onClick={onClose}>
+                {t("economy:housingListing.reportModal.copyrightRoute.cta")}
+              </Button>
+            ) : (
+              /* aria-disabled keeps the submit in the tab order, so the hint
+                 it points at is heard and an early press can move focus. */
+              <Button
+                variant="primary"
+                onClick={submit}
+                aria-disabled={!canSubmit || createReport.isPending}
+                aria-describedby={canSubmit ? undefined : missingHintId}
+              >
+                {createReport.isPending
+                  ? t("economy:housingListing.reportModal.submitting")
+                  : t("economy:housingListing.reportModal.submitCta")}
+              </Button>
+            )}
           </div>
         </div>
       )}

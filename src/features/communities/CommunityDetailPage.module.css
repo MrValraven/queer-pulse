@@ -1040,6 +1040,11 @@
    same chip-scroller pattern the forum sidebar uses. The tablist is addressed
    through this wrapper (and by role, not by class) because the tab styling
    lives in the shared Tabs module. */
+/* The volunteer detail page links back to `#community-tabs`; keep the strip
+   clear of the fixed nav when the page scrolls to it. */
+.tabScroller {
+  scroll-margin-block-start: calc(var(--nav-band) + var(--gap-sm));
+}
 @media (--mobile) {
   .tabScroller > [role="tablist"] {
     display: flex;

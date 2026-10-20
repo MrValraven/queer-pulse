@@ -44,8 +44,9 @@
   aspect-ratio: 3 / 4;
 }
 
-.frame img,
-.thumb img {
+/* The cover slot's own frame zooms on hover, so a poster's sharp image and
+   its blurred backdrop move as one, and the backdrop keeps its own scale. */
+.coverImage {
   transition: transform var(--dur-slow) var(--ease);
 }
 
@@ -416,10 +417,10 @@
     background: rgba(var(--plum-rgb), 0.05);
   }
 
-  .lead:hover .frame img,
-  .featured:hover .frame img,
-  .list:hover .thumb img,
-  .compact:hover .thumb img {
+  .lead:hover .coverImage,
+  .featured:hover .coverImage,
+  .list:hover .coverImage,
+  .compact:hover .coverImage {
     transform: scale(1.04);
   }
 
@@ -485,8 +486,7 @@
   .featured,
   .list,
   .compact,
-  .frame img,
-  .thumb img,
+  .coverImage,
   .ribbon,
   .scrimHover,
   .cta,
@@ -513,10 +513,10 @@
     transform: none;
   }
 
-  .lead:hover .frame img,
-  .featured:hover .frame img,
-  .list:hover .thumb img,
-  .compact:hover .thumb img {
+  .lead:hover .coverImage,
+  .featured:hover .coverImage,
+  .list:hover .coverImage,
+  .compact:hover .coverImage {
     transform: none;
   }
 }

@@ -1,0 +1,220 @@
+/* The owner's claim panels: the same row, measure and surface as the
+   dispute panel under the album hero (StudioReleaseDispute.module.css). */
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.panel {
+  max-width: 60ch;
+  margin: 0 0 24px;
+  padding: 18px 20px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-14);
+  background: rgba(var(--studio-ink-rgb), 0.04);
+  color: var(--studio-text);
+}
+
+.heading {
+  margin: 0 0 4px;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: var(--text-19);
+}
+
+.trackLine,
+.meta {
+  margin: 0 0 10px;
+  font-size: var(--text-14);
+  color: var(--studio-text-muted);
+}
+
+.statusLine {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  margin: 0 0 10px;
+}
+
+/* The date sits on the chip's centre line; the line's own margin spaces it. */
+.statusLine .meta {
+  margin: 0;
+}
+
+/* The owner's tracklist row while a claim holds the track offline. */
+.offlineTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-inline-end: 6px;
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--accent-rgb), 0.12);
+  color: var(--studio-accent-chip-text);
+  font-size: var(--text-11);
+  font-weight: 600;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+.offlineTag svg {
+  flex: none;
+}
+
+.banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  max-width: 60ch;
+  margin: 0 0 16px;
+  padding: 10px 14px;
+  border-radius: var(--radius-10);
+  background: rgba(var(--accent-rgb), 0.1);
+  color: var(--studio-text);
+  font-size: var(--text-14);
+  line-height: 1.5;
+}
+
+.banner svg {
+  flex: none;
+  margin-top: 3px;
+  color: var(--studio-accent-text);
+}
+
+.facts {
+  display: grid;
+  gap: 8px;
+  margin: 0 0 12px;
+}
+
+.factLabel,
+.label {
+  margin: 0;
+  font-size: var(--text-12);
+  font-weight: 600;
+  color: var(--studio-text-muted);
+}
+
+.factValue {
+  margin: 0;
+  font-size: var(--text-14);
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.quote {
+  margin: 4px 0 12px;
+  padding: 0 0 0 12px;
+  border-inline-start: 2px solid rgba(var(--studio-ink-rgb), 0.16);
+  font-size: var(--text-14);
+  line-height: 1.6;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.outcome {
+  margin: 0 0 8px;
+  font-weight: 600;
+}
+
+.form {
+  display: grid;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.goodFaith {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: var(--text-14);
+  line-height: 1.5;
+}
+
+.goodFaith input {
+  margin-top: 4px;
+}
+
+.error {
+  margin: 0;
+  font-size: var(--text-13);
+  color: var(--danger);
+}
+
+.link {
+  color: var(--studio-accent-text);
+}
+
+.link:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-radius: var(--radius-4);
+}
+
+.withheldView {
+  display: grid;
+  justify-items: start;
+  gap: 12px;
+  max-width: 52ch;
+  margin: 48px 0;
+}
+
+.withheldIcon {
+  display: inline-grid;
+  place-items: center;
+  inline-size: 56px;
+  block-size: 56px;
+  margin-block-end: 4px;
+  border-radius: 50%;
+  background: rgba(var(--studio-ink-rgb), 0.06);
+  color: var(--studio-text-muted);
+}
+
+.withheldIcon svg {
+  width: 28px;
+  height: 28px;
+}
+
+.withheldView h1 {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: var(--text-32);
+}
+
+.withheldView p {
+  margin: 0;
+  color: var(--studio-text-muted);
+}
+
+.withheldActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.safetyRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  margin: 0 0 20px;
+}
+
+.safetyRow:empty {
+  display: none;
+}
+
+/* Beside the cover (studio.module.css .heroInner: a 300px art column and a
+   40px gap until --compact stacks them), the row lines up under the title
+   and details column and tucks into the hero's bottom padding, so the
+   warning reads with the track's details. Stacked, it simply follows. */
+@media (min-width: 881px) {
+  .safetyRow {
+    margin-block-start: -16px;
+    padding-inline-start: calc(300px + 40px);
+  }
+}

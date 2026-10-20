@@ -473,8 +473,8 @@
 }
 
 /* Three nowrap labels never fit one line of a ~300px queue column (and the
-   Portuguese labels are longer again), so the row wraps by design instead of
-   overhanging the card edge: the two quiet options split the first line... */
+   Portuguese labels are longer again), so the row wraps by design and
+   stays inside the card edge: the two quiet options split the first line... */
 .queueActionSecondary {
   flex: 1 1 auto;
   min-width: 116px;
@@ -559,7 +559,7 @@
   white-space: nowrap;
 }
 
-/* The 18+ self-attestation record — quiet, but always visible before deciding. */
+/* The 18+ self-attestation record: quiet and always visible before deciding. */
 .queueAttest {
   display: flex;
   align-items: center;
@@ -671,7 +671,7 @@
   line-height: 1.5;
 }
 
-/* Roles & access — a labelled sub-group beneath the section's micro-heading.
+/* Roles & access: a labelled sub-group beneath the section's micro-heading.
    Sentence-case + darker ink so the two groups read as the real group titles,
    subordinate to the uppercase "Roles & access" eyebrow above them. */
 .subGroupLabel {
@@ -883,7 +883,7 @@
   stroke: rgba(var(--jade-rgb), 0.55);
   stroke-width: 2.5;
 }
-/* member vouched FOR this node — accent, dashed so it reads apart from the
+/* member vouched FOR this node: accent, dashed so it reads apart from the
    solid plum inbound edges even without colour */
 .previewEdgeOutbound {
   stroke: rgba(var(--accent-rgb), 0.5);
@@ -1073,7 +1073,7 @@
   color: var(--ink-60);
 }
 
-/* Verify modal — voucher review */
+/* Verify modal: voucher review */
 .voucherList {
   display: flex;
   flex-direction: column;
@@ -1151,7 +1151,7 @@
   border: 1px solid rgba(var(--amber-rgb), 0.28);
 }
 
-/* Restrict modal — reason list */
+/* Restrict modal: reason list */
 .reasonList {
   display: flex;
   flex-direction: column;
@@ -1280,7 +1280,7 @@
    multi-select checkbox and floating bar, styled to match this file's
    existing custom checkbox + bulk-bar rules on the other admin queues
    (`.rowCheckbox`/`.bulkBar` in AdminListingsPage.module.css /
-   AdminVerificationsPage.module.css) rather than inventing a new look. ── */
+   AdminVerificationsPage.module.css) and reuse their look. ── */
 .queueSelect {
   appearance: none;
   flex: none;
@@ -1388,4 +1388,48 @@
   .bulkActions > * {
     flex: 1 1 auto;
   }
+}
+
+/* Trust network entry: the button mounts when the summary loads, so it fades in. */
+@media (prefers-reduced-motion: no-preference) {
+  .trustCta {
+    animation: trustCtaFade var(--dur-base) var(--ease-out) both;
+  }
+}
+@keyframes trustCtaFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Open-case count pill in the header button. */
+.trustBadge {
+  display: inline-block;
+  min-width: 0;
+  margin-left: 0;
+  padding: 1px 0;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--amber-rgb), 0.16);
+  color: var(--amber-ink);
+  font-size: var(--text-11-5);
+  font-weight: 700;
+  line-height: 1.4;
+  text-align: center;
+  opacity: 0;
+  transform: scale(0.6);
+  overflow: hidden;
+  max-width: 0;
+  transition-property: opacity, transform, max-width, margin-left, padding;
+  transition-duration: var(--dur-base);
+  transition-timing-function: var(--ease-out);
+}
+.trustBadge[data-visible="true"] {
+  max-width: 48px;
+  margin-left: 8px;
+  padding: 1px 6px;
+  opacity: 1;
+  transform: scale(1);
 }

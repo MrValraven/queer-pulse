@@ -728,6 +728,10 @@ export const gatherings: Catalog = {
   // DraftResumeStrip.tsx / useCreateGatheringDraft.ts: saving and resuming a draft
   "create.v2.saved.saving": "Saving…",
   "create.v2.saved.label": "Saved · {age}",
+  "create.v2.saved.retrying": "Not saved, retrying",
+  "create.v2.saved.tooLarge": "Too long to save",
+  "create.v2.saved.notSaved": "Not saved",
+  "create.v2.saved.conflict": "Saving paused",
   "create.v2.draft.age.justNow": "just now",
   "create.v2.draft.age.minutes_one": "{count} min",
   "create.v2.draft.age.minutes_other": "{count} min",
@@ -741,6 +745,11 @@ export const gatherings: Catalog = {
   "create.v2.draft.resume": "Resume",
   "create.v2.draft.startFresh": "Start fresh",
   "create.v2.toast.draftResumed": "Draft resumed",
+  "create.v2.toast.draftDiscardFailed":
+    "We couldn't delete your old draft. It's still saved",
+  // CreatorDraftNotice in the event wizard: staff can see a server draft
+  "creatorDraftNote.body":
+    "Our team can see this event draft, so we can help if you get stuck",
 
   // usePublishGathering.ts: a co-host invite that did not go out after publishing
   "create.v2.toast.cohostInviteFailed_one":
@@ -928,9 +937,9 @@ export const gatherings: Catalog = {
   "create.v2.what.suggestion.inHood": "{format} in {hood}",
   "create.v2.what.suggestion.firstEdition": "{format}: first edition",
   "create.v2.what.coverLabel": "Cover image",
-  "create.v2.what.coverPlaceholder": "Add a cover photo",
+  "create.v2.what.coverPlaceholder": "Add a cover photo or poster",
   "create.v2.what.coverHint":
-    "Cards with a photo get noticed on the board. Without one, your card is tinted in your format's colour.",
+    "Cards with a photo get noticed on the board, and a vertical poster shows in full. Without one, your card is tinted in your format's colour.",
   "create.v2.what.themesLabel": "Themes",
   "create.v2.what.themesHint": "Shown on your card. Pick up to three.",
   "create.v2.what.descriptionOverBudget":
@@ -2285,4 +2294,10 @@ export const gatherings: Catalog = {
   "collabInvite.pastTitle": "This event already happened",
   "collabInvite.pastDescription": "The invite closed once {title} took place.",
   "collabInvite.viewGatheringCta": "View event",
+  "manage.tabs.quizshow": "Live game",
+  "create.success.quizshowCta": "Write your quiz",
+  "create.toast.quizshowCopyNeedsAdultsEvent":
+    "Your event is up. Its quiz has adults rounds, so make the event 18+ and copy the quiz from the Live game tab",
+  "create.toast.quizshowCopyFailed":
+    "Your event is up. Its quiz didn't come with it, so copy it from the Live game tab",
 };

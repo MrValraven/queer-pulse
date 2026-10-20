@@ -1,0 +1,19 @@
+/* The community Volunteering tab (VolunteeringTab.tsx). The cards, the post
+   call to action and the empty line reuse VolunteerPage.module.css and
+   CommunityHubTabs.module.css; this file only lays them out. */
+
+/* Fills the tab's column with as many cards as fit, one per row on a phone. */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+  gap: var(--gap-grid);
+}
+
+/* "Showing the 50 newest of 64": a quiet line under the grid. */
+.note {
+  margin-block: var(--gap-sm) 0;
+  font-size: var(--text-13);
+  line-height: 1.6;
+  color: var(--ink-60);
+  max-width: 58ch;
+}

@@ -1,0 +1,50 @@
+.shape {
+  --quizshow-shape-size: 32px;
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: var(--quizshow-shape-size);
+  height: var(--quizshow-shape-size);
+  border-radius: var(--radius-8);
+  background: var(--quizshow-shape-fill);
+  color: var(--quizshow-shape-ink);
+}
+
+.small {
+  --quizshow-shape-size: 20px;
+}
+
+.medium {
+  --quizshow-shape-size: 32px;
+}
+
+.large {
+  --quizshow-shape-size: 48px;
+}
+
+.screen {
+  --quizshow-shape-size: calc(var(--text-screen-label) * 1.6);
+}
+
+.icon {
+  width: 62%;
+  height: 62%;
+}
+
+/* Light circle and hexagon fills sit near 2:1 on the cream page; a faint ink
+   edge (about 4:1) holds their outline. The dark fills clear the dark page
+   unaided, so dark draws no edge. The last rule brings the edge back in a
+   light subtree of a dark page. An inset outline keeps it off the shadow scale. */
+.edged {
+  outline: 1.5px solid rgba(var(--ink-rgb), 0.35);
+  outline-offset: -1.5px;
+}
+
+:global([data-theme="dark"]) .edged {
+  outline-color: transparent;
+}
+
+:global([data-theme="dark"]) :global([data-theme="light"]) .edged {
+  outline-color: rgba(var(--ink-rgb), 0.35);
+}

@@ -1333,13 +1333,19 @@ export const MOD_ACTIONS: ModAction[] = [
  * A `studio_release` is taken down and restored from its own panel
  * (AdminStudioReleaseActions), so the generic hide and remove tiles stay off it.
  * A `persona_post` is removed from its own panel (AdminPersonaPostActions).
+ * A `studio_track` is marked or warned from the Studio flag review (Track
+ * reports), so the generic tiles stay off it too.
+ * A `quizshow_answer` is hidden from its game by the hosts, and the stored
+ * answer ages out with the session, so the generic tiles stay off it as well.
  */
 const SUBJECT_TYPES_WITHOUT_CONTENT = new Set<ReportSubjectType>([
   "venue",
   "conversation",
   "identity",
   "studio_release",
+  "studio_track",
   "persona_post",
+  "quizshow_answer",
 ]);
 
 export function modActionsFor(subjectType: ReportSubjectType): ModAction[] {

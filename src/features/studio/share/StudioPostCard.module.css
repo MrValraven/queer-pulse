@@ -1,0 +1,12 @@
+/* Sits under the post's words with the same rhythm as a post photo. */
+.root {
+  margin-top: 12px;
+  max-width: 100%;
+}
+
+/* A non-interactive preview (inert) mutes the play disc so it stops
+   reading as pressable. */
+.root[data-share-card-preview] button {
+  opacity: 0.45;
+  box-shadow: none;
+}

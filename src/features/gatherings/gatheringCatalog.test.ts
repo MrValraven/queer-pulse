@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { hiddenThemeKeysForFamily } from "./gatheringExtras";
 import { gatherings as gatheringsEn } from "../../shared/i18n/catalogs/en/gatherings";
 import { gatherings as gatheringsPt } from "../../shared/i18n/catalogs/pt/gatherings";
 import {
@@ -241,5 +242,34 @@ describe("gatheringCatalog", () => {
         );
       }
     });
+  });
+});
+
+describe("18+ on the quiz format", () => {
+  it("hides the adults-only theme on the quiz format", () => {
+    expect(hiddenThemeKeysForFamily("meet", "quiz")).toEqual(["adults-only"]);
+    expect(hiddenThemeKeysForFamily("meet", "mixer")).toEqual([]);
+    expect(hiddenThemeKeysForFamily("meet")).toEqual([]);
+  });
+  it("asks a quiz night whether it is adults only", () => {
+    expect(allowedDetailKeys("meet", "quiz")).toEqual(["isAdultsOnly"]);
+  });
+  it("leaves every other meet format and the family alone", () => {
+    expect(allowedDetailKeys("meet", "mixer")).toEqual([]);
+    expect(allowedDetailKeys("meet")).toEqual([]);
+  });
+  it("ignores a quiz key under a family it does not belong to", () => {
+    expect(allowedDetailKeys("party", "quiz")).toEqual([
+      "isAdultsOnly",
+      "isSoberFriendly",
+    ]);
+  });
+  it("keeps 18+ on a quiz and drops it when the format changes", () => {
+    expect(
+      stripDisallowedDetails("meet", { isAdultsOnly: true }, "quiz"),
+    ).toEqual({ isAdultsOnly: true });
+    expect(
+      stripDisallowedDetails("meet", { isAdultsOnly: true }, "mixer"),
+    ).toBeNull();
   });
 });

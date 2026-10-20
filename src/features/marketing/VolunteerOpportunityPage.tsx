@@ -1,16 +1,12 @@
 import { useState } from "react";
 import {
-  Link,
   Navigate,
   useLocation,
   useNavigate,
   useParams,
 } from "react-router-dom";
-import { FiArrowLeft } from "react-icons/fi";
 import { PageShell } from "../../shared/components/layout";
-import { ApiError } from "../../shared/api/client";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import type { TFunction } from "../../shared/i18n/types";
 import { useAuth } from "../../app/providers/authContext";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { routes } from "../../app/routeMap";
@@ -31,21 +27,10 @@ import {
   isEditedOpportunityCurrent,
 } from "./editedOpportunityHandoff";
 import { causeLabelKey } from "./causes.data";
+import { VolunteerOpportunityBackLink } from "./VolunteerOpportunityBackLink";
+import { signupErrorMessage } from "./volunteerSignupError";
+import { volunteerOpportunityPath } from "./volunteerPaths";
 import styles from "./VolunteerOpportunityPage.module.css";
-
-/** Map a failed signup to member-facing copy, distinguishing the two 409 cases. */
-function signupErrorMessage(e: unknown, t: TFunction): string {
-  if (e instanceof ApiError && e.status === 409) {
-    if (/already/i.test(e.message)) {
-      return t("marketing:volunteerDetail.error.alreadySignedUp");
-    }
-    if (/full/i.test(e.message)) {
-      return t("marketing:volunteerDetail.error.full");
-    }
-    return t("marketing:volunteerDetail.error.alreadyOrFull");
-  }
-  return t("marketing:volunteerDetail.error.generic");
-}
 
 export function VolunteerOpportunityPage() {
   const { t } = useTranslation();
@@ -123,8 +108,8 @@ export function VolunteerOpportunityPage() {
   }
   if (!opp) return <Navigate to={routes.volunteer} replace />;
 
-  // First page only — this sidebar shows at most three suggestions, so it never
-  // needs to pull further pages.
+  // First page only: this sidebar shows at most three suggestions, so the
+  // first page always covers it.
   const alternatives = allOpportunities
     .filter((o) => o.slug !== opp.slug)
     .slice(0, 3);
@@ -137,12 +122,10 @@ export function VolunteerOpportunityPage() {
           org: opp.org,
         })}
         description={opp.description}
-        canonical={`${routes.volunteer}/opportunity/${opp.slug}`}
+        canonical={volunteerOpportunityPath(opp.slug)}
       />
       <div className={styles.page}>
-        <Link to={routes.volunteer} className={styles.back}>
-          <FiArrowLeft aria-hidden /> {t("marketing:volunteerDetail.backCta")}
-        </Link>
+        <VolunteerOpportunityBackLink />
 
         <header className={styles.head}>
           <div className={styles.eyebrow}>

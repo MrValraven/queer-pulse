@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import { TestProviders } from "../test/TestProviders";
 import { AppRoutes } from "./routes";
 import { routes } from "./routeMap";
+import { gatheringPath } from "../features/gatherings/gatheringPaths";
 
 /**
  * Tier-2 breadth net: mount a representative path per route family through the
@@ -56,6 +57,8 @@ const SMOKE_PATHS: ReadonlyArray<readonly [string, string]> = [
   ["standalone persona (handle)", "/p/nightform"],
   ["nested linked persona", `${routes.members}/rui/engineering`],
   ["manage volunteer applicants", routes.manageVolunteerApplicants],
+  ["pulse live player", "/play/QZ7KP4"],
+  ["pulse live screen", `${gatheringPath("pride-brunch-jun")}/quizshow/screen`],
 ];
 
 /** The route ErrorBoundary's branded fallback heading — its presence = a crash. */

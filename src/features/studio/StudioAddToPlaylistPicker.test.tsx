@@ -12,7 +12,29 @@ import { resetStudioLibrarySeedForTests } from "./api/useStudioLibrarySaves";
 import { StudioAddToPlaylistPicker } from "./StudioAddToPlaylistPicker";
 import type { StudioLikeSubject } from "./useStudioLike";
 
+const inviteeCards = vi.hoisted(() => ({
+  value: [] as unknown[],
+}));
+
+vi.mock("./api/useStudioMyPlaylists", async (importOriginal) => {
+  const original =
+    await importOriginal<typeof import("./api/useStudioMyPlaylists")>();
+  return {
+    ...original,
+    useStudioMyPlaylists: (
+      ...args: Parameters<typeof original.useStudioMyPlaylists>
+    ) => {
+      const result = original.useStudioMyPlaylists(...args);
+      return {
+        ...result,
+        playlists: [...result.playlists, ...inviteeCards.value],
+      } as typeof result;
+    },
+  };
+});
+
 beforeEach(() => {
+  inviteeCards.value = [];
   resetDemoPlaylists();
   // Likes live in the saved store (localStorage in the demo).
   window.localStorage.clear();
@@ -158,5 +180,43 @@ describe("StudioAddToPlaylistPicker", () => {
     expect(await screen.findByText("Added to Night bus")).toBeInTheDocument();
     expect(screen.queryByText("Playlist created")).not.toBeInTheDocument();
     await waitFor(() => expect(onClose).toHaveBeenCalled());
+  });
+
+  it("offers a playlist the member edits, marked, and leaves an open invite out", async () => {
+    const onClose = renderPicker(["demo-track-home-4-01"]);
+    const tour = await screen.findByRole("button", {
+      name: "Add to Tour diary, a collaborative playlist",
+    });
+    expect(within(tour).getByText("Collaborative")).toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: /Pride warm-up/ }),
+    ).not.toBeInTheDocument();
+    fireEvent.click(tour);
+    expect(await screen.findByText("Added to Tour diary")).toBeInTheDocument();
+    await waitFor(() => expect(onClose).toHaveBeenCalled());
+  });
+
+  it("never lists an invitee card, even when the list returns one", async () => {
+    const { demoMyPlaylistsPage } = await import("./api/studioDemoPlaylists");
+    const { toPlaylistCardView } = await import("./api/studio.adapters");
+    const base = demoMyPlaylistsPage(null).items.find(
+      (item) => item.id === "demo-playlist-kitchen-tapes",
+    );
+    if (!base) throw new Error("fixture has no demo-playlist-kitchen-tapes");
+    inviteeCards.value = [
+      toPlaylistCardView({
+        ...base,
+        id: "invited-card",
+        name: "Invited mixtape",
+        isOwner: false,
+        role: "invitee",
+        editorCount: null,
+      }),
+    ];
+    renderPicker(["demo-track-home-4-01"]);
+    await screen.findByRole("button", { name: "Add to Kitchen tapes" });
+    expect(
+      screen.queryByRole("button", { name: /Invited mixtape/ }),
+    ).not.toBeInTheDocument();
   });
 });

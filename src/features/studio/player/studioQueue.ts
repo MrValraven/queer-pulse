@@ -8,6 +8,7 @@ import {
   type StudioTrackView,
 } from "../api/studio.adapters";
 import { latestEpisodeOf } from "../api/studioEpisodes";
+import { contentWarningsOf } from "../api/studioSafetyFields";
 import type {
   StudioRadioFilter,
   StudioRadioItemDTO,
@@ -75,6 +76,7 @@ export function queueFromRelease(
       artistName: release.artist.name,
       artistHref: release.artist.href,
       isExplicit: track.isExplicit,
+      contentWarnings: track.contentWarnings ?? [],
       isEpisode: false,
       ...(previewToken ? { previewToken } : {}),
     }));
@@ -107,6 +109,7 @@ export function queueItemFromTrack(
     artistName: track.release.artist.name,
     artistHref: track.release.artist.href,
     isExplicit: track.isExplicit,
+    contentWarnings: track.contentWarnings ?? [],
     isEpisode: track.release.type === "podcast",
   };
 }
@@ -128,6 +131,7 @@ export function queueItemFromTrackView(
     artistName: track.release.artist.name,
     artistHref: track.release.artist.href,
     isExplicit: track.isExplicit,
+    contentWarnings: track.contentWarnings ?? [],
     isEpisode: track.release.type === "podcast",
   };
 }
@@ -184,6 +188,7 @@ export function queueItemFromRadioItem(
     artistName: item.artist.name,
     artistHref: studioArtistPath(item.artist.id),
     isExplicit: item.isExplicit,
+    contentWarnings: contentWarningsOf(item.contentWarnings),
     // A radio never plays an episode (spec 4.6).
     isEpisode: false,
   };
@@ -208,6 +213,7 @@ export function queueItemFromEpisode(
     artistName: release.artist.name,
     artistHref: release.artist.href,
     isExplicit: track.isExplicit,
+    contentWarnings: track.contentWarnings ?? [],
     isEpisode: true,
   };
 }

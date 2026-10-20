@@ -7,17 +7,13 @@ export interface StoredCommunityDraft {
 }
 
 /**
- * The Start-a-Community wizard is nine chapters long and, until this existed,
- * lived only in component state: a reload, a phone backgrounding the PWA hard
- * enough to be killed, or a session refresh that bounced through OAuth all
- * threw the whole thing away. `useUnsavedChangesGuard` only ever caught a
- * deliberate navigation, never any of those.
- *
- * `sessionStorage` (not `localStorage`) on purpose: the draft belongs to this
- * tab and this sitting, and it holds the founder's own words about who a space
- * is for. It should not outlive the browsing session or follow them into a new
- * tab, and it is keyed per member so a shared device never hands one person's
- * half-written community to the next.
+ * The server holds the Start-a-Community draft now (`/me/creator-drafts/community`,
+ * through `useStartCommunityDraft`). An earlier build parked the wizard in
+ * `sessionStorage` under `qp.community-draft.<slug>`, and that copy holds the
+ * founder's own words about who a space is for. This file only reads that old
+ * tab copy back once, so the wizard can restore it and upload it on its first
+ * autosave, and clears it once that save lands. Nothing writes the key any
+ * more, and sign-out clears every copy of it.
  */
 const KEY_PREFIX = "qp.community-draft";
 
@@ -41,18 +37,6 @@ export function readCommunityDraft(
     // A malformed or unreadable entry (private-mode storage, a shape from an
     // older build) must never block someone from starting a community.
     return null;
-  }
-}
-
-export function writeCommunityDraft(
-  ownerSlug: string,
-  value: StoredCommunityDraft,
-): void {
-  try {
-    sessionStorage.setItem(keyFor(ownerSlug), JSON.stringify(value));
-  } catch {
-    // Storage full or blocked — the wizard still works, it just won't survive
-    // a reload. Nothing to tell the founder about mid-typing.
   }
 }
 

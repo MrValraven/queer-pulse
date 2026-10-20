@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { AnimatePresence } from "motion/react";
 import { FaRainbow } from "react-icons/fa6";
 import { FiArrowRight, FiShare2, FiUsers } from "react-icons/fi";
 import { Link } from "react-router-dom";
@@ -142,14 +143,20 @@ export function JobDetailSidebar({
         </div>
       </div>
 
-      {isSharing && (
-        <ShareToCommunityModal
-          title={job.title}
-          organization={job.organization}
-          url={jobUrl(job.slug)}
-          onClose={() => setIsSharing(false)}
-        />
-      )}
+      <AnimatePresence>
+        {isSharing && (
+          <ShareToCommunityModal
+            key="share-to-community"
+            title={job.title}
+            url={jobUrl(job.slug)}
+            defaultNote={t("economy:shareToCommunity.defaultNote", {
+              title: job.title,
+              organization: job.organization,
+            })}
+            onClose={() => setIsSharing(false)}
+          />
+        )}
+      </AnimatePresence>
 
       <div className={styles.noteCard}>
         <p>{d.reviewerNote}</p>

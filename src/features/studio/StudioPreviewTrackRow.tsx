@@ -6,6 +6,7 @@ import {
   StudioHiddenTrackNumber,
 } from "./StudioHiddenTrack";
 import hiddenCss from "./StudioHiddenTrack.module.css";
+import { StudioTrackWarningPill } from "./StudioTrackWarningPill";
 import releaseStyles from "./StudioRelease.module.css";
 import styles from "./StudioPreview.module.css";
 
@@ -73,6 +74,7 @@ export function StudioPreviewTrackRow({
             </abbr>
           )}
         </span>
+        <StudioTrackWarningPill warnings={track.contentWarnings} />
         {isHidden && <StudioHiddenTrackNote />}
       </div>
       <span className={styles.trackTime}>

@@ -2,6 +2,10 @@ import { Navigate, Route } from "react-router-dom";
 import { routes } from "../../app/routeMap";
 import { ParamRedirect } from "../../app/routes.redirects";
 import { lazyNamed } from "../../app/routeHelpers";
+import {
+  VOLUNTEER_OPPORTUNITY_ROUTE,
+  volunteerOpportunityPath,
+} from "./volunteerPaths";
 
 const PrivacyPage = lazyNamed(() => import("./PrivacyPage"), "PrivacyPage");
 const TermsPage = lazyNamed(() => import("./TermsPage"), "TermsPage");
@@ -164,7 +168,7 @@ export function marketingRoutes() {
         element={<VolunteerApplicantsDashboardPage />}
       />
       <Route
-        path="/about/volunteer/opportunity/:slug"
+        path={VOLUNTEER_OPPORTUNITY_ROUTE}
         element={<VolunteerOpportunityPage />}
       />
       <Route path={routes.platforms} element={<PlatformsPage />} />
@@ -187,7 +191,7 @@ export function marketingRoutes() {
         path="/volunteer-opportunity/:slug"
         element={
           <ParamRedirect
-            build={(p) => `/about/volunteer/opportunity/${p.slug ?? ""}`}
+            build={(p) => volunteerOpportunityPath(p.slug ?? "")}
           />
         }
       />
@@ -198,7 +202,7 @@ export function marketingRoutes() {
         }
       />
 
-      {/* Local — visas/arriving/directory/business listing (safe-spaces live in
+      {/* Local: visas/arriving/directory/business listing (safe-spaces live in
           the safety feature) */}
       <Route path={routes.visas} element={<VisasPage />} />
       <Route path={routes.arriving} element={<ArrivingPage />} />

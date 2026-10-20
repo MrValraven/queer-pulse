@@ -117,6 +117,12 @@ export interface FeedItem extends ContractFeedItem {
    *  in the member's own order. Absent from an older backend or with no
    *  signed-in viewer; empty when nothing is shared. */
   sharedInterests?: string[];
+  /** `community_post` only (Studio rich cards): the canonical path of the
+   *  first Studio track, release or playlist link in the post's body, which
+   *  the 220-character `summary` often cuts through. Null when the body has
+   *  none or was blanked (tombstone, moderation hide, removal); absent from
+   *  an older backend, which the card reads as "look in `summary`". */
+  studioLink?: string | null;
   // PRD-167's `excerpt` (a `forum_thread`'s opening post) is inherited from the
   // shared contract, which is where it is documented.
 }

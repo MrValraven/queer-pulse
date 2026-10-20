@@ -154,12 +154,17 @@
    the whole group: without it, a note longer than the card's own max-content
    width pulls the anonymous table wrapper wider than the card to fit it,
    instead of wrapping under it. Lifted over the `.surface::after` pattern
-   layer the same way `.bubble` is, or the tiles paint across the card. */
+   layer the same way `.bubble` is, or the tiles paint across the card.
+   `inline-size` gives the table a definite width too: the place and Studio
+   cards both size as `min(320px, 100%)`, and inside a shrink-to-fit table
+   that percentage had nothing to resolve against (a Studio card painted 2px
+   wide). */
 .placeGroup {
   position: relative;
   z-index: 1;
   display: table;
   align-self: flex-end;
+  inline-size: min(320px, 100%);
   max-width: min(320px, 100%);
 }
 .placeCaption {

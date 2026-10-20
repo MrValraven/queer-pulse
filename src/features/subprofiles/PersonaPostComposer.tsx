@@ -2,6 +2,7 @@ import { useEffect, useId, useRef, useState } from "react";
 import { FiAlertCircle, FiImage, FiLink, FiX } from "react-icons/fi";
 import { Button, Collapse } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { StudioComposerPreview } from "../studio/share/StudioComposerPreview";
 import {
   EMPTY_PERSONA_POST_DRAFT,
   createBodyFromDraft,
@@ -159,6 +160,11 @@ export function PersonaPostComposer(options: ComposerOptions) {
   const composer = usePersonaPostComposer(options);
   const { draft, patch, errors } = composer;
   const isEditing = post !== undefined;
+  // The save rule takes absolute https links only, so a root-relative
+  // `/studio/...` value gets its error line and no card.
+  const linkPreviewText = /^https:\/\//i.test(draft.linkUrl.trim())
+    ? draft.linkUrl
+    : "";
 
   useEffect(() => {
     if (isEditing) bodyRef.current?.focus();
@@ -208,6 +214,9 @@ export function PersonaPostComposer(options: ComposerOptions) {
             id={linkErrorId}
             message={errors.linkUrl ? t(errors.linkUrl) : ""}
           />
+          {/* "Remove link" under the field already takes the link out, so
+              the card carries no second X for the same action. */}
+          <StudioComposerPreview text={linkPreviewText} isRemovable={false} />
         </div>
       </Collapse>
       <Collapse isOpen={composer.isPhotoOpen}>

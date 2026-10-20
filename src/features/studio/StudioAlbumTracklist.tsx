@@ -14,6 +14,9 @@ import {
 } from "./StudioHiddenTrack";
 import hiddenCss from "./StudioHiddenTrack.module.css";
 import { StudioLikeButton } from "./StudioLikeButton";
+import { StudioTrackWarningPill } from "./StudioTrackWarningPill";
+import { StudioOfflineTag } from "./StudioWithheldBanner";
+import { StudioWithheldTrackRow } from "./StudioWithheldTrackRow";
 import { useStudioShowcase } from "./useStudioShowcase";
 import styles from "./studio.module.css";
 import kit from "./studioKit.module.css";
@@ -47,6 +50,12 @@ export function StudioAlbumTracklist({
       aria-label={t("studio:release.tracklistLabel", { title: release.title })}
     >
       {release.tracks.map((track) => {
+        // Studio safety (spec 5.3): a listener's withheld track keeps its
+        // place and number and offers nothing; the owner's stays whole.
+        if (track.isWithheld && !release.isOwner)
+          return (
+            <StudioWithheldTrackRow key={track.id} position={track.position} />
+          );
         const isCurrent = player.isCurrentTrack(track.id);
         const isPlaying = isCurrent && player.status === "playing";
         const isPlayBlocked = !isStreamable || !track.hasAudio;
@@ -122,6 +131,9 @@ export function StudioAlbumTracklist({
                   </abbr>
                 )}
               </h5>
+              {/* Only the owner reaches here with a withheld track. */}
+              {track.isWithheld && <StudioOfflineTag />}
+              <StudioTrackWarningPill warnings={track.contentWarnings} />
               <div className={styles.who}>
                 {isHidden ? (
                   <StudioHiddenTrackNote />
@@ -167,6 +179,9 @@ export function StudioAlbumTracklist({
                     href: track.href,
                     hasAudio: track.hasAudio,
                     isExplicit: track.isExplicit,
+                    artistId: release.artist.id,
+                    isPublished: release.publishedAt !== null,
+                    isWithheld: track.isWithheld,
                   }}
                 />
               )}

@@ -70,6 +70,24 @@ export const studioKeys = {
     ["studio", "memberPlaylists", demoMode, memberSlug] as const,
   trackPlaylists: (demoMode: boolean, trackId: string) =>
     ["studio", "trackPlaylists", demoMode, trackId] as const,
+  /** Collaborative playlists: who edits one playlist, and the persona
+   *  co-owners its owner can pick, per search. */
+  playlistEditors: (demoMode: boolean, playlistId: string) =>
+    ["studio", "playlistEditors", demoMode, playlistId] as const,
+  playlistEditorCandidatesAll: (demoMode: boolean, playlistId: string) =>
+    ["studio", "playlistEditorCandidates", demoMode, playlistId] as const,
+  playlistEditorCandidates: (
+    demoMode: boolean,
+    playlistId: string,
+    searchQuery: string,
+  ) =>
+    [
+      "studio",
+      "playlistEditorCandidates",
+      demoMode,
+      playlistId,
+      searchQuery,
+    ] as const,
   /** Liked songs, the member's `studio_track` saves. The demo appends the
    *  saved ids, so a like or an unlike reads the list again. */
   likedTracks: (demoMode: boolean) =>

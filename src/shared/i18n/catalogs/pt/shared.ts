@@ -304,6 +304,7 @@ export const shared: Catalog = {
   "adminNav.items.resourceSuggestions": "Sugestões de recursos",
   "adminNav.items.communityTagRequests": "Pedidos de etiquetas de comunidades",
   "adminNav.items.communitySpaceRequests": "Pedidos de espaços",
+  "adminNav.items.creatorDrafts": "Rascunhos em curso",
   "adminNav.items.housingGroups": "Grupos de habitação",
   "adminNav.items.housingCoops": "Cooperativas de habitação",
   "adminNav.items.governance": "Governação",
@@ -621,6 +622,7 @@ export const shared: Catalog = {
   "mediaRef.cinema-cover": "Título de cinema",
   "mediaRef.studio-cover": "Capa de lançamento do Studio",
   "mediaRef.persona-post": "Novidade de persona",
+  "mediaRef.quizshow-question": "Pergunta do jogo ao vivo",
   "mediaRef.landlord": "Senhorio",
   "mediaRef.company-work": "Empresa",
   "mediaRef.housing": "Habitação",
@@ -738,8 +740,39 @@ export const shared: Catalog = {
     "Usa um endereço completo, como https://exemplo.com, ou um email, como mailto:ola@exemplo.com.",
   "richText.slashMenuAria": "Inserir um bloco",
 
+  // ── Gravação automática dos rascunhos (src/features/creatorDrafts) ──
+  "creatorDraft.status.saving": "A guardar",
+  "creatorDraft.status.savedJustNow": "Guardado agora mesmo",
+  "creatorDraft.status.savedMinutes_one": "Guardado há {count} min",
+  "creatorDraft.status.savedMinutes_other": "Guardado há {count} min",
+  "creatorDraft.status.savedHours_one": "Guardado há {count} h",
+  "creatorDraft.status.savedHours_other": "Guardado há {count} h",
+  "creatorDraft.status.savedDays_one": "Guardado há {count} dia",
+  "creatorDraft.status.savedDays_other": "Guardado há {count} dias",
+  "creatorDraft.status.retrying": "Por guardar, a tentar outra vez",
+  "creatorDraft.status.tooLarge":
+    "Este rascunho é demasiado longo para guardar. Experimenta encurtá-lo",
+  "creatorDraft.status.notSaved": "Por guardar",
+  "creatorDraft.status.conflict": "Em pausa até escolheres",
+  "creatorDraft.conflict.title": "Este rascunho foi guardado noutro sítio",
+  "creatorDraft.conflict.body":
+    "Outro separador ou dispositivo guardou uma versão mais recente. Escolhe a que queres manter. O que escreveste aqui fica até escolheres",
+  "creatorDraft.conflict.loadNewer": "Carregar o rascunho mais recente",
+  "creatorDraft.conflict.keepThisVersion": "Manter esta versão",
+  "creatorDraft.conflict.loadFailed":
+    "Não conseguimos carregar o rascunho mais recente. Tenta outra vez ou mantém esta versão",
+  "creatorDraft.conflict.goneTitle": "Este rascunho foi fechado noutro sítio",
+  "creatorDraft.conflict.goneBody":
+    "Outro separador ou dispositivo publicou-o ou descartou-o, ou expirou. O que escreveste aqui fica, e Manter esta versão guarda-o outra vez",
+
   // Messaging inbox and entry points (scan section 5, 2026-09-15)
   "tabs.labelWithCount": "{label}, {count}",
   "pullToRefresh.failed":
     "A atualização falhou. Tenta outra vez daqui a um momento.",
+  "studioShare.track": "Faixa do Studio",
+  "studioShare.release": "Lançamento do Studio",
+  "studioShare.playlist": "Playlist do Studio",
+  "studioShare.unavailable": "Indisponível",
+  "apiError.quizshowAdultsRounds":
+    "O jogo ao vivo deste evento tem rondas para adultos. Muda a etiqueta delas no separador Jogo ao vivo e depois desliga o 18+",
 };

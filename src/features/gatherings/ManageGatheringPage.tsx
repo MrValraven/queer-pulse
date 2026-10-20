@@ -7,6 +7,7 @@ import { useShareLink } from "../../shared/hooks/useClipboard";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { routes } from "../../app/routeMap";
+import { useIsQuizshowVisible } from "../quizshow/quizshowLaunch";
 import {
   ManageGatheringTabs,
   ManageGatheringSidebar,
@@ -179,10 +180,16 @@ function ManageGatheringMain({
   const [openingTab] = useState<ManageGatheringTab>(() =>
     isCheckinLive ? "checkin" : "overview",
   );
+  const isQuizshowVisible = useIsQuizshowVisible();
+  const isQuizFormat = gatheringState.eventType === "quiz";
   const requestedTab = manageGatheringTabFromParam(
     searchParams.get(MANAGE_GATHERING_TAB_PARAM),
   );
-  const activeTab = requestedTab ?? openingTab;
+  // A requested Live game tab counts only while Pulse Live is visible.
+  const isRequestedTabAvailable =
+    requestedTab !== "quizshow" || isQuizshowVisible;
+  const activeTab =
+    (isRequestedTabAvailable ? requestedTab : undefined) ?? openingTab;
   const selectTab = (tab: ManageGatheringTab) =>
     setSearchParams(
       (current) => {
@@ -272,6 +279,8 @@ function ManageGatheringMain({
               showAttendeeCount={gathering?.showAttendeeCount}
               customRsvpQuestion={gathering?.customRsvpQuestion}
               hostSlug={gathering?.hostSlug}
+              isQuizFormat={isQuizFormat}
+              isQuizshowVisible={isQuizshowVisible}
               onUpdateSettings={(patch) => {
                 if (!demoMode) updateEvent.mutate(patch);
               }}

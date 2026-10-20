@@ -8,12 +8,14 @@ import {
   sectionsInPageBlocks,
   type EditorPaneKey,
 } from "./editorRail.data";
+import { usePersonaTeamLinks } from "../marketing/listBusiness/api/usePersonaTeamLinks";
 import { SubprofileEditorProvider } from "./SubprofileEditorProvider";
 import { EditorRail } from "./EditorRail";
 import { EditorPaneSwitcher } from "./EditorPaneSwitcher";
 import { EditorPaneRouter } from "./EditorPaneRouter";
 import { EditorFieldDeepLink } from "./EditorFieldDeepLink";
 import { EditorSavebar } from "./EditorSavebar";
+import { CreatorDraftNotice } from "../creatorDrafts/CreatorDraftNotice";
 import { EditorPreview } from "./EditorPreview";
 import type { PreviewDevice } from "./usePreviewFit";
 import { SubprofileEditorNavContext } from "./subprofileEditorNav";
@@ -101,7 +103,12 @@ export function SubprofileEditorShell({
     ? (previewDevice ?? "desktop")
     : "mobile";
 
-  const groups = useMemo(() => buildEditorRailGroups(subprofile), [subprofile]);
+  const worksAtAttentionCount =
+    usePersonaTeamLinks(subprofile.id).links?.awaitingYouCount ?? 0;
+  const groups = useMemo(
+    () => buildEditorRailGroups(subprofile, { worksAtAttentionCount }),
+    [subprofile, worksAtAttentionCount],
+  );
   // Flattened rail order, what `?pane=` is validated against. On a pane with
   // Page blocks the mobile switcher's back/forward arrows step through its
   // chapters first (`EditorPaneSwitcher`'s own `switchStops`), then move on
@@ -155,6 +162,13 @@ export function SubprofileEditorShell({
           <div className="ed-main">
             <EditorFieldDeepLink />
             <EditorPaneRouter pane={pane.activePane} subprofile={subprofile} />
+            <CreatorDraftNotice
+              messageKey="subprofiles:creatorDraftNote.body"
+              isShown={
+                subprofile.status === "draft" &&
+                subprofile.visibility !== "private"
+              }
+            />
             <EditorSavebar
               previewOpen={previewOpen}
               onTogglePreview={() => setPreviewOpen((open) => !open)}

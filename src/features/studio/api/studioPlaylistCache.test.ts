@@ -200,3 +200,89 @@ describe("playlist cache helpers", () => {
     ).toMatchObject({ name: "Night bus home" });
   });
 });
+
+describe("your playlists and the editor role", () => {
+  const minePages = (
+    items: StudioPlaylistsPage["items"],
+  ): InfiniteData<StudioPlaylistsPage, string | null> => ({
+    pages: [{ items, nextCursor: null }],
+    pageParams: [null],
+  });
+  const mineOf = (queryClient: QueryClient) =>
+    queryClient.getQueryData<InfiniteData<StudioPlaylistsPage, string | null>>(
+      studioKeys.myPlaylists(false),
+    );
+
+  it("puts an edited playlist at the top of your playlists", () => {
+    const queryClient = new QueryClient();
+    queryClient.setQueryData(studioKeys.myPlaylists(false), minePages([]));
+    const edited = toPlaylistView({
+      ...dto,
+      isOwner: false,
+      role: "editor",
+      editorCount: 2,
+      visibility: null,
+    });
+    storePlaylist(queryClient, false, edited);
+    const first = mineOf(queryClient)?.pages[0]?.items[0];
+    expect(first?.id).toBe("playlist-1");
+    expect(first?.role).toBe("editor");
+    expect(first?.isCollaborative).toBe(true);
+    expect(first?.hasEditRights).toBe(true);
+  });
+
+  it("keeps a listener's playlist out of your playlists", () => {
+    const queryClient = new QueryClient();
+    queryClient.setQueryData(studioKeys.myPlaylists(false), minePages([]));
+    storePlaylist(
+      queryClient,
+      false,
+      toPlaylistView({ ...dto, isOwner: false, role: null, visibility: null }),
+    );
+    expect(mineOf(queryClient)?.pages[0]?.items).toEqual([]);
+  });
+
+  it("drops a listener's card that sits in your playlists", () => {
+    const queryClient = new QueryClient();
+    const listened = toPlaylistView({
+      ...dto,
+      isOwner: false,
+      role: null,
+      visibility: null,
+    });
+    queryClient.setQueryData(
+      studioKeys.myPlaylists(false),
+      minePages([
+        { ...playlist, id: "older", name: "Older" },
+        { ...listened, name: "Night bus before" },
+      ]),
+    );
+    storePlaylist(queryClient, false, listened);
+    expect(mineOf(queryClient)?.pages[0]?.items.map((item) => item.id)).toEqual(
+      ["older"],
+    );
+  });
+
+  it("puts an invited playlist in your playlists and keeps it there", () => {
+    const queryClient = new QueryClient();
+    queryClient.setQueryData(
+      studioKeys.myPlaylists(false),
+      minePages([{ ...playlist, id: "older", name: "Older" }]),
+    );
+    const invited = toPlaylistView({
+      ...dto,
+      isOwner: false,
+      role: "invitee",
+      visibility: null,
+    });
+    storePlaylist(queryClient, false, invited);
+    storePlaylist(queryClient, false, { ...invited, name: "Night bus home" });
+    const items = mineOf(queryClient)?.pages[0]?.items;
+    expect(items?.map((item) => [item.id, item.name])).toEqual([
+      ["playlist-1", "Night bus home"],
+      ["older", "Older"],
+    ]);
+    expect(items?.[0]?.role).toBe("invitee");
+    expect(items?.[0]?.hasEditRights).toBe(false);
+  });
+});

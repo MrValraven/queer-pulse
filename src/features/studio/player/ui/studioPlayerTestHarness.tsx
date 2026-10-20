@@ -85,6 +85,8 @@ export function createStudioPlayerValue(
     seek: vi.fn(),
     retry: vi.fn(),
     stop: vi.fn(),
+    playWarnedTrack: vi.fn(),
+    skipWarnedTrack: vi.fn(),
     playNext: vi.fn(() => Promise.resolve(true)),
     addToQueue: vi.fn(() => Promise.resolve(true)),
     moveUserItem: vi.fn(),

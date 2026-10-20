@@ -17,6 +17,9 @@ import type { PlatformLogEntryDTO } from "./platformLog.api";
 const CATALOG: Record<string, string> = {
   "admin:platformLog.kind.mod.ban": "banned an account",
   "admin:platformLog.kind.mod.ban.target": "banned",
+  "admin:platformLog.kind.mod.creator_draft_viewed": "viewed a creator draft",
+  "admin:platformLog.kind.mod.creator_draft_viewed.target":
+    "viewed a creator draft of",
   "admin:platformLog.kind.generic.moderation": "took a moderation action",
   "admin:platformLog.kind.generic.moderation.target":
     "took a moderation action involving",
@@ -65,6 +68,22 @@ function entry(
 }
 
 describe("platform log adapters", () => {
+  it("names a viewed creator draft as a staff action with a link to the drafts page", () => {
+    const row = toPlatformLogRow(
+      entry({
+        category: "staff",
+        kind: "mod.creator_draft_viewed",
+        target: null,
+        params: { draftKind: "event" },
+        subject: { label: "", route: "/admin/creator-drafts" },
+      }),
+      translate,
+      fmt,
+    );
+    expect(row.verb).toBe("viewed a creator draft");
+    expect(row.subject?.to).toBe("/admin/creator-drafts");
+  });
+
   it("uses the with-target verb when the entry has a target", () => {
     const row = toPlatformLogRow(entry(), translate, fmt);
     expect(row.verb).toBe("banned");

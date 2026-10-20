@@ -516,6 +516,7 @@ function draftFormatDetails(
   return stripDisallowedDetails(
     draft.gatheringFamily || null,
     draft.formatDetails,
+    draft.format,
   );
 }
 

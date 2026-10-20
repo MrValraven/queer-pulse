@@ -1,0 +1,122 @@
+/* The tattoo hero card: avatar beside the name, status, styles, city and
+   the action row. Its layout breakpoint is a container query against `.pp`
+   (an inline-size container), so the editor's narrow preview stacks it. */
+
+.hero {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+  padding: 28px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-28);
+  box-shadow: var(--shadow-e1);
+}
+
+@container (max-width: 640px) {
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+    padding: 20px 16px;
+  }
+}
+
+.avatar {
+  flex: none;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  min-width: 0;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-title);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.craft {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--ink-60);
+}
+
+.tagline {
+  margin: 0;
+  font-size: var(--text-16);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+/* Up to three styles, one quiet row that wraps. */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.chip {
+  padding: 4px 12px;
+  font-size: var(--text-12-5);
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--ink);
+  background: var(--wash);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+}
+
+.city {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  font-size: var(--text-14);
+  color: var(--ink-60);
+}
+
+.cityIcon {
+  flex: none;
+  width: 15px;
+  height: 15px;
+}
+
+.bio {
+  margin: 0;
+  max-width: 62ch;
+  font-size: var(--text-15);
+  line-height: 1.6;
+  color: var(--ink);
+  white-space: pre-line;
+}
+
+/* "How to book" leads, then the shared action row on the same line. */
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+
+/* The studio skin gives `.pp-acts` a top padding (specificity 0,3,0) that
+   would drop the shared buttons below "How to book". The full path here
+   outranks it, so every button in the row shares one top edge and one gap. */
+.hero > .body > .actions > :global(.pp-acts) {
+  gap: 10px;
+  margin: 0;
+  padding-top: 0;
+}

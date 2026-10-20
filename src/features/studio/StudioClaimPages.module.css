@@ -1,0 +1,274 @@
+/* The claim form and the claimant's list: one reading column on the Studio
+   surface, like the settings and rights pages. */
+.page {
+  max-width: 64ch;
+  margin: 0 auto;
+  padding: 32px 0 var(--section-y-64);
+  color: var(--studio-text);
+}
+
+.eyebrow {
+  margin: 0 0 6px;
+  font-size: var(--text-12);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--studio-text-muted);
+}
+
+.title {
+  margin: 0 0 8px;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: var(--text-32);
+}
+
+.dek,
+.subject {
+  margin: 0 0 20px;
+  color: var(--studio-text-muted);
+  line-height: 1.6;
+}
+
+/* Holds its line while the track loads, so the form below never jumps. */
+.subject {
+  min-block-size: 1.6em;
+}
+
+.form {
+  display: grid;
+  gap: 16px;
+}
+
+.fieldset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-inline-size: 0;
+}
+
+.legend {
+  padding: 0;
+  margin: 0 0 8px;
+  font-size: var(--text-14);
+  font-weight: 600;
+}
+
+.required {
+  color: var(--studio-accent-text);
+  font-weight: 700;
+}
+
+.choices {
+  display: grid;
+  gap: 8px;
+}
+
+/* Radio cards, the report modal's reason picker on the Studio roles. */
+.choice {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-inline-size: 0;
+  min-block-size: var(--tap-min);
+  padding: 10px 14px;
+  border: 1.5px solid rgba(var(--studio-ink-rgb), 0.16);
+  border-radius: var(--radius-12);
+  color: var(--studio-text);
+  font-size: var(--text-14);
+  font-weight: 500;
+  line-height: 1.4;
+  cursor: pointer;
+  transition:
+    border-color var(--dur-base) var(--ease),
+    background var(--dur-base) var(--ease);
+}
+
+@media (hover: hover) {
+  .choice:hover {
+    border-color: rgba(var(--studio-ink-rgb), 0.32);
+  }
+}
+
+.choice:has(input:focus-visible) {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.choice input {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: var(--accent);
+}
+
+/* The card carries the ring, so the radio inside keeps none of its own. */
+.choice input:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+.choiceChecked {
+  border-color: var(--accent);
+  background: rgba(var(--accent-rgb), 0.06);
+}
+
+.goodFaith {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: var(--text-14);
+  line-height: 1.5;
+}
+
+.goodFaith input {
+  margin-top: 4px;
+}
+
+/* One error look for every field, FormField's own (12px, 600, coral text)
+   with an icon beside the words. `.errorText` is the same line inside a
+   FormField's error slot. */
+.error,
+.errorText {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 6px;
+  margin: 0;
+  font-size: var(--text-12);
+  font-weight: 600;
+  line-height: 1.45;
+  color: var(--studio-accent-text);
+}
+
+.error svg,
+.errorText svg {
+  flex: none;
+  width: 14px;
+  height: 14px;
+  margin-top: 1px;
+}
+
+/* "Send claim" in Studio coral: dark ink on the coral fill, 6.28:1. The
+   class pairs with the form to out-rank Button's own primary rules. */
+.form .submit {
+  background: var(--accent);
+  color: var(--studio-bg);
+}
+
+@media (hover: hover) {
+  .form .submit:hover:not(:disabled):not([aria-disabled="true"]) {
+    background: color-mix(in srgb, var(--accent) 88%, var(--studio-bg));
+  }
+}
+
+.pickNote {
+  margin: 0 0 20px;
+  font-size: var(--text-14);
+  color: var(--studio-text-muted);
+}
+
+.list {
+  display: grid;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.card {
+  padding: 18px 20px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-14);
+  background: rgba(var(--studio-ink-rgb), 0.04);
+}
+
+/* The owner panel's heading look (StudioClaimPanel.module.css .heading). */
+.cardTitle {
+  margin: 0 0 4px;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: var(--text-19);
+}
+
+.cardTitle a {
+  color: inherit;
+  text-decoration: none;
+}
+
+@media (hover: hover) {
+  .cardTitle a:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+}
+
+.cardTitle a:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-radius: var(--radius-4);
+}
+
+.cardTitle:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-radius: var(--radius-4);
+}
+
+.who,
+.meta {
+  margin: 0 0 10px;
+  font-size: var(--text-14);
+  color: var(--studio-text-muted);
+}
+
+.statusLine {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  margin: 0 0 4px;
+}
+
+/* "Filed" sits on the chip's centre line, and the first label below keeps
+   its own top margin as the only gap. */
+.statusLine .meta {
+  margin: 0;
+}
+
+.label {
+  margin: 12px 0 0;
+  font-size: var(--text-12);
+  font-weight: 600;
+  color: var(--studio-text-muted);
+}
+
+.quote {
+  margin: 4px 0 0;
+  padding: 0 0 0 12px;
+  border-inline-start: 2px solid rgba(var(--studio-ink-rgb), 0.16);
+  font-size: var(--text-14);
+  line-height: 1.6;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.pickList {
+  display: grid;
+  gap: 8px;
+  margin: 0 0 20px;
+}
+
+.pickList:empty {
+  display: none;
+}

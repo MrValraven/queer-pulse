@@ -154,6 +154,9 @@ export function StudioTrackHero({
                 href: track.href,
                 hasAudio: track.hasAudio,
                 isExplicit: track.isExplicit,
+                artistId: track.release.artist.id,
+                isPublished: track.release.publishedAt !== null,
+                isWithheld: track.isWithheld,
               }}
             />
             {isShowcase && (

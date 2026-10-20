@@ -52,6 +52,7 @@ import { governanceRoutes } from "../features/governance/routes";
 import { systemRoutes } from "../features/system/routes";
 import { adminRoutes } from "../features/admin/routes";
 import { simulationRoutes } from "../features/simulations/routes";
+import { quizshowRoutes } from "../features/quizshow/routes";
 
 const HomePage = lazyNamed(
   () => import("../features/homepage/HomePage"),
@@ -93,7 +94,7 @@ export function AppRoutes() {
   // auth checks because it doesn't depend on a session (the roadmap is public),
   // and inert in local dev (isComingSoonPath is false there) so the area stays
   // reachable while it's being built.
-  if (isComingSoonPath(pathname)) {
+  if (isComingSoonPath(pathname, { isDemoMode: demoMode })) {
     return isExitingPlane ? null : <Navigate to={routes.roadmap} replace />;
   }
   // While the live session is still being determined, hold gated routes on the
@@ -129,6 +130,7 @@ export function AppRoutes() {
           {notificationsRoutes()}
           {communitiesRoutes()}
           {gatheringRoutes(demoMode)}
+          {quizshowRoutes()}
           {goTogetherRoutes()}
           {magazineRoutes()}
           {topicRoutes()}

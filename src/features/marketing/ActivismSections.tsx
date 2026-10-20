@@ -4,6 +4,7 @@ import { Button, Reveal } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
+import { volunteerOpportunityPath } from "./volunteerPaths";
 import { usePartners } from "./api/usePartners";
 import { useOpportunities } from "./api/useOpportunities";
 import { START_STEPS, SKILLS_CARDS } from "./activism.data";
@@ -260,7 +261,7 @@ export function VolunteerSection() {
             <Reveal
               key={role.slug}
               as={Link}
-              to={`${routes.volunteer}/opportunity/${role.slug}`}
+              to={volunteerOpportunityPath(role.slug)}
               className={s.actionCard}
               delay={index * 60}
             >

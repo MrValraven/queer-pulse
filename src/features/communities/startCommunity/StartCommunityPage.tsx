@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { FiArrowLeft } from "react-icons/fi";
 import { PageShell } from "../../../shared/components/layout";
 import { PageMeta } from "../../../shared/seo";
-import { FadeIn } from "../../../shared/components/ui";
+import { FadeIn, SkeletonLine } from "../../../shared/components/ui";
 import { useToast } from "../../../shared/components/feedback/useToast";
 import { Translation } from "../../../shared/i18n/Translation";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
@@ -21,11 +21,16 @@ import {
 } from "./startCommunity.data";
 import { createCommunityRecord } from "./createdCommunities.store";
 import { useCommunityForm } from "./useCommunityForm";
+import type { StoredCommunityDraft } from "./communityDraftStorage";
 import {
-  clearCommunityDraft,
-  readCommunityDraft,
-  writeCommunityDraft,
-} from "./communityDraftStorage";
+  useStartCommunityAutosave,
+  useStartCommunityDraftLoad,
+  type StartCommunityAutosave,
+  type StartCommunityDraftSource,
+} from "./useStartCommunityDraft";
+import { CreatorDraftConflictStrip } from "../../creatorDrafts/CreatorDraftConflictStrip";
+import { CreatorDraftNotice } from "../../creatorDrafts/CreatorDraftNotice";
+import { CreatorDraftSaveLine } from "../../creatorDrafts/CreatorDraftSaveLine";
 import { ApiError } from "../../../shared/api/client";
 import {
   FoundingThread,
@@ -157,6 +162,11 @@ function StartCommunityFormPanel({
   onHandleChange,
   onBack,
   onNext,
+  draftStatus,
+  conflict,
+  isConflictBusy,
+  onLoadNewer,
+  onKeepThisVersion,
 }: {
   step: number;
   form: ReturnType<typeof useCommunityForm>;
@@ -167,12 +177,24 @@ function StartCommunityFormPanel({
   onHandleChange: () => void;
   onBack: () => void;
   onNext: () => void;
+  draftStatus: StartCommunityAutosave["status"];
+  conflict: StartCommunityAutosave["conflict"];
+  isConflictBusy: boolean;
+  onLoadNewer: () => void;
+  onKeepThisVersion: () => void;
 }) {
   const { t } = useTranslation();
   return (
     <div className={styles.page}>
       <div className={styles.grid}>
         <div>
+          <CreatorDraftConflictStrip
+            isOpen={conflict !== null}
+            isBusy={isConflictBusy}
+            isServerDraftGone={conflict?.revision === null}
+            onLoadNewer={onLoadNewer}
+            onKeepThisVersion={onKeepThisVersion}
+          />
           <FoundingThread
             step={step}
             onJump={goToStep}
@@ -209,6 +231,10 @@ function StartCommunityFormPanel({
               />
             </div>
           </FadeIn>
+          <div className={styles.draftStatus}>
+            <CreatorDraftSaveLine status={draftStatus} />
+            <CreatorDraftNotice messageKey="communities:creatorDraftNote.body" />
+          </div>
         </div>
 
         <StartCommunityPreview
@@ -221,35 +247,37 @@ function StartCommunityFormPanel({
   );
 }
 
-export function StartCommunityPage() {
+/** The founding flow's moves: next (founding the community on the last
+ *  chapter), back, and starting another once one opens. Split out of
+ *  `StartCommunityWizard` to keep both under the 200-line limit. */
+function useStartCommunityActions({
+  ownerSlug,
+  form,
+  step,
+  setStep,
+  setPhase,
+  setCreated,
+  setHandleError,
+  isStepSkipped,
+  communityDraft,
+}: {
+  ownerSlug: string;
+  form: ReturnType<typeof useCommunityForm>;
+  step: number;
+  setStep: (step: number) => void;
+  setPhase: (phase: Phase) => void;
+  setCreated: (created: CreatedCommunity | null) => void;
+  setHandleError: (handleError: string | null) => void;
+  isStepSkipped: (step: number) => boolean;
+  communityDraft: StartCommunityAutosave;
+}) {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { showToast } = useToast();
   const { demoMode } = useDemoMode();
-  const { user } = useAuth();
   const { createOwned } = useCommunityMembership();
   const create = useCreateCommunity();
-
-  // Nine chapters is a long way to lose. The draft and the chapter the
-  // founder was on are mirrored into sessionStorage and read back once, on
-  // mount, so a reload or a session refresh that bounces through OAuth comes
-  // back where they left off. `useUnsavedChangesGuard` below only ever caught
-  // a deliberate navigation.
-  const ownerSlug = user?.profile.slug ?? "";
-  const [parked] = useState(() => readCommunityDraft(ownerSlug));
-  const form = useCommunityForm(parked?.draft);
   const { draft } = form;
-  const [step, setStep] = useState(parked?.step ?? 0);
-  const [phase, setPhase] = useState<Phase>("form");
-  const [created, setCreated] = useState<CreatedCommunity | null>(null);
-  /** A handle the server refused as taken, shown inline on chapter 8. */
-  const [handleError, setHandleError] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (phase !== "form") return;
-    if (!form.isDirty) return;
-    writeCommunityDraft(ownerSlug, { draft, step });
-  }, [ownerSlug, draft, step, phase, form.isDirty]);
 
   const openTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   useEffect(
@@ -259,20 +287,10 @@ export function StartCommunityPage() {
     [],
   );
 
-  // Warn before an in-progress community is abandoned. Only while still on the
-  // form: once founding begins (phase "opening"/"done") the guard is inactive, so
-  // the live-mode redirect into the brand-new community hub navigates freely.
-  useUnsavedChangesGuard({
-    active: phase === "form" && form.isDirty,
-    confirmMessage: t("communities:start.leaveConfirm"),
-  });
-
-  const isInviteStepAvailable = demoMode;
-  const isStepSkipped = (n: number) =>
-    !isInviteStepAvailable && n === PEOPLE_STEP;
-
   const scrollUp = () => window.scrollTo({ top: 0, behavior: "smooth" });
   const goToStep = (n: number) => {
+    // A chapter move is an edit: the saved draft reopens on the new chapter.
+    form.markEdited();
     setStep(n);
     scrollUp();
   };
@@ -301,7 +319,8 @@ export function StartCommunityPage() {
     if (!demoMode) {
       create.mutate(draftToCreateDto(submitDraft), {
         onSuccess: (dto) => {
-          clearCommunityDraft(ownerSlug);
+          // The server deleted the draft on POST, so only the cached copy goes.
+          communityDraft.forget();
           if (dto) void navigate(communityPath(dto.slug));
         },
         onError: (error) => {
@@ -324,7 +343,8 @@ export function StartCommunityPage() {
     }
     openTimer.current = setTimeout(() => {
       const record = createCommunityRecord(submitDraft, ownerSlug);
-      clearCommunityDraft(ownerSlug);
+      // Demo has no server to delete it, so this empties the demo store slot.
+      communityDraft.forget();
       createOwned(record.slug);
       setCreated(record);
       setPhase("done");
@@ -347,13 +367,163 @@ export function StartCommunityPage() {
 
   const startAnother = () => {
     form.reset();
-    clearCommunityDraft(ownerSlug);
+    communityDraft.discard().catch(() => {
+      showToast(t("communities:start.toast.draftDiscardError"), "error");
+    });
     setCreated(null);
     setStep(0);
     setHandleError(null);
     setPhase("form");
     scrollUp();
   };
+
+  return { goToStep, next, back, startAnother };
+}
+
+/** The wizard itself, seeded once from the draft the page loaded. */
+function StartCommunityWizard({
+  ownerSlug,
+  initial,
+  source,
+}: {
+  ownerSlug: string;
+  initial: StoredCommunityDraft | null;
+  source: StartCommunityDraftSource;
+}) {
+  const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
+  const form = useCommunityForm(initial?.draft);
+  const [step, setStep] = useState(initial?.step ?? 0);
+  const [phase, setPhase] = useState<Phase>("form");
+  const [created, setCreated] = useState<CreatedCommunity | null>(null);
+  /** A handle the server refused as taken, shown inline on chapter 8. */
+  const [handleError, setHandleError] = useState<string | null>(null);
+
+  // Nine chapters is a long way to lose, so the founder's words and chapter
+  // autosave to the server while the form is open, and a reload, a phone
+  // backgrounding the PWA or a session refresh through OAuth comes back where
+  // they left off. `useUnsavedChangesGuard` below catches a deliberate exit.
+  const communityDraft = useStartCommunityAutosave({
+    ownerSlug,
+    draft: form.draft,
+    step,
+    missingByStep: form.missing,
+    isDirty: form.isDirty,
+    hasEdited: form.hasEdited,
+    isEnabled: phase === "form",
+    source,
+  });
+
+  // Warn before an in-progress community is abandoned. Only while still on the
+  // form: once founding begins (phase "opening"/"done") the guard is inactive, so
+  // the live-mode redirect into the brand-new community hub navigates freely.
+  useUnsavedChangesGuard({
+    active: phase === "form" && form.isDirty,
+    confirmMessage: t("communities:start.leaveConfirm"),
+  });
+
+  const isInviteStepAvailable = demoMode;
+  const isStepSkipped = (n: number) =>
+    !isInviteStepAvailable && n === PEOPLE_STEP;
+
+  const { goToStep, next, back, startAnother } = useStartCommunityActions({
+    ownerSlug,
+    form,
+    step,
+    setStep,
+    setPhase,
+    setCreated,
+    setHandleError,
+    isStepSkipped,
+    communityDraft,
+  });
+
+  // A null answer (the slot emptied elsewhere) keeps the founder's words as typed.
+  const loadNewerDraft = () => {
+    void communityDraft.loadNewer().then((stored) => {
+      if (stored === null) return;
+      form.reset(stored.draft);
+      // The picked cover belongs to the replaced draft, like the avatar reset clears.
+      form.setCoverPreviewUrl(null);
+      setStep(stored.step);
+    });
+  };
+
+  return (
+    <>
+      {phase === "form" && (
+        <StartCommunityFormPanel
+          step={step}
+          form={form}
+          isInviteStepAvailable={isInviteStepAvailable}
+          isStepSkipped={isStepSkipped}
+          goToStep={goToStep}
+          handleError={handleError}
+          onHandleChange={() => setHandleError(null)}
+          onBack={back}
+          onNext={next}
+          draftStatus={communityDraft.status}
+          conflict={communityDraft.conflict}
+          isConflictBusy={communityDraft.isConflictBusy}
+          onLoadNewer={loadNewerDraft}
+          onKeepThisVersion={communityDraft.keepThisVersion}
+        />
+      )}
+
+      {phase === "opening" && (
+        <div className={styles.page}>
+          <div className={styles.statusPanel}>
+            <div className={styles.ring} />
+            <p>{t("communities:start.opening.status")}</p>
+          </div>
+        </div>
+      )}
+
+      {phase === "done" && created && (
+        <div className={styles.page}>
+          <StartCommunitySuccess community={created} onAnother={startAnother} />
+        </div>
+      )}
+    </>
+  );
+}
+
+/** Holds the wizard's place while the founder's saved draft loads. */
+function StartCommunityWizardLoading() {
+  const { t } = useTranslation();
+  return (
+    <div className={styles.page}>
+      <div className={styles.wizardLoading} role="status" aria-busy="true">
+        <span className="visuallyHidden">
+          {t("communities:common.loading")}
+        </span>
+        <SkeletonLine height={12} width="40%" />
+        <SkeletonLine height={36} width="75%" />
+        <SkeletonLine height={16} />
+        <SkeletonLine height={16} width="85%" />
+        <SkeletonLine height={120} />
+      </div>
+    </div>
+  );
+}
+
+/** The id `AuthProvider` gives its demo mock member. */
+const DEMO_SESSION_USER_ID = "demo";
+
+/** Loads the founder's draft (the server copy, else the old tab copy), then opens the wizard on it. */
+export function StartCommunityPage() {
+  const { t } = useTranslation();
+  const { demoMode } = useDemoMode();
+  const { user, checking } = useAuth();
+  const ownerSlug = user?.profile.slug ?? "";
+  const draftLoad = useStartCommunityDraftLoad(ownerSlug);
+  // Right after a demo switch the session can still hold the other mode's
+  // member (demo sets its mock in an effect, live waits for /auth/me). A
+  // wizard mounted then would copy that member into the owner steward and
+  // save them into this mode's draft, so it waits for the matching session.
+  const isSessionForThisMode =
+    !checking &&
+    (user === null || (user.id === DEMO_SESSION_USER_ID) === demoMode);
 
   return (
     <PageShell>
@@ -364,36 +534,18 @@ export function StartCommunityPage() {
       <StartCommunityHero />
 
       <div className="wrap">
-        {phase === "form" && (
-          <StartCommunityFormPanel
-            step={step}
-            form={form}
-            isInviteStepAvailable={isInviteStepAvailable}
-            isStepSkipped={isStepSkipped}
-            goToStep={goToStep}
-            handleError={handleError}
-            onHandleChange={() => setHandleError(null)}
-            onBack={back}
-            onNext={next}
-          />
-        )}
-
-        {phase === "opening" && (
-          <div className={styles.page}>
-            <div className={styles.statusPanel}>
-              <div className={styles.ring} />
-              <p>{t("communities:start.opening.status")}</p>
-            </div>
-          </div>
-        )}
-
-        {phase === "done" && created && (
-          <div className={styles.page}>
-            <StartCommunitySuccess
-              community={created}
-              onAnother={startAnother}
+        {draftLoad.isLoading || !isSessionForThisMode ? (
+          <StartCommunityWizardLoading />
+        ) : (
+          // Keyed by mode and owner: a demo switch or another member re-seeds
+          // the wizard, so one slot's words never autosave into another's.
+          <FadeIn key={`${demoMode ? "demo" : "live"}:${ownerSlug}`}>
+            <StartCommunityWizard
+              ownerSlug={ownerSlug}
+              initial={draftLoad.initial}
+              source={draftLoad.source}
             />
-          </div>
+          </FadeIn>
         )}
       </div>
     </PageShell>

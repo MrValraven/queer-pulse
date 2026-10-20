@@ -437,6 +437,22 @@ export const portoMentorsConversation: Conversation = demoConversation({
       text: "I can help with flatshares. I've lived in three in Lisbon and one in Bonfim.",
       at: daysAgoAt(3, 12, 2),
     },
+    // Studio rich cards: a shared playlist with a note, and a track that is
+    // gone (no demo release holds this id, so every reader sees Not available).
+    {
+      id: "demo-msg-mentors-studio-001",
+      from: "them",
+      text: "found this playlist for the newcomers night so people have something on while they get ready, add yours\nhttps://queerpulse.com/studio/collection?id=demo-playlist-dyke-bar-standards",
+      at: daysAgoAt(2, 17, 20),
+      ...maria,
+    },
+    {
+      id: "demo-msg-mentors-studio-002",
+      from: "them",
+      text: "and this one from the open mic last month\nhttps://queerpulse.com/studio/track?id=demo-track-open-mic-gone",
+      at: daysAgoAt(2, 17, 26),
+      ...noah,
+    },
     {
       id: "demo-msg-mentors-006",
       from: "them",

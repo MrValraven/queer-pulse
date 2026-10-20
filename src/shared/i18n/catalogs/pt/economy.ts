@@ -444,8 +444,9 @@ export const economy: Catalog = {
   "shareToCommunity.eyebrow": "Passa a palavra",
   "shareToCommunity.title": "Partilha numa <em>comunidade.</em>",
   "shareToCommunity.ariaLabel": "Partilha numa comunidade",
+  "shareToCommunity.ariaLabelNamed": "Partilha {title} numa comunidade",
   "shareToCommunity.sub":
-    "Publica isto numa das tuas salas. Aparece no mural da sala e no feed, sob as regras dessa comunidade.",
+    "Publica isto numa das tuas comunidades. Aparece no mural dessa comunidade e no feed, sob as regras dela.",
   "shareToCommunity.communityLabel": "Que comunidade",
   "shareToCommunity.communityPlaceholder": "Escolhe uma comunidade",
   "shareToCommunity.noteLabel": "Diz alguma coisa sobre isto",
@@ -1189,6 +1190,10 @@ export const economy: Catalog = {
   "housingListing.reportModal.concernLabel": "Qual é a preocupação?",
   "housingListing.reportModal.reasonMissing":
     "Escolhe uma preocupação para enviar",
+  "housingListing.reportModal.copyrightRoute.body":
+    "As reivindicações de direitos de autor têm um formulário próprio. Pede a obra original e mantém a faixa online até a nossa equipa verificar",
+  "housingListing.reportModal.copyrightRoute.cta":
+    "Abrir o formulário de reivindicação",
   "housingListing.reportModal.detailLabel": "Conta-nos mais",
   "housingListing.reportModal.detailPlaceholder":
     "O que fez isto parecer inseguro, discriminatório, ou pouco fiável? Sê tão específique quanto te sintas confortável.",

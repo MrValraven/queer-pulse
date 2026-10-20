@@ -1,0 +1,30 @@
+/* The flash day event picker: the linked row, the select and its status. */
+
+.picker {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.linkedRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.linkedTitle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  font-size: var(--text-14);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.status {
+  margin: 0;
+  font-size: var(--text-13);
+  color: var(--ink-60);
+}

@@ -224,6 +224,7 @@ export function detailToGathering(
     type: dto.eventType ?? dto.type ?? "",
     gatheringFamily: dto.gatheringFamily ?? null,
     formatDetails: dto.formatDetails ?? null,
+    quizshow: dto.quizshow ?? null,
     date: new Date(dto.startAt),
     // The zone the host scheduled in, when the API carries one. See
     // `eventZoneFormat` — absent falls back to the reader's own zone.

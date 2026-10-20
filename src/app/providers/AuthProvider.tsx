@@ -19,11 +19,16 @@ import {
   currentUserSlug,
 } from "../../features/members/data/demoCurrentUser";
 import { clearStoredGatheringDrafts } from "../../features/gatherings/createGatheringDraftStorage";
+import { clearLegacyCreatorDraftCopies } from "../../features/creatorDrafts/legacyCreatorDraftStorage";
+import { clearCreatorDraftDemoStore } from "../../features/creatorDrafts/api/creatorDrafts.demoStore";
+import { CREATOR_DRAFT_QUERY_ROOT } from "../../features/creatorDrafts/api/creatorDraftQueryKeys";
 import { clearQuestionnaireDrafts } from "../../features/goTogether/questionnaire/questionnaireDraftStorage";
 import { clearDraftsForScope } from "../../features/messages/drafts";
 import { clearOutboxForScope } from "../../features/messages/outbox";
 import { clearStudioEpisodeMemory } from "../../features/studio/player/studioEpisodeMemory";
 import { clearStudioQueueSnapshots } from "../../features/studio/player/studioQueueStorage";
+import { clearStudioWarningConsent } from "../../features/studio/player/studioWarningGate";
+import { clearStudioTrackReveals } from "../../features/forum/forumWarnings.helpers";
 import { logoutAndDetachPush } from "../../features/push/detachPushOnSignOut";
 import { purgeMessagingCache } from "../../shared/api/queryPersistence/messagingCachePersistence";
 import { getInitialDemoLoggedIn, useDemoSession } from "./useDemoSession";
@@ -175,6 +180,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // device starts clean. Only this explicit sign-out clears them: a session
     // that expires keeps its draft for the member's return (ruling F4).
     clearStoredGatheringDrafts();
+    // Creator drafts live on the server now. Their only client copies are the
+    // react-query cache, the demo store and the old browser keys, so all
+    // three go here, in demo and live, before anything else.
+    queryClient.removeQueries({ queryKey: [CREATOR_DRAFT_QUERY_ROOT] });
+    clearCreatorDraftDemoStore();
+    clearLegacyCreatorDraftCopies();
     // The same for an unsaved Go together questionnaire: its answers are
     // sensitive, so the next member in this tab never inherits them.
     clearQuestionnaireDrafts();
@@ -183,6 +194,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Studio artist kinds: played episodes, saved places and speed go with
     // the saved queue, for every member on this device (spec 5.7).
     clearStudioEpisodeMemory();
+    // Studio safety: the warned tracks this tab agreed to hear go too, so
+    // the next member here is asked again (spec 6.3).
+    clearStudioWarningConsent();
+    // With the lyrics and show notes this tab uncovered (spec 6.2).
+    clearStudioTrackReveals();
     // And every unsent DM: the offline outbox and each composer draft, for the
     // signing-out member's own scope (ENG-404). Runs here so the wipe happens
     // whether or not the Messages page is mounted to see the scope change.

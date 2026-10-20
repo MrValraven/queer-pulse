@@ -3,6 +3,7 @@ import { renderHook, waitFor } from "@testing-library/react";
 import type { ReactNode } from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { useStudioAccess } from "./useStudioAccess";
+import { DEMO_STUDIO_ACCESS_STORAGE_KEY } from "./studioDemoAccessSwitch";
 import { studioKeys } from "./studioQueryKeys";
 
 let demoMode = false;
@@ -34,6 +35,8 @@ beforeEach(() => {
   loggedIn = true;
   checking = false;
   getStudioMe.mockReset();
+  window.localStorage.removeItem(DEMO_STUDIO_ACCESS_STORAGE_KEY);
+  window.history.replaceState(null, "", "/");
 });
 
 describe("useStudioAccess", () => {
@@ -86,6 +89,22 @@ describe("useStudioAccess", () => {
     expect(result.current.status).toBe("granted");
     expect(result.current.uploadablePersonas.length).toBeGreaterThan(0);
     expect(getStudioMe).not.toHaveBeenCalled();
+  });
+
+  it("reports no access in demo while ?studioAccess=off is set", () => {
+    demoMode = true;
+    window.history.replaceState(null, "", "/messages?studioAccess=off");
+    const { result } = renderHook(() => useStudioAccess(), { wrapper });
+    expect(result.current).toMatchObject({
+      status: "denied",
+      hasAccess: false,
+    });
+    window.history.replaceState(null, "", "/messages?studioAccess=on");
+    const { result: restored } = renderHook(() => useStudioAccess(), {
+      wrapper,
+    });
+    expect(restored.current.hasAccess).toBe(true);
+    window.history.replaceState(null, "", "/");
   });
 
   it("marks the query silent so a /studio/me blip raises no toast", async () => {

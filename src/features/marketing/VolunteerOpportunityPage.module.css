@@ -12,7 +12,12 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  margin-bottom: 22px;
+  /* A 44px tap target around one line of text. The negative block margins
+     hand back exactly what the extra height adds, so the label sits where it
+     did and the header below keeps its place. */
+  min-block-size: var(--tap-min);
+  margin-block-start: calc((1lh - var(--tap-min)) / 2);
+  margin-block-end: calc(22px + (1lh - var(--tap-min)) / 2);
 }
 @media (hover: hover) {
   .back:hover {

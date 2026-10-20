@@ -9,9 +9,11 @@ import {
   postDtoToPost,
   postToThread,
   pulseEventToCommunityEvent,
+  threadHeadingFromBody,
 } from "./communities.adapters";
 import { catalogs, loadNamespace } from "../../../shared/i18n/catalogs";
 import { createFormatters } from "../../../shared/i18n/format";
+import { studioShareLabelKey } from "../../studio/share/studioShareLabel";
 import type { Catalog, TFunction } from "../../../shared/i18n/types";
 import type { Post } from "../community.model";
 import type { CommunityDetailDTO, CommunityPostDTO } from "./communities.api";
@@ -45,7 +47,7 @@ function makePost(overrides: Partial<Post> = {}): Post {
 
 describe("postToThread", () => {
   it("derives the heading from the first body line and maps ids", () => {
-    const thread = postToThread(makePost());
+    const thread = postToThread(makePost(), translate);
     expect(thread.id).toBe("post-1");
     expect(thread.title).toBe("First line is the heading");
     expect(thread.post).toContain("Second line");
@@ -53,13 +55,13 @@ describe("postToThread", () => {
   });
 
   it("maps the Heart reaction to the votes/voted upvote state", () => {
-    const thread = postToThread(makePost());
+    const thread = postToThread(makePost(), translate);
     expect(thread.votes).toBe(3);
     expect(thread.voted).toBe(true);
   });
 
   it("defaults votes to 0 when there is no Heart reaction", () => {
-    const thread = postToThread(makePost({ reactions: [] }));
+    const thread = postToThread(makePost({ reactions: [] }), translate);
     expect(thread.votes).toBe(0);
     expect(thread.voted).toBe(false);
   });
@@ -116,6 +118,7 @@ describe("communities adapters carry the post/reply flags", () => {
   it("postToThread attaches OP id + flags and maps replies", () => {
     const thread = postToThread(
       postDtoToPost(post({ id: "op-1" }), "queer-runners", translate),
+      translate,
     );
     expect(thread.id).toBe("op-1");
     expect(thread.canDelete).toBe(true);
@@ -289,6 +292,28 @@ describe("detailDtoToLiving carries the subcommunity fields", () => {
   });
 });
 
+describe("detailDtoToLiving carries the giving count", () => {
+  it("maps givingMethodCount", () => {
+    expect(
+      detailDtoToLiving(detail({ givingMethodCount: 3 })).givingMethodCount,
+    ).toBe(3);
+  });
+
+  it("reads a missing count as 0", () => {
+    expect(detailDtoToLiving(detail()).givingMethodCount).toBe(0);
+  });
+});
+
+describe("detailDtoToLiving carries the archived flag", () => {
+  it("maps archived onto isArchived", () => {
+    expect(detailDtoToLiving(detail({ archived: true })).isArchived).toBe(true);
+  });
+
+  it("reads a missing flag as not archived", () => {
+    expect(detailDtoToLiving(detail()).isArchived).toBe(false);
+  });
+});
+
 /**
  * The Events-tab row a community shows, on both lanes that build it.
  *
@@ -380,5 +405,38 @@ describe("pulseEventToCommunityEvent", () => {
     expect(rowFor({ venue: null, isOnline: true }).meta).toBe(
       `${weekday} · Online`,
     );
+  });
+});
+
+describe("threadHeadingFromBody with a Studio link", () => {
+  const releaseUrl =
+    "https://queerpulse.com/studio/album?id=3f0c2a52-8d1e-4c6b-9a57-2b7f1e9d4c10";
+
+  it("leaves the link out of the heading", () => {
+    expect(
+      threadHeadingFromBody(`${releaseUrl}\nCoro has a new one`, translate),
+    ).toBe("Coro has a new one");
+  });
+
+  it("names the card when the post is only the link", () => {
+    const labelOf = ((key: string) => `label:${key}`) as TFunction;
+    expect(threadHeadingFromBody(releaseUrl, labelOf)).toBe(
+      `label:${studioShareLabelKey("release")}`,
+    );
+  });
+
+  it("keeps the heading rule for a post without a link", () => {
+    expect(threadHeadingFromBody("First line\nSecond line", translate)).toBe(
+      "First line",
+    );
+  });
+
+  it("shows a markdown-labelled link as its label in the heading", () => {
+    expect(
+      threadHeadingFromBody(
+        `listen to [the EP](${releaseUrl}) tonight`,
+        translate,
+      ),
+    ).toBe("listen to the EP tonight");
   });
 });

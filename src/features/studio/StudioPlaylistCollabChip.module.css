@@ -1,0 +1,69 @@
+/* The hero's Collaborative chip with its avatar stack. Studio roles only, so
+   it reads in light and dark Studio. */
+
+/* The byline row: credit, visibility chip and the Collaborative chip wrap
+   together with one gap, like the cards' meta row. */
+.byline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+}
+
+/* The visibility chip carries its own start margin; the gap replaces it. */
+.byline > span {
+  margin-inline-start: 0;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 32px;
+  padding: 2px 6px 2px 10px;
+  border: 1px solid rgba(var(--studio-ink-rgb), 0.28);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--studio-text);
+  font: inherit;
+  font-size: var(--text-12);
+  cursor: pointer;
+  transition-property: background-color;
+  transition-duration: var(--dur-base);
+  transition-timing-function: var(--ease);
+}
+
+.chip:hover {
+  background: rgba(var(--studio-ink-rgb), 0.06);
+}
+
+.chip:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.icon {
+  flex: none;
+}
+
+.stack {
+  display: inline-flex;
+  align-items: center;
+}
+
+.face {
+  display: inline-flex;
+  border: 2px solid var(--studio-surface);
+  border-radius: 50%;
+}
+
+.face + .face {
+  margin-inline-start: -6px;
+}
+
+.more {
+  margin-inline-start: 4px;
+  color: var(--studio-text-muted);
+  font-size: var(--text-11);
+}

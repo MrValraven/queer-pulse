@@ -1,6 +1,7 @@
 import { FiArrowRight } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
+import { CreatorDraftNotice } from "../creatorDrafts/CreatorDraftNotice";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { formatOfKind } from "./api/studio.adapters";
 import { CoverArt } from "./StudioUploadCoverArt";
@@ -89,6 +90,14 @@ export function MetadataStep({ draft }: { draft: StudioUploadDraft }) {
           {saveStatus}
         </p>
       </div>
+      <CreatorDraftNotice
+        messageKey="studio:creatorDraftNote.body"
+        isShown={
+          draft.release === null ||
+          draft.release.status === "draft" ||
+          draft.release.status === "scheduled"
+        }
+      />
     </div>
   );
 }

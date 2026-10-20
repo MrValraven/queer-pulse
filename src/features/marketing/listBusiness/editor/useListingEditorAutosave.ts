@@ -1,52 +1,81 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { useScopedLocalStorage } from "../../../../app/providers/useScopedLocalStorage";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useStorageScope } from "../../../../app/providers/useStorageScope";
-import type { ListingDraft } from "../listBusiness.data";
+import { useToast } from "../../../../shared/components/feedback/useToast";
+import { useTranslation } from "../../../../shared/i18n/useTranslation";
+import type {
+  CreatorDraftConflict,
+  CreatorDraftResponse,
+} from "../../../creatorDrafts/api/creatorDrafts.types";
+import {
+  useCreatorDraftAutosave,
+  type CreatorDraftSaveStatus,
+} from "../../../creatorDrafts/api/useCreatorDraftAutosave";
+import {
+  readLegacyListingEditDraft,
+  removeLegacyListingEditDraft,
+} from "../../../creatorDrafts/legacyCreatorDraftStorage";
+import type { ListingDraft, MissingField } from "../listBusiness.data";
+import { listingEditMissingCodes } from "./listingEditMissingCodes";
 import { comparableDraft } from "./restoreDiff/listingDraftComparable";
 
 /**
- * Local autosave for the OWNER EDITOR, deliberately separate from the create
- * flow's draft slot.
+ * Autosave for the OWNER EDITOR, kept apart from the create flow's draft slot.
  *
  * `useListingDraft` is switched off in edit mode on purpose: its live half
  * writes to `POST /listing-drafts`, which is the store of listings that have
  * never been submitted. An edit of a listing that is already published is not
- * one of those, and putting it there would make an owner's half-finished
- * wording show up in "your saved drafts" as if it were a new business waiting
- * to be sent. So this keeps the whole thing on the member's own device.
- *
- * The stored copy is keyed per listing ref AND per signed-in member (through
- * `useScopedLocalStorage`), so two listings never share a slot and a shared
- * browser never hands one owner's unsaved wording to the next.
+ * one of those, so it goes to its own creator draft slot,
+ * `listing_edit/<listingRef>`, through the shared creator draft engine. The
+ * server keys that slot per member, so a shared browser never hands one
+ * owner's unsaved wording to the next. Our team can see the draft (the save
+ * bar says so).
  *
  * Nothing is ever restored on its own. The stored copy is offered, and the
  * owner chooses: the listing on screen stays exactly what the server returned
- * until they press restore.
+ * until they press restore. A copy the old browser-only autosave left behind
+ * is offered the same way once, and its local key goes as soon as the first
+ * save after restoring it lands on the server.
  */
-
-/** Base key; the listing ref and the member scope are appended to it. */
-const BASE_KEY = "qp-listing-edit-draft.v1";
-const AUTOSAVE_MS = 800;
 
 interface StoredEditDraft {
   draft: ListingDraft;
-  /** Epoch millis of the last local write. */
+  /** Epoch millis of the last save. */
   savedAt: number;
-  /** Fingerprint of the SERVER version this local copy was edited on top of.
+  /** Fingerprint of the SERVER version this copy was edited on top of.
    *  Compared against the server version showing now, so a restore that would
    *  paper over a change made elsewhere can say so before it happens. */
   baseline: string;
 }
 
-function isStoredEditDraft(value: unknown): value is StoredEditDraft {
-  if (!value || typeof value !== "object") return false;
-  const record = value as Record<string, unknown>;
+/** True when a stored payload holds a listing edit this editor can restore. */
+export function isListingEditPayload(
+  payload: Record<string, unknown>,
+): boolean {
+  const { draft, baseline } = payload as {
+    draft?: unknown;
+    baseline?: unknown;
+  };
   return (
-    typeof record.savedAt === "number" &&
-    typeof record.baseline === "string" &&
-    Boolean(record.draft) &&
-    typeof record.draft === "object"
+    typeof baseline === "string" && typeof draft === "object" && draft !== null
   );
+}
+
+/** The listing edit inside a stored creator draft, or null for any other shape. */
+function serverEditDraftOf(
+  serverDraft: CreatorDraftResponse | null,
+): StoredEditDraft | null {
+  if (serverDraft === null || !isListingEditPayload(serverDraft.payload))
+    return null;
+  const { draft, baseline } = serverDraft.payload as {
+    draft: ListingDraft;
+    baseline: string;
+  };
+  const savedAt = Date.parse(serverDraft.savedAt);
+  return {
+    draft,
+    savedAt: Number.isNaN(savedAt) ? Date.now() : savedAt,
+    baseline,
+  };
 }
 
 /**
@@ -60,7 +89,7 @@ function isStoredEditDraft(value: unknown): value is StoredEditDraft {
  * with nothing in it, and claimed the server copy was "updated since" after
  * every remount.
  */
-function fingerprint(draft: ListingDraft): string {
+export function fingerprint(draft: ListingDraft): string {
   const serialized = JSON.stringify(comparableDraft(draft));
   let hash = 5381;
   for (let index = 0; index < serialized.length; index += 1) {
@@ -78,15 +107,170 @@ export interface RestorableEditDraft {
 }
 
 export interface ListingEditorAutosave {
-  /** A local copy worth offering, or null when there is nothing to restore. */
+  /** A stored copy worth offering, or null when there is nothing to restore. */
   restorable: RestorableEditDraft | null;
-  /** Stop offering it, keep it on disk (the owner restored it, or is ignoring
-   *  the banner for now and may still want it after a reload). */
+  /** Stop offering it and keep it stored (the owner restored it, or is
+   *  ignoring the banner for now and may still want it after a reload). */
   dismissRestorable: () => void;
-  /** Throw the local copy away. */
+  /** Throw the stored copy away. */
   discardRestorable: () => void;
-  /** Wipe the slot after the edit has actually reached the server. */
+  /** The full save landed: sending stops and the server draft goes. */
   clearAutosave: () => void;
+}
+
+/**
+ * What the full editor reads: the restore contract above plus the server
+ * draft's save state and its 409 choice. Kept as its own interface so the
+ * restore review keeps taking the four fields it uses.
+ */
+export interface ListingEditorDraftAutosave extends ListingEditorAutosave {
+  status: CreatorDraftSaveStatus;
+  conflict: CreatorDraftConflict | null;
+  isConflictBusy: boolean;
+  /** Fetches the newer copy and puts it into the form. */
+  loadNewer: () => void;
+  keepThisVersion: () => void;
+  /** The listing itself was deleted: drop the draft with no request, since
+   *  the server clears a draft whose listing is gone. */
+  forgetAutosave: () => void;
+}
+
+/** The offer a stored copy is worth making, or null. A copy identical to what
+ *  the server already has is not worth offering. */
+function offerFrom(
+  candidate: StoredEditDraft | null,
+  serverFingerprint: string,
+): RestorableEditDraft | null {
+  if (!candidate) return null;
+  if (fingerprint(candidate.draft) === serverFingerprint) return null;
+  return {
+    draft: candidate.draft,
+    savedAt: candidate.savedAt,
+    hasServerChanged: candidate.baseline !== serverFingerprint,
+  };
+}
+
+interface InspectedSources {
+  serverDraft: CreatorDraftResponse | null;
+  scopeId: string | null;
+}
+
+/**
+ * The restore offer, snapshot from the server draft (or, when the server has
+ * none, the old browser-only copy) and held in state, so pressing restore
+ * always brings back the copy the banner was describing. Declared before the
+ * engine, so sending can wait on the first inspection.
+ */
+function useRestorableOfferState() {
+  const [restorable, setRestorable] = useState<RestorableEditDraft | null>(
+    null,
+  );
+  const [isOfferLegacy, setIsOfferLegacy] = useState(false);
+  const [inspected, setInspected] = useState<InspectedSources | null>(null);
+  // The offer arrived after the owner had started typing, so a save now would
+  // write over the stored copy before they chose what to do with it.
+  const [isOfferLate, setIsOfferLate] = useState(false);
+  return {
+    restorable,
+    setRestorable,
+    isOfferLegacy,
+    setIsOfferLegacy,
+    inspected,
+    setInspected,
+    isOfferLate,
+    setIsOfferLate,
+  };
+}
+
+type RestorableOfferState = ReturnType<typeof useRestorableOfferState>;
+
+/**
+ * Reads the offer from the settled sources, with React's "adjust state while
+ * rendering" pattern so it lands in the same commit and never flashes an
+ * empty banner slot. The server read and the member scope both resolve a beat
+ * after mount: the first settled read is always inspected, even when the owner
+ * typed before it arrived, and later changes are read again until the owner
+ * starts editing.
+ */
+function inspectRestorableOffer(
+  offer: RestorableOfferState,
+  {
+    listingRef,
+    scopeId,
+    serverDraft,
+    isServerDraftLoading,
+    hasEdited,
+    serverFingerprint,
+  }: {
+    listingRef: string;
+    scopeId: string | null;
+    serverDraft: CreatorDraftResponse | null;
+    isServerDraftLoading: boolean;
+    hasEdited: boolean;
+    serverFingerprint: string;
+  },
+) {
+  if (isServerDraftLoading) return;
+  const { inspected } = offer;
+  const isFirstInspection = inspected === null;
+  const hasSourcesChanged =
+    isFirstInspection ||
+    inspected.serverDraft !== serverDraft ||
+    inspected.scopeId !== scopeId;
+  if (!isFirstInspection && (hasEdited || !hasSourcesChanged)) return;
+  offer.setInspected({ serverDraft, scopeId });
+  const serverEdit = serverEditDraftOf(serverDraft);
+  const legacyEdit =
+    serverEdit === null
+      ? readLegacyListingEditDraft(listingRef, scopeId)
+      : null;
+  offer.setRestorable(offerFrom(serverEdit ?? legacyEdit, serverFingerprint));
+  offer.setIsOfferLegacy(serverEdit === null && legacyEdit !== null);
+  offer.setIsOfferLate(hasEdited);
+}
+
+/** Where a pending legacy removal stands: a save already out at the restore
+ *  settles first, then a save has to start and then land. */
+type LegacyRemovalPhase = "awaitingInFlightSave" | "awaitingSave" | "saving";
+
+/**
+ * Removes the old browser-only copy once the first server save that starts
+ * after its restore lands. A save already on the wire at the restore carries
+ * the older edit, so its answer never counts.
+ */
+function useLegacyRemovalAfterSave(
+  listingRef: string,
+  scopeId: string | null,
+  status: CreatorDraftSaveStatus,
+) {
+  const phaseRef = useRef<LegacyRemovalPhase | null>(null);
+  const statusKind = status.kind;
+  const savedAt = status.kind === "saved" ? status.savedAt : null;
+  useEffect(() => {
+    const phase = phaseRef.current;
+    if (phase === null) return;
+    if (phase === "awaitingInFlightSave") {
+      if (statusKind !== "saving") phaseRef.current = "awaitingSave";
+      return;
+    }
+    if (phase === "awaitingSave") {
+      if (statusKind === "saving") phaseRef.current = "saving";
+      return;
+    }
+    if (statusKind !== "saved") return;
+    phaseRef.current = null;
+    removeLegacyListingEditDraft(listingRef, scopeId);
+  }, [listingRef, scopeId, statusKind, savedAt]);
+  const markPending = useCallback(() => {
+    phaseRef.current =
+      statusKind === "saving" ? "awaitingInFlightSave" : "awaitingSave";
+  }, [statusKind]);
+  /** The local key goes now, so nothing waits on a save any more. */
+  const removeNow = useCallback(() => {
+    phaseRef.current = null;
+    removeLegacyListingEditDraft(listingRef, scopeId);
+  }, [listingRef, scopeId]);
+  return { markPending, removeNow };
 }
 
 export function useListingEditorAutosave({
@@ -94,101 +278,171 @@ export function useListingEditorAutosave({
   draft,
   initialDraft,
   isDirty,
+  missing,
+  applyDraft,
 }: {
   listingRef: string;
   draft: ListingDraft;
   /** What the server returned when the editor mounted. */
   initialDraft: ListingDraft;
   isDirty: boolean;
-}): ListingEditorAutosave {
+  /** The editor's still-missing fields; staff see the public ones. */
+  missing?: MissingField[];
+  /** Puts a draft into the form (Load the newer draft). */
+  applyDraft: (nextDraft: ListingDraft) => void;
+}): ListingEditorDraftAutosave {
   const scopeId = useStorageScope();
-  const [stored, setStored] = useScopedLocalStorage<StoredEditDraft | null>(
-    `${BASE_KEY}.${listingRef}`,
-    scopeId,
-    null,
-    (value): value is StoredEditDraft | null =>
-      value === null || isStoredEditDraft(value),
-  );
-
+  const { t } = useTranslation();
+  const { showToast } = useToast();
   const serverFingerprint = useMemo(
     () => fingerprint(initialDraft),
     [initialDraft],
   );
 
-  /** The offer a stored copy is worth making, or null. A copy identical to
-   *  what the server already has is not worth offering, and a copy from
-   *  another listing or another member never reaches this key at all. */
-  const offerFrom = (
-    candidate: StoredEditDraft | null,
-  ): RestorableEditDraft | null => {
-    if (!candidate) return null;
-    if (fingerprint(candidate.draft) === serverFingerprint) return null;
-    return {
-      draft: candidate.draft,
-      savedAt: candidate.savedAt,
-      hasServerChanged: candidate.baseline !== serverFingerprint,
-    };
-  };
-
-  // Only start writing once the owner has actually changed something, so
-  // merely opening the editor never clears a copy that is still being offered.
-  // Latched in state rather than a ref: turning it back off has to re-run the
-  // autosave effect, which is what cancels a write still waiting on its timer.
+  // Only start saving once the owner has actually changed something, so
+  // merely opening the editor never replaces a copy that is still offered.
   const [hasEdited, setHasEdited] = useState(false);
   if (isDirty && !hasEdited) setHasEdited(true);
 
-  // Snapshot the offer BEFORE autosave gets a chance to touch the slot, and
-  // hold it in state: the offered draft then survives every later autosave, so
-  // pressing restore always brings back the copy the banner was describing.
-  const [restorable, setRestorable] = useState<RestorableEditDraft | null>(() =>
-    offerFrom(stored),
+  // The draft on screen when the full save landed. Sending stays off while it
+  // is still the draft on screen, so nothing re-saves the edit on the way out;
+  // a later change starts a new draft.
+  const [suspendedAtDraft, setSuspendedAtDraft] = useState<ListingDraft | null>(
+    null,
   );
+  const isSuspended = suspendedAtDraft === draft;
 
-  // The member scope resolves a beat after mount on a cold load (the session
-  // is still being checked), and only then does the real bucket become
-  // readable. Re-read the offer when the stored value first arrives, using
-  // React's "adjust state while rendering" pattern so it lands in the same
-  // commit rather than flashing an empty banner slot.
-  const [inspected, setInspected] = useState(stored);
-  if (inspected !== stored && !hasEdited) {
-    setInspected(stored);
-    setRestorable(offerFrom(stored));
-  }
+  const payload = useMemo(
+    () =>
+      !isSuspended && hasEdited && isDirty
+        ? { draft, baseline: serverFingerprint }
+        : null,
+    [isSuspended, hasEdited, isDirty, draft, serverFingerprint],
+  );
+  const missingCodes = useMemo(
+    () => listingEditMissingCodes(missing ?? []),
+    [missing],
+  );
+  const offer = useRestorableOfferState();
+  // Sending waits for the first server read to be inspected, and stays off
+  // while an offer that arrived after the first keystroke is still open, so
+  // early typing never replaces a stored copy the owner has not seen.
+  const isLateOfferOpen = offer.isOfferLate && offer.restorable !== null;
+  const autosave = useCreatorDraftAutosave({
+    slot: { kind: "listing_edit", listingRef },
+    payload,
+    progress: null,
+    missing: missingCodes,
+    isEnabled: !isSuspended && offer.inspected !== null && !isLateOfferOpen,
+  });
+  const { discard, forget, keepThisVersion } = autosave;
+  const loadNewerDraft = autosave.loadNewer;
 
-  useEffect(() => {
-    // A save or a discard put this back to false, and this effect re-running is
-    // what cancels the write that was still waiting on its timer.
-    if (!hasEdited) return;
-    const timer = setTimeout(() => {
-      // Back to exactly what the server has: there is nothing unsaved left to
-      // rescue, so the slot goes rather than holding a redundant copy.
-      setStored(
-        isDirty
-          ? { draft, savedAt: Date.now(), baseline: serverFingerprint }
-          : null,
-      );
-    }, AUTOSAVE_MS);
-    return () => clearTimeout(timer);
-  }, [draft, isDirty, hasEdited, serverFingerprint, setStored]);
+  inspectRestorableOffer(offer, {
+    listingRef,
+    scopeId,
+    serverDraft: autosave.serverDraft,
+    isServerDraftLoading: autosave.isServerDraftLoading,
+    hasEdited,
+    serverFingerprint,
+  });
+  const { restorable, setRestorable, isOfferLegacy, setIsOfferLegacy } = offer;
+  const legacyRemoval = useLegacyRemovalAfterSave(
+    listingRef,
+    scopeId,
+    autosave.status,
+  );
+  const markLegacyRemovalPending = legacyRemoval.markPending;
+  const removeLegacyNow = legacyRemoval.removeNow;
 
-  const dismissRestorable = useCallback(() => setRestorable(null), []);
+  const dismissRestorable = useCallback(() => {
+    if (isOfferLegacy) markLegacyRemovalPending();
+    setRestorable(null);
+  }, [isOfferLegacy, markLegacyRemovalPending, setRestorable]);
 
   const discardRestorable = useCallback(() => {
-    setHasEdited(false);
+    const discardedOffer = restorable;
     setRestorable(null);
-    setStored(null);
-  }, [setStored]);
+    setIsOfferLegacy(false);
+    removeLegacyNow();
+    // Once the owner has typed, the server slot holds that new typing (or
+    // soon will), so only the offer goes.
+    if (hasEdited && isDirty) return;
+    setHasEdited(false);
+    discard().catch(() => {
+      // The server copy stays, so the banner offers it again for another try.
+      showToast(
+        t("marketing:listBusiness.editor.restore.discardError"),
+        "error",
+      );
+      setRestorable(discardedOffer);
+    });
+  }, [
+    restorable,
+    setRestorable,
+    setIsOfferLegacy,
+    removeLegacyNow,
+    hasEdited,
+    isDirty,
+    discard,
+    showToast,
+    t,
+  ]);
 
   const clearAutosave = useCallback(() => {
     setHasEdited(false);
     setRestorable(null);
-    setStored(null);
-  }, [setStored]);
+    setSuspendedAtDraft(draft);
+    removeLegacyNow();
+    // The quick edit modal shares PATCH /listings/:ref, so the server keeps
+    // the draft through a save and the full editor deletes its own.
+    discard().catch(() => {
+      showToast(t("marketing:listBusiness.editor.draftClearError"), "error");
+    });
+  }, [draft, setRestorable, removeLegacyNow, discard, showToast, t]);
+
+  const forgetAutosave = useCallback(() => {
+    setHasEdited(false);
+    setRestorable(null);
+    setSuspendedAtDraft(draft);
+    removeLegacyNow();
+    forget();
+  }, [draft, setRestorable, removeLegacyNow, forget]);
+
+  // The owner chose the other tab's copy, so it goes straight into the form
+  // and the engine saves the next change on its revision. An emptied slot
+  // keeps the edit as typed, and so does a copy of a shape this editor cannot
+  // read: the engine then keeps the 409 pause and resolves null.
+  const loadNewer = useCallback(() => {
+    // A failed read keeps the pause, so the strip stays to choose again.
+    loadNewerDraft({ isReadable: isListingEditPayload })
+      .then((newerDraft) => {
+        const newerEdit = serverEditDraftOf(newerDraft);
+        if (newerEdit === null) return;
+        setRestorable(null);
+        setIsOfferLegacy(false);
+        removeLegacyNow();
+        applyDraft(newerEdit.draft);
+      })
+      .catch(() => undefined);
+  }, [
+    loadNewerDraft,
+    applyDraft,
+    setRestorable,
+    setIsOfferLegacy,
+    removeLegacyNow,
+  ]);
 
   return {
     restorable,
     dismissRestorable,
     discardRestorable,
     clearAutosave,
+    status: autosave.status,
+    conflict: autosave.conflict,
+    isConflictBusy: autosave.isConflictBusy,
+    loadNewer,
+    keepThisVersion,
+    forgetAutosave,
   };
 }

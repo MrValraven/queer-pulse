@@ -1,10 +1,14 @@
 import { describe, expect, it } from "vitest";
 import type { SubprofileKind } from "./api/subprofiles.api";
 import { KIND_SECTIONS } from "./subprofile-kinds";
-import { SKIN_BLOCKS_BY_FAMILY } from "./skinBlockFields.data";
+import {
+  SKIN_BLOCKS_BY_FAMILY,
+  skinBlocksForKind,
+} from "./skinBlockFields.data";
 import { PAGE_OUTLINE_BY_FAMILY } from "./skinPageOutline.data";
 import { deriveSkinChapters } from "./derivedSkinChapters";
 import { hasSkinBlocks, skinChaptersForKind } from "./skinChapters";
+import { TATTOO_BLOCKS, TATTOO_CHAPTERS } from "./tattooEditorChapters.data";
 import { THERAPIST_CHAPTERS } from "./therapistEditorChapters.data";
 
 const ALL_KINDS = Object.keys(KIND_SECTIONS) as SubprofileKind[];
@@ -191,6 +195,17 @@ describe("PAGE_OUTLINE_BY_FAMILY", () => {
 describe("skinChaptersForKind", () => {
   it("keeps the therapist's hand-written chapters", () => {
     expect(skinChaptersForKind("therapist")).toBe(THERAPIST_CHAPTERS);
+  });
+
+  it("keeps the tattoo artist's hand-written chapters", () => {
+    expect(skinChaptersForKind("tattoo_artist")).toBe(TATTOO_CHAPTERS);
+    expect(skinBlocksForKind("tattoo_artist")).toBe(TATTOO_BLOCKS);
+  });
+
+  it("keeps every other studio kind derived", () => {
+    expect(
+      skinChaptersForKind("illustrator").map((chapter) => chapter.key),
+    ).toEqual(["portfolio", "clients", "gallery"]);
   });
 
   it("gives every kind a Page blocks pane", () => {

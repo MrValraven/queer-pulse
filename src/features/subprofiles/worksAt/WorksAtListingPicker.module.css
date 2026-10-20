@@ -1,0 +1,67 @@
+.picker {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+  min-width: 0;
+}
+
+.hint,
+.empty {
+  margin: 0;
+  font-size: var(--text-13);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+.results {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  padding-block: var(--gap-xs);
+  border-bottom: 1px solid var(--line);
+}
+
+/* The refusal folds in under the row; its spacing sits inside the fold. */
+.item [role="alert"] {
+  padding-top: 6px;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px var(--gap-xs);
+  min-width: 0;
+}
+
+.name {
+  flex: 1 1 10rem;
+  min-width: 0;
+  font-size: var(--text-14);
+  font-weight: 600;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.action,
+.chip {
+  flex: 0 0 auto;
+  max-width: 100%;
+}
+
+/* Takes focus once a request replaces the Ask button. */
+.chip {
+  display: inline-flex;
+  border-radius: var(--radius-pill);
+}
+
+.chip:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}

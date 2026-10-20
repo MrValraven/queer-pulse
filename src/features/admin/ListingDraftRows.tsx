@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { FiEdit3, FiMessageCircle } from "react-icons/fi";
+import { AnimatePresence } from "motion/react";
 import { Button, FadeIn } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { formatDate } from "../../shared/lib/date";
@@ -38,13 +39,16 @@ export function ListingDraftRows({
           </FadeIn>
         ))}
       </ul>
-      {messaging?.owner && (
-        <ListingDraftMessageModal
-          draft={messaging}
-          owner={messaging.owner}
-          onClose={() => setMessaging(null)}
-        />
-      )}
+      <AnimatePresence>
+        {messaging?.owner ? (
+          <ListingDraftMessageModal
+            key={messaging.id}
+            owner={messaging.owner}
+            draftTitle={messaging.name}
+            onClose={() => setMessaging(null)}
+          />
+        ) : null}
+      </AnimatePresence>
     </>
   );
 }

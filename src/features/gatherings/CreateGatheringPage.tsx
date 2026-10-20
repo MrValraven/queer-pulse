@@ -1,13 +1,24 @@
-import { useMemo, type ComponentType, type ReactNode } from "react";
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  type ComponentType,
+  type ReactNode,
+} from "react";
 import { useSearchParams } from "react-router-dom";
 import { useAuth } from "../../app/providers/authContext";
+import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { routes } from "../../app/routeMap";
 import { PageShell } from "../../shared/components/layout";
 import { Button, Eyebrow } from "../../shared/components/ui";
+import { Collapse } from "../../shared/components/ui/Collapse";
 import { useMediaQuery, useUnsavedChangesGuard } from "../../shared/hooks";
 import { useFormat } from "../../shared/i18n/format";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { CreatorDraftConflictStrip } from "../creatorDrafts/CreatorDraftConflictStrip";
+import { CreatorDraftNotice } from "../creatorDrafts/CreatorDraftNotice";
+import { useIsQuizshowVisible } from "../quizshow/quizshowLaunch";
 import { useEvent } from "./api/useEvent";
 import { CreateGatheringChapter } from "./CreateGatheringChapter";
 import { CreateGatheringMobileBar } from "./CreateGatheringMobileBar";
@@ -53,7 +64,6 @@ import {
 } from "./useCreateGatheringChapterFlow";
 import {
   createGatheringDraftKey,
-  removeStoredDraft,
   useCreateGatheringDraft,
   type DraftSaveStatus,
 } from "./useCreateGatheringDraft";
@@ -76,8 +86,15 @@ const CHAPTER_BODIES: Record<
   care: CareChapter,
 };
 
-/** Eyebrow, serif title, lead, the draft's saved line, and Cancel. */
-function CreateGatheringHead({ saveStatus }: { saveStatus: DraftSaveStatus }) {
+/** Eyebrow, serif title, lead, the draft's saved line and team note, and
+ *  Cancel. */
+function CreateGatheringHead({
+  saveStatus,
+  isNoteShown,
+}: {
+  saveStatus: DraftSaveStatus;
+  isNoteShown: boolean;
+}) {
   const { t } = useTranslation();
   return (
     <header className={styles.head}>
@@ -93,6 +110,11 @@ function CreateGatheringHead({ saveStatus }: { saveStatus: DraftSaveStatus }) {
         </h1>
         <p className={styles.lead}>{t("gatherings:create.v2.lead")}</p>
         <SavedIndicator status={saveStatus} />
+        <CreatorDraftNotice
+          messageKey="gatherings:creatorDraftNote.body"
+          isShown={isNoteShown}
+          className={styles.note}
+        />
       </div>
       <div className={styles.headActions}>
         <Button variant="ghost" to={routes.host}>
@@ -155,7 +177,75 @@ function ChapterList({
   );
 }
 
+/** The draft's two strips over the chapters: "Resume your draft?" and the
+ *  conflict choice. Both fold in and out; while the resume strip folds away
+ *  the Collapse keeps rendering it with its last offer. */
+function CreateGatheringDraftStrips({
+  draft,
+  chapterFlow,
+}: {
+  draft: ReturnType<typeof useCreateGatheringDraft>;
+  chapterFlow: CreateGatheringChapterFlow;
+}) {
+  // Both strip answers remove the strip with focus on it, so focus moves to
+  // the chapter head the host continues from. A complete draft resumes on the
+  // review chapter, which is revealed like Continue reveals it, so its recap
+  // and Publish come into view with its head. The chapter the resume opens is
+  // only known once it renders, so the head's `aria-expanded` tells.
+  const handleResume = () => {
+    draft.resume();
+    chapterFlow.openAfterResume();
+    afterRender(() => {
+      const isReviewOpen =
+        document
+          .getElementById(chapterHeadId(REVIEW_CHAPTER_INDEX))
+          ?.getAttribute("aria-expanded") === "true";
+      if (isReviewOpen) {
+        revealSection(
+          chapterSectionId(REVIEW_CHAPTER_INDEX),
+          chapterHeadId(REVIEW_CHAPTER_INDEX),
+        );
+        return;
+      }
+      focusOpenChapterHead();
+    });
+  };
+
+  const handleStartFresh = () => {
+    draft.startFresh();
+    afterRender(focusOpenChapterHead);
+  };
+
+  return (
+    <>
+      <Collapse isOpen={draft.resumeOffer !== null}>
+        {draft.resumeOffer && (
+          <DraftResumeStrip
+            offer={draft.resumeOffer}
+            onResume={handleResume}
+            onStartFresh={handleStartFresh}
+          />
+        )}
+      </Collapse>
+      <CreatorDraftConflictStrip
+        isOpen={draft.conflict !== null}
+        isBusy={draft.isConflictBusy}
+        isServerDraftGone={draft.conflict?.revision === null}
+        onLoadNewer={draft.loadNewer}
+        onKeepThisVersion={draft.keepThisVersion}
+      />
+    </>
+  );
+}
+
+/** The route. A demo switch remounts the wizard, so a form typed in one mode
+ *  never autosaves into the other mode's draft slot. */
 export function CreateGatheringPage() {
+  const { demoMode } = useDemoMode();
+  return <CreateGatheringWizard key={demoMode ? "demo" : "live"} />;
+}
+
+function CreateGatheringWizard() {
   const { t } = useTranslation();
   const { user } = useAuth();
   // A community's Events tab links here as `?community=<slug>` so the host
@@ -169,6 +259,7 @@ export function CreateGatheringPage() {
   // seed's identity stable so it is applied exactly once.
   const duplicateSlug = searchParams.get(DUPLICATE_GATHERING_PARAM);
   const { data: duplicateSource } = useEvent(duplicateSlug ?? undefined);
+  const isQuizshowVisible = useIsQuizshowVisible();
   const seed = useMemo(
     () =>
       duplicateSlug && duplicateSource
@@ -183,9 +274,12 @@ export function CreateGatheringPage() {
   useDropUnhostableCommunity(form);
   const chapterFlow = useCreateGatheringChapterFlow(form);
   const draftKey = createGatheringDraftKey(user?.id);
+  // Publish success reaches the draft's `forget` through this ref, since the
+  // draft hook reads `publishing` and so comes after it.
+  const forgetDraftRef = useRef<() => void>(() => undefined);
   const publishing = usePublishGathering({
     form,
-    onPublished: () => removeStoredDraft(draftKey),
+    onPublished: () => forgetDraftRef.current(),
     onVenueRefused: () =>
       chapterFlow.openChapterAtField(
         chapterIndexOf("whenWhere"),
@@ -196,14 +290,21 @@ export function CreateGatheringPage() {
         chapterIndexOf("who"),
         RUN_BY_FIELD_ANCHOR,
       ),
+    quizshowSourceSlug:
+      isQuizshowVisible && duplicateSource?.gathering.quizshow?.hasQuiz
+        ? duplicateSource.gathering.slug
+        : null,
   });
   const draft = useCreateGatheringDraft({
     form,
-    storageKey: draftKey,
+    legacyStorageKey: draftKey,
     // A duplicate's seed lands after any resume and would overwrite it.
     shouldOfferResume: !duplicateSlug,
     communitySlugParam,
     isSavingEnabled: !publishing.isPublished && !publishing.isPending,
+  });
+  useEffect(() => {
+    forgetDraftRef.current = draft.forget;
   });
   const isCompact = useMediaQuery(COMPACT_LAYOUT_QUERY);
 
@@ -245,35 +346,6 @@ export function CreateGatheringPage() {
     }
   };
 
-  // Both strip answers remove the strip with focus on it, so focus moves to
-  // the chapter head the host continues from. A complete draft resumes on the
-  // review chapter, which is revealed like Continue reveals it, so its recap
-  // and Publish come into view with its head. The chapter the resume opens is
-  // only known once it renders, so the head's `aria-expanded` tells.
-  const handleResume = () => {
-    draft.resume();
-    chapterFlow.openAfterResume();
-    afterRender(() => {
-      const isReviewOpen =
-        document
-          .getElementById(chapterHeadId(REVIEW_CHAPTER_INDEX))
-          ?.getAttribute("aria-expanded") === "true";
-      if (isReviewOpen) {
-        revealSection(
-          chapterSectionId(REVIEW_CHAPTER_INDEX),
-          chapterHeadId(REVIEW_CHAPTER_INDEX),
-        );
-        return;
-      }
-      focusOpenChapterHead();
-    });
-  };
-
-  const handleStartFresh = () => {
-    draft.startFresh();
-    afterRender(focusOpenChapterHead);
-  };
-
   if (publishing.isPublished) {
     return (
       <PageShell>
@@ -307,14 +379,11 @@ export function CreateGatheringPage() {
     <PageShell>
       <section className={styles.page}>
         <div className="wrap">
-          <CreateGatheringHead saveStatus={draft.saveStatus} />
-          {draft.resumeOffer && (
-            <DraftResumeStrip
-              offer={draft.resumeOffer}
-              onResume={handleResume}
-              onStartFresh={handleStartFresh}
-            />
-          )}
+          <CreateGatheringHead
+            saveStatus={draft.saveStatus}
+            isNoteShown={draft.isNoteShown}
+          />
+          <CreateGatheringDraftStrips draft={draft} chapterFlow={chapterFlow} />
           <div className={styles.grid}>
             <div className={styles.formColumn}>
               <ChapterList

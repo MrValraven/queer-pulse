@@ -53,6 +53,12 @@ export interface ShareMenuProps {
   /** Builds a custom trigger (a labelled text button, say) in the default
    *  icon's place. The tooltip hides while the menu is open either way. */
   renderTrigger?: (trigger: ShareMenuTriggerRenderProps) => ReactNode;
+  /** False drops "Send in a message" (a Studio playlist whose owner would
+   *  pair their account with a persona by sending it). Defaults to true. */
+  shouldOfferSendInMessage?: boolean;
+  /** One line the "Send in a message" picker shows under the note, e.g. that
+   *  the member's account will show who runs a persona. */
+  identityNote?: string;
 }
 
 /** One entry in the menu. */

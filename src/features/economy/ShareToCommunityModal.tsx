@@ -1,13 +1,17 @@
-import { useState } from "react";
+import { useId, useState } from "react";
+import { FiInfo } from "react-icons/fi";
 import { ApiError } from "../../shared/api/client";
 import { Button, Select } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { TFunction } from "../../shared/i18n/types";
 import { useMyCommunityOptions } from "../communities/api/useMyCommunityOptions";
+import { StudioPostCard } from "../studio/share/StudioPostCard";
+import { parseStudioLink } from "../studio/share/studioLinkTarget";
 import { ModalShell, Sending, SuccessPanel } from "./ModalKit";
 import { useShareToCommunity } from "./api/useShareToCommunity";
 import styles from "./ApplicationModals.module.css";
+import localStyles from "./ShareToCommunityModal.module.css";
 
 /** Turns the API's refusal into the sentence that explains it. */
 function refusalMessage(error: unknown, t: TFunction): string {
@@ -21,35 +25,45 @@ function refusalMessage(error: unknown, t: TFunction): string {
 }
 
 /**
- * Share a job to one of the communities you belong to.
+ * Share something to one of the communities you belong to: a job, a Studio
+ * release or anything with a link back to it.
  *
- * It writes a COMMUNITY POST, so the share lands in a room with a moderation
- * owner and reaches the feed through the existing read-time aggregation. There
- * is no standalone feed-post content type, and this deliberately does not
- * invent one.
+ * It writes a COMMUNITY POST (`note`, a blank line, then `url`), so the share
+ * lands in a community with a moderation owner and reaches the feed through
+ * the existing read-time aggregation. There is no standalone feed-post
+ * content type, and this deliberately does not invent one. A Studio link
+ * previews its card under the note, as the post will show it; any other link
+ * (a job) posts as plain text.
  */
 export function ShareToCommunityModal({
   title,
   url,
-  organization,
+  defaultNote,
+  notice,
   onClose,
 }: {
+  /** The shared thing's name, for the dialog's accessible name. */
   title: string;
   /** Absolute link back to what is being shared. */
   url: string;
-  organization: string;
+  /** The note the field opens with; the member can rewrite it. */
+  defaultNote: string;
+  /** One more line above the moderation note, e.g. Studio's owner-persona
+   *  line. Omit for none. */
+  notice?: string;
   onClose: () => void;
 }) {
   const { t } = useTranslation();
   const communities = useMyCommunityOptions();
   const share = useShareToCommunity();
+  // The notice (who the post shows you run) is read with the button that posts.
+  const noticeId = useId();
+  const studioTarget = parseStudioLink(url);
 
   const [communitySlug, setCommunitySlug] = useState<string | null>(
     communities[0]?.slug ?? null,
   );
-  const [note, setNote] = useState(
-    t("economy:shareToCommunity.defaultNote", { title, organization }),
-  );
+  const [note, setNote] = useState(defaultNote);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [done, setDone] = useState(false);
 
@@ -95,7 +109,7 @@ export function ShareToCommunityModal({
   return (
     <ModalShell
       onClose={onClose}
-      ariaLabel={t("economy:shareToCommunity.ariaLabel")}
+      ariaLabel={t("economy:shareToCommunity.ariaLabelNamed", { title })}
     >
       <div className={styles.eyebrow}>
         {t("economy:shareToCommunity.eyebrow")}
@@ -141,7 +155,18 @@ export function ShareToCommunityModal({
               placeholder={t("economy:shareToCommunity.notePlaceholder")}
             />
           </div>
+          {studioTarget && (
+            <div className={localStyles.preview}>
+              <StudioPostCard target={studioTarget} isInteractive={false} />
+            </div>
+          )}
 
+          {notice && (
+            <p id={noticeId} className={localStyles.identityNote}>
+              <FiInfo aria-hidden className={localStyles.identityIcon} />
+              <span>{notice}</span>
+            </p>
+          )}
           <p className={styles.note}>
             {t("economy:shareToCommunity.moderationNote")}
           </p>
@@ -161,6 +186,9 @@ export function ShareToCommunityModal({
           variant="primary"
           size="lg"
           disabled={!canShare || share.isPending}
+          aria-describedby={
+            notice && communities.length > 0 ? noticeId : undefined
+          }
           onClick={() => void submit()}
         >
           {share.isPending ? (

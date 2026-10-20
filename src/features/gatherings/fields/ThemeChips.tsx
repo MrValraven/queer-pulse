@@ -15,6 +15,9 @@ export interface ThemeChipsProps {
   /** The family the gathering is filed under. A theme its own details
    *  already ask about is left out (ruling R6). */
   family: GatheringFamily | "" | null;
+  /** The chosen format, when it asks a question its family does not (a quiz
+   *  night asks about 18+). */
+  formatKey?: string | null;
   selectedThemes: readonly GatheringThemeKey[];
   onToggle: (theme: GatheringThemeKey) => void;
   /** The id of the visible label that names the chips. */
@@ -37,6 +40,7 @@ export interface ThemeChipsProps {
  */
 export function ThemeChips({
   family,
+  formatKey,
   selectedThemes,
   onToggle,
   labelledBy,
@@ -44,7 +48,7 @@ export function ThemeChips({
 }: ThemeChipsProps) {
   const { t } = useTranslation();
   const headingIdPrefix = useId();
-  const hiddenThemeKeys = hiddenThemeKeysForFamily(family);
+  const hiddenThemeKeys = hiddenThemeKeysForFamily(family, formatKey);
   const visibleGroups = GATHERING_THEME_GROUPS.filter((group) =>
     group.themes.some((themeKey) => !hiddenThemeKeys.includes(themeKey)),
   );

@@ -40,7 +40,13 @@ export function useLightboxDialog(
     const focusables = (): HTMLElement[] =>
       dialog
         ? Array.from(dialog.querySelectorAll<HTMLElement>(FOCUSABLE)).filter(
-            (el) => el.offsetParent !== null,
+            // tabIndex and inert drop controls the browser skips on Tab, such
+            // as a concealed photo's Hide button, so the trap's ends match
+            // the real tab order.
+            (el) =>
+              el.offsetParent !== null &&
+              el.tabIndex >= 0 &&
+              !el.closest("[inert]"),
           )
         : [];
 

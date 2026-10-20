@@ -5,7 +5,10 @@ import {
   personaUpdatesPath,
   communityPath,
 } from "../../app/routeMap";
-import { gatheringPath } from "../../features/gatherings/data";
+import {
+  gatheringPath,
+  manageGatheringPath,
+} from "../../features/gatherings/data";
 
 /**
  * Every place an uploaded image can be in use. Mirrors the backend
@@ -42,7 +45,8 @@ export type MediaReferenceType =
   | "press-contact" // PressContact.avatarUrl
   | "sticker" // Sticker.storageKey
   | "studio-cover" // StudioRelease.coverKey
-  | "persona-post"; // SubprofilePost.imageKey (Studio v3; label is the post body)
+  | "persona-post" // SubprofilePost.imageKey (Studio v3; label is the post body)
+  | "quizshow-question"; // QuizshowQuestion.mediaRef (label is the event title)
 
 /** One place an uploaded image is referenced. The backend owns `entityId`/
  *  `label`/`slug`; the frontend owns turning `type` into a localized label
@@ -91,6 +95,10 @@ export function mediaReferenceLabelKey(type: MediaReferenceType): string {
  *   assumed didn't exist.
  * - `changemaker` → `/changemaker/:slug` (`ChangemakerStoryPage`).
  * - `community-cover` / `community-avatar` → `communityPath(slug)`.
+ * - `quizshow-question` → the event's Manage page on its Live game tab,
+ *   `manageGatheringPath(slug, "quizshow")` (`?tab=quizshow`, read by
+ *   `manageGatheringTabFromParam` in `src/features/gatherings/gatheringPaths.ts`).
+ *   The backend sends the event's slug and title for a Pulse Live question image.
  * - `card-crest` / `card-background` → the ISSUING community's page: a
  *   membership-card programme is designed in a modal on that page and has no
  *   route of its own, and the backend already resolves the reference to the
@@ -146,6 +154,11 @@ export function mediaReferenceHref(reference: MediaReference): string | null {
     // page's Updates block.
     case "persona-post":
       return slug ? personaUpdatesPath(slug) : null;
+    // A Pulse Live question image. The backend sends the event's slug, and
+    // the quiz is built on the event's Manage page, Live game tab. A viewer
+    // who does not organise the event meets that page's own access check.
+    case "quizshow-question":
+      return slug ? manageGatheringPath(slug, "quizshow") : null;
     case "landlord":
       return slug ? `/work/landlord/${slug}` : null;
     case "company-work":

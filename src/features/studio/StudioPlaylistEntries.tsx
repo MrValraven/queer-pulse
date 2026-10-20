@@ -111,19 +111,19 @@ function useEntryFocus(orderKey: string) {
   };
 }
 
-function EntriesEmptyState({ isOwner }: { isOwner: boolean }) {
+function EntriesEmptyState({ hasEditRights }: { hasEditRights: boolean }) {
   const { t } = useTranslation();
   return (
     <EmptyState
       icon={<FiMusic />}
       headingLevel={3}
       title={t(
-        isOwner
+        hasEditRights
           ? "studio:playlist.page.emptyOwnerTitle"
           : "studio:playlist.page.emptyViewerTitle",
       )}
       description={
-        isOwner ? t("studio:playlist.page.emptyOwnerBody") : undefined
+        hasEditRights ? t("studio:playlist.page.emptyOwnerBody") : undefined
       }
       action={{
         label: t("studio:playlist.page.findMusicCta"),
@@ -133,9 +133,11 @@ function EntriesEmptyState({ isOwner }: { isOwner: boolean }) {
   );
 }
 
-/** The tracklist. Owners move rows with Move up, Move down or a drag, and
- *  remove them; one write runs at a time, so no order goes out built on a
- *  list the server has not confirmed. */
+/** The tracklist. The owner and editors move rows with Move up, Move down or
+ *  a drag, and remove them; one write runs at a time, so no order goes out
+ *  built on a list the server has not confirmed. A move refused because the
+ *  list changed meanwhile reads the playlist again and says so; a removal
+ *  another editor made first settles as a removal. */
 export function StudioPlaylistEntries({
   playlist,
 }: {
@@ -256,7 +258,7 @@ export function StudioPlaylistEntries({
             exit={{ opacity: 0 }}
             transition={fade}
           >
-            <EntriesEmptyState isOwner={playlist.isOwner} />
+            <EntriesEmptyState hasEditRights={playlist.hasEditRights} />
           </m.div>
         ) : (
           <m.ol
@@ -276,7 +278,8 @@ export function StudioPlaylistEntries({
                     entry={entry}
                     index={index}
                     rowCount={playlist.entries.length}
-                    isOwner={playlist.isOwner}
+                    hasEditRights={playlist.hasEditRights}
+                    isCollaborative={playlist.isCollaborative}
                     isBusy={isBusy}
                     isCurrent={isCurrent}
                     isPlaying={isCurrent && player.status === "playing"}

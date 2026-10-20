@@ -57,4 +57,40 @@ describe("AuthProvider sign-out and gathering drafts", () => {
     expect(window.localStorage.getItem(memberDraftKey)).toBeNull();
     expect(window.localStorage.getItem(anonDraftKey)).toBeNull();
   });
+
+  it("forgets every creator draft copy on sign-out", async () => {
+    window.localStorage.setItem("qp-listing-edit-draft.v1.casa", "{}");
+    window.sessionStorage.setItem("qp.community-draft.demo", "{}");
+    const { useAuth, wrapper } = await loadDemoAuth();
+    const { queryClient } = await import("../../shared/api/queryClient");
+    const { demoSaveCreatorDraft, demoGetCreatorDraft } =
+      await import("../../features/creatorDrafts/api/creatorDrafts.demoStore");
+    await demoSaveCreatorDraft(
+      { kind: "event", listingRef: null },
+      {
+        payload: { title: "Picnic" },
+        payloadVersion: 1,
+        baseRevision: null,
+        progress: null,
+        missing: null,
+      },
+    );
+    queryClient.setQueryData(["creator-draft", "event", "", true], {
+      payload: { title: "Picnic" },
+    });
+    const { result } = renderHook(() => useAuth(), { wrapper });
+
+    act(() => result.current.signOut());
+
+    expect(
+      queryClient.getQueryData(["creator-draft", "event", "", true]),
+    ).toBeUndefined();
+    await expect(
+      demoGetCreatorDraft({ kind: "event", listingRef: null }),
+    ).resolves.toBeNull();
+    expect(
+      window.localStorage.getItem("qp-listing-edit-draft.v1.casa"),
+    ).toBeNull();
+    expect(window.sessionStorage.getItem("qp.community-draft.demo")).toBeNull();
+  });
 });

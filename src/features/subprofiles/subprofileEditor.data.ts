@@ -187,6 +187,43 @@ export const KIND_ITEM_FIELD_META: Partial<
       },
     },
   },
+  // A guest spot names its studio or convention and runs from a first day;
+  // a flash day is one day at a place; a shop item links out to buy.
+  tattoo_artist: {
+    guest_spots: {
+      title: {
+        labelKey: "subprofiles:itemField.tattoo.guest_spots.title.label",
+        placeholderKey:
+          "subprofiles:itemField.tattoo.guest_spots.title.placeholder",
+      },
+      subtitle: {
+        labelKey: "subprofiles:itemField.tattoo.guest_spots.subtitle.label",
+        placeholderKey:
+          "subprofiles:itemField.tattoo.guest_spots.subtitle.placeholder",
+      },
+      date: {
+        labelKey: "subprofiles:itemField.tattoo.guest_spots.date.label",
+        inputType: "date",
+      },
+      url: { labelKey: "subprofiles:itemField.tattoo.guest_spots.url.label" },
+    },
+    flash_days: {
+      subtitle: {
+        labelKey: "subprofiles:itemField.tattoo.flash_days.subtitle.label",
+        placeholderKey:
+          "subprofiles:itemField.tattoo.flash_days.subtitle.placeholder",
+      },
+      date: { inputType: "date" },
+      url: { labelKey: "subprofiles:itemField.tattoo.flash_days.url.label" },
+    },
+    shop: {
+      url: {
+        labelKey: "subprofiles:itemField.tattoo.shop.url.label",
+        placeholderKey: "subprofiles:itemField.tattoo.shop.url.placeholder",
+        helperKey: "subprofiles:itemField.tattoo.shop.url.helper",
+      },
+    },
+  },
 };
 
 /** An item field's wording and input for this kind and section. */
@@ -214,4 +251,64 @@ export const SECTION_DRAWER_TITLE_KEYS: Partial<
     add: "subprofiles:itemDrawer.section.sessions.add",
     edit: "subprofiles:itemDrawer.section.sessions.edit",
   },
+  flash: {
+    add: "subprofiles:itemDrawer.section.flash.add",
+    edit: "subprofiles:itemDrawer.section.flash.edit",
+  },
+  healed: {
+    add: "subprofiles:itemDrawer.section.healed.add",
+    edit: "subprofiles:itemDrawer.section.healed.edit",
+  },
+  wanna_dos: {
+    add: "subprofiles:itemDrawer.section.wanna_dos.add",
+    edit: "subprofiles:itemDrawer.section.wanna_dos.edit",
+  },
+  in_progress: {
+    add: "subprofiles:itemDrawer.section.in_progress.add",
+    edit: "subprofiles:itemDrawer.section.in_progress.edit",
+  },
+  cover_ups: {
+    add: "subprofiles:itemDrawer.section.cover_ups.add",
+    edit: "subprofiles:itemDrawer.section.cover_ups.edit",
+  },
+  scar_work: {
+    add: "subprofiles:itemDrawer.section.scar_work.add",
+    edit: "subprofiles:itemDrawer.section.scar_work.edit",
+  },
+  guest_spots: {
+    add: "subprofiles:itemDrawer.section.guest_spots.add",
+    edit: "subprofiles:itemDrawer.section.guest_spots.edit",
+  },
+  flash_days: {
+    add: "subprofiles:itemDrawer.section.flash_days.add",
+    edit: "subprofiles:itemDrawer.section.flash_days.edit",
+  },
+  shop: {
+    add: "subprofiles:itemDrawer.section.shop.add",
+    edit: "subprofiles:itemDrawer.section.shop.edit",
+  },
+};
+
+/** The section editor's Add button, for sections whose button names what it
+ *  adds ("Add flash") in place of the generic "Add". */
+export const SECTION_ADD_LABEL_KEYS: Partial<
+  Record<SubprofileSection, string>
+> = {
+  flash: "subprofiles:itemDrawer.section.flash.add",
+  healed: "subprofiles:itemDrawer.section.healed.add",
+  wanna_dos: "subprofiles:itemDrawer.section.wanna_dos.add",
+  in_progress: "subprofiles:itemDrawer.section.in_progress.add",
+  cover_ups: "subprofiles:itemDrawer.section.cover_ups.add",
+  scar_work: "subprofiles:itemDrawer.section.scar_work.add",
+  guest_spots: "subprofiles:itemDrawer.section.guest_spots.add",
+  flash_days: "subprofiles:itemDrawer.section.flash_days.add",
+  shop: "subprofiles:itemDrawer.section.shop.add",
+};
+
+/** The item drawer's photo field prompt, for sections whose main photo has a
+ *  role of its own (a cover-up's main photo is the after photo). */
+export const SECTION_IMAGE_PLACEHOLDER_KEYS: Partial<
+  Record<SubprofileSection, string>
+> = {
+  cover_ups: "subprofiles:tattooItem.afterPhoto.placeholder",
 };

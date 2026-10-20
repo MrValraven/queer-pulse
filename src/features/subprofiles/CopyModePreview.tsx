@@ -1,4 +1,8 @@
-import { FormField, SegmentedControl } from "../../shared/components/ui";
+import {
+  Collapse,
+  FormField,
+  SegmentedControl,
+} from "../../shared/components/ui";
 import type { Translation as TranslationApi } from "../../shared/i18n/useTranslation";
 import type { SubprofileView } from "./api/subprofiles.adapters";
 import { duplicatePreview, type CopyMode } from "./subprofileDuplicate";
@@ -55,6 +59,13 @@ export function CopyModePreview({
         }}
       />
       <p className={styles.copySummary}>{summary}</p>
+      <Collapse isOpen={preview.leftOutBodyPhotoCount > 0}>
+        <p className={styles.copySummary}>
+          {t("subprofiles:duplicate.leftOutBodyPhotos", {
+            count: preview.leftOutBodyPhotoCount,
+          })}
+        </p>
+      </Collapse>
     </FormField>
   );
 }

@@ -6,6 +6,11 @@ import { Avatar, Button, Eyebrow, ImageSlot } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { collaboratorHref } from "./collaborators.data";
 import { WorkshopSnippet } from "./skins/WorkshopBlocks";
+import {
+  isItemPhotoBlurred,
+  itemCoverUrl,
+} from "./skins/tattoo/tattooItemImages";
+import { BlurredPhoto } from "./BlurredPhoto";
 import { SubprofileSocialRow } from "./SubprofileSocialRow";
 import { DEFAULT_ACCENT } from "./subprofilePresence.data";
 import type { PersonaViewMode } from "./personaSkinRender";
@@ -42,6 +47,19 @@ export function SubprofileSpotlight({
   const { t } = useTranslation();
   const interactive = mode !== "preview";
   const spotlightHref = safeHref(item.url);
+  // A starred tattoo project with no finished photo shows its latest session.
+  const coverUrl = itemCoverUrl(item);
+  const isCoverBlurred = coverUrl !== "" && isItemPhotoBlurred(item);
+  const coverImage = (
+    <ImageSlot
+      src={coverUrl || undefined}
+      alt={item.title}
+      tint="plum"
+      radius={0}
+      height="100%"
+      className="ph"
+    />
+  );
 
   return (
     // `data-has-image` marks a real picture, the same way the cover band's
@@ -49,18 +67,17 @@ export function SubprofileSpotlight({
     // showing the "Image" placeholder (the Quest skin hides `.art` on it).
     <div
       className="pp-spot"
-      data-has-image={item.imageUrl ? "" : undefined}
+      data-has-image={coverUrl ? "" : undefined}
       data-preview-anchor={`section:${item.section}`}
     >
       <div className="art">
-        <ImageSlot
-          src={item.imageUrl || undefined}
-          alt={item.title}
-          tint="plum"
-          radius={0}
-          height="100%"
-          className="ph"
-        />
+        {isCoverBlurred ? (
+          <BlurredPhoto isBlurred revealKey={coverUrl}>
+            {coverImage}
+          </BlurredPhoto>
+        ) : (
+          coverImage
+        )}
       </div>
       <div className="txt">
         {/* The global class lets a skin theme the eyebrow; the module class

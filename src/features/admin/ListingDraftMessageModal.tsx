@@ -9,14 +9,16 @@ import {
   OFFICIAL_MESSAGE_MAX_LENGTH,
   type OfficialRecipientDTO,
 } from "./api/adminOfficialMessages.api";
-import type {
-  AdminListingDraftDTO,
-  ListingDraftOwnerDTO,
-} from "./api/adminListingDrafts.api";
+import type { CreatorDraftOwner } from "./api/adminCreatorDrafts.api";
+
+const LISTING_DRAFT_TEMPLATE_KEYS = {
+  titled: "admin:listingDrafts.message.template",
+  untitled: "admin:listingDrafts.message.templateUntitled",
+};
 
 /** The official-messages recipient for a draft's owner. `status` is only read
  *  by the recipient picker, which this modal skips. */
-function ownerToRecipient(owner: ListingDraftOwnerDTO): OfficialRecipientDTO {
+function ownerToRecipient(owner: CreatorDraftOwner): OfficialRecipientDTO {
   const person = memberRefToPerson(owner);
   return {
     userId: owner.userId,
@@ -35,25 +37,29 @@ function ownerToRecipient(owner: ListingDraftOwnerDTO): OfficialRecipientDTO {
  * the admin can rewrite before sending.
  */
 export function ListingDraftMessageModal({
-  draft,
   owner,
+  draftTitle,
+  templateKeys = LISTING_DRAFT_TEMPLATE_KEYS,
   onClose,
 }: {
-  draft: AdminListingDraftDTO;
-  owner: ListingDraftOwnerDTO;
+  owner: CreatorDraftOwner;
+  /** The draft's name or title; empty or null picks the untitled starter. */
+  draftTitle: string | null;
+  /** The starter message keys; defaults to the listing draft pair. */
+  templateKeys?: { titled: string; untitled: string };
   onClose: () => void;
 }) {
   const { t } = useTranslation();
   const { showToast } = useToast();
   const sendMutation = useSendOfficialMessage();
-  const placeName = draft.name.trim();
+  const placeName = (draftTitle ?? "").trim();
   const [body, setBody] = useState(() =>
     placeName
-      ? t("admin:listingDrafts.message.template", {
+      ? t(templateKeys.titled, {
           firstName: owner.firstName,
           name: placeName,
         })
-      : t("admin:listingDrafts.message.templateUntitled", {
+      : t(templateKeys.untitled, {
           firstName: owner.firstName,
         }),
   );

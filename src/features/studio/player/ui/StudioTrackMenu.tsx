@@ -8,12 +8,17 @@ import {
 } from "react";
 import { AnimatePresence, m } from "motion/react";
 import { FiMoreHorizontal } from "react-icons/fi";
+import { useAuth } from "../../../../app/providers/authContext";
 import { useMotionPrefs } from "../../../../app/providers/motionPrefs";
 import { useToast } from "../../../../shared/components/feedback/useToast";
 import { useShareLink } from "../../../../shared/hooks/useClipboard";
 import { useOutsideDismiss } from "../../../../shared/hooks/useOutsideDismiss";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { formatTrackTime } from "../../api/studio.adapters";
+import { useStudioAccess } from "../../api/useStudioAccess";
+import { StudioShareToChatModal } from "../../share/StudioShareToChatModal";
+import { StudioTrackReportDialog } from "../../StudioTrackReportDialog";
+import { useIsOwnStudioPersona } from "../../useIsOwnStudioPersona";
 import { useStudioPlayer, useStudioPlayerClock } from "../studioPlayerContext";
 import { trackLinkAt } from "../studioTimestampLink";
 import styles from "./StudioTrackMenu.module.css";
@@ -26,6 +31,14 @@ export interface StudioTrackMenuTrack {
   hasAudio: boolean;
   /** With the member's "Hide explicit tracks" on, the queue items close. */
   isExplicit: boolean;
+  /** Studio safety: the persona behind the track. With it the menu offers
+   *  "Report track" to anyone who does not own that persona (spec 8). */
+  artistId?: string;
+  /** "Report track" shows for a published release only; a row that leaves
+   *  this out offers no report. */
+  isPublished?: boolean;
+  /** A withheld track takes no report: its row reads "Unavailable". */
+  isWithheld?: boolean;
 }
 
 interface MenuItem {
@@ -73,10 +86,14 @@ function TrackMenuPanel({
   id,
   track,
   onDone,
+  onSendInMessage,
+  onReport,
 }: {
   id: string;
   track: StudioTrackMenuTrack;
   onDone: () => void;
+  onSendInMessage: () => void;
+  onReport?: () => void;
 }) {
   const { t } = useTranslation();
   const { reducedMotion } = useMotionPrefs();
@@ -127,6 +144,11 @@ function TrackMenuPanel({
   const isPreviewPlaying = Boolean(player.currentItem?.previewToken);
   const shouldOfferLinkAt =
     player.isCurrentTrack(track.id) && !isPreviewPlaying;
+  const { user } = useAuth();
+  // A preview plays through its private link: like the timestamped copy,
+  // sending waits for the published release.
+  const shouldOfferSend =
+    Boolean(user) && !(isPreviewPlaying && player.isCurrentTrack(track.id));
 
   async function queue(action: "playNext" | "addToQueue") {
     onDone();
@@ -160,16 +182,26 @@ function TrackMenuPanel({
       isBlocked: isQueueBlocked,
       run: () => void queue("addToQueue"),
     },
-    {
-      id: "copyLink",
-      label: t("studio:trackMenu.copyLink"),
+  ];
+  if (shouldOfferSend)
+    items.push({
+      id: "sendInMessage",
+      label: t("studio:trackMenu.sendInMessage"),
       isBlocked: false,
       run: () => {
         onDone();
-        void share(absoluteUrl(track.href));
+        onSendInMessage();
       },
+    });
+  items.push({
+    id: "copyLink",
+    label: t("studio:trackMenu.copyLink"),
+    isBlocked: false,
+    run: () => {
+      onDone();
+      void share(absoluteUrl(track.href));
     },
-  ];
+  });
   if (shouldOfferLinkAt)
     items.push({
       id: "copyLinkAt",
@@ -180,6 +212,16 @@ function TrackMenuPanel({
       run: () => {
         onDone();
         void share(absoluteUrl(trackLinkAt(track.href, seconds)));
+      },
+    });
+  if (onReport)
+    items.push({
+      id: "report",
+      label: t("studio:report.trackCta"),
+      isBlocked: false,
+      run: () => {
+        onDone();
+        onReport();
       },
     });
 
@@ -236,8 +278,9 @@ function TrackMenuPanel({
 }
 
 /** The "..." on every track row and the track hero (spec 7.4): Play next,
- *  Add to queue, Copy link, and Copy link at the current time for the
- *  track that is playing. Only the open panel reads the clock, so closed
+ *  Add to queue, Send in a message, Copy link, Copy link at the current
+ *  time for the track that is playing, and Report track (someone else's
+ *  published track). Only the open panel reads the clock, so closed
  *  triggers stay still while a track plays. */
 export function StudioTrackMenu({
   track,
@@ -249,6 +292,16 @@ export function StudioTrackMenu({
   const { t } = useTranslation();
   const menuId = useId();
   const [isOpen, setIsOpen] = useState(false);
+  const [isSendPickerOpen, setIsSendPickerOpen] = useState(false);
+  const [isReporting, setIsReporting] = useState(false);
+  const { isPending: isAccessPending } = useStudioAccess();
+  const isOwnPersona = useIsOwnStudioPersona(track.artistId);
+  const isReportable =
+    track.artistId !== undefined &&
+    track.isPublished === true &&
+    track.isWithheld !== true &&
+    !isAccessPending &&
+    !isOwnPersona;
   const wrapRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const close = () => {
@@ -283,9 +336,32 @@ export function StudioTrackMenu({
       </button>
       <AnimatePresence>
         {isOpen && (
-          <TrackMenuPanel key="menu" id={menuId} track={track} onDone={close} />
+          <TrackMenuPanel
+            key="menu"
+            id={menuId}
+            track={track}
+            onDone={close}
+            onSendInMessage={() => setIsSendPickerOpen(true)}
+            onReport={isReportable ? () => setIsReporting(true) : undefined}
+          />
         )}
       </AnimatePresence>
+      <AnimatePresence>
+        {isSendPickerOpen && (
+          <StudioShareToChatModal
+            key="send-in-message"
+            target={{ kind: "track", id: track.id, startAtSeconds: null }}
+            title={track.title}
+            onClose={() => setIsSendPickerOpen(false)}
+          />
+        )}
+      </AnimatePresence>
+      <StudioTrackReportDialog
+        isOpen={isReporting}
+        trackId={track.id}
+        trackTitle={track.title}
+        onClose={() => setIsReporting(false)}
+      />
     </div>
   );
 }

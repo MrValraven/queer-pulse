@@ -476,3 +476,27 @@ describe("groupMessages: local-day boundaries", () => {
     expect(groups[1]!.dayKey).toBe("2026-09-15");
   });
 });
+
+describe("previewForMessage with a Studio share", () => {
+  const body =
+    "ouve isto\nhttps://queerpulse.com/studio/collection?id=1b2c3d4e-5f6a-4b7c-8d9e-0f1a2b3c4d5e";
+
+  beforeEach(() => {
+    window.localStorage.removeItem(STORAGE_KEY);
+  });
+
+  it("shows the note and the label in a DM", () => {
+    expect(previewForMessage(false, message({ body }))).toBe(
+      "ouve isto · Studio playlist",
+    );
+  });
+
+  it("keeps the sender's first name in a group", () => {
+    expect(
+      previewForMessage(
+        true,
+        message({ body, sender: author({ displayName: "Ana Lima" }) }),
+      ),
+    ).toBe("Ana: ouve isto · Studio playlist");
+  });
+});

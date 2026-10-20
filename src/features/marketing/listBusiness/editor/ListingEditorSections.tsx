@@ -2,6 +2,7 @@ import { VerifiedBadgeEditNotice } from "../../EditListingStatusHeader";
 import type { ManagedListingDTO } from "../api/listings.api";
 import { CoManagerRoleFields } from "../coManagers/CoManagerRoleFields";
 import { ListingCoManagersSection } from "../coManagers/ListingCoManagersSection";
+import { ListingTeamSection } from "../team/ListingTeamSection";
 import { listingKindOf } from "../listingMobile.data";
 import { effectivePricingMode } from "../listingShop.data";
 import type { ListingForm } from "../useListingForm";
@@ -158,6 +159,10 @@ export function ListingEditorSections({
 
       <ListingEditorSection section={section.coManagers}>
         <ListingCoManagersSection listing={listing} />
+      </ListingEditorSection>
+
+      <ListingEditorSection section={section.team}>
+        <ListingTeamSection listing={listing} />
       </ListingEditorSection>
 
       <ListingEditorSection section={section.permissions}>

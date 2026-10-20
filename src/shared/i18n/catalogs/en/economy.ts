@@ -431,8 +431,9 @@ export const economy: Catalog = {
   "shareToCommunity.eyebrow": "Pass it on",
   "shareToCommunity.title": "Share to <em>a community.</em>",
   "shareToCommunity.ariaLabel": "Share to a community",
+  "shareToCommunity.ariaLabelNamed": "Share {title} to a community",
   "shareToCommunity.sub":
-    "Post this to one of your rooms. It shows up on the room's wall and in the feed, under that community's own rules.",
+    "Post this to one of your communities. It shows up on that community's board and in the feed, under its own rules.",
   "shareToCommunity.communityLabel": "Which community",
   "shareToCommunity.communityPlaceholder": "Choose a community",
   "shareToCommunity.noteLabel": "Say something about it",
@@ -1194,6 +1195,9 @@ export const economy: Catalog = {
     "Reports help us keep QueerPulse trustworthy. Tell us what's going on, specifics help the review team. Your name is never shared with whoever you're reporting.",
   "housingListing.reportModal.concernLabel": "What's the concern?",
   "housingListing.reportModal.reasonMissing": "Choose a concern to send",
+  "housingListing.reportModal.copyrightRoute.body":
+    "Copyright claims have their own form. It asks for the original work and keeps the track online until our team checks it",
+  "housingListing.reportModal.copyrightRoute.cta": "Open the claim form",
   "housingListing.reportModal.detailLabel": "Tell us more",
   "housingListing.reportModal.detailPlaceholder":
     "What made this feel unsafe, discriminatory, or untrustworthy? Be as specific as you're comfortable with.",

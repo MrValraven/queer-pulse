@@ -72,6 +72,51 @@ describe("useDecideSignup", () => {
     );
   });
 
+  it("refreshes the board and every community tab once the decision settles", async () => {
+    vi.spyOn(api, "decideSignup").mockResolvedValue({
+      id: "signup-1",
+      member: null,
+      note: row.note,
+      status: "accepted",
+      decidedAt: "2026-08-18T00:00:00.000Z",
+      createdAt: "2026-08-16T00:00:00.000Z",
+      attended: null,
+      hoursContributed: null,
+      completedAt: null,
+    });
+    const invalidateSpy = vi.spyOn(queryClient, "invalidateQueries");
+
+    const { result } = renderHook(() => useDecideSignup(slug), { wrapper });
+
+    act(() => {
+      result.current.mutate({ signupId: "signup-1", status: "accepted" });
+    });
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    expect(invalidateSpy).toHaveBeenCalledWith({
+      queryKey: opportunityKeys.listRoot,
+    });
+    expect(invalidateSpy).toHaveBeenCalledWith({
+      queryKey: opportunityKeys.communityRoot,
+    });
+  });
+
+  it("refreshes the community tabs after a failed decision too", async () => {
+    vi.spyOn(api, "decideSignup").mockRejectedValue(new Error("network"));
+    const invalidateSpy = vi.spyOn(queryClient, "invalidateQueries");
+
+    const { result } = renderHook(() => useDecideSignup(slug), { wrapper });
+
+    act(() => {
+      result.current.mutate({ signupId: "signup-1", status: "declined" });
+    });
+
+    await waitFor(() => expect(result.current.isError).toBe(true));
+    expect(invalidateSpy).toHaveBeenCalledWith({
+      queryKey: opportunityKeys.communityRoot,
+    });
+  });
+
   it("rolls back the optimistic patch when the request fails", async () => {
     vi.spyOn(api, "decideSignup").mockRejectedValue(new Error("network"));
 

@@ -223,11 +223,11 @@ describe("useStudioTrackUploads", () => {
     const { result } = renderHook(() => useStudioTrackUploads("r1", "p1", []));
     act(() =>
       result.current.addFiles([
-        new File(["x"], "take.wav", { type: "audio/wav" }),
+        new File(["x"], "take.flac", { type: "audio/flac" }),
       ]),
     );
     expect(result.current.rejections).toEqual([
-      { fileName: "take.wav", reason: "type" },
+      { fileName: "take.flac", reason: "type" },
     ]);
     expect(result.current.rows).toEqual([]);
     expect(createTrack).not.toHaveBeenCalled();

@@ -9,12 +9,14 @@ import {
 import { Collapse } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { StudioReleaseType } from "./api/studio.types";
+import { StudioUploadRowProgress } from "./StudioUploadRowProgress";
 import { StudioUploadTrackDetails } from "./StudioUploadTrackDetails";
 import type { UploadRow } from "./useStudioTrackUploads";
 import tracksStyles from "./StudioUploadTracks.module.css";
 
 const STAGE_KEY: Record<UploadRow["stage"], string> = {
   queued: "studio:uploadFlow.files.stage.queued",
+  converting: "studio:uploadFlow.files.stage.converting",
   creating: "studio:uploadFlow.files.stage.creating",
   uploading: "studio:uploadFlow.files.stage.uploading",
   confirming: "studio:uploadFlow.files.stage.confirming",
@@ -217,17 +219,10 @@ export function StudioUploadTrackRow({
             {` · ${t("studio:upload.loudness.measuring")}`}
           </span>
         </span>
-        {(row.stage === "uploading" || row.stage === "confirming") && (
-          <progress
-            className={tracksStyles.progress}
-            max={100}
-            value={row.progress}
-            aria-label={t("studio:uploadFlow.files.progressLabel", label)}
-          />
-        )}
+        <StudioUploadRowProgress row={row} label={label} />
         {row.errorKey && (
           <p className={tracksStyles.error} role="alert">
-            {t(row.errorKey)}
+            {t(row.errorKey, row.errorValues ?? undefined)}
           </p>
         )}
       </div>

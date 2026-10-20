@@ -18,6 +18,8 @@ export function createStableActions(
     seek: (seconds) => latest().seek(seconds),
     retry: () => latest().retry(),
     stop: () => latest().stop(),
+    playWarnedTrack: () => latest().playWarnedTrack(),
+    skipWarnedTrack: () => latest().skipWarnedTrack(),
     playNext: (trackId) => latest().playNext(trackId),
     addToQueue: (trackId) => latest().addToQueue(trackId),
     moveUserItem: (fromIndex, toIndex) =>

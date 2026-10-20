@@ -177,3 +177,14 @@
     );
   }
 }
+
+/* Pulse Live's frameless pages (the big screen, the host remote and the
+   player's /play pages; useQuizshowFramelessPage stamps this attribute)
+   register no app frame, so no bottom tab bar renders on any width. The token
+   is the home indicator inset alone: the consent banner and the remote's
+   fixed control bar sit on the bottom edge, clear of the indicator. Written
+   at every width (an iPad also has a home indicator), and at (0,1,1) it wins
+   over the `:root` rules in the mobile block above wherever it sits. */
+html[data-quizshow-frameless="true"] {
+  --bottom-inset: env(safe-area-inset-bottom, 0px);
+}

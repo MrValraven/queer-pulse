@@ -1,0 +1,183 @@
+/* ── Team section of the listing editor ──────────────────────────────────────
+   Requests, invites and the accepted team, one row per persona. */
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.intro {
+  margin: 0;
+  max-inline-size: 66ch;
+  font-size: var(--text-14);
+  line-height: 1.65;
+  color: var(--ink-60);
+  text-wrap: pretty;
+}
+
+.notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 0;
+  padding: 12px 15px;
+  border-radius: var(--radius-14);
+  background: var(--wash);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  font-size: var(--text-13-5);
+  line-height: 1.6;
+  color: var(--ink-60);
+}
+.notice svg {
+  flex: none;
+  margin-block-start: 3px;
+  color: var(--accent);
+}
+.notice span {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+.heading {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  margin: 8px 0 0;
+  font-size: var(--text-15);
+  font-weight: 600;
+  color: var(--text-strong);
+}
+.count {
+  font-size: var(--text-12-5);
+  font-weight: 500;
+  color: var(--ink-60);
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+/* A list stays mounted after its last row leaves; empty, it takes no gap. */
+.list:empty {
+  display: none;
+}
+
+.row {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
+  padding-block: 14px;
+  border-block-start: 1px solid rgba(var(--line-rgb), 0.09);
+  /* Opaque on the section's card, so a row gliding past another covers it;
+     the divider sits on this animated box and travels with the row. */
+  background: var(--paper);
+}
+/* The row whose arrow was pressed, lifted only while it glides. */
+.rowRaised {
+  z-index: var(--z-raised);
+}
+
+.identity {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1 1 10rem;
+  min-inline-size: 0;
+}
+.identityText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-inline-size: 0;
+}
+.personaName {
+  font-size: var(--text-14);
+  font-weight: 600;
+  color: var(--text-strong);
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+.personaMeta {
+  font-size: var(--text-12-5);
+  line-height: 1.5;
+  color: var(--ink-60);
+  overflow-wrap: anywhere;
+}
+
+/* The role a member shows on the page, read as meta under the name. */
+.roleMeta {
+  margin: 0;
+  font-size: var(--text-13);
+  line-height: 1.5;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+/* A member row's buttons and its role editor fold into each other. */
+.actionsPanel {
+  min-inline-size: 0;
+  margin-inline-start: auto;
+}
+.rolePanel {
+  flex: 1 1 100%;
+  min-inline-size: 0;
+}
+.roleEditor {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+  min-inline-size: 0;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 8px;
+  margin-inline-start: auto;
+}
+@media (max-width: 520px) {
+  .actions {
+    flex-wrap: wrap;
+  }
+}
+
+/* A list heading takes focus when the row it held leaves. */
+.heading:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.rowError {
+  flex: 1 1 100%;
+  min-inline-size: 0;
+}
+.rowErrorText {
+  margin: 0;
+  font-size: var(--text-13);
+  line-height: 1.5;
+  color: var(--accent-text);
+  overflow-wrap: anywhere;
+}
+
+/* The coral "answers waiting" pill beside a nav item. */
+.navBadgeAttention {
+  flex: none;
+  min-width: 1.636em;
+  height: 1.636em;
+  padding: 0 5px;
+  border-radius: var(--radius-pill);
+  background: var(--accent-fill);
+  color: rgba(var(--cream-rgb), 1);
+  font-size: var(--text-11);
+  font-weight: 700;
+  line-height: 1.636em;
+  text-align: center;
+}

@@ -760,11 +760,28 @@ export function formatKeyForLegacyLabel(
     ?.formatKey;
 }
 
-/** Which of the six questions this family asks. None, for no family. */
+/** The one format that asks a question its family does not: a quiz night can
+ *  be 18+, which Pulse Live's adults rounds need (quizshow contract). Mirrors
+ *  the backend's per-format exception in `gathering-family.ts`. */
+const FORMAT_EXTRA_DETAIL_KEYS: Readonly<
+  Record<string, readonly FormatDetailKey[]>
+> = {
+  quiz: ["isAdultsOnly"],
+};
+
+/** Which of the six questions this family asks, followed by the extra keys of
+ *  the given format when it belongs to the family. None, for no family. */
 export function allowedDetailKeys(
   family: GatheringFamily | null | undefined,
+  formatKey?: string | null,
 ): readonly FormatDetailKey[] {
-  return findFamily(family)?.detailKeys ?? [];
+  const familyKeys = findFamily(family)?.detailKeys ?? [];
+  const format = findFormat(formatKey);
+  if (!format || format.family !== family) return familyKeys;
+  const extraKeys = (FORMAT_EXTRA_DETAIL_KEYS[format.key] ?? []).filter(
+    (key) => !familyKeys.includes(key),
+  );
+  return extraKeys.length === 0 ? familyKeys : [...familyKeys, ...extraKeys];
 }
 
 /**
@@ -783,9 +800,10 @@ export function allowedDetailKeys(
 export function stripDisallowedDetails(
   family: GatheringFamily | null | undefined,
   details: FormatDetails | null | undefined,
+  formatKey?: string | null,
 ): FormatDetails | null {
   if (!details) return null;
-  const allowed = allowedDetailKeys(family);
+  const allowed = allowedDetailKeys(family, formatKey);
   const kept: FormatDetails = {};
   let hasAnyKey = false;
   for (const key of allowed) {

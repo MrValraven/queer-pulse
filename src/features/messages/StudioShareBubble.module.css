@@ -1,0 +1,9 @@
+/* The same ceiling PlaceShareBubble.module.css puts on its group: the card
+   has a fixed width cap, so a long caption wraps at the card's width. The
+   group also takes that width outright, since `.attachmentGroup` is a
+   shrink-to-fit table and the card's own `min(320px, 100%)` needs a definite
+   box to resolve against (the bubble wrap gets one in MessagesPage.module.css). */
+.group {
+  inline-size: min(320px, 100%);
+  max-width: min(320px, 100%);
+}

@@ -10,6 +10,7 @@ import {
 } from "./subprofiles.adapters";
 import type {
   CollaboratorDTO,
+  FlashDayEventRef,
   SubprofileDTO,
   SubprofileItemDTO,
   SubprofilePublicDTO,
@@ -478,5 +479,92 @@ describe("itemsToInputDto", () => {
       workState: "shipped",
       structured: { courses: null, snippet: ["First line.", "Second line."] },
     });
+  });
+});
+
+describe("itemsToInputDto with tattoo items", () => {
+  const tattooItemBase = {
+    createdAt: "2026-10-01T10:00:00.000Z",
+    subtitle: null,
+    description: null,
+    url: null,
+    imageUrl: null,
+    date: null,
+    meta: null,
+    tags: [],
+    isFeatured: false,
+    collaborators: [],
+  };
+
+  it("keeps linkedEvent on the view and leaves it out of the save payload", () => {
+    const linkedEvent: FlashDayEventRef = {
+      slug: "trans-joy-picnic",
+      title: "Trans Joy Picnic",
+      startsAt: "2026-11-07T14:00:00.000Z",
+      endsAt: "2026-11-07T18:00:00.000Z",
+      venue: "Jardim da Estrela",
+      neighbourhood: "Estrela",
+      isOnline: false,
+      imageUrl: "https://cdn.test/picnic.jpg",
+    };
+    const dto: SubprofileItemDTO = {
+      ...tattooItemBase,
+      id: "item-flash-day",
+      section: "flash_days",
+      title: "Picnic flash day",
+      structured: {
+        flashDay: {
+          eventSlug: "trans-joy-picnic",
+          cause: "Proceeds to ILGA Portugal",
+        },
+      },
+      linkedEvent,
+    };
+
+    const view = itemToView(dto);
+    const [inputDto] = itemsToInputDto([view]);
+
+    expect(view.linkedEvent).toEqual(linkedEvent);
+    expect("linkedEvent" in inputDto!).toBe(false);
+    expect(inputDto!.structured).toEqual(dto.structured);
+  });
+
+  it("round-trips the tattoo structured keys untouched", () => {
+    const coverUpDto: SubprofileItemDTO = {
+      ...tattooItemBase,
+      id: "item-cover-up",
+      section: "cover_ups",
+      title: "Rose rework",
+      imageUrl: "work-image/u1/after.jpg",
+      structured: {
+        coverUp: {
+          type: "rework",
+          beforeImageUrl: "work-image/u1/before.jpg",
+        },
+        photo: { hasClientConsent: true, isBlurred: false },
+      },
+    };
+    const inProgressDto: SubprofileItemDTO = {
+      ...tattooItemBase,
+      id: "item-in-progress",
+      section: "in_progress",
+      title: "Back piece",
+      structured: {
+        sessions: [
+          {
+            imageUrl: "work-image/u1/session-one.jpg",
+            date: "2026-09-01",
+            note: "Outline",
+          },
+          { imageUrl: "work-image/u1/session-two.jpg", date: "", note: "" },
+        ],
+      },
+    };
+
+    const views = [coverUpDto, inProgressDto].map(itemToView);
+    const inputDtos = itemsToInputDto(views);
+
+    expect(inputDtos[0]!.structured).toEqual(views[0]!.structured);
+    expect(inputDtos[1]!.structured).toEqual(views[1]!.structured);
   });
 });

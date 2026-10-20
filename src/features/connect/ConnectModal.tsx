@@ -64,7 +64,8 @@ export function ConnectModal({
   // PRD-03. The relationship the server actually reports, so a request already
   // waiting FROM this member is known before a doomed send is attempted rather
   // than discovered from its 409.
-  const { isIncoming, incomingConnectionId } = useConnectionsHydrated();
+  const { isIncoming, isPending, incomingConnectionId } =
+    useConnectionsHydrated();
   const incomingNote = useIncomingRequestNote(slug);
   const [phase, setPhase] = useState<Phase>("idle");
   const [error, setError] = useState<string | null>(null);
@@ -89,8 +90,24 @@ export function ConnectModal({
 
   const sent = phase === "sent";
   const theyAskedYou = Boolean((slug && isIncoming(slug)) || refusedAsIncoming);
+  // A request you already sent shows the "already reached out" notice up
+  // front, so the member never composes a send that would only 409. Only while
+  // idle: `send` marks the slug as sent optimistically before the POST
+  // resolves, so without the guard the modal would flip to this notice
+  // mid-send and never reach the "sent" panel.
+  const alreadyAsked = phase === "idle" && Boolean(slug && isPending(slug));
+  const shownNotice: NoticeView | null =
+    notice ??
+    (alreadyAsked
+      ? {
+          mode: "panel",
+          titleKey: "connect:notice.alreadyPending.title",
+          bodyKey: "connect:notice.alreadyPending.body",
+          icon: "reached",
+        }
+      : null);
   // Both the success and terminal-notice panels use the plum-panel chrome.
-  const plum = sent || notice !== null || theyAskedYou;
+  const plum = sent || shownNotice !== null || theyAskedYou;
   // In live mode the member fetch is async; gate only the initial idle render
   // so ConnectForm never mounts with the seed's openTo and then swaps under it.
   const memberLoading = Boolean(slug) && profileLoading && !profileResult;
@@ -224,11 +241,11 @@ export function ConnectModal({
             onDecline={() => void handleDecline()}
             onClose={onClose}
           />
-        ) : notice ? (
+        ) : shownNotice ? (
           <ConnectNoticePanel
-            titleKey={notice.titleKey}
-            bodyKey={notice.bodyKey}
-            icon={notice.icon}
+            titleKey={shownNotice.titleKey}
+            bodyKey={shownNotice.bodyKey}
+            icon={shownNotice.icon}
             firstName={member.first}
             draft={draft}
             onClose={onClose}

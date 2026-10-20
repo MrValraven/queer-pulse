@@ -166,6 +166,14 @@ const AdminCommunitySpaceRequestsPage = lazyNamed(
   () => import("./AdminCommunitySpaceRequestsPage"),
   "AdminCommunitySpaceRequestsPage",
 );
+const AdminCreatorDraftsPage = lazyNamed(
+  () => import("./creatorDrafts/AdminCreatorDraftsPage"),
+  "AdminCreatorDraftsPage",
+);
+const AdminCreatorDraftPage = lazyNamed(
+  () => import("./creatorDrafts/AdminCreatorDraftPage"),
+  "AdminCreatorDraftPage",
+);
 const AdminLandingPage = lazyNamed(
   () => import("./AdminLandingPage"),
   "AdminLandingPage",
@@ -277,6 +285,23 @@ function publicFaceRoutes() {
       <Route
         path={routes.adminLogoConcepts}
         element={<AdminLogoConceptsPage />}
+      />
+    </>
+  );
+}
+
+/** Members' unfinished creator drafts: the list and one draft's read-only
+ *  preview. The backend answers these for the Admin role alone. */
+function creatorDraftRoutes() {
+  return (
+    <>
+      <Route
+        path={routes.adminCreatorDrafts}
+        element={<AdminCreatorDraftsPage />}
+      />
+      <Route
+        path={routes.adminCreatorDraft}
+        element={<AdminCreatorDraftPage />}
       />
     </>
   );
@@ -404,6 +429,7 @@ export function adminRoutes() {
         path={routes.adminCommunitySpaceRequests}
         element={<AdminCommunitySpaceRequestsPage />}
       />
+      {creatorDraftRoutes()}
       {publicFaceRoutes()}
       <Route
         path={routes.adminPartnerApplications}

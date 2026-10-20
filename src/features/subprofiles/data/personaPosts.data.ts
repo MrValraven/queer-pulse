@@ -16,6 +16,16 @@ const MARIANA_POSTS: PersonaPostDTO[] = [
     canEdit: true,
   },
   {
+    id: "demo-post-mariana-release",
+    body: "Cidade dos santos is up on Studio in full so put it on with the windows open and tell me which one is yours",
+    linkUrl:
+      "https://queerpulse.com/studio/album?id=demo-release-cidade-dos-santos",
+    imageUrl: null,
+    createdAt: agoIso(26),
+    editedAt: null,
+    canEdit: true,
+  },
+  {
     id: "demo-post-mariana-2",
     body: "playing the songs from Cidade dos santos at Casa do Comum on 24 October, doors at 21:00 and come say hi after",
     linkUrl: "https://example.org/casa-do-comum/mariana-sol",
@@ -36,29 +46,50 @@ const MARIANA_POSTS: PersonaPostDTO[] = [
   },
 ];
 
-/** Shown on /p/nightform and NIGHTFORM's Studio page, read as a visitor. */
-const NIGHTFORM_POSTS: PersonaPostDTO[] = [
-  ["new single in nine days, Night bus, the long version", 5],
+/** Shown on /p/nightform and NIGHTFORM's Studio page, read as a visitor. The
+ *  first one links the scheduled Night bus release (the card's date state,
+ *  and its no-access state signed out). */
+const NIGHTFORM_ROWS: [body: string, hours: number, linkUrl: string | null][] =
   [
-    "back at the Friday night in Anjos this week and we got the last set of the night",
-    30,
-  ],
-  ["finished the mix for Last stop at 4am as is tradition", 80],
-  ["thank you to everyone who came out on Saturday, still buzzing", 140],
-  [
-    "swapped the old drum machine for a borrowed one and kept it and no regrets",
-    300,
-  ],
-  ["first rehearsal in the new space today and it sounds huge in there", 600],
-].map(([body, hours], index) => ({
-  id: `demo-post-nightform-${index + 1}`,
-  body: String(body),
-  linkUrl: null,
-  imageUrl: null,
-  createdAt: agoIso(Number(hours)),
-  editedAt: null,
-  canEdit: false,
-}));
+    [
+      "new single in nine days, Night bus, the long version",
+      5,
+      "https://queerpulse.com/studio/album?id=demo-release-scheduled-night-bus",
+    ],
+    [
+      "back at the Friday night in Anjos this week and we got the last set of the night",
+      30,
+      null,
+    ],
+    ["finished the mix for Last stop at 4am as is tradition", 80, null],
+    [
+      "thank you to everyone who came out on Saturday, still buzzing",
+      140,
+      null,
+    ],
+    [
+      "swapped the old drum machine for a borrowed one and kept it and no regrets",
+      300,
+      null,
+    ],
+    [
+      "first rehearsal in the new space today and it sounds huge in there",
+      600,
+      null,
+    ],
+  ];
+
+const NIGHTFORM_POSTS: PersonaPostDTO[] = NIGHTFORM_ROWS.map(
+  ([body, hours, linkUrl], index) => ({
+    id: `demo-post-nightform-${index + 1}`,
+    body,
+    linkUrl,
+    imageUrl: null,
+    createdAt: agoIso(hours),
+    editedAt: null,
+    canEdit: false,
+  }),
+);
 
 export const DEMO_PERSONA_POSTS: Record<string, PersonaPostDTO[]> = {
   "demo-persona-mariana-sol": MARIANA_POSTS,

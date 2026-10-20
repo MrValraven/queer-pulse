@@ -1,0 +1,29 @@
+/* Local additions to the shared ApplicationModals sheet for the share to a
+   community dialog: the card preview under the note and the identity line. */
+
+/* The Studio card as it will sit under the post's words, spaced like the
+   `.field` above it. */
+.preview {
+  margin-bottom: 18px;
+}
+
+/* Who the post shows you run. Full ink with an info mark, so it reads as
+   something to know before Post it, apart from the fine-print moderation
+   note under it. */
+.identityNote {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 12px;
+  font-size: var(--text-13);
+  line-height: 1.5;
+  color: var(--ink);
+}
+/* Sized to the text and dropped onto the first line's centre. */
+.identityIcon {
+  flex: none;
+  inline-size: 1em;
+  block-size: 1em;
+  margin-block-start: 0.25em;
+  color: var(--ink-60);
+}

@@ -1,0 +1,6 @@
+/* Padding inside the Collapse keeps the measured height equal to what the
+   eye sees while it folds. */
+.root {
+  padding-top: 10px;
+  max-width: 100%;
+}

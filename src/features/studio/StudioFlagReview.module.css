@@ -140,6 +140,21 @@
   gap: 8px;
   margin-top: 16px;
 }
+/* A destructive decision that sits behind the main fixes: the ghost
+   button's weight in the danger ink (it lifts for dark). Scoped under the
+   card so it outranks the ghost's own and dark-theme rules. */
+.card .actions .dangerOutline {
+  color: var(--danger-ink);
+  border-color: var(--danger-ink);
+}
+@media (hover: hover) {
+  .card .actions .dangerOutline:hover:not(:disabled):not(
+      [aria-disabled="true"]
+    ) {
+    border-color: var(--danger-ink);
+    background: rgba(var(--danger-rgb), 0.08);
+  }
+}
 
 @media (--md) {
   /* The shell already gives the phone gutter, as on every other Studio page. */
@@ -155,5 +170,59 @@
   .actions > button {
     width: 100%;
     min-height: 44px;
+  }
+}
+
+/* Studio safety: the Claims tab's waiting count (the credits badge's
+   look). */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  margin-left: 6px;
+  padding: 0 5px;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--accent-rgb), 0.16);
+  color: var(--studio-accent-chip-text);
+  font-size: var(--text-11);
+  font-weight: 700;
+}
+
+.sectionHeading {
+  margin: 32px 0 12px;
+  font-size: var(--text-16);
+  font-weight: 600;
+  color: var(--studio-text);
+}
+
+.warningPicks {
+  margin-top: 12px;
+}
+
+/* The content warning dialog's body copy and footer, the shared confirm
+   dialog's own look (that dialog has no hook to hold Confirm back until a
+   theme is picked). */
+.warningDescription {
+  margin: 0;
+  font-size: var(--text-14-5);
+  line-height: 1.6;
+  color: var(--ink-60);
+}
+.warningActions {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/* Modal's own bottom-sheet breakpoint (Modal.module.css, ConfirmDialog). */
+@media (max-width: 719.98px) {
+  /* The dialog is a bottom sheet here: both buttons share the row. */
+  .warningActions > * {
+    flex: 1 1 0;
   }
 }

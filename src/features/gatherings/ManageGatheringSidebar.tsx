@@ -1,6 +1,6 @@
 import { FiArrowRight } from "react-icons/fi";
 import { Link } from "react-router-dom";
-import { Button, ImageSlot } from "../../shared/components/ui";
+import { Button, PosterAwareImageSlot } from "../../shared/components/ui";
 import { useFormat } from "../../shared/i18n/format";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -9,7 +9,7 @@ import { gatheringPath, gatheringShareDisplayUrl } from "./data";
 import styles from "./ManageGatheringPage.module.css";
 
 interface ManageGatheringSidebarProps {
-  /** The gathering's own slug — the share URL and "view listing" link are
+  /** The gathering's own slug. The share URL and "view listing" link are
    *  built from it, so both point at THIS gathering's public page. */
   slug: string;
   title: string;
@@ -24,7 +24,7 @@ interface ManageGatheringSidebarProps {
 }
 
 /**
- * The manage dashboard's share card — a preview of how this gathering reads in
+ * The manage dashboard's share card: a preview of how this gathering reads in
  * public, plus its real link. Every value is the live gathering's (in demo mode
  * the page seeds the same props from the Pride-Brunch prototype), so the card
  * never shows a different event than the dashboard around it.
@@ -45,7 +45,7 @@ export function ManageGatheringSidebar({
     <div className={styles.sidebar}>
       <div className={styles.sbCard}>
         {coverImageUrl ? (
-          <ImageSlot
+          <PosterAwareImageSlot
             src={coverImageUrl}
             alt={coverAlt}
             tint="plum"

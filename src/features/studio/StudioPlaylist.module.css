@@ -76,6 +76,19 @@
   vertical-align: middle;
 }
 
+/* Collaborative playlists: the marker on a card. */
+.collabChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 1px 8px;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--studio-ink-rgb), 0.08);
+  color: var(--studio-text);
+  font-size: var(--text-11);
+  vertical-align: middle;
+}
+
 /* Dialog. FormField styles its own input and textarea; the form's gap does
    the spacing, so the field's own bottom margin goes. */
 .form {
@@ -275,6 +288,16 @@
   flex: none;
   color: var(--ink-60);
   font-size: var(--text-13);
+}
+
+/* The same marker on a picker row. */
+.pickerCollab {
+  flex: none;
+  padding: 1px 8px;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--studio-ink-rgb), 0.08);
+  color: var(--studio-text-muted);
+  font-size: var(--text-11);
 }
 
 /* The Liked songs tick: always mounted, so it fades with the pressed state. */

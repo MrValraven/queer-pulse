@@ -23,7 +23,8 @@ import styles from "./WhatChapter.module.css";
  *  only. */
 function FormatDetailsBlock({ form }: { form: GatheringForm }) {
   const { t } = useTranslation();
-  if (!form.family || allowedDetailKeys(form.family).length === 0) return null;
+  if (!form.family || allowedDetailKeys(form.family, form.format).length === 0)
+    return null;
   return (
     <div
       role="group"
@@ -32,6 +33,7 @@ function FormatDetailsBlock({ form }: { form: GatheringForm }) {
       <FormatDetailsFields
         variant="wizard"
         family={form.family}
+        formatKey={form.format}
         details={form.formatDetails}
         onChange={form.setFormatDetail}
       />
@@ -117,6 +119,7 @@ function ThemesField({ form }: { form: GatheringForm }) {
     >
       <ThemeChips
         family={form.family}
+        formatKey={form.format}
         selectedThemes={form.themes}
         onToggle={form.toggleTheme}
         labelledBy={labelId}

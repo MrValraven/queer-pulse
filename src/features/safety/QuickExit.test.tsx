@@ -9,6 +9,10 @@ import { useEffect } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
 import { useStudioPlayer } from "../studio/player/studioPlayerContext";
+import {
+  consentToWarnedTrack,
+  hasWarningConsent,
+} from "../studio/player/studioWarningGate";
 import { resumeStudioQueueSavingForTests } from "../studio/player/studioQueueStorage";
 import { QuickExit } from "./QuickExit";
 
@@ -176,5 +180,19 @@ describe("QuickExit", () => {
 
     expect(savedQueueKeys()).toEqual([]);
     expect(replace).toHaveBeenCalledWith(SAFE_DESTINATION);
+  });
+
+  it("forgets the warned tracks this tab agreed to hear", () => {
+    spyOnReplace();
+    consentToWarnedTrack("warned-track");
+    render(
+      <TestProviders>
+        <QuickExit />
+      </TestProviders>,
+    );
+
+    window.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
+
+    expect(hasWarningConsent("warned-track")).toBe(false);
   });
 });

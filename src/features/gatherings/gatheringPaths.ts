@@ -94,6 +94,7 @@ export const MANAGE_GATHERING_TABS = [
   "checkin",
   "attendees",
   "messages",
+  "quizshow",
   "settings",
 ] as const;
 export type ManageGatheringTab = (typeof MANAGE_GATHERING_TABS)[number];
@@ -107,6 +108,38 @@ export function manageGatheringTabFromParam(
   value: string | null,
 ): ManageGatheringTab | undefined {
   return MANAGE_GATHERING_TABS.find((tabId) => tabId === value);
+}
+
+/**
+ * The tabs the Manage page shows, in order. Live game is hidden while Pulse
+ * Live is not visible, sits second on a quiz-format event and just before
+ * Settings on any other event.
+ */
+export function manageGatheringTabOrder(options: {
+  isQuizFormat: boolean;
+  isQuizshowVisible: boolean;
+}): readonly ManageGatheringTab[] {
+  if (!options.isQuizshowVisible) {
+    return MANAGE_GATHERING_TABS.filter((tabId) => tabId !== "quizshow");
+  }
+  if (options.isQuizFormat) {
+    return [
+      "overview",
+      "quizshow",
+      "checkin",
+      "attendees",
+      "messages",
+      "settings",
+    ];
+  }
+  return [
+    "overview",
+    "checkin",
+    "attendees",
+    "messages",
+    "quizshow",
+    "settings",
+  ];
 }
 
 /** The Manage page, opened on `tab` when one is given. */

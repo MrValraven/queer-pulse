@@ -112,4 +112,8 @@ export const GOVERNANCE_FIELD_LABEL_KEYS: Record<string, string> = {
   // `humanizeGovernanceKey`, which would print English at a reader in
   // Portuguese.
   rulesVersion: "communities:detail.modtools.history.field.rulesVersion",
+  // The backend writes a support section edit as a `settings_changed` diff:
+  // the intro as a string from/to, the methods as one summary line each.
+  givingIntro: "communities:detail.modtools.history.field.givingIntro",
+  givingMethods: "communities:detail.modtools.history.field.givingMethods",
 };

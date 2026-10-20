@@ -14,6 +14,7 @@ import { queueItemFromEpisode, showQueueSource } from "./player/studioQueue";
 import { useStudioEpisodeMemory } from "./player/useStudioEpisodeMemory";
 import { StudioHiddenTrackNote } from "./StudioHiddenTrack";
 import { StudioMarkPlayedButton } from "./StudioMarkPlayedButton";
+import { StudioTrackWarningPill } from "./StudioTrackWarningPill";
 import { studioEpisodeUploadPath } from "./studioPaths";
 import releaseStyles from "./StudioRelease.module.css";
 import css from "./StudioShow.module.css";
@@ -109,6 +110,7 @@ export function StudioEpisodeRow({
             </abbr>
           )}
         </h3>
+        <StudioTrackWarningPill warnings={episode.contentWarnings} />
         <p className={css.facts}>
           {episode.publishedAt && (
             <time dateTime={episode.publishedAt}>

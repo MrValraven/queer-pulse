@@ -9,6 +9,8 @@ import { formatItemDate } from "../../shared/lib/date";
 import type { SubprofileItemView } from "./api/subprofiles.adapters";
 import { EditorItemRowThumbnail } from "./EditorItemRowThumbnail";
 import { EditorItemRowActions } from "./EditorItemRowActions";
+import { isItemPhotoBlurred } from "./skins/tattoo/tattooItemImages";
+import { TattooConsentNudge } from "./skins/tattoo/editor/TattooConsentNudge";
 import styles from "./EditorItemRow.module.css";
 
 interface GripDragHandlers {
@@ -119,6 +121,7 @@ export function EditorItemRow({
         <EditorItemRowThumbnail
           imageUrl={item.imageUrl}
           sectionIcon={SectionIcon}
+          isBlurred={isItemPhotoBlurred(item)}
         />
       )}
       <div className={styles.content}>
@@ -127,6 +130,7 @@ export function EditorItemRow({
             (item.imageUrl ? t("subprofiles:itemEditor.untitledPhoto") : "")}
         </b>
         {subtitle && <small>{subtitle}</small>}
+        <TattooConsentNudge item={item} />
       </div>
       <EditorItemRowActions
         canFeature={canFeature}

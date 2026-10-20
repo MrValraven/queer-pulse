@@ -780,7 +780,7 @@ export const THREADS: Thread[] = [
     posted: "3 weeks ago",
     views: 3340,
     upvotes: 156,
-    comments: 89,
+    comments: 91,
     tags: ["welcome"],
     body: [
       "New here? This is the place to land. Tell us your name (or what you go by), where you came from, what you make or do, and what brought you to QueerPulse.",
@@ -804,6 +804,26 @@ export const THREADS: Thread[] = [
           "Diogo, sound engineer, Lisbon born and back after six years in Berlin. Here for the music thread and to find collaborators. Say hi if you make anything noisy.",
         ],
         reactions: 8,
+      }),
+      reply("carla", {
+        id: "reply-thread3-carla-studio",
+        parentPostId: "reply-thread3-diogo",
+        time: "3 weeks ago",
+        body: [
+          "Diogo you'll want this one, the new Coro de Outubro song on Studio, it gets very loud around the middle and I mean that in the best way",
+          "https://queerpulse.com/studio/track?id=demo-track-home-3-01",
+        ],
+        reactions: 5,
+      }),
+      reply("diogo", {
+        id: "reply-thread3-diogo-studio",
+        parentPostId: "reply-thread3-carla-studio",
+        time: "3 weeks ago",
+        body: [
+          "ha love it and I had a whole album saved from that same scene and now this is all the link shows me",
+          "https://queerpulse.com/studio/album?id=demo-release-withdrawn",
+        ],
+        reactions: 2,
       }),
       reply("bilal-kaya", {
         id: "reply-thread3-bilal-kaya",

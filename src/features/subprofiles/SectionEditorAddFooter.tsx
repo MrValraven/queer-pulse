@@ -20,6 +20,7 @@ export function SectionEditorAddFooter({
   isAtMax,
   hasAddButton,
   sectionLabelKey,
+  addLabelKey,
   addButtonRef,
   onAdd,
 }: {
@@ -28,6 +29,9 @@ export function SectionEditorAddFooter({
   isAtMax: boolean;
   hasAddButton: boolean;
   sectionLabelKey: string;
+  /** A label that names what the button adds ("Add flash"). It is then the
+   *  visible text and the accessible name both. */
+  addLabelKey?: string;
   addButtonRef: RefObject<HTMLButtonElement | null>;
   onAdd: () => void;
 }) {
@@ -44,9 +48,10 @@ export function SectionEditorAddFooter({
             disabled={isAtMax}
             data-jump-target={hasAddButton || undefined}
             // The visible "Add" sits under a heading naming the section;
-            // the name keeps it ("Add to Mixes"). Photos say what they add.
+            // the name keeps it ("Add to Mixes"). Photos and a section with
+            // its own add label say what they add.
             aria-label={
-              isGallery
+              isGallery || addLabelKey
                 ? undefined
                 : t("subprofiles:sectionEditor.addTo", {
                     section: t(sectionLabelKey),
@@ -55,9 +60,10 @@ export function SectionEditorAddFooter({
           >
             <FiPlus size={18} aria-hidden />{" "}
             {t(
-              isGallery
-                ? "subprofiles:gallery.addTitle"
-                : "subprofiles:sectionEditor.add",
+              addLabelKey ??
+                (isGallery
+                  ? "subprofiles:gallery.addTitle"
+                  : "subprofiles:sectionEditor.add"),
             )}
           </button>
         )}

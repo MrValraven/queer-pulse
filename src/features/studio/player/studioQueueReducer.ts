@@ -6,6 +6,7 @@ import type {
   StudioRepeatMode,
 } from "./studioPlayerContext";
 import { extendRadioQueue, shuffledQueue } from "./studioQueue";
+import { isWarningGated, type StudioWarningGate } from "./studioWarningGate";
 
 /**
  * The queue (spec 5.1). Pure: no storage, no audio, no time. Randomness
@@ -28,6 +29,11 @@ export interface StudioQueueState {
   sourceIndex: number;
   isShuffled: boolean;
   repeat: StudioRepeatMode;
+  /** Studio safety (spec 6.3): set when an automatic move landed on a
+   *  warned track the member has not agreed to hear. That track is current
+   *  and cued; nothing streams it until Play it. Missing reads as none
+   *  (states built before this field, saved snapshots). */
+  pendingWarning?: StudioQueueItem | null;
 }
 
 export type StudioQueueAction =
@@ -37,20 +43,28 @@ export type StudioQueueAction =
       items: StudioQueueItem[];
       startIndex: number;
       shuffleSeed: number;
+      gate?: StudioWarningGate;
     }
   | { type: "playNext"; items: StudioQueueItem[] }
   | { type: "addToQueue"; items: StudioQueueItem[] }
   | { type: "moveUser"; fromIndex: number; toIndex: number }
   | { type: "moveUpcomingSource"; fromIndex: number; toIndex: number }
-  | { type: "remove"; queueEntryId: string; hideExplicit?: boolean }
+  | {
+      type: "remove";
+      queueEntryId: string;
+      hideExplicit?: boolean;
+      gate?: StudioWarningGate;
+    }
   | { type: "clearUserQueue" }
   | { type: "playEntry"; queueEntryId: string }
-  | { type: "next"; hideExplicit?: boolean }
-  | { type: "previous"; hideExplicit?: boolean }
+  | { type: "next"; hideExplicit?: boolean; gate?: StudioWarningGate }
+  | { type: "previous"; hideExplicit?: boolean; gate?: StudioWarningGate }
   | { type: "toggleShuffle"; shuffleSeed: number }
   | { type: "cycleRepeat" }
-  | { type: "trackEnded"; hideExplicit?: boolean }
-  | { type: "restore"; state: StudioQueueState }
+  | { type: "trackEnded"; hideExplicit?: boolean; gate?: StudioWarningGate }
+  | { type: "restore"; state: StudioQueueState; gate?: StudioWarningGate }
+  /** Play it: the member agreed to hear the track that waits. */
+  | { type: "consentWarning" }
   | { type: "reset" };
 
 export const EMPTY_QUEUE_STATE: StudioQueueState = {
@@ -63,6 +77,7 @@ export const EMPTY_QUEUE_STATE: StudioQueueState = {
   sourceIndex: -1,
   isShuffled: false,
   repeat: "off",
+  pendingWarning: null,
 };
 
 const NEXT_REPEAT: Record<StudioRepeatMode, StudioRepeatMode> = {
@@ -523,6 +538,8 @@ function reduceQueue(
         : advanced(state, false, action.hideExplicit);
     case "restore":
       return action.state;
+    case "consentWarning":
+      return state.pendingWarning ? { ...state, pendingWarning: null } : state;
     case "reset":
       return {
         ...EMPTY_QUEUE_STATE,
@@ -532,13 +549,60 @@ function reduceQueue(
   }
 }
 
+/** The question a restored state carries: with a gate (a saved queue coming
+ *  back), the gate is asked again on the restored current entry. Without one
+ *  (dropHiddenRadioItems, which drops upcoming radio entries and never
+ *  changes the current one), the state keeps its own question while it
+ *  still names the current entry. */
+function restoredPendingWarning(
+  restored: StudioQueueState,
+  gate: StudioWarningGate | undefined,
+): StudioQueueItem | null {
+  const current = restored.current;
+  if (gate) return isWarningGated(current, gate) ? current : null;
+  const pending = restored.pendingWarning ?? null;
+  return pending && pending.queueEntryId === current?.queueEntryId
+    ? pending
+    : null;
+}
+
+/** Spec 6.3 (D5): a move onto a warned track the member has not agreed to
+ *  hear stops there with `pendingWarning` set, when the move carries a gate
+ *  (next, a track end, a removed current entry, a new queue, previous). A
+ *  move without one (a jump, Play next into an empty player) is a direct
+ *  choice and clears the question. A move that changes nothing keeps it. A
+ *  restore follows `restoredPendingWarning`. */
+function withWarningGate(
+  before: StudioQueueState,
+  reduced: StudioQueueState,
+  action: StudioQueueAction,
+): StudioQueueState {
+  if (action.type === "consentWarning") return reduced;
+  let pendingWarning: StudioQueueItem | null;
+  if (action.type === "restore") {
+    pendingWarning = restoredPendingWarning(reduced, action.gate);
+  } else {
+    const hasMoved =
+      reduced.current?.queueEntryId !== before.current?.queueEntryId;
+    if (!hasMoved) return reduced;
+    const gate = "gate" in action ? action.gate : undefined;
+    pendingWarning = isWarningGated(reduced.current, gate)
+      ? reduced.current
+      : null;
+  }
+  if ((reduced.pendingWarning ?? null) === pendingWarning) return reduced;
+  return { ...reduced, pendingWarning };
+}
+
 export function studioQueueReducer(
   state: StudioQueueState,
   action: StudioQueueAction,
 ): StudioQueueState {
   const reduced = reduceQueue(state, action);
-  if (action.type === "restore" || action.type === "reset") return reduced;
-  return withRadioRefill(reduced);
+  if (action.type === "reset") return reduced;
+  const gated = withWarningGate(state, reduced, action);
+  if (action.type === "restore") return gated;
+  return withRadioRefill(gated);
 }
 
 /** The public shape (contract C StudioQueueView). */

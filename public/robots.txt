@@ -57,6 +57,7 @@ Disallow: /gatherings
 Disallow: /rsvp
 Disallow: /host
 Disallow: /create-gathering
+Disallow: /play
 Disallow: /manage-gathering
 Disallow: /co-host-invite
 Disallow: /collab-invites
@@ -192,6 +193,7 @@ Disallow: /gatherings
 Disallow: /rsvp
 Disallow: /host
 Disallow: /create-gathering
+Disallow: /play
 Disallow: /manage-gathering
 Disallow: /co-host-invite
 Disallow: /collab-invites

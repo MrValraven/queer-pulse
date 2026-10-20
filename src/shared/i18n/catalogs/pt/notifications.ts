@@ -1461,6 +1461,57 @@ export const notifications: Catalog = {
   "type.studio_release_dispute_decided.meta": "Contestação no Studio",
   "type.studio_release_dispute_decided.releaseTitleFallback":
     "o teu lançamento",
+  // Studio safety: copyright claims and the marks our team puts on a track.
+  // In-app only, no push copy.
+  "type.studio_copyright_claim_accepted.text":
+    "{trackTitle} está offline enquanto a nossa equipa analisa uma reivindicação de direitos de autor.",
+  "type.studio_copyright_claim_accepted.meta": "Reivindicação no Studio",
+  "type.studio_copyright_claim_accepted.trackTitleFallback":
+    "Uma das tuas faixas",
+  "type.studio_copyright_claim_declined.text":
+    "A nossa equipa recusou a tua reivindicação relativa a {trackTitle}.",
+  "type.studio_copyright_claim_declined.meta": "Reivindicação no Studio",
+  "type.studio_copyright_claim_declined.trackTitleFallback":
+    "uma faixa do Studio",
+  "type.studio_copyright_claim_countered.text":
+    "A pessoa artista enviou uma contranotificação à tua reivindicação relativa a {trackTitle}.",
+  "type.studio_copyright_claim_countered.meta": "Reivindicação no Studio",
+  "type.studio_copyright_claim_countered.trackTitleFallback":
+    "uma faixa do Studio",
+  "type.studio_copyright_claim_decided.text":
+    "A nossa equipa decidiu a reivindicação relativa a {trackTitle}.",
+  "type.studio_copyright_claim_decided.meta": "Reivindicação no Studio",
+  "type.studio_copyright_claim_decided.trackTitleFallback":
+    "uma faixa do Studio",
+  "type.studio_copyright_claim_decided.owner.upheld.text":
+    "A nossa equipa manteve a reivindicação relativa a {trackTitle}.",
+  "type.studio_copyright_claim_decided.owner.upheld.meta":
+    "Reivindicação no Studio",
+  "type.studio_copyright_claim_decided.owner.rejected.text":
+    "A nossa equipa rejeitou a reivindicação relativa a {trackTitle}. Voltou a estar online.",
+  "type.studio_copyright_claim_decided.owner.rejected.meta":
+    "Reivindicação no Studio",
+  "type.studio_copyright_claim_decided.claimant.upheld.text":
+    "A nossa equipa manteve a tua reivindicação relativa a {trackTitle}.",
+  "type.studio_copyright_claim_decided.claimant.upheld.meta":
+    "Reivindicação no Studio",
+  "type.studio_copyright_claim_decided.claimant.rejected.text":
+    "A nossa equipa rejeitou a tua reivindicação relativa a {trackTitle}.",
+  "type.studio_copyright_claim_decided.claimant.rejected.meta":
+    "Reivindicação no Studio",
+  "type.studio_copyright_claim_withdrawn.text":
+    "A reivindicação relativa a {trackTitle} foi retirada.",
+  "type.studio_copyright_claim_withdrawn.meta": "Reivindicação no Studio",
+  "type.studio_copyright_claim_withdrawn.trackTitleFallback": "a tua faixa",
+  "type.studio_track_marked.text": "A nossa equipa atualizou {trackTitle}.",
+  "type.studio_track_marked.meta": "Faixa do Studio",
+  "type.studio_track_marked.trackTitleFallback": "a tua faixa",
+  "type.studio_track_marked.explicit.text":
+    "A nossa equipa marcou {trackTitle} como explícita.",
+  "type.studio_track_marked.explicit.meta": "Faixa do Studio",
+  "type.studio_track_marked.content_warning.text":
+    "A nossa equipa adicionou um aviso de conteúdo a {trackTitle}.",
+  "type.studio_track_marked.content_warning.meta": "Faixa do Studio",
   "actions.listenNow": "Ouvir agora",
   // Descoberta no Studio: créditos de personas. Ver a nota no bloco EN.
   "type.studio_credit_requested.text":
@@ -1489,4 +1540,56 @@ export const notifications: Catalog = {
   "studioCreditRole.coverArt": "Capa",
   "studioCreditRole.other": "Outro papel",
   "actions.reviewCredit": "Ver crédito",
+  // Playlists colaborativas do Studio. A pessoa que age é a outra parte: quem
+  // criou a playlist num convite ou numa escolha, quem foi convidade numa
+  // resposta. `{name}` vem dessa pessoa; `{playlistName}` e `{personaName}` do
+  // payload.
+  "type.studio_playlist_editor_invite.text":
+    "Foste convidade para editar a playlist {playlistName}.",
+  "type.studio_playlist_editor_invite.textNamed":
+    "<profile>{name}</profile> convidou-te para editar a playlist {playlistName}.",
+  "type.studio_playlist_editor_invite.meta": "Convite para playlist",
+  "type.studio_playlist_editor_invite.playlistNameFallback": "uma playlist",
+  "type.studio_playlist_editor_invite_accepted.text":
+    "Alguém aceitou o teu convite para editar {playlistName}.",
+  "type.studio_playlist_editor_invite_accepted.textNamed":
+    "<profile>{name}</profile> aceitou o teu convite para editar {playlistName}.",
+  "type.studio_playlist_editor_invite_accepted.meta":
+    "Convite para playlist aceite",
+  "type.studio_playlist_editor_invite_accepted.playlistNameFallback":
+    "a tua playlist",
+  "type.studio_playlist_editor_invite_declined.text":
+    "Alguém recusou o teu convite para editar {playlistName}.",
+  "type.studio_playlist_editor_invite_declined.textNamed":
+    "<profile>{name}</profile> recusou o teu convite para editar {playlistName}.",
+  "type.studio_playlist_editor_invite_declined.meta":
+    "Convite para playlist recusado",
+  "type.studio_playlist_editor_invite_declined.playlistNameFallback":
+    "a tua playlist",
+  "type.studio_playlist_editor_added.text":
+    "Agora podes editar {playlistName}, uma playlist de {personaName}.",
+  "type.studio_playlist_editor_added.textNamed":
+    "<profile>{name}</profile> deu-te acesso para editar {playlistName}, de {personaName}.",
+  "type.studio_playlist_editor_added.meta": "Edição de playlist",
+  "type.studio_playlist_editor_added.playlistNameFallback": "uma playlist",
+  "type.studio_playlist_editor_added.personaNameFallback": "a tua persona",
+
+  // ── Meet the team (2026-10-19) ──
+  "type.listing_team_invite.text":
+    "{listingName} convidou {personaName} para a equipa.",
+  "type.listing_team_invite.meta": "Convite para a equipa",
+  "type.listing_team_invite.listingNameFallback": "Um negócio",
+  "type.listing_team_invite.personaNameFallback": "a tua persona",
+  "type.listing_team_request.text":
+    "{personaName} pediu para entrar na equipa de {listingName}.",
+  "type.listing_team_request.meta": "Pedido para a equipa",
+  "type.listing_team_request.personaNameFallback": "Uma persona",
+  "type.listing_team_request.listingNameFallback": "o teu negócio",
+  "type.listing_team_accepted.text":
+    "{personaName} já faz parte da equipa de {listingName}.",
+  "type.listing_team_accepted.meta": "Na equipa",
+  "type.listing_team_accepted.personaNameFallback": "Uma persona",
+  "type.listing_team_accepted.listingNameFallback": "um negócio",
+  "actions.reviewTeamInvite": "Ver convite",
+  "actions.reviewTeamRequest": "Ver pedido",
 };

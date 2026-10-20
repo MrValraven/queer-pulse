@@ -1,3 +1,5 @@
+import { isOwnStudioUrl } from "../../messages/internalLinkTargets";
+
 // ── Reading the draft as text ───────────────────────────────────────────────
 // The checklist, the word count, the similarity search and every nudge all ask
 // questions of the same two strings. They ask them of the WORDS, so the
@@ -54,8 +56,12 @@ export function normalizeTitle(title: string): string {
     .trim();
 }
 
-/** The first link in the body, or null. Drives the rail's unfurl placeholder. */
+/** The first link in the body that gets an OpenGraph card, or null. Drives
+ *  the rail's unfurl placeholder. Own Studio URLs are passed over: a card link
+ *  shows the Studio card, and the rest stay plain links. */
 export function firstLinkIn(body: string): string | null {
-  const match = /https?:\/\/[^\s)]+/.exec(body);
-  return match ? match[0] : null;
+  for (const match of body.matchAll(/https?:\/\/[^\s)]+/g)) {
+    if (!isOwnStudioUrl(match[0])) return match[0];
+  }
+  return null;
 }

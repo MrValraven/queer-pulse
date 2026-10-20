@@ -17,7 +17,7 @@ import type {
 // disputes and withdrawn releases from the Studio admin routes. Demo fixtures
 // are built in these shapes too.
 
-export type StudioReviewTab = "reports" | "disputes" | "withdrawn";
+export type StudioReviewTab = "reports" | "claims" | "disputes" | "withdrawn";
 
 /** A release as a review card shows it: the card plus the takedown facts. */
 export type StudioReviewReleaseView = StudioReleaseCardView & {

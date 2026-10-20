@@ -3,7 +3,10 @@ import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { type SubprofileSectionView } from "./api/subprofiles.adapters";
 import { useSubprofileEditorContext } from "./subprofileEditorContext";
-import { MAX_ITEMS_PER_SECTION } from "./subprofileEditor.data";
+import {
+  MAX_ITEMS_PER_SECTION,
+  SECTION_ADD_LABEL_KEYS,
+} from "./subprofileEditor.data";
 import { TEMPLATE_ITEMS } from "./subprofileTemplates.data";
 import { appendGalleryRows, reorderRow } from "./subprofileSectionEditorRows";
 import { useRowDragReorder } from "./useRowDragReorder";
@@ -133,6 +136,7 @@ export function SubprofileSectionEditor({
         isAtMax={isAtMax}
         hasAddButton={hasAddButton}
         sectionLabelKey={section.labelKey}
+        addLabelKey={SECTION_ADD_LABEL_KEYS[section.section]}
         addButtonRef={addButtonRef}
         onAdd={() =>
           isGallery

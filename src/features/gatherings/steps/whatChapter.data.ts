@@ -2,14 +2,14 @@
  *  for about this much, and the counter says so. */
 export const MAX_TITLE_LENGTH = 80;
 
-/** The description's soft budget (ruling F2): a board card shows about this
- *  many characters, so the counter reads against it and warns past it. Text
- *  past the budget is kept and publishes as usual. */
-export const DESCRIPTION_CARD_BUDGET = 400;
+/** The description's counter budget (ruling F2): a board card shows about this
+ *  many characters. It equals the hard cap, so the counter reads against the
+ *  same number the field stops at. */
+export const DESCRIPTION_CARD_BUDGET = 1200;
 
-/** The description's hard cap, mirroring the backend's `MaxLength(10000)` on
+/** The description's hard cap, mirroring the backend's `MaxLength(1200)` on
  *  `CreateEventDto.description`. */
-export const MAX_DESCRIPTION_STORAGE_LENGTH = 10_000;
+export const MAX_DESCRIPTION_STORAGE_LENGTH = 1_200;
 
 /** At most this many title suggestion chips. */
 export const MAX_TITLE_SUGGESTIONS = 3;

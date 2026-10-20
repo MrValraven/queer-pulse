@@ -11,6 +11,7 @@ import {
   type StagedPostImage,
 } from "../communities/usePostImageAttach";
 import { ForumImageAttach } from "./ForumImageAttach";
+import { StudioComposerPreview } from "../studio/share/StudioComposerPreview";
 import {
   FORUM_DRAFT_STATUS_LABEL_KEY,
   useForumComposerDraft,
@@ -108,6 +109,11 @@ export function ThreadComposer({
         aria-label={t("forum:threadComposer.textareaAria")}
         value={reply}
         onChange={setReply}
+      />
+      <StudioComposerPreview
+        text={reply}
+        onTextChange={setReply}
+        fieldRef={textareaRef}
       />
       <div className={styles.crFooter}>
         <ForumImageAttach

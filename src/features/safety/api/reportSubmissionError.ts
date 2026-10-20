@@ -90,6 +90,17 @@ const REPORT_NOT_PARTICIPANT_CODE = "REPORT_NOT_PARTICIPANT";
  */
 const REPORT_EVIDENCE_EXPIRED_CODE = "REPORT_EVIDENCE_EXPIRED";
 
+/**
+ * Studio safety (spec 4.2): a copyright report about a Studio track or
+ * release belongs on the claim form, so the server refuses the filing with
+ * a coded 422. The report modal routes copyright to the form before it
+ * sends, so this answer means a surface sent one anyway. It gets the
+ * Studio line that names the form, since a retry would only fail again.
+ * Mirrors `studio_use_copyright_claim` in the backend's
+ * `studio/studio-safety.constants.ts`.
+ */
+const STUDIO_USE_COPYRIGHT_CLAIM_CODE = "studio_use_copyright_claim";
+
 /** How a failed report submission should be explained to the member. */
 export type ReportSubmissionRefusal =
   /** A rolling flood cap: shown as `safety:report.floodCap`. */
@@ -100,6 +111,8 @@ export type ReportSubmissionRefusal =
   | { kind: "notParticipant" }
   /** PRD-361: nothing of the reported message is left for staff to review. */
   | { kind: "evidenceExpired" }
+  /** Copyright on a Studio track or release: the claim form takes it. */
+  | { kind: "useCopyrightClaim" }
   /**
    * The server would not accept this filing from this caller: a 401, or a 403
    * that survived the API client's own CSRF re-fetch and retry.
@@ -142,6 +155,13 @@ export function classifyReportSubmissionError(
       REPORT_EVIDENCE_EXPIRED_CODE
   ) {
     return { kind: "evidenceExpired" };
+  }
+  if (
+    error.status === 422 &&
+    (error.data as { code?: unknown } | null | undefined)?.code ===
+      STUDIO_USE_COPYRIGHT_CLAIM_CODE
+  ) {
+    return { kind: "useCopyrightClaim" };
   }
   // Read BEFORE the 429 branch: a refused-outright filing is its own answer and
   // has nothing to do with rate limiting. 403 is included because the API
@@ -191,6 +211,7 @@ export function useReportSubmissionError(): (
   const authRefusedMessage = t("safety:report.authRefused");
   const notParticipantMessage = t("safety:report.notParticipant");
   const evidenceExpiredMessage = t("safety:report.evidenceExpired");
+  const claimFormMessage = t("studio:errors.useCopyrightClaim");
   return useCallback(
     (error: unknown, fallbackMessage: string) => {
       const refusal = classifyReportSubmissionError(error);
@@ -208,6 +229,11 @@ export function useReportSubmissionError(): (
         return evidenceExpiredMessage === "safety:report.evidenceExpired"
           ? fallbackMessage
           : evidenceExpiredMessage;
+      }
+      if (refusal.kind === "useCopyrightClaim") {
+        return claimFormMessage === "studio:errors.useCopyrightClaim"
+          ? fallbackMessage
+          : claimFormMessage;
       }
       if (refusal.kind === "burst") {
         // `t()` echoes the key back while its namespace is still loading, and a
@@ -231,6 +257,7 @@ export function useReportSubmissionError(): (
       authRefusedMessage,
       notParticipantMessage,
       evidenceExpiredMessage,
+      claimFormMessage,
     ],
   );
 }

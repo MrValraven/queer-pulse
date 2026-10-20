@@ -1,7 +1,17 @@
 import { useMemo } from "react";
 import { useMyCommunityOptions } from "../../communities/api/useMyCommunityOptions";
+import type { CommunityRole } from "../../communities/membership.types";
 import type { OwnedPartnerDTO } from "./partners.api";
 import { useMyPartners } from "./useMyPartners";
+
+/** The community roles that speak for a community when posting an
+ *  opportunity, matching what the backend accepts. Hoisted so the community
+ *  options memo sees the same array on every render. */
+export const ORGANISATION_STEWARD_ROLES: CommunityRole[] = [
+  "owner",
+  "co_owner",
+  "mod",
+];
 
 export interface OrganizationOption {
   kind: "partner" | "community";
@@ -42,7 +52,7 @@ function pinnedOnly(
 /**
  * The organisations a volunteering opportunity can be linked to by its
  * poster: the partner orgs they MAINTAIN (`GET /my-partners`, approved rows
- * only) plus the communities they own or moderate, tagged by `kind` so
+ * only) plus the communities they own, co-own or moderate, tagged by `kind` so
  * `OrganizationField` can group them and route a selection back to the right
  * one of `partnerSlug`/`communitySlug`. Both halves are organisations the
  * poster runs, since linking an opportunity to one is speaking for it.
@@ -61,7 +71,9 @@ export function useOrganizationOptions(
   pinned: OrganizationOption[] = NO_PINNED_ORGANIZATIONS,
 ): OrganizationPickerOption[] {
   const partners = useMyPartners().data ?? NO_OWNED_PARTNERS;
-  const communities = useMyCommunityOptions({ roles: ["owner", "mod"] });
+  const communities = useMyCommunityOptions({
+    roles: ORGANISATION_STEWARD_ROLES,
+  });
 
   return useMemo(() => {
     const livePartners = partners.map((partner) => ({

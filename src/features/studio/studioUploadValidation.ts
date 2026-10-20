@@ -12,6 +12,10 @@ import {
   type StudioFormat,
 } from "./api/studio.types";
 import { studioErrorMessageKeyOf } from "./studioErrors.data";
+import {
+  isConvertibleAudio,
+  type ConvertFailureReason,
+} from "./upload/convert/studioWavConverter";
 
 export type FileRejectionReason = "type" | "size" | "limit";
 
@@ -75,26 +79,65 @@ export function fileRejectionKeyOf(
     : FILE_REJECTION_KEY[reason];
 }
 
+export interface AcceptedAudioFile {
+  file: File;
+  contentType: StudioAudioContentType;
+  /** A WAV or AIFF: it uploads as the MP3 the browser makes from it. */
+  needsConversion: boolean;
+}
+
 export function validateAudioFiles(
   files: File[],
   existingCount: number,
   maxBytes: number = STUDIO_LIMITS.audioMaxBytes,
 ) {
-  const accepted: { file: File; contentType: StudioAudioContentType }[] = [];
+  const accepted: AcceptedAudioFile[] = [];
   const rejected: { fileName: string; reason: FileRejectionReason }[] = [];
   for (const file of files) {
-    const contentType = audioContentTypeOf(file);
+    const recognisedType = audioContentTypeOf(file);
+    const needsConversion = recognisedType === null && isConvertibleAudio(file);
+    const contentType = needsConversion ? "audio/mpeg" : recognisedType;
     if (!contentType) rejected.push({ fileName: file.name, reason: "type" });
-    else if (file.size > maxBytes)
+    // The cap applies to the MP3, and the converter checks it.
+    else if (!needsConversion && file.size > maxBytes)
       rejected.push({ fileName: file.name, reason: "size" });
     else if (
       existingCount + accepted.length >=
       STUDIO_LIMITS.tracksPerReleaseMax
     )
       rejected.push({ fileName: file.name, reason: "limit" });
-    else accepted.push({ file, contentType });
+    else accepted.push({ file, contentType, needsConversion });
   }
   return { accepted, rejected };
+}
+
+/** One line for each way a WAV or AIFF can fail to become an MP3. */
+export const CONVERSION_ERROR_KEY: Record<ConvertFailureReason, string> = {
+  tooLong: "studio:uploadFlow.files.errorTooLong",
+  unsupported: "studio:uploadFlow.files.errorUnsupported",
+  failed: "studio:uploadFlow.files.errorConvert",
+};
+
+export interface ConversionFailure {
+  errorKey: string;
+  errorValues: Record<string, number> | null;
+  isRetryable: boolean;
+}
+
+/** A too-long or unreadable file comes back the same on every Retry; a
+ *  failed run may not. */
+export function conversionFailureOf(failure: {
+  reason: ConvertFailureReason;
+  maxMinutes?: number;
+}): ConversionFailure {
+  return {
+    errorKey: CONVERSION_ERROR_KEY[failure.reason],
+    errorValues:
+      failure.maxMinutes === undefined
+        ? null
+        : { maxMinutes: failure.maxMinutes },
+    isRetryable: failure.reason === "failed",
+  };
 }
 
 /** A refused Studio write as a catalog key: the shared restriction line for a

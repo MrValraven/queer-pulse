@@ -77,7 +77,12 @@ export function SubprofileMobileRow({
           size={40}
           secondary={secondary}
         />
-        <SubprofileAvailability value={persona.availability} accent={accent} />
+        <SubprofileAvailability
+          value={persona.availability}
+          accent={accent}
+          kind={persona.kind}
+          skinData={persona.skinData}
+        />
         <SubprofileOwnerBadges
           status={status}
           visibility={visibility}

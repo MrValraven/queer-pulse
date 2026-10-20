@@ -52,15 +52,24 @@ export function SubprofileHeroActions({
   view,
   mode,
   onAction,
+  isAvailabilityHidden = false,
+  hasHostPrimaryAction = false,
 }: {
   view: PublicSubprofileView;
   mode: PersonaViewMode;
   onAction: (action: PersonaAction) => void;
+  /** The tattoo hero carries the status in its own pill, so it hides this one. */
+  isAvailabilityHidden?: boolean;
+  /** The hero leads with its own primary button (the tattoo "How to book"),
+   *  so the link and message buttons here take the quiet ghost style. */
+  hasHostPrimaryAction?: boolean;
 }) {
   const { t } = useTranslation();
   const accent = view.accent ?? DEFAULT_ACCENT;
   const ctaHref = safeHref(view.ctaUrl);
   const hasCta = Boolean(ctaHref && view.ctaLabel);
+  const ctaVariant = hasHostPrimaryAction ? "ghost" : "primary";
+  const messageVariant = hasCta || hasHostPrimaryAction ? "ghost" : "primary";
   // Spec 7: reaching a persona no longer exposes its owner, so an unlinked
   // persona is messageable too. The only thing that still gates it is
   // whether there is a published page to reach at all.
@@ -97,7 +106,14 @@ export function SubprofileHeroActions({
         {/* Disabled on a draft, stored handle or not: that address 404s for
             everyone else until publish (PRD-429), which the banner says. */}
         <SubprofileShare view={view} />
-        <SubprofileAvailability value={view.availability} accent={accent} />
+        {!isAvailabilityHidden && (
+          <SubprofileAvailability
+            value={view.availability}
+            accent={accent}
+            kind={view.kind}
+            skinData={view.skinData}
+          />
+        )}
       </div>
     );
   }
@@ -106,7 +122,7 @@ export function SubprofileHeroActions({
     return (
       <div className="pp-acts">
         {view.ctaLabel && (
-          <Button type="button" variant="primary" size="md" disabled>
+          <Button type="button" variant={ctaVariant} size="md" disabled>
             {view.ctaLabel}
           </Button>
         )}
@@ -147,7 +163,14 @@ export function SubprofileHeroActions({
         {mode === "visitor" && (
           <SubprofileMoreMenu view={view} onAction={onAction} inertReport />
         )}
-        <SubprofileAvailability value={view.availability} accent={accent} />
+        {!isAvailabilityHidden && (
+          <SubprofileAvailability
+            value={view.availability}
+            accent={accent}
+            kind={view.kind}
+            skinData={view.skinData}
+          />
+        )}
       </div>
     );
   }
@@ -157,7 +180,7 @@ export function SubprofileHeroActions({
     <div className="pp-acts">
       {ctaHref && view.ctaLabel && (
         <Button
-          variant="primary"
+          variant={ctaVariant}
           size="md"
           href={ctaHref}
           target="_blank"
@@ -171,7 +194,7 @@ export function SubprofileHeroActions({
         <IdentityContactButton
           target={{ kind: "persona", subprofileId: view.id }}
           name={view.displayName}
-          buttonVariant={hasCta ? "ghost" : "primary"}
+          buttonVariant={messageVariant}
           onOpen={() => onAction("message")}
         />
       )}
@@ -200,7 +223,14 @@ export function SubprofileHeroActions({
         </>
       )}
       <SubprofileMoreMenu view={view} onAction={onAction} />
-      <SubprofileAvailability value={view.availability} accent={accent} />
+      {!isAvailabilityHidden && (
+        <SubprofileAvailability
+          value={view.availability}
+          accent={accent}
+          kind={view.kind}
+          skinData={view.skinData}
+        />
+      )}
     </div>
   );
 }

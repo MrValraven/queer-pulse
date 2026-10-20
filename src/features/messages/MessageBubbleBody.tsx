@@ -10,6 +10,11 @@ import { resolveChatPlaceLink } from "./chatPlaceLink";
 import { useMessageLinkCard } from "./api/useMessageLinkCard";
 import { MessageLinkCard } from "./MessageLinkCard";
 import { PlaceShareBubble } from "./PlaceShareBubble";
+import {
+  findStudioLink,
+  textWithoutStudioLink,
+} from "../studio/share/studioLinkTarget";
+import { StudioShareBubble } from "./StudioShareBubble";
 import { AttachmentCaption } from "./AttachmentCaption";
 import { MessageMeta, type MetaStatus } from "./MessageSendStatus";
 import { useBubbleMetaAlign } from "./useBubbleMetaAlign";
@@ -396,9 +401,11 @@ function ImageOrGifBubble({
  *  body contains a link: the ordinary OpenGraph unfurl, see `MessageLinkCard`;
  *  a resolved QueerPulse place link instead hands off to `PlaceShareBubble`
  *  below, which renders the card on its own with no coloured surface around
- *  it), the body text, and, on a run's last bubble, the meta floated into its
- *  bottom-right (or, for a card-only bubble, tucked below the card instead;
- *  see the `shouldRenderText` gate below).
+ *  it, and a Studio track, release or playlist link hands off the same way
+ *  to `StudioShareBubble`, the Studio card with the note as its caption and
+ *  the URL hidden), the body text, and, on a run's last bubble, the meta
+ *  floated into its bottom-right (or, for a card-only bubble, tucked below
+ *  the card instead; see the `shouldRenderText` gate below).
  *
  *  Its own component (not inlined in `MessageBubbleBody`) because it is the one
  *  body that MEASURES itself: `useBubbleMetaAlign` reads the laid-out line
@@ -408,8 +415,8 @@ function ImageOrGifBubble({
  *  card resolution: `useMessageLinkCard` needs the message text to find a
  *  link in, so the hook call lives here rather than upstream in
  *  `MessageBubble`. Every hook below runs unconditionally, ahead of the
- *  `PlaceShareBubble` early return, so hook order never depends on what the
- *  link resolves to. */
+ *  `StudioShareBubble` and `PlaceShareBubble` early returns, so hook order
+ *  never depends on what the link resolves to. */
 function TextBubble({
   message,
   index,
@@ -457,7 +464,10 @@ function TextBubble({
     (inboundSafetySignals.includes("banking") ||
       inboundSafetySignals.includes("externalPayment") ||
       inboundSafetySignals.includes("offPlatform"));
-  const previewUrl = firstLinkUrl(message.text);
+  // A Studio link wins the card slot even when another link comes first: it
+  // is the one link this bubble turns into a player (Studio rich cards).
+  const studioMatch = findStudioLink(message.text);
+  const previewUrl = studioMatch?.url ?? firstLinkUrl(message.text);
   const linkCard = useMessageLinkCard(previewUrl);
   // The place-name link `renderWithLinks` swaps `previewUrl` for, once the
   // card resolved as a real directory place (never for the ordinary OG
@@ -475,7 +485,12 @@ function TextBubble({
   // Only drop the text once the card has genuinely resolved to something:
   // never mid-flight (the link would vanish with nothing to replace it yet)
   // and never for an empty/failed unfurl (the link stays the only content).
-  const isPreviewResolved = !linkCard.isLoading && linkCard.hasContent;
+  // A Studio target counts only when `findStudioLink` matched too: a bare
+  // `www.` Studio link reaches the hook through `firstLinkUrl` and stays text.
+  const isPreviewResolved =
+    !linkCard.isLoading &&
+    linkCard.hasContent &&
+    (studioMatch !== null || linkCard.studioTarget === null);
   const shouldRenderText = !(isLinkOnlyMessage && isPreviewResolved);
   // Below this point `placeLink` only ever renders inside `PlaceShareBubble`
   // (a resolved place link never reaches the `.bubble` JSX further down), so
@@ -487,6 +502,23 @@ function TextBubble({
     enabled: shouldRenderText,
     signal: message.text,
   });
+  // A resolved Studio link renders card-first like a place share. Every hook
+  // above has already run, so this early return never disturbs hook order.
+  if (studioMatch && linkCard.studioTarget) {
+    return (
+      <StudioShareBubble
+        message={message}
+        isSent={isSent}
+        metaStatus={metaStatus}
+        contentLabelId={contentLabelId}
+        forwardedNode={forwardedNode}
+        replyQuoteNode={replyQuoteNode}
+        target={linkCard.studioTarget}
+        caption={textWithoutStudioLink(message.text, studioMatch)}
+        showInboundSafetyCaution={showInboundSafetyCaution}
+      />
+    );
+  }
   // A resolved QueerPulse place link renders card-first, WhatsApp-photo-style:
   // the card on its own, the note (if any) in a caption bubble below it,
   // instead of tucked inside this coloured bubble surface. Every hook above

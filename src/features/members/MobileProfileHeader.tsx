@@ -1,15 +1,20 @@
 import { useState } from "react";
 import { ImageSlot } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { HeroVouchRow } from "./HeroVouchRow";
 import { MobileProfileActions } from "./MobileProfileActions";
 import { MobileProfileIdentity } from "./MobileProfileIdentity";
 import { MobileProfileIdentityTop } from "./MobileProfileIdentityTop";
 import { MobileProfileOwnerActions } from "./MobileProfileOwnerActions";
 import { MobileProfileStats } from "./MobileProfileStats";
+import { ProfileMutualsCard } from "./ProfileMutualsCard";
 import { ProfilePhotoViewer } from "./ProfilePhotoViewer";
 import type { MemberProfile } from "./data/memberProfiles";
 import type { Member } from "./data/members";
 import styles from "./MobileProfile.module.css";
+
+/** Voucher face diameter in the narrow column, in px (desktop uses 52). */
+const MOBILE_VOUCH_FACE_SIZE = 40;
 
 function VerifiedCheck() {
   return (
@@ -32,6 +37,9 @@ function VerifiedCheck() {
  * for the owner, the CTA block for a visitor). Shows exactly the same data
  * as the desktop `ProfileHero` (`ProfileSections.tsx`), same self/visitor
  * gating, same sub-pieces, just restructured for a single narrow column.
+ * That includes the trust pair closing the header: `HeroVouchRow` (who
+ * vouched) and, for a visitor, `ProfileMutualsCard`, both reused as is with
+ * smaller faces and a full-width card.
  */
 export function MobileProfileHeader({
   profile,
@@ -152,6 +160,23 @@ export function MobileProfileHeader({
         isSelf={isSelf}
         onEditLinks={onEditLinks}
       />
+
+      <HeroVouchRow
+        profile={profile}
+        realSelf={realSelf}
+        isSelf={isSelf}
+        className={styles.trustVouchRow}
+        faceSize={MOBILE_VOUCH_FACE_SIZE}
+        isMutualsChipShown={false}
+      />
+      {/* Raw `realSelf`, as on desktop: no mutuals with yourself, even while
+          previewing your own profile as a visitor. */}
+      {!realSelf && (
+        <ProfileMutualsCard
+          slug={profile.slug}
+          className={styles.trustMutualsCard}
+        />
+      )}
 
       {photoOpen && profile.photo && (
         <ProfilePhotoViewer

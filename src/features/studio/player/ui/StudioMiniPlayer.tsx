@@ -15,6 +15,7 @@ import { StudioEpisodeSkipButton } from "./StudioEpisodeSkipButton";
 import { StudioPlayPauseIcon } from "./StudioIconSwap";
 import { StudioPlayerStatus } from "./StudioPlayerBar";
 import { StudioPlayerCloseButton } from "./StudioPlayerCloseButton";
+import { StudioWarningGate } from "./StudioWarningGate";
 import { useMiniCardSwipe } from "./useMiniCardSwipe";
 import { useStudioSmoothProgress } from "./useStudioSmoothProgress";
 import styles from "../../StudioPlayer.module.css";
@@ -138,8 +139,9 @@ export function StudioMiniPlayer({ item }: { item: StudioQueueItem }) {
   const isEpisode = item.isEpisode === true;
   const isPreview = Boolean(item.previewToken);
   return (
-    <div className={styles.mini} {...swipe}>
+    <div className={styles.mini} data-studio-player-surface="" {...swipe}>
       <StudioPlayerStatus />
+      <StudioWarningGate />
       <button
         type="button"
         className={styles.miniOpen}
@@ -184,6 +186,7 @@ export function StudioMiniPlayer({ item }: { item: StudioQueueItem }) {
         <button
           type="button"
           className={styles.playButton}
+          data-studio-play-toggle=""
           onClick={player.togglePlay}
           aria-label={
             isPlaying ? t("studio:playerBar.pause") : t("studio:playerBar.play")

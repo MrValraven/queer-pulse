@@ -7,7 +7,10 @@ import {
   chromeLabel,
   volunteerEyebrow,
 } from "./volunteerChrome";
+import { VOLUNTEER_COMMUNITY_OPPORTUNITIES } from "./volunteerCommunityOpportunities.data";
 
+/** The community-attributed entries are appended at the end, so the board,
+ *  the detail lookup and each community's Volunteering tab read one list. */
 export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
   {
     slug: "community-outreach",
@@ -791,4 +794,6 @@ export const VOLUNTEER_OPPORTUNITIES: VolunteerOpportunity[] = [
     partner: null,
     community: null,
   },
+
+  ...VOLUNTEER_COMMUNITY_OPPORTUNITIES,
 ];

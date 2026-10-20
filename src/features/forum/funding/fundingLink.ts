@@ -211,7 +211,7 @@ const ALPHANUMERIC_PATTERN = /[A-Za-z0-9]/;
 const PORTUGUESE_MOBILE_PATTERN =
   /(?:(?:\+|00)351[\s.-]{0,3}|(?<!\d))9[1236](?:\d[\s.-]{0,3}\d{3}[\s.-]{0,3}\d{3}|[\s.-]{0,3}\d{3}[\s.-]{0,3}\d{4}|[\s.-]{0,3}\d{3}[\s.-]{0,3}\d{2}[\s.-]{0,3}\d{2})(?!\d)/;
 
-function hasValidIbanChecksum(compact: string): boolean {
+export function hasValidIbanChecksum(compact: string): boolean {
   const rearranged = compact.slice(4) + compact.slice(0, 4);
   let remainder = 0;
   for (const character of rearranged) {

@@ -10,6 +10,8 @@ import {
 import { skinChaptersForKind } from "./skinChapters";
 import type { SectionRowMap } from "./useEditorRowsState";
 import { nonBlankLines } from "./sectionItemsNormalize";
+import { resolveTattooBooksStatus } from "./skins/tattoo/tattooBooksStatus";
+import { isTattooBooksStatus } from "./skins/tattoo/tattooVocab.data";
 
 /** Working copy of the persona's editable `SkinData` blocks, keyed by their
  *  top-level `SkinData` key (`booker`, `chair`, `beforeYouSit`, …). Values are
@@ -109,8 +111,10 @@ function nestedListSubFields(descriptor: SkinBlockDescriptor): string[] {
   const subFields: string[] = [];
   for (const control of descriptor.controls) {
     if (!LIST_CONTROL_KINDS.has(control.kind)) continue;
-    const subKey = control.path.split(".")[1];
-    if (subKey) subFields.push(subKey);
+    // Only a list one level under the block; a deeper path names a list
+    // inside a nested object, which this block-level guarantee leaves alone.
+    const [, subKey, ...deeperKeys] = control.path.split(".");
+    if (subKey && deeperKeys.length === 0) subFields.push(subKey);
   }
   return subFields;
 }
@@ -133,12 +137,29 @@ function normalizeBlockValue(value: unknown): unknown {
   return value;
 }
 
+/** A plain object: a block or a nested group of fields. */
+function isPlainObject(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+/** Whether one field of an object block is empty: absent, `false` (a toggle
+ *  switched off), a blank string, an empty list, or a nested object whose
+ *  every field is empty in turn. */
+function isEmptyField(field: unknown): boolean {
+  if (field === undefined || field === null || field === false) return true;
+  if (typeof field === "string") return field.trim() === "";
+  if (Array.isArray(field)) return field.length === 0;
+  if (isPlainObject(field)) return Object.values(field).every(isEmptyField);
+  return false;
+}
+
 /** Whether a normalized block value carries nothing the page could show:
  *  absent, a blank string, an empty list, an object whose every field is blank
  *  or an empty list, or an availability grid without a start date (the skin
- *  cannot place its cells). */
+ *  cannot place its cells). `false` and a nested object of empty fields
+ *  (`tattooPrices.deposit`) read as empty too. */
 function isEmptyBlockValue(blockKey: string, value: unknown): boolean {
-  if (value === undefined || value === null) return true;
+  if (value === undefined || value === null || value === false) return true;
   if (typeof value === "string") return value.trim() === "";
   if (Array.isArray(value)) return value.length === 0;
   if (typeof value !== "object") return false;
@@ -148,13 +169,7 @@ function isEmptyBlockValue(blockKey: string, value: unknown): boolean {
       typeof object.startDate !== "string" || object.startDate.trim() === ""
     );
   }
-  return Object.values(object).every(
-    (field) =>
-      field === undefined ||
-      field === null ||
-      (typeof field === "string" && field.trim() === "") ||
-      (Array.isArray(field) && field.length === 0),
-  );
+  return Object.values(object).every(isEmptyField);
 }
 
 /** The path prefix of a `sectionItems` or `sectionList` control
@@ -176,15 +191,44 @@ function sectionItemsValue(
 }
 
 /** The value at a `SkinData` dot-path (`"chair.rate"`, `"openSlots"`) in a
- *  draft or baseline. Paths go one level deep, under a block. */
+ *  draft or baseline. A path may go any number of levels deep
+ *  (`"tattooPrices.deposit.amount"`); a missing level reads as undefined. */
 function readPath(source: SkinBlocksDraft, path: string): unknown {
-  const [blockKey, subKey] = path.split(".");
-  const blockValue = source[blockKey!];
-  if (!subKey) return blockValue;
-  if (blockValue && typeof blockValue === "object") {
-    return (blockValue as Record<string, unknown>)[subKey];
+  const [blockKey, ...subKeys] = path.split(".");
+  let value: unknown = source[blockKey!];
+  for (const subKey of subKeys) {
+    if (!value || typeof value !== "object") return undefined;
+    value = (value as Record<string, unknown>)[subKey];
   }
-  return undefined;
+  return value;
+}
+
+/** A copy of `container` with `value` written at `subKeys`, copying each
+ *  level on the way down and keeping its siblings. Writing `undefined`
+ *  removes that key, and a level the removal leaves empty goes too, so a
+ *  toggle switched off leaves no stray `{}` behind. Returns undefined when
+ *  nothing is left at this level. */
+function writeNested(
+  container: unknown,
+  subKeys: string[],
+  value: unknown,
+): Record<string, unknown> | undefined {
+  const [subKey, ...deeperKeys] = subKeys;
+  const existing =
+    container && typeof container === "object"
+      ? (container as Record<string, unknown>)
+      : {};
+  const next: Record<string, unknown> = { ...existing };
+  const written =
+    deeperKeys.length === 0
+      ? value
+      : writeNested(existing[subKey!], deeperKeys, value);
+  if (written === undefined && value === undefined) {
+    delete next[subKey!];
+    return Object.keys(next).length === 0 ? undefined : next;
+  }
+  next[subKey!] = written;
+  return next;
 }
 
 /** A block value as the server would hold it, for comparing a stored value
@@ -220,11 +264,35 @@ function legacyTherapistSeed(skinData: SkinData): SkinBlocksDraft {
   return seed;
 }
 
+/**
+ * A tattoo artist's books status, for a persona whose stored `tattoo.status`
+ * is no listed status (an older persona that only set `availability`): the
+ * status every surface already shows (`resolveTattooBooksStatus`), merged
+ * into the stored `tattoo` block. Undefined when the stored status stands or
+ * nothing resolves.
+ */
+function tattooStatusSeed(
+  subprofile: SubprofileView,
+): Record<string, unknown> | undefined {
+  const storedBlock = (subprofile.skinData as Record<string, unknown> | null)
+    ?.tattoo;
+  const tattooBlock = isPlainObject(storedBlock) ? storedBlock : {};
+  if (isTattooBooksStatus(tattooBlock.status)) return undefined;
+  const status = resolveTattooBooksStatus(
+    subprofile.skinData,
+    subprofile.availability,
+  );
+  if (!status) return undefined;
+  return { ...clone(tattooBlock), status };
+}
+
 /** Seed a draft from the loaded persona's `skinData`, limited to the blocks the
  *  family can edit. Absent blocks stay absent (never seeded as empty objects),
  *  so an untouched family sends nothing extra. A therapist also gets the
  *  blocks its page reads from `practical` (`legacyTherapistSeed`); draft and
- *  baseline both seed through here, so that starts clean. */
+ *  baseline both seed through here, so that starts clean. A tattoo artist
+ *  without a stored books status gets the one its page shows
+ *  (`tattooStatusSeed`). */
 function seedDraft(
   subprofile: SubprofileView,
   descriptors: SkinBlockDescriptor[],
@@ -240,6 +308,13 @@ function seedDraft(
     if (value !== undefined && value !== null) {
       draft[descriptor.blockKey] = clone(value);
     }
+  }
+  if (
+    subprofile.kind === "tattoo_artist" &&
+    descriptors.some((descriptor) => descriptor.blockKey === "tattoo")
+  ) {
+    const tattooBlock = tattooStatusSeed(subprofile);
+    if (tattooBlock) draft.tattoo = tattooBlock;
   }
   return draft;
 }
@@ -296,6 +371,7 @@ export function useSubprofileSkinBlocksEditor(
     const segments = path.split(".");
     const blockKey = segments[0]!;
     const subKey = segments[1];
+    const subKeys = segments.slice(1);
     setDraft((current) => {
       const next = { ...current };
       if (!subKey) {
@@ -315,12 +391,12 @@ export function useSubprofileSkinBlocksEditor(
         }
         return next;
       }
-      // Sub-field of an object block: preserve the sibling fields.
-      const existing =
-        current[blockKey] && typeof current[blockKey] === "object"
-          ? (current[blockKey] as Record<string, unknown>)
-          : {};
-      next[blockKey] = { ...existing, [subKey]: value };
+      // Sub-field of an object block, at any depth: preserve the sibling
+      // fields at every level. `undefined` removes the key (a toggle switched
+      // off), and a block that removal leaves empty leaves the draft.
+      const written = writeNested(current[blockKey], subKeys, value);
+      if (written === undefined) delete next[blockKey];
+      else next[blockKey] = written;
       return next;
     });
   }

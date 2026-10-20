@@ -2,6 +2,9 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useRef, useState } from "react";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { importQuizshowQuiz } from "../quizshow/api/quizshow.api";
+import { quizshowErrorCodeOf } from "../quizshow/api/quizshowErrors";
+import { quizshowKeys } from "../quizshow/api/quizshowKeys";
 import { prefersReducedMotionNow } from "../../shared/hooks/usePrefersReducedMotion";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
@@ -38,6 +41,7 @@ export function usePublishGathering({
   onPublished,
   onVenueRefused,
   onRunByRefused,
+  quizshowSourceSlug = null,
 }: {
   form: GatheringForm;
   /** Runs once the create succeeds (the page clears the stored draft). */
@@ -48,6 +52,9 @@ export function usePublishGathering({
   /** Runs when the server refuses the "Run by" business (the page opens
    *  that field). */
   onRunByRefused?: () => void;
+  /** A duplicate's source event that has a quiz: the new event starts with a
+   *  copy of it. Null for any other publish. */
+  quizshowSourceSlug?: string | null;
 }) {
   const { t } = useTranslation();
   const { showToast } = useToast();
@@ -164,6 +171,33 @@ export function usePublishGathering({
         // Onto the first date, like the co-host invites.
         if (slug && guestCommunitySlugs.length > 0) {
           void inviteGuestCommunities(slug, guestCommunitySlugs);
+        }
+        // A duplicate of an event with a quiz copies it onto the first date.
+        // The event stands whatever the copy returns.
+        if (slug && quizshowSourceSlug && !demoMode) {
+          // A copy refused for its adults rounds says so: the new event is
+          // not 18+. Either way the new event's Live game tab reads afresh.
+          void importQuizshowQuiz(slug, {
+            from: "event",
+            eventSlug: quizshowSourceSlug,
+          })
+            .catch((error: unknown) =>
+              showToast(
+                t(
+                  quizshowErrorCodeOf(error) ===
+                    "quizshow_adults_round_needs_adults_event"
+                    ? "gatherings:create.toast.quizshowCopyNeedsAdultsEvent"
+                    : "gatherings:create.toast.quizshowCopyFailed",
+                ),
+                "warning",
+              ),
+            )
+            .finally(
+              () =>
+                void queryClient.invalidateQueries({
+                  queryKey: quizshowKeys.quiz(slug, demoMode),
+                }),
+            );
         }
         // Demo makes no call: nothing was saved to switch it on for. A date
         // whose opt-in already closed (under 6 hours away) is left out.

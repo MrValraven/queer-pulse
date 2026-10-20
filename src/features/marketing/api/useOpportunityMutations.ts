@@ -22,7 +22,7 @@ import { opportunityKeys } from "./opportunityKeys";
  * invalidates the affected query keys. Demo mode must never hit the network.
  */
 
-/** POST /volunteering — the "Post an opportunity" create flow submit. */
+/** POST /volunteering: the "Post an opportunity" create flow submit. */
 export function useCreateOpportunity() {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
@@ -43,15 +43,20 @@ export function useCreateOpportunity() {
       void queryClient.invalidateQueries({
         queryKey: opportunityKeys.listRoot,
       });
+      void queryClient.invalidateQueries({
+        queryKey: opportunityKeys.communityRoot,
+      });
+      // The community pulse lane lists open opportunities too.
+      void queryClient.invalidateQueries({ queryKey: ["community-pulse"] });
     },
   });
 }
 
-/** PATCH /volunteering/:slug — poster edits an opportunity they posted. Demo
+/** PATCH /volunteering/:slug: poster edits an opportunity they posted. Demo
  * mode keeps the "saving…" beat with no network; the calling page applies
  * the draft to its own local view of the opportunity either way (there's no
- * mock store to refetch from), matching `useCloseOpportunity`'s reliance on
- * mutation state rather than query data for the demo-mode reflection. */
+ * mock store to refetch from), matching how `useCloseOpportunity` reflects
+ * its demo-mode result through mutation state. */
 export function useUpdateOpportunity(slug: string) {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
@@ -70,11 +75,18 @@ export function useUpdateOpportunity(slug: string) {
       void queryClient.invalidateQueries({
         queryKey: opportunityKeys.listRoot,
       });
+      // An edit can move the posting to another community, or change its
+      // spots, so both tabs it touches refresh.
+      void queryClient.invalidateQueries({
+        queryKey: opportunityKeys.communityRoot,
+      });
+      // The community pulse lane lists open opportunities too.
+      void queryClient.invalidateQueries({ queryKey: ["community-pulse"] });
     },
   });
 }
 
-/** POST /volunteering/:slug/close — poster closes the opportunity. */
+/** POST /volunteering/:slug/close: poster closes the opportunity. */
 export function useCloseOpportunity(slug: string) {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
@@ -90,12 +102,17 @@ export function useCloseOpportunity(slug: string) {
       void queryClient.invalidateQueries({
         queryKey: opportunityKeys.listRoot,
       });
+      void queryClient.invalidateQueries({
+        queryKey: opportunityKeys.communityRoot,
+      });
+      // The community pulse lane lists open opportunities too.
+      void queryClient.invalidateQueries({ queryKey: ["community-pulse"] });
     },
   });
 }
 
 /**
- * POST /volunteering/:slug/signups — the apply/express-interest action. The
+ * POST /volunteering/:slug/signups: the apply/express-interest action. The
  * server returns 409 when the opportunity is full OR the member already signed
  * up; the calling component reads `ApiError.status` to surface the right copy.
  * Demo keeps a short "sending…" beat and resolves so the success panel shows.
@@ -122,7 +139,7 @@ export function useSignup(slug: string) {
   });
 }
 
-/** DELETE /volunteering/:slug/signups — withdraw the viewer's own signup. */
+/** DELETE /volunteering/:slug/signups: withdraw the viewer's own signup. */
 export function useWithdrawSignup(slug: string) {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
@@ -138,6 +155,16 @@ export function useWithdrawSignup(slug: string) {
       void queryClient.invalidateQueries({
         queryKey: opportunityKeys.signupsRoot,
       });
+      // A withdrawal frees a spot, which can put a full opportunity back on
+      // the board and on its community's tab.
+      void queryClient.invalidateQueries({
+        queryKey: opportunityKeys.listRoot,
+      });
+      void queryClient.invalidateQueries({
+        queryKey: opportunityKeys.communityRoot,
+      });
+      // The community pulse lane lists open opportunities too.
+      void queryClient.invalidateQueries({ queryKey: ["community-pulse"] });
     },
   });
 }
@@ -148,7 +175,7 @@ export interface DecideSignupVars {
 }
 
 /**
- * PATCH /volunteering/:slug/signups/:signupId — a poster accepts/declines an
+ * PATCH /volunteering/:slug/signups/:signupId: a poster accepts/declines an
  * applicant from the manage-applicants dashboard. Optimistically patches the
  * row's status in the cached signups list and rolls back on failure; demo
  * mode never calls the network (the optimistic patch is its whole result).
@@ -185,6 +212,16 @@ export function useDecideSignup(slug: string) {
           void queryClient.invalidateQueries({
             queryKey: ["my-opportunities"],
           });
+          // An accepted applicant can fill the last spot, which takes the
+          // opportunity off the board and off its community's tab.
+          void queryClient.invalidateQueries({
+            queryKey: opportunityKeys.listRoot,
+          });
+          void queryClient.invalidateQueries({
+            queryKey: opportunityKeys.communityRoot,
+          });
+          // The community pulse lane lists open opportunities too.
+          void queryClient.invalidateQueries({ queryKey: ["community-pulse"] });
         }
       },
     },

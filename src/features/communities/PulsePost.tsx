@@ -7,6 +7,8 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { ConfirmDeleteModal } from "../forum/ConfirmDeleteModal";
+import { splitStudioPostText } from "../studio/share/studioPostText";
+import { StudioPostCard } from "../studio/share/StudioPostCard";
 import type { Post, PostReply, Reaction, ReactionKey } from "./community.model";
 import type { Person } from "./communityDetails";
 import type { CommunityTakedownInput } from "./api/communities.api";
@@ -73,9 +75,14 @@ function PulsePostBody({
       />
     );
   }
+  // One card per post: the first Studio link, out of the words and under
+  // them, after any photo (the forum's order for its link card).
+  const { target, visibleText } = splitStudioPostText(body, {
+    isMarkdown: false,
+  });
   return (
     <>
-      <p className={styles.pBody}>{body}</p>
+      {visibleText && <p className={styles.pBody}>{visibleText}</p>}
       {post.image && (
         <div className={styles.pImg}>
           <img
@@ -87,6 +94,7 @@ function PulsePostBody({
           />
         </div>
       )}
+      {target && <StudioPostCard target={target} />}
     </>
   );
 }
