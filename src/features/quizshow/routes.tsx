@@ -28,8 +28,10 @@ const QuizshowPlayPage = lazyNamed(
 /**
  * Pulse Live (quizshow): the presenter screen and the host's remote under an
  * event, and the player's `/play` pages. The player routes are members only
- * (gated in `authGate.ts`), and every route here sits behind the coming-soon
- * gate (`QUIZSHOW_COMING_SOON_PATTERNS` in `authGate.ts`) until launch.
+ * (gated in `authGate.ts`). Until launch, `AppRoutes` (`app/routes.tsx`) sends
+ * a signed-in member for whom `useIsQuizshowVisible` is false from every route
+ * here to the roadmap (`isQuizshowPath` in `authGate.ts`), so only early-access
+ * members, demo and `pnpm dev` reach these pages.
  */
 export function quizshowRoutes() {
   return (

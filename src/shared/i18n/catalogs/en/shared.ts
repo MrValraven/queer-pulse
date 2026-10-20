@@ -335,6 +335,7 @@ export const shared: Catalog = {
   "adminNav.items.reports": "Reports",
   "adminNav.items.systemAccounts": "System accounts",
   "adminNav.items.officialMessages": "Official messages",
+  "adminNav.items.earlyAccess": "Early access",
 
   // errorHandling.ts / errorMessage.ts — API failure copy, resolved through
   // setQueryErrorTranslator so non-React modules can stay i18n-aware.

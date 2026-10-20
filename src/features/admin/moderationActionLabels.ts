@@ -38,6 +38,10 @@ export const AUDIT_ACTION_LABEL_KEY: Partial<Record<string, string>> = {
   // its owner.
   studio_access_granted: "admin:moderation.action.studioAccessGranted",
   studio_access_revoked: "admin:moderation.action.studioAccessRevoked",
+  // Early access: an admin turned an unlaunched feature on or off for one
+  // member; the note names the feature.
+  early_access_granted: "admin:moderation.action.earlyAccessGranted",
+  early_access_revoked: "admin:moderation.action.earlyAccessRevoked",
   studio_release_taken_down: "admin:moderation.action.studioReleaseTakenDown",
   studio_release_restored: "admin:moderation.action.studioReleaseRestored",
   // Studio safety: the trail names only the claim and the track.

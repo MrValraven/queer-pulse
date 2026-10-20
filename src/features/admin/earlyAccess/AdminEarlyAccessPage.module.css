@@ -1,0 +1,195 @@
+/* ── Page: one section per feature in early access ─────────── */
+.sections {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+/* ── One feature's roster ───────────────────────────────────── */
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+
+.sectionHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 12px;
+  min-width: 0;
+}
+
+.sectionTitle {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-24);
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--text-strong);
+  overflow-wrap: anywhere;
+}
+
+/* Focus arrives here in code after a revoke; the ring sits clear of the
+   descenders. */
+.sectionTitle:focus-visible {
+  outline-offset: 4px;
+}
+
+.count {
+  font-size: var(--text-14);
+  color: var(--ink-60);
+}
+
+.description {
+  margin: 0;
+  max-width: 60ch;
+  font-size: var(--text-15);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+.note {
+  margin: 0;
+  font-size: var(--text-14);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+.emptyBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+/* Admins only: the way from an empty roster to where access is turned on. */
+.emptyLink {
+  display: inline-flex;
+  align-items: center;
+  font-size: var(--text-14);
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--text-strong);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  border-radius: var(--radius-4);
+}
+
+.emptyLink:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+@media (hover: hover) {
+  .emptyLink:hover {
+    color: var(--accent-ink);
+  }
+}
+
+@media (pointer: coarse) {
+  .emptyLink {
+    min-height: var(--tap-min);
+  }
+}
+
+.loadFailed {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+}
+
+/* ── Rows ───────────────────────────────────────────────────── */
+.rows {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 4px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Name and grant line on the left, Revoke on the right. On a phone the
+   button wraps under the name and keeps to the inline end. */
+.row,
+.rowSkeleton {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 16px;
+  padding: 12px 16px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-badge);
+}
+
+.row {
+  transition: border-color var(--dur-base) var(--ease);
+}
+
+@media (hover: hover) {
+  .row:hover {
+    border-color: var(--line-2);
+  }
+}
+
+.identity {
+  display: flex;
+  flex: 1 1 11rem;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.identityText {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.name {
+  font-family: var(--serif);
+  font-size: var(--text-17);
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--ink);
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+@media (hover: hover) {
+  a.name:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+}
+
+.granted {
+  font-size: var(--text-13);
+  line-height: 1.4;
+  color: var(--ink-60);
+}
+
+.revoke {
+  flex: none;
+  margin-inline-start: auto;
+}
+
+/* A thumb gets the full tap floor. */
+@media (pointer: coarse) {
+  .revoke {
+    min-height: var(--tap-min);
+  }
+}
+
+.rowSkeletonText {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}

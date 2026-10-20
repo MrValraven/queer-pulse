@@ -3309,6 +3309,11 @@ export const admin: Catalog = {
     "Reivindicação de direitos de autor mantida",
   "governance.audit.actionType.studio_copyright_claim_rejected":
     "Reivindicação de direitos de autor rejeitada",
+  // Acesso antecipado (`early_access_*` no módulo early-access do backend).
+  "governance.audit.actionType.early_access_granted":
+    "Acesso antecipado ativado",
+  "governance.audit.actionType.early_access_revoked":
+    "Acesso antecipado retirado",
   "governance.audit.range.today": "Hoje",
   "governance.audit.range.week": "Esta semana",
   "governance.audit.range.quarter": "Este trimestre",
@@ -8397,6 +8402,8 @@ export const admin: Catalog = {
   "moderation.action.studioCopyrightClaimRejected":
     "Rejeitou uma reivindicação de direitos de autor",
   "moderation.action.personaPostRemoved": "Removeu uma publicação de persona",
+  "moderation.action.earlyAccessGranted": "Ativou o acesso antecipado",
+  "moderation.action.earlyAccessRevoked": "Retirou o acesso antecipado",
   "ambassadors.loadMore": "Ver mais",
   "ambassadors.loadingMore": "A carregar…",
   "ambassadors.loadMoreError":
@@ -8891,4 +8898,43 @@ export const admin: Catalog = {
   "studioAdmin.toast.eventPinned": "Evento fixado",
   "studioAdmin.toast.eventUnpinned": "Evento desafixado",
   "studioAdmin.toast.releaseRemoved": "{title} saiu da cena",
+  // ── Acesso antecipado (2026-10-20) ─────────────────────────────────────────
+  // Acesso por pessoa a uma funcionalidade ainda por lançar. A secção da
+  // gaveta de membro (`earlyAccess.drawer.*`, `earlyAccess.row.*`) e a lista
+  // em /admin/early-access (`earlyAccess.page.*`, `earlyAccess.roster.*`).
+  // `earlyAccess.feature.<key>.*` dá nome a cada chave de EARLY_ACCESS_FEATURE_KEYS.
+  "earlyAccess.drawer.title": "Acesso antecipado",
+  "earlyAccess.drawer.hint":
+    "Ativa uma funcionalidade para esta pessoa antes do lançamento. Passa a vê-la da próxima vez que abrir a app.",
+  "earlyAccess.row.on": "Ativado por {staff} a {date}",
+  "earlyAccess.row.onNoStaff": "Desde {date}",
+  "earlyAccess.row.off": "Inativo",
+  "earlyAccess.row.toggleLabel": "{feature}: acesso antecipado",
+  "earlyAccess.row.loadFailed": "Não conseguimos carregar o acesso antecipado.",
+  "earlyAccess.row.retry": "Verificar de novo",
+  "earlyAccess.row.saveFailed":
+    "Não conseguimos guardar o acesso antecipado. Tenta de novo.",
+  "earlyAccess.feature.quizshow.name": "Pulse Live",
+  "earlyAccess.feature.quizshow.description":
+    "Jogos de quiz ao vivo nos eventos, para quem apresenta e para quem joga",
+  "earlyAccess.page.title": "Acesso <em>antecipado</em>",
+  "earlyAccess.page.subtitle":
+    "Pessoas a testar funcionalidades antes do lançamento. A administração ativa o acesso na gaveta de cada membro, em Membros.",
+  "earlyAccess.page.empty":
+    "Neste momento, nenhuma funcionalidade está em acesso antecipado.",
+  "earlyAccess.roster.count_one": "{count} pessoa",
+  "earlyAccess.roster.count_other": "{count} pessoas",
+  "earlyAccess.roster.empty":
+    "Ainda ninguém tem acesso antecipado a {feature}.",
+  "earlyAccess.roster.emptyCta": "Abre Membros para ativar o acesso",
+  "earlyAccess.roster.grantedBy": "Ativado por {staff} a {date}",
+  "earlyAccess.roster.grantedOn": "Desde {date}",
+  "earlyAccess.roster.capped": "A mostrar as {limit} mais recentes de {total}.",
+  "earlyAccess.roster.revokeCta": "Retirar acesso",
+  "earlyAccess.roster.revokeTitle": "Retirar o acesso antecipado?",
+  "earlyAccess.roster.revokeBody":
+    "{name} perde o acesso a {feature} da próxima vez que abrir a app.",
+  "earlyAccess.roster.revokeConfirm": "Retirar acesso",
+  "earlyAccess.roster.loadFailed": "Não conseguimos carregar a lista.",
+  "earlyAccess.roster.retry": "Verificar de novo",
 };

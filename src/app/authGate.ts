@@ -1,7 +1,6 @@
 import { matchPath, useLocation } from "react-router-dom";
 import { useAuth, type AuthContextValue } from "./providers/authContext";
 import { useDemoMode } from "./providers/DemoModeProvider";
-import { IS_QUIZSHOW_LAUNCHED } from "../features/quizshow/quizshowLaunch";
 import { isStandaloneLaunch } from "./providers/standaloneLaunch";
 import { linkToPath, routes } from "./routeMap";
 import { LEGACY_REDIRECTS } from "./routes.redirects.data";
@@ -218,13 +217,6 @@ function matchesAny(pathname: string, patterns: string[]): boolean {
  * `isComingSoonPath`.
  */
 // "/work/grants" left this list on 2026-10-05: it now redirects to the live Funding & Grants view, and this gate runs before any redirect.
-// Pulse Live (quizshow) stays hidden in built live apps until launch. The list empties itself when `IS_QUIZSHOW_LAUNCHED` flips to true.
-const QUIZSHOW_COMING_SOON_PATTERNS: string[] = [
-  "/play",
-  "/play/*",
-  "/gatherings/:slug/quizshow/*",
-];
-
 const COMING_SOON_PATTERNS: string[] = [
   // Career column
   "/account/work",
@@ -244,7 +236,6 @@ const COMING_SOON_PATTERNS: string[] = [
   "/work/offer",
   "/economy",
   "/economy/*",
-  ...(IS_QUIZSHOW_LAUNCHED ? [] : QUIZSHOW_COMING_SOON_PATTERNS),
 ];
 
 /**
@@ -252,27 +243,35 @@ const COMING_SOON_PATTERNS: string[] = [
  * should be hidden. Always false in local development so the area stays
  * reachable while it's being built.
  */
-export function isComingSoonPath(
-  pathname: string,
-  options?: { isDemoMode?: boolean },
-): boolean {
+export function isComingSoonPath(pathname: string): boolean {
   if (import.meta.env.DEV) return false;
-  if (
-    options?.isDemoMode &&
-    matchesAny(pathname, QUIZSHOW_COMING_SOON_PATTERNS)
-  )
-    return false;
   return matchesAny(pathname, COMING_SOON_PATTERNS);
 }
 
 /** The link-href form of `isComingSoonPath` (see `isGatedLink`). */
-export function isComingSoonLink(
-  href: string,
-  options?: { isDemoMode?: boolean },
-): boolean {
+export function isComingSoonLink(href: string): boolean {
   const path = linkToPath(href).split(/[?#]/)[0] || "/";
   if (!path.startsWith("/")) return false; // external / mailto / tel
-  return isComingSoonPath(path, options);
+  return isComingSoonPath(path);
+}
+
+// Pulse Live (quizshow) stays out of COMING_SOON_PATTERNS: it is gated per
+// viewer in `app/routes.tsx` (`useIsQuizshowVisible`, after the sign-in gate),
+// so members holding the early-access grant reach it before launch.
+const QUIZSHOW_PATTERNS: string[] = [
+  "/play",
+  "/play/*",
+  "/gatherings/:slug/quizshow/*",
+];
+
+/**
+ * True for every Pulse Live (quizshow) path: the player's `/play` pages and the
+ * presenter screen and remote under an event. `AppRoutes` sends a signed-in
+ * viewer for whom `useIsQuizshowVisible` is false from these to the roadmap;
+ * signed out, the sign-in gate (GATED_PATTERNS) answers first.
+ */
+export function isQuizshowPath(pathname: string): boolean {
+  return matchesAny(pathname, QUIZSHOW_PATTERNS);
 }
 
 /**
@@ -445,6 +444,13 @@ const MOD_ACCESSIBLE_ADMIN_PATTERNS: string[] = [
   // CAPABILITY_ELEVATED_PATTERNS.
   routes.adminStudio,
   `${routes.adminStudio}/*`,
+  // The early-access roster. `AdminEarlyAccessController` is
+  // `@Roles(Moderator, Admin)`, so moderators can see who holds each
+  // unlaunched feature and revoke a grant; granting happens in the admin-only
+  // member drawer. No grant opens it, so it stays out of
+  // CAPABILITY_ELEVATED_PATTERNS. No `/*` sibling: the page has no child
+  // routes.
+  routes.adminEarlyAccess,
 ];
 
 /**

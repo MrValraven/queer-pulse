@@ -78,6 +78,9 @@ const DEMO_USER: AuthUser = {
   // grants ALL staff roles in demo mode directly off `demoMode`, not off this
   // field, so it stays an honest empty array.
   staffRoles: [],
+  // Demo shows every unlaunched feature through its own visibility check
+  // (`isQuizshowVisible` reads `demoMode`), so the mock holds no grants.
+  earlyAccessFeatures: [],
   // A fixed adult mock — already attested so demo sessions never hit the age gate.
   ageAttestedAt: "2026-01-01T00:00:00.000Z",
   // A long-standing demo member — already onboarded. The gate still lets demo

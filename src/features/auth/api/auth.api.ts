@@ -66,6 +66,15 @@ export interface AuthUser {
    */
   staffRoles: string[];
   /**
+   * Early-access grants this member holds for features that are still
+   * unlaunched (e.g. `quizshow`), granted per member by an admin. Defaults to
+   * `[]` at the validation seam (`validateAuthUser`) when the backend payload
+   * omits it, the same way as `staffRoles`. Untyped as `EarlyAccessFeatureKey[]`
+   * so a key the backend adds first never fails validation; callers narrow
+   * with `isEarlyAccessFeatureKey` (see `useHasEarlyAccess`).
+   */
+  earlyAccessFeatures: string[];
+  /**
    * The Terms + Community Guidelines revisions this member has agreed to,
    * paired with the ones currently in effect (ID-14). When either `accepted*`
    * is behind (or `null`) the re-acceptance sheet opens over the member surface

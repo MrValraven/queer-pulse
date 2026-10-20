@@ -72,6 +72,10 @@ export const routes = {
   // here (see MOD_ACCESSIBLE_ADMIN_PATTERNS in authGate.ts).
   adminJoinRequests: "/admin/join-requests",
   adminStaff: "/admin/staff",
+  /** Who holds early access to each unlaunched feature, with revoke.
+   *  Moderator or admin; `AdminEarlyAccessController`. Admins grant from the
+   *  member drawer on /admin/members. */
+  adminEarlyAccess: "/admin/early-access",
   adminBots: "/admin/bots",
   /** PRD-372: post to one member's official thread or broadcast to all.
    *  Admin only, so it rides the blanket `/admin/*` gate in authGate.ts and

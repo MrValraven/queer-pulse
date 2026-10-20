@@ -159,6 +159,14 @@ export const validateAuthUser: ResponseValidator<AuthUser> = (data) => {
       )
     : [];
 
+  // `earlyAccessFeatures` follows `staffRoles`: additive and backend-optional,
+  // so a missing or malformed value means "no grants" and never a 422.
+  data.earlyAccessFeatures = Array.isArray(data.earlyAccessFeatures)
+    ? data.earlyAccessFeatures.filter(
+        (value): value is string => typeof value === "string",
+      )
+    : [];
+
   // `policyVersions` (ID-14) is normalised rather than asserted, for the same
   // reason as `staffRoles`: a backend that predates the field, or one that
   // sends a half-shaped object, must not 422 every gated route — it should just

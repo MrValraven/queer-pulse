@@ -78,6 +78,10 @@ const AdminStaffPage = lazyNamed(
   () => import("./AdminStaffPage"),
   "AdminStaffPage",
 );
+const AdminEarlyAccessPage = lazyNamed(
+  () => import("./earlyAccess/AdminEarlyAccessPage"),
+  "AdminEarlyAccessPage",
+);
 const AdminBotsPage = lazyNamed(
   () => import("./AdminBotsPage"),
   "AdminBotsPage",
@@ -307,6 +311,28 @@ function creatorDraftRoutes() {
   );
 }
 
+/** The rail's People section: members, the join-request queue, staff and
+ *  the early-access roster. */
+function peopleRoutes() {
+  return (
+    <>
+      <Route path={routes.adminMembers} element={<AdminMembersPage />} />
+      <Route
+        path={routes.adminJoinRequests}
+        element={<AdminJoinRequestsPage />}
+      />
+      <Route path={routes.adminStaff} element={<AdminStaffPage />} />
+      {/* Who holds early access to each unlaunched feature. `@Roles(Moderator,
+          Admin)`, so it is listed in MOD_ACCESSIBLE_ADMIN_PATTERNS; admins
+          grant from the member drawer. */}
+      <Route
+        path={routes.adminEarlyAccess}
+        element={<AdminEarlyAccessPage />}
+      />
+    </>
+  );
+}
+
 /** The admin & moderation panels (role-gated in authGate.ts). */
 export function adminRoutes() {
   return (
@@ -351,12 +377,7 @@ export function adminRoutes() {
         path={routes.adminLegalRequests}
         element={<AdminLegalRequestsPage />}
       />
-      <Route path={routes.adminMembers} element={<AdminMembersPage />} />
-      <Route
-        path={routes.adminJoinRequests}
-        element={<AdminJoinRequestsPage />}
-      />
-      <Route path={routes.adminStaff} element={<AdminStaffPage />} />
+      {peopleRoutes()}
       <Route path={routes.adminBots} element={<AdminBotsPage />} />
       {/* PRD-372: official messages. `@Roles(Admin)` alone on the backend, so
           it is deliberately absent from MOD_ACCESSIBLE_ADMIN_PATTERNS. */}

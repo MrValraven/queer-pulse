@@ -12,6 +12,7 @@ import {
   isGatedPath,
   isGuestOnlyPath,
   isComingSoonPath,
+  isQuizshowPath,
 } from "./authGate";
 import { useAuth } from "./providers/authContext";
 import { useDemoMode } from "./providers/DemoModeProvider";
@@ -53,6 +54,7 @@ import { systemRoutes } from "../features/system/routes";
 import { adminRoutes } from "../features/admin/routes";
 import { simulationRoutes } from "../features/simulations/routes";
 import { quizshowRoutes } from "../features/quizshow/routes";
+import { useIsQuizshowVisible } from "../features/quizshow/quizshowLaunch";
 
 const HomePage = lazyNamed(
   () => import("../features/homepage/HomePage"),
@@ -89,12 +91,13 @@ export function AppRoutes() {
   const { demoMode } = useDemoMode();
   // Before the early returns below, so the hook order never changes.
   const studioAccess = useStudioAccess();
+  const isQuizshowVisible = useIsQuizshowVisible();
   // The Work & Economy surface isn't launched yet, so bounce its routes to the
   // roadmap, where a "Coming soon" card lists what's landing. Decided before the
   // auth checks because it doesn't depend on a session (the roadmap is public),
   // and inert in local dev (isComingSoonPath is false there) so the area stays
   // reachable while it's being built.
-  if (isComingSoonPath(pathname, { isDemoMode: demoMode })) {
+  if (isComingSoonPath(pathname)) {
     return isExitingPlane ? null : <Navigate to={routes.roadmap} replace />;
   }
   // While the live session is still being determined, hold gated routes on the
@@ -109,6 +112,15 @@ export function AppRoutes() {
   }
   if (gateRedirect) {
     return isExitingPlane ? null : <Navigate to={gateRedirect} replace />;
+  }
+  // Pulse Live is unlaunched: a signed-in member without the early-access
+  // grant goes to the roadmap, the same place every other unlaunched surface
+  // lands. Decided after the sign-in gate so a signed-out visitor goes to
+  // sign-in with `?next=` kept, and after the `checking` hold above (every
+  // Pulse Live path is gated) so a grant holder is never bounced before
+  // `/auth/me` settles. Demo and `pnpm dev` always pass.
+  if (!isQuizshowVisible && isQuizshowPath(pathname)) {
+    return isExitingPlane ? null : <Navigate to={routes.roadmap} replace />;
   }
 
   return (

@@ -10,6 +10,7 @@ import { AdminMemberStaffRoles } from "./AdminMemberStaffRoles";
 import { AdminMemberAmbassadorLine } from "./AdminMemberAmbassadorLine";
 import { AdminMemberStudioAccessLine } from "./AdminMemberStudioAccessLine";
 import { AdminAccessPanel } from "./AdminAccessRow";
+import { AdminMemberEarlyAccessSection } from "./earlyAccess/AdminMemberEarlyAccessSection";
 import {
   SEALED_IDENTITY,
   type AdminMember,
@@ -36,22 +37,25 @@ export function RolesAndAccessSection({
 }) {
   const { t } = useTranslation();
   return (
-    <section className={styles.dSection}>
-      <h3 className={styles.dHeading}>{t("admin:staffRoles.title")}</h3>
-      <p className={styles.dHint}>{t("admin:staffRoles.subtitle")}</p>
-      <AdminMemberRoleControl member={member} detail={detail} />
-      <AdminAccessPanel>
-        <AdminMemberStaffRoles
-          memberId={member.id}
-          slug={member.slug}
-          isSystem={detail.isSystem}
-          role={detail.role}
-          staffRoles={detail.staffRoles}
-        />
-        <AdminMemberAmbassadorLine slug={member.slug} />
-        <AdminMemberStudioAccessLine memberId={member.id} />
-      </AdminAccessPanel>
-    </section>
+    <>
+      <section className={styles.dSection}>
+        <h3 className={styles.dHeading}>{t("admin:staffRoles.title")}</h3>
+        <p className={styles.dHint}>{t("admin:staffRoles.subtitle")}</p>
+        <AdminMemberRoleControl member={member} detail={detail} />
+        <AdminAccessPanel>
+          <AdminMemberStaffRoles
+            memberId={member.id}
+            slug={member.slug}
+            isSystem={detail.isSystem}
+            role={detail.role}
+            staffRoles={detail.staffRoles}
+          />
+          <AdminMemberAmbassadorLine slug={member.slug} />
+          <AdminMemberStudioAccessLine memberId={member.id} />
+        </AdminAccessPanel>
+      </section>
+      <AdminMemberEarlyAccessSection memberId={member.id} />
+    </>
   );
 }
 

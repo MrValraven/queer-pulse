@@ -402,6 +402,7 @@ export function toProvisionalAuthUser(
     status: member.status,
     role: "member",
     staffRoles: [],
+    earlyAccessFeatures: [],
     ageAttestedAt: member.ageAttestedAt,
     onboardedAt: member.onboardedAt,
     suspendedUntil: null,

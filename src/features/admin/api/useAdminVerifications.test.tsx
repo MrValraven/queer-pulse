@@ -87,6 +87,7 @@ const LIVE_STAFF_USER: AuthUser = {
   suspendedUntil: null,
   suspension: null,
   staffRoles: [],
+  earlyAccessFeatures: [],
   profile: {
     slug: "staff-member",
     firstName: "Staff",

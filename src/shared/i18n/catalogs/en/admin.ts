@@ -3309,6 +3309,9 @@ export const admin: Catalog = {
     "Copyright claim upheld",
   "governance.audit.actionType.studio_copyright_claim_rejected":
     "Copyright claim rejected",
+  // Early access grants (`early_access_*` in the backend early-access module).
+  "governance.audit.actionType.early_access_granted": "Early access turned on",
+  "governance.audit.actionType.early_access_revoked": "Early access revoked",
   "governance.audit.range.today": "Today",
   "governance.audit.range.week": "This week",
   "governance.audit.range.quarter": "This quarter",
@@ -8308,6 +8311,8 @@ export const admin: Catalog = {
   "moderation.action.studioCopyrightClaimRejected":
     "Rejected a copyright claim",
   "moderation.action.personaPostRemoved": "Removed a persona post",
+  "moderation.action.earlyAccessGranted": "Turned on early access",
+  "moderation.action.earlyAccessRevoked": "Revoked early access",
   "ambassadors.loadMore": "Load more",
   "ambassadors.loadingMore": "Loading…",
   "ambassadors.loadMoreError": "We couldn't load more ambassadors. Try again.",
@@ -8792,4 +8797,40 @@ export const admin: Catalog = {
   "studioAdmin.toast.eventPinned": "Event pinned",
   "studioAdmin.toast.eventUnpinned": "Event unpinned",
   "studioAdmin.toast.releaseRemoved": "{title} left the scene",
+  // ── Early access (2026-10-20) ──────────────────────────────────────────────
+  // Per-member access to an unlaunched feature. The admin member drawer
+  // section (`earlyAccess.drawer.*`, `earlyAccess.row.*`) and the
+  // /admin/early-access roster (`earlyAccess.page.*`, `earlyAccess.roster.*`).
+  // `earlyAccess.feature.<key>.*` names each key in EARLY_ACCESS_FEATURE_KEYS.
+  "earlyAccess.drawer.title": "Early access",
+  "earlyAccess.drawer.hint":
+    "Turn on a feature for this member before it launches. They see it the next time they open the app.",
+  "earlyAccess.row.on": "Turned on by {staff} on {date}",
+  "earlyAccess.row.onNoStaff": "Since {date}",
+  "earlyAccess.row.off": "Off",
+  "earlyAccess.row.toggleLabel": "{feature} early access",
+  "earlyAccess.row.loadFailed": "Couldn't load early access.",
+  "earlyAccess.row.retry": "Check again",
+  "earlyAccess.row.saveFailed": "Couldn't save early access. Try again.",
+  "earlyAccess.feature.quizshow.name": "Pulse Live",
+  "earlyAccess.feature.quizshow.description":
+    "Live quiz games on events, for hosts and players",
+  "earlyAccess.page.title": "Early <em>access</em>",
+  "earlyAccess.page.subtitle":
+    "Members testing features before launch. Admins turn access on from a member's drawer in Members.",
+  "earlyAccess.page.empty": "No feature is in early access right now.",
+  "earlyAccess.roster.count_one": "{count} member",
+  "earlyAccess.roster.count_other": "{count} members",
+  "earlyAccess.roster.empty": "No one has early access to {feature} yet.",
+  "earlyAccess.roster.emptyCta": "Open Members to turn access on",
+  "earlyAccess.roster.grantedBy": "Turned on by {staff} on {date}",
+  "earlyAccess.roster.grantedOn": "Since {date}",
+  "earlyAccess.roster.capped": "Showing the {limit} most recent of {total}.",
+  "earlyAccess.roster.revokeCta": "Revoke access",
+  "earlyAccess.roster.revokeTitle": "Revoke early access?",
+  "earlyAccess.roster.revokeBody":
+    "{name} loses {feature} the next time they open the app.",
+  "earlyAccess.roster.revokeConfirm": "Revoke access",
+  "earlyAccess.roster.loadFailed": "Couldn't load the list.",
+  "earlyAccess.roster.retry": "Check again",
 };

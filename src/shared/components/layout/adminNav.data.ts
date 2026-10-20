@@ -43,6 +43,7 @@ import {
   FiUserPlus,
   FiUserX,
   FiUsers,
+  FiZap,
 } from "react-icons/fi";
 import type { IconType } from "react-icons";
 import { routes } from "../../../app/routeMap";
@@ -274,6 +275,17 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
         labelKey: "shared:adminNav.items.staff",
         to: routes.adminStaff,
         icon: FiKey,
+      },
+      {
+        // Who holds early access to each unlaunched feature, with revoke.
+        // `AdminEarlyAccessController` is `@Roles(Moderator, Admin)` and the
+        // path sits in `MOD_ACCESSIBLE_ADMIN_PATTERNS`, so moderators and
+        // admins both see it: no `capabilities` and no `isAdminOnly`. No
+        // `badge`: badges count pending queues, and a roster has nothing
+        // waiting on anyone.
+        labelKey: "shared:adminNav.items.earlyAccess",
+        to: routes.adminEarlyAccess,
+        icon: FiZap,
       },
     ],
   },

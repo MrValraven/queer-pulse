@@ -38,4 +38,20 @@ describe("quizshow paths", () => {
       false,
     );
   });
+  it("shows Pulse Live in a live build to a member holding the early-access grant", () => {
+    expect(
+      isQuizshowVisible({
+        isDemoMode: false,
+        isDevBuild: false,
+        hasEarlyAccess: true,
+      }),
+    ).toBe(true);
+    expect(
+      isQuizshowVisible({
+        isDemoMode: false,
+        isDevBuild: false,
+        hasEarlyAccess: false,
+      }),
+    ).toBe(false);
+  });
 });

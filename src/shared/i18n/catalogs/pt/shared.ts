@@ -312,6 +312,7 @@ export const shared: Catalog = {
   "adminNav.items.reports": "Relatórios",
   "adminNav.items.systemAccounts": "Contas de sistema",
   "adminNav.items.officialMessages": "Mensagens oficiais",
+  "adminNav.items.earlyAccess": "Acesso antecipado",
 
   // errorHandling.ts / errorMessage.ts
   "apiError.server": "Algo correu mal do nosso lado. Tenta outra vez.",
