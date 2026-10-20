@@ -50,6 +50,7 @@ const ROW: ListingTeamManagerRowDTO = {
     displayName: "Agulha Lenta",
     kind: "tattoo_artist",
     avatarUrl: null,
+    ownerName: null,
   },
   createdAt: "2026-09-01T09:00:00.000Z",
   answeredAt: "2026-09-02T09:00:00.000Z",

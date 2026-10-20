@@ -37,6 +37,23 @@ describe("demo team fixtures", () => {
     }
   });
 
+  it("carries the owner name only on a linked demo team persona", () => {
+    for (const persona of DEMO_TEAM_PERSONAS) {
+      const subprofile = DEMO_SUBPROFILES.find(
+        (candidate) => candidate.id === persona.id,
+      );
+      const expectedOwnerName =
+        subprofile?.linkVisibility === "linked" ? subprofile.ownerName : null;
+      expect(persona.ownerName, persona.id).toBe(expectedOwnerName);
+    }
+    expect(
+      DEMO_TEAM_PERSONAS.some(
+        (persona) =>
+          persona.displayName === "Tattoo artist" && persona.ownerName !== null,
+      ),
+    ).toBe(true);
+  });
+
   it("lets the demo viewer edit the persona the store invites", () => {
     const mineIds = mockMineSubprofiles().map((subprofile) => subprofile.id);
     expect(mineIds).toContain(DEMO_VIEWER_TEAM_PERSONA_ID);

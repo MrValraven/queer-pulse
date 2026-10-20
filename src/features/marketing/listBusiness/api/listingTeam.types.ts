@@ -1,5 +1,6 @@
 // Meet the team on business pages (QUEERPULSE-BUSINESS-TEAM-CONTRACT-2026-10-19.md).
-// No shape here carries a user id, a member slug or a member name.
+// No shape here carries a user id or a member slug. The owner's name travels
+// only for a linked persona (`ownerName`); an unlinked persona carries none.
 import type { CropRect } from "../../../../shared/components/ui/cropGeometry";
 import type { SubprofileKind } from "../../../subprofiles/api/subprofiles.api";
 import type { CoverPhotoView } from "../../api/directory.api";
@@ -31,6 +32,8 @@ export interface ListingTeamPersonaDTO {
   kind: SubprofileKind;
   avatarUrl: string | null;
   avatarCrop?: CropRect;
+  /** The owner member's name for a linked persona; null for an unlinked one. */
+  ownerName: string | null;
 }
 
 export interface ListingTeamListingDTO {
@@ -163,6 +166,21 @@ export interface ListingTeamPersonaView {
   kindLabelKey: string;
   avatarUrl: string | null;
   avatarCrop?: CropRect;
+  /** The owner member's name for a linked persona; null for an unlinked one. */
+  ownerName: string | null;
+  /**
+   * For a slot that shows the name alone: "Owner Name | Poet" when the persona
+   * is still named after its craft and linked (`personaTitleName`), else the
+   * display name. Every aria-label and status line uses this one.
+   */
+  titleName: string;
+  /**
+   * For a slot that already shows the craft beside the name: the owner's name
+   * alone for a craft-named linked persona (`personaNameBesideCraft`), else
+   * the display name.
+   */
+  nameBesideCraft: string;
+  /** Taken from `nameBesideCraft`: a Poet owned by Tiago Costa gives "TC". */
   initials: string;
   /** `personaPath(handle)`. */
   href: string;

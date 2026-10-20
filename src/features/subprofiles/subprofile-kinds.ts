@@ -48,6 +48,7 @@ import {
   GiCog,
   GiDiceTwentyFacesTwenty,
   GiDramaMasks,
+  GiInkSwirl,
   GiJigsawPiece,
   GiLaurelsTrophy,
   GiMeeple,
@@ -869,6 +870,9 @@ export const KIND_ICON_OVERRIDE: Partial<Record<SubprofileKind, IconType>> = {
   short_form_creator: FiSmartphone,
   podcast_producer: FiHeadphones,
   radio_host: FiRadio,
+  // tattoo_artist leads with a picture-style section icon that reads as "photos"
+  // on persona cards, so it gets an ink swirl instead.
+  tattoo_artist: GiInkSwirl,
 };
 
 /** The icon for a kind's create-picker chip: the override above when one

@@ -3671,10 +3671,22 @@ export const marketing: Catalog = {
     "As páginas de criador do Studio cabem no telemóvel",
   "changelog.entries.studio-creator-phone-layout.body":
     "A barra de cima sai ao fazer scroll, os cartões usam a largura toda e o botão do lançamento fica dentro do cartão.",
+  "changelog.entries.team-portrait-cards.title":
+    "Conhece a equipa mostra cada membro num cartão com retrato",
+  "changelog.entries.team-portrait-cards.body":
+    "Foto maior sobre uma faixa colorida, o @handle, a função numa etiqueta coral e quatro cartões por linha no computador.",
+  "changelog.entries.team-shows-persona-owner.title":
+    "As equipas dos negócios mostram quem está por trás de cada persona",
+  "changelog.entries.team-shows-persona-owner.body":
+    'Uma persona ligada chamada só "Poesia" ou "Programação" mostra agora o nome e as iniciais de quem a tem.',
   "changelog.entries.studio-headers-fit.title":
     "Os cabeçalhos do Studio voltam a caber",
   "changelog.entries.studio-headers-fit.body":
     "Nos álbuns e playlists, os botões de ouvir ficam numa só linha em tablets, e o logótipo QueerPulse já não tem espaço a meio.",
+  "changelog.entries.studio-keeps-playing-when-locked.title":
+    "O Studio continua a tocar com o Android bloqueado",
+  "changelog.entries.studio-keeps-playing-when-locked.body":
+    "Mudar de música com o ecrã desligado parava tudo poucos segundos depois de começar a faixa seguinte.",
   "changelog.entries.studio-listening-sidebar.title":
     "A barra lateral do Studio é para ouvir",
   "changelog.entries.studio-listening-sidebar.body":

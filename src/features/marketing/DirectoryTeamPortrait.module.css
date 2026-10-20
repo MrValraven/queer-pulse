@@ -1,0 +1,292 @@
+/* "Meet the team": a small profile card with a tinted header band, an avatar
+   lifted over the band's edge, and the role as an accent pill. The surface,
+   border and radius match the directory's related-place cards (`.card` in
+   DirectoryPage.module.css). */
+
+/* The grid answers to the section's width, so 4 members sit in one row of 4
+   on a wide page and in 2 by 2 anywhere narrower, phones included. */
+.container {
+  container-type: inline-size;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+@container (min-width: 720px) {
+  .grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+.item {
+  min-width: 0;
+  display: flex;
+}
+.card {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-18);
+  padding: 0 16px 18px;
+  overflow: hidden;
+  color: inherit;
+  text-decoration: none;
+  box-shadow: var(--shadow-e1);
+  transition-property: transform, box-shadow, border-color;
+  transition-duration: var(--dur-base);
+  transition-timing-function: var(--ease);
+}
+
+/* Header band: a gentle two-stop wash, picked by list position. */
+.band {
+  align-self: stretch;
+  height: 58px;
+  margin: 0 -16px;
+  flex-shrink: 0;
+}
+.tintCoral {
+  background: linear-gradient(
+    135deg,
+    rgba(var(--accent-rgb), 0.24),
+    rgba(var(--amber-rgb), 0.16)
+  );
+}
+.tintJade {
+  background: linear-gradient(
+    135deg,
+    rgba(var(--jade-rgb), 0.24),
+    rgba(var(--amber-rgb), 0.12)
+  );
+}
+.tintViolet {
+  background: linear-gradient(
+    135deg,
+    rgba(var(--violet-rgb), 0.22),
+    rgba(var(--violet-rgb), 0.1)
+  );
+}
+.tintRose {
+  background: linear-gradient(
+    135deg,
+    rgba(var(--rose-rgb), 0.3),
+    rgba(var(--rose-rgb), 0.12)
+  );
+}
+/* On the dark surface the amber stop muddies every hue, so each band is one
+   hue, washed stronger. */
+:global([data-theme="dark"]) .tintCoral {
+  background: linear-gradient(
+    135deg,
+    rgba(var(--accent-rgb), 0.5),
+    rgba(var(--accent-rgb), 0.3)
+  );
+}
+:global([data-theme="dark"]) .tintJade {
+  background: linear-gradient(
+    135deg,
+    rgba(var(--jade-rgb), 0.55),
+    rgba(var(--jade-rgb), 0.3)
+  );
+}
+:global([data-theme="dark"]) .tintViolet {
+  background: linear-gradient(
+    135deg,
+    rgba(var(--violet-rgb), 0.5),
+    rgba(var(--violet-rgb), 0.26)
+  );
+}
+:global([data-theme="dark"]) .tintRose {
+  background: linear-gradient(
+    135deg,
+    rgba(var(--rose-rgb), 0.46),
+    rgba(var(--rose-rgb), 0.24)
+  );
+}
+
+/* Link affordance: a quiet round chip on the band, stronger on hover. */
+.arrow {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-avatar);
+  background: var(--paper);
+  color: rgba(var(--ink-rgb), 0.45);
+  transition-property: color, transform;
+  transition-duration: var(--dur-base);
+  transition-timing-function: var(--ease);
+}
+:global([data-theme="dark"]) .arrow {
+  color: rgba(var(--ink-rgb), 0.6);
+}
+
+/* The surface-coloured ring lifts the avatar off the band. */
+.avatarRing {
+  display: inline-flex;
+  margin-top: -40px;
+  padding: 4px;
+  border-radius: var(--radius-avatar);
+  background: var(--paper);
+  transition-property: transform;
+  transition-duration: var(--dur-base);
+  transition-timing-function: var(--ease);
+}
+
+.identity {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  margin-top: 8px;
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+.name {
+  font-size: var(--text-16-5);
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--text-strong);
+}
+.handle {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--text-12-5);
+  color: rgba(var(--ink-rgb), 0.5);
+}
+
+/* Always stacked, and pushed to the card's foot, so the role pills of a
+   row line up along its bottom edge whatever sits above them. */
+.chips {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  margin-top: auto;
+  padding-top: 12px;
+  max-width: 100%;
+  min-width: 0;
+}
+/* A 12px radius reads as a pill on one line and still as a tag when a long
+   role wraps to its second (and last) line. */
+.role {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  max-width: 100%;
+  padding: 4px 11px;
+  border-radius: var(--radius-12);
+  background: rgba(var(--accent-rgb), 0.14);
+  font-size: var(--text-13);
+  font-weight: 600;
+  text-align: center;
+  color: var(--accent-text);
+  overflow-wrap: anywhere;
+}
+/* One line always: a long craft name ellipsizes beside its icon. */
+.kind {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  max-width: 100%;
+  min-width: 0;
+  padding: 3px 10px;
+  border: 1px solid rgba(var(--line-rgb), 0.12);
+  border-radius: var(--radius-pill);
+  font-size: var(--text-12);
+  color: var(--ink-60);
+  white-space: nowrap;
+}
+.kind svg {
+  flex-shrink: 0;
+}
+.kindLabel {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Phones: a shorter band and a 64px avatar (sized in the component) with the
+   same overlap, so 8 cards stay a quick scroll. */
+@media (--sm) {
+  .grid {
+    gap: 10px;
+  }
+  .card {
+    padding: 0 10px 14px;
+  }
+  .band {
+    height: 44px;
+    margin: 0 -10px;
+  }
+  .arrow {
+    top: 8px;
+    right: 8px;
+    width: 24px;
+    height: 24px;
+  }
+  .avatarRing {
+    margin-top: -34px;
+    padding: 3px;
+  }
+  .identity {
+    margin-top: 6px;
+  }
+  .name {
+    font-size: var(--text-15);
+  }
+  .chips {
+    padding-top: 10px;
+  }
+}
+
+@media (hover: hover) {
+  .card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(var(--line-rgb), 0.16);
+    box-shadow: var(--shadow-lift);
+  }
+  .card:hover .avatarRing {
+    transform: scale(1.04);
+  }
+  .card:hover .arrow {
+    color: var(--accent-text);
+    transform: translateX(2px);
+  }
+}
+/* After the hover block so a hovered, focused card keeps its ring. */
+.card:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* The folded rest, under the first cards, and the Show all toggle. */
+.foldedList {
+  padding-top: 14px;
+}
+@media (--sm) {
+  .foldedList {
+    padding-top: 10px;
+  }
+}
+.toggle {
+  margin-top: 12px;
+}

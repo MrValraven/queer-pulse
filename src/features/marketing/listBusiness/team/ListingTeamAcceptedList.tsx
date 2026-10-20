@@ -65,7 +65,7 @@ export function ListingTeamAcceptedList({
     setMoveStatus(
       t("marketing:listBusiness.team.movedStatus", {
         name:
-          row.persona?.displayName ??
+          row.persona?.titleName ??
           t("marketing:listBusiness.team.hiddenPersona.name"),
         position: nextMemberIds.indexOf(row.id) + 1,
         count: nextMemberIds.length,

@@ -25,6 +25,9 @@ function makeMember(
       kind: "tattoo_artist",
       kindLabelKey: "subprofiles:kind.tattoo_artist",
       avatarUrl: null,
+      ownerName: null,
+      titleName: `Persona Number ${index}`,
+      nameBesideCraft: `Persona Number ${index}`,
       initials: "PN",
       href: `/p/persona-${index}`,
     },
@@ -72,6 +75,8 @@ describe("DirectoryTeamSection", () => {
           ...makeMember(1).persona,
           handle: "agulha-lenta",
           displayName: "Agulha Lenta",
+          titleName: "Agulha Lenta",
+          nameBesideCraft: "Agulha Lenta",
           href: "/p/agulha-lenta",
         },
         roleLabel: "Apprentice",
@@ -82,6 +87,23 @@ describe("DirectoryTeamSection", () => {
     expect(link).toHaveAttribute("href", "/p/agulha-lenta");
     expect(await screen.findByText("Tattoo artist")).toBeInTheDocument();
     expect(screen.getByText("Apprentice")).toBeInTheDocument();
+  });
+
+  it("names a craft-named persona after its owner beside the kind", async () => {
+    renderSection([
+      makeMember(1, {
+        persona: {
+          ...makeMember(1).persona,
+          displayName: "Tattoo artist",
+          ownerName: "Beatriz Pinto",
+          titleName: "Beatriz Pinto | Tattoo artist",
+          nameBesideCraft: "Beatriz Pinto",
+        },
+      }),
+    ]);
+
+    expect(await screen.findByText("Beatriz Pinto")).toBeInTheDocument();
+    expect(screen.getByText("Tattoo artist")).toBeInTheDocument();
   });
 
   it("shows 8 members and folds the rest behind Show all 11", async () => {

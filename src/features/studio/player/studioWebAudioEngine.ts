@@ -24,6 +24,10 @@ import {
   watchRemotePlayback,
   type StudioRemoteWatcher,
 } from "./studioRemotePlayback";
+import {
+  createSessionHoldElement,
+  needsSessionHold,
+} from "./studioSessionHold";
 
 /** The browser seams the engine needs; tests pass fakes. */
 export interface StudioAudioEnvironment {
@@ -34,6 +38,9 @@ export interface StudioAudioEnvironment {
   createElement: () => HTMLAudioElement;
   setTimer: (callback: () => void, delayMs: number) => number;
   clearTimer: (timerId: number) => void;
+  /** A hidden <audio> looping silence that keeps the media session alive
+   *  between songs, or null where the platform needs none. */
+  createSessionHold?: () => HTMLAudioElement | null;
 }
 
 interface Deck {
@@ -62,6 +69,10 @@ const CUT_OUT_SECONDS = 0.03;
 /** Spec 4.4: the player clamps whatever gain the server sends (the bounds
  *  trackGainDb applies). */
 const GAIN_DB_LIMITS = { min: -12, max: 6 } as const;
+/** How long the session hold outlasts a pause, an end or an error: long
+ *  enough to cover the no-preload reload and a refresh retry, after which a
+ *  member's pause lets the session go. */
+const SESSION_RELEASE_GRACE_MS = 10_000;
 
 const clampLevel = (level: number) => Math.min(Math.max(level, 0), 1);
 const clampGainDb = (gainDb: number) =>
@@ -108,6 +119,10 @@ class WebAudioEngine implements StudioAudioEngine {
   } | null = null;
   private remoteState: StudioRemoteState = REMOTE_IDLE;
   private remoteWatcher: StudioRemoteWatcher | null = null;
+  /** The silent element that holds the media session, made on first use. */
+  private sessionHold: HTMLAudioElement | null = null;
+  private hasTriedSessionHold = false;
+  private sessionReleaseTimerId: number | null = null;
 
   constructor(
     elements: readonly [HTMLAudioElement, HTMLAudioElement],
@@ -168,6 +183,7 @@ class WebAudioEngine implements StudioAudioEngine {
   }
 
   async play(): Promise<void> {
+    this.holdSession();
     const deck = this.active();
     // Both start inside the member's gesture: the context's resume and the
     // element's play. The resume's answer is read afterwards, and a context
@@ -199,6 +215,7 @@ class WebAudioEngine implements StudioAudioEngine {
     this.endFade();
     this.cancelPreload();
     this.clearDeck(this.active());
+    this.releaseSession(0);
   }
 
   preload(sourceUrl: string, gainDb: number): void {
@@ -329,6 +346,9 @@ class WebAudioEngine implements StudioAudioEngine {
       deck.detach.abort();
     this.ownedElements.forEach((element) => element.remove());
     this.ownedElements.clear();
+    this.releaseSession(0);
+    this.sessionHold?.remove();
+    this.sessionHold = null;
     this.graph?.close();
     this.graph = null;
   }
@@ -418,7 +438,9 @@ class WebAudioEngine implements StudioAudioEngine {
     // so the player still reads the track as playing when it hands over.
     listen("pause", () => {
       if (deck.element.ended) return;
-      if (hasSource() && this.isActive(deck)) this.emit({ type: "paused" });
+      if (!hasSource() || !this.isActive(deck)) return;
+      this.releaseSession(SESSION_RELEASE_GRACE_MS);
+      this.emit({ type: "paused" });
     });
     listen("ended", () => this.onDeckEnded(deck));
     listen("error", () => this.onDeckError(deck));
@@ -433,12 +455,21 @@ class WebAudioEngine implements StudioAudioEngine {
       this.graph = null;
       this.announcePlain();
     }
+    this.holdSession();
     this.emit({ type: "playing" });
   }
 
+  /** The release comes first: a handover inside the ended emit starts the
+   *  next deck, whose playing cancels it, and a queue that ends with nothing
+   *  next lets the session go after the grace. */
   private onDeckEnded(deck: Deck): void {
-    if (this.outgoing?.deck === deck) this.finishOutgoing();
-    else if (this.isActive(deck)) this.emit({ type: "ended" });
+    if (this.outgoing?.deck === deck) {
+      this.finishOutgoing();
+      return;
+    }
+    if (!this.isActive(deck)) return;
+    this.releaseSession(SESSION_RELEASE_GRACE_MS);
+    this.emit({ type: "ended" });
   }
 
   /** The single source of `failed` for a broken source: the pending play()
@@ -447,6 +478,7 @@ class WebAudioEngine implements StudioAudioEngine {
     if (!deck.element.getAttribute("src")) return;
     if (this.isActive(deck)) {
       if (this.mode === "trying") this.revertPlainAttempt();
+      this.releaseSession(SESSION_RELEASE_GRACE_MS);
       this.emit({ type: "failed" });
       return;
     }
@@ -506,6 +538,44 @@ class WebAudioEngine implements StudioAudioEngine {
       () => this.finishOutgoing(),
       CUT_OUT_SECONDS * 1000 + OUTGOING_GRACE_MS,
     );
+  }
+
+  // The session hold.
+
+  /** Starts the silent hold element so the media session keeps a playing
+   *  player through the gap between songs. A cast device holds its own. */
+  private holdSession(): void {
+    this.cancelSessionRelease();
+    if (this.remoteState.isConnected) return;
+    if (!this.hasTriedSessionHold) {
+      this.hasTriedSessionHold = true;
+      this.sessionHold = this.environment.createSessionHold?.() ?? null;
+    }
+    const element = this.sessionHold;
+    if (element?.paused)
+      void Promise.resolve(element.play()).catch(() => undefined);
+  }
+
+  /** Pauses the hold element once delayMs passes, or right away at 0. A
+   *  newer release replaces a pending one. */
+  private releaseSession(delayMs: number): void {
+    this.cancelSessionRelease();
+    const element = this.sessionHold;
+    if (!element) return;
+    if (delayMs <= 0) {
+      element.pause();
+      return;
+    }
+    this.sessionReleaseTimerId = this.environment.setTimer(() => {
+      this.sessionReleaseTimerId = null;
+      element.pause();
+    }, delayMs);
+  }
+
+  private cancelSessionRelease(): void {
+    if (this.sessionReleaseTimerId === null) return;
+    this.environment.clearTimer(this.sessionReleaseTimerId);
+    this.sessionReleaseTimerId = null;
   }
 
   // The graph and plain mode.
@@ -801,6 +871,7 @@ class WebAudioEngine implements StudioAudioEngine {
     if (state.isConnected && !previous.isConnected) {
       this.finishOutgoing();
       this.cancelPreload();
+      this.releaseSession(0);
     }
     this.emit({ type: "remote", state });
   }
@@ -837,6 +908,8 @@ function browserEnvironment(anchor: HTMLAudioElement): StudioAudioEnvironment {
     },
     setTimer: (callback, delayMs) => window.setTimeout(callback, delayMs),
     clearTimer: (timerId) => window.clearTimeout(timerId),
+    createSessionHold: () =>
+      needsSessionHold() ? createSessionHoldElement(anchor) : null,
   };
 }
 

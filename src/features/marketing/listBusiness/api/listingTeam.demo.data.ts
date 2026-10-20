@@ -78,6 +78,7 @@ export const DEMO_TEAM_HIDDEN_LISTING: DemoTeamListing = {
   av: "TN",
 };
 
+/** The Tinta Viva artists are unlinked, so they carry no owner name. */
 export const DEMO_TEAM_PERSONAS: ListingTeamPersonaDTO[] = [
   {
     id: "sp-rita-rosa-brava",
@@ -85,6 +86,7 @@ export const DEMO_TEAM_PERSONAS: ListingTeamPersonaDTO[] = [
     displayName: "Rosa Brava",
     kind: "tattoo_artist",
     avatarUrl: null,
+    ownerName: null,
   },
   {
     id: "sp-kai-linha-fina",
@@ -92,6 +94,7 @@ export const DEMO_TEAM_PERSONAS: ListingTeamPersonaDTO[] = [
     displayName: "Linha Fina",
     kind: "tattoo_artist",
     avatarUrl: null,
+    ownerName: null,
   },
   {
     id: "sp-tiago-agulha-lenta",
@@ -99,6 +102,7 @@ export const DEMO_TEAM_PERSONAS: ListingTeamPersonaDTO[] = [
     displayName: "Agulha Lenta",
     kind: "tattoo_artist",
     avatarUrl: null,
+    ownerName: null,
   },
   {
     id: "sp-anika-fumo-azul",
@@ -106,6 +110,17 @@ export const DEMO_TEAM_PERSONAS: ListingTeamPersonaDTO[] = [
     displayName: "Fumo Azul",
     kind: "tattoo_artist",
     avatarUrl: null,
+    ownerName: null,
+  },
+  // Linked and still named after its craft, so the invite picker shows
+  // "Beatriz Pinto" over its handle and kind. Seeded in no row.
+  {
+    id: "sp-beatriz-tattoo-artist",
+    handle: "beatriz-tattoo",
+    displayName: "Tattoo artist",
+    kind: "tattoo_artist",
+    avatarUrl: null,
+    ownerName: "Beatriz Pinto",
   },
 ];
 

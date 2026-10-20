@@ -220,7 +220,7 @@ export function ListingTeamSection({
             title={
               removeTarget.persona
                 ? t("marketing:listBusiness.team.removeConfirm.title", {
-                    name: removeTarget.persona.displayName,
+                    name: removeTarget.persona.titleName,
                   })
                 : t("marketing:listBusiness.team.removeConfirm.titleHidden")
             }

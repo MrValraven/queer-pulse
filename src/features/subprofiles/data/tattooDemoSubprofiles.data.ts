@@ -7,6 +7,9 @@ import type { DemoSubprofile } from "./subprofiles.data";
 // holds the matching team rows). Unlinked, so their owners stay unnamed. The
 // demo viewer's own persona, Agulha Lenta, takes the next free position among
 // the viewer's personas (the draft is 0, Late Bloomers is 1).
+//
+// Beatriz's persona stays named after its craft and is linked, so the team
+// invite picker titles it with her name (search "tattoo" on any team listing).
 
 type TattooPersonaDefaults = Pick<
   DemoSubprofile,
@@ -105,10 +108,27 @@ const FUMO_AZUL: DemoSubprofile = {
   position: 0,
 };
 
-/** The four Tinta Viva artists, appended to `DEMO_SUBPROFILES`. */
+const BEATRIZ_TATTOO_ARTIST: DemoSubprofile = {
+  ...tattooPersonaDefaults(),
+  linkVisibility: "linked",
+  ownerSlug: "beatriz",
+  ownerName: memberName("beatriz"),
+  id: "sp-beatriz-tattoo-artist",
+  kind: "tattoo_artist",
+  slug: "tattoo-artist",
+  handle: "beatriz-tattoo",
+  displayName: "Tattoo artist",
+  tagline: "small ceramic shapes turned into linework",
+  bio: "i started drawing my glaze patterns on friends and then on their arms and now i do a few fine line pieces a month between kiln days, and i keep it small and slow",
+  position: 0,
+};
+
+/** The four Tinta Viva artists and Beatriz's craft-named persona, appended to
+ *  `DEMO_SUBPROFILES`. */
 export const TATTOO_DEMO_SUBPROFILES: DemoSubprofile[] = [
   ROSA_BRAVA,
   LINHA_FINA,
   AGULHA_LENTA,
   FUMO_AZUL,
+  BEATRIZ_TATTOO_ARTIST,
 ];

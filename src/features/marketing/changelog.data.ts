@@ -63,6 +63,25 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "team-portrait-cards",
+        category: "improvement",
+        date: "20 Oct 2026",
+        ...entryKeys("team-portrait-cards"),
+      },
+      {
+        id: "team-shows-persona-owner",
+        category: "improvement",
+        date: "20 Oct 2026",
+        ...entryKeys("team-shows-persona-owner"),
+      },
+      {
+        id: "studio-keeps-playing-when-locked",
+        category: "fix",
+        date: "20 Oct 2026",
+        ...entryKeys("studio-keeps-playing-when-locked"),
+        tag: { labelKey: "marketing:changelog.tag.studio", to: routes.studio },
+      },
+      {
         id: "studio-headers-fit",
         category: "fix",
         date: "20 Oct 2026",

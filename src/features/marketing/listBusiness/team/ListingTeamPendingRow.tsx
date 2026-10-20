@@ -18,11 +18,12 @@ function listingTeamRowNameId(row: ListingTeamManagerRowView): string {
   return `listing-team-name-${row.id}`;
 }
 
-/** The name a row's controls are labelled with, hidden personas included. */
+/** The name a row's controls are labelled with, hidden personas included.
+ *  Titled ("Owner Name | Poet"), since an aria-label has no craft beside it. */
 function useListingTeamRowName(row: ListingTeamManagerRowView): string {
   const { t } = useTranslation();
   return (
-    row.persona?.displayName ??
+    row.persona?.titleName ??
     t("marketing:listBusiness.team.hiddenPersona.name")
   );
 }
@@ -53,7 +54,9 @@ export function ListingTeamRowIdentity({
 }) {
   const { t } = useTranslation();
   const persona = row.persona;
-  const name = useListingTeamRowName(row);
+  const hiddenName = t("marketing:listBusiness.team.hiddenPersona.name");
+  // The kind sits under the name, so a craft-named persona shows its owner.
+  const name = persona ? persona.nameBesideCraft : hiddenName;
   return (
     <div className={styles.identity}>
       <ListingTeamPersonaAvatar

@@ -45,7 +45,7 @@ export function ListingTeamCandidateRow({
     <div className={styles.row}>
       <ListingTeamPersonaAvatar persona={persona} size={40} />
       <div className={styles.rowText}>
-        <span className={styles.rowName}>{persona.displayName}</span>
+        <span className={styles.rowName}>{persona.nameBesideCraft}</span>
         <span className={styles.rowMeta}>
           @{persona.handle} · {t(persona.kindLabelKey)}
         </span>
@@ -62,7 +62,7 @@ export function ListingTeamCandidateRow({
           variant="soft"
           className={styles.rowAction}
           aria-disabled={isDisabled}
-          aria-label={t(`${KEY}.inviteAria`, { name: persona.displayName })}
+          aria-label={t(`${KEY}.inviteAria`, { name: persona.titleName })}
           onClick={() => {
             if (isDisabled) return;
             onInvite(candidate);

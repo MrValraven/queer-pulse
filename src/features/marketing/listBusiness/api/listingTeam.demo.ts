@@ -4,6 +4,7 @@
 import { ApiError } from "../../../../shared/api/client";
 import type { CropRect } from "../../../../shared/components/ui/cropGeometry";
 import type {
+  LinkVisibility,
   SubprofileKind,
   SubprofileStatus,
   Visibility,
@@ -68,6 +69,9 @@ export interface DemoTeamPersonaFacts {
   status: SubprofileStatus;
   visibility: Visibility;
   removedAt?: string | null;
+  /** The owner's name travels to the team only when this is `linked`. */
+  linkVisibility: LinkVisibility;
+  ownerName: string | null;
 }
 
 export type DemoTeamPersonaLookup = (
@@ -194,6 +198,7 @@ function toViewerPersonaDTO(
     kind: facts.kind,
     avatarUrl: facts.avatarUrl,
     ...(facts.avatarCrop ? { avatarCrop: facts.avatarCrop } : {}),
+    ownerName: facts.linkVisibility === "linked" ? facts.ownerName : null,
   };
 }
 

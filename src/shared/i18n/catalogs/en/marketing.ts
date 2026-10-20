@@ -3586,10 +3586,22 @@ export const marketing: Catalog = {
     "Studio's creator pages fit a phone",
   "changelog.entries.studio-creator-phone-layout.body":
     "The top bar scrolls away, cards use the full width and the release button stays inside its card.",
+  "changelog.entries.team-portrait-cards.title":
+    "Meet the team shows each member as a portrait card",
+  "changelog.entries.team-portrait-cards.body":
+    "Bigger photos over a tinted band, each @handle, the role as a coral pill and four cards to a row on desktop.",
+  "changelog.entries.team-shows-persona-owner.title":
+    "Business teams show the person behind each persona",
+  "changelog.entries.team-shows-persona-owner.body":
+    'A linked persona named just "Poet" or "Developer" now shows its owner\'s name and initials in Meet the team.',
   "changelog.entries.studio-headers-fit.title":
     "Studio headers fit their text again",
   "changelog.entries.studio-headers-fit.body":
     "Album and playlist pages keep Play and Shuffle on one row on tablets, and the QueerPulse wordmark has no gap.",
+  "changelog.entries.studio-keeps-playing-when-locked.title":
+    "Studio keeps playing on a locked Android phone",
+  "changelog.entries.studio-keeps-playing-when-locked.body":
+    "A song change with the screen off used to stop the music a few seconds into the next track.",
   "changelog.entries.studio-listening-sidebar.title":
     "Studio's sidebar is for listening",
   "changelog.entries.studio-listening-sidebar.body":

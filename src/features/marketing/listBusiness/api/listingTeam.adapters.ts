@@ -1,6 +1,10 @@
 import { businessPath, personaPath } from "../../../../app/routeMap";
 import { initialsFromName } from "../../../../shared/lib/initials";
 import {
+  personaNameBesideCraft,
+  personaTitleName,
+} from "../../../subprofiles/personaTitleName";
+import {
   LISTING_TEAM_LIMITS,
   type ListingTeamCandidatesDTO,
   type ListingTeamListingCandidateDTO,
@@ -25,9 +29,18 @@ import {
   type ListingWorksAtView,
 } from "./listingTeam.types";
 
+/**
+ * A persona still named after its craft ("Poet") shows its owner's name when
+ * it is linked: titled "Owner Name | Poet" where the name stands alone, and
+ * the owner's name alone where the craft already sits beside it. An unlinked
+ * persona has no `ownerName` and keeps its display name everywhere.
+ */
 export function toListingTeamPersonaView(
   dto: ListingTeamPersonaDTO,
 ): ListingTeamPersonaView {
+  const ownerName = dto.ownerName ?? null;
+  const nameParts = { displayName: dto.displayName, kind: dto.kind, ownerName };
+  const nameBesideCraft = personaNameBesideCraft(nameParts);
   return {
     id: dto.id,
     handle: dto.handle,
@@ -36,7 +49,10 @@ export function toListingTeamPersonaView(
     kindLabelKey: `subprofiles:kind.${dto.kind}`,
     avatarUrl: dto.avatarUrl,
     ...(dto.avatarCrop ? { avatarCrop: dto.avatarCrop } : {}),
-    initials: initialsFromName(dto.displayName, "?"),
+    ownerName,
+    titleName: personaTitleName(nameParts),
+    nameBesideCraft,
+    initials: initialsFromName(nameBesideCraft, "?"),
     href: personaPath(dto.handle),
   };
 }

@@ -61,7 +61,7 @@ export function ListingTeamMemberRow({
   const [roleDraft, setRoleDraft] = useState(row.roleLabel ?? "");
   const [isGliding, setIsGliding] = useState(false);
   const name =
-    row.persona?.displayName ??
+    row.persona?.titleName ??
     t("marketing:listBusiness.team.hiddenPersona.name");
   const shouldRestoreFocus = useRef(false);
   const moveUpRef = useRef<HTMLButtonElement>(null);

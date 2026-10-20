@@ -21,6 +21,7 @@ export const CHANGELOG_RELEASE_NOTES: Record<
       "feed-upcoming-calendar-tiles",
       "studio-play-without-gaps",
     ],
+    pushes: 2,
   },
   "19 Oct 2026": {
     highlights: [

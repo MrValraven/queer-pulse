@@ -382,6 +382,8 @@ describe("listing team demo store: other viewer personas", () => {
     status: "published",
     visibility: "open",
     removedAt: null,
+    linkVisibility: "unlinked",
+    ownerName: null,
   };
   const DRAFT_PERSONA: DemoTeamPersonaFacts = {
     ...PUBLISHED_PERSONA,

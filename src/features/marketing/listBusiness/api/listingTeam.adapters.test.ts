@@ -22,6 +22,7 @@ const personaDto: ListingTeamPersonaDTO = {
   displayName: "Agulha Lenta",
   kind: "tattoo_artist",
   avatarUrl: null,
+  ownerName: null,
 };
 
 const listingDto: ListingTeamListingDTO = {
@@ -48,6 +49,38 @@ describe("listing team adapters", () => {
     expect(view.kindLabelKey).toBe("subprofiles:kind.tattoo_artist");
     expect(view.initials).toBe("AL");
     expect("avatarCrop" in view).toBe(false);
+  });
+
+  it("names a craft-named linked persona after its owner", () => {
+    const view = toListingTeamPersonaView({
+      ...personaDto,
+      displayName: "Tattoo artist",
+      ownerName: "Beatriz Pinto",
+    });
+    expect(view.ownerName).toBe("Beatriz Pinto");
+    expect(view.titleName).toBe("Beatriz Pinto | Tattoo artist");
+    expect(view.nameBesideCraft).toBe("Beatriz Pinto");
+    expect(view.initials).toBe("BP");
+  });
+
+  it("keeps the display name of a craft-named unlinked persona", () => {
+    const view = toListingTeamPersonaView({
+      ...personaDto,
+      displayName: "Tattoo artist",
+      ownerName: null,
+    });
+    expect(view.titleName).toBe("Tattoo artist");
+    expect(view.nameBesideCraft).toBe("Tattoo artist");
+    expect(view.initials).toBe("TA");
+  });
+
+  it("keeps a real name even when the owner is known", () => {
+    const view = toListingTeamPersonaView({
+      ...personaDto,
+      ownerName: "Tiago Costa",
+    });
+    expect(view.titleName).toBe("Agulha Lenta");
+    expect(view.initials).toBe("AL");
   });
 
   it("builds a listing view from the cover photo", () => {
