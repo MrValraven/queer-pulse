@@ -181,6 +181,8 @@ export const shared: Catalog = {
   "accountMenu.items.help": "Ajuda",
   "accountMenu.hints.personas": "Perfis para o que fazes",
   "accountMenu.hints.invite": "Os teus convites deste mês",
+  "accountMenu.items.pulseLive": "Pulse Live",
+  "accountMenu.hints.pulseLive": "Noites de quiz em eventos, acesso antecipado",
   "installAppModal.title": "Instalar a app",
   "installAppModal.sub":
     "Adiciona a QueerPulse ao teu ecrã principal em poucos toques. A mesma app, sem loja de aplicações.",

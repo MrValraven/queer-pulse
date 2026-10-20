@@ -39,6 +39,7 @@ import {
 import { usePersonaBadge } from "./usePersonaBadge";
 import { useGettingStartedBadge } from "../../../features/onboarding/useGettingStartedBadge";
 import { useInviteQuotaBadge } from "./useInviteQuotaBadge";
+import { useAccountRowVisibility } from "./useAccountRowVisibility";
 import { useNavDrawerFocus } from "./useNavDrawerFocus";
 import { InstallAppModal } from "../system/InstallAppModal";
 import menu from "./AccountMenu.module.css";
@@ -212,6 +213,7 @@ function AccountSheetBody({
     [routes.invite]: inviteQuotaBadge,
   };
   const { isInstalled } = useDisplayMode();
+  const isAccountRowVisible = useAccountRowVisibility(); // liveOnly, earlyAccess
   const [installOpen, setInstallOpen] = useState(false);
   const { theme, toggleTheme } = useTheme();
   const themeLabel = t(
@@ -246,7 +248,7 @@ function AccountSheetBody({
         {ACCOUNT_GROUPS.map((group) =>
           group
             .filter((item) => item.to !== routes.accountProfile)
-            .filter((item) => !item.liveOnly || !demoMode)
+            .filter(isAccountRowVisible)
             .filter(
               (item) => item.action !== INSTALL_APP_ACTION || !isInstalled,
             )

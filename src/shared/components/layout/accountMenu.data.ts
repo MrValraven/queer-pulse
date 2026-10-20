@@ -16,8 +16,10 @@ import {
   FiCreditCard,
   FiKey,
   FiFlag,
+  FiPlayCircle,
 } from "react-icons/fi";
 import { routes } from "../../../app/routeMap";
+import type { EarlyAccessFeatureKey } from "../../contracts/earlyAccess";
 
 /** Sentinel id for the one non-navigating row (see `action` below). */
 export const INSTALL_APP_ACTION = "installApp";
@@ -44,6 +46,13 @@ export type AccountItem = {
    * sandbox — the panel/sheet drop the row when `demoMode` is on.
    */
   liveOnly?: boolean;
+  /**
+   * Only show this row to members holding this early-access grant (read off
+   * `user.earlyAccessFeatures`). Demo mode and `pnpm dev` show it too, so it
+   * can be checked locally. The panel/sheet apply the rule through
+   * `useAccountRowVisibility`.
+   */
+  earlyAccess?: EarlyAccessFeatureKey;
 } & (
   | { to: string; action?: undefined }
   /**
@@ -135,6 +144,17 @@ export const ACCOUNT_GROUPS: AccountItem[][] = [
       to: routes.invite,
       icon: FiKey,
       hintKey: "shared:accountMenu.hints.invite",
+    },
+    // Pulse Live's player join page, where a member types the code a host
+    // puts on screen. It shows only to members holding the `quizshow`
+    // early-access grant (plus demo and `pnpm dev`), whatever the launch flag
+    // says, so testers have a way in that nobody else sees.
+    {
+      labelKey: "shared:accountMenu.items.pulseLive",
+      to: routes.play,
+      icon: FiPlayCircle,
+      hintKey: "shared:accountMenu.hints.pulseLive",
+      earlyAccess: "quizshow",
     },
   ],
   // Career & content. Applications now lives inside the Work hub rather than

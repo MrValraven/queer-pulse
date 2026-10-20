@@ -192,6 +192,10 @@ export const shared: Catalog = {
   "accountMenu.items.help": "Help",
   "accountMenu.hints.personas": "Profiles for the work you do",
   "accountMenu.hints.invite": "Monthly invites to bring people in",
+  // Pulse Live (quizshow) row, shown only to members holding the early-access
+  // grant (plus demo and `pnpm dev`) until launch.
+  "accountMenu.items.pulseLive": "Pulse Live",
+  "accountMenu.hints.pulseLive": "Quiz nights at events, early access",
   "installAppModal.title": "Install the app",
   "installAppModal.sub":
     "Add QueerPulse to your home screen in a few taps. Same app, no app store.",

@@ -30,6 +30,7 @@ import {
 import { usePersonaBadge } from "./usePersonaBadge";
 import { useGettingStartedBadge } from "../../../features/onboarding/useGettingStartedBadge";
 import { useInviteQuotaBadge } from "./useInviteQuotaBadge";
+import { useAccountRowVisibility } from "./useAccountRowVisibility";
 import styles from "./AccountMenu.module.css";
 
 /** How long the panel lingers to fade out after a dismissal, ms. Mirrors the
@@ -315,7 +316,7 @@ function AccountMenuPanel({
       </div>
 
       <div className={styles.scroll}>
-        <AccountMenuLinkGroups demoMode={demoMode} onClose={onClose} />
+        <AccountMenuLinkGroups onClose={onClose} />
         {role !== "member" && (
           <>
             <div className={styles.divider} />
@@ -362,13 +363,9 @@ function AccountMenuPanel({
 /** The member link groups in {@link AccountMenuPanel}'s scroll region, each a
  * two-column sub-grid under a divider. Split out to keep the panel under the
  * repo's 200-line-per-component limit. */
-function AccountMenuLinkGroups({
-  demoMode,
-  onClose,
-}: {
-  demoMode: boolean;
-  onClose: () => void;
-}) {
+function AccountMenuLinkGroups({ onClose }: { onClose: () => void }) {
+  // liveOnly and earlyAccess rows; `AccountSheet` applies the same predicate.
+  const isAccountRowVisible = useAccountRowVisibility();
   const personaBadge = usePersonaBadge();
   const gettingStartedBadge = useGettingStartedBadge();
   const inviteQuotaBadge = useInviteQuotaBadge();
@@ -383,9 +380,7 @@ function AccountMenuLinkGroups({
   return ACCOUNT_GROUPS.map((group) =>
     group.filter(
       (item): item is AccountLinkItem =>
-        !item.action &&
-        (!item.liveOnly || !demoMode) &&
-        !isComingSoonLink(item.to),
+        !item.action && isAccountRowVisible(item) && !isComingSoonLink(item.to),
     ),
   )
     .filter((group) => group.length > 0)
