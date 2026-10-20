@@ -13,16 +13,20 @@ export function RailGroup({ items }: { items: RailLink[] }) {
   const { t } = useTranslation();
   return (
     <>
-      {items.map((item) => (
-        <NavLink
-          key={`${item.label}-${item.to}`}
-          to={item.to}
-          end={item.end}
-          className={railClass}
-        >
-          <span className={styles.nm}>{t(item.labelKey)}</span>
-        </NavLink>
-      ))}
+      {items.map((item) => {
+        const Icon = item.icon;
+        return (
+          <NavLink
+            key={`${item.label}-${item.to}`}
+            to={item.to}
+            end={item.end}
+            className={railClass}
+          >
+            {Icon && <Icon className={styles.railIcon} aria-hidden />}
+            <span className={styles.nm}>{t(item.labelKey)}</span>
+          </NavLink>
+        );
+      })}
     </>
   );
 }

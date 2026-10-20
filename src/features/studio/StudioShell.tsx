@@ -1,6 +1,5 @@
 import { type ReactNode } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { FiArrowRight, FiUpload } from "react-icons/fi";
 import { routes } from "../../app/routeMap";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
@@ -13,9 +12,7 @@ import { StudioAccountMenu } from "./StudioAccountMenu";
 import { StudioDemoLibrarySeed } from "./StudioDemoLibrarySeed";
 import { StudioShellSearch } from "./StudioShellSearch";
 import { StudioTabBar } from "./StudioTabBar";
-import { useStudioAccess } from "./api/useStudioAccess";
 import { SUSTAIN_PRICE } from "./studioShell.data";
-import { studioUploadPath } from "./studioPaths";
 import { useStudioShowcase } from "./useStudioShowcase";
 import { useStudioShellSignal } from "./useStudioShellSignal";
 import styles from "./studio.module.css";
@@ -25,7 +22,6 @@ export function StudioShell({ children }: { children: ReactNode }) {
   const { t } = useTranslation();
   const fmt = useFormat();
   const isShowcase = useStudioShowcase();
-  const { uploadablePersonas } = useStudioAccess();
   const identity = useAccountIdentity();
   const isCompact = useMediaQuery(mediaMax(880));
   useStudioShellSignal();
@@ -52,7 +48,9 @@ export function StudioShell({ children }: { children: ReactNode }) {
           saved store, so a save re-renders it alone. */}
       <StudioDemoLibrarySeed />
       <div className={styles.app}>
-        <StudioRail />
+        {/* The rail is hidden at this width anyway; leaving it unmounted
+            spares phones its playlist queries. */}
+        {!isCompact && <StudioRail />}
 
         <main className={styles.main}>
           <div className={styles.topbar}>
@@ -108,47 +106,14 @@ export function StudioShell({ children }: { children: ReactNode }) {
               <StudioShellSearch />
             )}
             <div className={styles.topRight}>
-              {isShowcase ? (
-                <>
-                  {/* On phones the sheet's Artist dashboard row covers it. */}
-                  {!isCompact && (
-                    <Link
-                      to={routes.studioDashboard}
-                      className={styles.creatorLink}
-                    >
-                      {t("studio:shell.forArtistsCta")}{" "}
-                      <FiArrowRight aria-hidden />
-                    </Link>
-                  )}
-                  <Link
-                    to={routes.cinemaMembership}
-                    className={styles.sustainPill}
-                    aria-label={isCompact ? sustainLabel : undefined}
-                  >
-                    {isCompact ? t("studio:shell.sustainShort") : sustainLabel}
-                  </Link>
-                </>
-              ) : (
-                uploadablePersonas.length > 0 && (
-                  <Link
-                    to={studioUploadPath()}
-                    className={styles.creatorLink}
-                    aria-label={
-                      isCompact ? t("studio:shell.uploadCta") : undefined
-                    }
-                  >
-                    {isCompact ? (
-                      <>
-                        <FiUpload aria-hidden /> {t("studio:shell.uploadShort")}
-                      </>
-                    ) : (
-                      <>
-                        {t("studio:shell.uploadCta")}{" "}
-                        <FiArrowRight aria-hidden />
-                      </>
-                    )}
-                  </Link>
-                )
+              {isShowcase && (
+                <Link
+                  to={routes.cinemaMembership}
+                  className={styles.sustainPill}
+                  aria-label={isCompact ? sustainLabel : undefined}
+                >
+                  {isCompact ? t("studio:shell.sustainShort") : sustainLabel}
+                </Link>
               )}
               {!isCompact && accountMenu}
             </div>

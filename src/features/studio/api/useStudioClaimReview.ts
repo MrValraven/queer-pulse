@@ -61,11 +61,14 @@ export function useStudioAcceptedClaims(): StudioReviewList<StudioAdminClaimView
 
 /** The Claims tab badge: claims waiting for our team (submitted plus
  *  countered), read from the counts route so the badge never pages the
- *  queue. */
-export function useStudioClaimCounts(): { waitingCount: number } {
+ *  queue. `isEnabled` (default true) lets a caller hold the read back. */
+export function useStudioClaimCounts(options: { isEnabled?: boolean } = {}): {
+  waitingCount: number;
+} {
   const { demoMode } = useDemoMode();
   const query = useQuery({
     queryKey: studioSafetyKeys.reviewClaimCounts(demoMode),
+    enabled: options.isEnabled ?? true,
     meta: SILENT,
     queryFn: async () =>
       demoMode

@@ -56,6 +56,7 @@ export const SKIN_OF: Record<SubprofileKind, SkinFamily> = {
   game_designer: "quest", // moved from studio (Quest personas)
   artist_3d: "studio",
   printmaker: "studio",
+  architect: "studio",
   // page (new kinds)
   journalist: "page",
   poet: "page",
@@ -193,6 +194,8 @@ export const VISUAL_SECTIONS: readonly SubprofileSection[] = [
   "games",
   "models",
   "editions",
+  // Architect
+  "built_work",
   "wares",
   "builds",
   "arrangements",

@@ -5,6 +5,7 @@ import { ConfirmDialog } from "../../../shared/components/ui/ConfirmDialog";
 import { RadioCardGroup } from "../../../shared/components/ui/RadioCardGroup";
 import { useRovingRadioGroup } from "../../../shared/hooks/useRovingRadioGroup";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
+import { useQuizshowScopeKind } from "../quizshowScope";
 import {
   QUIZSHOW_LIMITS,
   type QuizshowContentLabel,
@@ -42,6 +43,7 @@ function ContentLabelPicker({
   onChange,
 }: ContentLabelPickerProps) {
   const { t } = useTranslation();
+  const scopeKind = useQuizshowScopeKind();
   const labelId = useId();
   const lockedId = useId();
   const select = (label: QuizshowContentLabel) => {
@@ -88,7 +90,11 @@ function ContentLabelPicker({
       </div>
       <Collapse isOpen={!isAdultsEvent}>
         <p id={lockedId} className={styles.hint}>
-          {t("quizshow:rounds.contentLabel.adultsLocked")}
+          {t(
+            scopeKind === "game"
+              ? "quizshow:rounds.contentLabel.adultsLockedGame"
+              : "quizshow:rounds.contentLabel.adultsLocked",
+          )}
         </p>
       </Collapse>
     </div>

@@ -1,9 +1,13 @@
 import { Suspense } from "react";
-import { act, render, screen } from "@testing-library/react";
+import { act, cleanup, render, screen } from "@testing-library/react";
 import { MemoryRouter, Routes, useNavigate } from "react-router-dom";
 import type { NavigateFunction } from "react-router-dom";
 import { describe, expect, it, vi } from "vitest";
 import {
+  QUIZSHOW_GAMES_ROUTE,
+  quizshowGamePath,
+  quizshowGameRemotePath,
+  quizshowGameScreenPath,
   quizshowPlayPath,
   quizshowRemotePath,
   quizshowScreenPath,
@@ -55,6 +59,34 @@ vi.mock("./player/QuizshowPlayPage", async () => {
     );
   }
   return { QuizshowPlayPage };
+});
+
+vi.mock("./games/QuizshowGamePage", async () => {
+  const { createElement } = await import("react");
+  const { useParams } = await import("react-router-dom");
+  function QuizshowGamePage() {
+    const { gameId } = useParams();
+    return createElement("p", null, `game ${gameId}`);
+  }
+  return { QuizshowGamePage };
+});
+vi.mock("./screen/QuizshowGameScreenPage", async () => {
+  const { createElement } = await import("react");
+  const { useParams } = await import("react-router-dom");
+  function QuizshowGameScreenPage() {
+    const { gameId } = useParams();
+    return createElement("p", null, `game screen ${gameId}`);
+  }
+  return { QuizshowGameScreenPage };
+});
+vi.mock("./remote/QuizshowGameRemotePage", async () => {
+  const { createElement } = await import("react");
+  const { useParams } = await import("react-router-dom");
+  function QuizshowGameRemotePage() {
+    const { gameId } = useParams();
+    return createElement("p", null, `game remote ${gameId}`);
+  }
+  return { QuizshowGameRemotePage };
 });
 
 function renderRoutes(startPath: string) {
@@ -117,5 +149,29 @@ describe("quizshowRoutes", () => {
 
     goTo(quizshowPlayPath("AB2CD3"));
     expect(await screen.findByText("play AB2CD3 mount 3")).toBeInTheDocument();
+  });
+
+  it("routes a game page, its screen and its remote", async () => {
+    renderRoutes(quizshowGamePath("game-one"));
+    expect(await screen.findByText("game game-one")).toBeInTheDocument();
+    cleanup();
+
+    renderRoutes(quizshowGameScreenPath("game-one"));
+    expect(await screen.findByText("game screen game-one")).toBeInTheDocument();
+    cleanup();
+
+    renderRoutes(quizshowGameRemotePath("game-one"));
+    expect(await screen.findByText("game remote game-one")).toBeInTheDocument();
+  });
+
+  it("sends /play/games to /play", async () => {
+    renderRoutes(QUIZSHOW_GAMES_ROUTE);
+    expect(await screen.findByText("play no code mount 1")).toBeInTheDocument();
+  });
+
+  it("keeps /play/:code on the player page", async () => {
+    renderRoutes(quizshowPlayPath("QG4MW8"));
+    expect(await screen.findByText("play QG4MW8 mount 1")).toBeInTheDocument();
+    expect(screen.queryByText(/^game /)).not.toBeInTheDocument();
   });
 });

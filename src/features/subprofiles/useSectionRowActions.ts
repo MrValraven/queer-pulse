@@ -1,4 +1,5 @@
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import type { SubprofileKind } from "./api/subprofiles.api";
 import type {
   SubprofileItemView,
   SubprofileSectionView,
@@ -22,6 +23,7 @@ import type { SectionEditorDrawerState } from "./SectionEditorDialogs";
  */
 export function useSectionRowActions({
   section,
+  kind,
   rows,
   setSectionRows,
   isGallery,
@@ -31,6 +33,8 @@ export function useSectionRowActions({
   setDrawerState,
 }: {
   section: SubprofileSectionView;
+  /** Picks the kind's own starter items for "Insert examples". */
+  kind?: SubprofileKind;
   rows: SubprofileEditorRow[];
   setSectionRows: (section: string, rows: SubprofileEditorRow[]) => void;
   isGallery: boolean;
@@ -66,7 +70,7 @@ export function useSectionRowActions({
   }
 
   function insertExamples() {
-    const newRows = buildTemplateItems(section.section, t).map(withUid);
+    const newRows = buildTemplateItems(section.section, t, kind).map(withUid);
     setSectionRows(section.section, newRows);
     focusRowOrAdd(newRows[0]?._uid);
     announce(

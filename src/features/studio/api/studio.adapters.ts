@@ -265,6 +265,8 @@ export interface StudioReleaseView extends StudioReleaseCardView {
   buyUrl: string | null;
   /** The buy link as it renders: https only, labelled by host. */
   buyLink: StudioBuyLinkView | null;
+  /** The player runs its tracks straight on without a crossfade. */
+  isGapless: boolean;
   supportLinks: StudioExternalLinkView[];
   /** 1 until the artist adds a version note. */
   version: number;
@@ -924,6 +926,7 @@ export function toReleaseView(dto: StudioReleaseDTO): StudioReleaseView {
     isUpcoming,
     buyUrl: dto.buyUrl ?? null,
     buyLink: toBuyLinkView(dto.buyUrl),
+    isGapless: dto.isGapless ?? false,
     supportLinks: toSupportLinkViews(dto.supportLinks),
     version,
     versions,

@@ -23,6 +23,7 @@ import {
   DEMO_LOUD_TRACK_ANALYSIS,
   DEMO_LOUD_TRACK_ID,
 } from "./studioDemoListening.data";
+import { demoWithheldTrackIds } from "./studioDemoSafety";
 
 /** What a demo PATCH stored for a track; a key that is absent was never
  *  written, so the fixture's value stands. */
@@ -96,6 +97,29 @@ export function demoStreamAnalysis(trackId: string): StudioStreamAnalysis {
         : stored.loudnessLufs,
     peakDb: stored.peakDb === undefined ? seeded.peakDb : stored.peakDb,
   };
+}
+
+/** The stream's `gaplessAfterTrackId`: on a release marked to play without
+ *  gaps, the nearest earlier track by position that has audio and is not
+ *  withheld (the player queues only those); null for the first playable
+ *  track, for any other release and for a track outside the fixtures. */
+export function demoGaplessAfterTrackId(trackId: string): string | null {
+  const release = [...DEMO_RELEASES, ...DEMO_OWNER_RELEASES].find((candidate) =>
+    candidate.tracks.some((track) => track.id === trackId),
+  );
+  if (!release?.isGapless) return null;
+  const current = release.tracks.find((track) => track.id === trackId);
+  if (!current) return null;
+  const withheldTrackIds = demoWithheldTrackIds();
+  const earlierPlayable = release.tracks
+    .filter(
+      (track) =>
+        track.hasAudio &&
+        !withheldTrackIds.has(track.id) &&
+        track.position < current.position,
+    )
+    .sort((left, right) => right.position - left.position);
+  return earlierPlayable[0]?.id ?? null;
 }
 
 /** Owner rows' `hasAnalysis`: fixture tracks come measured; a track the demo

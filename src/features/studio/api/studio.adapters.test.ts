@@ -628,6 +628,13 @@ describe("studio v3: release fields", () => {
     expect(view.publishAt).toBeNull();
   });
 
+  it("reads a missing gapless flag as false and keeps a true one", () => {
+    expect(toReleaseView(releaseDto).isGapless).toBe(false);
+    expect(toReleaseView({ ...releaseDto, isGapless: true }).isGapless).toBe(
+      true,
+    );
+  });
+
   it("drops owner-only fields for a viewer even when a server sends them", () => {
     const view = toReleaseView({
       ...releaseDto,

@@ -6,6 +6,12 @@
   padding-bottom: var(--section-y-96);
 }
 
+/* The game page's own bottom padding clears the save bar, so the builder adds
+   none there and the results card follows at the page's gap. */
+.tabGame {
+  padding-bottom: 0;
+}
+
 .headingRow {
   display: flex;
   flex-wrap: wrap;
@@ -23,6 +29,10 @@
   font-size: var(--text-28);
   line-height: 1.15;
   color: var(--ink);
+}
+.headingGame {
+  font-size: var(--text-subhead);
+  font-weight: 400;
 }
 .lead {
   margin-top: 6px;
@@ -93,6 +103,59 @@
 .problemText {
   flex: 1 1 240px;
   min-width: 0;
+}
+
+/* A game's 18+ switch, under the quiz fields. */
+.adultsSwitch {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 16px;
+  min-width: 0;
+}
+.adultsRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+.adultsText {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  cursor: pointer;
+}
+.adultsLabel {
+  font-size: var(--text-14-5);
+  font-weight: 600;
+  color: var(--ink);
+}
+.adultsHint {
+  font-size: var(--text-13);
+  line-height: 1.45;
+  color: var(--ink-60);
+}
+/* Under a blank game title, which cannot be saved. */
+/* The My games limit note's look: a soft accent tint, so it reads as a notice. */
+.adultsLocked {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--gap-xs);
+  margin: 0;
+  padding: var(--gap-xs) var(--gap-sm);
+  font-size: var(--text-14);
+  line-height: 1.45;
+  color: var(--ink);
+  background: rgba(var(--accent-rgb), 0.1);
+  border-radius: var(--radius-16);
+}
+.adultsLockedIcon {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin-top: 1px;
+  color: var(--accent-text);
 }
 
 /* The save bar, the only fixed UI of the builder. */

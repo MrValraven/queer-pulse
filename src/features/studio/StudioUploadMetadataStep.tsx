@@ -56,6 +56,7 @@ export function MetadataStep({ draft }: { draft: StudioUploadDraft }) {
           draft.setField("genre", patch.genre);
           draft.setField("mood", patch.mood);
           draft.setField("sceneId", patch.sceneId);
+          draft.setField("isGapless", patch.isGapless);
         }}
       />
       <StudioUploadReleaseFields draft={draft} />
@@ -91,6 +92,7 @@ export function MetadataStep({ draft }: { draft: StudioUploadDraft }) {
         </p>
       </div>
       <CreatorDraftNotice
+        className={s.draftNotice}
         messageKey="studio:creatorDraftNote.body"
         isShown={
           draft.release === null ||

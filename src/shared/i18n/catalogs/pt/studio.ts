@@ -16,7 +16,6 @@ export const studio: Catalog = {
   "shell.back": "Voltar",
   "shell.forward": "Avançar",
   "shell.searchPlaceholder": "pesquisar artistas, faixas, partituras…",
-  "shell.forArtistsCta": "Para artistas",
   "shell.sustainCta": "Contribuir · {price}/mês",
 
   // ── Marca (repetida na shell/rail/páginas de erro/entrar) ─────────────────
@@ -25,9 +24,7 @@ export const studio: Catalog = {
 
   // ── Menu lateral (StudioRail) ──────────────────────────────────────────────
   "rail.section.contribute": "Contribuir",
-  "rail.section.governance": "Governação",
   "rail.section.coop": "A cooperativa",
-  "rail.section.library": "Na tua biblioteca",
 
   "rail.main.home": "Início",
   "rail.main.wednesdaySet": "O set de quarta-feira",
@@ -45,7 +42,6 @@ export const studio: Catalog = {
   "rail.governance.programWeek": "Programar a semana",
   "rail.governance.curationCouncil": "Conselho de curadoria",
   "rail.governance.submissionInbox": "Caixa de submissões",
-  "rail.governance.flaggedTracks": "Faixas assinaladas",
 
   "rail.utility.about": "Sobre a cooperativa",
   "rail.utility.help": "Ajuda e perguntas frequentes",
@@ -57,6 +53,12 @@ export const studio: Catalog = {
     "Já pagaste <b>{amount}</b> a {count} artista este ano.",
   "rail.foot.paid_other":
     "Já pagaste <b>{amount}</b> a {count} artistas este ano.",
+
+  "railPlaylists.label": "As tuas playlists",
+  "railPlaylists.autoPlaylist": "Playlist automática",
+  "railPlaylists.savedFallback": "Playlist guardada",
+  "railPlaylists.empty": "Cria uma playlist e ela aparece aqui",
+  "railPlaylists.loadError": "Não conseguimos carregar as tuas playlists",
 
   // ── Etiquetas partilhadas nos cartões de faixas/lançamentos ───────────────
   "tag.free": "Grátis",
@@ -1750,25 +1752,29 @@ export const studio: Catalog = {
   "shell.searchLabel": "Pesquisar no Studio",
   "shell.searchPlaceholderLive": "pesquisar artistas, lançamentos, faixas…",
   "shell.accountLabel": "A tua conta, {name}",
-  "shell.menu.library": "A tua biblioteca",
   "shell.menu.artistPages": "As tuas páginas de artista",
-  "shell.menu.dashboard": "Painel de artista",
   "shell.menu.settings": "Definições",
   "shell.menu.backToQueerPulse": "Voltar ao QueerPulse",
+  "shell.menu.group.creator": "Criação",
+  "shell.menu.group.staff": "Equipa",
+  "shell.menu.myClaims": "As minhas reivindicações",
+  "shell.menu.myClaimsBadge_one":
+    "{count} reivindicação à espera da tua resposta",
+  "shell.menu.myClaimsBadge_other":
+    "{count} reivindicações à espera da tua resposta",
+  "shell.menu.showAll_one": "Mostrar todas ({count})",
+  "shell.menu.showAll_other": "Mostrar todas ({count})",
+  "shell.menu.showFewer": "Mostrar menos",
+  "shell.menu.attentionLabel": "{label}, há algo que precisa da tua atenção",
   "shell.tabs.label": "Secções do Studio",
   "shell.sheet.label": "Menu do Studio",
   "shell.sheet.close": "Fechar menu",
-  "shell.sheet.more": "Mais no Studio",
-  "shell.uploadShort": "Carregar",
   "shell.sustainShort": "Contribuir",
-  "shell.tabs.openCalls": "Concursos",
   "shell.uploadCta": "Carregar um lançamento",
   "creator.avatarLabel": "A carregar como {name}",
   "rail.v1.navLabel": "Studio",
   "rail.v1.search": "Pesquisar",
-  "rail.v1.yourMusic": "A tua música",
   "rail.v1.upload": "Carregar um lançamento",
-  "rail.v1.yourReleases": "Os teus lançamentos · {name}",
   "home.hero.eyebrow": "Lançamento mais recente",
   "home.hero.byLine": "de <strong>{artist}</strong> · {facts}",
   "home.empty.title": "Ainda não há lançamentos",
@@ -1869,6 +1875,9 @@ export const studio: Catalog = {
   "uploadFlow.release.continueCta": "Guardar e passar às faixas",
   "uploadFlow.release.saveChangesCta": "Guardar alterações",
   "uploadFlow.release.changesSaved": "Alterações guardadas",
+  "uploadFlow.release.gaplessLabel": "Tocar sem pausas",
+  "uploadFlow.release.gaplessHint":
+    "Cada faixa segue direto para a seguinte, mesmo para quem tem a transição ligada. Ideal para álbuns ao vivo e mixes",
   "uploadFlow.saving": "A guardar",
   "uploadFlow.saved": "Rascunho guardado",
   "uploadFlow.cover.heading": "<em>Capa</em>",
@@ -3225,7 +3234,7 @@ export const studio: Catalog = {
   "player.crossfade.value_other": "{count} segundos",
   "player.crossfade.off": "Desligada",
   "player.crossfade.hint":
-    "Funde cada faixa com a seguinte. As faixas do mesmo lançamento seguem sem pausa",
+    "Funde cada faixa com a seguinte. Os lançamentos marcados para tocar sem pausas seguem direto",
   "player.crossfade.unavailable":
     "A transição não está disponível nesta sessão",
   "player.loudness.label": "Equilibrar o volume",

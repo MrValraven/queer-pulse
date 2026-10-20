@@ -87,3 +87,52 @@ describe("demo data export, Pulse Live plays", () => {
     ]);
   });
 });
+
+describe("demo data export, Pulse Live games", () => {
+  it("writes the member's games under events", () => {
+    expect(CATEGORY_ARCHIVE_KEYS.events).toContain("quizshowGames");
+    const content = buildDemoArchiveContent(["events"]);
+    expect(content.quizshowGames).toHaveLength(1);
+    const [game] = content.quizshowGames as Array<{
+      rounds: Array<{ questions: unknown[] }>;
+    }>;
+    expect(game).toEqual(
+      expect.objectContaining({
+        title: "Friday flat quiz",
+        isAdultsOnly: false,
+        languages: "both",
+        screenLanguage: "en",
+      }),
+    );
+    expect(game?.rounds).toHaveLength(1);
+    expect(game?.rounds[0]?.questions).toHaveLength(1);
+  });
+
+  it("mirrors the live game row's round and question fields", () => {
+    const content = buildDemoArchiveContent(["events"]);
+    const [game] = content.quizshowGames as Array<{
+      rounds: Array<Record<string, unknown> & { questions: object[] }>;
+    }>;
+    const [round] = game?.rounds ?? [];
+    expect(Object.keys(round ?? {}).sort()).toEqual([
+      "contentLabel",
+      "kind",
+      "questions",
+      "title",
+    ]);
+    expect(Object.keys(round?.questions[0] ?? {}).sort()).toEqual([
+      "acceptedAnswers",
+      "answer",
+      "mediaRef",
+      "options",
+      "prompt",
+      "type",
+    ]);
+  });
+
+  it("carries the quiz title on a play", () => {
+    const content = buildDemoArchiveContent(["events"]);
+    const [play] = content.quizshowPlays as Array<{ quizTitle: string }>;
+    expect(play?.quizTitle).toBe("Co-op quiz night");
+  });
+});

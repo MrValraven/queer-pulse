@@ -111,6 +111,7 @@ export const DEMO_LIBRARY_SAVES: SavedItem[] = [
     kind: "studio_playlist",
     title: "Lisbon dyke-bar standards",
     href: "/studio/collection?id=demo-playlist-dyke-bar-standards",
+    meta: "Sara Marques",
     availability: "available",
   },
 ];

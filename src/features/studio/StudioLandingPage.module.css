@@ -56,6 +56,9 @@
   color: var(--text);
   text-decoration: none;
   letter-spacing: -0.005em;
+  /* The wordmark never shrinks or wraps; the phone rules below make room. */
+  flex: none;
+  white-space: nowrap;
 }
 .brand .q {
   font-style: italic;
@@ -76,6 +79,8 @@
   padding: 4px 10px;
   border-radius: var(--radius-5);
   background: rgba(var(--accent-rgb), 0.14);
+  flex: none;
+  white-space: nowrap;
 }
 .topNav {
   margin-left: 24px;
@@ -100,6 +105,25 @@
 @media (--lg) {
   .topNav {
     display: none;
+  }
+}
+/* Phones: a 16px gutter and the small grid gap keep the wordmark, the Studio
+   chip and Sign in on one row inside the screen. */
+@media (--md) {
+  .top {
+    padding-inline: 16px;
+    gap: var(--gap-xs);
+  }
+}
+/* Small phones: at 320px that row still runs past the edge, so the header
+   wordmark steps down to the creator shell's size and Sign in trims its
+   sides. */
+@media (--xs) {
+  .top .brand {
+    font-size: var(--text-19);
+  }
+  .topRight > a {
+    padding-inline: 14px;
   }
 }
 

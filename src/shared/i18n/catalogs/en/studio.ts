@@ -20,7 +20,6 @@ export const studio: Catalog = {
   "shell.back": "Back",
   "shell.forward": "Forward",
   "shell.searchPlaceholder": "search artists, tracks, sheet music…",
-  "shell.forArtistsCta": "For artists",
   "shell.sustainCta": "Sustain · {price}/mo",
 
   // ── Brand lockup (repeated across shell/rail/error/sign-in pages) ────────
@@ -29,9 +28,7 @@ export const studio: Catalog = {
 
   // ── Left rail (StudioRail) ─────────────────────────────────────────────────
   "rail.section.contribute": "Contribute",
-  "rail.section.governance": "Governance",
   "rail.section.coop": "The co-op",
-  "rail.section.library": "In your library",
 
   "rail.main.home": "Home",
   "rail.main.wednesdaySet": "The Wednesday set",
@@ -49,7 +46,6 @@ export const studio: Catalog = {
   "rail.governance.programWeek": "Programme the week",
   "rail.governance.curationCouncil": "Curation council",
   "rail.governance.submissionInbox": "Submission inbox",
-  "rail.governance.flaggedTracks": "Flagged tracks",
 
   "rail.utility.about": "About the co-op",
   "rail.utility.help": "Help & FAQ",
@@ -61,6 +57,12 @@ export const studio: Catalog = {
     "You've paid <b>{amount}</b> to {count} artist this year.",
   "rail.foot.paid_other":
     "You've paid <b>{amount}</b> to {count} artists this year.",
+
+  "railPlaylists.label": "Your playlists",
+  "railPlaylists.autoPlaylist": "Auto playlist",
+  "railPlaylists.savedFallback": "Saved playlist",
+  "railPlaylists.empty": "Create a playlist and it shows up here",
+  "railPlaylists.loadError": "We couldn't load your playlists",
 
   // ── Shared corner-pill tag labels (track/release cards across pages) ──────
   "tag.free": "Free",
@@ -1733,25 +1735,27 @@ export const studio: Catalog = {
   "shell.searchLabel": "Search Studio",
   "shell.searchPlaceholderLive": "search artists, releases, tracks…",
   "shell.accountLabel": "Your account, {name}",
-  "shell.menu.library": "Your library",
   "shell.menu.artistPages": "Your artist pages",
-  "shell.menu.dashboard": "Artist dashboard",
   "shell.menu.settings": "Settings",
   "shell.menu.backToQueerPulse": "Back to QueerPulse",
+  "shell.menu.group.creator": "Creator",
+  "shell.menu.group.staff": "Staff",
+  "shell.menu.myClaims": "My claims",
+  "shell.menu.myClaimsBadge_one": "{count} claim waiting for your reply",
+  "shell.menu.myClaimsBadge_other": "{count} claims waiting for your reply",
+  "shell.menu.showAll_one": "Show all ({count})",
+  "shell.menu.showAll_other": "Show all ({count})",
+  "shell.menu.showFewer": "Show fewer",
+  "shell.menu.attentionLabel": "{label}, something needs your attention",
   "shell.tabs.label": "Studio sections",
   "shell.sheet.label": "Studio menu",
   "shell.sheet.close": "Close menu",
-  "shell.sheet.more": "More in Studio",
-  "shell.uploadShort": "Upload",
   "shell.sustainShort": "Sustain",
-  "shell.tabs.openCalls": "Open calls",
   "shell.uploadCta": "Upload a release",
   "creator.avatarLabel": "Uploading as {name}",
   "rail.v1.navLabel": "Studio",
   "rail.v1.search": "Search",
-  "rail.v1.yourMusic": "Your music",
   "rail.v1.upload": "Upload a release",
-  "rail.v1.yourReleases": "Your releases · {name}",
   "home.hero.eyebrow": "Newest release",
   "home.hero.byLine": "by <strong>{artist}</strong> · {facts}",
   "home.empty.title": "No releases yet",
@@ -1851,6 +1855,9 @@ export const studio: Catalog = {
   "uploadFlow.release.continueCta": "Save and continue to tracks",
   "uploadFlow.release.saveChangesCta": "Save changes",
   "uploadFlow.release.changesSaved": "Changes saved",
+  "uploadFlow.release.gaplessLabel": "Play without gaps",
+  "uploadFlow.release.gaplessHint":
+    "Each track runs straight into the next, even for listeners with crossfade on. Good for live albums and mixes",
   "uploadFlow.saving": "Saving",
   "uploadFlow.saved": "Draft saved",
   "uploadFlow.cover.heading": "Cover <em>art</em>",
@@ -3165,7 +3172,7 @@ export const studio: Catalog = {
   "player.crossfade.value_other": "{count} seconds",
   "player.crossfade.off": "Off",
   "player.crossfade.hint":
-    "Fades each track into the next. Tracks from the same release play straight through",
+    "Fades each track into the next. Releases set to play without gaps run straight through",
   "player.crossfade.unavailable": "Crossfade isn't available in this session",
   "player.loudness.label": "Even out loudness",
   "player.loudness.hint": "Brings every track close to the same level",

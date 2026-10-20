@@ -293,7 +293,64 @@ export const TEMPLATE_ITEMS: Partial<
       date: "2025",
     },
   ],
+  // architect (`projects` above is shared with the developer)
+  built_work: [
+    {
+      titleKey: "subprofiles:template.section.built_work.item1.title",
+      subtitleKey: "subprofiles:template.section.built_work.item1.subtitle",
+      descriptionKey: "subprofiles:template.section.built_work.item1.desc",
+      date: "2025",
+    },
+  ],
+  competitions: [
+    {
+      titleKey: "subprofiles:template.section.competitions.item1.title",
+      subtitleKey: "subprofiles:template.section.competitions.item1.subtitle",
+      descriptionKey: "subprofiles:template.section.competitions.item1.desc",
+      date: "2025",
+    },
+  ],
 };
+
+/** Starter items a kind words its own way in a section it shares with other
+ *  kinds, read before `TEMPLATE_ITEMS`. An architect's `projects` are unbuilt
+ *  entries and studies, so the developer's starter items would read wrong. */
+export const KIND_SECTION_TEMPLATE_ITEMS: Partial<
+  Record<SubprofileKind, Partial<Record<SubprofileSection, TemplateItem[]>>>
+> = {
+  architect: {
+    projects: [
+      {
+        titleKey:
+          "subprofiles:template.kindSection.architect.projects.item1.title",
+        descriptionKey:
+          "subprofiles:template.kindSection.architect.projects.item1.desc",
+        tags: ["Competition", "Timber"],
+        date: "2025",
+      },
+      {
+        titleKey:
+          "subprofiles:template.kindSection.architect.projects.item2.title",
+        descriptionKey:
+          "subprofiles:template.kindSection.architect.projects.item2.desc",
+        tags: ["Housing", "Study"],
+        date: "2025",
+      },
+    ],
+  },
+};
+
+/** A section's starter items for `kind`: the kind's own when it has them,
+ *  else the section's shared ones. Without a kind, always the shared ones. */
+export function templateItemsFor(
+  section: SubprofileSection,
+  kind?: SubprofileKind,
+): TemplateItem[] | undefined {
+  const kindItems = kind
+    ? KIND_SECTION_TEMPLATE_ITEMS[kind]?.[section]
+    : undefined;
+  return kindItems ?? TEMPLATE_ITEMS[section];
+}
 
 /** kind -> suggested tagline key, offered alongside the section templates. */
 export const TEMPLATE_TAGLINE: Partial<Record<SubprofileKind, string>> = {
@@ -315,17 +372,20 @@ export const TEMPLATE_TAGLINE: Partial<Record<SubprofileKind, string>> = {
   therapist: "subprofiles:template.tagline.therapist",
   astrologer: "subprofiles:template.tagline.astrologer",
   pole_dancer: "subprofiles:template.tagline.pole_dancer",
+  architect: "subprofiles:template.tagline.architect",
   generic: "subprofiles:template.tagline.generic",
 };
 
 /** Resolve a section's template items into full view-model rows (blank
  *  defaults for every field the template doesn't seed), ready to hand to
- *  `itemsToInputDto` or drop straight into an editor's `rows` state. */
+ *  `itemsToInputDto` or drop straight into an editor's `rows` state. A
+ *  `kind` picks that kind's own items for the section when it has them. */
 export function buildTemplateItems(
   section: SubprofileSection,
   t: TFunction,
+  kind?: SubprofileKind,
 ): SubprofileItemView[] {
-  const templateItems = TEMPLATE_ITEMS[section] ?? [];
+  const templateItems = templateItemsFor(section, kind) ?? [];
   return templateItems.map((templateItem) => ({
     // Not yet persisted: no server-assigned row exists until the create-time
     // save response returns one. The revision-history UI guards on `isNew`,
@@ -367,8 +427,11 @@ export function buildTemplateSections(
   t: TFunction,
 ): { section: SubprofileSection; items: SubprofileItemView[] }[] {
   return KIND_SECTIONS[kind]
-    .filter((section) => TEMPLATE_ITEMS[section] !== undefined)
-    .map((section) => ({ section, items: buildTemplateItems(section, t) }));
+    .filter((section) => templateItemsFor(section, kind) !== undefined)
+    .map((section) => ({
+      section,
+      items: buildTemplateItems(section, t, kind),
+    }));
 }
 
 /** The suggested tagline for `kind`, resolved via `t()` — `undefined` when the

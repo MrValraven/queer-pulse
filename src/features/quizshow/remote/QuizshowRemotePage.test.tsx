@@ -25,8 +25,17 @@ const eventSessionMock = vi.hoisted(() => ({ hasLoadFailed: false }));
 
 vi.mock("../screen/useQuizshowEventSession", () => ({
   useQuizshowEventSession: () => ({
+    scope: { kind: "event", eventSlug: "pride-brunch-jun" },
     slug: "pride-brunch-jun",
     eventTitle: "Pride brunch",
+    gameTitle: "",
+    isAdultsOnly: false,
+    backPath: "/gatherings/pride-brunch-jun",
+    backLabelKey: "quizshow:screen.backToEvent",
+    noGameKeys: {
+      screen: "quizshow:screen.noGame",
+      remote: "quizshow:remote.noGame",
+    },
     isOrganizer: true,
     isLoading: false,
     sessionId: null,
@@ -155,6 +164,9 @@ function hostState(
     sessionId: "session-1",
     eventSlug: "pride-brunch-jun",
     eventTitle: "Pride brunch",
+    kind: "event",
+    gameId: null,
+    isAdultsOnly: false,
     joinCode: "QZ7KP4",
     quizTitle: "Pride quiz",
     languages: "both",

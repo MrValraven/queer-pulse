@@ -190,6 +190,7 @@ export const subprofiles: Catalog = {
   "kind.game_designer": "Videojogos",
   "kind.artist_3d": "Arte 3D",
   "kind.printmaker": "Gravura",
+  "kind.architect": "Arquitetura",
   "kind.journalist": "Jornalismo",
   "kind.poet": "Poesia",
   "kind.editor": "Edição",
@@ -406,6 +407,8 @@ export const subprofiles: Catalog = {
   "section.episodes": "Episódios",
   "section.roles": "Papéis",
   "section.works": "Obras",
+  "section.built_work": "Obra construída",
+  "section.competitions": "Concursos e prémios",
 
   // Estado / visibilidade de ligação — também campos persistidos.
   "status.draft": "Rascunho",
@@ -925,6 +928,7 @@ export const subprofiles: Catalog = {
     "Mapas lidos com calma, para a vida que estás a viver.",
   "template.tagline.pole_dancer": "No varão e na sala: atuo e ensino.",
   "template.tagline.generic": "Umas quantas coisas que fiz, reunidas aqui.",
+  "template.tagline.architect": "Edifícios e lugares feitos para quem os vive.",
 
   // Exemplos por secção (usados tanto pelo modelo inicial como pelo botão
   // "Inserir exemplos") — um ou dois itens por secção, de acordo com os
@@ -1000,6 +1004,23 @@ export const subprofiles: Catalog = {
   "template.section.showcase.item1.title": "Algo que fiz",
   "template.section.showcase.item1.subtitle": "Uma etiqueta curta para isto",
   "template.section.showcase.item1.desc": "O que é e porque está aqui.",
+  "template.section.built_work.item1.title": "Um edifício que projetei",
+  "template.section.built_work.item1.subtitle": "Onde fica",
+  "template.section.built_work.item1.desc":
+    "O que é, quem o usa e o que te pedia o programa.",
+  "template.section.competitions.item1.title": "Um concurso a que concorri",
+  "template.section.competitions.item1.subtitle": "Quem o promoveu",
+  "template.section.competitions.item1.desc":
+    "O que pedia o programa e o que propuseste.",
+  // Exemplos próprios da arquitetura para a secção partilhada Projetos.
+  "template.kindSection.architect.projects.item1.title":
+    "Proposta de concurso para uma biblioteca em Marvila",
+  "template.kindSection.architect.projects.item1.desc":
+    "Ficou por construir e foi o projeto com que mais aprendi: um jardim de leitura debaixo de uma cobertura de madeira.",
+  "template.kindSection.architect.projects.item2.title":
+    "Estudo para um pátio partilhado na Mouraria",
+  "template.kindSection.architect.projects.item2.desc":
+    "Em curso com a vizinhança: sombra, bancos e um sítio para estender a roupa.",
   "template.section.menus.item1.title": "Um menu ou prato de assinatura",
   "template.section.menus.item1.subtitle": "O evento ou o espaço",
   "template.section.menus.item1.desc":
@@ -3359,6 +3380,22 @@ export const subprofiles: Catalog = {
   "itemField.tattoo.shop.url.label": "Link de compra",
   "itemField.tattoo.shop.url.placeholder": "https://aminhaloja.com/print",
   "itemField.tattoo.shop.url.helper": "Começa por https://",
+  // Persona de arquitetura (2026-10-20)
+  "itemField.architect.built_work.title.placeholder": "por ex. Casa na Graça",
+  "itemField.architect.built_work.subtitle.label": "Local",
+  "itemField.architect.built_work.subtitle.placeholder":
+    "por ex. Graça, Lisboa",
+  "itemField.architect.built_work.date.label": "Concluída em",
+  "itemField.architect.built_work.meta.label": "O teu papel",
+  "itemField.architect.built_work.meta.placeholder":
+    "por ex. Coordenação do projeto",
+  "itemField.architect.competitions.title.placeholder":
+    "por ex. Habitação acessível em Marvila",
+  "itemField.architect.competitions.subtitle.label": "Promotor ou prémio",
+  "itemField.architect.competitions.subtitle.placeholder":
+    "por ex. Câmara Municipal de Lisboa",
+  "itemField.architect.competitions.meta.label": "Resultado",
+  "itemField.architect.competitions.meta.placeholder": "por ex. Menção honrosa",
   "skinControl.listFull": "Máximo de {count}",
   "skinControl.validate.httpsUrl": "Usa um link que comece por https://",
   "skinControl.validate.year": "Usa um ano entre 1900 e este ano",

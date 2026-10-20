@@ -40,7 +40,13 @@ export const CATEGORY_ARCHIVE_KEYS: Record<string, readonly string[]> = {
     "communityRequests",
     "feedPreferences",
   ],
-  events: ["events", "eventPreferences", "eventParticipation", "quizshowPlays"],
+  events: [
+    "events",
+    "eventPreferences",
+    "eventParticipation",
+    "quizshowPlays",
+    "quizshowGames",
+  ],
   goTogether: ["go-together"],
   connections: [
     "connections",
@@ -202,6 +208,7 @@ function demoContentFor(archiveKey: string): unknown {
     case "quizshowPlays":
       return [
         {
+          quizTitle: "Co-op quiz night",
           // A real demo event: the past one whose Pulse Live results demo keeps.
           eventTitle: "Co-op Info Night: Buying a Building Together",
           eventSlug: "coop-info-night",
@@ -229,6 +236,37 @@ function demoContentFor(archiveKey: string): unknown {
               },
               votedForTruth: true,
               votedAt: now,
+            },
+          ],
+        },
+      ];
+    case "quizshowGames":
+      return [
+        {
+          title: "Friday flat quiz",
+          isAdultsOnly: false,
+          languages: "both",
+          screenLanguage: "en",
+          createdAt: now,
+          updatedAt: now,
+          rounds: [
+            {
+              kind: "quiz",
+              title: { en: "Warm-up", pt: "Aquecimento" },
+              contentLabel: "none",
+              questions: [
+                {
+                  type: "true_false",
+                  prompt: {
+                    en: "Gilbert Baker designed the first rainbow flag.",
+                    pt: "Gilbert Baker desenhou a primeira bandeira arco-íris.",
+                  },
+                  options: [],
+                  answer: { isTrue: true },
+                  acceptedAnswers: [],
+                  mediaRef: null,
+                },
+              ],
             },
           ],
         },

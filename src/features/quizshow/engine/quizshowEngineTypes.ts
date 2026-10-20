@@ -94,8 +94,13 @@ export interface QuizshowEngineQuestionPlay {
 
 export interface QuizshowEngineState {
   sessionId: string;
-  eventSlug: string;
-  eventTitle: string;
+  /** Null on a game session. */
+  eventSlug: string | null;
+  eventTitle: string | null;
+  /** Set on a game session; null on an event game. */
+  gameId: string | null;
+  /** The scope's 18+ flag or an adults round in the frozen quiz; a first join then needs consent. */
+  isAdultsOnly: boolean;
   joinCode: string;
   /** Frozen at creation. */
   quiz: QuizshowQuiz;
@@ -180,8 +185,12 @@ export interface QuizshowEngineOptions {
   playMode: QuizshowPlayMode;
   maxTeamSize: number | null;
   isReviewOn: boolean;
-  eventSlug: string;
-  eventTitle: string;
+  eventSlug: string | null;
+  eventTitle: string | null;
+  /** A game session's id; leave it out on an event game. */
+  gameId?: string | null;
+  /** The scope's 18+ switch; an adults round in the quiz marks the session 18+ too. */
+  isAdultsOnly?: boolean;
   joinCode: string;
   sessionId: string;
   seed: number;

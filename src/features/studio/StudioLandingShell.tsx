@@ -15,10 +15,14 @@ export function StudioLandingShell({ children }: { children: ReactNode }) {
       <header className={styles.top}>
         <Link to={routes.homepage} className={styles.brand}>
           <span className={styles.pulseDot} aria-hidden />
-          <Translation
-            i18nKey="studio:brand.lockup"
-            components={{ em: <span className={styles.q} /> }}
-          />
+          {/* One span keeps the wordmark a single flex item, so the brand's
+              gap spaces the dot and never splits "Queer" from "Pulse". */}
+          <span>
+            <Translation
+              i18nKey="studio:brand.lockup"
+              components={{ em: <span className={styles.q} /> }}
+            />
+          </span>
         </Link>
         <span className={styles.product}>{t("studio:brand.studioLabel")}</span>
         <nav className={styles.topNav}>
@@ -51,10 +55,12 @@ function StudioLandingFooter() {
         <div className={styles.footBrand}>
           <Link to={routes.homepage} className={styles.brand}>
             <span className={styles.pulseDot} aria-hidden />
-            <Translation
-              i18nKey="studio:brand.lockup"
-              components={{ em: <span className={styles.q} /> }}
-            />
+            <span>
+              <Translation
+                i18nKey="studio:brand.lockup"
+                components={{ em: <span className={styles.q} /> }}
+              />
+            </span>
           </Link>
           <p>{t("studio:landing.footer.tagline")}</p>
         </div>

@@ -1,4 +1,11 @@
-import { useId, useState, type FormEvent } from "react";
+import {
+  useEffect,
+  useId,
+  useRef,
+  useState,
+  type FormEvent,
+  type ReactNode,
+} from "react";
 import { Button } from "../../../shared/components/ui/Button";
 import { Collapse } from "../../../shared/components/ui/Collapse";
 import { Toggle } from "../../../shared/components/ui/Controls";
@@ -104,14 +111,29 @@ export function QuizshowToggleRow({
   );
 }
 
+interface QuizshowJoinFormProps {
+  controller: QuizshowSessionController;
+  /** Shown above the name step, such as the game's host. */
+  header?: ReactNode;
+  /** The player confirmed the 18+ step; `lobby:join` then carries it. */
+  hasAcceptedAdultContent?: boolean;
+  /** The server asked for the 18+ step; the page shows it again and the form shows no error. */
+  onConsentRequired?: () => void;
+}
+
 function JoinFormBody({
   controller,
   session,
-}: {
-  controller: QuizshowSessionController;
-  session: QuizshowPlayerState;
-}) {
+  header,
+  hasAcceptedAdultContent = false,
+  onConsentRequired,
+}: QuizshowJoinFormProps & { session: QuizshowPlayerState }) {
   const { t } = useTranslation();
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  // Coming from the 18+ step, focus lands on the name step's heading.
+  useEffect(() => {
+    if (hasAcceptedAdultContent) headingRef.current?.focus();
+  }, [hasAcceptedAdultContent]);
   const [screenName, setScreenName] = useState(session.suggestedScreenName);
   const [isAvatarShown, setIsAvatarShown] = useState(false);
   const [hasExtraTime, setHasExtraTime] = useState(false);
@@ -147,11 +169,20 @@ function JoinFormBody({
         : team;
     const result = await controller.send("lobby:join", {
       screenName: trimmedName,
+      ...(hasAcceptedAdultContent ? { hasAcceptedAdultContent: true } : {}),
       isAvatarShown,
       hasExtraTime,
       team: isTeams ? sentTeam : null,
     });
     setIsSending(false);
+    if (
+      !result.ok &&
+      result.code === "quizshow_adult_consent_required" &&
+      onConsentRequired !== undefined
+    ) {
+      onConsentRequired();
+      return;
+    }
     if (!result.ok) {
       setErrors(
         errorsForCode(
@@ -168,7 +199,10 @@ function JoinFormBody({
       onSubmit={(event) => void submitJoin(event)}
       noValidate
     >
-      <h1 className={styles.title}>{t("quizshow:player.nameTitle")}</h1>
+      {header}
+      <h1 ref={headingRef} tabIndex={-1} className={styles.title}>
+        {t("quizshow:player.nameTitle")}
+      </h1>
       <Collapse isOpen={session.cursor.status !== "lobby"}>
         <p className={styles.lead}>{t("quizshow:player.waitNextQuestion")}</p>
       </Collapse>
@@ -224,10 +258,19 @@ function JoinFormBody({
 
 export function QuizshowJoinForm({
   controller,
-}: {
-  controller: QuizshowSessionController;
-}) {
+  header,
+  hasAcceptedAdultContent,
+  onConsentRequired,
+}: QuizshowJoinFormProps) {
   const { session } = controller.state;
   if (!isPlayerState(session)) return null;
-  return <JoinFormBody controller={controller} session={session} />;
+  return (
+    <JoinFormBody
+      controller={controller}
+      session={session}
+      header={header}
+      hasAcceptedAdultContent={hasAcceptedAdultContent}
+      onConsentRequired={onConsentRequired}
+    />
+  );
 }

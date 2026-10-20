@@ -3,6 +3,7 @@ import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useMotionPrefs } from "../../../app/providers/motionPrefs";
 import { Collapse } from "../../../shared/components/ui/Collapse";
 import type { GatheringDetail } from "../../gatherings/data";
+import { eventScope } from "../quizshowScope";
 import { QuizshowEventBanner } from "./QuizshowEventBanner";
 import { QuizshowResultsCard } from "./QuizshowResultsCard";
 import { useQuizshowEventSummary } from "./useQuizshowEventSummary";
@@ -36,7 +37,10 @@ export function QuizshowEventSection({
           {liveSessionCode !== null ? (
             <QuizshowEventBanner code={liveSessionCode} />
           ) : (
-            <QuizshowResultsCard slug={gathering.slug} canDelete={canDelete} />
+            <QuizshowResultsCard
+              scope={eventScope(gathering.slug)}
+              canDelete={canDelete}
+            />
           )}
         </m.div>
       </AnimatePresence>

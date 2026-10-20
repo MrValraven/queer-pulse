@@ -93,10 +93,10 @@ export const PERSONA_KINDS_BY_PROFESSION: Readonly<
   socialScientist: ["academic"],
   economist: ["academic"],
   // architecture
-  architect: ["designer"],
-  urbanDesigner: ["designer"],
-  interiorArchitect: ["designer"],
-  landscapeArchitect: ["designer"],
+  architect: ["architect", "designer"],
+  urbanDesigner: ["architect", "designer"],
+  interiorArchitect: ["architect", "designer"],
+  landscapeArchitect: ["architect", "designer"],
   interiorDesigner: ["designer"],
   // healthcare
   therapist: ["therapist"],

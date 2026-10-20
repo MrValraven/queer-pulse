@@ -5,9 +5,12 @@ import type {
   QuizshowQuizInput,
 } from "../../../shared/contracts/quizshow";
 import { QUIZSHOW_STARTER_PACKS } from "../demo/quizshowStarterPacks.data";
+import { demoGetGame } from "./quizshowDemoGames";
+import { QUIZSHOW_DEMO_GAME_IDS } from "./quizshowDemoGames.data";
 import {
   demoGetQuiz,
   demoImportQuiz,
+  demoImportSources,
   demoJoin,
   demoOpenSession,
   demoPutQuiz,
@@ -124,9 +127,13 @@ describe("quizshow demo store", () => {
   });
 
   it("joins the demo game with any code shaped like one and refuses others", () => {
-    expect(demoJoin({ code: "qz7-kp4" }).eventSlug).toBe(
-      QUIZSHOW_DEMO_LIVE_SLUG,
-    );
+    const join = demoJoin({ code: "qz7-kp4" });
+    expect(join.eventSlug).toBe(QUIZSHOW_DEMO_LIVE_SLUG);
+    expect(join.kind).toBe("event");
+    expect(join.host).toBeNull();
+    expect(join.isAdultsOnly).toBe(false);
+    expect(join.quizTitle).toBe(demoQuizFor(QUIZSHOW_DEMO_LIVE_SLUG).title);
+    expect(join.quizTitle).toBe("Pride and queer history");
     const error = refusalOf(() => demoJoin({ code: "ABC" }));
     expect(error.status).toBe(404);
     expect(dataOf(error).code).toBe("quizshow_join_code_not_found");
@@ -148,5 +155,71 @@ describe("quizshow demo store", () => {
     const quiz = demoQuizFor(QUIZSHOW_DEMO_LIVE_SLUG);
     expect(quiz.starterPackKey).toBe("pride_history");
     expect(quiz.rounds.length).toBeGreaterThan(0);
+  });
+
+  it("lists the demo games among an event's import sources", () => {
+    const items = demoImportSources(QUIZSHOW_DEMO_LIVE_SLUG).items;
+    const eventSources = items.filter((source) => source.kind === "event");
+    const gameSources = items.filter((source) => source.kind === "game");
+    expect(eventSources.map((source) => source.eventSlug)).toEqual([
+      "coop-info-night",
+      "open-clinic-night",
+    ]);
+    expect(gameSources.map((source) => source.gameId)).toEqual([
+      QUIZSHOW_DEMO_GAME_IDS.afterDark,
+      QUIZSHOW_DEMO_GAME_IDS.flatQuiz,
+    ]);
+    const sourceKinds = items.map((source) => source.kind);
+    expect(sourceKinds.indexOf("game")).toBeGreaterThan(
+      sourceKinds.lastIndexOf("event"),
+    );
+    const flatQuizSource = gameSources[1];
+    expect(flatQuizSource).toMatchObject({
+      eventSlug: null,
+      eventTitle: null,
+      startAt: null,
+      quizTitle: "Friday flat quiz",
+      hasAdultsRounds: false,
+      isSameSeries: false,
+    });
+  });
+
+  it("copies a game into an event", () => {
+    const response = demoImportQuiz(QUIZSHOW_DEMO_LIVE_SLUG, {
+      from: "game",
+      gameId: QUIZSHOW_DEMO_GAME_IDS.flatQuiz,
+    });
+    const game = demoGetGame(QUIZSHOW_DEMO_GAME_IDS.flatQuiz);
+    expect(response.quiz?.title).toBe("Friday flat quiz");
+    expect(response.quiz?.starterPackKey).toBe("eurovision");
+    expect(response.quiz?.rounds.length).toBe(game.quiz?.rounds.length);
+    const eventQuestionIds = response.quiz?.rounds.flatMap((round) =>
+      round.questions.map((question) => question.id),
+    );
+    const gameQuestionIds = new Set(
+      game.quiz?.rounds.flatMap((round) =>
+        round.questions.map((question) => question.id),
+      ),
+    );
+    expect(
+      eventQuestionIds?.some((questionId) => gameQuestionIds.has(questionId)),
+    ).toBe(false);
+    const adultsError = refusalOf(() =>
+      demoImportQuiz(QUIZSHOW_DEMO_LIVE_SLUG, {
+        from: "game",
+        gameId: QUIZSHOW_DEMO_GAME_IDS.afterDark,
+      }),
+    );
+    expect(dataOf(adultsError).code).toBe(
+      "quizshow_adults_round_needs_adults_event",
+    );
+    const unknownError = refusalOf(() =>
+      demoImportQuiz(QUIZSHOW_DEMO_LIVE_SLUG, {
+        from: "game",
+        gameId: "demo-game-unknown",
+      }),
+    );
+    expect(unknownError.status).toBe(404);
+    expect(dataOf(unknownError).code).toBe("quizshow_import_source_not_found");
   });
 });

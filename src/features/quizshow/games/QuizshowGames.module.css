@@ -1,0 +1,295 @@
+/* The /play home's My games: heading, game cards, empty state and the New game dialog. */
+
+/* The quiet way home above the code form, styled like the game page's Back link. */
+.homeBack {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--icon-gap-inline);
+  min-height: var(--tap-min);
+  font-size: var(--text-body-sm);
+  font-weight: 600;
+  color: var(--ink-60);
+  text-decoration: none;
+  border-radius: var(--radius-tag);
+  transition: color var(--dur-fast) var(--ease);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .homeBack:hover {
+    color: var(--ink);
+  }
+}
+
+.homeBack:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+/* Margins over a flex gap here: the always-mounted limit status region is
+   empty most of the time and must not add a gap of its own. */
+.section {
+  display: flow-root;
+  margin-block-start: var(--gap-lg);
+  padding-block-start: var(--gap-lg);
+  border-block-start: 1px solid var(--line);
+}
+
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--gap-sm);
+}
+
+.headText {
+  display: flex;
+  flex: 1 1 14rem;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-22);
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--text-strong);
+}
+
+.sub {
+  margin: 0;
+  max-inline-size: 60ch;
+  font-size: var(--text-body-sm);
+  line-height: 1.5;
+  color: var(--ink-60);
+  text-wrap: pretty;
+}
+
+.limitNote {
+  margin: var(--gap-sm) 0 0;
+  padding: var(--gap-xs) var(--gap-sm);
+  font-size: var(--text-body-sm);
+  line-height: 1.45;
+  color: var(--ink);
+  background: rgba(var(--accent-rgb), 0.1);
+  border-radius: var(--radius-16);
+}
+
+.body {
+  margin-block-start: var(--gap-sm);
+}
+
+/* A loading stand-in sized like a game card: same padding, border, radius and gap. */
+.skeletonCard {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-block-end: var(--gap-xs);
+  padding: var(--gap-sm);
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* The whole card is the link. Its bottom margin stays inside the row's
+   flow-root, so it folds away with the row. */
+.card {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm);
+  margin-block-end: var(--gap-xs);
+  padding: var(--gap-sm);
+  min-height: 44px;
+  color: var(--ink);
+  text-decoration: none;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-e1);
+  transition-property: transform, box-shadow;
+  transition-duration: var(--dur-base);
+  transition-timing-function: var(--ease);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lift);
+  }
+}
+
+/* After the hover rule, so a hovered card keeps its focus ring halo. */
+.card:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.cardText {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.cardTitle {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-subhead);
+  font-weight: 400;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+  color: var(--text-strong);
+}
+
+.cardMeta {
+  margin: 0;
+  font-size: var(--text-caption);
+  line-height: 1.45;
+  color: var(--ink-60);
+}
+
+.metaDot {
+  white-space: pre;
+}
+
+.cardChevron {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  color: var(--ink-60);
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tags:empty {
+  display: none;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 10px;
+  font-size: var(--text-caption);
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--ink);
+  background: rgba(var(--ink-rgb), 0.06);
+  border-radius: var(--radius-pill);
+}
+
+.tagLive {
+  background: rgba(var(--jade-rgb), 0.16);
+}
+
+.tagAdults {
+  background: rgba(var(--accent-rgb), 0.16);
+}
+
+.liveDot {
+  width: 7px;
+  height: 7px;
+  background: var(--jade);
+  border-radius: var(--radius-avatar);
+}
+
+.emptyCard {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--gap-sm);
+  padding: var(--gap-lg) var(--gap-sm);
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+}
+
+@media (min-width: 30rem) {
+  .emptyCard {
+    padding-inline: var(--gap-lg);
+  }
+}
+
+.emptyTitle {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-subhead);
+  font-weight: 400;
+  color: var(--text-strong);
+}
+
+.emptyBody {
+  margin: 0;
+  max-inline-size: 60ch;
+  font-size: var(--text-body);
+  line-height: 1.5;
+  color: var(--ink-60);
+  text-wrap: pretty;
+}
+
+.emptyActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gap-xs);
+}
+
+.errorLine {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--gap-xs);
+  margin: 0;
+  font-size: var(--text-body-sm);
+  line-height: 1.45;
+  color: var(--ink);
+}
+
+.errorIcon {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  color: var(--danger);
+}
+
+.dialogForm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+}
+
+.dialogFooter {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--gap-xs);
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}

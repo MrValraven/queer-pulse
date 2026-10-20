@@ -11,6 +11,7 @@ import { quizshowKeys } from "../api/quizshowKeys";
 import { resetQuizshowDemoStore } from "../api/quizshowDemoStore";
 import { QUIZSHOW_DEMO_LIVE_SLUG } from "../api/quizshowDemoStore.data";
 import { QUIZSHOW_STARTER_PACKS } from "../demo/quizshowStarterPacks.data";
+import { eventScope } from "../quizshowScope";
 import { QuizshowEmptyState } from "./QuizshowEmptyState";
 import { QuizshowImportButtons } from "./QuizshowImportButtons";
 
@@ -26,6 +27,8 @@ const ADULTS_SOURCE: QuizshowImportSource = {
   questionCount: 12,
   hasAdultsRounds: true,
   isSameSeries: false,
+  kind: "event",
+  gameId: null,
 };
 
 function createClient(): QueryClient {
@@ -38,7 +41,7 @@ function renderEmptyState(queryClient: QueryClient, isAdultsEvent = false) {
   return render(
     <TestProviders queryClient={queryClient}>
       <QuizshowEmptyState
-        slug={SLUG}
+        scope={eventScope(SLUG)}
         eventStartAt={EVENT_START_AT}
         isAdultsEvent={isAdultsEvent}
         onStartBlank={() => undefined}
@@ -70,7 +73,7 @@ describe("QuizshowEmptyState", () => {
     expect(screen.getByRole("button", { name: "Start blank" })).toBeTruthy();
   });
 
-  it("lists the four packs with their rounds and questions and imports one", async () => {
+  it("lists the packs with their rounds and questions and imports one", async () => {
     const queryClient = createClient();
     renderEmptyState(queryClient);
 
@@ -80,9 +83,11 @@ describe("QuizshowEmptyState", () => {
     const useButtons = await screen.findAllByRole("button", {
       name: "Use this pack",
     });
-    expect(useButtons).toHaveLength(4);
+    expect(useButtons).toHaveLength(QUIZSHOW_STARTER_PACKS.length);
     expect((await screen.findAllByText(/3 rounds/)).length).toBe(4);
     expect((await screen.findAllByText(/15 questions/)).length).toBe(4);
+    expect((await screen.findAllByText(/4 rounds/)).length).toBe(1);
+    expect((await screen.findAllByText(/23 questions/)).length).toBe(1);
 
     const eurovisionIndex = QUIZSHOW_STARTER_PACKS.findIndex(
       (pack) => pack.key === "eurovision",
@@ -141,7 +146,7 @@ describe("QuizshowImportButtons in the toolbar", () => {
     render(
       <TestProviders queryClient={queryClient}>
         <QuizshowImportButtons
-          slug={SLUG}
+          scope={eventScope(SLUG)}
           onImported={onImported}
           hasQuiz
           eventStartAt={EVENT_START_AT}

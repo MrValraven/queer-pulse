@@ -7,7 +7,8 @@ export const IS_QUIZSHOW_LAUNCHED = false;
 
 /** Demo shows everything; `pnpm dev` shows everything; a built live artifact
  *  shows Pulse Live once launched, and before launch only to members holding
- *  the `quizshow` early-access grant (hosting and playing alike). */
+ *  the `quizshow` early-access grant. The grant gates hosting only: any
+ *  signed-in member can play. */
 export function isQuizshowVisible(options: {
   isDemoMode: boolean;
   isDevBuild?: boolean;
@@ -23,7 +24,7 @@ export function isQuizshowVisible(options: {
 }
 
 /** `isQuizshowVisible` for the current viewer: demo mode plus their own
- *  early-access grant. Also the route gate's check in `app/routes.tsx`. */
+ *  early-access grant. Also the hosting route gate's check in `app/routes.tsx`. */
 export function useIsQuizshowVisible(): boolean {
   const { demoMode } = useDemoMode();
   const hasEarlyAccess = useHasEarlyAccess("quizshow");

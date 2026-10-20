@@ -28,5 +28,6 @@ export function pickSidebarGatherings(
       date: event.date,
       name: event.title,
       venue: event.hood,
+      timezone: event.timezone,
     }));
 }

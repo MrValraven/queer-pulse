@@ -27,6 +27,11 @@
   padding-block: 40px var(--section-y-64);
   padding-inline: 30px;
 }
+@media (--md) {
+  .section {
+    padding-inline: 16px;
+  }
+}
 
 .head {
   display: grid;

@@ -20,18 +20,22 @@ export const EMPTY_STREAM_ANALYSIS: StudioStreamAnalysis = {
  * A `previewToken` reads the track through its release's private preview
  * link. Demo has no audio files, so it answers an empty URL that the
  * simulated engine plays as a silent clock, with the track's seeded analysis.
+ * `gaplessAfterTrackId` names the track this one follows without a
+ * crossfade; an older server leaves it out, which reads as null.
  */
 export async function fetchStudioStream(
   demoMode: boolean,
   trackId: string,
   previewToken?: string,
-): Promise<StudioStreamDTO> {
+): Promise<StudioStreamDTO & { gaplessAfterTrackId: string | null }> {
   if (demoMode) {
-    const { demoStreamAnalysis } = await import("./studioDemoListening");
+    const { demoGaplessAfterTrackId, demoStreamAnalysis } =
+      await import("./studioDemoListening");
     return {
       url: "",
       expiresAt: new Date(Date.now() + DEMO_STREAM_LIFETIME_MS).toISOString(),
       ...demoStreamAnalysis(trackId),
+      gaplessAfterTrackId: demoGaplessAfterTrackId(trackId),
     };
   }
   const stream = previewToken
@@ -41,6 +45,7 @@ export async function fetchStudioStream(
     url: stream.url,
     expiresAt: stream.expiresAt,
     ...streamAnalysisOf(stream),
+    gaplessAfterTrackId: stream.gaplessAfterTrackId ?? null,
   };
 }
 

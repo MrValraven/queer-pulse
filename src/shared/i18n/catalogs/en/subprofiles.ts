@@ -203,6 +203,7 @@ export const subprofiles: Catalog = {
   "kind.game_designer": "Game designer",
   "kind.artist_3d": "3D artist",
   "kind.printmaker": "Printmaker",
+  "kind.architect": "Architect",
   "kind.journalist": "Journalist",
   "kind.poet": "Poet",
   "kind.editor": "Editor",
@@ -419,6 +420,8 @@ export const subprofiles: Catalog = {
   "section.episodes": "Episodes",
   "section.roles": "Roles",
   "section.works": "Works",
+  "section.built_work": "Built work",
+  "section.competitions": "Competitions & awards",
 
   // Status / link-visibility badges — also persisted fields.
   "status.draft": "Draft",
@@ -925,6 +928,8 @@ export const subprofiles: Catalog = {
   "template.tagline.pole_dancer":
     "On the pole and in the room: I perform, and I teach.",
   "template.tagline.generic": "A few things I've made, gathered here.",
+  "template.tagline.architect":
+    "Buildings and places made for the people who live in them.",
 
   // Per-section example items (used by both the create-time template and
   // the "Insert examples" button) — one or two items per section, matching
@@ -999,6 +1004,23 @@ export const subprofiles: Catalog = {
   "template.section.showcase.item1.title": "Something I made",
   "template.section.showcase.item1.subtitle": "A short label for it",
   "template.section.showcase.item1.desc": "What it is and why it's here.",
+  "template.section.built_work.item1.title": "A building I designed",
+  "template.section.built_work.item1.subtitle": "Where it stands",
+  "template.section.built_work.item1.desc":
+    "What it is, who uses it, and what the brief asked of you.",
+  "template.section.competitions.item1.title": "A competition I entered",
+  "template.section.competitions.item1.subtitle": "Who ran it",
+  "template.section.competitions.item1.desc":
+    "What the brief asked for and what you proposed.",
+  // An architect's own starter items for the shared Projects section.
+  "template.kindSection.architect.projects.item1.title":
+    "Competition entry for a library in Marvila",
+  "template.kindSection.architect.projects.item1.desc":
+    "Unbuilt, and the project I learned most from: a reading garden under a timber roof.",
+  "template.kindSection.architect.projects.item2.title":
+    "Study for a shared courtyard in Mouraria",
+  "template.kindSection.architect.projects.item2.desc":
+    "In progress with the neighbours: shade, benches and somewhere to hang the washing.",
   "template.section.menus.item1.title": "A menu or signature dish",
   "template.section.menus.item1.subtitle": "The event or venue",
   "template.section.menus.item1.desc":
@@ -3278,6 +3300,21 @@ export const subprofiles: Catalog = {
   "itemField.tattoo.shop.url.label": "Buy link",
   "itemField.tattoo.shop.url.placeholder": "https://yourshop.com/print",
   "itemField.tattoo.shop.url.helper": "Starts with https://",
+  // Architect persona (2026-10-20)
+  "itemField.architect.built_work.title.placeholder": "e.g. House in Graça",
+  "itemField.architect.built_work.subtitle.label": "Place",
+  "itemField.architect.built_work.subtitle.placeholder": "e.g. Graça, Lisbon",
+  "itemField.architect.built_work.date.label": "Completed",
+  "itemField.architect.built_work.meta.label": "Your role",
+  "itemField.architect.built_work.meta.placeholder": "e.g. Project lead",
+  "itemField.architect.competitions.title.placeholder":
+    "e.g. Affordable housing in Marvila",
+  "itemField.architect.competitions.subtitle.label": "Organiser or award",
+  "itemField.architect.competitions.subtitle.placeholder":
+    "e.g. Lisbon City Council",
+  "itemField.architect.competitions.meta.label": "Result",
+  "itemField.architect.competitions.meta.placeholder":
+    "e.g. Honourable mention",
   "skinControl.listFull": "Up to {count}",
   "skinControl.validate.httpsUrl": "Use a link that starts with https://",
   "skinControl.validate.year": "Use a year from 1900 to this year",

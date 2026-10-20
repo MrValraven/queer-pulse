@@ -1251,4 +1251,5 @@ export const safety: Catalog = {
   "blockMute.blocked.unblockedNoConnectionToast":
     "Desbloqueaste {name}. Não tinham conexão antes, por isso envia um pedido se quiseres voltar a enviar mensagens.",
   "myReports.subject.quizshow_answer": "Sobre uma resposta do Pulse Live",
+  "myReports.subject.quizshow_game": "Sobre um jogo do Pulse Live",
 };

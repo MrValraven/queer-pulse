@@ -195,7 +195,7 @@ export const shared: Catalog = {
   // Pulse Live (quizshow) row, shown only to members holding the early-access
   // grant (plus demo and `pnpm dev`) until launch.
   "accountMenu.items.pulseLive": "Pulse Live",
-  "accountMenu.hints.pulseLive": "Quiz nights at events, early access",
+  "accountMenu.hints.pulseLive": "Join or host quiz games, early access",
   "installAppModal.title": "Install the app",
   "installAppModal.sub":
     "Add QueerPulse to your home screen in a few taps. Same app, no app store.",
@@ -671,6 +671,7 @@ export const shared: Catalog = {
   "mediaRef.studio-cover": "Studio release cover",
   "mediaRef.persona-post": "Persona update",
   "mediaRef.quizshow-question": "Live game question",
+  "mediaRef.quizshow-game-question": "Pulse Live game question",
   "mediaRef.landlord": "Landlord",
   "mediaRef.company-work": "Company",
   "mediaRef.housing": "Housing",

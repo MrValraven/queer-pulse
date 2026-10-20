@@ -4,6 +4,7 @@ import { TestProviders } from "../../../test/TestProviders";
 import type { GatheringDetail } from "../../gatherings/data";
 import type { QuizshowResultsResponse } from "../../../shared/contracts/quizshow";
 import { QUIZSHOW_DEMO_RESULTS } from "../api/quizshowDemoStore.data";
+import { eventScope } from "../quizshowScope";
 import { QuizshowEventSection } from "./QuizshowEventSection";
 import { QuizshowResultsCard } from "./QuizshowResultsCard";
 
@@ -184,7 +185,10 @@ describe("QuizshowEventSection", () => {
   it("keeps Delete results away from guests", () => {
     render(
       <TestProviders>
-        <QuizshowResultsCard slug="test-event" canDelete={false} />
+        <QuizshowResultsCard
+          scope={eventScope("test-event")}
+          canDelete={false}
+        />
       </TestProviders>,
     );
     expect(screen.getByText("Pulse Live results")).toBeInTheDocument();

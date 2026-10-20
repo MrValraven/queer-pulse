@@ -6,7 +6,7 @@ import type { MemberRole } from "../features/auth/api/auth.api";
 import {
   isComingSoonPath,
   isGatedPath,
-  isQuizshowPath,
+  isQuizshowHostingPath,
   requiredCapability,
   useAuthGateRedirect,
   useIsStaffOnlyBounce,
@@ -467,19 +467,30 @@ describe("Pulse Live gates", () => {
     ).toBe(false);
     expect(isComingSoonPath("/economy")).toBe(true);
   });
-  it("matches every Pulse Live path for the per-viewer route gate", () => {
-    expect(isQuizshowPath("/play")).toBe(true);
-    expect(isQuizshowPath("/play/QZ7KP4")).toBe(true);
+  it("treats game pages and event screens as hosting paths", () => {
+    expect(isQuizshowHostingPath("/play/games")).toBe(true);
+    expect(isQuizshowHostingPath("/play/games/g1")).toBe(true);
+    expect(isQuizshowHostingPath("/play/games/g1/remote")).toBe(true);
     expect(
-      isQuizshowPath("/gatherings/pride-brunch-jun-abcde/quizshow/screen"),
+      isQuizshowHostingPath(
+        "/gatherings/pride-brunch-jun-abcde/quizshow/screen",
+      ),
     ).toBe(true);
     expect(
-      isQuizshowPath("/gatherings/pride-brunch-jun-abcde/quizshow/remote"),
+      isQuizshowHostingPath(
+        "/gatherings/pride-brunch-jun-abcde/quizshow/remote",
+      ),
     ).toBe(true);
-    expect(isQuizshowPath("/gatherings/pride-brunch-jun-abcde/manage")).toBe(
+    expect(
+      isQuizshowHostingPath("/gatherings/pride-brunch-jun-abcde/manage"),
+    ).toBe(false);
+    expect(isQuizshowHostingPath("/gatherings/pride-brunch-jun-abcde")).toBe(
       false,
     );
-    expect(isQuizshowPath("/gatherings/pride-brunch-jun-abcde")).toBe(false);
-    expect(isQuizshowPath("/players")).toBe(false);
+    expect(isQuizshowHostingPath("/players")).toBe(false);
+  });
+  it("leaves /play and /play/:code out of the hosting gate", () => {
+    expect(isQuizshowHostingPath("/play")).toBe(false);
+    expect(isQuizshowHostingPath("/play/QZ7KP4")).toBe(false);
   });
 });

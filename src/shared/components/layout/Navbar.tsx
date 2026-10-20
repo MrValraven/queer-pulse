@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   FiBell,
@@ -189,8 +189,8 @@ export function Navbar({
   const { loggedIn } = useAuth();
   const { navMode } = useNavMode();
   const { t } = useTranslation();
-  const { activeSheet, closeSheet } = useNavDrawer();
-  const { pathname } = useLocation();
+  const { activeSheet, closeSheet, closeSheetForNavigation } = useNavDrawer();
+  const { pathname, key: locationKey } = useLocation();
   const navigate = useNavigate();
 
   // The drawer only renders below the mobile breakpoint (see the gate at the
@@ -236,6 +236,25 @@ export function Navbar({
     if (isCompactDrawerMounted && activeSheet === "browse") return;
     closeSheet();
   }, [isMobile, isCompactDrawerMounted, activeSheet, closeSheet]);
+
+  // Any page change closes an open sheet. The sheets' own links and the bottom
+  // tab bar already close it as they navigate with `replace`; this catches the
+  // rest: the app bar's messages, bell and search links and programmatic
+  // navigations. Keyed on the router's location key, so it fires only when the
+  // location actually changes, never on mount or because a sheet opened. The
+  // sheet's history entry is raw `pushState` carrying the current entry's key,
+  // so pushing it or popping it with Back leaves the key as it was.
+  // closeSheetForNavigation keeps that entry in place: `closeSheet` would pop
+  // it with `history.back()` and undo the navigation that just happened. A
+  // push caught here therefore leaves the sheet's entry one step back in
+  // history: Back from the new page lands on the page the sheet was opened
+  // over, and the next Back stays on that same page once more. Accepted.
+  const previousLocationKeyRef = useRef(locationKey);
+  useEffect(() => {
+    if (previousLocationKeyRef.current === locationKey) return;
+    previousLocationKeyRef.current = locationKey;
+    if (activeSheet) closeSheetForNavigation();
+  }, [locationKey, activeSheet, closeSheetForNavigation]);
 
   // The app bar steps out of the way while the member reads down a page and
   // returns as soon as they scroll back up. Only the app bar: the desktop pill

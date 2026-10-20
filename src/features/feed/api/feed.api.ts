@@ -90,6 +90,14 @@ export interface FeedItem extends ContractFeedItem {
   readMinutes?: number;
   /** The piece's lead art, or null when the desk set none. */
   imageUrl?: string | null;
+  /** `gathering` only: when the event happens, as ISO instants, plus the IANA
+   *  zone the host scheduled it in. `endsAt` is null when the host set no
+   *  end. Absent from an older backend, which the card reads as "show the
+   *  posted time". `startsAt` can be in the past, since the feed keeps past
+   *  events. */
+  startsAt?: string;
+  endsAt?: string | null;
+  timezone?: string;
   /** The language of the row the card is showing, so a reader served the
    *  original where no translation exists can be told which one they got. */
   locale?: string;

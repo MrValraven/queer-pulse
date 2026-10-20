@@ -766,8 +766,11 @@ function stateBase(state: QuizshowEngineState): QuizshowStateBase {
     phase === "podium" || (phase === "ended" && status === "finished");
   return {
     sessionId: state.sessionId,
+    kind: state.gameId !== null ? "game" : "event",
     eventSlug: state.eventSlug,
     eventTitle: state.eventTitle,
+    gameId: state.gameId,
+    isAdultsOnly: state.isAdultsOnly,
     joinCode: state.joinCode,
     quizTitle: state.quiz.title,
     languages: state.quiz.languages,

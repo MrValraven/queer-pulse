@@ -1,13 +1,14 @@
 import { useRef, useState } from "react";
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import type { SubprofileKind } from "./api/subprofiles.api";
 import { type SubprofileSectionView } from "./api/subprofiles.adapters";
 import { useSubprofileEditorContext } from "./subprofileEditorContext";
 import {
   MAX_ITEMS_PER_SECTION,
   SECTION_ADD_LABEL_KEYS,
 } from "./subprofileEditor.data";
-import { TEMPLATE_ITEMS } from "./subprofileTemplates.data";
+import { templateItemsFor } from "./subprofileTemplates.data";
 import { appendGalleryRows, reorderRow } from "./subprofileSectionEditorRows";
 import { useRowDragReorder } from "./useRowDragReorder";
 import { useSectionEditorFocusAnnounce } from "./useSectionEditorFocusAnnounce";
@@ -34,9 +35,13 @@ export function SubprofileSectionEditor({
   section,
   isInChapter = false,
   isFeatureHidden = false,
+  kind,
 }: {
   subprofileId: string;
   section: SubprofileSectionView;
+  /** The persona's kind, so "Insert examples" offers that kind's own
+   *  starter items for a shared section (an architect's Projects). */
+  kind?: SubprofileKind;
   /** Rows render as one hairline list inside the chapter's card. */
   isInChapter?: boolean;
   /** No spotlight slot for this section in the kind's layout (S6). */
@@ -65,7 +70,7 @@ export function SubprofileSectionEditor({
   const canInsertExamples =
     section.section !== "links" &&
     rows.length === 0 &&
-    TEMPLATE_ITEMS[section.section] !== undefined;
+    templateItemsFor(section.section, kind) !== undefined;
 
   // The grip drag swaps rows at each midpoint; motion's `layout` glides them.
   const { containerRef, draggingIndex, gripHandlers } = useRowDragReorder(
@@ -74,6 +79,7 @@ export function SubprofileSectionEditor({
   const { remove, move, insertExamples, toggleFeatured, saveDraft } =
     useSectionRowActions({
       section,
+      kind,
       rows,
       setSectionRows,
       isGallery,

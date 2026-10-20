@@ -206,6 +206,7 @@ export function EditorPaneRouter({
           <SubprofileSectionEditor
             subprofileId={subprofile.id}
             section={section}
+            kind={subprofile.kind}
           />
         </div>
       ))}

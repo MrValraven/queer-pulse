@@ -12,8 +12,8 @@ import {
   QUIZSHOW_ERROR_CODES,
   type QuizshowErrorCode,
 } from "../../../shared/contracts/quizshow";
-import { gatheringPath } from "../../gatherings/gatheringPaths";
 import { quizshowErrorKeyOf } from "../api/quizshowErrors";
+import { hasQuizshowScopeId } from "../api/useQuizshowQuiz";
 import type { QuizshowClientState } from "../realtime/quizshowClientStore";
 import { useQuizshowFramelessPage } from "../useQuizshowFramelessPage";
 import { useQuizshowSession } from "../realtime/useQuizshowSession";
@@ -23,9 +23,10 @@ import { QuizshowConnectionBanner } from "../stage/QuizshowConnectionBanner";
 import { QuizshowScreenStage } from "./QuizshowScreenStage";
 import { QuizshowScreenToolbar } from "./QuizshowScreenToolbar";
 import {
-  useQuizshowEventSession,
-  type QuizshowEventSession,
-} from "./useQuizshowEventSession";
+  hostSessionDemoOptions,
+  type QuizshowHostSession,
+} from "./quizshowHostSession";
+import { useQuizshowEventSession } from "./useQuizshowEventSession";
 import {
   useScreenLocalMute,
   useScreenTheme,
@@ -52,18 +53,19 @@ function refusalKeyOf(refusalCode: QuizshowClientState["refusalCode"]): string {
 
 function QuizshowScreenMessage({
   messageKey,
-  slug,
+  hostSession,
 }: {
   messageKey: string;
-  slug: string;
+  hostSession: QuizshowHostSession;
 }) {
   const { t } = useTranslation();
+  // No back link while the event or game behind the page is unknown.
   return (
     <div className={styles.message}>
       <h1 className={styles.messageTitle}>{t(messageKey)}</h1>
-      {slug !== "" && (
-        <Button variant="ghost" to={gatheringPath(slug)}>
-          {t("quizshow:screen.backToEvent")}
+      {hasQuizshowScopeId(hostSession.scope) && (
+        <Button variant="ghost" to={hostSession.backPath}>
+          {t(hostSession.backLabelKey)}
         </Button>
       )}
     </div>
@@ -71,7 +73,7 @@ function QuizshowScreenMessage({
 }
 
 interface QuizshowScreenLiveProps {
-  eventSession: QuizshowEventSession;
+  hostSession: QuizshowHostSession;
   sessionId: string;
   theme: QuizshowScreenTheme;
   onToggleTheme: () => void;
@@ -81,20 +83,22 @@ interface QuizshowScreenLiveProps {
 
 /** One attached screen: keyed by session, so a new game starts a fresh connection. */
 function QuizshowScreenLive({
-  eventSession,
+  hostSession,
   sessionId,
   theme,
   onToggleTheme,
   isLocallyMuted,
   onToggleLocalMute,
 }: QuizshowScreenLiveProps) {
-  const { slug, eventTitle, playMode } = eventSession;
+  const { backPath, backLabelKey, playMode } = hostSession;
+  const scopeOptions = hostSessionDemoOptions(hostSession);
   const { state, clockOffsetMs } = useQuizshowSession({
     sessionId,
     role: "screen",
+    gameId: scopeOptions.gameId,
+    isAdultsOnly: scopeOptions.isAdultsOnly,
     demo: {
-      eventSlug: slug,
-      eventTitle,
+      ...scopeOptions,
       isAutoHost: true,
       hasSelfPlayer: false,
       playMode,
@@ -112,7 +116,8 @@ function QuizshowScreenLive({
   return (
     <>
       <QuizshowScreenToolbar
-        slug={slug}
+        backPath={backPath}
+        backLabelKey={backLabelKey}
         theme={theme}
         onToggleTheme={onToggleTheme}
         isLocallyMuted={isLocallyMuted}
@@ -123,7 +128,7 @@ function QuizshowScreenLive({
       {state.status === "refused" ? (
         <QuizshowScreenMessage
           messageKey={refusalKeyOf(state.refusalCode)}
-          slug={slug}
+          hostSession={hostSession}
         />
       ) : (
         <QuizshowScreenStage
@@ -136,29 +141,31 @@ function QuizshowScreenLive({
   );
 }
 
-/** Load failures first: an event that failed to load has no organiser to check. */
-function messageKeyOf(eventSession: QuizshowEventSession): string | null {
-  if (eventSession.errorCode !== null)
-    return quizshowErrorKeyOf(eventSession.errorCode);
-  if (eventSession.hasLoadFailed) return "quizshow:errors.generic";
-  if (!eventSession.isOrganizer) return "quizshow:errors.not_organiser";
-  if (eventSession.sessionId === null) return "quizshow:screen.noGame";
+/** Load failures first: an event or game that failed to load has no organiser to check. */
+function messageKeyOf(hostSession: QuizshowHostSession): string | null {
+  if (hostSession.errorCode !== null)
+    return quizshowErrorKeyOf(hostSession.errorCode);
+  if (hostSession.hasLoadFailed) return "quizshow:errors.generic";
+  if (!hostSession.isOrganizer) return "quizshow:errors.not_organiser";
+  if (hostSession.sessionId === null) return hostSession.noGameKeys.screen;
   return null;
 }
 
-/** The presenter screen for the venue TV: chromeless, organisers only, dark by default. */
-export function QuizshowScreenPage() {
+/** The presenter screen for the venue TV, for an event or a game: chromeless, organisers only, dark by default. */
+export function QuizshowScreenView({
+  hostSession: loadedHostSession,
+}: {
+  hostSession: QuizshowHostSession;
+}) {
   const { t } = useTranslation();
   const { reducedMotion } = useMotionPrefs();
-  const { slug: routeParam } = useParams<{ slug: string }>();
   const [searchParams] = useSearchParams();
   const { demoMode } = useDemoMode();
-  const loadedEventSession = useQuizshowEventSession(routeParam);
   // The design review's switch to see team UI in demo; otherwise the open session's mode.
-  const eventSession: QuizshowEventSession =
+  const hostSession: QuizshowHostSession =
     demoMode && searchParams.get("demoPlayMode") === "teams"
-      ? { ...loadedEventSession, playMode: "teams" }
-      : loadedEventSession;
+      ? { ...loadedHostSession, playMode: "teams" }
+      : loadedHostSession;
   useQuizshowFramelessPage();
   const { theme, toggleTheme } = useScreenTheme();
   // Once per page load: a new session remounts the live body, the mute stays.
@@ -168,25 +175,28 @@ export function QuizshowScreenPage() {
     primeMessageChime();
   }, []);
 
-  const messageKey = eventSession.isLoading ? null : messageKeyOf(eventSession);
-  const { sessionId } = eventSession;
+  const messageKey = hostSession.isLoading ? null : messageKeyOf(hostSession);
+  const { sessionId } = hostSession;
   let viewKey = "loading";
   let body = (
     <div className={styles.message}>
       <Spinner />
     </div>
   );
-  if (!eventSession.isLoading && messageKey !== null) {
+  if (!hostSession.isLoading && messageKey !== null) {
     viewKey = `message-${messageKey}`;
     body = (
-      <QuizshowScreenMessage messageKey={messageKey} slug={eventSession.slug} />
+      <QuizshowScreenMessage
+        messageKey={messageKey}
+        hostSession={hostSession}
+      />
     );
-  } else if (!eventSession.isLoading && sessionId !== null) {
+  } else if (!hostSession.isLoading && sessionId !== null) {
     viewKey = `screen-${sessionId}`;
     body = (
       <QuizshowScreenLive
         key={`screen-${sessionId}`}
-        eventSession={eventSession}
+        hostSession={hostSession}
         sessionId={sessionId}
         theme={theme}
         onToggleTheme={toggleTheme}
@@ -215,4 +225,11 @@ export function QuizshowScreenPage() {
       </AnimatePresence>
     </div>
   );
+}
+
+/** The event's presenter screen at `/gatherings/:slug/quizshow/screen`. */
+export function QuizshowScreenPage() {
+  const { slug: routeParam } = useParams<{ slug: string }>();
+  const hostSession = useQuizshowEventSession(routeParam);
+  return <QuizshowScreenView hostSession={hostSession} />;
 }

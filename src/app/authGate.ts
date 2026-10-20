@@ -257,21 +257,24 @@ export function isComingSoonLink(href: string): boolean {
 
 // Pulse Live (quizshow) stays out of COMING_SOON_PATTERNS: it is gated per
 // viewer in `app/routes.tsx` (`useIsQuizshowVisible`, after the sign-in gate),
-// so members holding the early-access grant reach it before launch.
-const QUIZSHOW_PATTERNS: string[] = [
-  "/play",
-  "/play/*",
+// so members holding the early-access grant reach hosting before launch.
+// Playing (`/play` and `/play/:code`) stays open to every signed-in member.
+const QUIZSHOW_HOSTING_PATTERNS: string[] = [
+  "/play/games",
+  "/play/games/*",
   "/gatherings/:slug/quizshow/*",
 ];
 
 /**
- * True for every Pulse Live (quizshow) path: the player's `/play` pages and the
- * presenter screen and remote under an event. `AppRoutes` sends a signed-in
- * viewer for whom `useIsQuizshowVisible` is false from these to the roadmap;
- * signed out, the sign-in gate (GATED_PATTERNS) answers first.
+ * True for the Pulse Live (quizshow) hosting paths: My games and the game pages
+ * under `/play/games`, and the presenter screen and remote under an event.
+ * `AppRoutes` sends a signed-in viewer for whom `useIsQuizshowVisible` is false
+ * from these to the roadmap. `/play` and `/play/:code` are not hosting paths, so
+ * any signed-in member plays; signed out, the sign-in gate (GATED_PATTERNS)
+ * answers first.
  */
-export function isQuizshowPath(pathname: string): boolean {
-  return matchesAny(pathname, QUIZSHOW_PATTERNS);
+export function isQuizshowHostingPath(pathname: string): boolean {
+  return matchesAny(pathname, QUIZSHOW_HOSTING_PATTERNS);
 }
 
 /**

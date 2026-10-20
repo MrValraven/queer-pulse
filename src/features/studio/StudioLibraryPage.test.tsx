@@ -57,7 +57,9 @@ describe("library (demo)", () => {
       "/studio/collection?id=demo-playlist-kitchen-tapes",
     );
     expect(
-      screen.getByRole("button", { name: /create playlist/i }),
+      within(screen.getByRole("tabpanel")).getByRole("button", {
+        name: /create playlist/i,
+      }),
     ).toBeInTheDocument();
   });
 
@@ -123,7 +125,9 @@ describe("library (demo)", () => {
   it("lists followed artists who make music", async () => {
     renderAt("/studio/library?tab=artists");
     expect(
-      await screen.findByRole("link", { name: /nightform/i }),
+      await within(await screen.findByRole("tabpanel")).findByRole("link", {
+        name: /nightform/i,
+      }),
     ).toHaveAttribute("href", "/studio/artist?id=sp-diogo-nightform");
   });
 

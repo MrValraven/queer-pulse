@@ -2,7 +2,11 @@ import { describe, expect, it } from "vitest";
 import { createAnalysisAccumulator } from "./studioAnalysisAccumulator";
 import { createPeakMeter } from "./studioPeakMeter";
 import { createWaveformAccumulator } from "./studioWaveformAccumulator";
-import { silenceChannel, sineChannel } from "./studioAnalysisTestSignals";
+import {
+  joinChannels,
+  silenceChannel,
+  sineChannel,
+} from "./studioAnalysisTestSignals";
 
 describe("createPeakMeter", () => {
   function peakOf(values: number[]): number {
@@ -38,7 +42,53 @@ describe("createWaveformAccumulator", () => {
     expect(
       peaks.every((peak) => Number.isInteger(peak) && peak >= 0 && peak <= 255),
     ).toBe(true);
-    expect(Math.max(...peaks)).toBe(Math.round(10 ** (-6 / 20) * 255));
+  });
+
+  it("draws a steady tone at full height whatever its level", () => {
+    for (const amplitudeDbfs of [-30, -6, 0]) {
+      const waveform = createWaveformAccumulator(48000);
+      waveform.push([
+        sineChannel({
+          frequency: 440,
+          amplitudeDbfs,
+          seconds: 30,
+          sampleRate: 48000,
+        }),
+      ]);
+      const peaks = waveform.peaks();
+      expect(Math.max(...peaks)).toBe(255);
+      expect(Math.min(...peaks)).toBeGreaterThanOrEqual(250);
+    }
+  });
+
+  it("draws a quiet second half clearly lower than a loud first half", () => {
+    const waveform = createWaveformAccumulator(48000);
+    const loudHalf = sineChannel({
+      frequency: 440,
+      amplitudeDbfs: -1,
+      seconds: 10,
+      sampleRate: 48000,
+    });
+    const quietHalf = sineChannel({
+      frequency: 440,
+      amplitudeDbfs: -21,
+      seconds: 10,
+      sampleRate: 48000,
+    });
+    waveform.push([joinChannels(loudHalf, quietHalf)]);
+    const peaks = waveform.peaks();
+    const firstHalf = peaks.slice(0, 95);
+    const secondHalf = peaks.slice(105);
+    expect(Math.min(...firstHalf)).toBeGreaterThanOrEqual(250);
+    expect(Math.max(...secondHalf)).toBeLessThan(Math.min(...firstHalf) / 4);
+  });
+
+  it("answers all zeros for silence", () => {
+    const waveform = createWaveformAccumulator(48000);
+    waveform.push([silenceChannel(3, 48000), silenceChannel(3, 48000)]);
+    const peaks = waveform.peaks();
+    expect(peaks).toHaveLength(200);
+    expect(peaks.every((peak) => peak === 0)).toBe(true);
   });
 
   it("follows a rising level from left to right", () => {

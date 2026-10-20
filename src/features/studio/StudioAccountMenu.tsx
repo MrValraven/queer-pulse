@@ -17,10 +17,14 @@ import {
   useMediaQuery,
   useOutsideDismiss,
 } from "../../shared/hooks";
+import { useTranslation } from "../../shared/i18n/useTranslation";
 import { mediaMax } from "../../shared/theme/breakpoints";
 import type { StudioArtistRefView } from "./api/studio.adapters";
+import { StudioAccountAttentionDot } from "./StudioAccountAttentionDot";
+import dotStyles from "./StudioAccountAttentionDot.module.css";
 import { StudioAccountMenuPanel } from "./StudioAccountMenuPanel";
 import { StudioNavSheet } from "./StudioNavSheet";
+import { useStudioMenuAttention } from "./useStudioMenuAttention";
 import styles from "./StudioAccountMenu.module.css";
 
 /** How long the panel lingers to fade out after a dismissal, ms. Mirrors the
@@ -157,7 +161,9 @@ export function StudioAccountMenu({
   /** Opens the side sheet at 880px and below (the listener shell). */
   isSheetOnCompact?: boolean;
 }) {
+  const { t } = useTranslation();
   const identity = useAccountIdentity();
+  const { hasAttention } = useStudioMenuAttention();
   const isCompact = useMediaQuery(mediaMax(SHEET_MAX_WIDTH));
   const isSheetMode = isSheetOnCompact && isCompact;
   const {
@@ -203,14 +209,21 @@ export function StudioAccountMenu({
         aria-haspopup={isSheetMode ? "dialog" : undefined}
         aria-expanded={isOpen}
         aria-controls={isMounted ? panelId : undefined}
-        aria-label={triggerLabel}
+        aria-label={
+          hasAttention
+            ? t("studio:shell.menu.attentionLabel", { label: triggerLabel })
+            : triggerLabel
+        }
       >
-        <Avatar
-          initials={persona?.initials ?? identity.initials}
-          src={persona?.avatarUrl ?? identity.photo}
-          size={34}
-          alt=""
-        />
+        <span className={dotStyles.avatarWrap}>
+          <Avatar
+            initials={persona?.initials ?? identity.initials}
+            src={persona?.avatarUrl ?? identity.photo}
+            size={34}
+            alt=""
+          />
+          <StudioAccountAttentionDot isShown={hasAttention} />
+        </span>
       </button>
 
       {isMounted &&

@@ -145,6 +145,7 @@ export type SubprofileKind =
   | "game_designer"
   | "artist_3d"
   | "printmaker"
+  | "architect"
   // page (new kinds)
   | "journalist"
   | "poet"
@@ -380,7 +381,10 @@ export type SubprofileSection =
   | "wanna_dos"
   | "guest_spots"
   | "flash_days"
-  | "shop";
+  | "shop"
+  // Architect (+2; `projects` above is shared with the developer)
+  | "built_work"
+  | "competitions";
 
 export type GigState = "sold_out" | "cancelled" | "guest";
 export type WorkState = "shipped" | "archived" | "in_progress";

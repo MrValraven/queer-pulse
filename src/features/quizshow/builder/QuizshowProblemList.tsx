@@ -5,6 +5,7 @@ import {
   type QuizshowQuizProblemCode,
 } from "../../../shared/contracts/quizshow";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
+import { useQuizshowScopeKind } from "../quizshowScope";
 import type { QuizshowLocalProblem } from "./quizshowValidation";
 import styles from "./QuizshowBuilder.module.css";
 
@@ -20,6 +21,12 @@ const MAX_BY_CODE: Partial<Record<QuizshowQuizProblemCode, number>> = {
   too_many_questions_in_round: QUIZSHOW_LIMITS.questionsPerRoundMax,
 };
 
+/** A game names its own switch and its own title; every other code reads the same for both kinds. */
+const GAME_PROBLEM_KEYS: Partial<Record<string, string>> = {
+  adults_round_needs_adults_event: "adults_round_needs_switch",
+  title_missing: "title_missing_game",
+};
+
 export function QuizshowProblemList({
   problems,
   onJump,
@@ -28,6 +35,7 @@ export function QuizshowProblemList({
   onJump?: (target: QuizshowProblemTarget) => void;
 }) {
   const { t } = useTranslation();
+  const scopeKind = useQuizshowScopeKind();
   const idPrefix = useId();
   return (
     <ul className={styles.problemList}>
@@ -40,10 +48,14 @@ export function QuizshowProblemList({
         ].join("-");
         const textId = `${idPrefix}-${itemKey}`;
         const { roundIndex } = problem;
+        const problemKey =
+          (scopeKind === "game"
+            ? GAME_PROBLEM_KEYS[problem.code]
+            : undefined) ?? problem.code;
         return (
           <li key={itemKey} className={styles.problemItem}>
             <span id={textId} className={styles.problemText}>
-              {t(`quizshow:problems.${problem.code}`, {
+              {t(`quizshow:problems.${problemKey}`, {
                 round: roundIndex === null ? "" : roundIndex + 1,
                 question:
                   problem.questionIndex === null

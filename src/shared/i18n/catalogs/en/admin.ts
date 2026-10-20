@@ -8814,7 +8814,7 @@ export const admin: Catalog = {
   "earlyAccess.row.saveFailed": "Couldn't save early access. Try again.",
   "earlyAccess.feature.quizshow.name": "Pulse Live",
   "earlyAccess.feature.quizshow.description":
-    "Live quiz games on events, for hosts and players",
+    "Hosting live quiz games at events and anywhere else. Playing needs only a code",
   "earlyAccess.page.title": "Early <em>access</em>",
   "earlyAccess.page.subtitle":
     "Members testing features before launch. Admins turn access on from a member's drawer in Members.",
@@ -8833,4 +8833,29 @@ export const admin: Catalog = {
   "earlyAccess.roster.revokeConfirm": "Revoke access",
   "earlyAccess.roster.loadFailed": "Couldn't load the list.",
   "earlyAccess.roster.retry": "Check again",
+  // ── Pulse Live: reported game (staff tools) ──
+  "moderation.quizshowGame.heading": "Reported game",
+  "moderation.quizshowGame.body":
+    "Ending the game sends every player out. Deleting it removes the game and its questions for good",
+  "moderation.quizshowGame.end": "End this game",
+  "moderation.quizshowGame.endTitle": "End this game?",
+  "moderation.quizshowGame.endBody":
+    "Everyone playing is sent out of the game. The game itself stays",
+  "moderation.quizshowGame.ended": "Game ended",
+  "moderation.quizshowGame.delete": "Delete this game",
+  "moderation.quizshowGame.deleteTitle": "Delete this game?",
+  "moderation.quizshowGame.deleteBody":
+    "Any open lobby ends first, then the game and its questions go for good",
+  "moderation.quizshowGame.deleted": "Game deleted",
+  "moderation.quizshowGame.gone": "This game is already gone",
+  "moderation.quizshowGame.error": "That didn't work. Try again",
+  "moderation.action.quizshowGameEnded": "Ended a Pulse Live game",
+  "moderation.action.quizshowGameDeleted": "Deleted a Pulse Live game",
+  "governance.audit.actionType.quizshow_game_ended": "Pulse Live game ended",
+  "governance.audit.actionType.quizshow_game_deleted":
+    "Pulse Live game deleted",
+  "moderation.quizshowGame.reasonLabel": "Reason",
+  "moderation.quizshowGame.reasonHint":
+    "Saved in the moderation log with this report",
+  "moderation.quizshowGame.reasonRequired": "Add a reason first",
 };

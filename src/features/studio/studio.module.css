@@ -48,14 +48,16 @@
   min-height: 100svh;
 }
 
-/* Rail */
+/* Rail: the brand, the main nav and the Create playlist pill stay put; only
+   the playlist list below them scrolls (StudioRailPlaylists.module.css), and
+   it pads its own foot. */
 .rail {
   background: var(--rail);
-  padding: 24px 0 40px;
+  padding: 24px 0 0;
   position: sticky;
   top: 0;
   height: calc(100dvh - var(--studio-player-inset, 0px));
-  overflow-y: auto;
+  overflow: hidden;
   border-right: 1px solid var(--line);
   display: flex;
   flex-direction: column;
@@ -96,21 +98,17 @@
 .railGrp {
   padding: 8px 0;
 }
-.railGrp h5 {
-  font-size: var(--text-10-5);
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--studio-text-muted);
-  padding: 0 22px 8px;
-}
+/* Main nav rows: full-ink labels at 500 so they lead the playlist names
+   below, each after a muted icon that turns full ink on hover and on the
+   open page. */
 .railItem {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
   padding: 10px 22px;
   font-size: var(--text-14);
-  color: var(--text60);
+  font-weight: 500;
+  color: var(--text);
   cursor: pointer;
   border-left: 2px solid transparent;
   transition:
@@ -118,14 +116,22 @@
     background 0.2s var(--ease),
     border-left-color 0.2s var(--ease);
 }
+.railIcon {
+  flex: none;
+  font-size: var(--text-18);
+  color: var(--text60);
+  transition: color 0.2s var(--ease);
+}
 @media (hover: hover) {
   .railItem:hover {
-    color: var(--text);
     background: rgba(var(--studio-ink-rgb), 0.03);
+  }
+  .railItem:hover .railIcon {
+    color: var(--text);
   }
 }
 .railItemOn {
-  color: var(--text);
+  font-weight: 600;
   border-left-color: var(--accent);
   background: linear-gradient(
     90deg,
@@ -133,66 +139,70 @@
     transparent 60%
   );
 }
+.railItemOn .railIcon,
+.railItemOn:hover .railIcon {
+  color: var(--studio-accent-text);
+}
 .railItem .nm {
   flex: 1;
 }
-.railDivider {
-  height: 1px;
-  background: var(--line);
-  margin: 14px 22px;
+/* The pill and the playlist list under the main nav: it takes the rail's
+   remaining height so the list can scroll inside it. */
+.railBody {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
 }
-.plItem {
-  display: grid;
-  grid-template-columns: 36px 1fr;
-  gap: 12px;
-  align-items: center;
-  padding: 8px 22px;
-  cursor: pointer;
-  transition: background 0.2s;
+/* The Create playlist pill. Chained through .rail so it wins over the shared
+   ghost Button in both themes. Its fill is the boundary, so the ghost border
+   goes transparent (keeping its width, so nothing shifts on hover). The
+   12px margin, the 1.5px border and the 10.5px start padding put the plus
+   on the 24px column where the nav icons and the playlist names start. */
+.rail .railBody .railCreate {
+  align-self: stretch;
+  margin: 8px 12px 12px;
+  padding-inline-start: 10.5px;
+  justify-content: flex-start;
+  gap: 10px;
+  border-radius: var(--radius-pill);
+  border-color: transparent;
+  background: var(--wash);
+  color: var(--text);
 }
 @media (hover: hover) {
-  .plItem:hover {
-    background: rgba(var(--studio-ink-rgb), 0.03);
+  .rail .railBody .railCreate:hover:not(:disabled):not([aria-disabled="true"]) {
+    border-color: transparent;
+    background: rgba(var(--studio-ink-rgb), 0.09);
+    transform: none;
   }
 }
-.plCov {
-  width: 36px;
-  height: 36px;
-  border-radius: var(--radius-5);
-  overflow: hidden;
+/* Press feedback, matching the shared Button's sink. Placed after the hover
+   rule so it outranks it at equal specificity; the global reduced-motion
+   rule in base.css makes the change instant. */
+.rail .railBody .railCreate:active:not(:disabled):not([aria-disabled="true"]) {
+  transform: scale(0.97);
+  transition-duration: var(--dur-fast);
 }
-.plName {
-  font-size: var(--text-13);
-  color: var(--text);
-  font-family: var(--serif);
-  font-weight: 500;
-}
-.plName em {
-  font-style: italic;
-}
-.plMeta {
-  font-size: var(--text-11);
-  color: var(--text40);
-}
-.railFoot {
-  margin-top: auto;
-  padding: 16px 22px 0;
-  font-size: var(--text-12);
-  color: var(--text40);
-  font-family: var(--serif);
-  font-style: italic;
-  line-height: 1.5;
-}
-.railFoot em {
-  color: var(--text60);
-}
-.railFoot .pay {
-  display: block;
-  margin-top: 6px;
-}
-.railFoot b {
-  color: var(--studio-accent-text);
-  font-style: normal;
+/* Short windows (a landscape phone, a zoomed laptop): the whole rail scrolls
+   so the main nav and the playlists stay reachable. */
+@media (max-height: 600px) {
+  .rail {
+    overflow-y: auto;
+  }
+  .brandRow {
+    padding-bottom: 14px;
+    margin-bottom: 8px;
+  }
+  .railItem {
+    padding-block: 8px;
+  }
+  /* Chained through .rail so it outranks the list's own flex: 1 whatever
+     order the two modules load in. */
+  .rail .railBody,
+  .rail .railBody > * {
+    flex: none;
+  }
 }
 
 /* Main + topbar */
@@ -273,18 +283,6 @@
   border-radius: var(--radius-pill);
   padding: 8px 16px;
 }
-.creatorLink {
-  font-size: var(--text-13);
-  font-weight: 600;
-  color: var(--text);
-  opacity: 0.75;
-  transition: opacity 0.15s var(--ease);
-}
-@media (hover: hover) {
-  .creatorLink:hover {
-    opacity: 1;
-  }
-}
 .avatar {
   width: 2.615em;
   height: 2.615em;
@@ -314,11 +312,12 @@
     var(--bottom-inset, 0px) + var(--studio-player-inset, 0px)
   );
 }
-/* The creator shell wraps to two rows on phones, so its bar runs taller.
+/* The creator shell's bar scrolls away with the page on phones, so focus
+   only needs a little room at the top (same rule in creator.module.css).
    The listener shell's phone bar sets its own clearance below. */
 @media (--md) {
   :global(html[data-studio-shell="true"]:not([data-studio-tabs="true"])) {
-    scroll-padding-top: 128px;
+    scroll-padding-top: 16px;
   }
 }
 
@@ -383,22 +382,10 @@
     flex-wrap: nowrap;
     gap: 10px;
   }
-  .creatorLink,
   .sustainPill {
     display: inline-flex;
     align-items: center;
     white-space: nowrap;
-  }
-  .creatorLink {
-    gap: 6px;
-    min-height: 44px;
-  }
-  .creatorLink svg {
-    flex: none;
-    width: 15px;
-    height: 15px;
-  }
-  .sustainPill {
     position: relative;
     min-height: 32px;
     padding: 0 12px;
@@ -992,10 +979,13 @@
   border-bottom-color: var(--accent);
 }
 
-/* Album / artist hero variant */
+/* Album / artist hero variant. The rail stays until the 880px compact cut,
+   so just above it the hero is under 600px wide. The copy keeps 22rem, room
+   for play and the longest Shuffle label (pt) on one row, and the cover gives
+   up width to it. */
 .detailHero {
   display: grid;
-  grid-template-columns: 280px 1fr;
+  grid-template-columns: minmax(0, 280px) minmax(22rem, 1fr);
   gap: 40px;
   align-items: flex-end;
   padding: 44px 0 32px;

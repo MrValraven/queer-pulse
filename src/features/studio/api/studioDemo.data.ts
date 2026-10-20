@@ -162,6 +162,7 @@ function release(
     // Studio v3
     publishAt?: string | null;
     buyUrl?: string | null;
+    isGapless?: boolean;
     version?: number;
     versions?: StudioReleaseVersionDTO[];
   },
@@ -199,6 +200,7 @@ function release(
     // Studio v3
     publishAt: status === "scheduled" ? (base.publishAt ?? null) : null,
     buyUrl: base.buyUrl ?? null,
+    isGapless: base.isGapless ?? false,
     supportLinks: demoSupportLinksFor(base.artist.id),
     version: base.version ?? 1,
     versions: base.versions ?? [],
@@ -284,6 +286,8 @@ const MARIANA_OTHER_RELEASES = ARTIST_RELEASES.slice(1).map((mock, index) => {
       releasedOn: `${metaYear(mock.meta)}-03-01`,
       artist: DEMO_ARTIST_MARIANA,
       genre: "fado",
+      // Devoção's songs run into each other, so it plays without gaps.
+      isGapless: title === "Devoção",
     },
     trackRows(id, EXTRA_TRACK_TITLES[title] ?? [{ title, clock: "4:00" }]),
   );

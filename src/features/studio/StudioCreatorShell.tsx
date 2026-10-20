@@ -39,10 +39,14 @@ export function StudioCreatorShell({
       <div className={s.topbar}>
         <Link to={routes.studio} className={s.brand}>
           <span className={s.pulseDot} aria-hidden />
-          <Translation
-            i18nKey="studio:brand.lockup"
-            components={{ em: <em /> }}
-          />
+          {/* One span keeps the wordmark a single flex item, so the brand's
+              gap spaces the dot and never splits "Queer" from "Pulse". */}
+          <span>
+            <Translation
+              i18nKey="studio:brand.lockup"
+              components={{ em: <em /> }}
+            />
+          </span>
         </Link>
         <span className={s.product}>{t("studio:creator.product")}</span>
         <nav className={s.subnav}>

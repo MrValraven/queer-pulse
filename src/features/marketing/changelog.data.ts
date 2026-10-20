@@ -63,6 +63,72 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "studio-headers-fit",
+        category: "fix",
+        date: "20 Oct 2026",
+        ...entryKeys("studio-headers-fit"),
+      },
+      {
+        id: "studio-listening-sidebar",
+        category: "improvement",
+        date: "20 Oct 2026",
+        ...entryKeys("studio-listening-sidebar"),
+        tag: { labelKey: "marketing:changelog.tag.studio", to: routes.studio },
+      },
+      {
+        id: "studio-play-without-gaps",
+        category: "feature",
+        date: "20 Oct 2026",
+        ...entryKeys("studio-play-without-gaps"),
+        tag: { labelKey: "marketing:changelog.tag.studio", to: routes.studio },
+      },
+      {
+        id: "studio-creator-phone-layout",
+        category: "fix",
+        date: "20 Oct 2026",
+        ...entryKeys("studio-creator-phone-layout"),
+      },
+      {
+        id: "studio-waveform-shows-loud-songs",
+        category: "fix",
+        date: "20 Oct 2026",
+        ...entryKeys("studio-waveform-shows-loud-songs"),
+      },
+      {
+        id: "architect-personas",
+        category: "feature",
+        date: "20 Oct 2026",
+        ...entryKeys("architect-personas"),
+        tag: {
+          labelKey: "marketing:changelog.tag.personas",
+          to: routes.subprofiles,
+        },
+      },
+      {
+        id: "feed-upcoming-calendar-tiles",
+        category: "improvement",
+        date: "20 Oct 2026",
+        ...entryKeys("feed-upcoming-calendar-tiles"),
+      },
+      {
+        id: "feed-event-cards-show-date",
+        category: "fix",
+        date: "20 Oct 2026",
+        ...entryKeys("feed-event-cards-show-date"),
+      },
+      {
+        id: "events-hide-empty-highlights",
+        category: "fix",
+        date: "20 Oct 2026",
+        ...entryKeys("events-hide-empty-highlights"),
+      },
+      {
+        id: "nav-closes-on-page-change",
+        category: "fix",
+        date: "20 Oct 2026",
+        ...entryKeys("nav-closes-on-page-change"),
+      },
+      {
         id: "admin-creator-drafts",
         category: "feature",
         date: "19 Oct 2026",

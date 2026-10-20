@@ -811,12 +811,27 @@
   color: var(--ink-40);
   margin-bottom: 12px;
 }
+/* The card's way onward, set off from the rows above by a hairline. The
+   arrow nudges forward on hover. */
 .sbLink {
   font-size: var(--text-13);
   font-weight: 600;
   color: var(--accent-ink);
-  display: block;
-  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 6px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.06);
+}
+.sbLink svg {
+  flex: none;
+  transition: transform 0.2s var(--ease);
+}
+@media (hover: hover) {
+  .sbLink:hover svg {
+    transform: translateX(2px);
+  }
 }
 .sbInlineLink {
   /* Replaces an inline `style` object on the connections widget's manage
@@ -831,43 +846,97 @@
   line-height: 1.55;
   margin: 2px 0 4px;
 }
+/* "Upcoming" rows: a calendar tile beside the title and a one-line meta. The
+   row bleeds 8px past the card padding on each side so its hover wash reaches
+   the edge without shifting the content. */
 .upcomingRow {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 7px 0;
-  border-bottom: 1px solid rgba(var(--line-rgb), 0.06);
+  gap: 12px;
+  margin: 0 -8px;
+  padding: 8px;
+  border-radius: var(--radius-12);
   text-decoration: none;
   cursor: pointer;
-  transition: opacity 0.15s var(--ease);
+  transition: background-color 0.18s var(--ease);
 }
 @media (hover: hover) {
-  .upcomingRow:hover .upName {
-    text-decoration: underline;
-    text-underline-offset: 2px;
+  .upcomingRow:hover {
+    background: rgba(var(--plum-rgb), 0.04);
   }
 }
-.upcomingRow:last-of-type {
-  border-bottom: none;
+.upcomingRow:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }
-.datePill {
-  font-size: var(--text-11);
-  font-weight: 700;
-  padding: 3px 8px;
-  background: rgba(var(--plum-rgb), 0.06);
-  border-radius: var(--radius-6);
-  color: var(--text-strong);
-  white-space: nowrap;
+.dateTile {
   flex: none;
+  width: 44px;
+  padding: 6px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  border-radius: var(--radius-10);
+  background: rgba(var(--plum-rgb), 0.05);
+  text-align: center;
+}
+.dateTileMonth {
+  font-size: var(--text-10);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-transform: uppercase;
+  color: var(--accent-ink);
+}
+.dateTileDay {
+  font-family: var(--serif);
+  font-size: var(--text-20);
+  font-weight: 600;
+  line-height: 1;
+  color: var(--text-strong);
+}
+/* Today: the plum-panel fill, cream numeral and a coral month, the same
+   pairing every plum surface uses for its emphasis. */
+.dateTileToday {
+  background: var(--plum);
+}
+.dateTileToday .dateTileMonth {
+  color: var(--accent);
+}
+.dateTileToday .dateTileDay {
+  color: rgba(var(--cream-rgb), 1);
+}
+.upBody {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 .upName {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
   font-size: var(--text-13-5);
   font-weight: 600;
+  line-height: 1.3;
   color: var(--text-strong);
 }
-.upVenue {
+.upMeta {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
   font-size: var(--text-12);
-  color: var(--ink-40);
+  color: var(--ink-60);
+}
+/* pt-PT writes weekdays in lower case ("quinta"); at the head of the line it
+   takes a capital like "Hoje" beside it. */
+.upMeta::first-letter {
+  text-transform: uppercase;
 }
 .sbMemberRow {
   display: flex;
@@ -982,6 +1051,21 @@
 :global([data-theme="dark"]) .card,
 :global([data-theme="dark"]) .sbCard {
   border-color: rgba(var(--cream-rgb), 0.1);
+}
+/* --plum-rgb does not flip, so a plum wash vanishes on the dark card. The
+   resting tile and the row hover take a cream wash instead, and the filled
+   "today" tile, plum on a plum-dark card, gets the cream hairline edge. */
+:global([data-theme="dark"]) .dateTile {
+  background: rgba(var(--cream-rgb), 0.06);
+}
+:global([data-theme="dark"]) .dateTileToday {
+  background: var(--plum);
+  box-shadow: var(--ring-cream-hairline);
+}
+@media (hover: hover) {
+  :global([data-theme="dark"]) .upcomingRow:hover {
+    background: rgba(var(--cream-rgb), 0.04);
+  }
 }
 
 /* Report failed: an honest inline note above the actions. The form and the

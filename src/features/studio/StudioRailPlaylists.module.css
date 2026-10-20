@@ -1,0 +1,110 @@
+/* The rail's playlist list: Liked songs, then the member's own, collaborative
+   and saved playlists. It takes the rail's remaining height and scrolls on its
+   own, so the brand and main nav above it stay put. */
+
+.root {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 4px 0 24px;
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Mirrors studio.module.css .railItem: a transparent left edge that turns
+   coral on the open playlist. */
+.row {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  padding: 8px 22px;
+  border-left: 2px solid transparent;
+  color: var(--studio-text);
+  text-decoration: none;
+  transition:
+    background 0.2s var(--ease),
+    border-left-color 0.2s var(--ease);
+}
+@media (hover: hover) {
+  .row:hover {
+    background: rgba(var(--studio-ink-rgb), 0.03);
+  }
+}
+.row[aria-current="page"] {
+  border-left-color: var(--accent);
+  background: linear-gradient(
+    90deg,
+    rgba(var(--accent-rgb), 0.12),
+    transparent 60%
+  );
+}
+/* Drawn inset: the list's own scroll clip would cut an outward ring. */
+.row:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: calc(-2 * var(--focus-ring-offset));
+  box-shadow: var(--ring-cream-inset);
+}
+
+.name,
+.metaText {
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.name {
+  display: block;
+  font-size: var(--text-14);
+  color: var(--studio-text);
+}
+
+.meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  font-size: var(--text-12);
+  color: var(--studio-text-muted);
+}
+.meta svg {
+  flex: none;
+  width: 12px;
+  height: 12px;
+}
+
+/* Loading, error, empty and Show more sit under the list, on the rows'
+   left inset. */
+.skeleton {
+  display: grid;
+  gap: 4px;
+}
+.skeletonRow {
+  display: grid;
+  gap: 6px;
+  padding: 8px 22px 8px 24px;
+}
+
+.state {
+  display: grid;
+  justify-items: start;
+  gap: 8px;
+  padding: 8px 22px 8px 24px;
+}
+.stateText {
+  margin: 0;
+  font-size: var(--text-12);
+  color: var(--studio-text-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .row {
+    transition: none;
+  }
+}

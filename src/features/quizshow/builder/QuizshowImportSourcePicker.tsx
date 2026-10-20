@@ -8,8 +8,13 @@ import {
 } from "../../../shared/components/ui";
 import { useFormat } from "../../../shared/i18n/format";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import type { QuizshowImportSource } from "../../../shared/contracts/quizshow";
+import type {
+  QuizshowImportInput,
+  QuizshowImportSource,
+} from "../../../shared/contracts/quizshow";
 import { useQuizshowImportSources } from "../api/useQuizshowQuiz";
+import { quizshowScopeKey, type QuizshowScope } from "../quizshowScope";
+import { importInputOf } from "./useQuizshowImport";
 import {
   QuizshowPickerFade,
   QuizshowPickerSkeleton,
@@ -17,41 +22,70 @@ import {
 import styles from "./QuizshowImport.module.css";
 
 interface QuizshowImportSourcePickerProps {
-  slug: string;
+  scope: QuizshowScope;
   isOpen: boolean;
   isAdultsEvent: boolean;
   onClose: () => void;
-  onPick: (eventSlug: string) => void;
+  onPick: (input: QuizshowImportInput) => void;
+}
+
+/** The scope a listed source stands for, so the row key never collides across kinds. */
+function scopeOfSource(source: QuizshowImportSource): QuizshowScope | null {
+  if (source.kind === "game") {
+    return source.gameId === null
+      ? null
+      : { kind: "game", gameId: source.gameId };
+  }
+  return source.eventSlug === null
+    ? null
+    : { kind: "event", eventSlug: source.eventSlug };
 }
 
 function SourceRow({
   source,
+  input,
   isBlocked,
   onPick,
 }: {
   source: QuizshowImportSource;
+  input: QuizshowImportInput;
   isBlocked: boolean;
-  onPick: (eventSlug: string) => void;
+  onPick: (input: QuizshowImportInput) => void;
 }) {
   const { t } = useTranslation();
   const fmt = useFormat();
   const adultsTagId = useId();
+  const isGameSource = source.kind === "game";
+  const hasTags = isGameSource || source.isSameSeries || source.hasAdultsRounds;
   return (
     <div className={styles.row}>
       <div className={styles.rowText}>
-        <h3 className={styles.rowTitle}>{source.eventTitle}</h3>
+        <h3 className={styles.rowTitle}>
+          {isGameSource ? source.quizTitle : source.eventTitle}
+        </h3>
+        {!isGameSource && source.startAt !== null && (
+          <p className={styles.rowMeta}>
+            {fmt.date(new Date(source.startAt), { dateStyle: "medium" })}
+          </p>
+        )}
         <p className={styles.rowMeta}>
-          {fmt.date(new Date(source.startAt), { dateStyle: "medium" })}
-        </p>
-        <p className={styles.rowMeta}>
-          {source.quizTitle}
-          {", "}
+          {!isGameSource && (
+            <>
+              {source.quizTitle}
+              {", "}
+            </>
+          )}
           {t("quizshow:packs.rounds", { count: source.roundCount })}
           {", "}
           {t("quizshow:packs.questions", { count: source.questionCount })}
         </p>
-        {(source.isSameSeries || source.hasAdultsRounds) && (
+        {hasTags && (
           <ul className={styles.tags}>
+            {isGameSource && (
+              <li className={styles.tag}>
+                {t("quizshow:importSources.gameTag")}
+              </li>
+            )}
             {source.isSameSeries && (
               <li className={styles.tag}>
                 {t("quizshow:importSources.sameSeriesTag")}
@@ -73,7 +107,7 @@ function SourceRow({
         aria-disabled={isBlocked}
         aria-describedby={isBlocked ? adultsTagId : undefined}
         onClick={() => {
-          if (!isBlocked) onPick(source.eventSlug);
+          if (!isBlocked) onPick(input);
         }}
       >
         {t("quizshow:importSources.use")}
@@ -83,18 +117,25 @@ function SourceRow({
 }
 
 function SourcePickerBody({
-  slug,
+  scope,
   isAdultsEvent,
   onPick,
 }: Omit<QuizshowImportSourcePickerProps, "isOpen" | "onClose">) {
   const { t } = useTranslation();
-  const sources = useQuizshowImportSources(slug, { isEnabled: true });
+  const sources = useQuizshowImportSources(scope, {
+    isEnabled: true,
+  });
+  const isGameScope = scope.kind === "game";
   if (sources.isError) {
     return (
       <QuizshowPickerFade stateKey="error">
         <LoadErrorState
           compact
-          title={t("quizshow:importSources.loadError")}
+          title={t(
+            isGameScope
+              ? "quizshow:importSources.gameScope.loadError"
+              : "quizshow:importSources.loadError",
+          )}
           onRetry={() => void sources.refetch()}
           isRetrying={sources.isFetching}
         />
@@ -108,10 +149,23 @@ function SourcePickerBody({
       </QuizshowPickerFade>
     );
   }
-  if (sources.data.items.length === 0) {
+  const rows = sources.data.items.flatMap((source) => {
+    const input = importInputOf(source);
+    const sourceScope = scopeOfSource(source);
+    return input && sourceScope
+      ? [{ source, input, key: quizshowScopeKey(sourceScope) }]
+      : [];
+  });
+  if (rows.length === 0) {
     return (
       <QuizshowPickerFade stateKey="empty">
-        <p className={styles.emptyNote}>{t("quizshow:importSources.empty")}</p>
+        <p className={styles.emptyNote}>
+          {t(
+            isGameScope
+              ? "quizshow:importSources.gameScope.empty"
+              : "quizshow:importSources.empty",
+          )}
+        </p>
       </QuizshowPickerFade>
     );
   }
@@ -119,10 +173,11 @@ function SourcePickerBody({
     <QuizshowPickerFade stateKey="list">
       <ul className={styles.list}>
         <AnimatePresence initial={false}>
-          {sources.data.items.map((source) => (
-            <CollapseListItem key={source.eventSlug}>
+          {rows.map(({ source, input, key }) => (
+            <CollapseListItem key={key}>
               <SourceRow
                 source={source}
+                input={input}
                 isBlocked={source.hasAdultsRounds && !isAdultsEvent}
                 onPick={onPick}
               />
@@ -135,7 +190,7 @@ function SourcePickerBody({
 }
 
 export function QuizshowImportSourcePicker({
-  slug,
+  scope,
   isOpen,
   isAdultsEvent,
   onClose,
@@ -147,12 +202,20 @@ export function QuizshowImportSourcePicker({
       {isOpen && (
         <Modal
           key="quizshow-import-source-picker"
-          title={t("quizshow:importSources.title")}
-          sub={t("quizshow:importSources.sub")}
+          title={t(
+            scope.kind === "game"
+              ? "quizshow:import.fromCopy"
+              : "quizshow:importSources.title",
+          )}
+          sub={t(
+            scope.kind === "game"
+              ? "quizshow:importSources.gameScope.sub"
+              : "quizshow:importSources.sub",
+          )}
           onClose={onClose}
         >
           <SourcePickerBody
-            slug={slug}
+            scope={scope}
             isAdultsEvent={isAdultsEvent}
             onPick={onPick}
           />

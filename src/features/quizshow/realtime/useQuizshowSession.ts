@@ -83,6 +83,42 @@ function shouldKeepPending(
   );
 }
 
+/** A live session that ended: an event changes its page's Pulse Live card, the quiz lock and the
+ *  results; a game (owner-only) changes the game, its results and My games. */
+function useRefreshAfterSessionEnd(input: {
+  isEnded: boolean;
+  session: QuizshowClientState["session"];
+  gameId: string | null;
+}): void {
+  const queryClient = useQueryClient();
+  const { isEnded, session, gameId } = input;
+  const endedEventSlug = isEnded ? (session?.eventSlug ?? null) : null;
+  const endedGameId =
+    isEnded && session?.kind === "game" ? (gameId ?? session.gameId) : null;
+  useEffect(() => {
+    if (endedGameId !== null) {
+      void queryClient.invalidateQueries({
+        queryKey: quizshowKeys.game(endedGameId, false),
+      });
+      void queryClient.invalidateQueries({
+        queryKey: quizshowKeys.gameResults(endedGameId, false),
+      });
+      void queryClient.invalidateQueries({
+        queryKey: quizshowKeys.games(false),
+      });
+      return;
+    }
+    if (endedEventSlug === null) return;
+    void queryClient.invalidateQueries({ queryKey: eventKeys.detailRoot });
+    void queryClient.invalidateQueries({
+      queryKey: quizshowKeys.quiz(endedEventSlug, false),
+    });
+    void queryClient.invalidateQueries({
+      queryKey: quizshowKeys.results(endedEventSlug, false),
+    });
+  }, [endedEventSlug, endedGameId, queryClient]);
+}
+
 /**
  * The live `/quizshow` connection, or the in-browser demo engine, behind one
  * shape. Live opens one socket per session and role; demo opens none.
@@ -91,8 +127,12 @@ export function useQuizshowSession(options: {
   sessionId: string | null;
   role: QuizshowAttachRole;
   demo: Omit<QuizshowDemoEngineOptions, "role">;
+  /** A game session's id; the demo engine then plays that game's quiz. */
+  gameId?: string | null;
+  /** The scope's 18+ flag (the join response's, the event's or the game's), for the demo engine. */
+  isAdultsOnly?: boolean;
 }): QuizshowSessionController {
-  const { sessionId, role, demo } = options;
+  const { sessionId, role, demo, gameId = null, isAdultsOnly } = options;
   const { demoMode } = useDemoMode();
   const { loggedIn } = useAuth();
   const isLive = !demoMode && loggedIn && apiAvailable && sessionId !== null;
@@ -112,7 +152,6 @@ export function useQuizshowSession(options: {
   const replayCountRef = useRef(0);
   const resentKeysRef = useRef(new Set<string>());
   const [lostAck, setLostAck] = useState<LostAnswerAck | null>(null);
-  const queryClient = useQueryClient();
 
   // Live and demo swapped (demo toggle, sign out): nothing of the other connection carries over.
   const [isLiveSeen, setIsLiveSeen] = useState(isLive);
@@ -143,7 +182,15 @@ export function useQuizshowSession(options: {
     };
   }, [isLive, sessionId, role]);
 
-  const demoEngine = useQuizshowDemoEngine({ ...demo, role }, demoMode);
+  const demoEngine = useQuizshowDemoEngine(
+    {
+      ...demo,
+      role,
+      ...(gameId !== null ? { gameId } : {}),
+      ...(isAdultsOnly !== undefined ? { isAdultsOnly } : {}),
+    },
+    demoMode,
+  );
 
   useEffect(() => {
     if (demoEngine === null) return undefined;
@@ -220,19 +267,11 @@ export function useQuizshowSession(options: {
 
   const { status, pendingAnswer, session } = state;
 
-  // A live night that ended changes the event page's Pulse Live card, the quiz lock and the results.
-  const endedEventSlug =
-    isLive && state.sessionEnd !== null ? (session?.eventSlug ?? null) : null;
-  useEffect(() => {
-    if (endedEventSlug === null) return;
-    void queryClient.invalidateQueries({ queryKey: eventKeys.detailRoot });
-    void queryClient.invalidateQueries({
-      queryKey: quizshowKeys.quiz(endedEventSlug, false),
-    });
-    void queryClient.invalidateQueries({
-      queryKey: quizshowKeys.results(endedEventSlug, false),
-    });
-  }, [endedEventSlug, queryClient]);
+  useRefreshAfterSessionEnd({
+    isEnded: isLive && state.sessionEnd !== null,
+    session,
+    gameId,
+  });
   // The server already holds the answer: the lost ack no longer matters.
   const isLostAnswerHeld =
     lostAck !== null &&

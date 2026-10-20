@@ -8,6 +8,7 @@ import {
   type QuizshowLanguage,
   type QuizshowLanguageMode,
 } from "../../../shared/contracts/quizshow";
+import { useQuizshowScopeKind } from "../quizshowScope";
 import type { QuizshowDraftController } from "./useQuizshowDraft";
 import styles from "./QuizshowRounds.module.css";
 
@@ -16,14 +17,22 @@ const SCREEN_LANGUAGES: readonly QuizshowLanguage[] = ["en", "pt"];
 
 export function QuizshowQuizSettings({
   controller,
+  titleLabelKey = "quizshow:settings.title.label",
+  isTitleRequired = false,
 }: {
   controller: QuizshowDraftController;
+  /** A game labels the field "Game title". */
+  titleLabelKey?: string;
+  /** A game cannot save a blank title, so the field says so. */
+  isTitleRequired?: boolean;
 }) {
   const { t } = useTranslation();
   const languagesLabelId = useId();
   const screenLabelId = useId();
   const screenHintId = useId();
+  const isGame = useQuizshowScopeKind() === "game";
   const { draft, setQuizField } = controller;
+  const isTitleMissing = isTitleRequired && draft.title.trim() === "";
 
   const handleLanguages = (languages: QuizshowLanguageMode) => {
     setQuizField("languages", languages);
@@ -32,15 +41,27 @@ export function QuizshowQuizSettings({
 
   return (
     <div className={styles.fields}>
-      <FormField label={t("quizshow:settings.title.label")}>
-        <input
-          type="text"
-          value={draft.title}
-          maxLength={QUIZSHOW_LIMITS.quizTitleMax}
-          placeholder={t("quizshow:settings.title.placeholder")}
-          onChange={(event) => setQuizField("title", event.target.value)}
-        />
-      </FormField>
+      <div className={styles.fieldGroup}>
+        {/* The hint sits in the field's own error slot, which wires aria-invalid and the description. */}
+        <FormField
+          label={t(titleLabelKey)}
+          error={
+            isTitleMissing ? t("quizshow:games.new.titleRequired") : undefined
+          }
+        >
+          <input
+            type="text"
+            value={draft.title}
+            maxLength={QUIZSHOW_LIMITS.quizTitleMax}
+            placeholder={t(
+              isGame
+                ? "quizshow:games.new.titlePlaceholder"
+                : "quizshow:settings.title.placeholder",
+            )}
+            onChange={(event) => setQuizField("title", event.target.value)}
+          />
+        </FormField>
+      </div>
       <div className={styles.fieldGroup}>
         <span id={languagesLabelId} className={styles.groupLabel}>
           {t("quizshow:settings.languages.label")}

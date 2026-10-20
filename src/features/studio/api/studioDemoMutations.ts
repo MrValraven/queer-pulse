@@ -89,6 +89,7 @@ export function demoCreateRelease(
     isUpcoming: false,
     buyUrl: null,
     buyLink: null,
+    isGapless: false,
     supportLinks: [],
     version: 1,
     versions: [],
@@ -136,6 +137,7 @@ export function demoUpdateRelease(
     buyUrl: body.buyUrl === undefined ? release.buyUrl : body.buyUrl,
     buyLink:
       body.buyUrl === undefined ? release.buyLink : toBuyLinkView(body.buyUrl),
+    isGapless: body.isGapless ?? release.isGapless,
   };
 }
 

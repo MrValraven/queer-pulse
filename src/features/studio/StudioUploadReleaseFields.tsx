@@ -15,6 +15,7 @@ import {
   type StudioGenre,
   type StudioMood,
 } from "./api/studio.types";
+import { StudioUploadGaplessField } from "./StudioUploadGaplessField";
 import { StudioUploadSceneField } from "./StudioUploadSceneField";
 import { STUDIO_MOOD_LABEL_KEY } from "./studioDiscoveryLabels";
 import {
@@ -182,6 +183,9 @@ export function StudioUploadReleaseFields({
           </p>
         )}
       </div>
+      <Collapse isOpen={fieldCopy.isGenreShown}>
+        <StudioUploadGaplessField form={form} setField={setField} />
+      </Collapse>
       <div className={s.field}>
         <label htmlFor={buyUrlId}>
           {t("studio:uploadFlow.v3.buyUrlLabel")}

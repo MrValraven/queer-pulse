@@ -34,6 +34,8 @@ export interface ReleaseFormValues {
   coverKey: string | null;
   /** Studio v3: "" or an https link to buy the release. */
   buyUrl: string;
+  /** Play the tracks straight on, without a crossfade between them. */
+  isGapless: boolean;
 }
 
 const KNOWN_GENRES: ReadonlySet<string> = new Set(STUDIO_GENRES);
@@ -71,11 +73,15 @@ export function releaseFieldCopyOf(format: StudioFormat): ReleaseFieldCopy {
 
 /** The fields a persona switch resets: its first type, its genre preset (a
  *  spoken word persona's, or none when leaving one), and an empty genre,
- *  mood and scene for a show, which carries none of them. */
+ *  mood and scene for a show, which carries none of them. A show also
+ *  plays with gaps between its episodes, so the gapless mark turns off. */
 export function personaSwitchPatch(
   kind: StudioArtistPersonaKind,
   current: ReleaseFormValues,
-): Pick<ReleaseFormValues, "type" | "genre" | "mood" | "sceneId"> {
+): Pick<
+  ReleaseFormValues,
+  "type" | "genre" | "mood" | "sceneId" | "isGapless"
+> {
   const isGenreShown = releaseFieldCopyOf(
     STUDIO_FORMAT_BY_KIND[kind],
   ).isGenreShown;
@@ -89,6 +95,7 @@ export function personaSwitchPatch(
     genre,
     mood: isGenreShown ? current.mood : "",
     sceneId: isGenreShown ? current.sceneId : "",
+    isGapless: isGenreShown ? current.isGapless : false,
   };
 }
 
@@ -108,6 +115,7 @@ export function defaultReleaseForm(
     description: "",
     coverKey: null,
     buyUrl: "",
+    isGapless: false,
   };
 }
 
@@ -126,6 +134,7 @@ export function formFromRelease(release: StudioReleaseView): ReleaseFormValues {
     description: release.description ?? "",
     coverKey: null,
     buyUrl: release.buyUrl ?? "",
+    isGapless: release.isGapless,
   };
 }
 
@@ -189,6 +198,7 @@ export function patchFromForm(
     ? trimmedBuyUrl.replace(/^https:\/\//i, "https://")
     : null;
   if (buyUrl !== release.buyUrl) body.buyUrl = buyUrl;
+  if (form.isGapless !== release.isGapless) body.isGapless = form.isGapless;
   if (form.coverKey) body.coverKey = form.coverKey;
   return body;
 }

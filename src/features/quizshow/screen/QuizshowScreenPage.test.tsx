@@ -10,6 +10,7 @@ import type {
   QuizshowRoundCard,
   QuizshowScreenState,
 } from "../../../shared/contracts/quizshow";
+import type { QuizshowScope } from "../quizshowScope";
 import { defaultGatheringSlug } from "../../gatherings/data";
 import { gatheringPath } from "../../gatherings/gatheringPaths";
 import { QUIZSHOW_DEMO_TICK_MS } from "../quizshow.constants";
@@ -112,10 +113,10 @@ vi.mock("../api/useQuizshowQuiz", async (importOriginal) => {
   return {
     ...actual,
     useQuizshowQuiz: (
-      slug: string,
+      scope: QuizshowScope,
       options: Parameters<typeof actual.useQuizshowQuiz>[1],
     ) => {
-      const result = actual.useQuizshowQuiz(slug, options);
+      const result = actual.useQuizshowQuiz(scope, options);
       useSyncExternalStore(
         (listener) => liveMock.subscribe(listener),
         () => liveMock.version,
@@ -232,6 +233,9 @@ function screenSession(
     sessionId: "session-1",
     eventSlug: "quiz-night",
     eventTitle: "Quiz night",
+    kind: "event",
+    gameId: null,
+    isAdultsOnly: false,
     joinCode: "QZ7KP4",
     quizTitle: "Pride quiz",
     languages: "both",

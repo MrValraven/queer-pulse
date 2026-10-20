@@ -22,6 +22,7 @@ import {
   FiGrid,
   FiHeadphones,
   FiHeart,
+  FiHome,
   FiImage,
   FiLayers,
   FiLink,
@@ -832,6 +833,19 @@ export const SECTION_META: Record<SubprofileSection, SectionMeta> = {
     icon: GiScrollUnfurled,
     fields: ["title", "subtitle", "description", "url", "tags"],
   },
+  // architect: a finished building keeps its place in `subtitle` and the
+  // architect's role on it in `meta`; a competition keeps its organiser or
+  // award body in `subtitle` and the result in `meta`.
+  built_work: {
+    labelKey: "subprofiles:section.built_work",
+    icon: FiHome,
+    fields: ["title", "subtitle", "date", "meta", "description", "imageUrl"],
+  },
+  competitions: {
+    labelKey: "subprofiles:section.competitions",
+    icon: FiAward,
+    fields: ["title", "subtitle", "date", "meta", "description", "url"],
+  },
 };
 
 /** The create picker shows a kind's icon as its lead section's icon
@@ -907,6 +921,7 @@ export const KIND_LABEL_KEYS: Record<SubprofileKind, string> = {
   // Record's order sets each family's kind order in `KIND_FAMILIES`.
   artist_3d: "subprofiles:kind.artist_3d",
   printmaker: "subprofiles:kind.printmaker",
+  architect: "subprofiles:kind.architect",
   // page (new kinds)
   journalist: "subprofiles:kind.journalist",
   poet: "subprofiles:kind.poet",
@@ -1053,6 +1068,7 @@ const KIND_SLUG: Record<SubprofileKind, string> = {
   game_designer: "game-designer",
   artist_3d: "artist-3d",
   printmaker: "printmaker",
+  architect: "architect",
   // page (new kinds)
   journalist: "journalist",
   poet: "poet",
@@ -1219,6 +1235,13 @@ export const KIND_SEARCH_ALIASES: Partial<
     "xadrez",
   ],
   board_game_reviewer: ["board games", "jogos de tabuleiro"],
+  architect: [
+    "arquiteto",
+    "arquiteta",
+    "arquitecto",
+    "arquitecta",
+    "architecture",
+  ],
 };
 
 /** The slug a persona gets by default when the owner names it after the

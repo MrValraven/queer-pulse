@@ -53,6 +53,7 @@ export const KIND_LABELS: Record<SubprofileKind, string> = {
   game_designer: "Game designer",
   artist_3d: "3D artist",
   printmaker: "Printmaker",
+  architect: "Architect",
   // page (new kinds)
   journalist: "Journalist",
   poet: "Poet",
@@ -199,6 +200,7 @@ const PT_KIND_LABELS: Record<SubprofileKind, string> = {
   game_designer: "Videojogos",
   artist_3d: "Arte 3D",
   printmaker: "Gravura",
+  architect: "Arquitetura",
   journalist: "Jornalismo",
   poet: "Poesia",
   editor: "Edição",

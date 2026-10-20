@@ -237,3 +237,18 @@ describe("SUBJECT_REASONS for Pulse Live", () => {
     ]);
   });
 });
+
+describe("SUBJECT_REASONS for Pulse Live games", () => {
+  it("offers the game reasons in the backend's order", () => {
+    expect(SUBJECT_REASONS.quizshow_game).toEqual([
+      "hate_speech",
+      "harassment",
+      "discrimination",
+      "outing",
+      "doxxing",
+      "untagged_explicit",
+      "spam",
+      "other",
+    ]);
+  });
+});

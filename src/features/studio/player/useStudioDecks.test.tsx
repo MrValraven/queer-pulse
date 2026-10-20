@@ -17,6 +17,8 @@ import {
 } from "./studioQueueReducer";
 import { useStudioDecks } from "./useStudioDecks";
 
+/** Track id to the track it follows without a gap ("Play without gaps"). */
+const gaplessAfterByTrackId = new Map<string, string>();
 const fetchStudioStream = vi.fn((_demoMode: boolean, trackId: string) =>
   Promise.resolve({
     url: `https://stream.example/${trackId}`,
@@ -24,6 +26,7 @@ const fetchStudioStream = vi.fn((_demoMode: boolean, trackId: string) =>
     waveformPeaks: [0, 255],
     loudnessLufs: -20,
     peakDb: -10,
+    gaplessAfterTrackId: gaplessAfterByTrackId.get(trackId) ?? null,
   }),
 );
 vi.mock("../api/studioStream", async (importOriginal) => ({
@@ -73,7 +76,6 @@ function setup(
     status: "playing" as StudioPlaybackStatus,
     duration: 200 as number | null,
     crossfadeSeconds: 0,
-    releaseTrackIds: null as string[] | null,
     settings,
     isCrossfadeHeld: false,
   };
@@ -96,7 +98,6 @@ function setup(
         readStatus: () => live.status,
         readCrossfadeSeconds: () => live.crossfadeSeconds,
         readPlaybackSettings: () => live.settings,
-        releaseTrackIdsFor: () => live.releaseTrackIds,
         shouldHoldCrossfade: () => live.isCrossfadeHeld,
         onEvent,
         onEngineReady: vi.fn(),
@@ -124,6 +125,7 @@ function setup(
 
 afterEach(() => {
   fetchStudioStream.mockClear();
+  gaplessAfterByTrackId.clear();
   vi.restoreAllMocks();
 });
 
@@ -222,6 +224,7 @@ describe("useStudioDecks: preload timing", () => {
         waveformPeaks: [0, 255],
         loudnessLufs: -20,
         peakDb: -10,
+        gaplessAfterTrackId: null,
       });
       await new Promise((resolve) => setTimeout(resolve, 0));
     });
@@ -293,16 +296,32 @@ describe("useStudioDecks: crossfade", () => {
     expect(seconds).toBe(6);
   });
 
-  it("swaps gaplessly between consecutive tracks of one release", async () => {
+  it("crossfades between consecutive tracks of one release", async () => {
     const { live, time, onCrossfadeStart } = setup([
       item("ta", "r1"),
       item("tb", "r1"),
     ]);
     live.crossfadeSeconds = 6;
-    live.releaseTrackIds = ["ta", "tb"];
+    await time(181);
+    await time(195);
+    expect(onCrossfadeStart).toHaveBeenCalledTimes(1);
+  });
+
+  it("swaps gaplessly into a track that follows the current one without a gap", async () => {
+    gaplessAfterByTrackId.set("tb", "ta");
+    const { hook, live, time, onCrossfadeStart } = setup([
+      item("ta", "r1"),
+      item("tb", "r1"),
+    ]);
+    live.crossfadeSeconds = 6;
     await time(181);
     await time(195);
     expect(onCrossfadeStart).not.toHaveBeenCalled();
+    // The preload stays for the gapless swap at the end.
+    expect(hook.result.current.takePreload("entry-tb")).toMatchObject({
+      queueEntryId: "entry-tb",
+      gaplessAfterTrackId: "ta",
+    });
   });
 
   it("holds the crossfade while the sleep timer owns the fade", async () => {

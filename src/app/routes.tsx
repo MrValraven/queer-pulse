@@ -12,7 +12,7 @@ import {
   isGatedPath,
   isGuestOnlyPath,
   isComingSoonPath,
-  isQuizshowPath,
+  isQuizshowHostingPath,
 } from "./authGate";
 import { useAuth } from "./providers/authContext";
 import { useDemoMode } from "./providers/DemoModeProvider";
@@ -113,13 +113,15 @@ export function AppRoutes() {
   if (gateRedirect) {
     return isExitingPlane ? null : <Navigate to={gateRedirect} replace />;
   }
-  // Pulse Live is unlaunched: a signed-in member without the early-access
-  // grant goes to the roadmap, the same place every other unlaunched surface
-  // lands. Decided after the sign-in gate so a signed-out visitor goes to
-  // sign-in with `?next=` kept, and after the `checking` hold above (every
-  // Pulse Live path is gated) so a grant holder is never bounced before
-  // `/auth/me` settles. Demo and `pnpm dev` always pass.
-  if (!isQuizshowVisible && isQuizshowPath(pathname)) {
+  // Pulse Live hosting is unlaunched: the early-access grant gates hosting
+  // only (My games, game pages, the event screen and remote). A signed-in
+  // member without it goes to the roadmap from those paths, the same place
+  // every other unlaunched surface lands, while `/play` and `/play/:code` stay
+  // open to every signed-in member. Decided after the sign-in gate so a
+  // signed-out visitor goes to sign-in with `?next=` kept, and after the
+  // `checking` hold above (every Pulse Live path is gated) so a grant holder is
+  // never bounced before `/auth/me` settles. Demo and `pnpm dev` always pass.
+  if (!isQuizshowVisible && isQuizshowHostingPath(pathname)) {
     return isExitingPlane ? null : <Navigate to={routes.roadmap} replace />;
   }
 

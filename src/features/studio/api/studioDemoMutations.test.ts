@@ -273,6 +273,19 @@ describe("demo artist tools", () => {
     expect(cleared.buyLink).toBeNull();
   });
 
+  it("starts a draft with gaps and keeps the gapless flag until a patch sets it", () => {
+    const created = draft();
+    expect(created.isGapless).toBe(false);
+    const gapless = demoUpdateRelease(created, { isGapless: true });
+    expect(gapless.isGapless).toBe(true);
+    expect(demoUpdateRelease(gapless, { title: "Cartas II" }).isGapless).toBe(
+      true,
+    );
+    expect(demoUpdateRelease(gapless, { isGapless: false }).isGapless).toBe(
+      false,
+    );
+  });
+
   it("shapes a refusal the way the server sends it", () => {
     const refusal = studioRefusal(409, "studio_release_no_changes");
     expect(refusal).toBeInstanceOf(ApiError);

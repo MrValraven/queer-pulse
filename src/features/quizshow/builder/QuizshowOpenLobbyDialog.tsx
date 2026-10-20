@@ -9,7 +9,7 @@ import {
   type QuizshowPlayMode,
 } from "../../../shared/contracts/quizshow";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import { quizshowScreenPath } from "../quizshowPaths";
+import { quizshowScopeScreenPath, type QuizshowScope } from "../quizshowScope";
 import { QuizshowProblemList } from "./QuizshowProblemList";
 import { useQuizshowOpenLobby } from "./useQuizshowOpenLobby";
 import styles from "./QuizshowLobby.module.css";
@@ -21,7 +21,7 @@ const PLAY_MODES: readonly QuizshowPlayMode[] = ["solo", "teams"];
 const PLAY_MODE_ICONS = { solo: FiUser, teams: FiUsers } as const;
 
 interface QuizshowOpenLobbyDialogProps {
-  slug: string;
+  scope: QuizshowScope;
   isOpen: boolean;
   onClose: () => void;
 }
@@ -58,7 +58,7 @@ function teamSizeOptions(noneLabel: string) {
 }
 
 function OpenLobbyForm({
-  slug,
+  scope,
   onClose,
 }: Omit<QuizshowOpenLobbyDialogProps, "isOpen">) {
   const { t } = useTranslation();
@@ -68,7 +68,8 @@ function OpenLobbyForm({
   const [teamSize, setTeamSize] = useState<string>(NO_TEAM_LIMIT);
   const [isReviewOn, setIsReviewOn] = useState(true);
   const [shouldNotifyGuests, setShouldNotifyGuests] = useState(true);
-  const lobby = useQuizshowOpenLobby(slug);
+  const isGame = scope.kind === "game";
+  const lobby = useQuizshowOpenLobby(scope);
 
   function handleOpen() {
     if (lobby.isPending) return;
@@ -78,7 +79,7 @@ function OpenLobbyForm({
       maxTeamSize:
         isTeams && teamSize !== NO_TEAM_LIMIT ? Number(teamSize) : null,
       isReviewOn,
-      notifyGuests: shouldNotifyGuests,
+      notifyGuests: !isGame && shouldNotifyGuests,
       shouldReplaceResults: false,
     });
   }
@@ -142,16 +143,22 @@ function OpenLobbyForm({
         </Collapse>
         <ToggleRow
           label={t("quizshow:lobby.review.label")}
-          hint={t("quizshow:lobby.review.hint")}
+          hint={t(
+            isGame
+              ? "quizshow:lobby.review.hintGame"
+              : "quizshow:lobby.review.hint",
+          )}
           isChecked={isReviewOn}
           onChange={setIsReviewOn}
         />
-        <ToggleRow
-          label={t("quizshow:lobby.notify.label")}
-          hint={t("quizshow:lobby.notify.hint")}
-          isChecked={shouldNotifyGuests}
-          onChange={setShouldNotifyGuests}
-        />
+        <Collapse isOpen={!isGame}>
+          <ToggleRow
+            label={t("quizshow:lobby.notify.label")}
+            hint={t("quizshow:lobby.notify.hint")}
+            isChecked={shouldNotifyGuests}
+            onChange={setShouldNotifyGuests}
+          />
+        </Collapse>
         <Collapse isOpen={lobby.problems.length > 0}>
           <div className={styles.feedback} role="alert">
             <p className={styles.feedbackTitle}>
@@ -163,12 +170,16 @@ function OpenLobbyForm({
         <Collapse isOpen={lobby.alreadyOpen !== null}>
           <div className={styles.feedback} role="alert">
             <p className={styles.feedbackTitle}>
-              {t("quizshow:lobby.alreadyOpen")}
+              {t(
+                isGame
+                  ? "quizshow:lobby.alreadyOpenGame"
+                  : "quizshow:lobby.alreadyOpen",
+              )}
             </p>
             <Button
               variant="soft"
               size="sm"
-              to={quizshowScreenPath(slug)}
+              to={quizshowScopeScreenPath(scope)}
               onClick={onClose}
             >
               {t("quizshow:lobby.goToGame")}
@@ -187,7 +198,7 @@ function OpenLobbyForm({
 }
 
 export function QuizshowOpenLobbyDialog({
-  slug,
+  scope,
   isOpen,
   onClose,
 }: QuizshowOpenLobbyDialogProps) {
@@ -196,7 +207,7 @@ export function QuizshowOpenLobbyDialog({
       {isOpen && (
         <OpenLobbyForm
           key="quizshow-open-lobby"
-          slug={slug}
+          scope={scope}
           onClose={onClose}
         />
       )}

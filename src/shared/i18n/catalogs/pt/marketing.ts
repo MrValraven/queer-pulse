@@ -3497,6 +3497,8 @@ export const marketing: Catalog = {
   "changelog.release.count.infrastructure_other":
     "{count} alterações de infraestrutura",
   // Release headlines, one per shipping day (see changelogReleases.ts).
+  "changelog.releases.2026-10-20.headline":
+    "Persona de arquitetura, eventos do feed em calendário e menus do telemóvel que fecham ao mudar de página.",
   "changelog.releases.2026-10-19.headline":
     "Tatuadores ganham páginas para marcar, música do Studio nos chats e reclamações de direitos.",
   "changelog.releases.2026-10-14.headline":
@@ -3649,6 +3651,46 @@ export const marketing: Catalog = {
     "A QueerPulse arranca com as suas páginas principais e a navegação da comunidade.",
   "changelog.tag.report": "Abrir o formulário de denúncia",
   "changelog.tag.changelog": "Ver o registo de alterações",
+  "changelog.entries.architect-personas.title":
+    "Arquitetura ganha uma persona própria",
+  "changelog.entries.architect-personas.body":
+    "Mostra obra construída, projetos, concursos e prémios, para arquitetura de edifícios, interiores, paisagem e cidade.",
+  "changelog.entries.feed-upcoming-calendar-tiles.title":
+    "Os próximos eventos no feed parecem um calendário",
+  "changelog.entries.feed-upcoming-calendar-tiles.body":
+    "Cada evento tem um bloco com a data, o de hoje destaca-se a roxo e a linha de baixo mostra o dia, a hora e o sítio.",
+  "changelog.entries.feed-event-cards-show-date.title":
+    "Os eventos no feed mostram quando acontecem",
+  "changelog.entries.feed-event-cards-show-date.body":
+    "O dia e a hora substituem a data de publicação, e os eventos passados dizem quando aconteceram.",
+  "changelog.entries.events-hide-empty-highlights.title":
+    "Eventos esconde os destaques quando não há nada para mostrar",
+  "changelog.entries.events-hide-empty-highlights.body":
+    "Com só um evento a seguir, o título Vale a pena aparecer já não fica por cima de uma grelha vazia.",
+  "changelog.entries.studio-creator-phone-layout.title":
+    "As páginas de criador do Studio cabem no telemóvel",
+  "changelog.entries.studio-creator-phone-layout.body":
+    "A barra de cima sai ao fazer scroll, os cartões usam a largura toda e o botão do lançamento fica dentro do cartão.",
+  "changelog.entries.studio-headers-fit.title":
+    "Os cabeçalhos do Studio voltam a caber",
+  "changelog.entries.studio-headers-fit.body":
+    "Nos álbuns e playlists, os botões de ouvir ficam numa só linha em tablets, e o logótipo QueerPulse já não tem espaço a meio.",
+  "changelog.entries.studio-listening-sidebar.title":
+    "A barra lateral do Studio é para ouvir",
+  "changelog.entries.studio-listening-sidebar.body":
+    "As tuas playlists estão na barra lateral, e as ferramentas de criação passaram para o menu do teu perfil.",
+  "changelog.entries.studio-play-without-gaps.title":
+    "Os lançamentos podem tocar sem pausas",
+  "changelog.entries.studio-play-without-gaps.body":
+    "A transição junta agora as faixas de um álbum com volume estável, e álbuns ao vivo e mixes marcados seguem direto.",
+  "changelog.entries.studio-waveform-shows-loud-songs.title":
+    "As músicas altas ganham uma onda a sério no Studio",
+  "changelog.entries.studio-waveform-shows-loud-songs.body":
+    "A onda segue a energia de cada momento da música, por isso as faixas masterizadas mostram as partes calmas e intensas.",
+  "changelog.entries.nav-closes-on-page-change.title":
+    "Os menus do telemóvel fecham quando mudas de página",
+  "changelog.entries.nav-closes-on-page-change.body":
+    "Com o menu Você ou Mais aberto, toca num separador ou no sino e o menu fecha ao abrir a nova página.",
   "changelog.entries.community-giving.title":
     "As comunidades ganham um separador Apoiar",
   "changelog.entries.community-giving.body":

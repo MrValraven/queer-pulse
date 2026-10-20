@@ -35,6 +35,7 @@ function eventKey(event: CalendarEvent): string {
  * (ways to gather + host CTA), which stays mounted even with zero upcoming
  * events so a visitor always has somewhere to go next. The host CTA renders
  * outside `.wrap` because it's a full-bleed plum band (see `HostCtaBanner`).
+ * The highlights section hides when there are no highlights beyond the hero.
  */
 export function HighlightsView({
   events,
@@ -48,50 +49,54 @@ export function HighlightsView({
     [events, now],
   );
   const featuredEvents = isLoading || isEmpty ? [] : highlightEvents;
+  const shouldShowHighlights =
+    isLoading || isEmpty || highlightEvents.length > 0;
 
   return (
     <>
       <div className="wrap">
-        <Reveal as="section" className={styles.section}>
-          {isEmpty ? (
-            <HubEmptyState
-              titleKey="gatherings:hub.empty.title"
-              bodyKey="gatherings:hub.empty.body"
-              ctaLabelKey="gatherings:hub.host.cta"
-              ctaTo={routes.host}
-            />
-          ) : (
-            <>
-              <SectionHead title={t("gatherings:hub.highlights.heading")} />
-              {isLoading && (
-                <HubLoadingLine labelKey="gatherings:hub.loading" />
-              )}
-              <div className={styles.grid}>
-                {isLoading
-                  ? Array.from({ length: SKELETON_COUNT }).map(
-                      (_, skeletonIndex) => (
-                        <EventPosterSkeleton
-                          key={skeletonIndex}
-                          variant="featured"
-                        />
-                      ),
-                    )
-                  : featuredEvents.map((event, eventIndex) => (
-                      <Reveal
-                        key={eventKey(event)}
-                        delay={Math.min(eventIndex, 8) * 55}
-                      >
-                        <EventPosterCard
-                          event={event}
-                          variant="featured"
-                          now={now}
-                        />
-                      </Reveal>
-                    ))}
-              </div>
-            </>
-          )}
-        </Reveal>
+        {shouldShowHighlights && (
+          <Reveal as="section" className={styles.section}>
+            {isEmpty ? (
+              <HubEmptyState
+                titleKey="gatherings:hub.empty.title"
+                bodyKey="gatherings:hub.empty.body"
+                ctaLabelKey="gatherings:hub.host.cta"
+                ctaTo={routes.host}
+              />
+            ) : (
+              <>
+                <SectionHead title={t("gatherings:hub.highlights.heading")} />
+                {isLoading && (
+                  <HubLoadingLine labelKey="gatherings:hub.loading" />
+                )}
+                <div className={styles.grid}>
+                  {isLoading
+                    ? Array.from({ length: SKELETON_COUNT }).map(
+                        (_, skeletonIndex) => (
+                          <EventPosterSkeleton
+                            key={skeletonIndex}
+                            variant="featured"
+                          />
+                        ),
+                      )
+                    : featuredEvents.map((event, eventIndex) => (
+                        <Reveal
+                          key={eventKey(event)}
+                          delay={Math.min(eventIndex, 8) * 55}
+                        >
+                          <EventPosterCard
+                            event={event}
+                            variant="featured"
+                            now={now}
+                          />
+                        </Reveal>
+                      ))}
+                </div>
+              </>
+            )}
+          </Reveal>
+        )}
 
         <WaysToGather />
       </div>

@@ -2,8 +2,6 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useMemo, useRef, useState, type RefObject } from "react";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useAuth } from "../../../app/providers/authContext";
-import type { StudioReleaseView } from "../api/studio.adapters";
-import { studioKeys } from "../api/studioQueryKeys";
 import { useStudioAccess } from "../api/useStudioAccess";
 import type {
   StudioAudioEngine,
@@ -179,7 +177,6 @@ function useWiredDecks(input: {
   handleEventRef: RefObject<(event: StudioAudioEvent) => void>;
 }): StudioDecks {
   const { demoMode } = useDemoMode();
-  const queryClient = useQueryClient();
   const { preferences, sleep, commandsRef } = input;
   return useStudioDecks({
     engineRef: input.engineRef,
@@ -195,12 +192,6 @@ function useWiredDecks(input: {
     readStatus: input.readStatus,
     readCrossfadeSeconds: () => preferences.readPreferences().crossfadeSeconds,
     readPlaybackSettings: preferences.readPlaybackSettings,
-    releaseTrackIdsFor: (releaseId) =>
-      queryClient
-        .getQueryData<StudioReleaseView>(
-          studioKeys.release(demoMode, releaseId),
-        )
-        ?.tracks.map((track) => track.id) ?? null,
     shouldHoldCrossfade: () =>
       isSleepTimerHoldingCrossfade(sleep.sleepTimer, Date.now()),
     onEvent: (event) => input.handleEventRef.current(event),

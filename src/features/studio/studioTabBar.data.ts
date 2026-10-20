@@ -2,8 +2,6 @@ import type { IconType } from "react-icons";
 import {
   RiHome5Fill,
   RiHome5Line,
-  RiMegaphoneFill,
-  RiMegaphoneLine,
   RiSearchFill,
   RiSearchLine,
   RiStackFill,
@@ -22,7 +20,7 @@ export interface StudioTab {
   activeIcon: IconType;
 }
 
-/** Studio's phone tab bar (StudioTabBar), Spotify's four destinations. */
+/** Studio's phone tab bar (StudioTabBar): Home, Search and Library. */
 export const STUDIO_TABS: StudioTab[] = [
   {
     key: "home",
@@ -45,12 +43,5 @@ export const STUDIO_TABS: StudioTab[] = [
     to: routes.studioLibrary,
     icon: RiStackLine,
     activeIcon: RiStackFill,
-  },
-  {
-    key: "openCalls",
-    labelKey: "studio:shell.tabs.openCalls",
-    to: routes.studioCalls,
-    icon: RiMegaphoneLine,
-    activeIcon: RiMegaphoneFill,
   },
 ];

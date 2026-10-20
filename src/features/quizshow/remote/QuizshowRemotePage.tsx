@@ -18,7 +18,6 @@ import {
   type QuizshowHostState,
   type QuizshowPlayMode,
 } from "../../../shared/contracts/quizshow";
-import { gatheringPath } from "../../gatherings/gatheringPaths";
 import { quizshowErrorKeyOf } from "../api/quizshowErrors";
 import {
   isHostState,
@@ -28,6 +27,10 @@ import {
   useQuizshowSession,
   type QuizshowSessionController,
 } from "../realtime/useQuizshowSession";
+import {
+  hostSessionDemoOptions,
+  type QuizshowHostSession,
+} from "../screen/quizshowHostSession";
 import { useQuizshowEventSession } from "../screen/useQuizshowEventSession";
 import type { QuizshowCue } from "../sound/quizshowCues";
 import { useQuizshowCues } from "../sound/useQuizshowCues";
@@ -87,17 +90,19 @@ function answerCountKeyOf(phase: QuizshowHostState["cursor"]["phase"]) {
 
 function RemoteMessage({
   messageKey,
-  slug,
+  backPath,
+  backLabelKey,
 }: {
   messageKey: string;
-  slug: string;
+  backPath: string;
+  backLabelKey: string;
 }) {
   const { t } = useTranslation();
   return (
     <div className={styles.message}>
       <h1 className={styles.messageTitle}>{t(messageKey)}</h1>
-      <Button to={gatheringPath(slug)} variant="ghost">
-        {t("quizshow:screen.backToEvent")}
+      <Button to={backPath} variant="ghost">
+        {t(backLabelKey)}
       </Button>
     </div>
   );
@@ -240,12 +245,14 @@ function RemoteHeader({
 function RemoteConsole({
   controller,
   session,
-  slug,
+  backPath,
+  backLabelKey,
   onBarHeightChange,
 }: {
   controller: QuizshowSessionController;
   session: QuizshowHostState;
-  slug: string;
+  backPath: string;
+  backLabelKey: string;
   onBarHeightChange: (height: number) => void;
 }) {
   const { t, language } = useTranslation();
@@ -301,8 +308,8 @@ function RemoteConsole({
         <QuizshowRemoteReview controller={controller} state={session} />
       </Collapse>
       <Collapse isOpen={phase === "ended"}>
-        <Button to={gatheringPath(slug)} variant="ghost">
-          {t("quizshow:screen.backToEvent")}
+        <Button to={backPath} variant="ghost">
+          {t(backLabelKey)}
         </Button>
       </Collapse>
       <QuizshowRemoteControls
@@ -319,35 +326,33 @@ type RemoteView =
   | { kind: "message"; messageKey: string }
   | { kind: "console"; session: QuizshowHostState };
 
-export function QuizshowRemotePage() {
+/** The remote of one hosted session, an event's or a game's. */
+export function QuizshowRemoteView({
+  hostSession,
+}: {
+  hostSession: QuizshowHostSession;
+}) {
   const { t } = useTranslation();
   const { reducedMotion } = useMotionPrefs();
-  const params = useParams();
   const [searchParams] = useSearchParams();
   const { demoMode } = useDemoMode();
   const [barHeight, setBarHeight] = useState(0);
   useQuizshowFramelessPage();
-  const eventSession = useQuizshowEventSession(params.slug);
-  const {
-    slug,
-    eventTitle,
-    isOrganizer,
-    isLoading,
-    sessionId,
-    errorCode,
-    hasLoadFailed,
-  } = eventSession;
+  const { isOrganizer, isLoading, sessionId, errorCode, hasLoadFailed } =
+    hostSession;
   // The design review's switch to see team UI in demo; otherwise the open session's mode.
   const playMode: QuizshowPlayMode =
     demoMode && searchParams.get("demoPlayMode") === "teams"
       ? "teams"
-      : eventSession.playMode;
+      : hostSession.playMode;
+  const scopeOptions = hostSessionDemoOptions(hostSession);
   const controller = useQuizshowSession({
     sessionId: isOrganizer ? sessionId : null,
     role: "host",
+    gameId: scopeOptions.gameId,
+    isAdultsOnly: scopeOptions.isAdultsOnly,
     demo: {
-      eventSlug: slug,
-      eventTitle,
+      ...scopeOptions,
       isAutoHost: false,
       hasSelfPlayer: false,
       playMode,
@@ -376,8 +381,12 @@ export function QuizshowRemotePage() {
     view = { kind: "message", messageKey: "quizshow:errors.generic" };
   else if (!isOrganizer)
     view = { kind: "message", messageKey: "quizshow:errors.not_organiser" };
-  else if (!controller.isDemo && sessionId === null)
-    view = { kind: "message", messageKey: "quizshow:remote.noGame" };
+  // A demo game with no open lobby has no session to drive either; the demo event always has one.
+  else if (
+    sessionId === null &&
+    (!controller.isDemo || hostSession.scope.kind === "game")
+  )
+    view = { kind: "message", messageKey: hostSession.noGameKeys.remote };
   else if (state.status === "refused")
     view = { kind: "message", messageKey: refusalKeyOf(state.refusalCode) };
   else if (session !== null) view = { kind: "console", session };
@@ -410,13 +419,18 @@ export function QuizshowRemotePage() {
             transition={{ duration: reducedMotion ? 0 : 0.2 }}
           >
             {view.kind === "message" && (
-              <RemoteMessage messageKey={view.messageKey} slug={slug} />
+              <RemoteMessage
+                messageKey={view.messageKey}
+                backPath={hostSession.backPath}
+                backLabelKey={hostSession.backLabelKey}
+              />
             )}
             {view.kind === "console" && (
               <RemoteConsole
                 controller={controller}
                 session={view.session}
-                slug={slug}
+                backPath={hostSession.backPath}
+                backLabelKey={hostSession.backLabelKey}
                 onBarHeightChange={setBarHeight}
               />
             )}
@@ -425,4 +439,10 @@ export function QuizshowRemotePage() {
       </main>
     </div>
   );
+}
+
+export function QuizshowRemotePage() {
+  const params = useParams();
+  const hostSession = useQuizshowEventSession(params.slug);
+  return <QuizshowRemoteView hostSession={hostSession} />;
 }

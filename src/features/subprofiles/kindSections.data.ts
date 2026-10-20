@@ -58,6 +58,7 @@ export const KIND_SECTIONS: Record<SubprofileKind, SubprofileSection[]> = {
   game_designer: ["games", "jams"],
   artist_3d: ["models", "clients"],
   printmaker: ["editions", "workshops"],
+  architect: ["built_work", "projects", "competitions"],
   // page (new kinds)
   journalist: ["reporting", "bylines"],
   poet: ["poems", "readings"],

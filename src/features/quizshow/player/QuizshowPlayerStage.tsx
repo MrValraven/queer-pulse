@@ -21,6 +21,7 @@ import { QuizshowPartyReveal } from "./QuizshowPartyReveal";
 import { QuizshowPlayerParty } from "./QuizshowPlayerParty";
 import { QuizshowPlayerQuestion } from "./QuizshowPlayerQuestion";
 import { QuizshowPlayerReveal } from "./QuizshowPlayerReveal";
+import { QuizshowReportGameButton } from "./QuizshowReportGameButton";
 import { phoneScoresOf } from "./quizshowPhoneScores";
 import { entrantTotalOf, outcomeKeyOf } from "./quizshowRevealOutcome";
 import { vibrateForReveal } from "./quizshowVibrate";
@@ -37,6 +38,15 @@ const ANNOUNCED_PHASES: readonly QuizshowPhase[] = [
   "scores",
   "leaderboard",
   "podium",
+];
+
+const REPORTABLE_PHASES: readonly QuizshowPhase[] = [
+  "read",
+  "open",
+  "write",
+  "review",
+  "vote",
+  "reveal",
 ];
 
 /** Buzzes once per reveal phase, once the player's own result is in, unless motion is reduced. */
@@ -212,6 +222,10 @@ export function QuizshowPlayerStage({
     phase === "podium" && player.podium === null
       ? `${phaseId}:waiting`
       : phaseId;
+  const isReportShown =
+    player.kind === "game" &&
+    player.me !== null &&
+    REPORTABLE_PHASES.includes(phase);
   return (
     <div className={styles.stage}>
       <span role="status" className={styles.visuallyHidden}>
@@ -230,6 +244,12 @@ export function QuizshowPlayerStage({
           {body}
         </m.div>
       </AnimatePresence>
+      <Collapse isOpen={isReportShown}>
+        <QuizshowReportGameButton
+          sessionId={player.sessionId}
+          quizTitle={player.quizTitle}
+        />
+      </Collapse>
     </div>
   );
 }

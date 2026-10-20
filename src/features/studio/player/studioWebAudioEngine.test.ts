@@ -55,6 +55,16 @@ class FakeParam {
   linearRampToValueAtTime = vi.fn((value: number) => {
     this.value = value;
   });
+  setValueCurveAtTime = vi.fn((curve: Float32Array) => {
+    this.value = curve[curve.length - 1] ?? this.value;
+  });
+}
+
+/** The curve a param last received from setValueCurveAtTime. */
+function lastCurve(param: FakeParam): Float32Array {
+  const call = param.setValueCurveAtTime.mock.lastCall;
+  if (!call) throw new Error("no value curve was scheduled");
+  return call[0];
 }
 
 /** Like a browser, an element routed into any context (closed or not) can
@@ -375,19 +385,36 @@ describe("createWebAudioEngine: preload, handover, crossfade", () => {
     expect(events).toEqual([{ type: "time", seconds: 3 }]);
   });
 
-  it("crossfades with linear ramps and clears the outgoing deck after the fade", async () => {
+  it("crossfades with equal-power curves and clears the outgoing deck after the fade", async () => {
     const { engine, decks, deckGains, runTimers, events } = setup();
     engine.unlock();
     engine.load("https://stream.example/a", 0, 0);
     await engine.play();
     engine.preload("https://stream.example/b", 0);
     engine.handover({ crossfadeSeconds: 6 });
-    expect(
-      deckGains(1).fade.gain.linearRampToValueAtTime,
-    ).toHaveBeenLastCalledWith(1, 6);
-    expect(
-      deckGains(0).fade.gain.linearRampToValueAtTime,
-    ).toHaveBeenLastCalledWith(0, 6);
+    const incomingParam = deckGains(1).fade.gain;
+    const outgoingParam = deckGains(0).fade.gain;
+    const incomingCurve = lastCurve(incomingParam);
+    const outgoingCurve = lastCurve(outgoingParam);
+    expect(incomingParam.setValueCurveAtTime).toHaveBeenLastCalledWith(
+      incomingCurve,
+      0,
+      6,
+    );
+    expect(outgoingParam.setValueCurveAtTime).toHaveBeenLastCalledWith(
+      outgoingCurve,
+      0,
+      6,
+    );
+    expect(incomingCurve[0]).toBe(0);
+    expect(incomingCurve[incomingCurve.length - 1]).toBe(1);
+    expect(outgoingCurve[0]).toBe(1);
+    expect(outgoingCurve[outgoingCurve.length - 1]).toBe(0);
+    expect(outgoingCurve).toHaveLength(incomingCurve.length);
+    incomingCurve.forEach((incomingLevel, index) => {
+      const outgoingLevel = outgoingCurve[index] ?? Number.NaN;
+      expect(incomingLevel ** 2 + outgoingLevel ** 2).toBeCloseTo(1, 5);
+    });
     expect(decks[0].src).toBe("https://stream.example/a");
     events.length = 0;
     decks[0].dispatchEvent(new Event("ended"));
@@ -432,6 +459,31 @@ describe("createWebAudioEngine: preload, handover, crossfade", () => {
     expect(decks[0].src).toBe("https://stream.example/a");
     runTimers();
     expect(decks[0].src).toBe("");
+  });
+
+  it("falls back to linear ramps when the browser refuses value curves", async () => {
+    const { engine, deckGains } = setup();
+    engine.unlock();
+    engine.load("https://stream.example/a", 0, 0);
+    await engine.play();
+    engine.preload("https://stream.example/b", 0);
+    const incomingParam = deckGains(1).fade.gain;
+    const outgoingParam = deckGains(0).fade.gain;
+    for (const param of [incomingParam, outgoingParam])
+      param.setValueCurveAtTime.mockImplementation(() => {
+        throw new DOMException("curves refused", "NotSupportedError");
+      });
+    engine.handover({ crossfadeSeconds: 6 });
+    expect(incomingParam.setValueAtTime).toHaveBeenLastCalledWith(0, 0);
+    expect(incomingParam.linearRampToValueAtTime).toHaveBeenLastCalledWith(
+      1,
+      6,
+    );
+    expect(outgoingParam.setValueAtTime).toHaveBeenLastCalledWith(1, 0);
+    expect(outgoingParam.linearRampToValueAtTime).toHaveBeenLastCalledWith(
+      0,
+      6,
+    );
   });
 
   it("clamps the track gain to the spec bounds", () => {

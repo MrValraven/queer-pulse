@@ -8,6 +8,7 @@ import {
 import {
   demoApplyListeningPatch,
   demoConfirmNewAudio,
+  demoGaplessAfterTrackId,
   demoHasAnalysis,
   demoStoredListening,
   demoStreamAnalysis,
@@ -121,5 +122,33 @@ describe("demo listening PATCH", () => {
       chapters: null,
     });
     expect(demoHasAnalysis(audio.id)).toBe(false);
+  });
+});
+
+describe("demo gapless link", () => {
+  it("seeds Devoção alone as a release that plays without gaps", () => {
+    const gapless = [...DEMO_RELEASES, ...DEMO_OWNER_RELEASES].filter(
+      (release) => release.isGapless,
+    );
+    expect(gapless.map((release) => release.title)).toEqual(["Devoção"]);
+  });
+
+  it("names the nearest earlier track on Devoção, none for its first", () => {
+    expect(demoGaplessAfterTrackId("demo-track-mariana-3-01")).toBeNull();
+    expect(demoGaplessAfterTrackId("demo-track-mariana-3-02")).toBe(
+      "demo-track-mariana-3-01",
+    );
+  });
+
+  it("skips the withheld second track of Devoção, as the server does", () => {
+    // Track 2 is held offline by claims, so a listener's queue runs 1 then 3.
+    expect(demoGaplessAfterTrackId("demo-track-mariana-3-03")).toBe(
+      "demo-track-mariana-3-01",
+    );
+  });
+
+  it("answers null for a release with gaps and for an unknown track", () => {
+    expect(demoGaplessAfterTrackId("demo-track-mariana-2-02")).toBeNull();
+    expect(demoGaplessAfterTrackId("demo-track-unknown-01")).toBeNull();
   });
 });

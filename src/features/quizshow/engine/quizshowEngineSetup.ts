@@ -19,6 +19,7 @@ import {
   type QuizshowSessionStatus,
   type QuizshowTeamColorKey,
 } from "../../../shared/contracts/quizshow";
+import { hasAdultsRound } from "../api/quizshowDemoQuizzes";
 import { quizshowRandomFrom, type QuizshowRandom } from "./quizshowRandom";
 import type {
   QuizshowEngineOptions,
@@ -118,6 +119,8 @@ export function createQuizshowEngineState(
     sessionId: options.sessionId,
     eventSlug: options.eventSlug,
     eventTitle: options.eventTitle,
+    gameId: options.gameId ?? null,
+    isAdultsOnly: (options.isAdultsOnly ?? false) || hasAdultsRound(quiz),
     joinCode: options.joinCode,
     quiz,
     shuffledOrderOptions,

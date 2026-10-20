@@ -19,6 +19,8 @@ export const QUIZSHOW_DEMO_IMPORT_SOURCES: QuizshowImportSource[] = [
     questionCount: 15,
     hasAdultsRounds: false,
     isSameSeries: true,
+    kind: "event",
+    gameId: null,
   },
   {
     eventSlug: "open-clinic-night",
@@ -29,6 +31,8 @@ export const QUIZSHOW_DEMO_IMPORT_SOURCES: QuizshowImportSource[] = [
     questionCount: 8,
     hasAdultsRounds: false,
     isSameSeries: false,
+    kind: "event",
+    gameId: null,
   },
 ];
 

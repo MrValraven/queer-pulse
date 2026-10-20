@@ -6,31 +6,41 @@ import type {
   QuizshowImportSource,
   QuizshowQuizResponse,
 } from "../../../shared/contracts/quizshow";
-import { useQuizshowImportSources } from "../api/useQuizshowQuiz";
+import {
+  isEventImportSource,
+  useQuizshowImportSources,
+  type QuizshowEventImportSource,
+} from "../api/useQuizshowQuiz";
+import type { QuizshowScope } from "../quizshowScope";
 import { QuizshowImportSourcePicker } from "./QuizshowImportSourcePicker";
 import { QuizshowPackPicker } from "./QuizshowPackPicker";
 import { useQuizshowImport } from "./useQuizshowImport";
 import styles from "./QuizshowImport.module.css";
 
 interface QuizshowImportButtonsProps {
-  slug: string;
+  scope: QuizshowScope;
   hasQuiz: boolean;
-  eventStartAt: Date;
+  eventStartAt: Date | null;
   isAdultsEvent: boolean;
   variant: "empty" | "toolbar";
   onImported?: (response: QuizshowQuizResponse) => void;
+  /** Opens this picker on mount, once (the empty My games "Copy" hand-off). */
+  initialOpenPicker?: QuizshowImportPicker | null;
 }
 
-type OpenPicker = "pack" | "event" | null;
+export type QuizshowImportPicker = "pack" | "sources";
 
 /** The first source from this event's series that ran before this event. */
 function findSeriesSource(
   items: QuizshowImportSource[] | undefined,
   eventStartAt: Date,
-): QuizshowImportSource | undefined {
-  return items?.find(
-    (source) => source.isSameSeries && new Date(source.startAt) < eventStartAt,
-  );
+): QuizshowEventImportSource | undefined {
+  return items
+    ?.filter(isEventImportSource)
+    .find(
+      (source) =>
+        source.isSameSeries && new Date(source.startAt) < eventStartAt,
+    );
 }
 
 /**
@@ -38,26 +48,34 @@ function findSeriesSource(
  * its own (the empty state adds "Start blank"). The two pickers portal out.
  */
 export function QuizshowImportButtons({
-  slug,
+  scope,
   hasQuiz,
   eventStartAt,
   isAdultsEvent,
   variant,
   onImported,
+  initialOpenPicker = null,
 }: QuizshowImportButtonsProps) {
   const { t } = useTranslation();
   const seriesHintId = useId();
   const fmt = useFormat();
-  const [openPicker, setOpenPicker] = useState<OpenPicker>(null);
-  const { requestImport, confirmDialog, isPending } = useQuizshowImport(slug, {
+  const [openPicker, setOpenPicker] = useState<QuizshowImportPicker | null>(
+    initialOpenPicker,
+  );
+  const { requestImport, confirmDialog, isPending } = useQuizshowImport(scope, {
     hasQuiz,
     onImported,
   });
   const isEmptyVariant = variant === "empty";
-  const sources = useQuizshowImportSources(slug, { isEnabled: isEmptyVariant });
-  const seriesSource = isEmptyVariant
-    ? findSeriesSource(sources.data?.items, eventStartAt)
-    : undefined;
+  const isSeriesShortcutAllowed =
+    isEmptyVariant && scope.kind === "event" && eventStartAt !== null;
+  const sources = useQuizshowImportSources(scope, {
+    isEnabled: isSeriesShortcutAllowed,
+  });
+  const seriesSource =
+    isSeriesShortcutAllowed && eventStartAt !== null
+      ? findSeriesSource(sources.data?.items, eventStartAt)
+      : undefined;
   const isSeriesBlocked = Boolean(
     seriesSource?.hasAdultsRounds && !isAdultsEvent,
   );
@@ -88,7 +106,7 @@ export function QuizshowImportButtons({
             </Button>
             <span id={seriesHintId} className={styles.seriesHint}>
               {t("quizshow:builder.empty.fromSeriesHint", {
-                event: seriesSource.eventTitle,
+                event: seriesSource.eventTitle ?? "",
                 date: fmt.date(new Date(seriesSource.startAt), {
                   dateStyle: "medium",
                 }),
@@ -110,9 +128,13 @@ export function QuizshowImportButtons({
       <Button
         variant="ghost"
         aria-disabled={isPending}
-        onClick={() => setOpenPicker("event")}
+        onClick={() => setOpenPicker("sources")}
       >
-        {t("quizshow:builder.empty.fromEvent")}
+        {t(
+          scope.kind === "game"
+            ? "quizshow:import.fromCopy"
+            : "quizshow:builder.empty.fromEvent",
+        )}
       </Button>
       <QuizshowPackPicker
         isOpen={openPicker === "pack"}
@@ -123,13 +145,13 @@ export function QuizshowImportButtons({
         }}
       />
       <QuizshowImportSourcePicker
-        slug={slug}
-        isOpen={openPicker === "event"}
+        scope={scope}
+        isOpen={openPicker === "sources"}
         isAdultsEvent={isAdultsEvent}
         onClose={() => setOpenPicker(null)}
-        onPick={(eventSlug) => {
+        onPick={(input) => {
           setOpenPicker(null);
-          requestImport({ from: "event", eventSlug });
+          requestImport(input);
         }}
       />
       {confirmDialog}

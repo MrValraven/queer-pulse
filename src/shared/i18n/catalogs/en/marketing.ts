@@ -3412,6 +3412,8 @@ export const marketing: Catalog = {
   "changelog.release.count.infrastructure_other":
     "{count} infrastructure changes",
   // Release headlines, one per shipping day (see changelogReleases.ts).
+  "changelog.releases.2026-10-20.headline":
+    "Architect personas, calendar-style feed events, and phone menus that close on page change.",
   "changelog.releases.2026-10-19.headline":
     "Tattoo artists get bookable pages, Studio music plays in chats, plus copyright claims.",
   "changelog.releases.2026-10-14.headline":
@@ -3564,6 +3566,46 @@ export const marketing: Catalog = {
     "QueerPulse goes live with its core pages and community navigation.",
   "changelog.tag.report": "Open the report form",
   "changelog.tag.changelog": "See the changelog",
+  "changelog.entries.architect-personas.title":
+    "Architects get their own persona",
+  "changelog.entries.architect-personas.body":
+    "Built work, projects, competitions and awards, for buildings, interiors, landscape and cities.",
+  "changelog.entries.feed-upcoming-calendar-tiles.title":
+    "Upcoming events in the feed read like a calendar",
+  "changelog.entries.feed-upcoming-calendar-tiles.body":
+    "Each event gets a date tile, today stands out in plum, and the line below shows the day, time and place.",
+  "changelog.entries.feed-event-cards-show-date.title":
+    "Event cards in the feed show when the event happens",
+  "changelog.entries.feed-event-cards-show-date.body":
+    "The day and time replace the posted date, and past events say when they took place.",
+  "changelog.entries.events-hide-empty-highlights.title":
+    "Events hides the highlights row when it has nothing to show",
+  "changelog.entries.events-hide-empty-highlights.body":
+    "With one upcoming event, the Worth showing up for heading no longer sits above an empty grid.",
+  "changelog.entries.studio-creator-phone-layout.title":
+    "Studio's creator pages fit a phone",
+  "changelog.entries.studio-creator-phone-layout.body":
+    "The top bar scrolls away, cards use the full width and the release button stays inside its card.",
+  "changelog.entries.studio-headers-fit.title":
+    "Studio headers fit their text again",
+  "changelog.entries.studio-headers-fit.body":
+    "Album and playlist pages keep Play and Shuffle on one row on tablets, and the QueerPulse wordmark has no gap.",
+  "changelog.entries.studio-listening-sidebar.title":
+    "Studio's sidebar is for listening",
+  "changelog.entries.studio-listening-sidebar.body":
+    "Your playlists now fill the sidebar, and creator tools live in your profile menu.",
+  "changelog.entries.studio-play-without-gaps.title":
+    "Releases can play without gaps",
+  "changelog.entries.studio-play-without-gaps.body":
+    "Crossfade now blends album tracks at a steady volume, and marked live albums and mixes run straight through.",
+  "changelog.entries.studio-waveform-shows-loud-songs.title":
+    "Loud songs get a real waveform in Studio",
+  "changelog.entries.studio-waveform-shows-loud-songs.body":
+    "Waveforms follow how loud each moment of a song is, so mastered tracks show their quiet and busy parts.",
+  "changelog.entries.nav-closes-on-page-change.title":
+    "Phone menus close when you change page",
+  "changelog.entries.nav-closes-on-page-change.body":
+    "Tap a tab or the bell with the You or More menu open and it slides shut as the new page opens.",
   "changelog.entries.community-giving.title": "Communities get a Support tab",
   "changelog.entries.community-giving.body":
     "Owners list donation links, MB WAY numbers and IBANs, and anyone can open or copy them in one tap.",

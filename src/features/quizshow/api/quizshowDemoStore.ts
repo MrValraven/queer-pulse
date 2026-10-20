@@ -1,4 +1,3 @@
-import { ApiError } from "../../../shared/api/client";
 import {
   QUIZSHOW_JOIN_CODE_PATTERN,
   type QuizshowImportInput,
@@ -8,14 +7,11 @@ import {
   type QuizshowLiveSessionRef,
   type QuizshowOpenSessionInput,
   type QuizshowOpenSessionResponse,
-  type QuizshowQuestion,
+  type QuizshowPlayMode,
   type QuizshowQuiz,
   type QuizshowQuizInput,
-  type QuizshowQuizProblem,
   type QuizshowQuizResponse,
   type QuizshowResultsResponse,
-  type QuizshowRound,
-  type QuizshowStarterPack,
   type QuizshowStarterPackCard,
   type QuizshowStarterPackKey,
 } from "../../../shared/contracts/quizshow";
@@ -23,12 +19,28 @@ import {
   QUIZSHOW_DEMO_JOIN_CODE,
   QUIZSHOW_DEMO_SESSION_ID,
 } from "../quizshow.constants";
-import {
-  isStructuralProblem,
-  quizshowProblemsFor,
-  type QuizshowLocalProblem,
-} from "../builder/quizshowValidation";
 import { QUIZSHOW_STARTER_PACKS } from "../demo/quizshowStarterPacks.data";
+import {
+  demoGameIdForSession,
+  demoGameLiveSession,
+  demoGameSourceCopy,
+  demoGameSourcesForEvent,
+  demoJoinGame,
+  resetQuizshowDemoGames,
+} from "./quizshowDemoGames";
+import {
+  demoAssertShape,
+  demoCompletenessProblems,
+  demoDefaultPack,
+  demoEventQuizzesBySlug,
+  demoEventSourceCopy,
+  demoPackCopy,
+  demoRefusal,
+  hasAdultsRound,
+  quizFromInput,
+  type DemoQuizBody,
+  type DemoQuizCopy,
+} from "./quizshowDemoQuizzes";
 import {
   QUIZSHOW_DEMO_IMPORT_SOURCES,
   QUIZSHOW_DEMO_LIVE_SLUG,
@@ -36,14 +48,16 @@ import {
   QUIZSHOW_DEMO_RESULTS_SLUG,
 } from "./quizshowDemoStore.data";
 
-type QuizBody = Omit<QuizshowQuizInput, "expectedUpdatedAt">;
+// Moved to quizshowDemoQuizzes.ts; re-exported so QuizshowDryRun keeps its import.
+export { quizFromInput };
 
 const DEMO_EVENT_TITLE = "Pride brunch";
-const DEFAULT_QUIZ_PACK_KEY: QuizshowStarterPackKey = "pride_history";
 const DEFAULT_QUIZ_UPDATED_AT = "2026-10-01T10:00:00.000Z";
+const EVENT_ADULTS_CODE = "quizshow_adults_round_needs_adults_event";
 
 // Module scope on purpose: the demo keeps what a tab saved until it reloads.
-const quizzesBySlug = new Map<string, QuizshowQuiz>();
+// The event quizzes live in quizshowDemoQuizzes.ts so the games store can copy them.
+const quizzesBySlug = demoEventQuizzesBySlug;
 const liveSessionsBySlug = new Map<string, QuizshowLiveSessionRef>();
 const deletedResultsSlugs = new Set<string>();
 let saveCounter = 0;
@@ -53,78 +67,7 @@ export function resetQuizshowDemoStore(): void {
   liveSessionsBySlug.clear();
   deletedResultsSlugs.clear();
   saveCounter = 0;
-}
-
-function refusal(
-  status: number,
-  code: string,
-  details: Record<string, unknown> = {},
-): ApiError {
-  return new ApiError(status, code, {
-    statusCode: status,
-    code,
-    message: code,
-    ...details,
-  });
-}
-
-export function quizFromInput(
-  input: QuizBody,
-  options: {
-    idPrefix: string;
-    updatedAt: string;
-    starterPackKey: QuizshowStarterPackKey | null;
-  },
-): QuizshowQuiz {
-  const rounds: QuizshowRound[] = input.rounds.map((round, roundIndex) => {
-    const roundId = `${options.idPrefix}-r${roundIndex}`;
-    const questions: QuizshowQuestion[] = round.questions.map(
-      (question, questionIndex) => ({
-        ...question,
-        id: `${roundId}-q${questionIndex}`,
-        mediaUrl: question.mediaRef,
-      }),
-    );
-    return { ...round, id: roundId, questions };
-  });
-  return {
-    title: input.title,
-    languages: input.languages,
-    screenLanguage: input.screenLanguage,
-    starterPackKey: options.starterPackKey,
-    updatedAt: options.updatedAt,
-    rounds,
-  };
-}
-
-function defaultPack(): QuizshowStarterPack {
-  const pack =
-    QUIZSHOW_STARTER_PACKS.find(
-      (candidate) => candidate.key === DEFAULT_QUIZ_PACK_KEY,
-    ) ?? QUIZSHOW_STARTER_PACKS[0];
-  if (!pack) throw refusal(404, "quizshow_pack_not_found");
-  return pack;
-}
-
-function isServerProblem(
-  problem: QuizshowLocalProblem,
-): problem is QuizshowQuizProblem {
-  return problem.code !== "adults_round_needs_adults_event";
-}
-
-function bodyOf(quiz: QuizshowQuiz): QuizBody {
-  return {
-    title: quiz.title,
-    languages: quiz.languages,
-    screenLanguage: quiz.screenLanguage,
-    rounds: quiz.rounds,
-  };
-}
-
-function completenessProblemsOf(quiz: QuizshowQuiz): QuizshowQuizProblem[] {
-  return quizshowProblemsFor(bodyOf(quiz), { isAdultsEvent: false })
-    .filter((problem) => !isStructuralProblem(problem.code))
-    .filter(isServerProblem);
+  resetQuizshowDemoGames();
 }
 
 function hasKeptResults(slug: string): boolean {
@@ -135,7 +78,7 @@ function responseFor(slug: string): QuizshowQuizResponse {
   const quiz = quizzesBySlug.get(slug) ?? null;
   return {
     quiz,
-    problems: quiz ? completenessProblemsOf(quiz) : [],
+    problems: quiz ? demoCompletenessProblems(quiz) : [],
     isAdultsEvent: false,
     liveSession: liveSessionsBySlug.get(slug) ?? null,
     hasResults: hasKeptResults(slug),
@@ -149,7 +92,7 @@ function nextIdPrefix(slug: string): string {
 
 function storeQuiz(
   slug: string,
-  body: QuizBody,
+  body: DemoQuizBody,
   starterPackKey: QuizshowStarterPackKey | null,
 ): void {
   quizzesBySlug.set(
@@ -162,17 +105,11 @@ function storeQuiz(
   );
 }
 
-function assertNoStructuralProblems(body: QuizBody): void {
-  const structuralProblems = quizshowProblemsFor(body, {
-    isAdultsEvent: false,
-  }).filter((problem) => isStructuralProblem(problem.code));
-  const shapeProblems = structuralProblems.filter(isServerProblem);
-  if (shapeProblems.length > 0) {
-    throw refusal(422, "quizshow_quiz_invalid", { problems: shapeProblems });
-  }
-  if (structuralProblems.length > 0) {
-    throw refusal(422, "quizshow_adults_round_needs_adults_event");
-  }
+function assertNoStructuralProblems(body: DemoQuizBody): void {
+  demoAssertShape(body, {
+    isAdultsAllowed: false,
+    adultsCode: EVENT_ADULTS_CODE,
+  });
 }
 
 export function demoGetQuiz(slug: string): QuizshowQuizResponse {
@@ -185,7 +122,7 @@ export function demoPutQuiz(
 ): QuizshowQuizResponse {
   const stored = quizzesBySlug.get(slug);
   if (body.expectedUpdatedAt !== (stored?.updatedAt ?? null)) {
-    throw refusal(409, "quizshow_quiz_changed", {
+    throw demoRefusal(409, "quizshow_quiz_changed", {
       updatedAt: stored?.updatedAt ?? null,
     });
   }
@@ -200,38 +137,35 @@ export function demoImportQuiz(
   slug: string,
   body: QuizshowImportInput,
 ): QuizshowQuizResponse {
-  if (body.from === "pack") {
-    const pack = QUIZSHOW_STARTER_PACKS.find(
-      (candidate) => candidate.key === body.packKey,
-    );
-    if (!pack) throw refusal(404, "quizshow_pack_not_found");
-    storeQuiz(slug, pack.quiz, pack.key);
-    return responseFor(slug);
-  }
-  if (body.eventSlug === slug) throw refusal(422, "quizshow_import_same_event");
-  const source = QUIZSHOW_DEMO_IMPORT_SOURCES.find(
-    (candidate) => candidate.eventSlug === body.eventSlug,
-  );
-  if (!source) throw refusal(404, "quizshow_import_source_not_found");
-  const copiedQuiz = quizzesBySlug.get(source.eventSlug);
-  const fallbackPack = defaultPack();
-  storeQuiz(
-    slug,
-    copiedQuiz
-      ? bodyOf(copiedQuiz)
-      : { ...fallbackPack.quiz, title: source.quizTitle },
-    copiedQuiz ? copiedQuiz.starterPackKey : null,
-  );
+  const copy = eventImportCopyOf(slug, body);
+  assertNoStructuralProblems(copy.body);
+  storeQuiz(slug, copy.body, copy.starterPackKey);
   return responseFor(slug);
 }
 
+function eventImportCopyOf(
+  slug: string,
+  body: QuizshowImportInput,
+): DemoQuizCopy {
+  if (body.from === "pack") return demoPackCopy(body.packKey);
+  if (body.from === "game") return demoGameSourceCopy(body.gameId);
+  if (body.eventSlug === slug) {
+    throw demoRefusal(422, "quizshow_import_same_event");
+  }
+  return demoEventSourceCopy(body.eventSlug);
+}
+
+/** The other demo events first, then the member's games. */
 export function demoImportSources(slug: string): {
   items: QuizshowImportSource[];
 } {
   return {
-    items: QUIZSHOW_DEMO_IMPORT_SOURCES.filter(
-      (source) => source.eventSlug !== slug,
-    ),
+    items: [
+      ...QUIZSHOW_DEMO_IMPORT_SOURCES.filter(
+        (source) => source.eventSlug !== slug,
+      ),
+      ...demoGameSourcesForEvent(),
+    ],
   };
 }
 
@@ -259,20 +193,20 @@ export function demoOpenSession(
   body: QuizshowOpenSessionInput,
 ): QuizshowOpenSessionResponse {
   const quiz = quizzesBySlug.get(slug);
-  if (!quiz) throw refusal(404, "quizshow_quiz_not_found");
-  const problems = completenessProblemsOf(quiz);
+  if (!quiz) throw demoRefusal(404, "quizshow_quiz_not_found");
+  const problems = demoCompletenessProblems(quiz);
   if (problems.length > 0) {
-    throw refusal(422, "quizshow_quiz_incomplete", { problems });
+    throw demoRefusal(422, "quizshow_quiz_incomplete", { problems });
   }
   if (liveSessionsBySlug.has(slug)) {
-    throw refusal(409, "quizshow_session_already_open", {
+    throw demoRefusal(409, "quizshow_session_already_open", {
       sessionId: QUIZSHOW_DEMO_SESSION_ID,
       joinCode: QUIZSHOW_DEMO_JOIN_CODE,
     });
   }
   if (hasKeptResults(slug)) {
     if (!body.shouldReplaceResults)
-      throw refusal(409, "quizshow_results_exist");
+      throw demoRefusal(409, "quizshow_results_exist");
     deletedResultsSlugs.add(slug);
   }
   liveSessionsBySlug.set(slug, {
@@ -293,24 +227,40 @@ export function demoOpenSession(
 export function demoJoin(body: QuizshowJoinInput): QuizshowJoinResponse {
   const normalizedCode = body.code.toUpperCase().replace(/[\s-]/g, "");
   if (!QUIZSHOW_JOIN_CODE_PATTERN.test(normalizedCode)) {
-    throw refusal(404, "quizshow_join_code_not_found");
+    throw demoRefusal(404, "quizshow_join_code_not_found");
   }
+  const gameJoin = demoJoinGame(normalizedCode);
+  if (gameJoin) return gameJoin;
+  const eventQuiz = demoQuizFor(QUIZSHOW_DEMO_LIVE_SLUG);
   return {
     sessionId: QUIZSHOW_DEMO_SESSION_ID,
+    kind: "event",
     eventSlug: QUIZSHOW_DEMO_LIVE_SLUG,
     eventTitle: DEMO_EVENT_TITLE,
+    quizTitle: eventQuiz.title,
+    isAdultsOnly: hasAdultsRound(eventQuiz),
+    host: null,
     status: "lobby",
     isRejoin: false,
   };
 }
 
+/** The play mode of the lobby a demo join landed in: the game's own lobby, else the event's. */
+export function demoJoinPlayMode(join: QuizshowJoinResponse): QuizshowPlayMode {
+  const gameId = demoGameIdForSession(join.sessionId);
+  if (gameId !== null) return demoGameLiveSession(gameId)?.playMode ?? "solo";
+  return liveSessionsBySlug.get(join.eventSlug ?? "")?.playMode ?? "solo";
+}
+
 export function demoResults(slug: string): QuizshowResultsResponse {
-  if (!hasKeptResults(slug)) throw refusal(404, "quizshow_results_not_found");
+  if (!hasKeptResults(slug))
+    throw demoRefusal(404, "quizshow_results_not_found");
   return structuredClone(QUIZSHOW_DEMO_RESULTS);
 }
 
 export function demoDeleteResults(slug: string): void {
-  if (!hasKeptResults(slug)) throw refusal(404, "quizshow_results_not_found");
+  if (!hasKeptResults(slug))
+    throw demoRefusal(404, "quizshow_results_not_found");
   deletedResultsSlugs.add(slug);
 }
 
@@ -318,7 +268,7 @@ export function demoDeleteResults(slug: string): void {
 export function demoQuizFor(slug: string): QuizshowQuiz {
   const stored = quizzesBySlug.get(slug);
   if (stored) return structuredClone(stored);
-  const pack = defaultPack();
+  const pack = demoDefaultPack();
   return quizFromInput(pack.quiz, {
     idPrefix: `demo-${pack.key}`,
     updatedAt: DEFAULT_QUIZ_UPDATED_AT,

@@ -153,12 +153,16 @@
 /* Phones: row one is the brand, the Creator chip and the avatar; row two is
    the sub-nav (wrapping to a second line on the narrowest screens) with the public
    page link at its end, which drops to a third row when the nav fills the
-   width. Every label stays on one line. */
+   width. Every label stays on one line. That bar is too tall to pin over a
+   form on a phone, so it scrolls away with the page and focus only needs a
+   little room at the top. The selector matches studio.module.css's phone
+   rule, so the two agree whichever stylesheet loads last. */
 @media (--md) {
-  :global(html[data-studio-shell="true"]) {
-    scroll-padding-top: 128px;
+  :global(html[data-studio-shell="true"]:not([data-studio-tabs="true"])) {
+    scroll-padding-top: 16px;
   }
   .topbar {
+    position: relative;
     flex-wrap: wrap;
     column-gap: 10px;
     row-gap: 0;
@@ -203,7 +207,7 @@
   .back {
     order: 3;
     flex: none;
-    margin: 6px 0 0 auto;
+    margin: 2px 0 0 auto;
     padding-block: 4px;
     white-space: nowrap;
   }
@@ -215,6 +219,13 @@
   border-bottom: 1px solid var(--line);
   position: relative;
   overflow: hidden;
+}
+/* Phones: the same 16px side gutter as the body, so the hero lines up with
+   the cards under it. */
+@media (--md) {
+  .hero {
+    padding-inline: 16px;
+  }
 }
 .hero::before {
   content: "";
@@ -386,6 +397,17 @@
   border: 1px solid var(--line);
   border-radius: var(--radius-14);
   padding: 24px 26px;
+}
+/* Phones: a 16px gutter on the page and inside each card leaves the fields
+   and buttons most of a 375px screen. */
+@media (--md) {
+  .body {
+    padding: 20px 16px 32px;
+    gap: 20px;
+  }
+  .card {
+    padding: 20px 16px;
+  }
 }
 .cardH {
   display: flex;
@@ -699,6 +721,12 @@
   margin: 0 auto;
   flex-wrap: wrap;
   list-style: none;
+}
+/* Phones: the body's 16px gutter, so the steps line up with the cards. */
+@media (--md) {
+  .stepper {
+    padding: 20px 16px 0;
+  }
 }
 .step {
   display: flex;
@@ -1565,6 +1593,31 @@ fieldset.field legend {
 .saveStatus {
   margin: 0;
   font-size: var(--text-12);
+  color: var(--text60);
+}
+/* Phones: each button takes the whole row and its label may wrap, so a long
+   one like "Save and continue to tracks" stays inside the card. The save
+   status follows on its own line below. */
+@media (--md) {
+  .stepNav > * {
+    flex: 1 1 100%;
+  }
+  .stepNav > button,
+  .stepNav > a {
+    justify-content: center;
+    white-space: normal;
+    text-align: center;
+    line-height: 1.25;
+  }
+}
+
+/* The draft notice under a Studio editor's save status reads as one quiet
+   block with it: the status line's muted tone, a size close to it, and a
+   little room above. The margin sits on the paragraph, inside the Collapse,
+   so it folds away with the line. */
+.draftNotice p {
+  margin-block-start: 12px;
+  font-size: var(--text-12-5);
   color: var(--text60);
 }
 

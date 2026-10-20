@@ -15,6 +15,7 @@ import { useDeleteQuizshowResults } from "../api/useQuizshowMutations";
 import { useQuizshowResults } from "../api/useQuizshowResults";
 import { quizshowErrorCodeOf, quizshowErrorKeyOf } from "../api/quizshowErrors";
 import { QuizshowShape } from "../QuizshowShape";
+import type { QuizshowScope } from "../quizshowScope";
 import { QuizshowRecap } from "./QuizshowRecap";
 import styles from "./QuizshowEvent.module.css";
 
@@ -133,16 +134,16 @@ function ResultsBody({
 /** The kept podium and the viewer's own placing; organisers also get the recap
  *  and Delete results. Renders nothing once the results are gone. */
 export function QuizshowResultsCard({
-  slug,
+  scope,
   canDelete,
 }: {
-  slug: string;
+  scope: QuizshowScope;
   canDelete: boolean;
 }) {
   const { t } = useTranslation();
   const { showToast } = useToast();
-  const query = useQuizshowResults(slug, { isEnabled: true });
-  const deleteResults = useDeleteQuizshowResults(slug);
+  const query = useQuizshowResults(scope, { isEnabled: true });
+  const deleteResults = useDeleteQuizshowResults(scope);
   const [isConfirming, setIsConfirming] = useState(false);
   const [isDeleted, setIsDeleted] = useState(false);
   const isNotFound =

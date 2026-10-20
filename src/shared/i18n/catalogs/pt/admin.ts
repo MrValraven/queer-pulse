@@ -8916,7 +8916,7 @@ export const admin: Catalog = {
     "Não conseguimos guardar o acesso antecipado. Tenta de novo.",
   "earlyAccess.feature.quizshow.name": "Pulse Live",
   "earlyAccess.feature.quizshow.description":
-    "Jogos de quiz ao vivo nos eventos, para quem apresenta e para quem joga",
+    "Organizar jogos de quiz ao vivo em eventos e em qualquer outro lado. Para jogar basta um código",
   "earlyAccess.page.title": "Acesso <em>antecipado</em>",
   "earlyAccess.page.subtitle":
     "Pessoas a testar funcionalidades antes do lançamento. A administração ativa o acesso na gaveta de cada membro, em Membros.",
@@ -8937,4 +8937,30 @@ export const admin: Catalog = {
   "earlyAccess.roster.revokeConfirm": "Retirar acesso",
   "earlyAccess.roster.loadFailed": "Não conseguimos carregar a lista.",
   "earlyAccess.roster.retry": "Verificar de novo",
+  // ── Pulse Live: reported game (staff tools) ──
+  "moderation.quizshowGame.heading": "Jogo denunciado",
+  "moderation.quizshowGame.body":
+    "Terminar o jogo tira toda a gente do jogo. Apagá-lo remove o jogo e as perguntas de vez",
+  "moderation.quizshowGame.end": "Terminar este jogo",
+  "moderation.quizshowGame.endTitle": "Terminar este jogo?",
+  "moderation.quizshowGame.endBody":
+    "Toda a gente que está a jogar sai do jogo. O jogo em si fica",
+  "moderation.quizshowGame.ended": "Jogo terminado",
+  "moderation.quizshowGame.delete": "Apagar este jogo",
+  "moderation.quizshowGame.deleteTitle": "Apagar este jogo?",
+  "moderation.quizshowGame.deleteBody":
+    "Qualquer lobby aberto termina primeiro e depois o jogo e as perguntas desaparecem de vez",
+  "moderation.quizshowGame.deleted": "Jogo apagado",
+  "moderation.quizshowGame.gone": "Este jogo já não existe",
+  "moderation.quizshowGame.error": "Não resultou. Tenta outra vez",
+  "moderation.action.quizshowGameEnded": "Terminou um jogo do Pulse Live",
+  "moderation.action.quizshowGameDeleted": "Apagou um jogo do Pulse Live",
+  "governance.audit.actionType.quizshow_game_ended":
+    "Jogo do Pulse Live terminado",
+  "governance.audit.actionType.quizshow_game_deleted":
+    "Jogo do Pulse Live apagado",
+  "moderation.quizshowGame.reasonLabel": "Motivo",
+  "moderation.quizshowGame.reasonHint":
+    "Fica guardado no registo de moderação com esta denúncia",
+  "moderation.quizshowGame.reasonRequired": "Escreve primeiro um motivo",
 };

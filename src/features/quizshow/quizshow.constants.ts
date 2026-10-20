@@ -15,3 +15,5 @@ export const QUIZSHOW_DEMO_SESSION_ID = "demo-quizshow-session";
 export const QUIZSHOW_DEMO_JOIN_CODE = "QZ7KP4";
 export const QUIZSHOW_DEMO_TICK_MS = 250;
 export const QUIZSHOW_DEMO_SELF_MEMBER_KEY = "demo-self";
+export const QUIZSHOW_DEMO_GAME_JOIN_CODE = "QG4MW8";
+export const QUIZSHOW_DEMO_GAME_SESSION_PREFIX = "demo-quizshow-game-session-";

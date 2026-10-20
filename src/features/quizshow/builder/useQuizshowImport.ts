@@ -5,10 +5,12 @@ import { useToast } from "../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type {
   QuizshowImportInput,
+  QuizshowImportSource,
   QuizshowQuizResponse,
 } from "../../../shared/contracts/quizshow";
 import { quizshowErrorCodeOf, quizshowErrorKeyOf } from "../api/quizshowErrors";
 import { useImportQuizshowQuiz } from "../api/useQuizshowMutations";
+import type { QuizshowScope } from "../quizshowScope";
 
 interface QuizshowImportApi {
   /** Confirms first when a quiz exists, then imports. */
@@ -17,8 +19,22 @@ interface QuizshowImportApi {
   isPending: boolean;
 }
 
+/** The import body for a listed source, or null when its id field is missing. */
+export function importInputOf(
+  source: QuizshowImportSource,
+): QuizshowImportInput | null {
+  if (source.kind === "game") {
+    return source.gameId === null
+      ? null
+      : { from: "game", gameId: source.gameId };
+  }
+  return source.eventSlug === null
+    ? null
+    : { from: "event", eventSlug: source.eventSlug };
+}
+
 export function useQuizshowImport(
-  slug: string,
+  scope: QuizshowScope,
   options: {
     hasQuiz: boolean;
     /** Called with the server response after a successful import. */
@@ -27,7 +43,7 @@ export function useQuizshowImport(
 ): QuizshowImportApi {
   const { t } = useTranslation();
   const { showToast } = useToast();
-  const importMutation = useImportQuizshowQuiz(slug);
+  const importMutation = useImportQuizshowQuiz(scope);
   const [pendingInput, setPendingInput] = useState<QuizshowImportInput | null>(
     null,
   );

@@ -57,6 +57,11 @@ const SMOKE_PATHS: ReadonlyArray<readonly [string, string]> = [
   ["standalone persona (handle)", "/p/nightform"],
   ["nested linked persona", `${routes.members}/rui/engineering`],
   ["manage volunteer applicants", routes.manageVolunteerApplicants],
+  ["pulse live home", "/play"],
+  ["pulse live game", "/play/games/demo-game-flat-quiz"],
+  ["pulse live game screen", "/play/games/demo-game-flat-quiz/screen"],
+  ["pulse live game remote", "/play/games/demo-game-flat-quiz/remote"],
+  ["pulse live 18+ join", "/play/QG4MW8"],
   ["pulse live player", "/play/QZ7KP4"],
   ["pulse live screen", `${gatheringPath("pride-brunch-jun")}/quizshow/screen`],
 ];

@@ -479,12 +479,4 @@ export const studioShowcase: Catalog = {
   "withdrawn.still.meta.collectionTracks_one": "Coleção · {count} faixa",
   "withdrawn.still.meta.collectionTracks_other": "Coleção · {count} faixas",
   "withdrawn.still.meta.artistCity": "Artista · {city}",
-
-  // ── Rail: library shelf (StudioRail) ──
-  "rail.library.meta.album": "Álbum · {artist}",
-  "rail.library.meta.set": "Set · {artist}",
-  "rail.library.meta.collectionTracks_one": "Coleção · {count} faixa",
-  "rail.library.meta.collectionTracks_other": "Coleção · {count} faixas",
-  "rail.library.meta.mix": "Mix · {artist}",
-  "rail.library.meta.live": "Ao vivo · {venue}",
 };

@@ -82,6 +82,7 @@ describe("release form", () => {
       description: "  Recorded live  ",
       coverKey: "persona-cover/p1/abc.webp",
       buyUrl: "",
+      isGapless: false,
     };
     expect(patchFromForm(form, release)).toEqual({
       genre: "electronic",
@@ -196,6 +197,32 @@ describe("buy link (Studio v3)", () => {
   });
 });
 
+describe("play without gaps", () => {
+  it("starts a new release with gaps between tracks", () => {
+    expect(defaultReleaseForm(undefined).isGapless).toBe(false);
+  });
+
+  it("seeds the box from the release", () => {
+    expect(formFromRelease(release).isGapless).toBe(false);
+    expect(formFromRelease({ ...release, isGapless: true }).isGapless).toBe(
+      true,
+    );
+  });
+
+  it("sends the flag only when it changed", () => {
+    const form = formFromRelease(release);
+    expect(patchFromForm(form, release)).toEqual({});
+    expect(patchFromForm({ ...form, isGapless: true }, release)).toEqual({
+      isGapless: true,
+    });
+    const gapless = { ...release, isGapless: true };
+    expect(patchFromForm(formFromRelease(gapless), gapless)).toEqual({});
+    expect(
+      patchFromForm({ ...formFromRelease(gapless), isGapless: false }, gapless),
+    ).toEqual({ isGapless: false });
+  });
+});
+
 describe("artist kinds in the release form", () => {
   const personaOfKind = (kind: StudioArtistPersonaKind) =>
     ({
@@ -248,8 +275,18 @@ describe("artist kinds in the release form", () => {
       genre: "",
       mood: "",
       sceneId: "",
+      isGapless: false,
     });
     expect(personaSwitchPatch("musician", filled).mood).toBe("calm");
+  });
+
+  it("turns the gapless mark off when switching to a show", () => {
+    const gapless = {
+      ...defaultReleaseForm(personaOfKind("musician")),
+      isGapless: true,
+    };
+    expect(personaSwitchPatch("podcaster", gapless).isGapless).toBe(false);
+    expect(personaSwitchPatch("musician", gapless).isGapless).toBe(true);
   });
 
   it("drops the Spoken word preset when leaving a spoken word persona", () => {

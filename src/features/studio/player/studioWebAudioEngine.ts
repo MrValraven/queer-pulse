@@ -9,6 +9,7 @@ import {
 } from "./studioAudioEngine";
 import {
   createAudioGraph,
+  equalPowerParam,
   gainFromDb,
   preferPlaybackAudioSession,
   rampParam,
@@ -241,12 +242,7 @@ class WebAudioEngine implements StudioAudioEngine {
         ? Math.max(0, mode.crossfadeSeconds)
         : 0;
     if (crossfadeSeconds > 0) {
-      this.setFadeLevel(incoming, {
-        from: 0,
-        to: 1,
-        seconds: crossfadeSeconds,
-      });
-      this.setFadeLevel(previous, { to: 0, seconds: crossfadeSeconds });
+      this.crossfadeDecks(incoming, previous, crossfadeSeconds);
       this.outgoing = {
         deck: previous,
         timerId: this.environment.setTimer(
@@ -697,6 +693,34 @@ class WebAudioEngine implements StudioAudioEngine {
     }
     deck.plainFadeLevel = target.to;
     this.applyPlainVolume(deck);
+  }
+
+  /** The handover's crossfade runs equal-power curves, so the blend keeps
+   *  its loudness through the middle. Every other fade stays linear: the
+   *  sleep timer, loudness, master and restore ramps move one deck, and the
+   *  cut ramps are 30 to 50 ms click guards that start wherever a curve
+   *  left off. */
+  private crossfadeDecks(
+    incoming: Deck,
+    previous: Deck,
+    seconds: number,
+  ): void {
+    const fades = [
+      { deck: incoming, direction: "in" },
+      { deck: previous, direction: "out" },
+    ] as const;
+    for (const { deck, direction } of fades) {
+      if (deck.nodes && this.graph)
+        equalPowerParam(deck.nodes.fade.gain, this.graph.context, {
+          direction,
+          seconds,
+        });
+      else
+        this.setFadeLevel(
+          deck,
+          direction === "in" ? { from: 0, to: 1, seconds } : { to: 0, seconds },
+        );
+    }
   }
 
   /** Without the graph, loudness can only attenuate (element.volume tops out

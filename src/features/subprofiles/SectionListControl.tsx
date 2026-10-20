@@ -39,6 +39,7 @@ export function SectionListControl({ control }: { control: SkinBlockControl }) {
         section={section}
         isInChapter
         isFeatureHidden={control.isFeatureHidden}
+        kind={subprofile.kind}
       />
     </div>
   );

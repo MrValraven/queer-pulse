@@ -17,12 +17,15 @@ export function QuizshowSaveBar({
   isVisible,
   isSaving,
   isSaveBlocked,
+  statusId,
   onSave,
   onDiscard,
 }: {
   isVisible: boolean;
   isSaving: boolean;
   isSaveBlocked: boolean;
+  /** The status line's id, so Open lobby can name it as its blocked reason. */
+  statusId?: string;
   onSave: () => void;
   onDiscard: () => void;
 }) {
@@ -44,7 +47,7 @@ export function QuizshowSaveBar({
           transition={{ duration, ease: EASE }}
         >
           <div className={styles.saveBarInner}>
-            <p className={styles.saveStatus} role="status">
+            <p id={statusId} className={styles.saveStatus} role="status">
               <span className={styles.saveDot} aria-hidden />
               {t("quizshow:save.unsaved")}
             </p>

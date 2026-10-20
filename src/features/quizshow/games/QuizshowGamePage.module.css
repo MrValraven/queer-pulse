@@ -1,0 +1,94 @@
+/* The game page sits on the cream page ground; the nav band is reserved by
+   the shell (base.css), this is only breathing room. The bottom clears the
+   builder's fixed save bar, so the results card never sits under it. */
+.page {
+  padding-block: var(--gap-grid) var(--section-y-96);
+  background: var(--cream);
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-lg);
+  min-width: 0;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+  padding-block-end: var(--gap-lg);
+  border-block-end: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+.back {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--icon-gap-inline);
+  min-height: var(--tap-min);
+  font-size: var(--text-body-sm);
+  font-weight: 600;
+  color: var(--ink-60);
+  text-decoration: none;
+  border-radius: var(--radius-tag);
+  transition: color var(--dur-fast) var(--ease);
+}
+@media (hover: hover) and (pointer: fine) {
+  .back:hover {
+    color: var(--ink);
+  }
+}
+.back:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.titleRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gap-xs) var(--gap-sm);
+  min-width: 0;
+}
+
+.title {
+  min-width: 0;
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: var(--text-title);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--text-strong);
+  overflow-wrap: anywhere;
+}
+
+/* Same treatment as the import picker's adults tag, so 18+ reads the same
+   everywhere in Pulse Live. */
+.adultsTag {
+  padding: 2px 9px;
+  font-size: var(--text-caption);
+  font-weight: 600;
+  color: var(--ink);
+  background: rgba(var(--accent-rgb), 0.14);
+  border-radius: var(--radius-pill);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap-xs);
+}
+
+/* The body's gap alone sits above the results card. */
+.results {
+  padding-block-start: 0;
+}
+
+.skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+}

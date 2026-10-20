@@ -156,16 +156,21 @@ export interface SidebarMember {
   photo?: string;
 }
 
-/** A row in the sidebar's "Upcoming" widget — the live gatherings the viewer is
- *  attending, mapped from the events API in live mode. Demo mode keeps its own
- *  curated rows inside the sidebar component. */
+/** A row in the sidebar's "Upcoming" widget: the live gatherings the viewer is
+ *  attending, mapped from the events API in live mode. Demo mode paints its
+ *  curated rows from `feedSidebarUpcoming.data.ts` through the same row. */
 export interface SidebarGathering {
   /** Router path to the gathering detail page. */
   to: string;
-  /** Start instant — formatted to a date pill at render via `useFormat()`. */
+  /** Start instant, formatted to the calendar tile and meta line at render via
+   *  `useFormat()`. */
   date: Date;
   name: string;
   venue: string;
+  /** IANA zone the host scheduled it in, when the API carries one. The row
+   *  formats `date` through `eventZoneFormat` so the tile shows the event's
+   *  own day and clock. Absent in demo, where the viewer's zone applies. */
+  timezone?: string;
 }
 
 /**

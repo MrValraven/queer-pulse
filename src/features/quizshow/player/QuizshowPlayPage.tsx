@@ -1,11 +1,17 @@
 import { AnimatePresence, m } from "motion/react";
-import { useMemo, type ReactNode } from "react";
-import { useLocation, useParams, useSearchParams } from "react-router-dom";
+import { useMemo, useState, type ReactNode } from "react";
+import {
+  useLocation,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from "react-router-dom";
 import { useAuth } from "../../../app/providers/authContext";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useMotionPrefs } from "../../../app/providers/motionPrefs";
 import { MAIN_CONTENT_ID } from "../../../shared/components/layout/SkipToContentLink";
 import { Button } from "../../../shared/components/ui/Button";
+import { Collapse } from "../../../shared/components/ui/Collapse";
 import { Spinner } from "../../../shared/components/ui/Spinner";
 import {
   QUIZSHOW_ERROR_CODES,
@@ -15,7 +21,8 @@ import {
 } from "../../../shared/contracts/quizshow";
 import { PageMeta } from "../../../shared/seo/PageMeta";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import { demoGetQuiz } from "../api/quizshowDemoStore";
+import { demoGameIdForSession } from "../api/quizshowDemoGames";
+import { demoJoinPlayMode } from "../api/quizshowDemoStore";
 import { quizshowErrorKeyOf } from "../api/quizshowErrors";
 import {
   isJoinCodeShaped,
@@ -30,7 +37,9 @@ import {
   useQuizshowSession,
   type QuizshowSessionController,
 } from "../realtime/useQuizshowSession";
-import { QuizshowCodeForm } from "./QuizshowCodeForm";
+import { QuizshowPlayHome } from "../games/QuizshowPlayHome";
+import { QuizshowAdultConsent } from "./QuizshowAdultConsent";
+import { QuizshowHostCard } from "./QuizshowHostCard";
 import { QuizshowJoinForm } from "./QuizshowJoinForm";
 import styles from "./QuizshowPlay.module.css";
 import { QuizshowPlayerEnd, QuizshowRemovedNotice } from "./QuizshowPlayerEnd";
@@ -38,16 +47,21 @@ import { QuizshowPlayerLobby } from "./QuizshowPlayerLobby";
 import { QuizshowPlayerStage } from "./QuizshowPlayerStage";
 import { usePlayJoin, useRememberedPlace } from "./usePlayJoin";
 
-type PlayScreen = "connecting" | "refused" | "join" | "lobby" | "stage" | "end";
+type PlayScreen =
+  "connecting" | "refused" | "consent" | "join" | "lobby" | "stage" | "end";
 
-function screenOf(controller: QuizshowSessionController): PlayScreen {
+/** `needsConsent`: an 18+ game this player has not joined before and has not confirmed yet. */
+function screenOf(
+  controller: QuizshowSessionController,
+  { needsConsent }: { needsConsent: boolean },
+): PlayScreen {
   const { state } = controller;
   const { session } = state;
   if (isRemovedOf(state) || state.sessionEnd !== null) return "end";
   if (state.status === "refused") return "refused";
   if (session?.cursor.phase === "ended") return "end";
   if (session === null || !isPlayerState(session)) return "connecting";
-  if (session.me === null) return "join";
+  if (session.me === null) return needsConsent ? "consent" : "join";
   const { phase, roundIndex } = session.cursor;
   const isLobbyScreen =
     phase === "lobby" || (phase === "round_intro" && roundIndex === 0);
@@ -103,6 +117,29 @@ function RefusedNotice({
   );
 }
 
+/**
+ * Whether the 18+ step comes before the name step. The join response reads the
+ * flag from the game or event today and the session holds the flag it loaded
+ * with, so either one asks. A rejoin skips it, unless the server asked for it.
+ */
+function needsConsentOf({
+  join,
+  state,
+  hasAcceptedAdultContent,
+  isConsentAskedByServer,
+}: {
+  join: QuizshowJoinResponse;
+  state: QuizshowSessionController["state"];
+  hasAcceptedAdultContent: boolean;
+  isConsentAskedByServer: boolean;
+}): boolean {
+  if (hasAcceptedAdultContent) return false;
+  if (isConsentAskedByServer) return true;
+  const isSessionAdultsOnly =
+    isPlayerState(state.session) && state.session.isAdultsOnly;
+  return (join.isAdultsOnly || isSessionAdultsOnly) && !join.isRejoin;
+}
+
 function PlayGame({ join }: { join: QuizshowJoinResponse }) {
   const { user } = useAuth();
   const { demoMode } = useDemoMode();
@@ -114,11 +151,17 @@ function PlayGame({ join }: { join: QuizshowJoinResponse }) {
   const playMode = useMemo<QuizshowPlayMode>(() => {
     if (!demoMode) return "solo";
     if (isDemoTeamsOverride) return "teams";
-    return demoGetQuiz(join.eventSlug).liveSession?.playMode ?? "solo";
-  }, [demoMode, isDemoTeamsOverride, join.eventSlug]);
+    return demoJoinPlayMode(join);
+  }, [demoMode, isDemoTeamsOverride, join]);
+  const navigate = useNavigate();
+  // The 18+ step is answered once per join; a rejoin already has a player row.
+  const [hasAcceptedAdultContent, setHasAcceptedAdultContent] = useState(false);
+  const [isConsentAskedByServer, setIsConsentAskedByServer] = useState(false);
   const controller = useQuizshowSession({
     sessionId: join.sessionId,
     role: "player",
+    gameId: demoMode ? demoGameIdForSession(join.sessionId) : null,
+    isAdultsOnly: join.isAdultsOnly,
     demo: {
       eventSlug: join.eventSlug,
       eventTitle: join.eventTitle,
@@ -130,15 +173,47 @@ function PlayGame({ join }: { join: QuizshowJoinResponse }) {
     },
   });
   const finalPlace = useRememberedPlace(controller.state);
-  const screen = screenOf(controller);
+  const screen = screenOf(controller, {
+    needsConsent: needsConsentOf({
+      join,
+      state: controller.state,
+      hasAcceptedAdultContent,
+      isConsentAskedByServer,
+    }),
+  });
+  // Outside the keyed fade, so the card stays put from the 18+ step to the name step.
+  const isHostCardShown =
+    join.host !== null && (screen === "consent" || screen === "join");
   return (
     <>
       <QuizshowConnectionBanner status={controller.state.status} />
+      <Collapse isOpen={isHostCardShown}>
+        {join.host !== null && (
+          <QuizshowHostCard host={join.host} quizTitle={join.quizTitle} />
+        )}
+      </Collapse>
       <AnimatePresence mode="wait">
         <Fade key={screen}>
           {screen === "connecting" && <Connecting />}
           {screen === "refused" && <RefusedNotice controller={controller} />}
-          {screen === "join" && <QuizshowJoinForm controller={controller} />}
+          {screen === "consent" && (
+            <QuizshowAdultConsent
+              host={join.host}
+              quizTitle={join.quizTitle}
+              onAccept={() => setHasAcceptedAdultContent(true)}
+              onLeave={() => void navigate(quizshowPlayPath())}
+            />
+          )}
+          {screen === "join" && (
+            <QuizshowJoinForm
+              controller={controller}
+              hasAcceptedAdultContent={hasAcceptedAdultContent}
+              onConsentRequired={() => {
+                setIsConsentAskedByServer(true);
+                setHasAcceptedAdultContent(false);
+              }}
+            />
+          )}
           {screen === "lobby" && (
             <QuizshowPlayerLobby controller={controller} />
           )}
@@ -148,6 +223,7 @@ function PlayGame({ join }: { join: QuizshowJoinResponse }) {
           {screen === "end" && (
             <QuizshowPlayerEnd
               state={controller.state}
+              kind={join.kind}
               eventSlug={join.eventSlug}
               finalPlace={finalPlace}
               onPlayAgain={
@@ -161,7 +237,10 @@ function PlayGame({ join }: { join: QuizshowJoinResponse }) {
   );
 }
 
-/** `/play` asks for a code; `/play/:code` joins that game and walks the player through it. */
+/**
+ * `/play` is the Pulse Live home (the code form, then My games); `/play/:code`
+ * joins that game and walks the player through it, 18+ step included.
+ */
 export function QuizshowPlayPage() {
   const { t } = useTranslation();
   useQuizshowFramelessPage();
@@ -190,10 +269,12 @@ export function QuizshowPlayPage() {
       <AnimatePresence mode="wait">
         <Fade key={viewKey}>
           {viewKey === "joining" && <Connecting />}
-          {viewKey === "removed" && <QuizshowRemovedNotice eventSlug={null} />}
+          {viewKey === "removed" && (
+            <QuizshowRemovedNotice kind={null} eventSlug={null} />
+          )}
           {join !== null && <PlayGame key={viewKey} join={join} />}
           {viewKey === "code" && (
-            <QuizshowCodeForm
+            <QuizshowPlayHome
               initialErrorCode={shownErrorCode}
               hasUnknownFailure={hasUnknownFailure}
             />

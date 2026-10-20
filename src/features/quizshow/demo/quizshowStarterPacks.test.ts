@@ -14,6 +14,14 @@ const PARTY_ROUND_KIND_BY_PACK_KEY = {
   portuguese_queer_culture: "lie_detector",
   eurovision: "lie_detector",
   drag_herstory: "drag_name",
+  lisbon_queer_icons: "lie_detector",
+} as const;
+const SHAPE_BY_PACK_KEY = {
+  pride_history: { roundCount: 3, questionCount: 15 },
+  portuguese_queer_culture: { roundCount: 3, questionCount: 15 },
+  eurovision: { roundCount: 3, questionCount: 15 },
+  drag_herstory: { roundCount: 3, questionCount: 15 },
+  lisbon_queer_icons: { roundCount: 4, questionCount: 23 },
 } as const;
 
 function itemAt<Item>(items: readonly Item[], itemIndex: number): Item {
@@ -25,7 +33,7 @@ function itemAt<Item>(items: readonly Item[], itemIndex: number): Item {
 }
 
 describe("quizshow starter packs", () => {
-  it("lists the four packs in key order", () => {
+  it("lists the packs in key order", () => {
     expect(QUIZSHOW_STARTER_PACKS.map((pack) => pack.key)).toEqual([
       ...QUIZSHOW_STARTER_PACK_KEYS,
     ]);
@@ -34,14 +42,15 @@ describe("quizshow starter packs", () => {
     }
   });
 
-  it("gives every pack three rounds, fifteen questions and one party round", () => {
+  it("gives every pack its round and question counts and one closing party round", () => {
     for (const pack of QUIZSHOW_STARTER_PACKS) {
       const { rounds } = pack.quiz;
-      expect(rounds).toHaveLength(3);
+      const expectedShape = SHAPE_BY_PACK_KEY[pack.key];
+      expect(rounds).toHaveLength(expectedShape.roundCount);
       expect(
         rounds.reduce((total, round) => total + round.questions.length, 0),
-      ).toBe(15);
-      expect(itemAt(rounds, 2).kind).toBe(
+      ).toBe(expectedShape.questionCount);
+      expect(itemAt(rounds, rounds.length - 1).kind).toBe(
         PARTY_ROUND_KIND_BY_PACK_KEY[pack.key],
       );
       expect(rounds.filter((round) => round.kind !== "quiz")).toHaveLength(1);

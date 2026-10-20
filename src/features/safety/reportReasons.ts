@@ -107,7 +107,9 @@ export type ReportSubjectType =
   // backend `ReportSubjectType.PersonaPost`.
   | "persona_post"
   // Pulse Live (2026-10-19): ONE player-written answer in a live game (a party answer), addressed by its uuid. Hosts hide it in the game; staff act on the account. Mirrors the backend ReportSubjectType.QuizshowAnswer.
-  | "quizshow_answer";
+  | "quizshow_answer"
+  // Pulse Live (2026-10-20): ONE live game that is not tied to an event, addressed by its session id. Anyone with a player row may report it, removed players included. Staff end or delete the game from the report drawer's own panel. Mirrors the backend ReportSubjectType.QuizshowGame.
+  | "quizshow_game";
 
 export type ReasonCode =
   | "outing"
@@ -600,6 +602,18 @@ export const SUBJECT_REASONS: Record<ReportSubjectType, ReasonCode[]> = {
     "harassment",
     "hate_speech",
     "discrimination",
+    "spam",
+    "other",
+  ],
+  // A live game that is not tied to an event (Pulse Live). Order as the
+  // backend's reason catalogue lists it.
+  quizshow_game: [
+    "hate_speech",
+    "harassment",
+    "discrimination",
+    "outing",
+    "doxxing",
+    "untagged_explicit",
     "spam",
     "other",
   ],

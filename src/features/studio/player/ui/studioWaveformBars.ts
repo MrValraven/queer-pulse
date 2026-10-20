@@ -1,8 +1,8 @@
 /** One bar per this many CSS pixels. */
 export const WAVEFORM_BAR_PITCH = 3;
 
-/** The stored peaks (0..1) shrunk to the bars that fit `width`, each bar
- *  the loudest of its group so short transients stay visible. */
+/** The stored slice levels (0..1) shrunk to the bars that fit `width`, each
+ *  bar the loudest slice of its group so short loud passages stay visible. */
 export function barsForWidth(
   peaks: readonly number[],
   width: number,

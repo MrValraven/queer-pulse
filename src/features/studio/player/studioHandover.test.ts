@@ -24,20 +24,13 @@ describe("handover timing", () => {
     expect(isPreloadFresh(Number.NaN, 0)).toBe(false);
   });
 
-  it("never crossfades consecutive positions of the same release", () => {
-    const at = (trackId: string, releaseId: string) => ({ trackId, releaseId });
-    const tracklist = ["t1", "t2", "t3"];
-    expect(canCrossfadeBetween(at("t1", "r1"), at("x", "r2"), tracklist)).toBe(
-      true,
-    );
-    expect(canCrossfadeBetween(at("t1", "r1"), at("t2", "r1"), tracklist)).toBe(
-      false,
-    );
-    expect(canCrossfadeBetween(at("t3", "r1"), at("t1", "r1"), tracklist)).toBe(
-      true,
-    );
-    expect(canCrossfadeBetween(at("t1", "r1"), at("t2", "r1"), null)).toBe(
-      false,
-    );
+  it("crossfades by default, when the next stream names no track or another one", () => {
+    const current = { trackId: "t1" };
+    expect(canCrossfadeBetween(current, null)).toBe(true);
+    expect(canCrossfadeBetween(current, "t0")).toBe(true);
+  });
+
+  it("swaps gaplessly when the next stream follows the current track without a gap", () => {
+    expect(canCrossfadeBetween({ trackId: "t1" }, "t1")).toBe(false);
   });
 });

@@ -1,35 +1,47 @@
-import { useId, type ReactNode } from "react";
 import { Link } from "react-router-dom";
-import { FiArrowLeft, FiLogOut, FiMoon, FiSun } from "react-icons/fi";
+import { FiArrowLeft, FiLogOut } from "react-icons/fi";
 import { routes } from "../../app/routeMap";
 import { useAuth } from "../../app/providers/authContext";
-import { useTheme } from "../../app/providers/themeContext";
 import { Avatar } from "../../shared/components/ui";
 import { useAccountIdentity } from "../../shared/components/layout/useAccountIdentity";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { StudioArtistRefView } from "./api/studio.adapters";
-import { useStudioAccess } from "./api/useStudioAccess";
 import { useStudioShowcase } from "./useStudioShowcase";
 import {
-  STUDIO_CREATOR_ITEMS,
-  STUDIO_LISTENER_ITEMS,
-  type StudioAccountMenuItem,
+  STUDIO_MENU_CONTRIBUTE_ITEMS,
+  STUDIO_MENU_COOP_ITEMS,
+  STUDIO_MENU_CREATOR_ITEMS,
+  STUDIO_MENU_HELP_ITEMS_LIVE,
+  STUDIO_MENU_HELP_ITEMS_SHOWCASE,
+  STUDIO_MENU_LISTEN_ITEMS_SHOWCASE,
+  STUDIO_MENU_STAFF_ITEMS,
+  STUDIO_MENU_STUDIO_ITEMS,
 } from "./studioAccountMenu.data";
+import {
+  StudioAccountMenuArtistPages,
+  StudioAccountMenuHelp,
+} from "./StudioAccountMenuDisclosures";
+import { StudioAccountMenuGroup } from "./StudioAccountMenuGroups";
+import {
+  StudioAccountMenuGiving,
+  StudioThemeRow,
+} from "./StudioAccountMenuRows";
+import { useStudioMenuItemFilter } from "./useStudioMenuItemFilter";
 import styles from "./StudioAccountMenu.module.css";
-import { StudioCreditsBadge } from "./StudioCreditsBadge";
 
 /** The open panel of {@link StudioAccountMenu}: the member's header, the
- *  library, their artist pages, the creator pages, the theme switch, and the
- *  exits back to QueerPulse and out of the session. The phone side sheet
- *  (StudioNavSheet) reuses it full height through `className` and adds its
- *  own rows through `children`. */
+ *  creator pages, their artist pages, the showcase's contribute and co-op
+ *  pages, staff tools, the Studio pages with Help and info, the theme
+ *  switch, and the exits back to QueerPulse and out of the session. The
+ *  phone side sheet (StudioNavSheet) reuses it full height through
+ *  `className` and `isSheet`. */
 export function StudioAccountMenuPanel({
   id,
   isExiting,
   persona,
   onNavigate,
   className,
-  children,
+  isSheet = false,
 }: {
   id: string;
   isExiting: boolean;
@@ -39,30 +51,25 @@ export function StudioAccountMenuPanel({
   /** Replaces the dropdown's root class and its leave class, for a host
    *  that lays the panel out and animates it itself. */
   className?: string;
-  /** Extra rows at the end of the scroll region, after the theme row. */
-  children?: ReactNode;
+  /** True in the phone sheet, which opens with the showcase's listening
+   *  pages: on desktop the rail lists them. */
+  isSheet?: boolean;
 }) {
   const { t } = useTranslation();
   const identity = useAccountIdentity();
   const isShowcase = useStudioShowcase();
-  const { uploadablePersonas } = useStudioAccess();
   const { signOut } = useAuth();
-  const artistPagesLabelId = useId();
-  const hasArtistPages = uploadablePersonas.length > 0;
-  const isItemVisible = (item: StudioAccountMenuItem) =>
-    item.audience === "everyone" ||
-    (item.audience === "artist" && (hasArtistPages || isShowcase)) ||
-    (item.audience === "showcase" && isShowcase);
-  const creatorItems = STUDIO_CREATOR_ITEMS.filter(isItemVisible);
+  const { isItemVisible } = useStudioMenuItemFilter();
 
   return (
     <div
       id={id}
       className={
-        className ??
-        [styles.panel, isExiting && styles.panelClosing]
-          .filter(Boolean)
-          .join(" ")
+        className
+          ? `${className} ${styles.panelHosted}`
+          : [styles.panel, isExiting && styles.panelClosing]
+              .filter(Boolean)
+              .join(" ")
       }
     >
       <div className={styles.header}>
@@ -79,58 +86,57 @@ export function StudioAccountMenuPanel({
               {t("studio:creator.avatarLabel", { name: persona.name })}
             </div>
           )}
+          {isShowcase && <StudioAccountMenuGiving />}
         </div>
       </div>
 
       <div className={styles.scroll}>
-        {STUDIO_LISTENER_ITEMS.filter(isItemVisible).map((item) => (
-          <StudioAccountMenuLink
-            key={item.to}
-            item={item}
+        {isSheet && (
+          <StudioAccountMenuGroup
+            items={STUDIO_MENU_LISTEN_ITEMS_SHOWCASE.filter(isItemVisible)}
             onNavigate={onNavigate}
           />
-        ))}
-        {hasArtistPages && (
-          <>
-            <div className={styles.divider} />
-            <div className={styles.groupLabel} id={artistPagesLabelId}>
-              {t("studio:shell.menu.artistPages")}
-            </div>
-            <div role="group" aria-labelledby={artistPagesLabelId}>
-              {uploadablePersonas.map((artist) => (
-                <Link
-                  key={artist.id}
-                  to={artist.href}
-                  className={styles.item}
-                  onClick={onNavigate}
-                >
-                  <Avatar
-                    initials={artist.initials}
-                    src={artist.avatarUrl ?? undefined}
-                    size={22}
-                    alt=""
-                  />
-                  <span className={styles.itemLabel}>{artist.name}</span>
-                </Link>
-              ))}
-            </div>
-          </>
         )}
-        {creatorItems.length > 0 && (
-          <>
-            <div className={styles.divider} />
-            {creatorItems.map((item) => (
-              <StudioAccountMenuLink
-                key={item.to}
-                item={item}
-                onNavigate={onNavigate}
-              />
-            ))}
-          </>
-        )}
+        <StudioAccountMenuGroup
+          headingKey="studio:shell.menu.group.creator"
+          items={STUDIO_MENU_CREATOR_ITEMS.filter(isItemVisible)}
+          onNavigate={onNavigate}
+        />
+        <StudioAccountMenuArtistPages
+          persona={persona}
+          onNavigate={onNavigate}
+        />
+        <StudioAccountMenuGroup
+          headingKey="studio:rail.section.contribute"
+          items={STUDIO_MENU_CONTRIBUTE_ITEMS.filter(isItemVisible)}
+          onNavigate={onNavigate}
+        />
+        <StudioAccountMenuGroup
+          headingKey="studio:rail.section.coop"
+          items={STUDIO_MENU_COOP_ITEMS.filter(isItemVisible)}
+          onNavigate={onNavigate}
+        />
+        <StudioAccountMenuGroup
+          headingKey="studio:shell.menu.group.staff"
+          items={STUDIO_MENU_STAFF_ITEMS.filter(isItemVisible)}
+          onNavigate={onNavigate}
+        />
+        <StudioAccountMenuGroup
+          headingKey="studio:brand.studioLabel"
+          items={STUDIO_MENU_STUDIO_ITEMS.filter(isItemVisible)}
+          onNavigate={onNavigate}
+        >
+          <StudioAccountMenuHelp
+            items={
+              isShowcase
+                ? STUDIO_MENU_HELP_ITEMS_SHOWCASE
+                : STUDIO_MENU_HELP_ITEMS_LIVE
+            }
+            onNavigate={onNavigate}
+          />
+        </StudioAccountMenuGroup>
         <div className={styles.divider} />
         <StudioThemeRow />
-        {children}
       </div>
 
       <div className={styles.footer}>
@@ -157,52 +163,5 @@ export function StudioAccountMenuPanel({
         </Link>
       </div>
     </div>
-  );
-}
-
-/** One navigating row: icon and label, closing the menu on click. */
-function StudioAccountMenuLink({
-  item,
-  onNavigate,
-}: {
-  item: StudioAccountMenuItem;
-  onNavigate: () => void;
-}) {
-  const { t } = useTranslation();
-  const Icon = item.icon;
-  return (
-    <Link to={item.to} className={styles.item} onClick={onNavigate}>
-      <Icon aria-hidden className={styles.itemIcon} />
-      <span className={styles.itemLabel}>{t(item.labelKey)}</span>
-      {item.badge === "creditRequests" && <StudioCreditsBadge />}
-    </Link>
-  );
-}
-
-/** Light/dark switch. It acts in place, so the menu stays open. The label
- *  names the theme a press switches to, as the app's AccountMenu does. */
-function StudioThemeRow() {
-  const { t } = useTranslation();
-  const { theme, toggleTheme } = useTheme();
-  const isDark = theme === "dark";
-  return (
-    <button
-      type="button"
-      className={`${styles.item} ${styles.itemButton}`}
-      onClick={toggleTheme}
-    >
-      {isDark ? (
-        <FiSun aria-hidden className={styles.itemIcon} />
-      ) : (
-        <FiMoon aria-hidden className={styles.itemIcon} />
-      )}
-      <span className={styles.itemLabel}>
-        {t(
-          isDark
-            ? "shared:accountMenu.items.lightMode"
-            : "shared:accountMenu.items.darkMode",
-        )}
-      </span>
-    </button>
   );
 }

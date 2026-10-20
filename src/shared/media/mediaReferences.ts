@@ -5,6 +5,7 @@ import {
   personaUpdatesPath,
   communityPath,
 } from "../../app/routeMap";
+import { quizshowGamePath } from "../../features/quizshow/quizshowPaths";
 import {
   gatheringPath,
   manageGatheringPath,
@@ -46,7 +47,8 @@ export type MediaReferenceType =
   | "sticker" // Sticker.storageKey
   | "studio-cover" // StudioRelease.coverKey
   | "persona-post" // SubprofilePost.imageKey (Studio v3; label is the post body)
-  | "quizshow-question"; // QuizshowQuestion.mediaRef (label is the event title)
+  | "quizshow-question" // QuizshowQuestion.mediaRef (label is the event title)
+  | "quizshow-game-question"; // QuizshowGame question image (entityId is the game id, label is the game title)
 
 /** One place an uploaded image is referenced. The backend owns `entityId`/
  *  `label`/`slug`; the frontend owns turning `type` into a localized label
@@ -99,6 +101,9 @@ export function mediaReferenceLabelKey(type: MediaReferenceType): string {
  *   `manageGatheringPath(slug, "quizshow")` (`?tab=quizshow`, read by
  *   `manageGatheringTabFromParam` in `src/features/gatherings/gatheringPaths.ts`).
  *   The backend sends the event's slug and title for a Pulse Live question image.
+ * - `quizshow-game-question` → the game's page, `quizshowGamePath(entityId)`
+ *   (`/play/games/:gameId`). The backend sends the game id as `entityId` and
+ *   the game title as `label`, with an empty slug.
  * - `card-crest` / `card-background` → the ISSUING community's page: a
  *   membership-card programme is designed in a modal on that page and has no
  *   route of its own, and the backend already resolves the reference to the
@@ -159,6 +164,10 @@ export function mediaReferenceHref(reference: MediaReference): string | null {
     // who does not organise the event meets that page's own access check.
     case "quizshow-question":
       return slug ? manageGatheringPath(slug, "quizshow") : null;
+    // A question image on a game that is not tied to an event. The game id is
+    // the entity id and the slug is empty.
+    case "quizshow-game-question":
+      return entityId ? quizshowGamePath(entityId) : null;
     case "landlord":
       return slug ? `/work/landlord/${slug}` : null;
     case "company-work":

@@ -63,6 +63,7 @@ export function StudioPlaylistHero({
           kind: "studio_playlist",
           title: playlist.name,
           href: playlist.href,
+          meta: playlist.credit.name,
         },
   );
   const queue = useMemo(

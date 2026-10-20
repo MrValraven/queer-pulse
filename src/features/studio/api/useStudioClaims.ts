@@ -29,13 +29,19 @@ type MyClaimPages = InfiniteData<
   string | null
 >;
 
-/** The claimant's claims, newest first, with Show more. */
-export function useStudioMyClaims(): StudioCursorPagesResult<StudioMyClaimView> {
+/** The claimant's claims, newest first, with Show more. A caller outside
+ *  the claims page (the menu badge) can gate the read with `isEnabled` and
+ *  keep a failure quiet with `silentError`; the defaults keep the page's
+ *  behaviour. */
+export function useStudioMyClaims(
+  options: { isEnabled?: boolean; silentError?: boolean } = {},
+): StudioCursorPagesResult<StudioMyClaimView> {
   const { demoMode } = useDemoMode();
   return useStudioCursorPages({
     queryKey: studioSafetyKeys.myClaims(demoMode),
     // The page is member-gated; reading needs no Studio grant (contract).
-    enabled: true,
+    enabled: options.isEnabled ?? true,
+    silentError: options.silentError ?? false,
     read: async (cursor) =>
       demoMode
         ? (await loadDemo()).demoMyClaimsPage()

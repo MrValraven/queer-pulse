@@ -33,8 +33,16 @@
     /* Clears the iOS home indicator, and in landscape keeps the outermost
        tabs clear of the notch. Inert at env() == 0. */
     padding-bottom: env(safe-area-inset-bottom);
-    padding-left: env(safe-area-inset-left);
-    padding-right: env(safe-area-inset-right);
+    /* Past 480px of width the tabs gather near the centre so they do not
+       spread across a tablet. Below that the safe-area inset rules. */
+    padding-left: max(
+      env(safe-area-inset-left),
+      calc((100% - 480px) / 2)
+    );
+    padding-right: max(
+      env(safe-area-inset-right),
+      calc((100% - 480px) / 2)
+    );
   }
 
   /* Content softens into the bar as it scrolls under, like Spotify's. */

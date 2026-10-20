@@ -1337,6 +1337,8 @@ export const MOD_ACTIONS: ModAction[] = [
  * reports), so the generic tiles stay off it too.
  * A `quizshow_answer` is hidden from its game by the hosts, and the stored
  * answer ages out with the session, so the generic tiles stay off it as well.
+ * A `quizshow_game` is ended or deleted from its own panel (staff act on the
+ * game itself, Task 7), so the generic tiles stay off it too.
  */
 const SUBJECT_TYPES_WITHOUT_CONTENT = new Set<ReportSubjectType>([
   "venue",
@@ -1346,6 +1348,7 @@ const SUBJECT_TYPES_WITHOUT_CONTENT = new Set<ReportSubjectType>([
   "studio_track",
   "persona_post",
   "quizshow_answer",
+  "quizshow_game",
 ]);
 
 export function modActionsFor(subjectType: ReportSubjectType): ModAction[] {

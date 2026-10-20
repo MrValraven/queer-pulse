@@ -139,6 +139,9 @@ export const FIELD_META: Record<string, ItemFieldMeta> = {
 const gm = (section: string, field: string, part: string) =>
   `subprofiles:itemField.gameMaster.${section}.${field}.${part}`;
 
+const architectField = (section: string, field: string) =>
+  `subprofiles:itemField.architect.${section}.${field}.placeholder`;
+
 /**
  * Where a kind words a section's item fields its own way, over `FIELD_META`.
  * A game master's campaign keeps its seats in `subtitle` and its schedule in
@@ -221,6 +224,35 @@ export const KIND_ITEM_FIELD_META: Partial<
         labelKey: "subprofiles:itemField.tattoo.shop.url.label",
         placeholderKey: "subprofiles:itemField.tattoo.shop.url.placeholder",
         helperKey: "subprofiles:itemField.tattoo.shop.url.helper",
+      },
+    },
+  },
+  // A finished building names its place and the architect's role on it; a
+  // competition names who ran it and how the entry placed.
+  architect: {
+    built_work: {
+      title: { placeholderKey: architectField("built_work", "title") },
+      subtitle: {
+        labelKey: "subprofiles:itemField.architect.built_work.subtitle.label",
+        placeholderKey: architectField("built_work", "subtitle"),
+      },
+      date: {
+        labelKey: "subprofiles:itemField.architect.built_work.date.label",
+      },
+      meta: {
+        labelKey: "subprofiles:itemField.architect.built_work.meta.label",
+        placeholderKey: architectField("built_work", "meta"),
+      },
+    },
+    competitions: {
+      title: { placeholderKey: architectField("competitions", "title") },
+      subtitle: {
+        labelKey: "subprofiles:itemField.architect.competitions.subtitle.label",
+        placeholderKey: architectField("competitions", "subtitle"),
+      },
+      meta: {
+        labelKey: "subprofiles:itemField.architect.competitions.meta.label",
+        placeholderKey: architectField("competitions", "meta"),
       },
     },
   },

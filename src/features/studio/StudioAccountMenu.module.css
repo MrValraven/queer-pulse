@@ -45,17 +45,17 @@
   position: absolute;
   top: calc(100% + 8px);
   right: 0;
+  /* The wash, shared with the scroll region's foot fade so the fade ends
+     on exactly the panel's own fill. */
+  --studio-menu-wash: rgba(var(--studio-ink-rgb), 0.04);
   /* Small phones keep a 16px gutter on each side. */
-  width: 280px;
+  width: 300px;
   max-width: calc(100vw - 32px);
-  max-height: min(560px, calc(100dvh - 96px));
+  max-height: min(760px, calc(100dvh - 96px));
   display: flex;
   flex-direction: column;
   background:
-    linear-gradient(
-      rgba(var(--studio-ink-rgb), 0.04),
-      rgba(var(--studio-ink-rgb), 0.04)
-    ),
+    linear-gradient(var(--studio-menu-wash), var(--studio-menu-wash)),
     var(--studio-surface);
   border: 1px solid rgba(var(--studio-ink-rgb), 0.12);
   border-radius: var(--radius-16);
@@ -76,10 +76,12 @@
   pointer-events: none;
 }
 
+/* Top aligned: the avatar stays level with the name while the giving note
+   runs on below it. */
 .header {
   flex-shrink: 0;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 10px;
   padding: 12px 14px;
   border-bottom: 1px solid rgba(var(--studio-ink-rgb), 0.1);
@@ -105,6 +107,29 @@
   color: var(--studio-text-muted);
 }
 
+/* The showcase member's giving line under their name, small and muted. */
+.headerGiving {
+  margin: 4px 0 0;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: var(--text-12);
+  line-height: 1.5;
+  /* Muted holds 4.5:1 on the dark panel at this size. */
+  color: var(--studio-text-muted);
+  text-wrap: pretty;
+}
+.headerGiving em {
+  color: var(--studio-text);
+}
+.headerGiving b {
+  color: var(--studio-accent-text);
+  font-style: normal;
+}
+.headerGivingPaid {
+  display: block;
+  margin-top: 4px;
+}
+
 /* Only the middle scrolls when the list is taller than the viewport allows. */
 .scroll {
   flex: 1;
@@ -116,6 +141,39 @@
   scrollbar-color: rgba(var(--studio-ink-rgb), 0.22) transparent;
 }
 
+/* A fade at the foot of the scroll region while more rows sit below. It is
+   driven by the region's own scroll: full while there is more to see, gone
+   at the end, and absent when nothing overflows (the timeline is inactive
+   then). Browsers without scroll-driven animation keep a clean edge. The
+   last stop is the panel's fill: surface plus the dropdown's wash (the
+   sheet sets none). */
+@supports (animation-timeline: scroll()) {
+  .scroll::after {
+    content: "";
+    position: sticky;
+    bottom: -6px;
+    display: block;
+    height: 28px;
+    margin-top: -28px;
+    background:
+      linear-gradient(transparent, var(--studio-menu-wash, transparent)),
+      linear-gradient(transparent, var(--studio-surface));
+    pointer-events: none;
+    opacity: 0;
+    animation: studioMenuMoreBelow linear both;
+    animation-timeline: scroll();
+  }
+}
+@keyframes studioMenuMoreBelow {
+  0%,
+  85% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
 /* Back to QueerPulse and Sign out stay pinned under a hairline, the way out
    of Studio always in reach. */
 .footer {
@@ -124,13 +182,14 @@
   border-top: 1px solid rgba(var(--studio-ink-rgb), 0.1);
 }
 
+/* Muted (4.5:1 on the dark panel) for small uppercase type. */
 .groupLabel {
   padding: 4px 12px 4px;
-  font-size: var(--text-10-5);
+  font-size: var(--text-11);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--studio-text-faint);
+  color: var(--studio-text-muted);
 }
 
 .item {
@@ -158,14 +217,21 @@
   background: rgba(var(--studio-ink-rgb), 0.08);
 }
 
-/* The current page's row in the phone side sheet (a NavLink with
-   aria-current="page"): full ink over a soft wash. */
+/* The current page's row (aria-current="page"): full ink over a soft
+   wash. */
 .itemActive {
   font-weight: 600;
   background: rgba(var(--studio-ink-rgb), 0.08);
 }
 .itemActive .itemIcon {
   color: var(--studio-text);
+}
+/* StudioCredits.module.css inverts a badge inside any aria-current="page"
+   (for the creator nav's solid pill). The menu's current row is a soft
+   wash, so its badge keeps the usual coral pill. */
+.item[aria-current="page"] > .itemBadge {
+  background: rgba(var(--accent-rgb), 0.16);
+  color: var(--studio-accent-chip-text);
 }
 
 /* The theme row acts in place, so it is a <button> wearing .item. */
@@ -176,6 +242,20 @@
   font-family: inherit;
   text-align: left;
   cursor: pointer;
+}
+
+/* A row a toggle revealed (Help and info), indented under the toggle. */
+.itemNested {
+  padding-left: 34px;
+}
+
+/* A toggle's chevron, pushed to the row's end; it turns over while open. */
+.chevron {
+  margin-left: auto;
+  transition: transform var(--dur-fast) var(--ease);
+}
+.chevronOpen {
+  transform: rotate(180deg);
 }
 
 .itemLabel {
@@ -196,6 +276,10 @@
   height: 1px;
   margin: 6px 4px;
   background: rgba(var(--studio-ink-rgb), 0.1);
+}
+/* The first group sits right under the header's own hairline. */
+.scroll > .divider:first-child {
+  display: none;
 }
 
 .exit {
@@ -228,9 +312,33 @@
   }
 }
 
+/* Short screens (a phone on its side, a laptop with the window low): the
+   pinned header and exits would leave room for two or three rows, so the
+   whole panel scrolls as one column. The phone sheet's body, hosted
+   through `className`, does the same. */
+@media (max-height: 600px) {
+  .panel,
+  .panelHosted {
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(var(--studio-ink-rgb), 0.22) transparent;
+  }
+  .panel > .scroll,
+  .panelHosted > .scroll {
+    flex: none;
+    overflow: visible;
+  }
+  .panel > .scroll::after,
+  .panelHosted > .scroll::after {
+    bottom: 0;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .trigger,
-  .item {
+  .item,
+  .chevron {
     transition: none;
   }
   .panel,

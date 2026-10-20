@@ -300,7 +300,7 @@ export const quizshow: Catalog = {
   "errors.adults_round_needs_adults_event": "Adults rounds need an 18+ event",
   "errors.quiz_has_adults_rounds": "This event's quiz has adults rounds",
   "errors.pack_not_found": "We couldn't find that pack",
-  "errors.import_source_not_found": "That event has no quiz to copy",
+  "errors.import_source_not_found": "That quiz is no longer there to copy",
   "errors.import_same_event": "Pick a different event to copy from",
   "errors.quiz_not_found": "Save a quiz before opening the lobby",
   "errors.quiz_incomplete": "Finish the quiz before opening the lobby",
@@ -543,4 +543,92 @@ export const quizshow: Catalog = {
   "dryRun.sub":
     "Twelve pretend players play it on this screen. Nothing is saved and nobody is notified",
   "dryRun.close": "Close the try-out",
+  // ── Games without an event ──
+  "home.myGames.title": "My games",
+  "home.myGames.sub":
+    "Quizzes you host anywhere: at home, on a call, at the bar",
+  "home.myGames.new": "New game",
+  "home.myGames.loadError": "We couldn't load your games",
+  "home.myGames.emptyTitle": "No games yet",
+  "home.myGames.emptyBody":
+    "Start from one of our team's packs, copy a game or an event quiz, or write your own",
+  "import.fromCopy": "Copy a game or event quiz",
+  "games.row.adultsTag": "18+",
+  "games.row.liveTag": "Live now, code {code}",
+  "games.row.resultsTag": "Results",
+  "games.row.edited": "Edited {date}",
+  "games.new.title": "New game",
+  "games.new.sub": "Give it a name. You can change it later",
+  "games.new.titleLabel": "Game title",
+  "games.new.titlePlaceholder": "Friday night quiz",
+  "games.new.titleRequired": "Give the game a title",
+  "games.new.create": "Create game",
+  "games.new.created": "Game created",
+  "game.metaTitle": "Pulse Live game",
+  "game.back": "Back to Pulse Live",
+  "game.untitled": "Untitled game",
+  "game.loadError": "We couldn't load this game",
+  "game.duplicate": "Duplicate game",
+  "game.duplicated": "Game duplicated",
+  "game.delete": "Delete game",
+  "game.deleteTitle": "Delete this game?",
+  "game.deleteBody":
+    "Anyone playing now is sent out of the game, then its questions and any kept results go for good",
+  "game.deleted": "Game deleted",
+  "builder.gameHeading": "Your quiz",
+  "builder.gameLead":
+    "Write the rounds and questions, then run the game on a big screen while everyone plays on their phones",
+  "settings.adults.label": "This game has 18+ content",
+  "settings.adults.hint":
+    "Players confirm before they join, and the adults label unlocks for rounds",
+  "settings.adults.locked_one":
+    "Round {rounds} uses the adults label. Change its label first, then turn off 18+",
+  "settings.adults.locked_other":
+    "Rounds {rounds} use the adults label. Change their label first, then turn off 18+",
+  "importSources.gameScope.sub":
+    "Your other games, and events you run that hold a quiz",
+  "importSources.gameScope.empty":
+    "You have no other games or event quizzes yet",
+  "importSources.gameScope.loadError": "We couldn't load your games and events",
+  "importSources.gameTag": "Your game",
+  "lobby.alreadyOpenGame": "A lobby is already open for this game",
+  "lobby.replaceResultsBodyGame":
+    "This game already has kept results. Opening a new lobby deletes them",
+  "screen.noGameForGame":
+    "No lobby is open for this game. Open one from the game page",
+  "screen.backToGame": "Back to the game",
+  "remote.noGameForGame": "No lobby is open for this game",
+  "player.host.by": "Hosted by {name}",
+  "player.host.profile": "See {name}'s profile",
+  "player.host.hint": "You can report or block them from their profile",
+  "player.adults.title": "This game holds 18+ content",
+  "player.adults.body":
+    "Some rounds are for adults only. Join if you're happy to see them",
+  "player.adults.join": "Join game",
+  "player.adults.leave": "Leave",
+  "player.backToPlay": "Back to Pulse Live",
+  "player.removedBodyGame": "You can join another game any time",
+  "player.reportGame": "Report this game",
+  "errors.game_not_found": "We couldn't find this game",
+  "errors.game_limit_reached":
+    "You have 50 games, the most you can keep. Delete one to make room",
+  "errors.lobby_rate_limited":
+    "You've opened 10 lobbies in the last hour. Try again a little later",
+  "errors.adult_consent_required":
+    "This game holds 18+ content. Confirm to join",
+  "errors.game_adults_rounds_need_switch":
+    "Adults rounds need the 18+ switch on. Turn it on or change those rounds' label",
+  "rounds.contentLabel.adultsLockedGame":
+    "Turn on 18+ for this game to use this label",
+  "problems.adults_round_needs_switch":
+    "Round {round} is labelled adults only, and this game is not marked 18+",
+  "lobby.review.hintGame":
+    "You see every written answer first and can hide any",
+  "save.conflictTitleGame": "This game changed somewhere else",
+  "save.conflictBodyGame":
+    "You saved a newer version in another tab or on another device. Load that version, or keep this one and save it over it",
+  "save.conflictLoadGame": "Load that version",
+  "save.conflictOverwriteGame": "Save this one over it",
+  "problems.title_missing_game": "Give the game a title",
+  "home.back": "Back to QueerPulse",
 };

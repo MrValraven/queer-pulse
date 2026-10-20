@@ -299,7 +299,8 @@ export const quizshow: Catalog = {
   "errors.quiz_has_adults_rounds":
     "O quiz deste evento tem rondas para adultos",
   "errors.pack_not_found": "Não encontrámos esse pack",
-  "errors.import_source_not_found": "Esse evento não tem quiz para copiar",
+  "errors.import_source_not_found":
+    "Esse quiz já não está disponível para copiar",
   "errors.import_same_event": "Escolhe outro evento para copiar",
   "errors.quiz_not_found": "Guarda um quiz antes de abrires o lobby",
   "errors.quiz_incomplete": "Termina o quiz antes de abrires o lobby",
@@ -543,4 +544,94 @@ export const quizshow: Catalog = {
   "dryRun.sub":
     "Doze pessoas a fingir jogam aqui neste ecrã. Nada fica guardado e ninguém é notificado",
   "dryRun.close": "Fechar o ensaio",
+  // ── Games without an event ──
+  "home.myGames.title": "Os meus jogos",
+  "home.myGames.sub":
+    "Quizzes que organizas onde quiseres: em casa, numa chamada, num bar",
+  "home.myGames.new": "Novo jogo",
+  "home.myGames.loadError": "Não conseguimos carregar os teus jogos",
+  "home.myGames.emptyTitle": "Ainda não tens jogos",
+  "home.myGames.emptyBody":
+    "Começa com um dos packs da nossa equipa, copia um jogo ou o quiz de um evento, ou escreve o teu",
+  "import.fromCopy": "Copiar um jogo ou o quiz de um evento",
+  "games.row.adultsTag": "18+",
+  "games.row.liveTag": "Ao vivo, código {code}",
+  "games.row.resultsTag": "Resultados",
+  "games.row.edited": "Editado a {date}",
+  "games.new.title": "Novo jogo",
+  "games.new.sub": "Dá-lhe um nome. Podes mudá-lo mais tarde",
+  "games.new.titleLabel": "Título do jogo",
+  "games.new.titlePlaceholder": "Quiz de sexta à noite",
+  "games.new.titleRequired": "Dá um título ao jogo",
+  "games.new.create": "Criar jogo",
+  "games.new.created": "Jogo criado",
+  "game.metaTitle": "Jogo do Pulse Live",
+  "game.back": "Voltar ao Pulse Live",
+  "game.untitled": "Jogo sem título",
+  "game.loadError": "Não conseguimos carregar este jogo",
+  "game.duplicate": "Duplicar jogo",
+  "game.duplicated": "Jogo duplicado",
+  "game.delete": "Apagar jogo",
+  "game.deleteTitle": "Apagar este jogo?",
+  "game.deleteBody":
+    "Quem estiver a jogar agora sai do jogo e depois as perguntas e os resultados guardados desaparecem de vez",
+  "game.deleted": "Jogo apagado",
+  "builder.gameHeading": "O teu quiz",
+  "builder.gameLead":
+    "Escreve as rondas e as perguntas e depois lança o jogo num ecrã grande enquanto toda a gente joga no telemóvel",
+  "settings.adults.label": "Este jogo tem conteúdo para maiores de 18",
+  "settings.adults.hint":
+    "Quem joga confirma antes de entrar, e a etiqueta para adultos fica disponível nas rondas",
+  "settings.adults.locked_one":
+    "A ronda {rounds} usa a etiqueta para adultos. Muda a etiqueta primeiro e depois desliga o 18+",
+  "settings.adults.locked_other":
+    "As rondas {rounds} usam a etiqueta para adultos. Muda a etiqueta primeiro e depois desliga o 18+",
+  "importSources.gameScope.sub":
+    "Os teus outros jogos e os eventos que organizas com quiz",
+  "importSources.gameScope.empty":
+    "Ainda não tens outros jogos nem quizzes de eventos",
+  "importSources.gameScope.loadError":
+    "Não conseguimos carregar os teus jogos e eventos",
+  "importSources.gameTag": "O teu jogo",
+  "lobby.alreadyOpenGame": "Já há um lobby aberto para este jogo",
+  "lobby.replaceResultsBodyGame":
+    "Este jogo já tem resultados guardados. Abrir um novo lobby apaga-os",
+  "screen.noGameForGame":
+    "Não há nenhum lobby aberto para este jogo. Abre um na página do jogo",
+  "screen.backToGame": "Voltar ao jogo",
+  "remote.noGameForGame": "Não há nenhum lobby aberto para este jogo",
+  "player.host.by": "Organizado por {name}",
+  "player.host.profile": "Ver o perfil de {name}",
+  "player.host.hint":
+    "Podes denunciar ou bloquear esta pessoa a partir do perfil",
+  "player.adults.title": "Este jogo tem conteúdo para maiores de 18",
+  "player.adults.body":
+    "Algumas rondas são só para adultos. Entra se estiveres à vontade com isso",
+  "player.adults.join": "Entrar no jogo",
+  "player.adults.leave": "Sair",
+  "player.backToPlay": "Voltar ao Pulse Live",
+  "player.removedBodyGame": "Podes entrar noutro jogo quando quiseres",
+  "player.reportGame": "Denunciar este jogo",
+  "errors.game_not_found": "Não encontrámos este jogo",
+  "errors.game_limit_reached":
+    "Já tens 50 jogos, o máximo que podes guardar. Apaga um para abrir espaço",
+  "errors.lobby_rate_limited":
+    "Abriste 10 lobbies na última hora. Tenta outra vez daqui a pouco",
+  "errors.adult_consent_required":
+    "Este jogo tem conteúdo para maiores de 18. Confirma para entrar",
+  "errors.game_adults_rounds_need_switch":
+    "As rondas para adultos precisam do 18+ ligado. Liga-o ou muda a etiqueta dessas rondas",
+  "rounds.contentLabel.adultsLockedGame":
+    "Liga o 18+ deste jogo para usares esta etiqueta",
+  "problems.adults_round_needs_switch":
+    "A ronda {round} está marcada só para adultos e este jogo não está marcado como 18+",
+  "lobby.review.hintGame":
+    "Vês primeiro todas as respostas escritas e podes esconder qualquer uma",
+  "save.conflictTitleGame": "Este jogo mudou noutro sítio",
+  "save.conflictBodyGame":
+    "Guardaste uma versão mais recente noutro separador ou noutro dispositivo. Carrega essa versão ou mantém esta e guarda-a por cima",
+  "save.conflictLoadGame": "Carregar essa versão",
+  "save.conflictOverwriteGame": "Guardar esta por cima",
+  "problems.title_missing_game": "Dá um título ao jogo",
+  "home.back": "Voltar ao QueerPulse",
 };

@@ -2,6 +2,10 @@ import { describe, expect, it } from "vitest";
 import { gatheringPath } from "../gatherings/gatheringPaths";
 import {
   isJoinCodeShaped,
+  quizshowGamePath,
+  quizshowGameRemotePath,
+  quizshowGameScreenPath,
+  quizshowHostProfilePath,
   normaliseJoinCode,
   quizshowPlayPath,
   quizshowRemotePath,
@@ -17,6 +21,17 @@ describe("quizshow paths", () => {
     expect(quizshowRemotePath("pride-brunch-jun")).toBe(
       `${gatheringPath("pride-brunch-jun")}/quizshow/remote`,
     );
+  });
+  it("builds game screen and remote paths under /play/games", () => {
+    expect(quizshowGameScreenPath("g1")).toBe("/play/games/g1/screen");
+    expect(quizshowGameRemotePath("g1")).toBe("/play/games/g1/remote");
+    expect(quizshowGamePath("g1")).toBe("/play/games/g1");
+    expect(quizshowGamePath("g1", { shouldOpenSources: true })).toBe(
+      "/play/games/g1?start=copy",
+    );
+  });
+  it("links a host to their member page", () => {
+    expect(quizshowHostProfilePath("rui")).toBe("/members/rui");
   });
   it("builds the play paths with and without a code", () => {
     expect(quizshowPlayPath()).toBe("/play");

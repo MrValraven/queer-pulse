@@ -8,8 +8,8 @@ import { AppRoutes } from "./routes";
 
 /**
  * The per-viewer Pulse Live gate in `AppRoutes`: signed out goes to sign-in
- * with `?next=` kept, signed in without the early-access grant goes to the
- * roadmap, and a grant holder, demo and `pnpm dev` render the page. The real
+ * with `?next=` kept, signed in without the early-access grant plays freely but
+ * goes to the roadmap from hosting pages, and a grant holder, demo and `pnpm dev` render the page. The real
  * `useAuthGateRedirect`, `useIsQuizshowVisible` and `useHasEarlyAccess` run;
  * only the session (a real `AuthContext.Provider`), demo mode, the Studio
  * access read, the session loader and the three destination route groups are
@@ -37,13 +37,25 @@ vi.mock("../shared/components/feedback/PageLoader", () => ({
 
 vi.mock("../features/quizshow/routes", async () => {
   const { Route } = await import("react-router-dom");
-  const { QUIZSHOW_PLAY_CODE_ROUTE, QUIZSHOW_SCREEN_ROUTE } =
-    await import("../features/quizshow/quizshowPaths");
+  const { routes: routeMap } = await import("./routeMap");
+  const {
+    QUIZSHOW_GAME_ROUTE,
+    QUIZSHOW_PLAY_CODE_ROUTE,
+    QUIZSHOW_SCREEN_ROUTE,
+  } = await import("../features/quizshow/quizshowPaths");
   return {
     quizshowRoutes: () => (
       <>
         <Route
           path={QUIZSHOW_SCREEN_ROUTE}
+          element={<div data-testid="pulse-live-page" />}
+        />
+        <Route
+          path={QUIZSHOW_GAME_ROUTE}
+          element={<div data-testid="pulse-live-page" />}
+        />
+        <Route
+          path={routeMap.play}
           element={<div data-testid="pulse-live-page" />}
         />
         <Route
@@ -82,6 +94,8 @@ vi.mock("../features/marketing/routes", async () => {
 });
 
 const PLAYER_PATH = "/play/QZ7KP4";
+const PLAY_PATH = "/play";
+const GAME_PATH = "/play/games/game-1";
 const SCREEN_PATH = "/gatherings/pride-brunch-jun-abcde/quizshow/screen";
 
 function memberWith(earlyAccessFeatures: string[]): AuthUser {
@@ -144,7 +158,7 @@ function landedAt(): string | null {
   return screen.getByTestId("location").textContent;
 }
 
-describe("AppRoutes: Pulse Live early-access gate", () => {
+describe("AppRoutes: Pulse Live hosting gate", () => {
   beforeEach(() => {
     demoMode = false;
     vi.stubEnv("DEV", false);
@@ -160,10 +174,28 @@ describe("AppRoutes: Pulse Live early-access gate", () => {
     );
   });
 
-  it("sends a signed-in member without the grant to the roadmap", async () => {
+  it("lets a signed-in member without the grant play at /play/:code", async () => {
     renderAt(PLAYER_PATH, authValue(memberWith([])));
+    expect(await screen.findByTestId("pulse-live-page")).toBeInTheDocument();
+    expect(landedAt()).toBe(PLAYER_PATH);
+  });
+
+  it("lets a signed-in member without the grant reach /play", async () => {
+    renderAt(PLAY_PATH, authValue(memberWith([])));
+    expect(await screen.findByTestId("pulse-live-page")).toBeInTheDocument();
+    expect(landedAt()).toBe(PLAY_PATH);
+  });
+
+  it("sends a member without the grant from a game page to the roadmap", async () => {
+    renderAt(GAME_PATH, authValue(memberWith([])));
     expect(await screen.findByTestId("roadmap-page")).toBeInTheDocument();
     expect(landedAt()).toBe(routes.roadmap);
+  });
+
+  it("renders a game page for a member holding the grant", async () => {
+    renderAt(GAME_PATH, authValue(memberWith(["quizshow"])));
+    expect(await screen.findByTestId("pulse-live-page")).toBeInTheDocument();
+    expect(landedAt()).toBe(GAME_PATH);
   });
 
   it("sends a host without the grant away from the presenter screen", async () => {

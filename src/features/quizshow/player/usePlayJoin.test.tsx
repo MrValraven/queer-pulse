@@ -31,6 +31,10 @@ function joinResponseFor(code: string): QuizshowJoinResponse {
     sessionId: `session-${code}`,
     eventSlug: "quiz-night",
     eventTitle: "Quiz night",
+    kind: "event",
+    quizTitle: "Quiz night",
+    isAdultsOnly: false,
+    host: null,
     status: "lobby",
     isRejoin: false,
   };

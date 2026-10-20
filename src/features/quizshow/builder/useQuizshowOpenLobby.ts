@@ -12,7 +12,7 @@ import {
   quizshowProblemsOf,
 } from "../api/quizshowErrors";
 import { useOpenQuizshowSession } from "../api/useQuizshowMutations";
-import { quizshowScreenPath } from "../quizshowPaths";
+import { quizshowScopeScreenPath, type QuizshowScope } from "../quizshowScope";
 import type { QuizshowLocalProblem } from "./quizshowValidation";
 
 interface OpenSessionRef {
@@ -53,7 +53,7 @@ function stateAfterError(
   return { ...CLEAN_STATE, errorKey: quizshowErrorKeyOf(code) };
 }
 
-export function useQuizshowOpenLobby(slug: string): {
+export function useQuizshowOpenLobby(scope: QuizshowScope): {
   open: (input: QuizshowOpenSessionInput) => void;
   replaceResultsDialog: ReactNode;
   problems: readonly QuizshowLocalProblem[];
@@ -64,7 +64,7 @@ export function useQuizshowOpenLobby(slug: string): {
   const { t } = useTranslation();
   const { showToast } = useToast();
   const navigate = useNavigate();
-  const mutation = useOpenQuizshowSession(slug);
+  const mutation = useOpenQuizshowSession(scope);
   const [state, setState] = useState<OpenLobbyState>(CLEAN_STATE);
 
   async function submit(input: QuizshowOpenSessionInput): Promise<void> {
@@ -79,7 +79,7 @@ export function useQuizshowOpenLobby(slug: string): {
       } else if (input.notifyGuests) {
         showToast(t("quizshow:lobby.pushSkipped"), "info");
       }
-      void navigate(quizshowScreenPath(slug));
+      void navigate(quizshowScopeScreenPath(scope));
     } catch (error) {
       setState(stateAfterError(error, input));
     }
@@ -101,7 +101,11 @@ export function useQuizshowOpenLobby(slug: string): {
               shouldReplaceResults: true,
             }),
           title: t("quizshow:lobby.replaceResultsTitle"),
-          description: t("quizshow:lobby.replaceResultsBody"),
+          description: t(
+            scope.kind === "game"
+              ? "quizshow:lobby.replaceResultsBodyGame"
+              : "quizshow:lobby.replaceResultsBody",
+          ),
           confirmLabel: t("quizshow:lobby.replaceResultsCta"),
           tone: "destructive",
           loading: mutation.isPending,

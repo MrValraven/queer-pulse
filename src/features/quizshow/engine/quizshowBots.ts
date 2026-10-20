@@ -123,6 +123,8 @@ function planNextJoin(
       isAvatarShown: false,
       hasExtraTime: next.hasExtraTime,
       team: engine.playMode === "teams" ? teamChoiceFor(engine, next) : null,
+      /** Simulated players confirm 18+ content, so they join an 18+ game too. */
+      hasAcceptedAdultContent: true,
     },
     now,
   };

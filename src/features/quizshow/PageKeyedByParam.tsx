@@ -9,7 +9,7 @@ export function PageKeyedByParam({
   paramName,
   page: Page,
 }: {
-  paramName: "slug" | "code";
+  paramName: "slug" | "code" | "gameId";
   page: ComponentType;
 }) {
   const params = useParams();

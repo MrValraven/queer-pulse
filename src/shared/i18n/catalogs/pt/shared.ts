@@ -182,7 +182,8 @@ export const shared: Catalog = {
   "accountMenu.hints.personas": "Perfis para o que fazes",
   "accountMenu.hints.invite": "Os teus convites deste mês",
   "accountMenu.items.pulseLive": "Pulse Live",
-  "accountMenu.hints.pulseLive": "Noites de quiz em eventos, acesso antecipado",
+  "accountMenu.hints.pulseLive":
+    "Entra ou organiza jogos de quiz, acesso antecipado",
   "installAppModal.title": "Instalar a app",
   "installAppModal.sub":
     "Adiciona a QueerPulse ao teu ecrã principal em poucos toques. A mesma app, sem loja de aplicações.",
@@ -626,6 +627,7 @@ export const shared: Catalog = {
   "mediaRef.studio-cover": "Capa de lançamento do Studio",
   "mediaRef.persona-post": "Novidade de persona",
   "mediaRef.quizshow-question": "Pergunta do jogo ao vivo",
+  "mediaRef.quizshow-game-question": "Pergunta de um jogo do Pulse Live",
   "mediaRef.landlord": "Senhorio",
   "mediaRef.company-work": "Empresa",
   "mediaRef.housing": "Habitação",

@@ -13,7 +13,6 @@ import {
 } from "react-icons/fi";
 import { Button, IconButton } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import { gatheringPath } from "../../gatherings/gatheringPaths";
 import { useFullscreen } from "./useFullscreen";
 import type { QuizshowScreenTheme } from "./useScreenTheme";
 import styles from "./QuizshowScreen.module.css";
@@ -76,7 +75,10 @@ function isKeyboardFocus(element: Element): boolean {
 }
 
 interface QuizshowScreenToolbarProps {
-  slug: string;
+  /** The event page or the game page. */
+  backPath: string;
+  /** "Back to the event" or "Back to the game". */
+  backLabelKey: string;
   theme: QuizshowScreenTheme;
   onToggleTheme: () => void;
   isLocallyMuted: boolean;
@@ -85,13 +87,14 @@ interface QuizshowScreenToolbarProps {
 }
 
 /**
- * Full screen, theme, the screen's own mute and Back to the event, top right.
+ * Full screen, theme, the screen's own mute and Back to the event or game, top right.
  * It fades out after three still seconds so the TV shows only the game, and
  * comes back on pointer movement or while any of its buttons has keyboard focus.
  * Portaled to the body: route transitions transform the page.
  */
 export function QuizshowScreenToolbar({
-  slug,
+  backPath,
+  backLabelKey,
   theme,
   onToggleTheme,
   isLocallyMuted,
@@ -169,11 +172,7 @@ export function QuizshowScreenToolbar({
           )}
         </SwappingIcon>
       </IconButton>
-      <Button
-        variant="icon"
-        to={gatheringPath(slug)}
-        aria-label={t("quizshow:screen.backToEvent")}
-      >
+      <Button variant="icon" to={backPath} aria-label={t(backLabelKey)}>
         <FiArrowLeft aria-hidden="true" fill="none" />
       </Button>
     </div>,

@@ -5,8 +5,9 @@ import { useStudioCreditPendingCount } from "./api/useStudioCreditPendingCount";
 import css from "./StudioCredits.module.css";
 
 /** The pending credit requests pill beside "Credits". It shows only while a
- *  request waits, and fades in and out. */
-export function StudioCreditsBadge() {
+ *  request waits, and fades in and out. `className` adds a host's own class
+ *  beside the shared pill style. */
+export function StudioCreditsBadge({ className }: { className?: string } = {}) {
   const { t } = useTranslation();
   const { count } = useStudioCreditPendingCount();
   const { reducedMotion } = useMotionPrefs();
@@ -15,7 +16,7 @@ export function StudioCreditsBadge() {
       {count > 0 && (
         <m.span
           key="credit-requests"
-          className={css.badge}
+          className={className ? `${css.badge} ${className}` : css.badge}
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.8 }}

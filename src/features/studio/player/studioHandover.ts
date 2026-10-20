@@ -26,18 +26,13 @@ export function isPreloadFresh(expiresAtMs: number, nowMs: number): boolean {
   );
 }
 
-/** Crossfade never joins consecutive positions of one release (live albums
- *  and split mixes stay seamless). Without the release's tracklist, two
- *  tracks of one release swap gaplessly. */
+/** A release the artist marked "Play without gaps" swaps gaplessly between
+ *  consecutive playable tracks (live albums and split mixes stay seamless):
+ *  the next track's stream names the current track in `gaplessAfterTrackId`.
+ *  Every other handover crossfades, an unknown value included. */
 export function canCrossfadeBetween(
-  current: Pick<StudioQueueItem, "trackId" | "releaseId">,
-  next: Pick<StudioQueueItem, "trackId" | "releaseId">,
-  releaseTrackIds: readonly string[] | null,
+  current: Pick<StudioQueueItem, "trackId">,
+  gaplessAfterTrackId: string | null,
 ): boolean {
-  if (current.releaseId !== next.releaseId) return true;
-  if (!releaseTrackIds) return false;
-  const currentPosition = releaseTrackIds.indexOf(current.trackId);
-  const nextPosition = releaseTrackIds.indexOf(next.trackId);
-  if (currentPosition === -1 || nextPosition === -1) return false;
-  return nextPosition !== currentPosition + 1;
+  return gaplessAfterTrackId !== current.trackId;
 }

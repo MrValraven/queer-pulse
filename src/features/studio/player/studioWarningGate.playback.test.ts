@@ -351,7 +351,6 @@ describe("preload never pre-buffers a gated track", () => {
       readStatus: () => "playing",
       readCrossfadeSeconds: () => 6,
       readPlaybackSettings: () => ASKING,
-      releaseTrackIdsFor: () => null,
       shouldHoldCrossfade: () => false,
       onCrossfadeStart: vi.fn(),
     };

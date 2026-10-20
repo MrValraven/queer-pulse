@@ -1,0 +1,16 @@
+.avatarWrap {
+  position: relative;
+  display: inline-flex;
+}
+
+.dot {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+  border: 2px solid var(--studio-surface);
+  pointer-events: none;
+}

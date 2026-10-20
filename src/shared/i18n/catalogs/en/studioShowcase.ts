@@ -475,12 +475,4 @@ export const studioShowcase: Catalog = {
   "withdrawn.still.meta.collectionTracks_one": "Collection · {count} track",
   "withdrawn.still.meta.collectionTracks_other": "Collection · {count} tracks",
   "withdrawn.still.meta.artistCity": "Artist · {city}",
-
-  // ── Rail: library shelf (StudioRail) ──
-  "rail.library.meta.album": "Album · {artist}",
-  "rail.library.meta.set": "Set · {artist}",
-  "rail.library.meta.collectionTracks_one": "Collection · {count} track",
-  "rail.library.meta.collectionTracks_other": "Collection · {count} tracks",
-  "rail.library.meta.mix": "Mix · {artist}",
-  "rail.library.meta.live": "Live · {venue}",
 };

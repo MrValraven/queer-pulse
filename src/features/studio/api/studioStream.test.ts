@@ -41,6 +41,44 @@ describe("fetchStudioStream in demo", () => {
     expect(stream.url).toBe("");
     expect(getStudioPreviewStream).not.toHaveBeenCalled();
   });
+
+  it("names the earlier track on a release that plays without gaps", async () => {
+    const second = await fetchStudioStream(true, "demo-track-mariana-3-02");
+    expect(second.gaplessAfterTrackId).toBe("demo-track-mariana-3-01");
+    const first = await fetchStudioStream(true, "demo-track-mariana-3-01");
+    expect(first.gaplessAfterTrackId).toBeNull();
+  });
+
+  it("answers null on a release with gaps", async () => {
+    const stream = await fetchStudioStream(true, "demo-track-mariana-2-02");
+    expect(stream.gaplessAfterTrackId).toBeNull();
+  });
+});
+
+describe("fetchStudioStream gapless link", () => {
+  it("passes the server's earlier track through", async () => {
+    getStudioStream.mockReset();
+    getStudioStream.mockResolvedValueOnce({
+      url: "https://bucket.example/track",
+      expiresAt: "2026-10-13T10:00:00.000Z",
+      waveformPeaks: null,
+      loudnessLufs: null,
+      peakDb: null,
+      gaplessAfterTrackId: "t0",
+    });
+    const stream = await fetchStudioStream(false, "t1");
+    expect(stream.gaplessAfterTrackId).toBe("t0");
+  });
+
+  it("reads a server that leaves the field out as null", async () => {
+    getStudioPreviewStream.mockReset();
+    getStudioPreviewStream.mockResolvedValueOnce({
+      url: "https://bucket.example/preview",
+      expiresAt: "2026-10-13T10:00:00.000Z",
+    });
+    const stream = await fetchStudioStream(false, "t1", "d".repeat(64));
+    expect(stream.gaplessAfterTrackId).toBeNull();
+  });
 });
 
 describe("fetchStudioStream through a preview link", () => {
@@ -61,6 +99,7 @@ describe("fetchStudioStream through a preview link", () => {
       waveformPeaks: null,
       loudnessLufs: null,
       peakDb: null,
+      gaplessAfterTrackId: null,
     });
   });
 
@@ -110,6 +149,7 @@ describe("fetchStudioStream through a preview link", () => {
       waveformPeaks: null,
       loudnessLufs: null,
       peakDb: null,
+      gaplessAfterTrackId: null,
     });
   });
 });

@@ -30,7 +30,8 @@ export function BottomTabBar() {
   const { loggedIn } = useAuth();
   const { t } = useTranslation();
   const { pathname } = useLocation();
-  const { activeSheet, openSheet, closeSheet } = useNavDrawer();
+  const { activeSheet, openSheet, closeSheet, closeSheetForNavigation } =
+    useNavDrawer();
   const isLinkVisible = useIsLinkVisible();
   const { initials, photo } = useAccountIdentity();
   const isLandingVisitor = useIsLandingVisitor();
@@ -49,7 +50,8 @@ export function BottomTabBar() {
   );
   // While the drawer is open, "More" owns the highlight — nothing underneath it
   // should read as the current destination.
-  const currentKey = activeSheet ? null : activeTabKey(pathname, tabs);
+  const isSheetOpen = activeSheet !== null;
+  const currentKey = isSheetOpen ? null : activeTabKey(pathname, tabs);
 
   return (
     <nav className={styles.bar} aria-label={t("nav:primary")}>
@@ -60,7 +62,20 @@ export function BottomTabBar() {
           <Link
             key={tab.key}
             to={linkToPath(tab.href)}
+            // The bar paints above an open sheet, so a tab tap is a way out of
+            // it. It then behaves like the sheet's own links: `replace`
+            // overwrites the history entry the sheet pushed, and
+            // closeSheetForNavigation tells the provider that entry is already
+            // spent, so its close does not pop a real entry and undo this
+            // navigation. The tab for the current page closes the sheet too,
+            // since `currentKey` is null while a sheet is open. With no sheet
+            // open the prop stays unset, keeping the router's own default.
+            replace={isSheetOpen || undefined}
             onClick={(event) => {
+              if (isSheetOpen) {
+                closeSheetForNavigation();
+                return;
+              }
               if (isActive) {
                 event.preventDefault();
                 scrollBus.requestScrollToTop();

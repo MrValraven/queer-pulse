@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FiCalendar } from "react-icons/fi";
+import { FiCalendar, FiUser } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import {
@@ -14,6 +14,7 @@ import { initials, relativeTime } from "./api/feed.adapters";
 import type { FeedItem } from "./api/feed.api";
 import { FeedReasonLine } from "./FeedPostActions";
 import { DEMO_GATHERING as g } from "./feedCards.data";
+import { useGatheringWhen } from "./useGatheringWhen";
 import styles from "./FeedCard.module.css";
 import {
   FeedActionLink,
@@ -85,10 +86,16 @@ function GatheringBanner({ src }: { src: string }) {
  * plainer card (eyebrow + relative time, host avatar, title, blurb, a single
  * "Details" action) rather than guessing at them. Either branch leads with the
  * cover photo as a full-bleed banner when there is one.
+ *
+ * When the live item carries `startsAt`, the card shows when the event
+ * happens (a date row above the host row) and drops the posted time from its
+ * head, which members kept reading as the event date. An older backend sends
+ * no `startsAt` and keeps the posted time.
  */
 export function GatheringCard({ item }: { item?: FeedItem } = {}) {
   const { t } = useTranslation();
   const fmt = useFormat();
+  const whenLabel = useGatheringWhen(item);
 
   if (item) {
     const host = item.actor;
@@ -96,7 +103,8 @@ export function GatheringCard({ item }: { item?: FeedItem } = {}) {
     const hostName =
       host?.displayName ?? t("feed:card.gathering.anonymousHost");
     const hostTint = hostSlug ? tintForSlug(hostSlug) : "plum";
-    const timestamp = relativeTime(item.createdAt, fmt);
+    const timestamp = whenLabel ? undefined : relativeTime(item.createdAt, fmt);
+    const hostedBy = t("feed:gathering.hostedBy", { host: hostName });
     return (
       <FeedCardShell accent="ink">
         {item.imageUrl && <GatheringBanner src={item.imageUrl} />}
@@ -118,9 +126,16 @@ export function GatheringCard({ item }: { item?: FeedItem } = {}) {
           }
           name={item.title}
           meta={
-            <FeedStat icon={<FiCalendar aria-hidden />}>
-              {t("feed:gathering.hostedBy", { host: hostName })}
-            </FeedStat>
+            whenLabel ? (
+              <div className={styles.metaRows}>
+                <FeedStat icon={<FiCalendar aria-hidden />}>
+                  <time dateTime={item.startsAt}>{whenLabel}</time>
+                </FeedStat>
+                <FeedStat icon={<FiUser aria-hidden />}>{hostedBy}</FeedStat>
+              </div>
+            ) : (
+              <FeedStat icon={<FiCalendar aria-hidden />}>{hostedBy}</FeedStat>
+            )
           }
         />
         <FeedQuote className={styles.quoteAsTyped}>{item.summary}</FeedQuote>

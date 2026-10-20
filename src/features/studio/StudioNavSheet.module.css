@@ -130,29 +130,6 @@
   min-height: 44px;
 }
 
-/* The showcase rail's giving line, small and muted at the end of the list. */
-.giving {
-  margin: 10px 0 6px;
-  padding: 10px 12px 0;
-  border-top: 1px solid rgba(var(--studio-ink-rgb), 0.1);
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: var(--text-12);
-  line-height: 1.5;
-  color: var(--studio-text-faint);
-}
-.giving em {
-  color: var(--studio-text-muted);
-}
-.giving b {
-  color: var(--studio-accent-text);
-  font-style: normal;
-}
-.givingPaid {
-  display: block;
-  margin-top: 4px;
-}
-
 @keyframes studioSheetIn {
   from {
     transform: translateX(-100%);

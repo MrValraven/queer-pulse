@@ -62,6 +62,9 @@ export const AUDIT_ACTION_LABEL_KEY: Partial<Record<string, string>> = {
   // A staff look at an unfinished creator draft; the note names only the kind
   // and the id.
   creator_draft_viewed: "admin:moderation.action.creatorDraftViewed",
+  // Pulse Live: staff ended or deleted a reported game, with a reason.
+  quizshow_game_ended: "admin:moderation.action.quizshowGameEnded",
+  quizshow_game_deleted: "admin:moderation.action.quizshowGameDeleted",
 };
 
 /** The moderator-facing label for one audit entry. An unmapped code falls

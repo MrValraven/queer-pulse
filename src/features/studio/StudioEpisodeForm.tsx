@@ -25,6 +25,7 @@ import {
   createChapterDraftId,
   type ChapterDraft,
 } from "./upload/chapters/studioTracklist";
+import creatorStyles from "./creator.module.css";
 import css from "./StudioEpisodeUpload.module.css";
 import tracksStyles from "./StudioUploadTracks.module.css";
 
@@ -243,6 +244,7 @@ function EpisodeFields({
         {isSaved ? t("studio:episodeUpload.savedStatus") : ""}
       </p>
       <CreatorDraftNotice
+        className={creatorStyles.draftNotice}
         messageKey="studio:creatorDraftNote.episodeBody"
         isShown={track.publishedAt === null}
       />

@@ -184,6 +184,8 @@ function joinTeamOf(
 /**
  * `lobby:join`. A member who already has a row gets its `me` back unchanged;
  * a late joiner enters with `joinedAt = now` and plays from the next question.
+ * A first join to an 18+ session needs `hasAcceptedAdultContent: true`; a
+ * rejoin skips that check, as on the server.
  * The player's own room then gets a fresh `session:state`.
  */
 function joinLobby(
@@ -203,6 +205,9 @@ function joinLobby(
     return succeed({ me: toMe(state, existingPlayer.playerId) }, [
       { kind: "session_state", playerId: existingPlayer.playerId },
     ]);
+  }
+  if (state.isAdultsOnly && input.hasAcceptedAdultContent !== true) {
+    return refuse("quizshow_adult_consent_required", state);
   }
   if (!isOpenStatus(state.cursor.status)) {
     return refuse("quizshow_session_finished", state);

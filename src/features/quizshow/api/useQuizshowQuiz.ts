@@ -6,13 +6,17 @@ import type {
   QuizshowQuizResponse,
   QuizshowStarterPackCard,
 } from "../../../shared/contracts/quizshow";
+import type { QuizshowScope } from "../quizshowScope";
 import {
+  getQuizshowGame,
+  getQuizshowGameImportSources,
   getQuizshowImportSources,
   getQuizshowPacks,
   getQuizshowQuiz,
 } from "./quizshow.api";
 import { quizshowKeys } from "./quizshowKeys";
 import { demoGetQuiz, demoImportSources, demoPacks } from "./quizshowDemoStore";
+import { demoGameImportSources, demoGetGame } from "./quizshowDemoGames";
 
 const LIVE_PANEL_REFETCH_MS = 15_000;
 const MAX_RETRIES = 2;
@@ -31,8 +35,39 @@ export function shouldRetryQuizshowRead(
   return failureCount < MAX_RETRIES;
 }
 
+/** A scope whose slug or id has not resolved yet holds its reads back. */
+export function hasQuizshowScopeId(scope: QuizshowScope): boolean {
+  return scope.kind === "event" ? scope.eventSlug !== "" : scope.gameId !== "";
+}
+
+async function fetchQuizFor(
+  scope: QuizshowScope,
+  demoMode: boolean,
+): Promise<QuizshowQuizResponse> {
+  if (scope.kind === "event") {
+    return demoMode
+      ? demoGetQuiz(scope.eventSlug)
+      : getQuizshowQuiz(scope.eventSlug);
+  }
+  return demoMode ? demoGetGame(scope.gameId) : getQuizshowGame(scope.gameId);
+}
+
+async function fetchImportSourcesFor(
+  scope: QuizshowScope,
+  demoMode: boolean,
+): Promise<{ items: QuizshowImportSource[] }> {
+  if (scope.kind === "event") {
+    return demoMode
+      ? demoImportSources(scope.eventSlug)
+      : getQuizshowImportSources(scope.eventSlug);
+  }
+  return demoMode
+    ? demoGameImportSources(scope.gameId)
+    : getQuizshowGameImportSources(scope.gameId);
+}
+
 export function useQuizshowQuiz(
-  slug: string,
+  scope: QuizshowScope,
   options: {
     isEnabled: boolean;
     /** Live only: poll this often while no session is open, so a screen notices a new lobby. Off when left out. */
@@ -42,8 +77,8 @@ export function useQuizshowQuiz(
   const { demoMode } = useDemoMode();
   const { noSessionRefetchMs } = options;
   return useQuery<QuizshowQuizResponse>({
-    queryKey: quizshowKeys.quiz(slug, demoMode),
-    enabled: options.isEnabled && slug !== "",
+    queryKey: quizshowKeys.quizFor(scope, demoMode),
+    enabled: options.isEnabled && hasQuizshowScopeId(scope),
     retry: shouldRetryQuizshowRead,
     // Live only: the live panel's player count moves while a session is open.
     refetchInterval: (query) => {
@@ -51,7 +86,7 @@ export function useQuizshowQuiz(
       if (query.state.data?.liveSession) return LIVE_PANEL_REFETCH_MS;
       return noSessionRefetchMs ?? false;
     },
-    queryFn: async () => (demoMode ? demoGetQuiz(slug) : getQuizshowQuiz(slug)),
+    queryFn: async () => fetchQuizFor(scope, demoMode),
   });
 }
 
@@ -66,16 +101,33 @@ export function useQuizshowPacks(options: {
   });
 }
 
+/** An event row of the import list, with the fields an event row reads. */
+export type QuizshowEventImportSource = QuizshowImportSource & {
+  kind: "event";
+  eventSlug: string;
+  startAt: string;
+};
+
+/** Event rows only for now: game rows join the list with the game picker. */
+export function isEventImportSource(
+  source: QuizshowImportSource,
+): source is QuizshowEventImportSource {
+  return (
+    source.kind === "event" &&
+    source.eventSlug !== null &&
+    source.startAt !== null
+  );
+}
+
 export function useQuizshowImportSources(
-  slug: string,
+  scope: QuizshowScope,
   options: { isEnabled: boolean },
 ): UseQueryResult<{ items: QuizshowImportSource[] }> {
   const { demoMode } = useDemoMode();
   return useQuery<{ items: QuizshowImportSource[] }>({
-    queryKey: quizshowKeys.importSources(slug, demoMode),
-    enabled: options.isEnabled && slug !== "",
+    queryKey: quizshowKeys.importSourcesFor(scope, demoMode),
+    enabled: options.isEnabled && hasQuizshowScopeId(scope),
     retry: shouldRetryQuizshowRead,
-    queryFn: async () =>
-      demoMode ? demoImportSources(slug) : getQuizshowImportSources(slug),
+    queryFn: async () => fetchImportSourcesFor(scope, demoMode),
   });
 }

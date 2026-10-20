@@ -5,6 +5,7 @@ import type {
   QuizshowQuiz,
   QuizshowSessionState,
 } from "../../../shared/contracts/quizshow";
+import { demoGameQuizFor, demoGameSessionRef } from "../api/quizshowDemoGames";
 import { demoQuizFor } from "../api/quizshowDemoStore";
 import {
   QUIZSHOW_DEMO_JOIN_CODE,
@@ -37,8 +38,13 @@ import { QUIZSHOW_SIMULATED_PLAYERS } from "./quizshowSimulatedPlayers.data";
 
 export interface QuizshowDemoEngineOptions {
   role: QuizshowAttachRole;
-  eventSlug: string;
-  eventTitle: string;
+  /** Null on a game session. */
+  eventSlug: string | null;
+  eventTitle: string | null;
+  /** A game session's id; the engine then plays `demoGameQuizFor(gameId)`. */
+  gameId?: string | null;
+  /** The game's 18+ switch; an adults round in the quiz marks the session 18+ too. */
+  isAdultsOnly?: boolean;
   /** Presenter and player: true. Remote and dry run on the remote: false. */
   isAutoHost: boolean;
   /** The player page joins the visitor as one more player. */
@@ -47,7 +53,7 @@ export interface QuizshowDemoEngineOptions {
   suggestedScreenName: string;
   /** Presenter: restarts after the thank-you screen. */
   shouldLoop: boolean;
-  /** Dry run passes the draft's quiz; otherwise `demoQuizFor(eventSlug)`. */
+  /** Dry run passes the draft's quiz; otherwise the game's or the event's demo quiz. */
   quiz?: QuizshowQuiz;
 }
 
@@ -81,16 +87,35 @@ const PLAYER_FRAME_NAMES: readonly string[] = [
 ] satisfies QuizshowPlayerFrameName[];
 const CONNECTION_LIFETIME_MS = 3_600_000;
 
+/** A game plays under its own demo session and code; an event under the fixed demo ones. */
+function demoSessionRefOf(options: QuizshowDemoEngineOptions): {
+  sessionId: string;
+  joinCode: string;
+} {
+  if (options.gameId) return demoGameSessionRef(options.gameId);
+  return {
+    sessionId: QUIZSHOW_DEMO_SESSION_ID,
+    joinCode: QUIZSHOW_DEMO_JOIN_CODE,
+  };
+}
+
 function buildEngine(options: QuizshowDemoEngineOptions, seed: number) {
+  const { sessionId, joinCode } = demoSessionRefOf(options);
   return createQuizshowEngine({
-    quiz: options.quiz ?? demoQuizFor(options.eventSlug),
+    quiz:
+      options.quiz ??
+      (options.gameId
+        ? demoGameQuizFor(options.gameId)
+        : demoQuizFor(options.eventSlug ?? "")),
     playMode: options.playMode,
     maxTeamSize: null,
     isReviewOn: true,
     eventSlug: options.eventSlug,
     eventTitle: options.eventTitle,
-    joinCode: QUIZSHOW_DEMO_JOIN_CODE,
-    sessionId: QUIZSHOW_DEMO_SESSION_ID,
+    gameId: options.gameId ?? null,
+    isAdultsOnly: options.isAdultsOnly ?? false,
+    joinCode,
+    sessionId,
     seed,
     now: seed,
   });
@@ -259,8 +284,8 @@ export function useQuizshowDemoEngine(
   useEffect(() => {
     optionsRef.current = options;
   });
-  const { role, eventSlug, playMode } = options;
-  const dependencyKey = `${role}|${eventSlug}|${playMode}`;
+  const { role, eventSlug, gameId, playMode } = options;
+  const dependencyKey = `${role}|${eventSlug}|${gameId ?? ""}|${playMode}`;
   useEffect(() => {
     if (!isEnabled) return undefined;
     const controller = createQuizshowDemoController(() => optionsRef.current);

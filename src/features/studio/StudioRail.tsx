@@ -1,107 +1,31 @@
+import { AnimatePresence, m } from "motion/react";
 import { Link } from "react-router-dom";
-import { ImageSlot } from "../../shared/components/ui";
+import { useMotionPrefs } from "../../app/providers/motionPrefs";
 import { routes } from "../../app/routeMap";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useFormat } from "../../shared/i18n/format";
-import {
-  RAIL_MAIN,
-  CONTRIBUTE,
-  GOVERNANCE,
-  UTILITY,
-  LIBRARY,
-  SUSTAINER_SINCE_DATE,
-  YEARLY_GIVING,
-} from "./studioShell.data";
+import { useStudioAccess } from "./api/useStudioAccess";
+import { RAIL_MAIN } from "./studioShell.data";
+import { LIVE_RAIL_LINKS } from "./studioRailLive.data";
 import { RailGroup } from "./StudioRailGroup";
-import { StudioRailLive } from "./StudioRailLive";
+import { StudioRailCreatePlaylist } from "./StudioRailCreatePlaylist";
+import { StudioRailPlaylists } from "./StudioRailPlaylists";
 import { useStudioShowcase } from "./useStudioShowcase";
 import styles from "./studio.module.css";
 
-function StudioRailShowcase() {
-  const { t } = useTranslation();
-  const fmt = useFormat();
-  return (
-    <>
-      <nav className={styles.railGrp} aria-label={t("studio:rail.v1.navLabel")}>
-        <RailGroup items={RAIL_MAIN} />
-      </nav>
-
-      <div className={styles.railDivider} />
-
-      <div className={styles.railGrp}>
-        <h5>{t("studio:rail.section.contribute")}</h5>
-        <RailGroup items={CONTRIBUTE} />
-      </div>
-
-      <div className={styles.railGrp}>
-        <h5>{t("studio:rail.section.governance")}</h5>
-        <RailGroup items={GOVERNANCE} />
-      </div>
-
-      <div className={styles.railGrp}>
-        <h5>{t("studio:rail.section.coop")}</h5>
-        <RailGroup items={UTILITY} />
-      </div>
-
-      <div className={styles.railDivider} />
-
-      <div className={styles.railGrp}>
-        <h5>{t("studio:rail.section.library")}</h5>
-        {LIBRARY.map((pl) => (
-          <Link key={pl.name} to={pl.to} className={styles.plItem}>
-            <span className={styles.plCov}>
-              <ImageSlot
-                src={pl.image}
-                tint={pl.tint}
-                width={36}
-                height={36}
-                radius={5}
-                placeholder=""
-              />
-            </span>
-            <span>
-              <span className={styles.plName} style={{ display: "block" }}>
-                {pl.name}
-                <em>{pl.em}</em>
-              </span>
-              <span className={styles.plMeta}>
-                {t(pl.metaKey, pl.metaValues)}
-              </span>
-            </span>
-          </Link>
-        ))}
-      </div>
-
-      <div className={styles.railFoot}>
-        <Translation
-          i18nKey="studio:rail.foot.sustainedSince"
-          components={{ em: <em /> }}
-          values={{
-            date: fmt.date(SUSTAINER_SINCE_DATE, {
-              month: "long",
-              year: "numeric",
-            }),
-          }}
-        />
-        <span className={styles.pay}>
-          <Translation
-            i18nKey="studio:rail.foot.paid"
-            components={{ b: <b /> }}
-            values={{
-              amount: fmt.currency(YEARLY_GIVING.amount),
-              count: YEARLY_GIVING.artistCount,
-            }}
-          />
-        </span>
-      </div>
-    </>
-  );
-}
-
+/**
+ * The Studio rail, the member's listening home: the brand, the main nav,
+ * then the Create playlist pill and their playlists. The pill and the list
+ * mount once the member can use Studio (the demo always can), and only the
+ * list scrolls. Creator, staff, co-op and help links live in the avatar
+ * menu.
+ */
 export function StudioRail() {
   const { t } = useTranslation();
   const isShowcase = useStudioShowcase();
+  const { hasAccess } = useStudioAccess();
+  const { reducedMotion } = useMotionPrefs();
+  const isListeningHomeShown = isShowcase || hasAccess;
   return (
     <aside className={styles.rail}>
       <div className={styles.brandRow}>
@@ -115,7 +39,25 @@ export function StudioRail() {
         <span className={styles.product}>{t("studio:brand.studioLabel")}</span>
       </div>
 
-      {isShowcase ? <StudioRailShowcase /> : <StudioRailLive />}
+      <nav className={styles.railGrp} aria-label={t("studio:rail.v1.navLabel")}>
+        <RailGroup items={isShowcase ? RAIL_MAIN : LIVE_RAIL_LINKS} />
+      </nav>
+
+      <AnimatePresence initial={false}>
+        {isListeningHomeShown && (
+          <m.div
+            key="listening"
+            className={styles.railBody}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: reducedMotion ? 0 : 0.2 }}
+          >
+            <StudioRailCreatePlaylist />
+            <StudioRailPlaylists />
+          </m.div>
+        )}
+      </AnimatePresence>
     </aside>
   );
 }

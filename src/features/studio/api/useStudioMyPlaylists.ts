@@ -26,9 +26,13 @@ export interface StudioPlaylistListResult {
 }
 
 /** The member's own playlists, newest updated first. `isEnabled: false`
- *  lets the add-to-playlist picker wait until it opens. */
+ *  lets the add-to-playlist picker wait until it opens. `silentError: true`
+ *  keeps the global error toast quiet for a caller that shows its own error
+ *  row, as the Studio rail does. Every observer of the myPlaylists key shares
+ *  one `meta` (TanStack keeps the last observer's options), so silentError is
+ *  best effort and every caller keeps its own inline error UI. */
 export function useStudioMyPlaylists(
-  options: { isEnabled?: boolean } = {},
+  options: { isEnabled?: boolean; silentError?: boolean } = {},
 ): StudioPlaylistListResult {
   const { demoMode } = useDemoMode();
   const { hasAccess } = useStudioAccess();
@@ -36,6 +40,7 @@ export function useStudioMyPlaylists(
     queryKey: studioKeys.myPlaylists(demoMode),
     enabled: (options.isEnabled ?? true) && (demoMode || hasAccess),
     staleTime: demoMode ? Number.POSITIVE_INFINITY : undefined,
+    meta: options.silentError ? { silentError: true } : undefined,
     initialPageParam: null as string | null,
     queryFn: ({ pageParam, client }): Promise<StudioPlaylistsPage> =>
       readStudio(client, async () => {

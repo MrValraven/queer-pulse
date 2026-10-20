@@ -28,6 +28,9 @@ export interface StudioPreloadedStream {
   queueEntryId: string;
   expiresAtMs: number;
   gainDb: number;
+  /** The track this one follows without a gap (a "Play without gaps"
+   *  release), or null. */
+  gaplessAfterTrackId: string | null;
 }
 
 /** What the preloader reads; always the latest values. */
@@ -39,8 +42,6 @@ export interface StudioDeckSources {
   readCrossfadeSeconds: () => number;
   /** Autoplay next and hide explicit (contract F.2). */
   readPlaybackSettings: () => StudioPlaybackSettings;
-  /** The release's tracklist from the query cache, or null. */
-  releaseTrackIdsFor: (releaseId: string) => string[] | null;
   /** True while a crossfade would fight another fade (the sleep timer is set
    *  to the end of the track, or its own fade is running). The handover then
    *  stays a gapless swap. */
@@ -135,6 +136,7 @@ export function createDeckPreloader(
         queueEntryId: next.queueEntryId,
         expiresAtMs: Date.parse(stream.expiresAt),
         gainDb,
+        gaplessAfterTrackId: stream.gaplessAfterTrackId ?? null,
       };
     } catch {
       // A failed preload is tried once; the swap then loads the track the
@@ -162,8 +164,7 @@ export function createDeckPreloader(
       return;
     if (seconds < crossfadeStartSeconds(durationSeconds, crossfadeSeconds))
       return;
-    const releaseTrackIds = sources.releaseTrackIdsFor(current.releaseId);
-    if (!canCrossfadeBetween(current, next, releaseTrackIds)) return;
+    if (!canCrossfadeBetween(current, ready.gaplessAfterTrackId)) return;
     isCrossfadeBlocked = true;
     preload = null;
     attemptedEntryId = null;

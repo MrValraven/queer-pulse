@@ -1,52 +1,65 @@
-import { render, screen, within } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { fireEvent, render, screen, within } from "@testing-library/react";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
+import { resetDemoPlaylists } from "./api/studioDemoPlaylists";
 import { StudioRail } from "./StudioRail";
 
-let isShowcase = true;
-vi.mock("./useStudioShowcase", () => ({ useStudioShowcase: () => isShowcase }));
+const rail = vi.hoisted(() => ({ isShowcase: true, hasAccess: true }));
+vi.mock("./useStudioShowcase", () => ({
+  useStudioShowcase: () => rail.isShowcase,
+}));
 vi.mock("./api/useStudioAccess", () => ({
   useStudioAccess: () => ({
-    status: "granted",
-    hasAccess: true,
+    status: rail.hasAccess ? "granted" : "denied",
+    hasAccess: rail.hasAccess,
     isPending: false,
-    uploadablePersonas: [
-      { id: "p1", name: "NIGHTFORM", href: "/studio/artist?id=p1" },
-    ],
+    uploadablePersonas: rail.hasAccess
+      ? [{ id: "p1", name: "NIGHTFORM", href: "/studio/artist?id=p1" }]
+      : [],
   }),
 }));
 
-const staff = vi.hoisted(() => ({ isStaff: false }));
-vi.mock("./useIsStudioStaff", () => ({
-  useIsStudioStaff: () => staff.isStaff,
-}));
+beforeEach(() => {
+  rail.isShowcase = true;
+  rail.hasAccess = true;
+  resetDemoPlaylists();
+});
+
+function renderRailAt(path: string) {
+  render(
+    <TestProviders initialEntries={[path]}>
+      <StudioRail />
+    </TestProviders>,
+  );
+}
 
 describe("StudioRail", () => {
-  it("lights up only Home on Studio home in the demo", async () => {
-    isShowcase = true;
-    render(
-      <TestProviders initialEntries={["/studio"]}>
-        <StudioRail />
-      </TestProviders>,
-    );
+  it("lights up Home in the demo and leads into the member's playlists", async () => {
+    renderRailAt("/studio");
     const home = await screen.findByRole("link", { name: "Home" });
     expect(home).toHaveAttribute("aria-current", "page");
     expect(
-      screen.getByRole("link", { name: "The Wednesday set" }),
-    ).not.toHaveAttribute("aria-current");
-    expect(screen.getByRole("link", { name: "Browse" })).not.toHaveAttribute(
-      "aria-current",
-    );
+      screen.queryByRole("link", { name: "Notifications" }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /create playlist/i }),
+    ).toBeInTheDocument();
+    const playlists = screen.getByRole("navigation", {
+      name: "Your playlists",
+    });
+    expect(
+      within(playlists).getByRole("link", { name: /liked songs/i }),
+    ).toHaveAttribute("href", "/studio/liked");
   });
 
-  it("shows the live destinations in live mode, with the artist's links", async () => {
-    isShowcase = false;
-    render(
-      <TestProviders initialEntries={["/studio/artist?id=p1"]}>
-        <StudioRail />
-      </TestProviders>,
+  it("keeps the live main nav to Home, Search and Library", async () => {
+    rail.isShowcase = false;
+    renderRailAt("/studio");
+    const nav = await screen.findByRole("navigation", { name: "Studio" });
+    expect(within(nav).getByRole("link", { name: "Home" })).toHaveAttribute(
+      "href",
+      "/studio",
     );
-    const nav = await screen.findByRole("navigation");
     expect(within(nav).getByRole("link", { name: "Search" })).toHaveAttribute(
       "href",
       "/studio/search",
@@ -56,64 +69,43 @@ describe("StudioRail", () => {
       "/studio/library",
     );
     expect(
-      within(nav).getByRole("link", { name: "Open calls" }),
-    ).toHaveAttribute("href", "/studio/calls");
-    expect(screen.getByRole("link", { name: "Your numbers" })).toHaveAttribute(
-      "href",
-      "/studio/dashboard",
-    );
-    expect(
-      screen.getByRole("link", { name: "Upload a release" }),
-    ).toHaveAttribute("href", "/studio/upload");
-    expect(screen.getByRole("link", { name: "Press kit" })).toHaveAttribute(
-      "href",
-      "/studio/press/edit",
-    );
-    expect(screen.getByRole("link", { name: /NIGHTFORM/ })).toHaveAttribute(
-      "aria-current",
-      "page",
-    );
-    expect(
-      screen.getByRole("link", { name: "Solidarity fund" }),
-    ).toHaveAttribute("href", "/studio/solidarity-fund");
-    expect(screen.queryByText(/Sustained/)).not.toBeInTheDocument();
-  });
-
-  it("gives every live member the Help and info pages", async () => {
-    isShowcase = false;
-    staff.isStaff = false;
-    render(
-      <TestProviders initialEntries={["/studio"]}>
-        <StudioRail />
-      </TestProviders>,
-    );
-    const links: [string, string][] = [
-      ["Help", "/studio/help"],
-      ["About Studio", "/studio/about"],
-      ["Rights and takedowns", "/studio/rights"],
-      ["Studio terms", "/studio/terms"],
-      ["Accessibility", "/studio/accessibility"],
-    ];
-    for (const [name, href] of links)
-      expect(await screen.findByRole("link", { name })).toHaveAttribute(
-        "href",
-        href,
-      );
-    expect(
-      screen.queryByRole("link", { name: "Flag review" }),
+      within(nav).queryByRole("link", { name: "Open calls" }),
     ).not.toBeInTheDocument();
+    for (const name of [
+      "Solidarity fund",
+      "Upload a release",
+      "Your numbers",
+      "Press kit",
+      "Help",
+    ])
+      expect(screen.queryByRole("link", { name })).not.toBeInTheDocument();
   });
 
-  it("adds Flag review for staff", async () => {
-    isShowcase = false;
-    staff.isStaff = true;
-    render(
-      <TestProviders initialEntries={["/studio"]}>
-        <StudioRail />
-      </TestProviders>,
+  it("opens the create dialog from the Create playlist pill", async () => {
+    rail.isShowcase = false;
+    renderRailAt("/studio");
+    fireEvent.click(
+      await screen.findByRole("button", { name: /create playlist/i }),
     );
+    expect(await screen.findByRole("dialog")).toBeInTheDocument();
+  });
+
+  it("leaves the pill and the playlists out without Studio access", async () => {
+    rail.isShowcase = false;
+    rail.hasAccess = false;
+    renderRailAt("/studio");
     expect(
-      await screen.findByRole("link", { name: "Flag review" }),
-    ).toHaveAttribute("href", "/studio/flag-review");
+      await screen.findByRole("navigation", { name: "Studio" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: /create playlist/i }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("navigation", { name: "Your playlists" }),
+    ).not.toBeInTheDocument();
+    expect(screen.getAllByRole("navigation")).toHaveLength(1);
+    expect(
+      screen.queryByRole("link", { name: /liked songs/i }),
+    ).not.toBeInTheDocument();
   });
 });

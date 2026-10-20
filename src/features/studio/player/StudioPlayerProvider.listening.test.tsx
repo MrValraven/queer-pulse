@@ -32,6 +32,8 @@ let streamAnalysis = {
   loudnessLufs: null as number | null,
   peakDb: null as number | null,
 };
+/** Track id to the track it follows without a gap ("Play without gaps"). */
+const gaplessAfterByTrackId = new Map<string, string>();
 const fetchStudioStream = vi.fn(
   async (_demoMode: boolean, trackId: string, _previewToken?: string) => {
     streamVersion += 1;
@@ -39,6 +41,7 @@ const fetchStudioStream = vi.fn(
       url: `https://stream.example/${trackId}?v=${streamVersion}`,
       expiresAt: new Date(Date.now() + 900_000).toISOString(),
       ...streamAnalysis,
+      gaplessAfterTrackId: gaplessAfterByTrackId.get(trackId) ?? null,
     };
   },
 );
@@ -106,6 +109,7 @@ beforeEach(() => {
   };
   streamVersion = 0;
   streamAnalysis = { waveformPeaks: null, loudnessLufs: null, peakDb: null };
+  gaplessAfterByTrackId.clear();
   playbackSettings = {
     autoplayNext: true,
     hideExplicit: false,
@@ -212,7 +216,21 @@ describe("gapless and crossfade", () => {
     expect(hook.result.current.player.currentItem?.trackId).toBe("u1");
   });
 
-  it("swaps gaplessly between consecutive tracks of one release", async () => {
+  it("crossfades between consecutive tracks of one release", async () => {
+    const { engine, hook } = renderPlayer([albumOne]);
+    act(() => hook.result.current.player.setCrossfadeSeconds(6));
+    await startPlaying(engine, () =>
+      hook.result.current.player.playRelease("r1"),
+    );
+    act(() => engine.emit({ type: "time", seconds: 181 }));
+    await settle();
+    act(() => engine.emit({ type: "time", seconds: 194 }));
+    expect(engine.handover).toHaveBeenCalledWith({ crossfadeSeconds: 6 });
+    expect(hook.result.current.player.currentItem?.trackId).toBe("t2");
+  });
+
+  it("swaps gaplessly between tracks of a release marked to play without gaps", async () => {
+    gaplessAfterByTrackId.set("t2", "t1");
     const { engine, hook } = renderPlayer([albumOne]);
     act(() => hook.result.current.player.setCrossfadeSeconds(6));
     expect(hook.result.current.player.preferences.crossfadeSeconds).toBe(6);

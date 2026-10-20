@@ -9,6 +9,8 @@ import {
   QUIZSHOW_TIMED_PHASES,
   QUIZSHOW_STARTER_PACK_KEYS,
   QUIZSHOW_ERROR_CODES,
+  QUIZSHOW_GAMES_PER_MEMBER_MAX,
+  QUIZSHOW_LOBBY_OPENS_PER_HOUR_MAX,
   type QuizshowMyReveal,
   type QuizshowStateBase,
 } from "./quizshow";
@@ -53,18 +55,25 @@ describe("quizshow contract mirror", () => {
       "paused",
     ]);
   });
-  it("offers eight team shapes and four starter packs", () => {
+  it("offers eight team shapes and five starter packs", () => {
     expect(QUIZSHOW_TEAM_COLOR_KEYS).toHaveLength(8);
     expect(QUIZSHOW_STARTER_PACK_KEYS).toEqual([
       "pride_history",
       "portuguese_queer_culture",
       "eurovision",
       "drag_herstory",
+      "lisbon_queer_icons",
     ]);
   });
   it("carries the shared screen mute on the state base", () => {
-    const base: Pick<QuizshowStateBase, "isScreenMuted"> = {
+    const base: Pick<
+      QuizshowStateBase,
+      "isScreenMuted" | "kind" | "gameId" | "isAdultsOnly"
+    > = {
       isScreenMuted: true,
+      kind: "game",
+      gameId: "game-1",
+      isAdultsOnly: false,
     };
     expect(base.isScreenMuted).toBe(true);
   });
@@ -77,6 +86,30 @@ describe("quizshow contract mirror", () => {
       { hasAnswered: false, ownAnswerId: null };
     expect(withAnswer.ownAnswerId).toBe("answer-1");
     expect(withoutAnswer.ownAnswerId).toBeNull();
+  });
+  it("carries the game error codes and keeps the restriction code last", () => {
+    const resultsIndex = QUIZSHOW_ERROR_CODES.indexOf(
+      "quizshow_results_not_found",
+    );
+    expect(
+      QUIZSHOW_ERROR_CODES.slice(resultsIndex + 1, resultsIndex + 5),
+    ).toEqual([
+      "quizshow_game_not_found",
+      "quizshow_game_limit_reached",
+      "quizshow_lobby_rate_limited",
+      "quizshow_game_adults_rounds_need_switch",
+    ]);
+    const rateLimitedIndex = QUIZSHOW_ERROR_CODES.indexOf(
+      "quizshow_rate_limited",
+    );
+    expect(QUIZSHOW_ERROR_CODES[rateLimitedIndex + 1]).toBe(
+      "quizshow_adult_consent_required",
+    );
+    expect(QUIZSHOW_ERROR_CODES.at(-1)).toBe("ACCOUNT_RESTRICTED");
+  });
+  it("caps games at 50 and lobbies at 10 an hour", () => {
+    expect(QUIZSHOW_GAMES_PER_MEMBER_MAX).toBe(50);
+    expect(QUIZSHOW_LOBBY_OPENS_PER_HOUR_MAX).toBe(10);
   });
   it("ends the error list with the reused restriction code", () => {
     expect(QUIZSHOW_ERROR_CODES.at(-1)).toBe("ACCOUNT_RESTRICTED");

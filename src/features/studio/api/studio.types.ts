@@ -470,6 +470,8 @@ export interface StudioReleaseDTO extends StudioReleaseCardDTO {
   /** Set while scheduled. */
   publishAt?: string | null;
   buyUrl?: string | null;
+  /** The artist marked the release to play without gaps between tracks. */
+  isGapless?: boolean;
   /** The persona's Bandcamp, Ko-fi and Patreon links, in persona order. */
   supportLinks?: StudioSupportLinkDTO[];
   /** 1 when no version rows exist. */
@@ -571,6 +573,9 @@ export interface StudioStreamDTO {
   loudnessLufs: number | null;
   /** One decimal. */
   peakDb: number | null;
+  /** Set when the release plays without gaps: the nearest earlier playable
+   *  track, the one this track follows straight on from. Null otherwise. */
+  gaplessAfterTrackId?: string | null;
 }
 
 /** What the player keeps of a stream: the analysis alone (the URL stays
@@ -608,6 +613,8 @@ export interface UpdateStudioReleaseBody {
   sceneId?: string | null;
   /** v3: https only, at most 1000 characters; null clears it. */
   buyUrl?: string | null;
+  /** Play without gaps between consecutive tracks. */
+  isGapless?: boolean;
 }
 
 export interface CreateStudioTrackBody {

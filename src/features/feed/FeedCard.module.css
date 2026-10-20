@@ -200,6 +200,12 @@
   margin-block-start: calc((1lh - 1em) / 2);
   color: var(--ink-40);
 }
+/* Stacked stats in an identity's meta slot (the live event card's date row
+   above its host row). */
+.metaRows {
+  display: grid;
+  gap: 2px;
+}
 
 /* ── Divider + actions ── */
 .divider {
