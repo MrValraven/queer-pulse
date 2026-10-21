@@ -1,0 +1,116 @@
+/* "Bring people from QueerPulse" in the RSVP details modal: the hint, the
+   picker toggle, the connections picker and the list of sent invites.
+   Tokens only, so light and dark both follow the theme. */
+
+.hint {
+  margin: 0 0 var(--gap-xs);
+  font-size: var(--text-13);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+/* The section sits inside the modal's Collapse, where its field is the last
+   of its kind and loses the field margin. The gap to the next field lives
+   here instead, matching `.detailsField` (18px), and folds with the section. */
+.section {
+  padding-block-end: 18px;
+}
+
+.toggle {
+  gap: 8px;
+}
+
+/* A list that never loaded: the line, then its retry. */
+.loadError {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: var(--gap-sm);
+}
+
+.loadError .hint {
+  margin: 0;
+}
+
+/* The picker sits under its toggle; the modal's Save sends its picks. */
+.picker {
+  padding-top: var(--gap-xs);
+}
+
+/* The notice that a raised guest count unpicked someone. */
+.trimmedHint {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  margin: 0;
+  padding-top: var(--gap-xs);
+  font-size: var(--text-13);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+.trimmedIcon {
+  flex-shrink: 0;
+  margin-top: 0.2em;
+}
+
+.invited {
+  padding-top: var(--gap-sm);
+}
+
+.listLabel {
+  margin: 0 0 4px;
+  font-size: var(--text-caption);
+  font-weight: 600;
+  color: var(--ink-60);
+}
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Padding and the hairline live on the row, so they fold with its item. */
+.row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-block: 8px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+.identity {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.name {
+  overflow: hidden;
+  font-size: var(--text-body-sm);
+  font-weight: 600;
+  color: var(--ink);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.status {
+  font-size: var(--text-13);
+  color: var(--ink-60);
+}
+
+/* "Going" is drawn in jade; every other answer keeps the neutral ink. */
+.statusPositive {
+  color: var(--jade);
+}
+
+/* `size="sm"` drops the floor to 40px; a finger gets the full 44px. */
+@media (pointer: coarse) {
+  .toggle,
+  .retry,
+  .withdraw {
+    min-height: 44px;
+  }
+}

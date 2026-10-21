@@ -1385,10 +1385,37 @@ export function toArtistStatsView(
 
 // ── Studio v2: genres and followed artists ─────────────────────────────────
 
+/** One cover per listed facet value, read defensively: an older server
+ *  omits `covers`, and a key outside `values` or a blank URL is dropped. */
+export function toFacetCoverMap<FacetValue extends string>(
+  covers: unknown,
+  values: readonly FacetValue[],
+): Partial<Record<FacetValue, string>> {
+  const coverByValue: Partial<Record<FacetValue, string>> = {};
+  if (typeof covers !== "object" || covers === null) return coverByValue;
+  const coverRecord = covers as Record<string, unknown>;
+  for (const value of values) {
+    const coverUrl = coverRecord[value];
+    if (typeof coverUrl === "string" && coverUrl.trim() !== "") {
+      coverByValue[value] = coverUrl;
+    }
+  }
+  return coverByValue;
+}
+
+export interface StudioGenreListView {
+  genres: StudioGenre[];
+  coverByGenre: Partial<Record<StudioGenre, string>>;
+}
+
 /** The server's genres, in its order (STUDIO_GENRES order); an unknown slug
- *  from a newer server is dropped so every chip has a label. */
-export function toGenreList(dto: StudioGenresDTO): StudioGenre[] {
-  return dto.genres.filter(isStudioGenre);
+ *  from a newer server is dropped so every chip has a label. Each genre
+ *  keeps the cover of its newest release, when it has one. */
+export function toGenreList(dto: StudioGenresDTO): StudioGenreListView {
+  const genres = (Array.isArray(dto.genres) ? dto.genres : []).filter(
+    isStudioGenre,
+  );
+  return { genres, coverByGenre: toFacetCoverMap(dto.covers, genres) };
 }
 
 /** A followed persona as a Studio artist, or null when its kind does not

@@ -423,6 +423,9 @@ export interface AttendeeRow {
    *  who asked to be listed to the hosts only, so the host's list can say so
    *  (`AttendeeNeeds`). */
   detailsVisibility?: string | null;
+  /** The full name of the member whose RSVP invite brought them, organisers
+   *  only. Absent when they came on their own or the viewer is no organiser. */
+  invitedByName?: string;
 }
 
 /**
@@ -489,6 +492,12 @@ export function attendeeToRow(dto: AttendeeDTO, index: number): AttendeeRow {
     dietaryNeeds: dto.dietaryNeeds,
     customAnswer: dto.customAnswer,
     detailsVisibility: dto.detailsVisibility ?? null,
+    ...(dto.invitedBy
+      ? {
+          invitedByName:
+            `${dto.invitedBy.firstName} ${dto.invitedBy.lastName}`.trim(),
+        }
+      : {}),
   };
 }
 

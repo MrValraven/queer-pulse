@@ -1,5 +1,139 @@
-/* A narrow phone cannot fit every "Me and N others" segment on one row, and
-   each label holds to one line, so the tray wraps onto a second row. */
-.guestSegments {
-  flex-wrap: wrap;
+/* "Who's coming" quantity row: the party in words and seat icons on the
+   left, the minus and plus stepper on the right. Same card language as the
+   visibility options below it (border, radius, surface), and one line on a
+   360px phone at any count. */
+.quantityRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 56px;
+  padding-block: 8px;
+  padding-inline: 14px 8px;
+  background: transparent;
+  border: 1.5px solid rgba(var(--line-rgb), 0.12);
+  border-radius: var(--radius-12);
+  font-family: var(--sans);
+  color: var(--ink);
+}
+
+.party {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+}
+
+.partyLabel {
+  font-size: var(--text-14);
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+/* A quiet row of seats: the member's filled icon, one outline per guest,
+   one dashed coral seat per member invite, and a "+N" once the party
+   outgrows the row. */
+.seats {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  min-height: 16px;
+  font-size: var(--text-14);
+  line-height: 1;
+}
+
+.seatMember,
+.seatGuest,
+.seatInvite {
+  display: inline-flex;
+}
+
+.seatMember {
+  color: var(--ink);
+}
+
+.seatGuest {
+  color: var(--ink-60);
+}
+
+/* A seat held by a member invite, sent or picked: coral and dashed, so it
+   reads apart from the plain outline of a guest not on QueerPulse. */
+.seatInvite {
+  color: var(--accent-text);
+}
+
+.seatInvite svg {
+  stroke-dasharray: 3 2;
+}
+
+/* Why plus is held at the cap: a quiet notice under the stepper's hint. */
+.capHint {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  margin: 6px 0 0;
+  font-size: var(--text-13);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+.capHintIcon {
+  flex-shrink: 0;
+  margin-top: 0.2em;
+}
+
+.seatOverflow {
+  margin-inline-start: 2px;
+  font-size: var(--text-12);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-60);
+}
+
+.stepper {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Round 44px steps with a hairline ring, so they read as buttons on the
+   card's surface. Scoped under the row to out-rank the shared icon button
+   rules, whose explicit transition list already covers these changes. */
+.quantityRow .stepButton {
+  border-color: rgba(var(--line-rgb), 0.2);
+  color: var(--ink);
+}
+
+.quantityRow .stepButton:active:not([aria-disabled="true"]) {
+  transform: scale(0.94);
+}
+
+/* The global ring sets a small radius; restate the token triple so the ring
+   stays round on these pill buttons, at a limit too. */
+.quantityRow .stepButton:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-radius: var(--radius-pill);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .quantityRow .stepButton:hover:not(:disabled):not([aria-disabled="true"]) {
+    border-color: var(--accent);
+    color: var(--accent-text);
+  }
+}
+
+/* The count between the steps. RollingNumber rolls each new figure in;
+   a fixed width keeps the buttons still while it changes. */
+.count {
+  min-width: 2.5ch;
+  font-size: var(--text-16);
+  font-weight: 600;
+  line-height: 1.2;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
 }

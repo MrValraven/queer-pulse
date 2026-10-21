@@ -5,6 +5,15 @@ import {
   type StudioAudioEnvironment,
 } from "./studioWebAudioEngine";
 
+/** A TimeRanges stand-in over [start, end] pairs. */
+function timeRangesOf(spans: Array<[number, number]>): TimeRanges {
+  return {
+    length: spans.length,
+    start: (index: number) => spans[index]?.[0] ?? 0,
+    end: (index: number) => spans[index]?.[1] ?? 0,
+  };
+}
+
 /** Just enough of an <audio> element: real events, recorded calls. */
 function createStubElement() {
   const element = Object.assign(new EventTarget(), {
@@ -19,6 +28,7 @@ function createStubElement() {
     preload: "none",
     hidden: true,
     error: null as MediaError | null,
+    buffered: timeRangesOf([]),
     playResult: Promise.resolve(),
     attributes: new Map<string, string>(),
     getAttribute: (name: string): string | null =>
@@ -241,6 +251,66 @@ describe("createWebAudioEngine: one deck at a time", () => {
     decks[0].dispatchEvent(new Event("ended"));
     decks[0].dispatchEvent(new Event("timeupdate"));
     expect(events).toEqual([]);
+  });
+});
+
+describe("createWebAudioEngine: buffered ranges", () => {
+  it("emits the loaded spans once on progress and not again while unchanged", () => {
+    const { engine, decks, events } = setup();
+    engine.load("https://stream.example/a", 0, 0);
+    decks[0].buffered = timeRangesOf([[0, 30]]);
+    decks[0].dispatchEvent(new Event("progress"));
+    decks[0].dispatchEvent(new Event("progress"));
+    decks[0].buffered = timeRangesOf([[0, 30.1]]);
+    decks[0].dispatchEvent(new Event("progress"));
+    expect(events).toEqual([
+      { type: "buffered", ranges: [{ startSeconds: 0, endSeconds: 30 }] },
+    ]);
+  });
+
+  it("emits again after a seek lands in a new span", () => {
+    const { engine, decks, events } = setup();
+    engine.load("https://stream.example/a", 0, 0);
+    decks[0].buffered = timeRangesOf([[0, 30]]);
+    decks[0].dispatchEvent(new Event("progress"));
+    decks[0].buffered = timeRangesOf([
+      [0, 30],
+      [120, 150],
+    ]);
+    decks[0].dispatchEvent(new Event("seeked"));
+    expect(events).toHaveLength(2);
+    expect(events[1]).toEqual({
+      type: "buffered",
+      ranges: [
+        { startSeconds: 0, endSeconds: 30 },
+        { startSeconds: 120, endSeconds: 150 },
+      ],
+    });
+  });
+
+  it("emits nothing from load() and ignores the idle deck", () => {
+    const { engine, decks, events } = setup();
+    engine.load("https://stream.example/a", 0, 0);
+    expect(events).toEqual([]);
+    decks[1].buffered = timeRangesOf([[0, 40]]);
+    decks[1].dispatchEvent(new Event("progress"));
+    expect(events).toEqual([]);
+  });
+
+  it("reports the incoming deck's spans before its time on handover", async () => {
+    const { engine, decks, events } = setup();
+    engine.unlock();
+    engine.load("https://stream.example/a", 0, 0);
+    await engine.play();
+    engine.preload("https://stream.example/b", 0);
+    decks[1].buffered = timeRangesOf([[0, 45]]);
+    events.length = 0;
+    engine.handover("gapless");
+    expect(events.map((event) => event.type)).toEqual(["buffered", "time"]);
+    expect(events[0]).toEqual({
+      type: "buffered",
+      ranges: [{ startSeconds: 0, endSeconds: 45 }],
+    });
   });
 });
 

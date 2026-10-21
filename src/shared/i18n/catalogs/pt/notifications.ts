@@ -191,6 +191,21 @@ export const notifications: Catalog = {
     "<profile>{name}</profile> convidou-te para um evento.",
   "type.event_invite.meta": "Convite para evento",
 
+  // Uma pessoa pediu para trazer uma conexão; quem organiza aprova ou recusa.
+  "type.event_invite_request.text":
+    "Alguém pediu para trazer uma conexão a {eventTitle}.",
+  "type.event_invite_request.textNamed":
+    "<profile>{name}</profile> pediu para trazer uma conexão a {eventTitle}.",
+  "type.event_invite_request.meta": "Pedido de convite",
+  "type.event_invite_request_declined.text":
+    "Quem organiza {eventTitle} não aprovou o teu convite.",
+  "type.event_invite_request_declined.meta": "Pedido de convite",
+  "type.event_invite_accepted.text":
+    "Alguém aceitou o teu convite para {eventTitle}.",
+  "type.event_invite_accepted.textNamed":
+    "<profile>{name}</profile> aceitou o teu convite para {eventTitle}.",
+  "type.event_invite_accepted.meta": "Convite aceite",
+
   "type.event_cohost_invite.text":
     "Tens um convite para coanfitriar um evento.",
   "type.event_cohost_invite.textNamed":

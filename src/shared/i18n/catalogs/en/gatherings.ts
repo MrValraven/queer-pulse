@@ -1304,6 +1304,20 @@ export const gatherings: Catalog = {
   "manage.attendees.promoteCta": "Promote",
   "manage.attendees.promotedToast": "{name} promoted to guest list",
   "manage.attendees.actionErrorToast": "That didn't go through. Try again.",
+  "manage.attendees.invitedBy": "Invited by {name}",
+
+  // ── Manage: requests (members asking to bring a connection) ─────────────────
+  "manage.requests.heading": "Requests",
+  "manage.requests.sub":
+    "People coming to this event asked to bring a connection. The connection hears nothing unless you approve.",
+  "manage.requests.tabBadge_one": "{count} request to review",
+  "manage.requests.tabBadge_other": "{count} requests to review",
+  "manage.requests.row": "<b>{inviter}</b> wants to bring <b>{invitee}</b>",
+  "manage.requests.approveCta": "Approve request",
+  "manage.requests.declineCta": "Decline request",
+  "manage.requests.approvedToast": "Approved. We sent {name} the invite.",
+  "manage.requests.declinedToast": "Request declined",
+  "manage.requests.errorToast": "We couldn't save that. Try again.",
 
   // ── Manage: messages tab ─────────────────────────────────────────────────────
   "manage.messages.composerLabel_one": "Message all attendees ({count} going)",
@@ -2063,11 +2077,14 @@ export const gatherings: Catalog = {
   "rsvpDetails.eyebrow": "Your RSVP",
   "rsvpDetails.title": "Anything we should <em>know</em>?",
   "rsvpDetails.sub": "The hosts read this. Nobody else has to.",
-  "rsvpDetails.guestsLabel": "Who's coming",
+  "rsvpDetails.guestsLabel": "Guests not on QueerPulse",
   "rsvpDetails.guestOption_one": "Me and {count} other",
   "rsvpDetails.guestOption_other": "Me and {count} others",
+  "rsvpDetails.guestsJustMe": "Just me",
+  "rsvpDetails.addGuest": "Add a guest",
+  "rsvpDetails.removeGuest": "Remove a guest",
   "rsvpDetails.guestsHint":
-    "Seats are counted per person, so this is how many places the host lays.",
+    "Seats are counted per person. People on QueerPulse can get their own invite.",
   "rsvpDetails.guestsClosedHint":
     "RSVPs have closed. You can still bring fewer people than you told the host.",
   "rsvpDetails.guestsClosedNoneHint":
@@ -2095,6 +2112,51 @@ export const gatherings: Catalog = {
   "rsvpDetails.saveCta": "Save",
   "rsvpDetails.savedToast": "Saved",
   "rsvpDetails.saveErrorToast": "That didn't save. Try again in a moment.",
+
+  // rsvpInvites/*: bringing connections from QueerPulse inside the RSVP
+  // details modal. Each invitee answers for themselves.
+  "rsvpInvites.label": "Bring people from QueerPulse",
+  "rsvpInvites.hint_one":
+    "You can invite {count} more connection. They answer for themselves.",
+  "rsvpInvites.hint_other":
+    "You can invite {count} more connections. They answer for themselves.",
+  "rsvpInvites.capReachedHint":
+    "You're bringing {max} people, the most one RSVP can hold.",
+  "rsvpInvites.closedHint":
+    "RSVPs have closed, so you can't invite anyone now.",
+  "rsvpInvites.openPickerCta": "Invite connections",
+  "rsvpInvites.closePickerCta": "Close the list",
+  "rsvpInvites.searchLabel": "Search your connections",
+  "rsvpInvites.picksTrimmedHint_one":
+    "Your guests took a seat, so we unpicked {count} person.",
+  "rsvpInvites.picksTrimmedHint_other":
+    "Your guests took some seats, so we unpicked {count} people.",
+  "rsvpInvites.allInvited": "You've already invited everyone who matches.",
+  "rsvpInvites.listLoadError": "Your invites didn't load.",
+  "rsvpInvites.sentToast_one": "Invite sent",
+  "rsvpInvites.sentToast_other": "{count} invites sent",
+  "rsvpInvites.alreadyInvitedToast_one":
+    "{count} person already has an invite to this event",
+  "rsvpInvites.alreadyInvitedToast_other":
+    "{count} people already have an invite to this event",
+  "rsvpInvites.notInvitableToast_one":
+    "{count} person can't be invited to this event",
+  "rsvpInvites.notInvitableToast_other":
+    "{count} people can't be invited to this event",
+  "rsvpInvites.capToast":
+    "That's more than {max} people on one RSVP. Lower your guests or withdraw an invite.",
+  "rsvpInvites.sendErrorToast": "We couldn't send those invites. Try again.",
+  "rsvpInvites.listLabel": "Your invites",
+  "rsvpInvites.withdrawCta": "Withdraw invite",
+  "rsvpInvites.withdrawnToast": "Invite withdrawn",
+  "rsvpInvites.withdrawErrorToast":
+    "We couldn't withdraw that invite. Try again.",
+  "rsvpInvites.status.invited": "Invited",
+  "rsvpInvites.status.awaiting_host": "Waiting for the hosts",
+  "rsvpInvites.status.host_declined": "The hosts said no",
+  "rsvpInvites.status.going": "Going",
+  "rsvpInvites.status.waitlisted": "On the waitlist",
+  "rsvpInvites.status.answered": "Answered",
 
   // PRD-182 — the join link in the create wizard, asked only for an online
   // gathering (which has no door to describe instead).

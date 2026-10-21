@@ -1,4 +1,10 @@
-import { fireEvent, render, screen, within } from "@testing-library/react";
+import {
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+  within,
+} from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
 import { resetDemoPlaylists } from "./api/studioDemoPlaylists";
@@ -107,5 +113,23 @@ describe("StudioRail", () => {
     expect(
       screen.queryByRole("link", { name: /liked songs/i }),
     ).not.toBeInTheDocument();
+  });
+
+  it("offers the Back to QueerPulse exit in the demo and without Studio access", async () => {
+    renderRailAt("/studio");
+    expect(
+      await screen.findByRole("link", { name: "Back to QueerPulse" }),
+    ).toHaveAttribute("href", "/feed");
+    cleanup();
+    rail.isShowcase = false;
+    rail.hasAccess = false;
+    renderRailAt("/studio");
+    expect(
+      await screen.findByRole("link", { name: "Back to QueerPulse" }),
+    ).toHaveAttribute("href", "/feed");
+    expect(screen.getByRole("link", { name: "QueerPulse" })).toHaveAttribute(
+      "href",
+      "/studio",
+    );
   });
 });

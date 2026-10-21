@@ -1,0 +1,230 @@
+.track {
+  position: absolute;
+  inset-inline: 0;
+  inset-block-start: 50%;
+  block-size: 0;
+  pointer-events: none;
+  /* The thumb rail moves in cqi, so its travel is the track width. */
+  container-type: inline-size;
+  transition-property: none;
+}
+
+.rail {
+  position: absolute;
+  inset-inline: 0;
+  inset-block-start: -2px;
+  block-size: 4px;
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+  background: rgba(var(--studio-ink-rgb), 0.16);
+  transition-property: transform;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease-out);
+}
+
+[data-studio-range][data-dragging] .rail {
+  transform: scaleY(1.5);
+}
+
+.buffered {
+  position: absolute;
+  inset-block: 0;
+  background: rgba(var(--studio-ink-rgb), 0.28);
+  transition-property: none;
+}
+
+.ghost,
+.fill {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+}
+
+.ghost {
+  background: color-mix(in srgb, var(--studio-accent-text) 38%, transparent);
+  transform: translateX(calc((var(--studio-range-hover) - 1) * 100%));
+  opacity: 0;
+  transition-property: opacity;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+[data-studio-range][data-hovering] .ghost {
+  opacity: 1;
+}
+
+.fill {
+  background: var(--studio-text-muted);
+  transform: translateX(calc((var(--studio-range-progress) - 1) * 100%));
+  transition-property: background-color;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+[data-studio-range][data-hovering] .fill,
+[data-studio-range][data-dragging] .fill,
+[data-studio-range]:has(input:focus-visible) .fill {
+  background: var(--studio-accent-text);
+}
+
+:dir(rtl) .ghost {
+  transform: translateX(calc((1 - var(--studio-range-hover)) * 100%));
+}
+
+:dir(rtl) .fill {
+  transform: translateX(calc((1 - var(--studio-range-progress)) * 100%));
+}
+
+.tick {
+  position: absolute;
+  inset-block: 0;
+  inline-size: 2px;
+  background: rgba(var(--studio-ink-rgb), 0.7);
+  transform: translateX(-50%);
+  transition-property: none;
+}
+
+:dir(rtl) .tick {
+  transform: translateX(50%);
+}
+
+/* A zero-width rail at the start edge, moved by the progress times the
+   track width, so it never reaches past the track. */
+.thumbRail {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  inline-size: 0;
+  transform: translateX(calc(var(--studio-range-progress) * 100cqi));
+  transition-property: none;
+}
+
+:dir(rtl) .thumbRail {
+  transform: translateX(calc(var(--studio-range-progress) * -100cqi));
+}
+
+.thumb {
+  position: absolute;
+  inset-inline-start: 0;
+  inset-block-start: 0;
+  inline-size: 14px;
+  block-size: 14px;
+  border-radius: 50%;
+  background: var(--studio-accent-text);
+  box-shadow: var(--shadow-e2);
+  transform: translate(-50%, -50%) scale(0);
+  transition-property: transform;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease-out);
+}
+
+:dir(rtl) .thumb {
+  transform: translate(50%, -50%) scale(0);
+}
+
+[data-studio-range][data-hovering] .thumb,
+[data-studio-range]:has(input:focus-visible) .thumb {
+  transform: translate(-50%, -50%) scale(0.857);
+}
+
+/* The .thumbRail step lifts the drag above the focus rule's :has(). */
+[data-studio-range][data-dragging] .thumbRail .thumb {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+:dir(rtl) [data-studio-range][data-hovering] .thumb,
+:dir(rtl) [data-studio-range]:has(input:focus-visible) .thumb {
+  transform: translate(50%, -50%) scale(0.857);
+}
+
+:dir(rtl) [data-studio-range][data-dragging] .thumbRail .thumb {
+  transform: translate(50%, -50%) scale(1);
+}
+
+[data-studio-range][data-disabled] .thumb {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rail,
+  .thumb {
+    transition-property: opacity;
+  }
+
+  [data-studio-range][data-dragging] .rail {
+    transform: none;
+  }
+
+  .thumb,
+  [data-studio-range][data-dragging] .thumbRail .thumb {
+    transform: translate(-50%, -50%) scale(0.857);
+    opacity: 0;
+  }
+
+  [data-studio-range][data-hovering] .thumb,
+  [data-studio-range][data-dragging] .thumbRail .thumb,
+  [data-studio-range]:has(input:focus-visible) .thumb {
+    opacity: 1;
+  }
+
+  :dir(rtl) .thumb,
+  :dir(rtl) [data-studio-range][data-dragging] .thumbRail .thumb {
+    transform: translate(50%, -50%) scale(0.857);
+  }
+}
+
+:global(html[data-reduce-motion="true"]) .rail,
+:global(html[data-reduce-motion="true"]) .thumb {
+  transition-property: opacity;
+}
+
+:global(html[data-reduce-motion="true"]) [data-studio-range][data-dragging] .rail {
+  transform: none;
+}
+
+:global(html[data-reduce-motion="true"]) .thumb,
+:global(html[data-reduce-motion="true"]) [data-studio-range][data-dragging] .thumbRail .thumb {
+  transform: translate(-50%, -50%) scale(0.857);
+  opacity: 0;
+}
+
+:global(html[data-reduce-motion="true"]) [data-studio-range][data-hovering] .thumb,
+:global(html[data-reduce-motion="true"]) [data-studio-range][data-dragging] .thumbRail .thumb,
+:global(html[data-reduce-motion="true"]) [data-studio-range]:has(input:focus-visible) .thumb {
+  opacity: 1;
+}
+
+:global(html[data-reduce-motion="true"]) :dir(rtl) .thumb,
+:global(html[data-reduce-motion="true"]) :dir(rtl) [data-studio-range][data-dragging] .thumbRail .thumb {
+  transform: translate(50%, -50%) scale(0.857);
+}
+
+@media (forced-colors: active) {
+  .rail {
+    background: GrayText;
+  }
+
+  .buffered,
+  .ghost {
+    background: GrayText;
+  }
+
+  .fill {
+    background: Highlight;
+  }
+
+  [data-studio-range][data-hovering] .fill,
+  [data-studio-range][data-dragging] .fill,
+  [data-studio-range]:has(input:focus-visible) .fill {
+    background: Highlight;
+  }
+
+  .tick {
+    background: CanvasText;
+  }
+
+  .thumb {
+    background: CanvasText;
+    box-shadow: none;
+  }
+}

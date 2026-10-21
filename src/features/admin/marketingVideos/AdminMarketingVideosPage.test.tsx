@@ -142,6 +142,27 @@ describe("AdminMarketingVideosPage", () => {
     );
   });
 
+  it("offers the Studio open call story in English and Portuguese", async () => {
+    renderPage();
+    const story = within(
+      await screen.findByRole("article", { name: "Studio open call" }),
+    );
+    expect(
+      story.getByText("Instagram story · 1080 × 1920"),
+    ).toBeInTheDocument();
+    expect(
+      story.getByRole("link", { name: "Download PNG (English)" }),
+    ).toHaveAttribute("href", "/marketing-flyers/studio-open-call.png");
+    expect(
+      story.getByRole("link", { name: "Download PNG (Portuguese)" }),
+    ).toHaveAttribute("href", "/marketing-flyers/studio-open-call-pt.png");
+    // The print flyer keeps its plain PNG label.
+    const flyer = within(screen.getByRole("article", { name: "First event" }));
+    expect(
+      flyer.getByRole("link", { name: "Download PNG" }),
+    ).toBeInTheDocument();
+  });
+
   it("shows no format switch for a film with one shape", async () => {
     renderPage();
     await userEvent.click(

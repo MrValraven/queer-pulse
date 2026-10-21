@@ -40,6 +40,9 @@ export type NotificationKind =
   // centre. A `new_message` row from the API is treated as an unknown kind and
   // dropped upstream (see `useNotifications`) so it never renders here.
   | "event_invite"
+  | "event_invite_request"
+  | "event_invite_request_declined"
+  | "event_invite_accepted"
   | "event_reminder"
   | "waitlist_promoted"
   | "event_cancelled"
@@ -737,6 +740,9 @@ const KIND_CATEGORY: Record<NotificationKind, NotifType> = {
   forum_reply: "community",
   promoted_to_member: "platform",
   event_invite: "events",
+  event_invite_request: "events",
+  event_invite_request_declined: "events",
+  event_invite_accepted: "events",
   event_reminder: "events",
   waitlist_promoted: "events",
   event_cancelled: "events",

@@ -1845,6 +1845,10 @@ export const studio: Catalog = {
   "playerBar.next": "Faixa seguinte",
   "playerBar.seekLabel": "Posição na faixa",
   "playerBar.seekValue": "{elapsed} de {total}",
+  "playerBar.seekValueChapter": "{elapsed} de {total}, {chapter}",
+  "playerBar.seekValueUnknown": "Duração ainda desconhecida",
+  "playerBar.remainingTime": "−{time}",
+  "playerBar.remainingToggle": "Mostrar o tempo que falta",
   "playerBar.cantPlay": "Esta faixa não pode tocar agora",
   "playerBar.retry": "Tentar a faixa de novo",
   "playerBar.close": "Fechar leitor",
@@ -3645,6 +3649,44 @@ export const studio: Catalog = {
   "playlist.editors.invite.sentToast_other": "{count} convites enviados",
   "playlist.editors.invite.ineligible":
     "Não dá para convidar {names} agora. Desmarca e tenta outra vez",
+  // Why the server refused each person (2026-10-21): one sentence per reason.
+  "playlist.editors.refused.noStudioAccess_one":
+    "{names} ainda não tem acesso ao Studio, por isso não pode editar playlists",
+  "playlist.editors.refused.noStudioAccess_other":
+    "{names} ainda não têm acesso ao Studio, por isso não podem editar playlists",
+  "playlist.editors.refused.notConnected_one":
+    "{names} já não está nas tuas conexões",
+  "playlist.editors.refused.notConnected_other":
+    "{names} já não estão nas tuas conexões",
+  "playlist.editors.refused.notCoOwner_one":
+    "{names} já não gere {persona} contigo",
+  "playlist.editors.refused.notCoOwner_other":
+    "{names} já não gerem {persona} contigo",
+  "playlist.editors.refused.notCoOwnerUnnamed_one":
+    "{names} já não gere este perfil contigo",
+  "playlist.editors.refused.notCoOwnerUnnamed_other":
+    "{names} já não gerem este perfil contigo",
+  "playlist.editors.refused.blocked_one":
+    "Não dá para convidar {names} a partir da tua conta",
+  "playlist.editors.refused.blocked_other":
+    "Não dá para convidar {names} a partir da tua conta",
+  "playlist.editors.refused.notFound_one":
+    "Não encontrámos {names}. Pode ter saído do QueerPulse ou mudado o link do perfil",
+  "playlist.editors.refused.notFound_other":
+    "Não encontrámos {names}. Podem ter saído do QueerPulse ou mudado o link do perfil",
+  "playlist.editors.refused.isOwner_one": "A playlist já é de {names}",
+  "playlist.editors.refused.isOwner_other": "A playlist já é de {names}",
+  "playlist.editors.refused.creditLapsed":
+    "Esta playlist já não aparece como {persona}, por isso não dá para adicionar quem gere {persona}. Recarrega a página para veres quem aparece agora",
+  "playlist.editors.refused.creditLapsedUnnamed":
+    "Esta playlist já não aparece como uma persona, por isso não dá para adicionar quem gere a persona. Recarrega a página para veres quem aparece agora",
+  "playlist.editors.refused.unexplained_one":
+    "Não dá para convidar {names} agora",
+  "playlist.editors.refused.unexplained_other":
+    "Não dá para convidar {names} agora",
+  "playlist.editors.refused.untickAndRetry": "Desmarca e tenta outra vez",
+  "playlist.editors.refused.untickToSendRest":
+    "Desmarca para enviares os restantes convites",
   "playlist.editors.coOwners.listLabel": "Quem gere {persona}",
   "playlist.editors.coOwners.searchLabel": "Procurar quem gere a persona",
   "playlist.editors.coOwners.empty": "Mais ninguém gere {persona} contigo",

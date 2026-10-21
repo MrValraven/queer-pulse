@@ -1,0 +1,110 @@
+/* Physical left 0: the hover hook writes a physical translate3d. The
+   max-content size keeps the bubble its own width on a narrow track. */
+.anchor {
+  position: absolute;
+  left: 0;
+  inline-size: max-content;
+  bottom: calc(100% + 8px);
+  pointer-events: none;
+  z-index: 3;
+  transition-property: none;
+}
+
+.bubble {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 3px 8px;
+  border: 1px solid rgba(var(--studio-ink-rgb), 0.12);
+  border-radius: var(--radius-6);
+  background: var(--studio-surface-rail);
+  color: var(--studio-text);
+  box-shadow: var(--shadow-e2);
+  font-size: var(--text-11);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateY(4px);
+  transition-property: opacity, transform;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease-out);
+}
+
+.bubble[data-visible] {
+  opacity: 1;
+  transform: none;
+}
+
+.detail {
+  max-inline-size: 16rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--studio-text-muted);
+  transition-property: none;
+}
+
+.detail[data-empty] {
+  display: none;
+}
+
+.value {
+  display: block;
+  transition-property: none;
+}
+
+/* In the player bar the chapter and the time share one row, so the bubble
+   sits just above the track and inside the bar. A compact 20px bubble
+   anchored 8px above the track centre clears the thumb and leaves room
+   under the bar's top edge; on a waveform it covers the tops of the bars. */
+[data-studio-range][data-size="bar"] .anchor {
+  bottom: calc(50% + 8px);
+}
+
+[data-studio-range][data-size="bar"] .bubble {
+  flex-direction: row;
+  gap: 6px;
+  padding: 1px 6px;
+  line-height: 16px;
+}
+
+[data-studio-range][data-size="bar"] .detail {
+  max-inline-size: 12rem;
+}
+
+/* Touch keeps the stacked layout, lifted clear of the finger. */
+[data-studio-range][data-pointer="touch"] .anchor {
+  bottom: calc(100% + 28px);
+}
+
+[data-studio-range][data-pointer="touch"] .bubble {
+  flex-direction: column;
+  gap: 2px;
+  padding: 3px 8px;
+  line-height: inherit;
+  font-size: var(--text-13);
+}
+
+[data-studio-range][data-pointer="touch"] .detail {
+  max-inline-size: 16rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bubble,
+  .bubble[data-visible] {
+    transform: none;
+    transition-property: opacity;
+  }
+}
+
+:global(html[data-reduce-motion="true"]) .bubble,
+:global(html[data-reduce-motion="true"]) .bubble[data-visible] {
+  transform: none;
+  transition-property: opacity;
+}
+
+@media (forced-colors: active) {
+  .bubble {
+    border-color: CanvasText;
+  }
+}

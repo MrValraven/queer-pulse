@@ -195,7 +195,8 @@ const creditPersonaOf = (playlist: DemoPlaylist) =>
 /** A persona credit whose persona can no longer be resolved. The server
  *  keeps such a playlist private and shows the owner their own member
  *  credit; nobody else can open it. */
-const hasBrokenCredit = (playlist: DemoPlaylist) =>
+/** A persona credit that stopped standing (the persona went away). */
+export const hasBrokenCredit = (playlist: DemoPlaylist) =>
   playlist.creditPersonaId !== null && creditPersonaOf(playlist) === null;
 
 function creditOf(playlist: DemoPlaylist): StudioPlaylistCreditDTO {

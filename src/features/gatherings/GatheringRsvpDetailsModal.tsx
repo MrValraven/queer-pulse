@@ -1,22 +1,19 @@
 import { useState } from "react";
-import { Button, Modal } from "../../shared/components/ui";
+import { Button, Collapse, Modal } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useToast } from "../../shared/components/feedback/useToast";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
-import type {
-  RsvpDetailsVisibility,
-  UpdateRsvpDetailsDto,
-} from "./api/events.api";
+import type { RsvpDetailsVisibility } from "./api/events.api";
 import { useRsvpDetails } from "./api/useRsvpDetails";
-import { useUpdateRsvpDetails } from "./api/useEventMutations";
+import { useRsvpInvites } from "./api/useRsvpInvites";
 import type { RsvpQuestions } from "./gatheringExtras";
 import { GatheringRsvpDetailsQuestions } from "./GatheringRsvpDetailsQuestions";
 import { GatheringRsvpGuestCountField } from "./GatheringRsvpGuestCountField";
+import { RsvpConnectionInvites } from "./RsvpConnectionInvites";
 import { RsvpDetailsLoadError } from "./RsvpDetailsLoadError";
 import { RsvpVisibilityField } from "./RsvpVisibilityField";
 import { useHasRsvpCutoffPassed } from "./rsvpCutoff";
-import { rsvpDetailsSaveErrorMessage } from "./rsvpErrors";
+import { guestStepperMax } from "./rsvpGuestCap";
 import {
   answersFromSaved,
   askedAnswersPayload,
@@ -24,6 +21,8 @@ import {
   type RsvpDetailsAnswerKey,
   type RsvpDetailsAnswers,
 } from "./rsvpDetailsAnswers";
+import { useRsvpInviteDraft } from "./useRsvpInviteDraft";
+import { useSaveRsvpWithInvites } from "./useSaveRsvpWithInvites";
 import styles from "./GatheringDetailPanels.module.css";
 
 /** PRD-414/415: the one answer to "Who can see you're going?", the same field
@@ -35,13 +34,11 @@ import styles from "./GatheringDetailPanels.module.css";
  *  opens on the setting that is actually in force. */
 const VISIBILITY_DEFAULT: RsvpDetailsVisibility = "everyone";
 
-/** How many extra people a member may declare from this sheet. Capacity is
- *  measured in seats, so every number here is a seat the host has to lay. */
-const MAX_GUESTS = 3;
-
 /**
- * "Anything we should know?" — the plus-one count and the access/dietary
- * needs, asked on the gathering's OWN page (PRD-187).
+ * "Anything we should know?": the plus-one count, the connections the member
+ * brings, and the access/dietary needs, asked on the event's OWN page
+ * (PRD-187). Save is the one commit point: it writes the details, then sends
+ * the picked connections' invites.
  *
  * These could previously only be entered from a My Events card, after RSVPing
  * and on a different screen. Two things followed: a host's seat count was
@@ -59,25 +56,27 @@ export function GatheringRsvpDetailsModal({
   customRsvpQuestion,
   rsvpClosesAt,
   isOrganizer,
+  canInviteConnections,
   onClose,
 }: {
   slug: string;
-  /** Which optional questions this gathering asks. A detail from before the
+  /** Which optional questions this event asks. A detail from before the
    *  field existed carries none, and asks what this form always asked
    *  (ruling R8). */
   rsvpQuestions?: RsvpQuestions;
   /** The host's own question in their own words, or null/absent for none. */
   customRsvpQuestion?: string | null;
   /** When RSVPs close for members, or null when they stay open until the
-   *  gathering ends. Past it a member may lower their guest count only. */
+   *  event ends. Past it a member may lower their guest count only. */
   rsvpClosesAt: Date | null;
   /** The host or a co-host, whom the server lets add guests after the
    *  cutoff. */
   isOrganizer: boolean;
+  /** Going or maybe: the member may invite their connections. */
+  canInviteConnections: boolean;
   onClose: () => void;
 }) {
   const { t } = useTranslation();
-  const { showToast } = useToast();
   const { demoMode } = useDemoMode();
   const {
     data: saved,
@@ -85,7 +84,13 @@ export function GatheringRsvpDetailsModal({
     isFetching: isFetchingSavedDetails,
     refetch: refetchSavedDetails,
   } = useRsvpDetails(slug);
-  const update = useUpdateRsvpDetails(slug);
+  const { save: saveWithInvites, isSaving } = useSaveRsvpWithInvites(
+    slug,
+    onClose,
+  );
+  // Open member invites take seats from the same cap as the stepper.
+  const invitesQuery = useRsvpInvites(slug);
+  const { openInviteCount, isPending: isInvitesPending } = invitesQuery;
   const asked = askedRsvpQuestions(rsvpQuestions, customRsvpQuestion);
 
   const [guestCount, setGuestCount] = useState(0);
@@ -118,13 +123,31 @@ export function GatheringRsvpDetailsModal({
   const hasCutoffPassed = useHasRsvpCutoffPassed(rsvpClosesAt);
   const isGuestRaiseClosed =
     !demoMode && hasCutoffPassed && !isOrganizer && saved != null;
-  const maxGuestCount =
-    isGuestRaiseClosed && saved
-      ? saved.guestCount
-      : Math.max(MAX_GUESTS, saved?.guestCount ?? 0);
+  // Until the open invites land the ceiling holds at the saved count, so the
+  // stepper never offers a seat an invite already holds.
+  const maxGuestCount = guestStepperMax({
+    savedGuestCount: saved?.guestCount ?? 0,
+    openInviteCount,
+    isRaiseClosed: isGuestRaiseClosed || isInvitesPending,
+  });
+  const isInviteClosed = !demoMode && hasCutoffPassed && !isOrganizer;
   // A cutoff that passes while the sheet is open shrinks the options under a
   // higher pick, so the shown value and the payload both hold to the ceiling.
   const clampedGuestCount = Math.min(guestCount, maxGuestCount);
+  // Plus is held by the cap itself (guests and invites fill every seat), so
+  // the stepper says why. A closed cutoff has its own hint.
+  const isAtGuestCap =
+    !isGuestRaiseClosed &&
+    !isInvitesPending &&
+    clampedGuestCount >= maxGuestCount;
+  const inviteDraft = useRsvpInviteDraft({
+    slug,
+    invitesQuery,
+    savedGuestCount: saved?.guestCount ?? 0,
+    currentGuestCount: clampedGuestCount,
+    isInviteClosed,
+    canInviteConnections,
+  });
   // Live saves wait for the saved details: a save sent before they land would
   // write a zero guest count and blank answers over what is stored.
   const isAwaitingSavedDetails = !demoMode && saved === undefined;
@@ -134,26 +157,16 @@ export function GatheringRsvpDetailsModal({
   const isSavedDetailsLoadError =
     isAwaitingSavedDetails && hasSavedDetailsError;
 
-  const save = () => {
-    if (demoMode) {
-      onClose();
-      showToast(t("gatherings:rsvpDetails.savedToast"), "success");
-      return;
-    }
-    const details: UpdateRsvpDetailsDto = {
-      guestCount: clampedGuestCount,
-      visibility,
-      ...askedAnswersPayload(answers, asked),
-    };
-    update.mutate(details, {
-      onSuccess: () => {
-        onClose();
-        showToast(t("gatherings:rsvpDetails.savedToast"), "success");
+  // The one commit point: the details, then the picked connections' invites.
+  const save = () =>
+    saveWithInvites(
+      {
+        guestCount: clampedGuestCount,
+        visibility,
+        ...askedAnswersPayload(answers, asked),
       },
-      onError: (error) =>
-        showToast(rsvpDetailsSaveErrorMessage(error, t), "error"),
-    });
-  };
+      inviteDraft.activePicks,
+    );
 
   return (
     <Modal
@@ -174,7 +187,7 @@ export function GatheringRsvpDetailsModal({
           <Button
             variant="jade"
             onClick={save}
-            disabled={update.isPending || isAwaitingSavedDetails}
+            disabled={isSaving || isAwaitingSavedDetails}
           >
             {t("gatherings:rsvpDetails.saveCta")}
           </Button>
@@ -192,8 +205,18 @@ export function GatheringRsvpDetailsModal({
             guestCount={clampedGuestCount}
             maxGuestCount={maxGuestCount}
             isGuestRaiseClosed={isGuestRaiseClosed}
+            isAtGuestCap={isAtGuestCap}
+            inviteSeatCount={openInviteCount + inviteDraft.activePicks.length}
             onGuestCountChange={setGuestCount}
           />
+
+          <Collapse isOpen={canInviteConnections}>
+            <RsvpConnectionInvites
+              slug={slug}
+              draft={inviteDraft}
+              isInviteClosed={isInviteClosed}
+            />
+          </Collapse>
 
           <GatheringRsvpDetailsQuestions
             asked={asked}

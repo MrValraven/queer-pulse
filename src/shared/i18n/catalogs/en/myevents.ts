@@ -390,6 +390,18 @@ export const myevents: Catalog = {
   "acceptConfirm.title": "You said <em>yes.</em>",
   "acceptConfirm.addToCalendarCta": "Add to calendar",
   "acceptConfirm.doneCta": "Done",
+  "acceptConfirm.waitlistedTitle": "You're on the <em>waitlist.</em>",
+  "acceptConfirm.waitlistedEyebrow": "On the waitlist",
+
+  // ── Accept-invite modal (AcceptInviteModal): visibility choice first ──────
+  "acceptModal.eyebrow": "Your invite",
+  "acceptModal.title": "One step before you're <em>in</em>",
+  "acceptModal.sub": "Choose who sees you're going. The hosts read the rest.",
+  "acceptModal.acceptCta": "Accept invite",
+  "acceptModal.cancelCta": "Cancel",
+  "acceptModal.fullToast": "This event is full, so we couldn't add you.",
+  "acceptModal.errorToast": "We couldn't accept the invite. Try again.",
+  "acceptModal.noLongerOpenToast": "This invite is no longer open.",
 
   // ── RSVP details modal (RsvpDetailsModal) ─────────────────────────────────
   "rsvpModal.eyebrow": "Your RSVP",

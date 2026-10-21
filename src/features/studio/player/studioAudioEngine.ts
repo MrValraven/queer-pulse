@@ -1,9 +1,14 @@
 import type { RefObject } from "react";
-import type { StudioRemoteState } from "./studioPlayerContext";
+import type {
+  StudioBufferedRange,
+  StudioRemoteState,
+} from "./studioPlayerContext";
 
 export type StudioAudioEvent =
   | { type: "time"; seconds: number }
   | { type: "duration"; seconds: number }
+  /** The loaded spans of the active deck changed. */
+  | { type: "buffered"; ranges: readonly StudioBufferedRange[] }
   | { type: "playing" }
   | { type: "paused" }
   /** The browser refused to start playback without a gesture. */
@@ -142,7 +147,13 @@ export function createSimulatedAudioEngine(
       endFade(false);
       seconds = startAtSeconds;
       const duration = durationFor();
-      if (duration !== null) emit({ type: "duration", seconds: duration });
+      if (duration !== null) {
+        emit({ type: "duration", seconds: duration });
+        emit({
+          type: "buffered",
+          ranges: [{ startSeconds: 0, endSeconds: duration }],
+        });
+      }
       emit({ type: "time", seconds });
     },
     play: () => {
@@ -178,6 +189,12 @@ export function createSimulatedAudioEngine(
     handover: () => {
       hasPreloaded = false;
       seconds = 0;
+      const duration = durationFor();
+      if (duration !== null)
+        emit({
+          type: "buffered",
+          ranges: [{ startSeconds: 0, endSeconds: duration }],
+        });
       emit({ type: "time", seconds });
       if (!timer) startClock();
     },

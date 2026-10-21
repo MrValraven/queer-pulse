@@ -225,21 +225,44 @@ export function demoStudioReleasesPage(
   return demoPageOf(source.map(demoReleaseCard), cursor);
 }
 
-/** GET /studio/genres: genres with a published release, in list order. */
+/** The cover of the newest listed release matching each value, for the
+ *  values that have one. DEMO_LISTED_RELEASES is newest first, so the
+ *  first covered match wins. */
+function demoFacetCovers<FacetValue extends string>(
+  values: readonly FacetValue[],
+  facetOf: (release: StudioReleaseDTO) => string | null,
+): Record<string, string> {
+  const covers: Record<string, string> = {};
+  for (const value of values) {
+    const newestCovered = DEMO_LISTED_RELEASES.find(
+      (release) => facetOf(release) === value && Boolean(release.coverUrl),
+    );
+    if (newestCovered?.coverUrl) covers[value] = newestCovered.coverUrl;
+  }
+  return covers;
+}
+
+/** GET /studio/genres: genres with a published release, in list order, and
+ *  the newest cover in each. */
 export function demoStudioGenres(): StudioGenresDTO {
+  const genres = STUDIO_GENRES.filter((genre) =>
+    DEMO_LISTED_RELEASES.some((release) => release.genre === genre),
+  );
   return {
-    genres: STUDIO_GENRES.filter((genre) =>
-      DEMO_LISTED_RELEASES.some((release) => release.genre === genre),
-    ),
+    genres,
+    covers: demoFacetCovers(genres, (release) => release.genre),
   };
 }
 
-/** GET /studio/moods: moods with a published release, in list order. */
+/** GET /studio/moods: moods with a published release, in list order, and
+ *  the newest cover in each. */
 export function demoStudioMoods(): StudioMoodsDTO {
+  const moods = STUDIO_MOODS.filter((mood) =>
+    DEMO_LISTED_RELEASES.some((release) => release.mood === mood),
+  );
   return {
-    moods: STUDIO_MOODS.filter((mood) =>
-      DEMO_LISTED_RELEASES.some((release) => release.mood === mood),
-    ),
+    moods,
+    covers: demoFacetCovers(moods, (release) => release.mood),
   };
 }
 

@@ -16,25 +16,36 @@ describe("StudioPlayer.module.css", () => {
   });
 
   it("keeps the class names other files read", () => {
-    for (const name of [
-      ".seekRow",
-      ".time",
-      ".seek",
-      ".showcase",
-      ".payLine",
-      ".tip",
-    ])
+    for (const name of [".showcase", ".payLine", ".tip"])
       expect(css).toContain(`${name} {`);
   });
 
   it("keeps the title readable on narrow desktops", () => {
-    const narrowRule = /@media \(max-width: 1180px\)\s*\{([\s\S]*?)\n\}/.exec(
-      css,
-    )?.[1];
-    expect(narrowRule).toMatch(/grid-template-columns:\s*minmax\(312px/);
-    expect(narrowRule).toMatch(
-      /\.tools input\[type="range"\],\s*\.seekArea \.time\s*\{\s*display:\s*none/,
+    expect(css).toMatch(
+      /\.bar\s*\{[^}]*grid-template-columns:\s*minmax\(312px/,
     );
+    const narrowVolumeRule =
+      /@media \(max-width: 1280px\) and \(min-width: 1240px\)\s*\{([\s\S]*?)\n\}/.exec(
+        css,
+      )?.[1];
+    expect(narrowVolumeRule).toMatch(
+      /\.tools \[data-studio-range="volume"\]\s*\{\s*inline-size:\s*64px/,
+    );
+    const hiddenVolumeRule =
+      /@media \(max-width: 1239px\)\s*\{([\s\S]*?)\n\}/.exec(css)?.[1];
+    expect(hiddenVolumeRule).toMatch(
+      /\.tools \[data-studio-range="volume"\]\s*\{\s*display:\s*none/,
+    );
+    expect(css).toMatch(
+      /@media \(max-width: 1180px\) and \(min-width: 1041px\)\s*\{\s*\.seekArea \[data-seek-time\]\s*\{\s*display:\s*none/,
+    );
+  });
+
+  it("keeps the last column as wide as the tools row", () => {
+    expect(css).toMatch(
+      /grid-template-columns:\s*minmax\(312px,\s*1\.2fr\)\s*auto\s*minmax\(0,\s*2fr\)\s*max-content/,
+    );
+    expect(css).toMatch(/\.tools\s*\{[^}]*min-inline-size:\s*max-content/);
   });
 
   it("keeps the idle error region out of flow and in the accessibility tree", () => {
@@ -50,6 +61,9 @@ describe("StudioPlayer.module.css", () => {
     )?.[1];
     expect(stackedRule).toMatch(
       /\.seekArea\s*\{\s*grid-column:\s*1 \/ -1;\s*grid-row:\s*2;/,
+    );
+    expect(stackedRule).toMatch(
+      /\.tools \[data-studio-range="volume"\]\s*\{\s*display:\s*flex/,
     );
   });
 

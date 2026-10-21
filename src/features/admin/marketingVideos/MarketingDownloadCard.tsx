@@ -8,6 +8,11 @@ export interface MarketingDownloadPreview {
   /** The still's intrinsic size; the frame takes its aspect ratio from it. */
   width: number;
   height: number;
+  /**
+   * A box of another shape to frame the still in, so cards of different
+   * shapes line up in a row. The still fits inside it at full size, centred.
+   */
+  frame?: { width: number; height: number };
   alt: string;
 }
 
@@ -46,11 +51,16 @@ export function MarketingDownloadCard({
   view,
   downloads,
 }: MarketingDownloadCardProps) {
+  const box = preview.frame ?? preview;
   return (
     <article className={styles.card} aria-labelledby={headingId}>
       <div
-        className={flyerStyles.frame}
-        style={{ aspectRatio: `${preview.width} / ${preview.height}` }}
+        className={
+          preview.frame
+            ? `${flyerStyles.frame} ${flyerStyles.frameFit}`
+            : flyerStyles.frame
+        }
+        style={{ aspectRatio: `${box.width} / ${box.height}` }}
       >
         <img
           src={preview.src}

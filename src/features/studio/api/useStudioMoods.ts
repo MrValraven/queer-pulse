@@ -9,10 +9,14 @@ import { useStudioAccess } from "./useStudioAccess";
 
 const MOODS_STALE_MS = 5 * 60_000;
 
-/** Moods with at least one published release, in STUDIO_MOODS order. The
- *  chip rows stay quiet on a failure, so no toast. */
+const NO_COVERS: Partial<Record<StudioMood, string>> = {};
+
+/** Moods with at least one published release, in STUDIO_MOODS order, and
+ *  the newest cover in each mood that has one. The chip rows and home tiles
+ *  stay quiet on a failure, so no toast. */
 export function useStudioMoods(): {
   moods: StudioMood[];
+  coverByMood: Partial<Record<StudioMood, string>>;
   loadState: StudioLoadState;
 } {
   const { demoMode } = useDemoMode();
@@ -32,7 +36,8 @@ export function useStudioMoods(): {
       ),
   });
   return {
-    moods: query.data ?? [],
+    moods: query.data?.moods ?? [],
+    coverByMood: query.data?.coverByMood ?? NO_COVERS,
     loadState: studioLoadStateOf(query, query.data !== undefined),
   };
 }

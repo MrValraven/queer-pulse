@@ -1,5 +1,6 @@
 import { fireEvent, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { PointerEventStub } from "../../../../test/pointerEventStub";
 import { StudioCastButton } from "./StudioCastButton";
 import {
   StudioRepeatButton,
@@ -21,7 +22,35 @@ const MUTED_AT_80 = {
   isLoudnessEven: true,
 };
 
+/** Renders the volume control with a 300px wide slider and returns its root. */
+async function renderVolumeRoot(
+  player: ReturnType<typeof createStudioPlayerValue>,
+) {
+  vi.stubGlobal("PointerEvent", PointerEventStub);
+  vi.spyOn(HTMLElement.prototype, "getBoundingClientRect").mockReturnValue({
+    width: 300,
+    height: 44,
+    top: 0,
+    left: 0,
+    right: 300,
+    bottom: 44,
+    x: 0,
+    y: 0,
+    toJSON: () => ({}),
+  });
+  renderWithPlayer(<StudioVolumeControl />, { player });
+  const slider = await screen.findByRole("slider", { name: "Volume" });
+  const sliderRoot = slider.closest("[data-studio-range]");
+  expect(sliderRoot).not.toBeNull();
+  return sliderRoot as Element;
+}
+
 describe("player controls", () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+    vi.unstubAllGlobals();
+  });
+
   it("toggles shuffle and shows its state", async () => {
     const player = createStudioPlayerValue({
       queue: queueView({ isShuffled: true }),
@@ -147,5 +176,64 @@ describe("player controls", () => {
     fireEvent.change(slider, { target: { value: "45" } });
     expect(player.setVolume).toHaveBeenCalledWith(0.45);
     expect(player.toggleMute).not.toHaveBeenCalled();
+  });
+
+  it("sets the volume from a press at 30% of the slider", async () => {
+    vi.stubGlobal("PointerEvent", PointerEventStub);
+    vi.spyOn(HTMLElement.prototype, "getBoundingClientRect").mockReturnValue({
+      width: 300,
+      height: 44,
+      top: 0,
+      left: 0,
+      right: 300,
+      bottom: 44,
+      x: 0,
+      y: 0,
+      toJSON: () => ({}),
+    });
+    const player = createStudioPlayerValue({
+      preferences: { ...MUTED_AT_80, isMuted: false },
+    });
+    renderWithPlayer(<StudioVolumeControl />, { player });
+    const slider = await screen.findByRole("slider", { name: "Volume" });
+    const sliderRoot = slider.closest("[data-studio-range]");
+    expect(sliderRoot).not.toBeNull();
+    fireEvent.pointerDown(sliderRoot as Element, {
+      pointerId: 1,
+      pointerType: "mouse",
+      button: 0,
+      clientX: 90,
+    });
+    expect(player.setVolume).toHaveBeenCalledWith(0.3);
+  });
+
+  it("keeps the mute when a press lands at 0.4% of the slider", async () => {
+    const player = createStudioPlayerValue({ preferences: MUTED_AT_80 });
+    const sliderRoot = await renderVolumeRoot(player);
+    fireEvent.pointerDown(sliderRoot, {
+      pointerId: 1,
+      pointerType: "mouse",
+      button: 0,
+      clientX: 1.2,
+    });
+    expect(player.setVolume).not.toHaveBeenCalled();
+    expect(player.toggleMute).not.toHaveBeenCalled();
+  });
+
+  it("restores the volume and the mute when Escape cancels a drag", async () => {
+    const player = createStudioPlayerValue({ preferences: MUTED_AT_80 });
+    const sliderRoot = await renderVolumeRoot(player);
+    fireEvent.pointerDown(sliderRoot, {
+      pointerId: 1,
+      pointerType: "mouse",
+      button: 0,
+      clientX: 90,
+    });
+    expect(player.setVolume).toHaveBeenLastCalledWith(0.3);
+    fireEvent.keyDown(screen.getByRole("slider", { name: "Volume" }), {
+      key: "Escape",
+    });
+    expect(player.setVolume).toHaveBeenLastCalledWith(0.8);
+    expect(player.toggleMute).toHaveBeenCalledTimes(1);
   });
 });

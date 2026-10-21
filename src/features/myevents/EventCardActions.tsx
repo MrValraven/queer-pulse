@@ -43,7 +43,7 @@ export function EventSide({
   const { t } = useTranslation();
   const {
     rsvpSaved,
-    acceptInvite,
+    openAcceptDetails,
     declineInvite,
     softRemove,
     toast,
@@ -139,7 +139,7 @@ export function EventSide({
 
       {ev.category === "invite" && (
         <div className={sx("invite-row")}>
-          <Button variant="jade" onClick={() => acceptInvite(ev.id)}>
+          <Button variant="jade" onClick={() => openAcceptDetails(ev.id)}>
             {t("myevents:side.acceptCta")}
           </Button>
           <Button variant="ghost" onClick={() => declineInvite(ev.id)}>

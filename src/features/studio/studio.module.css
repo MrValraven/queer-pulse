@@ -184,6 +184,24 @@
   transform: scale(0.97);
   transition-duration: var(--dur-fast);
 }
+/* The exit row pinned to the rail's foot. margin-top: auto keeps it at the
+   bottom even when the playlist body is not mounted; the bottom padding
+   clears the phone safe area. The exit label stays quieter than the nav and
+   turns full ink on hover. */
+.railFoot {
+  margin-top: auto;
+  flex: none;
+  border-top: 1px solid var(--line);
+  padding: 8px 0 calc(12px + env(safe-area-inset-bottom, 0px));
+}
+.railExit {
+  color: var(--text60);
+}
+@media (hover: hover) {
+  .railExit:hover {
+    color: var(--text);
+  }
+}
 /* Short windows (a landscape phone, a zoomed laptop): the whole rail scrolls
    so the main nav and the playlists stay reachable. */
 @media (max-height: 600px) {
@@ -483,7 +501,15 @@
   margin-top: 26px;
   flex-wrap: wrap;
 }
-.heroActions button {
+/* The hero's pill buttons. The :where() guard adds no weight, so the rule
+   stays (0,1,1), and it keeps the pill look off the items of a menu that
+   opens inside the row (the playlist, release and artist overflow menus).
+   An icon before the label sits centred on it at 16px. */
+.heroActions button:where(:not([role="menuitem"])) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   font-family: var(--sans);
   font-size: var(--text-13-5);
   font-weight: 600;
@@ -495,8 +521,13 @@
   cursor: pointer;
   transition: background 0.2s;
 }
+.heroActions button:where(:not([role="menuitem"])) svg {
+  flex: none;
+  width: 16px;
+  height: 16px;
+}
 @media (hover: hover) {
-  .heroActions button:hover {
+  .heroActions button:where(:not([role="menuitem"])):hover {
     background: rgba(var(--studio-ink-rgb), 0.14);
   }
 }

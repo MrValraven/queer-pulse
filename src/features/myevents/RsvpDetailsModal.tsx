@@ -16,10 +16,10 @@ import {
   type RsvpDetailsAnswers,
 } from "../gatherings/rsvpDetailsAnswers";
 import { useHasRsvpCutoffPassed } from "../gatherings/rsvpCutoff";
-import { isRsvpsClosedError } from "../gatherings/rsvpErrors";
 import { RsvpDetailsLoadError } from "../gatherings/RsvpDetailsLoadError";
 import { RsvpVisibilityField } from "../gatherings/RsvpVisibilityField";
 import type { RsvpDetailsVisibility } from "../gatherings/api/events.api";
+import { rsvpDetailsSaveErrorMessage } from "./myEvents.rsvpErrors";
 import { sx } from "./myEvents.styles";
 import { useMyEvents } from "./MyEventsContext";
 import {
@@ -140,12 +140,7 @@ export function RsvpDetailsModal() {
           toast(t("myevents:rsvpModal.savedToast"), "success");
         },
         onError: (error) =>
-          toast(
-            isRsvpsClosedError(error)
-              ? t("myevents:rsvpModal.closedToast")
-              : t("myevents:rsvpModal.saveErrorToast"),
-            "info",
-          ),
+          toast(rsvpDetailsSaveErrorMessage(error, t), "info"),
       },
     );
   };

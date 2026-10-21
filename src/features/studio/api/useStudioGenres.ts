@@ -9,10 +9,14 @@ import { useStudioAccess } from "./useStudioAccess";
 
 const GENRES_STALE_MS = 5 * 60_000;
 
-/** Genres with at least one published release, in STUDIO_GENRES order. The
- *  home chip row stays quiet on a failure, so no toast. */
+const NO_COVERS: Partial<Record<StudioGenre, string>> = {};
+
+/** Genres with at least one published release, in STUDIO_GENRES order, and
+ *  the newest cover in each genre that has one. The home tiles stay quiet
+ *  on a failure, so no toast. */
 export function useStudioGenres(): {
   genres: StudioGenre[];
+  coverByGenre: Partial<Record<StudioGenre, string>>;
   loadState: StudioLoadState;
 } {
   const { demoMode } = useDemoMode();
@@ -32,7 +36,8 @@ export function useStudioGenres(): {
       ),
   });
   return {
-    genres: query.data ?? [],
+    genres: query.data?.genres ?? [],
+    coverByGenre: query.data?.coverByGenre ?? NO_COVERS,
     loadState: studioLoadStateOf(query, query.data !== undefined),
   };
 }

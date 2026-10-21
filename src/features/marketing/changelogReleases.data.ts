@@ -15,6 +15,13 @@ export const CHANGELOG_RELEASE_NOTES: Record<
   string,
   { highlights: string[]; pushes?: number }
 > = {
+  "21 Oct 2026": {
+    highlights: [
+      "rsvp-connection-invites",
+      "studio-open-call-story",
+      "studio-genre-mood-tiles",
+    ],
+  },
   "20 Oct 2026": {
     highlights: [
       "architect-personas",

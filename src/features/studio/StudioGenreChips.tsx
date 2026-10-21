@@ -7,6 +7,7 @@ import { STUDIO_GENRE_LABEL_KEY } from "./api/studio.adapters";
 import type { StudioFormat, StudioGenre, StudioMood } from "./api/studio.types";
 import { useStudioGenres } from "./api/useStudioGenres";
 import { useStudioMoods } from "./api/useStudioMoods";
+import { StudioFacetTiles } from "./StudioFacetTiles";
 import { STUDIO_MOOD_LABEL_KEY } from "./studioDiscoveryLabels";
 import { studioBrowsePath } from "./studioPaths";
 import styles from "./studio.module.css";
@@ -86,8 +87,9 @@ export function StudioFilterChips({
   );
 }
 
-/** One home chip row: a heading over its chips, grown in once its list
- *  arrives and kept out of the way while it loads or when the read fails. */
+/** One home browse row: a heading over its tiles. It holds skeleton tiles
+ *  from the first paint while its list loads, and folds away only when the
+ *  list comes back empty or the read fails. */
 function StudioHomeChipSection({
   isOpen,
   headingKey,
@@ -112,29 +114,36 @@ function StudioHomeChipSection({
   );
 }
 
-/** "Browse by genre", then "Browse by mood", under the home hero. */
+/** "Browse by genre", then "Browse by mood", under the home hero: each a
+ *  grid of colour tiles carrying a drawn motif and the newest cover. */
 export function StudioHomeGenres() {
   const { t } = useTranslation();
-  const { genres } = useStudioGenres();
-  const { moods } = useStudioMoods();
+  const {
+    genres,
+    coverByGenre,
+    loadState: genresLoadState,
+  } = useStudioGenres();
+  const { moods, coverByMood, loadState: moodsLoadState } = useStudioMoods();
   return (
     <>
       <StudioHomeChipSection
-        isOpen={genres.length > 0}
+        isOpen={genresLoadState.isLoading || genres.length > 0}
         headingKey="studio:home.genres.heading"
       >
-        <StudioFilterChips
-          facet={{ kind: "genre", values: genres }}
+        <StudioFacetTiles
+          facet={{ kind: "genre", values: genres, coverByValue: coverByGenre }}
           label={t("studio:home.genres.listLabel")}
+          isLoading={genresLoadState.isLoading}
         />
       </StudioHomeChipSection>
       <StudioHomeChipSection
-        isOpen={moods.length > 0}
+        isOpen={moodsLoadState.isLoading || moods.length > 0}
         headingKey="studio:home.moods.heading"
       >
-        <StudioFilterChips
-          facet={{ kind: "mood", values: moods }}
+        <StudioFacetTiles
+          facet={{ kind: "mood", values: moods, coverByValue: coverByMood }}
           label={t("studio:home.moods.listLabel")}
+          isLoading={moodsLoadState.isLoading}
         />
       </StudioHomeChipSection>
     </>

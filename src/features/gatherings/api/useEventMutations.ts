@@ -11,7 +11,6 @@ import {
   removeAttendee,
   removeCohost,
   respondCohostInvite,
-  respondInvite,
   rsvpEvent,
   unbookmarkEvent,
   unrsvpEvent,
@@ -378,14 +377,28 @@ export function useRespondCohostInvite() {
   );
 }
 
-/** POST /events/:slug/invites — invite members (≤100 slugs). */
+/** What one host invite call did: how many invites went out, and how many of
+ *  the picked people already held one. */
+export interface InviteMembersOutcome {
+  createdCount: number;
+  alreadyInvitedCount: number;
+}
+
+/** POST /events/:slug/invites, invite members (≤100 slugs). Demo mode sends
+ *  nothing and reports every pick as a fresh invite. */
 export function useInviteMembers(slug: string) {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
-  return useMutation<void, Error, string[]>({
+  return useMutation<InviteMembersOutcome, Error, string[]>({
     mutationFn: async (slugs) => {
-      if (demoMode) return;
-      await inviteToEvent(slug, slugs);
+      if (demoMode) {
+        return { createdCount: slugs.length, alreadyInvitedCount: 0 };
+      }
+      const result = await inviteToEvent(slug, slugs);
+      return {
+        createdCount: result.created,
+        alreadyInvitedCount: result.alreadyInvited.length,
+      };
     },
     onSuccess: () => {
       // Scope to THIS event's attendees only (see useRsvp).
@@ -394,23 +407,6 @@ export function useInviteMembers(slug: string) {
       });
     },
   });
-}
-
-/** PATCH /event-invites/:id — accept / decline an incoming invite. */
-export function useRespondInvite() {
-  const { demoMode } = useDemoMode();
-  const queryClient = useQueryClient();
-  return useMutation<void, Error, { id: string; action: "accept" | "decline" }>(
-    {
-      mutationFn: async ({ id, action }) => {
-        if (demoMode) return;
-        await respondInvite(id, action);
-      },
-      onSuccess: () => {
-        void queryClient.invalidateQueries({ queryKey: eventKeys.listRoot });
-      },
-    },
-  );
 }
 
 /** DELETE /events/:slug/attendees/:memberSlug — manage-attendees "Remove". */

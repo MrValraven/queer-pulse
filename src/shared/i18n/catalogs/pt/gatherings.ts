@@ -1320,6 +1320,20 @@ export const gatherings: Catalog = {
     "{name} entrou na lista de pessoas convidadas",
   "manage.attendees.actionErrorToast":
     "Isso não foi possível. Tenta outra vez.",
+  "manage.attendees.invitedBy": "Convite de {name}",
+
+  // ── Manage: requests (pessoas a pedir para trazer uma conexão) ──────────────
+  "manage.requests.heading": "Pedidos",
+  "manage.requests.sub":
+    "Pessoas que vêm a este evento pediram para trazer uma conexão. A conexão só é avisada se aprovares.",
+  "manage.requests.tabBadge_one": "{count} pedido por rever",
+  "manage.requests.tabBadge_other": "{count} pedidos por rever",
+  "manage.requests.row": "<b>{inviter}</b> quer trazer <b>{invitee}</b>",
+  "manage.requests.approveCta": "Aprovar pedido",
+  "manage.requests.declineCta": "Recusar pedido",
+  "manage.requests.approvedToast": "Aprovado. Enviámos o convite a {name}.",
+  "manage.requests.declinedToast": "Pedido recusado",
+  "manage.requests.errorToast": "Não conseguimos guardar. Tenta outra vez.",
 
   // ── Manage: messages tab ─────────────────────────────────────────────────────
   "manage.messages.composerLabel_one":
@@ -2078,11 +2092,14 @@ export const gatherings: Catalog = {
   "rsvpDetails.eyebrow": "A tua presença",
   "rsvpDetails.title": "Há alguma coisa que devamos <em>saber</em>?",
   "rsvpDetails.sub": "Quem organiza lê isto. Mais ninguém tem de ler.",
-  "rsvpDetails.guestsLabel": "Quem vem",
+  "rsvpDetails.guestsLabel": "Pessoas sem conta no QueerPulse",
   "rsvpDetails.guestOption_one": "Eu e mais {count}",
   "rsvpDetails.guestOption_other": "Eu e mais {count}",
+  "rsvpDetails.guestsJustMe": "Só eu",
+  "rsvpDetails.addGuest": "Adicionar um convidado",
+  "rsvpDetails.removeGuest": "Remover um convidado",
   "rsvpDetails.guestsHint":
-    "Os lugares contam por pessoa, por isso isto é quantos lugares quem organiza põe à mesa.",
+    "Os lugares contam por pessoa. As pessoas do QueerPulse podem receber o seu próprio convite.",
   "rsvpDetails.guestsClosedHint":
     "As confirmações já fecharam. Ainda podes levar menos pessoas do que disseste a quem organiza.",
   "rsvpDetails.guestsClosedNoneHint":
@@ -2113,6 +2130,52 @@ export const gatherings: Catalog = {
   "rsvpDetails.savedToast": "Guardado",
   "rsvpDetails.saveErrorToast":
     "Não foi possível guardar. Tenta outra vez daqui a pouco.",
+
+  // rsvpInvites/*: levar conexões do QueerPulse dentro do modal de detalhes
+  // da presença. Cada pessoa responde por si.
+  "rsvpInvites.label": "Levar pessoas do QueerPulse",
+  "rsvpInvites.hint_one":
+    "Podes convidar mais {count} conexão. A pessoa responde por si.",
+  "rsvpInvites.hint_other":
+    "Podes convidar mais {count} conexões. Cada pessoa responde por si.",
+  "rsvpInvites.capReachedHint":
+    "Já levas {max} pessoas, o máximo numa confirmação.",
+  "rsvpInvites.closedHint":
+    "As confirmações já fecharam, por isso já não podes convidar ninguém.",
+  "rsvpInvites.openPickerCta": "Convidar conexões",
+  "rsvpInvites.closePickerCta": "Fechar a lista",
+  "rsvpInvites.searchLabel": "Procura nas tuas conexões",
+  "rsvpInvites.picksTrimmedHint_one":
+    "As pessoas que levas ocuparam um lugar, por isso tirámos {count} pessoa da seleção.",
+  "rsvpInvites.picksTrimmedHint_other":
+    "As pessoas que levas ocuparam lugares, por isso tirámos {count} pessoas da seleção.",
+  "rsvpInvites.allInvited": "Já convidaste todas as pessoas que aparecem aqui.",
+  "rsvpInvites.listLoadError": "Os teus convites não carregaram.",
+  "rsvpInvites.sentToast_one": "Convite enviado",
+  "rsvpInvites.sentToast_other": "{count} convites enviados",
+  "rsvpInvites.alreadyInvitedToast_one":
+    "{count} pessoa já tem convite para este evento",
+  "rsvpInvites.alreadyInvitedToast_other":
+    "{count} pessoas já têm convite para este evento",
+  "rsvpInvites.notInvitableToast_one":
+    "Não dá para convidar {count} pessoa para este evento",
+  "rsvpInvites.notInvitableToast_other":
+    "Não dá para convidar {count} pessoas para este evento",
+  "rsvpInvites.capToast":
+    "Isso passa de {max} pessoas numa confirmação. Baixa o número de pessoas ou retira um convite.",
+  "rsvpInvites.sendErrorToast":
+    "Não conseguimos enviar os convites. Tenta outra vez.",
+  "rsvpInvites.listLabel": "Os teus convites",
+  "rsvpInvites.withdrawCta": "Retirar convite",
+  "rsvpInvites.withdrawnToast": "Convite retirado",
+  "rsvpInvites.withdrawErrorToast":
+    "Não conseguimos retirar o convite. Tenta outra vez.",
+  "rsvpInvites.status.invited": "Convite enviado",
+  "rsvpInvites.status.awaiting_host": "À espera de quem organiza",
+  "rsvpInvites.status.host_declined": "Quem organiza disse que não",
+  "rsvpInvites.status.going": "Vai",
+  "rsvpInvites.status.waitlisted": "Em lista de espera",
+  "rsvpInvites.status.answered": "Respondeu",
 
   // PRD-182
   "create.step2.joinLinkLabel": "Link de entrada",

@@ -1,4 +1,4 @@
-import { collabInvitePath } from "../../../app/routeMap";
+import { collabInvitePath, routes } from "../../../app/routeMap";
 import { coHostInvitePath, gatheringPath } from "../../gatherings/data";
 import {
   lineupInvitePath,
@@ -12,6 +12,9 @@ const GATHERING_INVITE_SOURCES = new Set([
   "lineup_reply",
   "community_collab_invite",
   "community_collab_response",
+  "event_invite",
+  "member_invite_request",
+  "member_invite_reply",
 ]);
 
 export function isGatheringInviteSource(source: unknown): boolean {
@@ -55,6 +58,14 @@ export function gatheringInviteSourceHref(
     case "community_collab_invite":
       return inviteId ? collabInvitePath(inviteId) : undefined;
     case "community_collab_response":
+      return eventSlug ? gatheringPath(eventSlug) : undefined;
+    case "event_invite":
+      return routes.myEvents;
+    case "member_invite_request":
+      return eventSlug
+        ? manageGatheringPath(eventSlug, "attendees")
+        : undefined;
+    case "member_invite_reply":
       return eventSlug ? gatheringPath(eventSlug) : undefined;
     default:
       return undefined;

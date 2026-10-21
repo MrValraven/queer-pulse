@@ -17,6 +17,7 @@ import {
   type StudioPlayhead,
 } from "./studioPlaybackCommands";
 import type {
+  StudioBufferedRange,
   StudioPlaybackSettings,
   StudioPlaybackStatus,
   StudioPlayerActions,
@@ -79,6 +80,8 @@ function isSleepTimerHoldingCrossfade(
   return sleepTimer.endsAt - nowMs <= SLEEP_FADE_SECONDS * 1000;
 }
 
+const EMPTY_BUFFERED_RANGES: readonly StudioBufferedRange[] = [];
+
 /** The context value and the clock, memoized: the value changes with the
  *  player's state, the clock with the playhead. The clock reads the chapter
  *  and lyric start lists only, so the detail never rides on a tick. */
@@ -138,6 +141,8 @@ function usePlayerValue(input: {
     () => ({
       currentTime: playhead.currentTime,
       duration: playhead.duration,
+      bufferedRanges: playhead.bufferedRanges ?? EMPTY_BUFFERED_RANGES,
+      seekCount: playhead.seekCount ?? 0,
       ...studioClockIndexes(playhead.currentTime, {
         chapterStartsSeconds,
         lyricStartsSeconds,

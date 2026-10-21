@@ -730,6 +730,9 @@ export interface StudioPlaylistDTO extends StudioPlaylistCardDTO {
  *  release, in list order. */
 export interface StudioGenresDTO {
   genres: string[];
+  /** Cover URL of the newest hearable release in each genre that has one;
+   *  an absent key means no cover. Older servers omit the field. */
+  covers?: Record<string, string>;
 }
 
 /** `value` is null when the count is 1 to 4. */
@@ -835,10 +838,37 @@ export interface RespondStudioPlaylistInviteBody {
   response: StudioPlaylistInviteResponse;
 }
 
-/** 422 `studio_playlist_editor_ineligible`: every slug that failed a check. */
+/** Why the server refused one member of an editors invite. */
+export const STUDIO_PLAYLIST_EDITOR_INELIGIBLE_REASONS = [
+  /** The slug resolves to no member (a deleted account or a changed link). */
+  "not_found",
+  /** The playlist owner themselves. */
+  "is_owner",
+  /** A block, either way, between the owner and the member. */
+  "blocked",
+  /** The member has no QueerPulse Studio access. */
+  "no_studio_access",
+  /** A member invite to someone who is no longer an accepted connection. */
+  "not_connected",
+  /** A persona playlist, and the member no longer co-owns the persona. */
+  "not_co_owner",
+  /** The playlist no longer shows as the persona (the whole request). */
+  "persona_credit_lapsed",
+] as const;
+export type StudioPlaylistEditorIneligibleReason =
+  (typeof STUDIO_PLAYLIST_EDITOR_INELIGIBLE_REASONS)[number];
+
+export interface StudioPlaylistEditorIneligibleMember {
+  memberSlug: string;
+  reason: StudioPlaylistEditorIneligibleReason;
+}
+
+/** 422 `studio_playlist_editor_ineligible`: every slug that failed a check,
+ *  and one reason for each. */
 export interface StudioEditorIneligibleErrorBody {
   code: "studio_playlist_editor_ineligible";
   memberSlugs: string[];
+  ineligibleMembers: StudioPlaylistEditorIneligibleMember[];
 }
 
 /** 409 `studio_playlist_credit_change_removes_editors`: who would lose access. */
@@ -966,6 +996,9 @@ export interface StudioSceneRefDTO {
  *  order. Counts stay off the wire. */
 export interface StudioMoodsDTO {
   moods: string[];
+  /** Cover URL of the newest hearable release in each mood that has one;
+   *  an absent key means no cover. Older servers omit the field. */
+  covers?: Record<string, string>;
 }
 
 /** One pick: the release card plus the staff note. */

@@ -188,6 +188,7 @@ function EpisodeHeroActions({
           <div className={css.actionPair}>
             {isPlayable && (
               <StudioTrackMenu
+                className={heroStyles.heroMenu}
                 track={{
                   id: track.id,
                   title: track.title,

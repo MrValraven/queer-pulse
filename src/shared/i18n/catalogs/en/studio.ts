@@ -1825,6 +1825,10 @@ export const studio: Catalog = {
   "playerBar.next": "Next track",
   "playerBar.seekLabel": "Seek",
   "playerBar.seekValue": "{elapsed} of {total}",
+  "playerBar.seekValueChapter": "{elapsed} of {total}, {chapter}",
+  "playerBar.seekValueUnknown": "Length not known yet",
+  "playerBar.remainingTime": "−{time}",
+  "playerBar.remainingToggle": "Show time left",
   "playerBar.cantPlay": "This track can't play right now",
   "playerBar.retry": "Retry the track",
   "playerBar.close": "Close player",
@@ -3572,6 +3576,43 @@ export const studio: Catalog = {
   "playlist.editors.invite.sentToast_other": "{count} invites sent",
   "playlist.editors.invite.ineligible":
     "{names} can't be invited right now. Untick them and try again",
+  // Why the server refused each person (2026-10-21): one sentence per reason.
+  "playlist.editors.refused.noStudioAccess_one":
+    "{names} doesn't have Studio access yet, so they can't edit playlists",
+  "playlist.editors.refused.noStudioAccess_other":
+    "{names} don't have Studio access yet, so they can't edit playlists",
+  "playlist.editors.refused.notConnected_one":
+    "{names} isn't one of your connections anymore",
+  "playlist.editors.refused.notConnected_other":
+    "{names} aren't your connections anymore",
+  "playlist.editors.refused.notCoOwner_one":
+    "{names} isn't a co-owner of {persona} anymore",
+  "playlist.editors.refused.notCoOwner_other":
+    "{names} aren't co-owners of {persona} anymore",
+  "playlist.editors.refused.notCoOwnerUnnamed_one":
+    "{names} isn't a co-owner of this profile anymore",
+  "playlist.editors.refused.notCoOwnerUnnamed_other":
+    "{names} aren't co-owners of this profile anymore",
+  "playlist.editors.refused.blocked_one":
+    "{names} can't be invited from your account",
+  "playlist.editors.refused.blocked_other":
+    "{names} can't be invited from your account",
+  "playlist.editors.refused.notFound_one":
+    "We couldn't find {names}. They may have left QueerPulse or changed their profile link",
+  "playlist.editors.refused.notFound_other":
+    "We couldn't find {names}. They may have left QueerPulse or changed their profile links",
+  "playlist.editors.refused.isOwner_one": "{names} already owns this playlist",
+  "playlist.editors.refused.isOwner_other": "{names} already own this playlist",
+  "playlist.editors.refused.creditLapsed":
+    "This playlist doesn't show as {persona} anymore, so co-owners of {persona} can't be added. Reload the page to see who it shows as now",
+  "playlist.editors.refused.creditLapsedUnnamed":
+    "This playlist doesn't show as a persona anymore, so co-owners can't be added. Reload the page to see who it shows as now",
+  "playlist.editors.refused.unexplained_one":
+    "{names} can't be invited right now",
+  "playlist.editors.refused.unexplained_other":
+    "{names} can't be invited right now",
+  "playlist.editors.refused.untickAndRetry": "Untick them and try again",
+  "playlist.editors.refused.untickToSendRest": "Untick them to send the rest",
   "playlist.editors.coOwners.listLabel": "Co-owners of {persona}",
   "playlist.editors.coOwners.searchLabel": "Search co-owners",
   "playlist.editors.coOwners.empty": "{persona} has no other co-owners",

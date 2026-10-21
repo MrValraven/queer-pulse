@@ -49,14 +49,17 @@ function FiltersSheet({ onClose, onFocusLeave, children }: FiltersSheetProps) {
       }}
       onBlur={(event) => {
         // Tabbing out of the sheet folds it away, so focus never lands on
-        // a control hidden behind the scrim.
+        // a control hidden behind the scrim. Focus moving into a dialog
+        // layered above the sheet (the month picker a date field opens)
+        // keeps it open: that dialog hands focus back when it closes.
         const nextTarget = event.relatedTarget;
-        if (
-          nextTarget instanceof Node &&
-          !sheetRef.current?.contains(nextTarget)
-        ) {
-          onFocusLeave();
+        const sheet = sheetRef.current;
+        if (!(nextTarget instanceof Element) || sheet?.contains(nextTarget)) {
+          return;
         }
+        const layeredDialog = nextTarget.closest('[role="dialog"]');
+        if (layeredDialog && sheet && !layeredDialog.contains(sheet)) return;
+        onFocusLeave();
       }}
     >
       {children}

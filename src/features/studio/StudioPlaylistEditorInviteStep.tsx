@@ -7,7 +7,6 @@ import {
   type MemberSelectPerson,
 } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { intlLocale } from "../../shared/i18n/locale";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useConnectionsSearch } from "../connect/api/useConnectionsSearch";
 import { InviteMembersListFooter } from "../gatherings/InviteMembersListFooter";
@@ -16,9 +15,8 @@ import type {
   StudioPlaylistView,
 } from "./api/studio.adapters";
 import { STUDIO_PLAYLIST_LIMITS } from "./api/studio.types";
-import { ineligibleEditorSlugsOf } from "./api/studioPlaylistEditors.api";
 import { useInviteStudioPlaylistEditors } from "./api/useStudioPlaylistEditorMutations";
-import { studioErrorMessageKeyOf } from "./studioErrors.data";
+import { editorRefusalTextOf } from "./studioPlaylistEditorRefusal";
 import css from "./StudioPlaylistEditors.module.css";
 
 /**
@@ -108,15 +106,14 @@ export function StudioPlaylistEditorInviteStep({
   };
 
   function errorTextOf(error: unknown): string {
-    const refusedSlugs = ineligibleEditorSlugsOf(error);
-    if (refusedSlugs.length === 0) return t(studioErrorMessageKeyOf(error));
-    const names = new Intl.ListFormat(intlLocale(language), {
-      style: "long",
-      type: "conjunction",
-    }).format(
-      refusedSlugs.map((slug) => everPickedPeople.get(slug)?.name ?? slug),
-    );
-    return t("studio:playlist.editors.invite.ineligible", { names });
+    return editorRefusalTextOf(error, {
+      t,
+      language,
+      nameOf: (slug) => everPickedPeople.get(slug)?.name ?? slug,
+      personaName:
+        playlist.credit.kind === "persona" ? playlist.credit.name : null,
+      pickedSlugs: selected,
+    });
   }
 
   async function send() {

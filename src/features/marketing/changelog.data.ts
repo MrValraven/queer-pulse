@@ -63,6 +63,63 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "rsvp-connection-invites",
+        category: "feature",
+        date: "21 Oct 2026",
+        ...entryKeys("rsvp-connection-invites"),
+      },
+      {
+        id: "trust-network-filters-redesigned",
+        category: "improvement",
+        date: "21 Oct 2026",
+        ...entryKeys("trust-network-filters-redesigned"),
+      },
+      {
+        id: "studio-genre-mood-tiles",
+        category: "improvement",
+        date: "21 Oct 2026",
+        ...entryKeys("studio-genre-mood-tiles"),
+        tag: { labelKey: "marketing:changelog.tag.studio", to: routes.studio },
+      },
+      {
+        id: "studio-rail-exit",
+        category: "improvement",
+        date: "21 Oct 2026",
+        ...entryKeys("studio-rail-exit"),
+        tag: { labelKey: "marketing:changelog.tag.studio", to: routes.studio },
+      },
+      {
+        id: "cleaner-playlist-owner-view",
+        category: "improvement",
+        date: "21 Oct 2026",
+        ...entryKeys("cleaner-playlist-owner-view"),
+        tag: { labelKey: "marketing:changelog.tag.studio", to: routes.studio },
+      },
+      {
+        id: "studio-open-call-story",
+        category: "feature",
+        date: "21 Oct 2026",
+        ...entryKeys("studio-open-call-story"),
+      },
+      {
+        id: "playlist-invite-refusal-reasons",
+        category: "fix",
+        date: "21 Oct 2026",
+        ...entryKeys("playlist-invite-refusal-reasons"),
+      },
+      {
+        id: "studio-seek-bar",
+        category: "improvement",
+        date: "21 Oct 2026",
+        ...entryKeys("studio-seek-bar"),
+      },
+      {
+        id: "rsvp-guest-stepper",
+        category: "improvement",
+        date: "20 Oct 2026",
+        ...entryKeys("rsvp-guest-stepper"),
+      },
+      {
         id: "team-portrait-cards",
         category: "improvement",
         date: "20 Oct 2026",

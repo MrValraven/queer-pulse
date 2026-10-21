@@ -19,6 +19,14 @@ export interface Tab {
    *  draws nothing: a filter reading "0" is noise, and every caller that
    *  already writes `count || undefined` was working around this. */
   count?: number;
+  /** `"accent"` draws the count as a coral pill, for a number that asks for
+   *  action (requests waiting for an answer) where the quiet default reads as
+   *  a tally. */
+  countTone?: "neutral" | "accent";
+  /** What a screen reader hears for the count, e.g. "3 requests to review".
+   *  The bare number is then hidden from assistive tech. Ignored on an
+   *  icon-only tab, whose aria-label already carries the count. */
+  countLabel?: string;
   /** Optional leading icon. */
   icon?: ReactNode;
   /** With `icon`, renders the tab as an icon-only square pill: `label` stops
@@ -155,6 +163,33 @@ function useSlidingIndicator({
   return { tablistRef, indicatorRef };
 }
 
+/** The badge beside a tab label. With a `spokenLabel`, screen readers hear
+ *  that sentence and the bare number is hidden from them. */
+function TabCount({
+  count,
+  tone = "neutral",
+  spokenLabel,
+}: {
+  count: number;
+  tone?: Tab["countTone"];
+  spokenLabel?: string;
+}) {
+  const fmt = useFormat();
+  return (
+    <>
+      <span
+        className={[styles.tabCount, tone === "accent" && styles.tabCountAccent]
+          .filter(Boolean)
+          .join(" ")}
+        aria-hidden={spokenLabel ? true : undefined}
+      >
+        <RollingNumber value={fmt.number(count)} numericValue={count} />
+      </span>
+      {spokenLabel && <span className="visuallyHidden"> {spokenLabel}</span>}
+    </>
+  );
+}
+
 /**
  * Tab row with `role="tablist"` semantics and optional count badges.
  * `variant="pill"` (default) is the filled-pill style; `variant="underline"`
@@ -195,7 +230,6 @@ export function Tabs({
   label?: string;
 }) {
   const { t } = useTranslation();
-  const fmt = useFormat();
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const fallbackId = useId();
   const prefix = idPrefix ?? fallbackId;
@@ -322,12 +356,11 @@ export function Tabs({
             {tab.icon}
             {!isIconOnly && tab.label}
             {tab.count ? (
-              <span className={styles.tabCount}>
-                <RollingNumber
-                  value={fmt.number(tab.count)}
-                  numericValue={tab.count}
-                />
-              </span>
+              <TabCount
+                count={tab.count}
+                tone={tab.countTone}
+                spokenLabel={isIconOnly ? undefined : tab.countLabel}
+              />
             ) : null}
             {isIconOnly && (
               <span role="tooltip" aria-hidden className={styles.tabTip}>

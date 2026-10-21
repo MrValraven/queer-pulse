@@ -1,0 +1,345 @@
+/* Studio home browse tiles: one coloured tile per genre or mood, a drawn
+   motif behind the label and, when the facet has one, the cover of its
+   newest release tilted into the bottom-right corner. The ground colours
+   are the fixed --studio-facet-* tokens, so a tile looks the same in light
+   and dark Studio and its cream label keeps AA on both. */
+
+.nav {
+  container: facet-grid / inline-size;
+}
+
+/* Row heights come from the grid's own width, so a lone last tile spanning
+   the row as a banner keeps the height of its neighbours: two-up rows are
+   4:3, wider rows 16:10. */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-rows: calc((100cqi - 12px) / 2 * 0.75);
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  container: facet-tile / size;
+  min-height: var(--tap-min);
+}
+
+/* A lone last tile spans its row. One rule per column count, each undoing
+   the one before it. */
+.item:last-child:nth-child(2n + 1) {
+  grid-column: 1 / -1;
+}
+
+@container facet-grid (min-width: 520px) {
+  .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-auto-rows: calc((100cqi - 28px) / 3 * 0.625);
+    gap: 14px;
+  }
+
+  .item:last-child:nth-child(2n + 1) {
+    grid-column: auto;
+  }
+
+  .item:last-child:nth-child(3n + 1) {
+    grid-column: 1 / -1;
+  }
+}
+
+@container facet-grid (min-width: 760px) {
+  .grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-auto-rows: calc((100cqi - 48px) / 4 * 0.625);
+    gap: 16px;
+  }
+
+  .item:last-child:nth-child(3n + 1) {
+    grid-column: auto;
+  }
+
+  .item:last-child:nth-child(4n + 1) {
+    grid-column: 1 / -1;
+  }
+}
+
+@container facet-grid (min-width: 1000px) {
+  .grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-auto-rows: calc((100cqi - 64px) / 5 * 0.625);
+  }
+
+  .item:last-child:nth-child(4n + 1) {
+    grid-column: auto;
+  }
+
+  .item:last-child:nth-child(5n + 1) {
+    grid-column: 1 / -1;
+  }
+}
+
+@container facet-grid (min-width: 1240px) {
+  .grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    grid-auto-rows: calc((100cqi - 80px) / 6 * 0.625);
+  }
+
+  .item:last-child:nth-child(5n + 1) {
+    grid-column: auto;
+  }
+
+  .item:last-child:nth-child(6n + 1) {
+    grid-column: 1 / -1;
+  }
+}
+
+/* The real tiles fade in over the skeletons they replace. */
+.gridEnter {
+  animation: facetTilesIn var(--dur-slow) var(--ease-out) both;
+}
+
+@keyframes facetTilesIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.skeletonTile {
+  height: 100%;
+  border-radius: var(--radius-12);
+}
+
+.tile {
+  /* --facet-tone is set per tile from the matching --studio-facet-* token.
+     The mark is a cream-lifted tint of it for the drawn motif, the shade a
+     deeper step for the motif's heavier shapes. Mixed in OKLab so both keep
+     the ground's hue. */
+  --facet-mark: color-mix(
+    in oklab,
+    var(--facet-tone),
+    rgb(var(--cream-rgb)) 42%
+  );
+  /* Browsers without relative colour (Safari before 18) get an OKLab mix
+     toward the deep ground, so the shade always resolves. */
+  --facet-shade: color-mix(in oklab, var(--facet-tone), var(--studio-deep) 30%);
+  position: relative;
+  display: block;
+  height: 100%;
+  overflow: hidden;
+  isolation: isolate;
+  border-radius: var(--radius-12);
+  /* A soft glow behind the motif in the bottom-right corner, and the label
+     corner a touch deeper than the ground, so the label only gains
+     contrast. */
+  background:
+    linear-gradient(
+      160deg,
+      color-mix(in oklab, var(--facet-tone), var(--studio-deep) 12%),
+      transparent 48%
+    ),
+    radial-gradient(
+      90% 100% at 100% 100%,
+      color-mix(in oklab, var(--facet-tone), rgb(var(--cream-rgb)) 14%),
+      transparent 70%
+    ),
+    var(--facet-tone);
+  color: rgb(var(--cream-rgb));
+  text-decoration: none;
+  transform: translateY(0);
+  transition-property: transform;
+  transition-duration: var(--dur-base);
+  transition-timing-function: var(--ease-out);
+}
+
+/* The dark page swallows the deeper grounds, so a faint hairline drawn
+   inside the tile edge keeps its shape. It sits inside the tile, so the
+   focus ring outside never meets it. */
+[data-theme="dark"] .tile::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(var(--cream-rgb), 0.14);
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.motif {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  color: var(--facet-mark);
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+  transform: translateX(var(--motif-shift));
+  transition-property: transform;
+  transition-duration: var(--dur-slow);
+  transition-timing-function: var(--ease-out);
+}
+
+/* With a cover in the corner, the motif slides left so its main shape
+   stays in view beside the cover. */
+.tile {
+  --motif-shift: 0%;
+}
+
+.hasCover {
+  --motif-shift: -16%;
+}
+
+/* Heavier motif shapes take the deeper step of the ground. */
+.shade {
+  color: var(--facet-shade);
+}
+
+/* Dreamy's cloud glow, softened at the edge. */
+.soft {
+  filter: blur(5px);
+}
+
+.label {
+  position: relative;
+  display: block;
+  padding: 10px 12px;
+  font-family: var(--serif);
+  font-size: var(--text-16);
+  font-weight: 650;
+  font-optical-sizing: auto;
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+  hyphens: auto;
+  /* Keeps the label legible where a long one reaches over the cover. */
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.22);
+}
+
+.cover {
+  position: absolute;
+  right: -6%;
+  bottom: -10%;
+  width: 38%;
+  height: auto;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: var(--radius-4);
+  box-shadow: var(--shadow-facet-cover);
+  opacity: 0;
+  transform: rotate(25deg);
+  transform-origin: 50% 50%;
+  transition-property: transform, opacity;
+  transition-duration: var(--dur-base), var(--dur-slow);
+  transition-timing-function: var(--ease-out);
+}
+
+.coverLoaded {
+  opacity: 1;
+}
+
+/* The banner: the motif box widens to 28:10, which shows the drawn lower
+   half of the board at a larger scale, and fades out leftward; the cover
+   sizes from the height. */
+@container facet-tile (min-aspect-ratio: 2 / 1) {
+  .tile {
+    --motif-shift: 0%;
+  }
+
+  .motif {
+    left: auto;
+    width: auto;
+    aspect-ratio: 28 / 10;
+    mask-image: linear-gradient(to right, transparent, black 35%);
+  }
+
+  .hasCover .motif {
+    right: 44cqh;
+  }
+
+  .cover {
+    right: 4%;
+    width: auto;
+    height: 64%;
+  }
+}
+
+@container facet-grid (min-width: 520px) {
+  .label {
+    padding: 12px 14px;
+    font-size: var(--text-17);
+  }
+}
+
+@container facet-grid (min-width: 760px) {
+  .label {
+    padding: 14px 16px;
+    font-size: var(--text-18);
+  }
+}
+
+@container facet-grid (min-width: 1000px) {
+  .label {
+    font-size: var(--text-19);
+  }
+}
+
+@media (hover: hover) {
+  .tile:hover {
+    transform: translateY(-3px);
+  }
+
+  .tile:hover .cover {
+    transform: translate(-4%, -5%) rotate(18deg) scale(1.04);
+  }
+
+  .tile:hover .motif {
+    transform: translateX(var(--motif-shift)) scale(1.04);
+  }
+}
+
+.tile:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.tile:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tile,
+  .motif,
+  .cover {
+    transition-property: opacity;
+  }
+
+  .gridEnter {
+    animation: none;
+  }
+
+  .tile:hover,
+  .tile:active {
+    transform: none;
+  }
+
+  .tile:hover .motif {
+    transform: translateX(var(--motif-shift));
+  }
+
+  .tile:hover .cover {
+    transform: rotate(25deg);
+  }
+}
+
+@supports (color: oklch(from red l c h)) {
+  .tile {
+    --facet-shade: oklch(from var(--facet-tone) calc(l - 0.12) c h);
+  }
+}

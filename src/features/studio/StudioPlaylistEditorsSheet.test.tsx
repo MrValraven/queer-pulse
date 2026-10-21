@@ -92,6 +92,20 @@ function renderSheet(playlistId: string) {
 const GROUP_CHAT = "demo-playlist-for-the-group-chat";
 const CARTAS = "demo-playlist-cartas-que-voltam";
 
+/** Opens Invite editors on the group chat, ticks Anika and sends. */
+async function inviteAnikaToGroupChat() {
+  renderSheet(GROUP_CHAT);
+  fireEvent.click(
+    await screen.findByRole("button", { name: "Invite editors" }),
+  );
+  fireEvent.change(
+    await screen.findByPlaceholderText("Search your connections"),
+    { target: { value: "ani" } },
+  );
+  fireEvent.click(await screen.findByRole("option", { name: /Anika Kovač/ }));
+  fireEvent.click(screen.getByRole("button", { name: "Send 1 invite" }));
+}
+
 describe("StudioPlaylistEditorsSheet", () => {
   it("shows the owner active editors and a pending invite with their actions", async () => {
     renderSheet(GROUP_CHAT);
@@ -181,7 +195,24 @@ describe("StudioPlaylistEditorsSheet", () => {
     expect(within(list).getAllByText("Invite sent")).toHaveLength(2);
   });
 
-  it("names the people the server refused", async () => {
+  it("says why the server refused each person", async () => {
+    control.inviteRefusal = {
+      status: 422,
+      body: {
+        code: "studio_playlist_editor_ineligible",
+        memberSlugs: ["anika"],
+        ineligibleMembers: [
+          { memberSlug: "anika", reason: "no_studio_access" },
+        ],
+      },
+    };
+    await inviteAnikaToGroupChat();
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "Anika Kovač doesn't have Studio access yet, so they can't edit playlists. Untick them and try again",
+    );
+  });
+
+  it("names the people refused without a reason, as an older server answers", async () => {
     control.inviteRefusal = {
       status: 422,
       body: {
@@ -189,16 +220,7 @@ describe("StudioPlaylistEditorsSheet", () => {
         memberSlugs: ["anika"],
       },
     };
-    renderSheet(GROUP_CHAT);
-    fireEvent.click(
-      await screen.findByRole("button", { name: "Invite editors" }),
-    );
-    fireEvent.change(
-      await screen.findByPlaceholderText("Search your connections"),
-      { target: { value: "ani" } },
-    );
-    fireEvent.click(await screen.findByRole("option", { name: /Anika Kovač/ }));
-    fireEvent.click(screen.getByRole("button", { name: "Send 1 invite" }));
+    await inviteAnikaToGroupChat();
     expect(await screen.findByRole("alert")).toHaveTextContent(
       "Anika Kovač can't be invited right now. Untick them and try again",
     );
@@ -209,16 +231,7 @@ describe("StudioPlaylistEditorsSheet", () => {
       status: 409,
       body: { code: "studio_playlist_editor_cap" },
     };
-    renderSheet(GROUP_CHAT);
-    fireEvent.click(
-      await screen.findByRole("button", { name: "Invite editors" }),
-    );
-    fireEvent.change(
-      await screen.findByPlaceholderText("Search your connections"),
-      { target: { value: "ani" } },
-    );
-    fireEvent.click(await screen.findByRole("option", { name: /Anika Kovač/ }));
-    fireEvent.click(screen.getByRole("button", { name: "Send 1 invite" }));
+    await inviteAnikaToGroupChat();
     expect(await screen.findByRole("alert")).toHaveTextContent(
       "A playlist can have up to 10 editors and invites",
     );
@@ -230,20 +243,12 @@ describe("StudioPlaylistEditorsSheet", () => {
       body: {
         code: "studio_playlist_editor_ineligible",
         memberSlugs: ["anika"],
+        ineligibleMembers: [{ memberSlug: "anika", reason: "not_connected" }],
       },
     };
-    renderSheet(GROUP_CHAT);
-    fireEvent.click(
-      await screen.findByRole("button", { name: "Invite editors" }),
-    );
-    fireEvent.change(
-      await screen.findByPlaceholderText("Search your connections"),
-      { target: { value: "ani" } },
-    );
-    fireEvent.click(await screen.findByRole("option", { name: /Anika Kovač/ }));
-    fireEvent.click(screen.getByRole("button", { name: "Send 1 invite" }));
+    await inviteAnikaToGroupChat();
     expect(await screen.findByRole("alert")).toHaveTextContent(
-      "Anika Kovač can't be invited right now",
+      "Anika Kovač isn't one of your connections anymore",
     );
     fireEvent.click(screen.getByRole("option", { name: /Anika Kovač/ }));
     await waitFor(() =>

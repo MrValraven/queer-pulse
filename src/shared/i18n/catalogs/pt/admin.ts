@@ -3634,9 +3634,13 @@ export const admin: Catalog = {
   "vouchGraph.filters.scene": "Cena",
   "vouchGraph.filters.sceneAll": "Todas as cenas",
   "vouchGraph.filters.verifiedOnly": "Só membros verificados",
-  "vouchGraph.filters.dateRange": "Conexões entre",
+  "vouchGraph.filters.dateRange": "Data da conexão",
   "vouchGraph.filters.dateFrom": "De",
   "vouchGraph.filters.dateTo": "Até",
+  "vouchGraph.filters.dateAnyTime": "Qualquer altura",
+  "vouchGraph.filters.dateLast3Months": "Últimos 3 meses",
+  "vouchGraph.filters.dateLast12Months": "Últimos 12 meses",
+  "vouchGraph.filters.dateCustom": "Personalizado",
   "vouchGraph.filters.edgeKinds": "Tipo de conexão",
   "vouchGraph.filters.edgeKind.invite": "Convites",
   "vouchGraph.filters.edgeKind.vouch": "Votos de confiança",
@@ -8422,7 +8426,7 @@ export const admin: Catalog = {
     "O círculo abre quando for atribuído o estatuto à primeira pessoa embaixadora.",
   "marketingVideos.header.eyebrow": "Filmes, flyers e merch",
   "marketingVideos.header.sub":
-    "Os nossos filmes de lançamento, flyers de eventos e merch da equipa, guardados como código. Vê um filme e transforma-o num ficheiro de vídeo, ou descarrega ficheiros para imprimir, sempre que precisares.",
+    "Os nossos filmes de lançamento, flyers de eventos, stories e merch da equipa, guardados como código. Vê um filme e transforma-o num ficheiro de vídeo, ou descarrega ficheiros para imprimir e stories, sempre que precisares.",
   "marketingVideos.sections.films": "Filmes",
   "marketingVideos.sections.flyers": "Flyers",
   "marketingVideos.sections.merch": "Merch",
@@ -8438,17 +8442,25 @@ export const admin: Catalog = {
   "marketingVideos.merchCard.download.backPng": "Descarregar PNG das costas",
   "marketingVideos.merchCard.download.backPdf": "Descarregar PDF das costas",
   "marketingVideos.merchCard.download.backSvg": "Descarregar SVG das costas",
+  "marketingVideos.flyers.studio-open-call.title": "Chamada aberta do Studio",
+  "marketingVideos.flyers.studio-open-call.summary":
+    "Uma story de Instagram a convidar artistas e DJs queer de Lisboa a juntar a sua música ao QueerPulse Studio, em inglês e português.",
   "marketingVideos.flyers.first-event.title": "Primeiro evento",
   "marketingVideos.flyers.first-event.summary":
     "Feito para o nosso primeiro evento: uma rede queer com raízes em Lisboa e um código QR que abre queerpulse.com.",
-  "marketingVideos.flyerCard.meta": "A5 vertical · PDF e PNG",
-  "marketingVideos.flyerCard.previewAlt": "O flyer {title}",
-  "marketingVideos.flyerCard.view": "Ver flyer",
+  "marketingVideos.flyerCard.meta.a5": "A5 vertical · PDF e PNG",
+  "marketingVideos.flyerCard.meta.story": "Story de Instagram · 1080 × 1920",
+  "marketingVideos.flyerCard.previewAlt.a5": "O flyer {title}",
+  "marketingVideos.flyerCard.previewAlt.story": "A story {title}",
+  "marketingVideos.flyerCard.view.a5": "Ver flyer",
+  "marketingVideos.flyerCard.view.story": "Ver story",
   "marketingVideos.flyerCard.download.pdfA5": "Descarregar PDF (A5)",
   "marketingVideos.flyerCard.download.pdfA5Print":
     "Descarregar PDF com sangria (A5)",
   "marketingVideos.flyerCard.download.pdfA4": "Descarregar PDF (A4)",
   "marketingVideos.flyerCard.download.png": "Descarregar PNG",
+  "marketingVideos.flyerCard.download.png.story": "Descarregar PNG (inglês)",
+  "marketingVideos.flyerCard.download.pngPt": "Descarregar PNG (português)",
   "marketingVideos.films.cinematic.title": "Cinematográfico",
   "marketingVideos.films.cinematic.summary":
     "Lento e caloroso, a 100 BPM. O produto em seis momentos, depois a cidade e o convite.",
@@ -8562,6 +8574,45 @@ export const admin: Catalog = {
   "logoConcepts.concepts.hearth.title": "Lareira",
   "logoConcepts.concepts.hearth.summary":
     "Um anel de pontos grandes à volta de uma lareira coral, com a cauda a sair. O mais forte para avatares pequenos.",
+  "logoConcepts.ripple.title": "Ondas",
+  "logoConcepts.ripple.sub":
+    "O P cai como um pulso e as ondas que cria tornam-se o Q. Quatro leituras do mesmo esboço. A 32px ou menos, cada uma passa para um corte pequeno mais simples.",
+  "logoConcepts.concepts.rippleDrop.title": "Gota",
+  "logoConcepts.concepts.rippleDrop.summary":
+    "O esboço tal como foi desenhado: ondas partidas à volta do P, a haste a romper o Q como cauda e uma gota coral na ponta.",
+  "logoConcepts.concepts.rippleRings.title": "Anéis",
+  "logoConcepts.concepts.rippleRings.summary":
+    "Duas ondas inteiras à volta do P, mais leves para o centro. A mais próxima dos pontos de pulso que usamos hoje.",
+  "logoConcepts.concepts.rippleSplash.title": "Salpico",
+  "logoConcepts.concepts.rippleSplash.summary":
+    "O P cai fora do centro, por isso as ondas apertam-se do lado dele e abrem-se do outro, como uma onda a afastar-se.",
+  "logoConcepts.concepts.rippleSerif.title": "Serifa",
+  "logoConcepts.concepts.rippleSerif.summary":
+    "Cada onda é o oval inclinado da Fraunces, grosso e fino como o Traço, por isso a marca entra na família do Fio.",
+  "logoConcepts.rippleOutside.title": "P por fora",
+  "logoConcepts.rippleOutside.sub":
+    "O P cresce e o Q fica dentro do bojo dele, como o pulso no centro. A 32px ou menos, o Q passa a ser um ponto coral com cauda.",
+  "logoConcepts.concepts.rippleOutsideNest.title": "Ninho",
+  "logoConcepts.concepts.rippleOutsideNest.summary":
+    "Um P direito com um Q coral inteiro pousado no bojo. Lês primeiro o P e depois o Q lá dentro.",
+  "logoConcepts.concepts.rippleOutsideRings.title": "Eco",
+  "logoConcepts.concepts.rippleOutsideRings.summary":
+    "O bojo do P é a onda de fora, com mais dois anéis a fechar sobre o Q coral no centro.",
+  "logoConcepts.concepts.rippleOutsideTail.title": "Rutura",
+  "logoConcepts.concepts.rippleOutsideTail.summary":
+    "A cauda do Q sai pelo bojo do P e acaba numa gota coral: a primeira ideia das Ondas virada do avesso.",
+  "logoConcepts.rippleFused.title": "Fundidos",
+  "logoConcepts.rippleFused.sub":
+    "O bojo do P é a primeira onda do Q, por isso as duas letras partilham o mesmo centro e a haste do P é a cauda do Q.",
+  "logoConcepts.concepts.rippleFusedRing.title": "Anel",
+  "logoConcepts.concepts.rippleFusedRing.summary":
+    "Só o bojo do P e o anel do Q, à volta do mesmo centro. O mais limpo da família em tamanho de avatar.",
+  "logoConcepts.concepts.rippleFusedSpiral.title": "Espiral",
+  "logoConcepts.concepts.rippleFusedSpiral.summary":
+    "Uma só linha desenha o P, continua a rodar até ser o Q e sai como cauda. A cor muda onde o P se torna Q.",
+  "logoConcepts.concepts.rippleFusedStack.title": "Camadas",
+  "logoConcepts.concepts.rippleFusedStack.summary":
+    "O bojo do P, uma onda fina e o anel do Q à volta do mesmo centro. O mais cheio dos três fundidos.",
   "logoConcepts.variants.title": "Variantes do Fio",
   "logoConcepts.variants.sub":
     "Cinco maneiras de dar profundidade ao Fio. A 32px ou menos, cada uma passa para um corte pequeno mais simples.",

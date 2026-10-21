@@ -18,6 +18,7 @@ import type {
 } from "./studioDeckPreload";
 import { trackGainDb } from "./studioLoudness";
 import type {
+  StudioBufferedRange,
   StudioPlaybackSettings,
   StudioPlaybackStatus,
   StudioQueueItem,
@@ -33,10 +34,17 @@ import { isWarningGated, warningGateOf } from "./studioWarningGate";
 export interface StudioPlayhead {
   currentTime: number;
   duration: number | null;
+  /** Loaded spans of the active deck. Optional so hand-built playheads stay
+   *  valid. */
+  bufferedRanges?: readonly StudioBufferedRange[];
+  /** Seeks and restarts so far, so a seek bar can tell another control's
+   *  seek from its own. Optional so hand-built playheads stay valid. */
+  seekCount?: number;
 }
 export const STOPPED_PLAYHEAD: StudioPlayhead = {
   currentTime: 0,
   duration: null,
+  bufferedRanges: [],
 };
 
 export interface PlaybackRefs {
@@ -121,6 +129,7 @@ function createTrackLoader(
     effects.tick({
       currentTime: startAtSeconds,
       duration: item.durationSeconds,
+      bufferedRanges: [],
     });
     return refs.loadTokenRef.current;
   }
@@ -240,7 +249,10 @@ function createTrackLoader(
     if (!engine) return;
     refs.resumeAtRef.current = 0;
     effects.decks.noteTrackStarted();
-    effects.tick({ currentTime: 0 });
+    effects.tick({
+      currentTime: 0,
+      seekCount: (refs.playheadRef.current.seekCount ?? 0) + 1,
+    });
     engine.seek(0);
     if (shouldPlay) {
       void engine.play();
@@ -303,6 +315,9 @@ function createEventHandler(
         return;
       case "duration":
         effects.tick({ duration: event.seconds });
+        return;
+      case "buffered":
+        effects.tick({ bufferedRanges: event.ranges });
         return;
       case "playing":
         refs.refreshCountRef.current = 0;
@@ -410,7 +425,10 @@ export function createPlaybackCommands(
     effects.decks.noteSeek(target);
     refs.engineRef.current?.seek(target);
     refs.resumeAtRef.current = target;
-    effects.tick({ currentTime: target });
+    effects.tick({
+      currentTime: target,
+      seekCount: (refs.playheadRef.current.seekCount ?? 0) + 1,
+    });
   }
 
   /** Stop, sign-out, an emptied queue and a demo/live switch: the sleep

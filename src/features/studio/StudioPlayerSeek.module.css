@@ -1,0 +1,66 @@
+/* Held at the waveform's 32px, so the row keeps its height while a new
+   track's waveform loads behind the plain track. */
+.seekRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-block-size: 32px;
+}
+
+/* Now playing's waveform is 48px tall; the row keeps that height while a
+   new track's waveform loads. */
+.seekRow[data-size="large"] {
+  min-block-size: 48px;
+}
+
+.slider {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Both labels reserve the width of the longest label the track can show,
+   so the bar beside them keeps its width as the time ticks. Each label
+   sits against the bar: the elapsed time ends at it, the length starts
+   from it. */
+.time {
+  display: inline-block;
+  min-inline-size: calc(var(--studio-seek-time-chars, 4) * 1ch);
+  text-align: end;
+  font-size: var(--text-11);
+  color: var(--studio-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* 24px tall for a comfortable press; the row still centres it. */
+.timeToggle {
+  appearance: none;
+  min-block-size: 24px;
+  margin: 0;
+  padding: 0;
+  text-align: start;
+  border: 0;
+  background: none;
+  font-family: inherit;
+  line-height: inherit;
+  border-radius: var(--radius-6);
+  cursor: pointer;
+  transition-property: color;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+@media (hover: hover) {
+  .timeToggle:not([aria-disabled="true"]):hover {
+    color: var(--studio-text);
+  }
+}
+
+.timeToggle:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.timeToggle[aria-disabled="true"] {
+  cursor: default;
+}

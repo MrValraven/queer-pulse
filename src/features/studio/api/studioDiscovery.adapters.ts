@@ -14,6 +14,7 @@ import {
   isStudioMood,
   orderedCreditRoles,
   tintForId,
+  toFacetCoverMap,
   toArtistRefView,
   toPersonaRefView,
   toReleaseCardView,
@@ -81,10 +82,19 @@ export function toCurationView(dto: StudioCurationDTO): StudioCurationView {
   };
 }
 
+export interface StudioMoodListView {
+  moods: StudioMood[];
+  coverByMood: Partial<Record<StudioMood, string>>;
+}
+
 /** The moods the server lists, in its order; a slug this client cannot name
- *  is dropped so every chip has a label. */
-export function toMoodList(dto: StudioMoodsDTO): StudioMood[] {
-  return dto.moods.filter(isStudioMood);
+ *  is dropped so every chip has a label. Each mood keeps the cover of its
+ *  newest release, when it has one. */
+export function toMoodList(dto: StudioMoodsDTO): StudioMoodListView {
+  const moods = (Array.isArray(dto.moods) ? dto.moods : []).filter(
+    isStudioMood,
+  );
+  return { moods, coverByMood: toFacetCoverMap(dto.covers, moods) };
 }
 
 export interface StudioSceneCardView {

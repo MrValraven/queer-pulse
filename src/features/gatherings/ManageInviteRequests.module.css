@@ -1,0 +1,77 @@
+/* The space below the area lives in padding on this wrapper, inside the
+   Collapse, so it folds smoothly with the area. */
+.spacer {
+  padding-block-end: var(--gap-sm);
+}
+
+/* A small card on the cream tab panel: the queue asks the host to act, so it
+   sits on its own surface above the guest list. */
+.root {
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-16);
+  padding: var(--gap-sm) var(--gap-sm) var(--gap-xs);
+}
+
+.heading {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-18);
+  font-weight: 500;
+  color: var(--text-strong);
+}
+
+.sub {
+  margin: 4px 0 var(--gap-xs);
+  max-width: 62ch;
+  font-size: var(--text-caption);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Padding and the hairline sit on this child of the animated `li`, so they
+   fold with the row when it leaves. */
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gap-xs) 12px;
+  padding-block: 10px;
+  border-block-start: 1px solid rgba(var(--line-rgb), 0.07);
+}
+
+.rowText {
+  flex: 1 1 14rem;
+  min-width: 0;
+  margin: 0;
+  font-size: var(--text-body-sm);
+  line-height: 1.45;
+  color: var(--ink-60);
+}
+
+.name {
+  font-weight: 600;
+  color: var(--text-strong);
+}
+
+/* Both answers stay side by side and drop under the sentence together on a
+   narrow row. */
+.actions {
+  display: flex;
+  gap: var(--gap-xs);
+  flex: none;
+  margin-inline-start: auto;
+}
+
+/* A fingertip needs the full 44px; the small buttons draw at 40. */
+@media (pointer: coarse) {
+  .answer {
+    min-height: 44px;
+  }
+}

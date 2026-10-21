@@ -269,6 +269,7 @@ export function StudioPlaylistEntryRow(props: StudioPlaylistEntryRowProps) {
           <StudioPlaylistAddedBy person={entry.addedBy} />
         )}
       </div>
+      {hasEditRights && <EntryControls {...props} title={title} />}
       <div className={`${styles.tm} ${css.duration} ${releaseStyles.timeCell}`}>
         <span className={releaseStyles.timeLabel}>
           {track?.durationLabel ?? ""}
@@ -299,7 +300,6 @@ export function StudioPlaylistEntryRow(props: StudioPlaylistEntryRowProps) {
           />
         )}
       </div>
-      {hasEditRights && <EntryControls {...props} title={title} />}
     </m.li>
   );
 }

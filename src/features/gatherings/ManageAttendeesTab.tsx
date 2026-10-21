@@ -1,6 +1,5 @@
 import { useMemo, useState } from "react";
 import { Button } from "../../shared/components/ui";
-import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { BarFromGatheringModal } from "./BarFromGatheringModal";
@@ -18,8 +17,8 @@ import {
   ManageAttendeesSearch,
   ManageAttendeesSearchFailure,
 } from "./ManageAttendeesSearch";
-import { getAttendeesCsv } from "./api/events.api";
-import { downloadBlob } from "../../shared/lib/downloadBlob";
+import { useAttendeeExport } from "./useAttendeeExport";
+import { ManageInviteRequests } from "./ManageInviteRequests";
 import { AttendeeSection } from "./ManageGatheringAttendees";
 import styles from "./ManageGatheringPage.module.css";
 
@@ -41,13 +40,11 @@ export function AttendeesTab({
   hostSlug?: string;
 }) {
   const { t } = useTranslation();
-  const { showToast } = useToast();
   const { demoMode } = useDemoMode();
   const [inviteOpen, setInviteOpen] = useState(false);
   const [barTarget, setBarTarget] = useState<BarTarget | null>(null);
   const [loadingMoreGoing, setLoadingMoreGoing] = useState(false);
   const [loadingMoreWaitlist, setLoadingMoreWaitlist] = useState(false);
-  const [isExporting, setIsExporting] = useState(false);
   const { data, loadMoreGoing, loadMoreWaitlist } = useAttendees(slug);
   const onLoadMoreGoing = async () => {
     setLoadingMoreGoing(true);
@@ -90,22 +87,7 @@ export function AttendeesTab({
     () => (goingRows ?? []).map((attendee) => attendee.slug),
     [goingRows],
   );
-  const exportAttendees = async () => {
-    if (demoMode) {
-      showToast(t("gatherings:manage.attendees.exportDemoToast"), "info");
-      return;
-    }
-    setIsExporting(true);
-    try {
-      const csv = await getAttendeesCsv(slug);
-      downloadBlob(`${slug}-attendees.csv`, csv, "text/csv;charset=utf-8;");
-      showToast(t("gatherings:manage.attendees.exportedToast"), "success");
-    } catch {
-      showToast(t("gatherings:manage.attendees.exportFailedToast"), "error");
-    } finally {
-      setIsExporting(false);
-    }
-  };
+  const { isExporting, exportAttendees } = useAttendeeExport(slug);
 
   return (
     <div>
@@ -147,6 +129,7 @@ export function AttendeesTab({
         <ManageAttendeesSearchFailure onRetry={search.retry} />
       )}
 
+      <ManageInviteRequests slug={slug} />
       <AttendeeSection
         {...search.going}
         heading={t("gatherings:manage.attendees.goingHeading", {

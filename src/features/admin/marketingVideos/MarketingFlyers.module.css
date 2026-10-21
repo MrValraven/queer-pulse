@@ -66,3 +66,16 @@
   width: 100%;
   height: auto;
 }
+
+/* A still framed in a box of another shape (a story in the A5 box) fits
+   inside it at full height, centred, with the plum showing at the sides. */
+.frameFit {
+  position: relative;
+}
+
+.frameFit img {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  object-fit: contain;
+}

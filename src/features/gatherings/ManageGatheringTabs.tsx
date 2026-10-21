@@ -11,6 +11,7 @@ import {
 import { OverviewTab } from "./ManageOverviewTab";
 import type { GatheringDetail, OverviewCounts } from "./ManageOverviewTab";
 import { AttendeesTab } from "./ManageAttendeesTab";
+import { useInviteRequests } from "./api/useInviteRequests";
 import { MessagesTab } from "./ManageMessagesTab";
 import { SettingsTab } from "./ManageSettingsTab";
 import { CheckinTab } from "./checkin/CheckinTab";
@@ -119,6 +120,9 @@ export function ManageGatheringTabs({
   onUpdateSettings,
 }: ManageGatheringTabsProps) {
   const { t } = useTranslation();
+  // Requests waiting for a host's answer badge the Attendees tab in coral, so
+  // a host on another tab still sees the queue and reads it as a to-do.
+  const { requests } = useInviteRequests(slug);
   const tabOrder = manageGatheringTabOrder({
     isQuizFormat: isQuizFormat ?? false,
     isQuizshowVisible: isQuizshowVisible ?? false,
@@ -151,6 +155,13 @@ export function ManageGatheringTabs({
         tabs={tabOrder.map((tabId) => ({
           id: tabId,
           label: t(TAB_LABEL_KEYS[tabId]),
+          ...(tabId === "attendees" && {
+            count: requests.length,
+            countTone: "accent" as const,
+            countLabel: t("gatherings:manage.requests.tabBadge", {
+              count: requests.length,
+            }),
+          }),
           icon:
             tabId === "checkin" && isCheckinLive ? (
               <span className={styles.liveDot} aria-hidden />

@@ -1,13 +1,15 @@
 import { apiDelete, apiGet, apiPost } from "../../../shared/api/client";
 import { studioErrorCodeOf } from "./studio.api";
-import type {
-  InviteStudioPlaylistEditorsBody,
-  RespondStudioPlaylistInviteBody,
-  StudioPlaylistDTO,
-  StudioPlaylistEditorCandidatesDTO,
-  StudioPlaylistEditorListDTO,
-  StudioPlaylistInviteResponse,
-  StudioPlaylistPersonDTO,
+import {
+  STUDIO_PLAYLIST_EDITOR_INELIGIBLE_REASONS,
+  type InviteStudioPlaylistEditorsBody,
+  type RespondStudioPlaylistInviteBody,
+  type StudioPlaylistDTO,
+  type StudioPlaylistEditorCandidatesDTO,
+  type StudioPlaylistEditorIneligibleReason,
+  type StudioPlaylistEditorListDTO,
+  type StudioPlaylistInviteResponse,
+  type StudioPlaylistPersonDTO,
 } from "./studio.types";
 
 // Collaborative playlists: one raw call per route of the 2026-10-14 contract.
@@ -87,6 +89,45 @@ export function ineligibleEditorSlugsOf(error: unknown): string[] {
   return Array.isArray(slugs)
     ? slugs.filter((slug): slug is string => typeof slug === "string")
     : [];
+}
+
+/** One refused member; `reason` is null when the server named none this
+ *  client knows (an older backend, or a reason added after this build). */
+export interface IneligibleEditor {
+  memberSlug: string;
+  reason: StudioPlaylistEditorIneligibleReason | null;
+}
+
+const isIneligibleReason = (
+  value: unknown,
+): value is StudioPlaylistEditorIneligibleReason =>
+  (STUDIO_PLAYLIST_EDITOR_INELIGIBLE_REASONS as readonly unknown[]).includes(
+    value,
+  );
+
+/** Everyone a 422 `studio_playlist_editor_ineligible` refused, each with its
+ *  reason from `ineligibleMembers`; [] for any other error. A slug in
+ *  `memberSlugs` with no known reason comes back with a null reason. */
+export function ineligibleEditorsOf(error: unknown): IneligibleEditor[] {
+  if (studioErrorCodeOf(error) !== "studio_playlist_editor_ineligible")
+    return [];
+  const ineligibleMembers = errorBodyOf(error).ineligibleMembers;
+  const reasonBySlug = new Map<string, StudioPlaylistEditorIneligibleReason>();
+  if (Array.isArray(ineligibleMembers))
+    for (const entry of ineligibleMembers as unknown[]) {
+      if (!entry || typeof entry !== "object") continue;
+      const { memberSlug, reason } = entry as Record<string, unknown>;
+      if (typeof memberSlug === "string" && isIneligibleReason(reason))
+        reasonBySlug.set(memberSlug, reason);
+    }
+  const slugs = new Set([
+    ...ineligibleEditorSlugsOf(error),
+    ...reasonBySlug.keys(),
+  ]);
+  return [...slugs].map((memberSlug) => ({
+    memberSlug,
+    reason: reasonBySlug.get(memberSlug) ?? null,
+  }));
 }
 
 function isPersonDto(value: unknown): value is StudioPlaylistPersonDTO {

@@ -1,6 +1,6 @@
 import type { ComponentProps } from "react";
 import { fireEvent, render, screen } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
 import { ManageGatheringTabs } from "./ManageGatheringTabs";
 import type { ManageGatheringTab } from "./gatheringPaths";
@@ -11,6 +11,20 @@ vi.mock("./checkin/CheckinTab", () => ({
 
 vi.mock("../quizshow/builder/QuizshowBuilderTab", () => ({
   QuizshowBuilderTab: () => <div>live game panel</div>,
+}));
+
+// The file renders without a QueryClient, so the request queue is mocked.
+// A test swaps in its own requests through this holder.
+const inviteRequestsMock = vi.hoisted(() => ({
+  requests: [] as { id: string; inviterName: string; inviteeName: string }[],
+}));
+
+vi.mock("./api/useInviteRequests", () => ({
+  useInviteRequests: () => ({
+    requests: inviteRequestsMock.requests,
+    isPending: false,
+    isError: false,
+  }),
 }));
 
 type TabsProps = ComponentProps<typeof ManageGatheringTabs>;
@@ -31,6 +45,29 @@ const requiredProps = {
 } satisfies Omit<TabsProps, "activeTab" | "onTabChange" | "isCheckinLive">;
 
 describe("ManageGatheringTabs", () => {
+  afterEach(() => {
+    inviteRequestsMock.requests = [];
+  });
+
+  it("shows the pending request count on the Attendees tab", async () => {
+    inviteRequestsMock.requests = [
+      { id: "request-1", inviterName: "Jun Park", inviteeName: "Ana Ferreira" },
+    ];
+    render(
+      <TestProviders>
+        <ManageGatheringTabs
+          {...requiredProps}
+          activeTab="overview"
+          onTabChange={vi.fn()}
+          isCheckinLive={false}
+        />
+      </TestProviders>,
+    );
+    expect(
+      await screen.findByRole("tab", { name: /Attendees\s*1/ }),
+    ).toBeInTheDocument();
+  });
+
   it("shows Check-in as its own tab and reports a switch to it", async () => {
     const onTabChange = vi.fn();
     render(

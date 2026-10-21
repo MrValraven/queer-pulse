@@ -7,6 +7,7 @@ import { DayFilterChip } from "./DayFilterChip";
 import { EventAgenda } from "./EventAgenda";
 import { CalendarCard } from "./CalendarCard";
 import { AcceptInviteConfirm } from "./AcceptInviteConfirm";
+import { AcceptInviteDetailsModal } from "./AcceptInviteDetailsModal";
 import { RsvpDetailsModal } from "./RsvpDetailsModal";
 import { EventTicketModal } from "./EventTicketModal";
 import { SeriesScopeModal } from "./SeriesScopeModal";
@@ -43,6 +44,9 @@ export function MyEventsBody() {
           ConfirmDialog) and mounted only while open, so its a11y setup and
           local state run per open. */}
       <AcceptInviteConfirm />
+      {c.acceptDetails.open && (
+        <AcceptInviteDetailsModal key={c.acceptDetails.inviteId ?? "none"} />
+      )}
       {c.details.open && <RsvpDetailsModal key={c.details.eventId ?? "none"} />}
       {c.ticket.open && <EventTicketModal key={c.ticket.eventId ?? "none"} />}
       {c.scope.open && <SeriesScopeModal />}

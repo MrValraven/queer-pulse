@@ -457,6 +457,9 @@ export interface AttendeeDTO {
    *  the host's UI can mark a member who asked to be listed to the organisers
    *  only. Organisers only. */
   detailsVisibility?: string | null;
+  /** The member whose RSVP invite brought this attendee, or `null` when they
+   *  came on their own. ORGANISERS ONLY: absent for every other reader. */
+  invitedBy?: EventHostDTO | null;
 }
 
 /** GET /events/:slug/attendees?status=&page= — one RSVP status's own
@@ -789,16 +792,55 @@ export const removeAttendee = (slug: string, memberSlug: string) =>
 export const promoteAttendee = (slug: string, memberSlug: string) =>
   apiPost<{ ok: true }>(`/events/${slug}/waitlist/${memberSlug}/promote`);
 
-/** Invite members to an event. `slugs` is capped at 100 by the backend. */
+/** Host invites members to an event. `slugs` is capped at 100 by the backend.
+ *  `alreadyInvited` lists the slugs that already held an invite. */
 export const inviteToEvent = (slug: string, slugs: string[]) =>
-  apiPost<{ invited: number }>(`/events/${slug}/invites`, {
-    slugs: slugs.slice(0, 100),
+  apiPost<{ created: number; alreadyInvited: string[] }>(
+    `/events/${slug}/invites`,
+    { slugs: slugs.slice(0, 100) },
+  );
+
+/** The details an invitee gives when they accept, the same answers the RSVP
+ *  details form asks for. */
+export interface AcceptInviteDetailsDto {
+  visibility: RsvpDetailsVisibility;
+  accessNeeds?: string;
+  dietaryNeeds?: string;
+  pronouns?: string;
+  customAnswer?: string;
+}
+
+/** PATCH /event-invites/:id result. `rsvp` is the RSVP an accept wrote, or
+ *  `null` after a decline. */
+export interface RespondInviteResultDTO {
+  id: string;
+  status: EventInviteStatus;
+  rsvp: {
+    status: "going" | "maybe" | "waitlisted";
+    waitlistPosition: number | null;
+  } | null;
+}
+
+export const respondInvite = (
+  id: string,
+  action: "accept" | "decline",
+  details?: AcceptInviteDetailsDto,
+) =>
+  apiPatch<RespondInviteResultDTO>(`/event-invites/${id}`, {
+    action,
+    ...(details ? { details } : {}),
   });
 
-export const respondInvite = (id: string, action: "accept" | "decline") =>
-  apiPatch<{ status: RsvpStatus }>(`/event-invites/${id}`, { action });
-
-export type EventInviteStatus = "pending" | "accepted" | "declined";
+/** `awaiting_host` is a member invite on an invite-only event the host has not
+ *  approved yet, `withdrawn` means the inviter took it back (or cancelled their
+ *  RSVP), and `host_declined` means the host refused the request. */
+export type EventInviteStatus =
+  | "pending"
+  | "accepted"
+  | "declined"
+  | "awaiting_host"
+  | "withdrawn"
+  | "host_declined";
 
 /** The lean event summary GET /event-invites nests per row — the invitee
  *  decides accept/decline from this, then opens GET /events/:slug to see more. */

@@ -5,6 +5,9 @@ export interface MyEventsModals {
   details: { open: boolean; eventId: string | null };
   openDetails: (id: string) => void;
   closeDetails: () => void;
+  acceptDetails: { open: boolean; inviteId: string | null };
+  openAcceptDetails: (id: string) => void;
+  closeAcceptDetails: () => void;
   ticket: { open: boolean; eventId: string | null };
   openTicket: (id: string) => void;
   closeTicket: () => void;
@@ -13,12 +16,16 @@ export interface MyEventsModals {
   closeMore: () => void;
 }
 
-/** The details + ticket modals and the row "more" menu. */
+/** The details, accept-invite and ticket modals and the row "more" menu. */
 export function useMyEventsModals(): MyEventsModals {
   const [details, setDetails] = useState<{
     open: boolean;
     eventId: string | null;
   }>({ open: false, eventId: null });
+  const [acceptDetails, setAcceptDetails] = useState<{
+    open: boolean;
+    inviteId: string | null;
+  }>({ open: false, inviteId: null });
   const [ticket, setTicket] = useState<{
     open: boolean;
     eventId: string | null;
@@ -36,6 +43,14 @@ export function useMyEventsModals(): MyEventsModals {
   );
   const closeDetails = useCallback(
     () => setDetails((d) => ({ ...d, open: false })),
+    [],
+  );
+  const openAcceptDetails = useCallback(
+    (id: string) => setAcceptDetails({ open: true, inviteId: id }),
+    [],
+  );
+  const closeAcceptDetails = useCallback(
+    () => setAcceptDetails((current) => ({ ...current, open: false })),
     [],
   );
   const openTicket = useCallback(
@@ -62,6 +77,9 @@ export function useMyEventsModals(): MyEventsModals {
     details,
     openDetails,
     closeDetails,
+    acceptDetails,
+    openAcceptDetails,
+    closeAcceptDetails,
     ticket,
     openTicket,
     closeTicket,

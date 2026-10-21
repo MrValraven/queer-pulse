@@ -1,5 +1,10 @@
 import { createContext, useContext } from "react";
 import type { ReasonCode } from "../safety/reportReasons";
+import type { AcceptInviteDetailsDto } from "../gatherings/api/events.api";
+import type {
+  AcceptConfirmState,
+  AcceptInviteCallbacks,
+} from "./useMyEventsInviteAnswers";
 import type {
   MyEvent,
   Pill,
@@ -77,7 +82,11 @@ export interface MyEventsValue {
   setMaybe: (id: string) => void;
   setGoing: (id: string) => void;
   rsvpSaved: (id: string) => void;
-  acceptInvite: (id: string) => void;
+  acceptInvite: (
+    id: string,
+    details: AcceptInviteDetailsDto,
+    callbacks: AcceptInviteCallbacks,
+  ) => void;
   declineInvite: (id: string) => void;
   cantGo: (id: string) => void;
   leaveWaitlist: (id: string) => void;
@@ -85,11 +94,14 @@ export interface MyEventsValue {
   removingId: string | null;
 
   // modals
-  confirm: { open: boolean; title: string; meta: string };
+  confirm: AcceptConfirmState;
   closeConfirm: () => void;
   details: { open: boolean; eventId: string | null };
   openDetails: (id: string) => void;
   closeDetails: () => void;
+  acceptDetails: { open: boolean; inviteId: string | null };
+  openAcceptDetails: (id: string) => void;
+  closeAcceptDetails: () => void;
   ticket: { open: boolean; eventId: string | null };
   openTicket: (id: string) => void;
   closeTicket: () => void;

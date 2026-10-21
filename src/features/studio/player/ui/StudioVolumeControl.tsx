@@ -1,20 +1,11 @@
-import { useEffect, useState, type CSSProperties } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FiVolume1, FiVolume2, FiVolumeX } from "react-icons/fi";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { useStudioPlayer } from "../studioPlayerContext";
 import { StudioIconSwap } from "./StudioIconSwap";
+import { StudioRangeSlider } from "./range/StudioRangeSlider";
 import styles from "./StudioPlayerControls.module.css";
 
-const SLIDER_KEYS = new Set([
-  "ArrowUp",
-  "ArrowDown",
-  "ArrowLeft",
-  "ArrowRight",
-  "PageUp",
-  "PageDown",
-  "Home",
-  "End",
-]);
 /** A little past the 250ms --dur-base glide, for when transitionend never
  *  comes. */
 const GLIDE_FALLBACK_MS = 300;
@@ -46,6 +37,61 @@ export function StudioVolumeControl() {
     );
     return () => window.clearTimeout(glideTimeoutId);
   }, [isAnimatingFill]);
+  /** The level and mute state from before a drag began. */
+  const gestureOriginRef = useRef<{ volume: number; isMuted: boolean } | null>(
+    null,
+  );
+  const hasGestureEndedRef = useRef(false);
+  // A cancelled drag (Escape or pointercancel) ends the preview, then commits
+  // the origin value in the same tick. A commit that arrives after the end
+  // and before the microtask clears the snapshot restores it exactly.
+  const trackGesture = (previewPercent: number | null) => {
+    if (previewPercent !== null) {
+      hasGestureEndedRef.current = false;
+      gestureOriginRef.current ??= {
+        volume: preferences.volume,
+        isMuted: preferences.isMuted,
+      };
+      return;
+    }
+    hasGestureEndedRef.current = true;
+    queueMicrotask(() => {
+      if (!hasGestureEndedRef.current) return;
+      gestureOriginRef.current = null;
+      hasGestureEndedRef.current = false;
+    });
+  };
+  /** Any direct input on the slider ends the mute glide, then applies the
+   *  level. */
+  const applyVolumePercent = (nextPercent: number) => {
+    setIsAnimatingFill(false);
+    const gestureOrigin = gestureOriginRef.current;
+    if (gestureOrigin && hasGestureEndedRef.current) {
+      gestureOriginRef.current = null;
+      hasGestureEndedRef.current = false;
+      setVolume(gestureOrigin.volume);
+      if (gestureOrigin.isMuted) toggleMute();
+      return;
+    }
+    // Pointer values arrive as floats; a press at 0.4% counts as 0.
+    const roundedPercent = Math.round(nextPercent);
+    // Plan 2's setVolume unmutes on any level above 0, so this never calls
+    // toggleMute after it (that would mute again).
+    if (!preferences.isMuted) {
+      setVolume(roundedPercent / 100);
+      return;
+    }
+    // Muted, the slider sits at 0. Moving it to 0 keeps the mute and the
+    // remembered level. A one-step nudge from 0 (an arrow key) unmutes at
+    // the remembered level; a drag or a press on the track unmutes at the
+    // chosen point.
+    if (roundedPercent === 0) return;
+    setVolume(
+      roundedPercent <= 1
+        ? Math.max(preferences.volume, roundedPercent / 100)
+        : roundedPercent / 100,
+    );
+  };
   return (
     <div className={styles.volume}>
       <button
@@ -66,50 +112,23 @@ export function StudioVolumeControl() {
           <Icon aria-hidden />
         </StudioIconSwap>
       </button>
-      <input
-        type="range"
-        className={styles.volumeSlider}
+      <StudioRangeSlider
+        variant="volume"
         min={0}
         max={100}
-        step={1}
         value={shownPercent}
-        style={{ "--volume-fill": shownPercent / 100 } as CSSProperties}
-        data-animating={isAnimatingFill ? "" : undefined}
-        aria-label={t("studio:player.volume")}
-        aria-valuetext={t("studio:player.volumeValue", {
+        commitMode="continuous"
+        keySteps={{ arrow: 1, page: 10 }}
+        inputStep={1}
+        onCommit={applyVolumePercent}
+        onPreviewChange={trackGesture}
+        ariaLabel={t("studio:player.volume")}
+        ariaValueText={t("studio:player.volumeValue", {
           percent: shownPercent,
         })}
-        onTransitionEnd={(event) => {
-          if (event.propertyName === "--volume-fill") setIsAnimatingFill(false);
-        }}
-        onTransitionCancel={(event) => {
-          if (event.propertyName === "--volume-fill") setIsAnimatingFill(false);
-        }}
-        onPointerDown={() => setIsAnimatingFill(false)}
-        onKeyDown={(event) => {
-          setIsAnimatingFill(false);
-          // The slider steps itself; the window-level arrow shortcuts stay out.
-          if (SLIDER_KEYS.has(event.key)) event.stopPropagation();
-        }}
-        onChange={(event) => {
-          const nextPercent = Number(event.target.value);
-          // Plan 2's setVolume unmutes on any level above 0, so this handler
-          // never calls toggleMute after it (that would mute again).
-          if (!preferences.isMuted) {
-            setVolume(nextPercent / 100);
-            return;
-          }
-          // Muted, the slider sits at 0. Moving it to 0 keeps the mute and
-          // the remembered level. A one-step nudge from 0 (an arrow key)
-          // unmutes at the remembered level; a drag or a press on the track
-          // unmutes at the chosen point.
-          if (nextPercent === 0) return;
-          setVolume(
-            nextPercent <= 1
-              ? Math.max(preferences.volume, nextPercent / 100)
-              : nextPercent / 100,
-          );
-        }}
+        isGliding={isAnimatingFill}
+        onGlideEnd={() => setIsAnimatingFill(false)}
+        className={styles.volumeRange}
       />
     </div>
   );

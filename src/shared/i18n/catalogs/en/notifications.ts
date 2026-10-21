@@ -217,6 +217,21 @@ export const notifications: Catalog = {
     "<profile>{name}</profile> invited you to an event.",
   "type.event_invite.meta": "Event invitation",
 
+  // A member asked to bring a connection; the hosts approve or decline.
+  "type.event_invite_request.text":
+    "Someone asked to bring a connection to {eventTitle}.",
+  "type.event_invite_request.textNamed":
+    "<profile>{name}</profile> asked to bring a connection to {eventTitle}.",
+  "type.event_invite_request.meta": "Invite request",
+  "type.event_invite_request_declined.text":
+    "The hosts of {eventTitle} didn't approve your invite.",
+  "type.event_invite_request_declined.meta": "Invite request",
+  "type.event_invite_accepted.text":
+    "Someone accepted your invite to {eventTitle}.",
+  "type.event_invite_accepted.textNamed":
+    "<profile>{name}</profile> accepted your invite to {eventTitle}.",
+  "type.event_invite_accepted.meta": "Invite accepted",
+
   "type.event_cohost_invite.text": "You've been invited to co-host an event.",
   "type.event_cohost_invite.textNamed":
     "<profile>{name}</profile> invited you to co-host an event.",

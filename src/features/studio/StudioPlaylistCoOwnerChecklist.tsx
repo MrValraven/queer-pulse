@@ -21,7 +21,7 @@ import {
   useInviteStudioPlaylistEditors,
   useRemoveStudioPlaylistEditor,
 } from "./api/useStudioPlaylistEditorMutations";
-import { studioErrorMessageKeyOf } from "./studioErrors.data";
+import { editorRefusalTextOf } from "./studioPlaylistEditorRefusal";
 import { StudioPlaylistPersonAvatar } from "./StudioPlaylistPersonAvatar";
 import { StudioLine } from "./StudioSkeletons";
 import css from "./StudioPlaylistEditors.module.css";
@@ -75,7 +75,7 @@ export function StudioPlaylistCoOwnerChecklist({
 }: {
   playlist: StudioPlaylistView;
 }) {
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const { showToast } = useToast();
   const [searchQuery, setSearchQuery] = useState("");
   const [hasManyCoOwners, setHasManyCoOwners] = useState(false);
@@ -112,7 +112,17 @@ export function StudioPlaylistCoOwnerChecklist({
     try {
       await change();
     } catch (error) {
-      showToast(t(studioErrorMessageKeyOf(error)), "error");
+      // A refused pick names its reason, the same way the invite step does.
+      const errorText = editorRefusalTextOf(error, {
+        t,
+        language,
+        nameOf: (slug) =>
+          candidates.find((candidate) => candidate.person.slug === slug)?.person
+            .name ?? slug,
+        personaName:
+          playlist.credit.kind === "persona" ? playlist.credit.name : null,
+      });
+      showToast(errorText, "error");
     } finally {
       setBusyRowKey(null);
     }

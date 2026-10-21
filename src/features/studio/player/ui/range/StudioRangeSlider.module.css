@@ -1,0 +1,84 @@
+@property --studio-range-progress {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --studio-range-hover {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+
+.range {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-block-size: 24px;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: pointer;
+  /* Every layer names what it animates. The progress and hover values
+     change each frame and are inherited, so under base.css's reduced
+     motion rule an implicit `all` would start a transition per element
+     per frame. */
+  transition-property: none;
+}
+
+/* Every press lands on the root, which focuses the input itself. */
+.range > * {
+  pointer-events: none;
+}
+
+.range[data-size="large"] {
+  min-block-size: 32px;
+}
+
+.range[data-studio-range="volume"] {
+  min-block-size: var(--tap-min);
+}
+
+.range[data-disabled] {
+  cursor: default;
+}
+
+/* The mute toggle glides the fill once; every other change snaps. */
+.range[data-gliding] {
+  transition-property: --studio-range-progress;
+  transition-duration: var(--dur-base);
+  transition-timing-function: var(--ease);
+}
+
+/* The native input is the control that takes focus and keys; the visuals
+   above it draw everything. */
+.input {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  margin: 0;
+  opacity: 0;
+  appearance: none;
+  pointer-events: none;
+  transition-property: none;
+}
+
+.range:has(.input:focus-visible) {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-radius: var(--radius-pill);
+}
+
+/* Reduced motion keeps the glide property so base.css's 0.01ms duration
+   ends it at once and transitionend still reports the glide over. */
+@media (prefers-reduced-motion: reduce) {
+  .range[data-gliding] {
+    transition-property: --studio-range-progress;
+  }
+}
+
+:global(html[data-reduce-motion="true"]) .range[data-gliding] {
+  transition-property: --studio-range-progress;
+}

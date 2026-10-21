@@ -84,107 +84,10 @@
   gap: 4px;
 }
 
-/* The volume level as a 0 to 1 number, set inline from the value.
-   Registered so the fill and the dot can glide on a mute toggle. */
-@property --volume-fill {
-  syntax: "<number>";
-  inherits: true;
-  initial-value: 0;
-}
-
-/* The slider is painted on its track from --volume-fill: a 4px bar, its
-   filled part, and a 14px dot. The native thumb stays the hit target but is
-   drawn clear, because a native thumb's position cannot transition. A
-   percentage background-position on a 14px layer lands exactly where the
-   browser puts a 14px thumb, so dot and thumb always agree. */
-.volumeSlider {
-  width: 96px;
-  min-block-size: var(--tap-min);
-  margin: 0;
-  appearance: none;
-  -webkit-appearance: none;
-  background: none;
-  cursor: pointer;
-}
-
-/* Only a change from the mute button glides; a drag or an arrow key paints
-   the new level the same frame. */
-.volumeSlider[data-animating] {
-  transition-property: --volume-fill;
-  transition-duration: var(--dur-base);
-  transition-timing-function: var(--ease);
-}
-
-.volumeSlider::-webkit-slider-runnable-track {
-  height: 14px;
-  border: none;
-  background:
-    radial-gradient(
-        circle closest-side,
-        var(--studio-accent-text) calc(100% - 1.5px),
-        transparent 100%
-      )
-      calc(var(--volume-fill) * 100%) 50% / 14px 14px no-repeat,
-    linear-gradient(var(--studio-accent-text), var(--studio-accent-text)) 2px
-      50% / calc(5px + var(--volume-fill) * (100% - 14px)) 4px no-repeat,
-    linear-gradient(
-        rgba(var(--studio-ink-rgb), 0.24),
-        rgba(var(--studio-ink-rgb), 0.24)
-      )
-      2px 50% / calc(100% - 4px) 4px no-repeat;
-}
-
-.volumeSlider::-moz-range-track {
-  height: 14px;
-  border: none;
-  background:
-    radial-gradient(
-        circle closest-side,
-        var(--studio-accent-text) calc(100% - 1.5px),
-        transparent 100%
-      )
-      calc(var(--volume-fill) * 100%) 50% / 14px 14px no-repeat,
-    linear-gradient(var(--studio-accent-text), var(--studio-accent-text)) 2px
-      50% / calc(5px + var(--volume-fill) * (100% - 14px)) 4px no-repeat,
-    linear-gradient(
-        rgba(var(--studio-ink-rgb), 0.24),
-        rgba(var(--studio-ink-rgb), 0.24)
-      )
-      2px 50% / calc(100% - 4px) 4px no-repeat;
-}
-
-.volumeSlider::-moz-range-progress {
-  background: none;
-}
-
-.volumeSlider::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 14px;
-  height: 14px;
-  border: none;
-  border-radius: 50%;
-  background: transparent;
-}
-
-.volumeSlider::-moz-range-thumb {
-  width: 14px;
-  height: 14px;
-  border: none;
-  border-radius: 50%;
-  background: transparent;
-}
-
-/* Forced colours drop the painted dot's contrast guarantees, so the native
-   thumb shows in a system colour there. */
-@media (forced-colors: active) {
-  .volumeSlider::-webkit-slider-thumb {
-    background: CanvasText;
-  }
-
-  .volumeSlider::-moz-range-thumb {
-    background: CanvasText;
-  }
+/* The shared slider's width in the bar; the slider owns its own look. */
+.volumeRange {
+  inline-size: 96px;
+  flex: none;
 }
 
 .chip {
@@ -383,7 +286,6 @@
 .chip:focus-visible,
 .option:focus-visible,
 .switchRow:focus-visible,
-.volumeSlider:focus-visible,
 .settingRow input:focus-visible {
   outline: var(--focus-ring);
   outline-offset: var(--focus-ring-offset);

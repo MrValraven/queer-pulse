@@ -3412,6 +3412,8 @@ export const marketing: Catalog = {
   "changelog.release.count.infrastructure_other":
     "{count} infrastructure changes",
   // Release headlines, one per shipping day (see changelogReleases.ts).
+  "changelog.releases.2026-10-21.headline":
+    "Invite connections to events you're going to, Studio genre tiles and a smoother seek bar.",
   "changelog.releases.2026-10-20.headline":
     "Architect personas, calendar-style feed events, and phone menus that close on page change.",
   "changelog.releases.2026-10-19.headline":
@@ -3586,6 +3588,42 @@ export const marketing: Catalog = {
     "Studio's creator pages fit a phone",
   "changelog.entries.studio-creator-phone-layout.body":
     "The top bar scrolls away, cards use the full width and the release button stays inside its card.",
+  "changelog.entries.rsvp-connection-invites.title":
+    "Bring connections to an event, each with their own invite",
+  "changelog.entries.rsvp-connection-invites.body":
+    "Pick connections in your RSVP. They accept with their own details, and hosts approve on invite-only events.",
+  "changelog.entries.trust-network-filters-redesigned.title":
+    "Cleaner trust network filters",
+  "changelog.entries.trust-network-filters-redesigned.body":
+    "Standing and connection type are colour-coded chips, and dates have quick ranges like the last 3 months.",
+  "changelog.entries.studio-genre-mood-tiles.title":
+    "Browse Studio genres and moods as colour tiles",
+  "changelog.entries.studio-genre-mood-tiles.body":
+    "Each genre and mood gets its own colour, a drawn motif and the cover of its newest release.",
+  "changelog.entries.studio-rail-exit.title":
+    "Leave Studio from the bottom of the sidebar",
+  "changelog.entries.studio-rail-exit.body":
+    "A Back to QueerPulse row now sits at the foot of the sidebar, and the logo opens Studio home.",
+  "changelog.entries.cleaner-playlist-owner-view.title":
+    "Manage your playlists from a cleaner page",
+  "changelog.entries.cleaner-playlist-owner-view.body":
+    "Delete and Leave sit apart in red in the quiet menu, and on desktop each row's buttons show on hover or focus.",
+  "changelog.entries.studio-open-call-story.title":
+    "A Studio open call story in admin Marketing",
+  "changelog.entries.studio-open-call-story.body":
+    "Admins can download an Instagram story, in English and Portuguese, inviting queer musicians and DJs in Lisbon to add their music to Studio.",
+  "changelog.entries.playlist-invite-refusal-reasons.title":
+    "A refused playlist invite now says why",
+  "changelog.entries.playlist-invite-refusal-reasons.body":
+    "Inviting editors names the reason each person can't join, such as having no Studio access yet.",
+  "changelog.entries.studio-seek-bar.title":
+    "Scrub through Studio tracks with a smoother seek bar",
+  "changelog.entries.studio-seek-bar.body":
+    "Hover shows the time you would jump to, a drag seeks once on release, and tapping the length shows time left.",
+  "changelog.entries.rsvp-guest-stepper.title":
+    "Choose how many people you bring with a plus and minus stepper",
+  "changelog.entries.rsvp-guest-stepper.body":
+    "Seat icons show your party at a glance, and the row fits on one line on a phone at any size.",
   "changelog.entries.team-portrait-cards.title":
     "Meet the team shows each member as a portrait card",
   "changelog.entries.team-portrait-cards.body":

@@ -32,7 +32,6 @@ export function InviteMembersModal({
   onClose: () => void;
 }) {
   const { t } = useTranslation();
-  const fmt = useFormat();
   const { showToast } = useToast();
   const staffMap = useStaffMap();
   const inviteMembers = useInviteMembers(slug);
@@ -58,8 +57,8 @@ export function InviteMembersModal({
     () => new Set(activePicks.map((person) => person.slug)),
     [activePicks],
   );
-  // Held from the moment of sending, so the success panel keeps the number
-  // that went out even if the exclusions change behind it.
+  // Set once the send lands, so the success panel keeps the number that went
+  // out even if the exclusions change behind it.
   const [sentCount, setSentCount] = useState<number | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -104,15 +103,31 @@ export function InviteMembersModal({
     setPickedSlugs((previous) => new Set(previous).add(memberSlug));
   };
 
+  // The success panel and its count follow what the server created; anyone
+  // who already held an invite is named in a toast of their own.
   const send = () => {
     if (selected.size === 0) return;
-    // Demo → no-op mutation, optimistic UI here. Live → fires the POST + invalidate.
-    inviteMembers.mutate([...selected]);
-    setSentCount(selected.size);
-    showToast(
-      t("gatherings:manage.invite.sentToast", { count: selected.size }),
-      "success",
-    );
+    inviteMembers.mutate([...selected], {
+      onSuccess: ({ createdCount, alreadyInvitedCount }) => {
+        if (createdCount > 0) {
+          setSentCount(createdCount);
+          showToast(
+            t("gatherings:manage.invite.sentToast", { count: createdCount }),
+            "success",
+          );
+        }
+        if (alreadyInvitedCount > 0) {
+          showToast(
+            t("gatherings:rsvpInvites.alreadyInvitedToast", {
+              count: alreadyInvitedCount,
+            }),
+            "info",
+          );
+        }
+      },
+      onError: () =>
+        showToast(t("gatherings:rsvpInvites.sendErrorToast"), "error"),
+    });
   };
 
   if (sentCount !== null) {
@@ -151,36 +166,12 @@ export function InviteMembersModal({
       sub={t("gatherings:manage.invite.sub")}
       onClose={onClose}
       footer={
-        <>
-          <Button variant="ghost" onClick={onClose}>
-            {t("gatherings:manage.cancelCta")}
-          </Button>
-          <Button
-            variant="primary"
-            onClick={send}
-            disabled={selected.size === 0}
-          >
-            {selected.size === 0 ? (
-              t("gatherings:manage.invite.sendDefaultCta")
-            ) : (
-              // One span keeps the sentence a single flex item in the button.
-              <span>
-                <Translation
-                  i18nKey="gatherings:manage.invite.sendCta"
-                  values={{ count: selected.size }}
-                  slots={{
-                    count: (
-                      <RollingNumber
-                        value={fmt.number(selected.size)}
-                        numericValue={selected.size}
-                      />
-                    ),
-                  }}
-                />
-              </span>
-            )}
-          </Button>
-        </>
+        <InviteMembersFooter
+          count={selected.size}
+          isSending={inviteMembers.isPending}
+          onCancel={onClose}
+          onSend={send}
+        />
       }
     >
       <MemberSelectList
@@ -213,5 +204,53 @@ export function InviteMembersModal({
         <InviteMembersSelectedCount count={selected.size} max={MAX_INVITES} />
       </div>
     </Modal>
+  );
+}
+
+/** Cancel plus the send button, whose label counts the picks as they roll. */
+function InviteMembersFooter({
+  count,
+  isSending,
+  onCancel,
+  onSend,
+}: {
+  count: number;
+  isSending: boolean;
+  onCancel: () => void;
+  onSend: () => void;
+}) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
+  return (
+    <>
+      <Button variant="ghost" onClick={onCancel}>
+        {t("gatherings:manage.cancelCta")}
+      </Button>
+      <Button
+        variant="primary"
+        onClick={onSend}
+        disabled={count === 0 || isSending}
+      >
+        {count === 0 ? (
+          t("gatherings:manage.invite.sendDefaultCta")
+        ) : (
+          // One span keeps the sentence a single flex item in the button.
+          <span>
+            <Translation
+              i18nKey="gatherings:manage.invite.sendCta"
+              values={{ count }}
+              slots={{
+                count: (
+                  <RollingNumber
+                    value={fmt.number(count)}
+                    numericValue={count}
+                  />
+                ),
+              }}
+            />
+          </span>
+        )}
+      </Button>
+    </>
   );
 }

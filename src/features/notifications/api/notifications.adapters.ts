@@ -226,6 +226,8 @@ const PERSONALIZED_KINDS = new Set<NotificationKind>([
   "vouch_received",
   "introduction_made",
   "event_invite",
+  "event_invite_request",
+  "event_invite_accepted",
   "event_cohost_invite",
   "event_lineup_invite",
   "event_lineup_accepted",

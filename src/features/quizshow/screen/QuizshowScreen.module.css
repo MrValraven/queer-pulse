@@ -375,6 +375,9 @@
 
 .questionBody[data-has-picture="true"] .tileGrid {
   grid-template-columns: minmax(0, 1fr);
+  /* One column keeps content-sized rows so a wrapped answer cannot push the
+     stack past its height budget. */
+  grid-auto-rows: auto;
   /* Four stacked tiles: 4 x 111 + 3 x 14 = 486 at 1080p, inside the 508
      an open question keeps for them while the Paused line shows. */
   gap: var(--gap-sm);
@@ -393,6 +396,14 @@
 
 .revealColumn {
   min-width: 0;
+}
+
+/* The bars on the TV: gaps sized from the screen height, so four thick rows
+   and the answered line fit the column at 1080p and at 720p. The
+   distribution sets its own sizes on its root; this selector reaches that
+   root by its data attribute, whatever wraps it. */
+.screen .revealColumn [data-quizshow-distribution] {
+  --stage-gap: min(var(--gap-lg), calc(2 * var(--screen-vh)));
 }
 
 .eyebrow {
@@ -431,6 +442,9 @@
 .tileGrid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
+  /* Every row takes the tallest tile's height, so a wrapped answer never
+     leaves its neighbours shorter. */
+  grid-auto-rows: 1fr;
   gap: var(--screen-gap);
   margin: 0;
   padding: 0;
@@ -446,9 +460,16 @@
   list-style: none;
 }
 
+/* The cell stretches to the row; the tile fills it in both directions. */
+.tileGrid > li {
+  display: flex;
+}
+
 /* The tile sets its own --stage-tile-min; this one-class-deeper selector
    overrides it on the tile itself, from this module's custom properties. */
 .tileGrid > li > * {
+  flex: 1;
+  min-width: 0;
   --stage-tile-min: var(--screen-tile-min);
 }
 
@@ -674,6 +695,17 @@
 
   .screen:not([data-fixed-canvas="true"]) .tileGrid {
     grid-template-columns: minmax(0, 1fr);
+    grid-auto-rows: auto;
+  }
+
+  /* The distribution moves under the answers, and the body takes its own
+     height, so the view scrolls and the bars keep the full width. */
+  .screen:not([data-fixed-canvas="true"]) .questionBody,
+  .screen:not([data-fixed-canvas="true"])
+    .questionBody[data-has-picture="true"] {
+    flex: none;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: none;
   }
 }
 

@@ -94,4 +94,14 @@ export const eventKeys = {
   rsvpDetailsRoot: ["rsvp-details"] as const,
   rsvpDetails: (slug: string | undefined, demoMode: boolean) =>
     ["rsvp-details", slug, demoMode] as const,
+
+  /** Prefix matching every "invites I sent from my RSVP" query. */
+  rsvpInvitesRoot: ["event-rsvp-invites"] as const,
+  rsvpInvites: (slug: string | undefined, demoMode: boolean) =>
+    ["event-rsvp-invites", slug, demoMode] as const,
+
+  /** Prefix matching every organiser "invite requests" query. */
+  inviteRequestsRoot: ["event-invite-requests"] as const,
+  inviteRequests: (slug: string | undefined, demoMode: boolean) =>
+    ["event-invite-requests", slug, demoMode] as const,
 };

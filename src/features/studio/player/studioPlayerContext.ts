@@ -191,6 +191,12 @@ export interface StudioPlayerValue extends StudioPlayerActions {
   currentSyncedLyrics: StudioSyncedLyricView[] | null;
 }
 
+/** One loaded span of the active deck, in seconds. */
+export interface StudioBufferedRange {
+  startSeconds: number;
+  endSeconds: number;
+}
+
 export interface StudioPlayerClock {
   currentTime: number;
   duration: number | null;
@@ -198,6 +204,12 @@ export interface StudioPlayerClock {
   currentChapterIndex: number | null;
   /** Index into currentSyncedLyrics. */
   currentLyricIndex: number | null;
+  /** Loaded spans of the active deck, ascending. Optional so hand-built test
+   *  clocks stay valid. */
+  bufferedRanges?: readonly StudioBufferedRange[];
+  /** Seeks and restarts so far, so a seek bar can tell another control's
+   *  seek from its own. Optional so hand-built test clocks stay valid. */
+  seekCount?: number;
 }
 
 export const STOPPED_PLAYER_CLOCK: StudioPlayerClock = {
@@ -205,6 +217,7 @@ export const STOPPED_PLAYER_CLOCK: StudioPlayerClock = {
   duration: null,
   currentChapterIndex: null,
   currentLyricIndex: null,
+  bufferedRanges: [],
 };
 
 export const StudioPlayerContext = createContext<StudioPlayerValue | null>(

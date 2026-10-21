@@ -27,6 +27,13 @@
   transition-timing-function: var(--ease);
 }
 
+/* The dots keep the trigger's 18px font size in the track hero too, where
+   `.heroActions button svg` (0,1,2) would set the hero's 16px icon size. */
+.wrap .trigger svg {
+  width: 1em;
+  height: 1em;
+}
+
 .menu {
   position: absolute;
   inset-inline-end: 0;
@@ -34,11 +41,13 @@
   z-index: var(--z-popover);
   min-width: 200px;
   padding: 6px;
-  border-radius: var(--radius-10);
-  background: var(--studio-surface-rail);
+  /* The surface, border, radius and shadow of the Share menu and the hero
+     overflow menus (StudioRelease.module.css), so every menu reads alike. */
+  background: var(--paper);
   color: var(--studio-text);
-  border: 1px solid rgba(var(--studio-ink-rgb), 0.12);
-  box-shadow: var(--shadow-panel);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-12);
+  box-shadow: var(--shadow-e3);
   font-family: var(--sans);
   font-variant-numeric: tabular-nums;
   text-align: start;

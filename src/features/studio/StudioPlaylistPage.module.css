@@ -1,6 +1,64 @@
-.list {
+/* The track card. `ol.list` (0,1,1) outranks the shared `.setCard` padding
+   so the first row sits close under the card's top edge; the inline padding
+   trades 8px to the rows, whose hover and now-playing tints then have room
+   around the text, which keeps its old place. */
+ol.list {
   margin: 0;
+  padding: 8px 18px;
   list-style: none;
+}
+
+/* The rows divide with a hairline; the first has none above it. The motion
+   rows are plain <li> elements, so the child selectors reach them. */
+.list > li {
+  padding-inline: 8px;
+}
+
+.list > li:first-child {
+  border-top: 0;
+}
+
+/* With a mouse a row tints on hover and while it holds focus. A rounded
+   row would bend a border-top, so the hairline moves to a straight line
+   drawn above each row after the first, and the lines above and below a
+   tinted row fade out. Touch and phone rows keep the border-top above. */
+@media (hover: hover) and (pointer: fine) {
+  .list > li {
+    position: relative;
+    border-top: 0;
+    border-radius: var(--radius-8);
+    transition-property: background-color;
+    transition-duration: var(--dur-fast);
+    transition-timing-function: var(--ease);
+  }
+
+  .list > li + li::before {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    top: 0;
+    height: 1px;
+    background: var(--line);
+    pointer-events: none;
+    transition-property: opacity;
+    transition-duration: var(--dur-fast);
+    transition-timing-function: var(--ease);
+  }
+
+  /* The now-playing row keeps its coral tint. */
+  .list > li:not([aria-current]):hover,
+  .list > li:not([aria-current]):focus-within {
+    background: rgba(var(--studio-ink-rgb), 0.04);
+  }
+
+  .list > li:not([aria-current]):hover::before,
+  .list > li:not([aria-current]):hover + li::before,
+  .list > li:not([aria-current]):focus-within::before,
+  .list > li:not([aria-current]):focus-within + li::before,
+  .list > li[aria-current]::before,
+  .list > li[aria-current] + li::before {
+    opacity: 0;
+  }
 }
 
 .row {
@@ -65,7 +123,27 @@
 
 .controls {
   display: inline-flex;
-  gap: 2px;
+  gap: 0;
+}
+
+/* With a mouse the drag handle and Move up, Move down and Remove rest
+   unseen and fade in while the row is hovered or holds focus, so a Tab onto
+   a control shows it. Touch keeps them in view. */
+@media (hover: hover) and (pointer: fine) {
+  .handle,
+  .controls {
+    opacity: 0;
+    transition-property: opacity;
+    transition-duration: var(--dur-fast);
+    transition-timing-function: var(--ease);
+  }
+
+  .rowOwner:hover .handle,
+  .rowOwner:hover .controls,
+  .rowOwner:focus-within .handle,
+  .rowOwner:focus-within .controls {
+    opacity: 1;
+  }
 }
 
 .control {

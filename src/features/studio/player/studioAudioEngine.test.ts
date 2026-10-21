@@ -36,6 +36,32 @@ describe("createSimulatedAudioEngine", () => {
     expect(events.at(-1)).toEqual({ type: "time", seconds: 0.5 });
   });
 
+  it("reports the whole track as loaded before the first time event", () => {
+    const { engine, events } = setup(10);
+    engine.load("", 0, 0);
+    expect(events).toEqual([
+      { type: "duration", seconds: 10 },
+      {
+        type: "buffered",
+        ranges: [{ startSeconds: 0, endSeconds: 10 }],
+      },
+      { type: "time", seconds: 0 },
+    ]);
+  });
+
+  it("reports the loaded span before the time event on handover", async () => {
+    const { engine, events } = setup(10);
+    engine.load("", 0, 0);
+    await engine.play();
+    engine.preload("", 0);
+    events.length = 0;
+    engine.handover("gapless");
+    expect(events.map((event) => event.type).slice(0, 2)).toEqual([
+      "buffered",
+      "time",
+    ]);
+  });
+
   it("moves the clock at the playback rate it is given", async () => {
     const { engine, events } = setup(100);
     engine.setPlaybackRate?.(2);

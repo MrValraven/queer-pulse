@@ -217,20 +217,28 @@
 
 .ladderSize {
   font-size: var(--text-caption);
+  white-space: nowrap;
   font-variant-numeric: tabular-nums;
   color: var(--ink-60);
 }
 
-/* ── Thread variants ───────────────────────────────────────────────────────
-   A second grid of cards under its own heading, set apart from the original
-   concepts by space alone. The heading is the card title type one step up,
-   so it outranks the card titles under it, and the sub follows the reference
-   strip's body copy. */
+/* ── Variant sections ──────────────────────────────────────────────────────
+   A family of variants (ripple, thread) as its own grid of cards under its
+   own heading, set apart from its neighbours by space alone. The bottom
+   margin collapses with the next grid's 20px top margin through the FadeIn
+   wrappers, so the original concepts sit as far below a section as a section
+   sits below them; the last section on the page drops it. The heading is the
+   card title type one step up, so it outranks the card titles under it, and
+   the sub follows the reference strip's body copy. */
 .variants {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  margin-top: 40px;
+  margin-block: 40px;
+}
+
+:last-child > .variants {
+  margin-bottom: 0;
 }
 
 .variantsTitle {

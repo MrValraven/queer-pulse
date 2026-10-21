@@ -4,6 +4,7 @@ import {
   getStudioPlaylistEditorCandidates,
   editorsRemovedByCreditChangeOf,
   ineligibleEditorSlugsOf,
+  ineligibleEditorsOf,
 } from "./studioPlaylistEditors.api";
 
 vi.mock("../../../shared/api/client", async (importOriginal) => ({
@@ -30,6 +31,35 @@ describe("collaborative playlist error bodies", () => {
       ),
     ).toEqual([]);
     expect(ineligibleEditorSlugsOf(new Error("offline"))).toEqual([]);
+  });
+
+  it("reads each refused member's reason and drops unknown ones", () => {
+    expect(
+      ineligibleEditorsOf(
+        refusal(422, {
+          code: "studio_playlist_editor_ineligible",
+          memberSlugs: ["anika", "rita", "nuno"],
+          ineligibleMembers: [
+            { memberSlug: "anika", reason: "no_studio_access" },
+            { memberSlug: "rita", reason: "moved_to_mars" },
+            { memberSlug: 7, reason: "blocked" },
+          ],
+        }),
+      ),
+    ).toEqual([
+      { memberSlug: "anika", reason: "no_studio_access" },
+      { memberSlug: "rita", reason: null },
+      { memberSlug: "nuno", reason: null },
+    ]);
+    expect(
+      ineligibleEditorsOf(
+        refusal(422, {
+          code: "studio_playlist_editor_ineligible",
+          memberSlugs: ["anika"],
+        }),
+      ),
+    ).toEqual([{ memberSlug: "anika", reason: null }]);
+    expect(ineligibleEditorsOf(new Error("offline"))).toEqual([]);
   });
 
   it("reads the editors a credit change would remove", () => {

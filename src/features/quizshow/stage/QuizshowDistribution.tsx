@@ -1,4 +1,4 @@
-import type { CSSProperties } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import { AnimatePresence, m } from "motion/react";
 import { FiCheck } from "react-icons/fi";
 import { useMotionPrefs } from "../../../app/providers/motionPrefs";
@@ -36,11 +36,14 @@ interface QuizshowDistributionProps {
 }
 
 interface BarRowProps {
+  /** The option letter, or null for True and False. */
+  letter: string | null;
   label: string;
   shape: QuizshowSwatch;
   shapeSize: QuizshowShapeSize;
   count: number;
   maxCount: number;
+  answeredCount: number;
   isCorrect: boolean;
 }
 
@@ -52,61 +55,112 @@ const SHAPE_SIZES = {
 
 const COUNT_START = { value: "0", numericValue: 0 };
 
+const PERCENT_FORMAT: Intl.NumberFormatOptions = {
+  style: "percent",
+  maximumFractionDigits: 0,
+};
+
+/**
+ * One option: its shape, its answer text over a bar, and the count with its
+ * share of everyone who answered. The bar fills against the most picked
+ * option. A correct row gets a check badge on its shape and an edge on its bar.
+ */
 function BarRow({
+  letter,
   label,
   shape,
   shapeSize,
   count,
   maxCount,
+  answeredCount,
   isCorrect,
 }: BarRowProps) {
   const { t } = useTranslation();
+  const format = useFormat();
   const { reducedMotion } = useMotionPrefs();
   const barStyle = { "--quizshow-bar-fill": shape.fillVar } as CSSProperties;
   const fraction = maxCount > 0 ? count / maxCount : 0;
+  const percent = format.number(
+    answeredCount > 0 ? count / answeredCount : 0,
+    PERCENT_FORMAT,
+  );
   return (
-    <li
-      className={`${styles.distributionRow} ${isCorrect ? styles.distributionRowCorrect : ""}`}
-    >
-      <span>
+    <li className={`${styles.barRow} ${isCorrect ? styles.barRowCorrect : ""}`}>
+      <span className={styles.barShape}>
         <QuizshowShape
           colorKey={shape.colorKey}
           size={shapeSize}
           label={null}
         />
-        <span className={styles.visuallyHidden}>{label}</span>
-      </span>
-      <span
-        className={styles.distributionBar}
-        style={barStyle}
-        aria-hidden="true"
-      >
-        <m.span
-          className={styles.distributionBarFill}
-          initial={{ scaleX: 0 }}
-          animate={{ scaleX: fraction }}
-          transition={{
-            duration: reducedMotion ? 0 : 0.6,
-            ease: [0.22, 0.68, 0.16, 1],
-          }}
-        />
-      </span>
-      <span>
         {isCorrect && (
-          <>
-            <FiCheck aria-hidden="true" />
+          <span className={styles.barCheck}>
+            <FiCheck aria-hidden="true" focusable="false" />
             <span className={styles.visuallyHidden}>
               {t("quizshow:stage.correctAnswer")}
             </span>
-          </>
+          </span>
         )}
+      </span>
+      <span className={styles.barBody}>
+        <span className={styles.barLabel}>
+          {letter !== null && (
+            <>
+              <span className={styles.barLetter}>{letter}</span>{" "}
+            </>
+          )}
+          {label}
+        </span>
+        <span className={styles.barTrack} style={barStyle} aria-hidden="true">
+          <m.span
+            className={styles.barFill}
+            initial={{ scaleX: 0 }}
+            animate={{ scaleX: fraction }}
+            transition={{
+              duration: reducedMotion ? 0 : 0.6,
+              ease: [0.22, 0.68, 0.16, 1],
+            }}
+          />
+        </span>
+      </span>
+      <span className={styles.barCount}>
         <RollingNumber
+          className={styles.barNumber}
           value={String(count)}
           numericValue={count}
           revealFrom={COUNT_START}
         />
+        <span className={styles.barPercent}>{percent}</span>
       </span>
     </li>
+  );
+}
+
+/** The bar rows and the "N of M answered" line under them. Wrong rows dim once a correct answer exists. */
+function BarChart({
+  reveal,
+  hasCorrect,
+  children,
+}: {
+  reveal: QuizshowReveal;
+  hasCorrect: boolean;
+  children: ReactNode;
+}) {
+  const { t } = useTranslation();
+  return (
+    <div className={styles.barChart}>
+      <ul
+        className={`${styles.distribution} ${styles.barList}`}
+        data-has-correct={hasCorrect ? "true" : "false"}
+      >
+        {children}
+      </ul>
+      <p className={styles.barCaption}>
+        {t("quizshow:stage.answered", {
+          count: reveal.answeredCount,
+          total: reveal.eligibleCount,
+        })}
+      </p>
+    </div>
   );
 }
 
@@ -244,47 +298,52 @@ export function QuizshowDistribution({
     const correctIndex =
       correct?.type === "multiple_choice" ? correct.correctIndex : null;
     body = (
-      <ul className={styles.distribution}>
+      <BarChart reveal={reveal} hasCorrect={correctIndex !== null}>
         {distribution.counts.map((count, optionIndex) => {
           const option = question.options?.[optionIndex];
-          const text = option ? pickQuizshowText(option.text, language) : "";
           return (
             <BarRow
               key={option?.id ?? optionIndex}
-              label={`${optionLetter(optionIndex)} ${text}`}
+              letter={optionLetter(optionIndex)}
+              label={option ? pickQuizshowText(option.text, language) : ""}
               shape={answerSwatchFor(optionIndex)}
               shapeSize={shapeSize}
               count={count}
               maxCount={maxCount}
+              answeredCount={reveal.answeredCount}
               isCorrect={correctIndex === optionIndex}
             />
           );
         })}
-      </ul>
+      </BarChart>
     );
   } else if (distribution.kind === "true_false") {
     const maxCount = Math.max(distribution.trueCount, distribution.falseCount);
     const correctIsTrue =
       correct?.type === "true_false" ? correct.isTrue : null;
     body = (
-      <ul className={styles.distribution}>
+      <BarChart reveal={reveal} hasCorrect={correctIsTrue !== null}>
         <BarRow
+          letter={null}
           label={t("quizshow:questions.trueFalse.true")}
           shape={trueFalseSwatchFor(true)}
           shapeSize={shapeSize}
           count={distribution.trueCount}
           maxCount={maxCount}
+          answeredCount={reveal.answeredCount}
           isCorrect={correctIsTrue === true}
         />
         <BarRow
+          letter={null}
           label={t("quizshow:questions.trueFalse.false")}
           shape={trueFalseSwatchFor(false)}
           shapeSize={shapeSize}
           count={distribution.falseCount}
           maxCount={maxCount}
+          answeredCount={reveal.answeredCount}
           isCorrect={correctIsTrue === false}
         />
-      </ul>
+      </BarChart>
     );
   } else if (distribution.kind === "typed") {
     body = (
@@ -336,5 +395,9 @@ export function QuizshowDistribution({
       <VoteEntryList distribution={distribution} maxEntries={maxEntries} />
     );
   }
-  return <div className={styles[size]}>{body}</div>;
+  return (
+    <div className={styles[size]} data-quizshow-distribution="">
+      {body}
+    </div>
+  );
 }

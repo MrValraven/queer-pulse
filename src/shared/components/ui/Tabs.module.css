@@ -105,6 +105,20 @@
   margin-left: 4px;
 }
 
+/* ── count tone: accent ──────────────────────────────────────────────────────
+   A count that asks for action wears a coral pill in every variant and state.
+   Plum on --accent holds about 4.9:1 in both themes, where cream on it does
+   not reach 3:1. Specific enough to outrank the variant counts above; an
+   icon-only tab keeps its own corner badge. */
+.tabs .tab:not(.tabIcon) .tabCountAccent {
+  min-width: 20px;
+  padding: 1px 6px;
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+  color: var(--plum); /* css-scale-allow: non-flipping-text (coral pill) */
+  font-weight: 700;
+}
+
 /* ── tint: dark (underline tabs on a dark/plum hero) ─────────────────────── */
 .underline.dark {
   border-bottom-color: rgba(var(--cream-rgb), 0.16);
@@ -167,7 +181,10 @@
     background: rgba(var(--cream-rgb), 0.08);
   }
 }
-:global([data-theme="dark"]) .tabs:not(.underline) .tab:not(.tabOn) .tabCount {
+:global([data-theme="dark"])
+  .tabs:not(.underline)
+  .tab:not(.tabOn)
+  .tabCount:not(.tabCountAccent) {
   background: rgba(var(--cream-rgb), 0.12);
 }
 

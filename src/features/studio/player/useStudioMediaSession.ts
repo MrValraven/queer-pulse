@@ -156,5 +156,5 @@ export function useStudioMediaSession(
     } catch {
       // A position the browser refuses leaves the lock screen as it was.
     }
-  }, [clock.currentTime, clock.duration, playbackRate]);
+  }, [clock.currentTime, clock.duration, playbackRate, player.status]);
 }

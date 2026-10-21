@@ -1,6 +1,7 @@
 import { ApiError } from "../../shared/api/client";
 import { reasonFor } from "../../shared/api/errorMessage";
 import type { TFunction } from "../../shared/i18n/types";
+import { MAX_RSVP_GUESTS } from "./rsvpGuestCap";
 
 /**
  * Why an RSVP was refused, said plainly and without leaking (LOC-08).
@@ -46,15 +47,46 @@ export function isRsvpsClosedError(error: unknown): boolean {
   );
 }
 
-/** A failed "Anything we should know?" save on the gathering page: the closed
- *  cutoff in the reader's language, and the form's own retry line otherwise. */
+/** The backend's sentence for a raise or an invite past the guest cap:
+ *  `RSVP_GUEST_CAP_MESSAGE` in
+ *  `queerpulse-backend/src/events/gathering-extras.ts`. */
+const RSVP_GUEST_CAP_MESSAGE = "You can bring up to 3 people on one RSVP";
+
+/** Did the server refuse because guests plus open invites would pass the
+ *  cap? Answers a guest-count save and an invite send alike. */
+export function isGuestCapError(error: unknown): boolean {
+  return (
+    error instanceof ApiError &&
+    error.status === 400 &&
+    error.message.includes(RSVP_GUEST_CAP_MESSAGE)
+  );
+}
+
+/** A failed "Anything we should know?" save on the event page: the closed
+ *  cutoff and the guest cap in the reader's language, and the form's own
+ *  retry line otherwise. */
 export function rsvpDetailsSaveErrorMessage(
   error: unknown,
   t: TFunction,
 ): string {
-  return isRsvpsClosedError(error)
-    ? t("gatherings:rsvpControl.closedToast")
-    : t("gatherings:rsvpDetails.saveErrorToast");
+  if (isRsvpsClosedError(error)) return t("gatherings:rsvpControl.closedToast");
+  if (isGuestCapError(error)) {
+    return t("gatherings:rsvpInvites.capToast", { max: MAX_RSVP_GUESTS });
+  }
+  return t("gatherings:rsvpDetails.saveErrorToast");
+}
+
+/** A refused invite send in the reader's language: the cutoff, the cap, or
+ *  the send's own retry line. */
+export function rsvpInviteSendErrorMessage(
+  error: unknown,
+  t: TFunction,
+): string {
+  if (isRsvpsClosedError(error)) return t("gatherings:rsvpControl.closedToast");
+  if (isGuestCapError(error)) {
+    return t("gatherings:rsvpInvites.capToast", { max: MAX_RSVP_GUESTS });
+  }
+  return t("gatherings:rsvpInvites.sendErrorToast");
 }
 
 /** `language` is the reader's UI language, from `useTranslation()`. */

@@ -3632,9 +3632,13 @@ export const admin: Catalog = {
   "vouchGraph.filters.scene": "Scene",
   "vouchGraph.filters.sceneAll": "All scenes",
   "vouchGraph.filters.verifiedOnly": "Verified members only",
-  "vouchGraph.filters.dateRange": "Connected between",
+  "vouchGraph.filters.dateRange": "Connected",
   "vouchGraph.filters.dateFrom": "From",
   "vouchGraph.filters.dateTo": "To",
+  "vouchGraph.filters.dateAnyTime": "Any time",
+  "vouchGraph.filters.dateLast3Months": "Last 3 months",
+  "vouchGraph.filters.dateLast12Months": "Last 12 months",
+  "vouchGraph.filters.dateCustom": "Custom",
   "vouchGraph.filters.edgeKinds": "Connection type",
   "vouchGraph.filters.edgeKind.invite": "Invites",
   "vouchGraph.filters.edgeKind.vouch": "Vouches",
@@ -8330,7 +8334,7 @@ export const admin: Catalog = {
     "The circle opens when the first ambassador is granted.",
   "marketingVideos.header.eyebrow": "Films, flyers and merch",
   "marketingVideos.header.sub":
-    "Our launch films, event flyers and team merch, kept as code. Watch a film and turn it into a video file, or download print files, whenever you need them.",
+    "Our launch films, event flyers, stories and team merch, kept as code. Watch a film and turn it into a video file, or download print and story files, whenever you need them.",
   "marketingVideos.sections.films": "Films",
   "marketingVideos.sections.flyers": "Flyers",
   "marketingVideos.sections.merch": "Merch",
@@ -8346,17 +8350,25 @@ export const admin: Catalog = {
   "marketingVideos.merchCard.download.backPng": "Download back PNG",
   "marketingVideos.merchCard.download.backPdf": "Download back PDF",
   "marketingVideos.merchCard.download.backSvg": "Download back SVG",
+  "marketingVideos.flyers.studio-open-call.title": "Studio open call",
+  "marketingVideos.flyers.studio-open-call.summary":
+    "An Instagram story inviting queer musicians and DJs in Lisbon to add their music to QueerPulse Studio, in English and Portuguese.",
   "marketingVideos.flyers.first-event.title": "First event",
   "marketingVideos.flyers.first-event.summary":
     "Made for our first event: a queer network rooted in Lisbon, and a QR code that opens queerpulse.com.",
-  "marketingVideos.flyerCard.meta": "A5 portrait · PDF and PNG",
-  "marketingVideos.flyerCard.previewAlt": "The {title} flyer",
-  "marketingVideos.flyerCard.view": "View flyer",
+  "marketingVideos.flyerCard.meta.a5": "A5 portrait · PDF and PNG",
+  "marketingVideos.flyerCard.meta.story": "Instagram story · 1080 × 1920",
+  "marketingVideos.flyerCard.previewAlt.a5": "The {title} flyer",
+  "marketingVideos.flyerCard.previewAlt.story": "The {title} story",
+  "marketingVideos.flyerCard.view.a5": "View flyer",
+  "marketingVideos.flyerCard.view.story": "View story",
   "marketingVideos.flyerCard.download.pdfA5": "Download PDF (A5)",
   "marketingVideos.flyerCard.download.pdfA5Print":
     "Download PDF with bleed (A5)",
   "marketingVideos.flyerCard.download.pdfA4": "Download PDF (A4)",
   "marketingVideos.flyerCard.download.png": "Download PNG",
+  "marketingVideos.flyerCard.download.png.story": "Download PNG (English)",
+  "marketingVideos.flyerCard.download.pngPt": "Download PNG (Portuguese)",
   "marketingVideos.films.cinematic.title": "Cinematic",
   "marketingVideos.films.cinematic.summary":
     "Slow and warm, at 100 BPM. The product as six moments, then the city and the invitation.",
@@ -8465,6 +8477,45 @@ export const admin: Catalog = {
   "logoConcepts.concepts.hearth.title": "Hearth",
   "logoConcepts.concepts.hearth.summary":
     "A ring of big dots round a coral hearth, the tail stepping out. The boldest for small avatars.",
+  "logoConcepts.ripple.title": "Ripple",
+  "logoConcepts.ripple.sub":
+    "The P lands like a pulse and the ripples it sends out become the Q. Four takes on one sketch. At 32px and below each one switches to a simpler small cut.",
+  "logoConcepts.concepts.rippleDrop.title": "Drop",
+  "logoConcepts.concepts.rippleDrop.summary":
+    "The sketch as drawn: broken ripples round the P, its stem breaking through the Q as the tail and a coral drop at the tip.",
+  "logoConcepts.concepts.rippleRings.title": "Rings",
+  "logoConcepts.concepts.rippleRings.summary":
+    "Two whole ripples round the P, lighter toward the middle. The closest to the pulse dots we use today.",
+  "logoConcepts.concepts.rippleSplash.title": "Splash",
+  "logoConcepts.concepts.rippleSplash.summary":
+    "The P lands off centre, so the ripples crowd on its side and open out on the other, like a wave moving out.",
+  "logoConcepts.concepts.rippleSerif.title": "Serif",
+  "logoConcepts.concepts.rippleSerif.summary":
+    "Every ripple is the tilted Fraunces bowl, thick and thin like Swell, so the mark joins the Thread family.",
+  "logoConcepts.rippleOutside.title": "P on the outside",
+  "logoConcepts.rippleOutside.sub":
+    "The P grows big and the Q sits inside its bowl, like the pulse at its heart. At 32px and below the Q becomes a coral dot with a tail.",
+  "logoConcepts.concepts.rippleOutsideNest.title": "Nest",
+  "logoConcepts.concepts.rippleOutsideNest.summary":
+    "An upright P with a whole coral Q resting in its bowl. You read the P first, then the Q inside it.",
+  "logoConcepts.concepts.rippleOutsideRings.title": "Echo",
+  "logoConcepts.concepts.rippleOutsideRings.summary":
+    "The P's bowl is the outer ripple, with two more rings closing in on the coral Q at the centre.",
+  "logoConcepts.concepts.rippleOutsideTail.title": "Break",
+  "logoConcepts.concepts.rippleOutsideTail.summary":
+    "The Q's tail runs out through the P's bowl and ends in a coral drop: the first Ripple idea turned inside out.",
+  "logoConcepts.rippleFused.title": "Fused",
+  "logoConcepts.rippleFused.sub":
+    "The P's bowl is the Q's first ripple, so the two letters share one centre and the P's stem is the Q's tail.",
+  "logoConcepts.concepts.rippleFusedRing.title": "Ring",
+  "logoConcepts.concepts.rippleFusedRing.summary":
+    "Only the P's bowl and the Q ring, round one centre. The cleanest of the family at avatar sizes.",
+  "logoConcepts.concepts.rippleFusedSpiral.title": "Spiral",
+  "logoConcepts.concepts.rippleFusedSpiral.summary":
+    "One line draws the P, keeps turning out into the Q and leaves as the tail. The colour changes where the P becomes the Q.",
+  "logoConcepts.concepts.rippleFusedStack.title": "Stack",
+  "logoConcepts.concepts.rippleFusedStack.summary":
+    "The P's bowl, one thin ripple and the Q ring round one centre. The fullest of the fused three.",
   "logoConcepts.variants.title": "Thread variants",
   "logoConcepts.variants.sub":
     "Five ways to give Thread depth. At 32px and below each one switches to a simpler small cut.",

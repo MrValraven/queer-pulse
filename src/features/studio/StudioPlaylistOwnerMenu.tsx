@@ -1,4 +1,11 @@
-import { useEffect, useId, useRef, useState, type KeyboardEvent } from "react";
+import {
+  Fragment,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+  type KeyboardEvent,
+} from "react";
 import { AnimatePresence, m } from "motion/react";
 import { FiMoreHorizontal } from "react-icons/fi";
 import { useMotionPrefs } from "../../app/providers/motionPrefs";
@@ -6,23 +13,49 @@ import { useOutsideDismiss } from "../../shared/hooks/useOutsideDismiss";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import releaseStyles from "./StudioRelease.module.css";
 
+/* A destructive item reads in the danger ink, below a hairline. */
 const OWNER_ITEMS = [
-  { id: "edit", labelKey: "studio:playlist.page.editDetails" },
-  { id: "visibility", labelKey: "studio:playlist.page.changeVisibility" },
-  { id: "manageEditors", labelKey: "studio:playlist.page.manageEditors" },
-  { id: "delete", labelKey: "studio:playlist.page.deletePlaylist" },
+  {
+    id: "edit",
+    labelKey: "studio:playlist.page.editDetails",
+    isDestructive: false,
+  },
+  {
+    id: "visibility",
+    labelKey: "studio:playlist.page.changeVisibility",
+    isDestructive: false,
+  },
+  {
+    id: "manageEditors",
+    labelKey: "studio:playlist.page.manageEditors",
+    isDestructive: false,
+  },
+  {
+    id: "delete",
+    labelKey: "studio:playlist.page.deletePlaylist",
+    isDestructive: true,
+  },
 ] as const;
 const EDITOR_ITEMS = [
-  { id: "edit", labelKey: "studio:playlist.page.editDetails" },
-  { id: "leave", labelKey: "studio:playlist.page.leavePlaylist" },
+  {
+    id: "edit",
+    labelKey: "studio:playlist.page.editDetails",
+    isDestructive: false,
+  },
+  {
+    id: "leave",
+    labelKey: "studio:playlist.page.leavePlaylist",
+    isDestructive: true,
+  },
 ] as const;
 type OwnerAction =
   (typeof OWNER_ITEMS)[number]["id"] | (typeof EDITOR_ITEMS)[number]["id"];
 
 /** The playlist menu. The owner gets Edit details, Change visibility,
  *  Manage editors and Delete playlist; an editor gets Edit details and Leave
- *  playlist. Arrow keys move through it, Escape and a click outside close
- *  it, and focus returns to the trigger before a dialog opens. It fades. */
+ *  playlist, the last item set apart by a hairline in the danger ink. Arrow
+ *  keys move through the items, Escape and a click outside close it, and
+ *  focus returns to the trigger before a dialog opens. It fades. */
 export function StudioPlaylistOwnerMenu({
   role,
   onAction,
@@ -36,6 +69,7 @@ export function StudioPlaylistOwnerMenu({
   const [isOpen, setIsOpen] = useState(false);
   const wrapRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
   const itemRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const items = role === "owner" ? OWNER_ITEMS : EDITOR_ITEMS;
   const close = () => {
@@ -45,8 +79,14 @@ export function StudioPlaylistOwnerMenu({
   useOutsideDismiss(isOpen, wrapRef, () => setIsOpen(false), {
     onEscape: close,
   });
+  // Opening brings the whole menu into view (on a phone it can open below
+  // the fold), then moves focus onto its first item. jsdom leaves
+  // scrollIntoView undefined.
   useEffect(() => {
-    if (isOpen) itemRefs.current[0]?.focus();
+    if (!isOpen) return;
+    menuRef.current?.scrollIntoView?.({ block: "nearest" });
+    // preventScroll keeps the focus from cutting the smooth scroll short.
+    itemRefs.current[0]?.focus({ preventScroll: true });
   }, [isOpen]);
 
   function moveFocus(event: KeyboardEvent<HTMLDivElement>) {
@@ -87,6 +127,7 @@ export function StudioPlaylistOwnerMenu({
         aria-haspopup="menu"
         aria-expanded={isOpen}
         aria-controls={menuId}
+        className={releaseStyles.overflowTrigger}
         aria-label={t("studio:playlist.page.actionsLabel")}
         onClick={() => setIsOpen((wasOpen) => !wasOpen)}
       >
@@ -96,6 +137,7 @@ export function StudioPlaylistOwnerMenu({
         {isOpen && (
           <m.div
             key="menu"
+            ref={menuRef}
             id={menuId}
             role="menu"
             className={releaseStyles.menu}
@@ -106,21 +148,34 @@ export function StudioPlaylistOwnerMenu({
             onKeyDown={moveFocus}
           >
             {items.map((item, index) => (
-              <button
-                key={item.id}
-                type="button"
-                role="menuitem"
-                ref={(element) => {
-                  itemRefs.current[index] = element;
-                }}
-                className={releaseStyles.menuItem}
-                onClick={() => {
-                  close();
-                  onAction(item.id);
-                }}
-              >
-                {t(item.labelKey)}
-              </button>
+              <Fragment key={item.id}>
+                {/* The separator is no button, so the arrow keys skip it:
+                    itemRefs holds the items alone, by their index. */}
+                {item.isDestructive && (
+                  <div
+                    role="separator"
+                    className={releaseStyles.menuSeparator}
+                  />
+                )}
+                <button
+                  type="button"
+                  role="menuitem"
+                  ref={(element) => {
+                    itemRefs.current[index] = element;
+                  }}
+                  className={
+                    item.isDestructive
+                      ? `${releaseStyles.menuItem} ${releaseStyles.menuItemDanger}`
+                      : releaseStyles.menuItem
+                  }
+                  onClick={() => {
+                    close();
+                    onAction(item.id);
+                  }}
+                >
+                  {t(item.labelKey)}
+                </button>
+              </Fragment>
             ))}
           </m.div>
         )}

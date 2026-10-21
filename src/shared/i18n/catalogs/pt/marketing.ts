@@ -3497,6 +3497,8 @@ export const marketing: Catalog = {
   "changelog.release.count.infrastructure_other":
     "{count} alterações de infraestrutura",
   // Release headlines, one per shipping day (see changelogReleases.ts).
+  "changelog.releases.2026-10-21.headline":
+    "Convida conexões para eventos onde vais, mosaicos de géneros no Studio e barra de progresso mais suave.",
   "changelog.releases.2026-10-20.headline":
     "Persona de arquitetura, eventos do feed em calendário e menus do telemóvel que fecham ao mudar de página.",
   "changelog.releases.2026-10-19.headline":
@@ -3671,6 +3673,42 @@ export const marketing: Catalog = {
     "As páginas de criador do Studio cabem no telemóvel",
   "changelog.entries.studio-creator-phone-layout.body":
     "A barra de cima sai ao fazer scroll, os cartões usam a largura toda e o botão do lançamento fica dentro do cartão.",
+  "changelog.entries.rsvp-connection-invites.title":
+    "Leva conexões a um evento, cada uma com o seu convite",
+  "changelog.entries.rsvp-connection-invites.body":
+    "Escolhe conexões na tua confirmação. Cada pessoa aceita com os seus dados e, em eventos só por convite, quem organiza aprova.",
+  "changelog.entries.trust-network-filters-redesigned.title":
+    "Filtros da rede de confiança mais claros",
+  "changelog.entries.trust-network-filters-redesigned.body":
+    "Estado e tipo de conexão são chips com cor, e as datas têm atalhos como os últimos 3 meses.",
+  "changelog.entries.studio-genre-mood-tiles.title":
+    "Explora géneros e ambientes do Studio em mosaicos de cor",
+  "changelog.entries.studio-genre-mood-tiles.body":
+    "Cada género e ambiente tem a sua cor, um desenho próprio e a capa do lançamento mais recente.",
+  "changelog.entries.studio-rail-exit.title":
+    "Sai do Studio pelo fundo da barra lateral",
+  "changelog.entries.studio-rail-exit.body":
+    "Uma linha Voltar ao QueerPulse fica no fundo da barra, e o logótipo passa a abrir o início do Studio.",
+  "changelog.entries.cleaner-playlist-owner-view.title":
+    "Gere as tuas playlists numa página mais limpa",
+  "changelog.entries.cleaner-playlist-owner-view.body":
+    "Apagar e Sair ficam à parte a vermelho num menu calmo, e no computador os botões de cada faixa só surgem ao passar o rato.",
+  "changelog.entries.studio-open-call-story.title":
+    "Uma story da chamada aberta do Studio no Marketing do admin",
+  "changelog.entries.studio-open-call-story.body":
+    "Os admins podem descarregar uma story de Instagram, em inglês e português, a convidar artistas e DJs queer de Lisboa a juntar a sua música ao Studio.",
+  "changelog.entries.playlist-invite-refusal-reasons.title":
+    "Um convite recusado para uma playlist já diz porquê",
+  "changelog.entries.playlist-invite-refusal-reasons.body":
+    "Ao convidar quem edita, vês porque é que cada pessoa não pode entrar, como ainda não ter acesso ao Studio.",
+  "changelog.entries.studio-seek-bar.title":
+    "Percorre as faixas do Studio com uma barra de progresso mais suave",
+  "changelog.entries.studio-seek-bar.body":
+    "Ao passar o rato vês para onde saltas, arrastar só salta ao largar, e um toque na duração mostra o que falta.",
+  "changelog.entries.rsvp-guest-stepper.title":
+    "Escolhe quantas pessoas trazes com botões de mais e menos",
+  "changelog.entries.rsvp-guest-stepper.body":
+    "Ícones mostram o teu grupo num relance, e tudo cabe numa linha no telemóvel, seja qual for o tamanho.",
   "changelog.entries.team-portrait-cards.title":
     "Conhece a equipa mostra cada membro num cartão com retrato",
   "changelog.entries.team-portrait-cards.body":

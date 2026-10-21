@@ -5,8 +5,18 @@ import {
   respondInvite,
   rsvpEvent,
   unrsvpEvent,
+  type AcceptInviteDetailsDto,
+  type RespondInviteResultDTO,
   type SeriesScope,
 } from "../gatherings/api/events.api";
+
+/** What an invite answer sends. `details` rides only on an accept, carrying
+ *  the visibility choice and the answers the invitee gave first. */
+export interface RespondInviteVariables {
+  id: string;
+  action: "accept" | "decline";
+  details?: AcceptInviteDetailsDto;
+}
 
 export interface MyEventsRsvpMutations {
   rsvpMutation: ReturnType<
@@ -17,9 +27,9 @@ export interface MyEventsRsvpMutations {
   >;
   respondInviteMutation: ReturnType<
     typeof useMutation<
-      void,
+      RespondInviteResultDTO | void,
       Error,
-      { id: string; action: "accept" | "decline" }
+      RespondInviteVariables
     >
   >;
 }
@@ -71,16 +81,20 @@ export function useMyEventsRsvpMutations(): MyEventsRsvpMutations {
     },
     onSuccess: invalidateMyEvents,
   });
+  // Demo has no server, so it resolves with nothing and the caller reads an
+  // accept as going. Live refetches on failure too: an invite answered or
+  // withdrawn elsewhere (409) must leave the list, so no card remains whose
+  // every answer fails.
   const respondInviteMutation = useMutation<
-    void,
+    RespondInviteResultDTO | void,
     Error,
-    { id: string; action: "accept" | "decline" }
+    RespondInviteVariables
   >({
-    mutationFn: async ({ id, action }) => {
+    mutationFn: async ({ id, action, details }) => {
       if (demoMode) return;
-      await respondInvite(id, action);
+      return respondInvite(id, action, details);
     },
-    onSuccess: invalidateMyEvents,
+    onSettled: invalidateMyEvents,
   });
 
   return { rsvpMutation, unrsvpMutation, respondInviteMutation };

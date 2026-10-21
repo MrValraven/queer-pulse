@@ -4,18 +4,13 @@ import type { ToastAction } from "../../shared/components/feedback/toastContext"
 import type { TFunction } from "../../shared/i18n/types";
 import type { Formatters } from "../../shared/i18n/format";
 import type { MyEvent } from "./myEvents.types";
-import { joinWhenParts, myEventWhen } from "./myEvents.when";
+import {
+  goingWhoText,
+  useMyEventsInviteAnswers,
+  type MyEventsInviteAnswers,
+} from "./useMyEventsInviteAnswers";
 import { useMyEventsRsvpMutations } from "./useMyEventsRsvpMutations";
 import { useMyEventsSoftRemove } from "./useMyEventsSoftRemove";
-
-/** The "N going" attendee line, or nothing when the count is hidden. */
-function goingWhoText(
-  goingCount: number | undefined,
-  t: TFunction,
-): string | undefined {
-  if (typeof goingCount !== "number") return undefined;
-  return t("myevents:badges.goingCount", { count: goingCount });
-}
 
 interface RsvpDeps {
   events: MyEvent[];
@@ -29,18 +24,16 @@ interface RsvpDeps {
   closeMore: () => void;
 }
 
-export interface MyEventsRsvp {
+/** The invite answers (accept, decline and the confirm dialog) come from
+ *  `useMyEventsInviteAnswers` and are spread in unchanged. */
+export interface MyEventsRsvp extends MyEventsInviteAnswers {
   setMaybe: (id: string) => void;
   setGoing: (id: string) => void;
   rsvpSaved: (id: string) => void;
-  acceptInvite: (id: string) => void;
-  declineInvite: (id: string) => void;
   cantGo: (id: string) => void;
   leaveWaitlist: (id: string) => void;
   softRemove: (id: string, msg: string) => void;
   removingId: string | null;
-  confirm: { open: boolean; title: string; meta: string };
-  closeConfirm: () => void;
   scope: { open: boolean; eventId: string | null; title: string };
   closeScope: () => void;
   scopeChoice: (which: "one" | "all") => void;
@@ -49,11 +42,12 @@ export interface MyEventsRsvp {
 /**
  * RSVP lifecycle: reminders, maybe/going toggles, invite accept/decline,
  * can't-go / leave-waitlist (with the series-scope prompt), and the shared
- * soft-remove-with-undo. Confirm + scope modal state live here too.
+ * soft-remove-with-undo. Scope modal state lives here too.
  *
- * The dual-mode mutations live in `useMyEventsRsvpMutations`, and the
- * soft-remove-with-undo primitive lives in `useMyEventsSoftRemove` — both
- * composed in below.
+ * The dual-mode mutations live in `useMyEventsRsvpMutations`, the
+ * soft-remove-with-undo primitive in `useMyEventsSoftRemove`, and the invite
+ * answers with their confirm state in `useMyEventsInviteAnswers`. All three
+ * are composed in below.
  */
 export function useMyEventsRsvp({
   events,
@@ -75,7 +69,15 @@ export function useMyEventsRsvp({
     t,
   });
 
-  const [confirm, setConfirm] = useState({ open: false, title: "", meta: "" });
+  const inviteAnswers = useMyEventsInviteAnswers({
+    setEvents,
+    byId,
+    softRemove,
+    respondInviteMutation,
+    t,
+    fmt,
+  });
+
   const [scope, setScope] = useState<{
     open: boolean;
     eventId: string | null;
@@ -160,68 +162,6 @@ export function useMyEventsRsvp({
     [byId, patch, t, toast, rsvpMutation],
   );
 
-  // `id` here is the INVITE id, not the event slug — `eventInviteToMyEvent`
-  // (myEvents.adapters.ts) keys the "invite" category's `MyEvent.id` off
-  // `EventInviteDTO.id`, since a pending invite has no RSVP row of its own
-  // yet. `respondInviteMutation` (PATCH /event-invites/:id) is the matching
-  // endpoint, not `rsvpMutation`.
-  //
-  // The "you're confirmed" modal + the going-category patch are themselves
-  // the success affordance here (there's no separate toast to gate), so both
-  // wait for `onSuccess` — an already-answered invite (backend 409s a second
-  // response) must never show a false "you're in" screen. `onError` leaves
-  // the invite row exactly as it was so the member can retry.
-  const acceptInvite = useCallback(
-    (id: string) => {
-      const ev = byId(id);
-      if (!ev) return;
-      respondInviteMutation.mutate(
-        { id, action: "accept" },
-        {
-          onSuccess: () => {
-            const when = myEventWhen(ev, fmt, t, {
-              weekday: "long",
-              day: "numeric",
-              month: "long",
-            });
-            setConfirm({
-              open: true,
-              title: ev.title,
-              meta: `${when.dateText} · ${joinWhenParts(when.timeText, when.nextDayNote)} · ${ev.venue}`,
-            });
-            patch(id, (e) => ({
-              ...e,
-              category: "going",
-              whoText: goingWhoText(e.going, t),
-              who: [["YOU", "coral"]],
-            }));
-          },
-        },
-      );
-    },
-    [byId, fmt, patch, respondInviteMutation, t],
-  );
-  const closeConfirm = useCallback(
-    () => setConfirm((c) => ({ ...c, open: false })),
-    [],
-  );
-  // `softRemove` (the optimistic row removal + "Undo" toast) only runs once
-  // `respondInviteMutation` actually succeeds — a failed decline (e.g. the
-  // invite was already answered elsewhere) must leave the invite row visible
-  // rather than disappearing on a call that never took effect server-side.
-  const declineInvite = useCallback(
-    (id: string) => {
-      respondInviteMutation.mutate(
-        { id, action: "decline" },
-        {
-          onSuccess: () =>
-            softRemove(id, t("myevents:toast.invitationDeclined")),
-        },
-      );
-    },
-    [softRemove, t, respondInviteMutation],
-  );
-
   // MSG-16 — `ev.series` is now populated for both demo (its own mock
   // fixture) AND live (real `EventSummary.series`, mapped by
   // `eventCardToMyEvent`), so this branch is reachable in both modes: a
@@ -298,14 +238,11 @@ export function useMyEventsRsvp({
     setMaybe,
     setGoing,
     rsvpSaved,
-    acceptInvite,
-    declineInvite,
     cantGo,
     leaveWaitlist,
     softRemove,
     removingId,
-    confirm,
-    closeConfirm,
+    ...inviteAnswers,
     scope,
     closeScope,
     scopeChoice,

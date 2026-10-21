@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { FiShare } from "react-icons/fi";
 import { ShareMenu } from "../../messages/share/ShareMenu";
 import type { ShareMenuTriggerRenderProps } from "../../messages/share/shareMenu.types";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
@@ -7,13 +8,14 @@ import { studioIdentityNote, studioShareContent } from "./studioShareContent";
 import { useStudioShareRules } from "./useStudioShareRules";
 
 /** The Studio hero's labelled Share trigger: a bare button styled by the
- *  hero's action row (`.heroActions button`, st/studio.module.css). */
+ *  hero's action row (`.heroActions button`, studio.module.css), the share
+ *  icon before the label as Shuffle carries its own. */
 export function studioShareTrigger(
   label: string,
 ): (trigger: ShareMenuTriggerRenderProps) => ReactNode {
   return ({ triggerProps }) => (
     <button type="button" {...triggerProps}>
-      {label}
+      <FiShare aria-hidden /> {label}
     </button>
   );
 }

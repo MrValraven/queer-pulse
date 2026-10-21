@@ -148,6 +148,7 @@ export function StudioTrackHero({
               likeSubject={isLikeable ? likeSubject : undefined}
             />
             <StudioTrackMenu
+              className={heroStyles.heroMenu}
               track={{
                 id: track.id,
                 title: track.title,

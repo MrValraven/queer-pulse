@@ -24,6 +24,7 @@ export function StudioArtistOverflow({
   const [isOpen, setIsOpen] = useState(false);
   const wrapRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
   const firstItemRef = useRef<HTMLAnchorElement>(null);
   const close = () => {
     setIsOpen(false);
@@ -32,9 +33,14 @@ export function StudioArtistOverflow({
   useOutsideDismiss(isOpen, wrapRef, () => setIsOpen(false), {
     onEscape: close,
   });
-  // Opening moves focus into the menu, onto its first item.
+  // Opening brings the whole menu into view (on a phone it can open below
+  // the fold), then moves focus onto its first item; preventScroll keeps
+  // the focus from cutting the smooth scroll short. jsdom leaves
+  // scrollIntoView undefined.
   useEffect(() => {
-    if (isOpen) firstItemRef.current?.focus();
+    if (!isOpen) return;
+    menuRef.current?.scrollIntoView?.({ block: "nearest" });
+    firstItemRef.current?.focus({ preventScroll: true });
   }, [isOpen]);
 
   return (
@@ -55,6 +61,7 @@ export function StudioArtistOverflow({
         aria-haspopup="menu"
         aria-expanded={isOpen}
         aria-controls={menuId}
+        className={releaseStyles.overflowTrigger}
         aria-label={t("studio:artistPage.v3.moreAria", { name })}
         onClick={() => setIsOpen((wasOpen) => !wasOpen)}
       >
@@ -64,6 +71,7 @@ export function StudioArtistOverflow({
         {isOpen && (
           <m.div
             key="menu"
+            ref={menuRef}
             id={menuId}
             role="menu"
             className={releaseStyles.menu}

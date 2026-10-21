@@ -5,6 +5,8 @@
   --stage-gap: var(--gap-lg);
   --stage-pad: var(--gap-grid);
   --stage-track: var(--gap-sm);
+  --stage-bar: 1em;
+  --stage-check: 0.9em;
   --stage-tile-min: 20vh;
   --stage-correct-edge: 6px;
 }
@@ -15,6 +17,8 @@
   --stage-gap: var(--gap-sm);
   --stage-pad: var(--gap-sm);
   --stage-track: var(--gap-xs);
+  --stage-bar: 0.75em;
+  --stage-check: 1.1em;
   --stage-tile-min: 64px;
   --stage-correct-edge: 4px;
 }
@@ -25,6 +29,8 @@
   --stage-gap: var(--gap-xs);
   --stage-pad: var(--gap-xs);
   --stage-track: var(--gap-xs);
+  --stage-bar: 0.6em;
+  --stage-check: 1.1em;
   --stage-tile-min: 40px;
   --stage-correct-edge: 2px;
 }
@@ -233,30 +239,161 @@ button.tile:active:not([aria-disabled="true"]) {
   color: var(--ink);
 }
 
-.distributionRow {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  align-items: center;
+/* Bars: the list is the grid and every row a subgrid of it, so the shape,
+   bar and count columns are shared and every track ends at the same x. */
+.barChart {
+  display: flex;
+  flex-direction: column;
   gap: var(--stage-gap);
+  min-width: 0;
+  font-size: var(--stage-label);
+  container-type: inline-size;
 }
 
-.distributionBar {
+.barList {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  column-gap: var(--stage-gap);
+  line-height: 1.2;
+}
+
+.barRow {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: subgrid;
+  align-items: center;
+  transition-property: opacity;
+  transition-duration: var(--dur-base);
+  transition-timing-function: var(--ease);
+}
+
+/* Once a correct answer exists the wrong rows step back, as the tiles do. */
+.barList[data-has-correct="true"] .barRow:not(.barRowCorrect) {
+  opacity: 0.6;
+}
+
+.barShape {
+  position: relative;
+  display: inline-flex;
+}
+
+/* The check sits on the shape's lower corner, ringed in the page colour so
+   it reads apart from the fill. */
+.barCheck {
+  position: absolute;
+  inset-block-end: -0.3em;
+  inset-inline-end: -0.3em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: var(--stage-check);
+  height: var(--stage-check);
+  border: 2px solid var(--cream);
+  border-radius: var(--radius-pill);
+  background: var(--jade-ink);
+  color: var(--paper);
+  animation: tileCheckIn var(--dur-base) var(--ease) both;
+}
+
+.barCheck svg {
+  width: 64%;
+  height: 64%;
+  stroke-width: 3.5;
+}
+
+.barBody {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25em;
+  min-width: 0;
+}
+
+/* Two lines at most, ending in an ellipsis, so a long answer still reads. */
+.barLabel {
+  display: -webkit-box;
   overflow: hidden;
-  height: var(--stage-track);
+  overflow-wrap: break-word;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+
+.barLetter {
+  margin-inline-end: 0.15em;
+  color: var(--ink-60);
+  font-weight: 700;
+}
+
+.barRowCorrect .barLabel {
+  font-weight: 700;
+}
+
+.barTrack {
+  display: block;
+  overflow: hidden;
+  height: var(--stage-bar);
   border-radius: var(--radius-pill);
   background: rgba(var(--ink-rgb), 0.08);
 }
 
-.distributionBarFill {
+/* An outline follows the pill and leaves the fill's clip alone. */
+.barRowCorrect .barTrack {
+  outline: calc(var(--stage-correct-edge) / 2) solid var(--quizshow-bar-fill);
+  outline-offset: calc(var(--stage-correct-edge) / 2);
+}
+
+.barFill {
   display: block;
   width: 100%;
   height: 100%;
+  border-radius: inherit;
   background: var(--quizshow-bar-fill);
   transform-origin: left center;
 }
 
-.distributionRowCorrect {
+/* The count sits level with the bar, under the answer text's line. */
+.barCount {
+  display: flex;
+  align-self: end;
+  align-items: baseline;
+  justify-content: flex-end;
+  gap: 0.4em;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.barNumber {
+  min-width: 2ch;
   font-weight: 700;
+  text-align: end;
+}
+
+/* Room for "100%", so a column of shares lines up on the right. */
+.barPercent {
+  min-width: 4ch;
+  color: var(--ink-60);
+  font-size: 0.7em;
+  text-align: end;
+}
+
+.barCaption {
+  margin: 0;
+  color: var(--ink-60);
+  font-size: 0.8em;
+}
+
+/* A narrow column: the share drops under the count, so the bar keeps its width. */
+@container (max-width: 18rem) {
+  .barCount {
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0;
+  }
+
+  .barPercent {
+    min-width: 0;
+  }
 }
 
 .distributionNote {

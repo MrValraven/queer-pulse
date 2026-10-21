@@ -1,0 +1,572 @@
+<!doctype html>
+<!--
+  QueerPulse Studio open call, an Instagram story.
+
+  Plum-led, as Studio's own pages are: cream type on plum, coral for the
+  headline's italic turn, the pulse dot and the call to action. The picture
+  is the brand's pulse dot (brandMark.geometry.json, drawn exactly) with a
+  track's waveform streaming out of it and off the right edge.
+
+  One 1080 x 1920 canvas, Instagram's native story size. Text stays clear of
+  the top 250 px and the bottom 320 px, where the profile bar, the reply box
+  and stickers sit. ?lang=pt switches the copy to Portuguese.
+  `node scripts/launch-flyer/render.mjs studio-open-call` writes the PNGs and
+  the dashboard preview into public/marketing-flyers/.
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>QueerPulse Studio open call</title>
+    <style>
+      @font-face {
+        font-family: "Fraunces";
+        font-style: normal;
+        font-weight: 100 900;
+        src: url("../../public/marketing-videos/fonts/fraunces.woff2")
+          format("woff2");
+      }
+      @font-face {
+        font-family: "Fraunces";
+        font-style: italic;
+        font-weight: 100 900;
+        src: url("../../public/marketing-videos/fonts/fraunces-italic.woff2")
+          format("woff2");
+      }
+      @font-face {
+        font-family: "DM Sans";
+        font-style: normal;
+        font-weight: 100 1000;
+        src: url("../../public/marketing-videos/fonts/dm-sans.woff2")
+          format("woff2");
+      }
+
+      :root {
+        --plum: #2d1b3d;
+        --plum-deep: #1f1229;
+        --coral: #e8775a;
+        --cream: #f7f3ee;
+        --cream-body: rgba(247, 243, 238, 0.8);
+        --cream-muted: rgba(247, 243, 238, 0.62);
+        --hair: rgba(247, 243, 238, 0.16);
+        --gutter: 76px;
+        /* The picture's size: dot, rings, halos and waveform scale together
+           from the ring's left edge, which lines up with the text column. */
+        --art-scale: 0.62;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html,
+      body {
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: var(--plum);
+      }
+      body {
+        position: relative;
+        font-family: "DM Sans", sans-serif;
+        color: var(--cream);
+        -webkit-font-smoothing: antialiased;
+      }
+
+      /* ── The stage: plum, deepening towards the foot, and a coral halo
+         behind the dot. Gradient halos only, no blurred shadows. ── */
+      #stage {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+        background: linear-gradient(
+          180deg,
+          var(--plum) 0%,
+          var(--plum) 46%,
+          var(--plum-deep) 100%
+        );
+      }
+      .halo {
+        position: absolute;
+        border-radius: 50%;
+      }
+      #halo-dot {
+        left: -320px;
+        width: 900px;
+        height: 760px;
+        margin-top: -380px;
+        background: radial-gradient(
+          closest-side,
+          rgba(232, 119, 90, 0.26),
+          rgba(232, 119, 90, 0.07) 55%,
+          rgba(232, 119, 90, 0)
+        );
+      }
+      #halo-wave {
+        left: 284px;
+        width: 1100px;
+        height: 520px;
+        margin-top: -260px;
+        background: radial-gradient(
+          closest-side,
+          rgba(247, 243, 238, 0.06),
+          rgba(247, 243, 238, 0)
+        );
+      }
+      #grain {
+        position: absolute;
+        inset: 0;
+        opacity: 0.035;
+        pointer-events: none;
+      }
+
+      /* ── Type ── */
+      /* Everything readable sits in one column inside Instagram's safe band:
+         clear of the top 250 px and the bottom 320 px. The picture takes
+         whatever height the copy leaves, so EN and PT both fit. */
+      #layout {
+        position: absolute;
+        left: var(--gutter);
+        right: var(--gutter);
+        top: 266px;
+        bottom: 330px;
+        display: flex;
+        flex-direction: column;
+      }
+      /* Only the picture gives up height; the type and the pill keep theirs. */
+      #layout > :not(#picture) {
+        flex-shrink: 0;
+      }
+      .eyebrow {
+        font-size: 28px;
+        font-weight: 600;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--cream-muted);
+        white-space: nowrap;
+      }
+      .eyebrow b {
+        font-weight: 700;
+        color: var(--cream);
+      }
+      .eyebrow i {
+        font-style: normal;
+        padding: 0 0.35em;
+      }
+      .headline {
+        margin-top: 26px;
+        font-family: "Fraunces", serif;
+        font-size: 124px;
+        font-weight: 440;
+        line-height: 0.98;
+        letter-spacing: -0.03em;
+        font-variation-settings:
+          "opsz" 144,
+          "SOFT" 30;
+        white-space: nowrap;
+      }
+      .headline span {
+        display: block;
+      }
+      .headline em {
+        font-style: italic;
+        font-weight: 360;
+        letter-spacing: -0.02em;
+        color: var(--coral);
+        font-variation-settings:
+          "opsz" 144,
+          "SOFT" 100;
+      }
+
+      /* ── The picture: the pulse dot and its waveform ── */
+      #picture {
+        position: relative;
+        flex: 1;
+        min-height: 192px;
+        margin-top: 22px;
+      }
+      #art {
+        position: absolute;
+        inset: 0;
+        transform: scale(var(--art-scale));
+        transform-origin: 0 50%;
+      }
+      #art > * {
+        position: absolute;
+        top: 50%;
+      }
+      #visual {
+        left: calc(-1 * var(--gutter));
+        width: 1080px;
+        height: 320px;
+        margin-top: -160px;
+        overflow: visible;
+      }
+
+      .body {
+        font-size: 37px;
+        line-height: 1.34;
+        text-wrap: balance;
+        letter-spacing: -0.005em;
+        color: var(--cream-body);
+      }
+      .perks {
+        margin-top: 28px;
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      /* Items start at the top, so a two-line item keeps its icon beside the
+         first line; the text's top padding centres that first line on the
+         icon. A second line hangs past the icon, under the first line's text.
+         Each .line stays whole, so a long item breaks only between them. */
+      .perks li {
+        display: flex;
+        align-items: flex-start;
+        gap: 24px;
+        font-size: 37px;
+        font-weight: 560;
+        line-height: 1.22;
+        letter-spacing: -0.01em;
+        color: var(--cream);
+      }
+      .perks .tx {
+        padding-top: calc((58px - 1.22em) / 2);
+        text-wrap: balance;
+      }
+      .perks .line {
+        white-space: nowrap;
+      }
+      /* The Portuguese lines run longer; they step down to stay on one line
+         beside the icons. */
+      html[lang="pt-PT"] .perks li {
+        font-size: 35px;
+      }
+      .perks .ic {
+        display: grid;
+        place-items: center;
+        flex: none;
+        width: 58px;
+        height: 58px;
+        border-radius: 50%;
+        border: 2px solid var(--hair);
+      }
+      .perks svg,
+      .cta svg {
+        fill: none;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      .perks svg {
+        width: 28px;
+        height: 28px;
+        stroke: var(--coral);
+        stroke-width: 2;
+      }
+
+      .cta {
+        margin-top: 34px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+        height: 108px;
+        padding: 0 14px 0 44px;
+        border-radius: 999px;
+        background: var(--coral);
+        color: var(--plum);
+        font-size: 40px;
+        font-weight: 680;
+        letter-spacing: -0.015em;
+        white-space: nowrap;
+      }
+      .cta .go {
+        display: grid;
+        place-items: center;
+        flex: none;
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: var(--plum);
+      }
+      /* The Portuguese line is nearly twice as long; it steps down to stay
+         on one line inside the pill. */
+      html[lang="pt-PT"] .cta {
+        font-size: 35px;
+        letter-spacing: -0.02em;
+      }
+      .cta svg {
+        width: 36px;
+        height: 36px;
+        stroke: var(--coral);
+        stroke-width: 2.25;
+        transform: translate(-2px, 2px);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="stage">
+      <div id="layout">
+        <p class="eyebrow" id="eyebrow"></p>
+        <h1 class="headline" id="headline"></h1>
+        <div id="picture">
+          <div id="art">
+            <div class="halo" id="halo-dot"></div>
+            <div class="halo" id="halo-wave"></div>
+            <svg id="visual" viewBox="0 0 1080 320" aria-hidden="true"></svg>
+          </div>
+        </div>
+        <p class="body" id="body"></p>
+        <ul class="perks" id="perks"></ul>
+        <p class="cta" id="cta"></p>
+      </div>
+
+      <div id="grain"></div>
+    </div>
+
+    <script>
+      const COPY = {
+        en: {
+          eyebrowBrand: "QueerPulse Studio",
+          eyebrowCall: "Open call",
+          headline: [
+            "Calling queer",
+            "<em>musicians</em>",
+            "<em>and DJs</em> in Lisbon",
+          ],
+          body: "Put your tracks and DJ sets in front of Lisbon’s queer community, where listeners come to discover and support local queer\u00a0artists",
+          // An item given as an array wraps between its parts.
+          perks: [
+            ["shield", "Your music stays yours, non-exclusive"],
+            ["user", "Your own artist page and press kit"],
+            ["bell", "Followers hear about every new release"],
+            ["heart", "Fans support you on Bandcamp, Ko-fi or Patreon"],
+            [
+              "trending",
+              [
+                "Soon, direct financial support on QueerPulse,",
+                "aiming for a fair share for artists",
+              ],
+            ],
+          ],
+          cta: "DM us to add your music",
+        },
+        pt: {
+          eyebrowBrand: "QueerPulse Studio",
+          eyebrowCall: "Chamada aberta",
+          headline: [
+            "Procuramos",
+            "<em>artistas e DJs</em>",
+            "queer em Lisboa",
+          ],
+          body: "Mostra as tuas faixas e DJ sets à\u00a0comunidade queer de Lisboa, onde quem ouve vem descobrir e apoiar artistas queer\u00a0locais",
+          perks: [
+            ["shield", "A tua música continua tua, sem exclusividade"],
+            ["user", "A tua página de artista e press kit"],
+            ["bell", "Quem te segue fica a saber de cada lançamento"],
+            ["heart", "Os fãs apoiam-te no Bandcamp, Ko-fi ou Patreon"],
+            [
+              "trending",
+              [
+                "Em breve, apoio financeiro direto no QueerPulse,",
+                "com o objetivo de uma parte justa para artistas",
+              ],
+            ],
+          ],
+          cta: "Envia-nos uma DM para juntares a tua música",
+        },
+      };
+      // Feather icons, 24 x 24, stroked.
+      const ICON = {
+        shield: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>',
+        user: '<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
+        bell: '<path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>',
+        heart:
+          '<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>',
+        trending:
+          '<polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/>',
+        send: '<line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>',
+      };
+
+      const lang =
+        new URLSearchParams(location.search).get("lang") === "pt"
+          ? "pt"
+          : "en";
+      const copy = COPY[lang];
+      document.documentElement.lang = lang === "pt" ? "pt-PT" : "en";
+      const $ = (selector) => document.querySelector(selector);
+      const svgIcon = (name) =>
+        `<svg viewBox="0 0 24 24">${ICON[name]}</svg>`;
+
+      $("#eyebrow").innerHTML =
+        `<b>${copy.eyebrowBrand}</b><i>·</i>${copy.eyebrowCall}`;
+      $("#headline").innerHTML = copy.headline
+        .map((line) => `<span>${line}</span>`)
+        .join("");
+      $("#body").textContent = copy.body;
+      $("#perks").innerHTML = copy.perks
+        .map(
+          ([icon, text]) =>
+            `<li><span class="ic">${svgIcon(icon)}</span><span class="tx">${[]
+              .concat(text)
+              .map((line) => `<span class="line">${line}</span>`)
+              .join(" ")}</span></li>`,
+        )
+        .join("");
+      $("#cta").innerHTML =
+        `<span>${copy.cta}</span><span class="go">${svgIcon("send")}</span>`;
+
+      // Seeded generator (the flyer's), so the waveform is the same each run.
+      function rng(seed) {
+        return () => {
+          seed |= 0;
+          seed = (seed + 0x6d2b79f5) | 0;
+          let value = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+          value =
+            (value + Math.imul(value ^ (value >>> 7), 61 | value)) ^ value;
+          return ((value ^ (value >>> 14)) >>> 0) / 4294967296;
+        };
+      }
+      const NS = "http://www.w3.org/2000/svg";
+      const svgEl = (tag, attrs, parent) => {
+        const node = document.createElementNS(NS, tag);
+        for (const key in attrs) node.setAttribute(key, attrs[key]);
+        parent.appendChild(node);
+        return node;
+      };
+
+      /* ── The pulse dot, from brandMark.geometry.json at 6x ── */
+      const MARK = {
+        viewBox: 64,
+        centre: 32,
+        core: { r: 10 },
+        innerRing: { r: 15, strokeWidth: 1.75, opacity: 0.55 },
+        outerArc: {
+          strokeWidth: 1.5,
+          opacity: 0.28,
+          path: "M48.55 19.07 A21 21 0 1 1 34.92 11.21",
+        },
+      };
+      const MARK_SCALE = 6;
+      const DOT = { x: 206, y: 160 };
+      const visual = $("#visual");
+      const markSize = MARK.viewBox * MARK_SCALE;
+      const mark = svgEl(
+        "svg",
+        {
+          x: DOT.x - markSize / 2,
+          y: DOT.y - markSize / 2,
+          width: markSize,
+          height: markSize,
+          viewBox: `0 0 ${MARK.viewBox} ${MARK.viewBox}`,
+          overflow: "visible",
+        },
+        visual,
+      );
+
+      /* ── The waveform: bars mirrored about the dot's centre line, small
+         where they leave the dot, swelling into a track that runs off the
+         right edge ── */
+      const defs = svgEl("defs", {}, visual);
+      defs.innerHTML = `<linearGradient id="wave-ink" gradientUnits="userSpaceOnUse" x1="${DOT.x + 150}" y1="0" x2="${DOT.x + 560}" y2="0">
+          <stop offset="0" stop-color="#e8775a"/>
+          <stop offset="1" stop-color="#f7f3ee"/>
+        </linearGradient>`;
+      const wave = svgEl("g", { fill: "url(#wave-ink)" }, visual);
+      const random = rng(1979);
+      const BAR = 11,
+        PITCH = 20,
+        MAX_HALF = 134,
+        START_X = DOT.x + 146;
+      let smooth = 0.5;
+      // Bars run past the canvas's right edge at any --art-scale.
+      const artScale =
+        parseFloat(
+          getComputedStyle(document.documentElement).getPropertyValue(
+            "--art-scale",
+          ),
+        ) || 1;
+      const WAVE_END = 76 + 1024 / artScale;
+      for (let x = START_X, index = 0; x < WAVE_END; x += PITCH, index++) {
+        const t = index / 40;
+        // Builds out of the dot, then breathes like a track's sections.
+        const rise = Math.min(1, 0.12 + t * 2.4);
+        const sections =
+          0.72 + 0.28 * Math.sin(t * Math.PI * 2.2 + 0.6) * Math.min(1, t * 3);
+        smooth = smooth * 0.35 + random() * 0.65;
+        const accent = random() < 0.3 ? 1 : 0.84;
+        const half = Math.max(
+          7,
+          MAX_HALF * rise * sections * (0.32 + 0.68 * smooth) * accent,
+        );
+        const opacity = 0.5 + 0.5 * Math.min(1, half / MAX_HALF + 0.2);
+        svgEl(
+          "rect",
+          {
+            x,
+            y: DOT.y - half,
+            width: BAR,
+            height: half * 2,
+            rx: BAR / 2,
+            "fill-opacity": opacity.toFixed(3),
+          },
+          wave,
+        );
+      }
+
+      // The mark sits over the first bars' start, drawn exactly.
+      svgEl(
+        "circle",
+        {
+          cx: MARK.centre,
+          cy: MARK.centre,
+          r: MARK.innerRing.r,
+          fill: "none",
+          stroke: "#e8775a",
+          "stroke-width": MARK.innerRing.strokeWidth,
+          "stroke-opacity": MARK.innerRing.opacity,
+        },
+        mark,
+      );
+      svgEl(
+        "path",
+        {
+          d: MARK.outerArc.path,
+          fill: "none",
+          stroke: "#e8775a",
+          "stroke-width": MARK.outerArc.strokeWidth,
+          "stroke-opacity": MARK.outerArc.opacity,
+          "stroke-linecap": "round",
+        },
+        mark,
+      );
+      svgEl(
+        "circle",
+        {
+          cx: MARK.centre,
+          cy: MARK.centre,
+          r: MARK.core.r,
+          fill: "#e8775a",
+        },
+        mark,
+      );
+      visual.appendChild(mark);
+
+      /* ── Grain: one 256px tile of seeded grey noise, repeated ── */
+      {
+        const canvas = document.createElement("canvas");
+        canvas.width = canvas.height = 256;
+        const context = canvas.getContext("2d"),
+          image = context.createImageData(256, 256),
+          noise = rng(2026);
+        for (let i = 0; i < image.data.length; i += 4) {
+          const value = noise() * 255;
+          image.data[i] = image.data[i + 1] = image.data[i + 2] = value;
+          image.data[i + 3] = 255;
+        }
+        context.putImageData(image, 0, 0);
+        $("#grain").style.backgroundImage = `url(${canvas.toDataURL()})`;
+      }
+    </script>
+  </body>
+</html>

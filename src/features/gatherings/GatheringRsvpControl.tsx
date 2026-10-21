@@ -132,6 +132,9 @@ export function GatheringRsvpControl({
             customRsvpQuestion={gathering.customRsvpQuestion}
             rsvpClosesAt={gathering.rsvpClosesAt ?? null}
             isOrganizer={gathering.viewerIsOrganizer === true}
+            canInviteConnections={
+              rsvp.status === "going" || rsvp.status === "maybe"
+            }
             onClose={() => setDetailsOpen(false)}
           />
         )}

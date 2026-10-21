@@ -1,4 +1,5 @@
 import { AnimatePresence, m } from "motion/react";
+import { FiArrowLeft } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { useMotionPrefs } from "../../app/providers/motionPrefs";
 import { routes } from "../../app/routeMap";
@@ -17,8 +18,9 @@ import styles from "./studio.module.css";
  * The Studio rail, the member's listening home: the brand, the main nav,
  * then the Create playlist pill and their playlists. The pill and the list
  * mount once the member can use Studio (the demo always can), and only the
- * list scrolls. Creator, staff, co-op and help links live in the avatar
- * menu.
+ * list scrolls. A footer row pinned to the bottom leaves Studio for the
+ * feed, and the wordmark opens Studio home. Creator, staff, co-op and help
+ * links live in the avatar menu.
  */
 export function StudioRail() {
   const { t } = useTranslation();
@@ -30,7 +32,7 @@ export function StudioRail() {
     <aside className={styles.rail}>
       <div className={styles.brandRow}>
         <span className={styles.pulseDot} aria-hidden />
-        <Link to={routes.homepage} className={styles.brand}>
+        <Link to={routes.studio} className={styles.brand}>
           <Translation
             i18nKey="studio:brand.lockup"
             components={{ em: <em /> }}
@@ -58,6 +60,18 @@ export function StudioRail() {
           </m.div>
         )}
       </AnimatePresence>
+
+      <div className={styles.railFoot}>
+        <Link
+          to={routes.feed}
+          className={`${styles.railItem} ${styles.railExit}`}
+        >
+          <FiArrowLeft aria-hidden className={styles.railIcon} />
+          <span className={styles.nm}>
+            {t("studio:shell.menu.backToQueerPulse")}
+          </span>
+        </Link>
+      </div>
     </aside>
   );
 }

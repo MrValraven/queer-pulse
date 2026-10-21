@@ -232,10 +232,13 @@ describe("scenes", () => {
 
 describe("moods", () => {
   it("keeps the known moods in the server's order", () => {
-    expect(toMoodList({ moods: ["tender", "furious", "late-night"] })).toEqual([
-      "tender",
-      "late-night",
-    ]);
+    expect(
+      toMoodList({ moods: ["tender", "furious", "late-night"] }).moods,
+    ).toEqual(["tender", "late-night"]);
+    expect(
+      toMoodList({ moods: ["tender"], covers: { tender: "/tender.jpg" } })
+        .coverByMood,
+    ).toEqual({ tender: "/tender.jpg" });
   });
 });
 

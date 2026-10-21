@@ -578,15 +578,22 @@
   }
 }
 .filtersPanel {
-  padding: 14px 22px 16px;
+  padding: 12px 22px 0;
   border-top: 1px solid rgba(var(--line-rgb), 0.09);
+}
+/* Head, rows and foot share one left-aligned column, so the close button
+   and Clear filters stay beside the rows on a wide stage. */
+.filtersHead,
+.filtersBody,
+.filtersFoot {
+  max-width: 46rem;
 }
 .filtersHead {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 .filtersTitle {
   margin: 0;
@@ -609,85 +616,130 @@
   transition-property: background-color, color;
   transition-duration: var(--dur-fast);
 }
+/* Labelled rows: one label column sized to the longest label, and the
+   controls beside it. Each row is a subgrid, so every label lines up. */
 .filtersBody {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px 28px;
+  --filter-row-min: 34px;
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  column-gap: 24px;
+  row-gap: 12px;
 }
-.filterGroup {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+.filterRow {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: subgrid;
+  align-items: start;
   min-width: 0;
-  margin: 0;
-  padding: 0;
-  border: none;
+}
+.filterRowCentered {
+  align-items: center;
 }
 .filterLegend {
-  padding: 0;
+  display: flex;
+  align-items: center;
+  min-height: var(--filter-row-min);
   font-size: var(--text-11);
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--ink-60);
 }
-.filterChecks {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px 14px;
+.filterChips {
+  grid-column: 2;
+  min-width: 0;
 }
-.filterCheck,
-.filterDate,
-.filterSwitchLabel {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  font-size: var(--text-13);
-  color: var(--ink);
-  cursor: pointer;
+.filterScene {
+  grid-column: 2;
+  width: min(100%, 18rem);
 }
-.filterCheck input {
+/* The tiny keys inside the chips match the graph and its legend: a dot in
+   the standing colour (the invite tree's dots), a line per connection. */
+.filterStandingDot {
+  flex: none;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--ink-40);
+}
+.filterStandingDot[data-standing="trusted"] {
+  background: var(--jade);
+}
+.filterStandingDot[data-standing="warned"] {
+  background: var(--amber);
+}
+.filterStandingDot[data-standing="flagged"] {
+  background: var(--danger);
+}
+.filterSwatch {
+  flex: none;
   width: 16px;
-  height: 16px;
-  margin: 0;
-  accent-color: var(--accent);
+  height: 3px;
+  border-radius: var(--radius-2);
+}
+.filterSwatchInvite {
+  background: rgba(var(--amber-rgb), 0.85);
+}
+.filterSwatchVouch {
+  background: rgba(var(--line-rgb), 0.6);
+}
+.filterSwatchMutual {
+  background: var(--jade);
+}
+/* A picked chip fills plum, where the plum vouch line would vanish, so the
+   line turns to the chip's cream text colour there. */
+[aria-pressed="true"] > .filterSwatchVouch {
+  background: rgba(var(--cream-rgb), 0.7);
+}
+/* The Custom months fold open under the presets. The space above them sits
+   inside the fold, so it opens and closes with it. */
+.filterDatesSlot {
+  grid-column: 2;
 }
 .filterDates {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px 12px;
+  gap: 10px 20px;
+  padding-top: 10px;
 }
-.filterControl {
-  min-height: 34px;
-  padding: 0 10px;
-  border: 1px solid rgba(var(--line-rgb), 0.14);
-  border-radius: var(--radius-10);
-  background: var(--cream);
-  font-family: var(--sans);
+.filterDate {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.filterDateLabel {
+  min-width: 2.5rem;
   font-size: var(--text-13);
-  color: var(--ink);
-}
-.filterCheck input:focus-visible,
-.filterControl:focus-visible {
-  outline: var(--focus-ring);
-  outline-offset: var(--focus-ring-offset);
-  box-shadow: var(--ring-cream);
+  font-weight: 600;
+  color: var(--ink-60);
 }
 .filterSwitches {
+  grid-column: 2;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 10px;
+  flex-wrap: wrap;
+  gap: 4px 28px;
 }
 .filterSwitch {
   display: flex;
   align-items: center;
   gap: 10px;
+  min-height: var(--filter-row-min);
+}
+.filterSwitchLabel {
+  display: inline-flex;
+  align-items: center;
+  font-size: var(--text-13);
+  color: var(--ink);
+  cursor: pointer;
 }
 .filtersFoot {
   display: flex;
+  align-items: center;
   justify-content: flex-end;
+  gap: 12px;
   margin-top: 12px;
+  padding-block: 8px 10px;
+  border-top: 1px solid rgba(var(--line-rgb), 0.09);
 }
 /* Wide screens: the panel drops over the top of the stage, so opening it
    leaves the graph at its size. */
@@ -728,18 +780,47 @@
 }
 @media (max-width: 920px) {
   .filtersPanel {
-    padding: 16px 16px 14px;
+    padding: 14px 16px 0;
     border-top: none;
   }
   /* 16px keeps iOS from zooming the page when a field takes focus. */
-  .filterControl,
   .searchInput {
     font-size: var(--text-16);
   }
+  /* The sheet stacks each label above its controls. */
+  .filtersBody {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 18px;
+  }
+  .filterRow {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .filterLegend {
+    min-height: 0;
+    margin-bottom: 8px;
+  }
+  .filterScene {
+    width: 100%;
+  }
+  .filterDates {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .filterSwitches {
+    flex-direction: column;
+    gap: 0;
+  }
+  .filtersFoot {
+    margin-top: 14px;
+    padding-bottom: 12px;
+  }
 }
+/* Touch: chips grow to the 44px floor, so the labels centre on that. */
 @media (pointer: coarse) {
-  .filterCheck {
-    min-height: var(--tap-min);
+  .filtersBody {
+    --filter-row-min: var(--tap-min);
   }
 }
 /* Phone filters: a switch row is a full 44px tap area, label included. */

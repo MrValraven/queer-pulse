@@ -16,7 +16,14 @@ import {
   type StudioAudioGraph,
   type StudioDeckNodes,
 } from "./studioAudioGraph";
-import type { StudioRemoteState } from "./studioPlayerContext";
+import {
+  areBufferedRangesEqual,
+  readBufferedRanges,
+} from "./studioBufferedRanges";
+import type {
+  StudioBufferedRange,
+  StudioRemoteState,
+} from "./studioPlayerContext";
 import {
   isRemotePlaybackSupported,
   promptRemotePicker,
@@ -110,6 +117,8 @@ class WebAudioEngine implements StudioAudioEngine {
   private activeIndex: 0 | 1 = 0;
   private outgoing: { deck: Deck; timerId: number } | null = null;
   private hasPreloaded = false;
+  /** The last loaded spans reported for the active deck. */
+  private lastBufferedRanges: readonly StudioBufferedRange[] = [];
   private volume = 1;
   private isMuted = false;
   private isLoudnessEven = true;
@@ -178,6 +187,7 @@ class WebAudioEngine implements StudioAudioEngine {
     deck.gainDb = clampGainDb(gainDb);
     this.setFadeLevel(deck, { to: 1, seconds: 0 });
     this.applyLoudness(deck, 0);
+    this.lastBufferedRanges = [];
     deck.element.src = sourceUrl;
     deck.element.load();
   }
@@ -214,6 +224,7 @@ class WebAudioEngine implements StudioAudioEngine {
     this.finishOutgoing();
     this.endFade();
     this.cancelPreload();
+    this.lastBufferedRanges = [];
     this.clearDeck(this.active());
     this.releaseSession(0);
   }
@@ -273,6 +284,8 @@ class WebAudioEngine implements StudioAudioEngine {
     }
     if (Number.isFinite(incoming.element.duration))
       this.emit({ type: "duration", seconds: incoming.element.duration });
+    this.lastBufferedRanges = [];
+    this.reportBuffered(incoming);
     this.emit({ type: "time", seconds: incoming.element.currentTime });
     void this.playDeck(incoming);
   }
@@ -367,6 +380,16 @@ class WebAudioEngine implements StudioAudioEngine {
     return deck === this.active();
   }
 
+  /** Emits the active deck's loaded spans when they changed since the last
+   *  report. */
+  private reportBuffered(deck: Deck): void {
+    if (!this.isActive(deck)) return;
+    const ranges = readBufferedRanges(deck.element);
+    if (areBufferedRangesEqual(ranges, this.lastBufferedRanges)) return;
+    this.lastBufferedRanges = ranges;
+    this.emit({ type: "buffered", ranges });
+  }
+
   private emit(event: StudioAudioEvent): void {
     this.listeners.emit(event);
   }
@@ -425,6 +448,9 @@ class WebAudioEngine implements StudioAudioEngine {
       if (this.isActive(deck))
         this.emit({ type: "time", seconds: deck.element.currentTime });
     });
+    listen("progress", () => this.reportBuffered(deck));
+    listen("seeked", () => this.reportBuffered(deck));
+    listen("loadeddata", () => this.reportBuffered(deck));
     listen("durationchange", () => {
       if (this.isActive(deck) && Number.isFinite(deck.element.duration))
         this.emit({ type: "duration", seconds: deck.element.duration });

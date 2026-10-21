@@ -151,7 +151,7 @@ describe("StudioPlayer bar (desktop)", () => {
     const { player } = renderWithPlayer(<StudioPlayer />);
     const slider = await screen.findByRole("slider", { name: "Seek" });
     fireEvent.keyDown(slider, { key: "ArrowRight" });
-    expect(player.seek).toHaveBeenLastCalledWith(25);
+    await waitFor(() => expect(player.seek).toHaveBeenLastCalledWith(25));
   });
 
   it("links the title to the track and the artist to their page", async () => {

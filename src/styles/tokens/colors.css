@@ -293,6 +293,36 @@
      grey-green smudge on cream, so light warms it to a faint coral. */
   --studio-hero-glow: rgba(var(--accent-rgb), 0.08);
 
+  /* Studio browse tiles: one ground per genre and mood on the home page.
+     Fixed in both themes, like Spotify's browse tiles, and each one carries
+     the fixed light cream label (--cream-rgb) at 4.7:1 or more, so the
+     tiles hold AA in light and dark alike. Written in OKLCH with lightness
+     capped at 0.54 for that reason; hues spread round the wheel and lean
+     warm so the set sits with plum, cream and coral. */
+  --studio-facet-fado: oklch(0.42 0.13 12);
+  --studio-facet-electronic: oklch(0.45 0.16 285);
+  --studio-facet-folk: oklch(0.47 0.09 128);
+  --studio-facet-experimental: oklch(0.46 0.075 200);
+  --studio-facet-pop: oklch(0.53 0.17 355);
+  --studio-facet-hip-hop: oklch(0.53 0.14 50);
+  --studio-facet-r-and-b: oklch(0.44 0.13 325);
+  --studio-facet-rock: oklch(0.44 0.13 30);
+  --studio-facet-jazz: oklch(0.5 0.1 80);
+  --studio-facet-classical: oklch(0.38 0.08 255);
+  --studio-facet-ambient: oklch(0.48 0.07 168);
+  --studio-facet-spoken-word: oklch(0.38 0.05 300);
+  --studio-facet-other: oklch(0.45 0.03 60);
+  --studio-facet-late-night: oklch(0.32 0.09 268);
+  --studio-facet-euphoric: oklch(0.54 0.16 35);
+  --studio-facet-tender: oklch(0.54 0.09 5);
+  --studio-facet-melancholy: oklch(0.45 0.05 238);
+  --studio-facet-defiant: oklch(0.46 0.17 22);
+  --studio-facet-dreamy: oklch(0.5 0.1 300);
+  --studio-facet-slow-burn: oklch(0.5 0.12 58);
+  --studio-facet-sweaty: oklch(0.5 0.19 345);
+  --studio-facet-calm: oklch(0.5 0.06 185);
+  --studio-facet-playful: oklch(0.52 0.12 140);
+
   /* ── Cinema (dark viewing surface) ── */
   /* Cinema is dark by design, like Studio: this surface is intentionally the
      same in both themes and must NOT follow --paper, which flips. */

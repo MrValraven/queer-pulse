@@ -306,6 +306,9 @@
   /* The lift for a light card resting on a plum panel, with a coral halo. */
   --shadow-card-on-plum:
     0 28px 60px -24px rgba(0, 0, 0, 0.5), 0 0 70px rgba(var(--accent-rgb), 0.22);
+  /* The small tilted cover on a Studio browse tile: a short, close shadow
+     on a coloured ground, the same in both themes. */
+  --shadow-facet-cover: 0 6px 14px -4px rgba(0, 0, 0, 0.45);
 
   /* Role names re-pointed at the scale. Values unchanged. */
   --shadow-card: var(--shadow-e1);

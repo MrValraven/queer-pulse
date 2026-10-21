@@ -7,7 +7,11 @@ import {
   clearStudioEpisodeMemory,
   writeEpisodeSpeed,
 } from "./studioEpisodeMemory";
-import type { StudioPlayerClock, StudioQueueItem } from "./studioPlayerContext";
+import type {
+  StudioPlayerClock,
+  StudioPlayerValue,
+  StudioQueueItem,
+} from "./studioPlayerContext";
 import { DEMO_EPISODE_MEMBER_ID } from "./useStudioEpisodeMemory";
 import { useStudioMediaSession } from "./useStudioMediaSession";
 
@@ -97,5 +101,35 @@ describe("media session for episodes", () => {
     expect(setPositionState).toHaveBeenLastCalledWith(
       expect.objectContaining({ playbackRate: 1.5 }),
     );
+  });
+
+  it("updates the lock-screen position when the member seeks", () => {
+    const player = createStudioPlayerTestValue(itemOf(false));
+    const { rerender } = renderHook(
+      ({ clock }) => useStudioMediaSession(player, clock),
+      { wrapper, initialProps: { clock: clockAt(60) } },
+    );
+    rerender({ clock: clockAt(300) });
+    expect(setPositionState).toHaveBeenLastCalledWith(
+      expect.objectContaining({ position: 300, duration: 1800 }),
+    );
+  });
+
+  it("updates the lock-screen position when the play state changes", () => {
+    const clock = clockAt(60);
+    const { rerender } = renderHook(
+      ({ status }) =>
+        useStudioMediaSession(
+          { ...createStudioPlayerTestValue(itemOf(false)), status },
+          clock,
+        ),
+      {
+        wrapper,
+        initialProps: { status: "playing" as StudioPlayerValue["status"] },
+      },
+    );
+    setPositionState.mockClear();
+    rerender({ status: "paused" });
+    expect(setPositionState).toHaveBeenCalledTimes(1);
   });
 });

@@ -9,6 +9,7 @@ import {
   STUDIO_PLAYLIST_LIMITS,
   type StudioPlaylistDTO,
   type StudioPlaylistEditorCandidatesDTO,
+  type StudioPlaylistEditorIneligibleReason,
   type StudioPlaylistEditorListDTO,
   type StudioPlaylistInviteResponse,
 } from "./studio.types";
@@ -19,6 +20,7 @@ import {
   demoPlaylistRecord,
   demoViewerRole,
   endDemoEditing,
+  hasBrokenCredit,
   refused,
   type DemoPlaylist,
 } from "./studioDemoPlaylists";
@@ -69,12 +71,25 @@ export function demoInvitePlaylistEditors(
   const freshSlugs = [...new Set(memberSlugs)].filter(
     (slug) => !currentSlugs.has(slug),
   );
-  const ineligibleSlugs = freshSlugs.filter(
-    (slug) => slug === DEMO_VIEWER_MEMBER_SLUG || !allowedSlugs.includes(slug),
-  );
-  if (ineligibleSlugs.length > 0)
+  // One reason per member, as the server answers: a persona credit that
+  // stopped standing refuses the whole request.
+  const reasonOf = (
+    slug: string,
+  ): StudioPlaylistEditorIneligibleReason | null => {
+    if (slug === DEMO_VIEWER_MEMBER_SLUG) return "is_owner";
+    if (personaId !== null && hasBrokenCredit(playlist))
+      return "persona_credit_lapsed";
+    if (allowedSlugs.includes(slug)) return null;
+    return personaId === null ? "not_connected" : "not_co_owner";
+  };
+  const ineligibleMembers = freshSlugs.flatMap((memberSlug) => {
+    const reason = reasonOf(memberSlug);
+    return reason === null ? [] : [{ memberSlug, reason }];
+  });
+  if (ineligibleMembers.length > 0)
     throw refused(422, "studio_playlist_editor_ineligible", {
-      memberSlugs: ineligibleSlugs,
+      memberSlugs: ineligibleMembers.map((member) => member.memberSlug),
+      ineligibleMembers,
     });
   if (
     playlist.editors.length + freshSlugs.length >

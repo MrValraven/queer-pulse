@@ -46,6 +46,13 @@ export function AttendeeRow({
           )}
         </div>
         <div className={styles.attMeta}>{attendeeMeta(attendee, t, fmt)}</div>
+        {attendee.invitedByName && (
+          <div className={styles.attMeta}>
+            {t("gatherings:manage.attendees.invitedBy", {
+              name: attendee.invitedByName,
+            })}
+          </div>
+        )}
         <AttendeeNeeds
           attendee={attendee}
           customQuestion={customRsvpQuestion}

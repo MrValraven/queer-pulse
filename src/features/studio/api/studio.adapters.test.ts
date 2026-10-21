@@ -504,10 +504,16 @@ describe("counts on Your numbers", () => {
 
 describe("genres and followed artists", () => {
   it("keeps known genres in the server's order", () => {
-    expect(toGenreList({ genres: ["folk", "polka", "fado"] })).toEqual([
+    expect(toGenreList({ genres: ["folk", "polka", "fado"] }).genres).toEqual([
       "folk",
       "fado",
     ]);
+    expect(
+      toGenreList({
+        genres: ["folk", "fado"],
+        covers: { folk: "/folk.jpg", fado: "", polka: "/polka.jpg" },
+      }).coverByGenre,
+    ).toEqual({ folk: "/folk.jpg" });
     expect(isStudioGenre("hip-hop")).toBe(true);
     expect(isStudioGenre("polka")).toBe(false);
   });

@@ -5,6 +5,10 @@ import { AttendeesTab } from "./ManageAttendeesTab";
 
 const pagesCalls: { status: string; q?: string; isEnabled?: boolean }[] = [];
 
+vi.mock("./ManageInviteRequests", () => ({
+  ManageInviteRequests: () => null,
+}));
+
 vi.mock("./api/useAttendees", () => ({
   useAttendees: () => ({
     data: {

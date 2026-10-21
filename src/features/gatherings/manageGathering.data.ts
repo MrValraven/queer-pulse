@@ -74,6 +74,7 @@ export const GOING_ATTENDEES = [
     avatarUrl: MEMBERS.anika?.photo,
     pronouns: "she/they",
     rsvpAt: new Date(2026, 5, 1),
+    invitedByName: "Sofia Rodrigues",
   },
   {
     id: "jordan",
