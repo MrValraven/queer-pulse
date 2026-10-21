@@ -1,10 +1,10 @@
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { FiCompass } from "react-icons/fi";
 import { Collapse, EmptyState, SearchInput } from "../../shared/components/ui";
 import { useDebouncedValue } from "../../shared/hooks";
 import type { Translation as TranslationApi } from "../../shared/i18n/useTranslation";
 import type { SubprofileKind } from "./api/subprofiles.api";
-import { KIND_FAMILIES } from "./kindFamilies.data";
+import { KIND_FAMILIES, type KindFamily } from "./kindFamilies.data";
 import { KindFamilyCard } from "./KindFamilyCard";
 import { kindsMatchingWordPrefix } from "./kindSearch";
 import { useSuggestedPersonaKinds } from "./useSuggestedPersonaKinds";
@@ -14,16 +14,33 @@ import styles from "./NewSideModal.module.css";
  *  live, long enough that a quick word filters once. */
 const SEARCH_DEBOUNCE_MS = 150;
 
+/** The families the picker offers. With no `allowedKinds` that is every
+ *  family as it stands; with a list, each family keeps only the kinds in it,
+ *  and a family left with none is dropped. */
+function pickerFamiliesFor(
+  allowedKinds: readonly SubprofileKind[] | undefined,
+): KindFamily[] {
+  if (!allowedKinds) return KIND_FAMILIES;
+  const allowedKindSet = new Set(allowedKinds);
+  return KIND_FAMILIES.map((familyGroup) => ({
+    ...familyGroup,
+    kinds: familyGroup.kinds.filter((candidateKind) =>
+      allowedKindSet.has(candidateKind),
+    ),
+  })).filter((familyGroup) => familyGroup.kinds.length > 0);
+}
+
 /** The kinds a search term leaves on screen, by family, in the picker's own
  *  order. An empty term shows every kind; any other term keeps only the
  *  families with a matching kind (`kindsMatchingWordPrefix`), so a term that
  *  matches nothing leaves the map empty. */
 function visibleKindsByFamily(
   trimmedQuery: string,
+  pickerFamilies: KindFamily[],
 ): Map<string, SubprofileKind[]> {
   if (trimmedQuery === "") {
     return new Map(
-      KIND_FAMILIES.map((familyGroup) => [
+      pickerFamilies.map((familyGroup) => [
         familyGroup.family,
         familyGroup.kinds,
       ]),
@@ -31,7 +48,7 @@ function visibleKindsByFamily(
   }
   const matchingKinds = new Set(kindsMatchingWordPrefix(trimmedQuery));
   const kindsByFamily = new Map<string, SubprofileKind[]>();
-  for (const familyGroup of KIND_FAMILIES) {
+  for (const familyGroup of pickerFamilies) {
     const familyKinds = familyGroup.kinds.filter((candidateKind) =>
       matchingKinds.has(candidateKind),
     );
@@ -76,24 +93,39 @@ function useHasSearched(trimmedQuery: string): boolean {
  * development StrictMode would then cancel the kind exits inside and leave
  * them stuck on screen. Inside each family the kinds pop and glide on their
  * own (`KindFamilyCard`).
+ *
+ * `allowedKinds` narrows the whole picker (families, search results and the
+ * suggested row) to those kinds, for a caller such as Studio that can only
+ * use some crafts.
  */
 export function KindFamilyPicker({
   kind,
   onChangeKind,
+  allowedKinds,
   t,
 }: {
   kind: SubprofileKind | null;
   onChangeKind: (kind: SubprofileKind) => void;
+  allowedKinds?: readonly SubprofileKind[];
   t: TranslationApi["t"];
 }) {
   const [query, setQuery] = useState("");
   const searchInputRef = useRef<HTMLInputElement>(null);
   const filterQuery = useDebouncedValue(query, SEARCH_DEBOUNCE_MS).trim();
-  const kindsByFamily = visibleKindsByFamily(filterQuery);
+  const pickerFamilies = useMemo(
+    () => pickerFamiliesFor(allowedKinds),
+    [allowedKinds],
+  );
+  const kindsByFamily = visibleKindsByFamily(filterQuery, pickerFamilies);
   const isSearching = filterQuery !== "";
   const hasNoMatches = isSearching && kindsByFamily.size === 0;
   const shouldKindsPopIn = useHasSearched(filterQuery);
-  const suggestedKinds = useSuggestedPersonaKinds();
+  const profileSuggestedKinds = useSuggestedPersonaKinds();
+  const suggestedKinds = allowedKinds
+    ? profileSuggestedKinds.filter((candidateKind) =>
+        allowedKinds.includes(candidateKind),
+      )
+    : profileSuggestedKinds;
   let matchCount = 0;
   for (const familyKinds of kindsByFamily.values()) {
     matchCount += familyKinds.length;
@@ -149,7 +181,7 @@ export function KindFamilyPicker({
             />
           </Collapse>
         )}
-        {KIND_FAMILIES.map((familyGroup) => {
+        {pickerFamilies.map((familyGroup) => {
           const visibleKinds = kindsByFamily.get(familyGroup.family);
           return (
             <Collapse

@@ -2150,8 +2150,19 @@ export const studio: Catalog = {
     "Only the first {max} characters fit, so the end of what you pasted was left out",
   "uploadFlow.noPersona.title": "Create a persona that works with Studio",
   "uploadFlow.noPersona.body":
-    "To upload, you need a published persona set to Open to everyone, of one of these kinds: musician, DJ, podcaster, podcast producer, poet, spoken word artist, drag performer, performer, dancer, ballroom and vogue, or burlesque performer. Set one up, then come back",
-  "uploadFlow.noPersona.cta": "Go to your personas",
+    "To upload, you need a published persona set to Open to everyone, of one of these kinds: musician, DJ, podcaster, podcast producer, poet, spoken word artist, drag performer, performer, dancer, ballroom and vogue, or burlesque performer. Create one here, publish it from its editor, then come back to upload",
+  "uploadFlow.noPersona.cta": "Create a persona",
+  // The create wizard's step 1 subtitle when Studio opens it (StudioNoPersonaState).
+  "uploadFlow.noPersona.modalSub":
+    "Studio uploads need one of these crafts. Once it's created, publish it with Open to everyone and you can upload",
+  // An artist persona the member owns that Studio does not list yet.
+  "uploadFlow.noPersona.unfinishedBody":
+    "{name} works with Studio. Publish it and set it to Open to everyone, then you can upload here",
+  "uploadFlow.noPersona.unfinishedCta": "Open {name} in the editor",
+  // Every persona slot taken and none of them an artist kind.
+  "uploadFlow.noPersona.atCapBody":
+    "You have {max} personas, the most one account can hold, and none of them works with Studio. Delete one you no longer use, then create one for Studio",
+  "uploadFlow.noPersona.dashboardCta": "Go to your personas",
   "uploadFlow.side.eyebrow": "What happens to your files",
   "uploadFlow.side.title": "Your files, <em>ready to play</em>",
   "uploadFlow.side.body":

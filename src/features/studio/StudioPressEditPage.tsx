@@ -1,15 +1,8 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useId } from "react";
 import { useSearchParams } from "react-router-dom";
-import { FiUserPlus } from "react-icons/fi";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
-import { routes } from "../../app/routeMap";
-import {
-  Collapse,
-  EmptyState,
-  LoadErrorState,
-  Select,
-} from "../../shared/components/ui";
+import { Collapse, LoadErrorState, Select } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { StudioPressKitView } from "./api/studio.adapters";
@@ -19,6 +12,7 @@ import { useStudioArtistStats } from "./api/useStudioArtistStats";
 import { useStudioPressKit } from "./api/useStudioPressKit";
 import { StudioCreatorShell } from "./StudioCreatorShell";
 import { StudioDetailSkeleton, StudioNotFound } from "./StudioLoadStates";
+import { StudioNoPersonaState } from "./StudioNoPersonaState";
 import {
   trackOptionsFromStats,
   type PressTrackListStatus,
@@ -76,19 +70,7 @@ export function StudioPressEditPage() {
 
   let body;
   if (isPending) body = <StudioDetailSkeleton />;
-  else if (uploadablePersonas.length === 0)
-    body = (
-      <EmptyState
-        icon={<FiUserPlus />}
-        title={t("studio:uploadFlow.noPersona.title")}
-        description={t("studio:uploadFlow.noPersona.body")}
-        action={{
-          label: t("studio:uploadFlow.noPersona.cta"),
-          to: routes.subprofilesDashboard,
-        }}
-        headingLevel={2}
-      />
-    );
+  else if (uploadablePersonas.length === 0) body = <StudioNoPersonaState />;
   // A press kit has no withdrawn view; a 410 reads as not found.
   else if (
     loadState.isNotFound ||

@@ -33,6 +33,11 @@ function joinedSectionLabels(
  * family/sections), shown as the searchable family-grouped picker
  * (`KindFamilyPicker`); "Copy" swaps in the existing source + mode pickers. A
  * live summary line explains what the chosen kind produces.
+ *
+ * With `allowedKinds`, the picker offers only those kinds and `sources` holds
+ * only personas of those kinds (the form filters them). When none of the
+ * owner's personas qualifies, the method switch is left out entirely, since
+ * "Copy one" would have nothing to offer.
  */
 export function NewSideStepCraft({
   method,
@@ -45,6 +50,7 @@ export function NewSideStepCraft({
   copyMode,
   onChangeCopyMode,
   effectiveKind,
+  allowedKinds,
   t,
 }: {
   method: StartMethod;
@@ -57,21 +63,31 @@ export function NewSideStepCraft({
   copyMode: CopyMode;
   onChangeCopyMode: (mode: CopyMode) => void;
   effectiveKind: SubprofileKind | null;
+  allowedKinds?: readonly SubprofileKind[];
   t: TranslationApi["t"];
 }) {
   const source = sources.find((candidate) => candidate.id === sourceId) ?? null;
+  const isMethodPickerHidden =
+    allowedKinds !== undefined && sources.length === 0;
 
   return (
     <>
-      <StartMethodPicker
-        method={method}
-        onChange={onChangeMethod}
-        copyDisabled={sources.length === 0}
-        t={t}
-      />
+      {!isMethodPickerHidden && (
+        <StartMethodPicker
+          method={method}
+          onChange={onChangeMethod}
+          copyDisabled={sources.length === 0}
+          t={t}
+        />
+      )}
 
       {method === "template" && (
-        <KindFamilyPicker kind={kind} onChangeKind={onChangeKind} t={t} />
+        <KindFamilyPicker
+          kind={kind}
+          onChangeKind={onChangeKind}
+          allowedKinds={allowedKinds}
+          t={t}
+        />
       )}
 
       {method === "copy" && (

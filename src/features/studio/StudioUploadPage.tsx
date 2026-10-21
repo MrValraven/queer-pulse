@@ -1,14 +1,14 @@
 import { useRef, type ReactNode } from "react";
-import { FiSlash, FiUserPlus } from "react-icons/fi";
+import { FiSlash } from "react-icons/fi";
 import { useSearchParams } from "react-router-dom";
 import { EmptyState } from "../../shared/components/ui";
-import { routes } from "../../app/routeMap";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { formatOfKind } from "./api/studio.adapters";
 import { useStudioAccess } from "./api/useStudioAccess";
 import { StudioCreatorShell } from "./StudioCreatorShell";
 import { StudioEpisodeUploadPage } from "./StudioEpisodeUploadPage";
+import { StudioNoPersonaState } from "./StudioNoPersonaState";
 import {
   StudioDetailSkeleton,
   StudioLoadError,
@@ -67,18 +67,7 @@ function StudioReleaseUploadPage() {
   // Only a new release needs a persona to upload as. An owner whose persona
   // stopped being listenable keeps editing an existing one (?release=<id>).
   if (!draft.isEditingExisting && uploadablePersonas.length === 0) {
-    body = (
-      <EmptyState
-        icon={<FiUserPlus />}
-        title={t("studio:uploadFlow.noPersona.title")}
-        description={t("studio:uploadFlow.noPersona.body")}
-        action={{
-          label: t("studio:uploadFlow.noPersona.cta"),
-          to: routes.subprofilesDashboard,
-        }}
-        headingLevel={2}
-      />
-    );
+    body = <StudioNoPersonaState />;
   } else if (
     editState?.isNotFound ||
     // A withdrawn release opened here by someone who does not own it: the

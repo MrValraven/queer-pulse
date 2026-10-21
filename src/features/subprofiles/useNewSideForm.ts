@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { reasonFor } from "../../shared/api/errorMessage";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { Translation as TranslationApi } from "../../shared/i18n/useTranslation";
 import { useAuth } from "../../app/providers/authContext";
@@ -216,16 +217,21 @@ export interface NewSideForm {
  * lifted out of `NewSideModal` so each stays under the line budget. Step 1 picks
  * the craft or a persona to copy; step 2 names it and chooses
  * linked-vs-standalone; then `submit()` creates and seeds the draft and routes
- * to its editor.
+ * to its editor. With `allowedKinds`, only the owner's personas of those
+ * kinds are offered as copy sources.
  */
 export function useNewSideForm(
   initialKind: SubprofileKind | null,
   onClose: () => void,
+  allowedKinds?: readonly SubprofileKind[],
 ): NewSideForm {
   const navigate = useNavigate();
   const mutations = useSubprofileMutations();
   const { data: mySubprofiles } = useSubprofiles();
-  const sources = mySubprofiles ?? [];
+  const ownedSubprofiles = mySubprofiles ?? [];
+  const sources = allowedKinds
+    ? ownedSubprofiles.filter((owned) => allowedKinds.includes(owned.kind))
+    : ownedSubprofiles;
   const { showToast } = useToast();
   const { t } = useTranslation();
   const { user } = useAuth();
@@ -355,10 +361,15 @@ export function useNewSideForm(
       }
       onClose();
       void navigate(subprofileEditPath(id));
-    } catch {
-      // Only reset on failure — a success navigates away and unmounts.
+    } catch (error) {
+      // Only reset on failure: a success navigates away and unmounts. The
+      // server's reason (the persona cap, a refused name) leads when it sent
+      // one; the general line covers a network failure.
       setSubmitting(false);
-      showToast(t("subprofiles:newModal.toastError"), "error");
+      showToast(
+        reasonFor(error) ?? t("subprofiles:newModal.toastError"),
+        "error",
+      );
     }
   }
 

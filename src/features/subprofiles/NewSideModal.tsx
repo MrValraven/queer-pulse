@@ -20,6 +20,8 @@ import styles from "./NewSideModal.module.css";
 export function NewSideModal({
   onClose,
   initialKind = null,
+  allowedKinds,
+  craftStepSub,
 }: {
   onClose: () => void;
   /** Pre-select a craft (Moment 4's persona-creation deep-link, `?kind=` on
@@ -27,9 +29,17 @@ export function NewSideModal({
    *  chosen in the family picker. Caller validates the raw
    *  query param against `SubprofileKind` before passing it in. */
   initialKind?: SubprofileKind | null;
+  /** Limit the wizard to these crafts (Studio's upload page passes the
+   *  Studio artist kinds): the picker shows only them, and "Copy one" lists
+   *  only personas of these kinds, or leaves the method out when none
+   *  qualifies. Omitted, every craft is offered. */
+  allowedKinds?: readonly SubprofileKind[];
+  /** Step 1's subtitle in place of the general one, so a caller that
+   *  narrows the crafts can say why. */
+  craftStepSub?: string;
 }) {
   const { t } = useTranslation();
-  const form = useNewSideForm(initialKind, onClose);
+  const form = useNewSideForm(initialKind, onClose, allowedKinds);
 
   return (
     <Modal
@@ -44,11 +54,11 @@ export function NewSideModal({
           components={{ em: <em /> }}
         />
       }
-      sub={t(
+      sub={
         form.step === 1
-          ? "subprofiles:newModal.sub"
-          : "subprofiles:newModal.stepIdentitySub",
-      )}
+          ? (craftStepSub ?? t("subprofiles:newModal.sub"))
+          : t("subprofiles:newModal.stepIdentitySub")
+      }
       className={form.step === 1 ? styles.craftStepModal : undefined}
       onClose={onClose}
       footer={
@@ -100,6 +110,7 @@ export function NewSideModal({
             copyMode={form.copyMode}
             onChangeCopyMode={form.setCopyMode}
             effectiveKind={form.effectiveKind}
+            allowedKinds={allowedKinds}
             t={t}
           />
         ) : (

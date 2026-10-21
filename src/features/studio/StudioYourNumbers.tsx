@@ -1,6 +1,5 @@
 import { useId } from "react";
 import { FiMusic } from "react-icons/fi";
-import { routes } from "../../app/routeMap";
 import { EmptyState, Select } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
@@ -13,6 +12,7 @@ import {
   StudioNotFound,
 } from "./StudioLoadStates";
 import { StudioDashboardNextSteps } from "./StudioDashboardNextSteps";
+import { StudioNoPersonaState } from "./StudioNoPersonaState";
 import { StudioNumbersTable } from "./StudioNumbersTable";
 import { studioUploadPath } from "./studioPaths";
 import css from "./StudioNumbers.module.css";
@@ -45,16 +45,7 @@ export function StudioYourNumbers({
         {isPageTitle && (
           <h1 className="visuallyHidden">{t("studio:numbers.eyebrow")}</h1>
         )}
-        <EmptyState
-          icon={<FiMusic />}
-          title={t("studio:uploadFlow.noPersona.title")}
-          description={t("studio:uploadFlow.noPersona.body")}
-          action={{
-            label: t("studio:uploadFlow.noPersona.cta"),
-            to: routes.subprofilesDashboard,
-          }}
-          headingLevel={2}
-        />
+        <StudioNoPersonaState icon={<FiMusic />} />
       </section>
     );
 

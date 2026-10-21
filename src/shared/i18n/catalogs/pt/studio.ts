@@ -2187,8 +2187,19 @@ export const studio: Catalog = {
     "Só cabem os primeiros {max} caracteres, por isso o fim do que colaste ficou de fora",
   "uploadFlow.noPersona.title": "Cria uma persona compatível com o Studio",
   "uploadFlow.noPersona.body":
-    "Para carregar, precisas de uma persona publicada e aberta a todas as pessoas, de um destes tipos: música, DJ, podcast, produção de podcast, poesia, spoken word, arte drag, performance, dança, ballroom e vogue ou burlesco. Prepara uma e volta",
-  "uploadFlow.noPersona.cta": "Ir para as tuas personas",
+    "Para carregar, precisas de uma persona publicada e aberta a todas as pessoas, de um destes tipos: música, DJ, podcast, produção de podcast, poesia, spoken word, arte drag, performance, dança, ballroom e vogue ou burlesco. Cria uma aqui, publica-a no editor e volta para carregar",
+  "uploadFlow.noPersona.cta": "Criar uma persona",
+  // Subtítulo do primeiro passo do assistente quando o Studio o abre (StudioNoPersonaState).
+  "uploadFlow.noPersona.modalSub":
+    "Os carregamentos no Studio precisam de um destes ofícios. Depois de a criares, publica-a aberta a todas as pessoas e já podes carregar",
+  // Uma persona artística da pessoa que o Studio ainda não lista.
+  "uploadFlow.noPersona.unfinishedBody":
+    "{name} funciona com o Studio. Publica-a e deixa-a aberta a todas as pessoas, depois já podes carregar aqui",
+  "uploadFlow.noPersona.unfinishedCta": "Abrir {name} no editor",
+  // Todos os lugares de persona ocupados e nenhuma é de um tipo artístico.
+  "uploadFlow.noPersona.atCapBody":
+    "Tens {max} personas, o máximo por conta, e nenhuma funciona com o Studio. Apaga uma que já não uses e depois cria uma para o Studio",
+  "uploadFlow.noPersona.dashboardCta": "Ir para as tuas personas",
   "uploadFlow.side.eyebrow": "O que acontece aos teus ficheiros",
   "uploadFlow.side.title": "Os teus ficheiros, <em>prontos a ouvir</em>",
   "uploadFlow.side.body":

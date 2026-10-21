@@ -25,6 +25,7 @@ import { subprofileToView } from "./subprofiles.adapters";
 import { subprofileQueryKey } from "./useSubprofile";
 import { linkedPersonaHandleCandidate } from "../personaHandle";
 import { currentUserSlug } from "../../members/data/demoCurrentUser";
+import { studioKeys } from "../../studio/api/studioQueryKeys";
 
 /** Mirrors the backend's draft-handle rule: a LINKED persona that is not
  *  published and holds no handle gets `<creatorSlug>-<personaSlug>` stored on
@@ -329,6 +330,14 @@ export function useSubprofileMutations() {
     }
     void queryClient.invalidateQueries({ queryKey: ["subprofile", "public"] });
   };
+  // Studio's upload list (GET /studio/me) holds the member's published,
+  // Open to everyone artist personas, so the writes that can add or drop one
+  // (publish, unpublish, delete, a visibility change) read it again. A
+  // member who publishes a new artist persona then finds the upload form
+  // waiting on /studio/upload.
+  const invalidateStudioAccess = () => {
+    void queryClient.invalidateQueries({ queryKey: studioKeys.meAll });
+  };
 
   const create = useMutation<SubprofileDTO, Error, CreateSubprofileDTO>({
     // NewSideModal toasts its own error, so silence the global duplicate.
@@ -351,7 +360,7 @@ export function useSubprofileMutations() {
     meta: { silentError: true },
     mutationFn: ({ id, dto }) =>
       demoMode ? demoUpdate(id, dto) : updateSubprofile(id, dto),
-    onSuccess: (data, { id }) => {
+    onSuccess: (data, { id, dto }) => {
       // The PATCH answers with the whole owner view (the same shape GET
       // returns), so write it straight into this persona's owner-editor
       // query. An editor mounted later (the owner moving from the page's
@@ -374,6 +383,7 @@ export function useSubprofileMutations() {
         queryClient.setQueryData(subprofileQueryKey(demoMode, id), savedView);
       }
       invalidateOwned(data.id);
+      if (dto.visibility !== undefined) invalidateStudioAccess();
     },
   });
 
@@ -457,7 +467,10 @@ export function useSubprofileMutations() {
     // as a checklist), so silence the global duplicate.
     meta: { silentError: true },
     mutationFn: (id) => (demoMode ? demoPublish(id) : livePublish(id)),
-    onSuccess: (_data, id) => invalidateOwned(id),
+    onSuccess: (_data, id) => {
+      invalidateOwned(id);
+      invalidateStudioAccess();
+    },
   });
 
   const unpublish = useMutation<SubprofileDTO, Error, string>({
@@ -465,14 +478,20 @@ export function useSubprofileMutations() {
     meta: { silentError: true },
     mutationFn: (id) =>
       demoMode ? demoUnpublish(id) : unpublishSubprofile(id),
-    onSuccess: (_data, id) => invalidateOwned(id),
+    onSuccess: (_data, id) => {
+      invalidateOwned(id);
+      invalidateStudioAccess();
+    },
   });
 
   const remove = useMutation<{ ok: true }, Error, string>({
     // MySubprofilesPage toasts its own error, so silence the global duplicate.
     meta: { silentError: true },
     mutationFn: async (id) => (demoMode ? { ok: true } : deleteSubprofile(id)),
-    onSuccess: (_data, id) => invalidateOwned(id),
+    onSuccess: (_data, id) => {
+      invalidateOwned(id);
+      invalidateStudioAccess();
+    },
   });
 
   return {
