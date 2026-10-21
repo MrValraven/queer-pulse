@@ -34,10 +34,13 @@
 
 /* Carries a transform only while a finger drags the head (useSheetSwipe),
    which turns the transition off for the drag and back on for the spring.
-   It fills the sheet at least, so its surface covers the scrim at rest. */
+   It fills the sheet at least, so its surface covers the scrim at rest.
+   Clipped sideways only: a resting tooltip bubble near the edge never
+   widens the sheet, and the popovers above the tools row still show. */
 .frame {
   position: relative;
   min-height: 100%;
+  overflow-x: clip;
   background: var(--studio-surface);
   padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px)
     env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
@@ -71,18 +74,20 @@
   display: none;
 }
 
-.close {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+/* Doubled with the head, so it beats the IconButton's own quiet look. */
+.head .close {
   width: var(--tap-min);
   height: var(--tap-min);
-  border: none;
-  border-radius: var(--radius-pill);
-  background: rgba(var(--studio-ink-rgb), 0.08);
+  background: var(--studio-wash-2);
   color: inherit;
   font-size: var(--text-22);
-  cursor: pointer;
+}
+
+@media (hover: hover) {
+  .head .close:hover:not([aria-disabled="true"]) {
+    background: var(--studio-wash-3);
+    color: inherit;
+  }
 }
 
 .source {
@@ -96,31 +101,135 @@
   overflow-wrap: anywhere;
 }
 
+/* Desktop: one centred band at most 1200px wide that fills the screen under
+   the head (76px). The stage holds the middle of the screen while a long
+   queue scrolls past it, and the lyrics run the full height of their
+   column. */
 .columns {
   position: relative;
   display: grid;
   grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
-  gap: 48px;
-  padding: 8px 48px var(--section-y-48);
+  align-items: start;
+  gap: 64px;
+  max-inline-size: 1200px;
+  min-block-size: calc(100dvh - 76px);
+  margin-inline: auto;
+  padding: 8px 48px 32px;
 }
 
 .stage {
+  position: sticky;
+  inset-block-start: 0;
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  justify-content: center;
+  justify-self: end;
+  gap: 16px;
+  inline-size: 100%;
+  max-inline-size: 440px;
   min-width: 0;
+  min-block-size: calc(100dvh - 76px - 32px);
+}
+
+/* Everything under the cover. A contents box, so its children sit in the
+   stage's own column; the short landscape phone makes it a column of its
+   own beside the cover. */
+.stageBody {
+  display: contents;
 }
 
 /* Starts at the column edge, in line with the title, artist and waveform
-   below it (and with the bar's cover). */
+   below it (and with the bar's cover). On desktop it shrinks with a short
+   window, so the transport and the tools row stay on screen. */
 .cover {
   position: relative;
-  width: min(100%, 440px);
+  width: min(100%, 440px, calc(100dvh - 480px));
+  min-width: min(100%, 240px);
   aspect-ratio: 1;
   align-self: flex-start;
   border-radius: var(--radius-16);
   overflow: hidden;
   box-shadow: var(--shadow-e3);
+}
+
+/* Old and new artwork share the frame while they crossfade. */
+.coverLayer {
+  position: absolute;
+  inset: 0;
+}
+
+/* A phone's cover takes the close and skip swipes: no text selection or
+   image callout under a long press. */
+.cover[data-swipe] {
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
+/* Like, Add to playlist, Mark as played and the track menu. Pulled out by
+   the icons' inner padding, so the first glyph lines up with the title. */
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  margin-inline: -10px;
+  color: var(--studio-text-muted);
+}
+
+.actionSlot {
+  display: inline-flex;
+}
+
+/* Doubled with the row, so each control reads the same whatever its own
+   module sets (the heart's row margin, the IconButton's ink). */
+.actions .action {
+  display: inline-grid;
+  place-items: center;
+  width: var(--tap-min);
+  min-width: var(--tap-min);
+  height: var(--tap-min);
+  margin-block: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: inherit;
+  font-size: var(--text-22);
+  cursor: pointer;
+  transition-property: background-color, color, transform;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+.actions .action[aria-disabled="true"] {
+  cursor: default;
+  opacity: 0.5;
+}
+
+@media (hover: hover) {
+  .actions .action:hover:not([aria-disabled="true"]) {
+    background: var(--studio-wash-2);
+    color: var(--studio-text);
+  }
+}
+
+.actions .action:active:not([aria-disabled="true"]) {
+  background: var(--studio-wash-3);
+  transform: scale(0.97);
+}
+
+.actions .action:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* The menu ends the row, away from the saves. */
+.actions .actionMenu {
+  margin-block: 0;
+  margin-inline-start: auto;
+  font-size: var(--text-20);
 }
 
 .meta {
@@ -187,9 +296,13 @@
 }
 
 .panes {
+  /* The lyric list's height: the screen under the head, the tabs and the
+     band's own padding (StudioSyncedLyrics reads it). */
+  --now-pane-block: calc(100dvh - 76px - 40px - 56px);
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  align-self: stretch;
+  gap: 16px;
   min-width: 0;
   min-height: 0;
 }
@@ -198,20 +311,46 @@
   min-height: 0;
 }
 
-.stack {
+.phonePanes {
   display: flex;
   flex-direction: column;
-  gap: 28px;
+  gap: 16px;
+  min-width: 0;
+}
+
+/* The phone switcher. It sticks under the sticky head, so Queue, Lyrics
+   and Credits stay one tap away while a long pane scrolls under it. Clear
+   while it sits in the flow, so the tint wash runs behind it; it turns a
+   frosted band once it sticks (data-stuck, from PhonePanes). */
+.switcher {
+  position: sticky;
+  inset-block-start: calc(var(--tap-min) + 12px + env(safe-area-inset-top, 0px));
+  z-index: 1;
+  margin-inline: -16px;
+  padding: 8px 16px;
+  background-color: transparent;
+  transition-property: background-color, backdrop-filter;
+  transition-duration: var(--dur-base);
+  transition-timing-function: var(--ease);
+  scroll-margin-block-start: calc(
+    var(--tap-min) + 12px + env(safe-area-inset-top, 0px)
+  );
+}
+
+.switcher[data-stuck] {
+  background-color: color-mix(in srgb, var(--studio-surface) 82%, transparent);
+  backdrop-filter: var(--blur-lg);
+}
+
+/* Touch: each segment is a full 44px target. */
+@media (pointer: coarse) {
+  .switcher button {
+    min-block-size: var(--tap-min);
+  }
 }
 
 .paneSection {
-  scroll-margin-block-start: 16px;
-}
-
-.paneHeading {
-  margin: 0 0 8px;
-  font-family: var(--serif);
-  font-size: var(--text-20);
+  min-width: 0;
 }
 
 .stanzas p {
@@ -244,7 +383,7 @@
   color: var(--studio-text-muted);
 }
 
-.close:focus-visible,
+.head .close:focus-visible,
 .titleLink:focus-visible,
 .artist:focus-visible,
 .status button:focus-visible {
@@ -312,26 +451,66 @@
     background: rgba(var(--studio-ink-rgb), 0.24);
   }
 
-  /* Clears the sticky head: its 8px and 4px padding around the 44px close
-     button, plus 16px of air. */
-  .paneSection {
-    scroll-margin-block-start: calc(
-      var(--tap-min) + 28px + env(safe-area-inset-top, 0px)
-    );
-  }
-
   .columns {
     grid-template-columns: minmax(0, 1fr);
     gap: 28px;
+    min-block-size: 0;
+    max-inline-size: none;
     padding: 8px 16px 32px;
+  }
+
+  /* A tablet keeps the player to one calm centred column. */
+  .stage,
+  .phonePanes {
+    justify-self: center;
+    inline-size: 100%;
+    max-inline-size: 480px;
+  }
+
+  .stage {
+    position: static;
+    gap: 18px;
+    min-block-size: 0;
   }
 
   .cover {
     width: min(100%, 360px);
+    min-width: 0;
     align-self: center;
   }
 
   .title {
     font-size: var(--text-22);
+  }
+}
+
+/* A phone on its side: the cover on the left, the titles and the transport
+   beside it, so the controls share the first screen with the art. */
+@media (--compact) and (orientation: landscape) and (max-height: 500px) {
+  .stage,
+  .phonePanes {
+    max-inline-size: none;
+  }
+
+  .stage {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    column-gap: 24px;
+  }
+
+  .stageBody {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 0;
+  }
+
+  .cover {
+    width: min(100dvh - 96px, 260px);
+  }
+
+  .title {
+    font-size: var(--text-20);
   }
 }

@@ -144,7 +144,7 @@ describe("useStudioTrackUploads", () => {
     act(() => result.current.addFiles([mp3("Tide.mp3")]));
     await waitFor(() => expect(result.current.rows[0]?.stage).toBe("failed"));
     expect(result.current.rows[0]?.errorKey).toBe(
-      "studio:uploadFlow.files.errorUpload",
+      "studio:errors.upload.server",
     );
     act(() => result.current.retry(result.current.rows[0]!.localId));
     await waitFor(() => expect(result.current.rows[0]?.stage).toBe("ready"));

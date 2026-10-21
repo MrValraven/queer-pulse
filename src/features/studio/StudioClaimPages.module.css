@@ -179,7 +179,7 @@
 
 .card {
   padding: 18px 20px;
-  border: 1px solid var(--line);
+  border: 1px solid var(--studio-line);
   border-radius: var(--radius-14);
   background: rgba(var(--studio-ink-rgb), 0.04);
 }
@@ -271,4 +271,30 @@
 
 .pickList:empty {
   display: none;
+}
+
+/* What a claim's status means for the claimant, in one sentence. */
+.outcome {
+  margin: 8px 0 0;
+  font-size: var(--text-14);
+  line-height: 1.6;
+  color: var(--studio-text);
+}
+
+/* The track picker's note, with Reload tracks beside a failed read. */
+.pickNoteRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  margin: 0 0 20px;
+}
+.pickNoteRow .pickNote {
+  margin: 0;
+}
+
+.replyError {
+  margin: 8px 0 0;
+  font-size: var(--text-14);
+  color: var(--danger-ink);
 }

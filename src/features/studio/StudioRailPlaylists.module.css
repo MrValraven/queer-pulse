@@ -5,6 +5,7 @@
 .root {
   flex: 1;
   min-height: 0;
+  overflow-x: hidden;
   overflow-y: auto;
   overscroll-behavior: contain;
   padding: 4px 0 24px;
@@ -16,9 +17,20 @@
   padding: 0;
 }
 
+/* Each row's Tooltip wrapper spans the rail, so the row stays full width
+   whether or not its tooltip is live (folded rail only). */
+.list > li > span {
+  display: flex;
+}
+.list > li > span > .row {
+  flex: 1;
+  min-width: 0;
+}
+
 /* Mirrors studio.module.css .railItem: a transparent left edge that turns
    coral on the open playlist. */
 .row {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 2px;
@@ -27,14 +39,28 @@
   border-left: 2px solid transparent;
   color: var(--studio-text);
   text-decoration: none;
-  transition:
-    background 0.2s var(--ease),
-    border-left-color 0.2s var(--ease);
+  /* Long-press opens Studio's menu, so the browser's callout and a text
+     selection stay away. */
+  -webkit-touch-callout: none;
+  user-select: none;
+  transition-property: background-color, border-left-color;
+  transition-duration: var(--dur-base);
+  transition-timing-function: var(--ease);
 }
 @media (hover: hover) {
   .row:hover {
-    background: rgba(var(--studio-ink-rgb), 0.03);
+    background-color: var(--studio-wash-1);
   }
+}
+/* A dragged track hovers a playlist it can land in. */
+.row[data-drop-over] {
+  border-left-color: var(--accent);
+  background-color: rgba(var(--accent-rgb), 0.14);
+  outline: 1px solid rgba(var(--accent-rgb), 0.5);
+  outline-offset: -1px;
+}
+.row[aria-busy="true"] {
+  cursor: progress;
 }
 .row[aria-current="page"] {
   border-left-color: var(--accent);
@@ -103,8 +129,92 @@
   color: var(--studio-text-muted);
 }
 
+/* The folded rail: covers only, centred in the strip. */
+.root[data-compact] {
+  padding: 4px 0 16px;
+}
+.row[data-compact] {
+  align-items: center;
+  padding: 6px 0;
+}
+.compactCover {
+  position: relative;
+  display: block;
+  width: 40px;
+  height: 40px;
+  overflow: hidden;
+  border-radius: var(--radius-8);
+}
+.likedCover {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(var(--accent-rgb), 0.16);
+  color: var(--accent);
+}
+.likedCover svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* Busy: a dropped track being added, or Edit details reading the list. */
+.busy {
+  position: absolute;
+  inset-inline-end: 12px;
+  inset-block-start: 50%;
+  display: inline-flex;
+  translate: 0 -50%;
+  pointer-events: none;
+}
+.row[data-compact] .busy {
+  inset-inline-end: 6px;
+  inset-block-start: 6px;
+  translate: none;
+}
+
+/* The folded rail's Create playlist: an icon button centred in the strip. */
+.createCompact {
+  display: flex;
+  justify-content: center;
+  padding: 0 0 6px;
+}
+
+/* Sort and filter above the rows, on the rows' inset. */
+.tools {
+  display: grid;
+  gap: 6px;
+  padding: 0 14px 6px 22px;
+}
+.toolsRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-width: 0;
+}
+.toolsLabel {
+  flex: none;
+  white-space: nowrap;
+  font-size: var(--text-12);
+  color: var(--studio-text-muted);
+}
+.sortTrigger {
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.filter input {
+  font-size: var(--text-16);
+  padding-block: 8px;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .row {
-    transition: none;
+    transition-property: none;
   }
+}
+:global(html[data-reduce-motion="true"]) .row {
+  transition-property: none;
 }

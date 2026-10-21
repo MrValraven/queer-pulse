@@ -4,7 +4,9 @@ import { routes } from "../../app/routeMap";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
+import { Button } from "../../shared/components/ui";
 import { ALBUM_BUY, ALBUM_LEDGER } from "./studioAlbum.data";
+import { formatStudioCount } from "./studioCount";
 import styles from "./studio.module.css";
 import { StudioEuroAmount } from "./StudioEuroAmount";
 
@@ -40,11 +42,11 @@ export function StudioAlbumSidebar({
               amount: fmt.currency(ALBUM_BUY.price),
             })}
           </Link>
-          <button type="button" className={styles.bt} onClick={onTip}>
+          <Button variant="quiet" className={styles.bt} onClick={onTip}>
             {t("studio:album.sidebar.payWhatYouCanCta", {
               amount: fmt.currency(ALBUM_BUY.payWhatYouCanMin),
             })}
-          </button>
+          </Button>
           <Link to={routes.cinemaMembership} className={styles.bt}>
             {t("studio:album.sidebar.streamingIncludedCta")}
           </Link>
@@ -66,10 +68,13 @@ export function StudioAlbumSidebar({
 
       <div className={styles.ledgerCard}>
         <div className={styles.head}>
-          <Translation
-            i18nKey="studio:album.sidebar.ledgerHeading"
-            components={{ em: <em /> }}
-          />
+          {/* One flex item, so the flex gap stays out of the sentence. */}
+          <span>
+            <Translation
+              i18nKey="studio:album.sidebar.ledgerHeading"
+              components={{ em: <em /> }}
+            />
+          </span>
         </div>
         <div className={styles.lrow}>
           <span className={styles.k}>
@@ -91,10 +96,10 @@ export function StudioAlbumSidebar({
         </div>
         <div className={styles.lrow}>
           <span className={styles.k}>
-            {t("studio:album.sidebar.playsThisMonth")}
+            {t("studio:album.sidebar.savesThisMonth")}
           </span>
           <span className={styles.v}>
-            {fmt.number(ALBUM_LEDGER.playsThisMonth)}
+            {formatStudioCount(ALBUM_LEDGER.savesThisMonth, t, fmt)}
           </span>
         </div>
         <Link to={routes.governance} className={styles.cta}>

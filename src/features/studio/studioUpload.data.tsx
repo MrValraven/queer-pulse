@@ -26,6 +26,20 @@ export const UPLOAD_STEPS: {
   },
 ];
 
+/** Fixed ids for the release step's fields (one form per page), so the
+ *  error summary and the publish checklist can link straight to them. */
+export const RELEASE_FIELD_IDS = {
+  title: "studio-release-title",
+  description: "studio-release-description",
+  buyUrl: "studio-release-buy-url",
+  cover: "studio-release-cover",
+  rights: "studio-release-rights",
+  tracks: "studio-release-tracks",
+} as const;
+
+/** The order the error summary lists the release fields in, top to bottom. */
+export const RELEASE_ERROR_FIELDS = ["title", "description", "buyUrl"] as const;
+
 export const UPLOAD_FILES = [
   {
     name: "01_abertura.wav",
@@ -54,39 +68,40 @@ export const UPLOAD_FILES = [
   },
 ];
 
+/** The showcase splits: shares add up to the 100% the footer states, and
+ *  each line's role and note are catalog keys, so they read in PT too. */
 export const UPLOAD_SPLITS = [
   {
     avatar: "MS",
     tone: "coral",
     name: "Mariana Sol",
-    subtitle: "you · songwriter, voice, piano · all tracks",
-    role: "writer + performer · 1 to 11",
-    percent: "85",
+    subtitleKey: "studio:upload.splits.demo.mariana.subtitle",
+    roleKey: "studio:upload.splits.demo.mariana.role",
+    percent: "70",
   },
   {
     avatar: "JA",
     tone: "jade",
     name: "João Anjos",
-    subtitle: "cellist · IBAN pending invite",
-    role: "cello · 2, 7, 11",
+    subtitleKey: "studio:upload.splits.demo.joao.subtitle",
+    roleKey: "studio:upload.splits.demo.joao.role",
     percent: "10",
   },
   {
     avatar: "IT",
     tone: "coral",
     name: "Inês T.",
-    subtitle: "mix & master · QP member",
-    role: "production · all tracks",
+    subtitleKey: "studio:upload.splits.demo.ines.subtitle",
+    roleKey: "studio:upload.splits.demo.ines.role",
     percent: "5",
   },
   {
     avatar: "CO",
     tone: "jade",
     name: "Coro de Outubro",
-    subtitle: "choir · 15 voices, treated as one",
-    role: "choir · 4 only",
-    percent: "20",
-    onTrack: "on track 4",
+    subtitleKey: "studio:upload.splits.demo.coro.subtitle",
+    roleKey: "studio:upload.splits.demo.coro.role",
+    percent: "15",
   },
 ];
 

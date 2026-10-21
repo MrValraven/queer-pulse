@@ -74,11 +74,15 @@ describe("StudioAlbumPage, Studio v3", () => {
     ).toBeInTheDocument();
   });
 
-  it("gives the owner of a scheduled release no Report overflow", async () => {
+  it("gives the owner of a scheduled release a More menu with no Report", async () => {
     renderRelease("demo-release-scheduled-mare-alta");
     await screen.findByRole("button", { name: /play maré alta/i });
+    fireEvent.click(screen.getByRole("button", { name: "More actions" }));
     expect(
-      screen.queryByRole("button", { name: "More actions" }),
+      await screen.findByRole("menuitem", { name: /copy link/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole("menuitem", { name: /report/i }),
     ).not.toBeInTheDocument();
   });
 

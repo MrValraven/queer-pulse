@@ -1,4 +1,4 @@
-import { useEffect, useId, useMemo, useRef } from "react";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { AnimatePresence, m } from "motion/react";
 import { FiHeart } from "react-icons/fi";
 import { routes } from "../../app/routeMap";
@@ -9,13 +9,39 @@ import {
   LoadMoreFooter,
 } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import type { StudioLikedEntryView } from "./api/studioLiked.adapters";
 import type { StudioLikedTracksResult } from "./api/useStudioLikedTracks";
+import { useStudioHideExplicit } from "./api/useStudioPlaybackPreferences";
+import { StudioSelectionBar } from "./kit/StudioSelectionBar";
+import { useStudioRowSelection } from "./kit/useStudioRowSelection";
 import { useStudioPlayer } from "./player/studioPlayerContext";
-import { queueFromTracks } from "./player/studioQueue";
 import { StudioLikedEntryRow } from "./StudioLikedEntryRow";
+import { useStudioLikedRows } from "./useStudioLikedRows";
+import { STUDIO_EXIT, STUDIO_FADE } from "./studioMotion";
+import {
+  StudioTracklistToolbar,
+  type StudioTracklistSortOption,
+} from "./StudioTracklistToolbar";
+import {
+  useStudioListFilter,
+  type StudioListSort,
+} from "./useStudioListFilter";
 import styles from "./studio.module.css";
 import kit from "./studioKit.module.css";
 import css from "./StudioPlaylistPage.module.css";
+
+const LIKED_SORTS: StudioTracklistSortOption[] = [
+  { id: "custom", labelKey: "studio:tracklist.sortRecentlyLiked" },
+  { id: "title", labelKey: "studio:tracklist.sortTitle" },
+  { id: "artist", labelKey: "studio:tracklist.sortArtist" },
+  { id: "duration", labelKey: "studio:tracklist.sortDuration" },
+];
+
+/** What the in-list search reads: the title, the artist and the release. */
+const likedEntryText = (entry: StudioLikedEntryView) =>
+  [entry.title, entry.track?.release.artist.name, entry.track?.release.title]
+    .filter(Boolean)
+    .join(" ");
 
 function LikedEmptyState() {
   const { t } = useTranslation();
@@ -33,10 +59,12 @@ function LikedEmptyState() {
   );
 }
 
-/** Liked songs' list, newest like first. Play from a row queues the loaded
- *  likes from there; Show more reads the next 100. Unliking a row fades it
- *  out and moves focus to the next row's heart (the previous one at the
- *  end, the list heading once none are left). */
+/** Liked songs' list, newest like first, with search, sort and selection
+ *  mode. Play from a row queues the loaded likes from there; Show more
+ *  reads the next 100, and a search or a sort reads every page first, so
+ *  it covers all of them. Unliking a row fades it out, offers Undo and
+ *  moves focus to the next row (the previous one at the end, the list
+ *  heading once none are left). */
 export function StudioLikedEntries({
   liked,
 }: {
@@ -45,25 +73,31 @@ export function StudioLikedEntries({
   const { t } = useTranslation();
   const { reducedMotion } = useMotionPrefs();
   const player = useStudioPlayer();
+  const shouldHideExplicit = useStudioHideExplicit();
   const headingId = useId();
   const headingRef = useRef<HTMLHeadingElement>(null);
-  const rowsRef = useRef(new Map<string, HTMLLIElement>());
-  const queue = useMemo(
-    () => queueFromTracks(liked.playableTracks),
-    [liked.playableTracks],
+  const [query, setQuery] = useState("");
+  const [sort, setSort] = useState<StudioListSort>("custom");
+  const shown = useStudioListFilter(liked.entries, query, sort, likedEntryText);
+  const isFiltering = query.trim() !== "" || sort !== "custom";
+  const selectableIds = useMemo(
+    () => shown.flatMap((entry) => (entry.track ? [entry.savedId] : [])),
+    [shown],
   );
-  const fade = { duration: reducedMotion ? 0 : 0.2, ease: "easeOut" } as const;
+  const selection = useStudioRowSelection(selectableIds);
+  const rows = useStudioLikedRows({ liked, shown, headingRef, selection });
+  const fade = reducedMotion ? { duration: 0.12 } : STUDIO_FADE;
   const isFooterOpen = liked.hasMore || liked.isFetchNextPageError;
   const hasEntries = liked.entries.length > 0;
   // Every loaded like unliked while more pages wait: the footer reads the
   // next page, so the empty state holds until none are left.
   const isEmpty = !hasEntries && !liked.hasMore;
-  // Every loaded row unliked with more pages to come: read the next page
-  // straight away, so the section never shows a bare Show more footer. A
-  // failed read stops here and leaves the footer's retry. A read already
-  // under way (the refetch an unlike starts) finishes first.
+  // Read the next page straight away when every loaded row was unliked
+  // (never a bare Show more footer), or while a search or sort needs the
+  // whole list. A failed read stops here and leaves the footer's retry. A
+  // read already under way (the refetch an unlike starts) finishes first.
   const shouldReadNextPage =
-    !hasEntries &&
+    (!hasEntries || isFiltering) &&
     liked.hasMore &&
     !liked.isFetchingNextPage &&
     !liked.isFetchNextPageError;
@@ -72,16 +106,15 @@ export function StudioLikedEntries({
     if (shouldReadNextPage) fetchNextPage({ cancelRefetch: false });
   }, [shouldReadNextPage, fetchNextPage]);
 
-  function focusAfterUnlike(index: number) {
-    const neighbour = liked.entries[index + 1] ?? liked.entries[index - 1];
-    const neighbourHeart = neighbour
-      ? rowsRef.current
-          .get(neighbour.savedId)
-          ?.querySelector<HTMLButtonElement>("button[aria-pressed]")
-      : null;
-    (neighbourHeart ?? headingRef.current)?.focus();
-  }
-
+  const listState = isEmpty
+    ? "empty"
+    : !hasEntries
+      ? null
+      : shown.length > 0
+        ? "entries"
+        : liked.hasMore
+          ? null
+          : "noMatch";
   return (
     <section className={styles.row} aria-labelledby={headingId}>
       <h2
@@ -94,58 +127,75 @@ export function StudioLikedEntries({
           name: t("studio:liked.title"),
         })}
       </h2>
+      <Collapse isOpen={hasEntries}>
+        <StudioTracklistToolbar
+          listName={t("studio:liked.title")}
+          query={query}
+          onQueryChange={setQuery}
+          sort={sort}
+          onSortChange={setSort}
+          sortOptions={LIKED_SORTS}
+          selection={selection}
+        />
+      </Collapse>
       {/* initial={false}: the first paint stays still, and later swaps
-          between the list and the empty state fade. */}
+          between the list and the empty states fade. */}
       <AnimatePresence initial={false} mode="wait">
-        {isEmpty ? (
+        {listState === "empty" && (
           <m.div
             key="empty"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+            exit={{ opacity: 0, transition: STUDIO_EXIT }}
             transition={fade}
           >
             <LikedEmptyState />
           </m.div>
-        ) : hasEntries ? (
+        )}
+        {listState === "noMatch" && (
+          <m.p
+            key="noMatch"
+            className={css.noMatch}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0, transition: STUDIO_EXIT }}
+            transition={fade}
+          >
+            {t("studio:tracklist.noMatch", { query: query.trim() })}
+          </m.p>
+        )}
+        {listState === "entries" && (
           <m.ol
             key="entries"
-            className={`${styles.setCard} ${css.list}`}
+            className={css.list}
             aria-labelledby={headingId}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+            exit={{ opacity: 0, transition: STUDIO_EXIT }}
             transition={fade}
           >
             <AnimatePresence initial={false}>
-              {liked.entries.map((entry, index) => {
-                const track = entry.track;
+              {shown.map((entry, index) => {
                 const isCurrent =
-                  track !== null && player.isCurrentTrack(track.id);
+                  entry.track !== null && player.isCurrentTrack(entry.track.id);
                 return (
                   <StudioLikedEntryRow
                     key={entry.savedId}
                     entry={entry}
+                    index={index}
                     isCurrent={isCurrent}
                     isPlaying={isCurrent && player.status === "playing"}
-                    rowRef={(element) => {
-                      if (element) rowsRef.current.set(entry.savedId, element);
-                      else rowsRef.current.delete(entry.savedId);
-                    }}
-                    onPlay={() => {
-                      if (!track) return;
-                      if (isCurrent) player.togglePlay();
-                      else void player.playTracks(queue, track.id);
-                    }}
-                    onToggled={(isNowLiked) => {
-                      if (!isNowLiked) focusAfterUnlike(index);
-                    }}
+                    onPlay={rows.playHandlerOf(entry.savedId)}
+                    likeOptions={rows.likeOptionsOf(entry.savedId)}
+                    rowRef={rows.rowRefOf(entry.savedId)}
+                    selection={selection}
+                    shouldHideExplicit={shouldHideExplicit}
                   />
                 );
               })}
             </AnimatePresence>
           </m.ol>
-        ) : null}
+        )}
       </AnimatePresence>
       <Collapse isOpen={isFooterOpen}>
         <div className={kit.moreFooter}>
@@ -159,6 +209,8 @@ export function StudioLikedEntries({
           />
         </div>
       </Collapse>
+      <StudioSelectionBar selection={selection} actions={rows.bulkActions} />
+      {rows.picker}
     </section>
   );
 }

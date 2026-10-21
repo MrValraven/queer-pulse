@@ -1,0 +1,65 @@
+/* The mini card's cover and titles, as one block that follows a sideways
+   swipe (useMiniCardSwipe writes its x) and springs back. It takes the
+   open button's own row layout, so the card looks the same at rest. */
+.slide {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  flex: 1;
+}
+
+/* The open button and the play disc are the shared Button and IconButton.
+   The doubled classes put back the card's own look over the Button's pill
+   (StudioPlayer.module.css `.miniOpen` and `.playButton`), whatever order
+   the sheets load in. */
+.open.open {
+  display: flex;
+  justify-content: flex-start;
+  gap: 10px;
+  min-width: 0;
+  min-height: 0;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-8);
+  background: none;
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  text-align: start;
+  white-space: normal;
+}
+
+.play.play {
+  width: 40px;
+  min-width: 40px;
+  height: 40px;
+  min-height: 0;
+  border: none;
+  font-size: inherit;
+  background: rgba(var(--studio-ink-rgb), 0.92);
+  color: var(--studio-surface-rail);
+}
+
+@media (hover: hover) {
+  .open.open:hover:not(:disabled):not([aria-disabled="true"]) {
+    background: none;
+  }
+
+  .play.play:hover:not(:disabled):not([aria-disabled="true"]) {
+    background: rgba(var(--studio-ink-rgb), 1);
+    color: var(--studio-surface-rail);
+  }
+}
+
+.open.open:active:not(:disabled):not([aria-disabled="true"]) {
+  background: none;
+  transform: none;
+}
+
+.play.play:active:not(:disabled):not([aria-disabled="true"]) {
+  background: rgba(var(--studio-ink-rgb), 1);
+  transform: scale(0.94);
+}

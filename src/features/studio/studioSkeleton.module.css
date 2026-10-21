@@ -1,6 +1,7 @@
 /* Skeletons for the Studio pages, shimmering on the Studio ink channel so they
-   read on the Studio surface in both themes. Reuses the shared qpShimmer
-   keyframe; animates background-position only. */
+   read on the Studio surface in both themes. This is the one Studio shimmer:
+   studio, funding, creator and council compose .shimmer from here. Animates
+   background-position only. */
 
 .shimmer {
   background: linear-gradient(
@@ -44,6 +45,170 @@
 .cardCov {
   aspect-ratio: 1;
   border-radius: var(--radius-10);
+}
+
+/* Hero: cover (optional) beside title, meta and action lines. */
+.hero {
+  display: flex;
+  align-items: flex-end;
+  gap: 24px;
+  padding: 24px 0 32px;
+}
+.heroCover {
+  flex: none;
+  width: 192px;
+  height: 192px;
+  border-radius: var(--radius-10);
+}
+.heroText {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+@media (--compact) {
+  .hero {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .heroCover {
+    width: min(60vw, 224px);
+    height: min(60vw, 224px);
+  }
+  .heroText {
+    align-items: center;
+    width: 100%;
+  }
+}
+
+/* Tracklist: the columns, gaps, height and padding of kit/StudioTrackRow
+   (number, optional cover, title, actions), at every breakpoint. */
+.trackRow {
+  display: grid;
+  grid-template-columns: var(--tap-min) minmax(0, 1fr) auto;
+  column-gap: 12px;
+  align-items: center;
+  min-height: 56px;
+  padding: 4px 8px 4px 4px;
+}
+.trackRowCover {
+  grid-template-columns: var(--tap-min) 40px minmax(0, 1fr) auto;
+}
+.trackNumber {
+  display: flex;
+  justify-content: center;
+}
+.trackCover {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-5);
+}
+.trackText {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+@media (--sm) {
+  .trackRow {
+    column-gap: 10px;
+    padding-inline: 0 2px;
+  }
+}
+
+/* Shelf: a sideways row; phones show 2.3 cards so the next one peeks in. */
+.shelf {
+  display: flex;
+  gap: 18px;
+  overflow: hidden;
+}
+.shelfCard {
+  flex: 0 0 calc((100% - 3 * 18px) / 4);
+  min-width: 0;
+}
+@media (--compact) {
+  .shelf {
+    gap: 12px;
+  }
+  .shelfCard {
+    flex-basis: calc((100% - 2 * 12px) / 2.3);
+  }
+}
+
+/* Table: header line, then rows of equal-width cells. */
+.tableRow {
+  display: grid;
+  grid-template-columns: repeat(var(--skeleton-columns, 3), minmax(0, 1fr));
+  gap: 16px;
+  align-items: center;
+  min-height: 44px;
+  padding: 8px 0;
+  border-top: 1px solid var(--line);
+}
+
+/* Gate: the full shell, painted before /studio/me answers. */
+.gateApp {
+  display: grid;
+  grid-template-columns: 248px 1fr;
+  min-height: 100svh;
+}
+.gateRail {
+  background: var(--rail);
+  border-right: 1px solid var(--line);
+  padding: 24px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.gateMain {
+  min-width: 0;
+}
+.gateTopbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 32px;
+  border-bottom: 1px solid var(--line);
+}
+.gateContent {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 24px 32px;
+}
+.gateTabBar {
+  display: none;
+}
+@media (--compact) {
+  .gateApp {
+    grid-template-columns: 1fr;
+  }
+  .gateRail {
+    display: none;
+  }
+  .gateTopbar {
+    padding: 10px 16px;
+  }
+  .gateContent {
+    padding: 16px;
+  }
+  .gateTabBar {
+    position: fixed;
+    inset: auto 0 0 0;
+    z-index: var(--z-nav);
+    box-sizing: border-box;
+    height: calc(var(--studio-tab-bar-h) + env(safe-area-inset-bottom));
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
+    place-items: center;
+    background: var(--studio-surface);
+    padding-bottom: env(safe-area-inset-bottom);
+    padding-left: max(env(safe-area-inset-left), calc((100% - 480px) / 2));
+    padding-right: max(env(safe-area-inset-right), calc((100% - 480px) / 2));
+  }
 }
 
 /* Local copies of shared keyframes, see src/styles/tokens/effects.css.

@@ -6,4 +6,63 @@
   display: flex;
   flex-wrap: wrap;
   gap: 0 6px;
+  min-width: 0;
+}
+
+/* The show name in an episode card's meta line: a quiet link that sits
+   above the card's stretched title link. */
+.metaLink {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  text-decoration-color: transparent;
+  transition-property: color, text-decoration-color;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease-out);
+}
+
+@media (hover: hover) {
+  .metaLink:hover {
+    color: var(--studio-text);
+    text-decoration-color: currentColor;
+  }
+}
+
+.metaLink:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-radius: var(--radius-4);
+}
+
+/* Continue listening: how far the member got, flush along the foot of the
+   art and clear of the play button above it. */
+.progressTrack {
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: 0;
+  z-index: 1;
+  height: 4px;
+  background: rgba(var(--plum-rgb), 0.36);
+}
+
+.progressFill {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+  transform-origin: left center;
+  transition-property: transform;
+  transition-duration: var(--dur-slow);
+  transition-timing-function: var(--ease-out);
+}
+
+.progressFill:dir(rtl) {
+  transform-origin: right center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .progressFill {
+    transition-property: none;
+  }
 }

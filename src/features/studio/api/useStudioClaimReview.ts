@@ -61,9 +61,12 @@ export function useStudioAcceptedClaims(): StudioReviewList<StudioAdminClaimView
 
 /** The Claims tab badge: claims waiting for our team (submitted plus
  *  countered), read from the counts route so the badge never pages the
- *  queue. `isEnabled` (default true) lets a caller hold the read back. */
+ *  queue. `disputesWaiting` (open takedown disputes) rides the same read,
+ *  for the staff menu's attention dot. `isEnabled` (default true) lets a
+ *  caller hold the read back; held back, both read 0. */
 export function useStudioClaimCounts(options: { isEnabled?: boolean } = {}): {
   waitingCount: number;
+  disputesWaitingCount: number;
 } {
   const { demoMode } = useDemoMode();
   const query = useQuery({
@@ -75,8 +78,11 @@ export function useStudioClaimCounts(options: { isEnabled?: boolean } = {}): {
         ? (await loadDemo()).demoAdminClaimCounts()
         : getAdminStudioClaimCounts(),
   });
-  const counts = query.data;
-  return { waitingCount: counts ? counts.submitted + counts.countered : 0 };
+  const counts = options.isEnabled === false ? undefined : query.data;
+  return {
+    waitingCount: counts ? counts.submitted + counts.countered : 0,
+    disputesWaitingCount: counts?.disputesWaiting ?? 0,
+  };
 }
 
 /** A decision moves a track in or out of withheld, so the pages that show

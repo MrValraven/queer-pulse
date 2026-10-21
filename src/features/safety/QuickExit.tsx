@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { FiX } from "react-icons/fi";
+import { markQuickExiting } from "../../shared/hooks/useUnsavedChangesGuard";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   clearStudioEpisodeMemory,
@@ -56,6 +57,8 @@ function leaveNow() {
   } catch {
     // History API unavailable — fall through to the hard redirect below.
   }
+  // No leave guard may hold the exit: unsaved-edit prompts stand down.
+  markQuickExiting();
   window.location.replace(SAFE_DESTINATION);
 }
 

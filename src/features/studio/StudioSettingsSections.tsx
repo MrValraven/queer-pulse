@@ -1,10 +1,15 @@
 import { useState } from "react";
-import { Select } from "../../shared/components/ui";
+import {
+  Button,
+  Select,
+  SegmentedControl,
+  Toggle,
+} from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
-import { Toggle, Seg, RadioCards } from "./StudioSettingsControls";
+import { StudioSettingsRadioCards } from "./StudioSettingsRadioCards";
 import { useStudioPlayer } from "./player/studioPlayerContext";
 import {
   STREAM_QUALITY_OPTS,
@@ -36,10 +41,11 @@ export function AudioSection() {
           <h3>{t("studio:settings.audio.streamQuality.heading")}</h3>
           <p>{t("studio:settings.audio.streamQuality.body")}</p>
         </div>
-        <RadioCards
-          opts={STREAM_QUALITY_OPTS}
-          active={streamQ}
+        <StudioSettingsRadioCards
+          options={STREAM_QUALITY_OPTS}
+          value={streamQ}
           onChange={setStreamQ}
+          ariaLabel={t("studio:settings.audio.streamQuality.heading")}
         />
       </div>
       <div className={s.opt}>
@@ -47,7 +53,12 @@ export function AudioSection() {
           <h3>{t("studio:settings.audio.downloadQuality.heading")}</h3>
           <p>{t("studio:settings.audio.downloadQuality.body")}</p>
         </div>
-        <Seg opts={DOWNLOAD_QUALITY_OPTS} active={dlQ} onChange={setDlQ} />
+        <SegmentedControl
+          options={DOWNLOAD_QUALITY_OPTS}
+          value={dlQ}
+          onChange={setDlQ}
+          label={t("studio:settings.audio.downloadQuality.heading")}
+        />
       </div>
       <div className={s.opt}>
         <div className={s.ot}>
@@ -60,8 +71,8 @@ export function AudioSection() {
           </p>
         </div>
         <Toggle
-          on={player.preferences.isLoudnessEven}
-          onToggle={() =>
+          checked={player.preferences.isLoudnessEven}
+          onChange={() =>
             player.setLoudnessEven(!player.preferences.isLoudnessEven)
           }
           label={t("studio:settings.audio.normalise.heading")}
@@ -94,8 +105,8 @@ export function PrivacySection() {
           <p>{t("studio:settings.privacy.history.body")}</p>
         </div>
         <Toggle
-          on={history}
-          onToggle={() => setHistory((v) => !v)}
+          checked={history}
+          onChange={() => setHistory((v) => !v)}
           label={t("studio:settings.privacy.history.heading")}
         />
       </div>
@@ -105,8 +116,8 @@ export function PrivacySection() {
           <p>{t("studio:settings.privacy.cloudSync.body")}</p>
         </div>
         <Toggle
-          on={cloudSync}
-          onToggle={() => setCloudSync((v) => !v)}
+          checked={cloudSync}
+          onChange={() => setCloudSync((v) => !v)}
           label={t("studio:settings.privacy.cloudSync.heading")}
         />
       </div>
@@ -120,10 +131,11 @@ export function PrivacySection() {
             />
           </p>
         </div>
-        <RadioCards
-          opts={TIP_PRIVACY_OPTS}
-          active={tipPrivacy}
+        <StudioSettingsRadioCards
+          options={TIP_PRIVACY_OPTS}
+          value={tipPrivacy}
           onChange={setTipPrivacy}
+          ariaLabel={t("studio:settings.privacy.tipNotes.heading")}
         />
       </div>
       <div className={s.opt}>
@@ -132,8 +144,8 @@ export function PrivacySection() {
           <p>{t("studio:settings.privacy.tipReceipts.body")}</p>
         </div>
         <Toggle
-          on={receipts}
-          onToggle={() => setReceipts((v) => !v)}
+          checked={receipts}
+          onChange={() => setReceipts((v) => !v)}
           label={t("studio:settings.privacy.tipReceipts.heading")}
         />
       </div>
@@ -169,8 +181,8 @@ export function CaptionsSection() {
           </p>
         </div>
         <Toggle
-          on={captions}
-          onToggle={() => setCaptions((v) => !v)}
+          checked={captions}
+          onChange={() => setCaptions((v) => !v)}
           label={t("studio:settings.captions.showCaptions.heading")}
         />
       </div>
@@ -179,10 +191,11 @@ export function CaptionsSection() {
           <h3>{t("studio:settings.captions.captionSize.heading")}</h3>
           <p>{t("studio:settings.captions.captionSize.body")}</p>
         </div>
-        <Seg
-          opts={CAPTION_SIZE_OPTS}
-          active={captionSize}
+        <SegmentedControl
+          options={CAPTION_SIZE_OPTS}
+          value={captionSize}
           onChange={setCaptionSize}
+          label={t("studio:settings.captions.captionSize.heading")}
         />
       </div>
       <div className={s.opt}>
@@ -225,8 +238,8 @@ export function CaptionsSection() {
           <p>{t("studio:settings.captions.showBoth.body")}</p>
         </div>
         <Toggle
-          on={showBoth}
-          onToggle={() => setShowBoth((v) => !v)}
+          checked={showBoth}
+          onChange={() => setShowBoth((v) => !v)}
           label={t("studio:settings.captions.showBoth.heading")}
         />
       </div>
@@ -255,25 +268,15 @@ export function TippingSection() {
           <h3>{t("studio:settings.tipping.defaultAmount.heading")}</h3>
           <p>{t("studio:settings.tipping.defaultAmount.body")}</p>
         </div>
-        <div className={s.chips}>
-          {TIP_AMOUNTS.map((amount) => (
-            <div
-              key={amount}
-              className={`${s.chip} ${tipAmt === amount ? s.chipOn : ""}`}
-              role="button"
-              tabIndex={0}
-              onClick={() => setTipAmt(amount)}
-              onKeyDown={(event) => {
-                if (event.key === "Enter" || event.key === " ") {
-                  event.preventDefault();
-                  setTipAmt(amount);
-                }
-              }}
-            >
-              {fmt.currency(amount)}
-            </div>
-          ))}
-        </div>
+        <SegmentedControl
+          options={TIP_AMOUNTS.map((amount) => ({
+            value: String(amount),
+            label: fmt.currency(amount),
+          }))}
+          value={String(tipAmt)}
+          onChange={(value) => setTipAmt(Number(value))}
+          label={t("studio:settings.tipping.defaultAmount.heading")}
+        />
       </div>
       <div className={s.opt}>
         <div className={s.ot}>
@@ -287,8 +290,8 @@ export function TippingSection() {
           </p>
         </div>
         <Toggle
-          on={roundUp}
-          onToggle={() => setRoundUp((v) => !v)}
+          checked={roundUp}
+          onChange={() => setRoundUp((v) => !v)}
           label={t("studio:settings.tipping.roundUp.heading")}
         />
       </div>
@@ -323,15 +326,15 @@ export function EraseSection() {
               />
             </p>
           </div>
-          <button
-            type="button"
-            className={s.btDanger}
+          <Button
+            variant="danger"
+            size="sm"
             onClick={() =>
               showToast(t("studio:settings.erase.history.toast"), "success")
             }
           >
             {t("studio:settings.erase.history.cta")}
-          </button>
+          </Button>
         </div>
         <div className={s.opt}>
           <div className={s.ot}>
@@ -340,15 +343,15 @@ export function EraseSection() {
               {t("studio:settings.erase.export.note")}
             </p>
           </div>
-          <button
-            type="button"
-            className={s.bt}
+          <Button
+            variant="quiet"
+            size="sm"
             onClick={() =>
               showToast(t("studio:settings.erase.export.toast"), "info")
             }
           >
             {t("studio:settings.erase.export.cta")}
-          </button>
+          </Button>
         </div>
         <div className={s.opt}>
           <div className={s.ot}>
@@ -360,15 +363,15 @@ export function EraseSection() {
               />
             </p>
           </div>
-          <button
-            type="button"
-            className={s.btDanger}
+          <Button
+            variant="danger"
+            size="sm"
             onClick={() =>
               showToast(t("studio:settings.erase.closeAccount.toast"), "info")
             }
           >
             {t("studio:settings.erase.closeAccount.cta")}
-          </button>
+          </Button>
         </div>
       </div>
     </section>

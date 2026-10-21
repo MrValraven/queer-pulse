@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { Routes } from "react-router-dom";
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
 import { studioRoutes } from "./routes";
 
@@ -12,6 +12,24 @@ vi.mock("../../app/routeHelpers", () => ({
       return <p>{exportName}</p>;
     },
 }));
+
+// The ungranted branch reads the access hook itself, to tell a failed read
+// apart from a real denial.
+const access = vi.hoisted(() => ({ isReadFailed: false }));
+vi.mock("./api/useStudioAccess", () => ({
+  useStudioAccess: () => ({
+    status: "denied",
+    hasAccess: false,
+    isPending: false,
+    isReadFailed: access.isReadFailed,
+    reason: access.isReadFailed ? "server" : null,
+    uploadablePersonas: [],
+  }),
+}));
+
+beforeEach(() => {
+  access.isReadFailed = false;
+});
 
 // TestProviders mounts the MemoryRouter, so the routes render inside it.
 function renderAt(path: string, options: Parameters<typeof studioRoutes>[0]) {
@@ -37,6 +55,13 @@ describe("studioRoutes", () => {
   it("shows the teaser to a live member without a grant", () => {
     renderAt("/studio/album?id=r1", { ...live, hasStudioAccess: false });
     expect(screen.getByText("StudioComingSoonPage")).toBeInTheDocument();
+  });
+
+  it("shows the access error, never the teaser, when the access read failed", () => {
+    access.isReadFailed = true;
+    renderAt("/studio/album?id=r1", { ...live, hasStudioAccess: false });
+    expect(screen.getByText("StudioAccessErrorPage")).toBeInTheDocument();
+    expect(screen.queryByText("StudioComingSoonPage")).not.toBeInTheDocument();
   });
 
   it("shows the Studio skeleton while access is pending, with the teaser kept out", async () => {

@@ -1,5 +1,7 @@
+import { useRef, useState } from "react";
+import { AnimatePresence } from "motion/react";
 import { FiArrowRight } from "react-icons/fi";
-import { useDismiss, useScrimDismiss } from "../../shared/components/ui";
+import { ConfirmDialog } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
 import s from "./StudioRightsPage.module.css";
@@ -12,10 +14,11 @@ interface StudioTakedownModalProps {
 }
 
 /**
- * Confirm-takedown dialog. Self-contained: only mounted while open, so it
- * locks scroll unconditionally. Closes on backdrop click and Esc; confirming
- * hands control back to the page which flips the release into its removal
- * window.
+ * Confirm-takedown dialog on the shared `ConfirmDialog`: focus opens on the
+ * safe action (Keep it up), never on the destructive one, and Escape, the
+ * scrim and Cancel all keep the release. It owns its presence, so the dialog
+ * plays its exit before the page hears the outcome: `onConfirm` after a
+ * confirm, `onClose` after any other dismissal.
  */
 export function StudioTakedownModal({
   title,
@@ -24,59 +27,61 @@ export function StudioTakedownModal({
   onClose,
 }: StudioTakedownModalProps) {
   const { t } = useTranslation();
-  // Shared dialog behaviour: focus trap, initial focus, focus restore, scroll
-  // lock, and modal-stack-aware Escape. This confirms a takedown, so a
-  // keyboard user must not be able to Tab out to the page behind it.
-  const dialogRef = useDismiss(onClose);
-  // Requires the pointer to have gone DOWN on the scrim, so a text-selection
-  // drag that ends outside the dialog no longer dismisses it.
-  const scrimProps = useScrimDismiss(onClose);
+  const [isOpen, setIsOpen] = useState(true);
+  const outcomeRef = useRef<"confirm" | "close">("close");
 
   return (
-    <div className={s.modalBg} role="presentation" {...scrimProps}>
-      <div
-        ref={dialogRef}
-        className={s.modal}
-        role="dialog"
-        aria-modal="true"
-        aria-label={t("studio:rights.modal.confirmAria", { title })}
-      >
-        <div className={s.eb}>{t("studio:rights.modal.eyebrow")}</div>
-        <h3 className={s.modalTitle}>
-          <Translation
-            i18nKey="studio:rights.modal.title"
-            values={{ title }}
-            components={{ em: <em /> }}
-          />
-        </h3>
-        <div className={s.modalMeta}>{meta}</div>
-        <p className={s.modalBody}>
-          <Translation
-            i18nKey="studio:rights.modal.body"
-            components={{ em: <em /> }}
-          />
-        </p>
-        <div className={s.keep}>
-          <p>
+    <AnimatePresence
+      onExitComplete={() => {
+        if (outcomeRef.current === "confirm") onConfirm();
+        else onClose();
+      }}
+    >
+      {isOpen && (
+        <ConfirmDialog
+          open
+          tone="destructive"
+          initialFocus="cancel"
+          title={
             <Translation
-              i18nKey="studio:rights.modal.keepEarned"
+              i18nKey="studio:rights.modal.title"
+              values={{ title }}
+              components={{ em: <em /> }}
+            />
+          }
+          confirmLabel={
+            <>
+              {t("studio:rights.modal.confirmCta")} <FiArrowRight aria-hidden />
+            </>
+          }
+          cancelLabel={t("studio:rights.modal.cancelCta")}
+          onConfirm={() => {
+            outcomeRef.current = "confirm";
+            setIsOpen(false);
+          }}
+          onClose={() => {
+            outcomeRef.current = "close";
+            setIsOpen(false);
+          }}
+        >
+          <div className={s.eb}>{t("studio:rights.modal.eyebrow")}</div>
+          <div className={s.modalMeta}>{meta}</div>
+          <p className={s.modalBody}>
+            <Translation
+              i18nKey="studio:rights.modal.body"
               components={{ em: <em /> }}
             />
           </p>
-        </div>
-        <div className={s.modalActions}>
-          <button
-            type="button"
-            className={`${s.bt} ${s.btConfirm}`}
-            onClick={onConfirm}
-          >
-            {t("studio:rights.modal.confirmCta")} <FiArrowRight aria-hidden />
-          </button>
-          <button type="button" className={s.bt} onClick={onClose}>
-            {t("studio:rights.modal.cancelCta")}
-          </button>
-        </div>
-      </div>
-    </div>
+          <div className={s.keep}>
+            <p>
+              <Translation
+                i18nKey="studio:rights.modal.keepEarned"
+                components={{ em: <em /> }}
+              />
+            </p>
+          </div>
+        </ConfirmDialog>
+      )}
+    </AnimatePresence>
   );
 }

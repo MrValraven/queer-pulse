@@ -33,10 +33,12 @@ describe("StudioPlayerMorePanel", () => {
       <StudioPlayerMorePanel placement="up" />,
     );
     await openPanel();
-    const crossfade = screen.getByRole("slider", { name: "Crossfade" });
+    const crossfade = screen.getByRole("slider", { name: "Crossfade length" });
     expect(crossfade).toHaveAttribute("aria-valuetext", "Off");
     expect(screen.getByText("Off")).toBeVisible();
+    // The shared slider saves once it is let go.
     fireEvent.change(crossfade, { target: { value: "6" } });
+    fireEvent.blur(crossfade);
     expect(player.setCrossfadeSeconds).toHaveBeenCalledWith(6);
     const loudness = screen.getByRole("switch", { name: "Even out loudness" });
     expect(loudness).toHaveAttribute("aria-checked", "true");
@@ -55,18 +57,19 @@ describe("StudioPlayerMorePanel", () => {
     });
     renderWithPlayer(<StudioPlayerMorePanel placement="up" />, { player });
     await openPanel();
-    const crossfade = screen.getByRole("slider", { name: "Crossfade" });
+    const crossfade = screen.getByRole("slider", { name: "Crossfade length" });
     expect(crossfade).toHaveValue("6");
     expect(crossfade).toHaveAttribute("aria-valuetext", "6 seconds");
-    expect(screen.getByText("6 seconds")).toBeInTheDocument();
+    expect(screen.getByText("6 s")).toBeInTheDocument();
   });
 
   it("shows crossfade as unavailable in plain mode", async () => {
     const player = createStudioPlayerValue({ isPlainMode: true });
     renderWithPlayer(<StudioPlayerMorePanel placement="up" />, { player });
     await openPanel();
-    const crossfade = screen.getByRole("slider", { name: "Crossfade" });
-    expect(crossfade).toHaveAttribute("aria-disabled", "true");
+    const crossfade = screen.getByRole("slider", { name: "Crossfade length" });
+    // At rest: the slider sits in an inert wrapper, and the hint says why.
+    expect(crossfade.closest("[inert]")).not.toBeNull();
     expect(
       screen.getByText("Crossfade isn't available in this session"),
     ).toBeInTheDocument();
@@ -74,6 +77,7 @@ describe("StudioPlayerMorePanel", () => {
       screen.getByText("In this session it can only turn loud tracks down"),
     ).toBeInTheDocument();
     fireEvent.change(crossfade, { target: { value: "6" } });
+    fireEvent.blur(crossfade);
     expect(player.setCrossfadeSeconds).not.toHaveBeenCalled();
   });
 

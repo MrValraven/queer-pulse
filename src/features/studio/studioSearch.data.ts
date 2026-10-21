@@ -13,10 +13,26 @@ export const STUDIO_SEARCH_FILTERS: {
   { id: "playlists", labelKey: "studio:searchPage.filter.playlists" },
 ];
 
-/** Demo-only suggestion chips (the showcase never stored searches). */
-export const RECENT = [
-  "fado reworked",
-  "sara marques",
-  "trans composers",
-  "sheet music",
-];
+/** The server answers 20 per type (ENG-05). A section of the all-types view
+ *  that came back full may hold more, so its "See all" names the count with
+ *  a plus. */
+export const STUDIO_SEARCH_PAGE_SIZE = 20;
+
+/** The all-types view previews this many tracks; "See all" opens the rest
+ *  under the Tracks tab. */
+export const STUDIO_SEARCH_ALL_VIEW_TRACKS = 6;
+
+/** Recent searches live on this device only, under this key, and the
+ *  listening-memory wipe removes them (clearStudioListeningMemory). */
+export const STUDIO_RECENT_SEARCHES_STORAGE_KEY = "qp.studio.searches.v1";
+export const STUDIO_RECENT_SEARCHES_LIMIT = 8;
+
+/** Demo-only suggestion chips, shown while this device has no recent
+ *  searches of its own. Catalog keys, so the terms read in the member's
+ *  language. */
+export const STUDIO_SEARCH_SUGGESTION_KEYS = [
+  "studio:searchPage.suggestion.fadoReworked",
+  "studio:searchPage.suggestion.saraMarques",
+  "studio:searchPage.suggestion.transComposers",
+  "studio:searchPage.suggestion.sheetMusic",
+] as const;

@@ -1,7 +1,8 @@
 import { Fragment, useId } from "react";
 import { FiExternalLink } from "react-icons/fi";
+import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import type { StudioTrackView } from "./api/studio.adapters";
+import { formatTrackTime, type StudioTrackView } from "./api/studio.adapters";
 import { playEpisode } from "./player/studioEpisodePlay";
 import { useStudioPlayer } from "./player/studioPlayerContext";
 import { queueItemFromEpisode, showQueueSource } from "./player/studioQueue";
@@ -49,9 +50,10 @@ export function StudioShowNotes({ track }: { track: StudioTrackView }) {
                 );
               if (token.kind === "time" && canPlay)
                 return (
-                  <button
+                  <Button
                     key={tokenIndex}
-                    type="button"
+                    variant="quiet"
+                    size="sm"
                     className={css.time}
                     aria-label={t("studio:episode.playFromAria", {
                       time: token.text,
@@ -65,8 +67,9 @@ export function StudioShowNotes({ track }: { track: StudioTrackView }) {
                       )
                     }
                   >
-                    {token.text}
-                  </button>
+                    {/* The chapters' format, whatever the notes wrote. */}
+                    {formatTrackTime(token.seconds) ?? token.text}
+                  </Button>
                 );
               return <Fragment key={tokenIndex}>{token.text}</Fragment>;
             })}

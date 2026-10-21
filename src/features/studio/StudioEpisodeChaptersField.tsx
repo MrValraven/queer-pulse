@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { FiList } from "react-icons/fi";
-import { ConfirmDialog } from "../../shared/components/ui";
+import { Button, ConfirmDialog } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { chapterRowsFromNotes } from "./studioEpisodeChapters";
 import { StudioChaptersEditor } from "./upload/chapters/StudioChaptersEditor";
@@ -52,14 +52,15 @@ export function StudioEpisodeChaptersField({
 
   return (
     <div className={css.chapters}>
-      <button
-        type="button"
+      <Button
+        variant="quiet"
+        size="sm"
         className={css.readChapters}
         aria-disabled={!hasNotes || undefined}
         onClick={readFromNotes}
       >
         <FiList aria-hidden /> {t("studio:episodeUpload.chaptersFromNotesCta")}
-      </button>
+      </Button>
       <p role="status" className={css.status}>
         {status ? t(status.key, { count: status.count }) : ""}
       </p>

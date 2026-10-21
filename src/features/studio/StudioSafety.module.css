@@ -102,3 +102,20 @@
   background: rgba(var(--studio-ink-rgb), 0.06);
   color: var(--studio-text-muted);
 }
+
+/* The way on from a rights decision: the member's rights and Contact our
+   team, as quiet pills under a one-line lead. */
+.helpLinks {
+  margin-top: 12px;
+}
+.helpLead {
+  margin: 0 0 8px;
+  font-size: var(--text-14);
+  line-height: 1.6;
+  color: var(--studio-text-muted);
+}
+.helpActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}

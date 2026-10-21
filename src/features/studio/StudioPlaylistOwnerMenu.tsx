@@ -1,16 +1,15 @@
+import type { ReactNode } from "react";
 import {
-  Fragment,
-  useEffect,
-  useId,
-  useRef,
-  useState,
-  type KeyboardEvent,
-} from "react";
-import { AnimatePresence, m } from "motion/react";
-import { FiMoreHorizontal } from "react-icons/fi";
-import { useMotionPrefs } from "../../app/providers/motionPrefs";
-import { useOutsideDismiss } from "../../shared/hooks/useOutsideDismiss";
+  FiEdit2,
+  FiEye,
+  FiLogOut,
+  FiMoreHorizontal,
+  FiTrash2,
+  FiUsers,
+} from "react-icons/fi";
+import { IconButton } from "../../shared/components/ui/IconButton";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { StudioMenu, type StudioMenuItem } from "./kit/StudioMenu";
 import releaseStyles from "./StudioRelease.module.css";
 
 /* A destructive item reads in the danger ink, below a hairline. */
@@ -51,11 +50,19 @@ const EDITOR_ITEMS = [
 type OwnerAction =
   (typeof OWNER_ITEMS)[number]["id"] | (typeof EDITOR_ITEMS)[number]["id"];
 
+const ACTION_ICONS: Record<OwnerAction, ReactNode> = {
+  edit: <FiEdit2 />,
+  visibility: <FiEye />,
+  manageEditors: <FiUsers />,
+  delete: <FiTrash2 />,
+  leave: <FiLogOut />,
+};
+
 /** The playlist menu. The owner gets Edit details, Change visibility,
  *  Manage editors and Delete playlist; an editor gets Edit details and Leave
  *  playlist, the last item set apart by a hairline in the danger ink. Arrow
- *  keys move through the items, Escape and a click outside close it, and
- *  focus returns to the trigger before a dialog opens. It fades. */
+ *  keys and type-ahead move through the items, Escape and a press outside
+ *  close it, and focus returns to the trigger before a dialog opens. */
 export function StudioPlaylistOwnerMenu({
   role,
   onAction,
@@ -64,122 +71,36 @@ export function StudioPlaylistOwnerMenu({
   onAction: (action: OwnerAction) => void;
 }) {
   const { t } = useTranslation();
-  const { reducedMotion } = useMotionPrefs();
-  const menuId = useId();
-  const [isOpen, setIsOpen] = useState(false);
-  const wrapRef = useRef<HTMLDivElement>(null);
-  const triggerRef = useRef<HTMLButtonElement>(null);
-  const menuRef = useRef<HTMLDivElement>(null);
-  const itemRefs = useRef<(HTMLButtonElement | null)[]>([]);
-  const items = role === "owner" ? OWNER_ITEMS : EDITOR_ITEMS;
-  const close = () => {
-    setIsOpen(false);
-    triggerRef.current?.focus();
-  };
-  useOutsideDismiss(isOpen, wrapRef, () => setIsOpen(false), {
-    onEscape: close,
-  });
-  // Opening brings the whole menu into view (on a phone it can open below
-  // the fold), then moves focus onto its first item. jsdom leaves
-  // scrollIntoView undefined.
-  useEffect(() => {
-    if (!isOpen) return;
-    menuRef.current?.scrollIntoView?.({ block: "nearest" });
-    // preventScroll keeps the focus from cutting the smooth scroll short.
-    itemRefs.current[0]?.focus({ preventScroll: true });
-  }, [isOpen]);
-
-  function moveFocus(event: KeyboardEvent<HTMLDivElement>) {
-    const menuItems = itemRefs.current.filter(
-      (item): item is HTMLButtonElement => item !== null,
-    );
-    const current = menuItems.indexOf(
-      document.activeElement as HTMLButtonElement,
-    );
-    const nextIndex =
-      event.key === "ArrowDown"
-        ? (current + 1) % menuItems.length
-        : event.key === "ArrowUp"
-          ? (current - 1 + menuItems.length) % menuItems.length
-          : event.key === "Home"
-            ? 0
-            : event.key === "End"
-              ? menuItems.length - 1
-              : null;
-    if (nextIndex === null) return;
-    event.preventDefault();
-    menuItems[nextIndex]?.focus();
-  }
-
+  const label = t("studio:playlist.page.actionsLabel");
+  const definitions = role === "owner" ? OWNER_ITEMS : EDITOR_ITEMS;
+  const items: StudioMenuItem[] = definitions.flatMap(
+    (definition): StudioMenuItem[] => {
+      const item: StudioMenuItem = {
+        id: definition.id,
+        label: t(definition.labelKey),
+        icon: ACTION_ICONS[definition.id],
+        tone: definition.isDestructive ? "danger" : "default",
+        onSelect: () => onAction(definition.id),
+      };
+      return definition.isDestructive
+        ? [{ id: `${definition.id}Separator`, type: "separator" }, item]
+        : [item];
+    },
+  );
   return (
-    <div
-      className={releaseStyles.overflow}
-      ref={wrapRef}
-      onBlur={(event) => {
-        const nextFocus = event.relatedTarget;
-        if (nextFocus && !event.currentTarget.contains(nextFocus))
-          setIsOpen(false);
-      }}
-    >
-      <button
-        ref={triggerRef}
-        type="button"
-        aria-haspopup="menu"
-        aria-expanded={isOpen}
-        aria-controls={menuId}
-        className={releaseStyles.overflowTrigger}
-        aria-label={t("studio:playlist.page.actionsLabel")}
-        onClick={() => setIsOpen((wasOpen) => !wasOpen)}
-      >
-        <FiMoreHorizontal aria-hidden />
-      </button>
-      <AnimatePresence>
-        {isOpen && (
-          <m.div
-            key="menu"
-            ref={menuRef}
-            id={menuId}
-            role="menu"
-            className={releaseStyles.menu}
-            initial={{ opacity: 0, y: -4 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -4 }}
-            transition={{ duration: reducedMotion ? 0 : 0.16, ease: "easeOut" }}
-            onKeyDown={moveFocus}
+    <div className={releaseStyles.overflow}>
+      <StudioMenu
+        trigger={
+          <IconButton
+            className={releaseStyles.overflowTrigger}
+            aria-label={label}
           >
-            {items.map((item, index) => (
-              <Fragment key={item.id}>
-                {/* The separator is no button, so the arrow keys skip it:
-                    itemRefs holds the items alone, by their index. */}
-                {item.isDestructive && (
-                  <div
-                    role="separator"
-                    className={releaseStyles.menuSeparator}
-                  />
-                )}
-                <button
-                  type="button"
-                  role="menuitem"
-                  ref={(element) => {
-                    itemRefs.current[index] = element;
-                  }}
-                  className={
-                    item.isDestructive
-                      ? `${releaseStyles.menuItem} ${releaseStyles.menuItemDanger}`
-                      : releaseStyles.menuItem
-                  }
-                  onClick={() => {
-                    close();
-                    onAction(item.id);
-                  }}
-                >
-                  {t(item.labelKey)}
-                </button>
-              </Fragment>
-            ))}
-          </m.div>
-        )}
-      </AnimatePresence>
+            <FiMoreHorizontal aria-hidden />
+          </IconButton>
+        }
+        label={label}
+        items={items}
+      />
     </div>
   );
 }

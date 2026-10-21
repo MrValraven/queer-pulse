@@ -5,8 +5,35 @@ import { useFormat } from "../../shared/i18n/format";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { StudioSceneEventView } from "./api/studioDiscovery.adapters";
-import styles from "./studio.module.css";
+import { StudioShelf } from "./kit/StudioShelf";
 import css from "./StudioScene.module.css";
+
+/** One upcoming event as a card linking to its event page: the title, the
+ *  date in the event's own time zone, and the venue or Online. */
+export function StudioEventCard({ event }: { event: StudioSceneEventView }) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
+  return (
+    <Link to={event.href} className={css.eventCard}>
+      <h3 className={css.eventTitle}>{event.title}</h3>
+      <span className={css.eventDate}>
+        {fmt.date(new Date(event.startAt), {
+          weekday: "short",
+          day: "numeric",
+          month: "short",
+          hour: "2-digit",
+          minute: "2-digit",
+          timeZone: event.timezone,
+        })}
+      </span>
+      {(event.isOnline || event.placeName) && (
+        <span className={css.eventPlace}>
+          {event.isOnline ? t("studio:scene.events.online") : event.placeName}
+        </span>
+      )}
+    </Link>
+  );
+}
 
 /** Up to six upcoming events, soonest first, each linking to its event
  *  page. Folded away when the scene has none. */
@@ -15,47 +42,23 @@ export function StudioSceneEvents({
 }: {
   events: StudioSceneEventView[];
 }) {
-  const { t } = useTranslation();
-  const fmt = useFormat();
   const headingId = useId();
   return (
     <Collapse isOpen={events.length > 0}>
-      <section className={styles.row} aria-labelledby={headingId}>
-        <div className={styles.rowH}>
-          <h2 id={headingId}>
-            <Translation
-              i18nKey="studio:scene.events.title"
-              components={{ em: <em /> }}
-            />
-          </h2>
-        </div>
-        <ul className={css.events}>
-          {events.map((event) => (
-            <li key={event.slug}>
-              <Link to={event.href} className={css.eventCard}>
-                <span className={css.eventTitle}>{event.title}</span>
-                <span className={css.eventDate}>
-                  {fmt.date(new Date(event.startAt), {
-                    weekday: "short",
-                    day: "numeric",
-                    month: "short",
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    timeZone: event.timezone,
-                  })}
-                </span>
-                {(event.isOnline || event.placeName) && (
-                  <span className={css.eventPlace}>
-                    {event.isOnline
-                      ? t("studio:scene.events.online")
-                      : event.placeName}
-                  </span>
-                )}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </section>
+      <StudioShelf
+        id={headingId}
+        layout="grid"
+        title={
+          <Translation
+            i18nKey="studio:scene.events.title"
+            components={{ em: <em /> }}
+          />
+        }
+      >
+        {events.map((event) => (
+          <StudioEventCard key={event.slug} event={event} />
+        ))}
+      </StudioShelf>
     </Collapse>
   );
 }

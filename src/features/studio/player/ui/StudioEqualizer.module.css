@@ -1,0 +1,223 @@
+/* StudioEqualizer: the More panel's presets, band sliders and reset
+   (PRD-14). Themed through the Studio tokens. */
+.equalizer {
+  gap: 8px;
+}
+
+.heading {
+  margin: 0;
+  font-size: var(--text-14);
+}
+
+.presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.presets .preset {
+  padding-inline: 14px;
+  transition-property: background-color, color, transform;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+.presets .preset[aria-checked="true"] {
+  background: rgba(var(--studio-ink-rgb), 0.88);
+  color: var(--studio-surface-rail);
+}
+
+.presets .preset[aria-disabled="true"],
+.actions .action[aria-disabled="true"] {
+  opacity: 0.45;
+  cursor: default;
+}
+
+/* Adjust bands and Reset share a row while they fit, and Reset drops under
+   Adjust bands when a translation runs long, so neither is cut off. */
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.actions .action {
+  padding-inline: 14px;
+  transition-property: background-color, transform;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+.presets .preset:active:not([aria-disabled="true"]),
+.actions .action:active:not([aria-disabled="true"]) {
+  transform: scale(0.97);
+}
+
+.resetSlot {
+  display: inline-flex;
+  max-inline-size: 100%;
+}
+
+.actions .action {
+  max-inline-size: 100%;
+}
+
+/* Touch: the presets, Adjust bands and Reset are full 44px targets. */
+@media (pointer: coarse) {
+  .presets .preset,
+  .actions .action {
+    min-block-size: var(--tap-min);
+  }
+}
+
+/* The Audio group starts under a hairline, 16px clear of the sleep timer
+   above it (StudioPlayerAudioSettings). */
+.audioHeading.audioHeading {
+  margin-block-start: 6px;
+  padding-block-start: 16px;
+  border-block-start: 1px solid var(--studio-line);
+}
+
+.bands {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+  padding: 4px 0 0;
+  list-style: none;
+}
+
+.band {
+  display: grid;
+  grid-template-columns: 6ch minmax(0, 1fr) 6ch;
+  align-items: center;
+  gap: 10px;
+  font-size: var(--text-12);
+  font-variant-numeric: tabular-nums;
+  color: var(--studio-text-muted);
+}
+
+.bandValue {
+  text-align: end;
+}
+
+/* The fill runs from the centre line (0 dB) to the thumb. */
+.bandRange {
+  min-inline-size: 0;
+  min-block-size: var(--tap-min);
+  margin: 0;
+  background: transparent;
+  appearance: none;
+  -webkit-appearance: none;
+  accent-color: var(--studio-accent-text);
+  --band-fill-direction: to right;
+  --band-track:
+    linear-gradient(
+      var(--band-fill-direction),
+      transparent var(--band-from, 50%),
+      var(--studio-accent-text) var(--band-from, 50%),
+      var(--studio-accent-text) var(--band-to, 50%),
+      transparent var(--band-to, 50%)
+    ),
+    linear-gradient(
+        rgba(var(--studio-ink-rgb), 0.45),
+        rgba(var(--studio-ink-rgb), 0.45)
+      )
+      50% 0 / 2px 100% no-repeat,
+    rgba(var(--studio-ink-rgb), 0.16);
+}
+
+.bandRange:dir(rtl) {
+  --band-fill-direction: to left;
+}
+
+.bandRange::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: var(--radius-pill);
+  background: var(--band-track);
+}
+
+.bandRange::-moz-range-track {
+  height: 6px;
+  border-radius: var(--radius-pill);
+  background: var(--band-track);
+}
+
+.bandRange::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  margin-top: -5px;
+  border-radius: 50%;
+  background: var(--studio-accent-text);
+  border: 2px solid var(--studio-surface-rail);
+}
+
+.bandRange::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--studio-accent-text);
+  border: 2px solid var(--studio-surface-rail);
+}
+
+.bandRange:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* The crossfade block in the same panel (StudioPlayerAudioSettings). */
+.crossfadeLabel {
+  margin: 0;
+  font-size: var(--text-14);
+}
+
+.crossfadeBody[inert] {
+  opacity: 0.4;
+}
+
+/* Even out loudness is the shared quiet Button; the doubled classes put
+   back the plain switch row (StudioPlayerControls .switchRow) over its pill. */
+.switchButton.switchButton {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  min-block-size: var(--tap-min);
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-6);
+  background: none;
+  color: inherit;
+  font-family: inherit;
+  font-size: var(--text-14);
+  font-weight: 400;
+  line-height: normal;
+  text-align: start;
+  white-space: normal;
+}
+
+.switchButton.switchButton:hover:not(:disabled):not([aria-disabled="true"]),
+.switchButton.switchButton:active:not(:disabled):not([aria-disabled="true"]) {
+  background: none;
+}
+
+.restingSwitch[aria-disabled="true"] {
+  opacity: 0.45;
+  cursor: default;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .presets .preset,
+  .actions .action {
+    transition-property: background-color, color;
+  }
+
+  .presets .preset:active:not([aria-disabled="true"]),
+  .actions .action:active:not([aria-disabled="true"]) {
+    transform: none;
+  }
+}

@@ -1,14 +1,16 @@
 import { Link } from "react-router-dom";
 import { AnimatePresence, m } from "motion/react";
-import { FiCheck, FiPause, FiPlay, FiPlus } from "react-icons/fi";
+import { FiCheck, FiPlus } from "react-icons/fi";
 import { useMotionPrefs } from "../../app/providers/motionPrefs";
-import { ImageSlot } from "../../shared/components/ui";
+import { Button } from "../../shared/components/ui";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { SubprofileFollow } from "../subprofiles/SubprofileFollow";
 import type { StudioReleaseView } from "./api/studio.adapters";
 import type { StudioEpisodeRowView } from "./api/studioEpisodes";
 import { useStudioArtist } from "./api/useStudioArtist";
+import { StudioPlayButton } from "./kit/StudioPlayButton";
+import { StudioIconSwap } from "./player/ui/StudioIconSwap";
 import { playEpisode } from "./player/studioEpisodePlay";
 import { useStudioPlayer } from "./player/studioPlayerContext";
 import { queueItemFromEpisode, showQueueSource } from "./player/studioQueue";
@@ -20,22 +22,28 @@ import { StudioReleaseOverflow } from "./StudioReleaseOverflow";
 import { StudioShareMenu } from "./share/StudioShareMenu";
 import { outDateOf } from "./studioUpcoming";
 import { useStudioSaveToggle } from "./useStudioSaveToggle";
-import styles from "./studio.module.css";
+import { STUDIO_EXIT, STUDIO_FADE } from "./studioMotion";
 import releaseStyles from "./StudioRelease.module.css";
+import { StudioReleaseCoverArt } from "./StudioReleaseCoverArt";
 
 /** The show's hero (spec 5.2): Play latest episode, Follow (the persona),
  *  Save, Share, and Report for a listener on a live show. A scheduled show
  *  gives its visitors Notify me in place of Play and names no episode count
- *  (its episodes go live at the drop). */
+ *  (its episodes go live at the drop). Save keeps one name ("Save {title}")
+ *  and aria-pressed carries its state, as the heart does. The overflow
+ *  queues every published episode, oldest first. */
 export function StudioShowHero({
   release,
   latest,
   publishedCount,
+  playableEpisodeIds,
   onReport,
 }: {
   release: StudioReleaseView;
   latest: StudioEpisodeRowView | null;
   publishedCount: number;
+  /** The published episodes with audio, oldest first. */
+  playableEpisodeIds: string[];
   onReport: () => void;
 }) {
   const { t } = useTranslation();
@@ -65,20 +73,13 @@ export function StudioShowHero({
     <>
       <StudioDetailHero
         art={
-          <ImageSlot
-            src={release.coverUrl ?? undefined}
+          <StudioReleaseCoverArt
+            src={release.coverUrl}
+            title={release.title}
+            format={release.format}
             tint={release.tint}
-            width="100%"
-            height="100%"
             radius={16}
-            placeholder={
-              release.status === "taken_down"
-                ? ""
-                : `${t("studio:media.coverLabel")} · ${release.title}`
-            }
-            style={{ position: "absolute", inset: 0 }}
-            loading="eager"
-            fetchPriority="high"
+            isPriority
           />
         }
         kind={
@@ -120,17 +121,24 @@ export function StudioShowHero({
                 isStatusReserved
               />
             ) : (
-              <button
-                type="button"
-                className={`${styles.playBig} ${releaseStyles.heroPlay}`}
-                aria-disabled={isPlayBlocked || undefined}
-                aria-label={t(
+              <StudioPlayButton
+                state={
+                  isPlayBlocked ? "blocked" : isPlaying ? "playing" : "idle"
+                }
+                blockedReason={
+                  release.status === "taken_down"
+                    ? t("studio:show.takenDownReason")
+                    : isPlayBlocked
+                      ? t("studio:show.nothingToPlay")
+                      : undefined
+                }
+                label={t(
                   isPlaying
                     ? "studio:show.pauseLatestCta"
                     : "studio:show.playLatestCta",
                 )}
-                onClick={() => {
-                  if (isPlayBlocked || !latest) return;
+                onToggle={() => {
+                  if (!latest) return;
                   if (isLatestCurrent) player.togglePlay();
                   else
                     void playEpisode(
@@ -139,9 +147,7 @@ export function StudioShowHero({
                       showQueueSource(release),
                     );
                 }}
-              >
-                {isPlaying ? <FiPause aria-hidden /> : <FiPlay aria-hidden />}
-              </button>
+              />
             )}
             <AnimatePresence initial={false}>
               {artist && (
@@ -149,8 +155,13 @@ export function StudioShowHero({
                   key="follow"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: reducedMotion ? 0 : 0.18 }}
+                  exit={{
+                    opacity: 0,
+                    transition: reducedMotion
+                      ? { duration: 0.12 }
+                      : STUDIO_EXIT,
+                  }}
+                  transition={reducedMotion ? { duration: 0.12 } : STUDIO_FADE}
                 >
                   <SubprofileFollow
                     subprofileId={release.artist.id}
@@ -162,26 +173,27 @@ export function StudioShowHero({
               )}
             </AnimatePresence>
             {isPublished && (
-              <button
-                type="button"
+              <Button
+                variant="quiet"
                 aria-pressed={save.isSaved}
-                aria-label={t(
-                  save.isSaved
-                    ? "studio:save.removeSavedCta"
-                    : "studio:save.saveReleaseCta",
-                  { title: release.title },
-                )}
+                aria-label={t("studio:save.saveReleaseCta", {
+                  title: release.title,
+                })}
                 onClick={save.toggle}
               >
-                {save.isSaved ? (
-                  <FiCheck aria-hidden />
-                ) : (
-                  <FiPlus aria-hidden />
-                )}{" "}
-                {save.isSaved
-                  ? t("studio:save.savedLabel")
-                  : t("studio:save.saveCta")}
-              </button>
+                <StudioIconSwap iconKey={save.isSaved ? "saved" : "save"}>
+                  {save.isSaved ? <FiCheck /> : <FiPlus />}
+                </StudioIconSwap>
+                <StudioIconSwap
+                  iconKey={save.isSaved ? "savedLabel" : "saveLabel"}
+                >
+                  {t(
+                    save.isSaved
+                      ? "studio:save.savedLabel"
+                      : "studio:save.saveCta",
+                  )}
+                </StudioIconSwap>
+              </Button>
             )}
             {isShareable && (
               <StudioShareMenu
@@ -195,7 +207,12 @@ export function StudioShowHero({
               />
             )}
             {isShareable && !release.isOwner && (
-              <StudioReleaseOverflow onReport={onReport} />
+              <StudioReleaseOverflow
+                onReport={onReport}
+                trackIds={isPublished ? playableEpisodeIds : undefined}
+                href={release.href}
+                artistHref={release.artist.href}
+              />
             )}
           </>
         }

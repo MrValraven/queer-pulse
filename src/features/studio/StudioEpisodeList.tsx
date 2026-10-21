@@ -2,7 +2,7 @@ import { useId, useState } from "react";
 import { Link } from "react-router-dom";
 import { AnimatePresence, m } from "motion/react";
 import { FiPlus } from "react-icons/fi";
-import { Collapse, useChipMotion } from "../../shared/components/ui";
+import { Button, Collapse, useChipMotion } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { StudioReleaseView } from "./api/studio.adapters";
 import {
@@ -10,6 +10,7 @@ import {
   type StudioEpisodeOrder,
   type StudioEpisodeRowView,
 } from "./api/studioEpisodes";
+import { useStudioHideExplicit } from "./api/useStudioPlaybackPreferences";
 import { StudioEpisodeRow } from "./StudioEpisodeRow";
 import { studioEpisodeUploadPath } from "./studioPaths";
 import css from "./StudioShow.module.css";
@@ -19,57 +20,34 @@ const ORDER_OPTIONS: { id: StudioEpisodeOrder; labelKey: string }[] = [
   { id: "oldest", labelKey: "studio:show.sortOldest" },
 ];
 
-/** Rows glide to their new place when the order flips (the shared chip
- *  motion's `layout` and timing) and fold in and out by height when an
- *  episode arrives or leaves. The labelled list exists only with rows in
- *  it, and folds away with its last one. */
+/** Rows glide to their new place when the order flips and fade in and out
+ *  when an episode arrives or leaves. The labelled list exists only with
+ *  rows in it, and folds away with its last one. */
 function EpisodeItems({
   episodes,
   release,
   label,
+  headingLevel,
 }: {
   episodes: StudioEpisodeRowView[];
   release: StudioReleaseView;
   label: string;
+  headingLevel: 3 | 4;
 }) {
-  const { transition } = useChipMotion();
-  // A row that glides over its neighbours paints the surface behind it.
-  const [movingIds, setMovingIds] = useState<ReadonlySet<string>>(new Set());
-  const setMoving = (id: string, isMoving: boolean) =>
-    setMovingIds((current) => {
-      if (current.has(id) === isMoving) return current;
-      const next = new Set(current);
-      if (isMoving) next.add(id);
-      else next.delete(id);
-      return next;
-    });
+  const shouldHideExplicit = useStudioHideExplicit();
   return (
     <Collapse isOpen={episodes.length > 0}>
       <ol className={css.list} aria-label={label}>
         <AnimatePresence initial={false}>
           {episodes.map((episode) => (
-            <m.li
+            <StudioEpisodeRow
               key={episode.id}
-              layout="position"
-              className={css.item}
-              data-is-moving={movingIds.has(episode.id) || undefined}
-              onLayoutAnimationStart={() => setMoving(episode.id, true)}
-              onLayoutAnimationComplete={() => setMoving(episode.id, false)}
-              initial={{ height: 0, opacity: 0, overflow: "hidden" }}
-              animate={{ height: "auto", opacity: 1, overflow: "visible" }}
-              exit={{
-                height: 0,
-                opacity: 0,
-                overflow: "hidden",
-                transition: { ...transition, overflow: { duration: 0 } },
-              }}
-              transition={{
-                ...transition,
-                overflow: { duration: 0, delay: transition.duration },
-              }}
-            >
-              <StudioEpisodeRow episode={episode} release={release} />
-            </m.li>
+              episode={episode}
+              release={release}
+              index={(episode.number ?? episode.position) - 1}
+              headingLevel={headingLevel}
+              shouldHideExplicit={shouldHideExplicit}
+            />
           ))}
         </AnimatePresence>
       </ol>
@@ -109,15 +87,16 @@ export function StudioEpisodeList({
               {...chip}
             >
               {ORDER_OPTIONS.map((option) => (
-                <button
+                <Button
                   key={option.id}
-                  type="button"
+                  variant="quiet"
+                  size="sm"
                   className={css.sortButton}
                   aria-pressed={order === option.id}
                   onClick={() => setOrder(option.id)}
                 >
                   {t(option.labelKey)}
-                </button>
+                </Button>
               ))}
             </m.div>
           )}
@@ -135,6 +114,7 @@ export function StudioEpisodeList({
         episodes={orderedEpisodes(published, order)}
         release={release}
         label={t("studio:show.listLabel", { title: release.title })}
+        headingLevel={3}
       />
       {release.isOwner && (
         <Collapse isOpen={drafts.length > 0}>
@@ -145,6 +125,7 @@ export function StudioEpisodeList({
             episodes={drafts}
             release={release}
             label={t("studio:show.draftsHeading")}
+            headingLevel={4}
           />
         </Collapse>
       )}

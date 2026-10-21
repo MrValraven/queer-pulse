@@ -79,6 +79,7 @@ describe("track menu mounts", () => {
           index={0}
           rowCount={1}
           hasEditRights={false}
+          isReorderable
           isCollaborative={false}
           isBusy={false}
           isCurrent={false}
@@ -86,7 +87,6 @@ describe("track menu mounts", () => {
           registerControl={vi.fn()}
           onPlay={vi.fn()}
           onMove={vi.fn()}
-          onDropAt={vi.fn()}
           onRemove={vi.fn()}
         />
       </ul>,

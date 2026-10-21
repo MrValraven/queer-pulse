@@ -1,0 +1,188 @@
+/* The selection bar: an inverted pill (plum on cream, cream on the dark
+   Studio) that floats above the player bar, the phone tab bar and the
+   consent banner. Portalled to the body, so it reads the global Studio
+   roles only. */
+
+.bar {
+  position: fixed;
+  inset-inline: 16px;
+  bottom: calc(
+    var(--studio-player-inset, 0px) +
+      max(var(--bottom-inset, 0px), var(--consent-inset, 0px)) + 12px
+  );
+  z-index: var(--z-popover);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: fit-content;
+  max-width: min(720px, calc(100% - 32px));
+  margin-inline: auto;
+  padding: 6px 6px 6px 18px;
+  border-radius: var(--radius-pill);
+  /* The dark theme's text role is slightly translucent: the surface under
+     it keeps the pill opaque over the list. */
+  background:
+    linear-gradient(var(--studio-text), var(--studio-text)),
+    var(--studio-surface);
+  color: var(--studio-surface);
+  box-shadow: var(--shadow-e3);
+}
+
+.count {
+  flex: none;
+  padding-inline-end: 6px;
+  font-size: var(--text-13-5);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.actions {
+  --edge-fade: 28px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+}
+
+.actions::-webkit-scrollbar {
+  display: none;
+}
+
+/* More actions past an end: that end fades out, so a clipped label reads
+   as "scroll for more". The mask is a stencil, so plain black is its ink. */
+.actions[data-scroll-edges="end"] {
+  mask-image: linear-gradient(
+    to var(--edge-end, right),
+    black calc(100% - var(--edge-fade)),
+    transparent
+  );
+}
+
+.actions[data-scroll-edges="start"] {
+  mask-image: linear-gradient(
+    to var(--edge-start, left),
+    black calc(100% - var(--edge-fade)),
+    transparent
+  );
+}
+
+.actions[data-scroll-edges="both"] {
+  mask-image: linear-gradient(
+    to var(--edge-end, right),
+    transparent,
+    black var(--edge-fade),
+    black calc(100% - var(--edge-fade)),
+    transparent
+  );
+}
+
+.actions:dir(rtl) {
+  --edge-end: left;
+  --edge-start: right;
+}
+
+/* Select all names itself on wide screens; its icon stands in on phones.
+   The count shortens there too ("2 selecionadas"). */
+.selectAllIcon,
+.countCompact {
+  display: none;
+}
+
+/* Two classes and the state pseudo-classes beat the shared quiet and icon
+   buttons, whose ink colours vanish on the inverted pill. */
+.bar .action,
+.bar .clear {
+  flex: none;
+  gap: 6px;
+  color: var(--studio-surface);
+  background: color-mix(in srgb, var(--studio-surface) 12%, transparent);
+}
+
+.bar .clear {
+  background: none;
+}
+
+@media (hover: hover) {
+  .bar .action:hover:not(:disabled):not([aria-disabled="true"]),
+  .bar .clear:hover:not(:disabled):not([aria-disabled="true"]) {
+    color: var(--studio-surface);
+    background: color-mix(in srgb, var(--studio-surface) 22%, transparent);
+  }
+}
+
+.bar .danger {
+  background: rgba(var(--accent-rgb), 0.32);
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Phones: the actions and Select all keep their names for screen readers
+   and show their icons only, so the whole bar fits at 360px. */
+@media (--sm) {
+  .bar {
+    padding-inline-start: 14px;
+  }
+
+  .bar .action:has(.actionLabel) {
+    padding-inline: 10px;
+  }
+
+  .bar,
+  .actions {
+    gap: 4px;
+  }
+
+  .selectAllIcon,
+  .countCompact {
+    display: inline;
+  }
+
+  .actionLabel,
+  .countFull {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+
+/* Touch: every button in the bar is a full 44px target (--tap-min). The
+   targets are the buttons themselves, so no hit area reaches past a pill
+   into its neighbour. */
+@media (pointer: coarse) {
+  .bar .action,
+  .bar .clear {
+    min-block-size: var(--tap-min);
+    min-inline-size: var(--tap-min);
+  }
+}
+
+/* Touch phones: the 44px pills sit 2px apart and the count gives up some
+   padding, so the whole bar still fits at 375px. */
+@media (--sm) and (pointer: coarse) {
+  .bar {
+    padding-inline: 10px 4px;
+  }
+
+  .bar,
+  .actions {
+    gap: 2px;
+  }
+
+  .count {
+    padding-inline-end: 2px;
+  }
+}

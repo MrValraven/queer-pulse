@@ -1,35 +1,46 @@
-import { useSearchParams } from "react-router-dom";
-import { FiGift, FiPause, FiPlay } from "react-icons/fi";
-import { ImageSlot } from "../../shared/components/ui";
+import type { Ref } from "react";
+import { FiGift } from "react-icons/fi";
+import { Button, IconButton, Tooltip } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
-import { formatTrackTime, type StudioTrackView } from "./api/studio.adapters";
-import { useStudioHideExplicit } from "./api/useStudioPlaybackPreferences";
-import { useStudioPlayer } from "./player/studioPlayerContext";
-import { parseStartSeconds } from "./player/studioTimestampLink";
+import type { StudioTrackView } from "./api/studio.adapters";
+import { StudioPlayButton } from "./kit/StudioPlayButton";
 import { StudioTrackMenu } from "./player/ui/StudioTrackMenu";
+import { studioTrackMenuTrackOf } from "./player/ui/studioTrackMenuTrack";
 import { StudioAddToPlaylistButton } from "./StudioAddToPlaylistButton";
+import { StudioDetailHero } from "./StudioDetailHero";
+import { StudioHeroShare } from "./StudioHeroShare";
 import { StudioHiddenTrackNote } from "./StudioHiddenTrack";
 import { StudioLikeButton } from "./StudioLikeButton";
 import hiddenCss from "./StudioHiddenTrack.module.css";
 import heroStyles from "./StudioTrackHero.module.css";
+import { useIsHeroCompact } from "./studioHeroLayout";
 import { useStudioShowcase } from "./useStudioShowcase";
+import { useStudioTrackPlay } from "./useStudioTrackPlay";
 import ss from "./studio.module.css";
+import { StudioReleaseCoverArt } from "./StudioReleaseCoverArt";
 
 const QUICK_TIP_AMOUNT = 2;
 
+/** The track hero on the shared detail scaffold: the release cover, "Track
+ *  3 of 11", the title and credit, then Play, Like, Add to playlist, Share
+ *  and the track menu. On a phone the actions after Play are icons. */
 export function StudioTrackHero({
   track,
   onTip,
+  sentinelRef,
 }: {
   track: StudioTrackView;
   onTip: () => void;
+  /** The marker the page's sticky header watches. */
+  sentinelRef?: Ref<HTMLDivElement>;
 }) {
   const { t } = useTranslation();
   const formatters = useFormat();
-  const player = useStudioPlayer();
   const isShowcase = useStudioShowcase();
+  const isCompact = useIsHeroCompact();
+  const play = useStudioTrackPlay(track);
   const likeSubject = {
     trackId: track.id,
     title: track.title,
@@ -41,136 +52,138 @@ export function StudioTrackHero({
   // The owner reads those tracks here too, and a like would land in Liked
   // songs as No longer available.
   const isLikeable = track.release.publishedAt !== null && track.hasAudio;
-  const isCurrent = player.isCurrentTrack(track.id);
-  const isPlaying = isCurrent && player.status === "playing";
-  const isHidden = useStudioHideExplicit() && track.isExplicit;
-  const [searchParams] = useSearchParams();
-  // A shared timestamp link (?t=) applies until this track is the current
-  // one; a hidden track or one without audio has no play to carry it.
-  const startAtSeconds =
-    isCurrent || isHidden || !track.hasAudio
-      ? null
-      : parseStartSeconds(searchParams, track.durationSeconds);
-  const startLabel =
-    startAtSeconds === null ? null : (formatTrackTime(startAtSeconds) ?? null);
+  const isPublished = track.release.publishedAt !== null;
+  const addLabel = t("studio:playlist.add.trackCta");
+  const tipLabel = t("studio:player.tipCta", {
+    amount: formatters.currency(QUICK_TIP_AMOUNT),
+  });
 
   return (
-    <section
-      className={[ss.hero, ss.heroTight, isHidden && hiddenCss.hidden]
+    <StudioDetailHero
+      className={[ss.detailHeroUnderCrumb, play.isHidden && hiddenCss.hidden]
         .filter(Boolean)
         .join(" ")}
-    >
-      <div className={ss.heroInner}>
-        <div className={ss.heroArt}>
-          <ImageSlot
-            src={track.release.coverUrl ?? undefined}
-            tint={track.release.tint}
-            width="100%"
-            height="100%"
-            radius={16}
-            placeholder={`${t("studio:media.coverLabel")} · ${track.release.title}`}
-            style={{ position: "absolute", inset: 0 }}
-            loading="eager"
-            fetchPriority="high"
+      tint={track.release.tint}
+      sentinelRef={sentinelRef}
+      isActionsCompact={isCompact}
+      art={
+        <StudioReleaseCoverArt
+          src={track.release.coverUrl}
+          title={track.release.title}
+          format={track.release.format}
+          tint={track.release.tint}
+          radius={16}
+          isPriority
+        />
+      }
+      kind={t("studio:track.hero.eyebrow", {
+        current: track.position,
+        total: track.release.trackCount,
+      })}
+      title={track.title}
+      by={
+        <>
+          <Translation
+            i18nKey="studio:trackPage.byLine"
+            components={{ strong: <strong />, em: <em /> }}
+            values={{
+              artist: track.release.artist.name,
+              release: track.release.title,
+            }}
           />
-        </div>
-        <div className={ss.heroInfo}>
-          <div className={ss.eb}>
-            {t("studio:track.hero.eyebrow", {
-              current: track.position,
-              total: track.release.trackCount,
-            })}
-          </div>
-          <h1>{track.title}</h1>
-          <div className={ss.by}>
-            <Translation
-              i18nKey="studio:trackPage.byLine"
-              components={{ strong: <strong />, em: <em /> }}
-              values={{
-                artist: track.release.artist.name,
-                release: track.release.title,
-              }}
-            />
-          </div>
-          <div className={ss.stats}>
-            {track.durationLabel && <span>{track.durationLabel}</span>}
-            {track.isExplicit && (
-              <>
-                <span className={ss.dot} />
-                <span>{t("studio:release.explicit")}</span>
-              </>
-            )}
-            {isHidden && <StudioHiddenTrackNote />}
-          </div>
-          <div className={ss.heroActions}>
-            {!isHidden && (
-              <button
-                type="button"
-                className={ss.playBig}
-                disabled={!track.hasAudio}
-                aria-label={
-                  startLabel
-                    ? t("studio:player.playFromAria", {
-                        title: track.title,
-                        time: startLabel,
-                      })
-                    : isPlaying
-                      ? t("studio:release.pauseTrack", { title: track.title })
-                      : t("studio:release.playTrack", { title: track.title })
-                }
-                onClick={() => {
-                  if (isCurrent) player.togglePlay();
-                  else if (startAtSeconds === null)
-                    void player.playRelease(track.releaseId, track.id);
-                  else
-                    void player.playRelease(
-                      track.releaseId,
-                      track.id,
-                      startAtSeconds,
-                    );
-                }}
-              >
-                {isPlaying ? <FiPause aria-hidden /> : <FiPlay aria-hidden />}
-              </button>
-            )}
-            {startLabel && (
-              <span className={heroStyles.playFromLabel} aria-hidden="true">
-                {t("studio:player.playFrom", { time: startLabel })}
-              </span>
-            )}
-            {isLikeable && (
-              <StudioLikeButton subject={likeSubject} variant="labelled" />
-            )}
+          {track.durationLabel && ` · ${track.durationLabel}`}
+          {(track.isExplicit || play.isHidden) && (
+            <span className={ss.stats}>
+              {track.isExplicit && <span>{t("studio:release.explicit")}</span>}
+              {play.isHidden && <StudioHiddenTrackNote />}
+            </span>
+          )}
+        </>
+      }
+      actions={
+        <>
+          {!play.isHidden && (
+            // On a phone the blocked reason leaves the row (still read
+            // through aria-describedby) and shows as the tooltip instead.
+            <Tooltip
+              label={play.blockedReason ?? play.label}
+              placement="top"
+              isDisabled={!isCompact || play.blockedReason === undefined}
+            >
+              <StudioPlayButton
+                state={play.state}
+                onToggle={play.toggle}
+                label={play.label}
+                blockedReason={play.blockedReason}
+              />
+            </Tooltip>
+          )}
+          {play.startLabel && !isCompact && (
+            <span className={heroStyles.playFromLabel} aria-hidden="true">
+              {t("studio:player.playFrom", { time: play.startLabel })}
+            </span>
+          )}
+          {isLikeable && (
+            <Tooltip
+              label={t("studio:like.cta")}
+              placement="top"
+              isDisabled={!isCompact}
+            >
+              <StudioLikeButton
+                subject={likeSubject}
+                variant={isCompact ? "icon" : "labelled"}
+              />
+            </Tooltip>
+          )}
+          <Tooltip label={addLabel} placement="top" isDisabled={!isCompact}>
             <StudioAddToPlaylistButton
               trackIds={track.hasAudio ? [track.id] : []}
               subjectTitle={track.title}
-              label={t("studio:playlist.add.trackCta")}
+              label={isCompact ? undefined : addLabel}
+              ariaLabel={
+                isCompact
+                  ? t("studio:playlist.add.trackAria", { title: track.title })
+                  : undefined
+              }
               likeSubject={isLikeable ? likeSubject : undefined}
             />
+          </Tooltip>
+          {isPublished && (
+            <StudioHeroShare
+              target={{ kind: "track", id: track.id, startAtSeconds: null }}
+              title={track.title}
+              isIconOnly={isCompact}
+            />
+          )}
+          <Tooltip
+            label={t("studio:release.moreActions")}
+            placement="top"
+            align={isShowcase ? "center" : "end"}
+          >
             <StudioTrackMenu
               className={heroStyles.heroMenu}
-              track={{
-                id: track.id,
-                title: track.title,
-                href: track.href,
-                hasAudio: track.hasAudio,
-                isExplicit: track.isExplicit,
-                artistId: track.release.artist.id,
-                isPublished: track.release.publishedAt !== null,
-                isWithheld: track.isWithheld,
-              }}
+              track={studioTrackMenuTrackOf(track)}
             />
-            {isShowcase && (
-              <button type="button" className={ss.tip} onClick={onTip}>
-                <FiGift aria-hidden />{" "}
-                {t("studio:player.tipCta", {
-                  amount: formatters.currency(QUICK_TIP_AMOUNT),
-                })}
-              </button>
-            )}
-          </div>
-        </div>
-      </div>
-    </section>
+          </Tooltip>
+          {isShowcase &&
+            (isCompact ? (
+              <IconButton
+                aria-label={tipLabel}
+                tooltip
+                tooltipPlacement="top"
+                className={ss.tip}
+                onClick={onTip}
+              >
+                <FiGift aria-hidden />
+              </IconButton>
+            ) : (
+              <Button variant="quiet" className={ss.tip} onClick={onTip}>
+                <FiGift aria-hidden />
+                {tipLabel}
+              </Button>
+            ))}
+        </>
+      }
+    />
   );
 }

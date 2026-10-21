@@ -44,6 +44,9 @@
   /* Coral as a FILLED BUTTON background carrying a white label: 4.52:1 against
      #fff, where --accent itself is 2.91:1 and fails AA at every size. */
   --accent-fill: #d5431e;
+  /* Primary button background under the fixed cream label (#f7f3ee): 4.56:1,
+     where --accent-fill gives 4.09:1. Same in both themes. */
+  --accent-fill-strong: #c93d1b;
 
   /* ── Surfaces ── */
   --cream: #f7f3ee; /* page background */
@@ -264,16 +267,22 @@
      theme: light here, dark in the block further down.
      --studio-ink-rgb is the channel for washes, hairlines and decorative
      marks (any alpha). Text uses the three text roles, whose alphas are set
-     per theme. Light: muted 7.0:1 and faint 4.85:1 on the cream page. Dark
-     keeps the shells' original alphas, where faint measures about 4.1:1 on
-     cards and is kept for metadata. */
+     per theme. Light: muted 7.0:1 and faint 6.0:1 on the cream page. Dark
+     faint is raised to 5.5:1 on the Studio page, so metadata clears AA. */
   --studio-surface: var(--cream);
   --studio-surface-rail: color-mix(in srgb, var(--plum) 4%, var(--cream));
   --studio-surface-deep: color-mix(in srgb, var(--plum) 8%, var(--cream));
   --studio-ink-rgb: var(--plum-rgb);
   --studio-text: var(--plum);
   --studio-text-muted: rgba(var(--plum-rgb), 0.78);
-  --studio-text-faint: rgba(var(--plum-rgb), 0.7);
+  /* Faint 0.72: 6.00:1 on the cream page and 5.77:1 on the 4% card tint. */
+  --studio-text-faint: rgba(var(--plum-rgb), 0.72);
+  /* Hairline and wash roles on the ink channel: rest, hover and pressed
+     surfaces step 0.04, 0.07, 0.11. */
+  --studio-line: rgba(var(--studio-ink-rgb), 0.1);
+  --studio-wash-1: rgba(var(--studio-ink-rgb), 0.04);
+  --studio-wash-2: rgba(var(--studio-ink-rgb), 0.07);
+  --studio-wash-3: rgba(var(--studio-ink-rgb), 0.11);
   /* Coral and jade as small TEXT. Plain --accent is 2.63:1 on cream, and
      --jade-light is an on-dark mark colour. */
   --studio-accent-text: var(--accent-text);
@@ -440,9 +449,15 @@
   --studio-surface-rail: var(--studio-rail);
   --studio-surface-deep: var(--studio-deep);
   --studio-ink-rgb: 247, 243, 238;
+  --studio-line: rgba(var(--studio-ink-rgb), 0.1);
+  --studio-wash-1: rgba(var(--studio-ink-rgb), 0.04);
+  --studio-wash-2: rgba(var(--studio-ink-rgb), 0.07);
+  --studio-wash-3: rgba(var(--studio-ink-rgb), 0.11);
   --studio-text: rgba(247, 243, 238, 0.92);
   --studio-text-muted: rgba(247, 243, 238, 0.62);
-  --studio-text-faint: rgba(247, 243, 238, 0.45);
+  /* Faint 0.54 (was 0.45, 4.17:1): 5.48:1 on --studio-bg, 5.30:1 on the 4%
+     card tint and 4.78:1 on the pressed 11% wash. */
+  --studio-text-faint: rgba(247, 243, 238, 0.54);
   --studio-accent-text: var(--accent);
   --studio-accent-soft-text: var(--accent-soft);
   --studio-jade-text: var(--jade-light);

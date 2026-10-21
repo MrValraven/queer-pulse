@@ -1,12 +1,16 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useId, useRef, useState } from "react";
-import { FiCheck } from "react-icons/fi";
+import { FiCheck, FiCircle } from "react-icons/fi";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { Collapse } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { intlLocale } from "../../shared/i18n/locale";
 import { studioErrorCodeOf } from "./api/studio.api";
-import type { StudioReleaseView } from "./api/studio.adapters";
+import {
+  isSourcedReleaseType,
+  type StudioReleaseView,
+} from "./api/studio.adapters";
 import { useScheduleStudioRelease } from "./api/useStudioArtistToolsMutations";
 import {
   usePublishStudioRelease,
@@ -16,11 +20,17 @@ import { studioKeys } from "./api/studioQueryKeys";
 import { useStudioReleaseTrackSources } from "./api/useStudioReleaseTrackSources";
 import { studioErrorMessageKeyOf } from "./studioErrors.data";
 import {
+  PUBLISH_DONE_KEY,
   PUBLISH_GAP_KEY,
-  publishGapsOf,
+  PUBLISH_GAP_TARGET,
+  publishChecksOf,
   rightsLabelKeyOf,
   tracksMissingSourcesOf,
+  type PublishCheck,
 } from "./studioPublishChecks";
+import { RELEASE_FIELD_IDS } from "./studioUpload.data";
+import type { UploadStepId } from "./studioUploadDraft.data";
+import { focusFieldById } from "./studioUploadFocus";
 import { StudioPublishChoice } from "./StudioPublishChoice";
 import { StudioSchedulePanel } from "./StudioSchedulePanel";
 import type { StudioTrackUploads } from "./useStudioTrackUploads";
@@ -32,6 +42,59 @@ interface PublishStepProps {
   uploads: StudioTrackUploads;
   onBack: () => void;
   onPublished: (release: StudioReleaseView) => void;
+  /** Opens the step that fixes a check and focuses its field there. */
+  onFixCheck?: (step: UploadStepId, fieldId: string) => void;
+}
+
+/** The checklist: every check, a done one with its check mark, an open one
+ *  as a link to the step and field that fixes it. */
+function PublishChecklist({
+  checks,
+  missingSourceTitles,
+  onFixCheck,
+}: {
+  checks: PublishCheck[];
+  missingSourceTitles: string[];
+  onFixCheck?: (step: UploadStepId, fieldId: string) => void;
+}) {
+  const { t, language } = useTranslation();
+  // DES-100: a list inside a sentence reads "A, B and C".
+  const titles = new Intl.ListFormat(intlLocale(language), {
+    style: "long",
+    type: "conjunction",
+  }).format(missingSourceTitles);
+  return (
+    <ul className={publishStyles.checkItems}>
+      {checks.map(({ gap, isDone }) => {
+        const target = PUBLISH_GAP_TARGET[gap];
+        const fieldId =
+          RELEASE_FIELD_IDS[target.field as keyof typeof RELEASE_FIELD_IDS];
+        return (
+          <li
+            key={gap}
+            className={publishStyles.checkItem}
+            data-done={isDone || undefined}
+          >
+            {isDone ? <FiCheck aria-hidden /> : <FiCircle aria-hidden />}
+            {isDone ? (
+              <span>{t(PUBLISH_DONE_KEY[gap])}</span>
+            ) : (
+              <a
+                href={`#${fieldId}`}
+                onClick={(event) => {
+                  event.preventDefault();
+                  if (target.step === "publish") focusFieldById(fieldId);
+                  else onFixCheck?.(target.step, fieldId);
+                }}
+              >
+                {t(PUBLISH_GAP_KEY[gap], { titles })}
+              </a>
+            )}
+          </li>
+        );
+      })}
+    </ul>
+  );
 }
 
 /** The publish step: a scheduled release shows its date panel; anything
@@ -67,6 +130,7 @@ function PublishForm({
   uploads,
   onBack,
   onPublished,
+  onFixCheck,
   shouldFocusHeading,
   onScheduled,
 }: PublishStepProps & {
@@ -93,15 +157,16 @@ function PublishForm({
     release.tracks,
     sourcesByTrackId,
   );
-  const gaps = publishGapsOf({
+  const checks = publishChecksOf({
     title: release.title,
     hasCover: release.coverUrl !== null,
     playableTrackCount: release.playableTrackCount,
     hasPendingUploads: uploads.hasPendingUploads,
     isRightsConfirmed: isRightsTicked,
     tracksMissingSources: missingSourceTitles,
+    isSourcedRelease: isSourcedReleaseType(release.type),
   });
-  const isBlocked = gaps.length > 0;
+  const isBlocked = checks.some((check) => !check.isDone);
 
   useEffect(() => {
     if (shouldFocusHeading) headingRef.current?.focus();
@@ -169,28 +234,23 @@ function PublishForm({
           aria-live="polite"
         >
           {isBlocked ? (
-            <>
-              <p className={publishStyles.checklistLead}>
-                {t("studio:uploadFlow.publish.missingLead")}
-              </p>
-              <ul>
-                {gaps.map((gap) => (
-                  <li key={gap}>
-                    {t(PUBLISH_GAP_KEY[gap], {
-                      titles: missingSourceTitles.join(", "),
-                    })}
-                  </li>
-                ))}
-              </ul>
-            </>
+            <p className={publishStyles.checklistLead}>
+              {t("studio:uploadFlow.publish.missingLead")}
+            </p>
           ) : (
             <p className={publishStyles.ready}>
               <FiCheck aria-hidden /> {t("studio:uploadFlow.publish.ready")}
             </p>
           )}
+          <PublishChecklist
+            checks={checks}
+            missingSourceTitles={missingSourceTitles}
+            onFixCheck={onFixCheck}
+          />
         </div>
         <label className={publishStyles.rights}>
           <input
+            id={RELEASE_FIELD_IDS.rights}
             type="checkbox"
             checked={isRightsTicked}
             disabled={release.rightsConfirmedAt !== null}

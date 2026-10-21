@@ -20,7 +20,7 @@
   width: var(--tap-min);
   height: var(--tap-min);
   background: rgba(var(--studio-ink-rgb), 0.08);
-  border: 1px solid var(--line);
+  border: 1px solid var(--studio-line);
   border-radius: var(--radius-avatar);
 }
 

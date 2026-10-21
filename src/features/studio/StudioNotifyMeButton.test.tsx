@@ -135,6 +135,10 @@ describe("StudioNotifyMeButton", () => {
     expect(invalidate).not.toHaveBeenCalled();
     act(() => options.onError(new ApiError(404, "Not found")));
     expect(showToast).toHaveBeenCalledTimes(2);
+    expect(showToast).toHaveBeenLastCalledWith(
+      "This release is no longer available",
+      "error",
+    );
     const keys = invalidate.mock.calls.map((call) => call[0]?.queryKey);
     expect(keys).toContainEqual(expect.arrayContaining(["studio", "release"]));
     expect(keys).toContainEqual(["studio", "artist", expect.any(Boolean)]);

@@ -63,6 +63,12 @@ export const CHANGELOG_DATA: ChangelogYear[] = [
     year: "2026",
     entries: [
       {
+        id: "toasts-clear-the-notch",
+        category: "fix",
+        date: "21 Oct 2026",
+        ...entryKeys("toasts-clear-the-notch"),
+      },
+      {
         id: "rsvp-connection-invites",
         category: "feature",
         date: "21 Oct 2026",

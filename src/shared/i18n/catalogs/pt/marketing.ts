@@ -3673,6 +3673,10 @@ export const marketing: Catalog = {
     "As páginas de criador do Studio cabem no telemóvel",
   "changelog.entries.studio-creator-phone-layout.body":
     "A barra de cima sai ao fazer scroll, os cartões usam a largura toda e o botão do lançamento fica dentro do cartão.",
+  "changelog.entries.toasts-clear-the-notch.title":
+    "As notificações ficam abaixo do entalhe do iPhone",
+  "changelog.entries.toasts-clear-the-notch.body":
+    "Na app instalada no iPhone, as notificações aparecem agora abaixo da barra de estado, nítidas e legíveis.",
   "changelog.entries.rsvp-connection-invites.title":
     "Leva conexões a um evento, cada uma com o seu convite",
   "changelog.entries.rsvp-connection-invites.body":

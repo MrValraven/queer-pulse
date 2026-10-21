@@ -1,0 +1,160 @@
+/* StudioPlayButton: one play control in three sizes. It rides on the shared
+   IconButton, so each rule below chains two of this module's classes to
+   outrank the Button's own `.button` / `.icon` rules whatever order the two
+   modules load in. */
+/* No min-width override: the wrap never shrinks below the button. */
+.wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.play.hero,
+.play.card,
+.play.row {
+  position: relative;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  touch-action: manipulation;
+  transition-property: transform, background-color, color, opacity, box-shadow;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+/* The coral fill, carrying dark ink: 6.28:1 on --accent. */
+.play.hero,
+.play.card {
+  background: var(--accent);
+  color: var(--studio-bg);
+}
+
+.play.hero {
+  width: 56px;
+  min-width: 56px;
+  height: 56px;
+  font-size: var(--text-22);
+}
+
+.play.card {
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  font-size: var(--text-16);
+  box-shadow: var(--shadow-e2);
+}
+
+/* A row's play is quiet ink inside its 44px hit area. */
+.play.row {
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  background: none;
+  color: var(--studio-text-muted);
+  font-size: var(--text-16);
+}
+
+/* The play triangle sits right of centre optically. */
+.play[data-state="idle"] svg,
+.play[data-state="blocked"] svg {
+  margin-inline-start: 2px;
+}
+
+@media (hover: hover) {
+  .play.hero:hover:not(:disabled):not([aria-disabled="true"]),
+  .play.card:hover:not(:disabled):not([aria-disabled="true"]) {
+    /* The fill stays --accent so the dark ink keeps its 6.28:1; the hover
+       reads through the lift and the coral glow. */
+    background: var(--accent);
+    color: var(--studio-bg);
+    box-shadow: var(--shadow-accent);
+    transform: scale(1.05);
+  }
+  .play.row:hover:not(:disabled):not([aria-disabled="true"]) {
+    background: var(--studio-wash-2);
+    color: var(--studio-text);
+  }
+}
+
+.play.hero:active:not([aria-disabled="true"]),
+.play.card:active:not([aria-disabled="true"]),
+.play.row:active:not([aria-disabled="true"]) {
+  transform: scale(0.97);
+}
+
+/* Blocked keeps focus and only looks inactive (the Button dims it to 0.4). */
+.play.hero[aria-disabled="true"],
+.play.card[aria-disabled="true"],
+.play.row[aria-disabled="true"] {
+  cursor: not-allowed;
+}
+
+/* The loading ring: a coral arc turning just outside the button. It is the
+   one looping motion here, and it stands still under reduced motion. */
+.ring {
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 2px solid rgba(var(--accent-rgb), 0.18);
+  border-top-color: var(--accent);
+  opacity: 0;
+  pointer-events: none;
+  transition-property: opacity;
+  transition-duration: var(--dur-base);
+  transition-timing-function: var(--ease-out);
+}
+
+.row .ring {
+  inset: 4px;
+}
+
+.play[data-state="loading"] .ring {
+  opacity: 1;
+  animation: studioPlayRingSpin 0.9s linear infinite;
+}
+
+@keyframes studioPlayRingSpin {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+.reason {
+  max-width: 36ch;
+  font-size: var(--text-13);
+  line-height: 1.35;
+  color: var(--studio-text-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .play.hero,
+  .play.card,
+  .play.row {
+    transition-property: background-color, color, opacity;
+  }
+  .play[data-state="loading"] .ring {
+    animation: none;
+    border-color: rgba(var(--accent-rgb), 0.55);
+  }
+  .play.hero:is(:hover, :active):not(:disabled):not([aria-disabled="true"]),
+  .play.card:is(:hover, :active):not(:disabled):not([aria-disabled="true"]),
+  .play.row:is(:hover, :active):not(:disabled):not([aria-disabled="true"]) {
+    transform: none;
+  }
+}
+
+:global(html[data-reduce-motion="true"]) .play.hero,
+:global(html[data-reduce-motion="true"]) .play.card,
+:global(html[data-reduce-motion="true"]) .play.row {
+  transition-property: background-color, color, opacity;
+}
+
+:global(html[data-reduce-motion="true"]) .play[data-state="loading"] .ring {
+  animation: none;
+  border-color: rgba(var(--accent-rgb), 0.55);
+}
+
+:global(html[data-reduce-motion="true"])
+  .play:is(.hero, .card, .row):is(:hover, :active):not(:disabled):not([aria-disabled="true"]) {
+  transform: none;
+}

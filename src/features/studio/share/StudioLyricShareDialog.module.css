@@ -1,0 +1,30 @@
+/* "Share lyric": the card as it will arrive, then each way to send it. */
+.preview {
+  display: flex;
+  justify-content: center;
+  margin-block-end: 20px;
+}
+
+.options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Each option is the shared quiet Button, laid out as a full-width row. */
+.option.option {
+  justify-content: flex-start;
+  gap: 10px;
+  inline-size: 100%;
+  text-align: start;
+}
+
+.optionIcon {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  font-size: var(--text-16);
+}

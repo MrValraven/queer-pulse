@@ -1,3 +1,4 @@
+import { Button } from "../../../../shared/components/ui";
 import type { StudioChapterView } from "../../api/studio.adapters";
 import styles from "./StudioChapterList.module.css";
 
@@ -18,8 +19,8 @@ export function StudioChapterList({
     <ol className={styles.list} aria-label={label}>
       {chapters.map((chapter, index) => (
         <li key={chapter.startSeconds}>
-          <button
-            type="button"
+          <Button
+            variant="quiet"
             className={styles.item}
             aria-current={index === activeIndex ? "true" : undefined}
             onClick={() => onSelect(chapter)}
@@ -31,7 +32,7 @@ export function StudioChapterList({
                 <span className={styles.artist}>{chapter.artist}</span>
               )}
             </span>
-          </button>
+          </Button>
         </li>
       ))}
     </ol>

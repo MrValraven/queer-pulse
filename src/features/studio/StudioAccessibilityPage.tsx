@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { Link } from "react-router-dom";
 import { routes } from "../../app/routeMap";
 import { Button } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
@@ -8,6 +9,7 @@ import { StudioAccessibilityShowcase } from "./StudioAccessibilityShowcase";
 import { StudioShortcutList } from "./player/ui/StudioShortcutList";
 import { StudioShell } from "./StudioShell";
 import { buildLiveGroups } from "./studioAccessibility.data";
+import { useStudioDocumentTitle } from "./useStudioDocumentTitle";
 import { useStudioShowcase } from "./useStudioShowcase";
 import s from "./StudioAccessibilityPage.module.css";
 
@@ -17,6 +19,7 @@ import s from "./StudioAccessibilityPage.module.css";
 export function StudioAccessibilityPage() {
   const { t } = useTranslation();
   const isShowcase = useStudioShowcase();
+  useStudioDocumentTitle(t("studio:accessibilityLive.pageTitle"));
   const groups = useMemo(() => buildLiveGroups(t), [t]);
 
   return (
@@ -46,6 +49,12 @@ export function StudioAccessibilityPage() {
           </h2>
           <div className={s.dek}>{t("studio:accessibility.shortcuts.dek")}</div>
           <StudioShortcutList />
+          <p className={s.shortcutsNote}>
+            {t("studio:accessibilityLive.shortcutsNote")}{" "}
+            <Link to={routes.studioSettings}>
+              {t("studio:accessibilityLive.shortcutsNoteCta")}
+            </Link>
+          </p>
         </section>
 
         {isShowcase && <StudioAccessibilityShowcase />}

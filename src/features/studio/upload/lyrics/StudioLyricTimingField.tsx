@@ -51,13 +51,9 @@ export function StudioLyricTimingField({
           <span className={styles.summary}>
             {t("studio:lyricTiming.summary", { count: timedCount })}
           </span>
-          <button
-            type="button"
-            className={styles.linkButton}
-            onClick={() => onChange(null)}
-          >
+          <Button variant="quiet" size="sm" onClick={() => onChange(null)}>
             {t("studio:lyricTiming.clearCta")}
-          </button>
+          </Button>
         </div>
       </Collapse>
       <Collapse isOpen={isStale}>

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, m, useIsPresent } from "motion/react";
 import { useMotionPrefs } from "../../../../app/providers/motionPrefs";
-import { Collapse } from "../../../../shared/components/ui";
+import { Button, Collapse } from "../../../../shared/components/ui";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import {
   useStudioPlayer,
@@ -15,7 +15,10 @@ import {
   type QueueFocusTarget,
 } from "./StudioQueueGroup";
 import { queueOrderKey } from "./studioQueueMoves";
+import { StudioQueuePlayed } from "./StudioQueuePlayed";
+import { StudioQueueUndoRow } from "./StudioQueueUndoRow";
 import { QueueRowSummary } from "./StudioQueueRow";
+import { useStudioQueueUndo } from "./useStudioQueueUndo";
 import styles from "./StudioQueue.module.css";
 
 type GroupKind = "user" | "upcoming";
@@ -66,27 +69,42 @@ function ClearQueueButton({ onClear }: { onClear: () => void }) {
   const { reducedMotion } = useMotionPrefs();
   const isPresent = useIsPresent();
   return (
-    <m.button
-      type="button"
-      className={styles.clear}
+    <m.span
+      className={styles.clearSlot}
       inert={!isPresent}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: reducedMotion ? 0 : 0.18 }}
-      onClick={onClear}
     >
-      {t("studio:queue.clear")}
-    </m.button>
+      <Button
+        variant="quiet"
+        size="sm"
+        className={styles.clear}
+        onClick={onClear}
+      >
+        {t("studio:queue.clear")}
+      </Button>
+    </m.span>
   );
 }
 
-/** Now playing, Your queue and Next from {source} (spec 7.3). */
-export function StudioQueueList({ headingLevel }: { headingLevel: 2 | 3 }) {
+/** Now playing, Your queue, Next from {source} and Played (spec 7.3).
+ *  `isInDialog` is for Now playing's modal sheet, where Undo shows as a row
+ *  in the queue because the app's toasts sit outside the dialog. */
+export function StudioQueueList({
+  headingLevel,
+  isInDialog = false,
+}: {
+  headingLevel: 2 | 3;
+  isInDialog?: boolean;
+}) {
   const { t } = useTranslation();
   const player = useStudioPlayer();
   const { queue } = player;
   const [announcement, setAnnouncement] = useState("");
+  const undo = useStudioQueueUndo({ isInDialog, announce: setAnnouncement });
+  const nowHeadingRef = useRef<HTMLHeadingElement>(null);
   const [focusRequests, setFocusRequests] = useState<
     Record<GroupKind, QueueFocusRequest | null>
   >({ user: null, upcoming: null });
@@ -148,9 +166,8 @@ export function StudioQueueList({ headingLevel }: { headingLevel: 2 | 3 }) {
           focusRequestFor(focusAfterRemoval(entries, index), entries),
         );
         player.removeEntry(entry.queueEntryId);
-        setAnnouncement(
-          t("studio:queue.removedStatus", { title: entry.title }),
-        );
+        // The Undo toast says what went, in its own live region.
+        undo.offerRemoveUndo(entry, kind, index);
       },
     };
   }
@@ -160,9 +177,14 @@ export function StudioQueueList({ headingLevel }: { headingLevel: 2 | 3 }) {
 
   return (
     <div className={styles.list}>
+      <StudioQueueUndoRow notice={undo.notice} />
       {queue.current && (
         <section className={styles.group}>
-          <NowHeading className={styles.groupHeading}>
+          <NowHeading
+            ref={nowHeadingRef}
+            tabIndex={-1}
+            className={styles.groupHeading}
+          >
             {t("studio:queue.nowPlaying")}
           </NowHeading>
           <div className={`${styles.row} ${styles.rowCurrent}`}>
@@ -180,12 +202,13 @@ export function StudioQueueList({ headingLevel }: { headingLevel: 2 | 3 }) {
               <ClearQueueButton
                 key="clear"
                 onClear={() => {
+                  const clearedItems = queue.userItems;
                   requestFocus(
                     "user",
-                    focusRequestFor("heading", queue.userItems),
+                    focusRequestFor("heading", clearedItems),
                   );
                   player.clearUserQueue();
-                  setAnnouncement(t("studio:queue.clearedStatus"));
+                  undo.offerClearUndo(clearedItems);
                 }}
               />
             )}
@@ -208,6 +231,10 @@ export function StudioQueueList({ headingLevel }: { headingLevel: 2 | 3 }) {
           </Collapse>
         }
         {...groupProps("upcoming", queue.upcomingSourceItems)}
+      />
+      <StudioQueuePlayed
+        headingLevel={headingLevel}
+        onBeforeClear={() => nowHeadingRef.current?.focus()}
       />
       <p className="visuallyHidden" role="status">
         {announcement}

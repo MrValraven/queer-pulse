@@ -3,21 +3,32 @@ import { Link, NavLink } from "react-router-dom";
 import { FiArrowRight } from "react-icons/fi";
 import { routes } from "../../app/routeMap";
 import { Translation } from "../../shared/i18n/Translation";
+import {
+  MAIN_CONTENT_ID,
+  SkipToContentLink,
+} from "../../shared/components/layout/SkipToContentLink";
 import { useAccountIdentity } from "../../shared/components/layout/useAccountIdentity";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useMediaQuery } from "../../shared/hooks";
+import { mediaMax } from "../../shared/theme/breakpoints";
 import type { StudioArtistRefView } from "./api/studio.adapters";
 import { StudioAccountMenu } from "./StudioAccountMenu";
 import { useStudioShowcase } from "./useStudioShowcase";
 import { useStudioShellSignal } from "./useStudioShellSignal";
 import { NAV } from "./StudioCreatorShell.data";
 import { StudioCreditsBadge } from "./StudioCreditsBadge";
+import { useStudioDocumentTitle } from "./useStudioDocumentTitle";
 import s from "./creator.module.css";
+import layoutStyles from "./StudioCreatorShell.module.css";
 import shellStyles from "./StudioShell.module.css";
 
 /** Creator back-office frame: sticky topbar + sub-nav, following the app
  *  theme like the listener shell. `isEditingRelease` is set by the upload
  *  page while it reopens a published or taken-down release, so "New
- *  release" stops reading as the current page. */
+ *  release" stops reading as the current page. The topbar sits outside
+ *  `<main id="main-content">`, so the skip link and the focus RouteAnnouncer
+ *  moves after each navigation land on the page. Tablets and phones get a
+ *  two-row bar (StudioCreatorShell.module.css). */
 export function StudioCreatorShell({
   children,
   persona,
@@ -30,13 +41,20 @@ export function StudioCreatorShell({
   const { t } = useTranslation();
   const identity = useAccountIdentity();
   const isShowcase = useStudioShowcase();
+  // Phones keep the bar two rows tall: the public page link moves into
+  // the avatar menu there (matches `--md`).
+  const isPhone = useMediaQuery(mediaMax(640));
+  const publicPageHref =
+    persona || isShowcase ? (persona?.href ?? routes.studioArtist) : undefined;
   useStudioShellSignal();
+  useStudioDocumentTitle();
   // Studio follows the app theme: its colours come from the theme-following
   // --studio-* tokens, so the shell and the shared components inside it
   // switch with the rest of the app.
   return (
     <div className={s.root}>
-      <div className={s.topbar}>
+      <SkipToContentLink />
+      <header className={`${s.topbar} ${layoutStyles.topbar}`}>
         <Link to={routes.studio} className={s.brand}>
           <span className={s.pulseDot} aria-hidden />
           {/* One span keeps the wordmark a single flex item, so the brand's
@@ -49,7 +67,10 @@ export function StudioCreatorShell({
           </span>
         </Link>
         <span className={s.product}>{t("studio:creator.product")}</span>
-        <nav className={s.subnav}>
+        <nav
+          className={`${s.subnav} ${layoutStyles.subnav}`}
+          aria-label={t("studio:creator.navLabel")}
+        >
           {NAV.filter((item) => isShowcase || !item.isShowcaseOnly).map(
             (item) => {
               const isSuppressed =
@@ -77,11 +98,8 @@ export function StudioCreatorShell({
           )}
         </nav>
         <div className={s.topRight}>
-          {(persona || isShowcase) && (
-            <Link
-              to={persona ? persona.href : routes.studioArtist}
-              className={s.back}
-            >
+          {publicPageHref && !isPhone && (
+            <Link to={publicPageHref} className={s.back}>
               {t("studio:creator.viewPublicPageCta")}{" "}
               <FiArrowRight aria-hidden />
             </Link>
@@ -89,13 +107,16 @@ export function StudioCreatorShell({
           <StudioAccountMenu
             className={shellStyles.creatorAccount}
             persona={persona}
+            publicPageHref={isPhone ? publicPageHref : undefined}
             triggerLabel={t("studio:creator.avatarLabel", {
               name: persona?.name ?? identity.name,
             })}
           />
         </div>
-      </div>
-      <main>{children}</main>
+      </header>
+      <main id={MAIN_CONTENT_ID} tabIndex={-1} className={layoutStyles.main}>
+        {children}
+      </main>
     </div>
   );
 }

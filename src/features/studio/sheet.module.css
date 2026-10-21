@@ -409,19 +409,15 @@
   color: var(--studio-text-muted);
   margin-top: 2px;
 }
-.chBtn {
+/* The checkout pay bar: a kit jade lg Button across the card. Once paid it
+   is disabled but still carries the receipt line, so it dims less than the
+   kit's 0.4 and stays readable. The doubled class outranks the kit. */
+.chBtn.chBtn {
   width: 100%;
-  font-family: var(--sans);
-  font-size: var(--text-14-5);
-  font-weight: 600;
-  color: var(--studio-bg);
-  background: var(--jade-light, var(--jade-light));
-  border: none;
-  border-radius: var(--radius-pill);
-  padding: 13px;
-  cursor: pointer;
+  white-space: normal;
+  text-align: center;
 }
-.chBtn:disabled {
+.chBtn.chBtn:disabled {
   opacity: 0.8;
   cursor: default;
 }

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { FiChevronDown, FiChevronUp } from "react-icons/fi";
-import { Collapse } from "../../shared/components/ui";
+import { Button, Collapse } from "../../shared/components/ui";
 import { useFormat } from "../../shared/i18n/format";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -48,8 +48,8 @@ export function StudioUploadLoudnessNote({
               </li>
             ))}
           </ul>
-          <button
-            type="button"
+          <Button
+            variant="quiet"
             className={tracksStyles.loudToggle}
             aria-expanded={isExplainerOpen}
             onClick={() => setIsExplainerOpen((wasOpen) => !wasOpen)}
@@ -60,7 +60,7 @@ export function StudioUploadLoudnessNote({
             ) : (
               <FiChevronDown aria-hidden />
             )}
-          </button>
+          </Button>
           <Collapse isOpen={isExplainerOpen}>
             <div className={s.loudExplainer}>
               <Translation

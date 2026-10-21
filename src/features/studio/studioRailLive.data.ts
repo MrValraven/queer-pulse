@@ -18,6 +18,7 @@ export const LIVE_RAIL_LINKS: RailLink[] = [
     label: "Search",
     labelKey: "studio:rail.v1.search",
     to: routes.studioSearch,
+    sectionPaths: [routes.studioBrowse],
     icon: RiSearchLine,
   },
   {

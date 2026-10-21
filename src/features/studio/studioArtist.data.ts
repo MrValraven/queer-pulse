@@ -6,7 +6,7 @@ export const heroImage =
 
 export const ARTIST_ID = "mariana-sol";
 
-// Stable canonical ids — the tab's *stored* value never changes with
+// Stable canonical ids: the tab's *stored* value never changes with
 // language; only `labelKey` resolves via t() at render (i18n §5.1).
 export const TABS = [
   { id: "music", labelKey: "studio:artist.tabs.music" },
@@ -36,7 +36,8 @@ export function artistTabsOf(
 export const ARTIST_SHOWCASE = {
   subscribeAmount: 3,
   sidebarStats: {
-    plays: 36400,
+    /** A count, so it reads "Fewer than 5" under the floor. */
+    newFollowers: { value: 184, isBelowThreshold: false },
     earningsStreaming: 1820,
     tipsReceived: 448,
     directSubscribers: 612,

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ImageSlot } from "../../shared/components/ui";
+import { Button, ImageSlot } from "../../shared/components/ui";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { StudioReleaseCardView } from "./api/studio.adapters";
@@ -48,9 +48,9 @@ export function StudioOwnerReleaseRow({
     ariaKey: string,
   ) {
     return (
-      <button
-        type="button"
-        className={ownerStyles.action}
+      <Button
+        variant="quiet"
+        size="sm"
         aria-disabled={isBusy || undefined}
         aria-label={t(ariaKey, { title: release.title })}
         onClick={() => {
@@ -58,7 +58,7 @@ export function StudioOwnerReleaseRow({
         }}
       >
         {t(labelKey)}
-      </button>
+      </Button>
     );
   }
 
@@ -99,26 +99,28 @@ export function StudioOwnerReleaseRow({
       </div>
       <div className={ownerStyles.actions}>
         {status !== "taken_down" && (
-          <Link
+          <Button
+            variant="quiet"
+            size="sm"
             to={studioUploadPath(release.id)}
-            className={ownerStyles.action}
             aria-label={t("studio:owner.editAria", { title: release.title })}
           >
             {t("studio:owner.edit")}
-          </Link>
+          </Button>
         )}
         {/* Studio artist kinds: episodes are added one by one once the show
             is live (spec 6.2). A scheduled show offers Edit only. */}
         {release.isShow && status === "published" && (
-          <Link
+          <Button
+            variant="quiet"
+            size="sm"
             to={studioEpisodeUploadPath(release.id)}
-            className={ownerStyles.action}
             aria-label={t("studio:owner.addEpisodeAria", {
               title: release.title,
             })}
           >
             {t("studio:show.addEpisodeCta")}
-          </Link>
+          </Button>
         )}
         {(status === "draft" || status === "scheduled") &&
           actionButton(

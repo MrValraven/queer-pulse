@@ -74,6 +74,18 @@ describe("Studio help (live)", () => {
     ).toBeInTheDocument();
   });
 
+  it("opens every matching answer while a search is on", async () => {
+    renderHelp();
+    const search = await screen.findByRole("searchbox", {
+      name: "Search Studio help",
+    });
+    fireEvent.change(search, { target: { value: "dispute" } });
+    const question = await screen.findByRole("button", {
+      name: "How do I dispute a takedown?",
+    });
+    expect(question).toHaveAttribute("aria-expanded", "true");
+  });
+
   it("says so when nothing matches, and Clear search brings everything back", async () => {
     renderHelp();
     const search = await screen.findByRole("searchbox", {

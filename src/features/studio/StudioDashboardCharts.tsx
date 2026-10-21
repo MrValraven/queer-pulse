@@ -3,18 +3,12 @@ import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { StudioLine } from "./StudioSkeletons";
-import {
-  BARS,
-  CHART_RANGES,
-  CURATORS,
-  CITIES,
-  SELECTED_CHART_RANGE_ID,
-} from "./studioDashboard.data";
+import { StudioDashboardActivityChart } from "./StudioDashboardActivityChart";
+import { CURATORS, CITIES, DAILY_ACTIVITY } from "./studioDashboard.data";
 import { fixtureDate, WEEKDAY_DAY_MONTH } from "./studioFixtureDate";
 import s from "./creator.module.css";
 
 // Chart footer figures: demo content, fixed for the showcase.
-const CHART_PEAK_PLAYS = 4212;
 const CHART_TOP_TRACK_TITLE = "Carta para a santa";
 const CHART_TOP_TRACK_PERCENT = 71;
 
@@ -52,52 +46,17 @@ export function StudioDashboardCharts({ loading }: { loading: boolean }) {
   const fmt = useFormat();
   return (
     <div className={s.col}>
+      <StudioDashboardActivityChart isLoading={loading} />
       <div className={s.card}>
-        <div className={s.cardH}>
-          <h3>
-            <Translation
-              i18nKey="studio:dashboard.charts.dailyPlays.heading"
-              components={{ em: <em /> }}
-            />
-          </h3>
-          <div className={s.range}>
-            {CHART_RANGES.map((range) => (
-              <button
-                key={range.id}
-                type="button"
-                className={[
-                  s.rangeBtn,
-                  range.id === SELECTED_CHART_RANGE_ID && s.rangeBtnOn,
-                ]
-                  .filter(Boolean)
-                  .join(" ")}
-              >
-                {fmt.number(range.amount, {
-                  style: "unit",
-                  unit: range.unit,
-                  unitDisplay: "narrow",
-                })}
-              </button>
-            ))}
-          </div>
-        </div>
-        <div className={s.chart}>
-          {BARS.map((barHeight, barIndex) => (
-            <div
-              key={barIndex}
-              className={[s.bar, barIndex === BARS.length - 1 && s.barToday]
-                .filter(Boolean)
-                .join(" ")}
-              style={{ height: `${barHeight}%` }}
-            />
-          ))}
-        </div>
         <div className={s.chartFoot}>
           <span>
             <Translation
               i18nKey="studio:demo.dashboard.peakSummary"
               components={{ em: <em /> }}
-              values={{ plays: fmt.number(CHART_PEAK_PLAYS) }}
+              values={{
+                day: t("studio:demo.dashboard.curator.today"),
+                total: fmt.number(Math.max(...DAILY_ACTIVITY)),
+              }}
             />
           </span>
           <span>

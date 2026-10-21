@@ -3588,6 +3588,10 @@ export const marketing: Catalog = {
     "Studio's creator pages fit a phone",
   "changelog.entries.studio-creator-phone-layout.body":
     "The top bar scrolls away, cards use the full width and the release button stays inside its card.",
+  "changelog.entries.toasts-clear-the-notch.title":
+    "Notifications clear the iPhone notch",
+  "changelog.entries.toasts-clear-the-notch.body":
+    "In the installed iPhone app, notifications now sit below the status bar, sharp and readable.",
   "changelog.entries.rsvp-connection-invites.title":
     "Bring connections to an event, each with their own invite",
   "changelog.entries.rsvp-connection-invites.body":

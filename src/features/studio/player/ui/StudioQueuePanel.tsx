@@ -13,10 +13,12 @@ import { useMotionPrefs } from "../../../../app/providers/motionPrefs";
 import { ShellFrameContext } from "../../../../app/providers/shellFrame";
 import { useMediaQuery } from "../../../../shared/hooks/useMediaQuery";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
+import { IconButton } from "../../../../shared/components/ui/IconButton";
 import { mediaMax } from "../../../../shared/theme/breakpoints";
 import { useStudioPlayerSurface } from "../studioPlayerSurface";
 import { StudioQueueList } from "./StudioQueueList";
 import { STUDIO_QUEUE_BUTTON_ID } from "./studioQueueMoves";
+import { useStudioToastShift } from "./useStudioToastShift";
 import styles from "./StudioQueue.module.css";
 
 type OpenerRef = RefObject<HTMLElement | null>;
@@ -110,6 +112,8 @@ function StudioQueuePanel({
   const isPresent = useIsPresent();
   const isSiteNavShown = useIsSiteNavShown();
   const { panelRef, headingRef } = usePanelFocus(openerRef, isPresent);
+  // Toasts step to the panel's side, off its head and rows (DES-28).
+  useStudioToastShift(panelRef, "end", isPresent);
   return (
     <m.aside
       ref={panelRef}
@@ -145,14 +149,13 @@ function StudioQueuePanel({
         >
           {t("studio:queue.heading")}
         </h2>
-        <button
-          type="button"
+        <IconButton
           className={styles.control}
           aria-label={t("studio:queue.close")}
           onClick={onClose}
         >
           <FiX aria-hidden />
-        </button>
+        </IconButton>
       </div>
       <div className={styles.panelBody}>
         <StudioQueueList headingLevel={3} />

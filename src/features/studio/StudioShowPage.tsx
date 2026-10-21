@@ -33,6 +33,9 @@ export function StudioShowPage({
         release={release}
         latest={latest}
         publishedCount={published.length}
+        playableEpisodeIds={published
+          .filter((episode) => episode.hasAudio)
+          .map((episode) => episode.id)}
         onReport={onReport}
       />
       {release.description && (

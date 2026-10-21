@@ -21,28 +21,11 @@
   overflow: hidden;
 }
 
-/* The same columns as the release card rows (studio.module.css .rowGrid),
-   so a scene card sits as wide as the cards in the rows around it. */
-.sceneGrid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 18px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-@media (--compact) {
-  .sceneGrid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
 .sceneCard {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  color: var(--text);
+  color: var(--studio-text);
   text-decoration: none;
   border-radius: var(--radius-12);
 }
@@ -53,12 +36,25 @@
   box-shadow: var(--ring-cream);
 }
 
+/* The cover lifts 2px with the elevation shadow on hover while the art
+   inside zooms a touch, as StudioMediaCard does. */
 .sceneCover {
   position: relative;
   display: block;
   aspect-ratio: 4 / 3;
   overflow: hidden;
   border-radius: var(--radius-12);
+  background: var(--studio-wash-2);
+  box-shadow: var(--shadow-e1);
+  transition-property: transform, box-shadow;
+  transition-duration: var(--dur-base);
+  transition-timing-function: var(--ease), var(--ease-out);
+}
+
+.sceneCover > * {
+  transition-property: transform;
+  transition-duration: var(--dur-slow);
+  transition-timing-function: var(--ease-out);
 }
 
 /* The release card title type (studio.module.css .card h4). */
@@ -81,5 +77,29 @@
 @media (hover: hover) {
   .sceneCard:hover .sceneName {
     color: var(--studio-accent-text);
+  }
+  .sceneCard:hover .sceneCover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lift);
+  }
+  .sceneCard:hover .sceneCover > * {
+    transform: scale(1.03);
+  }
+}
+
+.sceneCard:active .sceneCover {
+  transform: scale(0.97);
+  transition-duration: var(--dur-fast);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sceneCover,
+  .sceneCover > * {
+    transition-property: none;
+  }
+  .sceneCard:hover .sceneCover,
+  .sceneCard:hover .sceneCover > *,
+  .sceneCard:active .sceneCover {
+    transform: none;
   }
 }

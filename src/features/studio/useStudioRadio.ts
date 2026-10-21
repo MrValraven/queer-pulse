@@ -75,7 +75,7 @@ export function useStudioRadio(): StudioRadioStarter {
         radioFilter: filter,
       });
     } catch (error) {
-      const key = studioErrorMessageKeyOf(error);
+      const key = studioErrorMessageKeyOf(error, "play");
       setErrorKey(
         key === studioErrorMessageKey(null) ? "studio:radio.error" : key,
       );

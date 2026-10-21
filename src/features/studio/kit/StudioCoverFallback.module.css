@@ -1,0 +1,67 @@
+/* StudioCoverFallback: a cover without art. A soft gradient in the cover's
+   hue, lit from the top-start corner, with one mark in the theme ink at 40%
+   opacity. The mark scales with the frame (container units), so a 42px
+   sticky-bar square and a 320px hero read the same. */
+.fallback {
+  --fallback-rgb: var(--studio-ink-rgb);
+  --fallback-alpha: 0.14;
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  container-type: inline-size;
+  background-color: var(--studio-surface);
+  background-image:
+    radial-gradient(
+      120% 120% at 0% 0%,
+      rgba(var(--fallback-rgb), calc(var(--fallback-alpha) * 1.6)),
+      transparent 62%
+    ),
+    linear-gradient(
+      155deg,
+      rgba(var(--fallback-rgb), var(--fallback-alpha)),
+      rgba(var(--fallback-rgb), calc(var(--fallback-alpha) * 0.45))
+    );
+  color: rgb(var(--studio-ink-rgb));
+}
+
+.fallback[data-tint="coral"] {
+  --fallback-rgb: var(--accent-rgb);
+  --fallback-alpha: 0.22;
+}
+
+.fallback[data-tint="jade"] {
+  --fallback-rgb: var(--jade-rgb);
+  --fallback-alpha: 0.22;
+}
+
+/* Plum covers take the theme ink, plum in light and cream in dark, so the
+   hue stays visible on both surfaces. */
+.fallback[data-tint="plum"] {
+  --fallback-alpha: 0.2;
+}
+
+/* The 40% ink is the mark's opacity, so the icon's overlapping strokes
+   read as one shape and never darken where they cross. */
+.icon,
+.initial {
+  opacity: 0.4;
+}
+
+.icon {
+  width: 34%;
+  height: 34%;
+  stroke-width: 1.5;
+}
+
+.initial {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: 46cqi;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  /* Optical centre: Fraunces capitals sit a touch high in their box. */
+  transform: translateY(3%);
+  user-select: none;
+}

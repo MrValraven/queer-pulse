@@ -1,6 +1,6 @@
 import { useId, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button } from "../../shared/components/ui";
+import { Button, Sending } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type {
@@ -16,7 +16,8 @@ import css from "./StudioPlaylistInviteBanner.module.css";
 
 /**
  * The invitee's banner above the playlist: who invited them, what editors
- * can do, and Accept or Decline. Accept turns the page into the editor's
+ * can do, and Accept invite or Decline invite (each names its own pending
+ * state while the answer is on its way). Accept turns the page into the editor's
  * view (the banner folds away in its Collapse); Decline leaves for the
  * library, since a private playlist no longer opens for them. After Accept
  * `onAccepted` lets the page move focus out of the folding banner.
@@ -89,7 +90,11 @@ export function StudioPlaylistInviteBanner({
           aria-busy={answering === "accept" || undefined}
           onClick={() => answer("accept")}
         >
-          {t("studio:playlist.invite.acceptCta")}
+          {answering === "accept" ? (
+            <Sending label={t("studio:playlist.invite.acceptingCta")} />
+          ) : (
+            t("studio:playlist.invite.acceptCta")
+          )}
         </Button>
         <Button
           variant="ghost"
@@ -97,7 +102,11 @@ export function StudioPlaylistInviteBanner({
           aria-busy={answering === "decline" || undefined}
           onClick={() => answer("decline")}
         >
-          {t("studio:playlist.invite.declineCta")}
+          {answering === "decline" ? (
+            <Sending label={t("studio:playlist.invite.decliningCta")} />
+          ) : (
+            t("studio:playlist.invite.declineCta")
+          )}
         </Button>
       </div>
     </section>

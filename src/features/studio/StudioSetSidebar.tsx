@@ -1,6 +1,6 @@
 import { useId, useState } from "react";
 import { FiArrowRight } from "react-icons/fi";
-import { Select } from "../../shared/components/ui";
+import { Button, Select } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
@@ -149,16 +149,16 @@ export function StudioSetSidebar({ matched, held }: StudioSetSidebarProps) {
         </div>
       </div>
 
-      <button
-        type="button"
-        className={`${s.bt} ${s.btJade} ${s.btLg}`}
+      <Button
+        variant="jade"
+        size="lg"
         onClick={() =>
           showToast(t("studio:setSubmission.sidebar.submittedToast"), "success")
         }
       >
         {t("studio:setSubmission.sidebar.submitCta")}{" "}
         <FiArrowRight aria-hidden />
-      </button>
+      </Button>
     </div>
   );
 }

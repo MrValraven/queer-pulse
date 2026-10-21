@@ -1,16 +1,23 @@
-import { useId } from "react";
 import { Collapse, LoadMoreFooter } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { StudioReleasesResult } from "./api/useStudioReleases";
+import { StudioShelf } from "./kit/StudioShelf";
 import { StudioLoadError } from "./StudioLoadStates";
 import { StudioReleaseCard } from "./StudioReleaseCard";
-import { StudioCardGridSkeleton } from "./StudioSkeletons";
+import { StudioCardSkeleton } from "./StudioSkeletons";
 import styles from "./studio.module.css";
 import kit from "./studioKit.module.css";
 
-/** Every release except the hero's, cursor-paginated with Show more. A
- *  failed page keeps what is on screen and turns the button into Retry. */
+const SKELETON_CARD_KEYS = Array.from(
+  { length: 8 },
+  (_card, index) => `skeleton-${index}`,
+);
+
+/** Every release except the hero's, as a grid that pages with Show more.
+ *  Skeleton cards hold the grid's place and the real cards fade in over
+ *  them. A failed page keeps what is on screen and turns the button into
+ *  Retry. */
 export function StudioNewReleases({
   releasesResult,
   heroReleaseId,
@@ -24,7 +31,6 @@ export function StudioNewReleases({
   isHeroSettled: boolean;
 }) {
   const { t } = useTranslation();
-  const headingId = useId();
   const {
     releases,
     loadState,
@@ -40,31 +46,33 @@ export function StudioNewReleases({
   if (loadState.isError && heroReleaseId !== null)
     return (
       <section className={styles.row}>
-        <StudioLoadError loadState={loadState} />
+        <StudioLoadError
+          loadState={loadState}
+          what="studio:errors.what.newReleases"
+        />
       </section>
     );
   if (loadState.isError || loadState.isNotFound) return null;
   if (!isGridLoading && gridReleases.length === 0 && !hasMore) return null;
 
   return (
-    <section className={styles.row} aria-labelledby={headingId}>
-      <div className={styles.rowH}>
-        <h2 id={headingId}>
+    <div aria-busy={isGridLoading || undefined}>
+      <StudioShelf
+        id="studio-home-new-releases"
+        layout="grid"
+        title={
           <Translation
             i18nKey="studio:home.newReleases.title"
             components={{ em: <em /> }}
           />
-        </h2>
-      </div>
-      {isGridLoading ? (
-        <StudioCardGridSkeleton count={8} className={styles.rowGrid} />
-      ) : (
-        <div className={styles.rowGrid}>
-          {gridReleases.map((release) => (
-            <StudioReleaseCard key={release.id} release={release} />
-          ))}
-        </div>
-      )}
+        }
+      >
+        {isGridLoading
+          ? SKELETON_CARD_KEYS.map((key) => <StudioCardSkeleton key={key} />)
+          : gridReleases.map((release) => (
+              <StudioReleaseCard key={release.id} release={release} />
+            ))}
+      </StudioShelf>
       <Collapse isOpen={!isGridLoading && (hasMore || isFetchNextPageError)}>
         <div className={kit.moreFooter}>
           <LoadMoreFooter
@@ -77,6 +85,6 @@ export function StudioNewReleases({
           />
         </div>
       </Collapse>
-    </section>
+    </div>
   );
 }

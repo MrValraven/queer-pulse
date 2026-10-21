@@ -56,7 +56,7 @@
 }
 .card {
   padding: 18px 20px;
-  border: 1px solid var(--line);
+  border: 1px solid var(--studio-line);
   border-radius: var(--radius-16);
   background: var(--studio-surface);
 }
@@ -100,6 +100,9 @@
 .chip {
   display: block;
   width: fit-content;
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
   margin-top: 8px;
   padding: 2px 10px;
   border-radius: var(--radius-8);
@@ -143,14 +146,18 @@
 /* A destructive decision that sits behind the main fixes: the ghost
    button's weight in the danger ink (it lifts for dark). Scoped under the
    card so it outranks the ghost's own and dark-theme rules. */
+/* The two quiet exits: on a phone they share one row. */
+.actionPair {
+  display: contents;
+}
 .card .actions .dangerOutline {
   color: var(--danger-ink);
   border-color: var(--danger-ink);
 }
 @media (hover: hover) {
-  .card .actions .dangerOutline:hover:not(:disabled):not(
-      [aria-disabled="true"]
-    ) {
+  .card
+    .actions
+    .dangerOutline:hover:not(:disabled):not([aria-disabled="true"]) {
     border-color: var(--danger-ink);
     background: rgba(var(--danger-rgb), 0.08);
   }
@@ -171,23 +178,43 @@
     width: 100%;
     min-height: 44px;
   }
+  .actionPair {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+  .actionPair > a,
+  .actionPair > button {
+    width: 100%;
+    min-height: 44px;
+  }
 }
 
-/* Studio safety: the Claims tab's waiting count (the credits badge's
-   look). */
+/* Studio safety: a tab's waiting count (the credits badge's look). It is
+   sized in em from its own text, with a floor and padding instead of a
+   fixed height, so 200% text zoom grows the pill with its digits. */
 .badge {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 18px;
-  height: 18px;
+  min-width: 1.7em;
+  min-height: 1.7em;
   margin-left: 6px;
-  padding: 0 5px;
+  padding: 0.15em 0.5em;
   border-radius: var(--radius-pill);
   background: rgba(var(--accent-rgb), 0.16);
   color: var(--studio-accent-chip-text);
   font-size: var(--text-11);
   font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.sectionHeadingFirst {
+  margin: 0 0 12px;
+  font-size: var(--text-16);
+  font-weight: 600;
+  color: var(--studio-text);
 }
 
 .sectionHeading {
@@ -225,4 +252,202 @@
   .warningActions > * {
     flex: 1 1 0;
   }
+}
+
+/* "Press J and K": shown to pointer-and-keyboard setups only. */
+.keysHint {
+  display: none;
+  margin: 10px 0 0;
+  font-size: var(--text-13);
+  color: var(--studio-text-muted);
+}
+@media (hover: hover) and (pointer: fine) {
+  .keysHint {
+    display: block;
+  }
+}
+.key {
+  display: inline-block;
+  min-width: 1.6em;
+  padding: 0.05em 0.4em;
+  border: 1px solid var(--studio-line);
+  border-radius: var(--radius-4);
+  background: var(--studio-wash-1);
+  font-family: var(--sans);
+  font-size: 0.92em;
+  font-weight: 600;
+  text-align: center;
+  color: var(--studio-text);
+}
+
+/* The bar above a queue: Sort, the filter row, the count, Select. */
+.queueBar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 16px;
+  margin: 0 0 14px;
+}
+.queueSort {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.queueLabel {
+  font-size: var(--text-13);
+  font-weight: 600;
+  color: var(--studio-text-muted);
+}
+.queueCount {
+  margin: 0 auto 0 0;
+  font-size: var(--text-13);
+  color: var(--studio-text-muted);
+}
+
+/* The tick that picks a card for a bulk dismiss. */
+.selectBox {
+  flex: none;
+  align-self: center;
+}
+.selectLabel {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  cursor: pointer;
+}
+.selectLabel input {
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  accent-color: var(--accent);
+}
+
+/* Severity and SLA, under the reason chip. */
+.urgency {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  align-items: center;
+  margin: 8px 0 0;
+  font-size: var(--text-12);
+}
+.severity {
+  padding: 0.15em 0.7em;
+  border-radius: var(--radius-8);
+  background: var(--studio-wash-2);
+  color: var(--studio-text);
+  font-weight: 600;
+}
+.severityHigh {
+  background: rgba(var(--accent-rgb), 0.14);
+  color: var(--studio-accent-chip-text);
+}
+.severityUrgent {
+  background: rgba(var(--danger-rgb), 0.14);
+  color: var(--danger-ink);
+}
+.due {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--studio-text-muted);
+}
+.dueOver {
+  color: var(--danger-ink);
+  font-weight: 600;
+}
+.age {
+  margin: 8px 0 0;
+  font-size: var(--text-13);
+  font-weight: 600;
+  color: var(--studio-accent-text);
+}
+
+/* The track line on a card: its page, then Play. */
+.trackLine {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+}
+.trackLink {
+  color: inherit;
+  text-underline-offset: 3px;
+}
+.trackLink:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-radius: var(--radius-4);
+}
+
+/* A card whose release or track did not load: the reason and Reload. */
+.lookupError {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 12px;
+  margin-top: 14px;
+  padding: 12px 14px;
+  border: 1px solid rgba(var(--danger-rgb), 0.3);
+  border-radius: var(--radius-12);
+  background: rgba(var(--danger-rgb), 0.06);
+}
+.lookupIcon {
+  flex: none;
+  color: var(--danger-ink);
+}
+.lookupText {
+  flex: 1 1 220px;
+  min-width: 0;
+}
+.lookupText p {
+  margin: 0;
+  font-size: var(--text-14);
+  color: var(--studio-text);
+}
+.lookupText .lookupReason {
+  margin-top: 2px;
+  font-size: var(--text-13);
+  color: var(--studio-text-muted);
+}
+
+/* Why an action waits: a visible line per waiting button. */
+.disabledReasons {
+  display: grid;
+  gap: 4px;
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--text-13);
+  color: var(--studio-text-muted);
+}
+
+/* The review dialog: a failed decision's reason, and the guard that asks
+   before a typed note is thrown away. */
+.dialogError {
+  margin: 0 0 12px;
+  font-size: var(--text-14);
+  color: var(--danger-ink);
+}
+.discard {
+  margin: 0 0 12px;
+  padding: 12px 14px;
+  border-radius: var(--radius-12);
+  background: var(--studio-wash-1);
+  border: 1px solid var(--studio-line);
+}
+.discardText {
+  margin: 0;
+  font-size: var(--text-14);
+  font-weight: 600;
+  color: var(--studio-text);
+}
+.discardActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
 }

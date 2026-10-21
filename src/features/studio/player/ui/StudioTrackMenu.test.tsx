@@ -14,6 +14,12 @@ vi.mock("../../share/StudioShareToChatModal", () => ({
   ),
 }));
 
+vi.mock("../../StudioAddToPlaylistPicker", () => ({
+  StudioAddToPlaylistPicker: ({ subjectTitle }: { subjectTitle: string }) => (
+    <div role="dialog" aria-label={`Add ${subjectTitle} to a playlist`} />
+  ),
+}));
+
 const TRACK = {
   id: "t9",
   title: "Lighthouse",
@@ -188,20 +194,6 @@ describe("StudioTrackMenu", () => {
     expect(await screen.findByText("Link copied")).toBeInTheDocument();
   });
 
-  it("offers Send in a message between Add to queue and Copy link", async () => {
-    renderWithPlayer(<StudioTrackMenu track={TRACK} />);
-    await openMenu();
-    const labels = screen
-      .getAllByRole("menuitem")
-      .map((item) => item.textContent);
-    expect(labels).toEqual([
-      "Play next",
-      "Add to queue",
-      "Send in a message",
-      "Copy link",
-    ]);
-  });
-
   it("opens the picker for this track", async () => {
     renderWithPlayer(<StudioTrackMenu track={TRACK} />);
     await openMenu();
@@ -225,7 +217,86 @@ describe("StudioTrackMenu", () => {
   });
 });
 
+describe("StudioTrackMenu items", () => {
+  it("lists listening, going, sharing and report items in that order", async () => {
+    renderWithPlayer(
+      <StudioTrackMenu
+        track={{
+          ...TRACK,
+          artistHref: "/studio/artist?id=a1",
+          releaseHref: "/studio/album?id=r1",
+          artistName: "Mariana Sol",
+        }}
+      />,
+    );
+    await openMenu();
+    const labels = screen
+      .getAllByRole("menuitem")
+      .map((item) => item.textContent);
+    expect(labels).toEqual([
+      "Play next",
+      "Add to queue",
+      "Add to playlist",
+      "Add to Liked songs",
+      "Go to artist",
+      "Go to release",
+      "Send in a message",
+      "Copy link",
+    ]);
+    expect(screen.getAllByRole("separator")).toHaveLength(2);
+    expect(
+      screen.getByRole("menuitem", { name: "Go to artist" }),
+    ).toHaveAttribute("href", "/studio/artist?id=a1");
+  });
+
+  it("names the menu after the track", async () => {
+    renderWithPlayer(<StudioTrackMenu track={TRACK} />);
+    const menu = await openMenu();
+    expect(menu).toHaveAccessibleName("Actions for Lighthouse");
+  });
+
+  it("opens the playlist picker for this track", async () => {
+    renderWithPlayer(<StudioTrackMenu track={TRACK} />);
+    await openMenu();
+    fireEvent.click(screen.getByRole("menuitem", { name: "Add to playlist" }));
+    expect(
+      await screen.findByRole("dialog", {
+        name: "Add Lighthouse to a playlist",
+      }),
+    ).toBeInTheDocument();
+  });
+
+  it("hands Add to playlist to the caller when it asks", async () => {
+    const onRequestAddToPlaylist = vi.fn();
+    renderWithPlayer(
+      <StudioTrackMenu
+        track={TRACK}
+        onRequestAddToPlaylist={onRequestAddToPlaylist}
+      />,
+    );
+    await openMenu();
+    fireEvent.click(screen.getByRole("menuitem", { name: "Add to playlist" }));
+    expect(onRequestAddToPlaylist).toHaveBeenCalledTimes(1);
+    expect(screen.queryByRole("dialog")).toBeNull();
+  });
+
+  it("jumps to an item by its first letter", async () => {
+    renderWithPlayer(<StudioTrackMenu track={TRACK} />);
+    const menu = await openMenu();
+    fireEvent.keyDown(menu, { key: "c" });
+    expect(screen.getByRole("menuitem", { name: "Copy link" })).toHaveFocus();
+  });
+});
+
 describe("StudioTrackMenu panel alignment", () => {
+  // jsdom lays nothing out: the panel is given a 200 by 160 box, and every
+  // element's rect stands in for the trigger's.
+  beforeEach(() => {
+    vi.spyOn(HTMLElement.prototype, "offsetWidth", "get").mockReturnValue(200);
+    vi.spyOn(HTMLElement.prototype, "scrollHeight", "get").mockReturnValue(160);
+    return () => vi.restoreAllMocks();
+  });
+
   function panelRectAt(left: number) {
     return vi
       .spyOn(HTMLElement.prototype, "getBoundingClientRect")
@@ -243,6 +314,8 @@ describe("StudioTrackMenu panel alignment", () => {
   }
 
   it("hangs from the start edge when the end edge would cross the left of the screen", async () => {
+    // A trigger whose end edge sits at 80px: a 200px panel hung from it
+    // would start at -120px.
     const rectSpy = panelRectAt(-120);
     renderWithPlayer(<StudioTrackMenu track={TRACK} />);
     const menu = await openMenu();

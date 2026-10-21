@@ -1,7 +1,9 @@
 import { AnimatePresence, m } from "motion/react";
 import { FiCast } from "react-icons/fi";
 import { useMotionPrefs } from "../../../../app/providers/motionPrefs";
+import { IconButton } from "../../../../shared/components/ui/IconButton";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
+import { STUDIO_EXIT, STUDIO_FADE } from "../../studioMotion";
 import { useStudioPlayer } from "../studioPlayerContext";
 import styles from "./StudioPlayerControls.module.css";
 
@@ -12,27 +14,37 @@ export function StudioCastButton() {
   const { t } = useTranslation();
   const { reducedMotion } = useMotionPrefs();
   const { remote, promptRemotePlayback } = useStudioPlayer();
+  const label = remote.isConnected
+    ? t("studio:player.castConnected")
+    : t("studio:player.cast");
   return (
     <AnimatePresence initial={false}>
       {remote.isAvailable && (
-        <m.button
+        <m.span
           key="cast"
-          type="button"
-          className={styles.iconButton}
-          aria-pressed={remote.isConnected}
-          aria-label={
-            remote.isConnected
-              ? t("studio:player.castConnected")
-              : t("studio:player.cast")
-          }
-          onClick={() => promptRemotePlayback()}
+          className={styles.castSlot}
           initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: reducedMotion ? 0 : 0.16 }}
+          animate={{
+            opacity: 1,
+            transition: reducedMotion ? { duration: 0 } : STUDIO_FADE,
+          }}
+          exit={{
+            opacity: 0,
+            transition: reducedMotion ? { duration: 0 } : STUDIO_EXIT,
+          }}
         >
-          <FiCast aria-hidden />
-        </m.button>
+          <IconButton
+            className={styles.iconButton}
+            aria-pressed={remote.isConnected}
+            aria-label={label}
+            tooltip
+            data-active={remote.isConnected || undefined}
+            onClick={() => promptRemotePlayback()}
+          >
+            <FiCast aria-hidden />
+            <span className={styles.onDot} aria-hidden="true" />
+          </IconButton>
+        </m.span>
       )}
     </AnimatePresence>
   );

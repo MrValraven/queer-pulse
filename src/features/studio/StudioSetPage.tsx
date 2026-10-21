@@ -1,8 +1,12 @@
 import { useMemo } from "react";
-import { Link } from "react-router-dom";
 import { FiPlus, FiCheck, FiArrowRight } from "react-icons/fi";
 import { routes } from "../../app/routeMap";
-import { ImageSlot, FadeIn } from "../../shared/components/ui";
+import {
+  Button,
+  IconButton,
+  ImageSlot,
+  FadeIn,
+} from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useSaved } from "../../app/providers/useSaved";
 import { useToast } from "../../shared/components/feedback/useToast";
@@ -101,17 +105,17 @@ export function StudioSetPage() {
             {t(SET.blurbKey, { name: SET.curatorFirstName })}
           </div>
           <div className={s.collActions}>
-            <button
-              type="button"
-              className={ss.playBig}
+            <IconButton
+              className={s.setPlay}
               aria-label={t("studio:set.page.playAria")}
+              tooltip
             >
-              <svg viewBox="0 0 12 14" fill="currentColor">
+              <svg viewBox="0 0 12 14" fill="currentColor" aria-hidden>
                 <path d="M1 1l10 6-10 6z" />
               </svg>
-            </button>
-            <button
-              type="button"
+            </IconButton>
+            <Button
+              variant="quiet"
               onClick={() => {
                 const now = toggleSave(setItem);
                 showToast(
@@ -131,11 +135,11 @@ export function StudioSetPage() {
                   <FiPlus /> {t("studio:room.hero.addLibrary")}
                 </>
               )}
-            </button>
-            <Link to={routes.studioLive} className={ss.bt}>
+            </Button>
+            <Button variant="quiet" to={routes.studioLive}>
               {t("studio:set.page.joinLiveRoomCta")}{" "}
               <FiArrowRight aria-hidden />
-            </Link>
+            </Button>
           </div>
         </div>
       </div>

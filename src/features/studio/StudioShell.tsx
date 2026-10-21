@@ -1,30 +1,59 @@
-import { type ReactNode } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useRef, type ReactNode } from "react";
+import { Link } from "react-router-dom";
 import { routes } from "../../app/routeMap";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
 import { useMediaQuery } from "../../shared/hooks";
 import { mediaMax } from "../../shared/theme/breakpoints";
+import {
+  MAIN_CONTENT_ID,
+  SkipToContentLink,
+} from "../../shared/components/layout/SkipToContentLink";
 import { useAccountIdentity } from "../../shared/components/layout/useAccountIdentity";
 import { StudioRail } from "./StudioRail";
 import { StudioAccountMenu } from "./StudioAccountMenu";
 import { StudioDemoLibrarySeed } from "./StudioDemoLibrarySeed";
+import { StudioNotificationsBell } from "./StudioNotificationsBell";
+import { StudioShellHistoryNav } from "./StudioShellHistoryNav";
 import { StudioShellSearch } from "./StudioShellSearch";
 import { StudioTabBar } from "./StudioTabBar";
 import { SUSTAIN_PRICE } from "./studioShell.data";
+import { useStudioDocumentTitle } from "./useStudioDocumentTitle";
+import {
+  useStudioRailCollapsed,
+  useStudioRailTransitionFlag,
+} from "./useStudioRailCollapsed";
+import { useStudioSearchShortcut } from "./useStudioSearchShortcut";
+import { useStudioSearchShortcutFallback } from "./useStudioSearchShortcutFallback";
 import { useStudioShowcase } from "./useStudioShowcase";
 import { useStudioShellSignal } from "./useStudioShellSignal";
 import styles from "./studio.module.css";
 
+/**
+ * The listener shell: the rail (folding to an icon strip on desktop), the
+ * sticky topbar, the page's `<main>` and the phone tab bar. The topbar sits
+ * outside `<main>`, so the skip link and the focus that RouteAnnouncer moves
+ * to `#main-content` after every navigation land on the page itself. Every
+ * Studio page names the tab "Studio · QueerPulse" through this shell until
+ * the page sets its own title.
+ */
 export function StudioShell({ children }: { children: ReactNode }) {
-  const navigate = useNavigate();
   const { t } = useTranslation();
   const fmt = useFormat();
   const isShowcase = useStudioShowcase();
   const identity = useAccountIdentity();
   const isCompact = useMediaQuery(mediaMax(880));
+  const { isRailCollapsed } = useStudioRailCollapsed();
+  const appRef = useRef<HTMLDivElement>(null);
+  useStudioRailTransitionFlag(appRef);
   useStudioShellSignal();
+  useStudioDocumentTitle();
+  // "/" and Cmd/Ctrl+K at every width: the hook focuses a field on screen,
+  // and the fallback (mounted after it, so it acts last) opens the search
+  // page where the topbar has no field.
+  useStudioSearchShortcut();
+  useStudioSearchShortcutFallback();
   // Phones get the short action labels so the brand fits whole beside them;
   // the full wording stays the link's accessible name.
   const sustainLabel = t("studio:shell.sustainCta", {
@@ -43,55 +72,30 @@ export function StudioShell({ children }: { children: ReactNode }) {
   // (buttons, avatars, empty states, selects) switch with the rest of the app.
   return (
     <div className={styles.root}>
+      <SkipToContentLink />
       {/* Every Studio page mounts the shell, so the demo library fixture
           seeds on whichever page a visitor opens first. The leaf reads the
           saved store, so a save re-renders it alone. */}
       <StudioDemoLibrarySeed />
-      <div className={styles.app}>
+      <div
+        ref={appRef}
+        className={styles.app}
+        data-rail-collapsed={(!isCompact && isRailCollapsed) || undefined}
+      >
         {/* The rail is hidden at this width anyway; leaving it unmounted
             spares phones its playlist queries. */}
         {!isCompact && <StudioRail />}
 
-        <main className={styles.main}>
-          <div className={styles.topbar}>
+        <div className={styles.main}>
+          <header className={styles.topbar}>
             {isCompact && accountMenu}
-            <div className={styles.navs}>
-              <button
-                type="button"
-                aria-label={t("studio:shell.back")}
-                onClick={() => void navigate(-1)}
-              >
-                <svg
-                  viewBox="0 0 14 14"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth={2.4}
-                  strokeLinecap="round"
-                >
-                  <path d="M9 1L3 7l6 6" />
-                </svg>
-              </button>
-              <button
-                type="button"
-                aria-label={t("studio:shell.forward")}
-                onClick={() => void navigate(1)}
-              >
-                <svg
-                  viewBox="0 0 14 14"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth={2.4}
-                  strokeLinecap="round"
-                >
-                  <path d="M5 1l6 6-6 6" />
-                </svg>
-              </button>
-            </div>
+            <StudioShellHistoryNav />
             {/* Search is a tab on phones and /studio/search has its own
                 field, so the bar shows the brand there. */}
             {isCompact ? (
+              // No pulse dot here: the avatar's attention dot sits beside
+              // the brand, and one dot on the bar reads clearly.
               <Link to={routes.studio} className={styles.topBrand}>
-                <span className={styles.pulseDot} aria-hidden />
                 <span className={styles.topBrandWord}>
                   <Translation
                     i18nKey="studio:brand.lockup"
@@ -115,13 +119,16 @@ export function StudioShell({ children }: { children: ReactNode }) {
                   {isCompact ? t("studio:shell.sustainShort") : sustainLabel}
                 </Link>
               )}
+              <StudioNotificationsBell />
               {!isCompact && accountMenu}
             </div>
-          </div>
+          </header>
 
-          <div className={styles.content}>{children}</div>
+          <main id={MAIN_CONTENT_ID} tabIndex={-1} className={styles.content}>
+            {children}
+          </main>
           <StudioTabBar />
-        </main>
+        </div>
       </div>
     </div>
   );

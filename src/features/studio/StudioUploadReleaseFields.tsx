@@ -1,5 +1,5 @@
 import { useId } from "react";
-import { Collapse, Select } from "../../shared/components/ui";
+import { Collapse, FormField, Select } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   STUDIO_GENRE_LABEL_KEY,
@@ -16,35 +16,42 @@ import {
   type StudioMood,
 } from "./api/studio.types";
 import { StudioUploadGaplessField } from "./StudioUploadGaplessField";
+import { StudioUploadRadioCards } from "./StudioUploadRadioCards";
 import { StudioUploadSceneField } from "./StudioUploadSceneField";
 import { STUDIO_MOOD_LABEL_KEY } from "./studioDiscoveryLabels";
+import { RELEASE_FIELD_IDS } from "./studioUpload.data";
 import {
   releaseFieldCopyOf,
   releaseFormErrors,
 } from "./studioUploadDraft.data";
 import type { StudioUploadDraft } from "./useStudioUploadDraft";
 import s from "./creator.module.css";
+import fieldStyles from "./StudioTrackFields.module.css";
 
 /** The release's own details, controlled by the draft. The type choice hides
  *  when the persona has one type (a DJ's mix, a podcaster's show); a show
  *  reads Show name and About the show and has no genre, mood or scene. */
+/** A field's hint and its error, read with the field through FormField's
+ *  helper (aria-describedby). The error is deliberately no alert of its
+ *  own: the summary above the form announces every refusal once, and focus
+ *  lands on the first field, which then reads its error. */
+function fieldNoteOf(hint: string | null, error: string | null) {
+  if (!hint && !error) return undefined;
+  return (
+    <>
+      {hint}
+      {hint && error ? " " : null}
+      {error ? <span className={s.fieldError}>{error}</span> : null}
+    </>
+  );
+}
+
 export function StudioUploadReleaseFields({
   draft,
 }: {
   draft: StudioUploadDraft;
 }) {
   const { t } = useTranslation();
-  const titleId = useId();
-  const titleErrorId = useId();
-  const genreId = useId();
-  const moodId = useId();
-  const dateId = useId();
-  const descriptionId = useId();
-  const descriptionCountId = useId();
-  const descriptionErrorId = useId();
-  const buyUrlId = useId();
-  const buyUrlHintId = useId();
-  const buyUrlErrorId = useId();
   const typeLegendId = useId();
   const { form, setField } = draft;
   const errors = draft.shouldShowErrors ? releaseFormErrors(form) : {};
@@ -55,6 +62,7 @@ export function StudioUploadReleaseFields({
   const fieldCopy = releaseFieldCopyOf(
     draft.persona ? formatOfKind(draft.persona.kind) : "music",
   );
+  const fieldClass = `${s.field} ${fieldStyles.studioField}`;
 
   return (
     <>
@@ -63,47 +71,38 @@ export function StudioUploadReleaseFields({
           <legend id={typeLegendId}>
             {t("studio:uploadFlow.release.typeLabel")}
           </legend>
-          <div className={s.typeOptions}>
-            {allowedTypes.map((type) => (
-              <label key={type}>
-                <input
-                  type="radio"
-                  name="studio-release-type"
-                  value={type}
-                  checked={form.type === type}
-                  onChange={() => setField("type", type)}
-                />{" "}
-                {t(STUDIO_RELEASE_TYPE_LABEL_KEY[type])}
-              </label>
-            ))}
-          </div>
+          <StudioUploadRadioCards
+            legendId={typeLegendId}
+            value={form.type}
+            options={allowedTypes.map((type) => ({
+              id: type,
+              label: t(STUDIO_RELEASE_TYPE_LABEL_KEY[type]),
+            }))}
+            onChange={(type) => setField("type", type)}
+          />
         </fieldset>
       </Collapse>
-      <div className={s.field}>
-        <label htmlFor={titleId}>{t(fieldCopy.titleLabelKey)}</label>
+      <FormField
+        className={fieldClass}
+        label={t(fieldCopy.titleLabelKey)}
+        required
+        helper={fieldNoteOf(null, errors.title ? t(errors.title) : null)}
+      >
         <input
-          id={titleId}
+          id={RELEASE_FIELD_IDS.title}
+          aria-invalid={errors.title ? true : undefined}
           type="text"
           value={form.title}
           maxLength={STUDIO_LIMITS.titleMax}
-          required
-          aria-invalid={errors.title ? true : undefined}
-          aria-describedby={errors.title ? titleErrorId : undefined}
           onChange={(event) => setField("title", event.target.value)}
         />
-        {errors.title && (
-          <p id={titleErrorId} className={s.fieldError}>
-            {t(errors.title)}
-          </p>
-        )}
-      </div>
+      </FormField>
       <Collapse isOpen={fieldCopy.isGenreShown}>
-        <div className={s.field}>
-          <label htmlFor={genreId}>
-            {t("studio:upload.metadata.field.genre")}
-          </label>
+        <FormField
+          className={fieldClass}
+          label={t("studio:upload.metadata.field.genre")}
+        >
           <Select
-            id={genreId}
             options={[
               { value: "", label: t("studio:uploadFlow.release.genreNone") },
               ...STUDIO_GENRES.map((genre) => ({
@@ -116,13 +115,12 @@ export function StudioUploadReleaseFields({
               setField("genre", (value ?? "") as StudioGenre | "")
             }
           />
-        </div>
-        <div className={s.field}>
-          <label htmlFor={moodId}>
-            {t("studio:uploadFlow.release.moodLabel")}
-          </label>
+        </FormField>
+        <FormField
+          className={fieldClass}
+          label={t("studio:uploadFlow.release.moodLabel")}
+        >
           <Select
-            id={moodId}
             options={[
               { value: "", label: t("studio:uploadFlow.release.moodNone") },
               ...STUDIO_MOODS.map((mood) => ({
@@ -135,84 +133,66 @@ export function StudioUploadReleaseFields({
               setField("mood", (value ?? "") as StudioMood | "")
             }
           />
-        </div>
+        </FormField>
         <StudioUploadSceneField
           value={form.sceneId}
           onChange={(sceneId) => setField("sceneId", sceneId)}
         />
       </Collapse>
-      <div className={s.field}>
-        <label htmlFor={dateId}>
-          {t("studio:uploadFlow.release.dateLabel")}
-        </label>
+      <FormField
+        className={fieldClass}
+        label={t("studio:uploadFlow.release.dateLabel")}
+        helper={t("studio:uploadFlow.release.dateHint")}
+      >
         <input
-          id={dateId}
           type="date"
           value={form.releasedOn}
           onChange={(event) => setField("releasedOn", event.target.value)}
         />
-        <p className={s.fhint}>{t("studio:uploadFlow.release.dateHint")}</p>
-      </div>
-      <div className={s.field}>
-        <label htmlFor={descriptionId}>
-          {t(fieldCopy.descriptionLabelKey)}
-        </label>
+      </FormField>
+      <FormField
+        className={fieldClass}
+        label={t(fieldCopy.descriptionLabelKey)}
+        helper={fieldNoteOf(
+          t("studio:uploadFlow.release.descriptionCount", {
+            count: form.description.length,
+            max: STUDIO_LIMITS.descriptionMax,
+          }),
+          errors.description ? t(errors.description) : null,
+        )}
+      >
         <textarea
-          id={descriptionId}
+          id={RELEASE_FIELD_IDS.description}
+          aria-invalid={errors.description ? true : undefined}
           rows={5}
           value={form.description}
           maxLength={STUDIO_LIMITS.descriptionMax}
-          aria-describedby={[
-            descriptionCountId,
-            errors.description && descriptionErrorId,
-          ]
-            .filter(Boolean)
-            .join(" ")}
-          aria-invalid={errors.description ? true : undefined}
           onChange={(event) => setField("description", event.target.value)}
         />
-        <p id={descriptionCountId} className={s.fieldCount}>
-          {t("studio:uploadFlow.release.descriptionCount", {
-            count: form.description.length,
-            max: STUDIO_LIMITS.descriptionMax,
-          })}
-        </p>
-        {errors.description && (
-          <p id={descriptionErrorId} className={s.fieldError}>
-            {t(errors.description)}
-          </p>
-        )}
-      </div>
+      </FormField>
       <Collapse isOpen={fieldCopy.isGenreShown}>
         <StudioUploadGaplessField form={form} setField={setField} />
       </Collapse>
-      <div className={s.field}>
-        <label htmlFor={buyUrlId}>
-          {t("studio:uploadFlow.v3.buyUrlLabel")}
-        </label>
+      <FormField
+        className={fieldClass}
+        label={t("studio:uploadFlow.v3.buyUrlLabel")}
+        helper={fieldNoteOf(
+          t("studio:uploadFlow.v3.buyUrlHint"),
+          errors.buyUrl ? t(errors.buyUrl) : null,
+        )}
+      >
         <input
-          id={buyUrlId}
+          id={RELEASE_FIELD_IDS.buyUrl}
+          aria-invalid={errors.buyUrl ? true : undefined}
           type="text"
           inputMode="url"
           autoComplete="url"
           value={form.buyUrl}
           maxLength={STUDIO_BUY_URL_MAX}
           placeholder="https://"
-          aria-invalid={errors.buyUrl ? true : undefined}
-          aria-describedby={[buyUrlHintId, errors.buyUrl && buyUrlErrorId]
-            .filter(Boolean)
-            .join(" ")}
           onChange={(event) => setField("buyUrl", event.target.value)}
         />
-        <p id={buyUrlHintId} className={s.fhint}>
-          {t("studio:uploadFlow.v3.buyUrlHint")}
-        </p>
-        {errors.buyUrl && (
-          <p id={buyUrlErrorId} className={s.fieldError}>
-            {t(errors.buyUrl)}
-          </p>
-        )}
-      </div>
+      </FormField>
     </>
   );
 }

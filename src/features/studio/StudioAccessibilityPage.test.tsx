@@ -103,7 +103,7 @@ describe("Studio accessibility shortcuts (Listening)", () => {
         ),
       );
       expect(chipTexts).toEqual(expectedTexts);
-      for (const absentKey of ["T", "C", "/"])
+      for (const absentKey of ["T", "C"])
         expect(chipTexts.has(absentKey)).toBe(false);
       view.unmount();
     }

@@ -45,6 +45,12 @@ export interface SavedItemDTO {
    * without saying more. Every other unavailable row has `href: null`.
    */
   unavailableReason?: SavedItemUnavailableReason;
+  /**
+   * Studio Library cards: on every `studio_release` and `studio_playlist`
+   * row, the release cover or the playlist's first playable cover. `null`
+   * when there is none, and always `null` on an unavailable row.
+   */
+  coverUrl?: string | null;
 }
 
 /** The mutable subset PUT accepts (everything except id + savedAt). */
@@ -92,6 +98,7 @@ export function dtoToSavedItem(dto: SavedItemDTO): SavedItem {
     availability: dto.availability,
     unavailableReason:
       dto.availability === "unavailable" ? dto.unavailableReason : undefined,
+    ...(dto.coverUrl !== undefined ? { coverUrl: dto.coverUrl } : {}),
   };
 }
 

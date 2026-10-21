@@ -92,7 +92,10 @@
   padding: 0;
   border: none;
   border-radius: var(--radius-pill);
-  background: rgba(var(--plum-rgb), 0.18);
+  /* Off track: 3.1:1 against the cream page and 4.9:1 against the dark page;
+     the cream knob is 3.1:1 (light) and 3.6:1 (dark) against it (WCAG 1.4.11).
+     --line-rgb flips with the theme. */
+  background: rgba(var(--line-rgb), 0.5);
   cursor: pointer;
   position: relative;
   transition: background 0.2s var(--ease);
@@ -216,5 +219,6 @@
   background: rgba(var(--cream-rgb), 0.16);
 }
 :global([data-theme="dark"]) .toggle:not(.toggleOn) {
-  background: rgba(var(--cream-rgb), 0.22);
+  /* 0.5 gives 4.9:1 against the dark page and 3.6:1 to the cream knob. */
+  background: rgba(var(--cream-rgb), 0.5);
 }

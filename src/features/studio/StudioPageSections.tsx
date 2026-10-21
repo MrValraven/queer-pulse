@@ -13,9 +13,9 @@ import styles from "./studio.module.css";
 export function StudioSetSection() {
   const { t } = useTranslation();
   return (
-    <section className={styles.row}>
+    <section className={styles.row} aria-labelledby="studio-home-set">
       <div className={styles.rowH}>
-        <h2>
+        <h2 id="studio-home-set">
           <Translation
             i18nKey="studio:room.set.title"
             components={{ em: <em /> }}
@@ -54,10 +54,10 @@ export function StudioSetSection() {
                 />
               </div>
               <div>
-                <h5>
+                <h4>
                   {row.titlePre}
                   {row.titleEm && <em>{row.titleEm}</em>}
-                </h5>
+                </h4>
                 <div className={styles.who}>{row.who}</div>
               </div>
               <div className={styles.pay}>
@@ -127,15 +127,6 @@ function StudioSideCol() {
           </span>
           <span className={styles.v}>
             {fmt.currency(WEDNESDAY_SET.ledgerPaidArtists)}
-          </span>
-        </div>
-        <div className={styles.lrow}>
-          <span className={styles.k}>{t("studio:room.set.ledgerPlays")}</span>
-          <span className={styles.v}>
-            {fmt.number(WEDNESDAY_SET.ledgerPlays, {
-              notation: "compact",
-              maximumFractionDigits: 1,
-            })}
           </span>
         </div>
         <div className={styles.lrow}>

@@ -108,7 +108,7 @@
 
 .rowNumber {
   font-family: var(--serif);
-  color: var(--text60);
+  color: var(--studio-text-muted);
   transition-property: opacity;
   transition-duration: 0.15s;
 }
@@ -134,15 +134,6 @@ li[aria-current] > .rowPlay .rowNumber {
   box-shadow: var(--ring-cream);
 }
 
-/* A menu item draws its ring inside its own edge, so the menu's padding
-   never clips it. At (0,3,0) it beats the shared ring above, whose
-   `.overflow button:focus-visible` (0,2,1) also reaches the item buttons. */
-.menu .menuItem:focus-visible {
-  outline: var(--focus-ring);
-  outline-offset: -2px;
-  box-shadow: none;
-}
-
 .linerParagraph {
   white-space: pre-line;
 }
@@ -160,7 +151,7 @@ li[aria-current] > .rowPlay .rowNumber {
   border-radius: var(--radius-pill);
   font-size: var(--text-11);
   font-weight: 700;
-  color: var(--text);
+  color: var(--studio-text);
   background: rgba(var(--studio-ink-rgb), 0.22);
 }
 
@@ -191,73 +182,6 @@ li[aria-current] > .rowPlay .rowNumber {
 /* Open, the trigger holds the pills' hover tint. */
 .overflow .overflowTrigger[aria-expanded="true"] {
   background: rgba(var(--studio-ink-rgb), 0.14);
-}
-
-/* A quiet popover list: plain rows that tint on hover. Its surface, border,
-   radius and shadow match the Share menu (ShareMenu.module.css) beside it in
-   the hero. Opening it scrolls it into view, and the scroll margin keeps
-   its last item clear of the phone tab bar and the player bar. */
-.menu {
-  position: absolute;
-  inset-inline-end: 0;
-  top: calc(100% + 6px);
-  z-index: var(--z-popover);
-  min-width: 200px;
-  padding: 6px;
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: var(--radius-12);
-  box-shadow: var(--shadow-e3);
-  scroll-margin-bottom: calc(
-    var(--bottom-inset, 0px) + var(--studio-player-inset, 0px) + 12px
-  );
-}
-
-.menuItem {
-  display: flex;
-  align-items: center;
-  min-height: var(--tap-min);
-  width: 100%;
-  padding: 9px 12px;
-  border: none;
-  border-radius: var(--radius-8);
-  background: none;
-  color: inherit;
-  font-family: var(--sans);
-  font-size: var(--text-13-5);
-  font-weight: 500;
-  text-align: start;
-  text-decoration: none;
-  cursor: pointer;
-  transition-property: background-color;
-  transition-duration: var(--dur-fast);
-  transition-timing-function: var(--ease);
-}
-
-@media (hover: hover) {
-  .menuItem:hover {
-    background: rgba(var(--studio-ink-rgb), 0.07);
-  }
-}
-
-/* A destructive item (Delete playlist, Leave playlist) reads in the danger
-   ink, which lifts for dark; its hover takes a faint danger tint. */
-.menuItem.menuItemDanger {
-  color: var(--danger-ink);
-}
-
-@media (hover: hover) {
-  .menuItem.menuItemDanger:hover {
-    background: rgba(var(--danger-rgb), 0.08);
-  }
-}
-
-/* The hairline above the destructive item runs edge to edge across the
-   menu's 6px padding. */
-.menuSeparator {
-  height: 1px;
-  margin: 6px -6px;
-  background: var(--line);
 }
 
 /* Studio v2: the duration cell holds the row's Add to playlist button. */

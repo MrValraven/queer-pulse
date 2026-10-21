@@ -436,7 +436,8 @@ describe("StudioPlayer mini player (phone)", () => {
     const player = createStudioPlayerValue({ status: "error" });
     renderWithPlayer(<StudioPlayer />, { player });
     expect(
-      await screen.findByText(/This track can't play right now/),
+      // ENG-02: an error with no known cause reads the play "unknown" line.
+      await screen.findByText(/This track couldn't start/),
     ).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "Retry the track" }));
     expect(player.retry).toHaveBeenCalled();

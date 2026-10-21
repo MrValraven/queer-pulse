@@ -208,6 +208,59 @@ export const STORAGE_INVENTORY: StorageEntry[] = [
       "features/studio/player/studioEpisodeMemory.ts (cleared on sign-out, Quick Exit and loss of Studio access)",
   },
   {
+    id: "studioListening",
+    names: [
+      "qp.studio.resume.v1",
+      "qp.studio.recent.v1",
+      "qp.studio.searches.v1",
+    ],
+    kind: "localStorage",
+    category: "functional",
+    purposeKey: `${NS}.studioListening.purpose`,
+    lifetimeKey: `${NS}.lifetime.untilCleared`,
+    sourceHint:
+      "features/studio/player/studioListeningMemory.ts, features/studio/studioRecentSearches.ts (cleared on sign-out, Quick Exit and loss of Studio access)",
+  },
+  {
+    id: "studioListeningSettings",
+    names: ["studio.player.listening"],
+    kind: "localStorage",
+    category: "functional",
+    purposeKey: `${NS}.studioListeningSettings.purpose`,
+    lifetimeKey: `${NS}.lifetime.untilCleared`,
+    sourceHint: "features/studio/player/studioPlayerPreferences.ts",
+  },
+  {
+    id: "studioTaste",
+    names: ["qp.studio.taste.v1"],
+    kind: "localStorage",
+    category: "functional",
+    purposeKey: `${NS}.studioTaste.purpose`,
+    lifetimeKey: `${NS}.lifetime.untilCleared`,
+    sourceHint:
+      "features/studio/studioFirstRunTaste.ts (cleared on sign-out, Quick Exit and loss of Studio access)",
+  },
+  {
+    id: "studioWelcomeSeen",
+    names: ["qp.studio.welcomeSeen.v1"],
+    kind: "localStorage",
+    category: "functional",
+    purposeKey: `${NS}.studioWelcomeSeen.purpose`,
+    lifetimeKey: `${NS}.lifetime.untilCleared`,
+    sourceHint:
+      "features/studio/studioFirstRunTaste.ts (member id only; cleared on Quick Exit)",
+  },
+  {
+    id: "studioRail",
+    names: ["qp.studio.railPlaylists.v1.*"],
+    kind: "sessionStorage",
+    category: "functional",
+    purposeKey: `${NS}.studioRail.purpose`,
+    lifetimeKey: `${NS}.lifetime.untilTabClosed`,
+    sourceHint:
+      "features/studio/useStudioRailMemory.ts (cleared on sign-out and Quick Exit)",
+  },
+  {
     id: "outbox",
     names: [
       "qp.messages.outbox.v1",

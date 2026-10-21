@@ -368,10 +368,18 @@ export function demoAdminClaimsPage(
   );
 }
 
-export function demoAdminClaimCounts(): StudioAdminClaimCountsDTO {
+/** As the counts route: the claims waiting for our team, plus the open
+ *  takedown disputes from the demo's review queues. Those live in their own
+ *  module, read lazily, since it reaches this one through the demo API. */
+export async function demoAdminClaimCounts(): Promise<StudioAdminClaimCountsDTO> {
   const countOf = (status: StudioClaimStatus) =>
     state.claims.filter((claim) => claim.status === status).length;
-  return { submitted: countOf("submitted"), countered: countOf("countered") };
+  const { demoReviewDisputesPage } = await import("./studioDemoFlagReview");
+  return {
+    submitted: countOf("submitted"),
+    countered: countOf("countered"),
+    disputesWaiting: demoReviewDisputesPage().items.length,
+  };
 }
 
 export function demoDecideClaim(

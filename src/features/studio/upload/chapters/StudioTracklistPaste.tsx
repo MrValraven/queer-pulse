@@ -46,16 +46,16 @@ export function StudioTracklistPaste({
 
   return (
     <div className={styles.paste}>
-      <button
+      <Button
+        variant="quiet"
         ref={toggleRef}
-        type="button"
         className={styles.linkButton}
         aria-expanded={isOpen}
         aria-controls={isOpen ? panelId : undefined}
         onClick={() => setIsOpen((wasOpen) => !wasOpen)}
       >
         {t(toggleKey)}
-      </button>
+      </Button>
       <Collapse isOpen={isOpen}>
         <div id={panelId} className={styles.pastePanel}>
           <label htmlFor={textId} className={styles.label}>

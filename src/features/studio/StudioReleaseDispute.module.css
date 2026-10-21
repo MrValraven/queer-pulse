@@ -4,7 +4,7 @@
   max-width: 60ch;
   margin: 0 0 32px;
   padding: 18px 20px;
-  border: 1px solid var(--line);
+  border: 1px solid var(--studio-line);
   border-radius: var(--radius-14);
   background: rgba(var(--studio-ink-rgb), 0.04);
 }

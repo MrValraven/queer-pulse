@@ -4,6 +4,7 @@ import { AnimatePresence, m } from "motion/react";
 import { FiUsers } from "react-icons/fi";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
 import { useMotionPrefs } from "../../app/providers/motionPrefs";
+import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { keepOnFrameLoop } from "../gatherings/checkin/checkinMotion";
 import type { StudioPlaylistView } from "./api/studio.adapters";
@@ -79,35 +80,47 @@ export function StudioPlaylistCollabChip({
     onUpdate: keepOnFrameLoop,
   } as const;
   return (
-    <m.button
-      type="button"
-      className={css.chip}
-      aria-label={t("studio:playlist.collab.openAria", { count: editorCount })}
-      {...fadeMotion}
-      onClick={onOpen}
-    >
-      <FiUsers aria-hidden className={css.icon} />
-      <span>{t("studio:playlist.collab.chip")}</span>
-      <AnimatePresence initial={false}>
-        {shownEditors.length > 0 && (
-          <m.span key="stack" className={css.stack} aria-hidden {...fadeMotion}>
-            {shownEditors.map((editor) => (
-              <span key={editor.editorId} className={css.face}>
-                <StudioPlaylistPersonAvatar person={editor.person} size={20} />
-              </span>
-            ))}
-            <AnimatePresence initial={false}>
-              {hiddenCount > 0 && (
-                <m.span key="more" className={css.more} {...fadeMotion}>
-                  {t("studio:playlist.collab.moreCount", {
-                    count: hiddenCount,
-                  })}
-                </m.span>
-              )}
-            </AnimatePresence>
-          </m.span>
-        )}
-      </AnimatePresence>
-    </m.button>
+    <m.span className={css.chipWrap} {...fadeMotion}>
+      <Button
+        variant="quiet"
+        size="sm"
+        className={css.chip}
+        aria-label={t("studio:playlist.collab.openAria", {
+          count: editorCount,
+        })}
+        onClick={onOpen}
+      >
+        <FiUsers aria-hidden className={css.icon} />
+        <span>{t("studio:playlist.collab.chip")}</span>
+        <AnimatePresence initial={false}>
+          {shownEditors.length > 0 && (
+            <m.span
+              key="stack"
+              className={css.stack}
+              aria-hidden
+              {...fadeMotion}
+            >
+              {shownEditors.map((editor) => (
+                <span key={editor.editorId} className={css.face}>
+                  <StudioPlaylistPersonAvatar
+                    person={editor.person}
+                    size={20}
+                  />
+                </span>
+              ))}
+              <AnimatePresence initial={false}>
+                {hiddenCount > 0 && (
+                  <m.span key="more" className={css.more} {...fadeMotion}>
+                    {t("studio:playlist.collab.moreCount", {
+                      count: hiddenCount,
+                    })}
+                  </m.span>
+                )}
+              </AnimatePresence>
+            </m.span>
+          )}
+        </AnimatePresence>
+      </Button>
+    </m.span>
   );
 }

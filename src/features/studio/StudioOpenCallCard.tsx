@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { FiArrowRight } from "react-icons/fi";
-import { Collapse, ImageSlot } from "../../shared/components/ui";
+import { Button, Collapse, ImageSlot } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useFormat, type Formatters } from "../../shared/i18n/format";
@@ -128,20 +128,19 @@ export function StudioOpenCallCard({ call: c }: Props) {
           })}
         </div>
         <div className={s.callActions}>
-          <button
-            type="button"
-            className={s.bt}
+          <Button
+            variant="quiet"
             onClick={() => showToast(t("studio:calls.card.saveToast"), "info")}
           >
             {t("studio:calls.card.saveCta")}
-          </button>
-          <button
-            type="button"
-            className={`${s.bt} ${s.btP}`}
+          </Button>
+          <Button
+            variant="primary"
+            aria-expanded={c.tracks !== undefined ? open : undefined}
             onClick={() => setOpen((v) => !v)}
           >
             {t("studio:calls.card.applyCta")} <FiArrowRight aria-hidden />
-          </button>
+          </Button>
         </div>
       </div>
       <Collapse isOpen={open && c.tracks !== undefined}>
@@ -195,23 +194,18 @@ export function StudioOpenCallCard({ call: c }: Props) {
             placeholder={c.placeholderKey ? t(c.placeholderKey) : undefined}
           />
           <div className={s.attachFoot}>
-            <button
-              type="button"
-              className={`${s.bt} ${s.btP}`}
+            <Button
+              variant="primary"
               onClick={() => {
                 setOpen(false);
                 showToast(t("studio:calls.card.submittedToast"), "success");
               }}
             >
               {t("studio:calls.card.submitCta")}
-            </button>
-            <button
-              type="button"
-              className={s.bt}
-              onClick={() => setOpen(false)}
-            >
+            </Button>
+            <Button variant="quiet" onClick={() => setOpen(false)}>
               {t("studio:calls.card.cancelCta")}
-            </button>
+            </Button>
             <span className={s.singleNote}>
               <Translation
                 i18nKey="studio:calls.card.singleTrackNote"

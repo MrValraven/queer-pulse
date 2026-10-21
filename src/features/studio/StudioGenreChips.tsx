@@ -1,4 +1,4 @@
-import { useId, type ReactNode } from "react";
+import { useId } from "react";
 import { Link } from "react-router-dom";
 import { Collapse } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
@@ -9,8 +9,9 @@ import { useStudioGenres } from "./api/useStudioGenres";
 import { useStudioMoods } from "./api/useStudioMoods";
 import { StudioFacetTiles } from "./StudioFacetTiles";
 import { STUDIO_MOOD_LABEL_KEY } from "./studioDiscoveryLabels";
+import { useStudioTasteOrder } from "./studioFirstRunTaste";
 import { studioBrowsePath } from "./studioPaths";
-import styles from "./studio.module.css";
+import { useStudioChipScroller } from "./useStudioChipScroller";
 import css from "./StudioBrowse.module.css";
 
 interface StudioFilterChip {
@@ -25,6 +26,58 @@ export type StudioFilterFacet =
   | { kind: "genre"; values: StudioGenre[] }
   | { kind: "mood"; values: StudioMood[] };
 
+/** A labelled chip row on one line that scrolls sideways, fading only at a
+ *  side that hides more chips. Shared by the format, genre and mood rows.
+ *  A `caption` shows the row's name in a label column (on top on a phone)
+ *  and names the landmark in its place. */
+export function StudioChipRow({
+  label,
+  chips,
+  className,
+  caption,
+}: {
+  label: string;
+  chips: StudioFilterChip[];
+  className?: string;
+  caption?: string;
+}) {
+  const captionId = useId();
+  const currentKey = chips.find((chip) => chip.isCurrent)?.key ?? "";
+  const { listRef, edgeProps } = useStudioChipScroller(
+    `${chips.map((chip) => chip.key).join("|")}#${currentKey}`,
+  );
+  const navClassName =
+    [className, caption ? css.chipRowLabelled : undefined]
+      .filter(Boolean)
+      .join(" ") || undefined;
+  return (
+    <nav
+      aria-label={caption ? undefined : label}
+      aria-labelledby={caption ? captionId : undefined}
+      className={navClassName}
+    >
+      {caption ? (
+        <span id={captionId} className={css.chipRowCaption}>
+          {caption}
+        </span>
+      ) : null}
+      <ul ref={listRef} className={css.chips} {...edgeProps}>
+        {chips.map((chip) => (
+          <li key={chip.key}>
+            <Link
+              to={chip.href}
+              className={css.chip}
+              aria-current={chip.isCurrent ? "page" : undefined}
+            >
+              {chip.label}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  );
+}
+
 /** Genres or moods as links into /studio/browse, the current one marked.
  *  On the browse page every chip keeps the other filter, and the "Any"
  *  chip clears this one alone. */
@@ -34,6 +87,7 @@ export function StudioFilterChips({
   activeMood = null,
   activeFormat = null,
   label,
+  caption,
   hasAnyChip = false,
 }: {
   facet: StudioFilterFacet;
@@ -42,6 +96,8 @@ export function StudioFilterChips({
   /** Artist kinds: kept in every chip's link on the browse page. */
   activeFormat?: StudioFormat | null;
   label: string;
+  /** The visible row name ("Genre", "Mood"). */
+  caption?: string;
   hasAnyChip?: boolean;
 }) {
   const { t } = useTranslation();
@@ -69,54 +125,31 @@ export function StudioFilterChips({
     isCurrent: isGenreRow ? activeGenre === null : activeMood === null,
   };
   return (
-    <nav aria-label={label}>
-      <ul className={css.chips}>
-        {(hasAnyChip ? [anyChip, ...chips] : chips).map((chip) => (
-          <li key={chip.key}>
-            <Link
-              to={chip.href}
-              className={css.chip}
-              aria-current={chip.isCurrent ? "page" : undefined}
-            >
-              {chip.label}
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </nav>
+    <StudioChipRow
+      label={label}
+      caption={caption}
+      chips={hasAnyChip ? [anyChip, ...chips] : chips}
+    />
   );
 }
 
-/** One home browse row: a heading over its tiles. It holds skeleton tiles
- *  from the first paint while its list loads, and folds away only when the
- *  list comes back empty or the read fails. */
-function StudioHomeChipSection({
-  isOpen,
-  headingKey,
-  children,
+/** "Browse by genre", then "Browse by mood", at the foot of Studio home:
+ *  each a compact two-row shelf of colour tiles carrying a drawn motif and
+ *  the newest cover, every tile keeping the active format. Each holds
+ *  skeleton tiles from the first paint while its list loads, and folds away
+ *  only when the list comes back empty or the read fails. */
+export function StudioHomeGenres({
+  activeFormat = null,
+  omitGenres = [],
+  hasSeeAll = true,
 }: {
-  isOpen: boolean;
-  headingKey: string;
-  children: ReactNode;
+  activeFormat?: StudioFormat | null;
+  /** False on Browse, where See all leads back to the same page. */
+  hasSeeAll?: boolean;
+  /** Genres another row on the page already offers (Browse drops the
+   *  Spoken word genre under a Spoken word format chip). */
+  omitGenres?: readonly StudioGenre[];
 }) {
-  const headingId = useId();
-  return (
-    <Collapse isOpen={isOpen}>
-      <section className={styles.row} aria-labelledby={headingId}>
-        <div className={styles.rowH}>
-          <h2 id={headingId}>
-            <Translation i18nKey={headingKey} components={{ em: <em /> }} />
-          </h2>
-        </div>
-        {children}
-      </section>
-    </Collapse>
-  );
-}
-
-/** "Browse by genre", then "Browse by mood", under the home hero: each a
- *  grid of colour tiles carrying a drawn motif and the newest cover. */
-export function StudioHomeGenres() {
   const { t } = useTranslation();
   const {
     genres,
@@ -124,28 +157,53 @@ export function StudioHomeGenres() {
     loadState: genresLoadState,
   } = useStudioGenres();
   const { moods, coverByMood, loadState: moodsLoadState } = useStudioMoods();
+  // PRD-12: the welcome's picks lead, on this device only.
+  const tastedGenres = useStudioTasteOrder(genres, "genre").filter(
+    (genre) => !omitGenres.includes(genre),
+  );
+  const tastedMoods = useStudioTasteOrder(moods, "mood");
   return (
     <>
-      <StudioHomeChipSection
-        isOpen={genresLoadState.isLoading || genres.length > 0}
-        headingKey="studio:home.genres.heading"
-      >
+      <Collapse isOpen={genresLoadState.isLoading || genres.length > 0}>
         <StudioFacetTiles
-          facet={{ kind: "genre", values: genres, coverByValue: coverByGenre }}
+          id="studio-home-genres"
+          title={
+            <Translation
+              i18nKey="studio:home.genres.heading"
+              components={{ em: <em /> }}
+            />
+          }
+          facet={{
+            kind: "genre",
+            values: tastedGenres,
+            coverByValue: coverByGenre,
+          }}
           label={t("studio:home.genres.listLabel")}
+          activeFormat={activeFormat}
           isLoading={genresLoadState.isLoading}
+          hasSeeAll={hasSeeAll}
         />
-      </StudioHomeChipSection>
-      <StudioHomeChipSection
-        isOpen={moodsLoadState.isLoading || moods.length > 0}
-        headingKey="studio:home.moods.heading"
-      >
+      </Collapse>
+      <Collapse isOpen={moodsLoadState.isLoading || moods.length > 0}>
         <StudioFacetTiles
-          facet={{ kind: "mood", values: moods, coverByValue: coverByMood }}
+          id="studio-home-moods"
+          title={
+            <Translation
+              i18nKey="studio:home.moods.heading"
+              components={{ em: <em /> }}
+            />
+          }
+          facet={{
+            kind: "mood",
+            values: tastedMoods,
+            coverByValue: coverByMood,
+          }}
           label={t("studio:home.moods.listLabel")}
+          activeFormat={activeFormat}
           isLoading={moodsLoadState.isLoading}
+          hasSeeAll={hasSeeAll}
         />
-      </StudioHomeChipSection>
+      </Collapse>
     </>
   );
 }

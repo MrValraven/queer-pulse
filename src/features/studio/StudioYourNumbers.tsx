@@ -1,7 +1,7 @@
 import { useId } from "react";
 import { FiMusic } from "react-icons/fi";
 import { routes } from "../../app/routeMap";
-import { EmptyState } from "../../shared/components/ui";
+import { EmptyState, Select } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -12,6 +12,7 @@ import {
   StudioLoadError,
   StudioNotFound,
 } from "./StudioLoadStates";
+import { StudioDashboardNextSteps } from "./StudioDashboardNextSteps";
 import { StudioNumbersTable } from "./StudioNumbersTable";
 import { studioUploadPath } from "./studioPaths";
 import css from "./StudioNumbers.module.css";
@@ -72,25 +73,32 @@ export function StudioYourNumbers({
         {personas.length > 1 && (
           <div className={css.personaField}>
             <label htmlFor={selectId}>{t("studio:numbers.personaLabel")}</label>
-            <select
+            <Select
               id={selectId}
               className={css.select}
+              label={t("studio:numbers.personaLabel")}
+              size="sm"
+              searchable={false}
               value={persona.id}
-              onChange={(event) => onPersonaChange(event.target.value)}
-            >
-              {personas.map((candidate) => (
-                <option key={candidate.id} value={candidate.id}>
-                  {candidate.name}
-                </option>
-              ))}
-            </select>
+              options={personas.map((candidate) => ({
+                value: candidate.id,
+                label: candidate.name,
+              }))}
+              onChange={(subprofileId) => {
+                if (subprofileId) onPersonaChange(subprofileId);
+              }}
+            />
           </div>
         )}
       </div>
+      <StudioDashboardNextSteps persona={persona} />
       {loadState.isNotFound ? (
         <StudioNotFound />
       ) : loadState.isError ? (
-        <StudioLoadError loadState={loadState} />
+        <StudioLoadError
+          loadState={loadState}
+          what="studio:errors.what.yourNumbers"
+        />
       ) : !stats ? (
         <StudioDetailSkeleton />
       ) : (

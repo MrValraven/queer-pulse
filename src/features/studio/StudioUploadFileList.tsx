@@ -1,6 +1,8 @@
 import { AnimatePresence } from "motion/react";
-import { useLayoutEffect, useRef, useState } from "react";
-import { Collapse, ConfirmDialog } from "../../shared/components/ui";
+import { useLayoutEffect, useRef, useState, type RefObject } from "react";
+import { FiRefreshCw, FiWifiOff } from "react-icons/fi";
+import { Button, Collapse, ConfirmDialog } from "../../shared/components/ui";
+import { useOnlineStatus } from "../../shared/hooks/useOnlineStatus";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { StudioFormat, StudioReleaseType } from "./api/studio.types";
@@ -9,7 +11,9 @@ import {
   StudioUploadTrackRow,
   type UploadRowControl,
 } from "./StudioUploadTrackRow";
+import { RELEASE_FIELD_IDS } from "./studioUpload.data";
 import { fileRejectionKeyOf } from "./studioUploadValidation";
+import { useRowDragReorder } from "../subprofiles/useRowDragReorder";
 import { loudnessNotesFor } from "./upload/studioLoudnessNotes";
 import type { StudioUploadAnalysis } from "./upload/useStudioUploadAnalysis";
 import type { StudioTrackUploads } from "./useStudioTrackUploads";
@@ -60,6 +64,35 @@ function useRowFocus() {
   };
 }
 
+/** Retry all for a batch with failures, and an offline line while the
+ *  device has no connection (uploads stop until it is back). */
+function BatchStatus({ uploads }: { uploads: StudioTrackUploads }) {
+  const { t } = useTranslation();
+  const isOnline = useOnlineStatus();
+  const retryableCount = uploads.rows.filter(
+    (row) => row.stage === "failed" && row.isRetryable,
+  ).length;
+  return (
+    <>
+      <div role="status">
+        <Collapse isOpen={!isOnline && uploads.rows.length > 0}>
+          <p className={tracksStyles.offline}>
+            <FiWifiOff aria-hidden /> {t("studio:uploadFlow.files.offline")}
+          </p>
+        </Collapse>
+      </div>
+      <Collapse isOpen={retryableCount > 1}>
+        <div className={tracksStyles.batchActions}>
+          <Button variant="quiet" size="sm" onClick={uploads.retryAll}>
+            <FiRefreshCw aria-hidden />{" "}
+            {t("studio:uploadFlow.files.retryAll", { count: retryableCount })}
+          </Button>
+        </div>
+      </Collapse>
+    </>
+  );
+}
+
 export function FileList({
   uploads,
   analysis,
@@ -96,6 +129,15 @@ export function FileList({
     ),
   );
   const { rootRef, registerControl, requestFocus } = useRowFocus();
+  // Pointer drag on the grip (mouse, touch and pen); Move up and Move down
+  // stay the keyboard path. Each step the held row passes is a move.
+  const { containerRef, draggingIndex, gripHandlers } = useRowDragReorder(
+    (fromIndex, toIndex) => {
+      const dragged = uploads.rows[fromIndex];
+      if (dragged && uploads.canReorder)
+        uploads.moveTo(dragged.localId, toIndex);
+    },
+  );
   const readyCount = uploads.rows.filter((row) => row.stage === "ready").length;
   const [pendingRemoval, setPendingRemoval] = useState<{
     localId: string;
@@ -135,7 +177,12 @@ export function FileList({
 
   return (
     <div ref={rootRef} className={s.uploaded}>
-      <h4 aria-live="polite" aria-atomic="true">
+      <h4
+        id={RELEASE_FIELD_IDS.tracks}
+        tabIndex={-1}
+        aria-live="polite"
+        aria-atomic="true"
+      >
         <Translation
           i18nKey="studio:upload.files.heading"
           components={{ em: <em /> }}
@@ -155,10 +202,14 @@ export function FileList({
           </ul>
         )}
       </div>
+      <BatchStatus uploads={uploads} />
       {uploads.rows.length === 0 ? (
         <p className={s.fileMeta}>{t("studio:uploadFlow.files.empty")}</p>
       ) : (
         <ol
+          // The drag controller reads only `children` and boxes, which an
+          // <ol> has like the <div> its ref type names.
+          ref={containerRef as unknown as RefObject<HTMLOListElement>}
           className={tracksStyles.list}
           aria-label={t("studio:uploadFlow.files.listLabel")}
         >
@@ -180,10 +231,11 @@ export function FileList({
                 });
                 uploads.move(row.localId, offset);
               }}
-              onDropAt={(draggedLocalId) =>
-                uploads.moveTo(draggedLocalId, index)
-              }
+              gripHandlers={gripHandlers(index)}
+              isDragging={draggingIndex === index}
               onRetry={() => uploads.retry(row.localId)}
+              onCancel={() => uploads.cancel(row.localId)}
+              onAttachAudio={(file) => uploads.attachAudio(row.localId, file)}
               onRemove={() => requestRemoval(index)}
               onRename={(title) => uploads.rename(row.localId, title)}
               onDropFiles={uploads.addFiles}

@@ -40,12 +40,17 @@ function uploadsWith(remove = vi.fn()): StudioTrackUploads {
     rejections: [],
     addFiles: vi.fn(),
     retry: vi.fn(),
+    retryAll: vi.fn(),
+    cancel: vi.fn(),
+    attachAudio: vi.fn(),
     remove,
     move: vi.fn(),
     moveTo: vi.fn(),
     rename: vi.fn(),
     canReorder: true,
     hasPendingUploads: false,
+    hasActiveUploads: false,
+    hasHeldFiles: false,
     orderErrorKey: null,
   };
 }

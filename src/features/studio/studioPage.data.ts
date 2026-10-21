@@ -165,7 +165,7 @@ export const HERO_TRACK = {
     "A letter to the saint who never wrote back, solo voice and piano, in one take.",
 };
 
-/** Live-session stats — mock numbers only; the surrounding sentences are chrome. */
+/** Live-session stats, mock numbers only; the surrounding sentences are chrome. */
 export const HERO_STATS = {
   onAirTrack: 6,
   listeningNow: 312,
@@ -186,7 +186,6 @@ export const WEDNESDAY_SET = {
   casual: 223,
   cities: 41,
   ledgerPaidArtists: 11940,
-  ledgerPlays: 202000,
   ledgerArtistShare: 0.803,
   ledgerPerPlay: 0.05,
 };

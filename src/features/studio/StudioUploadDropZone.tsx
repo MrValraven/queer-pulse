@@ -1,5 +1,6 @@
 import { useId, useRef, useState, type DragEvent } from "react";
 import { FiUpload } from "react-icons/fi";
+import { Button } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import s from "./creator.module.css";
@@ -85,8 +86,8 @@ export function DropZone({
             event.target.value = "";
           }}
         />
-        <button
-          type="button"
+        <Button
+          variant="quiet"
           className={tracksStyles.chooseButton}
           data-upload-choose=""
           disabled={isDisabled}
@@ -94,7 +95,7 @@ export function DropZone({
           onClick={() => inputRef.current?.click()}
         >
           {t(chooseKey)}
-        </button>
+        </Button>
       </div>
       <p id={noteId} className={tracksStyles.wavNote}>
         {t(noteKey)}

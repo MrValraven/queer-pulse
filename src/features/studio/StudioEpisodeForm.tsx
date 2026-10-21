@@ -1,5 +1,5 @@
 import { useEffect, useId, useMemo, useRef, useState } from "react";
-import { Button, Collapse } from "../../shared/components/ui";
+import { Button, Collapse, FormField } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { CreatorDraftNotice } from "../creatorDrafts/CreatorDraftNotice";
 import type { StudioReleaseView, StudioTrackView } from "./api/studio.adapters";
@@ -25,7 +25,9 @@ import {
   createChapterDraftId,
   type ChapterDraft,
 } from "./upload/chapters/studioTracklist";
+import { useReportUploadActivity } from "./upload/studioUploadActivityContext";
 import creatorStyles from "./creator.module.css";
+import fieldStyles from "./StudioTrackFields.module.css";
 import css from "./StudioEpisodeUpload.module.css";
 import tracksStyles from "./StudioUploadTracks.module.css";
 
@@ -67,11 +69,88 @@ export function StudioEpisodeForm(props: EpisodeFormProps) {
   const { track, loadState } = useStudioTrack(props.trackId);
   if (track) return <EpisodeFields {...props} track={track} />;
   if (loadState.isNotFound) return <StudioNotFound />;
-  if (loadState.isError) return <StudioLoadError loadState={loadState} />;
+  if (loadState.isError)
+    return (
+      <StudioLoadError
+        loadState={loadState}
+        what="studio:errors.what.episode"
+      />
+    );
   return (
     <p className={tracksStyles.detailsLoading}>
       {t("studio:uploadFlow.files.loadingDetails")}
     </p>
+  );
+}
+
+/** The error line, the saved line, the draft notice and Save and Publish.
+ *  A blocked Publish names its reason through aria-describedby. */
+function EpisodeFooter({
+  episodeError,
+  isSaved,
+  isDraftEpisode,
+  canPublishEpisode,
+  hasAudio,
+  isBusy,
+  onSave,
+  onPublish,
+}: {
+  episodeError: ReturnType<typeof useEpisodeError>;
+  isSaved: boolean;
+  isDraftEpisode: boolean;
+  canPublishEpisode: boolean;
+  hasAudio: boolean;
+  isBusy: boolean;
+  onSave: () => void;
+  onPublish: () => void;
+}) {
+  const { t } = useTranslation();
+  const publishReasonId = useId();
+  return (
+    <>
+      <Collapse isOpen={episodeError.isOpen}>
+        <p
+          key={episodeError.error?.attempt}
+          className={tracksStyles.error}
+          role="alert"
+        >
+          {episodeError.error ? t(episodeError.error.key) : null}
+        </p>
+      </Collapse>
+      <p role="status" className={css.status}>
+        {isSaved ? t("studio:episodeUpload.savedStatus") : ""}
+      </p>
+      <CreatorDraftNotice
+        className={creatorStyles.draftNotice}
+        messageKey="studio:creatorDraftNote.episodeBody"
+        isShown={isDraftEpisode}
+      />
+      <Collapse isOpen={canPublishEpisode && !hasAudio}>
+        <p id={publishReasonId} className={css.hint}>
+          {t("studio:episodeUpload.needsAudio")}
+        </p>
+      </Collapse>
+      <div className={css.actions}>
+        <Button
+          variant="ghost"
+          aria-disabled={isBusy || undefined}
+          onClick={() => {
+            if (!isBusy) onSave();
+          }}
+        >
+          {t("studio:episodeUpload.saveCta")}
+        </Button>
+        {canPublishEpisode && (
+          <Button
+            aria-disabled={isBusy || !hasAudio || undefined}
+            aria-describedby={!hasAudio ? publishReasonId : undefined}
+            onClick={onPublish}
+          >
+            {t("studio:episodeUpload.publishCta")}
+          </Button>
+        )}
+      </div>
+    </>
   );
 }
 
@@ -89,9 +168,9 @@ function EpisodeFields({
   const { t } = useTranslation();
   const update = useUpdateStudioTrack();
   const publish = usePublishStudioEpisode();
-  const titleId = useId();
   const notesId = useId();
   const transcriptId = useId();
+  const [isShowingTitleError, setIsShowingTitleError] = useState(false);
   const titleRef = useRef<HTMLInputElement>(null);
   const [title, setTitle] = useState<string | null>(null);
   const [notes, setNotes] = useState<string | null>(null);
@@ -122,10 +201,26 @@ function EpisodeFields({
     transcript ??
     track.lyricStanzas.map((lines) => lines.join("\n")).join("\n\n");
   const chapterRowsValue = chapterRows ?? storedChapterRows;
+  // The leave guard asks before typed details are lost.
+  const isDirty =
+    (title !== null && title !== track.title) ||
+    notes !== null ||
+    transcript !== null ||
+    chapterRows !== null ||
+    safetyDraft.isDirty;
+  useReportUploadActivity("details", isDirty && !isSaved);
   // The server refuses an episode of a draft or scheduled show.
   const canPublishEpisode =
     track.isDraft === true && release.status === "published";
   const isBusy = update.isPending || publish.isPending;
+
+  // Any edit after a save makes the saved line stale and the form dirty.
+  const edited =
+    <Value,>(setter: (value: Value) => void) =>
+    (value: Value) => {
+      setIsSaved(false);
+      setter(value);
+    };
 
   // Rows that validate again stop showing every error at once.
   function changeChapters(rows: ChapterDraft[]) {
@@ -137,6 +232,12 @@ function EpisodeFields({
   async function save(): Promise<boolean> {
     episodeError.clear();
     setIsSaved(false);
+    // An emptied title says so, rather than quietly keeping the old one.
+    if (!titleValue.trim()) {
+      setIsShowingTitleError(true);
+      titleRef.current?.focus();
+      return false;
+    }
     const validation = validateChapters(
       chapterRowsValue,
       track.durationSeconds,
@@ -151,7 +252,7 @@ function EpisodeFields({
         trackId,
         releaseId: release.id,
         body: {
-          title: titleValue.trim() || track.title,
+          title: titleValue.trim(),
           notes: notesValue.trim() || null,
           lyrics: transcriptValue.trim() || null,
           isExplicit: safetyDraft.explicitValue,
@@ -191,25 +292,32 @@ function EpisodeFields({
       <Collapse isOpen={!track.hasAudio}>
         <StudioEpisodeAudioAttach release={release} trackId={trackId} />
       </Collapse>
-      <label className={tracksStyles.fieldLabel} htmlFor={titleId}>
-        {t("studio:episodeUpload.titleLabel")}
-      </label>
-      <input
-        ref={titleRef}
-        id={titleId}
-        type="text"
-        value={titleValue}
-        maxLength={STUDIO_LIMITS.titleMax}
-        onChange={(event) => setTitle(event.target.value)}
-      />
+      <FormField
+        className={fieldStyles.studioField}
+        label={t("studio:episodeUpload.titleLabel")}
+        required
+        error={
+          isShowingTitleError && !titleValue.trim()
+            ? t("studio:uploadFlow.files.titleRequired")
+            : undefined
+        }
+      >
+        <input
+          ref={titleRef}
+          type="text"
+          value={titleValue}
+          maxLength={STUDIO_LIMITS.titleMax}
+          onChange={(event) => edited(setTitle)(event.target.value)}
+        />
+      </FormField>
       <StudioTrackNotesField
         id={notesId}
         value={notesValue}
-        onChange={setNotes}
+        onChange={edited(setNotes)}
       />
       <StudioEpisodeChaptersField
         rows={chapterRowsValue}
-        onChange={changeChapters}
+        onChange={edited(changeChapters)}
         notes={notesValue}
         durationSeconds={track.durationSeconds}
         hasAudio={track.hasAudio}
@@ -219,57 +327,28 @@ function EpisodeFields({
         id={transcriptId}
         format="podcast"
         value={transcriptValue}
-        onChange={setTranscript}
+        onChange={edited(setTranscript)}
       />
       <StudioTrackSafetyFields
         explicitLabel={t("studio:episodeUpload.explicitLabel")}
         isExplicit={safetyDraft.explicitValue}
         isExplicitLocked={safety.isExplicitLocked}
-        onExplicitChange={safetyDraft.setIsExplicit}
+        onExplicitChange={edited(safetyDraft.setIsExplicit)}
         contentWarnings={safetyDraft.warningsValue}
         staffContentWarnings={safety.staffContentWarnings}
-        onContentWarningsChange={safetyDraft.setContentWarnings}
+        onContentWarningsChange={edited(safetyDraft.setContentWarnings)}
         checkboxClassName={tracksStyles.checkbox}
       />
-      <Collapse isOpen={episodeError.isOpen}>
-        <p
-          key={episodeError.error?.attempt}
-          className={tracksStyles.error}
-          role="alert"
-        >
-          {episodeError.error ? t(episodeError.error.key) : null}
-        </p>
-      </Collapse>
-      <p role="status" className={css.status}>
-        {isSaved ? t("studio:episodeUpload.savedStatus") : ""}
-      </p>
-      <CreatorDraftNotice
-        className={creatorStyles.draftNotice}
-        messageKey="studio:creatorDraftNote.episodeBody"
-        isShown={track.publishedAt === null}
+      <EpisodeFooter
+        episodeError={episodeError}
+        isSaved={isSaved}
+        isDraftEpisode={track.publishedAt === null}
+        canPublishEpisode={canPublishEpisode}
+        hasAudio={track.hasAudio}
+        isBusy={isBusy}
+        onSave={() => void save()}
+        onPublish={() => void saveAndPublish()}
       />
-      <Collapse isOpen={canPublishEpisode && !track.hasAudio}>
-        <p className={css.hint}>{t("studio:episodeUpload.needsAudio")}</p>
-      </Collapse>
-      <div className={css.actions}>
-        <Button
-          variant="ghost"
-          aria-disabled={isBusy || undefined}
-          onClick={() => {
-            if (!isBusy) void save();
-          }}
-        >
-          {t("studio:episodeUpload.saveCta")}
-        </Button>
-        {canPublishEpisode && (
-          <Button
-            aria-disabled={isBusy || !track.hasAudio || undefined}
-            onClick={() => void saveAndPublish()}
-          >
-            {t("studio:episodeUpload.publishCta")}
-          </Button>
-        )}
-      </div>
     </div>
   );
 }

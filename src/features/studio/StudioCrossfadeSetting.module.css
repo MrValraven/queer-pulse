@@ -1,0 +1,112 @@
+/* StudioCrossfadeSetting: the crossfade slider shared by Settings and the
+   player panel. Themed through the Studio tokens. */
+.root {
+  display: block;
+}
+.text h3 {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: var(--text-16);
+  color: var(--studio-text);
+  letter-spacing: -0.005em;
+  margin-bottom: 3px;
+}
+.text p {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: var(--text-13);
+  color: var(--studio-text-muted);
+  line-height: 1.55;
+  margin: 0;
+  max-width: 56ch;
+}
+.rangeRow {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.text + .rangeRow {
+  margin-top: 12px;
+}
+.range {
+  flex: 1;
+  min-height: 44px;
+  background: transparent;
+  appearance: none;
+  -webkit-appearance: none;
+  accent-color: var(--accent-fill);
+}
+/* The filled part follows --fill, set inline from the value. */
+.range::-webkit-slider-runnable-track {
+  height: 8px;
+  border-radius: var(--radius-pill);
+  background:
+    linear-gradient(var(--accent-fill), var(--accent-fill)) 0 / var(--fill, 0%)
+      100% no-repeat,
+    rgba(var(--studio-ink-rgb), 0.18);
+  border: 1px solid rgba(var(--studio-ink-rgb), 0.45);
+  box-sizing: border-box;
+}
+.range::-moz-range-track {
+  height: 8px;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--studio-ink-rgb), 0.18);
+  border: 1px solid rgba(var(--studio-ink-rgb), 0.45);
+  box-sizing: border-box;
+}
+.range::-moz-range-progress {
+  height: 8px;
+  border-radius: var(--radius-pill);
+  background: var(--accent-fill);
+}
+.range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  margin-top: -8px;
+  border-radius: 50%;
+  background: var(--accent-fill);
+  border: 2px solid rgba(var(--cream-rgb), 1);
+  box-sizing: border-box;
+}
+.range::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--accent-fill);
+  border: 2px solid rgba(var(--cream-rgb), 1);
+  box-sizing: border-box;
+}
+.range:focus-visible::-webkit-slider-thumb {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+.range:focus-visible::-moz-range-thumb {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+/* The thumb carries the focus ring; the input box stays bare. */
+.range:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+.rangeValue {
+  min-width: 6ch;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-size: var(--text-14);
+  color: var(--studio-text);
+}
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

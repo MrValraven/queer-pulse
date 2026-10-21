@@ -1,6 +1,7 @@
 import { useId, useState } from "react";
 import { FiZap, FiSettings, FiArrowRight } from "react-icons/fi";
-import { FadeIn, Select } from "../../shared/components/ui";
+import { Button, FadeIn, Select } from "../../shared/components/ui";
+import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -17,7 +18,7 @@ import {
   BreakdownRowSkeleton,
 } from "./StudioPayoutsSkeletons";
 import s from "./creator.module.css";
-import { StudioEuroAmount } from "./StudioEuroAmount";
+import { STUDIO_COUNT_FLOOR } from "./studioDashboard.data";
 
 // Content: the mock SEPA bank account's masked IBAN. It comes from the
 // artist's payout method record in live mode.
@@ -67,7 +68,7 @@ export function PayoutsHero() {
               <span>{t(line.labelKey)}</span>
               <span
                 className={s.v2}
-                style={{ fontFamily: "var(--serif)", color: "var(--text)" }}
+                style={{ fontFamily: "var(--serif)", color: "var(--s-text)" }}
               >
                 <em
                   style={{
@@ -84,7 +85,7 @@ export function PayoutsHero() {
             <span>{t("studio:payouts.summary.splitsRouted")}</span>
             <span
               className={s.v2}
-              style={{ fontFamily: "var(--serif)", color: "var(--text40)" }}
+              style={{ fontFamily: "var(--serif)", color: "var(--s-text-40)" }}
             >
               −
               <em style={{ fontStyle: "normal" }}>
@@ -93,7 +94,7 @@ export function PayoutsHero() {
             </span>
           </div>
           <div className={s.ln}>
-            <span style={{ fontWeight: 600, color: "var(--text)" }}>
+            <span style={{ fontWeight: 600, color: "var(--s-text)" }}>
               {t("studio:payouts.summary.toYourIban")}
             </span>
             <span
@@ -119,7 +120,6 @@ export function PayoutsHero() {
 /** A payout row's title and tally line, composed from catalog keys. */
 function PayoutRowCopy({ payout }: { payout: PayoutRow }) {
   const { t } = useTranslation();
-  const fmt = useFormat();
   const splitNote = payoutSplitNote(payout, t);
   return (
     <div className={s.payCopy}>
@@ -138,7 +138,7 @@ function PayoutRowCopy({ payout }: { payout: PayoutRow }) {
         />
       </h5>
       <div className={s.payMeta}>
-        {payoutMetaParts(payout, t, fmt).join(" · ")}
+        {payoutMetaParts(payout, t).join(" · ")}
         {splitNote === null ? null : (
           <>
             {" · "}
@@ -169,15 +169,9 @@ export function PayoutsList({
               components={{ em: <em /> }}
             />
           </h3>
-          <button
-            type="button"
-            className={s.allLink}
-            onClick={() => {
-              onExport();
-            }}
-          >
+          <Button variant="quiet" size="sm" onClick={onExport}>
             {t("studio:payouts.list.exportCsv")} <FiArrowRight aria-hidden />
-          </button>
+          </Button>
         </div>
         {loading
           ? Array.from({ length: PAYOUTS.length }).map((_, skeletonIndex) => (
@@ -196,7 +190,7 @@ export function PayoutsList({
                         fontFamily: "var(--serif)",
                         fontWeight: 300,
                         fontSize: 26,
-                        color: "var(--text)",
+                        color: "var(--s-text)",
                         lineHeight: 1,
                       }}
                     >
@@ -243,7 +237,7 @@ export function PayoutsList({
             className={s.sub}
             style={{
               fontSize: 12.5,
-              color: "var(--text40)",
+              color: "var(--s-text-40)",
               width: "100%",
             }}
           >
@@ -264,7 +258,7 @@ export function PayoutsList({
                     className={s.n}
                     style={{
                       fontFamily: "monospace",
-                      color: "var(--text40)",
+                      color: "var(--s-text-40)",
                       fontSize: 12,
                     }}
                   >
@@ -273,7 +267,7 @@ export function PayoutsList({
                   <span
                     className={s.nm}
                     style={{
-                      color: "var(--text)",
+                      color: "var(--s-text)",
                       fontFamily: "var(--serif)",
                       fontSize: 14,
                     }}
@@ -282,25 +276,25 @@ export function PayoutsList({
                   </span>
                   <span className={s.bdMeta}>
                     <span
-                      className={s.plays}
-                      style={{ color: "var(--text60)", whiteSpace: "nowrap" }}
+                      className={s.saves}
+                      style={{
+                        color: "var(--s-text-60)",
+                        whiteSpace: "nowrap",
+                      }}
                     >
-                      {t("studioShowcase:payouts.plays", {
-                        plays: fmt.number(breakdownRow.plays),
+                      {t("studio:payouts.breakdown.savesLine", {
+                        total:
+                          breakdownRow.saves < STUDIO_COUNT_FLOOR
+                            ? t("studio:numbers.fewerThanFive")
+                            : fmt.number(breakdownRow.saves),
                       })}
-                    </span>
-                    <span
-                      className={s.rate}
-                      style={{ color: "var(--text60)", fontSize: 12 }}
-                    >
-                      @ <StudioEuroAmount value={0.05} />
                     </span>
                   </span>
                   <span
                     className={s.bdTotal}
                     style={{
                       fontFamily: "var(--serif)",
-                      color: "var(--text)",
+                      color: "var(--s-text)",
                       whiteSpace: "nowrap",
                     }}
                   >
@@ -310,7 +304,7 @@ export function PayoutsList({
                         color: "var(--studio-accent-text)",
                       }}
                     >
-                      {fmt.currency(breakdownRow.total)}
+                      {fmt.currency(breakdownRow.total, "EUR", WHOLE_EUROS)}
                     </em>
                   </span>
                 </div>
@@ -323,13 +317,13 @@ export function PayoutsList({
             style={{
               fontFamily: "var(--serif)",
               fontSize: 18,
-              color: "var(--text)",
+              color: "var(--s-text)",
             }}
           >
             <em
               style={{ fontStyle: "normal", color: "var(--studio-jade-text)" }}
             >
-              {fmt.currency(1820)}
+              {fmt.currency(1820, "EUR", WHOLE_EUROS)}
             </em>
           </span>
         </div>
@@ -340,6 +334,7 @@ export function PayoutsList({
 
 export function PayoutsSidebar() {
   const { t } = useTranslation();
+  const { showToast } = useToast();
   const fieldId = useId();
   const [threshold, setThreshold] = useState("5");
   return (
@@ -372,9 +367,15 @@ export function PayoutsSidebar() {
             {t("studio:payouts.sidebar.method.stripe.label")}
             <small>{t("studio:payouts.sidebar.method.stripe.hint")}</small>
           </span>
-          <span className={s.methodSwitch}>
+          <Button
+            variant="quiet"
+            size="sm"
+            onClick={() =>
+              showToast(t("studio:payouts.sidebar.method.stripe.demoToast"))
+            }
+          >
             {t("studio:payouts.sidebar.method.stripe.switchCta")}
-          </span>
+          </Button>
         </div>
         <div className={s.method}>
           <span className={`${s.methodIc} ${s.methodIcAlt}`}>
@@ -384,9 +385,15 @@ export function PayoutsSidebar() {
             {t("studio:payouts.sidebar.method.coopCredit.label")}
             <small>{t("studio:payouts.sidebar.method.coopCredit.hint")}</small>
           </span>
-          <span className={s.methodSwitch}>
+          <Button
+            variant="quiet"
+            size="sm"
+            onClick={() =>
+              showToast(t("studio:payouts.sidebar.method.coopCredit.demoToast"))
+            }
+          >
             {t("studio:payouts.sidebar.method.coopCredit.addCta")}
-          </span>
+          </Button>
         </div>
       </div>
 
@@ -440,16 +447,6 @@ export function PayoutsSidebar() {
           <span className={s.fhint}>
             {t("studio:payouts.preferences.taxResidency.hint")}
           </span>
-        </div>
-        <div className={s.field}>
-          <label htmlFor={`${fieldId}-email`}>
-            {t("studio:payouts.preferences.notificationEmail.label")}
-          </label>
-          <input
-            id={`${fieldId}-email`}
-            type="email"
-            defaultValue="mariana@queerpulse.org"
-          />
         </div>
       </div>
     </div>

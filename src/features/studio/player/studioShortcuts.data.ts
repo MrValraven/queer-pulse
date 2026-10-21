@@ -12,6 +12,7 @@ export interface StudioPlayerShortcut {
 const KEY_LABEL_PREFIX = "studio:shortcuts.key.";
 const SPACE = `${KEY_LABEL_PREFIX}space`;
 const SHIFT = `${KEY_LABEL_PREFIX}shift`;
+const COMMAND_OR_CONTROL = `${KEY_LABEL_PREFIX}commandOrControl`;
 
 export function isStudioShortcutKeyLabelKey(key: string): boolean {
   return key.startsWith(KEY_LABEL_PREFIX);
@@ -41,4 +42,12 @@ export const STUDIO_PLAYER_SHORTCUTS: readonly StudioPlayerShortcut[] = [
   { id: "lyrics", keys: ["L"], labelKey: "studio:shortcuts.lyrics" },
   { id: "queue", keys: ["Q"], labelKey: "studio:shortcuts.queue" },
   { id: "help", keys: ["?"], labelKey: "studio:shortcuts.help" },
+  // The shell's search shortcuts, listed here so the help sheet names every
+  // key Studio answers to. The player itself never claims them.
+  { id: "focusSearch", keys: ["/"], labelKey: "studio:shortcuts.focusSearch" },
+  {
+    id: "focusSearchCommand",
+    keys: [COMMAND_OR_CONTROL, "K"],
+    labelKey: "studio:shortcuts.focusSearch",
+  },
 ];

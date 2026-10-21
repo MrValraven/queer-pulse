@@ -137,10 +137,10 @@ export function StudioPlaylistEditorInviteStep({
 
   return (
     <div className={css.panel}>
-      <button type="button" className={css.back} onClick={onBack}>
-        <FiChevronLeft aria-hidden />{" "}
+      <Button variant="quiet" size="sm" className={css.back} onClick={onBack}>
+        <FiChevronLeft aria-hidden />
         {t("studio:playlist.editors.invite.backCta")}
-      </button>
+      </Button>
       <MemberSelectList
         people={people}
         selected={selected}

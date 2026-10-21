@@ -1,35 +1,43 @@
-import { AnimatePresence, m } from "motion/react";
-import { useMotionPrefs } from "../../app/providers/motionPrefs";
-import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useStudioClaimCounts } from "./api/useStudioClaimReview";
-import css from "./StudioFlagReview.module.css";
+import { useStudioReviewCounts } from "./api/useStudioReviewCounts";
+import { useStudioReviewTrackReports } from "./api/useStudioTrackReports";
+import { useStudioReviewReports } from "./api/useStudioFlagReview";
+import { StudioReviewTabBadge } from "./StudioReviewTabBadge";
 
 /** The Claims tab's count while claims wait for our team (submitted plus
- *  countered). It fades in and out. */
+ *  countered). */
 export function StudioReviewClaimsBadge() {
-  const { t } = useTranslation();
-  const { reducedMotion } = useMotionPrefs();
-  const { waitingCount } = useStudioClaimCounts();
+  const { claimsWaiting } = useStudioReviewCounts();
   return (
-    <AnimatePresence initial={false}>
-      {waitingCount > 0 && (
-        <m.span
-          key="claims-waiting"
-          className={css.badge}
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.8 }}
-          transition={{ duration: reducedMotion ? 0 : 0.18 }}
-        >
-          <span aria-hidden>{waitingCount}</span>
-          <span className="visuallyHidden">
-            {", "}
-            <span>
-              {t("studio:flagReviewLive.claims.badge", { count: waitingCount })}
-            </span>
-          </span>
-        </m.span>
-      )}
-    </AnimatePresence>
+    <StudioReviewTabBadge
+      count={claimsWaiting}
+      labelKey="studio:flagReviewLive.claims.badge"
+    />
+  );
+}
+
+/** The Disputes tab's count: artists' takedown disputes still open. */
+export function StudioReviewDisputesBadge() {
+  const { disputesWaiting } = useStudioReviewCounts();
+  return (
+    <StudioReviewTabBadge
+      count={disputesWaiting}
+      labelKey="studio:flagReviewLive.disputes.badge"
+    />
+  );
+}
+
+/** The Reports tab's count: open release and track reports. The queues have
+ *  no counts route, so it counts the pages read so far (the same reads the
+ *  panel shows, shared through the cache) and marks a longer queue "20+". */
+export function StudioReviewReportsBadge() {
+  const releaseReports = useStudioReviewReports();
+  const trackReports = useStudioReviewTrackReports();
+  return (
+    <StudioReviewTabBadge
+      count={releaseReports.items.length + trackReports.items.length}
+      hasMore={releaseReports.hasNextPage || trackReports.hasNextPage}
+      labelKey="studio:flagReviewLive.reports.badge"
+      moreLabelKey="studio:flagReviewLive.reports.badgeMore"
+    />
   );
 }

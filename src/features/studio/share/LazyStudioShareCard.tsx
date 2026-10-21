@@ -8,6 +8,7 @@ import {
   StudioShareCardUnavailable,
 } from "./StudioShareCardFrame";
 import type { StudioShareCardProps } from "./studioShareCard.types";
+import { studioShareTargetKey } from "./studioLinkTarget";
 
 export type { StudioShareCardProps } from "./studioShareCard.types";
 
@@ -33,16 +34,24 @@ export function LazyStudioShareCard(props: StudioShareCardProps): ReactElement {
   return (
     <ErrorBoundary
       level="route"
-      resetKey={`${target.kind}:${target.id}`}
+      resetKey={studioShareTargetKey(target)}
       fallback={() => (
-        <StudioShareCardFrame surface={surface} onRemove={onRemove}>
+        <StudioShareCardFrame
+          surface={surface}
+          kind={target.kind}
+          onRemove={onRemove}
+        >
           <StudioShareCardUnavailable />
         </StudioShareCardFrame>
       )}
     >
       <Suspense
         fallback={
-          <StudioShareCardFrame surface={surface} onRemove={onRemove}>
+          <StudioShareCardFrame
+            surface={surface}
+            kind={target.kind}
+            onRemove={onRemove}
+          >
             <StudioShareCardPlaceholder />
           </StudioShareCardFrame>
         }

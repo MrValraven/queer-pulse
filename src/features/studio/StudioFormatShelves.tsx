@@ -1,52 +1,66 @@
-import { useId, type ReactNode } from "react";
+import type { ReactNode } from "react";
 import { Collapse } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import {
   releaseMetaLine,
   type StudioReleaseCardView,
 } from "./api/studio.adapters";
+import type { StudioFormat } from "./api/studio.types";
 import { useStudioFormatReleases } from "./api/useStudioFormatReleases";
 import { useStudioLatestEpisodes } from "./api/useStudioLatestEpisodes";
+import { StudioShelf } from "./kit/StudioShelf";
 import { StudioEpisodeCard } from "./StudioEpisodeCard";
 import { StudioReleaseCard } from "./StudioReleaseCard";
-import styles from "./studio.module.css";
+import { studioBrowsePath } from "./studioPaths";
 
-/** Cards a shelf shows; the grids and browse hold the rest. */
-const SHELF_SIZE = 8;
+/** Cards a shelf row holds; See all opens the format in browse. */
+const SHELF_SIZE = 12;
 
-function StudioShelf({
+function StudioFormatShelf({
+  id,
   titleKey,
+  format,
   isOpen,
   children,
 }: {
+  id: string;
   titleKey: string;
+  /** See all browses this format. */
+  format: StudioFormat;
   isOpen: boolean;
   children: ReactNode;
 }) {
-  const headingId = useId();
   return (
     <Collapse isOpen={isOpen}>
-      <section className={styles.row} aria-labelledby={headingId}>
-        <div className={styles.rowH}>
-          <h2 id={headingId}>
-            <Translation i18nKey={titleKey} components={{ em: <em /> }} />
-          </h2>
-        </div>
-        <div className={styles.rowGrid}>{children}</div>
-      </section>
+      <StudioShelf
+        id={id}
+        title={<Translation i18nKey={titleKey} components={{ em: <em /> }} />}
+        seeAllHref={studioBrowsePath(null, null, format)}
+      >
+        {children}
+      </StudioShelf>
     </Collapse>
   );
 }
 
 function StudioReleaseShelf({
+  id,
   titleKey,
+  format,
   releases,
 }: {
+  id: string;
   titleKey: string;
+  format: StudioFormat;
   releases: StudioReleaseCardView[];
 }) {
   return (
-    <StudioShelf titleKey={titleKey} isOpen={releases.length > 0}>
+    <StudioFormatShelf
+      id={id}
+      titleKey={titleKey}
+      format={format}
+      isOpen={releases.length > 0}
+    >
       {releases.slice(0, SHELF_SIZE).map((release) => (
         <StudioReleaseCard
           key={release.id}
@@ -54,11 +68,12 @@ function StudioReleaseShelf({
           meta={releaseMetaLine(release)}
         />
       ))}
-    </StudioShelf>
+    </StudioFormatShelf>
   );
 }
 
 /** Home under All (spec 5.1): New episodes, Spoken word and On stage, each
+ *  one swipeable row with See all into browse for its format, and each
  *  folded away while empty, loading or failed. */
 export function StudioFormatShelves() {
   const { episodes } = useStudioLatestEpisodes();
@@ -66,20 +81,26 @@ export function StudioFormatShelves() {
   const onStage = useStudioFormatReleases("performance", { isSilent: true });
   return (
     <>
-      <StudioShelf
+      <StudioFormatShelf
+        id="studio-home-new-episodes"
         titleKey="studio:home.newEpisodes.title"
+        format="podcast"
         isOpen={episodes.length > 0}
       >
         {episodes.slice(0, SHELF_SIZE).map((episode) => (
           <StudioEpisodeCard key={episode.track.id} episode={episode} />
         ))}
-      </StudioShelf>
+      </StudioFormatShelf>
       <StudioReleaseShelf
+        id="studio-home-spoken-word"
         titleKey="studio:home.spokenWord.title"
+        format="spoken_word"
         releases={spokenWord.releases}
       />
       <StudioReleaseShelf
+        id="studio-home-on-stage"
         titleKey="studio:home.onStage.title"
+        format="performance"
         releases={onStage.releases}
       />
     </>

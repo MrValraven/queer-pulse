@@ -1,0 +1,370 @@
+/* StudioShelf: a titled list of cards, as one swipeable row or a grid.
+   The row edge fades are two registered lengths, so a fade eases in and out
+   as a side gains or loses hidden content. They do not inherit, so changing
+   them never restyles the cards inside. */
+@property --studio-shelf-fade-start {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+@property --studio-shelf-fade-end {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+.shelf {
+  min-width: 0;
+  padding-block: 24px 32px;
+}
+
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 8px 18px;
+  margin-bottom: 16px;
+}
+
+.headText {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.eyebrow {
+  margin: 0;
+  font-size: var(--text-11);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--studio-accent-text);
+}
+
+.title {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: var(--text-28);
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+  color: var(--studio-text);
+  overflow-wrap: anywhere;
+}
+
+.title em {
+  font-style: italic;
+  color: var(--studio-accent-text);
+}
+
+/* A 44px target whose padding keeps the label on the heading's baseline
+   edge; the negative margin lines the text up with the shelf's end. */
+.seeAll {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 44px;
+  padding-inline: 12px 8px;
+  margin-inline-end: -8px;
+  border-radius: var(--radius-pill);
+  font-size: var(--text-13);
+  font-weight: 600;
+  color: var(--studio-text-muted);
+  text-decoration: none;
+  white-space: nowrap;
+  touch-action: manipulation;
+  transition-property: color, background-color;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease-out);
+}
+
+.seeAll svg {
+  font-size: var(--text-16);
+  transition-property: transform;
+  transition-duration: var(--dur-base);
+  transition-timing-function: var(--ease);
+}
+
+@media (hover: hover) {
+  .seeAll:hover {
+    color: var(--studio-text);
+    background: var(--studio-wash-2);
+  }
+  .seeAll:hover svg {
+    transform: translateX(2px);
+  }
+}
+
+.seeAll:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* The viewport is the size container the card width is measured against.
+   --studio-shelf-bleed (0 by default) lets a page run the row out to the
+   screen edge through its own gutter; snapping still lands on the gutter. */
+.viewport {
+  --shelf-gap: 18px;
+  --shelf-bleed: var(--studio-shelf-bleed, 0px);
+  /* Room inside the scroller for the first and last cards' focus rings
+     (6px stretched-link overhang plus the 3px ring and its 3px halo). */
+  --shelf-pad-top: 12px;
+  --shelf-pad-inline: max(var(--shelf-bleed), 12px);
+  /* Its own stacking context, so the scroll buttons stay under the sticky
+     detail header and any page furniture above the raised tier. */
+  isolation: isolate;
+  position: relative;
+  container-type: inline-size;
+  margin-inline: calc(-1 * var(--shelf-bleed));
+}
+
+/* Declared on the children, where the container queries below can change
+   the count: a var() inside a custom property resolves where it is declared.
+   100cqi is the viewport's width, so a phone shows 2.3 cards. */
+.viewport > * {
+  --shelf-visible: 2.3;
+  --shelf-whole-gaps: 2;
+  --shelf-card-w: calc(
+    (
+        100cqi - 2 * var(--shelf-bleed) - var(--shelf-whole-gaps) *
+          var(--shelf-gap)
+      ) / var(--shelf-visible)
+  );
+}
+
+@container (min-width: 560px) {
+  .viewport > * {
+    --shelf-visible: 3.3;
+    --shelf-whole-gaps: 3;
+  }
+}
+
+@container (min-width: 780px) {
+  .viewport > * {
+    --shelf-visible: 4.3;
+    --shelf-whole-gaps: 4;
+  }
+}
+
+@container (min-width: 1100px) {
+  .viewport > * {
+    --shelf-visible: 5.3;
+    --shelf-whole-gaps: 5;
+  }
+}
+
+.list {
+  --studio-shelf-fade-start: 0px;
+  --studio-shelf-fade-end: 0px;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: var(--shelf-card-w);
+  gap: var(--shelf-gap);
+  margin: 0;
+  /* Room above and below for the hover lift and its shadow, which the
+     scroller would otherwise clip, given back by the negative margin. */
+  padding: var(--shelf-pad-top) var(--shelf-pad-inline) 22px;
+  margin-block: calc(-1 * var(--shelf-pad-top)) -22px;
+  margin-inline: calc(var(--shelf-bleed) - var(--shelf-pad-inline));
+  list-style: none;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--shelf-pad-inline);
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    black var(--studio-shelf-fade-start),
+    black calc(100% - var(--studio-shelf-fade-end)),
+    transparent
+  );
+  transition-property: --studio-shelf-fade-start, --studio-shelf-fade-end;
+  transition-duration: var(--dur-base);
+  transition-timing-function: var(--ease-out);
+}
+
+.viewport .list::-webkit-scrollbar {
+  display: none;
+}
+
+.list:dir(rtl) {
+  mask-image: linear-gradient(
+    to left,
+    transparent,
+    black var(--studio-shelf-fade-start),
+    black calc(100% - var(--studio-shelf-fade-end)),
+    transparent
+  );
+}
+
+.list[data-fade-start] {
+  --studio-shelf-fade-start: 56px;
+}
+
+.list[data-fade-end] {
+  --studio-shelf-fade-end: 56px;
+}
+
+.item {
+  min-width: 0;
+  scroll-snap-align: start;
+}
+
+/* Keyboard focus in the row: the fades clear and snapping pauses, so the
+   focus listener can bring the whole focused card, ring and a margin past
+   the fade width, into view without the snap pulling it back. */
+.list:has(:focus-visible) {
+  --studio-shelf-fade-start: 0px;
+  --studio-shelf-fade-end: 0px;
+  scroll-snap-type: none;
+}
+
+.item:focus-within {
+  scroll-margin-inline: 68px;
+}
+
+/* Grid: the same items wrapping, two columns on a phone. */
+.viewport[data-layout="grid"] .list {
+  --shelf-columns: 2;
+  grid-auto-flow: row;
+  grid-auto-columns: auto;
+  grid-template-columns: repeat(var(--shelf-columns), minmax(0, 1fr));
+  row-gap: 28px;
+  padding: 0;
+  margin: 0;
+  overflow: visible;
+  scroll-snap-type: none;
+  mask-image: none;
+}
+
+@container (min-width: 560px) {
+  .viewport[data-layout="grid"] .list {
+    --shelf-columns: 3;
+  }
+}
+
+@container (min-width: 780px) {
+  .viewport[data-layout="grid"] .list {
+    --shelf-columns: 4;
+  }
+}
+
+@container (min-width: 1100px) {
+  .viewport[data-layout="grid"] .list {
+    --shelf-columns: 5;
+  }
+}
+
+/* Round scroll buttons, centred on the covers, over the faded edges. They
+   show while a hover pointer is over the row, and for keyboard focus. */
+.viewport .scroll {
+  position: absolute;
+  top: calc(var(--shelf-card-w) / 2 - 22px);
+  z-index: 3;
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--studio-line);
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--studio-surface) 88%, transparent);
+  backdrop-filter: var(--blur-md);
+  color: var(--studio-text);
+  box-shadow: var(--shadow-e3);
+  opacity: 0;
+  transform: scale(0.9);
+  pointer-events: none;
+  transition-property: opacity, transform, background-color;
+  transition-duration: var(--dur-base);
+  transition-timing-function: var(--ease-out), var(--ease), var(--ease-out);
+}
+
+.viewport .scrollStart {
+  inset-inline-start: calc(var(--shelf-bleed) + 8px);
+}
+
+.viewport .scrollEnd {
+  inset-inline-end: calc(var(--shelf-bleed) + 8px);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .viewport:hover .scroll:not([data-hidden]) {
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+  }
+  .viewport .scroll:hover:not(:disabled):not([aria-disabled="true"]) {
+    background: var(--studio-surface);
+    color: var(--studio-text);
+    transform: scale(1.06);
+  }
+}
+
+.viewport .scroll:focus-visible {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
+.viewport .scroll:active:not([aria-disabled="true"]) {
+  transform: scale(0.97);
+}
+
+/* At an edge the button steps away; focus still shows it, dimmed. */
+.viewport .scroll[data-hidden] {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.viewport .scroll[data-hidden]:focus-visible {
+  opacity: 0.4;
+}
+
+/* Touch swipes the row, so it has no scroll buttons. */
+@media (hover: none) {
+  .viewport .scroll {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .list {
+    transition-duration: 120ms;
+  }
+  .seeAll svg {
+    transition-property: none;
+  }
+  .viewport .scroll,
+  .viewport
+    .scroll:is(:hover, :active, :focus-visible):not(:disabled):not(
+      [aria-disabled="true"]
+    ) {
+    transform: none;
+    transition-property: opacity, background-color;
+  }
+}
+
+:global(html[data-reduce-motion="true"]) .list {
+  transition-duration: 120ms;
+}
+
+:global(html[data-reduce-motion="true"]) .seeAll svg {
+  transition-property: none;
+}
+
+:global(html[data-reduce-motion="true"]) .viewport .scroll,
+:global(html[data-reduce-motion="true"])
+  .viewport
+  .scroll:is(:hover, :active, :focus-visible):not(:disabled):not(
+    [aria-disabled="true"]
+  ) {
+  transform: none;
+  transition-property: opacity, background-color;
+}

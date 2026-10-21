@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
+import { Button } from "../../shared/components/ui";
 import { StudioShell } from "./StudioShell";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
@@ -20,61 +21,58 @@ const TITLE_TAGS = { strong: <strong />, em: <em /> };
 function NotifRow({ item, unread }: { item: NotifItem; unread: boolean }) {
   const { t } = useTranslation();
   const fmt = useFormat();
+  const { showToast } = useToast();
   const { icon } = item;
+  // The row is a card: the main area is the link and the action
+  // is a real sibling button, so no control sits inside another.
   return (
-    <Link
-      to={item.to}
-      className={`${s.nt} ${unread ? s.unread : ""}`}
-      data-t={item.type}
-    >
-      {icon.kind === "av" ? (
-        <div className={`${s.ntIc} ${s.av} ${icon.jade ? s.jade : ""}`}>
-          {icon.initials}
-        </div>
-      ) : (
-        <div
-          className={`${s.ntIc} ${icon.kind === "live" ? s.live : s.sys}`}
-          aria-hidden="true"
-        >
-          {icon.node}
-        </div>
-      )}
-      <div className={s.ntBody}>
-        <h4>
-          <Translation
-            i18nKey={item.title.key}
-            values={notifValues(item.title, fmt)}
-            components={TITLE_TAGS}
-          />
-        </h4>
-        {item.replyKey && <div className={s.reply}>{t(item.replyKey)}</div>}
-        <div className={s.meta}>
-          {t(item.meta.key, notifValues(item.meta, fmt))}
-        </div>
-        {item.action && (
-          <div className={s.ntAct}>
-            <span
-              role="button"
-              tabIndex={0}
-              className={`${s.bt} ${item.type === "live" ? s.btP : ""}`}
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-              }}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  e.preventDefault();
-                  e.stopPropagation();
-                }
-              }}
-            >
-              {t(item.action.labelKey)}
-            </span>
+    <div className={`${s.nt} ${unread ? s.unread : ""}`} data-t={item.type}>
+      <Link to={item.to} className={s.ntLink}>
+        {icon.kind === "av" ? (
+          <div className={`${s.ntIc} ${s.av} ${icon.jade ? s.jade : ""}`}>
+            {icon.initials}
+          </div>
+        ) : (
+          <div
+            className={`${s.ntIc} ${icon.kind === "live" ? s.live : s.sys}`}
+            aria-hidden="true"
+          >
+            {icon.node}
           </div>
         )}
-      </div>
-      <div className={s.ntTime}>{t(item.time.key, item.time.values)}</div>
-    </Link>
+        <div className={s.ntBody}>
+          <h4>
+            <Translation
+              i18nKey={item.title.key}
+              values={notifValues(item.title, fmt)}
+              components={TITLE_TAGS}
+            />
+          </h4>
+          {item.replyKey && <div className={s.reply}>{t(item.replyKey)}</div>}
+          <div className={s.meta}>
+            {t(item.meta.key, notifValues(item.meta, fmt))}
+          </div>
+        </div>
+        <div className={s.ntTime}>{t(item.time.key, item.time.values)}</div>
+      </Link>
+      {item.action && (
+        <div className={s.ntAct}>
+          {item.type === "live" ? (
+            <Button to={item.to} variant="primary" size="sm">
+              {t(item.action.labelKey)}
+            </Button>
+          ) : (
+            <Button
+              variant="quiet"
+              size="sm"
+              onClick={() => showToast(t("studio:notifications.rsvpToast"))}
+            >
+              {t(item.action.labelKey)}
+            </Button>
+          )}
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -130,18 +128,19 @@ export function StudioNotificationsPage() {
         <div className={s.ntWrap}>
           <div className={s.ntFilter}>
             {FILTERS.map((f) => (
-              <button
+              <Button
                 key={f.key}
-                type="button"
-                className={`${s.ntChip} ${filter === f.key ? s.on : ""}`}
+                variant={filter === f.key ? "primary" : "quiet"}
+                size="sm"
                 onClick={() => setFilter(f.key)}
                 aria-pressed={filter === f.key}
               >
                 {t(f.labelKey)} {counts[f.key]}
-              </button>
+              </Button>
             ))}
-            <button
-              type="button"
+            <Button
+              variant="quiet"
+              size="sm"
               className={s.ntRead}
               onClick={() => {
                 setReadAll(true);
@@ -152,7 +151,7 @@ export function StudioNotificationsPage() {
               }}
             >
               {t("studio:notifications.markAllReadCta")}
-            </button>
+            </Button>
           </div>
 
           {visible.length === 0 ? (

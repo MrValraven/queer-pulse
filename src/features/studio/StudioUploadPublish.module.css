@@ -2,7 +2,7 @@
   padding: 14px 16px;
   border-radius: var(--radius-10);
   background: rgba(var(--studio-ink-rgb), 0.04);
-  border: 1px solid var(--line);
+  border: 1px solid var(--s-line);
 }
 
 .checklist ul {
@@ -80,4 +80,58 @@
   justify-content: space-between;
   gap: 12px;
   padding-top: 6px;
+}
+
+/* The refused-Continue summary: one block above the fields, each line a
+   link to the field that fixes it. Scrolled to on a refusal: the page's
+   scroll-padding clears the sticky creator header, and this margin leaves
+   16px of air above it (studioUploadFocus.ts counts the same 16px). */
+.errorSummaryWrap {
+  scroll-margin-top: 16px;
+}
+.errorSummary {
+  margin-bottom: 16px;
+  padding: 12px 16px;
+  border-radius: var(--radius-10);
+  border: 1px solid rgba(var(--accent-rgb), 0.4);
+  background: rgba(var(--accent-rgb), 0.08);
+  color: var(--studio-accent-soft-text);
+  font-size: var(--text-13);
+}
+
+.errorSummaryLead {
+  margin: 0;
+  font-weight: 600;
+}
+
+.errorSummary ul,
+.checkItems {
+  margin: 6px 0 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.errorSummary a,
+.checkItem a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.checkItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-block-size: var(--tap-min);
+}
+
+.checkItem[data-done] {
+  color: var(--studio-jade-text);
+}
+
+.checkItem > svg {
+  flex: none;
 }

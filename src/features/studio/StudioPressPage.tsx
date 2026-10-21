@@ -68,7 +68,13 @@ export function StudioPressPage() {
   let body;
   // A press kit has no withdrawn view; a 410 reads as not found.
   if (loadState.isNotFound || loadState.isWithdrawn) body = <StudioNotFound />;
-  else if (loadState.isError) body = <StudioLoadError loadState={loadState} />;
+  else if (loadState.isError)
+    body = (
+      <StudioLoadError
+        loadState={loadState}
+        what="studio:errors.what.pressKit"
+      />
+    );
   else if (!pressKit) body = <StudioDetailSkeleton />;
   else
     body = <StudioPressKitBody pressKit={pressKit} hasShowcase={hasShowcase} />;

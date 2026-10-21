@@ -2,8 +2,11 @@
  *  locale. `isEmphasized` marks the artist's share in coral. */
 export interface SplitRow {
   c: string;
-  k: string;
-  sub: string;
+  /** Catalog key of the row's label, or the literal name when `name` is set. */
+  labelKey: string;
+  /** A person's name, shown as written in both languages. */
+  name?: string;
+  subKey: string;
   amount: number;
   isEmphasized?: boolean;
 }
@@ -36,27 +39,28 @@ export const TRACK = {
 export const SPLIT: SplitRow[] = [
   {
     c: "var(--accent)",
-    k: "Mariana Sol",
-    sub: "Direct, monthly",
+    labelKey: "studio:track.sidebar.split.artist.label",
+    name: "Mariana Sol",
+    subKey: "studio:track.sidebar.split.artist.sub",
     amount: 0.8,
     isEmphasized: true,
   },
   {
     c: "var(--jade)",
-    k: "Solidarity fund",
-    sub: "Grants & mastering vouchers",
+    labelKey: "studio:track.sidebar.split.fund.label",
+    subKey: "studio:track.sidebar.split.fund.sub",
     amount: 0.08,
   },
   {
     c: "var(--plum)",
-    k: "Platform & staff",
-    sub: "Hosting, captions, council",
+    labelKey: "studio:track.sidebar.split.platform.label",
+    subKey: "studio:track.sidebar.split.platform.sub",
     amount: 0.08,
   },
   {
     c: "rgba(var(--studio-ink-rgb), 0.2)",
-    k: "Payment fees",
-    sub: "Stripe / SEPA only",
+    labelKey: "studio:track.sidebar.split.fees.label",
+    subKey: "studio:track.sidebar.split.fees.sub",
     amount: 0.04,
   },
 ];

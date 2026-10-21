@@ -1,125 +1,42 @@
-/* Studio error pages — dark fullscreen, no rail */
-.root {
-  --bg: var(--studio-bg);
-  --line: rgba(var(--cream-rgb), 0.08);
-  --text: rgba(var(--cream-rgb), 0.92);
-  --text60: rgba(var(--cream-rgb), 0.62);
-  --text40: rgba(var(--cream-rgb), 0.4);
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100svh;
-  padding-bottom: 0;
-}
-
-.brand {
-  position: fixed;
-  top: max(26px, env(safe-area-inset-top));
-  left: 30px;
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  text-decoration: none;
-  z-index: 2;
-}
-
-.pulseDot {
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  background: var(--accent);
-  position: relative;
-  flex: none;
-}
-
-.pulseDot::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  background: var(--accent);
-  animation: errPulse 2.6s var(--ease) infinite;
-}
-
-@keyframes errPulse {
-  0%,
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  50% {
-    transform: scale(2.2);
-    opacity: 0;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .pulseDot::after {
-    animation: none;
-  }
-}
-
-.wordmark {
-  font-family: var(--serif);
-  font-weight: 600;
-  font-size: var(--text-20);
-  color: var(--text);
-}
-
-.wordmark em {
-  font-style: italic;
-}
-
-.product {
-  font-size: var(--text-10-5);
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--accent);
-}
+/* Studio error states (Studio404Page, Studio500Page, StudioAccessErrorPage).
+   They render inside the Studio shell's content column and paint on the
+   theme-following --studio-* roles, so they read right in light and dark. */
 
 /* ── Error layout ── */
 .err {
-  min-height: 100svh;
+  /* Fills the view under the topbar, above the tab bar and the player. */
+  min-height: calc(100svh - var(--studio-topbar-h, 81px) - var(--bottom-inset, 0px));
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: var(--section-y-88) 24px var(--section-y-72);
+  padding: var(--section-y-72) 0;
   text-align: center;
   position: relative;
   overflow: hidden;
+  color: var(--studio-text);
 }
 
-.errOrbRight::before {
-  content: "";
-  position: absolute;
-  top: -12%;
-  right: -6%;
-  width: 560px;
-  height: 560px;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle,
-    rgba(var(--accent-rgb), 0.12),
-    transparent 62%
-  );
-  pointer-events: none;
-}
-
+.errOrbRight::before,
 .errOrbLeft::before {
   content: "";
   position: absolute;
   top: -12%;
-  left: -6%;
   width: 560px;
   height: 560px;
   border-radius: 50%;
   background: radial-gradient(
     circle,
-    rgba(var(--accent-rgb), 0.12),
+    var(--studio-hero-glow),
     transparent 62%
   );
   pointer-events: none;
+}
+.errOrbRight::before {
+  right: -6%;
+}
+.errOrbLeft::before {
+  left: -6%;
 }
 
 .errNum {
@@ -130,10 +47,12 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(9.375rem, 30vw, 22.5rem);
-  color: var(--text);
+  color: var(--studio-text);
   opacity: 0.05;
   letter-spacing: -0.04em;
   line-height: 0.8;
+  /* "404" and "500" stay one numeral at every width. */
+  white-space: nowrap;
   user-select: none;
   pointer-events: none;
 }
@@ -145,40 +64,40 @@
 }
 
 .errEyebrow {
-  font-size: var(--text-11);
+  font-size: var(--text-12);
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: 18px;
+  color: var(--studio-accent-text);
+  margin: 0 0 18px;
 }
 
-.errContent h1 {
+.errTitle {
   font-family: var(--serif);
   font-weight: 300;
   font-size: var(--text-display);
-  color: var(--text);
+  color: var(--studio-text);
   letter-spacing: -0.025em;
   line-height: 1;
-  margin-bottom: 18px;
+  margin: 0 0 18px;
+  text-wrap: balance;
 }
 
-.errContent h1 em {
+.errTitle em {
   font-style: italic;
-  color: var(--accent);
+  color: var(--studio-accent-text);
   font-weight: 400;
 }
 
 .sub {
   font-size: var(--text-16);
-  color: var(--text60);
+  color: var(--studio-text-muted);
   line-height: 1.7;
-  margin-bottom: 34px;
+  margin: 0 auto 34px;
   max-width: 44ch;
-  margin-left: auto;
-  margin-right: auto;
   font-family: var(--serif);
   font-style: italic;
+  text-wrap: pretty;
 }
 
 .errActions {
@@ -187,6 +106,10 @@
   justify-content: center;
   flex-wrap: wrap;
   margin-bottom: 46px;
+}
+/* The Go back button's fade wrapper; it lays out as the button itself. */
+.errActionSlot {
+  display: contents;
 }
 
 /* Dead-air waveform (flat dots) */
@@ -197,14 +120,14 @@
   justify-content: center;
   height: 34px;
   margin-bottom: 38px;
-  opacity: 0.5;
 }
 
 .deadairFlat span {
   width: 4px;
   height: 4px;
   border-radius: var(--radius-2);
-  background: var(--text40);
+  background: var(--studio-text-faint);
+  opacity: 0.6;
 }
 
 /* Broken-tape waveform (accent bars) */
@@ -223,26 +146,32 @@
   background: var(--accent);
   opacity: 0.55;
 }
+.deadairWave .waveGap {
+  opacity: 0.2;
+}
 
-/* Err links grid (404) */
+/* Recovery links (404) */
 .errLinksTitle {
-  font-size: var(--text-11);
+  font-family: var(--sans);
+  font-size: var(--text-12);
   font-weight: 700;
   letter-spacing: 0.11em;
   text-transform: uppercase;
-  color: var(--text40);
-  margin-bottom: 16px;
+  color: var(--studio-text-faint);
+  margin: 0 0 16px;
 }
 
 .errGrid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 10px;
-  max-width: 500px;
+  max-width: 520px;
   margin: 0 auto;
+  padding: 0;
+  list-style: none;
 }
 
-@media (max-width: 520px) {
+@media (--sm) {
   .errGrid {
     grid-template-columns: 1fr;
   }
@@ -251,141 +180,79 @@
 .errLink {
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 4px;
+  /* The cards of a row share one height, whatever their sub runs to. */
+  height: 100%;
+  min-height: 44px;
   padding: 15px 18px;
-  background: rgba(var(--cream-rgb), 0.05);
-  border: 1px solid var(--line);
+  background: var(--studio-wash-1);
+  border: 1px solid var(--studio-line);
   border-radius: var(--radius-14);
   text-decoration: none;
   text-align: left;
-  transition:
-    border-color 0.2s var(--ease),
-    background 0.2s var(--ease),
-    transform 0.2s var(--ease);
+  color: var(--studio-text);
+  transition-property: border-color, background-color, transform;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
 }
 
 @media (hover: hover) {
   .errLink:hover {
     border-color: rgba(var(--accent-rgb), 0.4);
-    background: rgba(var(--cream-rgb), 0.08);
+    background: var(--studio-wash-2);
     transform: translateY(-2px);
   }
+}
+.errLink:active {
+  transform: scale(0.97);
+}
+.errLink:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.errLinkIcon {
+  width: 18px;
+  height: 18px;
+  color: var(--studio-accent-text);
+  margin-bottom: 4px;
 }
 
 .errLinkLabel {
   font-family: var(--serif);
   font-size: var(--text-15-5);
   font-weight: 500;
-  color: var(--text);
+  color: var(--studio-text);
   letter-spacing: -0.005em;
 }
 
 .errLinkLabel em {
   font-style: italic;
-  color: var(--accent);
+  color: var(--studio-accent-text);
 }
 
 .errLinkSub {
-  font-size: var(--text-12);
-  color: var(--text40);
-  font-family: var(--serif);
-  font-style: italic;
-}
-
-/* 500-specific */
-.statusPill {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 18px;
-  background: rgba(var(--cream-rgb), 0.05);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-pill);
   font-size: var(--text-13);
-  color: var(--text60);
-  font-family: var(--serif);
-  font-style: italic;
+  line-height: 1.45;
+  color: var(--studio-text-muted);
 }
 
-.statusDot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--jade);
-  box-shadow: var(--ring-jade);
-  flex: none;
+/* The access error (StudioAccessErrorPage): the shared load-error panel,
+   centred in the view under the topbar. */
+.accessError {
+  min-height: calc(100svh - var(--studio-topbar-h, 81px) - var(--bottom-inset, 0px));
+  display: grid;
+  place-items: center;
+  padding: var(--section-y-72) 0;
 }
 
-.statusPill a {
-  color: var(--accent);
-  font-weight: 600;
-  font-style: normal;
-  font-family: var(--sans);
-  font-size: var(--text-12);
-  margin-left: 4px;
-}
-
-.errRef {
-  margin-top: 22px;
-  font-size: var(--text-11-5);
-  color: var(--text40);
-  font-family: var(--sans);
-  font-variant-numeric: tabular-nums;
-  letter-spacing: 0.06em;
-}
-
-/* Studio btn overrides — in dark studio context use accent-based btns */
-.btPrimary {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  background: var(--accent);
-  /* Dark ink on the coral fill: 6.28:1. */
-  color: var(--studio-bg);
-  border: none;
-  border-radius: var(--radius-pill);
-  padding: 12px 24px;
-  font-family: var(--sans);
-  font-size: var(--text-14-5);
-  font-weight: 700;
-  cursor: pointer;
-  text-decoration: none;
-  transition:
-    opacity 0.18s,
-    transform 0.18s;
-}
-
-@media (hover: hover) {
-  .btPrimary:hover {
-    opacity: 0.88;
-    transform: translateY(-1px);
+@media (prefers-reduced-motion: reduce) {
+  .errLink {
+    transition-property: border-color, background-color;
   }
-}
-
-.btGhost {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  background: transparent;
-  color: var(--text);
-  border: 1.5px solid var(--line);
-  border-radius: var(--radius-pill);
-  padding: 11px 22px;
-  font-family: var(--sans);
-  font-size: var(--text-14-5);
-  font-weight: 600;
-  cursor: pointer;
-  text-decoration: none;
-  transition:
-    border-color 0.18s,
-    background 0.18s;
-}
-
-@media (hover: hover) {
-  .btGhost:hover {
-    border-color: rgba(var(--cream-rgb), 0.22);
-    background: rgba(var(--cream-rgb), 0.05);
+  .errLink:hover,
+  .errLink:active {
+    transform: none;
   }
 }

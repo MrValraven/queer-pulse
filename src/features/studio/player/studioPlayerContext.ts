@@ -68,7 +68,11 @@ export type StudioSleepTimerOption =
   { kind: "minutes"; minutes: 15 | 30 | 45 | 60 } | { kind: "endOfTrack" };
 
 export type StudioSleepTimerState =
-  null | { kind: "minutes"; endsAt: number } | { kind: "endOfTrack" };
+  | null
+  /** `minutes` is the length it was set for, so the options can mark the
+   *  running one (DES-27). */
+  | { kind: "minutes"; endsAt: number; minutes?: number }
+  | { kind: "endOfTrack" };
 
 export interface StudioPlayerPreferences {
   /** 0..1, default 1. */
@@ -145,6 +149,14 @@ export interface StudioPlayerActions {
   moveUserItem: (fromIndex: number, toIndex: number) => void;
   moveUpcomingSourceItem: (fromIndex: number, toIndex: number) => void;
   removeEntry: (queueEntryId: string) => void;
+  /** Undo of a removal: the removed entry goes back to its own place in
+   *  "Your queue" or the source. False when the queue has emptied since or
+   *  the entry is already back. Optional so hand-built values stay valid. */
+  restoreQueueEntry?: (
+    item: StudioQueueItem,
+    group: "user" | "source",
+    index: number,
+  ) => boolean;
   clearUserQueue: () => void;
   /** Jump to a row in the queue panel. */
   playEntry: (queueEntryId: string) => void;

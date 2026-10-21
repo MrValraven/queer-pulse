@@ -8,7 +8,20 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { isStudioNotFound } from "./api/studio.api";
 import { studioKeys } from "./api/studioQueryKeys";
 import { useStudioReleaseReminder } from "./api/useStudioArtistToolsMutations";
+import { studioErrorMessageKeyOf } from "./studioErrors.data";
 import styles from "./StudioUpcoming.module.css";
+
+const GENERIC_ERROR_KEY = "studio:errors.generic";
+
+/** The toast for a reminder that did not save: gone on a 404, else the
+ *  failure's own reason, else the reminder's own "couldn't save" line. */
+function notifyMeErrorKeyOf(error: unknown, isGone: boolean): string {
+  if (isGone) return "studio:upcoming.notifyMeGone";
+  const reasonKey = studioErrorMessageKeyOf(error);
+  return reasonKey === GENERIC_ERROR_KEY
+    ? "studio:upcoming.notifyMeError"
+    : reasonKey;
+}
 
 export function StudioNotifyMeButton({
   releaseId,
@@ -57,10 +70,13 @@ export function StudioNotifyMeButton({
                     : "studio:upcoming.notifyMeOffStatus",
                 ),
               onError: (error) => {
-                showToast(t("studio:upcoming.notifyMeError"), "error");
-                // A 404 means the release dropped or vanished meanwhile, so
-                // the page and the artist lists read it again.
-                if (!isStudioNotFound(error)) return;
+                const isGone = isStudioNotFound(error);
+                // A 404 means the release dropped or vanished meanwhile: no
+                // retry can work, so the member learns it is gone, and the
+                // page and the artist lists read it again. Anything else
+                // names its own reason (offline, server, rate limit).
+                showToast(t(notifyMeErrorKeyOf(error, isGone)), "error");
+                if (!isGone) return;
                 void queryClient.invalidateQueries({
                   queryKey: studioKeys.release(demoMode, releaseId),
                 });

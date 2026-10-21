@@ -21,6 +21,7 @@ export const CHANGELOG_RELEASE_NOTES: Record<
       "studio-open-call-story",
       "studio-genre-mood-tiles",
     ],
+    pushes: 2,
   },
   "20 Oct 2026": {
     highlights: [

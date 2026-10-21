@@ -73,9 +73,13 @@ describe("audio file validation", () => {
     expect(uploadErrorKeyOf(tooLarge)).toBe(
       "studio:uploadFlow.files.errorTooLarge",
     );
-    expect(uploadErrorKeyOf(stoppedPut)).toBe(
-      "studio:uploadFlow.files.errorUpload",
+    expect(uploadErrorKeyOf(stoppedPut)).toBe("studio:errors.upload.server");
+    expect(uploadErrorKeyOf(new StudioAudioUploadError("put", 403))).toBe(
+      "studio:uploadFlow.files.errorPresignExpired",
     );
+    expect(
+      uploadErrorKeyOf(new StudioAudioUploadError("put", null, true)),
+    ).toBe("studio:uploadFlow.files.cancelled");
     expect(uploadErrorKeyOf(restricted)).toBe(
       "shared:apiError.accountRestricted",
     );
@@ -126,7 +130,7 @@ describe("audio file validation", () => {
     expect(uploadErrorKeyOf(restricted)).toBe(
       "shared:apiError.accountRestricted",
     );
-    expect(uploadErrorKeyOf(uncoded)).toBe("studio:errors.generic");
+    expect(uploadErrorKeyOf(uncoded)).toBe("studio:errors.upload.forbidden");
     for (const refusal of [notOwner, restricted, uncoded])
       expect(isRetryableUploadError(refusal)).toBe(false);
     const presignOutage = new StudioAudioUploadError("presign", 500);

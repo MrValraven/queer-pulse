@@ -1,4 +1,5 @@
 import { FiPause, FiPlay } from "react-icons/fi";
+import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { StudioTrackRowView } from "./api/studio.adapters";
 import {
@@ -36,8 +37,8 @@ export function StudioPreviewTrackRow({
       {isHidden ? (
         <StudioHiddenTrackNumber position={track.position} />
       ) : (
-        <button
-          type="button"
+        <Button
+          variant="quiet"
           className={styles.trackPlay}
           aria-disabled={!track.hasAudio || undefined}
           aria-label={t(
@@ -54,7 +55,7 @@ export function StudioPreviewTrackRow({
             {track.position}
           </span>
           {isPlaying ? <FiPause aria-hidden /> : <FiPlay aria-hidden />}
-        </button>
+        </Button>
       )}
       <div className={styles.trackText}>
         <span

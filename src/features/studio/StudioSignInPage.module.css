@@ -2,19 +2,19 @@
 .root {
   --bg: var(--studio-bg);
   --rail: var(--studio-rail);
-  --line: rgba(var(--cream-rgb), 0.08);
-  --text: rgba(var(--cream-rgb), 0.92);
-  --text-60: rgba(var(--cream-rgb), 0.62);
+  --s-line: rgba(var(--cream-rgb), 0.08);
+  --s-text: rgba(var(--cream-rgb), 0.92);
+  --s-text-60: rgba(var(--cream-rgb), 0.62);
   /* Cream at 0.52 clears the AA 4.5:1 floor on every studio ground (4.96:1 on
      --surface, 4.87:1 on --studio-bg). It carries 11px and 12px meta text, so it
      never qualifies as large text. The old 0.40 measured 3.55:1 and failed. */
-  --text-40: rgba(var(--cream-rgb), 0.52);
+  --s-text-40: rgba(var(--cream-rgb), 0.52);
 
   display: grid;
   grid-template-columns: 1.05fr 0.95fr;
   min-height: 100svh;
   background: var(--bg);
-  color: var(--text);
+  color: var(--s-text);
   font-family: var(--sans);
 }
 @media (max-width: 920px) {
@@ -89,7 +89,7 @@
   font-family: var(--serif);
   font-weight: 600;
   font-size: var(--text-22);
-  color: var(--text);
+  color: var(--s-text);
   letter-spacing: -0.01em;
 }
 .wordmark em {
@@ -134,7 +134,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(2.125rem, 3.6vw, 3.125rem);
-  color: var(--text);
+  color: var(--s-text);
   letter-spacing: -0.025em;
   line-height: 1.02;
   max-width: 15ch;
@@ -146,7 +146,7 @@
 }
 .asideSub {
   font-size: var(--text-15);
-  color: var(--text-60);
+  color: var(--s-text-60);
   line-height: 1.66;
   margin-top: 18px;
   max-width: 42ch;
@@ -165,7 +165,7 @@
   margin-top: 30px;
   padding: 16px 18px;
   background: rgba(var(--cream-rgb), 0.05);
-  border: 1px solid var(--line);
+  border: 1px solid var(--s-line);
   border-radius: var(--radius-14);
   max-width: 420px;
 }
@@ -184,7 +184,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: var(--text-15);
-  color: var(--text);
+  color: var(--s-text);
   letter-spacing: -0.005em;
 }
 .nowTitle em {
@@ -195,7 +195,7 @@
   font-family: var(--serif);
   font-style: italic;
   font-size: var(--text-12-5);
-  color: var(--text-60);
+  color: var(--s-text-60);
   margin-top: 2px;
 }
 .bars {
@@ -243,7 +243,7 @@
 .asideFoot {
   margin-top: 28px;
   font-size: var(--text-12-5);
-  color: var(--text-40);
+  color: var(--s-text-40);
   font-family: var(--serif);
   font-style: italic;
   position: relative;
@@ -282,31 +282,20 @@
 .segTabs {
   display: flex;
   background: rgba(var(--cream-rgb), 0.05);
-  border: 1px solid var(--line);
+  border: 1px solid var(--s-line);
   border-radius: var(--radius-pill);
   padding: 4px;
   margin-bottom: 28px;
 }
-.segTabs button {
+/* The two mode pills are kit Buttons: primary when chosen, ghost-dark when
+   not. The doubled class lets each fill half the track, and the resting
+   pill drops its outline so the track reads as one control. */
+.seg.seg {
   flex: 1;
-  font-family: var(--sans);
-  font-size: var(--text-14);
-  font-weight: 600;
-  color: var(--text-60);
-  padding: 10px;
-  border: none;
-  background: transparent;
-  border-radius: var(--radius-pill);
-  cursor: pointer;
-  transition:
-    background 0.2s var(--ease),
-    color 0.2s var(--ease);
 }
-/* Scoped above `.segTabs button` so it wins on specificity, not !important. */
-.segTabs .segOn {
-  background: var(--accent);
-  /* Dark ink on the coral fill: 6.28:1. */
-  color: var(--studio-bg);
+.seg.seg:not([aria-pressed="true"]) {
+  border-color: transparent;
+  color: var(--s-text-60);
 }
 
 .pane {
@@ -327,7 +316,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: var(--text-40);
-  color: var(--text);
+  color: var(--s-text);
   letter-spacing: -0.025em;
   line-height: 1.02;
   margin-bottom: 8px;
@@ -339,7 +328,7 @@
 }
 .lede {
   font-size: var(--text-14-5);
-  color: var(--text-60);
+  color: var(--s-text-60);
   line-height: 1.6;
   margin-bottom: 26px;
   font-family: var(--serif);
@@ -358,16 +347,16 @@
 .field label {
   font-size: var(--text-11-5);
   font-weight: 600;
-  color: var(--text-60);
+  color: var(--s-text-60);
   letter-spacing: 0.07em;
   text-transform: uppercase;
 }
 .field input {
   font-family: var(--sans);
   font-size: var(--text-15);
-  color: var(--text);
+  color: var(--s-text);
   background: rgba(var(--cream-rgb), 0.05);
-  border: 1.5px solid var(--line);
+  border: 1.5px solid var(--s-line);
   border-radius: var(--radius-12);
   padding: 13px 15px;
   width: 100%;
@@ -394,7 +383,7 @@
   align-items: center;
   gap: 14px;
   margin: 22px 0;
-  color: var(--text-40);
+  color: var(--s-text-40);
   font-size: var(--text-11);
   font-weight: 600;
   letter-spacing: 0.08em;
@@ -405,7 +394,7 @@
   content: "";
   flex: 1;
   height: 1px;
-  background: var(--line);
+  background: var(--s-line);
 }
 
 .btnGoogle {
@@ -415,13 +404,13 @@
   justify-content: center;
   gap: 10px;
   background: rgba(var(--cream-rgb), 0.05);
-  border: 1.5px solid var(--line);
+  border: 1.5px solid var(--s-line);
   border-radius: var(--radius-12);
   padding: 13px;
   font-family: var(--sans);
   font-size: var(--text-14);
   font-weight: 600;
-  color: var(--text);
+  color: var(--s-text);
   cursor: pointer;
   transition:
     background 0.2s var(--ease),
@@ -442,7 +431,7 @@
   width: 16px;
   height: 16px;
   border: 2px solid rgba(var(--cream-rgb), 0.3);
-  border-top-color: var(--text);
+  border-top-color: var(--s-text);
   border-radius: 50%;
   animation: gspin 0.7s linear infinite;
 }
@@ -460,13 +449,19 @@
 .foot {
   margin-top: 22px;
   font-size: var(--text-13);
-  color: var(--text-60);
+  color: var(--s-text-60);
   text-align: center;
   font-family: var(--serif);
   font-style: italic;
 }
-.foot a,
-.foot button {
+/* The switch is a kit ghost-dark pill. The footer line is italic serif, so
+   the pill restates an upright face, and it keeps the 44px tap floor. */
+.footSwitch.footSwitch {
+  min-height: var(--tap-min);
+  margin-inline-start: 4px;
+  font-style: normal;
+}
+.foot a {
   appearance: none;
   background: none;
   border: none;
@@ -483,7 +478,7 @@
   display: block;
   margin-top: 10px;
   font-size: var(--text-12-5);
-  color: var(--text-40);
+  color: var(--s-text-40);
 }
 .free a {
   font-size: var(--text-12-5);
@@ -496,7 +491,7 @@
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--text-40);
+  color: var(--s-text-40);
   margin: 4px 0 12px;
 }
 .tier {
@@ -505,7 +500,7 @@
   align-items: flex-start;
   padding: 18px;
   background: rgba(var(--cream-rgb), 0.04);
-  border: 1.5px solid var(--line);
+  border: 1.5px solid var(--s-line);
   border-radius: var(--radius-14);
   cursor: pointer;
   transition:
@@ -526,7 +521,7 @@
 .tierDot {
   width: 18px;
   height: 18px;
-  border: 1.5px solid var(--text-40);
+  border: 1.5px solid var(--s-text-40);
   border-radius: 50%;
   flex: none;
   margin-top: 3px;
@@ -555,7 +550,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: var(--text-18);
-  color: var(--text);
+  color: var(--s-text);
   letter-spacing: -0.008em;
 }
 .tier h4 em {
@@ -566,7 +561,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: var(--text-20);
-  color: var(--text);
+  color: var(--s-text);
   white-space: nowrap;
 }
 .tierPrice em {
@@ -575,13 +570,13 @@
 }
 .tierPrice b {
   font-size: var(--text-12);
-  color: var(--text-40);
+  color: var(--s-text-40);
   font-weight: 400;
   font-family: var(--sans);
 }
 .tier p {
   font-size: var(--text-12-5);
-  color: var(--text-60);
+  color: var(--s-text-60);
   line-height: 1.55;
   margin: 6px 0 0;
   font-family: var(--serif);

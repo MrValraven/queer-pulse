@@ -1,20 +1,25 @@
-import type { ReactNode } from "react";
-import { Link } from "react-router-dom";
-import { FiPause, FiPlay } from "react-icons/fi";
-import { ImageSlot } from "../../shared/components/ui";
+import { useState, type ReactNode } from "react";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   releaseMetaLine,
   type StudioReleaseCardView,
 } from "./api/studio.adapters";
+import { StudioMediaCard } from "./kit/StudioMediaCard";
+import { StudioMenu } from "./kit/StudioMenu";
+import {
+  useStudioContextMenu,
+  type StudioContextMenuPoint,
+} from "./kit/useStudioContextMenu";
 import { useStudioPlayer } from "./player/studioPlayerContext";
-import styles from "./studio.module.css";
+import { useStudioReleaseCardMenu } from "./useStudioReleaseCardMenu";
 import kit from "./studioKit.module.css";
+import { StudioReleaseCoverArt } from "./StudioReleaseCoverArt";
 
 /**
- * One release on a grid. The cover is a link kept out of the tab order (the
- * title link is the one a keyboard or screen reader meets), and the play
- * button is its sibling, so no interactive element sits inside a link.
+ * One release on a shelf or grid. The title is the card's one link and the
+ * play button its sibling (StudioMediaCard), so no interactive element sits
+ * inside another. `tag` is a badge drawn on the art. Right-click or a long
+ * press opens Play next, Add to queue and Go to artist for the release.
  */
 export function StudioReleaseCard({
   release,
@@ -29,52 +34,45 @@ export function StudioReleaseCard({
   const player = useStudioPlayer();
   const isCurrent = player.isCurrentRelease(release.id);
   const isPlaying = isCurrent && player.status === "playing";
+  const [menuPoint, setMenuPoint] = useState<StudioContextMenuPoint | null>(
+    null,
+  );
+  const contextMenu = useStudioContextMenu(setMenuPoint);
+  const menuItems = useStudioReleaseCardMenu(release);
 
   return (
-    <article className={styles.card}>
-      <div className={kit.coverArea}>
-        <Link
-          to={release.href}
-          className={kit.coverLink}
-          tabIndex={-1}
-          aria-hidden="true"
-        >
-          <div className={styles.cardCov}>
-            <ImageSlot
-              src={release.coverUrl ?? undefined}
+    <div className={kit.cardMenuTarget} {...contextMenu}>
+      <StudioMediaCard
+        kind="release"
+        href={release.href}
+        title={release.title}
+        meta={meta ?? releaseMetaLine(release)}
+        isPlaying={isPlaying}
+        onPlay={() => {
+          if (isCurrent) player.togglePlay();
+          else void player.playRelease(release.id);
+        }}
+        cover={
+          <>
+            <StudioReleaseCoverArt
+              src={release.coverUrl}
+              title={release.title}
+              format={release.format}
               tint={release.tint}
-              width="100%"
-              height="100%"
-              radius={10}
-              placeholder={t("studio:media.coverLabel")}
-              style={{ position: "absolute", inset: 0 }}
             />
             {tag}
-          </div>
-        </Link>
-        <button
-          type="button"
-          className={`${styles.playFab} ${kit.cardPlay}`}
-          data-current={isCurrent || undefined}
-          aria-label={
-            isPlaying
-              ? t("studio:card.pauseRelease", { title: release.title })
-              : t("studio:card.playRelease", { title: release.title })
-          }
-          onClick={() => {
-            if (isCurrent) player.togglePlay();
-            else void player.playRelease(release.id);
-          }}
-        >
-          {isPlaying ? <FiPause aria-hidden /> : <FiPlay aria-hidden />}
-        </button>
-      </div>
-      <h4>
-        <Link to={release.href} className={kit.titleLink}>
-          {release.title}
-        </Link>
-      </h4>
-      <div className={styles.meta}>{meta ?? releaseMetaLine(release)}</div>
-    </article>
+          </>
+        }
+      />
+      <StudioMenu
+        trigger={null}
+        label={t("studio:trackMenu.menuLabel", { title: release.title })}
+        items={menuItems}
+        anchorPoint={menuPoint}
+        onOpenChange={(isOpen) => {
+          if (!isOpen) setMenuPoint(null);
+        }}
+      />
+    </div>
   );
 }

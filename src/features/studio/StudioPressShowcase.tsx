@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { FiArrowRight, FiPause, FiPlay } from "react-icons/fi";
-import { Button, ImageSlot } from "../../shared/components/ui";
+import { Button, IconButton, ImageSlot } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useShareLink } from "../../shared/hooks";
 import { Translation } from "../../shared/i18n/Translation";
@@ -43,29 +43,29 @@ export function PressShowcasePreview() {
       <PressSectionHead
         titleKey="studio:press.section.preview"
         action={
-          <button
-            type="button"
-            className={sections.headAction}
+          <Button
+            variant="quiet"
+            size="sm"
             onClick={() =>
               showToast(t("studio:press.fullPromoRequestedToast"), "success")
             }
           >
             {t("studio:press.requestFullPromoCta")} <FiArrowRight aria-hidden />
-          </button>
+          </Button>
         }
       />
       <div className={styles.preview}>
-        <button
-          type="button"
+        <IconButton
           className={styles.previewPlay}
           aria-label={t(
             isPlaying ? "studio:press.pauseAria" : "studio:press.playAria",
           )}
+          tooltip
           aria-pressed={isPlaying}
           onClick={() => setIsPlaying((wasPlaying) => !wasPlaying)}
         >
           {isPlaying ? <FiPause aria-hidden /> : <FiPlay aria-hidden />}
-        </button>
+        </IconButton>
         <div className={styles.previewInfo}>
           <h3 className={styles.previewTitle}>
             {PREVIEW_TRACK_TITLE.pre}
@@ -102,19 +102,20 @@ export function PressShowcasePhotos() {
       <PressSectionHead
         titleKey="studio:press.section.photos"
         action={
-          <button
-            type="button"
-            className={sections.headAction}
+          <Button
+            variant="quiet"
+            size="sm"
             onClick={() =>
               showToast(t("studio:press.downloadingPhotosToast"), "success")
             }
           >
             {t("studio:press.downloadAllCta")} <FiArrowRight aria-hidden />
-          </button>
+          </Button>
         }
       />
       <div className={styles.photos}>
         {PRESS_PHOTOS.map((photo) => (
+          // raw <button>: whole-card hit target that holds other content
           <button
             key={photo.captionKey}
             type="button"
@@ -157,13 +158,13 @@ export function PressShowcaseBoilerplate() {
           <div key={row.labelKey} className={styles.copyRow}>
             <span className={styles.copyLabel}>{t(row.labelKey)}</span>
             <span className={styles.copyValue}>{row.value}</span>
-            <button
-              type="button"
-              className={styles.copyButton}
+            <Button
+              variant="quiet"
+              size="sm"
               onClick={() => void copy(row.copy)}
             >
               {t("studio:press.copyCta")}
-            </button>
+            </Button>
           </div>
         ))}
       </div>

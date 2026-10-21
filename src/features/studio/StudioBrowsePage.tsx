@@ -1,5 +1,7 @@
+import { m } from "motion/react";
 import { useSearchParams } from "react-router-dom";
 import { FiMusic } from "react-icons/fi";
+import { useMotionPrefs } from "../../app/providers/motionPrefs";
 import { routes } from "../../app/routeMap";
 import {
   Collapse,
@@ -18,6 +20,8 @@ import { useStudioBrowseReleases } from "./api/useStudioBrowseReleases";
 import { useStudioGenres } from "./api/useStudioGenres";
 import { useStudioMoods } from "./api/useStudioMoods";
 import type { StudioReleasesResult } from "./api/useStudioReleases";
+import { StudioBrowseDefault } from "./StudioBrowseDefault";
+import { useBrowseOmittedGenres } from "./StudioFormatShown";
 import { StudioFormatChips } from "./StudioFormatChips";
 import { StudioFilterChips } from "./StudioGenreChips";
 import { StudioLoadError } from "./StudioLoadStates";
@@ -27,7 +31,9 @@ import { StudioShell } from "./StudioShell";
 import { StudioCardGridSkeleton } from "./StudioSkeletons";
 import { browseCopyKeysOf, FORMAT_BROWSE_COPY_KEYS } from "./studioBrowse.data";
 import { STUDIO_MOOD_LABEL_KEY } from "./studioDiscoveryLabels";
+import { STUDIO_FADE } from "./studioMotion";
 import { studioBrowsePath } from "./studioPaths";
+import { useStudioDocumentTitle } from "./useStudioDocumentTitle";
 import { useStudioActiveFormat } from "./useStudioFormatParam";
 import styles from "./studio.module.css";
 import kit from "./studioKit.module.css";
@@ -44,8 +50,15 @@ function BrowseGrid({
   result: StudioReleasesResult;
 }) {
   const { t } = useTranslation();
+  const { reducedMotion } = useMotionPrefs();
   const { releases, loadState } = result;
-  if (loadState.isError) return <StudioLoadError loadState={loadState} />;
+  if (loadState.isError)
+    return (
+      <StudioLoadError
+        loadState={loadState}
+        what="studio:errors.what.releases"
+      />
+    );
   if (loadState.isLoading)
     return <StudioCardGridSkeleton count={8} className={styles.rowGrid} />;
   if (releases.length === 0)
@@ -58,8 +71,15 @@ function BrowseGrid({
         action={{ label: t("studio:states.backHomeCta"), to: routes.studio }}
       />
     );
+  // The grid fades in over the skeleton it replaces.
   return (
-    <section className={styles.row} aria-label={gridLabel}>
+    <m.section
+      className={styles.row}
+      aria-label={gridLabel}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={reducedMotion ? { duration: 0.12 } : STUDIO_FADE}
+    >
       <div className={styles.rowGrid}>
         {releases.map((release) => (
           <StudioReleaseCard key={release.id} release={release} />
@@ -78,7 +98,7 @@ function BrowseGrid({
           />
         </div>
       </Collapse>
-    </section>
+    </m.section>
   );
 }
 
@@ -101,6 +121,9 @@ export function StudioBrowsePage() {
   const shownGenre = isPodcast ? null : genre;
   const shownMood = isPodcast ? null : mood;
   const result = useStudioBrowseReleases(shownGenre, shownMood, format);
+  // "Spoken word" is a format chip already, so its genre chip steps aside.
+  const omitGenres = useBrowseOmittedGenres(format, shownGenre);
+  const chipGenres = genres.filter((genre) => !omitGenres.includes(genre));
   const copyKeys =
     format !== null && shownGenre === null && shownMood === null
       ? FORMAT_BROWSE_COPY_KEYS
@@ -112,6 +135,8 @@ export function StudioBrowsePage() {
   };
   const hasFilter =
     shownGenre !== null || shownMood !== null || format !== null;
+  // The tab names the page as its heading reads, without the emphasis tags.
+  useStudioDocumentTitle(t(copyKeys.titleKey, values).replace(/<[^>]+>/g, ""));
   return (
     <StudioShell>
       <div className={s.pageH}>
@@ -126,6 +151,7 @@ export function StudioBrowsePage() {
         <StudioPlayRadioButtons genre={shownGenre} mood={shownMood} />
       </div>
       <StudioFormatChips
+        caption={t("studio:searchPage.formatLabel")}
         activeFormat={format}
         hrefOf={(chosen) =>
           chosen === "podcast"
@@ -136,10 +162,14 @@ export function StudioBrowsePage() {
       <Collapse isOpen={!isPodcast}>
         <>
           {genresLoadState.isError ? (
-            <StudioLoadError loadState={genresLoadState} />
+            <StudioLoadError
+              loadState={genresLoadState}
+              what="studio:errors.what.genres"
+            />
           ) : genres.length > 0 ? (
             <StudioFilterChips
-              facet={{ kind: "genre", values: genres }}
+              facet={{ kind: "genre", values: chipGenres }}
+              caption={t("studio:searchPage.genreLabel")}
               activeGenre={shownGenre}
               activeMood={shownMood}
               activeFormat={format}
@@ -154,6 +184,7 @@ export function StudioBrowsePage() {
           <Collapse isOpen={moods.length > 0}>
             <StudioFilterChips
               facet={{ kind: "mood", values: moods }}
+              caption={t("studio:searchPage.moodLabel")}
               activeGenre={shownGenre}
               activeMood={shownMood}
               activeFormat={format}
@@ -172,7 +203,10 @@ export function StudioBrowsePage() {
         />
       ) : (
         !genresLoadState.isError && (
-          <p className={css.note}>{t("studio:browse.pickPrompt")}</p>
+          <>
+            <p className={css.note}>{t("studio:browse.pickPrompt")}</p>
+            <StudioBrowseDefault omitGenres={omitGenres} />
+          </>
         )
       )}
     </StudioShell>

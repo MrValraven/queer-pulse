@@ -8,7 +8,7 @@ import {
 } from "react";
 import { FiMinus, FiPause, FiPlay, FiPlus } from "react-icons/fi";
 import { prefersReducedMotionNow } from "../../../../shared/hooks/usePrefersReducedMotion";
-import { Collapse } from "../../../../shared/components/ui";
+import { Button, Collapse, IconButton } from "../../../../shared/components/ui";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { activeIndexAt } from "../../player/studioTimeline";
 import { StudioSyncedLyrics } from "../../player/ui/StudioSyncedLyrics";
@@ -81,24 +81,24 @@ function TapLineRow({
       </span>
       <span className={styles.lineText}>{text}</span>
       <span className={styles.lineActions}>
-        <button
-          type="button"
+        <IconButton
+          size="sm"
           aria-disabled={stamp === null || undefined}
           aria-label={t("studio:lyricTiming.tap.earlier", { number })}
           onClick={() => tap.nudge(index, -1)}
         >
           <FiMinus aria-hidden />
-        </button>
-        <button
-          type="button"
+        </IconButton>
+        <IconButton
+          size="sm"
           aria-disabled={stamp === null || undefined}
           aria-label={t("studio:lyricTiming.tap.later", { number })}
           onClick={() => tap.nudge(index, 1)}
         >
           <FiPlus aria-hidden />
-        </button>
-        <button
-          type="button"
+        </IconButton>
+        <IconButton
+          size="sm"
           aria-disabled={!isSeekable || undefined}
           aria-label={t("studio:lyricTiming.tap.playFromHere", {
             number,
@@ -110,7 +110,7 @@ function TapLineRow({
           }}
         >
           <FiPlay aria-hidden />
-        </button>
+        </IconButton>
       </span>
     </li>
   );
@@ -202,8 +202,8 @@ export function StudioTapAlongPane({
       tabIndex={-1}
     >
       <div className={styles.transport}>
-        <button
-          type="button"
+        <IconButton
+          size="sm"
           className={styles.iconButton}
           aria-label={
             audio.isPlaying
@@ -218,13 +218,13 @@ export function StudioTapAlongPane({
           }}
         >
           {audio.isPlaying ? <FiPause aria-hidden /> : <FiPlay aria-hidden />}
-        </button>
+        </IconButton>
         <span className={styles.clock}>
           {formatLrcTime(audio.currentTime * 1000)}
         </span>
-        <button
+        <Button
+          variant="primary"
           ref={stampButtonRef}
-          type="button"
           className={styles.stamp}
           aria-label={t("studio:lyricTiming.tap.stamp", {
             number: Math.min(tap.nextIndex + 1, lyricLines.length),
@@ -235,7 +235,7 @@ export function StudioTapAlongPane({
           }}
         >
           {t("studio:lyricTiming.tap.stampVisible")}
-        </button>
+        </Button>
       </div>
       <AudioStatus audio={audio} />
       <Collapse isOpen={limitProblem !== null}>
@@ -277,17 +277,21 @@ export function StudioTapAlongPane({
         })}
       </ol>
       <div className={styles.footerRow}>
-        <button type="button" className={styles.linkButton} onClick={tap.clear}>
+        <Button
+          variant="quiet"
+          className={styles.linkButton}
+          onClick={tap.clear}
+        >
           {t("studio:lyricTiming.tap.restart")}
-        </button>
-        <button
-          type="button"
+        </Button>
+        <Button
+          variant="quiet"
           className={styles.linkButton}
           aria-expanded={isPreviewOpen}
           onClick={() => setIsPreviewOpen((wasOpen) => !wasOpen)}
         >
           {t("studio:lyricTiming.preview")}
-        </button>
+        </Button>
       </div>
       <Collapse isOpen={isPreviewOpen}>
         <div className={styles.preview} ref={previewRef}>

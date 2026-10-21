@@ -1,5 +1,5 @@
-import { FiMoon, FiMoreHorizontal } from "react-icons/fi";
-import { Collapse } from "../../../../shared/components/ui";
+import { FiMoon, FiSliders } from "react-icons/fi";
+import { Button, Collapse } from "../../../../shared/components/ui";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { useStudioPlayer } from "../studioPlayerContext";
 import { useStudioPlayerSurface } from "../studioPlayerSurface";
@@ -9,6 +9,7 @@ import { StudioPlayerPopover } from "./StudioPlayerPopover";
 import { StudioSleepTimerOptions } from "./StudioSleepTimer";
 import { StudioSpeedSetting } from "./StudioSpeedSetting";
 import styles from "./StudioPlayerControls.module.css";
+import timerStyles from "./StudioSleepTimer.module.css";
 
 /** The bar's overflow (spec 7.1): sleep timer, crossfade, Even out
  *  loudness, Speed while an episode plays, the shortcuts sheet and Close
@@ -25,7 +26,7 @@ export function StudioPlayerMorePanel({
   return (
     <StudioPlayerPopover
       label={t("studio:player.more")}
-      icon={FiMoreHorizontal}
+      icon={FiSliders}
       placement={placement}
     >
       {(close) => (
@@ -40,26 +41,28 @@ export function StudioPlayerMorePanel({
           <Collapse isOpen={isEpisode}>
             <StudioSpeedSetting />
           </Collapse>
-          <button
-            type="button"
-            className={styles.option}
-            onClick={() => {
-              close();
-              surface.openShortcuts();
-            }}
-          >
-            {t("studio:player.shortcutsCta")}
-          </button>
-          <button
-            type="button"
-            className={styles.option}
-            onClick={() => {
-              close();
-              closePlayer();
-            }}
-          >
-            {t("studio:playerBar.close")}
-          </button>
+          <div className={timerStyles.panelFoot}>
+            <Button
+              variant="quiet"
+              className={`${styles.option} ${timerStyles.choice}`}
+              onClick={() => {
+                close();
+                surface.openShortcuts();
+              }}
+            >
+              {t("studio:player.shortcutsCta")}
+            </Button>
+            <Button
+              variant="quiet"
+              className={`${styles.option} ${timerStyles.choice}`}
+              onClick={() => {
+                close();
+                closePlayer();
+              }}
+            >
+              {t("studio:playerBar.close")}
+            </Button>
+          </div>
         </>
       )}
     </StudioPlayerPopover>

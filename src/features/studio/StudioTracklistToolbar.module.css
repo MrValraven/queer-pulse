@@ -1,0 +1,45 @@
+/* The row above a playlist or Liked songs: search on the left, the order and
+   Select tracks on the right. On a phone the search takes the first line and
+   the two buttons share the second. */
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 12px;
+  margin: 0 0 12px;
+}
+
+.search {
+  flex: 1 1 240px;
+  max-inline-size: 360px;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-inline-start: auto;
+}
+
+.label {
+  white-space: nowrap;
+}
+
+/* Keeps every sort item's label on one edge, ticked or not. */
+.iconSpacer {
+  display: inline-block;
+  inline-size: 1em;
+  block-size: 1em;
+}
+
+@media (--sm) {
+  .search {
+    flex-basis: 100%;
+    max-inline-size: none;
+  }
+
+  .controls {
+    margin-inline-start: 0;
+  }
+}

@@ -71,7 +71,7 @@
   padding: 1px 8px;
   border: 1px solid rgba(var(--studio-ink-rgb), 0.28);
   border-radius: var(--radius-pill);
-  color: var(--text60);
+  color: var(--studio-text-muted);
   font-size: var(--text-11);
   vertical-align: middle;
 }
@@ -153,7 +153,7 @@
   align-items: flex-start;
   gap: 12px;
   padding: 12px 14px;
-  border: 1px solid var(--line);
+  border: 1px solid var(--studio-line);
   border-radius: var(--radius-12);
   cursor: pointer;
   transition-property: border-color, background-color;
@@ -217,11 +217,14 @@
   font-size: var(--text-14);
 }
 
-/* Picker */
-.newRow,
-.pickerRow {
+/* Picker. The rows ride on the shared quiet Button; the doubled classes
+   outrank its own rules whatever order the two modules load in, so a row
+   reads as a list row (its hover keeps the quiet wash). */
+.newRow.newRow,
+.pickerRow.pickerRow {
   display: flex;
   align-items: center;
+  justify-content: flex-start;
   gap: 12px;
   width: 100%;
   min-height: var(--tap-min);
@@ -231,6 +234,8 @@
   background: transparent;
   color: var(--ink);
   font: inherit;
+  line-height: inherit;
+  white-space: normal;
   text-align: left;
   cursor: pointer;
   transition-property: background-color;
@@ -238,7 +243,7 @@
   transition-timing-function: var(--ease);
 }
 
-.newRow {
+.newRow.newRow {
   color: var(--accent-text);
   font-weight: 600;
 }
@@ -254,8 +259,8 @@
   }
 }
 
-.newRow[aria-disabled="true"],
-.pickerRow[aria-disabled="true"] {
+.newRow.newRow[aria-disabled="true"],
+.pickerRow.pickerRow[aria-disabled="true"] {
   cursor: progress;
   opacity: 0.7;
 }

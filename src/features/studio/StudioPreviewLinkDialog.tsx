@@ -19,7 +19,7 @@ function PreviewLinkSkeleton() {
     <div
       className={styles.skeleton}
       role="status"
-      aria-label={t("studio:states.loadingLabel")}
+      aria-label={t("studio:loading.previewLink")}
     >
       <StudioLine width="45%" height={18} />
       <StudioLine width="95%" height={13} />
@@ -40,7 +40,13 @@ function PreviewLinkDialogBody({
   const { t } = useTranslation();
   if (release && canShowPreviewLink(release))
     return <StudioPreviewLinkPanel release={release} isHeadingHidden />;
-  if (loadState.isError) return <StudioLoadError loadState={loadState} />;
+  if (loadState.isError)
+    return (
+      <StudioLoadError
+        loadState={loadState}
+        what="studio:errors.what.previewLink"
+      />
+    );
   // A release that went live, was withdrawn (410) or is gone (404) has no
   // link to offer: one plain line, so the dialog never waits forever.
   let lineKey = "studio:states.notFoundTitle";

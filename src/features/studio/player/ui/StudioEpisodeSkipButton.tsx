@@ -1,4 +1,5 @@
 import { FiRotateCcw, FiRotateCw } from "react-icons/fi";
+import { IconButton } from "../../../../shared/components/ui/IconButton";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import {
   EPISODE_SKIP_BACK_SECONDS,
@@ -22,12 +23,12 @@ export function StudioEpisodeSkipButton({
   const { currentTime, duration } = useStudioPlayerClock();
   const isBack = direction === "back";
   return (
-    <button
-      type="button"
+    <IconButton
       className={[className, styles.skip].filter(Boolean).join(" ")}
       aria-label={t(
         isBack ? "studio:player.skipBack" : "studio:player.skipForward",
       )}
+      tooltip
       onClick={() =>
         player.seek(skipTargetSeconds(currentTime, direction, duration))
       }
@@ -36,6 +37,6 @@ export function StudioEpisodeSkipButton({
       <span className={styles.skipSeconds} aria-hidden="true">
         {isBack ? EPISODE_SKIP_BACK_SECONDS : EPISODE_SKIP_FORWARD_SECONDS}
       </span>
-    </button>
+    </IconButton>
   );
 }

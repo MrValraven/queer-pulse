@@ -74,8 +74,32 @@
 }
 .collActions {
   display: flex;
+  flex-wrap: wrap;
+  align-items: center;
   gap: 10px;
   margin-top: 20px;
+}
+/* The set's round coral play: an <IconButton> kept round. The doubled class
+   outranks the kit's quiet icon fill and its hover wash. */
+.setPlay.setPlay {
+  width: 52px;
+  min-width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--accent);
+  /* Dark ink on the coral fill: 6.28:1. */
+  color: var(--studio-bg);
+}
+.setPlay.setPlay svg {
+  width: 16px;
+  height: 16px;
+  margin-left: 2px;
+}
+@media (hover: hover) {
+  .setPlay.setPlay:hover:not(:disabled):not([aria-disabled="true"]) {
+    background: var(--accent);
+    color: var(--studio-bg);
+  }
 }
 
 /* Search */
@@ -88,6 +112,20 @@
   border-radius: var(--radius-pill);
   padding: 15px 24px;
   margin: 8px 0 22px;
+  position: relative;
+  overflow: hidden;
+  transition-property: background-color, border-color;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease-out);
+}
+/* DES-59: the pill carries the focus ring, so the ring follows its radius
+   instead of boxing the bare input. */
+.searchBar:focus-within {
+  background: var(--studio-wash-1);
+  border-color: rgba(var(--studio-ink-rgb), 0.4);
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }
 .searchBar svg {
   width: 20px;
@@ -97,43 +135,132 @@
 }
 .searchBar input {
   flex: 1;
+  min-width: 0;
   border: none;
   background: none;
   font: inherit;
   font-size: var(--text-16);
   color: rgba(var(--studio-ink-rgb), 1);
 }
+.searchBar input:focus,
+.searchBar input:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
 .searchBar input::placeholder {
   color: var(--studio-text-muted);
+}
+/* DES-39: a thin line along the foot of the field while new results load,
+   beside the dimmed old ones. It sweeps like the buffering indicator; under
+   reduced motion it holds still. */
+.searchProgress {
+  position: absolute;
+  inset: auto 0 0;
+  height: 2px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition-property: opacity;
+  transition-duration: var(--dur-base);
+  transition-timing-function: var(--ease-out);
+}
+.searchProgress::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  width: 40%;
+  background: var(--accent);
+  transform: translateX(-100%);
+}
+.searchProgress[data-active] {
+  opacity: 1;
+}
+.searchProgress[data-active]::before {
+  animation: searchProgressSweep 1.1s var(--ease) infinite;
+}
+@keyframes searchProgressSweep {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(250%);
+  }
+}
+
+/* DES-38: search chips match the browse chips: 44px links with a 0.4 ink
+   outline, a hover wash, and the accent tint on the current one. */
+.chipsNav {
+  margin-bottom: 24px;
 }
 .chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 9px;
-  margin-bottom: 30px;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 .chip {
-  appearance: none;
-  border: 1px solid rgba(var(--studio-ink-rgb), 0.2);
-  background: transparent;
-  color: rgba(var(--studio-ink-rgb), 0.8);
-  font: inherit;
-  font-size: var(--text-13);
-  font-weight: 600;
-  padding: 7px 15px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: var(--tap-min);
+  padding: 0 16px;
+  border: 1px solid rgba(var(--studio-ink-rgb), 0.4);
   border-radius: var(--radius-pill);
-  cursor: pointer;
-  transition:
-    background var(--ease),
-    color var(--ease),
-    border-color var(--ease);
+  background: transparent;
+  color: var(--studio-text);
+  font: inherit;
+  font-size: var(--text-14);
+  font-weight: 600;
+  text-decoration: none;
+  touch-action: manipulation;
+  transition-property: background-color, border-color, color, transform;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
 }
-/* --cream and --text-strong follow the app theme, so the selected chip is the
-   app page tone with a solid ink outline in both themes. */
-.chipOn {
-  background: var(--cream);
-  border-color: rgba(var(--studio-ink-rgb), 1);
-  color: var(--text-strong);
+.chip svg {
+  flex: none;
+  width: 14px;
+  height: 14px;
+  color: var(--studio-text-muted);
+}
+@media (hover: hover) {
+  .chip:hover {
+    background: var(--studio-wash-2);
+  }
+}
+.chip:active {
+  transform: scale(0.97);
+}
+.chip[aria-current="page"] {
+  border-color: var(--accent);
+  background: rgba(var(--accent-rgb), 0.16);
+}
+.chip:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+/* A filter chip that drops its filter: the x sits after the label. */
+.chipDrop {
+  padding-inline-end: 12px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .searchBar,
+  .searchProgress,
+  .chip {
+    transition-duration: 0.01ms;
+  }
+  .chip:active {
+    transform: none;
+  }
+  .searchProgress[data-active]::before {
+    animation: none;
+    transform: none;
+    width: 100%;
+    opacity: 0.6;
+  }
 }
 /* Tabs */
 .tabs {

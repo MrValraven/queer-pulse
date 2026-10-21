@@ -24,9 +24,15 @@ import {
   StudioNotFound,
 } from "./StudioLoadStates";
 import { studioEpisodeUploadPath, studioUploadPath } from "./studioPaths";
+import { StudioUploadActivityProvider } from "./upload/StudioUploadActivity";
+import { expectDraftParam } from "./upload/useStudioUploadLeaveGuard";
+import { useStudioDocumentTitle } from "./useStudioDocumentTitle";
 import s from "./creator.module.css";
 import css from "./StudioEpisodeUpload.module.css";
 import publishStyles from "./StudioUploadPublish.module.css";
+
+/** The episode page's draft lives in both params: dropping either leaves. */
+const EPISODE_DRAFT_PARAMS = ["release", "episode"] as const;
 
 /** The plum success panel, with ghost-dark buttons on its dark ground. The
  *  page's h1 carries the success line ("<title> is live") and takes focus. */
@@ -114,6 +120,8 @@ export function StudioEpisodeUploadPage() {
   const openEpisode = useCallback(
     (readyTrackId: string) => {
       setArrivedTrackId(readyTrackId);
+      // The leave guard lets `episode=new` become this id, and only this.
+      expectDraftParam("episode", readyTrackId);
       setSearchParams(
         (previous) => {
           const next = new URLSearchParams(previous);
@@ -130,6 +138,13 @@ export function StudioEpisodeUploadPage() {
     trackId === null || release?.tracks.some((track) => track.id === trackId);
 
   const isPublished = publishedTrack !== null && publishedTrack.id === trackId;
+  useStudioDocumentTitle(
+    t(
+      trackId === null
+        ? "studio:episodeUpload.pageTitleNew"
+        : "studio:episodeUpload.pageTitleEdit",
+    ),
+  );
 
   // `bodyKey` names the state, so each swap fades through the shared motion.
   let body: ReactNode;
@@ -139,7 +154,9 @@ export function StudioEpisodeUploadPage() {
     body = <StudioNotFound />;
   } else if (loadState.isError) {
     bodyKey = "error";
-    body = <StudioLoadError loadState={loadState} />;
+    body = (
+      <StudioLoadError loadState={loadState} what="studio:errors.what.show" />
+    );
   } else if (!release) {
     bodyKey = "loading";
     body = <StudioDetailSkeleton />;
@@ -152,9 +169,15 @@ export function StudioEpisodeUploadPage() {
       <EmptyState
         icon={<FiSlash />}
         title={t("studio:uploadFlow.locked.takenDownTitle")}
-        description={t("studio:uploadFlow.locked.takenDownBody", {
-          reason: release.takedownReason ?? "",
-        })}
+        description={
+          // With no reason on record, the line points to the notice
+          // instead of printing an empty reason.
+          release.takedownReason
+            ? t("studio:uploadFlow.locked.takenDownBody", {
+                reason: release.takedownReason,
+              })
+            : t("studio:uploadFlow.locked.takenDownBodyNoReason")
+        }
         action={{
           label: t("studio:uploadFlow.locked.backCta"),
           to: release.artist.href,
@@ -214,37 +237,39 @@ export function StudioEpisodeUploadPage() {
   }
 
   return (
-    <StudioCreatorShell persona={release?.artist ?? null} isEditingRelease>
-      <section className={s.hero}>
-        <div className={s.heroInner}>
-          <div className={s.eb}>{t("studio:episodeUpload.eyebrow")}</div>
-          <StudioEpisodeHeading
-            trackId={trackId}
-            publishedTitle={
-              isPublished && publishedTrack ? publishedTrack.title : null
-            }
-          />
-          {release && (
-            <div className={s.sub}>
-              {t("studio:episodeUpload.forShow", { show: release.title })}
-            </div>
-          )}
-        </div>
-      </section>
-      <section className={s.body}>
-        <AnimatePresence mode="wait" initial={false}>
-          <m.div
-            key={bodyKey}
-            className={css.main}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: reducedMotion ? 0 : 0.2 }}
-          >
-            {body}
-          </m.div>
-        </AnimatePresence>
-      </section>
-    </StudioCreatorShell>
+    <StudioUploadActivityProvider keptParams={EPISODE_DRAFT_PARAMS}>
+      <StudioCreatorShell persona={release?.artist ?? null} isEditingRelease>
+        <section className={s.hero}>
+          <div className={`${s.heroInner} ${css.heroColumn}`}>
+            <div className={s.eb}>{t("studio:episodeUpload.eyebrow")}</div>
+            <StudioEpisodeHeading
+              trackId={trackId}
+              publishedTitle={
+                isPublished && publishedTrack ? publishedTrack.title : null
+              }
+            />
+            {release && (
+              <div className={s.sub}>
+                {t("studio:episodeUpload.forShow", { show: release.title })}
+              </div>
+            )}
+          </div>
+        </section>
+        <section className={s.body}>
+          <AnimatePresence mode="wait" initial={false}>
+            <m.div
+              key={bodyKey}
+              className={css.main}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: reducedMotion ? 0 : 0.2 }}
+            >
+              {body}
+            </m.div>
+          </AnimatePresence>
+        </section>
+      </StudioCreatorShell>
+    </StudioUploadActivityProvider>
   );
 }

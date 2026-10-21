@@ -1,13 +1,11 @@
-import { FiX } from "react-icons/fi";
-import { MdDragIndicator } from "react-icons/md";
-import { ImageSlot } from "../../shared/components/ui";
+import { Button, ImageSlot } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { StudioProgramSingles } from "./StudioProgramSingles";
 import {
   COVER,
   COLLECTIONS,
   BROADCASTS,
-  resolveText,
   type Single,
 } from "./studioProgram.data";
 import s from "./StudioProgramPage.module.css";
@@ -16,6 +14,9 @@ interface SlateProps {
   singles: Single[];
   onNoteChange: (id: string, note: string) => void;
   onRemove: (id: string) => void;
+  onReorder: (from: number, to: number) => void;
+  onAddSlot: () => void;
+  onAddBroadcast: () => void;
   onSwap: () => void;
   onEditNote: () => void;
 }
@@ -25,6 +26,9 @@ export function StudioProgramSlate({
   singles,
   onNoteChange,
   onRemove,
+  onReorder,
+  onAddSlot,
+  onAddBroadcast,
   onSwap,
   onEditNote,
 }: SlateProps) {
@@ -66,12 +70,12 @@ export function StudioProgramSlate({
               />
             </blockquote>
             <div className={s.coverActions}>
-              <button type="button" className={s.chip} onClick={onSwap}>
+              <Button variant="quiet" size="sm" onClick={onSwap}>
                 {t("studio:program.slate.cover.swapCta")}
-              </button>
-              <button type="button" className={s.chip} onClick={onEditNote}>
+              </Button>
+              <Button variant="quiet" size="sm" onClick={onEditNote}>
                 {t("studio:program.slate.cover.editNoteCta")}
-              </button>
+              </Button>
             </div>
           </div>
         </div>
@@ -88,59 +92,13 @@ export function StudioProgramSlate({
             })}
           </span>
         </div>
-        <div className={s.tracks}>
-          {singles.map((single, singleIndex) => (
-            <div key={single.id} className={s.trackSlot}>
-              <span className={s.grip} aria-hidden>
-                <span className={s.gripDots}>
-                  <MdDragIndicator />
-                </span>
-                <span className={s.gripNo}>
-                  {String(singleIndex + 1).padStart(2, "0")}
-                </span>
-              </span>
-              <span className={s.trackCov}>
-                <ImageSlot
-                  src={single.image}
-                  tint={single.tint}
-                  width={44}
-                  height={44}
-                  radius={7}
-                  placeholder=""
-                />
-              </span>
-              <div className={s.trackMeta}>
-                <div className={s.trackTitle}>
-                  {single.titlePre}
-                  <em>{single.titleEm}</em>
-                </div>
-                <div className={s.trackWho}>{resolveText(single.who, t)}</div>
-              </div>
-              <input
-                className={s.noteField}
-                value={resolveText(single.note, t)}
-                placeholder={t("studio:program.slate.singles.notePlaceholder")}
-                onChange={(e) => onNoteChange(single.id, e.target.value)}
-                aria-label={t("studio:program.slate.singles.noteAria", {
-                  title: `${single.titlePre}${single.titleEm}`,
-                })}
-              />
-              <button
-                type="button"
-                className={s.remove}
-                onClick={() => onRemove(single.id)}
-                aria-label={t("studio:program.slate.singles.removeAria", {
-                  title: `${single.titlePre}${single.titleEm}`,
-                })}
-              >
-                <FiX aria-hidden />
-              </button>
-            </div>
-          ))}
-          <button type="button" className={s.emptySlot}>
-            {t("studio:program.slate.singles.addSlotCta")}
-          </button>
-        </div>
+        <StudioProgramSingles
+          singles={singles}
+          onNoteChange={onNoteChange}
+          onRemove={onRemove}
+          onReorder={onReorder}
+          onAddSlot={onAddSlot}
+        />
       </section>
 
       <section className={s.group}>
@@ -203,9 +161,13 @@ export function StudioProgramSlate({
               <span className={s.timePill}>{broadcast.time}</span>
             </div>
           ))}
-          <button type="button" className={s.emptySlot}>
+          <Button
+            variant="quiet"
+            className={s.emptySlot}
+            onClick={onAddBroadcast}
+          >
             {t("studio:program.slate.broadcasts.addSlotCta")}
-          </button>
+          </Button>
         </div>
       </section>
     </div>

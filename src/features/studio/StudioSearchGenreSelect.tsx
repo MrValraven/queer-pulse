@@ -1,4 +1,5 @@
 import { useId } from "react";
+import { Select, type SelectOption } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   isStudioFormat,
@@ -15,11 +16,32 @@ import {
   type StudioGenre,
   type StudioMood,
 } from "./api/studio.types";
+import { useStudioFormats } from "./api/useStudioFormats";
+import { useStudioGenres } from "./api/useStudioGenres";
+import { useStudioMoods } from "./api/useStudioMoods";
+import type { StudioLoadState } from "./api/studioLoadState";
 import { STUDIO_MOOD_LABEL_KEY } from "./studioDiscoveryLabels";
 import css from "./StudioSearch.module.css";
 
-/** One vocabulary select beside the type filter: "Any" first, then every
- *  value in list order. Genre and mood narrow releases and tracks (the
+/** DES-35: a facet lists only the values with something published, read
+ *  from the same queries as browse. Until that list arrives (or if it
+ *  fails) the whole vocabulary stays, so the select never goes empty, and
+ *  the value in the URL always stays listed. */
+function publishedValuesOf<Value extends string>(
+  vocabulary: readonly Value[],
+  published: readonly Value[],
+  loadState: StudioLoadState,
+  current: Value | null,
+): readonly Value[] {
+  const hasList = !loadState.isLoading && !loadState.isError;
+  if (!hasList) return vocabulary;
+  const listed = new Set<Value>(published);
+  if (current) listed.add(current);
+  return vocabulary.filter((value) => listed.has(value));
+}
+
+/** One vocabulary select beside the type filter, on the shared Select
+ *  (DES-38): "Any" first, then each published value in list order. Genre and mood narrow releases and tracks (the
  *  server ignores both for artists and playlists). */
 function StudioSearchVocabularySelect<Value extends string>({
   labelKey,
@@ -39,24 +61,24 @@ function StudioSearchVocabularySelect<Value extends string>({
   onChange: (value: Value | null) => void;
 }) {
   const { t } = useTranslation();
-  const selectId = useId();
+  const labelId = useId();
+  const options: SelectOption[] = [
+    { value: "", label: t(anyKey) },
+    ...values.map((option) => ({ value: option, label: t(labelKeys[option]) })),
+  ];
   return (
     <div className={css.facetField}>
-      <label htmlFor={selectId}>{t(labelKey)}</label>
-      <select
-        id={selectId}
+      <span id={labelId} className={css.facetLabel}>
+        {t(labelKey)}
+      </span>
+      <Select
+        className={css.facetSelect}
+        labelledBy={labelId}
+        options={options}
+        searchable={false}
         value={value ?? ""}
-        onChange={(event) =>
-          onChange(isValue(event.target.value) ? event.target.value : null)
-        }
-      >
-        <option value="">{t(anyKey)}</option>
-        {values.map((option) => (
-          <option key={option} value={option}>
-            {t(labelKeys[option])}
-          </option>
-        ))}
-      </select>
+        onChange={(next) => onChange(next && isValue(next) ? next : null)}
+      />
     </div>
   );
 }
@@ -68,11 +90,12 @@ export function StudioSearchGenreSelect({
   value: StudioGenre | null;
   onChange: (genre: StudioGenre | null) => void;
 }) {
+  const { genres, loadState } = useStudioGenres();
   return (
     <StudioSearchVocabularySelect
       labelKey="studio:searchPage.genreLabel"
       anyKey="studio:searchPage.genreAny"
-      values={STUDIO_GENRES}
+      values={publishedValuesOf(STUDIO_GENRES, genres, loadState, value)}
       labelKeys={STUDIO_GENRE_LABEL_KEY}
       isValue={isStudioGenre}
       value={value}
@@ -88,11 +111,12 @@ export function StudioSearchMoodSelect({
   value: StudioMood | null;
   onChange: (mood: StudioMood | null) => void;
 }) {
+  const { moods, loadState } = useStudioMoods();
   return (
     <StudioSearchVocabularySelect
       labelKey="studio:searchPage.moodLabel"
       anyKey="studio:searchPage.moodAny"
-      values={STUDIO_MOODS}
+      values={publishedValuesOf(STUDIO_MOODS, moods, loadState, value)}
       labelKeys={STUDIO_MOOD_LABEL_KEY}
       isValue={isStudioMood}
       value={value}
@@ -110,11 +134,12 @@ export function StudioSearchFormatSelect({
   value: StudioFormat | null;
   onChange: (format: StudioFormat | null) => void;
 }) {
+  const { formats, loadState } = useStudioFormats();
   return (
     <StudioSearchVocabularySelect
       labelKey="studio:searchPage.formatLabel"
       anyKey="studio:searchPage.formatAny"
-      values={STUDIO_FORMATS}
+      values={publishedValuesOf(STUDIO_FORMATS, formats, loadState, value)}
       labelKeys={STUDIO_FORMAT_LABEL_KEY}
       isValue={isStudioFormat}
       value={value}

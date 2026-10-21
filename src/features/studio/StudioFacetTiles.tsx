@@ -1,8 +1,16 @@
-import { useState, type CSSProperties, type ReactElement } from "react";
+import {
+  useLayoutEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type ReactElement,
+  type RefObject,
+} from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { STUDIO_GENRE_LABEL_KEY } from "./api/studio.adapters";
-import type { StudioGenre, StudioMood } from "./api/studio.types";
+import type { StudioFormat, StudioGenre, StudioMood } from "./api/studio.types";
+import { StudioShelf } from "./kit/StudioShelf";
 import { STUDIO_MOOD_LABEL_KEY } from "./studioDiscoveryLabels";
 import { STUDIO_GENRE_MOTIF } from "./studioGenreMotifs";
 import { STUDIO_MOOD_MOTIF } from "./studioMoodMotifs";
@@ -10,15 +18,54 @@ import { studioBrowsePath } from "./studioPaths";
 import css from "./StudioFacetTiles.module.css";
 import skeleton from "./studioSkeleton.module.css";
 
-/** Placeholder tiles while a list loads: enough for two rows at most
- *  widths, so the section holds its place before the real tiles land. */
-const SKELETON_TILE_COUNT = 8;
-const SKELETON_TILE_KEYS = Array.from(
-  { length: SKELETON_TILE_COUNT },
-  (_cell, index) => `skeleton-${index}`,
+/** Placeholder columns while a list loads: enough to fill a wide row. */
+const SKELETON_COLUMN_KEYS = Array.from(
+  { length: 6 },
+  (_column, index) => `skeleton-${index}`,
 );
 
-/** Which vocabulary a tile grid lists, with the newest cover per value. */
+/** Tiles stacked in each column of the two-row scroller. */
+const TILES_PER_COLUMN = 2;
+
+/** The shelf grid's columns by width, as StudioShelf.module.css sets them
+ *  (two, then three from 560px, four from 780px, five from 1100px). */
+const SHELF_GRID_STEPS = [
+  { minWidth: 1100, columns: 5 },
+  { minWidth: 780, columns: 4 },
+  { minWidth: 560, columns: 3 },
+  { minWidth: 0, columns: 2 },
+] as const;
+
+/** True when every tile fits one row of the shelf grid at the width the
+ *  shelf has, so the tiles line up in a row with no sideways scroll. It
+ *  measures before paint and again on every resize. */
+function useFitsOneRow(
+  ref: RefObject<HTMLElement | null>,
+  tileCount: number,
+): boolean {
+  const [width, setWidth] = useState(0);
+  useLayoutEffect(() => {
+    const element = ref.current;
+    if (!element) return;
+    setWidth(element.clientWidth);
+    if (typeof ResizeObserver === "undefined") return;
+    const observer = new ResizeObserver(([entry]) => {
+      if (entry) setWidth(entry.contentRect.width);
+    });
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, [ref]);
+  if (width === 0 || tileCount === 0) return false;
+  const step = SHELF_GRID_STEPS.find((each) => width >= each.minWidth);
+  return tileCount <= (step?.columns ?? 0);
+}
+
+/** "Fado / contemporâneo" breaks after the slash, never before it. */
+function keepSlashWithWord(label: string): string {
+  return label.replace(/ \//g, "\u00a0/");
+}
+
+/** Which vocabulary a tile row lists, with the newest cover per value. */
 export type StudioFacetTilesFacet =
   | {
       kind: "genre";
@@ -81,70 +128,109 @@ function StudioFacetTile({ tile }: { tile: StudioFacetTileView }) {
         {tile.motif}
       </svg>
       {tile.coverUrl ? <StudioFacetCover coverUrl={tile.coverUrl} /> : null}
-      <span className={css.label}>{tile.label}</span>
+      <span className={css.label}>{keepSlashWithWord(tile.label)}</span>
     </Link>
   );
 }
 
-/** Genres or moods as Spotify-style browse tiles into /studio/browse: each
- *  its own colour and drawn motif, with its newest cover when there is one. */
+function tilesOf(
+  facet: StudioFacetTilesFacet,
+  activeFormat: StudioFormat | null,
+  translate: (key: string) => string,
+): StudioFacetTileView[] {
+  return facet.kind === "genre"
+    ? facet.values.map((genre) => ({
+        value: genre,
+        label: translate(STUDIO_GENRE_LABEL_KEY[genre]),
+        href: studioBrowsePath(genre, null, activeFormat),
+        coverUrl: facet.coverByValue[genre],
+        motif: STUDIO_GENRE_MOTIF[genre],
+      }))
+    : facet.values.map((mood) => ({
+        value: mood,
+        label: translate(STUDIO_MOOD_LABEL_KEY[mood]),
+        href: studioBrowsePath(null, mood, activeFormat),
+        coverUrl: facet.coverByValue[mood],
+        motif: STUDIO_MOOD_MOTIF[mood],
+      }));
+}
+
+/** The tiles in columns of two, top to bottom then left to right. */
+function columnsOf(tiles: StudioFacetTileView[]): StudioFacetTileView[][] {
+  const columns: StudioFacetTileView[][] = [];
+  for (let start = 0; start < tiles.length; start += TILES_PER_COLUMN)
+    columns.push(tiles.slice(start, start + TILES_PER_COLUMN));
+  return columns;
+}
+
+/** Genres or moods as colour tiles into /studio/browse, each its own colour
+ *  and drawn motif with its newest cover when there is one, laid out as a
+ *  compact two-row shelf that scrolls sideways. Every tile keeps the active
+ *  `?format`, so the member's narrowing survives the tap. Skeleton tiles
+ *  hold the row while the list loads and the real tiles fade in over them. */
 export function StudioFacetTiles({
   facet,
+  id,
+  title,
   label,
+  activeFormat = null,
   isLoading = false,
+  hasSeeAll = true,
 }: {
+  /** False on Browse itself, where See all would lead back to the page. */
+  hasSeeAll?: boolean;
   facet: StudioFacetTilesFacet;
+  /** The shelf heading's id. */
+  id: string;
+  title: ReactElement;
+  /** Names the navigation landmark ("Genres", "Moods"). */
   label: string;
-  /** Shows plain skeleton tiles in the grid's place. */
+  activeFormat?: StudioFormat | null;
   isLoading?: boolean;
 }) {
   const { t } = useTranslation();
-  // Real tiles fade in only when they replace skeletons; a list already in
-  // the cache paints at once.
-  const [shouldFadeIn] = useState(isLoading);
-  if (isLoading) {
-    return (
-      <div
-        className={css.nav}
-        role="status"
-        aria-label={t("studio:states.loadingLabel")}
-      >
-        <div className={css.grid}>
-          {SKELETON_TILE_KEYS.map((key) => (
-            <div
-              key={key}
-              className={`${css.item} ${skeleton.shimmer} ${css.skeletonTile}`}
-            />
-          ))}
-        </div>
-      </div>
-    );
-  }
-  const tiles: StudioFacetTileView[] =
-    facet.kind === "genre"
-      ? facet.values.map((genre) => ({
-          value: genre,
-          label: t(STUDIO_GENRE_LABEL_KEY[genre]),
-          href: studioBrowsePath(genre, null, null),
-          coverUrl: facet.coverByValue[genre],
-          motif: STUDIO_GENRE_MOTIF[genre],
-        }))
-      : facet.values.map((mood) => ({
-          value: mood,
-          label: t(STUDIO_MOOD_LABEL_KEY[mood]),
-          href: studioBrowsePath(null, mood, null),
-          coverUrl: facet.coverByValue[mood],
-          motif: STUDIO_MOOD_MOTIF[mood],
-        }));
+  const navRef = useRef<HTMLElement>(null);
+  const tiles = tilesOf(facet, activeFormat, t);
+  const columns = columnsOf(tiles);
+  // Few enough tiles for one row: a plain row of tiles in place of the
+  // two-row scroller, so no column stands half empty.
+  const isOneRow = useFitsOneRow(navRef, isLoading ? 0 : tiles.length);
   return (
-    <nav aria-label={label} className={css.nav}>
-      <ul className={shouldFadeIn ? `${css.grid} ${css.gridEnter}` : css.grid}>
-        {tiles.map((tile) => (
-          <li key={tile.value} className={css.item}>
-            <StudioFacetTile tile={tile} />
-          </li>
-        ))}
-      </ul>
+    <nav ref={navRef} aria-label={label} aria-busy={isLoading || undefined}>
+      <StudioShelf
+        id={id}
+        title={title}
+        layout={isOneRow ? "grid" : "row"}
+        seeAllHref={
+          hasSeeAll ? studioBrowsePath(null, null, activeFormat) : undefined
+        }
+      >
+        {isLoading
+          ? SKELETON_COLUMN_KEYS.map((key) => (
+              <div key={key} className={css.column} aria-hidden="true">
+                <div className={`${skeleton.shimmer} ${css.skeletonTile}`} />
+                <div className={`${skeleton.shimmer} ${css.skeletonTile}`} />
+              </div>
+            ))
+          : isOneRow
+            ? tiles.map((tile) => (
+                <div key={tile.value} className={css.cell}>
+                  <StudioFacetTile tile={tile} />
+                </div>
+              ))
+            : columns.map((column) => (
+                <div
+                  key={column.map((tile) => tile.value).join("|")}
+                  className={css.column}
+                >
+                  {column.map((tile) => (
+                    <div key={tile.value} className={css.cell}>
+                      <StudioFacetTile tile={tile} />
+                    </div>
+                  ))}
+                </div>
+              ))}
+      </StudioShelf>
     </nav>
   );
 }

@@ -6,10 +6,12 @@ import { useToast } from "../../shared/components/feedback/useToast";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { StudioMyClaimView } from "./api/studioSafety.adapters";
+import type { StudioClaimStatus } from "./api/studioSafety.types";
 import { useWithdrawStudioClaim } from "./api/useStudioClaims";
 import { StudioClaimStatusChip } from "./StudioClaimStatusChip";
 import { studioErrorMessageKeyOf } from "./studioErrors.data";
 import { StudioMyClaimReplyForm } from "./StudioMyClaimReplyForm";
+import { StudioSafetyHelpLinks } from "./StudioSafetyHelpLinks";
 import css from "./StudioClaimPages.module.css";
 
 const DATE_FORMAT = {
@@ -17,6 +19,21 @@ const DATE_FORMAT = {
   month: "short",
   year: "numeric",
 } as const;
+
+/** Decisions that went against the claim: the claimant's way on is their
+ *  rights and our team. */
+const CLOSED_WITHOUT_CLAIMANT: ReadonlySet<StudioClaimStatus> = new Set([
+  "declined",
+  "rejected",
+]);
+
+/** The outcome line's key. A counter-notice reads differently once the
+ *  claimant has used their one reply. */
+function outcomeKeyOf(claim: StudioMyClaimView): string {
+  if (claim.status === "countered" && claim.claimantReply !== null)
+    return "studio:claims.mine.outcome.counteredReplied";
+  return `studio:claims.mine.outcome.${claim.status}`;
+}
 
 function Quote({ labelKey, text }: { labelKey: string; text: string | null }) {
   const { t } = useTranslation();
@@ -45,6 +62,7 @@ export function StudioMyClaimCard({
   const headingRef = useRef<HTMLHeadingElement>(null);
   const withdraw = useWithdrawStudioClaim();
   const [isConfirming, setIsConfirming] = useState(false);
+  const dateOf = (iso: string) => format.date(new Date(iso), DATE_FORMAT);
   useEffect(() => {
     if (!isFocused) return;
     headingRef.current?.scrollIntoView({ block: "center" });
@@ -92,10 +110,19 @@ export function StudioMyClaimCard({
         <StudioClaimStatusChip status={claim.status} viewpoint="claimant" />
         <span className={css.meta}>
           {t("studio:claims.mine.filedOn", {
-            date: format.date(new Date(claim.createdAt), DATE_FORMAT),
+            date: dateOf(claim.createdAt),
           })}
         </span>
+        {claim.decidedAt ? (
+          <span className={css.meta}>
+            {t("studio:claims.mine.decidedOn", {
+              date: dateOf(claim.decidedAt),
+            })}
+          </span>
+        ) : null}
       </div>
+      {/* What the status means for the claimant, and what happens next. */}
+      <p className={css.outcome}>{t(outcomeKeyOf(claim))}</p>
       <Quote
         labelKey="studio:claims.form.originalWork.label"
         text={claim.originalWork}
@@ -113,6 +140,9 @@ export function StudioMyClaimCard({
         labelKey="studio:claims.mine.staffNoteHeading"
         text={claim.staffNote}
       />
+      <Collapse isOpen={CLOSED_WITHOUT_CLAIMANT.has(claim.status)}>
+        <StudioSafetyHelpLinks />
+      </Collapse>
       <StudioMyClaimReplyForm claim={claim} />
       <Collapse isOpen={claim.canWithdraw}>
         <div className={css.actions}>

@@ -92,8 +92,8 @@ describe("Studio home (demo fixture)", () => {
     );
     const grid = await screen.findByRole("region", { name: /new releases/i });
     // The grid holds its skeleton until curation settles; Show more appears
-    // with the real cards.
-    await within(grid).findByRole("button", { name: /show more/i });
+    // with the real cards, just under the grid's region.
+    await screen.findByRole("button", { name: /show more/i });
     const hrefsBefore = within(grid)
       .getAllByRole("link")
       .map((link) => link.getAttribute("href"));
@@ -101,7 +101,7 @@ describe("Studio home (demo fixture)", () => {
     expect(
       hrefsBefore.every((href) => href?.startsWith("/studio/album?id=")),
     ).toBe(true);
-    fireEvent.click(within(grid).getByRole("button", { name: /show more/i }));
+    fireEvent.click(screen.getByRole("button", { name: /show more/i }));
     await waitFor(() =>
       expect(within(grid).getAllByRole("link").length).toBeGreaterThan(
         hrefsBefore.length,
@@ -129,13 +129,13 @@ describe("Studio home (demo fixture)", () => {
       </TestProviders>,
     );
     const grid = await screen.findByRole("region", { name: /new releases/i });
-    const showMore = await within(grid).findByRole("button", {
+    const showMore = await screen.findByRole("button", {
       name: /show more/i,
     });
     const linksBefore = within(grid).getAllByRole("link").length;
     fireEvent.click(showMore);
     expect(
-      await within(grid).findByRole("button", { name: /retry/i }),
+      await screen.findByRole("button", { name: /retry/i }),
     ).toBeInTheDocument();
     expect(within(grid).getAllByRole("link")).toHaveLength(linksBefore);
     expect(

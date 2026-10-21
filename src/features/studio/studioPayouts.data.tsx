@@ -1,5 +1,4 @@
 import type { ReactNode } from "react";
-import type { Formatters } from "../../shared/i18n/format";
 import { Translation } from "../../shared/i18n/Translation";
 import type { TFunction } from "../../shared/i18n/types";
 
@@ -12,9 +11,9 @@ export interface PayoutSummaryRow {
 
 /**
  * One monthly payout. `monthKey`, `periodKey` and `noteKey` are
- * `studioShowcase` catalog keys (Pattern A). The tallies are data: `plays`
- * formats as a locale number, the other counts drive plural keys through
- * `payoutMetaParts` / `payoutSplitNote`.
+ * `studioShowcase` catalog keys (Pattern A). The tallies are data: the counts
+ * drive plural keys through `payoutMetaParts` / `payoutSplitNote`. Studio
+ * never counts plays, so a payout row carries none.
  */
 export interface PayoutRow {
   d: string;
@@ -22,7 +21,6 @@ export interface PayoutRow {
   periodKey: string;
   /** Optional emphasised note after the title. */
   noteKey?: string;
-  plays: number;
   tips: number;
   albumBuys: number;
   directSubs: number;
@@ -38,8 +36,9 @@ export interface PayoutBreakdownRow {
       which stands for several tracks and so has no single number. */
   n?: string;
   nm: ReactNode;
-  /** Play count; the "plays" phrase comes from the catalog. */
-  plays: number;
+  /** Saves plus playlist adds this month. Under the floor of 5 the page
+      shows "Fewer than 5" and never the exact figure. */
+  saves: number;
   /** Euros, with cents. */
   total: number;
 }
@@ -57,7 +56,6 @@ export const PAYOUTS: PayoutRow[] = [
     monthKey: "studioShowcase:payouts.month.jul",
     periodKey: "studioShowcase:payouts.period.july2026",
     noteKey: "studioShowcase:payouts.row.note.pending",
-    plays: 36400,
     tips: 87,
     albumBuys: 1,
     directSubs: 12,
@@ -69,7 +67,6 @@ export const PAYOUTS: PayoutRow[] = [
     d: "5",
     monthKey: "studioShowcase:payouts.month.jun",
     periodKey: "studioShowcase:payouts.period.june2026",
-    plays: 24260,
     tips: 64,
     albumBuys: 4,
     directSubs: 8,
@@ -81,7 +78,6 @@ export const PAYOUTS: PayoutRow[] = [
     monthKey: "studioShowcase:payouts.month.may",
     periodKey: "studioShowcase:payouts.period.may2026",
     noteKey: "studioShowcase:payouts.row.note.firstMonthOfCds",
-    plays: 18420,
     tips: 42,
     albumBuys: 12,
     directSubs: 6,
@@ -92,7 +88,6 @@ export const PAYOUTS: PayoutRow[] = [
     d: "5",
     monthKey: "studioShowcase:payouts.month.apr",
     periodKey: "studioShowcase:payouts.period.april2026",
-    plays: 8140,
     tips: 18,
     albumBuys: 3,
     directSubs: 4,
@@ -104,7 +99,6 @@ export const PAYOUTS: PayoutRow[] = [
     monthKey: "studioShowcase:payouts.month.mar",
     periodKey: "studioShowcase:payouts.period.march2026",
     noteKey: "studioShowcase:payouts.row.note.firstOnStudio",
-    plays: 2140,
     tips: 6,
     albumBuys: 1,
     directSubs: 2,
@@ -114,13 +108,8 @@ export const PAYOUTS: PayoutRow[] = [
 ];
 
 /** The tally phrases of a payout row, in display order. */
-export function payoutMetaParts(
-  payout: PayoutRow,
-  t: TFunction,
-  fmt: Formatters,
-): string[] {
+export function payoutMetaParts(payout: PayoutRow, t: TFunction): string[] {
   return [
-    t("studioShowcase:payouts.plays", { plays: fmt.number(payout.plays) }),
     t("studioShowcase:payouts.meta.tips", { count: payout.tips }),
     t("studioShowcase:payouts.meta.albumBuys", { count: payout.albumBuys }),
     t("studioShowcase:payouts.meta.directSubs", { count: payout.directSubs }),
@@ -140,12 +129,8 @@ export function payoutSplitNote(
 }
 
 /** The whole tally line as plain text, for the CSV export. */
-export function payoutCsvMeta(
-  payout: PayoutRow,
-  t: TFunction,
-  fmt: Formatters,
-): string {
-  const parts = payoutMetaParts(payout, t, fmt);
+export function payoutCsvMeta(payout: PayoutRow, t: TFunction): string {
+  const parts = payoutMetaParts(payout, t);
   const splitNote = payoutSplitNote(payout, t);
   return (splitNote === null ? parts : [...parts, splitNote]).join(" · ");
 }
@@ -158,7 +143,7 @@ export const BREAKDOWN: PayoutBreakdownRow[] = [
         Carta para a <em>santa</em>
       </>
     ),
-    plays: 25832,
+    saves: 640,
     total: 1291.6,
   },
   {
@@ -168,7 +153,7 @@ export const BREAKDOWN: PayoutBreakdownRow[] = [
         A <em>vizinha</em> que reza
       </>
     ),
-    plays: 4144,
+    saves: 104,
     total: 207.2,
   },
   {
@@ -178,7 +163,7 @@ export const BREAKDOWN: PayoutBreakdownRow[] = [
         Mãe, três <em>vezes</em>
       </>
     ),
-    plays: 2880,
+    saves: 72,
     total: 144,
   },
   {
@@ -188,7 +173,7 @@ export const BREAKDOWN: PayoutBreakdownRow[] = [
         Mãe, <em>vento</em>
       </>
     ),
-    plays: 1684,
+    saves: 42,
     total: 84.2,
   },
   {
@@ -198,7 +183,7 @@ export const BREAKDOWN: PayoutBreakdownRow[] = [
         O <em>nome</em>
       </>
     ),
-    plays: 920,
+    saves: 3,
     total: 46,
   },
   {
@@ -208,7 +193,7 @@ export const BREAKDOWN: PayoutBreakdownRow[] = [
         components={{ em: <em /> }}
       />
     ),
-    plays: 940,
+    saves: 21,
     total: 47,
   },
 ];

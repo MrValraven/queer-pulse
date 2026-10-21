@@ -1,6 +1,14 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FiAtSign, FiGrid, FiUserCheck, FiUsers } from "react-icons/fi";
+import {
+  FiAlertTriangle,
+  FiAtSign,
+  FiAward,
+  FiInfo,
+  FiLayers,
+  FiTrash2,
+  FiUsers,
+} from "react-icons/fi";
 import { Button, FormField, ModalSheet } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -13,13 +21,13 @@ import styles from "./SubprofileDeleteModal.module.css";
 
 /**
  * Type-to-confirm delete for the editor's Publish pane. Mirrors the
- * dashboard's (`MySubprofilesPage`) co-owner-aware delete copy/logic — the
+ * dashboard's (`MySubprofilesPage`) co-owner-aware delete copy/logic: the
  * same `useSubprofileMembers` shared-delete detection feeding
  * `deleteModalBodyCoOwned` vs. `deleteModalBody`, and the same
- * `useSubprofileMutations().remove` call — but additionally requires typing
+ * `useSubprofileMutations().remove` call: but additionally requires typing
  * the persona's display name before Delete enables, and spells out exactly
- * what's lost (`.losing`, the global "what breaks" list) rather than a plain
- * confirm. Deleting removes the persona for every co-owner, not just the
+ * what's lost (a self-contained "what breaks" list) rather than a plain
+ * confirm. Deleting removes the persona for every co-owner, beyond just the
  * signed-in one. On success it closes the modal and navigates to the dashboard:
  * from the editor that leaves the now-deleted persona's editor; from the
  * dashboard itself the navigate is a no-op and the closed modal + invalidated
@@ -84,47 +92,71 @@ export function SubprofileDeleteModal({
       ariaLabel={t("subprofiles:mine.deleteModalTitle")}
     >
       <header className={styles.head}>
-        <h3 className={styles.title}>
-          {t("subprofiles:mine.deleteModalTitle")}
-        </h3>
-        <p className={styles.sub}>
-          {t("subprofiles:mine.deleteModalSub", { name: requiredName })}
-        </p>
+        <span className={styles.headIcon} aria-hidden>
+          <FiAlertTriangle />
+        </span>
+        <div className={styles.headText}>
+          <h3 className={styles.title}>
+            {t("subprofiles:mine.deleteModalTitle")}
+          </h3>
+          <p className={styles.sub}>
+            {t("subprofiles:mine.deleteModalSub", { name: requiredName })}
+          </p>
+        </div>
       </header>
 
       <div className={styles.body}>
-        <p>
-          {isSharedDelete
-            ? t("subprofiles:mine.deleteModalBodyCoOwned", {
-                name: requiredName,
-                count: otherOwnerCount,
-              })
-            : t("subprofiles:mine.deleteModalBody")}
+        <p className={styles.notice}>
+          <FiInfo className={styles.noticeIcon} aria-hidden />
+          <span>
+            {isSharedDelete
+              ? t("subprofiles:mine.deleteModalBodyCoOwned", {
+                  name: requiredName,
+                  count: otherOwnerCount,
+                })
+              : t("subprofiles:mine.deleteModalBody")}
+          </span>
         </p>
 
-        <ul className={`losing ${styles.losing}`}>
-          <li>
-            <FiGrid size={15} aria-hidden />
-            {t("subprofiles:deleteConfirm.losingItems", { count: itemCount })}
+        <ul className={styles.losing}>
+          <li className={styles.losingRow}>
+            <span className={styles.tile} aria-hidden>
+              <FiLayers />
+            </span>
+            <span className={styles.losingText}>
+              {t("subprofiles:deleteConfirm.losingItems", { count: itemCount })}
+            </span>
           </li>
-          <li>
-            <FiUserCheck size={15} aria-hidden />
-            {t("subprofiles:deleteConfirm.losingEndorsements", {
-              count: subprofile.endorsementCount,
-            })}
+          <li className={styles.losingRow}>
+            <span className={styles.tile} aria-hidden>
+              <FiAward />
+            </span>
+            <span className={styles.losingText}>
+              {t("subprofiles:deleteConfirm.losingEndorsements", {
+                count: subprofile.endorsementCount,
+              })}
+            </span>
           </li>
-          <li>
-            <FiUsers size={15} aria-hidden />
-            {t("subprofiles:deleteConfirm.losingFollowers", {
-              count: subprofile.followerCount,
-            })}
+          <li className={styles.losingRow}>
+            <span className={styles.tile} aria-hidden>
+              <FiUsers />
+            </span>
+            <span className={styles.losingText}>
+              {t("subprofiles:deleteConfirm.losingFollowers", {
+                count: subprofile.followerCount,
+              })}
+            </span>
           </li>
           {releasesHandle && (
-            <li>
-              <FiAtSign size={15} aria-hidden />
-              {t("subprofiles:deleteConfirm.losingHandle", {
-                handle: subprofile.handle ?? "",
-              })}
+            <li className={styles.losingRow}>
+              <span className={styles.tile} aria-hidden>
+                <FiAtSign />
+              </span>
+              <span className={styles.losingText}>
+                {t("subprofiles:deleteConfirm.losingHandle", {
+                  handle: subprofile.handle ?? "",
+                })}
+              </span>
             </li>
           )}
         </ul>
@@ -157,9 +189,12 @@ export function SubprofileDeleteModal({
           onClick={() => void confirmDelete()}
           disabled={remove.isPending || !nameMatches}
         >
-          {remove.isPending
-            ? t("subprofiles:mine.deleteModalDeleting")
-            : t("subprofiles:mine.deleteModalConfirm")}
+          <span className={styles.deleteLabel}>
+            <FiTrash2 aria-hidden />
+            {remove.isPending
+              ? t("subprofiles:mine.deleteModalDeleting")
+              : t("subprofiles:mine.deleteModalConfirm")}
+          </span>
         </Button>
       </div>
     </ModalSheet>

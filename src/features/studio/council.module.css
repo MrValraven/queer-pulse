@@ -869,30 +869,6 @@
 
 /* ── Loading skeletons (Studio ink washes, so they read in both themes) ── */
 .skel {
-  border-radius: var(--radius-8);
-  background: linear-gradient(
-    90deg,
-    rgba(var(--studio-ink-rgb), 0.05) 25%,
-    rgba(var(--studio-ink-rgb), 0.11) 50%,
-    rgba(var(--studio-ink-rgb), 0.05) 75%
-  );
-  background-size: 200% 100%;
-  animation: qpShimmer 1.5s ease infinite;
-}
-@media (prefers-reduced-motion: reduce) {
-  .skel {
-    animation: none;
-  }
+  composes: shimmer from "./studioSkeleton.module.css";
 }
 
-/* Local copies of shared keyframes; see src/styles/tokens/effects.css.
-   Global keyframes can't be referenced from a CSS module (the animation-name
-   gets scoped to a dangling hash), so each module needs its own copy. */
-@keyframes qpShimmer {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
-}

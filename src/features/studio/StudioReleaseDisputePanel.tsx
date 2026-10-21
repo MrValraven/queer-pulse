@@ -7,6 +7,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { StudioReleaseView } from "./api/studio.adapters";
 import type { StudioDisputeStatus } from "./api/studio.types";
 import { StudioReleaseDisputeForm } from "./StudioReleaseDisputeForm";
+import { StudioSafetyHelpLinks } from "./StudioSafetyHelpLinks";
 import css from "./StudioReleaseDispute.module.css";
 
 const DATE_FORMAT = { day: "numeric", month: "long", year: "numeric" } as const;
@@ -146,6 +147,7 @@ export function StudioReleaseDisputePanel({
       </Collapse>
 
       {isTakenDown && (
+        // The form folds itself open and shut through its own Collapse.
         <StudioReleaseDisputeForm
           releaseId={release.id}
           canDispute={release.canDispute}
@@ -161,6 +163,7 @@ export function StudioReleaseDisputePanel({
         isOpen={isTakenDown && !release.canDispute && shownStatus !== "open"}
       >
         <p className={css.meta}>{t("studio:dispute.limitReached")}</p>
+        <StudioSafetyHelpLinks leadKey="studio:dispute.limitNextStep" />
       </Collapse>
     </section>
   );

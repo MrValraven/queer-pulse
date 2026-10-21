@@ -15,7 +15,7 @@
 
 .section {
   padding: 20px 22px;
-  border: 1px solid var(--line);
+  border: 1px solid var(--studio-line);
   border-radius: var(--radius-14);
   background: var(--surface);
 }
@@ -53,7 +53,7 @@
   align-items: center;
   gap: 12px;
   padding: 12px 0;
-  border-top: 1px solid var(--line);
+  border-top: 1px solid var(--studio-line);
 }
 
 .cover {
@@ -93,19 +93,23 @@
   color: var(--studio-accent-text);
 }
 
+/* Sized in em from its own text, with a floor and padding instead of a
+   fixed height, so 200% text zoom grows the pill with its digits. */
 .badge {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 18px;
-  height: 18px;
+  min-width: 1.7em;
+  min-height: 1.7em;
   margin-left: 6px;
-  padding: 0 5px;
+  padding: 0.15em 0.5em;
   border-radius: var(--radius-pill);
   background: rgba(var(--accent-rgb), 0.16);
   color: var(--studio-accent-chip-text);
   font-size: var(--text-11);
   font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
 }
 
 /* The creator nav's current pill is inverted (`--bg` text on `--text`,

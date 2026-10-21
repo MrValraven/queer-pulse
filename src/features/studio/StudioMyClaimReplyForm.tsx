@@ -1,4 +1,4 @@
-import { useId, useState, type FormEvent } from "react";
+import { useId, useRef, useState, type FormEvent } from "react";
 import { Button, Collapse, FormField } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -9,7 +9,9 @@ import { studioErrorMessageKeyOf } from "./studioErrors.data";
 import css from "./StudioClaimPages.module.css";
 
 /** One reply to the artist's counter-notice (spec 8), while the claim is
- *  countered. It folds away once sent. */
+ *  countered. The reply goes out once, so it goes through a review step:
+ *  write, Check reply (the text as our team will read it), then Send reply
+ *  or Edit reply. It folds away once sent. */
 export function StudioMyClaimReplyForm({
   claim,
 }: {
@@ -18,8 +20,11 @@ export function StudioMyClaimReplyForm({
   const { t } = useTranslation();
   const { showToast } = useToast();
   const formId = useId();
+  const reviewHeadingRef = useRef<HTMLParagraphElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const reply = useReplyToStudioClaim();
   const [isOpen, setIsOpen] = useState(false);
+  const [isReviewing, setIsReviewing] = useState(false);
   const [text, setText] = useState("");
   const [hasTried, setHasTried] = useState(false);
   const trimmed = text.trim();
@@ -29,16 +34,27 @@ export function StudioMyClaimReplyForm({
       ? "studio:claims.mine.replyRequired"
       : null;
 
-  function submit(event: FormEvent<HTMLFormElement>) {
+  function review(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (reply.isPending) return;
     setHasTried(true);
     if (!trimmed) return;
+    setIsReviewing(true);
+    requestAnimationFrame(() => reviewHeadingRef.current?.focus());
+  }
+
+  function edit() {
+    setIsReviewing(false);
+    requestAnimationFrame(() => textareaRef.current?.focus());
+  }
+
+  function send() {
+    if (reply.isPending || !trimmed) return;
     reply.mutate(
       { claimId: claim.id, reply: trimmed },
       {
         onSuccess: () => {
           setIsOpen(false);
+          setIsReviewing(false);
           showToast(t("studio:claims.mine.replySentToast"), "success");
         },
       },
@@ -64,8 +80,8 @@ export function StudioMyClaimReplyForm({
         </Button>
       </div>
       <div id={formId}>
-        <Collapse isOpen={isOpen}>
-          <form className={css.form} onSubmit={submit} noValidate>
+        <Collapse isOpen={isOpen && !isReviewing}>
+          <form className={css.form} onSubmit={review} noValidate>
             <FormField
               label={t("studio:claims.mine.replyLabel")}
               helper={t("studio:claims.mine.replyHint")}
@@ -73,6 +89,7 @@ export function StudioMyClaimReplyForm({
               required
             >
               <textarea
+                ref={textareaRef}
                 rows={4}
                 value={text}
                 maxLength={STUDIO_CLAIM_LIMITS.replyMax}
@@ -83,10 +100,33 @@ export function StudioMyClaimReplyForm({
               />
             </FormField>
             <div>
+              <Button type="submit" variant="primary">
+                {t("studio:claims.mine.replyCheck")}
+              </Button>
+            </div>
+          </form>
+        </Collapse>
+        <Collapse isOpen={isOpen && isReviewing}>
+          <div className={css.form}>
+            <p ref={reviewHeadingRef} tabIndex={-1} className={css.label}>
+              {t("studio:claims.mine.replyReviewHeading")}
+            </p>
+            <blockquote className={css.quote}>{trimmed}</blockquote>
+            <p className={css.meta}>
+              {t("studio:claims.mine.replyReviewNote")}
+            </p>
+            <Collapse isOpen={reply.error !== null}>
+              <p className={css.replyError} role="alert">
+                {reply.error ? t(studioErrorMessageKeyOf(reply.error)) : null}
+              </p>
+            </Collapse>
+            <div className={css.actions}>
               <Button
-                type="submit"
+                type="button"
                 variant="primary"
                 aria-disabled={reply.isPending || undefined}
+                aria-busy={reply.isPending || undefined}
+                onClick={send}
               >
                 {t(
                   reply.isPending
@@ -94,8 +134,18 @@ export function StudioMyClaimReplyForm({
                     : "studio:claims.mine.replySend",
                 )}
               </Button>
+              <Button
+                type="button"
+                variant="quiet"
+                aria-disabled={reply.isPending || undefined}
+                onClick={() => {
+                  if (!reply.isPending) edit();
+                }}
+              >
+                {t("studio:claims.mine.replyEdit")}
+              </Button>
             </div>
-          </form>
+          </div>
         </Collapse>
       </div>
     </Collapse>

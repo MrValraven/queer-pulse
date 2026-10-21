@@ -1,5 +1,5 @@
+import type { Ref } from "react";
 import { Link } from "react-router-dom";
-import { ImageSlot } from "../../shared/components/ui";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { StudioReleaseView } from "./api/studio.adapters";
@@ -8,23 +8,29 @@ import { StudioReleaseClaimPanels } from "./StudioClaimPanels";
 import { StudioDetailHero } from "./StudioDetailHero";
 import { StudioReleaseDisputePanel } from "./StudioReleaseDisputePanel";
 import { releaseFactsLine } from "./studioFacts";
+import { useIsHeroCompact } from "./studioHeroLayout";
 import { outDateOf } from "./studioUpcoming";
 import releaseStyles from "./StudioRelease.module.css";
+import { StudioReleaseCoverArt } from "./StudioReleaseCoverArt";
 
 export function StudioAlbumHero({
   release,
   onTip,
   onReport,
   previewToken,
+  sentinelRef,
 }: {
   release: StudioReleaseView;
   onTip: () => void;
   onReport: () => void;
+  /** The marker the page's sticky header watches. */
+  sentinelRef?: Ref<HTMLDivElement>;
   /** Set on the private preview page: Play streams through the link, and Save, Add to playlist, Share and Report leave the hero. */
   previewToken?: string;
 }) {
   const { t } = useTranslation();
   const formatters = useFormat();
+  const isCompact = useIsHeroCompact();
   const isPublished = release.status === "published";
   const outLine = release.isUpcoming
     ? outDateOf(release.publishAt, formatters)
@@ -33,21 +39,17 @@ export function StudioAlbumHero({
   return (
     <>
       <StudioDetailHero
+        tint={release.tint}
+        sentinelRef={sentinelRef}
+        isActionsCompact={isCompact}
         art={
-          <ImageSlot
-            src={release.coverUrl ?? undefined}
+          <StudioReleaseCoverArt
+            src={release.coverUrl}
+            title={release.title}
+            format={release.format}
             tint={release.tint}
-            width="100%"
-            height="100%"
             radius={16}
-            placeholder={
-              release.status === "taken_down"
-                ? ""
-                : `${t("studio:media.coverLabel")} · ${release.title}`
-            }
-            style={{ position: "absolute", inset: 0 }}
-            loading="eager"
-            fetchPriority="high"
+            isPriority
           />
         }
         kind={releaseFactsLine(release, t)}

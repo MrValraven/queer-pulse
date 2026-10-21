@@ -10,24 +10,25 @@ import type {
 } from "./api/studio.adapters";
 import { useStudioPlaylist } from "./api/useStudioPlaylist";
 import { useDeleteStudioPlaylist } from "./api/useStudioPlaylistMutations";
+import { StudioStickyHeader } from "./kit/StudioStickyHeader";
 import { studioErrorMessageKeyOf } from "./studioErrors.data";
-import {
-  StudioDetailSkeleton,
-  StudioLoadError,
-  StudioNotFound,
-} from "./StudioLoadStates";
+import { StudioLoadError, StudioNotFound } from "./StudioLoadStates";
 import { studioLibraryPath } from "./studioPaths";
 import {
   StudioPlaylistDialog,
   type StudioPlaylistDialogMode,
 } from "./StudioPlaylistDialog";
 import { StudioPlaylistEditorsSheet } from "./StudioPlaylistEditorsSheet";
+import { StudioPlaylistCover } from "./StudioPlaylistCover";
 import { StudioPlaylistEntries } from "./StudioPlaylistEntries";
+import { StudioPlaylistPlayButton } from "./StudioPlaylistPlayButton";
 import { StudioPlaylistHero } from "./StudioPlaylistHero";
 import { StudioPlaylistInviteBanner } from "./StudioPlaylistInviteBanner";
 import { StudioPlaylistLeaveConfirm } from "./StudioPlaylistLeaveConfirm";
 import type { StudioPlaylistOwnerAction } from "./StudioPlaylistOwnerMenu";
 import { StudioShell } from "./StudioShell";
+import { StudioHeroSkeleton, StudioTracklistSkeleton } from "./StudioSkeletons";
+import { useStudioDocumentTitle } from "./useStudioDocumentTitle";
 
 /** After Accept, focus leaves the folding banner for the hero's "Playlist
  *  actions" trigger once the editor's menu mounts. When the page settles on
@@ -79,6 +80,7 @@ function StudioPlaylistBody({ playlist }: { playlist: StudioPlaylistView }) {
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [isEditorsOpen, setIsEditorsOpen] = useState(false);
   const [isLeaveOpen, setIsLeaveOpen] = useState(false);
+  const [sentinel, setSentinel] = useState<Element | null>(null);
   // The banner keeps the last invite while it folds away after Accept.
   const [shownInvite, setShownInvite] =
     useState<StudioPlaylistInviteView | null>(playlist.invite);
@@ -131,6 +133,20 @@ function StudioPlaylistBody({ playlist }: { playlist: StudioPlaylistView }) {
 
   return (
     <>
+      <StudioStickyHeader
+        sentinel={sentinel}
+        title={playlist.name}
+        tint={playlist.tint}
+        actions={<StudioPlaylistPlayButton playlist={playlist} size="row" />}
+        cover={
+          <StudioPlaylistCover
+            coverUrls={playlist.coverUrls}
+            tint={playlist.tint}
+            label=""
+            radius={6}
+          />
+        }
+      />
       <Collapse isOpen={playlist.invite !== null}>
         {shownInvite && (
           <StudioPlaylistInviteBanner
@@ -146,6 +162,7 @@ function StudioPlaylistBody({ playlist }: { playlist: StudioPlaylistView }) {
         onOpenEditors={() => setIsEditorsOpen(true)}
         actionsMenuRef={acceptFocus.actionsMenuRef}
         titleRef={acceptFocus.titleRef}
+        sentinelRef={setSentinel}
       />
       <StudioPlaylistEntries playlist={playlist} />
       <AnimatePresence>
@@ -203,12 +220,28 @@ function StudioPlaylistBody({ playlist }: { playlist: StudioPlaylistView }) {
  *  whether it exists. An invitee sees the playlist read only, under the
  *  invite banner. */
 export function StudioCollectionPage() {
+  const { t } = useTranslation();
   const [searchParams] = useSearchParams();
   const { playlist, loadState } = useStudioPlaylist(searchParams.get("id"));
+  useStudioDocumentTitle(playlist?.name);
   let body: ReactNode;
   if (loadState.isNotFound) body = <StudioNotFound />;
-  else if (loadState.isError) body = <StudioLoadError loadState={loadState} />;
-  else if (!playlist) body = <StudioDetailSkeleton />;
+  else if (loadState.isError)
+    body = (
+      <StudioLoadError
+        loadState={loadState}
+        what="studio:errors.what.playlist"
+      />
+    );
+  else if (!playlist)
+    body = (
+      <>
+        <StudioHeroSkeleton label={t("studio:playlist.page.loadingLabel")} />
+        <StudioTracklistSkeleton
+          label={t("studio:playlist.page.loadingLabel")}
+        />
+      </>
+    );
   else body = <StudioPlaylistBody key={playlist.id} playlist={playlist} />;
   return <StudioShell>{body}</StudioShell>;
 }

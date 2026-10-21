@@ -1,8 +1,12 @@
-import { useId } from "react";
-import { Select, type SelectOption } from "../../shared/components/ui";
+import {
+  FormField,
+  Select,
+  type SelectOption,
+} from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useStudioScenes } from "./api/useStudioScenes";
 import s from "./creator.module.css";
+import fieldStyles from "./StudioTrackFields.module.css";
 
 /** The optional scene select: active scenes in staff order, plus the
  *  release's current scene when it was archived since (the link stays until
@@ -15,7 +19,6 @@ export function StudioUploadSceneField({
   onChange: (sceneId: string) => void;
 }) {
   const { t } = useTranslation();
-  const fieldId = useId();
   const { scenes, loadState } = useStudioScenes();
   const isCurrentListed =
     value === "" || scenes.some((scene) => scene.id === value);
@@ -44,18 +47,17 @@ export function StudioUploadSceneField({
     })),
   ];
   return (
-    <div className={s.field}>
-      <label htmlFor={fieldId}>
-        {t("studio:uploadFlow.release.sceneLabel")}
-      </label>
+    <FormField
+      className={`${s.field} ${fieldStyles.studioField}`}
+      label={t("studio:uploadFlow.release.sceneLabel")}
+      helper={t("studio:uploadFlow.release.sceneHint")}
+    >
       <Select
-        id={fieldId}
         options={options}
         value={value}
         loading={loadState.isLoading}
         onChange={(next) => onChange(next ?? "")}
       />
-      <p className={s.fhint}>{t("studio:uploadFlow.release.sceneHint")}</p>
-    </div>
+    </FormField>
   );
 }

@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { FiCopy, FiExternalLink, FiPause, FiPlay } from "react-icons/fi";
-import { Button, Collapse } from "../../shared/components/ui";
+import { Button, Collapse, IconButton } from "../../shared/components/ui";
 import { useShareLink } from "../../shared/hooks";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -80,9 +80,9 @@ export function PressBestTracks({
               className={styles.track}
               aria-current={isCurrent ? "true" : undefined}
             >
-              <button
-                type="button"
+              <IconButton
                 className={styles.trackPlay}
+                tooltip
                 aria-disabled={(!isCurrent && isPlayBlocked) || undefined}
                 aria-label={t(
                   isPlaying
@@ -97,7 +97,7 @@ export function PressBestTracks({
                 }}
               >
                 {isPlaying ? <FiPause aria-hidden /> : <FiPlay aria-hidden />}
-              </button>
+              </IconButton>
               <div className={styles.trackText}>
                 <span className={styles.trackTitle}>{track.title}</span>
                 <span className={styles.trackMeta}>

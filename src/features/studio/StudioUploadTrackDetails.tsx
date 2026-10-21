@@ -1,5 +1,13 @@
-import { useId, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { Button, Collapse } from "../../shared/components/ui";
+import {
+  useEffect,
+  useId,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+  type RefObject,
+} from "react";
+import { Button, Collapse, FormField } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   isSourcedReleaseType,
@@ -16,10 +24,8 @@ import { useStudioOwnerTrackSafety } from "./api/useStudioOwnerTrackSafety";
 import { useStudioTrack } from "./api/useStudioTrack";
 import { useUpdateStudioTrack } from "./api/useStudioTrackMutations";
 import { StudioPersonaCreditsEditor } from "./StudioPersonaCreditsEditor";
-import {
-  StudioUploadCreditsFieldset,
-  type CreditRow,
-} from "./StudioUploadCreditsFieldset";
+import { StudioUploadCreditsFieldset } from "./StudioUploadCreditsFieldset";
+import { missingCreditFieldOf, type CreditRow } from "./studioUploadCredits";
 import {
   cleanSources,
   focusFirstIncompleteSource,
@@ -47,6 +53,8 @@ import {
   lyricsFromTimedLines,
 } from "./upload/lyrics/studioLrc";
 import { StudioLyricTimingField } from "./upload/lyrics/StudioLyricTimingField";
+import { useReportUploadActivity } from "./upload/studioUploadActivityContext";
+import fieldStyles from "./StudioTrackFields.module.css";
 import tracksStyles from "./StudioUploadTracks.module.css";
 
 const listOrNull = <Item,>(items: readonly Item[] | null) =>
@@ -139,6 +147,7 @@ function useArtistKindFields(
   const isSourcesUnchangedEmpty =
     cleanSourceRows.length === 0 && (track?.sources ?? []).length === 0;
   return {
+    isDirty: notes !== null || sources !== null,
     notesId,
     notesValue,
     setNotes,
@@ -172,6 +181,161 @@ function useArtistKindFields(
   };
 }
 
+/** The title and credit checks a save runs first. An emptied title says
+ *  "Title is required" and a half-filled credit says which half it needs,
+ *  each focusing the field, so nothing is kept or dropped quietly. */
+function useDetailsChecks(
+  titleRef: RefObject<HTMLInputElement | null>,
+  creditsRef: RefObject<HTMLDivElement | null>,
+) {
+  const [isShowingTitleError, setIsShowingTitleError] = useState(false);
+  const [isShowingCreditErrors, setIsShowingCreditErrors] = useState(false);
+  return {
+    isShowingTitleError,
+    isShowingCreditErrors,
+    clearTitleError: () => setIsShowingTitleError(false),
+    clearCreditErrors: () => setIsShowingCreditErrors(false),
+    /** False, with the first problem focused, when a save must wait. */
+    check: (titleValue: string, creditRows: readonly CreditRow[]) => {
+      if (!titleValue.trim()) {
+        setIsShowingTitleError(true);
+        titleRef.current?.focus();
+        return false;
+      }
+      const incomplete = creditRows.find(
+        (credit) => missingCreditFieldOf(credit) !== null,
+      );
+      if (!incomplete) return true;
+      setIsShowingCreditErrors(true);
+      requestAnimationFrame(() =>
+        creditsRef.current
+          ?.querySelector<HTMLInputElement>(
+            `[data-credit-id="${incomplete.id}"] [aria-invalid="true"]`,
+          )
+          ?.focus(),
+      );
+      return false;
+    },
+  };
+}
+
+/** Timings that no longer fit the lyrics. Lyrics the artist emptied on
+ *  purpose take their timings with them. */
+function isTimingStaleOf(
+  syncedValue: readonly StudioSyncedLyricView[] | null | undefined,
+  lyrics: string | null,
+  lyricsValue: string,
+): boolean {
+  if ((syncedValue?.length ?? 0) === 0) return false;
+  if (lyrics !== null && lyrics.trim() === "") return true;
+  return (
+    lyricsValue.trim() !== "" &&
+    !doTimingsMatchLyrics(syncedValue ?? [], lyricsValue)
+  );
+}
+
+/** The credits to save. The checks already stopped half-filled rows, so
+ *  every row left is complete or empty, and empty ones are dropped. */
+const completeCreditsOf = (rows: readonly CreditRow[]) =>
+  rows
+    .map((credit) => ({ name: credit.name.trim(), role: credit.role.trim() }))
+    .filter((credit) => credit.name && credit.role);
+
+/** Tells the page's leave guard and the row that edits are unsaved.
+ *  Persona credits save on their own, so they never count here. */
+function useReportDetailsDirty(
+  isDirty: boolean,
+  onDirtyChange: ((isDirty: boolean) => void) | undefined,
+) {
+  useReportUploadActivity("details", isDirty);
+  useEffect(() => {
+    onDirtyChange?.(isDirty);
+  }, [isDirty, onDirtyChange]);
+}
+
+/** Cancel (the row asks first when edits would be lost) and Save. */
+function DetailsActions({
+  isSaving,
+  onCancel,
+  onSave,
+}: {
+  isSaving: boolean;
+  onCancel: () => void;
+  onSave: () => void;
+}) {
+  const { t } = useTranslation();
+  return (
+    <div className={tracksStyles.detailsActions}>
+      <Button variant="ghost" onClick={onCancel}>
+        {t("studio:uploadFlow.files.cancelDetails")}
+      </Button>
+      <Button onClick={onSave} aria-disabled={isSaving || undefined}>
+        {t("studio:uploadFlow.files.saveDetails")}
+      </Button>
+    </div>
+  );
+}
+
+/** Title, free-text credits and persona credits, at the top of the panel. */
+function DetailsTitleAndCredits({
+  titleRef,
+  creditsRef,
+  titleValue,
+  onTitleChange,
+  isShowingTitleError,
+  creditRows,
+  onCreditsChange,
+  isShowingCreditErrors,
+  trackId,
+  releaseId,
+}: {
+  titleRef: RefObject<HTMLInputElement | null>;
+  creditsRef: RefObject<HTMLDivElement | null>;
+  titleValue: string;
+  onTitleChange: (title: string) => void;
+  isShowingTitleError: boolean;
+  creditRows: readonly CreditRow[];
+  onCreditsChange: (credits: CreditRow[]) => void;
+  isShowingCreditErrors: boolean;
+  trackId: string;
+  releaseId: string;
+}) {
+  const { t } = useTranslation();
+  return (
+    <>
+      <FormField
+        className={fieldStyles.studioField}
+        label={t("studio:uploadFlow.files.titleLabel")}
+        required
+        error={
+          isShowingTitleError && !titleValue.trim()
+            ? t("studio:uploadFlow.files.titleRequired")
+            : undefined
+        }
+      >
+        <input
+          ref={titleRef}
+          type="text"
+          value={titleValue}
+          maxLength={STUDIO_LIMITS.titleMax}
+          onChange={(event) => onTitleChange(event.target.value)}
+        />
+      </FormField>
+      <div ref={creditsRef}>
+        <StudioUploadCreditsFieldset
+          credits={creditRows}
+          onChange={onCreditsChange}
+          shouldShowErrors={isShowingCreditErrors}
+        />
+      </div>
+      <StudioPersonaCreditsEditor trackId={trackId} releaseId={releaseId} />
+      <p className={fieldStyles.hint}>
+        {t("studio:uploadFlow.files.personaCreditsSaveOwn")}
+      </p>
+    </>
+  );
+}
+
 /** The failed save's line. The chapter summary also takes focus, so the
  *  artist lands above the rows marked in the editor. */
 function SaveErrorLine({ saveError }: { saveError: SaveError | null }) {
@@ -195,6 +359,17 @@ function SaveErrorLine({ saveError }: { saveError: SaveError | null }) {
   );
 }
 
+interface TrackDetailsProps {
+  trackId: string;
+  releaseId: string;
+  releaseType: StudioReleaseType;
+  localFile: File | null;
+  onDone: (savedTitle?: string) => void;
+  /** Reports edits the server does not have yet, so the row can ask
+   *  before Cancel or Edit details throws them away. */
+  onDirtyChange?: (isDirty: boolean) => void;
+}
+
 /** Title, credits (free text and persona credits), lyrics with their
  *  timings, chapters and the explicit flag of one track. `onDone` receives
  *  the saved title after a save, and nothing on Cancel. Persona credits save
@@ -206,18 +381,15 @@ export function StudioUploadTrackDetails({
   releaseType,
   localFile,
   onDone,
-}: {
-  trackId: string;
-  releaseId: string;
-  releaseType: StudioReleaseType;
-  localFile: File | null;
-  onDone: (savedTitle?: string) => void;
-}) {
+  onDirtyChange,
+}: TrackDetailsProps) {
   const { t } = useTranslation();
   const { track } = useStudioTrack(trackId);
   const update = useUpdateStudioTrack();
-  const titleId = useId();
   const lyricsId = useId();
+  const titleRef = useRef<HTMLInputElement>(null);
+  const creditsRef = useRef<HTMLDivElement>(null);
+  const checks = useDetailsChecks(titleRef, creditsRef);
   const [title, setTitle] = useState<string | null>(null);
   const [lyrics, setLyrics] = useState<string | null>(null);
   const safety = useStudioOwnerTrackSafety(releaseId, trackId);
@@ -233,6 +405,14 @@ export function StudioUploadTrackDetails({
   const [isShowingChapterErrors, setIsShowingChapterErrors] = useState(false);
   const storedChapterRows = useStoredChapterRows(track?.chapters);
   const artistKind = useArtistKindFields(track, releaseType);
+  useReportDetailsDirty(
+    (title !== null && title !== track?.title) ||
+      [lyrics, credits, chapterRows].some((value) => value !== null) ||
+      syncedLyrics !== undefined ||
+      safetyDraft.isDirty ||
+      artistKind.isDirty,
+    onDirtyChange,
+  );
   if (!track)
     return (
       <p className={tracksStyles.detailsLoading}>
@@ -251,13 +431,7 @@ export function StudioUploadTrackDetails({
   const syncedValue =
     syncedLyrics === undefined ? track.syncedLyrics : syncedLyrics;
   const chapterRowsValue = chapterRows ?? storedChapterRows;
-  // Lyrics the artist emptied on purpose take their timings with them.
-  const isLyricsCleared = lyrics !== null && lyrics.trim() === "";
-  const isTimingStale =
-    (syncedValue?.length ?? 0) > 0 &&
-    (isLyricsCleared ||
-      (lyricsValue.trim() !== "" &&
-        !doTimingsMatchLyrics(syncedValue ?? [], lyricsValue)));
+  const isTimingStale = isTimingStaleOf(syncedValue, lyrics, lyricsValue);
 
   // Spec 8.4: timings set over empty lyrics write the lyrics from their lines.
   function changeTimings(lines: StudioSyncedLyricView[] | null) {
@@ -278,12 +452,10 @@ export function StudioUploadTrackDetails({
   async function save() {
     if (update.isPending) return;
     clearSaveError();
+    if (!checks.check(titleValue, creditRows)) return;
     if (!artistKind.checkSources()) return;
-    const cleanCredits = creditRows
-      .map((credit) => ({ name: credit.name.trim(), role: credit.role.trim() }))
-      .filter((credit) => credit.name && credit.role);
-    // An emptied title field keeps the stored title.
-    const savedTitle = titleValue.trim() || storedTitle;
+    const cleanCredits = completeCreditsOf(creditRows);
+    const savedTitle = titleValue.trim();
     const chapterValidation = validateChapters(
       chapterRowsValue,
       durationSeconds,
@@ -326,18 +498,22 @@ export function StudioUploadTrackDetails({
 
   return (
     <div className={tracksStyles.details}>
-      <label className={tracksStyles.fieldLabel} htmlFor={titleId}>
-        {t("studio:uploadFlow.files.titleLabel")}
-      </label>
-      <input
-        id={titleId}
-        type="text"
-        value={titleValue}
-        maxLength={STUDIO_LIMITS.titleMax}
-        onChange={(event) => setTitle(event.target.value)}
+      <DetailsTitleAndCredits
+        titleRef={titleRef}
+        creditsRef={creditsRef}
+        titleValue={titleValue}
+        onTitleChange={setTitle}
+        isShowingTitleError={checks.isShowingTitleError}
+        creditRows={creditRows}
+        onCreditsChange={(next) => {
+          setCredits(next);
+          if (!next.some((credit) => missingCreditFieldOf(credit)))
+            checks.clearCreditErrors();
+        }}
+        isShowingCreditErrors={checks.isShowingCreditErrors}
+        trackId={trackId}
+        releaseId={releaseId}
       />
-      <StudioUploadCreditsFieldset credits={creditRows} onChange={setCredits} />
-      <StudioPersonaCreditsEditor trackId={trackId} releaseId={releaseId} />
       <Collapse isOpen={artistKind.isSourcedTrack}>
         <StudioTrackSourcesField
           sources={artistKind.sourceRows}
@@ -389,17 +565,11 @@ export function StudioUploadTrackDetails({
         isShowingAllErrors={isShowingChapterErrors}
       />
       <SaveErrorLine saveError={saveError} />
-      <div className={tracksStyles.detailsActions}>
-        <Button variant="ghost" onClick={() => onDone()}>
-          {t("studio:uploadFlow.files.cancelDetails")}
-        </Button>
-        <Button
-          onClick={() => void save()}
-          aria-disabled={update.isPending || undefined}
-        >
-          {t("studio:uploadFlow.files.saveDetails")}
-        </Button>
-      </div>
+      <DetailsActions
+        isSaving={update.isPending}
+        onCancel={() => onDone()}
+        onSave={() => void save()}
+      />
     </div>
   );
 }

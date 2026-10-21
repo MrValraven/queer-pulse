@@ -1,6 +1,7 @@
 import { renderHook } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { popModal, pushModal } from "../../../shared/components/ui/modalStack";
+import { writeListeningPreferences } from "./studioPlayerPreferences";
 import {
   isShortcutBlockedByTarget,
   shortcutIdOf,
@@ -25,6 +26,7 @@ function element(html: string): HTMLElement {
 }
 
 afterEach(() => {
+  writeListeningPreferences({ areSingleKeyShortcutsOn: true });
   document.body.innerHTML = "";
   popModal("other-dialog");
   popModal("now-playing");
@@ -185,6 +187,20 @@ describe("useStudioPlayerShortcuts", () => {
     window.dispatchEvent(event);
     return event;
   };
+  /** A key pressed with focus on a control inside the player bar. */
+  const keydownInPlayer = (key: string, init: KeyboardEventInit = {}) => {
+    const target = element(
+      '<section data-studio-player=""><button data-target>Shuffle</button></section>',
+    );
+    const event = new KeyboardEvent("keydown", {
+      key,
+      bubbles: true,
+      cancelable: true,
+      ...init,
+    });
+    target.dispatchEvent(event);
+    return event;
+  };
 
   it("runs a shortcut while something is queued and claims the key", () => {
     const onShortcut = vi.fn();
@@ -195,8 +211,8 @@ describe("useStudioPlayerShortcuts", () => {
         onShortcut,
       }),
     );
-    const event = keydown(" ");
-    expect(onShortcut).toHaveBeenCalledWith("playPause");
+    const event = keydownInPlayer("ArrowUp");
+    expect(onShortcut).toHaveBeenCalledWith("volumeUp");
     expect(event.defaultPrevented).toBe(true);
   });
 
@@ -265,8 +281,21 @@ describe("useStudioPlayerShortcuts", () => {
         onShortcut,
       }),
     );
-    keydown(" ");
-    const repeated = keydown(" ", { repeat: true });
+    const target = element(
+      '<section data-studio-player=""><div tabindex="-1" data-target></div></section>',
+    );
+    const press = (init: KeyboardEventInit = {}) => {
+      const event = new KeyboardEvent("keydown", {
+        key: " ",
+        bubbles: true,
+        cancelable: true,
+        ...init,
+      });
+      target.dispatchEvent(event);
+      return event;
+    };
+    press();
+    const repeated = press({ repeat: true });
     expect(onShortcut).toHaveBeenCalledTimes(1);
     expect(repeated.defaultPrevented).toBe(true);
   });
@@ -280,9 +309,100 @@ describe("useStudioPlayerShortcuts", () => {
         onShortcut,
       }),
     );
-    keydown("ArrowRight");
-    keydown("ArrowRight", { repeat: true });
+    keydownInPlayer("ArrowRight");
+    keydownInPlayer("ArrowRight", { repeat: true });
     expect(onShortcut).toHaveBeenCalledTimes(2);
+  });
+});
+
+describe("useStudioPlayerShortcuts scope and switch (DES-21)", () => {
+  const keydown = (key: string, init: KeyboardEventInit = {}) => {
+    const event = new KeyboardEvent("keydown", {
+      key,
+      bubbles: true,
+      cancelable: true,
+      ...init,
+    });
+    window.dispatchEvent(event);
+    return event;
+  };
+  const keydownInPlayer = (key: string) => {
+    const target = element(
+      '<section data-studio-player=""><button data-target>Shuffle</button></section>',
+    );
+    const event = new KeyboardEvent("keydown", {
+      key,
+      bubbles: true,
+      cancelable: true,
+    });
+    target.dispatchEvent(event);
+    return event;
+  };
+
+  it("leaves Space and the arrows to the page outside the player", () => {
+    const onShortcut = vi.fn();
+    renderHook(() =>
+      useStudioPlayerShortcuts({
+        hasQueue: true,
+        isNowPlayingOpen: false,
+        onShortcut,
+      }),
+    );
+    const onBody = new KeyboardEvent("keydown", {
+      key: " ",
+      bubbles: true,
+      cancelable: true,
+    });
+    document.body.dispatchEvent(onBody);
+    const link = element('<a data-target href="/forum">A post</a>');
+    const onLink = new KeyboardEvent("keydown", {
+      key: "ArrowDown",
+      bubbles: true,
+      cancelable: true,
+    });
+    link.dispatchEvent(onLink);
+    expect(keydown("ArrowRight").defaultPrevented).toBe(false);
+    expect(onShortcut).not.toHaveBeenCalled();
+    expect(onBody.defaultPrevented).toBe(false);
+    expect(onLink.defaultPrevented).toBe(false);
+  });
+
+  it("runs letters from the body while single-key shortcuts are on", () => {
+    const onShortcut = vi.fn();
+    renderHook(() =>
+      useStudioPlayerShortcuts({
+        hasQueue: true,
+        isNowPlayingOpen: false,
+        onShortcut,
+      }),
+    );
+    const event = new KeyboardEvent("keydown", {
+      key: "s",
+      bubbles: true,
+      cancelable: true,
+    });
+    document.body.dispatchEvent(event);
+    expect(onShortcut).toHaveBeenCalledWith("shuffle");
+    expect(event.defaultPrevented).toBe(true);
+  });
+
+  it("leaves every letter alone once single-key shortcuts are off", () => {
+    writeListeningPreferences({ areSingleKeyShortcutsOn: false });
+    const onShortcut = vi.fn();
+    renderHook(() =>
+      useStudioPlayerShortcuts({
+        hasQueue: true,
+        isNowPlayingOpen: false,
+        onShortcut,
+      }),
+    );
+    const letter = keydown("m");
+    const help = keydown("?", { shiftKey: true });
+    expect(onShortcut).not.toHaveBeenCalled();
+    expect(letter.defaultPrevented).toBe(false);
+    expect(help.defaultPrevented).toBe(false);
+    keydownInPlayer("ArrowUp");
+    expect(onShortcut).toHaveBeenCalledWith("volumeUp");
   });
 
   it("ignores a keydown that has no key", () => {

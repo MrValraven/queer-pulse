@@ -62,11 +62,12 @@ describe("warning pills on rows", () => {
       <ol>
         <StudioLikedEntryRow
           entry={entry}
+          index={0}
           isCurrent={false}
           isPlaying={false}
           rowRef={() => {}}
           onPlay={() => {}}
-          onToggled={() => {}}
+          likeOptions={{ isQuiet: true, onToggled: () => {} }}
         />
       </ol>,
     );
@@ -76,7 +77,13 @@ describe("warning pills on rows", () => {
   it("shows the warning on an episode row", () => {
     const episode: StudioEpisodeRowView = { ...row, number: 1 };
     renderWithPlayer(
-      <StudioEpisodeRow episode={episode} release={releaseViewFixture()} />,
+      <ol>
+        <StudioEpisodeRow
+          episode={episode}
+          release={releaseViewFixture()}
+          index={0}
+        />
+      </ol>,
     );
     expect(screen.getByText(/family/i)).toBeTruthy();
   });

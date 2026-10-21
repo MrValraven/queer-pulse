@@ -157,9 +157,13 @@ describe("account menu panel (showcase off)", () => {
   it("adds Flag review for staff under a Staff heading", async () => {
     state.isStaff = true;
     renderPanel();
+    // The row opens the tab with work waiting (`?tab=claims` or
+    // `?tab=disputes`) once the counts land, and the bare route before.
     expect(
-      await screen.findByRole("link", { name: /^Flag review/ }),
-    ).toHaveAttribute("href", "/studio/flag-review");
+      (await screen.findByRole("link", { name: /^Flag review/ })).getAttribute(
+        "href",
+      ),
+    ).toMatch(/^\/studio\/flag-review(\?tab=(claims|disputes))?$/);
     expect(screen.getByRole("group", { name: "Staff" })).toContainElement(
       screen.getByRole("link", { name: /^Flag review/ }),
     );

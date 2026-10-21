@@ -20,5 +20,7 @@ export function useTrackSafetyDraft(
     setIsExplicit,
     setContentWarnings,
     warningsPatch: contentWarnings !== null ? { contentWarnings } : {},
+    /** The artist changed the explicit flag or the warnings. */
+    isDirty: isExplicit !== null || contentWarnings !== null,
   };
 }

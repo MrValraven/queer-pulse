@@ -1,0 +1,596 @@
+/* The one Studio track row. Painted on the global Studio roles only, so it
+   reads the same inside any Studio module and in a portal. No hairlines
+   between rows: the hover wash and the now-playing tint separate them. */
+
+/* The optional columns (a leading drag handle, the cover, the trailing
+   slot) come in through custom properties that default to nothing, so a
+   missing cell leaves no empty track and no extra gap. The `main` line
+   lets the phone layout drop the trailing slot under the title. */
+.row {
+  position: relative;
+  display: grid;
+  grid-template-columns:
+    var(--row-leading-column,) var(--tap-min) var(--row-cover-column,)
+    [main] minmax(0, 1fr) var(--row-trailing-column,) auto;
+  column-gap: 12px;
+  align-items: center;
+  min-height: 56px;
+  margin: 0;
+  padding: 4px 8px 4px 4px;
+  border-radius: var(--radius-8);
+  list-style: none;
+  background-color: transparent;
+  -webkit-tap-highlight-color: transparent;
+  transition-property: background-color, opacity;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease-out);
+}
+
+/* Touch: no text selection or iOS callout, because a long press opens the
+   row's own menu or starts a selection. A mouse keeps select and copy. */
+@media (hover: none), (pointer: coarse) {
+  .row {
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+  }
+}
+
+.hasLeading {
+  --row-leading-column: auto;
+}
+
+.hasCover {
+  --row-cover-column: 40px;
+}
+
+.hasTrailing {
+  --row-trailing-column: minmax(96px, 180px);
+}
+
+.leading {
+  display: grid;
+  place-items: center;
+}
+
+/* Read by screen readers only ("Now playing" in the subline). */
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ── States: hover, keyboard focus, now playing, selected, dragged ───── */
+
+@media (hover: hover) {
+  .row:not(.rowUnavailable):hover {
+    background-color: var(--studio-wash-2);
+  }
+}
+
+.row:has(:focus-visible),
+.row[data-menu-open] {
+  background-color: var(--studio-wash-2);
+}
+
+.row[data-current] {
+  background-color: rgba(var(--accent-rgb), 0.07);
+}
+
+.row[data-selecting] {
+  cursor: pointer;
+}
+
+.row[data-selected] {
+  background-color: rgba(var(--accent-rgb), 0.12);
+}
+
+@media (hover: hover) {
+  .row[data-selected]:hover {
+    background-color: rgba(var(--accent-rgb), 0.16);
+  }
+}
+
+.row[data-dragging] {
+  opacity: 0.5;
+}
+
+/* ── Lead cell: number, equaliser, play or pause, checkbox ──────────── */
+
+.lead {
+  display: grid;
+  place-items: center;
+  width: var(--tap-min);
+  height: var(--tap-min);
+}
+
+.leadLayer {
+  grid-area: 1 / 1;
+  display: grid;
+  place-items: center;
+}
+
+/* Two classes beat the shared icon button's own colour and size. */
+.lead .playButton {
+  position: relative;
+  color: var(--studio-text);
+  font-size: var(--text-16);
+}
+
+/* The row draws the hover, so the button keeps no circle of its own. */
+@media (hover: hover) {
+  .lead .playButton:hover:not(:disabled):not([aria-disabled="true"]) {
+    background: none;
+    color: var(--studio-text);
+  }
+}
+
+.leadNumber,
+.leadIcon,
+.equalizer {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  transition-property: opacity, transform;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease-out);
+}
+
+.leadNumber {
+  font-family: var(--serif);
+  font-size: var(--text-14);
+  font-variant-numeric: tabular-nums;
+  color: var(--studio-text-faint);
+}
+
+.leadIcon,
+.equalizer {
+  opacity: 0;
+  transform: scale(0.7);
+}
+
+/* The current row: the number takes the accent while paused, and the
+   equaliser stands in for it while playing. */
+.row[data-current] .leadNumber {
+  color: var(--studio-accent-text);
+}
+
+.row[data-current][data-playing] .leadNumber {
+  opacity: 0;
+  transform: scale(0.7);
+}
+
+.row[data-current][data-playing] .equalizer {
+  opacity: 1;
+  transform: none;
+}
+
+/* Hover and keyboard focus swap whatever the cell shows for play or
+   pause. A blocked row keeps its number. */
+@media (hover: hover) {
+  .row:hover .playButton:not([aria-disabled="true"]) .leadNumber,
+  .row:hover .playButton:not([aria-disabled="true"]) .equalizer {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+
+  .row:hover .playButton:not([aria-disabled="true"]) .leadIcon {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.row:has(:focus-visible) .playButton:not([aria-disabled="true"]) .leadNumber,
+.row:has(:focus-visible) .playButton:not([aria-disabled="true"]) .equalizer {
+  opacity: 0;
+  transform: scale(0.7);
+}
+
+.row:has(:focus-visible) .playButton:not([aria-disabled="true"]) .leadIcon {
+  opacity: 1;
+  transform: none;
+}
+
+.equalizer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 2px;
+  padding-block: 15px;
+}
+
+.equalizerBar {
+  width: 3px;
+  height: 100%;
+  border-radius: var(--radius-1);
+  background: var(--studio-accent-text);
+  transform-origin: bottom;
+  transform: scaleY(0.45);
+}
+
+.equalizerBar:nth-child(2) {
+  transform: scaleY(0.85);
+}
+
+.equalizerBar:nth-child(3) {
+  transform: scaleY(0.6);
+}
+
+/* Only the playing row moves, slowly, and never under reduced motion (the
+   component also stills it for the in-app setting). */
+.equalizer[data-moving] .equalizerBar {
+  animation: rowEqualizer 1.1s var(--ease-in-out) infinite alternate;
+}
+
+.equalizer[data-moving] .equalizerBar:nth-child(2) {
+  animation-duration: 0.8s;
+  animation-delay: -0.4s;
+}
+
+.equalizer[data-moving] .equalizerBar:nth-child(3) {
+  animation-duration: 0.95s;
+  animation-delay: -0.7s;
+}
+
+@keyframes rowEqualizer {
+  from {
+    transform: scaleY(0.3);
+  }
+
+  to {
+    transform: scaleY(1);
+  }
+}
+
+/* The selection checkbox: a native input over a drawn box. */
+.check {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: var(--tap-min);
+  height: var(--tap-min);
+  cursor: pointer;
+}
+
+.checkInput {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.checkBox {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--studio-text-faint);
+  border-radius: var(--radius-6);
+  background-color: transparent;
+  transition-property: background-color, border-color, transform;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+.checkMark {
+  font-size: var(--text-14);
+  color: rgba(var(--cream-rgb), 1);
+  opacity: 0;
+  transform: scale(0.4);
+  transition-property: opacity, transform;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+.checkInput:checked + .checkBox {
+  border-color: var(--accent-fill);
+  background-color: var(--accent-fill);
+}
+
+.checkInput:checked + .checkBox .checkMark {
+  opacity: 1;
+  transform: none;
+}
+
+.check:active .checkBox {
+  transform: scale(0.9);
+}
+
+.checkInput:focus-visible + .checkBox {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* ── Cover and text ─────────────────────────────────────────────────── */
+
+.cover {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-6);
+  overflow: hidden;
+  background: var(--studio-wash-1);
+}
+
+.main {
+  display: grid;
+  justify-items: start;
+  gap: 2px;
+  min-width: 0;
+}
+
+.title {
+  max-width: 100%;
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-15);
+  font-weight: 500;
+  line-height: 1.3;
+  color: var(--studio-text);
+  overflow-wrap: anywhere;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  transition-property: color;
+  transition-duration: var(--dur-fast);
+}
+
+.row[data-current] .title {
+  color: var(--studio-accent-text);
+}
+
+/* A hidden explicit track and an unavailable row grey by colour, the way
+   the shared hidden-track treatment does (opacity would fail contrast). */
+.row[data-hidden] .title,
+.row[data-hidden] .subline {
+  color: var(--studio-text-muted);
+}
+
+.titleLink,
+.subLink {
+  color: inherit;
+  text-decoration: none;
+  border-radius: var(--radius-4);
+}
+
+@media (hover: hover) {
+  .titleLink:hover,
+  .subLink:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .subLink:hover {
+    color: var(--studio-text);
+  }
+}
+
+.titleLink:focus-visible,
+.subLink:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.subline {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 100%;
+  min-width: 0;
+  font-size: var(--text-12-5);
+  color: var(--studio-text-muted);
+  white-space: nowrap;
+}
+
+.subLink {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dot {
+  flex: none;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background-color: currentColor;
+}
+
+/* Explicit: an inverted chip, crisp in both themes. */
+.explicit {
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  min-width: 16px;
+  height: 16px;
+  padding-inline: 4px;
+  border-radius: var(--radius-3);
+  font-family: var(--sans);
+  font-size: var(--text-10);
+  font-weight: 700;
+  line-height: 1;
+  color: var(--studio-surface);
+  background-color: var(--studio-text-muted);
+}
+
+.warning {
+  margin-top: 2px;
+}
+
+.trailing {
+  min-width: 0;
+}
+
+/* ── Actions ────────────────────────────────────────────────────────── */
+
+.actions {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 2px;
+}
+
+/* Add to playlist and the heart. Two classes beat each button's own
+   module, so the row's version wins wherever it renders. */
+.actions .action {
+  display: grid;
+  place-items: center;
+  width: var(--tap-min);
+  height: var(--tap-min);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background-color: transparent;
+  color: var(--studio-text-muted);
+  font-size: var(--text-18);
+  cursor: pointer;
+  transition-property: opacity, color, background-color, transform;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+@media (hover: hover) {
+  .actions .action:hover:not([aria-disabled="true"]) {
+    color: var(--studio-text);
+    background-color: var(--studio-wash-2);
+  }
+}
+
+.actions .action:active:not([aria-disabled="true"]) {
+  transform: scale(0.97);
+}
+
+.actions .action[aria-disabled="true"] {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.actions .action:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.actions .likeAction[aria-pressed="true"] {
+  color: var(--studio-accent-text);
+}
+
+.duration {
+  min-width: 48px;
+  padding-inline: 6px;
+  text-align: end;
+  font-size: var(--text-13);
+  font-variant-numeric: tabular-nums;
+  color: var(--studio-text-faint);
+}
+
+.menuSlot {
+  display: inline-grid;
+  place-items: center;
+  transition-property: opacity;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease-out);
+}
+
+/* On a pointer that hovers, the quiet actions rest hidden and come up with
+   the row, its keyboard focus or an open menu. A liked heart stays up. On
+   touch they always show. */
+@media (hover: hover) {
+  .row .addAction,
+  .row .likeAction:not([aria-pressed="true"]),
+  .row .menuSlot {
+    opacity: 0;
+  }
+
+  .row:hover .addAction,
+  .row:hover .likeAction,
+  .row:hover .menuSlot,
+  .row:has(:focus-visible) .addAction,
+  .row:has(:focus-visible) .likeAction,
+  .row:has(:focus-visible) .menuSlot,
+  .row[data-menu-open] .menuSlot,
+  .row .menuSlot:has([aria-expanded="true"]) {
+    opacity: 1;
+  }
+
+  /* A caller's extra actions marked `data-studio-row-extra` ("menu" or
+     "hover") rest hidden the same way. One that is open
+     or pressed (a confirm, a toggle) stays up. */
+  .actions [data-studio-row-extra] {
+    opacity: 0;
+    transition-property: opacity, color, background-color, transform;
+    transition-duration: var(--dur-fast);
+    transition-timing-function: var(--ease-out);
+  }
+
+  .row:hover .actions [data-studio-row-extra],
+  .row:has(:focus-visible) .actions [data-studio-row-extra],
+  .row[data-menu-open] .actions [data-studio-row-extra],
+  .actions [data-studio-row-extra][aria-expanded="true"],
+  .actions [data-studio-row-extra][aria-pressed="true"] {
+    opacity: 1;
+  }
+}
+
+/* ── Phones ─────────────────────────────────────────────────────────── */
+
+@media (--sm) {
+  .row {
+    grid-template-columns:
+      var(--row-leading-column,) var(--tap-min) var(--row-cover-column,)
+      [main] minmax(0, 1fr) auto;
+    column-gap: 10px;
+    padding-inline: 0 2px;
+  }
+
+  /* The trailing slot drops under the title; Add to playlist and the
+     duration move into the "..." menu's reach. */
+  .hasTrailing .trailing {
+    grid-column: main / -1;
+    grid-row: 2;
+  }
+
+  .actions .addAction,
+  .duration {
+    display: none;
+  }
+
+  /* Extra actions marked `data-studio-row-extra="menu"` live in the "..." menu
+     and selection mode on phones, so the title keeps the row's width. */
+  .actions [data-studio-row-extra="menu"] {
+    display: none;
+  }
+}
+
+/* An unavailable row reads quiet and takes no hover. */
+.rowUnavailable {
+  cursor: default;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .equalizer[data-moving] .equalizerBar {
+    animation: none;
+  }
+
+  .leadNumber,
+  .leadIcon,
+  .equalizer,
+  .row[data-current][data-playing] .equalizer {
+    transform: none;
+  }
+
+  .checkMark,
+  .check:active .checkBox,
+  .actions .action:active:not([aria-disabled="true"]) {
+    transform: none;
+  }
+}

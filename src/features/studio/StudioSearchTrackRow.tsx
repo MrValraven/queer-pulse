@@ -1,129 +1,40 @@
-import { Link } from "react-router-dom";
-import { FiPause, FiPlay } from "react-icons/fi";
-import { ImageSlot } from "../../shared/components/ui";
-import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useCallback } from "react";
 import type { StudioSearchTrackView } from "./api/studio.adapters";
-import { useStudioHideExplicit } from "./api/useStudioPlaybackPreferences";
 import { useStudioPlayer } from "./player/studioPlayerContext";
-import { StudioTrackMenu } from "./player/ui/StudioTrackMenu";
-import { StudioAddToPlaylistButton } from "./StudioAddToPlaylistButton";
-import { StudioHiddenTrackNote } from "./StudioHiddenTrack";
-import hiddenCss from "./StudioHiddenTrack.module.css";
-import { StudioLikeButton } from "./StudioLikeButton";
-import { StudioTrackWarningPill } from "./StudioTrackWarningPill";
-import styles from "./studio.module.css";
-import kit from "./studioKit.module.css";
-import releaseStyles from "./StudioRelease.module.css";
-import searchStyles from "./StudioSearch.module.css";
+import { StudioTrackRow } from "./kit/StudioTrackRow";
 
-/** A track hit: play it inside its release, or open its page. While "Hide
- *  explicit tracks" hides it, the row greys and offers no play. */
+/** A track hit on the shared Studio row: play it inside its release, or
+ *  open its page. While "Hide explicit tracks" hides it, the row greys and
+ *  offers no play (the list reads the setting once and passes it). A
+ *  release named like its artist (a podcast) names itself once. */
 export function StudioSearchTrackRow({
   track,
+  index,
+  shouldHideExplicit,
 }: {
   track: StudioSearchTrackView;
+  index?: number;
+  shouldHideExplicit?: boolean;
 }) {
-  const { t } = useTranslation();
-  const player = useStudioPlayer();
-  const isHidden = useStudioHideExplicit() && track.isExplicit;
-  const isCurrent = player.isCurrentTrack(track.id);
-  const isPlaying = isCurrent && player.status === "playing";
-  const likeSubject = {
-    trackId: track.id,
-    title: track.title,
-    href: track.href,
-    artistName: track.release.artist.name,
-  };
+  const { isCurrentTrack, status, togglePlay, playRelease } = useStudioPlayer();
+  const isCurrent = isCurrentTrack(track.id);
+  const isPlaying = isCurrent && status === "playing";
+  const releaseId = track.release.id;
+  const trackId = track.id;
+  const handlePlay = useCallback(() => {
+    if (isCurrent) togglePlay();
+    else void playRelease(releaseId, trackId);
+  }, [isCurrent, togglePlay, playRelease, releaseId, trackId]);
   return (
-    <li
-      className={[
-        styles.setRow,
-        searchStyles.trackRow,
-        isCurrent && styles.setRowNow,
-        isHidden && hiddenCss.hidden,
-        isHidden && hiddenCss.hiddenSearchRow,
-        isHidden && searchStyles.trackRowHidden,
-      ]
-        .filter(Boolean)
-        .join(" ")}
-      aria-current={isCurrent ? "true" : undefined}
-    >
-      {!isHidden && (
-        <button
-          type="button"
-          className={releaseStyles.rowPlay}
-          disabled={!track.hasAudio}
-          aria-label={
-            isPlaying
-              ? t("studio:release.pauseTrack", { title: track.title })
-              : t("studio:release.playTrack", { title: track.title })
-          }
-          onClick={() =>
-            isCurrent
-              ? player.togglePlay()
-              : void player.playRelease(track.release.id, track.id)
-          }
-        >
-          {isPlaying ? <FiPause aria-hidden /> : <FiPlay aria-hidden />}
-        </button>
-      )}
-      <div className={styles.srCov}>
-        <ImageSlot
-          src={track.release.coverUrl ?? undefined}
-          tint={track.release.tint}
-          width={36}
-          height={36}
-          radius={5}
-          placeholder=""
-        />
-      </div>
-      <div>
-        <h5>
-          <Link to={track.href} className={kit.titleLink}>
-            {track.title}
-          </Link>
-        </h5>
-        <div className={`${styles.who} ${searchStyles.trackArtist}`}>
-          {track.release.artist.name === track.release.title
-            ? track.release.title
-            : `${track.release.artist.name} · ${track.release.title}`}
-        </div>
-        <StudioTrackWarningPill warnings={track.contentWarnings} />
-        {isHidden && <StudioHiddenTrackNote />}
-      </div>
-      <div className={styles.pay} />
-      <div
-        className={`${styles.tm} ${releaseStyles.timeCell} ${searchStyles.trackTime}`}
-      >
-        <span className={releaseStyles.timeLabel}>
-          {track.durationLabel ?? ""}
-        </span>
-        {track.hasAudio && (
-          <StudioLikeButton
-            subject={likeSubject}
-            className={releaseStyles.rowAdd}
-          />
-        )}
-        <StudioAddToPlaylistButton
-          trackIds={track.hasAudio ? [track.id] : []}
-          subjectTitle={track.title}
-          ariaLabel={t("studio:playlist.add.trackAria", { title: track.title })}
-          className={releaseStyles.rowAdd}
-          likeSubject={track.hasAudio ? likeSubject : undefined}
-        />
-        <StudioTrackMenu
-          track={{
-            id: track.id,
-            title: track.title,
-            href: track.href,
-            hasAudio: track.hasAudio,
-            isExplicit: track.isExplicit,
-            artistId: track.release.artist.id,
-            isPublished: track.release.publishedAt !== null,
-            isWithheld: track.isWithheld,
-          }}
-        />
-      </div>
-    </li>
+    <StudioTrackRow
+      track={track}
+      index={index}
+      isCurrent={isCurrent}
+      isPlaying={isPlaying}
+      onPlay={handlePlay}
+      showRelease={track.release.artist.name !== track.release.title}
+      shouldHideExplicit={shouldHideExplicit}
+      isDraggable
+    />
   );
 }

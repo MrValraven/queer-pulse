@@ -1,0 +1,104 @@
+/* StudioStickyHeader: a zero-height sticky anchor just under the shell
+   topbar, holding a bar pinned to the topbar's bottom edge. --studio-topbar-h overrides the
+   offset; the fallbacks are the topbar's own heights (its padding, which
+   grows with the notch, its row and its hairline). It sits on the raised
+   tier, under the topbar's own popovers (the account menu, search), which
+   live inside the topbar's sticky stacking context. */
+.anchor {
+  position: sticky;
+  top: var(
+    --studio-topbar-h,
+    calc(max(18px, env(safe-area-inset-top, 0px)) + 63px)
+  );
+  z-index: var(--z-raised);
+  height: 0;
+}
+
+@media (--compact) {
+  .anchor {
+    top: var(
+      --studio-topbar-h,
+      calc(max(10px, env(safe-area-inset-top, 0px)) + 55px)
+    );
+  }
+}
+
+/* Flush against the topbar's hairline, so nothing scrolls past in a gap
+   above it, and opaque: the surface sits under the tint wash, so rows
+   never show through. The blur only softens the bottom-corner edge. */
+.bar {
+  --wash-rgb: var(--studio-ink-rgb);
+  --wash-alpha: 0.08;
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 60px;
+  padding: 8px 10px 8px 8px;
+  border: 1px solid var(--studio-line);
+  border-top: 0;
+  border-radius: 0 0 var(--radius-16) var(--radius-16);
+  background-color: var(--studio-surface);
+  background-image: linear-gradient(
+    90deg,
+    rgba(var(--wash-rgb), var(--wash-alpha)),
+    transparent 72%
+  );
+  backdrop-filter: blur(12px);
+  box-shadow: var(--shadow-e3);
+}
+
+.bar[data-tint="coral"] {
+  --wash-rgb: var(--accent-rgb);
+  --wash-alpha: 0.2;
+}
+
+.bar[data-tint="jade"] {
+  --wash-rgb: var(--jade-rgb);
+  --wash-alpha: 0.18;
+}
+
+/* Plum covers wash in the theme ink, which is plum in light and cream in
+   dark, so the tint stays visible on both surfaces. */
+.bar[data-tint="plum"] {
+  --wash-rgb: var(--studio-ink-rgb);
+  --wash-alpha: 0.14;
+}
+
+.cover {
+  position: relative;
+  flex: none;
+  width: 42px;
+  height: 42px;
+  overflow: hidden;
+  border-radius: var(--radius-6);
+}
+
+.title {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: var(--text-17);
+  letter-spacing: -0.01em;
+  color: var(--studio-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.actions {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 8px;
+}
+
+@media (--md) {
+  .bar {
+    gap: 10px;
+  }
+}

@@ -170,7 +170,7 @@ describe("StudioQueueList", () => {
     ).not.toHaveAttribute("aria-disabled");
   });
 
-  it("removes a row by its entry id and announces it", async () => {
+  it("removes a row by its entry id and offers Undo in a toast", async () => {
     const { player } = renderWithPlayer(<StudioQueueList headingLevel={2} />, {
       player: playerWith(),
     });
@@ -180,9 +180,46 @@ describe("StudioQueueList", () => {
       }),
     );
     expect(player.removeEntry).toHaveBeenCalledWith("entry-d");
+    expect(
+      await screen.findByText("Removed Delta from the queue"),
+    ).toBeInTheDocument();
+    // Undo adds the track back; a "Next from" row returns after Your queue.
+    fireEvent.click(screen.getByRole("button", { name: "Undo" }));
+    await waitFor(() => expect(player.addToQueue).toHaveBeenCalledWith("d"));
+  });
+
+  it("offers Undo inside Now playing and runs it once", async () => {
+    const { player } = renderWithPlayer(
+      <StudioQueueList headingLevel={3} isInDialog />,
+      { player: playerWith() },
+    );
+    fireEvent.click(
+      await screen.findByRole("button", {
+        name: "Remove Delta from the queue",
+      }),
+    );
     expect(screen.getByRole("status")).toHaveTextContent(
       "Removed Delta from the queue",
     );
+    const undo = await screen.findByRole("button", { name: "Undo" });
+    fireEvent.click(undo);
+    fireEvent.click(undo);
+    await waitFor(() => expect(player.addToQueue).toHaveBeenCalledTimes(1));
+  });
+
+  it("puts a removed row of Your queue back where it was on Undo", async () => {
+    const { player } = renderWithPlayer(<StudioQueueList headingLevel={2} />, {
+      player: playerWith(),
+    });
+    fireEvent.click(
+      await screen.findByRole("button", {
+        name: "Remove Bravo from the queue",
+      }),
+    );
+    fireEvent.click(await screen.findByRole("button", { name: "Undo" }));
+    await waitFor(() => expect(player.addToQueue).toHaveBeenCalledWith("b"));
+    // The harness keeps both rows, so the re-added one sits at index 2.
+    await waitFor(() => expect(player.moveUserItem).toHaveBeenCalledWith(2, 0));
   });
 
   it("clears your queue and shows the hint when it is empty", async () => {
@@ -192,6 +229,9 @@ describe("StudioQueueList", () => {
     );
     fireEvent.click(await screen.findByRole("button", { name: "Clear queue" }));
     expect(player.clearUserQueue).toHaveBeenCalled();
+    expect(
+      await screen.findByText("Cleared 2 tracks from your queue"),
+    ).toBeInTheDocument();
     rerenderWith({ player: playerWith([]) });
     await waitFor(() =>
       expect(screen.getByText(/Add tracks with Play next/)).toBeInTheDocument(),

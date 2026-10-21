@@ -26,6 +26,18 @@
   transition-property: none;
 }
 
+/* On touch the press area reaches the 44px target above and below the
+   track (DES-24); the drawn track keeps its height. A pseudo-element of the
+   root, so a press on it still lands on the root. */
+@media (pointer: coarse) {
+  .range::before {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    inset-block: min(0px, calc(50% - var(--tap-min) / 2));
+  }
+}
+
 /* Every press lands on the root, which focuses the input itself. */
 .range > * {
   pointer-events: none;

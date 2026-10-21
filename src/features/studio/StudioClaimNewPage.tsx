@@ -7,6 +7,7 @@ import { StudioClaimForm } from "./StudioClaimForm";
 import { StudioClaimTrackPicker } from "./StudioClaimTrackPicker";
 import { StudioNotFound } from "./StudioLoadStates";
 import { StudioShell } from "./StudioShell";
+import { useStudioDocumentTitle } from "./useStudioDocumentTitle";
 import css from "./StudioClaimPages.module.css";
 
 /** "About {title} by {artist}" for the track the claim is about; a track
@@ -36,6 +37,7 @@ export function StudioClaimNewPage() {
   const trackParam = searchParams.get("track");
   const releaseParam = searchParams.get("release");
   const [pickedTrackId, setPickedTrackId] = useState<string | null>(null);
+  useStudioDocumentTitle(t("studio:claims.form.title"));
   if (!trackParam && !releaseParam)
     return (
       <StudioShell>

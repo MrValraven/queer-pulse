@@ -63,6 +63,36 @@
   overscroll-behavior: contain;
   padding: 6px;
 }
+
+/* A 24px fade at the foot of the list while more rows sit below it. The
+   scroll timeline is only active when the list overflows, so a short list
+   never fades; the fade clears at the very end so the last row reads whole.
+   Without scroll-driven animation support there is simply no fade. */
+@property --notifications-scroll-fade {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+@keyframes notificationsScrollFade {
+  0%,
+  92% {
+    --notifications-scroll-fade: 24px;
+  }
+  100% {
+    --notifications-scroll-fade: 0px;
+  }
+}
+@supports (animation-timeline: scroll()) {
+  .scroll {
+    mask-image: linear-gradient(
+      to bottom,
+      black calc(100% - var(--notifications-scroll-fade)),
+      transparent
+    );
+    animation: notificationsScrollFade linear both;
+    animation-timeline: scroll(self block);
+  }
+}
 /* A size container, so its rows take the stacked narrow layout from
    NotificationsPage.module.css at the panel's 400px width. */
 .list {

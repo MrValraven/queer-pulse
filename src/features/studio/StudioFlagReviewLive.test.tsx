@@ -66,6 +66,59 @@ async function firstReportCard() {
   return card;
 }
 
+/** A Withdrawn card, found by its release title (the queue's order is a
+ *  sort choice, so tests never pick a card by position). */
+async function withdrawnCardTitled(title: string) {
+  const heading = await screen.findByRole("heading", { level: 3, name: title });
+  const card = heading.closest("article");
+  if (!card) throw new Error(`the ${title} title sits outside its card`);
+  return card;
+}
+
+/** The Withdrawn card that carries "Dispute waiting". */
+async function withdrawnCardWithDispute() {
+  const chip = await screen.findByText("Dispute waiting");
+  const card = chip.closest("article");
+  if (!card) throw new Error("the dispute chip sits outside its card");
+  return card;
+}
+
+describe("flag review: the open tab lives in the URL", () => {
+  it("opens the tab the link names", async () => {
+    render(
+      <TestProviders initialEntries={["/studio/flag-review?tab=disputes"]}>
+        <StudioFlagReviewPage />
+      </TestProviders>,
+    );
+    expect(
+      await screen.findByRole("tab", { name: /Disputes/, selected: true }),
+    ).toBeInTheDocument();
+  });
+
+  it("asks before a typed note is thrown away", async () => {
+    renderReview();
+    const card = await firstReportCard();
+    fireEvent.click(
+      within(card).getByRole("button", { name: "Take down release" }),
+    );
+    const dialog = await screen.findByRole("dialog");
+    fireEvent.change(within(dialog).getByRole("textbox"), {
+      target: { value: "Names a member" },
+    });
+    fireEvent.click(within(dialog).getByRole("button", { name: "Cancel" }));
+    expect(
+      await within(dialog).findByRole("button", { name: "Keep writing" }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("dialog")).toBeInTheDocument();
+    fireEvent.click(
+      within(dialog).getByRole("button", { name: "Discard note" }),
+    );
+    await waitFor(() =>
+      expect(screen.queryByRole("dialog")).not.toBeInTheDocument(),
+    );
+  });
+});
+
 describe("flag review: who sees it", () => {
   it("answers the Studio 404 to a member who is not staff", async () => {
     access.isStaff = false;
@@ -132,8 +185,11 @@ describe("flag review: Reports", () => {
     fireEvent.click(
       within(dialog).getByRole("button", { name: "Dismiss report" }),
     );
+    // The reason shows in the toast and inside the dialog, which stays.
     expect(
-      await screen.findByText("That didn't go through. Try again"),
+      await within(screen.getByRole("dialog")).findByText(
+        "That didn't go through. Try again",
+      ),
     ).toBeInTheDocument();
     expect(screen.getByRole("dialog")).toBeInTheDocument();
     expect(
@@ -153,7 +209,9 @@ describe("flag review: Reports", () => {
       within(dialog).getByRole("button", { name: "Dismiss report" }),
     );
     expect(
-      await screen.findByText("That didn't go through. Try again"),
+      await screen.findByText(
+        "This was already closed or is no longer there, so the queue now shows the latest",
+      ),
     ).toBeInTheDocument();
     await waitFor(() =>
       expect(screen.queryByRole("dialog")).not.toBeInTheDocument(),
@@ -271,11 +329,14 @@ describe("flag review: Disputes and Withdrawn", () => {
     renderReview();
     fireEvent.click(await screen.findByRole("tab", { name: "Withdrawn" }));
     expect(await screen.findByText("Dispute waiting")).toBeInTheDocument();
-    const restoreButtons = screen.getAllByRole("button", {
-      name: "Restore release",
-    });
-    expect(restoreButtons).toHaveLength(2);
-    fireEvent.click(restoreButtons[1] as HTMLElement);
+    expect(
+      screen.getAllByRole("button", { name: "Restore release" }),
+    ).toHaveLength(2);
+    fireEvent.click(
+      within(await withdrawnCardTitled("Bairro antigo")).getByRole("button", {
+        name: "Restore release",
+      }),
+    );
     const dialog = await screen.findByRole("dialog");
     expect(within(dialog).queryByRole("textbox")).not.toBeInTheDocument();
     fireEvent.click(
@@ -291,10 +352,11 @@ describe("flag review: Disputes and Withdrawn", () => {
   it("restores a withdrawn release with a dispute waiting through that dispute, with a reply", async () => {
     renderReview();
     fireEvent.click(await screen.findByRole("tab", { name: "Withdrawn" }));
-    const [withDispute] = await screen.findAllByRole("button", {
-      name: "Restore release",
-    });
-    fireEvent.click(withDispute as HTMLElement);
+    fireEvent.click(
+      within(await withdrawnCardWithDispute()).getByRole("button", {
+        name: "Restore release",
+      }),
+    );
     const dialog = await screen.findByRole("dialog");
     const confirm = within(dialog).getByRole("button", {
       name: "Restore release",
@@ -322,10 +384,11 @@ describe("flag review: Disputes and Withdrawn", () => {
     });
     renderReview();
     fireEvent.click(await screen.findByRole("tab", { name: "Withdrawn" }));
-    const restoreButtons = await screen.findAllByRole("button", {
-      name: "Restore release",
-    });
-    fireEvent.click(restoreButtons[1] as HTMLElement);
+    fireEvent.click(
+      within(await withdrawnCardTitled("Bairro antigo")).getByRole("button", {
+        name: "Restore release",
+      }),
+    );
     const dialog = await screen.findByRole("dialog");
     fireEvent.click(
       within(dialog).getByRole("button", { name: "Restore release" }),

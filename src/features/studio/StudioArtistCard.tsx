@@ -1,27 +1,30 @@
-import { Link } from "react-router-dom";
 import { ImageSlot } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { StudioArtistRefView } from "./api/studio.adapters";
-import kit from "./studioKit.module.css";
+import { StudioMediaCard } from "./kit/StudioMediaCard";
 
+/** One artist on a shelf or grid: a square avatar, the name as the card's
+ *  one link and the artist kind under it (StudioMediaCard). */
 export function StudioArtistCard({ artist }: { artist: StudioArtistRefView }) {
   const { t } = useTranslation();
   return (
-    <Link to={artist.href} className={kit.artistCard}>
-      <span className={kit.artistAvatar}>
+    <StudioMediaCard
+      kind="artist"
+      href={artist.href}
+      title={artist.name}
+      meta={t(artist.kindLabelKey)}
+      cover={
         <ImageSlot
           src={artist.avatarUrl ?? undefined}
           tint={artist.tint}
-          shape="circle"
           width="100%"
           height="100%"
-          radius={9999}
+          radius={10}
           initials={artist.initials}
           placeholder={artist.name}
+          style={{ position: "absolute", inset: 0 }}
         />
-      </span>
-      <span className={kit.artistName}>{artist.name}</span>
-      <span className={kit.artistKind}>{t(artist.kindLabelKey)}</span>
-    </Link>
+      }
+    />
   );
 }

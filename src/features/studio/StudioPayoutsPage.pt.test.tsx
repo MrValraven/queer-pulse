@@ -34,15 +34,18 @@ describe("StudioPayoutsPage in Portuguese", () => {
     ).toBeInTheDocument();
     expect(
       await screen.findByText(
-        /36\s400 reproduções · 87 gorjetas · 1 compra de álbum · 12 subscrições diretas/,
+        /87 gorjetas · 1 compra de álbum · 12 subscrições diretas/,
       ),
     ).toBeInTheDocument();
     expect(
-      await screen.findByText(/^25\s832 reproduções$/),
+      await screen.findByText(/^640 guardados e adições a playlists$/),
+    ).toBeInTheDocument();
+    expect(
+      await screen.findByText(/^Menos de 5 guardados e adições a playlists$/),
     ).toBeInTheDocument();
     expect(await screen.findByText(/Outras sete faixas/)).toBeInTheDocument();
 
     expect(screen.queryByText(/June 2026 payout/)).toBeNull();
-    expect(screen.queryByText(/832 plays/)).toBeNull();
+    expect(screen.queryByText(/reproduções/)).toBeNull();
   });
 });

@@ -68,6 +68,18 @@
   cursor: pointer;
 }
 
+/* The cover is the shared IconButton; these outrank its icon variant's
+   size, border and padding, so the 48px cover fills the button. */
+.now .art {
+  width: 48px;
+  min-width: 48px;
+  height: 48px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-8);
+  overflow: hidden;
+}
+
 .titles {
   display: flex;
   flex-direction: column;
@@ -185,7 +197,6 @@
 }
 
 .toolButton,
-.retry,
 .playButton {
   display: inline-flex;
   align-items: center;
@@ -208,7 +219,18 @@
   transition-timing-function: var(--ease);
 }
 
-.toolButton[aria-expanded="true"] {
+/* The shared IconButton's icon variant carries its own colour, border and
+   hover; the doubled class keeps the Studio roles, and the open queue
+   keeps its accent while hovered. */
+.toolButton.toolButton {
+  color: inherit;
+  border: none;
+}
+
+.toolButton[aria-expanded="true"],
+.toolButton.toolButton[aria-expanded="true"]:not(:disabled):not(
+    [aria-disabled="true"]
+  ) {
   color: var(--studio-accent-text);
 }
 
@@ -252,14 +274,88 @@
   clip-path: inset(50%);
 }
 
+/* One status line: the reason, then Retry beside it, wrapping on a narrow
+   bar. */
 .error {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
   font-size: var(--text-12);
 }
 
 .retry {
-  font-weight: 600;
-  color: var(--studio-accent-text);
-  text-decoration: underline;
+  flex: none;
+}
+
+/* ENG-01: a thin indeterminate line along the bar's top edge while the
+   audio loads or waits for data. It fades in after --dur-base, so a quick
+   start never shows it; the sliding segment is one of the two loops the
+   Studio allows, and reduced motion keeps it still. */
+.waitLine {
+  position: absolute;
+  inset-inline: 0;
+  inset-block-start: 0;
+  block-size: 2px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition-property: opacity;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease-in);
+}
+
+.waitLine::after {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  inline-size: 30%;
+  border-radius: var(--radius-pill);
+  background: var(--studio-accent-text);
+  transform: translateX(-100%);
+}
+
+.waitLine[data-active] {
+  opacity: 1;
+  transition-duration: var(--dur-base);
+  transition-delay: var(--dur-base);
+  transition-timing-function: var(--ease-out);
+}
+
+.waitLine[data-active]::after {
+  animation: studio-wait-slide 1200ms var(--ease) infinite;
+}
+
+@keyframes studio-wait-slide {
+  to {
+    transform: translateX(340%);
+  }
+}
+
+.waitLine:dir(rtl)::after {
+  inset-inline-start: auto;
+  inset-inline-end: 0;
+  transform: translateX(100%);
+}
+
+.waitLine:dir(rtl)[data-active]::after {
+  animation-name: studio-wait-slide-rtl;
+}
+
+@keyframes studio-wait-slide-rtl {
+  to {
+    transform: translateX(-340%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .waitLine[data-active]::after {
+    animation: none;
+    inline-size: 100%;
+    transform: none;
+    opacity: 0.5;
+  }
 }
 
 .showcase {
@@ -281,14 +377,53 @@
   letter-spacing: 0.06em;
 }
 
-.tip {
-  border: none;
-  border-radius: var(--radius-pill);
-  padding: 7px 14px;
-  font-weight: 600;
-  color: var(--studio-accent-text);
-  background: rgba(var(--accent-rgb), 0.14);
-  cursor: pointer;
+/* In the bar the demo line sits under the artist, so it adds no row: one
+   line that ellipsizes, then the tip pill. The title column grows with the
+   viewport to hold it, while the seek keeps its room. */
+@media (min-width: 1041px) {
+  .bar:has(.titles .showcase) {
+    grid-template-columns:
+      minmax(clamp(352px, 30vw, 416px), 1.2fr) auto minmax(0, 2fr)
+      max-content;
+  }
+}
+
+.titles .showcase {
+  gap: 8px;
+  min-width: 0;
+  margin-block-start: 2px;
+}
+
+.titles .payLine {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.titles .payLine b {
+  display: inline;
+  margin-inline-end: 4px;
+}
+
+/* The tip is a kit soft Button, drawn small inside the bar's title line so
+   the bar keeps its height; on touch its hit area keeps the --tap-min floor
+   below. The `.titles` prefix outranks the kit's sm size. */
+.titles .tip {
+  position: relative;
+  flex: none;
+  min-height: 0;
+  padding: 3px 10px;
+  font-size: var(--text-11);
+}
+
+@media (pointer: coarse) {
+  .titles .tip::before {
+    content: "";
+    position: absolute;
+    inset-block: min(0px, calc((100% - var(--tap-min)) / 2));
+    inset-inline: 0;
+  }
 }
 
 .addToPlaylist {
@@ -404,11 +539,6 @@
     grid-column: 1 / -1;
     grid-row: 2;
   }
-
-  /* The seek has its own row here, so the volume slider comes back. */
-  .tools [data-studio-range="volume"] {
-    display: flex;
-  }
 }
 
 /* The mini player: a floating card over the Studio tab bar (Spotify's mini
@@ -443,6 +573,12 @@
     padding: 0 8px var(--studio-player-card-floor);
     background: transparent;
     border-top: 0;
+  }
+
+  /* On the mini card, the line runs along the card's own top edge. */
+  .waitLine {
+    inset-inline: 20px;
+    border-radius: var(--radius-pill);
   }
 
   .bar::before {
@@ -513,10 +649,30 @@
     transition-timing-function: var(--ease);
   }
 
+  /* Both are the shared IconButton; the doubled class outranks its icon
+     variant's colour, border and transition, so the card keeps its roles. */
+  .miniSkip.miniSkip,
+  .miniClose.miniClose {
+    border: 0;
+    color: var(--studio-text);
+    transition-property: transform;
+    transition-duration: var(--dur-fast);
+    transition-timing-function: var(--ease);
+  }
+
   /* Close sits last, a little apart from the play button and the skips. */
-  .miniClose {
+  .miniClose,
+  .miniClose.miniClose {
     margin-inline-start: 4px;
     color: var(--studio-text-muted);
+  }
+
+  @media (hover: hover) {
+    .miniSkip.miniSkip:hover:not(:disabled):not([aria-disabled="true"]),
+    .miniClose.miniClose:hover:not(:disabled):not([aria-disabled="true"]) {
+      background: var(--studio-wash-2);
+      color: var(--studio-text);
+    }
   }
 
   /* The same light press as the play button beside it. */

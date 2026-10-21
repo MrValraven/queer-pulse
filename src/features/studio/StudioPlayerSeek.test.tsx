@@ -147,7 +147,7 @@ describe("StudioPlayerSeek", () => {
   it("switches the right label between the length and the time left, and remembers it", async () => {
     const view = renderWithPlayer(<StudioPlayerSeek onSeek={vi.fn()} />);
     const toggle = await screen.findByRole("button", {
-      name: "Show time left",
+      name: /show time left/i,
     });
     expect(toggle).toHaveTextContent("3:20");
     expect(toggle).toHaveAttribute("aria-pressed", "false");
@@ -162,11 +162,11 @@ describe("StudioPlayerSeek", () => {
     view.unmount();
     renderWithPlayer(<StudioPlayerSeek onSeek={vi.fn()} />);
     expect(
-      await screen.findByRole("button", { name: "Show time left" }),
+      await screen.findByRole("button", { name: /show time left/i }),
     ).toHaveTextContent("−3:00");
-    fireEvent.click(screen.getByRole("button", { name: "Show time left" }));
+    fireEvent.click(screen.getByRole("button", { name: /show time left/i }));
     expect(
-      screen.getByRole("button", { name: "Show time left" }),
+      screen.getByRole("button", { name: /show time left/i }),
     ).toHaveTextContent("3:20");
   });
 
@@ -178,7 +178,7 @@ describe("StudioPlayerSeek", () => {
       </>,
     );
     const toggles = await screen.findAllByRole("button", {
-      name: "Show time left",
+      name: /show time left/i,
     });
     const [barToggle, nowPlayingToggle] = toggles;
     if (!barToggle || !nowPlayingToggle)
@@ -211,7 +211,7 @@ describe("StudioPlayerSeek", () => {
     ).toBe("5");
     expect(slider).toHaveAttribute("aria-valuetext", "Length not known yet");
     expect(slider).toHaveAttribute("aria-disabled", "true");
-    const toggle = screen.getByRole("button", { name: "Show time left" });
+    const toggle = screen.getByRole("button", { name: /show time left/i });
     expect(toggle).toHaveAttribute("aria-disabled", "true");
     fireEvent.click(toggle);
     expect(toggle).toHaveAttribute("aria-pressed", "false");

@@ -9,6 +9,10 @@
  * Anything that READS the title for a human purpose (screen reader page names,
  * saved-item names, share titles) reads `getDocumentBaseTitle()` instead of
  * `document.title`, so the count never leaks into it.
+ *
+ * A short status prefix ("Playing:" while Studio audio plays) is stored the
+ * same way: composed into the written title after the count, and never part
+ * of the base title.
  */
 
 /** Counts above this render as "99+", the same cap a nav badge uses. */
@@ -16,14 +20,17 @@ const MAX_SHOWN_COUNT = 99;
 
 let baseTitle: string | null = null;
 let badgeCount = 0;
+/** A status word shown before the page's own title; null for none. */
+let titlePrefix: string | null = null;
 /** The last string this module wrote, to tell whether someone else wrote since. */
 let lastWrittenTitle: string | null = null;
 
 function formatTitle(title: string, count: number): string {
-  if (count <= 0) return title;
+  const prefixedTitle = titlePrefix ? `${titlePrefix} ${title}` : title;
+  if (count <= 0) return prefixedTitle;
   const shownCount =
     count > MAX_SHOWN_COUNT ? `${MAX_SHOWN_COUNT}+` : String(count);
-  return `(${shownCount}) ${title}`;
+  return `(${shownCount}) ${prefixedTitle}`;
 }
 
 /**
@@ -54,5 +61,15 @@ export function writeDocumentTitle(title: string): void {
 export function setDocumentTitleBadge(count: number): void {
   const title = getDocumentBaseTitle();
   badgeCount = count;
+  writeDocumentTitle(title);
+}
+
+/** Set a status prefix shown between the unread count and the page's own
+ *  title ("(3) Playing: Tide · Studio"); null or "" clears it. The base title
+ *  `getDocumentBaseTitle()` returns never includes it. */
+export function setDocumentTitlePrefix(text: string | null): void {
+  const title = getDocumentBaseTitle();
+  const trimmed = text?.trim() ?? "";
+  titlePrefix = trimmed === "" ? null : trimmed;
   writeDocumentTitle(title);
 }

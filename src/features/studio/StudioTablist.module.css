@@ -1,0 +1,24 @@
+/* The sliding underline under the active tab (StudioTablist `indicator`).
+   The tab's own 2px bottom border stays as the slot, kept transparent, and
+   the indicator paints over it, so a tab's height never moves. */
+
+.indicated {
+  position: relative;
+}
+
+/* Two classes beat `.tabOn` (studio.module.css), which paints the border. */
+.indicated.indicated {
+  border-bottom-color: transparent;
+}
+
+.indicator {
+  position: absolute;
+  inset-inline: 0;
+  /* Over the tab's 2px bottom border, outside its padding box. */
+  bottom: -2px;
+  height: 2px;
+  background: var(--accent);
+  pointer-events: none;
+  /* Motion drives the slide; no CSS transition on any property. */
+  transition-property: none;
+}

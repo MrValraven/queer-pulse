@@ -80,8 +80,18 @@ export const getAdminStudioClaims = (
     `/admin/studio/copyright-claims${queryOf({ status, cursor })}`,
   );
 
-export const getAdminStudioClaimCounts = () =>
-  apiGet<StudioAdminClaimCountsDTO>("/admin/studio/copyright-claims/counts");
+/** The Claims and Disputes tab counts. A server from before the dispute
+ *  count answers without it, which reads as none waiting. */
+export const getAdminStudioClaimCounts = async () => {
+  const counts = await apiGet<
+    Omit<StudioAdminClaimCountsDTO, "disputesWaiting"> &
+      Partial<Pick<StudioAdminClaimCountsDTO, "disputesWaiting">>
+  >("/admin/studio/copyright-claims/counts");
+  return {
+    ...counts,
+    disputesWaiting: counts.disputesWaiting ?? 0,
+  } satisfies StudioAdminClaimCountsDTO;
+};
 
 export type StudioClaimDecision = "accept" | "decline" | "uphold" | "reject";
 

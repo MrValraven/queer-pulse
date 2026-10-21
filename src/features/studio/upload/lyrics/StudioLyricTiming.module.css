@@ -16,11 +16,15 @@
   color: var(--studio-text-muted);
 }
 
-.linkButton {
+/* Doubled classes: these restyle the shared Button, out-ranking its pill. */
+.linkButton.linkButton {
   display: inline-flex;
   align-items: center;
   min-block-size: var(--tap-min);
-  padding: 4px 0;
+  /* The shared quiet Button's hover wash gets room around the text, and the
+     negative margin keeps the label on the column's edge. */
+  padding: 6px 10px;
+  margin-inline-start: -10px;
   border: none;
   background: none;
   color: var(--accent-text);
@@ -29,7 +33,7 @@
   cursor: pointer;
 }
 
-.field .linkButton {
+.field .linkButton.linkButton {
   color: var(--studio-accent-text);
 }
 
@@ -86,7 +90,7 @@
   gap: 12px;
 }
 
-.iconButton {
+.iconButton.iconButton {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -104,7 +108,7 @@
   font-variant-numeric: tabular-nums;
 }
 
-.stamp {
+.stamp.stamp {
   margin-inline-start: auto;
   min-width: 140px;
   min-height: 56px;

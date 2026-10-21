@@ -8,6 +8,7 @@ import { createPortal } from "react-dom";
 import { AnimatePresence, m, useIsPresent } from "motion/react";
 import { FiChevronDown } from "react-icons/fi";
 import { useMotionPrefs } from "../../../../app/providers/motionPrefs";
+import { IconButton } from "../../../../shared/components/ui/IconButton";
 import { useInertWhileCovered } from "../../../../shared/components/ui/modalStack";
 import { useDismiss } from "../../../../shared/components/ui/useDismiss";
 import { useHistoryBackDismiss } from "../../../../shared/hooks/useHistoryBackDismiss";
@@ -18,8 +19,10 @@ import { mediaMax } from "../../../../shared/theme/breakpoints";
 import { useStudioPlayer } from "../studioPlayerContext";
 import { useStudioPlayerSurface } from "../studioPlayerSurface";
 import { radioFilterLabelKey } from "../studioQueue";
+import { StudioNowPlayingAnnouncer } from "./StudioNowPlayingAnnouncer";
 import { StudioNowPlayingPanes } from "./StudioNowPlayingPanes";
 import { StudioNowPlayingStage } from "./StudioNowPlayingStage";
+import { useStudioToastShift } from "./useStudioToastShift";
 import styles from "./StudioNowPlaying.module.css";
 
 const SHEET_EASE = [0.22, 0.68, 0.16, 1] as const;
@@ -88,8 +91,11 @@ function StudioNowPlayingOverlay({ onNavigate }: { onNavigate: () => void }) {
   const isPhone = useMediaQuery(mediaMax(880));
   const isPresent = useIsPresent();
   const layerRef = useRef<HTMLDivElement>(null);
+  const headRef = useRef<HTMLElement>(null);
   const dialogRef = useDismiss<HTMLDivElement>(surface.closeNowPlaying);
   useInertWhileCovered(layerRef, !isPresent);
+  // Toasts land below the head, off the close button and the source line.
+  useStudioToastShift(headRef, "top", isPresent);
   const sourceLine = useSourceLine();
   const { frameRef, swipeHandlers } = useSheetSwipe(
     isPhone,
@@ -134,17 +140,17 @@ function StudioNowPlayingOverlay({ onNavigate }: { onNavigate: () => void }) {
         transition={{ duration: reducedMotion ? 0 : 0.28, ease: SHEET_EASE }}
       >
         <div ref={frameRef} className={styles.frame}>
+          <StudioNowPlayingAnnouncer />
           <div className={styles.wash} aria-hidden="true" />
-          <header className={styles.head} {...swipeHandlers}>
+          <header ref={headRef} className={styles.head} {...swipeHandlers}>
             <span className={styles.grabber} aria-hidden="true" />
-            <button
-              type="button"
+            <IconButton
               className={styles.close}
               aria-label={t("studio:nowPlaying.close")}
               onClick={surface.closeNowPlaying}
             >
               <FiChevronDown aria-hidden />
-            </button>
+            </IconButton>
             <p className={styles.source}>{sourceLine}</p>
           </header>
           {item && (
@@ -153,6 +159,9 @@ function StudioNowPlayingOverlay({ onNavigate }: { onNavigate: () => void }) {
                 item={item}
                 isPhone={isPhone}
                 onNavigate={closeForLink}
+                sheetRef={dialogRef}
+                frameRef={frameRef}
+                onClose={surface.closeNowPlaying}
               />
               <StudioNowPlayingPanes item={item} isPhone={isPhone} />
             </div>

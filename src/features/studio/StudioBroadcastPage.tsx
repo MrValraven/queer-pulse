@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { usePrefersReducedMotion } from "../../shared/hooks";
 import { Translation } from "../../shared/i18n/Translation";
@@ -50,24 +51,22 @@ function StatusBar({ reduced }: { reduced: boolean }) {
         />
       </span>
       <div className={s.headRight}>
-        <button
-          type="button"
-          className={s.pauseBtn}
+        <Button
+          variant="ghost"
           onClick={() =>
             showToast(t("studio:broadcast.status.toast.micPaused"), "info")
           }
         >
           {t("studio:broadcast.status.pauseMicCta")}
-        </button>
-        <button
-          type="button"
-          className={s.endBtn}
+        </Button>
+        <Button
+          variant="soft"
           onClick={() =>
             showToast(t("studio:broadcast.status.toast.ending"), "info")
           }
         >
           {t("studio:broadcast.status.endBroadcastCta")}
-        </button>
+        </Button>
       </div>
     </div>
   );

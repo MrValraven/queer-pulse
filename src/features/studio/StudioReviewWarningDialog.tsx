@@ -1,5 +1,11 @@
 import { useState } from "react";
-import { Button, ChipSelect, Modal, Sending } from "../../shared/components/ui";
+import {
+  Button,
+  ChipSelect,
+  Collapse,
+  Modal,
+  Sending,
+} from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { CONTENT_WARNINGS } from "../forum/compose/composeWarnings.data";
 import type { StudioAdminTrackView } from "./api/studioSafety.adapters";
@@ -20,11 +26,14 @@ const LABEL_KEY_BY_ID = new Map(
 export function StudioReviewWarningDialog({
   track,
   isPending,
+  errorKey = null,
   onConfirm,
   onClose,
 }: {
   track: StudioAdminTrackView;
   isPending: boolean;
+  /** The last attempt's failure; the picks stay so staff can send again. */
+  errorKey?: string | null;
   onConfirm: (warnings: StudioContentWarningId[]) => void;
   onClose: () => void;
 }) {
@@ -79,6 +88,11 @@ export function StudioReviewWarningDialog({
       <p className={css.warningDescription}>
         {t("studio:flagReviewLive.trackReports.dialog.warningBody")}
       </p>
+      <Collapse isOpen={errorKey !== null}>
+        <p className={css.dialogError} role="alert">
+          {errorKey ? t(errorKey) : null}
+        </p>
+      </Collapse>
       <div className={css.warningPicks}>
         <ChipSelect
           options={options}

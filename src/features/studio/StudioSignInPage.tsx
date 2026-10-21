@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Button } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
@@ -100,20 +101,22 @@ export function StudioSignInPage() {
           </div>
 
           <div className={styles.segTabs}>
-            <button
-              type="button"
-              className={activeMode === "in" ? styles.segOn : ""}
+            <Button
+              variant={activeMode === "in" ? "primary" : "ghost-dark"}
+              className={styles.seg}
+              aria-pressed={activeMode === "in"}
               onClick={() => setActiveMode("in")}
             >
               {t("studio:signin.tabs.signIn")}
-            </button>
-            <button
-              type="button"
-              className={activeMode === "join" ? styles.segOn : ""}
+            </Button>
+            <Button
+              variant={activeMode === "join" ? "primary" : "ghost-dark"}
+              className={styles.seg}
+              aria-pressed={activeMode === "join"}
               onClick={() => setActiveMode("join")}
             >
               {t("studio:signin.tabs.join")}
-            </button>
+            </Button>
           </div>
 
           <StudioAuthPane

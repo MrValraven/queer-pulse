@@ -1,11 +1,11 @@
 .wrap {
-  --text: var(--studio-text);
-  --text-60: var(--studio-text-muted);
+  --s-text: var(--studio-text);
+  --s-text-60: var(--studio-text-muted);
   /* It carries 11px and 12px meta text, so it never qualifies as large text:
      the muted token clears the AA 4.5:1 floor on every studio ground in both
      themes. The old cream 0.40 measured 3.55:1 and failed. */
-  --text-40: var(--studio-text-muted);
-  --line: rgba(var(--studio-ink-rgb), 0.1);
+  --s-text-40: var(--studio-text-muted);
+  --s-line: rgba(var(--studio-ink-rgb), 0.1);
   --surface: rgba(var(--studio-ink-rgb), 0.05);
   --rail: var(--studio-surface-rail);
 
@@ -41,7 +41,7 @@
 }
 .dek {
   font-size: var(--text-16);
-  color: var(--text-60);
+  color: var(--s-text-60);
   line-height: 1.6;
   max-width: 56ch;
   margin: 16px auto 0;
@@ -57,10 +57,18 @@
   display: flex;
   align-items: center;
   background: var(--surface);
-  border: 1px solid var(--line);
+  border: 1px solid var(--s-line);
   border-radius: var(--radius-pill);
-  padding: 8px 8px 8px 22px;
+  padding: 8px 8px 8px 18px;
   margin-bottom: 36px;
+}
+/* The magnifier names the field before a word is typed. */
+.searchIcon {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin-inline-end: 10px;
+  color: var(--s-text-60);
 }
 .search:focus-within {
   outline: var(--focus-ring);
@@ -78,7 +86,7 @@
   color: rgba(var(--studio-ink-rgb), 1);
 }
 .search input::placeholder {
-  color: var(--text-40);
+  color: var(--s-text-40);
 }
 .search input::-webkit-search-cancel-button {
   display: none;
@@ -145,23 +153,38 @@
   color: var(--studio-text-muted);
 }
 
-/* Category cards */
+/* Category cards: minmax(0, 1fr) lets a long blurb wrap inside its card
+   instead of widening the track past the column. */
 .cats {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 14px;
   margin-bottom: 44px;
 }
+/* A column flex from the top: a button centres block content vertically,
+   which left the three cards' icons on different lines. */
 .cat {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 0;
+  height: auto;
+  min-height: 0;
+  box-shadow: none;
+  font-weight: inherit;
   text-align: left;
   width: 100%;
   background: var(--surface);
-  border: 1px solid var(--line);
+  border: 1px solid var(--s-line);
   border-radius: var(--radius-16);
   padding: 22px 22px 20px;
   cursor: pointer;
   font-family: var(--sans);
+  /* The shared Button keeps its label on one line; a card's copy wraps. */
+  white-space: normal;
+  line-height: 1.3;
+  min-width: 0;
   transition:
     border-color 0.2s var(--ease),
     transform 0.2s var(--ease);
@@ -198,7 +221,7 @@
 .catBlurb {
   display: block;
   font-size: var(--text-13);
-  color: var(--text-40);
+  color: var(--s-text-40);
   margin-top: 6px;
   line-height: 1.5;
 }
@@ -222,16 +245,16 @@
 }
 
 .faq {
-  border-top: 1px solid var(--line);
+  border-top: 1px solid var(--s-line);
 }
 .faqItem {
-  border-bottom: 1px solid var(--line);
+  border-bottom: 1px solid var(--s-line);
 }
 .faqHeading {
   margin: 0;
   font: inherit;
 }
-.faqQ {
+.faqItem .faqQ {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -240,19 +263,27 @@
   text-align: left;
   background: none;
   border: none;
+  border-radius: 0;
+  box-shadow: none;
   cursor: pointer;
   padding: 20px 4px;
+  /* A long question wraps beside its plus instead of running off the page. */
+  white-space: normal;
+  line-height: 1.35;
   font-family: var(--serif);
   font-weight: 400;
   font-size: var(--text-18);
   color: rgba(var(--studio-ink-rgb), 1);
   letter-spacing: -0.01em;
 }
-.faqQ:focus-visible {
+.faqItem .faqQ:focus-visible {
   outline: var(--focus-ring);
   outline-offset: var(--focus-ring-offset);
   box-shadow: var(--ring-cream);
   border-radius: var(--radius-6);
+}
+.faqQ > span:first-child {
+  min-width: 0;
 }
 .faqIcon {
   flex: none;
@@ -274,7 +305,7 @@
 .faqAInner {
   padding: 0 4px 22px;
   font-size: var(--text-15);
-  color: var(--text-60);
+  color: var(--s-text-60);
   line-height: 1.7;
   max-width: 66ch;
 }
@@ -283,7 +314,7 @@
   color: var(--studio-jade-text);
 }
 .faqAInner strong {
-  color: var(--text);
+  color: var(--s-text);
   font-weight: 600;
 }
 .faqAInner a {
@@ -303,7 +334,7 @@
 }
 .cc {
   background: var(--surface);
-  border: 1px solid var(--line);
+  border: 1px solid var(--s-line);
   border-radius: var(--radius-16);
   padding: 24px 22px;
   text-align: center;
@@ -336,7 +367,7 @@
 }
 .cc p {
   font-size: var(--text-13);
-  color: var(--text-60);
+  color: var(--s-text-60);
   line-height: 1.55;
   margin: 8px 0 16px;
 }
@@ -387,10 +418,10 @@
   gap: 8px;
   margin-top: 22px;
   font-size: var(--text-13);
-  color: var(--text-40);
+  color: var(--s-text-40);
 }
 .status a {
-  color: var(--text-60);
+  color: var(--s-text-60);
   text-decoration: underline;
   text-underline-offset: 2px;
 }
@@ -422,4 +453,16 @@
     transition: none;
     animation: none;
   }
+}
+
+/* Search hits: a mark in the question, the highlight API in the answer. */
+.match {
+  border-radius: var(--radius-3);
+  background: rgba(var(--accent-rgb), 0.28);
+  color: inherit;
+}
+
+.faq ::highlight(studio-help-match) {
+  background-color: rgba(var(--accent-rgb), 0.28);
+  color: inherit;
 }

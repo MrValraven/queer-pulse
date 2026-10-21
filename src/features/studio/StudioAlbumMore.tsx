@@ -1,13 +1,12 @@
-import { Link } from "react-router-dom";
-import { FiArrowRight } from "react-icons/fi";
+import { useId } from "react";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
 import type { StudioReleaseView } from "./api/studio.adapters";
 import { useStudioArtist } from "./api/useStudioArtist";
 import { StudioReleaseCard } from "./StudioReleaseCard";
-import { StudioCardGridSkeleton } from "./StudioSkeletons";
+import { StudioShelf } from "./kit/StudioShelf";
+import { StudioShelfSkeleton } from "./StudioSkeletons";
 import { releaseFactsLine } from "./studioFacts";
-import styles from "./studio.module.css";
 
 const MORE_LIMIT = 4;
 
@@ -15,6 +14,7 @@ const MORE_LIMIT = 4;
  *  read failed: the release above is the page. */
 export function StudioAlbumMore({ release }: { release: StudioReleaseView }) {
   const { t } = useTranslation();
+  const headingId = useId();
   const { artist, loadState } = useStudioArtist(release.artist.id);
   const others = artist
     ? [...artist.releases, ...artist.singles]
@@ -28,33 +28,36 @@ export function StudioAlbumMore({ release }: { release: StudioReleaseView }) {
   )
     return null;
 
+  const title = (
+    <Translation
+      i18nKey="studio:album.more.heading"
+      values={{ artist: release.artist.name }}
+      components={{ em: <em /> }}
+    />
+  );
+  if (!artist)
+    return (
+      <StudioShelfSkeleton
+        cards={MORE_LIMIT}
+        label={t("studio:loading.moreFromArtist", {
+          artist: release.artist.name,
+        })}
+      />
+    );
   return (
-    <section className={styles.row}>
-      <div className={styles.rowH}>
-        <h2>
-          <Translation
-            i18nKey="studio:album.more.heading"
-            values={{ artist: release.artist.name }}
-            components={{ em: <em /> }}
-          />
-        </h2>
-        <Link to={release.artist.href} className={styles.all}>
-          {t("studio:album.more.artistPageCta")} <FiArrowRight aria-hidden />
-        </Link>
-      </div>
-      {!artist ? (
-        <StudioCardGridSkeleton className={styles.rowGrid} count={MORE_LIMIT} />
-      ) : (
-        <div className={styles.rowGrid}>
-          {others.map((other) => (
-            <StudioReleaseCard
-              key={other.id}
-              release={other}
-              meta={releaseFactsLine(other, t)}
-            />
-          ))}
-        </div>
-      )}
-    </section>
+    <StudioShelf
+      id={headingId}
+      title={title}
+      seeAllHref={release.artist.href}
+      seeAllLabel={t("studio:album.more.artistPageCta")}
+    >
+      {others.map((other) => (
+        <StudioReleaseCard
+          key={other.id}
+          release={other}
+          meta={releaseFactsLine(other, t)}
+        />
+      ))}
+    </StudioShelf>
   );
 }

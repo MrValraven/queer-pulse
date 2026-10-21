@@ -1,67 +1,59 @@
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useId, useState, type ReactNode } from "react";
 import { AnimatePresence, m } from "motion/react";
-import { useDemoMode } from "../../app/providers/DemoModeProvider";
+import { FiRefreshCw, FiX } from "react-icons/fi";
 import { useMotionPrefs } from "../../app/providers/motionPrefs";
-import { Collapse } from "../../shared/components/ui";
+import { Button, Collapse } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { StudioReleaseView } from "./api/studio.adapters";
 import { STUDIO_LIMITS } from "./api/studio.types";
-import {
-  StudioAudioUploadError,
-  uploadStudioAudio,
-  type StudioAudioUploadHandle,
-} from "./api/studioAudioUpload";
-import { useConfirmStudioTrackAudio } from "./api/useStudioTrackMutations";
 import { DropZone } from "./StudioUploadDropZone";
-import { conversionBarOf, uploadBarOf } from "./studioRowConversion";
-import { createProgressReporter } from "./studioUploadQueue";
 import {
-  conversionFailureOf,
-  fileRejectionKeyOf,
-  uploadErrorKeyOf,
-  validateAudioFiles,
-  type FileRejectionReason,
-} from "./studioUploadValidation";
-import { convertToMp3 } from "./upload/convert/studioWavConverter";
+  failureLineOf,
+  rejectionLineOf,
+  type EpisodeAudioProgress,
+  type Translate,
+} from "./upload/episodeAudioLines";
+import { useReportUploadActivity } from "./upload/studioUploadActivityContext";
+import { useEpisodeAudioAttach } from "./upload/useEpisodeAudioAttach";
 import { useStudioTrackUploads } from "./useStudioTrackUploads";
 import css from "./StudioEpisodeUpload.module.css";
 
-type Translate = ReturnType<typeof useTranslation>["t"];
-
-/** A failed upload's line. A file over the cap reads the 250 MB wording; the
- *  generic failure asks for the file again; a refusal with its own line
- *  (the 500 episode cap, a restriction, a conversion) keeps it, with the
- *  values it needs. */
-function failureLineOf(
-  t: Translate,
-  errorKey: string | null,
-  fileName: string,
-  errorValues: Record<string, number> | null = null,
-) {
-  if (errorKey === "studio:uploadFlow.files.errorTooLarge")
-    return t("studio:uploadFlow.files.rejectSizePodcast", { fileName });
-  if (!errorKey || errorKey === "studio:uploadFlow.files.errorUpload")
-    return t("studio:episodeUpload.uploadFailed");
-  return t(errorKey, errorValues ?? undefined);
-}
-
-const rejectionLineOf = (
-  t: Translate,
-  rejection: { fileName: string; reason: FileRejectionReason },
-) =>
-  t(fileRejectionKeyOf(rejection.reason, "podcast"), {
-    fileName: rejection.fileName,
-  });
-
-interface EpisodeAudioProgress {
+/** Cancel during a conversion or an upload, Retry after one stopped. Both
+ *  keep the file in memory, so a 250 MB episode is never picked again. */
+function EpisodeAudioActions({
+  fileName,
+  onCancel,
+  onRetry,
+}: {
   fileName: string;
-  /** The stage's own 0..100 percent (the converting line shows it). */
-  progress: number;
-  /** The bar's value: a converted file's one bar, 0..50 then 50..100. */
-  barPercent: number;
-  isConfirming: boolean;
-  /** The browser is turning a WAV or AIFF into MP3 before the upload. */
-  isConverting: boolean;
+  onCancel: (() => void) | null;
+  onRetry: (() => void) | null;
+}) {
+  const { t } = useTranslation();
+  return (
+    <div className={css.audioActions}>
+      <Collapse isOpen={onCancel !== null}>
+        <Button
+          variant="quiet"
+          size="sm"
+          onClick={() => onCancel?.()}
+          aria-label={t("studio:episodeUpload.cancelFor", { fileName })}
+        >
+          <FiX aria-hidden /> {t("studio:episodeUpload.cancelCta")}
+        </Button>
+      </Collapse>
+      <Collapse isOpen={onRetry !== null}>
+        <Button
+          variant="quiet"
+          size="sm"
+          onClick={() => onRetry?.()}
+          aria-label={t("studio:episodeUpload.retryFor", { fileName })}
+        >
+          <FiRefreshCw aria-hidden /> {t("studio:episodeUpload.retryCta")}
+        </Button>
+      </Collapse>
+    </div>
+  );
 }
 
 /** The visible line (with the percent while converting) and the bar's name. */
@@ -91,10 +83,13 @@ function EpisodeAudioZone({
   progress,
   onFile,
   lines,
+  actions,
 }: {
   progress: EpisodeAudioProgress | null;
   onFile: (file: File) => void;
   lines: string[];
+  /** Cancel and Retry, under the progress or the drop zone. */
+  actions?: ReactNode;
 }) {
   const { t } = useTranslation();
   const { reducedMotion } = useMotionPrefs();
@@ -145,6 +140,7 @@ function EpisodeAudioZone({
           )}
         </m.div>
       </AnimatePresence>
+      {actions}
       <div role="status" className={css.status}>
         {lines.map((line) => (
           <p key={line}>{line}</p>
@@ -180,6 +176,15 @@ export function StudioEpisodeAudioStep({
   const readyTrackId = row?.stage === "ready" ? row.trackId : null;
   const isFailed = row?.stage === "failed";
   const fileName = row?.fileName ?? row?.title ?? "";
+  // The same stages useStudioTrackUploads lets Cancel stop: a create or a
+  // confirm waits for the server.
+  const isCancellable =
+    row !== null &&
+    (row.stage === "queued" ||
+      row.stage === "converting" ||
+      row.stage === "uploading");
+  useReportUploadActivity("uploads", uploads.hasActiveUploads);
+  useReportUploadActivity("heldFiles", uploads.hasHeldFiles);
 
   useEffect(() => {
     if (readyTrackId) onReady(readyTrackId);
@@ -206,114 +211,31 @@ export function StudioEpisodeAudioStep({
       }}
       lines={[
         ...(isFailed
-          ? [failureLineOf(t, row.errorKey, fileName, row.errorValues ?? null)]
+          ? [
+              failureLineOf(
+                t,
+                row.errorKey,
+                fileName,
+                row.errorValues ?? null,
+                row.isRetryable,
+              ),
+            ]
           : []),
         ...uploads.rejections.map((rejection) => rejectionLineOf(t, rejection)),
       ]}
+      actions={
+        <EpisodeAudioActions
+          fileName={fileName}
+          onCancel={isCancellable ? () => uploads.cancel(row.localId) : null}
+          onRetry={
+            isFailed && row.isRetryable
+              ? () => uploads.retry(row.localId)
+              : null
+          }
+        />
+      }
     />
   );
-}
-
-/** Uploads and confirms audio for an episode that exists without it (an
- *  upload that stopped); a WAV or AIFF converts first. The confirmed track
- *  lands in the track cache, so the form reads its audio from there.
- *  Unmounting aborts the conversion and the upload. */
-function useEpisodeAudioAttach(release: StudioReleaseView, trackId: string) {
-  const { t } = useTranslation();
-  const { demoMode } = useDemoMode();
-  const confirmAudio = useConfirmStudioTrackAudio();
-  const [progress, setProgress] = useState<EpisodeAudioProgress | null>(null);
-  const [lines, setLines] = useState<string[]>([]);
-  const handleRef = useRef<StudioAudioUploadHandle | null>(null);
-  const conversionRef = useRef<AbortController | null>(null);
-  useEffect(
-    () => () => {
-      handleRef.current?.abort();
-      conversionRef.current?.abort();
-    },
-    [],
-  );
-
-  /** The MP3 to upload, or null once the failure line is set. An aborted
-   *  conversion never settles, so nothing runs after an unmount. */
-  async function convertFirst(file: File): Promise<File | null> {
-    const fileName = file.name;
-    const controller = new AbortController();
-    conversionRef.current = controller;
-    const showConverting = (percent: number) =>
-      setProgress({
-        fileName,
-        progress: percent,
-        barPercent: conversionBarOf(percent),
-        isConfirming: false,
-        isConverting: true,
-      });
-    showConverting(0);
-    const reportProgress = createProgressReporter(showConverting);
-    const result = await convertToMp3(
-      file,
-      STUDIO_LIMITS.audioMaxBytesPodcast,
-      {
-        signal: controller.signal,
-        onProgress: (fraction) => reportProgress(fraction * 100),
-      },
-    );
-    conversionRef.current = null;
-    if (result.ok) return result.file;
-    const failure = conversionFailureOf(result);
-    setProgress(null);
-    setLines([
-      failureLineOf(t, failure.errorKey, fileName, failure.errorValues),
-    ]);
-    return null;
-  }
-
-  async function attach(file: File) {
-    const { accepted, rejected } = validateAudioFiles(
-      [file],
-      0,
-      STUDIO_LIMITS.audioMaxBytesPodcast,
-    );
-    setLines(rejected.map((rejection) => rejectionLineOf(t, rejection)));
-    const [first] = accepted;
-    if (!first) return;
-    const fileName = file.name;
-    const uploadFile = first.needsConversion ? await convertFirst(file) : file;
-    if (!uploadFile) return;
-    const wasConverted = first.needsConversion;
-    const showUploading = (percent: number, isConfirming: boolean) =>
-      setProgress({
-        fileName,
-        progress: percent,
-        barPercent: uploadBarOf(percent, wasConverted),
-        isConfirming,
-        isConverting: false,
-      });
-    showUploading(0, false);
-    try {
-      const handle = uploadStudioAudio({
-        demoMode,
-        subprofileId: release.artist.id,
-        file: uploadFile,
-        contentType: first.contentType,
-        onProgress: createProgressReporter((percent) =>
-          showUploading(percent, false),
-        ),
-      });
-      handleRef.current = handle;
-      const key = await handle.promise;
-      handleRef.current = null;
-      showUploading(100, true);
-      await confirmAudio.mutateAsync({ trackId, releaseId: release.id, key });
-    } catch (error) {
-      handleRef.current = null;
-      if (error instanceof StudioAudioUploadError && error.isAborted) return;
-      setProgress(null);
-      setLines([failureLineOf(t, uploadErrorKeyOf(error), fileName)]);
-    }
-  }
-
-  return { progress, lines, attach };
 }
 
 /** The drop zone inside the form of an episode that has no audio yet. */
@@ -324,12 +246,21 @@ export function StudioEpisodeAudioAttach({
   release: StudioReleaseView;
   trackId: string;
 }) {
-  const { progress, lines, attach } = useEpisodeAudioAttach(release, trackId);
+  const attachment = useEpisodeAudioAttach(release, trackId);
+  useReportUploadActivity("uploads", attachment.isRunning);
+  useReportUploadActivity("heldFiles", attachment.hasHeldFile);
   return (
     <EpisodeAudioZone
-      progress={progress}
-      onFile={(file) => void attach(file)}
-      lines={lines}
+      progress={attachment.progress}
+      onFile={(file) => void attachment.attach(file)}
+      lines={attachment.lines}
+      actions={
+        <EpisodeAudioActions
+          fileName={attachment.progress?.fileName ?? attachment.heldFileName}
+          onCancel={attachment.cancel}
+          onRetry={attachment.retry}
+        />
+      }
     />
   );
 }

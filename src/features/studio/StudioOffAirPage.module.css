@@ -205,7 +205,8 @@
     gap: 14px 16px;
     padding: 16px;
   }
-  .nightcap .playBig {
+  /* The play sits in the tooltip's wrapper, so the wrapper takes the row. */
+  .nightcap > :has(> .playBig) {
     grid-column: 1 / -1;
     justify-self: start;
   }
@@ -255,26 +256,30 @@
   font-style: italic;
 }
 
-.playBig {
+/* The replay is an <IconButton> kept round and coral. The doubled class
+   outranks the kit's quiet icon fill and its hover wash. */
+.playBig.playBig {
   width: 50px;
+  min-width: 50px;
   height: 50px;
   border-radius: 50%;
   background: var(--accent);
   /* Dark ink on the coral fill: 6.28:1. */
   color: var(--studio-bg);
-  border: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
   box-shadow: var(--shadow-accent);
-  transition: transform 0.2s;
   flex: none;
 }
 
 @media (hover: hover) {
-  .playBig:hover {
+  .playBig.playBig:hover:not(:disabled):not([aria-disabled="true"]) {
+    background: var(--accent);
+    color: var(--studio-bg);
     transform: scale(1.06);
+  }
+}
+@media (hover: hover) and (prefers-reduced-motion: reduce) {
+  .playBig.playBig:hover:not(:disabled):not([aria-disabled="true"]) {
+    transform: none;
   }
 }
 

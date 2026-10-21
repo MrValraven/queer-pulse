@@ -1,0 +1,19 @@
+/* Checkout form extras: the field group that disables during processing, and
+   the declined-payment message. Tokens only. */
+.fields {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+
+.error {
+  margin: 4px 0 8px;
+  padding: 12px 14px;
+  border: 1px solid rgba(var(--accent-rgb), 0.45);
+  border-radius: var(--radius-12);
+  background: rgba(var(--accent-rgb), 0.08);
+  color: var(--studio-text);
+  font-size: var(--text-13-5);
+  line-height: 1.5;
+}

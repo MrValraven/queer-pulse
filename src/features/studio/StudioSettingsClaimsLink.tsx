@@ -1,7 +1,7 @@
 import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { studioClaimsPath } from "./studioClaimPaths";
-import { SettingsSection } from "./StudioSettingsPlayback";
+import { SettingsSection } from "./StudioSettingsOption";
 import s from "./StudioSettingsPage.module.css";
 
 /** The settings page's way to the member's copyright claims (spec 8), in

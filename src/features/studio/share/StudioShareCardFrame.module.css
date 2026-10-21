@@ -25,6 +25,12 @@
   color: var(--ink);
 }
 
+/* A lyric card holds the line (three lines of serif at most) above its
+   credit row, so its kind sets a taller box, the same in every state. */
+.frame[data-kind="lyric"] {
+  block-size: 11.5rem;
+}
+
 /* A bubble column is a shrink-to-fit box: the same cap the place card uses
    (PlaceLinkCardBody.module.css). */
 .chat {

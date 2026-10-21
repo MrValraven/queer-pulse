@@ -98,11 +98,12 @@
 
 /* Primary — coral */
 .primary {
-  /* --accent behind a white label is 2.91:1 — fails AA at BOTH normal and
-     large sizes, on every CTA in the product. --accent-fill is 4.52:1.
-     --accent is still the brand colour everywhere it isn't carrying text.
+  /* The label is cream (#f7f3ee), not white. --accent behind it is 2.6:1 and
+     --accent-fill is 4.09:1, both under AA. --accent-fill-strong is 4.56:1
+     (5.04:1 against white) in both themes. --accent is still the brand
+     colour everywhere it isn't carrying text.
      See docs/production-readiness/contrast-audit.md §4. */
-  background: var(--accent-fill);
+  background: var(--accent-fill-strong);
   color: rgba(var(--cream-rgb), 1);
   box-shadow: var(--shadow-accent);
 }
@@ -114,9 +115,8 @@
 }
 @media (hover: hover) {
   .primary:hover:not(:disabled):not([aria-disabled="true"]) {
-    /* --accent-ink behind white is 4.21:1 — still under AA. --accent-deep is
-       5.94:1, and its own token comment already names it the pressed/hover
-       partner for accent-ink. */
+    /* --accent-deep behind the cream label is 5.38:1 (5.94:1 against white),
+       and its own token comment names it the pressed/hover partner. */
     background: var(--accent-deep);
     transform: translateY(-1px);
     box-shadow: 0 12px 26px -10px rgba(var(--accent-rgb), 0.9);
@@ -241,6 +241,33 @@
     .soft:hover:not(:disabled):not([aria-disabled="true"]) {
     background: rgba(var(--accent-rgb), 0.2);
   }
+}
+
+/* Quiet: neutral ink wash. --ink-rgb flips in dark mode, so one rule serves
+   both themes. No shadow, so the global :focus-visible halo applies untouched.
+   The `sm` size drops to 36px tall but keeps a 44px hit area through the
+   pseudo-element below. */
+.quiet {
+  background: rgba(var(--ink-rgb), 0.06);
+  color: var(--ink);
+  box-shadow: none;
+}
+@media (hover: hover) {
+  .quiet:hover:not(:disabled):not([aria-disabled="true"]) {
+    background: rgba(var(--ink-rgb), 0.1);
+  }
+}
+.quiet:active:not(:disabled):not([aria-disabled="true"]) {
+  background: rgba(var(--ink-rgb), 0.14);
+}
+.quiet.sm {
+  min-height: 36px;
+  position: relative;
+}
+.quiet.sm::after {
+  content: "";
+  position: absolute;
+  inset: -4px 0;
 }
 
 :global([data-theme="dark"]) .ghost {

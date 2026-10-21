@@ -3,6 +3,10 @@ import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useToast } from "../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import {
+  studioErrorMessageKey,
+  studioErrorMessageKeyOf,
+} from "../studioErrors.data";
+import {
   DEFAULT_STUDIO_PLAYBACK,
   type StudioPlaybackPreferencesDTO,
 } from "./studio.types";
@@ -98,10 +102,20 @@ export function useStudioPlaybackPreferences(): StudioPlaybackPreferencesResult 
       });
       return { previous };
     },
-    onError: (_error, _patch, context) => {
+    onError: (error, _patch, context) => {
       if (context) queryClient.setQueryData(queryKey, context.previous);
       void queryClient.invalidateQueries({ queryKey });
-      showToast(t("studio:settingsLive.saveError"), "error");
+      // Name the reason (offline, restricted, rate limit, server). Only a
+      // failure with no nameable reason keeps the setting-specific line.
+      const messageKey = studioErrorMessageKeyOf(error, "save");
+      showToast(
+        t(
+          messageKey === studioErrorMessageKey(null)
+            ? "studio:settingsLive.saveError"
+            : messageKey,
+        ),
+        "error",
+      );
     },
     onSuccess: (stored) => {
       queryClient.setQueryData(queryKey, stored);

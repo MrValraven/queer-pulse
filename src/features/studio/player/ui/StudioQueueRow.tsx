@@ -2,7 +2,8 @@ import type { PointerEvent as ReactPointerEvent } from "react";
 import { m, useIsPresent } from "motion/react";
 import { FiArrowDown, FiArrowUp, FiMenu, FiX } from "react-icons/fi";
 import { useMotionPrefs } from "../../../../app/providers/motionPrefs";
-import { ImageSlot } from "../../../../shared/components/ui";
+import { Button, ImageSlot } from "../../../../shared/components/ui";
+import { IconButton } from "../../../../shared/components/ui/IconButton";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { useStudioPlayer, type StudioQueueItem } from "../studioPlayerContext";
 import { StudioTrackWarningPill } from "../../StudioTrackWarningPill";
@@ -48,7 +49,8 @@ export function QueueRowSummary({
 }
 
 /** One reorderable queue row. The grip is pointer and touch only; the
- *  three buttons are the keyboard and screen reader path. Title and artist
+ *  three buttons are the keyboard and screen reader path (Move up and Move
+ *  down stay quiet until the row is hovered or holds focus). Title and artist
  *  are plain text in every row (a private preview's pages are closed to
  *  visitors), and a row fading out is inert, so the drag geometry skips it
  *  and its buttons leave the tab order. */
@@ -112,8 +114,8 @@ export function StudioQueueRow({
       >
         <FiMenu />
       </span>
-      <button
-        type="button"
+      <Button
+        variant="quiet"
         className={styles.play}
         aria-label={t("studio:release.playTrack", { title })}
         aria-disabled={isHiddenBySettings || undefined}
@@ -127,12 +129,11 @@ export function StudioQueueRow({
           noteId={hiddenNoteId}
           note={isHiddenBySettings ? t("studio:hiddenTrack.label") : undefined}
         />
-      </button>
+      </Button>
       <div className={styles.actions}>
-        <button
-          type="button"
+        <IconButton
           ref={(element) => registerControl("moveUp", element)}
-          className={styles.control}
+          className={`${styles.control} ${styles.reorder}`}
           aria-disabled={isFirst || undefined}
           aria-label={t("studio:queue.moveUp", { title })}
           onClick={() => {
@@ -140,11 +141,10 @@ export function StudioQueueRow({
           }}
         >
           <FiArrowUp aria-hidden />
-        </button>
-        <button
-          type="button"
+        </IconButton>
+        <IconButton
           ref={(element) => registerControl("moveDown", element)}
-          className={styles.control}
+          className={`${styles.control} ${styles.reorder}`}
           aria-disabled={isLast || undefined}
           aria-label={t("studio:queue.moveDown", { title })}
           onClick={() => {
@@ -152,16 +152,15 @@ export function StudioQueueRow({
           }}
         >
           <FiArrowDown aria-hidden />
-        </button>
-        <button
-          type="button"
+        </IconButton>
+        <IconButton
           ref={(element) => registerControl("remove", element)}
           className={styles.control}
           aria-label={t("studio:queue.remove", { title })}
           onClick={onRemove}
         >
           <FiX aria-hidden />
-        </button>
+        </IconButton>
       </div>
     </m.div>
   );

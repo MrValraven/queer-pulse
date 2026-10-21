@@ -1,9 +1,12 @@
 import { Navigate, Route } from "react-router-dom";
 import { routes } from "../../app/routeMap";
 import { lazyNamed } from "../../app/routeHelpers";
+import { StudioErrorBoundary } from "./StudioErrorBoundary";
 import { STUDIO_DEFERRED_PATHS } from "./studioGate.data";
+import { StudioFirstRunRedirect } from "./StudioFirstRunRedirect";
 import { StudioGateSkeleton } from "./StudioGateSkeleton";
 import { STUDIO_PREVIEW_ROUTE } from "./studioPaths";
+import { StudioUngrantedPage } from "./StudioUngrantedPage";
 
 const StudioPage = lazyNamed(() => import("./StudioPage"), "StudioPage");
 const StudioAlbumPage = lazyNamed(
@@ -183,17 +186,9 @@ const StudioBroadcastPage = lazyNamed(
   () => import("./StudioBroadcastPage"),
   "StudioBroadcastPage",
 );
-const StudioWelcomePage = lazyNamed(
-  () => import("./StudioWelcomePage"),
-  "StudioWelcomePage",
-);
 const StudioWithdrawnPage = lazyNamed(
   () => import("./StudioWithdrawnPage"),
   "StudioWithdrawnPage",
-);
-const StudioComingSoonPage = lazyNamed(
-  () => import("./StudioComingSoonPage"),
-  "StudioComingSoonPage",
 );
 
 interface StudioRouteOptions {
@@ -205,7 +200,7 @@ interface StudioRouteOptions {
 /** Every demo route, unchanged from the showcase. */
 function demoStudioRoutes() {
   return (
-    <>
+    <Route element={<StudioErrorBoundary />}>
       <Route path={routes.studio} element={<StudioPage />} />
       <Route path={routes.studioAlbum} element={<StudioAlbumPage />} />
       <Route path={routes.studioArtist} element={<StudioArtistPage />} />
@@ -269,9 +264,10 @@ function demoStudioRoutes() {
       <Route path={routes.studioRights} element={<StudioRightsPage />} />
       <Route path={routes.studioProgram} element={<StudioProgramPage />} />
       <Route path={routes.studioBroadcast} element={<StudioBroadcastPage />} />
-      <Route path={routes.studioWelcome} element={<StudioWelcomePage />} />
+      <Route path={routes.studioWelcome} element={<StudioFirstRunRedirect />} />
       <Route path={routes.studioWithdrawn} element={<StudioWithdrawnPage />} />
-    </>
+      <Route path="/studio/*" element={<Studio404Page />} />
+    </Route>
   );
 }
 
@@ -284,7 +280,7 @@ function demoStudioRoutes() {
  *  home; anything else under /studio is the Studio 404. */
 function grantedStudioRoutes() {
   return (
-    <>
+    <Route element={<StudioErrorBoundary />}>
       <Route path={routes.studio} element={<StudioPage />} />
       <Route path={routes.studioAlbum} element={<StudioAlbumPage />} />
       <Route path={routes.studioArtist} element={<StudioArtistPage />} />
@@ -326,6 +322,7 @@ function grantedStudioRoutes() {
         path={routes.studioFlagReview}
         element={<StudioFlagReviewPage />}
       />
+      <Route path={routes.studioWelcome} element={<StudioFirstRunRedirect />} />
       <Route path="/studio/404" element={<Studio404Page />} />
       <Route path="/studio/500" element={<Studio500Page />} />
       {STUDIO_DEFERRED_PATHS.map((path) => (
@@ -336,15 +333,18 @@ function grantedStudioRoutes() {
         />
       ))}
       <Route path="/studio/*" element={<Studio404Page />} />
-    </>
+    </Route>
   );
 }
 
 /**
  * The music studio. Demo renders the full showcase. Live mode shows Studio v1
  * to members with a Studio access grant (GET /studio/me) and the coming-soon
- * teaser to everyone else, as before. While the grant is still being read the
+ * teaser to everyone else, as before; a failed read shows the access error
+ * instead (StudioUngrantedPage). While the grant is still being read the
  * whole subtree holds on the Studio skeleton, so the teaser never flashes.
+ * Every branch sits under StudioErrorBoundary, so a crash keeps the Studio
+ * frame.
  * See QUEERPULSE-STUDIO-V1-DESIGN-2026-10-08.md section 6.
  */
 export function studioRoutes({
@@ -359,10 +359,10 @@ export function studioRoutes({
   if (!hasStudioAccess) {
     // A claimant who lost the grant can still follow their claims.
     return (
-      <>
+      <Route element={<StudioErrorBoundary />}>
         <Route path={routes.studioClaims} element={<StudioMyClaimsPage />} />
-        <Route path="/studio/*" element={<StudioComingSoonPage />} />
-      </>
+        <Route path="/studio/*" element={<StudioUngrantedPage />} />
+      </Route>
     );
   }
   return grantedStudioRoutes();

@@ -391,22 +391,48 @@ describe("StudioNowPlaying content", () => {
     ).toBeInTheDocument();
   });
 
-  it("stacks the panes on a phone and scrolls to Queue when opened on it", async () => {
+  it("switches panes on a phone, Queue first, and scrolls to Queue when opened on it", async () => {
     asPhone(true);
     renderWithPlayer(<Harness initialTab="queue" />);
     const { dialog } = await openFromButton();
-    for (const name of ["Lyrics", "Queue", "Credits"])
-      expect(
-        within(dialog).getByRole("heading", { level: 2, name }),
-      ).toBeInTheDocument();
+    const switcher = within(dialog).getByRole("group", {
+      name: "Now playing details",
+    });
+    const choices = within(switcher)
+      .getAllByRole("button")
+      .map((choice) => choice.textContent);
+    expect(choices).toEqual(["Queue", "Lyrics", "Credits"]);
     expect(within(dialog).queryByRole("tablist")).toBeNull();
-    const queueSection = within(dialog)
-      .getByRole("heading", { level: 2, name: "Queue" })
-      .closest("section");
-    expect(queueSection).not.toBeNull();
+    expect(
+      within(switcher).getByRole("button", { name: "Queue" }),
+    ).toHaveAttribute("aria-pressed", "true");
+    expect(
+      within(dialog).getByRole("heading", { name: "Your queue" }),
+    ).toBeInTheDocument();
     await waitFor(() =>
-      expect(scrollIntoViewMock.mock.contexts).toContain(queueSection),
+      expect(scrollIntoViewMock.mock.contexts).toContain(
+        switcher.parentElement,
+      ),
     );
+    scrollIntoViewMock.mockClear();
+    fireEvent.click(within(switcher).getByRole("button", { name: "Lyrics" }));
+    expect(
+      await within(dialog).findByRole("heading", { level: 2, name: "Lyrics" }),
+    ).toBeInTheDocument();
+    // A choice made on the switcher keeps the sheet where the finger is.
+    expect(scrollIntoViewMock).not.toHaveBeenCalled();
+  });
+
+  it("offers Like, Add to playlist and the track menu beside the playing track", async () => {
+    asPhone(true);
+    renderWithPlayer(<Harness />);
+    const { dialog } = await openFromButton();
+    for (const name of [
+      "Like Tide",
+      "Add Tide to a playlist",
+      "More actions for Tide",
+    ])
+      expect(within(dialog).getByRole("button", { name })).toBeInTheDocument();
   });
 
   it("shows the can't play line, and its Retry retries the track", async () => {
@@ -415,7 +441,7 @@ describe("StudioNowPlaying content", () => {
     renderWithPlayer(<Harness />, { player });
     const { dialog } = await openFromButton();
     expect(
-      within(dialog).getByText("This track can't play right now", {
+      within(dialog).getByText("This track couldn't start. Try again", {
         exact: false,
       }),
     ).toBeInTheDocument();

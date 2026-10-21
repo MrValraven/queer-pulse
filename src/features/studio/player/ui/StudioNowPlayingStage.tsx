@@ -1,9 +1,12 @@
-import type { MouseEvent as ReactMouseEvent } from "react";
+import type { MouseEvent as ReactMouseEvent, RefObject } from "react";
 import { Link } from "react-router-dom";
-import { ImageSlot } from "../../../../shared/components/ui";
+import { Collapse } from "../../../../shared/components/ui";
 import { StudioPlayerSeek } from "../../StudioPlayerSeek";
 import { useStudioPlayer, type StudioQueueItem } from "../studioPlayerContext";
 import { StudioCastButton } from "./StudioCastButton";
+import { StudioFormatLine } from "./StudioFormatLine";
+import { StudioNowPlayingActions } from "./StudioNowPlayingActions";
+import { StudioNowPlayingCover } from "./StudioNowPlayingCover";
 import { StudioPlayerStatus } from "./StudioPlayerBar";
 import {
   StudioPlayerMorePanel,
@@ -72,56 +75,67 @@ function StageMeta({
   );
 }
 
-/** Cover, titles, scrubber and controls: Now playing's left column. */
+/** Cover, titles, the action row, scrubber and controls: Now playing's
+ *  left column. On a phone the cover takes the swipes (close and skip).
+ *  The body under the cover is its own box, so a phone on its side can set
+ *  it beside the cover. */
 export function StudioNowPlayingStage({
   item,
   isPhone,
   onNavigate,
+  sheetRef,
+  frameRef,
+  onClose,
 }: {
   item: StudioQueueItem;
   isPhone: boolean;
   onNavigate: () => void;
+  sheetRef: RefObject<HTMLElement | null>;
+  frameRef: RefObject<HTMLElement | null>;
+  onClose: () => void;
 }) {
   const player = useStudioPlayer();
   return (
     <div className={styles.stage} data-studio-player-surface="">
-      <div className={styles.cover}>
-        <ImageSlot
-          src={item.coverUrl ?? undefined}
-          tint={item.tint}
-          width="100%"
-          height="100%"
-          radius={16}
-          placeholder=""
-          style={{ position: "absolute", inset: 0 }}
-        />
-      </div>
-      <StageMeta item={item} onNavigate={onNavigate} />
-      <StudioPlayerSeek onSeek={player.seek} size="large" />
-      {/* The warning gate moves focus to this transport's play button. */}
-      <div className={styles.controlsRow} data-studio-transport="">
-        <StudioShuffleButton />
-        <StudioTransport size="large" />
-        <StudioRepeatButton />
-      </div>
-      {/* The bar's "can't play" line and Retry: the bar sits behind this
+      <StudioNowPlayingCover
+        item={item}
+        isPhone={isPhone}
+        sheetRef={sheetRef}
+        frameRef={frameRef}
+        onClose={onClose}
+      />
+      <div className={styles.stageBody}>
+        <StageMeta item={item} onNavigate={onNavigate} />
+        <StudioFormatLine />
+        <Collapse isOpen={!item.previewToken}>
+          <StudioNowPlayingActions item={item} onNavigate={onNavigate} />
+        </Collapse>
+        <StudioPlayerSeek onSeek={player.seek} size="large" />
+        {/* The warning gate moves focus to this transport's play button. */}
+        <div className={styles.controlsRow} data-studio-transport="">
+          <StudioShuffleButton />
+          <StudioTransport size="large" />
+          <StudioRepeatButton />
+        </div>
+        {/* The bar's "can't play" line and Retry: the bar sits behind this
           modal sheet, so the line has to show here too. The wrapper is
           `display: contents`, so the idle region stays out of the flow. */}
-      <div className={styles.status}>
-        <StudioPlayerStatus />
-      </div>
-      {/* Studio safety: the pause before a warned track (spec 6.3). */}
-      <StudioWarningGate />
-      {/* Both popovers open upward: this row sits low on the sheet. */}
-      <div className={styles.toolsRow}>
-        <StudioCastButton />
-        <StudioSleepTimerChip />
-        {isPhone ? (
-          <StudioSleepTimerButton placement="up" />
-        ) : (
-          <StudioVolumeControl />
-        )}
-        <StudioPlayerMorePanel placement="up" />
+        <div className={styles.status}>
+          <StudioPlayerStatus />
+        </div>
+        {/* Studio safety: the pause before a warned track (spec 6.3). */}
+        <StudioWarningGate />
+        {/* Both popovers open upward: this row sits low on the sheet. */}
+        <div className={styles.toolsRow}>
+          <StudioCastButton />
+          <StudioSleepTimerChip />
+          {isPhone ? (
+            <StudioSleepTimerButton placement="up" />
+          ) : (
+            <StudioVolumeControl />
+          )}
+          <StudioPlayerMorePanel placement="up" />
+        </div>
       </div>
     </div>
   );

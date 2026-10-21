@@ -1,11 +1,12 @@
 import { Link } from "react-router-dom";
-import { FiArrowLeft, FiLogOut } from "react-icons/fi";
+import { FiArrowLeft, FiUser, FiLogOut } from "react-icons/fi";
 import { routes } from "../../app/routeMap";
-import { useAuth } from "../../app/providers/authContext";
 import { Avatar } from "../../shared/components/ui";
 import { useAccountIdentity } from "../../shared/components/layout/useAccountIdentity";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { StudioArtistRefView } from "./api/studio.adapters";
+import { useStudioMenuShouldReplace } from "./studioAccountMenuNavigation";
+import { requestStudioSignOut } from "./useStudioSignOutAfterLeave";
 import { useStudioShowcase } from "./useStudioShowcase";
 import {
   STUDIO_MENU_CONTRIBUTE_ITEMS,
@@ -42,6 +43,7 @@ export function StudioAccountMenuPanel({
   onNavigate,
   className,
   isSheet = false,
+  publicPageHref,
 }: {
   id: string;
   isExiting: boolean;
@@ -54,12 +56,14 @@ export function StudioAccountMenuPanel({
   /** True in the phone sheet, which opens with the showcase's listening
    *  pages: on desktop the rail lists them. */
   isSheet?: boolean;
+  /** The creator's public artist page, listed first (phone creator bar). */
+  publicPageHref?: string;
 }) {
   const { t } = useTranslation();
   const identity = useAccountIdentity();
   const isShowcase = useStudioShowcase();
-  const { signOut } = useAuth();
   const { isItemVisible } = useStudioMenuItemFilter();
+  const shouldReplace = useStudioMenuShouldReplace();
 
   return (
     <div
@@ -94,6 +98,19 @@ export function StudioAccountMenuPanel({
         {isSheet && (
           <StudioAccountMenuGroup
             items={STUDIO_MENU_LISTEN_ITEMS_SHOWCASE.filter(isItemVisible)}
+            onNavigate={onNavigate}
+          />
+        )}
+        {publicPageHref && (
+          <StudioAccountMenuGroup
+            items={[
+              {
+                labelKey: "studio:creator.viewPublicPageCta",
+                to: publicPageHref,
+                icon: FiUser,
+                audience: "everyone",
+              },
+            ]}
             onNavigate={onNavigate}
           />
         )}
@@ -142,6 +159,7 @@ export function StudioAccountMenuPanel({
       <div className={styles.footer}>
         <Link
           to={routes.feed}
+          replace={shouldReplace}
           className={`${styles.item} ${styles.exit}`}
           onClick={onNavigate}
         >
@@ -152,9 +170,15 @@ export function StudioAccountMenuPanel({
         </Link>
         <Link
           to={routes.homepage}
+          replace={shouldReplace}
           className={`${styles.item} ${styles.signOut}`}
-          onClick={() => {
-            signOut();
+          onClick={(event) => {
+            // A modified click opens home in another tab; this one stays
+            // signed in.
+            if (event.metaKey || event.ctrlKey || event.shiftKey) return;
+            // The session ends on arrival (useStudioSignOutAfterLeave), so
+            // a leave prompt answered "Keep" leaves the member signed in.
+            requestStudioSignOut();
             onNavigate();
           }}
         >

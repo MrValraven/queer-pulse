@@ -1,6 +1,11 @@
 import { AnimatePresence, m } from "motion/react";
 import type { ReactNode } from "react";
-import { ImageSlot, useChipMotion } from "../../../../shared/components/ui";
+import {
+  Button,
+  ImageSlot,
+  useChipMotion,
+} from "../../../../shared/components/ui";
+import { IconButton } from "../../../../shared/components/ui/IconButton";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { StudioLikeButton } from "../../StudioLikeButton";
 import {
@@ -15,10 +20,13 @@ import { StudioEpisodeSkipButton } from "./StudioEpisodeSkipButton";
 import { StudioPlayPauseIcon } from "./StudioIconSwap";
 import { StudioPlayerStatus } from "./StudioPlayerBar";
 import { StudioPlayerCloseButton } from "./StudioPlayerCloseButton";
+import { StudioNowCoverSwap, StudioNowTextSwap } from "./StudioPlayerNowSwap";
 import { StudioWarningGate } from "./StudioWarningGate";
 import { useMiniCardSwipe } from "./useMiniCardSwipe";
+import { useStudioCoverSkip } from "./useStudioCoverSkip";
 import { useStudioSmoothProgress } from "./useStudioSmoothProgress";
 import styles from "../../StudioPlayer.module.css";
+import miniStyles from "./StudioMiniPlayer.module.css";
 
 /** Draws the mini line's fill as a horizontal scale. */
 function paintMiniFill(fill: HTMLSpanElement, fraction: number) {
@@ -122,7 +130,9 @@ function MiniSkipSlot({
   );
 }
 
-/** The phone mini player (spec 7.1): tap or swipe up for Now playing. Title
+/** The phone mini player (spec 7.1): tap or swipe up for Now playing, swipe
+ *  sideways to skip (the cover and titles follow the finger and spring
+ *  back). Cover and titles crossfade on a track change, as the bar's do. Title
  *  and artist are plain text for every item, private previews included, and
  *  the card keeps to a single save, the Like heart. The heart leads the
  *  controls for a music track; it folds away for a private preview and for
@@ -134,38 +144,57 @@ export function StudioMiniPlayer({ item }: { item: StudioQueueItem }) {
   const { t } = useTranslation();
   const player = useStudioPlayer();
   const surface = useStudioPlayerSurface();
-  const swipe = useMiniCardSwipe(() => surface.openNowPlaying());
+  const swipe = useMiniCardSwipe(
+    () => surface.openNowPlaying(),
+    useStudioCoverSkip(),
+  );
   const isPlaying = player.status === "playing";
   const isEpisode = item.isEpisode === true;
   const isPreview = Boolean(item.previewToken);
   return (
-    <div className={styles.mini} data-studio-player-surface="" {...swipe}>
+    <div
+      className={styles.mini}
+      data-studio-player-surface=""
+      {...swipe.handlers}
+    >
       <StudioPlayerStatus />
       <StudioWarningGate />
-      <button
-        type="button"
-        className={styles.miniOpen}
+      <Button
+        variant="quiet"
+        className={`${styles.miniOpen} ${miniStyles.open}`}
         aria-label={t("studio:player.openNowPlaying", {
           title: item.title,
           artist: item.artistName,
         })}
         onClick={() => surface.openNowPlaying()}
       >
-        <span className={styles.art}>
-          <ImageSlot
-            src={item.coverUrl ?? undefined}
-            tint={item.tint}
-            width={44}
-            height={44}
-            radius={8}
-            placeholder=""
-          />
-        </span>
-        <span className={styles.titles}>
-          <span className={styles.title}>{item.title}</span>
-          <span className={styles.artist}>{item.artistName}</span>
-        </span>
-      </button>
+        <m.span className={miniStyles.slide} style={{ x: swipe.offsetX }}>
+          <span className={styles.art}>
+            <StudioNowCoverSwap
+              swapKey={item.trackId}
+              isInstant={swipe.isSwipeSkip}
+            >
+              <ImageSlot
+                src={item.coverUrl ?? undefined}
+                tint={item.tint}
+                width={44}
+                height={44}
+                radius={8}
+                placeholder=""
+              />
+            </StudioNowCoverSwap>
+          </span>
+          <span className={styles.titles}>
+            <StudioNowTextSwap
+              swapKey={item.trackId}
+              isInstant={swipe.isSwipeSkip}
+            >
+              <span className={styles.title}>{item.title}</span>
+              <span className={styles.artist}>{item.artistName}</span>
+            </StudioNowTextSwap>
+          </span>
+        </m.span>
+      </Button>
       <span className={styles.miniControls}>
         <MiniFoldSlot
           slotKey="like"
@@ -183,9 +212,8 @@ export function StudioMiniPlayer({ item }: { item: StudioQueueItem }) {
           />
         </MiniFoldSlot>
         <MiniSkipSlot direction="back" isShown={isEpisode} />
-        <button
-          type="button"
-          className={styles.playButton}
+        <IconButton
+          className={`${styles.playButton} ${miniStyles.play}`}
           data-studio-play-toggle=""
           onClick={player.togglePlay}
           aria-label={
@@ -194,7 +222,7 @@ export function StudioMiniPlayer({ item }: { item: StudioQueueItem }) {
           aria-busy={player.status === "loading" || undefined}
         >
           <StudioPlayPauseIcon isPlaying={isPlaying} />
-        </button>
+        </IconButton>
         <MiniSkipSlot direction="forward" isShown={isEpisode} />
         <StudioPlayerCloseButton className={styles.miniClose} />
       </span>

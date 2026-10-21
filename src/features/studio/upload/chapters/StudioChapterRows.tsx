@@ -2,7 +2,7 @@ import { useLayoutEffect, useRef } from "react";
 import { AnimatePresence, m, useIsPresent } from "motion/react";
 import { FiArrowDown, FiArrowUp, FiTrash2 } from "react-icons/fi";
 import { useMotionPrefs } from "../../../../app/providers/motionPrefs";
-import { Collapse } from "../../../../shared/components/ui";
+import { Collapse, IconButton } from "../../../../shared/components/ui";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import {
   CHAPTER_ERROR_KEY,
@@ -149,9 +149,10 @@ function StudioChapterRow({
         />
       )}
       <div className={styles.rowActions}>
-        <button
+        <IconButton
           ref={register(row.id, "moveUp")}
-          type="button"
+          size="sm"
+          tooltip
           aria-disabled={index === 0 || undefined}
           aria-label={t("studio:chapters.editor.moveUp", { number })}
           onClick={() => {
@@ -159,10 +160,11 @@ function StudioChapterRow({
           }}
         >
           <FiArrowUp aria-hidden />
-        </button>
-        <button
+        </IconButton>
+        <IconButton
           ref={register(row.id, "moveDown")}
-          type="button"
+          size="sm"
+          tooltip
           aria-disabled={index === rowCount - 1 || undefined}
           aria-label={t("studio:chapters.editor.moveDown", { number })}
           onClick={() => {
@@ -170,15 +172,16 @@ function StudioChapterRow({
           }}
         >
           <FiArrowDown aria-hidden />
-        </button>
-        <button
+        </IconButton>
+        <IconButton
           ref={register(row.id, "remove")}
-          type="button"
+          size="sm"
+          tooltip
           aria-label={t("studio:chapters.editor.remove", { number })}
           onClick={() => onRemove(index)}
         >
           <FiTrash2 aria-hidden />
-        </button>
+        </IconButton>
       </div>
       <FieldError
         id={time.errorId}

@@ -8,11 +8,9 @@ import { StudioAlbumHero } from "./StudioAlbumHero";
 import { StudioAlbumMain } from "./StudioAlbumMain";
 import { StudioAlbumMore } from "./StudioAlbumMore";
 import { StudioAlbumSidebar } from "./StudioAlbumSidebar";
-import {
-  StudioDetailSkeleton,
-  StudioLoadError,
-  StudioNotFound,
-} from "./StudioLoadStates";
+import { StudioDetailLoading } from "./StudioDetailLoading";
+import { StudioReleaseStickyHeader } from "./StudioDetailSticky";
+import { StudioLoadError, StudioNotFound } from "./StudioLoadStates";
 import { StudioReleaseSupportCard } from "./StudioReleaseSupportCard";
 import { StudioReleaseVersions } from "./StudioReleaseVersions";
 import { StudioShell } from "./StudioShell";
@@ -22,6 +20,7 @@ import { StudioTablist } from "./StudioTablist";
 import { StudioTipModal } from "./StudioTipModal";
 import { StudioUpcomingNote } from "./StudioUpcomingNote";
 import { TABS, type AlbumTabId } from "./studioAlbum.data";
+import { useStudioDocumentTitle } from "./useStudioDocumentTitle";
 import { useStudioShowcase } from "./useStudioShowcase";
 import styles from "./studio.module.css";
 import kit from "./studioKit.module.css";
@@ -41,6 +40,9 @@ export function StudioAlbumPage() {
   } | null>(null);
   const [isTipOpen, setIsTipOpen] = useState(false);
   const [isReporting, setIsReporting] = useState(false);
+  // The hero's foot, held in state so the sticky header arms once it mounts.
+  const [heroSentinel, setHeroSentinel] = useState<HTMLDivElement | null>(null);
+  useStudioDocumentTitle(release?.title);
 
   if (loadState.isWithdrawn)
     return (
@@ -57,13 +59,16 @@ export function StudioAlbumPage() {
   if (loadState.isError)
     return (
       <StudioShell>
-        <StudioLoadError loadState={loadState} />
+        <StudioLoadError
+          loadState={loadState}
+          what="studio:errors.what.release"
+        />
       </StudioShell>
     );
   if (!release)
     return (
       <StudioShell>
-        <StudioDetailSkeleton />
+        <StudioDetailLoading label={t("studio:loading.release")} />
       </StudioShell>
     );
 
@@ -107,8 +112,10 @@ export function StudioAlbumPage() {
   const isUpcomingForViewer = release.isUpcoming && !release.isOwner;
   return (
     <StudioShell>
+      <StudioReleaseStickyHeader release={release} sentinel={heroSentinel} />
       <StudioAlbumHero
         release={release}
+        sentinelRef={setHeroSentinel}
         onTip={() => setIsTipOpen(true)}
         onReport={() => setIsReporting(true)}
       />

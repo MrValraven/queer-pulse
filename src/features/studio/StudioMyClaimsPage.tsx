@@ -13,6 +13,7 @@ import { useStudioMyClaims } from "./api/useStudioClaims";
 import { StudioDetailSkeleton, StudioLoadError } from "./StudioLoadStates";
 import { StudioMyClaimCard } from "./StudioMyClaimCard";
 import { StudioShell } from "./StudioShell";
+import { useStudioDocumentTitle } from "./useStudioDocumentTitle";
 import css from "./StudioClaimPages.module.css";
 
 /** `/studio/claims`: the member's copyright claims, newest first (spec 8). */
@@ -22,6 +23,7 @@ export function StudioMyClaimsPage() {
   const [searchParams] = useSearchParams();
   const focusedClaimId = searchParams.get("claim");
   const list = useStudioMyClaims();
+  useStudioDocumentTitle(t("studio:claims.mine.title"));
   const isEmpty =
     !list.loadState.isLoading &&
     !list.loadState.isError &&
@@ -39,6 +41,7 @@ export function StudioMyClaimsPage() {
           <StudioLoadError
             loadState={list.loadState}
             title={t("studio:claims.mine.loadError")}
+            what="studio:errors.what.claims"
           />
         </Collapse>
         <Collapse isOpen={isEmpty}>

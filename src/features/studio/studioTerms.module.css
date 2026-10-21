@@ -1,11 +1,11 @@
 .wrap {
-  --text: var(--studio-text);
-  --text-60: var(--studio-text-muted);
+  --s-text: var(--studio-text);
+  --s-text-60: var(--studio-text-muted);
   /* It carries 11px and 12px meta text, so it never qualifies as large text:
      the muted token clears the AA 4.5:1 floor on every studio ground in both
      themes. The old cream 0.40 measured 3.55:1 and failed. */
-  --text-40: var(--studio-text-muted);
-  --line: rgba(var(--studio-ink-rgb), 0.1);
+  --s-text-40: var(--studio-text-muted);
+  --s-line: rgba(var(--studio-ink-rgb), 0.1);
   --surface: rgba(var(--studio-ink-rgb), 0.05);
   --rail: var(--studio-surface-rail);
 
@@ -45,7 +45,7 @@
 }
 .lede {
   font-size: var(--text-17);
-  color: var(--text-60);
+  color: var(--s-text-60);
   line-height: 1.6;
   max-width: 62ch;
   margin-top: 18px;
@@ -64,7 +64,7 @@
 }
 .dealCard {
   background: var(--surface);
-  border: 1px solid var(--line);
+  border: 1px solid var(--s-line);
   border-radius: var(--radius-16);
   padding: 22px 24px;
 }
@@ -97,7 +97,7 @@
 }
 .dealCard p {
   font-size: var(--text-13-5);
-  color: var(--text-60);
+  color: var(--s-text-60);
   line-height: 1.6;
 }
 .dealCard p em {
@@ -108,7 +108,7 @@
 /* ── Sections ── */
 .sec {
   padding: 34px 0;
-  border-top: 1px solid var(--line);
+  border-top: 1px solid var(--s-line);
 }
 .num {
   font-size: var(--text-12);
@@ -133,13 +133,13 @@
 }
 .sec p {
   font-size: var(--text-15-5);
-  color: var(--text-60);
+  color: var(--s-text-60);
   line-height: 1.7;
   margin-bottom: 16px;
   max-width: 64ch;
 }
 .sec p strong {
-  color: var(--text);
+  color: var(--s-text);
   font-weight: 600;
 }
 .sec p em {
@@ -155,7 +155,7 @@
   max-width: 48ch;
 }
 .muted {
-  color: var(--text-40) !important;
+  color: var(--s-text-40) !important;
   font-size: var(--text-14) !important;
 }
 .muted a {
@@ -191,7 +191,7 @@
 }
 .lic {
   background: var(--surface);
-  border: 1px solid var(--line);
+  border: 1px solid var(--s-line);
   border-radius: var(--radius-14);
   padding: 20px 20px 18px;
 }
@@ -231,7 +231,7 @@
   gap: 9px;
   font-size: var(--text-13);
   line-height: 1.4;
-  color: var(--text-60);
+  color: var(--s-text-60);
 }
 .lic li em {
   font-style: italic;
@@ -244,7 +244,7 @@
   margin-top: 1px;
 }
 .yes {
-  color: var(--text) !important;
+  color: var(--s-text) !important;
 }
 .yes svg {
   color: var(--studio-jade-text);
@@ -262,7 +262,7 @@
   margin-top: 20px;
   padding: 24px 26px;
   background: var(--surface);
-  border: 1px solid var(--line);
+  border: 1px solid var(--s-line);
   border-radius: var(--radius-16);
 }
 .mt {
@@ -278,7 +278,7 @@
 }
 .mt p {
   font-size: var(--text-12-5);
-  color: var(--text-40);
+  color: var(--s-text-40);
   line-height: 1.5;
 }
 

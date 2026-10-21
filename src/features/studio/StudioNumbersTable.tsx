@@ -1,15 +1,60 @@
-import { useState } from "react";
+import { useId, useState } from "react";
 import { Link } from "react-router-dom";
 import { FiChevronRight } from "react-icons/fi";
-import { Collapse } from "../../shared/components/ui";
+import { AnimatePresence, m } from "motion/react";
+import { useMotionPrefs } from "../../app/providers/motionPrefs";
+import { IconButton } from "../../shared/components/ui";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type {
   StudioArtistStatsView,
   StudioStatsReleaseView,
+  StudioStatsTrackView,
 } from "./api/studio.adapters";
 import { formatStudioCount } from "./studioCount";
+import { STUDIO_EXIT, STUDIO_FADE } from "./studioMotion";
 import css from "./StudioNumbers.module.css";
+
+/** One track row inside its release's row group. It fades in and its cells
+ *  open to their height, so a table row never snaps in or out. */
+function TrackRow({ trackRow }: { trackRow: StudioStatsTrackView }) {
+  const { t } = useTranslation();
+  const fmt = useFormat();
+  const { reducedMotion } = useMotionPrefs();
+  const cellMotion = {
+    initial: { height: 0, opacity: 0 },
+    animate: {
+      height: "auto",
+      opacity: 1,
+      transition: reducedMotion ? { duration: 0 } : STUDIO_FADE,
+    },
+    exit: {
+      height: 0,
+      opacity: 0,
+      transition: reducedMotion ? { duration: 0 } : STUDIO_EXIT,
+    },
+  };
+  return (
+    <m.tr className={css.trackRow}>
+      <th scope="row" className={css.trackCell}>
+        <m.div className={css.trackCellInner} {...cellMotion}>
+          <span className={css.trackPosition}>{trackRow.track.position}</span>
+          {trackRow.track.title}
+        </m.div>
+      </th>
+      <td className={css.trackCell}>
+        <m.div className={css.trackCellInner} {...cellMotion}>
+          {formatStudioCount(trackRow.saves, t, fmt)}
+        </m.div>
+      </td>
+      <td className={css.trackCell}>
+        <m.div className={css.trackCellInner} {...cellMotion}>
+          {formatStudioCount(trackRow.playlistInclusions, t, fmt)}
+        </m.div>
+      </td>
+    </m.tr>
+  );
+}
 
 function ReleaseRows({
   row,
@@ -22,15 +67,16 @@ function ReleaseRows({
 }) {
   const { t } = useTranslation();
   const fmt = useFormat();
+  const tracksId = useId();
   return (
-    <tbody>
+    <tbody className={css.group} id={tracksId}>
       <tr className={css.releaseRow}>
         <th scope="row" className={css.releaseCell}>
           <span className={css.releaseCellInner}>
-            <button
-              type="button"
+            <IconButton
               className={css.expand}
               aria-expanded={isOpen}
+              aria-controls={tracksId}
               aria-label={t(
                 isOpen
                   ? "studio:numbers.hideTracks"
@@ -40,7 +86,7 @@ function ReleaseRows({
               onClick={onToggle}
             >
               <FiChevronRight aria-hidden className={css.chevron} />
-            </button>
+            </IconButton>
             <Link to={row.release.href} className={css.releaseLink}>
               {row.release.title}
             </Link>
@@ -59,39 +105,12 @@ function ReleaseRows({
         <td>{formatStudioCount(row.saves, t, fmt)}</td>
         <td>{formatStudioCount(row.playlistInclusions, t, fmt)}</td>
       </tr>
-      <tr className={css.tracksRow}>
-        <td colSpan={3}>
-          <Collapse isOpen={isOpen}>
-            <table className={css.trackTable} aria-label={row.release.title}>
-              <thead className="visuallyHidden">
-                <tr>
-                  <th scope="col">{t("studio:numbers.column.release")}</th>
-                  <th scope="col">{t("studio:numbers.column.saves")}</th>
-                  <th scope="col">
-                    {t("studio:numbers.column.inPublicPlaylists")}
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {row.tracks.map((trackRow) => (
-                  <tr key={trackRow.track.id}>
-                    <th scope="row">
-                      <span className={css.trackPosition}>
-                        {trackRow.track.position}
-                      </span>
-                      {trackRow.track.title}
-                    </th>
-                    <td>{formatStudioCount(trackRow.saves, t, fmt)}</td>
-                    <td>
-                      {formatStudioCount(trackRow.playlistInclusions, t, fmt)}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </Collapse>
-        </td>
-      </tr>
+      <AnimatePresence initial={false}>
+        {isOpen &&
+          row.tracks.map((trackRow) => (
+            <TrackRow key={trackRow.track.id} trackRow={trackRow} />
+          ))}
+      </AnimatePresence>
     </tbody>
   );
 }
@@ -121,9 +140,14 @@ export function StudioNumbersTable({
       <caption className={css.caption}>
         {t("studio:numbers.tableCaption", { name: personaName })}
       </caption>
+      <colgroup>
+        <col className={css.colName} />
+        <col className={css.colFigure} />
+        <col className={css.colFigure} />
+      </colgroup>
       <thead>
         <tr>
-          <th scope="col">{t("studio:numbers.column.release")}</th>
+          <th scope="col">{t("studio:numbers.column.releaseOrTrack")}</th>
           <th scope="col">{t("studio:numbers.column.saves")}</th>
           <th scope="col">{t("studio:numbers.column.inPublicPlaylists")}</th>
         </tr>

@@ -1,13 +1,20 @@
 import {
   Button,
+  Collapse,
   LoadMoreButton,
   LoadMoreStatus,
+  SearchInput,
 } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { StudioLoadState } from "./api/studioLoadState";
-import type { StudioPlaylistListResult } from "./api/useStudioMyPlaylists";
+import { StudioLibrarySortMenu } from "./StudioLibraryToolbar";
+import {
+  STUDIO_LIBRARY_SORTS,
+  type StudioLibrarySort,
+} from "./studioLibrarySort.data";
 import { StudioLine } from "./StudioSkeletons";
 import { RAIL_PLAYLIST_SKELETON_ROW_COUNT } from "./studioRailPlaylists.data";
+import type { StudioPager } from "./useStudioLoadAllPages";
 import css from "./StudioRailPlaylists.module.css";
 
 const SKELETON_ROW_INDEXES = Array.from(
@@ -43,7 +50,7 @@ export function StudioRailPlaylistsError({
       <p className={css.stateText}>{t("studio:railPlaylists.loadError")}</p>
       <Button
         type="button"
-        variant="ghost"
+        variant="quiet"
         size="sm"
         onClick={() => {
           if (!loadState.isRetrying) loadState.retry();
@@ -58,13 +65,10 @@ export function StudioRailPlaylistsError({
   );
 }
 
-/** Show more for the member's own playlists; Studio pagers never auto-fetch,
- *  so a failed page can never loop. */
-export function StudioRailPlaylistsMore({
-  list,
-}: {
-  list: StudioPlaylistListResult;
-}) {
+/** Show more for the member's own playlists, then their saved ones. It
+ *  reads one page per press (a filter or a sort reads the rest itself), and
+ *  a failed page stops there, so it can never loop. */
+export function StudioRailPlaylistsMore({ list }: { list: StudioPager }) {
   const { t } = useTranslation();
   return (
     <div className={css.state}>
@@ -92,6 +96,68 @@ export function StudioRailPlaylistsEmpty() {
   return (
     <div className={css.state}>
       <p className={css.stateText}>{t("studio:railPlaylists.empty")}</p>
+    </div>
+  );
+}
+
+/** The sort, and past eight playlists the filter box, above the rows. */
+export function StudioRailPlaylistsTools({
+  isFilterOffered,
+  query,
+  onQueryChange,
+  sort,
+  onSortChange,
+}: {
+  isFilterOffered: boolean;
+  query: string;
+  onQueryChange: (query: string) => void;
+  sort: StudioLibrarySort;
+  onSortChange: (sort: StudioLibrarySort) => void;
+}) {
+  const { t } = useTranslation();
+  return (
+    <div className={css.tools}>
+      <div className={css.toolsRow}>
+        <span className={css.toolsLabel}>
+          {t("studio:railPlaylists.sortLabel")}
+        </span>
+        <StudioLibrarySortMenu
+          sort={sort}
+          options={STUDIO_LIBRARY_SORTS}
+          onSortChange={onSortChange}
+          className={css.sortTrigger}
+        />
+      </div>
+      <Collapse isOpen={isFilterOffered}>
+        <SearchInput
+          value={query}
+          onChange={onQueryChange}
+          ariaLabel={t("studio:railPlaylists.filterLabel")}
+          placeholder={t("studio:railPlaylists.filterPlaceholder")}
+          className={css.filter}
+        />
+      </Collapse>
+    </div>
+  );
+}
+
+/** The filter matched no playlist: say so and offer to clear it. */
+export function StudioRailPlaylistsNoMatches({
+  query,
+  onClear,
+}: {
+  query: string;
+  onClear: () => void;
+}) {
+  const { t } = useTranslation();
+  return (
+    <div className={css.state}>
+      <p className={css.stateText}>
+        {t("studio:railPlaylists.noMatches", { query: query.trim() })}
+      </p>
+      <Button type="button" variant="quiet" size="sm" onClick={onClear}>
+        {t("studio:libraryLive.clearFilterCta")}
+      </Button>
     </div>
   );
 }

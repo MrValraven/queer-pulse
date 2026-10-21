@@ -10,6 +10,12 @@ import {
 import { clearStudioEpisodeMemory } from "./studioEpisodeMemory";
 import { clearStudioTrackReveals } from "../../forum/forumWarnings.helpers";
 import { clearStudioWarningConsent } from "./studioWarningGate";
+import {
+  clearStudioListeningMemory,
+  resumeStudioListeningMemoryWrites,
+} from "./studioListeningMemory";
+import { useStudioListeningPreferences } from "./useStudioPlayerPreferences";
+import { useStudioRecentlyPlayedRecorder } from "./useStudioRecentlyPlayed";
 
 const POSITION_SAVE_INTERVAL_MS = 5000;
 
@@ -21,6 +27,10 @@ export interface StudioQueuePersistenceOptions {
   isSessionSettled: boolean;
   /** Signed in with Studio access. */
   hasAccess: boolean;
+  /** The access read failed (useStudioAccess().isReadFailed): no access for
+   *  now, but no denial either, so device listening memory stays and other
+   *  tabs keep writing. Treated as false when left out. */
+  isAccessReadFailed?: boolean;
   queueState: StudioQueueState;
   isPlaying: boolean;
   readQueue: () => StudioQueueState;
@@ -37,6 +47,11 @@ export interface StudioQueuePersistenceOptions {
  * access goes and on a switch between demo and live. Sign-out and Quick Exit
  * clear it from their own files. Live boot starts signed out while the
  * session is checked, so nothing here clears during that window.
+ *
+ * Listening memory (PRD-17, PRD-18): with resume on, the same writes reach
+ * the device's resume copy, and a fresh tab cues it paused. The recently
+ * played recorder runs here too. A settled session without access, in this
+ * tab or a fresh one, removes both (clearStudioListeningMemory).
  */
 export function useStudioQueuePersistence(
   options: StudioQueuePersistenceOptions,
@@ -46,6 +61,7 @@ export function useStudioQueuePersistence(
     demoMode,
     isSessionSettled,
     hasAccess,
+    isAccessReadFailed = false,
     queueState,
     isPlaying,
   } = options;
@@ -55,6 +71,15 @@ export function useStudioQueuePersistence(
   });
   const canSave = memberId !== null && isSessionSettled && hasAccess;
   const isQueueEmpty = queueState.current === null;
+  const { shouldResumeAcrossSessions } =
+    useStudioListeningPreferences().preferences;
+  useStudioRecentlyPlayedRecorder({
+    memberId,
+    canRecord: canSave,
+    current: queueState.current,
+    isPlaying,
+    readPositionSeconds: options.readPositionSeconds,
+  });
   const previousDemoModeRef = useRef(demoMode);
   const allowedMemberRef = useRef<string | null>(null);
   /** The member the in-memory queue belongs to; null until it is claimed. */
@@ -83,10 +108,24 @@ export function useStudioQueuePersistence(
     if (!isSessionSettled) return;
     if (hasAccess && memberId) {
       allowedMemberRef.current = memberId;
+      // Settled again: writes another tab's wipe paused may start again.
+      resumeStudioListeningMemoryWrites();
       return;
     }
+    // Access granted with no member id yet is boot, never a denial: demo's
+    // mock user (and a live user) reaches auth state an effect after
+    // loggedIn, and a wipe here erased the device memory on every load.
+    if (hasAccess) return;
+    // A failed access read is no denial: the session queue, the resume copy
+    // and the recently played list all stay, other tabs keep writing, and
+    // the member stays remembered for a later real denial.
+    if (isAccessReadFailed) return;
     const lostMember = allowedMemberRef.current;
     allowedMemberRef.current = null;
+    // A settled denial (loss of access, or a fresh tab that opens signed out
+    // or without a grant): the device's resume copy and recently played list
+    // go, and other tabs pause.
+    clearStudioListeningMemory();
     if (lostMember) {
       clearQueueSnapshot(lostMember);
       // Studio artist kinds: losing Studio access clears the episode memory
@@ -97,7 +136,7 @@ export function useStudioQueuePersistence(
       clearStudioWarningConsent();
       clearStudioTrackReveals();
     }
-  }, [memberId, isSessionSettled, hasAccess]);
+  }, [memberId, isSessionSettled, hasAccess, isAccessReadFailed]);
 
   useEffect(() => {
     const owner = queueOwnerRef.current;
@@ -106,6 +145,7 @@ export function useStudioQueuePersistence(
     restoredPositionRef.current = null;
     isAwaitingResetRef.current = true;
     optionsRef.current.onReset();
+    clearStudioListeningMemory();
     clearStudioWarningConsent();
     clearStudioTrackReveals();
   }, [memberId]);
@@ -135,7 +175,8 @@ export function useStudioQueuePersistence(
       state: queueState,
       positionSeconds: positionToSave(),
     });
-  }, [canSave, memberId, queueState, isPlaying]);
+    // Switching resume on writes the resume copy at once.
+  }, [canSave, memberId, queueState, isPlaying, shouldResumeAcrossSessions]);
 
   useEffect(() => {
     if (isPlaying) restoredPositionRef.current = null;

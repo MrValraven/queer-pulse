@@ -1,8 +1,9 @@
 import { AnimatePresence, m } from "motion/react";
-import { FiArrowLeft } from "react-icons/fi";
+import { FiArrowLeft, FiChevronsLeft, FiChevronsRight } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { useMotionPrefs } from "../../app/providers/motionPrefs";
 import { routes } from "../../app/routeMap";
+import { IconButton, Tooltip } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useStudioAccess } from "./api/useStudioAccess";
@@ -11,6 +12,8 @@ import { LIVE_RAIL_LINKS } from "./studioRailLive.data";
 import { RailGroup } from "./StudioRailGroup";
 import { StudioRailCreatePlaylist } from "./StudioRailCreatePlaylist";
 import { StudioRailPlaylists } from "./StudioRailPlaylists";
+import { STUDIO_EXIT, STUDIO_FADE } from "./studioMotion";
+import { useStudioRailCollapsed } from "./useStudioRailCollapsed";
 import { useStudioShowcase } from "./useStudioShowcase";
 import styles from "./studio.module.css";
 
@@ -21,28 +24,49 @@ import styles from "./studio.module.css";
  * list scrolls. A footer row pinned to the bottom leaves Studio for the
  * feed, and the wordmark opens Studio home. Creator, staff, co-op and help
  * links live in the avatar menu.
+ *
+ * The foot's toggle folds the rail to an icon strip (kept on this device):
+ * the shell narrows the grid column with a width transition, the labels
+ * fade, and every icon gains a tooltip. The Create pill and the playlist
+ * list stay mounted and fold themselves (an icon Create button and a
+ * covers-only strip, read from useStudioRailCollapsed).
  */
 export function StudioRail() {
   const { t } = useTranslation();
   const isShowcase = useStudioShowcase();
   const { hasAccess } = useStudioAccess();
   const { reducedMotion } = useMotionPrefs();
+  const { isRailCollapsed, toggleRail } = useStudioRailCollapsed();
   const isListeningHomeShown = isShowcase || hasAccess;
+  const exitLabel = t("studio:shell.menu.backToQueerPulse");
+  const toggleLabel = t(
+    isRailCollapsed ? "studio:rail.expandLabel" : "studio:rail.collapseLabel",
+  );
   return (
-    <aside className={styles.rail}>
+    <aside
+      className={styles.rail}
+      data-collapsed={isRailCollapsed || undefined}
+    >
       <div className={styles.brandRow}>
-        <span className={styles.pulseDot} aria-hidden />
         <Link to={routes.studio} className={styles.brand}>
-          <Translation
-            i18nKey="studio:brand.lockup"
-            components={{ em: <em /> }}
-          />
+          <span className={styles.pulseDot} aria-hidden />
+          <span className={styles.railFade}>
+            <Translation
+              i18nKey="studio:brand.lockup"
+              components={{ em: <em /> }}
+            />
+          </span>
         </Link>
-        <span className={styles.product}>{t("studio:brand.studioLabel")}</span>
+        <span className={`${styles.product} ${styles.railFade}`}>
+          {t("studio:brand.studioLabel")}
+        </span>
       </div>
 
       <nav className={styles.railGrp} aria-label={t("studio:rail.v1.navLabel")}>
-        <RailGroup items={isShowcase ? RAIL_MAIN : LIVE_RAIL_LINKS} />
+        <RailGroup
+          items={isShowcase ? RAIL_MAIN : LIVE_RAIL_LINKS}
+          isCollapsed={isRailCollapsed}
+        />
       </nav>
 
       <AnimatePresence initial={false}>
@@ -51,9 +75,14 @@ export function StudioRail() {
             key="listening"
             className={styles.railBody}
             initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: reducedMotion ? 0 : 0.2 }}
+            animate={{
+              opacity: 1,
+              transition: reducedMotion ? { duration: 0 } : STUDIO_FADE,
+            }}
+            exit={{
+              opacity: 0,
+              transition: reducedMotion ? { duration: 0 } : STUDIO_EXIT,
+            }}
           >
             <StudioRailCreatePlaylist />
             <StudioRailPlaylists />
@@ -62,15 +91,35 @@ export function StudioRail() {
       </AnimatePresence>
 
       <div className={styles.railFoot}>
-        <Link
-          to={routes.feed}
-          className={`${styles.railItem} ${styles.railExit}`}
+        <Tooltip
+          label={exitLabel}
+          placement="right"
+          isDisabled={!isRailCollapsed}
         >
-          <FiArrowLeft aria-hidden className={styles.railIcon} />
-          <span className={styles.nm}>
-            {t("studio:shell.menu.backToQueerPulse")}
-          </span>
-        </Link>
+          <Link
+            to={routes.feed}
+            className={`${styles.railItem} ${styles.railExit}`}
+          >
+            <FiArrowLeft aria-hidden className={styles.railIcon} />
+            <span className={`${styles.nm} ${styles.railFade}`}>
+              {exitLabel}
+            </span>
+          </Link>
+        </Tooltip>
+        <IconButton
+          aria-label={toggleLabel}
+          aria-expanded={!isRailCollapsed}
+          tooltip
+          tooltipPlacement="right"
+          className={styles.railToggle}
+          onClick={toggleRail}
+        >
+          {isRailCollapsed ? (
+            <FiChevronsRight aria-hidden />
+          ) : (
+            <FiChevronsLeft aria-hidden />
+          )}
+        </IconButton>
       </div>
     </aside>
   );

@@ -1,8 +1,9 @@
 import { useMemo, type Ref } from "react";
 import { AnimatePresence, m } from "motion/react";
 import { Link } from "react-router-dom";
-import { FiCheck, FiPause, FiPlay, FiPlus, FiShuffle } from "react-icons/fi";
+import { FiCheck, FiPlus, FiShuffle } from "react-icons/fi";
 import { useMotionPrefs } from "../../app/providers/motionPrefs";
+import { Button, IconButton } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { StudioPlaylistView } from "./api/studio.adapters";
@@ -15,28 +16,79 @@ import {
 } from "./StudioPlaylistOwnerMenu";
 import { StudioPlaylistCollabChip } from "./StudioPlaylistCollabChip";
 import { StudioPlaylistCover } from "./StudioPlaylistCover";
-import { StudioShareMenu } from "./share/StudioShareMenu";
+import { StudioPlaylistPlayButton } from "./StudioPlaylistPlayButton";
+import { StudioIconSwap } from "./player/ui/StudioIconSwap";
+import { StudioHeroShare } from "./StudioHeroShare";
+import { useIsHeroCompact } from "./studioHeroLayout";
 import { useStudioSaveToggle } from "./useStudioSaveToggle";
-import styles from "./studio.module.css";
+import { STUDIO_EXIT, STUDIO_FADE } from "./studioMotion";
 import bylineCss from "./StudioPlaylistCollabChip.module.css";
 import pageCss from "./StudioPlaylistPage.module.css";
+
+/** Save keeps one name ("Save {name}") and aria-pressed carries its
+ *  state, as the heart does; the icon swaps to a check and the words to
+ *  Saved. On a phone it is the round icon with a tooltip. */
+function StudioPlaylistSaveButton({
+  save,
+  name,
+  isIconOnly,
+}: {
+  save: ReturnType<typeof useStudioSaveToggle>;
+  name: string;
+  isIconOnly: boolean;
+}) {
+  const { t } = useTranslation();
+  const label = t("studio:save.saveReleaseCta", { title: name });
+  const icon = (
+    <StudioIconSwap iconKey={save.isSaved ? "saved" : "save"}>
+      {save.isSaved ? <FiCheck /> : <FiPlus />}
+    </StudioIconSwap>
+  );
+  if (isIconOnly)
+    return (
+      <IconButton
+        aria-label={label}
+        aria-pressed={save.isSaved}
+        tooltip={t("studio:save.saveCta")}
+        onClick={save.toggle}
+      >
+        {icon}
+      </IconButton>
+    );
+  return (
+    <Button
+      variant="quiet"
+      aria-pressed={save.isSaved}
+      aria-label={label}
+      onClick={save.toggle}
+    >
+      {icon}
+      <StudioIconSwap iconKey={save.isSaved ? "savedLabel" : "saveLabel"}>
+        {t(save.isSaved ? "studio:save.savedLabel" : "studio:save.saveCta")}
+      </StudioIconSwap>
+    </Button>
+  );
+}
 
 /** Cover mosaic, name, credit, the owner's visibility chip, the Collaborative
  *  chip for the owner and editors of a playlist with editors, the facts, and
  *  Play playlist, Shuffle, Save (a playlist you neither own nor edit), Share
  *  and the owner's or the editor's menu.
- *  Shuffle is computed in the browser and sent nowhere. The saved snapshot
+ *  On a phone every action after Play is a round icon with a tooltip, and
+ *  the menu stays last. Shuffle is computed in the browser and sent nowhere. The saved snapshot
  *  holds the name and link only: a credit can change after the save, so the
  *  snapshot carries no credit and can never pair a member with a persona.
  *  Save and the menu fade as they swap when an invitee accepts. The page
  *  finds the menu trigger through `actionsMenuRef` and the h1 through
- *  `titleRef` to move focus after Accept. */
+ *  `titleRef` to move focus after Accept.
+ *  `sentinelRef` marks the hero's foot for the sticky header. */
 export function StudioPlaylistHero({
   playlist,
   onOwnerAction,
   onOpenEditors,
   actionsMenuRef,
   titleRef,
+  sentinelRef,
 }: {
   playlist: StudioPlaylistView;
   onOwnerAction: (action: StudioPlaylistOwnerAction) => void;
@@ -45,14 +97,18 @@ export function StudioPlaylistHero({
   actionsMenuRef?: Ref<HTMLDivElement>;
   /** The playlist name inside the page h1. */
   titleRef?: Ref<HTMLSpanElement>;
+  sentinelRef?: Ref<HTMLDivElement>;
 }) {
   const { t } = useTranslation();
   const { reducedMotion } = useMotionPrefs();
   const swapFade = {
     initial: { opacity: 0 },
     animate: { opacity: 1 },
-    exit: { opacity: 0 },
-    transition: { duration: reducedMotion ? 0 : 0.18, ease: "easeOut" },
+    exit: {
+      opacity: 0,
+      transition: reducedMotion ? { duration: 0.12 } : STUDIO_EXIT,
+    },
+    transition: reducedMotion ? { duration: 0.12 } : STUDIO_FADE,
   } as const;
   const player = useStudioPlayer();
   const save = useStudioSaveToggle(
@@ -70,9 +126,12 @@ export function StudioPlaylistHero({
     () => queueFromTracks(playlist.playableTracks),
     [playlist.playableTracks],
   );
-  const isCurrent = queue.some((item) => player.isCurrentTrack(item.trackId));
-  const isPlaying = isCurrent && player.status === "playing";
   const isEmpty = queue.length === 0;
+  const isCompact = useIsHeroCompact();
+  const shuffleLabel = t("studio:playlist.page.shuffleCta");
+  const shuffle = () => {
+    if (!isEmpty) void player.playTracks(shuffledQueue(queue));
+  };
   const minutes = Math.round(playlist.totalDurationSeconds / 60);
   const facts = [
     t("studio:facts.trackCount", { count: playlist.trackCount }),
@@ -127,65 +186,43 @@ export function StudioPlaylistHero({
           </AnimatePresence>
         </div>
       }
+      isActionsCompact={isCompact}
       actions={
         <>
-          <button
-            type="button"
-            className={styles.playBig}
-            aria-disabled={isEmpty || undefined}
-            aria-label={t(
-              isPlaying
-                ? "studio:playlist.page.pauseAria"
-                : "studio:playlist.page.playAria",
-              { name: playlist.name },
-            )}
-            onClick={() => {
-              if (isEmpty) return;
-              if (isCurrent) player.togglePlay();
-              else void player.playTracks(queue);
-            }}
-          >
-            {isPlaying ? <FiPause aria-hidden /> : <FiPlay aria-hidden />}
-          </button>
-          <button
-            type="button"
-            aria-disabled={isEmpty || undefined}
-            onClick={() => {
-              if (!isEmpty) void player.playTracks(shuffledQueue(queue));
-            }}
-          >
-            <FiShuffle aria-hidden /> {t("studio:playlist.page.shuffleCta")}
-          </button>
+          <StudioPlaylistPlayButton playlist={playlist} />
+          {isCompact ? (
+            <IconButton
+              aria-label={shuffleLabel}
+              aria-disabled={isEmpty || undefined}
+              tooltip
+              onClick={shuffle}
+            >
+              <FiShuffle aria-hidden />
+            </IconButton>
+          ) : (
+            <Button
+              variant="quiet"
+              aria-disabled={isEmpty || undefined}
+              onClick={shuffle}
+            >
+              <FiShuffle aria-hidden /> {shuffleLabel}
+            </Button>
+          )}
           <AnimatePresence initial={false}>
             {!playlist.hasEditRights && (
-              <m.button
-                key="save"
-                type="button"
-                {...swapFade}
-                aria-pressed={save.isSaved}
-                aria-label={t(
-                  save.isSaved
-                    ? "studio:save.removeSavedCta"
-                    : "studio:save.saveReleaseCta",
-                  { title: playlist.name },
-                )}
-                onClick={save.toggle}
-              >
-                {save.isSaved ? (
-                  <FiCheck aria-hidden />
-                ) : (
-                  <FiPlus aria-hidden />
-                )}{" "}
-                {save.isSaved
-                  ? t("studio:save.savedLabel")
-                  : t("studio:save.saveCta")}
-              </m.button>
+              <m.span key="save" className={pageCss.swap} {...swapFade}>
+                <StudioPlaylistSaveButton
+                  save={save}
+                  name={playlist.name}
+                  isIconOnly={isCompact}
+                />
+              </m.span>
             )}
           </AnimatePresence>
-          <StudioShareMenu
+          <StudioHeroShare
             target={{ kind: "playlist", id: playlist.id, startAtSeconds: null }}
             title={playlist.name}
-            triggerLabel={t("studio:playlist.shareCta")}
+            isIconOnly={isCompact}
           />
           <AnimatePresence initial={false}>
             {playlist.hasEditRights && (
@@ -203,6 +240,7 @@ export function StudioPlaylistHero({
       {playlist.description && (
         <p className={pageCss.description}>{playlist.description}</p>
       )}
+      <div ref={sentinelRef} aria-hidden="true" />
     </StudioDetailHero>
   );
 }

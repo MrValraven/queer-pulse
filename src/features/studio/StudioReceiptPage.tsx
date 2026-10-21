@@ -1,9 +1,11 @@
 import { Link } from "react-router-dom";
+import { FiHeart } from "react-icons/fi";
 import { Button, ImageSlot } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { StudioEuroAmount } from "./StudioEuroAmount";
 import { StudioShell } from "./StudioShell";
 import { routes } from "../../app/routeMap";
 import {
@@ -27,40 +29,35 @@ import s from "./StudioReceiptPage.module.css";
 // mode. The phrase around it comes from the `studioShowcase` catalog.
 const RECEIPT_CARD_LAST4 = "4242";
 
-/** Jade heart-hands "thank you" mark that pulses. */
-function ThankIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path
-        d="M12 20.5s-7.5-4.6-7.5-9.6A3.9 3.9 0 0 1 12 8.3a3.9 3.9 0 0 1 7.5 2.6c0 5-7.5 9.6-7.5 9.6Z"
-        fill="currentColor"
-      />
-      <path
-        d="M8 9.5 5 12.5M16 9.5l3 3"
-        stroke="currentColor"
-        strokeWidth={1.6}
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
+/** The receipt names Lisbon time, so it formats in that zone. */
+const LISBON_TIME_ZONE = "Europe/Lisbon";
 
 /** The near-black receipt card: head, split, detail grid, note, footer. */
 function ReceiptCard() {
   const { t } = useTranslation();
   const fmt = useFormat();
 
-  const dateTimeLabel = `${fmt.date(RECEIPT_TIP_DATE, {
-    weekday: "short",
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-  })} · ${fmt.time(RECEIPT_TIP_DATE)} Lisbon`;
-  const ledgerDateLabel = `${fmt.date(RECEIPT_LEDGER_DATE, {
-    weekday: "short",
-    day: "numeric",
-    month: "short",
-  })} · ${fmt.time(RECEIPT_LEDGER_DATE)} Lisbon`;
+  // The fixed instants print in Lisbon's clock for every reader, so the
+  // "Lisbon" label is true wherever the page is opened.
+  const dateTimeLabel = t("studio:receipt.detail.lisbonTime", {
+    date: fmt.date(RECEIPT_TIP_DATE, {
+      weekday: "short",
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+      timeZone: LISBON_TIME_ZONE,
+    }),
+    time: fmt.time(RECEIPT_TIP_DATE, { timeZone: LISBON_TIME_ZONE }),
+  });
+  const ledgerDateLabel = t("studio:receipt.detail.lisbonTime", {
+    date: fmt.date(RECEIPT_LEDGER_DATE, {
+      weekday: "short",
+      day: "numeric",
+      month: "short",
+      timeZone: LISBON_TIME_ZONE,
+    }),
+    time: fmt.time(RECEIPT_LEDGER_DATE, { timeZone: LISBON_TIME_ZONE }),
+  });
 
   return (
     <div className={s.card}>
@@ -92,7 +89,9 @@ function ReceiptCard() {
           </div>
         </div>
         <div className={s.amount}>
-          <em>{fmt.currency(TIP_AMOUNT)}</em>
+          <em>
+            <StudioEuroAmount value={TIP_AMOUNT} />
+          </em>
         </div>
       </div>
 
@@ -121,7 +120,7 @@ function ReceiptCard() {
               </small>
             </span>
             <span className={`${s.v} ${s.tip}`}>
-              {fmt.currency(TIP_AMOUNT)}
+              <StudioEuroAmount value={TIP_AMOUNT} />
             </span>
             <span className={s.pct}>{t("studio:receipt.split.artistPct")}</span>
           </div>
@@ -131,7 +130,9 @@ function ReceiptCard() {
               {t("studio:receipt.split.platformName")}
               <small>{t("studio:receipt.split.platformSub")}</small>
             </span>
-            <span className={`${s.v} ${s.muted}`}>{fmt.currency(0)}</span>
+            <span className={`${s.v} ${s.muted}`}>
+              <StudioEuroAmount value={0} />
+            </span>
             <span className={s.pct}>
               {t("studio:receipt.split.platformPct")}
             </span>
@@ -227,13 +228,9 @@ function ReceiptCard() {
           </Link>{" "}
           · {t("studio:receipt.footer.rowLabel", { code: RECEIPT_LEDGER_ROW })}
         </span>
-        <button
-          type="button"
-          className={s.exportBtn}
-          onClick={() => window.print()}
-        >
+        <Button variant="ghost" size="sm" onClick={() => window.print()}>
           {t("studio:receipt.footer.exportCta")}
-        </button>
+        </Button>
       </div>
     </div>
   );
@@ -241,23 +238,20 @@ function ReceiptCard() {
 
 export function StudioReceiptPage() {
   const { t } = useTranslation();
-  const fmt = useFormat();
   const { showToast } = useToast();
   return (
     <StudioShell>
       <div className={s.wrap}>
         <div className={s.thank}>
           <div className={s.icon}>
-            <ThankIcon />
+            <FiHeart aria-hidden />
           </div>
           <h1>
             <Translation
               i18nKey="studio:receipt.thanksTitle"
               components={{ em: <em /> }}
-              values={{
-                artist: RECEIPT_ARTIST,
-                amount: fmt.currency(TIP_AMOUNT),
-              }}
+              values={{ artist: RECEIPT_ARTIST }}
+              slots={{ amount: <StudioEuroAmount value={TIP_AMOUNT} /> }}
             />
           </h1>
           <p className={s.sub}>
@@ -294,14 +288,6 @@ export function StudioReceiptPage() {
             {t("studio:receipt.actions.openArtistPage", {
               artist: RECEIPT_ARTIST,
             })}
-          </Button>
-          <Button
-            variant="ghost"
-            onClick={() =>
-              showToast(t("studio:receipt.toast.emailCopy"), "success")
-            }
-          >
-            {t("studio:receipt.actions.emailCopy")}
           </Button>
         </div>
 

@@ -2,12 +2,14 @@ import { Fragment } from "react";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { useStudioAccess } from "../../api/useStudioAccess";
 import { useStudioTrack } from "../../api/useStudioTrack";
+import { StudioLyricShareHost } from "../../share/StudioLyricShareHost";
 import { StudioWarnedContent } from "../../StudioWarnedContent";
 import {
   useStudioPlayer,
   useStudioPlayerClock,
   type StudioQueueItem,
 } from "../studioPlayerContext";
+import { studioSeekAndResume } from "../studioSeekAndResume";
 import type { StudioNowPlayingTab } from "../studioPlayerSurface";
 import { StudioChapterList } from "./StudioChapterList";
 import { StudioQueueList } from "./StudioQueueList";
@@ -85,6 +87,18 @@ function LyricsPaneWords({
         activeIndex={currentLyricIndex}
         onSeekLine={(ms) => player.seek(ms / 1000)}
         label={t("studio:player.lyrics.listLabel")}
+        // A song's lines share as lyric cards (PRD-13); a private preview's
+        // and a transcript's do not.
+        share={
+          isTranscript || item.previewToken
+            ? undefined
+            : {
+                trackId: item.trackId,
+                title: item.title,
+                playFromLine: (lineStartMs) =>
+                  studioSeekAndResume(player, lineStartMs / 1000),
+              }
+        }
       />
     );
   if (item.previewToken)
@@ -165,8 +179,14 @@ export function StudioNowPlayingPaneContent({
   /** An episode or a spoken word track: its words are a transcript. */
   isTranscript?: boolean;
 }) {
-  if (tab === "queue") return <StudioQueueList headingLevel={3} />;
+  if (tab === "queue") return <StudioQueueList headingLevel={3} isInDialog />;
   if (tab === "credits") return <CreditsPane item={item} />;
   if (tab === "chapters") return <ChaptersPane title={item.title} />;
-  return <LyricsPane item={item} isTranscript={isTranscript} />;
+  // The share sheet sits above the per-track lyrics pane, so it and a
+  // half-written send stay open when playback moves to the next track.
+  return (
+    <StudioLyricShareHost>
+      <LyricsPane item={item} isTranscript={isTranscript} />
+    </StudioLyricShareHost>
+  );
 }

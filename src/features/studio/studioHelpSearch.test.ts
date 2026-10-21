@@ -1,7 +1,11 @@
 import { describe, expect, it } from "vitest";
 import type { TFunction } from "../../shared/i18n/types";
 import type { HelpSectionData } from "./studioHelp.data";
-import { filterHelpSections } from "./studioHelpSearch";
+import {
+  filterHelpSections,
+  findHelpMatchRanges,
+  helpSearchTerms,
+} from "./studioHelpSearch";
 
 const copy: Record<string, string> = {
   "q.dispute": "Como contesto uma retirada?",
@@ -54,5 +58,28 @@ describe("filterHelpSections", () => {
       ),
     ).toEqual(["dispute"]);
     expect(filterHelpSections(sections, "equípa", t)).toHaveLength(1);
+  });
+
+  it("matches word by word, in any order", () => {
+    expect(
+      filterHelpSections(sections, "playlists saving", t).map(
+        (section) => section.id,
+      ),
+    ).toEqual(["listening"]);
+    expect(filterHelpSections(sections, "saving contesto", t)).toEqual([]);
+  });
+});
+
+describe("findHelpMatchRanges", () => {
+  it("returns ranges in the original text, accent-blind", () => {
+    const text = "Como contestação funciona";
+    const terms = helpSearchTerms("CONTESTACAO");
+    const [range] = findHelpMatchRanges(text, terms);
+    expect(range && text.slice(range[0], range[1])).toBe("contestação");
+  });
+
+  it("merges overlapping hits and returns none for no terms", () => {
+    expect(findHelpMatchRanges("playlist", ["play", "list"])).toEqual([[0, 8]]);
+    expect(findHelpMatchRanges("playlist", [])).toEqual([]);
   });
 });

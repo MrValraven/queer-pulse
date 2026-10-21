@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { FiCheck, FiPlay } from "react-icons/fi";
-import { ImageSlot, FadeIn } from "../../shared/components/ui";
+import { Button, ImageSlot, FadeIn } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
@@ -79,10 +79,9 @@ export function StudioSetMatcher({
           components={{ em: <em /> }}
         />
       </div>
-      <button
-        type="button"
-        className={`${s.bt} ${s.btP} ${s.btWithIcon}`}
-        style={{ marginTop: 14 }}
+      <Button
+        variant="primary"
+        className={s.runMatcher}
         onClick={onRun}
         disabled={running}
       >
@@ -94,7 +93,7 @@ export function StudioSetMatcher({
             {t("studio:setSubmission.matcher.runCta")}
           </>
         )}
-      </button>
+      </Button>
 
       {ran && (
         <>
@@ -160,9 +159,9 @@ export function StudioSetMatcher({
                   </span>
                 ) : (
                   <span className={s.st}>
-                    <button
-                      type="button"
-                      className={s.resolve}
+                    <Button
+                      variant="quiet"
+                      size="sm"
                       onClick={() =>
                         showToast(
                           t("studio:setSubmission.matcher.identifyToast"),
@@ -171,7 +170,7 @@ export function StudioSetMatcher({
                       }
                     >
                       {t("studio:setSubmission.matcher.identifyCta")}
-                    </button>
+                    </Button>
                   </span>
                 )}
               </FadeIn>

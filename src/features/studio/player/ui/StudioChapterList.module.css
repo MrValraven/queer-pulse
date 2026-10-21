@@ -15,27 +15,37 @@
   list-style: none;
 }
 
-.item {
+/* Each chapter is the shared quiet Button; the doubled classes keep the
+   row look over its pill, whatever order the sheets load in. */
+.item.item {
   display: grid;
   grid-template-columns: 4.5em minmax(0, 1fr);
+  justify-content: stretch;
   gap: 12px;
   align-items: baseline;
   width: 100%;
+  min-height: var(--tap-min);
   padding: 9px 8px;
   border: none;
   border-radius: var(--radius-8);
   background: none;
   color: var(--studio-text);
   font: inherit;
+  line-height: normal;
   text-align: start;
+  white-space: normal;
   cursor: pointer;
   transition-property: background-color;
   transition-duration: var(--dur-fast);
   transition-timing-function: var(--ease);
 }
 
-.item[aria-current="true"] {
+.item.item[aria-current="true"] {
   background: rgba(var(--accent-rgb), 0.14);
+}
+
+.item.item:active:not(:disabled):not([aria-disabled="true"]) {
+  background: var(--studio-wash-3);
 }
 
 .time {
@@ -66,8 +76,12 @@
 }
 
 @media (hover: hover) {
-  .item:not([aria-current="true"]):hover {
-    background: rgba(var(--studio-ink-rgb), 0.06);
+  .item.item:not([aria-current="true"]):hover:not(:disabled) {
+    background: var(--studio-wash-2);
+  }
+
+  .item.item[aria-current="true"]:hover:not(:disabled) {
+    background: rgba(var(--accent-rgb), 0.14);
   }
 }
 

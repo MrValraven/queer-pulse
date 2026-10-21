@@ -5,7 +5,7 @@ import {
   waitFor,
   within,
 } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { useNavigate } from "react-router-dom";
 import { toSearchView } from "./api/studio.adapters";
 import {
@@ -16,6 +16,8 @@ import { StudioSearchTrackRow } from "./StudioSearchTrackRow";
 import { TestProviders } from "../../test/TestProviders";
 import { createStudioPlayerTestValue } from "../../test/studioPlayerTestValue";
 import { StudioSearchPage } from "./StudioSearchPage";
+import { clearStudioListeningMemory } from "./player/studioListeningMemory";
+import { STUDIO_RECENT_SEARCHES_STORAGE_KEY } from "./studioSearch.data";
 
 describe("StudioSearchPage (demo fixture)", () => {
   it("reads the query and the filter from the URL", async () => {
@@ -31,9 +33,9 @@ describe("StudioSearchPage (demo fixture)", () => {
         name: /releases, tracks and artists/i,
       }),
     ).toHaveValue("devocao");
-    expect(screen.getByRole("button", { name: "Releases" })).toHaveAttribute(
-      "aria-pressed",
-      "true",
+    expect(screen.getByRole("link", { name: "Releases" })).toHaveAttribute(
+      "aria-current",
+      "page",
     );
     const releases = await screen.findByRole("region", { name: /releases/i });
     expect(
@@ -47,10 +49,12 @@ describe("StudioSearchPage (demo fixture)", () => {
         <StudioSearchPage />
       </TestProviders>,
     );
-    fireEvent.click(await screen.findByRole("button", { name: "Tracks" }));
-    expect(screen.getByRole("button", { name: "Tracks" })).toHaveAttribute(
-      "aria-pressed",
-      "true",
+    fireEvent.click(await screen.findByRole("link", { name: "Tracks" }));
+    await waitFor(() =>
+      expect(screen.getByRole("link", { name: "Tracks" })).toHaveAttribute(
+        "aria-current",
+        "page",
+      ),
     );
     const tracks = await screen.findByRole("region", { name: /tracks/i });
     expect(
@@ -111,21 +115,22 @@ describe("StudioSearchPage (demo fixture)", () => {
         <BackButton />
       </TestProviders>,
     );
-    fireEvent.click(await screen.findByRole("button", { name: "Tracks" }));
-    expect(screen.getByRole("button", { name: "Tracks" })).toHaveAttribute(
-      "aria-pressed",
-      "true",
+    fireEvent.click(await screen.findByRole("link", { name: "Tracks" }));
+    await waitFor(() =>
+      expect(screen.getByRole("link", { name: "Tracks" })).toHaveAttribute(
+        "aria-current",
+        "page",
+      ),
     );
     fireEvent.click(screen.getByRole("button", { name: "go back" }));
     await waitFor(() =>
-      expect(screen.getByRole("button", { name: "Tracks" })).toHaveAttribute(
-        "aria-pressed",
-        "false",
+      expect(screen.getByRole("link", { name: "Tracks" })).not.toHaveAttribute(
+        "aria-current",
       ),
     );
-    expect(screen.getByRole("button", { name: "Everything" })).toHaveAttribute(
-      "aria-pressed",
-      "true",
+    expect(screen.getByRole("link", { name: "Everything" })).toHaveAttribute(
+      "aria-current",
+      "page",
     );
   });
 });
@@ -216,9 +221,9 @@ describe("StudioSearchPage (v2)", () => {
         <StudioSearchPage />
       </TestProviders>,
     );
-    expect(screen.getByRole("button", { name: "Playlists" })).toHaveAttribute(
-      "aria-pressed",
-      "true",
+    expect(screen.getByRole("link", { name: "Playlists" })).toHaveAttribute(
+      "aria-current",
+      "page",
     );
     const playlists = await screen.findByRole("region", { name: /playlists/i });
     expect(
@@ -235,7 +240,7 @@ describe("StudioSearchPage (v2)", () => {
       </TestProviders>,
     );
     expect(
-      screen.queryByRole("combobox", { name: "Genre" }),
+      screen.queryByRole("button", { name: "Genre" }),
     ).not.toBeInTheDocument();
     unmount();
     render(
@@ -243,7 +248,7 @@ describe("StudioSearchPage (v2)", () => {
         <StudioSearchPage />
       </TestProviders>,
     );
-    expect(screen.getByRole("combobox", { name: "Genre" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Genre" })).toBeInTheDocument();
   });
 
   it("narrows releases by the genre in the URL", async () => {
@@ -254,8 +259,8 @@ describe("StudioSearchPage (v2)", () => {
         <StudioSearchPage />
       </TestProviders>,
     );
-    expect(screen.getByRole("combobox", { name: "Genre" })).toHaveValue(
-      "electronic",
+    expect(screen.getByRole("button", { name: "Genre" })).toHaveTextContent(
+      "Electronic",
     );
     const releases = await screen.findByRole("region", { name: /releases/i });
     expect(
@@ -272,12 +277,13 @@ describe("StudioSearchPage (v2)", () => {
         <StudioSearchPage />
       </TestProviders>,
     );
-    fireEvent.change(screen.getByRole("combobox", { name: "Genre" }), {
-      target: { value: "fado" },
-    });
+    fireEvent.click(screen.getByRole("button", { name: "Genre" }));
+    fireEvent.click(
+      await screen.findByRole("option", { name: "Fado / contemporary" }),
+    );
     await waitFor(() =>
-      expect(screen.getByRole("combobox", { name: "Genre" })).toHaveValue(
-        "fado",
+      expect(screen.getByRole("button", { name: "Genre" })).toHaveTextContent(
+        "Fado / contemporary",
       ),
     );
     const releases = await screen.findByRole("region", { name: /releases/i });
@@ -297,8 +303,8 @@ describe("StudioSearchPage (v2)", () => {
         <StudioSearchPage />
       </TestProviders>,
     );
-    expect(screen.getByRole("combobox", { name: "Mood" })).toHaveValue(
-      "sweaty",
+    expect(screen.getByRole("button", { name: "Mood" })).toHaveTextContent(
+      "Sweaty",
     );
     const releases = await screen.findByRole("region", { name: /releases/i });
     expect(
@@ -315,12 +321,11 @@ describe("StudioSearchPage (v2)", () => {
         <StudioSearchPage />
       </TestProviders>,
     );
-    fireEvent.change(screen.getByRole("combobox", { name: "Mood" }), {
-      target: { value: "melancholy" },
-    });
+    fireEvent.click(screen.getByRole("button", { name: "Mood" }));
+    fireEvent.click(await screen.findByRole("option", { name: "Melancholy" }));
     await waitFor(() =>
-      expect(screen.getByRole("combobox", { name: "Mood" })).toHaveValue(
-        "melancholy",
+      expect(screen.getByRole("button", { name: "Mood" })).toHaveTextContent(
+        "Melancholy",
       ),
     );
     const releases = await screen.findByRole("region", { name: /releases/i });
@@ -379,5 +384,63 @@ describe("StudioSearchPage (v2)", () => {
     );
     expect(screen.getByText("Late Bloomers")).toBeInTheDocument();
     expect(screen.queryByText("Late Bloomers · Late Bloomers")).toBeNull();
+  });
+});
+
+describe("StudioSearchPage (C2 polish)", () => {
+  afterEach(() => {
+    window.localStorage.removeItem(STUDIO_RECENT_SEARCHES_STORAGE_KEY);
+  });
+
+  it("offers a chip that drops one filter and keeps the term", async () => {
+    render(
+      <TestProviders initialEntries={["/studio/search?q=zzzz&type=tracks"]}>
+        <StudioSearchPage />
+      </TestProviders>,
+    );
+    const dropChip = await screen.findByRole("link", {
+      name: /remove the tracks filter/i,
+    });
+    expect(dropChip).toHaveAttribute("href", "/studio/search?q=zzzz");
+    expect(
+      screen.getByRole("button", { name: /clear search/i }),
+    ).toBeInTheDocument();
+  });
+
+  it("keeps a submitted search on this device until the wipe", async () => {
+    render(
+      <TestProviders initialEntries={["/studio/search"]}>
+        <StudioSearchPage />
+      </TestProviders>,
+    );
+    const searchbox = await screen.findByRole("searchbox", {
+      name: /releases, tracks and artists/i,
+    });
+    const form = searchbox.closest("form");
+    if (!form) throw new Error("the search field has no form");
+    fireEvent.change(searchbox, { target: { value: "fado" } });
+    fireEvent.submit(form);
+    fireEvent.change(searchbox, { target: { value: "" } });
+    fireEvent.submit(form);
+    expect(
+      await screen.findByRole("link", { name: "fado" }),
+    ).toBeInTheDocument();
+    clearStudioListeningMemory();
+    await waitFor(() =>
+      expect(screen.queryByRole("link", { name: "fado" })).toBeNull(),
+    );
+  });
+
+  it("focuses the search field on the slash key", async () => {
+    render(
+      <TestProviders initialEntries={["/studio/search"]}>
+        <StudioSearchPage />
+      </TestProviders>,
+    );
+    const searchbox = await screen.findByRole("searchbox", {
+      name: /releases, tracks and artists/i,
+    });
+    fireEvent.keyDown(document.body, { key: "/" });
+    expect(searchbox).toHaveFocus();
   });
 });

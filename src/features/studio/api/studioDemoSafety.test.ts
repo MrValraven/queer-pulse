@@ -103,10 +103,14 @@ describe("demo Studio safety: claims", () => {
     );
   });
 
-  it("lists submitted and countered claims oldest first for staff, and counts them", () => {
+  it("lists submitted and countered claims oldest first for staff, and counts them", async () => {
     const statuses = demoAdminClaimsPage(null).items.map((item) => item.status);
     expect(statuses.sort()).toEqual(["countered", "submitted"]);
-    expect(demoAdminClaimCounts()).toEqual({ submitted: 1, countered: 1 });
+    expect(await demoAdminClaimCounts()).toEqual({
+      submitted: 1,
+      countered: 1,
+      disputesWaiting: 1,
+    });
   });
 
   it("restores a track only when no other claim holds it", () => {

@@ -1,12 +1,14 @@
 import type { QueryClient } from "@tanstack/react-query";
 import type { RefObject } from "react";
-import { onStudioAccessLost } from "../api/studioQueryKeys";
+import { onStudioAccessLost, studioKeys } from "../api/studioQueryKeys";
 import { isStudioTrackWithheld } from "../api/studioSafety.api";
 import {
   fetchStudioStream,
   rememberStreamAnalysis,
   streamAnalysisOf,
 } from "../api/studioStream";
+import type { StudioStreamAnalysis } from "../api/studio.types";
+import { studioReasonOf } from "../studioReason";
 import type {
   StudioAudioEngine,
   StudioAudioEvent,
@@ -17,6 +19,12 @@ import type {
   StudioPreloadedStream,
 } from "./studioDeckPreload";
 import { trackGainDb } from "./studioLoudness";
+import { clearStudioPlayerAnnouncement } from "./studioPlayerAnnouncer";
+import {
+  resetPlaybackSignals,
+  setPlaybackSignals,
+  takeMediaFailureReason,
+} from "./studioPlaybackSignals";
 import type {
   StudioBufferedRange,
   StudioPlaybackSettings,
@@ -154,6 +162,8 @@ function createTrackLoader(
       return;
     }
     effects.setStatus("loading");
+    // A new attempt: the bar's last reason and the autoplay note clear.
+    setPlaybackSignals({ failureReason: null, isAutoplayBlocked: false });
     try {
       // A preview entry reads its stream through its preview link (v3).
       const stream = await fetchStudioStream(
@@ -185,7 +195,7 @@ function createTrackLoader(
         onWithheld(item);
         return;
       }
-      fail("stream");
+      fail("stream", error);
       return;
     }
     await engine.play();
@@ -201,8 +211,10 @@ function createTrackLoader(
 
   /** One silent refresh of the signed URL, resuming at the same second. A
    *  second media failure retries once on plain elements (the CORS fallback);
-   *  after that, or for a failed stream read, the error shows with Retry. */
-  function fail(reason: "stream" | "media") {
+   *  after that, or for a failed stream read, the error shows with Retry and
+   *  its reason (ENG-02): the stream read's own error, or the media
+   *  element's. */
+  function fail(source: "stream" | "media", error?: unknown) {
     if (refs.refreshCountRef.current < 1) {
       refs.refreshCountRef.current += 1;
       reloadCurrent();
@@ -210,7 +222,7 @@ function createTrackLoader(
     }
     const engine = refs.engineRef.current;
     if (
-      reason === "media" &&
+      source === "media" &&
       !refs.hasTriedPlainModeRef.current &&
       engine?.enterPlainMode()
     ) {
@@ -218,6 +230,11 @@ function createTrackLoader(
       reloadCurrent();
       return;
     }
+    setPlaybackSignals({
+      failureReason:
+        source === "stream" ? studioReasonOf(error) : takeMediaFailureReason(),
+      isBuffering: false,
+    });
     effects.setStatus("error");
   }
 
@@ -321,14 +338,22 @@ function createEventHandler(
         return;
       case "playing":
         refs.refreshCountRef.current = 0;
+        setPlaybackSignals({
+          failureReason: null,
+          isAutoplayBlocked: false,
+          isPausedForOffline: false,
+        });
         effects.setStatus("playing");
         return;
       case "paused":
         if (status === "playing") effects.setStatus("paused");
         return;
       case "blocked":
-        if (status === "playing" || status === "loading")
+        // ENG-02: the bar says "Tap play to start" instead of going quiet.
+        if (status === "playing" || status === "loading") {
+          setPlaybackSignals({ isAutoplayBlocked: true, isBuffering: false });
           effects.setStatus("paused");
+        }
         return;
       case "ended":
         onEnded();
@@ -443,6 +468,8 @@ export function createPlaybackCommands(
     effects.decks.cancelPreload();
     refs.engineRef.current?.reset();
     effects.dispatch({ type: "reset" });
+    resetPlaybackSignals();
+    clearStudioPlayerAnnouncement();
     effects.setStatus("idle");
     effects.tick(STOPPED_PLAYHEAD);
   }
@@ -479,6 +506,33 @@ export function createPlaybackCommands(
     effects.dispatch({ type: "moveUpcomingSource", fromIndex: -1, toIndex: 0 });
   }
 
+  /** DES-28: a restored track shows its waveform before Play. Only the
+   *  analysis is kept; the signed URL is read again on Play, so the expiry
+   *  rule stays as it was. A failed read leaves the plain slider, as before.
+   *  Nothing about this reaches the server beyond the stream read Play
+   *  would make anyway. */
+  async function prefetchRestoredAnalysis(item: StudioQueueItem) {
+    const cached = effects.queryClient.getQueryData<StudioStreamAnalysis>(
+      studioKeys.streamAnalysis(effects.demoMode, item.trackId),
+    );
+    if (cached?.waveformPeaks) return;
+    try {
+      const stream = await fetchStudioStream(
+        effects.demoMode,
+        item.trackId,
+        item.previewToken,
+      );
+      rememberStreamAnalysis(
+        effects.queryClient,
+        effects.demoMode,
+        item.trackId,
+        streamAnalysisOf(stream),
+      );
+    } catch {
+      // The waveform waits for Play, which reports its own failure.
+    }
+  }
+
   /** A saved queue comes back paused at its second; the stream is read on
    *  play (an expired-at of 0 makes togglePlay reload). */
   function restoreCued(snapshot: StudioQueueSnapshot) {
@@ -499,6 +553,7 @@ export function createPlaybackCommands(
       return;
     }
     loader.beginTrack(current, snapshot.positionSeconds);
+    void prefetchRestoredAnalysis(current);
   }
 
   return {
@@ -506,6 +561,7 @@ export function createPlaybackCommands(
     reloadCurrent: loader.reloadCurrent,
     retry: () => {
       refs.refreshCountRef.current = 0;
+      setPlaybackSignals({ failureReason: null });
       loader.reloadCurrent();
     },
     advance,

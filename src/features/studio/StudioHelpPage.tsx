@@ -4,6 +4,7 @@ import { useMotionPrefs } from "../../app/providers/motionPrefs";
 import { Button, Collapse, EmptyState } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { StudioFirstRunHelpEntry } from "./StudioFirstRunHelpEntry";
 import { StudioHelpContact } from "./StudioHelpContact";
 import { StudioHelpFaq } from "./StudioHelpFaq";
 import { StudioShell } from "./StudioShell";
@@ -14,7 +15,9 @@ import {
   helpSectionAnchor,
   type HelpCategoryCard,
 } from "./studioHelp.data";
-import { filterHelpSections } from "./studioHelpSearch";
+import { filterHelpSections, helpSearchTerms } from "./studioHelpSearch";
+import { useStudioDocumentTitle } from "./useStudioDocumentTitle";
+import { useStudioHelpHighlight } from "./useStudioHelpHighlight";
 import { useStudioShowcase } from "./useStudioShowcase";
 import s from "./StudioHelpPage.module.css";
 
@@ -29,8 +32,8 @@ function CategoryCard({ card }: { card: HelpCategoryCard }) {
   const { reducedMotion } = useMotionPrefs();
   const Icon = CATEGORY_ICON[card.target];
   return (
-    <button
-      type="button"
+    <Button
+      variant="quiet"
       className={s.cat}
       onClick={() => {
         const section = document.getElementById(helpSectionAnchor(card.target));
@@ -46,7 +49,7 @@ function CategoryCard({ card }: { card: HelpCategoryCard }) {
         <Translation i18nKey={card.headingKey} components={{ em: <em /> }} />
       </span>
       <span className={s.catBlurb}>{t(card.blurbKey)}</span>
-    </button>
+    </Button>
   );
 }
 
@@ -56,7 +59,9 @@ export function StudioHelpPage() {
   const { t } = useTranslation();
   const isShowcase = useStudioShowcase();
   const [query, setQuery] = useState("");
+  useStudioDocumentTitle(t("studio:helpLive.pageTitle"));
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const wrapRef = useRef<HTMLDivElement>(null);
   const sections = useMemo(
     () =>
       isShowcase
@@ -78,6 +83,8 @@ export function StudioHelpPage() {
     [visibleSections],
   );
   const isSearching = query.trim().length > 0;
+  const searchTerms = useMemo(() => helpSearchTerms(query), [query]);
+  useStudioHelpHighlight(wrapRef, searchTerms, [...visibleIds].join());
   const trimmedQuery = query.trim();
   // Keep the last non-empty query so the empty-state title does not flash
   // `Nothing matches ""` while its Collapse folds after Clear.
@@ -86,7 +93,7 @@ export function StudioHelpPage() {
 
   return (
     <StudioShell>
-      <div className={s.wrap}>
+      <div className={s.wrap} ref={wrapRef}>
         <header className={s.pageH}>
           <div className={s.eb}>{t("studio:helpLive.hero.eyebrow")}</div>
           <h1>
@@ -104,6 +111,7 @@ export function StudioHelpPage() {
             className={s.search}
             onSubmit={(event) => event.preventDefault()}
           >
+            <FiSearch className={s.searchIcon} aria-hidden />
             <input
               ref={searchInputRef}
               type="search"
@@ -166,7 +174,11 @@ export function StudioHelpPage() {
                     components={{ em: <em /> }}
                   />
                 </h2>
-                <StudioHelpFaq items={section.items} visibleIds={visibleIds} />
+                <StudioHelpFaq
+                  items={section.items}
+                  visibleIds={visibleIds}
+                  searchTerms={searchTerms}
+                />
               </section>
             </Collapse>
           ))}
@@ -182,6 +194,7 @@ export function StudioHelpPage() {
             />
           </Collapse>
 
+          <StudioFirstRunHelpEntry />
           <StudioHelpContact />
         </div>
       </div>

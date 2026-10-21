@@ -46,19 +46,31 @@
   vertical-align: -1px;
 }
 
-.time {
-  padding: 0 4px;
+/* A timestamp inside the notes rides on the shared quiet Button; the
+   doubled class outranks its own rules whatever order the two modules load
+   in, so it stays an inline chip on the text's own line. Inline in a
+   sentence, it is exempt from the 44px target floor. */
+.time.time {
+  display: inline;
+  min-height: 0;
+  padding: 2px 6px;
   border: 0;
   border-radius: var(--radius-4);
   background: rgba(var(--studio-ink-rgb), 0.08);
   color: var(--studio-accent-text);
   font: inherit;
+  line-height: inherit;
+  white-space: normal;
   font-variant-numeric: tabular-nums;
   cursor: pointer;
 }
 
+.time.time::after {
+  content: none;
+}
+
 .link:focus-visible,
-.time:focus-visible {
+.time.time:focus-visible {
   outline: var(--focus-ring);
   outline-offset: var(--focus-ring-offset);
   box-shadow: var(--ring-cream);
@@ -72,4 +84,32 @@
 
 .sources li + li {
   margin-top: 4px;
+}
+
+/* The episode's chapters: the notes' light Fraunces heading, a full tap
+   target per row, and the notes' 32px before the transcript. */
+.chapters:not(:empty) {
+  max-width: 68ch;
+  margin-bottom: 32px;
+}
+
+.chapters h2 {
+  margin: 0 0 12px;
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: var(--text-28);
+  color: var(--studio-text);
+}
+
+.chapters li > button {
+  min-height: var(--tap-min);
+}
+
+/* Each chapter time reads as the notes' chips do. */
+.chapters li > button > span:first-child {
+  justify-self: start;
+  padding: 2px 6px;
+  border-radius: var(--radius-4);
+  background: rgba(var(--studio-ink-rgb), 0.08);
+  color: var(--studio-accent-text);
 }

@@ -8,51 +8,160 @@
   box-shadow: var(--ring-cream);
 }
 
-.savedList {
-  display: grid;
+/* Filter box and sort, between the tabs and the cards. The filter takes the
+   room; the sort keeps its natural width at the end. */
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 12px;
+  margin-top: 16px;
+}
+
+.filter {
+  flex: 1 1 240px;
+  max-width: 420px;
+}
+
+.sortTrigger {
+  flex: none;
+  gap: 6px;
+}
+
+.sortTrigger svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* On touch the trigger shows its full 44px target, so the pill a finger
+   aims at is the area that answers. The element and doubled class beat
+   the quiet sm size (.quiet.sm), whatever order the sheets load in. */
+@media (pointer: coarse) {
+  button.sortTrigger.sortTrigger {
+    min-height: var(--tap-min);
+  }
+}
+
+/* The card grid as a list; popLayout lifts a leaving card out of the flow,
+   so the grid is its positioning context. */
+.grid {
+  position: relative;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.savedRow {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 4px 12px;
-  padding: 12px 0;
-  border-top: 1px solid var(--line);
+.gridItem {
+  min-width: 0;
 }
 
-.savedRowUnavailable .savedTitle,
-.savedRowUnavailable .savedMeta {
-  color: var(--studio-text-muted);
+/* One saved card with Remove from Library over the art's top end. */
+.savedCard {
+  position: relative;
+  min-width: 0;
 }
 
-.savedTitle {
-  color: var(--text);
-  font-family: var(--serif);
-  font-size: var(--text-16);
-  text-decoration: none;
+.unsave {
+  position: absolute;
+  inset-block-start: 8px;
+  inset-inline-end: 8px;
+  z-index: 3;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--studio-surface) 86%, transparent);
+  box-shadow: var(--shadow-e1);
+  transition-property: opacity, transform;
+  transition-duration: var(--dur-base);
+  transition-timing-function: var(--ease-out);
 }
 
-a.savedTitle:hover {
-  text-decoration: underline;
+.unsave svg {
+  color: var(--accent);
 }
 
-a.savedTitle:focus-visible {
-  outline: var(--focus-ring);
-  outline-offset: var(--focus-ring-offset);
-  box-shadow: var(--ring-cream);
+/* Hover screens show it with the card's lift; touch keeps it showing. */
+@media (hover: hover) {
+  .unsave {
+    opacity: 0;
+  }
+  .savedCard:hover .unsave,
+  .savedCard:focus-within .unsave {
+    opacity: 1;
+  }
+  .savedCard:hover .unsave {
+    transform: translateY(-2px);
+  }
 }
 
-.savedMeta,
-.savedNote {
-  color: var(--text60);
-  font-size: var(--text-13);
+.savedMeta {
+  display: block;
 }
 
 /* Withdrawn and No longer available each sit on their own line. */
 .savedNote {
-  flex-basis: 100%;
+  display: block;
+  color: var(--studio-text-muted);
+}
+
+/* The first page of saves failed: a quiet line and Retry under the cards. */
+.savesError {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  margin-top: 20px;
+}
+
+.savesErrorText {
+  margin: 0;
+  font-size: var(--text-13);
+  color: var(--studio-text-muted);
+}
+
+/* A lost save: the media card's shape with no link and muted ink. */
+.lostCard {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+
+.lostFrame {
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: var(--radius-10);
+  background: var(--studio-wash-2);
+  opacity: 0.6;
+}
+
+.lostTitle {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: var(--text-16);
+  line-height: 1.22;
+  color: var(--studio-text-muted);
+}
+
+.lostMeta {
+  font-size: var(--text-12);
+  line-height: 1.35;
+  color: var(--studio-text-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .unsave {
+    transition-property: opacity;
+  }
+  .savedCard:hover .unsave {
+    transform: none;
+  }
+}
+
+:global(html[data-reduce-motion="true"]) .unsave {
+  transition-property: opacity;
+}
+
+:global(html[data-reduce-motion="true"]) .savedCard:hover .unsave {
+  transform: none;
 }

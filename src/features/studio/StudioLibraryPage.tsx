@@ -1,15 +1,24 @@
 import { useId } from "react";
-import { Navigate, useSearchParams } from "react-router-dom";
+import { m } from "motion/react";
+import { Navigate } from "react-router-dom";
+import { useMotionPrefs } from "../../app/providers/motionPrefs";
 import { routes } from "../../app/routeMap";
-import { FadeIn, tabPanelProps } from "../../shared/components/ui";
+import { tabPanelProps } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { StudioLibraryPanel } from "./StudioLibraryPanels";
+import { StudioLibraryToolbar } from "./StudioLibraryToolbar";
 import { LIVE_LIBRARY_TABS } from "./studioLibrary.data";
-import { STUDIO_LIBRARY_TABS, type StudioLibraryTab } from "./studioPaths";
+import {
+  STUDIO_LIBRARY_ARTIST_SORTS,
+  STUDIO_LIBRARY_SORTS,
+} from "./studioLibrarySort.data";
+import { STUDIO_FADE } from "./studioMotion";
 import { StudioShell } from "./StudioShell";
 import { StudioTablist } from "./StudioTablist";
+import { useStudioDocumentTitle } from "./useStudioDocumentTitle";
+import { useStudioLibraryParams } from "./useStudioLibraryParams";
 import { useStudioShowcase } from "./useStudioShowcase";
 import s from "./studioPages.module.css";
 import css from "./StudioLibrary.module.css";
@@ -19,22 +28,22 @@ import css from "./StudioLibrary.module.css";
 const LIFETIME_PAID_AMOUNT = 312;
 const LIFETIME_ARTIST_COUNT = 47;
 
-const KNOWN_TABS: ReadonlySet<string> = new Set(STUDIO_LIBRARY_TABS);
-const isLibraryTab = (value: string | null): value is StudioLibraryTab =>
-  value !== null && KNOWN_TABS.has(value);
+const REDUCED_FADE = { duration: 0.12 } as const;
 
 /** The library (Studio v2): your playlists and saved ones (Liked songs
  *  first), saved releases, and the artists you follow. The tab lives in
- *  `?tab=`. The old `?tab=tracks` link opens Liked songs. */
+ *  `?tab=`, the filter in `?q=` and the sort in `?sort=`, and both carry
+ *  across tabs. The old `?tab=tracks` link opens Liked songs. */
 export function StudioLibraryPage() {
   const { t } = useTranslation();
   const fmt = useFormat();
   const isShowcase = useStudioShowcase();
-  const [searchParams, setSearchParams] = useSearchParams();
-  const tabParam = searchParams.get("tab");
-  const tab: StudioLibraryTab = isLibraryTab(tabParam) ? tabParam : "playlists";
+  const params = useStudioLibraryParams();
+  const { tab } = params;
   const idPrefix = useId();
-  if (tabParam === "tracks")
+  const { reducedMotion } = useMotionPrefs();
+  useStudioDocumentTitle(t("studio:library.eyebrow"));
+  if (params.tabParam === "tracks")
     return <Navigate to={routes.studioLiked} replace />;
   return (
     <StudioShell>
@@ -66,16 +75,33 @@ export function StudioLibraryPage() {
         activeId={tab}
         idPrefix={idPrefix}
         label={t("studio:libraryLive.tablistLabel")}
-        onChange={(next) =>
-          setSearchParams(next === "playlists" ? {} : { tab: next }, {
-            replace: true,
-          })
+        onChange={params.setTab}
+      />
+      <StudioLibraryToolbar
+        query={params.query}
+        onQueryChange={params.setQuery}
+        sort={params.sort}
+        onSortChange={params.setSort}
+        options={
+          tab === "artists" ? STUDIO_LIBRARY_ARTIST_SORTS : STUDIO_LIBRARY_SORTS
         }
       />
       <div {...tabPanelProps(idPrefix, tab)} className={css.panel}>
-        <FadeIn key={tab}>
-          <StudioLibraryPanel tab={tab} />
-        </FadeIn>
+        {/* The tab's content fades in on arrival and on every tab change,
+            on the Studio fade (a lift with full motion). */}
+        <m.div
+          key={tab}
+          initial={{ opacity: 0, y: reducedMotion ? 0 : 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={reducedMotion ? REDUCED_FADE : STUDIO_FADE}
+        >
+          <StudioLibraryPanel
+            tab={tab}
+            query={params.query}
+            sort={params.sort}
+            onClearQuery={() => params.setQuery("")}
+          />
+        </m.div>
       </div>
     </StudioShell>
   );

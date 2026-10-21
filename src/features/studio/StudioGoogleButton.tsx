@@ -33,6 +33,7 @@ export function StudioGoogleButton() {
   return (
     <>
       <div className={styles.divider}>{t("studio:signin.orDivider")}</div>
+      {/* raw <button>: Google brand sign-in button (brand rules) */}
       <button
         type="button"
         className={styles.btnGoogle}

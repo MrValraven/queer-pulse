@@ -1,5 +1,6 @@
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { StudioListeningSettings } from "./StudioSettingsListening";
 import { StudioSettingsClaimsLink } from "./StudioSettingsClaimsLink";
 import { StudioPlaybackSettings } from "./StudioSettingsPlayback";
 import {
@@ -10,6 +11,7 @@ import {
   TippingSection,
 } from "./StudioSettingsSections";
 import { StudioShell } from "./StudioShell";
+import { useStudioDocumentTitle } from "./useStudioDocumentTitle";
 import { useStudioShowcase } from "./useStudioShowcase";
 import s from "./StudioSettingsPage.module.css";
 
@@ -19,6 +21,7 @@ import s from "./StudioSettingsPage.module.css";
 export function StudioSettingsPage() {
   const { t } = useTranslation();
   const isShowcase = useStudioShowcase();
+  useStudioDocumentTitle(t("studio:settingsLive.pageTitle"));
   return (
     <StudioShell>
       <div className={s.pageH}>
@@ -34,6 +37,7 @@ export function StudioSettingsPage() {
 
       <div className={s.wrap}>
         <StudioPlaybackSettings />
+        <StudioListeningSettings />
         <StudioSettingsClaimsLink />
         {isShowcase && (
           <>

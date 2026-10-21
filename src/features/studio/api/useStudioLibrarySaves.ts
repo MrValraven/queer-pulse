@@ -1,8 +1,13 @@
-import { useEffect } from "react";
+import { useEffect, useLayoutEffect, useMemo } from "react";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useSaved, type SavedItem } from "../../../app/providers/useSaved";
 import { safeStorage } from "../../../shared/storage/safeStorage";
 import { DEMO_LIBRARY_SAVES } from "../studioLibrary.data";
+import type { StudioCursorPagesResult } from "./useStudioCursorPages";
+import {
+  useStudioSavedPage,
+  type StudioSavedPageKind,
+} from "./useStudioSavedPage";
 
 export type StudioLibrarySaveKind =
   "studio_release" | "studio_track" | "studio_playlist";
@@ -67,4 +72,53 @@ export function useStudioLibrarySaves(
   const { byKind } = useSaved();
   useStudioDemoLibrarySeed();
   return byKind(kind);
+}
+
+/**
+ * ENG-04: Library's saved releases or playlists, every page of them. The
+ * saved store leads (the bootstrap's newest saves and this session's own),
+ * then the older saves the cursor pages bring, each once, keyed by id. Live,
+ * each page is remembered into the store before paint, so an older save
+ * reads as saved everywhere and an unsave anywhere removes its card at once.
+ * Demo keeps the seeded store as the truth: a fixture save unsaved in an
+ * earlier session stays gone.
+ */
+export interface StudioLibrarySavedPageResult extends StudioCursorPagesResult<SavedItem> {
+  /** Distinct saves the cursor pages brought so far, store aside: what a
+   *  load-all run counts to see whether a page added anything. */
+  pagedCount: number;
+}
+
+export function useStudioLibrarySavedPage(
+  kind: StudioSavedPageKind,
+): StudioLibrarySavedPageResult {
+  const { demoMode } = useDemoMode();
+  const { items: savedItems, byKind, remember, readSaveScope } = useSaved();
+  useStudioDemoLibrarySeed();
+  const pages = useStudioSavedPage(kind);
+  const pageItems = pages.items;
+  useLayoutEffect(() => {
+    if (demoMode || pageItems.length === 0) return;
+    remember(pageItems, { scopeAtRead: readSaveScope() });
+  }, [demoMode, pageItems, remember, readSaveScope]);
+  const storeItems = byKind(kind);
+  // Built once per store change, so the merge below asks a Set.
+  const savedIds = useMemo(
+    () => new Set(savedItems.map((item) => item.id)),
+    [savedItems],
+  );
+  const items = useMemo(() => {
+    // The server's copy is the fresher one (it says whether the save can
+    // still be opened); the store decides the order and what is saved.
+    const pageCopyById = new Map(pageItems.map((item) => [item.id, item]));
+    const seenIds = new Set<string>();
+    const merged: SavedItem[] = [];
+    for (const item of [...storeItems, ...pageItems]) {
+      if (seenIds.has(item.id) || !savedIds.has(item.id)) continue;
+      seenIds.add(item.id);
+      merged.push(pageCopyById.get(item.id) ?? item);
+    }
+    return merged;
+  }, [storeItems, pageItems, savedIds]);
+  return { ...pages, items, pagedCount: pageItems.length };
 }

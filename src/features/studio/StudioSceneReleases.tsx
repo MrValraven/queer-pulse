@@ -34,7 +34,13 @@ export function StudioSceneReleases({
     fetchNextPage,
   } = releasesResult;
   let body: ReactNode;
-  if (loadState.isError) body = <StudioLoadError loadState={loadState} />;
+  if (loadState.isError)
+    body = (
+      <StudioLoadError
+        loadState={loadState}
+        what="studio:errors.what.sceneReleases"
+      />
+    );
   else if (loadState.isLoading)
     body = <StudioCardGridSkeleton count={8} className={styles.rowGrid} />;
   else if (releases.length === 0)

@@ -24,7 +24,6 @@ export function StudioPressHero({
         <ImageSlot
           src={artist.avatarUrl ?? undefined}
           tint={artist.tint}
-          shape="circle"
           width="100%"
           height="100%"
           initials={artist.initials}

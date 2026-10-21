@@ -230,7 +230,10 @@ export function StudioPersonaCreditsEditor({
         </p>
       </Collapse>
       <Collapse isOpen={rowsLoadState.isError}>
-        <StudioLoadError loadState={rowsLoadState} />
+        <StudioLoadError
+          loadState={rowsLoadState}
+          what="studio:errors.what.credits"
+        />
       </Collapse>
       <ul
         className={css.rows}

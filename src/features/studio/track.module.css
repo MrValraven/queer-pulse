@@ -51,6 +51,30 @@
   color: var(--studio-accent-text);
   white-space: nowrap;
 }
+/* A phone stacks the call to join under the status line, lined up with
+   the text past the live dot, as a full 44px tap target. */
+@media (--sm) {
+  .inSet {
+    flex-wrap: wrap;
+    align-items: flex-start;
+    row-gap: 0;
+  }
+  .inSet .live {
+    margin-top: 6px;
+  }
+  .inSet > span:not(.live) {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+  .inSet a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: var(--tap-min);
+    flex-basis: calc(100% - 20px);
+    margin-left: 20px;
+  }
+}
 
 .body {
   display: grid;
@@ -72,12 +96,14 @@
   justify-content: space-between;
   margin-bottom: 22px;
 }
+.lyrH h2,
 .lyrH h3 {
   font-family: var(--serif);
   font-weight: 400;
   font-size: var(--text-20);
   color: rgba(var(--studio-ink-rgb), 1);
 }
+.lyrH h2 em,
 .lyrH h3 em {
   font-style: italic;
   color: var(--studio-accent-text);

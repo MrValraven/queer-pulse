@@ -24,9 +24,9 @@
   border: 1px solid rgba(var(--studio-ink-rgb), 0.14);
   border-radius: var(--radius-12);
   background: var(--studio-surface);
-  color: var(--text);
+  color: var(--studio-text);
   text-decoration: none;
-  transition-property: border-color;
+  transition-property: border-color, transform;
   transition-duration: var(--dur-fast);
   transition-timing-function: var(--ease);
 }
@@ -40,10 +40,24 @@
 @media (hover: hover) {
   .eventCard:hover {
     border-color: var(--accent);
+    transform: translateY(-2px);
+  }
+}
+
+.eventCard:active {
+  transform: scale(0.97);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .eventCard:hover,
+  .eventCard:active {
+    transform: none;
   }
 }
 
 .eventTitle {
+  margin: 0;
+  font-weight: 400;
   font-family: var(--serif);
   font-size: var(--text-17);
   line-height: 1.3;
@@ -59,4 +73,32 @@
 .eventPlace {
   font-size: var(--text-13);
   color: var(--studio-text-muted);
+}
+
+/* The scene hero: its cover is the scene's whole picture, so the tint
+   washes in half again as strong as on a release. */
+.sceneHero {
+  --wash-boost: 1.5;
+}
+
+.heroPlay {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.heroPlayLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--text-14);
+  font-weight: 600;
+  color: var(--studio-text);
+}
+
+.heroPlayLabel svg {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  color: var(--studio-accent-text);
 }

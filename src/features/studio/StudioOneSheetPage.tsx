@@ -80,7 +80,10 @@ export function StudioOneSheetPage() {
       {loadState.isNotFound || loadState.isWithdrawn ? (
         <StudioNotFound />
       ) : loadState.isError ? (
-        <StudioLoadError loadState={loadState} />
+        <StudioLoadError
+          loadState={loadState}
+          what="studio:errors.what.pressKit"
+        />
       ) : !pressKit ? (
         <StudioDetailSkeleton />
       ) : (

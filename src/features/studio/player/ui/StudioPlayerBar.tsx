@@ -1,6 +1,12 @@
 import { Link } from "react-router-dom";
 import { FiList } from "react-icons/fi";
-import { Collapse, ImageSlot } from "../../../../shared/components/ui";
+import {
+  Button,
+  Collapse,
+  ImageSlot,
+  Tooltip,
+} from "../../../../shared/components/ui";
+import { IconButton } from "../../../../shared/components/ui/IconButton";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { StudioAddToPlaylistButton } from "../../StudioAddToPlaylistButton";
 import { StudioLikeButton } from "../../StudioLikeButton";
@@ -8,6 +14,8 @@ import { StudioPlayerSeek } from "../../StudioPlayerSeek";
 import { StudioPlayerShowcase } from "../../StudioPlayerShowcase";
 import type { StudioLikeSubject } from "../../useStudioLike";
 import { useStudioShowcase } from "../../useStudioShowcase";
+import { studioReasonCopyKey } from "../../studioReason";
+import { useStudioPlaybackSignals } from "../studioPlaybackSignals";
 import { useStudioPlayer, type StudioQueueItem } from "../studioPlayerContext";
 import { useStudioPlayerSurface } from "../studioPlayerSurface";
 import { StudioCastButton } from "./StudioCastButton";
@@ -30,6 +38,7 @@ import { StudioVolumeControl } from "./StudioVolumeControl";
 import { StudioWarningGate } from "./StudioWarningGate";
 import { STUDIO_QUEUE_BUTTON_ID } from "./studioQueueMoves";
 import styles from "../../StudioPlayer.module.css";
+import { useStudioShortcutHint } from "./useStudioShortcutHint";
 
 /** The current track as the heart likes it. */
 function studioLikeSubjectFor(item: StudioQueueItem): StudioLikeSubject {
@@ -49,13 +58,13 @@ function StudioPlayerNow({ item }: { item: StudioQueueItem }) {
   const { t } = useTranslation();
   const player = useStudioPlayer();
   const surface = useStudioPlayerSurface();
+  const isShowcase = useStudioShowcase();
   const isPreview = Boolean(item.previewToken);
   const swapKey = `${item.trackId}-${isPreview ? "preview" : "track"}`;
   const likeSubject = studioLikeSubjectFor(item);
   return (
     <div className={styles.now}>
-      <button
-        type="button"
+      <IconButton
         className={styles.art}
         aria-label={t("studio:player.openNowPlaying", {
           title: item.title,
@@ -73,8 +82,8 @@ function StudioPlayerNow({ item }: { item: StudioQueueItem }) {
             placeholder=""
           />
         </StudioNowCoverSwap>
-      </button>
-      <span className={styles.titles}>
+      </IconButton>
+      <div className={styles.titles}>
         <StudioNowTextSwap swapKey={swapKey}>
           {isPreview ? (
             <>
@@ -94,18 +103,27 @@ function StudioPlayerNow({ item }: { item: StudioQueueItem }) {
         </StudioNowTextSwap>
         <StudioChapterLine />
         <StudioPlayerRadioLine radio={player.radio} />
-      </span>
+        {/* Demo only: the per-play line and the tip, under the artist so
+            the bar keeps one row. */}
+        {isShowcase && <StudioPlayerShowcase artistName={item.artistName} />}
+      </div>
       {/* The heart and Add to playlist share one slot, so they sit
           together at the row's end and fade as one for a preview. */}
       <StudioNowSaveSlot isShown={!isPreview}>
-        <StudioLikeButton subject={likeSubject} className={styles.like} />
-        <StudioAddToPlaylistButton
-          trackIds={[item.trackId]}
-          subjectTitle={item.title}
-          ariaLabel={t("studio:playlist.add.trackAria", { title: item.title })}
-          className={styles.addToPlaylist}
-          likeSubject={likeSubject}
-        />
+        <Tooltip label={t("studio:like.cta")} placement="top">
+          <StudioLikeButton subject={likeSubject} className={styles.like} />
+        </Tooltip>
+        <Tooltip label={t("studio:playlist.add.trackCta")} placement="top">
+          <StudioAddToPlaylistButton
+            trackIds={[item.trackId]}
+            subjectTitle={item.title}
+            ariaLabel={t("studio:playlist.add.trackAria", {
+              title: item.title,
+            })}
+            className={styles.addToPlaylist}
+            likeSubject={likeSubject}
+          />
+        </Tooltip>
       </StudioNowSaveSlot>
     </div>
   );
@@ -117,24 +135,26 @@ function StudioPlayerNow({ item }: { item: StudioQueueItem }) {
 function StudioPlayerTools() {
   const { t } = useTranslation();
   const surface = useStudioPlayerSurface();
+  const hintFor = useStudioShortcutHint();
+  const queueLabel = surface.isQueuePanelOpen
+    ? t("studio:player.queueHide")
+    : t("studio:player.queueShow");
+  const queueHint = hintFor(queueLabel, "queue");
   return (
     <div className={styles.tools}>
       <StudioSleepTimerChip announces={!surface.isNowPlayingOpen} />
       <StudioCastButton />
-      <button
-        type="button"
+      <IconButton
         id={STUDIO_QUEUE_BUTTON_ID}
         className={styles.toolButton}
         aria-expanded={surface.isQueuePanelOpen}
-        aria-label={
-          surface.isQueuePanelOpen
-            ? t("studio:player.queueHide")
-            : t("studio:player.queueShow")
-        }
+        aria-label={queueLabel}
+        aria-keyshortcuts={queueHint.ariaKeyShortcuts}
+        tooltip={queueHint.tooltip}
         onClick={surface.toggleQueuePanel}
       >
         <FiList aria-hidden />
-      </button>
+      </IconButton>
       <StudioVolumeControl />
       <StudioPlayerMorePanel placement="up" />
       <StudioPlayerCloseButton className={styles.toolButton} />
@@ -142,19 +162,45 @@ function StudioPlayerTools() {
   );
 }
 
-/** "This track can't play right now" with Retry, in both layouts. The status
- *  region stays mounted so the line is announced; the line folds in and out. */
+/** The player's status line, in both layouts (ENG-02): why the track
+ *  can't play, with Retry; "Tap play to start" after a refused autoplay;
+ *  the offline pause. The status region stays mounted so each line is
+ *  announced; the lines fold in and out. */
 export function StudioPlayerStatus() {
   const { t } = useTranslation();
   const player = useStudioPlayer();
+  const signals = useStudioPlaybackSignals();
+  const isError = player.status === "error";
+  const isOfflinePaused = signals.isPausedForOffline && !isError;
+  const isAutoplayBlocked =
+    signals.isAutoplayBlocked && player.status === "paused" && !isOfflinePaused;
+  const errorKey = studioReasonCopyKey(
+    signals.failureReason ?? "unknown",
+    "play",
+  );
   return (
     <div className={styles.status} role="status">
-      <Collapse isOpen={player.status === "error"}>
+      <Collapse isOpen={isError}>
         <span className={styles.error}>
-          {t("studio:playerBar.cantPlay")}{" "}
-          <button type="button" className={styles.retry} onClick={player.retry}>
+          <span>{t(errorKey)}</span>
+          <Button
+            variant="quiet"
+            size="sm"
+            className={styles.retry}
+            onClick={player.retry}
+          >
             {t("studio:playerBar.retry")}
-          </button>
+          </Button>
+        </span>
+      </Collapse>
+      <Collapse isOpen={isOfflinePaused}>
+        <span className={styles.error}>
+          {t("studio:playerBar.offlinePaused")}
+        </span>
+      </Collapse>
+      <Collapse isOpen={isAutoplayBlocked}>
+        <span className={styles.error}>
+          {t("studio:playerBar.autoplayBlocked")}
         </span>
       </Collapse>
     </div>
@@ -164,7 +210,6 @@ export function StudioPlayerStatus() {
 /** The desktop bar (spec 7.1). */
 export function StudioPlayerBar({ item }: { item: StudioQueueItem }) {
   const player = useStudioPlayer();
-  const isShowcase = useStudioShowcase();
   return (
     <>
       <StudioPlayerNow item={item} />
@@ -180,8 +225,7 @@ export function StudioPlayerBar({ item }: { item: StudioQueueItem }) {
       <StudioPlayerTools />
       <StudioPlayerStatus />
       {/* Studio safety: the pause before a warned track (spec 6.3). */}
-      <StudioWarningGate />
-      {isShowcase && <StudioPlayerShowcase artistName={item.artistName} />}
+      <StudioWarningGate layout="bar" />
     </>
   );
 }

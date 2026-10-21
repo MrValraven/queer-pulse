@@ -4,6 +4,7 @@ import {
   EPISODE_SKIP_FORWARD_SECONDS,
   MUSIC_SEEK_SECONDS,
 } from "./studioEpisodeRules";
+import { noteMemberPlayToggle } from "./studioPlaybackSignals";
 import type {
   StudioPlayerClock,
   StudioPlayerValue,
@@ -87,13 +88,17 @@ export function useStudioMediaSession(
       [
         "play",
         () => {
-          if (!isPlaying && !isWarningPending) player.togglePlay();
+          if (isPlaying || isWarningPending) return;
+          noteMemberPlayToggle();
+          player.togglePlay();
         },
       ],
       [
         "pause",
         () => {
-          if (isPlaying) player.togglePlay();
+          if (!isPlaying) return;
+          noteMemberPlayToggle();
+          player.togglePlay();
         },
       ],
       ["previoustrack", () => player.previous()],

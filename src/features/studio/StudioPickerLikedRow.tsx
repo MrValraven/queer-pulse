@@ -1,4 +1,5 @@
 import { FiCheck } from "react-icons/fi";
+import { Button } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useStudioLikedTracks } from "./api/useStudioLikedTracks";
 import { StudioLikedCover } from "./StudioLikedCover";
@@ -22,8 +23,8 @@ export function StudioPickerLikedRow({
   const { trackCount, loadState } = useStudioLikedTracks();
   const hasTrackCount = !loadState.isLoading && !loadState.isError;
   return (
-    <button
-      type="button"
+    <Button
+      variant="quiet"
       className={css.pickerRow}
       aria-pressed={isLiked}
       aria-label={t("studio:liked.title")}
@@ -44,6 +45,6 @@ export function StudioPickerLikedRow({
         </span>
       )}
       <FiCheck aria-hidden fill="none" className={css.pickerTick} />
-    </button>
+    </Button>
   );
 }

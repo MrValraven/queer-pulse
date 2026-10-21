@@ -87,7 +87,7 @@ export function StudioOpenCallsLive() {
         <div
           className={css.skeletons}
           role="status"
-          aria-label={t("studio:states.loadingLabel")}
+          aria-label={t("studio:loading.openCalls")}
         >
           {SKELETON_ROWS.map((row) => (
             <div key={row} className={css.card}>

@@ -21,10 +21,16 @@ describe("studioErrorMessageKeyOf", () => {
     ).toBe("studio:uploadFlow.publish.gap.cover");
   });
 
-  it("falls back to the generic line for anything else", () => {
+  it("names the reason of an uncoded refusal in its context", () => {
     expect(studioErrorMessageKeyOf(refusal(403, "SOMETHING_ELSE"))).toBe(
-      "studio:errors.generic",
+      "studio:errors.save.forbidden",
     );
+    expect(studioErrorMessageKeyOf(new ApiError(500, "boom"), "play")).toBe(
+      "studio:errors.play.server",
+    );
+  });
+
+  it("falls back to the generic line for a reason it cannot name", () => {
     expect(studioErrorMessageKeyOf(new Error("network"))).toBe(
       "studio:errors.generic",
     );

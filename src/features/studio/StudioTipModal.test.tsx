@@ -60,4 +60,32 @@ describe("StudioTipModal", () => {
       await screen.findByText("Back to the music", {}, { timeout: 2500 }),
     ).toBeInTheDocument();
   });
+
+  it("marks the picked preset pressed", async () => {
+    render(
+      <TestProviders>
+        <StudioTipModal recipient="Mariana Sol" onClose={() => {}} />
+      </TestProviders>,
+    );
+    const fivePreset = await screen.findByRole("button", { name: "€5" });
+    expect(fivePreset).toHaveAttribute("aria-pressed", "false");
+    fireEvent.click(fivePreset);
+    expect(fivePreset).toHaveAttribute("aria-pressed", "true");
+  });
+
+  it("names the reason when the demo card issuer declines a large tip", async () => {
+    render(
+      <TestProviders>
+        <StudioTipModal recipient="Mariana Sol" onClose={() => {}} />
+      </TestProviders>,
+    );
+    await screen.findByRole("button", { name: /^tip /i });
+    fireEvent.change(screen.getByRole("spinbutton"), {
+      target: { value: "150" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: /^tip /i }));
+    expect(
+      await screen.findByRole("alert", {}, { timeout: 2500 }),
+    ).toHaveTextContent(/declined/i);
+  });
 });

@@ -1,0 +1,30 @@
+/* StudioFormatLine: Now playing's quiet format line under the artist
+   (PRD-14). It sits in the stage's 18px flex gap: the wrapper takes the gap
+   back, so a line that opens or closes moves nothing above or below by
+   more than its own height. */
+.collapse {
+  margin-block-start: -18px;
+}
+
+.line {
+  margin: 0;
+  padding-block-start: 6px;
+  font-size: var(--text-12);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+  color: var(--studio-text-muted);
+  transition-property: opacity;
+  transition-duration: var(--dur-base);
+  transition-timing-function: var(--ease-out);
+}
+
+/* The next track's header is being read: the last line rests, faded. */
+.line[data-faded] {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .line {
+    transition-duration: 120ms;
+  }
+}

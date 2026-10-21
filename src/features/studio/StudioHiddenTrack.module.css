@@ -36,7 +36,7 @@
 
 @media (hover: hover) {
   .noteLink:hover {
-    color: var(--text);
+    color: var(--studio-text);
   }
 }
 

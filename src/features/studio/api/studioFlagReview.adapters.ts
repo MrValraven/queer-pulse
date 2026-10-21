@@ -1,4 +1,4 @@
-import type { ModReportDTO } from "../../admin/api/moderation.api";
+import type { ModReportDTO, ModSeverity } from "../../admin/api/moderation.api";
 import { REASON_LABEL_KEYS, type ReasonCode } from "../../safety/reportReasons";
 import {
   STUDIO_RELEASE_STATUS_LABEL_KEY,
@@ -26,12 +26,29 @@ export type StudioReviewReleaseView = StudioReleaseCardView & {
   takedownReason: string | null;
 };
 
-export interface StudioReviewReportView {
+/** What the shared moderation queue says about a report's urgency. Both are
+ *  optional: demo rows and older answers carry neither, and a card shows
+ *  each only when it is there. */
+export interface StudioReviewUrgency {
+  severity?: ModSeverity | null;
+  /** When the moderation SLA falls due (ISO). */
+  slaDueAt?: string | null;
+}
+
+export interface StudioReviewReportView extends StudioReviewUrgency {
   reportId: string;
   releaseId: string;
   reasonCode: ReasonCode;
   reasonLabelKey: string;
   createdAt: string;
+}
+
+/** The urgency fields of a moderation row, kept only when present. */
+export function reviewUrgencyOf(dto: ModReportDTO): StudioReviewUrgency {
+  return {
+    severity: dto.severity ?? null,
+    slaDueAt: dto.slaDueAt ?? null,
+  };
 }
 
 export interface StudioReviewDisputeView {
@@ -83,6 +100,7 @@ export function toReviewReportView(dto: ModReportDTO): StudioReviewReportView {
     reasonCode: dto.reasonCode,
     reasonLabelKey: REASON_LABEL_KEYS[dto.reasonCode],
     createdAt: dto.createdAt,
+    ...reviewUrgencyOf(dto),
   };
 }
 

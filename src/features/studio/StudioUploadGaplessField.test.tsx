@@ -19,28 +19,26 @@ function renderField(isGapless: boolean) {
 }
 
 describe("StudioUploadGaplessField", () => {
-  it("turns play without gaps on from an empty box", async () => {
+  it("turns play without gaps on from an empty line", async () => {
     const setField = renderField(false);
-    const box = screen.getByRole("checkbox");
-    expect(box).not.toBeChecked();
-    await userEvent.click(box);
+    const line = screen.getByRole("button");
+    expect(line).toHaveAttribute("aria-pressed", "false");
+    await userEvent.click(line);
     expect(setField).toHaveBeenCalledWith("isGapless", true);
   });
 
-  it("turns it off from a ticked box", async () => {
+  it("turns it off from a ticked line", async () => {
     const setField = renderField(true);
-    const box = screen.getByRole("checkbox");
-    expect(box).toBeChecked();
-    await userEvent.click(box);
+    const line = screen.getByRole("button");
+    expect(line).toHaveAttribute("aria-pressed", "true");
+    await userEvent.click(line);
     expect(setField).toHaveBeenCalledWith("isGapless", false);
   });
 
-  it("reads the hint as the box's description", () => {
+  it("reads the hint with the choice", () => {
     renderField(false);
-    const box = screen.getByRole("checkbox");
-    const hintId = box.getAttribute("aria-describedby") ?? "";
-    const hint = document.getElementById(hintId);
-    expect(hint?.textContent).toBeTruthy();
-    expect(box).toHaveAccessibleDescription(hint?.textContent ?? "");
+    const line = screen.getByRole("button");
+    expect(line.textContent).toMatch(/\S/);
+    expect(line.querySelectorAll("span span").length).toBeGreaterThan(1);
   });
 });

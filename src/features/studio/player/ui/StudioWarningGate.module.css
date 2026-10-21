@@ -47,56 +47,29 @@
   gap: 8px;
 }
 
+/* Brought into view on open (useRevealOpenGate) with a little room below,
+   so the buttons never sit flush on the screen edge. */
+.card {
+  scroll-margin-block: 16px;
+}
+
+/* The desktop bar: Play it and Skip follow the text 16px on (the card's
+   12px gap plus 4px), so the question and its answers read as one group at
+   the row's start. The icon keeps its 12px. */
+.gate[data-layout="bar"] .text {
+  flex: 0 1 auto;
+}
+
+.gate[data-layout="bar"] .actions {
+  margin-inline-start: 4px;
+}
+
+/* Play it and Skip are the shared Button (DES-90): primary and quiet own
+   the colours, hover, press and focus ring. Only the size is tuned to the
+   gate's compact row, keeping the 44px floor. */
 .play,
 .skip {
-  display: inline-flex;
-  align-items: center;
   gap: 6px;
-  min-block-size: var(--tap-min);
-  padding: 0 16px;
-  border-radius: var(--radius-pill);
-  /* Buttons do not inherit the page font on their own. */
-  font: inherit;
+  padding-inline: 16px;
   font-size: var(--text-14);
-  font-weight: 600;
-  cursor: pointer;
-  /* The bar's press and hover values. */
-  transition-property: transform, background-color;
-  transition-duration: var(--dur-fast);
-  transition-timing-function: var(--ease);
-}
-
-.play {
-  border: 0;
-  background: var(--accent);
-  color: var(--studio-bg);
-}
-
-.skip {
-  border: 1px solid rgba(var(--studio-ink-rgb), 0.16);
-  background: none;
-  color: var(--studio-text);
-}
-
-@media (hover: hover) {
-  .play:hover {
-    transform: scale(1.04);
-  }
-
-  .skip:hover {
-    background: rgba(var(--studio-ink-rgb), 0.08);
-  }
-}
-
-/* After the hover rules, so a held press wins over the hover lift. */
-.play:active,
-.skip:active {
-  transform: scale(0.94);
-}
-
-.play:focus-visible,
-.skip:focus-visible {
-  outline: var(--focus-ring);
-  outline-offset: var(--focus-ring-offset);
-  box-shadow: var(--ring-cream);
 }

@@ -29,6 +29,15 @@
   top: calc(var(--sticky-top) + 12px);
 }
 
+/* Dark: the panel lifts off the page on a lighter wash and a deeper shadow. */
+:global([data-theme="dark"]) .panel {
+  background:
+    linear-gradient(var(--studio-wash-2), var(--studio-wash-2)),
+    var(--studio-surface-rail);
+  border-color: var(--studio-line);
+  box-shadow: var(--shadow-e3);
+}
+
 .panelHead {
   display: flex;
   align-items: center;
@@ -59,13 +68,18 @@
 
 .groupHead {
   display: flex;
+  flex-wrap: wrap;
   align-items: baseline;
   justify-content: space-between;
-  gap: 12px;
+  gap: 4px 12px;
 }
 
+/* The label keeps its words on one line; the tools beside it wrap under it
+   when a long translation leaves no room. */
 .groupHeading {
+  flex: 1 0 auto;
   margin: 0 0 6px;
+  white-space: nowrap;
   font-size: var(--text-12);
   font-weight: 700;
   letter-spacing: 0.06em;
@@ -127,19 +141,31 @@
   cursor: grabbing;
 }
 
-.play {
+/* The shared quiet Button; doubled so the row's look wins over its pill. */
+.play.play {
   display: grid;
   grid-template-columns: 40px minmax(0, 1fr);
+  justify-content: stretch;
   align-items: center;
   gap: 10px;
   min-width: 0;
+  min-height: 0;
   padding: 2px;
   border: none;
   border-radius: var(--radius-6);
   background: none;
   color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: normal;
   text-align: start;
+  white-space: normal;
   cursor: pointer;
+}
+
+.play.play:active:not(:disabled):not([aria-disabled="true"]) {
+  background: var(--studio-wash-3);
 }
 
 .cover {
@@ -176,35 +202,118 @@
   align-items: center;
 }
 
-.control,
-.clear {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  background: none;
-  color: inherit;
-  cursor: pointer;
+/* Move up and Move down. With a mouse they show on the row's hover or
+   focus; on a touch phone the grip moves the row, so they fold to nothing
+   and open while the keyboard is in the row (screen readers still reach
+   them). Remove stays in view. */
+.actions .control.reorder {
+  overflow: hidden;
+  transition-property: background-color, color, transform, opacity, width,
+    min-width, border-width;
 }
 
-.control {
+@media (hover: hover) {
+  .row:not(:hover, :focus-within) .control.reorder {
+    opacity: 0;
+  }
+}
+
+@media (--compact) and (hover: none) {
+  .row:not(:focus-within) .control.reorder {
+    width: 0;
+    min-width: 0;
+    border-inline-width: 0;
+    opacity: 0;
+  }
+}
+
+/* Row and panel controls are IconButtons; doubled so the Studio ink wins
+   over the IconButton's app ink whatever order the sheets load in. */
+.control.control {
   width: var(--tap-min);
   height: var(--tap-min);
   border-radius: var(--radius-pill);
+  color: inherit;
+  transition-property: background-color, color, transform;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
 }
 
-.control[aria-disabled="true"] {
+.control.control[aria-disabled="true"] {
   opacity: 0.4;
   cursor: default;
 }
 
-.clear {
-  min-height: var(--tap-min);
-  padding: 4px 8px;
-  border-radius: var(--radius-6);
+.control.control:active:not([aria-disabled="true"]) {
+  transform: scale(0.97);
+}
+
+.clearSlot {
+  display: inline-flex;
+}
+
+/* Inside Now playing: "Removed {title}" with Undo, at the top of the queue
+   while the page's toast would show. */
+.undoRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 4px 4px 4px 12px;
+  border-radius: var(--radius-8);
+  background: var(--studio-wash-2);
+}
+
+.undoText {
+  min-width: 0;
   font-size: var(--text-13);
-  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+/* Clear queue and the Played fold: quiet pills with the accent text. */
+.clear.clear,
+.foldToggle.foldToggle {
   color: var(--studio-accent-text);
+}
+
+.foldToggle.foldToggle {
+  gap: 4px;
+}
+
+.foldIcon {
+  transition-property: rotate;
+  transition-duration: var(--dur-base);
+  transition-timing-function: var(--ease);
+}
+
+.foldToggle[aria-expanded="true"] .foldIcon {
+  rotate: 180deg;
+}
+
+.playedTools {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-inline-start: auto;
+}
+
+/* Clear played: a round trash IconButton in the accent ink. */
+.playedTools .control.clearPlayed {
+  color: var(--studio-accent-text);
+}
+
+/* Played rows have no grip: the summary, then Play next. */
+.row.playedRow {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.playedSummary {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  padding: 2px;
 }
 
 .hiddenNote {
@@ -218,34 +327,31 @@
   color: var(--studio-text-muted);
 }
 
-/* Narrow screens: the three 44px actions drop to a second line so the title
-   keeps the full row width. */
-@media (--compact) {
-  .row:not(.rowCurrent) {
-    grid-template-columns: auto minmax(0, 1fr);
-  }
-
-  .row:not(.rowCurrent) .actions {
-    grid-column: 2;
-    justify-self: start;
+/* Touch: Undo, Clear queue and the Played fold reach the 44px target. */
+@media (pointer: coarse) {
+  .clear.clear,
+  .foldToggle.foldToggle {
+    min-block-size: var(--tap-min);
   }
 }
 
-.play[aria-disabled="true"] {
+.play.play[aria-disabled="true"] {
   opacity: 0.55;
   cursor: default;
 }
 
 @media (hover: hover) {
-  .control:not([aria-disabled="true"]):hover,
-  .play:not([aria-disabled="true"]):hover {
-    background: rgba(var(--studio-ink-rgb), 0.08);
+  .control.control:not([aria-disabled="true"]):hover,
+  .play.play:hover:not(:disabled):not([aria-disabled="true"]) {
+    background: var(--studio-wash-2);
+    color: inherit;
   }
 }
 
 .play:focus-visible,
 .control:focus-visible,
 .clear:focus-visible,
+.foldToggle:focus-visible,
 .groupHeading:focus-visible,
 .panelHeading:focus-visible {
   outline: var(--focus-ring);

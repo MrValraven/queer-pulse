@@ -1,27 +1,17 @@
 import { useId } from "react";
+import { MdMusicOff } from "react-icons/md";
 import { routes } from "../../app/routeMap";
 import { Button } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import s from "./StudioWithdrawnPage.module.css";
 
-/** The cover the withdrawn view shows: a music note struck through. */
+/** The cover the withdrawn view shows: a music note struck through (a
+ *  react-icons glyph, decorative). */
 export function WithdrawnCoverArt() {
   return (
     <div className={s.cover} aria-hidden="true">
-      <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth={1.6}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M9 18V5l12-2v13" />
-        <circle cx={6} cy={18} r={3} />
-        <circle cx={18} cy={16} r={3} />
-        <line x1={2} y1={2} x2={22} y2={22} />
-      </svg>
+      <MdMusicOff />
     </div>
   );
 }

@@ -3,17 +3,36 @@
 .root {
   --bg: var(--studio-surface);
   --rail: var(--studio-surface-rail);
-  --line: rgba(var(--studio-ink-rgb), 0.08);
-  --text: var(--studio-text);
-  --text60: var(--studio-text-muted);
-  --text40: var(--studio-text-faint);
+  --s-line: rgba(var(--studio-ink-rgb), 0.08);
+  --s-text: var(--studio-text);
+  --s-text-60: var(--studio-text-muted);
+  --s-text-40: var(--studio-text-faint);
+  /* Legacy bridge: sibling Studio modules still read the old alias names by
+     inheritance from this root. Remove once they all use the --s-* names. */
+  --line: var(--s-line);
+  --text: var(--s-text);
+  --text60: var(--s-text-60);
+  --text40: var(--s-text-40);
   /* The app-wide wash and hairline restated on the Studio ink channel, so
      every wash inside the shell shares one palette with the Studio roles in
      both themes. */
   --wash: rgba(var(--studio-ink-rgb), 0.05);
   --line-2: rgba(var(--studio-ink-rgb), 0.22);
+  /* The content gutter: 32px on desktop, 24px on tablets, 16px on phones
+     (set below), plus the landscape notch on either side. */
+  --studio-gutter: 32px;
+  --studio-gutter-left: calc(var(--studio-gutter) + env(safe-area-inset-left, 0px));
+  --studio-gutter-right: calc(
+    var(--studio-gutter) + env(safe-area-inset-right, 0px)
+  );
+  /* The sticky topbar's height (its padding, the 44px row, the hairline),
+     read by StudioStickyHeader and the error pages to sit under it. */
+  --studio-topbar-h: calc(max(18px, env(safe-area-inset-top, 0px)) + 63px);
+  /* The rail's two widths; the shell's grid animates between them. */
+  --studio-rail-w: 248px;
+  --studio-rail-w-collapsed: 72px;
   background: var(--bg);
-  color: var(--text);
+  color: var(--s-text);
   min-height: 100svh;
   /* Firefox */
   scrollbar-width: thin;
@@ -44,8 +63,19 @@
 }
 .app {
   display: grid;
-  grid-template-columns: 248px 1fr;
+  grid-template-columns: var(--studio-rail-w) minmax(0, 1fr);
   min-height: 100svh;
+  transition: grid-template-columns var(--dur-base) var(--ease);
+}
+/* The folded rail (StudioRail): an icon strip with tooltips. */
+.app[data-rail-collapsed] {
+  grid-template-columns: var(--studio-rail-w-collapsed) minmax(0, 1fr);
+}
+/* While the column animates, the page lays out inside its own box, so
+   the width change never reflows anything outside it. Only for the
+   transition: `contain: layout` makes the box a containing block. */
+.app[data-rail-moving] .content {
+  contain: layout;
 }
 
 /* Rail: the brand, the main nav and the Create playlist pill stay put; only
@@ -58,7 +88,7 @@
   top: 0;
   height: calc(100dvh - var(--studio-player-inset, 0px));
   overflow: hidden;
-  border-right: 1px solid var(--line);
+  border-right: 1px solid var(--s-line);
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -68,7 +98,7 @@
   align-items: center;
   gap: 9px;
   padding: 0 22px 28px;
-  border-bottom: 1px solid var(--line);
+  border-bottom: 1px solid var(--s-line);
   margin-bottom: 18px;
 }
 .pulseDot {
@@ -79,10 +109,22 @@
   flex: none;
 }
 .brandRow .brand {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
   font-family: var(--serif);
   font-weight: 600;
   font-size: var(--text-21);
-  color: var(--text);
+  color: var(--s-text);
+  white-space: nowrap;
+  border-radius: var(--radius-4);
+}
+/* Inset, so the rail's overflow clip never cuts the ring. */
+.brandRow .brand:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: calc(-1 * var(--focus-ring-offset));
+  box-shadow: var(--ring-cream-inset);
 }
 .brandRow .brand em {
   font-style: italic;
@@ -94,9 +136,21 @@
   text-transform: uppercase;
   color: var(--studio-accent-text);
   margin-left: auto;
+  white-space: nowrap;
 }
 .railGrp {
   padding: 8px 0;
+}
+/* Each row's Tooltip wrapper spans the rail, so the row stays full width
+   whether or not its tooltip is live. */
+.railGrp > span,
+.railFoot > span:first-child {
+  display: flex;
+}
+.railGrp > span > .railItem,
+.railFoot > span:first-child > .railItem {
+  flex: 1;
+  min-width: 0;
 }
 /* Main nav rows: full-ink labels at 500 so they lead the playlist names
    below, each after a muted icon that turns full ink on hover and on the
@@ -108,18 +162,33 @@
   padding: 10px 22px;
   font-size: var(--text-14);
   font-weight: 500;
-  color: var(--text);
+  color: var(--s-text);
   cursor: pointer;
   border-left: 2px solid transparent;
-  transition:
-    color 0.2s var(--ease),
-    background 0.2s var(--ease),
-    border-left-color 0.2s var(--ease);
+  white-space: nowrap;
+  transition-property: color, background-color, border-left-color;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+/* Drawn inset: the rail's own overflow clip would cut an outward ring (the
+   playlist rows draw theirs the same way). */
+.railItem:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: calc(-2 * var(--focus-ring-offset));
+  box-shadow: var(--ring-cream-inset);
+}
+/* Labels that fade while the rail folds; they keep their width so nothing
+   reflows mid-transition, and the rail's clip hides them. */
+.railFade {
+  transition: opacity var(--dur-fast) var(--ease);
+}
+.rail[data-collapsed] .railFade {
+  opacity: 0;
 }
 .railIcon {
   flex: none;
   font-size: var(--text-18);
-  color: var(--text60);
+  color: var(--s-text-60);
   transition: color 0.2s var(--ease);
 }
 @media (hover: hover) {
@@ -127,7 +196,7 @@
     background: rgba(var(--studio-ink-rgb), 0.03);
   }
   .railItem:hover .railIcon {
-    color: var(--text);
+    color: var(--s-text);
   }
 }
 .railItemOn {
@@ -168,7 +237,7 @@
   border-radius: var(--radius-pill);
   border-color: transparent;
   background: var(--wash);
-  color: var(--text);
+  color: var(--s-text);
 }
 @media (hover: hover) {
   .rail .railBody .railCreate:hover:not(:disabled):not([aria-disabled="true"]) {
@@ -191,15 +260,31 @@
 .railFoot {
   margin-top: auto;
   flex: none;
-  border-top: 1px solid var(--line);
-  padding: 8px 0 calc(12px + env(safe-area-inset-bottom, 0px));
+  display: flex;
+  align-items: center;
+  border-top: 1px solid var(--s-line);
+  padding: 8px 8px calc(12px + env(safe-area-inset-bottom, 0px)) 0;
+}
+/* The fold toggle sits at the foot's end; folded, it stacks above the exit
+   icon so both fit the strip. */
+.railToggle {
+  flex: none;
+  color: var(--s-text-60);
+}
+.rail[data-collapsed] .railFoot {
+  flex-direction: column-reverse;
+  align-items: stretch;
+  padding-right: 0;
+}
+.rail[data-collapsed] .railToggle {
+  align-self: center;
 }
 .railExit {
-  color: var(--text60);
+  color: var(--s-text-60);
 }
 @media (hover: hover) {
   .railExit:hover {
-    color: var(--text);
+    color: var(--s-text);
   }
 }
 /* Short windows (a landscape phone, a zoomed laptop): the whole rail scrolls
@@ -231,34 +316,30 @@
   display: flex;
   align-items: center;
   gap: 16px;
-  padding: 18px 32px;
+  padding: 18px var(--studio-gutter-right) 18px var(--studio-gutter-left);
   padding-block-start: max(18px, env(safe-area-inset-top));
   position: sticky;
   top: 0;
   z-index: var(--z-sticky);
   background: color-mix(in srgb, var(--studio-surface) 82%, transparent);
   backdrop-filter: var(--blur-lg);
-  border-bottom: 1px solid var(--line);
+  border-bottom: 1px solid var(--s-line);
 }
 .navs {
+  flex: none;
   display: flex;
-  gap: 6px;
+  gap: 4px;
 }
-.navs button {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: rgba(var(--studio-ink-rgb), 0.06);
-  border: none;
-  color: var(--text60);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+/* Back and Forward: round 44px IconButtons on the Studio ink wash. Nothing
+   to go to reads aria-disabled and stays focusable. */
+.navs .navButton {
+  border-radius: var(--radius-pill);
+  background: var(--studio-wash-2);
+  color: var(--s-text);
 }
-.navs svg {
-  width: 13px;
-  height: 13px;
+.navs .navButton[aria-disabled="true"] {
+  background: var(--studio-wash-1);
+  color: var(--s-text-40);
 }
 .search {
   flex: 1;
@@ -267,10 +348,10 @@
   align-items: center;
   gap: 10px;
   background: rgba(var(--studio-ink-rgb), 0.06);
-  border: 1px solid var(--line);
+  border: 1px solid var(--s-line);
   border-radius: var(--radius-pill);
   padding: 9px 16px;
-  color: var(--text40);
+  color: var(--s-text-40);
 }
 .search svg {
   width: 16px;
@@ -282,10 +363,10 @@
   border: none;
   font-family: var(--sans);
   font-size: var(--text-14);
-  color: var(--text);
+  color: var(--s-text);
 }
 .search input::placeholder {
-  color: var(--text40);
+  color: var(--s-text-40);
 }
 .topRight {
   margin-left: auto;
@@ -301,22 +382,9 @@
   border-radius: var(--radius-pill);
   padding: 8px 16px;
 }
-.avatar {
-  width: 2.615em;
-  height: 2.615em;
-  border-radius: 50%;
-  background: rgba(var(--studio-ink-rgb), 0.1);
-  color: var(--text);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--serif);
-  font-size: var(--text-13);
-  font-weight: 500;
-}
-
 .content {
-  padding: 0 32px;
+  display: block;
+  padding: 0 var(--studio-gutter-right) 0 var(--studio-gutter-left);
 }
 
 /* The page scrolls the document, so the sticky topbar's clearance goes on
@@ -355,10 +423,6 @@
   color: var(--studio-text);
   border-radius: var(--radius-4);
 }
-.topBrand .pulseDot {
-  width: 8px;
-  height: 8px;
-}
 .topBrandWord {
   min-width: 0;
   overflow: hidden;
@@ -386,10 +450,14 @@
   :global(html[data-studio-shell="true"][data-studio-tabs="true"]) {
     scroll-padding-top: calc(max(10px, env(safe-area-inset-top, 0px)) + 55px);
   }
+  .root {
+    --studio-gutter: 24px;
+    --studio-topbar-h: calc(max(10px, env(safe-area-inset-top, 0px)) + 55px);
+  }
   .topbar {
     flex-wrap: nowrap;
     gap: 12px;
-    padding: 10px 16px;
+    padding: 10px var(--studio-gutter-right) 10px var(--studio-gutter-left);
     padding-block-start: max(10px, env(safe-area-inset-top));
   }
   .navs {
@@ -414,9 +482,27 @@
     inset: -6px 0;
   }
 }
+@media (--md) {
+  .root {
+    --studio-gutter: 16px;
+  }
+}
 @media (--xs) {
-  .navs {
+  .navs:not([data-standalone]) {
     display: none;
+  }
+  /* The installed app keeps Back alone; Forward stays with the browser. */
+  .navs[data-standalone] {
+    gap: 0;
+  }
+  .navs[data-standalone] .navForward {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .app,
+  .railFade {
+    transition: none;
   }
 }
 
@@ -436,6 +522,20 @@
   border-radius: var(--radius-16);
   overflow: hidden;
   box-shadow: 0 28px 60px -28px rgba(0, 0, 0, 0.7);
+}
+/* Phones and tablets: the home cover centres at the detail-hero size, so
+   the title and Play stay above the fold once the grid goes one column. */
+@media (--compact) {
+  .heroArt {
+    justify-self: center;
+    width: min(260px, 68vw);
+  }
+}
+/* A phone on its side: the cover gives the short screen back to the copy. */
+@media (--compact) and (max-height: 500px) {
+  .heroArt {
+    width: min(180px, 44vh);
+  }
 }
 .eb {
   display: inline-flex;
@@ -457,7 +557,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(2.375rem, 5vw, 4rem);
-  color: var(--text);
+  color: var(--s-text);
   letter-spacing: -0.025em;
   line-height: 0.98;
   margin: 14px 0;
@@ -468,10 +568,10 @@
 }
 .by {
   font-size: var(--text-15);
-  color: var(--text60);
+  color: var(--s-text-60);
 }
 .by strong {
-  color: var(--text);
+  color: var(--s-text);
 }
 .by em {
   font-style: italic;
@@ -482,17 +582,17 @@
   gap: 12px;
   margin-top: 12px;
   font-size: var(--text-13);
-  color: var(--text40);
+  color: var(--s-text-40);
 }
 .stats em {
   font-style: normal;
-  color: var(--text);
+  color: var(--s-text);
 }
 .stats .dot {
   width: 3px;
   height: 3px;
   border-radius: 50%;
-  background: var(--text40);
+  background: var(--s-text-40);
 }
 .heroActions {
   display: flex;
@@ -513,13 +613,17 @@
   font-family: var(--sans);
   font-size: var(--text-13-5);
   font-weight: 600;
-  color: var(--text);
+  color: var(--s-text);
   background: rgba(var(--studio-ink-rgb), 0.08);
-  border: 1px solid var(--line);
+  border: 1px solid var(--s-line);
   border-radius: var(--radius-pill);
+  /* Every pill is a full 44px tap target, Share and Like included. */
+  min-height: var(--tap-min);
   padding: 10px 18px;
   cursor: pointer;
-  transition: background 0.2s;
+  transition-property: background-color, border-color, transform;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
 }
 .heroActions button:where(:not([role="menuitem"])) svg {
   flex: none;
@@ -530,6 +634,19 @@
   .heroActions button:where(:not([role="menuitem"])):hover {
     background: rgba(var(--studio-ink-rgb), 0.14);
   }
+}
+.heroActions
+  button:where(:not([role="menuitem"])):active:not([aria-disabled="true"]) {
+  transform: scale(0.97);
+}
+/* A pressed toggle (Save) holds a deeper wash and the accent hairline, so
+   its state shows beside its words while its accessible name stays put. */
+.heroActions button:where(:not([role="menuitem"]))[aria-pressed="true"] {
+  background: rgba(var(--studio-ink-rgb), 0.14);
+  border-color: rgba(var(--accent-rgb), 0.45);
+}
+.heroActions button:where(:not([role="menuitem"]))[aria-pressed="true"] svg {
+  color: var(--studio-accent-text);
 }
 /* Beats .heroActions button (0,1,1): the hero play keeps the coral fill. */
 .heroActions .playBig {
@@ -574,7 +691,7 @@
   border: 1px solid rgba(var(--jade-rgb), 0.2);
   border-radius: var(--radius-12);
   font-size: var(--text-13);
-  color: var(--text60);
+  color: var(--s-text-60);
   max-width: 52ch;
 }
 .payPill svg {
@@ -589,7 +706,7 @@
   font-weight: 600;
 }
 .payPill .small {
-  color: var(--text40);
+  color: var(--s-text-40);
 }
 
 /* Rows + cards */
@@ -612,7 +729,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: var(--text-28);
-  color: var(--text);
+  color: var(--s-text);
   letter-spacing: -0.015em;
 }
 .rowH h2 em {
@@ -621,132 +738,22 @@
 }
 .rowH .sub {
   font-size: var(--text-13);
-  color: var(--text60);
+  color: var(--s-text-60);
 }
 .rowH .all {
   margin-left: auto;
   font-size: var(--text-13);
   font-weight: 600;
-  color: var(--text60);
+  color: var(--s-text-60);
   cursor: pointer;
 }
+/* A wrapping grid of StudioMediaCard items (search, library, artist pages).
+   minmax(0, 1fr) keeps a long unbroken title inside its column, and the
+   taller row gap leaves room for two-line titles and the meta line. */
 .rowGrid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 18px;
-}
-.card {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  color: inherit;
-  cursor: pointer;
-}
-.cardCov {
-  aspect-ratio: 1;
-  border-radius: var(--radius-10);
-  overflow: hidden;
-  position: relative;
-  transition:
-    transform 0.3s var(--ease),
-    box-shadow 0.3s var(--ease);
-}
-@media (hover: hover) {
-  .card:hover .cardCov {
-    transform: translateY(-3px);
-    box-shadow: 0 18px 40px -22px rgba(0, 0, 0, 0.6);
-  }
-}
-.tag {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  font-size: var(--text-10);
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  padding: 4px 8px;
-  border-radius: var(--radius-6);
-  /* Covers can be pale placeholders, dark art or bright photos, so every tag
-     carries its own fixed plum backing and keeps its ink fixed in both themes. */
-  background: rgba(var(--plum-rgb), 0.8);
-  backdrop-filter: var(--blur-md);
-  z-index: 2;
-}
-.tagFree {
-  color: var(--jade-light);
-}
-.tagMem {
-  color: var(--accent-soft);
-}
-.tagLive {
-  color: rgba(var(--cream-rgb), 0.92);
-}
-.playFab {
-  position: absolute;
-  bottom: 10px;
-  right: 10px;
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  background: var(--accent);
-  border: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  transform: translateY(6px);
-  transition:
-    opacity 0.25s var(--ease),
-    transform 0.25s var(--ease);
-  cursor: pointer;
-  z-index: 2;
-}
-@media (hover: hover) {
-  .card:hover .playFab {
-    opacity: 1;
-    transform: none;
-  }
-}
-.playFab svg {
-  width: 13px;
-  height: 13px;
-  /* Dark ink on the coral fill: 6.28:1. */
-  color: var(--studio-bg);
-  margin-left: 1px;
-}
-.byCur {
-  font-size: var(--text-11);
-  color: var(--text40);
-  font-family: var(--serif);
-  font-style: italic;
-}
-.card h4 {
-  font-family: var(--serif);
-  font-weight: 400;
-  font-size: var(--text-16);
-  color: var(--text);
-  line-height: 1.18;
-  letter-spacing: -0.01em;
-}
-.card h4 em {
-  font-style: italic;
-}
-.card .meta {
-  font-size: var(--text-12);
-  color: var(--text40);
-}
-.payLine {
-  display: flex;
-  justify-content: space-between;
-  font-size: var(--text-11-5);
-  color: var(--text40);
-  margin-top: 2px;
-}
-.payLine em {
-  font-style: normal;
-  color: var(--studio-jade-text);
-  font-weight: 600;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 28px 18px;
 }
 
 /* Set + side */
@@ -758,7 +765,7 @@
 }
 .setCard {
   background: rgba(var(--studio-ink-rgb), 0.04);
-  border: 1px solid var(--line);
+  border: 1px solid var(--s-line);
   border-radius: var(--radius-18);
   padding: 24px 26px;
 }
@@ -766,7 +773,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: var(--text-22);
-  color: var(--text);
+  color: var(--s-text);
   letter-spacing: -0.015em;
 }
 .setCard h3 em {
@@ -775,7 +782,7 @@
 }
 .setDesc {
   font-size: var(--text-13);
-  color: var(--text60);
+  color: var(--s-text-60);
   margin: 6px 0 16px;
 }
 .setRow {
@@ -784,11 +791,11 @@
   gap: 12px;
   align-items: center;
   padding: 8px 0;
-  border-top: 1px solid var(--line);
+  border-top: 1px solid var(--s-line);
   font-size: var(--text-13);
 }
 .setRow .n {
-  color: var(--text40);
+  color: var(--s-text-40);
   font-family: var(--serif);
 }
 .setRow .srCov {
@@ -797,22 +804,22 @@
   border-radius: var(--radius-5);
   overflow: hidden;
 }
-.setRow h5 {
+.setRow :is(h4, h5) {
   font-family: var(--serif);
   font-weight: 500;
   font-size: var(--text-14);
-  color: var(--text);
+  color: var(--s-text);
 }
-.setRow h5 em {
+.setRow :is(h4, h5) em {
   font-style: italic;
 }
 .setRow .who {
   font-size: var(--text-11-5);
-  color: var(--text40);
+  color: var(--s-text-40);
 }
 .setRow .pay {
   font-size: var(--text-11);
-  color: var(--text40);
+  color: var(--s-text-40);
   text-align: right;
   white-space: nowrap;
 }
@@ -825,7 +832,7 @@
 }
 .setRow .tm {
   font-size: var(--text-12);
-  color: var(--text40);
+  color: var(--s-text-40);
   font-variant-numeric: tabular-nums;
 }
 @media (--sm) {
@@ -852,14 +859,14 @@
 }
 .sideCard {
   background: rgba(var(--studio-ink-rgb), 0.04);
-  border: 1px solid var(--line);
+  border: 1px solid var(--s-line);
   border-radius: var(--radius-16);
   padding: 20px 22px;
 }
 .sideCard .ct {
   font-family: var(--serif);
   font-size: var(--text-28);
-  color: var(--text);
+  color: var(--s-text);
   margin-top: 8px;
 }
 .sideCard .ct em {
@@ -868,7 +875,7 @@
 }
 .sideCard .sub {
   font-size: var(--text-12-5);
-  color: var(--text40);
+  color: var(--s-text-40);
   margin-top: 4px;
 }
 .sideCard .lrow {
@@ -902,7 +909,7 @@
 }
 .ledgerCard {
   background: rgba(var(--studio-ink-rgb), 0.04);
-  border: 1px solid var(--line);
+  border: 1px solid var(--s-line);
   border-radius: var(--radius-16);
   padding: 20px 22px;
 }
@@ -914,7 +921,7 @@
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--text40);
+  color: var(--s-text-40);
   margin-bottom: 14px;
 }
 .ledgerCard .head em {
@@ -925,19 +932,19 @@
   display: flex;
   justify-content: space-between;
   padding: 8px 0;
-  border-bottom: 1px solid var(--line);
+  border-bottom: 1px solid var(--s-line);
 }
 .ledgerCard .lrow:last-of-type {
   border-bottom: none;
 }
 .ledgerCard .k {
   font-size: var(--text-13);
-  color: var(--text60);
+  color: var(--s-text-60);
 }
 .ledgerCard .v {
   font-family: var(--serif);
   font-size: var(--text-16);
-  color: var(--text);
+  color: var(--s-text);
 }
 .ledgerCard .v em {
   font-style: normal;
@@ -969,7 +976,7 @@
   padding: calc(4px + var(--tab-ring-reach)) var(--tab-inline-reach)
     calc(1px + var(--tab-ring-reach));
   margin-inline: calc(-1 * var(--tab-inline-reach));
-  background: linear-gradient(var(--line), var(--line)) 0 100% / 100% 1px
+  background: linear-gradient(var(--s-line), var(--s-line)) 0 100% / 100% 1px
     no-repeat;
   background-origin: content-box;
   margin-bottom: 21px;
@@ -994,7 +1001,7 @@
   font-family: var(--sans);
   font-size: var(--text-14);
   font-weight: 600;
-  color: var(--text60);
+  color: var(--s-text-60);
   background: none;
   border: none;
   padding-bottom: 12px;
@@ -1005,8 +1012,14 @@
     color 0.2s var(--ease),
     border-bottom-color 0.2s var(--ease);
 }
+/* A touch screen of any width gets the full 44px tab. */
+@media (pointer: coarse) {
+  .tab {
+    min-height: var(--tap-min);
+  }
+}
 .tabOn {
-  color: var(--text);
+  color: var(--s-text);
   border-bottom-color: var(--accent);
 }
 
@@ -1015,11 +1028,69 @@
    for play and the longest Shuffle label (pt) on one row, and the cover gives
    up width to it. */
 .detailHero {
+  /* The cover's tint, washed behind the hero (data-tint from the cover). */
+  --wash-rgb: var(--studio-ink-rgb);
+  --wash-alpha: 0.07;
+  position: relative;
+  isolation: isolate;
   display: grid;
   grid-template-columns: minmax(0, 280px) minmax(22rem, 1fr);
   gap: 40px;
   align-items: flex-end;
   padding: 44px 0 32px;
+}
+.detailHero[data-tint="coral"] {
+  --wash-rgb: var(--accent-rgb);
+  --wash-alpha: 0.2;
+}
+.detailHero[data-tint="jade"] {
+  --wash-rgb: var(--jade-rgb);
+  --wash-alpha: 0.18;
+}
+/* Plum washes in the theme ink (plum in light, cream in dark), so the tint
+   shows on both surfaces. */
+.detailHero[data-tint="plum"] {
+  --wash-rgb: var(--studio-ink-rgb);
+  --wash-alpha: 0.12;
+}
+/* Runs out through the page gutter (--studio-gutter, with the notch inset)
+   and up under the topbar's frosted glass, then fades to the page before the
+   body starts.
+   The second glow pools under the cover, so the art sits in its own light. */
+.detailWash {
+  position: absolute;
+  inset-block: -96px -24px;
+  inset-inline-start: calc(-1 * var(--studio-gutter-left));
+  inset-inline-end: calc(-1 * var(--studio-gutter-right));
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      ellipse 46% 58% at 16% 62%,
+      rgba(var(--wash-rgb), calc(var(--wash-alpha) * var(--wash-boost, 1))),
+      transparent 72%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(
+        var(--wash-rgb),
+        calc(var(--wash-alpha) * 0.9 * var(--wash-boost, 1))
+      ),
+      transparent 82%
+    );
+}
+.detailCopy {
+  min-width: 0;
+}
+/* The sticky header watches this marker leave the viewport. Absolute, so it
+   takes no grid cell. */
+.detailSentinel {
+  position: absolute;
+  inset-inline-start: 0;
+  bottom: 0;
+  width: 1px;
+  height: 1px;
+  pointer-events: none;
 }
 .detailArt {
   position: relative;
@@ -1027,6 +1098,111 @@
   border-radius: var(--radius-16);
   overflow: hidden;
   box-shadow: 0 28px 60px -28px rgba(0, 0, 0, 0.7);
+}
+/* Phones and tablets: the cover centres at a size that leaves the title and
+   Play above the fold, and the copy keeps the full width. */
+@media (--compact) {
+  .detailHero {
+    gap: 24px;
+    padding: 28px 0 24px;
+  }
+  .detailArt {
+    justify-self: center;
+    width: min(260px, 68vw);
+  }
+}
+/* A phone on its side: the cover gives the short screen back to the title
+   and Play. */
+@media (--compact) and (max-height: 500px) {
+  .detailArt {
+    width: min(180px, 44vh);
+  }
+}
+/* A hero under a breadcrumb (the track page) starts its wash at its own top
+   and fades it in, so the crumb keeps the plain page behind its text. */
+.detailHeroUnderCrumb .detailWash {
+  inset-block-start: 0;
+  mask-image: linear-gradient(
+    180deg,
+    transparent,
+    var(--studio-surface) 72px
+  );
+}
+/* The phone action row: Play, then round 44px icon buttons. It fits one
+   line at 360px for a release or a track; a longer row (an artist's Follow
+   in PT) wraps onto a second line rather than run past the screen. */
+.heroActions[data-compact] {
+  flex-wrap: wrap;
+  gap: 10px 6px;
+  margin-top: 18px;
+}
+/* The blocked reason leaves the phone row and becomes Play's tooltip; it
+   stays in the tree, so aria-describedby still reads it. */
+.heroActions[data-compact] [data-size="hero"] > span[id] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.heroActions[data-compact] > :first-child {
+  margin-inline-end: auto;
+}
+/* (0,1,1) like the pill rule above and later in the file, so it wins over
+   the pill and loses to the play button's own (0,2,0) size. */
+.heroActions:where([data-compact])
+  button:where(:not([role="menuitem"], .heroLabelled *)) {
+  width: var(--tap-min);
+  min-width: var(--tap-min);
+  height: var(--tap-min);
+  padding: 0;
+  border-radius: var(--radius-avatar);
+}
+.heroActions:where([data-compact]) button:where(:not([role="menuitem"])) svg {
+  width: 18px;
+  height: 18px;
+}
+/* A control that keeps its words in the phone row (Follow). */
+.heroLabelled {
+  display: inline-flex;
+  flex: none;
+}
+/* An icon-only link in the phone row (View profile), drawn like the round
+   icon buttons beside it. */
+.heroIconLink {
+  display: inline-grid;
+  place-items: center;
+  width: var(--tap-min);
+  height: var(--tap-min);
+  border: 1px solid var(--s-line);
+  border-radius: var(--radius-avatar);
+  background: rgba(var(--studio-ink-rgb), 0.08);
+  color: var(--s-text);
+  font-size: var(--text-18);
+  transition-property: background-color, transform;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+@media (hover: hover) {
+  .heroIconLink:hover {
+    background: rgba(var(--studio-ink-rgb), 0.14);
+  }
+}
+.heroIconLink:active {
+  transform: scale(0.97);
+}
+@media (prefers-reduced-motion: reduce) {
+  .heroIconLink:active,
+  .heroActions
+    button:where(:not([role="menuitem"])):active:not([aria-disabled="true"]) {
+    transform: none;
+  }
+}
+.heroIconLink:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
 }
 .detailHero .kind {
   font-size: var(--text-11);
@@ -1039,7 +1215,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(2.5rem, 6vw, 4.75rem);
-  color: var(--text);
+  color: var(--s-text);
   letter-spacing: -0.025em;
   line-height: 0.96;
   margin: 12px 0;
@@ -1059,7 +1235,7 @@
 }
 .prose p {
   font-size: var(--text-15-5);
-  color: var(--text60);
+  color: var(--s-text-60);
   line-height: 1.8;
   margin-bottom: 14px;
 }
@@ -1073,7 +1249,7 @@
   gap: 10px;
   margin-top: 16px;
   font-size: var(--text-13);
-  color: var(--text40);
+  color: var(--s-text-40);
   font-family: var(--serif);
   font-style: italic;
 }
@@ -1091,7 +1267,7 @@
 }
 .buyCard {
   background: rgba(var(--studio-ink-rgb), 0.04);
-  border: 1px solid var(--line);
+  border: 1px solid var(--s-line);
   border-radius: var(--radius-18);
   padding: 24px 26px;
 }
@@ -1099,7 +1275,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: var(--text-48);
-  color: var(--text);
+  color: var(--s-text);
   letter-spacing: -0.02em;
   line-height: 1;
   margin: 6px 0;
@@ -1110,11 +1286,11 @@
 }
 .buyCard .price .small {
   font-size: var(--text-14);
-  color: var(--text40);
+  color: var(--s-text-40);
 }
 .buyCard .sub {
   font-size: var(--text-13);
-  color: var(--text60);
+  color: var(--s-text-60);
   margin-bottom: 16px;
 }
 .buyActions {
@@ -1126,9 +1302,9 @@
   font-family: var(--sans);
   font-size: var(--text-13-5);
   font-weight: 600;
-  color: var(--text);
+  color: var(--s-text);
   background: rgba(var(--studio-ink-rgb), 0.08);
-  border: 1px solid var(--line);
+  border: 1px solid var(--s-line);
   border-radius: var(--radius-12);
   padding: 12px 16px;
   cursor: pointer;
@@ -1148,7 +1324,7 @@
 }
 .splitHint {
   font-size: var(--text-12);
-  color: var(--text40);
+  color: var(--s-text-40);
   line-height: 1.55;
   margin-top: 14px;
 }
@@ -1160,7 +1336,7 @@
 
 .payMini {
   font-size: var(--text-11-5);
-  color: var(--text40);
+  color: var(--s-text-40);
 }
 .payMini b {
   display: block;
@@ -1197,18 +1373,24 @@
     grid-template-columns: repeat(2, 1fr);
   }
 }
+/* A phone on its side: the detail hero goes back to two columns, a 160px
+   cover beside the copy, so the title and Play share the short screen.
+   After the one-column rule above, which it overrides. */
+@media (--compact) and (max-height: 500px) {
+  .detailHero {
+    grid-template-columns: 160px minmax(0, 1fr);
+    gap: 20px;
+    align-items: center;
+  }
+  .detailArt {
+    justify-self: stretch;
+    width: 160px;
+  }
+}
 
 /* Loading skeletons: an ink shimmer that follows the Studio surface. */
 .skel {
-  border-radius: var(--radius-8);
-  background: linear-gradient(
-    90deg,
-    rgba(var(--studio-ink-rgb), 0.05) 25%,
-    rgba(var(--studio-ink-rgb), 0.11) 50%,
-    rgba(var(--studio-ink-rgb), 0.05) 75%
-  );
-  background-size: 200% 100%;
-  animation: qpShimmer 1.5s ease infinite;
+  composes: shimmer from "./studioSkeleton.module.css";
 }
 .skelCard {
   display: flex;
@@ -1218,23 +1400,6 @@
 .skelCover {
   aspect-ratio: 1;
   border-radius: var(--radius-10);
-}
-@media (prefers-reduced-motion: reduce) {
-  .skel {
-    animation: none;
-  }
-}
-
-/* Local copies of shared keyframes, see src/styles/tokens/effects.css.
-   Global keyframes can't be referenced from a CSS module (the animation-name
-   gets scoped to a dangling hash), so each module needs its own copy. */
-@keyframes qpShimmer {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
 }
 
 /* The track hero's tighter padding (was an inline style). */

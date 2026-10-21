@@ -1,5 +1,6 @@
 import { isStudioNotFound, isStudioWithdrawn } from "./studio.api";
 import { isStudioTrackWithheld } from "./studioSafety.api";
+import { studioReasonOf, type StudioFailureReason } from "../studioReason";
 
 /** The subset of a React Query result the Studio pages branch on. */
 export interface StudioQueryLike {
@@ -26,6 +27,11 @@ export interface StudioLoadState {
    *  track page shows its withheld view, which names nothing. Optional so
    *  states built by hand in older tests stay valid. */
   isTrackWithheld?: boolean;
+  /** Why the last attempt failed, so the error panel names the cause
+   *  ("You're offline", a rate limit, our server). Read it only while
+   *  `isError` is true. Optional so states built by hand stay valid; a
+   *  missing reason reads as "unknown". */
+  reason?: StudioFailureReason;
   retry: () => void;
 }
 
@@ -56,6 +62,7 @@ export function studioLoadStateOf(
     isNotFound,
     isWithdrawn,
     isTrackWithheld,
+    reason: hasFailed ? studioReasonOf(query.error) : "unknown",
     retry: () => {
       void query.refetch();
     },
@@ -70,5 +77,6 @@ export const STUDIO_NOT_FOUND_STATE: StudioLoadState = {
   isNotFound: true,
   isWithdrawn: false,
   isTrackWithheld: false,
+  reason: "notFound",
   retry: () => {},
 };

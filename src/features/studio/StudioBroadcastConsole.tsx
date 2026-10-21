@@ -78,6 +78,7 @@ export function AudioInColumn({ reduced }: { reduced: boolean }) {
           {t("studio:broadcast.audioIn.panelLabel")}
         </div>
         {DEVICES.map((device) => (
+          // raw <button>: whole-card hit target that holds other content
           <button
             key={device.id}
             type="button"
@@ -273,29 +274,35 @@ export function AsideColumn({ reduced }: { reduced: boolean }) {
     <div className={s.col}>
       <div className={s.panel}>
         <div className={s.tabs}>
-          <button
-            type="button"
-            className={`${s.tab} ${tab === "tips" ? s.active : ""}`}
+          <Button
+            variant="quiet"
+            className={s.tab}
+            aria-pressed={tab === "tips"}
             onClick={() => setTab("tips")}
           >
-            <Translation
-              i18nKey="studio:broadcast.aside.tipsTab"
-              components={{ em: <em /> }}
-              values={{ amount: fmt.currency(total) }}
-              slots={{ amount: rollingTotal }}
-            />
-          </button>
-          <button
-            type="button"
-            className={`${s.tab} ${tab === "talkback" ? s.active : ""}`}
+            <span>
+              <Translation
+                i18nKey="studio:broadcast.aside.tipsTab"
+                components={{ em: <em /> }}
+                values={{ amount: fmt.currency(total) }}
+                slots={{ amount: rollingTotal }}
+              />
+            </span>
+          </Button>
+          <Button
+            variant="quiet"
+            className={s.tab}
+            aria-pressed={tab === "talkback"}
             onClick={() => setTab("talkback")}
           >
-            <Translation
-              i18nKey="studio:broadcast.aside.talkbackTab"
-              components={{ em: <em /> }}
-              values={{ count: TALKBACK.length }}
-            />
-          </button>
+            <span>
+              <Translation
+                i18nKey="studio:broadcast.aside.talkbackTab"
+                components={{ em: <em /> }}
+                values={{ count: TALKBACK.length }}
+              />
+            </span>
+          </Button>
         </div>
 
         {tab === "tips" ? (

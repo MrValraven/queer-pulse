@@ -1,3 +1,4 @@
+import { Button } from "../../../../shared/components/ui";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { formatTrackTime } from "../../api/studio.adapters";
 import styles from "../../StudioPlayerSeek.module.css";
@@ -23,7 +24,8 @@ export function StudioSeekElapsedLabel({
 }
 
 /** The label after the seek bar: the track's length, or the time left
- *  once the member presses it. */
+ *  once the member presses it. Its press area reaches 44px tall on touch
+ *  while the text keeps its size (DES-24). */
 export function StudioSeekTotalToggle({
   mode,
   onToggle,
@@ -52,18 +54,20 @@ export function StudioSeekTotalToggle({
         ? t("studio:playerBar.remainingTime", { time: remainingLabel })
         : totalLabel;
   return (
-    <button
-      type="button"
+    <Button
+      variant="quiet"
       className={`${styles.time} ${styles.timeToggle}`}
       data-seek-time=""
       aria-pressed={mode === "remaining"}
       aria-disabled={isLengthKnown ? undefined : "true"}
-      aria-label={t("studio:playerBar.remainingToggle")}
+      // The name starts with the time on screen, so voice control can press
+      // it by what it shows (WCAG 2.5.3); aria-pressed carries the mode.
+      aria-label={t("studio:playerBar.timeToggleLabel", { time: shownLabel })}
       onClick={() => {
         if (isLengthKnown) onToggle();
       }}
     >
       {shownLabel}
-    </button>
+    </Button>
   );
 }

@@ -28,22 +28,6 @@
   color: var(--studio-accent-text);
 }
 
-.headAction {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  min-height: var(--tap-min);
-  padding: 0;
-  border: 0;
-  background: none;
-  color: var(--studio-accent-text);
-  font: inherit;
-  font-size: var(--text-13);
-  cursor: pointer;
-}
-
-.headAction:focus-visible,
-.trackPlay:focus-visible,
 .contact:focus-visible {
   outline: var(--focus-ring);
   outline-offset: var(--focus-ring-offset);
@@ -81,19 +65,22 @@
   background: rgba(var(--studio-ink-rgb), 0.09);
 }
 
-.trackPlay {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+/* Each track's round play: an <IconButton> kept round and coral. The
+   doubled class outranks the kit's quiet icon fill and its hover wash. */
+.trackPlay.trackPlay {
   flex-shrink: 0;
-  width: var(--tap-min);
-  height: var(--tap-min);
-  border: 0;
   border-radius: 50%;
   background: var(--accent);
   color: var(--studio-bg);
-  cursor: pointer;
+  font-size: var(--text-16);
   touch-action: manipulation;
+}
+
+@media (hover: hover) {
+  .trackPlay.trackPlay:hover:not(:disabled):not([aria-disabled="true"]) {
+    background: var(--accent);
+    color: var(--studio-bg);
+  }
 }
 
 .trackText {

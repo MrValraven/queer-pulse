@@ -99,6 +99,16 @@ export const shared: Catalog = {
     "Cópias dos ficheiros do próprio site, para abrir depressa e continuar a funcionar com má ligação. Sem conteúdo pessoal.",
   "consent.storage.monitoring.purpose":
     "Absolutamente nada enquanto isto estiver desativado. Se o ativares, o nosso relator de erros (Sentry) carrega e pode guardar um identificador de diagnóstico. Sem gravação de sessão, sem rastreio de desempenho, sem dados de publicidade ou perfilagem.",
+  "consent.storage.studioListening.purpose":
+    "A tua fila do Studio e onde paraste (só com Retomar onde ficaste ligado), mais as faixas que tocaste e pesquisaste há pouco. Fica neste dispositivo, nunca nos chega e apaga-se quando terminas sessão ou usas a Saída rápida.",
+  "consent.storage.studioListeningSettings.purpose":
+    "Os teus interruptores de audição do Studio: Retomar onde ficaste, Tocado recentemente e Atalhos de uma só tecla.",
+  "consent.storage.studioRail.purpose":
+    "Onde deslizaste as tuas playlists do Studio e como as ordenaste, só para este separador.",
+  "consent.storage.studioTaste.purpose":
+    "Os géneros e ambientes que escolheste nas boas-vindas do Studio, que põem esses mosaicos primeiro na página inicial do Studio. Fica só neste dispositivo e apaga-se quando terminas sessão ou usas a Saída rápida. Nunca nos chega.",
+  "consent.storage.studioWelcomeSeen.purpose":
+    "Que já viste as boas-vindas do Studio, para não voltarem a abrir quando inicias sessão outra vez. Guarda só o identificador da tua conta, fica neste dispositivo e apaga-se quando usas a Saída rápida. Nunca nos chega.",
 
   // Feedback: PageLoader / RouteFallback / ErrorFallback / RoomLoader
   "feedback.errorFallback.title": "Algo correu mal do nosso <em>lado</em>",
@@ -321,7 +331,7 @@ export const shared: Catalog = {
   "apiError.server": "Algo correu mal do nosso lado. Tenta outra vez.",
   "apiError.forbidden": "Não tens acesso a isso.",
   "apiError.accountRestricted":
-    "Não podes fazer isso enquanto estiver em vigor uma restrição de moderação. Podes recorrer nas definições da tua conta.",
+    "Não podes fazer isso enquanto estiver em vigor uma restrição de moderação. Podes recorrer em Segurança, em Contestar uma decisão.",
   "apiError.generic": "Algo correu mal.",
   "apiError.genericRetry": "Algo correu mal. Tenta outra vez.",
   "apiError.tryAgainTail": " Tenta outra vez.",
@@ -777,6 +787,7 @@ export const shared: Catalog = {
   "studioShare.track": "Faixa do Studio",
   "studioShare.release": "Lançamento do Studio",
   "studioShare.playlist": "Playlist do Studio",
+  "studioShare.lyric": "Letra do Studio",
   "studioShare.unavailable": "Indisponível",
   "apiError.quizshowAdultsRounds":
     "O jogo ao vivo deste evento tem rondas para adultos. Muda a etiqueta delas no separador Jogo ao vivo e depois desliga o 18+",

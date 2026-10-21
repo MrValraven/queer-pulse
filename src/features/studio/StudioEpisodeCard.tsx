@@ -1,17 +1,16 @@
 import { Link } from "react-router-dom";
-import { FiPause, FiPlay } from "react-icons/fi";
-import { Collapse, ImageSlot } from "../../shared/components/ui";
+import { Collapse } from "../../shared/components/ui";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { StudioLatestEpisodeView } from "./api/studio.adapters";
 import { useStudioHideExplicit } from "./api/useStudioPlaybackPreferences";
+import { StudioMediaCard } from "./kit/StudioMediaCard";
 import { playEpisode } from "./player/studioEpisodePlay";
 import { useStudioPlayer } from "./player/studioPlayerContext";
 import { queueItemFromEpisode, showQueueSource } from "./player/studioQueue";
 import { StudioHiddenTrackNote } from "./StudioHiddenTrack";
-import styles from "./studio.module.css";
-import kit from "./studioKit.module.css";
 import css from "./StudioFormats.module.css";
+import { StudioReleaseCoverArt } from "./StudioReleaseCoverArt";
 
 const DATE_FORMAT: Intl.DateTimeFormatOptions = {
   day: "numeric",
@@ -29,13 +28,34 @@ function publishedDateOptions(publishedAt: Date): Intl.DateTimeFormatOptions {
   return isThisYear ? DATE_FORMAT : DATE_FORMAT_WITH_YEAR;
 }
 
-/** One episode on the New episodes shelf: the show's cover, the episode
- *  title, the show name and the date. Play starts the episode alone (spec
- *  5.6). The cover link stays out of the tab order, as on release cards. */
+/** Whole minutes left, at least 1 while anything is left. */
+function minutesLeftOf(durationSeconds: number, positionSeconds: number) {
+  return Math.max(1, Math.ceil((durationSeconds - positionSeconds) / 60));
+}
+
+/** The saved place as a thin bar along the foot of the art. Decorative:
+ *  the meta line says how much is left in words. */
+function StudioEpisodeProgressBar({ share }: { share: number }) {
+  return (
+    <span className={css.progressTrack} aria-hidden="true">
+      <span
+        className={css.progressFill}
+        style={{ transform: `scaleX(${share})` }}
+      />
+    </span>
+  );
+}
+
+/** One episode on a shelf: the show's cover, the episode title, the show
+ *  name and the date. Play starts the episode alone (spec 5.6) and resumes
+ *  a saved place. With `positionSeconds` (Continue listening) the art shows
+ *  how far the member got and the meta line says how much is left. */
 export function StudioEpisodeCard({
   episode,
+  positionSeconds,
 }: {
   episode: StudioLatestEpisodeView;
+  positionSeconds?: number;
 }) {
   const { t } = useTranslation();
   const formatters = useFormat();
@@ -48,70 +68,82 @@ export function StudioEpisodeCard({
   // audio, like every other row.
   const isHidden = useStudioHideExplicit() && track.isExplicit;
   const isPlayBlocked = !track.hasAudio || isHidden;
+  const duration = track.durationSeconds ?? 0;
+  const hasProgress = positionSeconds !== undefined && duration > 0;
+  const savedPosition = positionSeconds ?? 0;
+  const progressShare = hasProgress
+    ? Math.min(1, Math.max(0, savedPosition / duration))
+    : 0;
   return (
-    <article className={styles.card}>
-      <div className={kit.coverArea}>
-        <Link
-          to={track.href}
-          className={kit.coverLink}
-          tabIndex={-1}
-          aria-hidden="true"
-        >
-          <div className={styles.cardCov}>
-            <ImageSlot
-              src={release.coverUrl ?? undefined}
-              tint={release.tint}
-              width="100%"
-              height="100%"
-              radius={10}
-              placeholder={t("studio:media.coverLabel")}
-              style={{ position: "absolute", inset: 0 }}
-            />
-          </div>
-        </Link>
-        <button
-          type="button"
-          className={`${styles.playFab} ${kit.cardPlay}`}
-          data-current={isCurrent || undefined}
-          aria-disabled={(!isCurrent && isPlayBlocked) || undefined}
-          aria-label={t(
-            isPlaying
-              ? "studio:episodeCard.pauseAria"
-              : "studio:episodeCard.playAria",
-            { title: track.title },
-          )}
-          onClick={() => {
-            if (isCurrent) player.togglePlay();
-            else if (!isPlayBlocked)
-              void playEpisode(
-                player,
-                queueItemFromEpisode(track, release),
-                showQueueSource(release),
-              );
-          }}
-        >
-          {isPlaying ? <FiPause aria-hidden /> : <FiPlay aria-hidden />}
-        </button>
-      </div>
-      <h4>
-        <Link to={track.href} className={kit.titleLink}>
-          {track.title}
-        </Link>
-      </h4>
-      <div className={`${styles.meta} ${css.shelfMeta}`}>
-        <Link to={release.href} className={kit.titleLink}>
-          {release.title}
-        </Link>
-        {publishedAt && <span aria-hidden="true">·</span>}
-        {publishedAt && (
-          <span>
-            {formatters.date(publishedAt, publishedDateOptions(publishedAt))}
+    <StudioMediaCard
+      kind="episode"
+      href={track.href}
+      title={track.title}
+      isPlaying={isPlaying}
+      playLabel={t(
+        isPlaying
+          ? "studio:episodeCard.pauseAria"
+          : "studio:episodeCard.playAria",
+        { title: track.title },
+      )}
+      onPlay={
+        isCurrent || !isPlayBlocked
+          ? () => {
+              if (isCurrent) player.togglePlay();
+              else
+                void playEpisode(
+                  player,
+                  queueItemFromEpisode(track, release),
+                  showQueueSource(release),
+                );
+            }
+          : undefined
+      }
+      cover={
+        <>
+          <StudioReleaseCoverArt
+            src={release.coverUrl}
+            title={release.title}
+            format={release.format}
+            tint={release.tint}
+          />
+          {hasProgress && <StudioEpisodeProgressBar share={progressShare} />}
+        </>
+      }
+      meta={
+        <>
+          <span className={css.shelfMeta}>
+            <Link to={release.href} className={css.metaLink}>
+              {release.title}
+            </Link>
+            {hasProgress ? (
+              <>
+                <span aria-hidden="true">·</span>
+                <span>
+                  {t("studio:home.continue.minutesLeft", {
+                    count: minutesLeftOf(duration, savedPosition),
+                  })}
+                </span>
+              </>
+            ) : (
+              publishedAt && (
+                <>
+                  <span aria-hidden="true">·</span>
+                  <span>
+                    {formatters.date(
+                      publishedAt,
+                      publishedDateOptions(publishedAt),
+                    )}
+                  </span>
+                </>
+              )
+            )}
           </span>
-        )}
-      </div>
-      <Collapse isOpen={isHidden}>
-        <StudioHiddenTrackNote />
-      </Collapse>
-    </article>
+          <Collapse isOpen={isHidden}>
+            <StudioHiddenTrackNote />
+          </Collapse>
+        </>
+      }
+    />
   );
 }

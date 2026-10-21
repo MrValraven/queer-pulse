@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { FiPlus } from "react-icons/fi";
 import { useToast } from "../../shared/components/feedback/useToast";
-import { Button } from "../../shared/components/ui";
+import { Button, Collapse } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { UPLOAD_SPLITS } from "./studioUpload.data";
@@ -39,7 +39,19 @@ export function SplitsTable({
     setAdding(false);
   }
 
-  const rows = [...UPLOAD_SPLITS, ...collaborators];
+  const rows: Collaborator[] = [
+    ...UPLOAD_SPLITS.map(({ subtitleKey, roleKey, ...row }) => ({
+      ...row,
+      subtitle: t(subtitleKey),
+      role: t(roleKey),
+    })),
+    ...collaborators,
+  ];
+  // The footer states what the rows add up to (an invite joins at 0%).
+  const totalPercent = rows.reduce(
+    (sum, row) => sum + (Number(row.percent) || 0),
+    0,
+  );
 
   return (
     <div className={s.card}>
@@ -67,14 +79,8 @@ export function SplitsTable({
               <td>
                 <div className={s.splitWho}>
                   <span
-                    className={s.av}
-                    style={
-                      row.tone === "jade"
-                        ? {
-                            background: "rgba(var(--jade-rgb),.18)",
-                            color: "var(--studio-jade-text)",
-                          }
-                        : undefined
+                    className={
+                      row.tone === "jade" ? `${s.av} ${s.avJade}` : s.av
                     }
                   >
                     {row.avatar}
@@ -85,26 +91,11 @@ export function SplitsTable({
                   </span>
                 </div>
               </td>
-              <td style={{ fontStyle: "italic", fontFamily: "var(--serif)" }}>
-                {row.role}
-              </td>
+              <td className={s.splitRole}>{row.role}</td>
               <td>
                 <span className={s.splitPct}>
                   <em>{row.percent}</em>%
                 </span>
-                {row.onTrack && (
-                  <small
-                    style={{
-                      display: "block",
-                      fontFamily: "var(--serif)",
-                      fontStyle: "italic",
-                      fontSize: 11,
-                      color: "var(--text40)",
-                    }}
-                  >
-                    {row.onTrack}
-                  </small>
-                )}
               </td>
             </tr>
           ))}
@@ -113,14 +104,14 @@ export function SplitsTable({
       <div className={s.splitFoot}>
         <span className={s.splitTotal}>
           {t("studio:upload.splits.footer", {
-            total: "100%",
+            total: `${totalPercent}%`,
           })}
         </span>
         <Button variant="ghost" onClick={() => setAdding((v) => !v)}>
           <FiPlus /> {t("studio:upload.splits.addCollaboratorCta")}
         </Button>
       </div>
-      {adding && (
+      <Collapse isOpen={adding}>
         <div className={s.collabForm}>
           <input
             ref={handleRef}
@@ -136,7 +127,7 @@ export function SplitsTable({
             {t("studio:upload.splits.inviteCta")}
           </Button>
         </div>
-      )}
+      </Collapse>
     </div>
   );
 }

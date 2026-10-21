@@ -53,7 +53,13 @@
   transition-timing-function: var(--ease);
 }
 @media (hover: hover) {
-  .play:not([aria-disabled="true"]):hover {
+  /* :not(:disabled) matches the IconButton hover's weight, so the coral disc
+     and its plum icon hold on hover while the lift plays. */
+  .play:not(:disabled):not([aria-disabled="true"]):hover {
+    background: var(--accent);
+    /* css-scale-allow: non-flipping-text. The plum icon on the coral disc,
+       as at rest. */
+    color: var(--plum);
     transform: scale(1.06);
   }
 }

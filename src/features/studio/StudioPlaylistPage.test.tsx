@@ -231,7 +231,7 @@ describe("collaborative playlists (demo)", () => {
     expect(
       screen.queryByRole("button", { name: "Playlist actions" }),
     ).not.toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button", { name: "Accept" }));
+    fireEvent.click(screen.getByRole("button", { name: "Accept invite" }));
     expect(
       await screen.findByText("You can now edit Pride warm-up"),
     ).toBeInTheDocument();
@@ -249,7 +249,7 @@ describe("collaborative playlists (demo)", () => {
 
   it("moves focus to Playlist actions after Accept", async () => {
     renderRoutedPage("demo-playlist-pride-warm-up");
-    const accept = await screen.findByRole("button", { name: "Accept" });
+    const accept = await screen.findByRole("button", { name: "Accept invite" });
     accept.focus();
     fireEvent.click(accept);
     await waitFor(() =>
@@ -266,7 +266,9 @@ describe("collaborative playlists (demo)", () => {
 
   it("leaves for the library after Decline", async () => {
     renderRoutedPage("demo-playlist-pride-warm-up");
-    fireEvent.click(await screen.findByRole("button", { name: "Decline" }));
+    fireEvent.click(
+      await screen.findByRole("button", { name: "Decline invite" }),
+    );
     expect(await screen.findByText("Library page")).toBeInTheDocument();
     expect(await screen.findByText("Invite declined")).toBeInTheDocument();
   });

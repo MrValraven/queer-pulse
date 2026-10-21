@@ -108,7 +108,13 @@ export function StudioCreditsPage() {
   }
 
   let body: ReactNode;
-  if (loadState.isError) body = <StudioLoadError loadState={loadState} />;
+  if (loadState.isError)
+    body = (
+      <StudioLoadError
+        loadState={loadState}
+        what="studio:errors.what.creditsInbox"
+      />
+    );
   else if (!inbox) body = <StudioDetailSkeleton />;
   else
     body = (

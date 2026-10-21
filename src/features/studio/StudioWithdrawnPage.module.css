@@ -1,11 +1,11 @@
 .wrap {
-  --text: var(--studio-text);
-  --text-60: var(--studio-text-muted);
+  --s-text: var(--studio-text);
+  --s-text-60: var(--studio-text-muted);
   /* It carries 11px and 12px meta text, so it never qualifies as large text:
      the muted token clears the AA 4.5:1 floor on every studio ground in both
      themes. The old cream 0.40 measured 3.55:1 and failed. */
-  --text-40: var(--studio-text-muted);
-  --line: rgba(var(--studio-ink-rgb), 0.1);
+  --s-text-40: var(--studio-text-muted);
+  --s-line: rgba(var(--studio-ink-rgb), 0.1);
   --surface: rgba(var(--studio-ink-rgb), 0.05);
   --rail: var(--studio-surface-rail);
 
@@ -47,13 +47,13 @@
   margin: 0 auto 28px;
   border-radius: var(--radius-24);
   background: var(--surface);
-  border: 1px solid var(--line);
+  border: 1px solid var(--s-line);
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
   overflow: hidden;
-  color: var(--text-40);
+  color: var(--s-text-40);
 }
 .cover::after {
   content: "";
@@ -96,7 +96,7 @@
 }
 .sub {
   font-size: var(--text-16);
-  color: var(--text-60);
+  color: var(--s-text-60);
   line-height: 1.6;
   max-width: 52ch;
   margin: 18px auto 0;
@@ -109,13 +109,13 @@
 /* ── What this means card ── */
 .card {
   background: var(--surface);
-  border: 1px solid var(--line);
+  border: 1px solid var(--s-line);
   border-radius: var(--radius-18);
   padding: 28px 30px;
   margin: 0 auto 20px;
   max-width: 640px;
 }
-.card h3 {
+.card h2 {
   font-family: var(--serif);
   font-weight: 400;
   font-size: var(--text-22);
@@ -123,13 +123,13 @@
   letter-spacing: -0.01em;
   margin-bottom: 12px;
 }
-.card h3 em {
+.card h2 em {
   font-style: italic;
   color: var(--studio-accent-text);
 }
 .card p {
   font-size: var(--text-14-5);
-  color: var(--text-60);
+  color: var(--s-text-60);
   line-height: 1.65;
 }
 .jadeLine {
@@ -170,7 +170,7 @@
 
 /* ── Still available ── */
 .still {
-  border-top: 1px solid var(--line);
+  border-top: 1px solid var(--s-line);
   padding-top: 40px;
 }
 .rowH {
@@ -190,7 +190,7 @@
 }
 .rowH .subLine {
   font-size: var(--text-14);
-  color: var(--text-40);
+  color: var(--s-text-40);
   margin-top: 8px;
 }
 .rowGrid {
@@ -259,21 +259,15 @@
   justify-content: center;
   opacity: 0;
   transform: translateY(6px);
-  transition:
-    opacity 0.25s var(--ease),
-    transform 0.25s var(--ease);
-  cursor: pointer;
+  transition-property: opacity, transform;
+  transition-duration: var(--dur-base);
+  transition-timing-function: var(--ease);
   z-index: 2;
 }
-/* The app's two-tone focus ring: the cream halo reads on dark ground and art,
-   the --accent-deep ring reads on light art. The button sits 10px inside the
-   cover, so the 6px ring stays clear of the cover's overflow clip. */
-.playFab:focus-visible {
+/* The card link carries focus, so the decorative play shows with it. */
+.tcard:focus-visible .playFab {
   opacity: 1;
   transform: none;
-  outline: var(--focus-ring);
-  outline-offset: var(--focus-ring-offset);
-  box-shadow: var(--ring-cream);
 }
 @media (hover: hover) {
   .tcard:hover .playFab {
@@ -290,28 +284,28 @@
 }
 .byCur {
   font-size: var(--text-11);
-  color: var(--text-40);
+  color: var(--s-text-40);
   font-family: var(--serif);
   font-style: italic;
 }
-.tcard h4 {
+.tcard h3 {
   font-family: var(--serif);
   font-weight: 400;
   font-size: var(--text-16);
-  color: var(--text);
+  color: var(--s-text);
   line-height: 1.18;
   letter-spacing: -0.01em;
 }
-.tcard h4 em {
+.tcard h3 em {
   font-style: italic;
   color: var(--studio-accent-text);
 }
 .meta {
   font-size: var(--text-12);
-  color: var(--text-40);
+  color: var(--s-text-40);
 }
 .meta .who {
-  color: var(--text-60);
+  color: var(--s-text-60);
 }
 
 @media (--md) {

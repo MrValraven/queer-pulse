@@ -1,5 +1,10 @@
-import { AnimatePresence, m, useIsPresent } from "motion/react";
-import { useLayoutEffect, useRef, type ReactNode } from "react";
+import {
+  AnimatePresence,
+  m,
+  PresenceContext,
+  useIsPresent,
+} from "motion/react";
+import { useContext, useLayoutEffect, useRef, type ReactNode } from "react";
 import { useMotionPrefs } from "../../../../app/providers/motionPrefs";
 import styles from "../../StudioPlayer.module.css";
 
@@ -25,12 +30,30 @@ function useSwapSeconds(): number {
   return reducedMotion ? 0 : SWAP_SECONDS;
 }
 
+/** Whether the swap this item takes part in is a swipe's skip. An entering
+ *  item reads its own prop; a leaving one reads AnimatePresence's `custom`,
+ *  which carries the value of the change that removed it. */
+function useIsInstantSwap(isInstant: boolean): boolean {
+  const presence = useContext(PresenceContext);
+  if (presence && !presence.isPresent) return presence.custom === true;
+  return isInstant;
+}
+
 /** One title block of the swap. On its way out it is inert (out of the tab
  *  order, keyboard and assistive tech) and ignores the pointer while it
- *  fades. */
-function NowTextItem({ children }: { children: ReactNode }) {
+ *  fades. In a swipe's skip it arrives whole and the old one goes at once:
+ *  the slide carries the change. */
+function NowTextItem({
+  isInstant: isInstantSwap,
+  children,
+}: {
+  isInstant: boolean;
+  children: ReactNode;
+}) {
   const isPresent = useIsPresent();
-  const duration = useSwapSeconds();
+  const isInstant = useIsInstantSwap(isInstantSwap);
+  const swapSeconds = useSwapSeconds();
+  const duration = isInstant ? 0 : swapSeconds;
   return (
     <m.span
       className={styles.nowSwapItem}
@@ -38,7 +61,7 @@ function NowTextItem({ children }: { children: ReactNode }) {
       aria-hidden={isPresent ? undefined : true}
       data-swap-item=""
       data-leaving={isPresent ? undefined : ""}
-      initial={{ opacity: 0, y: SWAP_RISE_PX }}
+      initial={isInstant ? false : { opacity: 0, y: SWAP_RISE_PX }}
       animate={{
         opacity: 1,
         y: 0,
@@ -82,9 +105,12 @@ function readFocusedIndex(swap: HTMLElement): number | null {
  */
 export function StudioNowTextSwap({
   swapKey,
+  isInstant = false,
   children,
 }: {
   swapKey: string;
+  /** A swipe's skip: the slide moves the blocks, so they swap at once. */
+  isInstant?: boolean;
   children: ReactNode;
 }) {
   const swapRef = useRef<HTMLSpanElement>(null);
@@ -125,8 +151,10 @@ export function StudioNowTextSwap({
         });
       }}
     >
-      <AnimatePresence initial={false}>
-        <NowTextItem key={swapKey}>{children}</NowTextItem>
+      <AnimatePresence initial={false} custom={isInstant}>
+        <NowTextItem key={swapKey} isInstant={isInstant}>
+          {children}
+        </NowTextItem>
       </AnimatePresence>
     </span>
   );
@@ -135,15 +163,23 @@ export function StudioNowTextSwap({
 /** One cover of the swap. The entering cover fades in on top; the leaving
  *  one stays whole underneath until it is covered, so the box never shows
  *  through mid-fade. */
-function NowCoverItem({ children }: { children: ReactNode }) {
+function NowCoverItem({
+  isInstant: isInstantSwap,
+  children,
+}: {
+  isInstant: boolean;
+  children: ReactNode;
+}) {
   const isPresent = useIsPresent();
-  const duration = useSwapSeconds();
+  const isInstant = useIsInstantSwap(isInstantSwap);
+  const swapSeconds = useSwapSeconds();
+  const duration = isInstant ? 0 : swapSeconds;
   return (
     <m.span
       className={styles.coverSwapItem}
       aria-hidden={isPresent ? undefined : true}
       data-leaving={isPresent ? undefined : ""}
-      initial={{ opacity: 0 }}
+      initial={isInstant ? false : { opacity: 0 }}
       animate={{ opacity: 1, transition: { duration, ease: SWAP_EASE_OUT } }}
       exit={{ opacity: 0, transition: { duration: 0, delay: duration } }}
     >
@@ -152,18 +188,23 @@ function NowCoverItem({ children }: { children: ReactNode }) {
   );
 }
 
-/** The cover's crossfade on a track change, inside the art box. */
+/** The cover's crossfade on a track change, inside the art box; at once
+ *  in a swipe's skip (`isInstant`). */
 export function StudioNowCoverSwap({
   swapKey,
+  isInstant = false,
   children,
 }: {
   swapKey: string;
+  isInstant?: boolean;
   children: ReactNode;
 }) {
   return (
     <span className={styles.coverSwap}>
-      <AnimatePresence initial={false}>
-        <NowCoverItem key={swapKey}>{children}</NowCoverItem>
+      <AnimatePresence initial={false} custom={isInstant}>
+        <NowCoverItem key={swapKey} isInstant={isInstant}>
+          {children}
+        </NowCoverItem>
       </AnimatePresence>
     </span>
   );

@@ -50,6 +50,37 @@ interface UnsavedChangesGuardOptions {
    * prompts (see "Query steps" below).
    */
   shouldAllowQueryChanges?: boolean;
+  /**
+   * Narrows `shouldAllowQueryChanges`: a same-pathname navigation passes
+   * silently only when this returns true for its destination (the URL it
+   * would land on). Anything else on that pathname prompts like a move off
+   * the page, so a page whose draft lives in one query param (the Studio
+   * upload flow's `?release=`) can let its own step changes through while
+   * a link that drops the draft still asks. Omitted, every same-pathname
+   * move passes, as before. Read at navigation time, so a fresh function
+   * each render is fine.
+   */
+  shouldAllowNavigation?: (destination: URL) => boolean;
+}
+
+/**
+ * Set once by Quick Exit right before it leaves the site. From then on no
+ * guard prompts, on navigation, Back or tab close, so the exit is instant
+ * whatever page the visitor was editing. Never cleared: the page is going.
+ */
+let isQuickExiting = false;
+
+/** Quick Exit calls this before `location.replace`; every guard stands down. */
+export function markQuickExiting(): void {
+  isQuickExiting = true;
+}
+
+// A page restored from the back/forward cache after Quick Exit is a live
+// page again: its guards must work, so the flag clears.
+if (typeof window !== "undefined") {
+  window.addEventListener("pageshow", (event) => {
+    if (event.persisted) isQuickExiting = false;
+  });
 }
 
 /**
@@ -112,6 +143,32 @@ function stampEntryDepth(depth: number): void {
   );
 }
 
+/** The URL a navigator target would land on, resolved against the current
+ *  one the way the router resolves it (a missing pathname keeps this one). */
+function destinationUrlOf(target: unknown): URL {
+  const current = new URL(window.location.href);
+  const path: Partial<Path> =
+    typeof target === "string"
+      ? parsePath(target)
+      : target && typeof target === "object"
+        ? target
+        : {};
+  const destination = new URL(path.pathname || current.pathname, current);
+  destination.search = path.search ?? "";
+  destination.hash = path.hash ?? "";
+  return destination;
+}
+
+/** A same-pathname target the caller's `shouldAllowNavigation` (if any)
+ *  lets through as a step inside the page. */
+function isAllowedQueryStep(
+  target: unknown,
+  shouldAllowNavigation: ((destination: URL) => boolean) | undefined,
+): boolean {
+  if (!isSamePathnameTarget(target)) return false;
+  return shouldAllowNavigation?.(destinationUrlOf(target)) ?? true;
+}
+
 /**
  * Does a navigator target keep the current pathname? `useNavigate` hands the
  * navigator a resolved `Partial<Path>`; a string is parsed the way the router
@@ -127,6 +184,37 @@ function isSamePathnameTarget(target: unknown): boolean {
   if (!pathname) return true;
   const destination = new URL(pathname, window.location.href).pathname;
   return destination === window.location.pathname;
+}
+
+/**
+ * One in-app navigation away from a guarded page. Standing on the armed
+ * sentinel, the destination overwrites it, which leaves the stack the caller
+ * would have got had the sentinel never existed. A leave to the same
+ * pathname keeps the page mounted, so while the guard is still active it
+ * re-arms there (`rearm`), and Back stays caught after the move.
+ */
+function leaveFromGuardedPage(
+  args: unknown[],
+  historyNavigator: unknown,
+  context: {
+    armedRef: { current: boolean };
+    isSentinelOnTop: () => boolean;
+    replace: (...args: unknown[]) => void;
+    navigate: (...args: unknown[]) => void;
+    rearm: (() => void) | null;
+  },
+): void {
+  const isStayingMounted = isSamePathnameTarget(args[0]);
+  if (context.armedRef.current && context.isSentinelOnTop()) {
+    context.armedRef.current = false;
+    context.replace.apply(historyNavigator, args);
+  } else {
+    context.navigate.apply(historyNavigator, args);
+  }
+  if (isStayingMounted && context.rearm && !context.armedRef.current) {
+    context.armedRef.current = true;
+    context.rearm();
+  }
 }
 
 /**
@@ -359,6 +447,7 @@ export function useUnsavedChangesGuard({
   onSaveAndLeave,
   guardBackButton = false,
   shouldAllowQueryChanges = false,
+  shouldAllowNavigation,
 }: UnsavedChangesGuardOptions): void {
   const { navigator } = useContext(UNSAFE_NavigationContext);
   const { askToLeave, dismissOpenPrompt, isPromptOpen } =
@@ -380,6 +469,8 @@ export function useUnsavedChangesGuard({
   // (synced with the other latest-value refs below) so it never re-runs the
   // navigator patch or the popstate listener; both prompts read it on open.
   const onSaveAndLeaveRef = useRef(onSaveAndLeave);
+  // Read at navigation time (synced with the refs below), like the above.
+  const shouldAllowNavigationRef = useRef(shouldAllowNavigation);
 
   const pushSentinel = useCallback(() => {
     sentinelIdRef.current = `unsaved-guard-${(nextSentinelId += 1)}`;
@@ -418,14 +509,14 @@ export function useUnsavedChangesGuard({
     const leave = (
       requestedMethod: (...args: unknown[]) => void,
       args: unknown[],
-    ) => {
-      if (armedRef.current && isSentinelOnTop()) {
-        armedRef.current = false;
-        originalReplace.apply(historyNavigator, args);
-        return;
-      }
-      requestedMethod.apply(historyNavigator, args);
-    };
+    ) =>
+      leaveFromGuardedPage(args, historyNavigator, {
+        armedRef,
+        isSentinelOnTop,
+        replace: originalReplace,
+        navigate: requestedMethod,
+        rearm: guardBackButton && active ? pushSentinel : null,
+      });
     // A same-pathname move on a `shouldAllowQueryChanges` page: no prompt. On
     // the armed sentinel it waits for our walk back off it (see "Query steps").
     // A second step asked for before that walk lands takes the queued slot
@@ -455,11 +546,12 @@ export function useUnsavedChangesGuard({
       methodName: "push" | "replace",
       args: unknown[],
     ) => {
-      if (shouldAllowQueryChanges && isSamePathnameTarget(args[0])) {
+      const allowsStep = shouldAllowNavigationRef.current;
+      if (shouldAllowQueryChanges && isAllowedQueryStep(args[0], allowsStep)) {
         stepWithinPage(methodName, args);
         return;
       }
-      if (!active) {
+      if (!active || isQuickExiting) {
         leave(originalMethods[methodName], args);
         return;
       }
@@ -485,12 +577,14 @@ export function useUnsavedChangesGuard({
     onConfirmLeave,
     isSentinelOnTop,
     askToLeave,
+    pushSentinel,
   ]);
   /* eslint-enable react-hooks/immutability */
 
   useEffect(() => {
     if (!active) return;
     const warnBeforeUnload = (event: BeforeUnloadEvent) => {
+      if (isQuickExiting) return;
       event.preventDefault();
       event.returnValue = "";
     };
@@ -510,6 +604,7 @@ export function useUnsavedChangesGuard({
     confirmMessageRef.current = confirmMessage;
     onConfirmLeaveRef.current = onConfirmLeave;
     onSaveAndLeaveRef.current = onSaveAndLeave;
+    shouldAllowNavigationRef.current = shouldAllowNavigation;
   });
 
   // Arm the sentinel the FIRST time the guard goes active this mount, so a Back
@@ -546,6 +641,8 @@ export function useUnsavedChangesGuard({
   useEffect(() => {
     if (!guardBackButton) return;
     const onPopState = () => {
+      // Quick Exit is burying history on its way out: never prompt.
+      if (isQuickExiting) return;
       // Our own walk back off the sentinel for a queued query step: perform
       // the step as asked, then re-arm on top of it.
       const pendingStep = pendingStepRef.current;

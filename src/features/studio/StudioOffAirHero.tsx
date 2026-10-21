@@ -1,4 +1,4 @@
-import { ImageSlot } from "../../shared/components/ui";
+import { IconButton, ImageSlot } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -122,10 +122,10 @@ export function StudioOffAirHero() {
               ].join(" · ")}
             </p>
           </div>
-          <button
-            type="button"
+          <IconButton
             className={styles.playBig}
             aria-label={t("studio:offAir.hero.replayAria")}
+            tooltip
             onClick={() =>
               showToast(
                 t("studio:offAir.hero.replayingToast", {
@@ -138,7 +138,7 @@ export function StudioOffAirHero() {
             <svg viewBox="0 0 12 14" fill="currentColor" aria-hidden>
               <path d="M1 1l10 6-10 6z" />
             </svg>
-          </button>
+          </IconButton>
         </div>
       </div>
     </section>

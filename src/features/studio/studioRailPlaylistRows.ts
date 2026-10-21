@@ -3,8 +3,10 @@ import {
   isSavedItemUnavailable,
   type SavedItem,
 } from "../../app/providers/useSaved";
+import type { ImageSlotTint } from "../../shared/components/ui";
 import type { StudioPlaylistCardView } from "./api/studio.adapters";
 import { SAVED_ID_PREFIX } from "./studioRailPlaylists.data";
+import { savedCoverTintOf } from "./studioLibrarySort.data";
 
 /** One playlist row in the Studio rail. */
 export interface StudioRailPlaylistRowModel {
@@ -18,6 +20,17 @@ export interface StudioRailPlaylistRowModel {
   ownerName: string | null;
   isCollaborative: boolean;
   isSaved: boolean;
+  /** The member owns it: Rename and Delete playlist. */
+  isOwner: boolean;
+  /** The owner or an active editor: Rename, and dropped tracks land in it. */
+  hasEditRights: boolean;
+  /** Tracks the member can play, for the add toast's count; null for a
+   *  save, which carries none. */
+  trackCount: number | null;
+  /** The folded rail's cover: up to four release covers (none for a save)
+   *  over the playlist's tint. */
+  coverUrls: string[];
+  tint: ImageSlotTint;
 }
 
 /**
@@ -41,6 +54,11 @@ export function toRailPlaylistRows(
       ownerName: playlist.credit.name,
       isCollaborative: playlist.isCollaborative,
       isSaved: false,
+      isOwner: playlist.isOwner,
+      hasEditRights: playlist.hasEditRights,
+      trackCount: playlist.trackCount,
+      coverUrls: playlist.coverUrls,
+      tint: playlist.tint,
     }));
   const ownSavedIds = new Set(ownRows.map((row) => row.key));
   const savedRows: StudioRailPlaylistRowModel[] = [];
@@ -55,7 +73,22 @@ export function toRailPlaylistRows(
       ownerName: item.meta ?? null,
       isCollaborative: false,
       isSaved: true,
+      isOwner: false,
+      hasEditRights: false,
+      trackCount: null,
+      coverUrls: [],
+      tint: savedCoverTintOf(item.id),
     });
   }
   return [...ownRows, ...savedRows];
 }
+
+/** What the rail's filter box matches: the name and who it belongs to. */
+export const railPlaylistFilterText = (row: StudioRailPlaylistRowModel) =>
+  `${row.name} ${row.ownerName ?? ""}`;
+
+/** The rail's Creator sort reads the owner line. */
+export const RAIL_PLAYLIST_SORT_ACCESSORS = {
+  title: (row: StudioRailPlaylistRowModel) => row.name,
+  artist: (row: StudioRailPlaylistRowModel) => row.ownerName,
+};

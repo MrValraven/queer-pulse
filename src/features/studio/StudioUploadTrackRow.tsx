@@ -1,18 +1,24 @@
-import { useRef, useState, type DragEvent, type RefObject } from "react";
 import {
-  FiArrowDown,
-  FiArrowUp,
-  FiMenu,
-  FiRefreshCw,
-  FiTrash2,
-} from "react-icons/fi";
-import { Collapse } from "../../shared/components/ui";
+  useCallback,
+  useRef,
+  useState,
+  type PointerEvent as ReactPointerEvent,
+} from "react";
+import { AnimatePresence } from "motion/react";
+import { FiMenu } from "react-icons/fi";
+import { Collapse, ConfirmDialog } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { StudioReleaseType } from "./api/studio.types";
+import {
+  StudioUploadRowActions,
+  type RegisterControl,
+} from "./StudioUploadRowActions";
 import { StudioUploadRowProgress } from "./StudioUploadRowProgress";
 import { StudioUploadTrackDetails } from "./StudioUploadTrackDetails";
 import type { UploadRow } from "./useStudioTrackUploads";
 import tracksStyles from "./StudioUploadTracks.module.css";
+
+export type { UploadRowControl } from "./StudioUploadRowActions";
 
 const STAGE_KEY: Record<UploadRow["stage"], string> = {
   queued: "studio:uploadFlow.files.stage.queued",
@@ -25,112 +31,93 @@ const STAGE_KEY: Record<UploadRow["stage"], string> = {
   noAudio: "studio:uploadFlow.files.stage.noAudio",
 };
 
-/** The id a dragged row carries, kept apart from files dropped from the desktop. */
-const ROW_DRAG_TYPE = "application/x-studio-upload-row";
-
-/** The row buttons the list refocuses after a move or a removal. */
-export type UploadRowControl = "moveUp" | "moveDown" | "remove";
-
-/** Records (or, with null, forgets) one of this row's buttons. */
-type RegisterControl = (
-  control: UploadRowControl,
-  element: HTMLButtonElement | null,
-) => void;
-
-function startRowDrag(event: DragEvent<HTMLSpanElement>, localId: string) {
-  event.dataTransfer.setData(ROW_DRAG_TYPE, localId);
-  event.dataTransfer.effectAllowed = "move";
-  const rowElement = event.currentTarget.closest("li");
-  if (rowElement) event.dataTransfer.setDragImage(rowElement, 16, 16);
+/** The details panel's open state. Closing it with unsaved edits (Cancel,
+ *  or Edit details pressed again) asks first, so long manual work never
+ *  vanishes on a press that looks harmless. */
+function useDetailsPanel() {
+  const [isEditing, setIsEditing] = useState(false);
+  const [isConfirmingDiscard, setIsConfirmingDiscard] = useState(false);
+  const isDirtyRef = useRef(false);
+  const editButtonRef = useRef<HTMLButtonElement>(null);
+  const onDirtyChange = useCallback((isDirty: boolean) => {
+    isDirtyRef.current = isDirty;
+  }, []);
+  const close = () => {
+    isDirtyRef.current = false;
+    setIsConfirmingDiscard(false);
+    setIsEditing(false);
+    editButtonRef.current?.focus();
+  };
+  const requestClose = () => {
+    if (isDirtyRef.current) setIsConfirmingDiscard(true);
+    else close();
+  };
+  return {
+    isEditing,
+    isConfirmingDiscard,
+    editButtonRef,
+    onDirtyChange,
+    close,
+    requestClose,
+    keepEditing: () => setIsConfirmingDiscard(false),
+    toggle: () => {
+      if (isEditing) requestClose();
+      else setIsEditing(true);
+    },
+  };
 }
 
-/** Move up, Move down, Retry, Edit details and Remove. A blocked move stays
- *  focusable (aria-disabled) so focus never drops off the list. */
-function RowActions({
+/** The stage line: what the row is doing, its length once ready, and the
+ *  measuring note while its loudness is read. */
+function StageLine({
   row,
-  label,
-  isFirst,
-  isLast,
-  canReorder,
-  isEditing,
-  editButtonRef,
-  registerControl,
-  onMove,
-  onRetry,
-  onRemove,
-  onToggleEditing,
+  isMeasuring,
 }: {
   row: UploadRow;
-  label: { title: string; position: number };
-  isFirst: boolean;
-  isLast: boolean;
+  isMeasuring: boolean;
+}) {
+  const { t } = useTranslation();
+  return (
+    <span className={tracksStyles.stage} data-stage={row.stage}>
+      {t(STAGE_KEY[row.stage])}
+      {row.durationLabel && row.stage === "ready"
+        ? ` · ${row.durationLabel}`
+        : ""}
+      <span
+        className={tracksStyles.measuring}
+        data-visible={isMeasuring || undefined}
+        aria-hidden={!isMeasuring || undefined}
+      >
+        {` · ${t("studio:upload.loudness.measuring")}`}
+      </span>
+    </span>
+  );
+}
+
+export interface UploadTrackRowProps {
+  row: UploadRow;
+  index: number;
+  rowCount: number;
+  releaseId: string;
   canReorder: boolean;
-  isEditing: boolean;
-  /** Edit details takes focus back when the details panel closes. */
-  editButtonRef: RefObject<HTMLButtonElement | null>;
   registerControl: RegisterControl;
   onMove: (offset: -1 | 1) => void;
   onRetry: () => void;
+  onCancel: () => void;
+  onAttachAudio: (file: File) => void;
   onRemove: () => void;
-  onToggleEditing: () => void;
-}) {
-  const { t } = useTranslation();
-  const isMoveUpBlocked = !canReorder || isFirst;
-  const isMoveDownBlocked = !canReorder || isLast;
-  return (
-    <div className={tracksStyles.actions}>
-      <button
-        ref={(element) => registerControl("moveUp", element)}
-        type="button"
-        aria-disabled={isMoveUpBlocked || undefined}
-        onClick={() => {
-          if (!isMoveUpBlocked) onMove(-1);
-        }}
-        aria-label={t("studio:uploadFlow.files.moveUp", label)}
-      >
-        <FiArrowUp aria-hidden />
-      </button>
-      <button
-        ref={(element) => registerControl("moveDown", element)}
-        type="button"
-        aria-disabled={isMoveDownBlocked || undefined}
-        onClick={() => {
-          if (!isMoveDownBlocked) onMove(1);
-        }}
-        aria-label={t("studio:uploadFlow.files.moveDown", label)}
-      >
-        <FiArrowDown aria-hidden />
-      </button>
-      {row.stage === "failed" && row.isRetryable && (
-        <button
-          type="button"
-          onClick={onRetry}
-          aria-label={t("studio:uploadFlow.files.retry", label)}
-        >
-          <FiRefreshCw aria-hidden />
-        </button>
-      )}
-      {row.trackId && (
-        <button
-          ref={editButtonRef}
-          type="button"
-          aria-expanded={isEditing}
-          aria-label={t("studio:uploadFlow.files.editDetailsFor", label)}
-          onClick={onToggleEditing}
-        >
-          {t("studio:uploadFlow.files.editDetails")}
-        </button>
-      )}
-      <button
-        ref={(element) => registerControl("remove", element)}
-        type="button"
-        onClick={onRemove}
-        aria-label={t("studio:uploadFlow.files.remove", label)}
-      >
-        <FiTrash2 aria-hidden />
-      </button>
-    </div>
-  );
+  onRename: (title: string) => void;
+  /** Audio files dropped on a row join the list. */
+  onDropFiles?: (files: File[]) => void;
+  /** The row's file is being measured (spec 8.1). */
+  isMeasuring: boolean;
+  releaseType: StudioReleaseType;
+  /** The file picked for this row this session, for the timing tap-along. */
+  localFile: File | null;
+  /** The grip's pointer handlers (mouse, touch and pen drag to reorder). */
+  gripHandlers?: { onPointerDown: (event: ReactPointerEvent) => void };
+  /** This row is the one being dragged: it lifts and shows where it lands. */
+  isDragging?: boolean;
 }
 
 export function StudioUploadTrackRow({
@@ -141,109 +128,75 @@ export function StudioUploadTrackRow({
   canReorder,
   registerControl,
   onMove,
-  onDropAt,
   onRetry,
+  onCancel,
+  onAttachAudio,
   onRemove,
   onRename,
   onDropFiles,
   isMeasuring,
   releaseType,
   localFile,
-}: {
-  row: UploadRow;
-  index: number;
-  rowCount: number;
-  releaseId: string;
-  canReorder: boolean;
-  registerControl: RegisterControl;
-  onMove: (offset: -1 | 1) => void;
-  onDropAt: (draggedLocalId: string) => void;
-  onRetry: () => void;
-  onRemove: () => void;
-  onRename: (title: string) => void;
-  /** Audio files dropped on a row join the list. */
-  onDropFiles?: (files: File[]) => void;
-  /** The row's file is being measured (spec 8.1). */
-  isMeasuring: boolean;
-  releaseType: StudioReleaseType;
-  /** The file picked for this row this session, for the timing tap-along. */
-  localFile: File | null;
-}) {
+  gripHandlers,
+  isDragging = false,
+}: UploadTrackRowProps) {
   const { t } = useTranslation();
-  const [isEditing, setIsEditing] = useState(false);
-  const editButtonRef = useRef<HTMLButtonElement>(null);
+  const panel = useDetailsPanel();
   const label = { title: row.title, position: index + 1 };
 
   return (
     <li
       className={tracksStyles.row}
+      data-dragging={isDragging || undefined}
       onDragOver={(event) => {
-        const types = event.dataTransfer.types;
-        const isRowDrag = canReorder && types.includes(ROW_DRAG_TYPE);
-        const isFileDrag = onDropFiles !== undefined && types.includes("Files");
-        if (isRowDrag || isFileDrag) event.preventDefault();
+        if (onDropFiles && event.dataTransfer.types.includes("Files"))
+          event.preventDefault();
       }}
       onDrop={(event) => {
-        if (onDropFiles && event.dataTransfer.files.length > 0) {
-          event.preventDefault();
-          onDropFiles(Array.from(event.dataTransfer.files));
-          return;
-        }
-        const draggedLocalId = event.dataTransfer.getData(ROW_DRAG_TYPE);
-        if (!canReorder || !draggedLocalId) return;
+        if (!onDropFiles || event.dataTransfer.files.length === 0) return;
         event.preventDefault();
-        onDropAt(draggedLocalId);
+        onDropFiles(Array.from(event.dataTransfer.files));
       }}
     >
       <span
         className={tracksStyles.handle}
+        data-active={canReorder || undefined}
         aria-hidden
-        draggable={canReorder}
-        onDragStart={(event) => startRowDrag(event, row.localId)}
+        {...(canReorder ? gripHandlers : {})}
       >
         {canReorder && <FiMenu />}
       </span>
       <span className={tracksStyles.position}>{index + 1}</span>
       <div className={tracksStyles.main}>
         <span className={tracksStyles.title}>{row.title}</span>
-        <span className={tracksStyles.stage} data-stage={row.stage}>
-          {t(STAGE_KEY[row.stage])}
-          {row.durationLabel && row.stage === "ready"
-            ? ` · ${row.durationLabel}`
-            : ""}
-          <span
-            className={tracksStyles.measuring}
-            data-visible={isMeasuring || undefined}
-            aria-hidden={!isMeasuring || undefined}
-          >
-            {` · ${t("studio:upload.loudness.measuring")}`}
-          </span>
-        </span>
+        <StageLine row={row} isMeasuring={isMeasuring} />
         <StudioUploadRowProgress row={row} label={label} />
-        {row.errorKey && (
+        <Collapse isOpen={row.errorKey !== null}>
           <p className={tracksStyles.error} role="alert">
-            {t(row.errorKey, row.errorValues ?? undefined)}
+            {row.errorKey ? t(row.errorKey, row.errorValues ?? undefined) : ""}
           </p>
-        )}
+        </Collapse>
       </div>
-      <RowActions
+      <StudioUploadRowActions
         row={row}
         label={label}
         isFirst={index === 0}
         isLast={index === rowCount - 1}
         canReorder={canReorder}
-        isEditing={isEditing}
-        editButtonRef={editButtonRef}
+        isEditing={panel.isEditing}
+        editButtonRef={panel.editButtonRef}
         registerControl={registerControl}
         onMove={onMove}
+        onCancel={onCancel}
         onRetry={onRetry}
+        onAttachAudio={onAttachAudio}
         onRemove={onRemove}
-        onToggleEditing={() => setIsEditing((wasEditing) => !wasEditing)}
+        onToggleEditing={panel.toggle}
       />
       {/* The panel turns inert as it folds away, so Save and Cancel hand
           focus back to Edit details. */}
       <Collapse
-        isOpen={isEditing && Boolean(row.trackId)}
+        isOpen={panel.isEditing && Boolean(row.trackId)}
         className={tracksStyles.detailsSlot}
       >
         {row.trackId && (
@@ -252,14 +205,34 @@ export function StudioUploadTrackRow({
             releaseId={releaseId}
             releaseType={releaseType}
             localFile={localFile}
+            onDirtyChange={panel.onDirtyChange}
             onDone={(savedTitle) => {
-              if (savedTitle) onRename(savedTitle);
-              setIsEditing(false);
-              editButtonRef.current?.focus();
+              if (savedTitle === undefined) {
+                panel.requestClose();
+                return;
+              }
+              onRename(savedTitle);
+              panel.close();
             }}
           />
         )}
       </Collapse>
+      <AnimatePresence>
+        {panel.isConfirmingDiscard && (
+          <ConfirmDialog
+            open
+            onClose={panel.keepEditing}
+            onConfirm={panel.close}
+            tone="destructive"
+            title={t("studio:uploadFlow.files.discardTitle", {
+              title: row.title,
+            })}
+            description={t("studio:uploadFlow.files.discardBody")}
+            confirmLabel={t("studio:uploadFlow.files.discardConfirm")}
+            cancelLabel={t("studio:uploadFlow.files.discardKeep")}
+          />
+        )}
+      </AnimatePresence>
     </li>
   );
 }

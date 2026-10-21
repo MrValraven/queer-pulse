@@ -1,47 +1,69 @@
-import { useMemo, useState } from "react";
+import { useId, useMemo, useState } from "react";
+import { FiPause, FiPlay, FiPlus } from "react-icons/fi";
 import { useToast } from "../../shared/components/feedback/useToast";
+import { Button, Collapse, IconButton } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { buildFile, WF } from "./studioTriage.data";
+import { StudioIconSwap } from "./player/ui/StudioIconSwap";
+import { buildFile, WF, type Sub } from "./studioTriage.data";
+import {
+  triageDetailOf,
+  type TriageSubmissionDetail,
+} from "./StudioTriageDetail.data";
 import s from "./council.module.css";
+import css from "./StudioTriage.module.css";
 
-/** This specific submission's artist name, interpolated into the translated
- * decision copy below. */
-const CURRENT_SUBMISSION_ARTIST_NAME = "Renato";
+/** The demo's mini player: the waveform and Play, which marks the bars as
+ *  heard while it runs (the demo has no audio for submissions). */
+function TriagePlayerMini({ detail }: { detail: TriageSubmissionDetail }) {
+  const { t } = useTranslation();
+  const [isPlaying, setIsPlaying] = useState(false);
+  const playedBars = isPlaying ? WF.length : detail.playedBars;
+  return (
+    <div className={s.playerMini}>
+      <div className={s.pmWf}>
+        {WF.map((barHeight, barIndex) => (
+          <span
+            key={barIndex}
+            className={barIndex < playedBars ? s.played : undefined}
+            style={{ height: `${barHeight}%` }}
+          />
+        ))}
+      </div>
+      <div className={s.pmCtrl}>
+        <IconButton
+          size="sm"
+          tooltip
+          aria-label={t(
+            isPlaying
+              ? "studio:triage.detail.pauseAria"
+              : "studio:triage.detail.playAria",
+          )}
+          onClick={() => setIsPlaying((wasPlaying) => !wasPlaying)}
+        >
+          <StudioIconSwap iconKey={isPlaying ? "pause" : "play"}>
+            {isPlaying ? <FiPause /> : <FiPlay />}
+          </StudioIconSwap>
+        </IconButton>
+        <div className={s.pmTimes}>
+          <span>{detail.durationLabel}</span>
+        </div>
+      </div>
+    </div>
+  );
+}
 
-// This submission's title, artist line and people stay literal (titles and
-// names); the claim status and curator quotes resolve through
-// `studioShowcase:triage.detail.*`.
-const SUBMISSION_TITLE_PRE = "The piano ";
-const SUBMISSION_TITLE_EM = "I waited for";
-const SUBMISSION_ARTIST_LINE = "Renato V. · Porto · single · 4:40";
-const CLAIMANT_INITIALS = "SM";
-const CLAIMANT_NAME = "Sara M.";
-const SECOND_READER_NAME = "D. Okoye";
-const FLAGGED_COMMENTS: { curator: string; quoteKey: string }[] = [
-  {
-    curator: "D. Okoye",
-    quoteKey: "studioShowcase:triage.detail.flagged.bridge",
-  },
-  {
-    curator: "João R.",
-    quoteKey: "studioShowcase:triage.detail.flagged.regional",
-  },
-  {
-    curator: "Yara R.",
-    quoteKey: "studioShowcase:triage.detail.flagged.standards",
-  },
-];
-
-export function StudioTriageDetail() {
+/** "Your answer": the pass sentence and the three decisions. The decision
+ *  is held in local state and shown under the actions, so it is visibly
+ *  recorded; a bare toast alone would imply it was saved (Studio is coming
+ *  soon in live). */
+function TriageDecision({ artistName }: { artistName: string }) {
   const { t } = useTranslation();
   const { showToast } = useToast();
-  // Demo-only triage: the note and decision are held in local state and
-  // reflected below the actions so a decision is visibly recorded; a bare
-  // toast alone would imply persistence (studio is coming-soon in live).
+  const noteId = useId();
   const [note, setNote] = useState("");
   const [decision, setDecision] = useState<string | null>(null);
-  const fileRows = useMemo(() => buildFile(t), [t]);
+  const trimmedNote = note.trim();
 
   function record(message: string, tone: "info" | "success") {
     setDecision(message);
@@ -49,186 +71,150 @@ export function StudioTriageDetail() {
   }
 
   return (
-    <aside className={s.aside}>
-      <h2>
-        {SUBMISSION_TITLE_PRE}
-        <em>{SUBMISSION_TITLE_EM}</em>
-      </h2>
-      <div className={s.asideWho}>{SUBMISSION_ARTIST_LINE}</div>
+    <div className={s.decision}>
+      <h4>{t("studio:triage.detail.decision.heading", { artistName })}</h4>
+      <textarea
+        id={noteId}
+        aria-label={t("studio:triage.detail.decision.placeholder")}
+        placeholder={t("studio:triage.detail.decision.placeholder")}
+        value={note}
+        onChange={(event) => setNote(event.target.value)}
+      />
+      <div className={s.hint}>
+        <Translation
+          i18nKey="studio:triage.detail.decision.hint"
+          components={{ em: <em /> }}
+        />
+      </div>
+      <div className={s.actions}>
+        <Button
+          variant="quiet"
+          size="sm"
+          onClick={() => record(t("studio:triage.detail.toast.held"), "info")}
+        >
+          {t("studio:triage.detail.holdCta")}
+        </Button>
+        <Button
+          variant="quiet"
+          size="sm"
+          onClick={() =>
+            record(
+              t("studio:triage.detail.toast.passed", { artistName }),
+              "success",
+            )
+          }
+        >
+          {t("studio:triage.detail.passCta")}
+        </Button>
+        <Button
+          variant="primary"
+          size="sm"
+          onClick={() =>
+            record(t("studio:triage.detail.toast.addedToSlate"), "success")
+          }
+        >
+          <FiPlus aria-hidden /> {t("studio:triage.detail.addToSlateCta")}
+        </Button>
+      </div>
+      <div role="status">
+        <Collapse isOpen={decision !== null}>
+          <div className={css.decisionRecord}>
+            <b>{decision}</b>
+            {trimmedNote ? (
+              <p className={css.decisionNote}>&ldquo;{trimmedNote}&rdquo;</p>
+            ) : null}
+          </div>
+        </Collapse>
+      </div>
+    </div>
+  );
+}
 
-      <div className={s.playerMini}>
-        <div className={s.pmWf}>
-          {WF.map((h, i) => (
-            <span
-              key={i}
-              className={i < 6 ? s.played : undefined}
-              style={{ height: `${h}%` }}
-            />
-          ))}
-        </div>
-        <div className={s.pmCtrl}>
-          <button
-            type="button"
-            className={s.pmPlay}
-            aria-label={t("studio:triage.detail.playAria")}
-          >
-            <svg viewBox="0 0 12 14" fill="currentColor">
-              <path d="M1 1l10 6-10 6z" />
-            </svg>
-          </button>
-          <div className={s.pmTimes}>
-            <span
-              className={s.e}
-              style={{ color: "var(--studio-accent-text)" }}
-            >
-              1:48
-            </span>
-            <span>4:40</span>
+/** The selected submission: title, who, the mini player, the claim, the
+ *  file and what other curators flagged, then the answer. The page keys it
+ *  by submission, so picking another row starts a fresh answer. */
+export function StudioTriageDetail({
+  submission,
+  id,
+}: {
+  submission: Sub;
+  id?: string;
+}) {
+  const { t } = useTranslation();
+  const detail = triageDetailOf(submission);
+  const fileRows = useMemo(() => buildFile(t), [t]);
+  return (
+    <aside
+      className={s.aside}
+      id={id}
+      aria-label={t("studio:triage.detail.regionLabel")}
+    >
+      <h2>
+        {submission.titlePre}
+        {submission.titleEm ? <em>{submission.titleEm}</em> : null}
+      </h2>
+      <div className={s.asideWho}>{detail.artistLine || submission.who}</div>
+      <TriagePlayerMini detail={detail} />
+      {detail.claim ? (
+        <div className={s.claimRow}>
+          <div className={s.av}>{detail.claim.initials}</div>
+          <div className={s.text}>
+            <b>
+              {t("studioShowcase:triage.detail.claim.headline", {
+                name: detail.claim.claimantName,
+              })}
+            </b>
+            {t("studioShowcase:triage.detail.claim.note")}{" "}
+            <em>
+              {t("studioShowcase:triage.detail.claim.secondReader", {
+                name: detail.claim.secondReaderName,
+              })}
+            </em>
           </div>
         </div>
-      </div>
-
-      <div className={s.claimRow}>
-        <div className={s.av}>{CLAIMANT_INITIALS}</div>
-        <div className={s.text}>
-          <b>
-            {t("studioShowcase:triage.detail.claim.headline", {
-              name: CLAIMANT_NAME,
-            })}
-          </b>
-          {t("studioShowcase:triage.detail.claim.note")}{" "}
-          <em>
-            {t("studioShowcase:triage.detail.claim.secondReader", {
-              name: SECOND_READER_NAME,
-            })}
-          </em>
-        </div>
-      </div>
-
+      ) : null}
       <div className={s.detailBlock}>
         <h4>{t("studio:triage.detail.fileHeading")}</h4>
-        <div className={s.dGrid}>
-          {fileRows.map(([labelKey, value], fileRowIndex) => (
-            <span key={fileRowIndex} style={{ display: "contents" }}>
-              <span className={s.k}>{t(labelKey)}</span>
-              <span className={s.v}>{value}</span>
-            </span>
-          ))}
+        {detail.hasFileSheet ? (
+          <dl className={s.dGrid}>
+            {fileRows.map(([labelKey, value]) => (
+              <div key={labelKey} className={css.fileRow}>
+                <dt className={s.k}>{t(labelKey)}</dt>
+                <dd className={s.v}>{value}</dd>
+              </div>
+            ))}
+          </dl>
+        ) : (
+          <ul className={css.metaList}>
+            {submission.meta.map((metaItem, metaIndex) => (
+              <li key={metaIndex}>{metaItem}</li>
+            ))}
+          </ul>
+        )}
+      </div>
+      {detail.flagged.length > 0 ? (
+        <div className={s.detailBlock}>
+          <h4>
+            {t("studio:triage.detail.flaggedHeading", {
+              count: detail.flagged.length,
+            })}
+          </h4>
+          <ul className={css.flaggedList}>
+            {detail.flagged.map(({ curator, quoteKey }) => (
+              <li key={curator}>
+                {curator}: &ldquo;{t(quoteKey)}&rdquo;
+              </li>
+            ))}
+          </ul>
         </div>
-      </div>
-
-      <div className={s.detailBlock}>
-        <h4>{t("studio:triage.detail.flaggedHeading", { count: 3 })}</h4>
-        <p style={{ fontStyle: "italic", color: "var(--studio-text-muted)" }}>
-          {FLAGGED_COMMENTS.map(
-            ({ curator, quoteKey }) => `${curator}: "${t(quoteKey)}"`,
-          ).join(" · ")}
-        </p>
-      </div>
-
+      ) : null}
       <h3 className={s.shortlistH}>
         <Translation
           i18nKey="studio:triage.detail.answerHeading"
           components={{ em: <em /> }}
         />
       </h3>
-      <div className={s.decision}>
-        <h4>
-          {t("studio:triage.detail.decision.heading", {
-            artistName: CURRENT_SUBMISSION_ARTIST_NAME,
-          })}
-        </h4>
-        <textarea
-          aria-label={t("studio:triage.detail.decision.placeholder")}
-          placeholder={t("studio:triage.detail.decision.placeholder")}
-          value={note}
-          onChange={(event) => setNote(event.target.value)}
-        />
-        <div
-          className={s.hint}
-          style={{
-            fontSize: 11.5,
-            color: "var(--studio-text-muted)",
-            fontFamily: "var(--serif)",
-            fontStyle: "italic",
-            marginTop: 8,
-          }}
-        >
-          <Translation
-            i18nKey="studio:triage.detail.decision.hint"
-            components={{
-              em: <em style={{ color: "var(--studio-accent-text)" }} />,
-            }}
-          />
-        </div>
-        <div
-          className={s.actions}
-          style={{
-            display: "flex",
-            gap: 8,
-            marginTop: 14,
-            flexWrap: "wrap",
-          }}
-        >
-          <button
-            type="button"
-            className={s.bt}
-            onClick={() => record(t("studio:triage.detail.toast.held"), "info")}
-          >
-            {t("studio:triage.detail.holdCta")}
-          </button>
-          <button
-            type="button"
-            className={s.bt}
-            onClick={() =>
-              record(
-                t("studio:triage.detail.toast.passed", {
-                  artistName: CURRENT_SUBMISSION_ARTIST_NAME,
-                }),
-                "success",
-              )
-            }
-          >
-            {t("studio:triage.detail.passCta")}
-          </button>
-          <button
-            type="button"
-            className={`${s.bt} ${s.btP}`}
-            onClick={() =>
-              record(t("studio:triage.detail.toast.addedToSlate"), "success")
-            }
-          >
-            {t("studio:triage.detail.addToSlateCta")}
-          </button>
-        </div>
-        {decision && (
-          <div
-            role="status"
-            style={{
-              marginTop: 14,
-              padding: "11px 13px",
-              borderRadius: 10,
-              background: "rgba(var(--jade-rgb), 0.14)",
-              border: "1px solid rgba(var(--jade-rgb), 0.3)",
-              color: "rgba(var(--studio-ink-rgb), 1)",
-              fontSize: 12.5,
-            }}
-          >
-            <b>{decision}</b>
-            {note.trim() && (
-              <div
-                style={{
-                  marginTop: 6,
-                  fontStyle: "italic",
-                  color: "var(--studio-text-muted)",
-                }}
-              >
-                &ldquo;{note.trim()}&rdquo;
-              </div>
-            )}
-          </div>
-        )}
-      </div>
+      <TriageDecision artistName={detail.artistName} />
     </aside>
   );
 }

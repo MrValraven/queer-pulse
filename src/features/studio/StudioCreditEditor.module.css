@@ -9,7 +9,7 @@
   padding: 0;
   font-size: var(--text-14);
   font-weight: 600;
-  color: var(--text);
+  color: var(--s-text);
 }
 
 .hint {
@@ -22,7 +22,7 @@
   display: block;
   margin-bottom: 6px;
   font-size: var(--text-13);
-  color: var(--text);
+  color: var(--s-text);
 }
 
 .lookupRow {
@@ -172,7 +172,7 @@
   padding: 0 10px;
   border-radius: var(--radius-pill);
   background: rgba(var(--studio-ink-rgb), 0.08);
-  color: var(--text);
+  color: var(--s-text);
   font-size: var(--text-12);
   font-weight: 600;
 }

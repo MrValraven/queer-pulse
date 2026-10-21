@@ -1,7 +1,12 @@
 import { AnimatePresence } from "motion/react";
 import { useId, useLayoutEffect, useRef } from "react";
 import { FiArrowDown, FiArrowUp, FiX } from "react-icons/fi";
-import { Collapse, CollapseListItem, Select } from "../../shared/components/ui";
+import {
+  Collapse,
+  CollapseListItem,
+  IconButton,
+  Select,
+} from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { StudioLoadState } from "./api/studioLoadState";
 import { STUDIO_PRESS } from "./api/studio.types";
@@ -52,36 +57,36 @@ function TrackRowButtons({
     <>
       {row.state === "playable" && (
         <>
-          <button
+          <IconButton
             ref={register(`${row.id}:up`)}
-            type="button"
             className={styles.iconButton}
             aria-disabled={isFirst || undefined}
             aria-label={t("studio:pressEdit.moveUp", { title })}
+            tooltip={t("studio:pressEdit.moveUpTooltip")}
             onClick={() => {
               if (!isFirst) onMove(-1);
             }}
           >
             <FiArrowUp aria-hidden />
-          </button>
-          <button
+          </IconButton>
+          <IconButton
             ref={register(`${row.id}:down`)}
-            type="button"
             className={styles.iconButton}
             aria-disabled={isLast || undefined}
             aria-label={t("studio:pressEdit.moveDown", { title })}
+            tooltip={t("studio:pressEdit.moveDownTooltip")}
             onClick={() => {
               if (!isLast) onMove(1);
             }}
           >
             <FiArrowDown aria-hidden />
-          </button>
+          </IconButton>
         </>
       )}
-      <button
+      <IconButton
         ref={register(`${row.id}:remove`)}
-        type="button"
         className={styles.iconButton}
+        tooltip={t("studio:pressEdit.removeTooltip")}
         aria-label={
           row.state === "playable"
             ? t("studio:pressEdit.removeTrack", { title })
@@ -92,7 +97,7 @@ function TrackRowButtons({
         onClick={onRemove}
       >
         <FiX aria-hidden />
-      </button>
+      </IconButton>
     </>
   );
 }
@@ -183,7 +188,7 @@ export function StudioPressTrackPicker({
               row.state === "playable"
                 ? row.option.title
                 : row.state === "pending"
-                  ? t("studio:states.loadingLabel")
+                  ? t("studio:loading.pressTrack")
                   : t("studio:pressEdit.trackUnavailable");
             return (
               <CollapseListItem key={row.id}>
@@ -233,6 +238,7 @@ export function StudioPressTrackPicker({
           <StudioLoadError
             loadState={tracksLoadState}
             title={t("studio:pressEdit.tracksLoadErrorTitle")}
+            what="studio:errors.what.pressTracks"
           />
         </div>
       </Collapse>

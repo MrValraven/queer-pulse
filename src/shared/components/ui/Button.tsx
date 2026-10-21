@@ -12,6 +12,9 @@ export type ButtonVariant =
   /** Tonal: a light coral tint with coral text and no shadow, for a
    *  secondary action that should still carry the brand colour. */
   | "soft"
+  /** Neutral ink wash: a quiet pill with ink text, no shadow, for a tertiary
+   *  action beside a primary one. Follows the theme ink channel. */
+  | "quiet"
   /** Square, quiet, icon-only. Reach for it through `<IconButton>`, which
    *  makes the `aria-label` mandatory. */
   | "icon"
@@ -27,6 +30,7 @@ const variantClass: Record<ButtonVariant, string | undefined> = {
   plum: styles.plum,
   danger: styles.danger,
   soft: styles.soft,
+  quiet: styles.quiet,
   icon: styles.icon,
   "icon-dark": `${styles.icon} ${styles.iconDark}`,
 };

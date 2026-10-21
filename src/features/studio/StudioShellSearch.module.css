@@ -1,0 +1,73 @@
+/* DES-59: the topbar search pill takes the focus ring itself, so the ring
+   follows the pill's radius instead of drawing a box around the bare
+   input inside it. */
+.field {
+  position: relative;
+  transition-property: background-color, border-color, box-shadow;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease-out);
+}
+
+@media (hover: hover) {
+  .field:hover {
+    background: var(--studio-wash-2);
+  }
+}
+
+.field:focus-within {
+  background: var(--studio-wash-1);
+  border-color: rgba(var(--studio-ink-rgb), 0.4);
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.field input {
+  min-width: 0;
+}
+
+.field input:focus,
+.field input:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+/* The "/" hint names the shortcut for pointer members; it steps aside
+   while the field has focus. */
+.hint {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  border: 1px solid var(--studio-line);
+  border-radius: var(--radius-6);
+  font-family: var(--sans);
+  font-size: var(--text-12);
+  font-weight: 600;
+  color: var(--studio-text-muted);
+  transition-property: opacity;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease-out);
+}
+
+.field:focus-within .hint,
+.hint[data-hidden] {
+  opacity: 0;
+}
+
+/* No hardware keyboard to press it on. */
+@media (hover: none) {
+  .hint {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .field,
+  .hint {
+    transition-duration: 0.01ms;
+  }
+}

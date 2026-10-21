@@ -1,159 +1,24 @@
-/* Mobile: a bottom-anchored sheet in the thumb's reach. Becomes a centered
-   dialog from 720px up (desktop appearance unchanged). */
-.overlay {
-  /* This modal portals to document.body, so it renders OUTSIDE the studio
-     shell's `.root` and cannot inherit the local text aliases defined there.
-     These read the global Studio text roles, which follow the app theme on
-     <html>: plum ink on the light paper sheet, cream ink on the dark one. */
-  --text: var(--studio-text);
-  --text60: var(--studio-text-muted);
-  --text40: var(--studio-text-faint);
-  position: fixed;
-  inset: 0;
-  z-index: var(--z-modal);
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  padding: 0;
-  /* Lift the bottom-anchored sheet above the on-screen keyboard on iOS
-     (published app-wide by useVisualViewportKeyboard; 0px when no keyboard). */
-  padding-block-end: var(--keyboard-inset, 0px);
-  background: var(--scrim);
-  backdrop-filter: var(--blur-sm);
-  animation: fade 0.2s var(--ease);
-}
-@media (min-width: 720px) {
-  .overlay {
-    align-items: center;
-    padding: 24px;
-    padding-block-end: max(24px, var(--keyboard-inset, 0px));
-  }
+/* The tip dialog's body. The shared Modal owns the scrim, sheet, close button,
+   focus and exit; this file styles what sits inside it. Modal portals to
+   document.body, outside the studio shell root, so the text aliases below read
+   the global Studio roles (they follow the app theme on <html>). */
+.body {
+  --s-text: var(--studio-text);
+  --s-text-60: var(--studio-text-muted);
+  --s-text-40: var(--studio-text-faint);
 }
 
-.modal {
-  position: relative;
-  width: 100%;
-  /* svh is the small viewport, so the sheet fits under mobile chrome (vh is
-     the large viewport and overflows there). */
-  max-height: 92svh;
-  overflow-y: auto;
-  /* Keep an over-scroll from chaining to the page behind the sheet. */
-  overscroll-behavior: contain;
-  background: var(--studio-surface);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  /* Sheet on mobile: round only the top corners. */
-  border-radius: var(--radius-20) var(--radius-20) 0 0;
-  /* Clear the iOS home indicator on the flush-to-bottom sheet. */
-  padding: 30px 28px max(28px, env(safe-area-inset-bottom));
-  box-shadow: 0 -18px 50px rgba(var(--plum-rgb), 0.22);
-  animation: rise 0.24s var(--ease);
-}
-@media (min-width: 720px) {
-  .modal {
-    max-width: 440px;
-    max-height: none;
-    border-radius: var(--radius-18);
-    padding: 30px 28px 28px;
-    box-shadow: var(--shadow-e4);
-  }
-}
-
-.modalSuccess {
-  background: var(--plum);
-  border-color: transparent;
-}
-
-/* Drag-affordance grabber: a visible cue the panel is a sheet. Hidden on
-   desktop where it's a centered dialog. */
-.grabber {
-  position: sticky;
-  top: 0;
-  z-index: 2;
-  width: 40px;
-  height: 5px;
-  margin: -12px auto 16px;
-  border-radius: var(--radius-pill);
-  background: rgba(var(--plum-rgb), 0.18);
-  touch-action: none;
-}
-/* On the plum success panel the plum grabber would vanish, so lighten it. */
-.modalSuccess .grabber {
-  background: rgba(var(--cream-rgb), 0.32);
-}
-@media (min-width: 720px) {
-  .grabber {
-    display: none;
-  }
-}
-
-.close {
-  position: absolute;
-  top: 14px;
-  right: 16px;
-  width: 1.364em;
-  height: 1.364em;
-  border: none;
-  background: transparent;
-  color: var(--text40);
-  font-size: var(--text-22);
-  line-height: 1;
-  cursor: pointer;
-  border-radius: 50%;
-}
-
-/* Grows the hit area to the 44px floor without changing the ink: this
-   control is drawn small on purpose. See --tap-min in tokens/spacing.css. */
-.close::after {
+/* Short viewports scroll the body under the sticky footer: a fade at the
+   bottom edge shows that more sits below. It rests on blank space after the
+   note, so nothing is covered when the body does not scroll. */
+.body::after {
   content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  translate: -50% -50%;
-  width: max(100%, var(--tap-min));
-  height: max(100%, var(--tap-min));
-}
-@media (hover: hover) {
-  .close:hover {
-    background: rgba(var(--plum-rgb), 0.06);
-    color: var(--text);
-  }
-}
-.modalSuccess .close {
-  color: rgba(var(--cream-rgb), 0.55);
-}
-@media (hover: hover) {
-  .modalSuccess .close:hover {
-    background: rgba(var(--cream-rgb), 0.12);
-    color: rgba(var(--cream-rgb), 1);
-  }
-}
-
-.eb {
-  font-size: var(--text-11-5);
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--studio-accent-text);
-}
-
-.title {
-  font-family: var(--serif);
-  font-weight: 300;
-  font-size: var(--text-25);
-  letter-spacing: -0.02em;
-  color: var(--text);
-  margin: 8px 0 4px;
-}
-.title em {
-  font-style: italic;
-  color: var(--studio-accent-text);
-}
-
-.sub {
-  font-size: var(--text-13-5);
-  color: var(--text60);
-  line-height: 1.6;
-  margin-bottom: 18px;
+  position: sticky;
+  bottom: 0;
+  display: block;
+  height: 24px;
+  background: linear-gradient(to bottom, transparent, var(--cream));
+  pointer-events: none;
 }
 
 .amounts {
@@ -163,56 +28,51 @@
   margin-bottom: 14px;
 }
 
-.amount {
-  padding: 14px 0;
-  border: 1px solid rgba(var(--line-rgb), 0.14);
-  border-radius: var(--radius-12);
-  background: rgba(var(--studio-ink-rgb), 0.04);
-  font-family: var(--serif);
-  font-size: var(--text-18);
-  color: var(--text);
-  cursor: pointer;
-  transition:
-    border-color 0.18s var(--ease),
-    background 0.18s var(--ease);
-}
-@media (hover: hover) {
-  .amount:hover {
-    border-color: var(--accent);
-  }
-}
-.amountOn {
-  border-color: var(--accent);
-  background: rgba(var(--accent-rgb), 0.1);
-  color: var(--studio-accent-text);
-}
-
 .customRow {
   display: flex;
   align-items: center;
   gap: 8px;
-  border: 1px solid rgba(var(--line-rgb), 0.14);
+  border: 1px solid var(--studio-line);
   border-radius: var(--radius-12);
   padding: 0 12px;
-  margin-bottom: 18px;
+  margin-bottom: 14px;
+}
+.customRow:focus-within {
+  border-color: var(--accent);
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
 }
 .customRow span {
   font-family: var(--serif);
   font-size: var(--text-17);
-  color: var(--text40);
+  color: var(--s-text-40);
 }
 .customRow input {
   flex: 1;
+  min-width: 0;
   border: none;
+  outline: none;
   background: transparent;
   padding: 13px 0;
   font-size: var(--text-15);
-  color: var(--text);
+  color: var(--s-text);
+}
+
+/* A declined payment: the reason sits in plain text above the retry button. */
+.error {
+  margin: 0 0 14px;
+  padding: 12px 14px;
+  border: 1px solid rgba(var(--accent-rgb), 0.45);
+  border-radius: var(--radius-12);
+  background: rgba(var(--accent-rgb), 0.08);
+  color: var(--s-text);
+  font-size: var(--text-13-5);
+  line-height: 1.5;
 }
 
 .note {
   font-size: var(--text-12-5);
-  color: var(--text40);
+  color: var(--s-text-40);
   text-align: center;
   margin-top: 12px;
 }
@@ -233,52 +93,6 @@
   animation: spin 0.7s linear infinite;
 }
 
-.success {
-  text-align: center;
-  padding: 8px 4px 4px;
-}
-.successIcon {
-  width: 54px;
-  height: 54px;
-  margin: 0 auto 16px;
-  border-radius: 50%;
-  background: rgba(var(--jade-rgb), 0.18);
-  color: var(--jade-light);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.success h2 {
-  font-family: var(--serif);
-  font-weight: 300;
-  font-size: var(--text-27);
-  color: rgba(var(--cream-rgb), 1);
-  letter-spacing: -0.02em;
-  margin-bottom: 10px;
-}
-.success h2 em {
-  font-style: italic;
-  color: var(--accent);
-}
-.success p {
-  font-size: var(--text-14);
-  color: rgba(var(--cream-rgb), 0.7);
-  line-height: 1.6;
-  max-width: 34ch;
-  margin: 0 auto 22px;
-}
-
-@keyframes fade {
-  from {
-    opacity: 0;
-  }
-}
-@keyframes rise {
-  from {
-    opacity: 0;
-    transform: translateY(14px);
-  }
-}
 @keyframes spin {
   to {
     transform: rotate(360deg);
@@ -286,10 +100,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .overlay,
-  .modal {
-    animation: none;
-  }
   .spinner {
     animation-duration: 1.4s;
   }

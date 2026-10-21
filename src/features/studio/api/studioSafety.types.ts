@@ -202,11 +202,13 @@ export interface StudioAdminClaimDTO {
   release: StudioAdminReleaseSummaryDTO;
 }
 
-/** GET /admin/studio/copyright-claims/counts: the Claims tab badge is the
- *  sum. */
+/** GET /admin/studio/copyright-claims/counts: the Claims tab badge is
+ *  submitted plus countered, and the Disputes tab badge is the artists'
+ *  takedown disputes still waiting for our team. */
 export interface StudioAdminClaimCountsDTO {
   submitted: number;
   countered: number;
+  disputesWaiting: number;
 }
 
 /** GET /admin/studio/tracks/:id; also the answer of mark-explicit and

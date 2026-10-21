@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
-import { FiArrowRight } from "react-icons/fi";
+import { FiArrowRight, FiFileText } from "react-icons/fi";
 import { routes } from "../../app/routeMap";
 import { Collapse } from "../../shared/components/ui";
+import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { StudioTrackView } from "./api/studio.adapters";
 import { useStudioShowcase } from "./useStudioShowcase";
@@ -14,7 +15,6 @@ import trackStyles from "./track.module.css";
 // the track/artist names are content, left English in both locales (§1).
 const CURATOR_INITIALS = "SM";
 const CURATOR_NAME = "Sara Marques";
-const CURATOR_ROLE = "programming lead · the Wednesday set";
 const CURATOR_QUOTE_PRE =
   '"Track six of an album I have not stopped playing since April. A ' +
   "devotional addressed plainly to a saint who isn't listening; a piano " +
@@ -23,9 +23,10 @@ const CURATOR_QUOTE_EM = "Stay through the second verse.";
 const CURATOR_QUOTE_POST = '"';
 const TRACK_ARTIST_SHARE = 0.8;
 const TRACK_PLATFORM_SHARE = 0.2;
-const TRACK_ARTIST_SHARE_TO = " to Mariana. ";
-const TRACK_PLATFORM_SHARE_NOTE = " keeps Studio open.";
-const SHEET_MUSIC_SPEC = "6 pages · piano + voice · CC-BY-NC · Mariana Sol";
+const TRACK_ARTIST_NAME = "Mariana";
+const SHEET_ARTIST_NAME = "Mariana Sol";
+/** A standard licence code, the same in every locale. */
+const SHEET_LICENCE = "CC-BY-NC";
 
 function StudioTrackCuratorNote() {
   const { t } = useTranslation();
@@ -38,7 +39,9 @@ function StudioTrackCuratorNote() {
         <div className={trackStyles.noteAv}>{CURATOR_INITIALS}</div>
         <div>
           <div className={trackStyles.noteName}>{CURATOR_NAME}</div>
-          <div className={trackStyles.noteRole}>{CURATOR_ROLE}</div>
+          <div className={trackStyles.noteRole}>
+            {t("studio:track.sidebar.curatorRole")}
+          </div>
         </div>
       </div>
       <p>
@@ -58,10 +61,24 @@ function StudioTrackSplit() {
         {t("studio:track.sidebar.splitHeading")}
       </div>
       <div className={trackStyles.splitLead}>
-        <StudioEuroAmount value={TRACK_ARTIST_SHARE} shouldEmphasizeNumber />
-        {TRACK_ARTIST_SHARE_TO}
-        <StudioEuroAmount value={TRACK_PLATFORM_SHARE} shouldEmphasizeNumber />
-        {TRACK_PLATFORM_SHARE_NOTE}
+        <Translation
+          i18nKey="studio:track.sidebar.splitLead"
+          values={{ artist: TRACK_ARTIST_NAME }}
+          slots={{
+            artistShare: (
+              <StudioEuroAmount
+                value={TRACK_ARTIST_SHARE}
+                shouldEmphasizeNumber
+              />
+            ),
+            platformShare: (
+              <StudioEuroAmount
+                value={TRACK_PLATFORM_SHARE}
+                shouldEmphasizeNumber
+              />
+            ),
+          }}
+        />
       </div>
       <div className={trackStyles.splitBar}>
         <span style={{ width: "80%", background: "var(--accent)" }} />
@@ -76,11 +93,11 @@ function StudioTrackSplit() {
       </div>
       <div>
         {SPLIT.map((r) => (
-          <div key={r.k} className={trackStyles.splRow}>
+          <div key={r.labelKey} className={trackStyles.splRow}>
             <span className={trackStyles.splDot} style={{ background: r.c }} />
             <span className={trackStyles.splK}>
-              <b>{r.k}</b>
-              {r.sub}
+              <b>{r.name ?? t(r.labelKey)}</b>
+              {t(r.subKey)}
             </span>
             <span className={trackStyles.splV}>
               <StudioEuroAmount
@@ -100,21 +117,24 @@ function StudioTrackSheetMini({ title }: { title: string }) {
   return (
     <div className={trackStyles.sheetMini}>
       <span className={trackStyles.icon}>
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth={2}
-        >
-          <path d="M4 4h12l4 4v12H4z" />
-          <path d="M16 4v4h4M8 13h8M8 17h5" />
-        </svg>
+        <FiFileText aria-hidden />
       </span>
       <div className={trackStyles.nm}>
         <b>
           {t("studio:track.sidebar.leadSheetLabel")} · <em>{title}</em>
         </b>
-        <small>{SHEET_MUSIC_SPEC}</small>
+        <small>
+          {/* The licence code keeps its hyphens on one line. */}
+          <Translation
+            i18nKey="studio:track.sidebar.sheetSpec"
+            values={{ artist: SHEET_ARTIST_NAME, licence: SHEET_LICENCE }}
+            slots={{
+              licence: (
+                <span style={{ whiteSpace: "nowrap" }}>{SHEET_LICENCE}</span>
+              ),
+            }}
+          />
+        </small>
       </div>
       <Link to={routes.studioSheetStore}>
         {t("studio:track.sidebar.downloadCta")} <FiArrowRight aria-hidden />

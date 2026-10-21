@@ -1,5 +1,6 @@
 import type { IconType } from "react-icons";
 import {
+  FiAlertTriangle,
   FiAward,
   FiBarChart2,
   FiBell,
@@ -36,13 +37,18 @@ import { studioUploadPath } from "./studioPaths";
 export type StudioAccountMenuAudience =
   "everyone" | "artist" | "showcase" | "staff";
 
+/** A live count beside a row's label. "review" is the staff queue's pair:
+ *  claims and takedown disputes waiting for our team. "counterWindows" is
+ *  the artist's claims they can still answer with a counter-notice. */
+export type StudioAccountMenuBadge =
+  "creditRequests" | "myClaims" | "review" | "counterWindows";
+
 export interface StudioAccountMenuItem {
   labelKey: string;
   to: string;
   icon: IconType;
   audience: StudioAccountMenuAudience;
-  /** A live count beside the label. */
-  badge?: "creditRequests" | "myClaims" | "claimsWaiting";
+  badge?: StudioAccountMenuBadge;
 }
 
 /** How many artist pages the menu lists before "Show all". */
@@ -77,7 +83,7 @@ export const STUDIO_MENU_CREATOR_ITEMS: StudioAccountMenuItem[] = [
     labelKey: "studio:rail.v1.upload",
     to: studioUploadPath(),
     icon: FiUpload,
-    audience: "artist",
+    audience: "everyone",
   },
   {
     labelKey: "studio:rail.v2.yourNumbers",
@@ -104,6 +110,15 @@ export const STUDIO_MENU_CREATOR_ITEMS: StudioAccountMenuItem[] = [
     icon: FiClipboard,
     audience: "everyone",
     badge: "myClaims",
+  },
+  {
+    // DES-84: a claim holds one of the artist's tracks offline and they can
+    // still answer it. The row links to the track's claim panel.
+    labelKey: "studio:shell.menu.counterWindows",
+    to: routes.studioDashboard,
+    icon: FiAlertTriangle,
+    audience: "artist",
+    badge: "counterWindows",
   },
   {
     labelKey: "studio:rail.v2.openCalls",
@@ -164,7 +179,7 @@ export const STUDIO_MENU_STAFF_ITEMS: StudioAccountMenuItem[] = [
     to: routes.studioFlagReview,
     icon: FiFlag,
     audience: "staff",
-    badge: "claimsWaiting",
+    badge: "review",
   },
 ];
 

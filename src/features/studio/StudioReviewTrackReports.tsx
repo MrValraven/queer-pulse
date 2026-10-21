@@ -12,7 +12,14 @@ import {
   useStudioTrackReportAction,
   type StudioTrackReportAction,
 } from "./api/useStudioTrackReports";
-import { studioErrorMessageKeyOf } from "./studioErrors.data";
+import { REASON_LABEL_KEYS, type ReasonCode } from "../safety/reportReasons";
+import type { StudioRowSelection } from "./kit/useStudioRowSelection";
+import {
+  isReviewSettledElsewhere,
+  reviewErrorKeyOf,
+} from "./StudioReviewErrors";
+import type { ReviewQueueOrder } from "./StudioReviewQueue";
+import { StudioReviewQueueBar } from "./StudioReviewQueueBar";
 import {
   StudioReviewDialog,
   type StudioReviewDialogRequest,
@@ -32,42 +39,138 @@ interface PendingTrackAction {
   successKey: string;
 }
 
+/** Mark explicit: no text, the track keeps playing with its new mark. */
+function markExplicitRequest(
+  report: StudioReviewTrackReportView,
+  track: StudioAdminTrackView,
+): PendingTrackAction {
+  return {
+    report,
+    request: {
+      titleKey: "studio:flagReviewLive.trackReports.dialog.markExplicitTitle",
+      bodyKey: "studio:flagReviewLive.trackReports.dialog.markExplicitBody",
+      confirmKey: "studio:flagReviewLive.trackReports.markExplicit",
+      textLabelKey: null,
+      textMaxLength: 0,
+      releaseTitle: track.title,
+      tone: "default",
+    },
+    toAction: () => ({
+      kind: "markExplicit",
+      reportId: report.reportId,
+      trackId: track.id,
+    }),
+    successKey: "studio:flagReviewLive.trackReports.toast.markedExplicit",
+  };
+}
+
+/** Take the whole release down, with the reason the artist reads. */
+function takeDownRequest(
+  report: StudioReviewTrackReportView,
+  track: StudioAdminTrackView,
+): PendingTrackAction {
+  return {
+    report,
+    request: {
+      titleKey: "studio:flagReviewLive.dialog.takeDownTitle",
+      bodyKey: "studio:flagReviewLive.dialog.takeDownBody",
+      confirmKey: "studio:flagReviewLive.action.takeDown",
+      textLabelKey: "studio:flagReviewLive.dialog.reasonLabel",
+      textMaxLength: STUDIO_LIMITS.takedownReasonMax,
+      releaseTitle: track.release.title,
+      tone: "destructive",
+    },
+    toAction: (reason) => ({
+      kind: "takeDown",
+      reportId: report.reportId,
+      releaseId: track.releaseId,
+      reason,
+    }),
+    successKey: "studio:flagReviewLive.toast.takenDown",
+  };
+}
+
+/** Dismiss: the report closes and the track stays as it is. */
+function dismissRequest(
+  report: StudioReviewTrackReportView,
+  trackTitle: string,
+): PendingTrackAction {
+  return {
+    report,
+    request: {
+      titleKey: "studio:flagReviewLive.dialog.dismissTitle",
+      bodyKey: "studio:flagReviewLive.trackReports.dialog.dismissBody",
+      confirmKey: "studio:flagReviewLive.action.dismiss",
+      textLabelKey: null,
+      textMaxLength: 0,
+      releaseTitle: trackTitle,
+      tone: "default",
+    },
+    toAction: () => ({
+      kind: "dismiss",
+      reportId: report.reportId,
+      reasonCode: report.reasonCode,
+    }),
+    successKey: "studio:flagReviewLive.toast.dismissed",
+  };
+}
+
 /** Track reports, under the release reports in the Reports tab (contract):
  *  Mark explicit, Add content warning, Take down release, Dismiss. */
 export function StudioReviewTrackReports({
   tabButtonId,
+  selection,
+  queueOrder,
 }: {
   tabButtonId: string;
+  /** The Reports tab's one selection, shared with the release reports. */
+  selection?: StudioRowSelection;
+  /** The track queue's sort and filter, held by the Reports tab so its one
+   *  selection covers exactly the cards on screen. */
+  queueOrder: ReviewQueueOrder<StudioReviewTrackReportView>;
 }) {
   const { t } = useTranslation();
   const { showToast } = useToast();
   const headingId = useId();
   const list = useStudioReviewTrackReports();
-  const focus = useReviewFocus(list.items, reportKey, tabButtonId);
+  const focus = useReviewFocus(queueOrder.visibleItems, reportKey, tabButtonId);
   const action = useStudioTrackReportAction();
   const [pending, setPending] = useState<PendingTrackAction | null>(null);
+  const [errorKey, setErrorKey] = useState<string | null>(null);
+  const openPending = (next: PendingTrackAction) => {
+    setErrorKey(null);
+    setPending(next);
+  };
   const [warningFor, setWarningFor] = useState<{
     report: StudioReviewTrackReportView;
     track: StudioAdminTrackView;
   } | null>(null);
 
+  /** Sends one decision. Success closes its dialog (`onDone`); a card
+   *  settled elsewhere closes it too, and any other failure keeps the dialog
+   *  and what staff picked or wrote, with the reason inside. */
   function run(
     report: StudioReviewTrackReportView,
     nextAction: StudioTrackReportAction,
     successKey: string,
     title: string,
-    onSettled: () => void,
+    onDone: () => void,
   ) {
+    setErrorKey(null);
     focus.markLeaving(report.reportId);
     action.mutate(nextAction, {
       onSuccess: () => {
-        onSettled();
+        onDone();
         showToast(t(successKey, { title }), "success");
       },
       onError: (error) => {
-        focus.clearLeaving();
-        onSettled();
-        showToast(t(studioErrorMessageKeyOf(error)), "error");
+        const messageKey = reviewErrorKeyOf(error);
+        if (isReviewSettledElsewhere(error)) onDone();
+        else {
+          focus.clearLeaving();
+          setErrorKey(messageKey);
+        }
+        showToast(t(messageKey), "error");
       },
     });
   }
@@ -91,6 +194,18 @@ export function StudioReviewTrackReports({
       </h3>
       <StudioReviewList
         list={list}
+        items={queueOrder.visibleItems}
+        toolbar={
+          <StudioReviewQueueBar
+            order={queueOrder}
+            totalCount={list.items.length}
+            canSortBySeverity
+            filterLabelOf={(reasonCode) =>
+              t(REASON_LABEL_KEYS[reasonCode as ReasonCode])
+            }
+            filterGroupLabelKey="studio:flagReviewLive.queue.filterReason"
+          />
+        }
         getKey={reportKey}
         emptyTitleKey="studio:flagReviewLive.trackReports.emptyTitle"
         emptyBodyKey="studio:flagReviewLive.trackReports.emptyBody"
@@ -98,71 +213,17 @@ export function StudioReviewTrackReports({
           <StudioReviewTrackReportCard
             report={report}
             titleRef={focus.registerTitle(report.reportId)}
+            selection={selection}
             onMarkExplicit={(track) =>
-              setPending({
-                report,
-                request: {
-                  titleKey:
-                    "studio:flagReviewLive.trackReports.dialog.markExplicitTitle",
-                  bodyKey:
-                    "studio:flagReviewLive.trackReports.dialog.markExplicitBody",
-                  confirmKey: "studio:flagReviewLive.trackReports.markExplicit",
-                  textLabelKey: null,
-                  textMaxLength: 0,
-                  releaseTitle: track.title,
-                  tone: "default",
-                },
-                toAction: () => ({
-                  kind: "markExplicit",
-                  reportId: report.reportId,
-                  trackId: track.id,
-                }),
-                successKey:
-                  "studio:flagReviewLive.trackReports.toast.markedExplicit",
-              })
+              openPending(markExplicitRequest(report, track))
             }
-            onAddWarning={(track) => setWarningFor({ report, track })}
-            onTakeDown={(track) =>
-              setPending({
-                report,
-                request: {
-                  titleKey: "studio:flagReviewLive.dialog.takeDownTitle",
-                  bodyKey: "studio:flagReviewLive.dialog.takeDownBody",
-                  confirmKey: "studio:flagReviewLive.action.takeDown",
-                  textLabelKey: "studio:flagReviewLive.dialog.reasonLabel",
-                  textMaxLength: STUDIO_LIMITS.takedownReasonMax,
-                  releaseTitle: track.release.title,
-                  tone: "destructive",
-                },
-                toAction: (reason) => ({
-                  kind: "takeDown",
-                  reportId: report.reportId,
-                  releaseId: track.releaseId,
-                  reason,
-                }),
-                successKey: "studio:flagReviewLive.toast.takenDown",
-              })
-            }
+            onAddWarning={(track) => {
+              setErrorKey(null);
+              setWarningFor({ report, track });
+            }}
+            onTakeDown={(track) => openPending(takeDownRequest(report, track))}
             onDismiss={(trackTitle) =>
-              setPending({
-                report,
-                request: {
-                  titleKey: "studio:flagReviewLive.dialog.dismissTitle",
-                  bodyKey:
-                    "studio:flagReviewLive.trackReports.dialog.dismissBody",
-                  confirmKey: "studio:flagReviewLive.action.dismiss",
-                  textLabelKey: null,
-                  textMaxLength: 0,
-                  releaseTitle: trackTitle,
-                  tone: "default",
-                },
-                toAction: () => ({
-                  kind: "dismiss",
-                  reportId: report.reportId,
-                  reasonCode: report.reasonCode,
-                }),
-                successKey: "studio:flagReviewLive.toast.dismissed",
-              })
+              openPending(dismissRequest(report, trackTitle))
             }
           />
         )}
@@ -173,6 +234,7 @@ export function StudioReviewTrackReports({
             key={`${pending.report.reportId}-${pending.request.confirmKey}`}
             request={pending.request}
             isPending={action.isPending}
+            errorKey={errorKey}
             onConfirm={confirm}
             onClose={() => {
               if (!action.isPending) setPending(null);
@@ -184,6 +246,7 @@ export function StudioReviewTrackReports({
             key={`${warningFor.report.reportId}-warning`}
             track={warningFor.track}
             isPending={action.isPending}
+            errorKey={errorKey}
             onConfirm={(warnings) =>
               run(
                 warningFor.report,

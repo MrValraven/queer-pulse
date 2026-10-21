@@ -14,6 +14,7 @@ import {
   getAdminStudioTrack,
   markStudioTrackExplicit,
 } from "./studioSafety.api";
+import { studioLoadStateOf, type StudioLoadState } from "./studioLoadState";
 import { studioSafetyKeys } from "./studioSafetyQueryKeys";
 import type { StudioContentWarningId } from "./studioSafety.types";
 import {
@@ -49,10 +50,12 @@ export function useStudioReviewTrackReports(): StudioReviewList<StudioReviewTrac
   );
 }
 
-/** The staff read of one track: a report names only the track id. */
-export function useStaffStudioTrack(
-  trackId: string,
-): StudioAdminTrackView | null {
+/** The staff read of one track: a report names only the track id. The
+ *  card branches on `loadState`, so a failed read shows Retry in place. */
+export function useStaffStudioTrackRead(trackId: string): {
+  track: StudioAdminTrackView | null;
+  loadState: StudioLoadState;
+} {
   const { demoMode } = useDemoMode();
   const query = useQuery({
     queryKey: studioSafetyKeys.adminTrack(demoMode, trackId),
@@ -64,7 +67,17 @@ export function useStaffStudioTrack(
           : await getAdminStudioTrack(trackId),
       ),
   });
-  return query.data ?? null;
+  return {
+    track: query.data ?? null,
+    loadState: studioLoadStateOf(query, query.data !== undefined),
+  };
+}
+
+/** The track alone, for callers that never show its failure. */
+export function useStaffStudioTrack(
+  trackId: string,
+): StudioAdminTrackView | null {
+  return useStaffStudioTrackRead(trackId).track;
 }
 
 export type StudioTrackReportAction =

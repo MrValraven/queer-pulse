@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { FiMusic, FiX } from "react-icons/fi";
 import { IconButton } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
+import type { StudioShareKind } from "./studioLinkTarget";
 import type { StudioShareCardSurface } from "./studioShareCard.types";
 import styles from "./StudioShareCardFrame.module.css";
 
@@ -11,14 +12,18 @@ const SURFACE_CLASS: Record<StudioShareCardSurface, string | undefined> = {
   composer: styles.composer,
 };
 
-/** The fixed box every card state and the lazy fallback render inside. */
+/** The fixed box every card state and the lazy fallback render inside. A
+ *  lyric card is taller, set by its kind, which the link names before any
+ *  read: so its box too keeps one height in every state. */
 export function StudioShareCardFrame({
   surface,
+  kind,
   label,
   onRemove,
   children,
 }: {
   surface: StudioShareCardSurface;
+  kind?: StudioShareKind;
   /** The group's accessible name, e.g. "Studio track". */
   label?: string;
   onRemove?: () => void;
@@ -33,6 +38,7 @@ export function StudioShareCardFrame({
         .filter(Boolean)
         .join(" ")}
       data-studio-share-frame={surface}
+      data-kind={kind === "lyric" ? "lyric" : undefined}
       data-removable={onRemove ? "" : undefined}
     >
       {children}

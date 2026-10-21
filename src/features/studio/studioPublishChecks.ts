@@ -56,3 +56,49 @@ export function publishGapsOf(input: {
   if (input.hasPendingUploads) gaps.push("pending");
   return gaps;
 }
+
+/** Done lines for the checklist, one per gap, so finished checks show too. */
+export const PUBLISH_DONE_KEY: Record<PublishGap, string> = {
+  title: "studio:uploadFlow.publish.done.title",
+  cover: "studio:uploadFlow.publish.done.cover",
+  rights: "studio:uploadFlow.publish.done.rights",
+  tracks: "studio:uploadFlow.publish.done.tracks",
+  sources: "studio:uploadFlow.publish.done.sources",
+  pending: "studio:uploadFlow.publish.done.pending",
+};
+
+/** Where each check is fixed: the step it lives on and the field to focus
+ *  there (an id from RELEASE_FIELD_IDS, or the tracks list). */
+export const PUBLISH_GAP_TARGET: Record<
+  PublishGap,
+  { step: "release" | "tracks" | "publish"; field: string }
+> = {
+  title: { step: "release", field: "title" },
+  cover: { step: "release", field: "cover" },
+  rights: { step: "publish", field: "rights" },
+  tracks: { step: "tracks", field: "tracks" },
+  sources: { step: "tracks", field: "tracks" },
+  pending: { step: "tracks", field: "tracks" },
+};
+
+export interface PublishCheck {
+  gap: PublishGap;
+  isDone: boolean;
+}
+
+/** Every check in the server's order, done or not. The sources check only
+ *  appears on sourced releases, where it can fail. */
+export function publishChecksOf(
+  input: Parameters<typeof publishGapsOf>[0] & { isSourcedRelease: boolean },
+): PublishCheck[] {
+  const gaps = new Set(publishGapsOf(input));
+  const order: PublishGap[] = [
+    "title",
+    "cover",
+    "rights",
+    "tracks",
+    ...(input.isSourcedRelease ? (["sources"] as const) : []),
+    "pending",
+  ];
+  return order.map((gap) => ({ gap, isDone: !gaps.has(gap) }));
+}

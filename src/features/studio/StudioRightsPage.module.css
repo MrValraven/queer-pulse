@@ -1,11 +1,11 @@
 .wrap {
-  --text: var(--studio-text);
-  --text-60: var(--studio-text-muted);
+  --s-text: var(--studio-text);
+  --s-text-60: var(--studio-text-muted);
   /* It carries 11px and 12px meta text, so it never qualifies as large text:
      the muted token clears the AA 4.5:1 floor on every studio ground in both
      themes. The old cream 0.40 measured 3.55:1 and failed. */
-  --text-40: var(--studio-text-muted);
-  --line: rgba(var(--studio-ink-rgb), 0.1);
+  --s-text-40: var(--studio-text-muted);
+  --s-line: rgba(var(--studio-ink-rgb), 0.1);
   --surface: rgba(var(--studio-ink-rgb), 0.05);
   --rail: var(--studio-surface-rail);
   padding: 8px 0 var(--section-y-64);
@@ -39,7 +39,7 @@
 }
 .dek {
   font-size: var(--text-16);
-  color: var(--text-60);
+  color: var(--s-text-60);
   line-height: 1.6;
   max-width: 64ch;
   margin-top: 16px;
@@ -54,7 +54,7 @@
 }
 .p {
   background: var(--surface);
-  border: 1px solid var(--line);
+  border: 1px solid var(--s-line);
   border-radius: var(--radius-16);
   padding: 22px 22px 24px;
 }
@@ -87,12 +87,12 @@
 }
 .p p {
   font-size: var(--text-13-5);
-  color: var(--text-60);
+  color: var(--s-text-60);
   line-height: 1.6;
 }
 .p p em {
   font-style: italic;
-  color: var(--text);
+  color: var(--s-text);
 }
 
 /* ── Section head ── */
@@ -104,7 +104,7 @@
   flex-wrap: wrap;
   padding-bottom: 18px;
   margin-bottom: 4px;
-  border-bottom: 1px solid var(--line);
+  border-bottom: 1px solid var(--s-line);
 }
 .secH h2 {
   font-family: var(--serif);
@@ -119,7 +119,7 @@
 }
 .secH .sub {
   font-size: var(--text-13);
-  color: var(--text-40);
+  color: var(--s-text-40);
 }
 
 /* ── Release rows ── */
@@ -129,7 +129,7 @@
   align-items: center;
   gap: 18px;
   padding: 18px 4px;
-  border-bottom: 1px solid var(--line);
+  border-bottom: 1px solid var(--s-line);
 }
 .cover {
   width: 56px;
@@ -154,13 +154,13 @@
 }
 .rm {
   font-size: var(--text-12-5);
-  color: var(--text-40);
+  color: var(--s-text-40);
   margin-top: 3px;
   line-height: 1.5;
 }
 .rm em {
   font-style: normal;
-  color: var(--text-60);
+  color: var(--s-text-60);
 }
 
 /* Licence chip */
@@ -169,7 +169,7 @@
   font-family: var(--sans);
   font-size: var(--text-13);
   font-weight: 600;
-  color: var(--text);
+  color: var(--s-text);
   white-space: nowrap;
 }
 .lic span {
@@ -178,7 +178,7 @@
   font-weight: 500;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: var(--text-40);
+  color: var(--s-text-40);
   margin-top: 2px;
 }
 
@@ -214,56 +214,11 @@
   }
 }
 
-/* ── Buttons ── */
-.btTake {
-  font-family: var(--sans);
-  font-size: var(--text-13);
-  font-weight: 600;
-  color: var(--studio-accent-text);
-  background: transparent;
-  border: 1px solid rgba(var(--accent-rgb), 0.4);
-  border-radius: var(--radius-pill);
-  padding: 8px 16px;
-  cursor: pointer;
-  white-space: nowrap;
-  transition:
-    background 0.18s var(--ease),
-    border-color 0.18s var(--ease);
-}
-.btTake:hover {
-  background: rgba(var(--accent-rgb), 0.12);
-  border-color: var(--accent);
-}
-.btUndo {
-  font-family: var(--sans);
-  font-size: var(--text-13);
-  font-weight: 600;
-  color: var(--text);
-  background: transparent;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-pill);
-  padding: 8px 16px;
-  cursor: pointer;
-  white-space: nowrap;
-  transition:
-    background 0.18s var(--ease),
-    border-color 0.18s var(--ease);
-}
-.btUndo:hover {
-  background: rgba(var(--studio-ink-rgb), 0.08);
-  border-color: rgba(var(--studio-ink-rgb), 0.22);
-}
-.btTake:focus-visible,
-.btUndo:focus-visible {
-  outline: var(--focus-ring);
-  outline-offset: var(--focus-ring-offset);
-  box-shadow: var(--ring-cream);
-}
 
 /* ── Footer note ── */
 .foot {
   background: var(--surface);
-  border: 1px solid var(--line);
+  border: 1px solid var(--s-line);
   border-radius: var(--radius-18);
   padding: 26px 28px;
   margin-top: 36px;
@@ -282,7 +237,7 @@
 }
 .foot p {
   font-size: var(--text-14);
-  color: var(--text-60);
+  color: var(--s-text-60);
   line-height: 1.65;
   max-width: 72ch;
 }
@@ -300,35 +255,6 @@
 }
 
 /* ── Modal ── */
-.modalBg {
-  position: fixed;
-  inset: 0;
-  /* a dialog-class overlay, so it sits at the same tier as the shared Modal */
-  z-index: var(--z-modal);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-  background: var(--scrim);
-  backdrop-filter: var(--blur-sm);
-  -webkit-backdrop-filter: var(--blur-sm);
-  animation: rtFadeIn 0.2s var(--ease);
-}
-.modal {
-  width: 100%;
-  max-width: 460px;
-  background: var(--studio-surface);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-20);
-  padding: 30px 32px 28px;
-  animation: rtModalIn 0.22s var(--ease);
-}
-@media (prefers-reduced-motion: reduce) {
-  .modalBg,
-  .modal {
-    animation: none;
-  }
-}
 .modalTitle {
   font-family: var(--serif);
   font-weight: 300;
@@ -344,12 +270,12 @@
 }
 .modalMeta {
   font-size: var(--text-12-5);
-  color: var(--text-40);
+  color: var(--s-text-40);
   margin-top: 8px;
 }
 .modalBody {
   font-size: var(--text-14);
-  color: var(--text-60);
+  color: var(--s-text-60);
   line-height: 1.65;
   margin-top: 14px;
 }
@@ -374,19 +300,14 @@
 .keep p em {
   color: var(--studio-jade-text);
 }
-.modalActions {
-  display: flex;
-  gap: 10px;
-  margin-top: 22px;
-}
 .bt {
   flex: 1;
   font-family: var(--sans);
   font-size: var(--text-14);
   font-weight: 600;
-  color: var(--text);
+  color: var(--s-text);
   background: rgba(var(--studio-ink-rgb), 0.06);
-  border: 1px solid var(--line);
+  border: 1px solid var(--s-line);
   border-radius: var(--radius-pill);
   padding: 12px 18px;
   cursor: pointer;
@@ -396,16 +317,6 @@
 }
 .bt:hover {
   background: rgba(var(--studio-ink-rgb), 0.1);
-}
-.btConfirm {
-  /* Dark ink on the coral fill: 6.28:1. */
-  color: var(--studio-bg);
-  background: var(--accent);
-  border-color: var(--accent);
-}
-.btConfirm:hover {
-  background: var(--accent);
-  filter: brightness(1.06);
 }
 .bt:focus-visible {
   outline: var(--focus-ring);
@@ -427,8 +338,7 @@
   }
   .relRow .lic,
   .relRow .rtStatus,
-  .relRow .btTake,
-  .relRow .btUndo {
+  .relRow .rowAction {
     grid-column: 1 / -1;
     justify-self: start;
     text-align: left;
@@ -436,31 +346,13 @@
 }
 
 /* ── Local keyframes ── */
-@keyframes rtFadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-@keyframes rtModalIn {
-  from {
-    opacity: 0;
-    transform: translateY(8px) scale(0.98);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
 @keyframes rtPulse {
   0%,
   100% {
-    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2);
+    box-shadow: 0 0 0 3px rgba(var(--amber-rgb), 0.2);
   }
   50% {
-    box-shadow: 0 0 0 5px rgba(245, 158, 11, 0.08);
+    box-shadow: 0 0 0 5px rgba(var(--amber-rgb), 0.08);
   }
 }
 

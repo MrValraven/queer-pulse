@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { FiMusic, FiPause, FiPlay } from "react-icons/fi";
+import { IconButton } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { StudioShareKind } from "./studioLinkTarget";
 import { studioShareLabelKey } from "./studioShareLabel";
@@ -41,9 +42,10 @@ export function StudioShareCardBody({
     <div className={styles.body}>
       <div className={styles.art}>
         {art}
+        {/* No tooltip: its wrapper would take the play's centring on the
+            cover, and the cover already says what play does. */}
         {play && (
-          <button
-            type="button"
+          <IconButton
             className={styles.play}
             aria-label={play.label}
             aria-disabled={play.isBlocked || undefined}
@@ -51,7 +53,7 @@ export function StudioShareCardBody({
             onClick={play.onPlay}
           >
             {play.isPlaying ? <FiPause aria-hidden /> : <FiPlay aria-hidden />}
-          </button>
+          </IconButton>
         )}
       </div>
       <div className={styles.text}>

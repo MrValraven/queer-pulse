@@ -8,12 +8,25 @@ import {
 import { contentWarningsOf } from "../api/studioSafetyFields";
 import type { StudioQueueItem, StudioQueueSource } from "./studioPlayerContext";
 import type { StudioQueueState } from "./studioQueueReducer";
+import {
+  clearStudioListeningMemory,
+  clearStudioResumeRecord,
+  endStudioListeningMemory,
+  readStudioResumeRecord,
+  writeStudioResumeRecord,
+} from "./studioListeningMemory";
+import { readListeningPreferences } from "./studioPlayerPreferences";
 
 /**
  * The queue saved for this tab (contract C.4, spec 5.3): sessionStorage under
  * `studio.queue.<memberId>`. It holds the queue rows and the playhead only;
  * stream URLs live in memory and are fetched again on play. Every access is
  * guarded: blocked or full storage means nothing is saved.
+ *
+ * With "Resume where you left off" on (PRD-17, opt-in), every write also goes
+ * to the device's resume copy (`qp.studio.resume.v1`, studioListeningMemory),
+ * tagged with the member, and a fresh tab with no saved queue cues that copy
+ * paused. Every clear below removes the resume copy as well.
  */
 export const STUDIO_QUEUE_STORAGE_PREFIX = "studio.queue.";
 const SNAPSHOT_VERSION = 1;
@@ -199,16 +212,38 @@ function parseSnapshot(raw: string): StudioQueueSnapshot | null {
   };
 }
 
+/** The device's resume copy, when it is this member's; another member's copy
+ *  is removed. Null with resume off. */
+function readResumeSnapshot(memberId: string): StudioQueueSnapshot | null {
+  if (!readListeningPreferences().shouldResumeAcrossSessions) return null;
+  const raw = readStudioResumeRecord();
+  if (raw === null) return null;
+  try {
+    const parsed: unknown = JSON.parse(raw);
+    if (!isRecord(parsed) || parsed.memberId !== memberId) {
+      clearStudioResumeRecord();
+      return null;
+    }
+    return parseSnapshot(raw);
+  } catch {
+    clearStudioResumeRecord();
+    return null;
+  }
+}
+
+/** This tab's saved queue, else (resume on) the device's resume copy. */
 export function readQueueSnapshot(
   memberId: string,
 ): StudioQueueSnapshot | null {
+  let tabSnapshot: StudioQueueSnapshot | null;
   try {
     const raw =
       sessionStore()?.getItem(studioQueueStorageKey(memberId)) ?? null;
-    return raw === null ? null : parseSnapshot(raw);
+    tabSnapshot = raw === null ? null : parseSnapshot(raw);
   } catch {
-    return null;
+    tabSnapshot = null;
   }
+  return tabSnapshot ?? readResumeSnapshot(memberId);
 }
 
 /** Set by Quick Exit for the rest of this page: leaving fires pagehide and
@@ -216,9 +251,11 @@ export function readQueueSnapshot(
 let areQueueSavesEnded = false;
 
 /** Quick Exit: no queue is saved again on this page, and every saved one is
- *  removed. Never throws. */
+ *  removed, with the resume copy and the recently played list (which stop
+ *  being written too). Never throws. */
 export function endStudioQueueSaving(): void {
   areQueueSavesEnded = true;
+  endStudioListeningMemory();
   clearStudioQueueSnapshots();
 }
 
@@ -258,19 +295,42 @@ export function writeQueueSnapshot(
   } catch {
     // Full or blocked storage: the queue stays in memory for this visit.
   }
+  // Resume on (opt-in): the same rows on this device, tagged with the member.
+  if (!readListeningPreferences().shouldResumeAcrossSessions) return;
+  // A preview link never reaches the device copy: its unreleased track and
+  // token stay in this tab, and an older copy goes rather than come back.
+  if (hasPreviewItem(state)) {
+    clearStudioResumeRecord();
+    return;
+  }
+  writeStudioResumeRecord(JSON.stringify({ ...payload, memberId }));
 }
 
+function hasPreviewItem(state: StudioQueueState): boolean {
+  const items = [
+    state.current,
+    ...state.sourceItems,
+    ...state.originalSourceItems,
+    ...state.userItems,
+  ];
+  return items.some((item) => item !== null && item.previewToken !== undefined);
+}
+
+/** The member's saved queue goes, with the device's resume copy. */
 export function clearQueueSnapshot(memberId: string): void {
   try {
     sessionStore()?.removeItem(studioQueueStorageKey(memberId));
   } catch {
     // Blocked storage holds nothing to clear.
   }
+  clearStudioResumeRecord();
 }
 
-/** Every member's saved queue in this tab: Quick Exit, sign-out and a switch
- *  between demo and live. */
+/** Every member's saved queue in this tab, plus the device's listening
+ *  memory (the resume copy and the recently played list): Quick Exit,
+ *  sign-out and a switch between demo and live. Never throws. */
 export function clearStudioQueueSnapshots(): void {
+  clearStudioListeningMemory();
   const store = sessionStore();
   if (!store) return;
   try {

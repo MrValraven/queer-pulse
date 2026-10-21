@@ -7,8 +7,8 @@ export const ALBUM = {
   id: "post:studio-album-cidade-dos-santos",
   kind: "post" as const,
   title: "Cidade dos santos",
-  // Split for the hero's <em> emphasis on the title's second word — content,
-  // mirrors ALBUM.title.
+  // Split for the hero's <em> emphasis on the title's second word (content,
+  // mirrors ALBUM.title).
   titlePre: "Cidade dos ",
   titleEm: "santos",
   href: routes.studioAlbum,
@@ -128,7 +128,7 @@ export const TRACKS: {
   },
 ];
 
-// Stable canonical ids — the tab's *stored* value never changes with
+// Stable canonical ids: the tab's *stored* value never changes with
 // language; only `labelKey` resolves via t() at render (i18n §5.1).
 export const TABS = [
   { id: "tracklist", labelKey: "studio:album.tabs.tracklist" },
@@ -136,7 +136,7 @@ export const TABS = [
 ] as const;
 export type AlbumTabId = (typeof TABS)[number]["id"];
 
-// Mock ledger + buy figures — per-instance analytics, run through
+// Mock ledger + buy figures: per-instance analytics, run through
 // useFormat() at the call site rather than hardcoded as display strings.
 export const ALBUM_BUY = {
   price: 8,
@@ -146,7 +146,8 @@ export const ALBUM_BUY = {
 export const ALBUM_LEDGER = {
   paidToArtistLifetime: 8940,
   paidToCollaborators: 1420,
-  playsThisMonth: 42840,
+  /** A count, so it reads "Fewer than 5" under the floor. */
+  savesThisMonth: { value: 312, isBelowThreshold: false },
 };
 
 export const MORE: {

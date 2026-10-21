@@ -14,6 +14,9 @@ export interface RailLink {
   end?: boolean;
   /** Drawn before the label, decorative (the label names the link). */
   icon?: IconType;
+  /** Other pages of the row's section, which light it as the current
+   *  section (Browse under Search). */
+  sectionPaths?: readonly string[];
 }
 
 export const RAIL_MAIN: RailLink[] = [
@@ -34,6 +37,7 @@ export const RAIL_MAIN: RailLink[] = [
     label: "Browse",
     labelKey: "studio:rail.main.browse",
     to: routes.studioSearch,
+    sectionPaths: [routes.studioBrowse],
     icon: FiCompass,
   },
   {

@@ -1,7 +1,19 @@
 .container {
   position: fixed;
-  top: 20px;
+  /* The installed iPhone app draws under the status bar (viewport-fit=cover),
+     where iOS blurs page content, so the stack clears the notch inset.
+     A surface that owns the top edge while it is open (Studio's Now playing
+     head, the queue side panel) moves the stack off its own controls by
+     setting --toast-shift-top and --toast-shift-end on the root element;
+     the stack glides there by translate, so its resting place stays put. */
+  top: max(20px, calc(env(safe-area-inset-top, 0px) + 8px));
   inset-inline-end: 20px;
+  --toast-shift-sign: -1;
+  translate: calc(var(--toast-shift-end, 0px) * var(--toast-shift-sign))
+    var(--toast-shift-top, 0px);
+  transition-property: translate;
+  transition-duration: var(--dur-base);
+  transition-timing-function: var(--ease);
   z-index: var(--z-toast);
   display: flex;
   flex-direction: column;
@@ -14,6 +26,11 @@
      keeps it pinned to the corner; long messages wrap within max-width. */
   width: max-content;
   max-width: min(400px, calc(100vw - 32px));
+}
+
+/* Right to left, the inline end is on the left, so the shift runs right. */
+:global([dir="rtl"]) .container {
+  --toast-shift-sign: 1;
 }
 
 /* One per politeness level. Both are always in the DOM — a live region created

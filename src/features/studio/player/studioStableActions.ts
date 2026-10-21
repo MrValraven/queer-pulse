@@ -27,6 +27,8 @@ export function createStableActions(
     moveUpcomingSourceItem: (fromIndex, toIndex) =>
       latest().moveUpcomingSourceItem(fromIndex, toIndex),
     removeEntry: (queueEntryId) => latest().removeEntry(queueEntryId),
+    restoreQueueEntry: (item, group, index) =>
+      latest().restoreQueueEntry?.(item, group, index) ?? false,
     clearUserQueue: () => latest().clearUserQueue(),
     playEntry: (queueEntryId) => latest().playEntry(queueEntryId),
     toggleShuffle: () => latest().toggleShuffle(),

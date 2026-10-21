@@ -38,6 +38,12 @@
     transform var(--dur-fast, 0.12s) var(--ease-out, ease);
 }
 
+/* Dark: the plum bubble sits close to the dark surfaces under it, so it
+   takes a hairline edge on the ink channel. Light keeps its look. */
+:global([data-theme="dark"]) .bubble {
+  border: 1px solid var(--studio-line);
+}
+
 .bottom {
   top: calc(100% + 6px);
 }

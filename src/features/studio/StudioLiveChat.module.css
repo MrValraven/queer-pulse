@@ -1,0 +1,7 @@
+/* The live-region wrapper inside the chat panel: lines stack like the panel
+   body did before the log got its own element. */
+.log {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}

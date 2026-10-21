@@ -1,0 +1,94 @@
+/* Demo dashboard activity chart: the range group, SVG text and data table
+   around the shared ChartFrame and BarPlot. Tokens only. */
+.range {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.axisLabel {
+  font-family: var(--serif);
+  font-size: var(--text-12);
+  fill: var(--studio-text-faint);
+}
+
+.columnLabel {
+  font-family: var(--sans);
+  font-size: var(--text-11);
+  fill: var(--studio-text-faint);
+}
+
+.columnLabelToday {
+  font-family: var(--sans);
+  font-size: var(--text-11);
+  font-weight: 700;
+  fill: var(--studio-jade-text);
+}
+
+.table {
+  width: 100%;
+  margin-top: 10px;
+  border-collapse: collapse;
+  font-size: var(--text-13);
+  color: var(--studio-text);
+}
+
+.caption {
+  text-align: left;
+  padding-bottom: 6px;
+  font-family: var(--serif);
+  font-style: italic;
+  color: var(--studio-text-muted);
+}
+
+.table th,
+.table td {
+  padding: 8px 0;
+  text-align: left;
+  font-weight: 400;
+  border-top: 1px solid var(--studio-line);
+}
+
+.table thead th {
+  font-size: var(--text-11);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--studio-text-faint);
+}
+
+.table td {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.table thead th:last-child {
+  text-align: right;
+}
+
+/* The hero copy and stat row share the body's 1280px frame (30px gutter
+   inside it), so all three line up on one left edge on wide screens. */
+.heroColumn {
+  max-width: calc(1280px - 60px);
+  margin-inline: auto;
+}
+
+/* The stat row sits under the hero copy: a little air above it. */
+.stats {
+  margin-top: 30px;
+}
+
+/* The "since last month" delta inside a stat tile's hint. */
+.trendUp {
+  font-style: italic;
+  font-weight: 600;
+  color: var(--studio-jade-text);
+}
+
+/* The stat tiles take the card surface of the panels below them. Doubled
+   class plus the element keeps this ahead of the tile's own dark rule. */
+div.stats.stats > * {
+  background: var(--surface);
+  border-color: var(--s-line);
+  border-radius: var(--radius-14);
+}

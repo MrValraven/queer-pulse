@@ -3,6 +3,7 @@ import {
   hasOpenModal,
   openModalCount,
 } from "../../../shared/components/ui/modalStack";
+import { readListeningPreferences } from "./studioPlayerPreferences";
 
 export type StudioPlayerShortcutId =
   | "playPause"
@@ -46,6 +47,26 @@ const ARROW_SHORTCUTS: ReadonlySet<StudioPlayerShortcutId> = new Set([
   "volumeUp",
   "volumeDown",
 ]);
+
+/** Single printable keys (WCAG 2.1.4): the "Single-key shortcuts" switch in
+ *  Studio Settings turns these off. */
+const SINGLE_KEY_SHORTCUTS: ReadonlySet<StudioPlayerShortcutId> = new Set([
+  "mute",
+  "shuffle",
+  "repeat",
+  "lyrics",
+  "queue",
+  "help",
+]);
+
+export function isSingleKeyShortcut(
+  shortcutId: StudioPlayerShortcutId,
+): boolean {
+  return SINGLE_KEY_SHORTCUTS.has(shortcutId);
+}
+
+/** The bar, the mini card and every player overlay carry this marker. */
+const PLAYER_SURFACE_SELECTOR = "[data-studio-player]";
 
 /** Held keys that keep acting: seeking and volume repeat, the rest fire once. */
 const REPEATABLE_SHORTCUTS: ReadonlySet<StudioPlayerShortcutId> = new Set([
@@ -126,6 +147,25 @@ export function isShortcutBlockedByTarget(
   return false;
 }
 
+/** DES-21: Space and the arrows scroll the page and move through links and
+ *  buttons everywhere else, so they act only while focus sits inside the
+ *  player (the bar, the mini card, Now playing). Focus on the body, a link
+ *  or a button out on the page leaves them to the browser. Letters work
+ *  from anywhere while the single-key switch is on. */
+export function isShortcutOutOfScope(
+  target: EventTarget | null,
+  shortcutId: StudioPlayerShortcutId,
+): boolean {
+  if (SINGLE_KEY_SHORTCUTS.has(shortcutId))
+    return !readListeningPreferences().areSingleKeyShortcutsOn;
+  const isFocusScoped =
+    shortcutId === "playPause" || ARROW_SHORTCUTS.has(shortcutId);
+  if (!isFocusScoped) return false;
+  return !(
+    target instanceof Element && target.closest(PLAYER_SURFACE_SELECTOR)
+  );
+}
+
 /** Any dialog other than Now playing stands the shortcuts down. */
 export function isBlockedByModal(isNowPlayingOpen: boolean): boolean {
   if (!hasOpenModal()) return false;
@@ -133,7 +173,8 @@ export function isBlockedByModal(isNowPlayingOpen: boolean): boolean {
 }
 
 /** The player's keyboard shortcuts, mounted once by StudioPlayerProvider
- *  (through StudioPlayerShortcutsMount). Active while something is queued. */
+ *  (through StudioPlayerShortcutsMount). Active while something is queued;
+ *  the switch and the focus scope are read at key time. */
 export function useStudioPlayerShortcuts(
   handlers: StudioPlayerShortcutHandlers,
 ): void {
@@ -149,6 +190,7 @@ export function useStudioPlayerShortcuts(
       const shortcutId = shortcutIdOf(event);
       if (!shortcutId) return;
       if (isBlockedByModal(handlersRef.current.isNowPlayingOpen)) return;
+      if (isShortcutOutOfScope(event.target, shortcutId)) return;
       if (isShortcutBlockedByTarget(event.target, shortcutId)) return;
       event.preventDefault();
       if (event.repeat && !REPEATABLE_SHORTCUTS.has(shortcutId)) return;

@@ -12,6 +12,7 @@ import {
   type StudioFormat,
 } from "./api/studio.types";
 import { studioErrorMessageKeyOf } from "./studioErrors.data";
+import { studioReasonCopyKey, studioReasonOf } from "./studioReason";
 import {
   isConvertibleAudio,
   type ConvertFailureReason,
@@ -151,15 +152,49 @@ export function studioWriteErrorKeyOf(error: unknown): string {
 const isPresignRefusal = (error: StudioAudioUploadError) =>
   error.stage === "presign" && error.status === 403;
 
-/** One message per failure a row can show. */
+/** Storage answers a PUT on an expired presigned link with 403: the link
+ *  outlived the file (a slow connection or a long WAV conversion). Retry
+ *  asks for a fresh link, so it always helps. */
+const PRESIGN_EXPIRED_STATUS = 403;
+const FIRST_SERVER_STATUS = 500;
+
+/** A failed PUT by what the member can do about it: a link that expired,
+ *  a connection that dropped (offline or unreachable), or storage that
+ *  failed on our side. Anything else keeps the plain stopped line. */
+function putFailureKeyOf(error: StudioAudioUploadError): string {
+  if (error.isAborted) return "studio:uploadFlow.files.cancelled";
+  if (error.status === PRESIGN_EXPIRED_STATUS)
+    return "studio:uploadFlow.files.errorPresignExpired";
+  if (error.status === null) {
+    const isOffline =
+      typeof navigator !== "undefined" && navigator.onLine === false;
+    return studioReasonCopyKey(isOffline ? "offline" : "unreachable", "upload");
+  }
+  if (error.status >= FIRST_SERVER_STATUS)
+    return studioReasonCopyKey("server", "upload");
+  return "studio:uploadFlow.files.errorUpload";
+}
+
+/** One message per failure a row can show. A presign that never got an
+ *  answer reads its reason (offline, unreachable, timeout) through
+ *  `studioReasonOf`; a presign outage keeps the plain stopped line. */
 export function uploadErrorKeyOf(error: unknown): string {
   if (error instanceof StudioAudioUploadError) {
     if (error.stage === "presign" && error.status === 413)
       return "studio:uploadFlow.files.errorTooLarge";
-    if (isPresignRefusal(error)) return studioErrorMessageKeyOf(error.cause);
+    if (isPresignRefusal(error))
+      return studioErrorMessageKeyOf(error.cause, "upload");
+    if (error.stage === "put") return putFailureKeyOf(error);
+    const reason = studioReasonOf(error.cause);
+    if (
+      reason === "offline" ||
+      reason === "unreachable" ||
+      reason === "timeout"
+    )
+      return studioReasonCopyKey(reason, "upload");
     return "studio:uploadFlow.files.errorUpload";
   }
-  return studioWriteErrorKeyOf(error);
+  return studioErrorMessageKeyOf(error, "upload");
 }
 
 /** Refusals that come back the same on every Retry. */

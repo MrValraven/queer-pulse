@@ -1,11 +1,11 @@
 .wrap {
-  --text: var(--studio-text);
-  --text-60: var(--studio-text-muted);
+  --s-text: var(--studio-text);
+  --s-text-60: var(--studio-text-muted);
   /* Meta text at 11px and 12px never qualifies as large text, so it takes the
      muted Studio text token, which clears the AA 4.5:1 floor on the Studio
      surface and rail in both themes. The old cream at 0.40 measured 3.55:1. */
-  --text-40: var(--studio-text-muted);
-  --line: rgba(var(--studio-ink-rgb), 0.1);
+  --s-text-40: var(--studio-text-muted);
+  --s-line: rgba(var(--studio-ink-rgb), 0.1);
   --surface: rgba(var(--studio-ink-rgb), 0.05);
   --surface-hov: rgba(var(--studio-ink-rgb), 0.08);
   --rail: var(--studio-surface-rail);
@@ -23,7 +23,7 @@
   gap: 32px;
   flex-wrap: wrap;
   padding: 24px 0 28px;
-  border-bottom: 1px solid var(--line);
+  border-bottom: 1px solid var(--s-line);
   margin-bottom: 28px;
 }
 .prHMain {
@@ -52,7 +52,7 @@
 }
 .sub {
   font-size: var(--text-15);
-  color: var(--text-60);
+  color: var(--s-text-60);
   line-height: 1.6;
   max-width: 60ch;
   margin-top: 16px;
@@ -73,7 +73,7 @@
   align-items: center;
   gap: 8px;
   font-size: var(--text-12);
-  color: var(--text-60);
+  color: var(--s-text-60);
 }
 .pulseDot {
   width: 8px;
@@ -146,7 +146,7 @@
 }
 .count {
   font-size: var(--text-12);
-  color: var(--text-40);
+  color: var(--s-text-40);
   white-space: nowrap;
 }
 
@@ -195,7 +195,7 @@
 }
 .coverBy {
   font-size: var(--text-12-5);
-  color: var(--text-60);
+  color: var(--s-text-60);
   margin-top: 8px;
 }
 .coverNote {
@@ -221,9 +221,9 @@
   font-family: var(--sans);
   font-size: var(--text-12-5);
   font-weight: 600;
-  color: var(--text);
+  color: var(--s-text);
   background: var(--surface);
-  border: 1px solid var(--line);
+  border: 1px solid var(--s-line);
   border-radius: var(--radius-pill);
   padding: 7px 15px;
   cursor: pointer;
@@ -241,11 +241,11 @@
 }
 .trackSlot {
   display: grid;
-  grid-template-columns: 40px 44px minmax(150px, 1.1fr) 1.6fr 32px;
+  grid-template-columns: 40px 44px minmax(150px, 1.1fr) 1.6fr auto;
   align-items: center;
   gap: 14px;
   background: var(--surface);
-  border: 1px solid var(--line);
+  border: 1px solid var(--s-line);
   border-radius: var(--radius-12);
   padding: 11px 14px;
   transition: background 0.15s var(--ease);
@@ -255,18 +255,19 @@
 }
 @media (--md) {
   .trackSlot {
-    grid-template-columns: 32px 44px 1fr 28px;
+    grid-template-columns: 32px 44px 1fr auto;
   }
   .noteField {
     grid-column: 1 / -1;
   }
 }
 .grip {
+  touch-action: none;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 1px;
-  color: var(--text-40);
+  color: var(--s-text-40);
   cursor: grab;
 }
 .gripDots {
@@ -276,7 +277,7 @@
 .gripNo {
   font-size: var(--text-11);
   font-variant-numeric: tabular-nums;
-  color: var(--text-60);
+  color: var(--s-text-60);
 }
 .trackCov {
   width: 44px;
@@ -303,7 +304,7 @@
 }
 .trackWho {
   font-size: var(--text-11-5);
-  color: var(--text-60);
+  color: var(--s-text-60);
   margin-top: 2px;
   white-space: nowrap;
   overflow: hidden;
@@ -312,7 +313,7 @@
 .noteField {
   font-family: var(--sans);
   font-size: var(--text-12-5);
-  color: var(--text);
+  color: var(--s-text);
   background: transparent;
   border: none;
   border-bottom: 1px solid transparent;
@@ -320,15 +321,22 @@
   width: 100%;
   transition: border-color 0.15s var(--ease);
 }
+.rowActions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
 .noteField::placeholder {
-  color: var(--text-40);
+  color: var(--s-text-40);
   font-style: italic;
 }
 .noteField:hover {
-  border-bottom-color: var(--line);
+  border-bottom-color: var(--s-line);
 }
-.noteField:focus {
-  outline: none;
+.noteField:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
   border-bottom-color: var(--accent);
 }
 .remove {
@@ -336,9 +344,9 @@
   width: 1.556em;
   height: 1.556em;
   border-radius: var(--radius-8);
-  border: 1px solid var(--line);
+  border: 1px solid var(--s-line);
   background: transparent;
-  color: var(--text-60);
+  color: var(--s-text-60);
   font-size: var(--text-18);
   line-height: 1;
   cursor: pointer;
@@ -367,10 +375,10 @@
 .emptySlot {
   font-family: var(--sans);
   font-size: var(--text-13);
-  color: var(--text-40);
+  color: var(--s-text-40);
   text-align: center;
   background: transparent;
-  border: 1px dashed var(--line);
+  border: 1px dashed var(--s-line);
   border-radius: var(--radius-12);
   padding: 15px;
   cursor: pointer;
@@ -380,7 +388,7 @@
 }
 .emptySlot:hover {
   border-color: rgba(var(--accent-rgb), 0.4);
-  color: var(--text-60);
+  color: var(--s-text-60);
 }
 
 /* ── Collections ── */
@@ -395,7 +403,7 @@
   justify-content: space-between;
   gap: 16px;
   background: var(--surface);
-  border: 1px solid var(--line);
+  border: 1px solid var(--s-line);
   border-radius: var(--radius-12);
   padding: 14px 16px;
   transition: background 0.15s var(--ease);
@@ -418,7 +426,7 @@
 }
 .collSub {
   font-size: var(--text-12);
-  color: var(--text-60);
+  color: var(--s-text-60);
   margin-top: 3px;
 }
 .collBadge {
@@ -439,7 +447,7 @@
   background: rgba(var(--accent-rgb), 0.14);
 }
 .collBadge.flat {
-  color: var(--text-40);
+  color: var(--s-text-40);
   background: var(--surface);
 }
 
@@ -455,7 +463,7 @@
   align-items: center;
   gap: 16px;
   background: var(--surface);
-  border: 1px solid var(--line);
+  border: 1px solid var(--s-line);
   border-radius: var(--radius-12);
   padding: 12px 16px;
   transition: background 0.15s var(--ease);
@@ -476,7 +484,7 @@
   height: 2.364em;
   border-radius: var(--radius-10);
   background: rgba(var(--studio-ink-rgb), 0.06);
-  border: 1px solid var(--line);
+  border: 1px solid var(--s-line);
 }
 .dateBox b {
   font-family: var(--serif);
@@ -489,7 +497,7 @@
   font-size: var(--text-10);
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--text-40);
+  color: var(--s-text-40);
   margin-top: 2px;
 }
 .bcastMeta {
@@ -507,7 +515,7 @@
 }
 .bcastSub {
   font-size: var(--text-12);
-  color: var(--text-60);
+  color: var(--s-text-60);
   margin-top: 3px;
 }
 .timePill {
@@ -525,7 +533,7 @@
   position: sticky;
   top: 12px;
   background: rgba(var(--studio-ink-rgb), 0.04);
-  border: 1px solid var(--line);
+  border: 1px solid var(--s-line);
   border-radius: var(--radius-18);
   padding: 20px;
   min-width: 0;
@@ -564,11 +572,11 @@
 }
 .inboxTip {
   font-size: var(--text-12);
-  color: var(--text-60);
+  color: var(--s-text-60);
   line-height: 1.5;
   margin: 10px 0 18px;
   padding-bottom: 18px;
-  border-bottom: 1px solid var(--line);
+  border-bottom: 1px solid var(--s-line);
 }
 .inboxTip em {
   font-style: italic;
@@ -581,7 +589,7 @@
 }
 .subCard {
   background: var(--surface);
-  border: 1px solid var(--line);
+  border: 1px solid var(--s-line);
   border-radius: var(--radius-12);
   padding: 14px;
   transition: background 0.15s var(--ease);
@@ -616,7 +624,7 @@
 }
 .subWho {
   font-size: var(--text-11-5);
-  color: var(--text-60);
+  color: var(--s-text-60);
   margin-top: 2px;
 }
 .subQuote {
@@ -631,29 +639,16 @@
   display: flex;
   gap: 8px;
 }
-.subBtn {
-  flex: 1;
-  font-family: var(--sans);
-  font-size: var(--text-12);
-  font-weight: 600;
-  color: var(--text);
-  background: rgba(var(--studio-ink-rgb), 0.06);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-8);
-  padding: 8px 6px;
-  cursor: pointer;
-  transition: background 0.15s var(--ease);
-}
-.subBtn:hover {
-  background: var(--surface-hov);
-}
-.subBtnAdd {
-  color: var(--studio-jade-chip-text);
-  background: rgba(var(--jade-rgb), 0.14);
-  border-color: rgba(var(--jade-rgb), 0.3);
-}
-.subBtnAdd:hover {
-  background: rgba(var(--jade-rgb), 0.22);
+/* The three triage actions are kit sm Buttons sharing the card's width
+   by their labels. The `.subActions` prefix outranks the kit's sm heights,
+   so all three hold the 44px tap floor, and a long label wraps if it must. */
+.subActions .subBtn.subBtn {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: var(--tap-min);
+  padding-inline: 12px;
+  white-space: normal;
+  text-align: center;
 }
 
 /* ── Publish bar ── */
@@ -666,7 +661,7 @@
   gap: 20px;
   flex-wrap: wrap;
   background: var(--rail);
-  border: 1px solid var(--line);
+  border: 1px solid var(--s-line);
   border-radius: var(--radius-16);
   padding: 16px 22px;
   margin-top: 34px;
@@ -674,7 +669,7 @@
 }
 .publishStatus {
   font-size: var(--text-13);
-  color: var(--text-60);
+  color: var(--s-text-60);
 }
 .publishStatus em {
   font-style: normal;
@@ -682,7 +677,7 @@
   color: var(--studio-jade-text);
 }
 .publishStatus span {
-  color: var(--text);
+  color: var(--s-text);
 }
 .publishActions {
   display: flex;

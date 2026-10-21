@@ -109,7 +109,9 @@ function createSleepTimerControls(
         return;
       }
       const endsAt = Date.now() + option.minutes * 60_000;
-      set({ kind: "minutes", endsAt });
+      // The chosen length rides along, so the options can mark the running
+      // one (DES-27).
+      set({ kind: "minutes", endsAt, minutes: option.minutes });
       armTimer(endsAt);
     },
     cancelSleepTimer: cancel,

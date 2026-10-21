@@ -1,21 +1,28 @@
 import type { RefObject } from "react";
 import { createPortal } from "react-dom";
 import { FiX } from "react-icons/fi";
-import { useScrimDismiss } from "../../shared/components/ui";
+import { IconButton, useScrimDismiss } from "../../shared/components/ui";
 import { useScrollLock } from "../../shared/hooks";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { StudioArtistRefView } from "./api/studio.adapters";
 import { StudioAccountMenuPanel } from "./StudioAccountMenuPanel";
+import { StudioMenuNavigationProvider } from "./studioAccountMenuNavigation";
 import styles from "./StudioNavSheet.module.css";
 
 /**
  * The listener shell's phone navigation: a sheet from the left edge, opened
  * by the topbar avatar at 880px and below. It holds the account panel's
  * header, groups and exits. StudioAccountMenu owns the open state, the
- * leave window and the focus trap (useNavDrawerFocus on `panelRef`), so the
- * sheet only draws and reports its closes.
+ * leave window, the focus trap (useNavDrawerFocus on `panelRef`) and the
+ * history entry that lets Android or browser Back close the sheet
+ * (useHistoryBackDismiss), so the sheet only draws and reports its closes.
+ * Its rows navigate with `replace`, spending that entry instead of leaving
+ * it behind the new page.
  */
+/** Stable, so the provider never re-renders the panel on its own. */
+const SHEET_NAVIGATION = { shouldReplace: true };
+
 export function StudioNavSheet({
   id,
   panelRef,
@@ -66,23 +73,24 @@ export function StudioNavSheet({
           <span className={styles.product}>
             {t("studio:brand.studioLabel")}
           </span>
-          <button
-            type="button"
+          <IconButton
             className={styles.close}
             aria-label={t("studio:shell.sheet.close")}
             onClick={onClose}
           >
             <FiX aria-hidden />
-          </button>
+          </IconButton>
         </div>
-        <StudioAccountMenuPanel
-          id={`${id}-account`}
-          className={styles.body}
-          isSheet
-          isExiting={isExiting}
-          persona={persona}
-          onNavigate={onNavigate}
-        />
+        <StudioMenuNavigationProvider value={SHEET_NAVIGATION}>
+          <StudioAccountMenuPanel
+            id={`${id}-account`}
+            className={styles.body}
+            isSheet
+            isExiting={isExiting}
+            persona={persona}
+            onNavigate={onNavigate}
+          />
+        </StudioMenuNavigationProvider>
       </div>
     </div>,
     document.body,

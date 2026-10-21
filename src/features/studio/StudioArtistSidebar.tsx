@@ -3,7 +3,9 @@ import { FiArrowRight } from "react-icons/fi";
 import { routes } from "../../app/routeMap";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
+import { Button } from "../../shared/components/ui";
 import { ARTIST_SHOWCASE } from "./studioArtist.data";
+import { formatStudioCount } from "./studioCount";
 import styles from "./studio.module.css";
 import { StudioEuroAmount } from "./StudioEuroAmount";
 
@@ -46,9 +48,9 @@ export function StudioArtistSidebar({
               amount: formatters.currency(ARTIST_SHOWCASE.subscribeAmount),
             })}
           </Link>
-          <button type="button" className={styles.bt} onClick={onTip}>
+          <Button variant="quiet" className={styles.bt} onClick={onTip}>
             {t("studio:artist.sidebar.oneOffTipCta")}
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -59,8 +61,12 @@ export function StudioArtistSidebar({
           })}
         </div>
         <div className={styles.lrow}>
-          <span className={styles.k}>{t("studio:artist.sidebar.plays")}</span>
-          <span className={styles.v}>{formatters.number(stats.plays)}</span>
+          <span className={styles.k}>
+            {t("studio:artist.sidebar.newFollowers")}
+          </span>
+          <span className={styles.v}>
+            {formatStudioCount(stats.newFollowers, t, formatters)}
+          </span>
         </div>
         <div className={styles.lrow}>
           <span className={styles.k}>

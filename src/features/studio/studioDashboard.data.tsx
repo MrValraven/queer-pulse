@@ -12,7 +12,6 @@ export interface DashStat {
   trendValues?: Record<string, string | number>;
   /** Trend tokens rendered as nodes, for euro figures in the active locale. */
   trendSlots?: Record<string, ReactNode>;
-  payout?: boolean;
 }
 
 export interface DashCurator {
@@ -35,25 +34,33 @@ export interface DashCity {
 
 export const STATS: DashStat[] = [
   {
-    labelKey: "studio:dashboard.stats.playsThisMonth",
-    v: <StudioNumber value={36400} shouldEmphasizeLastGroup />,
-    trendKey: "studio:demo.dashboard.trend.plays",
+    labelKey: "studio:demo.dashboard.stats.followers",
+    v: <StudioNumber value={1204} />,
+    trendKey: "studio:demo.dashboard.trend.followers",
+    trendSlots: {
+      delta: (
+        <>
+          + <StudioNumber value={86} />
+        </>
+      ),
+    },
+  },
+  {
+    labelKey: "studio:demo.dashboard.stats.saves",
+    v: <StudioNumber value={312} />,
+    trendKey: "studio:demo.dashboard.trend.saves",
     trendValues: { active: 4, total: 11 },
     trendSlots: {
       delta: (
         <>
-          + <StudioNumber value={12140} />
+          + <StudioNumber value={74} />
         </>
       ),
     },
   },
   {
     labelKey: "studio:dashboard.stats.streamingEarnings",
-    v: (
-      <em>
-        <StudioEuroAmount value={1820} />
-      </em>
-    ),
+    v: <StudioEuroAmount value={1820} />,
     trendKey: "studio:demo.dashboard.trend.earnings",
     trendSlots: {
       delta: (
@@ -61,33 +68,35 @@ export const STATS: DashStat[] = [
           + <StudioEuroAmount value={607} />
         </>
       ),
-      rate: <StudioEuroAmount value={0.05} />,
     },
   },
   {
     labelKey: "studio:dashboard.stats.tipsReceived",
-    v: (
-      <em>
-        <StudioEuroAmount value={448} />
-      </em>
-    ),
+    v: <StudioEuroAmount value={448} />,
     trendKey: "studio:demo.dashboard.trend.tips",
     trendValues: { tippers: 87, notes: 64, recent: 5 },
   },
   {
     labelKey: "studio:dashboard.stats.nextPayout",
     labelDateIso: "2026-07-05",
-    v: (
-      <em>
-        <StudioEuroAmount value={2140} />
-      </em>
-    ),
+    v: <StudioEuroAmount value={2140} />,
     trendKey: "studio:demo.dashboard.trend.payout",
-    payout: true,
   },
 ];
 
-export const BARS = [32, 42, 38, 55, 48, 62, 58, 68, 72, 65, 78, 60, 54, 96];
+/** The fixture's "today", the last day of the activity series. */
+export const DASHBOARD_TODAY_ISO = "2026-06-10";
+
+/** Saves plus playlist adds per day, oldest first, 30 days. Studio never
+ *  counts plays, and a day under 5 shows as "Fewer than 5" (the floor that
+ *  keeps small audiences unidentifiable), so the series holds one such day. */
+export const DAILY_ACTIVITY: readonly number[] = [
+  8, 12, 9, 14, 11, 3, 7, 15, 18, 13, 16, 22, 19, 4, 10, 17, 21, 24, 20, 26, 23,
+  28, 25, 30, 27, 34, 31, 29, 33, 41,
+];
+
+/** The smallest count Studio shows as a number. */
+export const STUDIO_COUNT_FLOOR = 5;
 
 export const CURATORS: DashCurator[] = [
   {
@@ -134,19 +143,18 @@ export const CITIES: DashCity[] = [
   { name: null, otherCount: 35, pct: 4 },
 ];
 
-/** A daily-plays range chip: its stable id and the span it covers. The
- *  label is `Intl` unit formatting ("7d" / "7 dias", "1y" / "1 ano"). */
+/** An activity range chip: its stable id and the number of days it covers.
+ *  The label is `Intl` unit formatting ("7d" / "7 dias"). */
 export interface ChartRange {
   id: string;
-  amount: number;
-  unit: "day" | "year";
+  days: number;
 }
 
 export const CHART_RANGES: ChartRange[] = [
-  { id: "7d", amount: 7, unit: "day" },
-  { id: "14d", amount: 14, unit: "day" },
-  { id: "30d", amount: 30, unit: "day" },
-  { id: "1y", amount: 1, unit: "year" },
+  { id: "7d", days: 7 },
+  { id: "14d", days: 14 },
+  { id: "30d", days: 30 },
 ];
 
-export const SELECTED_CHART_RANGE_ID = "14d";
+export const DEFAULT_CHART_RANGE_ID = "14d";
+export const DEFAULT_CHART_RANGE_DAYS = 14;

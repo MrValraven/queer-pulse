@@ -1,0 +1,152 @@
+/* StudioMenu: one menu surface for every Studio "..." and context menu.
+   Portalled to <body> and fixed, so the panel sits over modals and sheets
+   (--z-popover-portal) and no scrolling column clips it. The items are the
+   shared Button (quiet); the doubled and chained selectors below beat the
+   Button module's own pill, padding and hover rules (up to 0,4,0). */
+.menu {
+  position: fixed;
+  z-index: var(--z-popover-portal);
+  box-sizing: border-box;
+  min-inline-size: 224px;
+  max-inline-size: min(320px, calc(100vw - 16px));
+  padding: 6px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--paper);
+  color: var(--studio-text);
+  border: 1px solid var(--studio-line);
+  border-radius: var(--radius-12);
+  box-shadow: var(--shadow-e3);
+  font-family: var(--sans);
+  font-variant-numeric: tabular-nums;
+  text-align: start;
+  /* A long press that opened the menu never turns into a text selection
+     or the browser's callout on the panel itself. */
+  user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.menu .item.item {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  inline-size: 100%;
+  min-block-size: var(--tap-min);
+  padding: 8px 12px;
+  border: none;
+  border-radius: var(--radius-8);
+  background: none;
+  color: inherit;
+  box-shadow: none;
+  font-family: inherit;
+  font-size: var(--text-14);
+  font-weight: 500;
+  line-height: 1.3;
+  text-align: start;
+  text-decoration: none;
+  white-space: normal;
+  opacity: 1;
+  cursor: pointer;
+  transition-property: background-color, color, transform;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+.icon {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  inline-size: 18px;
+  font-size: var(--text-16);
+  color: var(--studio-text-muted);
+  transition-property: color;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-inline-size: 0;
+}
+
+.label {
+  overflow-wrap: anywhere;
+}
+
+/* Why an item is unavailable, under its label. Muted, still 4.5:1. */
+.reason {
+  font-size: var(--text-12);
+  font-weight: 400;
+  color: var(--studio-text-muted);
+}
+
+.menu .item.item[aria-disabled="true"] {
+  color: var(--studio-text-faint);
+  cursor: default;
+}
+
+.menu .item.item[aria-disabled="true"] .icon {
+  color: var(--studio-text-faint);
+}
+
+.menu .itemDanger.itemDanger,
+.menu .itemDanger.itemDanger .icon {
+  color: var(--danger-ink);
+}
+
+@media (hover: hover) {
+  .menu .item.item:hover:not([aria-disabled="true"]) {
+    background: var(--studio-wash-2);
+  }
+
+  .menu .item.item:hover:not([aria-disabled="true"]) .icon {
+    color: var(--studio-text);
+  }
+
+  .menu .itemDanger.itemDanger:hover:not([aria-disabled="true"]) {
+    background: rgba(var(--danger-rgb), 0.08);
+  }
+
+  .menu .itemDanger.itemDanger:hover .icon {
+    color: var(--danger-ink);
+  }
+}
+
+.menu .item.item:active:not([aria-disabled="true"]) {
+  background: var(--studio-wash-3);
+  transform: scale(0.97);
+}
+
+/* The ring draws inside the item's own edge, so the panel never clips it. */
+.menu .item.item:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: -2px;
+  box-shadow: none;
+}
+
+/* Opened by a press: focus still lands on the first item (so arrows work
+   at once), but its ring waits for the first key inside the menu. */
+.menu[data-opened-by="pointer"] .item.item:focus-visible {
+  outline: none;
+}
+
+.separator {
+  block-size: 1px;
+  margin: 6px 6px;
+  background: var(--studio-line);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menu .item.item {
+    transition-property: background-color, color;
+  }
+
+  .menu .item.item:active:not([aria-disabled="true"]) {
+    transform: none;
+  }
+}

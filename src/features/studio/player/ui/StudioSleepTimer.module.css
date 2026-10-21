@@ -1,0 +1,127 @@
+/* The sleep timer's chip and choices (StudioSleepTimer.tsx). Each is the
+   shared quiet Button; the doubled classes put back the look of `.chip`
+   and `.option` (StudioPlayerControls.module.css) over the Button's own
+   pill, whatever order the sheets load in. */
+.chipSlot {
+  display: inline-flex;
+}
+
+.chip.chip {
+  position: relative;
+  min-height: 0;
+  gap: 6px;
+  padding: 6px 12px;
+  border: none;
+  border-radius: var(--radius-pill);
+  font-family: inherit;
+  font-size: var(--text-12);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  line-height: normal;
+  color: var(--studio-accent-chip-text);
+  background: rgba(var(--accent-rgb), 0.14);
+  transition-property: background-color, transform;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+.choice.choice {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: var(--tap-min);
+  padding: 7px 12px;
+  border: 1px solid rgba(var(--studio-ink-rgb), 0.16);
+  border-radius: var(--radius-pill);
+  background: none;
+  color: inherit;
+  font-family: inherit;
+  font-size: var(--text-13);
+  font-weight: 400;
+  line-height: normal;
+  transition-property: background-color, border-color, color, transform;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+@media (hover: hover) {
+  .chip.chip:hover:not(:disabled):not([aria-disabled="true"]) {
+    background: rgba(var(--accent-rgb), 0.22);
+  }
+
+  .choice.choice:hover:not(:disabled):not([aria-disabled="true"]) {
+    background: var(--studio-wash-2);
+  }
+}
+
+.chip.chip:active:not(:disabled):not([aria-disabled="true"]) {
+  background: rgba(var(--accent-rgb), 0.22);
+}
+
+.choice.choice:active:not(:disabled):not([aria-disabled="true"]) {
+  background: var(--studio-wash-3);
+}
+
+/* The timer choices sit in an even three-column grid, so the lengths line
+   up as one calm block. End of track takes two cells, Turn off a row. */
+.grid.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.grid .choice.choice {
+  justify-content: center;
+  min-width: 0;
+  white-space: normal;
+  text-align: center;
+}
+
+.grid .wide {
+  grid-column: span 2;
+}
+
+.turnOffSlot {
+  display: flex;
+  grid-column: 1 / -1;
+}
+
+.turnOffSlot > * {
+  flex: 1;
+}
+
+/* The running timer: an accent edge and text, as the Speed choice does. */
+.active.active.active {
+  border-color: var(--accent);
+  background: var(--studio-wash-3);
+  color: var(--studio-accent-text);
+  font-weight: 600;
+}
+
+.check {
+  display: inline-flex;
+  font-size: var(--text-14);
+}
+
+.turnOff.turnOff.turnOff {
+  color: var(--studio-accent-text);
+  font-weight: 600;
+}
+
+.chip.chip:focus-visible,
+.choice.choice:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* The More panel's last two rows (keyboard shortcuts, Close player) under
+   a hairline of their own, 16px clear of the audio settings. */
+.panelFoot {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-block-start: 6px;
+  padding-block-start: 16px;
+  border-block-start: 1px solid var(--studio-line);
+}

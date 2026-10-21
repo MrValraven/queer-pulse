@@ -72,6 +72,12 @@ interface ImageUploadFieldProps {
    *  poster reads, and eases back to `size` for a landscape file, a cleared
    *  slot or a reverted pick. Ignored for a `circle` slot. Off by default. */
   isPosterAware?: boolean;
+  /** The pick button's label while the slot is empty, naming its object
+   *  ("Add cover"). Defaults to the generic "Add image". */
+  addLabel?: string;
+  /** The pick button's label once an image is in ("Change cover").
+   *  Defaults to the generic "Change". */
+  changeLabel?: string;
 }
 
 /**
@@ -104,6 +110,8 @@ export function ImageUploadField({
   isRemovable = true,
   isSquare = false,
   isPosterAware = false,
+  addLabel,
+  changeLabel,
 }: ImageUploadFieldProps) {
   const { t } = useTranslation();
   const [pickerOpen, setPickerOpen] = useState(false);
@@ -224,8 +232,8 @@ export function ImageUploadField({
         >
           <FiCamera size={14} aria-hidden />
           {displayedValue
-            ? t("subprofiles:imageUpload.change")
-            : t("subprofiles:imageUpload.add")}
+            ? (changeLabel ?? t("subprofiles:imageUpload.change"))
+            : (addLabel ?? t("subprofiles:imageUpload.add"))}
         </button>
         {displayedValue && isRemovable && (
           <button

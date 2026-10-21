@@ -3,10 +3,8 @@ import {
   FiMessageSquare,
   FiAlignLeft,
   FiActivity,
-  FiCheck,
   FiGlobe,
   FiList,
-  FiEye,
   FiVolume2,
   FiPause,
   FiMoon,
@@ -49,22 +47,6 @@ export function buildGroups(t: TFunction): AccessGroup[] {
       dek: t("studio:accessibility.group.deaf.dek"),
       items: [
         {
-          icon: <FiMessageSquare />,
-          heading: (
-            <Translation
-              i18nKey="studio:accessibility.item.captions.heading"
-              components={{ em: <em /> }}
-            />
-          ),
-          body: (
-            <Translation
-              i18nKey="studio:accessibility.item.captions.body"
-              components={{ em: <em /> }}
-            />
-          ),
-          status: "live",
-        },
-        {
           icon: <FiAlignLeft />,
           heading: (
             <Translation
@@ -96,22 +78,6 @@ export function buildGroups(t: TFunction): AccessGroup[] {
           ),
           status: "live",
         },
-        {
-          icon: <FiCheck />,
-          heading: (
-            <Translation
-              i18nKey="studio:accessibility.item.signed.heading"
-              components={{ em: <em /> }}
-            />
-          ),
-          body: (
-            <Translation
-              i18nKey="studio:accessibility.item.signed.body"
-              components={{ em: <em /> }}
-            />
-          ),
-          status: "soon",
-        },
       ],
     },
     {
@@ -123,22 +89,6 @@ export function buildGroups(t: TFunction): AccessGroup[] {
       ),
       dek: t("studio:accessibility.group.language.dek"),
       items: [
-        {
-          icon: <FiGlobe />,
-          heading: (
-            <Translation
-              i18nKey="studio:accessibility.item.translation.heading"
-              components={{ em: <em /> }}
-            />
-          ),
-          body: (
-            <Translation
-              i18nKey="studio:accessibility.item.translation.body"
-              components={{ em: <em /> }}
-            />
-          ),
-          status: "live",
-        },
         {
           icon: <FiList />,
           heading: (
@@ -166,38 +116,6 @@ export function buildGroups(t: TFunction): AccessGroup[] {
       ),
       dek: t("studio:accessibility.group.lowVision.dek"),
       items: [
-        {
-          icon: <FiEye />,
-          heading: (
-            <Translation
-              i18nKey="studio:accessibility.item.contrast.heading"
-              components={{ em: <em /> }}
-            />
-          ),
-          body: (
-            <Translation
-              i18nKey="studio:accessibility.item.contrast.body"
-              components={{ em: <em /> }}
-            />
-          ),
-          status: "live",
-        },
-        {
-          icon: <FiVolume2 />,
-          heading: (
-            <Translation
-              i18nKey="studio:accessibility.item.screenReader.heading"
-              components={{ em: <em /> }}
-            />
-          ),
-          body: (
-            <Translation
-              i18nKey="studio:accessibility.item.screenReader.body"
-              components={{ em: <em /> }}
-            />
-          ),
-          status: "live",
-        },
         {
           icon: <FiPause />,
           heading: (

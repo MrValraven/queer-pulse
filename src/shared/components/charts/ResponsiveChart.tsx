@@ -14,7 +14,14 @@ export function ResponsiveChart({
   children: (width: number, height: number) => ReactNode;
 }) {
   return (
-    <ParentSize>
+    <ParentSize
+      parentSizeStyles={{
+        position: "relative",
+        width: "100%",
+        height: "auto",
+        aspectRatio: String(aspect),
+      }}
+    >
       {({ width }) =>
         width > 0 ? children(width, Math.round(width / aspect)) : null
       }

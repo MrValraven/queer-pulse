@@ -1,38 +1,62 @@
-import { useState, type FormEvent } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { FiCheck, FiArrowRight } from "react-icons/fi";
 import { routes } from "../../app/routeMap";
+import { Button, Collapse } from "../../shared/components/ui";
 import { StudioShell } from "./StudioShell";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import {
-  PLAN_PRICE,
-  PLAN_LINES,
-  PLAN_ARTIST_SHARE_PERCENT,
-  PLAN_PLATFORM_SHARE_PERCENT,
-  REASSURE_KEYS,
-} from "./studioCheckout.data";
-import ss from "./studio.module.css";
+import { PLAN_PRICE } from "./studioCheckout.data";
 import s from "./studioPages.module.css";
+import { StudioCheckoutSummary } from "./StudioCheckoutSummary";
+import local from "./StudioCheckoutPage.module.css";
+
+type CheckoutPhase = "idle" | "processing" | "declined" | "done";
+
+/** Demo rule: a card number ending in this declines, so the showcase can model
+ *  a refused payment. */
+const DEMO_DECLINED_ENDING = "0002";
+const DEMO_PROCESSING_MS = 1400;
 
 export function StudioCheckoutPage() {
   const { t } = useTranslation();
   const fmt = useFormat();
   const { showToast } = useToast();
-  const [done, setDone] = useState(false);
+  const [phase, setPhase] = useState<CheckoutPhase>("idle");
+  const [declinedLastFour, setDeclinedLastFour] = useState("");
+  const timer = useRef<number | undefined>(undefined);
+  const isProcessing = phase === "processing";
 
-  const priceLabel = fmt.currency(PLAN_PRICE);
+  useEffect(() => () => window.clearTimeout(timer.current), []);
+
+  const priceLabel = fmt.currency(PLAN_PRICE, "EUR", {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  });
   const cadenceLabel = t("studio:checkout.cadenceMonthly");
 
-  function handleSubmit(event: FormEvent) {
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setDone(true);
-    showToast(t("studio:checkout.doneToast"));
+    if (isProcessing) return;
+    const cardEntry = new FormData(event.currentTarget).get("cardNumber");
+    const cardDigits = (typeof cardEntry === "string" ? cardEntry : "").replace(
+      /\D/g,
+      "",
+    );
+    setPhase("processing");
+    timer.current = window.setTimeout(() => {
+      if (cardDigits.endsWith(DEMO_DECLINED_ENDING)) {
+        setDeclinedLastFour(cardDigits.slice(-4));
+        setPhase("declined");
+        return;
+      }
+      setPhase("done");
+      showToast(t("studio:checkout.doneToast"));
+    }, DEMO_PROCESSING_MS);
   }
 
-  if (done) {
+  if (phase === "done") {
     return (
       <StudioShell>
         <div className={`${s.done} ${s.screenIn}`} key="done">
@@ -47,13 +71,13 @@ export function StudioCheckoutPage() {
           </h1>
           <p>{t("studio:checkout.doneBody", { amount: priceLabel })}</p>
           <div className={s.doneActions}>
-            <Link to={routes.studio} className={ss.btP}>
+            <Button to={routes.studio} variant="primary">
               {t("studio:checkout.startListeningCta")}{" "}
               <FiArrowRight aria-hidden />
-            </Link>
-            <Link to={routes.studioLibrary} className={ss.bt}>
+            </Button>
+            <Button to={routes.studioLibrary} variant="ghost">
               {t("studio:checkout.goToLibraryCta")}
-            </Link>
+            </Button>
           </div>
         </div>
       </StudioShell>
@@ -74,105 +98,96 @@ export function StudioCheckoutPage() {
       </div>
 
       <div className={s.coGrid}>
-        <form onSubmit={handleSubmit}>
-          <div className={s.coField}>
-            <label className={s.coLabel} htmlFor="co-name">
-              {t("studio:checkout.nameLabel")}
-            </label>
-            <input
-              id="co-name"
-              className={s.coInput}
-              type="text"
-              placeholder={t("studio:checkout.namePlaceholder")}
-              required
-            />
-          </div>
-          <div className={s.coField}>
-            <label className={s.coLabel} htmlFor="co-card">
-              {t("studio:checkout.cardLabel")}
-            </label>
-            <input
-              id="co-card"
-              className={s.coInput}
-              inputMode="numeric"
-              placeholder={t("studio:checkout.cardPlaceholder")}
-              required
-            />
-          </div>
-          <div className={s.coRow}>
+        <form onSubmit={handleSubmit} aria-busy={isProcessing}>
+          <fieldset disabled={isProcessing} className={local.fields}>
             <div className={s.coField}>
-              <label className={s.coLabel} htmlFor="co-exp">
-                {t("studio:checkout.expiryLabel")}
+              <label className={s.coLabel} htmlFor="co-name">
+                {t("studio:checkout.nameLabel")}
               </label>
               <input
-                id="co-exp"
+                id="co-name"
+                name="cardName"
                 className={s.coInput}
-                placeholder={t("studio:checkout.expiryPlaceholder")}
+                type="text"
+                autoComplete="cc-name"
+                placeholder={t("studio:checkout.namePlaceholder")}
                 required
               />
             </div>
             <div className={s.coField}>
-              <label className={s.coLabel} htmlFor="co-cvc">
-                {t("studio:checkout.cvcLabel")}
+              <label className={s.coLabel} htmlFor="co-card">
+                {t("studio:checkout.cardLabel")}
               </label>
               <input
-                id="co-cvc"
+                id="co-card"
+                name="cardNumber"
                 className={s.coInput}
                 inputMode="numeric"
-                placeholder="123"
+                autoComplete="cc-number"
+                placeholder={t("studio:checkout.cardPlaceholder")}
                 required
               />
             </div>
-          </div>
-          <button
+            <div className={s.coRow}>
+              <div className={s.coField}>
+                <label className={s.coLabel} htmlFor="co-exp">
+                  {t("studio:checkout.expiryLabel")}
+                </label>
+                <input
+                  id="co-exp"
+                  name="cardExpiry"
+                  className={s.coInput}
+                  inputMode="numeric"
+                  autoComplete="cc-exp"
+                  placeholder={t("studio:checkout.expiryPlaceholder")}
+                  required
+                />
+              </div>
+              <div className={s.coField}>
+                <label className={s.coLabel} htmlFor="co-cvc">
+                  {t("studio:checkout.cvcLabel")}
+                </label>
+                <input
+                  id="co-cvc"
+                  name="cardCvc"
+                  className={s.coInput}
+                  inputMode="numeric"
+                  autoComplete="cc-csc"
+                  placeholder="123"
+                  required
+                />
+              </div>
+            </div>
+          </fieldset>
+          <Collapse isOpen={phase === "declined"}>
+            <p className={local.error} role="alert">
+              {t("studio:checkout.declined", { last4: declinedLastFour })}
+            </p>
+          </Collapse>
+          <Button
             type="submit"
-            className={ss.btP}
+            variant="primary"
+            size="lg"
+            disabled={isProcessing}
             style={{ width: "100%", marginTop: 8 }}
           >
-            {t("studio:checkout.payCta", {
-              amount: priceLabel,
-              cadence: cadenceLabel,
-            })}{" "}
-            <FiArrowRight aria-hidden />
-          </button>
+            {isProcessing ? (
+              t("studio:checkout.processingCta")
+            ) : (
+              <>
+                {t("studio:checkout.payCta", {
+                  amount: priceLabel,
+                  cadence: cadenceLabel,
+                })}{" "}
+                <FiArrowRight aria-hidden />
+              </>
+            )}
+          </Button>
           <p className={s.sumNote}>{t("studio:checkout.prototypeNote")}</p>
+          <p className={s.sumNote}>{t("studio:checkout.declineHint")}</p>
         </form>
 
-        <aside className={s.summary}>
-          <div className={s.sumH}>
-            <Translation
-              i18nKey="studio:checkout.membershipLabel"
-              components={{ em: <em /> }}
-              values={{ name: t("studio:checkout.planName") }}
-            />
-          </div>
-          {PLAN_LINES.map((line) => (
-            <div key={line.labelKey} className={s.sumLine}>
-              <span>{t(line.labelKey)}</span>
-              <span>
-                {line.valueKey
-                  ? t(line.valueKey)
-                  : line.labelKey === "studio:checkout.lines.artistShare"
-                    ? `${PLAN_ARTIST_SHARE_PERCENT}%`
-                    : `${PLAN_PLATFORM_SHARE_PERCENT}%`}
-              </span>
-            </div>
-          ))}
-          <div className={s.sumTotal}>
-            <span>{t("studio:checkout.dueTodayLabel")}</span>
-            <span>{priceLabel}</span>
-          </div>
-          <p className={s.sumNote}>
-            {REASSURE_KEYS.map((key) => (
-              <span key={key} style={{ display: "block", marginBottom: 6 }}>
-                ·{" "}
-                {key === "studio:checkout.reassure.share"
-                  ? t(key, { percent: PLAN_ARTIST_SHARE_PERCENT })
-                  : t(key)}
-              </span>
-            ))}
-          </p>
-        </aside>
+        <StudioCheckoutSummary priceLabel={priceLabel} />
       </div>
     </StudioShell>
   );

@@ -1,0 +1,253 @@
+/* The lyric card (PRD-13): the shared line set in Fraunces over a wash of the
+   cover's tint, the credit row beneath it. It fills the frame's taller lyric
+   box (StudioShareCardFrame.module.css, data-kind="lyric"). */
+.body {
+  /* The cover's tint, washed as the detail heroes wash it (studio.module.css
+     .detailHero): coral and jade carry their colour, plum and the default
+     wash in the theme ink. */
+  --wash-rgb: var(--studio-ink-rgb);
+  --wash-alpha: 0.08;
+  position: relative;
+  box-sizing: border-box;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: 6px;
+  block-size: 100%;
+  padding: var(--share-card-pad) var(--share-card-pad) var(--share-card-pad)
+    1rem;
+  padding-inline-end: var(--share-card-end-space, var(--share-card-pad));
+  isolation: isolate;
+  background:
+    radial-gradient(
+      120% 95% at 0% 0%,
+      rgba(var(--wash-rgb), var(--wash-alpha)),
+      transparent 70%
+    ),
+    radial-gradient(
+      90% 80% at 100% 100%,
+      rgba(var(--wash-rgb), calc(var(--wash-alpha) * 0.55)),
+      transparent 72%
+    );
+}
+
+.body[data-tint="coral"] {
+  --wash-rgb: var(--accent-rgb);
+  --wash-alpha: 0.22;
+}
+
+.body[data-tint="jade"] {
+  --wash-rgb: var(--jade-rgb);
+  --wash-alpha: 0.2;
+}
+
+.body[data-tint="plum"] {
+  --wash-rgb: var(--studio-ink-rgb);
+  --wash-alpha: 0.14;
+}
+
+/* A large open quote behind the line's end, in the wash's own colour. */
+.quoteMark {
+  position: absolute;
+  inset-block-start: 0.5rem;
+  inset-inline-end: 0.75rem;
+  z-index: -1;
+  font-size: var(--text-48);
+  color: rgba(var(--wash-rgb), 0.22);
+  pointer-events: none;
+}
+
+/* The composer's remove control sits in that corner. */
+:global([data-removable]) .quoteMark {
+  display: none;
+}
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-inline-size: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  font-size: var(--text-11);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--text-strong);
+}
+
+.eyebrow svg {
+  flex: none;
+}
+
+.eyebrowLabel {
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* The line: Fraunces, three lines at most, balanced so a short line never
+   leaves one word on its own. Scoped under .body so a post body's paragraph
+   and quote rules never restyle it. */
+.body .line {
+  align-self: center;
+  display: -webkit-box;
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  font-family: var(--serif);
+  font-size: var(--text-22);
+  font-style: normal;
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+  color: var(--ink);
+}
+
+/* In place of the words: why they are not shown. */
+.body .note {
+  align-self: center;
+  display: -webkit-box;
+  min-inline-size: 0;
+  margin: 0;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  font-size: var(--text-13);
+  line-height: 1.35;
+  color: var(--ink-60);
+}
+
+.credit {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-inline-size: 0;
+}
+
+.thumb {
+  position: relative;
+  flex: none;
+  inline-size: 2.5rem;
+  block-size: 2.5rem;
+  border-radius: var(--radius-4);
+  overflow: hidden;
+  box-shadow: var(--shadow-e1);
+}
+
+.creditText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-inline-size: 0;
+  line-height: 1.3;
+}
+
+.title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--text-13);
+  font-weight: 600;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+/* The stretched link: the whole card opens the track at the line. */
+.title::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-card);
+}
+
+.title:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+.title:focus-visible::after {
+  outline: var(--focus-ring);
+  outline-offset: calc(-2 * var(--focus-ring-offset));
+  box-shadow: var(--ring-cream-inset);
+}
+
+.artist {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--text-12);
+  color: var(--ink-60);
+}
+
+/* The coral play disc of the other cards, at the credit row's end and above
+   the stretched link. Doubled to outrank the shared icon button's look. */
+.play.play {
+  position: relative;
+  z-index: var(--z-raised);
+  flex: none;
+  inline-size: 44px;
+  min-inline-size: 44px;
+  block-size: 44px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+  /* css-scale-allow: non-flipping-text. The coral fill is the same in both
+     themes, so the icon on it stays plum in both too. */
+  color: var(--plum);
+  box-shadow: var(--ring-paper), var(--shadow-e2);
+  transition-property: transform, opacity;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+@media (hover: hover) {
+  .play.play:not([aria-disabled="true"]):not(:disabled):hover {
+    background: var(--accent);
+    /* css-scale-allow: non-flipping-text. The same plum icon on the same
+       coral fill as at rest, over the shared icon button's hover ink. */
+    color: var(--plum);
+    transform: scale(1.06);
+  }
+}
+
+.play.play:active:not([aria-disabled="true"]) {
+  transform: scale(0.97);
+}
+
+.play.play:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream), var(--shadow-e2);
+}
+
+.play.play[aria-disabled="true"] {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* A narrow frame (a phone's composer beside its remove control): the line
+   steps down a size so three lines still fit. */
+@container studio-share-card (inline-size < 17.5rem) {
+  .body .line {
+    font-size: var(--text-18);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .play.play {
+    transition-property: opacity;
+  }
+
+  .play.play:not([aria-disabled="true"]):hover,
+  .play.play:active:not([aria-disabled="true"]) {
+    transform: none;
+  }
+}

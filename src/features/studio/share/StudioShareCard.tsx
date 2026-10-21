@@ -6,10 +6,11 @@ import {
   StudioShareCardLayer,
   StudioShareCardStatusBody,
 } from "./StudioShareCardStates";
-import type { StudioShareKind } from "./studioLinkTarget";
+import { studioShareTargetKey, type StudioShareKind } from "./studioLinkTarget";
 import type { StudioShareCardProps } from "./studioShareCard.types";
 import { studioShareCardStatus } from "./studioShareCardModel";
 import { studioShareLabelKey } from "./studioShareLabel";
+import { StudioShareLyricCard } from "./StudioShareLyricCard";
 import { StudioSharePlaylistCard } from "./StudioSharePlaylistCard";
 import { StudioShareReleaseCard } from "./StudioShareReleaseCard";
 import { StudioShareTrackCard } from "./StudioShareTrackCard";
@@ -18,6 +19,7 @@ const VARIANT_BY_KIND: Record<StudioShareKind, typeof StudioShareTrackCard> = {
   track: StudioShareTrackCard,
   release: StudioShareReleaseCard,
   playlist: StudioSharePlaylistCard,
+  lyric: StudioShareLyricCard,
 };
 
 /**
@@ -39,12 +41,13 @@ export function StudioShareCard({
   return (
     <StudioShareCardFrame
       surface={surface}
+      kind={target.kind}
       label={t(studioShareLabelKey(target.kind))}
       onRemove={onRemove}
     >
       {access.hasAccess ? (
         // Keyed by the target so an edited composer link starts fresh.
-        <Variant key={`${target.kind}:${target.id}`} target={target} />
+        <Variant key={studioShareTargetKey(target)} target={target} />
       ) : (
         <AnimatePresence initial={false}>
           <StudioShareCardLayer key={accessStatus}>

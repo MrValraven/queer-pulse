@@ -1,7 +1,6 @@
-import { Link } from "react-router-dom";
 import { FiPlus, FiCheck, FiArrowRight } from "react-icons/fi";
 import { routes } from "../../app/routeMap";
-import { ImageSlot, FadeIn } from "../../shared/components/ui";
+import { Button, ImageSlot, FadeIn } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useSaved } from "../../app/providers/useSaved";
@@ -155,19 +154,14 @@ export function StudioLiveNow({ onTip }: { onTip: () => void }) {
               <span>4:18</span>
             </div>
             <div className={s.liveActions}>
-              <button
-                type="button"
-                className={`${s.bt} ${s.btP}`}
-                onClick={onTip}
-              >
+              <Button variant="primary" onClick={onTip}>
                 {t("studio:liveNow.tipArtistCta", {
                   artist: "Mariana",
                   amount: fmt.currency(2),
                 })}
-              </button>
-              <button
-                type="button"
-                className={s.bt}
+              </Button>
+              <Button
+                variant="quiet"
                 onClick={() => {
                   const now = toggleSave(buildLiveTrack(t));
                   showToast(
@@ -189,11 +183,11 @@ export function StudioLiveNow({ onTip }: { onTip: () => void }) {
                     <FiPlus /> {t("studio:liveNow.saveTrackCta")}
                   </>
                 )}
-              </button>
-              <Link to={routes.studioTrack} className={s.bt}>
+              </Button>
+              <Button variant="quiet" to={routes.studioTrack}>
                 {t("studio:liveNow.lyricsNotesCta")}{" "}
                 <FiArrowRight aria-hidden />
-              </Link>
+              </Button>
             </div>
           </div>
         </div>

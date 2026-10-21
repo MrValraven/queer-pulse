@@ -1,115 +1,27 @@
 /* Studio home browse tiles: one coloured tile per genre or mood, a drawn
    motif behind the label and, when the facet has one, the cover of its
-   newest release tilted into the bottom-right corner. The ground colours
+   newest release tilted into the bottom-right corner. They sit two to a
+   column on a sideways StudioShelf. The ground colours
    are the fixed --studio-facet-* tokens, so a tile looks the same in light
    and dark Studio and its cream label keeps AA on both. */
 
-.nav {
-  container: facet-grid / inline-size;
-}
-
-/* Row heights come from the grid's own width, so a lone last tile spanning
-   the row as a banner keeps the height of its neighbours: two-up rows are
-   4:3, wider rows 16:10. */
-.grid {
+/* One column of the two-row shelf: two compact tiles stacked, as wide as
+   a card on the shelves around it. */
+.column {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  grid-auto-rows: calc((100cqi - 12px) / 2 * 0.75);
+  grid-template-rows: repeat(2, auto);
   gap: 12px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
 }
 
-.item {
+.cell {
   container: facet-tile / size;
+  aspect-ratio: 16 / 9;
   min-height: var(--tap-min);
 }
 
-/* A lone last tile spans its row. One rule per column count, each undoing
-   the one before it. */
-.item:last-child:nth-child(2n + 1) {
-  grid-column: 1 / -1;
-}
-
-@container facet-grid (min-width: 520px) {
-  .grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    grid-auto-rows: calc((100cqi - 28px) / 3 * 0.625);
-    gap: 14px;
-  }
-
-  .item:last-child:nth-child(2n + 1) {
-    grid-column: auto;
-  }
-
-  .item:last-child:nth-child(3n + 1) {
-    grid-column: 1 / -1;
-  }
-}
-
-@container facet-grid (min-width: 760px) {
-  .grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    grid-auto-rows: calc((100cqi - 48px) / 4 * 0.625);
-    gap: 16px;
-  }
-
-  .item:last-child:nth-child(3n + 1) {
-    grid-column: auto;
-  }
-
-  .item:last-child:nth-child(4n + 1) {
-    grid-column: 1 / -1;
-  }
-}
-
-@container facet-grid (min-width: 1000px) {
-  .grid {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    grid-auto-rows: calc((100cqi - 64px) / 5 * 0.625);
-  }
-
-  .item:last-child:nth-child(4n + 1) {
-    grid-column: auto;
-  }
-
-  .item:last-child:nth-child(5n + 1) {
-    grid-column: 1 / -1;
-  }
-}
-
-@container facet-grid (min-width: 1240px) {
-  .grid {
-    grid-template-columns: repeat(6, minmax(0, 1fr));
-    grid-auto-rows: calc((100cqi - 80px) / 6 * 0.625);
-  }
-
-  .item:last-child:nth-child(5n + 1) {
-    grid-column: auto;
-  }
-
-  .item:last-child:nth-child(6n + 1) {
-    grid-column: 1 / -1;
-  }
-}
-
-/* The real tiles fade in over the skeletons they replace. */
-.gridEnter {
-  animation: facetTilesIn var(--dur-slow) var(--ease-out) both;
-}
-
-@keyframes facetTilesIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
 .skeletonTile {
-  height: 100%;
+  aspect-ratio: 16 / 9;
+  min-height: var(--tap-min);
   border-radius: var(--radius-12);
 }
 
@@ -243,47 +155,21 @@
   opacity: 1;
 }
 
-/* The banner: the motif box widens to 28:10, which shows the drawn lower
-   half of the board at a larger scale, and fades out leftward; the cover
-   sizes from the height. */
-@container facet-tile (min-aspect-ratio: 2 / 1) {
-  .tile {
-    --motif-shift: 0%;
-  }
-
-  .motif {
-    left: auto;
-    width: auto;
-    aspect-ratio: 28 / 10;
-    mask-image: linear-gradient(to right, transparent, black 35%);
-  }
-
-  .hasCover .motif {
-    right: 44cqh;
-  }
-
-  .cover {
-    right: 4%;
-    width: auto;
-    height: 64%;
-  }
-}
-
-@container facet-grid (min-width: 520px) {
+@container facet-tile (min-width: 170px) {
   .label {
     padding: 12px 14px;
     font-size: var(--text-17);
   }
 }
 
-@container facet-grid (min-width: 760px) {
+@container facet-tile (min-width: 210px) {
   .label {
     padding: 14px 16px;
     font-size: var(--text-18);
   }
 }
 
-@container facet-grid (min-width: 1000px) {
+@container facet-tile (min-width: 250px) {
   .label {
     font-size: var(--text-19);
   }
@@ -291,7 +177,7 @@
 
 @media (hover: hover) {
   .tile:hover {
-    transform: translateY(-3px);
+    transform: translateY(-2px);
   }
 
   .tile:hover .cover {
@@ -304,7 +190,7 @@
 }
 
 .tile:active {
-  transform: translateY(0) scale(0.98);
+  transform: translateY(0) scale(0.97);
 }
 
 .tile:focus-visible {
@@ -318,10 +204,6 @@
   .motif,
   .cover {
     transition-property: opacity;
-  }
-
-  .gridEnter {
-    animation: none;
   }
 
   .tile:hover,

@@ -1,12 +1,31 @@
-/* SubprofileDeleteModal — the dialog chrome is the shared `<ModalSheet>`
+/* SubprofileDeleteModal: the dialog chrome is the shared `<ModalSheet>`
    (bottom-sheet on mobile, centred dialog on desktop; drag-to-dismiss +
-   safe-area). This module draws the heading + footer inside the sheet body
-   and spaces the body's stacked children (intro / losing list / type-to-confirm
-   field). `.losing` is the global "what breaks" list (persona-editor.css). */
+   safe-area). This module is fully self-contained: it draws the danger header,
+   the notice strip, the "what you lose" list with icon tiles, and the footer.
+   It does not depend on the global `.losing` rule, which only loads with the
+   persona editor. */
 
 .head {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--gap-sm);
   margin-bottom: 18px;
   padding-inline-end: 34px;
+}
+.headIcon {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-14);
+  background: rgba(var(--danger-rgb), 0.12);
+  color: var(--danger-ink);
+  font-size: var(--text-20);
+}
+.headText {
+  min-width: 0;
 }
 .title {
   margin: 0;
@@ -23,13 +42,6 @@
   line-height: 1.5;
   color: var(--ink-60);
 }
-.foot {
-  display: flex;
-  justify-content: flex-end;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 22px;
-}
 
 .body {
   display: flex;
@@ -37,6 +49,69 @@
   gap: 16px;
 }
 
-.losing {
+.notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
   margin: 0;
+  padding: 12px 14px;
+  border: 1px solid rgba(var(--danger-rgb), 0.28);
+  border-radius: var(--radius-12);
+  background: rgba(var(--danger-rgb), 0.08);
+  font-size: var(--text-14);
+  line-height: 1.5;
+  color: var(--text-strong);
+}
+.noticeIcon {
+  flex: none;
+  margin-top: 2px;
+  font-size: var(--text-16);
+  color: var(--danger-ink);
+}
+
+.losing {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.losingRow {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm);
+  margin: 0;
+  padding: 0;
+}
+.tile {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-10);
+  background: rgba(var(--danger-rgb), 0.1);
+  color: var(--danger-ink);
+  font-size: var(--text-18);
+}
+.losingText {
+  min-width: 0;
+  font-size: var(--text-15);
+  line-height: 1.4;
+  color: var(--text-strong);
+}
+
+.foot {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 22px;
+}
+.deleteLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--icon-gap-inline);
 }

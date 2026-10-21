@@ -1,6 +1,6 @@
 import { useId, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { FiChevronDown, FiPlus } from "react-icons/fi";
-import { Collapse } from "../../../../shared/components/ui";
+import { Button, Collapse } from "../../../../shared/components/ui";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { formatChapterTime } from "./studioChapterTime";
 import { validateChapters } from "./studioChapterValidation";
@@ -101,8 +101,8 @@ export function StudioChaptersEditor({
 
   return (
     <section className={styles.section}>
-      <button
-        type="button"
+      <Button
+        variant="quiet"
         className={styles.toggle}
         aria-expanded={isOpen}
         aria-controls={isOpen ? panelId : undefined}
@@ -119,7 +119,7 @@ export function StudioChaptersEditor({
           className={styles.chevron}
           data-open={isOpen || undefined}
         />
-      </button>
+      </Button>
       <Collapse isOpen={isOpen}>
         <div id={panelId} className={styles.panel}>
           {!hasAudio ? (
@@ -159,9 +159,9 @@ export function StudioChaptersEditor({
                   {t("studio:chapters.error.tooMany")}
                 </p>
               </Collapse>
-              <button
+              <Button
+                variant="quiet"
                 ref={addButtonRef}
-                type="button"
                 className={styles.linkButton}
                 aria-describedby={
                   validation.listError !== null ? listErrorId : undefined
@@ -169,7 +169,7 @@ export function StudioChaptersEditor({
                 onClick={add}
               >
                 <FiPlus aria-hidden /> {t("studio:chapters.editor.add")}
-              </button>
+              </Button>
               <StudioTracklistPaste
                 toggleKey={
                   isEpisode ? "studio:chapters.editor.pasteEpisode" : undefined

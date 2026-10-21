@@ -6,6 +6,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { StudioOwnerClaimView } from "./api/studioSafetyFields";
 import { StudioClaimCounterForm } from "./StudioClaimCounterForm";
 import { StudioClaimStatusChip } from "./StudioClaimStatusChip";
+import { StudioSafetyHelpLinks } from "./StudioSafetyHelpLinks";
 import css from "./StudioClaimPanel.module.css";
 
 const DATE_FORMAT = {
@@ -125,6 +126,11 @@ export function StudioClaimPanel({
         <p className={css.meta}>
           {t("studio:claimPanel.decidedOn", { date: dateOf(claim.decidedAt) })}
         </p>
+      </Collapse>
+      {/* An upheld claim keeps the track offline for good: the way on is
+          the artist's rights and our team. */}
+      <Collapse isOpen={claim.status === "upheld"}>
+        <StudioSafetyHelpLinks leadKey="studio:claimPanel.upheldNextStep" />
       </Collapse>
       <Quote
         labelKey="studio:claimPanel.staffNoteHeading"

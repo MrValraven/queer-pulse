@@ -31,8 +31,12 @@
   font-variant-numeric: tabular-nums;
 }
 
-/* 24px tall for a comfortable press; the row still centres it. */
-.timeToggle {
+/* 24px tall for the eye; the row still centres it. On touch the press area
+   below reaches the 44px target (DES-24). It is the shared quiet Button;
+   the doubled classes keep the plain time label over its pill. */
+.timeToggle.timeToggle {
+  position: relative;
+  display: inline-block;
   appearance: none;
   min-block-size: 24px;
   margin: 0;
@@ -40,7 +44,10 @@
   text-align: start;
   border: 0;
   background: none;
+  color: var(--studio-text-muted);
   font-family: inherit;
+  font-size: var(--text-11);
+  font-weight: 400;
   line-height: inherit;
   border-radius: var(--radius-6);
   cursor: pointer;
@@ -49,8 +56,29 @@
   transition-timing-function: var(--ease);
 }
 
+.timeToggle.timeToggle:active:not(:disabled):not([aria-disabled="true"]) {
+  background: none;
+  transform: none;
+}
+
+@media (pointer: coarse) {
+  .timeToggle::after {
+    content: "";
+    position: absolute;
+    inset-block: calc(50% - var(--tap-min) / 2);
+    inset-inline: -8px;
+  }
+
+  /* Now playing's 48px row has room for the whole 44px target itself. */
+  .seekRow[data-size="large"] .timeToggle.timeToggle {
+    min-block-size: var(--tap-min);
+    min-inline-size: var(--tap-min);
+  }
+}
+
 @media (hover: hover) {
-  .timeToggle:not([aria-disabled="true"]):hover {
+  .timeToggle.timeToggle:hover:not(:disabled):not([aria-disabled="true"]) {
+    background: none;
     color: var(--studio-text);
   }
 }
@@ -61,6 +89,7 @@
   box-shadow: var(--ring-cream);
 }
 
-.timeToggle[aria-disabled="true"] {
+.timeToggle.timeToggle[aria-disabled="true"] {
+  opacity: 1;
   cursor: default;
 }

@@ -4,12 +4,17 @@
   gap: 8px;
 }
 
-.toggle {
+/* Doubled classes: these restyle the shared Button, out-ranking its pill. */
+.toggle.toggle {
   display: flex;
+  justify-content: flex-start;
   min-block-size: var(--tap-min);
   align-items: center;
   gap: 8px;
-  padding: 6px 0;
+  /* The shared quiet Button's hover wash gets room around the text, and the
+     negative margin keeps the label on the column's edge. */
+  padding: 6px 10px;
+  margin-inline-start: -10px;
   border: none;
   background: none;
   color: var(--studio-text);
@@ -121,13 +126,16 @@
   color: var(--studio-accent-soft-text);
 }
 
-.linkButton {
+.linkButton.linkButton {
   display: inline-flex;
   min-block-size: var(--tap-min);
   align-items: center;
   gap: 6px;
   align-self: flex-start;
-  padding: 6px 0;
+  /* The shared quiet Button's hover wash gets room around the text, and the
+     negative margin keeps the label on the column's edge. */
+  padding: 6px 10px;
+  margin-inline-start: -10px;
   border: none;
   background: none;
   color: var(--studio-accent-text);

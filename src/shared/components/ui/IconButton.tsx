@@ -1,5 +1,6 @@
 import type { ComponentPropsWithRef, ReactNode } from "react";
 import { Button, type ButtonSize } from "./Button";
+import { Tooltip, type TooltipProps } from "./Tooltip";
 
 type IconButtonBase = {
   /**
@@ -20,6 +21,11 @@ type IconButtonBase = {
   /** `dark` for a plum/dark ground, where the ink tokens disappear. */
   tone?: "light" | "dark";
   className?: string;
+  /** Wraps the button in the shared `Tooltip`. `true` reuses the aria-label;
+   *  a string shows that text instead. Omit for no tooltip. */
+  tooltip?: string | boolean;
+  /** Where the tooltip bubble sits. Defaults to `top`. */
+  tooltipPlacement?: TooltipProps["placement"];
 };
 
 type IconButtonProps = IconButtonBase &
@@ -46,9 +52,13 @@ export function IconButton({
   size = "md",
   tone = "light",
   className,
+  tooltip,
+  tooltipPlacement = "top",
   ...rest
 }: IconButtonProps) {
-  return (
+  const tooltipLabel =
+    tooltip === true ? rest["aria-label"] : tooltip || undefined;
+  const button = (
     <Button
       variant={tone === "dark" ? "icon-dark" : "icon"}
       size={size}
@@ -57,5 +67,12 @@ export function IconButton({
     >
       {children}
     </Button>
+  );
+  return tooltipLabel ? (
+    <Tooltip label={tooltipLabel} placement={tooltipPlacement}>
+      {button}
+    </Tooltip>
+  ) : (
+    button
   );
 }

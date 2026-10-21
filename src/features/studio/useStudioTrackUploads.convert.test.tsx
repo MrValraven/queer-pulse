@@ -243,7 +243,7 @@ describe("useStudioTrackUploads WAV retries, removal and order", () => {
     act(() => result.current.addFiles([wav("Tide.wav")]));
     await waitFor(() => expect(result.current.rows[0]?.stage).toBe("failed"));
     expect(result.current.rows[0]?.errorKey).toBe(
-      "studio:uploadFlow.files.errorUpload",
+      "studio:errors.upload.server",
     );
     act(() => result.current.retry(result.current.rows[0]?.localId ?? ""));
     await waitFor(() => expect(result.current.rows[0]?.stage).toBe("ready"));

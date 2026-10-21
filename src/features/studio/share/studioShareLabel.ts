@@ -9,6 +9,7 @@ const LABEL_PATH: Readonly<Record<StudioShareKind, string>> = {
   track: "studioShare.track",
   release: "studioShare.release",
   playlist: "studioShare.playlist",
+  lyric: "studioShare.lyric",
 };
 
 const SHARED_CATALOGS: Readonly<Record<Language, Catalog>> = {
@@ -16,7 +17,8 @@ const SHARED_CATALOGS: Readonly<Record<Language, Catalog>> = {
   pt: ptShared,
 };
 
-/** "Studio track", "Studio release" or "Studio playlist", as an i18n key. */
+/** "Studio track", "Studio release", "Studio playlist" or "Studio lyric",
+ *  as an i18n key. */
 export function studioShareLabelKey(kind: StudioShareKind): string {
   return `shared:${LABEL_PATH[kind]}`;
 }

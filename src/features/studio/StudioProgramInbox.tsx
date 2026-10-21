@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { FiArrowRight } from "react-icons/fi";
-import { ImageSlot } from "../../shared/components/ui";
+import { Button, ImageSlot } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -66,23 +66,30 @@ export function StudioProgramInbox({
             </div>
             <p className={s.subQuote}>{t(submission.quoteKey)}</p>
             <div className={s.subActions}>
-              <button type="button" className={s.subBtn} onClick={onListen}>
+              <Button
+                variant="quiet"
+                size="sm"
+                className={s.subBtn}
+                onClick={onListen}
+              >
                 {t("studio:program.inbox.listenCta")}
-              </button>
-              <button
-                type="button"
-                className={`${s.subBtn} ${s.subBtnAdd}`}
+              </Button>
+              <Button
+                variant="jade"
+                size="sm"
+                className={s.subBtn}
                 onClick={() => onSlate(submission)}
               >
                 {t("studio:program.inbox.slateCta")}
-              </button>
-              <button
-                type="button"
+              </Button>
+              <Button
+                variant="quiet"
+                size="sm"
                 className={s.subBtn}
                 onClick={() => onPass(submission.id)}
               >
                 {t("studio:program.inbox.passCta")}
-              </button>
+              </Button>
             </div>
           </div>
         ))}

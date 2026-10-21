@@ -15,7 +15,10 @@
   margin-inline-start: 0;
 }
 
-.chip {
+/* The chip rides on the shared quiet Button (size sm, whose ::after keeps a
+   44px hit area); the doubled class outranks its own rules whatever order
+   the two modules load in, so the chip keeps its outline look. */
+.chip.chip {
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -27,13 +30,21 @@
   color: var(--studio-text);
   font: inherit;
   font-size: var(--text-12);
+  font-weight: inherit;
+  line-height: inherit;
   cursor: pointer;
   transition-property: background-color;
   transition-duration: var(--dur-base);
   transition-timing-function: var(--ease);
 }
 
-.chip:hover {
+/* The 32px chip keeps a full 44px hit area: its ::after reaches 6px past
+   the top and bottom (the tripled class outranks the shared Button's 4px). */
+.chip.chip.chip::after {
+  inset: -6px 0;
+}
+
+.chip.chip:hover {
   background: rgba(var(--studio-ink-rgb), 0.06);
 }
 
@@ -66,4 +77,10 @@
   margin-inline-start: 4px;
   color: var(--studio-text-muted);
   font-size: var(--text-11);
+}
+
+/* Fades the chip in and out as editors come and go; a flex item of the
+   byline, so the chip keeps its own size. */
+.chipWrap {
+  display: inline-flex;
 }

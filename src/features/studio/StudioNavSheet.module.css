@@ -86,31 +86,13 @@
   color: var(--studio-accent-text);
 }
 
+/* The close IconButton, pushed to the row's end on the Studio ink. */
 .close {
   flex: none;
   margin-left: auto;
-  width: 44px;
-  height: 44px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: 0;
   border-radius: var(--radius-pill);
-  background: transparent;
   color: var(--studio-text);
   font-size: var(--text-18);
-  cursor: pointer;
-  transition: background var(--dur-fast) var(--ease);
-}
-@media (hover: hover) {
-  .close:hover {
-    background: rgba(var(--studio-ink-rgb), 0.08);
-  }
-}
-.close:focus-visible {
-  outline: var(--focus-ring);
-  outline-offset: var(--focus-ring-offset);
-  box-shadow: var(--ring-cream);
 }
 
 /* The account panel laid out full height: its header and footer keep their
@@ -169,8 +151,5 @@
   .rootClosing .scrim,
   .rootClosing .panel {
     animation: none;
-  }
-  .close {
-    transition: none;
   }
 }

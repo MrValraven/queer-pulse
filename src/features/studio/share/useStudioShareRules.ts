@@ -4,7 +4,7 @@ import { studioTrackQueryOptions } from "../api/studioTrackQuery";
 import { useStudioAccess } from "../api/useStudioAccess";
 import { studioPlaylistQueryOptions } from "../api/useStudioPlaylist";
 import { studioReleaseQueryOptions } from "../api/useStudioRelease";
-import type { StudioLinkTarget } from "./studioLinkTarget";
+import { isTrackShareKind, type StudioLinkTarget } from "./studioLinkTarget";
 import { studioShareRulesOf, type StudioShareRules } from "./studioShareRules";
 
 export type { StudioShareRules } from "./studioShareRules";
@@ -27,9 +27,11 @@ export function useStudioShareRules(
   const isReadable = target !== null && (demoMode || access.hasAccess);
   const targetId = target?.id ?? "";
   const kind = target?.kind ?? null;
+  // A lyric link shares its track, so it reads the track's rules.
+  const isTrackKind = kind !== null && isTrackShareKind(kind);
   const trackQuery = useQuery({
     ...studioTrackQueryOptions(demoMode, targetId),
-    enabled: isReadable && kind === "track",
+    enabled: isReadable && isTrackKind,
   });
   const releaseQuery = useQuery({
     ...studioReleaseQueryOptions(demoMode, targetId),
@@ -43,7 +45,7 @@ export function useStudioShareRules(
   return studioShareRulesOf(
     kind,
     {
-      track: kind === "track" ? trackQuery.data : undefined,
+      track: isTrackKind ? trackQuery.data : undefined,
       release: kind === "release" ? releaseQuery.data : undefined,
       playlist: kind === "playlist" ? playlistQuery.data : undefined,
     },

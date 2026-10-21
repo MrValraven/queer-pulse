@@ -547,6 +547,9 @@ export interface StudioMeDTO {
   hasAccess: boolean;
   /** Empty when hasAccess is false. */
   uploadablePersonas: StudioArtistRefDTO[];
+  /** DES-84: accepted claims on the member's releases they can still
+   *  counter, 0 without a grant. Optional: an older server leaves it out. */
+  counterWindowsOpen?: number;
 }
 
 export interface StudioPageDTO<Item> {
@@ -560,6 +563,18 @@ export interface StudioSearchResultDTO {
   artists: StudioArtistRefDTO[];
   /** v2: public playlists only; [] unless the type is all or playlists. */
   playlists: StudioPlaylistCardDTO[];
+  /** ENG-05: sent only when `type` names one type (not `all`). Pass it back
+   *  as `cursor` for the next 20 of that type; null on the last page. The
+   *  multi-type search omits it and stays at 20 per type. */
+  nextCursor?: string | null;
+}
+
+/** ENG-05: the query a single-type search page sends. `cursor` is the
+ *  previous page's `nextCursor`; omit it for the first page. */
+export interface StudioSearchPageParamsDTO {
+  q: string;
+  type: Exclude<StudioSearchType, "all">;
+  cursor?: string;
 }
 
 /** A presigned GET. Its lifetime is per track (contract A.2):

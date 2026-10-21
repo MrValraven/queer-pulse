@@ -62,7 +62,6 @@ describe("StudioShowPage (demo, owner)", () => {
       "Dating again at 45",
       "Coming out at 40",
     ]);
-    expect(within(list).getByText("Episode 3")).toBeInTheDocument();
   });
 
   it("reverses the order with Oldest", async () => {
@@ -132,7 +131,12 @@ describe("StudioShowPage (listener)", () => {
         <StudioShowPage release={release} onReport={() => {}} />
       </TestProviders>,
     );
-    expect(await screen.findByText("Episode 1")).toBeInTheDocument();
+    expect(
+      await screen.findByRole("heading", {
+        level: 3,
+        name: "Coming out at 40",
+      }),
+    ).toBeInTheDocument();
     expect(screen.queryByText("Draft")).toBeNull();
     expect(screen.queryByText("Our parents, part two")).toBeNull();
     expect(screen.queryByRole("link", { name: "Add episode" })).toBeNull();
@@ -183,7 +187,9 @@ describe("StudioShowPage (listener)", () => {
     expect(
       screen.getByRole("button", { name: "Play Dating again at 45" }),
     ).toBeInTheDocument();
-    expect(screen.getByTitle("Explicit")).toHaveTextContent("E");
+    expect(screen.getByRole("img", { name: "Explicit" })).toHaveTextContent(
+      "E",
+    );
     // Play latest episode skips the hidden newest episode.
     expect(
       screen.getByRole("button", { name: "Play latest episode" }),
@@ -222,7 +228,7 @@ describe("StudioShowPage (listener)", () => {
     expect(
       await screen.findByRole("button", { name: "Play Chosen family dinners" }),
     ).toBeInTheDocument();
-    expect(screen.getByTitle("Explicit")).toBeInTheDocument();
+    expect(screen.getByRole("img", { name: "Explicit" })).toBeInTheDocument();
     expect(screen.queryByText("Hidden by your settings")).toBeNull();
   });
 });

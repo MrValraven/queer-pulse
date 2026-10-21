@@ -18,7 +18,7 @@ function StudioReviewSkeleton() {
   return (
     <div
       role="status"
-      aria-label={t("studio:states.loadingLabel")}
+      aria-label={t("studio:loading.reviews")}
       className={css.list}
     >
       {[0, 1, 2].map((placeholderIndex) => (
@@ -39,12 +39,19 @@ function StudioReviewSkeleton() {
  */
 export function StudioReviewList<Item>({
   list,
+  items = list.items,
+  toolbar,
   getKey,
   renderCard,
   emptyTitleKey,
   emptyBodyKey,
 }: {
   list: StudioReviewListData<Item>;
+  /** The cards in the order and filter the queue bar chose; the list's own
+   *  items when the queue has no bar. */
+  items?: Item[];
+  /** The queue bar, shown while the queue holds cards. */
+  toolbar?: ReactNode;
   getKey: (item: Item) => string;
   renderCard: (item: Item) => ReactNode;
   emptyTitleKey: string;
@@ -58,6 +65,7 @@ export function StudioReviewList<Item>({
       <StudioLoadError
         loadState={list.loadState}
         title={t("studio:flagReviewLive.loadError")}
+        what="studio:errors.what.reviewList"
       />
     );
   return (
@@ -70,9 +78,12 @@ export function StudioReviewList<Item>({
           headingLevel={3}
         />
       </Collapse>
+      {toolbar ? (
+        <Collapse isOpen={list.items.length > 0}>{toolbar}</Collapse>
+      ) : null}
       <ul className={css.list}>
         <AnimatePresence initial={false}>
-          {list.items.map((item) => (
+          {items.map((item) => (
             <m.li
               key={getKey(item)}
               className={css.item}

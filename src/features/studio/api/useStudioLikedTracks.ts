@@ -1,5 +1,5 @@
 import { keepPreviousData, useInfiniteQuery } from "@tanstack/react-query";
-import { useMemo } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useSaved } from "../../../app/providers/useSaved";
 import {
@@ -33,7 +33,19 @@ export interface StudioLikedTracksResult {
   /** Reads the next page. `cancelRefetch: false` lets a read already under
    *  way (the one a like or unlike starts) finish first. */
   fetchNextPage: (options?: { cancelRefetch?: boolean }) => void;
+  /** Reads every page still waiting, then resolves with the playable likes
+   *  in list order: what Play and Shuffle queue, so a member with 400 likes
+   *  hears all 400. `isCancelled` is asked before each page; once it says
+   *  yes the reading stops and the promise resolves null. Rejects with the
+   *  read's error when a page fails. */
+  loadAllPlayableTracks: (options?: {
+    isCancelled?: () => boolean;
+  }) => Promise<StudioSearchTrackView[] | null>;
 }
+
+/** 200 pages of 100: past any real Liked songs, and a stop for a cursor
+ *  that never ends. */
+const MAX_PAGES_READ = 200;
 
 /**
  * Liked songs: the member's `studio_track` saves, newest first, 100 a page.
@@ -94,6 +106,49 @@ export function useStudioLikedTracks(
     [items],
   );
   const pages = query.data?.pages;
+  // A load-all keeps every like the pages return except the ones the member
+  // took out here. Testing "is it in the store" would drop the newest page:
+  // its rows reach the store (`remember`) only after the next render. So a
+  // like counts as taken out only once it was seen liked and has left.
+  const savedIdsRef = useRef(savedIds);
+  const seenLikedIdsRef = useRef(new Set<string>());
+  useEffect(() => {
+    savedIdsRef.current = savedIds;
+    for (const page of pages ?? [])
+      for (const entry of page.entries)
+        if (savedIds.has(entry.savedId))
+          seenLikedIdsRef.current.add(entry.savedId);
+  }, [savedIds, pages]);
+  const { fetchNextPage: readNextPage, hasNextPage } = query;
+  const loadAllPlayableTracks = useCallback(
+    async (loadOptions: { isCancelled?: () => boolean } = {}) => {
+      let latestPages = pages ?? [];
+      let hasPagesLeft = hasNextPage;
+      for (let read = 0; hasPagesLeft && read < MAX_PAGES_READ; read += 1) {
+        if (loadOptions.isCancelled?.()) return null;
+        const result = await readNextPage({ cancelRefetch: false });
+        if (result.isFetchNextPageError || result.isError)
+          throw (
+            result.error ??
+            new Error(
+              "studio_liked_page_read_failed: a liked songs page failed",
+            )
+          );
+        latestPages = result.data?.pages ?? latestPages;
+        hasPagesLeft = result.hasNextPage;
+      }
+      if (loadOptions.isCancelled?.()) return null;
+      const isTakenOutHere = (savedId: string) =>
+        seenLikedIdsRef.current.has(savedId) &&
+        !savedIdsRef.current.has(savedId);
+      return playableTracksOf(
+        latestPages
+          .flatMap((page) => page.entries)
+          .filter((entry) => !isTakenOutHere(entry.savedId)),
+      );
+    },
+    [pages, hasNextPage, readNextPage],
+  );
   const derived = useMemo(() => {
     const loaded = pages?.flatMap((page) => page.entries) ?? [];
     const unlikedHere = loaded.filter(
@@ -130,5 +185,6 @@ export function useStudioLikedTracks(
       if (query.isFetchingNextPage) return;
       void query.fetchNextPage(fetchOptions);
     },
+    loadAllPlayableTracks,
   };
 }

@@ -1,25 +1,23 @@
+import { m } from "motion/react";
 import { useId, useState } from "react";
 import { Link } from "react-router-dom";
-import {
-  FiCheck,
-  FiHeart,
-  FiMusic,
-  FiPause,
-  FiPlay,
-  FiPlus,
-} from "react-icons/fi";
-import { EmptyState, ImageSlot } from "../../shared/components/ui";
+import { FiCheck, FiHeart, FiMusic, FiPlus } from "react-icons/fi";
+import { useMotionPrefs } from "../../app/providers/motionPrefs";
+import { Button, EmptyState, ImageSlot } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import type { StudioReleaseCardView } from "./api/studio.adapters";
 import type { StudioReleasesResult } from "./api/useStudioReleases";
 import { useStudioAccess } from "./api/useStudioAccess";
+import { StudioPlayButton } from "./kit/StudioPlayButton";
 import { useStudioPlayer } from "./player/studioPlayerContext";
 import { StudioHomeHeroShowcase } from "./StudioHomeHeroShowcase";
 import { StudioLoadError } from "./StudioLoadStates";
-import { StudioLine } from "./StudioSkeletons";
+import { StudioHeroSkeleton } from "./StudioSkeletons";
 import { StudioTipModal } from "./StudioTipModal";
 import { releaseFactsLine } from "./studioFacts";
 import type { StudioHomeHeroChoice } from "./studioHome.data";
+import { STUDIO_FADE } from "./studioMotion";
 import { studioUploadPath } from "./studioPaths";
 import { useStudioSaveToggle } from "./useStudioSaveToggle";
 import { useStudioShowcase } from "./useStudioShowcase";
@@ -27,9 +25,84 @@ import styles from "./studio.module.css";
 import kit from "./studioKit.module.css";
 import css from "./StudioCuration.module.css";
 
+const REDUCED_FADE = { duration: 0.12 } as const;
+
+/** The page's h1 when there is no release to title it: while the hero
+ *  loads, an empty catalogue or a failed read still gives heading
+ *  navigation a page title. */
+function StudioHomePageHeading() {
+  const { t } = useTranslation();
+  return <h1 className="visuallyHidden">{t("studio:home.pageHeading")}</h1>;
+}
+
+/** Play, Save and (demo) Tip under the hero title. */
+function StudioHomeHeroActions({
+  release,
+}: {
+  release: StudioReleaseCardView;
+}) {
+  const { t } = useTranslation();
+  const player = useStudioPlayer();
+  const isShowcase = useStudioShowcase();
+  const [isTipOpen, setIsTipOpen] = useState(false);
+  const save = useStudioSaveToggle({
+    savedId: release.savedId,
+    kind: "studio_release",
+    title: release.title,
+    href: release.href,
+    meta: release.artist.name,
+  });
+  const isCurrent = player.isCurrentRelease(release.id);
+  const isPlaying = isCurrent && player.status === "playing";
+  const isLoading = isCurrent && player.status === "loading";
+  return (
+    <div className={kit.homeHeroActions}>
+      <StudioPlayButton
+        size="hero"
+        state={isLoading ? "loading" : isPlaying ? "playing" : "idle"}
+        label={
+          isPlaying
+            ? t("studio:card.pauseRelease", { title: release.title })
+            : t("studio:card.playRelease", { title: release.title })
+        }
+        onToggle={() =>
+          isCurrent ? player.togglePlay() : void player.playRelease(release.id)
+        }
+      />
+      <Button
+        variant="quiet"
+        aria-pressed={save.isSaved}
+        aria-label={t(
+          save.isSaved
+            ? "studio:save.removeSavedCta"
+            : "studio:save.saveReleaseCta",
+          { title: release.title },
+        )}
+        onClick={save.toggle}
+      >
+        {save.isSaved ? <FiCheck aria-hidden /> : <FiPlus aria-hidden />}
+        {save.isSaved ? t("studio:save.savedLabel") : t("studio:save.saveCta")}
+      </Button>
+      {isShowcase && (
+        <Button variant="soft" onClick={() => setIsTipOpen(true)}>
+          <FiHeart aria-hidden />
+          {t("studio:detail.tipArtistCta", { artist: release.artist.name })}
+        </Button>
+      )}
+      {isTipOpen && (
+        <StudioTipModal
+          recipient={release.artist.name}
+          onClose={() => setIsTipOpen(false)}
+        />
+      )}
+    </div>
+  );
+}
+
 /** The featured release with its staff note, else the newest release, with
  *  Play, Save and (demo) Tip. Owns the page's loading, empty and error
- *  states so the rows below never double them. */
+ *  states so the rows below never double them. The skeleton holds the
+ *  hero's shape and the real hero fades in over it. */
 export function StudioHomeHero({
   releasesResult,
   hero,
@@ -41,58 +114,61 @@ export function StudioHomeHero({
   isHeroSettled: boolean;
 }) {
   const { t } = useTranslation();
+  const { reducedMotion } = useMotionPrefs();
   const headingId = useId();
-  const player = useStudioPlayer();
   const isShowcase = useStudioShowcase();
   const { uploadablePersonas } = useStudioAccess();
-  const [isTipOpen, setIsTipOpen] = useState(false);
   const { loadState } = releasesResult;
   const release = hero.release;
-  const save = useStudioSaveToggle(
-    release
-      ? {
-          savedId: release.savedId,
-          kind: "studio_release",
-          title: release.title,
-          href: release.href,
-          meta: release.artist.name,
-        }
-      : null,
-  );
 
   if (!release && (loadState.isError || loadState.isNotFound))
-    return <StudioLoadError loadState={loadState} />;
+    return (
+      <>
+        <StudioHomePageHeading />
+        <StudioLoadError
+          loadState={loadState}
+          what="studio:errors.what.newReleases"
+        />
+      </>
+    );
   if (!isHeroSettled || (!release && loadState.isLoading)) {
     return (
-      <section className={styles.hero} aria-busy="true">
-        <StudioLine width="60%" height={42} />
-        <StudioLine width="35%" height={16} style={{ marginTop: 14 }} />
+      <section className={styles.hero}>
+        <StudioHomePageHeading />
+        <StudioHeroSkeleton label={t("studio:home.hero.loadingLabel")} />
       </section>
     );
   }
   if (!release) {
     return (
-      <EmptyState
-        icon={<FiMusic />}
-        title={t("studio:home.empty.title")}
-        description={t("studio:home.empty.body")}
-        action={
-          uploadablePersonas.length > 0
-            ? {
-                label: t("studio:home.empty.uploadCta"),
-                to: studioUploadPath(),
-              }
-            : undefined
-        }
-        headingLevel={2}
-      />
+      <>
+        <StudioHomePageHeading />
+        <EmptyState
+          icon={<FiMusic />}
+          title={t("studio:home.empty.title")}
+          description={t("studio:home.empty.body")}
+          action={
+            uploadablePersonas.length > 0
+              ? {
+                  label: t("studio:home.empty.uploadCta"),
+                  to: studioUploadPath(),
+                }
+              : undefined
+          }
+          headingLevel={2}
+        />
+      </>
     );
   }
 
-  const isCurrent = player.isCurrentRelease(release.id);
-  const isPlaying = isCurrent && player.status === "playing";
   return (
-    <section className={styles.hero} aria-labelledby={headingId}>
+    <m.section
+      className={styles.hero}
+      aria-labelledby={headingId}
+      initial={{ opacity: 0, y: reducedMotion ? 0 : 6 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={reducedMotion ? REDUCED_FADE : STUDIO_FADE}
+    >
       <div className={styles.heroInner}>
         <div className={styles.heroArt}>
           <ImageSlot
@@ -141,60 +217,9 @@ export function StudioHomeHero({
           {isShowcase && (
             <StudioHomeHeroShowcase artistName={release.artist.name} />
           )}
-          <div className={styles.heroActions}>
-            <button
-              type="button"
-              className={styles.playBig}
-              aria-label={
-                isPlaying
-                  ? t("studio:card.pauseRelease", { title: release.title })
-                  : t("studio:card.playRelease", { title: release.title })
-              }
-              onClick={() =>
-                isCurrent
-                  ? player.togglePlay()
-                  : void player.playRelease(release.id)
-              }
-            >
-              {isPlaying ? <FiPause aria-hidden /> : <FiPlay aria-hidden />}
-            </button>
-            <button
-              type="button"
-              aria-pressed={save.isSaved}
-              aria-label={t(
-                save.isSaved
-                  ? "studio:save.removeSavedCta"
-                  : "studio:save.saveReleaseCta",
-                { title: release.title },
-              )}
-              onClick={save.toggle}
-            >
-              {save.isSaved ? <FiCheck aria-hidden /> : <FiPlus aria-hidden />}{" "}
-              {save.isSaved
-                ? t("studio:save.savedLabel")
-                : t("studio:save.saveCta")}
-            </button>
-            {isShowcase && (
-              <button
-                type="button"
-                className={styles.tip}
-                onClick={() => setIsTipOpen(true)}
-              >
-                <FiHeart aria-hidden />{" "}
-                {t("studio:detail.tipArtistCta", {
-                  artist: release.artist.name,
-                })}
-              </button>
-            )}
-          </div>
+          <StudioHomeHeroActions key={release.id} release={release} />
         </div>
       </div>
-      {isTipOpen && (
-        <StudioTipModal
-          recipient={release.artist.name}
-          onClose={() => setIsTipOpen(false)}
-        />
-      )}
-    </section>
+    </m.section>
   );
 }

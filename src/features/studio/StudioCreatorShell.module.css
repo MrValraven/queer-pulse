@@ -1,0 +1,81 @@
+/* Desktop: the same notch clearance the listener shell keeps. It comes
+   first, so the tablet rule below wins where the two overlap (860-1223px).
+   Every label keeps to one line. */
+@media (--mobile-up) {
+  header.topbar {
+    padding-inline: calc(30px + env(safe-area-inset-left, 0px))
+      calc(30px + env(safe-area-inset-right, 0px));
+  }
+  header.topbar > a,
+  header.topbar > span,
+  nav.subnav > a {
+    white-space: nowrap;
+  }
+}
+
+/* StudioCreatorShell's tablet layout (DES-61). Between the phone layout
+   (creator.module.css, at 640px and below) and a desktop wide enough for one
+   row, the brand, the Creator chip, the public page link and the avatar keep
+   row one, and the sub-nav takes its own row underneath, scrolling sideways
+   when the pills outgrow it. One row needs about 1160px in PT (at 1024 it
+   broke "Painel" mid-word), so the two rows hold up to --desk-split. */
+@media (--desk-split) and (--md-up) {
+  /* Element-qualified so it outranks creator.module.css whatever order the
+     two stylesheets load in. */
+  header.topbar {
+    flex-wrap: wrap;
+    row-gap: 8px;
+    padding-inline: calc(24px + env(safe-area-inset-left, 0px))
+      calc(24px + env(safe-area-inset-right, 0px));
+  }
+  nav.subnav {
+    order: 2;
+    flex: 1 0 100%;
+    min-width: 0;
+    margin: 0 0 0 -4px;
+    padding: 4px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    overscroll-behavior-x: contain;
+  }
+  nav.subnav::-webkit-scrollbar {
+    display: none;
+  }
+  nav.subnav > a {
+    flex: none;
+    white-space: nowrap;
+  }
+}
+
+/* Phones: row two is one sideways-scrolling row of 44px pills under an end
+   fade, so the bar stays two rows tall in every language. "View public
+   page" moves into the avatar menu (StudioCreatorShell.tsx). Element-
+   qualified, so it outranks creator.module.css's wrapping phone nav. */
+@media (--md) {
+  nav.subnav {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    overscroll-behavior-x: contain;
+    /* Room past the last pill, so it can scroll clear of the fade. */
+    padding-inline-end: 24px;
+    margin-inline-end: -16px;
+    mask-image: linear-gradient(
+      90deg,
+      var(--studio-surface) calc(100% - 24px),
+      transparent
+    );
+  }
+  nav.subnav::-webkit-scrollbar {
+    display: none;
+  }
+  nav.subnav > a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+}
+
+.main {
+  display: block;
+}

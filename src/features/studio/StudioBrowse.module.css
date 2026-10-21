@@ -1,10 +1,80 @@
+/* One chip row per facet, on one line that scrolls sideways with snap.
+   The edge fade shows only on a side that hides more chips
+   (useStudioChipScroller sets the data attributes). The padding gives the
+   focus ring room inside the scroller, and the negative margin gives it
+   back so the first chip still lines up with the page edge. */
+@property --studio-chips-fade-start {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+@property --studio-chips-fade-end {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
 .chips {
+  --studio-chips-fade-start: 0px;
+  --studio-chips-fade-end: 0px;
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 8px;
-  margin: 0 0 24px;
-  padding: 0;
+  margin: -6px -6px 18px;
+  padding: 6px;
   list-style: none;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
+  scroll-padding-inline: 6px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    black var(--studio-chips-fade-start),
+    black calc(100% - var(--studio-chips-fade-end)),
+    transparent
+  );
+  transition-property: --studio-chips-fade-start, --studio-chips-fade-end;
+  transition-duration: var(--dur-base);
+  transition-timing-function: var(--ease-out);
+}
+
+.chips::-webkit-scrollbar {
+  display: none;
+}
+
+.chips[data-fade-start] {
+  --studio-chips-fade-start: 40px;
+}
+
+.chips[data-fade-end] {
+  --studio-chips-fade-end: 40px;
+}
+
+/* Keyboard focus clears the fades, so a focused chip is never half hidden. */
+.chips:has(:focus-visible) {
+  --studio-chips-fade-start: 0px;
+  --studio-chips-fade-end: 0px;
+}
+
+.chips > li {
+  flex: none;
+  scroll-snap-align: start;
+}
+
+/* A mouse or trackpad has no swipe, so on fine pointers the row wraps and
+   every chip stays in reach without scrolling. */
+@media (hover: hover) and (pointer: fine) {
+  .chips {
+    flex-wrap: wrap;
+    overflow: visible;
+    mask-image: none;
+    scroll-snap-type: none;
+  }
 }
 
 .chip {
@@ -14,18 +84,24 @@
   padding: 0 16px;
   border: 1px solid rgba(var(--studio-ink-rgb), 0.4);
   border-radius: var(--radius-pill);
-  color: var(--text);
+  color: var(--studio-text);
   font-size: var(--text-14);
+  white-space: nowrap;
   text-decoration: none;
-  transition-property: background-color, border-color, color;
+  touch-action: manipulation;
+  transition-property: background-color, border-color, color, transform;
   transition-duration: var(--dur-fast);
-  transition-timing-function: var(--ease);
+  transition-timing-function: var(--ease-out);
 }
 
 @media (hover: hover) {
   .chip:hover {
-    background: rgba(var(--studio-ink-rgb), 0.06);
+    background: var(--studio-wash-2);
   }
+}
+
+.chip:active {
+  transform: scale(0.97);
 }
 
 .chip[aria-current="page"] {
@@ -39,9 +115,52 @@
   box-shadow: var(--ring-cream);
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .chips {
+    transition-duration: 120ms;
+  }
+  .chip {
+    transition-property: background-color, border-color, color;
+  }
+  .chip:active {
+    transform: none;
+  }
+}
+
+/* Browse names each row (Format, Genre, Mood) in a fixed label column, so
+   the three rows read as one filter panel; on a phone the label sits on
+   top and the chips keep the full width. */
+.chipRowLabelled {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr);
+  column-gap: 12px;
+  align-items: start;
+}
+
+.chipRowCaption {
+  display: flex;
+  align-items: center;
+  min-height: var(--tap-min);
+  color: var(--studio-text-muted);
+  font-size: var(--text-12);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+@media (--sm) {
+  .chipRowLabelled {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .chipRowCaption {
+    min-height: 0;
+    margin-bottom: 8px;
+  }
+}
+
 .note {
   margin: 0 0 24px;
-  color: var(--text60);
+  color: var(--studio-text-muted);
 }
 
 .radioActions {

@@ -2,18 +2,18 @@
    Standalone dark page (not inside StudioShell), so it declares the studio
    surface + the design's token aliases on the .page wrapper. */
 .page {
-  --text: rgba(var(--cream-rgb), 0.92);
-  --text-60: rgba(var(--cream-rgb), 0.62);
+  --s-text: rgba(var(--cream-rgb), 0.92);
+  --s-text-60: rgba(var(--cream-rgb), 0.62);
   /* Cream at 0.52 clears the AA 4.5:1 floor on every studio ground (4.96:1 on
      --surface, 4.87:1 on --studio-bg). It carries 11px and 12px meta text, so it
      never qualifies as large text. The old 0.40 measured 3.55:1 and failed. */
-  --text-40: rgba(var(--cream-rgb), 0.52);
-  --line: rgba(var(--cream-rgb), 0.1);
+  --s-text-40: rgba(var(--cream-rgb), 0.52);
+  --s-line: rgba(var(--cream-rgb), 0.1);
   --surface: rgba(var(--cream-rgb), 0.04);
   --rail: var(--studio-rail);
 
   background: var(--studio-bg);
-  color: var(--text);
+  color: var(--s-text);
   min-height: 100svh;
   font-family: var(--sans);
 }
@@ -37,9 +37,9 @@
   position: sticky;
   top: 0;
   z-index: var(--z-sticky);
-  background: rgba(26, 16, 40, 0.85);
+  background: color-mix(in srgb, var(--studio-bg) 85%, transparent);
   backdrop-filter: var(--blur-nav);
-  border-bottom: 1px solid var(--line);
+  border-bottom: 1px solid var(--s-line);
   padding: 18px 36px;
   padding-block-start: max(18px, env(safe-area-inset-top));
   display: flex;
@@ -53,7 +53,7 @@
   font-family: var(--serif);
   font-weight: 600;
   font-size: var(--text-21);
-  color: var(--text);
+  color: var(--s-text);
   text-decoration: none;
   letter-spacing: -0.005em;
   /* The wordmark never shrinks or wraps; the phone rules below make room. */
@@ -88,13 +88,13 @@
   gap: 18px;
 }
 .topNav a {
-  color: var(--text-60);
+  color: var(--s-text-60);
   font-size: var(--text-13-5);
   font-weight: 500;
   text-decoration: none;
 }
 .topNav a:hover {
-  color: var(--text);
+  color: var(--s-text);
 }
 .topRight {
   margin-left: auto;
@@ -228,7 +228,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: clamp(3.75rem, 8.5vw, 8rem);
-  color: var(--text);
+  color: var(--s-text);
   letter-spacing: -0.03em;
   line-height: 0.9;
   max-width: 16ch;
@@ -242,7 +242,7 @@
   font-family: var(--serif);
   font-style: italic;
   font-size: clamp(1.25rem, 2vw, 1.625rem);
-  color: var(--text-60);
+  color: var(--s-text-60);
   line-height: 1.45;
   margin-top: 30px;
   max-width: 38ch;
@@ -263,7 +263,7 @@
 /* Demo card */
 .demoCard {
   background: rgba(var(--cream-rgb), 0.05);
-  border: 1px solid var(--line);
+  border: 1px solid var(--s-line);
   border-radius: var(--radius-22);
   padding: 30px 32px;
   backdrop-filter: var(--blur-md);
@@ -305,7 +305,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: var(--text-24);
-  color: var(--text);
+  color: var(--s-text);
   letter-spacing: -0.015em;
   line-height: 1.1;
 }
@@ -317,7 +317,7 @@
   font-family: var(--serif);
   font-style: italic;
   font-size: var(--text-14);
-  color: var(--text-60);
+  color: var(--s-text-60);
   margin-top: 6px;
 }
 .demoRow {
@@ -378,7 +378,7 @@
   font-family: var(--serif);
   font-style: italic;
   font-size: var(--text-12);
-  color: var(--text-40);
+  color: var(--s-text-40);
   margin-top: 6px;
 }
 .times .e {
@@ -393,20 +393,24 @@
   gap: 14px;
   margin-top: 18px;
 }
-.demoPlay {
+/* The demo's round play: an <IconButton> kept round and coral. The doubled
+   class outranks the kit's quiet icon fill and its hover wash. */
+.demoPlay.demoPlay {
   width: 48px;
+  min-width: 48px;
   height: 48px;
   border-radius: 50%;
   background: var(--accent);
   /* Dark ink on the coral fill: 6.28:1. */
   color: var(--studio-bg);
-  border: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
   box-shadow: var(--shadow-accent);
   flex: none;
+}
+@media (hover: hover) {
+  .demoPlay.demoPlay:hover:not(:disabled):not([aria-disabled="true"]) {
+    background: var(--accent);
+    color: var(--studio-bg);
+  }
 }
 .demoPlay svg {
   width: 16px;
@@ -416,7 +420,7 @@
   font-family: var(--serif);
   font-weight: 500;
   font-size: var(--text-15);
-  color: var(--text);
+  color: var(--s-text);
   line-height: 1.2;
 }
 .demoInfo .t em {
@@ -427,7 +431,7 @@
   font-family: var(--serif);
   font-style: italic;
   font-size: var(--text-12-5);
-  color: var(--text-60);
+  color: var(--s-text-60);
   margin-top: 2px;
 }
 .payPill {
@@ -441,7 +445,7 @@
   border-radius: var(--radius-12);
   font-family: var(--serif);
   font-size: var(--text-13);
-  color: var(--text);
+  color: var(--s-text);
   line-height: 1.5;
 }
 .payPill svg {
@@ -465,7 +469,7 @@
   font-family: var(--serif);
   font-style: italic;
   font-size: var(--text-13);
-  color: var(--text);
+  color: var(--s-text);
   line-height: 1.5;
 }
 .note em {
@@ -476,8 +480,8 @@
 .promises {
   padding: var(--section-y-80) 36px;
   background: rgba(var(--cream-rgb), 0.025);
-  border-top: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
+  border-top: 1px solid var(--s-line);
+  border-bottom: 1px solid var(--s-line);
 }
 .promisesH {
   text-align: center;
@@ -499,7 +503,7 @@
   letter-spacing: -0.022em;
   line-height: 1.04;
   margin: 0 auto;
-  color: var(--text);
+  color: var(--s-text);
 }
 .promisesH h2 {
   font-size: var(--text-display);
@@ -531,7 +535,7 @@
 }
 .promise {
   background: var(--surface);
-  border: 1px solid var(--line);
+  border: 1px solid var(--s-line);
   border-radius: var(--radius-18);
   padding: 30px 28px;
 }
@@ -549,7 +553,7 @@
   font-family: var(--serif);
   font-weight: 400;
   font-size: var(--text-22);
-  color: var(--text);
+  color: var(--s-text);
   letter-spacing: -0.012em;
   line-height: 1.15;
   margin-bottom: 12px;
@@ -561,7 +565,7 @@
 .promise p {
   font-family: var(--serif);
   font-size: var(--text-14-5);
-  color: var(--text-60);
+  color: var(--s-text-60);
   line-height: 1.62;
   margin: 0;
 }
@@ -615,7 +619,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: var(--text-title);
-  color: var(--text);
+  color: var(--s-text);
   line-height: 1.2;
   letter-spacing: -0.018em;
   max-width: 24ch;
@@ -635,7 +639,7 @@
      14vw is unchanged, so every width where it already cleared 6.25rem
      (about 715px and up) renders exactly as before. */
   font-size: clamp(3.5rem, 14vw, 12.5rem);
-  color: var(--text);
+  color: var(--s-text);
   letter-spacing: -0.04em;
   line-height: 0.9;
   white-space: nowrap;
@@ -649,7 +653,7 @@
   font-family: var(--serif);
   font-style: italic;
   font-size: var(--text-18);
-  color: var(--text-60);
+  color: var(--s-text-60);
   margin-top: 16px;
 }
 .counterSub a {
@@ -677,7 +681,7 @@
 }
 .cs {
   background: rgba(var(--cream-rgb), 0.04);
-  border: 1px solid var(--line);
+  border: 1px solid var(--s-line);
   border-radius: var(--radius-12);
   padding: 18px 22px;
 }
@@ -685,7 +689,7 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: var(--text-30);
-  color: var(--text);
+  color: var(--s-text);
   letter-spacing: -0.018em;
   line-height: 1;
 }
@@ -695,7 +699,7 @@
 }
 .cs .l {
   font-size: var(--text-11-5);
-  color: var(--text-40);
+  color: var(--s-text-40);
   font-family: var(--serif);
   font-style: italic;
   margin-top: 5px;
@@ -705,8 +709,8 @@
 .compareBand {
   padding: var(--section-y-80) 36px;
   background: rgba(var(--cream-rgb), 0.025);
-  border-top: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
+  border-top: 1px solid var(--s-line);
+  border-bottom: 1px solid var(--s-line);
 }
 .compareInner {
   max-width: 1180px;
@@ -732,7 +736,7 @@
 }
 .cmp {
   background: var(--surface);
-  border: 1px solid var(--line);
+  border: 1px solid var(--s-line);
   border-radius: var(--radius-14);
   padding: 24px 26px;
   text-align: center;
@@ -751,7 +755,7 @@
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--text-40);
+  color: var(--s-text-40);
   margin-bottom: 8px;
 }
 .cmpUs .lbl {
@@ -761,20 +765,20 @@
   font-family: var(--serif);
   font-weight: 300;
   font-size: var(--text-46);
-  color: var(--text);
+  color: var(--s-text);
   letter-spacing: -0.022em;
   line-height: 0.95;
 }
 .cmp .v em {
   font-style: italic;
-  color: var(--text-60);
+  color: var(--s-text-60);
 }
 .cmpUs .v em {
   color: var(--accent);
 }
 .cmp .ctx {
   font-size: var(--text-12);
-  color: var(--text-40);
+  color: var(--s-text-40);
   font-family: var(--serif);
   font-style: italic;
   margin-top: 8px;
@@ -796,7 +800,7 @@
   font-family: var(--serif);
   font-style: italic;
   font-size: var(--text-18);
-  color: var(--text-60);
+  color: var(--s-text-60);
   margin: 24px auto 36px;
   max-width: 42ch;
   line-height: 1.6;
@@ -816,7 +820,7 @@
   font-family: var(--serif);
   font-style: italic;
   font-size: var(--text-13);
-  color: var(--text-40);
+  color: var(--s-text-40);
   margin-top: 22px;
 }
 .ctaSecondary em {
@@ -837,9 +841,9 @@
 /* Footer */
 .foot {
   background: var(--studio-deep);
-  color: var(--text);
+  color: var(--s-text);
   padding: var(--section-y-64) 36px 36px;
-  border-top: 1px solid var(--line);
+  border-top: 1px solid var(--s-line);
 }
 .footInner {
   max-width: var(--maxw);
@@ -848,7 +852,7 @@
   grid-template-columns: 1.4fr 2fr;
   gap: 48px;
   padding-bottom: 30px;
-  border-bottom: 1px solid var(--line);
+  border-bottom: 1px solid var(--s-line);
 }
 @media (max-width: 780px) {
   .footInner {
@@ -859,7 +863,7 @@
   font-family: var(--serif);
   font-style: italic;
   font-size: var(--text-14);
-  color: var(--text-60);
+  color: var(--s-text-60);
   margin-top: 14px;
   line-height: 1.6;
   max-width: 38ch;
@@ -885,12 +889,12 @@
 .footCol a {
   display: block;
   font-size: var(--text-13-5);
-  color: var(--text-60);
+  color: var(--s-text-60);
   padding: 4px 0;
   text-decoration: none;
 }
 .footCol a:hover {
-  color: var(--text);
+  color: var(--s-text);
 }
 .footBase {
   max-width: var(--maxw);
@@ -898,7 +902,7 @@
   display: flex;
   justify-content: space-between;
   font-size: var(--text-12);
-  color: var(--text-40);
+  color: var(--s-text-40);
   flex-wrap: wrap;
   gap: 14px;
   font-family: var(--serif);

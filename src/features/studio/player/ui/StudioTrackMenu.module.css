@@ -1,6 +1,7 @@
 /* The track "..." sits in rows, in the library list and in the track hero.
    The doubled selectors beat the hero's `.heroActions button` pill rule
-   (0,1,1), so the trigger and the items look the same everywhere. */
+   (0,1,1) and the IconButton's own look, so the trigger reads the same
+   everywhere. The menu itself is StudioMenu (kit/StudioMenu.module.css). */
 .wrap {
   position: relative;
   display: inline-flex;
@@ -22,7 +23,7 @@
   color: inherit;
   font-size: var(--text-18);
   cursor: pointer;
-  transition-property: background-color;
+  transition-property: background-color, transform;
   transition-duration: var(--dur-fast);
   transition-timing-function: var(--ease);
 }
@@ -34,82 +35,33 @@
   height: 1em;
 }
 
-.menu {
-  position: absolute;
-  inset-inline-end: 0;
-  top: calc(100% + 6px);
-  z-index: var(--z-popover);
-  min-width: 200px;
-  padding: 6px;
-  /* The surface, border, radius and shadow of the Share menu and the hero
-     overflow menus (StudioRelease.module.css), so every menu reads alike. */
-  background: var(--paper);
-  color: var(--studio-text);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: var(--radius-12);
-  box-shadow: var(--shadow-e3);
-  font-family: var(--sans);
-  font-variant-numeric: tabular-nums;
-  text-align: start;
+/* Open, the trigger holds its hover wash, so the menu reads as its own. */
+.wrap .trigger[aria-expanded="true"] {
+  background: var(--studio-wash-2);
 }
 
-/* Set by the panel when hanging from the end edge would cross the
-   viewport's left edge (a trigger near the left of a row or the hero). */
-.menu[data-align="start"] {
-  inset-inline-start: 0;
-  inset-inline-end: auto;
-}
-
-/* Set by the panel when there is not enough room below the trigger above
-   the player bar and the phone tab bar. */
-.menu[data-placement="up"] {
-  top: auto;
-  bottom: calc(100% + 6px);
-}
-
-.menu .item {
-  display: block;
-  width: 100%;
-  min-height: var(--tap-min);
-  padding: 9px 10px;
-  border: none;
-  border-radius: var(--radius-6);
-  background: none;
-  color: inherit;
-  font-family: inherit;
-  font-size: var(--text-14);
-  font-weight: 500;
-  text-align: start;
-  white-space: nowrap;
-  cursor: pointer;
-  transition-property: background-color;
-  transition-duration: var(--dur-fast);
-  transition-timing-function: var(--ease);
-}
-
-.menu .item[aria-disabled="true"] {
-  background: none;
-  color: var(--studio-text-faint);
-  cursor: default;
-}
-
-.note {
-  margin: 4px 10px 6px;
-  font-size: var(--text-12);
-  color: var(--studio-text-muted);
-  white-space: normal;
-}
-
+/* Chained to (0,5,0) to beat the IconButton hover, which tints in the app
+   ink rather than the Studio ink. */
 @media (hover: hover) {
-  .wrap .trigger:hover,
-  .menu .item:not([aria-disabled="true"]):hover {
-    background: rgba(var(--studio-ink-rgb), 0.08);
+  .wrap .trigger.trigger:hover:not([aria-disabled="true"]) {
+    background: var(--studio-wash-2);
+    color: inherit;
   }
 }
 
-.wrap .trigger:focus-visible,
-.menu .item:focus-visible {
+.wrap .trigger.trigger:active:not([aria-disabled="true"]) {
+  background: var(--studio-wash-3);
+  transform: scale(0.97);
+}
+
+.wrap .trigger:focus-visible {
   outline: var(--focus-ring);
   outline-offset: var(--focus-ring-offset);
   box-shadow: var(--ring-cream);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wrap .trigger.trigger:active:not([aria-disabled="true"]) {
+    transform: none;
+  }
 }

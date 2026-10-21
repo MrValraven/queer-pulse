@@ -1,72 +1,90 @@
-/* A search track row opens with the 32px play button, as the album tracklist
-   does, so the two line up. */
-li.trackRow {
-  grid-template-columns: 32px 36px minmax(0, 1fr) auto auto;
+/* Track hits sit on the shared Studio row (kit/StudioTrackRow), which
+   draws its own columns at every breakpoint, so the list only resets. */
+.trackList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
-li.trackRow:first-child {
-  border-top: none;
+.showMore {
+  margin: 8px 0 32px;
 }
 
-/* Phones, as the album tracklist does: the duration and the row buttons
-   move to a second line under the title, so the title takes the full
-   column. The play button and the cover span both lines, and the buttons
-   keep their 44px targets. */
-@media (--sm) {
-  li.trackRow {
-    grid-template-columns: 32px 36px minmax(0, 1fr);
-    gap: 8px;
-  }
-
-  li.trackRow .pay {
-    display: none;
-  }
-
-  /* The card keeps a 26px side padding inside the content gutter, which left
-     the title column about 76px wide. Element-qualified so it beats
-     studio.module.css .setCard whatever the stylesheet order. */
-  ol.trackList {
-    padding: 12px;
-  }
-
-  div.trackArtist {
-    min-width: 0;
-    overflow: hidden;
-    overflow-wrap: normal;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  li.trackRow > :nth-child(-n + 2) {
-    grid-row: span 2;
-  }
-
-  li.trackRow > .trackTime {
-    grid-column: 3;
-    grid-row: 2;
-    justify-content: flex-start;
-  }
-
-  /* A hidden row has no play cell: the cover alone spans both lines and the
-     second line sits under the title in column 2. */
-  li.trackRow.trackRowHidden > :nth-child(2) {
-    grid-row: auto;
-  }
-
-  li.trackRow.trackRowHidden > .trackTime {
-    grid-column: 2;
-  }
+.empty {
+  padding-bottom: 32px;
 }
 
-/* The two selects sit on one line and wrap under each other on a phone. */
+/* DES-35: the drop-one-filter chips under the empty state, centred with
+   it. */
+.dropFilters {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding-top: 16px;
+}
+
+.dropFilters ul {
+  justify-content: center;
+}
+
+.dropFiltersLead {
+  margin: 0;
+  font-size: var(--text-14);
+  color: var(--studio-text-muted);
+}
+
+/* DES-40: recent searches on this device, above "Featured now". */
+.recent {
+  padding-block: 8px 16px;
+}
+
+.recentHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+  margin-bottom: 12px;
+}
+
+.recentTitle {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: var(--text-22);
+  color: var(--studio-text);
+}
+
+.recentNote {
+  margin: 12px 0 0;
+  font-size: var(--text-13);
+  color: var(--studio-text-muted);
+}
+
+/* The type tabs: the shared chip row (one line that scrolls sideways with
+   snap on touch), with the page's spacing under it. */
+.typeChips {
+  margin-bottom: 6px;
+}
+
+/* The facet selects. On a wide screen genre and mood share a line and
+   format sits under them; each line pads its own foot so the Collapse
+   around it never clips a margin. */
 .facets {
+  padding-bottom: 6px;
+}
+
+.facetRows {
   display: flex;
   flex-wrap: wrap;
   gap: 8px 16px;
-  margin: 0 0 18px;
+  padding-bottom: 12px;
 }
 
-/* The genre and mood selects beside the type filter. */
+/* The genre, mood and format facets beside the type filter, on the shared
+   Select (DES-38). Its trigger keeps its 48px floor; the width fits the
+   longest PT value without jumping as the choice changes. */
 .facetField {
   display: inline-flex;
   align-items: center;
@@ -74,43 +92,44 @@ li.trackRow:first-child {
   font-size: var(--text-13);
 }
 
-.facetField select {
-  min-height: var(--tap-min);
-  padding: 0 12px;
-  border: 1px solid rgba(var(--studio-ink-rgb), 0.4);
-  border-radius: var(--radius-pill);
-  background: transparent;
-  color: inherit;
-  color-scheme: light;
-  font: inherit;
-}
-/* The native option list follows the app theme with the page. */
-:global([data-theme="dark"]) .facetField select {
-  color-scheme: dark;
+.facetLabel {
+  color: var(--studio-text);
 }
 
-/* Stacked on a phone, the two labels differ in width ("Género",
-   "Ambiente"), so a shared label column starts both selects at one x. */
+.facetSelect {
+  min-width: 200px;
+}
+
+/* The phone's Filters button, which folds the selects open. */
+.facetsToggle {
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.facetsToggle svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Stacked on a phone, every field takes one fixed label column, so the
+   three selects start at one x whatever the label's width ("Género",
+   "Ambiente", "Formato"). */
 @media (--sm) {
-  .facets {
+  .facetRows {
     display: grid;
-    grid-template-columns: max-content minmax(0, 1fr);
+    gap: 8px;
+    padding-bottom: 8px;
+  }
+
+  .facetField {
+    display: grid;
+    grid-template-columns: 80px minmax(0, 1fr);
     align-items: center;
     gap: 8px;
   }
 
-  .facetField {
-    display: contents;
-  }
-
-  .facetField select {
-    justify-self: start;
+  .facetSelect {
+    min-width: 0;
     max-width: 100%;
   }
-}
-
-.facetField select:focus-visible {
-  outline: var(--focus-ring);
-  outline-offset: var(--focus-ring-offset);
-  box-shadow: var(--ring-cream);
 }

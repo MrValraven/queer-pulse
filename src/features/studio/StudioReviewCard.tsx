@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { useId, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { routes } from "../../app/routeMap";
 import { Button, Collapse, ImageSlot } from "../../shared/components/ui";
@@ -10,6 +10,15 @@ import type {
   StudioReviewReportView,
   StudioReviewWithdrawnView,
 } from "./api/studioFlagReview.adapters";
+import { studioLoadStateOf } from "./api/studioLoadState";
+import type { StudioRowSelection } from "./kit/useStudioRowSelection";
+import {
+  ReviewDisabledReasons,
+  ReviewLookupFailure,
+  ReviewSelectBox,
+  ReviewUrgency,
+} from "./StudioReviewCardParts";
+import { REVIEW_CARD_TITLE_ATTRIBUTE } from "./StudioReviewQueue";
 import css from "./StudioFlagReview.module.css";
 import { useReviewDate } from "./useReviewDate";
 
@@ -26,6 +35,9 @@ export function ReviewCardFrame({
   meta,
   children,
   actions,
+  urgency,
+  notice,
+  selectBox,
 }: {
   release: StudioReleaseCardView | null;
   titleRef: TitleRef;
@@ -33,6 +45,12 @@ export function ReviewCardFrame({
   meta: string;
   children?: ReactNode;
   actions: ReactNode;
+  /** Severity and SLA, beside the chip. */
+  urgency?: ReactNode;
+  /** A failed lookup and the reasons any action waits, under the actions. */
+  notice?: ReactNode;
+  /** The tick for a bulk decision, before the cover. */
+  selectBox?: ReactNode;
 }) {
   const { t } = useTranslation();
   const title =
@@ -41,6 +59,7 @@ export function ReviewCardFrame({
   return (
     <article className={css.card}>
       <div className={css.cardTop}>
+        {selectBox}
         <span className={css.cover}>
           <ImageSlot
             src={release?.coverUrl ?? undefined}
@@ -52,7 +71,12 @@ export function ReviewCardFrame({
           />
         </span>
         <div className={css.titleBlock}>
-          <h3 ref={titleRef} tabIndex={-1} className={css.title}>
+          <h3
+            ref={titleRef}
+            tabIndex={-1}
+            className={css.title}
+            {...{ [REVIEW_CARD_TITLE_ATTRIBUTE]: "" }}
+          >
             {release ? <Link to={release.href}>{title}</Link> : title}
           </h3>
           {artistName.length > 0 ? (
@@ -61,11 +85,13 @@ export function ReviewCardFrame({
             </p>
           ) : null}
           {chip ? <span className={css.chip}>{chip}</span> : null}
+          {urgency}
         </div>
       </div>
       {children ? <dl className={css.facts}>{children}</dl> : null}
       <p className={css.meta}>{meta}</p>
       <div className={css.actions}>{actions}</div>
+      {notice}
     </article>
   );
 }
@@ -98,38 +124,97 @@ export function ReviewFact({
 }
 
 /** A member's report. The list row carries no title, so the card reads its
- *  release through the staff release query. */
+ *  release through the staff release query. While that read fails the card
+ *  says so with Reload, and Take down waits with its reason: staff never
+ *  take down a release they cannot see. */
 export function StudioReviewReportCard({
   report,
   titleRef,
+  selection,
   onTakeDown,
   onDismiss,
 }: {
   report: StudioReviewReportView;
   titleRef: TitleRef;
+  selection?: StudioRowSelection;
   onTakeDown: (releaseTitle: string) => void;
   onDismiss: (releaseTitle: string) => void;
 }) {
   const { t } = useTranslation();
   const dateOf = useReviewDate();
-  const release =
-    useStaffStudioRelease(report.releaseId, { isSilent: true }).data ?? null;
+  const takeDownReasonId = useId();
+  const lookupTextId = useId();
+  const releaseQuery = useStaffStudioRelease(report.releaseId, {
+    isSilent: true,
+  });
+  const release = releaseQuery.data ?? null;
+  const loadState = studioLoadStateOf(releaseQuery, release !== null);
   const releaseTitle =
     release?.title || t("studio:flagReviewLive.card.unknownRelease");
+  const isTakeDownWaiting = release === null;
   return (
     <ReviewCardFrame
       release={release}
       titleRef={titleRef}
       chip={t(report.reasonLabelKey)}
+      urgency={
+        <ReviewUrgency severity={report.severity} slaDueAt={report.slaDueAt} />
+      }
+      selectBox={
+        selection ? (
+          <ReviewSelectBox
+            isShown={selection.isSelecting}
+            isChecked={selection.isSelected(report.reportId)}
+            label={t("studio:flagReviewLive.queue.selectReport", {
+              title: releaseTitle,
+            })}
+            onToggle={(withShift) =>
+              selection.toggle(report.reportId, withShift)
+            }
+          />
+        ) : undefined
+      }
       meta={t("studio:flagReviewLive.card.filedOn", {
         date: dateOf(report.createdAt),
       })}
+      notice={
+        <>
+          <ReviewLookupFailure
+            loadState={loadState}
+            whatKey="studio:errors.what.release"
+            reloadLabelKey="studio:flagReviewLive.card.reloadRelease"
+            textId={lookupTextId}
+          />
+          <ReviewDisabledReasons
+            reasons={
+              isTakeDownWaiting && !loadState.isError
+                ? [
+                    {
+                      id: takeDownReasonId,
+                      text: t("studio:flagReviewLive.card.waitingForRelease"),
+                    },
+                  ]
+                : []
+            }
+          />
+        </>
+      }
       actions={
         <>
           <Button
             variant="danger"
             size="sm"
-            onClick={() => onTakeDown(releaseTitle)}
+            aria-disabled={isTakeDownWaiting || undefined}
+            aria-describedby={
+              loadState.isError
+                ? lookupTextId
+                : isTakeDownWaiting
+                  ? takeDownReasonId
+                  : undefined
+            }
+            onClick={() => {
+              if (!isTakeDownWaiting) onTakeDown(releaseTitle);
+            }}
           >
             {t("studio:flagReviewLive.action.takeDown")}
           </Button>

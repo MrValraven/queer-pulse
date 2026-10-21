@@ -1,7 +1,12 @@
 import { useId, useRef, useState, type RefObject } from "react";
 import { AnimatePresence } from "motion/react";
 import { FiPlus, FiX } from "react-icons/fi";
-import { Collapse, CollapseListItem } from "../../shared/components/ui";
+import {
+  Button,
+  Collapse,
+  CollapseListItem,
+  IconButton,
+} from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { STUDIO_LIMITS, type StudioSource } from "./api/studio.types";
 import { isIncompleteSource, presentSourceTitles } from "./studioSources";
@@ -135,14 +140,13 @@ export function StudioTrackSourcesField({
                       change(index, "artist", event.target.value)
                     }
                   />
-                  <button
-                    type="button"
-                    className={css.remove}
+                  <IconButton
+                    tooltip
                     aria-label={t("studio:sources.removeAria", { number })}
                     onClick={() => remove(index)}
                   >
                     <FiX aria-hidden />
-                  </button>
+                  </IconButton>
                 </div>
               </CollapseListItem>
             );
@@ -155,9 +159,15 @@ export function StudioTrackSourcesField({
         </p>
       </Collapse>
       <Collapse isOpen={sources.length < STUDIO_LIMITS.sourcesMax}>
-        <button type="button" data-add-source className={css.add} onClick={add}>
+        <Button
+          variant="quiet"
+          size="sm"
+          data-add-source
+          className={css.add}
+          onClick={add}
+        >
           <FiPlus aria-hidden /> {t("studio:sources.addCta")}
-        </button>
+        </Button>
       </Collapse>
     </fieldset>
   );

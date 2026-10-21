@@ -4,7 +4,9 @@ import { useFormat } from "../../../../shared/i18n/format";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { STUDIO_EPISODE_SPEEDS } from "../studioEpisodeRules";
 import { useStudioEpisodeSpeed } from "../useStudioEpisodeMemory";
+import { Button } from "../../../../shared/components/ui";
 import styles from "./StudioPlayerControls.module.css";
+import timerStyles from "./StudioSleepTimer.module.css";
 
 /** Speed for podcast episodes (spec 5.6): 0.8x to 2x, kept on this device.
  *  Music always plays at 1x. */
@@ -35,19 +37,19 @@ export function StudioSpeedSetting() {
         aria-describedby={hintId}
       >
         {STUDIO_EPISODE_SPEEDS.map((option, index) => (
-          <button
+          <Button
             key={option}
+            variant="quiet"
             {...getRadioProps(index)}
-            type="button"
             role="radio"
-            className={styles.option}
+            className={`${styles.option} ${timerStyles.choice}`}
             aria-checked={speed === option}
             onClick={() => setSpeed(option)}
           >
             {t("studio:player.speed.value", {
               rate: formatters.number(option),
             })}
-          </button>
+          </Button>
         ))}
       </div>
       <p id={hintId} className={styles.settingHint}>

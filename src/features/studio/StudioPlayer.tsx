@@ -3,6 +3,7 @@ import { useLocation } from "react-router-dom";
 import { useMediaQuery } from "../../shared/hooks/useMediaQuery";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { mediaMax } from "../../shared/theme/breakpoints";
+import { useStudioPlaybackSignals } from "./player/studioPlaybackSignals";
 import { useStudioPlayer } from "./player/studioPlayerContext";
 import { useStudioPlayerSurface } from "./player/studioPlayerSurface";
 import { StudioMiniPlayer } from "./player/ui/StudioMiniPlayer";
@@ -12,6 +13,21 @@ import { StudioQueuePanelHost } from "./player/ui/StudioQueuePanel";
 import { StudioShortcutsSheetHost } from "./player/ui/StudioShortcutsSheet";
 import { useStudioBarExit } from "./useStudioBarExit";
 import styles from "./StudioPlayer.module.css";
+
+/** ENG-01: the thin line along the bar's top edge while the stream loads or
+ *  the audio waits for data. Decorative: the play button carries aria-busy. */
+function StudioPlayerWaitLine() {
+  const player = useStudioPlayer();
+  const { isBuffering } = useStudioPlaybackSignals();
+  const isWaiting = player.status === "loading" || isBuffering;
+  return (
+    <span
+      className={styles.waitLine}
+      data-active={isWaiting || undefined}
+      aria-hidden="true"
+    />
+  );
+}
 
 /** The history-state key that stamps the shortcuts sheet's own entry. */
 const SHORTCUTS_ENTRY_KEY = "studioShortcutsEntry";
@@ -167,6 +183,7 @@ export function StudioPlayer({
         inert={isClosing || undefined}
         data-studio-player=""
       >
+        <StudioPlayerWaitLine />
         {isPhone ? (
           <StudioMiniPlayer item={item} />
         ) : (

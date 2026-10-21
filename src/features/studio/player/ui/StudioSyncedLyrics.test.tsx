@@ -134,7 +134,7 @@ describe("StudioSyncedLyrics", () => {
     );
   });
 
-  it("keeps ArrowDown on a line for scrolling and pauses the follow", async () => {
+  it("moves between lines with the arrows, skipping gaps, and pauses the follow", async () => {
     const onShortcut = vi.fn();
     renderHook(() =>
       useStudioPlayerShortcuts({
@@ -145,6 +145,7 @@ describe("StudioSyncedLyrics", () => {
     );
     renderLyrics(0);
     const firstLine = await screen.findByRole("button", { name: "First line" });
+    firstLine.focus();
     const event = new KeyboardEvent("keydown", {
       key: "ArrowDown",
       bubbles: true,
@@ -154,10 +155,21 @@ describe("StudioSyncedLyrics", () => {
       firstLine.dispatchEvent(event);
     });
     expect(onShortcut).not.toHaveBeenCalled();
-    expect(event.defaultPrevented).toBe(false);
+    expect(event.defaultPrevented).toBe(true);
+    expect(screen.getByRole("button", { name: "Second line" })).toHaveFocus();
     expect(
       await screen.findByRole("button", { name: "Back to current line" }),
     ).toBeInTheDocument();
+  });
+
+  it("is one Tab stop, held by the current line", () => {
+    renderLyrics(2);
+    const tabStops = screen
+      .getAllByRole("button")
+      .filter((button) => button.tabIndex === 0);
+    expect(tabStops.map((button) => button.textContent)).toEqual([
+      "Second line",
+    ]);
   });
 
   it.each([

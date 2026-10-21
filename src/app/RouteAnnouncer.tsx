@@ -3,6 +3,7 @@ import { useLocation } from "react-router-dom";
 import { useTranslation } from "../shared/i18n/useTranslation";
 import { getDocumentBaseTitle } from "../shared/seo/documentTitleBadge";
 import { defaultMeta } from "../shared/seo/seo.data";
+import { STUDIO_BASE_TITLE } from "../features/studio/useStudioDocumentTitle";
 import { findMainLandmark, watchForReplacedMain } from "./mainLandmarkFocus";
 
 /**
@@ -28,7 +29,13 @@ const TITLE_SETTLE_TIMEOUT_MS = 1500;
  */
 function resolvePageName(genericFallback: string): string {
   const title = getDocumentBaseTitle().trim();
-  if (title.length > 0 && title !== defaultMeta.title) return title;
+  if (
+    title.length > 0 &&
+    title !== defaultMeta.title &&
+    title !== STUDIO_BASE_TITLE
+  ) {
+    return title;
+  }
 
   const heading = findMainLandmark()
     ?.querySelector("h1")
@@ -169,7 +176,11 @@ export function RouteAnnouncer() {
     };
 
     const settleIfTitleChanged = (): void => {
-      if (getDocumentBaseTitle() !== titleAtNavigationStart) settle();
+      const title = getDocumentBaseTitle();
+      // The Studio shell writes its bare title before the page names
+      // itself, so that one keeps waiting (to the deadline, then the h1).
+      if (title === STUDIO_BASE_TITLE) return;
+      if (title !== titleAtNavigationStart) settle();
     };
 
     // `document.title` writes mutate the text inside the existing <title>, and

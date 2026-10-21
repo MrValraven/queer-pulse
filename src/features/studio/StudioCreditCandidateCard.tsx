@@ -39,7 +39,13 @@ export function StudioCreditCandidateCard({
         {t("studio:credits.editor.notFound")}
       </p>
     );
-  if (loadState.isError) return <StudioLoadError loadState={loadState} />;
+  if (loadState.isError)
+    return (
+      <StudioLoadError
+        loadState={loadState}
+        what="studio:errors.what.persona"
+      />
+    );
   if (!candidate)
     return (
       <p className={css.note} role="status">

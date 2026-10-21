@@ -19,13 +19,22 @@ const ACTION_KEYS = [
   "lyrics",
   "queue",
   "help",
+  // "/" and Cmd or Ctrl+K both focus search.
+  "focusSearch",
+  "focusSearch",
 ].map((name) => `studio:shortcuts.${name}`);
-const KEY_LABEL_KEYS = ["space", "shift", "left", "right", "up", "down"].map(
-  (name) => `studio:shortcuts.key.${name}`,
-);
+const KEY_LABEL_KEYS = [
+  "space",
+  "shift",
+  "left",
+  "right",
+  "up",
+  "down",
+  "commandOrControl",
+].map((name) => `studio:shortcuts.key.${name}`);
 
 describe("STUDIO_PLAYER_SHORTCUTS", () => {
-  it("lists every contract action once, in table order", () => {
+  it("lists every contract action, in table order", () => {
     expect(STUDIO_PLAYER_SHORTCUTS.map((row) => row.labelKey)).toEqual(
       ACTION_KEYS,
     );

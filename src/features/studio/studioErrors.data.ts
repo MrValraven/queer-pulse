@@ -5,6 +5,11 @@ import {
 import { studioErrorCodeOf } from "./api/studio.api";
 import type { StudioErrorCode } from "./api/studio.types";
 import type { StudioSafetyErrorCode } from "./api/studioSafety.types";
+import {
+  studioReasonCopyKey,
+  studioReasonOf,
+  type StudioFailureContext,
+} from "./studioReason";
 
 /** Studio safety and moderation: one message per new contract code. */
 export const STUDIO_SAFETY_ERROR_MESSAGE_KEY: Record<
@@ -115,8 +120,19 @@ export function studioErrorMessageKey(code: StudioErrorCode | null): string {
 
 /** A refused Studio request as a catalog key: the shared restriction line for
  *  a member under a moderation restriction (the server's 403 sentence,
- *  translated), else the Studio code's own line, else the generic one. */
-export function studioErrorMessageKeyOf(error: unknown): string {
+ *  translated), else the Studio code's own line, else the `context` line for
+ *  the failure's reason (offline, unreachable, timeout, rate limit, server,
+ *  access, gone). A reason we cannot name keeps the generic key, because
+ *  callers compare against `studioErrorMessageKey(null)` to swap in their
+ *  own line. */
+export function studioErrorMessageKeyOf(
+  error: unknown,
+  context: StudioFailureContext = "save",
+): string {
   if (isAccountRestricted(error)) return ACCOUNT_RESTRICTED_COPY.key;
-  return studioErrorMessageKey(studioErrorCodeOf(error));
+  const code = studioErrorCodeOf(error);
+  if (code) return STUDIO_ERROR_MESSAGE_KEY[code];
+  const reason = studioReasonOf(error);
+  if (reason === "unknown") return studioErrorMessageKey(null);
+  return studioReasonCopyKey(reason, context);
 }

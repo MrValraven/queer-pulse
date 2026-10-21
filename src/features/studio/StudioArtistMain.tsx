@@ -1,3 +1,4 @@
+import { useId } from "react";
 import { Collapse } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -5,13 +6,14 @@ import { PersonaUpdates } from "../subprofiles/PersonaUpdates";
 import type { StudioArtistView } from "./api/studio.adapters";
 import type { StudioFormat } from "./api/studio.types";
 import { StudioArtistDiscovery } from "./StudioArtistDiscovery";
+import { StudioArtistEvents } from "./StudioArtistEvents";
+import { StudioShelf } from "./kit/StudioShelf";
 import { StudioPlaylistCard } from "./StudioPlaylistCard";
 import { StudioReleaseCard } from "./StudioReleaseCard";
 import { releaseFactsLine } from "./studioFacts";
 import type { ArtistTabId } from "./studioArtist.data";
 import styles from "./studio.module.css";
 import ownerStyles from "./StudioArtistOwner.module.css";
-import kit from "./studioKit.module.css";
 
 /** The releases section is titled by the artist's format (spec 5.5). */
 const RELEASES_HEADING_KEY: Record<StudioFormat, string> = {
@@ -29,6 +31,7 @@ export function StudioArtistMain({
   artist: StudioArtistView;
 }) {
   const { t } = useTranslation();
+  const shelfId = useId();
 
   if (tab === "about") {
     // The persona bio is the artist's own text, shown as written.
@@ -69,56 +72,54 @@ export function StudioArtistMain({
         <p className={ownerStyles.note}>{t("studio:artistPage.noReleases")}</p>
       </Collapse>
       {artist.releases.length > 0 && (
-        <>
-          <div className={styles.rowH}>
-            <h2>{t(RELEASES_HEADING_KEY[artist.artist.format])}</h2>
-          </div>
-          <div className={`${styles.rowGrid} ${kit.rowGrid3}`}>
-            {artist.releases.map((release) => (
-              <StudioReleaseCard
-                key={release.id}
-                release={release}
-                meta={releaseFactsLine(release, t)}
-              />
-            ))}
-          </div>
-        </>
+        <StudioShelf
+          id={`${shelfId}-releases`}
+          layout="grid"
+          title={t(RELEASES_HEADING_KEY[artist.artist.format])}
+        >
+          {artist.releases.map((release) => (
+            <StudioReleaseCard
+              key={release.id}
+              release={release}
+              meta={releaseFactsLine(release, t)}
+            />
+          ))}
+        </StudioShelf>
       )}
       {artist.singles.length > 0 && (
-        <>
-          <div className={`${styles.rowH} ${kit.sectionGap}`}>
-            <h2>
-              <Translation
-                i18nKey="studio:artist.main.singlesHeading"
-                components={{ em: <em /> }}
-              />
-            </h2>
-          </div>
-          <div className={`${styles.rowGrid} ${kit.rowGrid5}`}>
-            {artist.singles.map((release) => (
-              <StudioReleaseCard
-                key={release.id}
-                release={release}
-                meta={release.releaseYear ?? undefined}
-              />
-            ))}
-          </div>
-        </>
+        <StudioShelf
+          id={`${shelfId}-singles`}
+          title={
+            <Translation
+              i18nKey="studio:artist.main.singlesHeading"
+              components={{ em: <em /> }}
+            />
+          }
+        >
+          {artist.singles.map((release) => (
+            <StudioReleaseCard
+              key={release.id}
+              release={release}
+              meta={release.releaseYear ?? undefined}
+            />
+          ))}
+        </StudioShelf>
       )}
+      <StudioArtistEvents artistId={artist.artist.id} />
       <Collapse isOpen={artist.playlists.length > 0}>
-        <div className={`${styles.rowH} ${kit.sectionGap}`}>
-          <h2>
+        <StudioShelf
+          id={`${shelfId}-playlists`}
+          title={
             <Translation
               i18nKey="studio:artistPage.section.playlists"
               components={{ em: <em /> }}
             />
-          </h2>
-        </div>
-        <div className={`${styles.rowGrid} ${kit.rowGrid5}`}>
+          }
+        >
           {artist.playlists.map((playlist) => (
             <StudioPlaylistCard key={playlist.id} playlist={playlist} />
           ))}
-        </div>
+        </StudioShelf>
       </Collapse>
       <StudioArtistDiscovery artistId={artist.artist.id} />
     </>

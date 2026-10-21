@@ -1,11 +1,21 @@
+import { useId } from "react";
 import { FiArrowRight } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { CreatorDraftNotice } from "../creatorDrafts/CreatorDraftNotice";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { formatOfKind } from "./api/studio.adapters";
+import { RELEASE_ERROR_FIELDS, RELEASE_FIELD_IDS } from "./studioUpload.data";
+import { StudioUploadAutosaveLine } from "./StudioUploadAutosaveLine";
 import { CoverArt } from "./StudioUploadCoverArt";
-import { personaSwitchPatch } from "./studioUploadDraft.data";
+import {
+  personaSwitchPatch,
+  releaseFormErrors,
+} from "./studioUploadDraft.data";
+import {
+  StudioUploadErrorSummary,
+  type UploadErrorSummaryItem,
+} from "./StudioUploadErrorSummary";
 import { StudioUploadPersonaPicker } from "./StudioUploadPersonaPicker";
 import { StudioUploadReleaseFields } from "./StudioUploadReleaseFields";
 import type { StudioUploadDraft } from "./useStudioUploadDraft";
@@ -14,18 +24,27 @@ import s from "./creator.module.css";
 /** The release step: persona, details and cover. Leaving it creates the
  *  draft; after that a draft's edits save themselves, and a published or
  *  scheduled release's edits save on "Save changes". */
+/** Every refused field, top to bottom, each linking to its field. */
+function errorSummaryItemsOf(
+  draft: StudioUploadDraft,
+): UploadErrorSummaryItem[] {
+  if (!draft.shouldShowErrors) return [];
+  const errors = releaseFormErrors(draft.form);
+  return RELEASE_ERROR_FIELDS.flatMap((field) => {
+    const messageKey = errors[field];
+    return messageKey
+      ? [{ fieldId: RELEASE_FIELD_IDS[field], messageKey }]
+      : [];
+  });
+}
+
 export function MetadataStep({ draft }: { draft: StudioUploadDraft }) {
   const { t } = useTranslation();
+  const saveChangesReasonId = useId();
   const isPublished = draft.hasLiveDetails;
   const isShow =
     draft.persona !== null && formatOfKind(draft.persona.kind) === "podcast";
-  let saveStatus = "";
-  if (draft.saveErrorKey) saveStatus = t(draft.saveErrorKey);
-  else if (draft.isSaving) saveStatus = t("studio:uploadFlow.saving");
-  else if (isPublished && draft.hasSavedChanges)
-    saveStatus = t("studio:uploadFlow.release.changesSaved");
-  else if (!isPublished && draft.release)
-    saveStatus = t("studio:uploadFlow.saved");
+  const isSaveChangesBlocked = draft.isSaving || !draft.hasUnsavedChanges;
   return (
     <div className={s.card}>
       <div className={s.cardH}>
@@ -43,6 +62,10 @@ export function MetadataStep({ draft }: { draft: StudioUploadDraft }) {
           <div className={s.cardSub}>{t("studio:uploadFlow.release.sub")}</div>
         )}
       </div>
+      <StudioUploadErrorSummary
+        items={errorSummaryItemsOf(draft)}
+        focusRequest={draft.errorFocusRequest}
+      />
       <StudioUploadPersonaPicker
         personas={draft.personas}
         value={draft.form.subprofileId}
@@ -69,8 +92,9 @@ export function MetadataStep({ draft }: { draft: StudioUploadDraft }) {
           <Button
             variant="ghost"
             onClick={() => void draft.saveChanges()}
-            aria-disabled={
-              draft.isSaving || !draft.hasUnsavedChanges || undefined
+            aria-disabled={isSaveChangesBlocked || undefined}
+            aria-describedby={
+              isSaveChangesBlocked ? saveChangesReasonId : undefined
             }
           >
             {t("studio:uploadFlow.release.saveChangesCta")}
@@ -87,8 +111,16 @@ export function MetadataStep({ draft }: { draft: StudioUploadDraft }) {
           )}{" "}
           <FiArrowRight aria-hidden />
         </Button>
-        <p className={s.saveStatus} role="status">
-          {saveStatus}
+        <StudioUploadAutosaveLine draft={draft} />
+        {/* The reason a blocked Save changes gives; read with the button. */}
+        <p id={saveChangesReasonId} className="visuallyHidden">
+          {isPublished && isSaveChangesBlocked
+            ? t(
+                draft.isSaving
+                  ? "studio:uploadFlow.autosave.saving"
+                  : "studio:uploadFlow.release.noChangesReason",
+              )
+            : ""}
         </p>
       </div>
       <CreatorDraftNotice

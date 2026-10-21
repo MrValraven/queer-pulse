@@ -10,9 +10,48 @@ import {
 import { AnimatePresence, m } from "motion/react";
 import type { IconType } from "react-icons";
 import { useMotionPrefs } from "../../../../app/providers/motionPrefs";
+import { IconButton } from "../../../../shared/components/ui/IconButton";
+import { Tooltip } from "../../../../shared/components/ui/Tooltip";
+import { useMediaQuery } from "../../../../shared/hooks/useMediaQuery";
 import { useOutsideDismiss } from "../../../../shared/hooks/useOutsideDismiss";
+import { mediaMax } from "../../../../shared/theme/breakpoints";
+import { STUDIO_EXIT, STUDIO_FADE, STUDIO_SPRING } from "../../studioMotion";
 import { fitStudioPopover } from "./studioPopoverFit";
 import styles from "./StudioPlayerControls.module.css";
+
+/** The panel's entrance: a short lift beside the trigger on desktop, and on
+ *  --compact (880px) a bottom sheet that springs up from the screen edge.
+ *  Reduced motion keeps only an instant swap, with no transform. */
+function popoverMotion(
+  isSheet: boolean,
+  placement: "up" | "down",
+  reducedMotion: boolean,
+) {
+  if (reducedMotion)
+    return {
+      initial: { opacity: 0 },
+      animate: { opacity: 1 },
+      exit: { opacity: 0 },
+      transition: { duration: 0 },
+    };
+  if (isSheet)
+    return {
+      initial: { opacity: 0, y: "100%" },
+      animate: {
+        opacity: 1,
+        y: 0,
+        transition: { y: STUDIO_SPRING, opacity: STUDIO_FADE },
+      },
+      exit: { opacity: 0, y: "100%", transition: STUDIO_EXIT },
+    };
+  const offset = placement === "up" ? 6 : -6;
+  return {
+    initial: { opacity: 0, y: offset },
+    animate: { opacity: 1, y: 0 },
+    exit: { opacity: 0, y: offset },
+    transition: { duration: 0.16, ease: "easeOut" as const },
+  };
+}
 
 /** Keeps the open panel inside the viewport: measured on open and on
  *  resize, written as CSS variables the module reads. */
@@ -65,6 +104,7 @@ export function StudioPlayerPopover({
   children: (close: () => void) => ReactNode;
 }) {
   const { reducedMotion } = useMotionPrefs();
+  const isSheet = useMediaQuery(mediaMax(880));
   const panelId = useId();
   const triggerId = useId();
   const [isOpen, setIsOpen] = useState(false);
@@ -103,7 +143,6 @@ export function StudioPlayerPopover({
     if (isOpen)
       panelRef.current?.querySelector<HTMLElement>("button, input")?.focus();
   }, [isOpen]);
-  const offset = placement === "up" ? 6 : -6;
   return (
     <div
       ref={wrapRef}
@@ -114,17 +153,25 @@ export function StudioPlayerPopover({
           setIsOpen(false);
       }}
     >
-      <button
-        id={triggerId}
-        type="button"
-        className={styles.iconButton}
-        aria-expanded={isOpen}
-        aria-controls={panelId}
-        aria-label={label}
-        onClick={() => setIsOpen((wasOpen) => !wasOpen)}
+      {/* The label shows on hover and keyboard focus while closed; it is
+          held back while open, so the bubble never covers the panel. The
+          wrapper stays mounted either way, so the trigger keeps focus. */}
+      <Tooltip
+        label={label}
+        placement={placement === "up" ? "top" : "bottom"}
+        isDisabled={isOpen}
       >
-        <Icon aria-hidden />
-      </button>
+        <IconButton
+          id={triggerId}
+          className={styles.iconButton}
+          aria-expanded={isOpen}
+          aria-controls={panelId}
+          aria-label={label}
+          onClick={() => setIsOpen((wasOpen) => !wasOpen)}
+        >
+          <Icon aria-hidden />
+        </IconButton>
+      </Tooltip>
       <AnimatePresence>
         {isOpen && (
           <m.div
@@ -135,10 +182,7 @@ export function StudioPlayerPopover({
             aria-label={label}
             className={styles.popover}
             data-placement={placement}
-            initial={{ opacity: 0, y: offset }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: offset }}
-            transition={{ duration: reducedMotion ? 0 : 0.16, ease: "easeOut" }}
+            {...popoverMotion(isSheet, placement, reducedMotion)}
           >
             {children(close)}
           </m.div>

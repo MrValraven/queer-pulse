@@ -2,6 +2,7 @@ import { useState, type ReactNode } from "react";
 import { AnimatePresence } from "motion/react";
 import { FiPlus } from "react-icons/fi";
 import {
+  Button,
   LoadErrorState,
   LoadMoreFooter,
   Modal,
@@ -79,8 +80,8 @@ function PickerList({
           {likedRow && <div role="listitem">{likedRow}</div>}
           {playlists.map((card: StudioPlaylistCardView) => (
             <div key={card.id} role="listitem">
-              <button
-                type="button"
+              <Button
+                variant="quiet"
                 className={css.pickerRow}
                 aria-disabled={busyPlaylistId !== null || undefined}
                 aria-busy={busyPlaylistId === card.id || undefined}
@@ -109,7 +110,7 @@ function PickerList({
                 <span className={css.pickerMeta}>
                   {t("studio:facts.trackCount", { count: card.trackCount })}
                 </span>
-              </button>
+              </Button>
             </div>
           ))}
         </div>
@@ -118,7 +119,7 @@ function PickerList({
         <div
           className={css.pickerSkeleton}
           role="status"
-          aria-label={t("studio:states.loadingLabel")}
+          aria-label={t("studio:loading.playlists")}
         >
           <StudioLine width="70%" height={18} />
           <StudioLine width="55%" height={18} />
@@ -166,12 +167,16 @@ export function StudioAddToPlaylistPicker({
   subjectTitle,
   likeSubject,
   onClose,
+  onAdded,
 }: {
   trackIds: string[];
   subjectTitle: string;
   /** One track's like; a whole release passes none and Liked songs stays out. */
   likeSubject?: StudioLikeSubject;
   onClose: () => void;
+  /** After a pick saved, before the picker closes (a bulk add clears the
+   *  selection it came from). */
+  onAdded?: () => void;
 }) {
   const { t } = useTranslation();
   const { showToast } = useToast();
@@ -191,6 +196,7 @@ export function StudioAddToPlaylistPicker({
       });
       const toast = addedToastOf(addedCount, trackIds.length);
       showToast(t(toast.key, { name: target.name }), toast.type);
+      onAdded?.();
       onClose();
     } catch (error) {
       showToast(t(studioErrorMessageKeyOf(error)), "error");
@@ -207,8 +213,8 @@ export function StudioAddToPlaylistPicker({
         onClose={onClose}
         isStudioPlayerSurface
       >
-        <button
-          type="button"
+        <Button
+          variant="quiet"
           className={css.newRow}
           aria-disabled={busyPlaylistId !== null || undefined}
           onClick={() => {
@@ -217,7 +223,7 @@ export function StudioAddToPlaylistPicker({
         >
           <FiPlus aria-hidden className={css.newRowIcon} />
           {t("studio:playlist.add.newPlaylistCta")}
-        </button>
+        </Button>
         <PickerList
           result={mine}
           likedRow={

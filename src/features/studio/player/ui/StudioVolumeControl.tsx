@@ -1,10 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { FiVolume1, FiVolume2, FiVolumeX } from "react-icons/fi";
+import { IconButton } from "../../../../shared/components/ui/IconButton";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { useStudioPlayer } from "../studioPlayerContext";
 import { StudioIconSwap } from "./StudioIconSwap";
 import { StudioRangeSlider } from "./range/StudioRangeSlider";
 import styles from "./StudioPlayerControls.module.css";
+import { useStudioShortcutHint } from "./useStudioShortcutHint";
 
 /** A little past the 250ms --dur-base glide, for when transitionend never
  *  comes. */
@@ -14,6 +16,11 @@ const GLIDE_FALLBACK_MS = 300;
 export function StudioVolumeControl() {
   const { t } = useTranslation();
   const { preferences, setVolume, toggleMute } = useStudioPlayer();
+  const hintFor = useStudioShortcutHint();
+  const muteLabel = preferences.isMuted
+    ? t("studio:player.unmute")
+    : t("studio:player.mute");
+  const muteHint = hintFor(muteLabel, "mute");
   const percent = Math.round(preferences.volume * 100);
   const shownPercent = preferences.isMuted ? 0 : percent;
   const iconKind =
@@ -94,14 +101,11 @@ export function StudioVolumeControl() {
   };
   return (
     <div className={styles.volume}>
-      <button
-        type="button"
+      <IconButton
         className={styles.iconButton}
-        aria-label={
-          preferences.isMuted
-            ? t("studio:player.unmute")
-            : t("studio:player.mute")
-        }
+        aria-label={muteLabel}
+        aria-keyshortcuts={muteHint.ariaKeyShortcuts}
+        tooltip={muteHint.tooltip}
         onClick={() => {
           // At a level of 0 the toggle moves nothing, so no glide starts.
           if (percent > 0) setIsAnimatingFill(true);
@@ -111,7 +115,7 @@ export function StudioVolumeControl() {
         <StudioIconSwap iconKey={iconKind}>
           <Icon aria-hidden />
         </StudioIconSwap>
-      </button>
+      </IconButton>
       <StudioRangeSlider
         variant="volume"
         min={0}

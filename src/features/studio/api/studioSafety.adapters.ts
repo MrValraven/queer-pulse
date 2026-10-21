@@ -7,8 +7,10 @@ import {
 } from "../studioPaths";
 import { formatTrackTime } from "./studio.adapters";
 import {
+  reviewUrgencyOf,
   toReviewReleaseView,
   type StudioReviewReleaseView,
+  type StudioReviewUrgency,
 } from "./studioFlagReview.adapters";
 import { contentWarningsOf, safeOriginalLinkOf } from "./studioSafetyFields";
 import {
@@ -182,7 +184,7 @@ export function toAdminTrackView(
 }
 
 /** One open `studio_track` report from the shared moderation queue. */
-export interface StudioReviewTrackReportView {
+export interface StudioReviewTrackReportView extends StudioReviewUrgency {
   reportId: string;
   trackId: string;
   reasonCode: ReasonCode;
@@ -199,5 +201,6 @@ export function toReviewTrackReportView(
     reasonCode: dto.reasonCode,
     reasonLabelKey: REASON_LABEL_KEYS[dto.reasonCode],
     createdAt: dto.createdAt,
+    ...reviewUrgencyOf(dto),
   };
 }

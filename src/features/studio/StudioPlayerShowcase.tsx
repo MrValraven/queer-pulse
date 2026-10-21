@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Button } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
@@ -25,15 +26,16 @@ export function StudioPlayerShowcase({ artistName }: { artistName: string }) {
           }}
         />
       </span>
-      <button
-        type="button"
+      <Button
+        variant="soft"
+        size="sm"
         className={styles.tip}
         onClick={() => setIsTipOpen(true)}
       >
         {t("studio:player.tipCta", {
           amount: formatters.currency(TIP_AMOUNT),
         })}
-      </button>
+      </Button>
       {isTipOpen && (
         <StudioTipModal
           recipient={artistName}

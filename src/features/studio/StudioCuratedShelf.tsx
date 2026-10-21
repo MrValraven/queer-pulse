@@ -1,11 +1,11 @@
-import { useId } from "react";
 import { Collapse } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { StudioCuratedPickView } from "./api/studioDiscovery.adapters";
 import { releaseMetaLine } from "./api/studio.adapters";
+import { StudioShelf } from "./kit/StudioShelf";
 import { StudioReleaseCard } from "./StudioReleaseCard";
-import styles from "./studio.module.css";
+import { useStudioHomeShelf } from "./useStudioHomeShelf";
 import css from "./StudioCuration.module.css";
 
 function StudioPickMeta({ pick }: { pick: StudioCuratedPickView }) {
@@ -25,25 +25,31 @@ function StudioPickMeta({ pick }: { pick: StudioCuratedPickView }) {
   );
 }
 
-/** A staff shelf (Staff picks, New this week): release cards in shelf order
- *  with each pick's note. It folds away while empty or unread. */
+/** A staff shelf (Staff picks, New this week): one swipeable row of release
+ *  cards in shelf order with each pick's note, and See all opening every
+ *  pick as a grid. It folds away while empty or unread. */
 export function StudioCuratedShelf({
   picks,
   titleKey,
+  shelfKey,
 }: {
   picks: StudioCuratedPickView[];
   titleKey: string;
+  /** The `?shelf=` value See all sets, and the heading id's stem. */
+  shelfKey: string;
 }) {
-  const headingId = useId();
+  const { attachFrame, ...shelf } = useStudioHomeShelf(shelfKey, picks.length);
   return (
     <Collapse isOpen={picks.length > 0}>
-      <section className={styles.row} aria-labelledby={headingId}>
-        <div className={styles.rowH}>
-          <h2 id={headingId}>
-            <Translation i18nKey={titleKey} components={{ em: <em /> }} />
-          </h2>
-        </div>
-        <div className={styles.rowGrid}>
+      <div ref={attachFrame}>
+        <StudioShelf
+          id={`studio-home-${shelfKey}`}
+          title={<Translation i18nKey={titleKey} components={{ em: <em /> }} />}
+          layout={shelf.layout}
+          seeAllHref={shelf.seeAllHref}
+          seeAllLabel={shelf.seeAllLabel}
+          seeAllReplace={shelf.seeAllReplace}
+        >
           {picks.map((pick) => (
             <StudioReleaseCard
               key={pick.id}
@@ -51,8 +57,8 @@ export function StudioCuratedShelf({
               meta={<StudioPickMeta pick={pick} />}
             />
           ))}
-        </div>
-      </section>
+        </StudioShelf>
+      </div>
     </Collapse>
   );
 }

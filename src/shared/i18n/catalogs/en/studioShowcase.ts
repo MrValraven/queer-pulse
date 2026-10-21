@@ -327,7 +327,6 @@ export const studioShowcase: Catalog = {
 
   // ── Press: hero (StudioPressPage) ──
   "press.facts.pronounsValue": "she / her",
-  "press.facts.playsValue": "<em>{plays}</em> on Studio",
 
   // ── Press: photos (StudioPressPage) ──
   "press.photos.liveGarage": "Live · converted garage",
@@ -367,7 +366,6 @@ export const studioShowcase: Catalog = {
   "payouts.row.note.pending": "pending",
   "payouts.row.note.firstMonthOfCds": "first month of CDS",
   "payouts.row.note.firstOnStudio": "first on Studio",
-  "payouts.plays": "{plays} plays",
   "payouts.meta.tips_one": "{count} tip",
   "payouts.meta.tips_other": "{count} tips",
   "payouts.meta.albumBuys_one": "{count} album buy",
@@ -455,7 +453,6 @@ export const studioShowcase: Catalog = {
   "rights.release.format.liveRecording": "Live recording",
   "rights.release.trackCount_one": "{count} track",
   "rights.release.trackCount_other": "{count} tracks",
-  "rights.release.plays": "{plays} plays",
   "rights.release.paid": "{amount} paid",
   "rights.release.clearanceDispute_one": "clearance dispute on {count} track",
   "rights.release.clearanceDispute_other":

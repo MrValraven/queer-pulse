@@ -99,91 +99,28 @@
 }
 .optLoading {
   opacity: 0.6;
-  transition: opacity 0.25s;
+  transition: opacity var(--dur-base);
 }
 .optBlock {
   display: block;
 }
-
-/* Crossfade slider (Studio open pages) */
-.rangeRow {
+.optControls {
   display: flex;
   align-items: center;
-  gap: 16px;
-  margin-top: 12px;
+  gap: 12px;
+  flex: none;
 }
-.range {
-  flex: 1;
-  min-height: 44px;
-  background: transparent;
-  appearance: none;
-  -webkit-appearance: none;
-  accent-color: var(--accent-fill);
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
-/* The filled part follows --fill, set inline from the value. */
-.range::-webkit-slider-runnable-track {
-  height: 8px;
-  border-radius: var(--radius-pill);
-  background:
-    linear-gradient(var(--accent-fill), var(--accent-fill)) 0 / var(--fill, 0%)
-      100% no-repeat,
-    rgba(var(--studio-ink-rgb), 0.18);
-  border: 1px solid rgba(var(--studio-ink-rgb), 0.45);
-  box-sizing: border-box;
-}
-.range::-moz-range-track {
-  height: 8px;
-  border-radius: var(--radius-pill);
-  background: rgba(var(--studio-ink-rgb), 0.18);
-  border: 1px solid rgba(var(--studio-ink-rgb), 0.45);
-  box-sizing: border-box;
-}
-.range::-moz-range-progress {
-  height: 8px;
-  border-radius: var(--radius-pill);
-  background: var(--accent-fill);
-}
-.range::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 22px;
-  height: 22px;
-  margin-top: -8px;
-  border-radius: 50%;
-  background: var(--accent-fill);
-  border: 2px solid rgba(var(--cream-rgb), 1);
-  box-sizing: border-box;
-}
-.range::-moz-range-thumb {
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  background: var(--accent-fill);
-  border: 2px solid rgba(var(--cream-rgb), 1);
-  box-sizing: border-box;
-}
-.range:focus-visible::-webkit-slider-thumb {
-  outline: var(--focus-ring);
-  outline-offset: var(--focus-ring-offset);
-  box-shadow: var(--ring-cream);
-}
-.range:focus-visible::-moz-range-thumb {
-  outline: var(--focus-ring);
-  outline-offset: var(--focus-ring-offset);
-  box-shadow: var(--ring-cream);
-}
-/* The thumb carries the focus ring; the input box stays bare. */
-.range:focus-visible {
-  outline: none;
-  box-shadow: none;
-}
-.rangeValue {
-  min-width: 6ch;
-  text-align: right;
-  font-variant-numeric: tabular-nums;
-  font-size: var(--text-14);
-  color: var(--studio-text);
-}
+
 .ot {
   flex: 1;
   min-width: 0;
@@ -222,85 +159,6 @@
   color: var(--studio-accent-text);
 }
 
-/* Toggle */
-.tgSw {
-  width: 48px;
-  height: 28px;
-  border-radius: var(--radius-pill);
-  background: rgba(var(--studio-ink-rgb), 0.18);
-  /* The outline lifts the off track above the 3:1 non-text floor. The knob is
-     inset 2px so it keeps its 3px gap from the outer edge. */
-  border: 1px solid rgba(var(--studio-ink-rgb), 0.45);
-  box-sizing: border-box;
-  position: relative;
-  cursor: pointer;
-  flex: none;
-  padding: 0;
-  transition: background 0.25s;
-}
-/* Wider hit area than the 48x28 track. */
-.tgSw::before {
-  content: "";
-  position: absolute;
-  inset: -8px -2px;
-}
-.tgSw[aria-disabled="true"] {
-  cursor: default;
-}
-/* --accent-fill keeps the cream knob at 4.09:1 on the on track and the track
-   at 4.05:1 against the page (--accent would leave the knob at 2.63:1). */
-.tgSwOn {
-  background: var(--accent-fill);
-}
-.tgSw::after {
-  content: "";
-  position: absolute;
-  left: 2px;
-  top: 2px;
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  /* Light cream in every theme: 9.89:1 on the dark off track. The pale light
-     off track needs an edge to show the knob, so the ink channel draws one. In
-     dark that edge is cream on the cream knob and paints nothing new. */
-  background: rgba(var(--cream-rgb), 1);
-  border: 1px solid rgba(var(--studio-ink-rgb), 0.45);
-  transition: transform 0.25s;
-}
-.tgSwOn::after {
-  transform: translateX(20px);
-}
-
-/* Segmented control */
-.seg {
-  display: inline-flex;
-  background: rgba(var(--studio-ink-rgb), 0.05);
-  border: 1px solid rgba(var(--studio-ink-rgb), 0.08);
-  border-radius: var(--radius-pill);
-  padding: 3px;
-  flex: none;
-}
-.segBtn {
-  font-family: var(--sans);
-  font-size: var(--text-12-5);
-  font-weight: 600;
-  color: var(--studio-text-muted);
-  padding: 7px 15px;
-  border-radius: var(--radius-pill);
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  transition:
-    background 0.2s var(--ease),
-    color 0.2s var(--ease);
-  white-space: nowrap;
-}
-/* Dark ink on the coral fill: 6.28:1 (cream on --accent is 2.63:1). */
-.segBtnOn {
-  background: var(--accent);
-  color: var(--studio-bg);
-}
-
 /* Radio cards */
 .rcards {
   display: grid;
@@ -315,10 +173,13 @@
   background: rgba(var(--studio-ink-rgb), 0.04);
   border: 1px solid rgba(var(--studio-ink-rgb), 0.08);
   border-radius: var(--radius-12);
+  text-align: left;
+  width: 100%;
+  font: inherit;
   cursor: pointer;
   transition:
-    background 0.2s var(--ease),
-    border-color 0.2s var(--ease);
+    background var(--dur-fast) var(--ease),
+    border-color var(--dur-fast) var(--ease);
 }
 @media (hover: hover) {
   .rcard:hover {
@@ -348,24 +209,25 @@
   border-radius: 50%;
   background: var(--accent);
 }
-.rcard h4 {
+.rcardText {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.rcardTitle {
   font-family: var(--serif);
   font-weight: 500;
   font-size: var(--text-15-5);
   color: var(--studio-text);
   letter-spacing: -0.005em;
 }
-.rcard h4 em {
-  font-style: italic;
-  color: var(--studio-accent-text);
-}
-.rcard p {
+.rcardSub {
   font-family: var(--serif);
   font-style: italic;
   font-size: var(--text-12-5);
   color: var(--studio-text-muted);
   line-height: 1.5;
-  margin: 3px 0 0;
+  margin-top: 3px;
 }
 .badge {
   font-size: var(--text-10);
@@ -381,52 +243,6 @@
   white-space: nowrap;
 }
 
-/* Chips */
-.chips {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  flex: none;
-}
-@media (--md) {
-  .chips {
-    flex: 1 1 100%;
-    min-width: 0;
-    flex-wrap: wrap;
-  }
-}
-.chip {
-  font-family: var(--serif);
-  font-size: var(--text-15);
-  color: var(--studio-text);
-  padding: 9px 16px;
-  border-radius: var(--radius-10);
-  border: 1px solid rgba(var(--studio-ink-rgb), 0.08);
-  background: rgba(var(--studio-ink-rgb), 0.04);
-  cursor: pointer;
-  transition:
-    background 0.2s var(--ease),
-    border-color 0.2s var(--ease),
-    color 0.2s var(--ease);
-}
-.chipOn {
-  border-color: var(--accent);
-  background: rgba(var(--accent-rgb), 0.12);
-  color: var(--studio-accent-text);
-}
-
-.selectMini {
-  font-family: var(--sans);
-  font-size: var(--text-13-5);
-  color: var(--studio-text);
-  background: rgba(var(--studio-ink-rgb), 0.05);
-  border: 1px solid rgba(var(--studio-ink-rgb), 0.08);
-  border-radius: var(--radius-10);
-  padding: 9px 14px;
-  cursor: pointer;
-  flex: none;
-}
-
 /* Danger */
 .danger {
   background: rgba(var(--accent-rgb), 0.06);
@@ -438,50 +254,6 @@
 .danger .opt {
   border-color: rgba(var(--accent-rgb), 0.18);
 }
-.btDanger {
-  background: transparent;
-  border: 1.5px solid rgba(var(--accent-rgb), 0.5);
-  color: var(--studio-accent-soft-text);
-  font-family: var(--sans);
-  font-size: var(--text-13-5);
-  font-weight: 600;
-  padding: 9px 16px;
-  border-radius: var(--radius-pill);
-  cursor: pointer;
-  transition:
-    background 0.2s var(--ease),
-    color 0.2s var(--ease),
-    border-color 0.2s var(--ease);
-  flex: none;
-}
-@media (hover: hover) {
-  .btDanger:hover {
-    background: rgba(var(--accent-rgb), 0.16);
-    color: rgba(var(--studio-ink-rgb), 1);
-    border-color: var(--accent);
-  }
-}
-.bt {
-  background: transparent;
-  border: 1.5px solid rgba(var(--studio-ink-rgb), 0.18);
-  color: var(--studio-text-muted);
-  font-family: var(--sans);
-  font-size: var(--text-13-5);
-  font-weight: 600;
-  padding: 9px 16px;
-  border-radius: var(--radius-pill);
-  cursor: pointer;
-  transition:
-    border-color 0.2s var(--ease),
-    color 0.2s var(--ease);
-  flex: none;
-}
-@media (hover: hover) {
-  .bt:hover {
-    border-color: rgba(var(--studio-ink-rgb), 0.4);
-    color: var(--studio-text);
-  }
-}
 .eraseNote {
   font-family: var(--serif);
   font-style: italic;
@@ -491,7 +263,4 @@
 }
 .eraseNote em {
   color: var(--studio-accent-text);
-}
-.rcardsWide {
-  width: 340px;
 }

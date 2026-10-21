@@ -50,6 +50,24 @@ export function StudioProgramPage() {
       prev.map((single) => (single.id === id ? { ...single, note } : single)),
     );
 
+  const handleReorderSingles = (from: number, to: number) => {
+    const moved = singles[from];
+    if (!moved || to < 0 || to >= singles.length) return;
+    setSingles((prev) => {
+      const next = [...prev];
+      const [item] = next.splice(from, 1);
+      if (item) next.splice(to, 0, item);
+      return next;
+    });
+    showToast(
+      t("studio:program.toast.movedSingle", {
+        title: `${moved.titlePre}${moved.titleEm}`,
+        position: to + 1,
+      }),
+      "info",
+    );
+  };
+
   const handleRemoveSingle = (id: string) =>
     setSingles((prev) => prev.filter((single) => single.id !== id));
 
@@ -97,6 +115,13 @@ export function StudioProgramPage() {
             singles={singles}
             onNoteChange={handleNoteChange}
             onRemove={handleRemoveSingle}
+            onReorder={handleReorderSingles}
+            onAddSlot={() =>
+              showToast(t("studio:program.toast.addSingleFromInbox"), "info")
+            }
+            onAddBroadcast={() =>
+              showToast(t("studio:program.toast.addBroadcastDemo"), "info")
+            }
             onSwap={() =>
               showToast(t("studio:program.toast.chooseNewCover"), "info")
             }

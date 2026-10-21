@@ -15,6 +15,7 @@ export function StudioTrackChapters({
   track,
   heading,
   isHeadingHidden = false,
+  headingLevel = 3,
 }: {
   track: Pick<
     StudioTrackView,
@@ -23,6 +24,8 @@ export function StudioTrackChapters({
   heading?: string;
   /** Keeps the heading for screen readers when a tab already names the section. */
   isHeadingHidden?: boolean;
+  /** 2 on the track page, where the section sits straight under the h1. */
+  headingLevel?: 2 | 3;
 }) {
   const { t } = useTranslation();
   const player = useStudioPlayer();
@@ -31,6 +34,7 @@ export function StudioTrackChapters({
   // Spec 7: a hidden explicit track, or one without audio, starts nowhere.
   const isPlayBlocked = !track.hasAudio || (hideExplicit && track.isExplicit);
   if (!track.chapters || track.chapters.length === 0) return null;
+  const Heading = headingLevel === 2 ? "h2" : "h3";
   const isCurrent = player.isCurrentTrack(track.id);
   // A chapter names where to start (0:00 included): on the loaded track it
   // also wins over a saved place still waiting to resume.
@@ -43,13 +47,13 @@ export function StudioTrackChapters({
   };
   return (
     <section className={styles.section}>
-      <h3
+      <Heading
         className={
           isHeadingHidden ? `${styles.heading} visuallyHidden` : styles.heading
         }
       >
         {heading ?? t("studio:chapters.listHeading")}
-      </h3>
+      </Heading>
       <StudioChapterList
         chapters={track.chapters}
         activeIndex={isCurrent ? currentChapterIndex : null}

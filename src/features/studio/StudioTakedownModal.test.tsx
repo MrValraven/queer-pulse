@@ -1,10 +1,12 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
 import { StudioTakedownModal } from "./StudioTakedownModal";
 
 /**
- * The confirm-takedown dialog is a self-contained overlay (studio is demo-only
+ * The confirm-takedown dialog is a self-contained overlay on the shared
+ * `ConfirmDialog`. It plays its exit first, so the outcome reaches the spies
+ * a moment after the click (hence `waitFor`) (studio is demo-only
  * in live, so there's no adapter to test — just the interaction contract). It
  * must hand control back cleanly on all four dismissal paths: the confirm
  * action, the cancel action, Escape, and a backdrop click — while an inside
@@ -39,14 +41,22 @@ describe("StudioTakedownModal", () => {
     fireEvent.click(
       await screen.findByRole("button", { name: /take it down/i }),
     );
-    expect(onConfirm).toHaveBeenCalledTimes(1);
+    await waitFor(() => expect(onConfirm).toHaveBeenCalledTimes(1));
     expect(onClose).not.toHaveBeenCalled();
+  });
+
+  it("opens with focus on the safe action, never on the takedown", async () => {
+    renderModal();
+    const keepButton = await screen.findByRole("button", {
+      name: /keep it up/i,
+    });
+    await waitFor(() => expect(keepButton).toHaveFocus());
   });
 
   it("dismisses via the cancel action", async () => {
     const { onConfirm, onClose } = renderModal();
     fireEvent.click(await screen.findByRole("button", { name: /keep it up/i }));
-    expect(onClose).toHaveBeenCalledTimes(1);
+    await waitFor(() => expect(onClose).toHaveBeenCalledTimes(1));
     expect(onConfirm).not.toHaveBeenCalled();
   });
 
@@ -55,7 +65,7 @@ describe("StudioTakedownModal", () => {
     // Wait for the catalog so the dialog is fully mounted, then press Escape.
     await screen.findByRole("button", { name: /take it down/i });
     fireEvent.keyDown(document.body, { key: "Escape" });
-    expect(onClose).toHaveBeenCalledTimes(1);
+    await waitFor(() => expect(onClose).toHaveBeenCalledTimes(1));
   });
 
   it("dismisses on a backdrop press-and-release but not on an inside click", async () => {
@@ -71,7 +81,7 @@ describe("StudioTakedownModal", () => {
     // over the scrim doesn't dismiss the dialog under the member.
     fireEvent.pointerDown(scrim);
     fireEvent.click(scrim);
-    expect(onClose).toHaveBeenCalledTimes(1);
+    await waitFor(() => expect(onClose).toHaveBeenCalledTimes(1));
   });
 
   it("ignores a release on the scrim that began inside the dialog", async () => {

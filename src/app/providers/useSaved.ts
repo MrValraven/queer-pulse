@@ -66,6 +66,9 @@ export interface SavedItem {
   /** Set only with `availability: "unavailable"`, see
    *  `SavedItemUnavailableReason`. */
   unavailableReason?: SavedItemUnavailableReason;
+  /** Studio Library cards: the cover of a saved release or playlist as the
+   *  server last read it. Absent elsewhere, null when there is none. */
+  coverUrl?: string | null;
 }
 
 /**

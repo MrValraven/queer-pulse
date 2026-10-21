@@ -2,7 +2,7 @@ import { useMemo, useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { FiCheckCircle, FiDollarSign, FiLock } from "react-icons/fi";
 import { routes } from "../../app/routeMap";
-import { ImageSlot } from "../../shared/components/ui";
+import { Button, ImageSlot } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useFormat } from "../../shared/i18n/format";
 import { Translation } from "../../shared/i18n/Translation";
@@ -129,13 +129,13 @@ export function StudioRightsShowcase() {
                     count: release.daysLeft ?? 0,
                   })}
                 </div>
-                <button
-                  type="button"
-                  className={s.btUndo}
+                <Button
+                  variant="ghost"
+                  className={s.rowAction}
                   onClick={() => cancelRemoval(release)}
                 >
                   {t("studio:rights.cancelRemovalCta")}
-                </button>
+                </Button>
               </>
             ) : (
               <>
@@ -147,13 +147,13 @@ export function StudioRightsShowcase() {
                     <span>{t(release.licence.subKey)}</span>
                   </div>
                 )}
-                <button
-                  type="button"
-                  className={s.btTake}
+                <Button
+                  variant="soft"
+                  className={s.rowAction}
                   onClick={() => setPending(release)}
                 >
                   {t("studio:rights.takeDownCta")}
-                </button>
+                </Button>
               </>
             )}
           </div>

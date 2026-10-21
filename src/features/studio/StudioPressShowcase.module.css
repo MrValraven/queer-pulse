@@ -38,24 +38,27 @@
   background: rgba(var(--studio-ink-rgb), 0.05);
 }
 
-.previewPlay {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+/* The preview's round play: an <IconButton> kept round and coral. The
+   doubled class outranks the kit's quiet icon fill and its hover wash. */
+.previewPlay.previewPlay {
   flex-shrink: 0;
   width: 52px;
+  min-width: 52px;
   height: 52px;
-  border: 0;
   border-radius: 50%;
   background: var(--accent);
   color: var(--studio-bg);
-  cursor: pointer;
   touch-action: manipulation;
 }
 
-.previewPlay:focus-visible,
-.photo:focus-visible,
-.copyButton:focus-visible {
+@media (hover: hover) {
+  .previewPlay.previewPlay:hover:not(:disabled):not([aria-disabled="true"]) {
+    background: var(--accent);
+    color: var(--studio-bg);
+  }
+}
+
+.photo:focus-visible {
   outline: var(--focus-ring);
   outline-offset: var(--focus-ring-offset);
   box-shadow: var(--ring-cream);
@@ -166,18 +169,6 @@
 .copyValue {
   min-width: 0;
   overflow-wrap: anywhere;
-}
-
-.copyButton {
-  min-height: var(--tap-min);
-  padding: 0 12px;
-  border: 1px solid rgba(var(--studio-ink-rgb), 0.18);
-  border-radius: var(--radius-pill);
-  background: none;
-  color: inherit;
-  font: inherit;
-  font-size: var(--text-12);
-  cursor: pointer;
 }
 
 .request {

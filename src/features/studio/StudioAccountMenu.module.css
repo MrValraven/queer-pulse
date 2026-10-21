@@ -6,33 +6,33 @@
   flex: none;
 }
 
-/* The avatar button. The padding draws a halo around the avatar that the
-   hover and open states wash in. */
-.trigger {
-  display: inline-flex;
-  padding: 3px;
-  border: 0;
-  background: transparent;
-  border-radius: var(--radius-pill);
-  cursor: pointer;
-  transition: background var(--dur, 0.18s) var(--ease, ease);
+/* The avatar trigger: the shared IconButton (44px round target) with the
+   avatar centred in it, so its padding draws a halo the hover and open
+   states wash in. Chained through .wrap, with the same :not() guards, so it
+   outranks the icon variant's own washes. */
+.wrap .trigger {
+  padding: 0;
+  color: inherit;
+  border-color: transparent;
+  transition-property: background-color, transform;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
 }
-/* In sheet mode the avatar is the phone's main navigation control, so the
-   halo grows to a 44px touch target. Top alignment keeps the wrapper's line
-   box from adding height under it, so the phone topbar row stays 44px. */
-.trigger[data-sheet-mode] {
-  padding: 5px;
+/* Top alignment keeps the wrapper's line box from adding height under the
+   phone avatar, so the phone topbar row stays 44px. */
+.wrap .trigger[data-sheet-mode] {
   vertical-align: top;
 }
-.trigger[aria-expanded="true"] {
+.wrap .trigger[aria-expanded="true"] {
   background: rgba(var(--studio-ink-rgb), 0.12);
 }
 @media (hover: hover) {
-  .trigger:hover {
+  .wrap .trigger:hover:not(:disabled):not([aria-disabled="true"]) {
     background: rgba(var(--studio-ink-rgb), 0.12);
+    color: inherit;
   }
 }
-.trigger:focus-visible {
+.wrap .trigger:focus-visible {
   outline: var(--focus-ring);
   outline-offset: var(--focus-ring-offset);
   box-shadow: var(--ring-cream);
@@ -234,14 +234,59 @@
   color: var(--studio-accent-chip-text);
 }
 
-/* The theme row acts in place, so it is a <button> wearing .item. */
-.itemButton {
+/* The count pill the menu draws itself (disputes, counter windows): the
+   same coral chip as the credits badge, growing with its count. */
+.countBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  min-height: 18px;
+  margin-left: 6px;
+  padding: 1px 5px;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--accent-rgb), 0.16);
+  color: var(--studio-accent-chip-text);
+  font-size: var(--text-11);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+/* Rows that act in place (the theme switch, the disclosures) are the
+   shared quiet Button wearing .item. Chained, with the Button's own :not()
+   guards on hover and press, so the row look wins over the pill. */
+.item.itemButton {
   width: 100%;
+  min-height: 0;
+  justify-content: flex-start;
+  gap: 10px;
+  padding: 9px 12px;
   border: 0;
+  border-radius: var(--radius-10);
   background: transparent;
+  box-shadow: none;
+  color: var(--studio-text);
   font-family: inherit;
+  font-size: var(--text-13-5);
+  font-weight: 500;
+  line-height: inherit;
+  white-space: normal;
   text-align: left;
-  cursor: pointer;
+  transition-property: background-color, transform;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+@media (hover: hover) {
+  .item.itemButton:hover:not(:disabled):not([aria-disabled="true"]) {
+    background: rgba(var(--studio-ink-rgb), 0.08);
+  }
+}
+.item.itemButton:active:not(:disabled):not([aria-disabled="true"]) {
+  background: rgba(var(--studio-ink-rgb), 0.12);
+}
+/* The phone sheet (the hosted panel) keeps every row a 44px target. */
+.panelHosted .item.itemButton {
+  min-height: 44px;
 }
 
 /* A row a toggle revealed (Help and info), indented under the toggle. */
@@ -258,11 +303,17 @@
   transform: rotate(180deg);
 }
 
+/* A long label ("Reivindicações sobre as tuas faixas") takes a second line
+   beside its badge, then clamps. */
 .itemLabel {
   min-width: 0;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  white-space: normal;
+  overflow-wrap: anywhere;
   line-height: 1.3;
 }
 

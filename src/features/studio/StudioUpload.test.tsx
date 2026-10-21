@@ -23,9 +23,10 @@ describe("StudioUploadPage steps", () => {
     fireEvent.click(
       await screen.findByRole("button", { name: /save and continue/i }),
     );
+    // The field's own error and the summary link above the form.
     expect(
-      await screen.findByText(/give the release a title/i),
-    ).toBeInTheDocument();
+      await screen.findAllByText(/give the release a title/i),
+    ).toHaveLength(2);
     expect(
       screen.getByRole("button", { name: /release/i, current: "step" }),
     ).toBeInTheDocument();
@@ -75,7 +76,7 @@ describe("StudioUploadPage steps", () => {
     const publishStep = within(
       screen.getByRole("list", { name: /upload steps/i }),
     ).getByRole("button", { name: /publish/i });
-    expect(publishStep).toBeDisabled();
+    expect(publishStep).toHaveAttribute("aria-disabled", "true");
     expect(publishStep).not.toHaveAttribute("aria-current");
   });
 
@@ -119,8 +120,8 @@ describe("StudioUploadPage steps", () => {
     fireEvent.change(buyLink, { target: { value: "http://shop.example" } });
     fireEvent.click(screen.getByRole("button", { name: /save and continue/i }));
     expect(
-      await screen.findByText("Use a full link starting with https://"),
-    ).toBeInTheDocument();
+      await screen.findAllByText("Use a full link starting with https://"),
+    ).toHaveLength(2);
     expect(
       screen.getByRole("button", { name: /release/i, current: "step" }),
     ).toBeInTheDocument();

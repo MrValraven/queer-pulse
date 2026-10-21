@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
 import { StudioSearchPage } from "./StudioSearchPage";
@@ -10,8 +10,8 @@ describe("search by format (demo)", () => {
         <StudioSearchPage />
       </TestProviders>,
     );
-    const select = await screen.findByRole("combobox", { name: "Format" });
-    expect(select).toHaveValue("performance");
+    const select = await screen.findByRole("button", { name: "Format" });
+    expect(select).toHaveTextContent("Performance");
     expect(await screen.findByText("Motorbike")).toBeInTheDocument();
     expect(screen.queryByText("Último elétrico")).toBeNull();
   });
@@ -22,9 +22,10 @@ describe("search by format (demo)", () => {
         <StudioSearchPage />
       </TestProviders>,
     );
-    const select = await screen.findByRole("combobox", { name: "Format" });
-    fireEvent.change(select, { target: { value: "" } });
-    expect(select).toHaveValue("");
+    const select = await screen.findByRole("button", { name: "Format" });
+    fireEvent.click(select);
+    fireEvent.click(await screen.findByRole("option", { name: "Any format" }));
+    await waitFor(() => expect(select).toHaveTextContent("Any format"));
   });
 
   it("heads the track section Episodes under Podcasts and drops genre and mood", async () => {
@@ -35,7 +36,7 @@ describe("search by format (demo)", () => {
         <StudioSearchPage />
       </TestProviders>,
     );
-    await screen.findByRole("combobox", { name: "Format" });
+    await screen.findByRole("button", { name: "Format" });
     expect(await screen.findByText("Episodes")).toBeInTheDocument();
     expect(screen.queryByText("Tracks", { selector: "h2 *" })).toBeNull();
   });
@@ -47,8 +48,8 @@ describe("search by format (demo)", () => {
       </TestProviders>,
     );
     expect(
-      await screen.findByRole("combobox", { name: "Genre" }),
+      await screen.findByRole("button", { name: "Genre" }),
     ).toBeInTheDocument();
-    expect(screen.getByRole("combobox", { name: "Mood" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Mood" })).toBeInTheDocument();
   });
 });

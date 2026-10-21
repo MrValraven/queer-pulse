@@ -33,10 +33,13 @@ export const PREVIEW_WAVE: number[] = [
 
 /**
  * Facts shown as label / value pairs in the hero. `labelKey` is chrome
- * (Pattern A). Places and years in `value` stay literal, the play count
+ * (Pattern A). Places and years in `value` stay literal, the follower count
  * formats in the active locale, and the phrases around them render through
  * `<Translation>` from the `studioShowcase` catalog.
  */
+/** Followers, a total (never plays). */
+const PRESS_FOLLOWER_COUNT = 1240;
+
 export const PRESS_FACTS: { labelKey: string; value: ReactNode }[] = [
   { labelKey: "studio:press.fact.from", value: "Sintra, Portugal" },
   {
@@ -45,14 +48,8 @@ export const PRESS_FACTS: { labelKey: string; value: ReactNode }[] = [
   },
   { labelKey: "studio:press.fact.since", value: "2024" },
   {
-    labelKey: "studio:press.fact.plays",
-    value: (
-      <Translation
-        i18nKey="studioShowcase:press.facts.playsValue"
-        slots={{ plays: <StudioNumber value={231000} isCompact /> }}
-        components={{ em: <em /> }}
-      />
-    ),
+    labelKey: "studio:press.fact.followers",
+    value: <StudioNumber value={PRESS_FOLLOWER_COUNT} />,
   },
   { labelKey: "studio:press.fact.forFansOf", value: "Cesária, Anohni" },
 ];

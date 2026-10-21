@@ -1,6 +1,6 @@
-import { Link } from "react-router-dom";
 import { FiArrowRight } from "react-icons/fi";
 import { routes } from "../../app/routeMap";
+import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -53,18 +53,18 @@ function StudioSolidarityFundShowcase() {
           </p>
         </div>
         <div className={s.acts}>
-          <button
-            type="button"
-            className={`${s.bt} ${s.btJade} ${s.btLg}`}
+          <Button
+            variant="jade"
+            size="lg"
             onClick={() =>
               showToast(t("studio:fund.apply.requestToast"), "info")
             }
           >
             {t("studio:fund.apply.requestCta")}
-          </button>
-          <Link to={routes.studioCalls} className={`${s.bt} ${s.btLg}`}>
+          </Button>
+          <Button to={routes.studioCalls} variant="ghost" size="lg">
             {t("studio:fund.apply.seeGrantsCta")} <FiArrowRight aria-hidden />
-          </Link>
+          </Button>
         </div>
       </div>
     </div>

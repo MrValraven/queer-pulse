@@ -23,10 +23,10 @@ interface EmptyStateProps {
   secondaryAction?: EmptyStateAction;
   /** Tighter padding for inline/in-grid usage. */
   compact?: boolean;
-  /** Heading level for the title, `2` or `3`. Defaults to `3` for a panel
-   *  nested under a section heading; use `2` when the panel sits straight
-   *  under the page `h1`, such as a full-page notice replacing its content. */
-  headingLevel?: 2 | 3;
+  /** Heading level for the title. Defaults to `3` for a panel nested under
+   *  a section heading; use `2` when the panel sits straight under the page
+   *  `h1`, and `1` when the panel is the whole page (a not-found page). */
+  headingLevel?: 1 | 2 | 3;
   className?: string;
 }
 
@@ -80,7 +80,7 @@ export function EmptyState({
   const cls = [styles.empty, compact && styles.compact, className]
     .filter(Boolean)
     .join(" ");
-  const Heading = headingLevel === 2 ? "h2" : "h3";
+  const Heading = headingLevel === 1 ? "h1" : headingLevel === 2 ? "h2" : "h3";
   return (
     <div className={cls} role="status">
       {icon && (

@@ -1,11 +1,11 @@
 .wrap {
-  --text: var(--studio-text);
-  --text-60: var(--studio-text-muted);
+  --s-text: var(--studio-text);
+  --s-text-60: var(--studio-text-muted);
   /* Meta text at 11px and 12px never qualifies as large text, so it takes the
      muted Studio text token, which clears the AA 4.5:1 floor on the Studio
      surface and rail in both themes. The old cream at 0.40 measured 3.55:1. */
-  --text-40: var(--studio-text-muted);
-  --line: rgba(var(--studio-ink-rgb), 0.1);
+  --s-text-40: var(--studio-text-muted);
+  --s-line: rgba(var(--studio-ink-rgb), 0.1);
   --surface: rgba(var(--studio-ink-rgb), 0.05);
   --rail: var(--studio-surface-rail);
   padding: 8px 0 var(--section-y-64);
@@ -49,7 +49,7 @@
   gap: 16px;
   flex-wrap: wrap;
   background: var(--surface);
-  border: 1px solid var(--line);
+  border: 1px solid var(--s-line);
   border-radius: var(--radius-16);
   padding: 16px 22px;
   margin: 20px 0 24px;
@@ -69,7 +69,7 @@
   font-family: var(--serif);
   font-size: var(--text-19);
   font-weight: 300;
-  color: var(--text);
+  color: var(--s-text);
 }
 .onAir em {
   font-style: italic;
@@ -91,63 +91,26 @@
   font-variant-numeric: tabular-nums;
   font-size: var(--text-15);
   letter-spacing: 0.04em;
-  color: var(--text);
+  color: var(--s-text);
   padding: 4px 12px;
   border-radius: var(--radius-8);
   background: rgba(var(--studio-ink-rgb), 0.06);
 }
 .headMeta {
   font-size: var(--text-13);
-  color: var(--text-60);
+  color: var(--s-text-60);
 }
 .headMeta em {
   font-style: normal;
-  color: var(--text);
+  color: var(--s-text);
   font-weight: 600;
 }
 .headRight {
   margin-left: auto;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 10px;
-}
-.pauseBtn {
-  font-family: var(--sans);
-  font-size: var(--text-13);
-  font-weight: 600;
-  color: var(--text-60);
-  background: transparent;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-10);
-  padding: 9px 16px;
-  cursor: pointer;
-  transition:
-    color 0.18s var(--ease),
-    border-color 0.18s var(--ease);
-}
-.pauseBtn:hover,
-.pauseBtn:focus-visible {
-  color: var(--text);
-  border-color: rgba(var(--studio-ink-rgb), 0.2);
-}
-.endBtn {
-  font-family: var(--sans);
-  font-size: var(--text-13);
-  font-weight: 600;
-  color: var(--studio-accent-text);
-  background: transparent;
-  border: 1.5px solid rgba(var(--accent-rgb), 0.5);
-  border-radius: var(--radius-10);
-  padding: 9px 16px;
-  cursor: pointer;
-  transition:
-    background 0.18s var(--ease),
-    border-color 0.18s var(--ease);
-}
-.endBtn:hover,
-.endBtn:focus-visible {
-  background: rgba(var(--accent-rgb), 0.12);
-  border-color: var(--accent);
 }
 
 /* ---- 3-column grid ---- */
@@ -170,7 +133,7 @@
 }
 .panel {
   background: var(--surface);
-  border: 1px solid var(--line);
+  border: 1px solid var(--s-line);
   border-radius: var(--radius-16);
   padding: 18px 18px 20px;
 }
@@ -179,7 +142,7 @@
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--text-40);
+  color: var(--s-text-40);
   margin-bottom: 14px;
 }
 
@@ -189,7 +152,7 @@
   width: 100%;
   text-align: left;
   background: transparent;
-  border: 1px solid var(--line);
+  border: 1px solid var(--s-line);
   border-radius: var(--radius-12);
   padding: 12px 14px;
   cursor: pointer;
@@ -218,7 +181,7 @@
   width: 15px;
   height: 15px;
   border-radius: 50%;
-  border: 1.5px solid var(--text-40);
+  border: 1.5px solid var(--s-text-40);
   flex: none;
   position: relative;
 }
@@ -235,11 +198,11 @@
 .devName {
   font-size: var(--text-13-5);
   font-weight: 600;
-  color: var(--text);
+  color: var(--s-text);
 }
 .devSub {
   font-size: var(--text-12);
-  color: var(--text-40);
+  color: var(--s-text-40);
   margin-top: 4px;
   padding-left: 25px;
 }
@@ -257,7 +220,7 @@
 .meterCh {
   font-size: var(--text-11);
   font-weight: 700;
-  color: var(--text-40);
+  color: var(--s-text-40);
   width: 12px;
 }
 .meterTrack {
@@ -282,7 +245,7 @@
   display: flex;
   justify-content: space-between;
   font-size: var(--text-10);
-  color: var(--text-40);
+  color: var(--s-text-40);
   padding-left: 22px;
   margin-top: 2px;
 }
@@ -300,11 +263,11 @@
 .camName {
   font-size: var(--text-13-5);
   font-weight: 600;
-  color: var(--text);
+  color: var(--s-text);
 }
 .camSub {
   font-size: var(--text-12);
-  color: var(--text-40);
+  color: var(--s-text-40);
   margin-top: 5px;
   line-height: 1.5;
 }
@@ -313,7 +276,7 @@
   height: 22px;
   border-radius: var(--radius-pill);
   background: rgba(var(--studio-ink-rgb), 0.12);
-  border: 1px solid var(--line);
+  border: 1px solid var(--s-line);
   flex: none;
   position: relative;
   cursor: not-allowed;
@@ -326,7 +289,7 @@
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background: var(--text-40);
+  background: var(--s-text-40);
 }
 
 /* ---- Now playing (centre) ---- */
@@ -382,12 +345,12 @@
 /* ---- Setlist input ---- */
 .setLbl {
   font-size: var(--text-13);
-  color: var(--text-60);
+  color: var(--s-text-60);
   margin: 26px 0 12px;
 }
 .setLbl em {
   font-style: normal;
-  color: var(--text);
+  color: var(--s-text);
   font-weight: 600;
 }
 .setForm {
@@ -399,18 +362,20 @@
   flex: 1;
   font-family: var(--sans);
   font-size: var(--text-14);
-  color: var(--text);
+  color: var(--s-text);
   background: var(--surface);
-  border: 1px solid var(--line);
+  border: 1px solid var(--s-line);
   border-radius: var(--radius-12);
   padding: 12px 16px;
 }
 .setInput::placeholder {
-  color: var(--text-40);
+  color: var(--s-text-40);
 }
 .setInput:focus {
-  outline: none;
-  border-color: rgba(var(--accent-rgb), 0.5);
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-color: var(--accent);
 }
 
 /* ---- Cue list ---- */
@@ -420,7 +385,7 @@
   align-items: center;
   gap: 14px;
   padding: 14px 4px;
-  border-top: 1px solid var(--line);
+  border-top: 1px solid var(--s-line);
 }
 .cue:first-child {
   border-top: none;
@@ -429,13 +394,13 @@
   font-family: var(--sans);
   font-variant-numeric: tabular-nums;
   font-size: var(--text-12-5);
-  color: var(--text-40);
+  color: var(--s-text-40);
 }
 .cueTitle {
   font-family: var(--serif);
   font-size: var(--text-16);
   font-weight: 300;
-  color: var(--text);
+  color: var(--s-text);
 }
 .cueTitle em {
   font-style: italic;
@@ -443,7 +408,7 @@
 }
 .cueWho {
   font-size: var(--text-12);
-  color: var(--text-40);
+  color: var(--s-text-40);
   margin-top: 3px;
 }
 .badge {
@@ -471,11 +436,11 @@
 }
 .cueFoot {
   font-size: var(--text-12-5);
-  color: var(--text-40);
+  color: var(--s-text-40);
   line-height: 1.6;
   margin-top: 18px;
   padding-top: 16px;
-  border-top: 1px solid var(--line);
+  border-top: 1px solid var(--s-line);
 }
 .cueFoot em {
   font-style: italic;
@@ -488,34 +453,30 @@
   gap: 6px;
   margin-bottom: 16px;
 }
-.tab {
+/* The two panel switches are kit quiet Buttons sharing the strip. The chosen
+   one keeps the kit wash; the other rests clear with muted text. The doubled
+   class outranks the kit. */
+.tab.tab {
   flex: 1;
-  font-family: var(--sans);
-  font-size: var(--text-13);
-  font-weight: 600;
-  color: var(--text-40);
-  background: transparent;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-10);
-  padding: 10px 8px;
-  cursor: pointer;
-  transition:
-    color 0.18s var(--ease),
-    border-color 0.18s var(--ease),
-    background 0.18s var(--ease);
+  min-width: 0;
+  padding-inline: 10px;
+  white-space: normal;
+  text-align: center;
+  line-height: 1.25;
 }
 .tab em {
   font-style: normal;
   color: var(--studio-jade-text);
 }
-.tab:hover,
-.tab:focus-visible {
-  color: var(--text-60);
+.tab.tab:not([aria-pressed="true"]) {
+  background: transparent;
+  color: var(--s-text-60);
 }
-.tab.active {
-  color: var(--text);
-  border-color: rgba(var(--studio-ink-rgb), 0.24);
-  background: rgba(var(--studio-ink-rgb), 0.06);
+@media (hover: hover) {
+  .tab.tab:not([aria-pressed="true"]):hover:not(:disabled) {
+    background: var(--studio-wash-2);
+    color: var(--s-text);
+  }
 }
 
 /* ---- Tips ---- */
@@ -541,7 +502,7 @@
   place-items: center;
   font-size: var(--text-11);
   font-weight: 700;
-  color: var(--text);
+  color: var(--s-text);
   background: rgba(var(--studio-ink-rgb), 0.1);
 }
 .tipBody {
@@ -556,7 +517,7 @@
 .tipName {
   font-size: var(--text-13-5);
   font-weight: 600;
-  color: var(--text);
+  color: var(--s-text);
 }
 .tipAmount {
   font-size: var(--text-13);
@@ -565,13 +526,13 @@
 }
 .tipNote {
   font-size: var(--text-12-5);
-  color: var(--text-60);
+  color: var(--s-text-60);
   line-height: 1.5;
   margin-top: 3px;
 }
 .tipNote.priv {
   font-style: italic;
-  color: var(--text-40);
+  color: var(--s-text-40);
 }
 .tipTotal {
   margin-top: 18px;
@@ -582,7 +543,7 @@
 }
 .tipTotalLbl {
   font-size: var(--text-11-5);
-  color: var(--text-60);
+  color: var(--s-text-60);
 }
 .tipTotalLbl em {
   font-style: normal;
@@ -615,7 +576,7 @@
   place-items: center;
   font-size: var(--text-11);
   font-weight: 700;
-  color: var(--text);
+  color: var(--s-text);
   background: rgba(var(--studio-ink-rgb), 0.1);
 }
 .tbOwn .tbAv {
@@ -632,21 +593,21 @@
 .tbName {
   font-size: var(--text-12);
   font-weight: 700;
-  color: var(--text);
+  color: var(--s-text);
 }
 .tbName em {
   font-style: normal;
   font-weight: 600;
-  color: var(--text-40);
+  color: var(--s-text-40);
 }
 .tbText {
   font-size: var(--text-13);
-  color: var(--text-60);
+  color: var(--s-text-60);
   line-height: 1.55;
   margin-top: 4px;
 }
 .tbOwn .tbText {
-  color: var(--text);
+  color: var(--s-text);
 }
 .tbForm {
   display: flex;
@@ -657,16 +618,18 @@
   flex: 1;
   font-family: var(--sans);
   font-size: var(--text-13);
-  color: var(--text);
+  color: var(--s-text);
   background: var(--surface);
-  border: 1px solid var(--line);
+  border: 1px solid var(--s-line);
   border-radius: var(--radius-10);
   padding: 10px 14px;
 }
 .tbInput::placeholder {
-  color: var(--text-40);
+  color: var(--s-text-40);
 }
 .tbInput:focus {
-  outline: none;
-  border-color: rgba(var(--accent-rgb), 0.5);
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+  border-color: var(--accent);
 }

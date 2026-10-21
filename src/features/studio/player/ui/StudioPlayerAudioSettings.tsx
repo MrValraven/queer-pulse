@@ -1,90 +1,105 @@
-import { useId } from "react";
+import { useId, useRef } from "react";
+import { Button } from "../../../../shared/components/ui";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
-import { STUDIO_CROSSFADE_MAX_SECONDS } from "../../api/studio.types";
+import { StudioCrossfadeSetting } from "../../StudioCrossfadeSetting";
 import { useStudioPlayer } from "../studioPlayerContext";
+import { StudioEqualizer } from "./StudioEqualizer";
+import { useStudioSliderKeyGuard } from "./StudioEqualizer.hooks";
+import equalizerStyles from "./StudioEqualizer.module.css";
 import styles from "./StudioPlayerControls.module.css";
 
-/** Keys the range steps itself with; Escape and Tab still reach the popover. */
-const SLIDER_KEYS = new Set([
-  "ArrowUp",
-  "ArrowDown",
-  "ArrowLeft",
-  "ArrowRight",
-  "PageUp",
-  "PageDown",
-  "Home",
-  "End",
-]);
+/** Why the browser's audio settings rest: a cast device plays the stream
+ *  itself, and plain mode has no graph for crossfade. */
+function crossfadeHintKey(isCasting: boolean, isPlainMode: boolean): string {
+  if (isCasting) return "studio:player.crossfade.castHint";
+  return isPlainMode
+    ? "studio:player.crossfade.unavailable"
+    : "studio:player.crossfade.hint";
+}
 
-/** The More panel's crossfade slider; plain mode shows it at 0, unavailable. */
+function loudnessHintKey(isCasting: boolean, isPlainMode: boolean): string {
+  if (isCasting) return "studio:player.loudness.castHint";
+  return isPlainMode
+    ? "studio:player.loudness.plainHint"
+    : "studio:player.loudness.hint";
+}
+
+/** The More panel's Audio group opens here: its heading, then the shared
+ *  crossfade slider (the one Studio Settings shows). Plain mode shows it at
+ *  0 and at rest, and casting at rest, each with the reason. */
 export function CrossfadeSetting() {
   const { t } = useTranslation();
-  const { preferences, isPlainMode, setCrossfadeSeconds } = useStudioPlayer();
+  const { preferences, isPlainMode, remote, setCrossfadeSeconds } =
+    useStudioPlayer();
+  const isCasting = remote.isConnected;
+  const isResting = isPlainMode || isCasting;
+  const labelId = useId();
   const hintId = useId();
-  const sliderId = useId();
-  const seconds = isPlainMode ? 0 : preferences.crossfadeSeconds;
-  const valueText =
-    seconds === 0
-      ? t("studio:player.crossfade.off")
-      : t("studio:player.crossfade.value", { count: seconds });
+  const rootRef = useRef<HTMLDivElement>(null);
+  useStudioSliderKeyGuard(rootRef);
   return (
-    <div className={styles.setting}>
-      <div className={styles.settingRow}>
-        <label htmlFor={sliderId}>{t("studio:player.crossfade.label")}</label>
-        <input
-          id={sliderId}
-          type="range"
-          min={0}
-          max={STUDIO_CROSSFADE_MAX_SECONDS}
-          step={1}
-          value={seconds}
-          aria-disabled={isPlainMode || undefined}
-          aria-describedby={hintId}
-          aria-valuetext={valueText}
-          onKeyDown={(event) => {
-            if (SLIDER_KEYS.has(event.key)) event.stopPropagation();
-          }}
-          onChange={(event) => {
-            if (!isPlainMode) setCrossfadeSeconds(Number(event.target.value));
-          }}
-        />
-        {/* The slider's value text says it to assistive tech already. */}
-        <span className={styles.settingValue} aria-hidden="true">
-          {valueText}
-        </span>
-      </div>
-      <p id={hintId} className={styles.settingHint}>
-        {isPlainMode
-          ? t("studio:player.crossfade.unavailable")
-          : t("studio:player.crossfade.hint")}
+    <>
+      <p className={`${styles.popoverHeading} ${equalizerStyles.audioHeading}`}>
+        {t("studio:player.audio.heading")}
       </p>
-    </div>
+      <div
+        ref={rootRef}
+        role="group"
+        aria-labelledby={labelId}
+        aria-describedby={hintId}
+        className={styles.setting}
+      >
+        <p id={labelId} className={equalizerStyles.crossfadeLabel}>
+          {t("studio:player.crossfade.label")}
+        </p>
+        <div className={equalizerStyles.crossfadeBody} inert={isResting}>
+          <StudioCrossfadeSetting
+            seconds={isPlainMode ? 0 : preferences.crossfadeSeconds}
+            hasHeading={false}
+            describedById={hintId}
+            onCommit={(seconds) => {
+              if (!isResting) setCrossfadeSeconds(seconds);
+            }}
+          />
+        </div>
+        <p id={hintId} className={styles.settingHint}>
+          {t(crossfadeHintKey(isCasting, isPlainMode))}
+        </p>
+      </div>
+    </>
   );
 }
 
-/** The More panel's Even out loudness switch. */
+/** The More panel's Even out loudness switch, then the equaliser that
+ *  closes the Audio group (PRD-14). Casting rests the switch. */
 export function LoudnessSetting() {
   const { t } = useTranslation();
-  const { preferences, isPlainMode, setLoudnessEven } = useStudioPlayer();
+  const { preferences, isPlainMode, remote, setLoudnessEven } =
+    useStudioPlayer();
+  const isCasting = remote.isConnected;
   const hintId = useId();
   return (
-    <div className={styles.setting}>
-      <button
-        type="button"
-        role="switch"
-        aria-checked={preferences.isLoudnessEven}
-        aria-describedby={hintId}
-        className={styles.switchRow}
-        onClick={() => setLoudnessEven(!preferences.isLoudnessEven)}
-      >
-        <span>{t("studio:player.loudness.label")}</span>
-        <span className={styles.switchTrack} aria-hidden="true" />
-      </button>
-      <p id={hintId} className={styles.settingHint}>
-        {isPlainMode
-          ? t("studio:player.loudness.plainHint")
-          : t("studio:player.loudness.hint")}
-      </p>
-    </div>
+    <>
+      <div className={styles.setting}>
+        <Button
+          variant="quiet"
+          role="switch"
+          aria-checked={preferences.isLoudnessEven}
+          aria-describedby={hintId}
+          aria-disabled={isCasting || undefined}
+          className={`${styles.switchRow} ${equalizerStyles.switchButton} ${equalizerStyles.restingSwitch}`}
+          onClick={() => {
+            if (!isCasting) setLoudnessEven(!preferences.isLoudnessEven);
+          }}
+        >
+          <span>{t("studio:player.loudness.label")}</span>
+          <span className={styles.switchTrack} aria-hidden="true" />
+        </Button>
+        <p id={hintId} className={styles.settingHint}>
+          {t(loudnessHintKey(isCasting, isPlainMode))}
+        </p>
+      </div>
+      <StudioEqualizer />
+    </>
   );
 }

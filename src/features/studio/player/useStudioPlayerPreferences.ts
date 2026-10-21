@@ -1,4 +1,11 @@
-import { useEffect, useMemo, useRef, useState, type RefObject } from "react";
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useSyncExternalStore,
+  type RefObject,
+} from "react";
 import { useStudioPlaybackPreferences } from "../api/useStudioPlaybackPreferences";
 import type { StudioAudioEngine } from "./studioAudioEngine";
 import type {
@@ -9,8 +16,13 @@ import {
   clampCrossfadeSeconds,
   clampVolume,
   normalizePlayerPreferences,
+  readListeningPreferences,
   readPlayerPreferences,
+  setActiveCrossfadeSeconds,
+  subscribeListeningPreferences,
+  writeListeningPreferences,
   writePlayerPreferences,
+  type StudioListeningPreferences,
   type StudioLocalPlayerPreferences,
 } from "./studioPlayerPreferences";
 
@@ -82,6 +94,7 @@ export function useStudioPlayerPreferences(
   const latestRef = useRef({ preferences, playbackSettings, server });
   useEffect(() => {
     latestRef.current = { preferences, playbackSettings, server };
+    setActiveCrossfadeSeconds(preferences.crossfadeSeconds);
   });
   // A pending save is sent when the player unmounts.
   useEffect(
@@ -146,4 +159,37 @@ export function useStudioPlayerPreferences(
     };
   }, [engineRef]);
   return { preferences, playbackSettings, ...controls };
+}
+
+export interface StudioListeningPreferenceControls {
+  preferences: StudioListeningPreferences;
+  /** Off also removes the resume copy from this device. */
+  setShouldResumeAcrossSessions: (shouldResume: boolean) => void;
+  /** Off also removes the recently played list from this device. */
+  setRecentlyPlayedOn: (isOn: boolean) => void;
+  setSingleKeyShortcutsOn: (isOn: boolean) => void;
+}
+
+const listeningSetters = {
+  setShouldResumeAcrossSessions: (shouldResume: boolean) => {
+    writeListeningPreferences({ shouldResumeAcrossSessions: shouldResume });
+  },
+  setRecentlyPlayedOn: (isOn: boolean) => {
+    writeListeningPreferences({ isRecentlyPlayedOn: isOn });
+  },
+  setSingleKeyShortcutsOn: (isOn: boolean) => {
+    writeListeningPreferences({ areSingleKeyShortcutsOn: isOn });
+  },
+};
+
+/** This device's listening switches (resume, recently played, single-key
+ *  shortcuts). Works outside the player provider, so Studio Settings and the
+ *  shortcut listener read it anywhere; every reader re-renders on a change,
+ *  here or in another tab. Nothing here reaches the server. */
+export function useStudioListeningPreferences(): StudioListeningPreferenceControls {
+  const preferences = useSyncExternalStore(
+    subscribeListeningPreferences,
+    readListeningPreferences,
+  );
+  return useMemo(() => ({ preferences, ...listeningSetters }), [preferences]);
 }

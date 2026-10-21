@@ -1,14 +1,9 @@
 import { AnimatePresence } from "motion/react";
-import { useState } from "react";
-import { ApiError } from "../../shared/api/client";
+import { useId, useState } from "react";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { studioErrorCodeOf } from "./api/studio.api";
-import {
-  STUDIO_DISPUTE_LIMITS,
-  STUDIO_LIMITS,
-  type StudioErrorCode,
-} from "./api/studio.types";
+import { STUDIO_DISPUTE_LIMITS, STUDIO_LIMITS } from "./api/studio.types";
 import type {
   StudioReviewAction,
   StudioReviewDisputeView,
@@ -30,32 +25,46 @@ import {
   StudioReviewDialog,
   type StudioReviewDialogRequest,
 } from "./StudioReviewDialog";
-import { studioErrorMessageKeyOf } from "./studioErrors.data";
+import {
+  isReviewSettledElsewhere,
+  reviewErrorKeyOf,
+} from "./StudioReviewErrors";
+import { REASON_LABEL_KEYS, type ReasonCode } from "../safety/reportReasons";
+import type { StudioReviewTrackReportView } from "./api/studioSafety.adapters";
+import { useStudioReviewTrackReports } from "./api/useStudioTrackReports";
+import { useStudioRowSelection } from "./kit/useStudioRowSelection";
+import { StudioReviewBulkDismiss } from "./StudioReviewBulkDismiss";
 import { StudioReviewList } from "./StudioReviewList";
+import { useReviewQueueOrder } from "./StudioReviewQueue";
+import { StudioReviewQueueBar } from "./StudioReviewQueueBar";
 import { StudioReviewTrackReports } from "./StudioReviewTrackReports";
+import css from "./StudioFlagReview.module.css";
 import { useReviewFocus } from "./useReviewFocus";
 
-/** Refusals that mean the card already moved on: the dialog closes and the
- *  queues re-read (the mutation hook does that on every refusal). A reject
- *  that hits a release someone already restored answers "not taken down". */
-const SETTLED_ELSEWHERE: ReadonlySet<StudioErrorCode> = new Set([
-  "studio_dispute_not_open",
-  "studio_takedown_report_not_open",
-  "studio_release_not_taken_down",
-]);
-
-/** A coded refusal from the list above, or an uncoded 404 or 409: the
- *  release or the report is gone or already decided by someone else. */
-function isSettledElsewhere(error: unknown, code: StudioErrorCode | null) {
-  if (code) return SETTLED_ELSEWHERE.has(code);
-  return (
-    error instanceof ApiError && (error.status === 404 || error.status === 409)
-  );
-}
-
 const reportKey = (report: StudioReviewReportView) => report.reportId;
+
+const REPORT_QUEUE_FIELDS = {
+  createdAtOf: (report: StudioReviewReportView) => report.createdAt,
+  severityOf: (report: StudioReviewReportView) => report.severity,
+  filterValueOf: (report: StudioReviewReportView) => report.reasonCode,
+};
 const disputeKey = (dispute: StudioReviewDisputeView) => dispute.disputeId;
 const withdrawnKey = (item: StudioReviewWithdrawnView) => item.release.id;
+
+const DISPUTE_QUEUE_FIELDS = {
+  createdAtOf: (dispute: StudioReviewDisputeView) => dispute.createdAt,
+};
+// Withdrawn is a record of what is down, so it opens newest first.
+const WITHDRAWN_QUEUE_FIELDS = {
+  createdAtOf: (item: StudioReviewWithdrawnView) => item.takenDownAt ?? "",
+  initialSortOrder: "newest" as const,
+};
+
+const TRACK_REPORT_QUEUE_FIELDS = {
+  createdAtOf: (report: StudioReviewTrackReportView) => report.createdAt,
+  severityOf: (report: StudioReviewTrackReportView) => report.severity,
+  filterValueOf: (report: StudioReviewTrackReportView) => report.reasonCode,
+};
 
 interface PendingDecision {
   /** The card's key: the card that leaves on success. */
@@ -95,7 +104,8 @@ function upholdDecision(
 }
 
 /** The decision flow every queue shares: the dialog hosted here (so it
- *  outlives its card), the request, the toasts and the focus move. */
+ *  outlives its card), the request, the toasts and the focus move. A failed
+ *  decision keeps the dialog and the typed note, with the reason inside. */
 function useDecision(
   markLeaving: (key: string) => void,
   clearLeaving: () => void,
@@ -104,11 +114,18 @@ function useDecision(
   const { showToast } = useToast();
   const action = useStudioReviewAction();
   const [pending, setPending] = useState<PendingDecision | null>(null);
+  const [errorKey, setErrorKey] = useState<string | null>(null);
+
+  function open(decision: PendingDecision) {
+    setErrorKey(null);
+    setPending(decision);
+  }
 
   function confirm(text: string) {
     if (!pending || action.isPending) return;
     const { key, request, toAction, successKey } = pending;
     if (request.textLabelKey !== null && text.length === 0) return;
+    setErrorKey(null);
     markLeaving(key);
     action.mutate(toAction(text), {
       onSuccess: () => {
@@ -116,25 +133,21 @@ function useDecision(
         showToast(t(successKey, { title: request.releaseTitle }), "success");
       },
       onError: (error) => {
-        const code = studioErrorCodeOf(error);
-        if (code === "studio_release_has_open_dispute") {
+        const messageKey = reviewErrorKeyOf(error);
+        if (studioErrorCodeOf(error) === "studio_release_has_open_dispute") {
           // The artist disputed in the meantime: the card stays, the re-read
           // shows "Dispute waiting" and Restore goes through that dispute.
           setPending(null);
           clearLeaving();
-        } else if (isSettledElsewhere(error, code)) {
+        } else if (isReviewSettledElsewhere(error)) {
           // A card settled elsewhere leaves on the re-read, and focus moves
           // on as it would after a success.
           setPending(null);
-        } else clearLeaving();
-        showToast(
-          t(
-            code
-              ? studioErrorMessageKeyOf(error)
-              : "studio:flagReviewLive.toast.actionError",
-          ),
-          "error",
-        );
+        } else {
+          clearLeaving();
+          setErrorKey(messageKey);
+        }
+        showToast(t(messageKey), "error");
       },
     });
   }
@@ -148,6 +161,7 @@ function useDecision(
           key={`${pending.key}-${pending.request.confirmKey}`}
           request={pending.request}
           isPending={action.isPending}
+          errorKey={errorKey}
           onConfirm={confirm}
           onClose={() => {
             if (!action.isPending) setPending(null);
@@ -156,73 +170,129 @@ function useDecision(
       )}
     </AnimatePresence>
   );
-  return { open: setPending, dialog };
+  return { open, dialog };
 }
 
+/** The Reports tab: release reports, then track reports, each under its
+ *  own heading with its own Sort and filter, and one selection across both
+ *  for a bulk dismiss. */
 export function StudioReviewReportsPanel({
   tabButtonId,
 }: {
   tabButtonId: string;
 }) {
+  const { t } = useTranslation();
+  const headingId = useId();
   const list = useStudioReviewReports();
-  const focus = useReviewFocus(list.items, reportKey, tabButtonId);
+  const trackList = useStudioReviewTrackReports();
+  const queueOrder = useReviewQueueOrder(list.items, REPORT_QUEUE_FIELDS);
+  const trackQueueOrder = useReviewQueueOrder(
+    trackList.items,
+    TRACK_REPORT_QUEUE_FIELDS,
+  );
+  // One selection over the cards on screen, in screen order, so Select all
+  // and a Shift range never tick a report the filters hide.
+  const selection = useStudioRowSelection([
+    ...queueOrder.visibleItems.map(reportKey),
+    ...trackQueueOrder.visibleItems.map((report) => report.reportId),
+  ]);
+  const focus = useReviewFocus(queueOrder.visibleItems, reportKey, tabButtonId);
   const decision = useDecision(focus.markLeaving, focus.clearLeaving);
+  const hasReports = list.items.length + trackList.items.length > 0;
   return (
     <>
-      <StudioReviewList
-        list={list}
-        getKey={reportKey}
-        emptyTitleKey="studio:flagReviewLive.empty.reportsTitle"
-        emptyBodyKey="studio:flagReviewLive.empty.reportsBody"
-        renderCard={(report) => (
-          <StudioReviewReportCard
-            report={report}
-            titleRef={focus.registerTitle(report.reportId)}
-            onTakeDown={(releaseTitle) =>
-              decision.open({
-                key: report.reportId,
-                request: {
-                  titleKey: "studio:flagReviewLive.dialog.takeDownTitle",
-                  bodyKey: "studio:flagReviewLive.dialog.takeDownBody",
-                  confirmKey: "studio:flagReviewLive.action.takeDown",
-                  textLabelKey: "studio:flagReviewLive.dialog.reasonLabel",
-                  textMaxLength: STUDIO_LIMITS.takedownReasonMax,
-                  releaseTitle,
-                  tone: "destructive",
-                },
-                toAction: (reason) => ({
-                  kind: "takeDown",
-                  reportId: report.reportId,
-                  releaseId: report.releaseId,
-                  reason,
-                }),
-                successKey: "studio:flagReviewLive.toast.takenDown",
-              })
-            }
-            onDismiss={(releaseTitle) =>
-              decision.open({
-                key: report.reportId,
-                request: {
-                  titleKey: "studio:flagReviewLive.dialog.dismissTitle",
-                  bodyKey: "studio:flagReviewLive.dialog.dismissBody",
-                  confirmKey: "studio:flagReviewLive.action.dismiss",
-                  ...NO_TEXT_FIELD,
-                  releaseTitle,
-                  tone: "default",
-                },
-                toAction: () => ({
-                  kind: "dismiss",
-                  reportId: report.reportId,
-                  reasonCode: report.reasonCode,
-                }),
-                successKey: "studio:flagReviewLive.toast.dismissed",
-              })
-            }
-          />
-        )}
-      />
+      <section aria-labelledby={headingId}>
+        <h3 id={headingId} className={css.sectionHeadingFirst}>
+          {t("studio:flagReviewLive.reports.releaseHeading")}
+        </h3>
+        <StudioReviewList
+          list={list}
+          items={queueOrder.visibleItems}
+          toolbar={
+            <StudioReviewQueueBar
+              order={queueOrder}
+              totalCount={list.items.length}
+              canSortBySeverity
+              filterLabelOf={(reasonCode) =>
+                t(REASON_LABEL_KEYS[reasonCode as ReasonCode])
+              }
+              filterGroupLabelKey="studio:flagReviewLive.queue.filterReason"
+              selectLabelKey={
+                hasReports
+                  ? selection.isSelecting
+                    ? "studio:flagReviewLive.bulk.stopSelecting"
+                    : "studio:flagReviewLive.bulk.selectReports"
+                  : undefined
+              }
+              isSelecting={selection.isSelecting}
+              onStartSelecting={() =>
+                selection.isSelecting ? selection.clear() : selection.start()
+              }
+            />
+          }
+          getKey={reportKey}
+          emptyTitleKey="studio:flagReviewLive.empty.reportsTitle"
+          emptyBodyKey="studio:flagReviewLive.empty.reportsBody"
+          renderCard={(report) => (
+            <StudioReviewReportCard
+              report={report}
+              titleRef={focus.registerTitle(report.reportId)}
+              selection={selection}
+              onTakeDown={(releaseTitle) =>
+                decision.open({
+                  key: report.reportId,
+                  request: {
+                    titleKey: "studio:flagReviewLive.dialog.takeDownTitle",
+                    bodyKey: "studio:flagReviewLive.dialog.takeDownBody",
+                    confirmKey: "studio:flagReviewLive.action.takeDown",
+                    textLabelKey: "studio:flagReviewLive.dialog.reasonLabel",
+                    textMaxLength: STUDIO_LIMITS.takedownReasonMax,
+                    releaseTitle,
+                    tone: "destructive",
+                  },
+                  toAction: (reason) => ({
+                    kind: "takeDown",
+                    reportId: report.reportId,
+                    releaseId: report.releaseId,
+                    reason,
+                  }),
+                  successKey: "studio:flagReviewLive.toast.takenDown",
+                })
+              }
+              onDismiss={(releaseTitle) =>
+                decision.open({
+                  key: report.reportId,
+                  request: {
+                    titleKey: "studio:flagReviewLive.dialog.dismissTitle",
+                    bodyKey: "studio:flagReviewLive.dialog.dismissBody",
+                    confirmKey: "studio:flagReviewLive.action.dismiss",
+                    ...NO_TEXT_FIELD,
+                    releaseTitle,
+                    tone: "default",
+                  },
+                  toAction: () => ({
+                    kind: "dismiss",
+                    reportId: report.reportId,
+                    reasonCode: report.reasonCode,
+                  }),
+                  successKey: "studio:flagReviewLive.toast.dismissed",
+                })
+              }
+            />
+          )}
+        />
+      </section>
       {decision.dialog}
-      <StudioReviewTrackReports tabButtonId={tabButtonId} />
+      <StudioReviewTrackReports
+        tabButtonId={tabButtonId}
+        selection={selection}
+        queueOrder={trackQueueOrder}
+      />
+      <StudioReviewBulkDismiss
+        selection={selection}
+        releaseReports={list.items}
+        trackReports={trackList.items}
+      />
     </>
   );
 }
@@ -234,7 +304,12 @@ export function StudioReviewDisputesPanel({
 }) {
   const { t } = useTranslation();
   const list = useStudioReviewDisputes();
-  const focus = useReviewFocus(list.items, disputeKey, tabButtonId);
+  const queueOrder = useReviewQueueOrder(list.items, DISPUTE_QUEUE_FIELDS);
+  const focus = useReviewFocus(
+    queueOrder.visibleItems,
+    disputeKey,
+    tabButtonId,
+  );
   const decision = useDecision(focus.markLeaving, focus.clearLeaving);
   const releaseTitleOf = (dispute: StudioReviewDisputeView) =>
     dispute.release.title || t("studio:flagReviewLive.card.unknownRelease");
@@ -242,6 +317,13 @@ export function StudioReviewDisputesPanel({
     <>
       <StudioReviewList
         list={list}
+        items={queueOrder.visibleItems}
+        toolbar={
+          <StudioReviewQueueBar
+            order={queueOrder}
+            totalCount={list.items.length}
+          />
+        }
         getKey={disputeKey}
         emptyTitleKey="studio:flagReviewLive.empty.disputesTitle"
         emptyBodyKey="studio:flagReviewLive.empty.disputesBody"
@@ -294,7 +376,12 @@ export function StudioReviewWithdrawnPanel({
 }) {
   const { t } = useTranslation();
   const list = useStudioReviewWithdrawn();
-  const focus = useReviewFocus(list.items, withdrawnKey, tabButtonId);
+  const queueOrder = useReviewQueueOrder(list.items, WITHDRAWN_QUEUE_FIELDS);
+  const focus = useReviewFocus(
+    queueOrder.visibleItems,
+    withdrawnKey,
+    tabButtonId,
+  );
   const decision = useDecision(focus.markLeaving, focus.clearLeaving);
   // A release with a dispute waiting restores through that dispute's uphold
   // (with a reply), which closes it in the same step; the plain restore
@@ -325,6 +412,13 @@ export function StudioReviewWithdrawnPanel({
     <>
       <StudioReviewList
         list={list}
+        items={queueOrder.visibleItems}
+        toolbar={
+          <StudioReviewQueueBar
+            order={queueOrder}
+            totalCount={list.items.length}
+          />
+        }
         getKey={withdrawnKey}
         emptyTitleKey="studio:flagReviewLive.empty.withdrawnTitle"
         emptyBodyKey="studio:flagReviewLive.empty.withdrawnBody"

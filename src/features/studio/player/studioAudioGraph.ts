@@ -1,3 +1,10 @@
+import {
+  FLAT_EQUALIZER_GAINS,
+  isFlatEqualizer,
+  readEqualizerGains,
+  subscribeEqualizerGains,
+} from "./studioPlayerPreferences";
+
 /** One deck's nodes: loudness (the track gain) then fade (crossfade, sleep
  *  timer), both into the master. */
 export interface StudioDeckNodes {
@@ -126,12 +133,179 @@ export function equalPowerParam(
   }
 }
 
+// ── Equaliser (PRD-14) ────────────────────────────────────────────────────
+
+export interface StudioEqualizerBand {
+  type: BiquadFilterType;
+  frequencyHz: number;
+  /** Peaking bands only; the shelves ignore it. */
+  q: number;
+}
+
+/** Five bands, low to high: a low shelf for weight, three broad peaks for
+ *  body, voice and presence, a high shelf for air. Broad Q values keep the
+ *  curves smooth, so a preset colours the sound and never rings. */
+export const STUDIO_EQUALIZER_BANDS: readonly StudioEqualizerBand[] = [
+  { type: "lowshelf", frequencyHz: 80, q: 0.7 },
+  { type: "peaking", frequencyHz: 250, q: 0.9 },
+  { type: "peaking", frequencyHz: 1000, q: 0.9 },
+  { type: "peaking", frequencyHz: 3500, q: 0.9 },
+  { type: "highshelf", frequencyHz: 10000, q: 0.7 },
+];
+
+const EQUALIZER_RAMP_SECONDS = 0.05;
+/** Past the ramp to flat, so the chain leaves the graph at unity gain. */
+const EQUALIZER_BYPASS_DELAY_MS = 90;
+
+/** The preamp turns the signal down by the largest boost, so a boosted band
+ *  never pushes a loud master past full scale. */
+function preampDbOf(gainsDb: readonly number[]): number {
+  return -Math.max(0, ...gainsDb);
+}
+
+interface EqualizerChain {
+  preamp: GainNode;
+  filters: BiquadFilterNode[];
+}
+
+/** The equaliser between the master and the speakers. Flat keeps it out of
+ *  the graph (master straight to the destination); the chain is built on
+ *  the first non-flat setting and removed again once the gains reach flat.
+ *  It only filters what plays: nothing is re-encoded. */
+function createEqualizerStage(context: AudioContext, master: GainNode) {
+  let chain: EqualizerChain | null = null;
+  let bypassTimer: ReturnType<typeof setTimeout> | null = null;
+  const clearBypassTimer = () => {
+    if (bypassTimer !== null) clearTimeout(bypassTimer);
+    bypassTimer = null;
+  };
+  // Every node starts at unity, so the rewire itself changes nothing the
+  // ear can hear; the ramp that follows moves the sound.
+  const buildChain = (): EqualizerChain => {
+    const preamp = context.createGain();
+    const filters = STUDIO_EQUALIZER_BANDS.map((band) => {
+      const filter = context.createBiquadFilter();
+      filter.type = band.type;
+      filter.frequency.value = band.frequencyHz;
+      filter.Q.value = band.q;
+      filter.gain.value = 0;
+      return filter;
+    });
+    let previous: AudioNode = preamp;
+    for (const filter of filters) {
+      previous.connect(filter);
+      previous = filter;
+    }
+    previous.connect(context.destination);
+    master.disconnect();
+    master.connect(preamp);
+    return { preamp, filters };
+  };
+  const removeChain = () => {
+    if (!chain) return;
+    master.disconnect();
+    master.connect(context.destination);
+    chain.preamp.disconnect();
+    chain.filters.forEach((filter) => filter.disconnect());
+    chain = null;
+  };
+  const rampChain = (target: EqualizerChain, gainsDb: readonly number[]) => {
+    target.filters.forEach((filter, index) =>
+      rampParam(filter.gain, context, {
+        to: gainsDb[index] ?? 0,
+        seconds: EQUALIZER_RAMP_SECONDS,
+      }),
+    );
+    rampParam(target.preamp.gain, context, {
+      to: gainFromDb(preampDbOf(gainsDb)),
+      seconds: EQUALIZER_RAMP_SECONDS,
+    });
+  };
+  return {
+    apply: (gainsDb: readonly number[]) => {
+      clearBypassTimer();
+      if (isFlatEqualizer(gainsDb)) {
+        if (!chain) return;
+        rampChain(chain, FLAT_EQUALIZER_GAINS);
+        bypassTimer = setTimeout(() => {
+          bypassTimer = null;
+          removeChain();
+        }, EQUALIZER_BYPASS_DELAY_MS);
+        return;
+      }
+      try {
+        chain ??= buildChain();
+      } catch {
+        // A browser without biquad filters keeps the plain route.
+        return;
+      }
+      rampChain(chain, gainsDb);
+    },
+    dispose: clearBypassTimer,
+  };
+}
+
+// ── The playing stream (PRD-14 format line) ──────────────────────────────
+
+/** The routed element that most recently started playing, and its URL.
+ *  Memory only; Now playing's format line reads the stream header from it. */
+let playingStream: { element: HTMLAudioElement; url: string } | null = null;
+const playingStreamListeners = new Set<() => void>();
+
+function setPlayingStream(next: typeof playingStream): void {
+  if (
+    next?.element === playingStream?.element &&
+    next?.url === playingStream?.url
+  )
+    return;
+  playingStream = next;
+  playingStreamListeners.forEach((listener) => listener());
+}
+
+/** For useSyncExternalStore: the signed URL of the stream that plays now
+ *  through the graph, or null (plain mode, a silent hold, nothing yet). */
+export function readPlayingStreamUrl(): string | null {
+  return playingStream?.url ?? null;
+}
+
+export function subscribePlayingStreamUrl(listener: () => void): () => void {
+  playingStreamListeners.add(listener);
+  return () => playingStreamListeners.delete(listener);
+}
+
+function watchPlayingStream(
+  element: HTMLAudioElement,
+  signal: AbortSignal,
+): void {
+  element.addEventListener(
+    "playing",
+    () => {
+      const url = element.currentSrc || element.src;
+      setPlayingStream(/^https?:/i.test(url) ? { element, url } : null);
+    },
+    { signal },
+  );
+  element.addEventListener(
+    "emptied",
+    () => {
+      if (playingStream?.element === element) setPlayingStream(null);
+    },
+    { signal },
+  );
+}
+
 export function createAudioGraph(
   context: AudioContext | null,
 ): StudioAudioGraph | null {
   if (!context) return null;
   const master = context.createGain();
   master.connect(context.destination);
+  const lifetime = new AbortController();
+  const equalizer = createEqualizerStage(context, master);
+  equalizer.apply(readEqualizerGains());
+  const stopEqualizer = subscribeEqualizerGains(() =>
+    equalizer.apply(readEqualizerGains()),
+  );
   return {
     context,
     connect: (element) => {
@@ -142,6 +316,7 @@ export function createAudioGraph(
         source.connect(loudness);
         loudness.connect(fade);
         fade.connect(master);
+        watchPlayingStream(element, lifetime.signal);
         return { loudness, fade };
       } catch {
         return null;
@@ -162,6 +337,10 @@ export function createAudioGraph(
       return stateOf(context) === "running";
     },
     close: () => {
+      stopEqualizer();
+      equalizer.dispose();
+      lifetime.abort();
+      setPlayingStream(null);
       void context.close().catch(() => undefined);
     },
     onStateChange: (listener, signal) =>

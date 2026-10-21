@@ -100,9 +100,14 @@ export function StudioAuthPane({
 
       <div className={styles.foot}>
         {t(copy.footPromptKey)}{" "}
-        <button type="button" onClick={onSwitch}>
+        <Button
+          variant="ghost-dark"
+          size="sm"
+          className={styles.footSwitch}
+          onClick={onSwitch}
+        >
           {t(copy.footSwitchCtaKey)} <FiArrowRight aria-hidden />
-        </button>
+        </Button>
         <span className={styles.free}>
           {t(copy.footFreePromptKey)}{" "}
           <Link to={routes.studioLanding}>{t(copy.footFreeCtaKey)}</Link>

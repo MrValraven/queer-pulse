@@ -1,0 +1,70 @@
+/* The Studio topbar's notifications bell (StudioNotificationsBell.tsx): a
+   44px round target on the Studio ink wash, with the app's coral count. */
+.bell {
+  position: relative;
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--studio-text);
+  cursor: pointer;
+  transition-property: background-color, transform;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+@media (hover: hover) {
+  .bell:hover {
+    background: var(--studio-wash-2);
+  }
+}
+.bell:active {
+  transform: scale(0.97);
+}
+.bell[aria-expanded="true"] {
+  background: var(--studio-wash-3);
+}
+.bell:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.icon {
+  width: 20px;
+  height: 20px;
+}
+
+/* Grows with the count (em sizing), ringed in the surface so it reads over
+   the bell in both themes. */
+.badge {
+  position: absolute;
+  top: 5px;
+  inset-inline-start: calc(50% + 2px);
+  min-width: 1.889em;
+  min-height: 1.889em;
+  padding: 0 4px;
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+  color: var(--studio-bg);
+  font-size: var(--text-9);
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--studio-surface);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bell {
+    transition-property: background-color;
+  }
+  .bell:active {
+    transform: none;
+  }
+}

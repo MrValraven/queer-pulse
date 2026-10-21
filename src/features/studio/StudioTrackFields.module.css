@@ -35,32 +35,9 @@
   padding: 4px 0;
 }
 
-.remove,
+/* Add a source: the shared quiet Button, at its own width. */
 .add {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  min-height: var(--tap-min);
-  min-width: var(--tap-min);
-  border: 0;
-  border-radius: var(--radius-pill);
-  background: none;
-  color: var(--studio-text);
-  font: inherit;
-  cursor: pointer;
-}
-
-.add {
-  padding: 0 12px;
-  color: var(--studio-accent-text);
-}
-
-.remove:focus-visible,
-.add:focus-visible {
-  outline: var(--focus-ring);
-  outline-offset: var(--focus-ring-offset);
-  box-shadow: var(--ring-cream);
+  margin-top: 4px;
 }
 
 .error {
@@ -77,4 +54,71 @@
   .sourceRow input:nth-child(2) {
     grid-column: 1;
   }
+}
+
+/* The shared FormField on a Studio surface: Studio's own label, field and
+   hint tones in both themes. Child combinators out-rank FormField's own
+   (0,1,0) and (0,1,1) selectors without !important. */
+.studioField {
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.studioField > label {
+  font-size: var(--text-12-5);
+  letter-spacing: normal;
+  text-transform: none;
+  color: var(--studio-text);
+}
+
+/* One input surface for every field type: text, date, long text and the
+   shared Select's trigger all rest on --studio-wash-2 and deepen to
+   --studio-wash-3 while in use, with the same 3:1 edge (WCAG 1.4.11),
+   radius, padding, type size and 44px height. */
+.studioField > div > input,
+.studioField > div > textarea,
+.studioField button[aria-haspopup="listbox"] {
+  min-height: 44px;
+  color: var(--studio-text);
+  background: var(--studio-wash-2);
+  border: 1px solid rgba(var(--studio-ink-rgb), 0.45);
+  border-radius: var(--radius-10);
+  padding: 11px 14px;
+  font-size: var(--text-14);
+}
+
+.studioField > div > input:focus,
+.studioField > div > textarea:focus,
+.studioField button[aria-haspopup="listbox"]:focus-visible,
+.studioField button[aria-haspopup="listbox"][aria-expanded="true"] {
+  background: var(--studio-wash-3);
+}
+
+.studioField > div > input[aria-invalid="true"],
+.studioField > div > textarea[aria-invalid="true"] {
+  border-color: var(--danger);
+}
+
+.studioField > span,
+.studioField > label > span + span {
+  color: var(--studio-text-muted);
+}
+
+.studioField > span[role="alert"] {
+  color: var(--studio-accent-soft-text);
+}
+
+/* A paste that ran past the cap: the count turns to the warning tone. */
+.countOver {
+  color: var(--studio-accent-soft-text);
+}
+
+/* A checkbox or radio inside a Studio FormField keeps its native size:
+   FormField's own input rule is for text controls. */
+.studioField input[type="checkbox"],
+.studioField input[type="radio"] {
+  width: auto;
+  padding: 0;
+  border: none;
+  background: none;
 }

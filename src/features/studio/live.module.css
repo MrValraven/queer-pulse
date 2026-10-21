@@ -154,23 +154,6 @@
   margin-top: 18px;
   flex-wrap: wrap;
 }
-.bt {
-  font-family: var(--sans);
-  font-size: var(--text-13);
-  font-weight: 600;
-  color: var(--studio-text);
-  background: rgba(var(--studio-ink-rgb), 0.08);
-  border: 1px solid rgba(var(--studio-ink-rgb), 0.12);
-  border-radius: var(--radius-pill);
-  padding: 9px 16px;
-  cursor: pointer;
-}
-.btP {
-  background: var(--accent);
-  /* Dark ink on the coral fill: 6.28:1. */
-  color: var(--studio-bg);
-  border-color: var(--accent);
-}
 .listeners {
   display: grid;
   grid-template-columns: repeat(3, 1fr);

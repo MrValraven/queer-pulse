@@ -32,9 +32,18 @@ import {
   type StudioRemoteWatcher,
 } from "./studioRemotePlayback";
 import {
+  MEDIA_ERROR_SOURCE_NOT_SUPPORTED,
+  noteMediaFailure,
+  setPlaybackSignals,
+  studioMediaFailureReasonOf,
+} from "./studioPlaybackSignals";
+import {
   createSessionHoldElement,
   needsSessionHold,
 } from "./studioSessionHold";
+
+/** HTMLMediaElement.HAVE_FUTURE_DATA: enough is loaded to keep playing. */
+const HAVE_FUTURE_DATA = 3;
 
 /** The browser seams the engine needs; tests pass fakes. */
 export interface StudioAudioEnvironment {
@@ -188,6 +197,7 @@ class WebAudioEngine implements StudioAudioEngine {
     this.setFadeLevel(deck, { to: 1, seconds: 0 });
     this.applyLoudness(deck, 0);
     this.lastBufferedRanges = [];
+    setPlaybackSignals({ isBuffering: false });
     deck.element.src = sourceUrl;
     deck.element.load();
   }
@@ -225,6 +235,7 @@ class WebAudioEngine implements StudioAudioEngine {
     this.endFade();
     this.cancelPreload();
     this.lastBufferedRanges = [];
+    setPlaybackSignals({ isBuffering: false });
     this.clearDeck(this.active());
     this.releaseSession(0);
   }
@@ -394,6 +405,15 @@ class WebAudioEngine implements StudioAudioEngine {
     this.listeners.emit(event);
   }
 
+  /** ENG-01: the active deck waiting for data while it should play shows
+   *  the buffering ring and line; playing, a pause, the end or an error
+   *  clears it. Idle and emptied decks never report. */
+  private reportBuffering(deck: Deck, isBuffering: boolean): void {
+    if (!this.isActive(deck) || !deck.element.getAttribute("src")) return;
+    if (isBuffering && deck.element.paused) return;
+    setPlaybackSignals({ isBuffering });
+  }
+
   private createDeck(element: HTMLAudioElement): Deck {
     const deck: Deck = {
       element,
@@ -463,6 +483,7 @@ class WebAudioEngine implements StudioAudioEngine {
     // A natural end fires pause before ended: that pause is the end itself,
     // so the player still reads the track as playing when it hands over.
     listen("pause", () => {
+      this.reportBuffering(deck, false);
       if (deck.element.ended) return;
       if (!hasSource() || !this.isActive(deck)) return;
       this.releaseSession(SESSION_RELEASE_GRACE_MS);
@@ -470,6 +491,17 @@ class WebAudioEngine implements StudioAudioEngine {
     });
     listen("ended", () => this.onDeckEnded(deck));
     listen("error", () => this.onDeckError(deck));
+    listen("waiting", () => this.reportBuffering(deck, true));
+    // Data arrived while paused: nothing waits any more.
+    listen("canplay", () => {
+      if (deck.element.paused) this.reportBuffering(deck, false);
+    });
+    // A stall with enough data on hand keeps playing; only a starved deck
+    // waits.
+    listen("stalled", () => {
+      if (deck.element.readyState < HAVE_FUTURE_DATA)
+        this.reportBuffering(deck, true);
+    });
   }
 
   private onDeckPlaying(deck: Deck): void {
@@ -482,6 +514,7 @@ class WebAudioEngine implements StudioAudioEngine {
       this.announcePlain();
     }
     this.holdSession();
+    this.reportBuffering(deck, false);
     this.emit({ type: "playing" });
   }
 
@@ -494,6 +527,7 @@ class WebAudioEngine implements StudioAudioEngine {
       return;
     }
     if (!this.isActive(deck)) return;
+    this.reportBuffering(deck, false);
     this.releaseSession(SESSION_RELEASE_GRACE_MS);
     this.emit({ type: "ended" });
   }
@@ -504,6 +538,9 @@ class WebAudioEngine implements StudioAudioEngine {
     if (!deck.element.getAttribute("src")) return;
     if (this.isActive(deck)) {
       if (this.mode === "trying") this.revertPlainAttempt();
+      this.reportBuffering(deck, false);
+      // ENG-02: the element's own error names the cause for the bar.
+      noteMediaFailure(studioMediaFailureReasonOf(deck.element.error?.code));
       this.releaseSession(SESSION_RELEASE_GRACE_MS);
       this.emit({ type: "failed" });
       return;
@@ -528,6 +565,14 @@ class WebAudioEngine implements StudioAudioEngine {
         !this.isActive(deck)
       )
         return;
+      if (errorName !== "NotAllowedError")
+        noteMediaFailure(
+          studioMediaFailureReasonOf(
+            errorName === "NotSupportedError"
+              ? MEDIA_ERROR_SOURCE_NOT_SUPPORTED
+              : undefined,
+          ),
+        );
       this.emit(
         errorName === "NotAllowedError"
           ? { type: "blocked" }

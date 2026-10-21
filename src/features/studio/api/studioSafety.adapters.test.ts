@@ -347,6 +347,21 @@ describe("toReviewTrackReportView", () => {
       reasonCode: "hateful_lyrics",
       reasonLabelKey: "safety:reason.hatefulLyrics",
       createdAt: "2026-10-13T16:00:00.000Z",
+      severity: null,
+      slaDueAt: null,
     });
+  });
+
+  it("keeps the moderation severity and SLA when the row has them", () => {
+    const view = toReviewTrackReportView({
+      id: "report-2",
+      subjectId: "track-3",
+      reasonCode: "hateful_lyrics",
+      createdAt: "2026-10-13T16:00:00.000Z",
+      severity: "high",
+      slaDueAt: "2026-10-14T16:00:00.000Z",
+    } as ModReportDTO);
+    expect(view.severity).toBe("high");
+    expect(view.slaDueAt).toBe("2026-10-14T16:00:00.000Z");
   });
 });

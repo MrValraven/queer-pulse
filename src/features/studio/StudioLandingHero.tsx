@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, ImageSlot } from "../../shared/components/ui";
+import { Button, IconButton, ImageSlot } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
@@ -128,9 +128,9 @@ function DemoCard() {
               <span>4:18</span>
             </div>
             <div className={styles.demoCtrl}>
-              <button
-                type="button"
+              <IconButton
                 className={styles.demoPlay}
+                tooltip
                 aria-label={
                   playing
                     ? t("studio:landing.demo.pauseAria")
@@ -149,7 +149,7 @@ function DemoCard() {
                     <path d="M1 1l10 6-10 6z" />
                   </svg>
                 )}
-              </button>
+              </IconButton>
               <div className={styles.demoInfo}>
                 <div className={styles.t}>
                   {t("studio:landing.demo.trackPrefix", {

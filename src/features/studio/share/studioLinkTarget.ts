@@ -8,14 +8,23 @@ import { isDemoModeRuntime } from "../../../shared/api/demoModeRuntime";
  * turns a link into a card (chat bubbles, the share picker, inbox rows, reply
  * quotes, posts) asks this module, so the rule lives in one place. Preview
  * links, artist pages, scenes and shelves are never Studio links here.
+ *
+ * A lyric link (PRD-13) is a track link with `line`, the index of one timed
+ * lyric line: `/studio/track?id=<id>&t=<s>&line=<n>`. The URL carries the
+ * index only, never the words; each reader's card reads the line from its
+ * own track read. The backend reader (`studio-share-link.ts`) reads the same
+ * link as a track with `lineIndex` and builds the same canonical path.
  */
-export type StudioShareKind = "track" | "release" | "playlist";
+export type StudioShareKind = "track" | "release" | "playlist" | "lyric";
 
 export interface StudioLinkTarget {
   kind: StudioShareKind;
+  /** The track's id for a track or lyric link. */
   id: string;
-  /** Track links only: whole seconds from `t`, 0 to 86400. */
+  /** Track and lyric links only: whole seconds from `t`, 0 to 86400. */
   startAtSeconds: number | null;
+  /** Lyric links only: the timed line's index, 0 to 499. */
+  lineIndex?: number;
 }
 
 export interface StudioLinkMatch {
@@ -34,7 +43,14 @@ const PATH_BY_KIND: Readonly<Record<StudioShareKind, string>> = {
   track: routes.studioTrack,
   release: routes.studioAlbum,
   playlist: routes.studioCollection,
+  lyric: routes.studioTrack,
 };
+
+/** Lyric links: the `line` index, up to the 500 timed lines a track holds
+ *  (`LIMITS.syncedLyricsMax`). Anything else leaves a plain track link, as
+ *  an unusable `t` leaves the link without a start. */
+const LINE_INDEX_PATTERN = /^\d{1,3}$/;
+export const STUDIO_LYRIC_MAX_LINE_INDEX = 499;
 
 // The production origins; the origin serving the app (a preview deploy, the
 // dev server) counts too. Exact origins, so another port or scheme is out.
@@ -123,6 +139,41 @@ function startSecondsOf(rawStart: string | null): number | null {
   return seconds <= MAX_START_SECONDS ? seconds : null;
 }
 
+function lineIndexOf(rawLine: string | null): number | null {
+  if (rawLine === null || !LINE_INDEX_PATTERN.test(rawLine)) return null;
+  const lineIndex = Number(rawLine);
+  return lineIndex <= STUDIO_LYRIC_MAX_LINE_INDEX ? lineIndex : null;
+}
+
+/** True for a track or a lyric link: both open the track page and play. */
+export function isTrackShareKind(kind: StudioShareKind): boolean {
+  return kind === "track" || kind === "lyric";
+}
+
+/** One key per card target: a lyric link on another line is another card. */
+export function studioShareTargetKey(target: StudioLinkTarget): string {
+  return target.lineIndex === undefined
+    ? `${target.kind}:${target.id}`
+    : `${target.kind}:${target.id}:${target.lineIndex}`;
+}
+
+/** The lyric link for one timed line, starting where the line starts. */
+export function studioLyricTarget(
+  trackId: string,
+  lineIndex: number,
+  lineStartMs: number,
+): StudioLinkTarget {
+  return {
+    kind: "lyric",
+    id: trackId,
+    startAtSeconds: Math.min(
+      Math.max(Math.floor(lineStartMs / 1000), 0),
+      MAX_START_SECONDS,
+    ),
+    lineIndex,
+  };
+}
+
 function isRootRelative(url: string): boolean {
   return url.startsWith("/") && !url.startsWith("//");
 }
@@ -156,12 +207,12 @@ export function parseStudioLink(url: string): StudioLinkTarget | null {
   if (!kind) return null;
   const id = normalizedId(parsed.searchParams.get("id"));
   if (id === null) return null;
-  return {
-    kind,
-    id,
-    startAtSeconds:
-      kind === "track" ? startSecondsOf(parsed.searchParams.get("t")) : null,
-  };
+  if (kind !== "track") return { kind, id, startAtSeconds: null };
+  const startAtSeconds = startSecondsOf(parsed.searchParams.get("t"));
+  const lineIndex = lineIndexOf(parsed.searchParams.get("line"));
+  return lineIndex === null
+    ? { kind, id, startAtSeconds }
+    : { kind: "lyric", id, startAtSeconds, lineIndex };
 }
 
 interface StudioLinkMatchAt {
@@ -259,11 +310,18 @@ export function textWithoutStudioLink(
   return LEFTOVER_ONLY.test(note) ? "" : note;
 }
 
+/** The canonical root-relative form, built in the backend's order: `id`,
+ *  then `t` when set, then `line` on a lyric link. */
 export function studioLinkPath(target: StudioLinkTarget): string {
   const path = `${PATH_BY_KIND[target.kind]}?id=${encodeURIComponent(target.id)}`;
-  return target.kind === "track" && target.startAtSeconds !== null
-    ? `${path}&t=${target.startAtSeconds}`
-    : path;
+  if (!isTrackShareKind(target.kind)) return path;
+  const timedPath =
+    target.startAtSeconds !== null
+      ? `${path}&t=${target.startAtSeconds}`
+      : path;
+  return target.kind === "lyric" && target.lineIndex !== undefined
+    ? `${timedPath}&line=${target.lineIndex}`
+    : timedPath;
 }
 
 export function studioLinkUrl(target: StudioLinkTarget): string {

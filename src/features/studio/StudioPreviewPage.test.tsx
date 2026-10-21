@@ -155,11 +155,11 @@ describe("StudioPreviewPage (demo)", () => {
   });
 
   it.each([`/studio/preview/${"0".repeat(64)}`, "/studio/preview/abc"])(
-    "shows the not-found state for an unknown or malformed link (%s)",
+    "shows the preview link's own not-found state for an unknown or malformed link (%s)",
     async (path) => {
       renderAt(path);
       expect(
-        await screen.findByText("We can't find that in Studio"),
+        await screen.findByText("This preview link is turned off"),
       ).toBeInTheDocument();
     },
   );

@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { FiCheckCircle, FiPlay } from "react-icons/fi";
 import { Button, ImageSlot } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { Translation } from "../../shared/i18n/Translation";
@@ -6,6 +7,7 @@ import { StudioShell } from "./StudioShell";
 import { routes } from "../../app/routeMap";
 import { STILL_AVAILABLE, type WithdrawnCard } from "./studioWithdrawn.data";
 import { StudioWithdrawnView, WithdrawnCoverArt } from "./StudioWithdrawnView";
+import { useStudioDocumentTitle } from "./useStudioDocumentTitle";
 import { useStudioShowcase } from "./useStudioShowcase";
 import s from "./StudioWithdrawnPage.module.css";
 
@@ -33,25 +35,10 @@ function StillCard({ card }: { card: WithdrawnCard }) {
             {t(card.tagLabelKey)}
           </span>
         )}
-        <span
-          role="button"
-          tabIndex={0}
-          aria-label={t("studio:player.play")}
-          className={s.playFab}
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-          }}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              e.preventDefault();
-              e.stopPropagation();
-            }
-          }}
-        >
-          <svg viewBox="0 0 12 14" fill="currentColor">
-            <path d="M1 1l10 6-10 6z" />
-          </svg>
+        {/* Decorative: the whole card is the link, so nothing inside it
+            is a second control. */}
+        <span className={s.playFab} aria-hidden="true">
+          <FiPlay />
         </span>
       </div>
       {(card.byCurKey || card.byCur) && (
@@ -59,10 +46,10 @@ function StillCard({ card }: { card: WithdrawnCard }) {
           {card.byCurKey ? t(card.byCurKey) : card.byCur}
         </div>
       )}
-      <h4>
+      <h3>
         {card.titlePre}
         {card.titleEm && <em>{card.titleEm}</em>}
-      </h4>
+      </h3>
       <div className={s.meta}>{t(card.metaKey, card.metaValues)}</div>
     </>
   );
@@ -74,13 +61,14 @@ function StillCard({ card }: { card: WithdrawnCard }) {
       </Link>
     );
   }
-  // No destination: an inert card, not a link. Rendering an <a href="#"> here
+  // No destination: an inert card that renders as a plain div. An <a href="#"> here
   // put a focusable element that goes nowhere into the tab order.
   return <div className={s.tcard}>{inner}</div>;
 }
 
 export function StudioWithdrawnPage() {
   const { t } = useTranslation();
+  useStudioDocumentTitle(t("studio:pageTitle.withdrawn"));
   const isShowcase = useStudioShowcase();
   // Live: the same view an album or track URL shows, with no release named.
   if (!isShowcase)
@@ -110,25 +98,15 @@ export function StudioWithdrawnPage() {
         </div>
 
         <div className={s.card}>
-          <h3>
+          <h2>
             <Translation
               i18nKey="studio:withdrawn.card.title"
               components={{ em: <em /> }}
             />
-          </h3>
+          </h2>
           <p>{t("studio:withdrawn.card.body")}</p>
           <div className={s.jadeLine}>
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={2}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-              <path d="M22 4 12 14.01l-3-3" />
-            </svg>
+            <FiCheckCircle aria-hidden />
             <span>
               <Translation
                 i18nKey="studio:withdrawn.card.jadeLine"

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FadeIn } from "../../shared/components/ui";
+import { Button, FadeIn } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
@@ -51,16 +51,15 @@ export function StudioOpenCallsShowcase() {
 
       <div className={s.filter}>
         {FILTERS.map((f) => (
-          <button
-            type="button"
+          <Button
             key={f.id}
-            className={[s.chip, filter === f.id && s.chipOn]
-              .filter(Boolean)
-              .join(" ")}
+            variant="ghost"
+            className={filter === f.id ? s.chipOn : undefined}
+            aria-pressed={filter === f.id}
             onClick={() => setFilter(f.id)}
           >
             {t(f.labelKey)}
-          </button>
+          </Button>
         ))}
         <span className={s.filterCount}>
           <Translation
@@ -172,9 +171,8 @@ export function StudioOpenCallsShowcase() {
                     </span>
                   </div>
                   <div className={s.callActions}>
-                    <button
-                      type="button"
-                      className={s.bt}
+                    <Button
+                      variant="quiet"
                       onClick={() =>
                         showToast(
                           t("studio:calls.applied.withdrawnToast"),
@@ -183,7 +181,7 @@ export function StudioOpenCallsShowcase() {
                       }
                     >
                       {t("studio:calls.applied.withdrawCta")}
-                    </button>
+                    </Button>
                   </div>
                 </div>
               </div>

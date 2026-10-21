@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useDebouncedValue } from "../../shared/hooks/useDebouncedValue";
 import type {
   StudioArtistRefView,
@@ -13,6 +13,7 @@ import {
   useUpdateStudioRelease,
 } from "./api/useStudioReleaseMutations";
 import { studioErrorMessageKeyOf } from "./studioErrors.data";
+import { expectDraftParam } from "./upload/useStudioUploadLeaveGuard";
 import {
   defaultReleaseForm,
   formFromRelease,
@@ -23,6 +24,31 @@ import {
 } from "./studioUploadDraft.data";
 
 const AUTOSAVE_DELAY_MS = 800;
+
+const UPLOAD_STEP_IDS: readonly UploadStepId[] = [
+  "release",
+  "tracks",
+  "publish",
+];
+
+/** The step named in `?step=`; anything else reads as the release step. */
+const stepFromParam = (value: string | null): UploadStepId =>
+  UPLOAD_STEP_IDS.find((candidate) => candidate === value) ?? "release";
+
+/** What the autosave line says about a draft's details:
+ *  - `saving`: a change waits for the pause or is on its way;
+ *  - `saved`: the server has everything typed (`savedAt` once this visit saved);
+ *  - `notSaved`: the last save failed or a field blocks it (`reasonKey` says which);
+ *  - `waitingForTitle`: the title is empty, and the server needs one;
+ *  - `idle`: nothing to say (no draft yet, or details that save on a button). */
+export type StudioAutosaveState =
+  "idle" | "saving" | "saved" | "notSaved" | "waitingForTitle";
+
+export interface StudioAutosaveStatus {
+  state: StudioAutosaveState;
+  savedAt: Date | null;
+  reasonKey: string | null;
+}
 
 export interface StudioUploadDraft {
   /** The step on screen: Release until the draft exists, and Tracks when a
@@ -43,6 +69,14 @@ export interface StudioUploadDraft {
   isSaving: boolean;
   saveErrorKey: string | null;
   shouldShowErrors: boolean;
+  /** Bumped by every refused Continue or Save changes, so the release step
+   *  moves focus to the first invalid field each time. */
+  errorFocusRequest: number;
+  /** The honest autosave line of a draft (see StudioAutosaveState). */
+  autosave: StudioAutosaveStatus;
+  /** Details typed that the server does not have yet: a new release's
+   *  form before the draft exists, or a release's unsaved edits. */
+  hasUnsavedDetails: boolean;
   continueToTracks: () => Promise<void>;
   /** Published: there is no Publish step; tracks still change (Studio v3). */
   isPublished: boolean;
@@ -86,6 +120,7 @@ function useDraftAutosave(
 ) {
   const update = useUpdateStudioRelease();
   const debouncedForm = useDebouncedValue(form, AUTOSAVE_DELAY_MS);
+  const [savedAt, setSavedAt] = useState<Date | null>(null);
   useEffect(() => {
     if (!release || release.status !== "draft" || debouncedForm !== form)
       return;
@@ -97,10 +132,172 @@ function useDraftAutosave(
     if (Object.keys(body).length === 0) return;
     update.mutate(
       { releaseId: release.id, body },
-      { onSuccess: () => onSaved(body.coverKey), onError: onFailed },
+      {
+        onSuccess: () => {
+          setSavedAt(new Date());
+          onSaved(body.coverKey);
+        },
+        onError: onFailed,
+      },
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps -- fires on the settled form and on a new draft id alone
   }, [debouncedForm, release?.id]);
+  return {
+    savedAt,
+    isPending: update.isPending || debouncedForm !== form,
+  };
+}
+
+/** The autosave line, from what the draft knows. A failed save outranks a
+ *  pending one, so "Not saved" never flips back to "Saving" by itself. */
+function autosaveStatusOf(input: {
+  release: StudioReleaseView | null;
+  form: ReleaseFormValues;
+  isPending: boolean;
+  savedAt: Date | null;
+  saveErrorKey: string | null;
+}): StudioAutosaveStatus {
+  const { release, form, savedAt } = input;
+  const idle = { state: "idle", savedAt, reasonKey: null } as const;
+  if (!release || release.status !== "draft") return idle;
+  // An empty title never reads as saved: the server needs one first.
+  if (!form.title.trim())
+    return { state: "waitingForTitle", savedAt, reasonKey: null };
+  const errors = releaseFormErrors(form);
+  const isDirty = hasChanges(form, release);
+  if (isDirty && (errors.title || errors.buyUrl))
+    return {
+      state: "notSaved",
+      savedAt,
+      reasonKey: errors.title ?? errors.buyUrl ?? null,
+    };
+  if (input.saveErrorKey)
+    return { state: "notSaved", savedAt, reasonKey: input.saveErrorKey };
+  if (input.isPending || isDirty)
+    return { state: "saving", savedAt, reasonKey: null };
+  return { state: "saved", savedAt, reasonKey: null };
+}
+
+/** The flow's address: `?release=` names the draft and `?step=` the step.
+ *  Each step is its own history entry, so Back walks the steps and a reload
+ *  keeps the member where they were. */
+function useUploadAddress() {
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const releaseId = searchParams.get("release");
+  // The step to open once a just-created draft's id is in the address. The
+  // leave guard may still be landing that replace (it steps off its Back
+  // sentinel first), so the step waits for it instead of racing it.
+  const stepAfterReleaseRef = useRef<{
+    releaseId: string;
+    step: UploadStepId;
+  } | null>(null);
+  const navigateToStep = (target: UploadStepId) => {
+    const next = new URLSearchParams(searchParams);
+    if (target === "release") next.delete("step");
+    else next.set("step", target);
+    void navigate({ search: `?${next.toString()}` });
+  };
+  useEffect(() => {
+    const pending = stepAfterReleaseRef.current;
+    if (!pending || pending.releaseId !== releaseId) return;
+    stepAfterReleaseRef.current = null;
+    navigateToStep(pending.step);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- runs when the replace lands
+  }, [releaseId]);
+  return {
+    releaseId,
+    requestedStep: stepFromParam(searchParams.get("step")),
+    navigateToStep,
+    /** The new draft's id replaces the empty address, so a reload resumes
+     *  it; `thenStep` opens once that address is the one on screen. */
+    replaceWithRelease: (createdId: string, thenStep: UploadStepId) => {
+      stepAfterReleaseRef.current = { releaseId: createdId, step: thenStep };
+      // The leave guard lets an empty address take this id, and only this.
+      expectDraftParam("release", createdId);
+      const next = new URLSearchParams(searchParams);
+      next.set("release", createdId);
+      void navigate({ search: `?${next.toString()}` }, { replace: true });
+    },
+  };
+}
+
+/** The form once its picked cover reached the server (a newer pick stays). */
+const withoutSentCover = (form: ReleaseFormValues, sentKey: string) =>
+  form.coverKey === sentKey ? { ...form, coverKey: null } : form;
+
+/** "Save changes" for a published or scheduled release: refused fields
+ *  show their errors, anything else goes out as one PATCH. */
+async function saveLiveDetails(input: {
+  release: StudioReleaseView | null;
+  form: ReleaseFormValues;
+  isSaving: boolean;
+  send: (body: ReturnType<typeof patchFromForm>) => Promise<unknown>;
+  onRefused: () => void;
+  onStart: () => void;
+  onSaved: (sentCoverKey: string | undefined) => void;
+  onFailed: (error: unknown) => void;
+}) {
+  const { release, form } = input;
+  if (!release || input.isSaving || !hasChanges(form, release)) return;
+  const errors = releaseFormErrors(form);
+  if (errors.title || errors.description || errors.buyUrl) {
+    input.onRefused();
+    return;
+  }
+  const body = patchFromForm(form, release);
+  input.onStart();
+  try {
+    await input.send(body);
+    input.onSaved(body.coverKey);
+  } catch (error) {
+    input.onFailed(error);
+  }
+}
+
+/** What the page shows, derived: the persona, the step on screen (Tracks
+ *  when a published release asks for Publish) and whether typed details
+ *  would be lost (a new release counts its title, notes and a picked cover). */
+function flowViewOf(input: {
+  release: StudioReleaseView | null;
+  releaseId: string | null;
+  form: ReleaseFormValues;
+  uploadablePersonas: StudioArtistRefView[];
+  requestedStep: UploadStepId;
+  canReach: (step: UploadStepId) => boolean;
+}) {
+  const { release, releaseId, form, requestedStep } = input;
+  let persona: StudioArtistRefView | null = null;
+  if (release) persona = release.artist;
+  else if (releaseId === null)
+    persona =
+      input.uploadablePersonas.find(
+        (candidate) => candidate.id === form.subprofileId,
+      ) ?? null;
+  let shownStep: UploadStepId = input.canReach(requestedStep)
+    ? requestedStep
+    : "release";
+  if (requestedStep === "publish" && release?.status === "published")
+    shownStep = "tracks";
+  const hasUnsavedDetails =
+    release !== null
+      ? hasChanges(form, release)
+      : releaseId === null &&
+        (form.title.trim() !== "" ||
+          form.description.trim() !== "" ||
+          form.coverKey !== null);
+  return { persona, shownStep, hasUnsavedDetails };
+}
+
+function useIsMountedRef() {
+  const isMountedRef = useRef(false);
+  useEffect(() => {
+    isMountedRef.current = true;
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
+  return isMountedRef;
 }
 
 /**
@@ -109,8 +306,8 @@ function useDraftAutosave(
  * it, and every later edit to a draft saves itself after a short pause.
  */
 export function useStudioUploadDraft(): StudioUploadDraft {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const releaseId = searchParams.get("release");
+  const address = useUploadAddress();
+  const { releaseId, requestedStep, navigateToStep } = address;
   const { uploadablePersonas } = useStudioAccess();
   const { release, loadState } = useStudioRelease(releaseId, {
     shouldUseDemoDefault: false,
@@ -120,9 +317,9 @@ export function useStudioUploadDraft(): StudioUploadDraft {
   const [form, setForm] = useState<ReleaseFormValues>(() =>
     defaultReleaseForm(uploadablePersonas[0]),
   );
-  const [requestedStep, setRequestedStep] = useState<UploadStepId>("release");
   const [saveErrorKey, setSaveErrorKey] = useState<string | null>(null);
   const [shouldShowErrors, setShouldShowErrors] = useState(false);
+  const [errorFocusRequest, setErrorFocusRequest] = useState(0);
   const [hasSavedChanges, setHasSavedChanges] = useState(false);
   const [publishedRelease, setPublishedRelease] =
     useState<StudioReleaseView | null>(null);
@@ -130,14 +327,8 @@ export function useStudioUploadDraft(): StudioUploadDraft {
   // The saved release date the form last followed (see the reseed below).
   const [seededReleasedOn, setSeededReleasedOn] = useState<string | null>(null);
   const [trackedReleaseId, setTrackedReleaseId] = useState(releaseId);
-  const isMountedRef = useRef(false);
+  const isMountedRef = useIsMountedRef();
   const isCreatingRef = useRef(false);
-  useEffect(() => {
-    isMountedRef.current = true;
-    return () => {
-      isMountedRef.current = false;
-    };
-  }, []);
   const isSaving = create.isPending || update.isPending;
   const isPublished = release?.status === "published";
   const hasLiveDetails = isPublished || release?.status === "scheduled";
@@ -149,7 +340,6 @@ export function useStudioUploadDraft(): StudioUploadDraft {
     setTrackedReleaseId(releaseId);
     if (releaseId === null) {
       setForm(defaultReleaseForm(uploadablePersonas[0]));
-      setRequestedStep("release");
       setSaveErrorKey(null);
       setShouldShowErrors(false);
       setHasSavedChanges(false);
@@ -165,11 +355,9 @@ export function useStudioUploadDraft(): StudioUploadDraft {
     setSeededReleasedOn(release.releasedOn);
     setForm(formFromRelease(release));
   } else if (release && release.releasedOn !== seededReleasedOn) {
-    // The server moves the release date by itself: scheduling fills an empty
-    // one (and a new date moves it), Cancel schedule clears a filled one and
-    // Publish now sets today. The field follows the saved value while it
-    // still shows the last one, so a member's unsaved typing stays and the
-    // next save sends no stale date back.
+    // The server moves the release date itself (schedule, Cancel schedule,
+    // Publish now). The field follows it while it still shows the last saved
+    // value, so unsaved typing stays and no stale date is sent back.
     const previousSaved = seededReleasedOn ?? "";
     const nextSaved = release.releasedOn ?? "";
     setSeededReleasedOn(release.releasedOn);
@@ -192,18 +380,13 @@ export function useStudioUploadDraft(): StudioUploadDraft {
   }
 
   const clearSentCover = (sentKey: string | undefined) => {
-    if (sentKey)
-      setForm((previous) =>
-        previous.coverKey === sentKey
-          ? { ...previous, coverKey: null }
-          : previous,
-      );
+    if (sentKey) setForm((previous) => withoutSentCover(previous, sentKey));
   };
   const reportError = (error: unknown) => {
     if (isMountedRef.current) setSaveErrorKey(saveErrorKeyOf(error));
   };
 
-  useDraftAutosave(
+  const autosave = useDraftAutosave(
     release,
     form,
     (sentCoverKey) => {
@@ -217,13 +400,18 @@ export function useStudioUploadDraft(): StudioUploadDraft {
     target === "release" ||
     (release !== null && !isTakenDown && (target === "tracks" || !isPublished));
 
+  function refuseWithErrors() {
+    setShouldShowErrors(true);
+    setErrorFocusRequest((previous) => previous + 1);
+  }
+
   async function continueToTracks() {
     // The button stays focusable while busy (aria-disabled), so a second
     // press lands here: one create per draft.
     if (isCreatingRef.current) return;
     const errors = releaseFormErrors(form);
     if (errors.title || errors.description || errors.buyUrl) {
-      setShouldShowErrors(true);
+      refuseWithErrors();
       return;
     }
     setSaveErrorKey(null);
@@ -241,22 +429,15 @@ export function useStudioUploadDraft(): StudioUploadDraft {
         if (!isMountedRef.current) return;
         setSeededReleaseId(current.id);
         setSeededReleasedOn(current.releasedOn);
-        const createdId = current.id;
-        setSearchParams(
-          (previous) => {
-            const next = new URLSearchParams(previous);
-            next.set("release", createdId);
-            return next;
-          },
-          { replace: true },
-        );
+        // The tracks step lands as its own entry once this replace has.
+        address.replaceWithRelease(current.id, "tracks");
       }
       const body = patchFromForm(form, current);
       if (Object.keys(body).length > 0) {
         await update.mutateAsync({ releaseId: current.id, body });
         clearSentCover(body.coverKey);
       }
-      if (isMountedRef.current) setRequestedStep("tracks");
+      if (isMountedRef.current && release) navigateToStep("tracks");
     } catch (error) {
       reportError(error);
     } finally {
@@ -264,42 +445,36 @@ export function useStudioUploadDraft(): StudioUploadDraft {
     }
   }
 
-  async function saveChanges() {
-    if (!release || isSaving || !hasChanges(form, release)) return;
-    const errors = releaseFormErrors(form);
-    if (errors.title || errors.description || errors.buyUrl) {
-      setShouldShowErrors(true);
-      return;
-    }
-    const body = patchFromForm(form, release);
-    setSaveErrorKey(null);
-    try {
-      await update.mutateAsync({ releaseId: release.id, body });
-      clearSentCover(body.coverKey);
-      setHasSavedChanges(true);
-    } catch (error) {
-      reportError(error);
-    }
-  }
+  const saveChanges = () =>
+    saveLiveDetails({
+      release,
+      form,
+      isSaving,
+      send: (body) =>
+        update.mutateAsync({ releaseId: release?.id ?? "", body }),
+      onRefused: refuseWithErrors,
+      onStart: () => setSaveErrorKey(null),
+      onSaved: (sentCoverKey) => {
+        clearSentCover(sentCoverKey);
+        setHasSavedChanges(true);
+      },
+      onFailed: reportError,
+    });
 
-  let persona: StudioArtistRefView | null = null;
-  if (release) persona = release.artist;
-  else if (releaseId === null)
-    persona =
-      uploadablePersonas.find(
-        (candidate) => candidate.id === form.subprofileId,
-      ) ?? null;
+  const { persona, shownStep, hasUnsavedDetails } = flowViewOf({
+    release,
+    releaseId,
+    form,
+    uploadablePersonas,
+    requestedStep,
+    canReach,
+  });
 
   return {
-    step:
-      release === null
-        ? "release"
-        : requestedStep === "publish" && isPublished
-          ? "tracks"
-          : requestedStep,
+    step: release === null ? "release" : shownStep,
     canReach,
     goTo: (target) => {
-      if (canReach(target)) setRequestedStep(target);
+      if (canReach(target) && target !== shownStep) navigateToStep(target);
     },
     personas: uploadablePersonas,
     persona,
@@ -314,6 +489,15 @@ export function useStudioUploadDraft(): StudioUploadDraft {
     isSaving,
     saveErrorKey,
     shouldShowErrors,
+    errorFocusRequest,
+    autosave: autosaveStatusOf({
+      release,
+      form,
+      isPending: autosave.isPending,
+      savedAt: autosave.savedAt,
+      saveErrorKey,
+    }),
+    hasUnsavedDetails,
     continueToTracks,
     isPublished,
     hasLiveDetails,

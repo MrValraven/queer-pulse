@@ -9,41 +9,181 @@
   margin: 0;
   padding: 24px 0;
   list-style: none;
+  overflow-x: hidden;
   overflow-y: auto;
   overscroll-behavior: contain;
 }
 
-.line {
+/* Now playing's phone pane: the sheet scrolls on once the box reaches an
+   end, so a finger on the lyrics never gets stuck in them (DES-19). */
+:global([data-lyrics-scroll-chain]) .list {
+  overscroll-behavior-y: auto;
+}
+
+/* Now playing on desktop: the list runs the full height of its column
+   (StudioNowPlaying sets --now-pane-block), and the lines fade out at its
+   top and bottom edges as they scroll away. */
+:global([data-now-playing-panes]) .list {
+  max-block-size: var(--now-pane-block, min(60vh, 520px));
+  padding-block: var(--section-y-48);
+  mask-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0),
+    rgba(0, 0, 0, 1) 48px,
+    rgba(0, 0, 0, 1) calc(100% - 48px),
+    rgba(0, 0, 0, 0)
+  );
+}
+
+/* Each line is the shared quiet Button; the doubled classes keep the
+   lyric look over its pill, whatever order the sheets load in. */
+.line.line {
   display: block;
   width: 100%;
+  /* Room for the current line's 2% lift, so it never runs past the box. */
+  max-inline-size: calc(100% / 1.02);
+  min-height: 0;
   padding: 6px 4px;
   border: none;
   border-radius: var(--radius-6);
   background: none;
   font-family: var(--serif);
   font-size: var(--text-20);
+  font-weight: 400;
   line-height: 1.35;
   text-align: start;
+  white-space: normal;
   overflow-wrap: anywhere;
   color: var(--studio-text-muted);
   cursor: pointer;
-  transition-property: color, opacity;
+  transform-origin: left center;
+  transition-property: color, background-color, transform;
   transition-duration: var(--dur-base);
   transition-timing-function: var(--ease);
 }
 
-.line[data-past] {
-  opacity: 0.7;
+.line.line:dir(rtl) {
+  transform-origin: right center;
 }
 
-.line[aria-current="true"] {
+/* A hovered line takes a quiet wash and keeps its own ink, so the current
+   line stays the brightest one. */
+@media (hover: hover) {
+  .line.line:hover:not(:disabled):not([aria-disabled="true"]) {
+    background: var(--studio-wash-1);
+  }
+}
+
+/* Touch: each line is a full 44px target. */
+@media (pointer: coarse) {
+  .line.line {
+    min-block-size: var(--tap-min);
+  }
+}
+
+.line.line:active:not(:disabled):not([aria-disabled="true"]) {
+  background: none;
+}
+
+/* Lines already sung step clearly back from the ones to come, on a solid
+   colour that still clears AA (DES-23): 4.97:1 on cream at 0.66, 4.87:1
+   on the dark surface at 0.5, where the old 0.7 opacity fell to 3.5:1. */
+.root {
+  --lyric-past-alpha: 0.66;
+}
+
+:global([data-theme="dark"]) .root {
+  --lyric-past-alpha: 0.5;
+}
+
+.line.line[data-past] {
+  color: rgba(var(--studio-ink-rgb), var(--lyric-past-alpha));
+}
+
+/* The current line steps forward by ink and a slight lift from its start
+   edge; its weight stays, so the line never reflows. */
+.line.line[aria-current="true"] {
   color: var(--studio-text);
-  font-weight: 600;
+  transform: scale(1.02);
 }
 
 .gap {
   padding: 4px;
   color: var(--studio-text-faint);
+}
+
+/* Shareable lines (PRD-13) keep a column right after the line for the
+   round "Share lyric" button, so it sits beside the words it shares and the
+   line never reflows when it springs in. */
+.root[data-shareable] .list > li:not(.gap) {
+  display: grid;
+  grid-template-columns: minmax(0, max-content) var(--tap-min);
+  justify-content: start;
+  align-items: center;
+  column-gap: 8px;
+}
+
+/* The cell is as wide as the words, so the line takes it whole; the lift
+   spills into the gap before the button. */
+.root[data-shareable] .line.line {
+  max-inline-size: none;
+}
+
+.shareSlot {
+  display: inline-flex;
+  grid-column: 2;
+  justify-content: center;
+}
+
+/* The shared icon button, in the lyric's muted ink until hovered. */
+.shareButton.shareButton {
+  color: var(--studio-text-muted);
+  transition-property: color, background-color, transform;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+@media (hover: hover) {
+  .shareButton.shareButton:hover:not(:disabled):not([aria-disabled="true"]) {
+    background: var(--studio-wash-2);
+    color: var(--studio-text);
+  }
+}
+
+.shareButton.shareButton:active:not(:disabled):not([aria-disabled="true"]) {
+  transform: scale(0.97);
+}
+
+/* The in-app Reduce motion toggle drops the lift too. */
+:global(html[data-reduce-motion="true"]) .line.line[aria-current="true"] {
+  transform: none;
+}
+
+/* A long press opens the line's menu: on touch, keep the browser's callout
+   and word selection off the lines (useStudioContextMenu). */
+@media (hover: none) {
+  .root[data-shareable] .line.line {
+    -webkit-touch-callout: none;
+    user-select: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .line.line {
+    transition-property: color, background-color;
+  }
+
+  .line.line[aria-current="true"] {
+    transform: none;
+  }
+
+  .shareButton.shareButton {
+    transition-property: color, background-color;
+  }
+
+  .shareButton.shareButton:active:not(:disabled):not([aria-disabled="true"]) {
+    transform: none;
+  }
 }
 
 .back {
@@ -53,7 +193,10 @@
   /* translate, so motion's own transform (for y) composes with it. */
   translate: -50% 0;
   display: inline-flex;
-  align-items: center;
+}
+
+/* The pill is the shared quiet Button, inverted on the ink. */
+.backButton.backButton {
   gap: 6px;
   padding: 8px 14px;
   border: none;
@@ -63,7 +206,22 @@
   color: var(--studio-surface-rail);
   background: rgba(var(--studio-ink-rgb), 0.92);
   box-shadow: var(--shadow-e2);
-  cursor: pointer;
+}
+
+@media (hover: hover) {
+  .backButton.backButton:hover:not(:disabled):not([aria-disabled="true"]) {
+    background: rgba(var(--studio-ink-rgb), 1);
+  }
+}
+
+@media (pointer: coarse) {
+  .backButton.backButton {
+    min-block-size: var(--tap-min);
+  }
+}
+
+.backButton.backButton:active:not(:disabled):not([aria-disabled="true"]) {
+  background: rgba(var(--studio-ink-rgb), 1);
 }
 
 /* On the track page the list scrolls with the page, between the sticky
@@ -103,14 +261,15 @@
 }
 
 .line:focus-visible,
-.back:focus-visible {
+.backButton:focus-visible,
+.shareButton:focus-visible {
   outline: var(--focus-ring);
   outline-offset: var(--focus-ring-offset);
   box-shadow: var(--ring-cream);
 }
 
 @media (--compact) {
-  .line {
+  .line.line {
     font-size: var(--text-18);
   }
 }

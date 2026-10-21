@@ -48,8 +48,8 @@ describe("StudioRail", () => {
       screen.queryByRole("link", { name: "Notifications" }),
     ).not.toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: /create playlist/i }),
-    ).toBeInTheDocument();
+      screen.getByRole("button", { name: /^create playlist or folder$/i }),
+    ).toHaveAttribute("aria-haspopup", "menu");
     const playlists = screen.getByRole("navigation", {
       name: "Your playlists",
     });
@@ -87,11 +87,20 @@ describe("StudioRail", () => {
       expect(screen.queryByRole("link", { name })).not.toBeInTheDocument();
   });
 
-  it("opens the create dialog from the Create playlist pill", async () => {
+  it("opens the create dialog from Create playlist in the Create menu", async () => {
     rail.isShowcase = false;
     renderRailAt("/studio");
     fireEvent.click(
-      await screen.findByRole("button", { name: /create playlist/i }),
+      await screen.findByRole("button", {
+        name: /^create playlist or folder$/i,
+      }),
+    );
+    const menu = await screen.findByRole("menu");
+    expect(
+      within(menu).getByRole("menuitem", { name: /create folder/i }),
+    ).toBeInTheDocument();
+    fireEvent.click(
+      within(menu).getByRole("menuitem", { name: /create playlist/i }),
     );
     expect(await screen.findByRole("dialog")).toBeInTheDocument();
   });
@@ -104,7 +113,9 @@ describe("StudioRail", () => {
       await screen.findByRole("navigation", { name: "Studio" }),
     ).toBeInTheDocument();
     expect(
-      screen.queryByRole("button", { name: /create playlist/i }),
+      screen.queryByRole("button", {
+        name: /^create playlist or folder$/i,
+      }),
     ).not.toBeInTheDocument();
     expect(
       screen.queryByRole("navigation", { name: "Your playlists" }),

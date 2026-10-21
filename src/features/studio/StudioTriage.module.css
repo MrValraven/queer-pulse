@@ -1,0 +1,59 @@
+/* The demo triage's own bits on top of council.module.css: the page head
+   with no padding of its own, the recorded decision, and the detail lists. */
+
+.pageHead {
+  padding: 0;
+}
+
+/* One label and value of the file sheet: the row hands its two cells to
+   the sheet's grid. */
+.fileRow {
+  display: contents;
+}
+.fileRow dt,
+.fileRow dd {
+  margin: 0;
+}
+
+.metaList,
+.flaggedList {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--text-12-5);
+  color: var(--studio-text-muted);
+}
+
+.flaggedList {
+  font-style: italic;
+}
+
+.decisionRecord {
+  margin-top: 14px;
+  padding: 11px 13px;
+  border-radius: var(--radius-10);
+  background: rgba(var(--jade-rgb), 0.14);
+  border: 1px solid rgba(var(--jade-rgb), 0.3);
+  color: var(--studio-text);
+  font-size: var(--text-12-5);
+}
+
+.decisionNote {
+  margin: 6px 0 0;
+  font-style: italic;
+  color: var(--studio-text-muted);
+}
+
+/* Phones: the KPI tiles form a two-column grid, and the tab strip fades at
+   its scrolling edge so a clipped tab reads as "more this way". */
+@media (--md) {
+  section > .kpiGrid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .tabsFade > [role="tablist"] {
+    mask-image: linear-gradient(to right, black calc(100% - 32px), transparent);
+  }
+}

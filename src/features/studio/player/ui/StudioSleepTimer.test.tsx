@@ -198,6 +198,14 @@ describe("StudioSleepTimerOptions", () => {
     renderWithPlayer(<StudioSleepTimerOptions onChosen={vi.fn()} />, {
       player,
     });
+    // The running choice reads as pressed; the others do not.
+    expect(
+      await screen.findByRole("button", { name: "End of track" }),
+    ).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByRole("button", { name: "30 minutes" })).toHaveAttribute(
+      "aria-pressed",
+      "false",
+    );
     fireEvent.click(
       await screen.findByRole("button", { name: "Turn off the timer" }),
     );

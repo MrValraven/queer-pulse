@@ -62,11 +62,38 @@ export interface UploadRow {
   isRetryable: boolean;
 }
 
+/** Stages a row can be stopped in: Cancel upload aborts the conversion or
+ *  the PUT and keeps the file in memory, so Retry picks it up again. A row
+ *  being created or confirmed waits for the server, so it has no Cancel. */
+const CANCELLABLE_STAGES: ReadonlySet<UploadRowStage> = new Set([
+  "queued",
+  "converting",
+  "uploading",
+]);
+
+export const isCancellableStage = (stage: UploadRowStage) =>
+  CANCELLABLE_STAGES.has(stage);
+
+/** Stages where work is still moving: leaving the page would stop it. */
+const ACTIVE_STAGES: ReadonlySet<UploadRowStage> = new Set([
+  "queued",
+  "converting",
+  "creating",
+  "uploading",
+  "confirming",
+]);
+
+/** The line a cancelled row shows; Retry starts the same file again. */
+export const UPLOAD_CANCELLED_KEY = "studio:uploadFlow.files.cancelled";
+
 /** What a row needs to resume where it failed. Kept out of render state. */
 interface RowWork extends ConvertibleWork {
   uploadedKey: string | null;
   handle: StudioAudioUploadHandle | null;
   isRunning: boolean;
+  /** Bumped by Cancel upload: a run whose token is old stops at its next
+   *  step and never writes to the row again. */
+  runToken: number;
 }
 
 /** A file the list accepted, with the row it became (for the analysis). */
@@ -81,6 +108,12 @@ export interface StudioTrackUploads {
   rejections: { fileName: string; reason: FileRejectionReason }[];
   addFiles: (files: File[]) => void;
   retry: (localId: string) => void;
+  /** Retries every failed row that Retry can fix. */
+  retryAll: () => void;
+  /** Stops a row's conversion or upload; the file stays for Retry. */
+  cancel: (localId: string) => void;
+  /** Uploads audio onto a row whose track has none yet (stage noAudio). */
+  attachAudio: (localId: string, file: File) => void;
   remove: (localId: string) => void;
   move: (localId: string, offset: -1 | 1) => void;
   moveTo: (localId: string, targetIndex: number) => void;
@@ -88,6 +121,12 @@ export interface StudioTrackUploads {
   rename: (localId: string, title: string) => void;
   canReorder: boolean;
   hasPendingUploads: boolean;
+  /** Work still moving: leaving the page now stops it, so the leave guard
+   *  asks first. */
+  hasActiveUploads: boolean;
+  /** Files that stopped (failed or cancelled) and wait in memory for Retry:
+   *  leaving drops them, so the guard asks about those too. */
+  hasHeldFiles: boolean;
   orderErrorKey: string | null;
 }
 
@@ -289,6 +328,7 @@ function registerAcceptedFiles(
       uploadedKey: null,
       handle: null,
       isRunning: false,
+      runToken: 0,
     });
     return { localId, file, contentType, needsConversion };
   });
@@ -350,6 +390,49 @@ async function deleteRemovedRow(
   }
 }
 
+/** Holds an upload slot from presign to the end of the PUT, and returns
+ *  the stored key (null when the row went or was cancelled first). */
+async function uploadRowAudio(
+  localId: string,
+  work: RowWork,
+  context: {
+    uploadSlots: ReturnType<typeof createSlotQueue>;
+    isStopped: (localId: string) => boolean;
+    isCancelled: () => boolean;
+    patchRow: (localId: string, patch: Partial<UploadRow>) => void;
+    demoMode: boolean;
+    subprofileId: string;
+  },
+) {
+  const releaseSlot = await context.uploadSlots.acquire();
+  let handle: StudioAudioUploadHandle | null = null;
+  try {
+    if (context.isStopped(localId)) return null;
+    context.patchRow(localId, {
+      stage: "uploading",
+      progress: uploadBarOf(0, work.wasConverted),
+    });
+    handle = uploadStudioAudio({
+      demoMode: context.demoMode,
+      subprofileId: context.subprofileId,
+      file: work.file,
+      contentType: work.contentType,
+      onProgress: createProgressReporter((progress) => {
+        if (!context.isCancelled())
+          context.patchRow(localId, {
+            progress: uploadBarOf(progress, work.wasConverted),
+          });
+      }),
+    });
+    work.handle = handle;
+    return await handle.promise;
+  } finally {
+    // A Retry after Cancel may already hold a newer handle.
+    if (work.handle === handle) work.handle = null;
+    releaseSlot();
+  }
+}
+
 /**
  * Each file runs convert (WAV and AIFF only), create track, upload,
  * confirm. Creates run one at a time in list order, so the server's
@@ -376,7 +459,7 @@ export function useStudioTrackUploads(
   const deleteTrack = useDeleteStudioTrack();
   const rowState = useUploadRows(releaseId, initialTracks);
   const { rows, rowsRef, isMountedRef, serverOrderRef } = rowState;
-  const { commitRows, patchRow, rowOf } = rowState;
+  const { patchRow, rowOf } = rowState;
   const order = useTrackOrder(releaseId, rowState);
   const [rejections, setRejections] = useState<
     { fileName: string; reason: FileRejectionReason }[]
@@ -403,10 +486,16 @@ export function useStudioTrackUploads(
     );
   }
 
-  /** Waits its turn in the create chain; null when the row went meanwhile. */
-  function createFor(localId: string, title: string, forReleaseId: string) {
+  /** Waits its turn in the create chain; null when the row went meanwhile
+   *  or was cancelled before its turn. */
+  function createFor(
+    localId: string,
+    title: string,
+    forReleaseId: string,
+    isCancelled: () => boolean,
+  ) {
     return createChain.run(async () => {
-      if (isGone(localId)) return null;
+      if (isGone(localId) || isCancelled()) return null;
       patchRow(localId, { stage: "creating" });
       const created = await createTrack
         .mutateAsync({ releaseId: forReleaseId, title })
@@ -427,45 +516,41 @@ export function useStudioTrackUploads(
         order.releaseOrderSync(localId, isDeleted);
         return null;
       }
-      patchRow(localId, { trackId: created.id, stage: "queued" });
+      // A row cancelled meanwhile keeps its cancelled line; Retry reuses the
+      // track it now has, so no retry ever makes a second one.
+      patchRow(
+        localId,
+        isCancelled()
+          ? { trackId: created.id }
+          : { trackId: created.id, stage: "queued" },
+      );
       order.syncOrderIfNeeded();
-      return created.id;
+      return isCancelled() ? null : created.id;
     });
   }
 
-  /** Holds an upload slot from presign to the end of the PUT. */
-  async function uploadFor(localId: string, work: RowWork) {
-    const releaseSlot = await uploadSlots.acquire();
-    try {
-      if (isGone(localId)) return null;
-      patchRow(localId, {
-        stage: "uploading",
-        progress: uploadBarOf(0, work.wasConverted),
-      });
-      const handle = uploadStudioAudio({
-        demoMode,
-        subprofileId,
-        file: work.file,
-        contentType: work.contentType,
-        onProgress: createProgressReporter((progress) =>
-          patchRow(localId, {
-            progress: uploadBarOf(progress, work.wasConverted),
-          }),
-        ),
-      });
-      work.handle = handle;
-      return await handle.promise;
-    } finally {
-      work.handle = null;
-      releaseSlot();
-    }
-  }
+  const uploadFor = (
+    localId: string,
+    work: RowWork,
+    isCancelled: () => boolean,
+  ) =>
+    uploadRowAudio(localId, work, {
+      uploadSlots,
+      isStopped: (id) => isGone(id) || isCancelled(),
+      isCancelled,
+      patchRow,
+      demoMode,
+      subprofileId,
+    });
 
   async function process(localId: string) {
     const work = workRef.current.get(localId);
     const startRow = rowOf(localId);
     if (!work || work.isRunning || !releaseId || !startRow) return;
     const forReleaseId = releaseId;
+    const runToken = work.runToken;
+    const isCancelled = () => work.runToken !== runToken;
+    const isStopped = (id: string) => isGone(id) || isCancelled();
     work.isRunning = true;
     patchRow(localId, {
       stage: "queued",
@@ -477,17 +562,18 @@ export function useStudioTrackUploads(
       const isConverted = await convertRowAudio(localId, work, {
         maxBytes: options.audioMaxBytes ?? STUDIO_LIMITS.audioMaxBytes,
         patchRow,
-        isGone,
+        isGone: isStopped,
         onConverted: (accepted) => options.onFilesAccepted?.([accepted]),
       });
-      if (!isConverted) return;
+      if (!isConverted || isCancelled()) return;
       const trackId =
         startRow.trackId ??
-        (await createFor(localId, startRow.title, forReleaseId));
-      if (trackId === null) return;
-      if (!work.uploadedKey) work.uploadedKey = await uploadFor(localId, work);
-      // Removed or unmounted after the PUT: nothing left to confirm.
-      if (!work.uploadedKey || isGone(localId)) return;
+        (await createFor(localId, startRow.title, forReleaseId, isCancelled));
+      if (trackId === null || isCancelled()) return;
+      if (!work.uploadedKey)
+        work.uploadedKey = await uploadFor(localId, work, isCancelled);
+      // Removed, cancelled or unmounted after the PUT: nothing to confirm.
+      if (!work.uploadedKey || isStopped(localId)) return;
       patchRow(localId, { stage: "confirming" });
       const confirmed = await confirmAudio.mutateAsync({
         trackId,
@@ -501,7 +587,7 @@ export function useStudioTrackUploads(
       });
       workRef.current.delete(localId);
     } catch (error) {
-      if (isGone(localId)) return;
+      if (isStopped(localId)) return;
       // The server deleted an unreadable object, so its key cannot be confirmed again.
       if (studioErrorCodeOf(error) === "studio_audio_unreadable")
         work.uploadedKey = null;
@@ -511,19 +597,83 @@ export function useStudioTrackUploads(
         isRetryable: isRetryableUploadError(error),
       });
     } finally {
-      work.isRunning = false;
+      // Cancel already let go of the row; a newer run may hold it now.
+      if (!isCancelled()) work.isRunning = false;
     }
   }
+
+  // Built at press time, so no ref is read while rendering.
+  const commands = () =>
+    rowCommandsOf({
+      workRef,
+      rowState,
+      process,
+      audioMaxBytes: options.audioMaxBytes,
+      setRejections,
+      onFilesAccepted: options.onFilesAccepted,
+      removal: { releaseId, order, rowState, deleteTrackOf },
+    });
 
   return {
     rows,
     rejections,
-    addFiles: (files) => {
+    addFiles: (files) => commands().addFiles(files),
+    retry: (localId) => void process(localId),
+    retryAll: () => commands().retryAll(),
+    cancel: (localId) => commands().cancel(localId),
+    attachAudio: (localId, file) => commands().attachAudio(localId, file),
+    remove: (localId) => commands().remove(localId),
+    move: (localId, offset) => {
+      const index = rowsRef.current.findIndex((row) => row.localId === localId);
+      order.moveTo(localId, index + offset);
+    },
+    moveTo: order.moveTo,
+    rename: (localId, title) => patchRow(localId, { title }),
+    canReorder: rows.length > 1 && rows.every((row) => row.trackId !== null),
+    hasPendingUploads: rows.some(
+      (row) => row.stage !== "ready" && row.stage !== "noAudio",
+    ),
+    hasActiveUploads: rows.some((row) => ACTIVE_STAGES.has(row.stage)),
+    // A file picked this visit still waits in memory for Retry.
+    hasHeldFiles: rows.some(
+      (row) =>
+        row.stage === "failed" && row.isRetryable && row.fileName !== null,
+    ),
+    orderErrorKey: order.orderErrorKey,
+  };
+}
+
+interface RowCommandContext {
+  workRef: { current: Map<string, RowWork> };
+  rowState: UploadRowsState;
+  process: (localId: string) => Promise<void>;
+  audioMaxBytes?: number;
+  setRejections: (
+    rejections: { fileName: string; reason: FileRejectionReason }[],
+  ) => void;
+  onFilesAccepted?: (accepted: AcceptedUpload[]) => void;
+  removal: RemovalContext;
+}
+
+/** Add files, Remove, Retry all, Cancel upload and Attach audio. Plain
+ *  functions over the hook's refs, called from events only. */
+function rowCommandsOf({
+  workRef,
+  rowState,
+  process,
+  audioMaxBytes,
+  setRejections,
+  onFilesAccepted,
+  removal,
+}: RowCommandContext) {
+  const { rowsRef, rowOf, patchRow, commitRows } = rowState;
+  return {
+    addFiles: (files: File[]) => {
       if (files.length === 0) return;
       const { accepted, rejected } = validateAudioFiles(
         files,
         rowsRef.current.length,
-        options.audioMaxBytes,
+        audioMaxBytes,
       );
       setRejections(rejected);
       const { measuredNow, added } = registerAcceptedFiles(
@@ -532,11 +682,10 @@ export function useStudioTrackUploads(
       );
       commitRows([...rowsRef.current, ...added]);
       // Spec 8.1: measuring starts together with the upload.
-      options.onFilesAccepted?.(measuredNow);
+      onFilesAccepted?.(measuredNow);
       added.forEach((row) => void process(row.localId));
     },
-    retry: (localId) => void process(localId),
-    remove: (localId) => {
+    remove: (localId: string) => {
       const index = rowsRef.current.findIndex(
         (candidate) => candidate.localId === localId,
       );
@@ -549,23 +698,62 @@ export function useStudioTrackUploads(
       commitRows(
         rowsRef.current.filter((candidate) => candidate.localId !== localId),
       );
-      void deleteRemovedRow(row, index, {
-        releaseId,
-        order,
-        rowState,
-        deleteTrackOf,
+      void deleteRemovedRow(row, index, removal);
+    },
+    retryAll: () => {
+      rowsRef.current
+        .filter((row) => row.stage === "failed" && row.isRetryable)
+        .forEach((row) => void process(row.localId));
+    },
+    cancel: (localId: string) => {
+      const work = workRef.current.get(localId);
+      const row = rowOf(localId);
+      if (!work || !row || !work.isRunning || !isCancellableStage(row.stage))
+        return;
+      work.runToken += 1;
+      work.isRunning = false;
+      work.handle?.abort();
+      work.handle = null;
+      work.conversion?.abort();
+      work.conversion = null;
+      patchRow(localId, {
+        stage: "failed",
+        progress: 0,
+        errorKey: UPLOAD_CANCELLED_KEY,
+        errorValues: null,
+        isRetryable: true,
       });
     },
-    move: (localId, offset) => {
-      const index = rowsRef.current.findIndex((row) => row.localId === localId);
-      order.moveTo(localId, index + offset);
+    attachAudio: (localId: string, file: File) => {
+      const row = rowOf(localId);
+      if (!row || row.trackId === null || workRef.current.has(localId)) return;
+      // The row already counts toward the cap, so it is left out here.
+      const { accepted, rejected } = validateAudioFiles(
+        [file],
+        rowsRef.current.length - 1,
+        audioMaxBytes,
+      );
+      setRejections(rejected);
+      const [first] = accepted;
+      if (!first) return;
+      workRef.current.set(localId, {
+        file: first.file,
+        contentType: first.contentType,
+        sourceFile: first.needsConversion ? first.file : null,
+        needsConversion: first.needsConversion,
+        wasConverted: false,
+        conversion: null,
+        uploadedKey: null,
+        handle: null,
+        isRunning: false,
+        runToken: 0,
+      });
+      patchRow(localId, { fileName: file.name, isRetryable: true });
+      if (!first.needsConversion)
+        onFilesAccepted?.([
+          { localId, file: first.file, contentType: first.contentType },
+        ]);
+      void process(localId);
     },
-    moveTo: order.moveTo,
-    rename: (localId, title) => patchRow(localId, { title }),
-    canReorder: rows.length > 1 && rows.every((row) => row.trackId !== null),
-    hasPendingUploads: rows.some(
-      (row) => row.stage !== "ready" && row.stage !== "noAudio",
-    ),
-    orderErrorKey: order.orderErrorKey,
   };
 }

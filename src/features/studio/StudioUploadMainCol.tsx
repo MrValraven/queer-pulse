@@ -9,13 +9,17 @@ import { MetadataStep } from "./StudioUploadMetadataStep";
 import { PublishStep } from "./StudioUploadPublishStep";
 import { SplitsTable } from "./StudioUploadSplitsTable";
 import { SubmittedPanel } from "./StudioUploadSubmittedPanel";
+import type { UploadStepId } from "./studioUploadDraft.data";
+import { focusFieldById } from "./studioUploadFocus";
 import { audioMaxBytesFor } from "./studioUploadValidation";
+import { useReportUploadActivity } from "./upload/studioUploadActivityContext";
 import { useStudioAnalysisBackfill } from "./upload/useStudioAnalysisBackfill";
 import { useStudioUploadAnalysis } from "./upload/useStudioUploadAnalysis";
 import type { StudioUploadDraft } from "./useStudioUploadDraft";
 import { useStudioShowcase } from "./useStudioShowcase";
 import { StudioVersionNotePanel } from "./StudioVersionNotePanel";
 import s from "./creator.module.css";
+import publishStyles from "./StudioUploadPublish.module.css";
 import versionStyles from "./StudioVersionNote.module.css";
 
 function invitedCollaborator(
@@ -35,6 +39,55 @@ function invitedCollaborator(
     role,
     percent: "0",
     tone: "jade",
+  };
+}
+
+/** A details save that failed after Tracks opened (the draft was made,
+ *  the follow-up PATCH was refused) says so here, with its reason, so it is
+ *  never stranded on the release step off screen. */
+function DetailsSaveBanner({
+  errorKey,
+  onOpenRelease,
+}: {
+  errorKey: string | null;
+  onOpenRelease: () => void;
+}) {
+  const { t } = useTranslation();
+  return (
+    <div role="alert">
+      <Collapse isOpen={errorKey !== null}>
+        <div className={publishStyles.errorSummary}>
+          <p className={publishStyles.errorSummaryLead}>
+            {errorKey
+              ? t("studio:uploadFlow.autosave.notSaved", {
+                  reason: t(errorKey),
+                })
+              : ""}
+          </p>
+          <Button variant="quiet" size="sm" onClick={onOpenRelease}>
+            {t("studio:uploadFlow.backToRelease")}
+          </Button>
+        </div>
+      </Collapse>
+    </div>
+  );
+}
+
+/** A publish check's link opens its step, then focuses the field once the
+ *  step has rendered it. */
+function useFocusAfterStepChange() {
+  const pendingFieldRef = useRef<string | null>(null);
+  useEffect(() => {
+    const fieldId = pendingFieldRef.current;
+    if (fieldId && focusFieldById(fieldId)) pendingFieldRef.current = null;
+  });
+  return (
+    step: UploadStepId,
+    fieldId: string,
+    goTo: (step: UploadStepId) => void,
+  ) => {
+    pendingFieldRef.current = fieldId;
+    goTo(step);
   };
 }
 
@@ -69,6 +122,10 @@ export function UploadMainCol({ draft }: { draft: StudioUploadDraft }) {
       ),
     [ownerTracks],
   );
+  // Leaving with uploads running asks first (the page's leave guard).
+  useReportUploadActivity("uploads", uploads.hasActiveUploads);
+  useReportUploadActivity("heldFiles", uploads.hasHeldFiles);
+  const fixFocus = useFocusAfterStepChange();
   const [collaborators, setCollaborators] = useState<Collaborator[]>([]);
   const dropZoneRef = useRef<HTMLDivElement>(null);
   const shouldFocusDropZoneRef = useRef(false);
@@ -121,12 +178,17 @@ export function UploadMainCol({ draft }: { draft: StudioUploadDraft }) {
           uploads={uploads}
           onBack={() => draft.goTo("tracks")}
           onPublished={draft.markPublished}
+          onFixCheck={(step, fieldId) => fixFocus(step, fieldId, draft.goTo)}
         />
       </div>
     );
   }
   return (
     <div className={`${s.col} ${s.screenIn}`} key="tracks">
+      <DetailsSaveBanner
+        errorKey={draft.saveErrorKey}
+        onOpenRelease={() => draft.goTo("release")}
+      />
       {/* Artist kinds: v3's version tools skip shows (spec 4.1). */}
       <Collapse
         isOpen={draft.release.hasUnnotedChanges && !draft.release.isShow}

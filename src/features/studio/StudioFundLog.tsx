@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FadeIn } from "../../shared/components/ui";
+import { Button, FadeIn } from "../../shared/components/ui";
 import { useSimulatedLoad } from "../../shared/hooks";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
@@ -9,6 +9,7 @@ import { DISB, DISB_MORE } from "./studioSolidarityFund.data";
 import { downloadCsv } from "../../shared/lib/downloadBlob";
 import type { TFunction } from "../../shared/i18n/types";
 import type { DisbursementRow } from "./studioSolidarityFund.data";
+import { StudioEuroAmount } from "./StudioEuroAmount";
 import s from "./funding.module.css";
 
 const rowDate = (row: DisbursementRow) => new Date(`${row.dateIso}T12:00:00Z`);
@@ -139,7 +140,9 @@ export function StudioFundLog() {
                   <p>{t(r.noteKey)}</p>
                 </div>
                 <div className={s.disbAmt}>
-                  <em>{fmt.currency(r.amount)}</em>
+                  <em>
+                    <StudioEuroAmount value={r.amount} />
+                  </em>
                 </div>
               </div>
             </FadeIn>
@@ -150,15 +153,20 @@ export function StudioFundLog() {
           total: 148,
         })}{" "}
         ·{" "}
-        <button type="button" onClick={() => setShowFull((v) => !v)}>
+        <Button
+          variant="quiet"
+          size="sm"
+          aria-expanded={showFull}
+          onClick={() => setShowFull((v) => !v)}
+        >
           {showFull
             ? t("studio:fund.log.showLess")
             : t("studio:fund.log.fullLog")}
-        </button>{" "}
+        </Button>{" "}
         ·{" "}
-        <button type="button" onClick={exportCsv}>
+        <Button variant="quiet" size="sm" onClick={exportCsv}>
           {t("studio:fund.log.exportCsv")}
-        </button>
+        </Button>
       </div>
     </section>
   );

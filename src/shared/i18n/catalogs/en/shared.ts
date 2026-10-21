@@ -107,6 +107,16 @@ export const shared: Catalog = {
     "Copies of the site's own files, so it opens fast and still works on a bad connection. No personal content.",
   "consent.storage.monitoring.purpose":
     "Nothing at all while this is off. Turn it on and our error reporter (Sentry) loads and can store a diagnostic id. No session replay, no tracing, no ad or profiling data.",
+  "consent.storage.studioListening.purpose":
+    "Your Studio queue and where you stopped (only with Resume where you left off on), plus the tracks you recently played and searched for. It stays on this device, never reaches us and clears when you sign out or use Quick exit.",
+  "consent.storage.studioListeningSettings.purpose":
+    "Your Studio listening switches: Resume where you left off, Recently played and Single-key shortcuts.",
+  "consent.storage.studioRail.purpose":
+    "Where you scrolled your Studio playlists and how you sorted them, for this tab only.",
+  "consent.storage.studioTaste.purpose":
+    "The genres and moods you picked in the Studio welcome, which put those tiles first on Studio home. It stays on this device and clears when you sign out or use Quick exit. We never receive it.",
+  "consent.storage.studioWelcomeSeen.purpose":
+    "That you have seen the Studio welcome, so it stays closed when you sign back in. It holds only your account id, stays on this device and clears when you use Quick exit. We never receive it.",
 
   // Feedback: PageLoader / RouteFallback / ErrorFallback / RoomLoader
   "feedback.errorFallback.title": "Something broke on our <em>end</em>",
@@ -346,7 +356,7 @@ export const shared: Catalog = {
   "apiError.server": "Something went wrong on our end. Please try again.",
   "apiError.forbidden": "You don't have access to that.",
   "apiError.accountRestricted":
-    "You can't do that while a moderation restriction is in effect. You can appeal it from your account settings.",
+    "You can't do that while a moderation restriction is in effect. You can appeal it from Safety, under Appeal a decision.",
   "apiError.generic": "Something went wrong.",
   "apiError.genericRetry": "Something went wrong. Please try again.",
   "apiError.tryAgainTail": " Please try again.",
@@ -827,6 +837,7 @@ export const shared: Catalog = {
   "studioShare.track": "Studio track",
   "studioShare.release": "Studio release",
   "studioShare.playlist": "Studio playlist",
+  "studioShare.lyric": "Studio lyric",
   "studioShare.unavailable": "Not available",
   "apiError.quizshowAdultsRounds":
     "This event's live game has adults rounds. Change their label in the Live game tab first, then turn off 18+",

@@ -20,7 +20,7 @@ import {
 import { StudioPreviewLinkDialog } from "./StudioPreviewLinkDialog";
 import ownerStyles from "./StudioArtistOwner.module.css";
 
-type ConfirmedAction = Exclude<OwnerAction, "publish" | "previewLink">;
+type ConfirmedAction = Exclude<OwnerAction, "previewLink">;
 
 function ownerRowsOf(artist: StudioArtistView): OwnerRow[] {
   return [
@@ -67,6 +67,8 @@ export function StudioArtistOwnerPanel({
     row: OwnerRow;
   } | null>(null);
   const [previewRow, setPreviewRow] = useState<OwnerRow | null>(null);
+  // Said aloud once a publish lands, since the row changing is silent.
+  const [announcement, setAnnouncement] = useState("");
   const [rowErrors, setRowErrors] = useState<Record<string, string>>({});
   // The ref guards against a second press before React re-renders; the state
   // copy drives aria-disabled on the rows and the dialog's loading flag.
@@ -96,7 +98,14 @@ export function StudioArtistOwnerPanel({
         await queryClient.ensureQueryData(
           studioReleaseQueryOptions(demoMode, releaseId),
         );
-      if (action === "publish") await publish.mutateAsync({ releaseId });
+      if (action === "publish") {
+        await publish.mutateAsync({ releaseId });
+        setAnnouncement(
+          t("studio:owner.publishedAnnouncement", {
+            title: row.release.title,
+          }),
+        );
+      }
       if (action === "unpublish") await unpublish.mutateAsync({ releaseId });
       if (action === "delete") await remove.mutateAsync({ releaseId });
       setPending(null);
@@ -115,13 +124,13 @@ export function StudioArtistOwnerPanel({
 
   function handleAction(action: OwnerAction, row: OwnerRow) {
     if (action === "previewLink") setPreviewRow(row);
-    else if (action === "publish") void run(action, row);
     else setPending({ action, row });
   }
 
   if (rows.length === 0) return null;
 
   const isDelete = pending?.action === "delete";
+  const isPublish = pending?.action === "publish";
   const pendingTitle = pending?.row.release.title ?? "";
   return (
     <section className={ownerStyles.panel} aria-labelledby={headingId}>
@@ -152,22 +161,32 @@ export function StudioArtistOwnerPanel({
         }}
         loading={pending !== null && busyIds.has(pending.row.release.id)}
         tone={isDelete ? "destructive" : "default"}
-        title={
+        title={t(
           isDelete
-            ? t("studio:owner.deleteTitle", { title: pendingTitle })
-            : t("studio:owner.unpublishTitle", { title: pendingTitle })
-        }
-        description={
+            ? "studio:owner.deleteTitle"
+            : isPublish
+              ? "studio:owner.publishTitle"
+              : "studio:owner.unpublishTitle",
+          { title: pendingTitle },
+        )}
+        description={t(
           isDelete
-            ? t("studio:owner.deleteBody")
-            : t("studio:owner.unpublishBody")
-        }
-        confirmLabel={
+            ? "studio:owner.deleteBody"
+            : isPublish
+              ? "studio:owner.publishBody"
+              : "studio:owner.unpublishBody",
+        )}
+        confirmLabel={t(
           isDelete
-            ? t("studio:owner.deleteConfirm")
-            : t("studio:owner.unpublishConfirm")
-        }
+            ? "studio:owner.deleteConfirm"
+            : isPublish
+              ? "studio:owner.publishConfirm"
+              : "studio:owner.unpublishConfirm",
+        )}
       />
+      <p role="status" className="visuallyHidden">
+        {announcement}
+      </p>
       <AnimatePresence>
         {previewRow && (
           <StudioPreviewLinkDialog

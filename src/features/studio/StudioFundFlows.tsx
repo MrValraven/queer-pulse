@@ -1,13 +1,12 @@
 import { FiArrowDown, FiArrowUp } from "react-icons/fi";
 import { Translation } from "../../shared/i18n/Translation";
-import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { IN, OUT } from "./studioSolidarityFund.data";
+import { StudioEuroAmount } from "./StudioEuroAmount";
 import s from "./funding.module.css";
 
 export function StudioFundFlows() {
   const { t } = useTranslation();
-  const fmt = useFormat();
 
   return (
     <section className={s.sec}>
@@ -43,7 +42,9 @@ export function StudioFundFlows() {
                 <div className={s.d}>{t(f.descKey)}</div>
               </div>
               <div className={`${s.amt} ${s.amtIn}`}>
-                <em>{fmt.currency(f.amount)}</em>
+                <em>
+                  <StudioEuroAmount value={f.amount} />
+                </em>
               </div>
             </div>
           ))}
@@ -67,7 +68,9 @@ export function StudioFundFlows() {
                 <div className={s.d}>{t(f.descKey)}</div>
               </div>
               <div className={`${s.amt} ${s.amtOut}`}>
-                <em>{fmt.currency(f.amount)}</em>
+                <em>
+                  <StudioEuroAmount value={f.amount} />
+                </em>
               </div>
             </div>
           ))}

@@ -10,17 +10,28 @@ import {
   useStudioClaimDecision,
   useStudioReviewClaims,
 } from "./api/useStudioClaimReview";
-import { studioErrorMessageKeyOf } from "./studioErrors.data";
+import { claimStatusLabelKeyFor } from "./studioClaimStatus.data";
 import { StudioReviewClaimCard } from "./StudioReviewClaimCard";
 import {
   StudioReviewDialog,
   type StudioReviewDialogRequest,
 } from "./StudioReviewDialog";
+import {
+  isReviewSettledElsewhere,
+  reviewErrorKeyOf,
+} from "./StudioReviewErrors";
 import { StudioReviewList } from "./StudioReviewList";
+import { useReviewQueueOrder } from "./StudioReviewQueue";
+import { StudioReviewQueueBar } from "./StudioReviewQueueBar";
 import { useReviewFocus } from "./useReviewFocus";
 import css from "./StudioFlagReview.module.css";
 
 const claimKey = (claim: StudioAdminClaimView) => claim.id;
+
+const CLAIM_QUEUE_FIELDS = {
+  createdAtOf: (claim: StudioAdminClaimView) => claim.createdAt,
+  filterValueOf: (claim: StudioAdminClaimView) => claim.status,
+};
 
 const DECISION_REQUEST: Record<
   StudioClaimDecision,
@@ -78,7 +89,12 @@ export function StudioReviewClaimsPanel({
   const acceptedHeadingId = useId();
   const list = useStudioReviewClaims();
   const acceptedList = useStudioAcceptedClaims();
-  const queueFocus = useReviewFocus(list.items, claimKey, tabButtonId);
+  const queueOrder = useReviewQueueOrder(list.items, CLAIM_QUEUE_FIELDS);
+  const queueFocus = useReviewFocus(
+    queueOrder.visibleItems,
+    claimKey,
+    tabButtonId,
+  );
   const acceptedFocus = useReviewFocus(
     acceptedList.items,
     claimKey,
@@ -92,6 +108,7 @@ export function StudioReviewClaimsPanel({
     claim: StudioAdminClaimView;
     decision: StudioClaimDecision;
   } | null>(null);
+  const [errorKey, setErrorKey] = useState<string | null>(null);
   const request = pending ? DECISION_REQUEST[pending.decision] : null;
 
   function confirm(text: string) {
@@ -99,6 +116,7 @@ export function StudioReviewClaimsPanel({
     if (request.textLabelKey !== null && text.length === 0) return;
     const { claim } = pending;
     const focus = focusFor(claim);
+    setErrorKey(null);
     focus.markLeaving(claim.id);
     decision.mutate(
       { claimId: claim.id, decision: pending.decision, note: text || null },
@@ -111,9 +129,15 @@ export function StudioReviewClaimsPanel({
           );
         },
         onError: (error) => {
-          focus.clearLeaving();
-          setPending(null);
-          showToast(t(studioErrorMessageKeyOf(error)), "error");
+          const messageKey = reviewErrorKeyOf(error);
+          // A claim decided elsewhere leaves on the re-read; any other
+          // failure keeps the dialog and the note, with the reason inside.
+          if (isReviewSettledElsewhere(error)) setPending(null);
+          else {
+            focus.clearLeaving();
+            setErrorKey(messageKey);
+          }
+          showToast(t(messageKey), "error");
         },
       },
     );
@@ -123,7 +147,10 @@ export function StudioReviewClaimsPanel({
     <StudioReviewClaimCard
       claim={claim}
       titleRef={focusFor(claim).registerTitle(claim.id)}
-      onDecide={(nextDecision) => setPending({ claim, decision: nextDecision })}
+      onDecide={(nextDecision) => {
+        setErrorKey(null);
+        setPending({ claim, decision: nextDecision });
+      }}
     />
   );
 
@@ -131,6 +158,22 @@ export function StudioReviewClaimsPanel({
     <>
       <StudioReviewList
         list={list}
+        items={queueOrder.visibleItems}
+        toolbar={
+          <StudioReviewQueueBar
+            order={queueOrder}
+            totalCount={list.items.length}
+            filterLabelOf={(status) =>
+              t(
+                claimStatusLabelKeyFor(
+                  status as StudioAdminClaimView["status"],
+                  "staff",
+                ),
+              )
+            }
+            filterGroupLabelKey="studio:flagReviewLive.queue.filterStatus"
+          />
+        }
         getKey={claimKey}
         emptyTitleKey="studio:flagReviewLive.claims.emptyTitle"
         emptyBodyKey="studio:flagReviewLive.claims.emptyBody"
@@ -154,6 +197,7 @@ export function StudioReviewClaimsPanel({
             key={`${pending.claim.id}-${pending.decision}`}
             request={{ ...request, releaseTitle: pending.claim.track.title }}
             isPending={decision.isPending}
+            errorKey={errorKey}
             onConfirm={confirm}
             onClose={() => {
               if (!decision.isPending) setPending(null);

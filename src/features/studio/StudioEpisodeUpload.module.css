@@ -1,12 +1,17 @@
-/* Episode mode spans the whole body grid (the release flow's sidebar column
-   has nothing to show here). */
+/* Episode mode is one centred 720px column: it spans the body grid (the
+   release flow's sidebar has nothing to show here) and the hero copy sits
+   on the same column, so the page has one left edge at every width. */
 .main {
   grid-column: 1 / -1;
+  justify-self: center;
+  width: 100%;
+  max-width: 720px;
   min-width: 0;
 }
 
-.form {
+.heroColumn {
   max-width: 720px;
+  margin-inline: auto;
 }
 
 .form input[type="text"],
@@ -18,30 +23,10 @@
   margin: 12px 0;
 }
 
+/* Read chapters from the notes: the shared quiet Button, set under the
+   notes at its own width. */
 .readChapters {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  min-height: var(--tap-min);
-  padding: 0 14px;
-  border: 1px solid rgba(var(--studio-ink-rgb), 0.2);
-  border-radius: var(--radius-pill);
-  background: none;
-  color: var(--studio-text);
-  font: inherit;
-  font-size: var(--text-13);
-  cursor: pointer;
-}
-
-.readChapters[aria-disabled="true"] {
-  opacity: 0.5;
-  cursor: default;
-}
-
-.readChapters:focus-visible {
-  outline: var(--focus-ring);
-  outline-offset: var(--focus-ring-offset);
-  box-shadow: var(--ring-cream);
+  align-self: flex-start;
 }
 
 .status,
@@ -59,9 +44,6 @@
   margin-top: 12px;
 }
 
-.audio {
-  max-width: 720px;
-}
 
 .audio h2 {
   margin: 0 0 12px;
@@ -113,4 +95,12 @@
   margin: 0;
   font-size: var(--text-12);
   color: var(--studio-text-muted);
+}
+
+/* Cancel and Retry sit under the zone, each folding in on its own. */
+.audioActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
 }

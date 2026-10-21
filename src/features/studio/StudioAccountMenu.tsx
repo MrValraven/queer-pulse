@@ -8,7 +8,7 @@ import {
   type RefObject,
 } from "react";
 import { useLocation } from "react-router-dom";
-import { Avatar } from "../../shared/components/ui";
+import { Avatar, IconButton } from "../../shared/components/ui";
 import { useAccountIdentity } from "../../shared/components/layout/useAccountIdentity";
 import { useNavDrawerFocus } from "../../shared/components/layout/useNavDrawerFocus";
 import { useMotionPrefs } from "../../app/providers/motionPrefs";
@@ -17,6 +17,7 @@ import {
   useMediaQuery,
   useOutsideDismiss,
 } from "../../shared/hooks";
+import { useHistoryBackDismiss } from "../../shared/hooks/useHistoryBackDismiss";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { mediaMax } from "../../shared/theme/breakpoints";
 import type { StudioArtistRefView } from "./api/studio.adapters";
@@ -25,6 +26,7 @@ import dotStyles from "./StudioAccountAttentionDot.module.css";
 import { StudioAccountMenuPanel } from "./StudioAccountMenuPanel";
 import { StudioNavSheet } from "./StudioNavSheet";
 import { useStudioMenuAttention } from "./useStudioMenuAttention";
+import { useStudioSignOutAfterLeave } from "./useStudioSignOutAfterLeave";
 import styles from "./StudioAccountMenu.module.css";
 
 /** How long the panel lingers to fade out after a dismissal, ms. Mirrors the
@@ -138,18 +140,45 @@ function useTriggerFocusAcrossSlots(
 }
 
 /**
+ * Closes the dropdown when keyboard focus leaves it (Tab past Sign out), so
+ * a floating panel never sits over the page focus moved into. Focus going
+ * nowhere (a press on bare page, the window losing focus) is left to the
+ * outside-press rule. A native listener, since the wrapper is not a control.
+ */
+function useDismissOnFocusOut(
+  isActive: boolean,
+  wrapRef: RefObject<HTMLDivElement | null>,
+  onDismiss: () => void,
+) {
+  useEffect(() => {
+    const wrap = wrapRef.current;
+    if (!isActive || !wrap) return;
+    const handleFocusOut = (event: FocusEvent) => {
+      const nextTarget = event.relatedTarget;
+      if (!(nextTarget instanceof Node)) return;
+      if (wrap.contains(nextTarget)) return;
+      onDismiss();
+    };
+    wrap.addEventListener("focusout", handleFocusOut);
+    return () => wrap.removeEventListener("focusout", handleFocusOut);
+  }, [isActive, wrapRef, onDismiss]);
+}
+
+/**
  * The avatar of both Studio shells, opening the Studio profile menu. Behaves
- * like the app's AccountMenu: an outside press or Escape dismisses with a
- * short fade (Escape hands focus back to the trigger), a row that navigates
- * unmounts the panel at once, and reduced motion skips the fade on every
- * path. With `isSheetOnCompact`, at 880px and below the avatar opens the
- * phone side sheet (StudioNavSheet), which runs its own focus trap.
+ * like the app's AccountMenu: an outside press, Escape or Tab out dismisses
+ * with a short fade (Escape hands focus back to the trigger), a row that
+ * navigates unmounts the panel at once, and reduced motion skips the fade on
+ * every path. With `isSheetOnCompact`, at 880px and below the avatar opens
+ * the phone side sheet (StudioNavSheet), which runs its own focus trap and
+ * pushes a history entry so Android or browser Back closes it.
  */
 export function StudioAccountMenu({
   triggerLabel,
   persona = null,
   className,
   isSheetOnCompact = false,
+  publicPageHref,
 }: {
   /** The trigger's accessible name. */
   triggerLabel: string;
@@ -160,6 +189,9 @@ export function StudioAccountMenu({
   className?: string;
   /** Opens the side sheet at 880px and below (the listener shell). */
   isSheetOnCompact?: boolean;
+  /** The creator's public artist page, as the menu's first row (the
+   *  creator shell's phone bar has no room for its own link). */
+  publicPageHref?: string;
 }) {
   const { t } = useTranslation();
   const identity = useAccountIdentity();
@@ -179,6 +211,7 @@ export function StudioAccountMenu({
   const sheetRef = useRef<HTMLDivElement>(null);
   const panelId = useId();
   useTriggerFocusAcrossSlots(isOpen, wrapRef, triggerRef);
+  useStudioSignOutAfterLeave();
 
   // The sheet portals to <body>, so the dropdown's outside press would read
   // every press inside it as outside. The sheet gets the nav drawer's trap,
@@ -194,15 +227,44 @@ export function StudioAccountMenu({
       triggerRef.current?.focus();
     },
   });
+  useDismissOnFocusOut(isOpen && !isSheetMode, wrapRef, dismissMenu);
+  // Back closes the sheet. A sheet row navigates with `replace` and marks
+  // the entry spent first, so its close pops nothing.
+  const { markNavigated } = useHistoryBackDismiss(
+    isOpen && isSheetMode,
+    dismissMenu,
+  );
+  const closeSheetForNavigation = useCallback(
+    (event?: {
+      button: number;
+      metaKey: boolean;
+      ctrlKey: boolean;
+      shiftKey: boolean;
+      altKey: boolean;
+    }) => {
+      // A modified click opens the row in a new tab or window: this page
+      // stays, so the sheet and its history entry stay too.
+      const isModifiedClick =
+        event !== undefined &&
+        (event.button !== 0 ||
+          event.metaKey ||
+          event.ctrlKey ||
+          event.shiftKey ||
+          event.altKey);
+      if (isModifiedClick) return;
+      markNavigated();
+      closeMenuForNavigation();
+    },
+    [markNavigated, closeMenuForNavigation],
+  );
 
   return (
     <div
       className={[styles.wrap, className].filter(Boolean).join(" ")}
       ref={wrapRef}
     >
-      <button
+      <IconButton
         ref={triggerRef}
-        type="button"
         className={styles.trigger}
         data-sheet-mode={isSheetMode || undefined}
         onClick={toggleMenu}
@@ -224,7 +286,7 @@ export function StudioAccountMenu({
           />
           <StudioAccountAttentionDot isShown={hasAttention} />
         </span>
-      </button>
+      </IconButton>
 
       {isMounted &&
         (isSheetMode ? (
@@ -234,13 +296,14 @@ export function StudioAccountMenu({
             persona={persona}
             isExiting={isExiting}
             onClose={dismissMenu}
-            onNavigate={closeMenuForNavigation}
+            onNavigate={closeSheetForNavigation}
           />
         ) : (
           <StudioAccountMenuPanel
             id={panelId}
             isExiting={isExiting}
             persona={persona}
+            publicPageHref={publicPageHref}
             onNavigate={closeMenuForNavigation}
           />
         ))}

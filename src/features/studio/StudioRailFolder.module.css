@@ -1,0 +1,210 @@
+/* A rail folder: a disclosure head on the rows' inset, then its playlists,
+   nested one step in. The head is the shared Button, so the selectors below
+   carry the extra specificity that lifts them over its quiet variant. */
+
+.folder {
+  position: relative;
+}
+
+/* The Tooltip wrapper spans the rail, so the head stays full width. */
+.headWrap > span {
+  display: flex;
+}
+
+.folder .head {
+  display: flex;
+  flex: 1;
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  justify-content: flex-start;
+  gap: 8px;
+  padding: 8px 14px 8px 16px;
+  border-left: 2px solid transparent;
+  border-radius: 0;
+  background: transparent;
+  color: var(--studio-text);
+  font-weight: 400;
+  font-size: var(--text-14);
+  text-align: start;
+  -webkit-touch-callout: none;
+  user-select: none;
+  transition-property: background-color, border-left-color;
+  transition-duration: var(--dur-base);
+  transition-timing-function: var(--ease);
+}
+@media (hover: hover) {
+  .folder .head:hover:not(:disabled):not([aria-disabled="true"]) {
+    background: var(--studio-wash-1);
+  }
+}
+.folder .head:active:not(:disabled):not([aria-disabled="true"]) {
+  background: var(--studio-wash-2);
+}
+/* A dragged playlist hovers a folder it can land in. */
+.folder .head[data-drop-over] {
+  border-left-color: var(--accent);
+  background: rgba(var(--accent-rgb), 0.14);
+  outline: 1px solid rgba(var(--accent-rgb), 0.5);
+  outline-offset: -1px;
+}
+/* Drawn inset: the list's own scroll clip would cut an outward ring. */
+.folder .head:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: calc(-2 * var(--focus-ring-offset));
+  box-shadow: var(--ring-cream-inset);
+}
+
+.chevron,
+.folderIcon {
+  flex: none;
+  width: 14px;
+  height: 14px;
+  color: var(--studio-text-muted);
+}
+.chevron {
+  transition-property: transform;
+  transition-duration: var(--dur-base);
+  transition-timing-function: var(--ease);
+}
+.head[aria-expanded="true"] .chevron {
+  transform: rotate(90deg);
+}
+
+.headText {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  min-width: 0;
+}
+.name,
+.meta {
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.25;
+}
+.meta {
+  font-size: var(--text-12);
+  color: var(--studio-text-muted);
+}
+
+/* Renaming: the name as a field on the head's inset. */
+.rename {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 4px 14px 4px 38px;
+}
+.renameInput {
+  flex: 1;
+  min-width: 0;
+  padding: 6px 10px;
+  border: 1px solid var(--studio-line);
+  border-radius: var(--radius-8);
+  background: var(--studio-wash-1);
+  color: var(--studio-text);
+  font: inherit;
+  /* 16px keeps iOS from zooming into the field. */
+  font-size: var(--text-16);
+}
+.renameInput:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* The folder's playlists, one step in from the head. */
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 0 14px;
+}
+.list > li > span {
+  display: flex;
+}
+.list > li > span > a {
+  flex: 1;
+  min-width: 0;
+}
+
+.empty {
+  margin: 0;
+  padding: 4px 22px 10px 40px;
+  font-size: var(--text-12);
+  color: var(--studio-text-muted);
+}
+
+/* The folded rail: a folder tile centred in the strip, rows unindented. */
+.folder .head[data-compact] {
+  justify-content: center;
+  padding: 6px 0;
+}
+.folder[data-compact] .list {
+  padding: 0;
+}
+.compactTile {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-8);
+  background: var(--studio-wash-2);
+  color: var(--studio-text);
+}
+.compactTile svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* Shown while a filed playlist is dragged: drop it here to take it out of
+   its folder. */
+.moveOut {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 4px 14px 4px 22px;
+  padding: 10px 12px;
+  border: 1px dashed var(--studio-line);
+  border-radius: var(--radius-8);
+  font-size: var(--text-12);
+  color: var(--studio-text-muted);
+  transition-property: background-color, border-color, color;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+.moveOut svg {
+  flex: none;
+  width: 14px;
+  height: 14px;
+}
+/* Folded: a square drop tile centred in the strip, the words kept for
+   screen readers. */
+.moveOut[data-compact] {
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  margin: 4px auto;
+  padding: 0;
+}
+.moveOut[data-drop-over] {
+  border-color: var(--accent);
+  background: rgba(var(--accent-rgb), 0.12);
+  color: var(--studio-text);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .folder .head,
+  .chevron,
+  .moveOut {
+    transition-property: none;
+  }
+}
+:global(html[data-reduce-motion="true"]) .folder .head,
+:global(html[data-reduce-motion="true"]) .chevron,
+:global(html[data-reduce-motion="true"]) .moveOut {
+  transition-property: none;
+}

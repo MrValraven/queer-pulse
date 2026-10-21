@@ -1,24 +1,82 @@
-import { FiCheck, FiHeart, FiPause, FiPlay, FiPlus } from "react-icons/fi";
-import { Collapse } from "../../shared/components/ui";
+import { FiCheck, FiHeart, FiPlus } from "react-icons/fi";
+import {
+  Button,
+  Collapse,
+  IconButton,
+  Tooltip,
+} from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { StudioReleaseView } from "./api/studio.adapters";
-import { useStudioHideExplicit } from "./api/useStudioPlaybackPreferences";
-import { useStudioPlayer } from "./player/studioPlayerContext";
-import { queueFromRelease } from "./player/studioQueue";
+import { StudioPlayButton } from "./kit/StudioPlayButton";
+import { StudioIconSwap } from "./player/ui/StudioIconSwap";
 import { StudioAddToPlaylistButton } from "./StudioAddToPlaylistButton";
+import { StudioHeroShare } from "./StudioHeroShare";
 import { StudioHiddenTrackNote } from "./StudioHiddenTrack";
 import { StudioNotifyMeButton } from "./StudioNotifyMeButton";
 import { StudioReleaseOverflow } from "./StudioReleaseOverflow";
-import { StudioShareMenu } from "./share/StudioShareMenu";
+import { useIsHeroCompact } from "./studioHeroLayout";
+import { useStudioReleasePlay } from "./useStudioReleasePlay";
 import { useStudioSaveToggle } from "./useStudioSaveToggle";
 import { useStudioShowcase } from "./useStudioShowcase";
 import styles from "./studio.module.css";
-import releaseStyles from "./StudioRelease.module.css";
+
+/** Save keeps one name, "Save {title}", and aria-pressed carries the state,
+ *  so a screen reader hears it once; the icon swaps to a check and the
+ *  visible words to Saved. */
+function StudioReleaseSaveButton({
+  release,
+  isIconOnly,
+}: {
+  release: StudioReleaseView;
+  isIconOnly: boolean;
+}) {
+  const { t } = useTranslation();
+  const save = useStudioSaveToggle({
+    savedId: release.savedId,
+    kind: "studio_release",
+    title: release.title,
+    href: release.href,
+    meta: release.artist.name,
+  });
+  const label = t("studio:save.saveReleaseCta", { title: release.title });
+  const icon = (
+    <StudioIconSwap iconKey={save.isSaved ? "saved" : "save"}>
+      {save.isSaved ? <FiCheck aria-hidden /> : <FiPlus aria-hidden />}
+    </StudioIconSwap>
+  );
+  if (isIconOnly)
+    return (
+      <IconButton
+        aria-label={label}
+        aria-pressed={save.isSaved}
+        tooltip={t("studio:save.saveCta")}
+        onClick={save.toggle}
+      >
+        {icon}
+      </IconButton>
+    );
+  return (
+    <Button
+      variant="quiet"
+      aria-label={label}
+      aria-pressed={save.isSaved}
+      onClick={save.toggle}
+    >
+      {icon}
+      {/* The words follow the state; the name above stays "Save {title}". */}
+      <StudioIconSwap iconKey={save.isSaved ? "savedLabel" : "saveLabel"}>
+        {t(save.isSaved ? "studio:save.savedLabel" : "studio:save.saveCta")}
+      </StudioIconSwap>
+    </Button>
+  );
+}
 
 /** The hero's actions. Who sees what: an upcoming release's visitor gets
  *  Notify me and Share; a preview gets Play alone; a published release
- *  gets Save, Add to playlist, Tip (showcase only), Share and, for a
- *  visitor, Report. */
+ *  gets Save, Add to playlist, Tip (showcase only), Share and the More
+ *  menu (Play next and Add to queue for the whole release, Go to artist,
+ *  Copy link and, for a visitor, Report). On a phone every action after
+ *  Play is a round icon with a tooltip, so the row stays on one line. */
 export function StudioAlbumHeroActions({
   release,
   previewToken,
@@ -31,79 +89,43 @@ export function StudioAlbumHeroActions({
   onReport: () => void;
 }) {
   const { t } = useTranslation();
-  const player = useStudioPlayer();
   const isShowcase = useStudioShowcase();
-  const save = useStudioSaveToggle({
-    savedId: release.savedId,
-    kind: "studio_release",
-    title: release.title,
-    href: release.href,
-    meta: release.artist.name,
-  });
-  const hideExplicit = useStudioHideExplicit();
+  const isCompact = useIsHeroCompact();
+  const play = useStudioReleasePlay(release, previewToken);
   const isPreview = previewToken !== undefined || release.isPreview;
   const isPublished = release.status === "published";
   // A preview plays whatever its status: Notify me is for the release page,
   // and the owner of a scheduled release keeps Play.
   const isUpcomingForViewer =
     release.isUpcoming && !release.isOwner && !isPreview;
-  const isCurrent = player.isCurrentRelease(release.id);
-  const isPlaying = isCurrent && player.status === "playing";
-  // The server refuses every stream on a taken-down release, owners included.
-  const isStreamable = release.status !== "taken_down";
-  // Play starts only the tracks with audio that the member has not hidden,
-  // and has nothing to start when every one of them is hidden.
-  const hiddenTrackIds = new Set(
-    hideExplicit
-      ? release.tracks
-          .filter((track) => track.isExplicit)
-          .map((track) => track.id)
-      : [],
-  );
-  const audibleQueue = queueFromRelease(release, previewToken).filter(
-    (item) => !hiddenTrackIds.has(item.trackId),
-  );
-  const hasHiddenAudibleTrack =
-    audibleQueue.length < release.playableTrackCount;
-  const isPlayBlocked = !isStreamable || audibleQueue.length === 0;
   const isPublicExtra = isPublished && !isPreview;
-
-  function play() {
-    if (isPlayBlocked) return;
-    if (isCurrent) player.togglePlay();
-    else if (isPreview || hasHiddenAudibleTrack)
-      void player.playTracks(audibleQueue);
-    else void player.playRelease(release.id);
-  }
+  const isShareable = (isPublished || release.isUpcoming) && !isPreview;
+  const addLabel = t("studio:playlist.add.releaseCta");
+  const tipLabel = t("studio:detail.tipArtistCta", {
+    artist: release.artist.name,
+  });
 
   return (
     <>
       {!isUpcomingForViewer && (
-        <button
-          type="button"
-          className={`${styles.playBig} ${releaseStyles.heroPlay}`}
-          aria-disabled={isPlayBlocked || undefined}
-          aria-label={
-            isPlaying
-              ? t("studio:card.pauseRelease", { title: release.title })
-              : t("studio:card.playRelease", { title: release.title })
-          }
-          onClick={play}
+        // On a phone the blocked reason leaves the row (still read through
+        // aria-describedby) and shows as the button's tooltip instead.
+        <Tooltip
+          label={play.blockedReason ?? play.label}
+          placement="top"
+          isDisabled={!isCompact || play.blockedReason === undefined}
         >
-          {isPlaying ? <FiPause aria-hidden /> : <FiPlay aria-hidden />}
-        </button>
+          <StudioPlayButton
+            state={play.state}
+            onToggle={play.toggle}
+            label={play.label}
+            blockedReason={play.blockedReason}
+          />
+        </Tooltip>
       )}
       {/* Spec 7: every playable track is explicit and hidden, so Play is
-          disabled; the release says why. */}
-      <Collapse
-        isOpen={
-          !isUpcomingForViewer &&
-          isStreamable &&
-          hideExplicit &&
-          audibleQueue.length === 0 &&
-          release.playableTrackCount > 0
-        }
-      >
+          blocked; the release says why. */}
+      <Collapse isOpen={!isUpcomingForViewer && play.isAllHidden}>
         <StudioHiddenTrackNote />
       </Collapse>
       {isUpcomingForViewer && (
@@ -115,52 +137,63 @@ export function StudioAlbumHeroActions({
         />
       )}
       {isPublicExtra && (
-        <button
-          type="button"
-          aria-pressed={save.isSaved}
-          aria-label={t(
-            save.isSaved
-              ? "studio:save.removeSavedCta"
-              : "studio:save.saveReleaseCta",
-            { title: release.title },
-          )}
-          onClick={save.toggle}
-        >
-          {save.isSaved ? <FiCheck aria-hidden /> : <FiPlus aria-hidden />}{" "}
-          {save.isSaved
-            ? t("studio:save.savedLabel")
-            : t("studio:save.saveCta")}
-        </button>
+        <StudioReleaseSaveButton release={release} isIconOnly={isCompact} />
       )}
       {isPublicExtra && (
-        <StudioAddToPlaylistButton
-          trackIds={release.tracks
-            .filter((track) => track.hasAudio)
-            .map((track) => track.id)}
-          subjectTitle={release.title}
-          label={t("studio:playlist.add.releaseCta")}
-        />
+        <Tooltip label={addLabel} placement="top" isDisabled={!isCompact}>
+          <StudioAddToPlaylistButton
+            trackIds={release.tracks
+              .filter((track) => track.hasAudio)
+              .map((track) => track.id)}
+            subjectTitle={release.title}
+            label={isCompact ? undefined : addLabel}
+            ariaLabel={isCompact ? addLabel : undefined}
+          />
+        </Tooltip>
       )}
-      {isShowcase && isPublicExtra && (
-        <button type="button" className={styles.tip} onClick={onTip}>
-          <FiHeart aria-hidden />{" "}
-          {t("studio:detail.tipArtistCta", { artist: release.artist.name })}
-        </button>
-      )}
-      {(isPublished || release.isUpcoming) && !isPreview && (
-        <StudioShareMenu
+      {isShowcase &&
+        isPublicExtra &&
+        (isCompact ? (
+          <IconButton
+            aria-label={tipLabel}
+            tooltip
+            className={styles.tip}
+            onClick={onTip}
+          >
+            <FiHeart aria-hidden />
+          </IconButton>
+        ) : (
+          <Button variant="quiet" className={styles.tip} onClick={onTip}>
+            <FiHeart aria-hidden />
+            {tipLabel}
+          </Button>
+        ))}
+      {isShareable && (
+        <StudioHeroShare
           target={{ kind: "release", id: release.id, startAtSeconds: null }}
           title={release.title}
-          triggerLabel={t("studio:detail.shareCta")}
+          isIconOnly={isCompact}
         />
       )}
       {/* The server accepts a report on a published or scheduled release
           (granted members see a scheduled release's title, cover and
           description). A preview has no public page, and an artist does not
-          report their own release. */}
-      {(isPublished || release.isUpcoming) &&
-        !isPreview &&
-        !release.isOwner && <StudioReleaseOverflow onReport={onReport} />}
+          report their own release, so the owner's menu keeps the queue and
+          link items alone. */}
+      {isShareable && (
+        <Tooltip
+          label={t("studio:release.moreActions")}
+          placement="top"
+          align="end"
+        >
+          <StudioReleaseOverflow
+            trackIds={isPublished ? play.audibleTrackIds : undefined}
+            href={release.href}
+            artistHref={release.artist.href}
+            onReport={release.isOwner ? undefined : onReport}
+          />
+        </Tooltip>
+      )}
     </>
   );
 }

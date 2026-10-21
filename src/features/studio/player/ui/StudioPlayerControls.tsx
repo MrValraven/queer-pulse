@@ -2,11 +2,17 @@ import { AnimatePresence, m, useIsPresent } from "motion/react";
 import { useLayoutEffect, useRef, type ReactNode } from "react";
 import { FiRepeat, FiShuffle, FiSkipBack, FiSkipForward } from "react-icons/fi";
 import { useChipMotion } from "../../../../shared/components/ui";
+import { IconButton } from "../../../../shared/components/ui/IconButton";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
+import {
+  noteMemberPlayToggle,
+  useStudioPlaybackSignals,
+} from "../studioPlaybackSignals";
 import { useStudioPlayer } from "../studioPlayerContext";
 import { StudioEpisodeSkipButton } from "./StudioEpisodeSkipButton";
 import { StudioPlayPauseIcon } from "./StudioIconSwap";
 import styles from "./StudioPlayerControls.module.css";
+import { useStudioShortcutHint } from "./useStudioShortcutHint";
 
 const REPEAT_KEY = {
   off: "studio:player.repeat.off",
@@ -14,19 +20,32 @@ const REPEAT_KEY = {
   one: "studio:player.repeat.one",
 } as const;
 
+/** The 4px dot under Shuffle and Repeat while on (DES-22), so their state
+ *  reads by shape as well as colour. */
+function StudioControlOnDot() {
+  return <span className={styles.onDot} aria-hidden="true" />;
+}
+
 export function StudioShuffleButton() {
   const { t } = useTranslation();
   const player = useStudioPlayer();
+  const hintFor = useStudioShortcutHint();
+  const label = t("studio:player.shuffle");
+  const hint = hintFor(label, "shuffle");
+  const isOn = player.queue.isShuffled;
   return (
-    <button
-      type="button"
+    <IconButton
       className={styles.iconButton}
-      aria-pressed={player.queue.isShuffled}
-      aria-label={t("studio:player.shuffle")}
+      aria-pressed={isOn}
+      aria-label={label}
+      aria-keyshortcuts={hint.ariaKeyShortcuts}
+      tooltip={hint.tooltip}
+      data-active={isOn || undefined}
       onClick={player.toggleShuffle}
     >
       <FiShuffle aria-hidden />
-    </button>
+      <StudioControlOnDot />
+    </IconButton>
   );
 }
 
@@ -35,15 +54,21 @@ export function StudioRepeatButton() {
   const player = useStudioPlayer();
   const mode = player.queue.repeat;
   const { chip } = useChipMotion();
+  const hintFor = useStudioShortcutHint();
+  const label = t(REPEAT_KEY[mode]);
+  const hint = hintFor(label, "repeat");
   return (
-    <button
-      type="button"
+    <IconButton
       className={styles.iconButton}
       data-mode={mode}
-      aria-label={t(REPEAT_KEY[mode])}
+      data-active={mode !== "off" || undefined}
+      aria-label={label}
+      aria-keyshortcuts={hint.ariaKeyShortcuts}
+      tooltip={hint.tooltip}
       onClick={player.cycleRepeat}
     >
       <FiRepeat aria-hidden />
+      <StudioControlOnDot />
       {/* The "1" pops in and out with the shared chip motion. */}
       <AnimatePresence initial={false}>
         {mode === "one" && (
@@ -60,7 +85,7 @@ export function StudioRepeatButton() {
           </m.span>
         )}
       </AnimatePresence>
-    </button>
+    </IconButton>
   );
 }
 
@@ -140,14 +165,29 @@ function TransportSlot({
   );
 }
 
-/** Previous, play or pause, next. `large` is Now playing's size. */
+/** Previous, play or pause, next. `large` is Now playing's size. While the
+ *  stream loads or the audio waits for data, a ring turns around play
+ *  (ENG-01); it fades in after a short delay, so a quick start never
+ *  flashes it. */
 export function StudioTransport({ size }: { size: "bar" | "large" }) {
   const { t } = useTranslation();
   const player = useStudioPlayer();
+  const { isBuffering } = useStudioPlaybackSignals();
+  const hintFor = useStudioShortcutHint();
   const isPlaying = player.status === "playing";
+  const isWaiting = player.status === "loading" || isBuffering;
+  // The warning gate's Play it is the answer while it waits, so this play
+  // steps back to the muted ink.
+  const isGated = player.pendingWarning !== null;
   // Artist kinds: an episode skips 15 s back and 30 s forward (spec 5.6).
   const isEpisode = player.currentItem?.isEpisode === true;
   const slotKind = isEpisode ? "episode" : "music";
+  const playLabel = isPlaying
+    ? t("studio:playerBar.pause")
+    : t("studio:playerBar.play");
+  const playHint = hintFor(playLabel, "playPause");
+  const previousHint = hintFor(t("studio:playerBar.previous"), "previousTrack");
+  const nextHint = hintFor(t("studio:playerBar.next"), "nextTrack");
   return (
     <div className={styles.transport} data-size={size}>
       <TransportSlot slotKey={`back-${slotKind}`}>
@@ -157,27 +197,34 @@ export function StudioTransport({ size }: { size: "bar" | "large" }) {
             className={styles.iconButton}
           />
         ) : (
-          <button
-            type="button"
+          <IconButton
             className={styles.iconButton}
             onClick={player.previous}
             aria-label={t("studio:playerBar.previous")}
+            aria-keyshortcuts={previousHint.ariaKeyShortcuts}
+            tooltip={previousHint.tooltip}
           >
             <FiSkipBack aria-hidden />
-          </button>
+          </IconButton>
         )}
       </TransportSlot>
-      <button
-        type="button"
+      <IconButton
         className={styles.playButton}
-        onClick={player.togglePlay}
-        aria-label={
-          isPlaying ? t("studio:playerBar.pause") : t("studio:playerBar.play")
-        }
-        aria-busy={player.status === "loading" || undefined}
+        onClick={() => {
+          noteMemberPlayToggle();
+          player.togglePlay();
+        }}
+        aria-label={playLabel}
+        aria-keyshortcuts={playHint.ariaKeyShortcuts}
+        tooltip={playHint.tooltip}
+        aria-busy={isWaiting || undefined}
+        data-waiting={isWaiting || undefined}
+        data-gated={isGated || undefined}
+        data-studio-play-toggle=""
       >
+        <span className={styles.waitRing} aria-hidden="true" />
         <StudioPlayPauseIcon isPlaying={isPlaying} />
-      </button>
+      </IconButton>
       <TransportSlot slotKey={`forward-${slotKind}`}>
         {isEpisode ? (
           <StudioEpisodeSkipButton
@@ -185,17 +232,18 @@ export function StudioTransport({ size }: { size: "bar" | "large" }) {
             className={styles.iconButton}
           />
         ) : (
-          <button
-            type="button"
+          <IconButton
             className={styles.iconButton}
             aria-disabled={!player.hasNext || undefined}
             aria-label={t("studio:playerBar.next")}
+            aria-keyshortcuts={nextHint.ariaKeyShortcuts}
+            tooltip={nextHint.tooltip}
             onClick={() => {
               if (player.hasNext) player.next();
             }}
           >
             <FiSkipForward aria-hidden />
-          </button>
+          </IconButton>
         )}
       </TransportSlot>
     </div>

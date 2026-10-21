@@ -5,14 +5,8 @@ import css from "./StudioPlaylist.module.css";
 
 const CELLS = ["topLeft", "topRight", "bottomLeft", "bottomRight"] as const;
 
-/** The cover shown in each of the four cells. Two covers sit on the
- *  diagonals; three repeat the first in the last cell; four fill in order. */
-function cellCoverUrls(coverUrls: string[]): string[] {
-  const coverOrder = coverUrls.length === 2 ? [0, 1, 1, 0] : [0, 1, 2, 3];
-  return coverOrder
-    .map((coverIndex) => coverUrls[coverIndex % coverUrls.length])
-    .filter((url): url is string => Boolean(url));
-}
+/** A full mosaic needs four distinct covers; fewer show the first alone. */
+const MOSAIC_COVER_COUNT = CELLS.length;
 
 /** A mosaic cover that fades in once loaded; one already loaded on mount
  *  (from the cache) shows at once. */
@@ -33,9 +27,10 @@ function StudioMosaicImage({ src }: { src: string }) {
   );
 }
 
-/** A playlist's cover: its one release cover, or a 2x2 mosaic of up to four
- *  distinct covers in playlist order, repeated to fill every cell. Fills a
- *  positioned parent, like ImageSlot does. Decorative: the name sits beside. */
+/** A playlist's cover: with fewer than four distinct covers the first one
+ *  full-bleed, and with four or more a 2x2 mosaic of the first four in
+ *  playlist order. Fills a positioned parent, like ImageSlot does.
+ *  Decorative: the name sits beside. */
 export function StudioPlaylistCover({
   coverUrls,
   tint,
@@ -47,7 +42,7 @@ export function StudioPlaylistCover({
   label: string;
   radius?: number;
 }) {
-  if (coverUrls.length <= 1) {
+  if (coverUrls.length < MOSAIC_COVER_COUNT) {
     return (
       <ImageSlot
         src={coverUrls[0]}
@@ -62,7 +57,7 @@ export function StudioPlaylistCover({
   }
   return (
     <div className={css.mosaic} data-tint={tint} aria-hidden>
-      {cellCoverUrls(coverUrls).map((url, index) => (
+      {coverUrls.slice(0, MOSAIC_COVER_COUNT).map((url, index) => (
         <span key={CELLS[index]} className={css.mosaicCell}>
           <StudioMosaicImage key={url} src={url} />
         </span>

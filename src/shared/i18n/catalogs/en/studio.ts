@@ -18,6 +18,7 @@ import type { Catalog } from "../../types";
 export const studio: Catalog = {
   // ── Shell topbar (StudioShell) ────────────────────────────────────────────
   "shell.back": "Back",
+  "shell.historyLabel": "Page history",
   "shell.forward": "Forward",
   "shell.searchPlaceholder": "search artists, tracks, sheet music…",
   "shell.sustainCta": "Sustain · {price}/mo",
@@ -63,6 +64,59 @@ export const studio: Catalog = {
   "railPlaylists.savedFallback": "Saved playlist",
   "railPlaylists.empty": "Create a playlist and it shows up here",
   "railPlaylists.loadError": "We couldn't load your playlists",
+  "railPlaylists.menu.label": "{name} actions",
+  "railPlaylists.menu.removeSaved": "Remove from your library",
+  "railPlaylists.sortLabel": "Sort",
+  "railPlaylists.filterLabel": "Filter your playlists",
+  "railPlaylists.filterPlaceholder": "Filter playlists",
+  "railPlaylists.noMatches": 'No playlist matches "{query}"',
+  "railPlaylists.create.label": "Create",
+  "railPlaylists.create.triggerLabel": "Create playlist or folder",
+  "railPlaylists.create.menuLabel": "Create a playlist or a folder",
+
+  "playlistFolders.create.menuItem": "Create folder",
+  "playlistFolders.defaultName": "New folder",
+  "playlistFolders.count_one": "{count} playlist",
+  "playlistFolders.count_other": "{count} playlists",
+  "playlistFolders.listLabel": "Playlists in {name}",
+  "playlistFolders.emptyHint":
+    "Pick Move to folder in a playlist's menu, or drag one here",
+  "playlistFolders.moveOutDropHint": "Drop here to take it out of its folder",
+  "playlistFolders.rename.fieldLabel": "Folder name",
+  "playlistFolders.rename.title": "Rename folder",
+  "playlistFolders.rename.saveCta": "Save name",
+  "playlistFolders.create.title": "Create folder",
+  "playlistFolders.create.createCta": "Create folder",
+  "playlistFolders.create.withPlaylistSub": "{name} goes in it straight away",
+  "playlistFolders.create.createdToast": "Created {name}",
+  "playlistFolders.nameLabel": "Name",
+  "playlistFolders.nameRequired": "Give your folder a name",
+  "playlistFolders.namePlaceholder": "Late nights",
+  "playlistFolders.move.title": "Move {name} to a folder",
+  "playlistFolders.move.legend": "Folder",
+  "playlistFolders.move.noFolder": "No folder",
+  "playlistFolders.move.moveCta": "Move playlist",
+  "playlistFolders.move.movedToast": "Moved {playlist} to {folder}",
+  "playlistFolders.move.movedOutToast": "Took {playlist} out of its folder",
+  "playlistFolders.menu.label": "{name} folder actions",
+  "playlistFolders.menu.rename": "Rename folder",
+  "playlistFolders.menu.delete": "Delete folder",
+  "playlistFolders.menu.moveToFolder": "Move to folder",
+  "playlistFolders.menu.moveToNewFolder": "Move to new folder",
+  "playlistFolders.menu.removeFromFolder": "Remove from {name}",
+  "playlistFolders.delete.title": "Delete {name}?",
+  "playlistFolders.delete.body":
+    "The folder goes for good. Its playlists move back to your list as they are",
+  "playlistFolders.delete.confirmCta": "Delete folder",
+  "playlistFolders.delete.deletedToast": "Deleted {name}",
+  "playlistFolders.errors.notFound":
+    "This folder is gone. It may have been deleted on another device",
+  "playlistFolders.errors.limit": "You can keep up to 50 folders",
+  "playlistFolders.errors.playlistUnavailable":
+    "A folder holds playlists you made, edit or saved, and this one is no longer open to you",
+  "playlistFolders.library.title": "Your <em>folders</em>",
+  "playlistFolders.library.emptyHint":
+    "Nothing here yet. Pick Move to folder in a playlist's menu, or drag one onto this folder in the side list",
 
   // ── Shared corner-pill tag labels (track/release cards across pages) ──────
   "tag.free": "Free",
@@ -96,34 +150,43 @@ export const studio: Catalog = {
     "{sustainers} sustainers · {casual} casual · {cities} cities",
   "room.set.ledgerHead": "Ledger · this month",
   "room.set.ledgerPaidArtists": "Paid to artists",
-  "room.set.ledgerPlays": "Plays",
   "room.set.ledgerArtistShare": "Artist share",
   "room.set.ledgerPerPlay": "Per play",
 
   // ── Error pages (Studio404Page, Studio500Page) ────────────────────────────
-  "error.brandAria": "QueerPulse Studio home",
-  "error404.eyebrow": "Track not found",
-  "error404.title": "This song <em>doesn't exist.</em>",
+  "error404.kind.release.eyebrow": "Release not found",
+  "error404.kind.release.title": "This release <em>isn't here.</em>",
+  "error404.kind.track.eyebrow": "Track not found",
+  "error404.kind.track.title": "This track <em>isn't here.</em>",
+  "error404.kind.artist.eyebrow": "Artist page not found",
+  "error404.kind.artist.title": "This artist page <em>isn't here.</em>",
+  "error404.kind.playlist.eyebrow": "Playlist not found",
+  "error404.kind.playlist.title": "This playlist <em>isn't here.</em>",
+  "error404.kind.scene.eyebrow": "Scene not found",
+  "error404.kind.scene.title": "This scene <em>isn't here.</em>",
+  "error404.kind.pressKit.eyebrow": "Press kit not found",
+  "error404.kind.pressKit.title": "This press kit <em>isn't here.</em>",
+  "error404.kind.page.eyebrow": "Page not found",
+  "error404.kind.page.title": "This page <em>isn't here.</em>",
   "error404.body":
-    "The track, set, or page you were after was never recorded, got taken down by the artist, or lives behind a sign-in. No drama. The catalogue is large and there's plenty more to hear.",
-  "error404.backCta": "Back to the player",
+    "The link may have a typo, or what it pointed to was taken down or made private. Search or your library will get you back to the music.",
+  "error404.backCta": "Go to Studio home",
   "error404.goBackCta": "Go back",
   "error404.tryInsteadTitle": "Try one of these instead",
-  "error404.link.set.label": "This week's <em>set</em>",
-  "error404.link.set.sub": "Live, programmed Mondays",
   "error404.link.search.label": "<em>Search</em> the catalogue",
-  "error404.link.search.sub": "Tracks, artists, sheet music",
+  "error404.link.search.sub": "Releases, tracks, artists and playlists",
   "error404.link.library.label": "Your <em>library</em>",
-  "error404.link.library.sub": "Saved, sustaining, tipped",
+  "error404.link.library.sub": "Your playlists, Liked songs and saves",
+  "error404.link.home.label": "Studio <em>home</em>",
+  "error404.link.home.sub": "New releases and scenes near you",
 
-  "error500.eyebrow": "Something dropped out",
-  "error500.title": "We lost the <em>recording.</em>",
+  "error500.eyebrow": "Page error",
+  "error500.title": "This page <em>stopped.</em>",
   "error500.body":
-    "A server on our side stumbled mid-take. Your account, your saves, and every artist's payout are safe. This is just the front of house. Give it a second and try again.",
+    "A fault in Studio's code stopped this page while it was showing. Try again, and if it stops again, go to Studio home and open it from there.",
   "error500.tryAgainCta": "Try again",
-  "error500.backCta": "Back to the player",
-  "error500.statusPrefix": "All payouts and banking unaffected ·",
-  "error500.refLine": "ref: {ref} · {timestamp} · the council has been pinged",
+  "error500.backCta": "Go to Studio home",
+  "error500.reloadCta": "Reload Studio",
 
   // ── Marketing landing shell (StudioLandingShell) ──────────────────────────
   "landing.nav.aboutCoop": "About the co-op",
@@ -153,7 +216,7 @@ export const studio: Catalog = {
   "landing.hero.clock": "{weekday} · {time} Lisbon",
   "landing.hero.title": "Music, <em>programmed</em> by queer ears.",
   "landing.hero.dek":
-    "A co-op streaming platform. <em>{sharePercent}</em> of every listen to the artist. <em>{tipPercent}</em> of every tip. The ledger is public. The curators have names. <em>No algorithm has ever set foot in here.</em>",
+    "A co-op streaming platform. <em>{sharePercent}</em> of every listen to the artist. <em>{tipPercent}</em> of every tip. The ledger is public. The curators have names. <em>Every pick here is made by a person.</em>",
   "landing.hero.demoCta": "Listen to a demo set · free",
 
   "landing.demo.eyebrow": "The Wednesday set · free preview",
@@ -266,39 +329,46 @@ export const studio: Catalog = {
   "signin.join.freeCta": "Listen to one free set first",
   "signin.perMonth": "/mo",
 
-  // ── Welcome onboarding wizard (StudioWelcomePage) ─────────────────────────
-  "welcome.eyebrow": "You're in · let's set up Studio for you",
-  "welcome.title": "Welcome to <em>Studio</em>, {name}.",
-  "welcome.sub":
-    "Three quick things and the first set is yours. <em>Skip any of it</em>. None of this is locked in.",
-  "welcome.step1.title": "Follow a few <em>artists</em>",
-  "welcome.step1.dek":
-    "We'll surface their new releases first. Pick three or more: <em>the council picks the rest</em>.",
-  "welcome.step1.followedCount_one": "{count} followed",
-  "welcome.step1.followedCount_other": "{count} followed",
-  "welcome.nextCta": "Next",
-  "welcome.step2.title": "Set your default <em>tip</em>",
-  "welcome.step2.dek":
-    "One tap from the player sends this straight to the artist: <em>100%, no cut</em>. Change it any time.",
-  "welcome.skipCta": "Skip",
-  "welcome.tip.nod": "a nod",
-  "welcome.tip.coffee": "a coffee",
-  "welcome.tip.round": "a round",
-  "welcome.tip.record": "a record",
-  "welcome.step3.title": "How <em>private</em> do you want to be?",
-  "welcome.step3.dek":
-    "Our defaults are the careful ones. <em>Nothing here is on unless you turn it on.</em>",
-  "welcome.step3.history.title": "Keep my listening history",
-  "welcome.step3.history.body":
-    "A private, deletable record only you see. Off by default: nothing leaves your browser.",
-  "welcome.step3.tipNotes.title": "Make my tip notes public",
-  "welcome.step3.tipNotes.body":
-    "Off keeps every note between you and the artist. You can flip any single note later.",
-  "welcome.step3.librarySync.title": "Sync my library across devices",
-  "welcome.step3.librarySync.body":
-    "Saves and follows move with you. On by default. Turn off to keep it on this device only.",
-  "welcome.enterRoomCta": "Open Studio",
-  "welcome.readyToast": "Studio is ready for you",
+  "firstRun.progress": "Step {current} of {total}",
+  "firstRun.about.name": "What Studio is",
+  "firstRun.taste.name": "Genres and moods you love",
+  "firstRun.follow.name": "Artists to follow",
+  "firstRun.about.title": "Welcome to <em>Studio</em>",
+  "firstRun.about.dek":
+    "Music, spoken word, DJ sets and podcasts from queer artists in our community. Three short steps and you're listening.",
+  "firstRun.about.listen.title": "Listen",
+  "firstRun.about.listen.body":
+    "Albums, EPs, sets and episodes, ready whenever you are.",
+  "firstRun.about.save.title": "Save",
+  "firstRun.about.save.body":
+    "Like a track or save a release and it waits for you in your library.",
+  "firstRun.about.follow.title": "Follow",
+  "firstRun.about.follow.body":
+    "Follow artists from local scenes. Your library keeps everyone you follow.",
+  "firstRun.about.note":
+    "Skip any step you like. You can open this again from Studio Help.",
+  "firstRun.taste.title": "What do you love to <em>hear</em>?",
+  "firstRun.taste.dek":
+    "Pick as many as you like. They move to the front of your Studio home and stay on this device.",
+  "firstRun.taste.noneYet": "Nothing picked yet. That's fine too.",
+  "firstRun.taste.pickedCount_one": "{count} picked, kept on this device",
+  "firstRun.taste.pickedCount_other": "{count} picked, kept on this device",
+  "firstRun.follow.title": "Find your <em>scene</em>",
+  "firstRun.follow.dek":
+    "Follow a few artists from the scenes on Studio. The ones closest to your picks come first.",
+  "firstRun.follow.followLabel": "Follow {artist}",
+  "firstRun.follow.loadingLabel": "Loading artists to follow",
+  "firstRun.follow.empty":
+    "Artists show up here as they share releases. You can follow anyone from their page.",
+  "firstRun.skipCta": "Skip",
+  "firstRun.backCta": "Back",
+  "firstRun.nextCta": "Next",
+  "firstRun.finishCta": "Start listening",
+  "firstRun.savedToast": "Your picks are saved on this device",
+  "firstRun.help.heading": "Pick your <em>sound</em> again",
+  "firstRun.help.body":
+    "The three-step welcome: what Studio is, the genres and moods you love, and artists to follow.",
+  "firstRun.help.cta": "Show the welcome again",
 
   // ── About the co-op (StudioAboutPage + StudioAboutSections) ──────────────
 
@@ -338,15 +408,15 @@ export const studio: Catalog = {
   "about.tier.touring.body":
     "Studio will <em>not</em> replace a touring income, and we won't pretend it can. It can, plausibly, replace the rent while you make the next thing.",
   "about.tierFoot":
-    "These aren't projections from a pitch deck. They're the live ledger's actual per-stream rate times honest play counts. <em>The real numbers are public, every Monday at noon.</em>",
+    "These are the live ledger's actual per-stream rate times honest play counts, with nothing borrowed from a pitch deck. <em>The real numbers are public, every Monday at noon.</em>",
 
   "about.sec.governance.num": "04: who decides",
   "about.sec.governance.heading":
     "An elected <em>council</em>, term-limited, on the record.",
   "about.sec.governance.p1":
-    "Six curators program the weekly set, run submission triage, and write a paragraph justifying every pick. They're elected by the whole co-op at the annual assembly, paid a flat €400/mo stipend that appears on the public ledger, and limited to two-year terms with mandatory rotation. <strong>No algorithm decides who gets heard.</strong> A person does, and signs their name to it.",
+    "Six curators program the weekly set, run submission triage, and write a paragraph justifying every pick. They're elected by the whole co-op at the annual assembly, paid a flat €400/mo stipend that appears on the public ledger, and limited to two-year terms with mandatory rotation. <strong>A person decides who gets heard,</strong> and signs their name to it.",
   "about.sec.governance.p2":
-    "The per-listen floor and the split percentages are set yearly by a joint vote of sustainers and artists, with a 20% quorum. If you think the rate is wrong, you don't email support. <em>You vote, or you stand.</em>",
+    "The per-listen floor and the split percentages are set yearly by a joint vote of sustainers and artists, with a 20% quorum. If you think the rate is wrong, <em>you vote, or you stand.</em>",
 
   "about.sec.hardQuestions.num": "05: the hard questions",
   "about.sec.hardQuestions.heading":
@@ -371,50 +441,34 @@ export const studio: Catalog = {
 
   // ── Accessibility (StudioAccessibilityPage) ───────────────────────────────
   "accessibility.statement.p1":
-    "QueerPulse Studio commits to meeting <em>WCAG 2.2 AA</em> across every surface, and to treating accessibility as a core product requirement, built in from the start. Deaf and hard-of-hearing people should be able to use a music platform. So should blind and low-vision people, people who navigate by keyboard, and people who need words in their own language.",
+    "QueerPulse Studio commits to meeting <em>WCAG 2.2 AA</em> across every surface, and to treating accessibility as a core product requirement, built in from the start. Deaf and hard-of-hearing people should be able to use a music platform. So should blind and low-vision people and people who navigate by keyboard.",
   "accessibility.statement.p2":
-    "We test with real screen readers and real users (paid, from our own community) every release. <em>If something here doesn't work for you, that's a bug, and we want the report.</em>",
+    "If something here does not work for you, that is a bug, and we want the report.",
 
   "accessibility.group.deaf.heading":
     "For Deaf & <em>hard-of-hearing</em> listeners",
   "accessibility.group.deaf.dek":
-    "A music platform can't pretend everyone hears it the same way. So we caption the talk and surface the words.",
-  "accessibility.item.captions.heading": "Captioned <em>live rooms</em>",
-  "accessibility.item.captions.body":
-    "Every broadcast is auto-captioned in real time; council broadcasts get a <em>human pass</em>. The talk between songs, the dedications, the artist's asides: all transcribed and adjustable in size.",
+    "A music platform can't pretend everyone hears it the same way. So Studio shows the words and the waveform.",
   "accessibility.item.lyrics.heading": "Time-synced <em>lyrics</em>",
   "accessibility.item.lyrics.body":
     "Where the artist supplied them, lyrics scroll in time with playback, with the current line highlighted. Readable as a static sheet too, for any track.",
   "accessibility.item.waveforms.heading": "Visual <em>waveforms</em>",
   "accessibility.item.waveforms.body":
-    "Live rooms and tracks show a real-time waveform tied to the actual audio, so rhythm and dynamics are visible as well as audible.",
-  "accessibility.item.signed.heading": "Signed <em>broadcasts</em>",
-  "accessibility.item.signed.body":
-    "Flagship council broadcasts include a Portuguese Sign Language (LGP) interpreter window. Expanding to the weekly live rooms next quarter.",
+    "Tracks show a waveform tied to the audio, so rhythm and dynamics are visible as well as audible.",
 
   "accessibility.group.language.heading":
     "For listeners in <em>any language</em>",
   "accessibility.group.language.dek":
     "The catalogue is mostly in Portuguese, with songs in a dozen other languages. Words shouldn't be a wall.",
-  "accessibility.item.translation.heading": "Lyric <em>translation</em>",
-  "accessibility.item.translation.body":
-    "Community translations sit beside the original. Show one or both at once. Translators are credited and <em>paid from the solidarity fund</em>. Translation is labour.",
   "accessibility.item.interfaceLang.heading":
     "Interface in <em>your language</em>",
   "accessibility.item.interfaceLang.body":
-    "Studio's chrome ships in Portuguese, English, Spanish and French, with more added as members translate them. Set it in Settings, then Captions & lyrics.",
+    "Studio's interface ships in Portuguese and English. Set it in Settings.",
 
   "accessibility.group.lowVision.heading":
     "For low-vision & <em>keyboard</em> navigation",
   "accessibility.group.lowVision.dek":
     "The whole player is operable without a mouse, and both the light and dark themes are built to clear contrast as well as mood.",
-  "accessibility.item.contrast.heading": "Contrast that <em>passes</em>",
-  "accessibility.item.contrast.body":
-    "Body text sits at 4.5:1 or better in both themes; interactive elements at 3:1 minimum, with a high-contrast mode that lifts everything further. Focus rings are always visible.",
-  "accessibility.item.screenReader.heading":
-    "Screen-reader notes on the <em>player</em>",
-  "accessibility.item.screenReader.body":
-    "The persistent transport announces track, artist, elapsed time, and <em>what this play pays the artist</em>. Tip and save are labelled buttons; the live tip feed is a polite ARIA live region, paced to stay gentle.",
   "accessibility.item.reducedMotion.heading":
     "Respects <em>reduced motion</em>",
   "accessibility.item.reducedMotion.body":
@@ -426,8 +480,7 @@ export const studio: Catalog = {
   "accessibility.shortcuts.dek":
     "They work on any Studio page while something is queued, unless you're typing in a field",
 
-  "accessibility.contact.meta":
-    "Last audited 2 Jun 2026 · WCAG 2.2 AA · NVDA, VoiceOver, TalkBack · next audit Sep 2026",
+  "accessibility.contact.meta": "Target: WCAG 2.2 AA",
 
   // ── Help & FAQ (StudioHelpPage + StudioHelpFaq) ───────────────────────────
 
@@ -468,7 +521,7 @@ export const studio: Catalog = {
   "press.fact.from": "From",
   "press.fact.pronouns": "Pronouns",
   "press.fact.since": "Since",
-  "press.fact.plays": "Plays",
+  "press.fact.followers": "Followers",
   "press.fact.forFansOf": "For fans of",
   "press.section.preview": "Streamable <em>preview</em>",
   "press.fullPromoRequestedToast": "Full promo requested",
@@ -504,7 +557,7 @@ export const studio: Catalog = {
     "The split lives in the co-op's deed, binding by law. <em>The floor rises freely and can only fall by a two-thirds vote.</em>",
   "terms.deal.tips.title": "Tips are <em>100%</em>, always",
   "terms.deal.tips.body":
-    "No platform cut on tips, ever. This one isn't up for a vote. It's a founding term.",
+    "No platform cut on tips, ever. This one is a founding term, fixed outside any vote.",
   "terms.deal.data.title": "Your data is <em>never</em> sold",
   "terms.deal.data.body":
     "It stays inside the co-op and does exactly one job: paying artists. History is off by default and erasable in one tap.",
@@ -515,7 +568,7 @@ export const studio: Catalog = {
   "terms.sec.deed.num": "01: the co-op deed",
   "terms.sec.deed.heading": "What it means that you <em>own</em> this.",
   "terms.sec.deed.p1":
-    "QueerPulse Studio is a registered co-operative. Members, listeners and artists alike, own it. That isn't branding: it's a legal structure with a deed you can read, that binds the people running it.",
+    "QueerPulse Studio is a registered co-operative. Members, listeners and artists alike, own it. That makes it a legal structure, with a deed you can read, that binds the people running it.",
   "terms.sec.deed.p2":
     "The deed fixes three things the people in charge <strong>cannot quietly change</strong>: the 80% artist floor, the 100% tip pass-through, and the public ledger. Altering the floor downward needs a two-thirds supermajority of the whole membership. The council is <em>elected, term-limited, and paid on the ledger</em>. There are no founder shares and no investor veto.",
   "terms.sec.deed.pull":
@@ -566,7 +619,7 @@ export const studio: Catalog = {
     "Every listen up to removal is paid in the next cycle. Taking work down never claws back money already earned.",
   "rights.promise.banking.title": "Banking untouched",
   "rights.promise.banking.body":
-    "A takedown is not an account closure. Your SEPA details, your payout schedule, your collaborator splits: all stay live.",
+    "A takedown leaves your account open. Your SEPA details, your payout schedule, your collaborator splits: all stay live.",
 
   "rights.releases.heading": "Your <em>releases</em>",
   "rights.releases.liveCount_one": "{count} live",
@@ -626,6 +679,18 @@ export const studio: Catalog = {
   "track.sidebar.creditsHeading": "Credits",
   "track.sidebar.leadSheetLabel": "Lead sheet",
   "track.sidebar.downloadCta": "Download",
+  "track.sidebar.curatorRole": "programming lead · the Wednesday set",
+  "track.sidebar.splitLead":
+    "{artistShare} to {artist}. {platformShare} keeps Studio open.",
+  "track.sidebar.split.artist.label": "Artist",
+  "track.sidebar.split.artist.sub": "Direct, monthly",
+  "track.sidebar.split.fund.label": "Solidarity fund",
+  "track.sidebar.split.fund.sub": "Grants & mastering vouchers",
+  "track.sidebar.split.platform.label": "Platform & staff",
+  "track.sidebar.split.platform.sub": "Hosting, captions, council",
+  "track.sidebar.split.fees.label": "Payment fees",
+  "track.sidebar.split.fees.sub": "Stripe / SEPA only",
+  "track.sidebar.sheetSpec": "6 pages · piano + voice · {licence} · {artist}",
   "track.lyrics.heading": "Lyrics & <em>translation</em>",
   "track.lyrics.leadSheetChordsCta": "Lead sheet & chords",
 
@@ -635,6 +700,7 @@ export const studio: Catalog = {
   "album.tabs.tracklist": "Tracklist",
   "album.tabs.linerNotes": "Liner notes",
   "album.main.perPlaySuffix": "{amount} / play",
+  "album.main.perPlayNote": "Every play pays {amount}",
   "album.sidebar.buyEyebrow": "Studio is open to you",
   "album.sidebar.buySub": "Buy the album · keep it offline · FLAC + AAC.",
   "album.sidebar.buyCta": "Buy · {amount}",
@@ -643,14 +709,12 @@ export const studio: Catalog = {
   "album.sidebar.ledgerHeading": "Public ledger for <em>this release</em>",
   "album.sidebar.paidToArtistLifetime": "Paid to {artist}, lifetime",
   "album.sidebar.paidToCollaborators": "Paid to collaborators",
-  "album.sidebar.playsThisMonth": "Plays this month",
 
   // ── Artist profile page (StudioArtistPage + Hero + Main + Sidebar) ────────
   // Scope note: artist bio prose is content — left English (§1).
   "artist.tabs.music": "Music",
   "artist.tabs.about": "About",
   "artist.hero.followCta": "Follow",
-  "artist.hero.followingCta": "Following",
   "artist.hero.followedToast": "Following {artist}",
   "artist.hero.unfollowedToast": "Unfollowed {artist}",
   "artist.hero.subscribeNote":
@@ -664,7 +728,6 @@ export const studio: Catalog = {
   "artist.sidebar.subscribeCta": "Subscribe · {amount}/mo",
   "artist.sidebar.oneOffTipCta": "One-off tip",
   "artist.sidebar.thisMonthHeading": "{artist} · this month",
-  "artist.sidebar.plays": "Plays",
   "artist.sidebar.earningsStreaming": "Earnings (streaming)",
   "artist.sidebar.tipsReceived": "Tips received",
   "artist.sidebar.directSubscribers": "Direct subscribers",
@@ -694,7 +757,7 @@ export const studio: Catalog = {
     "The artist removed it from Studio: their right, their call. <em>No reason is owed</em>, and we don't ask for one.",
   "withdrawn.card.title": "What this <em>means</em>",
   "withdrawn.card.body":
-    "A takedown isn't a deletion of the work itself. The masters stay with the artist, who can re-publish any time. It just means it's no longer served here. If you'd bought or saved it, it stays in your library as a record, marked withdrawn.",
+    "A takedown removes the release from Studio and leaves the work itself intact. The masters stay with the artist, who can re-publish any time. If you'd bought or saved it, it stays in your library as a record, marked withdrawn.",
   "withdrawn.card.jadeLine":
     "If you tipped or bought this, <em>every cent already reached the artist</em> and stays with them. Nothing is clawed back.",
   "withdrawn.visitArtistCta": "Visit the artist's page",
@@ -719,7 +782,7 @@ export const studio: Catalog = {
   "council.hero.dek":
     "Elected yearly by the assembly, paid a flat stipend on the public ledger, term-limited to two years. They program the weekly set, run triage, and write the notes. <em>Everything they pick has their name on it.</em>",
   "council.intro.lede":
-    "The council isn't a tastemaker board behind glass. They listen in the open, <em>justify every pick in a paragraph</em>, and answer for the rate. You can read their notebooks, see their slates, and vote them out.",
+    "The council works in the open. They listen publicly, <em>justify every pick in a paragraph</em>, and answer for the rate. You can read their notebooks, see their slates, and vote them out.",
 
   "council.fact.seats.value": "<em>6</em> seats",
   "council.fact.seats.label": "2-year terms · staggered",
@@ -859,6 +922,7 @@ export const studio: Catalog = {
   "notifications.day.week": "This week",
   "notifications.action.joinRoom": "Join the set",
   "notifications.action.rsvp": "RSVP",
+  "notifications.rsvpToast": "You're on the list for this premiere",
 
   // ── Tip modal (StudioTipModal — reused across Studio pages) ───────────────
   "tipModal.dialogAria": "Send a tip to {recipient}",
@@ -872,11 +936,14 @@ export const studio: Catalog = {
   "tipModal.sendCta": "Tip {amount}",
   "tipModal.note":
     "Pays {recipient} on top of streaming · <em>nothing skimmed</em>",
-  "tipModal.success.title":
-    "Thank you. That's <em>{amount}</em> to {recipient}.",
   "tipModal.success.body":
     "100% of your tip reaches {recipient} directly. No platform cut, no processing skimmed off the top.",
   "tipModal.success.backCta": "Back to the music",
+  "tipModal.amountsLabel": "Tip amount",
+  "tipModal.failed":
+    "The demo card issuer declined {amount} because tips above {limit} are not accepted. Pick a smaller amount and try again, nothing was charged",
+  "tipModal.success.heading": "Tip sent",
+  "tipModal.success.sentTo": "Sent to {recipient}",
 
   // ── Creator back-office nav (StudioCreatorShell) ───────────────────────────
   "creator.nav.dashboard": "Dashboard",
@@ -936,12 +1003,23 @@ export const studio: Catalog = {
   "dashboard.hero.sub":
     "<em>{trackTitle}</em> is two months old and still climbing. The curators kept it in rotation.",
 
-  "dashboard.stats.playsThisMonth": "Plays · this month",
   "dashboard.stats.streamingEarnings": "Streaming earnings",
   "dashboard.stats.tipsReceived": "Tips received",
   "dashboard.stats.nextPayout": "Next payout · {date}",
 
-  "dashboard.charts.dailyPlays.heading": "Daily plays · <em>last 14 days</em>",
+  "nextSteps.heading": "Next steps",
+  "nextSteps.drafts_one": "You have {count} draft waiting to be finished",
+  "nextSteps.drafts_other": "You have {count} drafts waiting to be finished",
+  "nextSteps.draftsAction": "Finish drafts",
+  "nextSteps.scheduled_one": "{count} release is scheduled",
+  "nextSteps.scheduled_other": "{count} releases are scheduled",
+  "nextSteps.scheduledAction": "Review scheduled releases",
+  "nextSteps.support":
+    "Add Bandcamp, Ko-fi or Patreon links so people can support you",
+  "nextSteps.supportAction": "Add support links",
+  "nextSteps.press": "Set up your press kit with a contact and quotes",
+  "nextSteps.pressAction": "Edit press kit",
+
   "dashboard.charts.curators.heading":
     "Curators & <em>placements</em> · what landed your work this week",
   "dashboard.charts.geography.heading": "Where they're <em>listening</em> from",
@@ -1007,6 +1085,15 @@ export const studio: Catalog = {
   "upload.splits.invitedToast": "Invited {handle} to the splits",
   "upload.splits.invitedSubLabel": "invited · IBAN pending",
   "upload.splits.invitedRole": "collaborator · all tracks",
+  "upload.splits.demo.mariana.subtitle":
+    "you · songwriter, voice, piano · all tracks",
+  "upload.splits.demo.mariana.role": "writer and performer · tracks 1 to 11",
+  "upload.splits.demo.joao.subtitle": "cellist · IBAN invite pending",
+  "upload.splits.demo.joao.role": "cello · tracks 2, 7 and 11",
+  "upload.splits.demo.ines.subtitle": "mix and master · QueerPulse member",
+  "upload.splits.demo.ines.role": "production · all tracks",
+  "upload.splits.demo.coro.subtitle": "choir · 15 voices sharing one split",
+  "upload.splits.demo.coro.role": "choir · track 4",
 
   "upload.side.files.eyebrow": "What we do with your files",
   "upload.side.files.title": "Yours, <em>still</em>.",
@@ -1077,9 +1164,10 @@ export const studio: Catalog = {
 
   "payouts.breakdown.heading": "This month, <em>track-by-track</em>",
   "payouts.breakdown.rateNote":
-    "€0.05 per qualifying play (≥30s, capped 1/listener/track/day). Updates nightly at 02:00 Lisbon.",
+    "Streaming earnings update nightly at 02:00 Lisbon. Each track shows its saves and playlist adds, and anything under 5 reads Fewer than 5.",
   "payouts.breakdown.subtotalLabel":
     "Streaming subtotal · before splits + tips + buys",
+  "payouts.breakdown.savesLine": "{total} saves and playlist adds",
 
   "payouts.sidebar.methodEyebrow": "Payout method · active",
   "payouts.sidebar.methodHeading": "Sending to <em>SEPA</em>",
@@ -1088,10 +1176,14 @@ export const studio: Catalog = {
   "payouts.sidebar.method.stripe.label": "Stripe Connect",
   "payouts.sidebar.method.stripe.hint": "connected · backup route",
   "payouts.sidebar.method.stripe.switchCta": "Switch",
+  "payouts.sidebar.method.stripe.demoToast":
+    "Switching to Stripe Connect is switched off in the demo, so your payouts stay on SEPA",
   "payouts.sidebar.method.coopCredit.label": "Co-op credit",
   "payouts.sidebar.method.coopCredit.hint":
     "spend at Casa do Comum, rehearsal rooms · €0 fees",
   "payouts.sidebar.method.coopCredit.addCta": "Add",
+  "payouts.sidebar.method.coopCredit.demoToast":
+    "Adding co-op credit is switched off in the demo, so your payouts stay on SEPA",
 
   "payouts.preferences.heading": "Payout <em>preferences</em>",
   "payouts.preferences.threshold.label": "Minimum threshold",
@@ -1103,7 +1195,6 @@ export const studio: Catalog = {
   "payouts.preferences.taxResidency.label": "Tax residency",
   "payouts.preferences.taxResidency.hint":
     "We auto-issue your IRS recibo verde for each payout.",
-  "payouts.preferences.notificationEmail.label": "Notification email",
 
   "payouts.export.headers.period": "Period",
   "payouts.export.headers.date": "Date",
@@ -1138,6 +1229,11 @@ export const studio: Catalog = {
   "program.toast.openingHomepagePreview": "Opening homepage preview…",
   "program.toast.draftSaved": "Draft saved",
   "program.toast.published": "Slate published. Homepage rotates at noon",
+  "program.toast.movedSingle": "{title} is now number {position}",
+  "program.toast.addSingleFromInbox":
+    "Pick a submission in the inbox and choose + Slate to fill an open slot",
+  "program.toast.addBroadcastDemo":
+    "Scheduling a new broadcast is switched off in the demo",
 
   "program.inbox.heading": "Submissions · <em>{count} new</em>",
   "program.inbox.triageCta": "Triage",
@@ -1158,6 +1254,8 @@ export const studio: Catalog = {
     "Write a one-line note · why this, why now",
   "program.slate.singles.noteAria": "Note for {title}",
   "program.slate.singles.removeAria": "Remove {title}",
+  "program.slate.singles.moveUpAria": "Move {title} up",
+  "program.slate.singles.moveDownAria": "Move {title} down",
   "program.slate.singles.addSlotCta":
     "＋ drag a track from submissions, or click to add from catalogue",
   "program.slate.collections.heading": "Collection rotation",
@@ -1216,12 +1314,16 @@ export const studio: Catalog = {
   "triage.detail.decision.hint":
     "Required for pass. <em>Not required</em> for slate.",
   "triage.detail.holdCta": "Hold & second-read",
-  "triage.detail.passCta": "Pass · with the sentence",
-  "triage.detail.addToSlateCta": "＋ Add to next slate",
+  "triage.detail.passCta": "Pass with your note",
+  "triage.detail.addToSlateCta": "Add to next slate",
   "triage.detail.toast.held": "Held for a second read",
   "triage.detail.toast.passed":
     "Passed with your sentence, sent to {artistName}",
   "triage.detail.toast.addedToSlate": "Added to the next slate",
+  "triage.documentTitle": "Curator triage",
+  "triage.tabsLabel": "Submission queues",
+  "triage.detail.regionLabel": "Selected submission",
+  "triage.detail.pauseAria": "Pause",
 
   // ── Live room (StudioLivePage + LiveNow + LiveChat) ────────────────────────
   // Chrome only. The demo's mock content for this page lives in studioShowcase
@@ -1249,6 +1351,9 @@ export const studio: Catalog = {
   "liveChat.sendAria": "Send",
   "liveChat.tipPresetCta": "Tip {amount}",
   "liveChat.tipCustomCta": "Tip €__",
+  "liveChat.tabsLabel": "Chat panels",
+  "liveChat.tips.empty": "No tips yet. Tip lines appear here as they come in",
+  "liveChat.logLabel": "Live chat messages",
 
   // ── Go live / broadcaster console (StudioBroadcastPage + Console) ─────────
   // Chrome only. The demo's mock content for this page lives in studioShowcase
@@ -1368,6 +1473,7 @@ export const studio: Catalog = {
   "receipt.detail.chosenByDefault": "<em>chosen by default</em>",
   "receipt.detail.visibilityValue":
     "Public · with your name · <em>change to anonymous</em>",
+  "receipt.detail.lisbonTime": "{date} · {time} Lisbon",
   "receipt.note.label": "Your note to {artist}",
   "receipt.note.repliedSuffix": "<em>replied</em>",
   "receipt.note.replyWhen": "{relativeTime} · still on air, two tracks later",
@@ -1378,10 +1484,8 @@ export const studio: Catalog = {
   "receipt.actions.share": "Share paid card",
   "receipt.actions.tipAgain": "Tip again",
   "receipt.actions.openArtistPage": "Open {artist}'s page",
-  "receipt.actions.emailCopy": "Email me a copy",
   "receipt.toast.shareCopied": "Paid card copied. Share it anywhere.",
   "receipt.toast.tipAgain": "Tip {artist} again, same track.",
-  "receipt.toast.emailCopy": "A copy is on its way to your inbox.",
   "receipt.privacyNote":
     "By default tips are <em>public, with your name</em>. You can make this one anonymous, or set every future tip to anonymous, in settings. <em>We don't share tip data with anyone.</em> <a>Privacy commitments</a>",
 
@@ -1404,7 +1508,7 @@ export const studio: Catalog = {
   "checkout.expiryPlaceholder": "MM / YY",
   "checkout.cvcLabel": "CVC",
   "checkout.payCta": "Pay {amount}{cadence}",
-  "checkout.cadenceMonthly": "/ month",
+  "checkout.cadenceMonthly": "/month",
   "checkout.prototypeNote":
     "This is a prototype. No card is charged and nothing is stored.",
   "checkout.planName": "Sustain",
@@ -1421,6 +1525,11 @@ export const studio: Catalog = {
   "checkout.reassure.share":
     "{percent}% of every euro is paid straight to the artists you listen to.",
   "checkout.reassure.noAds": "No ads, ever. Your listening data is never sold.",
+  "checkout.processingCta": "Processing payment…",
+  "checkout.declined":
+    "The demo bank declined the card ending {last4}. Check the card number or try another card, nothing was charged",
+  "checkout.declineHint":
+    "To see a declined payment, enter a card number ending in 0002.",
 
   // ── Solidarity fund (StudioSolidarityFundPage + Balance + Flows + Log) ────
   // Chrome only. Two paragraphs deliberately NOT swept — flagged in the sweep
@@ -1650,6 +1759,7 @@ export const studio: Catalog = {
   // location values are content, passed in via `values`.
   "albumHero.byLine": "by <strong>{artist}</strong> · {year} · {location}",
   "artist.sidebar.perMonthSuffix": "/month",
+  "artist.sidebar.newFollowers": "New followers",
   "liveNow.onAirTag": "on air",
   "liveNow.byFromLine": "by <strong>{artist}</strong> · from <em>{album}</em>",
   "liveNow.setBuilding.activityLine":
@@ -1662,6 +1772,7 @@ export const studio: Catalog = {
   // ── no-literal-string sweep: misc chrome eyebrows/labels ──────────────────
   "album.sidebar.splitHint":
     "If you buy at {price}: <em>{artistShare} to {artist}</em>, {solidarityShare} to the solidarity fund, {platformShare} to the platform, processing absorbed.",
+  "album.sidebar.savesThisMonth": "Saves this month",
   "set.page.programmedByEyebrow": "Set · programmed by {curator}",
   "sheet.checkout.leadSheetLabel": "Lead sheet: {title}",
   // ── Studio v1 (2026-10-08) ─────────────────────────────────────────────────
@@ -1698,7 +1809,6 @@ export const studio: Catalog = {
   "states.notFoundBody":
     "It may have been removed, or the link may be out of date",
   "states.backHomeCta": "Back to Studio home",
-  "states.loadingLabel": "Loading",
   "save.saveCta": "Save",
   "save.saveReleaseCta": "Save {title}",
   "save.removeSavedCta": "Remove {title} from saved",
@@ -1719,7 +1829,19 @@ export const studio: Catalog = {
   "liked.page.showMore": "Show more songs",
   "liked.page.loadingMore": "Loading more songs",
   "liked.page.loadMoreError": "We couldn't load more of your liked songs",
-  "errors.generic": "Something went wrong. Try again",
+  "liked.page.undoCta": "Undo",
+  "liked.page.unlikedManyToast_one": "Removed {count} song from Liked songs",
+  "liked.page.unlikedManyToast_other": "Removed {count} songs from Liked songs",
+  "liked.page.loadingAll_one": "Loading {count} song",
+  "liked.page.loadingAll_other": "Loading all {count} songs",
+  "liked.page.loadAllError":
+    "We couldn't load all your liked songs, so nothing started. {reason}",
+  "liked.page.loadingLabel": "Loading Liked songs",
+  "liked.page.nothingToPlayToast":
+    "None of your liked songs can play right now",
+  "liked.page.cancelLoadingAria": "Cancel loading your liked songs",
+  "errors.generic":
+    "That didn't work. Check your connection and try again in a moment",
   "errors.accessRequired": "Your Studio access has ended",
   "errors.notPersonaOwner": "Only the persona's owners can change its releases",
   "errors.personaKindNotAllowed":
@@ -1743,6 +1865,13 @@ export const studio: Catalog = {
   "shell.menu.myClaims": "My claims",
   "shell.menu.myClaimsBadge_one": "{count} claim waiting for your reply",
   "shell.menu.myClaimsBadge_other": "{count} claims waiting for your reply",
+  "shell.menu.counterWindows": "Claims on your tracks",
+  "shell.menu.counterWindowsBadge_one": "{count} claim you can still answer",
+  "shell.menu.counterWindowsBadge_other": "{count} claims you can still answer",
+  "shell.menu.disputesBadge_one":
+    "{count} takedown dispute waiting for our team",
+  "shell.menu.disputesBadge_other":
+    "{count} takedown disputes waiting for our team",
   "shell.menu.showAll_one": "Show all ({count})",
   "shell.menu.showAll_other": "Show all ({count})",
   "shell.menu.showFewer": "Show fewer",
@@ -1753,6 +1882,11 @@ export const studio: Catalog = {
   "shell.sustainShort": "Sustain",
   "shell.uploadCta": "Upload a release",
   "creator.avatarLabel": "Uploading as {name}",
+  "creator.navLabel": "Creator pages",
+  "rail.collapseLabel": "Collapse sidebar",
+  "rail.expandLabel": "Expand sidebar",
+  "accessError.pageTitle": "Studio access",
+  "accessError.title": "We couldn't check your Studio access",
   "rail.v1.navLabel": "Studio",
   "rail.v1.search": "Search",
   "rail.v1.upload": "Upload a release",
@@ -1802,6 +1936,11 @@ export const studio: Catalog = {
   "release.explicitShort": "E",
   "release.moreActions": "More actions",
   "release.report": "Report release",
+  "release.queueFailedToast": "This release can't join your queue right now",
+  "release.queueEmptyReason": "No tracks in this release are ready to play yet",
+  "release.queuePartialToast": "Added {count} of {total} tracks to your queue",
+  "release.queuePartialReasonToast":
+    "Added {count} of {total} tracks. {reason}",
   "trackPage.byLine": "by <strong>{artist}</strong> · from <em>{release}</em>",
   "trackPage.crumbLabel": "Breadcrumb",
   "trackPage.lyricsHeading": "Lyrics",
@@ -1828,20 +1967,22 @@ export const studio: Catalog = {
   "playerBar.seekValueChapter": "{elapsed} of {total}, {chapter}",
   "playerBar.seekValueUnknown": "Length not known yet",
   "playerBar.remainingTime": "−{time}",
-  "playerBar.remainingToggle": "Show time left",
-  "playerBar.cantPlay": "This track can't play right now",
+  "playerBar.timeToggleLabel": "{time}, show time left",
   "playerBar.retry": "Retry the track",
   "playerBar.close": "Close player",
+  "playerBar.autoplayBlocked": "Press play to start",
+  "playerBar.offlinePaused":
+    "You're offline, so playback paused. It picks up again if you're back online within 3 minutes",
   "uploadFlow.hero.title": "Put your music <em>out.</em>",
   "uploadFlow.hero.sub":
     "Three steps: the release, its tracks, then publish. MP3, M4A, WAV or AIFF, up to 50 MB a track",
   "uploadFlow.steps.label": "Upload steps",
   "uploadFlow.steps.release.nm": "Release",
-  "uploadFlow.steps.release.sub": "· title · cover · details",
+  "uploadFlow.steps.release.sub": "title · cover · details",
   "uploadFlow.steps.tracks.nm": "Tracks",
-  "uploadFlow.steps.tracks.sub": "· audio · credits · lyrics",
+  "uploadFlow.steps.tracks.sub": "audio · credits · lyrics",
   "uploadFlow.steps.publish.nm": "Publish",
-  "uploadFlow.steps.publish.sub": "· checks · rights",
+  "uploadFlow.steps.publish.sub": "checks · rights",
   "uploadFlow.release.heading": "The <em>release</em>",
   "uploadFlow.release.sub":
     "Saved as a draft as you go. Nothing is public until you publish",
@@ -1865,7 +2006,7 @@ export const studio: Catalog = {
   "uploadFlow.saving": "Saving",
   "uploadFlow.saved": "Draft saved",
   "uploadFlow.cover.heading": "Cover <em>art</em>",
-  "uploadFlow.cover.placeholder": "Add a cover",
+  "uploadFlow.cover.placeholder": "No cover yet",
   "uploadFlow.cover.hint":
     "A square image works best. You can crop it after choosing",
   "uploadFlow.backToRelease": "Back to the release",
@@ -1943,7 +2084,71 @@ export const studio: Catalog = {
     "Members with Studio access can play it now. You can unpublish it from your artist page at any time",
   "uploadFlow.published.openCta": "Open the release",
   "uploadFlow.published.anotherCta": "Upload another release",
-  "uploadFlow.noPersona.title": "You need a Studio artist persona",
+  "uploadFlow.pageTitle": "New release",
+  "uploadFlow.leave.uploadsBody":
+    "Your uploads are still running. If you leave now they stop, and you'll need to add those files again",
+  "uploadFlow.leave.detailsBody":
+    "You have details that aren't saved yet. If you leave now, they're lost",
+  "uploadFlow.leave.heldFilesBody":
+    "Some files stopped before they finished uploading. If you leave now, you'll need to add them again",
+  "uploadFlow.autosave.saving": "Saving…",
+  "uploadFlow.autosave.savedAt": "Saved {time}",
+  "uploadFlow.autosave.notSaved": "Not saved: {reason}",
+  "uploadFlow.autosave.waitingForTitle": "Waiting for a title",
+  "uploadFlow.release.noChangesReason":
+    "Change a detail first, then save it here",
+  "uploadFlow.release.personaLockedReason":
+    "A release stays with the persona it was started under",
+  "uploadFlow.errorSummary.lead_one": "Fix this before you continue:",
+  "uploadFlow.errorSummary.lead_other":
+    "Fix these {count} things before you continue:",
+  "uploadFlow.steps.doneLabel": "(done)",
+  "uploadFlow.steps.blocked.needsDraft": "Save the release details first",
+  "uploadFlow.steps.blocked.alreadyLive": "This release is already live",
+  "uploadFlow.cover.tooSmall":
+    "This cover is {width} by {height} px. Use at least {min} by {min} px so it stays sharp on large screens",
+  "uploadFlow.cover.addCta": "Add cover",
+  "uploadFlow.cover.changeCta": "Change cover",
+  "uploadFlow.locked.takenDownBodyNoReason":
+    "Taken down by our team. The takedown notice in your notifications says why. It can't be edited while it's down",
+  "uploadFlow.publish.done.title": "The release has a title",
+  "uploadFlow.publish.done.cover": "The cover is in place",
+  "uploadFlow.publish.done.rights": "You confirmed you hold the rights",
+  "uploadFlow.publish.done.tracks": "At least one track has audio",
+  "uploadFlow.publish.done.sources": "Every track credits its sources",
+  "uploadFlow.publish.done.pending": "Every track finished uploading",
+  "uploadFlow.files.cancelled":
+    "Upload cancelled. Retry starts the same file again",
+  "uploadFlow.files.errorPresignExpired":
+    "The upload link expired before the file finished. Retry to get a fresh link",
+  "uploadFlow.files.cancelUpload": "Cancel upload of track {position}, {title}",
+  "uploadFlow.files.attachAudio": "Attach audio",
+  "uploadFlow.files.attachAudioFor":
+    "Attach audio to track {position}, {title}",
+  "uploadFlow.files.reorderWaits":
+    "Tracks can move once every track has finished preparing",
+  "uploadFlow.files.moveAtEnd": "This track can't move further that way",
+  "uploadFlow.files.retryAll_one": "Retry {count} track",
+  "uploadFlow.files.retryAll_other": "Retry {count} tracks",
+  "uploadFlow.files.offline":
+    "You're offline. Uploads stop until you're back, then Retry picks them up",
+  "uploadFlow.files.discardTitle": "Discard your changes to {title}?",
+  "uploadFlow.files.discardBody":
+    "The edits to this track's details aren't saved. Persona credits you added are already saved and stay",
+  "uploadFlow.files.discardConfirm": "Discard changes",
+  "uploadFlow.files.discardKeep": "Keep editing",
+  "uploadFlow.files.titleRequired": "Title is required",
+  "uploadFlow.files.creditNameLabel": "Name",
+  "uploadFlow.files.creditRoleLabel": "Role",
+  "uploadFlow.files.creditNeedsName":
+    "Add a name for this credit, or clear its role",
+  "uploadFlow.files.creditNeedsRole":
+    "Add a role for this credit, or clear its name",
+  "uploadFlow.files.personaCreditsSaveOwn":
+    "Persona credits save as soon as you add them",
+  "uploadFlow.files.pasteCut":
+    "Only the first {max} characters fit, so the end of what you pasted was left out",
+  "uploadFlow.noPersona.title": "Create a persona that works with Studio",
   "uploadFlow.noPersona.body":
     "To upload, you need a published persona set to Open to everyone, of one of these kinds: musician, DJ, podcaster, podcast producer, poet, spoken word artist, drag performer, performer, dancer, ballroom and vogue, or burlesque performer. Set one up, then come back",
   "uploadFlow.noPersona.cta": "Go to your personas",
@@ -1962,8 +2167,6 @@ export const studio: Catalog = {
     "Taken down by our team: {reason}. It can't be edited while it's down",
   "uploadFlow.locked.backCta": "Back to your releases",
   // ── Studio v2 (2026-10-13) ──────────────────────────────────────────────────
-  "artistPage.followerCount_one": "{count} follower",
-  "artistPage.followerCount_other": "{count} followers",
   "errors.playlistLimit":
     "You can keep up to 100 playlists. Delete one to make another",
   "errors.playlistTrackLimit": "A playlist holds up to 500 tracks",
@@ -2046,6 +2249,7 @@ export const studio: Catalog = {
   "playlist.row.orderError": "We couldn't save the new order. Try again",
   "playlist.row.removeError": "We couldn't remove that. Try again",
   "playlist.card.coverLabel": "Playlist cover",
+  "playlist.card.nothingToPlay": "This playlist has no tracks you can play yet",
   "playlist.inThese.heading": "In these <em>playlists</em>",
   "searchPage.filter.playlists": "Playlists",
   "searchPage.section.playlists": "<em>Playlists</em>",
@@ -2082,6 +2286,27 @@ export const studio: Catalog = {
   "libraryLive.showMoreArtists": "Show more artists",
   "libraryLive.loadingMoreArtists": "Loading more artists",
   "libraryLive.loadMoreArtistsError": "We couldn't load more artists",
+  "libraryLive.sort.recent": "Recent",
+  "libraryLive.sort.title": "Title",
+  "libraryLive.sort.creator": "Creator",
+  "libraryLive.sort.name": "Name",
+  "libraryLive.sort.triggerAria": "Sort by {sort}",
+  "libraryLive.sort.menuLabel": "Sort by",
+  "libraryLive.filterLabel": "Filter your library",
+  "libraryLive.filterPlaceholder": "Filter by title or creator",
+  "libraryLive.noMatches.title": 'Nothing here matches "{query}"',
+  "libraryLive.noMatches.body":
+    "Try another word or clear the filter to see everything you kept",
+  "libraryLive.clearFilterCta": "Clear filter",
+  "libraryLive.savedReleases": "Saved <em>releases</em>",
+  "libraryLive.showMoreSaves": "Show more saves",
+  "libraryLive.loadingMoreSaves": "Loading more saves",
+  "libraryLive.loadMoreSavesError": "We couldn't load more of your saves",
+  "libraryLive.removeSavedAria": "Remove {title} from your library",
+  "libraryLive.removedToast": "Removed {title} from your library",
+  "libraryLive.undoCta": "Undo",
+  "libraryLive.playlistNothingToPlay": "This playlist has nothing to play yet",
+  "libraryLive.olderSavesError": "We couldn't load your older saves.",
   "numbers.eyebrow": "Your numbers",
   "numbers.title": "How <em>{name}</em> is reaching people",
   "numbers.dek":
@@ -2093,6 +2318,7 @@ export const studio: Catalog = {
   "numbers.column.release": "Release",
   "numbers.column.saves": "Saves",
   "numbers.column.inPublicPlaylists": "In public playlists",
+  "numbers.column.releaseOrTrack": "Release or track",
   "numbers.fewerThanFive": "Fewer than 5",
   "numbers.showTracks": "Show tracks for {title}",
   "numbers.hideTracks": "Hide tracks for {title}",
@@ -2133,10 +2359,12 @@ export const studio: Catalog = {
   "creator.nav.yourNumbers": "Your numbers",
   // Demo-only showcase copy moved out of P2's data files (spec 3.2). Names
   // of people, places, tracks and releases stay literal in the data files.
-  "demo.dashboard.trend.plays":
-    "<up>{delta}</up> vs. last month · {active} of {total} tracks active",
-  "demo.dashboard.trend.earnings":
-    "<up>{delta}</up> vs. last month · {rate} per qualifying play",
+  "demo.dashboard.stats.followers": "Followers",
+  "demo.dashboard.stats.saves": "Saves · this month",
+  "demo.dashboard.trend.followers": "<up>{delta}</up> this month",
+  "demo.dashboard.trend.saves":
+    "<up>{delta}</up> vs. last month · {active} of {total} tracks saved",
+  "demo.dashboard.trend.earnings": "<up>{delta}</up> vs. last month",
   "demo.dashboard.trend.tips":
     "{tippers} tippers, {notes} with notes · <up>{recent} since you opened this page</up>",
   "demo.dashboard.trend.payout":
@@ -2160,7 +2388,27 @@ export const studio: Catalog = {
   "demo.dashboard.curator.today": "today",
   "demo.dashboard.otherCities": "{count} other cities",
   "demo.dashboard.peakSummary":
-    "Peak: <em>today</em> · {plays} plays · Sara picked you on Monday",
+    "Peak: <em>{day}</em> · {total} saves and playlist adds · Sara picked you on Monday",
+  "demo.dashboard.activity.title": "Saves and playlist adds",
+  "demo.dashboard.activity.sub_one": "Last day · Studio never counts plays",
+  "demo.dashboard.activity.sub_other":
+    "Last {count} days · Studio never counts plays",
+  "demo.dashboard.activity.rangeLabel": "Time range",
+  "demo.dashboard.activity.rangeAria_one": "Show the last day",
+  "demo.dashboard.activity.rangeAria_other": "Show the last {count} days",
+  "demo.dashboard.activity.ariaLabel_one":
+    "Bar chart of saves and playlist adds for the last day",
+  "demo.dashboard.activity.ariaLabel_other":
+    "Bar chart of saves and playlist adds per day for the last {count} days",
+  "demo.dashboard.activity.today": "Today",
+  "demo.dashboard.activity.showTable": "Show data table",
+  "demo.dashboard.activity.hideTable": "Hide data table",
+  "demo.dashboard.activity.tableCaption_one":
+    "Saves and playlist adds for the last day",
+  "demo.dashboard.activity.tableCaption_other":
+    "Saves and playlist adds per day, last {count} days",
+  "demo.dashboard.activity.dayColumn": "Day",
+  "demo.dashboard.activity.countColumn": "Saves and playlist adds",
   "demo.dashboard.topTrackShare": "<em>{title}</em> is {percent}% of this",
   "demo.dashboard.goLivePlan": "Plan: {date} · premiere of {title}",
   "demo.dashboard.nextPayout": "Next: {amount} on {date} · SEPA",
@@ -2274,7 +2522,7 @@ export const studio: Catalog = {
   "helpLive.hero.dek":
     "Answers about listening, sharing your music and staying safe in Studio. If something's missing, our team reads every message.",
   "helpLive.search.label": "Search Studio help",
-  "helpLive.search.placeholder": "Try saving, playlists or disputes",
+  "helpLive.search.placeholder": "Try saving or playlists",
   "helpLive.search.clearCta": "Clear search",
   "helpLive.search.resultCount_one": "{count} answer matches",
   "helpLive.search.resultCount_other": "{count} answers match",
@@ -2331,6 +2579,7 @@ export const studio: Catalog = {
   "helpLive.contact.platform.body":
     "Questions about your account and staying safe across QueerPulse.",
   "helpLive.contact.platform.action": "Open QueerPulse help",
+  "helpLive.pageTitle": "Help",
 
   "aboutLive.hero.eyebrow": "About Studio",
   "aboutLive.hero.title": "Music by queer artists, for <em>our members</em>.",
@@ -2425,7 +2674,7 @@ export const studio: Catalog = {
     "Studio follows the choices you've made for QueerPulse.",
   "accessibilityLive.item.motion.heading": "Respects <em>reduced motion</em>",
   "accessibilityLive.item.motion.body":
-    "When your device or QueerPulse asks for reduced motion, panels and lists appear without sliding or fading.",
+    "When your device or QueerPulse asks for reduced motion, panels and lists stop sliding and resizing. Now playing keeps a 0.2 second fade, so it still opens and closes smoothly.",
   "accessibilityLive.item.themes.heading": "Light and <em>dark</em> themes",
   "accessibilityLive.item.themes.body":
     "Studio follows your QueerPulse theme. Switch it from the account menu or from Studio settings.",
@@ -2444,6 +2693,10 @@ export const studio: Catalog = {
   "accessibilityLive.contact.body":
     "Tell our team what got in your way and where. We treat it as a bug to fix.",
   "accessibilityLive.contact.cta": "Report an accessibility problem",
+  "accessibilityLive.pageTitle": "Accessibility",
+  "accessibilityLive.shortcutsNote":
+    "The single-letter shortcuts can be turned off in Settings.",
+  "accessibilityLive.shortcutsNoteCta": "Open Settings",
 
   "rightsLive.eyebrow": "Rights and takedowns",
   "rightsLive.title": "How rights <em>work</em> in Studio",
@@ -2496,6 +2749,8 @@ export const studio: Catalog = {
   "dispute.replyLabel": "Their reply",
   "dispute.decidedOn": "Decided {date}",
   "dispute.limitReached": "This release has used all three disputes.",
+  "dispute.limitNextStep":
+    "Our team can still look at this release. Read your rights, or write to us with what changed.",
 
   "claimPanel.heading": "Copyright claim",
   "claimPanel.trackLabel": "About {title}",
@@ -2546,6 +2801,8 @@ export const studio: Catalog = {
     "Our team rejected the claim. The track is back online",
   "claimPanel.decidedOn": "Decided {date}",
   "claimPanel.staffNoteHeading": "Note from our team",
+  "claimPanel.upheldNextStep":
+    "The track stays offline. If you think our team got this wrong, read your rights or write to us.",
 
   "claims.form.eyebrow": "Studio rights",
   "claims.form.title": "Copyright claim",
@@ -2556,8 +2813,7 @@ export const studio: Catalog = {
   "claims.form.pickTrack": "Which track is the claim about?",
   "claims.form.pickTrackRow": "{number}. {title}",
   "claims.form.pickTrackLoading": "Loading the tracks",
-  "claims.form.pickTrackError":
-    "We couldn't load the tracks. Try again in a moment",
+  "claims.form.pickTrackError": "We couldn't load the tracks.",
   "claims.form.pickTrackEmpty":
     "No track on this release can take a claim right now",
   "claims.form.roleLegend": "Who are you to this work?",
@@ -2586,6 +2842,7 @@ export const studio: Catalog = {
   "claims.form.error.detailsTooLong": "Keep the details under 2000 characters",
   "claims.form.error.goodFaithRequired": "Tick the statement to send the claim",
   "claims.form.error.pickTrack": "Pick the track first",
+  "claims.form.pickTrackRetry": "Reload tracks",
   "claims.mine.title": "Your copyright claims",
   "claims.mine.dek":
     "What you filed, what the artist answered and what our team decided",
@@ -2621,6 +2878,28 @@ export const studio: Catalog = {
   "claims.mine.loadMore": "Show more claims",
   "claims.mine.loadingMore": "Loading more claims",
   "claims.mine.loadError": "We couldn't load your claims",
+  "claims.mine.decidedOn": "Decided {date}",
+  "claims.mine.outcome.submitted":
+    "Our team reads every claim. We'll tell you here once we decide.",
+  "claims.mine.outcome.accepted":
+    "We took the track offline. The artist can send a counter-notice, and you'll see it here.",
+  "claims.mine.outcome.countered":
+    "The artist sent a counter-notice. You can reply once, then our team reads both sides and decides.",
+  "claims.mine.outcome.counteredReplied":
+    "You replied to the counter-notice. Our team is reading both sides and decides next.",
+  "claims.mine.outcome.upheld":
+    "Our team upheld your claim, so the track stays offline.",
+  "claims.mine.outcome.rejected":
+    "Our team rejected the claim, so it no longer keeps the track offline",
+  "claims.mine.outcome.declined":
+    "Our team declined the claim, so it doesn't keep the track offline",
+  "claims.mine.outcome.withdrawn":
+    "You withdrew this claim, and it no longer affects the track.",
+  "claims.mine.replyCheck": "Check reply",
+  "claims.mine.replyReviewHeading": "Your reply, as our team will read it",
+  "claims.mine.replyReviewNote":
+    "You can send one reply to this counter-notice, and it can't be changed once sent.",
+  "claims.mine.replyEdit": "Edit reply",
 
   "settingsLive.eyebrow": "Your Studio settings",
   "settingsLive.title": "How Studio <em>plays</em> for you",
@@ -2659,6 +2938,21 @@ export const studio: Catalog = {
   "settingsLive.theme.dark.body":
     "Studio follows your QueerPulse theme, so a change here applies across QueerPulse on this device.",
   "settingsLive.saveError": "We couldn't save that setting. Try again",
+  "settingsLive.pageTitle": "Settings",
+  "settingsLive.loadingReason":
+    "Still loading your saved setting, so this switch cannot change yet",
+  "settingsLive.device.label": "This device",
+  "settingsLive.device.title": "What Studio <em>remembers</em> here",
+  "settingsLive.singleKey.heading": "Single-key shortcuts",
+  "settingsLive.singleKey.body":
+    "Play, skip, seek and mute with single letters, plus arrows and Space when nothing else has focus. Turn them off if they clash with your screen reader or voice control. Saved on this device only.",
+  "settingsLive.resume.heading": "Resume where you left off",
+  "settingsLive.resume.body":
+    "Next time you open Studio on this device, your queue and position are ready, paused. Stays on this device only, and clears on Quick Exit, sign-out or loss of access.",
+  "settingsLive.recent.heading": "Recently played",
+  "settingsLive.recent.body":
+    "Keeps a list of what you played last, so you can find it again. Stays on this device only and is never sent to us.",
+  "settingsLive.recent.clear": "Clear recently played",
 
   "hiddenTrack.label": "Hidden by your settings",
   "contentWarnings.pickerLabel": "Content warnings",
@@ -2693,6 +2987,13 @@ export const studio: Catalog = {
   "flagReviewLive.card.disputedOn": "Disputed {date}",
   "flagReviewLive.card.takenDownOn": "Taken down {date}",
   "flagReviewLive.card.openDispute": "Dispute waiting",
+  "flagReviewLive.card.lookupFailed":
+    "We couldn't load {what}, so its actions wait until it loads.",
+  "flagReviewLive.card.reloadRelease": "Reload release",
+  "flagReviewLive.card.waitingForRelease":
+    "Take down release waits until the release loads",
+  "flagReviewLive.card.dueIn": "Due in {span}",
+  "flagReviewLive.card.overdueBy": "Overdue by {span}",
   "flagReviewLive.action.takeDown": "Take down release",
   "flagReviewLive.action.dismiss": "Dismiss report",
   "flagReviewLive.action.openModeration": "Open in moderation",
@@ -2713,6 +3014,10 @@ export const studio: Catalog = {
   "flagReviewLive.dialog.keepDownBody":
     "It stays offline and the artist reads your reply on the release.",
   "flagReviewLive.dialog.replyLabel": "Reply the artist will read",
+  "flagReviewLive.dialog.discardQuestion":
+    "Discard your note? It hasn't been sent",
+  "flagReviewLive.dialog.keepWriting": "Keep writing",
+  "flagReviewLive.dialog.discardNote": "Discard note",
   "flagReviewLive.toast.takenDown":
     "{title} is down and its reports are closed",
   "flagReviewLive.toast.dismissed": "Report dismissed",
@@ -2720,6 +3025,8 @@ export const studio: Catalog = {
   "flagReviewLive.toast.keptDown":
     "{title} stays down and the artist has your reply",
   "flagReviewLive.toast.actionError": "That didn't go through. Try again",
+  "flagReviewLive.toast.settledElsewhere":
+    "This was already closed or is no longer there, so the queue now shows the latest",
   "flagReviewLive.empty.reportsTitle": "No open reports",
   "flagReviewLive.empty.reportsBody":
     "New reports about Studio releases show up here.",
@@ -2730,7 +3037,7 @@ export const studio: Catalog = {
     "Releases our team takes down are listed here.",
   "flagReviewLive.loadError": "We couldn't load this list",
   "flagReviewLive.loadMore": "Show more",
-  "flagReviewLive.loadingMore": "Loading more",
+  "flagReviewLive.loadingMore": "Loading more reviews",
   "flagReviewLive.loadMoreError": "We couldn't load more. Try again",
   "flagReviewLive.tabs.claims": "Claims",
   "flagReviewLive.claims.badge_one": "{count} claim waiting",
@@ -2771,6 +3078,12 @@ export const studio: Catalog = {
   "flagReviewLive.claims.toast.declined": "Claim declined",
   "flagReviewLive.claims.toast.upheld": "Claim upheld",
   "flagReviewLive.claims.toast.rejected": "Claim rejected",
+  "flagReviewLive.claims.offlineFor_one": "Offline for {count} day",
+  "flagReviewLive.claims.offlineFor_other": "Offline for {count} days",
+  "flagReviewLive.claims.offlineToday": "Offline since today",
+  "flagReviewLive.claims.acceptedOn": "Accepted {date}",
+  "flagReviewLive.claims.counteredOn": "Counter-notice {date}",
+  "flagReviewLive.claims.repliedOn": "Claimant replied {date}",
   "flagReviewLive.trackReports.heading": "Track reports",
   "flagReviewLive.trackReports.emptyTitle": "No open track reports",
   "flagReviewLive.trackReports.emptyBody":
@@ -2794,6 +3107,58 @@ export const studio: Catalog = {
   "flagReviewLive.trackReports.toast.markedExplicit":
     "{title} is marked explicit",
   "flagReviewLive.trackReports.toast.warningAdded": "Warning added to {title}",
+  "flagReviewLive.documentTitle": "{tab} · Flag review",
+  "flagReviewLive.disputes.badge_one": "{count} dispute waiting",
+  "flagReviewLive.disputes.badge_other": "{count} disputes waiting",
+  "flagReviewLive.reports.badge_one": "{count} report open",
+  "flagReviewLive.reports.badge_other": "{count} reports open",
+  "flagReviewLive.reports.badgeMore_one": "{count} or more reports open",
+  "flagReviewLive.reports.badgeMore_other": "{count} or more reports open",
+  "flagReviewLive.reports.releaseHeading": "Release reports",
+  "flagReviewLive.severity.emergency": "Emergency",
+  "flagReviewLive.severity.high": "High severity",
+  "flagReviewLive.severity.medium": "Medium severity",
+  "flagReviewLive.severity.low": "Low severity",
+  "flagReviewLive.trackReports.reloadTrack": "Reload track",
+  "flagReviewLive.trackReports.waitingForTrack":
+    "These actions wait until the track loads",
+  "flagReviewLive.trackReports.explicitLockedReason":
+    "Our team already marked this track explicit",
+  "flagReviewLive.trackReports.everyWarningReason":
+    "Every content warning is already on this track",
+  "flagReviewLive.queue.sortLabel": "Sort",
+  "flagReviewLive.queue.sortOldest": "Oldest first",
+  "flagReviewLive.queue.sortNewest": "Newest first",
+  "flagReviewLive.queue.sortSeverity": "Most severe first",
+  "flagReviewLive.queue.filterLabel": "Filter the queue",
+  "flagReviewLive.queue.filterReason": "Filter by reason",
+  "flagReviewLive.queue.filterStatus": "Filter by status",
+  "flagReviewLive.queue.filterAll": "All",
+  "flagReviewLive.queue.showing": "Showing {shown} of {total}",
+  "flagReviewLive.queue.keysHint":
+    "Press <key>J</key> and <key>K</key> to move between cards",
+  "flagReviewLive.queue.selectReport": "Select the report about {title}",
+  "flagReviewLive.bulk.selectReports": "Select reports",
+  "flagReviewLive.bulk.stopSelecting": "Stop selecting",
+  "flagReviewLive.bulk.dismissAction": "Dismiss reports",
+  "flagReviewLive.bulk.confirmTitle_one": "Dismiss {count} report?",
+  "flagReviewLive.bulk.confirmTitle_other": "Dismiss {count} reports?",
+  "flagReviewLive.bulk.confirmBody":
+    "Each report closes, and its release or track stays as it is.",
+  "flagReviewLive.bulk.confirmAction_one": "Dismiss {count} report",
+  "flagReviewLive.bulk.confirmAction_other": "Dismiss {count} reports",
+  "flagReviewLive.bulk.dismissed_one": "Dismissed {count} report",
+  "flagReviewLive.bulk.dismissed_other": "Dismissed {count} reports",
+  "flagReviewLive.bulk.partlyDismissed_one":
+    "Dismissed {done} of {count} report. The rest stay ticked.",
+  "flagReviewLive.bulk.partlyDismissed_other":
+    "Dismissed {done} of {count} reports. The rest stay ticked.",
+  "flagReviewLive.bulk.skipped_one":
+    "{count} report had already left the queue: {titles}.",
+  "flagReviewLive.bulk.skipped_other":
+    "{count} reports had already left the queue: {titles}.",
+  "flagReviewLive.bulk.reportGone":
+    "This report was already closed or its release is gone",
 
   "rail.live.utilityLabel": "Help and info",
   "rail.live.help": "Help",
@@ -2816,10 +3181,10 @@ export const studio: Catalog = {
   "home.moods.heading": "Browse by <em>mood</em>",
   "home.moods.listLabel": "Moods",
   "home.hero.featuredEyebrow": "Featured",
+  "home.hero.loadingLabel": "Loading Studio home",
   "home.staffPicks.title": "Staff <em>picks</em>",
   "home.newThisWeek.title": "New this <em>week</em>",
   "home.scenes.title": "Local <em>scenes</em>",
-  "home.scenes.listLabel": "Scenes",
   "curation.noteLabel": "Note from the Studio team:",
   "browse.titleMood": "<em>{mood}</em> releases",
   "browse.titleBoth": "<em>{mood}</em> releases in {genre}",
@@ -2988,6 +3353,7 @@ export const studio: Catalog = {
   "upcoming.notifyMeOffStatus": "Reminder for {title} turned off",
   "upcoming.notifyMeError": "We couldn't save that. Try again",
   "upcoming.cardHeading": "Upcoming",
+  "upcoming.notifyMeGone": "This release is no longer available",
   "versions.line": "Version {version} · {date}",
   "versions.earlierCta": "Earlier versions",
   "versions.blockLabel": "What changed in this release",
@@ -3095,6 +3461,9 @@ export const studio: Catalog = {
   "pressEdit.saving": "Saving",
   "pressEdit.savedStatus": "Press kit saved",
   "pressEdit.viewCta": "View press kit",
+  "pressEdit.moveUpTooltip": "Move up",
+  "pressEdit.moveDownTooltip": "Move down",
+  "pressEdit.removeTooltip": "Remove",
   "oneSheet.downloadCta": "Download one-sheet",
   "oneSheet.backCta": "Back to the press kit",
   "oneSheet.saveHint": "In the print dialog, choose Save as PDF",
@@ -3125,6 +3494,9 @@ export const studio: Catalog = {
   "creator.nav.pressKit": "Press kit",
   "artistPage.v3.moreAria": "More about {name}",
   "artistPage.v3.pressKit": "Press kit",
+  "artistPage.followerCountGrouped_one": "{number} follower",
+  "artistPage.followerCountGrouped_other": "{number} followers",
+  "artistPage.pauseAll": "Pause the music by {name}",
   // ── Studio Listening (2026-10-13): player, Now playing, queue, track
   // menu, chapters, lyric timing and the upload loudness check. Plan 3
   // Task 0 writes every key; Plan 2's code reads only the shortcuts and
@@ -3153,6 +3525,8 @@ export const studio: Catalog = {
   "shortcuts.key.right": "Right arrow",
   "shortcuts.key.up": "Up arrow",
   "shortcuts.key.down": "Down arrow",
+  "shortcuts.focusSearch": "Focus search",
+  "shortcuts.key.commandOrControl": "Cmd or Ctrl",
   // Player bar, controls and Now playing extras (player/ui)
   "player.playFrom": "Play from {time}",
   "player.playFromAria": "Play {title} from {time}",
@@ -3172,16 +3546,43 @@ export const studio: Catalog = {
   "player.unmute": "Unmute",
   "player.more": "More player options",
   "player.crossfade.label": "Crossfade",
-  "player.crossfade.value_one": "{count} second",
-  "player.crossfade.value_other": "{count} seconds",
-  "player.crossfade.off": "Off",
   "player.crossfade.hint":
     "Fades each track into the next. Releases set to play without gaps run straight through",
   "player.crossfade.unavailable": "Crossfade isn't available in this session",
+  "player.crossfade.castHint":
+    "Your cast device plays one track at a time, so crossfade rests while you cast",
   "player.loudness.label": "Even out loudness",
   "player.loudness.hint": "Brings every track close to the same level",
   "player.loudness.plainHint":
     "In this session it can only turn loud tracks down",
+  "player.loudness.castHint":
+    "Your cast device sets its own volume, so this switch rests while you cast",
+  "player.audio.heading": "Audio",
+  "player.equalizer.heading": "Equaliser",
+  "player.equalizer.presets.flat": "Flat",
+  "player.equalizer.presets.warm": "Warm",
+  "player.equalizer.presets.voice": "Voice",
+  "player.equalizer.presets.bass": "Bass",
+  "player.equalizer.hint":
+    "Kept on this device. Flat plays each track as it was mixed",
+  "player.equalizer.customHint": "Your own curve, kept on this device",
+  "player.equalizer.plainHint":
+    "This session plays through the browser's basic audio, so the equaliser rests",
+  "player.equalizer.castHint":
+    "Your cast device plays the track as it was mixed, so the equaliser rests",
+  "player.equalizer.adjustBands": "Adjust bands",
+  "player.equalizer.hideBands": "Hide bands",
+  "player.equalizer.reset": "Reset equaliser",
+  "player.equalizer.bandLabel": "{frequency} band",
+  "player.equalizer.gainValue": "{value} dB",
+  "player.equalizer.frequencyHz": "{value} Hz",
+  "player.equalizer.frequencyKhz": "{value} kHz",
+  "player.format.label": "Audio format: {line}",
+  "player.format.sampleRate": "{rate} kHz",
+  "player.format.mono": "Mono",
+  "player.format.stereo": "Stereo",
+  "player.format.channels_one": "{count} channel",
+  "player.format.channels_other": "{count} channels",
   "player.shortcutsCta": "Keyboard shortcuts",
   "player.sleep.heading": "Sleep timer",
   "player.sleep.minutes": "{count} minutes",
@@ -3195,8 +3596,12 @@ export const studio: Catalog = {
   "player.sleep.setStatus": "Sleep timer set for {minutes} minutes",
   "player.sleep.endOfTrackStatus": "Playback stops at the end of this track",
   "player.sleep.cancelledStatus": "Sleep timer off",
+  "player.sleep.minutesShort": "{count} min",
   "player.lyrics.listLabel": "Lyrics, following the music",
   "player.lyrics.backToCurrent": "Back to current line",
+  "player.lyrics.shareLine": "Share lyric",
+  "player.lyrics.playFromLine": "Play from this line",
+  "player.lyrics.lineMenuLabel": "Lyric line options",
   // Now playing (StudioNowPlaying)
   "nowPlaying.dialogLabel": "Now playing",
   "nowPlaying.close": "Close Now playing",
@@ -3210,13 +3615,17 @@ export const studio: Catalog = {
   "nowPlaying.noLyrics": "No lyrics for this track yet",
   "nowPlaying.noCredits": "No credits for this track yet",
   "nowPlaying.creditsLoading": "Loading the credits",
+  "nowPlaying.markPlayed": "Mark {title} as played",
+  "nowPlaying.markUnplayed": "Mark {title} as unplayed",
   // Queue (StudioQueueList, StudioQueuePanel)
   "queue.heading": "Queue",
   "queue.close": "Close the queue",
   "queue.nowPlaying": "Now playing",
   "queue.yours": "Your queue",
   "queue.clear": "Clear queue",
-  "queue.clearedStatus": "Your queue is empty",
+  "queue.undo": "Undo",
+  "queue.clearedToast_one": "Cleared 1 track from your queue",
+  "queue.clearedToast_other": "Cleared {count} tracks from your queue",
   "queue.nextFrom": "Next from {source}",
   "queue.nextUp": "Next up",
   "queue.emptyHint":
@@ -3226,7 +3635,19 @@ export const studio: Catalog = {
   "queue.moveDown": "Move {title} down",
   "queue.remove": "Remove {title} from the queue",
   "queue.movedStatus": "{title} is now number {position}",
-  "queue.removedStatus": "Removed {title} from the queue",
+  "queue.removedToast": "Removed {title} from the queue",
+  "queue.undoHiddenExplicitToast":
+    "{title} stays out of your queue while Hide explicit tracks is on",
+  "queue.undoUnavailableToast":
+    "{title} can't play anymore, so it couldn't go back into your queue",
+  "queue.undoStoppedToast":
+    "Playback stopped, so {title} couldn't go back into the queue",
+  "queue.played": "Played",
+  "queue.showPlayed_one": "Show 1 track",
+  "queue.showPlayed_other": "Show {count} tracks",
+  "queue.hidePlayed": "Hide played tracks",
+  "queue.clearPlayed": "Clear played tracks",
+  "queue.playedPlayNext": "Play {title} next",
   "queue.dragHint": "Drag to reorder",
   // Track menu (StudioTrackMenu)
   "trackMenu.trigger": "More actions for {title}",
@@ -3239,6 +3660,11 @@ export const studio: Catalog = {
   "trackMenu.linkCopiedToast": "Link copied",
   "trackMenu.queueFailedToast": "This track can't join your queue right now",
   "trackMenu.sendInMessage": "Send in a message",
+  "trackMenu.menuLabel": "Actions for {title}",
+  "trackMenu.like": "Add to Liked songs",
+  "trackMenu.unlike": "Remove from Liked songs",
+  "trackMenu.goToArtist": "Go to artist",
+  "trackMenu.goToRelease": "Go to release",
   // ── Studio rich cards: the card a shared link becomes (features/studio/share/) ──
   "share.card.teaser": "From QueerPulse Studio, open to members with access",
   "share.card.withdrawn": "This release was withdrawn",
@@ -3248,6 +3674,16 @@ export const studio: Catalog = {
   "share.card.openAria": "Open {title} in Studio",
   "share.card.removeCta": "Remove Studio link",
   "share.card.hiddenNote": "Hidden by your settings",
+  "share.lyric.dialogTitle": "Share lyric",
+  "share.lyric.dialogSub":
+    "The card shows this line to people with Studio access",
+  "share.lyric.optionsLabel": "Ways to share this lyric",
+  "share.lyric.playFromLine": "Play {title} from this line",
+  "share.lyric.warnedNote":
+    "The words sit behind a content warning on the track page",
+  "share.lyric.withheldNote":
+    "The words are unavailable while this track is offline",
+  "share.lyric.missingNote": "This line is no longer in the lyrics",
   // Chapters: listener lists, errors (contract A.7, D) and the editor
   "chapters.listHeading": "Tracklist",
   "chapters.listHeadingFor": "Tracklist for {title}",
@@ -3362,6 +3798,13 @@ export const studio: Catalog = {
   "home.newEpisodes.title": "New <em>episodes</em>",
   "home.spokenWord.title": "Spoken <em>word</em>",
   "home.onStage.title": "On <em>stage</em>",
+  "home.continue.title": "Continue <em>listening</em>",
+  "home.continue.eyebrow": "Kept on this device only",
+  "home.continue.minutesLeft_one": "{count} min left",
+  "home.continue.minutesLeft_other": "{count} min left",
+  "home.shelf.showLess": "Show less",
+  "home.pageHeading": "Studio home",
+  "home.tabTitle": "Home",
   "episodeCard.playAria": "Play {title}",
   "episodeCard.pauseAria": "Pause {title}",
   "browse.titleFormat": "<em>{format}</em> in Studio",
@@ -3385,6 +3828,8 @@ export const studio: Catalog = {
   "show.editEpisodeCta": "Edit episode",
   "show.savedMeta": "Podcast · {artist}",
   "show.listLabel": "Episodes of {title}",
+  "show.nothingToPlay": "No episodes are ready to play yet",
+  "show.takenDownReason": "Our team took this show offline",
   "episode.number": "Episode {number}",
   "episode.minutesLeft_one": "{count} min left",
   "episode.minutesLeft_other": "{count} min left",
@@ -3401,6 +3846,8 @@ export const studio: Catalog = {
   "episode.crumbLabel": "Episode",
   "episode.fromLabel": "From",
   "episode.publishedOn": "Published {date}",
+  "episode.draftReason": "This episode is a draft, so it can't play yet",
+  "episode.noAudioReason": "This episode's audio isn't ready yet",
   "trackPage.transcriptHeading": "Transcript",
   "trackPage.noTranscript": "No transcript for this one",
   "sources.heading": "Sources",
@@ -3417,11 +3864,28 @@ export const studio: Catalog = {
   "artist.main.showsHeading": "Shows",
   "artist.main.performanceHeading": "Performance audio",
   "owner.addEpisodeAria": "Add episode to {title}",
+  "owner.publishTitle": "Publish {title}?",
+  "owner.publishBody":
+    "It becomes public and anyone with Studio access can play it. You can unpublish it later.",
+  "owner.publishConfirm": "Publish release",
+  "owner.publishedAnnouncement": "{title} is published",
   "player.skipBack": "Skip back 15 s",
   "player.skipForward": "Skip forward 30 s",
   "player.speed.heading": "Speed",
   "player.speed.value": "{rate}x",
   "player.speed.hint": "Speed applies to podcast episodes. Music plays at 1x",
+  "player.announce.nowPlaying": "Now playing {title} by {artist}",
+  "player.announce.playing": "Playing",
+  "player.announce.paused": "Paused",
+  "player.announce.position": "At {time}",
+  "player.announce.volume": "Volume {percent}%",
+  "player.announce.muted": "Sound muted",
+  "player.announce.unmuted": "Sound on",
+  "player.announce.shuffleOn": "Shuffle on",
+  "player.announce.shuffleOff": "Shuffle off",
+  "player.announce.noNextTrack": "Nothing is queued after this track",
+  "player.documentTitlePrefix": "Playing:",
+  "player.shortcutHint": "{label} ({keys})",
   "uploadFlow.release.showNameLabel": "Show name",
   "uploadFlow.release.showAboutLabel": "About the show",
   "uploadFlow.publish.gap.sources": "Credit every source: {titles}",
@@ -3495,9 +3959,42 @@ export const studio: Catalog = {
   "episodeUpload.eyebrow": "New episode · upload",
   "episodeUpload.dropTitle": "Drop an MP3, M4A, WAV or AIFF file here",
   "episodeUpload.chooseFile": "Choose an audio file",
+  "episodeUpload.cancelCta": "Cancel upload",
+  "episodeUpload.cancelFor": "Cancel the upload of {fileName}",
+  "episodeUpload.retryCta": "Retry upload",
+  "episodeUpload.retryFor": "Retry the upload of {fileName}",
+  "episodeUpload.pageTitleNew": "New episode",
+  "episodeUpload.pageTitleEdit": "Edit episode",
   "chapters.editor.hintEpisode": "Mark where each part of the episode starts",
   "chapters.editor.pasteEpisode": "Paste chapters",
   "searchPage.episodesHeading": "<em>Episodes</em>",
+  "searchPage.documentTitle": "Search",
+  "searchPage.seeAll": "See all {count}",
+  "searchPage.seeAllMore": "See all {count}+",
+  "searchPage.showMore.releases": "Show more releases",
+  "searchPage.showMore.tracks": "Show more tracks",
+  "searchPage.showMore.artists": "Show more artists",
+  "searchPage.showMore.playlists": "Show more playlists",
+  "searchPage.showMore.episodes": "Show more episodes",
+  "searchPage.showMoreLoading": "Loading more results",
+  "searchPage.showMoreError": "We couldn't load more results. {reason}",
+  "searchPage.loadingResults": "Loading search results",
+  "searchPage.emptyFiltered":
+    "We couldn't find anything for <em>{term}</em> with these filters. Remove one to widen the search, and your term stays",
+  "searchPage.dropFilterLead": "Try without a filter",
+  "searchPage.dropFilter": "Remove the {filter} filter",
+  "searchPage.recentHeading": "Recent searches",
+  "searchPage.recentClear": "Clear recent searches",
+  "searchPage.recentNote":
+    "Kept on this device only, and cleared by Quick exit and signing out",
+  "searchPage.suggestionsHeading": "Try a search",
+  "searchPage.featuredLoading": "Loading featured releases",
+  "searchPage.suggestion.fadoReworked": "fado reworked",
+  "searchPage.suggestion.saraMarques": "sara marques",
+  "searchPage.suggestion.transComposers": "trans composers",
+  "searchPage.suggestion.sheetMusic": "sheet music",
+  "searchPage.facetsToggle": "Filters",
+  "searchPage.facetsToggleCount": "Filters ({count})",
   "artist.showCount_one": "{count} show",
   "artist.showCount_other": "{count} shows",
   "artist.tabs.podcast": "Shows",
@@ -3519,8 +4016,123 @@ export const studio: Catalog = {
     "Changing who it shows as removes some editors",
   "errors.playlistEntryNotFound": "That track was already removed",
   "errors.playlistEditorNotFound": "That editor was already removed",
+  "errors.load.title": "We couldn't load <em>{what}</em>",
+  "errors.load.offline":
+    "You're offline. Check your Wi-Fi or mobile data and try again",
+  "errors.load.timeout":
+    "Studio took too long to answer. Try again in a moment",
+  "errors.load.rateLimited":
+    "You've asked for a lot in a short time. Wait a minute, then try again",
+  "errors.load.server":
+    "Our server didn't answer. This one is on us, so try again in a moment",
+  "errors.load.unreachable":
+    "We couldn't reach Studio. Check your connection, or try again in a moment",
+  "errors.load.forbidden":
+    "Your account doesn't have access to this. Sign in again if you think it should",
+  "errors.load.notFound":
+    "This isn't available anymore. It may have moved or been taken down",
+  "errors.load.restricted":
+    "You can't open this while a moderation restriction is in effect. You can appeal it from Safety, under Appeal a decision",
+  "errors.load.unknown": "The request didn't go through. Try again in a moment",
+  "errors.save.offline":
+    "You're offline, so this wasn't saved. Check your connection and try again",
+  "errors.save.timeout":
+    "Saving took too long and may not have gone through. Try again",
+  "errors.save.rateLimited":
+    "You've made a lot of changes in a short time. Wait a minute, then try again",
+  "errors.save.server":
+    "Our server couldn't save this. This one is on us, so try again in a moment",
+  "errors.save.unreachable":
+    "We couldn't reach Studio, so this wasn't saved. Check your connection, or try again in a moment",
+  "errors.save.forbidden":
+    "Your account can't make this change. Sign in again, then try once more",
+  "errors.save.notFound":
+    "This isn't available anymore, so the change wasn't saved",
+  "errors.save.restricted":
+    "You can't make changes while a moderation restriction is in effect. You can appeal it from Safety, under Appeal a decision",
+  "errors.save.unknown": "This change didn't go through. Try again",
+  "errors.play.offline":
+    "You're offline, so this can't play. Check your connection and try again",
+  "errors.play.timeout": "The audio took too long to load. Try again",
+  "errors.play.rateLimited":
+    "You've started a lot of tracks in a short time. Wait a minute, then press play again",
+  "errors.play.server":
+    "Our audio server didn't answer. This one is on us, so try again in a moment",
+  "errors.play.unreachable":
+    "We couldn't reach Studio, so this can't play. Check your connection, or try again in a moment",
+  "errors.play.forbidden":
+    "Your account can't play this. Sign in again, then press play once more",
+  "errors.play.notFound":
+    "This audio isn't available anymore. Pick another track to keep listening",
+  "errors.play.restricted":
+    "You can't play this while a moderation restriction is in effect. You can appeal it from Safety, under Appeal a decision",
+  "errors.play.unknown": "This track couldn't start. Try again",
+  "errors.upload.offline":
+    "You're offline, so the upload stopped. Check your connection and try again",
+  "errors.upload.timeout": "The upload took too long to answer. Try again",
+  "errors.upload.rateLimited":
+    "You've uploaded a lot in a short time. Wait a minute, then try again",
+  "errors.upload.server":
+    "Our server couldn't take the upload. This one is on us, so try again in a moment",
+  "errors.upload.unreachable":
+    "We couldn't reach Studio, so the upload stopped. Check your connection, or try again in a moment",
+  "errors.upload.forbidden":
+    "Your account can't upload here. Check that you picked a persona you manage, then try again",
+  "errors.upload.notFound":
+    "The release you're uploading to isn't available anymore. Start a new one with Upload a release",
+  "errors.upload.restricted":
+    "You can't upload while a moderation restriction is in effect. You can appeal it from Safety, under Appeal a decision",
+  "errors.upload.unknown": "The upload didn't go through. Try again",
+  "errors.queue.offline":
+    "You're offline, so the queue didn't change. Check your connection and try again",
+  "errors.queue.timeout": "The queue took too long to update. Try again",
+  "errors.queue.rateLimited":
+    "You've changed the queue a lot in a short time. Wait a minute, then try again",
+  "errors.queue.server":
+    "Our server couldn't fill the queue. This one is on us, so try again in a moment",
+  "errors.queue.unreachable":
+    "We couldn't reach Studio, so the queue didn't change. Check your connection, or try again in a moment",
+  "errors.queue.forbidden":
+    "Your account can't add this to the queue. Sign in again, then try once more",
+  "errors.queue.notFound":
+    "That track isn't available anymore, so it was left out of your queue",
+  "errors.queue.restricted":
+    "You can't change the queue while a moderation restriction is in effect. You can appeal it from Safety, under Appeal a decision",
+  "errors.queue.unknown": "The queue didn't update. Try again",
+  "errors.what.release": "this release",
+  "errors.what.track": "this track",
+  "errors.what.artist": "this artist page",
+  "errors.what.scene": "this scene",
+  "errors.what.sceneReleases": "this scene's releases",
+  "errors.what.playlist": "this playlist",
+  "errors.what.liked": "Liked songs",
+  "errors.what.show": "this show",
+  "errors.what.episode": "this episode",
+  "errors.what.pressKit": "this press kit",
+  "errors.what.pressTracks": "these tracks",
+  "errors.what.creditsInbox": "your credits",
+  "errors.what.credits": "the credits",
+  "errors.what.persona": "this persona",
+  "errors.what.claims": "your claims",
+  "errors.what.reviewList": "the review list",
+  "errors.what.yourNumbers": "your numbers",
+  "errors.what.playbackSettings": "your playback settings",
+  "errors.what.preview": "this preview",
+  "errors.what.previewLink": "this preview link",
+  "errors.what.searchResults": "these results",
+  "errors.what.releases": "these releases",
+  "errors.what.genres": "the genres",
+  "errors.what.newReleases": "the new releases",
+  "errors.what.yourPlaylists": "your playlists",
+  "errors.what.followedArtists": "the artists you follow",
+  "errors.what.featured": "the featured releases",
+  "errors.what.savedReleases": "your saved releases",
+  "errors.what.access": "your Studio access",
+  "errors.what.suggestedArtists": "the artists to follow",
   "playlist.page.manageEditors": "Manage editors",
   "playlist.page.leavePlaylist": "Leave playlist",
+  "playlist.page.loadingLabel": "Loading this playlist",
+  "playlist.page.nothingToPlay": "Nothing in this playlist can play yet",
   "playlist.collab.chip": "Collaborative",
   "playlist.collab.openAria_one":
     "Collaborative playlist with {count} editor. See who edits it",
@@ -3528,14 +4140,32 @@ export const studio: Catalog = {
     "Collaborative playlist with {count} editors. See who edits it",
   "playlist.collab.moreCount": "+{count}",
   "playlist.row.addedBy": "Added by {name}",
+  "playlist.row.undoCta": "Undo",
+  "playlist.row.removedManyToast_one":
+    "Removed {count} track from the playlist",
+  "playlist.row.removedManyToast_other":
+    "Removed {count} tracks from the playlist",
+  "playlist.row.restoredToast": "Back in the playlist, in its old place",
+  "playlist.row.restoreError":
+    "We couldn't put that back in the playlist. Try again",
+  "playlist.row.restoredNoneToast":
+    "The playlist already holds these tracks, so nothing came back",
+  "playlist.row.restoredSomeToast_one":
+    "Put {count} of {total} tracks back. The playlist already held the rest",
+  "playlist.row.restoredSomeToast_other":
+    "Put {count} of {total} tracks back. The playlist already held the rest",
+  "playlist.row.removedTitledToast": "Removed “{title}” from the playlist",
+  "playlist.row.arrangeMenu": "Move or remove {title}",
   "playlist.invite.bannerTitle": "{name} invited you to edit this playlist",
   "playlist.invite.bannerBody":
     "Editors can add, remove and reorder tracks, and change the name and description",
-  "playlist.invite.acceptCta": "Accept",
-  "playlist.invite.declineCta": "Decline",
+  "playlist.invite.acceptCta": "Accept invite",
+  "playlist.invite.declineCta": "Decline invite",
   "playlist.invite.acceptedToast": "You can now edit {name}",
   "playlist.invite.declinedToast": "Invite declined",
   "playlist.invite.cardChip": "Invited",
+  "playlist.invite.acceptingCta": "Accepting invite",
+  "playlist.invite.decliningCta": "Declining invite",
   "playlist.editors.title": "Editors",
   "playlist.editors.ownerSubMember":
     "Editors can add, remove and reorder tracks, and change the name and description. Who can open it, who it shows as and deleting it stay with you",
@@ -3633,4 +4263,72 @@ export const studio: Catalog = {
   "playlist.creditChange.confirmCta": "Change and remove editors",
   "playlist.add.addToCollaborativeAria":
     "Add to {name}, a collaborative playlist",
+  "kit.shelf.seeAll": "See all",
+  "kit.shelf.scrollLeft": "Scroll {title} left",
+  "kit.shelf.scrollRight": "Scroll {title} right",
+  "trackRow.selectAria": "Select {title}",
+  "selection.regionLabel": "Selected tracks",
+  "selection.prompt": "Choose tracks",
+  "selection.count_one": "{count} track selected",
+  "selection.count_other": "{count} tracks selected",
+  "selection.selectAll": "Select all tracks",
+  "selection.clear": "Clear selection",
+  "selection.keyboardHint": "Press F6 to reach the actions.",
+  "selection.addToPlaylist": "Add to playlist",
+  "selection.addToQueue": "Add to queue",
+  "selection.removeFromPlaylist": "Remove from this playlist",
+  "selection.unlike": "Remove from Liked songs",
+  "selection.queuedToast_one": "Added {count} track to your queue",
+  "selection.queuedToast_other": "Added {count} tracks to your queue",
+  "selection.queueFailedToast":
+    "None of these tracks can join your queue right now",
+  "selection.nothingPlayableToast":
+    "None of the tracks you picked can play right now",
+  "selection.pickerSubject_one": "{count} track",
+  "selection.pickerSubject_other": "{count} tracks",
+  "selection.queueFailedReasonToast":
+    "None of these tracks joined your queue. {reason}",
+  "selection.queuedSomeToast_one":
+    "Added {count} of {total} tracks to your queue. {reason}",
+  "selection.queuedSomeToast_other":
+    "Added {count} of {total} tracks to your queue. {reason}",
+  "selection.countCompact_one": "{count} selected",
+  "selection.countCompact_other": "{count} selected",
+
+  // ── Studio polish pass 2: hero/loading states, tracklist, safety help, preview ──
+  "hero.shareAria": "Share {title}",
+  "hero.blocked.noAudio": "No track here has audio yet",
+  "hero.blocked.takenDown": "A taken-down release cannot play",
+  "hero.blocked.trackNoAudio": "This track has no audio yet",
+  "hero.blocked.artistNoReleases": "No release to play yet",
+  "loading.release": "Loading this release",
+  "loading.track": "Loading this track",
+  "loading.artist": "Loading this artist",
+  "loading.scene": "Loading this scene",
+  "loading.moreFromArtist": "Loading more from {artist}",
+  "loading.detail": "Loading this page",
+  "loading.previewLink": "Loading the preview link settings",
+  "loading.reviews": "Loading takedown reviews",
+  "loading.playlists": "Loading your playlists",
+  "loading.openCalls": "Loading open calls",
+  "loading.pressTrack": "Loading the track",
+  "pageTitle.withdrawn": "Release withdrawn",
+  "tracklist.sortLabel": "Sort by",
+  "tracklist.sortAria": "Sort by {order}",
+  "tracklist.searchPlaceholder": "Search by title, artist or release",
+  "tracklist.searchAria": "Search in {name}",
+  "tracklist.selectCta": "Select tracks",
+  "tracklist.sortCustom": "Playlist order",
+  "tracklist.sortRecentlyAdded": "Recently added",
+  "tracklist.sortRecentlyLiked": "Recently liked",
+  "tracklist.sortTitle": "Title",
+  "tracklist.sortArtist": "Artist",
+  "tracklist.sortDuration": "Duration",
+  "tracklist.noMatch": 'Nothing here matches "{query}"',
+  "safety.help.readRights": "Read your rights in Studio",
+  "safety.help.contactTeam": "Contact our team",
+  "preview.goneTitle": "This preview link is turned off",
+  "preview.goneBody":
+    "The artist turned this link off or made a new one. Ask them for the current link.",
+  "preview.documentTitle": "Preview of {title}",
 };

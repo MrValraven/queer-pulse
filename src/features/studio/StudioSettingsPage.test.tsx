@@ -153,3 +153,29 @@ describe("Studio settings switches", () => {
     expect(autoplay).toHaveAttribute("aria-checked", "true");
   });
 });
+
+describe("Studio settings device switches", () => {
+  it("offers the three device-only switches, each described", async () => {
+    renderSettings();
+    for (const name of [
+      "Single-key shortcuts",
+      "Resume where you left off",
+      "Recently played",
+    ]) {
+      const toggle = await screen.findByRole("switch", { name });
+      expect(toggle).toHaveAttribute("aria-describedby");
+    }
+  });
+
+  it("turns Single-key shortcuts off and on", async () => {
+    renderSettings();
+    const toggle = await screen.findByRole("switch", {
+      name: "Single-key shortcuts",
+    });
+    expect(toggle).toHaveAttribute("aria-checked", "true");
+    fireEvent.click(toggle);
+    expect(
+      screen.getByRole("switch", { name: "Single-key shortcuts" }),
+    ).toHaveAttribute("aria-checked", "false");
+  });
+});

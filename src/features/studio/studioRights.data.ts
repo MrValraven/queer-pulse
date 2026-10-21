@@ -31,24 +31,18 @@ export const PROMISES: RightsPromise[] = [
 
 /**
  * The facts line under a release title. The format word and the phrases are
- * catalog keys; play counts and paid totals are numbers, formatted for the
- * active locale (plays in compact notation: "142K" / "142 mil").
+ * catalog keys; paid totals are numbers, formatted for the active locale.
  */
 export interface ReleaseMeta {
   formatKey: string;
   trackCount?: number;
   year: number;
-  plays?: number;
   paid?: number;
   /** Tracks under a clearance dispute (live recordings). */
   disputedTrackCount?: number;
 }
 
 const WHOLE_EUROS = { minimumFractionDigits: 0, maximumFractionDigits: 0 };
-const COMPACT_COUNT: Intl.NumberFormatOptions = {
-  notation: "compact",
-  maximumFractionDigits: 1,
-};
 
 /** Resolve a {@link ReleaseMeta} into the "Album · 11 tracks · 2026 · ..." line. */
 export function formatReleaseMeta(
@@ -65,13 +59,6 @@ export function formatReleaseMeta(
     );
   }
   parts.push(String(meta.year));
-  if (meta.plays != null) {
-    parts.push(
-      t("studioShowcase:rights.release.plays", {
-        plays: fmt.number(meta.plays, COMPACT_COUNT),
-      }),
-    );
-  }
   if (meta.paid != null) {
     parts.push(
       t("studioShowcase:rights.release.paid", {
@@ -127,7 +114,6 @@ export const RELEASES: Release[] = [
       formatKey: "studioShowcase:rights.release.format.album",
       trackCount: 11,
       year: 2026,
-      plays: 142000,
       paid: 7100,
     },
     licence: { top: "CC-BY-NC", subKey: "studioShowcase:rights.licence.sub" },
@@ -144,7 +130,6 @@ export const RELEASES: Release[] = [
       formatKey: "studioShowcase:rights.release.format.ep",
       trackCount: 9,
       year: 2025,
-      plays: 61000,
       paid: 3040,
     },
     licence: {
@@ -164,7 +149,6 @@ export const RELEASES: Release[] = [
     meta: {
       formatKey: "studioShowcase:rights.release.format.single",
       year: 2025,
-      plays: 28000,
       paid: 1400,
     },
     licence: { top: "CC-BY-SA", subKey: "studioShowcase:rights.licence.sub" },
@@ -197,7 +181,6 @@ export const RELEASES: Release[] = [
     meta: {
       formatKey: "studioShowcase:rights.release.format.single",
       year: 2024,
-      plays: 9000,
       paid: 450,
     },
     licence: { top: "CC-BY-NC", subKey: "studioShowcase:rights.licence.sub" },

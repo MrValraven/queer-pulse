@@ -139,6 +139,7 @@ afterEach(() => {
     }
     sessionKeys.forEach((key) => window.sessionStorage.removeItem(key));
     window.localStorage.removeItem("studio.player.preferences");
+    window.localStorage.removeItem("studio.player.equalizer");
   } catch {
     // A test that blocked storage left nothing behind.
   }

@@ -7,61 +7,15 @@
   white-space: nowrap;
 }
 
-.chooseButton,
-.actions button,
-.creditRow button {
-  border: 1px solid rgba(var(--studio-ink-rgb), 0.18);
-  border-radius: var(--radius-pill);
-  padding: 6px 12px;
-  font-size: var(--text-12);
-  font-family: inherit;
-  color: inherit;
-  background: none;
-  cursor: pointer;
-}
-
-/* The remove-credit icon keeps a full tap target. */
-.creditRow button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-block-size: var(--tap-min);
-  min-inline-size: var(--tap-min);
-}
-
-.addCredit {
-  align-self: flex-start;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  min-block-size: var(--tap-min);
-  border: 1px solid rgba(var(--studio-ink-rgb), 0.28);
-  border-radius: var(--radius-pill);
-  padding: 8px 16px;
-  font-size: var(--text-13);
-  font-weight: 600;
-  color: inherit;
-  background: none;
-  cursor: pointer;
-}
-
 .chooseButton {
   margin-top: 12px;
-  padding: 8px 16px;
-  font-weight: 600;
 }
 
-.chooseButton:disabled,
-.actions button:disabled,
-.actions button[aria-disabled="true"] {
-  opacity: 0.4;
-  cursor: default;
+/* Add a credit sits under the rows, at its own width. */
+.addCredit {
+  align-self: flex-start;
 }
 
-.chooseButton:focus-visible,
-.actions button:focus-visible,
-.addCredit:focus-visible,
-.creditRow button:focus-visible,
 .checkbox input:focus-visible,
 .details input:focus-visible,
 .details textarea:focus-visible {
@@ -70,7 +24,8 @@
   box-shadow: var(--ring-cream);
 }
 
-.dropActive {
+/* Doubled so a drag always out-ranks the zone's hover and focus preview. */
+.dropActive.dropActive {
   border-color: var(--accent);
   background: rgba(var(--accent-rgb), 0.06);
 }
@@ -85,23 +40,24 @@
 }
 
 .row {
+  /* The first column is the drag grip's full 44px tap width. */
   display: grid;
-  grid-template-columns: 20px 24px minmax(0, 1fr) auto;
+  grid-template-columns: var(--tap-min) 24px minmax(0, 1fr) auto;
   gap: 10px;
   align-items: center;
   padding: 10px 12px;
-  border: 1px solid var(--line);
+  border: 1px solid var(--s-line);
   border-radius: var(--radius-10);
 }
 
 .handle {
-  color: var(--text40);
+  color: var(--s-text-40);
   cursor: grab;
 }
 
 .position {
   font-variant-numeric: tabular-nums;
-  color: var(--text60);
+  color: var(--s-text-60);
 }
 
 .main {
@@ -121,7 +77,7 @@
 .stage {
   position: relative;
   font-size: var(--text-12);
-  color: var(--text60);
+  color: var(--s-text-60);
 }
 
 .stage[data-stage="failed"],
@@ -184,7 +140,7 @@
   padding: 0;
   font-size: var(--text-12-5);
   font-weight: 600;
-  color: var(--text);
+  color: var(--s-text);
 }
 
 .fieldLabel:not(:first-child),
@@ -196,9 +152,10 @@
 .details textarea {
   font-family: var(--sans);
   font-size: var(--text-14);
-  color: var(--text);
-  background: rgba(var(--studio-ink-rgb), 0.06);
-  border: 1px solid var(--line);
+  color: var(--s-text);
+  /* The one Studio input surface and edge (StudioTrackFields.module.css). */
+  background: var(--studio-wash-2);
+  border: 1px solid rgba(var(--studio-ink-rgb), 0.45);
   border-radius: var(--radius-10);
   padding: 11px 14px;
 }
@@ -215,7 +172,28 @@
 .creditRow {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
-  gap: 6px;
+  align-items: start;
+  gap: 8px;
+}
+
+/* The remove button lines up with the inputs, under their labels. */
+.creditRemove {
+  margin-top: 22px;
+}
+
+@media (max-width: 480px) {
+  .creditRow {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .creditRow > :nth-child(2) {
+    grid-column: 1;
+  }
+
+  .creditRemove {
+    grid-column: 2;
+    grid-row: 1;
+  }
 }
 
 .checkbox {
@@ -243,7 +221,7 @@
 .detailsLoading {
   margin: 0;
   font-size: var(--text-12);
-  color: var(--text60);
+  color: var(--s-text-60);
 }
 
 .rejections {
@@ -262,7 +240,7 @@
 
 @media (--md) {
   .row {
-    grid-template-columns: 20px 24px minmax(0, 1fr);
+    grid-template-columns: var(--tap-min) 24px minmax(0, 1fr);
   }
 
   .actions {
@@ -294,14 +272,15 @@
   white-space: nowrap;
 }
 
-.loudToggle {
+/* Doubled class: restyles the shared quiet Button as an inline link. */
+.loudToggle.loudToggle {
   display: inline-flex;
   align-items: center;
   gap: 4px;
   min-block-size: var(--tap-min);
   background: none;
   border: none;
-  padding: 0;
+  padding: 0 6px;
   color: var(--studio-accent-text);
   font-weight: 600;
   font-family: inherit;
@@ -345,4 +324,71 @@
 /* The shared zone's own bottom margin moves to the wrapper. */
 .dropZoneWithNote > :first-child {
   margin-bottom: 0;
+}
+
+/* Long text fields in the details panel: the panel's own rhythm. */
+.wordsField {
+  margin-top: 10px;
+}
+
+.creditField {
+  min-width: 0;
+}
+
+/* A stage-bound action keeps its button's own box. */
+.stageAction {
+  display: inline-flex;
+}
+
+/* Retry all sits above the list, at its own width. */
+.batchActions {
+  display: flex;
+  margin-bottom: 12px;
+}
+
+.offline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 12px;
+  font-size: var(--text-13);
+  color: var(--studio-text-muted);
+}
+
+/* The grip takes a finger or pen without panning the page under it. */
+.handle[data-active] {
+  touch-action: none;
+  -webkit-touch-callout: none;
+  user-select: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-block-size: var(--tap-min);
+  min-inline-size: var(--tap-min);
+}
+
+/* The held row lifts and carries an accent edge, so the member sees which
+   row moves and the slot it takes as it passes its neighbours. */
+.row {
+  transition-property: box-shadow, border-color, background-color;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease-out);
+}
+
+.row[data-dragging] {
+  position: relative;
+  z-index: 1;
+  border-color: var(--studio-accent-text);
+  background: var(--studio-surface);
+  box-shadow: 0 10px 24px rgba(var(--plum-rgb), 0.18);
+}
+
+.row[data-dragging] .handle {
+  cursor: grabbing;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .row {
+    transition-property: none;
+  }
 }

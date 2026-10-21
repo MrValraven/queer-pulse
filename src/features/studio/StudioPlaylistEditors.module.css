@@ -126,7 +126,9 @@
   gap: 10px;
 }
 
-.back {
+/* The doubled class outranks the shared quiet Button's own rules whatever
+   order the two modules load in, so Back stays a flat text control. */
+.back.back {
   display: inline-flex;
   align-items: center;
   justify-self: start;

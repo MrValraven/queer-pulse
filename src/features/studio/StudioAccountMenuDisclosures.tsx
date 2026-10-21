@@ -4,7 +4,7 @@ import type { IconType } from "react-icons";
 import { FiChevronDown, FiLifeBuoy } from "react-icons/fi";
 import { useMotionPrefs } from "../../app/providers/motionPrefs";
 import { routes } from "../../app/routeMap";
-import { Avatar, Collapse } from "../../shared/components/ui";
+import { Avatar, Button, Collapse } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { StudioArtistRefView } from "./api/studio.adapters";
 import { useStudioAccess } from "./api/useStudioAccess";
@@ -12,6 +12,7 @@ import {
   STUDIO_MENU_ARTIST_PAGES_SHOWN,
   type StudioAccountMenuItem,
 } from "./studioAccountMenu.data";
+import { useStudioMenuShouldReplace } from "./studioAccountMenuNavigation";
 import { StudioAccountMenuLink } from "./StudioAccountMenuRows";
 import styles from "./StudioAccountMenu.module.css";
 
@@ -32,6 +33,7 @@ export function StudioAccountMenuArtistPages({
   onNavigate: () => void;
 }) {
   const { t } = useTranslation();
+  const shouldReplace = useStudioMenuShouldReplace();
   const { uploadablePersonas } = useStudioAccess();
   const location = useLocation();
   const headingId = useId();
@@ -68,6 +70,7 @@ export function StudioAccountMenuArtistPages({
       <Link
         key={artist.id}
         to={artist.href}
+        replace={shouldReplace}
         className={[styles.item, isActive && styles.itemActive]
           .filter(Boolean)
           .join(" ")}
@@ -200,8 +203,8 @@ function StudioAccountMenuToggle({
   onToggle: () => void;
 }) {
   return (
-    <button
-      type="button"
+    <Button
+      variant="quiet"
       className={`${styles.item} ${styles.itemButton}`}
       aria-expanded={isOpen}
       aria-controls={controlsId}
@@ -219,6 +222,6 @@ function StudioAccountMenuToggle({
           .filter(Boolean)
           .join(" ")}
       />
-    </button>
+    </Button>
   );
 }

@@ -1,6 +1,6 @@
 import { useId, useState } from "react";
 import { FiChevronRight } from "react-icons/fi";
-import { Collapse } from "../../shared/components/ui";
+import { Button, Collapse } from "../../shared/components/ui";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type {
@@ -59,8 +59,9 @@ export function StudioReleaseVersions({
       <VersionLine entry={latest} />
       {earlier.length > 0 && (
         <>
-          <button
-            type="button"
+          <Button
+            variant="quiet"
+            size="sm"
             className={styles.toggle}
             aria-expanded={isEarlierOpen}
             aria-controls={earlierId}
@@ -68,7 +69,7 @@ export function StudioReleaseVersions({
           >
             <FiChevronRight aria-hidden className={styles.chevron} />
             {t("studio:versions.earlierCta")}
-          </button>
+          </Button>
           <div id={earlierId}>
             <Collapse isOpen={isEarlierOpen}>
               <ol className={styles.earlier}>

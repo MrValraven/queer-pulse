@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { FiCheck, FiArrowRight } from "react-icons/fi";
+import { Button } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
@@ -123,8 +124,9 @@ export function StudioSheetCheckout() {
         ))}
       </div>
 
-      <button
-        type="button"
+      <Button
+        variant="jade"
+        size="lg"
         className={s.chBtn}
         disabled={bought}
         onClick={() => {
@@ -151,7 +153,7 @@ export function StudioSheetCheckout() {
             <FiArrowRight aria-hidden />
           </>
         )}
-      </button>
+      </Button>
       <div className={s.chNote}>
         <Translation
           i18nKey="studio:sheet.checkout.note"

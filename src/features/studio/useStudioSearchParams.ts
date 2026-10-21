@@ -1,5 +1,6 @@
 import { useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
+import { routes } from "../../app/routeMap";
 import {
   isStudioFormat,
   isStudioGenre,
@@ -14,6 +15,10 @@ import {
 } from "./api/studio.types";
 
 const KNOWN_TYPES: ReadonlySet<string> = new Set(STUDIO_SEARCH_TYPES);
+
+export type StudioSearchHrefPatch = Partial<
+  Record<"q" | "type" | "genre" | "mood" | "format", string | null>
+>;
 
 /** The query, the filter, the genre and the mood live in the URL (`?q=`,
  *  `?type=`, `?genre=`, `?mood=`, `?format=`), so a search can be shared and reloaded.
@@ -52,6 +57,30 @@ export function useStudioSearchParams() {
     [setSearchParams],
   );
 
+  /** A link to this search with some params changed (null removes one), so
+   *  a type tab, a "See all", a dropped filter and a recent term are real
+   *  links that Back walks and a new tab opens. */
+  const hrefWith = useCallback(
+    (patch: StudioSearchHrefPatch) => {
+      const next = new URLSearchParams(searchParams);
+      for (const [name, value] of Object.entries(patch)) {
+        if (value === undefined) continue;
+        if (
+          value === null ||
+          value === "" ||
+          (name === "type" && value === "all")
+        )
+          next.delete(name);
+        else next.set(name, value);
+      }
+      const queryString = next.toString();
+      return queryString
+        ? `${routes.studioSearch}?${queryString}`
+        : routes.studioSearch;
+    },
+    [searchParams],
+  );
+
   const setQuery = useCallback(
     (nextQuery: string, options?: { isReplace?: boolean }) =>
       update(
@@ -68,6 +97,7 @@ export function useStudioSearchParams() {
     genre,
     mood,
     format,
+    hrefWith,
     setQuery,
     setType: (nextType: StudioSearchType) =>
       update(
