@@ -50,6 +50,13 @@
   }
 }
 
+/* Named only while a Studio page morph runs (studioPageMorph.ts), so the
+   phone tab bar holds still above the crossfading page. Hidden past the
+   phone width, where a hidden bar takes no part. */
+:global(:root[data-studio-morph]) .bar {
+  view-transition-name: studio-tab-bar;
+}
+
 .tab {
   display: flex;
   flex-direction: column;

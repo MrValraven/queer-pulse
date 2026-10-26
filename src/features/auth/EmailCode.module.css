@@ -1,0 +1,136 @@
+/* Shared pieces of the email-code flow: the sign-in card, the invite join
+   and the reauth dialog all stack the same request form and code step. */
+
+.or {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: var(--text-caption);
+  color: rgba(var(--ink-rgb), 0.6);
+}
+
+.or::before,
+.or::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: rgba(var(--line-rgb), 0.12);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* The gap is the whole rhythm: FormField's own bottom margin would add a
+   second 16px under the field. (0,1,1) out-specifies FormField's `.field`. */
+.form > div {
+  margin-bottom: 0;
+}
+
+/* A panel that folds in under the "or" divider. Its spacing is a top margin
+   inside Collapse's flow-root wrapper, so the space folds with the panel. */
+.step {
+  margin-top: 16px;
+}
+
+/* SignInNotice keeps a bottom margin for the top of the page; inside a step
+   the next step's top margin spaces it. */
+.step > [role="alert"] {
+  margin-bottom: 0;
+}
+
+.sentTo {
+  margin: 0;
+  font-size: var(--text-body);
+}
+
+/* The address moves to its own line as one piece, so it never breaks at a
+   hyphen; only an address wider than the whole line wraps inside itself. */
+.sentTo strong {
+  display: inline-block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
+/* The code field sits one level down inside the step, so the rule above
+   misses it. The error shows right under the boxes, the spam hint after it:
+   FormField renders the helper first, and `order` swaps them on screen. */
+.form .codeField {
+  margin-bottom: 0;
+}
+
+.codeField > span:not([role="alert"]) {
+  order: 1;
+}
+
+/* The verifying and resent lines sit inside the field group, below the
+   boxes; their margin lives inside Collapse's flow-root wrapper. */
+.status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 12px 0 0;
+  color: var(--text-strong);
+  font-size: var(--text-caption);
+  overflow-wrap: anywhere;
+}
+
+/* "Check this code" across the full width, the two ghost buttons on one
+   row under it. */
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.secondaryActions {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.secondaryActions > * {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.fullWidth {
+  width: 100%;
+}
+
+/* In a narrow dialog a label wraps inside its button and stays in its box. */
+.secondaryActions .fullWidth {
+  white-space: normal;
+  text-align: center;
+}
+
+/* Under the whole button row, so it fits one line at desktop width. Its
+   margin folds with it inside Collapse's flow-root wrapper. */
+.countdown {
+  margin: 6px 0 0;
+  font-size: var(--text-caption);
+  color: rgba(var(--ink-rgb), 0.7);
+}
+
+/* Two tabular figures wide at every count, so the words around the number
+   hold still when it drops from 10 to 9. RollingNumber already sets
+   tabular-nums and keeps its cells on one line; inline-block stays in the
+   text line, so the accessible name reads it with the sentence. */
+.countdownNumber {
+  display: inline-block;
+  min-width: 2ch;
+  text-align: end;
+}
+
+@media (max-width: 480px) {
+  .secondaryActions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .secondaryActions > * {
+    flex: none;
+  }
+}

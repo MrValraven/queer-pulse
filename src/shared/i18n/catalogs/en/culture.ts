@@ -292,7 +292,7 @@ export const culture: Catalog = {
   "commissionInterestPage.success.step2":
     "The commission board itself is still being built, so nothing you sent is published anywhere.",
   "commissionInterestPage.success.step3":
-    "No reply is sent from here. QueerPulse sends no email and raises no notification for this, so there is nothing waiting in an inbox.",
+    "No reply is sent from here. QueerPulse emails nothing about this and raises no notification for it, so there is nothing waiting in an inbox.",
   "commissionInterestPage.success.backCta": "Back to Culture",
   "commissionInterestPage.success.anotherCta": "Register another interest",
   "comingSoon.commissions.title": "The commission board is being built",

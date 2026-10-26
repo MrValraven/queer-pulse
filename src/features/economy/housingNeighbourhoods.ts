@@ -1,6 +1,6 @@
 /**
- * Lisbon's official freguesias (parishes): the taxonomy housing listings use
- * as their `area`. Derived directly from the freguesia dataset the maps
+ * The official freguesias (parishes) of Lisbon, Oeiras, Cascais and the south
+ * bank of the Tejo, plus Setúbal: the taxonomy housing listings use as their `area`. Derived directly from the freguesia dataset the maps
  * render (`shared/components/map/freguesias.data.ts`), so the picker and the
  * map are always in sync. Mirrors the backend's `housing-geo.ts`
  * NEIGHBOURHOOD_CENTROIDS. A listing whose area isn't a freguesia is still
@@ -40,7 +40,7 @@ const BY_KEY = new Map(
 
 /** The parish entry a name refers to, matched without regard to accents or
  * case ("principe real" finds "Príncipe Real"), or null when the name is not a
- * Lisbon parish. The entry's `name` is the exact spelling the map overlay uses. */
+ * mapped parish. The entry's `name` is the exact spelling the map overlay uses. */
 export function findHousingNeighbourhood(
   name: string,
 ): HousingNeighbourhood | null {

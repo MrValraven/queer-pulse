@@ -7,17 +7,24 @@ import { playEpisode } from "./player/studioEpisodePlay";
 import { useStudioPlayer } from "./player/studioPlayerContext";
 import { queueItemFromEpisode, showQueueSource } from "./player/studioQueue";
 import { StudioWarnedContent } from "./StudioWarnedContent";
-import { tokenizeShowNotes } from "./studioShowNotesTokens";
+import {
+  notesWithoutChapterLines,
+  tokenizeShowNotes,
+} from "./studioShowNotesTokens";
 import css from "./StudioEpisode.module.css";
 
 /** The episode's show notes (spec 5.3). A time plays the episode from that
- *  point; an address opens in a new tab. */
+ *  point; an address opens in a new tab. A line that only repeats a
+ *  chapter's time and title is left out, since the chapter list on the
+ *  page offers it already. */
 export function StudioShowNotes({ track }: { track: StudioTrackView }) {
   const { t } = useTranslation();
   const headingId = useId();
   const player = useStudioPlayer();
   if (!track.notes) return null;
-  const paragraphs = tokenizeShowNotes(track.notes, track.durationSeconds);
+  const notes = notesWithoutChapterLines(track.notes, track.chapters ?? []);
+  const paragraphs = tokenizeShowNotes(notes, track.durationSeconds);
+  if (paragraphs.length === 0) return null;
   const canPlay = track.hasAudio && track.isDraft !== true;
   return (
     <section className={css.notes} aria-labelledby={headingId}>

@@ -176,11 +176,7 @@
   right: 0;
   bottom: 0;
   height: 140px;
-  background: linear-gradient(
-    to bottom,
-    transparent,
-    var(--sheet-paper) 70%
-  );
+  background: linear-gradient(to bottom, transparent, var(--sheet-paper) 70%);
   display: flex;
   align-items: flex-end;
   justify-content: center;
@@ -416,6 +412,9 @@
   width: 100%;
   white-space: normal;
   text-align: center;
+  /* The label wraps at 375, so give the lines room to breathe. */
+  line-height: 1.25;
+  padding-inline: 20px;
 }
 .chBtn.chBtn:disabled {
   opacity: 0.8;

@@ -1,7 +1,5 @@
-import { Link, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { Tooltip } from "../../shared/components/ui";
-import { useMediaQuery } from "../../shared/hooks";
-import { mediaMax } from "../../shared/theme/breakpoints";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { formatTrackTime, type StudioTrackView } from "./api/studio.adapters";
@@ -21,14 +19,18 @@ import { StudioHiddenTrackNote } from "./StudioHiddenTrack";
 import hiddenCss from "./StudioHiddenTrack.module.css";
 import { StudioLikeButton } from "./StudioLikeButton";
 import { StudioMarkPlayedButton } from "./StudioMarkPlayedButton";
-import { useIsHeroCompact } from "./studioHeroLayout";
+import { StudioMorphLink } from "./StudioMorphLink";
+import {
+  useIsHeroActionsCompact,
+  useIsHeroShareFolded,
+} from "./studioHeroLayout";
 import heroStyles from "./StudioTrackHero.module.css";
 import styles from "./studio.module.css";
 import { StudioReleaseCoverArt } from "./StudioReleaseCoverArt";
-
-/** Under this width Share leaves the row for the menu's own Send in a
- *  message and Copy link, so the row keeps one line beside the cover. */
-const SHARE_FOLD_MAX_WIDTH = 1439;
+import {
+  StudioFoldedShareItemsContext,
+  useStudioFoldedShareItems,
+} from "./useStudioFoldedShareItem";
 
 const DATE_FORMAT: Intl.DateTimeFormatOptions = {
   day: "numeric",
@@ -44,7 +46,7 @@ export function StudioEpisodeHero({ track }: { track: StudioTrackView }) {
   const { t } = useTranslation();
   const formatters = useFormat();
   const isHidden = useStudioHideExplicit() && track.isExplicit;
-  const isCompact = useIsHeroCompact();
+  const isCompact = useIsHeroActionsCompact();
   // A show usually carries its persona's name; the line names it once.
   const isArtistNamedAsShow = track.release.artist.name === track.release.title;
   return (
@@ -71,15 +73,18 @@ export function StudioEpisodeHero({ track }: { track: StudioTrackView }) {
         by={
           <>
             {t("studio:episode.fromLabel")}{" "}
-            <Link to={track.release.href}>
+            <StudioMorphLink to={track.release.href} destination="release">
               <strong>{track.release.title}</strong>
-            </Link>
+            </StudioMorphLink>
             {!isArtistNamedAsShow && (
               <>
                 {" · "}
-                <Link to={track.release.artist.href}>
+                <StudioMorphLink
+                  to={track.release.artist.href}
+                  destination="artist"
+                >
                   {track.release.artist.name}
-                </Link>
+                </StudioMorphLink>
               </>
             )}
             {track.publishedAt &&
@@ -111,10 +116,11 @@ export function StudioEpisodeHero({ track }: { track: StudioTrackView }) {
 
 /** The hero's action row in two groups that wrap whole: Play with its start
  *  time and Mark as played, then Like, Add to playlist, Share and the menu,
- *  which stays last. Below 1440px Share folds into the menu (Send in a
- *  message, Copy link), and on a phone every action after Play is a round
- *  icon with a tooltip. A published episode without audio offers Share
- *  beside an inert Play; a draft shows the inert Play alone. */
+ *  which stays last. Below 1440px Share folds into the menu with every way
+ *  to share, and below 1280px every action after Play is a round icon with
+ *  a tooltip ("Play from {time}" keeps its words). A published episode
+ *  without audio offers Share beside an inert Play; a draft shows the inert
+ *  Play alone. */
 function EpisodeHeroActions({
   track,
   isHidden,
@@ -127,7 +133,7 @@ function EpisodeHeroActions({
   const { t } = useTranslation();
   const [searchParams] = useSearchParams();
   const player = useStudioPlayer();
-  const isShareFolded = useMediaQuery(mediaMax(SHARE_FOLD_MAX_WIDTH));
+  const isShareFolded = useIsHeroShareFolded();
   const likeSubject = {
     trackId: track.id,
     title: track.title,
@@ -137,6 +143,15 @@ function EpisodeHeroActions({
   const isCurrent = player.isCurrentTrack(track.id);
   const isPlaying = isCurrent && player.status === "playing";
   const isPlayable = track.hasAudio && track.isDraft !== true;
+  // The menu shows only for a playable episode, so the fold needs one.
+  const foldedShare = useStudioFoldedShareItems(
+    isPlayable && isShareFolded
+      ? {
+          target: { kind: "track", id: track.id, startAtSeconds: null },
+          title: track.title,
+        }
+      : undefined,
+  );
   // A shared timestamp link (?t=) applies until this episode is the current
   // one, as on the track page; a hidden episode has no play to carry it.
   const startAtSeconds =
@@ -186,8 +201,12 @@ function EpisodeHeroActions({
             }}
           />
         )}
-        {startLabel && !isCompact && (
-          <span className={heroStyles.playFromLabel} aria-hidden="true">
+        {startLabel && (
+          <span
+            className={heroStyles.playFromLabel}
+            data-hero-play-from=""
+            aria-hidden="true"
+          >
             {t("studio:player.playFrom", { time: startLabel })}
           </span>
         )}
@@ -239,17 +258,20 @@ function EpisodeHeroActions({
               />
             )}
             {isPlayable && (
-              <Tooltip
-                label={t("studio:release.moreActions")}
-                placement="top"
-                align="end"
-              >
-                <StudioTrackMenu
-                  className={heroStyles.heroMenu}
-                  track={studioTrackMenuTrackOf(track)}
-                />
-              </Tooltip>
+              <StudioFoldedShareItemsContext value={foldedShare.items}>
+                <Tooltip
+                  label={t("studio:release.moreActions")}
+                  placement="top"
+                  align="end"
+                >
+                  <StudioTrackMenu
+                    className={heroStyles.heroMenu}
+                    track={studioTrackMenuTrackOf(track)}
+                  />
+                </Tooltip>
+              </StudioFoldedShareItemsContext>
             )}
+            {foldedShare.dialog}
           </div>
         </div>
       )}

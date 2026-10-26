@@ -61,6 +61,7 @@ function StatusBar({ reduced }: { reduced: boolean }) {
         </Button>
         <Button
           variant="soft"
+          className={s.endBtn}
           onClick={() =>
             showToast(t("studio:broadcast.status.toast.ending"), "info")
           }

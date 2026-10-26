@@ -141,7 +141,7 @@ export const safety: Catalog = {
   "report.form.emailLabel":
     "Um endereço onde alguém te possa contactar (opcional)",
   "report.form.emailHelper":
-    "O QueerPulse não envia emails. Isto só dá a alguém da equipa de segurança uma forma de te contactar se precisar de te perguntar alguma coisa. Se deixares em branco, a denúncia fica anónima.",
+    "O QueerPulse nunca te envia emails sobre denúncias. Isto só dá a alguém da equipa de segurança uma forma de te contactar se precisar de te perguntar alguma coisa. Se deixares em branco, a denúncia fica anónima.",
   "report.form.emailPlaceholder": "teu@email.com",
   // Ver o comentário na versão EN: é uma escolha EXPLÍCITA, porque este
   // formulário costumava deduzi-la a partir do campo de email em branco.

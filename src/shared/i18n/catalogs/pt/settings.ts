@@ -179,8 +179,8 @@ export const settings: Catalog = {
 
   // ── interests.data.ts: com que frequência o resumo do feed se junta (o
   // id "daily"/"weekly"/"important" é o valor guardado; só título/descrição
-  // são traduzidos). Não fala de email: a QueerPulse não envia nenhum e nunca
-  // vai enviar, por isso "ter notícias nossas" é o que chega na app. ───────
+  // são traduzidos). A QueerPulse só envia por email o código de início de sessão
+  // que a pessoa pediu, por isso "ter notícias nossas" é o que chega na app. ──
   "interests.freq.daily.title": "Resumo diário",
   "interests.freq.daily.desc":
     "Um resumo por dia com as tuas atualizações principais",
@@ -333,6 +333,23 @@ export const settings: Catalog = {
   "notifications.phonePush.manage.desc":
     "Vê todos os dispositivos que recebem as tuas notificações push e remove os que não reconheças.",
   "notifications.phonePush.manage.cta": "Gerir dispositivos",
+  "notifications.phonePush.recovery.title":
+    "As notificações no telemóvel pararam",
+  "notifications.phonePush.recovery.bodyDefault":
+    "O teu navegador já não está definido para te enviar notificações, por isso as mensagens e novidades dos eventos não chegam a este dispositivo.",
+  "notifications.phonePush.recovery.bodyDenied":
+    "As notificações do QueerPulse estão bloqueadas nas definições do navegador, por isso nada chega a este dispositivo. Permite as notificações deste site nas definições do navegador e volta a carregar a página.",
+  "notifications.phonePush.recovery.bodyFailed":
+    "Não conseguimos voltar a ligar este dispositivo depois de uma atualização das nossas chaves de segurança. Ativa as notificações outra vez para as receberes.",
+  "notifications.phonePush.recovery.action": "Ativar notificações",
+  "notifications.phonePush.recovery.dismiss":
+    "Dispensar o lembrete de notificações",
+  "notifications.phonePush.recovery.done":
+    "As notificações voltaram a estar ativas neste dispositivo",
+  "notifications.phonePush.recovery.promptClosed":
+    "As notificações continuam desativadas porque o pedido de permissão foi fechado sem as permitir",
+  "notifications.phonePush.recovery.error":
+    "Não foi possível ativar as notificações porque o serviço de push recusou este dispositivo. Tenta daqui a pouco",
 
   // ── SettingsPanes.tsx — LanguagePane ──────────────────────────────────────
   "language.title": "Idioma e <em>terminologia.</em>",
@@ -484,11 +501,11 @@ export const settings: Catalog = {
   "account.section.security": "Segurança",
   "account.twoFactor.title": "Autenticação de dois fatores",
   "account.twoFactor.desc":
-    "Entras com a Google, por isso é a verificação em dois passos da tua conta Google que protege o QueerPulse. Também protege o caminho de volta se perderes o acesso.",
+    "Se entras com a Google, a verificação em dois passos da tua conta Google também protege o QueerPulse. Ativa-a também na tua conta de email, porque um código enviado para lá abre a tua conta.",
   "account.twoFactor.cta": "Ativar na Google",
   "account.loginAlerts.title": "Alertas de início de sessão",
-  // Nomeia os dois canais que existem. A linha anterior dizia "por email", que
-  // a QueerPulse nunca conseguiu enviar e nunca vai.
+  // Nomeia os dois canais que existem. A QueerPulse só envia por email o código
+  // de início de sessão que a pessoa pediu.
   "account.loginAlerts.desc":
     "Avisa-me aqui e no telemóvel quando a minha conta iniciar sessão a partir de um dispositivo que ainda não usei",
   "account.loginAlerts.toastError":
@@ -508,9 +525,9 @@ export const settings: Catalog = {
 
   // ── AccountSecurityPage.tsx — o painel de segurança da própria pessoa (ID-15)
   // Cada linha descreve algo com um endpoint real por trás. As capacidades que
-  // a plataforma não tem estão nomeadas em `notYet.*` como texto, nunca como um
-  // controlo. Não há canal de email e nunca haverá, por isso o texto dos
-  // alertas nomeia os dois canais que existem.
+  // a plataforma não tem estão nomeadas em `notYet.*` como texto, sem controlo
+  // associado. A QueerPulse só envia por email o código de início de sessão que
+  // a pessoa pediu, por isso o texto dos alertas nomeia os dois canais que existem.
   "accountSecurity.back": "Voltar às definições da conta",
   "accountSecurity.eyebrow": "Segurança da conta",
   "accountSecurity.h1": "Quem consegue <em>entrar na tua conta.</em>",
@@ -524,16 +541,22 @@ export const settings: Catalog = {
   "accountSecurity.section.data": "Os teus dados",
   "accountSecurity.section.more": "Noutro sítio",
 
-  "accountSecurity.signIn.title": "Google",
+  "accountSecurity.signIn.title": "O teu acesso",
   "accountSecurity.signIn.value":
+    "Entras com um código enviado para <strong>{email}</strong>.",
+  "accountSecurity.signIn.valueWithGoogle":
+    "Entras com um código enviado para <strong>{email}</strong>, e com a Google.",
+  "accountSecurity.signIn.valueGoogleOnly":
     "Inicias sessão com a Google, como <strong>{email}</strong>.",
-  "accountSecurity.signIn.noEmail": "a tua conta Google",
+  "accountSecurity.signIn.noEmail": "o email da tua conta",
   "accountSecurity.signIn.note":
-    "Esta é a única forma de entrar na tua conta, por isso não há palavra-passe para mudar aqui. Mantém a tua própria conta Google bem protegida.",
+    "Não há palavra-passe para mudar aqui. Quem conseguir ler essa caixa de correio consegue entrar, por isso mantém a tua conta de email bem protegida.",
+  "accountSecurity.signIn.noteGoogleOnly":
+    "A Google é a única forma de entrar na tua conta neste momento, por isso não há palavra-passe para mudar aqui. Mantém a tua própria conta Google bem protegida.",
 
   "accountSecurity.alerts.title": "Avisar-me sobre novos inícios de sessão",
   "accountSecurity.alerts.desc":
-    "Quando a tua conta iniciar sessão a partir de um dispositivo que ainda não usaste, dizemos-te aqui e nos dispositivos onde autorizaste notificações. Não enviamos email.",
+    "Quando a tua conta iniciar sessão a partir de um dispositivo que ainda não usaste, dizemos-te aqui e nos dispositivos onde autorizaste notificações. Estes alertas nunca vão por email.",
 
   "accountSecurity.sessions.title": "Com sessão iniciada agora",
   "accountSecurity.sessions.count_one": "{count} sessão ativa.",
@@ -555,14 +578,14 @@ export const settings: Catalog = {
   "accountSecurity.export.value":
     "Leva uma cópia de tudo o que guardamos sobre ti, em JSON ou CSV.",
   "accountSecurity.export.note":
-    "Inicias sessão com a Google outra vez antes de o arquivo ser criado, para que uma sessão emprestada não leve os teus dados.",
+    "Confirmas que és tu com um código que te enviamos por email, ou com a Google, antes de o arquivo ser criado, para que uma sessão emprestada não leve os teus dados.",
   "accountSecurity.export.cta": "Começar uma exportação",
 
   "accountSecurity.erasure.title": "Desativar ou eliminar",
   "accountSecurity.erasure.value":
     "Esconde a tua conta e volta mais tarde, ou pede-nos para a apagar de vez.",
   "accountSecurity.erasure.note":
-    "A eliminação abre um período de 30 dias que podes cancelar e termina a sessão em todo o lado. Também te pede para iniciares sessão com a Google outra vez.",
+    "A eliminação abre um período de 30 dias que podes cancelar e termina a sessão em todo o lado. Também te pede para confirmares primeiro que és tu, com um código que te enviamos por email ou com a Google.",
   "accountSecurity.erasure.cta": "Ver as opções",
   "accountSecurity.erasure.ctaPending": "Rever o pedido",
   "accountSecurity.erasure.pending":
@@ -575,9 +598,7 @@ export const settings: Catalog = {
 
   "accountSecurity.notYet.title": "Ainda não disponível",
   "accountSecurity.notYet.twoFactor":
-    "Um segundo fator. Hoje, quem protege o início de sessão é a verificação em dois passos da tua própria conta Google.",
-  "accountSecurity.notYet.recovery":
-    "Uma segunda forma de entrar que não passe pela Google. Perder a conta Google já não é o fim: escreve-nos e podemos voltar a ligar a tua conta QueerPulse a uma identidade Google com o mesmo endereço verificado.",
+    "Um segundo fator. Hoje, quem protege o teu acesso é a tua conta de email e, se usas a Google, a verificação em dois passos da tua conta Google.",
 
   "accountSecurity.compromised":
     "<strong>Achas que mais alguém está na tua conta?</strong> <sessions>Termina todas as outras sessões</sessions> primeiro, o que deixa apenas o navegador onde estás a ler isto com sessão iniciada, e depois <contact>diz-nos</contact> para podermos ver o que aconteceu.",
@@ -872,7 +893,7 @@ export const settings: Catalog = {
     "Seleciona os tipos de dados que queres incluir no teu arquivo.",
   "dataExport.steps.step2.label": "Confirma a tua identidade",
   "dataExport.steps.step2.desc":
-    "Pedimos-te para confirmares que és tu, aqui mesmo. Sem email nem palavra-passe.",
+    "Enviamos-te um código de 6 dígitos por email e escreves-o aqui mesmo. Sem palavra-passe.",
   "dataExport.steps.step3.label": "Descarrega o teu arquivo",
   "dataExport.steps.step3.desc":
     "É criado logo e descarregas a partir desta página.",
@@ -956,9 +977,9 @@ export const settings: Catalog = {
   // ── DataExportSections.tsx — DataExportStatus ────────────────────────────
   "dataExport.status.ready.title": "O teu arquivo está pronto",
   "dataExport.status.ready.body":
-    "Está pronto para descarregares. Não enviámos nada por email. Isto fica entre ti e esta página.",
+    "Está pronto para descarregares. O arquivo fica nesta página e nunca vai por email.",
   "dataExport.status.ready.bodyWithExpiry":
-    "Está pronto para descarregares. Não enviámos nada por email. Guardamo-lo aqui até <strong>{date}</strong> e depois apagamo-lo.",
+    "Está pronto para descarregares. O arquivo nunca vai por email. Guardamo-lo aqui até <strong>{date}</strong> e depois apagamo-lo.",
   "dataExport.status.expired.title": "Essa ligação expirou",
   "dataExport.status.expired.body":
     "Não guardamos arquivos indefinidamente. Pede outra vez e criamos-te um novo.",
@@ -1179,10 +1200,17 @@ export const settings: Catalog = {
     "Não conseguimos cancelar isso agora. Tenta novamente.",
 
   // ── Reautenticação (useReauthToken.ts) ────────────────────────────────────
-  "reauth.completion.success":
-    "Reautenticação confirmada. Carrega em confirmar outra vez para terminar.",
+  "reauth.completion.success": "Confirmámos que és tu.",
   "reauth.completion.failed":
     "Não conseguimos confirmar que eras tu. Tenta novamente.",
+  "reauth.dialog.title": "Confirma que és tu",
+  "reauth.dialog.lead":
+    "Nos passos que não têm volta, confirmamos que ainda és tu neste dispositivo.",
+  "reauth.dialog.sending": "A enviar um código para o teu email…",
+  "reauth.dialog.googleCta": "Confirmar com a Google em vez disso",
+  "reauth.dialog.confirmed":
+    "Confirmámos que és tu. Carrega outra vez no mesmo botão para terminares.",
+  "reauth.dialog.sendCode": "Enviar um código",
   "deleteAccount.options.deactivate.title": "Desativar",
   "deleteAccount.options.deactivate.desc":
     "O teu perfil torna-se invisível. Os teus dados são preservados. Podes reativá-la a qualquer momento voltando a iniciar sessão.",
@@ -1198,7 +1226,7 @@ export const settings: Catalog = {
   "deleteAccount.wh.deactivate.dataPreserved":
     "Os teus <strong>dados são totalmente preservados</strong>: mensagens, publicações e histórico mantêm-se intactos.",
   "deleteAccount.wh.deactivate.reactivateInstantly":
-    "<strong>Reativa instantaneamente</strong> ao iniciares sessão de novo com a Google.",
+    "<strong>Reativa instantaneamente</strong> ao voltares a iniciar sessão.",
   "deleteAccount.wh.deactivate.nameRemoved":
     "O teu <strong>nome é removido</strong> das listas de pessoas e dos resultados de pesquisa.",
   "deleteAccount.wh.deactivate.attributedDeactivated":
@@ -1249,7 +1277,7 @@ export const settings: Catalog = {
   "destructiveFlow.delete.loadingText": "A agendar a eliminação da tua conta…",
   "destructiveFlow.delete.resultTitle": "Está <em>agendado.</em>",
   "destructiveFlow.delete.resultBody":
-    "A tua conta está agendada para eliminação. Tens <strong>30 dias</strong> para mudar de ideias. Basta voltares a iniciar sessão com a Google e paramos a eliminação. Depois disso, os teus dados são permanentemente apagados. Cuida de ti.",
+    "A tua conta está agendada para eliminação. Tens <strong>30 dias</strong> para mudar de ideias. Basta voltares a iniciar sessão e paramos a eliminação. Depois disso, os teus dados são permanentemente apagados. Cuida de ti.",
 
   // ── ThemeStudio.tsx / profileTheme.data.ts — seletor de tema do perfil.
   // Os NOMES das bandeiras (FLAG_SWATCHES.label) ficam deliberadamente em
@@ -1289,7 +1317,7 @@ export const settings: Catalog = {
   "accountData.download.cta": "Abrir exportação de dados",
   "accountData.stepAway.title": "Pausar ou apagar a tua conta",
   "accountData.stepAway.desc":
-    "Esconde o teu perfil durante uns tempos, ou pede que tudo seja apagado. Ambos exigem uma confirmação escrita e uma nova entrada com a Google. RGPD, artigo 17.",
+    "Esconde o teu perfil durante uns tempos, ou pede que tudo seja apagado. Ambos exigem uma confirmação escrita e uma nova confirmação de que és tu. RGPD, artigo 17.",
   "accountData.stepAway.cta": "Abrir pausar e apagar",
   "accountData.dsar.title": "Fazer um pedido sobre os teus dados",
   "accountData.dsar.desc":
@@ -1299,7 +1327,7 @@ export const settings: Catalog = {
     "Cada um destes abre numa página completa, para leres exatamente o que faz antes de avançares.",
 
   // Deep-scan section 13 (the vertical surfaces), built 2026-08-31.
-  // PRD-48-FE — PRD-48 - the member's own submissions index at /account/submissions (MySubmissionsPage), plus the Settings > Account card that leads to it. Three intakes on one page: partner applications, swap proposals sent, resource suggestions. Each keeps its own status vocabulary on purpose. `resource.status.archived` is queue tidying rather than a verdict, so its copy must never read as a refusal. Nothing here may promise an email: QueerPulse sends none.
+  // PRD-48-FE: the member's own submissions index at /account/submissions (MySubmissionsPage), plus the Settings > Account card that leads to it. Three intakes on one page: partner applications, swap proposals sent, resource suggestions. Each keeps its own status vocabulary on purpose. `resource.status.archived` is queue tidying with no verdict in it, so its copy reads as housekeeping. Nothing here may promise an email: QueerPulse emails only a sign-in code the person asked for.
   "account.submissions.title": "O que enviaste",
   "account.submissions.desc":
     "Candidaturas a parceria, propostas de troca e sugestões de recursos, cada uma com o ponto de situação e a decisão.",
@@ -1308,7 +1336,7 @@ export const settings: Catalog = {
   "mySubmissions.eyebrow": "A tua conta · Submissões",
   "mySubmissions.h1": "O que <em>enviaste</em>, e no que deu.",
   "mySubmissions.lead":
-    "Tudo o que submeteste para alguém rever, e o ponto de situação de cada coisa. As respostas chegam aqui e às tuas notificações. A QueerPulse não envia email, por isso é nesta página que a decisão fica depois de limpares o sino.",
+    "Tudo o que submeteste para alguém rever, e o ponto de situação de cada coisa. As respostas chegam aqui e às tuas notificações. A QueerPulse nunca envia decisões por email, por isso é nesta página que a decisão fica depois de limpares o sino.",
   "mySubmissions.footNote":
     "Só aparecem aqui as submissões que passam por uma fila de revisão. As publicações, eventos e anúncios que publicas ficam logo online, por isso não há nada a aguardar.",
   "mySubmissions.emptyAll.title": "Ainda não enviaste nada",
@@ -1386,7 +1414,7 @@ export const settings: Catalog = {
   "sessions.everywhere.confirmTitle":
     "Terminar sessão em todos os dispositivos?",
   "sessions.everywhere.confirmBody":
-    "Isto termina todas as sessões da tua conta, incluindo a deste dispositivo, por isso a tua sessão aqui termina assim que confirmares. Volta a iniciar sessão com a tua conta Google quando quiseres. Não se apaga nada da tua conta.",
+    "Isto termina todas as sessões da tua conta, incluindo a deste dispositivo, por isso a tua sessão aqui termina assim que confirmares. Volta a iniciar sessão quando quiseres. Não se apaga nada da tua conta.",
   "sessions.everywhere.confirmCta": "Terminar sessão em todo o lado",
   "sessions.toast.signedOutEverywhere":
     "Sessão terminada em todos os dispositivos",
@@ -1400,4 +1428,21 @@ export const settings: Catalog = {
   "notifications.volume.quizshow.title": "O Pulse Live está a começar",
   "notifications.volume.quizshow.desc":
     "Quando quem organiza abre o jogo ao vivo num evento a que vais",
+  // Hidden event communities
+  "nav.item.hiddenCommunities": "Comunidades escondidas",
+  "hiddenCommunities.title": "Comunidades que <em>escondeste.</em>",
+  "hiddenCommunities.sub":
+    "Os eventos delas deixam de aparecer em Destaques, Explorar e no calendário, a menos que uma comunidade que ainda vês os organize também. A tua participação e as publicações delas no teu feed ficam como estão.",
+  "hiddenCommunities.section": "Escondidas dos eventos",
+  "hiddenCommunities.row.hiddenOn": "Escondida a {date}",
+  "hiddenCommunities.row.unhideCta": "Voltar a mostrar",
+  "hiddenCommunities.row.unhideLabel": "Voltar a mostrar eventos de {name}",
+  "hiddenCommunities.empty.none.title":
+    "Ainda não escondeste nenhuma comunidade",
+  "hiddenCommunities.empty.none.desc":
+    "Esconde uma comunidade a partir de um cartão de evento ou dos filtros de Explorar, e ela aparece aqui para poderes voltar a ver os eventos dela.",
+  "hiddenCommunities.empty.error.title":
+    "Não foi possível carregar as tuas comunidades escondidas",
+  "hiddenCommunities.empty.error.desc":
+    "Verifica a tua ligação e tenta outra vez.",
 };

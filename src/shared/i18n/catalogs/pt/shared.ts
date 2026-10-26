@@ -67,10 +67,12 @@ export const shared: Catalog = {
     "Um valor aleatório que comparamos em cada escrita, para que outro site não possa agir em teu nome. No site em produção usa o nome com o prefixo __Host-.",
   "consent.storage.oauthState.purpose":
     "Um valor de uso único que liga o teu início de sessão com a Google ao separador que o começou. É apagado assim que voltas.",
+  "consent.storage.emailCodeRequester.purpose":
+    "Liga um código de entrada ao navegador que o pediu, para que só funcione onde foi pedido.",
   "consent.storage.consentChoice.purpose":
     "Esta escolha, e a versão da política em que a fizeste, para não voltarmos a perguntar até a política mudar.",
   "consent.storage.signInProgress.purpose":
-    "Valores de curta duração que te acompanham ao iniciar sessão, ao confirmares a palavra-passe outra vez e ao aceitares um convite.",
+    "Valores de curta duração que te acompanham ao iniciar sessão, ao confirmares outra vez que és tu e ao aceitares um convite.",
   "consent.storage.displayPreferences.purpose":
     "Tema, idioma, disposição da navegação e as tuas definições de acessibilidade: menos movimento, tamanho do texto, espaçamento, anéis de foco, link de salto.",
   "consent.storage.notificationPreferences.purpose":
@@ -791,4 +793,13 @@ export const shared: Catalog = {
   "studioShare.unavailable": "Indisponível",
   "apiError.quizshowAdultsRounds":
     "O jogo ao vivo deste evento tem rondas para adultos. Muda a etiqueta delas no separador Jogo ao vivo e depois desliga o 18+",
+
+  // ── CodeInput (shared/components/ui) ──
+  "codeInput.digit": "Dígito {index} de {total}",
+
+  // ── Step-up toast (features/settings/api/useReauthToken.ts) ──
+  reauthUnavailable:
+    "Não conseguimos confirmar que és tu neste momento: os códigos de entrada estão desligados. Escreve-nos e a nossa equipa ajuda-te.",
+  reauthStatusPending:
+    "Ainda estamos a ver como confirmar que és tu. Tenta outra vez daqui a pouco.",
 };

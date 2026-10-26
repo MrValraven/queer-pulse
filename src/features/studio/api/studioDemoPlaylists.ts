@@ -20,7 +20,9 @@ import {
   type StudioPlaylistPersonDTO,
   type StudioPlaylistRole,
   type StudioPlaylistTrackDTO,
+  type StudioProfilePlaylistsDTO,
   type UpdateStudioPlaylistBody,
+  type UpdateStudioProfilePlaylistsBody,
 } from "./studio.types";
 import { demoReleaseCard } from "./studioDemoCards";
 import { demoTrackWithSafety } from "./studioDemoSafety";
@@ -107,9 +109,16 @@ function fromSeed(seed: DemoPlaylistSeed): DemoPlaylist {
 
 const store = new Map<string, DemoPlaylist>();
 
+/** The demo viewer's profile-playlists choice, held for the session. */
+let profilePlaylistsSetting: UpdateStudioProfilePlaylistsBody = {
+  isShown: true,
+  featuredIds: [],
+};
+
 /** Back to the seeds. Tests call it between cases. */
 export function resetDemoPlaylists(): void {
   store.clear();
+  profilePlaylistsSetting = { isShown: true, featuredIds: [] };
   for (const seed of DEMO_PLAYLIST_SEEDS) store.set(seed.id, fromSeed(seed));
 }
 resetDemoPlaylists();
@@ -392,22 +401,73 @@ export function demoArtistPlaylistCards(
     .map(toCardDto);
 }
 
-/** Member-credited playlists: public ones, plus connections-only ones for a
- *  connection; the member's own page shows all of their own. */
+/** Member-credited playlists on a member's profile. Another member's page
+ *  lists their public and connections-only playlists (the demo viewer is
+ *  everyone's connection). The demo viewer's own page follows their profile
+ *  setting, as the server does: nothing while it is hidden, their public
+ *  playlists while none are featured, else the featured ones in the order
+ *  they picked. */
 export function demoMemberPlaylistsPage(
   memberSlug: string,
   cursor: string | null,
 ) {
   const isSelf = memberSlug === DEMO_VIEWER_MEMBER_SLUG;
+  const credited = allPlaylists().filter(
+    (playlist) =>
+      playlist.creditPersonaId === null &&
+      playlist.creditMemberSlug === memberSlug &&
+      (isSelf || playlist.visibility !== "private"),
+  );
+  if (!isSelf) return pageOf(credited, cursor);
+  // The owner's own setting filters their profile, the way the server does.
+  if (!profilePlaylistsSetting.isShown) return pageOf([], cursor);
+  if (profilePlaylistsSetting.featuredIds.length === 0)
+    return pageOf(
+      credited.filter((playlist) => playlist.visibility === "public"),
+      cursor,
+    );
   return pageOf(
-    allPlaylists().filter(
-      (playlist) =>
-        playlist.creditPersonaId === null &&
-        playlist.creditMemberSlug === memberSlug &&
-        (isSelf || playlist.visibility !== "private"),
+    profilePlaylistsSetting.featuredIds.flatMap((id) =>
+      credited.filter((playlist) => playlist.id === id),
     ),
     cursor,
   );
+}
+
+/** `GET studio/me/profile-playlists`: every playlist the viewer owns and
+ *  credits to themselves, private ones included. */
+export function demoProfilePlaylists(): StudioProfilePlaylistsDTO {
+  return {
+    ...profilePlaylistsSetting,
+    items: allPlaylists()
+      .filter(
+        (playlist) =>
+          playlist.creditPersonaId === null &&
+          playlist.creditMemberSlug === DEMO_VIEWER_MEMBER_SLUG &&
+          demoViewerRole(playlist) === "owner",
+      )
+      .map(toCardDto),
+  };
+}
+
+/** `PUT studio/me/profile-playlists`, with the server's refusals. */
+export function demoSetProfilePlaylists(
+  body: UpdateStudioProfilePlaylistsBody,
+): StudioProfilePlaylistsDTO {
+  const ownedIds = new Set(
+    demoProfilePlaylists().items.map((playlist) => playlist.id),
+  );
+  if (body.featuredIds.length > STUDIO_PLAYLIST_LIMITS.profileFeaturedMax)
+    throw refused(422, "profile_playlists_too_many");
+  if (new Set(body.featuredIds).size !== body.featuredIds.length)
+    throw refused(422, "profile_playlists_duplicate");
+  if (body.featuredIds.some((id) => !ownedIds.has(id)))
+    throw refused(422, "studio_profile_playlist_not_yours");
+  profilePlaylistsSetting = {
+    isShown: body.isShown,
+    featuredIds: [...body.featuredIds],
+  };
+  return demoProfilePlaylists();
 }
 
 export function demoTrackPlaylists(trackId: string): {

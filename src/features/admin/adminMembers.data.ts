@@ -141,6 +141,12 @@ export interface MemberDetail {
    *  platform holds no address for this member, which the drawer says in words
    *  rather than leaving the field blank. */
   signInEmailMasked: string | null;
+  /** False while an admin has paused this member's invites. Drives the
+   *  drawer's Invites row. */
+  hasInviteAccess: boolean;
+  /** The member's pending, unexpired invites, named in the pause confirm.
+   *  `null` when the backend did not send it. */
+  pendingInviteCount: number | null;
 }
 
 /** Vanity total shown in the admin members header in demo mode. Also doubles
@@ -346,6 +352,8 @@ export const MEMBER_DETAIL: Record<
     id: "ines",
     role: "admin",
     isSystem: false,
+    hasInviteAccess: true,
+    pendingInviteCount: 2,
     glance: [
       { labelKey: "admin:members.glance.vouches", value: "21" },
       { labelKey: "admin:members.glance.memberFor", value: "3yr" },
@@ -458,6 +466,8 @@ export function detailFor(member: AdminMember): MemberDetail {
     // Demo heuristic: an unverified, flagged (coral) member stands in for a
     // suspended account so the "Lift suspension" control is exercisable in demo.
     suspended: !member.verified && member.statusTone === "coral",
+    hasInviteAccess: true,
+    pendingInviteCount: 0,
     glance: [
       {
         labelKey: "admin:members.glance.vouches",

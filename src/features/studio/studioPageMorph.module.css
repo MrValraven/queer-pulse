@@ -1,0 +1,44 @@
+/* The Studio page morph (studioPageMorph.ts): a same-document view transition
+   from the track page into its release or its artist. The hero cover carries
+   the name `studio-release-cover` through an inline style the morph sets on
+   both heroes, and only into a release page. The shell's topbar, the player
+   bar and the phone tab bar take their own names off the root attribute in
+   their own modules, so they hold still above the page while it changes. */
+
+/* One unhurried duration and a soft ease-out for the cover and the page, so
+   both settle together. */
+:root[data-studio-morph] {
+  --studio-morph-duration: calc(var(--dur-slow) + 40ms);
+}
+:root[data-studio-morph]::view-transition-group(*) {
+  animation-duration: var(--studio-morph-duration);
+  animation-timing-function: var(--ease-out);
+}
+:root[data-studio-morph]::view-transition-old(root),
+:root[data-studio-morph]::view-transition-new(root) {
+  animation-duration: var(--studio-morph-duration);
+  animation-timing-function: var(--ease-out);
+}
+
+/* Reduced motion: the hook already navigates without a transition, and these
+   rules keep any morph that does start from moving. With no animation left
+   the browser ends it on the next frame and the new page shows at once. The
+   global reduced-motion rule in base.css never reaches these pseudo
+   elements, so they are named here for the OS setting and the in-app
+   toggle. */
+@media (prefers-reduced-motion: reduce) {
+  :root[data-studio-morph]::view-transition-group(*),
+  :root[data-studio-morph]::view-transition-image-pair(*),
+  :root[data-studio-morph]::view-transition-old(*),
+  :root[data-studio-morph]::view-transition-new(*) {
+    animation: none;
+  }
+}
+:root[data-studio-morph][data-reduce-motion="true"]::view-transition-group(*),
+:root[data-studio-morph][data-reduce-motion="true"]::view-transition-image-pair(
+    *
+  ),
+:root[data-studio-morph][data-reduce-motion="true"]::view-transition-old(*),
+:root[data-studio-morph][data-reduce-motion="true"]::view-transition-new(*) {
+  animation: none;
+}

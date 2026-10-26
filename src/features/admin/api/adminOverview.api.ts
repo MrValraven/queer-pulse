@@ -44,11 +44,13 @@ export interface AdminOverviewDTO {
     weeks: { weekStart: string; values: [number, number, number, number] }[];
   };
   memberGrowth: {
+    /** 10 weekly buckets, oldest first. `total` is the running member count
+     *  at the end of the bucket; `joined` is that week's new members. */
     points: {
       at: string;
       joined: number;
+      total: number;
       churned: number | null;
-      spike: boolean;
     }[];
   };
   responseTime: {

@@ -1,8 +1,6 @@
 import { Link } from "react-router-dom";
 import { AnimatePresence, m } from "motion/react";
-import { FiCheck, FiPlus } from "react-icons/fi";
 import { useMotionPrefs } from "../../app/providers/motionPrefs";
-import { Button } from "../../shared/components/ui";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { SubprofileFollow } from "../subprofiles/SubprofileFollow";
@@ -10,7 +8,6 @@ import type { StudioReleaseView } from "./api/studio.adapters";
 import type { StudioEpisodeRowView } from "./api/studioEpisodes";
 import { useStudioArtist } from "./api/useStudioArtist";
 import { StudioPlayButton } from "./kit/StudioPlayButton";
-import { StudioIconSwap } from "./player/ui/StudioIconSwap";
 import { playEpisode } from "./player/studioEpisodePlay";
 import { useStudioPlayer } from "./player/studioPlayerContext";
 import { queueItemFromEpisode, showQueueSource } from "./player/studioQueue";
@@ -18,12 +15,17 @@ import { StudioReleaseClaimPanels } from "./StudioClaimPanels";
 import { StudioDetailHero } from "./StudioDetailHero";
 import { StudioNotifyMeButton } from "./StudioNotifyMeButton";
 import { StudioReleaseDisputePanel } from "./StudioReleaseDisputePanel";
+import { StudioReleaseSaveButton } from "./StudioSaveButton";
+import { StudioHeroShare } from "./StudioHeroShare";
 import { StudioReleaseOverflow } from "./StudioReleaseOverflow";
-import { StudioShareMenu } from "./share/StudioShareMenu";
+import {
+  useIsHeroActionsCompact,
+  useIsHeroShareFolded,
+} from "./studioHeroLayout";
 import { outDateOf } from "./studioUpcoming";
-import { useStudioSaveToggle } from "./useStudioSaveToggle";
 import { STUDIO_EXIT, STUDIO_FADE } from "./studioMotion";
 import releaseStyles from "./StudioRelease.module.css";
+import ss from "./studio.module.css";
 import { StudioReleaseCoverArt } from "./StudioReleaseCoverArt";
 
 /** The show's hero (spec 5.2): Play latest episode, Follow (the persona),
@@ -31,7 +33,9 @@ import { StudioReleaseCoverArt } from "./StudioReleaseCoverArt";
  *  gives its visitors Notify me in place of Play and names no episode count
  *  (its episodes go live at the drop). Save keeps one name ("Save {title}")
  *  and aria-pressed carries its state, as the heart does. The overflow
- *  queues every published episode, oldest first. */
+ *  queues every published episode, oldest first. On a phone every action
+ *  after Play is a round icon with a tooltip, as on the other heroes, and
+ *  below 1440px a listener's Share folds into the overflow. */
 export function StudioShowHero({
   release,
   latest,
@@ -51,13 +55,14 @@ export function StudioShowHero({
   const { reducedMotion } = useMotionPrefs();
   const player = useStudioPlayer();
   const { artist } = useStudioArtist(release.artist.id, { isSilent: true });
-  const save = useStudioSaveToggle({
-    savedId: release.savedId,
-    kind: "studio_release",
-    title: release.title,
-    href: release.href,
-    meta: t("studio:show.savedMeta", { artist: release.artist.name }),
-  });
+  const isCompact = useIsHeroActionsCompact();
+  // The owner has no overflow, so their Share stays in the row.
+  const isShareInMenu = useIsHeroShareFolded() && !release.isOwner;
+  const shareTarget = {
+    kind: "release",
+    id: release.id,
+    startAtSeconds: null,
+  } as const;
   const isPublished = release.status === "published";
   const isUpcomingForViewer =
     release.isUpcoming && !release.isOwner && !release.isPreview;
@@ -72,6 +77,7 @@ export function StudioShowHero({
   return (
     <>
       <StudioDetailHero
+        isActionsCompact={isCompact}
         art={
           <StudioReleaseCoverArt
             src={release.coverUrl}
@@ -153,6 +159,7 @@ export function StudioShowHero({
               {artist && (
                 <m.span
                   key="follow"
+                  className={ss.heroLabelled}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{
@@ -173,37 +180,19 @@ export function StudioShowHero({
               )}
             </AnimatePresence>
             {isPublished && (
-              <Button
-                variant="quiet"
-                aria-pressed={save.isSaved}
-                aria-label={t("studio:save.saveReleaseCta", {
-                  title: release.title,
+              <StudioReleaseSaveButton
+                release={release}
+                isIconOnly={isCompact}
+                meta={t("studio:show.savedMeta", {
+                  artist: release.artist.name,
                 })}
-                onClick={save.toggle}
-              >
-                <StudioIconSwap iconKey={save.isSaved ? "saved" : "save"}>
-                  {save.isSaved ? <FiCheck /> : <FiPlus />}
-                </StudioIconSwap>
-                <StudioIconSwap
-                  iconKey={save.isSaved ? "savedLabel" : "saveLabel"}
-                >
-                  {t(
-                    save.isSaved
-                      ? "studio:save.savedLabel"
-                      : "studio:save.saveCta",
-                  )}
-                </StudioIconSwap>
-              </Button>
+              />
             )}
-            {isShareable && (
-              <StudioShareMenu
-                target={{
-                  kind: "release",
-                  id: release.id,
-                  startAtSeconds: null,
-                }}
+            {isShareable && !isShareInMenu && (
+              <StudioHeroShare
+                target={shareTarget}
                 title={release.title}
-                triggerLabel={t("studio:detail.shareCta")}
+                isIconOnly={isCompact}
               />
             )}
             {isShareable && !release.isOwner && (
@@ -212,6 +201,11 @@ export function StudioShowHero({
                 trackIds={isPublished ? playableEpisodeIds : undefined}
                 href={release.href}
                 artistHref={release.artist.href}
+                share={
+                  isShareInMenu
+                    ? { target: shareTarget, title: release.title }
+                    : undefined
+                }
               />
             )}
           </>

@@ -1,0 +1,106 @@
+/* HiddenCommunitiesPane: communities whose events the member hid */
+
+/* Rows fold their height away on removal, so the space between them lives
+   inside each row (on .rowSlot) and folds with it. A flex gap on the list
+   would stay behind as an empty step. */
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.rowSlot {
+  padding-block-end: 10px;
+}
+.list > li:last-child > .rowSlot {
+  padding-block-end: 0;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm);
+  padding: 14px 18px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-14);
+  transition:
+    transform 0.25s var(--ease),
+    border-color 0.2s,
+    box-shadow 0.25s var(--ease);
+}
+@media (hover: hover) {
+  .row:hover {
+    transform: translateY(-1px);
+    border-color: rgba(var(--line-rgb), 0.18);
+    box-shadow: var(--shadow-lift);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .row {
+    transition-property: border-color, box-shadow;
+  }
+  .row:hover {
+    transform: none;
+  }
+}
+
+.avatar,
+.avatarFallback {
+  flex: none;
+  inline-size: 40px;
+  block-size: 40px;
+  border-radius: var(--radius-avatar);
+}
+.avatar {
+  object-fit: cover;
+  background: rgba(var(--line-rgb), 0.06);
+}
+.avatarFallback {
+  display: grid;
+  place-items: center;
+  background: rgba(var(--line-rgb), 0.06);
+  color: var(--ink-60);
+  font-size: var(--text-16);
+}
+
+.body {
+  flex: 1;
+  min-width: 0;
+}
+
+.name {
+  margin: 0;
+  font-size: var(--text-15);
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.meta {
+  margin: 4px 0 0;
+  font-size: var(--text-12-5);
+  color: var(--ink-60);
+  line-height: 1.5;
+}
+
+.action {
+  flex: none;
+}
+
+.skeletonList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.skeletonRow {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm);
+  padding: 14px 18px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-14);
+}

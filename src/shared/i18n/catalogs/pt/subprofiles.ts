@@ -671,6 +671,15 @@ export const subprofiles: Catalog = {
     "Escolhe como a capa encontra a página. Adiciona uma imagem de capa para ativar.",
   "metaForm.bannerEdgeContained": "Contida",
   "metaForm.bannerEdgeBleed": "Sangrar na página",
+  "metaForm.studioHero.label": "Layout da página no Studio",
+  "metaForm.studioHero.helper":
+    "Escolhe como a tua foto de capa aparece no topo da tua página no Studio.",
+  "metaForm.studioHero.full-bleed": "Foto de ponta a ponta",
+  "metaForm.studioHero.full-bleedEffect":
+    "A tua foto ocupa todo o topo da tua página no Studio, com o teu nome por cima.",
+  "metaForm.studioHero.avatar": "Avatar sobre a foto",
+  "metaForm.studioHero.avatarEffect":
+    "A tua foto fica atrás do topo da tua página no Studio e o teu avatar aparece à frente, ao lado do teu nome.",
   "metaForm.availabilityLabel": "Disponibilidade",
   "metaForm.availabilityUnset": "Não definida",
   "metaForm.ctaLabelLabel": "Texto do botão",
@@ -1824,6 +1833,7 @@ export const subprofiles: Catalog = {
   "pending.field.ctaLabel": "Texto do botão",
   "pending.field.ctaUrl": "Link do botão",
   "pending.field.coverBleed": "Borda do banner",
+  "pending.field.studioHero": "Layout da página no Studio",
 
   // Gaveta de itens (SubprofileItemDrawer, EditorItemRow) — a lista de linhas
   // fechadas + a gaveta lateral que substituiu os antigos cartões de item

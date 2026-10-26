@@ -7,6 +7,8 @@ import {
   FiFileText,
   FiMessageCircle,
   FiMusic,
+  FiUserPlus,
+  FiUsers,
 } from "react-icons/fi";
 import { MEMBERS } from "./data/members";
 import { SOCIAL_PLATFORMS } from "./socialLinks.data";
@@ -25,6 +27,8 @@ const ICON_TO_KIND = new Map<IconType, ActivityKind>([
   [FiEdit3, "edit"],
   [FiCamera, "photo"],
   [FiMusic, "music"],
+  [FiUsers, "community"],
+  [FiUserPlus, "persona"],
 ]);
 
 /**

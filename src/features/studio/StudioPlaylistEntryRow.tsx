@@ -1,11 +1,5 @@
 import { useMemo } from "react";
-import {
-  FiArrowDown,
-  FiArrowUp,
-  FiMenu,
-  FiMove,
-  FiTrash2,
-} from "react-icons/fi";
+import { FiArrowDown, FiArrowUp, FiMenu, FiTrash2 } from "react-icons/fi";
 import { IconButton } from "../../shared/components/ui";
 import { useMediaQuery } from "../../shared/hooks";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -14,7 +8,7 @@ import {
   StudioTrackRow,
   StudioTrackRowUnavailable,
 } from "./kit/StudioTrackRow";
-import { StudioMenu, type StudioMenuItem } from "./kit/StudioMenu";
+import type { StudioMenuItem } from "./kit/StudioMenu";
 import { startEntryDrag } from "./studioPlaylistEntryDrag";
 import type { StudioRowSelection } from "./kit/useStudioRowSelection";
 import { StudioPlaylistAddedBy } from "./StudioPlaylistAddedBy";
@@ -84,150 +78,127 @@ function EntryControls({
   const isMoveUpBlocked = isBusy || index === 0;
   const isMoveDownBlocked = isBusy || index === rowCount - 1;
   const canMove = entry.isAvailable && isReorderable;
+  // Below --sm the row keeps the heart and "..." alone and these move into
+  // the "..." menu (and Remove into selection mode); with a mouse they come
+  // up with the row.
   return (
-    <>
-      <EntryPhoneMenu
-        title={title}
-        canMove={canMove}
-        isMoveUpBlocked={isMoveUpBlocked}
-        isMoveDownBlocked={isMoveDownBlocked}
-        isBusy={isBusy}
-        removeLabel={
+    <span className={css.controls} data-studio-row-extra="menu">
+      {canMove && (
+        <>
+          <IconButton
+            ref={(element: HTMLButtonElement | null) =>
+              registerControl(entry.entryId, "moveUp", element)
+            }
+            size="sm"
+            className={css.control}
+            aria-disabled={isMoveUpBlocked || undefined}
+            aria-label={t("studio:playlist.row.moveUp", { title })}
+            onClick={() => {
+              if (!isMoveUpBlocked) onMove(-1);
+            }}
+          >
+            <FiArrowUp aria-hidden />
+          </IconButton>
+          <IconButton
+            ref={(element: HTMLButtonElement | null) =>
+              registerControl(entry.entryId, "moveDown", element)
+            }
+            size="sm"
+            className={css.control}
+            aria-disabled={isMoveDownBlocked || undefined}
+            aria-label={t("studio:playlist.row.moveDown", { title })}
+            onClick={() => {
+              if (!isMoveDownBlocked) onMove(1);
+            }}
+          >
+            <FiArrowDown aria-hidden />
+          </IconButton>
+        </>
+      )}
+      <IconButton
+        ref={(element: HTMLButtonElement | null) =>
+          registerControl(entry.entryId, "remove", element)
+        }
+        size="sm"
+        className={css.control}
+        aria-disabled={isBusy || undefined}
+        aria-label={
           entry.isAvailable
             ? t("studio:playlist.row.remove", { title })
             : t("studio:playlist.row.removeUnavailable", {
                 position: entry.position,
               })
         }
-        onMove={onMove}
-        onRemove={onRemove}
-      />
-      {/* Below --sm the row keeps the heart and "..." alone and these move
-          into the menu above (and Remove into selection mode); with a mouse
-          they come up with the row. */}
-      <span className={css.controls} data-studio-row-extra="menu">
-        {canMove && (
-          <>
-            <IconButton
-              ref={(element: HTMLButtonElement | null) =>
-                registerControl(entry.entryId, "moveUp", element)
-              }
-              size="sm"
-              className={css.control}
-              aria-disabled={isMoveUpBlocked || undefined}
-              aria-label={t("studio:playlist.row.moveUp", { title })}
-              onClick={() => {
-                if (!isMoveUpBlocked) onMove(-1);
-              }}
-            >
-              <FiArrowUp aria-hidden />
-            </IconButton>
-            <IconButton
-              ref={(element: HTMLButtonElement | null) =>
-                registerControl(entry.entryId, "moveDown", element)
-              }
-              size="sm"
-              className={css.control}
-              aria-disabled={isMoveDownBlocked || undefined}
-              aria-label={t("studio:playlist.row.moveDown", { title })}
-              onClick={() => {
-                if (!isMoveDownBlocked) onMove(1);
-              }}
-            >
-              <FiArrowDown aria-hidden />
-            </IconButton>
-          </>
-        )}
-        <IconButton
-          ref={(element: HTMLButtonElement | null) =>
-            registerControl(entry.entryId, "remove", element)
-          }
-          size="sm"
-          className={css.control}
-          aria-disabled={isBusy || undefined}
-          aria-label={
-            entry.isAvailable
-              ? t("studio:playlist.row.remove", { title })
-              : t("studio:playlist.row.removeUnavailable", {
-                  position: entry.position,
-                })
-          }
-          onClick={() => {
-            if (!isBusy) onRemove();
-          }}
-        >
-          <FiTrash2 aria-hidden />
-        </IconButton>
-      </span>
-    </>
+        onClick={() => {
+          if (!isBusy) onRemove();
+        }}
+      >
+        <FiTrash2 aria-hidden />
+      </IconButton>
+    </span>
   );
 }
 
-/** The phone's one control for an entry: a menu with Move up, Move down
- *  and Remove, in place of three buttons that would squeeze the title. */
-function EntryPhoneMenu({
+/** Move up, Move down and Remove as the row's own "..." menu offers them
+ *  after the track's items, so a phone row keeps its width for the title. */
+function entryMenuItems({
+  entry,
   title,
-  canMove,
-  isMoveUpBlocked,
-  isMoveDownBlocked,
+  index,
+  rowCount,
   isBusy,
-  removeLabel,
+  isReorderable,
   onMove,
   onRemove,
-}: {
+  t,
+}: Pick<
+  StudioPlaylistEntryRowProps,
+  | "entry"
+  | "index"
+  | "rowCount"
+  | "isBusy"
+  | "isReorderable"
+  | "onMove"
+  | "onRemove"
+> & {
   title: string;
-  canMove: boolean;
-  isMoveUpBlocked: boolean;
-  isMoveDownBlocked: boolean;
-  isBusy: boolean;
-  removeLabel: string;
-  onMove: (offset: -1 | 1) => void;
-  onRemove: () => void;
-}) {
-  const { t } = useTranslation();
-  const label = t("studio:playlist.row.arrangeMenu", { title });
+  t: ReturnType<typeof useTranslation>["t"];
+}): StudioMenuItem[] {
+  const canMove = entry.isAvailable && isReorderable;
   const moveItems: StudioMenuItem[] = canMove
     ? [
         {
           id: "moveUp",
           label: t("studio:playlist.row.moveUp", { title }),
           icon: <FiArrowUp aria-hidden />,
-          isDisabled: isMoveUpBlocked,
+          isDisabled: isBusy || index === 0,
           onSelect: () => onMove(-1),
         },
         {
           id: "moveDown",
           label: t("studio:playlist.row.moveDown", { title }),
           icon: <FiArrowDown aria-hidden />,
-          isDisabled: isMoveDownBlocked,
+          isDisabled: isBusy || index === rowCount - 1,
           onSelect: () => onMove(1),
         },
         { id: "removeSeparator", type: "separator" },
       ]
     : [];
-  return (
-    <span className={css.phoneMenu}>
-      <StudioMenu
-        trigger={
-          <IconButton size="sm" className={css.control} aria-label={label}>
-            <FiMove aria-hidden />
-          </IconButton>
-        }
-        label={label}
-        items={[
-          ...moveItems,
-          {
-            id: "remove",
-            label: removeLabel,
-            icon: <FiTrash2 aria-hidden />,
-            tone: "danger",
-            isDisabled: isBusy,
-            onSelect: onRemove,
-          },
-        ]}
-      />
-    </span>
-  );
+  return [
+    ...moveItems,
+    {
+      id: "remove",
+      label: entry.isAvailable
+        ? t("studio:playlist.row.remove", { title })
+        : t("studio:playlist.row.removeUnavailable", {
+            position: entry.position,
+          }),
+      icon: <FiTrash2 aria-hidden />,
+      tone: "danger",
+      isDisabled: isBusy,
+      onSelect: onRemove,
+    },
+  ];
 }
 
 /** One playlist entry on the shared track row: play inside the playlist,
@@ -298,6 +269,34 @@ export function StudioPlaylistEntryRow(props: StudioPlaylistEntryRowProps) {
       onRemove,
     ],
   );
+  const menuExtraItems = useMemo(
+    () =>
+      hasEditRights
+        ? entryMenuItems({
+            entry,
+            title,
+            index,
+            rowCount,
+            isBusy,
+            isReorderable,
+            onMove,
+            onRemove,
+            t,
+          })
+        : undefined,
+    [
+      hasEditRights,
+      entry,
+      title,
+      index,
+      rowCount,
+      isBusy,
+      isReorderable,
+      onMove,
+      onRemove,
+      t,
+    ],
+  );
   const addedBy = entry.addedBy;
   const details = useMemo(
     () =>
@@ -313,6 +312,7 @@ export function StudioPlaylistEntryRow(props: StudioPlaylistEntryRowProps) {
         label={unavailableLabel}
         leading={handle}
         actions={controls}
+        menuExtraItems={menuExtraItems}
       />
     );
   return (
@@ -327,6 +327,7 @@ export function StudioPlaylistEntryRow(props: StudioPlaylistEntryRowProps) {
       shouldHideExplicit={props.shouldHideExplicit}
       leading={handle}
       extraActions={controls}
+      menuExtraItems={menuExtraItems}
       details={details}
       isLayoutAnimated
       isDraggable

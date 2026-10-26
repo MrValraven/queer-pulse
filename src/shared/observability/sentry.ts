@@ -179,6 +179,14 @@ const PRIVATE_BREADCRUMB_PATHS = [
   // a persona hero's) stay out of every breadcrumb, so a staff preview of a
   // draft persona never leaves its slugs on a later error event.
   "/mentions/names",
+  // Landing visit counter: the anonymous count records nothing about a
+  // visitor, so its POST (and the admin read of the totals) stays out of
+  // every breadcrumb too.
+  "/landing/visits",
+  // Email code sign-in: the request, verify and step-up routes stay out of
+  // every breadcrumb, so no later error event says when someone asked for a
+  // code or how often they tried one.
+  "/auth/email-code",
 ];
 
 /**

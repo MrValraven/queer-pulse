@@ -2,6 +2,7 @@ import { FiArrowRight, FiCheck, FiClock } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useIsGoogleStepUp } from "../settings/api/useReauthToken";
 import { REAUTH_EMAIL } from "./verificationNeeded.data";
 import styles from "./VerificationNeededPage.module.css";
 
@@ -20,16 +21,19 @@ import styles from "./VerificationNeededPage.module.css";
  * promised could never arrive.
  *
  * All three are gone. What is left is a single confirm step that tells the
- * truth about the real mechanism: step-up re-auth on QueerPulse is a Google
- * sign-in round trip (`beginReauth()` in `features/settings/api/
- * useReauthToken.ts`), which is what the live surfaces that need it
- * (DeleteAccountSection, AccountDataExport, useDsar) actually call, and what
- * this page's live mode now calls too.
+ * truth about the real mechanism: step-up re-auth on QueerPulse opens the code
+ * dialog (`beginReauth()` in `features/settings/api/useReauthToken.ts`), which
+ * emails a code to the member's own address and lets members with Google pick
+ * the redirect (`beginGoogleReauth()`). That is what the live surfaces that
+ * need it (DeleteAccountSection, AccountDataExport, useDsar) actually call,
+ * and what this page's live mode now calls too.
  *
  * `isLiveStepUp` is what separates the two: on the live build the confirm
- * button leaves for Google and the copy names no address, because the page has
+ * button opens the code dialog and the copy names no address, because the page has
  * no idea which account is signed in; in demo mode it resolves locally against
- * `REAUTH_EMAIL` so the prototype still reads end to end.
+ * `REAUTH_EMAIL` so the prototype still reads end to end. Unless sign-in codes
+ * are explicitly on, `beginReauth()` runs the Google round trip for a member
+ * with Google, and the live copy says so.
  */
 
 function Spinner() {
@@ -47,11 +51,16 @@ export function ConfirmMethod({
   onVerify: () => void;
 }) {
   const { t } = useTranslation();
+  const isGoogleStepUp = useIsGoogleStepUp();
   return (
     <div className={styles.magicIntro}>
       <p className={styles.magicCopy}>
         {isLiveStepUp ? (
-          t("system:verificationNeeded.confirm.introLive")
+          t(
+            isGoogleStepUp
+              ? "system:verificationNeeded.confirm.introLiveGoogle"
+              : "system:verificationNeeded.confirm.introLive",
+          )
         ) : (
           <Translation
             i18nKey="system:verificationNeeded.confirm.intro"

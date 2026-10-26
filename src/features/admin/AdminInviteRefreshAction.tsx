@@ -16,8 +16,8 @@ import {
  * accepted, revoked or already-valid invite gets a 409 from the backend.
  *
  * It mirrors {@link AdminInviteRevokeAction}: the confirm goes through the
- * shared `ConfirmDialog` (default tone, since reopening a link is reversible
- * with a revoke), the dialog names the code and the sender, and success is
+ * shared `ConfirmDialog` (the jade positive tone, matching the bulk refresh,
+ * since reopening a link is reversible with a revoke), the dialog names the code and the sender, and success is
  * announced only from the mutation's `onSuccess` with the server's own row.
  * A 409 gets its own calm message: the invite moved on while the drawer sat
  * open, which is ordinary.
@@ -74,7 +74,7 @@ export function AdminInviteRefreshAction({
         open={isConfirmOpen}
         onClose={() => setIsConfirmOpen(false)}
         onConfirm={handleConfirm}
-        tone="default"
+        tone="positive"
         loading={refreshInvite.isPending}
         title={t("admin:adminInvites.refresh.confirmTitle", {
           code: invite.code,

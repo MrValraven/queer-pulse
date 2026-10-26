@@ -112,6 +112,12 @@
   align-items: center;
   gap: 10px;
 }
+/* "End broadcast" is a kit soft Button. Its --accent-text label is 4.42:1 on
+   this console's tint, so the chip ink (mixed toward plum in light, about
+   5:1) carries it. The doubled class outranks the kit. */
+.endBtn.endBtn {
+  color: var(--studio-accent-chip-text);
+}
 
 /* ---- 3-column grid ---- */
 .grid {

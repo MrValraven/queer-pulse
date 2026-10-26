@@ -72,6 +72,7 @@ function StudioTrackRowComponent(props: StudioTrackRowProps) {
         headingLevel={props.headingLevel}
         details={props.details}
         isLayoutAnimated={props.isLayoutAnimated}
+        menuExtraItems={props.menuExtraItems}
       />
     );
   if (shouldHideExplicit === undefined)
@@ -111,6 +112,7 @@ function StudioTrackRowBody({
   selection,
   selectionId = track.id,
   extraActions,
+  menuExtraItems,
   leading,
   headingLevel = 3,
   trailing,
@@ -243,6 +245,7 @@ function StudioTrackRowBody({
           hiddenActions={hiddenActions}
           extraActions={extraActions}
           menuTrack={menuTrack}
+          menuExtraItems={menuExtraItems}
           likeOptions={likeOptions}
         />
       </m.li>
@@ -255,6 +258,7 @@ function StudioTrackRowBody({
           point={menuPoint}
           onClose={closeMenu}
           returnFocusRef={focusTargetRef}
+          extraItems={menuExtraItems}
         />
       )}
     </>

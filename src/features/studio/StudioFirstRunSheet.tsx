@@ -98,22 +98,31 @@ function StudioFirstRunProgress({ stepIndex }: { stepIndex: number }) {
 }
 
 /** The step's serif heading, crossfading with the step body. It takes
- *  focus when the welcome opens, so a screen reader starts on the step's
- *  name. */
+ *  focus when the welcome opens and again as each new step's heading
+ *  mounts, so a screen reader starts every step on its name. */
 function StudioFirstRunTitle({
   stepIndex,
   headingRef,
+  focusRequestRef,
 }: {
   stepIndex: number;
   headingRef: RefObject<HTMLSpanElement | null>;
+  /** Set on a step change; the next heading to mount takes focus. */
+  focusRequestRef: RefObject<boolean>;
 }) {
   const { reducedMotion } = useMotionPrefs();
   const step = firstRunStepAt(stepIndex);
+  const attachHeading = (element: HTMLSpanElement | null) => {
+    headingRef.current = element;
+    if (!element || !focusRequestRef.current) return;
+    focusRequestRef.current = false;
+    element.focus({ preventScroll: true });
+  };
   return (
     <AnimatePresence mode="wait" initial={false}>
       <m.span
         key={step.id}
-        ref={headingRef}
+        ref={attachHeading}
         tabIndex={-1}
         className={css.title}
         initial={{ opacity: 0, y: reducedMotion ? 0 : 6 }}
@@ -143,9 +152,9 @@ function toggled(previous: Set<string>, value: string): Set<string> {
 /**
  * The welcome dialog: the shared Modal, a bottom sheet on phones and a
  * centred dialog on desktop, with its focus trap, Escape and focus return.
- * The step heading takes focus on open. Steps slide in from the side they
- * come from and the body springs to each step's height on the same soft
- * spring; the footer stays put, so focus stays on Next from step to step.
+ * The step heading takes focus on open and on every step change. Steps
+ * slide in from the side they come from and the body springs to each
+ * step's height on the same soft spring; the footer stays put.
  */
 export interface StudioFirstRunSheetProps {
   initialTaste: StudioTaste | null;
@@ -168,6 +177,7 @@ export function StudioFirstRunSheet({
   );
   const nextButtonRef = useRef<HTMLButtonElement>(null);
   const headingRef = useRef<HTMLSpanElement>(null);
+  const focusRequestRef = useRef(false);
   const { ref: stepBoxRef, height: stepHeight } =
     useStudioMeasuredHeight<HTMLDivElement>();
   const step = firstRunStepAt(stepIndex);
@@ -188,13 +198,15 @@ export function StudioFirstRunSheet({
   );
 
   const goTo = (index: number) => {
+    focusRequestRef.current = true;
     setDirection(index > stepIndex ? 1 : -1);
     setStepIndex(index);
   };
   const goBack = () => {
     const previousIndex = Math.max(0, stepIndex - 1);
     goTo(previousIndex);
-    // Back leaves with step 1, so focus moves on to Next before it goes.
+    // Back leaves with step 1, so focus waits on Next while the step 1
+    // heading comes in to take it.
     if (previousIndex === 0) nextButtonRef.current?.focus();
   };
   const goNext = () => {
@@ -221,7 +233,11 @@ export function StudioFirstRunSheet({
     <Modal
       eyebrow={<StudioFirstRunProgress stepIndex={stepIndex} />}
       title={
-        <StudioFirstRunTitle stepIndex={stepIndex} headingRef={headingRef} />
+        <StudioFirstRunTitle
+          stepIndex={stepIndex}
+          headingRef={headingRef}
+          focusRequestRef={focusRequestRef}
+        />
       }
       onClose={() => onClose(picks, false)}
       initialFocusRef={headingRef}

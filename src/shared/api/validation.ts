@@ -167,6 +167,10 @@ export const validateAuthUser: ResponseValidator<AuthUser> = (data) => {
       )
     : [];
 
+  // `hasGoogle` is backend-optional: every account that predates email codes
+  // signed up with Google, so a missing or malformed value reads as true.
+  data.hasGoogle = typeof data.hasGoogle === "boolean" ? data.hasGoogle : true;
+
   // `policyVersions` (ID-14) is normalised rather than asserted, for the same
   // reason as `staffRoles`: a backend that predates the field, or one that
   // sends a half-shaped object, must not 422 every gated route — it should just

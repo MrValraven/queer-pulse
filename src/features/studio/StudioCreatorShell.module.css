@@ -79,3 +79,11 @@
 .main {
   display: block;
 }
+/* The neutral ink channel on the Studio ink, as on the listener shell's root
+   (studio.module.css), so the kit's quiet washes read plum here too. The
+   root div takes creator.module.css's class, so the bar and the main region
+   carry it. */
+.topbar,
+.main {
+  --ink-rgb: var(--studio-ink-rgb);
+}

@@ -108,6 +108,8 @@ export const STUDIO_PLAYLIST_LIMITS = {
   tracksPerPlaylist: 500,
   tracksPerAdd: 50,
   playlistsPerPage: 24,
+  /** Playlists a member may feature on their profile. */
+  profileFeaturedMax: 12,
   trackPlaylistsMax: 6,
   /** Liked songs: rows per page of `GET /studio/playlists/liked`. */
   likedTracksPerPage: 100,
@@ -524,7 +526,14 @@ export interface StudioTrackDTO extends StudioTrackSummaryDTO {
 }
 
 export interface StudioArtistDTO {
-  artist: StudioArtistRefDTO & { bio: string | null; city: string | null };
+  artist: StudioArtistRefDTO & {
+    bio: string | null;
+    city: string | null;
+    /** The persona's wide cover photo; null without one. */
+    coverUrl: string | null;
+    /** skinData.studioHero; null when the owner never chose a layout. */
+    studioHero: "full-bleed" | "avatar" | null;
+  };
   /** Published, newest first. */
   releases: StudioReleaseCardDTO[];
   /** Drafts, scheduled and taken-down releases; null unless the viewer owns
@@ -1316,4 +1325,18 @@ export interface StudioLatestEpisodeDTO {
 export interface StudioLatestEpisodesPageDTO {
   items: StudioLatestEpisodeDTO[];
   nextCursor: string | null;
+}
+
+/** `GET` and `PUT /studio/me/profile-playlists`: whether the member's
+ *  playlists show on their profile, the featured ids in display order, and
+ *  every playlist they may put there (private ones included). */
+export interface StudioProfilePlaylistsDTO {
+  isShown: boolean;
+  featuredIds: string[];
+  items: StudioPlaylistCardDTO[];
+}
+
+export interface UpdateStudioProfilePlaylistsBody {
+  isShown: boolean;
+  featuredIds: string[];
 }

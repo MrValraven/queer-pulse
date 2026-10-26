@@ -27,19 +27,16 @@ const SKELETON_COLUMN_KEYS = Array.from(
 /** Tiles stacked in each column of the two-row scroller. */
 const TILES_PER_COLUMN = 2;
 
-/** The shelf grid's columns by width, as StudioShelf.module.css sets them
- *  (two, then three from 560px, four from 780px, five from 1100px). */
-const SHELF_GRID_STEPS = [
-  { minWidth: 1100, columns: 5 },
-  { minWidth: 780, columns: 4 },
-  { minWidth: 560, columns: 3 },
-  { minWidth: 0, columns: 2 },
-] as const;
+/** The tile grid's floor and gap, as StudioFacetTiles.module.css sets
+ *  them (`.fitGrid`: `repeat(auto-fit, minmax(160px, 1fr))`, 12px gaps). */
+const GRID_TILE_MIN_PX = 160;
+const GRID_GAP_PX = 12;
 
-/** True when every tile fits one row of the shelf grid at the width the
- *  shelf has, so the tiles line up in a row with no sideways scroll. It
- *  measures before paint and again on every resize. */
-function useFitsOneRow(
+/** True when the tiles lay out as a plain wrapping grid in place of the
+ *  two-row scroller: every tile fits one row at the width the shelf has,
+ *  or a phone's two columns hold them all in two rows. It measures before
+ *  paint and again on every resize. */
+function useFitsGrid(
   ref: RefObject<HTMLElement | null>,
   tileCount: number,
 ): boolean {
@@ -56,11 +53,15 @@ function useFitsOneRow(
     return () => observer.disconnect();
   }, [ref]);
   if (width === 0 || tileCount === 0) return false;
-  const step = SHELF_GRID_STEPS.find((each) => width >= each.minWidth);
-  return tileCount <= (step?.columns ?? 0);
+  const columns = Math.max(
+    1,
+    Math.floor((width + GRID_GAP_PX) / (GRID_TILE_MIN_PX + GRID_GAP_PX)),
+  );
+  return tileCount <= columns || (columns <= 2 && tileCount <= 2 * columns);
 }
 
-/** "Fado / contemporâneo" breaks after the slash, never before it. */
+/** "Fado / contemporâneo" breaks after the slash, never before it: a
+ *  no-break space joins the slash to the word ahead of it. */
 function keepSlashWithWord(label: string): string {
   return label.replace(/ \//g, "\u00a0/");
 }
@@ -192,11 +193,18 @@ export function StudioFacetTiles({
   const navRef = useRef<HTMLElement>(null);
   const tiles = tilesOf(facet, activeFormat, t);
   const columns = columnsOf(tiles);
-  // Few enough tiles for one row: a plain row of tiles in place of the
-  // two-row scroller, so no column stands half empty.
-  const isOneRow = useFitsOneRow(navRef, isLoading ? 0 : tiles.length);
+  // Few enough tiles for the grid: a plain wrapping grid of tiles in place
+  // of the two-row scroller, so no column stands half empty.
+  const isOneRow = useFitsGrid(navRef, isLoading ? 0 : tiles.length);
+  const countStyle = { "--facet-count": tiles.length } as CSSProperties;
   return (
-    <nav ref={navRef} aria-label={label} aria-busy={isLoading || undefined}>
+    <nav
+      ref={navRef}
+      aria-label={label}
+      aria-busy={isLoading || undefined}
+      className={isOneRow ? css.fitGrid : undefined}
+      style={countStyle}
+    >
       <StudioShelf
         id={id}
         title={title}

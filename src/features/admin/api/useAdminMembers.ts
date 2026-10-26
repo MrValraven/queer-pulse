@@ -240,6 +240,11 @@ export function useAdminMember(member: AdminMember | null) {
     ],
     enabled: member !== null,
     initialData: demoMode && member ? detailFor(member) : undefined,
+    // Demo never goes stale, so the drawer's cache writes (an invite pause)
+    // last for the session; after the 30s default a re-run of `detailFor`
+    // would drop them. Mirrors `useMemberStudioAccess`. Spread so live keeps
+    // the default: passing `staleTime: undefined` would override it.
+    ...(demoMode ? { staleTime: Number.POSITIVE_INFINITY } : {}),
     queryFn: async () => {
       if (demoMode) {
         return member ? detailFor(member) : undefined;

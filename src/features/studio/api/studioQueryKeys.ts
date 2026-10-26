@@ -68,6 +68,9 @@ export const studioKeys = {
     ["studio", "playlist", demoMode, playlistId] as const,
   memberPlaylists: (demoMode: boolean, memberSlug: string) =>
     ["studio", "memberPlaylists", demoMode, memberSlug] as const,
+  /** The owner's own profile-playlists setting (shown flag, featured ids). */
+  profilePlaylists: (demoMode: boolean) =>
+    ["studio", "profilePlaylists", demoMode] as const,
   trackPlaylists: (demoMode: boolean, trackId: string) =>
     ["studio", "trackPlaylists", demoMode, trackId] as const,
   /** Collaborative playlists: who edits one playlist, and the persona

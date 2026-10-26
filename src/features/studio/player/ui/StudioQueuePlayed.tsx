@@ -112,16 +112,22 @@ export function StudioQueuePlayed({
 }) {
   const { t } = useTranslation();
   const { entries, clear } = useStudioRecentlyPlayed();
+  const { currentItem } = useStudioPlayer();
   const [isOpen, setIsOpen] = useState(false);
   const headingId = useId();
   const listId = useId();
-  const trackIds = entries
+  // A track that has played 30s joins the list while it still plays; it
+  // shows under Played only once it is no longer the current one.
+  const playedEntries = entries.filter(
+    (entry) => entry.trackId !== currentItem?.trackId,
+  );
+  const trackIds = playedEntries
     .slice(0, PLAYED_ROW_LIMIT)
     .map((entry) => entry.trackId);
   const tracks = usePlayedTracks(trackIds, isOpen);
   const Heading = headingLevel === 2 ? "h2" : "h3";
   return (
-    <Collapse isOpen={entries.length > 0}>
+    <Collapse isOpen={playedEntries.length > 0}>
       <section className={styles.group} aria-labelledby={headingId}>
         <div className={styles.groupHead}>
           <Heading id={headingId} className={styles.groupHeading}>

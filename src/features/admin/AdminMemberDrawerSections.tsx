@@ -9,6 +9,7 @@ import { AdminMemberRoleControl } from "./AdminMemberRoleControl";
 import { AdminMemberStaffRoles } from "./AdminMemberStaffRoles";
 import { AdminMemberAmbassadorLine } from "./AdminMemberAmbassadorLine";
 import { AdminMemberStudioAccessLine } from "./AdminMemberStudioAccessLine";
+import { AdminMemberInviteAccessLine } from "./AdminMemberInviteAccessLine";
 import { AdminAccessPanel } from "./AdminAccessRow";
 import { AdminMemberEarlyAccessSection } from "./earlyAccess/AdminMemberEarlyAccessSection";
 import {
@@ -25,8 +26,8 @@ import styles from "./AdminMembersPage.module.css";
  * Groups the tier control (`AdminMemberRoleControl`) with the additive
  * access the member holds, under one umbrella heading: the tier is "how much
  * power", the access panel below it is "which desks and features". Staff
- * roles, the ambassador tag and Studio share one panel and one row anatomy,
- * so the three read as a single list of grants.
+ * roles, the ambassador tag, Studio and invites share one panel and one row
+ * anatomy, so the four read as a single list of grants.
  */
 export function RolesAndAccessSection({
   member,
@@ -52,6 +53,7 @@ export function RolesAndAccessSection({
           />
           <AdminMemberAmbassadorLine slug={member.slug} />
           <AdminMemberStudioAccessLine memberId={member.id} />
+          <AdminMemberInviteAccessLine member={member} detail={detail} />
         </AdminAccessPanel>
       </section>
       <AdminMemberEarlyAccessSection memberId={member.id} />

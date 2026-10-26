@@ -75,10 +75,12 @@ export const shared: Catalog = {
     "A random value we compare on every write, so another site can't act as you. Takes the __Host- name on the live site.",
   "consent.storage.oauthState.purpose":
     "A one-time value that ties your Google sign-in to the tab that started it. Deleted the moment you come back.",
+  "consent.storage.emailCodeRequester.purpose":
+    "Ties a sign-in code to the browser that asked for it, so a code only works where it was requested.",
   "consent.storage.consentChoice.purpose":
     "This choice, and which policy version you made it under, so we don't ask again until the policy changes.",
   "consent.storage.signInProgress.purpose":
-    "Short-lived values that carry you through signing in, confirming your password again, and accepting an invite.",
+    "Short-lived values that carry you through signing in, confirming it's you again, and accepting an invite.",
   "consent.storage.displayPreferences.purpose":
     "Theme, language, navigation layout, and your accessibility settings: reduced motion, text size, spacing, focus rings, skip link.",
   "consent.storage.notificationPreferences.purpose":
@@ -841,4 +843,15 @@ export const shared: Catalog = {
   "studioShare.unavailable": "Not available",
   "apiError.quizshowAdultsRounds":
     "This event's live game has adults rounds. Change their label in the Live game tab first, then turn off 18+",
+
+  // ── CodeInput (shared/components/ui) ──
+  "codeInput.digit": "Digit {index} of {total}",
+
+  // ── Step-up toast (features/settings/api/useReauthToken.ts) ──
+  // Here in the eager namespace: any page can start a step-up, and the toast
+  // must read in full on a page that never loads `settings`.
+  reauthUnavailable:
+    "We can't confirm it's you right now: sign-in codes are switched off. Write to us and our team will help.",
+  reauthStatusPending:
+    "We're still checking how to confirm it's you. Try again in a moment.",
 };

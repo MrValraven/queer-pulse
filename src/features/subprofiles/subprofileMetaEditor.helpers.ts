@@ -1,11 +1,30 @@
 import type {
   LinkVisibility,
   SkinData,
+  StudioHeroChoice,
   UpdateSubprofileDTO,
   Visibility,
 } from "./api/subprofiles.api";
 import type { SubprofileView } from "./api/subprofiles.adapters";
 import type { MetaSnapshot } from "./subprofileEditorDiff";
+import { isStudioArtistPersonaKind } from "../studio/api/studio.types";
+
+/** The layout a Studio artist page uses when none is stored. */
+export const DEFAULT_STUDIO_HERO: StudioHeroChoice = "full-bleed";
+
+/**
+ * Whether the "Studio page layout" control shows: only for an artist kind
+ * that publishes in Studio, and only once the persona has a cover photo (the
+ * layout needs a wide photo to act on).
+ */
+export function shouldShowStudioHeroControl(
+  kind: string | undefined,
+  coverUrl: string,
+): boolean {
+  return (
+    kind !== undefined && isStudioArtistPersonaKind(kind) && coverUrl !== ""
+  );
+}
 
 /** The persisted persona, mapped to the comparable flat meta shape. */
 export function metaSnapshotOf(subprofile: SubprofileView): MetaSnapshot {
@@ -24,6 +43,7 @@ export function metaSnapshotOf(subprofile: SubprofileView): MetaSnapshot {
     ctaLabel: subprofile.ctaLabel,
     ctaUrl: subprofile.ctaUrl,
     coverBleed: subprofile.skinData?.coverBleed ?? false,
+    studioHero: subprofile.skinData?.studioHero ?? DEFAULT_STUDIO_HERO,
   };
 }
 
@@ -71,6 +91,9 @@ export function buildMetaPatchFrom(
   // Only PATCH skinData when the bleed flag actually changed, and merge onto
   // the loaded skinData so we never clobber skin-extras panels' fields.
   const coverBleedChanged = current.coverBleed !== baseline.coverBleed;
+  // The Studio page layout rides the same skinData merge, and only when it
+  // changed, so an untouched layout is never written for a non-artist persona.
+  const studioHeroChanged = current.studioHero !== baseline.studioHero;
   return {
     displayName: current.displayName.trim(),
     tagline: current.tagline.trim() || null,
@@ -85,11 +108,12 @@ export function buildMetaPatchFrom(
     visibility: current.visibility as Visibility,
     ...(slugChanged ? { slug: current.slug.trim() } : {}),
     ...(handleChanged ? { handle: current.handle.trim() || null } : {}),
-    ...(coverBleedChanged
+    ...(coverBleedChanged || studioHeroChanged
       ? {
           skinData: {
             ...(existingSkinData ?? {}),
-            coverBleed: current.coverBleed,
+            ...(coverBleedChanged ? { coverBleed: current.coverBleed } : {}),
+            ...(studioHeroChanged ? { studioHero: current.studioHero } : {}),
           },
         }
       : {}),

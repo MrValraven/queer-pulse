@@ -49,8 +49,8 @@ import type { AdminOverviewDTO } from "./adminOverview.api";
  *  - `overviewToResponseDist` returns `null` outright;
  *  - `GrowthPoint.churned` is passed through as `null` rather than coerced to
  *    0 — `adminDashboard.data.ts`'s `GrowthPoint.churned` was widened from
- *    `number` to `number | null` for exactly this case (the fixture's own
- *    `MEMBER_GROWTH` values are all plain numbers and stay valid unchanged).
+ *    `number` to `number | null` for exactly this case (the demo
+ *    `MEMBER_GROWTH` fixture sends `null` too, matching live).
  */
 
 const [
@@ -246,15 +246,16 @@ export function overviewToReportChart(dto: AdminOverviewDTO): {
 
 /* ── 4 · Member growth line ───────────────────────────────────────────────── */
 
-/** GET /admin/overview → the member-growth line points. `churned` is passed
- *  through as-is (`number | null`) — E4 renders the churn line only where it
- *  has real data, never a fabricated 0. */
+/** GET /admin/overview → the member-growth line points. The line plots
+ *  `total` (running member count per week) and the tooltip adds that week's
+ *  `joined`. `churned` is passed through as-is (`number | null`) so E4 renders
+ *  the churn line only where it has real data, never a fabricated 0. */
 export function overviewToMemberGrowth(dto: AdminOverviewDTO): GrowthPoint[] {
   return dto.memberGrowth.points.map((point) => ({
     date: new Date(point.at),
     joined: point.joined,
+    total: point.total,
     churned: point.churned,
-    spike: point.spike,
   }));
 }
 

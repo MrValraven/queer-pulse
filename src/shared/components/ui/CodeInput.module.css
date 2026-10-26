@@ -1,0 +1,54 @@
+/* One box per digit, `--code-length` equal columns (set inline by CodeInput). */
+.group {
+  display: grid;
+  grid-template-columns: repeat(var(--code-length, 6), minmax(0, 1fr));
+  gap: var(--gap-xs);
+}
+
+/* Every box rule is scoped under .group, so inside a FormField it beats the
+   plain `.field input` rule (0,1,1). FormField's pseudo-class rules
+   (`:focus`, `:disabled`, `[aria-invalid]`) still apply where a rule here
+   leaves a property unset. The border matches FormField's: 0.5 on --line-rgb
+   reaches the 3:1 a control boundary needs (WCAG 1.4.11). */
+.group .box {
+  min-width: 0;
+  min-height: 48px;
+  padding: 0;
+  font: inherit;
+  font-size: var(--text-24);
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+  border: 1.5px solid rgba(var(--line-rgb), 0.5);
+  border-radius: var(--radius-12);
+  color: var(--text-strong);
+  transition: border-color var(--dur-fast) var(--ease);
+}
+
+.group .box:focus {
+  border-color: var(--line-strong);
+}
+
+.group .box:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* --accent-ink is the 3:1 invalid border FormField uses. */
+.group .box[aria-invalid="true"] {
+  border-color: var(--accent-ink);
+}
+
+/* Dims the way a disabled Button does. The colour is restated so FormField's
+   `.field input:disabled` colour never fades the digits further. */
+.group .box:disabled {
+  color: var(--text-strong);
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .group .box {
+    transition: none;
+  }
+}

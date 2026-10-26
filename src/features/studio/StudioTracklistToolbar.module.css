@@ -26,6 +26,15 @@
   white-space: nowrap;
 }
 
+/* Touch: the order and Select tracks grow to the 44px tap floor (the quiet
+   sm pill is 36px). The doubled class outranks the shared Button's own
+   rules whatever order the two modules load in. */
+@media (pointer: coarse) {
+  .control.control {
+    min-height: var(--tap-min);
+  }
+}
+
 /* Keeps every sort item's label on one edge, ticked or not. */
 .iconSpacer {
   display: inline-block;

@@ -311,11 +311,11 @@
   min-height: 48px;
 }
 
-/* The shared `.primary` rule sets `box-shadow: var(--shadow-accent)` after
-   the global `:focus-visible` rule at the same specificity, which drops the
-   cream halo from the two-tone focus ring and leaves only the dark coral
-   outline on plum. Restate the ring here, halo first, keeping the coral lift
-   behind it. The second selector outranks the shared hover rule, so a
+/* The shared `.primary` hover rule sets `box-shadow: var(--button-glow)`
+   at a higher specificity than the global `:focus-visible` rule, which drops
+   the cream halo from the two-tone focus ring and leaves only the dark coral
+   outline on plum. Restate the ring here, halo first, keeping the button's
+   own glow behind it. The second selector outranks the shared hover rule, so a
    focused button that is also hovered keeps its halo. */
 .actions .primaryAction:focus-visible,
 .actions
@@ -324,7 +324,7 @@
   ) {
   outline: var(--focus-ring);
   outline-offset: var(--focus-ring-offset);
-  box-shadow: var(--ring-cream), var(--shadow-accent);
+  box-shadow: var(--ring-cream), var(--button-glow);
 }
 
 @media (--xs) {

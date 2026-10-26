@@ -397,6 +397,9 @@ const MODERATION_ACTION_TITLE_KEY: Partial<Record<string, string>> = {
   role_changed: "admin:members.timeline.action.roleChanged",
   staff_role_granted: "admin:members.timeline.action.staffRoleGranted",
   staff_role_revoked: "admin:members.timeline.action.staffRoleRevoked",
+  // An admin paused or turned back on the member's invites; the note says
+  // which.
+  invite_access_changed: "admin:members.timeline.action.inviteAccessChanged",
 };
 
 function moderationEntryTitle(
@@ -434,6 +437,25 @@ function moderationEntryMeta(
   return dateLabel;
 }
 
+/** The backend writes `invite_access_changed`'s note in English, one of two
+ *  fixed strings; each maps to its catalog line. Any other note shows as
+ *  written. */
+const INVITE_ACCESS_NOTE_KEY: Partial<Record<string, string>> = {
+  "Invites paused": "admin:members.timeline.note.invitesPaused",
+  "Invites turned back on": "admin:members.timeline.note.invitesResumed",
+};
+
+function moderationEntryNote(
+  moderationEntryDto: AdminMemberModerationEntryDTO,
+  t: TFunction,
+): string | undefined {
+  const note = moderationEntryDto.note ?? undefined;
+  if (note === undefined) return undefined;
+  if (moderationEntryDto.action !== "invite_access_changed") return note;
+  const noteKey = INVITE_ACCESS_NOTE_KEY[note];
+  return noteKey ? t(noteKey) : note;
+}
+
 function moderationEntryDtoToEntry(
   moderationEntryDto: AdminMemberModerationEntryDTO,
   t: TFunction,
@@ -448,7 +470,7 @@ function moderationEntryDtoToEntry(
     metaLink: moderationEntryDto.reportId
       ? t("admin:members.timeline.viewCta")
       : undefined,
-    note: moderationEntryDto.note ?? undefined,
+    note: moderationEntryNote(moderationEntryDto, t),
   };
 }
 
@@ -533,5 +555,9 @@ export function detailDtoToMember(
     },
     staffRoles: detailDto.staffRoles.filter(isStaffRoleId),
     signInEmailMasked: detailDto.signInEmailMasked,
+    // Missing means a backend older than the invite lever: it cannot pause
+    // anyone, so the member can invite, and the pending count is unknown.
+    hasInviteAccess: detailDto.hasInviteAccess ?? true,
+    pendingInviteCount: detailDto.pendingInviteCount ?? null,
   };
 }

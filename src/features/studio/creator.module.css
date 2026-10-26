@@ -221,15 +221,26 @@
 
 /* Hero */
 .hero {
-  padding: 42px 30px 24px;
+  --hero-gutter: 30px;
+  padding: 42px var(--hero-gutter) 24px;
   border-bottom: 1px solid var(--s-line);
   position: relative;
   overflow: hidden;
+}
+/* Over a centred 1280px stepper or body, the copy keeps that measure and
+   its gutter, so on wide screens the hero's left edge lines up with the
+   cards under it. The glow still bleeds to the hero's own edges. */
+.hero:has(+ .stepper, + .body) {
+  padding-inline: max(
+    var(--hero-gutter),
+    calc((100% - 1280px) / 2 + var(--hero-gutter))
+  );
 }
 /* Phones: the same 16px side gutter as the body, so the hero lines up with
    the cards under it. */
 @media (--md) {
   .hero {
+    --hero-gutter: 16px;
     padding-inline: 16px;
   }
 }
@@ -241,11 +252,7 @@
   width: 520px;
   height: 520px;
   border-radius: 50%;
-  background: radial-gradient(
-    circle,
-    var(--studio-hero-glow),
-    transparent 62%
-  );
+  background: radial-gradient(circle, var(--studio-hero-glow), transparent 62%);
   pointer-events: none;
 }
 .heroInner {
@@ -258,6 +265,13 @@
   grid-template-columns: 1.4fr 1fr;
   gap: 40px;
   align-items: end;
+}
+/* Tablets: the breakdown card grows taller than the copy, so the copy
+   starts at the top beside it instead of sinking to its foot. */
+@media (--wide) {
+  .heroSplit {
+    align-items: start;
+  }
 }
 @media (--md) {
   .heroSplit {
@@ -1654,9 +1668,11 @@
     border-color: rgba(var(--studio-ink-rgb), 0.35);
   }
 }
+/* Ink, so a chosen card reads as selected instead of as an error; the
+   filled dot carries the accent. */
 .radioCardOn {
-  border-color: var(--studio-accent-text);
-  background: rgba(var(--accent-rgb), 0.08);
+  border-color: rgba(var(--studio-ink-rgb), 0.6);
+  background: rgba(var(--studio-ink-rgb), 0.05);
 }
 .radioCard:disabled {
   cursor: default;

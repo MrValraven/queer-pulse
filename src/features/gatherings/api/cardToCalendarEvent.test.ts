@@ -39,4 +39,50 @@ describe("cardToCalendarEvent", () => {
     expect(event.endAt).toBeUndefined();
     expect("endAt" in event).toBe(false);
   });
+
+  it("carries the hosting community the API named", () => {
+    const event = cardToCalendarEvent(
+      cardDto({
+        hostingCommunity: {
+          id: "community-1",
+          slug: "queer-runners",
+          name: "Queer Runners Lisboa",
+        },
+      }),
+      translate,
+    );
+    expect(event.hostingCommunity).toEqual({
+      id: "community-1",
+      slug: "queer-runners",
+      name: "Queer Runners Lisboa",
+    });
+  });
+
+  it("leaves the hosting community unset when the server withheld it", () => {
+    const event = cardToCalendarEvent(
+      cardDto({ hostingCommunity: null }),
+      translate,
+    );
+    expect("hostingCommunity" in event).toBe(false);
+  });
+
+  it("leaves the hosting community unset when an older server sent none", () => {
+    const event = cardToCalendarEvent(cardDto(), translate);
+    expect("hostingCommunity" in event).toBe(false);
+  });
+
+  it("marks a co-hosted gathering", () => {
+    const event = cardToCalendarEvent(cardDto({ isCoHosted: true }), translate);
+    expect(event.isCoHosted).toBe(true);
+  });
+
+  it("leaves the co-hosted flag unset when false or absent", () => {
+    const falseEvent = cardToCalendarEvent(
+      cardDto({ isCoHosted: false }),
+      translate,
+    );
+    const absentEvent = cardToCalendarEvent(cardDto(), translate);
+    expect("isCoHosted" in falseEvent).toBe(false);
+    expect("isCoHosted" in absentEvent).toBe(false);
+  });
 });

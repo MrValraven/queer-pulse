@@ -480,6 +480,12 @@
 .modalWide {
   max-width: 680px;
 }
+/* Fixed height for search-led dialogs, so the box holds still while results
+   change. The body (flex: 1, overflow-y: auto) scrolls inside it. */
+.modalTall {
+  height: min(86vh, 760px);
+  height: min(86dvh, 760px);
+}
 /* For surfaces that need the whole viewport, e.g. the email template preview.
    The scrim's 24px padding on each side accounts for the 48px. The body turns
    into a flex column so its content can stretch down to the footer. */
@@ -511,6 +517,11 @@
   }
   /* The full-size dialog stays a full-height sheet on phones. */
   .modalFull {
+    height: 92svh;
+  }
+  /* The tall dialog keeps its fixed height as a sheet too. */
+  .modalTall {
+    height: 92vh;
     height: 92svh;
   }
   .modal::before {

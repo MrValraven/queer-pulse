@@ -1,4 +1,4 @@
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { foldForSearch } from "../../../shared/lib/foldForSearch";
@@ -9,8 +9,13 @@ import {
   type EventsPage,
 } from "./events.api";
 import { eventKeys } from "./eventKeys";
+import type { HiddenEventCommunityDTO } from "./hiddenEventCommunities.api";
 import { cardToCalendarEvent } from "./events.adapters";
 import { calendarEvents, type CalendarEvent } from "../data";
+import {
+  isDemoEventHidden,
+  NO_HIDDEN_COMMUNITIES,
+} from "../hiddenEventCommunities";
 
 export interface EventsResult {
   /** All events fetched so far, flattened across loaded pages. */
@@ -36,7 +41,9 @@ export interface EventsResult {
   refetch: () => void;
 }
 
-interface EventsPageVM {
+/** One loaded page, as the infinite query caches it. Exported for the hide
+ *  action's optimistic patch of the cached upcoming lists. */
+export interface EventsPageVM {
   items: CalendarEvent[];
   total: number;
   page: number;
@@ -53,23 +60,42 @@ interface EventsPageVM {
  * `upcoming` and `past` are applied (see `filterDemoEvents`); the others
  * return the whole registry, since a demo row carries no RSVP, host or
  * bookmark standing to split on.
+ *
+ * The upcoming list leaves out events from the member's hidden communities
+ * (live: the server; demo: `filterDemoEvents` against the demo hidden list in
+ * the query cache). `includeHidden` keeps them in, for a surface that must see
+ * every event (the create wizard's clash notes).
  */
 export function useEvents(
-  params: { filter?: EventFilter; browse?: EventBrowseFilters } = {},
+  params: {
+    filter?: EventFilter;
+    browse?: EventBrowseFilters;
+    includeHidden?: boolean;
+  } = {},
 ): EventsResult {
   const { demoMode } = useDemoMode();
   const { t } = useTranslation();
+  const queryClient = useQueryClient();
   const browse = params.browse;
+  const includeHidden = params.includeHidden ?? false;
   const query = useInfiniteQuery<EventsPageVM>({
-    queryKey: eventKeys.list(params.filter, demoMode, browse),
+    queryKey: eventKeys.list(params.filter, demoMode, browse, includeHidden),
     initialPageParam: 1,
     queryFn: async ({ pageParam }) => {
       if (demoMode) {
+        // Read at fetch time: a hide or unhide invalidates this list, and the
+        // refetch picks up the hidden list the action has just written.
+        const hiddenRows =
+          queryClient.getQueryData<HiddenEventCommunityDTO[]>(
+            eventKeys.hiddenCommunities(true),
+          ) ?? [];
         const items = filterDemoEvents(
           calendarEvents,
           params.filter,
           browse,
           new Date(),
+          new Set(hiddenRows.map((row) => row.communityId)),
+          includeHidden,
         );
         // `total` is the FILTERED length, so `getNextPageParam` never asks the
         // synthetic single page for a page 2 that does not exist.
@@ -78,6 +104,7 @@ export function useEvents(
       const res: EventsPage = await getEvents({
         filter: params.filter,
         page: pageParam as number,
+        includeHidden,
         ...browse,
       });
       return {
@@ -130,12 +157,18 @@ export function useEvents(
  * its doors open), and a row with an `endAt` while that end is still ahead.
  * `past` is the complement. Every other filter value returns the registry
  * unsplit, as before.
+ *
+ * The hidden communities pass runs on `upcoming` only, after the time split,
+ * the way the server applies it to that branch alone: My events lists and the
+ * past list keep every row. `includeHidden` skips it.
  */
-function filterDemoEvents(
+export function filterDemoEvents(
   events: CalendarEvent[],
   filter: EventFilter | undefined,
   browse: EventBrowseFilters | undefined,
   now: Date,
+  hiddenIds: ReadonlySet<string> = NO_HIDDEN_COMMUNITIES,
+  includeHidden = false,
 ): CalendarEvent[] {
   const startOfToday = new Date(
     now.getFullYear(),
@@ -152,8 +185,13 @@ function filterDemoEvents(
       : filter === "past"
         ? events.filter((event) => !isStillAhead(event))
         : events;
-  if (!browse) return timed;
-  return timed.filter((event) => matchesDemoBrowse(event, browse));
+  const shouldDropHidden =
+    filter === "upcoming" && !includeHidden && hiddenIds.size > 0;
+  const shown = shouldDropHidden
+    ? timed.filter((event) => !isDemoEventHidden(event, hiddenIds))
+    : timed;
+  if (!browse) return shown;
+  return shown.filter((event) => matchesDemoBrowse(event, browse));
 }
 
 /** One demo row against the browse filters (date range, place, kind, cost,

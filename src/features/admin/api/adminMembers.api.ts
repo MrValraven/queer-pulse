@@ -118,6 +118,14 @@ export interface AdminMemberDetailDTO {
    *  the auth row at all. The whole value never travels on this read: see
    *  `getAdminMemberSignInEmail`. */
   signInEmailMasked: string | null;
+  /** False while an admin has paused this member's invites. Optional so a
+   *  frontend deployed ahead of the backend reads "can invite" (the adapter
+   *  defaults it to true) and never shows a false "paused". */
+  hasInviteAccess?: boolean;
+  /** How many of the member's invites are still pending and unexpired, for
+   *  the pause confirm. Optional for the same reason; the adapter reads a
+   *  missing value as unknown (null). */
+  pendingInviteCount?: number;
 }
 
 /** Paginated member grid for the admin panel, optionally filtered and
@@ -182,6 +190,26 @@ export interface AdminMemberRoleDTO {
  *  admin) and 403/409s otherwise. */
 export const patchAdminMemberRole = (memberId: string, role: MemberRole) =>
   apiPatch<AdminMemberRoleDTO>(`/admin/members/${memberId}/role`, { role });
+
+/** The shape returned after an invite access change. Mirrors the backend
+ *  `AdminMemberInviteAccessDTO`. */
+export interface AdminMemberInviteAccessDTO {
+  userId: string;
+  slug: string;
+  hasInviteAccess: boolean;
+}
+
+/** Pause or turn back on one member's ability to invite new people.
+ *  Admin-only and audited (`invite_access_changed`). `memberId` may be the
+ *  slug or the user id. A no-op answers the same 200 shape. */
+export const patchAdminMemberInviteAccess = (
+  memberId: string,
+  hasInviteAccess: boolean,
+) =>
+  apiPatch<AdminMemberInviteAccessDTO>(
+    `/admin/members/${memberId}/invite-access`,
+    { hasInviteAccess },
+  );
 
 /**
  * Lift a member's active suspension (reinstate them), consuming the backend's

@@ -8,10 +8,7 @@ import {
   simulateOr,
   type DeletionRequest,
 } from "./account.api";
-import {
-  beginReauth as beginReauthRedirect,
-  getCachedReauthToken,
-} from "./useReauthToken";
+import { beginReauth, getCachedReauthToken } from "./useReauthToken";
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 const GRACE_DAYS = 30;
@@ -22,36 +19,37 @@ function daysFromNow(days: number): string {
 }
 
 /**
- * Step-up re-auth, demo/live combined. `getReauthToken()` reads FRESH each
- * call — deliberately not a pre-computed value off the hook's return, since
- * the redirect landing writes the cache via an effect (`useReauthCompletion`)
- * that commits after this hook's own render; a snapshotted value could read
- * stale-null on the very render where the token just became available.
- * Live: reads whatever `useReauthToken.ts`'s redirect flow has cached (`null`
- * until the member completes it); `beginReauth()` starts that OAuth round
- * trip. Demo: a fixed fake token is always "already valid" — there's no real
- * backend to step up against — and `beginReauth()` is a no-op, so the flow
- * runs end-to-end without ever leaving the prototype.
+ * Step-up re-auth, the same on demo and live. `getReauthToken()` reads the
+ * cache FRESH on each call. The code dialog and the Google landing (an effect
+ * in `useReauthCompletion`) both write that cache after this hook has
+ * rendered, so a value snapshotted at render time could read stale-null on
+ * the very render where the token just became available.
+ * `getReauthToken()` reads whatever `useReauthToken.ts` has cached in
+ * `qp_reauth_token` (`null` until the member confirms); `beginReauth()` opens
+ * the dialog that emails a code (`/auth/email-code/reauth/*`), where members
+ * with Google can still pick the redirect. Demo runs the same dialog on its
+ * mock answers (`emailCode.data.ts`), which caches `demo-reauth-code` in that
+ * slot, so the prototype shows the whole step-up end to end.
  *
  * Every gated call site (DeleteAccountSection, AccountDataStepAway,
  * AccountDataExport, useDsar, useExportFlow) follows the same shape, called
- * fresh inside the action itself (never hoisted to render time):
+ * fresh inside the action itself, at click time:
  * `const reauthToken = getReauthToken(); if (!reauthToken) { beginReauth(); return; }`.
- * On live, that first click redirects away and the member has to press
- * confirm again after landing back — deliberate: nothing destructive ever
- * fires as a side effect of the redirect itself.
+ * A promise-based action throws `ReauthRequiredError` in place of that
+ * `return`, so its caller resets quietly. That first click opens the dialog
+ * and ends the action with no success panel, no error toast and the button
+ * enabled again; once the code is accepted the member presses the same
+ * button again and the cached token is used. That second press is
+ * deliberate: nothing destructive ever fires as a side effect of the
+ * confirmation itself.
  */
 export function useReauth() {
-  const { demoMode } = useDemoMode();
   const getReauthToken = useCallback(
-    (): string | null => (demoMode ? "demo-reauth" : getCachedReauthToken()),
-    [demoMode],
+    (): string | null => getCachedReauthToken(),
+    [],
   );
-  const beginReauth = useCallback(() => {
-    if (demoMode) return;
-    void beginReauthRedirect();
-  }, [demoMode]);
-  return { getReauthToken, beginReauth };
+  const startReauth = useCallback(() => beginReauth(), []);
+  return { getReauthToken, beginReauth: startReauth };
 }
 
 /**

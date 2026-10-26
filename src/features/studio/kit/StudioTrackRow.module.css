@@ -569,6 +569,103 @@
   .actions [data-studio-row-extra="menu"] {
     display: none;
   }
+
+  /* Selection mode carries the list's actions in its bar, and an
+     unavailable row has no checkbox to tick, so its "..." fades out of the
+     way. The row takes no selection of its own: the list's selecting rows
+     say the mode is on. */
+  :is(ul, ol):has(> .row[data-selecting]) > .rowUnavailable .menuSlot {
+    opacity: 0;
+    visibility: hidden;
+    transition-property: opacity, visibility;
+  }
+
+  /* Artist and release both showing: the artist alone, whole, so the line
+     never reads as two cut stubs. The release stays one tap away in the
+     "..." menu and on the cover's own page. */
+  .dot,
+  .dot ~ .releaseLink {
+    display: none;
+  }
+
+  /* A row with a cover drops the number column: the cover is the play
+     target, with the lead cell (play, the equaliser, the checkbox) laid
+     over it in one 44px cell. The title gains the number's 54px. */
+  .hasCover {
+    grid-template-columns:
+      var(--row-leading-column,) [cover] var(--tap-min)
+      [main] minmax(0, 1fr) auto;
+  }
+
+  .hasCover .lead,
+  .hasCover .cover {
+    grid-column: cover;
+    grid-row: 1;
+  }
+
+  .hasCover .lead {
+    position: relative;
+    z-index: 1;
+  }
+
+  .hasCover .cover {
+    position: relative;
+    justify-self: center;
+  }
+
+  /* The scrim that keeps the lead's mark readable on any art: up on the
+     current row and in selection mode, gone at rest so the art shows. */
+  .hasCover .cover::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--scrim);
+    opacity: 0;
+    transition-property: opacity;
+    transition-duration: var(--dur-fast);
+    transition-timing-function: var(--ease-out);
+  }
+
+  .hasCover[data-current] .cover::after,
+  .hasCover[data-selecting] .cover::after,
+  .hasCover:has(:focus-visible) .cover::after {
+    opacity: 1;
+  }
+
+  /* On the art the number would be noise: the cover stands for the row,
+     and a hidden row's inert number gives way to it too. */
+  .hasCover .leadNumber,
+  .hasCover[data-hidden] .lead {
+    opacity: 0;
+  }
+
+  .hasCover .lead .playButton,
+  .hasCover .equalizerBar,
+  .hasCover .checkBox {
+    color: rgba(var(--cream-rgb), 1);
+  }
+
+  .hasCover .equalizerBar {
+    background: rgba(var(--cream-rgb), 1);
+  }
+
+  .hasCover .checkBox {
+    border-color: rgba(var(--cream-rgb), 0.9);
+  }
+
+  /* The paused current row shows its play mark on the scrim. */
+  .hasCover[data-current]:not([data-playing]) .playButton .leadIcon {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* A narrow window with a mouse: hovering a covered row brings the scrim
+   up under the play mark. */
+@media (--sm) and (hover: hover) {
+  .hasCover:not(.rowUnavailable):not([data-hidden]):hover .cover::after {
+    opacity: 1;
+  }
 }
 
 /* An unavailable row reads quiet and takes no hover. */

@@ -56,6 +56,7 @@ const RIGHTS_HOW_KEYS = [
  */
 const SUB_PROCESSOR_KEYS = [
   "google",
+  "resend",
   "railway",
   "tigris",
   "vercel",

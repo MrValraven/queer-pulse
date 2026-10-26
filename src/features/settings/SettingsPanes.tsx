@@ -517,19 +517,30 @@ export function AccountPane() {
         <div className={styles.dataCards}>
           {/* PRD-12. This was a "two-factor authentication, coming soon"
               toggle, on a platform with no password and no second factor of
-              its own to build. Sign-in is Google OAuth only, so the second
-              factor that protects a QueerPulse account is the one on the
-              member's Google account, and since ID re-linking landed that is
-              also what protects the way back in: the recovery lever only ever
-              offers an identity Google confirms holds the member's verified
-              address. Pointing at the real control beats promising a copy of
-              it. */}
-          <DataCard
-            title={t("settings:account.twoFactor.title")}
-            description={t("settings:account.twoFactor.desc")}
-            button={t("settings:account.twoFactor.cta")}
-            href={GOOGLE_TWO_STEP_VERIFICATION_URL}
-          />
+              its own to build. A member signs in with an emailed code or with
+              Google, so the 2-step verification on their email account and
+              on their Google account is what protects the way in. The card
+              points at Google's real control, and only for an account with
+              Google on it; every other account keeps the advice alone. */}
+          {user?.hasGoogle === false ? (
+            <div className={styles.dataCard}>
+              <div className={styles.dcText}>
+                <div className={styles.dcTitle}>
+                  {t("settings:account.twoFactor.title")}
+                </div>
+                <div className={styles.dcDesc}>
+                  {t("settings:account.twoFactor.desc")}
+                </div>
+              </div>
+            </div>
+          ) : (
+            <DataCard
+              title={t("settings:account.twoFactor.title")}
+              description={t("settings:account.twoFactor.desc")}
+              button={t("settings:account.twoFactor.cta")}
+              href={GOOGLE_TWO_STEP_VERIFICATION_URL}
+            />
+          )}
           <DataCard
             title={t("settings:account.sessions.title")}
             description={t("settings:account.sessions.desc")}

@@ -10,6 +10,7 @@ import {
   markFocusProps,
   linearScale,
   bandScale,
+  wholeNumberTicks,
   CHART_INK,
   type LegendItem,
   type BarPlotBar,
@@ -22,10 +23,11 @@ import {
   type GrowthPoint,
   type DistBucket,
 } from "./adminDashboard.data";
-import { ChartTooltip, GrowthSpike } from "./AdminDashboardChartParts";
+import { ChartTooltip } from "./AdminDashboardChartParts";
 import {
   growthLegendItems,
   growthPointTip,
+  startsNewMonth,
   type GrowthTip,
 } from "./adminDashboardChart.helpers";
 import { chartMax } from "./api/adminOverview.adapters";
@@ -104,7 +106,7 @@ export function ReportsByTypeChart({
                 height={height}
                 valueScale={valueScale}
                 columnScale={columnScale}
-                ticks={valueScale.ticks(3)}
+                ticks={wholeNumberTicks(valueScale, 3)}
                 gridLeft={padLeft}
                 gridRight={width - 6}
                 labelY={height - 10}
@@ -178,10 +180,14 @@ export function ReportsByTypeChart({
 
 interface MemberGrowthChartProps extends ChartProps {
   points: GrowthPoint[];
+  /** Replaces the default "last 10 weeks" subtitle when the caller shows a
+   *  different range (the Reports page's adjustable window). */
+  subtitle?: string;
 }
 
 export function MemberGrowthChart({
   points,
+  subtitle,
   loading = false,
 }: MemberGrowthChartProps) {
   const { t } = useTranslation();
@@ -198,7 +204,7 @@ export function MemberGrowthChart({
   return (
     <ChartFrame
       title={t("admin:dashboard.charts.memberGrowth.title")}
-      subtitle={t("admin:dashboard.charts.memberGrowth.sub")}
+      subtitle={subtitle ?? t("admin:dashboard.charts.memberGrowth.sub")}
       loading={loading}
       skeletonHeight={180}
     >
@@ -212,7 +218,7 @@ export function MemberGrowthChart({
             const padBottom = 26;
             const count = points.length;
             const max = chartMax([
-              ...points.map((point) => point.joined),
+              ...points.map((point) => point.total),
               ...knownChurned,
             ]);
             const valueScale = linearScale(max, padTop, height - padBottom);
@@ -223,7 +229,6 @@ export function MemberGrowthChart({
             const pointX = (index: number) =>
               padLeft + index * (plotWidth / Math.max(count - 1, 1));
             const ticks = valueScale.ticks(4);
-            const spikeIndex = points.findIndex((point) => point.spike);
 
             return (
               <svg
@@ -247,7 +252,7 @@ export function MemberGrowthChart({
                   <AreaClosed
                     data={points}
                     x={(_, index) => pointX(index)}
-                    y={(point) => valueScale(point.joined)}
+                    y={(point) => valueScale(point.total)}
                     yScale={valueScale}
                     curve={curveMonotoneX}
                     fill={CHART_INK.area}
@@ -271,7 +276,7 @@ export function MemberGrowthChart({
                     className={styles.lineDraw}
                     data={points}
                     x={(_, index) => pointX(index)}
-                    y={(point) => valueScale(point.joined)}
+                    y={(point) => valueScale(point.total)}
                     curve={curveMonotoneX}
                     pathLength={1}
                     fill="none"
@@ -288,7 +293,7 @@ export function MemberGrowthChart({
                       key={index}
                       className={chartStyles.mark}
                       cx={pointX(index)}
-                      cy={valueScale(point.joined)}
+                      cy={valueScale(point.total)}
                       r={10}
                       fill="transparent"
                       onMouseMove={(event) => {
@@ -303,21 +308,14 @@ export function MemberGrowthChart({
                       {...markFocusProps(tip, {
                         label: ariaLabel,
                         x: pointX(index),
-                        y: valueScale(point.joined),
+                        y: valueScale(point.total),
                         datum,
                       })}
                     />
                   );
                 })}
-                {spikeIndex >= 0 && (
-                  <GrowthSpike
-                    x={pointX(spikeIndex)}
-                    y={valueScale(points[spikeIndex]!.joined)}
-                    label={t("admin:dashboard.charts.memberGrowth.spike")}
-                  />
-                )}
                 {points.map((point, index) =>
-                  point.date ? (
+                  startsNewMonth(points, index) ? (
                     <text
                       key={index}
                       x={pointX(index)}
@@ -338,7 +336,9 @@ export function MemberGrowthChart({
           {(data) => (
             <>
               <div className={chartStyles.tipStrong}>{data.label}</div>
-              {t("admin:dashboard.charts.legend.joined")}: {data.joined}
+              {`${t("admin:dashboard.charts.memberGrowth.totalMembers")}: ${fmt.number(data.total)}`}
+              <br />
+              {`${t("admin:dashboard.charts.memberGrowth.joinedThatWeek")}: +${fmt.number(data.joined)}`}
               {data.churned !== null && (
                 <>
                   <br />
@@ -402,7 +402,9 @@ export function ResponseTimeChart({
         <ResponsiveChart aspect={360 / 220}>
           {(width, height) => {
             if (buckets === null) return null;
-            const padLeft = 8;
+            // A left gutter for the value labels (as in ReportsByTypeChart), so
+            // no bar can paint over a tick label at any value.
+            const padLeft = 34;
             const padRight = 8;
             const padTop = 14;
             const padBottom = 30;
@@ -423,7 +425,7 @@ export function ResponseTimeChart({
                 height={height}
                 valueScale={valueScale}
                 columnScale={columnScale}
-                ticks={valueScale.ticks(2)}
+                ticks={wholeNumberTicks(valueScale, 2)}
                 gridLeft={padLeft}
                 gridRight={width - padRight}
                 labelY={height - 12}
@@ -432,8 +434,9 @@ export function ResponseTimeChart({
                 ariaLabel={t("admin:dashboard.charts.responseTime.ariaLabel")}
                 axisLabel={(value, axisY) => (
                   <text
-                    x={padLeft}
-                    y={axisY - 4}
+                    x={padLeft - 8}
+                    y={axisY + 4}
+                    textAnchor="end"
                     className={styles.chAxisSerif}
                   >
                     {value}

@@ -49,3 +49,25 @@ describe("validateAuthUser: earlyAccessFeatures", () => {
     expect(user.earlyAccessFeatures).toEqual(["future-feature"]);
   });
 });
+
+describe("validateAuthUser: hasGoogle", () => {
+  it("keeps hasGoogle false for an email-only member", () => {
+    const user = validateAuthUser(authMeBody({ hasGoogle: false }));
+    expect(user.hasGoogle).toBe(false);
+  });
+
+  it("keeps hasGoogle true", () => {
+    const user = validateAuthUser(authMeBody({ hasGoogle: true }));
+    expect(user.hasGoogle).toBe(true);
+  });
+
+  it("reads a missing value as true, since every older account has Google", () => {
+    const user = validateAuthUser(authMeBody());
+    expect(user.hasGoogle).toBe(true);
+  });
+
+  it("reads a malformed value as true", () => {
+    const user = validateAuthUser(authMeBody({ hasGoogle: "yes" }));
+    expect(user.hasGoogle).toBe(true);
+  });
+});

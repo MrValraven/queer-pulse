@@ -1,3 +1,4 @@
+import { useAuth } from "../../app/providers/authContext";
 import { FormField } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { PRONOUNS } from "./onboardingPage.data";
@@ -18,13 +19,14 @@ interface IdentityFieldsProps {
 
 /**
  * The name, pronouns and short-bio fields tacked onto `StepPhoto`. Name comes
- * prefilled from Google but is editable here, since not everyone wants members
- * to see their Google account name. Pronouns and bio are the one moment
- * onboarding asks a member to say a little about who they are — real signup
- * only collects what Google OAuth supplies (email, name, avatar). Pronouns and
- * bio are optional, mirroring the photo above them: `StepPhoto` only ever
- * writes what the member actually typed, so leaving either blank changes
- * nothing. Split into its own file to keep `StepPhoto` under the 200-line
+ * prefilled from Google, or from the invite form for an email-code signup, and
+ * is editable here, since some members want a different name on their profile.
+ * The helper under it only mentions Google to a member who joined with Google.
+ * Pronouns and bio are the one moment onboarding asks a member to say a little
+ * about who they are: signup collects only an email and a name (plus the
+ * Google avatar for Google accounts). Pronouns and bio are optional,
+ * mirroring the photo above them: `StepPhoto` only ever writes what the
+ * member actually typed, so leaving either blank changes nothing. Split into its own file to keep `StepPhoto` under the 200-line
  * component limit.
  */
 export function IdentityFields({
@@ -38,6 +40,7 @@ export function IdentityFields({
   onBioChange,
 }: IdentityFieldsProps) {
   const { t } = useTranslation();
+  const { user } = useAuth();
   return (
     <div className={styles.identityFields}>
       <div className={styles.nameRow}>
@@ -59,7 +62,9 @@ export function IdentityFields({
         </FormField>
       </div>
       <p className={styles.nameHint}>
-        {t("auth:onboarding.stepPhoto.name.helper")}
+        {user?.hasGoogle === false
+          ? t("auth:onboarding.stepPhoto.name.helperEmail")
+          : t("auth:onboarding.stepPhoto.name.helper")}
       </p>
       <FormField
         label={t("auth:onboarding.stepPhoto.pronouns.label")}

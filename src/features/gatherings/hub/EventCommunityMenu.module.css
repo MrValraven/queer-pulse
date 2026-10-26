@@ -1,0 +1,188 @@
+/* The card's "more" menu. The caller's slot class places the wrapper; the
+   menu itself is absolutely placed against the trigger, inside the card. */
+.wrap {
+  position: relative;
+  display: inline-flex;
+}
+
+/* While a card's menu is open its whole grid cell rises above the cells after
+   it, whose own triggers would otherwise paint over the open menu. */
+:global([data-event-cell]):has(.wrap[data-open="true"]) {
+  position: relative;
+  z-index: var(--z-raised);
+}
+
+/* A card about to leave (its community is being hidden) starts fading on the
+   frame after the click, before the list re-renders without it. Once its exit
+   begins it turns inert, the transition stops matching, and Motion's exit
+   carries the opacity on from here to zero. The fade goes most of the way
+   (0.3) over the exit's own 220ms (`PRESENCE_SECONDS` in
+   EventCellPresence.tsx), so it carries the card through the long frame
+   that the list's re-render costs and Motion picks up near where it stands.
+   Set by `markCardsLeaving`. */
+:global([data-event-cell][data-event-leaving="true"]) {
+  opacity: 0.3;
+}
+
+:global([data-event-cell][data-event-leaving="true"]:not([inert])) {
+  transition: opacity 220ms var(--ease-out);
+}
+
+/* A paper disc with a hairline, so it reads on a photo and on paper alike. */
+.trigger {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  inline-size: var(--card-menu-size, 2rem);
+  block-size: var(--card-menu-size, 2rem);
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--paper);
+  color: var(--text-strong);
+  box-shadow: var(--shadow-e1);
+  font-size: var(--text-16);
+  cursor: pointer;
+  transition:
+    background-color var(--dur-fast) var(--ease),
+    box-shadow var(--dur-fast) var(--ease);
+}
+
+/* The disc stays 32px to the eye; the press target grows to 44px. The inset
+   is measured from the padding box, so the 1px border is paid back here. */
+.trigger::before {
+  content: "";
+  position: absolute;
+  inset: calc((var(--card-menu-size, 2rem) - var(--tap-min)) / 2 - 1px);
+  border-radius: 50%;
+}
+
+@media (hover: hover) {
+  .trigger:hover {
+    background: var(--cream);
+    box-shadow: var(--shadow-e2);
+  }
+}
+
+.trigger:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.wrap[data-open="true"] .trigger {
+  background: var(--cream);
+}
+
+.menu {
+  position: absolute;
+  inset-block-start: calc(100% + 6px);
+  inset-inline-end: 0;
+  z-index: var(--z-raised);
+  inline-size: max-content;
+  max-inline-size: min(var(--menu-max), calc(100vw - 2 * var(--menu-edge)));
+  padding: var(--menu-pad);
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-12);
+  box-shadow: var(--shadow-e3);
+  animation: qpEventMenuIn 140ms var(--ease-out);
+}
+
+/* Lined up with the trigger's inline start, opening toward the inline end.
+   `fitMenuToViewport` in EventCommunityMenu.tsx sets this when the end-aligned
+   menu would leave the screen. */
+.menu[data-align="start"] {
+  inset-inline-start: 0;
+  inset-inline-end: auto;
+}
+
+.menu[data-placement="above"] {
+  inset-block-start: auto;
+  inset-block-end: calc(100% + 6px);
+}
+
+.menu[data-exiting="true"] {
+  animation: qpEventMenuOut 140ms var(--ease-in) forwards;
+  pointer-events: none;
+}
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-xs);
+  inline-size: 100%;
+  padding: var(--menu-item-pad-y) var(--menu-item-pad-x);
+  border: none;
+  border-radius: var(--radius-8);
+  background: none;
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: var(--text-13);
+  font-weight: 500;
+  line-height: 1.35;
+  text-align: start;
+  cursor: pointer;
+}
+
+/* Balanced, so a long community name breaks into even lines and its last
+   word never sits alone. */
+.menuLabel {
+  text-wrap: balance;
+}
+
+.menuItem svg {
+  flex: none;
+  color: var(--ink-60);
+}
+
+@media (hover: hover) {
+  .menuItem:hover {
+    background: rgba(var(--plum-rgb), 0.05);
+  }
+}
+
+.menuItem:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: calc(var(--focus-ring-offset) * -1);
+  box-shadow: var(--ring-cream-inset);
+}
+
+:global([data-theme="dark"]) .menuItem:hover {
+  background: rgba(var(--cream-rgb), 0.08);
+}
+
+@keyframes qpEventMenuIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* No `from`: a dismissal mid-entrance fades from where the menu already is. */
+@keyframes qpEventMenuOut {
+  to {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menu,
+  .menu[data-exiting="true"] {
+    animation: none;
+  }
+
+  .trigger {
+    transition: none;
+  }
+
+  :global([data-event-cell][data-event-leaving="true"]) {
+    opacity: 1;
+    transition: none;
+  }
+}

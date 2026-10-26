@@ -1,4 +1,4 @@
-import { useId, useState } from "react";
+import { type ReactNode, useId, useState } from "react";
 import { Link } from "react-router-dom";
 import { FiArrowRight, FiCheck } from "react-icons/fi";
 import { Button, FadeIn } from "../../shared/components/ui";
@@ -8,7 +8,8 @@ import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import { useDemoMode } from "../../app/providers/DemoModeProvider";
-import { type Perk, sidebarCopy } from "./perks.data";
+import { type Perk, type PerkInviteQuota, sidebarCopy } from "./perks.data";
+import { useInviteQuota } from "../auth/api/useInviteQuota";
 import { useRecognition } from "./api/useRecognition";
 import { levelNameKeyFor } from "./levelLadder.data";
 import {
@@ -226,30 +227,57 @@ function PerkFooter({ perk }: { perk: Perk }) {
   }
 }
 
+/**
+ * The description of an invite-quota perk. The invite-quota perks name real
+ * numbers, so the translated sentence interpolates the base and total the
+ * backend enforces. Under a staff invite-quota override
+ * the enforced total can already equal the base allowance, and "goes from 25
+ * to 25" reads as broken copy, so that case gets its own sentence naming only
+ * the total. While our team has paused this member's invites, a bigger
+ * allowance changes nothing, so the card says that instead. Claiming stays
+ * available either way.
+ *
+ * It reads the member's own quota, and it mounts only inside an invite-quota
+ * perk card, so `GET /invites/quota` fires only while such a perk is on screen.
+ */
+function PerkInviteQuotaDescription({
+  inviteQuota,
+  descKey,
+}: {
+  inviteQuota: PerkInviteQuota;
+  descKey: string;
+}) {
+  const { t } = useTranslation();
+  const { data: quota } = useInviteQuota();
+  if (quota?.hasInviteAccess === false) {
+    return t("members:perks.catalog.invitePaused.desc");
+  }
+  if (inviteQuota.base === inviteQuota.total) {
+    return t("members:perks.catalog.inviteQuotaAtLimit.desc", {
+      total: inviteQuota.total,
+    });
+  }
+  return t(descKey, { base: inviteQuota.base, total: inviteQuota.total });
+}
+
 function PerkCard({ perk }: { perk: Perk }) {
   const { t } = useTranslation();
   const dimmed = perk.state !== "available";
   const displayMeta = perkDisplayMetaFor(perk.key);
   const categoryKey =
     displayMeta?.categoryKey ?? perkCategoryLabelKeyFor(perk.category);
-  // The invite-quota perks name real numbers, so the translated sentence
-  // interpolates the ones the backend enforces rather than baking in a pair.
-  // Under a staff invite-quota override the enforced total can already equal
-  // the base allowance, and "goes from 25 to 25" reads as broken copy, so
-  // that case gets its own sentence naming only the total.
   const inviteQuota = perk.inviteQuota;
-  const isInviteQuotaAtLimit =
-    inviteQuota !== undefined && inviteQuota.base === inviteQuota.total;
-  const description = displayMeta
-    ? isInviteQuotaAtLimit
-      ? t("members:perks.catalog.inviteQuotaAtLimit.desc", {
-          total: inviteQuota.total,
-        })
-      : t(displayMeta.descKey, {
-          base: inviteQuota?.base,
-          total: inviteQuota?.total,
-        })
-    : perk.description;
+  let description: ReactNode = perk.description;
+  if (displayMeta && inviteQuota) {
+    description = (
+      <PerkInviteQuotaDescription
+        inviteQuota={inviteQuota}
+        descKey={displayMeta.descKey}
+      />
+    );
+  } else if (displayMeta) {
+    description = t(displayMeta.descKey);
+  }
   return (
     <article
       className={`${styles.perkCard} ${dimmed ? styles.perkCardDim : ""}`}

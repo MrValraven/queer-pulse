@@ -10,6 +10,7 @@ import { EditProfilePane, type ProfileSection } from "./EditProfilePane";
 import { EditProfileSidebar } from "./EditProfileSidebar";
 import { EditProfileMobileNav } from "./EditProfileMobileNav";
 import { SECTION_LABEL_KEYS } from "./editProfileNav.data";
+import { useProfilePlaylistsDraft } from "./useProfilePlaylistsDraft";
 import styles from "./EditProfilePage.module.css";
 
 export function EditProfilePage() {
@@ -18,6 +19,10 @@ export function EditProfilePage() {
   const [savedSections, setSavedSections] = useState<ProfileSection[] | null>(
     null,
   );
+  const playlistsDraft = useProfilePlaylistsDraft();
+  const [playlistsSaveErrorKey, setPlaylistsSaveErrorKey] = useState<
+    string | null
+  >(null);
   const savedTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { save, isSaving, saveError, cancelEditing, startEditing, isEditing } =
     useProfileEdit();
@@ -70,6 +75,7 @@ export function EditProfilePage() {
         return;
       }
       cancelEditing();
+      playlistsDraft.discard();
       setChanged(new Set());
       setSavedSections(null);
     },
@@ -92,8 +98,16 @@ export function EditProfilePage() {
   // only when the profile saved; the unmount cleanup below clears the timer.
   async function handleSave(): Promise<boolean> {
     const sections = [...changed];
-    const isSaved = await save();
-    if (!isSaved) return false; // provider.saveError surfaces in the save bar
+    const isProfileEdited = sections.some((section) => section !== "playlists");
+    const isProfileSaved = isProfileEdited ? await save() : true;
+    // A playlists-only edit never touches the profile draft; both saves run
+    // so one failure never hides the other's cause in the save bar.
+    const playlistsErrorKey = changed.has("playlists")
+      ? await playlistsDraft.save()
+      : null;
+    setPlaylistsSaveErrorKey(playlistsErrorKey);
+    // provider.saveError and the playlists error surface in the save bar
+    if (!isProfileSaved || playlistsErrorKey) return false;
     setSavedSections(sections);
     setChanged(new Set());
     if (savedTimer.current) clearTimeout(savedTimer.current);
@@ -115,6 +129,8 @@ export function EditProfilePage() {
 
   function handleDiscard() {
     cancelEditing();
+    playlistsDraft.discard();
+    setPlaylistsSaveErrorKey(null);
     setChanged(new Set());
     setSavedSections(null);
   }
@@ -133,7 +149,10 @@ export function EditProfilePage() {
 
         <div className={styles.main}>
           <EditProfileMobileNav />
-          <EditProfilePane onChange={markChanged} />
+          <EditProfilePane
+            onChange={markChanged}
+            playlistsDraft={playlistsDraft}
+          />
         </div>
       </div>
 
@@ -173,6 +192,11 @@ export function EditProfilePage() {
             {saveError && (
               <span className={styles.saveError} role="alert">
                 {saveError}
+              </span>
+            )}
+            {playlistsSaveErrorKey && (
+              <span className={styles.saveError} role="alert">
+                {t(playlistsSaveErrorKey)}
               </span>
             )}
             <Button variant="ghost" onClick={handleDiscard} disabled={isSaving}>

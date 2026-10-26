@@ -244,6 +244,7 @@ export const members: Catalog = {
   "profile.nav.skills": "Skills & offerings",
   "profile.nav.groups": "Groups & circles",
   "profile.nav.shapings": "What shaped me",
+  "profile.nav.activity": "Recent activity",
   "profile.nav.related": "People close by",
 
   // ── Trust signals row + explainer (ProfileTrustSignals, ProfileTrustModal — Task 4) ──
@@ -437,6 +438,20 @@ export const members: Catalog = {
     "Not interests. Formative texts, films, moments.",
   "content.activity.title": "Recent activity",
   "content.activity.subtitle": "Public moments from around the platform",
+  // Period headings on the activity timeline. "This week" is the last 7 days.
+  "content.activity.group.thisWeek": "This week",
+  "content.activity.group.thisMonth": "Earlier this month",
+  "content.activity.group.earlier": "Earlier",
+  // The small line above each row's subject, one per backend `action`.
+  "content.activity.verb.persona": "Published a persona",
+  "content.activity.verb.join": "Joined",
+  "content.activity.verb.rsvp": "RSVP'd to",
+  "content.activity.verb.thread": "Started a thread",
+  "content.activity.verb.communityPost": "Posted in",
+  "content.activity.justNow": "just now",
+  "content.activity.unknownTime": "a while ago",
+  "content.activity.showMore": "Show {count} more",
+  "content.activity.showLess": "Show less",
   "content.related.title": "People close by",
   "content.related.subtitle": "Sharing a craft or a neighbourhood.",
   // The one chip each card carries: why that member is close to THIS profile's
@@ -2228,6 +2243,8 @@ export const members: Catalog = {
     "Claim it and your monthly invite allowance goes from {base} to {total}. The community grows because of people like you.",
   "perks.catalog.inviteQuotaAtLimit.desc":
     "Your monthly invite allowance is {total}.",
+  "perks.catalog.invitePaused.desc":
+    "Your invites are paused right now. You can still claim this, and the bigger allowance starts when our team turns your invites back on.",
   "perks.base.browseDirectory": "Browse the member directory",
   "perks.base.joinGatherings": "Join events and RSVP",
   "perks.base.directMessages": "Message other members directly",

@@ -8,6 +8,7 @@ import type { CalendarEvent } from "../data";
 import { eventZoneFormat } from "../eventTimezone";
 import { sizedCover } from "./coverUrl";
 import { EventCoverFallback } from "./EventCoverFallback";
+import { EventCommunityMenu } from "./EventCommunityMenu";
 import { EventDateStamp } from "./EventDateStamp";
 import {
   CtaPill,
@@ -21,6 +22,7 @@ import {
   WhenRibbon,
 } from "./eventCardParts";
 import { GoingCount } from "./GoingCount";
+import { HostingCommunityLine } from "./HostingCommunityLine";
 import { timeBucketOf, type TimeBucket } from "./pickHighlights";
 import posterStyles from "./EventPosterCard.module.css";
 import styles from "./EventTicketCard.module.css";
@@ -106,7 +108,9 @@ function TicketMedia({
  * and the host's theme tags. One `<Link>` per card, named by the event title
  * and its date (the stamp itself is hidden from assistive tech). On a precise
  * pointer the card lifts, the cover eases in and a "See it" pill slides in at
- * the body's trailing edge; keyboard focus gets the same reveal.
+ * the body's trailing edge; keyboard focus gets the same reveal. A card that
+ * names its hosting community sits in a `.shell` with the community menu
+ * pinned to the cover's top trailing corner, beside the link.
  */
 export function EventTicketCard({
   event,
@@ -121,7 +125,7 @@ export function EventTicketCard({
     month: "long",
     ...zone.dateOptions,
   });
-  return (
+  const link = (
     <Link
       to={event.to}
       aria-label={`${event.title}, ${spokenDate}`}
@@ -137,6 +141,10 @@ export function EventTicketCard({
           <FormatLine event={event} className={`${posterStyles.formatLine}`} />
           <h3 className={styles.title}>{event.title}</h3>
           <RunByLine event={event} className={posterStyles.runByLine} />
+          <HostingCommunityLine
+            event={event}
+            className={posterStyles.runByLine}
+          />
           <span className={styles.meta}>
             <MetaRow event={event}>
               <EventTime event={event} fmt={formatters} />
@@ -154,5 +162,19 @@ export function EventTicketCard({
         </span>
       </span>
     </Link>
+  );
+  if (!event.hostingCommunity) return link;
+  // The menu trigger is a sibling of the link: a button cannot sit inside one.
+  return (
+    <div className={styles.shell}>
+      {link}
+      <EventCommunityMenu
+        community={event.hostingCommunity}
+        eventTitle={event.title}
+        eventSlug={event.slug}
+        isCoHosted={event.isCoHosted ?? false}
+        className={styles.menuSlot}
+      />
+    </div>
   );
 }

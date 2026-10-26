@@ -425,4 +425,16 @@ describe("Studio v3 private paths", () => {
       ),
     ).toBe(true);
   });
+
+  it("drops a breadcrumb for the landing visit count", () => {
+    expect(
+      dropStudioPlayBreadcrumb({
+        category: "fetch",
+        data: { url: "http://api.test/v1/landing/visits", method: "POST" },
+      }),
+    ).toBeNull();
+    expect(
+      isPrivateObservabilityUrl("http://api.test/v1/landing/features"),
+    ).toBe(false);
+  });
 });

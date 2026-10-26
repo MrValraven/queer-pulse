@@ -1,9 +1,9 @@
 import type { RefObject } from "react";
 import { AnimatePresence, m } from "motion/react";
 import { useMotionPrefs } from "../../../../app/providers/motionPrefs";
-import { ImageSlot } from "../../../../shared/components/ui";
 import { STUDIO_EXIT, STUDIO_FADE } from "../../studioMotion";
 import type { StudioQueueItem } from "../studioPlayerContext";
+import { StudioPlayerArt } from "./StudioPlayerArt";
 import { useNowPlayingCoverSwipe } from "./useNowPlayingCoverSwipe";
 import { useStudioCoverSkip } from "./useStudioCoverSkip";
 import styles from "./StudioNowPlaying.module.css";
@@ -40,8 +40,9 @@ export function StudioNowPlayingCover({
 }) {
   const { reducedMotion } = useMotionPrefs();
   const skip = useStudioCoverSkip();
-  const { coverRef, offsetX, isSwipeSkip } = useNowPlayingCoverSwipe({
+  const { coverRef, offsetX, isSwipeSkip, trail } = useNowPlayingCoverSwipe({
     isEnabled: isPhone,
+    item,
     sheetRef,
     frameRef,
     onClose,
@@ -54,6 +55,17 @@ export function StudioNowPlayingCover({
       data-swipe={isPhone ? "" : undefined}
       style={{ x: offsetX }}
     >
+      {/* The art a landed swipe left, one page beside the next while both
+          slide (useSwipeSkipPager). */}
+      {trail && (
+        <div
+          className={`${styles.coverLayer} ${styles.coverTrail}`}
+          style={{ translate: `${trail.shift}px 0` }}
+          aria-hidden="true"
+        >
+          <StudioPlayerArt item={trail.item} fill radius={16} />
+        </div>
+      )}
       {/* A swipe's skip swaps the art at once: the slide carries it in. */}
       <AnimatePresence initial={false} custom={isSwipeSkip}>
         <m.div
@@ -67,15 +79,7 @@ export function StudioNowPlayingCover({
           variants={COVER_EXIT_VARIANTS}
           exit={reducedMotion ? "reducedExit" : "exit"}
         >
-          <ImageSlot
-            src={item.coverUrl ?? undefined}
-            tint={item.tint}
-            width="100%"
-            height="100%"
-            radius={16}
-            placeholder=""
-            style={{ position: "absolute", inset: 0 }}
-          />
+          <StudioPlayerArt item={item} fill radius={16} />
         </m.div>
       </AnimatePresence>
     </m.div>

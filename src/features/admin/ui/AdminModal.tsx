@@ -20,6 +20,7 @@ export function AdminModal({
   footer,
   wide = false,
   isFullSize = false,
+  isTall = false,
   children,
 }: {
   eyebrow?: ReactNode;
@@ -29,6 +30,8 @@ export function AdminModal({
   wide?: boolean;
   /** Near full-viewport dialog whose body stretches its content to the footer. */
   isFullSize?: boolean;
+  /** Fixed height so a search-led dialog holds still while its results change; the body scrolls. */
+  isTall?: boolean;
   children: ReactNode;
 }) {
   const { t } = useTranslation();
@@ -67,6 +70,7 @@ export function AdminModal({
           styles.modal,
           wide && styles.modalWide,
           isFullSize && styles.modalFull,
+          isTall && styles.modalTall,
         ]
           .filter(Boolean)
           .join(" ")}

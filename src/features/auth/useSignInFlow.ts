@@ -21,6 +21,8 @@ export interface SignInFlow {
   showSupportLink: boolean;
   registrationClosed: boolean;
   platformStatus: PlatformStatusDTO | undefined;
+  /** Where a successful sign-in lands: the safe `?next=` path. */
+  dest: string;
 }
 
 /** Everything the sign-in page does: the probe, the busy state, the error
@@ -110,5 +112,6 @@ export function useSignInFlow(): SignInFlow {
     showSupportLink,
     registrationClosed,
     platformStatus,
+    dest,
   };
 }

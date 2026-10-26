@@ -17,6 +17,7 @@ import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { formatTrackTime } from "../../api/studio.adapters";
 import type { StudioMenuItem } from "../../kit/StudioMenu";
 import { studioErrorMessageKeyOf } from "../../studioErrors.data";
+import { useStudioFoldedShareItemsContext } from "../../useStudioFoldedShareItem";
 import { useStudioLike } from "../../useStudioLike";
 import { useStudioPlayer } from "../studioPlayerContext";
 import { takeLastQueueFailure } from "../studioQueueActions";
@@ -40,8 +41,10 @@ function joinGroups(groups: StudioMenuItem[][]): StudioMenuItem[] {
 /** The track menu's items, in four groups: listening (Play next, Add to
  *  queue, Add to playlist, Like), going (Go to artist, Go to release),
  *  sharing (Send, Copy link, Copy link at the playhead) and Report.
- *  `linkSeconds` is the playhead for the track that is playing, null for
- *  every other track. */
+ *  Inside a track hero whose Share folded into this menu, the hero's full
+ *  share set (StudioFoldedShareItemsContext) takes Send and Copy link's
+ *  place. `linkSeconds` is the playhead for the track that is playing,
+ *  null for every other track. */
 export function useStudioTrackMenuItems({
   track,
   linkSeconds,
@@ -56,6 +59,7 @@ export function useStudioTrackMenuItems({
   onReport?: () => void;
 }): StudioMenuItem[] {
   const { t } = useTranslation();
+  const foldedShareItems = useStudioFoldedShareItemsContext();
   const player = useStudioPlayer();
   const { showToast } = useToast();
   const { user } = useAuth();
@@ -183,19 +187,24 @@ export function useStudioTrackMenuItems({
     });
 
   const sharing: StudioMenuItem[] = [];
-  if (shouldOfferSend)
+  // A preview playing keeps the plain items: Send waits for the release.
+  if (foldedShareItems && foldedShareItems.length > 0 && !isPreviewPlaying)
+    sharing.push(...foldedShareItems);
+  else {
+    if (shouldOfferSend)
+      sharing.push({
+        id: "sendInMessage",
+        label: t("studio:trackMenu.sendInMessage"),
+        icon: <FiSend />,
+        onSelect: onSendInMessage,
+      });
     sharing.push({
-      id: "sendInMessage",
-      label: t("studio:trackMenu.sendInMessage"),
-      icon: <FiSend />,
-      onSelect: onSendInMessage,
+      id: "copyLink",
+      label: t("studio:trackMenu.copyLink"),
+      icon: <FiLink />,
+      onSelect: () => void share(absoluteUrl(track.href)),
     });
-  sharing.push({
-    id: "copyLink",
-    label: t("studio:trackMenu.copyLink"),
-    icon: <FiLink />,
-    onSelect: () => void share(absoluteUrl(track.href)),
-  });
+  }
   if (shouldOfferLinkAt)
     sharing.push({
       id: "copyLinkAt",

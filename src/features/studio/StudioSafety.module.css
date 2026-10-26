@@ -93,9 +93,11 @@
   line-height: 1.4;
 }
 
+/* The chip ink for text on its own coral wash: --studio-accent-text dips
+   to 4.48:1 over the 12% tint in light. */
 .statusOpen {
   background: rgba(var(--accent-rgb), 0.12);
-  color: var(--studio-accent-text);
+  color: var(--studio-accent-chip-text);
 }
 
 .statusClosed {

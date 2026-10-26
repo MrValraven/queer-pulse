@@ -1,5 +1,9 @@
+/* Block spacing only: this element also carries the shared \`.wrap\` class,
+   so a \`padding\` shorthand would clear its inline gutter. The bottom padding
+   matches PlacesSection and keeps the last card off the footer. */
 .section {
   margin-top: 40px;
+  padding-bottom: 40px;
 }
 
 .head {

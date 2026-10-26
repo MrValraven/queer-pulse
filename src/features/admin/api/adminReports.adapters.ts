@@ -31,21 +31,15 @@ export function reportsByTypeToWeekBars(dto: AdminReportsByTypeDTO): WeekBar[] {
   }));
 }
 
-/** Thins the line chart's x-axis date labels for the longer ranges so a
- *  26-week line doesn't crowd every tick — every point still contributes to
- *  the line and its tooltip, only the visible label is sparsified. */
-function shouldLabelPoint(index: number, totalPoints: number): boolean {
-  if (totalPoints <= 8) return true;
-  const stride = totalPoints <= 12 ? 2 : 4;
-  return index === totalPoints - 1 || index % stride === 0;
-}
-
+/** GET /admin/reports/growth → the member-growth line points. The line plots
+ *  `total` (running member count per week) and the tooltip adds that week's
+ *  `joined`, the same mapping `adminOverview.adapters.ts` uses. Every point
+ *  keeps its date; the chart decides which ones get a month label. */
 export function growthToPoints(dto: AdminReportsGrowthDTO): GrowthPoint[] {
-  const totalPoints = dto.points.length;
-  return dto.points.map((point, index) => ({
-    date: shouldLabelPoint(index, totalPoints) ? new Date(point.at) : null,
+  return dto.points.map((point) => ({
+    date: new Date(point.at),
     joined: point.joined,
+    total: point.total,
     churned: point.churned,
-    spike: point.spike,
   }));
 }

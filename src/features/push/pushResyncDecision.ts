@@ -109,3 +109,71 @@ export function shouldRestorePushSubscription(
     pushEnabledMemberIds.includes(memberId)
   );
 }
+
+/**
+ * How the last subscription health pass ended, as far as the member's own
+ * device is concerned. `working` and `inconclusive` never prompt: the first is
+ * healthy, the second covers a sign-out mid-pass or a failed POST while the
+ * browser still holds a subscription, which the next trigger retries.
+ */
+export type PushSyncOutcome =
+  | "working"
+  | "permissionNotGranted"
+  | "noSubscription"
+  | "subscribeFailed"
+  | "inconclusive";
+
+/** Why the recovery prompt shows, which picks its copy. */
+export type PushRecoveryReason =
+  "permissionDefault" | "permissionDenied" | "subscribeFailed";
+
+/** A dismissed prompt returns after this long if push is still not working. */
+export const PUSH_RECOVERY_REPROMPT_MS = 3 * 24 * 60 * 60 * 1000;
+
+export interface PushRecoveryInput {
+  /** The signed-in active live member, or `null` (signed out, pending, demo). */
+  memberId: string | null;
+  hasPushApis: boolean;
+  /** Members who turned push on on this device and never turned it off here. */
+  pushEnabledMemberIds: readonly string[];
+  /** The last health pass outcome for `memberId`, `null` before one finished. */
+  outcome: PushSyncOutcome | null;
+  permission: NotificationPermission;
+  /** When this member last dismissed the prompt on this device, if ever. */
+  lastDismissedAt: number | null;
+  now: number;
+}
+
+/**
+ * Whether to tell a member that push stopped on this device, and why. Only for
+ * a member who had push on here (so nobody who never opted in is nagged) and
+ * whose browser has no working subscription after the sync pass: permission was
+ * reset or revoked, or the silent restore or key rotation failed. A dismissal
+ * hides it for `PUSH_RECOVERY_REPROMPT_MS`; a dismissal time in the future
+ * (the device clock moved back) counts as expired.
+ */
+export function decidePushRecoveryPrompt(
+  input: PushRecoveryInput,
+): PushRecoveryReason | null {
+  const {
+    memberId,
+    hasPushApis,
+    pushEnabledMemberIds,
+    outcome,
+    permission,
+    lastDismissedAt,
+    now,
+  } = input;
+  if (!memberId || !hasPushApis) return null;
+  if (!pushEnabledMemberIds.includes(memberId)) return null;
+  if (outcome === null || outcome === "working" || outcome === "inconclusive") {
+    return null;
+  }
+  if (lastDismissedAt !== null) {
+    const age = now - lastDismissedAt;
+    if (age >= 0 && age < PUSH_RECOVERY_REPROMPT_MS) return null;
+  }
+  if (permission === "denied") return "permissionDenied";
+  if (permission === "default") return "permissionDefault";
+  return "subscribeFailed";
+}

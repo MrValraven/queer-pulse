@@ -132,7 +132,7 @@ describe("playlist entries, collaborative playlists", () => {
       })[0] as HTMLElement,
     );
     expect(
-      await screen.findByText("Removed from the playlist"),
+      await screen.findByText(/^Removed “.+” from the playlist$/),
     ).toBeInTheDocument();
     expect(
       screen.queryByText("That track was already removed"),

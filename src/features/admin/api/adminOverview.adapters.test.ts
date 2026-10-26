@@ -94,9 +94,9 @@ const baseDto: AdminOverviewDTO = {
   reportsByType: { weeks: reportChartWeeks },
   memberGrowth: {
     points: [
-      { at: "2026-01-01T00:00:00Z", joined: 180, churned: null, spike: false },
-      { at: "2026-02-01T00:00:00Z", joined: 210, churned: null, spike: false },
-      { at: "2026-03-01T00:00:00Z", joined: 240, churned: null, spike: true },
+      { at: "2026-01-01T00:00:00Z", joined: 180, total: 4180, churned: null },
+      { at: "2026-02-01T00:00:00Z", joined: 210, total: 4390, churned: null },
+      { at: "2026-03-01T00:00:00Z", joined: 240, total: 4630, churned: null },
     ],
   },
   responseTime: null,
@@ -474,8 +474,8 @@ describe("overviewToMemberGrowth", () => {
           {
             at: "2026-01-01T00:00:00Z",
             joined: 180,
+            total: 4180,
             churned: 60,
-            spike: false,
           },
         ],
       },
@@ -484,12 +484,12 @@ describe("overviewToMemberGrowth", () => {
     expect(points[0]?.churned).toBe(60);
   });
 
-  it("maps `at`/joined/spike onto Date/joined/spike", () => {
+  it("maps `at`/joined/total onto Date/joined/total", () => {
     const points = overviewToMemberGrowth(baseDto);
     expect(points[0]?.date).toBeInstanceOf(Date);
-    expect(points[0]?.date?.toISOString()).toBe("2026-01-01T00:00:00.000Z");
+    expect(points[0]?.date.toISOString()).toBe("2026-01-01T00:00:00.000Z");
     expect(points[0]?.joined).toBe(180);
-    expect(points[2]?.spike).toBe(true);
+    expect(points[2]?.total).toBe(4630);
   });
 });
 

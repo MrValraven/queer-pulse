@@ -10,6 +10,7 @@ import { BlockedUsersPane } from "./BlockedUsersPane";
 import { DeleteAccountSection } from "./DeleteAccountSection";
 import type { DeleteOption } from "./deleteAccount.data";
 import { EditProfilePane } from "./EditProfilePane";
+import { HiddenCommunitiesPane } from "./HiddenCommunitiesPane";
 import { MyUploadsPane } from "./MyUploadsPane";
 import { ProfileThemePane, AccessibilityPane } from "./SettingsPersonalisation";
 import { InterestsPane } from "./InterestsPane";
@@ -53,6 +54,7 @@ export function SettingsPage() {
     saveChanges,
     isSaving,
     saveError,
+    playlistsDraft,
   } = useSettingsEditSession({ pane, isDeleteModalOpen: showDelete });
 
   // On the mobile horizontal nav strip, keep the selected tab in view when the
@@ -120,7 +122,12 @@ export function SettingsPage() {
               />
             )}
             {pane === "visibility" && <VisibilityPane onChange={markChanged} />}
-            {pane === "profile" && <EditProfilePane onChange={markChanged} />}
+            {pane === "profile" && (
+              <EditProfilePane
+                onChange={markChanged}
+                playlistsDraft={playlistsDraft}
+              />
+            )}
             {pane === "profile-theme" && (
               <ProfileThemePane
                 onChange={() => markChanged("theme.appearance")}
@@ -131,6 +138,7 @@ export function SettingsPage() {
             {pane === "accessibility" && <AccessibilityPane />}
             {pane === "interests" && <InterestsPane onChange={markChanged} />}
             {pane === "blockedUsers" && <BlockedUsersPane />}
+            {pane === "hiddenCommunities" && <HiddenCommunitiesPane />}
             {pane === "account" && <AccountPane />}
             {pane === "uploads" && <MyUploadsPane />}
             {pane === "delete" && (

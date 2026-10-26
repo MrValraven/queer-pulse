@@ -2,7 +2,7 @@ import type { AdminInviteDTO } from "./api/adminInvites.api";
 
 /**
  * Demo-mode sample of platform-wide invites for the admin oversight page, so it
- * renders fully with no backend. Fabricated data — it must never appear as
+ * renders fully with no backend. Fabricated data: it must never appear as
  * platform truth in live mode (the hook only serves this when `demoMode` is on).
  * Mirrors {@link AdminInviteDTO}.
  */
@@ -69,3 +69,23 @@ export const ADMIN_INVITES: AdminInviteDTO[] = [
     expiresAt: "2026-06-09T12:00:00.000Z",
   },
 ];
+
+/**
+ * Demo-mode invite limit overrides for the "Manage invite quotas" modal, by
+ * inviter slug. Rui's limit of 1 is already used up this month, so the modal
+ * shows its "Limit reached" state; Inês carries a raised limit. Everyone else
+ * stays on the default. Fabricated, demo only, like the list above.
+ */
+export const ADMIN_INVITE_DEMO_QUOTA_OVERRIDES: Record<string, number> = {
+  rui: 1,
+  ines: 12,
+};
+
+/**
+ * Demo-mode inviters whose invite access is paused, by slug, so the modal
+ * shows its "Invites paused" state. Joana keeps her default limit, which an
+ * admin can still edit while the pause holds. Fabricated, demo only.
+ */
+export const ADMIN_INVITE_DEMO_PAUSED_SLUGS: ReadonlySet<string> = new Set([
+  "joana",
+]);

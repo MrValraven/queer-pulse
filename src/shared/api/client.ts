@@ -419,6 +419,138 @@ export async function postUnversioned(
   }
 }
 
+/** Whether a thrown fetch error is the abort fired by `timedFetch`'s deadline. */
+function isAbortError(error: unknown): boolean {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    (error as { name?: unknown }).name === "AbortError"
+  );
+}
+
+/** Reads a failed response's JSON body the same way `requestMeta` does:
+ *  `message` is the body's string or joined array, `data` the parsed body. */
+async function readErrorBody(
+  res: Response,
+): Promise<{ message: string; data: unknown }> {
+  let message = res.statusText;
+  let data: unknown;
+  try {
+    const parsed = (await res.json()) as { message?: string | string[] };
+    data = parsed;
+    message = Array.isArray(parsed.message)
+      ? parsed.message.join(", ")
+      : (parsed.message ?? message);
+  } catch {
+    /* non-JSON error body */
+  }
+  return { message, data };
+}
+
+/** Whether a parsed error body names a specific refusal through `reason`. */
+function hasReason(data: unknown): boolean {
+  return (
+    typeof data === "object" &&
+    data !== null &&
+    typeof (data as { reason?: unknown }).reason === "string"
+  );
+}
+
+async function sendUnversionedJson(
+  path: string,
+  body: unknown,
+): Promise<Response> {
+  await ensureCsrf();
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+  };
+  if (csrfToken) headers["X-CSRF-Token"] = csrfToken;
+  try {
+    return await timedFetch(
+      `${API_BASE_URL}${path}`,
+      {
+        method: "POST",
+        credentials: "include",
+        headers,
+        body: JSON.stringify(body),
+      },
+      DEFAULT_TIMEOUT_MS,
+    );
+  } catch (error) {
+    if (isAbortError(error)) throw new ApiError(408, "Request timed out");
+    throw error;
+  }
+}
+
+async function postUnversionedJsonAttempt<T>(
+  path: string,
+  body: unknown,
+  validate: ResponseValidator<T> | undefined,
+  isFirstAttempt: boolean,
+): Promise<T> {
+  const res = await sendUnversionedJson(path, body);
+
+  if (res.status === 401 && isFirstAttempt) {
+    if (!shouldAttemptRecovery()) {
+      throw new ApiError(401, "Not authenticated");
+    }
+    const isRefreshed = await refreshOnce();
+    if (isRefreshed) {
+      return postUnversionedJsonAttempt<T>(path, body, validate, false);
+    }
+    onAuthLost?.();
+    throw new ApiError(401, "Not authenticated");
+  }
+
+  if (!res.ok) {
+    const { message, data } = await readErrorBody(res);
+    // A 403 with no `reason` is the CsrfGuard rejecting a stale token before
+    // the controller ran, so a single retry with a fresh token is safe. A 403
+    // that names a `reason` is the controller's own answer and goes straight
+    // back to the caller.
+    if (res.status === 403 && isFirstAttempt && !hasReason(data)) {
+      csrfToken = null;
+      await ensureCsrf();
+      return postUnversionedJsonAttempt<T>(path, body, validate, false);
+    }
+    throw new ApiError(res.status, message, data);
+  }
+
+  const text = await res.text();
+  let parsed: unknown;
+  try {
+    parsed = text ? JSON.parse(text) : undefined;
+  } catch {
+    throw new ApiError(422, `Malformed JSON in response from ${path}`, text);
+  }
+  return finalizeBody<T>(parsed, path, validate);
+}
+
+/**
+ * POST a JSON body to an UNVERSIONED backend path (a `@Version(VERSION_NEUTRAL)`
+ * controller answering at `/auth/...`) and resolve its parsed response body.
+ * Built for the email-code sign-in routes, because neither existing helper fits:
+ *
+ * - `postUnversioned` resolves a boolean, swallows every error and never reads
+ *   the body, so a refusal's `reason` and extras (`attemptsLeft`, `statusUrl`)
+ *   would be lost.
+ * - `requestMeta` always prefixes `/v1`, and these routes live outside it.
+ * - `requestMeta` retries ANY 403 on a mutation once with a fresh CSRF token,
+ *   which would replay a verify the backend refused with a signup `reason`.
+ *   Here only a 403 whose body carries no string `reason` gets that retry.
+ *
+ * Keeps the rest of the client's contract: CSRF header, cookies, the 15 s
+ * timeout as `ApiError(408)`, one session refresh on a 401, and the optional
+ * `validate` guard on the success body.
+ */
+export function apiPostUnversioned<T>(
+  path: string,
+  body: unknown,
+  validate?: ResponseValidator<T>,
+): Promise<T> {
+  return postUnversionedJsonAttempt<T>(path, body, validate, true);
+}
+
 const SAFE = new Set(["GET", "HEAD", "OPTIONS"]);
 
 /** Dev-only: paths already warned about, so the safety net logs once per path. */

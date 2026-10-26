@@ -5,6 +5,7 @@ import { useUnsavedChangesGuard } from "../../shared/hooks";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { PaneId } from "./settings.data";
+import { useProfilePlaylistsDraft } from "./useProfilePlaylistsDraft";
 
 /**
  * The Settings page's unsaved-changes lifecycle: the dirty flag and its "what
@@ -25,6 +26,8 @@ export function useSettingsEditSession({
   const { commit: commitTheme, discard: discardTheme } = useProfileTheme();
   const { save, cancelEditing, startEditing, isSaving, saveError, isEditing } =
     useProfileEdit();
+  // The profile pane's Playlists draft; saved with the rest by saveChanges.
+  const playlistsDraft = useProfilePlaylistsDraft();
   const [isDirty, setIsDirty] = useState(false);
   // Which fields changed, in the order they were touched. Feeds the save
   // bar's "what changed" disclosure. Only panes backed by real persisted
@@ -88,6 +91,7 @@ export function useSettingsEditSession({
       openedRef.current = false;
     }
     discardTheme();
+    playlistsDraft.discard();
     setIsDirty(false);
     setChangedKeys([]);
   };
@@ -96,10 +100,20 @@ export function useSettingsEditSession({
   // persists the profile draft when this page opened a session, commits the
   // theme draft, and toasts the outcome. True only when all of it saved.
   const saveChanges = async (): Promise<boolean> => {
-    if (openedRef.current) {
+    // A playlists-only edit leaves the profile draft untouched.
+    const isPlaylistsOnly =
+      changedKeys.length > 0 && changedKeys.every((key) => key === "playlists");
+    if (openedRef.current && !isPlaylistsOnly) {
       const isProfileSaved = await save();
       if (!isProfileSaved) {
         showToast(t("settings:page.saveBar.saveErrorToast"), "error");
+        return false;
+      }
+    }
+    if (changedKeys.includes("playlists")) {
+      const playlistsErrorKey = await playlistsDraft.save();
+      if (playlistsErrorKey) {
+        showToast(t(playlistsErrorKey), "error");
         return false;
       }
     }
@@ -149,5 +163,6 @@ export function useSettingsEditSession({
     saveChanges,
     isSaving,
     saveError,
+    playlistsDraft,
   };
 }

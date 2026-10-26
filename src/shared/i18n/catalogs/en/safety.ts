@@ -141,7 +141,7 @@ export const safety: Catalog = {
   "report.form.emailLabel":
     "An address where someone could reach you (optional)",
   "report.form.emailHelper":
-    "QueerPulse sends no email. This only gives a person on the safety team a way to reach you if they need to ask you something. Leave it blank and the report is filed anonymously.",
+    "QueerPulse never emails you about reports. This only gives a person on the safety team a way to reach you if they need to ask you something. Leave it blank and the report is filed anonymously.",
   "report.form.emailPlaceholder": "you@email.com",
   // An EXPLICIT choice, because this form used to infer it: leaving the
   // optional email blank filed the report anonymously, and a signed-in member
@@ -249,7 +249,8 @@ export const safety: Catalog = {
   // These three modals used to reuse `flag.*`, which is safe-space BADGE copy:
   // it promised badge suspension at three independent flags and told the
   // reporter "we may contact you, but never the venue". There is no badge and
-  // no venue on this surface, and QueerPulse sends no email at all, so nothing
+  // no venue on this surface, and QueerPulse emails nothing about reports (its
+  // only email is a sign-in code a person asks for on screen), so nothing
   // here promises a follow-up message. What IS true and what this copy says:
   // every report is read by the moderation team (report.form.fineprint), the
   // backend derives severity and the review deadline from the reason code
@@ -854,7 +855,8 @@ export const safety: Catalog = {
   // The 48-hour window IS backed: `SAFE_SPACE_ACKNOWLEDGEMENT_HOURS`, a
   // moderator acknowledge endpoint, and a daily sweep that tells moderators
   // when a nomination has gone past it. What was vague is the delivery, so the
-  // tail now names the one channel that exists. QueerPulse sends no email, and
+  // tail now names the one channel that exists. QueerPulse emails nothing about
+  // nominations (its only email is a sign-in code a person asks for on screen), and
   // "we'll keep you posted" was the kind of line a reader reads as one.
   "spaces.nominate.thanks.subInfo":
     "Here's what happens next: we acknowledge every nomination within <strong>48 hours</strong>. Then three verified members visit independently and review it against the criteria before a volunteer panel decides. Your notifications here in the app are where you'll hear each step.",

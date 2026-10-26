@@ -1,4 +1,9 @@
-import type { CSSProperties, ReactNode } from "react";
+import type {
+  CSSProperties,
+  FocusEventHandler,
+  KeyboardEventHandler,
+  ReactNode,
+} from "react";
 import { localPoint } from "@visx/event";
 import { CHART_INK } from "./chartColors";
 import { linearScale, bandScale } from "./chartScales";
@@ -38,6 +43,12 @@ export interface BarPlotBar<Datum> {
   datum: Datum;
   /** Accessible + focus-tooltip label for this bar. */
   ariaLabel: string;
+  /** Optional roving-tabindex hooks for a dense chart: `-1` takes the bar out
+   *  of the Tab order (default `0`), and the handlers run after the kit's own
+   *  focus/Escape wiring. Omitted, every bar is its own tab stop. */
+  tabIndex?: 0 | -1;
+  onFocus?: FocusEventHandler<SVGRectElement>;
+  onKeyDown?: KeyboardEventHandler<SVGRectElement>;
 }
 
 /** One column of the plot: its bars plus the label drawn beneath it. */
@@ -61,7 +72,8 @@ export interface BarPlotProps<Item, Datum> {
   /** Horizontal band axis from {@link bandScale}; supplies each column's `x` and
    *  the shared `bandwidth()` bar width. */
   columnScale: ReturnType<typeof bandScale>;
-  /** Value-axis grid tick values, e.g. `valueScale.ticks(3)`. */
+  /** Value-axis grid tick values, e.g. `wholeNumberTicks(valueScale, 3)` for a
+   *  chart that counts whole things. */
   ticks: readonly number[];
   /** Left edge of the grid lines (the chart's `padLeft`). */
   gridLeft: number;
@@ -106,7 +118,7 @@ export interface BarPlotProps<Item, Datum> {
  * <ResponsiveChart aspect={360 / 220}>
  *   {(width, height) => {
  *     if (buckets === null) return null;
- *     const padLeft = 8, padRight = 8, padTop = 14, padBottom = 30;
+ *     const padLeft = 34, padRight = 8, padTop = 14, padBottom = 30;
  *     const plotBottom = height - padBottom;
  *     const max = chartMax(buckets.map((bucket) => bucket.value));
  *     const valueScale = linearScale(max, padTop, plotBottom);
@@ -116,12 +128,12 @@ export interface BarPlotProps<Item, Datum> {
  *       <BarPlot<DistBucket, ResponseTip>
  *         width={width} height={height}
  *         valueScale={valueScale} columnScale={columnScale}
- *         ticks={valueScale.ticks(2)}
+ *         ticks={wholeNumberTicks(valueScale, 2)}
  *         gridLeft={padLeft} gridRight={width - padRight} labelY={height - 12}
  *         data={buckets} tip={tip}
  *         ariaLabel={t("admin:dashboard.charts.responseTime.ariaLabel")}
  *         axisLabel={(value, y) => (
- *           <text x={padLeft} y={y - 4} className={styles.chAxisSerif}>{value}</text>
+ *           <text x={padLeft - 8} y={y + 4} textAnchor="end" className={styles.chAxisSerif}>{value}</text>
  *         )}
  *         column={(bucket, _index, { x, barWidth }) => {
  *           const y = valueScale(bucket.value);
@@ -203,35 +215,47 @@ export function BarPlot<Item, Datum>({
         const columnSpec = column(item, index, { x, barWidth });
         return (
           <g key={columnSpec.key}>
-            {columnSpec.bars.map((bar) => (
-              <rect
-                key={bar.key}
-                className={bar.className}
-                x={x}
-                y={bar.y}
-                width={barWidth}
-                height={bar.height}
-                rx={bar.rx}
-                fill={bar.fill}
-                opacity={bar.opacity}
-                style={bar.style}
-                onMouseMove={(event) => {
-                  const point = localPoint(event);
-                  tip.showTooltip({
-                    tooltipLeft: point?.x,
-                    tooltipTop: point?.y,
-                    tooltipData: bar.datum,
-                  });
-                }}
-                onMouseLeave={tip.hideTooltip}
-                {...markFocusProps(tip, {
-                  label: bar.ariaLabel,
-                  x: x + barWidth / 2,
-                  y: bar.y + bar.height / 2,
-                  datum: bar.datum,
-                })}
-              />
-            ))}
+            {columnSpec.bars.map((bar) => {
+              const focusProps = markFocusProps(tip, {
+                label: bar.ariaLabel,
+                x: x + barWidth / 2,
+                y: bar.y + bar.height / 2,
+                datum: bar.datum,
+              });
+              return (
+                <rect
+                  key={bar.key}
+                  className={bar.className}
+                  x={x}
+                  y={bar.y}
+                  width={barWidth}
+                  height={bar.height}
+                  rx={bar.rx}
+                  fill={bar.fill}
+                  opacity={bar.opacity}
+                  style={bar.style}
+                  onMouseMove={(event) => {
+                    const point = localPoint(event);
+                    tip.showTooltip({
+                      tooltipLeft: point?.x,
+                      tooltipTop: point?.y,
+                      tooltipData: bar.datum,
+                    });
+                  }}
+                  onMouseLeave={tip.hideTooltip}
+                  {...focusProps}
+                  tabIndex={bar.tabIndex ?? focusProps.tabIndex}
+                  onFocus={(event) => {
+                    focusProps.onFocus(event);
+                    bar.onFocus?.(event);
+                  }}
+                  onKeyDown={(event) => {
+                    focusProps.onKeyDown(event);
+                    bar.onKeyDown?.(event);
+                  }}
+                />
+              );
+            })}
             {columnSpec.label != null && (
               <text
                 x={x + barWidth / 2}

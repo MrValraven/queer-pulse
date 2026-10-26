@@ -1,51 +1,19 @@
-import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import {
   FiArrowUpRight,
   FiCompass,
-  FiGift,
   FiGlobe,
   FiLock,
   FiMapPin,
-  FiTag,
   FiVideo,
 } from "react-icons/fi";
-import type { IconType } from "react-icons";
 import { businessPath } from "../../app/routeMap";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { GatheringDetail } from "./data";
+import { GatheringPaymentDetails } from "./GatheringPaymentDetails";
 import { GatheringWhereLayout } from "./GatheringWhereLayout";
+import { GatheringCostRow, WhereRow } from "./GatheringWhereRow";
 import styles from "./GatheringDetailPanels.module.css";
-
-/** One labelled fact about getting there. `withheld` draws the dashed
- *  treatment used for something the viewer has not earned yet. */
-function WhereRow({
-  icon: Icon,
-  label,
-  children,
-  withheld = false,
-}: {
-  icon: IconType;
-  label: string;
-  children: ReactNode;
-  withheld?: boolean;
-}) {
-  return (
-    <div
-      className={[styles.row, withheld && styles.rowWithheld]
-        .filter(Boolean)
-        .join(" ")}
-    >
-      <span className={styles.rowIcon} aria-hidden>
-        <Icon />
-      </span>
-      <span className={styles.rowText}>
-        <span className={styles.rowLabel}>{label}</span>
-        <span className={styles.rowValue}>{children}</span>
-      </span>
-    </div>
-  );
-}
 
 /** The panel's lead row: the venue, which is what most readers come here for.
  *  The name is set large in the serif on its own line with the neighbourhood
@@ -115,7 +83,10 @@ function WhereVenueRow({
  *
  * COST is free text the host wrote, rendered and nothing more (LOC-18). There
  * is no payment integration on this platform, so no button, link or sentence
- * on this panel may imply one.
+ * on this panel may imply one. A paid gathering can add how guests pay the
+ * host directly, which `GatheringPaymentDetails` draws under the cost row;
+ * its own note then says where the money goes, so the cost row
+ * (`GatheringCostRow`, shared with the demo page) drops its matching note.
  *
  * ONLINE GATHERINGS have no door, so they answer a different question: the
  * join link, gated by the server on exactly the same rule as the address
@@ -140,7 +111,6 @@ export function GatheringWherePanel({
   const displayedAddress =
     gathering.address?.trim() || gathering.venueListing?.address?.trim() || "";
   const arrivalNotes = gathering.arrivalNotes?.trim() ?? "";
-  const cost = gathering.cost?.trim() ?? "";
   const neighbourhood = gathering.neighbourhood?.trim() ?? gathering.hood;
   // The venue and the neighbourhood are for everybody: they are what makes a
   // gathering findable at all. Prefer the linked listing's own name when the
@@ -252,22 +222,8 @@ export function GatheringWherePanel({
             </WhereRow>
           )}
 
-          <WhereRow
-            icon={cost ? FiTag : FiGift}
-            label={t("gatherings:gathering.where.costLabel")}
-          >
-            {cost ? (
-              cost
-            ) : (
-              <span className={styles.freeChip}>
-                <FiGift aria-hidden />
-                {t("gatherings:gathering.where.costFree")}
-              </span>
-            )}
-            <span className={styles.costNote}>
-              {t("gatherings:gathering.where.costNote")}
-            </span>
-          </WhereRow>
+          <GatheringCostRow gathering={gathering} />
+          <GatheringPaymentDetails gathering={gathering} />
         </div>
       </GatheringWhereLayout>
     </section>

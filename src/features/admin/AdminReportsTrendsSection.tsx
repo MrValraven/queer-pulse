@@ -71,7 +71,11 @@ export function AdminReportsTrendsSection() {
 
       <div className={styles.chartRow}>
         <div className={styles.chartCol}>
-          <MemberGrowthChart points={data?.growth ?? []} loading={isLoading} />
+          <MemberGrowthChart
+            points={data?.growth ?? []}
+            subtitle={t("admin:reports.trends.growthSub", { count: weeks })}
+            loading={isLoading}
+          />
           <Button
             variant="ghost"
             size="sm"

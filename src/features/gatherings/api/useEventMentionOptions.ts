@@ -33,7 +33,8 @@ export function useEventMentionOptionsQuery() {
           name: gathering.title,
         }));
       }
-      const page = await getEvents();
+      // Mentions name any event, so events from hidden communities stay in.
+      const page = await getEvents({ includeHidden: true });
       return page.items.map((dto) => ({ slug: dto.slug, name: dto.title }));
     },
   });

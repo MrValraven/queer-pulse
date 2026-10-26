@@ -185,10 +185,6 @@ export function UploadMainCol({ draft }: { draft: StudioUploadDraft }) {
   }
   return (
     <div className={`${s.col} ${s.screenIn}`} key="tracks">
-      <DetailsSaveBanner
-        errorKey={draft.saveErrorKey}
-        onOpenRelease={() => draft.goTo("release")}
-      />
       {/* Artist kinds: v3's version tools skip shows (spec 4.1). */}
       <Collapse
         isOpen={draft.release.hasUnnotedChanges && !draft.release.isShow}
@@ -198,19 +194,32 @@ export function UploadMainCol({ draft }: { draft: StudioUploadDraft }) {
           onSaved={handleVersionSaved}
         />
       </Collapse>
-      <p className={versionStyles.savedStatus} role="status">
+      {/* Off screen until it has a line to say, so the empty live region
+          takes no gap in the column above the drop zone. */}
+      <p
+        className={`${versionStyles.savedStatus} ${versionStatusKey ? "" : "visuallyHidden"}`}
+        role="status"
+      >
         {versionStatusKey ? t(versionStatusKey) : ""}
       </p>
-      <div ref={dropZoneRef}>
-        <DropZone
-          onFiles={uploads.addFiles}
-          isDisabled={false}
-          acceptsKey={
-            draft.release.isShow
-              ? "studio:uploadFlow.files.acceptsPodcast"
-              : undefined
-          }
+      {/* The save banner's live region shares one block with the drop zone,
+          so while it is closed it adds no gap above it. */}
+      <div>
+        <DetailsSaveBanner
+          errorKey={draft.saveErrorKey}
+          onOpenRelease={() => draft.goTo("release")}
         />
+        <div ref={dropZoneRef}>
+          <DropZone
+            onFiles={uploads.addFiles}
+            isDisabled={false}
+            acceptsKey={
+              draft.release.isShow
+                ? "studio:uploadFlow.files.acceptsPodcast"
+                : undefined
+            }
+          />
+        </div>
       </div>
       <FileList
         uploads={uploads}

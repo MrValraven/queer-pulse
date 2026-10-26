@@ -79,6 +79,11 @@
   gap: 10px;
   margin-top: 20px;
 }
+/* The set's pills at the track hero's 13.5px. The kit Button's md size is
+   14.5px at (0,1,0), so this (0,2,1) rule wins wherever it loads. */
+.collActions > :is(a, button):not(.setPlay) {
+  font-size: var(--text-13-5);
+}
 /* The set's round coral play: an <IconButton> kept round. The doubled class
    outranks the kit's quiet icon fill and its hover wash. */
 .setPlay.setPlay {
@@ -99,6 +104,19 @@
   .setPlay.setPlay:hover:not(:disabled):not([aria-disabled="true"]) {
     background: var(--accent);
     color: var(--studio-bg);
+    transform: scale(1.06);
+  }
+}
+@media (hover: hover) and (prefers-reduced-motion: reduce) {
+  .setPlay.setPlay:hover:not(:disabled):not([aria-disabled="true"]) {
+    transform: none;
+  }
+}
+/* The in-app Reduce motion setting holds it still too. */
+@media (hover: hover) {
+  :global(html[data-reduce-motion="true"])
+    .setPlay.setPlay:hover:not(:disabled):not([aria-disabled="true"]) {
+    transform: none;
   }
 }
 

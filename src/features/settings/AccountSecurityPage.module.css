@@ -105,7 +105,9 @@
   width: 48px;
   height: 48px;
   border-radius: var(--radius-14);
-  background: rgba(var(--plum-rgb), 0.06);
+  /* Line and text-strong both flip with the theme, so the disc and its icon
+     stay visible on the dark ground (plum on plum disappeared). */
+  background: rgba(var(--line-rgb), 0.08);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -114,7 +116,7 @@
 .ic svg {
   width: 22px;
   height: 22px;
-  stroke: var(--plum);
+  stroke: var(--text-strong);
   stroke-width: 1.8;
   fill: none;
   stroke-linecap: round;

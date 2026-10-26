@@ -6,11 +6,12 @@ import {
   useRef,
   useState,
   useLayoutEffect,
+  type MouseEvent,
   type ReactNode,
   type RefObject,
 } from "react";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { IconButton } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useMotionPrefs } from "../../../app/providers/motionPrefs";
@@ -27,8 +28,9 @@ export interface StudioShelfProps {
   seeAllHref?: string;
   /** Defaults to "See all". */
   seeAllLabel?: string;
-  /** The See all link replaces the history entry (a Show less that folds
-   *  the shelf back), so Back leaves the page as expected. */
+  /** The link is a Show less that folds an in-place See all back. It steps
+   *  back over the See all entry when it can and replaces it otherwise, so
+   *  home sits in history once and one Back leaves it. */
   seeAllReplace?: boolean;
   /** `row` (default) scrolls sideways with snap; `grid` wraps. */
   layout?: StudioShelfLayout;
@@ -189,6 +191,75 @@ function ShelfScrollButtons({
   );
 }
 
+/** History state an in-place See all (one that only changes the query)
+ *  leaves on its entry, with the address it opened from. */
+interface ShelfToggleState {
+  fromShelfToggle: true;
+  shelfReturnHref: string;
+}
+
+/** The address with its query in canonical form, for comparing hrefs. */
+function canonicalHref(href: string): string {
+  const url = new URL(href, "https://studio.invalid");
+  const query = url.searchParams.toString();
+  return `${url.pathname}${query ? `?${query}` : ""}`;
+}
+
+function isShelfToggleState(state: unknown): state is ShelfToggleState {
+  return (
+    typeof state === "object" &&
+    state !== null &&
+    (state as Partial<ShelfToggleState>).fromShelfToggle === true &&
+    typeof (state as Partial<ShelfToggleState>).shelfReturnHref === "string"
+  );
+}
+
+function isPlainClick(event: MouseEvent<HTMLAnchorElement>): boolean {
+  return (
+    event.button === 0 &&
+    !event.metaKey &&
+    !event.ctrlKey &&
+    !event.shiftKey &&
+    !event.altKey
+  );
+}
+
+/**
+ * The See all link's history behaviour. An in-place See all pushes its entry
+ * marked with ShelfToggleState. Show less then steps back to the entry it
+ * came from (`navigate(-1)`), so history never holds home twice; opened from
+ * a deep link, or from another shelf's See all, it replaces instead.
+ */
+function useSeeAllNavigation(
+  seeAllHref: string | undefined,
+  isShowLess: boolean,
+) {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const currentHref = `${location.pathname}${location.search}`;
+  const isInPlace =
+    seeAllHref !== undefined &&
+    new URL(seeAllHref, "https://studio.invalid").pathname ===
+      location.pathname;
+  const state: ShelfToggleState | undefined =
+    !isShowLess && isInPlace
+      ? { fromShelfToggle: true, shelfReturnHref: canonicalHref(currentHref) }
+      : undefined;
+  const canStepBack =
+    isShowLess &&
+    seeAllHref !== undefined &&
+    isShelfToggleState(location.state) &&
+    location.state.shelfReturnHref === canonicalHref(seeAllHref);
+  const onClick = canStepBack
+    ? (event: MouseEvent<HTMLAnchorElement>) => {
+        if (!isPlainClick(event)) return;
+        event.preventDefault();
+        void navigate(-1);
+      }
+    : undefined;
+  return { state, replace: isShowLess, onClick };
+}
+
 /**
  * A titled Studio shelf. `row` is one swipeable line of cards: snap
  * scrolling, an edge fade only on a side that hides more, round scroll
@@ -216,6 +287,7 @@ export function StudioShelf({
   const itemKeys = items.map((item) => String(item.key)).join("|");
   const { isAtStart, isAtEnd } = useStudioShelfEdges(listRef, itemKeys, isRow);
   useFocusedItemIntoView(listRef, isRow, reducedMotion);
+  const seeAllNavigation = useSeeAllNavigation(seeAllHref, !!seeAllReplace);
 
   return (
     <section className={styles.shelf} aria-labelledby={id}>
@@ -229,7 +301,9 @@ export function StudioShelf({
         {seeAllHref && (
           <Link
             to={seeAllHref}
-            replace={seeAllReplace}
+            replace={seeAllNavigation.replace}
+            state={seeAllNavigation.state}
+            onClick={seeAllNavigation.onClick}
             className={styles.seeAll}
             aria-describedby={id}
           >

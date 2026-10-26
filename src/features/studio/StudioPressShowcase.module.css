@@ -55,6 +55,19 @@
   .previewPlay.previewPlay:hover:not(:disabled):not([aria-disabled="true"]) {
     background: var(--accent);
     color: var(--studio-bg);
+    transform: scale(1.06);
+  }
+}
+@media (hover: hover) and (prefers-reduced-motion: reduce) {
+  .previewPlay.previewPlay:hover:not(:disabled):not([aria-disabled="true"]) {
+    transform: none;
+  }
+}
+/* The in-app Reduce motion setting holds it still too. */
+@media (hover: hover) {
+  :global(html[data-reduce-motion="true"])
+    .previewPlay.previewPlay:hover:not(:disabled):not([aria-disabled="true"]) {
+    transform: none;
   }
 }
 
@@ -194,6 +207,42 @@
 @media (max-width: 620px) {
   .copyRow {
     grid-template-columns: 1fr auto;
+  }
+
+  /* On a phone the watermark chip sits under the title, so the title and the
+     wave keep the full width beside the play. */
+  .preview {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas:
+      "play title"
+      "play badge"
+      "play wave";
+    column-gap: 14px;
+    align-items: center;
+  }
+
+  .previewPlay.previewPlay {
+    grid-area: play;
+  }
+
+  .previewInfo {
+    display: contents;
+  }
+
+  .previewTitle {
+    grid-area: title;
+    margin-bottom: 6px;
+  }
+
+  .badge {
+    grid-area: badge;
+    justify-self: start;
+    margin-bottom: 8px;
+  }
+
+  .wave {
+    grid-area: wave;
   }
 
   .copyLabel {

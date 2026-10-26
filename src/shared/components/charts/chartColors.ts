@@ -4,8 +4,9 @@
  * (e.g. REPORT_SERIES), never hardcoded here.
  */
 export const CHART_INK = {
-  /** Faint gridlines — matches the value used by the current hand-rolled charts. */
-  grid: "rgba(45,27,61,.08)",
+  /** Faint gridlines on the hairline channels, which flip to light ink in
+   *  dark mode so the grid stays visible on the dark paper. */
+  grid: "rgba(var(--line-rgb),.08)",
   /** Jade area fill under the member-growth line. */
   area: "rgba(var(--jade-rgb),.10)",
 } as const;

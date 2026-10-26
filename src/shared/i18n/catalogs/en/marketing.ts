@@ -855,7 +855,7 @@ export const marketing: Catalog = {
   "help.qa.unknownSession.q":
     "I don't recognise a device in my active sessions. What now?",
   "help.qa.unknownSession.a":
-    "Sign that session out from <sessionsLink>your active sessions</sessionsLink>. Signing in runs through Google, so review your Google account's security too, since anyone with access to it can get in here. Then <contactLink>tell us what happened</contactLink> and we'll help you lock things down.",
+    "Sign that session out from <sessionsLink>your active sessions</sessionsLink>. You sign in with Google or with a code sent to your email, so review the security of that Google account and that inbox too, since anyone with access to either can get in here. Then <contactLink>tell us what happened</contactLink> and we'll help you lock things down.",
   "help.qa.deleteAccount.q": "How do I delete my account?",
   "help.qa.deleteAccount.a":
     "In <settingsLink>Settings</settingsLink>, then Account, at the bottom. This is permanent. See the Privacy Policy for what's retained and for how long.",
@@ -897,7 +897,7 @@ export const marketing: Catalog = {
     "Early access to events, a supporter badge, and the knowledge that your membership keeps the platform ad-free.",
   "help.qa.emailNotifications.q": "How do I control notifications?",
   "help.qa.emailNotifications.a":
-    "In <settingsLink>Settings</settingsLink>, then Notifications, toggle each category independently. QueerPulse notifies you in the app and, if you allow it, by push. It sends no email.",
+    "In <settingsLink>Settings</settingsLink>, then Notifications, toggle each category independently. QueerPulse notifies you in the app and, if you allow it, by push. Notifications never go by email.",
   "help.qa.browserSupport.q": "Which browsers does QueerPulse support?",
   "help.qa.browserSupport.a":
     "Current versions of Chrome, Firefox, Safari, and Edge. Older browsers may have display issues.",
@@ -1062,12 +1062,12 @@ export const marketing: Catalog = {
   "privacy.whatWeCollect.account.item1":
     "<strong>Profile details</strong> you add: name, pronouns, tagline, bio, photos.",
   "privacy.whatWeCollect.account.item2":
-    "<strong>Contact information</strong>: your email address, which comes from your Google account and is used to sign you in. QueerPulse does not send email.",
+    "<strong>Contact information</strong>: your email address, used to sign you in. It comes from your Google account if you use Google, or from you when you ask for a sign-in code. The only email QueerPulse sends is a sign-in code you ask for.",
   "privacy.whatWeCollect.account.item3":
     "<strong>Membership data</strong>: your tier, join date, who invited you, and who vouched for you.",
   "privacy.whatWeCollect.signInHeading": "How you sign in",
   "privacy.whatWeCollect.signInBody":
-    "You sign in with <strong>Google</strong>. There's no separate QueerPulse password to manage. When you do, Google shares your name, email, and profile photo with us. We never see or store your Google password.",
+    "You sign in with <strong>a code we email you</strong> or with <strong>Google</strong>. There's no QueerPulse password to manage. If you use Google, Google shares your name, email, and profile photo with us. We never see or store your Google password.",
   "privacy.whatWeCollect.deviceHeading": "Device & technical data",
   "privacy.whatWeCollect.device.item1":
     "<strong>The browser and device</strong> you sign in from, kept with your active sessions so you can see them and sign out remotely.",
@@ -1207,7 +1207,9 @@ export const marketing: Catalog = {
   "privacy.thirdParties.intro":
     "We work with a small number of service providers. Each sees only what it needs for the job it does:",
   "privacy.thirdParties.google":
-    "<strong>Google</strong>: powers Sign in with Google, our only login. Google confirms who you are and shares your name, email address and profile photo.",
+    "<strong>Google</strong>: powers Sign in with Google, one of the two ways in. Google confirms who you are and shares your name, email address and profile photo.",
+  "privacy.thirdParties.resend":
+    "<strong>Resend</strong> (United States): delivers the sign-in codes you ask for. It receives your email address and the code, and nothing else.",
   "privacy.thirdParties.railway":
     "<strong>Railway</strong>: hosts the platform and the database where everything you post is stored.",
   "privacy.thirdParties.tigris":
@@ -3412,6 +3414,8 @@ export const marketing: Catalog = {
   "changelog.release.count.infrastructure_other":
     "{count} infrastructure changes",
   // Release headlines, one per shipping day (see changelogReleases.ts).
+  "changelog.releases.2026-10-26.headline":
+    "Bulk invite refresh and revoke, Studio resume and playlist folders, a crisp iPhone bar.",
   "changelog.releases.2026-10-21.headline":
     "Invite connections to events you're going to, Studio genre tiles and a smoother seek bar.",
   "changelog.releases.2026-10-20.headline":
@@ -3588,6 +3592,110 @@ export const marketing: Catalog = {
     "Studio's creator pages fit a phone",
   "changelog.entries.studio-creator-phone-layout.body":
     "The top bar scrolls away, cards use the full width and the release button stays inside its card.",
+  "changelog.entries.studio-resume-fades-in.title":
+    "Songs ease back in when you press play",
+  "changelog.entries.studio-resume-fades-in.body":
+    "Resuming after a pause brings the sound up from silence in under half a second, so it never lands at full volume.",
+  "changelog.entries.studio-player-go-to-track.title":
+    "Jump back to the song you're playing",
+  "changelog.entries.studio-player-go-to-track.body":
+    "From anywhere in QueerPulse, the player's arrow or its settings panel takes you to that track's Studio page.",
+  "changelog.entries.hide-community-events.title":
+    "Hide events from communities you pick",
+  "changelog.entries.hide-community-events.body":
+    "Choose them in Browse, on an event card or in Settings, and their events stop showing up for you.",
+  "changelog.entries.event-payment-details.title":
+    "Tell guests how to pay for your event",
+  "changelog.entries.event-payment-details.body":
+    "Paid events can carry a payment link and instructions, like MB WAY or cash at the door.",
+  "changelog.entries.genesis-closes-after-use.title":
+    "Genesis closes for good once it has been used",
+  "changelog.entries.genesis-closes-after-use.body":
+    "The bootstrap page checks first and shows it is closed, with no claim or invite button left to press.",
+  "changelog.entries.landing-page-visit-counts.title":
+    "See landing page visits in the admin dashboard",
+  "changelog.entries.landing-page-visit-counts.body":
+    "Anonymous daily counts by source show which posts and links bring people to the homepage.",
+  "changelog.entries.sign-in-with-an-email-code.title":
+    "Sign in with a code sent to your email",
+  "changelog.entries.sign-in-with-an-email-code.body":
+    "Members on Proton or any other mail can sign in with a 6-digit code, and invited newcomers can join the same way.",
+  "changelog.entries.pause-member-invites.title":
+    "Admins can pause one member's invites",
+  "changelog.entries.pause-member-invites.body":
+    "Members whose invites are paused see why on every invite screen and keep the rest of their account.",
+  "changelog.entries.invite-quotas-search.title":
+    "Search members when setting invite limits",
+  "changelog.entries.invite-quotas-search.body":
+    "Admins see each member's invites this month against their limit, and can change it inline.",
+  "changelog.entries.bulk-refresh-and-revoke-invites.title":
+    "Refresh or revoke many invites at once",
+  "changelog.entries.bulk-refresh-and-revoke-invites.body":
+    "Admins can pick invites to refresh or revoke together, or bring every expired invite back in one go.",
+  "changelog.entries.coverless-personas-skip-the-banner.title":
+    "Persona pages without a banner open on the name",
+  "changelog.entries.coverless-personas-skip-the-banner.body":
+    "The empty striped band is gone, so the avatar and name sit right under the nav until a cover is added.",
+  "changelog.entries.profile-activity-timeline.title":
+    "Read a profile's recent activity as a timeline",
+  "changelog.entries.profile-activity-timeline.body":
+    "Moments are grouped by week with when each one happened, and a re-published persona shows only once.",
+  "changelog.entries.studio-track-byline-links.title":
+    "Jump from a track to its album or artist",
+  "changelog.entries.studio-track-byline-links.body":
+    "Tap the artist or album name under a track title and the page glides over, cover and all.",
+  "changelog.entries.studio-sliders-easier-to-grab.title":
+    "Drag the Studio player's sliders with ease",
+  "changelog.entries.studio-sliders-easier-to-grab.body":
+    "The handles are bigger, the equaliser bands run longer and crossfade and equaliser now share one look.",
+  "changelog.entries.member-growth-shows-real-total.title":
+    "Member growth shows your real total",
+  "changelog.entries.member-growth-shows-real-total.body":
+    "The admin chart now tracks total members week by week, and the leftover Pride label is gone.",
+  "changelog.entries.crisp-app-bar-on-iphone.title":
+    "Top bar icons stay sharp on iPhone",
+  "changelog.entries.crisp-app-bar-on-iphone.body":
+    "Top bar icons and unread badges look crisp on iPhone now that the bar is a solid strip like the bottom tabs.",
+  "changelog.entries.trust-network-ties-in-full-colour.title":
+    "Trust network ties show in full colour",
+  "changelog.entries.trust-network-ties-in-full-colour.body":
+    "Mutual, invited and withdrawn vouches now match the legend, so the rings read at a glance.",
+  "changelog.entries.studio-account-menu-clears-the-player.title":
+    "Sign out stays clear of the music player",
+  "changelog.entries.studio-account-menu-clears-the-player.body":
+    "The Studio account menu now ends above the player bar, so its last rows are always reachable.",
+  "changelog.entries.studio-resume-where-you-left-off.title":
+    "Pick up Studio where you left off",
+  "changelog.entries.studio-resume-where-you-left-off.body":
+    "Switch on Resume and your queue comes back after you close the tab, with Recently played on this device.",
+  "changelog.entries.studio-playlist-folders.title":
+    "File your playlists into folders",
+  "changelog.entries.studio-playlist-folders.body":
+    "Group playlists into folders in your library and the sidebar, and only you see how you file them.",
+  "changelog.entries.studio-artist-banner-hero.title":
+    "Give your Studio page a wide photo",
+  "changelog.entries.studio-artist-banner-hero.body":
+    "Add a cover photo to your artist page and pick a full-bleed layout or your avatar over the photo.",
+  "changelog.entries.studio-select-many-tracks.title":
+    "Pick several tracks at once",
+  "changelog.entries.studio-select-many-tracks.body":
+    "Long-press or tick rows, then queue, save or remove the whole batch from the bar that slides up.",
+  "changelog.entries.studio-menus-everywhere.title":
+    "Right-click or long-press anything in Studio",
+  "changelog.entries.studio-menus-everywhere.body":
+    "Cards, rows and playlists open the same action menu, and it stays open when you lift your finger.",
+  "changelog.entries.studio-one-button-look.title":
+    "One button style across Studio",
+  "changelog.entries.studio-one-button-look.body":
+    "Studio buttons now share one look with stronger contrast and a full-size touch target on phones.",
+  "changelog.entries.studio-calmer-now-playing.title":
+    "A calmer Now playing screen",
+  "changelog.entries.studio-calmer-now-playing.body":
+    "Cover and controls fit every screen, swipes skip without a flash and More opens as a sheet on phones.",
+  "changelog.entries.studio-single-key-shortcuts-switch.title":
+    "Turn single-key player shortcuts off",
+  "changelog.entries.studio-single-key-shortcuts-switch.body":
+    "A new Settings switch turns off the Studio player's letter-key shortcuts if they get in your way.",
   "changelog.entries.toasts-clear-the-notch.title":
     "Notifications clear the iPhone notch",
   "changelog.entries.toasts-clear-the-notch.body":
@@ -9966,7 +10074,7 @@ export const marketing: Catalog = {
   "forOrgs.apply.lead":
     "Tell us who you are and we will take you to the partner application. It is one form, it goes to the partnerships queue, and you can see where it stands from your account at any time.",
   "forOrgs.apply.note":
-    "We read every application, however rough. The answer arrives in the app, on your submissions page and in your notifications. We send no email, ever.",
+    "We read every application, however rough. The answer arrives in the app, on your submissions page and in your notifications. Decisions never go by email.",
   "forOrgs.cta.title": "Start a <em>conversation.</em>",
   "forOrgs.cta.list1": "For partnerships, we usually call before we write",
   "forOrgs.cta.list2": "Grant applications: include a one-pager",
@@ -12275,7 +12383,7 @@ export const marketing: Catalog = {
   "accessibilityStatement.feedback.p2":
     "Use the contact form and pick <strong>Accessibility</strong> as the topic. The message is stored for the people who run the platform, who read every one.",
   "accessibilityStatement.feedback.p3":
-    "QueerPulse sends no automatic email, so any reply is written by a person to the address you give us. We aim to answer within {days} working days. If your report is about something that is keeping you out of your own account, say so and it moves to the front.",
+    "Any reply to your report is written by a person on our team to the address you give us. We aim to answer within {days} working days. If your report is about something that is keeping you out of your own account, say so and it moves to the front.",
   "accessibilityStatement.feedback.cta": "Report an access barrier",
 
   "accessibilityStatement.enforcement.title": "If our answer is not enough",

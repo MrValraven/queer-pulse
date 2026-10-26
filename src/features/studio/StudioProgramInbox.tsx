@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { FiArrowRight } from "react-icons/fi";
+import { FiArrowRight, FiPlus } from "react-icons/fi";
 import { Button, ImageSlot } from "../../shared/components/ui";
 import { routes } from "../../app/routeMap";
 import { Translation } from "../../shared/i18n/Translation";
@@ -80,7 +80,7 @@ export function StudioProgramInbox({
                 className={s.subBtn}
                 onClick={() => onSlate(submission)}
               >
-                {t("studio:program.inbox.slateCta")}
+                <FiPlus aria-hidden /> {t("studio:program.inbox.slateLabel")}
               </Button>
               <Button
                 variant="quiet"

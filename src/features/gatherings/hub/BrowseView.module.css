@@ -19,6 +19,12 @@
   margin-block: 0 var(--card-pad);
 }
 
+/* The months' box. Positioned, because a month on its way out (AnimatePresence
+   popLayout) is lifted out of the flow and placed against it while it fades. */
+.months {
+  position: relative;
+}
+
 .sentinel {
   block-size: 1px;
 }

@@ -146,10 +146,6 @@
 /* A destructive decision that sits behind the main fixes: the ghost
    button's weight in the danger ink (it lifts for dark). Scoped under the
    card so it outranks the ghost's own and dark-theme rules. */
-/* The two quiet exits: on a phone they share one row. */
-.actionPair {
-  display: contents;
-}
 .card .actions .dangerOutline {
   color: var(--danger-ink);
   border-color: var(--danger-ink);
@@ -168,24 +164,47 @@
   .wrap {
     padding-inline: 0;
   }
-  /* One full-width decision per row, each a 44px target. */
+  /* One full-width decision per row, each a 44px target. On a card with
+     three or more, the last two (the quiet exits, Archive and Open in
+     moderation) share one row. Counted from the end, so the release,
+     track and claim cards all pair without a wrapper. */
   .actions {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
   .actions > a,
   .actions > button {
+    grid-column: 1 / -1;
     width: 100%;
     min-height: 44px;
   }
-  .actionPair {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 8px;
+  .actions > :nth-last-child(2):nth-child(n + 2),
+  .actions > :last-child:nth-child(n + 3) {
+    grid-column: auto;
   }
-  .actionPair > a,
-  .actionPair > button {
-    width: 100%;
+  /* The filter row's long reasons wrap inside their chip at 375. */
+  .queueChips > button {
+    white-space: normal;
+    text-align: start;
+  }
+  /* The tab strip fades at its scrolling edge, as on triage. */
+  .wrap > [role="tablist"] {
+    mask-image: linear-gradient(to right, black calc(100% - 32px), transparent);
+  }
+}
+
+/* The Collapse around the filter row takes the bar's whole line and may
+   shrink, so the chips wrap inside it instead of pushing past 375. */
+.queueFilter {
+  flex: 1 1 100%;
+  min-width: 0;
+}
+/* Touch: Sort and Select reports reach the 44px floor. The class plus
+   attribute and element outrank the compact trigger's and the quiet sm
+   button's own (0,2,0) heights; the Sort menu's options keep theirs. */
+@media (pointer: coarse) {
+  .queueSort button[aria-haspopup="listbox"],
+  .queueBar button.queueSelect {
     min-height: 44px;
   }
 }

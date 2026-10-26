@@ -155,6 +155,8 @@
 }
 
 :global(html[data-reduce-motion="true"])
-  .play:is(.hero, .card, .row):is(:hover, :active):not(:disabled):not([aria-disabled="true"]) {
+  .play:is(.hero, .card, .row):is(:hover, :active):not(:disabled):not(
+    [aria-disabled="true"]
+  ) {
   transform: none;
 }

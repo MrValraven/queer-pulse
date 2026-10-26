@@ -33,11 +33,13 @@ describe("listingKindOf", () => {
 });
 
 describe("the vocabularies", () => {
-  it("spells the 24 parishes exactly as the map's parish polygons", () => {
-    const polygonNames = FREGUESIAS.features.map(
-      (feature) => feature.properties.name,
+  it("spells the 24 Lisbon parishes exactly as the map's parish polygons", () => {
+    const polygonNames = new Set(
+      FREGUESIAS.features.map((feature) => feature.properties.name),
     );
-    expect([...LISBON_PARISH_NAMES].sort()).toEqual([...polygonNames].sort());
+    for (const parishName of LISBON_PARISH_NAMES) {
+      expect(polygonNames.has(parishName)).toBe(true);
+    }
     expect(LISBON_PARISH_NAMES).toHaveLength(24);
   });
 

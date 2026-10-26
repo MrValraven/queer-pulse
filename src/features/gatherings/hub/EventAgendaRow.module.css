@@ -2,10 +2,22 @@
    column, 16:9 cover, body, trailing arrow, with a hairline between rows.
    Below 640px it stacks into a card: cover on top with the stamp on it. */
 
+/* The size of the community menu trigger, read by every row's trailing track
+   and by the trigger itself in a `.shell`. */
+.row,
+.shell {
+  --card-menu-size: 2rem;
+}
+
+/* The trailing track is as wide as the menu trigger on every row, with or
+   without a menu, so the arrows and the bodies line up down the list and the
+   trigger never covers the body. */
 .row {
   position: relative;
   display: grid;
-  grid-template-columns: auto clamp(10rem, 22vw, 15rem) minmax(0, 1fr) auto;
+  grid-template-columns:
+    auto clamp(10rem, 22vw, 15rem) minmax(0, 1fr)
+    var(--card-menu-size);
   align-items: center;
   column-gap: var(--card-pad);
   padding: var(--gap-sm) var(--gap-xs);
@@ -34,6 +46,23 @@
   outline: var(--focus-ring);
   outline-offset: var(--focus-ring-offset);
   box-shadow: var(--ring-cream);
+}
+
+/* A row that names its hosting community: the link and the community menu
+   side by side in one box, so the trigger never sits inside the link. */
+.shell {
+  position: relative;
+  display: block;
+}
+
+/* The menu trigger at the top of the trailing track, over the arrow's column.
+   Doubled with `.shell` so it outranks the menu's own wrapper placement
+   whatever order the stylesheets load in. */
+.shell > .menuSlot {
+  position: absolute;
+  inset-block-start: var(--gap-sm);
+  inset-inline-end: var(--gap-xs);
+  z-index: 2;
 }
 
 .stampColumn {
@@ -153,6 +182,7 @@
 
 .arrow {
   position: relative;
+  justify-self: center;
   inline-size: 1.25rem;
   block-size: 1.25rem;
   color: var(--accent-text);
@@ -175,20 +205,33 @@
   .coverStamp {
     display: flex;
   }
+
+  /* Stacked, the trigger lands on the cover's top trailing corner, opposite
+     the stamp; its paper disc reads over the photo. */
+  .shell > .menuSlot {
+    inset-block-start: calc(var(--gap-sm) * 2);
+    inset-inline-end: var(--gap-sm);
+  }
 }
 
 /* ── Hover ── */
+/* The shell's hover keeps the row lit while the pointer is on the menu
+   trigger. */
 @media (hover: hover) and (pointer: fine) {
-  .row:hover::before {
+  .row:hover::before,
+  .shell:hover > .row::before {
     opacity: 1;
   }
 
   .row:hover .coverImage,
-  .row:hover .cover [data-cover-fallback] {
+  .row:hover .cover [data-cover-fallback],
+  .shell:hover > .row .coverImage,
+  .shell:hover > .row .cover [data-cover-fallback] {
     transform: scale(1.04);
   }
 
-  .row:hover .arrow {
+  .row:hover .arrow,
+  .shell:hover > .row .arrow {
     transform: translateX(4px);
   }
 }
@@ -213,7 +256,10 @@
   .row:hover .coverImage,
   .row:hover .cover [data-cover-fallback],
   .row:hover .arrow,
-  .row:focus-visible .arrow {
+  .row:focus-visible .arrow,
+  .shell:hover > .row .coverImage,
+  .shell:hover > .row .cover [data-cover-fallback],
+  .shell:hover > .row .arrow {
     transform: none;
   }
 }

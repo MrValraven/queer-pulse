@@ -53,6 +53,13 @@ export interface PlatformStatusDTO {
    * keyed by `announcementVersion` (see `AnnouncementBanner`).
    */
   announcementDismissed: boolean;
+  /**
+   * Whether sign-in with a 6-digit email code is switched on: the backend
+   * sets it only once its Resend settings are in place. Optional on the wire
+   * so an older backend that predates the field reads as off. Read it through
+   * `useIsEmailCodeSignInOn`, which also keeps demo mode on.
+   */
+  emailCodeSignIn?: boolean;
 }
 
 export const getPlatformStatus = () =>

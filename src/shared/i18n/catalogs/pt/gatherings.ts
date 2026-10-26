@@ -792,6 +792,7 @@ export const gatherings: Catalog = {
   "create.v2.need.date": "uma data e hora de início no futuro",
   "create.v2.need.joinLink":
     "um link de entrada começado por http:// ou https://",
+  "create.v2.need.paymentLink": "um link de pagamento que comece por https://",
   "create.v2.need.recurrence": "uma repetição completa",
 
   // createGatheringChapters.ts: the one-line summary of a closed chapter
@@ -855,6 +856,7 @@ export const gatherings: Catalog = {
   "create.v2.ready.item.date": "Data e hora de início no futuro",
   "create.v2.ready.item.joinLink":
     "O link de entrada começa por http:// ou https://",
+  "create.v2.ready.item.paymentLink": "O link de pagamento começa por https://",
   "create.v2.ready.item.recurrence": "Repetição completa",
   "create.v2.ready.item.hood": "Bairro escolhido",
   "create.v2.ready.item.accessibility": "Acessibilidade respondida",
@@ -1022,8 +1024,7 @@ export const gatherings: Catalog = {
   "create.v2.who.costPlaceholderPayWhatYouCan":
     "ex. 5 a 15 EUR, escala variável",
   "create.v2.who.costPlaceholderFixed": "ex. 8 EUR à porta",
-  "create.v2.who.costHint":
-    "Nas tuas palavras. Ninguém paga pela QueerPulse; é o que as pessoas devem esperar à porta.",
+  "create.v2.who.costHint": "Nas tuas palavras. Ninguém paga pela QueerPulse.",
   "create.v2.who.cohostsLabel": "Coanfitriões",
   "create.v2.who.cohostsPlaceholder": "Procura na tua rede",
   "create.v2.who.cohostsHint":
@@ -1049,6 +1050,21 @@ export const gatherings: Catalog = {
     "Preenchemos o ponto de encontro de {name}. Podes mudá-lo.",
   "create.v2.who.runByRefused":
     "Este negócio não pode organizar este evento. Escolhe outro, ou nenhum.",
+  "create.v2.who.paymentLinkLabel": "Link de pagamento",
+  "create.v2.who.paymentLinkHint":
+    "Uma página onde te podem pagar, como um link Revolut, PayPal ou Ko-fi.",
+  "create.v2.who.paymentLinkPlaceholder": "https://revolut.me/oteunome",
+  "create.v2.who.paymentLinkNotHttps":
+    "Os links de pagamento precisam de https:// no início.",
+  "create.v2.who.paymentLinkNoDomain":
+    "Escreve o endereço completo, como revolut.me/oteunome.",
+  "create.v2.who.paymentLinkTooLong":
+    "Os links de pagamento podem ter até 500 caracteres.",
+  "create.v2.who.paymentLinkUnparseable":
+    "Este link tem caracteres que um endereço web não aceita, como espaços.",
+  "create.v2.who.paymentInstructionsLabel": "Instruções de pagamento",
+  "create.v2.who.paymentInstructionsPlaceholder":
+    "MB WAY para 912 345 678 com o teu nome, ou dinheiro à porta",
 
   // steps/AccessChapter.tsx: chapter 4
   "create.v2.access.questionsLabel": "Seis perguntas",
@@ -1877,6 +1893,12 @@ export const gatherings: Catalog = {
   "gathering.where.costFree": "Gratuito",
   "gathering.where.costNote":
     "O que pagares fica entre ti e quem organiza. A QueerPulse não recebe dinheiro.",
+  "gathering.where.paymentHeading": "Como pagar",
+  "gathering.where.paymentLinkCta": "Abrir link de pagamento",
+  "gathering.where.paymentNote":
+    "Os pagamentos vão diretamente para quem organiza, fora da QueerPulse.",
+  "gathering.where.paymentLinkHost": "Vai para {host}",
+  "gathering.where.opensInNewTab": "(abre num novo separador)",
   "gathering.where.takeMeThere": "Leva-me lá",
   "gathering.where.mapAriaExact":
     "Mapa que mostra a localização exata de {name}",
@@ -2060,7 +2082,7 @@ export const gatherings: Catalog = {
 
   // ENG-140
   "rsvpControl.goingCountHidden":
-    "A pessoa que organiza mantém a lista privada.",
+    "Quem organiza desativou a lista de convidados deste evento, por isso ninguém vê quem mais vai.",
 
   // PRD-187
   "rsvpControl.yourDetailsCta": "Os teus detalhes",
@@ -2383,4 +2405,44 @@ export const gatherings: Catalog = {
     "O teu evento está publicado. O quiz tem rondas para adultos, por isso torna o evento 18+ e copia o quiz no separador Jogo ao vivo",
   "create.toast.quizshowCopyFailed":
     "O teu evento está publicado. O quiz não veio com ele, por isso copia-o no separador Jogo ao vivo",
+  // Hidden event communities
+  "hub.card.hostedWith": "Com {name}",
+  "hiddenCommunities.menu.trigger": "Mais opções para {title}",
+  "hiddenCommunities.menu.hide": "Esconder eventos de {name}",
+  "hiddenCommunities.toast.hidden": "Os eventos de {name} estão escondidos",
+  "hiddenCommunities.toast.undo": "Desfazer",
+  "hiddenCommunities.toast.hiddenEventStays":
+    "Os eventos de {name} estão escondidos. {title} continua porque uma comunidade que ainda vês também o organiza",
+  "hiddenCommunities.toast.shown": "Os eventos de {name} voltaram a aparecer",
+  "hiddenCommunities.error.notFound":
+    "Não encontrámos {name}. Pode ter sido apagada, ou é privada e não fazes parte dela.",
+  "hiddenCommunities.error.limitReached":
+    "Já escondeste 200 comunidades, o máximo possível. Volta a mostrar uma nas Definições para esconderes outra.",
+  "hiddenCommunities.error.rateLimited":
+    "São muitas alterações seguidas. Espera um minuto e tenta outra vez.",
+  "hiddenCommunities.error.hideUnreachable":
+    "Não conseguimos chegar ao QueerPulse para esconder os eventos de {name}. Verifica a tua ligação e tenta outra vez.",
+  "hiddenCommunities.error.unhideUnreachable":
+    "Não conseguimos chegar ao QueerPulse para voltar a mostrar os eventos de {name}. Verifica a tua ligação e tenta outra vez.",
+  "hiddenCommunities.error.hideFailed":
+    "Não foi possível esconder os eventos de {name}",
+  "hiddenCommunities.error.unhideFailed":
+    "Não foi possível voltar a mostrar os eventos de {name}",
+  "hiddenCommunities.refine.label": "Comunidades",
+  "hiddenCommunities.refine.note":
+    "Os eventos das comunidades que escondes deixam de aparecer em Destaques, Explorar e no calendário, a menos que uma comunidade que ainda vês os organize também. As publicações delas no teu feed ficam como estão.",
+  "hiddenCommunities.refine.searchLabel": "Procurar comunidades para esconder",
+  "hiddenCommunities.refine.searchPlaceholder":
+    "Procura pelo nome da comunidade",
+  "hiddenCommunities.refine.hideCta": "Esconder eventos",
+  "hiddenCommunities.refine.unhideCta": "Voltar a mostrar",
+  "hiddenCommunities.refine.unhideLabel": "Voltar a mostrar eventos de {name}",
+  "hiddenCommunities.refine.noMatch": "Nenhuma comunidade tem esse nome.",
+  "hiddenCommunities.refine.searchError":
+    "Não foi possível carregar as comunidades. Verifica a tua ligação e tenta outra vez.",
+  "hiddenCommunities.notice.text_one":
+    "Os eventos de {count} comunidade que escondeste não aparecem aqui.",
+  "hiddenCommunities.notice.text_other":
+    "Os eventos de {count} comunidades que escondeste não aparecem aqui.",
+  "hiddenCommunities.notice.manage": "Gerir comunidades escondidas",
 };

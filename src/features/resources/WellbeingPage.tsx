@@ -90,6 +90,11 @@ export function WellbeingPage() {
       <CrisisSection />
       <HarmReductionSection />
 
+      <SubpageIndex
+        title={t("resources:wellbeing.subpageIndex.title")}
+        items={subpages}
+      />
+
       <Outro
         title={
           <Translation
@@ -103,11 +108,6 @@ export function WellbeingPage() {
           {t("resources:wellbeing.outro.cta")}
         </Button>
       </Outro>
-
-      <SubpageIndex
-        title={t("resources:wellbeing.subpageIndex.title")}
-        items={subpages}
-      />
     </PageShell>
   );
 }

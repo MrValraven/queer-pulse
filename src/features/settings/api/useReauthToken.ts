@@ -1,43 +1,63 @@
 import { useEffect } from "react";
+import { useAuth } from "../../../app/providers/authContext";
 import { routes } from "../../../app/routeMap";
 import { API_BASE_URL } from "../../../shared/api/config";
 import { refreshSession } from "../../../shared/api/client";
+import { useEmailCodeSignInState } from "../../../shared/api/useIsEmailCodeSignInOn";
 import { useToast } from "../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
+import { openReauthDialog } from "./reauthDialogStore";
 
 /**
- * Step-up re-authentication, redirect-based.
+ * Step-up re-authentication: proving the caller confirmed it is them just now,
+ * on top of holding a valid session cookie.
  *
- * Auth is OAuth-only (no password), so proving "the caller re-authenticated
- * just now" — not merely "still holds a valid session cookie" — means making
- * them complete a real Google OAuth round trip with `prompt=login`. That is a
- * full top-level browser navigation, which cannot be driven from a fetch/XHR
- * call the way the old `POST /account/reauth` was: this file replaces that
- * dead-end (it minted a token from nothing but the caller's own claim) with
- * a redirect flow that leaves via `beginReauth`, comes back through
- * `AuthController.googleCallback`'s `reauth` branch, and lands here again via
- * `useReauthCompletion`.
+ * `beginReauth` opens the code dialog (`reauthDialogStore`, mounted once by
+ * `ReauthCompletionProvider`) while the email code sign-in is switched on;
+ * `beginReauth` itself describes the paths taken while it is off. The dialog
+ * emails a 6-digit code to the member's own address through
+ * `/auth/email-code/reauth/request` and checks it with
+ * `/auth/email-code/reauth/verify`, all in place, so the page stays loaded.
+ * Members with Google on their account can still pick the redirect:
+ * `beginGoogleReauth` runs the Google OAuth round trip with `prompt=login`,
+ * comes back through `AuthController.googleCallback`'s `reauth` branch, and
+ * lands here again via `useReauthCompletion`.
  *
- * The token itself travels back in the URL FRAGMENT (never sent to a server,
- * so it can't leak into access logs) and is cached in `sessionStorage` — NOT
- * auto-applied to whatever destructive action was pending. Every call site
+ * Both paths put the token in the same `sessionStorage` slot
+ * (`qp_reauth_token`, written by `cacheReauthToken`), and both leave the
+ * pending action for the member to run again. Each gated action
  * (DeleteAccountSection, AccountDataStepAway, AccountDataExport, useDsar,
- * useExportFlow) checks `getCachedReauthToken()` first and only calls
- * `beginReauth()` when it's null; the member has to press the same confirm
- * button again after landing back, which is the deliberate safety margin:
- * nothing DESTRUCTIVE ever fires as a side effect of a page load.
+ * useExportFlow) reads the cached token at click time and, when there is
+ * none, calls `beginReauth()` and ends quietly: no success panel, no error
+ * toast, its button enabled again at once, and a destructive flow back at its
+ * confirm step. A promise-based
+ * action rejects with `ReauthRequiredError` (`reauthRequiredError.ts`) so its
+ * caller can tell this stop from a failure. Once the code is accepted, or the
+ * Google redirect lands, the member presses the same button again and the
+ * cached token is used. That second press is the deliberate safety margin:
+ * nothing DESTRUCTIVE ever fires as a side effect of a confirmation or a page
+ * load. VerificationNeededPage is the one caller that passes `onConfirmed`,
+ * because it only shows a success panel and runs no action.
  *
  * One deliberate exception, PRD-305: the data export resumes itself on the
  * landing (see `readReauthLandingToken`). It is the one step-up call site that
  * destroys nothing, and asking for a second press there cost the member their
- * chosen category set. The resume is armed by the landing FRAGMENT rather than
- * the cached token, so it fires once, on the trip the member started, and
- * never again while the token stays cached. Deactivation, deletion and the
- * DSAR keep the second press.
+ * chosen category set. The resume is armed by the landing FRAGMENT, so it only
+ * fires after the Google round trip, once, on the trip the member started, and
+ * never again while the token stays cached. The code dialog has no landing, so
+ * after a code the export waits for the second press like everything else.
+ * Deactivation, deletion and the DSAR keep the second press on both paths.
  */
 
 const TOKEN_KEY = "qp_reauth_token";
 const EXPIRES_KEY = "qp_reauth_expires_at";
+
+/** Caches a freshly minted reauth token where `getCachedReauthToken` reads it.
+ * The code dialog and the Google landing both write through here. */
+export function cacheReauthToken(token: string, expiresAt: string): void {
+  sessionStorage.setItem(TOKEN_KEY, token);
+  sessionStorage.setItem(EXPIRES_KEY, expiresAt);
+}
 
 /** A still-valid cached reauth token, or `null` if none is cached or it has
  * expired (also clears an expired one so a stale entry doesn't linger). */
@@ -81,6 +101,107 @@ export function readReauthLandingToken(): string | null {
 }
 
 /**
+ * What `beginReauth` needs to pick a path: whether the email code sign-in is
+ * switched on (`GET /platform-status`'s `emailCodeSignIn`), whether the member
+ * has Google, and how to say that neither path is open.
+ *
+ * `beginReauth` is a plain function its callers run from action handlers, so
+ * it cannot read a hook. A tiny module store bridges the two, the same way
+ * `reauthDialogStore` does for the dialog: `useReauthAvailabilitySync`,
+ * mounted once by `ReauthCompletionProvider`, writes it on every change, and
+ * `beginReauth` reads it at click time. The store was picked over reading
+ * react-query's cache because the provider already holds the toast, the
+ * translations and the signed-in member the off path needs.
+ *
+ * `null` means nothing has synced it: the provider is not mounted (a test that
+ * renders one gated page, with its own dialog), and `beginReauth` opens the
+ * code dialog as before. `isEmailCodeOn: null` means no platform status has
+ * been read yet (still loading, or the read failed): the code dialog is only
+ * in the tree once the switch is `true`, so that state takes the Google path
+ * or says the check is still pending.
+ *
+ * The toast copy lives in the eager `shared` namespace, so it reads in full
+ * at click time on any page, including the ones that never load `settings`
+ * (VerificationNeededPage, AccountDataStepAway).
+ */
+interface ReauthAvailability {
+  isEmailCodeOn: boolean | null;
+  hasGoogle: boolean;
+  /** Toasts why there is no way to confirm: `isEmailCodeOn` decides whether
+   *  codes are switched off or the switch is still being read. */
+  showUnavailable: () => void;
+}
+
+let reauthAvailability: ReauthAvailability | null = null;
+
+/**
+ * Keeps the step-up store in step with the email code switch and the member.
+ * Mount ONCE, in `ReauthCompletionProvider`. `hasGoogle` reads as the dialog's
+ * Google button does: only an explicit `false` means no Google.
+ */
+export function useReauthAvailabilitySync(): void {
+  const isEmailCodeOn = useEmailCodeSignInState();
+  const { user } = useAuth();
+  const { showToast } = useToast();
+  const { t } = useTranslation();
+  const hasGoogle = user != null && user.hasGoogle !== false;
+
+  useEffect(() => {
+    reauthAvailability = {
+      isEmailCodeOn,
+      hasGoogle,
+      showUnavailable: () =>
+        isEmailCodeOn === false
+          ? showToast(t("shared:reauthUnavailable"), "error")
+          : showToast(t("shared:reauthStatusPending"), "info"),
+    };
+    return () => {
+      reauthAvailability = null;
+    };
+  }, [isEmailCodeOn, hasGoogle, showToast, t]);
+}
+
+/**
+ * Whether `beginReauth` will take the Google round trip for this member: the
+ * email code sign-in is not explicitly on (off, or not read yet) and the
+ * member has Google. A page that describes the step-up picks its words from
+ * this, so a member without Google keeps the code copy (their press shows a
+ * toast naming why it cannot go ahead).
+ */
+export function useIsGoogleStepUp(): boolean {
+  const isEmailCodeOn = useEmailCodeSignInState();
+  const { user } = useAuth();
+  return isEmailCodeOn !== true && user != null && user.hasGoogle !== false;
+}
+
+/**
+ * Starts step-up re-authentication. With the email code sign-in on, it opens
+ * the code dialog: the page stays where it is, the dialog caches the token
+ * through `cacheReauthToken` and then runs `onConfirmed`, if given, so a page
+ * can react in place. Otherwise (switched off, or not read yet) a member
+ * with Google takes the Google round trip (`beginGoogleReauth`), and a member
+ * without Google gets a toast: codes switched off, or the check still
+ * pending. The caller's action still ends quietly, as it does after any
+ * `beginReauth()`. With nothing synced it opens the dialog (see
+ * `ReauthAvailability`).
+ */
+export function beginReauth(options?: { onConfirmed?: () => void }): void {
+  if (
+    reauthAvailability === null ||
+    reauthAvailability.isEmailCodeOn === true
+  ) {
+    openReauthDialog(options);
+    return;
+  }
+  if (reauthAvailability.hasGoogle) {
+    void beginGoogleReauth();
+    return;
+  }
+  reauthAvailability.showUnavailable();
+}
+
+/**
+ * The Google path of step-up, for members with Google on their account.
  * Refreshes the session, then navigates the browser to
  * `GET /auth/google?reauth=1&redirect=<here>` to begin the step-up round
  * trip. This is a full-page navigation: the returned promise exists only so
@@ -132,7 +253,7 @@ export function readReauthLandingToken(): string | null {
  * inside Google's `state` parameter) and re-validate it on landing, because it
  * came back through an external redirect and is untrusted input.
  */
-export async function beginReauth(): Promise<void> {
+export async function beginGoogleReauth(): Promise<void> {
   const returnPath = window.location.pathname + window.location.search;
   const refreshed = await refreshSession();
   if (!refreshed) {
@@ -151,8 +272,9 @@ export async function beginReauth(): Promise<void> {
  * `#reauthError=...` (failure) fragment left by `AuthController.
  * googleCallback`'s reauth branch, caches a successful token, clears the
  * fragment (so a refresh doesn't reprocess it), and toasts the outcome.
- * Demo mode never produces this fragment — the OAuth round trip is live-only
- * — so this is a no-op there.
+ * This covers the Google path only; the code dialog caches its token itself.
+ * Demo mode never produces this fragment (the OAuth round trip is live-only),
+ * so this is a no-op there.
  */
 export function useReauthCompletion(): void {
   const { showToast } = useToast();
@@ -167,8 +289,7 @@ export function useReauthCompletion(): void {
     if (!token && !error) return;
 
     if (token && expiresAt) {
-      sessionStorage.setItem(TOKEN_KEY, token);
-      sessionStorage.setItem(EXPIRES_KEY, expiresAt);
+      cacheReauthToken(token, expiresAt);
     }
     window.history.replaceState(
       null,

@@ -222,11 +222,22 @@ export type ActivityKind =
   | "community"
   /** Published a persona. */
   | "persona";
+/** What the member did, sent beside `subject` so the frontend phrases the
+ *  verb per language ("RSVP'd to", "Confirmou presença em"). */
+export type ActivityAction =
+  "rsvp" | "thread" | "communityPost" | "join" | "persona";
 /** A recent public action, linking to where it happened ("Recent activity"). */
 export interface ActivityItemDTO {
   kind: ActivityKind;
+  /** The whole sentence, in English. What renders when `action` is absent. */
   title: string;
   sub?: string | null;
+  /** When it happened (ISO). Absent on rows written before it was sent. */
+  occurredAt?: string | null;
+  /** Absent or null on older rows; the row then renders `title` whole. */
+  action?: ActivityAction | null;
+  /** The name part of `title` ("Bi Mosaic", a persona's title). */
+  subject?: string | null;
   /** Path the activity links to, or `null` when it has none.
    *
    *  The backend stores a link only for a subject that is already public to

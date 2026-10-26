@@ -1,0 +1,122 @@
+/* Landing visits card. The frame itself (paper surface, hairline, title and
+   head-aligned range toggle) comes from the shared ChartFrame. */
+
+/* Takes the frame head's last slot (a full row on small phones) so the
+   segmented pill inside keeps its natural width. */
+.range {
+  display: flex;
+}
+
+.total {
+  margin: 2px 0 0;
+  font-size: var(--text-13);
+  color: var(--ink-60);
+  transition: opacity 0.2s var(--ease);
+}
+.totalFigure {
+  font-family: var(--serif);
+  font-size: var(--text-22);
+  color: var(--text-strong);
+}
+
+/* Chart and sources sit side by side once the card is wide enough, and
+   stack on a narrow card. A container query, since the card's own width
+   depends on the dashboard grid more than on the viewport. The container
+   is the Collapse wrapper around the body, since an element cannot query
+   its own width. */
+.content {
+  container-type: inline-size;
+}
+.body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 18px;
+  transition: opacity 0.2s var(--ease);
+}
+/* The previous range's answer, dimmed while the other range loads. Shared
+   by the total and the body so the whole answer reads as one. */
+.stale {
+  opacity: 0.55;
+}
+@container (min-width: 620px) {
+  .body {
+    grid-template-columns: minmax(0, 1fr) minmax(180px, 220px);
+    align-items: start;
+  }
+}
+
+.sources {
+  min-width: 0;
+  padding-top: 8px;
+}
+.sourcesTitle {
+  margin: 0 0 8px;
+  font-size: var(--text-label);
+  font-weight: 600;
+  color: var(--ink-60);
+}
+.sourceList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.sourceRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 56px auto;
+  align-items: center;
+  gap: 10px;
+  font-size: var(--text-13);
+}
+.sourceName {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text-strong);
+}
+.sourceTrack {
+  display: block;
+  height: 6px;
+  border-radius: var(--radius-pill);
+  background: rgba(var(--line-rgb), 0.1);
+  overflow: hidden;
+}
+.sourceFill {
+  display: block;
+  height: 100%;
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+  transform-origin: left;
+  transition: transform 0.4s var(--ease);
+}
+.sourceCount {
+  min-width: 3ch;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-60);
+}
+
+.loadError {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0 4px;
+}
+.loadErrorText {
+  flex: 1 1 260px;
+  margin: 0;
+  font-size: var(--text-14);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .total,
+  .body,
+  .sourceFill {
+    transition: none;
+  }
+}

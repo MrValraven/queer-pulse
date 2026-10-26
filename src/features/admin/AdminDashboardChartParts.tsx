@@ -1,6 +1,5 @@
 import type { ReactNode } from "react";
 import { useChartTooltip } from "../../shared/components/charts";
-import styles from "./AdminDashboardPage.module.css";
 import chartStyles from "../../shared/components/charts/charts.module.css";
 
 /** The cursor-following tooltip bubble shared by every dashboard chart. Renders
@@ -25,34 +24,5 @@ export function ChartTooltip<Datum>({
     >
       {children(tip.tooltipData)}
     </tip.TooltipInPortal>
-  );
-}
-
-/** The highlighted spike marker (dot + label) drawn over the member-growth line
- *  at its peak-join month. Extracted to keep MemberGrowthChart under the
- *  200-line component limit. */
-export function GrowthSpike({
-  x,
-  y,
-  label,
-}: {
-  x: number;
-  y: number;
-  label: string;
-}) {
-  return (
-    <>
-      <circle
-        cx={x}
-        cy={y}
-        r={5}
-        fill="var(--accent)"
-        stroke="var(--paper)"
-        strokeWidth={2}
-      />
-      <text x={x} y={y - 12} textAnchor="middle" className={styles.chSpike}>
-        {label}
-      </text>
-    </>
   );
 }

@@ -1,4 +1,5 @@
 import type { DragEvent, ReactNode, Ref } from "react";
+import type { StudioMenuItem } from "./StudioMenu";
 import type {
   StudioTrackRowAction,
   StudioTrackRowHeadingLevel,
@@ -16,8 +17,8 @@ export interface StudioTrackRowDropTarget {
 /** The row is memoised and compares every prop by identity. Keep these
  *  stable across renders (useCallback, useMemo, or values hoisted out of
  *  the map), or each one re-renders its row on every list render:
- *  `onPlay`, `extraActions`, `details`, `leading`, `trailing`,
- *  `likeOptions`, `dropTarget` and `rowRef`. */
+ *  `onPlay`, `extraActions`, `menuExtraItems`, `details`, `leading`,
+ *  `trailing`, `likeOptions`, `dropTarget` and `rowRef`. */
 export interface StudioTrackRowProps {
   track: StudioTrackSummary;
   /** The row's 0-based place in its list; the row shows `index + 1`.
@@ -38,6 +39,9 @@ export interface StudioTrackRowProps {
   selectionId?: string;
   /** Controls placed before Add to playlist (a playlist's move and remove). */
   extraActions?: ReactNode;
+  /** Items the row's own track menu ("...", right-click, long-press) adds
+   *  after a separator: a playlist editor's Move up, Move down, Remove. */
+  menuExtraItems?: StudioMenuItem[];
   /** A cell before the number (a playlist's drag handle). */
   leading?: ReactNode;
   headingLevel?: StudioTrackRowHeadingLevel;

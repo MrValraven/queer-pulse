@@ -54,9 +54,11 @@ import {
 // Auth is Google OAuth + invite redemption (no password), so a plain POST
 // with no credential attached had nothing to actually verify — it minted a
 // token from nothing but the caller's own claim. The `reauthToken` every
-// erasure/export route below still requires is now minted only by completing
-// a REAL Google OAuth round trip (`prompt=login`) as the same already-signed-in
-// member — see `beginReauth`/`getCachedReauthToken` in `useReauthToken.ts`.
+// erasure/export route below still requires is now minted only by a real
+// step-up as the same already-signed-in member: a code emailed to their own
+// address and checked in the code dialog (`beginReauth`), or a Google OAuth
+// round trip with `prompt=login` (`beginGoogleReauth`). Both are in
+// `useReauthToken.ts`, along with `getCachedReauthToken`.
 
 /* ── Right to erasure — account deletion ───────────────────────────────── */
 

@@ -8,6 +8,7 @@ import {
 import type { GatheringForm } from "../useGatheringForm";
 import { guestCommunitiesFromDetail } from "./eventCommunities.adapters";
 import { OTHER_FORMAT_KEY } from "../gatheringCatalog";
+import { paymentDetailsPayload } from "../paymentDetails";
 import {
   EXISTING_GATHERING_RSVP_QUESTIONS,
   isCostKind,
@@ -183,6 +184,19 @@ export function cardToCalendarEvent(
     // The business that runs it. The card names it as plain text: the
     // whole card is already one link.
     ...(dto.runByListing ? { runByName: dto.runByListing.name } : {}),
+    // The lead community the card names and the card menu can hide. The
+    // server sends null for a withheld private lead, which leaves it unset.
+    ...(dto.hostingCommunity
+      ? {
+          hostingCommunity: {
+            id: dto.hostingCommunity.id,
+            slug: dto.hostingCommunity.slug,
+            name: dto.hostingCommunity.name,
+          },
+        }
+      : {}),
+    // Set only when true, so a card with no guest community keeps its shape.
+    ...(dto.isCoHosted === true ? { isCoHosted: true } : {}),
     // LOC-18 — the host's own words about what it costs, plus the server's
     // own "does this read as free" verdict. DISPLAY ONLY: there is no payment
     // anywhere behind this, so no card may offer to take one.
@@ -311,6 +325,12 @@ export function detailToGathering(
     contentNotes: sanitizeContentNotes(dto.contentNotes),
     houseRules: dto.houseRules?.trim() ? dto.houseRules : null,
     costKind: isCostKind(dto.costKind) ? dto.costKind : null,
+    // How guests pay the host, display only. Blank reads as none, so the page
+    // never draws an empty "How to pay" block.
+    paymentUrl: dto.paymentUrl?.trim() || null,
+    paymentInstructions: dto.paymentInstructions?.trim()
+      ? dto.paymentInstructions
+      : null,
     rsvpCutoff: isRsvpCutoff(dto.rsvpCutoff) ? dto.rsvpCutoff : null,
     rsvpClosesAt: closingInstant(dto),
     // A detail without the field predates it, and ruling R8 says such a
@@ -638,6 +658,14 @@ export function formToCreateEventDto(form: GatheringForm): CreateEventDto {
       ? { cost: form.cost.trim() }
       : {}),
     costKind: form.costKind,
+    // How guests pay the host, display only. Trimmed, with a bare domain
+    // completed to `https://`, and `null` when blank or free: the server
+    // validates the link before trimming it.
+    ...paymentDetailsPayload(
+      form.costKind,
+      form.paymentUrl,
+      form.paymentInstructions,
+    ),
     // ── Care and access (Create Gathering v2) ──────────────────────────────
     // The lists and the free text only when the host filled them in. The
     // cutoff, the questions and the waitlist go on every create, because each

@@ -1,17 +1,13 @@
-import {
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-  type RefObject,
-} from "react";
+import { useEffect, useLayoutEffect, useRef, type RefObject } from "react";
 import { animate, useMotionValue, type MotionValue } from "motion/react";
 import { useMotionPrefs } from "../../../../app/providers/motionPrefs";
 import {
   SWIPE_DISTANCE_THRESHOLD,
   SWIPE_VELOCITY_THRESHOLD,
 } from "../../../../shared/hooks/verticalSwipeTracker";
-import { STUDIO_EXIT, STUDIO_SPRING } from "../../studioMotion";
+import { STUDIO_SPRING } from "../../studioMotion";
+import type { StudioQueueItem } from "../studioPlayerContext";
+import { useSwipeSkipPager } from "./useSwipeSkipPager";
 
 /** Travel before the gesture picks an axis; under it a touch is a tap. */
 export const AXIS_LOCK_PX = 8;
@@ -20,13 +16,13 @@ export const SKIP_DISTANCE_PX = 72;
 const MINIMUM_FLICK_PX = 24;
 /** A pull with nothing to skip to follows the finger at this share. */
 export const RUBBER_BAND_SHARE = 0.35;
-/** Where the next cover starts its spring in, as a share of the width. */
-const ENTRY_OFFSET_SHARE = 0.25;
 
 export type CoverSkipDirection = "next" | "previous";
 
 interface CoverSwipeOptions {
   isEnabled: boolean;
+  /** The track on the cover; a landed skip slides it out beside the next. */
+  item: StudioQueueItem;
   /** The sheet scroller: a pull down closes only from its top. */
   sheetRef: RefObject<HTMLElement | null>;
   /** The frame that follows a pull down, as the head's swipe moves it. */
@@ -78,58 +74,6 @@ export function springHome(offsetX: MotionValue<number>, isReduced: boolean) {
   else void animate(offsetX, 0, STUDIO_SPRING);
 }
 
-/** A skip that landed: the surface slides out the way it was pulled, the
- *  track changes, and the next one springs in from the other side. Under
- *  reduced motion the track changes in place. Resolves once the next one
- *  has settled. */
-export async function slideSkip(
-  offsetX: MotionValue<number>,
-  options: {
-    width: number;
-    sign: number;
-    isReduced: boolean;
-    onSkip: () => void;
-  },
-) {
-  const { width, sign, isReduced, onSkip } = options;
-  if (isReduced) {
-    offsetX.set(0);
-    onSkip();
-    return;
-  }
-  await animate(offsetX, sign * width, STUDIO_EXIT);
-  onSkip();
-  // jump, so the spring in starts at rest: a set would hand it the
-  // velocity of the jump across the card and fling the next one away.
-  offsetX.jump(-sign * width * ENTRY_OFFSET_SHARE);
-  await animate(offsetX, 0, STUDIO_SPRING);
-}
-
-/** True from the moment a swipe lands a skip until the next track has
- *  sprung into place. The swaps read it to show the next cover and titles
- *  whole at once, so the slide carries them in and the surface never shows
- *  blank while a fade catches up. */
-export function useSwipeSkipFlag() {
-  const [isSwipeSkip, setIsSwipeSkip] = useState(false);
-  return {
-    isSwipeSkip,
-    /** Wraps a skip's slide: the flag holds for its whole run. */
-    runSwipeSkip: (
-      slide: (markSkipped: () => void) => Promise<void>,
-      isReduced: boolean,
-    ) => {
-      // Under reduced motion the swap is already instant.
-      if (isReduced) {
-        void slide(() => undefined);
-        return;
-      }
-      void slide(() => setIsSwipeSkip(true)).finally(() =>
-        setIsSwipeSkip(false),
-      );
-    },
-  };
-}
-
 /**
  * The cover's gestures on a phone: pull it down from the top of the sheet
  * to close Now playing, or sideways to skip, with a spring back when the
@@ -142,10 +86,10 @@ export function useNowPlayingCoverSwipe(options: CoverSwipeOptions) {
   const { reducedMotion } = useMotionPrefs();
   const coverRef = useRef<HTMLDivElement>(null);
   const offsetX = useMotionValue(0);
-  const { isSwipeSkip, runSwipeSkip } = useSwipeSkipFlag();
-  const latestRef = useRef({ ...options, reducedMotion, runSwipeSkip });
+  const pager = useSwipeSkipPager(offsetX, options.item, options.item.trackId);
+  const latestRef = useRef({ ...options, reducedMotion, pager });
   useLayoutEffect(() => {
-    latestRef.current = { ...options, reducedMotion, runSwipeSkip };
+    latestRef.current = { ...options, reducedMotion, pager };
   });
   const isEnabled = options.isEnabled;
 
@@ -170,6 +114,8 @@ export function useNowPlayingCoverSwipe(options: CoverSwipeOptions) {
         if (active?.axis === "x") returnHome();
         return;
       }
+      // A press during a skip's slide settles the next cover first.
+      latestRef.current.pager.interrupt();
       gesture = {
         startX: touch.clientX,
         startY: touch.clientY,
@@ -224,19 +170,12 @@ export function useNowPlayingCoverSwipe(options: CoverSwipeOptions) {
         latest.canSkip(direction) &&
         isPastThreshold(Math.abs(deltaX), elapsedMs, SKIP_DISTANCE_PX);
       if (isSkip)
-        latest.runSwipeSkip(
-          (markSkipped) =>
-            slideSkip(offsetX, {
-              width: cover.offsetWidth,
-              sign: Math.sign(deltaX),
-              isReduced: latest.reducedMotion,
-              onSkip: () => {
-                markSkipped();
-                latest.onSkip(direction);
-              },
-            }),
-          latest.reducedMotion,
-        );
+        latest.pager.runSkip({
+          width: cover.offsetWidth,
+          sign: Math.sign(deltaX),
+          isReduced: latest.reducedMotion,
+          onSkip: () => latest.onSkip(direction),
+        });
       else returnHome();
     };
 
@@ -260,5 +199,10 @@ export function useNowPlayingCoverSwipe(options: CoverSwipeOptions) {
     };
   }, [isEnabled, offsetX]);
 
-  return { coverRef, offsetX, isSwipeSkip };
+  return {
+    coverRef,
+    offsetX,
+    isSwipeSkip: pager.isSwipeSkip,
+    trail: pager.trail,
+  };
 }

@@ -2,7 +2,6 @@ import type { Ref } from "react";
 import { FiGift } from "react-icons/fi";
 import { Button, IconButton, Tooltip } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { Translation } from "../../shared/i18n/Translation";
 import { useFormat } from "../../shared/i18n/format";
 import type { StudioTrackView } from "./api/studio.adapters";
 import { StudioPlayButton } from "./kit/StudioPlayButton";
@@ -13,9 +12,17 @@ import { StudioDetailHero } from "./StudioDetailHero";
 import { StudioHeroShare } from "./StudioHeroShare";
 import { StudioHiddenTrackNote } from "./StudioHiddenTrack";
 import { StudioLikeButton } from "./StudioLikeButton";
+import { StudioTrackByline } from "./StudioTrackByline";
 import hiddenCss from "./StudioHiddenTrack.module.css";
 import heroStyles from "./StudioTrackHero.module.css";
-import { useIsHeroCompact } from "./studioHeroLayout";
+import {
+  useIsHeroActionsCompact,
+  useIsHeroShareFolded,
+} from "./studioHeroLayout";
+import {
+  StudioFoldedShareItemsContext,
+  useStudioFoldedShareItems,
+} from "./useStudioFoldedShareItem";
 import { useStudioShowcase } from "./useStudioShowcase";
 import { useStudioTrackPlay } from "./useStudioTrackPlay";
 import ss from "./studio.module.css";
@@ -24,8 +31,10 @@ import { StudioReleaseCoverArt } from "./StudioReleaseCoverArt";
 const QUICK_TIP_AMOUNT = 2;
 
 /** The track hero on the shared detail scaffold: the release cover, "Track
- *  3 of 11", the title and credit, then Play, Like, Add to playlist, Share
- *  and the track menu. On a phone the actions after Play are icons. */
+ *  3 of 11", the title and credit, then Play, Like, Add to playlist, Tip
+ *  (showcase), Share and the track menu, which stays last. Below 1280px the
+ *  actions after Play are icons ("Play from {time}" keeps its words), and
+ *  below 1440px Share folds into the track menu with every way to share. */
 export function StudioTrackHero({
   track,
   onTip,
@@ -39,7 +48,17 @@ export function StudioTrackHero({
   const { t } = useTranslation();
   const formatters = useFormat();
   const isShowcase = useStudioShowcase();
-  const isCompact = useIsHeroCompact();
+  const isCompact = useIsHeroActionsCompact();
+  const isShareFolded = useIsHeroShareFolded();
+  const isPublished = track.release.publishedAt !== null;
+  const foldedShare = useStudioFoldedShareItems(
+    isPublished && isShareFolded
+      ? {
+          target: { kind: "track", id: track.id, startAtSeconds: null },
+          title: track.title,
+        }
+      : undefined,
+  );
   const play = useStudioTrackPlay(track);
   const likeSubject = {
     trackId: track.id,
@@ -51,12 +70,29 @@ export function StudioTrackHero({
   // is null for a draft or a scheduled release) and an uploaded audio file.
   // The owner reads those tracks here too, and a like would land in Liked
   // songs as No longer available.
-  const isLikeable = track.release.publishedAt !== null && track.hasAudio;
-  const isPublished = track.release.publishedAt !== null;
+  const isLikeable = isPublished && track.hasAudio;
   const addLabel = t("studio:playlist.add.trackCta");
   const tipLabel = t("studio:player.tipCta", {
     amount: formatters.currency(QUICK_TIP_AMOUNT),
   });
+  const isShareInRow = isPublished && !isShareFolded;
+  // Add to playlist joins the menu's group when nothing else would.
+  const isAddGrouped = !isShowcase && !isShareInRow;
+  const addButton = (
+    <Tooltip label={addLabel} placement="top" isDisabled={!isCompact}>
+      <StudioAddToPlaylistButton
+        trackIds={track.hasAudio ? [track.id] : []}
+        subjectTitle={track.title}
+        label={isCompact ? undefined : addLabel}
+        ariaLabel={
+          isCompact
+            ? t("studio:playlist.add.trackAria", { title: track.title })
+            : undefined
+        }
+        likeSubject={isLikeable ? likeSubject : undefined}
+      />
+    </Tooltip>
+  );
 
   return (
     <StudioDetailHero
@@ -83,14 +119,7 @@ export function StudioTrackHero({
       title={track.title}
       by={
         <>
-          <Translation
-            i18nKey="studio:trackPage.byLine"
-            components={{ strong: <strong />, em: <em /> }}
-            values={{
-              artist: track.release.artist.name,
-              release: track.release.title,
-            }}
-          />
+          <StudioTrackByline track={track} />
           {track.durationLabel && ` · ${track.durationLabel}`}
           {(track.isExplicit || play.isHidden) && (
             <span className={ss.stats}>
@@ -118,8 +147,12 @@ export function StudioTrackHero({
               />
             </Tooltip>
           )}
-          {play.startLabel && !isCompact && (
-            <span className={heroStyles.playFromLabel} aria-hidden="true">
+          {play.startLabel && (
+            <span
+              className={heroStyles.playFromLabel}
+              data-hero-play-from=""
+              aria-hidden="true"
+            >
               {t("studio:player.playFrom", { time: play.startLabel })}
             </span>
           )}
@@ -135,53 +168,48 @@ export function StudioTrackHero({
               />
             </Tooltip>
           )}
-          <Tooltip label={addLabel} placement="top" isDisabled={!isCompact}>
-            <StudioAddToPlaylistButton
-              trackIds={track.hasAudio ? [track.id] : []}
-              subjectTitle={track.title}
-              label={isCompact ? undefined : addLabel}
-              ariaLabel={
-                isCompact
-                  ? t("studio:playlist.add.trackAria", { title: track.title })
-                  : undefined
-              }
-              likeSubject={isLikeable ? likeSubject : undefined}
-            />
-          </Tooltip>
-          {isPublished && (
-            <StudioHeroShare
-              target={{ kind: "track", id: track.id, startAtSeconds: null }}
-              title={track.title}
-              isIconOnly={isCompact}
-            />
-          )}
-          <Tooltip
-            label={t("studio:release.moreActions")}
-            placement="top"
-            align={isShowcase ? "center" : "end"}
-          >
-            <StudioTrackMenu
-              className={heroStyles.heroMenu}
-              track={studioTrackMenuTrackOf(track)}
-            />
-          </Tooltip>
-          {isShowcase &&
-            (isCompact ? (
-              <IconButton
-                aria-label={tipLabel}
-                tooltip
-                tooltipPlacement="top"
-                className={ss.tip}
-                onClick={onTip}
+          {!isAddGrouped && addButton}
+          {/* The menu wraps with the action before it, never alone. */}
+          <div className={ss.heroActionGroup}>
+            {isAddGrouped && addButton}
+            {isShowcase &&
+              (isCompact ? (
+                <IconButton
+                  aria-label={tipLabel}
+                  tooltip
+                  tooltipPlacement="top"
+                  className={ss.tip}
+                  onClick={onTip}
+                >
+                  <FiGift aria-hidden />
+                </IconButton>
+              ) : (
+                <Button variant="quiet" className={ss.tip} onClick={onTip}>
+                  <FiGift aria-hidden />
+                  {tipLabel}
+                </Button>
+              ))}
+            {isShareInRow && (
+              <StudioHeroShare
+                target={{ kind: "track", id: track.id, startAtSeconds: null }}
+                title={track.title}
+                isIconOnly={isCompact}
+              />
+            )}
+            <StudioFoldedShareItemsContext value={foldedShare.items}>
+              <Tooltip
+                label={t("studio:release.moreActions")}
+                placement="top"
+                align="end"
               >
-                <FiGift aria-hidden />
-              </IconButton>
-            ) : (
-              <Button variant="quiet" className={ss.tip} onClick={onTip}>
-                <FiGift aria-hidden />
-                {tipLabel}
-              </Button>
-            ))}
+                <StudioTrackMenu
+                  className={heroStyles.heroMenu}
+                  track={studioTrackMenuTrackOf(track)}
+                />
+              </Tooltip>
+            </StudioFoldedShareItemsContext>
+          </div>
+          {foldedShare.dialog}
         </>
       }
     />

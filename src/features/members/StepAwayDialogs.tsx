@@ -7,7 +7,7 @@ export type ConfirmKind = "hide" | "erase" | null;
 /**
  * The two confirm gates in front of "Hide me" (reversible deactivation) and
  * "Erase me" (a deletion request). Both are real, checked gates on top of the
- * OAuth step-up `AccountDataStepAway` performs before either call goes out;
+ * step-up code check `AccountDataStepAway` performs before either call goes out;
  * "Erase me" additionally captures an optional reason.
  *
  * Split out of `AccountDataStepAway` to keep that component inside the repo's

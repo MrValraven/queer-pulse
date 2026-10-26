@@ -36,7 +36,6 @@ import {
   type StudioQueueAction,
   type StudioQueueState,
 } from "./studioQueueReducer";
-import { setPlaybackSignals } from "./studioPlaybackSignals";
 import { createStableActions } from "./studioStableActions";
 import { createTransportActions } from "./studioTransportActions";
 import { isWarningGated, warningGateOf } from "./studioWarningGate";
@@ -368,16 +367,6 @@ export function useStudioPlayback(
     if (shouldStop && queueRef.current.current !== null)
       commandsRef.current().resetPlayback();
   }, [shouldStop, queueRef]);
-
-  // Playing again, however it restarted (a load that finished, the system's
-  // media keys): an offline pause has nothing left to resume.
-  useEffect(() => {
-    if (status === "playing")
-      setPlaybackSignals({
-        isPausedForOffline: false,
-        offlinePausedAtMs: null,
-      });
-  }, [status]);
 
   const stableActions = useMemo(
     // eslint-disable-next-line react-hooks/refs -- the proxies read the ref only when an action runs, from a handler or an effect

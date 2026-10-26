@@ -1,160 +1,172 @@
-import { useState } from "react";
-import { FiRotateCcw } from "react-icons/fi";
-import { Button } from "../../shared/components/ui";
-import { useToast } from "../../shared/components/feedback/useToast";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type KeyboardEvent,
+  type RefCallback,
+} from "react";
+import { SearchInput, SkeletonLine } from "../../shared/components/ui";
+import { RollingNumber } from "../../shared/components/ui/RollingNumber";
+import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { useFormat } from "../../shared/i18n/format";
 import { AdminModal } from "./ui";
-import { useUpdateInviteQuota } from "./api/useAdminInvites";
-import type { AdminInviteInviterDTO } from "./api/adminInvites.api";
-import styles from "./AdminInvitesPage.module.css";
+import {
+  QUOTA_SEARCH_MAX_LENGTH,
+  useAdminInviteQuotas,
+} from "./api/useAdminInvites";
+import type { AdminInviteQuotaMemberDTO } from "./api/adminInvites.api";
+import { AdminInviteQuotaResults } from "./AdminInviteQuotaResults";
+import styles from "./AdminInviteQuotaModal.module.css";
 
 /**
- * One inviter's quota override row: a number input (empty = "use the
- * platform default"), a Save button, and — only once an override is set — a
- * Clear button that resets it back to the default. `draftQuota` seeds once
- * from `inviter.inviteMonthlyQuota` and is otherwise only ever written by
- * this row's own Save/Clear, so there is no server-value-changed-elsewhere
- * case to reconcile and no seed-then-draft effect is needed.
+ * The sticky top of the modal body: the member search and a thin busy line
+ * while a new search loads. Only this stays put; the summary under it
+ * scrolls away with the rows.
  */
-function AdminInviteQuotaRow({ inviter }: { inviter: AdminInviteInviterDTO }) {
+function QuotaSearchBar({
+  searchTerm,
+  onSearchTermChange,
+  searchInputRef,
+  isSearching,
+}: {
+  searchTerm: string;
+  onSearchTermChange: (searchTerm: string) => void;
+  searchInputRef: RefCallback<HTMLInputElement>;
+  isSearching: boolean;
+}) {
   const { t } = useTranslation();
-  const { showToast } = useToast();
-  const updateInviteQuota = useUpdateInviteQuota();
-  const [draftQuota, setDraftQuota] = useState(
-    inviter.inviteMonthlyQuota === null
-      ? ""
-      : String(inviter.inviteMonthlyQuota),
-  );
 
-  const hasOverride = inviter.inviteMonthlyQuota !== null;
-  const inputId = `admin-invite-quota-${inviter.slug}`;
-
-  function handleSave() {
-    const trimmedQuota = draftQuota.trim();
-    const parsedQuota = trimmedQuota === "" ? null : Number(trimmedQuota);
-    if (
-      parsedQuota !== null &&
-      (!Number.isInteger(parsedQuota) || parsedQuota < 0)
-    ) {
-      showToast(t("admin:adminInvites.quota.invalid"), "error");
-      return;
-    }
-    updateInviteQuota.mutate(
-      { slug: inviter.slug, quota: parsedQuota },
-      {
-        onSuccess: () => {
-          showToast(
-            t("admin:adminInvites.quota.saved", { name: inviter.name }),
-            "success",
-          );
-        },
-      },
-    );
-  }
-
-  function handleClear() {
-    setDraftQuota("");
-    updateInviteQuota.mutate(
-      { slug: inviter.slug, quota: null },
-      {
-        onSuccess: () => {
-          showToast(
-            t("admin:adminInvites.quota.cleared", { name: inviter.name }),
-            "success",
-          );
-        },
-      },
-    );
+  function handleKeyDown(event: KeyboardEvent<HTMLInputElement>) {
+    // Escape empties a filled search first; on an empty one it closes the
+    // modal as usual.
+    if (event.key !== "Escape" || searchTerm === "") return;
+    event.stopPropagation();
+    onSearchTermChange("");
   }
 
   return (
-    <div className={styles.quotaRow}>
-      <div className={styles.quotaRowInfo}>
-        <span className={styles.quotaRowName}>{inviter.name}</span>
-        <span className={styles.quotaRowCount}>
-          {t("admin:adminInvites.quota.sentCount", { count: inviter.count })}
-        </span>
-      </div>
-      <div className={styles.quotaRowControls}>
-        <label className={styles.quotaField} htmlFor={inputId}>
-          <span className={styles.quotaFieldLabel}>
-            {t("admin:adminInvites.quota.fieldLabel")}
-          </span>
-          <input
-            id={inputId}
-            type="number"
-            min={0}
-            step={1}
-            inputMode="numeric"
-            className={styles.quotaInput}
-            placeholder={t("admin:adminInvites.quota.defaultPlaceholder")}
-            value={draftQuota}
-            onChange={(event) => setDraftQuota(event.target.value)}
-            aria-label={t("admin:adminInvites.quota.inputAriaLabel", {
-              name: inviter.name,
-            })}
-          />
-        </label>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={handleSave}
-          disabled={updateInviteQuota.isPending}
-          aria-label={t("admin:adminInvites.quota.saveAriaLabel", {
-            name: inviter.name,
-          })}
-        >
-          {t("admin:adminInvites.quota.saveCta")}
-        </Button>
-        {hasOverride && (
-          <button
-            type="button"
-            className={styles.quotaClearButton}
-            onClick={handleClear}
-            disabled={updateInviteQuota.isPending}
-            aria-label={t("admin:adminInvites.quota.clearAriaLabel", {
-              name: inviter.name,
-            })}
-            title={t("admin:adminInvites.quota.clearCta")}
-          >
-            <FiRotateCcw aria-hidden />
-          </button>
-        )}
-      </div>
+    <div className={styles.searchBar} data-busy={isSearching || undefined}>
+      <SearchInput
+        value={searchTerm}
+        onChange={onSearchTermChange}
+        placeholder={t("admin:adminInvites.quota.searchPlaceholder")}
+        ariaLabel={t("admin:adminInvites.quota.searchAria")}
+        inputRef={searchInputRef}
+        onKeyDown={handleKeyDown}
+        className={styles.search}
+      />
+      <span className={styles.busyLine} aria-hidden />
+    </div>
+  );
+}
+
+/** The line under the search stating the real default. It scrolls with the
+ *  list, so on a phone the rows get the height. */
+function QuotaSummary({
+  defaultMonthlyQuota,
+}: {
+  defaultMonthlyQuota: number | null;
+}) {
+  const fmt = useFormat();
+  return (
+    <div className={styles.summary}>
+      {defaultMonthlyQuota === null ? (
+        <SkeletonLine width="70%" height={14} />
+      ) : (
+        <Translation
+          i18nKey="admin:adminInvites.quota.summary"
+          values={{ count: defaultMonthlyQuota }}
+          slots={{
+            count: (
+              <RollingNumber
+                value={fmt.number(defaultMonthlyQuota)}
+                numericValue={defaultMonthlyQuota}
+              />
+            ),
+          }}
+        />
+      )}
     </div>
   );
 }
 
 /**
- * "Manage invite quotas" modal opened from the invite oversight page's
- * header action. Lists every known inviter (the same list backing the "sent
- * by" filter) with an editable monthly invite quota override per row — the
- * only admin surface for `User.inviteMonthlyQuota`, previously a direct
- * database edit.
+ * The search field's handle, plus two focus moves the modal owns:
+ *
+ * - On open with a fine pointer, the caret goes to the search. It waits a
+ *   frame for the dialog's own first focus (its close button), which still
+ *   applies on touch so no keyboard pops up unasked.
+ * - When the rows change and the focused one has left the list (a live save
+ *   whose refetch drops the member, say), or focus fell to the page, focus
+ *   moves to the search so it never lands on `<body>`.
  */
-export function AdminInviteQuotaModal({
-  inviters,
-  onClose,
-}: {
-  inviters: AdminInviteInviterDTO[];
-  onClose: () => void;
-}) {
+function useQuotaSearchFocus(members: AdminInviteQuotaMemberDTO[]) {
+  const searchInputRef = useRef<HTMLInputElement | null>(null);
+  const attachSearchInput = useCallback((input: HTMLInputElement | null) => {
+    searchInputRef.current = input;
+    // The server refuses a longer `q`; SearchInput has no prop for this.
+    if (input) input.maxLength = QUOTA_SEARCH_MAX_LENGTH;
+  }, []);
+
+  useEffect(() => {
+    if (!window.matchMedia("(pointer: fine)").matches) return;
+    const frame = requestAnimationFrame(() => searchInputRef.current?.focus());
+    return () => cancelAnimationFrame(frame);
+  }, []);
+
+  useEffect(() => {
+    const activeElement = document.activeElement;
+    const isFocusLost =
+      activeElement === null || activeElement === document.body;
+    const focusedRow =
+      activeElement?.closest<HTMLElement>("[data-member-slug]") ?? null;
+    const isFocusInLeavingRow =
+      focusedRow !== null &&
+      !members.some((member) => member.slug === focusedRow.dataset.memberSlug);
+    if (isFocusLost || isFocusInLeavingRow) searchInputRef.current?.focus();
+  }, [members]);
+
+  return attachSearchInput;
+}
+
+/**
+ * "Manage invite quotas" modal opened from the invite oversight page's header
+ * action: the only admin surface for `User.inviteMonthlyQuota`. A server-side
+ * member search sits on top; below it each member shows this month's usage
+ * against the limit in force, and a "Set limit" or "Edit limit" button folds
+ * a small editor open under the row.
+ */
+export function AdminInviteQuotaModal({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation();
+  const [searchTerm, setSearchTerm] = useState("");
+  const quotas = useAdminInviteQuotas(searchTerm);
+  const attachSearchInput = useQuotaSearchFocus(quotas.members);
+  const isSettled = quotas.data !== undefined && !quotas.isSearching;
   return (
     <AdminModal
       eyebrow={t("admin:adminInvites.quota.modalEyebrow")}
       title={t("admin:adminInvites.quota.modalTitle")}
       onClose={onClose}
       wide
+      // A fixed height, so the dialog holds still while results change.
+      isTall
     >
-      <p className={styles.quotaHint}>
-        {t("admin:adminInvites.quota.modalHint")}
+      <QuotaSearchBar
+        searchTerm={searchTerm}
+        onSearchTermChange={setSearchTerm}
+        searchInputRef={attachSearchInput}
+        isSearching={quotas.isSearching}
+      />
+      <QuotaSummary defaultMonthlyQuota={quotas.defaultMonthlyQuota} />
+      {/* Says how many members match once a search settles, for anyone not
+          watching the list change. */}
+      <p className="visuallyHidden" role="status">
+        {isSettled &&
+          t("admin:adminInvites.quota.resultsStatus", { count: quotas.total })}
       </p>
-      <div className={styles.quotaList}>
-        {inviters.map((inviter) => (
-          <AdminInviteQuotaRow key={inviter.slug} inviter={inviter} />
-        ))}
-      </div>
+      <AdminInviteQuotaResults quotas={quotas} />
     </AdminModal>
   );
 }

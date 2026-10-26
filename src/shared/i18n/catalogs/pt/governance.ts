@@ -305,7 +305,7 @@ export const governance: Catalog = {
     "Usa este formulário para denunciar uma pessoa, um conteúdo, uma decisão da plataforma, ou uma preocupação sobre como o QueerPulse é gerido. Todas as submissões são confidenciais, e alguém da equipa de governação lê cada uma.",
   "sections.raise.cardTitle": "Submeter uma preocupação",
   "sections.raise.cardText":
-    "A tua identidade permanece confidencial. O QueerPulse não envia emails, por isso ao submeteres recebes um código de referência: guarda-o, e podes ver a qualquer momento o que aconteceu à tua preocupação.",
+    "A tua identidade permanece confidencial. O QueerPulse nunca te escreve por email sobre preocupações, por isso ao submeteres recebes um código de referência: guarda-o, e podes ver a qualquer momento o que aconteceu à tua preocupação.",
   "sections.raise.selectPlaceholder": "Que tipo de preocupação?",
   "sections.raise.option.member": "Denunciar uma pessoa ou comportamento",
   "sections.raise.option.gathering": "Denunciar um evento",
@@ -522,7 +522,7 @@ export const governance: Catalog = {
   "concernStatus.submitted.copyErrorToast":
     "O teu navegador não deixou copiar. Seleciona o código e copia à mão.",
   "concernStatus.submitted.keepIt":
-    "Guarda este código num sítio a que consigas voltar. Não guardamos nenhuma cópia que te possa ser devolvida, e o QueerPulse não envia emails, por isso esta é a única forma de consultares a tua preocupação mais tarde.",
+    "Guarda este código num sítio a que consigas voltar. Não guardamos nenhuma cópia que te possa ser devolvida, e o QueerPulse nunca te escreve por email sobre preocupações, por isso esta é a única forma de consultares a tua preocupação mais tarde.",
   "concernStatus.submitted.checkCta": "Ver esta preocupação",
   "concernStatus.submitted.whatHappensNext":
     "Alguém da equipa de governação lê todas as preocupações. Volta com o teu código para veres quando alguém a pegou e como terminou.",

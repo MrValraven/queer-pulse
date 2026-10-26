@@ -1,5 +1,5 @@
 import { FiCheck, FiCopy } from "react-icons/fi";
-import { Button, SkeletonLine } from "../../shared/components/ui";
+import { Button, Collapse, SkeletonLine } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useClipboard } from "../../shared/hooks";
 import { inviteFullUrlFor } from "../../shared/lib/inviteUrl";
@@ -63,6 +63,7 @@ export function SentInviteRow({
   isRevoking,
   onResend,
   isResending,
+  isResendAllowed,
 }: {
   invite: SentInviteView;
   t: TFunction;
@@ -71,6 +72,9 @@ export function SentInviteRow({
   isRevoking: boolean;
   onResend: (invite: SentInviteView) => void;
   isResending: boolean;
+  /** False while our team has paused this member's invites: an expired row
+   *  then offers no "Send again". */
+  isResendAllowed: boolean;
 }) {
   const { showToast } = useToast();
   // The shared clipboard primitive, so this row never grows a second copy of
@@ -140,7 +144,9 @@ export function SentInviteRow({
           <span className={`${styles.chip} ${styles[invite.statusTone]}`}>
             {t(invite.statusKey)}
           </span>
-          {invite.status === "valid" && (
+          {/* Copy and Revoke fold in and out like "Send again" below, so a
+              successful resend swaps the controls in one motion. */}
+          <Collapse isOpen={invite.status === "valid"}>
             <Button
               variant="ghost"
               size="md"
@@ -155,8 +161,8 @@ export function SentInviteRow({
                 ? t("auth:common.copied")
                 : t("auth:invite.sentList.copyLinkCta")}
             </Button>
-          )}
-          {invite.status === "valid" && (
+          </Collapse>
+          <Collapse isOpen={invite.status === "valid"}>
             <Button
               variant="ghost"
               size="md"
@@ -168,8 +174,10 @@ export function SentInviteRow({
                 ? t("auth:invite.sentList.revoking")
                 : t("auth:invite.sentList.revokeCta")}
             </Button>
-          )}
-          {invite.status === "expired" && (
+          </Collapse>
+          {/* Folds away while our team has paused this member's invites,
+              since the backend would refuse the resend. */}
+          <Collapse isOpen={invite.status === "expired" && isResendAllowed}>
             <Button
               variant="ghost"
               size="md"
@@ -181,7 +189,7 @@ export function SentInviteRow({
                 ? t("auth:invite.sentList.resending")
                 : t("auth:invite.sentList.resendCta")}
             </Button>
-          )}
+          </Collapse>
         </div>
       </div>
       <SentInvitePrivateNoteEditor

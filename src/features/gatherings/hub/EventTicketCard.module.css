@@ -3,8 +3,13 @@
    the hover shadow; the visible card is `.surface`, which clips the cover to
    the card's corners. */
 
-.card {
+/* The widest a ticket grows, read by the card and by its `.shell`. */
+.card,
+.shell {
   --ticket-max-inline: 26rem;
+}
+
+.card {
   position: relative;
   display: block;
   inline-size: 100%;
@@ -35,6 +40,30 @@
   outline: var(--focus-ring);
   outline-offset: var(--focus-ring-offset);
   box-shadow: var(--ring-cream);
+}
+
+/* A card that names its hosting community: the link and the community menu
+   side by side in one box, so the trigger never sits inside the link. The
+   shell takes the sizing the bare link has, and the link fills it. */
+.shell {
+  --card-menu-size: 2rem;
+  position: relative;
+  display: block;
+  inline-size: 100%;
+  min-inline-size: 0;
+  max-inline-size: var(--ticket-max-inline);
+  block-size: 100%;
+}
+
+/* The menu trigger on the cover's top trailing corner. Doubled with `.shell`
+   so it outranks the menu's own wrapper placement whatever order the
+   stylesheets load in. */
+.shell > .menuSlot {
+  position: absolute;
+  inset-block-start: var(--gap-sm);
+  inset-inline-end: var(--gap-sm);
+  z-index: 2;
+  transition: transform var(--dur-base) var(--ease);
 }
 
 .surface {
@@ -96,6 +125,11 @@
 .media .ribbon {
   inset-inline-start: auto;
   inset-inline-end: var(--gap-sm);
+}
+
+/* With a community menu on that corner, the ribbon steps in beside it. */
+.shell .media .ribbon {
+  inset-inline-end: calc(var(--gap-sm) + var(--card-menu-size) + var(--gap-xs));
 }
 
 .mediaFoot {
@@ -256,20 +290,28 @@
     transition-timing-function: var(--ease-out);
   }
 
-  .card:hover {
+  /* The shell's hover keeps the card lifted while the pointer is on the
+     menu trigger, and the trigger rides up with it. */
+  .card:hover,
+  .shell:hover > .card,
+  .shell:hover > .menuSlot {
     transform: translateY(-4px);
   }
 
-  .card:hover::after {
+  .card:hover::after,
+  .shell:hover > .card::after {
     opacity: 1;
   }
 
   .card:hover .coverImage,
-  .card:hover .media [data-cover-fallback] {
+  .card:hover .media [data-cover-fallback],
+  .shell:hover > .card .coverImage,
+  .shell:hover > .card .media [data-cover-fallback] {
     transform: scale(1.04);
   }
 
-  .card:hover .cta {
+  .card:hover .cta,
+  .shell:hover > .card .cta {
     opacity: 1;
     transform: translateX(0);
   }
@@ -289,7 +331,8 @@
 @media (prefers-reduced-motion: reduce) {
   .card,
   .coverImage,
-  .media [data-cover-fallback] {
+  .media [data-cover-fallback],
+  .shell > .menuSlot {
     transition-property: none;
   }
 
@@ -297,7 +340,12 @@
   .card:hover .coverImage,
   .card:hover .media [data-cover-fallback],
   .card:hover .cta,
-  .card:focus-visible .cta {
+  .card:focus-visible .cta,
+  .shell:hover > .card,
+  .shell:hover > .menuSlot,
+  .shell:hover > .card .coverImage,
+  .shell:hover > .card .media [data-cover-fallback],
+  .shell:hover > .card .cta {
     transform: none;
   }
 

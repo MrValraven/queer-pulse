@@ -82,6 +82,12 @@ export interface GatheringDetailsDraft {
    *  so switching back to a paid kind brings the words back; a free
    *  gathering sends no cost (ruling F11). */
   cost: string;
+  /** How guests pay: the link and the host's instructions, `""` for none.
+   *  Kept while the kind is free like `cost`; a free gathering sends `null`
+   *  for both. Optional so a draft built before the fields existed still
+   *  types, and absent reads as `""`. */
+  paymentUrl?: string;
+  paymentInstructions?: string;
   /** When RSVPs close, or `null` for "When it ends". */
   rsvpCutoff: RsvpCutoff | null;
   /** Which RSVP questions are asked. `access` stays on (ruling R8). */

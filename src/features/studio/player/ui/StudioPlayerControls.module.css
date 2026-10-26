@@ -198,7 +198,10 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-  width: min(300px, calc(100vw - 32px));
+  /* 340px gives the crossfade and equaliser sliders a long enough track to
+     drag with care. Only the More panel opens this way on desktop; the
+     phone-only sleep timer button opens the --compact sheet below. */
+  width: min(340px, calc(100vw - 32px));
   padding: 12px;
   border-radius: var(--radius-12);
   background: var(--studio-surface-rail);
@@ -210,6 +213,16 @@
   max-block-size: var(--popover-max-block-size, calc(100dvh - 2rem));
   overflow-y: auto;
   overscroll-behavior: contain;
+}
+
+/* Dark: the panel lifts off the page on a lighter wash and a deeper shadow,
+   as the queue panel does, with no inset highlight along its top edge. */
+:global([data-theme="dark"]) .popover {
+  background:
+    linear-gradient(var(--studio-wash-2), var(--studio-wash-2)),
+    var(--studio-surface-rail);
+  border-color: var(--studio-line);
+  box-shadow: var(--shadow-e3);
 }
 
 .popover[data-placement="up"] {
@@ -243,8 +256,31 @@
     );
   }
 
-  /* The grabber: the sheet's top edge reads as a sheet. */
-  .popover::before {
+  :global([data-theme="dark"]) .popover {
+    box-shadow: var(--shadow-e4);
+  }
+
+  /* The page behind the sheet dims (StudioPlayerPopover fades it in and
+     out); a tap on it closes the sheet. */
+  .sheetScrim {
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-popover);
+    background: var(--scrim);
+  }
+
+  /* The grabber band across the sheet's top: a pull down on it closes the
+     sheet (useStudioSheetDrag). Its bar is drawn by ::before. */
+  .sheetGrabber {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline: 0;
+    block-size: 24px;
+    touch-action: none;
+    cursor: grab;
+  }
+
+  .sheetGrabber::before {
     content: "";
     position: absolute;
     inset-block-start: 8px;
@@ -254,7 +290,6 @@
     margin-inline: auto;
     border-radius: var(--radius-pill);
     background: rgba(var(--studio-ink-rgb), 0.2);
-    pointer-events: none;
   }
 }
 
@@ -396,9 +431,7 @@
   }
 }
 
-.iconButton.iconButton[data-active]:not(:disabled):not(
-    [aria-disabled="true"]
-  ) {
+.iconButton.iconButton[data-active]:not(:disabled):not([aria-disabled="true"]) {
   color: var(--studio-accent-text);
   background: rgba(var(--accent-rgb), 0.12);
 }
@@ -482,17 +515,16 @@
   font-size: var(--text-14);
 }
 
+/* Five even cells, each at least a 44px target on touch. */
 .speedOptions {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(var(--tap-min), 1fr));
   gap: 6px;
   margin: 6px 0;
 }
 
-/* The chosen speed reads by weight and fill as well as colour. */
-.speedOptions .option[aria-checked="true"] {
-  border-color: var(--accent);
-  background: rgba(var(--studio-ink-rgb), 0.12);
-  color: var(--studio-accent-text);
-  font-weight: 600;
+.speedOptions .option.option {
+  justify-content: center;
+  min-width: 0;
+  padding-inline: 4px;
 }

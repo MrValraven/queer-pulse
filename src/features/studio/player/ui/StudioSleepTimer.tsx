@@ -39,7 +39,10 @@ const timerKey = (timer: StudioSleepTimerState) =>
 
 /** One sentence per timer change, compared by content, so clock ticks and
  *  re-renders with an equal value stay silent. */
-function useSleepAnnouncement(timer: StudioSleepTimerState): string {
+function useSleepAnnouncement(
+  timer: StudioSleepTimerState,
+  isEpisode: boolean,
+): string {
   const { t } = useTranslation();
   const [announcement, setAnnouncement] = useState("");
   const previousKeyRef = useRef(timerKey(timer));
@@ -49,14 +52,20 @@ function useSleepAnnouncement(timer: StudioSleepTimerState): string {
     previousKeyRef.current = key;
     if (!timer) setAnnouncement(t("studio:player.sleep.cancelledStatus"));
     else if (timer.kind === "endOfTrack")
-      setAnnouncement(t("studio:player.sleep.endOfTrackStatus"));
+      setAnnouncement(
+        t(
+          isEpisode
+            ? "studio:player.sleep.endOfEpisodeStatus"
+            : "studio:player.sleep.endOfTrackStatus",
+        ),
+      );
     else
       setAnnouncement(
         t("studio:player.sleep.setStatus", {
           minutes: Math.max(1, Math.round((timer.endsAt - Date.now()) / 60000)),
         }),
       );
-  }, [timer, t]);
+  }, [timer, isEpisode, t]);
   return announcement;
 }
 
@@ -88,10 +97,12 @@ export function StudioSleepTimerChip({
 }) {
   const { t } = useTranslation();
   const { reducedMotion } = useMotionPrefs();
-  const { sleepTimer, cancelSleepTimer } = useStudioPlayer();
+  const { sleepTimer, cancelSleepTimer, currentItem } = useStudioPlayer();
+  // An episode's timer stops at the end of the episode, and says so.
+  const isEpisode = currentItem?.isEpisode === true;
   const descriptionId = useId();
   const now = useNow(sleepTimer?.kind === "minutes" ? sleepTimer.endsAt : null);
-  const announcement = useSleepAnnouncement(sleepTimer);
+  const announcement = useSleepAnnouncement(sleepTimer, isEpisode);
   const seconds = sleepTimer ? remainingSeconds(sleepTimer, now) : null;
   const remaining = formatTrackTime(seconds) ?? "0:00";
   return (
@@ -128,16 +139,22 @@ export function StudioSleepTimerChip({
             >
               <FiMoon aria-hidden />
               <span>
-                {sleepTimer.kind === "endOfTrack"
-                  ? t("studio:player.sleep.chipEndOfTrack")
-                  : t("studio:player.sleep.chip", { remaining })}
+                {sleepTimer.kind !== "endOfTrack"
+                  ? t("studio:player.sleep.chip", { remaining })
+                  : isEpisode
+                    ? t("studio:player.sleep.chipEndOfEpisode")
+                    : t("studio:player.sleep.chipEndOfTrack")}
               </span>
             </Button>
           </m.span>
         )}
       </AnimatePresence>
       <span id={descriptionId} hidden>
-        {t("studio:player.sleep.cancelAriaEndOfTrack")}
+        {t(
+          isEpisode
+            ? "studio:player.sleep.cancelAriaEndOfEpisode"
+            : "studio:player.sleep.cancelAriaEndOfTrack",
+        )}
       </span>
       {announces && (
         <span className="visuallyHidden" role="status">
@@ -215,7 +232,8 @@ export function StudioSleepTimerOptions({
 }) {
   const { t } = useTranslation();
   const { chip } = useChipMotion();
-  const { sleepTimer, startSleepTimer, cancelSleepTimer } = useStudioPlayer();
+  const { sleepTimer, startSleepTimer, cancelSleepTimer, currentItem } =
+    useStudioPlayer();
   const choose = (option: StudioSleepTimerOption) => {
     if (!isOptionActive(sleepTimer, option)) startSleepTimer(option);
     onChosen();
@@ -236,7 +254,11 @@ export function StudioSleepTimerOptions({
         );
       })}
       <SleepOption
-        label={t("studio:player.sleep.endOfTrack")}
+        label={t(
+          currentItem?.isEpisode === true
+            ? "studio:player.sleep.endOfEpisode"
+            : "studio:player.sleep.endOfTrack",
+        )}
         isWide
         isActive={isOptionActive(sleepTimer, endOfTrack)}
         onChoose={() => choose(endOfTrack)}

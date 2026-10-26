@@ -10,6 +10,7 @@ import {
   rsvpCutoffToOptionValue,
 } from "./gatheringExtras";
 import { gatheringWhen } from "./gatheringSchedule";
+import { paymentDetailsPayload } from "./paymentDetails";
 import { RSVP_QUESTION_CHIP_KEYS } from "./preview/gatheringPreview.data";
 import { previewRepeatTag } from "./preview/gatheringPreviewReading";
 import { scheduleInstants } from "./steps/schedulePair";
@@ -121,6 +122,19 @@ export function reviewCostText(form: GatheringForm, t: TFunction): string {
   return form.costKind === "fixed" && form.cost.trim()
     ? form.cost.trim()
     : t(COST_KIND_LABEL_KEYS[form.costKind]);
+}
+
+/** How guests pay, as the payload will carry it: the completed link on a
+ *  line of its own, then the host's instructions with their line breaks kept
+ *  (the row renders it multiline), or "" when the event is free or the host
+ *  added neither. */
+export function reviewPaymentText(form: GatheringForm): string {
+  const { paymentUrl, paymentInstructions } = paymentDetailsPayload(
+    form.costKind,
+    form.paymentUrl,
+    form.paymentInstructions,
+  );
+  return [paymentUrl, paymentInstructions].filter(Boolean).join("\n");
 }
 
 export function reviewVisibilityText(

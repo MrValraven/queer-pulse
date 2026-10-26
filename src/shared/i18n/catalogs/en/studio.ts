@@ -661,6 +661,7 @@ export const studio: Catalog = {
   "detail.linkCopiedToast": "Link copied to clipboard",
   "detail.copyFailedToast": "Could not copy link",
   "detail.tipArtistCta": "Tip {artist}",
+  "detail.tipCta": "Tip",
   "detail.fullLedgerCta": "Full ledger",
   "detail.addedToast": "Added to your library",
   "detail.removedToast": "Removed from your library",
@@ -1240,7 +1241,7 @@ export const studio: Catalog = {
   "program.inbox.tip":
     "Drag any submission left into a slot. <em>The pass-with-reason flow is in triage.</em>",
   "program.inbox.listenCta": "Listen",
-  "program.inbox.slateCta": "+ Slate",
+  "program.inbox.slateLabel": "Slate",
   "program.inbox.passCta": "Pass",
 
   "program.slate.cover.heading": "Cover artist of the week",
@@ -1256,15 +1257,15 @@ export const studio: Catalog = {
   "program.slate.singles.removeAria": "Remove {title}",
   "program.slate.singles.moveUpAria": "Move {title} up",
   "program.slate.singles.moveDownAria": "Move {title} down",
-  "program.slate.singles.addSlotCta":
-    "＋ drag a track from submissions, or click to add from catalogue",
+  "program.slate.singles.addSlotLabel":
+    "Drag a track from submissions, or click to add from catalogue",
   "program.slate.collections.heading": "Collection rotation",
   "program.slate.collections.count": "{placed} of {total}",
   "program.slate.broadcasts.heading": "Live broadcasts this week",
   "program.slate.broadcasts.count":
     "{scheduled} scheduled · slot {slotNumber} open",
-  "program.slate.broadcasts.addSlotCta":
-    "＋ schedule a third broadcast for Saturday late",
+  "program.slate.broadcasts.addSlotLabel":
+    "Schedule a third broadcast for Saturday late",
 
   // ── Submission triage (StudioTriagePage + List + Detail) ───────────────────
   // Chrome only. The demo's mock content for this page lives in studioShowcase
@@ -1856,6 +1857,7 @@ export const studio: Catalog = {
   "errors.audioWrongOwner": "That file belongs to another persona",
   "shell.searchLabel": "Search Studio",
   "shell.searchPlaceholderLive": "search artists, releases, tracks…",
+  "shell.searchPlaceholderShort": "search Studio…",
   "shell.accountLabel": "Your account, {name}",
   "shell.menu.artistPages": "Your artist pages",
   "shell.menu.settings": "Settings",
@@ -3556,6 +3558,8 @@ export const studio: Catalog = {
   "player.mute": "Mute",
   "player.unmute": "Unmute",
   "player.more": "More player options",
+  "player.goToTrack": "Go to track",
+  "player.goToTrackAria": "Go to the page for {title} by {artist}",
   "player.crossfade.label": "Crossfade",
   "player.crossfade.hint":
     "Fades each track into the next. Releases set to play without gaps run straight through",
@@ -3601,11 +3605,17 @@ export const studio: Catalog = {
   "player.sleep.turnOff": "Turn off the timer",
   "player.sleep.chip": "{remaining} left",
   "player.sleep.chipEndOfTrack": "Stops after this track",
+  "player.sleep.chipEndOfEpisode": "Stops after this episode",
   "player.sleep.cancelAria": "Turn off the sleep timer, {remaining} left",
   "player.sleep.cancelAriaEndOfTrack":
     "Turn off the sleep timer set for the end of this track",
+  "player.sleep.cancelAriaEndOfEpisode":
+    "Turn off the sleep timer set for the end of this episode",
   "player.sleep.setStatus": "Sleep timer set for {minutes} minutes",
   "player.sleep.endOfTrackStatus": "Playback stops at the end of this track",
+  "player.sleep.endOfEpisode": "End of episode",
+  "player.sleep.endOfEpisodeStatus":
+    "Playback stops at the end of this episode",
   "player.sleep.cancelledStatus": "Sleep timer off",
   "player.sleep.minutesShort": "{count} min",
   "player.lyrics.listLabel": "Lyrics, following the music",
@@ -3662,6 +3672,7 @@ export const studio: Catalog = {
   "queue.dragHint": "Drag to reorder",
   // Track menu (StudioTrackMenu)
   "trackMenu.trigger": "More actions for {title}",
+  "trackMenu.triggerUnavailable": "More actions for {title}, track {number}",
   "trackMenu.playNext": "Play next",
   "trackMenu.addToQueue": "Add to queue",
   "trackMenu.copyLink": "Copy link",
@@ -4166,7 +4177,6 @@ export const studio: Catalog = {
   "playlist.row.restoredSomeToast_other":
     "Put {count} of {total} tracks back. The playlist already held the rest",
   "playlist.row.removedTitledToast": "Removed “{title}” from the playlist",
-  "playlist.row.arrangeMenu": "Move or remove {title}",
   "playlist.invite.bannerTitle": "{name} invited you to edit this playlist",
   "playlist.invite.bannerBody":
     "Editors can add, remove and reorder tracks, and change the name and description",

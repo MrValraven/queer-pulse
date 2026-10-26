@@ -1,6 +1,5 @@
-import { FiBookOpen, FiCalendar, FiMusic } from "react-icons/fi";
 import type { Member } from "./members";
-import { routes } from "../../../app/routeMap";
+import { TIAGO_ACTIVITY } from "./demoActivity";
 
 // ── The demo-mode signed-in user, standalone ────────────────────────────────
 // A light module for first paint. `members.ts` builds `currentUser` and
@@ -19,7 +18,8 @@ import { routes } from "../../../app/routeMap";
 // here on purpose and differ from the registry entry: `respondsWithin` (so
 // the demo "me" shows a reply-time hint) and `ambassador: null` (explained
 // inline below). There is no shared source by design, since sharing one would
-// re-import the registry this file exists to avoid.
+// re-import the registry this file exists to avoid. The one exception is
+// `activity`, which both read from the light `demoActivity.ts`.
 
 /** Slug of the currently logged-in (demo-mode) user. Mirrors `currentUserSlug`
  *  in members.ts. */
@@ -126,26 +126,7 @@ export const currentUser: Member = {
     { name: "Queer Community Events", role: "Organiser" },
     { name: "Non-Monogamy Network", role: "Organiser" },
   ],
-  activity: [
-    {
-      icon: FiBookOpen,
-      title: "Published in the Ofélia books",
-      sub: "Four poems · 2024",
-      to: routes.magazine,
-    },
-    {
-      icon: FiMusic,
-      title: "DJ set as Hot Mess Express",
-      sub: "Queer party · with Camila",
-      to: routes.events,
-    },
-    {
-      icon: FiCalendar,
-      title: "Organised a community event",
-      sub: "Queer + non-monogamy meetup",
-      to: routes.events,
-    },
-  ],
+  activity: TIAGO_ACTIVITY,
   shapings: {
     film: {
       title: "Star Wars",

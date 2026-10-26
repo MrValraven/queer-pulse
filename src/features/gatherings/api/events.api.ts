@@ -120,6 +120,16 @@ export interface EventCommunityDTO {
   avatarImageUrl?: string | null;
 }
 
+/** The lead community a card names ("With Queer Runners Lisboa"), carried on
+ *  every summary the server returns: list, search, community lane and detail.
+ *  Backend `EventSummary.hostingCommunity`. Its `id` is what the hidden event
+ *  communities list keys on. */
+export interface EventHostingCommunityDTO {
+  id: string;
+  slug: string;
+  name: string;
+}
+
 export interface EventHostDTO {
   slug: string;
   firstName: string;
@@ -221,6 +231,17 @@ export interface EventCardDTO {
    *  when unset, or when the listing is no longer live. Absent from an
    *  older server. */
   runByListing?: RunByListingView | null;
+  /** The lead community this gathering is hosted with. `null` when there is
+   *  no lead community, and also when the lead is a private community the
+   *  viewer may not see (neither an organiser nor on its roster): the server
+   *  withholds it under the rule on `EventCommunityDTO`, and sends
+   *  `communityId` as `null` too. Absent from an older server, which reads
+   *  as none. */
+  hostingCommunity?: EventHostingCommunityDTO | null;
+  /** True when at least one accepted guest community co-hosts this
+   *  gathering with the lead. Backend `EventSummary.isCoHosted`. Absent from
+   *  an older server, which reads as false. */
+  isCoHosted?: boolean;
 }
 
 export interface EventsPage {
@@ -391,6 +412,14 @@ export interface EventDetailDTO extends EventCardDTO {
   rsvpQuestions?: Partial<RsvpQuestions> | null;
   /** The host's own extra RSVP question, or `null`. */
   customRsvpQuestion?: string | null;
+  // ── How guests pay the host (display only) ─────────────────────────────
+  // Detail only: no card or summary carries these. Both arrive as `null` for
+  // a free gathering. QueerPulse takes no money, so nothing rendering them may
+  // promise a charge, a refund or a ticket.
+  /** An `https:` page where guests pay the host (Revolut, PayPal, Ko-fi). */
+  paymentUrl?: string | null;
+  /** The host's own words on how to pay, up to 500 characters. */
+  paymentInstructions?: string | null;
   /** Pulse Live. `null` while the feature is off; absent from an older server. Detail only. */
   quizshow?: QuizshowEventDetail | null;
 }
@@ -565,6 +594,13 @@ export interface CreateEventDto {
   houseRules?: string | null;
   /** `"free"` makes the server store `cost` as `null`. */
   costKind?: CostKind | null;
+  /** How guests pay the host, DISPLAY ONLY. An `https:` URL up to 500
+   *  characters. On PATCH, absent leaves it alone and `null` clears it. Sent
+   *  as `null` for a free gathering. */
+  paymentUrl?: string | null;
+  /** The host's own payment instructions, up to 500 characters. Same
+   *  absent/`null` rule as `paymentUrl`. */
+  paymentInstructions?: string | null;
   rsvpCutoff?: RsvpCutoff | null;
   /** Any subset; a missing key is `false` on create and unchanged on PATCH. */
   rsvpQuestions?: Partial<RsvpQuestions>;
@@ -653,6 +689,10 @@ export async function getEvents(
     hostSlug?: string;
     /** Pairs with `hostSlug` — drops one event out of its own results. */
     excludeSlug?: string;
+    /** Keeps events from the viewer's hidden communities in the results.
+     *  Honoured on `filter: "upcoming"` only; the mention picker and the
+     *  create wizard's clash notes send it so every event stays nameable. */
+    includeHidden?: boolean;
   } & EventBrowseFilters = {},
 ): Promise<EventsPage> {
   const q = new URLSearchParams();
@@ -667,6 +707,7 @@ export async function getEvents(
   if (params.type) q.set("type", params.type);
   if (params.q) q.set("q", params.q);
   if (params.cost) q.set("cost", params.cost);
+  if (params.includeHidden) q.set("includeHidden", "true");
   const qs = q.toString();
   const res = await apiGet<EventCardDTO[] | EventsPage>(
     `/events${qs ? `?${qs}` : ""}`,

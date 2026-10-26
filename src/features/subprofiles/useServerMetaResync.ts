@@ -3,6 +3,7 @@ import type {
   AccentKey,
   AvailabilityKey,
   LinkVisibility,
+  StudioHeroChoice,
   Visibility,
 } from "./api/subprofiles.api";
 import type { MetaSnapshot } from "./subprofileEditorDiff";
@@ -28,6 +29,7 @@ export interface ServerMetaResyncSetters {
   setCtaLabel: (value: string) => void;
   setCtaUrl: (value: string) => void;
   setCoverBleed: (value: boolean) => void;
+  setStudioHero: (value: StudioHeroChoice) => void;
 }
 
 /**
@@ -75,6 +77,7 @@ export function useServerMetaResync(
     ctaLabel: (server) => setters.setCtaLabel(server.ctaLabel),
     ctaUrl: (server) => setters.setCtaUrl(server.ctaUrl),
     coverBleed: (server) => setters.setCoverBleed(server.coverBleed),
+    studioHero: (server) => setters.setStudioHero(server.studioHero),
   };
 
   const { changedKeys, nextBaseline } = computeServerMetaResync(

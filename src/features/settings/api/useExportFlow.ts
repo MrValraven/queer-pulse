@@ -142,17 +142,20 @@ export function useExportFlow() {
       }
 
       // Step-up auth. An export is a full dump of everything we hold on a
-      // person, so it sits behind the same real OAuth step-up the deletion and
-      // deactivation flows use — a stolen session cookie alone shouldn't be
-      // enough to exfiltrate someone's entire account. Resolved here rather
-      // than by the caller so the demo branch above never touches the network
-      // and no page has to know the flow needs a token at all.
+      // person, so it sits behind the same real step-up the deletion and
+      // deactivation flows use: a stolen session cookie alone shouldn't be
+      // enough to exfiltrate someone's entire account. Resolved here so the
+      // demo branch above never touches the network and no page has to know
+      // the flow needs a token at all.
       //
-      // No fresh token: redirect instead of proceeding, with no job state
-      // change. The member's chosen categories and format ride out in the
-      // page's query string and come back intact (see `beginReauth`), and
-      // DataExportPage resumes this call for them on the landing, so the
-      // second run exports exactly the set they picked (PRD-305). Before that,
+      // No fresh token: open the code dialog and return before `isStarting`
+      // is set, with no job state change, so the form stays enabled and the
+      // member presses Download again once the code is accepted. A member who
+      // picks Google in the dialog leaves the page instead: their chosen
+      // categories and format ride out in the page's query string and come
+      // back intact (see `beginGoogleReauth`), and DataExportPage resumes this
+      // call for them on the landing, so the second run exports exactly the
+      // set they picked (PRD-305). Before that,
       // both choices lived in component state, the round trip reset them to
       // the defaults, and the 3-per-hour throttle capped how many times a
       // member could correct it.

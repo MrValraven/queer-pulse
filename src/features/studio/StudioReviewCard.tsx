@@ -202,8 +202,9 @@ export function StudioReviewReportCard({
       actions={
         <>
           <Button
-            variant="danger"
+            variant="ghost"
             size="sm"
+            className={css.dangerOutline}
             aria-disabled={isTakeDownWaiting || undefined}
             aria-describedby={
               loadState.isError

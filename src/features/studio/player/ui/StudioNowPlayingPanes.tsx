@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef } from "react";
+import { useEffect, useId, useRef, type ReactElement } from "react";
 import { AnimatePresence, m } from "motion/react";
 import { useMotionPrefs } from "../../../../app/providers/motionPrefs";
 import {
@@ -39,24 +39,29 @@ const PHONE_ORDER: readonly StudioNowPlayingTab[] = [
   "chapters",
 ];
 
-/** The pane's arrival: a short fade with a small rise, a fade alone under
- *  reduced motion. */
+/** The pane's arrival: a short fade with a small rise. Under reduced
+ *  motion the pane changes at once (PaneSwap), with no fade through an
+ *  empty panel. */
 function usePaneMotion() {
   const { reducedMotion } = useMotionPrefs();
-  const rise = reducedMotion ? 0 : 6;
+  if (reducedMotion) return { initial: false, animate: { opacity: 1, y: 0 } };
   return {
-    initial: { opacity: 0, y: rise },
-    animate: {
-      opacity: 1,
-      y: 0,
-      transition: reducedMotion ? { duration: 0.12 } : STUDIO_FADE,
-    },
-    exit: {
-      opacity: 0,
-      y: -rise,
-      transition: reducedMotion ? { duration: 0.12 } : STUDIO_EXIT,
-    },
-  };
+    initial: { opacity: 0, y: 6 },
+    animate: { opacity: 1, y: 0, transition: STUDIO_FADE },
+    exit: { opacity: 0, y: -6, transition: STUDIO_EXIT },
+  } as const;
+}
+
+/** The pane change: the old pane leaves, then the new one rises in. Under
+ *  reduced motion the keyed pane swaps in place, in one frame. */
+function PaneSwap({ children }: { children: ReactElement | false }) {
+  const { reducedMotion } = useMotionPrefs();
+  if (reducedMotion) return children || null;
+  return (
+    <AnimatePresence mode="wait" initial={false}>
+      {children}
+    </AnimatePresence>
+  );
 }
 
 /** Phones: a Queue, Lyrics and Credits switcher above one pane at a time
@@ -118,8 +123,8 @@ function PhonePanes({
           }}
         />
       </div>
-      <AnimatePresence mode="wait" initial={false}>
-        {activePane && (
+      <PaneSwap>
+        {activePane !== undefined && (
           <m.section
             key={activePane.id}
             className={styles.paneSection}
@@ -133,7 +138,7 @@ function PhonePanes({
             />
           </m.section>
         )}
-      </AnimatePresence>
+      </PaneSwap>
     </div>
   );
 }
@@ -203,7 +208,7 @@ export function StudioNowPlayingPanes({
         tabIndex={holdsFocusables ? undefined : 0}
         className={styles.panel}
       >
-        <AnimatePresence mode="wait" initial={false}>
+        <PaneSwap>
           <m.div key={activeTab} {...paneMotion}>
             <StudioNowPlayingPaneContent
               tab={activeTab}
@@ -211,7 +216,7 @@ export function StudioNowPlayingPanes({
               isTranscript={isTranscript}
             />
           </m.div>
-        </AnimatePresence>
+        </PaneSwap>
       </div>
     </div>
   );

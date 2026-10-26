@@ -4,9 +4,15 @@ import {
   SegmentedControl,
   Select,
 } from "../../shared/components/ui";
+import { Collapse } from "../../shared/components/ui/Collapse";
+import { RadioCardGroup } from "../../shared/components/ui/RadioCardGroup";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { CropRect } from "../../shared/components/ui/cropGeometry";
-import type { AccentKey, AvailabilityKey } from "./api/subprofiles.api";
+import type {
+  AccentKey,
+  AvailabilityKey,
+  StudioHeroChoice,
+} from "./api/subprofiles.api";
 import { ImageUploadField } from "./ImageUploadField";
 import { FIELD_ANCHOR_ID } from "./publishChecklist.data";
 import { SubprofilePresenceCtaFields } from "./SubprofilePresenceCtaFields";
@@ -18,6 +24,7 @@ import {
 } from "./subprofilePresence.data";
 import styles from "./SubprofilePresenceFields.module.css";
 import { TattooBooksStatusLine } from "./skins/tattoo/editor/TattooBooksStatusLine";
+import { shouldShowStudioHeroControl } from "./subprofileMetaEditor.helpers";
 import { useEditorPersonaKind } from "./useEditorPersonaKind";
 
 interface SubprofilePresenceFieldsProps {
@@ -29,6 +36,9 @@ interface SubprofilePresenceFieldsProps {
   onCoverPreviewChange: (value: string | null, crop?: CropRect) => void;
   coverBleed: boolean;
   onCoverBleedChange: (value: boolean) => void;
+  /** Studio page layout for an artist persona with a cover photo. */
+  studioHero: StudioHeroChoice;
+  onStudioHeroChange: (value: StudioHeroChoice) => void;
   accent: AccentKey | "";
   onAccentChange: (value: AccentKey) => void;
   availability: AvailabilityKey | "";
@@ -61,6 +71,8 @@ export function SubprofilePresenceFields({
   onCoverPreviewChange,
   coverBleed,
   onCoverBleedChange,
+  studioHero,
+  onStudioHeroChange,
   accent,
   onAccentChange,
   availability,
@@ -75,6 +87,25 @@ export function SubprofilePresenceFields({
   const personaKind = useEditorPersonaKind();
   const isTherapist = personaKind === "therapist";
   const isTattooArtist = personaKind === "tattoo_artist";
+  const shouldShowStudioHero = shouldShowStudioHeroControl(
+    personaKind,
+    coverUrl,
+  );
+  const studioHeroOptions = (["full-bleed", "avatar"] as const).map(
+    (choice) => ({
+      id: choice,
+      render: (
+        <>
+          <span className={styles.heroChoiceTitle}>
+            {t(`subprofiles:metaForm.studioHero.${choice}`)}
+          </span>
+          <span className={styles.heroChoiceEffect}>
+            {t(`subprofiles:metaForm.studioHero.${choice}Effect`)}
+          </span>
+        </>
+      ),
+    }),
+  );
 
   return (
     <>
@@ -127,6 +158,23 @@ export function SubprofilePresenceFields({
           disabledOptions={!coverUrl ? ["contained", "bleed"] : undefined}
         />
       </FormField>
+
+      <Collapse isOpen={shouldShowStudioHero}>
+        <FormField
+          label={t("subprofiles:metaForm.studioHero.label")}
+          helper={t("subprofiles:metaForm.studioHero.helper")}
+        >
+          <RadioCardGroup
+            value={studioHero}
+            onChange={onStudioHeroChange}
+            options={studioHeroOptions}
+            ariaLabel={t("subprofiles:metaForm.studioHero.label")}
+            className={styles.heroChoices}
+            optionClassName={styles.heroChoice}
+            checkedClassName={styles.heroChoiceChecked}
+          />
+        </FormField>
+      </Collapse>
 
       <FormField
         id={FIELD_ANCHOR_ID.accent}

@@ -45,3 +45,52 @@
     transform: none;
   }
 }
+
+/* Studio page layout: two radio cards beside the cover field. */
+.heroChoices {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.heroChoice {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-height: 44px;
+  padding: 12px 14px;
+  text-align: left;
+  color: var(--ink);
+  background: var(--paper);
+  border: 1.5px solid rgba(var(--line-rgb), 0.18);
+  border-radius: var(--radius-12);
+  cursor: pointer;
+  transition: border-color 0.15s var(--ease);
+}
+.heroChoice:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+.heroChoiceChecked {
+  border-color: var(--ink);
+}
+.heroChoiceTitle {
+  font-weight: 600;
+}
+.heroChoiceEffect {
+  font-size: var(--text-14);
+  color: var(--ink-60);
+}
+
+@media (max-width: 480px) {
+  .heroChoices {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .heroChoice {
+    transition: none;
+  }
+}

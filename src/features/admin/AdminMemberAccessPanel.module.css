@@ -1,8 +1,8 @@
 /* The member drawer's access panel, under Roles & access: staff roles, the
-   ambassador tag and Studio access as three rows with one anatomy. Title and
-   status on the left, the action on the right, a footnote under both. The
-   panel draws the only frame; rows are split by hairlines and carry no
-   background of their own. */
+   ambassador tag, Studio access and Invites as four rows with one anatomy.
+   Title and status on the left, the action on the right, a footnote under
+   both. The panel draws the only frame; rows are split by hairlines and carry
+   no background of their own. */
 .panel {
   list-style: none;
   margin: 18px 0 0;
@@ -85,6 +85,17 @@
   display: flex;
   flex: none;
   align-items: center;
+}
+
+/* A switch action (Invites): centred on the title and status together, the
+   way the Studio row's taller button spans both lines. The text link keeps
+   the plain .action, on the title's line. */
+.action:has(> .switchAction) {
+  align-self: center;
+}
+
+.switchAction {
+  display: flex;
 }
 
 .footnote {

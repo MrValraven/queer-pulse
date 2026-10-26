@@ -16,6 +16,9 @@ import { Badge } from "../ui";
  * and a stale count is worse than none — the same "render nothing rather than a
  * zero" rule `usePersonaBadge` and `useGettingStartedBadge` follow.
  *
+ * It also renders nothing while our team has paused this member's invites
+ * (`hasInviteAccess` is false), because there is no allowance to spend.
+ *
  * GATE: this mounts on EVERY page, so it copies the persona badge's guard
  * exactly — `GET /invites/quota` is only issued once the session is settled,
  * the member is signed in, AND their status is `"active"`, with `retry: false`
@@ -36,6 +39,7 @@ export function useInviteQuotaBadge(): ReactNode {
     isError,
   } = useInviteQuota({ enabled: canFetch, retry: false });
   if (isLoading || isError || !quota) return undefined;
+  if (!quota.hasInviteAccess) return undefined;
   if (quota.remaining <= 0) return undefined;
   return <Badge tone="coral">{quota.remaining}</Badge>;
 }

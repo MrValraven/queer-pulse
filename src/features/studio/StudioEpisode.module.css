@@ -46,31 +46,52 @@
   vertical-align: -1px;
 }
 
-/* A timestamp inside the notes rides on the shared quiet Button; the
-   doubled class outranks its own rules whatever order the two modules load
-   in, so it stays an inline chip on the text's own line. Inline in a
-   sentence, it is exempt from the 44px target floor. */
-.time.time {
-  display: inline;
-  min-height: 0;
+/* One timestamp chip for the notes and the episode's chapters: 14px
+   tabular figures on a faint ink ground, coral text, a 4px corner. */
+.time.time.time,
+.chapters li > button > span:first-child {
   padding: 2px 6px;
-  border: 0;
   border-radius: var(--radius-4);
   background: rgba(var(--studio-ink-rgb), 0.08);
   color: var(--studio-accent-text);
-  font: inherit;
-  line-height: inherit;
-  white-space: normal;
+  font-size: var(--text-14);
+  line-height: 1.4;
   font-variant-numeric: tabular-nums;
+}
+
+/* A timestamp inside the notes rides on the shared quiet Button; the
+   tripled class outranks its rules (.quiet.sm included) whatever order the
+   two modules load in, so it stays an inline chip on the text's line. */
+.time.time.time {
+  position: relative;
+  display: inline;
+  min-height: 0;
+  border: 0;
+  font-family: inherit;
+  font-weight: inherit;
+  white-space: normal;
   cursor: pointer;
 }
 
-.time.time::after {
+.time.time.time::after {
   content: none;
 }
 
+/* On touch the chip keeps its look and gains a 44px square hit area
+   centred on it. */
+@media (pointer: coarse) {
+  .time.time.time::after {
+    content: "";
+    position: absolute;
+    inset: 50% auto auto 50%;
+    width: max(100%, var(--tap-min));
+    height: max(100%, var(--tap-min));
+    transform: translate(-50%, -50%);
+  }
+}
+
 .link:focus-visible,
-.time.time:focus-visible {
+.time.time.time:focus-visible {
   outline: var(--focus-ring);
   outline-offset: var(--focus-ring-offset);
   box-shadow: var(--ring-cream);
@@ -105,11 +126,7 @@
   min-height: var(--tap-min);
 }
 
-/* Each chapter time reads as the notes' chips do. */
+/* Each chapter time is the notes' chip (above), at the start of its row. */
 .chapters li > button > span:first-child {
   justify-self: start;
-  padding: 2px 6px;
-  border-radius: var(--radius-4);
-  background: rgba(var(--studio-ink-rgb), 0.08);
-  color: var(--studio-accent-text);
 }

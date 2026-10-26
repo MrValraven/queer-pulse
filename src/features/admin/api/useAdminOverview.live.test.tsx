@@ -98,14 +98,14 @@ const MINIMAL_OVERVIEW_DTO: AdminOverviewDTO = {
       {
         at: "2026-06-01T00:00:00.000Z",
         joined: 120,
+        total: 3120,
         churned: null,
-        spike: false,
       },
       {
         at: "2026-07-01T00:00:00.000Z",
         joined: 150,
+        total: 3270,
         churned: null,
-        spike: false,
       },
     ],
   },
@@ -194,6 +194,7 @@ describe("useAdminOverview (live mode via MSW)", () => {
     // 4 · member growth — passed through 1:1 with null churn preserved.
     expect(overview!.memberGrowth).toHaveLength(2);
     expect(overview!.memberGrowth[0]!.churned).toBeNull();
+    expect(overview!.memberGrowth[1]!.total).toBe(3270);
 
     // 5 · response-time distribution — null response time → null dist.
     expect(overview!.responseDist).toBeNull();

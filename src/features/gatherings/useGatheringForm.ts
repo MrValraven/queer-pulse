@@ -49,6 +49,7 @@ import {
   type RsvpQuestionKey,
   type RsvpQuestions,
 } from "./gatheringExtras";
+import { isPaidCostKind, isValidPaymentLink } from "./paymentDetails";
 import { scheduleInstants } from "./steps/schedulePair";
 import type { GuestCommunityDraftEntry } from "./api/eventCommunities.api";
 import { guestsForLead } from "./guestCommunities";
@@ -98,6 +99,10 @@ export interface GatheringFormSeed {
   contentNotes: ContentNoteKey[];
   houseRules: string;
   costKind: CostKind;
+  /** How guests pay the host, as the source carried it. Absent reads as
+   *  none, so a seed built before the fields existed still types. */
+  paymentUrl?: string;
+  paymentInstructions?: string;
   /** The source's cutoff. `undefined` (the source carried no field) leaves
    *  the family default applying. `null` is "When it ends", copied as the
    *  host's own answer. */
@@ -163,6 +168,10 @@ export interface GatheringDraftSnapshot {
   lang: string;
   cost: string;
   costKind: CostKind;
+  /** How guests pay the host. Absent in a draft saved before the fields
+   *  existed; restores as none. */
+  paymentUrl?: string;
+  paymentInstructions?: string;
   accessibilityAnswers: AccessibilityAnswerMap;
   accessNotes: string;
   themes: GatheringThemeKey[];
@@ -1176,6 +1185,16 @@ function useGatheringAccessState() {
   // when text sits in the field, so a price typed before the host switched
   // back to free stays off the card. DISPLAY ONLY, like `cost`.
   const [costKind, setCostKind] = useState<CostKind>("free");
+  // How guests pay the host for a paid gathering: a link and the host's own
+  // instructions, both optional. DISPLAY ONLY, like `cost`. Kept while the
+  // kind is free, so switching back to a paid kind brings them back; the
+  // payload sends `null` for both on a free gathering.
+  const [paymentUrl, setPaymentUrl] = useState("");
+  const [paymentInstructions, setPaymentInstructions] = useState("");
+  // A malformed link holds the Who chapter, since the server would refuse it.
+  // A free gathering sends no link, so its leftover text holds nothing.
+  const paymentUrlValid =
+    !isPaidCostKind(costKind) || isValidPaymentLink(paymentUrl);
   // The six canonical accessibility questions, three-valued, exactly as a
   // business listing answers them. A checkbox list used to stand here, which
   // could only ever say "yes" or say nothing: "there is a step at the door"
@@ -1203,6 +1222,8 @@ function useGatheringAccessState() {
   const applyAccessSeed = (seed: GatheringFormSeed) => {
     setCost(seed.cost);
     setCostKind(seed.costKind);
+    setPaymentUrl(seed.paymentUrl ?? "");
+    setPaymentInstructions(seed.paymentInstructions ?? "");
     setAccessibilityAnswers(
       normalizeAccessibilityAnswers(seed.accessibilityAnswers),
     );
@@ -1220,6 +1241,8 @@ function useGatheringAccessState() {
     setLang(isKnownLanguage ? snapshot.lang : LANGS[0]!.value);
     setCost(snapshot.cost);
     setCostKind(isCostKind(snapshot.costKind) ? snapshot.costKind : "free");
+    setPaymentUrl(snapshot.paymentUrl ?? "");
+    setPaymentInstructions(snapshot.paymentInstructions ?? "");
     setAccessibilityAnswers(
       normalizeAccessibilityAnswers(snapshot.accessibilityAnswers),
     );
@@ -1230,6 +1253,8 @@ function useGatheringAccessState() {
     accessNotes.trim().length > 0 ||
     cost.trim().length > 0 ||
     costKind !== "free" ||
+    paymentUrl.trim().length > 0 ||
+    paymentInstructions.trim().length > 0 ||
     answeredAccessibilityCount > 0;
 
   return {
@@ -1239,6 +1264,11 @@ function useGatheringAccessState() {
     setCost,
     costKind,
     setCostKind,
+    paymentUrl,
+    setPaymentUrl,
+    paymentInstructions,
+    setPaymentInstructions,
+    paymentUrlValid,
     accessibilityAnswers,
     setAccessibilityAnswer,
     answeredAccessibilityCount,
@@ -1292,6 +1322,8 @@ function pickDraftSnapshot(
     lang: form.lang,
     cost: form.cost,
     costKind: form.costKind,
+    paymentUrl: form.paymentUrl,
+    paymentInstructions: form.paymentInstructions,
     accessibilityAnswers: form.accessibilityAnswers,
     accessNotes: form.accessNotes,
     themes: form.themes,
@@ -1512,7 +1544,8 @@ export function useGatheringForm(initial: GatheringFormInitial = {}) {
     // `onlineUrlValid`, `setRefusedVenueListingId` and
     // `isVenueListingRefused`.
     ...whereState,
-    // `lang`, `cost`, `costKind`, `accessNotes` and their setters, plus
+    // `lang`, `cost`, `costKind`, `paymentUrl`, `paymentInstructions`,
+    // `accessNotes` and their setters, plus `paymentUrlValid`,
     // `accessibilityAnswers`, `setAccessibilityAnswer` and
     // `answeredAccessibilityCount`.
     ...accessState,

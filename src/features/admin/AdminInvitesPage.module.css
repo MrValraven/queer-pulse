@@ -36,8 +36,33 @@
   white-space: nowrap;
 }
 
-.filterBar > :last-child {
+.filterGroup {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.filterBar .filterSelect {
   min-width: 220px;
+}
+
+/* Right-aligned: "Refresh all N expired" on the Expired tab, then Select. */
+.filterBarActions {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+}
+
+/* The width-animated slot around "Refresh all N expired". The gap to Select
+   lives inside it, so a folded slot leaves no gap behind. */
+.filterBarAction {
+  display: inline-flex;
+  white-space: nowrap;
+}
+
+.filterBarActionInner {
+  display: inline-flex;
+  padding-inline-end: 8px;
 }
 
 @media (--sm) {
@@ -46,15 +71,29 @@
     align-items: stretch;
   }
 
-  .filterBar > :last-child {
+  .filterGroup {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filterBar .filterSelect {
     min-width: 0;
+  }
+
+  .filterBarActions {
+    margin-left: 0;
+    justify-content: flex-end;
   }
 }
 
+/* No flex gap: the select-mode checkbox slot carries its own spacing, so
+   it can grow in from nothing without a gap appearing first. Positioned,
+   so the checkbox's stretched label (`.rowCheckHit::after`) covers the card
+   and never the grid around it. */
 .row {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 16px;
   height: 100%;
   padding: 16px 18px;
   background: var(--paper);
@@ -65,6 +104,7 @@
   transition:
     border-color 0.16s var(--ease),
     box-shadow 0.16s var(--ease),
+    opacity 0.16s var(--ease),
     transform 0.16s var(--ease);
 }
 
@@ -127,6 +167,298 @@
 
 :global([data-theme="dark"]) .row {
   border-color: rgba(var(--cream-rgb), 0.1);
+}
+
+/* ── Select mode ───────────────────────────────────────────── */
+
+/* In select mode a click anywhere on the card toggles its checkbox. */
+.rowSelectable {
+  cursor: pointer;
+}
+
+/* Top-left of the card, at its full width from the first frame; motion fades
+   it and scales the checkbox inside (AdminInviteRowCheck). */
+.rowCheckSlot {
+  display: flex;
+  flex: none;
+  align-self: flex-start;
+}
+
+.rowCheckHit {
+  display: inline-flex;
+  padding: 2px 14px 0 0;
+  cursor: pointer;
+}
+
+/* Above the card's own content (a positioned status chip included), so a
+   click anywhere on the card lands on the label. */
+.rowCheckHit::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+}
+
+.rowCheckbox {
+  appearance: none;
+  position: relative;
+  flex: none;
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  border: 1.6px solid rgba(var(--line-rgb), 0.28);
+  border-radius: var(--radius-6);
+  background: var(--paper);
+  cursor: pointer;
+  transition-property: background, border-color;
+  transition-duration: 0.15s;
+  transition-timing-function: var(--ease);
+}
+
+/* The hover cue of the listings and members selection lists. The whole card
+   is the checkbox's label, so hovering anywhere on it lights the box. */
+@media (hover: hover) {
+  .rowCheckbox:not(:disabled):hover,
+  .rowSelectable:hover .rowCheckbox:not(:disabled) {
+    border-color: var(--jade);
+  }
+}
+
+.rowCheckbox:checked {
+  background: var(--jade);
+  border-color: var(--jade);
+}
+
+/* The tick is drawn in the fixed light cream (`--cream-rgb` stays light in
+   both themes), so it reads on jade in dark mode too. */
+.rowCheckbox:checked::after {
+  content: "";
+  position: absolute;
+  left: 6px;
+  top: 2px;
+  width: 5px;
+  height: 10px;
+  border: solid rgba(var(--cream-rgb), 1);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.rowCheckbox:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.rowCheckbox:disabled {
+  cursor: not-allowed;
+}
+
+.row.rowSelected,
+.row.rowSelected:hover,
+:global([data-theme="dark"]) .row.rowSelected {
+  border-color: var(--jade);
+  box-shadow: var(--ring-jade);
+}
+
+/* At the bulk cap, the cards outside the selection step back. */
+.row.rowSelectDisabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.rowSelectDisabled .rowCheckHit {
+  cursor: not-allowed;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rowCheckbox {
+    transition: none;
+  }
+}
+
+/* While a selection exists the floating `.bulkBar` covers the bottom of the
+   viewport, so the grid reserves room for it: the bar's measured height
+   (`--invite-bulk-bar-h`, published by AdminInviteBulkBar), its bottom offset
+   (the same expression as `.bulkBar`'s `bottom`), and 24px of air. */
+.rowsWithBulkBar {
+  padding-bottom: calc(
+    var(--invite-bulk-bar-h, 140px) +
+      max(
+        20px,
+        calc(env(safe-area-inset-bottom) + 14px),
+        calc(var(--consent-inset, 0px) + 16px)
+      ) +
+      24px
+  );
+}
+
+/* ── Bulk action bar: floating, mounted while one or more invites are
+   selected. Mirrors `.bulkBar` in AdminListingsPage.module.css; motion owns
+   the transform (the -50% centring plus the rise), so none is set here.
+   One pill row while everything fits. Labels change length with the
+   language, so the bar wraps whenever one row cannot hold them, and
+   AdminInviteBulkBar marks it `data-wrapped`: the pill becomes a rounded
+   card in the phone layout, the count with its buttons at the edge, the cap
+   note under them, then the actions sharing a full line. ── */
+.bulkBar {
+  position: fixed;
+  left: 50%;
+  /* Clears the home indicator and, while it shows, the consent banner. The
+     admin shell has no bottom tab bar, so `--bottom-inset` stays out. */
+  bottom: max(
+    20px,
+    calc(env(safe-area-inset-bottom) + 14px),
+    calc(var(--consent-inset, 0px) + 16px)
+  );
+  z-index: var(--z-nav);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 16px;
+  flex-wrap: wrap;
+  width: max-content;
+  max-width: min(92vw, 820px);
+  padding: 12px 12px 12px 22px;
+  border-radius: var(--radius-pill);
+  background: var(--plum);
+  color: rgba(var(--cream-rgb), 1);
+  box-shadow: var(--shadow-lift);
+}
+
+/* Wraps inside itself too, so on a narrow line Select all and Clear drop
+   below the count, together, before anything overlaps. */
+.bulkSummary {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  min-width: 0;
+}
+
+.bulkCount {
+  font-family: var(--serif);
+  font-size: var(--text-15);
+  font-weight: 500;
+  flex: none;
+}
+
+/* A full line of its own, so it never squeezes into a narrow column beside
+   the count and the actions. Once the bar wraps it moves up under the count. */
+.bulkCapNote {
+  order: 1;
+  flex: 1 0 100%;
+  font-size: var(--text-11-5);
+  line-height: 1.3;
+  color: rgba(var(--cream-rgb), 0.7);
+}
+
+/* Select all and Clear move as one, so neither is left alone on a line. */
+.bulkSummaryButtons {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: none;
+  margin-left: auto;
+}
+
+@media (pointer: coarse) {
+  .bulkSummaryButtons > * {
+    min-height: 44px;
+  }
+}
+
+.bulkActions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  flex: 0 1 auto;
+  flex-wrap: wrap;
+  margin-left: auto;
+}
+
+.bulkBar[data-wrapped] {
+  border-radius: var(--radius-card);
+}
+
+.bulkBar[data-wrapped] .bulkSummary {
+  flex: 1 1 auto;
+}
+
+.bulkBar[data-wrapped] .bulkCapNote {
+  order: 0;
+}
+
+.bulkBar[data-wrapped] .bulkActions {
+  width: 100%;
+  flex-wrap: nowrap;
+  margin-left: 0;
+}
+
+.bulkBar[data-wrapped] .bulkActions > * {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* Above 900px the admin rail takes the left of the viewport, so the bar
+   centres on the content column beside it (same sum as the listings bar). */
+@media (min-width: 901px) {
+  .bulkBar {
+    left: calc(
+      var(--admin-rail-w, 248px) +
+        min(100% - var(--admin-rail-w, 248px), var(--maxw)) / 2
+    );
+    max-width: min(100% - var(--admin-rail-w, 248px) - 32px, 820px);
+  }
+}
+
+/* Phone: a rounded card in two lines, the count with Select all and Clear
+   pushed to the edge, then the two actions sharing the full width. The cap
+   note sits between them, under the count it explains. The action icons go,
+   as on the listings bar, so "Refresh 1 expired" holds one line. */
+@media (--md) {
+  .bulkBar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    width: calc(100vw - 32px);
+    padding: 10px 12px 12px 16px;
+    border-radius: var(--radius-card);
+  }
+
+  .bulkCapNote {
+    order: 0;
+    flex-basis: auto;
+  }
+
+  .bulkActions {
+    width: 100%;
+    flex-wrap: nowrap;
+    margin-left: 0;
+  }
+
+  .bulkBar .bulkActions svg {
+    display: none;
+  }
+
+  .bulkBar .bulkActions > * {
+    flex: 1 1 auto;
+    min-width: 0;
+    padding-inline: 12px;
+    font-size: var(--text-13-5);
+    white-space: normal;
+    text-align: center;
+    line-height: 1.15;
+  }
+}
+
+/* The bulk confirm's "left as they are" line, in the muted ink and type of
+   the ConfirmDialog description above it (ConfirmDialog.module.css). */
+.bulkConfirmNote {
+  font-size: var(--text-14-5);
+  line-height: 1.6;
+  color: var(--ink-60);
 }
 
 /* ── Detail drawer ─────────────────────────────────────────── */
@@ -291,141 +623,10 @@
   }
 }
 
-/* ── Invite quota modal ────────────────────────────────────── */
-
-.quotaHint {
-  margin: 0 0 16px;
-  font-size: var(--text-14);
-  line-height: 1.5;
-  color: var(--ink-60);
-}
-
-.quotaList {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.quotaRow {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 12px;
-  padding: 12px 14px;
-  background: rgba(var(--plum-rgb), 0.05);
-  border: 1px solid rgba(var(--line-rgb), 0.09);
-  border-radius: var(--radius-14);
-}
-
-.quotaRowInfo {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  min-width: 0;
-}
-
-.quotaRowName {
-  font-size: var(--text-14-5);
-  font-weight: 600;
-  color: var(--text-strong);
-}
-
-.quotaRowCount {
-  font-size: var(--text-12-5);
-  color: var(--ink-60);
-}
-
-.quotaRowControls {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.quotaField {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.quotaFieldLabel {
-  font-size: var(--text-12);
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--ink-60);
-  white-space: nowrap;
-}
-
-.quotaInput {
-  width: 5.5rem;
-  padding: 7px 10px;
-  font-size: var(--text-14);
-  font-family: inherit;
-  color: var(--text-strong);
-  background: var(--paper);
-  border: 1px solid rgba(var(--line-rgb), 0.16);
-  border-radius: var(--radius-8);
-}
-
-.quotaInput:focus-visible {
-  outline: none;
-  border-color: rgba(var(--line-rgb), 0.4);
-  box-shadow: var(--ring-plum);
-}
-
-.quotaClearButton {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 30px;
-  height: 30px;
-  border-radius: var(--radius-8);
-  border: 1px solid rgba(var(--line-rgb), 0.14);
-  background: transparent;
-  color: var(--ink-60);
-  cursor: pointer;
-  transition:
-    background 0.16s var(--ease),
-    color 0.16s var(--ease);
-}
-
-.quotaClearButton:hover {
-  background: rgba(var(--plum-rgb), 0.12);
-  color: var(--text-strong);
-}
-
-.quotaClearButton:focus-visible {
-  outline: none;
-  box-shadow: var(--ring-plum);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .quotaClearButton {
-    transition: none;
-  }
-}
-
-:global([data-theme="dark"]) .quotaRow {
-  background: rgba(var(--cream-rgb), 0.05);
-  border-color: rgba(var(--cream-rgb), 0.1);
-}
-
-@media (--sm) {
-  .quotaRow {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .quotaRowControls {
-    justify-content: space-between;
-  }
-}
-
 /* The "Sent by" panel opens DOWN over the invite grid, and its own
    `z-index: var(--z-popover)` can't reach it: `<FadeIn>` sets
    `will-change: opacity, transform`, so this wrapper is its own stacking
-   context and the panel only wins INSIDE it — the later-sibling rows FadeIn
+   context and the panel only wins INSIDE it; the later-sibling rows FadeIn
    then paints its opaque cards on top. Lift the whole wrapper, but only while
    the Select is open, so nothing else changes. Keyed on the open trigger:
    the panel swaps its listbox for a "No matches" status, which would drop

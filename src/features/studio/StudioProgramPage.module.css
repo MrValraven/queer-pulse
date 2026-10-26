@@ -382,6 +382,10 @@
   border-radius: var(--radius-12);
   padding: 15px;
   cursor: pointer;
+  /* The kit quiet hover and press (0,4,0) outrank .emptySlot:hover, so the
+     dashed slot hands them its own clear ground through the kit's hooks. */
+  --button-quiet-hover: transparent;
+  --button-quiet-active: transparent;
   transition:
     border-color 0.15s var(--ease),
     color 0.15s var(--ease);
@@ -389,6 +393,13 @@
 .emptySlot:hover {
   border-color: rgba(var(--accent-rgb), 0.4);
   color: var(--s-text-60);
+}
+/* The slot is a kit Button, which never wraps. Its long label ran past the
+   card on a phone, so it wraps here and stays inside its column. */
+.emptySlot.emptySlot {
+  max-width: 100%;
+  white-space: normal;
+  line-height: 1.35;
 }
 
 /* ── Collections ── */

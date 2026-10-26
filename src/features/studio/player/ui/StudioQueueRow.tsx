@@ -2,11 +2,12 @@ import type { PointerEvent as ReactPointerEvent } from "react";
 import { m, useIsPresent } from "motion/react";
 import { FiArrowDown, FiArrowUp, FiMenu, FiX } from "react-icons/fi";
 import { useMotionPrefs } from "../../../../app/providers/motionPrefs";
-import { Button, ImageSlot } from "../../../../shared/components/ui";
+import { Button } from "../../../../shared/components/ui";
 import { IconButton } from "../../../../shared/components/ui/IconButton";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { useStudioPlayer, type StudioQueueItem } from "../studioPlayerContext";
 import { StudioTrackWarningPill } from "../../StudioTrackWarningPill";
+import { StudioPlayerArt } from "./StudioPlayerArt";
 import styles from "./StudioQueue.module.css";
 
 export type QueueRowControl = "moveUp" | "moveDown" | "remove";
@@ -25,14 +26,7 @@ export function QueueRowSummary({
   return (
     <>
       <span className={styles.cover}>
-        <ImageSlot
-          src={item.coverUrl ?? undefined}
-          tint={item.tint}
-          width={40}
-          height={40}
-          radius={6}
-          placeholder=""
-        />
+        <StudioPlayerArt item={item} size={40} radius={6} />
       </span>
       <span className={styles.titles}>
         <span className={styles.title}>{item.title}</span>

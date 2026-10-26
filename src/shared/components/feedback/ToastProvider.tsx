@@ -199,6 +199,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
         { id, message, type, leaving: false, action },
       ]);
       schedule(id, ms);
+      return id;
     },
     [schedule],
   );
@@ -211,7 +212,12 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     [dismiss],
   );
 
-  const value = useMemo(() => ({ showToast }), [showToast]);
+  // `dismissToast` is the same exit a manual close takes; an id already gone
+  // finds no toast and changes nothing.
+  const value = useMemo(
+    () => ({ showToast, dismissToast: dismiss }),
+    [showToast, dismiss],
+  );
   const dismissLabel = t("shared:toast.dismiss");
 
   return (

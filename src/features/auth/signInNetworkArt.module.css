@@ -8,6 +8,24 @@
   background: var(--plum);
 }
 
+/* The canvas's box, which the engine sizes the art from. On desktop the
+   column grows with the card (the code step and its errors add up to
+   300px), and every size change would restart the network. So the stage
+   is a fixed box taller than any step, clipped by the root, and only a
+   card taller still resizes it. The bottom padding reserves the part a
+   resting card never shows: the engine reads it as the strip to keep
+   clear, so the Q is laid out for the resting column's height. */
+.stage {
+  --art-stage-height: 1040px;
+  --art-resting-height: 720px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: max(100%, var(--art-stage-height));
+  padding-bottom: calc(var(--art-stage-height) - var(--art-resting-height));
+}
+
 .canvas {
   position: absolute;
   inset: 0;
@@ -230,9 +248,11 @@
    name, then the line, with the same handoff as on desktop. The bottom
    padding is the text zone: the engine reads it and centres the Q in the
    space above. The text starts on the content's left line below, from the
-   column width and gutter signInCard.module.css shares. */
+   column width and gutter signInCard.module.css shares. The band keeps
+   one height through every step, so its stage simply fills it. */
 @media (--lg) {
-  .root {
+  .stage {
+    height: 100%;
     padding-top: env(safe-area-inset-top);
     padding-bottom: var(--section-y-88);
   }

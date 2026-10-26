@@ -23,8 +23,8 @@ export function AdminAccessPanel({ children }: { children: ReactNode }) {
 /**
  * One access row in the member drawer: what the access is, where the member
  * stands (a status line led by a tone dot), an optional footnote, and the
- * action on the right. Staff roles, the ambassador tag and Studio access all
- * share it so the three read as one panel.
+ * action on the right. Staff roles, the ambassador tag, Studio access and
+ * Invites all share it so the four read as one panel.
  *
  * With `disclosure`, the title and status become a single button that shows
  * and hides `children`, and the chevron takes the action's place. The
@@ -35,6 +35,7 @@ export function AdminAccessRow({
   status,
   tone,
   footnote,
+  footnoteId,
   action,
   disclosure,
   children,
@@ -43,6 +44,9 @@ export function AdminAccessRow({
   status: string;
   tone: AdminAccessTone;
   footnote?: ReactNode;
+  /** `id` for the footnote, so a control in `action` can point
+   *  `aria-describedby` at it. */
+  footnoteId?: string;
   action?: ReactNode;
   disclosure?: {
     isOpen: boolean;
@@ -88,7 +92,11 @@ export function AdminAccessRow({
           {action && <div className={styles.action}>{action}</div>}
         </div>
       )}
-      {footnote && <p className={styles.footnote}>{footnote}</p>}
+      {footnote && (
+        <p id={footnoteId} className={styles.footnote}>
+          {footnote}
+        </p>
+      )}
       {children}
     </li>
   );

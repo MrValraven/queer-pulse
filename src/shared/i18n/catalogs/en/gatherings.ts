@@ -787,6 +787,7 @@ export const gatherings: Catalog = {
   "create.v2.need.title": "a name",
   "create.v2.need.date": "a date and start time in the future",
   "create.v2.need.joinLink": "a join link starting with http:// or https://",
+  "create.v2.need.paymentLink": "a payment link that starts with https://",
   "create.v2.need.recurrence": "a complete repeat schedule",
 
   // createGatheringChapters.ts: the one-line summary of a closed chapter
@@ -849,6 +850,7 @@ export const gatherings: Catalog = {
   "create.v2.ready.item.title": "Name your event",
   "create.v2.ready.item.date": "Date and start time in the future",
   "create.v2.ready.item.joinLink": "Join link starts with http:// or https://",
+  "create.v2.ready.item.paymentLink": "Payment link starts with https://",
   "create.v2.ready.item.recurrence": "Repeat schedule is complete",
   "create.v2.ready.item.hood": "Neighbourhood chosen",
   "create.v2.ready.item.accessibility": "Accessibility answered",
@@ -1012,8 +1014,7 @@ export const gatherings: Catalog = {
   "create.v2.who.costPlaceholderPayWhatYouCan":
     "e.g. 5 to 15 EUR sliding scale",
   "create.v2.who.costPlaceholderFixed": "e.g. 8 EUR at the door",
-  "create.v2.who.costHint":
-    "Your own words. Nobody pays through QueerPulse; this is what people should expect at the door.",
+  "create.v2.who.costHint": "Your own words. Nobody pays through QueerPulse.",
   "create.v2.who.cohostsLabel": "Co-hosts",
   "create.v2.who.cohostsPlaceholder": "Search your network",
   "create.v2.who.cohostsHint":
@@ -1038,6 +1039,21 @@ export const gatherings: Catalog = {
     "We filled in the meeting point from {name}. You can change it.",
   "create.v2.who.runByRefused":
     "This business can't run this event. Pick another, or none.",
+  "create.v2.who.paymentLinkLabel": "Payment link",
+  "create.v2.who.paymentLinkHint":
+    "A page where guests can pay you, such as a Revolut, PayPal or Ko-fi link.",
+  "create.v2.who.paymentLinkPlaceholder": "https://revolut.me/yourname",
+  "create.v2.who.paymentLinkNotHttps":
+    "Payment links need https:// at the start.",
+  "create.v2.who.paymentLinkNoDomain":
+    "Add the full address, such as revolut.me/yourname.",
+  "create.v2.who.paymentLinkTooLong":
+    "Payment links can be up to 500 characters long.",
+  "create.v2.who.paymentLinkUnparseable":
+    "This link has characters a web address can't hold, such as spaces.",
+  "create.v2.who.paymentInstructionsLabel": "Payment instructions",
+  "create.v2.who.paymentInstructionsPlaceholder":
+    "MB WAY to 912 345 678 with your name, or cash at the door",
 
   // steps/AccessChapter.tsx: chapter 4
   "create.v2.access.questionsLabel": "Six questions",
@@ -1853,6 +1869,12 @@ export const gatherings: Catalog = {
   "gathering.where.costFree": "Free",
   "gathering.where.costNote":
     "Whatever you pay happens between you and the host. QueerPulse takes no money.",
+  "gathering.where.paymentHeading": "How to pay",
+  "gathering.where.paymentLinkCta": "Open payment link",
+  "gathering.where.paymentNote":
+    "Payments go straight to the host, outside QueerPulse.",
+  "gathering.where.paymentLinkHost": "Goes to {host}",
+  "gathering.where.opensInNewTab": "(opens in a new tab)",
   "gathering.where.takeMeThere": "Take me there",
   "gathering.where.mapAriaExact": "Map showing the exact location of {name}",
   "gathering.where.mapAriaArea": "Map showing the approximate area of {area}",
@@ -2040,7 +2062,8 @@ export const gatherings: Catalog = {
   // ENG-140 — the host turned "Show attendee count" off, so the server sends
   // no roster and no numbers to anyone but an organiser. Said plainly rather
   // than rendered as a zero, which would read as "nobody is coming".
-  "rsvpControl.goingCountHidden": "The host keeps the guest list private.",
+  "rsvpControl.goingCountHidden":
+    "The host turned off the guest list for this event, so nobody going can see who else is going.",
 
   // PRD-187 — the plus-one and access needs, reachable from the gathering
   // itself instead of only from a My Events card on another page.
@@ -2362,4 +2385,42 @@ export const gatherings: Catalog = {
     "Your event is up. Its quiz has adults rounds, so make the event 18+ and copy the quiz from the Live game tab",
   "create.toast.quizshowCopyFailed":
     "Your event is up. Its quiz didn't come with it, so copy it from the Live game tab",
+  // Hidden event communities
+  "hub.card.hostedWith": "With {name}",
+  "hiddenCommunities.menu.trigger": "More options for {title}",
+  "hiddenCommunities.menu.hide": "Hide events from {name}",
+  "hiddenCommunities.toast.hidden": "Events from {name} are hidden",
+  "hiddenCommunities.toast.undo": "Undo",
+  "hiddenCommunities.toast.hiddenEventStays":
+    "Events from {name} are hidden. {title} stays because a community you still see co-hosts it",
+  "hiddenCommunities.toast.shown": "Events from {name} are showing again",
+  "hiddenCommunities.error.notFound":
+    "We couldn't find {name}. It may have been deleted, or it is private and you're not in it.",
+  "hiddenCommunities.error.limitReached":
+    "You've hidden 200 communities, the most you can. Unhide one in Settings to hide another.",
+  "hiddenCommunities.error.rateLimited":
+    "That's a lot of changes in a row. Wait a minute and try again.",
+  "hiddenCommunities.error.hideUnreachable":
+    "Couldn't reach QueerPulse to hide events from {name}. Check your connection and try again.",
+  "hiddenCommunities.error.unhideUnreachable":
+    "Couldn't reach QueerPulse to show events from {name} again. Check your connection and try again.",
+  "hiddenCommunities.error.hideFailed": "Couldn't hide events from {name}",
+  "hiddenCommunities.error.unhideFailed":
+    "Couldn't show events from {name} again",
+  "hiddenCommunities.refine.label": "Communities",
+  "hiddenCommunities.refine.note":
+    "Events hosted by the communities you hide stay off Highlights, Browse and the calendar, unless a community you still see co-hosts them. Their posts in your feed stay as they are.",
+  "hiddenCommunities.refine.searchLabel": "Search communities to hide",
+  "hiddenCommunities.refine.searchPlaceholder": "Search by community name",
+  "hiddenCommunities.refine.hideCta": "Hide events",
+  "hiddenCommunities.refine.unhideCta": "Unhide",
+  "hiddenCommunities.refine.unhideLabel": "Unhide events from {name}",
+  "hiddenCommunities.refine.noMatch": "No community has that name.",
+  "hiddenCommunities.refine.searchError":
+    "Couldn't load communities. Check your connection and try again.",
+  "hiddenCommunities.notice.text_one":
+    "Events from {count} community you hid aren't shown here.",
+  "hiddenCommunities.notice.text_other":
+    "Events from {count} communities you hid aren't shown here.",
+  "hiddenCommunities.notice.manage": "Manage hidden communities",
 };

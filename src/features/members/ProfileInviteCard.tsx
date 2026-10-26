@@ -19,12 +19,15 @@ import styles from "./ProfileInviteCard.module.css";
  * Silent by default. Nothing renders while the quota is loading, if the fetch
  * failed, or once the allowance is spent — the same rule the account-menu
  * badge follows, so a member with nothing to give is never nagged about it.
+ * It also stays hidden while our team has paused this member's invites
+ * (`hasInviteAccess` is false); the invite page explains the pause.
  */
 export function ProfileInviteCard() {
   const { t } = useTranslation();
   const { data: quota, isLoading, isError } = useInviteQuota();
 
   if (isLoading || isError || !quota) return null;
+  if (!quota.hasInviteAccess) return null;
   if (quota.remaining <= 0) return null;
 
   // Derived at render, never cached, so a page left open across midnight shows

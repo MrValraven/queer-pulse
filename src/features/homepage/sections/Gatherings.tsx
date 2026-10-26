@@ -5,10 +5,18 @@ import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { routes } from "../../../app/routeMap";
 import { gatherings } from "../data/gatherings";
 import { formatLabel } from "../../gatherings/gatheringCatalog";
+import { useIsDemoGatheringHidden } from "../../gatherings/api/useHiddenEventCommunities";
 import styles from "./Gatherings.module.css";
 
+/** The demo homepage strip. It renders its own static rows, so it applies the
+ *  session's demo hidden communities itself (each row's `id` is the gathering
+ *  slug). */
 export function Gatherings() {
   const { t } = useTranslation();
+  const isHidden = useIsDemoGatheringHidden();
+  const shownGatherings = gatherings.filter(
+    (gathering) => !isHidden(gathering.id),
+  );
 
   return (
     <section className={styles.gather} id="gather">
@@ -28,7 +36,7 @@ export function Gatherings() {
           </Reveal>
 
           <div className={styles.list}>
-            {gatherings.map((event, index) => (
+            {shownGatherings.map((event, index) => (
               <Reveal key={event.id} delay={index * 50}>
                 <Link
                   to={`${routes.gatherings}#${event.id}`}

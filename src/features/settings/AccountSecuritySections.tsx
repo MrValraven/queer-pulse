@@ -11,6 +11,7 @@ import {
 } from "react-icons/fi";
 import { Button } from "../../shared/components/ui";
 import { useAuth } from "../../app/providers/authContext";
+import { useEmailCodeSignInState } from "../../shared/api/useIsEmailCodeSignInOn";
 import { routes } from "../../app/routeMap";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -65,28 +66,57 @@ export function SecurityRow({
   );
 }
 
+/** The sign-in line and its note. A member without Google reads the code
+ *  line; a member with Google reads both ways in only while the status says
+ *  codes are on, and the Google-only pair otherwise (off, or not read yet). */
+function signInCopyKeys(
+  hasGoogle: boolean,
+  isEmailCodeOn: boolean | null,
+): { value: string; note: string } {
+  if (hasGoogle && isEmailCodeOn !== true) {
+    return {
+      value: "settings:accountSecurity.signIn.valueGoogleOnly",
+      note: "settings:accountSecurity.signIn.noteGoogleOnly",
+    };
+  }
+  return {
+    value: hasGoogle
+      ? "settings:accountSecurity.signIn.valueWithGoogle"
+      : "settings:accountSecurity.signIn.value",
+    note: "settings:accountSecurity.signIn.note",
+  };
+}
+
 /**
- * How the member gets in. Google OAuth is the only credential the backend
- * knows (`users.google_id`), so this states that rather than offering a
- * password change, a second factor, or an unlink that no endpoint backs.
+ * How the member gets in. Two credentials exist now: a code sent to the
+ * account email and an optional Google identity (`users.google_id`). The row
+ * states both without offering a password change, a second factor, or an
+ * unlink that no endpoint backs. Unless the email code sign-in is explicitly
+ * on, a member with Google reads the Google-only line; one without Google
+ * keeps the code line, since that is still the address their account answers
+ * to.
  */
 export function SignInMethodRow() {
   const { t } = useTranslation();
   const { user } = useAuth();
+  const copyKeys = signInCopyKeys(
+    user?.hasGoogle !== false,
+    useEmailCodeSignInState(),
+  );
   return (
     <SecurityRow
       icon={<FiKey aria-hidden />}
       title={t("settings:accountSecurity.signIn.title")}
       value={
         <Translation
-          i18nKey="settings:accountSecurity.signIn.value"
+          i18nKey={copyKeys.value}
           components={{ strong: <b /> }}
           values={{
             email: user?.email ?? t("settings:accountSecurity.signIn.noEmail"),
           }}
         />
       }
-      note={t("settings:accountSecurity.signIn.note")}
+      note={t(copyKeys.note)}
     />
   );
 }
@@ -235,7 +265,6 @@ export function NotYetAvailableSection() {
       </div>
       <ul className={styles.notYetList}>
         <li>{t("settings:accountSecurity.notYet.twoFactor")}</li>
-        <li>{t("settings:accountSecurity.notYet.recovery")}</li>
       </ul>
     </div>
   );

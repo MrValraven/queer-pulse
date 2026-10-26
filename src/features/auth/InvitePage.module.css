@@ -324,6 +324,56 @@
   height: 16px;
 }
 
+/* ── Paused: our team has paused this member's invites. Takes the place of
+   the quota row and the compose form, in the same accent tint as the quota
+   refusal above, so both refusals read as one family. ── */
+.pausedPanel {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  max-width: 640px;
+  margin-bottom: 28px;
+}
+/* Phone: the icon tile sits above the heading, so the body and the button
+   get the card's full width. */
+@media (max-width: 599px) {
+  .pausedPanel {
+    flex-direction: column;
+    gap: 12px;
+  }
+}
+.pausedIcon {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-11);
+  background: rgba(var(--accent-rgb), 0.1);
+  border: 1px solid rgba(var(--accent-rgb), 0.28);
+  color: var(--accent-ink);
+}
+.pausedIcon svg {
+  width: 20px;
+  height: 20px;
+}
+.pausedHeading {
+  margin: 0 0 6px;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: var(--text-22);
+  line-height: 1.2;
+  color: var(--text-strong);
+}
+.pausedBody {
+  margin: 0 0 14px;
+  font-size: var(--text-14);
+  line-height: 1.6;
+  color: var(--ink-60);
+  max-width: 52ch;
+}
+
 /* ── Ready state: plum success panel revealed after generating the link ── */
 .ready {
   max-width: 540px;

@@ -9,6 +9,7 @@ import {
   type DsarArticle,
   type DsarRequest,
 } from "./account.api";
+import { ReauthRequiredError } from "./reauthRequiredError";
 import { useReauth } from "./useAccountMutations";
 
 const DAY_MS = 24 * 60 * 60 * 1000;
@@ -34,8 +35,10 @@ export interface SubmitDsarInput {
  * prototype still confirms end to end — and never invents a persona or a
  * fixed reference on a real session. No `reauthToken` is passed by callers; it
  * is resolved here so the page needn't know the route is gated (see
- * `useReauthToken.ts`) — live mode requires a fresh OAuth step-up round trip,
- * not a mintable-on-demand token.
+ * `useReauthToken.ts`). Live mode requires a fresh step-up token from the code
+ * dialog: with none cached, this opens the dialog and rejects with
+ * `ReauthRequiredError`, which callers treat as a quiet reset (no toast, the
+ * submit button enabled again) so the member can submit again after the code.
  *
  * On success, the new request is prepended directly into the `useListDsar`
  * cache (see `dsarListQueryKey`) instead of invalidating and refetching.
@@ -57,14 +60,14 @@ export function useSubmitDsar() {
         dueBy: daysFromNow(DSAR_DUE_DAYS),
       };
       const created = await simulateOr(demoMode, demoResult, async () => {
-        // No fresh step-up token cached yet: redirect instead of proceeding,
-        // and never resolve — the page is about to unload, and the caller
-        // must not see this as either a success or an error. The member
-        // submits again after landing back with a fresh token.
+        // No fresh step-up token cached yet: open the code dialog and stop
+        // with `ReauthRequiredError`, which the caller reads as a quiet pause:
+        // it re-enables the form and shows no toast. The member submits again
+        // once the code is accepted and the token is cached.
         const reauthToken = getReauthToken();
         if (!reauthToken) {
           beginReauth();
-          return new Promise<DsarRequest>(() => {});
+          throw new ReauthRequiredError();
         }
         return submitDsar({ ...input, reauthToken });
       });

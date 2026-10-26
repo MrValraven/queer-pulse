@@ -158,7 +158,7 @@ export function StudioTriageDetail({
       {detail.claim ? (
         <div className={s.claimRow}>
           <div className={s.av}>{detail.claim.initials}</div>
-          <div className={s.text}>
+          <div className={`${s.text} ${css.claimText}`}>
             <b>
               {t("studioShowcase:triage.detail.claim.headline", {
                 name: detail.claim.claimantName,

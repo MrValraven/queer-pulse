@@ -1,11 +1,14 @@
 /* The selection bar: an inverted pill (plum on cream, cream on the dark
    Studio) that floats above the player bar, the phone tab bar and the
    consent banner. Portalled to the body, so it reads the global Studio
-   roles only. */
+   roles only, and centres on the page's <main> through the two edges
+   StudioSelectionBar.tsx measures (--bar-left, --bar-right): clear of the
+   Studio rail, whether it is open, folded or gone. */
 
 .bar {
   position: fixed;
-  inset-inline: 16px;
+  left: calc(var(--bar-left, 0px) + 16px);
+  right: calc(var(--bar-right, 0px) + 16px);
   bottom: calc(
     var(--studio-player-inset, 0px) +
       max(var(--bottom-inset, 0px), var(--consent-inset, 0px)) + 12px
@@ -15,7 +18,12 @@
   align-items: center;
   gap: 6px;
   width: fit-content;
-  max-width: min(720px, calc(100% - 32px));
+  /* No wider than main less the 16px margins (the side insets only centre
+     it), and 980px at most: StudioSelectionBar.tsx reads the same cap. */
+  max-width: min(
+    980px,
+    calc(100% - var(--bar-left, 0px) - var(--bar-right, 0px) - 32px)
+  );
   margin-inline: auto;
   padding: 6px 6px 6px 18px;
   border-radius: var(--radius-pill);
@@ -46,6 +54,11 @@
   overflow-x: auto;
   overscroll-behavior-x: contain;
   scrollbar-width: none;
+}
+
+/* Each action sits in its tooltip's wrapper, which keeps its width. */
+.actions > * {
+  flex: none;
 }
 
 .actions::-webkit-scrollbar {
@@ -85,9 +98,7 @@
   --edge-start: right;
 }
 
-/* Select all names itself on wide screens; its icon stands in on phones.
-   The count shortens there too ("2 selecionadas"). */
-.selectAllIcon,
+/* The count shortens on phones ("2 selecionadas"). */
 .countCompact {
   display: none;
 }
@@ -118,7 +129,13 @@
   background: rgba(var(--accent-rgb), 0.32);
 }
 
-.srOnly {
+/* Visually hidden, still read. Below the --mobile cutover, and wherever
+   their names would not fit over main (`data-compact`, which
+   StudioSelectionBar.tsx sets in both cases), the actions keep their names
+   for screen readers (and in a tooltip) and show their icons only, so every
+   action shows and the whole bar fits at 360px. */
+.srOnly,
+.actions[data-compact] .actionLabel {
   position: absolute;
   width: 1px;
   height: 1px;
@@ -127,15 +144,13 @@
   white-space: nowrap;
 }
 
-/* Phones: the actions and Select all keep their names for screen readers
-   and show their icons only, so the whole bar fits at 360px. */
+.bar .actions[data-compact] .action:has(.actionLabel) {
+  padding-inline: 10px;
+}
+
 @media (--sm) {
   .bar {
     padding-inline-start: 14px;
-  }
-
-  .bar .action:has(.actionLabel) {
-    padding-inline: 10px;
   }
 
   .bar,
@@ -143,12 +158,11 @@
     gap: 4px;
   }
 
-  .selectAllIcon,
   .countCompact {
     display: inline;
   }
 
-  .actionLabel,
+  /* The .srOnly block above, on phones only. */
   .countFull {
     position: absolute;
     width: 1px;

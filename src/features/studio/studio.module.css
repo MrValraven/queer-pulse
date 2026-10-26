@@ -18,10 +18,17 @@
      both themes. */
   --wash: rgba(var(--studio-ink-rgb), 0.05);
   --line-2: rgba(var(--studio-ink-rgb), 0.22);
+  /* The neutral ink channel on the Studio ink, so the kit's quiet washes
+     (Button, Controls) read plum like the Studio pills. Dark mode is the same
+     cream either way. Ink 0.7 text stays above AA in light: 5.63:1 on cream,
+     5.06:1 on the 11% wash. */
+  --ink-rgb: var(--studio-ink-rgb);
   /* The content gutter: 32px on desktop, 24px on tablets, 16px on phones
      (set below), plus the landscape notch on either side. */
   --studio-gutter: 32px;
-  --studio-gutter-left: calc(var(--studio-gutter) + env(safe-area-inset-left, 0px));
+  --studio-gutter-left: calc(
+    var(--studio-gutter) + env(safe-area-inset-left, 0px)
+  );
   --studio-gutter-right: calc(
     var(--studio-gutter) + env(safe-area-inset-right, 0px)
   );
@@ -325,6 +332,12 @@
   backdrop-filter: var(--blur-lg);
   border-bottom: 1px solid var(--s-line);
 }
+
+/* Named only while a Studio page morph runs (studioPageMorph.ts), so the
+   topbar holds still above the crossfading page and the moving cover. */
+:global(:root[data-studio-morph]) .topbar {
+  view-transition-name: studio-topbar;
+}
 .navs {
   flex: none;
   display: flex;
@@ -357,6 +370,8 @@
   width: 16px;
   height: 16px;
 }
+/* The field swaps to a short placeholder when the full one would not fit
+   (StudioShellSearch); the ellipsis covers anything narrower still. */
 .search input {
   flex: 1;
   background: none;
@@ -364,6 +379,7 @@
   font-family: var(--sans);
   font-size: var(--text-14);
   color: var(--s-text);
+  text-overflow: ellipsis;
 }
 .search input::placeholder {
   color: var(--s-text-40);
@@ -482,6 +498,18 @@
     inset: -6px 0;
   }
 }
+/* Touch at any width: the pill keeps its slim look and a transparent
+   extension centred on it brings the hit area to 44px tall. */
+@media (pointer: coarse) {
+  .sustainPill {
+    position: relative;
+  }
+  .sustainPill::before {
+    content: "";
+    position: absolute;
+    inset: calc(50% - var(--tap-min) / 2) 0;
+  }
+}
 @media (--md) {
   .root {
     --studio-gutter: 16px;
@@ -523,18 +551,28 @@
   overflow: hidden;
   box-shadow: 0 28px 60px -28px rgba(0, 0, 0, 0.7);
 }
-/* Phones and tablets: the home cover centres at the detail-hero size, so
-   the title and Play stay above the fold once the grid goes one column. */
+/* Phones and tablets: the home cover takes the detail-hero size on the
+   copy's start edge, so it lines up with the eyebrow and title below it
+   and they stay above the fold once the grid goes one column. */
 @media (--compact) {
   .heroArt {
-    justify-self: center;
+    justify-self: start;
     width: min(260px, 68vw);
   }
 }
-/* A phone on its side: the cover gives the short screen back to the copy. */
+/* A phone on its side: two columns again, a 160px cover beside the copy,
+   as the detail heroes do. `.hero .heroInner` outranks the one-column
+   rule in the --compact block further down. The cover tops the row with
+   the eyebrow, so the short screen shows all of it. */
 @media (--compact) and (max-height: 500px) {
+  .hero .heroInner {
+    grid-template-columns: 160px minmax(0, 1fr);
+    gap: 20px;
+    align-items: start;
+  }
   .heroArt {
-    width: min(180px, 44vh);
+    justify-self: stretch;
+    width: 160px;
   }
 }
 .eb {
@@ -604,7 +642,9 @@
 /* The hero's pill buttons. The :where() guard adds no weight, so the rule
    stays (0,1,1), and it keeps the pill look off the items of a menu that
    opens inside the row (the playlist, release and artist overflow menus).
-   An icon before the label sits centred on it at 16px. */
+   An icon before the label sits centred on it at 16px.
+   A kit quiet Button's own hover and press (0,4,0) outrank this rule, so
+   the row hands it the Studio washes through the kit's hooks. */
 .heroActions button:where(:not([role="menuitem"])) {
   display: inline-flex;
   align-items: center;
@@ -615,6 +655,9 @@
   font-weight: 600;
   color: var(--s-text);
   background: rgba(var(--studio-ink-rgb), 0.08);
+  --button-quiet-hover: rgba(var(--studio-ink-rgb), 0.14);
+  --button-quiet-active: rgba(var(--studio-ink-rgb), 0.14);
+  --button-icon-hover: rgba(var(--studio-ink-rgb), 0.14);
   border: 1px solid var(--s-line);
   border-radius: var(--radius-pill);
   /* Every pill is a full 44px tap target, Share and Like included. */
@@ -640,42 +683,15 @@
   transform: scale(0.97);
 }
 /* A pressed toggle (Save) holds a deeper wash and the accent hairline, so
-   its state shows beside its words while its accessible name stays put. */
+   its state shows beside its words while its accessible name stays put.
+   Hovered, it keeps that wash rather than taking the lighter hover. */
 .heroActions button:where(:not([role="menuitem"]))[aria-pressed="true"] {
   background: rgba(var(--studio-ink-rgb), 0.14);
   border-color: rgba(var(--accent-rgb), 0.45);
+  --button-quiet-hover: rgba(var(--studio-ink-rgb), 0.14);
 }
 .heroActions button:where(:not([role="menuitem"]))[aria-pressed="true"] svg {
   color: var(--studio-accent-text);
-}
-/* Beats .heroActions button (0,1,1): the hero play keeps the coral fill. */
-.heroActions .playBig {
-  background: var(--accent);
-  border: none;
-  padding: 0;
-}
-@media (hover: hover) {
-  .heroActions .playBig:hover {
-    background: var(--accent-fill);
-  }
-}
-.playBig {
-  width: 52px;
-  height: 52px;
-  border-radius: 50%;
-  background: var(--accent);
-  border: none;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.playBig svg {
-  width: 16px;
-  height: 16px;
-  /* Dark ink on the coral fill: 6.28:1. */
-  color: var(--studio-bg);
-  margin-left: 2px;
 }
 .heroActions .tip {
   color: var(--studio-accent-text);
@@ -1122,11 +1138,7 @@
    and fades it in, so the crumb keeps the plain page behind its text. */
 .detailHeroUnderCrumb .detailWash {
   inset-block-start: 0;
-  mask-image: linear-gradient(
-    180deg,
-    transparent,
-    var(--studio-surface) 72px
-  );
+  mask-image: linear-gradient(180deg, transparent, var(--studio-surface) 72px);
 }
 /* The phone action row: Play, then round 44px icon buttons. It fits one
    line at 360px for a release or a track; a longer row (an artist's Follow
@@ -1146,8 +1158,21 @@
   clip-path: inset(50%);
   white-space: nowrap;
 }
-.heroActions[data-compact] > :first-child {
-  margin-inline-end: auto;
+/* On a phone Play holds the start and the icons the end of the row. A
+   "Play from {time}" beside Play can wrap the row, so then every action
+   lines up from the start. Wider icon-only rows keep their icons beside
+   Play. */
+@media (--md), (max-height: 500px) {
+  .heroActions[data-compact] > :first-child:not(:has(+ [data-hero-play-from])) {
+    margin-inline-end: auto;
+  }
+}
+/* The track hero's trailing actions, kept together so a wrapping row
+   carries the "..." onto the next line with company, never alone. */
+.heroActionGroup {
+  display: flex;
+  align-items: center;
+  gap: inherit;
 }
 /* (0,1,1) like the pill rule above and later in the file, so it wins over
    the pill and loses to the play button's own (0,2,0) size. */
@@ -1223,6 +1248,150 @@
 .detailHero h1 em {
   font-style: italic;
   color: var(--studio-accent-text);
+}
+
+/* The artist's wide cover (StudioArtistHero). It fades in once loaded; a
+   cover that fails leaves the layer below it showing. */
+.heroPhoto {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition-property: opacity;
+  transition-duration: var(--dur-slow);
+  transition-timing-function: var(--ease);
+}
+.heroPhoto[data-loaded] {
+  opacity: 1;
+}
+
+/* Full-bleed artist hero: no cover frame. The photo fills a band that runs
+   out through the page gutter, with the kind, the name and the counts over
+   its lower part; the action row sits under the band on the page. */
+.detailHero[data-variant="full-bleed"] {
+  display: block;
+  padding-top: 0;
+}
+/* The band's own fill is the tint over the scrim ink, so while the photo
+   loads, or if it never does, the light copy still sits on a dark ground. */
+.detailBand {
+  --band-pad-end: 28px;
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: clamp(18rem, 44vh, 28rem);
+  margin-inline: calc(-1 * var(--studio-gutter-left))
+    calc(-1 * var(--studio-gutter-right));
+  padding: 0 var(--studio-gutter-right) var(--band-pad-end)
+    var(--studio-gutter-left);
+  overflow: hidden;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(var(--wash-rgb), calc(var(--wash-alpha) * 2.5)),
+      transparent
+    ),
+    rgb(var(--scrim-rgb));
+}
+.detailBandPhoto {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+.detailBandCopy {
+  position: relative;
+  min-width: 0;
+}
+/* The scrim is anchored to the copy, so it darkens exactly where the type
+   sits however far a long name wraps: it rises from clear over the top of
+   the photo to 0.68 at the eyebrow, which holds the cream type at 4.5:1 or
+   more over any photo, white included, in light and dark. */
+.detailBandCopy::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset-block: -7rem calc(-1 * var(--band-pad-end));
+  inset-inline: calc(-1 * var(--studio-gutter-left))
+    calc(-1 * var(--studio-gutter-right));
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    transparent,
+    rgba(var(--scrim-rgb), 0.68) 7rem,
+    rgba(var(--scrim-rgb), 0.82)
+  );
+}
+.detailHero .detailBand .kind {
+  color: rgba(var(--cream-rgb), 0.92);
+}
+.detailHero .detailBand h1 {
+  font-size: var(--text-hero);
+  font-weight: 400;
+  line-height: 0.92;
+  letter-spacing: -0.035em;
+  color: rgba(var(--cream-rgb), 1);
+  margin: 10px 0 14px;
+  /* A long name wraps, even one long word, so a phone never scrolls
+     sideways. */
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+  text-shadow: 0 2px 24px rgba(var(--scrim-rgb), 0.35);
+}
+.detailHero .detailBand .by {
+  color: rgba(var(--cream-rgb), 0.86);
+}
+
+/* Avatar over photo: the usual cover and copy, with the photo dimmed and
+   softened behind the whole hero on the wash's footprint. It fades out
+   toward the copy and the page, so the type reads on the surface; a soft
+   halo of the surface under the small lines covers a dark photo. */
+.detailBackdrop {
+  position: absolute;
+  inset-block: -96px -24px;
+  inset-inline-start: calc(-1 * var(--studio-gutter-left));
+  inset-inline-end: calc(-1 * var(--studio-gutter-right));
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+.detailBackdrop .heroPhoto {
+  filter: var(--blur-md);
+  transform: scale(1.06);
+  mask-image: linear-gradient(
+    180deg,
+    rgba(var(--scrim-rgb), 1),
+    rgba(var(--scrim-rgb), 0.62) 32%,
+    rgba(var(--scrim-rgb), 0.28) 56%,
+    transparent 88%
+  );
+}
+.detailBackdrop .heroPhoto[data-loaded] {
+  opacity: 0.42;
+}
+.detailHero[data-variant="avatar-backdrop"] :is(.kind, .by) {
+  text-shadow:
+    0 0 0.5em var(--studio-surface),
+    0 0 1em var(--studio-surface);
+}
+
+/* Phones and tablets: a shorter band, so the name and Play stay above the
+   fold. */
+@media (--compact) {
+  .detailBand {
+    --band-pad-end: 22px;
+    min-height: clamp(14rem, 36vh, 18rem);
+  }
+}
+/* A phone on its side: the band gives the short screen back to Play. */
+@media (--compact) and (max-height: 500px) {
+  .detailBand {
+    min-height: 11rem;
+  }
 }
 
 /* Detail layout (album/artist body) */

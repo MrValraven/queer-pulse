@@ -24,7 +24,13 @@ function artistWith(
   isOwner: boolean,
 ): StudioArtistView {
   return toArtistView({
-    artist: { ...artistRef, bio: null, city: null },
+    artist: {
+      ...artistRef,
+      bio: null,
+      city: null,
+      coverUrl: null,
+      studioHero: null,
+    },
     releases: [],
     ownerReleases: isOwner ? [] : null,
     followerCount: 0,

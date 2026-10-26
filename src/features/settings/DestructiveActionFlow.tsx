@@ -1,4 +1,10 @@
-import { useCallback, useEffect, useState, type ReactNode } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
 import { createPortal } from "react-dom";
 import { FiAlertTriangle, FiCheck } from "react-icons/fi";
 import { Button, useDismiss } from "../../shared/components/ui";
@@ -6,6 +12,7 @@ import { logError } from "../../shared/observability/logger";
 import { routes } from "../../app/routeMap";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
+import { isReauthRequiredError } from "./api/reauthRequiredError";
 import styles from "./DestructiveActionFlow.module.css";
 
 type Phase = "confirm" | "loading" | "done" | "error";
@@ -31,6 +38,11 @@ export interface DestructiveActionContent {
  * demo-simulated success). A rejected promise lands on an honest error phase,
  * never the success panel. `onDone` fires when the member leaves the result
  * (used to kill the session on success).
+ *
+ * A `ReauthRequiredError` rejection means the action found no step-up token
+ * and opened the code dialog without doing anything, so the flow goes back to
+ * the confirm phase quietly: no error panel, nothing logged, and the confirm
+ * button works again for the press that follows the code.
  *
  * `action` is REQUIRED, and PRD-01 is why. It used to be optional, with a
  * 1.4-second `setTimeout` standing in when a caller left it out. The Settings
@@ -65,11 +77,29 @@ export function DestructiveActionFlow({
     if (canDismiss) onClose();
   });
 
+  // Set when the action stopped for a step-up code. The code dialog has just
+  // opened on top and owns focus, so the return to "confirm" leaves it there.
+  const shouldKeepFocusRef = useRef(false);
+
   // Each phase swaps the dialog's contents out from under the focused control,
   // so move focus back inside whenever the phase changes.
   useEffect(() => {
+    if (shouldKeepFocusRef.current) {
+      shouldKeepFocusRef.current = false;
+      return;
+    }
     const dialog = dialogRef.current;
     if (!dialog) return;
+    // The code dialog can mount in the same commit as "loading", so leave
+    // focus alone while it sits in another open modal on top of this one.
+    const activeElement = document.activeElement;
+    if (
+      activeElement &&
+      !dialog.contains(activeElement) &&
+      activeElement.closest('[aria-modal="true"]')
+    ) {
+      return;
+    }
     const firstFocusable = dialog.querySelector<HTMLElement>(
       "a[href], button:not([disabled])",
     );
@@ -77,11 +107,19 @@ export function DestructiveActionFlow({
   }, [phase, dialogRef]);
 
   const run = useCallback(async () => {
+    // A flag left by a stop whose phase change never rendered must not skip
+    // the focus move for this run.
+    shouldKeepFocusRef.current = false;
     setPhase("loading");
     try {
       await action();
       setPhase("done");
     } catch (err) {
+      if (isReauthRequiredError(err)) {
+        shouldKeepFocusRef.current = true;
+        setPhase("confirm");
+        return;
+      }
       logError(err, {
         where: "DestructiveActionFlow",
         eyebrow: content.eyebrow,

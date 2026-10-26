@@ -178,24 +178,40 @@
   transition-property: opacity;
 }
 
-:global(html[data-reduce-motion="true"]) [data-studio-range][data-dragging] .rail {
+:global(html[data-reduce-motion="true"])
+  [data-studio-range][data-dragging]
+  .rail {
   transform: none;
 }
 
 :global(html[data-reduce-motion="true"]) .thumb,
-:global(html[data-reduce-motion="true"]) [data-studio-range][data-dragging] .thumbRail .thumb {
+:global(html[data-reduce-motion="true"])
+  [data-studio-range][data-dragging]
+  .thumbRail
+  .thumb {
   transform: translate(-50%, -50%) scale(0.857);
   opacity: 0;
 }
 
-:global(html[data-reduce-motion="true"]) [data-studio-range][data-hovering] .thumb,
-:global(html[data-reduce-motion="true"]) [data-studio-range][data-dragging] .thumbRail .thumb,
-:global(html[data-reduce-motion="true"]) [data-studio-range]:has(input:focus-visible) .thumb {
+:global(html[data-reduce-motion="true"])
+  [data-studio-range][data-hovering]
+  .thumb,
+:global(html[data-reduce-motion="true"])
+  [data-studio-range][data-dragging]
+  .thumbRail
+  .thumb,
+:global(html[data-reduce-motion="true"])
+  [data-studio-range]:has(input:focus-visible)
+  .thumb {
   opacity: 1;
 }
 
 :global(html[data-reduce-motion="true"]) :dir(rtl) .thumb,
-:global(html[data-reduce-motion="true"]) :dir(rtl) [data-studio-range][data-dragging] .thumbRail .thumb {
+:global(html[data-reduce-motion="true"])
+  :dir(rtl)
+  [data-studio-range][data-dragging]
+  .thumbRail
+  .thumb {
   transform: translate(50%, -50%) scale(0.857);
 }
 

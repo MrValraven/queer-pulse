@@ -288,10 +288,10 @@ export const admin: Catalog = {
   "dashboard.charts.series.spam": "Spam",
   "dashboard.charts.series.other": "Other",
   "dashboard.charts.memberGrowth.title": "Member growth",
-  "dashboard.charts.memberGrowth.sub": "Joined vs churned · with Pride spike",
+  "dashboard.charts.memberGrowth.sub": "Total members · last 10 weeks",
   "dashboard.charts.memberGrowth.ariaLabel": "Member growth line chart",
-  "dashboard.charts.memberGrowth.spike": "Pride",
-  "dashboard.charts.legend.joined": "Joined",
+  "dashboard.charts.memberGrowth.totalMembers": "Total members",
+  "dashboard.charts.memberGrowth.joinedThatWeek": "Joined that week",
   "dashboard.charts.legend.churned": "Churned",
   "dashboard.charts.responseTime.title": "Response time",
   "dashboard.charts.responseTime.sub": "Distribution · this month",
@@ -488,6 +488,10 @@ export const admin: Catalog = {
   "platformLog.kind.mod.invite_quota_changed": "changed an invite quota",
   "platformLog.kind.mod.invite_quota_changed.target":
     "changed the invite quota of",
+  "platformLog.kind.mod.invite_access_changed":
+    "changed someone's invite access",
+  "platformLog.kind.mod.invite_access_changed.target":
+    "changed the invite access of",
   "platformLog.kind.mod.invite_revoked": "revoked an invite",
   "platformLog.kind.mod.invite_revoked.target": "revoked an invite from",
   "platformLog.kind.mod.invite_refreshed": "refreshed an invite",
@@ -731,7 +735,8 @@ export const admin: Catalog = {
   "members.verify.source.rating_explainer": "Guide rating explainer",
   "members.verify.ageAttested": "18+ confirmed {date} · Terms v{version}",
   "members.verify.ageAttestedUnknown": "18+ confirmed · Terms v{version}",
-  // Approved: QueerPulse sends no email, so approval reaches the applicant
+  // Approved: QueerPulse emails nothing about applications (its only email is
+  // a sign-in code a person asks for on screen), so approval reaches the applicant
   // only when the reviewer carries the link over themselves. Say that
   // plainly here; promising an inbox delivery would strand people.
   "members.verify.approvedLabel": "Welcomed in",
@@ -1425,6 +1430,9 @@ export const admin: Catalog = {
   "members.timeline.action.roleChanged": "Role changed",
   "members.timeline.action.staffRoleGranted": "Staff role granted",
   "members.timeline.action.staffRoleRevoked": "Staff role revoked",
+  "members.timeline.action.inviteAccessChanged": "Invite access changed",
+  "members.timeline.note.invitesPaused": "Invites paused",
+  "members.timeline.note.invitesResumed": "Invites turned back on",
   "members.timeline.action.other": "Moderation action taken",
   "members.timeline.noReportsMeta": "A clean record so far",
   "members.timeline.verifiedMeta": "{date} · vouches confirmed",
@@ -1570,20 +1578,78 @@ export const admin: Catalog = {
   "adminInvites.quota.manageCta": "Manage invite quotas",
   "adminInvites.quota.modalEyebrow": "Resource limits",
   "adminInvites.quota.modalTitle": "Invite quotas",
-  "adminInvites.quota.modalHint":
-    "Set how many invites a member can send per month. Leave a field empty and clear it to use the platform default.",
-  "adminInvites.quota.sentCount": "{count} sent",
-  "adminInvites.quota.fieldLabel": "Monthly quota",
-  "adminInvites.quota.defaultPlaceholder": "Default",
-  "adminInvites.quota.inputAriaLabel": "Monthly invite quota for {name}",
-  "adminInvites.quota.saveCta": "Save",
-  "adminInvites.quota.saveAriaLabel": "Save invite quota for {name}",
-  "adminInvites.quota.clearCta": "Clear override",
-  "adminInvites.quota.clearAriaLabel": "Clear invite quota override for {name}",
-  "adminInvites.quota.invalid":
-    "Enter a whole number of 0 or more, or clear the field.",
-  "adminInvites.quota.saved": "Saved {name}'s invite quota.",
-  "adminInvites.quota.cleared": "{name} is back on the default invite quota.",
+  "adminInvites.quota.searchPlaceholder": "Search by name or @handle",
+  "adminInvites.quota.searchAria": "Search members by name or @handle",
+  "adminInvites.quota.summary_one":
+    "Everyone gets {count} invite a month, plus any perk or ambassador bonus. A custom limit replaces all of that.",
+  "adminInvites.quota.summary_other":
+    "Everyone gets {count} invites a month, plus any perk or ambassador bonus. A custom limit replaces all of that.",
+  "adminInvites.quota.resultsStatus_one": "{count} member found",
+  "adminInvites.quota.resultsStatus_other": "{count} members found",
+  "adminInvites.quota.listLabel": "Members and their invite limits",
+  "adminInvites.quota.column.member": "Member",
+  "adminInvites.quota.column.thisMonth": "This month",
+  "adminInvites.quota.column.monthlyLimit": "Monthly limit",
+  "adminInvites.quota.sentTotal_one": "{count} sent in total",
+  "adminInvites.quota.sentTotal_other": "{count} sent in total",
+  "adminInvites.quota.usage": "{sent} of {limit}",
+  "adminInvites.quota.limitReached": "Limit reached",
+  "adminInvites.quota.invitesPaused": "Invites paused",
+  "adminInvites.quota.limitDefault": "Default · {limit}",
+  "adminInvites.quota.customChip": "Custom",
+  "adminInvites.quota.setLimitCta": "Set limit",
+  "adminInvites.quota.setLimitAria": "Set limit for {name}",
+  "adminInvites.quota.editLimitCta": "Edit limit",
+  "adminInvites.quota.editLimitAria": "Edit limit for {name}",
+  "adminInvites.quota.editor.label": "Monthly invite limit for {name}",
+  "adminInvites.quota.editor.unit": "invites a month",
+  "adminInvites.quota.editor.saveCta": "Save limit",
+  "adminInvites.quota.editor.saving": "Saving…",
+  "adminInvites.quota.editor.cancelCta": "Cancel",
+  "adminInvites.quota.editor.useDefaultCta": "Use default",
+  "adminInvites.quota.editor.useDefaultAria": "Use default limit for {name}",
+  "adminInvites.quota.editor.problem.empty":
+    "Enter how many invites {name} can send a month.",
+  "adminInvites.quota.editor.problem.notWhole": "Use a whole number, like 5.",
+  "adminInvites.quota.editor.problem.negative":
+    "The limit can't go below 0. Use 0 to stop {name} sending invites.",
+  "adminInvites.quota.toast.saved_one":
+    "{name} can now send {count} invite a month.",
+  "adminInvites.quota.toast.saved_other":
+    "{name} can now send {count} invites a month.",
+  "adminInvites.quota.toast.savedZero": "{name} can't send invites now.",
+  "adminInvites.quota.toast.usingDefault":
+    "{name} is back on the default limit.",
+  "adminInvites.quota.countAll_one": "{count} member",
+  "adminInvites.quota.countAll_other": "{count} members",
+  "adminInvites.quota.countPartial_one": "Showing {shown} of {count} member",
+  "adminInvites.quota.countPartial_other": "Showing {shown} of {count} members",
+  "adminInvites.quota.loadMoreCta": "Load more members",
+  "adminInvites.quota.loadingMore": "Loading more members…",
+  "adminInvites.quota.empty.searchTitle": "No members match “{query}”",
+  "adminInvites.quota.empty.searchBody":
+    "Check the spelling, or try their @handle.",
+  "adminInvites.quota.empty.idleTitle": "No invites sent yet",
+  "adminInvites.quota.empty.idleBody":
+    "Members show up here once they send an invite or get a custom limit. Search by name to set a limit for anyone.",
+  "adminInvites.quota.error.loadTitle": "Couldn't load invite limits",
+  "adminInvites.quota.error.loadConnection":
+    "The request didn't reach the server. Check your connection and try again.",
+  "adminInvites.quota.error.loadServer":
+    "The server hit an error while loading this list. Try again in a moment.",
+  "adminInvites.quota.error.loadMissing":
+    "This server doesn't have the invite limits list yet. It needs a backend update.",
+  "adminInvites.quota.error.loadMore": "Couldn't load more members. {reason}",
+  "adminInvites.quota.error.adminOnly":
+    "Only admins can manage invite limits. Your account doesn't have admin access.",
+  "adminInvites.quota.error.memberGone":
+    "{name}'s account no longer exists, so there's no limit to change.",
+  "adminInvites.quota.error.saveConnection":
+    "{name}'s limit wasn't saved: the request didn't reach the server. Check your connection and try again.",
+  "adminInvites.quota.error.saveServer":
+    "{name}'s limit wasn't saved: the server hit an error. Try again in a moment.",
+  "adminInvites.quota.error.saveWithReason":
+    "{name}'s limit wasn't saved: {reason}.",
   "adminInvites.revoke.cta": "Revoke this invite",
   "adminInvites.revoke.confirmTitle": "Revoke invite {code}?",
   "adminInvites.revoke.confirmBody":
@@ -1603,6 +1669,91 @@ export const admin: Catalog = {
     "This invite changed while you had it open. Reload to see where it stands.",
   "adminInvites.refresh.failedToast":
     "Couldn't refresh this invite. Try again.",
+  "adminInvites.select.startCta": "Select",
+  "adminInvites.select.doneCta": "Done",
+  "adminInvites.select.rowAriaLabel": "Select invite {code}",
+  "adminInvites.select.selectAllCta": "Select all",
+  "adminInvites.select.clearCta": "Clear",
+  "adminInvites.select.capToast":
+    "Selected the first {cap} invites. One action takes up to {cap} at a time.",
+  "adminInvites.bulk.ariaLabel": "Actions for the selected invites",
+  "adminInvites.bulk.selectedCount_one": "{count} selected",
+  "adminInvites.bulk.selectedCount_other": "{count} selected",
+  "adminInvites.bulk.capNote": "Up to {cap} invites at a time",
+  "adminInvites.bulk.refreshCta_one": "Refresh {count} expired",
+  "adminInvites.bulk.refreshCta_other": "Refresh {count} expired",
+  "adminInvites.bulk.revokeCta_one": "Revoke {count} pending",
+  "adminInvites.bulk.revokeCta_other": "Revoke {count} pending",
+  "adminInvites.bulk.refreshCtaNone": "Refresh expired",
+  "adminInvites.bulk.revokeCtaNone": "Revoke pending",
+  "adminInvites.bulk.refreshConfirmTitle_one":
+    "Refresh {count} expired invite?",
+  "adminInvites.bulk.refreshConfirmTitle_other":
+    "Refresh {count} expired invites?",
+  "adminInvites.bulk.refreshConfirmBody_one":
+    "Its link works again for 7 days with the same code. Anyone who already has it can use it to join.",
+  "adminInvites.bulk.refreshConfirmBody_other":
+    "Each link works again for 7 days with its same code. Anyone who already has one can use it to join.",
+  "adminInvites.bulk.refreshConfirmCta_one": "Refresh invite",
+  "adminInvites.bulk.refreshConfirmCta_other": "Refresh {count} invites",
+  "adminInvites.bulk.refreshLeftAsTheyAre_one":
+    "{count} selected invite hasn't expired, so it stays as it is.",
+  "adminInvites.bulk.refreshLeftAsTheyAre_other":
+    "{count} selected invites haven't expired, so they stay as they are.",
+  "adminInvites.bulk.revokeConfirmTitle_one": "Revoke {count} pending invite?",
+  "adminInvites.bulk.revokeConfirmTitle_other":
+    "Revoke {count} pending invites?",
+  "adminInvites.bulk.revokeConfirmBody_one":
+    "The link stops working straight away. This can't be undone, though the sender can send a fresh invite.",
+  "adminInvites.bulk.revokeConfirmBody_other":
+    "Each link stops working straight away. This can't be undone, though each sender can send a fresh invite.",
+  "adminInvites.bulk.revokeConfirmCta_one": "Revoke invite",
+  "adminInvites.bulk.revokeConfirmCta_other": "Revoke {count} invites",
+  "adminInvites.bulk.revokeLeftAsTheyAre_one":
+    "{count} selected invite isn't pending, so it stays as it is.",
+  "adminInvites.bulk.revokeLeftAsTheyAre_other":
+    "{count} selected invites aren't pending, so they stay as they are.",
+  "adminInvites.bulk.refreshDoneToast_one": "Refreshed {count} invite",
+  "adminInvites.bulk.refreshDoneToast_other": "Refreshed {count} invites",
+  "adminInvites.bulk.revokeDoneToast_one": "Revoked {count} invite",
+  "adminInvites.bulk.revokeDoneToast_other": "Revoked {count} invites",
+  "adminInvites.bulk.refreshFailedAction":
+    "Couldn't refresh the selected invites",
+  "adminInvites.bulk.revokeFailedAction":
+    "Couldn't revoke the selected invites",
+  "adminInvites.bulk.skippedToast": "Left as they were: {reasons}.",
+  "adminInvites.bulk.skipReason.not_found_one": "{count} no longer exists",
+  "adminInvites.bulk.skipReason.not_found_other": "{count} no longer exist",
+  "adminInvites.bulk.skipReason.accepted_one": "{count} was already accepted",
+  "adminInvites.bulk.skipReason.accepted_other":
+    "{count} were already accepted",
+  "adminInvites.bulk.skipReason.revoked_one": "{count} was already revoked",
+  "adminInvites.bulk.skipReason.revoked_other": "{count} were already revoked",
+  "adminInvites.bulk.skipReason.expired_one": "{count} had already expired",
+  "adminInvites.bulk.skipReason.expired_other": "{count} had already expired",
+  "adminInvites.bulk.skipReason.still_valid_one": "{count} was still active",
+  "adminInvites.bulk.skipReason.still_valid_other": "{count} were still active",
+  "adminInvites.refreshAll.cta_one": "Refresh {count} expired",
+  "adminInvites.refreshAll.cta_other": "Refresh all {count} expired",
+  "adminInvites.refreshAll.confirmTitle_one": "Refresh {count} expired invite?",
+  "adminInvites.refreshAll.confirmTitle_other":
+    "Refresh {count} expired invites?",
+  "adminInvites.refreshAll.confirmBody_one":
+    "Its link works again for 7 days with the same code. Anyone who already has it can use it to join.",
+  "adminInvites.refreshAll.confirmBody_other":
+    "Each link works again for 7 days with its same code. Anyone who already has one can use it to join.",
+  "adminInvites.refreshAll.confirmBodyForInviter_one":
+    "The expired invite from {name} works again for 7 days with the same code. Anyone who already has the link can use it to join.",
+  "adminInvites.refreshAll.confirmBodyForInviter_other":
+    "Every expired invite from {name} works again for 7 days, each with its same code. Anyone who already has one of the links can use it to join.",
+  "adminInvites.refreshAll.confirmCta_one": "Refresh invite",
+  "adminInvites.refreshAll.confirmCta_other": "Refresh {count} invites",
+  "adminInvites.refreshAll.doneToast_one": "Refreshed {count} invite",
+  "adminInvites.refreshAll.doneToast_other": "Refreshed {count} invites",
+  "adminInvites.refreshAll.noneLeftToast":
+    "No expired invites were left to refresh.",
+  "adminInvites.refreshAll.failedAction":
+    "Couldn't refresh the expired invites",
 
   "adminCommissionInterests.title": "Commission <em>interest</em>",
   "adminCommissionInterests.header.eyebrow": "Culture",
@@ -1728,14 +1879,15 @@ export const admin: Catalog = {
   // One reader for the two inboxes that had none: the eleven generic intake
   // kinds (the twelfth, governance concerns, keeps its own page above) and the
   // public contact/partnership messages. Nothing here sends anything: this
-  // platform delivers no email, so "handled" only ever means a person read it.
+  // platform emails nothing about intakes (its only email is a sign-in code a
+  // person asks for on screen), so "handled" only ever means a person read it.
   "adminIntakes.title": "Everything <em>people sent</em>",
   "adminIntakes.header.eyebrow": "Front desk",
   "adminIntakes.header.title": "What people <em>sent us</em>",
   "adminIntakes.header.sub":
     "Every form on the platform files into one of two inboxes: the intake forms (grants, edit suggestions, sober hosting, panel signups, incubator and culture submissions) and the messages sent through the contact page. This is where a person reads them.",
   "adminIntakes.header.noEmailNote":
-    "QueerPulse sends no email. Marking something handled records that a person read it. Any answer goes out from your own inbox, to the address on the message.",
+    "QueerPulse sends no email from here. Marking something handled records that a person on our team read it. Any answer goes out from your own inbox, to the address on the message.",
 
   "adminIntakes.tab.waiting": "Waiting",
   "adminIntakes.tab.intakes": "Intake forms",
@@ -3242,6 +3394,7 @@ export const admin: Catalog = {
   // `AdminInvitesService`, `AdminMemberModerationService`).
   "governance.audit.actionType.member_verified": "Member verified",
   "governance.audit.actionType.invite_quota_changed": "Invite quota changed",
+  "governance.audit.actionType.invite_access_changed": "Invite access changed",
   "governance.audit.actionType.invite_revoked": "Invite revoked",
   "governance.audit.actionType.invite_refreshed": "Invite refreshed",
   // Reversals and the ban-ratification window (`ModerationService`,
@@ -4986,6 +5139,7 @@ export const admin: Catalog = {
   "reports.trends.title": "Growth & reports by type",
   "reports.trends.sub": "Adjust the range to see a longer or shorter window.",
   "reports.trends.rangeWeeks": "{count}w",
+  "reports.trends.growthSub": "Total members · last {count} weeks",
   "reports.trends.exportGrowth": "Export growth CSV",
   "reports.trends.exportReportsByType": "Export reports CSV",
   "reports.trends.exportToast": "Export started",
@@ -5012,6 +5166,24 @@ export const admin: Catalog = {
   "reports.communityHealth.columns.openReports": "Open reports",
 
   "dashboard.viewFullReport": "View full report",
+  "dashboard.landingVisits.title": "Landing page visits",
+  "dashboard.landingVisits.sub": "Anonymous daily counts, no personal data",
+  "dashboard.landingVisits.range30": "Last 30 days",
+  "dashboard.landingVisits.range90": "Last 90 days",
+  "dashboard.landingVisits.total_one": "{count} visit",
+  "dashboard.landingVisits.total_other": "{count} visits",
+  "dashboard.landingVisits.topSources": "Top sources",
+  "dashboard.landingVisits.sourceDirect": "Direct or unknown",
+  "dashboard.landingVisits.ariaLabel": "Daily landing page visits",
+  "dashboard.landingVisits.empty":
+    "No visits counted yet. Share the page and check back.",
+  "dashboard.landingVisits.loadError": "Couldn't load landing page visits",
+  "dashboard.landingVisits.retry": "Retry",
+  "dashboard.landingVisits.tip_one": "{day}: {countLabel} visit",
+  "dashboard.landingVisits.tip_other": "{day}: {countLabel} visits",
+  "dashboard.landingVisits.tipCount_one": "{countLabel} visit",
+  "dashboard.landingVisits.tipCount_other": "{countLabel} visits",
+  "dashboard.landingVisits.rangeLabel": "Range",
 
   // ── CNT-14: admin resource-listings CRUD ────────────────────────────────
   "adminResourceListings.title": "Resource <em>listings</em>",
@@ -8264,6 +8436,23 @@ export const admin: Catalog = {
   "studioAccess.revokeBody":
     "Their player stops and Studio shows them the coming-soon page again",
   "studioAccess.revokeConfirm": "Revoke Studio access",
+  // ── Invite access (2026-10-26) ─────────────────────────────────────────────
+  "inviteAccess.label": "Invites",
+  "inviteAccess.on": "Can invite new people",
+  "inviteAccess.off": "Invites paused",
+  "inviteAccess.hint":
+    "While paused, this member can't create or resend invites. The rest of their account keeps working",
+  "inviteAccess.toggleLabel": "Invites for {name}",
+  "inviteAccess.pauseTitle": "Pause invites for {name}?",
+  "inviteAccess.pauseBody_one":
+    "{name} won't be able to create or resend invites until you turn them back on. Their {count} pending invite stays valid unless you revoke it on the Invites page",
+  "inviteAccess.pauseBody_other":
+    "{name} won't be able to create or resend invites until you turn them back on. Their {count} pending invites stay valid unless you revoke them on the Invites page",
+  "inviteAccess.pauseBodyNoPending":
+    "{name} won't be able to create or resend invites until you turn them back on. They have no pending invites right now",
+  "inviteAccess.pauseBodyCountUnknown":
+    "{name} won't be able to create or resend invites until you turn them back on. Any pending invites stay valid unless you revoke them on the Invites page",
+  "inviteAccess.pauseConfirm": "Pause invites",
   "moderation.studioRelease.heading": "Studio release",
   "moderation.studioRelease.subject": "{title} by {artist}",
   "moderation.studioRelease.takeDownCta": "Take down release",
@@ -8317,6 +8506,7 @@ export const admin: Catalog = {
   "moderation.action.personaPostRemoved": "Removed a persona post",
   "moderation.action.earlyAccessGranted": "Turned on early access",
   "moderation.action.earlyAccessRevoked": "Revoked early access",
+  "moderation.action.inviteAccessChanged": "Changed invite access",
   "ambassadors.loadMore": "Load more",
   "ambassadors.loadingMore": "Loading…",
   "ambassadors.loadMoreError": "We couldn't load more ambassadors. Try again.",

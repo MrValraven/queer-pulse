@@ -2,10 +2,12 @@
 
 The web front end for **QueerPulse** — a queer community platform rooted in Lisbon. It brings together the many things a real-world LGBTQ+ community needs in one place: people, events, culture, mutual support, and the infrastructure to run it all transparently.
 
+> **New here? Start with [SETUP.md](SETUP.md).** It gets the frontend, the API, Postgres and local uploads running and you signed in, with one command per repo.
+
 > **Dual-mode.** This app began as a pure design prototype and is being wired to a real [NestJS backend](../queerpulse-backend) (a separate repo, deployed at `api.queerpulse.com`). It runs in one of two modes:
 >
-> - **Live mode** — the default whenever `VITE_API_URL` is set. Real Google OAuth, httpOnly-cookie sessions with CSRF + token refresh, real persistence, and socket.io realtime. See [`src/shared/api/client.ts`](src/shared/api/client.ts).
-> - **Demo mode** — forced on when `VITE_API_URL` is unset, or opted into with `VITE_DEMO=1`. Every data hook falls back to colocated `*.data.ts` mock fixtures, so the prototype still runs standalone with no backend.
+> - **Live mode**: the default. `VITE_API_URL` names the backend origin. Real sign-in (email codes and Google OAuth), httpOnly-cookie sessions with CSRF + token refresh, real persistence, and socket.io realtime. See [`src/shared/api/client.ts`](src/shared/api/client.ts).
+> - **Demo mode**: on only with `VITE_DEMO=1` (see [`src/shared/api/config.ts`](src/shared/api/config.ts)); a missing `VITE_API_URL` never turns it on, and a production build without `VITE_API_URL` or `VITE_DEMO=1` refuses to boot. Every data hook then returns its colocated `*.data.ts` mock fixture, so the prototype runs standalone with no backend: `VITE_DEMO=1 pnpm dev`. With both `VITE_DEMO=1` and `VITE_API_URL` set, the app starts live and platform admins can toggle demo data from **Populate platform** in the account menu.
 >
 > **Every live-mode code path must keep its demo fallback.** Preserving this split is a hard rule for any change — see [`CLAUDE.md`](CLAUDE.md).
 >
@@ -34,38 +36,44 @@ The app spans the full surface of the imagined platform, including:
 
 ## Getting started
 
-Requires Node and **pnpm**.
+Node 22 (`.nvmrc`) and pnpm 9.15 through `corepack enable`. With the backend cloned next to this repo as `../queerpulse-backend`:
 
 ```bash
-pnpm install
-cp .env.example .env   # then set VITE_API_URL (omit it to run in demo mode)
-pnpm dev               # start the dev server (HMR)
+pnpm dev:setup   # checks Node and pnpm, installs, creates .env, runs the doctor
+pnpm dev         # dev server with HMR at http://localhost:5173
 ```
+
+[SETUP.md](SETUP.md) covers the backend, signing in, demo mode, the daily checks and troubleshooting. `pnpm dev:doctor` re-checks your setup at any time (read-only).
 
 Other scripts:
 
 ```bash
-pnpm build      # typecheck + production build (tsc -b && vite build)
-pnpm preview    # serve the production build locally
-pnpm lint       # run ESLint
-pnpm test       # run the Vitest suite once
-pnpm test:watch # watch mode
-pnpm test:cov   # with coverage (gated on src/shared/api/client.ts)
-pnpm test:e2e   # Playwright happy-paths (browsers must be installed)
-pnpm sitemap    # regenerate public/sitemap.xml (not part of build)
+pnpm verify             # lint, typecheck, lint:a11y, check:tokens, check:css-scale, test
+pnpm typecheck          # tsc -b --noEmit
+pnpm build              # build gates (a11y, tokens, css-scale, tsc -b, sitemap, robots, Chromium), vite build, prerender
+pnpm preview            # serve the production build locally
+pnpm lint               # run ESLint (Prettier runs through it)
+pnpm test               # run the Vitest suite once
+pnpm test:watch         # watch mode
+pnpm test:cov           # with coverage (gated on src/shared/api/client.ts)
+pnpm test:e2e           # Playwright happy-paths on a demo-mode dev server at :5188
+pnpm prerender:browser  # install the Playwright Chromium that prerender and e2e need
+pnpm sitemap            # regenerate public/sitemap.xml (the build also runs it)
 ```
 
-Tests live in `src/**/*.test.ts(x)` and `src/test/**`. Note there is **no CI** in this repo — run `pnpm build && pnpm lint && pnpm test` before pushing.
+The prerender step reads only `process.env`, so a local build needs the API origin on the command line: `VITE_API_URL=http://localhost:3000 pnpm build`.
+
+Tests live in `src/**/*.test.ts(x)` and `src/test/**`. This repo has **no CI**, so run `pnpm verify` before handing work over.
 
 ## Environment
 
-| Variable           | Required               | Purpose                                                                                                                                                                  |
-| ------------------ | ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `VITE_API_URL`     | **Yes, in production** | Backend origin, no trailing slash (`https://api.queerpulse.com`). Inlined at build time; a production build **throws at boot** without it, by design. Unset ⇒ demo mode. |
-| `VITE_DEMO`        | No                     | `1` forces demo mode. **Never set this on a real deployment** — it serves fabricated content as real community data.                                                     |
-| `VITE_SITE_ORIGIN` | Recommended            | Canonical origin for SEO/OG/sitemap URLs. Unset ⇒ falls back to `https://queerpulse.com`, which is wrong on preview deploys.                                             |
-| `VITE_SENTRY_DSN`  | No                     | Currently **inert** — `@sentry/react` is not installed and the observability layer is a no-op stub.                                                                      |
-| `VITE_RELEASE`     | No                     | Sentry release tag; inert for the same reason.                                                                                                                           |
+| Variable           | Required               | Purpose                                                                                                                                                                      |
+| ------------------ | ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `VITE_API_URL`     | **Yes, in production** | Backend origin, no trailing slash (`https://api.queerpulse.com`). Inlined at build time; a production build **throws at boot** without it (unless `VITE_DEMO=1`), by design. |
+| `VITE_DEMO`        | No                     | `1` forces demo mode. **Never set this on a real deployment** — it serves fabricated content as real community data.                                                         |
+| `VITE_SITE_ORIGIN` | Recommended            | Canonical origin for SEO/OG/sitemap URLs. Unset ⇒ falls back to `https://queerpulse.com`, which is wrong on preview deploys.                                                 |
+| `VITE_SENTRY_DSN`  | No                     | Currently **inert** — `@sentry/react` is not installed and the observability layer is a no-op stub.                                                                          |
+| `VITE_RELEASE`     | No                     | Sentry release tag; inert for the same reason.                                                                                                                               |
 
 Cookies are `SameSite=Lax` with no `Domain` attribute, so the frontend and API **must share a registrable domain** (`queerpulse.com` + `api.queerpulse.com`). Deploying the frontend on an unrelated domain silently breaks authentication.
 

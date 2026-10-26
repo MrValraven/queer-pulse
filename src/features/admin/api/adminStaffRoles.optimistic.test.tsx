@@ -68,6 +68,8 @@ function makeDetail(
     role: "member",
     isSystem: false,
     signInEmailMasked: null,
+    hasInviteAccess: true,
+    pendingInviteCount: null,
     glance: [],
     graphNote: "",
     communities: [],

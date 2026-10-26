@@ -11,6 +11,9 @@ interface CollapseProps {
   /** Skip the height animation on first render, so content that is already
    *  open when the page loads does not grow in. Defaults to true. */
   isInitialSkipped?: boolean;
+  /** Called once the content has finished folding away after `isOpen` turns
+   *  false, for a caller whose own layout should follow the fold's end. */
+  onExitComplete?: () => void;
 }
 
 /**
@@ -28,9 +31,13 @@ export function Collapse({
   children,
   className,
   isInitialSkipped = true,
+  onExitComplete,
 }: CollapseProps) {
   return (
-    <AnimatePresence initial={!isInitialSkipped}>
+    <AnimatePresence
+      initial={!isInitialSkipped}
+      onExitComplete={onExitComplete}
+    >
       {isOpen && (
         <CollapsePanel key="collapse" className={className}>
           {children}

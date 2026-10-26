@@ -186,22 +186,21 @@ export function StudioReviewTrackReportCard({
           >
             {t("studio:flagReviewLive.action.takeDown")}
           </Button>
-          <div className={css.actionPair}>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => onDismiss(trackTitle)}
-            >
-              {t("studio:flagReviewLive.action.dismiss")}
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              to={`${routes.adminModeration}?tab=open&subjectId=${encodeURIComponent(report.trackId)}`}
-            >
-              {t("studio:flagReviewLive.action.openModeration")}
-            </Button>
-          </div>
+          {/* The quiet exits come last: on a phone they share one row. */}
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => onDismiss(trackTitle)}
+          >
+            {t("studio:flagReviewLive.action.dismiss")}
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            to={`${routes.adminModeration}?tab=open&subjectId=${encodeURIComponent(report.trackId)}`}
+          >
+            {t("studio:flagReviewLive.action.openModeration")}
+          </Button>
         </>
       }
     >

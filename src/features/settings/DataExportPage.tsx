@@ -36,15 +36,16 @@ const FORMAT_BY_WIRE_VALUE: Record<ExportFormat, Format> = {
 /**
  * The chosen categories and format live in the URL, not in component state.
  *
- * An export sits behind a step-up re-auth, which is a real Google OAuth round
- * trip: the SPA unloads, and `beginReauth` sends the browser back to
+ * An export sits behind a step-up re-auth. The code dialog keeps the page
+ * loaded, but a member with Google can pick the OAuth round trip instead: the
+ * SPA unloads, and `beginGoogleReauth` sends the browser back to
  * `pathname + search`. Anything in `useState` is gone by then, so a member who
  * chose "messages only, CSV" used to land back on the defaults and their next
  * press exported a different set than the one they picked, with a 3-per-hour
  * throttle capping how often they could correct it (PRD-305).
  *
  * The search string is the natural carrier because it is already what the
- * round trip preserves; `beginReauth`'s doc comment traces every hop that
+ * round trip preserves; `beginGoogleReauth`'s doc comment traces every hop that
  * keeps it intact. This value therefore comes back through an EXTERNAL
  * redirect and is parsed as untrusted input: every category is matched against
  * `DATA_TYPES` and the format against the three known values, and anything

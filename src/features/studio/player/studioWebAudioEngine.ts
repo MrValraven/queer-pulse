@@ -89,6 +89,10 @@ const GAIN_DB_LIMITS = { min: -12, max: 6 } as const;
  *  enough to cover the no-preload reload and a refresh retry, after which a
  *  member's pause lets the session go. */
 const SESSION_RELEASE_GRACE_MS = 10_000;
+/** A resume after a pause builds from silence to full this fast; plain
+ *  decks step element.volume every RESUME_FADE_STEP_MS to get there. */
+const RESUME_FADE_SECONDS = 0.4;
+const RESUME_FADE_STEP_MS = 25;
 
 const clampLevel = (level: number) => Math.min(Math.max(level, 0), 1);
 const clampGainDb = (gainDb: number) =>
@@ -134,6 +138,12 @@ class WebAudioEngine implements StudioAudioEngine {
   private fade: {
     timerIds: number[];
     settle: (isComplete: boolean) => void;
+  } | null = null;
+  /** The fade-in armed by a resume, started by the deck's playing. */
+  private resumeFade: {
+    deck: Deck;
+    timerIds: number[];
+    hasStarted: boolean;
   } | null = null;
   private remoteState: StudioRemoteState = REMOTE_IDLE;
   private remoteWatcher: StudioRemoteWatcher | null = null;
@@ -191,6 +201,7 @@ class WebAudioEngine implements StudioAudioEngine {
   load(sourceUrl: string, startAtSeconds: number, gainDb: number): void {
     this.cutCrossfade();
     this.endFade();
+    this.cancelResumeFade();
     const deck = this.active();
     deck.pendingStartSeconds = startAtSeconds;
     deck.gainDb = clampGainDb(gainDb);
@@ -205,6 +216,7 @@ class WebAudioEngine implements StudioAudioEngine {
   async play(): Promise<void> {
     this.holdSession();
     const deck = this.active();
+    this.armResumeFade(deck);
     // Both start inside the member's gesture: the context's resume and the
     // element's play. The resume's answer is read afterwards, and a context
     // that never answers reads as suspended once RESUME_TIMEOUT_MS passes.
@@ -214,12 +226,14 @@ class WebAudioEngine implements StudioAudioEngine {
     // A context that stays suspended plays the element into silence.
     if (!this.isActive(deck) || deck.element.paused) return;
     deck.element.pause();
+    this.abandonResumeFade(deck);
     this.emit({ type: "blocked" });
   }
 
   pause(): void {
     this.finishOutgoing();
     this.endFade();
+    this.cancelResumeFade();
     const deck = this.active();
     deck.element.pause();
     this.setFadeLevel(deck, { to: 1, seconds: 0 });
@@ -244,6 +258,7 @@ class WebAudioEngine implements StudioAudioEngine {
     if (this.remoteState.isConnected) return;
     const deck = this.idle();
     if (this.outgoing?.deck === deck) this.finishOutgoing();
+    this.cancelResumeFade(deck);
     deck.gainDb = clampGainDb(gainDb);
     deck.pendingStartSeconds = 0;
     this.setFadeLevel(deck, { to: 1, seconds: 0 });
@@ -271,6 +286,7 @@ class WebAudioEngine implements StudioAudioEngine {
     this.hasPreloaded = false;
     this.finishOutgoing();
     this.endFade();
+    this.cancelResumeFade();
     this.activeIndex = this.activeIndex === 0 ? 1 : 0;
     // A cast device plays one deck: the swap is gapless while connected.
     const crossfadeSeconds =
@@ -327,6 +343,8 @@ class WebAudioEngine implements StudioAudioEngine {
 
   fadeOut(seconds: number): Promise<boolean> {
     this.endFade();
+    // The sleep fade takes over from wherever a resume fade-in got to.
+    this.cancelResumeFade();
     const deck = this.active();
     return new Promise<boolean>((resolve) => {
       const timerIds: number[] = [];
@@ -348,6 +366,7 @@ class WebAudioEngine implements StudioAudioEngine {
     this.mode = "trying";
     this.finishOutgoing();
     this.endFade();
+    this.cancelResumeFade();
     this.hasPreloaded = false;
     this.graphDecks.forEach((deck) => this.clearDeck(deck));
     this.decks = [this.createFreshDeck(), this.createFreshDeck()];
@@ -364,6 +383,7 @@ class WebAudioEngine implements StudioAudioEngine {
   dispose(): void {
     this.finishOutgoing();
     this.endFade();
+    this.cancelResumeFade();
     this.detach.abort();
     this.remoteWatcher?.dispose();
     for (const deck of new Set([...this.graphDecks, ...this.decks]))
@@ -514,6 +534,7 @@ class WebAudioEngine implements StudioAudioEngine {
       this.announcePlain();
     }
     this.holdSession();
+    this.startResumeFade(deck);
     this.reportBuffering(deck, false);
     this.emit({ type: "playing" });
   }
@@ -556,6 +577,7 @@ class WebAudioEngine implements StudioAudioEngine {
     try {
       await deck.element.play();
     } catch (error) {
+      this.abandonResumeFade(deck);
       const errorName = error instanceof DOMException ? error.name : "";
       // AbortError: a newer load replaced this source before it started.
       // element.error: the error listener has already reported it.
@@ -582,6 +604,7 @@ class WebAudioEngine implements StudioAudioEngine {
   }
 
   private clearDeck(deck: Deck): void {
+    this.cancelResumeFade(deck);
     deck.pendingStartSeconds = 0;
     deck.element.pause();
     deck.element.removeAttribute("src");
@@ -886,10 +909,13 @@ class WebAudioEngine implements StudioAudioEngine {
       1,
       Math.round((seconds * 1000) / PLAIN_FADE_STEP_MS),
     );
+    // From the level the deck has now, so a fade that takes over a resume
+    // fade-in never jumps up first.
+    const startLevel = deck.plainFadeLevel;
     for (let step = 1; step <= stepCount; step += 1) {
       timerIds.push(
         this.environment.setTimer(() => {
-          deck.plainFadeLevel = 1 - step / stepCount;
+          deck.plainFadeLevel = startLevel * (1 - step / stepCount);
           this.applyPlainVolume(deck);
         }, step * PLAIN_FADE_STEP_MS),
       );
@@ -917,6 +943,63 @@ class WebAudioEngine implements StudioAudioEngine {
     fade.settle(false);
   }
 
+  /** A play that resumes mid track (Spotify style) starts silent and fades
+   *  in once the deck plays. A fresh track from 0 keeps its intro whole, and
+   *  a sleep fade or a cast device keeps the level it has. */
+  private armResumeFade(deck: Deck): void {
+    const element = deck.element;
+    if (!element.paused || !element.getAttribute("src")) return;
+    if (this.remoteState.isConnected || this.fade) return;
+    if (element.currentTime <= 0 && deck.pendingStartSeconds <= 0) return;
+    this.cancelResumeFade();
+    this.setFadeLevel(deck, { to: 0, seconds: 0 });
+    this.resumeFade = { deck, timerIds: [], hasStarted: false };
+  }
+
+  /** Runs once per resume: a later playing (after a buffering wait) leaves
+   *  it be. The graph ramps on the context clock, which waits while the
+   *  context is suspended; a plain deck steps its volume up to exactly 1. */
+  private startResumeFade(deck: Deck): void {
+    const resumeFade = this.resumeFade;
+    if (resumeFade?.deck !== deck || resumeFade.hasStarted) return;
+    resumeFade.hasStarted = true;
+    if (deck.nodes && this.graph) {
+      this.resumeFade = null;
+      this.setFadeLevel(deck, { from: 0, to: 1, seconds: RESUME_FADE_SECONDS });
+      return;
+    }
+    const stepCount = Math.round(
+      (RESUME_FADE_SECONDS * 1000) / RESUME_FADE_STEP_MS,
+    );
+    for (let step = 1; step <= stepCount; step += 1)
+      resumeFade.timerIds.push(
+        this.environment.setTimer(() => {
+          deck.plainFadeLevel = step / stepCount;
+          this.applyPlainVolume(deck);
+          if (step === stepCount) this.resumeFade = null;
+        }, step * RESUME_FADE_STEP_MS),
+      );
+  }
+
+  /** Drops a resume fade-in (all of them, or only the given deck's). The
+   *  level stays where the caller puts it. */
+  private cancelResumeFade(deck?: Deck): void {
+    const resumeFade = this.resumeFade;
+    if (!resumeFade || (deck && resumeFade.deck !== deck)) return;
+    this.resumeFade = null;
+    resumeFade.timerIds.forEach((timerId) =>
+      this.environment.clearTimer(timerId),
+    );
+  }
+
+  /** A resume that never got going (blocked, failed, cast): the deck goes
+   *  back to full level so it is never left silent. */
+  private abandonResumeFade(deck: Deck): void {
+    if (this.resumeFade?.deck !== deck) return;
+    this.cancelResumeFade();
+    this.setFadeLevel(deck, { to: 1, seconds: 0 });
+  }
+
   /** A new watcher (new elements) starts from its own state, so the cast
    *  button follows the elements that play now. */
   private watchRemote(): void {
@@ -942,6 +1025,7 @@ class WebAudioEngine implements StudioAudioEngine {
     if (state.isConnected && !previous.isConnected) {
       this.finishOutgoing();
       this.cancelPreload();
+      this.abandonResumeFade(this.active());
       this.releaseSession(0);
     }
     this.emit({ type: "remote", state });

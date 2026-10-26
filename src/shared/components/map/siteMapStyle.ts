@@ -12,12 +12,13 @@ type SymbolLayer = Extract<LayerSpecification, { type: "symbol" }>;
 // to another provider (e.g. MapTiler) later is a single change to this constant.
 export const MAP_STYLE_URL = "https://tiles.openfreemap.org/styles/positron";
 
-// SW then NE corner (lng, lat) framing greater Lisbon: Sintra and Cascais to
-// the west, the south-margin cities (Almada, Seixal, Barreiro, Montijo,
-// Alcochete) across the Tejo, and Setúbal to the south.
+// SW then NE corner (lng, lat) framing every mapped freguesia: Cascais and
+// Oeiras to the west, Lisbon in the middle, and the south margin of the Tejo
+// (Almada, Seixal, Barreiro, Moita, Montijo, Alcochete) and Setúbal, down to
+// the Arrábida and Sado parts at about 38.46.
 export const GREATER_LISBON_BOUNDS: [[number, number], [number, number]] = [
-  [-9.47, 38.47],
-  [-8.82, 38.85],
+  [-9.52, 38.44],
+  [-8.72, 38.85],
 ];
 
 // Hex mirrors of the design tokens. Required because MapLibre paint runs in a

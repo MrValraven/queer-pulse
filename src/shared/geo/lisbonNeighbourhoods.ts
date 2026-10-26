@@ -1,14 +1,18 @@
 /**
- * The one "where in Lisbon are you" vocabulary, shared by the profile
+ * The one "where in greater Lisbon are you" vocabulary, shared by the profile
  * editor's neighbourhood select and the member directory's "Where they're
  * based" filter. Mirrored server-side by `src/profiles/neighbourhoods.ts`,
- * which does the free-text matching — the two lists must stay identical or a
+ * which does the free-text matching: the two lists must stay identical or a
  * member can pick an area no filter can find them by.
  *
  * It is deliberately TWO vocabularies in one list:
  *
- * - the 24 official freguesias (parishes), derived from the same map data the
- *   freguesia layer renders, so the names and the map can never drift; and
+ * - the official freguesias (parishes) of Lisbon, Oeiras, Cascais and the
+ *   south bank of the Tejo (Almada, Seixal, Barreiro, Moita, Montijo,
+ *   Alcochete) and Setúbal, derived from the same map data the freguesia layer renders,
+ *   so the names and the map can never drift. Freguesia names are unique
+ *   across those municipalities; if OSM ever returns two with the same name
+ *   the generator suffixes the concelho, "Name (Concelho)"; and
  * - the informal bairros queer Lisbon actually says. "Príncipe Real" and
  *   "Cais do Sodré" are how people describe where they live; "Santo António"
  *   and "Misericórdia" are what the council calls the same ground.
@@ -21,7 +25,7 @@
  */
 import { FREGUESIAS } from "../components/map/freguesias.data";
 
-/** Which of the two vocabularies a name belongs to — the select groups on it. */
+/** Which of the two vocabularies a name belongs to (the select groups on it). */
 export type LisbonNeighbourhoodKind = "bairro" | "freguesia";
 
 export interface LisbonNeighbourhood {
@@ -29,7 +33,7 @@ export interface LisbonNeighbourhood {
   kind: LisbonNeighbourhoodKind;
 }
 
-/** Informal bairros: the everyday names that are NOT freguesias. Each one is
+/** Informal Lisbon bairros: the everyday names that are NOT freguesias. Each one is
  *  already in use somewhere in the app (member profiles, housing listings,
  *  the list-a-business wizard's `CITY` config), so this list adds no new
  *  vocabulary, it just gathers what members already write by hand. */

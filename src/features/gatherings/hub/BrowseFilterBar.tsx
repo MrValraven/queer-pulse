@@ -1,4 +1,4 @@
-import { useId } from "react";
+import { useId, type ReactNode, type RefObject } from "react";
 import type { IconType } from "react-icons";
 import { FiGrid } from "react-icons/fi";
 import {
@@ -10,7 +10,7 @@ import {
   SearchInput,
   Select,
 } from "../../../shared/components/ui";
-import { useRefineDrawer } from "../../../shared/hooks";
+import type { useRefineDrawer } from "../../../shared/hooks";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { HOODS } from "../createGathering.data";
 import {
@@ -29,6 +29,7 @@ import {
   type CostFilter,
   type WhenPreset,
 } from "./browseFilters";
+import { HiddenCommunitiesRefineGroup } from "./HiddenCommunitiesRefineGroup";
 import {
   countHiddenBrowseFilters,
   useBrowseActiveFilters,
@@ -102,15 +103,25 @@ export function BrowseFilterBar({
   onChange,
   searchDraft,
   onSearchDraftChange,
+  refine,
+  communitiesSearchRef,
+  notice,
 }: {
   filters: BrowseFilterState;
   onChange: (next: BrowseFilterState) => void;
   /** The search box's own value. It outruns the debounced `filters.query`. */
   searchDraft: string;
   onSearchDraftChange: (next: string) => void;
+  /** The drawer's open state, owned by `BrowseView` so the hidden-communities
+   *  notice under the bar can open it too. */
+  refine: ReturnType<typeof useRefineDrawer>;
+  /** The hidden-communities search field, focused by that notice. */
+  communitiesSearchRef: RefObject<HTMLInputElement | null>;
+  /** A line under the active-filter chips, inside the bar's own spacing so
+   *  the board below keeps one gap whether it shows or not. */
+  notice?: ReactNode;
 }) {
   const { t } = useTranslation();
-  const refine = useRefineDrawer("qp.events.browse.refineOpen");
   const familyLabelId = useId();
   const whenLabelId = useId();
   const hoodLabelId = useId();
@@ -255,6 +266,10 @@ export function BrowseFilterBar({
             onChange={(cost) => onChange({ ...filters, cost })}
           />
         </RefineGroup>
+
+        {/* A standing preference that outlasts any search, so the Refine
+            badge and the active-filter chips leave it out. */}
+        <HiddenCommunitiesRefineGroup searchInputRef={communitiesSearchRef} />
       </RefinePanel>
 
       {/* Clearing lives here, beside the chips it clears, rather than as a
@@ -263,6 +278,7 @@ export function BrowseFilterBar({
         filters={activeFilters}
         onClearFilters={() => onChange(EMPTY_BROWSE_FILTERS)}
       />
+      {notice}
     </div>
   );
 }

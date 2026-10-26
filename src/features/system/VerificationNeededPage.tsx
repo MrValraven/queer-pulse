@@ -9,6 +9,7 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import {
   beginReauth,
   getCachedReauthToken,
+  useIsGoogleStepUp,
 } from "../settings/api/useReauthToken";
 import {
   ConfirmMethod,
@@ -18,7 +19,7 @@ import {
 import { REAUTH_SECONDS } from "./verificationNeeded.data";
 import styles from "./VerificationNeededPage.module.css";
 
-type Stage = "input" | "verifying" | "success" | "expired";
+type Stage = "input" | "success" | "expired";
 
 function formatCountdown(totalSeconds: number) {
   return `${Math.floor(totalSeconds / 60)}:${String(totalSeconds % 60).padStart(2, "0")}`;
@@ -34,39 +35,46 @@ function formatCountdown(totalSeconds: number) {
  * is no billing to cancel. On the live build that meant a screen that said
  * "we've confirmed it's you" having confirmed nothing at all.
  *
- * A real step-up flow exists. QueerPulse auth is Google OAuth only, so proving
- * "this person re-authenticated just now" means a genuine OAuth round trip:
- * `beginReauth()` navigates to `GET /auth/google?reauth=1&redirect=<here>`, the
- * callback returns the token in the URL fragment, and `useReauthCompletion`
- * (mounted at the app root) caches it. This page now drives exactly that in
- * live mode and reads the result with `getCachedReauthToken()`.
+ * A real step-up flow exists. Proving "this person confirmed it is them just
+ * now" means a code emailed to the member's own address: `beginReauth()` opens
+ * the code dialog (`/auth/email-code/reauth/*`), which caches the token in
+ * `qp_reauth_token` and then calls the `onConfirmed` this page hands it, so
+ * the success panel shows in place. Members with Google can still pick the
+ * redirect from the dialog; that round trip lands back here and
+ * `useReauthCompletion` (mounted at the app root) caches the same token, which
+ * this page reads with `getCachedReauthToken()` on mount.
  *
- * The countdown does not survive into live mode, on purpose: `beginReauth()`
- * unloads the page, so there is no in-page window left to count down, and the
- * token's own expiry is checked by `getCachedReauthToken` when a destructive
- * action asks for it. Nor does the live page finish the action for the member:
- * every call site (DeleteAccountSection, AccountDataExport, useDsar) requires
- * the same confirm button to be pressed again after landing back, which is the
- * deliberate safety margin against anything destructive firing as a side
- * effect of a page load.
+ * Demo opens the same dialog on its mock answers, and its `onConfirmed` shows
+ * the demo success panel and moves on to settings, so the prototype walks the
+ * whole step-up. The countdown stays in demo mode on purpose: the code itself
+ * carries its own expiry inside the dialog, and the token's expiry is checked by
+ * `getCachedReauthToken` when a destructive action asks for it. The live page
+ * also leaves the action to the member: every call site
+ * (DeleteAccountSection, AccountDataStepAway, AccountDataExport, useDsar,
+ * useExportFlow) requires the same confirm button to be pressed again after
+ * the confirmation, which is the deliberate safety margin against anything
+ * destructive firing as a side effect of it.
  */
 export function VerificationNeededPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { demoMode } = useDemoMode();
+  // Unless sign-in codes are explicitly on, `beginReauth` runs the Google
+  // round trip for a member with Google.
+  const isGoogleStepUp = useIsGoogleStepUp();
   const [stage, setStage] = useState<Stage>("input");
   const [secondsLeft, setSecondsLeft] = useState(REAUTH_SECONDS);
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
   // Read once at mount rather than during every render: `getCachedReauthToken`
   // touches sessionStorage and clears an expired entry, so it is not a pure
   // read, and a value that changed mid-render would be a rules-of-React
-  // violation. The only way it becomes true is the redirect landing, which
-  // remounts the page anyway.
-  const [hasReauthToken] = useState(
+  // violation. It becomes true on the Google redirect landing, which remounts
+  // the page, or through the code dialog's `onConfirmed` below.
+  const [hasReauthToken, setHasReauthToken] = useState(
     () => !demoMode && !!getCachedReauthToken(),
   );
 
-  // Live re-auth countdown — demo only; pauses once verifying/done.
+  // The demo countdown; it stops once the page leaves the input stage.
   useEffect(() => {
     if (!demoMode || stage !== "input") return;
     const countdown = setInterval(() => {
@@ -84,10 +92,11 @@ export function VerificationNeededPage() {
 
   useEffect(() => () => timers.current.forEach(clearTimeout), []);
 
-  function handleVerify() {
-    setStage("verifying");
-    timers.current.push(setTimeout(() => setStage("success"), 1100));
-    timers.current.push(setTimeout(() => void navigate(routes.settings), 2700));
+  // Demo: the code dialog runs on mock answers; once it confirms, the demo
+  // success panel shows and the page moves on to settings.
+  function handleDemoConfirmed() {
+    setStage("success");
+    timers.current.push(setTimeout(() => void navigate(routes.settings), 1600));
   }
 
   function restart() {
@@ -95,7 +104,7 @@ export function VerificationNeededPage() {
     setSecondsLeft(REAUTH_SECONDS);
   }
 
-  // Landed back from Google with a token in hand.
+  // A token in hand, from the code dialog or the Google landing.
   if (hasReauthToken) {
     return (
       <AuthLayout>
@@ -123,7 +132,6 @@ export function VerificationNeededPage() {
     );
   }
 
-  const isBusy = demoMode && stage === "verifying";
   const isUrgent = secondsLeft <= 60;
 
   return (
@@ -172,9 +180,15 @@ export function VerificationNeededPage() {
           VerificationNeededSections. */}
       <div className={styles.methodBody}>
         <ConfirmMethod
-          isBusy={isBusy}
+          isBusy={false}
           isLiveStepUp={!demoMode}
-          onVerify={demoMode ? handleVerify : beginReauth}
+          onVerify={() =>
+            beginReauth({
+              onConfirmed: demoMode
+                ? handleDemoConfirmed
+                : () => setHasReauthToken(true),
+            })
+          }
         />
       </div>
 
@@ -194,7 +208,11 @@ export function VerificationNeededPage() {
             }}
           />
         ) : (
-          t("system:verificationNeeded.footLive")
+          t(
+            isGoogleStepUp
+              ? "system:verificationNeeded.footLiveGoogle"
+              : "system:verificationNeeded.footLive",
+          )
         )}
       </p>
     </AuthLayout>

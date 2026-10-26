@@ -4,7 +4,6 @@ import { ImageSlot } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { routes } from "../../app/routeMap";
 import type { MemberProfile } from "./data/memberProfiles";
-import type { ActivityItem } from "./data/members";
 import type { WorkItem } from "./data/members";
 import { SHAPING_META } from "./profileSections.data";
 import { Section } from "./ProfileSections";
@@ -167,52 +166,4 @@ export function ShapingsSection({ profile }: { profile: MemberProfile }) {
   );
 }
 
-export function ActivitySection({ profile }: { profile: MemberProfile }) {
-  const { t } = useTranslation();
-  if (profile.activity.length === 0) return null;
-  return (
-    <Section
-      title={t("members:content.activity.title")}
-      subtitle={t("members:content.activity.subtitle")}
-    >
-      <div className={styles.activityList}>
-        {profile.activity.map((item, index) => (
-          <ActivityRow key={`${item.title}-${index}`} item={item} />
-        ))}
-      </div>
-    </Section>
-  );
-}
-
-/**
- * One "Recent activity" row.
- *
- * A row links only when the backend gave it a destination, and it only does
- * that for a subject that is already public to the reader: a public gathering,
- * a forum thread, a public community or one of its posts, a published persona.
- * The backend re-checks that on every read, so a subject made private later
- * takes its whole row away rather than leaving a link that 404s. A row with no
- * destination is still a true statement, so it renders as plain text instead
- * of a dead link.
- */
-function ActivityRow({ item }: { item: ActivityItem }) {
-  const body = (
-    <>
-      <span className={styles.actIcon} aria-hidden>
-        <item.icon />
-      </span>
-      <span className={styles.actBody}>
-        <span className={styles.actTitle}>{item.title}</span>
-        {item.sub ? <span className={styles.actSub}>{item.sub}</span> : null}
-      </span>
-    </>
-  );
-  if (!item.to) {
-    return <div className={styles.actItem}>{body}</div>;
-  }
-  return (
-    <Link to={item.to} className={styles.actItem}>
-      {body}
-    </Link>
-  );
-}
+export { ActivitySection } from "./ProfileActivitySection";

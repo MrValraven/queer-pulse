@@ -3,7 +3,7 @@ import { useId, useState } from "react";
 import { Link } from "react-router-dom";
 import { FiCheck, FiHeart, FiMusic, FiPlus } from "react-icons/fi";
 import { useMotionPrefs } from "../../app/providers/motionPrefs";
-import { Button, EmptyState, ImageSlot } from "../../shared/components/ui";
+import { Button, EmptyState } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { StudioReleaseCardView } from "./api/studio.adapters";
@@ -13,6 +13,7 @@ import { StudioPlayButton } from "./kit/StudioPlayButton";
 import { useStudioPlayer } from "./player/studioPlayerContext";
 import { StudioHomeHeroShowcase } from "./StudioHomeHeroShowcase";
 import { StudioLoadError } from "./StudioLoadStates";
+import { StudioReleaseCoverArt } from "./StudioReleaseCoverArt";
 import { StudioHeroSkeleton } from "./StudioSkeletons";
 import { StudioTipModal } from "./StudioTipModal";
 import { releaseFactsLine } from "./studioFacts";
@@ -171,16 +172,14 @@ export function StudioHomeHero({
     >
       <div className={styles.heroInner}>
         <div className={styles.heroArt}>
-          <ImageSlot
-            src={release.coverUrl ?? undefined}
+          {/* No art yet: the wordless fallback, as on every other cover. */}
+          <StudioReleaseCoverArt
+            src={release.coverUrl}
+            title={release.title}
+            format={release.format}
             tint={release.tint}
-            width="100%"
-            height="100%"
             radius={16}
-            placeholder={`${t("studio:media.coverLabel")} · ${release.artist.name}`}
-            style={{ position: "absolute", inset: 0 }}
-            loading="eager"
-            fetchPriority="high"
+            isPriority
           />
         </div>
         <div className={styles.heroInfo}>

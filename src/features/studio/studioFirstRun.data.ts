@@ -87,12 +87,21 @@ export interface StudioFirstRunChoice<Value extends string> {
   labelKey: string;
 }
 
-/** Step 2: every genre a release can carry except the catch-all. */
+/** Not offered in step 2: the catch-all, and Spoken word, which the
+ *  format chips already name. */
+const FIRST_RUN_LEFT_OUT_GENRES: ReadonlySet<StudioGenre> = new Set([
+  "other",
+  "spoken-word",
+]);
+
+/** Step 2: every genre a release can carry, less the ones left out above. */
 export const FIRST_RUN_GENRES: readonly StudioFirstRunChoice<StudioGenre>[] =
-  STUDIO_GENRES.filter((genre) => genre !== "other").map((genre) => ({
-    value: genre,
-    labelKey: STUDIO_GENRE_LABEL_KEY[genre],
-  }));
+  STUDIO_GENRES.filter((genre) => !FIRST_RUN_LEFT_OUT_GENRES.has(genre)).map(
+    (genre) => ({
+      value: genre,
+      labelKey: STUDIO_GENRE_LABEL_KEY[genre],
+    }),
+  );
 
 export const FIRST_RUN_MOODS: readonly StudioFirstRunChoice<StudioMood>[] =
   STUDIO_MOODS.map((mood) => ({

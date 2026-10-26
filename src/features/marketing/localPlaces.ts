@@ -121,7 +121,7 @@ function warnIfUnknownFreguesia(freguesia: string, source: string): string {
     warnedFreguesias.add(freguesia);
     console.warn(
       `[localPlaces] ${source} → freguesia "${freguesia}" is not one of the ` +
-        `${FREGUESIA_NAMES.size} Lisbon parishes; its map count will not render. ` +
+        `${FREGUESIA_NAMES.size} mapped parishes; its map count will not render. ` +
         `Add the hood to HOOD_TO_FREGUESIA or fix the parish name.`,
     );
   }

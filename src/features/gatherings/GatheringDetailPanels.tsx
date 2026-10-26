@@ -1,5 +1,6 @@
 import { GatheringAccessPanel } from "./GatheringAccessPanel";
 import { GatheringAnnouncements } from "./GatheringAnnouncements";
+import { GatheringPaymentDetails } from "./GatheringPaymentDetails";
 import { GatheringWherePanel } from "./GatheringWherePanel";
 import type { GatheringDetail } from "./data";
 
@@ -10,7 +11,8 @@ import type { GatheringDetail } from "./data";
  * Demo-only: the mock registry has no address, no accessibility answers and no
  * announcements, so a demo gathering would render three empty panels claiming
  * nobody has answered anything. It keeps the prototype's own single location
- * line in the sidebar instead.
+ * line in the sidebar instead. Cost is the one exception: a paid demo event
+ * shows its price, with how to pay beneath it, as a panel of its own.
  */
 export function GatheringDetailPanels({
   gathering,
@@ -19,7 +21,9 @@ export function GatheringDetailPanels({
   gathering: GatheringDetail;
   demoMode: boolean;
 }) {
-  if (demoMode) return null;
+  if (demoMode) {
+    return <GatheringPaymentDetails gathering={gathering} isStandalone />;
+  }
 
   return (
     <>

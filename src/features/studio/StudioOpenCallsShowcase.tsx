@@ -50,17 +50,20 @@ export function StudioOpenCallsShowcase() {
       </div>
 
       <div className={s.filter}>
-        {FILTERS.map((f) => (
-          <Button
-            key={f.id}
-            variant="ghost"
-            className={filter === f.id ? s.chipOn : undefined}
-            aria-pressed={filter === f.id}
-            onClick={() => setFilter(f.id)}
-          >
-            {t(f.labelKey)}
-          </Button>
-        ))}
+        <div className={s.filterChips}>
+          {FILTERS.map((f) => (
+            <Button
+              key={f.id}
+              variant="ghost"
+              size="sm"
+              className={filter === f.id ? s.chipOn : undefined}
+              aria-pressed={filter === f.id}
+              onClick={() => setFilter(f.id)}
+            >
+              {t(f.labelKey)}
+            </Button>
+          ))}
+        </div>
         <span className={s.filterCount}>
           <Translation
             i18nKey="studio:calls.filter.openCount"

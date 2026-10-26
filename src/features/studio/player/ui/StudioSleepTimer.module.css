@@ -90,12 +90,24 @@
   flex: 1;
 }
 
-/* The running timer: an accent edge and text, as the Speed choice does. */
-.active.active.active {
-  border-color: var(--accent);
-  background: var(--studio-wash-3);
-  color: var(--studio-accent-text);
+/* The running timer and the chosen speed: the ink fill the equalizer's
+   chosen preset wears, so every choice in the panel reads the same. */
+.active.active.active,
+.choice.choice[aria-checked="true"] {
+  border-color: rgba(var(--studio-ink-rgb), 0.88);
+  background: rgba(var(--studio-ink-rgb), 0.88);
+  color: var(--studio-surface-rail);
   font-weight: 600;
+}
+
+@media (hover: hover) {
+  .active.active.active:hover:not(:disabled):not([aria-disabled="true"]),
+  .choice.choice[aria-checked="true"]:hover:not(:disabled):not(
+      [aria-disabled="true"]
+    ) {
+    border-color: rgba(var(--studio-ink-rgb), 1);
+    background: rgba(var(--studio-ink-rgb), 1);
+  }
 }
 
 .check {
@@ -115,8 +127,9 @@
   box-shadow: var(--ring-cream);
 }
 
-/* The More panel's last two rows (keyboard shortcuts, Close player) under
-   a hairline of their own, 16px clear of the audio settings. */
+/* The More panel's last rows (Go to track inside Now playing, keyboard
+   shortcuts, Close player) under a hairline of their own, 16px clear of the
+   audio settings. */
 .panelFoot {
   display: flex;
   flex-direction: column;
@@ -124,4 +137,17 @@
   margin-block-start: 6px;
   padding-block-start: 16px;
   border-block-start: 1px solid var(--studio-line);
+}
+
+/* Go to track sits in a fold, a block, so it stretches like its siblings. */
+.goToTrackRow {
+  inline-size: 100%;
+}
+
+/* A touch phone has no keyboard to take shortcuts from. Tripled to
+   outrank the choice's own display. */
+@media (hover: none) and (pointer: coarse) {
+  .choice.choice.shortcutsRow {
+    display: none;
+  }
 }

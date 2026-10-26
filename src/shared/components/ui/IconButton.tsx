@@ -26,6 +26,9 @@ type IconButtonBase = {
   tooltip?: string | boolean;
   /** Where the tooltip bubble sits. Defaults to `top`. */
   tooltipPlacement?: TooltipProps["placement"];
+  /** Holds the tooltip back without unmounting the button, for a trigger
+   *  whose own menu or panel is open. */
+  isTooltipDisabled?: boolean;
 };
 
 type IconButtonProps = IconButtonBase &
@@ -54,6 +57,7 @@ export function IconButton({
   className,
   tooltip,
   tooltipPlacement = "top",
+  isTooltipDisabled = false,
   ...rest
 }: IconButtonProps) {
   const tooltipLabel =
@@ -69,7 +73,11 @@ export function IconButton({
     </Button>
   );
   return tooltipLabel ? (
-    <Tooltip label={tooltipLabel} placement={tooltipPlacement}>
+    <Tooltip
+      label={tooltipLabel}
+      placement={tooltipPlacement}
+      isDisabled={isTooltipDisabled}
+    >
       {button}
     </Tooltip>
   ) : (

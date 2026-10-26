@@ -1,0 +1,310 @@
+/* Recent activity: one timeline on the page ground. A hairline rail joins a
+   dot per period heading and a tinted badge per row; rows carry no card of
+   their own, only a soft wash when they link somewhere and are hovered.
+
+   The rail is drawn per node (each heading and row paints its own segment as
+   `::before`), so it runs unbroken across the "Show more" fold. The node that
+   starts the rail clips its segment's top to its own centre, the node that
+   ends it clips the bottom, and `--node-center` says where that centre is. */
+.timeline {
+  --activity-badge-size: 32px;
+  --activity-row-pad-y: 12px;
+  --activity-row-pad-x: 12px;
+  --activity-col-gap: 14px;
+  --activity-arrow-col: 24px;
+  --activity-rail-x: calc(
+    var(--activity-row-pad-x) + var(--activity-badge-size) / 2
+  );
+  --activity-text-x: calc(
+    var(--activity-row-pad-x) + var(--activity-badge-size) +
+      var(--activity-col-gap)
+  );
+  --activity-rail-color: rgba(var(--line-rgb), 0.14);
+  /* Rows bleed into the gutter so the hover wash has room around the text,
+     while the badges still line up with the section heading above. */
+  margin-inline: calc(-1 * var(--activity-row-pad-x));
+  /* Keeps a short headline within reach of its time on a wide column. */
+  max-width: 760px;
+}
+
+.periodLabel,
+.rowItem {
+  position: relative;
+}
+.periodLabel::before,
+.rowItem::before {
+  content: "";
+  position: absolute;
+  left: calc(var(--activity-rail-x) - 0.5px);
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--activity-rail-color);
+}
+.isRailStart::before {
+  top: var(--node-center);
+}
+.isRailEnd::before {
+  bottom: auto;
+  height: var(--node-center);
+}
+
+/* Period heading: a small open dot on the rail, the label in the text column. */
+.periodLabel {
+  --label-pad-top: 22px;
+  --label-line: 16px;
+  --node-center: calc(var(--label-pad-top) + var(--label-line) / 2);
+  margin: 0;
+  padding: var(--label-pad-top) var(--activity-row-pad-x) 6px
+    var(--activity-text-x);
+  font-family: inherit;
+  font-size: var(--text-11-5);
+  font-weight: 600;
+  line-height: var(--label-line);
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--ink-60);
+}
+.periodLabel.isRailStart {
+  --label-pad-top: 0px;
+}
+.periodLabel::after {
+  content: "";
+  position: absolute;
+  left: calc(var(--activity-rail-x) - 4px);
+  top: calc(var(--node-center) - 4px);
+  width: 8px;
+  height: 8px;
+  box-sizing: border-box;
+  border-radius: var(--radius-avatar);
+  border: 1.5px solid rgba(var(--line-rgb), 0.3);
+  background: var(--cream);
+}
+
+.rowList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.rowItem {
+  --node-center: calc(
+    var(--activity-row-pad-y) + var(--activity-badge-size) / 2
+  );
+}
+
+.row {
+  /* Where the time and arrow start, matched to the first text line. */
+  --activity-meta-top: 1px;
+  display: grid;
+  grid-template-columns:
+    var(--activity-badge-size) minmax(0, 1fr) auto
+    var(--activity-arrow-col);
+  grid-template-areas: "badge body time arrow";
+  align-items: start;
+  padding: var(--activity-row-pad-y) var(--activity-row-pad-x);
+  border-radius: var(--radius-14);
+  color: inherit;
+  text-decoration: none;
+}
+.row.isTitleOnly {
+  --activity-meta-top: 10px;
+}
+.isLinked {
+  transition: background-color 0.2s var(--ease);
+}
+.isLinked:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+@media (hover: hover) {
+  .isLinked:hover {
+    background-color: rgba(var(--ink-rgb), 0.04);
+  }
+}
+.isLinked:focus-visible {
+  background-color: rgba(var(--ink-rgb), 0.04);
+}
+
+/* The badge sits on the rail, so it paints an opaque page-coloured base under
+   its tint: the line stops at its edge instead of showing through. */
+.badge {
+  grid-area: badge;
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: var(--activity-badge-size);
+  height: var(--activity-badge-size);
+  border-radius: var(--radius-avatar);
+  background-color: var(--cream);
+  background-image: linear-gradient(
+    rgba(var(--tone-rgb), var(--tone-alpha)),
+    rgba(var(--tone-rgb), var(--tone-alpha))
+  );
+  box-sizing: border-box;
+  border: 1px solid rgba(var(--tone-rgb), 0.16);
+  color: var(--tone-ink);
+  font-size: var(--text-15);
+  --tone-alpha: 0.13;
+}
+.tonePersona {
+  --tone-rgb: var(--accent-rgb);
+  --tone-ink: var(--accent-ink);
+}
+.toneCommunity {
+  --tone-rgb: var(--jade-rgb);
+  --tone-ink: var(--jade-ink);
+}
+.toneEvent {
+  --tone-rgb: var(--amber-rgb);
+  --tone-ink: var(--amber-ink);
+}
+.toneConversation {
+  --tone-rgb: var(--violet-rgb);
+  --tone-ink: var(--violet);
+}
+.toneWriting {
+  --tone-rgb: var(--rose-rgb);
+  --tone-ink: var(--rose-ink);
+}
+.toneNeutral {
+  --tone-rgb: var(--line-rgb);
+  --tone-ink: var(--ink-60);
+}
+:global([data-theme="dark"]) .badge {
+  --tone-alpha: 0.2;
+}
+
+.body {
+  grid-area: body;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  padding-inline: var(--activity-col-gap) 16px;
+  /* Optically centres a one-line headline on the badge. */
+  padding-top: 1px;
+}
+.verb {
+  font-size: var(--text-12-5);
+  line-height: 1.35;
+  color: var(--ink-60);
+}
+.headline {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: var(--text-17);
+  line-height: 1.3;
+  letter-spacing: -0.008em;
+  color: var(--text-strong);
+  overflow-wrap: anywhere;
+}
+/* A title-only row (no verb line) is one line tall; centre it on the badge. */
+.headline:first-child {
+  padding-top: 4px;
+}
+.excerpt {
+  margin-top: 4px;
+  max-width: 62ch;
+  font-size: var(--text-13-5);
+  line-height: 1.5;
+  color: var(--ink-60);
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+}
+/* The member's own words (a thread opener, a community post) read as a quote. */
+.excerpt.isQuoted {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: var(--text-14);
+}
+
+.time {
+  grid-area: time;
+  padding-top: var(--activity-meta-top);
+  font-size: var(--text-12-5);
+  line-height: 1.35;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-60);
+  white-space: nowrap;
+}
+
+/* The arrow lives in its own column on every row, so linked and plain rows
+   keep their times aligned; it only shows on a linked row's hover or focus. */
+.arrow {
+  grid-area: arrow;
+  justify-self: end;
+  margin-top: var(--activity-meta-top);
+  font-size: var(--text-15);
+  color: var(--accent-ink);
+  opacity: 0;
+  transform: translateX(-6px);
+  transition:
+    opacity 0.22s var(--ease),
+    transform 0.32s var(--ease-out);
+}
+@media (hover: hover) {
+  .isLinked:hover .arrow {
+    opacity: 1;
+    transform: none;
+  }
+}
+.isLinked:focus-visible .arrow {
+  opacity: 1;
+  transform: none;
+}
+
+.foldToggle {
+  margin: 8px 0 0 var(--activity-text-x);
+  gap: 6px;
+}
+.foldChevron {
+  font-size: var(--text-15);
+  transition: transform 0.28s var(--ease);
+}
+.foldChevron.isFlipped {
+  transform: rotate(180deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .arrow {
+    transform: none;
+    transition: opacity 0.01ms;
+  }
+  .foldChevron {
+    transition: none;
+  }
+}
+:global(html[data-reduce-motion="true"]) .arrow {
+  transform: none;
+}
+
+/* Phones: the time moves under the text so the headline keeps the width. */
+@media (--sm) {
+  .timeline {
+    --activity-row-pad-x: 8px;
+    --activity-col-gap: 12px;
+    --activity-arrow-col: 20px;
+  }
+  .row {
+    grid-template-columns:
+      var(--activity-badge-size) minmax(0, 1fr)
+      var(--activity-arrow-col);
+    grid-template-areas:
+      "badge body arrow"
+      "badge time arrow";
+  }
+  .body {
+    padding-right: 8px;
+  }
+  .time {
+    padding: 4px 0 0 var(--activity-col-gap);
+  }
+  .headline {
+    font-size: var(--text-16);
+  }
+}

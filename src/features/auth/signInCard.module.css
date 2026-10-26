@@ -5,6 +5,29 @@
 
    `main > .twoColumnCard` outranks `.card` in auth.module.css, so the padding
    and width overrides hold whatever order the two modules load in. */
+
+/* The card hangs from the top of the page, so a taller step (the code
+   boxes, an error) grows it downward and the heading and the Google
+   button hold still. The top padding is where the centred card used to
+   rest: half the height left round a resting card about 720px tall (with
+   auth.module.css's 88px above and 40px below), and never less than those
+   88px. `div.twoColumnRoot` outranks `.root` in auth.module.css. */
+div.twoColumnRoot {
+  --sign-in-resting-card-height: 720px;
+  --sign-in-page-bottom: 40px;
+  align-items: flex-start;
+  padding-top: max(
+    var(--section-y-88),
+    calc(
+      (
+          100svh - var(--sign-in-resting-card-height) -
+            var(--sign-in-page-bottom) + var(--section-y-88)
+        ) /
+        2
+    )
+  );
+}
+
 main > .twoColumnCard {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 46%);

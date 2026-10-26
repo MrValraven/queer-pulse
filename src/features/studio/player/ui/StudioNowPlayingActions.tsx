@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { AnimatePresence, m } from "motion/react";
 import { FiCheckCircle, FiRotateCcw } from "react-icons/fi";
-import { useChipMotion } from "../../../../shared/components/ui";
+import { Tooltip, useChipMotion } from "../../../../shared/components/ui";
 import { IconButton } from "../../../../shared/components/ui/IconButton";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { useStudioTrack } from "../../api/useStudioTrack";
@@ -113,14 +113,22 @@ export function StudioNowPlayingActions({
       : menuTrackOf(item);
   return (
     <div className={styles.actions}>
-      <StudioLikeButton subject={likeSubject} className={styles.action} />
-      <StudioAddToPlaylistButton
-        trackIds={[item.trackId]}
-        subjectTitle={item.title}
-        ariaLabel={t("studio:playlist.add.trackAria", { title: item.title })}
+      <StudioLikeButton
+        subject={likeSubject}
         className={styles.action}
-        likeSubject={likeSubject}
+        hasTooltip
       />
+      <Tooltip label={t("studio:playlist.add.trackCta")} placement="top">
+        <StudioAddToPlaylistButton
+          trackIds={[item.trackId]}
+          subjectTitle={item.title}
+          ariaLabel={t("studio:playlist.add.trackAria", {
+            title: item.title,
+          })}
+          className={styles.action}
+          likeSubject={likeSubject}
+        />
+      </Tooltip>
       <AnimatePresence initial={false}>
         {item.isEpisode === true && (
           <m.span key="mark-played" className={styles.actionSlot} {...chip}>
@@ -132,6 +140,7 @@ export function StudioNowPlayingActions({
         track={menuTrack}
         className={styles.actionMenu}
         onLinkNavigate={onNavigate}
+        tooltip={t("studio:release.moreActions")}
       />
     </div>
   );

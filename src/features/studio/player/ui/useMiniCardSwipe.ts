@@ -4,6 +4,7 @@ import {
   type PointerEvent as ReactPointerEvent,
 } from "react";
 import { useMotionValue } from "motion/react";
+import type { StudioQueueItem } from "../studioPlayerContext";
 import { useMotionPrefs } from "../../../../app/providers/motionPrefs";
 import { useVerticalSwipe } from "../../../../shared/hooks/useVerticalSwipe";
 import {
@@ -12,11 +13,10 @@ import {
   RUBBER_BAND_SHARE,
   SKIP_DISTANCE_PX,
   skipDirectionOf,
-  slideSkip,
   springHome,
-  useSwipeSkipFlag,
   type CoverSkipDirection,
 } from "./useNowPlayingCoverSwipe";
+import { useSwipeSkipPager } from "./useSwipeSkipPager";
 
 /** Upward travel past which a press counts as a drag and its click is dropped. */
 const DRAG_CLICK_SLOP_PX = 10;
@@ -46,16 +46,23 @@ interface SidewaysGesture {
  * click within DRAG_CLICK_WINDOW_MS of a drag's release ends that drag and
  * is dropped; keyboard clicks (detail 0) and any later click always pass,
  * so a click that arrives with no pointerdown (some assistive tech) is
- * never lost. `offsetX` moves the card's cover and titles with the finger;
- * `isSwipeSkip` holds while a landed skip slides the next track in.
+ * never lost. `offsetX` moves the card's cover and titles with the finger
+ * (`slideRef` is that block); `isSwipeSkip` holds while a landed skip
+ * slides the next track in, with the track it left drawn beside it
+ * (`trail`).
  */
-export function useMiniCardSwipe(onSwipe: () => void, skip?: MiniCardSkip) {
+export function useMiniCardSwipe(
+  item: StudioQueueItem,
+  onSwipe: () => void,
+  skip?: MiniCardSkip,
+) {
   const { reducedMotion } = useMotionPrefs();
   const offsetX = useMotionValue(0);
+  const slideRef = useRef<HTMLSpanElement>(null);
+  const pager = useSwipeSkipPager(offsetX, item, item.trackId);
   const hasDraggedRef = useRef(false);
   const dragEndedAtRef = useRef<number | null>(null);
   const sidewaysRef = useRef<SidewaysGesture | null>(null);
-  const { isSwipeSkip, runSwipeSkip } = useSwipeSkipFlag();
   const swipe = useVerticalSwipe({
     direction: "up",
     onSwipe: () => {
@@ -86,20 +93,12 @@ export function useMiniCardSwipe(onSwipe: () => void, skip?: MiniCardSkip) {
       springHome(offsetX, reducedMotion);
       return;
     }
-    const width = event.currentTarget.offsetWidth;
-    runSwipeSkip(
-      (markSkipped) =>
-        slideSkip(offsetX, {
-          width,
-          sign: Math.sign(deltaX),
-          isReduced: reducedMotion,
-          onSkip: () => {
-            markSkipped();
-            skip.onSkip(direction);
-          },
-        }),
-      reducedMotion,
-    );
+    pager.runSkip({
+      width: slideRef.current?.offsetWidth ?? event.currentTarget.offsetWidth,
+      sign: Math.sign(deltaX),
+      isReduced: reducedMotion,
+      onSkip: () => skip.onSkip(direction),
+    });
   }
 
   const handlers = {
@@ -114,15 +113,18 @@ export function useMiniCardSwipe(onSwipe: () => void, skip?: MiniCardSkip) {
       }
       hasDraggedRef.current = false;
       dragEndedAtRef.current = null;
-      sidewaysRef.current =
-        skip && event.pointerType !== "mouse"
-          ? {
-              startX: event.clientX,
-              startY: event.clientY,
-              startTime: event.timeStamp,
-              axis: null,
-            }
-          : null;
+      const isSidewaysPossible =
+        skip !== undefined && event.pointerType !== "mouse";
+      // A press during a skip's slide settles the next track first.
+      if (isSidewaysPossible) pager.interrupt();
+      sidewaysRef.current = isSidewaysPossible
+        ? {
+            startX: event.clientX,
+            startY: event.clientY,
+            startTime: event.timeStamp,
+            axis: null,
+          }
+        : null;
       swipe.onPointerDown(event);
       // The hook ignores mouse presses, so a mouse keeps its own capture.
       if (event.pointerType === "mouse") return;
@@ -184,5 +186,11 @@ export function useMiniCardSwipe(onSwipe: () => void, skip?: MiniCardSkip) {
       event.stopPropagation();
     },
   };
-  return { handlers, offsetX, isSwipeSkip };
+  return {
+    handlers,
+    offsetX,
+    slideRef,
+    isSwipeSkip: pager.isSwipeSkip,
+    trail: pager.trail,
+  };
 }

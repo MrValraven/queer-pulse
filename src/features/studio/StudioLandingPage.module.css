@@ -410,6 +410,19 @@
   .demoPlay.demoPlay:hover:not(:disabled):not([aria-disabled="true"]) {
     background: var(--accent);
     color: var(--studio-bg);
+    transform: scale(1.06);
+  }
+}
+@media (hover: hover) and (prefers-reduced-motion: reduce) {
+  .demoPlay.demoPlay:hover:not(:disabled):not([aria-disabled="true"]) {
+    transform: none;
+  }
+}
+/* The in-app Reduce motion setting holds it still too. */
+@media (hover: hover) {
+  :global(html[data-reduce-motion="true"])
+    .demoPlay.demoPlay:hover:not(:disabled):not([aria-disabled="true"]) {
+    transform: none;
   }
 }
 .demoPlay svg {

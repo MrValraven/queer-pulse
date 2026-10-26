@@ -20,6 +20,7 @@ import {
 } from "../openTo.data";
 import type { WorkLink, WorkRefEntity } from "../workLink.data";
 import type {
+  ActivityAction,
   ActivityKind,
   BoardItemDTO,
   GroupMembershipDTO,
@@ -97,6 +98,23 @@ const ACTIVITY_ICONS: Record<ActivityKind, IconType> = {
   community: FiUsers,
   persona: FiUserPlus,
 };
+
+/** Actions this build can phrase. A newer backend's unknown action degrades to
+ *  `null`, so its row renders the English `title` whole instead of an
+ *  untranslated key. */
+const KNOWN_ACTIVITY_ACTIONS = new Set<ActivityAction>([
+  "rsvp",
+  "thread",
+  "communityPost",
+  "join",
+  "persona",
+]);
+
+function toActivityAction(action?: string | null): ActivityAction | null {
+  return action && KNOWN_ACTIVITY_ACTIONS.has(action as ActivityAction)
+    ? (action as ActivityAction)
+    : null;
+}
 
 const KNOWN_WORK_REF_ENTITIES = new Set<WorkRefEntity>([
   "collection",
@@ -341,6 +359,9 @@ export function profileToMember(dto: ProfileDTO): Member {
       // backend that stores no link for this row, and every row written before
       // links existed, both arrive as null/undefined here.
       to: activityRow.to ?? null,
+      occurredAt: activityRow.occurredAt ?? null,
+      action: toActivityAction(activityRow.action),
+      subject: activityRow.subject?.trim() || null,
     })),
     // "People close by": the backend already returns full related-member
     // cards, so we resolve them here into `relatedCards` (name, hood, avatar,

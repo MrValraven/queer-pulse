@@ -30,6 +30,8 @@ vi.mock("./studio.api", () => ({
 function artistViewOf(published: StudioReleaseView[]): StudioArtistView {
   return {
     artist: { id: DEMO_ARTIST_MARIANA.id } as StudioArtistView["artist"],
+    coverUrl: null,
+    heroLayout: "classic",
     allReleases: published,
     releases: published,
     singles: [],

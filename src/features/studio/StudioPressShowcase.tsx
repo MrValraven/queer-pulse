@@ -44,7 +44,7 @@ export function PressShowcasePreview() {
         titleKey="studio:press.section.preview"
         action={
           <Button
-            variant="quiet"
+            variant="ghost"
             size="sm"
             onClick={() =>
               showToast(t("studio:press.fullPromoRequestedToast"), "success")
@@ -103,7 +103,7 @@ export function PressShowcasePhotos() {
         titleKey="studio:press.section.photos"
         action={
           <Button
-            variant="quiet"
+            variant="ghost"
             size="sm"
             onClick={() =>
               showToast(t("studio:press.downloadingPhotosToast"), "success")

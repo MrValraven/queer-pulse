@@ -6,6 +6,7 @@ import { useFormat } from "../../shared/i18n/format";
 import { logError } from "../../shared/observability/logger";
 import { useListDsar, useSubmitDsar } from "../settings/api/useDsar";
 import type { DsarArticle } from "../settings/api/account.api";
+import { isReauthRequiredError } from "../settings/api/reauthRequiredError";
 import styles from "./AccountData.module.css";
 
 /** Confirmed against the backend `SubmitDsarDto` (`@IsIn([15, 16, 17, 21])`,
@@ -82,6 +83,9 @@ export function AccountDataDsar() {
       );
       setDetails("");
     } catch (err) {
+      // The code dialog just opened and nothing was sent: re-enable the button
+      // with no toast, so the member submits again after the code.
+      if (isReauthRequiredError(err)) return;
       logError(err, { where: "AccountDataDsar.submit" });
       showToast(
         t("members:profile.accountData.dsar.toast.submitError"),

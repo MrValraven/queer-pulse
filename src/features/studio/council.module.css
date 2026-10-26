@@ -871,4 +871,3 @@
 .skel {
   composes: shimmer from "./studioSkeleton.module.css";
 }
-

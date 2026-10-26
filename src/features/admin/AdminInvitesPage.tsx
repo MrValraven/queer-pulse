@@ -1,4 +1,5 @@
 import {
+  useEffect,
   useLayoutEffect,
   useMemo,
   useRef,
@@ -13,16 +14,12 @@ import {
   Button,
   FadeIn,
   LoadErrorState,
-  Select,
   SkeletonLine,
 } from "../../shared/components/ui";
 import { AdminShell } from "../../shared/components/layout/AdminShell";
-import { AdminPageHeader, AdminTabs, AdminChip } from "./ui";
-import { AdminArrowSeparator } from "./ui/AdminInlineMarkers";
+import { AdminPageHeader, AdminTabs } from "./ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { useFormat, type Formatters } from "../../shared/i18n/format";
-import type { TFunction } from "../../shared/i18n/types";
 import { routes } from "../../app/routeMap";
 import { useMotionPrefs } from "../../app/providers/motionPrefs";
 import {
@@ -34,7 +31,13 @@ import {
 } from "./api/useAdminInvites";
 import { AdminInviteDrawer } from "./AdminInviteDrawer";
 import { AdminInviteQuotaModal } from "./AdminInviteQuotaModal";
-import { ADMIN_INVITE_STATUS_TONE } from "./adminInviteStatusTone";
+import { AdminInviteRow } from "./AdminInviteRow";
+import { AdminInviteBulkBar } from "./AdminInviteBulkBar";
+import { AdminInviteFilterBar } from "./AdminInviteFilterBar";
+import {
+  useAdminInviteSelection,
+  type AdminInviteSelection,
+} from "./useAdminInviteSelection";
 import type { AdminInviteDTO, AdminInviteStatus } from "./api/adminInvites.api";
 import styles from "./AdminInvitesPage.module.css";
 
@@ -45,79 +48,6 @@ const FILTERS: AdminInviteFilter[] = [
   "expired",
   "revoked",
 ];
-
-/** Day + month + year, locale-aware. */
-function shortDate(fmt: Formatters, iso: string): string {
-  return fmt.date(new Date(iso), {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-  });
-}
-
-/** Who the invite was addressed to: the member who accepted, a target email, or
- *  "anyone with the link". */
-function recipientLine(invite: AdminInviteDTO, t: TFunction): string {
-  if (invite.invitee) {
-    return t("admin:adminInvites.row.toMember", { name: invite.invitee.name });
-  }
-  if (invite.email) {
-    return t("admin:adminInvites.row.toEmail", { email: invite.email });
-  }
-  return t("admin:adminInvites.row.toAnyone");
-}
-
-function AdminInviteRow({
-  invite,
-  onOpen,
-  isLeaving,
-}: {
-  invite: AdminInviteDTO;
-  onOpen: () => void;
-  /** On its way out of the grid: no longer a Tab stop. */
-  isLeaving: boolean;
-}) {
-  const { t } = useTranslation();
-  const fmt = useFormat();
-  return (
-    <div
-      className={styles.row}
-      role="button"
-      tabIndex={isLeaving ? -1 : 0}
-      aria-label={t("admin:adminInvites.row.open", { code: invite.code })}
-      onClick={onOpen}
-      onKeyDown={(event) => {
-        if (event.key === "Enter" || event.key === " ") {
-          event.preventDefault();
-          onOpen();
-        }
-      }}
-    >
-      <div className={styles.rowMain}>
-        <div className={styles.rowTop}>
-          <span className={styles.rowName}>{invite.code}</span>
-          <AdminChip tone={ADMIN_INVITE_STATUS_TONE[invite.status]} dot>
-            {t(`admin:adminInvites.status.${invite.status}`)}
-          </AdminChip>
-        </div>
-        <div className={styles.rowMeta}>
-          {t("admin:adminInvites.row.from", { name: invite.inviter.name })}
-          <AdminArrowSeparator />
-          {recipientLine(invite, t)}
-        </div>
-        <div className={styles.rowDates}>
-          {t("admin:adminInvites.row.sent", {
-            date: shortDate(fmt, invite.createdAt),
-          })}
-          {" · "}
-          {t("admin:adminInvites.row.expires", {
-            date: shortDate(fmt, invite.expiresAt),
-          })}
-        </div>
-      </div>
-    </div>
-  );
-}
 
 function InviteRowsSkeleton() {
   return (
@@ -162,7 +92,11 @@ function handOffFocusFromLeavingCell(
           Node.DOCUMENT_POSITION_FOLLOWING) !==
         0,
     ) ?? remainingCells[remainingCells.length - 1];
-  const nextRow = nextCell?.querySelector<HTMLElement>('[role="button"]');
+  // A card's own control: the card itself outside select mode, its checkbox
+  // in it.
+  const nextRow = nextCell?.querySelector<HTMLElement>(
+    '[role="button"], input[type="checkbox"]:not(:disabled)',
+  );
   if (nextRow) nextRow.focus();
   else onNoRowLeft();
 }
@@ -240,6 +174,7 @@ function AdminInviteRowCell({
 function AdminInviteResults({
   filter,
   inviterSlug,
+  selection,
   isRowLeaving,
   onRowExitComplete,
   onOpenInvite,
@@ -247,6 +182,7 @@ function AdminInviteResults({
 }: {
   filter: AdminInviteFilter;
   inviterSlug: string | null;
+  selection: AdminInviteSelection;
   isRowLeaving: boolean;
   onRowExitComplete: () => void;
   onOpenInvite: (invite: AdminInviteDTO) => void;
@@ -265,6 +201,15 @@ function AdminInviteResults({
     fetchNextPage,
   } = useAdminInvites(filter, inviterSlug);
 
+  // `isRowLeaving` is cleared by the grid's `onExitComplete`, which never
+  // fires once the grid is gone. A refetch that fails after a bulk action or
+  // refresh-all swaps the grid for the error state mid-exit, so the flag is
+  // cleared here, or a later empty list would show no empty line.
+  const isGridGone = isLoading || isError;
+  useEffect(() => {
+    if (isRowLeaving && isGridGone) onRowExitComplete();
+  }, [isRowLeaving, isGridGone, onRowExitComplete]);
+
   // An outage read as "no invites match this filter", which invites an admin
   // to loosen a filter that was never the problem (DES-22).
   if (isLoading) return <InviteRowsSkeleton />;
@@ -278,12 +223,15 @@ function AdminInviteResults({
     );
   }
   if (invites.length === 0 && !isRowLeaving) {
+    // Fades in once the last card's exit has finished.
     return (
-      <p className={styles.emptyLine}>
-        {inviterSlug
-          ? t("admin:adminInvites.emptyForInviter")
-          : t("admin:adminInvites.empty")}
-      </p>
+      <FadeIn>
+        <p className={styles.emptyLine}>
+          {inviterSlug
+            ? t("admin:adminInvites.emptyForInviter")
+            : t("admin:adminInvites.empty")}
+        </p>
+      </FadeIn>
     );
   }
   return (
@@ -308,6 +256,17 @@ function AdminInviteResults({
                     invite={invite}
                     isLeaving={isLeaving}
                     onOpen={() => onOpenInvite(invite)}
+                    selection={
+                      selection.isSelectMode
+                        ? {
+                            isSelected: selection.selectedIds.has(invite.id),
+                            isDisabled:
+                              selection.isAtCap &&
+                              !selection.selectedIds.has(invite.id),
+                            onToggle: () => selection.toggleInvite(invite.id),
+                          }
+                        : null
+                    }
                   />
                 </FadeIn>
               )}
@@ -358,6 +317,27 @@ export function AdminInvitesPage() {
   // The sender filter's options come from a dedicated inviters list covering
   // every sender platform-wide (not only those already fetched).
   const { inviters } = useAdminInviteInviters();
+  // The same query `AdminInviteResults` reads (one key, one request), here
+  // for the selection's rows and the Expired tab's total.
+  const {
+    invites,
+    total,
+    isPending: isListPending,
+    isError: isListError,
+  } = useAdminInvites(filter, inviterSlug);
+  const selection = useAdminInviteSelection(invites);
+  // Select mode needs cards to pick from: while the list loads the toggle
+  // stays put, and once it has no invites (a bulk revoke emptied the Pending
+  // tab) or fails to load, the toggle folds away and select mode ends.
+  const isSelectToggleShown =
+    isListPending || (!isListError && invites.length > 0);
+  const { isSelectMode, toggleSelectMode } = selection;
+  useEffect(() => {
+    if (!isSelectToggleShown && isSelectMode) toggleSelectMode();
+  }, [isSelectToggleShown, isSelectMode, toggleSelectMode]);
+  const hasSelection = selection.selectedInvites.length > 0;
+  const inviterName =
+    inviters.find((inviter) => inviter.slug === inviterSlug)?.name ?? null;
 
   const inviterOptions = useMemo(
     () =>
@@ -441,36 +421,42 @@ export function AdminInvitesPage() {
           onChange={(value) => {
             setFilter(value as AdminInviteFilter);
             setIsRowLeaving(false);
+            selection.clearSelection();
           }}
         />
       </FadeIn>
 
-      {inviterOptions.length > 1 && (
+      {(inviterOptions.length > 0 || invites.length > 0) && (
         <FadeIn delay={70} className={styles.filterFade}>
-          <div className={styles.filterBar}>
-            <span className={styles.filterLabel} id="invite-inviter-label">
-              {t("admin:adminInvites.filterByInviter")}
-            </span>
-            <Select
-              labelledBy="invite-inviter-label"
-              size="sm"
-              clearable
-              value={inviterSlug}
-              placeholder={t("admin:adminInvites.allInviters")}
-              options={inviterOptions}
-              onChange={(slug) => {
-                setInviterSlug(slug);
-                setIsRowLeaving(false);
-              }}
-            />
-          </div>
+          <AdminInviteFilterBar
+            inviterOptions={inviterOptions}
+            inviterSlug={inviterSlug}
+            inviterName={inviterName}
+            onInviterChange={(slug) => {
+              setInviterSlug(slug);
+              setIsRowLeaving(false);
+              selection.clearSelection();
+            }}
+            isSelectMode={selection.isSelectMode}
+            onToggleSelectMode={selection.toggleSelectMode}
+            isSelectToggleShown={isSelectToggleShown}
+            isRefreshAllShown={filter === "expired" && total > 0}
+            expiredTotal={total}
+            onRowLeavingChange={setIsRowLeaving}
+          />
         </FadeIn>
       )}
 
-      <FadeIn delay={80}>
+      {/* While a selection exists the page reserves room below the grid for
+          the floating bar, so the last card stays reachable. */}
+      <FadeIn
+        delay={80}
+        className={hasSelection ? styles.rowsWithBulkBar : undefined}
+      >
         <AdminInviteResults
           filter={filter}
           inviterSlug={inviterSlug}
+          selection={selection}
           isRowLeaving={isRowLeaving}
           onRowExitComplete={() => setIsRowLeaving(false)}
           onOpenInvite={(invite) =>
@@ -479,6 +465,19 @@ export function AdminInvitesPage() {
           onNoRowLeft={focusActiveTab}
         />
       </FadeIn>
+
+      {/* Outside the FadeIn, whose `will-change: transform` would make it the
+          containing block for the fixed bar. */}
+      <AnimatePresence>
+        {hasSelection && (
+          <AdminInviteBulkBar
+            key="invite-bulk-bar"
+            selection={selection}
+            filter={filter}
+            onRowLeavingChange={setIsRowLeaving}
+          />
+        )}
+      </AnimatePresence>
 
       {drawerSession && (
         <AdminInviteDrawer
@@ -490,10 +489,7 @@ export function AdminInvitesPage() {
       )}
 
       {quotaModalOpen && (
-        <AdminInviteQuotaModal
-          inviters={inviters}
-          onClose={() => setQuotaModalOpen(false)}
-        />
+        <AdminInviteQuotaModal onClose={() => setQuotaModalOpen(false)} />
       )}
     </AdminShell>
   );

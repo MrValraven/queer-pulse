@@ -4,7 +4,6 @@ import { routes } from "../../app/routeMap";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { PageMeta } from "../../shared/seo";
-import { CrisisStrip } from "./CrisisStrip";
 
 /**
  * What a guide page shows while no editor has signed off on it.
@@ -16,10 +15,8 @@ import { CrisisStrip } from "./CrisisStrip";
  * the index is empty until reviews land, so they arrive at nothing. A 404
  * claims the guide never existed, which is untrue.
  *
- * So the page states plainly what happened, and carries the crisis lines
- * above the explanation: somebody who reached `/resources/harm-reduction` from
- * a search result at 3am needs a phone number on this screen more than they
- * need to understand our editorial process.
+ * So the page states plainly what happened and points to the guide index and
+ * the resource library.
  */
 export function GuideUnderReview() {
   const { t } = useTranslation();
@@ -31,7 +28,6 @@ export function GuideUnderReview() {
         description={t("resources:guide.underReview.meta.description")}
         noIndex
       />
-      <CrisisStrip />
       <Outro
         title={
           <Translation

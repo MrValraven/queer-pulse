@@ -237,6 +237,7 @@ export const members: Catalog = {
   "profile.nav.skills": "Competências e ofertas",
   "profile.nav.groups": "Grupos e círculos",
   "profile.nav.shapings": "O que me formou",
+  "profile.nav.activity": "Atividade recente",
   "profile.nav.related": "Pessoas por perto",
 
   // ── Sinais de confiança + explicação (ProfileTrustSignals, ProfileTrustModal — Task 4) ──
@@ -423,6 +424,20 @@ export const members: Catalog = {
     "Não são interesses. São textos, filmes e momentos marcantes.",
   "content.activity.title": "Atividade recente",
   "content.activity.subtitle": "Momentos públicos por toda a plataforma",
+  // Títulos de período na linha do tempo. "Esta semana" são os últimos 7 dias.
+  "content.activity.group.thisWeek": "Esta semana",
+  "content.activity.group.thisMonth": "Este mês",
+  "content.activity.group.earlier": "Antes disso",
+  // A linha pequena por cima do nome de cada entrada, uma por `action`.
+  "content.activity.verb.persona": "Publicou uma persona",
+  "content.activity.verb.join": "Entrou em",
+  "content.activity.verb.rsvp": "Confirmou presença em",
+  "content.activity.verb.thread": "Abriu um tópico",
+  "content.activity.verb.communityPost": "Publicou em",
+  "content.activity.justNow": "agora mesmo",
+  "content.activity.unknownTime": "há algum tempo",
+  "content.activity.showMore": "Mostrar mais {count}",
+  "content.activity.showLess": "Mostrar menos",
   "content.related.title": "Pessoas por perto",
   "content.related.subtitle": "A partilhar ofício ou bairro.",
   // A etiqueta única de cada cartão: porque é que essa pessoa está perto de
@@ -2199,6 +2214,8 @@ export const members: Catalog = {
     "Resgata e o teu limite mensal de convites passa de {base} para {total}. A comunidade cresce por causa de pessoas como tu.",
   "perks.catalog.inviteQuotaAtLimit.desc":
     "O teu limite mensal de convites é de {total}.",
+  "perks.catalog.invitePaused.desc":
+    "Os teus convites estão em pausa. Podes resgatar isto na mesma, e o limite maior começa quando a nossa equipa voltar a ativar os teus convites.",
   "perks.base.browseDirectory": "Ver o diretório de membros",
   "perks.base.joinGatherings": "Ir a eventos e confirmar presença",
   "perks.base.directMessages": "Falar diretamente com outros membros",

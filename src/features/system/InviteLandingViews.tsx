@@ -1,19 +1,16 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { FiClock } from "react-icons/fi";
-import { FcGoogle } from "react-icons/fc";
 import { Button } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { resolveAvatarSrc } from "../../shared/lib/avatarUrl";
 import { routes } from "../../app/routeMap";
 import type { InviteView } from "../../features/auth/api/useInvite";
-import { AgeAttestation } from "../auth/AgeAttestation";
 import { Under18Notice } from "../auth/Under18Notice";
 import { buildLoaderSteps, WHAT_ITEMS } from "./inviteLanding.data";
+import { AGE_ATTESTATION_ID, InviteJoinControls } from "./InviteJoinControls";
 import styles from "./InviteLandingPage.module.css";
-
-const AGE_ATTESTATION_ID = "invite-age-attestation";
 
 function focusOnMount(node: HTMLDivElement | null) {
   node?.focus();
@@ -171,6 +168,7 @@ export function InviteOpeningView({
 export function InviteCardView({
   view,
   onGoogle,
+  onEmailJoined,
   is18,
   onIs18Change,
   isUnder18,
@@ -181,7 +179,9 @@ export function InviteCardView({
 }: {
   view: InviteView;
   onGoogle: () => void;
-  /** Whether the 18+ box is ticked — gates the Google button. */
+  /** The email code join succeeded in demo; live mode leaves the page. */
+  onEmailJoined: () => void;
+  /** Whether the 18+ box is ticked; gates both ways of joining. */
   is18: boolean;
   onIs18Change: (value: boolean) => void;
   /** Shows the under-18 notice in the card body instead of the sign-up controls. */
@@ -301,48 +301,16 @@ export function InviteCardView({
                 </div>
               )}
 
-              <AgeAttestation
-                id={AGE_ATTESTATION_ID}
-                confirmed={is18}
-                onConfirmedChange={onIs18Change}
+              <InviteJoinControls
+                inviteCode={view.code}
+                is18={is18}
+                onIs18Change={onIs18Change}
                 onUnder18={onUnder18}
+                onGoogle={onGoogle}
+                onEmailJoined={onEmailJoined}
+                onOpenTerms={onOpenTerms}
+                onOpenPrivacy={onOpenPrivacy}
               />
-
-              <button
-                type="button"
-                className={styles.google}
-                onClick={onGoogle}
-                disabled={!is18}
-                aria-disabled={!is18}
-              >
-                {/* Official Google "G" logo, via react-icons' <FcGoogle> — the
-                  same mark SignInPage uses. Its four brand fills are baked into
-                  the icon, which is what Google's branding guidelines require and
-                  what no design token could supply. Sized by `.google svg`. */}
-                <FcGoogle aria-hidden />
-                {t("system:inviteLanding.card.googleCta")}
-              </button>
-
-              <p className={styles.consentNote}>
-                <Translation
-                  i18nKey="system:inviteLanding.card.consent"
-                  components={{
-                    // eslint-disable-next-line jsx-a11y/control-has-associated-label -- false positive: an element template for <Translation>, which clones it with the translated children (its accessible name) at render.
-                    termsLink: <button type="button" onClick={onOpenTerms} />,
-                    privacyLink: (
-                      // eslint-disable-next-line jsx-a11y/control-has-associated-label -- same as above.
-                      <button type="button" onClick={onOpenPrivacy} />
-                    ),
-                  }}
-                />
-              </p>
-
-              <p className={styles.alreadyMember}>
-                <Translation
-                  i18nKey="system:inviteLanding.card.alreadyMember"
-                  components={{ a: <Link to={routes.signIn} /> }}
-                />
-              </p>
             </>
           )}
         </div>

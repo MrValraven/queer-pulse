@@ -263,7 +263,8 @@
 }
 
 /* The Studio playlists block carries a 40px top margin for the desktop
-   column; inside a tab panel the flex gap already spaces it. Collapse wraps
+   column; inside a tab panel the flex gap already spaces it. Its 40px bottom
+   padding stays, like the Places block's, so the last card clears the footer. Collapse wraps
    the section, so this matches it at any depth. */
 .tabPanel [data-profile-studio-playlists] {
   margin-top: 0;

@@ -374,12 +374,50 @@
   }
 }
 
+/* One height for everything in the row. The ghost "Save" pill carries a
+   1.5px border the filled pill lacks, so at its natural size it stood a few
+   pixels taller; both pills and the community menu trigger
+   (`--card-menu-size`) now share `--hero-action-size`, so the trigger reads
+   as their sibling icon button. */
 .actions {
+  --hero-action-size: 3rem;
+  --card-menu-size: var(--hero-action-size);
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: var(--gap-xs);
   margin-block-start: var(--gap-xs);
+}
+
+.actions > a,
+.actions > button {
+  block-size: var(--hero-action-size);
+}
+
+/* The fading holder of the community menu, at the row's trailing end. The
+   menu opens toward the leading side, so it always stays on screen. */
+.menuPresence {
+  display: flex;
+  flex: none;
+  margin-inline-start: auto;
+}
+
+/* On a phone the row stays one line: the pills trim their side padding and
+   share the room the trigger leaves, each in proportion to its label, so the
+   trigger keeps its place beside "Save". A narrow 304px row holds the two
+   labels (about 150px), their padding and the trigger with room to spare. */
+@media (--md) {
+  .actions {
+    flex-wrap: nowrap;
+  }
+
+  .actions > a,
+  .actions > button {
+    flex: 1 1 auto;
+    min-inline-size: 0;
+    padding-inline: var(--gap-xs);
+    overflow: hidden;
+  }
 }
 
 /* ── Skeleton slots ──

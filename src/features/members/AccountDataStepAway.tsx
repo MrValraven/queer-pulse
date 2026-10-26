@@ -202,16 +202,18 @@ export function AccountDataStepAway({ ownerSlug }: { ownerSlug: string }) {
     }
   }
 
-  // No password is collected or sent: auth is OAuth-only, so there is
-  // nothing to verify one against. The real step-up is a Google OAuth round
-  // trip (`beginReauth`, see `useReauthToken.ts`): if no fresh token is
-  // cached yet, this redirects away instead of proceeding, and the member
-  // presses confirm again after landing back. The typed `ConfirmDialog` is a
-  // separate, real, checked gate on top of that.
+  // No password is collected or sent: there is nothing to verify one
+  // against. The real step-up is the code dialog (`beginReauth`, see
+  // `useReauthToken.ts`): if no fresh token is cached yet, this closes the
+  // typed `ConfirmDialog` so it does not sit under the code dialog, opens the
+  // code dialog, and stops with no toast. The member presses Hide or Erase
+  // again once the code is accepted. The typed `ConfirmDialog` is a separate,
+  // real, checked gate on top of that.
   async function handleConfirm() {
     if (!confirmKind) return;
     const reauthToken = getReauthToken();
     if (!reauthToken) {
+      setConfirmKind(null);
       beginReauth();
       return;
     }

@@ -11,11 +11,13 @@ import {
 } from "./EditProfileSections";
 import { CommunitiesPickerSection } from "./CommunitiesPickerSection";
 import { LinksSection } from "./LinksSection";
+import { ProfilePlaylistsSection } from "./ProfilePlaylistsSection";
 import { UsernameSection } from "./UsernameSection";
+import type { ProfilePlaylistsDraft } from "./useProfilePlaylistsDraft";
 
 /** Section id of a change, so the host can list what was edited on save. */
 export type ProfileSection =
-  "identity" | "bio" | "links" | "skills" | "communities";
+  "identity" | "bio" | "links" | "skills" | "communities" | "playlists";
 
 /**
  * Full profile editor — the rich Identity / Pronouns / Bio / Skills / Visibility
@@ -26,8 +28,12 @@ export type ProfileSection =
  */
 export function EditProfilePane({
   onChange,
+  playlistsDraft,
 }: {
   onChange: (section: ProfileSection) => void;
+  /** The "Playlists" section's draft, owned by the page so its save bar
+   * saves it with the profile. */
+  playlistsDraft: ProfilePlaylistsDraft;
 }) {
   const { t } = useTranslation();
   const { showToast } = useToast();
@@ -171,6 +177,10 @@ export function EditProfilePane({
         onKeyDown={handleTagKey}
       />
       <CommunitiesPickerSection onChange={onChange} />
+      <ProfilePlaylistsSection
+        playlistsDraft={playlistsDraft}
+        onChange={onChange}
+      />
     </>
   );
 }

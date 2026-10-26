@@ -13,7 +13,10 @@ import { ApiError } from "../../shared/api/client";
 import { useFormat } from "../../shared/i18n/format";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import type { TFunction } from "../../shared/i18n/types";
-import type { SentInviteCountsDTO } from "./api/invite.api";
+import {
+  isInviteAccessDisabledError,
+  type SentInviteCountsDTO,
+} from "./api/invite.api";
 import {
   useResendInvite,
   useRevokeInvite,
@@ -25,11 +28,16 @@ import {
 import { SentInviteRow, SentInviteRowSkeletons } from "./SentInviteRow";
 import styles from "./SentInvitesList.module.css";
 
-/** Turn a resend failure into an honest, no-blame line. The backend 403s an
- *  invite that isn't yours, 404s an unknown code, and 409s one that can't be
- *  re-minted (already accepted, revoked, or still valid) — each gets its own
- *  message; anything else falls through to the generic one. */
+/** Turn a resend failure into an honest, no-blame line. The typed paused
+ *  refusal (our team paused this member's invites) is read first, because it
+ *  is a 403 too. Then the backend 403s an invite that isn't yours, 404s an
+ *  unknown code, and 409s one that can't be re-minted (already accepted,
+ *  revoked, or still valid). Each gets its own message; anything else falls
+ *  through to the generic one. */
 function resendErrorMessage(error: unknown, t: TFunction): string {
+  if (isInviteAccessDisabledError(error)) {
+    return t("auth:invite.sentList.resendError.paused");
+  }
   const status = error instanceof ApiError ? error.status : 0;
   switch (status) {
     case 403:
@@ -78,8 +86,19 @@ function tabsFor(counts: SentInviteCountsDTO | undefined, t: TFunction): Tab[] {
  * from useSentInvites, 20 at a time with a "Show more" footer (GET /invites in
  * live mode, the mock in demo mode). Renders nothing when the member has never
  * sent an invite, to keep the compose page focused for first-time inviters.
+ *
+ * `isResendAllowed` (default true) is false while our team has paused this
+ * member's invites, which takes "Send again" off the expired rows. A resend
+ * refused for that reason calls `onInviteAccessPaused`, so the page can show
+ * its paused panel at once.
  */
-export function SentInvitesList() {
+export function SentInvitesList({
+  isResendAllowed = true,
+  onInviteAccessPaused,
+}: {
+  isResendAllowed?: boolean;
+  onInviteAccessPaused?: () => void;
+} = {}) {
   const { t } = useTranslation();
   const fmt = useFormat();
   const { showToast } = useToast();
@@ -128,7 +147,10 @@ export function SentInvitesList() {
       {
         onSuccess: () =>
           showToast(t("auth:invite.sentList.resentToast"), "success"),
-        onError: (error) => showToast(resendErrorMessage(error, t), "error"),
+        onError: (error) => {
+          if (isInviteAccessDisabledError(error)) onInviteAccessPaused?.();
+          showToast(resendErrorMessage(error, t), "error");
+        },
       },
     );
   };
@@ -187,6 +209,7 @@ export function SentInvitesList() {
               isRevoking={revokingId === invite.id}
               onResend={handleResend}
               isResending={resendingId === invite.id}
+              isResendAllowed={isResendAllowed}
             />
           ))}
         </FadeIn>

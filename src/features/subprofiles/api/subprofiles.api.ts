@@ -692,10 +692,17 @@ export interface TattooLineage {
   teaches?: string[];
 }
 
+/** The two stored Studio page layouts a member can pick. */
+export type StudioHeroChoice = "full-bleed" | "avatar";
+
 export interface SkinData {
   /** Owner display preference: fade the cover banner into the page background
    *  at its bottom edge (see `.pp[data-cover-bleed]` in persona-skins.css). */
   coverBleed?: boolean;
+  /** Studio artist page layout: "full-bleed" fills the top of the Studio page
+   *  with the cover photo and the name over it; "avatar" shows the avatar over
+   *  the cover photo. Absent means "full-bleed". */
+  studioHero?: StudioHeroChoice;
   /** Where the banner sits vertically, as an `object-position` percentage:
    *  0 pins the image's top edge to the band's, 100 its bottom. Set by the
    *  owner's in-page reposition control (`PersonaCoverReposition`); absent

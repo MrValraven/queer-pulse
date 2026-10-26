@@ -24,7 +24,8 @@ import type { GatheringForm } from "./useGatheringForm";
  * Continue button and the "Still needed" line alike, so both always read the
  * same gate. Chapters 0 (What) and 1 (When and where) hold everything the
  * backend refuses to create a gathering without; chapters 2 to 4 ask nothing
- * required, and chapter 5 (the review) asks nothing of its own.
+ * required, though chapter 2 holds while its optional payment link is
+ * malformed, and chapter 5 (the review) asks nothing of its own.
  */
 
 /** One unmet thing standing between a chapter and its Continue. */
@@ -106,6 +107,13 @@ export function chapterNeeds(
       });
     }
   }
+  if (chapterIndex === 2 && !form.paymentUrlValid) {
+    needs.push({
+      key: "paymentLink",
+      labelKey: "gatherings:create.v2.need.paymentLink",
+      anchor: GATE_ANCHOR.paymentLink,
+    });
+  }
   return needs;
 }
 
@@ -170,6 +178,18 @@ export function readinessItems(form: GatheringForm): ReadinessItem[] {
       isOptional: false,
       chapterIndex: 1,
       anchor: GATE_ANCHOR.recurrence,
+    });
+  }
+  // Like the join link: listed only while the payment link is malformed,
+  // since an empty one is a real answer.
+  if (!form.paymentUrlValid) {
+    items.push({
+      key: "paymentLink",
+      labelKey: "gatherings:create.v2.ready.item.paymentLink",
+      isMet: false,
+      isOptional: false,
+      chapterIndex: 2,
+      anchor: GATE_ANCHOR.paymentLink,
     });
   }
   items.push(

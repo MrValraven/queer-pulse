@@ -880,7 +880,7 @@ export const marketing: Catalog = {
   "help.qa.unknownSession.q":
     "Não reconheço um dispositivo nas minhas sessões ativas. E agora?",
   "help.qa.unknownSession.a":
-    "Termina essa sessão em <sessionsLink>sessões ativas</sessionsLink>. O início de sessão é feito através da Google, por isso revê também a segurança da tua conta Google, já que quem tiver acesso a ela consegue entrar aqui. Depois <contactLink>conta-nos o que aconteceu</contactLink> e ajudamos-te a proteger a tua conta.",
+    "Termina essa sessão em <sessionsLink>sessões ativas</sessionsLink>. Inicias sessão com a Google ou com um código enviado para o teu email, por isso revê também a segurança dessa conta Google e dessa caixa de correio, já que quem tiver acesso a qualquer uma delas consegue entrar aqui. Depois <contactLink>conta-nos o que aconteceu</contactLink> e ajudamos-te a proteger a tua conta.",
   "help.qa.deleteAccount.q": "Como elimino a minha conta?",
   "help.qa.deleteAccount.a":
     "Em <settingsLink>Definições</settingsLink> e depois Conta, mais abaixo. Isto é permanente. Vê a Política de Privacidade para saber o que fica retido e por quanto tempo.",
@@ -925,7 +925,7 @@ export const marketing: Catalog = {
     "Acesso antecipado a eventos, um distintivo de apoiante, e a certeza de que a tua adesão mantém a plataforma sem anúncios.",
   "help.qa.emailNotifications.q": "Como controlo as notificações?",
   "help.qa.emailNotifications.a":
-    "Em <settingsLink>Definições</settingsLink> e depois Notificações, ativa ou desativa cada categoria em separado. A QueerPulse avisa-te dentro da aplicação e, se autorizares, por push. Não envia email.",
+    "Em <settingsLink>Definições</settingsLink> e depois Notificações, ativa ou desativa cada categoria em separado. A QueerPulse avisa-te dentro da aplicação e, se autorizares, por push. As notificações nunca vão por email.",
   "help.qa.browserSupport.q": "Que navegadores é que a QueerPulse suporta?",
   "help.qa.browserSupport.a":
     "Versões atuais do Chrome, Firefox, Safari e Edge. Navegadores mais antigos podem ter problemas de visualização.",
@@ -1096,12 +1096,12 @@ export const marketing: Catalog = {
   "privacy.whatWeCollect.account.item1":
     "<strong>Detalhes do perfil</strong> que adicionas: nome, pronomes, descrição, biografia, fotos.",
   "privacy.whatWeCollect.account.item2":
-    "<strong>Informação de contacto</strong>: o teu email, que vem da tua conta Google e serve para iniciares sessão. A QueerPulse não envia email.",
+    "<strong>Informação de contacto</strong>: o teu email, que serve para iniciares sessão. Vem da tua conta Google, se usas o Google, ou de ti, quando pedes um código de acesso. O único email que a QueerPulse envia é um código de acesso que pediste.",
   "privacy.whatWeCollect.account.item3":
     "<strong>Dados de adesão</strong>: o teu escalão, data de entrada, quem te convidou e quem te deu um voto de confiança.",
   "privacy.whatWeCollect.signInHeading": "Como inicias sessão",
   "privacy.whatWeCollect.signInBody":
-    "Inicias sessão com o <strong>Google</strong>. Não há uma palavra-passe QueerPulse separada para gerir. Quando o fazes, o Google partilha connosco o teu nome, email e foto de perfil. Nunca vemos nem guardamos a tua palavra-passe do Google.",
+    "Inicias sessão com <strong>um código que te enviamos por email</strong> ou com o <strong>Google</strong>. Não há uma palavra-passe QueerPulse para gerir. Se usares o Google, o Google partilha connosco o teu nome, email e foto de perfil. Nunca vemos nem guardamos a tua palavra-passe do Google.",
   "privacy.whatWeCollect.deviceHeading": "Dados de dispositivo e técnicos",
   "privacy.whatWeCollect.device.item1":
     "<strong>O navegador e o dispositivo</strong> a partir dos quais inicias sessão, guardados com as tuas sessões ativas para as poderes ver e terminar à distância.",
@@ -1242,7 +1242,9 @@ export const marketing: Catalog = {
   "privacy.thirdParties.intro":
     "Trabalhamos com um pequeno número de fornecedores de serviços. Cada um vê apenas o que precisa para a função que desempenha:",
   "privacy.thirdParties.google":
-    "<strong>Google</strong>: dá suporte ao Iniciar sessão com o Google, o nosso único método de acesso. O Google confirma quem és e partilha o teu nome, email e foto de perfil.",
+    "<strong>Google</strong>: dá suporte ao Iniciar sessão com o Google, uma das duas formas de entrar. O Google confirma quem és e partilha o teu nome, email e foto de perfil.",
+  "privacy.thirdParties.resend":
+    "<strong>Resend</strong> (Estados Unidos): entrega os códigos de acesso que pedes. Recebe o teu email e o código, e mais nada.",
   "privacy.thirdParties.railway":
     "<strong>Railway</strong>: aloja a plataforma e a base de dados onde fica guardado tudo o que publicas.",
   "privacy.thirdParties.tigris":
@@ -3497,6 +3499,8 @@ export const marketing: Catalog = {
   "changelog.release.count.infrastructure_other":
     "{count} alterações de infraestrutura",
   // Release headlines, one per shipping day (see changelogReleases.ts).
+  "changelog.releases.2026-10-26.headline":
+    "Renovar e revogar convites em lote, retomar no Studio, pastas de playlists e barra nítida no iPhone.",
   "changelog.releases.2026-10-21.headline":
     "Convida conexões para eventos onde vais, mosaicos de géneros no Studio e barra de progresso mais suave.",
   "changelog.releases.2026-10-20.headline":
@@ -3673,6 +3677,110 @@ export const marketing: Catalog = {
     "As páginas de criador do Studio cabem no telemóvel",
   "changelog.entries.studio-creator-phone-layout.body":
     "A barra de cima sai ao fazer scroll, os cartões usam a largura toda e o botão do lançamento fica dentro do cartão.",
+  "changelog.entries.studio-resume-fades-in.title":
+    "As músicas voltam suavemente quando carregas no play",
+  "changelog.entries.studio-resume-fades-in.body":
+    "Ao retomar depois de uma pausa, o som sobe do silêncio em menos de meio segundo e nunca entra logo no volume todo.",
+  "changelog.entries.studio-player-go-to-track.title":
+    "Volta num toque à música que estás a ouvir",
+  "changelog.entries.studio-player-go-to-track.body":
+    "Em qualquer parte do QueerPulse, a seta do leitor ou o painel de definições levam-te à página da faixa no Studio.",
+  "changelog.entries.hide-community-events.title":
+    "Esconde eventos das comunidades que escolheres",
+  "changelog.entries.hide-community-events.body":
+    "Escolhe-as em Explorar, num cartão de evento ou nas Definições, e os eventos delas deixam de te aparecer.",
+  "changelog.entries.event-payment-details.title":
+    "Diz a quem vem como pagar o teu evento",
+  "changelog.entries.event-payment-details.body":
+    "Eventos pagos podem ter um link de pagamento e instruções, como MB WAY ou dinheiro à porta.",
+  "changelog.entries.genesis-closes-after-use.title":
+    "O Genesis fecha de vez depois de usado",
+  "changelog.entries.genesis-closes-after-use.body":
+    "A página de arranque verifica primeiro e mostra que está fechada, sem botão de reivindicar ou convidar.",
+  "changelog.entries.landing-page-visit-counts.title":
+    "Vê as visitas à página inicial no painel de admin",
+  "changelog.entries.landing-page-visit-counts.body":
+    "Contagens diárias anónimas por origem mostram que publicações e links trazem pessoas à página inicial.",
+  "changelog.entries.sign-in-with-an-email-code.title":
+    "Entra com um código enviado para o teu email",
+  "changelog.entries.sign-in-with-an-email-code.body":
+    "Quem usa Proton ou outro email pode entrar com um código de 6 dígitos, e quem recebe um convite pode juntar-se da mesma forma.",
+  "changelog.entries.pause-member-invites.title":
+    "Quem administra pode pôr em pausa os convites de uma pessoa",
+  "changelog.entries.pause-member-invites.body":
+    "Quem tiver os convites em pausa vê porquê em cada ecrã de convites e mantém o resto da conta.",
+  "changelog.entries.invite-quotas-search.title":
+    "Pesquisa membros ao definir limites de convites",
+  "changelog.entries.invite-quotas-search.body":
+    "Quem administra vê os convites de cada membro este mês face ao limite, e muda-o ali mesmo.",
+  "changelog.entries.bulk-refresh-and-revoke-invites.title":
+    "Renova ou revoga vários convites de uma vez",
+  "changelog.entries.bulk-refresh-and-revoke-invites.body":
+    "Quem administra escolhe convites para renovar ou revogar em conjunto, ou reativa todos os expirados de uma vez.",
+  "changelog.entries.coverless-personas-skip-the-banner.title":
+    "Páginas de persona sem banner abrem no nome",
+  "changelog.entries.coverless-personas-skip-the-banner.body":
+    "A faixa vazia às riscas desapareceu: o avatar e o nome ficam logo abaixo da navegação até juntares uma capa.",
+  "changelog.entries.profile-activity-timeline.title":
+    "Lê a atividade recente de um perfil numa linha do tempo",
+  "changelog.entries.profile-activity-timeline.body":
+    "Os momentos ficam agrupados por semana com a altura de cada um, e uma persona republicada aparece só uma vez.",
+  "changelog.entries.studio-track-byline-links.title":
+    "Salta de uma faixa para o álbum ou artista",
+  "changelog.entries.studio-track-byline-links.body":
+    "Toca no nome do artista ou do álbum por baixo do título da faixa e a página desliza até lá, capa incluída.",
+  "changelog.entries.studio-sliders-easier-to-grab.title":
+    "Arrasta os controlos do leitor do Studio com mais facilidade",
+  "changelog.entries.studio-sliders-easier-to-grab.body":
+    "As pegas são maiores, as bandas do equalizador são mais longas e a transição e o equalizador têm agora o mesmo aspeto.",
+  "changelog.entries.member-growth-shows-real-total.title":
+    "O crescimento mostra o total real de pessoas",
+  "changelog.entries.member-growth-shows-real-total.body":
+    "O gráfico de admin mostra agora o total de pessoas semana a semana e a etiqueta do Orgulho que sobrou desapareceu.",
+  "changelog.entries.crisp-app-bar-on-iphone.title":
+    "Os ícones da barra de cima ficam nítidos no iPhone",
+  "changelog.entries.crisp-app-bar-on-iphone.body":
+    "Os ícones e contadores de não lidas da barra de cima ficam nítidos no iPhone, agora que a barra é sólida como a de baixo.",
+  "changelog.entries.trust-network-ties-in-full-colour.title":
+    "Ligações da rede de confiança com cor plena",
+  "changelog.entries.trust-network-ties-in-full-colour.body":
+    "Votos de confiança mútuos, convites e votos retirados têm agora as cores da legenda e os anéis leem-se num relance.",
+  "changelog.entries.studio-account-menu-clears-the-player.title":
+    "O Sair já não fica tapado pelo leitor de música",
+  "changelog.entries.studio-account-menu-clears-the-player.body":
+    "O menu da conta no Studio acaba agora acima da barra do leitor, por isso as últimas linhas estão sempre à mão.",
+  "changelog.entries.studio-resume-where-you-left-off.title":
+    "Retoma o Studio onde ficaste",
+  "changelog.entries.studio-resume-where-you-left-off.body":
+    "Liga Retomar e a tua fila volta depois de fechares o separador, com Tocado recentemente neste dispositivo.",
+  "changelog.entries.studio-playlist-folders.title":
+    "Arruma as tuas playlists em pastas",
+  "changelog.entries.studio-playlist-folders.body":
+    "Junta playlists em pastas na tua biblioteca e na barra lateral, e só tu vês como as arrumas.",
+  "changelog.entries.studio-artist-banner-hero.title":
+    "Dá uma foto larga à tua página no Studio",
+  "changelog.entries.studio-artist-banner-hero.body":
+    "Põe uma foto de capa na tua página de artista e escolhe o layout de ponta a ponta ou o teu avatar sobre a foto.",
+  "changelog.entries.studio-select-many-tracks.title":
+    "Escolhe várias faixas de uma vez",
+  "changelog.entries.studio-select-many-tracks.body":
+    "Mantém premido ou marca as linhas e põe na fila, guarda ou tira o lote todo na barra que aparece.",
+  "changelog.entries.studio-menus-everywhere.title":
+    "Clique direito ou toque longo em tudo no Studio",
+  "changelog.entries.studio-menus-everywhere.body":
+    "Cartões, linhas e playlists abrem o mesmo menu de ações, e ele fica aberto quando levantas o dedo.",
+  "changelog.entries.studio-one-button-look.title":
+    "Um só estilo de botão em todo o Studio",
+  "changelog.entries.studio-one-button-look.body":
+    "Os botões do Studio têm agora um só aspeto, com mais contraste e uma área de toque inteira no telemóvel.",
+  "changelog.entries.studio-calmer-now-playing.title":
+    "Um ecrã A tocar mais calmo",
+  "changelog.entries.studio-calmer-now-playing.body":
+    "Capa e controlos cabem em qualquer ecrã, deslizar salta sem piscar e o Mais abre como folha no telemóvel.",
+  "changelog.entries.studio-single-key-shortcuts-switch.title":
+    "Desliga os atalhos de uma só tecla",
+  "changelog.entries.studio-single-key-shortcuts-switch.body":
+    "Um novo interruptor nas Definições desliga os atalhos de letras do leitor do Studio se te atrapalharem.",
   "changelog.entries.toasts-clear-the-notch.title":
     "As notificações ficam abaixo do entalhe do iPhone",
   "changelog.entries.toasts-clear-the-notch.body":
@@ -10111,7 +10219,7 @@ export const marketing: Catalog = {
   "forOrgs.apply.lead":
     "Diz-nos quem és e levamos-te à candidatura de parceria. É um formulário só, entra na fila de parcerias, e podes ver em que ponto está a partir da tua conta quando quiseres.",
   "forOrgs.apply.note":
-    "Lemos todas as candidaturas, por mais rascunho que sejam. A resposta chega dentro da app, na tua página de submissões e nas notificações. Nunca enviamos email.",
+    "Lemos todas as candidaturas, por mais rascunho que sejam. A resposta chega dentro da app, na tua página de submissões e nas notificações. As decisões nunca vão por email.",
   "forOrgs.cta.title": "Começa uma <em>conversa.</em>",
   "forOrgs.cta.list1": "Para parcerias, normalmente ligamos antes de escrever",
   "forOrgs.cta.list2":
@@ -12428,7 +12536,7 @@ export const marketing: Catalog = {
   "accessibilityStatement.feedback.p2":
     "Usa o formulário de contacto e escolhe <strong>Acessibilidade</strong> como tema. A mensagem fica guardada para quem gere a plataforma, que lê todas.",
   "accessibilityStatement.feedback.p3":
-    "O QueerPulse não envia email automático, por isso qualquer resposta é escrita por uma pessoa para o endereço que nos deres. Procuramos responder em {days} dias úteis. Se o teu relato for sobre algo que te está a deixar de fora da tua própria conta, diz-o e passa à frente.",
+    "Qualquer resposta ao teu relato é escrita por alguém da nossa equipa para o endereço que nos deres. Procuramos responder em {days} dias úteis. Se o teu relato for sobre algo que te está a deixar de fora da tua própria conta, diz-o e passa à frente.",
   "accessibilityStatement.feedback.cta": "Comunicar uma barreira de acesso",
 
   "accessibilityStatement.enforcement.title": "Se a nossa resposta não chegar",

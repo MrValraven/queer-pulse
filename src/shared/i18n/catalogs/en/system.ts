@@ -215,6 +215,11 @@ export const system: Catalog = {
   "inviteLanding.card.validFor_other": "Valid for {count} days",
   "inviteLanding.card.expires": "Invite expires {date}",
   "inviteLanding.card.googleCta": "Register with Google",
+  "inviteLanding.card.emailCta": "Register with an email code",
+  "inviteLanding.card.firstNameLabel": "First name",
+  "inviteLanding.card.lastNameLabel": "Last name (optional)",
+  "inviteLanding.card.nameHelper":
+    "This is the name members see. You can change it later in settings.",
   "inviteLanding.card.under18BackLabel": "Back to the invitation",
   "inviteLanding.card.consent":
     "By continuing you agree to our <termsLink>terms of use</termsLink> and <privacyLink>privacy policy</privacyLink>.",
@@ -460,8 +465,10 @@ export const system: Catalog = {
   "verificationNeeded.heading": "Quick check · <em>is this still you?</em>",
   // DEMO ONLY, with `actionCard` and `foot` below: a countdown against a
   // simulated check, and a membership cancellation there is no billing for.
-  // Live mode runs the real step-up (`beginReauth`), which leaves for Google
-  // and so has no in-page timer to count down.
+  // Live mode runs the real step-up (`beginReauth` in
+  // features/settings/api/useReauthToken.ts), which opens the code dialog and
+  // has no in-page timer to count down. Google is the alternative for members
+  // who have it.
   "verificationNeeded.lead":
     "For your next step we need to confirm it's still you on this device. <b>This is one of two actions</b> we re-auth for: cancelling membership, or removing your account.",
   "verificationNeeded.leadLive":
@@ -470,18 +477,23 @@ export const system: Catalog = {
     "You're about to <b>cancel your Sustainer membership</b>",
   "verificationNeeded.foot": "This re-auth expires in <b>{time}</b>.",
   "verificationNeeded.footLive":
-    "You'll land back on this page once Google is done.",
+    "We'll send a 6-digit code to your account email. Enter it and you can carry on.",
   "verificationNeeded.confirm.introLive":
-    "Confirming means signing in with Google again, so a session someone else left open can't carry this through. Nothing is emailed.",
+    "Confirming means entering a code we email you now, so a session someone else left open can't carry this through.",
+  // The two lines above, for while sign-in codes are switched off and the
+  // confirm button runs the Google round trip.
+  "verificationNeeded.footLiveGoogle":
+    "You'll land back on this page once Google is done.",
+  "verificationNeeded.confirm.introLiveGoogle":
+    "Confirming means signing in with Google again, so a session someone else left open can't carry this through.",
   "verificationNeeded.successLive.sub":
     "Re-authentication confirmed, and it stays good for a few minutes. Go back to the action you started and press its button again to finish it.",
   "verificationNeeded.successLive.continueCta": "Back to settings",
-  // Step-up re-auth on QueerPulse is a Google sign-in round trip (see
-  // features/settings/api/useReauthToken.ts). The pane that used to sit here
-  // offered to email a one-time link; QueerPulse delivers no email, so it was
-  // describing something that could never arrive.
+  // Step-up re-auth on QueerPulse opens the code dialog (`beginReauth` in
+  // features/settings/api/useReauthToken.ts), with Google as the alternative
+  // for members who have it.
   "verificationNeeded.confirm.intro":
-    "Confirming means signing in with Google again as <b>{email}</b>, so a session someone else left open can't carry this through. Nothing is emailed.",
+    "Confirming means entering a code we email to <b>{email}</b>, so a session someone else left open can't carry this through.",
   "verificationNeeded.confirm.cta": "Confirm it's me",
   "verificationNeeded.confirm.verifyingCta": "Confirming…",
   "verificationNeeded.success.title": "It's you, <em>verified.</em>",
@@ -522,8 +534,12 @@ export const system: Catalog = {
   "genesis.loggedOut.lead":
     "Generate the founding invite. You'll join through the normal invite flow, invited by QueerPulse.",
   "genesis.loggedOut.generateCta": "Generate invite",
-  "genesis.notice.closed": "Genesis is closed.",
+  "genesis.closed.lead":
+    "Genesis has already been used. This platform has its admin.",
   "genesis.notice.rejected": "This account cannot claim genesis.",
+  "genesis.notice.rateLimited": "Too many tries. Wait a minute and try again.",
+  "genesis.notice.statusFailed":
+    "We couldn't check whether genesis is still open. Reload the page to try again.",
   "genesis.notice.failedFallback": "Something went wrong. Try again.",
   "genesis.notice.claimed": "You are now an admin.",
   "genesis.notice.demo": "Genesis isn't available in demo mode.",

@@ -63,7 +63,7 @@ export const auth: Catalog = {
   // Retrying the same way can't work; the support link under the notice does.
   "signIn.notice.emailInUse.title": "That email already has an account",
   "signIn.notice.emailInUse.body":
-    "This address is already on a QueerPulse account, so we can't open a second one for it. Sign in with the Google account you first joined with.",
+    "This address is already on a QueerPulse account, so we can't open a second one for it. Sign in with an email code to this address, or with the Google account you first joined with.",
   "signIn.notice.oauthFailed.title": "Something went sideways",
   "signIn.notice.oauthFailed.body":
     "Sign-in didn't complete on Google's side. Nothing was changed. Try again in a moment.",
@@ -105,11 +105,15 @@ export const auth: Catalog = {
   "invite.quota.resets_one": "Resets tomorrow",
   "invite.quota.resets_other": "Resets in {count} days",
   "invite.quota.resets_zero": "Resets today",
+  "invite.paused.heading": "Your invites are paused",
+  "invite.paused.body":
+    "Our team has paused invites on your account. You can still use everything else.",
+  "invite.paused.cta": "Message our team",
 
   "invite.compose.recipientEmail.label": "Who is this for",
   "invite.compose.recipientEmail.placeholder": "them@example.com",
   "invite.compose.recipientEmail.help":
-    "Whoever redeems this invite joins with you on record as their voucher, and connected to you from day one. Fill in an address and only the person signing in with that Google account can redeem it, so a forwarded or screenshotted link gets nobody else in; leave it blank and anyone holding the link can use it.",
+    "Whoever redeems this invite joins with you on record as their voucher, and connected to you from day one. Fill in an address and only the person who signs in with that address can redeem it, so a forwarded or screenshotted link gets nobody else in; leave it blank and anyone holding the link can use it.",
   "invite.compose.recipientEmail.noSend":
     "Filling this in sends nothing to that address. You still pass the link on yourself.",
   "invite.compose.recipientEmail.invalid":
@@ -139,7 +143,7 @@ export const auth: Catalog = {
   "invite.ready.headline": "Your invite is <em>ready</em>",
   "invite.ready.sub": "Share it however feels natural. It's good for one use.",
   "invite.ready.pinnedTo":
-    "Set aside for {email}. Only a Google account with that address can redeem it.",
+    "Set aside for {email}. Only someone who signs in with that address can redeem it.",
   "invite.ready.pinnedSend":
     "Nothing was sent to them. Pass the link on yourself, however feels natural.",
   "invite.ready.linkCopied": "Link copied",
@@ -191,6 +195,8 @@ export const auth: Catalog = {
     "Only an expired invite can be sent again. This one's already been used, withdrawn, or is still live.",
   "invite.sentList.resendError.generic":
     "Couldn't send that one again just now. Give it another try in a moment.",
+  "invite.sentList.resendError.paused":
+    "Your invites are paused, so this one can't be sent again. Message our team if you'd like to talk about it.",
   "invite.sentList.showMore": "Show more",
   "invite.sentList.loadingMore": "Loading…",
   "invite.sentList.loadMoreError": "We couldn't load more of your invites.",
@@ -274,9 +280,65 @@ export const auth: Catalog = {
     "We couldn't record that just now. Check your connection and try again.",
   "policyReacceptance.signOut": "Sign out instead",
 
-  // ── Confirm email (six-digit code) ──
-
-  // ── Magic link sign-in ──
+  // ── Sign in with an email code (EmailCodeSignIn, EmailCodeStep, InviteEmailCodeJoin, ReauthCodeModal) ──
+  "emailCode.or": "or",
+  "emailCode.emailLabel": "Email",
+  "emailCode.emailPlaceholder": "you@example.com",
+  "emailCode.emailHelper":
+    "We email you a 6-digit code. It is the only email QueerPulse sends.",
+  "emailCode.requestCta": "Email me a code",
+  "emailCode.requesting": "Sending your code…",
+  "emailCode.sentTo":
+    "We sent a code to <strong>{email}</strong>. It works for 10 minutes.",
+  "emailCode.codeLabel": "Your 6-digit code",
+  "emailCode.spamHint":
+    "Nothing yet? Check your spam folder. The email comes from hello@queerpulse.com.",
+  "emailCode.verifying": "Checking your code…",
+  "emailCode.verifyCta": "Check this code",
+  "emailCode.resendCta": "Send a new code",
+  "emailCode.resending": "Sending…",
+  "emailCode.resendIn_one": "You can send a new code in {count} second.",
+  "emailCode.resendIn_other": "You can send a new code in {count} seconds.",
+  "emailCode.resent": "We sent a new code to {email}.",
+  "emailCode.differentEmailCta": "Use a different email",
+  "emailCode.error.emailInvalid":
+    "That email address does not look right. Check it and try again.",
+  "emailCode.error.tooManyCodes":
+    "We have sent a lot of codes to this address today. You can ask again at {time}.",
+  "emailCode.error.networkBusy":
+    "Lots of sign-in codes have been asked for from this network. You can try again at {time}.",
+  "emailCode.error.resendTooSoon":
+    "We sent a code a moment ago. You can ask for a new one at {time}.",
+  "emailCode.error.emailSendFailed":
+    "We could not send the email just now, so no code is on its way. Try again in a minute.",
+  "emailCode.error.codeIncorrect":
+    "That code is incorrect. Check the latest email from us and try again.",
+  "emailCode.error.codeIncorrectAttempts_one":
+    "That code is incorrect. You have {count} try left.",
+  "emailCode.error.codeIncorrectAttempts_other":
+    "That code is incorrect. You have {count} tries left.",
+  "emailCode.error.codeExpired":
+    "This code has expired. Codes work for 10 minutes, so send a new one.",
+  "emailCode.error.codeUsedUp":
+    "That was the fifth wrong try, so this code has stopped working. Send a new code to try again.",
+  "emailCode.error.codeReplaced":
+    "You asked for a newer code, so this one has stopped working. Use the code in the latest email.",
+  "emailCode.error.codeAlreadyUsed":
+    "This code has already been used. Send a new code to sign in again.",
+  "emailCode.error.tooManyAttempts":
+    "There have been too many wrong codes for this address today. You can try again at {time}.",
+  "emailCode.error.accountRecoveryReview":
+    "This account needs a check by our team before a code can open it. <a>Write to us</a> and we will sort it out.",
+  "emailCode.error.nameRequired":
+    "Add your first name so we can set up your account.",
+  "emailCode.error.emailCodeUnavailable":
+    "Sign-in codes are switched off right now. Use Google, or <a>write to us</a> if you can't.",
+  "emailCode.error.throttled":
+    "Too many tries have come from this network. Wait a minute and try again.",
+  "emailCode.error.network":
+    "We could not reach QueerPulse. Check your connection and try again.",
+  "emailCode.error.unexpected":
+    "QueerPulse answered with an error we did not expect ({status}). Try again in a minute.",
 
   // ── Invite-code entry (/auth/invite-code) ──
   // PRD-306. A code with no link around it used to be a dead end. The only
@@ -407,8 +469,8 @@ export const auth: Catalog = {
     "Your first request already has a code, from the day you sent it. There's no new one here, because there's no new request.",
   "requestInvite.reference.enterCodeCta": "Check on my request with that code",
   "requestInvite.reference.signInBody":
-    "Lost the code? Sign in with the Google account for the address you applied with. Proving the address is yours is what lets us take you back to your own request.",
-  "requestInvite.reference.signInCta": "Continue with Google",
+    "Lost the code? Sign in with the address you applied with, using Google or a code we email you. Proving the address is yours is what lets us take you back to your own request.",
+  "requestInvite.reference.signInCta": "Go to sign in",
 
   // Pre-emptive states, rendered from GET /platform-status BEFORE submit so
   // nobody fills in the whole form only to be rejected on submit.
@@ -660,6 +722,8 @@ export const auth: Catalog = {
   "onboarding.stepPhoto.lastName.label": "Last name",
   "onboarding.stepPhoto.name.helper":
     "This is what members will see on your profile. We pulled it from your Google account, but you can change it.",
+  "onboarding.stepPhoto.name.helperEmail":
+    "This is what members will see on your profile. You can change it.",
   "onboarding.stepPhoto.preview.caption": "How your profile card will look",
   "onboarding.stepPhoto.pronouns.label": "Pronouns",
   "onboarding.stepPhoto.pronouns.helper":

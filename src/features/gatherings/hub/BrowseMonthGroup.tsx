@@ -1,7 +1,9 @@
+import { AnimatePresence } from "motion/react";
 import { Reveal } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { CalendarEvent } from "../data";
 import { EventAgendaRow } from "./EventAgendaRow";
+import { EventCellPresence } from "./EventCellPresence";
 import { EventPosterSkeleton } from "./EventPosterSkeleton";
 import { EventTicketCard } from "./EventTicketCard";
 import type { BrowseLayout } from "./useBrowseLayout";
@@ -23,6 +25,15 @@ function listClassFor(layout: BrowseLayout): string {
 
 function itemClassFor(layout: BrowseLayout): string {
   return layout === "tickets" ? `${styles.ticketCell}` : `${styles.agendaItem}`;
+}
+
+/** The scroll reveal inside a live cell. The cell is the grid item that
+ *  folds away when its event leaves the list; the reveal lays the card out
+ *  inside it. */
+function revealClassFor(layout: BrowseLayout): string {
+  return layout === "tickets"
+    ? `${styles.ticketReveal}`
+    : `${styles.agendaReveal}`;
 }
 
 /**
@@ -65,27 +76,35 @@ export function MonthGroup({
         )}
       </h2>
       <div className={listClassFor(layout)}>
-        {events.map((event, index) => {
-          const isPriority = isFirstMonth && index < PRIORITY_CARD_COUNT;
-          return (
-            <Reveal
-              key={`${event.title}-${event.date.toISOString()}`}
-              as="div"
-              className={itemClassFor(layout)}
-              delay={Math.min(index, REVEAL_MAX_STAGGER) * REVEAL_STEP_MS}
-            >
-              {layout === "tickets" ? (
-                <EventTicketCard
-                  event={event}
-                  now={now}
-                  isPriority={isPriority}
-                />
-              ) : (
-                <EventAgendaRow event={event} isPriority={isPriority} />
-              )}
-            </Reveal>
-          );
-        })}
+        {/* A card whose community the member hides fades away, and its
+            neighbours glide into the gap. */}
+        <AnimatePresence initial={false}>
+          {events.map((event, index) => {
+            const isPriority = isFirstMonth && index < PRIORITY_CARD_COUNT;
+            return (
+              <EventCellPresence
+                key={`${event.title}-${event.date.toISOString()}`}
+                className={itemClassFor(layout)}
+              >
+                <Reveal
+                  as="div"
+                  className={revealClassFor(layout)}
+                  delay={Math.min(index, REVEAL_MAX_STAGGER) * REVEAL_STEP_MS}
+                >
+                  {layout === "tickets" ? (
+                    <EventTicketCard
+                      event={event}
+                      now={now}
+                      isPriority={isPriority}
+                    />
+                  ) : (
+                    <EventAgendaRow event={event} isPriority={isPriority} />
+                  )}
+                </Reveal>
+              </EventCellPresence>
+            );
+          })}
+        </AnimatePresence>
       </div>
     </section>
   );

@@ -64,6 +64,7 @@ export function StudioTracklistToolbar({
             <Button
               variant="quiet"
               size="sm"
+              className={css.control}
               aria-label={t("studio:tracklist.sortAria", {
                 order: current ? t(current.labelKey) : "",
               })}
@@ -81,6 +82,7 @@ export function StudioTracklistToolbar({
         <Button
           variant="quiet"
           size="sm"
+          className={css.control}
           aria-pressed={selection.isSelecting}
           onClick={() => {
             if (selection.isSelecting) selection.clear();

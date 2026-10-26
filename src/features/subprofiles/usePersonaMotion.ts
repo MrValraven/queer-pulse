@@ -84,13 +84,14 @@ export function usePersonaMotion(): RefObject<HTMLElement | null> {
     mutationObserver.observe(root, { childList: true, subtree: true });
 
     // Cover parallax: only wire the scroll listener when a cover is present AND
-    // actually rendered. The `page` and `workshop` skins set `.pp-cover {
-    // display:none }` while keeping `data-has-cover`, so without this guard the
-    // scroll + rAF + getBoundingClientRect + style-write loop would fire on
-    // every frame for an invisible element. Layout is available here (we're in
-    // a useLayoutEffect after the node is in the DOM), so getComputedStyle is
-    // safe. This only skips the parallax wiring — the reveal observer above
-    // still runs, and its cleanup below still tears everything down.
+    // actually rendered. The `page`, `chart`, `gallery` and `classroom` skins
+    // set `.pp-cover { display:none }` while keeping `data-has-cover`, so
+    // without this guard the scroll + rAF + getBoundingClientRect +
+    // style-write loop would fire on every frame for an invisible element.
+    // Layout is available here (we're in a useLayoutEffect after the node is
+    // in the DOM), so getComputedStyle is safe. This only skips the parallax
+    // wiring: the reveal observer above still runs, and its cleanup below
+    // still tears everything down.
     const cover = root.querySelector(".pp-cover[data-has-cover]");
     let scrollListener: (() => void) | null = null;
     let pendingFrame: number | null = null;

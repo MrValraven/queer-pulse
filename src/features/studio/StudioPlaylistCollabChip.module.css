@@ -44,6 +44,13 @@
   inset: -6px 0;
 }
 
+/* Touch: the chip itself grows to the 44px tap floor. */
+@media (pointer: coarse) {
+  .chip.chip {
+    min-height: var(--tap-min);
+  }
+}
+
 .chip.chip:hover {
   background: rgba(var(--studio-ink-rgb), 0.06);
 }

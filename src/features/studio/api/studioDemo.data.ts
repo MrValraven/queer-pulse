@@ -93,13 +93,23 @@ export const DEMO_ARTISTS: StudioArtistRefDTO[] = [
 
 /** `city` stays null, as the server always sends it (personas have no city
  *  field), so the demo renders exactly what live renders. */
-export const DEMO_ARTIST_DETAILS: Record<
-  string,
-  { bio: string | null; city: string | null }
-> = {
+export interface DemoArtistDetails {
+  bio: string | null;
+  city: string | null;
+  coverUrl?: string | null;
+  studioHero?: "full-bleed" | "avatar" | null;
+}
+
+/** Mariana's wide demo photo: her portrait photo at banner size. */
+const DEMO_ARTIST_COVER_URL =
+  "https://images.unsplash.com/photo-1695270918704-2c788f9e3cbf?q=80&w=2000&auto=format&fit=crop";
+
+export const DEMO_ARTIST_DETAILS: Record<string, DemoArtistDetails> = {
   [DEMO_ARTIST_MARIANA.id]: {
     bio: "Mariana Sol writes letters set to a piano so patient it sometimes forgets to play. Born in Beja, based in Sintra. Her work moves between fado's grammar and something quieter, the song you hum doing the dishes.",
     city: null,
+    coverUrl: DEMO_ARTIST_COVER_URL,
+    studioHero: "full-bleed",
   },
   [DEMO_ARTIST_NIGHTFORM.id]: {
     bio: "Synths, a drum machine and one long night bus home",

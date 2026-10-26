@@ -1,0 +1,30 @@
+/* The step-up code dialog (ReauthCodeModal). The request form and code step
+   come from EmailCode.module.css; this holds only the dialog's own frame. */
+
+/* Room under the last line in the body (the countdown, or "Send a code"),
+   so it never sits on the dialog's edge or against the "or" divider. */
+.body {
+  padding-bottom: 16px;
+}
+
+/* The sending line holds about the code step's height, so the dialog keeps
+   its size when the boxes fold in: this folds away as the step folds in.
+   The code step measured about 336px at 1280 and 339px at 390 (sent-to
+   line, boxes, helper, action rows, countdown); 320px plus the status
+   line's 12px top margin leaves a growth of under 10px at both widths. */
+.sending {
+  min-height: calc(var(--section-y-160) * 2);
+}
+
+/* Google sits in the body under an "or" divider, the same as the sign-in
+   page, so the footer has no action that reads as a dismiss. */
+.alternative {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-bottom: 16px;
+}
+
+.alternativeButton {
+  width: 100%;
+}

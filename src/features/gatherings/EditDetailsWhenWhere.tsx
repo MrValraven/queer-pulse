@@ -2,6 +2,7 @@ import { FormField } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { editFieldDomId } from "./editDetailsChanges";
 import { EditDetailsCost } from "./EditDetailsCost";
+import { EditDetailsPayment } from "./EditDetailsPayment";
 import type { GatheringDetailsDraft } from "./editDetailsDraft";
 import { EditDetailsSchedule } from "./EditDetailsSchedule";
 import { EditDetailsSection } from "./EditDetailsSection";
@@ -9,7 +10,7 @@ import fieldStyles from "./EditDetailsFields.module.css";
 
 /**
  * "When and where" in the edit-details modal: the start and end, the
- * location, and what it costs.
+ * location, what it costs and, for a paid gathering, how guests pay.
  *
  * Split out of `EditDetailsModal` so the modal stays inside the 200-line rule.
  * The start, end and location fields carry ids, since those are the fields
@@ -78,6 +79,11 @@ export function EditDetailsWhenWhere({
         <EditDetailsCost
           costKind={draft.costKind}
           cost={draft.cost}
+          onChange={onChange}
+        />
+        <EditDetailsPayment
+          draft={draft}
+          linkFieldId={editFieldDomId(editorId, "paymentUrl")}
           onChange={onChange}
         />
       </div>

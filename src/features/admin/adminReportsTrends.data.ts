@@ -17,40 +17,31 @@ export const RANGE_OPTIONS: RangeOption[] = REPORT_RANGE_WEEKS.map((weeks) => ({
   weeks,
 }));
 
-/** Thins the line chart's x-axis date labels for the longer ranges — mirrors
- *  `adminReports.adapters.ts`'s live-mode `shouldLabelPoint`, so demo and
- *  live look the same at every range. */
-function shouldLabelPoint(index: number, totalPoints: number): boolean {
-  if (totalPoints <= 8) return true;
-  const stride = totalPoints <= 12 ? 2 : 4;
-  return index === totalPoints - 1 || index % stride === 0;
-}
+/** The running member total the demo series lands on, matching the Overview
+ *  dashboard's `MEMBER_GROWTH` fixture and active-members tile. */
+const DEMO_LATEST_TOTAL = 8412;
 
 /**
  * Deterministic demo member-growth series for a given weekly range. There is
- * no backend in demo mode, so this generates a plausible, stable ramp with
- * one clear "spike" week rather than reshaping the fixed 10-point
- * `MEMBER_GROWTH` fixture (built for the Overview dashboard's own fixed
- * window) into ranges it was never shaped for.
+ * no backend in demo mode, so this generates a plausible, stable run of
+ * weekly joins and a steadily rising running total rather than reshaping the
+ * fixed 10-point `MEMBER_GROWTH` fixture (built for the Overview dashboard's
+ * own fixed window) into ranges it was never shaped for.
  */
 export function buildDemoGrowthPoints(weeks: number): GrowthPoint[] {
-  const spikeIndex = Math.max(2, Math.floor(weeks * 0.7));
-  const baseDate = new Date(2026, 0, 1);
-  const points: GrowthPoint[] = [];
-  for (let index = 0; index < weeks; index += 1) {
-    const ramp = 140 + Math.round((260 * index) / Math.max(weeks - 1, 1));
-    const wobble = Math.round(30 * Math.sin(index * 1.3));
-    const joined = index === spikeIndex ? ramp + 220 : ramp + wobble;
-    const date = new Date(baseDate);
-    date.setDate(date.getDate() + index * 7);
-    points.push({
-      date: shouldLabelPoint(index, weeks) ? date : null,
-      joined,
-      churned: null,
-      spike: index === spikeIndex,
-    });
-  }
-  return points;
+  const latestWeekStart = new Date(2026, 9, 19);
+  const weeklyJoins = Array.from(
+    { length: weeks },
+    (_, index) => 80 + Math.round(14 * Math.sin(index * 1.3)),
+  );
+  const joinsInRange = weeklyJoins.reduce((sum, joined) => sum + joined, 0);
+  let runningTotal = DEMO_LATEST_TOTAL - joinsInRange;
+  return weeklyJoins.map((joined, index) => {
+    runningTotal += joined;
+    const date = new Date(latestWeekStart);
+    date.setDate(date.getDate() - (weeks - 1 - index) * 7);
+    return { date, joined, total: runningTotal, churned: null };
+  });
 }
 
 /** Deterministic demo reports-by-type series for a given weekly range — same

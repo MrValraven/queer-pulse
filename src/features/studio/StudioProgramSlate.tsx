@@ -1,3 +1,4 @@
+import { FiPlus } from "react-icons/fi";
 import { Button, ImageSlot } from "../../shared/components/ui";
 import { Translation } from "../../shared/i18n/Translation";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -166,7 +167,8 @@ export function StudioProgramSlate({
             className={s.emptySlot}
             onClick={onAddBroadcast}
           >
-            {t("studio:program.slate.broadcasts.addSlotCta")}
+            <FiPlus aria-hidden />{" "}
+            {t("studio:program.slate.broadcasts.addSlotLabel")}
           </Button>
         </div>
       </section>

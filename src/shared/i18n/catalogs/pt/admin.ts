@@ -290,12 +290,11 @@ export const admin: Catalog = {
   "dashboard.charts.series.spam": "Spam",
   "dashboard.charts.series.other": "Outras",
   "dashboard.charts.memberGrowth.title": "Crescimento de pessoas",
-  "dashboard.charts.memberGrowth.sub":
-    "Entradas vs. saídas · com pico do Orgulho",
+  "dashboard.charts.memberGrowth.sub": "Total de pessoas · últimas 10 semanas",
   "dashboard.charts.memberGrowth.ariaLabel":
     "Gráfico de linhas do crescimento de pessoas",
-  "dashboard.charts.memberGrowth.spike": "Orgulho",
-  "dashboard.charts.legend.joined": "Entradas",
+  "dashboard.charts.memberGrowth.totalMembers": "Total de pessoas",
+  "dashboard.charts.memberGrowth.joinedThatWeek": "Entraram nessa semana",
   "dashboard.charts.legend.churned": "Saídas",
   "dashboard.charts.responseTime.title": "Tempo de resposta",
   "dashboard.charts.responseTime.sub": "Distribuição · este mês",
@@ -503,6 +502,10 @@ export const admin: Catalog = {
   "platformLog.kind.mod.invite_quota_changed": "alterou uma quota de convites",
   "platformLog.kind.mod.invite_quota_changed.target":
     "alterou a quota de convites de",
+  "platformLog.kind.mod.invite_access_changed":
+    "alterou o acesso a convites de alguém",
+  "platformLog.kind.mod.invite_access_changed.target":
+    "alterou o acesso a convites de",
   "platformLog.kind.mod.invite_revoked": "revogou um convite",
   "platformLog.kind.mod.invite_revoked.target": "revogou um convite de",
   "platformLog.kind.mod.invite_refreshed": "renovou um convite",
@@ -765,7 +768,8 @@ export const admin: Catalog = {
   "members.verify.source.rating_explainer": "Explicação da avaliação de guias",
   "members.verify.ageAttested": "18+ confirmado a {date} · Termos v{version}",
   "members.verify.ageAttestedUnknown": "18+ confirmado · Termos v{version}",
-  // Aprovado: a QueerPulse não envia emails, por isso a aprovação só chega a
+  // Aprovado: a QueerPulse não envia emails sobre candidaturas (o único email é
+  // um código de entrada pedido no ecrã), por isso a aprovação só chega a
   // quem se candidatou quando quem revê leva a ligação até lá. Dizê-lo com
   // clareza aqui; prometer um email deixaria as pessoas à espera.
   "members.verify.approvedLabel": "Recebide na comunidade",
@@ -1449,6 +1453,9 @@ export const admin: Catalog = {
   "members.timeline.action.roleChanged": "Papel alterado",
   "members.timeline.action.staffRoleGranted": "Papel de equipa concedido",
   "members.timeline.action.staffRoleRevoked": "Papel de equipa revogado",
+  "members.timeline.action.inviteAccessChanged": "Acesso a convites alterado",
+  "members.timeline.note.invitesPaused": "Convites em pausa",
+  "members.timeline.note.invitesResumed": "Convites reativados",
   "members.timeline.action.other": "Ação de moderação tomada",
   "members.timeline.noReportsMeta": "Um histórico limpo, até agora",
   "members.timeline.verifiedMeta": "{date} · votos de confiança confirmados",
@@ -1596,22 +1603,84 @@ export const admin: Catalog = {
   "adminInvites.quota.manageCta": "Gerir quotas de convites",
   "adminInvites.quota.modalEyebrow": "Limites de recursos",
   "adminInvites.quota.modalTitle": "Quotas de convites",
-  "adminInvites.quota.modalHint":
-    "Define quantos convites um membro pode enviar por mês. Limpa o campo para usar o valor predefinido da plataforma.",
-  "adminInvites.quota.sentCount": "{count} enviados",
-  "adminInvites.quota.fieldLabel": "Quota mensal",
-  "adminInvites.quota.defaultPlaceholder": "Predefinido",
-  "adminInvites.quota.inputAriaLabel": "Quota mensal de convites de {name}",
-  "adminInvites.quota.saveCta": "Guardar",
-  "adminInvites.quota.saveAriaLabel": "Guardar quota de convites de {name}",
-  "adminInvites.quota.clearCta": "Repor predefinição",
-  "adminInvites.quota.clearAriaLabel":
-    "Repor a quota de convites de {name} para a predefinição",
-  "adminInvites.quota.invalid":
-    "Introduz um número inteiro de 0 ou mais, ou limpa o campo.",
-  "adminInvites.quota.saved": "Quota de convites de {name} guardada.",
-  "adminInvites.quota.cleared":
-    "{name} voltou à quota de convites predefinida.",
+  "adminInvites.quota.searchPlaceholder": "Pesquisa pelo nome ou @utilizador",
+  "adminInvites.quota.searchAria": "Pesquisar membros pelo nome ou @utilizador",
+  "adminInvites.quota.summary_one":
+    "Cada membro recebe {count} convite por mês, mais qualquer bónus de vantagem ou de embaixador. Um limite personalizado substitui tudo isso.",
+  "adminInvites.quota.summary_other":
+    "Cada membro recebe {count} convites por mês, mais qualquer bónus de vantagem ou de embaixador. Um limite personalizado substitui tudo isso.",
+  "adminInvites.quota.resultsStatus_one": "{count} membro encontrado",
+  "adminInvites.quota.resultsStatus_other": "{count} membros encontrados",
+  "adminInvites.quota.listLabel": "Membros e os seus limites de convites",
+  "adminInvites.quota.column.member": "Membro",
+  "adminInvites.quota.column.thisMonth": "Este mês",
+  "adminInvites.quota.column.monthlyLimit": "Limite mensal",
+  "adminInvites.quota.sentTotal_one": "{count} enviado no total",
+  "adminInvites.quota.sentTotal_other": "{count} enviados no total",
+  "adminInvites.quota.usage": "{sent} de {limit}",
+  "adminInvites.quota.limitReached": "Limite atingido",
+  "adminInvites.quota.invitesPaused": "Convites pausados",
+  "adminInvites.quota.limitDefault": "Predefinido · {limit}",
+  "adminInvites.quota.customChip": "Personalizado",
+  "adminInvites.quota.setLimitCta": "Definir limite",
+  "adminInvites.quota.setLimitAria": "Definir limite de {name}",
+  "adminInvites.quota.editLimitCta": "Editar limite",
+  "adminInvites.quota.editLimitAria": "Editar limite de {name}",
+  "adminInvites.quota.editor.label": "Limite mensal de convites de {name}",
+  "adminInvites.quota.editor.unit": "convites por mês",
+  "adminInvites.quota.editor.saveCta": "Guardar limite",
+  "adminInvites.quota.editor.saving": "A guardar…",
+  "adminInvites.quota.editor.cancelCta": "Cancelar",
+  "adminInvites.quota.editor.useDefaultCta": "Usar predefinição",
+  "adminInvites.quota.editor.useDefaultAria":
+    "Usar predefinição no limite de {name}",
+  "adminInvites.quota.editor.problem.empty":
+    "Indica quantos convites {name} pode enviar por mês.",
+  "adminInvites.quota.editor.problem.notWhole":
+    "Usa um número inteiro, como 5.",
+  "adminInvites.quota.editor.problem.negative":
+    "O limite não pode ser inferior a 0. Usa 0 para impedir {name} de enviar convites.",
+  "adminInvites.quota.toast.saved_one":
+    "{name} pode agora enviar {count} convite por mês.",
+  "adminInvites.quota.toast.saved_other":
+    "{name} pode agora enviar {count} convites por mês.",
+  "adminInvites.quota.toast.savedZero": "{name} já não pode enviar convites.",
+  "adminInvites.quota.toast.usingDefault":
+    "{name} voltou ao limite predefinido.",
+  "adminInvites.quota.countAll_one": "{count} membro",
+  "adminInvites.quota.countAll_other": "{count} membros",
+  "adminInvites.quota.countPartial_one": "A mostrar {shown} de {count} membro",
+  "adminInvites.quota.countPartial_other":
+    "A mostrar {shown} de {count} membros",
+  "adminInvites.quota.loadMoreCta": "Carregar mais membros",
+  "adminInvites.quota.loadingMore": "A carregar mais membros…",
+  "adminInvites.quota.empty.searchTitle":
+    "Nenhum membro corresponde a “{query}”",
+  "adminInvites.quota.empty.searchBody":
+    "Confirma a ortografia ou experimenta o @utilizador.",
+  "adminInvites.quota.empty.idleTitle": "Ainda ninguém enviou convites",
+  "adminInvites.quota.empty.idleBody":
+    "Os membros aparecem aqui quando enviam um convite ou recebem um limite personalizado. Pesquisa pelo nome para definir o limite de qualquer membro.",
+  "adminInvites.quota.error.loadTitle":
+    "Não foi possível carregar os limites de convites",
+  "adminInvites.quota.error.loadConnection":
+    "O pedido não chegou ao servidor. Verifica a tua ligação e tenta outra vez.",
+  "adminInvites.quota.error.loadServer":
+    "O servidor teve um erro ao carregar esta lista. Tenta outra vez daqui a pouco.",
+  "adminInvites.quota.error.loadMissing":
+    "Este servidor ainda não tem a lista de limites de convites. Precisa de uma atualização do backend.",
+  "adminInvites.quota.error.loadMore":
+    "Não foi possível carregar mais membros. {reason}",
+  "adminInvites.quota.error.adminOnly":
+    "Só os administradores podem gerir limites de convites. A tua conta não tem acesso de administrador.",
+  "adminInvites.quota.error.memberGone":
+    "A conta de {name} já não existe, por isso não há limite para alterar.",
+  "adminInvites.quota.error.saveConnection":
+    "O limite de {name} não foi guardado: o pedido não chegou ao servidor. Verifica a tua ligação e tenta outra vez.",
+  "adminInvites.quota.error.saveServer":
+    "O limite de {name} não foi guardado: o servidor teve um erro. Tenta outra vez daqui a pouco.",
+  "adminInvites.quota.error.saveWithReason":
+    "O limite de {name} não foi guardado: {reason}.",
   "adminInvites.revoke.cta": "Revogar este convite",
   "adminInvites.revoke.confirmTitle": "Revogar o convite {code}?",
   "adminInvites.revoke.confirmBody":
@@ -1632,6 +1701,95 @@ export const admin: Catalog = {
     "Este convite mudou enquanto o tinhas aberto. Recarrega para veres em que ponto está.",
   "adminInvites.refresh.failedToast":
     "Não foi possível renovar este convite. Tenta de novo.",
+  "adminInvites.select.startCta": "Selecionar",
+  "adminInvites.select.doneCta": "Concluído",
+  "adminInvites.select.rowAriaLabel": "Selecionar o convite {code}",
+  "adminInvites.select.selectAllCta": "Selecionar tudo",
+  "adminInvites.select.clearCta": "Limpar",
+  "adminInvites.select.capToast":
+    "Selecionaste os primeiros {cap} convites. Cada ação abrange até {cap} de cada vez.",
+  "adminInvites.bulk.ariaLabel": "Ações para os convites selecionados",
+  "adminInvites.bulk.selectedCount_one": "{count} selecionado",
+  "adminInvites.bulk.selectedCount_other": "{count} selecionados",
+  "adminInvites.bulk.capNote": "Até {cap} convites de cada vez",
+  "adminInvites.bulk.refreshCta_one": "Renovar {count} expirado",
+  "adminInvites.bulk.refreshCta_other": "Renovar {count} expirados",
+  "adminInvites.bulk.revokeCta_one": "Revogar {count} pendente",
+  "adminInvites.bulk.revokeCta_other": "Revogar {count} pendentes",
+  "adminInvites.bulk.refreshCtaNone": "Renovar expirados",
+  "adminInvites.bulk.revokeCtaNone": "Revogar pendentes",
+  "adminInvites.bulk.refreshConfirmTitle_one":
+    "Renovar {count} convite expirado?",
+  "adminInvites.bulk.refreshConfirmTitle_other":
+    "Renovar {count} convites expirados?",
+  "adminInvites.bulk.refreshConfirmBody_one":
+    "A ligação volta a funcionar durante 7 dias com o mesmo código. Quem já a tiver pode usá-la para entrar.",
+  "adminInvites.bulk.refreshConfirmBody_other":
+    "Cada ligação volta a funcionar durante 7 dias com o mesmo código. Quem já tiver uma pode usá-la para entrar.",
+  "adminInvites.bulk.refreshConfirmCta_one": "Renovar convite",
+  "adminInvites.bulk.refreshConfirmCta_other": "Renovar {count} convites",
+  "adminInvites.bulk.refreshLeftAsTheyAre_one":
+    "{count} convite selecionado não expirou, por isso fica como está.",
+  "adminInvites.bulk.refreshLeftAsTheyAre_other":
+    "{count} convites selecionados não expiraram, por isso ficam como estão.",
+  "adminInvites.bulk.revokeConfirmTitle_one":
+    "Revogar {count} convite pendente?",
+  "adminInvites.bulk.revokeConfirmTitle_other":
+    "Revogar {count} convites pendentes?",
+  "adminInvites.bulk.revokeConfirmBody_one":
+    "A ligação deixa de funcionar de imediato. Não dá para anular, mas quem a enviou pode mandar um convite novo.",
+  "adminInvites.bulk.revokeConfirmBody_other":
+    "Cada ligação deixa de funcionar de imediato. Não dá para anular, mas cada pessoa que enviou pode mandar um convite novo.",
+  "adminInvites.bulk.revokeConfirmCta_one": "Revogar convite",
+  "adminInvites.bulk.revokeConfirmCta_other": "Revogar {count} convites",
+  "adminInvites.bulk.revokeLeftAsTheyAre_one":
+    "{count} convite selecionado não está pendente, por isso fica como está.",
+  "adminInvites.bulk.revokeLeftAsTheyAre_other":
+    "{count} convites selecionados não estão pendentes, por isso ficam como estão.",
+  "adminInvites.bulk.refreshDoneToast_one": "{count} convite renovado",
+  "adminInvites.bulk.refreshDoneToast_other": "{count} convites renovados",
+  "adminInvites.bulk.revokeDoneToast_one": "{count} convite revogado",
+  "adminInvites.bulk.revokeDoneToast_other": "{count} convites revogados",
+  "adminInvites.bulk.refreshFailedAction":
+    "Não foi possível renovar os convites selecionados",
+  "adminInvites.bulk.revokeFailedAction":
+    "Não foi possível revogar os convites selecionados",
+  "adminInvites.bulk.skippedToast": "Ficaram como estavam: {reasons}.",
+  "adminInvites.bulk.skipReason.not_found_one": "{count} já não existe",
+  "adminInvites.bulk.skipReason.not_found_other": "{count} já não existem",
+  "adminInvites.bulk.skipReason.accepted_one": "{count} já tinha sido aceite",
+  "adminInvites.bulk.skipReason.accepted_other":
+    "{count} já tinham sido aceites",
+  "adminInvites.bulk.skipReason.revoked_one": "{count} já tinha sido revogado",
+  "adminInvites.bulk.skipReason.revoked_other":
+    "{count} já tinham sido revogados",
+  "adminInvites.bulk.skipReason.expired_one": "{count} já tinha expirado",
+  "adminInvites.bulk.skipReason.expired_other": "{count} já tinham expirado",
+  "adminInvites.bulk.skipReason.still_valid_one": "{count} ainda estava ativo",
+  "adminInvites.bulk.skipReason.still_valid_other":
+    "{count} ainda estavam ativos",
+  "adminInvites.refreshAll.cta_one": "Renovar {count} expirado",
+  "adminInvites.refreshAll.cta_other": "Renovar os {count} expirados",
+  "adminInvites.refreshAll.confirmTitle_one":
+    "Renovar {count} convite expirado?",
+  "adminInvites.refreshAll.confirmTitle_other":
+    "Renovar {count} convites expirados?",
+  "adminInvites.refreshAll.confirmBody_one":
+    "A ligação volta a funcionar durante 7 dias com o mesmo código. Quem já a tiver pode usá-la para entrar.",
+  "adminInvites.refreshAll.confirmBody_other":
+    "Cada ligação volta a funcionar durante 7 dias com o mesmo código. Quem já tiver uma pode usá-la para entrar.",
+  "adminInvites.refreshAll.confirmBodyForInviter_one":
+    "O convite expirado de {name} volta a funcionar durante 7 dias com o mesmo código. Quem já tiver a ligação pode usá-la para entrar.",
+  "adminInvites.refreshAll.confirmBodyForInviter_other":
+    "Todos os convites expirados de {name} voltam a funcionar durante 7 dias, cada um com o mesmo código. Quem já tiver uma das ligações pode usá-la para entrar.",
+  "adminInvites.refreshAll.confirmCta_one": "Renovar convite",
+  "adminInvites.refreshAll.confirmCta_other": "Renovar {count} convites",
+  "adminInvites.refreshAll.doneToast_one": "{count} convite renovado",
+  "adminInvites.refreshAll.doneToast_other": "{count} convites renovados",
+  "adminInvites.refreshAll.noneLeftToast":
+    "Já não havia convites expirados para renovar.",
+  "adminInvites.refreshAll.failedAction":
+    "Não foi possível renovar os convites expirados",
 
   "adminCommissionInterests.title": "Interesse em <em>encomendas</em>",
   "adminCommissionInterests.header.eyebrow": "Cultura",
@@ -1764,7 +1922,7 @@ export const admin: Catalog = {
   "adminIntakes.header.sub":
     "Todos os formulários da plataforma vão parar a uma de duas caixas: os formulários de submissão (bolsas, sugestões de correção, ofertas para eventos sem álcool, inscrições no painel, incubadora e cultura) e as mensagens enviadas pela página de contacto. É aqui que uma pessoa as lê.",
   "adminIntakes.header.noEmailNote":
-    "A QueerPulse não envia email. Marcar como tratada regista que alguém leu. Qualquer resposta sai da tua própria caixa de correio, para o endereço que vem na mensagem.",
+    "A QueerPulse não envia email a partir daqui. Marcar como tratada regista que alguém da nossa equipa leu. Qualquer resposta sai da tua própria caixa de correio, para o endereço que vem na mensagem.",
 
   "adminIntakes.tab.waiting": "À espera",
   "adminIntakes.tab.intakes": "Formulários",
@@ -3241,6 +3399,8 @@ export const admin: Catalog = {
   "governance.audit.actionType.member_verified": "Membro verificado",
   "governance.audit.actionType.invite_quota_changed":
     "Quota de convites alterada",
+  "governance.audit.actionType.invite_access_changed":
+    "Acesso a convites alterado",
   "governance.audit.actionType.invite_revoked": "Convite revogado",
   "governance.audit.actionType.invite_refreshed": "Convite renovado",
   "governance.audit.actionType.content_restored": "Conteúdo restaurado",
@@ -5029,6 +5189,7 @@ export const admin: Catalog = {
   "reports.trends.sub":
     "Ajusta o período para veres uma janela mais longa ou mais curta.",
   "reports.trends.rangeWeeks": "{count}sem",
+  "reports.trends.growthSub": "Total de pessoas · últimas {count} semanas",
   "reports.trends.exportGrowth": "Exportar CSV de crescimento",
   "reports.trends.exportReportsByType": "Exportar CSV de denúncias",
   "reports.trends.exportToast": "Exportação iniciada",
@@ -5056,6 +5217,26 @@ export const admin: Catalog = {
   "reports.communityHealth.columns.openReports": "Denúncias abertas",
 
   "dashboard.viewFullReport": "Ver relatório completo",
+  "dashboard.landingVisits.title": "Visitas à página inicial",
+  "dashboard.landingVisits.sub":
+    "Contagens diárias anónimas, sem dados pessoais",
+  "dashboard.landingVisits.range30": "Últimos 30 dias",
+  "dashboard.landingVisits.range90": "Últimos 90 dias",
+  "dashboard.landingVisits.total_one": "{count} visita",
+  "dashboard.landingVisits.total_other": "{count} visitas",
+  "dashboard.landingVisits.topSources": "Principais origens",
+  "dashboard.landingVisits.sourceDirect": "Direto ou desconhecido",
+  "dashboard.landingVisits.ariaLabel": "Visitas diárias à página inicial",
+  "dashboard.landingVisits.empty":
+    "Ainda não há visitas contadas. Partilha a página e volta mais tarde.",
+  "dashboard.landingVisits.loadError":
+    "Não foi possível carregar as visitas à página inicial",
+  "dashboard.landingVisits.retry": "Tentar de novo",
+  "dashboard.landingVisits.tip_one": "{day}: {countLabel} visita",
+  "dashboard.landingVisits.tip_other": "{day}: {countLabel} visitas",
+  "dashboard.landingVisits.tipCount_one": "{countLabel} visita",
+  "dashboard.landingVisits.tipCount_other": "{countLabel} visitas",
+  "dashboard.landingVisits.rangeLabel": "Período",
 
   // ── CNT-14: CRUD de diretório de recursos (admin) ───────────────────────
   "adminResourceListings.title": "Diretório de <em>recursos</em>",
@@ -8352,6 +8533,23 @@ export const admin: Catalog = {
   "studioAccess.revokeBody":
     "O leitor para e o Studio volta a mostrar-lhe a página de brevemente",
   "studioAccess.revokeConfirm": "Retirar acesso ao Studio",
+  // ── Invite access (2026-10-26) ─────────────────────────────────────────────
+  "inviteAccess.label": "Convites",
+  "inviteAccess.on": "Pode convidar pessoas novas",
+  "inviteAccess.off": "Convites em pausa",
+  "inviteAccess.hint":
+    "Em pausa, esta pessoa não pode criar nem reenviar convites. O resto da conta continua a funcionar",
+  "inviteAccess.toggleLabel": "Convites de {name}",
+  "inviteAccess.pauseTitle": "Pausar os convites de {name}?",
+  "inviteAccess.pauseBody_one":
+    "{name} deixa de poder criar ou reenviar convites até os voltares a ativar. Tem {count} convite pendente, que continua válido a menos que o revogues na página de Convites",
+  "inviteAccess.pauseBody_other":
+    "{name} deixa de poder criar ou reenviar convites até os voltares a ativar. Tem {count} convites pendentes, que continuam válidos a menos que os revogues na página de Convites",
+  "inviteAccess.pauseBodyNoPending":
+    "{name} deixa de poder criar ou reenviar convites até os voltares a ativar. Neste momento não tem convites pendentes",
+  "inviteAccess.pauseBodyCountUnknown":
+    "{name} deixa de poder criar ou reenviar convites até os voltares a ativar. Os convites pendentes que tiver continuam válidos, a menos que os revogues na página de Convites",
+  "inviteAccess.pauseConfirm": "Pausar convites",
   "moderation.studioRelease.heading": "Lançamento do Studio",
   "moderation.studioRelease.subject": "{title}, de {artist}",
   "moderation.studioRelease.takeDownCta": "Retirar lançamento",
@@ -8408,6 +8606,7 @@ export const admin: Catalog = {
   "moderation.action.personaPostRemoved": "Removeu uma publicação de persona",
   "moderation.action.earlyAccessGranted": "Ativou o acesso antecipado",
   "moderation.action.earlyAccessRevoked": "Retirou o acesso antecipado",
+  "moderation.action.inviteAccessChanged": "Alterou o acesso a convites",
   "ambassadors.loadMore": "Ver mais",
   "ambassadors.loadingMore": "A carregar…",
   "ambassadors.loadMoreError":

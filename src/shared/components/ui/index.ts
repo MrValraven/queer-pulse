@@ -36,6 +36,7 @@ export {
 
 // Composition-level primitives (extracted from per-feature duplicates)
 export { FormField } from "./FormField";
+export { CodeInput } from "./CodeInput";
 export { Modal, ModalSheet, SideSheet } from "./Modal";
 export {
   ReferenceDigestModal,

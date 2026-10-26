@@ -17,4 +17,6 @@ export const INVITE_QUOTA: InviteQuotaDTO = {
   // Matches the fixed illustrative size used elsewhere in demo mode (see
   // `demoInvite` in `api/useInvite.ts`).
   memberCount: 247,
+  // The demo member can invite; flip to false to preview the paused panel.
+  hasInviteAccess: true,
 };

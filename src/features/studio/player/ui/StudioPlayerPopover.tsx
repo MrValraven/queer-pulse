@@ -17,6 +17,7 @@ import { useOutsideDismiss } from "../../../../shared/hooks/useOutsideDismiss";
 import { mediaMax } from "../../../../shared/theme/breakpoints";
 import { STUDIO_EXIT, STUDIO_FADE, STUDIO_SPRING } from "../../studioMotion";
 import { fitStudioPopover } from "./studioPopoverFit";
+import { useStudioSheetDrag } from "./useStudioSheetDrag";
 import styles from "./StudioPlayerControls.module.css";
 
 /** The panel's entrance: a short lift beside the trigger on desktop, and on
@@ -52,6 +53,9 @@ function popoverMotion(
     transition: { duration: 0.16, ease: "easeOut" as const },
   };
 }
+
+/** The scrim behind the phone sheet fades over --dur-base (250ms). */
+const SCRIM_FADE = { duration: 0.25, ease: "easeOut" } as const;
 
 /** Keeps the open panel inside the viewport: measured on open and on
  *  resize, written as CSS variables the module reads. */
@@ -117,6 +121,7 @@ export function StudioPlayerPopover({
     document.getElementById(triggerId)?.focus();
   };
   useOutsideDismiss(isOpen, wrapRef, () => setIsOpen(false));
+  const sheetDrag = useStudioSheetDrag(panelRef, isOpen, close);
   // While open, Escape is caught on the document in the capture phase and
   // stops there, wherever focus sits (a press on the panel's padding leaves
   // it on body). An enclosing dialog (Now playing) listening on the document
@@ -173,6 +178,19 @@ export function StudioPlayerPopover({
         </IconButton>
       </Tooltip>
       <AnimatePresence>
+        {isOpen && isSheet && (
+          // A tap on the dimmed page closes the sheet; the keyboard has
+          // Escape and the panel's own buttons.
+          <m.div
+            key="scrim"
+            className={styles.sheetScrim}
+            aria-hidden="true"
+            onPointerDown={close}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1, transition: SCRIM_FADE }}
+            exit={{ opacity: 0, transition: SCRIM_FADE }}
+          />
+        )}
         {isOpen && (
           <m.div
             key="panel"
@@ -184,6 +202,13 @@ export function StudioPlayerPopover({
             data-placement={placement}
             {...popoverMotion(isSheet, placement, reducedMotion)}
           >
+            {isSheet && (
+              <div
+                className={styles.sheetGrabber}
+                aria-hidden="true"
+                {...sheetDrag}
+              />
+            )}
             {children(close)}
           </m.div>
         )}

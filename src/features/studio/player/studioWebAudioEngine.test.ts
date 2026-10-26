@@ -707,3 +707,77 @@ describe("createWebAudioEngine: sleep fade", () => {
     ).toHaveBeenLastCalledWith(1, 0.2);
   });
 });
+
+describe("createWebAudioEngine: resume fade-in", () => {
+  /** Plays a track from 0, moves it mid song and pauses it there. */
+  async function pausedMidTrack(options: { hasWebAudio?: boolean } = {}) {
+    const harness = setup(options);
+    harness.engine.unlock();
+    harness.engine.load("https://stream.example/a", 0, 0);
+    await harness.engine.play();
+    harness.decks[0].dispatchEvent(new Event("playing"));
+    harness.decks[0].currentTime = 30;
+    harness.engine.pause();
+    return harness;
+  }
+
+  it("starts a resume silent and ramps to full over 0.4s once it plays", async () => {
+    const { engine, decks, deckGains } = await pausedMidTrack();
+    const fadeParam = deckGains(0).fade.gain;
+    await engine.play();
+    expect(fadeParam.setValueAtTime).toHaveBeenLastCalledWith(0, 0);
+    expect(fadeParam.value).toBe(0);
+    expect(fadeParam.linearRampToValueAtTime).not.toHaveBeenCalled();
+    decks[0].dispatchEvent(new Event("playing"));
+    expect(fadeParam.linearRampToValueAtTime).toHaveBeenLastCalledWith(1, 0.4);
+    expect(fadeParam.value).toBe(1);
+    // A buffering wait mid song plays again without restarting the ramp.
+    decks[0].dispatchEvent(new Event("playing"));
+    expect(fadeParam.linearRampToValueAtTime).toHaveBeenCalledTimes(1);
+  });
+
+  it("steps a plain deck's volume from silence to exactly full", async () => {
+    const { engine, decks, runTimers } = await pausedMidTrack({
+      hasWebAudio: false,
+    });
+    await engine.play();
+    expect(decks[0].volume).toBe(0);
+    decks[0].dispatchEvent(new Event("playing"));
+    runTimers();
+    expect(decks[0].volume).toBe(1);
+  });
+
+  it("plays a fresh track from 0 at full level with no fade", async () => {
+    const { engine, decks, deckGains } = setup();
+    engine.unlock();
+    engine.load("https://stream.example/a", 0, 0);
+    await engine.play();
+    decks[0].dispatchEvent(new Event("playing"));
+    const fadeParam = deckGains(0).fade.gain;
+    expect(fadeParam.setValueAtTime).not.toHaveBeenCalledWith(0, 0);
+    expect(fadeParam.linearRampToValueAtTime).not.toHaveBeenCalled();
+    expect(fadeParam.value).toBe(1);
+  });
+
+  it("leaves the level at full when paused during the fade-in", async () => {
+    const { engine, decks, runTimers } = await pausedMidTrack({
+      hasWebAudio: false,
+    });
+    await engine.play();
+    decks[0].dispatchEvent(new Event("playing"));
+    engine.pause();
+    expect(decks[0].volume).toBe(1);
+    runTimers();
+    expect(decks[0].volume).toBe(1);
+  });
+
+  it("restores full level when the resumed play is refused", async () => {
+    const { engine, decks, deckGains, events } = await pausedMidTrack();
+    decks[0].playResult = Promise.reject(
+      new DOMException("gesture", "NotAllowedError"),
+    );
+    await engine.play();
+    expect(events.at(-1)).toEqual({ type: "blocked" });
+    expect(deckGains(0).fade.gain.value).toBe(1);
+  });
+});

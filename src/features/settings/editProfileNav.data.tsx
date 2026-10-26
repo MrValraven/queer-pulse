@@ -1,5 +1,12 @@
 import type { ReactNode } from "react";
-import { FiFileText, FiLink, FiStar, FiUser, FiUsers } from "react-icons/fi";
+import {
+  FiFileText,
+  FiLink,
+  FiMusic,
+  FiStar,
+  FiUser,
+  FiUsers,
+} from "react-icons/fi";
 
 export interface ProfileNavItem {
   /** DOM id of the section this item scrolls to. */
@@ -7,6 +14,8 @@ export interface ProfileNavItem {
   labelKey: string;
   groupKey: string;
   icon: ReactNode;
+  /** Shown only to a viewer with a Studio grant (or in demo mode). */
+  requiresStudio?: boolean;
 }
 
 /**
@@ -44,6 +53,13 @@ export const PROFILE_NAV: ProfileNavItem[] = [
     labelKey: "settings:editProfile.nav.communities.label",
     groupKey: "settings:editProfile.nav.group.profile",
     icon: <FiUsers aria-hidden />,
+  },
+  {
+    id: "playlists",
+    labelKey: "settings:editProfile.nav.playlists.label",
+    groupKey: "settings:editProfile.nav.group.profile",
+    icon: <FiMusic aria-hidden />,
+    requiresStudio: true,
   },
 ];
 

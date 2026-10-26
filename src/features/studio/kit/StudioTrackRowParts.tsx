@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
+import type { StudioMenuItem } from "./StudioMenu";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import {
   StudioTrackMenu,
@@ -92,11 +93,16 @@ export function StudioTrackRowMain({
               {release.artist.name}
             </Link>
           )}
+          {/* Phones keep the artist alone when both show, so neither name
+              is cut to a stub (StudioTrackRow.module.css). */}
           {showArtist && showRelease && (
             <span className={css.dot} aria-hidden="true" />
           )}
           {showRelease && (
-            <Link to={release.href} className={css.subLink}>
+            <Link
+              to={release.href}
+              className={`${css.subLink} ${css.releaseLink}`}
+            >
               {release.title}
             </Link>
           )}
@@ -127,6 +133,8 @@ interface StudioTrackRowActionsProps {
    *  An element with `aria-pressed` or `aria-expanded` true stays up. */
   extraActions?: ReactNode;
   menuTrack: StudioTrackMenuTrack;
+  /** Items the "..." menu adds after its own, at every width. */
+  menuExtraItems?: StudioMenuItem[];
   likeOptions?: StudioTrackRowLikeOptions;
 }
 
@@ -139,6 +147,7 @@ export function StudioTrackRowActions({
   hiddenActions,
   extraActions,
   menuTrack,
+  menuExtraItems,
   likeOptions,
 }: StudioTrackRowActionsProps) {
   const { t } = useTranslation();
@@ -179,7 +188,7 @@ export function StudioTrackRowActions({
       </span>
       {hasMenu && (
         <span className={css.menuSlot}>
-          <StudioTrackMenu track={menuTrack} />
+          <StudioTrackMenu track={menuTrack} extraItems={menuExtraItems} />
         </span>
       )}
     </div>

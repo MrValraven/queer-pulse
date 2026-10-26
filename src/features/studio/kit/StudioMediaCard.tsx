@@ -1,10 +1,15 @@
-import type { ReactNode } from "react";
+import { useRef, useState, type ReactNode, type RefObject } from "react";
 import { Link } from "react-router-dom";
 import type { ImageSlotTint } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { StudioFormat } from "../api/studio.types";
 import { StudioCoverFallback } from "./StudioCoverFallback";
+import { StudioMenu, type StudioMenuItem } from "./StudioMenu";
 import { StudioPlayButton } from "./StudioPlayButton";
+import {
+  useStudioContextMenu,
+  type StudioContextMenuPoint,
+} from "./useStudioContextMenu";
 import styles from "./StudioMediaCard.module.css";
 
 export type StudioMediaCardKind =
@@ -31,6 +36,41 @@ export interface StudioMediaCardProps {
   playLabel?: string;
   /** A round frame; off by default. */
   isRound?: boolean;
+  /** The card's own menu: right-click, a long press, the Menu key or
+   *  Shift+F10 on the card opens it, and the finger lifting off a long
+   *  press never follows the link. Leave it out on a card whose caller
+   *  wraps it in its own context menu (StudioReleaseCard). */
+  menu?: { label: string; items: StudioMenuItem[] };
+}
+
+/** The menu a card opens at the press or the cursor, and the handlers that
+ *  open it, spread on the card's one link. Closing hands focus back to that
+ *  link. */
+function useCardMenu(
+  menu: StudioMediaCardProps["menu"],
+  linkRef: RefObject<HTMLAnchorElement | null>,
+) {
+  const [menuPoint, setMenuPoint] = useState<StudioContextMenuPoint | null>(
+    null,
+  );
+  const contextMenu = useStudioContextMenu(setMenuPoint);
+  const hasMenu = menu !== undefined && menu.items.length > 0;
+  const linkProps = hasMenu
+    ? { ...contextMenu, "aria-keyshortcuts": "Shift+F10" }
+    : {};
+  const menuElement = hasMenu ? (
+    <StudioMenu
+      trigger={null}
+      label={menu.label}
+      items={menu.items}
+      anchorPoint={menuPoint}
+      returnFocusRef={linkRef}
+      onOpenChange={(isOpen) => {
+        if (!isOpen) setMenuPoint(null);
+      }}
+    />
+  ) : null;
+  return { hasMenu, linkProps, menuElement };
 }
 
 /**
@@ -52,8 +92,11 @@ export function StudioMediaCard({
   isPlaying = false,
   playLabel,
   isRound,
+  menu,
 }: StudioMediaCardProps) {
   const { t } = useTranslation();
+  const linkRef = useRef<HTMLAnchorElement>(null);
+  const cardMenu = useCardMenu(menu, linkRef);
   const isRoundFrame = isRound ?? false;
   const label =
     playLabel ??
@@ -67,11 +110,17 @@ export function StudioMediaCard({
       data-kind={kind}
       data-round={isRoundFrame || undefined}
       data-playing={isPlaying || undefined}
+      data-has-menu={cardMenu.hasMenu || undefined}
     >
       {/* The title comes first in the DOM, so a keyboard meets the card's
           name before its play button; CSS `order` draws the art on top. */}
       <h3 className={styles.title}>
-        <Link to={href} className={styles.link}>
+        <Link
+          ref={linkRef}
+          to={href}
+          className={styles.link}
+          {...cardMenu.linkProps}
+        >
           {title}
         </Link>
       </h3>
@@ -101,6 +150,7 @@ export function StudioMediaCard({
       {meta !== undefined && meta !== null && (
         <div className={styles.meta}>{meta}</div>
       )}
+      {cardMenu.menuElement}
     </article>
   );
 }

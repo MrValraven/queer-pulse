@@ -5,11 +5,13 @@ import {
   isSavedItemUnavailable,
   type SavedItem,
 } from "../../app/providers/useSaved";
-import { IconButton, ImageSlot } from "../../shared/components/ui";
+import { IconButton } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { StudioMediaCard } from "./kit/StudioMediaCard";
 import { StudioLibraryGrid } from "./StudioLibraryGrid";
 import { StudioPlaylistCover } from "./StudioPlaylistCover";
+import { StudioReleaseCoverArt } from "./StudioReleaseCoverArt";
+import { useStudioPlaylistCardMenu } from "./useStudioPlaylistCardMenu";
 import {
   savedCoverTintOf,
   savedPlaylistIdOf,
@@ -20,19 +22,17 @@ import {
 } from "./useStudioLibrarySavedCard";
 import css from "./StudioLibrary.module.css";
 
-/** The cover GET /me/saved read for an available save, else the tinted
- *  placeholder (an unavailable save always reads `coverUrl: null`). */
+/** The cover GET /me/saved read for an available save, else the wordless
+ *  fallback with the title's first letter in the save's hue (an
+ *  unavailable save always reads `coverUrl: null`). The save names no
+ *  format, so the letter stands in for every kind. */
 function SavedCover({ item }: { item: SavedItem }) {
-  const { t } = useTranslation();
   return (
-    <ImageSlot
-      src={item.coverUrl ?? undefined}
+    <StudioReleaseCoverArt
+      src={item.coverUrl ?? null}
+      title={item.title}
+      format="music"
       tint={savedCoverTintOf(item.id)}
-      width="100%"
-      height="100%"
-      radius={0}
-      placeholder={t("studio:media.coverLabel")}
-      style={{ position: "absolute", inset: 0 }}
     />
   );
 }
@@ -75,10 +75,39 @@ function SavedReleaseCard({ item, href }: { item: SavedItem; href: string }) {
   );
 }
 
-function SavedPlaylistCard({ item, href }: { item: SavedItem; href: string }) {
+/** A saved playlist's card: a long press or a right-click opens the rail
+ *  row's menu, whose Remove from Library is this grid's own (it fades the
+ *  card out and offers Undo). */
+function SavedPlaylistCard({
+  item,
+  href,
+  onUnsave,
+}: {
+  item: SavedItem;
+  href: string;
+  onUnsave: () => void;
+}) {
   const { t } = useTranslation();
   const play = useSavedPlaylistPlay(savedPlaylistIdOf(item));
-  const cover = play.cached ? (
+  const cardMenu = useStudioPlaylistCardMenu(
+    {
+      key: item.id,
+      playlistId: savedPlaylistIdOf(item),
+      name: item.title,
+      href,
+      ownerName: item.meta ?? null,
+      isCollaborative: false,
+      isSaved: true,
+      isOwner: false,
+      hasEditRights: false,
+      trackCount: null,
+      coverUrls: play.cached?.coverUrls ?? [],
+      tint: savedCoverTintOf(item.id),
+    },
+    onUnsave,
+  );
+  // A cached playlist with no covers yet takes the wordless fallback too.
+  const cover = play.cached?.coverUrls.length ? (
     <StudioPlaylistCover
       coverUrls={play.cached.coverUrls}
       tint={play.cached.tint}
@@ -89,15 +118,21 @@ function SavedPlaylistCard({ item, href }: { item: SavedItem; href: string }) {
     <SavedCover item={item} />
   );
   return (
-    <StudioMediaCard
-      kind="playlist"
-      href={href}
-      title={item.title}
-      meta={<SavedMeta item={item} />}
-      cover={cover}
-      onPlay={play.onPlay}
-      isPlaying={play.isPlaying}
-    />
+    // `display: contents` keeps the card the grid cell's own child; the
+    // wrapper only arms the menu on the card's first press or focus.
+    <div style={{ display: "contents" }} {...cardMenu.armProps}>
+      <StudioMediaCard
+        kind="playlist"
+        href={href}
+        title={item.title}
+        meta={<SavedMeta item={item} />}
+        cover={cover}
+        onPlay={play.onPlay}
+        isPlaying={play.isPlaying}
+        menu={cardMenu.menu}
+      />
+      {cardMenu.dialogs}
+    </div>
   );
 }
 
@@ -131,7 +166,7 @@ function StudioLibrarySavedCard({ item }: { item: SavedItem }) {
   if (href)
     card =
       item.kind === "studio_playlist" ? (
-        <SavedPlaylistCard item={item} href={href} />
+        <SavedPlaylistCard item={item} href={href} onUnsave={onUnsave} />
       ) : (
         <SavedReleaseCard item={item} href={href} />
       );

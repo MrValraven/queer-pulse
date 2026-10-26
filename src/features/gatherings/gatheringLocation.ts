@@ -22,7 +22,7 @@ const GATHERING_CITY = "Lisboa";
 
 /**
  * Well-known Lisbon bairros that are not official freguesias, so
- * `neighbourhoodCentroid` (the 24 parishes) does not know them. Each point is
+ * `neighbourhoodCentroid` (the mapped parishes) does not know them. Each point is
  * the bairro's centre, at the precision an area blob needs: its main square,
  * garden or crossroads. The tail holds the places the demo registry uses as a
  * neighbourhood, so every demo gathering lands somewhere.

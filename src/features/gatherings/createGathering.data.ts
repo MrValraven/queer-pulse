@@ -117,6 +117,8 @@ export const GATE_ANCHOR = {
   recurrence: "cg-gate-recurrence",
   /** Chapter 1's cover image field (a soft readiness row). */
   cover: "cg-gate-cover",
+  /** Chapter 3's payment link, which holds Continue while it is malformed. */
+  paymentLink: "cg-gate-payment-link",
   /** Chapter 2's neighbourhood field (a soft readiness row). */
   hood: "cg-gate-hood",
   /** Chapter 2's venue field, where a publish the server refused for its

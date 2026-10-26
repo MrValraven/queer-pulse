@@ -1,9 +1,11 @@
 import { useMemo } from "react";
-import { Reveal, SectionHead } from "../../../shared/components/ui";
+import { AnimatePresence } from "motion/react";
+import { Collapse, Reveal, SectionHead } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { routes } from "../../../app/routeMap";
 import type { CalendarEvent } from "../data";
 import { pickHighlights } from "./pickHighlights";
+import { EventCellPresence } from "./EventCellPresence";
 import { EventPosterCard } from "./EventPosterCard";
 import { EventPosterSkeleton } from "./EventPosterSkeleton";
 import { WaysToGather } from "./WaysToGather";
@@ -35,7 +37,8 @@ function eventKey(event: CalendarEvent): string {
  * (ways to gather + host CTA), which stays mounted even with zero upcoming
  * events so a visitor always has somewhere to go next. The host CTA renders
  * outside `.wrap` because it's a full-bleed plum band (see `HostCtaBanner`).
- * The highlights section hides when there are no highlights beyond the hero.
+ * The highlights section folds away when there are no highlights beyond the
+ * hero, as when the member hides the communities behind the last of them.
  */
 export function HighlightsView({
   events,
@@ -55,7 +58,7 @@ export function HighlightsView({
   return (
     <>
       <div className="wrap">
-        {shouldShowHighlights && (
+        <Collapse isOpen={shouldShowHighlights}>
           <Reveal as="section" className={styles.section}>
             {isEmpty ? (
               <HubEmptyState
@@ -71,32 +74,39 @@ export function HighlightsView({
                   <HubLoadingLine labelKey="gatherings:hub.loading" />
                 )}
                 <div className={styles.grid}>
-                  {isLoading
-                    ? Array.from({ length: SKELETON_COUNT }).map(
-                        (_, skeletonIndex) => (
-                          <EventPosterSkeleton
-                            key={skeletonIndex}
-                            variant="featured"
-                          />
-                        ),
-                      )
-                    : featuredEvents.map((event, eventIndex) => (
-                        <Reveal
-                          key={eventKey(event)}
-                          delay={Math.min(eventIndex, 8) * 55}
-                        >
-                          <EventPosterCard
-                            event={event}
-                            variant="featured"
-                            now={now}
-                          />
-                        </Reveal>
+                  {isLoading ? (
+                    Array.from({ length: SKELETON_COUNT }).map(
+                      (_, skeletonIndex) => (
+                        <EventPosterSkeleton
+                          key={skeletonIndex}
+                          variant="featured"
+                        />
+                      ),
+                    )
+                  ) : (
+                    // Mounted with the first loaded posters, so they arrive
+                    // through `Reveal` alone. A poster whose community the
+                    // member hides fades away, and its neighbours glide into
+                    // the gap.
+                    <AnimatePresence initial={false}>
+                      {featuredEvents.map((event, eventIndex) => (
+                        <EventCellPresence key={eventKey(event)}>
+                          <Reveal delay={Math.min(eventIndex, 8) * 55}>
+                            <EventPosterCard
+                              event={event}
+                              variant="featured"
+                              now={now}
+                            />
+                          </Reveal>
+                        </EventCellPresence>
                       ))}
+                    </AnimatePresence>
+                  )}
                 </div>
               </>
             )}
           </Reveal>
-        )}
+        </Collapse>
 
         <WaysToGather />
       </div>

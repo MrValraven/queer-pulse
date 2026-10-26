@@ -216,6 +216,11 @@ export const system: Catalog = {
   "inviteLanding.card.validFor_other": "Válido durante {count} dias",
   "inviteLanding.card.expires": "O convite expira {date}",
   "inviteLanding.card.googleCta": "Registar com a Google",
+  "inviteLanding.card.emailCta": "Registar com um código por email",
+  "inviteLanding.card.firstNameLabel": "Nome próprio",
+  "inviteLanding.card.lastNameLabel": "Apelido (opcional)",
+  "inviteLanding.card.nameHelper":
+    "É o nome que a comunidade vê. Podes mudá-lo mais tarde nas definições.",
   "inviteLanding.card.under18BackLabel": "Voltar ao convite",
   "inviteLanding.card.consent":
     "Ao continuares, aceitas os nossos <termsLink>termos de utilização</termsLink> e a <privacyLink>política de privacidade</privacyLink>.",
@@ -228,7 +233,7 @@ export const system: Catalog = {
   "maintenance.heading": "Já <em>voltamos.</em>",
   // SÓ EM DEMO, tal como `info.*`, `affected.*` e `meta.line1` abaixo: uma
   // versão fixa, uma janela 14:00–14:20 escrita à mão e uma fila de email numa
-  // plataforma que não envia email nenhum. Em modo real não aparece nada disto.
+  // plataforma que não envia email sobre isto. Em modo real não aparece nada disto.
   "maintenance.lead":
     "Estamos a lançar a <b>versão 2.5</b>: melhores ferramentas de moderação, um chat de crise renovado e envios de imagens mais rápidos. Deve voltar dentro de cerca de <em>20 minutos</em>.",
   "maintenance.leadLive":
@@ -467,17 +472,21 @@ export const system: Catalog = {
     "Estás prestes a <b>cancelar a tua subscrição Sustainer</b>",
   "verificationNeeded.foot": "Esta verificação expira em <b>{time}</b>.",
   "verificationNeeded.footLive":
-    "Voltas a esta página assim que a Google terminar.",
+    "Enviamos um código de 6 dígitos para o email da tua conta. Escreve-o e podes continuar.",
   "verificationNeeded.confirm.introLive":
-    "Confirmar significa iniciar sessão na Google outra vez, para que uma sessão que outra pessoa tenha deixado aberta não leve isto por diante. Não é enviado nenhum email.",
+    "Confirmar significa escrever um código que te enviamos agora por email, para que uma sessão que outra pessoa tenha deixado aberta não leve isto por diante.",
+  "verificationNeeded.footLiveGoogle":
+    "Voltas a esta página assim que a Google terminar.",
+  "verificationNeeded.confirm.introLiveGoogle":
+    "Confirmar significa iniciar sessão na Google outra vez, para que uma sessão que outra pessoa tenha deixado aberta não leve isto por diante.",
   "verificationNeeded.successLive.sub":
     "Verificação confirmada, e fica válida durante alguns minutos. Volta à ação que começaste e carrega outra vez no botão para a terminares.",
   "verificationNeeded.successLive.continueCta": "Voltar às definições",
-  // Ver a nota em en/system.ts: a nova autenticação passa por iniciar sessão
-  // no Google outra vez, e não por uma ligação enviada por email, que a
-  // QueerPulse nunca entrega.
+  // Ver a nota em en/system.ts: a nova autenticação abre o diálogo do código
+  // (`beginReauth` em features/settings/api/useReauthToken.ts), com a Google
+  // como alternativa para quem a tem.
   "verificationNeeded.confirm.intro":
-    "Confirmar significa iniciar sessão no Google outra vez como <b>{email}</b>, para que uma sessão que outra pessoa tenha deixado aberta não leve isto por diante. Não é enviado nenhum email.",
+    "Confirmar significa escrever um código que enviamos para <b>{email}</b>, para que uma sessão que outra pessoa tenha deixado aberta não leve isto por diante.",
   "verificationNeeded.confirm.cta": "Confirmar que sou eu",
   "verificationNeeded.confirm.verifyingCta": "A confirmar…",
   "verificationNeeded.success.title": "És mesmo tu, <em>confirmado.</em>",
@@ -515,8 +524,13 @@ export const system: Catalog = {
   "genesis.loggedOut.lead":
     "Gera o convite fundador. Vais entrar através do fluxo de convite normal, com um convite da QueerPulse.",
   "genesis.loggedOut.generateCta": "Gerar convite",
-  "genesis.notice.closed": "O Genesis está fechado.",
+  "genesis.closed.lead":
+    "O Genesis já foi usado. Esta plataforma já tem a sua administração.",
   "genesis.notice.rejected": "Esta conta não pode reivindicar o Genesis.",
+  "genesis.notice.rateLimited":
+    "Demasiadas tentativas. Espera um minuto e tenta outra vez.",
+  "genesis.notice.statusFailed":
+    "Não conseguimos confirmar se o Genesis ainda está aberto. Recarrega a página para tentar outra vez.",
   "genesis.notice.failedFallback": "Algo correu mal. Tenta outra vez.",
   "genesis.notice.claimed": "Agora fazes parte da administração.",
   "genesis.notice.demo":

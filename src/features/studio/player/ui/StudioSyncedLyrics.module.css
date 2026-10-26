@@ -107,8 +107,13 @@
   transform: scale(1.02);
 }
 
+/* A stanza break: the dots sit centred between the lines around them, with
+   the same air above as below. */
 .gap {
-  padding: 4px;
+  display: flex;
+  align-items: center;
+  padding: 12px 4px;
+  line-height: 0;
   color: var(--studio-text-faint);
 }
 
@@ -239,8 +244,7 @@
     60vh,
     520px,
     calc(
-      100dvh - var(--studio-player-inset, 0px) - var(--bottom-inset, 0px) -
-        96px
+      100dvh - var(--studio-player-inset, 0px) - var(--bottom-inset, 0px) - 96px
     )
   );
 }

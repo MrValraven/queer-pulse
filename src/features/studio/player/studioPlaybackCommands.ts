@@ -338,10 +338,13 @@ function createEventHandler(
         return;
       case "playing":
         refs.refreshCountRef.current = 0;
+        // Playing again, however it restarted (a load that finished, the
+        // system's media keys): an offline pause has nothing left to resume.
         setPlaybackSignals({
           failureReason: null,
           isAutoplayBlocked: false,
           isPausedForOffline: false,
+          offlinePausedAtMs: null,
         });
         effects.setStatus("playing");
         return;

@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { PROFILE_NAV } from "./editProfileNav.data";
+import { useProfileNavItems } from "./useProfileNavItems";
 import { useProfileScrollSpy } from "./useProfileScrollSpy";
 import styles from "./EditProfilePage.module.css";
 
@@ -14,6 +14,7 @@ import styles from "./EditProfilePage.module.css";
  */
 export function EditProfileMobileNav() {
   const { t } = useTranslation();
+  const navItems = useProfileNavItems();
   const { active, goTo } = useProfileScrollSpy();
   const stripRef = useRef<HTMLDivElement>(null);
 
@@ -31,7 +32,7 @@ export function EditProfileMobileNav() {
       className={styles.mobileNav}
       aria-label={t("settings:editProfile.nav.group.profile")}
     >
-      {PROFILE_NAV.map((item) => (
+      {navItems.map((item) => (
         <button
           type="button"
           key={item.id}

@@ -267,7 +267,7 @@ export const culture: Catalog = {
   "commissionInterestPage.success.step2":
     "O Quadro de Encomendas ainda está a ser construído, por isso nada do que enviaste é publicado.",
   "commissionInterestPage.success.step3":
-    "Daqui não sai nenhuma resposta. A QueerPulse não envia e-mails nem cria notificações para isto, por isso não fica nada à tua espera numa caixa de entrada.",
+    "Daqui não sai nenhuma resposta. A QueerPulse não envia e-mails nem cria notificações sobre isto, por isso não fica nada à tua espera numa caixa de entrada.",
   "commissionInterestPage.success.backCta": "Voltar a Cultura",
   "commissionInterestPage.success.anotherCta": "Registar outro interesse",
   "comingSoon.commissions.title":

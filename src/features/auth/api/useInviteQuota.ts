@@ -20,6 +20,10 @@ export interface InviteQuotaView {
   remaining: number;
   resetsAt: Date;
   memberCount: number;
+  /** False when our team has paused this member's invites. Defaults to true
+   *  when the backend did not send it, so a frontend deployed ahead of the
+   *  backend never shows a false "paused". */
+  hasInviteAccess: boolean;
 }
 
 /** Whole days from now until the allowance resets, floored at 0. Call at render
@@ -35,6 +39,7 @@ function dtoToView(dto: InviteQuotaDTO): InviteQuotaView {
     remaining: dto.remaining,
     resetsAt: new Date(dto.resetsAt),
     memberCount: dto.memberCount,
+    hasInviteAccess: dto.hasInviteAccess ?? true,
   };
 }
 

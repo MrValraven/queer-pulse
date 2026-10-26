@@ -6,6 +6,34 @@
   flex-wrap: wrap;
 }
 
+/* The chart card wears the creator card's surface, hairline, radius and
+   padding, like the curator and city cards under it. Element plus class
+   keeps this ahead of the shared frame's own card rule. */
+.frame > figure {
+  margin: 0;
+  background: var(--surface);
+  border: 1px solid var(--s-line);
+  border-radius: var(--radius-14);
+  padding: 24px 26px;
+}
+@media (--md) {
+  .frame > figure {
+    padding: 20px 16px;
+  }
+}
+
+/* A range change tweens each kept bar to its new place and height. */
+.bar {
+  transition-property: x, y, width, height;
+  transition-duration: var(--dur-base);
+  transition-timing-function: var(--ease);
+}
+@media (prefers-reduced-motion: reduce) {
+  .bar {
+    transition-property: none;
+  }
+}
+
 .axisLabel {
   font-family: var(--serif);
   font-size: var(--text-12);
@@ -91,4 +119,12 @@ div.stats.stats > * {
   background: var(--surface);
   border-color: var(--s-line);
   border-radius: var(--radius-14);
+}
+
+/* Small phones pack the tiles two to a row: an odd last tile takes the
+   whole row instead of leaving a hole beside it. */
+@media (--xs) {
+  div.stats.stats > :last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+  }
 }

@@ -6,12 +6,19 @@ import {
 } from "./lisbonNeighbourhoods";
 
 describe("LISBON_NEIGHBOURHOODS", () => {
-  it("carries the 24 freguesias plus the informal bairros", () => {
+  it("carries every mapped freguesia plus the informal bairros", () => {
     const freguesias = LISBON_NEIGHBOURHOODS.filter(
       (entry) => entry.kind === "freguesia",
     );
-    expect(freguesias).toHaveLength(24);
-    expect(LISBON_NEIGHBOURHOODS).toHaveLength(33);
+    expect(freguesias).toHaveLength(65);
+    expect(LISBON_NEIGHBOURHOODS).toHaveLength(74);
+  });
+
+  it("offers the freguesias of Oeiras, Cascais, the south bank and Setúbal", () => {
+    expect(isLisbonNeighbourhood("Cascais e Estoril")).toBe(true);
+    expect(isLisbonNeighbourhood("Barreiro e Lavradio")).toBe(true);
+    expect(isLisbonNeighbourhood("Alcochete")).toBe(true);
+    expect(isLisbonNeighbourhood("Setúbal (São Sebastião)")).toBe(true);
   });
 
   it("lists no name twice", () => {

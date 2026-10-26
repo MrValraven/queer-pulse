@@ -10,6 +10,7 @@ import { OnboardingPage } from "../auth/OnboardingPage";
 import { TermsModal } from "../marketing/TermsModal";
 import { PrivacyModal } from "../marketing/PrivacyModal";
 import { InviteExpiredPage } from "./InviteExpiredPage";
+import { INVITE_SIGNUP_REDIRECT } from "./InviteEmailCodeJoin";
 import { buildLoaderSteps } from "./inviteLanding.data";
 import {
   InviteCardView,
@@ -111,7 +112,10 @@ export function InviteLandingPage() {
     // backend a signup it will bounce.
     if (!is18) return;
     if (!demoMode) {
-      signIn("/onboarding", { invite: invite!.code, ageAttested: true });
+      signIn(INVITE_SIGNUP_REDIRECT, {
+        invite: invite!.code,
+        ageAttested: true,
+      });
       return;
     }
     // Demo has no real Google and no network. This used to call the invite
@@ -131,6 +135,7 @@ export function InviteLandingPage() {
       <InviteCardView
         view={invite}
         onGoogle={joinWithGoogle}
+        onEmailJoined={() => setJoined(true)}
         is18={is18}
         onIs18Change={setIs18}
         isUnder18={under18}

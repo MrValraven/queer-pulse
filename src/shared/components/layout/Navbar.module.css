@@ -337,9 +337,20 @@
   padding: 0 calc(16px + env(safe-area-inset-right)) 0
     calc(16px + env(safe-area-inset-left));
   padding-top: env(safe-area-inset-top);
+  /* A solid strip like the bottom tab bar. iOS WebKit rasterises whatever sits
+     inside a backdrop-filter layer that also animates `transform`, then
+     resamples it soft: the icons grew a halo and the coral badges washed out,
+     and the drop shadow left a grey haze across the top of the page. So the
+     app bar drops the pill's glass and shadow and keeps a bottom hairline. */
+  background: var(--cream);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  box-shadow: none;
   border-radius: 0;
+  border-top: 0;
   border-left: 0;
   border-right: 0;
+  border-bottom: 1px solid rgba(var(--line-rgb), 0.14);
   /* The hide-on-scroll slide rides `transform` so it runs on the compositor.
      Sticky strips under the bar ease their `top` over the same duration and
      curve (standalone.css), so the two travel together. */
@@ -363,6 +374,12 @@
 }
 :global([data-theme="dark"]) .scrolled {
   background: color-mix(in srgb, var(--cream) 94%, transparent);
+}
+/* The dark pill rules above outrank `.appBar`, so the strip restates its solid
+   fill and hairline here to match the dark tab bar. */
+:global([data-theme="dark"]) .appBar {
+  background: var(--cream);
+  border-bottom-color: rgba(var(--line-rgb), 0.14);
 }
 :global([data-theme="dark"]) .brand,
 :global([data-theme="dark"]) .themeToggle,

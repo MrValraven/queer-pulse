@@ -3,6 +3,7 @@ import type {
   AccentKey,
   AvailabilityKey,
   LinkVisibility,
+  StudioHeroChoice,
   UpdateSubprofileDTO,
   Visibility,
 } from "./api/subprofiles.api";
@@ -12,6 +13,7 @@ import type { MetaSnapshot } from "./subprofileEditorDiff";
 import type { CropRect } from "../../shared/components/ui/cropGeometry";
 import {
   buildMetaPatchFrom,
+  DEFAULT_STUDIO_HERO,
   metaSnapshotOf,
   sameMetaSnapshot,
 } from "./subprofileMetaEditor.helpers";
@@ -64,6 +66,8 @@ export interface SubprofileMetaEditor {
   coverPreviewCrop: CropRect | undefined;
   coverBleed: boolean;
   setCoverBleed: (value: boolean) => void;
+  studioHero: StudioHeroChoice;
+  setStudioHero: (value: StudioHeroChoice) => void;
   accent: AccentKey | "";
   setAccent: (value: AccentKey) => void;
   availability: AvailabilityKey | "";
@@ -159,6 +163,9 @@ export function useSubprofileMetaEditor(
   const [coverBleed, setCoverBleed] = useState<boolean>(
     subprofile.skinData?.coverBleed ?? false,
   );
+  const [studioHero, setStudioHero] = useState<StudioHeroChoice>(
+    subprofile.skinData?.studioHero ?? DEFAULT_STUDIO_HERO,
+  );
   const [accent, setAccent] = useState<AccentKey | "">(subprofile.accent ?? "");
   const [availability, setAvailability] = useState<AvailabilityKey | "">(
     subprofile.availability ?? "",
@@ -198,6 +205,7 @@ export function useSubprofileMetaEditor(
     ctaLabel,
     ctaUrl,
     coverBleed,
+    studioHero,
   };
 
   // Adopt server-side changes to fields the member hasn't locally edited (see
@@ -219,6 +227,7 @@ export function useSubprofileMetaEditor(
     setCtaLabel,
     setCtaUrl,
     setCoverBleed,
+    setStudioHero,
   });
 
   const nameMissing = displayName.trim().length === 0;
@@ -281,6 +290,7 @@ export function useSubprofileMetaEditor(
     setCoverUrl(baseline.coverUrl);
     setCoverPreview(null);
     setCoverBleed(baseline.coverBleed);
+    setStudioHero(baseline.studioHero);
     setAccent(baseline.accent as AccentKey);
     setAvailability(baseline.availability as AvailabilityKey | "");
     setCtaLabel(baseline.ctaLabel);
@@ -327,6 +337,8 @@ export function useSubprofileMetaEditor(
     coverPreviewCrop,
     coverBleed,
     setCoverBleed,
+    studioHero,
+    setStudioHero,
     accent,
     setAccent,
     availability,

@@ -71,6 +71,8 @@ describe("scheduling", () => {
     const artistKey = studioKeys.artist(true, DEMO_ARTIST_MARIANA.id);
     queryClient.setQueryData<StudioArtistView>(artistKey, {
       artist: { id: DEMO_ARTIST_MARIANA.id } as StudioArtistView["artist"],
+      coverUrl: null,
+      heroLayout: "classic",
       allReleases: [],
       releases: [],
       singles: [],
@@ -121,6 +123,8 @@ describe("scheduling", () => {
     const artistKey = studioKeys.artist(true, DEMO_ARTIST_MARIANA.id);
     queryClient.setQueryData<StudioArtistView>(artistKey, {
       artist: { id: DEMO_ARTIST_MARIANA.id } as StudioArtistView["artist"],
+      coverUrl: null,
+      heroLayout: "classic",
       allReleases: [],
       releases: [],
       singles: [],
@@ -172,6 +176,8 @@ describe("Notify me", () => {
     const artistKey = studioKeys.artist(true, "sp-other");
     queryClient.setQueryData<StudioArtistView>(artistKey, {
       artist: { id: "sp-other" } as StudioArtistView["artist"],
+      coverUrl: null,
+      heroLayout: "classic",
       allReleases: [],
       releases: [],
       singles: [],

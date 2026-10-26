@@ -1,6 +1,6 @@
 import {
   useCallback,
-  useEffect,
+  useLayoutEffect,
   useRef,
   useState,
   type ReactNode,
@@ -10,8 +10,11 @@ import { createPortal } from "react-dom";
 import { AnimatePresence, m } from "motion/react";
 import { FiCheckSquare, FiX } from "react-icons/fi";
 import { useMotionPrefs } from "../../../app/providers/motionPrefs";
-import { Button, IconButton } from "../../../shared/components/ui";
+import { MAIN_CONTENT_ID } from "../../../shared/components/layout/SkipToContentLink";
+import { Button, IconButton, Tooltip } from "../../../shared/components/ui";
+import { useMediaQuery } from "../../../shared/hooks/useMediaQuery";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
+import { mediaMax } from "../../../shared/theme/breakpoints";
 import { STUDIO_EXIT, STUDIO_SPRING } from "../studioMotion";
 import type { StudioRowSelection } from "./useStudioRowSelection";
 import { useStudioSelectionBarKeys } from "./useStudioSelectionBarKeys";
@@ -34,13 +37,43 @@ interface StudioSelectionBarProps {
   actions: StudioSelectionAction[];
 }
 
+/** A mouse wheel turned over the actions strip scrolls it sideways, so a
+ *  mouse reaches an action past its end (a trackpad already swipes). The
+ *  page stays put while the strip still has room to travel. */
+function scrollStripByWheel(event: WheelEvent) {
+  const strip = event.currentTarget;
+  if (!(strip instanceof HTMLElement)) return;
+  if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
+  const isRtl = getComputedStyle(strip).direction === "rtl";
+  const step = isRtl ? -event.deltaY : event.deltaY;
+  const before = strip.scrollLeft;
+  strip.scrollLeft += step;
+  if (strip.scrollLeft !== before) event.preventDefault();
+}
+
 type ScrollEdges = "start" | "end" | "both" | undefined;
 
+const BAR_MAX_WIDTH = 980;
+
+/** The widest the bar may grow over <main>: its max-width, or main less the
+ *  bar's 16px side margins (StudioSelectionBar.module.css). */
+function barRoomOverMain(): number {
+  const main = document.getElementById(MAIN_CONTENT_ID);
+  const mainWidth = main?.getBoundingClientRect().width ?? window.innerWidth;
+  return Math.min(BAR_MAX_WIDTH, mainWidth - 32);
+}
+
 /** Which ends of the actions strip have more actions past them, so the strip
- *  fades there. Read on scroll and whenever the strip or its content
- *  resizes; RTL scrolls negative, so the distance is taken absolute. */
-function useScrollEdges(stripRef: RefObject<HTMLDivElement | null>) {
+ *  fades there, and whether the actions show their icons only. They do when
+ *  their names would not fit over <main> (a tablet beside the open rail);
+ *  the names come back once main has grown by what they overflowed by, so
+ *  the switch never flickers. Read on scroll and whenever the strip, its
+ *  content or main resizes; RTL scrolls negative, so the distance is taken
+ *  absolute. */
+function useActionStrip(stripRef: RefObject<HTMLDivElement | null>) {
   const [edges, setEdges] = useState<ScrollEdges>(undefined);
+  const [isCompact, setIsCompact] = useState(false);
+  const compactAtRef = useRef<{ room: number; overflow: number } | null>(null);
   const measure = useCallback(() => {
     const strip = stripRef.current;
     if (!strip) return;
@@ -57,8 +90,18 @@ function useScrollEdges(stripRef: RefObject<HTMLDivElement | null>) {
             ? "end"
             : undefined,
     );
+    const compactAt = compactAtRef.current;
+    const barRoom = barRoomOverMain();
+    if (!compactAt && room > 1) {
+      compactAtRef.current = { room: barRoom, overflow: room };
+      setIsCompact(true);
+    } else if (compactAt && barRoom >= compactAt.room + compactAt.overflow) {
+      compactAtRef.current = null;
+      setIsCompact(false);
+    }
   }, [stripRef]);
-  useEffect(() => {
+  // Before paint, so the first frame is already compact and never overflows.
+  useLayoutEffect(() => {
     const strip = stripRef.current;
     if (!strip) return;
     measure();
@@ -68,9 +111,49 @@ function useScrollEdges(stripRef: RefObject<HTMLDivElement | null>) {
         : new ResizeObserver(measure);
     observer?.observe(strip);
     for (const child of Array.from(strip.children)) observer?.observe(child);
-    return () => observer?.disconnect();
+    const main = document.getElementById(MAIN_CONTENT_ID);
+    if (main) observer?.observe(main);
+    // Not passive, so a wheel the strip takes leaves the page where it is.
+    strip.addEventListener("wheel", scrollStripByWheel, { passive: false });
+    return () => {
+      observer?.disconnect();
+      strip.removeEventListener("wheel", scrollStripByWheel);
+    };
   }, [stripRef, measure]);
-  return { edges, measure };
+  return { edges, measure, isCompact };
+}
+
+/** The bar is portalled to the body, so it centres itself on the page's
+ *  <main> (clear of the Studio rail, open, folded or gone) by reading main's
+ *  edges into two custom properties. Main resizes with the rail's
+ *  animation, so the bar follows it. */
+function useBarOverMain(
+  barRef: RefObject<HTMLDivElement | null>,
+  isOpen: boolean,
+) {
+  useLayoutEffect(() => {
+    const bar = barRef.current;
+    const main = document.getElementById(MAIN_CONTENT_ID);
+    if (!isOpen || !bar || !main) return;
+    const place = () => {
+      const rect = main.getBoundingClientRect();
+      const viewportWidth = document.documentElement.clientWidth;
+      bar.style.setProperty("--bar-left", `${Math.max(0, rect.left)}px`);
+      bar.style.setProperty(
+        "--bar-right",
+        `${Math.max(0, viewportWidth - rect.right)}px`,
+      );
+    };
+    place();
+    const observer =
+      typeof ResizeObserver === "undefined" ? null : new ResizeObserver(place);
+    observer?.observe(main);
+    window.addEventListener("resize", place);
+    return () => {
+      observer?.disconnect();
+      window.removeEventListener("resize", place);
+    };
+  }, [barRef, isOpen]);
 }
 
 function StudioSelectionBarPanel({
@@ -81,7 +164,8 @@ function StudioSelectionBarPanel({
   const count = selection.orderedSelectedIds.length;
   const isEmpty = count === 0;
   const stripRef = useRef<HTMLDivElement>(null);
-  const { edges, measure } = useScrollEdges(stripRef);
+  const { edges, measure, isCompact } = useActionStrip(stripRef);
+  const isIconOnly = useMediaQuery(mediaMax("mobile")) || isCompact;
   return (
     <>
       <span className={css.count} role="status">
@@ -105,42 +189,52 @@ function StudioSelectionBarPanel({
           </span>
         )}
       </span>
-      <Button
-        variant="quiet"
+      {/* Icon-only at every width, so the list's own actions keep the room;
+          the tooltip names it for a mouse, the label for everyone. */}
+      <IconButton
         size="sm"
         className={css.action}
+        aria-label={t("studio:selection.selectAll")}
+        tooltip
         aria-disabled={selection.isAllSelected || undefined}
         onClick={() => {
           if (!selection.isAllSelected) selection.selectAll();
         }}
       >
-        <FiCheckSquare aria-hidden className={css.selectAllIcon} />
-        <span className={css.actionLabel}>
-          {t("studio:selection.selectAll")}
-        </span>
-      </Button>
+        <FiCheckSquare aria-hidden />
+      </IconButton>
       <div
         ref={stripRef}
         className={css.actions}
         data-scroll-edges={edges}
+        data-compact={isIconOnly || undefined}
         onScroll={measure}
       >
         {actions.map((action) => (
-          <Button
+          // Below --mobile, or when their names would not fit, the actions
+          // show their icons only, and the tooltip (drawn outside the
+          // scrolling strip) names each one.
+          <Tooltip
             key={action.id}
-            variant="quiet"
-            size="sm"
-            className={[css.action, action.tone === "danger" && css.danger]
-              .filter(Boolean)
-              .join(" ")}
-            aria-disabled={isEmpty || undefined}
-            onClick={() => {
-              if (!isEmpty) action.onRun(selection.orderedSelectedIds);
-            }}
+            label={action.label}
+            placement="floating-top"
+            isDisabled={!isIconOnly}
           >
-            {action.icon}
-            <span className={css.actionLabel}>{action.label}</span>
-          </Button>
+            <Button
+              variant="quiet"
+              size="sm"
+              className={[css.action, action.tone === "danger" && css.danger]
+                .filter(Boolean)
+                .join(" ")}
+              aria-disabled={isEmpty || undefined}
+              onClick={() => {
+                if (!isEmpty) action.onRun(selection.orderedSelectedIds);
+              }}
+            >
+              {action.icon}
+              <span className={css.actionLabel}>{action.label}</span>
+            </Button>
+          </Tooltip>
         ))}
       </div>
       <IconButton
@@ -169,6 +263,7 @@ export function StudioSelectionBar({
   const { reducedMotion } = useMotionPrefs();
   const barRef = useRef<HTMLDivElement>(null);
   useStudioSelectionBarKeys(selection, barRef);
+  useBarOverMain(barRef, selection.isSelecting);
   const hidden = reducedMotion ? { opacity: 0 } : { opacity: 0, y: 24 };
   return createPortal(
     <AnimatePresence>

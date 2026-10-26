@@ -1,0 +1,99 @@
+/* The Browse drawer's hidden-communities band: the note, the hidden chips,
+   the name search and its result rows. */
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+  min-width: 0;
+  /* "Manage hidden communities" scrolls this band into view. The margins keep
+     it clear of the sticky nav above and, on a phone, of the bottom tab bar
+     and the home indicator below (`--bottom-inset`, zero in a browser tab). */
+  scroll-margin-block: var(--sticky-top, 0px)
+    calc(var(--bottom-inset) + var(--gap-lg));
+}
+
+/* The note sits right under the band label; the stack's gap spaces it. */
+.stack > p:first-child {
+  margin-block-start: 0;
+}
+
+/* A chip whose hide or unhide is still saving reads as busy, and its remove
+   button ignores presses until the server answers. */
+.chipLabel {
+  transition: opacity var(--dur-fast) var(--ease);
+}
+
+.chipLabel[data-saving] {
+  opacity: 0.55;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chipLabel {
+    transition: none;
+  }
+}
+
+.search {
+  max-inline-size: 26rem;
+}
+
+.results {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+  max-inline-size: 26rem;
+}
+
+.rows {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Padding lives on the row, inside the folding `li`, so it folds with it. */
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-xs);
+  padding-block: 6px;
+  min-width: 0;
+}
+
+.name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--text-14);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.avatar,
+.avatarFallback {
+  flex: none;
+  inline-size: 28px;
+  block-size: 28px;
+  border-radius: var(--radius-avatar);
+}
+
+.avatar {
+  object-fit: cover;
+}
+
+.avatarFallback {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--text-13);
+  color: var(--jade);
+  background: rgba(var(--jade-rgb), 0.12);
+}
+
+.noMatch {
+  margin: 0;
+  font-size: var(--text-13);
+  color: var(--ink-60);
+}

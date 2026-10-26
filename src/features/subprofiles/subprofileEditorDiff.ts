@@ -1,4 +1,5 @@
 import { itemsToInputDto } from "./api/subprofiles.adapters";
+import type { StudioHeroChoice } from "./api/subprofiles.api";
 import type { SubprofileEditorRow } from "./subprofileSectionEditorRows";
 
 /**
@@ -44,6 +45,7 @@ export interface MetaSnapshot {
   ctaLabel: string;
   ctaUrl: string;
   coverBleed: boolean;
+  studioHero: StudioHeroChoice;
 }
 
 export interface RowDiffCounts {
@@ -155,6 +157,7 @@ const META_FIELDS: MetaFieldSpec[] = [
   { field: "ctaLabel", kind: "text" },
   { field: "ctaUrl", kind: "text" },
   { field: "coverBleed", kind: "boolean" },
+  { field: "studioHero", kind: "enum" },
 ];
 
 const META_AREA_LABEL_KEY = "subprofiles:pending.area.meta";

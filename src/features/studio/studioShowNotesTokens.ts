@@ -86,6 +86,51 @@ function tokenizeLine(
   return tokens;
 }
 
+/** A chapter as the notes compare it: where it starts and its title. */
+export interface ShowNotesChapter {
+  startSeconds: number;
+  title: string;
+}
+
+/** A whole line that is one time and a title, with an optional dash, dot
+ *  or colon between them ("04:10 Why now", "4:10 - Why now"). */
+const CHAPTER_LINE_PATTERN =
+  /^\s*(\d{1,2}:\d{2}:\d{2}|\d{1,3}:\d{2})\s*(?:[-\u2013\u2014:\u00b7.]\s*)?(.+?)\s*$/;
+
+function normalizedTitle(title: string): string {
+  return title.trim().toLocaleLowerCase().replace(/\s+/g, " ");
+}
+
+/** The notes without the lines that repeat a chapter, its time and its
+ *  title, since the chapter list beside them already offers both. Every
+ *  other line stays as written. */
+export function notesWithoutChapterLines(
+  notes: string,
+  chapters: readonly ShowNotesChapter[],
+): string {
+  if (chapters.length === 0) return notes;
+  const chapterTitleAt = new Map(
+    chapters.map((chapter) => [
+      chapter.startSeconds,
+      normalizedTitle(chapter.title),
+    ]),
+  );
+  return notes
+    .replace(/\r\n/g, "\n")
+    .split("\n")
+    .filter((line) => {
+      const match = CHAPTER_LINE_PATTERN.exec(line);
+      if (!match) return true;
+      const [, time = "", title = ""] = match;
+      const seconds = secondsOfTimestamp(time);
+      return (
+        seconds === null ||
+        chapterTitleAt.get(seconds) !== normalizedTitle(title)
+      );
+    })
+    .join("\n");
+}
+
 export function tokenizeShowNotes(
   notes: string,
   durationSeconds: number | null,

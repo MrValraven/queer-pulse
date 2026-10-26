@@ -321,11 +321,22 @@ export const demoAllArtists = (): StudioArtistRefDTO[] => [
 export function demoArtistDetailsOf(artistId: string): {
   bio: string | null;
   city: string | null;
+  coverUrl: string | null;
+  studioHero: "full-bleed" | "avatar" | null;
 } {
-  return (
-    DEMO_ARTIST_DETAILS[artistId] ??
-    DEMO_FORMAT_ARTIST_DETAILS[artistId] ?? { bio: null, city: null }
-  );
+  const details: {
+    bio: string | null;
+    city: string | null;
+    coverUrl?: string | null;
+    studioHero?: "full-bleed" | "avatar" | null;
+  } = DEMO_ARTIST_DETAILS[artistId] ??
+    DEMO_FORMAT_ARTIST_DETAILS[artistId] ?? { bio: null, city: null };
+  return {
+    bio: details.bio,
+    city: details.city,
+    coverUrl: details.coverUrl ?? null,
+    studioHero: details.studioHero ?? null,
+  };
 }
 
 /** The demo viewer owns every persona they can upload as. */

@@ -179,6 +179,12 @@ export function SafetyPage() {
         </Reveal>
       </div>
 
+      <SubpageIndex
+        eyebrow={t("resources:safety.subpageIndex.eyebrow")}
+        title={t("resources:safety.subpageIndex.title")}
+        items={subpages}
+      />
+
       <Outro
         title={
           <Translation
@@ -201,12 +207,6 @@ export function SafetyPage() {
           {t("resources:safety.outro.contactCta")}
         </Button>
       </Outro>
-
-      <SubpageIndex
-        eyebrow={t("resources:safety.subpageIndex.eyebrow")}
-        title={t("resources:safety.subpageIndex.title")}
-        items={subpages}
-      />
     </PageShell>
   );
 }

@@ -11,7 +11,8 @@ export interface StudioHomeShelfView {
   isExpanded: boolean;
   seeAllHref: string | undefined;
   seeAllLabel: string | undefined;
-  /** Show less replaces the history entry: pass to StudioShelf. */
+  /** True for Show less: pass to StudioShelf, which steps back over the
+   *  See all entry (or replaces it after a deep link). */
   seeAllReplace: boolean;
   /** The See all or Show less target, also while See all hides. */
   toggleHref: string;
@@ -46,10 +47,12 @@ function useRowOverflow(
  * See all for a home shelf with no page of its own (Continue listening,
  * Staff picks, New this week, Local scenes, Artists): the link opens the
  * same shelf as a wrapping grid of every item, in place, and Show less
- * folds it back into its row, replacing the history entry so Back leaves
- * home as expected. The shelf stays mounted across the switch, so focus
- * stays on the link. See all shows only while the row hides cards. A
- * query-only change keeps the scroll position (ScrollManager).
+ * folds it back into its row. See all pushes an entry marked
+ * `{ fromShelfToggle: true }`, and Show less goes back over it, so home sits
+ * in history once and one Back leaves it; after a deep link to `?shelf=`,
+ * Show less replaces the entry instead. The shelf stays mounted across the
+ * switch, so focus stays on the link. See all shows only while the row hides
+ * cards. A query-only change keeps the scroll position (ScrollManager).
  */
 export function useStudioHomeShelf(
   shelfKey: string,

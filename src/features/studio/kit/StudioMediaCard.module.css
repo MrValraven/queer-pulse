@@ -114,10 +114,20 @@
   transition-duration: var(--dur-fast);
 }
 
-@media (hover: none) {
+/* Touch shows the play button whole, at its full 44px, whatever hover the
+   device reports (a touch laptop, an emulated phone). On a card with a menu
+   it also drops text selection and the iOS link callout, so a long press
+   opens the card's own menu (useStudioContextMenu). */
+@media (hover: none), (pointer: coarse) {
   .fab {
     opacity: 1;
     transform: none;
+  }
+
+  .card[data-has-menu] {
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
   }
 }
 

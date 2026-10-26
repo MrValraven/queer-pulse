@@ -5,6 +5,7 @@ import {
   FiDroplet,
   FiEdit2,
   FiEye,
+  FiEyeOff,
   FiHeart,
   FiImage,
   FiLock,
@@ -18,13 +19,11 @@ import { SECTION_LABEL_KEYS } from "./editProfileNav.data";
 /**
  * Google's own 2-Step Verification page.
  *
- * QueerPulse has no password and no second factor of its own to offer: sign-in
- * is Google OAuth only, so the second factor guarding a QueerPulse account is
- * the one on the member's Google account, and it also guards the recovery path
- * back in (an admin can only ever re-link an account to an identity Google
- * confirms holds the same verified address). The Account pane links here
- * rather than badging a switch "coming soon" for something that is not
- * QueerPulse's to build.
+ * QueerPulse has no password and no second factor of its own to offer. A
+ * member signs in with an emailed code or with Google, so the 2-step
+ * verification on their email account and on their Google account is what
+ * guards a QueerPulse account. The Account pane links here for an account
+ * with Google on it, pointing at the real control Google offers.
  */
 export const GOOGLE_TWO_STEP_VERIFICATION_URL =
   "https://myaccount.google.com/signinoptions/two-step-verification";
@@ -39,6 +38,7 @@ export type PaneId =
   | "accessibility"
   | "interests"
   | "blockedUsers"
+  | "hiddenCommunities"
   | "account"
   | "uploads"
   | "delete";
@@ -68,6 +68,12 @@ export const NAV: { groupKey: string; items: NavItem[] }[] = [
         id: "language",
         icon: FiMessageCircle,
         labelKey: "settings:nav.item.language",
+      },
+      // It shapes which events you see, so it sits with the preferences.
+      {
+        id: "hiddenCommunities",
+        icon: FiEyeOff,
+        labelKey: "settings:nav.item.hiddenCommunities",
       },
     ],
   },

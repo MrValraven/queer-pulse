@@ -147,6 +147,8 @@ function StudioNowPlayingOverlay({ onNavigate }: { onNavigate: () => void }) {
             <IconButton
               className={styles.close}
               aria-label={t("studio:nowPlaying.close")}
+              tooltip
+              tooltipPlacement="bottom"
               onClick={surface.closeNowPlaying}
             >
               <FiChevronDown aria-hidden />

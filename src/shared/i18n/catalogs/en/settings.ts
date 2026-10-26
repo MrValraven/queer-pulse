@@ -185,8 +185,8 @@ export const settings: Catalog = {
 
   // ── interests.data.ts: how often the feed digest gathers up (id
   // "daily"/"weekly"/"important" is the stored value; only title/desc are
-  // translated). Names no email: QueerPulse delivers none and never will, so
-  // "hear from us" here means what lands in the app. ───────────────────────
+  // translated). QueerPulse emails only the sign-in code a person asked for, so
+  // "hear from us" here means what lands in the app. ──────────────────────
   "interests.freq.daily.title": "Daily digest",
   "interests.freq.daily.desc": "One roundup a day with your top updates",
   "interests.freq.weekly.title": "Weekly roundup",
@@ -335,6 +335,21 @@ export const settings: Catalog = {
   "notifications.phonePush.manage.desc":
     "See every device receiving your push notifications, and remove any you don't recognise.",
   "notifications.phonePush.manage.cta": "Manage devices",
+  "notifications.phonePush.recovery.title": "Phone notifications stopped",
+  "notifications.phonePush.recovery.bodyDefault":
+    "Your browser is no longer set to send you notifications, so messages and event updates are not reaching this device.",
+  "notifications.phonePush.recovery.bodyDenied":
+    "Notifications are blocked for QueerPulse in your browser settings, so nothing reaches this device. Allow notifications for this site in your browser settings, then reload the page.",
+  "notifications.phonePush.recovery.bodyFailed":
+    "We could not reconnect this device after a security key update on our side. Turn notifications on again to receive them.",
+  "notifications.phonePush.recovery.action": "Turn on notifications",
+  "notifications.phonePush.recovery.dismiss": "Dismiss notifications reminder",
+  "notifications.phonePush.recovery.done":
+    "Notifications are back on for this device",
+  "notifications.phonePush.recovery.promptClosed":
+    "Notifications stayed off because the permission prompt was closed without allowing them",
+  "notifications.phonePush.recovery.error":
+    "We could not turn notifications on because the push service refused this device. Try again in a moment",
 
   // ── SettingsPanes.tsx — LanguagePane ──────────────────────────────────────
   "language.title": "Language & <em>terminology.</em>",
@@ -489,11 +504,11 @@ export const settings: Catalog = {
   "account.emailAddress.notSet": "Not set yet",
   "account.section.security": "Security",
   "account.twoFactor.title": "Two-factor authentication",
-  // You sign in with Google, so QueerPulse has no password and no second
-  // factor of its own to add. Google's is the one that protects this account,
-  // and since account re-linking landed it protects the way back in too.
+  // QueerPulse has no password and no second factor of its own. A person
+  // signs in with an emailed code or with Google, so the 2-step verification
+  // of their email account and of their Google account protects the way in.
   "account.twoFactor.desc":
-    "You sign in with Google, so your Google account's own 2-step verification is what protects QueerPulse. It also protects the way back in if you ever lose access.",
+    "If you sign in with Google, your Google account's own 2-step verification protects QueerPulse too. Turn it on for your email account as well, since a code sent there opens your account.",
   "account.twoFactor.cta": "Set it up at Google",
   "account.loginAlerts.title": "Login alerts",
   // Names the two channels that exist. The previous line said "Email me",
@@ -516,9 +531,9 @@ export const settings: Catalog = {
 
   // ── AccountSecurityPage.tsx — the member's own security hub (ID-15) ───────
   // Every line here describes something with a real endpoint behind it. The
-  // capabilities the platform does not have are named in `notYet.*` as prose,
-  // never as a control. There is no email channel and never will be, so the
-  // alert copy names the two channels that exist.
+  // capabilities the platform does not have are named in `notYet.*` as prose
+  // only. QueerPulse emails only a sign-in code the person asked for,
+  // so the alert copy names the two channels that exist.
   "accountSecurity.back": "Back to account settings",
   "accountSecurity.eyebrow": "Account security",
   "accountSecurity.h1": "Who can get <em>into your account.</em>",
@@ -532,16 +547,22 @@ export const settings: Catalog = {
   "accountSecurity.section.data": "Your data",
   "accountSecurity.section.more": "Elsewhere",
 
-  "accountSecurity.signIn.title": "Google",
+  "accountSecurity.signIn.title": "Your sign-in",
   "accountSecurity.signIn.value":
+    "You sign in with a code sent to <strong>{email}</strong>.",
+  "accountSecurity.signIn.valueWithGoogle":
+    "You sign in with a code sent to <strong>{email}</strong>, and with Google.",
+  "accountSecurity.signIn.valueGoogleOnly":
     "You sign in with Google, as <strong>{email}</strong>.",
-  "accountSecurity.signIn.noEmail": "your Google account",
+  "accountSecurity.signIn.noEmail": "your account email",
   "accountSecurity.signIn.note":
-    "This is the only way into your account, so there is no password to change here. Keep your Google account itself well protected.",
+    "There is no password to change here. Anyone who can read that inbox can sign in, so keep your email account well protected.",
+  "accountSecurity.signIn.noteGoogleOnly":
+    "Google is the only way into your account right now, so there is no password to change here. Keep your Google account itself well protected.",
 
   "accountSecurity.alerts.title": "Tell me about new sign-ins",
   "accountSecurity.alerts.desc":
-    "When your account is signed in to from a device you have not used before, we say so here and on the devices you have given push permission to. We send no email.",
+    "When your account is signed in to from a device you have not used before, we say so here and on the devices you have given push permission to. These alerts never go by email.",
 
   "accountSecurity.sessions.title": "Signed in right now",
   "accountSecurity.sessions.count_one": "{count} active session.",
@@ -561,14 +582,14 @@ export const settings: Catalog = {
   "accountSecurity.export.value":
     "Take a copy of everything we hold on you, in JSON or CSV.",
   "accountSecurity.export.note":
-    "You sign in with Google again before the archive is built, so a borrowed session cannot walk off with your data.",
+    "You confirm it's you with a code we email you, or with Google, before the archive is built, so a borrowed session cannot walk off with your data.",
   "accountSecurity.export.cta": "Start an export",
 
   "accountSecurity.erasure.title": "Deactivate or delete",
   "accountSecurity.erasure.value":
     "Hide your account and come back later, or ask us to erase it for good.",
   "accountSecurity.erasure.note":
-    "Deletion opens a 30-day grace period you can cancel, and signs you out everywhere. It also asks you to sign in with Google again first.",
+    "Deletion opens a 30-day grace period you can cancel, and signs you out everywhere. It also asks you to confirm it's you first, with a code we email you or with Google.",
   "accountSecurity.erasure.cta": "Open the options",
   "accountSecurity.erasure.ctaPending": "Review the request",
   "accountSecurity.erasure.pending":
@@ -581,9 +602,7 @@ export const settings: Catalog = {
 
   "accountSecurity.notYet.title": "Not available yet",
   "accountSecurity.notYet.twoFactor":
-    "A second factor. Your Google account's own two-step verification is what protects the sign-in today.",
-  "accountSecurity.notYet.recovery":
-    "A second way in that does not go through Google. Losing your Google account is no longer the end of it: write to us and we can re-link your QueerPulse account to a Google identity holding the same verified address.",
+    "A second factor. Today your sign-in is protected by your email account, and by your Google account's two-step verification if you use Google.",
 
   "accountSecurity.compromised":
     "<strong>Think somebody else is in your account?</strong> <sessions>End every other session</sessions> first, which leaves only the browser you are reading this on signed in, then <contact>tell us</contact> so we can look at what happened.",
@@ -637,6 +656,7 @@ export const settings: Catalog = {
   "editProfile.nav.links.label": "Links & social",
   "editProfile.nav.skills.label": "Skills & interests",
   "editProfile.nav.communities.label": "Communities",
+  "editProfile.nav.playlists.label": "Playlists",
   "editProfile.nav.more": "More",
   "editProfile.nav.pronounsGuideLink": "Pronouns guide",
 
@@ -726,6 +746,38 @@ export const settings: Catalog = {
   "editProfile.communities.featured": "Featured",
   "editProfile.communities.moveUp": "Move up",
   "editProfile.communities.moveDown": "Move down",
+  "editProfile.playlists.title": "Playlists <em>on your profile</em>",
+  "editProfile.playlists.sub":
+    "Choose whether your Studio playlists show on your profile and which ones to feature.",
+  "editProfile.playlists.showToggle": "Show my playlists on my profile",
+  "editProfile.playlists.loading": "Loading your playlists",
+  "editProfile.playlists.empty":
+    "You have no playlists yet. Create one in your Studio library and it appears here.",
+  "editProfile.playlists.rule":
+    "With none picked, all your public playlists show. With some picked, only those show, in the order picked.",
+  "editProfile.playlists.counter": "{count} / {max} featured",
+  "editProfile.playlists.moveUp": "Move {name} up",
+  "editProfile.playlists.moveDown": "Move {name} down",
+  "editProfile.playlists.error.playlistNotYours":
+    "One of the picked playlists belongs to someone else, so your playlists were not saved. Remove it and save again.",
+  "editProfile.playlists.error.playlistNotFound":
+    "One of the picked playlists no longer exists, so your playlists were not saved. Reload the page and pick again.",
+  "editProfile.playlists.error.tooMany":
+    "You picked more than 12 playlists, so your playlists were not saved. Drop some and save again.",
+  "editProfile.playlists.error.duplicate":
+    "The same playlist was picked twice, so your playlists were not saved. Reload the page and pick again.",
+  "editProfile.playlists.error.signedOut":
+    "Your session ended, so your playlists were not saved. Sign in again.",
+  "editProfile.playlists.error.noStudioAccess":
+    "Your account has no Studio access, so your playlists were not saved.",
+  "editProfile.playlists.error.rateLimited":
+    "Too many saves in a short time, so your playlists were not saved. Wait a minute and try again.",
+  "editProfile.playlists.error.serverDown":
+    "Our server failed while saving your playlists. Try again in a moment.",
+  "editProfile.playlists.error.rejected":
+    "The server rejected the playlists you picked, so they were not saved. Reload the page and pick again.",
+  "editProfile.playlists.error.offline":
+    "Your device could not reach our server, so your playlists were not saved. Check your connection and try again.",
 
   // ── UsernameSection.tsx ────────────────────────────────────────────────────
   "editProfile.username.title": "Your <em>username</em>",
@@ -868,7 +920,7 @@ export const settings: Catalog = {
     "Select the data types you want included in your archive.",
   "dataExport.steps.step2.label": "Confirm your identity",
   "dataExport.steps.step2.desc":
-    "We ask you to confirm it's you, right here. No email, no password.",
+    "We email you a 6-digit code and you type it in, right here. No password.",
   "dataExport.steps.step3.label": "Download your archive",
   "dataExport.steps.step3.desc":
     "It's built straight away and downloads from this page.",
@@ -955,9 +1007,9 @@ export const settings: Catalog = {
   // ── DataExportSections.tsx — DataExportStatus ────────────────────────────
   "dataExport.status.ready.title": "Your archive is ready",
   "dataExport.status.ready.body":
-    "It's ready to download now. Nothing was emailed. This stays between you and this page.",
+    "It's ready to download now. The archive stays on this page and never goes by email.",
   "dataExport.status.ready.bodyWithExpiry":
-    "It's ready to download now. Nothing was emailed. We'll keep it here until <strong>{date}</strong>, then clear it out.",
+    "It's ready to download now. The archive never goes by email. We'll keep it here until <strong>{date}</strong>, then clear it out.",
   "dataExport.status.expired.title": "That link has expired",
   "dataExport.status.expired.body":
     "We don't keep archives around indefinitely. Ask again and we'll build you a fresh one.",
@@ -1184,12 +1236,23 @@ export const settings: Catalog = {
     "We couldn't cancel that just now. Try again.",
 
   // ── Step-up re-authentication (useReauthToken.ts) ────────────────────────
-  // Deliberately says only what just happened, and leaves what comes next to
-  // each surface. The data export resumes itself on landing (PRD-305), while
-  // deactivation, deletion and the DSAR still want a second press, so a single
-  // "press confirm again" was wrong on one of the four.
-  "reauth.completion.success": "You're re-authenticated.",
+  // The Google landing toast says only what just happened, and leaves what
+  // comes next to each surface. The data export resumes itself on landing
+  // (PRD-305), while deactivation, deletion and the DSAR still want a second
+  // press, so a single "press confirm again" was wrong on one of the four.
+  // The code dialog has no landing, so after a code every gated action waits
+  // for that second press, and `reauth.dialog.confirmed` says so. A dialog
+  // opened with `onConfirmed` shows no toast: its caller shows the outcome.
+  "reauth.completion.success": "Confirmed it's you.",
   "reauth.completion.failed": "We couldn't confirm that was you. Try again.",
+  "reauth.dialog.title": "Confirm it's you",
+  "reauth.dialog.lead":
+    "For steps you can't take back, we check it's still you on this device.",
+  "reauth.dialog.sending": "Sending a code to your email…",
+  "reauth.dialog.googleCta": "Confirm with Google instead",
+  "reauth.dialog.confirmed":
+    "Confirmed it's you. Press the same button again to finish.",
+  "reauth.dialog.sendCode": "Send a code",
   "deleteAccount.options.deactivate.title": "Deactivate",
   "deleteAccount.options.deactivate.desc":
     "Your profile becomes invisible. Your data is preserved. You can reactivate any time by signing back in.",
@@ -1205,7 +1268,7 @@ export const settings: Catalog = {
   "deleteAccount.wh.deactivate.dataPreserved":
     "Your <strong>data is fully preserved</strong>: messages, posts, history remain intact.",
   "deleteAccount.wh.deactivate.reactivateInstantly":
-    "<strong>Reactivate instantly</strong> by signing back in with Google.",
+    "<strong>Reactivate instantly</strong> by signing back in.",
   "deleteAccount.wh.deactivate.nameRemoved":
     "Your <strong>name is removed</strong> from member lists and search results.",
   "deleteAccount.wh.deactivate.attributedDeactivated":
@@ -1255,7 +1318,7 @@ export const settings: Catalog = {
   "destructiveFlow.delete.loadingText": "Scheduling your account for deletion…",
   "destructiveFlow.delete.resultTitle": "It's <em>scheduled.</em>",
   "destructiveFlow.delete.resultBody":
-    "Your account is scheduled for deletion. You have <strong>30 days</strong> to change your mind. Just sign back in with Google and we'll stop the erasure. After that, your data is permanently erased. Take care of yourself.",
+    "Your account is scheduled for deletion. You have <strong>30 days</strong> to change your mind. Just sign back in and we'll stop the erasure. After that, your data is permanently erased. Take care of yourself.",
 
   // ── ThemeStudio.tsx / profileTheme.data.ts — profile theme picker. Pride
   // flag NAMES (FLAG_SWATCHES.label) are deliberately left in English: they're
@@ -1299,7 +1362,7 @@ export const settings: Catalog = {
   "accountData.download.cta": "Open data export",
   "accountData.stepAway.title": "Pause or delete your account",
   "accountData.stepAway.desc":
-    "Hide your profile for a while, or ask for everything to be erased. Both take a typed confirmation and a fresh sign-in with Google. GDPR Article 17.",
+    "Hide your profile for a while, or ask for everything to be erased. Both take a typed confirmation and a fresh check that it's you. GDPR Article 17.",
   "accountData.stepAway.cta": "Open pause and delete",
   "accountData.dsar.title": "Make a data request",
   "accountData.dsar.desc":
@@ -1309,7 +1372,7 @@ export const settings: Catalog = {
     "Each of these opens as a full page, so you can read exactly what it does before you commit to anything.",
 
   // Deep-scan section 13 (the vertical surfaces), built 2026-08-31.
-  // PRD-48-FE — PRD-48 - the member's own submissions index at /account/submissions (MySubmissionsPage), plus the Settings > Account card that leads to it. Three intakes on one page: partner applications, swap proposals sent, resource suggestions. Each keeps its own status vocabulary on purpose. `resource.status.archived` is queue tidying rather than a verdict, so its copy must never read as a refusal. Nothing here may promise an email: QueerPulse sends none.
+  // PRD-48-FE: the member's own submissions index at /account/submissions (MySubmissionsPage), plus the Settings > Account card that leads to it. Three intakes on one page: partner applications, swap proposals sent, resource suggestions. Each keeps its own status vocabulary on purpose. `resource.status.archived` is queue tidying with no verdict in it, so its copy reads as housekeeping. Nothing here may promise an email: QueerPulse emails only a sign-in code the person asked for.
   "account.submissions.title": "Things you sent in",
   "account.submissions.desc":
     "Partner applications, swap proposals and resource suggestions, each with where it stands and what was decided.",
@@ -1318,7 +1381,7 @@ export const settings: Catalog = {
   "mySubmissions.eyebrow": "Your account · Submissions",
   "mySubmissions.h1": "What you <em>sent in</em>, and what came of it.",
   "mySubmissions.lead":
-    "Everything you have submitted for someone to look at, and where each one stands. Answers land here and in your notifications. QueerPulse sends no email, so this page is where a decision stays once you have cleared the bell.",
+    "Everything you have submitted for someone to look at, and where each one stands. Answers land here and in your notifications. QueerPulse never emails decisions, so this page is where a decision stays once you have cleared the bell.",
   "mySubmissions.footNote":
     "Only submissions that go to a review queue appear here. Posts, events and listings you publish yourself go live straight away, so there is nothing to wait on.",
   "mySubmissions.emptyAll.title": "You have not sent anything in yet",
@@ -1399,7 +1462,7 @@ export const settings: Catalog = {
   "sessions.bulk.signOutEverywhere": "Sign out everywhere",
   "sessions.everywhere.confirmTitle": "Sign out on every device?",
   "sessions.everywhere.confirmBody":
-    "This ends every session on your account, this device included, so you will be signed out here as soon as you confirm. Sign back in with Google whenever you are ready. Nothing on your account is deleted.",
+    "This ends every session on your account, this device included, so you will be signed out here as soon as you confirm. Sign back in whenever you are ready. Nothing on your account is deleted.",
   "sessions.everywhere.confirmCta": "Sign out everywhere",
   "sessions.toast.signedOutEverywhere": "Signed out on every device",
   "sessions.toast.signedOutEverywhereError":
@@ -1412,4 +1475,19 @@ export const settings: Catalog = {
   "notifications.volume.quizshow.title": "Pulse Live is starting",
   "notifications.volume.quizshow.desc":
     "When a host opens the live game at an event you're going to",
+  // Hidden event communities
+  "nav.item.hiddenCommunities": "Hidden communities",
+  "hiddenCommunities.title": "Communities you've <em>hidden.</em>",
+  "hiddenCommunities.sub":
+    "Their events stay off Highlights, Browse and the calendar, unless a community you still see co-hosts them. Your membership and their posts in your feed stay as they are.",
+  "hiddenCommunities.section": "Hidden from events",
+  "hiddenCommunities.row.hiddenOn": "Hidden {date}",
+  "hiddenCommunities.row.unhideCta": "Unhide",
+  "hiddenCommunities.row.unhideLabel": "Unhide events from {name}",
+  "hiddenCommunities.empty.none.title": "You haven't hidden any communities",
+  "hiddenCommunities.empty.none.desc":
+    "Hide a community from an event card or the Browse filters, and it shows up here so you can bring its events back.",
+  "hiddenCommunities.empty.error.title":
+    "Couldn't load your hidden communities",
+  "hiddenCommunities.empty.error.desc": "Check your connection and try again.",
 };

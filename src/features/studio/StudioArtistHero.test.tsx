@@ -42,7 +42,13 @@ const card = (
 
 // Published newest first by the server; the member-entered dates disagree.
 const artist = toArtistView({
-  artist: { ...artistRef, bio: null, city: null },
+  artist: {
+    ...artistRef,
+    bio: null,
+    city: null,
+    coverUrl: null,
+    studioHero: null,
+  },
   releases: [
     card("r-newest-single", "single", "2019-01-01", "2026-10-01T10:00:00.000Z"),
     card("r-older-album", "album", "2026-09-30", "2026-05-01T10:00:00.000Z"),

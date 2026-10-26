@@ -1,11 +1,6 @@
 import { Link } from "react-router-dom";
 import { FiList } from "react-icons/fi";
-import {
-  Button,
-  Collapse,
-  ImageSlot,
-  Tooltip,
-} from "../../../../shared/components/ui";
+import { Button, Collapse, Tooltip } from "../../../../shared/components/ui";
 import { IconButton } from "../../../../shared/components/ui/IconButton";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { StudioAddToPlaylistButton } from "../../StudioAddToPlaylistButton";
@@ -20,6 +15,8 @@ import { useStudioPlayer, type StudioQueueItem } from "../studioPlayerContext";
 import { useStudioPlayerSurface } from "../studioPlayerSurface";
 import { StudioCastButton } from "./StudioCastButton";
 import { StudioChapterLine } from "./StudioChapterLine";
+import { StudioGoToTrackButton } from "./StudioGoToTrackButton";
+import { StudioPlayerArt } from "./StudioPlayerArt";
 import { StudioPlayerCloseButton } from "./StudioPlayerCloseButton";
 import { StudioPlayerMorePanel } from "./StudioPlayerMorePanel";
 import {
@@ -73,14 +70,7 @@ function StudioPlayerNow({ item }: { item: StudioQueueItem }) {
         onClick={() => surface.openNowPlaying()}
       >
         <StudioNowCoverSwap swapKey={item.trackId}>
-          <ImageSlot
-            src={item.coverUrl ?? undefined}
-            tint={item.tint}
-            width={48}
-            height={48}
-            radius={8}
-            placeholder=""
-          />
+          <StudioPlayerArt item={item} size={48} radius={8} />
         </StudioNowCoverSwap>
       </IconButton>
       <div className={styles.titles}>
@@ -110,9 +100,11 @@ function StudioPlayerNow({ item }: { item: StudioQueueItem }) {
       {/* The heart and Add to playlist share one slot, so they sit
           together at the row's end and fade as one for a preview. */}
       <StudioNowSaveSlot isShown={!isPreview}>
-        <Tooltip label={t("studio:like.cta")} placement="top">
-          <StudioLikeButton subject={likeSubject} className={styles.like} />
-        </Tooltip>
+        <StudioLikeButton
+          subject={likeSubject}
+          className={styles.like}
+          hasTooltip
+        />
         <Tooltip label={t("studio:playlist.add.trackCta")} placement="top">
           <StudioAddToPlaylistButton
             trackIds={[item.trackId]}
@@ -129,10 +121,10 @@ function StudioPlayerNow({ item }: { item: StudioQueueItem }) {
   );
 }
 
-/** Sleep chip, Cast, the queue toggle, volume, the More panel and Close
- *  player. While Now playing is open its own chip announces, so this one
- *  stays silent. */
-function StudioPlayerTools() {
+/** Sleep chip, Cast, Go to track, the queue toggle, volume, the More panel
+ *  and Close player. While Now playing is open its own chip announces, so
+ *  this one stays silent. */
+function StudioPlayerTools({ item }: { item: StudioQueueItem }) {
   const { t } = useTranslation();
   const surface = useStudioPlayerSurface();
   const hintFor = useStudioShortcutHint();
@@ -144,6 +136,7 @@ function StudioPlayerTools() {
     <div className={styles.tools}>
       <StudioSleepTimerChip announces={!surface.isNowPlayingOpen} />
       <StudioCastButton />
+      <StudioGoToTrackButton item={item} />
       <IconButton
         id={STUDIO_QUEUE_BUTTON_ID}
         className={styles.toolButton}
@@ -222,7 +215,7 @@ export function StudioPlayerBar({ item }: { item: StudioQueueItem }) {
       <div className={styles.seekArea}>
         <StudioPlayerSeek onSeek={player.seek} />
       </div>
-      <StudioPlayerTools />
+      <StudioPlayerTools item={item} />
       <StudioPlayerStatus />
       {/* Studio safety: the pause before a warned track (spec 6.3). */}
       <StudioWarningGate layout="bar" />

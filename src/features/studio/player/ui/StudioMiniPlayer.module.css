@@ -2,11 +2,24 @@
    swipe (useMiniCardSwipe writes its x) and springs back. It takes the
    open button's own row layout, so the card looks the same at rest. */
 .slide {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 10px;
   min-width: 0;
   flex: 1;
+}
+
+/* The track a landed skip left: one page beside the block (its translate
+   comes from useSwipeSkipPager), sliding out as the next one slides in. */
+.trail {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  pointer-events: none;
 }
 
 /* The open button and the play disc are the shared Button and IconButton.
@@ -30,6 +43,10 @@
   line-height: inherit;
   text-align: start;
   white-space: normal;
+  /* The sliding block shows only inside the button, so a title coming in
+     never runs under the heart and play. The button's own ring is outside
+     the clip. */
+  overflow: clip;
 }
 
 .play.play {
@@ -41,6 +58,15 @@
   font-size: inherit;
   background: rgba(var(--studio-ink-rgb), 0.92);
   color: var(--studio-surface-rail);
+  transition-property: transform, background-color;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+/* While the warning gate waits, its Play it is the primary answer, so the
+   card's disc dims to the muted ink, as the transport's does. */
+.play.play[data-gated] {
+  background: var(--studio-text-muted);
 }
 
 @media (hover: hover) {

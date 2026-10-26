@@ -55,12 +55,21 @@
   border-radius: var(--radius-18);
   overflow: hidden;
   margin-bottom: 24px;
+  container: now-card / inline-size;
 }
 .nowInner {
   display: grid;
-  grid-template-columns: 200px 1fr;
+  grid-template-columns: 200px minmax(0, 1fr);
   gap: 26px;
   padding: 26px;
+}
+/* Beside the chat column (961 to about 1150px wide) the card is too narrow
+   for the art and the info side by side: the info shrank to 76px and the
+   action row spilled. Stack them, as the single-column layout does. */
+@container now-card (max-width: 520px) {
+  .nowInner {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 .nowArt {
   aspect-ratio: 1;
@@ -148,11 +157,16 @@
 .times .e {
   color: var(--studio-accent-text);
 }
+/* Two even columns with the primary tip across the top, so the row never
+   wraps raggedly when the card narrows. */
 .liveActions {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 8px;
   margin-top: 18px;
-  flex-wrap: wrap;
+}
+.liveActions > :first-child {
+  grid-column: 1 / -1;
 }
 .listeners {
   display: grid;

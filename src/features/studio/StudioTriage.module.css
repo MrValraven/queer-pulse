@@ -30,6 +30,13 @@
   font-style: italic;
 }
 
+/* The claim row's italic jade line takes the chip ink for jade on its own
+   wash (--studio-jade-text is 4.49:1 there in light). Element plus doubled
+   class outranks council's `.claimRow .text em`. */
+div.claimText.claimText em {
+  color: var(--studio-jade-chip-text);
+}
+
 .decisionRecord {
   margin-top: 14px;
   padding: 11px 13px;

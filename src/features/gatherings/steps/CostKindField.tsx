@@ -1,8 +1,10 @@
 import { useId } from "react";
+import { Collapse } from "../../../shared/components/ui/Collapse";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { Field, TextInput } from "../CreateGatheringFields";
 import { CostKindSegment } from "../fields/CostKindSegment";
 import type { GatheringForm } from "../useGatheringForm";
+import { PaymentDetailsFields } from "./PaymentDetailsFields";
 import { COST_PLACEHOLDER_KEYS, MAX_COST_TEXT_LENGTH } from "./whoChapter.data";
 import styles from "./WhoChapter.module.css";
 
@@ -13,6 +15,9 @@ import styles from "./WhoChapter.module.css";
  * The line is hidden while the gathering is free. Text typed before switching
  * back to free stays in the form and is kept off the wire by the adapter, so
  * switching back to a paid kind brings the host's words back.
+ *
+ * Under the price, for the two paid kinds, the payment link and instructions
+ * fold open (`PaymentDetailsFields`), under the same keep-but-do-not-send rule.
  */
 export function CostKindField({ form }: { form: GatheringForm }) {
   const { t } = useTranslation();
@@ -21,30 +26,35 @@ export function CostKindField({ form }: { form: GatheringForm }) {
   const paidCostKind = form.costKind === "free" ? null : form.costKind;
 
   return (
-    <Field
-      label={costLabel}
-      labelId={labelId}
-      hint={paidCostKind ? t("gatherings:create.v2.who.costHint") : undefined}
-    >
-      <CostKindSegment
-        className={styles.segment}
+    <>
+      <Field
         label={costLabel}
-        value={form.costKind}
-        onChange={form.setCostKind}
-      />
-      {paidCostKind && (
-        <div className={styles.costDetail}>
-          <TextInput
-            type="text"
-            aria-label={t("gatherings:create.v2.who.costDetailLabel")}
-            aria-describedby={`${labelId}-hint`}
-            maxLength={MAX_COST_TEXT_LENGTH}
-            placeholder={t(COST_PLACEHOLDER_KEYS[paidCostKind])}
-            value={form.cost}
-            onChange={(event) => form.setCost(event.target.value)}
-          />
-        </div>
-      )}
-    </Field>
+        labelId={labelId}
+        hint={paidCostKind ? t("gatherings:create.v2.who.costHint") : undefined}
+      >
+        <CostKindSegment
+          className={styles.segment}
+          label={costLabel}
+          value={form.costKind}
+          onChange={form.setCostKind}
+        />
+        {paidCostKind && (
+          <div className={styles.costDetail}>
+            <TextInput
+              type="text"
+              aria-label={t("gatherings:create.v2.who.costDetailLabel")}
+              aria-describedby={`${labelId}-hint`}
+              maxLength={MAX_COST_TEXT_LENGTH}
+              placeholder={t(COST_PLACEHOLDER_KEYS[paidCostKind])}
+              value={form.cost}
+              onChange={(event) => form.setCost(event.target.value)}
+            />
+          </div>
+        )}
+      </Field>
+      <Collapse isOpen={paidCostKind !== null}>
+        <PaymentDetailsFields form={form} />
+      </Collapse>
+    </>
   );
 }

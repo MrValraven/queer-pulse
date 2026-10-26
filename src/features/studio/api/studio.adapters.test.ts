@@ -22,6 +22,7 @@ import {
   isStudioGenre,
   isTranscriptFormat,
   lyricStanzasOf,
+  resolveHeroLayout,
   tintForId,
   toArtistStatsView,
   toArtistView,
@@ -156,7 +157,13 @@ describe("toArtistView", () => {
       type,
     });
     const dto: StudioArtistDTO = {
-      artist: { ...artist, bio: "Songs for the night bus", city: "Lisbon" },
+      artist: {
+        ...artist,
+        bio: "Songs for the night bus",
+        city: "Lisbon",
+        coverUrl: null,
+        studioHero: null,
+      },
       releases: [card("a", "album"), card("s", "single"), card("m", "mix")],
       ownerReleases: null,
       followerCount: 0,
@@ -168,6 +175,43 @@ describe("toArtistView", () => {
     expect(view.singles.map((release) => release.id)).toEqual(["s"]);
     expect(view.ownerReleases).toBeNull();
     expect(view.artist.city).toBe("Lisbon");
+  });
+});
+
+describe("resolveHeroLayout and the artist hero fields", () => {
+  const coverUrl = "https://example.test/wide.jpg";
+
+  it("resolves to classic without a cover", () => {
+    expect(resolveHeroLayout(null, null)).toBe("classic");
+    expect(resolveHeroLayout(null, "avatar")).toBe("classic");
+  });
+
+  it("resolves to full-bleed for a cover with no stored choice", () => {
+    expect(resolveHeroLayout(coverUrl, null)).toBe("full-bleed");
+  });
+
+  it("resolves to the stored choice when a cover is set", () => {
+    expect(resolveHeroLayout(coverUrl, "avatar")).toBe("avatar");
+    expect(resolveHeroLayout(coverUrl, "full-bleed")).toBe("full-bleed");
+  });
+
+  it("maps coverUrl and the resolved layout onto the artist view", () => {
+    const view = toArtistView({
+      artist: {
+        ...artist,
+        bio: null,
+        city: null,
+        coverUrl,
+        studioHero: "avatar",
+      },
+      releases: [],
+      ownerReleases: null,
+      followerCount: 0,
+      isFollowing: false,
+      playlists: [],
+    });
+    expect(view.coverUrl).toBe(coverUrl);
+    expect(view.heroLayout).toBe("avatar");
   });
 });
 
@@ -337,7 +381,13 @@ const playlistDto: StudioPlaylistDTO = {
 describe("release cards (v2)", () => {
   it("carries publishedAt and the genre label", () => {
     const artistView = toArtistView({
-      artist: { ...mariana, bio: null, city: null },
+      artist: {
+        ...mariana,
+        bio: null,
+        city: null,
+        coverUrl: null,
+        studioHero: null,
+      },
       releases: [cardDto],
       ownerReleases: null,
       followerCount: 12,
@@ -353,7 +403,13 @@ describe("release cards (v2)", () => {
   it("keeps the server's release order for Play all and flags the owner", () => {
     const albumDto = { ...cardDto, id: "release-8", type: "album" as const };
     const view = toArtistView({
-      artist: { ...mariana, bio: null, city: null },
+      artist: {
+        ...mariana,
+        bio: null,
+        city: null,
+        coverUrl: null,
+        studioHero: null,
+      },
       releases: [cardDto, albumDto],
       ownerReleases: [],
       followerCount: 3,
@@ -804,7 +860,13 @@ describe("studio v3: artist upcoming and owner rows", () => {
       isReminderSet: false,
     });
     const view = toArtistView({
-      artist: { ...artist, bio: null, city: null },
+      artist: {
+        ...artist,
+        bio: null,
+        city: null,
+        coverUrl: null,
+        studioHero: null,
+      },
       releases: [],
       ownerReleases: [
         {
@@ -837,7 +899,13 @@ describe("studio v3: artist upcoming and owner rows", () => {
   it("shows at most 6 upcoming releases, the soonest ones", () => {
     const days = [7, 3, 5, 1, 6, 2, 4];
     const view = toArtistView({
-      artist: { ...artist, bio: null, city: null },
+      artist: {
+        ...artist,
+        bio: null,
+        city: null,
+        coverUrl: null,
+        studioHero: null,
+      },
       releases: [],
       ownerReleases: null,
       followerCount: 0,

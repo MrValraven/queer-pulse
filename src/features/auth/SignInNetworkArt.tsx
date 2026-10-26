@@ -17,7 +17,10 @@ import styles from "./signInNetworkArt.module.css";
  *  themselves in, carry small lights between them, and reach out to welcome
  *  newcomers. Once the Q has formed, its last light travels down to the
  *  wordmark, which writes itself in, and `caption` fades up under it. Fills
- *  its column (the parent is `position: relative`). Decorative, so the
+ *  its column (the parent is `position: relative`). The canvas paints a
+ *  stage taller than the desktop column, so a sign-in step that makes the
+ *  card taller only uncovers more night and the network keeps running
+ *  (see `.stage` in the stylesheet). Decorative, so the
  *  canvas is hidden from assistive tech; the wordmark and caption stay real
  *  text in the DOM throughout. Under reduced motion it paints one composed
  *  still frame, never starts a loop, and shows the text from the start. */
@@ -85,7 +88,9 @@ export function SignInNetworkArt({ caption }: { caption: ReactNode }) {
       className={styles.root}
       data-text-phase={visibleTextPhase}
     >
-      <canvas ref={canvasRef} className={styles.canvas} aria-hidden />
+      <div className={styles.stage} aria-hidden>
+        <canvas ref={canvasRef} className={styles.canvas} />
+      </div>
       <div className={styles.scrim} aria-hidden />
       <div className={styles.captionStack}>
         <div className={styles.wordmarkRow}>

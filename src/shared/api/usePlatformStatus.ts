@@ -31,6 +31,8 @@ const DEMO_STATUS: PlatformStatusDTO = {
   announcementMessage: null,
   announcementVersion: null,
   announcementDismissed: false,
+  // Demo answers every email-code call itself, so the code sign-in is on.
+  emailCodeSignIn: true,
 };
 
 /**

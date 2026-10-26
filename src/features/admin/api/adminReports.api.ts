@@ -15,11 +15,13 @@ import type { ActivityLabel } from "./adminCommunities.api";
 export const REPORT_WEEK_RANGES = [4, 8, 12, 26] as const;
 export type ReportWeekRange = (typeof REPORT_WEEK_RANGES)[number];
 
+/** One weekly bucket, oldest first. `total` is the running member count at
+ *  the end of the bucket; `joined` is that week's new members. */
 export interface AdminReportsGrowthPoint {
   at: string;
   joined: number;
-  churned: null;
-  spike: boolean;
+  total: number;
+  churned: number | null;
 }
 
 export interface AdminReportsGrowthDTO {

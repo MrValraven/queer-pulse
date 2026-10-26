@@ -109,14 +109,23 @@ ol.list {
   font-style: italic;
 }
 
-/* Collaborative playlists: who added the track, for the owner and editors. */
+/* Collaborative playlists: who added the track, for the owner and editors.
+   One line: a long name ends in an ellipsis and never wraps the row. */
 .addedBy {
   display: flex;
   align-items: center;
   gap: 6px;
+  min-width: 0;
   margin-top: 2px;
   color: var(--studio-text-muted);
   font-size: var(--text-12);
+  white-space: nowrap;
+}
+
+.addedBy > span:last-child {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .addedByFace {
@@ -128,16 +137,4 @@ ol.list {
    item of the hero's action row. */
 .swap {
   display: inline-flex;
-}
-
-/* An entry's phone menu (Move up, Move down, Remove) shows below --sm
-   alone, where the row's own three buttons fold away. */
-.phoneMenu {
-  display: none;
-}
-
-@media (--sm) {
-  .phoneMenu {
-    display: inline-flex;
-  }
 }

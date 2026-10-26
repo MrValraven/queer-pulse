@@ -10,6 +10,8 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useFormat } from "../../shared/i18n/format";
 import type { TFunction } from "../../shared/i18n/types";
 import { logError } from "../../shared/observability/logger";
+import { ApiError } from "../../shared/api/client";
+import { isAccountRestricted, reasonFor } from "../../shared/api/errorMessage";
 import { DATA_TYPES } from "../settings/dataExport.data";
 import {
   getExportJob,
@@ -17,6 +19,10 @@ import {
   type ExportJob,
   type ExportStatus,
 } from "../settings/api/account.api";
+import {
+  isReauthRequiredError,
+  ReauthRequiredError,
+} from "../settings/api/reauthRequiredError";
 import { useReauth } from "../settings/api/useAccountMutations";
 import styles from "./AccountData.module.css";
 
@@ -97,6 +103,22 @@ async function buildDemoJobUpdate(
 }
 
 /**
+ * The toast for a failed export start, naming its cause the way the global
+ * mutation handler does (this mutation is `silentError`): a moderation
+ * restriction gets the appeal copy, a server fault says it was on our end, and
+ * a 4xx with a reason shows that reason. The export copy covers the rest.
+ */
+function exportStartErrorMessage(error: unknown, t: TFunction): string {
+  if (isAccountRestricted(error)) return t("shared:apiError.accountRestricted");
+  if (error instanceof ApiError && error.status >= 500) {
+    return t("shared:apiError.server");
+  }
+  return (
+    reasonFor(error) ?? t("members:profile.accountData.export.toast.startError")
+  );
+}
+
+/**
  * "Download your data" — Article 20 portability. Click posts the job, then
  * polls `GET /account/export/:jobId` via react-query's `refetchInterval`
  * (rather than a hand-rolled `setInterval` effect) until it lands on
@@ -148,25 +170,26 @@ export function AccountDataExport() {
         };
       }
       // Step-up token: an export is a full dump of everything held on a
-      // person, so it sits behind the same real OAuth step-up as deletion —
-      // see `useReauthToken.ts`. No fresh token cached yet: redirect instead
-      // of proceeding, and never resolve (the page is about to unload; the
-      // member presses Download again after landing back).
+      // person, so it sits behind the same real step-up as deletion (see
+      // `useReauthToken.ts`). `handleStart` opens the code dialog before the
+      // mutation runs when no token is cached; this guard only catches a token
+      // that expired in between, and settles the mutation quietly.
       const reauthToken = getReauthToken();
       if (!reauthToken) {
         beginReauth();
-        return new Promise<ExportJob>(() => {});
+        throw new ReauthRequiredError();
       }
       const categories = DATA_TYPES.map((type) => type.id);
       return requestExport({ categories, format: "json", reauthToken });
     },
     onSuccess: (job) => setJobId(job.jobId),
+    // This component owns the error UI below, so the global mutation toast
+    // stays silent, for the step-up stop as much as for a failed request.
+    meta: { silentError: true },
     onError: (err) => {
+      if (isReauthRequiredError(err)) return;
       logError(err, { where: "AccountDataExport.start" });
-      showToast(
-        t("members:profile.accountData.export.toast.startError"),
-        "error",
-      );
+      showToast(exportStartErrorMessage(err, t), "error");
     },
   });
 
@@ -204,7 +227,14 @@ export function AccountDataExport() {
     job?.expiresAt &&
     fmt.date(new Date(job.expiresAt), { day: "numeric", month: "long" });
 
+  // No step-up token yet: open the code dialog and leave the button as it is,
+  // so the member presses Download again once the code is accepted. Demo
+  // runs the same dialog on its mock answers.
   function handleStart() {
+    if (!getReauthToken()) {
+      beginReauth();
+      return;
+    }
     setJobId(null);
     startMutation.mutate();
   }

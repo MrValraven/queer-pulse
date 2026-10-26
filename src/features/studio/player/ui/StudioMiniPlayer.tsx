@@ -1,10 +1,6 @@
 import { AnimatePresence, m } from "motion/react";
 import type { ReactNode } from "react";
-import {
-  Button,
-  ImageSlot,
-  useChipMotion,
-} from "../../../../shared/components/ui";
+import { Button, useChipMotion } from "../../../../shared/components/ui";
 import { IconButton } from "../../../../shared/components/ui/IconButton";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { StudioLikeButton } from "../../StudioLikeButton";
@@ -18,6 +14,7 @@ import { playbackRateFor } from "../useStudioEpisodeRate";
 import { useStudioPlayerSurface } from "../studioPlayerSurface";
 import { StudioEpisodeSkipButton } from "./StudioEpisodeSkipButton";
 import { StudioPlayPauseIcon } from "./StudioIconSwap";
+import { StudioPlayerArt } from "./StudioPlayerArt";
 import { StudioPlayerStatus } from "./StudioPlayerBar";
 import { StudioPlayerCloseButton } from "./StudioPlayerCloseButton";
 import { StudioNowCoverSwap, StudioNowTextSwap } from "./StudioPlayerNowSwap";
@@ -25,6 +22,7 @@ import { StudioWarningGate } from "./StudioWarningGate";
 import { useMiniCardSwipe } from "./useMiniCardSwipe";
 import { useStudioCoverSkip } from "./useStudioCoverSkip";
 import { useStudioSmoothProgress } from "./useStudioSmoothProgress";
+import type { SwipeSkipTrail } from "./useSwipeSkipPager";
 import styles from "../../StudioPlayer.module.css";
 import miniStyles from "./StudioMiniPlayer.module.css";
 
@@ -130,6 +128,26 @@ function MiniSkipSlot({
   );
 }
 
+/** The track a landed swipe left, drawn beside the next one while both
+ *  slide (useSwipeSkipPager). Decorative: the card names the new track. */
+function MiniTrail({ trail }: { trail: SwipeSkipTrail<StudioQueueItem> }) {
+  return (
+    <span
+      className={miniStyles.trail}
+      style={{ translate: `${trail.shift}px 0` }}
+      aria-hidden="true"
+    >
+      <span className={styles.art}>
+        <StudioPlayerArt item={trail.item} size={44} radius={8} />
+      </span>
+      <span className={styles.titles}>
+        <span className={styles.title}>{trail.item.title}</span>
+        <span className={styles.artist}>{trail.item.artistName}</span>
+      </span>
+    </span>
+  );
+}
+
 /** The phone mini player (spec 7.1): tap or swipe up for Now playing, swipe
  *  sideways to skip (the cover and titles follow the finger and spring
  *  back). Cover and titles crossfade on a track change, as the bar's do. Title
@@ -144,7 +162,8 @@ export function StudioMiniPlayer({ item }: { item: StudioQueueItem }) {
   const { t } = useTranslation();
   const player = useStudioPlayer();
   const surface = useStudioPlayerSurface();
-  const swipe = useMiniCardSwipe(
+  const { handlers, offsetX, slideRef, isSwipeSkip, trail } = useMiniCardSwipe(
+    item,
     () => surface.openNowPlaying(),
     useStudioCoverSkip(),
   );
@@ -152,11 +171,7 @@ export function StudioMiniPlayer({ item }: { item: StudioQueueItem }) {
   const isEpisode = item.isEpisode === true;
   const isPreview = Boolean(item.previewToken);
   return (
-    <div
-      className={styles.mini}
-      data-studio-player-surface=""
-      {...swipe.handlers}
-    >
+    <div className={styles.mini} data-studio-player-surface="" {...handlers}>
       <StudioPlayerStatus />
       <StudioWarningGate />
       <Button
@@ -168,27 +183,19 @@ export function StudioMiniPlayer({ item }: { item: StudioQueueItem }) {
         })}
         onClick={() => surface.openNowPlaying()}
       >
-        <m.span className={miniStyles.slide} style={{ x: swipe.offsetX }}>
+        <m.span
+          ref={slideRef}
+          className={miniStyles.slide}
+          style={{ x: offsetX }}
+        >
+          {trail && <MiniTrail trail={trail} />}
           <span className={styles.art}>
-            <StudioNowCoverSwap
-              swapKey={item.trackId}
-              isInstant={swipe.isSwipeSkip}
-            >
-              <ImageSlot
-                src={item.coverUrl ?? undefined}
-                tint={item.tint}
-                width={44}
-                height={44}
-                radius={8}
-                placeholder=""
-              />
+            <StudioNowCoverSwap swapKey={item.trackId} isInstant={isSwipeSkip}>
+              <StudioPlayerArt item={item} size={44} radius={8} />
             </StudioNowCoverSwap>
           </span>
           <span className={styles.titles}>
-            <StudioNowTextSwap
-              swapKey={item.trackId}
-              isInstant={swipe.isSwipeSkip}
-            >
+            <StudioNowTextSwap swapKey={item.trackId} isInstant={isSwipeSkip}>
               <span className={styles.title}>{item.title}</span>
               <span className={styles.artist}>{item.artistName}</span>
             </StudioNowTextSwap>
@@ -215,6 +222,7 @@ export function StudioMiniPlayer({ item }: { item: StudioQueueItem }) {
         <IconButton
           className={`${styles.playButton} ${miniStyles.play}`}
           data-studio-play-toggle=""
+          data-gated={player.pendingWarning !== null || undefined}
           onClick={player.togglePlay}
           aria-label={
             isPlaying ? t("studio:playerBar.pause") : t("studio:playerBar.play")

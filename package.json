@@ -10,6 +10,8 @@
   },
   "scripts": {
     "dev": "vite",
+    "dev:setup": "node scripts/dev-setup.mjs",
+    "dev:doctor": "node scripts/dev-doctor.mjs",
     "build": "node scripts/build-gates.mjs && vite build && pnpm prerender",
     "lint": "eslint .",
     "check:tokens": "node scripts/check-design-tokens.mjs",

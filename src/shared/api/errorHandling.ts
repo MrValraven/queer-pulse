@@ -1,6 +1,10 @@
 import { ApiError } from "./client";
 import { ACCOUNT_RESTRICTED_COPY, reasonFor } from "./errorMessage";
 import { logError } from "../observability/logger";
+import {
+  EMAIL_CODE_REASONS,
+  SIGNUP_REJECTED_REASONS,
+} from "../../features/auth/api/emailCodeFailure";
 
 type ToastType = "success" | "error" | "info";
 type ToastEmitter = (
@@ -133,6 +137,23 @@ function isSignedOutFailure(error: unknown): boolean {
   return error instanceof ApiError && error.status === 401;
 }
 
+const EMAIL_CODE_REFUSAL_REASONS: ReadonlySet<unknown> = new Set([
+  ...EMAIL_CODE_REASONS,
+  ...SIGNUP_REJECTED_REASONS,
+]);
+
+/**
+ * An email-code call the backend refused with a contract reason (a wrong
+ * code, a cap reached, a signup refusal). The flow words each one on screen,
+ * and they are everyday traffic, so they stay out of error monitoring.
+ */
+function isEmailCodeRefusal(error: unknown): boolean {
+  if (!(error instanceof ApiError)) return false;
+  const { data } = error;
+  if (typeof data !== "object" || data === null) return false;
+  return EMAIL_CODE_REFUSAL_REASONS.has((data as { reason?: unknown }).reason);
+}
+
 /**
  * Read failures the classification above already calls expected, so they must
  * never reach error monitoring: the signed-out 401, plus a 404 for a resource
@@ -228,7 +249,7 @@ export function handleMutationError(
     options: { mutationKey?: unknown; meta?: { silentError?: boolean } };
   },
 ): void {
-  if (!isSignedOutFailure(error)) {
+  if (!isSignedOutFailure(error) && !isEmailCodeRefusal(error)) {
     logError(error, { mutationKey: mutation.options.mutationKey });
   }
   if (demo.current) return;

@@ -212,33 +212,40 @@ export const REPORT_SERIES = [
 // ── Member growth line ──────────────────────────────────────────────────────
 
 export interface GrowthPoint {
-  /** `null` means "no tick label at this point" (design keeps the axis sparse). */
-  date: Date | null;
+  /** Start of the weekly bucket. The chart prints its month under the first
+   *  point of each new month and uses the full day + month in the tooltip. */
+  date: Date;
+  /** New members who joined during this week. */
   joined: number;
+  /** Running total of members at the end of this week; the line plots this. */
+  total: number;
   /** `null` means "not measured yet" (no churn data recorded for this
    *  period) — E4 renders the churn line only across points with a real
    *  number, never a fabricated 0. */
   churned: number | null;
-  /** True on the labelled marker point (the Pride spike). */
-  spike?: boolean;
 }
 
 /**
  * i18n note: `date` is a real `Date` so `MemberGrowthChart` can format ticks
  * through `useFormat().date(..., { month: "short" })` — no hand-rolled
  * English month-abbreviation array (the exact trap `gatherings` hit first).
+ *
+ * Ten weekly buckets, oldest first, the same shape the live overview sends.
+ * Each `total` is the previous week's total plus that week's `joined`, ending
+ * on the active-members tile's 8,412. Churn stays `null` the way live sends
+ * it today, so demo shows the same "not measured yet" legend.
  */
 export const MEMBER_GROWTH: GrowthPoint[] = [
-  { date: new Date(2026, 0, 1), joined: 180, churned: 60 },
-  { date: null, joined: 210, churned: 70 },
-  { date: new Date(2026, 2, 1), joined: 240, churned: 55 },
-  { date: null, joined: 225, churned: 80 },
-  { date: new Date(2026, 4, 1), joined: 260, churned: 65 },
-  { date: new Date(2026, 5, 1), joined: 290, churned: 72 },
-  { date: null, joined: 520, churned: 120, spike: true },
-  { date: new Date(2026, 7, 1), joined: 410, churned: 95 },
-  { date: null, joined: 360, churned: 70 },
-  { date: new Date(2026, 9, 1), joined: 395, churned: 68 },
+  { date: new Date(2026, 7, 17), joined: 74, total: 7651, churned: null },
+  { date: new Date(2026, 7, 24), joined: 81, total: 7732, churned: null },
+  { date: new Date(2026, 7, 31), joined: 69, total: 7801, churned: null },
+  { date: new Date(2026, 8, 7), joined: 88, total: 7889, churned: null },
+  { date: new Date(2026, 8, 14), joined: 92, total: 7981, churned: null },
+  { date: new Date(2026, 8, 21), joined: 77, total: 8058, churned: null },
+  { date: new Date(2026, 8, 28), joined: 85, total: 8143, churned: null },
+  { date: new Date(2026, 9, 5), joined: 96, total: 8239, churned: null },
+  { date: new Date(2026, 9, 12), joined: 90, total: 8329, churned: null },
+  { date: new Date(2026, 9, 19), joined: 83, total: 8412, churned: null },
 ];
 
 // ── Response-time distribution ──────────────────────────────────────────────

@@ -195,7 +195,9 @@
 }
 .checkSub {
   font-size: var(--text-12-5);
-  color: var(--ink-60);
+  /* Ink at 0.7, where --ink-60 (0.62) measured 4.29:1 on the tinted Studio
+     card. The channel flips in dark mode, so one value serves both themes. */
+  color: rgba(var(--ink-rgb), 0.7);
   line-height: 1.45;
 }
 

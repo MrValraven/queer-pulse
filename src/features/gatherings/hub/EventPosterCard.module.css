@@ -16,6 +16,26 @@
   outline-offset: 3px;
 }
 
+/* A `lead` or `featured` poster that names its hosting community: the link
+   and the community menu side by side in one box, so the trigger never sits
+   inside the link. The link fills the shell as it fills a bare grid cell. */
+.shell {
+  --card-menu-size: 2rem;
+  position: relative;
+  display: block;
+}
+
+/* The menu trigger on the poster's top trailing corner. Doubled with `.shell`
+   so it outranks the menu's own wrapper placement whatever order the
+   stylesheets load in. */
+.shell > .menuSlot {
+  position: absolute;
+  inset-block-start: var(--gap-sm);
+  inset-inline-end: var(--gap-sm);
+  z-index: 2;
+  transition: transform var(--dur-base) var(--ease);
+}
+
 /* ── Overlay variants (lead / featured) ── */
 .lead,
 .featured {
@@ -130,6 +150,11 @@
   letter-spacing: var(--ls-label);
   white-space: nowrap;
   pointer-events: none;
+}
+
+/* With a community menu on that corner, the pill steps in beside it. */
+.shell .featured .cta {
+  inset-inline-end: calc(var(--gap-sm) + var(--card-menu-size) + var(--gap-xs));
 }
 
 /* "See it →" affordance — list row, trailing edge. Invisible at rest on every
@@ -402,10 +427,18 @@
 }
 
 @media (hover: hover) {
+  /* The shell's hover keeps the poster lifted while the pointer is on the
+     menu trigger, and the trigger rides up with it. */
   .lead:hover,
-  .featured:hover {
+  .featured:hover,
+  .shell:hover > .lead,
+  .shell:hover > .featured {
     transform: translateY(-4px);
     box-shadow: var(--shadow-card-hover);
+  }
+
+  .shell:hover > .menuSlot {
+    transform: translateY(-4px);
   }
 
   .list:hover {
@@ -420,7 +453,9 @@
   .lead:hover .coverImage,
   .featured:hover .coverImage,
   .list:hover .coverImage,
-  .compact:hover .coverImage {
+  .compact:hover .coverImage,
+  .shell:hover > .lead .coverImage,
+  .shell:hover > .featured .coverImage {
     transform: scale(1.04);
   }
 
@@ -428,12 +463,16 @@
      scrim deepens so the title pulls forward. `list` stays out of this — it's
      a dense row and only gets the calmer lift/tint above. */
   .lead:hover .ribbon,
-  .featured:hover .ribbon {
+  .featured:hover .ribbon,
+  .shell:hover > .lead .ribbon,
+  .shell:hover > .featured .ribbon {
     transform: scale(1.08);
   }
 
   .lead:hover .scrimHover,
-  .featured:hover .scrimHover {
+  .featured:hover .scrimHover,
+  .shell:hover > .lead .scrimHover,
+  .shell:hover > .featured .scrimHover {
     opacity: 1;
   }
 }
@@ -451,7 +490,8 @@
       opacity var(--dur-fast) var(--ease-out);
   }
 
-  .featured:hover .cta {
+  .featured:hover .cta,
+  .shell:hover > .featured .cta {
     opacity: 1;
     transform: translateY(0);
   }
@@ -490,33 +530,42 @@
   .ribbon,
   .scrimHover,
   .cta,
-  .listCta {
+  .listCta,
+  .shell > .menuSlot {
     transition: none;
   }
 
   .lead:hover,
   .featured:hover,
-  .list:hover {
+  .list:hover,
+  .shell:hover > .lead,
+  .shell:hover > .featured {
     transform: none;
     box-shadow: none;
   }
 
   .lead:hover .ribbon,
-  .featured:hover .ribbon {
+  .featured:hover .ribbon,
+  .shell:hover > .menuSlot,
+  .shell:hover > .lead .ribbon,
+  .shell:hover > .featured .ribbon {
     transform: none;
   }
 
   .featured:hover .cta,
   .featured:focus-visible .cta,
   .list:hover .listCta,
-  .list:focus-visible .listCta {
+  .list:focus-visible .listCta,
+  .shell:hover > .featured .cta {
     transform: none;
   }
 
   .lead:hover .coverImage,
   .featured:hover .coverImage,
   .list:hover .coverImage,
-  .compact:hover .coverImage {
+  .compact:hover .coverImage,
+  .shell:hover > .lead .coverImage,
+  .shell:hover > .featured .coverImage {
     transform: none;
   }
 }

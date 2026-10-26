@@ -10,6 +10,10 @@ import {
 import { IconButton } from "../../shared/components/ui/IconButton";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { StudioMenu, type StudioMenuItem } from "./kit/StudioMenu";
+import {
+  useStudioFoldedShareItems,
+  type StudioFoldedShare,
+} from "./useStudioFoldedShareItem";
 import releaseStyles from "./StudioRelease.module.css";
 
 /* A destructive item reads in the danger ink, below a hairline. */
@@ -60,18 +64,27 @@ const ACTION_ICONS: Record<OwnerAction, ReactNode> = {
 
 /** The playlist menu. The owner gets Edit details, Change visibility,
  *  Manage editors and Delete playlist; an editor gets Edit details and Leave
- *  playlist, the last item set apart by a hairline in the danger ink. Arrow
- *  keys and type-ahead move through the items, Escape and a press outside
- *  close it, and focus returns to the trigger before a dialog opens. */
+ *  playlist, the last item set apart by a hairline in the danger ink. With
+ *  `share` (the hero's Share folded here) every way to share comes before
+ *  it, after a hairline. Arrow keys and type-ahead move through the items, Escape
+ *  and a press outside close it, and focus returns to the trigger before a
+ *  dialog opens. */
 export function StudioPlaylistOwnerMenu({
   role,
   onAction,
+  share,
 }: {
   role: "owner" | "editor";
   onAction: (action: OwnerAction) => void;
+  share?: StudioFoldedShare;
 }) {
   const { t } = useTranslation();
   const label = t("studio:playlist.page.actionsLabel");
+  const foldedShare = useStudioFoldedShareItems(share);
+  const shareItems: StudioMenuItem[] =
+    foldedShare.items.length > 0
+      ? [{ id: "shareSeparator", type: "separator" }, ...foldedShare.items]
+      : [];
   const definitions = role === "owner" ? OWNER_ITEMS : EDITOR_ITEMS;
   const items: StudioMenuItem[] = definitions.flatMap(
     (definition): StudioMenuItem[] => {
@@ -83,7 +96,11 @@ export function StudioPlaylistOwnerMenu({
         onSelect: () => onAction(definition.id),
       };
       return definition.isDestructive
-        ? [{ id: `${definition.id}Separator`, type: "separator" }, item]
+        ? [
+            ...shareItems,
+            { id: `${definition.id}Separator`, type: "separator" },
+            item,
+          ]
         : [item];
     },
   );
@@ -101,6 +118,7 @@ export function StudioPlaylistOwnerMenu({
         label={label}
         items={items}
       />
+      {foldedShare.dialog}
     </div>
   );
 }

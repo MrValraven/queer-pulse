@@ -58,7 +58,7 @@ export const auth: Catalog = {
     "O email da tua conta Google ainda não está verificado. Verifica-o junto da Google e volta a tentar.",
   "signIn.notice.emailInUse.title": "Esse email já tem uma conta",
   "signIn.notice.emailInUse.body":
-    "Este endereço já está associado a uma conta QueerPulse, por isso não podemos abrir uma segunda. Inicia sessão com a conta Google com que entraste da primeira vez.",
+    "Este endereço já está associado a uma conta QueerPulse, por isso não podemos abrir uma segunda. Entra com um código enviado para este endereço, ou com a conta Google com que entraste da primeira vez.",
   "signIn.notice.oauthFailed.title": "Algo correu mal",
   "signIn.notice.oauthFailed.body":
     "O início de sessão não terminou do lado da Google. Nada foi alterado, tenta outra vez daqui a pouco.",
@@ -102,11 +102,15 @@ export const auth: Catalog = {
   "invite.quota.resets_one": "Renova amanhã",
   "invite.quota.resets_other": "Renova daqui a {count} dias",
   "invite.quota.resets_zero": "Renova hoje",
+  "invite.paused.heading": "Os teus convites estão em pausa",
+  "invite.paused.body":
+    "A nossa equipa pôs em pausa os convites na tua conta. Podes continuar a usar tudo o resto.",
+  "invite.paused.cta": "Escrever à nossa equipa",
 
   "invite.compose.recipientEmail.label": "Para quem é",
   "invite.compose.recipientEmail.placeholder": "pessoa@exemplo.com",
   "invite.compose.recipientEmail.help":
-    "Quem usar este convite entra com o teu voto de confiança registado e fica ligade a ti desde o primeiro dia. Se preencheres um endereço, só quem iniciar sessão com essa conta Google o pode usar, por isso um link reencaminhado ou fotografado não deixa entrar mais ninguém; se deixares em branco, qualquer pessoa com o link o pode usar.",
+    "Quem usar este convite entra com o teu voto de confiança registado e fica ligade a ti desde o primeiro dia. Se preencheres um endereço, só quem iniciar sessão com esse endereço o pode usar, por isso um link reencaminhado ou fotografado não deixa entrar mais ninguém; se deixares em branco, qualquer pessoa com o link o pode usar.",
   "invite.compose.recipientEmail.noSend":
     "Preencher isto não envia nada para esse endereço. O link continua a ser partilhado por ti.",
   "invite.compose.recipientEmail.invalid":
@@ -137,7 +141,7 @@ export const auth: Catalog = {
   "invite.ready.sub":
     "Partilha da forma que fizer mais sentido. É válido para uma utilização.",
   "invite.ready.pinnedTo":
-    "Reservado para {email}. Só uma conta Google com esse endereço o pode usar.",
+    "Reservado para {email}. Só quem iniciar sessão com esse endereço o pode usar.",
   "invite.ready.pinnedSend":
     "Não foi enviado nada a essa pessoa. O link é partilhado por ti, da forma que fizer mais sentido.",
   "invite.ready.linkCopied": "Link copiado",
@@ -190,6 +194,8 @@ export const auth: Catalog = {
     "Só um convite expirado pode ser enviado de novo. Este já foi usado, foi retirado, ou ainda está válido.",
   "invite.sentList.resendError.generic":
     "Não foi possível voltar a enviar agora. Tenta outra vez daqui a pouco.",
+  "invite.sentList.resendError.paused":
+    "Os teus convites estão em pausa, por isso este não pode ser enviado de novo. Escreve à nossa equipa se quiseres falar sobre isso.",
   "invite.sentList.showMore": "Mostrar mais",
   "invite.sentList.loadingMore": "A carregar…",
   "invite.sentList.loadMoreError": "Não conseguimos carregar mais convites.",
@@ -270,9 +276,67 @@ export const auth: Catalog = {
     "Não conseguimos registar isso agora. Verifica a ligação e tenta de novo.",
   "policyReacceptance.signOut": "Terminar sessão",
 
-  // ── Confirmar email (código de seis dígitos) ──
-
-  // ── Entrar por link mágico ──
+  // ── Entrar com um código por email ──
+  "emailCode.or": "ou",
+  "emailCode.emailLabel": "Email",
+  "emailCode.emailPlaceholder": "tu@exemplo.com",
+  "emailCode.emailHelper":
+    "Enviamos-te um código de 6 dígitos por email. É o único email que a QueerPulse envia.",
+  "emailCode.requestCta": "Enviar-me um código por email",
+  "emailCode.requesting": "A enviar o código…",
+  "emailCode.sentTo":
+    "Enviámos um código para <strong>{email}</strong>. É válido durante 10 minutos.",
+  "emailCode.codeLabel": "O teu código de 6 dígitos",
+  "emailCode.spamHint":
+    "Ainda nada? Vê a pasta de spam. O email vem de hello@queerpulse.com.",
+  "emailCode.verifying": "A verificar o código…",
+  "emailCode.verifyCta": "Verificar este código",
+  "emailCode.resendCta": "Enviar um novo código",
+  "emailCode.resending": "A enviar…",
+  "emailCode.resendIn_one":
+    "Podes enviar um novo código daqui a {count} segundo.",
+  "emailCode.resendIn_other":
+    "Podes enviar um novo código daqui a {count} segundos.",
+  "emailCode.resent": "Enviámos um novo código para {email}.",
+  "emailCode.differentEmailCta": "Usar outro email",
+  "emailCode.error.emailInvalid":
+    "Esse endereço de email não parece estar certo. Verifica-o e tenta outra vez.",
+  "emailCode.error.tooManyCodes":
+    "Já enviámos muitos códigos para este endereço hoje. Podes pedir outra vez às {time}.",
+  "emailCode.error.networkBusy":
+    "Foram pedidos muitos códigos a partir desta rede. Podes tentar outra vez às {time}.",
+  "emailCode.error.resendTooSoon":
+    "Enviámos um código há pouco. Podes pedir um novo às {time}.",
+  "emailCode.error.emailSendFailed":
+    "Não conseguimos enviar o email agora, por isso não vai nenhum código a caminho. Tenta outra vez daqui a um minuto.",
+  "emailCode.error.codeIncorrect":
+    "Esse código está errado. Vê o email mais recente que te enviámos e tenta outra vez.",
+  "emailCode.error.codeIncorrectAttempts_one":
+    "Esse código está errado. Tens mais {count} tentativa.",
+  "emailCode.error.codeIncorrectAttempts_other":
+    "Esse código está errado. Tens mais {count} tentativas.",
+  "emailCode.error.codeExpired":
+    "Este código expirou. Os códigos são válidos durante 10 minutos, por isso envia um novo.",
+  "emailCode.error.codeUsedUp":
+    "Essa foi a quinta tentativa errada, por isso este código deixou de funcionar. Envia um novo código para tentares outra vez.",
+  "emailCode.error.codeReplaced":
+    "Pediste um código mais recente, por isso este deixou de funcionar. Usa o código do email mais recente.",
+  "emailCode.error.codeAlreadyUsed":
+    "Este código já foi usado. Envia um novo código para voltares a entrar.",
+  "emailCode.error.tooManyAttempts":
+    "Houve demasiados códigos errados para este endereço hoje. Podes tentar outra vez às {time}.",
+  "emailCode.error.accountRecoveryReview":
+    "Esta conta precisa de uma verificação da nossa equipa antes de um código a poder abrir. <a>Escreve-nos</a> e tratamos disso.",
+  "emailCode.error.nameRequired":
+    "Escreve o teu nome próprio para podermos criar a tua conta.",
+  "emailCode.error.emailCodeUnavailable":
+    "Os códigos de entrada estão desligados neste momento. Usa a Google, ou <a>escreve-nos</a> se não conseguires.",
+  "emailCode.error.throttled":
+    "Chegaram demasiadas tentativas desta rede. Espera um minuto e tenta outra vez.",
+  "emailCode.error.network":
+    "Não conseguimos chegar à QueerPulse. Verifica a tua ligação e tenta outra vez.",
+  "emailCode.error.unexpected":
+    "A QueerPulse respondeu com um erro que não esperávamos ({status}). Tenta outra vez daqui a um minuto.",
 
   // ── Introduzir um código de convite (/auth/invite-code) ──
   // PRD-306. Um código sem o link à volta era um beco sem saída. As únicas
@@ -404,8 +468,8 @@ export const auth: Catalog = {
   "requestInvite.reference.enterCodeCta":
     "Consultar o meu pedido com esse código",
   "requestInvite.reference.signInBody":
-    "Perdeste o código? Entra com a conta Google da morada que usaste no pedido. É provares que a morada é tua que nos permite levar-te de volta ao teu pedido.",
-  "requestInvite.reference.signInCta": "Continuar com o Google",
+    "Perdeste o código? Entra com o endereço que usaste no pedido, com a Google ou com um código que te enviamos por email. É provares que o endereço é teu que nos permite levar-te de volta ao teu pedido.",
+  "requestInvite.reference.signInCta": "Ir para o início de sessão",
 
   // Estados antecipados, mostrados a partir de GET /platform-status ANTES do
   // envio, para ninguém preencher o formulário todo só para ser rejeitade ao
@@ -663,6 +727,8 @@ export const auth: Catalog = {
   "onboarding.stepPhoto.lastName.label": "Apelido",
   "onboarding.stepPhoto.name.helper":
     "É isto que as outras pessoas vão ver no teu perfil. Tirámos isto da tua conta Google, mas podes mudá-lo.",
+  "onboarding.stepPhoto.name.helperEmail":
+    "É isto que os membros vão ver no teu perfil. Podes mudá-lo.",
   "onboarding.stepPhoto.preview.caption":
     "Como vai ficar o teu cartão de perfil",
   "onboarding.stepPhoto.pronouns.label": "Pronomes",

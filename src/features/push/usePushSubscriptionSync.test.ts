@@ -330,3 +330,53 @@ describe("syncPushSubscriptionHealth, existing subscriptions", () => {
     expect(addPushEnabledMemberId).not.toHaveBeenCalled();
   });
 });
+
+describe("syncPushSubscriptionHealth, reporting its outcome", () => {
+  it("reports permissionNotGranted when the browser reset the permission", async () => {
+    vi.stubGlobal("Notification", { permission: "default" });
+    const sync = await loadSync();
+    expect(await sync(MEMBER_ID)).toBe("permissionNotGranted");
+  });
+
+  it("reports subscribeFailed when the silent restore throws", async () => {
+    getSubscription.mockResolvedValue(null);
+    readPushEnabledMemberIds.mockResolvedValue([MEMBER_ID]);
+    subscribe.mockRejectedValueOnce(new Error("user gesture required"));
+    const sync = await loadSync();
+    expect(await sync(MEMBER_ID)).toBe("subscribeFailed");
+  });
+
+  it("keeps reporting noSubscription after the one restore attempt per page load", async () => {
+    getSubscription.mockResolvedValue(null);
+    readPushEnabledMemberIds.mockResolvedValue([MEMBER_ID]);
+    subscribe.mockRejectedValueOnce(new Error("push service unavailable"));
+    const sync = await loadSync();
+    await sync(MEMBER_ID);
+    expect(await sync(MEMBER_ID)).toBe("noSubscription");
+  });
+
+  it("reports working after a successful restore", async () => {
+    getSubscription.mockResolvedValue(null);
+    readPushEnabledMemberIds.mockResolvedValue([MEMBER_ID]);
+    subscribe.mockResolvedValueOnce(
+      makeSubscription("https://push.example/restored", currentKeyBuffer()),
+    );
+    const sync = await loadSync();
+    expect(await sync(MEMBER_ID)).toBe("working");
+  });
+
+  it("reports inconclusive when only the server POST failed", async () => {
+    getSubscription.mockResolvedValue(
+      makeSubscription("https://push.example/abc", currentKeyBuffer()),
+    );
+    subscribePush.mockRejectedValueOnce(new Error("offline"));
+    const sync = await loadSync();
+    expect(await sync(MEMBER_ID)).toBe("inconclusive");
+  });
+
+  it("reports inconclusive when the member signs out mid-pass", async () => {
+    getSubscription.mockResolvedValue(null);
+    const sync = await loadSync();
+    expect(await sync(MEMBER_ID, () => true)).toBe("inconclusive");
+  });
+});

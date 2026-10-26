@@ -263,8 +263,15 @@
    base.css does this job from the other side for a plum `PageHero`
    (`main[data-page-main]:has(header[data-plum])`). That can't be reused
    here: the ground lives on `.pp` and custom properties do not cascade
-   upward, so `main` cannot read it. */
-.pp[data-nav-band="true"]::before {
+   upward, so `main` cannot read it.
+
+   Studio and gallery already spend `::before` on their inset page frame (see
+   their skin blocks), so they sit this strip out. Merged into one box, the
+   frame took this rule's `height` and ground and became an opaque 80px plate
+   12-18px under the nav, covering the top of the hero. */
+.pp[data-nav-band="true"]:not([data-skin="studio"]):not(
+    [data-skin="gallery"]
+  )::before {
   content: "";
   position: absolute;
   left: 0;
@@ -626,6 +633,35 @@
     margin-inline: auto;
     max-width: 52ch;
   }
+}
+
+/* ── No banner uploaded ───────────────────────────────────────────────────
+   A banner skin mounts `.pp-cover` only once the owner uploads an image
+   (`shouldMountCoverBand` in SubprofilePageBody), and `.pp` carries
+   `data-has-cover` when there is one. Without it the hero is the first
+   thing on the page, so:
+   • the base avatar overlap (the negative `margin-top` above, and the 640px
+     one) has no band to sit on and would poke up under the nav. Reset at the
+     base specificity, through `:where()`, so every skin's own `.pp-av` rule
+     still wins; placed after the 640px block so it beats that one too.
+   • the five skins whose hero sat directly under the band get a top gap, so
+     their identity block opens with the same air the quest and workshop
+     sheets keep under the floating nav. The other skins either hide the band
+     always (page, chart, gallery, classroom), open on their own spacing
+     (workshop, quest, the therapist layout), or keep their thin rule
+     (practice, chair, collective). */
+.pp:where(:not([data-has-cover])) .pp-av {
+  margin-top: 0;
+}
+.pp:not([data-has-cover]):is(
+    [data-skin="stage"],
+    [data-skin="studio"],
+    [data-skin="table"],
+    [data-skin="runway"],
+    [data-skin="history"]
+  )
+  > .wrap {
+  padding-top: var(--gap-lg);
 }
 
 .pp-body {
@@ -1020,29 +1056,6 @@ button.pp-row {
 }
 .pp[data-skin="stage"] .pp-cover {
   --pp-cover-h: clamp(180px, 26cqw, 300px);
-}
-/* The tinted poster gradient + the marquee/dot texture (`::after`, below and
-   at the STAGE content block) are the EMPTY-STATE decoration for a coverless
-   poster. Gate them on `:not([data-has-cover])` (set in SubprofilePageBody
-   when `coverUrl` exists) so they don't paint over a real banner image — the
-   `::after` sits at `inset:0` above the `<img>`, so ungated it dims/textures
-   every uploaded cover. */
-.pp[data-skin="stage"] .pp-cover:not([data-has-cover]) {
-  background: linear-gradient(
-    160deg,
-    color-mix(in srgb, var(--sk-tint) 70%, var(--skin-stage-ground)),
-    var(--skin-stage-ground)
-  );
-}
-.pp[data-skin="stage"] .pp-cover:not([data-has-cover])::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: repeating-linear-gradient(
-    115deg,
-    rgba(var(--cream-rgb), 0.06) 0 2px,
-    transparent 2px 26px
-  );
 }
 .pp[data-skin="stage"] .pp-av {
   border-color: var(--skin-stage-ground);
@@ -1596,14 +1609,10 @@ button.pp-row {
     linear-gradient(90deg, rgba(var(--plum-rgb), 0.045) 1px, transparent 1px);
   background-size: 26px 26px;
 }
-/* Workshop reads as a bare drawing sheet by default, so a cover band would look
-   like empty scaffolding — hide it UNLESS the owner has actually uploaded one
-   (`data-has-cover`, set on `.pp-cover` when `coverUrl` is present). When a cover
-   exists it renders as a full-width banner above the datasheet card; the hero's
+/* Workshop reads as a bare drawing sheet by default: the cover band mounts only
+   once the owner uploads one (SubprofilePageBody), and then renders as a
+   full-width banner above the datasheet card. Either way the hero's
    `padding-top:34px` keeps a clean gap and the avatar stays boxed (no overlap). */
-.pp[data-skin="workshop"] .pp-cover:not([data-has-cover]) {
-  display: none;
-}
 .pp[data-skin="workshop"] .pp-hero {
   padding-top: 34px;
 }
@@ -2811,13 +2820,6 @@ button.pp-row {
   font-size: var(--text-14);
   opacity: 0.85;
   margin-right: auto;
-}
-.pp[data-skin="stage"] .pp-cover:not([data-has-cover])::after {
-  background: radial-gradient(
-    rgba(var(--cream-rgb), 0.16) 1px,
-    transparent 1.4px
-  );
-  background-size: 6px 6px;
 }
 .pp[data-skin="stage"] .pp-name {
   text-wrap: balance;
@@ -6404,11 +6406,8 @@ button.pp-row {
 .pp[data-skin="quest"] .wrap {
   max-width: 920px;
 }
-/* A bare page needs no empty banner: the band shows only once the owner has
-   uploaded a cover. */
-.pp[data-skin="quest"] .pp-cover:not([data-has-cover]) {
-  display: none;
-}
+/* A bare page opens on the hero: the band mounts only once the owner has
+   uploaded a cover (SubprofilePageBody). */
 .pp[data-skin="quest"] .pp-cover {
   --pp-cover-h: clamp(120px, 18cqw, 200px);
 }
@@ -6542,8 +6541,13 @@ button.pp-row {
    the panel further down. */
 .pp[data-skin="quest"] :is(.pp-acts, .pp-spot .txt) {
   --accent-fill: var(--skin-quest-button);
+  --accent-fill-strong: var(--skin-quest-button);
   --accent-deep: var(--skin-quest-button-hover);
   --jade-fill: var(--skin-quest-button-kept);
+  /* The kit jade fill and its hover both read the kept gold; the hover
+     wash below deepens it. */
+  --jade-button: var(--skin-quest-button-kept);
+  --jade-button-hover: var(--skin-quest-button-kept);
   --cream-rgb: var(--skin-quest-on-button-rgb);
   /* The light ghost's own hover tint is plum; point it at the page ink. */
   --plum-rgb: var(--skin-quest-ink-rgb);

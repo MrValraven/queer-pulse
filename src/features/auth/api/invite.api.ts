@@ -144,6 +144,26 @@ export function isInviteQuotaError(err: unknown): boolean {
   );
 }
 
+/** The typed reason code the backend sends when our team has paused this
+ *  member's invites (`InvitesService`, create and resend). */
+export const INVITE_ACCESS_DISABLED_CODE = "INVITE_ACCESS_DISABLED";
+
+/**
+ * True for the typed `403 { code: "INVITE_ACCESS_DISABLED" }` refusal: our
+ * team has paused invites on this member's account. Both POST /invites and
+ * POST /invites/:code/resend send it, ahead of the quota check and the code
+ * lookup, so it always wins over the other refusals. Same shape as
+ * {@link isInviteQuotaError}: the frontend branches on `code` alone.
+ */
+export function isInviteAccessDisabledError(err: unknown): boolean {
+  return (
+    err instanceof ApiError &&
+    err.status === 403 &&
+    (err.data as { code?: string } | null | undefined)?.code ===
+      INVITE_ACCESS_DISABLED_CODE
+  );
+}
+
 // NOTE: `acceptInvite` (POST /invites/:code/accept) is gone. The backend
 // removed the route because it was unreachable by construction. Redeeming it
 // required a session, and the only way to hold one is to already have an
@@ -242,7 +262,9 @@ export const getSentInviteCounts = (signal?: AbortSignal) =>
  *
  * Only an `expired` invite you own is resendable: the backend 403s an invite
  * that isn't yours, 404s an unknown code, and 409s one that's already accepted,
- * revoked, or still valid.
+ * revoked, or still valid. When our team has paused the member's invites it
+ * 403s first with the typed `INVITE_ACCESS_DISABLED` code (read it with
+ * {@link isInviteAccessDisabledError}), before it looks the code up.
  */
 export const resendInvite = (code: string) =>
   apiPost<SentInviteDTO>(`/invites/${encodeURIComponent(code)}/resend`);
@@ -283,6 +305,10 @@ export interface InviteQuotaDTO {
   resetsAt: string;
   /** Current community size, for the compose page's share preview. */
   memberCount: number;
+  /** False when our team has paused this member's invites; `remaining` is
+   *  then 0 while `limit` and `used` keep their real values. Absent on an
+   *  older backend, which reads as invites on. */
+  hasInviteAccess?: boolean;
 }
 
 /** The current member's remaining personal invites + reset date. */

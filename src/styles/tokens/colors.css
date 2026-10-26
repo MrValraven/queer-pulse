@@ -47,6 +47,9 @@
   /* Primary button background under the fixed cream label (#f7f3ee): 4.56:1,
      where --accent-fill gives 4.09:1. Same in both themes. */
   --accent-fill-strong: #c93d1b;
+  /* Channels of --accent-fill-strong, so the primary Button's glow is the
+     colour of its own fill. Not theme-switched, like the fill. */
+  --accent-fill-strong-rgb: 201, 61, 27;
 
   /* ── Surfaces ── */
   --cream: #f7f3ee; /* page background */
@@ -82,6 +85,9 @@
   /* Jade button fill under the fixed light cream label (--cream-rgb, not
      theme-switched): 5.14:1, so it holds in light and dark. */
   --jade-button: #3c7159;
+  /* Hover partner of --jade-button, one step darker: 6.16:1 under the cream
+     label. Not theme-switched, so it holds in light and dark. */
+  --jade-button-hover: #35644f;
   /* Pale jade for marks and labels sitting ON a dark (plum/deep) surface.
      Promoted here from 17 studio stylesheets that each redeclared the same
      literal locally, so a jade change had to be made in 18 places. Decorative

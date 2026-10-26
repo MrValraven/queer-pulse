@@ -172,6 +172,8 @@ export function EditorPaneRouter({
             onCoverPreviewChange={meta.setCoverPreview}
             coverBleed={meta.coverBleed}
             onCoverBleedChange={meta.setCoverBleed}
+            studioHero={meta.studioHero}
+            onStudioHeroChange={meta.setStudioHero}
             accent={meta.accent}
             onAccentChange={meta.setAccent}
             availability={meta.availability}

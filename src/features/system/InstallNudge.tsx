@@ -17,6 +17,7 @@ import { mediaMax } from "../../shared/theme/breakpoints";
 import { InstallAppModal } from "../../shared/components/system/InstallAppModal";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import styles from "./InstallNudge.module.css";
+import { useInstallNudgeInset } from "./useInstallNudgeInset";
 
 /** Matches the 30 days PwaPromptPage's own "maybe later" copy promises. */
 const SNOOZE_MS = 30 * 24 * 60 * 60 * 1000;
@@ -58,6 +59,7 @@ export function InstallNudge() {
     0,
     isTimestamp,
   );
+  const nudgeRef = useInstallNudgeInset();
   const [isRevealed, setIsRevealed] = useState(false);
   const [isInstructionsOpen, setIsInstructionsOpen] = useState(false);
 
@@ -132,6 +134,7 @@ export function InstallNudge() {
   return (
     <>
       <m.aside
+        ref={nudgeRef}
         className={styles.nudge}
         aria-label={t("system:pwaInstall.nudge.title")}
         initial={prefersReducedMotion ? false : { opacity: 0, y: 12 }}

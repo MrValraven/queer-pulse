@@ -10,6 +10,7 @@ import type { CalendarEvent } from "../data";
 import { eventZoneFormat } from "../eventTimezone";
 import { gatheringWhen } from "../gatheringSchedule";
 import { sizedCover } from "./coverUrl";
+import { EventCommunityMenu } from "./EventCommunityMenu";
 import {
   CtaPill,
   EventSpan,
@@ -22,6 +23,7 @@ import {
   ThemeTags,
   WhenRibbon,
 } from "./eventCardParts";
+import { HostingCommunityLine } from "./HostingCommunityLine";
 import styles from "./EventPosterCard.module.css";
 
 export type PosterVariant = "lead" | "featured" | "list" | "compact";
@@ -73,7 +75,9 @@ function DateChip({
  * row for `list`. A landscape cover fills the frame; a poster shows whole over
  * its own blurred backdrop, in every variant. One `<Link>` per card; `aria-label`
  * pins the accessible name to the event title regardless of how much text sits
- * inside.
+ * inside. A `lead` or `featured` poster that names its hosting community sits
+ * in a `.shell` with the community menu on its top trailing corner, beside the
+ * link.
  */
 export function EventPosterCard({
   event,
@@ -155,7 +159,7 @@ export function EventPosterCard({
 
   const showRibbon = variant === "lead" || variant === "featured";
 
-  return (
+  const link = (
     <Link
       to={event.to}
       aria-label={event.title}
@@ -175,6 +179,10 @@ export function EventPosterCard({
           <FormatLine event={event} className={`${styles.formatLineScrim}`} />
           <h3 className={styles.title}>{event.title}</h3>
           <RunByLine event={event} className={styles.runByLineScrim} />
+          <HostingCommunityLine
+            event={event}
+            className={styles.runByLineScrim}
+          />
           <MetaRow event={event}>
             <EventSpan event={event} fmt={fmt} t={t} />
           </MetaRow>
@@ -183,5 +191,19 @@ export function EventPosterCard({
         </span>
       </span>
     </Link>
+  );
+  if (!event.hostingCommunity) return link;
+  // The menu trigger is a sibling of the link: a button cannot sit inside one.
+  return (
+    <div className={styles.shell}>
+      {link}
+      <EventCommunityMenu
+        community={event.hostingCommunity}
+        eventTitle={event.title}
+        eventSlug={event.slug}
+        isCoHosted={event.isCoHosted ?? false}
+        className={styles.menuSlot}
+      />
+    </div>
   );
 }

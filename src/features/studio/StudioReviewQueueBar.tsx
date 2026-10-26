@@ -71,9 +71,10 @@ export function StudioReviewQueueBar<Item>({
           }}
         />
       </div>
-      <Collapse isOpen={hasFilter}>
+      <Collapse isOpen={hasFilter} className={css.queueFilter}>
         <FilterChips
           size="touch"
+          className={css.queueChips}
           label={t(
             filterGroupLabelKey ?? "studio:flagReviewLive.queue.filterLabel",
           )}
@@ -101,6 +102,7 @@ export function StudioReviewQueueBar<Item>({
         <Button
           variant="quiet"
           size="sm"
+          className={css.queueSelect}
           aria-pressed={isSelecting}
           onClick={onStartSelecting}
         >

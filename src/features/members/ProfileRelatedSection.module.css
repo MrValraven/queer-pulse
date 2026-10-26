@@ -27,6 +27,7 @@
    `overflow: hidden` is what rounds its top corners, so everything below the
    photo takes its inset from `.body`. */
 .card {
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -50,6 +51,9 @@
   flex-direction: column;
   align-items: flex-start;
   width: 100%;
+  /* Grid rows stretch every card to the tallest, so the body fills the card
+     and the chip can pin itself to the bottom edge. */
+  flex: 1;
   padding: 12px 14px 14px;
 }
 
@@ -72,6 +76,7 @@
   font-size: var(--text-13);
   color: var(--ink-60);
   margin-top: 3px;
+  margin-bottom: 10px;
 }
 
 /* The one chip: why this person is close to the profile owner. Exactly one per
@@ -81,7 +86,9 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  margin-top: 10px;
+  /* Pushed to the card's bottom so the chips line up across a row whatever
+     the role line's length. */
+  margin-top: auto;
   padding: 4px 10px;
   border-radius: var(--radius-pill);
   font-size: var(--text-12);

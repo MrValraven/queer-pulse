@@ -23,6 +23,7 @@ import {
   PauseNotificationsStrip,
 } from "./DeleteAccountSections";
 import type { DeletionRequest } from "./api/account.api";
+import { ReauthRequiredError } from "./api/reauthRequiredError";
 import {
   useCancelDeletion,
   useDeactivate,
@@ -124,17 +125,18 @@ export function DeleteAccountSection({
 
   // Require a fresh step-up token, then run the chosen destructive action.
   //
-  // No password is collected or sent — auth is OAuth-only, so there is
-  // nothing to verify one against. The real step-up is a Google OAuth round
-  // trip (`beginReauth`, see `useReauthToken.ts`): if no fresh token is
-  // cached yet, this redirects away instead of proceeding, and the member
-  // presses confirm again after landing back. The typed phrase below is a
-  // separate, real, checked gate on top of that.
+  // No password is collected or sent: there is nothing to verify one
+  // against. The real step-up is the code dialog (`beginReauth`, see
+  // `useReauthToken.ts`): if no fresh token is cached yet, this opens it and
+  // throws `ReauthRequiredError`, which DestructiveActionFlow treats as a quiet
+  // return to its confirm phase. The member presses confirm again once the
+  // code is accepted. The typed phrase below is a separate, real, checked gate
+  // on top of that.
   const runAction = useCallback(async () => {
     const reauthToken = getReauthToken();
     if (!reauthToken) {
       beginReauth();
-      return;
+      throw new ReauthRequiredError();
     }
     if (option === "delete") {
       const req = await requestDeletion(reauthToken);

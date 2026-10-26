@@ -1,13 +1,18 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import { AnimatePresence, LayoutGroup } from "motion/react";
+import { useMotionPrefs } from "../../../app/providers/motionPrefs";
 import { routes } from "../../../app/routeMap";
 import { LoadErrorState, LoadMoreFooter } from "../../../shared/components/ui";
+import { useRefineDrawer } from "../../../shared/hooks";
 import { useFormat, type Formatters } from "../../../shared/i18n/format";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { CalendarEvent } from "../data";
 import { useEvents } from "../api/useEvents";
 import { BrowseFilterBar } from "./BrowseFilterBar";
 import { BrowseSkeleton, MonthGroup } from "./BrowseMonthGroup";
+import { MonthPresence } from "./EventCellPresence";
+import { HiddenCommunitiesNotice } from "./HiddenCommunitiesNotice";
 import {
   hasActiveBrowseFilters,
   readBrowseFilters,
@@ -29,6 +34,11 @@ const INITIAL_SKELETON_COUNT = 6;
 /** Placeholders while a later page loads: one full ticket row. */
 const NEXT_PAGE_SKELETON_COUNT = 3;
 
+/** How long the Refine drawer takes to open (`OPEN_MS` in
+ *  `useRefineDrawer`). The hidden-communities search is scrolled to and
+ *  focused once it has, so the scroll measures the drawer at full height. */
+const REFINE_DRAWER_OPEN_MS = 300;
+
 function groupByMonth(
   events: CalendarEvent[],
   fmt: Formatters,
@@ -41,6 +51,45 @@ function groupByMonth(
     map.set(key, list);
   }
   return [...map.entries()];
+}
+
+/**
+ * The Browse drawer's open state, owned above the filter bar so the
+ * hidden-communities notice under the bar can open it as well as the Refine
+ * toggle. `openHiddenCommunities` is the notice's "Manage": it opens the
+ * drawer when it is shut, waits out its glide, centres the whole Communities
+ * band in view (its scroll margin clears the phone's bottom tab bar, so the
+ * field and the results under it stay visible), then focuses the search.
+ */
+function useBrowseRefineDrawer() {
+  const { reducedMotion } = useMotionPrefs();
+  const refine = useRefineDrawer("qp.events.browse.refineOpen");
+  const communitiesSearchRef = useRef<HTMLInputElement>(null);
+  const manageTimerRef = useRef<number | undefined>(undefined);
+  useEffect(() => () => window.clearTimeout(manageTimerRef.current), []);
+
+  const openHiddenCommunities = () => {
+    const isDrawerOpen = refine.isOpen;
+    if (!isDrawerOpen) refine.toggle();
+    window.clearTimeout(manageTimerRef.current);
+    manageTimerRef.current = window.setTimeout(
+      () => {
+        const searchInput = communitiesSearchRef.current;
+        if (!searchInput) return;
+        const communitiesBand =
+          searchInput.closest<HTMLElement>("[data-hidden-communities-band]") ??
+          searchInput;
+        communitiesBand.scrollIntoView({
+          block: "center",
+          behavior: reducedMotion ? "auto" : "smooth",
+        });
+        searchInput.focus({ preventScroll: true });
+      },
+      isDrawerOpen || reducedMotion ? 0 : REFINE_DRAWER_OPEN_MS,
+    );
+  };
+
+  return { refine, communitiesSearchRef, openHiddenCommunities };
 }
 
 /**
@@ -64,6 +113,8 @@ export function BrowseView() {
   const fmt = useFormat();
   const sentinelRef = useRef<HTMLDivElement>(null);
   const layout = useBrowseLayout();
+  const { refine, communitiesSearchRef, openHiddenCommunities } =
+    useBrowseRefineDrawer();
   const [params, setParams] = useSearchParams();
   const filters = useMemo(() => readBrowseFilters(params), [params]);
   // Captured once so the date presets resolve against a stable "now" instead
@@ -151,6 +202,9 @@ export function BrowseView() {
           onChange={applyFilters}
           searchDraft={searchDraft}
           onSearchDraftChange={setSearchDraft}
+          refine={refine}
+          communitiesSearchRef={communitiesSearchRef}
+          notice={<HiddenCommunitiesNotice onManage={openHiddenCommunities} />}
         />
 
         {isLoading ? (
@@ -162,20 +216,32 @@ export function BrowseView() {
           <LoadErrorState onRetry={refetch} />
         ) : (
           <>
-            {months.map(([label, monthEvents], monthIndex) => (
-              <MonthGroup
-                key={label}
-                label={label}
-                events={monthEvents}
-                layout={layout}
-                now={now}
-                isFirstMonth={monthIndex === 0}
-                // The last loaded month may continue on the next page.
-                isCountShown={
-                  !(hasNextPage && monthIndex === months.length - 1)
-                }
-              />
-            ))}
+            {/* A month whose last event leaves (its community hidden) fades
+                where it stands, and the months below glide up into its place,
+                headings and cards together (see `MonthPresence`). The group
+                lets every month measure when any one changes; the positioned
+                box is what `popLayout` places the leaving month against. */}
+            <LayoutGroup>
+              <div className={styles.months}>
+                <AnimatePresence initial={false} mode="popLayout">
+                  {months.map(([label, monthEvents], monthIndex) => (
+                    <MonthPresence key={label}>
+                      <MonthGroup
+                        label={label}
+                        events={monthEvents}
+                        layout={layout}
+                        now={now}
+                        isFirstMonth={monthIndex === 0}
+                        // The last loaded month may continue on the next page.
+                        isCountShown={
+                          !(hasNextPage && monthIndex === months.length - 1)
+                        }
+                      />
+                    </MonthPresence>
+                  ))}
+                </AnimatePresence>
+              </div>
+            </LayoutGroup>
 
             {/* Two different nothings, and saying the wrong one is a lie: with
                 filters on, the list is narrowed and widening it may help; with

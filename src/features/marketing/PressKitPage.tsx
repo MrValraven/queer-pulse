@@ -143,20 +143,6 @@ export function PressKitPage() {
         </div>
       </div>
 
-      <Outro
-        title={
-          <Translation
-            i18nKey="marketing:pressKit.outro.title"
-            components={{ em: <em /> }}
-          />
-        }
-        sub={t("marketing:pressKit.outro.sub")}
-      >
-        <Button size="lg" to={`${routes.contact}?topic=press`}>
-          {t("marketing:pressKit.outro.askCta")}
-        </Button>
-      </Outro>
-
       {isDownloadOpen && (
         <PressKitDownloadModal
           eyebrow={t("marketing:pressKit.downloadModal.eyebrow")}
@@ -189,6 +175,20 @@ export function PressKitPage() {
           },
         ]}
       />
+
+      <Outro
+        title={
+          <Translation
+            i18nKey="marketing:pressKit.outro.title"
+            components={{ em: <em /> }}
+          />
+        }
+        sub={t("marketing:pressKit.outro.sub")}
+      >
+        <Button size="lg" to={`${routes.contact}?topic=press`}>
+          {t("marketing:pressKit.outro.askCta")}
+        </Button>
+      </Outro>
     </PageShell>
   );
 }

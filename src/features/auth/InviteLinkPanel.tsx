@@ -1,9 +1,12 @@
 import { useState } from "react";
 import { FiAlertCircle, FiLink } from "react-icons/fi";
-import { Button, Sending } from "../../shared/components/ui";
+import { Button, Collapse, Sending } from "../../shared/components/ui";
 import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { isInviteQuotaError } from "./api/invite.api";
+import {
+  isInviteAccessDisabledError,
+  isInviteQuotaError,
+} from "./api/invite.api";
 import { useCreateInvite, type CreatedInvite } from "./api/useCreateInvite";
 import { SharePreviewCard } from "./SharePreviewCard";
 import { INVITE_URL, defaultVouch } from "./invite.data";
@@ -19,11 +22,15 @@ interface InviteLinkPanelProps {
   /** True when the page's quota fetch already says the month's allowance is
    *  spent, so the refusal is shown up front instead of after a wasted POST. */
   isQuotaExhausted?: boolean;
+  /** Called when POST /invites comes back refused because our team paused
+   *  this member's invites, so the page can swap in its paused panel. */
+  onInviteAccessPaused?: () => void;
 }
 
 export function InviteLinkPanel({
   memberCount,
   isQuotaExhausted = false,
+  onInviteAccessPaused,
 }: InviteLinkPanelProps) {
   const { t } = useTranslation();
   const { showToast } = useToast();
@@ -56,9 +63,13 @@ export function InviteLinkPanel({
   const description = note.trim() || defaultVouch(t);
 
   /** Surface a failed POST /invites: the quota refusal sticks inline (no toast
-   *  on top of it — one message, one place), everything else toasts. */
+   *  on top of it: one message, one place), everything else toasts. The
+   *  paused refusal comes first and hands over to the page's paused panel,
+   *  which explains it in place of this form, so it shows no toast either. */
   function handleInviteError(err: unknown) {
-    if (isInviteQuotaError(err)) {
+    if (isInviteAccessDisabledError(err)) {
+      onInviteAccessPaused?.();
+    } else if (isInviteQuotaError(err)) {
       setHasHitQuota(true);
     } else {
       showToast(t("auth:invite.link.error.generic"), "error");
@@ -145,12 +156,12 @@ export function InviteLinkPanel({
       </div>
 
       <div className={styles.composeAction}>
-        {isBlockedByQuota && (
+        <Collapse isOpen={isBlockedByQuota}>
           <div className={styles.quotaError} role="alert">
             <FiAlertCircle aria-hidden />
             {t("auth:invite.link.error.quota")}
           </div>
-        )}
+        </Collapse>
 
         <div className={styles.actions}>
           <Button

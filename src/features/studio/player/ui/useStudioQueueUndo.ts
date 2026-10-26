@@ -12,7 +12,10 @@ import {
   studioErrorMessageKeyOf,
 } from "../../studioErrors.data";
 import { useStudioPlayer, type StudioQueueItem } from "../studioPlayerContext";
-import { takeLastQueueFailure } from "../studioQueueActions";
+import {
+  sourceIndexAtRemovalOf,
+  takeLastQueueFailure,
+} from "../studioQueueActions";
 
 /** As long as the Undo stays up: long enough to read and reach (DES-26). */
 export const QUEUE_UNDO_MS = 5200;
@@ -75,9 +78,11 @@ function useQueueNotice(isInDialog: boolean, announce: (text: string) => void) {
  * Now playing it is an inline row in the queue, with the same line on the
  * queue's status region. Each Undo runs once, so a double tap on a leaving
  * toast never adds the tracks twice. A row of Your queue goes back to its
- * own place through the player's restore; a "Next from" row comes back at
- * the end of Your queue, the spot that plays just before the rest. A track
- * that cannot come back says why. Nothing here leaves this tab.
+ * own place through the player's restore, and a "Next from" row back to its
+ * own slot in the source, never before the track playing now. Neither reads
+ * the network, so Undo works offline. Only when a restore cannot land on a
+ * live queue does the row join the end of Your queue through Add to queue.
+ * A track that cannot come back says why. Nothing here leaves this tab.
  */
 export function useStudioQueueUndo({
   isInDialog,
@@ -149,6 +154,29 @@ export function useStudioQueueUndo({
     [readd, show, t],
   );
 
+  /** A "Next from" row goes back to its slot in the source: `index` is its
+   *  place among the upcoming rows, after the source position it left at. */
+  const restoreUpcomingRow = useCallback(
+    (
+      item: StudioQueueItem,
+      index: number,
+      sourceIndexAtRemoval: number | null,
+    ) => {
+      const restoreEntry = playerRef.current.restoreQueueEntry;
+      const isBack =
+        restoreEntry !== undefined &&
+        sourceIndexAtRemoval !== null &&
+        restoreEntry(item, "source", sourceIndexAtRemoval + 1 + index);
+      if (isBack) return;
+      if (playerRef.current.queue.current === null) {
+        show(t("studio:queue.undoStoppedToast", { title: item.title }));
+        return;
+      }
+      return readd([item], Number.POSITIVE_INFINITY);
+    },
+    [readd, show, t],
+  );
+
   const offer = useCallback(
     (message: string, restore: () => unknown) => {
       let hasRun = false;
@@ -169,12 +197,16 @@ export function useStudioQueueUndo({
       item: StudioQueueItem,
       group: RemovedGroup,
       index: number,
-    ) =>
+    ) => {
+      // Read now: the player noted the source position as the row left.
+      const sourceIndexAtRemoval =
+        group === "upcoming" ? sourceIndexAtRemovalOf(item.queueEntryId) : null;
       offer(t("studio:queue.removedToast", { title: item.title }), () =>
         group === "user"
           ? restoreUserRows([item], index)
-          : readd([item], Number.POSITIVE_INFINITY),
-      ),
+          : restoreUpcomingRow(item, index, sourceIndexAtRemoval),
+      );
+    },
     offerClearUndo: (items: readonly StudioQueueItem[]) =>
       offer(t("studio:queue.clearedToast", { count: items.length }), () =>
         restoreUserRows(items, 0),

@@ -9,19 +9,23 @@ import { useStudioLike, type StudioLikeSubject } from "./useStudioLike";
  *  aria-pressed carries the state. The labelled variant shows "Like" beside
  *  the heart, a word the accessible name starts with. `isQuiet` skips the
  *  confirming toast, for a surface that shows the change itself. The icon
- *  variant is an IconButton with no tooltip of its own, as its sibling
- *  StudioAddToPlaylistButton: the heroes wrap it in a Tooltip already. */
+ *  variant has no tooltip of its own unless `hasTooltip` asks for one (the
+ *  player bar, Now playing), which names what a press does now: Like or
+ *  Unlike. The heroes wrap it in their own Tooltip instead. */
 export function StudioLikeButton({
   subject,
   variant = "icon",
   className,
   isQuiet,
+  hasTooltip = false,
   onToggled,
 }: {
   subject: StudioLikeSubject;
   variant?: "icon" | "labelled";
   className?: string;
   isQuiet?: boolean;
+  /** Icon variant only: a tooltip from the heart's own state. */
+  hasTooltip?: boolean;
   onToggled?: (isNowLiked: boolean) => void;
 }) {
   const { t } = useTranslation();
@@ -41,6 +45,11 @@ export function StudioLikeButton({
         className={[css.button, css.icon, className].filter(Boolean).join(" ")}
         aria-pressed={isLiked}
         aria-label={label}
+        tooltip={
+          hasTooltip
+            ? t(isLiked ? "studio:trackMenu.unlike" : "studio:like.cta")
+            : undefined
+        }
         onClick={onClick}
       >
         {heart}

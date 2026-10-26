@@ -134,7 +134,7 @@ export function StudioNowPlayingStage({
           ) : (
             <StudioVolumeControl />
           )}
-          <StudioPlayerMorePanel placement="up" />
+          <StudioPlayerMorePanel placement="up" onNavigate={onNavigate} />
         </div>
       </div>
     </div>

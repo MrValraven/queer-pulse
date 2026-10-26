@@ -248,6 +248,38 @@ describe("handleMutationError", () => {
   });
 });
 
+describe("handleMutationError with an email-code refusal", () => {
+  it("keeps a refused code out of error monitoring", () => {
+    handleMutationError(
+      new ApiError(400, "x", { reason: "code_incorrect", attemptsLeft: 4 }),
+      undefined,
+      undefined,
+      mutation,
+    );
+    expect(logError).not.toHaveBeenCalled();
+  });
+
+  it("keeps a signup refusal out of error monitoring", () => {
+    handleMutationError(
+      new ApiError(403, "x", { reason: "invite_required" }),
+      undefined,
+      undefined,
+      mutation,
+    );
+    expect(logError).not.toHaveBeenCalled();
+  });
+
+  it("still logs an error whose reason is outside both lists", () => {
+    handleMutationError(
+      new ApiError(400, "x", { reason: "something_else" }),
+      undefined,
+      undefined,
+      mutation,
+    );
+    expect(logError).toHaveBeenCalledOnce();
+  });
+});
+
 // PRD-467: the mutation toast speaks the member's language for a 4xx whose
 // backend sentence is English only.
 describe("handleMutationError with a coded refusal", () => {

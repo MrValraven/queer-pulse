@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { FiChevronRight } from "react-icons/fi";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { useStudioTrack } from "./api/useStudioTrack";
 import { StudioDetailLoading } from "./StudioDetailLoading";
 import { StudioLoadError, StudioNotFound } from "./StudioLoadStates";
+import { StudioMorphLink } from "./StudioMorphLink";
 import { StudioEpisodeHero } from "./StudioEpisodeHero";
 import { StudioShell } from "./StudioShell";
 import { StudioShowNotes } from "./StudioShowNotes";
@@ -92,15 +93,20 @@ export function StudioTrackPage() {
       >
         {!isArtistCrumbHidden && (
           <>
-            <Link to={track.release.artist.href}>
+            <StudioMorphLink
+              to={track.release.artist.href}
+              destination="artist"
+            >
               {track.release.artist.name}
-            </Link>
+            </StudioMorphLink>
             <span aria-hidden>
               <FiChevronRight />
             </span>
           </>
         )}
-        <Link to={track.release.href}>{track.release.title}</Link>
+        <StudioMorphLink to={track.release.href} destination="release">
+          {track.release.title}
+        </StudioMorphLink>
         <span aria-hidden>
           <FiChevronRight />
         </span>

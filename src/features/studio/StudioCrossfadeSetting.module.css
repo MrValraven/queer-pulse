@@ -23,60 +23,93 @@
 .rangeRow {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
 }
 .text + .rangeRow {
   margin-top: 12px;
 }
+/* The Studio slider. The equaliser bands compose this class
+   (StudioEqualizer.module.css) and swap the track drawing through
+   --slider-track and --slider-progress, so both read as one control. */
 .range {
+  --slider-rest: rgba(var(--studio-ink-rgb), 0.16);
+  /* The coral the panel's switches and the seek bar use, in both themes. */
+  --slider-fill: var(--studio-accent-text);
+  --slider-thumb-scale: 1;
   flex: 1;
-  min-height: 44px;
+  min-block-size: var(--slider-block-size, var(--tap-min));
+  margin: 0;
   background: transparent;
   appearance: none;
   -webkit-appearance: none;
-  accent-color: var(--accent-fill);
+  accent-color: var(--slider-fill);
+  cursor: pointer;
 }
-/* The filled part follows --fill, set inline from the value. */
+.range:dir(rtl) {
+  --slider-fill-edge: 100%;
+}
+/* The thumb swells a little under the pointer and a little more in hand. */
+.range:hover:not([aria-disabled="true"]) {
+  --slider-thumb-scale: 1.1;
+}
+.range:active:not([aria-disabled="true"]) {
+  --slider-thumb-scale: 1.15;
+  cursor: grabbing;
+}
+.range[aria-disabled="true"] {
+  cursor: default;
+}
+/* The filled part follows --fill, set inline from the value, and starts
+   at the inline-start edge. */
 .range::-webkit-slider-runnable-track {
   height: 8px;
   border-radius: var(--radius-pill);
-  background:
-    linear-gradient(var(--accent-fill), var(--accent-fill)) 0 / var(--fill, 0%)
-      100% no-repeat,
-    rgba(var(--studio-ink-rgb), 0.18);
-  border: 1px solid rgba(var(--studio-ink-rgb), 0.45);
-  box-sizing: border-box;
+  background: var(
+    --slider-track,
+    linear-gradient(var(--slider-fill), var(--slider-fill))
+      var(--slider-fill-edge, 0%) 0 / var(--fill, 0%) 100% no-repeat,
+    var(--slider-rest)
+  );
 }
 .range::-moz-range-track {
   height: 8px;
   border-radius: var(--radius-pill);
-  background: rgba(var(--studio-ink-rgb), 0.18);
-  border: 1px solid rgba(var(--studio-ink-rgb), 0.45);
-  box-sizing: border-box;
+  background: var(--slider-track, var(--slider-rest));
 }
 .range::-moz-range-progress {
   height: 8px;
   border-radius: var(--radius-pill);
-  background: var(--accent-fill);
+  background: var(--slider-progress, var(--slider-fill));
 }
+/* 20px on an 8px track: the -6px margin centres it in WebKit. */
 .range::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 22px;
-  height: 22px;
-  margin-top: -8px;
+  width: 20px;
+  height: 20px;
+  margin-top: -6px;
   border-radius: 50%;
-  background: var(--accent-fill);
+  background: var(--slider-fill);
   border: 2px solid rgba(var(--cream-rgb), 1);
   box-sizing: border-box;
+  box-shadow: var(--shadow-e2);
+  transform: scale(var(--slider-thumb-scale));
+  transition-property: transform;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
 }
 .range::-moz-range-thumb {
-  width: 22px;
-  height: 22px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
-  background: var(--accent-fill);
+  background: var(--slider-fill);
   border: 2px solid rgba(var(--cream-rgb), 1);
   box-sizing: border-box;
+  box-shadow: var(--shadow-e2);
+  transform: scale(var(--slider-thumb-scale));
+  transition-property: transform;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
 }
 .range:focus-visible::-webkit-slider-thumb {
   outline: var(--focus-ring);
@@ -93,12 +126,28 @@
   outline: none;
   box-shadow: none;
 }
+/* Reduced motion keeps the thumb at its resting size. */
+@media (prefers-reduced-motion: reduce) {
+  .range:hover:not([aria-disabled="true"]),
+  .range:active:not([aria-disabled="true"]) {
+    --slider-thumb-scale: 1;
+  }
+}
+:global(html[data-reduce-motion="true"])
+  .range:hover:not([aria-disabled="true"]),
+:global(html[data-reduce-motion="true"])
+  .range:active:not([aria-disabled="true"]) {
+  --slider-thumb-scale: 1;
+}
+/* Sized and tinted as the equaliser's dB column, with room for "-12 dB",
+   so a changing value never shifts the track. */
 .rangeValue {
-  min-width: 6ch;
-  text-align: right;
+  min-inline-size: 6.5ch;
+  text-align: end;
+  white-space: nowrap;
   font-variant-numeric: tabular-nums;
-  font-size: var(--text-14);
-  color: var(--studio-text);
+  font-size: var(--text-13);
+  color: var(--studio-text-muted);
 }
 .srOnly {
   position: absolute;

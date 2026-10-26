@@ -66,9 +66,10 @@
   scroll-snap-align: start;
 }
 
-/* A mouse or trackpad has no swipe, so on fine pointers the row wraps and
-   every chip stays in reach without scrolling. */
-@media (hover: hover) and (pointer: fine) {
+/* A mouse or trackpad has no swipe, so on fine pointers wider than a phone
+   the row wraps and every chip stays in reach without scrolling. At phone
+   width every row stays one line that scrolls with snap, as on Search. */
+@media (hover: hover) and (pointer: fine) and (--sm-up) {
   .chips {
     flex-wrap: wrap;
     overflow: visible;

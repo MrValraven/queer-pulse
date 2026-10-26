@@ -132,7 +132,8 @@
     (
         100cqi - 2 * var(--shelf-bleed) - var(--shelf-whole-gaps) *
           var(--shelf-gap)
-      ) / var(--shelf-visible)
+      ) /
+      var(--shelf-visible)
   );
 }
 

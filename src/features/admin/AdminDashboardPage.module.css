@@ -335,13 +335,7 @@
   font-family: var(--sans, "DM Sans", sans-serif);
   font-size: var(--text-11);
   font-weight: 700;
-  fill: var(--plum);
-}
-.chSpike {
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: var(--text-12);
-  fill: var(--accent-ink);
+  fill: var(--text-strong);
 }
 .chSla {
   font-family: var(--serif);

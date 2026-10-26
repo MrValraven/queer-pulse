@@ -51,7 +51,16 @@
   /* Small phones keep a 16px gutter on each side. */
   width: 300px;
   max-width: calc(100vw - 32px);
-  max-height: min(760px, calc(100dvh - 96px));
+  /* The bottom keeps clear of the player bar, the phone tab bar and the
+     consent banner, the same space StudioMenu's placement reserves, so the
+     pinned Sign out never slides under the player. */
+  max-height: min(
+    760px,
+    calc(
+      100dvh - 96px - var(--studio-player-inset, 0px) -
+        max(var(--bottom-inset, 0px), var(--consent-inset, 0px))
+    )
+  );
   display: flex;
   flex-direction: column;
   background:
@@ -287,6 +296,14 @@
 /* The phone sheet (the hosted panel) keeps every row a 44px target. */
 .panelHosted .item.itemButton {
   min-height: 44px;
+}
+/* On touch, every row (links and the in-place buttons) is a full 44px
+   target in the popover too. */
+@media (pointer: coarse) {
+  .item,
+  .item.itemButton {
+    min-height: var(--tap-min);
+  }
 }
 
 /* A row a toggle revealed (Help and info), indented under the toggle. */

@@ -37,6 +37,15 @@
   font-size: var(--text-13-5);
   min-height: 40px;
 }
+/* On touch the 40px floor is under the 44px target, so it goes back up.
+   `.quiet.sm` keeps its 36px with a 44px hit area (below). The :where()
+   keeps this at (0,1,0), so a feature class that sizes its own sm button
+   still wins. */
+@media (pointer: coarse) {
+  .sm:where(:not(.quiet)) {
+    min-height: 44px;
+  }
+}
 
 /* Icon-only. A square, quiet control for a lone react-icon: an × on a modal, a
    kebab on a row, a remove on a chip. Deliberately keeps the 44x44 tap-target
@@ -56,9 +65,11 @@
   font-size: var(--text-18);
   gap: 0;
 }
+/* --button-icon-hover lets a context that restyles icon buttons (the Studio
+   hero row) keep its own hover wash, which this (0,4,0) rule would outrank. */
 @media (hover: hover) {
   .icon:hover:not(:disabled):not([aria-disabled="true"]) {
-    background: rgba(var(--ink-rgb), 0.06);
+    background: var(--button-icon-hover, rgba(var(--ink-rgb), 0.06));
     color: var(--ink);
   }
 }
@@ -105,13 +116,26 @@
      See docs/production-readiness/contrast-audit.md §4. */
   background: var(--accent-fill-strong);
   color: rgba(var(--cream-rgb), 1);
-  box-shadow: var(--shadow-accent);
+  /* The glow takes the fill's own colour. --shadow-accent is the lighter
+     brand --accent, which haloed the darker fill in a paler coral. */
+  --button-glow: 0 8px 22px -10px rgba(var(--accent-fill-strong-rgb), 0.8);
+  box-shadow: var(--button-glow);
 }
-/* `.primary` ties the global :focus-visible on specificity and loads later, so
-   its glow used to replace the --ring-cream halo, leaving only the accent-deep
-   outline (2.65:1 on plum). Restate the halo under the glow. */
-.primary:focus-visible {
-  box-shadow: var(--ring-cream), var(--shadow-accent);
+/* A glowing variant ties the global :focus-visible on specificity and loads
+   later, so its glow used to replace the --ring-cream halo, leaving only the
+   accent-deep outline (2.65:1 on plum). Restate the halo under the glow.
+   Jade, plum and danger carry a glow too, so they share the rule. */
+.primary:focus-visible,
+.jade:focus-visible,
+.plum:focus-visible,
+.danger:focus-visible {
+  box-shadow: var(--ring-cream), var(--button-glow);
+}
+/* An aria-disabled button stays focusable but has no glow (see Disabled
+   above), and the rule just above would bring it back on focus. Keep only
+   the cream halo. */
+.button[aria-disabled="true"]:focus-visible {
+  box-shadow: var(--ring-cream);
 }
 @media (hover: hover) {
   .primary:hover:not(:disabled):not([aria-disabled="true"]) {
@@ -119,7 +143,8 @@
        and its own token comment names it the pressed/hover partner. */
     background: var(--accent-deep);
     transform: translateY(-1px);
-    box-shadow: 0 12px 26px -10px rgba(var(--accent-rgb), 0.9);
+    --button-glow: 0 12px 26px -10px rgba(var(--accent-fill-strong-rgb), 0.9);
+    box-shadow: var(--button-glow);
   }
 }
 
@@ -159,15 +184,20 @@
 
 /* Jade — success */
 .jade {
-  /* --jade behind white is 3.98:1 — large text only. --jade-fill is 4.52:1. */
-  background: var(--jade-fill);
+  /* The label is the fixed cream, where --jade-fill measured 4.10:1.
+     --jade-button is 5.14:1 and does not flip, so it holds in both themes;
+     hover deepens to --jade-button-hover (6.16:1). */
+  background: var(--jade-button);
   color: rgba(var(--cream-rgb), 1);
-  box-shadow: 0 8px 22px -10px rgba(var(--jade-rgb), 0.7);
+  --button-glow: 0 8px 22px -10px rgba(var(--jade-rgb), 0.7);
+  box-shadow: var(--button-glow);
 }
 @media (hover: hover) {
   .jade:hover:not(:disabled):not([aria-disabled="true"]) {
+    background: var(--jade-button-hover);
     transform: translateY(-1px);
-    box-shadow: 0 12px 26px -10px rgba(var(--jade-rgb), 0.85);
+    --button-glow: 0 12px 26px -10px rgba(var(--jade-rgb), 0.85);
+    box-shadow: var(--button-glow);
   }
 }
 
@@ -175,13 +205,15 @@
 .plum {
   background: var(--plum);
   color: rgba(var(--cream-rgb), 1);
-  box-shadow: 0 8px 22px -10px rgba(var(--plum-rgb), 0.6);
+  --button-glow: 0 8px 22px -10px rgba(var(--plum-rgb), 0.6);
+  box-shadow: var(--button-glow);
 }
 @media (hover: hover) {
   .plum:hover:not(:disabled):not([aria-disabled="true"]) {
     background: var(--plum-deep);
     transform: translateY(-1px);
-    box-shadow: 0 12px 26px -10px rgba(var(--plum-rgb), 0.7);
+    --button-glow: 0 12px 26px -10px rgba(var(--plum-rgb), 0.7);
+    box-shadow: var(--button-glow);
   }
 }
 
@@ -189,13 +221,15 @@
 .danger {
   background: var(--danger);
   color: rgba(var(--cream-rgb), 1);
-  box-shadow: 0 8px 22px -10px rgba(var(--danger-rgb), 0.7);
+  --button-glow: 0 8px 22px -10px rgba(var(--danger-rgb), 0.7);
+  box-shadow: var(--button-glow);
 }
 @media (hover: hover) {
   .danger:hover:not(:disabled):not([aria-disabled="true"]) {
     background: var(--danger-pressed);
     transform: translateY(-1px);
-    box-shadow: 0 12px 26px -10px rgba(var(--danger-rgb), 0.85);
+    --button-glow: 0 12px 26px -10px rgba(var(--danger-rgb), 0.85);
+    box-shadow: var(--button-glow);
   }
 }
 
@@ -244,21 +278,27 @@
 }
 
 /* Quiet: neutral ink wash. --ink-rgb flips in dark mode, so one rule serves
-   both themes. No shadow, so the global :focus-visible halo applies untouched.
-   The `sm` size drops to 36px tall but keeps a 44px hit area through the
-   pseudo-element below. */
+   both themes. The `sm` size drops to 36px tall but keeps a 44px hit area
+   through the pseudo-element below. A context that restyles quiet buttons
+   (the Studio hero pills) sets --button-quiet-hover and --button-quiet-active,
+   because these (0,4,0) state rules outrank any class it can write. */
 .quiet {
   background: rgba(var(--ink-rgb), 0.06);
   color: var(--ink);
   box-shadow: none;
 }
+/* `box-shadow: none` above outranks the global :focus-visible halo, so the
+   halo is restated for a keyboard focus. */
+.quiet:focus-visible {
+  box-shadow: var(--ring-cream);
+}
 @media (hover: hover) {
   .quiet:hover:not(:disabled):not([aria-disabled="true"]) {
-    background: rgba(var(--ink-rgb), 0.1);
+    background: var(--button-quiet-hover, rgba(var(--ink-rgb), 0.1));
   }
 }
 .quiet:active:not(:disabled):not([aria-disabled="true"]) {
-  background: rgba(var(--ink-rgb), 0.14);
+  background: var(--button-quiet-active, rgba(var(--ink-rgb), 0.14));
 }
 .quiet.sm {
   min-height: 36px;
@@ -280,7 +320,10 @@
   border-color: rgba(var(--cream-rgb), 0.45);
 }
 @media (hover: hover) {
-  :global([data-theme="dark"]) .ghost:hover {
+  /* The same :not() guards as the light hover, which would otherwise outrank
+     this rule (0,4,0 against 0,3,0) and leave dark hover invisible. */
+  :global([data-theme="dark"])
+    .ghost:hover:not(:disabled):not([aria-disabled="true"]) {
     background: rgba(var(--cream-rgb), 0.1);
     border-color: rgba(var(--cream-rgb), 0.7);
     color: rgba(var(--cream-rgb), 1);

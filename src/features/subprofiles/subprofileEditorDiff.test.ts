@@ -10,6 +10,10 @@ import {
   withUid,
   type SubprofileEditorRow,
 } from "./subprofileSectionEditorRows";
+import {
+  buildMetaPatchFrom,
+  shouldShowStudioHeroControl,
+} from "./subprofileMetaEditor.helpers";
 import type { SubprofileItemView } from "./api/subprofiles.adapters";
 
 /**
@@ -36,6 +40,7 @@ function makeMeta(overrides: Partial<MetaSnapshot> = {}): MetaSnapshot {
     ctaLabel: "Book a set",
     ctaUrl: "https://x.test/book",
     coverBleed: false,
+    studioHero: "full-bleed",
     ...overrides,
   };
 }
@@ -147,6 +152,25 @@ describe("diffMeta", () => {
       summaryKey: "subprofiles:pending.metaEdited",
       params: { field: "subprofiles:pending.field.coverBleed" },
     });
+  });
+
+  it("itemizes a changed Studio page layout as a plain metaEdited change", () => {
+    const changes = diffMeta(
+      makeMeta({ studioHero: "avatar" }),
+      makeMeta({ studioHero: "full-bleed" }),
+    );
+    expect(changes).toEqual([
+      {
+        area: { kind: "meta" },
+        areaLabelKey: "subprofiles:pending.area.meta",
+        summaryKey: "subprofiles:pending.metaEdited",
+        params: { field: "subprofiles:pending.field.studioHero" },
+      },
+    ]);
+  });
+
+  it("reports no Studio layout change when it is unchanged", () => {
+    expect(diffMeta(makeMeta(), makeMeta())).toEqual([]);
   });
 
   it("emits one change per diverged field when several change at once", () => {
@@ -289,5 +313,64 @@ describe("rowDiffToChange", () => {
       edited: 0,
       reordered: 1,
     });
+  });
+});
+
+describe("buildMetaPatchFrom studioHero", () => {
+  it("omits skinData when neither bleed nor layout changed", () => {
+    const patch = buildMetaPatchFrom(
+      makeMeta({ displayName: "Renamed" }),
+      makeMeta(),
+      { coverOffsetY: 40 },
+    );
+    expect(patch).not.toBeNull();
+    expect(patch).not.toHaveProperty("skinData");
+  });
+
+  it("includes studioHero merged onto existing skinData when changed", () => {
+    const patch = buildMetaPatchFrom(
+      makeMeta({ studioHero: "avatar" }),
+      makeMeta({ studioHero: "full-bleed" }),
+      { coverOffsetY: 40 },
+    );
+    expect(patch?.skinData).toEqual({
+      coverOffsetY: 40,
+      studioHero: "avatar",
+    });
+  });
+
+  it("sends both keys when bleed and layout change together", () => {
+    const patch = buildMetaPatchFrom(
+      makeMeta({ studioHero: "avatar", coverBleed: true }),
+      makeMeta(),
+      null,
+    );
+    expect(patch?.skinData).toEqual({ coverBleed: true, studioHero: "avatar" });
+  });
+
+  it("does not send studioHero when only the bleed changed", () => {
+    const patch = buildMetaPatchFrom(
+      makeMeta({ coverBleed: true }),
+      makeMeta(),
+      null,
+    );
+    expect(patch?.skinData).toEqual({ coverBleed: true });
+  });
+});
+
+describe("shouldShowStudioHeroControl", () => {
+  it("shows for an artist kind with a cover", () => {
+    expect(shouldShowStudioHeroControl("musician", "cover.jpg")).toBe(true);
+    expect(shouldShowStudioHeroControl("drag", "cover.jpg")).toBe(true);
+  });
+
+  it("hides for an artist kind without a cover", () => {
+    expect(shouldShowStudioHeroControl("musician", "")).toBe(false);
+  });
+
+  it("hides for non-artist personas even with a cover", () => {
+    expect(shouldShowStudioHeroControl("therapist", "cover.jpg")).toBe(false);
+    expect(shouldShowStudioHeroControl("developer", "cover.jpg")).toBe(false);
+    expect(shouldShowStudioHeroControl(undefined, "cover.jpg")).toBe(false);
   });
 });

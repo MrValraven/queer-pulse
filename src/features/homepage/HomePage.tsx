@@ -20,6 +20,7 @@ import {
   PersonasShowcase,
   Stories,
 } from "./sections";
+import { useLandingVisitBeacon } from "./api/useLandingVisitBeacon";
 
 /**
  * QueerPulse marketing homepage — composes the sections in the order from
@@ -55,6 +56,7 @@ import {
 export function HomePage() {
   const { t } = useTranslation();
   const { demoMode } = useDemoMode();
+  useLandingVisitBeacon();
 
   return (
     <PageShell>

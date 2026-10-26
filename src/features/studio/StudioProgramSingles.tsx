@@ -1,4 +1,4 @@
-import { FiArrowDown, FiArrowUp, FiX } from "react-icons/fi";
+import { FiArrowDown, FiArrowUp, FiPlus, FiX } from "react-icons/fi";
 import { MdDragIndicator } from "react-icons/md";
 import { Button, IconButton, ImageSlot } from "../../shared/components/ui";
 import { useTranslation } from "../../shared/i18n/useTranslation";
@@ -115,7 +115,7 @@ export function StudioProgramSingles({
         })}
       </div>
       <Button variant="quiet" className={s.emptySlot} onClick={onAddSlot}>
-        {t("studio:program.slate.singles.addSlotCta")}
+        <FiPlus aria-hidden /> {t("studio:program.slate.singles.addSlotLabel")}
       </Button>
     </>
   );

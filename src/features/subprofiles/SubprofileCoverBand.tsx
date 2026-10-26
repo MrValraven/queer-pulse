@@ -56,10 +56,12 @@ export function SubprofileCoverBand({
         width="100%"
         height="100%"
         className="ph"
-        // Skins that always render the cover band (stage/studio/table) must
-        // show a plain tinted frame when no image is uploaded, never the
-        // literal "Image" placeholder caption. (page/practice hide the band,
-        // and workshop hides it unless a cover was uploaded.)
+        // The band mounts without an image only on the practice, chair and
+        // collective skins, which hide this slot and paint the band as a thin
+        // rule; every banner skin skips the band until a cover is uploaded
+        // (see `shouldMountCoverBand` in SubprofilePageBody). The empty
+        // caption keeps the literal "Image" placeholder text out of the band
+        // in every case.
         placeholder=""
         // The single above-the-fold hero image on the page — eager + high
         // priority so it isn't lazy-deferred as the LCP candidate.

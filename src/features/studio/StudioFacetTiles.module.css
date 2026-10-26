@@ -13,6 +13,29 @@
   gap: 12px;
 }
 
+/* Few enough tiles for a plain grid (useFitsGrid in StudioFacetTiles.tsx
+   matches the 160px floor and 12px gap): tiles at least 160px wide that
+   share the row, capped at 280px each so three genres never balloon. The
+   selector reaches the shelf's grid list by its place under the nav and
+   outranks the shelf's own grid rule. */
+.fitGrid {
+  --facet-tile-min: 160px;
+  --facet-tile-max: 280px;
+  --facet-grid-gap: 12px;
+}
+
+.fitGrid [data-layout="grid"] > ul[aria-labelledby] {
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(min(var(--facet-tile-min), 100%), 1fr)
+  );
+  gap: var(--facet-grid-gap);
+  max-inline-size: calc(
+    var(--facet-count) * var(--facet-tile-max) + (var(--facet-count) - 1) *
+      var(--facet-grid-gap)
+  );
+}
+
 .cell {
   container: facet-tile / size;
   aspect-ratio: 16 / 9;
@@ -128,7 +151,10 @@
   line-height: 1.12;
   letter-spacing: -0.01em;
   text-wrap: balance;
-  hyphens: auto;
+  /* No hyphen splits a word that fits its own line ("Fado /" then
+     "contemporâneo"); only a tile too narrow for the longest word, below,
+     lets the browser hyphenate. */
+  hyphens: manual;
   /* Keeps the label legible where a long one reaches over the cover. */
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.22);
 }
@@ -153,6 +179,12 @@
 
 .coverLoaded {
   opacity: 1;
+}
+
+@container facet-tile (max-width: 149px) {
+  .label {
+    hyphens: auto;
+  }
 }
 
 @container facet-tile (min-width: 170px) {

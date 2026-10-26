@@ -22,6 +22,7 @@ import type {
   RsvpQuestions,
 } from "./gatheringExtras";
 import type { RunByListingView } from "./runByListing";
+import { demoCommunityId } from "./hiddenEventCommunities.data";
 
 /**
  * The "spots" line on an event card — "8 seats left", "32 going", "Open to all".
@@ -283,6 +284,13 @@ export interface GatheringDetail {
    *  existed. DISPLAY ONLY, like `cost`: nothing rendering it may take a
    *  payment. */
   costKind?: CostKind | null;
+  /** An `https:` page where guests pay the host, or null for none. Always
+   *  null for a free gathering. DISPLAY ONLY: the money goes straight to the
+   *  host, outside the platform. */
+  paymentUrl?: string | null;
+  /** The host's own words on how to pay ("MB WAY to 912 345 678 with your
+   *  name"), or null for none. Plain text, line breaks kept. */
+  paymentInstructions?: string | null;
   /** When RSVPs close relative to the start, or null when they stay open. */
   rsvpCutoff?: RsvpCutoff | null;
   /** The instant RSVPs close, computed server-side from `rsvpCutoff`, or null
@@ -397,6 +405,12 @@ export const gatheringDetails: Record<string, GatheringDetail> = {
     body: "Twelve seats, no menu, whatever came in that week. Tomás cooks with whatever is seasonal and beautiful, and the bread comes from b/cafe-mouraria-velha round the corner. Guests bring wine. @rita is drawing the place cards this time. The conversation takes care of itself. Doors open at 7:30pm, dinner at 8. The address is shared on the morning of the event.",
     coverImageUrl:
       "https://images.unsplash.com/photo-1531058020387-3be344556be6?q=80&w=1200&auto=format&fit=crop",
+    // A demo event with both payment details: a link and the host's words.
+    costKind: "pay-what-you-can",
+    cost: "6 to 18 EUR sliding scale",
+    paymentUrl: "https://revolut.me/tomascozinha",
+    paymentInstructions:
+      "MB WAY to 912 345 678 with your name and Supper Club\nor cash on the night, whatever you can spare is perfect",
   },
   "portfolio-night": {
     slug: "portfolio-night",
@@ -446,6 +460,11 @@ export const gatheringDetails: Record<string, GatheringDetail> = {
     body: "A slow Sunday afternoon in Beatriz's studio in Graça. She'll talk through her practice, show the kiln, and there will be clay to touch. Limited to 10 people. Tea provided. The studio is at the top of a steep hill and worth every step.",
     coverImageUrl:
       "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?q=80&w=1200&auto=format&fit=crop",
+    // A demo event with a payment link and no instructions.
+    costKind: "fixed",
+    cost: "10 EUR, clay and tea included",
+    paymentUrl: "https://ko-fi.com/beatrizbarro",
+    paymentInstructions: null,
   },
   "queer-history-walk": {
     slug: "queer-history-walk",
@@ -464,6 +483,12 @@ export const gatheringDetails: Record<string, GatheringDetail> = {
       slug: "lisboa-arco-iris-walks",
       name: "Lisboa Arco-Íris Walks",
     },
+    // A demo event with payment instructions and no link.
+    costKind: "fixed",
+    cost: "5 EUR per person",
+    paymentUrl: null,
+    paymentInstructions:
+      "MB WAY to 913 482 207 with your name before the walk\nor 5 euros cash when we meet at Largo da Severa",
   },
   "founders-breakfast": {
     slug: "founders-breakfast",
@@ -1262,6 +1287,13 @@ export interface CalendarEvent {
   /** The name of the business that runs this gathering, for the card's
    *  "Run by" line. Absent for none. */
   runByName?: string;
+  /** The lead community the card names ("With Queer Runners Lisboa"), and the
+   *  one its menu can hide events from. Absent when the gathering has no lead
+   *  community, or when the server withheld a private one from this viewer. */
+  hostingCommunity?: { id: string; slug: string; name: string };
+  /** True when at least one accepted guest community co-hosts the gathering
+   *  with the lead. Set only when true: absent reads as false. */
+  isCoHosted?: boolean;
 }
 
 const ACCENT = "var(--accent)";
@@ -1318,6 +1350,11 @@ export const calendarEvents: CalendarEvent[] = [
     hood: "Arroios",
     slug: "trans-hub-meetup",
     to: gatheringPath("trans-hub-meetup"),
+    hostingCommunity: {
+      id: demoCommunityId("trans-hub"),
+      slug: "trans-hub",
+      name: "Trans & Non-Binary Hub",
+    },
     kind: "gathering",
     eventType: "meetup",
     gatheringFamily: "meet",
@@ -1348,6 +1385,12 @@ export const calendarEvents: CalendarEvent[] = [
     hood: "Príncipe Real",
     slug: "portfolio-night",
     to: gatheringPath("portfolio-night"),
+    hostingCommunity: {
+      id: demoCommunityId("rainbow-arts"),
+      slug: "rainbow-arts",
+      name: "Rainbow Arts Collective",
+    },
+    isCoHosted: true,
     kind: "event",
     eventType: "mixer",
     gatheringFamily: "meet",
@@ -1365,6 +1408,11 @@ export const calendarEvents: CalendarEvent[] = [
     hood: "Mouraria",
     slug: "queer-history-walk",
     to: gatheringPath("queer-history-walk"),
+    hostingCommunity: {
+      id: demoCommunityId("queer-barreiro"),
+      slug: "queer-barreiro",
+      name: "Queer Barreiro",
+    },
     kind: "gathering",
     eventType: "walk-or-hike",
     gatheringFamily: "move",
@@ -1438,6 +1486,11 @@ export const calendarEvents: CalendarEvent[] = [
     hood: "Chiado",
     slug: "queer-elders-social",
     to: gatheringPath("queer-elders-social"),
+    hostingCommunity: {
+      id: demoCommunityId("queer-elders"),
+      slug: "queer-elders",
+      name: "Queer Elders",
+    },
     kind: "gathering",
     eventType: "mixer",
     gatheringFamily: "meet",
@@ -1484,6 +1537,12 @@ export const calendarEvents: CalendarEvent[] = [
     hood: "Tejo path",
     slug: "queer-runners-run",
     to: gatheringPath("queer-runners-run"),
+    hostingCommunity: {
+      id: demoCommunityId("queer-runners"),
+      slug: "queer-runners",
+      name: "Queer Runners Lisboa",
+    },
+    isCoHosted: true,
     kind: "gathering",
     eventType: "run-club",
     gatheringFamily: "move",
@@ -1516,6 +1575,11 @@ export const calendarEvents: CalendarEvent[] = [
     hood: "Bairro Alto",
     slug: "queer-karaoke-night",
     to: gatheringPath("queer-karaoke-night"),
+    hostingCommunity: {
+      id: demoCommunityId("queer-barreiro"),
+      slug: "queer-barreiro",
+      name: "Queer Barreiro",
+    },
     kind: "gathering",
     eventType: "karaoke",
     gatheringFamily: "party",

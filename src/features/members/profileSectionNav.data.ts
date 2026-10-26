@@ -8,7 +8,7 @@ import type { Member } from "./data/members";
  *
  * Order matches the actual render order of these sections below the hero
  * (`ProfilePage.tsx`'s `belowHero`: subprofiles, then `ProfileContent`'s
- * now/selected-work/board/skills/groups/shapings/related, then communities,
+ * now/selected-work/board/skills/groups/shapings/activity/related, then communities,
  * then places) — not the order they were designed in.
  */
 export interface ProfileSectionNavItem {
@@ -65,6 +65,12 @@ export const PROFILE_SECTION_NAV_ITEMS: readonly ProfileSectionNavItem[] = [
     id: "shapings",
     labelKey: "members:profile.nav.shapings",
     isVisible: (profile) => Object.keys(profile.shapings).length > 0,
+  },
+  {
+    id: "recent-activity",
+    labelKey: "members:profile.nav.activity",
+    // Mirrors ActivitySection's own empty-gate (ProfileActivitySection.tsx).
+    isVisible: (profile) => profile.activity.length > 0,
   },
   {
     id: "related",

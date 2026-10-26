@@ -13,31 +13,40 @@ import { useTranslation } from "../../shared/i18n/useTranslation";
 import { StudioMenu, type StudioMenuItem } from "./kit/StudioMenu";
 import { useStudioQueueMany } from "./player/studioQueueActions";
 import { studioErrorMessageKeyOf } from "./studioErrors.data";
+import {
+  useStudioFoldedShareItems,
+  type StudioFoldedShare,
+} from "./useStudioFoldedShareItem";
 import releaseStyles from "./StudioRelease.module.css";
 
 const absoluteUrl = (path: string) =>
   new URL(path, window.location.origin).toString();
 
 /** The release's overflow menu: Play next and Add to queue for the whole
- *  release, Copy link, Go to artist and Report release. Each item shows
- *  when its prop is passed; `trackIds` are the playable tracks in release
- *  order. */
+ *  release, Go to artist, Copy link and Report release. With `share` (the
+ *  hero's Share folded here) every way to share takes Copy link's place.
+ *  Each item shows when its prop is passed; `trackIds` are the playable
+ *  tracks in release order. */
 export function StudioReleaseOverflow({
   onReport,
   trackIds,
   href,
   artistHref,
+  share,
 }: {
   onReport?: () => void;
   trackIds?: string[];
   /** The release's router path, for Copy link. */
   href?: string;
   artistHref?: string;
+  /** Set once the hero's Share folds into this menu. */
+  share?: StudioFoldedShare;
 }) {
   const { t } = useTranslation();
+  const foldedShare = useStudioFoldedShareItems(share);
   const { playNextMany, addManyToQueue } = useStudioQueueMany();
   const { showToast } = useToast();
-  const { share } = useShareLink({
+  const { share: copyLink } = useShareLink({
     copied: t("studio:trackMenu.linkCopiedToast"),
     failed: t("studio:detail.copyFailedToast"),
   });
@@ -104,12 +113,16 @@ export function StudioReleaseOverflow({
       href: artistHref,
       onSelect: () => undefined,
     });
-  if (href)
+  if (foldedShare.items.length > 0) {
+    if (items.length > 0)
+      items.push({ id: "shareSeparator", type: "separator" });
+    items.push(...foldedShare.items);
+  } else if (href)
     items.push({
       id: "copyLink",
       label: t("studio:trackMenu.copyLink"),
       icon: <FiLink />,
-      onSelect: () => void share(absoluteUrl(href)),
+      onSelect: () => void copyLink(absoluteUrl(href)),
     });
   if (onReport) {
     if (items.length > 0)
@@ -138,6 +151,7 @@ export function StudioReleaseOverflow({
         label={t("studio:release.moreActions")}
         items={items}
       />
+      {foldedShare.dialog}
     </div>
   );
 }

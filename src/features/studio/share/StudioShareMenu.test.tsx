@@ -2,7 +2,7 @@ import { render, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../../test/TestProviders";
 import type { ShareMenuProps } from "../../messages/share/shareMenu.types";
-import { StudioShareMenu } from "./StudioShareMenu";
+import { StudioHeroShare } from "../StudioHeroShare";
 
 const mocks = vi.hoisted(() => ({
   rules: { canSendToOthers: true, ownPersonaName: null as string | null },
@@ -28,16 +28,17 @@ beforeEach(() => {
 function renderMenu() {
   render(
     <TestProviders>
-      <StudioShareMenu
+      <StudioHeroShare
         target={TARGET}
         title="Kitchen tapes"
-        triggerLabel="Share"
+        isIconOnly={false}
       />
     </TestProviders>,
   );
 }
 
-describe("StudioShareMenu", () => {
+// The orphaned StudioShareMenu went; the hero's Share keeps its contract.
+describe("StudioHeroShare", () => {
   it("shares the canonical Studio path as a studio kind", () => {
     renderMenu();
     expect(mocks.lastProps?.content).toEqual({

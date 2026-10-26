@@ -1,0 +1,50 @@
+/* The email code option under the Google button on the invite card. */
+
+.option {
+  margin-top: 12px;
+}
+
+/* Matches the Google button above it (InviteLandingPage.module.css
+   `.google`): the same padding, text size and line box give the same height,
+   and the same corner radius.
+   `.option` lifts it over Button's own padding and line-height. */
+.option .choose {
+  width: 100%;
+  padding: 14px 20px;
+  font-size: var(--text-15);
+  line-height: normal;
+  border-radius: var(--radius-12);
+}
+
+.chevron {
+  width: 18px;
+  height: 18px;
+  flex: none;
+  transition: transform var(--dur-base) var(--ease);
+}
+
+/* The chevron points down while closed and turns up once the fields open. */
+.choose[aria-expanded="true"] .chevron {
+  transform: rotate(180deg);
+}
+
+/* The fields and the steps stack under the option once it opens; the top
+   padding lives inside Collapse's flow-root wrapper. Each step below the
+   name row spaces itself with EmailCode.module.css `.step`, so its space
+   folds with it. */
+.join {
+  padding-top: 20px;
+}
+
+.nameRow {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  align-items: start;
+}
+
+@media (max-width: 480px) {
+  .nameRow {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

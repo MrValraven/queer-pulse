@@ -148,14 +148,24 @@
   aspect-ratio: 1;
   align-self: flex-start;
   border-radius: var(--radius-16);
-  overflow: hidden;
   box-shadow: var(--shadow-e3);
 }
 
-/* Old and new artwork share the frame while they crossfade. */
+/* Old and new artwork share the frame while they crossfade. Each layer
+   clips itself to the frame's corners, so the cover itself never clips and
+   a skip's trail can sit a page beside it. */
 .coverLayer {
   position: absolute;
   inset: 0;
+  border-radius: inherit;
+  overflow: hidden;
+}
+
+/* The art a landed skip left: one page beside the cover (its translate
+   comes from useSwipeSkipPager), with the cover's own lift. */
+.coverTrail {
+  box-shadow: var(--shadow-e3);
+  pointer-events: none;
 }
 
 /* A phone's cover takes the close and skip swipes: no text selection or
@@ -296,9 +306,11 @@
 }
 
 .panes {
-  /* The lyric list's height: the screen under the head, the tabs and the
-     band's own padding (StudioSyncedLyrics reads it). */
-  --now-pane-block: calc(100dvh - 76px - 40px - 56px);
+  /* The lyric list's height (StudioSyncedLyrics reads it): the screen less
+     the head with the band's top padding (76px), the band's bottom padding
+     (32px) and the tab row above the panel (48px tall, its 21px margin and
+     the 16px gap), so the band ends at the screen's foot and never scrolls. */
+  --now-pane-block: calc(100dvh - 76px - 32px - 85px);
   display: flex;
   flex-direction: column;
   align-self: stretch;
@@ -324,7 +336,9 @@
    frosted band once it sticks (data-stuck, from PhonePanes). */
 .switcher {
   position: sticky;
-  inset-block-start: calc(var(--tap-min) + 12px + env(safe-area-inset-top, 0px));
+  inset-block-start: calc(
+    var(--tap-min) + 12px + env(safe-area-inset-top, 0px)
+  );
   z-index: 1;
   margin-inline: -16px;
   padding: 8px 16px;
@@ -502,12 +516,14 @@
   .stageBody {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 6px;
     min-width: 0;
   }
 
+  /* Small enough that the titles, transport and tools row all fit beside
+     it on a 360px tall screen. */
   .cover {
-    width: min(100dvh - 96px, 260px);
+    width: min(100dvh - 112px, 240px);
   }
 
   .title {

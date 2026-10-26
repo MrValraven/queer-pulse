@@ -27,6 +27,31 @@ import type {
 } from "./api/subprofiles.adapters";
 import type { SkinFamily } from "./subprofile-skins";
 
+/** Skins that paint `.pp-cover` as a thin rule above the hero and hide its
+ *  image slot whatever the owner uploads, so the rule is part of their design
+ *  and looks the same with or without a cover. */
+const RULE_COVER_SKINS: ReadonlySet<SkinFamily> = new Set([
+  "practice",
+  "chair",
+  "collective",
+]);
+
+/**
+ * Whether the page mounts its `.pp-cover` band. Every banner skin needs an
+ * uploaded image for it: without one the page starts right under the nav,
+ * and `.pp:not([data-has-cover])` in `persona-skins.css` sets that layout's
+ * top gap. The rule skins above keep their band either way, except the
+ * therapist layout, which shows a real image in it and, without one, starts
+ * right under the nav as its design does.
+ */
+function shouldMountCoverBand(
+  data: PublicSubprofileView,
+  skin: SkinFamily,
+): boolean {
+  if (data.coverUrl) return true;
+  return RULE_COVER_SKINS.has(skin) && data.kind !== "therapist";
+}
+
 /**
  * The skinned `.pp` tree itself — cover, per-slot `SkinExtras`, hero,
  * spotlight/sections, the foot and the page's single `PersonaRightsFooter`
@@ -88,6 +113,7 @@ export function SubprofilePageBody({
       data-cover-bleed={
         data.coverUrl && data.skinData?.coverBleed ? "true" : undefined
       }
+      data-has-cover={data.coverUrl ? "true" : undefined}
       data-cover-rise={coverRise ? "true" : undefined}
       data-nav-band={navBand ? "true" : undefined}
       style={skinVars}
@@ -95,9 +121,7 @@ export function SubprofilePageBody({
     >
       {lead && <div className="pp-lead">{lead}</div>}
 
-      {/* The therapist layout has no empty band to fill: without a cover
-          image the page starts right under the nav, as its design does. */}
-      {(data.kind !== "therapist" || Boolean(data.coverUrl)) && (
+      {shouldMountCoverBand(data, skin) && (
         <SubprofileCoverBand data={data} mode={mode} />
       )}
 

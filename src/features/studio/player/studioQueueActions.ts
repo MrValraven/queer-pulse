@@ -85,16 +85,51 @@ export type StudioQueueActions = Pick<
 const clampIndex = (index: number, length: number) =>
   Math.min(Math.max(0, Math.round(index)), length);
 
+/** Where each removed source entry stood when it left, by entry id: the
+ *  source position then, and its place in the source's own order, so Undo
+ *  puts it back in both orders. Only the latest removals are kept. */
+const removedSourcePlaces = new Map<
+  string,
+  { sourceIndex: number; originalIndex: number }
+>();
+const REMOVED_SOURCE_PLACES_KEPT = 32;
+
+/** The source position when this source entry was removed, or null when it
+ *  was not removed from the source. */
+export function sourceIndexAtRemovalOf(queueEntryId: string): number | null {
+  return removedSourcePlaces.get(queueEntryId)?.sourceIndex ?? null;
+}
+
+function noteRemovedSourcePlace(state: StudioQueueState, queueEntryId: string) {
+  const isEntry = (entry: StudioQueueItem) =>
+    entry.queueEntryId === queueEntryId;
+  if (state.current?.queueEntryId === queueEntryId) return;
+  if (!state.sourceItems.some(isEntry)) return;
+  removedSourcePlaces.delete(queueEntryId);
+  removedSourcePlaces.set(queueEntryId, {
+    sourceIndex: state.sourceIndex,
+    originalIndex: state.originalSourceItems.findIndex(isEntry),
+  });
+  const oldestId = removedSourcePlaces.keys().next().value;
+  if (
+    removedSourcePlaces.size > REMOVED_SOURCE_PLACES_KEPT &&
+    oldestId !== undefined
+  )
+    removedSourcePlaces.delete(oldestId);
+}
+
 /** The queue with a removed entry back at its own place: `index` is its
  *  position in "Your queue" or in the source's play order when it left. A
- *  source entry also goes back into the source's own order, so switching
- *  shuffle off keeps it. The same state comes back when the queue has
- *  emptied since, or the entry is already in it. */
+ *  source entry also goes back into the source's own order, at
+ *  `originalIndex` when known, so switching shuffle off keeps it. The same
+ *  state comes back when the queue has emptied since, or the entry is
+ *  already in it. */
 export function queueStateWithRestoredEntry(
   state: StudioQueueState,
   item: StudioQueueItem,
   group: "user" | "source",
   index: number,
+  originalIndex?: number,
 ): StudioQueueState {
   if (state.current === null) return state;
   const isSameEntry = (entry: StudioQueueItem) =>
@@ -119,11 +154,13 @@ export function queueStateWithRestoredEntry(
   );
   sourceItems.splice(sourcePosition, 0, item);
   // Without shuffle both orders are one; with it, the entry rejoins its own
-  // order at the same place, as near as the list allows.
+  // order where it stood there, as near as the list allows.
   const originalSourceItems = [...state.originalSourceItems];
+  const ownOrderIndex =
+    originalIndex !== undefined && originalIndex >= 0 ? originalIndex : index;
   originalSourceItems.splice(
     clampIndex(
-      state.isShuffled ? index : sourcePosition,
+      state.isShuffled ? ownOrderIndex : sourcePosition,
       originalSourceItems.length,
     ),
     0,
@@ -218,6 +255,7 @@ export function createQueueActions(
       const previousEntryId = currentEntryId();
       const shouldPlay = isActiveStatus(refs.statusRef.current);
       const settings = deps.readPlaybackSettings();
+      noteRemovedSourcePlace(refs.queueRef.current, queueEntryId);
       dispatch({
         type: "remove",
         queueEntryId,
@@ -228,8 +266,19 @@ export function createQueueActions(
     },
     restoreQueueEntry: (item, group, index) => {
       const before = refs.queueRef.current;
-      const restored = queueStateWithRestoredEntry(before, item, group, index);
+      const place =
+        group === "source"
+          ? removedSourcePlaces.get(item.queueEntryId)
+          : undefined;
+      const restored = queueStateWithRestoredEntry(
+        before,
+        item,
+        group,
+        index,
+        place?.originalIndex,
+      );
       if (restored === before) return false;
+      removedSourcePlaces.delete(item.queueEntryId);
       // No gate: the current entry never changes here, so the state keeps
       // its own warning question.
       dispatch({ type: "restore", state: restored });

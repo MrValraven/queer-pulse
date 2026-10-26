@@ -119,6 +119,9 @@ export const ACTION_TONE: Record<AuditType, AdminTone> &
   staff_role_granted: "violet",
   staff_role_revoked: "amber",
   evidence_cited: "violet",
+  // Outside the filter union: a pause on one member's invites, toned like
+  // the other access limits.
+  invite_access_changed: "amber",
   // Ghost-quiet on purpose: a recorded look is not an enforcement action, and
   // toning it like one would have it read as something done to the member.
   member_sign_in_email_viewed: "ghost",

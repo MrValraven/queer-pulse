@@ -15,6 +15,7 @@ import {
   ResponseTimeChart,
 } from "./AdminDashboardCharts";
 import { AdminDashboardFeed } from "./AdminDashboardFeed";
+import { AdminLandingVisitsCard } from "./AdminLandingVisitsCard";
 import { useAdminOverview } from "./api/useAdminOverview";
 import { hasFailedWithoutData, isRetryingFailedRead } from "./queryLoadFailure";
 import styles from "./AdminDashboardPage.module.css";
@@ -95,6 +96,7 @@ export function AdminDashboardPage() {
                   loading={isLoading}
                 />
               </div>
+              <AdminLandingVisitsCard />
               <Link to={routes.adminReports} className={styles.viewReportLink}>
                 {t("admin:dashboard.viewFullReport")}{" "}
                 <FiArrowRight aria-hidden />

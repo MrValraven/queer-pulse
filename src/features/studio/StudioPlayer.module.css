@@ -31,6 +31,12 @@
   transition-timing-function: var(--ease-out);
 }
 
+/* Named only while a Studio page morph runs (studioPageMorph.ts), so the bar
+   holds still above the crossfading page. */
+:global(:root[data-studio-morph]) .bar {
+  view-transition-name: studio-player-bar;
+}
+
 /* Browsers without @starting-style show the bar at once. */
 @starting-style {
   .bar {
@@ -66,6 +72,15 @@
   overflow: hidden;
   background: none;
   cursor: pointer;
+}
+
+/* StudioPlayerArt's frame for an item with no cover: the kit fallback
+   fills it (absolute, inset 0). */
+.artFallback {
+  position: relative;
+  display: block;
+  flex: none;
+  overflow: hidden;
 }
 
 /* The cover is the shared IconButton; these outrank its icon variant's
@@ -194,6 +209,12 @@
   justify-self: end;
   gap: 4px;
   min-inline-size: max-content;
+}
+
+/* Go to track's fold: it never shrinks once open. */
+.goToTrackSlot {
+  display: flex;
+  flex: none;
 }
 
 .toolButton,
@@ -422,6 +443,16 @@
     content: "";
     position: absolute;
     inset-block: min(0px, calc((100% - var(--tap-min)) / 2));
+    inset-inline: 0;
+  }
+}
+
+/* A mouse gets the 24px floor (WCAG 2.5.8) around the small chip. */
+@media (pointer: fine) {
+  .titles .tip::before {
+    content: "";
+    position: absolute;
+    inset-block: min(0px, calc((100% - 24px) / 2));
     inset-inline: 0;
   }
 }

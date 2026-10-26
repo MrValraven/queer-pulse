@@ -2,20 +2,21 @@ import { Fragment } from "react";
 import { Link } from "react-router-dom";
 import { routes } from "../../app/routeMap";
 import { useTranslation } from "../../shared/i18n/useTranslation";
-import { PROFILE_NAV } from "./editProfileNav.data";
+import { useProfileNavItems } from "./useProfileNavItems";
 import { useProfileScrollSpy } from "./useProfileScrollSpy";
 import styles from "./EditProfilePage.module.css";
 
 export function EditProfileSidebar() {
   const { t } = useTranslation();
+  const navItems = useProfileNavItems();
   const { active, goTo } = useProfileScrollSpy();
 
   return (
     <aside className={styles.nav}>
       <div className={styles.navInner}>
-        {PROFILE_NAV.map((item, i) => {
+        {navItems.map((item, i) => {
           const firstInGroup =
-            i === 0 || PROFILE_NAV[i - 1]!.groupKey !== item.groupKey;
+            i === 0 || navItems[i - 1]!.groupKey !== item.groupKey;
           return (
             <Fragment key={item.id}>
               {firstInGroup && (

@@ -8,7 +8,7 @@ import { StudioReleaseClaimPanels } from "./StudioClaimPanels";
 import { StudioDetailHero } from "./StudioDetailHero";
 import { StudioReleaseDisputePanel } from "./StudioReleaseDisputePanel";
 import { releaseFactsLine } from "./studioFacts";
-import { useIsHeroCompact } from "./studioHeroLayout";
+import { useIsHeroActionsCompact } from "./studioHeroLayout";
 import { outDateOf } from "./studioUpcoming";
 import releaseStyles from "./StudioRelease.module.css";
 import { StudioReleaseCoverArt } from "./StudioReleaseCoverArt";
@@ -30,7 +30,7 @@ export function StudioAlbumHero({
 }) {
   const { t } = useTranslation();
   const formatters = useFormat();
-  const isCompact = useIsHeroCompact();
+  const isCompact = useIsHeroActionsCompact();
   const isPublished = release.status === "published";
   const outLine = release.isUpcoming
     ? outDateOf(release.publishAt, formatters)

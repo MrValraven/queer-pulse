@@ -36,37 +36,7 @@ import {
   useLiveSessionBootstrap,
   useReconcileSession,
 } from "./useLiveSessionBootstrap";
-
-/**
- * Live-mode sign-in leaves the SPA entirely (full-page redirect to Google, then
- * back via the backend callback), so the in-memory `preparing` flag set at the
- * moment of the click can't survive to the landing page. We stash a marker in
- * sessionStorage just before leaving and consume it once on the way back, so the
- * member lands on their feed behind the "preparing the room" loader rather than
- * the bare session-check spinner. sessionStorage (not localStorage) so it dies
- * with the tab and can never leak into an unrelated later visit.
- */
-const PREPARING_KEY = "qp.auth.preparing";
-
-function markSignInPending(): void {
-  try {
-    window.sessionStorage.setItem(PREPARING_KEY, "1");
-  } catch {
-    // Private-mode / blocked storage: we just skip the loader, not the sign-in.
-  }
-}
-
-/** Read-and-clear the marker — returns true only for the first read after a redirect. */
-function consumeSignInPending(): boolean {
-  if (typeof window === "undefined") return false;
-  try {
-    const pending = window.sessionStorage.getItem(PREPARING_KEY) === "1";
-    if (pending) window.sessionStorage.removeItem(PREPARING_KEY);
-    return pending;
-  } catch {
-    return false;
-  }
-}
+import { consumeSignInPending, markSignInPending } from "./signInPending";
 
 /** The mock signed-in user used in demo mode (mirrors the prototype's currentUser). */
 const DEMO_USER: AuthUser = {
@@ -81,6 +51,7 @@ const DEMO_USER: AuthUser = {
   // Demo shows every unlaunched feature through its own visibility check
   // (`isQuizshowVisible` reads `demoMode`), so the mock holds no grants.
   earlyAccessFeatures: [],
+  hasGoogle: true,
   // A fixed adult mock — already attested so demo sessions never hit the age gate.
   ageAttestedAt: "2026-01-01T00:00:00.000Z",
   // A long-standing demo member — already onboarded. The gate still lets demo

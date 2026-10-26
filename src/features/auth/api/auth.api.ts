@@ -75,6 +75,12 @@ export interface AuthUser {
    */
   earlyAccessFeatures: string[];
   /**
+   * True when the account has a Google identity linked, so step-up can offer
+   * Google. Set by `validateAuthUser`, which defaults it to true when the
+   * backend omits it.
+   */
+  hasGoogle?: boolean;
+  /**
    * The Terms + Community Guidelines revisions this member has agreed to,
    * paired with the ones currently in effect (ID-14). When either `accepted*`
    * is behind (or `null`) the re-acceptance sheet opens over the member surface

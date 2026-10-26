@@ -101,6 +101,16 @@ export const STORAGE_INVENTORY: StorageEntry[] = [
     lifetimeKey: `${NS}.lifetime.minutes10`,
     sourceHint: "backend: src/auth/auth-cookies.ts (setOAuthStateCookie)",
   },
+  {
+    id: "emailCodeRequester",
+    names: ["email_code_requester"],
+    kind: "cookie",
+    category: "necessary",
+    purposeKey: `${NS}.emailCodeRequester.purpose`,
+    lifetimeKey: `${NS}.lifetime.days30`,
+    sourceHint:
+      "backend: src/auth/auth-cookies.ts (setEmailCodeRequesterCookie)",
+  },
 
   // ── Strictly necessary device storage ───────────────────────────────────────
   {
@@ -126,7 +136,7 @@ export const STORAGE_INVENTORY: StorageEntry[] = [
     purposeKey: `${NS}.signInProgress.purpose`,
     lifetimeKey: `${NS}.lifetime.untilTabClosed`,
     sourceHint:
-      "app/providers/AuthProvider.tsx, features/settings/api/useReauthToken.ts, features/auth/api/pendingInvite.ts, shared/lib/staleChunkReload.ts",
+      "app/providers/signInPending.ts, features/settings/api/useReauthToken.ts, features/auth/api/pendingInvite.ts, shared/lib/staleChunkReload.ts",
   },
 
   // ── Functional device storage (your own choices — always on) ────────────────

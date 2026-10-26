@@ -9,6 +9,7 @@ import { sanitizeThemes } from "./gatheringExtras";
 import {
   canSaveEditDraft,
   editCapacityProblem,
+  editPaymentLinkProblem,
   editScheduleProblem,
 } from "./manageGatheringState";
 
@@ -132,8 +133,8 @@ export type EditSaveProblem =
  * Why `canSaveEditDraft` refuses this draft, as the place to fix it, or
  * `null` when the draft saves. Mirrors every rule of `canSaveEditDraft`, in
  * its order: the title, the start, the location, the words "Something else"
- * needs, the schedule (whose message hangs off the end field) and the
- * capacity. A refusal none of them explains still reports a problem, with
+ * needs, the schedule (whose message hangs off the end field), the
+ * capacity and the payment link. A refusal none of them explains still reports a problem, with
  * no target, so the footer never says a draft saves when it does not.
  */
 export function editSaveProblem(
@@ -158,6 +159,9 @@ export function editSaveProblem(
   }
   if (editCapacityProblem(draft, openedWithCapacity) !== null) {
     return { sectionKey: "audience", field: "capacity" };
+  }
+  if (editPaymentLinkProblem(draft)) {
+    return { sectionKey: "whenWhere", field: "paymentUrl" };
   }
   return { sectionKey: null, field: null };
 }

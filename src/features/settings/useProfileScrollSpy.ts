@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { usePrefersReducedMotion } from "../../shared/hooks";
-import { PROFILE_NAV } from "./editProfileNav.data";
+import { useProfileNavItems } from "./useProfileNavItems";
 
 /** Sticky header offset so a scrolled-to section clears the AppNav. */
 const SCROLL_OFFSET = 100;
@@ -13,12 +13,13 @@ const SCROLL_OFFSET = 100;
  */
 export function useProfileScrollSpy() {
   const reduced = usePrefersReducedMotion();
-  const [active, setActive] = useState(PROFILE_NAV[0]!.id);
+  const navItems = useProfileNavItems();
+  const [active, setActive] = useState(navItems[0]!.id);
 
   useEffect(() => {
     function onScroll() {
-      let current = PROFILE_NAV[0]!.id;
-      for (const item of PROFILE_NAV) {
+      let current = navItems[0]!.id;
+      for (const item of navItems) {
         const el = document.getElementById(item.id);
         if (el && el.getBoundingClientRect().top - SCROLL_OFFSET <= 1)
           current = item.id;
@@ -28,7 +29,7 @@ export function useProfileScrollSpy() {
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  }, [navItems]);
 
   const goTo = useCallback(
     (id: string) => {

@@ -678,6 +678,15 @@ export const subprofiles: Catalog = {
     "Choose how the cover meets the page. Add a cover image to enable this.",
   "metaForm.bannerEdgeContained": "Contained",
   "metaForm.bannerEdgeBleed": "Bleed into page",
+  "metaForm.studioHero.label": "Studio page layout",
+  "metaForm.studioHero.helper":
+    "Choose how your cover photo shows at the top of your Studio page.",
+  "metaForm.studioHero.full-bleed": "Full-bleed photo",
+  "metaForm.studioHero.full-bleedEffect":
+    "Your photo fills the top of your Studio page with your name over it.",
+  "metaForm.studioHero.avatar": "Avatar over photo",
+  "metaForm.studioHero.avatarEffect":
+    "Your photo sits behind the top of your Studio page and your avatar stands in front of it, next to your name.",
   "metaForm.availabilityLabel": "Availability",
   "metaForm.availabilityUnset": "Not set",
   "metaForm.ctaLabelLabel": "Button label",
@@ -1798,6 +1807,7 @@ export const subprofiles: Catalog = {
   "pending.field.ctaLabel": "Button label",
   "pending.field.ctaUrl": "Button link",
   "pending.field.coverBleed": "Banner edge",
+  "pending.field.studioHero": "Studio page layout",
 
   // Item drawer (SubprofileItemDrawer, EditorItemRow) — the collapsed row
   // list + right-anchored drawer that replaced the old always-open item

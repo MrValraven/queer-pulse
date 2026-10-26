@@ -46,31 +46,33 @@ export function StudioDashboardCharts({ loading }: { loading: boolean }) {
   const fmt = useFormat();
   return (
     <div className={s.col}>
-      <StudioDashboardActivityChart isLoading={loading} />
-      <div className={s.card}>
-        <div className={s.chartFoot}>
-          <span>
-            <Translation
-              i18nKey="studio:demo.dashboard.peakSummary"
-              components={{ em: <em /> }}
-              values={{
-                day: t("studio:demo.dashboard.curator.today"),
-                total: fmt.number(Math.max(...DAILY_ACTIVITY)),
-              }}
-            />
-          </span>
-          <span>
-            <Translation
-              i18nKey="studio:demo.dashboard.topTrackShare"
-              components={{ em: <em /> }}
-              values={{
-                title: CHART_TOP_TRACK_TITLE,
-                percent: CHART_TOP_TRACK_PERCENT,
-              }}
-            />
-          </span>
-        </div>
-      </div>
+      <StudioDashboardActivityChart
+        isLoading={loading}
+        footer={
+          <div className={s.chartFoot}>
+            <span>
+              <Translation
+                i18nKey="studio:demo.dashboard.peakSummary"
+                components={{ em: <em /> }}
+                values={{
+                  day: t("studio:demo.dashboard.curator.today"),
+                  total: fmt.number(Math.max(...DAILY_ACTIVITY)),
+                }}
+              />
+            </span>
+            <span>
+              <Translation
+                i18nKey="studio:demo.dashboard.topTrackShare"
+                components={{ em: <em /> }}
+                values={{
+                  title: CHART_TOP_TRACK_TITLE,
+                  percent: CHART_TOP_TRACK_PERCENT,
+                }}
+              />
+            </span>
+          </div>
+        }
+      />
 
       <div className={s.card}>
         <div className={s.cardH}>
@@ -96,8 +98,8 @@ export function StudioDashboardCharts({ loading }: { loading: boolean }) {
                   style={
                     curator.tone === "jade"
                       ? {
-                          background: "rgba(var(--jade-rgb), 0.2)",
-                          color: "var(--studio-jade-text)",
+                          background: "rgba(var(--jade-rgb), 0.14)",
+                          color: "var(--studio-jade-chip-text)",
                         }
                       : undefined
                   }

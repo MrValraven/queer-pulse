@@ -8,10 +8,18 @@
 
 .head {
   display: flex;
+  flex-wrap: wrap;
   align-items: flex-start;
   justify-content: space-between;
   gap: 12px;
   margin-bottom: 6px;
+}
+/* Small phones: a head-aligned legend or range group takes its own row
+   under the title instead of stacking into a narrow column beside it. */
+@media (--xs) {
+  .head > :last-child:not(:first-child) {
+    flex-basis: 100%;
+  }
 }
 
 .title {

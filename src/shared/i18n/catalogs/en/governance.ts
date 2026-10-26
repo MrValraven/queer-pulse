@@ -291,14 +291,15 @@ export const governance: Catalog = {
   "sections.raise.eyebrow": "Raise a concern",
   "sections.raise.title": "Something isn't <em>right?</em> Tell us.",
   // PRD-261: the old copy promised a confirmation within 48 hours and an
-  // emailed update. QueerPulse sends no email. Since 6 Oct 2026 the strings
+  // emailed update. QueerPulse emails nothing about concerns (its only email
+  // is a sign-in code a person asks for on screen). Since 6 Oct 2026 the strings
   // promise no reply time either (the staff queue still reddens at the
   // three-day SLA in `intake-sla.ts`): a reference code, and a person reads it.
   "sections.raise.intro":
     "Use this form to report a member, a piece of content, a platform decision, or a concern about how QueerPulse is run. Every submission is confidential, and a member of the governance team reads each one.",
   "sections.raise.cardTitle": "Submit a concern",
   "sections.raise.cardText":
-    "Your identity stays confidential. QueerPulse sends no email, so when you submit this you get a reference code instead: keep it, and you can check what happened to your concern at any time.",
+    "Your identity stays confidential. QueerPulse never emails you about concerns, so when you submit this you get a reference code instead: keep it, and you can check what happened to your concern at any time.",
   "sections.raise.selectPlaceholder": "What kind of concern?",
   "sections.raise.option.member": "Report a member or behaviour",
   "sections.raise.option.gathering": "Report an event",
@@ -522,7 +523,7 @@ export const governance: Catalog = {
   "concernStatus.submitted.copyErrorToast":
     "Your browser wouldn't let us copy that. Select the code and copy it by hand.",
   "concernStatus.submitted.keepIt":
-    "Save this code somewhere you can get to it. We keep no copy you can be given back, and QueerPulse sends no email, so this is the only way to look your concern up later.",
+    "Save this code somewhere you can get to it. We keep no copy you can be given back, and QueerPulse never emails you about concerns, so this is the only way to look your concern up later.",
   "concernStatus.submitted.checkCta": "Check on this concern",
   "concernStatus.submitted.whatHappensNext":
     "A member of the governance team reads every concern. Come back with your code to see when someone picked it up and how it ended.",

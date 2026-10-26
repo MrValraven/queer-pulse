@@ -91,18 +91,33 @@
   min-inline-size: 0;
 }
 
+/* A live cell holds the scroll reveal, which takes the cell's whole area and
+   lays the card out exactly as the cell does for a loading placeholder. */
+.ticketReveal {
+  justify-self: stretch;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: start;
+  min-inline-size: 0;
+}
+
 /* ── Agenda: one column of programme rows ── */
 .agendaList {
   display: flex;
   flex-direction: column;
 }
 
-.agendaItem {
+.agendaItem,
+.agendaReveal {
   min-width: 0;
 }
 
 /* Each row draws a hairline under itself. The month's last one has nothing
-   below it to divide from, and the next month's heading is its own break. */
-.agendaItem:last-child > * {
+   below it to divide from, and the next month's heading is its own break. A
+   live row sits in the scroll reveal, and in a shell beside its community
+   menu when it names one. */
+.agendaItem:last-child > *,
+.agendaItem:last-child > .agendaReveal > *,
+.agendaItem:last-child > .agendaReveal > * > a {
   border-block-end-color: transparent;
 }

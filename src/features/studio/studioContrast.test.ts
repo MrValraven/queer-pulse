@@ -86,12 +86,12 @@ describe("Studio demo page contrast", () => {
   });
 
   it("keeps the hero play button on the coral fill with dark ink", () => {
-    const source = cssOf("studio.module.css");
-    expect(ruleBody(source, ".heroActions .playBig")).toContain(
-      "background: var(--accent);",
+    // The hero and card sizes share one rule in the kit play button.
+    const body = ruleBody(
+      cssOf("kit/StudioPlayButton.module.css"),
+      ".play.card",
     );
-    expect(ruleBody(source, ".playBig svg")).toContain(
-      "color: var(--studio-bg);",
-    );
+    expect(body).toContain("background: var(--accent);");
+    expect(body).toContain("color: var(--studio-bg);");
   });
 });

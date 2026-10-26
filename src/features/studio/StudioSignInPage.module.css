@@ -297,6 +297,11 @@
   border-color: transparent;
   color: var(--s-text-60);
 }
+/* Inside the track the coral glow reads as a second, blurry ring. Focus
+   keeps only the cream halo. */
+.seg.seg:focus-visible {
+  box-shadow: var(--ring-cream);
+}
 
 .pane {
   animation: fadeUp 0.3s var(--ease) both;
@@ -454,12 +459,33 @@
   font-family: var(--serif);
   font-style: italic;
 }
-/* The switch is a kit ghost-dark pill. The footer line is italic serif, so
-   the pill restates an upright face, and it keeps the 44px tap floor. */
+/* The switch is a kit Button worn as an accent text link, like the "free"
+   link below it. It keeps a 44px tall hit area, and the negative block
+   margin stops that height from pushing the footer line apart. */
 .footSwitch.footSwitch {
   min-height: var(--tap-min);
-  margin-inline-start: 4px;
+  margin-block: -14px;
+  margin-inline-start: 2px;
+  padding: 0 4px;
+  gap: 4px;
+  background: none;
+  border-color: transparent;
+  box-shadow: none;
+  color: var(--accent);
+  font-family: var(--sans);
+  font-size: var(--text-12-5);
+  font-weight: 600;
   font-style: normal;
+  vertical-align: middle;
+}
+@media (hover: hover) {
+  .footSwitch.footSwitch:hover:not(:disabled):not([aria-disabled="true"]) {
+    background: none;
+    border-color: transparent;
+    transform: none;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
 }
 .foot a {
   appearance: none;
@@ -481,8 +507,13 @@
   color: var(--s-text-40);
 }
 .free a {
+  display: inline-block;
   font-size: var(--text-12-5);
   color: var(--accent);
+  /* A 44px tall hit area around the line, pulled back by the negative
+     margin so the line keeps its place. */
+  padding-block: calc((var(--tap-min) - 1lh) / 2);
+  margin-block: calc((1lh - var(--tap-min)) / 2);
 }
 
 /* Tier picker */

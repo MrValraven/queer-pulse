@@ -15,6 +15,14 @@ export const CHANGELOG_RELEASE_NOTES: Record<
   string,
   { highlights: string[]; pushes?: number }
 > = {
+  "26 Oct 2026": {
+    highlights: [
+      "bulk-refresh-and-revoke-invites",
+      "studio-resume-where-you-left-off",
+      "studio-playlist-folders",
+    ],
+    pushes: 2,
+  },
   "21 Oct 2026": {
     highlights: [
       "rsvp-connection-invites",

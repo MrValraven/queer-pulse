@@ -34,6 +34,12 @@ import {
   type GatheringFamily,
 } from "./gatheringCatalog";
 import { gatheringWhen } from "./gatheringSchedule";
+import {
+  isPaidCostKind,
+  isValidPaymentLink,
+  paymentDetailsPayload,
+  type PaymentDetailsPayload,
+} from "./paymentDetails";
 import { diffGuestCommunities, guestsForLead } from "./guestCommunities";
 import { dateToDatetimeValue, daysUntil } from "./manageGatheringDates";
 import { MAX_CAPACITY, MIN_CAPACITY } from "./steps/whoChapter.data";
@@ -132,6 +138,11 @@ export interface GatheringState {
   costKind: CostKind;
   /** The host's own words about what it costs, or `""`. */
   cost: string;
+  /** How guests pay, as PERSISTED, `""` for none. Same pre-edit-snapshot
+   *  role `communitySlug` plays. Optional so a state built before the fields
+   *  existed still types, and absent reads as `""`. */
+  paymentUrl?: string;
+  paymentInstructions?: string;
   /** When RSVPs close, or `null` when they stay open until it ends. */
   rsvpCutoff: RsvpCutoff | null;
   rsvpQuestions: RsvpQuestions;
@@ -248,6 +259,8 @@ export function demoInitialState(
     houseRules: "",
     costKind: "free",
     cost: "",
+    paymentUrl: "",
+    paymentInstructions: "",
     rsvpCutoff: null,
     rsvpQuestions: EXISTING_GATHERING_RSVP_QUESTIONS,
     customRsvpQuestion: "",
@@ -339,6 +352,8 @@ export function liveInitialState(
     houseRules: gathering.houseRules ?? "",
     costKind: persistedCostKind(gathering),
     cost: gathering.cost ?? "",
+    paymentUrl: gathering.paymentUrl ?? "",
+    paymentInstructions: gathering.paymentInstructions ?? "",
     rsvpCutoff: gathering.rsvpCutoff ?? null,
     // A live detail always carries the map. Without it, the gathering keeps
     // asking what the RSVP form asked before the questions existed (R8).
@@ -397,6 +412,8 @@ export function editDraftCareFields(
   | "houseRules"
   | "costKind"
   | "cost"
+  | "paymentUrl"
+  | "paymentInstructions"
   | "capacity"
   | "rsvpCutoff"
   | "rsvpQuestions"
@@ -410,6 +427,8 @@ export function editDraftCareFields(
     houseRules: state.houseRules,
     costKind: state.costKind,
     cost: state.cost,
+    paymentUrl: state.paymentUrl ?? "",
+    paymentInstructions: state.paymentInstructions ?? "",
     rsvpCutoff: state.rsvpCutoff,
     rsvpQuestions: { ...state.rsvpQuestions, access: true },
     customRsvpQuestion: state.customRsvpQuestion,
@@ -651,7 +670,18 @@ export function canSaveEditDraft(
     // a gathering may carry none, and clearing one is a real choice.
     (draft.format !== OTHER_FORMAT_KEY || draft.otherText.trim().length > 0) &&
     editScheduleProblem(draft) === null &&
-    editCapacityProblem(draft, openedWithCapacity) === null
+    editCapacityProblem(draft, openedWithCapacity) === null &&
+    !editPaymentLinkProblem(draft)
+  );
+}
+
+/** Whether the payment link would be refused: a paid gathering whose link is
+ *  not a full `https:` URL. A free gathering sends no link, so a leftover one
+ *  holds nothing. */
+export function editPaymentLinkProblem(draft: GatheringDetailsDraft): boolean {
+  return (
+    isPaidCostKind(draft.costKind) &&
+    !isValidPaymentLink(draft.paymentUrl ?? "")
   );
 }
 
@@ -695,6 +725,44 @@ function hasCostChanged(
 ): boolean {
   if (draft.costKind !== current.costKind) return true;
   return draft.costKind !== "free" && draft.cost.trim() !== current.cost.trim();
+}
+
+/** How guests pay after a save, as it goes on the wire: trimmed, a bare
+ *  domain completed to `https://`, and `null` when blank or free. */
+function draftPayment(draft: GatheringDetailsDraft): PaymentDetailsPayload {
+  return paymentDetailsPayload(
+    draft.costKind,
+    draft.paymentUrl ?? "",
+    draft.paymentInstructions ?? "",
+  );
+}
+
+/**
+ * The payment fields for the PATCH, each one only when its saved value
+ * changes, so an untouched field stays off the wire (absent leaves it alone
+ * server-side). Turning the gathering free sends `null` for both, which is
+ * the clear the server expects with a free cost kind.
+ */
+function paymentPatch(
+  current: GatheringState,
+  draft: GatheringDetailsDraft,
+): Partial<PaymentDetailsPayload> {
+  const next = draftPayment(draft);
+  const saved = paymentDetailsPayload(
+    current.costKind,
+    current.paymentUrl ?? "",
+    current.paymentInstructions ?? "",
+  );
+  const isTurningFree =
+    !isPaidCostKind(draft.costKind) && draft.costKind !== current.costKind;
+  return {
+    ...(isTurningFree || next.paymentUrl !== saved.paymentUrl
+      ? { paymentUrl: next.paymentUrl }
+      : {}),
+    ...(isTurningFree || next.paymentInstructions !== saved.paymentInstructions
+      ? { paymentInstructions: next.paymentInstructions }
+      : {}),
+  };
 }
 
 /** Whether the host picked or removed a cover. The detail arrives with the
@@ -789,6 +857,9 @@ export function applyEditDraft(
     ...(hasCostChanged(current, draft)
       ? { costKind: draft.costKind, cost: draftCost(draft) ?? "" }
       : {}),
+    // How guests pay, folded in as it goes on the wire.
+    paymentUrl: draftPayment(draft).paymentUrl ?? "",
+    paymentInstructions: draftPayment(draft).paymentInstructions ?? "",
     ...(hasLocationChanged(current, draft)
       ? { venueListingId: null, venueListing: null }
       : {}),
@@ -897,6 +968,8 @@ export function buildEditPatch(
     ...(hasCostChanged(current, draft)
       ? { costKind: draft.costKind, cost: draftCost(draft) }
       : {}),
+    // How guests pay, each field only when it changed (see `paymentPatch`).
+    ...paymentPatch(current, draft),
     // The capacity, only when the host changed it (see `hasCapacityChanged`).
     // A cleared field sends `null`, which the server stores as no limit. A
     // higher number on a published gathering promotes people off the

@@ -41,18 +41,40 @@ export const eventKeys = {
    * the old filter. An unfiltered call produces the same key it always did, so
    * the hub's own `filter=upcoming` fetch and an unfiltered browse still share
    * one request.
+   *
+   * `includeHidden` (the create wizard's clash notes, the mention picker)
+   * asks for the upcoming list with the member's hidden communities left in.
+   * It lands in the key only when true, so every default key is unchanged.
    */
   list: (
     filter: EventFilter | undefined,
     demoMode: boolean,
     browse?: EventBrowseFilters,
+    includeHidden?: boolean,
   ) =>
     [
       "events",
       filter,
       demoMode,
       ...(browse && Object.values(browse).some(Boolean) ? [browse] : []),
+      ...(includeHidden ? ["includeHidden"] : []),
     ] as const,
+
+  /**
+   * The member's hidden event communities. These keys sit outside
+   * `["events"]` on purpose (the lesson recorded in `useFeedMutes.ts`): hiding
+   * a community invalidates the whole events tree, and a hidden list living
+   * under that prefix would be refetched by its own mutation. In demo mode that
+   * refetch resolves the empty seed and silently undoes the hide.
+   */
+  hiddenCommunitiesRoot: ["hidden-event-communities"] as const,
+  hiddenCommunities: (demoMode: boolean) =>
+    ["hidden-event-communities", demoMode] as const,
+
+  /** Prefix of `useMoreFromHost`'s literal key, so a hide can refresh it. */
+  moreFromHostRoot: ["more-from-host"] as const,
+  /** `useHomepageGatherings`'s literal key, so a hide can refresh it. */
+  homepageGatheringsRoot: ["homepage-gatherings"] as const,
 
   /** Prefix matching every announcements query (any slug, any mode). */
   announcementsRoot: ["event-announcements"] as const,

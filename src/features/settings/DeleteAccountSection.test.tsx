@@ -1,7 +1,10 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { TestProviders } from "../../test/TestProviders";
+import { cacheReauthToken } from "./api/useReauthToken";
 import { DeleteAccountSection } from "./DeleteAccountSection";
+
+const TEN_MINUTES_MS = 10 * 60 * 1000;
 
 /**
  * Account deletion / GDPR erasure (audit item #13).
@@ -14,8 +17,23 @@ import { DeleteAccountSection } from "./DeleteAccountSection";
  *
  * i18n note: `settings` is a lazy namespace, so translated labels resolve one
  * render after mount — findBy* is used for the first lookup of each string.
+ *
+ * Demo runs the code dialog too, so each test starts with the token that
+ * dialog caches already in place: the delete runs on the first confirm, and
+ * the dialog's own path is covered by DeleteAccountSection.reauth.test.tsx.
  */
 describe("DeleteAccountSection", () => {
+  beforeEach(() => {
+    cacheReauthToken(
+      "demo-reauth-code",
+      new Date(Date.now() + TEN_MINUTES_MS).toISOString(),
+    );
+  });
+
+  afterEach(() => {
+    sessionStorage.clear();
+  });
+
   it("gates the destructive action behind an exact typed confirmation", async () => {
     render(
       <TestProviders>
@@ -74,8 +92,8 @@ describe("DeleteAccountSection", () => {
 
     // The mutation resolves and the section flips to the pending state: a
     // scheduled, still-cancellable erasure (GDPR Art. 17 grace period).
-    // Demo's step-up token resolves synchronously (getReauthToken(), no
-    // network round trip to simulate); deletion-request itself still carries
+    // The step-up token seeded in beforeEach reads synchronously
+    // (getReauthToken(), no round trip); deletion-request itself still carries
     // a ~900ms simulated delay (account.api simulateOr) — past findBy's
     // default 1s budget under CI jitter. Widen the window rather than
     // shorten the assertion.

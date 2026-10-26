@@ -9,6 +9,7 @@ import { useFormat } from "../../../shared/i18n/format";
 import type { CalendarEvent } from "../data";
 import { eventZoneFormat } from "../eventTimezone";
 import { sizedCover } from "./coverUrl";
+import { EventCommunityMenu } from "./EventCommunityMenu";
 import { EventCoverFallback } from "./EventCoverFallback";
 import { EventDateStamp } from "./EventDateStamp";
 import {
@@ -20,6 +21,7 @@ import {
   ThemeTags,
 } from "./eventCardParts";
 import { GoingCount } from "./GoingCount";
+import { HostingCommunityLine } from "./HostingCommunityLine";
 import posterStyles from "./EventPosterCard.module.css";
 import styles from "./EventAgendaRow.module.css";
 
@@ -82,7 +84,8 @@ function AgendaCover({
  * trailing arrow nudges forward on hover. One `<Link>` per row, named by the
  * event title and its date (the stamps are hidden from assistive tech). Below
  * 640px the row stacks into a card: cover on top carrying the stamp, body
- * below.
+ * below. A row that names its hosting community sits in a `.shell` with the
+ * community menu on its top trailing corner, beside the link.
  */
 export function EventAgendaRow({
   event,
@@ -97,7 +100,7 @@ export function EventAgendaRow({
     month: "long",
     ...zone.dateOptions,
   });
-  return (
+  const link = (
     <Link
       to={event.to}
       aria-label={`${event.title}, ${spokenDate}`}
@@ -111,6 +114,10 @@ export function EventAgendaRow({
         <FormatLine event={event} className={`${posterStyles.formatLine}`} />
         <h3 className={styles.title}>{event.title}</h3>
         <RunByLine event={event} className={posterStyles.runByLine} />
+        <HostingCommunityLine
+          event={event}
+          className={posterStyles.runByLine}
+        />
         <span className={styles.meta}>
           <MetaRow event={event}>
             <EventSpan event={event} fmt={formatters} t={t} />
@@ -126,5 +133,19 @@ export function EventAgendaRow({
       </span>
       <FiArrowRight className={styles.arrow} aria-hidden />
     </Link>
+  );
+  if (!event.hostingCommunity) return link;
+  // The menu trigger is a sibling of the link: a button cannot sit inside one.
+  return (
+    <div className={styles.shell}>
+      {link}
+      <EventCommunityMenu
+        community={event.hostingCommunity}
+        eventTitle={event.title}
+        eventSlug={event.slug}
+        isCoHosted={event.isCoHosted ?? false}
+        className={styles.menuSlot}
+      />
+    </div>
   );
 }

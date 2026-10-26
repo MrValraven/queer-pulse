@@ -22,7 +22,18 @@
   transition-timing-function: var(--ease);
 }
 
+/* The shared quiet Button's hover and press rules outrank any class, so the
+   Studio tints come through its custom properties. The chosen preset keeps
+   its filled ink on hover and press instead of washing out under cream text. */
+.presets .preset,
+.actions .action {
+  --button-quiet-hover: rgba(var(--studio-ink-rgb), 0.14);
+  --button-quiet-active: rgba(var(--studio-ink-rgb), 0.18);
+}
+
 .presets .preset[aria-checked="true"] {
+  --button-quiet-hover: rgba(var(--studio-ink-rgb), 0.88);
+  --button-quiet-active: rgba(var(--studio-ink-rgb), 0.88);
   background: rgba(var(--studio-ink-rgb), 0.88);
   color: var(--studio-surface-rail);
 }
@@ -80,22 +91,27 @@
   border-block-start: 1px solid var(--studio-line);
 }
 
+/* One grid for all five rows (each row is a subgrid), so the tracks line
+   up: the frequency column takes the widest label and the dB column keeps
+   room for "-12 dB", so a changing value never shifts the track. */
 .bands {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr) minmax(6.5ch, max-content);
+  column-gap: 12px;
+  row-gap: 2px;
   margin: 0;
   padding: 4px 0 0;
   list-style: none;
+  font-size: var(--text-13);
 }
 
 .band {
+  grid-column: 1 / -1;
   display: grid;
-  grid-template-columns: 6ch minmax(0, 1fr) 6ch;
+  grid-template-columns: subgrid;
   align-items: center;
-  gap: 10px;
-  font-size: var(--text-12);
   font-variant-numeric: tabular-nums;
+  white-space: nowrap;
   color: var(--studio-text-muted);
 }
 
@@ -103,22 +119,21 @@
   text-align: end;
 }
 
-/* The fill runs from the centre line (0 dB) to the thumb. */
+/* The shared Studio slider (StudioCrossfadeSetting.module.css), drawn here
+   with the fill running from the centre line (0 dB) to the thumb. Firefox
+   draws the same track, so its start-anchored progress stays clear. */
 .bandRange {
+  composes: range from "../../StudioCrossfadeSetting.module.css";
   min-inline-size: 0;
-  min-block-size: var(--tap-min);
-  margin: 0;
-  background: transparent;
-  appearance: none;
-  -webkit-appearance: none;
-  accent-color: var(--studio-accent-text);
+  --slider-block-size: 36px;
+  --slider-progress: transparent;
   --band-fill-direction: to right;
-  --band-track:
+  --slider-track:
     linear-gradient(
       var(--band-fill-direction),
       transparent var(--band-from, 50%),
-      var(--studio-accent-text) var(--band-from, 50%),
-      var(--studio-accent-text) var(--band-to, 50%),
+      var(--slider-fill) var(--band-from, 50%),
+      var(--slider-fill) var(--band-to, 50%),
       transparent var(--band-to, 50%)
     ),
     linear-gradient(
@@ -126,48 +141,18 @@
         rgba(var(--studio-ink-rgb), 0.45)
       )
       50% 0 / 2px 100% no-repeat,
-    rgba(var(--studio-ink-rgb), 0.16);
+    var(--slider-rest);
 }
 
 .bandRange:dir(rtl) {
   --band-fill-direction: to left;
 }
 
-.bandRange::-webkit-slider-runnable-track {
-  height: 6px;
-  border-radius: var(--radius-pill);
-  background: var(--band-track);
-}
-
-.bandRange::-moz-range-track {
-  height: 6px;
-  border-radius: var(--radius-pill);
-  background: var(--band-track);
-}
-
-.bandRange::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 16px;
-  height: 16px;
-  margin-top: -5px;
-  border-radius: 50%;
-  background: var(--studio-accent-text);
-  border: 2px solid var(--studio-surface-rail);
-}
-
-.bandRange::-moz-range-thumb {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: var(--studio-accent-text);
-  border: 2px solid var(--studio-surface-rail);
-}
-
-.bandRange:focus-visible {
-  outline: var(--focus-ring);
-  outline-offset: var(--focus-ring-offset);
-  box-shadow: var(--ring-cream);
+/* Touch: each band is a full 44px row. */
+@media (pointer: coarse) {
+  .bandRange {
+    --slider-block-size: var(--tap-min);
+  }
 }
 
 /* The crossfade block in the same panel (StudioPlayerAudioSettings). */

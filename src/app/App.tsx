@@ -143,7 +143,7 @@ const RootProviders = composeProviders([
   // place of window.confirm. Needs I18nProvider above it (the dialog calls
   // `t()`), and sits above the router so every routed editor can reach it.
   LeaveConfirmProvider,
-  // Picks up a completed step-up reauth OAuth round trip (see
+  // Mounts the step-up code dialog, picks up a Google reauth landing (see
   // useReauthToken.ts) and toasts the outcome. Needs I18nProvider (t()) and
   // ToastProvider (useToast()) above it, both satisfied here.
   ReauthCompletionProvider,

@@ -13,7 +13,9 @@ import { subscribePush } from "./push.api";
 import {
   decidePushResync,
   shouldRestorePushSubscription,
+  type PushSyncOutcome,
 } from "./pushResyncDecision";
+import { reportPushSyncOutcome } from "./pushSyncOutcomeStore";
 import {
   compareApplicationServerKey,
   hasPushApis,
@@ -113,15 +115,19 @@ async function resolveSubscriptionToPost(
  * turned it off, it is re-created and POSTed once per page load; nobody else
  * is ever opted in.
  *
- * Best-effort throughout: any failure is swallowed and the next trigger retries.
+ * Best-effort throughout: a failure never throws, the next trigger retries. It
+ * is reported through the returned `PushSyncOutcome` instead of being lost, so
+ * the recovery prompt can tell a member whose device cannot recover silently
+ * (permission reset, a refused subscribe) that push stopped.
  * `isCancelled` is checked before every step that changes something, so a
  * sign-out mid-pass never re-subscribes or re-registers the endpoint.
  */
 export async function syncPushSubscriptionHealth(
   memberId: string,
   isCancelled: () => boolean = () => false,
-): Promise<void> {
-  if (Notification.permission !== "granted") return;
+): Promise<PushSyncOutcome> {
+  if (Notification.permission !== "granted") return "permissionNotGranted";
+  let hasResolvedSubscription = false;
   try {
     const registration = await navigator.serviceWorker.ready;
     const resolved = await resolveSubscriptionToPost(
@@ -129,14 +135,19 @@ export async function syncPushSubscriptionHealth(
       memberId,
       isCancelled,
     );
-    if (!resolved) return;
+    if (!resolved) {
+      if (isCancelled()) return "inconclusive";
+      const current = await registration.pushManager.getSubscription();
+      return current ? "working" : "noSubscription";
+    }
+    hasResolvedSubscription = true;
     const { subscription, isNewlyCreated } = resolved;
 
     const { endpoint } = subscription;
     const json = subscription.toJSON();
     const p256dh = json.keys?.p256dh;
     const auth = json.keys?.auth;
-    if (!p256dh || !auth) return;
+    if (!p256dh || !auth) return "inconclusive";
 
     if (!isNewlyCreated) {
       const [pending, lastSynced] = await Promise.all([
@@ -151,10 +162,10 @@ export async function syncPushSubscriptionHealth(
         memberId,
         now: Date.now(),
       });
-      if (reason === null) return;
+      if (reason === null) return "working";
     }
 
-    if (isCancelled()) return;
+    if (isCancelled()) return "inconclusive";
     await subscribePush({ endpoint, keys: { p256dh, auth } });
     memberIdsSyncedThisPageLoad.add(memberId);
     await writeLastSyncedSubscription({
@@ -164,9 +175,14 @@ export async function syncPushSubscriptionHealth(
     });
     await addPushEnabledMemberId(memberId);
     await clearPendingSubscription();
+    return "working";
   } catch {
     // Best-effort: a failed re-sync is retried on the next trigger (the tab
-    // becoming visible, a service worker message, or the next app boot).
+    // becoming visible, a service worker message, or the next app boot). A
+    // throw before any subscription was resolved means the browser refused to
+    // create one; after that it was only the server POST, and the browser
+    // subscription still stands.
+    return hasResolvedSubscription ? "inconclusive" : "subscribeFailed";
   }
 }
 
@@ -197,12 +213,13 @@ export function usePushSubscriptionSync(): void {
     function runSync() {
       if (isSyncing) return;
       isSyncing = true;
-      void syncPushSubscriptionHealth(
-        syncingMemberId,
-        () => isCancelled,
-      ).finally(() => {
-        isSyncing = false;
-      });
+      void syncPushSubscriptionHealth(syncingMemberId, () => isCancelled)
+        .then((outcome) => {
+          if (!isCancelled) reportPushSyncOutcome(syncingMemberId, outcome);
+        })
+        .finally(() => {
+          isSyncing = false;
+        });
     }
 
     runSync();

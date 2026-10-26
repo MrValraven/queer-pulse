@@ -136,6 +136,10 @@ export function gatheringToFormSeed(
     contentNotes: sanitizeContentNotes(gathering.contentNotes),
     houseRules: gathering.houseRules ?? "",
     costKind: seedCostKind(gathering),
+    // How guests pay: the same host most likely takes payment the same way.
+    // The payload drops both again if the copy turns free.
+    paymentUrl: gathering.paymentUrl ?? "",
+    paymentInstructions: gathering.paymentInstructions ?? "",
     // Passed through as it stands. `undefined` (a demo record without the
     // field) leaves the family default to the wizard; `null` (a live gathering
     // whose RSVPs stay open until it ends) is copied as that answer.

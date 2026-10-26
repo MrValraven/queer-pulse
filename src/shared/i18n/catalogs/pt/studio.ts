@@ -674,6 +674,7 @@ export const studio: Catalog = {
   "detail.linkCopiedToast": "Link copiado para a área de transferência",
   "detail.copyFailedToast": "Não foi possível copiar o link",
   "detail.tipArtistCta": "Dar gorjeta a {artist}",
+  "detail.tipCta": "Dar gorjeta",
   "detail.fullLedgerCta": "Livro-razão completo",
   "detail.addedToast": "Adicionado à tua biblioteca",
   "detail.removedToast": "Removido da tua biblioteca",
@@ -1266,7 +1267,7 @@ export const studio: Catalog = {
   "program.inbox.tip":
     "Arrasta qualquer submissão para a esquerda, para um espaço. <em>O fluxo de recusa com motivo está na triagem.</em>",
   "program.inbox.listenCta": "Ouvir",
-  "program.inbox.slateCta": "+ Selecionar",
+  "program.inbox.slateLabel": "Selecionar",
   "program.inbox.passCta": "Recusar",
 
   "program.slate.cover.heading": "Artista de capa da semana",
@@ -1282,15 +1283,15 @@ export const studio: Catalog = {
   "program.slate.singles.removeAria": "Remover {title}",
   "program.slate.singles.moveUpAria": "Mover {title} para cima",
   "program.slate.singles.moveDownAria": "Mover {title} para baixo",
-  "program.slate.singles.addSlotCta":
-    "＋ arrasta uma faixa das submissões, ou clica para adicionar do catálogo",
+  "program.slate.singles.addSlotLabel":
+    "Arrasta uma faixa das submissões, ou clica para adicionar do catálogo",
   "program.slate.collections.heading": "Rotação de coleções",
   "program.slate.collections.count": "{placed} de {total}",
   "program.slate.broadcasts.heading": "Transmissões ao vivo esta semana",
   "program.slate.broadcasts.count":
     "{scheduled} agendadas · espaço {slotNumber} em aberto",
-  "program.slate.broadcasts.addSlotCta":
-    "＋ agendar uma terceira transmissão para sábado à noite",
+  "program.slate.broadcasts.addSlotLabel":
+    "Agendar uma terceira transmissão para sábado à noite",
 
   // ── Triagem de submissões (StudioTriagePage + List + Detail) ──────────────
   // Só chrome. O conteúdo fictício da demonstração desta página vive em
@@ -1881,6 +1882,7 @@ export const studio: Catalog = {
   "errors.audioWrongOwner": "Esse ficheiro pertence a outra persona",
   "shell.searchLabel": "Pesquisar no Studio",
   "shell.searchPlaceholderLive": "pesquisar artistas, lançamentos, faixas…",
+  "shell.searchPlaceholderShort": "pesquisar no Studio…",
   "shell.accountLabel": "A tua conta, {name}",
   "shell.menu.artistPages": "As tuas páginas de artista",
   "shell.menu.settings": "Definições",
@@ -3638,6 +3640,8 @@ export const studio: Catalog = {
   "player.mute": "Silenciar",
   "player.unmute": "Voltar a ouvir",
   "player.more": "Mais opções do leitor",
+  "player.goToTrack": "Ver faixa",
+  "player.goToTrackAria": "Ver a página de {title} de {artist}",
   "player.crossfade.label": "Transição",
   "player.crossfade.hint":
     "Funde cada faixa com a seguinte. Os lançamentos marcados para tocar sem pausas seguem direto",
@@ -3685,11 +3689,16 @@ export const studio: Catalog = {
   "player.sleep.turnOff": "Desligar o temporizador",
   "player.sleep.chip": "Faltam {remaining}",
   "player.sleep.chipEndOfTrack": "Para depois desta faixa",
+  "player.sleep.chipEndOfEpisode": "Para depois deste episódio",
   "player.sleep.cancelAria": "Desligar o temporizador, faltam {remaining}",
   "player.sleep.cancelAriaEndOfTrack":
     "Desligar o temporizador marcado para o fim desta faixa",
+  "player.sleep.cancelAriaEndOfEpisode":
+    "Desligar o temporizador marcado para o fim deste episódio",
   "player.sleep.setStatus": "Temporizador definido para {minutes} minutos",
   "player.sleep.endOfTrackStatus": "A reprodução para no fim desta faixa",
+  "player.sleep.endOfEpisode": "Fim do episódio",
+  "player.sleep.endOfEpisodeStatus": "A reprodução para no fim deste episódio",
   "player.sleep.cancelledStatus": "Temporizador desligado",
   "player.sleep.minutesShort": "{count} min",
   "player.lyrics.listLabel": "Letra, a acompanhar a música",
@@ -3746,6 +3755,7 @@ export const studio: Catalog = {
   "queue.dragHint": "Arrasta para reordenar",
   // Track menu (StudioTrackMenu)
   "trackMenu.trigger": "Mais ações para {title}",
+  "trackMenu.triggerUnavailable": "Mais ações para {title}, faixa {number}",
   "trackMenu.playNext": "Tocar a seguir",
   "trackMenu.addToQueue": "Adicionar à fila",
   "trackMenu.copyLink": "Copiar link",
@@ -3949,7 +3959,7 @@ export const studio: Catalog = {
     "Este episódio é um rascunho, por isso ainda não pode tocar",
   "episode.noAudioReason": "O áudio deste episódio ainda não está pronto",
   "trackPage.transcriptHeading": "Transcrição",
-  "trackPage.noTranscript": "Este não tem transcrição",
+  "trackPage.noTranscript": "Ainda não há transcrição",
   "sources.heading": "Fontes",
   "sources.line": "{title} de {artist}",
   "sources.listLabel": "Músicas usadas em {title}",
@@ -4260,7 +4270,6 @@ export const studio: Catalog = {
   "playlist.row.restoredSomeToast_other":
     "Voltaste a pôr {count} de {total} faixas. A playlist já tinha as outras",
   "playlist.row.removedTitledToast": "«{title}» saiu da playlist",
-  "playlist.row.arrangeMenu": "Mover ou tirar {title}",
   "playlist.invite.bannerTitle": "{name} convidou-te para editar esta playlist",
   "playlist.invite.bannerBody":
     "Quem edita pode adicionar, tirar e reordenar faixas, e mudar o nome e a descrição",

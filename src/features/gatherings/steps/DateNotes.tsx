@@ -51,9 +51,11 @@ function ClashNotes({
     59,
     999,
   );
+  // A host planning a date sees every clash, hidden communities included.
   const { items } = useEvents({
     filter: "upcoming",
     browse: { from: dayStart.toISOString(), to: dayEnd.toISOString(), hood },
+    includeHidden: true,
   });
   const { user } = useAuth();
   const signedInSlug = user?.profile?.slug;

@@ -144,20 +144,6 @@ export function ResourceLibraryPage() {
         </div>
       </section>
 
-      <Outro
-        title={
-          <Translation
-            i18nKey="marketing:resourceLibrary.outro.title"
-            components={{ em: <em /> }}
-          />
-        }
-        sub={t("marketing:resourceLibrary.outro.sub")}
-      >
-        <Button size="lg" type="button" onClick={() => setIsSuggestOpen(true)}>
-          {t("marketing:resourceLibrary.outro.cta")}
-        </Button>
-      </Outro>
-
       {isSuggestOpen && (
         <SuggestEditModal
           subjectOptions={guides.map((guide) => guide.title)}
@@ -175,6 +161,20 @@ export function ResourceLibraryPage() {
           blurb: t(subpage.blurbKey),
         }))}
       />
+
+      <Outro
+        title={
+          <Translation
+            i18nKey="marketing:resourceLibrary.outro.title"
+            components={{ em: <em /> }}
+          />
+        }
+        sub={t("marketing:resourceLibrary.outro.sub")}
+      >
+        <Button size="lg" type="button" onClick={() => setIsSuggestOpen(true)}>
+          {t("marketing:resourceLibrary.outro.cta")}
+        </Button>
+      </Outro>
     </PageShell>
   );
 }

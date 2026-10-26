@@ -39,6 +39,22 @@
   margin: 0 auto 32px;
 }
 
+/* Holds two lines of lead while the status check runs, so the answer grows in
+   from a held slot. Each view inside folds in and out through Collapse. */
+.body {
+  min-height: calc(var(--text-15-5) * 1.65 * 2);
+}
+
+/* The closed and failed-check leads: the last line of the card, with nothing
+   below. */
+.settledLead {
+  font-size: var(--text-15-5);
+  color: var(--ink-60);
+  line-height: 1.65;
+  max-width: 42ch;
+  margin: 0 auto;
+}
+
 .notice {
   margin-top: 22px;
   padding-top: 20px;

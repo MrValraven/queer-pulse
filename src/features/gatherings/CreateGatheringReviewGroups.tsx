@@ -14,11 +14,13 @@ import {
   reviewCustomQuestionText,
   reviewGuestCommunitiesText,
   reviewLanguageText,
+  reviewPaymentText,
   reviewRsvpCutoffText,
   reviewRsvpQuestionsText,
   reviewSpotsText,
   reviewVisibilityText,
 } from "./reviewRecapReadings";
+import { isPaidCostKind } from "./paymentDetails";
 import type { GatheringForm } from "./useGatheringForm";
 import { useHostableCommunities } from "./useHostableCommunities";
 
@@ -34,10 +36,11 @@ export interface ReviewGroupProps {
 }
 
 /**
- * Chapter 3 read back: spots, language, cost, who can see it, the waitlist,
- * when RSVPs close, the community (only for a host who runs or moderates one,
- * as the chapter itself shows the field), the guest communities with when
- * their invites go out, and the co-hosts picked.
+ * Chapter 3 read back: spots, language, cost and, for a paid event, how
+ * guests pay, who can see it, the waitlist, when RSVPs close, the community
+ * (only for a host who runs or moderates one, as the chapter itself shows the
+ * field), the guest communities with when their invites go out, and the
+ * co-hosts picked.
  */
 export function WhoReviewGroup({ form, onEditChapter }: ReviewGroupProps) {
   const { t } = useTranslation();
@@ -66,6 +69,13 @@ export function WhoReviewGroup({ form, onEditChapter }: ReviewGroupProps) {
           label={t("gatherings:create.step3.costLabel")}
           value={reviewCostText(form, t)}
         />
+        {isPaidCostKind(form.costKind) && (
+          <ReviewRow
+            label={t("gatherings:gathering.where.paymentHeading")}
+            value={reviewPaymentText(form)}
+            isMultiline
+          />
+        )}
         <ReviewRow
           label={t("gatherings:create.v2.review.row.visibility")}
           value={reviewVisibilityText(form, t)}

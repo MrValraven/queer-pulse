@@ -77,7 +77,7 @@
 /* The label keeps its words on one line; the tools beside it wrap under it
    when a long translation leaves no room. */
 .groupHeading {
-  flex: 1 0 auto;
+  flex: 0 1 auto;
   margin: 0 0 6px;
   white-space: nowrap;
   font-size: var(--text-12);
@@ -208,8 +208,8 @@
    them). Remove stays in view. */
 .actions .control.reorder {
   overflow: hidden;
-  transition-property: background-color, color, transform, opacity, width,
-    min-width, border-width;
+  transition-property:
+    background-color, color, transform, opacity, width, min-width, border-width;
 }
 
 @media (hover: hover) {
@@ -341,10 +341,22 @@
 }
 
 @media (hover: hover) {
-  .control.control:not([aria-disabled="true"]):hover,
-  .play.play:hover:not(:disabled):not([aria-disabled="true"]) {
+  .control.control:not([aria-disabled="true"]):hover {
     background: var(--studio-wash-2);
     color: inherit;
+  }
+
+  /* The wash covers the whole row the pointer is over, so the row reads as
+     one target with its tools. */
+  .play.play:hover:not(:disabled):not([aria-disabled="true"]) {
+    background: none;
+    color: inherit;
+  }
+
+  .row:not(.rowCurrent, .rowDragging):has(:hover) {
+    background:
+      linear-gradient(var(--studio-wash-2), var(--studio-wash-2)),
+      var(--studio-surface-rail);
   }
 }
 
