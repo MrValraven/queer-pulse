@@ -61,6 +61,10 @@ export const routes = {
   /** Studio discovery: the featured hero, the two shelves and the scenes
    *  (`StudioAdminPage`). Moderator and Admin. */
   adminStudio: "/admin/studio",
+  /** Pulse Live quiz templates: the staff list. Moderator and Admin. */
+  adminQuizshowTemplates: "/admin/quizshow/templates",
+  /** One template's builder (`adminQuizshowTemplatePath`). */
+  adminQuizshowTemplate: "/admin/quizshow/templates/:templateId",
   adminLanding: "/admin/landing",
   adminPressKit: "/admin/press-kit",
   adminMarketingVideos: "/admin/marketing-videos",
@@ -193,6 +197,10 @@ export const routes = {
   /** Reach and depth per product feature, classified into the four states
    *  (busy/browsed-but-empty/quiet/not-launched) a moderator needs to see. */
   adminFeatureUsage: "/admin/feature-usage",
+  /** The staff Utilities hub: browser-only tools for moderators and admins. */
+  adminUtilities: "/admin/utilities",
+  /** The PDF toolkit: merge, split, reorder and rotate pages in the browser. */
+  adminUtilitiesPdf: "/admin/utilities/pdf",
   about: "/about",
   account: "/account",
   accountProfile: "/account/profile",
@@ -591,6 +599,9 @@ export const adminCommunityMod = (slug: string) =>
 /** One creator draft's staff preview page. */
 export const adminCreatorDraftPath = (kind: string, id: string) =>
   `/admin/creator-drafts/${kind}/${encodeURIComponent(id)}`;
+/** One Pulse Live quiz template's builder page. */
+export const adminQuizshowTemplatePath = (templateId: string) =>
+  `${routes.adminQuizshowTemplates}/${encodeURIComponent(templateId)}`;
 /** The creator drafts list, optionally filtered to one kind. */
 export const adminCreatorDraftsPath = (kind?: string | null) =>
   kind ? `/admin/creator-drafts?kind=${kind}` : "/admin/creator-drafts";

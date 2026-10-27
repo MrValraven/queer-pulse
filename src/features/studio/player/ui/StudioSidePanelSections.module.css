@@ -1,0 +1,247 @@
+/* The side panel's Now playing sections: the track header, Credits and
+   Next in queue. Colours come from the --studio-* roles, which flip for
+   dark mode. */
+
+.section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  min-width: 0;
+  padding-block-start: 20px;
+}
+
+.section > * {
+  max-width: 100%;
+}
+
+.section > dl,
+.section > div {
+  align-self: stretch;
+}
+
+/* One head row for every panel section (Credits, Next in queue and the
+   artist extras): the serif title on the left and the section's action on
+   the right as a quiet text link (See all, Show all credits, Open queue). */
+.sectionHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  min-width: 0;
+}
+
+.sectionTitle {
+  min-width: 0;
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-18);
+  font-weight: 500;
+  line-height: 1.3;
+  color: var(--studio-text);
+  overflow-wrap: anywhere;
+}
+
+/* The fold wrapper around an action that comes and goes. */
+.sectionAction {
+  flex-shrink: 0;
+}
+
+/* A router link (See all) or the shared quiet Button (Show all credits,
+   Open queue). Doubled so the text-link look wins over the Button's pill. */
+.sectionLink.sectionLink {
+  --button-quiet-hover: transparent;
+  --button-quiet-active: transparent;
+  position: relative;
+  flex-shrink: 0;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-6);
+  background: none;
+  font-family: inherit;
+  font-size: var(--text-13);
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--studio-text-muted);
+  text-decoration: none;
+  cursor: pointer;
+  transition-property: color;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+/* The press area: a --tap-min tall band centred on the link, so the text
+   keeps its size and a finger still lands on it. Scoped under the head row
+   to win over the quiet small Button's own ::after. */
+.sectionHead .sectionLink.sectionLink::after {
+  content: "";
+  position: absolute;
+  inset: calc(50% - var(--tap-min) / 2) 0;
+}
+
+@media (hover: hover) {
+  .sectionLink.sectionLink:hover {
+    color: var(--studio-text);
+    text-decoration: underline;
+  }
+}
+
+.sectionLink.sectionLink:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* The credits past the first few, opened in place under them. */
+.moreCredits {
+  padding-block-start: 10px;
+}
+
+/* Track header. */
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+}
+
+.cover {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: var(--radius-12);
+  box-shadow: var(--shadow-e2);
+}
+
+.headerRow {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+}
+
+.headerTitles {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.headerTitle,
+.headerArtist {
+  overflow: hidden;
+  color: inherit;
+  text-decoration: none;
+}
+
+/* The title takes up to two lines before it truncates, so a long one
+   still reads in the 360px column. */
+.headerTitle {
+  display: -webkit-box;
+  font-family: var(--serif);
+  font-size: var(--text-20);
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.headerArtist {
+  font-size: var(--text-14);
+  color: var(--studio-text-muted);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+a.headerTitle:hover,
+a.headerArtist:hover {
+  text-decoration: underline;
+}
+
+.headerTitle:focus-visible,
+.headerArtist:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.headerAction,
+.headerMenu {
+  flex: none;
+}
+
+/* Next in queue: the shared quiet Button, doubled so the row's look wins
+   over its pill. */
+.nextRow.nextRow {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr);
+  justify-content: stretch;
+  align-items: center;
+  gap: 10px;
+  align-self: stretch;
+  min-width: 0;
+  min-height: 0;
+  padding: 4px;
+  border: none;
+  border-radius: var(--radius-6);
+  background: none;
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: normal;
+  text-align: start;
+  white-space: normal;
+  cursor: pointer;
+  transition-property: background-color;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+@media (hover: hover) {
+  .nextRow.nextRow:hover {
+    background: var(--studio-wash-2);
+  }
+}
+
+.nextRow.nextRow:active {
+  background: var(--studio-wash-3);
+}
+
+.nextRow.nextRow:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.nextCover {
+  display: block;
+  width: 40px;
+  height: 40px;
+  overflow: hidden;
+  border-radius: var(--radius-6);
+}
+
+.nextTitles {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.nextTitle,
+.nextArtist {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nextTitle {
+  font-size: var(--text-14);
+}
+
+.nextArtist {
+  font-size: var(--text-12);
+  color: var(--studio-text-muted);
+}

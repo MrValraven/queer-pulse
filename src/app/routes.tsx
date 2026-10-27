@@ -13,6 +13,7 @@ import {
   isGuestOnlyPath,
   isComingSoonPath,
   isQuizshowHostingPath,
+  isQuizshowStaffPath,
 } from "./authGate";
 import { useAuth } from "./providers/authContext";
 import { useDemoMode } from "./providers/DemoModeProvider";
@@ -73,7 +74,7 @@ const NotFoundPage = lazyNamed(
 export function AppRoutes() {
   // Walled-garden gate: bounce logged-out visitors off member-only routes to
   // sign-in (with a ?next= back-link). Public/marketing pages fall through.
-  const { checking } = useAuth();
+  const { checking, role } = useAuth();
   const gateRedirect = useAuthGateRedirect();
   const liveLocation = useLocation();
   // Inside RouteTransition every plane is pinned to the route it was rendered
@@ -123,6 +124,16 @@ export function AppRoutes() {
   // never bounced before `/auth/me` settles. Demo and `pnpm dev` always pass.
   if (!isQuizshowVisible && isQuizshowHostingPath(pathname)) {
     return isExitingPlane ? null : <Navigate to={routes.roadmap} replace />;
+  }
+  // The Pulse Live staff console (quiz templates). The role gate has already
+  // run by this point: `gateRedirect` above sent anyone below moderator away,
+  // so whoever is still here is staff. Staff without Pulse Live access leave,
+  // since the backend `@Feature('quizshow')` guard refuses every templates
+  // read for them: an admin lands on the admin home, and a moderator lands on
+  // the queues console, because the admin home is admin-only.
+  if (!isQuizshowVisible && isQuizshowStaffPath(pathname)) {
+    const staffHome = role === "admin" ? routes.admin : routes.adminQueues;
+    return isExitingPlane ? null : <Navigate to={staffHome} replace />;
   }
 
   return (

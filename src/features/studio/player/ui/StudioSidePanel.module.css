@@ -1,0 +1,79 @@
+/* The side panel's inside, shared by the floating card and the docked
+   column: the head (heading, close and the "Playing from" line), the body
+   that scrolls on its own, and the spacing between the Now playing
+   sections. Colours come from the --studio-* roles, which flip for dark
+   mode. */
+
+/* Fills the card or column it sits in, so the body takes the height left
+   under the head. */
+.panel {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.head {
+  flex: none;
+  padding: 14px 14px 6px 18px;
+}
+
+.headRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.heading {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-20);
+}
+
+/* "Playing from {source}": a quiet line under the heading, with the
+   source's name as a link when it has a page. */
+.source {
+  margin: 0;
+  padding-block-end: 4px;
+  font-size: var(--text-13);
+  color: var(--studio-text-muted);
+  overflow-wrap: anywhere;
+}
+
+.sourceLink {
+  border-radius: var(--radius-6);
+  font-weight: 600;
+  color: var(--studio-text);
+  text-decoration: none;
+}
+
+@media (hover: hover) {
+  .sourceLink:hover {
+    text-decoration: underline;
+  }
+}
+
+.sourceName {
+  font-weight: 600;
+  color: var(--studio-text);
+}
+
+.heading:focus-visible,
+.sourceLink:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+/* Now playing sits 8px further in than the queue rows, so its text lines
+   up with the panel heading. */
+.nowPlaying {
+  padding: 8px 8px 0;
+}
+
+/* The track header carries no top space of its own; About gets the same
+   20px the other sections open with. */
+.aboutSlot {
+  padding-block-start: 20px;
+}

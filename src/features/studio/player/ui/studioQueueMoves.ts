@@ -28,3 +28,7 @@ export function queueOrderKey(
  *  hand focus back to it when nothing held focus as it opened (Safari
  *  leaves a clicked button unfocused). */
 export const STUDIO_QUEUE_BUTTON_ID = "studio-queue-button";
+
+/** The player bar's Now playing button carries this id, so the side panel
+ *  can hand focus back to it when it closes. */
+export const STUDIO_NOW_PLAYING_BUTTON_ID = "studio-now-playing-button";

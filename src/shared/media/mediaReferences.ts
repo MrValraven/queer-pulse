@@ -1,5 +1,6 @@
 import {
   routes,
+  adminQuizshowTemplatePath,
   businessPath,
   personaPath,
   personaUpdatesPath,
@@ -48,7 +49,8 @@ export type MediaReferenceType =
   | "studio-cover" // StudioRelease.coverKey
   | "persona-post" // SubprofilePost.imageKey (Studio v3; label is the post body)
   | "quizshow-question" // QuizshowQuestion.mediaRef (label is the event title)
-  | "quizshow-game-question"; // QuizshowGame question image (entityId is the game id, label is the game title)
+  | "quizshow-game-question" // QuizshowGame question image (entityId is the game id, label is the game title)
+  | "quizshow-template-question"; // QuizshowTemplate question image (entityId is the template id, label is the EN card title else the PT one, slug is empty)
 
 /** One place an uploaded image is referenced. The backend owns `entityId`/
  *  `label`/`slug`; the frontend owns turning `type` into a localized label
@@ -104,6 +106,10 @@ export function mediaReferenceLabelKey(type: MediaReferenceType): string {
  * - `quizshow-game-question` → the game's page, `quizshowGamePath(entityId)`
  *   (`/play/games/:gameId`). The backend sends the game id as `entityId` and
  *   the game title as `label`, with an empty slug.
+ * - `quizshow-template-question` → the staff template page,
+ *   `adminQuizshowTemplatePath(entityId)` (`/admin/quizshow/templates/:templateId`).
+ *   The backend sends the template id as `entityId` and the EN card title
+ *   (else the PT one) as `label`, with an empty slug.
  * - `card-crest` / `card-background` → the ISSUING community's page: a
  *   membership-card programme is designed in a modal on that page and has no
  *   route of its own, and the backend already resolves the reference to the
@@ -168,6 +174,11 @@ export function mediaReferenceHref(reference: MediaReference): string | null {
     // the entity id and the slug is empty.
     case "quizshow-game-question":
       return entityId ? quizshowGamePath(entityId) : null;
+    // A question image on a quiz template. The template id is the entity id
+    // and the slug is empty. The page is staff only, which is who sees media
+    // references.
+    case "quizshow-template-question":
+      return entityId ? adminQuizshowTemplatePath(entityId) : null;
     case "landlord":
       return slug ? `/work/landlord/${slug}` : null;
     case "company-work":

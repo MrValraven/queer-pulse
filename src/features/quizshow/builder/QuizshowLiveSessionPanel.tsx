@@ -6,7 +6,7 @@ import {
   quizshowScopeRemotePath,
   quizshowScopeRemoteUrl,
   quizshowScopeScreenPath,
-  type QuizshowScope,
+  type QuizshowSessionScope,
 } from "../quizshowScope";
 import styles from "./QuizshowLobby.module.css";
 
@@ -16,7 +16,7 @@ const QR_LIGHT_FILL = "rgba(var(--cream-rgb), 1)";
 const QR_DARK_FILL = "var(--plum)";
 
 interface QuizshowLiveSessionPanelProps {
-  scope: QuizshowScope;
+  scope: QuizshowSessionScope;
   liveSession: QuizshowLiveSessionRef;
 }
 

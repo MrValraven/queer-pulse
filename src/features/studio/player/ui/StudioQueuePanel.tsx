@@ -8,26 +8,30 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, m, useIsPresent } from "motion/react";
-import { FiX } from "react-icons/fi";
 import { useMotionPrefs } from "../../../../app/providers/motionPrefs";
 import { ShellFrameContext } from "../../../../app/providers/shellFrame";
-import { useMediaQuery } from "../../../../shared/hooks/useMediaQuery";
-import { useTranslation } from "../../../../shared/i18n/useTranslation";
-import { IconButton } from "../../../../shared/components/ui/IconButton";
-import { mediaMax } from "../../../../shared/theme/breakpoints";
-import { useStudioPlayerSurface } from "../studioPlayerSurface";
-import { StudioQueueList } from "./StudioQueueList";
-import { STUDIO_QUEUE_BUTTON_ID } from "./studioQueueMoves";
+import { useStudioPlayer, type StudioQueueItem } from "../studioPlayerContext";
+import {
+  useStudioPlayerSurface,
+  type StudioSidePanelView,
+} from "../studioPlayerSurface";
+import { StudioSidePanelBody } from "./StudioSidePanelBody";
+import {
+  STUDIO_NOW_PLAYING_BUTTON_ID,
+  STUDIO_QUEUE_BUTTON_ID,
+} from "./studioQueueMoves";
 import { useStudioToastShift } from "./useStudioToastShift";
 import styles from "./StudioQueue.module.css";
 
 type OpenerRef = RefObject<HTMLElement | null>;
 
 /** The opener the host was given, else what held focus as the panel opened
- *  (anything outside the panel itself), else the player bar's queue button. */
+ *  (anything outside the panel itself), else the player bar's button for
+ *  the view the panel opened on. */
 function readOpener(
   openerRef: OpenerRef | undefined,
   panel: HTMLElement | null,
+  view: StudioSidePanelView,
 ): HTMLElement | null {
   const given = openerRef?.current;
   if (given) return given;
@@ -39,7 +43,9 @@ function readOpener(
     isOutsidePanel
   )
     return activeElement;
-  return document.getElementById(STUDIO_QUEUE_BUTTON_ID);
+  return document.getElementById(
+    view === "queue" ? STUDIO_QUEUE_BUTTON_ID : STUDIO_NOW_PLAYING_BUTTON_ID,
+  );
 }
 
 /** Hands focus back to the opener, once, while focus is still in the panel
@@ -64,14 +70,25 @@ function returnFocus(
  * on mount: the opener is read once (a replay would find the heading the
  * first run focused, so the panel's own elements never count), and the
  * unmount return runs only once the panel has left the document, which a
- * replayed cleanup never sees.
+ * replayed cleanup never sees. This hook moves no focus on a view switch
+ * inside the open panel (the body moves it to the heading after Open
+ * queue). The fallback opener is the bar button of the view it opened on.
  */
-function usePanelFocus(openerRef: OpenerRef | undefined, isPresent: boolean) {
+function usePanelFocus(
+  openerRef: OpenerRef | undefined,
+  isPresent: boolean,
+  view: StudioSidePanelView,
+) {
   const panelRef = useRef<HTMLElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const openerElementRef = useRef<HTMLElement | null>(null);
+  const openedViewRef = useRef(view);
   useLayoutEffect(() => {
-    openerElementRef.current ??= readOpener(openerRef, panelRef.current);
+    openerElementRef.current ??= readOpener(
+      openerRef,
+      panelRef.current,
+      openedViewRef.current,
+    );
     headingRef.current?.focus();
   }, [openerRef]);
   useEffect(() => {
@@ -97,21 +114,26 @@ function useIsSiteNavShown(): boolean {
   return topFrame !== undefined && !topFrame.chromeless;
 }
 
-/** The desktop side panel: pushes no layout, sits above the player bar and
- *  leaves the page usable (non-modal). */
+/** The floating side panel card: pushes no layout, sits above the player
+ *  bar and leaves the page usable (non-modal). It shows either view; the
+ *  host hands it the view and the item, so its exit plays with the last
+ *  ones it showed. */
 function StudioQueuePanel({
+  view,
+  item,
   onClose,
   openerRef,
 }: {
+  view: StudioSidePanelView;
+  item: StudioQueueItem;
   onClose: () => void;
   openerRef?: OpenerRef;
 }) {
-  const { t } = useTranslation();
   const { reducedMotion } = useMotionPrefs();
   const headingId = useId();
   const isPresent = useIsPresent();
   const isSiteNavShown = useIsSiteNavShown();
-  const { panelRef, headingRef } = usePanelFocus(openerRef, isPresent);
+  const { panelRef, headingRef } = usePanelFocus(openerRef, isPresent, view);
   // Toasts step to the panel's side, off its head and rows (DES-28).
   useStudioToastShift(panelRef, "end", isPresent);
   return (
@@ -140,46 +162,40 @@ function StudioQueuePanel({
         onClose();
       }}
     >
-      <div className={styles.panelHead}>
-        <h2
-          id={headingId}
-          ref={headingRef}
-          tabIndex={-1}
-          className={styles.panelHeading}
-        >
-          {t("studio:queue.heading")}
-        </h2>
-        <IconButton
-          className={styles.control}
-          aria-label={t("studio:queue.close")}
-          onClick={onClose}
-        >
-          <FiX aria-hidden />
-        </IconButton>
-      </div>
-      <div className={styles.panelBody}>
-        <StudioQueueList headingLevel={3} />
-      </div>
+      <StudioSidePanelBody
+        view={view}
+        item={item}
+        headingId={headingId}
+        headingRef={headingRef}
+        onClose={onClose}
+      />
     </m.aside>
   );
 }
 
-/** Mounted by the player bar. On phones the queue is a pane in Now playing.
- *  `openerRef` names the queue button, so focus returns to it on close. */
+/** Mounted by the player bar: the floating card, for the floating placement
+ *  only (the docked column has its own host). On phones both views are
+ *  panes in Now playing. `openerRef` names the button that opened it, so
+ *  focus returns to it on close. */
 export function StudioQueuePanelHost({
   openerRef,
 }: { openerRef?: OpenerRef } = {}) {
   const surface = useStudioPlayerSurface();
-  const isPhone = useMediaQuery(mediaMax(880));
+  const { currentItem } = useStudioPlayer();
+  const view = surface.sidePanel;
   return createPortal(
     <AnimatePresence>
-      {surface.isQueuePanelOpen && !isPhone && (
-        <StudioQueuePanel
-          key="queue-panel"
-          onClose={surface.closeQueuePanel}
-          openerRef={openerRef}
-        />
-      )}
+      {surface.sidePanelPlacement === "floating" &&
+        view !== null &&
+        currentItem && (
+          <StudioQueuePanel
+            key="side-panel"
+            view={view}
+            item={currentItem}
+            onClose={surface.closeSidePanel}
+            openerRef={openerRef}
+          />
+        )}
     </AnimatePresence>,
     document.body,
   );

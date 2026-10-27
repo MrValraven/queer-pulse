@@ -1,14 +1,17 @@
 import { useId, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 import { FiAlertCircle } from "react-icons/fi";
+import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { useToast } from "../../../shared/components/feedback/useToast";
 import { Button, Collapse } from "../../../shared/components/ui";
-import type { QuizshowStarterPackKey } from "../../../shared/contracts/quizshow";
+import type { QuizshowTemplateCard } from "../../../shared/contracts/quizshow";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { quizshowErrorCodeOf, quizshowErrorKeyOf } from "../api/quizshowErrors";
+import { quizshowKeys } from "../api/quizshowKeys";
 import { useCreateQuizshowGame } from "../api/useQuizshowGames";
-import { useQuizshowPacks } from "../api/useQuizshowQuiz";
-import { QuizshowPackPicker } from "../builder/QuizshowPackPicker";
+import { QuizshowTemplatePicker } from "../builder/QuizshowTemplatePicker";
+import { templateCardTitleOf } from "../templates/quizshowTemplateResponse";
 import { quizshowGamePath } from "../quizshowPaths";
 import styles from "./QuizshowGames.module.css";
 
@@ -20,34 +23,40 @@ interface QuizshowGamesEmptyStateProps {
   onStartNewGame: (start: QuizshowNewGameStart) => void;
 }
 
-/** The empty My games: start from a pack, copy a game or event quiz, or start blank. */
+/** The empty My games: start from a template, copy a game or event quiz, or start blank. */
 export function QuizshowGamesEmptyState({
   onStartNewGame,
 }: QuizshowGamesEmptyStateProps) {
   const { t, language } = useTranslation();
   const { showToast } = useToast();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const { demoMode } = useDemoMode();
   const titleId = useId();
-  const [isPackPickerOpen, setIsPackPickerOpen] = useState(false);
+  const [isTemplatePickerOpen, setIsTemplatePickerOpen] = useState(false);
   const [errorKey, setErrorKey] = useState<string | null>(null);
-  // The picker loads the packs; this reads the same cache for the picked title.
-  const packs = useQuizshowPacks({ isEnabled: false });
   const createGame = useCreateQuizshowGame();
 
-  async function startFromPack(packKey: QuizshowStarterPackKey) {
+  async function startFromTemplate(card: QuizshowTemplateCard) {
     if (createGame.isPending) return;
-    const pack = packs.data?.items.find((item) => item.key === packKey);
-    setIsPackPickerOpen(false);
+    setIsTemplatePickerOpen(false);
     setErrorKey(null);
     try {
       const response = await createGame.mutateAsync({
-        title: pack?.title[language] ?? "",
-        source: { from: "pack", packKey },
+        title: templateCardTitleOf(card.title, language),
+        source: { from: "template", templateId: card.id },
       });
       showToast(t("quizshow:games.new.created"), "success");
       void navigate(quizshowGamePath(response.gameId));
     } catch (error) {
-      setErrorKey(quizshowErrorKeyOf(quizshowErrorCodeOf(error)));
+      const errorCode = quizshowErrorCodeOf(error);
+      if (errorCode === "quizshow_template_not_found") {
+        // Unpublished or deleted since the picker loaded, so its card leaves the picker.
+        void queryClient.invalidateQueries({
+          queryKey: quizshowKeys.templateCards(demoMode),
+        });
+      }
+      setErrorKey(quizshowErrorKeyOf(errorCode));
     }
   }
 
@@ -62,10 +71,10 @@ export function QuizshowGamesEmptyState({
           variant="soft"
           aria-disabled={createGame.isPending}
           onClick={() => {
-            if (!createGame.isPending) setIsPackPickerOpen(true);
+            if (!createGame.isPending) setIsTemplatePickerOpen(true);
           }}
         >
-          {t("quizshow:builder.empty.fromPack")}
+          {t("quizshow:builder.empty.fromTemplate")}
         </Button>
         <Button variant="ghost" onClick={() => onStartNewGame("copy")}>
           {t("quizshow:import.fromCopy")}
@@ -80,10 +89,12 @@ export function QuizshowGamesEmptyState({
           {errorKey === null ? null : t(errorKey)}
         </p>
       </Collapse>
-      <QuizshowPackPicker
-        isOpen={isPackPickerOpen}
-        onClose={() => setIsPackPickerOpen(false)}
-        onPick={(packKey) => void startFromPack(packKey)}
+      {/* A game started from an adults template turns its 18+ switch on, so every template is open here. */}
+      <QuizshowTemplatePicker
+        isOpen={isTemplatePickerOpen}
+        isAdultsAllowed
+        onClose={() => setIsTemplatePickerOpen(false)}
+        onPick={(card) => void startFromTemplate(card)}
       />
     </section>
   );

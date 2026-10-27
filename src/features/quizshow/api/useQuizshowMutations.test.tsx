@@ -8,8 +8,11 @@ import type {
   QuizshowQuizResponse,
   QuizshowResultsResponse,
 } from "../../../shared/contracts/quizshow";
-import { QUIZSHOW_STARTER_PACKS } from "../demo/quizshowStarterPacks.data";
-import { eventScope, gameScope } from "../quizshowScope";
+import {
+  QUIZSHOW_DEMO_TEMPLATE_IDS,
+  templateSeedById,
+} from "../demo/quizshowTemplates.data";
+import { eventScope, gameScope, templateScope } from "../quizshowScope";
 import { quizshowKeys } from "./quizshowKeys";
 import {
   QUIZSHOW_DEMO_LIVE_SLUG,
@@ -18,6 +21,12 @@ import {
 } from "./quizshowDemoStore.data";
 import { demoPutQuiz, resetQuizshowDemoStore } from "./quizshowDemoStore";
 import { demoGetGame, demoListGames } from "./quizshowDemoGames";
+import {
+  demoGetTemplate,
+  demoListTemplates,
+  demoPutTemplate,
+  demoTemplateCards,
+} from "./quizshowDemoTemplates";
 import { QUIZSHOW_DEMO_GAME_IDS } from "./quizshowDemoGames.data";
 import { demoBodyOf } from "./quizshowDemoQuizzes";
 import {
@@ -30,6 +39,18 @@ vi.mock("./quizshowDemoStore", async (importOriginal) => {
   const actual = await importOriginal<typeof import("./quizshowDemoStore")>();
   return { ...actual, demoPutQuiz: vi.fn(actual.demoPutQuiz) };
 });
+
+// The template demo branch calls the template store; the spy reads its body.
+vi.mock("./quizshowDemoTemplates", async (importOriginal) => {
+  const actual =
+    await importOriginal<typeof import("./quizshowDemoTemplates")>();
+  return { ...actual, demoPutTemplate: vi.fn(actual.demoPutTemplate) };
+});
+
+/** The Pride template's quiz, the fixture every event save starts from. */
+const PRIDE_QUIZ = templateSeedById(
+  QUIZSHOW_DEMO_TEMPLATE_IDS.prideHistory,
+).quiz;
 
 function setup() {
   const queryClient = new QueryClient({
@@ -45,12 +66,11 @@ describe("quizshow mutations in demo mode", () => {
   beforeEach(() => {
     resetQuizshowDemoStore();
     vi.mocked(demoPutQuiz).mockClear();
+    vi.mocked(demoPutTemplate).mockClear();
   });
 
   it("puts the saved quiz in the cache", async () => {
-    const pack = QUIZSHOW_STARTER_PACKS[0];
-    if (!pack) throw new Error("no starter pack");
-    const body: QuizshowQuizInput = { ...pack.quiz, expectedUpdatedAt: null };
+    const body: QuizshowQuizInput = { ...PRIDE_QUIZ, expectedUpdatedAt: null };
     const { queryClient, wrapper } = setup();
     const { result } = renderHook(
       () => useSaveQuizshowQuiz(eventScope(QUIZSHOW_DEMO_LIVE_SLUG)),
@@ -119,9 +139,7 @@ describe("quizshow mutations in demo mode", () => {
     expect(response.quiz?.title).toBe("Friday flat quiz, second round");
   });
 
-  it("saves an event quiz without isAdultsOnly", async () => {
-    const pack = QUIZSHOW_STARTER_PACKS[0];
-    if (!pack) throw new Error("no starter pack");
+  it("saves an event quiz without isAdultsOnly or template fields", async () => {
     const { wrapper } = setup();
     const { result } = renderHook(
       () => useSaveQuizshowQuiz(eventScope(QUIZSHOW_DEMO_LIVE_SLUG)),
@@ -129,9 +147,13 @@ describe("quizshow mutations in demo mode", () => {
     );
 
     await result.current.mutateAsync({
-      ...pack.quiz,
+      ...PRIDE_QUIZ,
       expectedUpdatedAt: null,
       isAdultsOnly: true,
+      templateFields: {
+        card: templateSeedById(QUIZSHOW_DEMO_TEMPLATE_IDS.prideHistory).card,
+        staffNotes: "",
+      },
     });
 
     expect(vi.mocked(demoPutQuiz)).toHaveBeenCalledTimes(1);
@@ -139,5 +161,88 @@ describe("quizshow mutations in demo mode", () => {
     expect(sentSlug).toBe(QUIZSHOW_DEMO_LIVE_SLUG);
     expect(sentBody).toBeDefined();
     expect(sentBody).not.toHaveProperty("isAdultsOnly");
+    expect(sentBody).not.toHaveProperty("templateFields");
+  });
+
+  it("saves a template with its card, staff notes and quiz in one PUT", async () => {
+    const templateId = QUIZSHOW_DEMO_TEMPLATE_IDS.prideHistory;
+    const detail = demoGetTemplate(templateId);
+    const card = {
+      title: { en: "Pride through the years", pt: "Pride ao longo dos anos" },
+      description: detail.card.description,
+    };
+    const staffNotes = "Round 1, question 1: checked against the archive";
+    const { queryClient, wrapper } = setup();
+    const { result } = renderHook(
+      () => useSaveQuizshowQuiz(templateScope(templateId)),
+      { wrapper },
+    );
+
+    const response = await result.current.mutateAsync({
+      ...demoBodyOf(detail.quiz),
+      expectedUpdatedAt: detail.quiz.updatedAt,
+      isAdultsOnly: true,
+      templateFields: { card, staffNotes },
+    });
+
+    expect(vi.mocked(demoPutTemplate)).toHaveBeenCalledTimes(1);
+    const [sentId, sentBody] = vi.mocked(demoPutTemplate).mock.calls[0] ?? [];
+    expect(sentId).toBe(templateId);
+    expect(Object.keys(sentBody ?? {}).sort()).toEqual([
+      "card",
+      "quiz",
+      "staffNotes",
+    ]);
+    expect(sentBody?.card).toEqual(card);
+    expect(sentBody?.staffNotes).toBe(staffNotes);
+    expect(sentBody?.quiz.expectedUpdatedAt).toBe(detail.quiz.updatedAt);
+    expect(sentBody?.quiz).not.toHaveProperty("isAdultsOnly");
+    expect(sentBody?.quiz).not.toHaveProperty("templateFields");
+    expect(
+      queryClient.getQueryData(quizshowKeys.template(templateId, true)),
+    ).toEqual(response);
+    expect(response.isAdultsEvent).toBe(true);
+  });
+
+  it("refreshes the template lists after a template save", async () => {
+    const templateId = QUIZSHOW_DEMO_TEMPLATE_IDS.prideHistory;
+    const detail = demoGetTemplate(templateId);
+    const { queryClient, wrapper } = setup();
+    const rowsKey = quizshowKeys.templateRows(true);
+    const cardsKey = quizshowKeys.templateCards(true);
+    queryClient.setQueryData(rowsKey, demoListTemplates());
+    queryClient.setQueryData(cardsKey, demoTemplateCards());
+    const { result } = renderHook(
+      () => useSaveQuizshowQuiz(templateScope(templateId)),
+      { wrapper },
+    );
+
+    await result.current.mutateAsync({
+      ...demoBodyOf(detail.quiz),
+      title: "Pride history, revised",
+      expectedUpdatedAt: detail.quiz.updatedAt,
+      templateFields: { card: detail.card, staffNotes: detail.staffNotes },
+    });
+
+    expect(queryClient.getQueryState(rowsKey)?.isInvalidated).toBe(true);
+    expect(queryClient.getQueryState(cardsKey)?.isInvalidated).toBe(true);
+  });
+
+  it("refuses a template save without its card and staff notes", async () => {
+    const templateId = QUIZSHOW_DEMO_TEMPLATE_IDS.prideHistory;
+    const detail = demoGetTemplate(templateId);
+    const { wrapper } = setup();
+    const { result } = renderHook(
+      () => useSaveQuizshowQuiz(templateScope(templateId)),
+      { wrapper },
+    );
+
+    await expect(
+      result.current.mutateAsync({
+        ...demoBodyOf(detail.quiz),
+        expectedUpdatedAt: detail.quiz.updatedAt,
+      }),
+    ).rejects.toThrow("A template save needs its card and staff notes");
+    expect(vi.mocked(demoPutTemplate)).not.toHaveBeenCalled();
   });
 });

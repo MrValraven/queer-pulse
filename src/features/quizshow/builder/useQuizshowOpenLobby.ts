@@ -12,7 +12,10 @@ import {
   quizshowProblemsOf,
 } from "../api/quizshowErrors";
 import { useOpenQuizshowSession } from "../api/useQuizshowMutations";
-import { quizshowScopeScreenPath, type QuizshowScope } from "../quizshowScope";
+import {
+  quizshowScopeScreenPath,
+  type QuizshowSessionScope,
+} from "../quizshowScope";
 import type { QuizshowLocalProblem } from "./quizshowValidation";
 
 interface OpenSessionRef {
@@ -53,7 +56,7 @@ function stateAfterError(
   return { ...CLEAN_STATE, errorKey: quizshowErrorKeyOf(code) };
 }
 
-export function useQuizshowOpenLobby(scope: QuizshowScope): {
+export function useQuizshowOpenLobby(scope: QuizshowSessionScope): {
   open: (input: QuizshowOpenSessionInput) => void;
   replaceResultsDialog: ReactNode;
   problems: readonly QuizshowLocalProblem[];

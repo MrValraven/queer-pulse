@@ -38,6 +38,7 @@ import {
   FiStar,
   FiTag,
   FiThumbsUp,
+  FiTool,
   FiType,
   FiUserCheck,
   FiUserPlus,
@@ -58,6 +59,9 @@ export type AdminNavBadge =
   | "verifications"
   | "housingCoops"
   | "listingClaims";
+
+/** An unlaunched feature whose console pages only some staff can see yet. */
+export type AdminNavFeature = "quizshow";
 
 export interface AdminNavItem {
   /** Catalog key for the visible label — resolve with `t()`. */
@@ -94,6 +98,13 @@ export interface AdminNavItem {
    * both stay off for a moderator (ENG-491).
    */
   isAdminOnly?: boolean;
+  /**
+   * The unlaunched feature this destination belongs to. The entry stays hidden
+   * unless the viewer can see that feature (`visibleFeatures`), on every
+   * branch, admins included, so the rail never offers a page whose backend
+   * `@Feature` guard then refuses.
+   */
+  feature?: AdminNavFeature;
 }
 
 export interface AdminNavSection {
@@ -491,6 +502,17 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
         to: routes.adminStudio,
         icon: FiRadio,
       },
+      {
+        // Pulse Live quiz templates (/admin/quizshow/templates).
+        // `AdminQuizshowTemplatesController` is `@Roles(Moderator, Admin)`
+        // plus `@Feature('quizshow')`, so the item carries no `capabilities`
+        // and no `isAdminOnly`, and `feature` hides it from staff without
+        // Pulse Live access.
+        labelKey: "shared:adminNav.items.quizTemplates",
+        to: routes.adminQuizshowTemplates,
+        icon: FiLayers,
+        feature: "quizshow",
+      },
     ],
   },
   {
@@ -647,6 +669,15 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
         icon: FiActivity,
       },
       {
+        // No `capabilities` and no `isAdminOnly`: the tools run in the
+        // browser with no backend call, so any moderator or admin may use
+        // them. `visibleAdminNavSections` keeps this link for moderators and
+        // hides it from grant-only members, whose route is refused by the gate.
+        labelKey: "shared:adminNav.items.utilities",
+        to: routes.adminUtilities,
+        icon: FiTool,
+      },
+      {
         labelKey: "shared:adminNav.items.systemAccounts",
         to: routes.adminBots,
         icon: FiCpu,
@@ -742,26 +773,53 @@ export function visibleAdminNavSections(options: {
    *  whose backends refuse them outright. */
   isAdmin: boolean;
   staffRoles: readonly StaffRoleId[];
+  /** The unlaunched features this viewer can see. An item whose `feature` is
+   *  missing here is dropped on every branch, admins included. */
+  visibleFeatures?: readonly AdminNavFeature[];
 }): AdminNavSection[] {
   const { staffRoles } = options;
+  const visibleFeatures = options.visibleFeatures ?? [];
+  const featureSections = sectionsWithVisibleFeatures(visibleFeatures);
   if (options.isFullConsole) {
-    if (options.isAdmin) return ADMIN_NAV_SECTIONS;
-    return ADMIN_NAV_SECTIONS.map((section) => ({
+    if (options.isAdmin) return featureSections;
+    return featureSections
+      .map((section) => ({
+        ...section,
+        items: section.items.filter(
+          (item) =>
+            !item.isAdminOnly &&
+            (!item.capabilities ||
+              MODERATOR_ADMITTED_CAPABILITY_PATHS.has(item.to) ||
+              holdsItemGrant(item, staffRoles)),
+        ),
+      }))
+      .filter((section) => section.items.length > 0);
+  }
+  return featureSections
+    .map((section) => ({
       ...section,
       items: section.items.filter(
-        (item) =>
-          !item.isAdminOnly &&
-          (!item.capabilities ||
-            MODERATOR_ADMITTED_CAPABILITY_PATHS.has(item.to) ||
-            holdsItemGrant(item, staffRoles)),
+        (item) => !item.isAdminOnly && holdsItemGrant(item, staffRoles),
       ),
-    })).filter((section) => section.items.length > 0);
-  }
+    }))
+    .filter((section) => section.items.length > 0);
+}
+
+/** The rail minus every item whose unlaunched feature the viewer cannot see.
+ *  Returns `ADMIN_NAV_SECTIONS` itself when nothing is dropped, so an admin's
+ *  rail keeps its identity across renders. */
+function sectionsWithVisibleFeatures(
+  visibleFeatures: readonly AdminNavFeature[],
+): AdminNavSection[] {
+  const isItemVisible = (item: AdminNavItem) =>
+    !item.feature || visibleFeatures.includes(item.feature);
+  const hasHiddenItem = ADMIN_NAV_SECTIONS.some(
+    (section) => !section.items.every(isItemVisible),
+  );
+  if (!hasHiddenItem) return ADMIN_NAV_SECTIONS;
   return ADMIN_NAV_SECTIONS.map((section) => ({
     ...section,
-    items: section.items.filter(
-      (item) => !item.isAdminOnly && holdsItemGrant(item, staffRoles),
-    ),
+    items: section.items.filter(isItemVisible),
   })).filter((section) => section.items.length > 0);
 }
 

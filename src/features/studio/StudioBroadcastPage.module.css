@@ -126,7 +126,14 @@
   gap: 24px;
   align-items: start;
 }
-@media (max-width: 1180px) {
+/* One column on phones, and on desktop once the page column is too narrow
+   for all three. */
+@media (--compact) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+@container studio-page (max-width: 899px) {
   .grid {
     grid-template-columns: 1fr;
   }

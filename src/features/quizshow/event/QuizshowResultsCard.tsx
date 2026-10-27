@@ -15,7 +15,7 @@ import { useDeleteQuizshowResults } from "../api/useQuizshowMutations";
 import { useQuizshowResults } from "../api/useQuizshowResults";
 import { quizshowErrorCodeOf, quizshowErrorKeyOf } from "../api/quizshowErrors";
 import { QuizshowShape } from "../QuizshowShape";
-import type { QuizshowScope } from "../quizshowScope";
+import type { QuizshowSessionScope } from "../quizshowScope";
 import { QuizshowRecap } from "./QuizshowRecap";
 import styles from "./QuizshowEvent.module.css";
 
@@ -137,7 +137,7 @@ export function QuizshowResultsCard({
   scope,
   canDelete,
 }: {
-  scope: QuizshowScope;
+  scope: QuizshowSessionScope;
   canDelete: boolean;
 }) {
   const { t } = useTranslation();

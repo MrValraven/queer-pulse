@@ -6,16 +6,18 @@ import type {
   QuizshowQuiz,
   QuizshowQuizInput,
   QuizshowQuizProblem,
+  QuizshowQuizShape,
   QuizshowRound,
-  QuizshowStarterPack,
-  QuizshowStarterPackKey,
 } from "../../../shared/contracts/quizshow";
 import {
   isStructuralProblem,
   quizshowProblemsFor,
   type QuizshowLocalProblem,
 } from "../builder/quizshowValidation";
-import { QUIZSHOW_STARTER_PACKS } from "../demo/quizshowStarterPacks.data";
+import {
+  QUIZSHOW_DEMO_TEMPLATE_IDS,
+  templateSeedById,
+} from "../demo/quizshowTemplates.data";
 import { QUIZSHOW_DEMO_IMPORT_SOURCES } from "./quizshowDemoStore.data";
 
 /**
@@ -30,10 +32,8 @@ export type DemoQuizBody = Omit<QuizshowQuizInput, "expectedUpdatedAt">;
 /** A quiz picked as an import source, ready to be stored under a new owner. */
 export interface DemoQuizCopy {
   body: DemoQuizBody;
-  starterPackKey: QuizshowStarterPackKey | null;
+  sourceTemplateId: string | null;
 }
-
-const DEFAULT_QUIZ_PACK_KEY: QuizshowStarterPackKey = "pride_history";
 
 /** Refusal statuses that differ from the 422 the event adults code uses. */
 const ADULTS_REFUSAL_STATUS: Partial<Record<QuizshowErrorCode, number>> = {
@@ -43,6 +43,14 @@ const DEFAULT_ADULTS_REFUSAL_STATUS = 422;
 
 // Module scope on purpose: the demo keeps what a tab saved until it reloads.
 export const demoEventQuizzesBySlug = new Map<string, QuizshowQuiz>();
+
+export function demoBadRequest(message: string): ApiError {
+  return new ApiError(400, "Bad Request", {
+    statusCode: 400,
+    error: "Bad Request",
+    message: [message],
+  });
+}
 
 export function demoRefusal(
   status: number,
@@ -62,7 +70,7 @@ export function quizFromInput(
   options: {
     idPrefix: string;
     updatedAt: string;
-    starterPackKey: QuizshowStarterPackKey | null;
+    sourceTemplateId: string | null;
   },
 ): QuizshowQuiz {
   const rounds: QuizshowRound[] = input.rounds.map((round, roundIndex) => {
@@ -80,19 +88,15 @@ export function quizFromInput(
     title: input.title,
     languages: input.languages,
     screenLanguage: input.screenLanguage,
-    starterPackKey: options.starterPackKey,
+    sourceTemplateId: options.sourceTemplateId,
     updatedAt: options.updatedAt,
     rounds,
   };
 }
 
-export function demoDefaultPack(): QuizshowStarterPack {
-  const pack =
-    QUIZSHOW_STARTER_PACKS.find(
-      (candidate) => candidate.key === DEFAULT_QUIZ_PACK_KEY,
-    ) ?? QUIZSHOW_STARTER_PACKS[0];
-  if (!pack) throw demoRefusal(404, "quizshow_pack_not_found");
-  return pack;
+/** The Pride seed's quiz, read from the static seeds so a demo template delete never reaches it. */
+export function demoDefaultQuizShape(): QuizshowQuizShape {
+  return templateSeedById(QUIZSHOW_DEMO_TEMPLATE_IDS.prideHistory).quiz;
 }
 
 function isServerProblem(
@@ -147,15 +151,7 @@ export function hasAdultsRound(quiz: {
   return quiz.rounds.some((round) => round.contentLabel === "adults");
 }
 
-export function demoPackCopy(packKey: QuizshowStarterPackKey): DemoQuizCopy {
-  const pack = QUIZSHOW_STARTER_PACKS.find(
-    (candidate) => candidate.key === packKey,
-  );
-  if (!pack) throw demoRefusal(404, "quizshow_pack_not_found");
-  return { body: pack.quiz, starterPackKey: pack.key };
-}
-
-/** The quiz a demo event offers as a source: the one saved in this tab, else the default pack under the source's title. */
+/** The quiz a demo event offers as a source: the one saved in this tab, else the Pride seed's quiz under the source's title. */
 export function demoEventSourceCopy(eventSlug: string): DemoQuizCopy {
   const source = QUIZSHOW_DEMO_IMPORT_SOURCES.find(
     (candidate) =>
@@ -166,11 +162,11 @@ export function demoEventSourceCopy(eventSlug: string): DemoQuizCopy {
   if (copiedQuiz) {
     return {
       body: demoBodyOf(copiedQuiz),
-      starterPackKey: copiedQuiz.starterPackKey,
+      sourceTemplateId: copiedQuiz.sourceTemplateId,
     };
   }
   return {
-    body: { ...demoDefaultPack().quiz, title: source.quizTitle },
-    starterPackKey: null,
+    body: { ...demoDefaultQuizShape(), title: source.quizTitle },
+    sourceTemplateId: null,
   };
 }

@@ -212,12 +212,21 @@
    read from --studio-detail-art-w and --studio-detail-hero-gap, until
    --compact stacks them), the row lines up under the title
    and details column and tucks into the hero's bottom padding, so the
-   warning reads with the track's details. Stacked, it simply follows. */
+   warning reads with the track's details. Stacked, it simply follows.
+   The hero and this row are both full-width children of the page column
+   (the studio-page container), so 100cqi is the hero's width. The cover
+   column is what the copy's 22rem minimum and the gap leave over, up to
+   the full cover width, so the row tracks the cover as it shrinks. */
 @media (min-width: 881px) {
   .safetyRow {
     margin-block-start: -16px;
     padding-inline-start: calc(
-      var(--studio-detail-art-w) + var(--studio-detail-hero-gap)
+      clamp(
+          0px,
+          100cqi - 22rem - var(--studio-detail-hero-gap),
+          var(--studio-detail-art-w)
+        ) +
+        var(--studio-detail-hero-gap)
     );
   }
 }

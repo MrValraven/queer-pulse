@@ -4,7 +4,10 @@ import type {
   QuizshowOpenSessionInput,
   QuizshowQuizInput,
 } from "../../../shared/contracts/quizshow";
-import { QUIZSHOW_STARTER_PACKS } from "../demo/quizshowStarterPacks.data";
+import {
+  QUIZSHOW_DEMO_TEMPLATE_IDS,
+  templateSeedById,
+} from "../demo/quizshowTemplates.data";
 import { demoGetGame } from "./quizshowDemoGames";
 import { QUIZSHOW_DEMO_GAME_IDS } from "./quizshowDemoGames.data";
 import {
@@ -30,10 +33,9 @@ const OPEN_INPUT: QuizshowOpenSessionInput = {
   shouldReplaceResults: false,
 };
 
-function firstPackInput(): QuizshowQuizInput {
-  const pack = QUIZSHOW_STARTER_PACKS[0];
-  if (!pack) throw new Error("no starter pack");
-  return { ...pack.quiz, expectedUpdatedAt: null };
+function prideSeedInput(): QuizshowQuizInput {
+  const seed = templateSeedById(QUIZSHOW_DEMO_TEMPLATE_IDS.prideHistory);
+  return { ...structuredClone(seed.quiz), expectedUpdatedAt: null };
 }
 
 function refusalOf(action: () => unknown): ApiError {
@@ -62,13 +64,13 @@ describe("quizshow demo store", () => {
     expect(response.liveSession).toBeNull();
   });
 
-  it("imports a pack as a fresh quiz with new ids and the pack key", () => {
+  it("imports a template as a fresh quiz with new ids and the template id", () => {
     const response = demoImportQuiz(QUIZSHOW_DEMO_LIVE_SLUG, {
-      from: "pack",
-      packKey: "eurovision",
+      from: "template",
+      templateId: QUIZSHOW_DEMO_TEMPLATE_IDS.eurovision,
     });
     const quiz = response.quiz;
-    expect(quiz?.starterPackKey).toBe("eurovision");
+    expect(quiz?.sourceTemplateId).toBe(QUIZSHOW_DEMO_TEMPLATE_IDS.eurovision);
     const questionIds = quiz?.rounds.flatMap((round) =>
       round.questions.map((question) => question.id),
     );
@@ -82,10 +84,10 @@ describe("quizshow demo store", () => {
   });
 
   it("refuses a save over a newer version with quiz_changed", () => {
-    demoPutQuiz(QUIZSHOW_DEMO_LIVE_SLUG, firstPackInput());
+    demoPutQuiz(QUIZSHOW_DEMO_LIVE_SLUG, prideSeedInput());
     const stored = demoGetQuiz(QUIZSHOW_DEMO_LIVE_SLUG).quiz?.updatedAt;
     const error = refusalOf(() =>
-      demoPutQuiz(QUIZSHOW_DEMO_LIVE_SLUG, firstPackInput()),
+      demoPutQuiz(QUIZSHOW_DEMO_LIVE_SLUG, prideSeedInput()),
     );
     expect(error.status).toBe(409);
     expect(dataOf(error).code).toBe("quizshow_quiz_changed");
@@ -93,7 +95,7 @@ describe("quizshow demo store", () => {
   });
 
   it("refuses an adults round on an event without 18+", () => {
-    const input = firstPackInput();
+    const input = prideSeedInput();
     const firstRound = input.rounds[0];
     if (!firstRound) throw new Error("no round");
     input.rounds[0] = { ...firstRound, contentLabel: "adults" };
@@ -104,7 +106,7 @@ describe("quizshow demo store", () => {
 
   it("lists completeness problems on a draft save", () => {
     const response = demoPutQuiz(QUIZSHOW_DEMO_LIVE_SLUG, {
-      ...firstPackInput(),
+      ...prideSeedInput(),
       title: "",
     });
     expect(response.problems.map((problem) => problem.code)).toContain(
@@ -113,7 +115,7 @@ describe("quizshow demo store", () => {
   });
 
   it("asks before opening over kept results", () => {
-    demoPutQuiz(QUIZSHOW_DEMO_RESULTS_SLUG, firstPackInput());
+    demoPutQuiz(QUIZSHOW_DEMO_RESULTS_SLUG, prideSeedInput());
     const error = refusalOf(() =>
       demoOpenSession(QUIZSHOW_DEMO_RESULTS_SLUG, OPEN_INPUT),
     );
@@ -139,21 +141,23 @@ describe("quizshow demo store", () => {
     expect(dataOf(error).code).toBe("quizshow_join_code_not_found");
   });
 
-  it("keeps the starter pack key when a pack quiz is saved", () => {
+  it("keeps the source template id when a template quiz is saved", () => {
     const imported = demoImportQuiz(QUIZSHOW_DEMO_LIVE_SLUG, {
-      from: "pack",
-      packKey: "eurovision",
+      from: "template",
+      templateId: QUIZSHOW_DEMO_TEMPLATE_IDS.eurovision,
     });
     const saved = demoPutQuiz(QUIZSHOW_DEMO_LIVE_SLUG, {
-      ...firstPackInput(),
+      ...prideSeedInput(),
       expectedUpdatedAt: imported.quiz?.updatedAt ?? null,
     });
-    expect(saved.quiz?.starterPackKey).toBe("eurovision");
+    expect(saved.quiz?.sourceTemplateId).toBe(
+      QUIZSHOW_DEMO_TEMPLATE_IDS.eurovision,
+    );
   });
 
-  it("plays the Pride history pack when the event has no saved quiz", () => {
+  it("plays the Pride history template when the event has no saved quiz", () => {
     const quiz = demoQuizFor(QUIZSHOW_DEMO_LIVE_SLUG);
-    expect(quiz.starterPackKey).toBe("pride_history");
+    expect(quiz.sourceTemplateId).toBe(QUIZSHOW_DEMO_TEMPLATE_IDS.prideHistory);
     expect(quiz.rounds.length).toBeGreaterThan(0);
   });
 
@@ -191,7 +195,9 @@ describe("quizshow demo store", () => {
     });
     const game = demoGetGame(QUIZSHOW_DEMO_GAME_IDS.flatQuiz);
     expect(response.quiz?.title).toBe("Friday flat quiz");
-    expect(response.quiz?.starterPackKey).toBe("eurovision");
+    expect(response.quiz?.sourceTemplateId).toBe(
+      QUIZSHOW_DEMO_TEMPLATE_IDS.eurovision,
+    );
     expect(response.quiz?.rounds.length).toBe(game.quiz?.rounds.length);
     const eventQuestionIds = response.quiz?.rounds.flatMap((round) =>
       round.questions.map((question) => question.id),

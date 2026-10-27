@@ -3500,7 +3500,7 @@ export const marketing: Catalog = {
     "{count} alterações de infraestrutura",
   // Release headlines, one per shipping day (see changelogReleases.ts).
   "changelog.releases.2026-10-27.headline":
-    "O que ouves, audições e apoiantes no Studio, marcos no painel e páginas para cada público.",
+    "Painel A tocar agora e o que ouves no Studio, mais páginas para cada público.",
   "changelog.releases.2026-10-26.headline":
     "Renovar e revogar convites em lote, retomar no Studio, nova página do Studio e barra nítida no iPhone.",
   "changelog.releases.2026-10-21.headline":
@@ -3799,6 +3799,14 @@ export const marketing: Catalog = {
     "Retoma o Studio onde ficaste",
   "changelog.entries.studio-resume-where-you-left-off.body":
     "Liga Retomar e a tua fila volta depois de fechares o separador, com Tocado recentemente neste dispositivo.",
+  "changelog.entries.staff-pdf-page-tool.title":
+    "Uma ferramenta de páginas de PDF para a equipa",
+  "changelog.entries.staff-pdf-page-tool.body":
+    "A equipa pode remover, rodar, reordenar, juntar e dividir páginas de PDF no navegador, e os ficheiros ficam no dispositivo.",
+  "changelog.entries.studio-now-playing-panel.title":
+    "Painel A tocar agora no Studio",
+  "changelog.entries.studio-now-playing-panel.body":
+    "Quem faz cada faixa aparece ao lado de qualquer página do Studio, com a bio, Seguir, eventos e links de apoio.",
   "changelog.entries.studio-your-listening.title":
     "O que ouves, contagem de audições e apoiantes no Studio",
   "changelog.entries.studio-your-listening.body":

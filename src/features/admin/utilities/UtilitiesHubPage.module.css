@@ -1,0 +1,89 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  display: flex;
+}
+
+.card {
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 8px;
+  padding: 20px 22px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-e1);
+  color: var(--ink);
+  text-decoration: none;
+  transition-property: box-shadow, transform;
+  transition-duration: var(--dur-base);
+  transition-timing-function: var(--ease);
+}
+
+.card:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.card:hover {
+  box-shadow: var(--shadow-lift);
+  transform: translateY(-2px);
+}
+
+.iconCircle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(var(--accent-rgb), 0.12);
+  color: var(--accent);
+  font-size: var(--text-20);
+}
+
+.cardName {
+  margin: 8px 0 0;
+  font-family: var(--serif);
+  font-size: var(--text-20);
+  font-weight: 600;
+}
+
+.cardDescription {
+  margin: 0;
+  font-size: var(--text-14);
+  line-height: 1.5;
+  color: rgba(var(--ink-rgb), 0.72);
+}
+
+.arrow {
+  display: inline-flex;
+  margin-top: auto;
+  padding-top: 8px;
+  color: var(--accent);
+  font-size: var(--text-18);
+  transition-property: transform;
+  transition-duration: var(--dur-base);
+  transition-timing-function: var(--ease);
+}
+
+.card:hover .arrow {
+  transform: translateX(4px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card:hover,
+  .card:hover .arrow {
+    transform: none;
+  }
+}

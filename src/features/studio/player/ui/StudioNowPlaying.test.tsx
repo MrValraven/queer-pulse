@@ -369,7 +369,7 @@ describe("StudioNowPlaying content", () => {
     const tabs = within(dialog)
       .getAllByRole("tab")
       .map((tab) => tab.textContent);
-    expect(tabs).toEqual(["Lyrics", "Queue", "Credits"]);
+    expect(tabs).toEqual(["Lyrics", "Queue", "Credits", "Artist"]);
     fireEvent.click(within(dialog).getByRole("tab", { name: "Queue" }));
     expect(
       await within(dialog).findByRole("heading", { name: "Your queue" }),
@@ -401,7 +401,7 @@ describe("StudioNowPlaying content", () => {
     const choices = within(switcher)
       .getAllByRole("button")
       .map((choice) => choice.textContent);
-    expect(choices).toEqual(["Queue", "Lyrics", "Credits"]);
+    expect(choices).toEqual(["Queue", "Lyrics", "Artist", "Credits"]);
     expect(within(dialog).queryByRole("tablist")).toBeNull();
     expect(
       within(switcher).getByRole("button", { name: "Queue" }),

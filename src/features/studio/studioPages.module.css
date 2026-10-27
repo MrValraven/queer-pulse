@@ -309,7 +309,9 @@
   gap: 32px;
   padding: 12px 0 40px;
 }
-@media (min-width: 820px) {
+/* Two columns once the page column has room for them (a container query, so
+   the docked side panel narrows it too). */
+@container studio-page (min-width: 720px) {
   .coGrid {
     grid-template-columns: 1.1fr 0.9fr;
     align-items: start;

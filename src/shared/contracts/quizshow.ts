@@ -96,15 +96,19 @@ export const QUIZSHOW_TEAM_COLOR_KEYS = [
 ] as const;
 export type QuizshowTeamColorKey = (typeof QUIZSHOW_TEAM_COLOR_KEYS)[number];
 
-export const QUIZSHOW_STARTER_PACK_KEYS = [
-  "pride_history",
-  "portuguese_queer_culture",
-  "eurovision",
-  "drag_herstory",
-  "lisbon_queer_icons",
+export const QUIZSHOW_TEMPLATE_STATUSES = ["draft", "published"] as const;
+export type QuizshowTemplateStatus =
+  (typeof QUIZSHOW_TEMPLATE_STATUSES)[number];
+
+/** `missing` on `quizshow_template_card_incomplete`, in this order. */
+export const QUIZSHOW_TEMPLATE_CARD_FIELDS = [
+  "title.en",
+  "title.pt",
+  "description.en",
+  "description.pt",
 ] as const;
-export type QuizshowStarterPackKey =
-  (typeof QUIZSHOW_STARTER_PACK_KEYS)[number];
+export type QuizshowTemplateCardField =
+  (typeof QUIZSHOW_TEMPLATE_CARD_FIELDS)[number];
 
 /** Every coded refusal, REST bodies and socket acks alike. */
 export const QUIZSHOW_ERROR_CODES = [
@@ -116,7 +120,6 @@ export const QUIZSHOW_ERROR_CODES = [
   "quizshow_quiz_invalid",
   "quizshow_adults_round_needs_adults_event",
   "quizshow_quiz_has_adults_rounds",
-  "quizshow_pack_not_found",
   "quizshow_import_source_not_found",
   "quizshow_import_same_event",
   "quizshow_quiz_not_found",
@@ -136,6 +139,8 @@ export const QUIZSHOW_ERROR_CODES = [
   "quizshow_game_limit_reached",
   "quizshow_lobby_rate_limited",
   "quizshow_game_adults_rounds_need_switch",
+  "quizshow_template_not_found",
+  "quizshow_template_card_incomplete",
   // socket
   "quizshow_session_not_found",
   "quizshow_already_attached",
@@ -256,6 +261,9 @@ export const QUIZSHOW_LIMITS = {
   finishedCodeMemoryHours: 12,
   guestPushCooldownMs: 7_200_000,
   importSourcesMax: 50,
+  templateCardTitleMax: 120,
+  templateCardDescriptionMax: 300,
+  templateStaffNotesMax: 20000,
 } as const;
 
 /** Every bilingual field. A language the quiz does not use may hold ''. */
@@ -363,7 +371,7 @@ export interface QuizshowQuiz {
   title: string;
   languages: QuizshowLanguageMode;
   screenLanguage: QuizshowLanguage;
-  starterPackKey: QuizshowStarterPackKey | null; // read only; set by a pack import, copied by an event import
+  sourceTemplateId: string | null; // read only; set by a template import, copied by an event or game import, null after the template is deleted
   updatedAt: string;
   rounds: QuizshowRound[];
 }
@@ -441,14 +449,51 @@ export interface QuizshowImportSource {
   isSameSeries: boolean;
 }
 
-export interface QuizshowStarterPackCard {
-  key: QuizshowStarterPackKey;
+/** Host-facing card. Never carries questions or answers. */
+export interface QuizshowTemplateCard {
+  id: string; // uuid of the template
   title: QuizshowText;
   description: QuizshowText;
-  languages: QuizshowLanguageMode; // 'both' for all four
+  languages: QuizshowLanguageMode;
   roundCount: number;
   questionCount: number;
-  hasAdultsRounds: boolean; // false for all four in v1
+  hasAdultsRounds: boolean;
+}
+
+/** Staff list row. */
+export interface QuizshowTemplateRow {
+  id: string;
+  title: QuizshowText; // card title
+  status: QuizshowTemplateStatus;
+  roundCount: number;
+  questionCount: number;
+  hasAdultsRounds: boolean;
+  updatedAt: string; // the quiz's updatedAt
+  updatedByName: string | null; // display name of updated_by_user_id; null when that account is gone
+  publishedAt: string | null;
+}
+
+export interface QuizshowTemplateCardText {
+  title: QuizshowText;
+  description: QuizshowText;
+}
+
+/** Staff detail: what GET, PUT, create, duplicate, publish and unpublish return. */
+export interface QuizshowTemplateDetail {
+  id: string;
+  card: QuizshowTemplateCardText;
+  staffNotes: string; // '' when empty
+  status: QuizshowTemplateStatus;
+  publishedAt: string | null;
+  publishedByName: string | null;
+  quiz: QuizshowQuiz; // same shape the builder reads today
+}
+
+/** Staff PUT body. `quiz.expectedUpdatedAt` is the concurrency token. */
+export interface QuizshowTemplateInput {
+  card: QuizshowTemplateCardText;
+  staffNotes: string;
+  quiz: QuizshowQuizInput;
 }
 
 export interface QuizshowOpenSessionInput {
@@ -526,17 +571,8 @@ export interface QuizshowRecapQuestion {
   wasSkipped: boolean;
 }
 
-/** `GET /quizshow/packs` source data: a starter pack with its full quiz. */
-export type QuizshowStarterPackQuiz = Omit<
-  QuizshowQuizInput,
-  "expectedUpdatedAt"
->;
-export interface QuizshowStarterPack {
-  key: QuizshowStarterPackKey;
-  title: QuizshowText;
-  description: QuizshowText;
-  quiz: QuizshowStarterPackQuiz;
-}
+/** A quiz body with no concurrency token, as import code reads it. */
+export type QuizshowQuizShape = Omit<QuizshowQuizInput, "expectedUpdatedAt">;
 
 /** The `quizshow` field of `EventDetail`; null while the feature is hidden from this viewer (unlaunched, and no early-access grant). */
 export interface QuizshowEventDetail {
@@ -968,7 +1004,7 @@ export interface QuizshowAnswerSnapshotEvidence {
 
 // Frontend-only names for shapes the contract writes inline.
 export type QuizshowImportInput =
-  | { from: "pack"; packKey: QuizshowStarterPackKey }
+  | { from: "template"; templateId: string }
   | { from: "event"; eventSlug: string }
   | { from: "game"; gameId: string };
 export interface QuizshowOpenSessionResponse {

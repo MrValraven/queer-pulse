@@ -221,6 +221,9 @@ const PRIVATE_BREADCRUMB_PATHS = [
  * The same holds for a click on a toast's dismiss button (`data-toast-dismiss`
  * in the global toast region): the toast can come from a player action and
  * outlive the page that raised it, and a dismiss click has no diagnostic value.
+ * The same holds on the staff utilities hub and the PDF tool under it: every
+ * `ui.*` breadcrumb (its text carries file names) and every `console`
+ * breadcrumb (qpdf writes to stdout and stderr) is dropped there.
  * A missing hint, a missing event or a target that is no Element (a text
  * node, the window, the document) leaves the breadcrumb to the rules above.
  * Every other breadcrumb passes through unchanged.
@@ -235,6 +238,13 @@ export function dropStudioPlayBreadcrumb(
       isOnCommunityGivingTab() ||
       isFromStudioPlayerSurface(hint) ||
       isFromToastDismiss(hint))
+  ) {
+    return null;
+  }
+  if (
+    (breadcrumb.category?.startsWith("ui.") ||
+      breadcrumb.category === "console") &&
+    isOnStaffUtilitiesPage()
   ) {
     return null;
   }
@@ -253,6 +263,17 @@ function isOnStudioPage(): boolean {
   const pathname =
     typeof window === "undefined" ? "" : (window.location?.pathname ?? "");
   return pathname === "/studio" || pathname.startsWith("/studio/");
+}
+
+/** True while the page's path is the staff utilities hub or under it (outside
+ *  a browser, false). The literal mirrors `routes.adminUtilities`; routeMap is
+ *  not imported here to avoid an import cycle. */
+function isOnStaffUtilitiesPage(): boolean {
+  const pathname =
+    typeof window === "undefined" ? "" : (window.location?.pathname ?? "");
+  return (
+    pathname === "/admin/utilities" || pathname.startsWith("/admin/utilities/")
+  );
 }
 
 /** True while the page's query has `tab=giving`, a community's Support tab

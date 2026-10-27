@@ -10,6 +10,14 @@ const StudioAdminPage = lazyNamed(
   () => import("./StudioAdminPage"),
   "StudioAdminPage",
 );
+const AdminQuizshowTemplatesPage = lazyNamed(
+  () => import("./quizshowTemplates/AdminQuizshowTemplatesPage"),
+  "AdminQuizshowTemplatesPage",
+);
+const AdminQuizshowTemplatePage = lazyNamed(
+  () => import("./quizshowTemplates/AdminQuizshowTemplatePage"),
+  "AdminQuizshowTemplatePage",
+);
 const AdminMarketingVideosPage = lazyNamed(
   () => import("./marketingVideos/AdminMarketingVideosPage"),
   "AdminMarketingVideosPage",
@@ -21,6 +29,14 @@ const AdminLogoConceptsPage = lazyNamed(
 const AdminDashboardPage = lazyNamed(
   () => import("./AdminDashboardPage"),
   "AdminDashboardPage",
+);
+const UtilitiesHubPage = lazyNamed(
+  () => import("./utilities/UtilitiesHubPage"),
+  "UtilitiesHubPage",
+);
+const PdfToolkitPage = lazyNamed(
+  () => import("./utilities/pdf/PdfToolkitPage"),
+  "PdfToolkitPage",
 );
 const AdminFeatureUsagePage = lazyNamed(
   () => import("./AdminFeatureUsagePage"),
@@ -294,6 +310,24 @@ function publicFaceRoutes() {
   );
 }
 
+/** Pulse Live quiz templates: the list and one template's builder. For
+ *  moderators and admins with Pulse Live access; `AppRoutes` sends staff
+ *  without that access away before these mount. */
+function quizshowTemplateRoutes() {
+  return (
+    <>
+      <Route
+        path={routes.adminQuizshowTemplates}
+        element={<AdminQuizshowTemplatesPage />}
+      />
+      <Route
+        path={routes.adminQuizshowTemplate}
+        element={<AdminQuizshowTemplatePage />}
+      />
+    </>
+  );
+}
+
 /** Members' unfinished creator drafts: the list and one draft's read-only
  *  preview. The backend answers these for the Admin role alone. */
 function creatorDraftRoutes() {
@@ -342,6 +376,8 @@ export function adminRoutes() {
         path={routes.adminFeatureUsage}
         element={<AdminFeatureUsagePage />}
       />
+      <Route path={routes.adminUtilities} element={<UtilitiesHubPage />} />
+      <Route path={routes.adminUtilitiesPdf} element={<PdfToolkitPage />} />
       <Route path={routes.adminModeration} element={<AdminModerationPage />} />
       <Route
         path={routes.adminModResponseTemplates}
@@ -442,6 +478,7 @@ export function adminRoutes() {
           so staff need somewhere to curate them. */}
       <Route path={routes.adminTopics} element={<TopicsAdminPage />} />
       <Route path={routes.adminStudio} element={<StudioAdminPage />} />
+      {quizshowTemplateRoutes()}
       <Route
         path={routes.adminCommunityTagRequests}
         element={<AdminCommunityTagRequestsPage />}

@@ -17,6 +17,12 @@ const CONFLICT_KEYS = {
     load: "quizshow:save.conflictLoadGame",
     overwrite: "quizshow:save.conflictOverwriteGame",
   },
+  template: {
+    title: "quizshow:save.conflictTitleTemplate",
+    body: "quizshow:save.conflictBodyTemplate",
+    load: "quizshow:save.conflictLoad",
+    overwrite: "quizshow:save.conflictOverwrite",
+  },
 } as const;
 
 export function QuizshowSaveConflictDialog({

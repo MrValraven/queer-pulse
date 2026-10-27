@@ -1,0 +1,509 @@
+/* Chrome around the PDF page grid: drop zone, open files, error notices,
+   the sticky selection bar and the output bar. */
+
+/* ── Drop zone ─────────────────────────────────────────────────────────── */
+.dropZone {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 36px 22px;
+  background: var(--paper);
+  border: 1.5px dashed rgba(var(--line-rgb), 0.2);
+  border-radius: var(--radius-card);
+  text-align: center;
+  transition-property: border-color, background-color;
+  transition-duration: var(--dur-base);
+  transition-timing-function: var(--ease);
+}
+
+.dropZone[data-drag-active="true"] {
+  border-color: var(--accent);
+  background: rgba(var(--accent-rgb), 0.06);
+}
+
+/* A real grid: the button cell, then the opening line beside it. The drop
+   line shares the button's cell, so it never takes a row of its own. */
+.dropZoneCompact {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  justify-items: start;
+  gap: 0 14px;
+  padding: 12px 16px;
+  border-radius: var(--radius-badge);
+  text-align: start;
+}
+
+.compactSlot {
+  display: grid;
+  align-items: center;
+  justify-items: start;
+}
+
+.dropZoneCompact .opening {
+  padding-top: 0;
+}
+
+/* Files rarely get dragged on a touch screen, so the dashed frame goes and
+   the button stands alone. A drag still lights the frame up. */
+@media (pointer: coarse) {
+  .dropZoneCompact {
+    padding: 0;
+  }
+
+  .dropZoneCompact:not([data-drag-active="true"]) {
+    border-color: transparent;
+    background: none;
+  }
+}
+
+.dropIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: rgba(var(--accent-rgb), 0.12);
+  color: var(--accent-ink);
+  font-size: var(--text-24);
+}
+
+/* Two lines stacked in one grid cell, so the swap is an opacity crossfade
+   and the zone keeps its height. */
+.swap {
+  display: grid;
+  align-items: center;
+  margin: 0;
+}
+
+.swapLine {
+  grid-area: 1 / 1;
+  transition-property: opacity;
+  transition-duration: var(--dur-base);
+  transition-timing-function: var(--ease);
+}
+
+.swapLine[data-shown="false"] {
+  opacity: 0;
+}
+
+.dropTitle {
+  font-family: var(--serif);
+  font-size: var(--text-20);
+  font-weight: 400;
+  color: var(--text-strong);
+}
+
+.dropActiveLine {
+  font-size: var(--text-14);
+  font-weight: 600;
+  color: var(--accent-ink);
+}
+
+.privacy {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--icon-gap-inline);
+  margin: 0;
+  font-size: var(--text-13);
+  color: var(--ink-60);
+}
+
+.opening {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding-top: 4px;
+  font-size: var(--text-14);
+  color: var(--ink-60);
+}
+
+/* ── Shared panel ──────────────────────────────────────────────────────── */
+.panel {
+  display: grid;
+  gap: 10px;
+  padding: 16px 18px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-badge);
+  box-shadow: var(--shadow-e1);
+}
+
+.panelHeading {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-18);
+  font-weight: 400;
+  color: var(--text-strong);
+}
+
+.list {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* ── Open files ────────────────────────────────────────────────────────── */
+.fileRow {
+  display: grid;
+  gap: 6px;
+  padding-block: 8px;
+}
+
+.fileLine {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.toneDot {
+  flex: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--file-tone);
+}
+
+.fileName {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--text-14);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.pageCount {
+  flex: none;
+  font-size: var(--text-13);
+  color: var(--ink-60);
+}
+
+.warning {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0;
+  margin-inline-start: 20px;
+  padding: 8px 12px;
+  border-radius: var(--radius-10);
+  font-size: var(--text-13);
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+.warning svg {
+  flex: none;
+  margin-top: 2px;
+}
+
+.warningSigned {
+  background: rgba(var(--amber-rgb), 0.16);
+}
+
+.warningSigned svg {
+  color: var(--amber-ink);
+}
+
+.warningLarge {
+  background: rgba(var(--line-rgb), 0.05);
+}
+
+.warningLarge svg {
+  color: var(--ink-60);
+}
+
+/* ── Error notices ─────────────────────────────────────────────────────── */
+.errors {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.notice {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+  padding: 6px 6px 6px 14px;
+  background: rgba(var(--danger-rgb), 0.08);
+  border: 1px solid rgba(var(--danger-rgb), 0.22);
+  border-radius: var(--radius-badge);
+}
+
+.noticeIcon {
+  flex: none;
+  color: var(--danger);
+}
+
+.noticeText {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  font-size: var(--text-14);
+  line-height: 1.5;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+/* ── Selection bar ─────────────────────────────────────────────────────── */
+/* Sits under the AdminShell top bar. The bar measures that top bar and
+   writes --pdf-bar-top; the fallback matches its one-row desktop height.
+   Two rows: the status with Select all and Clear selection, then the page
+   actions with the edit history at the far end.
+   A split toggle in the last column reaches past the grid's end by half a
+   tap target. The second shadow is a solid strip in the page colour along
+   the bar's end edge, as wide as that overhang plus the bar's corner radius,
+   so a toggle scrolling under the bar stays hidden beside it as well. It
+   paints under the bar's own shadow, so the bar keeps its lift. */
+.selectionBar {
+  position: sticky;
+  top: var(--pdf-bar-top, calc(67px + env(safe-area-inset-top, 0px)));
+  z-index: var(--z-sticky);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+  padding: 10px 14px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-badge);
+  box-shadow:
+    var(--shadow-e2),
+    calc(var(--tap-min) / 2 + var(--radius-badge)) 0 0 0 var(--cream);
+}
+
+.selectionStatus {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 12px;
+  min-width: 0;
+}
+
+.selectionText {
+  flex: 1 1 16rem;
+  min-width: 0;
+  margin: 0;
+  font-size: var(--text-14);
+  line-height: 1.4;
+  color: var(--ink-60);
+}
+
+.selectionText [data-tone="count"] {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+/* Wraps when the two buttons outgrow the bar (long Portuguese labels on the
+   smallest phones), so each stays whole inside it. */
+.selectionTools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-width: 0;
+  margin-inline-start: auto;
+}
+
+.actionRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+  min-width: 0;
+}
+
+.group {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.history {
+  display: flex;
+  gap: 4px;
+  margin-inline-start: auto;
+}
+
+/* The bar's row gap lives inside the fold, so the reason and its gap grow
+   in together from nothing. */
+.blockedReason {
+  margin-block-start: -8px;
+}
+
+.blockedText {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding-block-start: 8px;
+  font-size: var(--text-13);
+  color: var(--ink-60);
+}
+
+/* ── Output bar ────────────────────────────────────────────────────────── */
+/* The buttons on one row, the split hint on a full-width row under them. */
+.outputBar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  padding: 14px 16px;
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-badge);
+  box-shadow: var(--shadow-e1);
+}
+
+.outputActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.outputSlot {
+  display: grid;
+  gap: 6px;
+  justify-items: start;
+}
+
+.startOver {
+  margin-inline-start: auto;
+}
+
+.building {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--text-13);
+  color: var(--ink-60);
+}
+
+/* The space above sits inside the fold, so it grows in with the line. */
+.hint {
+  max-width: 60ch;
+  margin: 0;
+  padding-block-start: 10px;
+  font-size: var(--text-13);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+@media (--md) {
+  .dropZone:not(.dropZoneCompact) {
+    padding: 28px 18px;
+  }
+
+  .outputSlot,
+  .outputSlot > button,
+  .startOver {
+    width: 100%;
+    min-width: 0;
+  }
+
+  /* A long label (Portuguese "one file per page") breaks onto a second
+     line inside its full-width button, so the bar never runs off a 360px
+     screen. Two classes on Start over, so it outranks the button's own
+     single line. */
+  .outputSlot > button,
+  .outputBar .startOver {
+    white-space: normal;
+    text-wrap: balance;
+    text-align: center;
+    line-height: 1.25;
+  }
+
+  .outputSlot > button > svg,
+  .outputBar .startOver > svg {
+    flex: none;
+  }
+
+  .startOver {
+    margin-inline-start: 0;
+  }
+
+  /* Phones stack the buttons, so the split hint moves up to sit right
+     under Split, the button it explains. The actions box steps aside and
+     its buttons join the bar's own column, where order places the hint's
+     fold (the bar's last child) after the first two slots. The bar keeps
+     no row gap: a gap would appear and vanish in one step as the fold
+     mounts and unmounts, so each later item carries its own space, and the
+     hint's space sits inside the fold, where it grows in with the line. */
+  .outputActions {
+    display: contents;
+  }
+
+  .outputActions + * {
+    order: 1;
+  }
+
+  .outputSlot:nth-child(n + 3),
+  .startOver {
+    order: 2;
+  }
+
+  .outputSlot + .outputSlot,
+  .startOver {
+    margin-block-start: 12px;
+  }
+
+  .hint {
+    padding-block-start: 8px;
+  }
+
+  /* Phones: the page actions and the history share one row of icons, and
+     Select all and Clear selection follow the status line, one under the
+     other when the labels run long. */
+  .selectionBar {
+    gap: 6px;
+    padding: 8px 10px;
+  }
+
+  .selectionText {
+    font-size: var(--text-13);
+  }
+
+  .selectionTools {
+    margin-inline-start: 0;
+  }
+
+  /* Still allowed to wrap: under a 350px viewport the history drops to its own
+     row, which keeps the page free of sideways scroll. */
+  .actionRow {
+    gap: 6px;
+  }
+
+  .group,
+  .history {
+    gap: 2px;
+  }
+
+  .blockedReason {
+    margin-block-start: -6px;
+  }
+
+  .blockedText {
+    padding-block-start: 6px;
+  }
+}
+
+/* The smallest phones: seven icons in one row need a slightly narrower
+   button. Each keeps its full 44px height. */
+@media (--xs) {
+  .selectionBar {
+    padding-inline: 8px;
+  }
+
+  /* Two classes, so it outranks the icon button's own 44px width. */
+  .actionRow .barIcon {
+    width: 40px;
+    min-width: 40px;
+  }
+}

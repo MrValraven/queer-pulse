@@ -26,15 +26,18 @@ const PANES: readonly { id: StudioNowPlayingTab; labelKey: string }[] = [
   { id: "lyrics", labelKey: "studio:nowPlaying.tab.lyrics" },
   { id: "queue", labelKey: "studio:nowPlaying.tab.queue" },
   { id: "credits", labelKey: "studio:nowPlaying.tab.credits" },
+  { id: "artist", labelKey: "studio:nowPlaying.tab.artist" },
   { id: "chapters", labelKey: "studio:nowPlaying.tab.chapters" },
 ];
 
 const TRANSCRIPT_LABEL_KEY = "studio:trackPage.transcriptHeading";
+const SHOW_LABEL_KEY = "studio:nowPlaying.tab.show";
 
 /** Phones lead with the queue, so it is one tap from the cover. */
 const PHONE_ORDER: readonly StudioNowPlayingTab[] = [
   "queue",
   "lyrics",
+  "artist",
   "credits",
   "chapters",
 ];
@@ -64,7 +67,7 @@ function PaneSwap({ children }: { children: ReactElement | false }) {
   );
 }
 
-/** Phones: a Queue, Lyrics and Credits switcher above one pane at a time
+/** Phones: a Queue, Lyrics, Artist and Credits switcher above one pane at a time
  *  (DES-19), so the queue never sits below a long lyric list. A pane chosen
  *  from outside (the Q key, a queue button) scrolls the switcher into view;
  *  one chosen on the switcher stays where the finger is, and so does the
@@ -143,7 +146,7 @@ function PhonePanes({
   );
 }
 
-/** Lyrics, Queue, Credits and Chapters: tabs on desktop, a switcher on
+/** Lyrics, Queue, Credits, Artist and Chapters: tabs on desktop, a switcher on
  *  phones. */
 export function StudioNowPlayingPanes({
   item,
@@ -161,11 +164,14 @@ export function StudioNowPlayingPanes({
   const isTranscript = useNowPlayingIsTranscript(item);
   const panes = PANES.filter(
     (pane) => pane.id !== "chapters" || hasChapters,
-  ).map((pane) =>
-    pane.id === "lyrics" && isTranscript
-      ? { ...pane, labelKey: TRANSCRIPT_LABEL_KEY }
-      : pane,
-  );
+  ).map((pane) => {
+    if (pane.id === "lyrics" && isTranscript)
+      return { ...pane, labelKey: TRANSCRIPT_LABEL_KEY };
+    // An episode belongs to a show.
+    if (pane.id === "artist" && item.isEpisode === true)
+      return { ...pane, labelKey: SHOW_LABEL_KEY };
+    return pane;
+  });
   const { activeTab, requestedTab, choose } = useNowPlayingActiveTab({
     item,
     paneIds: panes.map((pane) => pane.id),

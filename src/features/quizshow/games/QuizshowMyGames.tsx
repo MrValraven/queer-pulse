@@ -12,7 +12,7 @@ import {
 import type { QuizshowGameListResponse } from "../../../shared/contracts/quizshow";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { useQuizshowGames } from "../api/useQuizshowGames";
-import { QuizshowPickerFade } from "../builder/QuizshowPackPicker";
+import { QuizshowPickerFade } from "../builder/QuizshowTemplatePicker";
 import { QuizshowGameRow } from "./QuizshowGameRow";
 import {
   QuizshowGamesEmptyState,

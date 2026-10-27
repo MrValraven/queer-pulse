@@ -9,13 +9,21 @@ import { StudioShelf } from "./kit/StudioShelf";
 import css from "./StudioScene.module.css";
 
 /** One upcoming event as a card linking to its event page: the title, the
- *  date in the event's own time zone, and the venue or Online. */
-export function StudioEventCard({ event }: { event: StudioSceneEventView }) {
+ *  date in the event's own time zone, and the venue or Online. The title is
+ *  an h3 by default; a list under an h3 section head passes h4. */
+export function StudioEventCard({
+  event,
+  headingLevel = "h3",
+}: {
+  event: StudioSceneEventView;
+  headingLevel?: "h3" | "h4";
+}) {
   const { t } = useTranslation();
   const fmt = useFormat();
+  const Heading = headingLevel;
   return (
     <Link to={event.href} className={css.eventCard}>
-      <h3 className={css.eventTitle}>{event.title}</h3>
+      <Heading className={css.eventTitle}>{event.title}</Heading>
       <span className={css.eventDate}>
         {fmt.date(new Date(event.startAt), {
           weekday: "short",

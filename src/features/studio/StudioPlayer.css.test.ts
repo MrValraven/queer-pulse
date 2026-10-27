@@ -25,7 +25,7 @@ describe("StudioPlayer.module.css", () => {
       /\.bar\s*\{[^}]*grid-template-columns:\s*minmax\(312px/,
     );
     const narrowVolumeRule =
-      /@media \(max-width: 1280px\) and \(min-width: 1240px\)\s*\{([\s\S]*?)\n\}/.exec(
+      /@media \(max-width: 1366px\) and \(min-width: 1240px\)\s*\{([\s\S]*?)\n\}/.exec(
         css,
       )?.[1];
     expect(narrowVolumeRule).toMatch(
@@ -37,7 +37,7 @@ describe("StudioPlayer.module.css", () => {
       /\.tools \[data-studio-range="volume"\]\s*\{\s*display:\s*none/,
     );
     expect(css).toMatch(
-      /@media \(max-width: 1180px\) and \(min-width: 1041px\)\s*\{\s*\.seekArea \[data-seek-time\]\s*\{\s*display:\s*none/,
+      /@media \(max-width: 1180px\) and \(min-width: 1121px\)\s*\{\s*\.seekArea \[data-seek-time\]\[data-seek-time\]\s*\{\s*display:\s*none/,
     );
   });
 
@@ -56,7 +56,7 @@ describe("StudioPlayer.module.css", () => {
   });
 
   it("gives the seek its own row where the tools could squeeze it", () => {
-    const stackedRule = /@media \(max-width: 1040px\)\s*\{([\s\S]*?)\n\}/.exec(
+    const stackedRule = /@media \(max-width: 1120px\)\s*\{([\s\S]*?)\n\}/.exec(
       css,
     )?.[1];
     expect(stackedRule).toMatch(

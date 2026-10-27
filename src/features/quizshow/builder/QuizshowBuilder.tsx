@@ -3,50 +3,50 @@ import { useMotionPrefs } from "../../../app/providers/motionPrefs";
 import { LoadErrorState, SkeletonLine } from "../../../shared/components/ui";
 import { Collapse } from "../../../shared/components/ui/Collapse";
 import { useUnsavedChangesGuard } from "../../../shared/hooks";
-import type {
-  QuizshowQuizProblem,
-  QuizshowQuizResponse,
-} from "../../../shared/contracts/quizshow";
+import { cx } from "../../../shared/lib/cx";
+import type { QuizshowQuizResponse } from "../../../shared/contracts/quizshow";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import { quizshowErrorCodeOf, quizshowErrorKeyOf } from "../api/quizshowErrors";
 import { useQuizshowQuiz } from "../api/useQuizshowQuiz";
-import { QuizshowScopeContext, type QuizshowScope } from "../quizshowScope";
-import { draftToInput } from "./quizshowDraft";
+import {
+  isQuizshowSessionScope,
+  QuizshowScopeContext,
+  useQuizshowScopeKind,
+  type QuizshowScope,
+} from "../quizshowScope";
+import { QuizshowTemplateDetails } from "../templates/QuizshowTemplateDetails";
+import { quizshowTemplateErrorKeyOf } from "../templates/quizshowTemplateErrors";
+import { templateMetaOf } from "../templates/quizshowTemplateResponse";
+import { useQuizshowTemplateDraft } from "../templates/useQuizshowTemplateDraft";
 import {
   isStructuralProblem,
-  quizshowProblemsFor,
-  quizshowProblemsFromServer,
   type QuizshowLocalProblem,
 } from "./quizshowValidation";
 import { QuizshowAdultsSwitch } from "./QuizshowAdultsSwitch";
 import { QuizshowBuilderEditor } from "./QuizshowBuilderEditor";
-import { QuizshowBuilderHeading } from "./QuizshowBuilderHeading";
+import { QuizshowBuilderToolbar } from "./QuizshowBuilderToolbar";
 import { QuizshowEmptyState } from "./QuizshowEmptyState";
-import {
-  QuizshowImportButtons,
-  type QuizshowImportPicker,
-} from "./QuizshowImportButtons";
+import type { QuizshowImportPicker } from "./QuizshowImportButtons";
 import { QuizshowLiveSessionPanel } from "./QuizshowLiveSessionPanel";
-import { QuizshowOpenLobbyButton } from "./QuizshowOpenLobbyButton";
 import { QuizshowProblemList } from "./QuizshowProblemList";
 import type { QuizshowOpenTarget } from "./QuizshowRoundList";
 import { QuizshowSaveBar } from "./QuizshowSaveBar";
 import { QuizshowSaveConflictDialog } from "./QuizshowSaveConflictDialog";
-import { QuizshowTryItButton } from "./QuizshowTryItButton";
 import { useQuizshowAdultsDraft } from "./useQuizshowAdultsDraft";
+import { useQuizshowBuilderProblems } from "./useQuizshowBuilderProblems";
 import { useQuizshowDraft } from "./useQuizshowDraft";
 import { useQuizshowSave } from "./useQuizshowSave";
 import styles from "./QuizshowBuilder.module.css";
 
 interface QuizshowBuilderProps {
   scope: QuizshowScope;
-  /** The event's start, for the series shortcut; null on a game. */
+  /** The event's start, for the series shortcut; null on a game or a template. */
   eventStartAt: Date | null;
   /** Opens this import picker on mount, once (the "Copy" hand-off from My games). */
   initialImportPicker?: QuizshowImportPicker | null;
 }
 
-/** Write the quiz of an event or a game, save it, open the lobby. */
+/** Write the quiz of an event, a game or a template, save it, and open the lobby on an event or a game. */
 export function QuizshowBuilder({
   scope,
   eventStartAt,
@@ -68,7 +68,11 @@ export function QuizshowBuilder({
     // screen; the full error state is for a first load that never arrived.
     body = (
       <LoadErrorState
-        title={t(quizshowErrorKeyOf(quizshowErrorCodeOf(query.error)))}
+        title={t(
+          scope.kind === "template"
+            ? quizshowTemplateErrorKeyOf(query.error)
+            : quizshowErrorKeyOf(quizshowErrorCodeOf(query.error)),
+        )}
         description={t("quizshow:builder.loadError")}
         onRetry={() => void query.refetch()}
         isRetrying={query.isRefetching}
@@ -112,26 +116,51 @@ function QuizshowRefreshNote({
   );
 }
 
+/** The list of what to fix, titled for what it gates: the lobby, or a template's publish. */
+function QuizshowBuilderProblems({
+  problems,
+  onJump,
+}: {
+  problems: readonly QuizshowLocalProblem[];
+  onJump: (target: QuizshowOpenTarget) => void;
+}) {
+  const { t } = useTranslation();
+  const isTemplate = useQuizshowScopeKind() === "template";
+  return (
+    <Collapse isOpen={problems.length > 0}>
+      <section className={styles.problems}>
+        <h3 className={styles.problemsTitle}>
+          {t(
+            isTemplate
+              ? "quizshow:templates.problemsTitle"
+              : "quizshow:problems.title",
+          )}
+        </h3>
+        <QuizshowProblemList problems={problems} onJump={onJump} />
+      </section>
+    </Collapse>
+  );
+}
+
 /**
- * The server's refusal first, then the draft's own problems while it is
- * unsaved, else the saved quiz's problems plus the adults check on the draft.
+ * The builder's column. A game page clears the save bar itself, and a
+ * template moves the bar beside the admin rail.
  */
-function shownProblemsOf(options: {
-  rejectedProblems: readonly QuizshowLocalProblem[];
-  localProblems: readonly QuizshowLocalProblem[];
-  serverProblems: readonly QuizshowQuizProblem[];
-  isUnsaved: boolean;
-}): readonly QuizshowLocalProblem[] {
-  const { rejectedProblems, localProblems, serverProblems, isUnsaved } =
-    options;
-  if (rejectedProblems.length > 0) return rejectedProblems;
-  if (isUnsaved) return localProblems;
-  return [
-    ...quizshowProblemsFromServer(serverProblems),
-    ...localProblems.filter(
-      (problem) => problem.code === "adults_round_needs_adults_event",
-    ),
-  ];
+function tabClassNameOf(kind: QuizshowScope["kind"]): string {
+  return cx(
+    styles.tab,
+    kind === "game" && styles.tabGame,
+    kind === "template" && styles.tabTemplate,
+  );
+}
+
+interface QuizshowBuilderLoadedProps {
+  scope: QuizshowScope;
+  eventStartAt: Date | null;
+  initialImportPicker: QuizshowImportPicker | null;
+  data: QuizshowQuizResponse;
+  isRefreshFailed?: boolean;
+  refetch: () => Promise<QuizshowQuizResponse | null>;
 }
 
 function QuizshowBuilderLoaded({
@@ -141,16 +170,10 @@ function QuizshowBuilderLoaded({
   data,
   isRefreshFailed = false,
   refetch,
-}: {
-  scope: QuizshowScope;
-  eventStartAt: Date | null;
-  initialImportPicker: QuizshowImportPicker | null;
-  data: QuizshowQuizResponse;
-  isRefreshFailed?: boolean;
-  refetch: () => Promise<QuizshowQuizResponse | null>;
-}) {
+}: QuizshowBuilderLoadedProps) {
   const { t, language } = useTranslation();
   const { reducedMotion } = useMotionPrefs();
+  const sessionScope = isQuizshowSessionScope(scope) ? scope : null;
   const controller = useQuizshowDraft(data.quiz);
   const adults = useQuizshowAdultsDraft({
     scope,
@@ -158,6 +181,8 @@ function QuizshowBuilderLoaded({
     draft: controller.draft,
   });
   const { isAdultsEvent } = adults;
+  const templateDraft = useQuizshowTemplateDraft({ data });
+  const templateMeta = templateMetaOf(data);
   const [isBlankStarted, setIsBlankStarted] = useState(false);
   const [openTarget, setOpenTarget] = useState<QuizshowOpenTarget | null>(null);
   const editorRef = useRef<HTMLDivElement>(null);
@@ -173,34 +198,34 @@ function QuizshowBuilderLoaded({
     controller,
     refetch,
     isAdultsOnly: adults.isAdultsOnlyToSave,
-    onReset: adults.resetTo,
+    templateFields: templateDraft.fieldsToSave,
+    onReset: (response) => {
+      adults.resetTo(response);
+      templateDraft.resetTo(response);
+    },
   });
 
   const hasQuiz = data.quiz !== null || isBlankStarted;
   const isUnsaved =
     controller.isDirty ||
     (data.quiz === null && isBlankStarted) ||
-    adults.isUnsaved;
-  const localProblems = quizshowProblemsFor(
-    draftToInput(controller.draft, null),
-    { isAdultsEvent },
-  );
-  const problems = shownProblemsOf({
-    rejectedProblems: saving.rejectedProblems,
-    localProblems,
-    serverProblems: data.problems,
+    adults.isUnsaved ||
+    templateDraft.isUnsaved;
+  const { problems, dryRunProblems, publishing } = useQuizshowBuilderProblems({
+    scope,
+    data,
+    draft: controller.draft,
+    isAdultsEvent,
     isUnsaved,
+    saveRejectedProblems: saving.rejectedProblems,
+    templateCard: templateDraft.card,
   });
-  // The try-out plays the draft on screen now, so its own problems block it;
-  // the adults-event check is about the event and leaves the try-out open.
-  const dryRunProblems = localProblems.filter(
-    (problem) => problem.code !== "adults_round_needs_adults_event",
-  );
-  // A game is listed by its title, so a blank one cannot be saved.
+  // A game is listed by its title and the server refuses a blank template title, so both need one.
   const isGame = scope.kind === "game";
-  const isGameTitleBlank = isGame && controller.draft.title.trim() === "";
+  const isTitleRequired = scope.kind !== "event";
+  const isTitleBlank = isTitleRequired && controller.draft.title.trim() === "";
   const isSaveBlocked =
-    isGameTitleBlank ||
+    isTitleBlank ||
     problems.some((problem) => isStructuralProblem(problem.code));
   const isLobbyBlocked = isUnsaved || problems.length > 0;
   // While unsaved, the save bar's status line is the reason; the button points at it.
@@ -225,15 +250,17 @@ function QuizshowBuilderLoaded({
   const discard = () => {
     controller.resetTo(data.quiz);
     adults.resetTo(data);
+    templateDraft.resetTo(data);
     setIsBlankStarted(false);
     setOpenTarget(null);
   };
 
   // The import parts read the saved switch, the one the server checks.
-  if (!hasQuiz) {
+  // The scope kind is fixed for the life of the builder, so this part mounts by kind.
+  if (!hasQuiz && sessionScope) {
     return (
       <QuizshowEmptyState
-        scope={scope}
+        scope={sessionScope}
         eventStartAt={eventStartAt}
         isAdultsEvent={data.isAdultsEvent}
         initialOpenPicker={initialImportPicker}
@@ -245,54 +272,50 @@ function QuizshowBuilderLoaded({
     );
   }
   return (
-    <div className={isGame ? `${styles.tab} ${styles.tabGame}` : styles.tab}>
-      <div className={styles.headingRow}>
-        <QuizshowBuilderHeading scope={scope} />
-        <div className={styles.headingActions}>
-          <div className={styles.importActions}>
-            <QuizshowImportButtons
-              scope={scope}
-              hasQuiz={(data.quiz?.rounds.length ?? 0) > 0 || isUnsaved}
-              eventStartAt={eventStartAt}
-              isAdultsEvent={data.isAdultsEvent}
-              variant="toolbar"
-              initialOpenPicker={initialImportPicker}
-              onImported={(response) => {
-                controller.resetTo(response.quiz);
-                adults.resetTo(response);
-              }}
-            />
-          </div>
-          <QuizshowTryItButton
-            draft={controller.draft}
-            pickedPreviewUrls={controller.pickedPreviewUrls}
-            problems={dryRunProblems}
-          />
-          <QuizshowOpenLobbyButton
-            scope={scope}
-            isBlocked={isLobbyBlocked}
-            blockedReason={blockedReason}
-            blockedDescriptionId={isUnsaved ? saveStatusId : undefined}
-          />
-        </div>
-      </div>
+    <div className={tabClassNameOf(scope.kind)}>
+      {/* A template's card leads, so the quiz heading sits next to its rounds. The kind is fixed, so this mounts by kind. */}
+      {templateMeta && (
+        <QuizshowTemplateDetails
+          templateDraft={templateDraft}
+          meta={templateMeta}
+          languages={controller.draft.languages}
+          publishing={publishing}
+        />
+      )}
+      <QuizshowBuilderToolbar
+        scope={scope}
+        importProps={{
+          hasQuiz: (data.quiz?.rounds.length ?? 0) > 0 || isUnsaved,
+          eventStartAt,
+          isAdultsEvent: data.isAdultsEvent,
+          initialImportPicker,
+          onImported: (response) => {
+            controller.resetTo(response.quiz);
+            adults.resetTo(response);
+          },
+        }}
+        tryItProps={{
+          draft: controller.draft,
+          pickedPreviewUrls: controller.pickedPreviewUrls,
+          problems: dryRunProblems,
+        }}
+        lobbyProps={{
+          isBlocked: isLobbyBlocked,
+          blockedReason,
+          blockedDescriptionId: isUnsaved ? saveStatusId : undefined,
+        }}
+      />
       <QuizshowRefreshNote isRefreshFailed={isRefreshFailed} />
-      <Collapse isOpen={data.liveSession !== null}>
-        {shownLiveSession && (
+      <Collapse isOpen={sessionScope !== null && data.liveSession !== null}>
+        {/* The scope kind is fixed for the life of the builder, so this part mounts by kind. */}
+        {sessionScope && shownLiveSession && (
           <QuizshowLiveSessionPanel
-            scope={scope}
+            scope={sessionScope}
             liveSession={shownLiveSession}
           />
         )}
       </Collapse>
-      <Collapse isOpen={problems.length > 0}>
-        <section className={styles.problems}>
-          <h3 className={styles.problemsTitle}>
-            {t("quizshow:problems.title")}
-          </h3>
-          <QuizshowProblemList problems={problems} onJump={jumpTo} />
-        </section>
-      </Collapse>
+      <QuizshowBuilderProblems problems={problems} onJump={jumpTo} />
       <div ref={editorRef}>
         <QuizshowBuilderEditor
           controller={controller}
@@ -301,7 +324,7 @@ function QuizshowBuilderLoaded({
           openTarget={openTarget}
           onOpen={setOpenTarget}
           titleLabelKey={isGame ? "quizshow:games.new.titleLabel" : undefined}
-          isTitleRequired={isGame}
+          isTitleRequired={isTitleRequired}
           settingsExtra={
             isGame ? (
               <QuizshowAdultsSwitch
@@ -318,6 +341,9 @@ function QuizshowBuilderLoaded({
         isSaving={saving.isSaving}
         isSaveBlocked={isSaveBlocked}
         statusId={saveStatusId}
+        saveLabelKey={
+          scope.kind === "template" ? "quizshow:templates.saveCta" : undefined
+        }
         onSave={() => void saving.saveNow()}
         onDiscard={discard}
       />

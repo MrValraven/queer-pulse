@@ -9344,12 +9344,131 @@ export const admin: Catalog = {
   "moderation.quizshowGame.error": "Não resultou. Tenta outra vez",
   "moderation.action.quizshowGameEnded": "Terminou um jogo do Pulse Live",
   "moderation.action.quizshowGameDeleted": "Apagou um jogo do Pulse Live",
+  "moderation.action.quizshowTemplatePublished": "Publicou um modelo de quiz",
+  "moderation.action.quizshowTemplateUnpublished":
+    "Despublicou um modelo de quiz",
+  "moderation.action.quizshowTemplateDeleted": "Apagou um modelo de quiz",
   "governance.audit.actionType.quizshow_game_ended":
     "Jogo do Pulse Live terminado",
   "governance.audit.actionType.quizshow_game_deleted":
     "Jogo do Pulse Live apagado",
+  "governance.audit.actionType.quizshow_template_published":
+    "Modelo de quiz publicado",
+  "governance.audit.actionType.quizshow_template_unpublished":
+    "Modelo de quiz despublicado",
+  "governance.audit.actionType.quizshow_template_deleted":
+    "Modelo de quiz apagado",
   "moderation.quizshowGame.reasonLabel": "Motivo",
   "moderation.quizshowGame.reasonHint":
     "Fica guardado no registo de moderação com esta denúncia",
   "moderation.quizshowGame.reasonRequired": "Escreve primeiro um motivo",
+
+  // Staff utilities hub and PDF toolkit (/admin/utilities)
+  "utilities.breadcrumb": "Utilitários",
+  "utilities.hub.title": "<em>Utilitários</em>",
+  "utilities.hub.eyebrow": "Utilitários",
+  "utilities.hub.header.title":
+    "Pequenas tarefas com ficheiros, <em>feitas aqui</em>",
+  "utilities.hub.sub":
+    "Ferramentas para as tarefas do dia a dia com ficheiros. Correm no teu navegador, por isso os ficheiros ficam no teu dispositivo",
+  "utilities.hub.listLabel": "Ferramentas da equipa",
+  "utilities.tools.pdf.name": "Páginas de PDF",
+  "utilities.tools.pdf.description":
+    "Remove, roda, reordena, junta e divide as páginas de um PDF",
+  "utilities.pdf.title": "Páginas de <em>PDF</em>",
+  "utilities.pdf.header.title": "Edita as páginas de um <em>PDF</em>",
+  "utilities.pdf.sub":
+    "Abre um ou vários PDFs, remove, roda, reordena ou divide páginas e descarrega o resultado",
+  "utilities.pdf.drop.title": "Larga aqui os PDFs ou escolhe ficheiros",
+  "utilities.pdf.drop.titleTouch": "Escolhe PDFs para editar",
+  "utilities.pdf.drop.choose": "Escolher PDFs",
+  "utilities.pdf.drop.add": "Adicionar PDFs",
+  "utilities.pdf.drop.active": "Larga para abrir",
+  "utilities.pdf.drop.privacy":
+    "Os ficheiros ficam neste dispositivo e nunca são enviados",
+  "utilities.pdf.drop.inputLabel": "Ficheiros PDF",
+  "utilities.pdf.drop.opening_one": "A abrir {count} ficheiro…",
+  "utilities.pdf.drop.opening_other": "A abrir {count} ficheiros…",
+  "utilities.pdf.files.heading": "Ficheiros abertos",
+  "utilities.pdf.files.pageCount_one": "{count} página",
+  "utilities.pdf.files.pageCount_other": "{count} páginas",
+  "utilities.pdf.files.signedWarning":
+    "Este PDF tem uma assinatura digital. Depois de o editares, a assinatura deixa de ser válida",
+  "utilities.pdf.files.largeWarning":
+    "Este ficheiro é grande, por isso as páginas podem demorar a aparecer e guardar pode ser lento",
+  "utilities.pdf.errors.notPdf": "{fileName} não é um ficheiro PDF",
+  "utilities.pdf.errors.passwordRequired":
+    "{fileName} precisa de uma palavra-passe para abrir, por isso não pode ser aberto aqui",
+  "utilities.pdf.errors.damaged":
+    "{fileName} está danificado e não foi possível lê-lo",
+  "utilities.pdf.errors.tooLarge":
+    "{fileName} tem mais de {limit} MB, demasiado grande para o teu navegador",
+  "utilities.pdf.errors.unreadable":
+    "Não foi possível ler {fileName} do teu dispositivo. Confirma que o ficheiro ainda lá está e tenta outra vez",
+  "utilities.pdf.errors.decrypterUnavailable":
+    "{fileName} tem restrições de impressão ou cópia, e a parte desta ferramenta que abre esses ficheiros não carregou. Verifica a ligação e tenta outra vez",
+  "utilities.pdf.errors.rendererUnavailable":
+    "A parte desta ferramenta que mostra as páginas não carregou, por isso {fileName} não foi aberto. Verifica a ligação e tenta outra vez",
+  "utilities.pdf.errors.buildPdf":
+    "Não foi possível criar o PDF, por isso nada foi descarregado. Tenta outra vez",
+  "utilities.pdf.errors.buildZip":
+    "Não foi possível criar o ficheiro zip, por isso nada foi descarregado. Tenta outra vez",
+  "utilities.pdf.errors.dismiss": "Fechar mensagem",
+  "utilities.pdf.grid.label": "Páginas",
+  "utilities.pdf.grid.keyboardHint":
+    "As setas mudam de página e a barra de espaço seleciona",
+  "utilities.pdf.page.label": "Página {number}",
+  "utilities.pdf.page.labelWithFile": "Página {number}, de {fileName}",
+  "utilities.pdf.page.thumbnailFailed":
+    "Pré-visualização indisponível. Esta página é guardada na mesma",
+  "utilities.pdf.page.partLabel": "Parte {number}",
+  "utilities.pdf.cut.add": "Dividir depois da página {number}",
+  "utilities.pdf.cut.remove": "Remover a divisão depois da página {number}",
+  "utilities.pdf.selection.count_one": "{count} página selecionada",
+  "utilities.pdf.selection.count_other": "{count} páginas selecionadas",
+  "utilities.pdf.selection.hint":
+    "Seleciona páginas para as rodar, mover ou remover",
+  "utilities.pdf.selection.selectAll": "Selecionar todas as páginas",
+  "utilities.pdf.selection.clear": "Limpar seleção",
+  "utilities.pdf.actions.remove": "Remover páginas",
+  "utilities.pdf.actions.removeBlocked":
+    "Mantém pelo menos uma página. Tira uma da seleção para remover as restantes",
+  "utilities.pdf.actions.rotateLeft": "Rodar para a esquerda",
+  "utilities.pdf.actions.rotateRight": "Rodar para a direita",
+  "utilities.pdf.actions.moveEarlier": "Mover páginas para antes",
+  "utilities.pdf.actions.moveLater": "Mover páginas para depois",
+  "utilities.pdf.actions.undo": "Desfazer edição",
+  "utilities.pdf.actions.redo": "Refazer edição",
+  "utilities.pdf.output.download": "Descarregar PDF",
+  "utilities.pdf.output.split": "Dividir em ficheiros",
+  "utilities.pdf.output.splitCount_one": "Dividir em {count} ficheiro",
+  "utilities.pdf.output.splitCount_other": "Dividir em {count} ficheiros",
+  "utilities.pdf.output.splitHint":
+    "Adiciona uma divisão entre duas páginas para ativar esta opção",
+  "utilities.pdf.output.everyPage": "Descarregar cada página num ficheiro",
+  "utilities.pdf.output.building": "A preparar o teu ficheiro…",
+  "utilities.pdf.output.startOver": "Começar de novo",
+  "utilities.pdf.startOver.title": "Começar de novo?",
+  "utilities.pdf.startOver.body":
+    "Isto fecha todos os ficheiros e apaga as tuas edições. O que não descarregaste perde-se",
+  "utilities.pdf.startOver.confirm": "Fechar ficheiros e começar de novo",
+  "utilities.pdf.startOver.cancel": "Continuar a editar",
+  "utilities.pdf.drag.instructions":
+    "Arrasta uma página com o rato ou o dedo para a mover. Com o teclado, seleciona páginas e usa Mover páginas para antes ou Mover páginas para depois",
+  "utilities.pdf.drag.start": "Pegaste na página {number}",
+  "utilities.pdf.drag.over":
+    "A página {number} está sobre a posição {position}",
+  "utilities.pdf.drag.cancel": "A página {number} voltou à posição {position}",
+  "utilities.pdf.announce.removed_one": "{count} página removida",
+  "utilities.pdf.announce.removed_other": "{count} páginas removidas",
+  "utilities.pdf.announce.rotated_one": "{count} página rodada",
+  "utilities.pdf.announce.rotated_other": "{count} páginas rodadas",
+  "utilities.pdf.announce.moved_one": "{count} página movida",
+  "utilities.pdf.announce.moved_other": "{count} páginas movidas",
+  "utilities.pdf.announce.added_one": "{count} página adicionada",
+  "utilities.pdf.announce.added_other": "{count} páginas adicionadas",
+  "utilities.pdf.announce.cutAdded": "Divisão adicionada",
+  "utilities.pdf.announce.cutRemoved": "Divisão removida",
+  "utilities.pdf.announce.undone": "Edição desfeita",
+  "utilities.pdf.announce.redone": "Edição refeita",
 };

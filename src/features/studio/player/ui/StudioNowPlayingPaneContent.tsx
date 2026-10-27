@@ -1,7 +1,5 @@
 import { Fragment } from "react";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
-import { useStudioAccess } from "../../api/useStudioAccess";
-import { useStudioTrack } from "../../api/useStudioTrack";
 import { StudioLyricShareHost } from "../../share/StudioLyricShareHost";
 import { StudioWarnedContent } from "../../StudioWarnedContent";
 import {
@@ -13,20 +11,12 @@ import { markExplicitStart } from "../studioEpisodePlay";
 import { studioSeekAndResume } from "../studioSeekAndResume";
 import type { StudioNowPlayingTab } from "../studioPlayerSurface";
 import { StudioChapterList } from "./StudioChapterList";
+import { StudioNowPlayingArtistPane } from "./StudioNowPlayingArtistPane";
+import { StudioNowPlayingCredits } from "./StudioNowPlayingCredits";
 import { StudioQueueList } from "./StudioQueueList";
 import { StudioSyncedLyrics } from "./StudioSyncedLyrics";
+import { useNowPlayingTrackDetail } from "./useNowPlayingTrackDetail";
 import styles from "./StudioNowPlaying.module.css";
-
-/** The track's detail, for the plain lyrics and the credits. Only a public
- *  track mounts this: a private preview's detail needs its token, so a
- *  preview never asks. Loading ends with any answer, including a missing
- *  track, a failed read or a member without Studio access (whose read never
- *  starts). */
-function useNowPlayingTrackDetail(trackId: string) {
-  const { track, loadState } = useStudioTrack(trackId);
-  const { status } = useStudioAccess();
-  return { track, isLoading: loadState.isLoading && status !== "denied" };
-}
 
 function EmptyNote({ textKey }: { textKey: string }) {
   const { t } = useTranslation();
@@ -128,31 +118,10 @@ function LyricsPane({
   );
 }
 
-function TrackCredits({ trackId }: { trackId: string }) {
-  const { track, isLoading } = useNowPlayingTrackDetail(trackId);
-  if (isLoading)
-    return <EmptyNote textKey="studio:nowPlaying.creditsLoading" />;
-  if (!track || track.credits.length === 0)
-    return <EmptyNote textKey="studio:nowPlaying.noCredits" />;
-  return (
-    <dl className={styles.credits}>
-      {track.credits.map((credit, index) => (
-        <div
-          key={`${credit.role}-${credit.name}-${index}`}
-          className={styles.credit}
-        >
-          <dt>{credit.role}</dt>
-          <dd>{credit.name}</dd>
-        </div>
-      ))}
-    </dl>
-  );
-}
-
 function CreditsPane({ item }: { item: StudioQueueItem }) {
   if (item.previewToken)
     return <EmptyNote textKey="studio:nowPlaying.noCredits" />;
-  return <TrackCredits trackId={item.trackId} />;
+  return <StudioNowPlayingCredits trackId={item.trackId} />;
 }
 
 function ChaptersPane({ title }: { title: string }) {
@@ -188,6 +157,7 @@ export function StudioNowPlayingPaneContent({
   if (tab === "queue") return <StudioQueueList headingLevel={3} isInDialog />;
   if (tab === "credits") return <CreditsPane item={item} />;
   if (tab === "chapters") return <ChaptersPane title={item.title} />;
+  if (tab === "artist") return <StudioNowPlayingArtistPane item={item} />;
   // The share sheet sits above the per-track lyrics pane, so it and a
   // half-written send stay open when playback moves to the next track.
   return (

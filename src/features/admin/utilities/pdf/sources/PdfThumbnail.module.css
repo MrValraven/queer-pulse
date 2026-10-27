@@ -1,0 +1,82 @@
+/*
+ * A page preview that fills the tile's sized 3:4 box. Tiles set --file-tone on
+ * an ancestor. The inset keeps a page that touches the box's edge clear of the
+ * rounded corners, so its border always shows in full.
+ */
+.thumbnail {
+  --thumbnail-inset: 4px;
+  position: relative;
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  inline-size: 100%;
+  block-size: 100%;
+  padding: var(--thumbnail-inset);
+  overflow: hidden;
+  border-radius: var(--radius-10);
+  background: color-mix(
+    in srgb,
+    var(--file-tone, var(--plum)) 10%,
+    transparent
+  );
+}
+
+.image {
+  position: absolute;
+  inset: var(--thumbnail-inset);
+  inline-size: calc(100% - 2 * var(--thumbnail-inset));
+  block-size: calc(100% - 2 * var(--thumbnail-inset));
+  object-fit: contain;
+  scale: 1;
+  opacity: 0;
+  user-select: none;
+  transition-property: rotate, scale, opacity;
+  transition-duration: var(--dur-slow), var(--dur-slow), var(--dur-base);
+  transition-timing-function: var(--ease);
+}
+
+/* Measured by PdfThumbnail from the box and the page's aspect; 0.75 until then. */
+.thumbnail[data-quarter-turn] .image {
+  scale: var(--quarter-turn-scale, 0.75);
+}
+
+.image[data-loaded] {
+  opacity: 1;
+}
+
+.failed {
+  grid-area: 1 / 1;
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  padding: 10px;
+  color: var(--ink-60);
+  text-align: center;
+  opacity: 1;
+  transition-property: opacity;
+  transition-duration: var(--dur-base);
+  transition-timing-function: var(--ease-out);
+}
+
+@starting-style {
+  .failed {
+    opacity: 0;
+  }
+}
+
+.failedIcon {
+  inline-size: 22px;
+  block-size: 22px;
+  color: var(--file-tone, var(--ink-40));
+}
+
+.failedText {
+  font-size: var(--text-caption);
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.thumbnail[data-reduced-motion] .image,
+.thumbnail[data-reduced-motion] .failed {
+  transition-property: none;
+}

@@ -66,6 +66,14 @@
   grid-template-columns: repeat(5, minmax(0, 1fr));
 }
 
+/* A narrow page column on desktop (the docked side panel beside it) fits
+   three. Placed before the phone rule below, so phones keep two. */
+@container studio-page (max-width: 719px) {
+  .rowGrid5 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
 @media (--md) {
   .rowGrid3,
   .rowGrid5 {

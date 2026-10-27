@@ -7,10 +7,12 @@ import {
   QUIZSHOW_PHASES,
   QUIZSHOW_TEAM_COLOR_KEYS,
   QUIZSHOW_TIMED_PHASES,
-  QUIZSHOW_STARTER_PACK_KEYS,
   QUIZSHOW_ERROR_CODES,
   QUIZSHOW_GAMES_PER_MEMBER_MAX,
   QUIZSHOW_LOBBY_OPENS_PER_HOUR_MAX,
+  QUIZSHOW_TEMPLATE_CARD_FIELDS,
+  QUIZSHOW_TEMPLATE_STATUSES,
+  type QuizshowImportInput,
   type QuizshowMyReveal,
   type QuizshowStateBase,
 } from "./quizshow";
@@ -55,15 +57,8 @@ describe("quizshow contract mirror", () => {
       "paused",
     ]);
   });
-  it("offers eight team shapes and five starter packs", () => {
+  it("offers eight team shapes", () => {
     expect(QUIZSHOW_TEAM_COLOR_KEYS).toHaveLength(8);
-    expect(QUIZSHOW_STARTER_PACK_KEYS).toEqual([
-      "pride_history",
-      "portuguese_queer_culture",
-      "eurovision",
-      "drag_herstory",
-      "lisbon_queer_icons",
-    ]);
   });
   it("carries the shared screen mute on the state base", () => {
     const base: Pick<
@@ -110,6 +105,45 @@ describe("quizshow contract mirror", () => {
   it("caps games at 50 and lobbies at 10 an hour", () => {
     expect(QUIZSHOW_GAMES_PER_MEMBER_MAX).toBe(50);
     expect(QUIZSHOW_LOBBY_OPENS_PER_HOUR_MAX).toBe(10);
+  });
+  it("appends the template codes after the game adults code", () => {
+    const adultsSwitchIndex = QUIZSHOW_ERROR_CODES.indexOf(
+      "quizshow_game_adults_rounds_need_switch",
+    );
+    expect(QUIZSHOW_ERROR_CODES[adultsSwitchIndex + 1]).toBe(
+      "quizshow_template_not_found",
+    );
+    expect(QUIZSHOW_ERROR_CODES[adultsSwitchIndex + 2]).toBe(
+      "quizshow_template_card_incomplete",
+    );
+    expect(
+      (QUIZSHOW_ERROR_CODES as readonly string[]).includes(
+        "quizshow_pack_not_found",
+      ),
+    ).toBe(false);
+  });
+  it("caps template cards and staff notes", () => {
+    expect(QUIZSHOW_LIMITS.templateCardTitleMax).toBe(120);
+    expect(QUIZSHOW_LIMITS.templateCardDescriptionMax).toBe(300);
+    expect(QUIZSHOW_LIMITS.templateStaffNotesMax).toBe(20000);
+  });
+  it("lists the card fields in refusal order", () => {
+    expect(QUIZSHOW_TEMPLATE_CARD_FIELDS).toEqual([
+      "title.en",
+      "title.pt",
+      "description.en",
+      "description.pt",
+    ]);
+  });
+  it("lists the template statuses", () => {
+    expect(QUIZSHOW_TEMPLATE_STATUSES).toEqual(["draft", "published"]);
+  });
+  it("drops the starter packs from the contract", () => {
+    // Kept on one line so the expected error lands on the line below the directive.
+    // prettier-ignore
+    // @ts-expect-error the pack import body is gone
+    const packBody: QuizshowImportInput = { from: "pack", packKey: "eurovision" };
+    expect(packBody).toBeDefined();
   });
   it("ends the error list with the reused restriction code", () => {
     expect(QUIZSHOW_ERROR_CODES.at(-1)).toBe("ACCOUNT_RESTRICTED");

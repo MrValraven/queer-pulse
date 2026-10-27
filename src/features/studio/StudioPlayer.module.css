@@ -401,7 +401,7 @@
 /* In the bar the demo line sits under the artist, so it adds no row: one
    line that ellipsizes, then the tip pill. The title column grows with the
    viewport to hold it, while the seek keeps its room. */
-@media (min-width: 1041px) {
+@media (min-width: 1121px) {
   .bar:has(.titles .showcase) {
     grid-template-columns:
       minmax(clamp(352px, 30vw, 416px), 1.2fr) auto minmax(0, 2fr)
@@ -534,10 +534,10 @@
   box-shadow: var(--ring-cream);
 }
 
-/* Up to about 1280px the title column's floor squeezes the seek, so the
-   volume slider gives room back: it narrows from 1240px to 1280px, and
+/* Up to about 1366px the title column's floor squeezes the seek, so the
+   volume slider gives room back: it narrows from 1240px to 1366px, and
    below 1240px the volume keeps its mute button and drops its slider. */
-@media (max-width: 1280px) and (min-width: 1240px) {
+@media (max-width: 1366px) and (min-width: 1240px) {
   .tools [data-studio-range="volume"] {
     inline-size: 64px;
   }
@@ -549,18 +549,19 @@
   }
 }
 
-/* Between 1041px and 1180px the seek also drops its time labels (the slider
-   still speaks its time). */
-@media (max-width: 1180px) and (min-width: 1041px) {
-  .seekArea [data-seek-time] {
+/* Between 1121px and 1180px the seek also drops its time labels (the slider
+   still speaks its time). The total-time button's own module sets its display
+   at (0,2,0), so the doubled attribute selector outranks it. */
+@media (max-width: 1180px) and (min-width: 1121px) {
+  .seekArea [data-seek-time][data-seek-time] {
     display: none;
   }
 }
 
-/* Below about 1040px the sleep chip and Cast could squeeze the seek to
+/* Below about 1120px the sleep chip and Cast could squeeze the seek to
    nothing, so the seek takes a full-width second row, with its time labels
    back. The title row keeps its room. */
-@media (max-width: 1040px) {
+@media (max-width: 1120px) {
   .bar {
     grid-template-columns: minmax(0, 1fr) auto auto;
     row-gap: 8px;

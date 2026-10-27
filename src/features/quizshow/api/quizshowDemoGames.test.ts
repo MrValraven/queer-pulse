@@ -12,6 +12,10 @@ import {
   QUIZSHOW_DEMO_GAME_SESSION_PREFIX,
 } from "../quizshow.constants";
 import {
+  QUIZSHOW_DEMO_TEMPLATE_IDS,
+  templateSeedById,
+} from "../demo/quizshowTemplates.data";
+import {
   demoCreateGame,
   demoDeleteGame,
   demoDuplicateGame,
@@ -33,6 +37,7 @@ import {
 } from "./quizshowDemoGames.data";
 import { hasAdultsRound } from "./quizshowDemoQuizzes";
 import { demoJoin, resetQuizshowDemoStore } from "./quizshowDemoStore";
+import { demoGetTemplate, demoPutTemplate } from "./quizshowDemoTemplates";
 
 const OPEN_INPUT: QuizshowOpenSessionInput = {
   playMode: "solo",
@@ -87,7 +92,9 @@ describe("quizshow demo games store", () => {
 
     const flatQuiz = demoGetGame(QUIZSHOW_DEMO_GAME_IDS.flatQuiz);
     expect(flatQuiz.quiz?.title).toBe("Friday flat quiz");
-    expect(flatQuiz.quiz?.starterPackKey).toBe("eurovision");
+    expect(flatQuiz.quiz?.sourceTemplateId).toBe(
+      QUIZSHOW_DEMO_TEMPLATE_IDS.eurovision,
+    );
     expect(flatQuiz.hasResults).toBe(true);
     expect(flatQuiz.liveSession).toBeNull();
     expect(flatQuiz.isAdultsOnly).toBe(false);
@@ -98,7 +105,9 @@ describe("quizshow demo games store", () => {
 
     const afterDark = demoGetGame(QUIZSHOW_DEMO_GAME_IDS.afterDark);
     expect(afterDark.quiz?.title).toBe("After dark trivia");
-    expect(afterDark.quiz?.starterPackKey).toBe("drag_herstory");
+    expect(afterDark.quiz?.sourceTemplateId).toBe(
+      QUIZSHOW_DEMO_TEMPLATE_IDS.dragHerstory,
+    );
     expect(
       afterDark.quiz?.rounds.map((round) => round.contentLabel === "adults"),
     ).toEqual([false, true, false]);
@@ -124,7 +133,7 @@ describe("quizshow demo games store", () => {
     expect(created.quiz?.languages).toBe("both");
     expect(created.quiz?.screenLanguage).toBe("en");
     expect(created.quiz?.rounds).toEqual([]);
-    expect(created.quiz?.starterPackKey).toBeNull();
+    expect(created.quiz?.sourceTemplateId).toBeNull();
     expect(created.isAdultsOnly).toBe(false);
     expect(created.liveSession).toBeNull();
     expect(created.hasResults).toBe(false);
@@ -143,12 +152,40 @@ describe("quizshow demo games store", () => {
     expect(created.quiz?.title).toBe("Late copy");
     expect(created.quiz && hasAdultsRound(created.quiz)).toBe(true);
     expect(created.isAdultsOnly).toBe(true);
-    const fromPack = demoCreateGame({
-      title: "Pack copy",
-      source: { from: "pack", packKey: "eurovision" },
+    const fromTemplate = demoCreateGame({
+      title: "Template copy",
+      source: {
+        from: "template",
+        templateId: QUIZSHOW_DEMO_TEMPLATE_IDS.eurovision,
+      },
     });
-    expect(fromPack.isAdultsOnly).toBe(false);
-    expect(fromPack.quiz?.starterPackKey).toBe("eurovision");
+    expect(fromTemplate.isAdultsOnly).toBe(false);
+    expect(fromTemplate.quiz?.sourceTemplateId).toBe(
+      QUIZSHOW_DEMO_TEMPLATE_IDS.eurovision,
+    );
+  });
+
+  it("creates a game from a template with the switch on for an adults round", () => {
+    const prideId = QUIZSHOW_DEMO_TEMPLATE_IDS.prideHistory;
+    const pride = demoGetTemplate(prideId);
+    const prideQuiz = structuredClone(templateSeedById(prideId).quiz);
+    const firstRound = prideQuiz.rounds[0];
+    if (!firstRound) throw new Error("no round");
+    prideQuiz.rounds[0] = { ...firstRound, contentLabel: "adults" };
+    demoPutTemplate(prideId, {
+      card: pride.card,
+      staffNotes: pride.staffNotes,
+      quiz: { ...prideQuiz, expectedUpdatedAt: pride.quiz.updatedAt },
+    });
+    const created = demoCreateGame({
+      title: "Pride after dark",
+      source: { from: "template", templateId: prideId },
+    });
+    expect(created.isAdultsOnly).toBe(true);
+    expect(created.isAdultsEvent).toBe(true);
+    expect(created.quiz && hasAdultsRound(created.quiz)).toBe(true);
+    expect(created.quiz?.rounds[0]?.contentLabel).toBe("adults");
+    expect(created.quiz?.sourceTemplateId).toBe(prideId);
   });
 
   it("refuses an adults round while the switch is off with game_adults_rounds_need_switch", () => {
@@ -307,11 +344,13 @@ describe("quizshow demo game lobbies, sources and joins", () => {
 
   it("keeps the game's title when importing into it", () => {
     const imported = demoImportGame(QUIZSHOW_DEMO_GAME_IDS.flatQuiz, {
-      from: "pack",
-      packKey: "pride_history",
+      from: "template",
+      templateId: QUIZSHOW_DEMO_TEMPLATE_IDS.prideHistory,
     });
     expect(imported.quiz?.title).toBe("Friday flat quiz");
-    expect(imported.quiz?.starterPackKey).toBe("pride_history");
+    expect(imported.quiz?.sourceTemplateId).toBe(
+      QUIZSHOW_DEMO_TEMPLATE_IDS.prideHistory,
+    );
     expect(imported.quiz?.languages).toBe("both");
     expect(imported.quiz?.rounds[0]?.title.en).toBe("Where it started");
     expect(demoListGames().games[0]).toMatchObject({

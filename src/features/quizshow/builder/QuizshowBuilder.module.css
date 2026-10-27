@@ -12,6 +12,24 @@
   padding-bottom: 0;
 }
 
+/* A template keeps the .tab clearance (its admin page adds no padding of its
+   own). The root's scroll padding already clears the published bar inset
+   (base.css, useFloatingBarInset); the bar publishes that inset on its first
+   frame, mid slide-in, so the extra gap covers the slide offset too and a
+   focused card field or round always lands above the bar. */
+:global(html):has(.tabTemplate) {
+  scroll-padding-bottom: calc(var(--floating-bar-inset, 0px) + var(--gap-lg));
+}
+/* The admin page adds no bottom padding of its own, and on a phone the bar
+   plus the consent inset outgrows the 96px, so the clearance follows the
+   bar's published inset and keeps Add round above it at the end. */
+.tabTemplate {
+  padding-bottom: max(
+    var(--section-y-96),
+    calc(var(--floating-bar-inset, 0px) + var(--gap-lg))
+  );
+}
+
 .headingRow {
   display: flex;
   flex-wrap: wrap;
@@ -198,6 +216,31 @@
   align-items: center;
   gap: 10px;
   margin-inline-start: auto;
+}
+
+/* On a template the builder sits in the admin console, whose sidebar takes the
+   left of the viewport above 900px. The bar is portaled to the body, so it
+   reads the builder through :has() and starts after the rail, its content
+   lined up with the content column (AdminShell.module.css `.content`, capped
+   at `--maxw`). Same rail width and cutover as the listings bulk bar
+   (AdminListingsPage.module.css): `--admin-rail-w` falls back to the expanded
+   rail's 248px, and below 901px the rail is off-canvas, so the bar spans the
+   viewport as on an event or a game. */
+@media (min-width: 901px) {
+  :global(body):has(.tabTemplate) .saveBar {
+    inset-inline-start: var(--admin-rail-w, 248px);
+    /* Follows the rail as it collapses or expands, at the rail's own pace. */
+    transition: inset-inline-start var(--dur, 0.18s) var(--ease, ease);
+  }
+  :global(body):has(.tabTemplate) .saveBarInner {
+    max-width: calc(var(--maxw) - 2 * var(--wrap-px));
+    margin-inline: 0;
+  }
+}
+@media (min-width: 901px) and (prefers-reduced-motion: reduce) {
+  :global(body):has(.tabTemplate) .saveBar {
+    transition: none;
+  }
 }
 
 @media (--mobile) {

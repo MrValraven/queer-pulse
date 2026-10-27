@@ -53,21 +53,15 @@ export const quizshow: Catalog = {
   "builder.loadError": "Não conseguimos carregar o quiz",
   "builder.empty.title": "Ainda não há quiz",
   "builder.empty.body":
-    "Começa com um dos packs da nossa equipa, copia o quiz de outro evento que organizas ou escreve o teu",
-  "builder.empty.fromPack": "Começar com um pack",
+    "Começa com um dos modelos da nossa equipa, copia o quiz de outro evento que organizas ou escreve o teu",
   "builder.empty.fromEvent": "Copiar de um evento passado",
   "builder.empty.blank": "Começar do zero",
   "builder.empty.fromSeries": "Copiar do último evento desta série",
   "builder.empty.fromSeriesHint": "{event}, {date}",
-  "packs.title": "Packs para começar",
-  "packs.sub":
-    "Feitos pela nossa equipa. Tudo é copiado para o teu quiz, por isso podes mudar qualquer pergunta",
   "packs.rounds_one": "{count} ronda",
   "packs.rounds_other": "{count} rondas",
   "packs.questions_one": "{count} pergunta",
   "packs.questions_other": "{count} perguntas",
-  "packs.use": "Usar este pack",
-  "packs.loadError": "Não conseguimos carregar os packs",
   "importSources.title": "Copiar de um evento passado",
   "importSources.sub": "Eventos que organizas e que têm quiz",
   "importSources.empty": "Nenhum dos teus outros eventos tem quiz ainda",
@@ -298,7 +292,6 @@ export const quizshow: Catalog = {
     "As rondas para adultos precisam de um evento 18+",
   "errors.quiz_has_adults_rounds":
     "O quiz deste evento tem rondas para adultos",
-  "errors.pack_not_found": "Não encontrámos esse pack",
   "errors.import_source_not_found":
     "Esse quiz já não está disponível para copiar",
   "errors.import_same_event": "Escolhe outro evento para copiar",
@@ -552,7 +545,7 @@ export const quizshow: Catalog = {
   "home.myGames.loadError": "Não conseguimos carregar os teus jogos",
   "home.myGames.emptyTitle": "Ainda não tens jogos",
   "home.myGames.emptyBody":
-    "Começa com um dos packs da nossa equipa, copia um jogo ou o quiz de um evento, ou escreve o teu",
+    "Começa com um dos modelos da nossa equipa, copia um jogo ou o quiz de um evento, ou escreve o teu",
   "import.fromCopy": "Copiar um jogo ou o quiz de um evento",
   "games.row.adultsTag": "18+",
   "games.row.liveTag": "Ao vivo, código {code}",
@@ -634,4 +627,96 @@ export const quizshow: Catalog = {
   "save.conflictOverwriteGame": "Guardar esta por cima",
   "problems.title_missing_game": "Dá um título ao jogo",
   "home.back": "Voltar ao QueerPulse",
+
+  // ── Quiz templates ──
+  "builder.empty.fromTemplate": "Começar com um modelo",
+  "templates.title": "Modelos",
+  "templates.sub":
+    "Feitos pela nossa equipa. Tudo é copiado para o teu quiz, por isso podes mudar qualquer pergunta",
+  "templates.use": "Usar este modelo",
+  "templates.loadError": "Não conseguimos carregar os modelos",
+  "templates.empty": "A nossa equipa ainda não publicou modelos",
+  "errors.template_not_found": "Não encontrámos esse modelo",
+  "errors.template_card_incomplete":
+    "Escreve o título e a descrição do cartão em cada língua que o quiz usa e depois publica",
+  "templates.errors.noFeatureAccess":
+    "Os modelos de quiz precisam de acesso ao Pulse Live, e esta conta ainda não o tem",
+  "templates.errors.noStaffRole":
+    "Só moderadores e admins gerem os modelos de quiz",
+  "templates.errors.offline":
+    "Não conseguimos ligar ao QueerPulse. Verifica a tua ligação e tenta outra vez",
+  "templates.errors.server":
+    "O nosso servidor teve um problema. Tenta outra vez daqui a pouco",
+  "templates.errors.invalidInput":
+    "Falta algo neste modelo ou há um texto demasiado longo. Verifica se cada título está preenchido e dentro do limite e guarda outra vez",
+  "templates.errors.signedOut":
+    "A tua sessão terminou. Entra outra vez para continuares a trabalhar nos modelos",
+  "templates.errors.membershipInactive":
+    "A tua adesão não está ativa neste momento, por isso os modelos de quiz estão fechados para esta conta",
+  "templates.errors.foreignUpload":
+    "Uma das imagens pertence a outra conta e ainda não está neste modelo. Carrega a tua própria cópia e guarda outra vez",
+  "templates.errors.staleSession":
+    "A sessão desta página expirou. Recarrega a página e tenta outra vez",
+  "templates.errors.quizInvalid":
+    "O quiz tem problemas para corrigir antes de publicares",
+  "templates.builder.heading": "Quiz do modelo",
+  "templates.builder.lead":
+    "Quem organiza copia estas rondas e perguntas para o seu quiz e pode mudar qualquer uma",
+  "templates.problemsTitle": "Antes de publicares",
+  "templates.titleRequired": "Dá um título ao quiz",
+  "templates.saveCta": "Guardar modelo",
+  "templates.saved": "Modelo guardado",
+  "save.conflictTitleTemplate": "Outra pessoa guardou este modelo",
+  "save.conflictBodyTemplate":
+    "Alguém da nossa equipa guardou uma versão mais recente enquanto editavas. Carrega a versão da outra pessoa ou mantém a tua e guarda-a por cima",
+  "templates.details.heading": "Cartão do modelo",
+  "templates.details.sub":
+    "Quem organiza vê este cartão quando escolhe um modelo",
+  "templates.details.cardTitle": "Título do cartão",
+  "templates.details.cardDescription": "Descrição do cartão",
+  "templates.details.cardTitleMissing": "Escreve um título nesta língua",
+  "templates.details.cardDescriptionMissing":
+    "Escreve uma descrição nesta língua",
+  "templates.details.staffNotes": "Notas da equipa",
+  "templates.details.staffNotesHint":
+    "Fontes e notas de verificação. Só a nossa equipa as vê, e as cópias de quem organiza ficam sem elas",
+  "templates.details.statusDraft": "Rascunho. Só a nossa equipa o vê",
+  "templates.details.statusPublished": "Publicado a {date} por {name}",
+  "templates.details.statusPublishedNameless": "Publicado a {date}",
+  "templates.details.saveFirst":
+    "Guarda as alterações primeiro e depois publica",
+  "templates.details.fixFirst":
+    "Corrige os problemas indicados abaixo e depois publica",
+  "templates.status.draft": "Rascunho",
+  "templates.status.published": "Publicado",
+  "templates.publish": "Publicar modelo",
+  "templates.unpublish": "Despublicar modelo",
+  "templates.published": "Modelo publicado. Quem organiza já o pode escolher",
+  "templates.unpublished":
+    "Modelo despublicado. As cópias de quem organiza ficam como estão",
+  "templates.list.title": "Modelos de <em>quiz</em>",
+  "templates.list.eyebrow": "Pulse Live",
+  "templates.list.sub":
+    "Quem organiza começa quizzes de eventos e jogos a partir dos modelos que publicas aqui. Os rascunhos ficam com a nossa equipa até os publicares",
+  "templates.list.breadcrumb": "Modelos de quiz",
+  "templates.list.new": "Novo modelo",
+  "templates.list.created": "Modelo criado",
+  "templates.list.count_one": "{count} modelo",
+  "templates.list.count_other": "{count} modelos",
+  "templates.list.emptyTitle": "Ainda não há modelos",
+  "templates.list.emptyBody":
+    "Cria um agora. Quem organiza vê-o assim que o publicares",
+  "templates.row.untitled": "Modelo sem título",
+  "templates.row.editedBy": "Editado por {name}, {time}",
+  "templates.row.edited": "Editado {time}",
+  "templates.row.open": "Abrir modelo",
+  "templates.row.duplicate": "Duplicar modelo",
+  "templates.row.duplicated": "Modelo duplicado",
+  "templates.row.delete": "Apagar modelo",
+  "templates.row.deleteTitle": "Apagar este modelo?",
+  "templates.row.deleteTitleNamed": "Apagar {title}?",
+  "templates.row.deleteBody":
+    "Deixa de aparecer a quem organiza. Os quizzes já copiados a partir dele ficam exatamente como estão",
+  "templates.row.deleted": "Modelo apagado",
+  "templates.page.back": "Voltar aos modelos de quiz",
 };

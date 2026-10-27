@@ -38,6 +38,9 @@
   /* The rail's two widths; the shell's grid animates between them. */
   --studio-rail-w: 248px;
   --studio-rail-w-collapsed: 72px;
+  /* The docked Now playing and Queue column (the shell's third track while
+     .app carries data-side-panel-open). */
+  --studio-side-panel-w: 360px;
   /* The detail hero's cover column and the gap beside it (.detailHero). The
      track and episode safety row reads both to line up under the title. */
   --studio-detail-art-w: 280px;
@@ -72,15 +75,27 @@
 .root ::-webkit-scrollbar-corner {
   background: transparent;
 }
+/* Three tracks: the rail, the page column and the docked side panel. The
+   panel track sits at 0px until the panel opens, and both outer tracks are
+   variables, so the rail folding and the panel opening share one
+   transition. */
 .app {
+  --studio-app-rail-col: var(--studio-rail-w);
+  --studio-app-panel-col: 0px;
   display: grid;
-  grid-template-columns: var(--studio-rail-w) minmax(0, 1fr);
+  grid-template-columns: var(--studio-app-rail-col) minmax(0, 1fr) var(
+      --studio-app-panel-col
+    );
   min-height: 100svh;
   transition: grid-template-columns var(--dur-base) var(--ease);
 }
 /* The folded rail (StudioRail): an icon strip with tooltips. */
 .app[data-rail-collapsed] {
-  grid-template-columns: var(--studio-rail-w-collapsed) minmax(0, 1fr);
+  --studio-app-rail-col: var(--studio-rail-w-collapsed);
+}
+/* The docked Now playing or Queue column (grid child 3). */
+.app[data-side-panel-open] {
+  --studio-app-panel-col: var(--studio-side-panel-w);
 }
 /* While the column animates, the page lays out inside its own box, so
    the width change never reflows anything outside it. Only for the
@@ -97,7 +112,12 @@
   padding: 24px 0 0;
   position: sticky;
   top: 0;
-  height: calc(100dvh - var(--studio-player-inset, 0px));
+  /* Ends above the player bar and whichever is taller of the tab bar and
+     the consent banner, like the docked side panel. */
+  height: calc(
+    100dvh - var(--studio-player-inset, 0px) -
+      max(var(--bottom-inset, 0px), var(--consent-inset, 0px))
+  );
   overflow: hidden;
   border-right: 1px solid var(--s-line);
   display: flex;
@@ -402,9 +422,14 @@
   border-radius: var(--radius-pill);
   padding: 8px 16px;
 }
+/* The page column is a named container, so a detail page stacks its sidebar
+   when the column narrows beside the docked side panel. Phones keep their
+   viewport queries (--compact). Every fixed layer a page opens (StudioMenu,
+   StudioSelectionBar, Tooltip, Modal) is portalled out of <main>. */
 .content {
   display: block;
   padding: 0 var(--studio-gutter-right) 0 var(--studio-gutter-left);
+  container: studio-page / inline-size;
 }
 
 /* The page scrolls the document, so the sticky topbar's clearance goes on
@@ -688,7 +713,7 @@
 }
 /* A pressed toggle (Save) holds a deeper wash and the accent hairline, so
    its state shows beside its words while its accessible name stays put.
-   Hovered, it keeps that wash rather than taking the lighter hover. */
+   Hovered, it keeps that deeper wash. */
 .heroActions button:where(:not([role="menuitem"]))[aria-pressed="true"] {
   background: rgba(var(--studio-ink-rgb), 0.14);
   border-color: rgba(var(--accent-rgb), 0.45);
@@ -1149,7 +1174,7 @@
 }
 /* The phone action row: Play, then round 44px icon buttons. It fits one
    line at 360px for a release or a track; a longer row (an artist's Follow
-   in PT) wraps onto a second line rather than run past the screen. */
+   in PT) wraps onto a second line inside the screen. */
 .heroActions[data-compact] {
   flex-wrap: wrap;
   gap: 10px 6px;
@@ -1175,7 +1200,7 @@
   }
 }
 /* The track hero's trailing actions, kept together so a wrapping row
-   carries the "..." onto the next line with company, never alone. */
+   carries the "..." onto the next line together with its neighbours. */
 .heroActionGroup {
   display: flex;
   align-items: center;
@@ -1536,6 +1561,15 @@
   }
   .rowGrid {
     grid-template-columns: repeat(2, 1fr);
+  }
+}
+/* A narrow page column on desktop (the docked side panel beside it): the
+   artist and album sidebar and the set's side column drop under the main
+   column, as they do on phones. */
+@container studio-page (max-width: 759px) {
+  .split,
+  .detailGrid {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 /* A phone on its side: the detail hero goes back to two columns, a 160px

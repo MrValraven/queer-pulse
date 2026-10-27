@@ -1,8 +1,16 @@
 .panel {
   position: fixed;
-  /* Studio's own pages show no app nav, so the panel sits a fixed gap from
-     the top there. `.panelBelowNav` handles pages that show the nav. */
-  top: 12px;
+  /* Studio's own pages show no app nav, so the panel starts 8px under the
+     Studio topbar. The shell root defines --studio-topbar-h and the card is
+     portalled to body, so the literal fallback repeats the token's value.
+     `.panelBelowNav` handles pages that show the nav. */
+  top: calc(
+    var(
+        --studio-topbar-h,
+        calc(max(18px, env(safe-area-inset-top, 0px)) + 63px)
+      ) +
+      8px
+  );
   inset-inline-end: 12px;
   /* Ends above the player bar, which itself sits above the tab bar or the
      consent banner (whichever is taller). The panel paints under the bar so
@@ -36,20 +44,6 @@
     var(--studio-surface-rail);
   border-color: var(--studio-line);
   box-shadow: var(--shadow-e3);
-}
-
-.panelHead {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 14px 14px 6px 18px;
-}
-
-.panelHeading {
-  margin: 0;
-  font-family: var(--serif);
-  font-size: var(--text-20);
 }
 
 .panelBody {
@@ -364,8 +358,7 @@
 .control:focus-visible,
 .clear:focus-visible,
 .foldToggle:focus-visible,
-.groupHeading:focus-visible,
-.panelHeading:focus-visible {
+.groupHeading:focus-visible {
   outline: var(--focus-ring);
   outline-offset: var(--focus-ring-offset);
   box-shadow: var(--ring-cream);

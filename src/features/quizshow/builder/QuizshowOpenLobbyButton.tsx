@@ -1,12 +1,12 @@
 import { useId, useState } from "react";
 import { Button, Collapse } from "../../../shared/components/ui";
-import type { QuizshowScope } from "../quizshowScope";
+import type { QuizshowSessionScope } from "../quizshowScope";
 import { QuizshowOpenLobbyDialog } from "./QuizshowOpenLobbyDialog";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import styles from "./QuizshowLobby.module.css";
 
 interface QuizshowOpenLobbyButtonProps {
-  scope: QuizshowScope;
+  scope: QuizshowSessionScope;
   isBlocked: boolean;
   blockedReason: string | null;
   /** Describes a block that shows no reason here, such as the save bar's "Unsaved changes". */

@@ -7,14 +7,14 @@ import type {
 } from "../../../shared/contracts/quizshow";
 import { hasAdultsRound } from "../api/quizshowDemoQuizzes";
 import type { QuizshowDemoEngineOptions } from "../engine/useQuizshowDemoEngine";
-import type { QuizshowScope } from "../quizshowScope";
+import type { QuizshowSessionScope } from "../quizshowScope";
 
 /** While no session is open, the screen and the remote look for a new lobby this often. */
 export const QUIZSHOW_NO_SESSION_REFETCH_MS = 15_000;
 
 /** The event or game behind the screen and the remote, and its open session. */
 export interface QuizshowHostSession {
-  scope: QuizshowScope;
+  scope: QuizshowSessionScope;
   /** The event's slug; null for a game. */
   slug: string | null;
   /** The event's title; null for a game. */

@@ -2,7 +2,7 @@ import { useId } from "react";
 import { Button } from "../../../shared/components/ui";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
 import type { QuizshowQuizResponse } from "../../../shared/contracts/quizshow";
-import type { QuizshowScope } from "../quizshowScope";
+import type { QuizshowSessionScope } from "../quizshowScope";
 import {
   QuizshowImportButtons,
   type QuizshowImportPicker,
@@ -10,7 +10,7 @@ import {
 import styles from "./QuizshowImport.module.css";
 
 interface QuizshowEmptyStateProps {
-  scope: QuizshowScope;
+  scope: QuizshowSessionScope;
   eventStartAt: Date | null;
   isAdultsEvent: boolean;
   onStartBlank: () => void;

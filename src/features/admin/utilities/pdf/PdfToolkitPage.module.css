@@ -1,0 +1,32 @@
+/* The PDF toolkit workspace: open files and the add zone on top, the sticky
+   selection bar over the page grid, then the ways out. */
+
+.workspace {
+  display: grid;
+  gap: var(--gap-grid);
+  min-width: 0;
+}
+
+.intake {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+}
+
+/* One parent spans the whole grid, so the sticky selection bar stays stuck
+   while the pages scroll under it and lets go only past the last row. */
+.pages {
+  display: grid;
+  gap: var(--gap-sm);
+  min-width: 0;
+}
+
+/* The output bar paints over the fading pages and the tiles gliding up past
+   it. It shares --z-raised with the split toggles and comes after the grid in
+   the page, so it paints over them too. A dragged tile lifts one step higher
+   and stays on top of the bar. */
+.output {
+  position: relative;
+  z-index: var(--z-raised);
+  min-width: 0;
+}

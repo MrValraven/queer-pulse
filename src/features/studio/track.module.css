@@ -333,3 +333,10 @@
     grid-template-columns: 1fr;
   }
 }
+/* A narrow page column on desktop (the docked side panel beside it): the
+   track's side column drops under the lyrics and credits. */
+@container studio-page (max-width: 779px) {
+  .body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

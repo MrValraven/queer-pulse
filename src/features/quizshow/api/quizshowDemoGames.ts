@@ -1,4 +1,3 @@
-import { ApiError } from "../../../shared/api/client";
 import {
   QUIZSHOW_GAMES_PER_MEMBER_MAX,
   QUIZSHOW_JOIN_CODE_ALPHABET,
@@ -16,8 +15,11 @@ import {
   type QuizshowOpenSessionResponse,
   type QuizshowQuiz,
   type QuizshowResultsResponse,
-  type QuizshowStarterPackKey,
 } from "../../../shared/contracts/quizshow";
+import {
+  QUIZSHOW_DEMO_TEMPLATE_IDS,
+  templateSeedById,
+} from "../demo/quizshowTemplates.data";
 import {
   QUIZSHOW_DEMO_GAME_JOIN_CODE,
   QUIZSHOW_DEMO_GAME_SESSION_PREFIX,
@@ -31,11 +33,11 @@ import {
 } from "./quizshowDemoGames.data";
 import {
   demoAssertShape,
+  demoBadRequest,
   demoBodyOf,
   demoCompletenessProblems,
-  demoDefaultPack,
+  demoDefaultQuizShape,
   demoEventSourceCopy,
-  demoPackCopy,
   demoRefusal,
   hasAdultsRound,
   quizFromInput,
@@ -46,6 +48,10 @@ import {
   QUIZSHOW_DEMO_IMPORT_SOURCES,
   QUIZSHOW_DEMO_RESULTS,
 } from "./quizshowDemoStore.data";
+import {
+  demoTemplateCopy,
+  onDemoTemplateDeleted,
+} from "./quizshowDemoTemplates";
 
 interface DemoGame {
   gameId: string;
@@ -73,14 +79,6 @@ export function resetQuizshowDemoGames(): void {
   hasSeededGames = false;
   gameCounter = 0;
   saveCounter = 0;
-}
-
-function badRequest(message: string): ApiError {
-  return new ApiError(400, "Bad Request", {
-    statusCode: 400,
-    error: "Bad Request",
-    message: [message],
-  });
 }
 
 function stableHashOf(text: string): number {
@@ -129,27 +127,28 @@ function nextIdPrefix(gameId: string): string {
 function buildQuiz(
   gameId: string,
   body: DemoQuizBody,
-  starterPackKey: QuizshowStarterPackKey | null,
+  sourceTemplateId: string | null,
   updatedAt: string,
 ): QuizshowQuiz {
   return quizFromInput(body, {
     idPrefix: nextIdPrefix(gameId),
     updatedAt,
-    starterPackKey,
+    sourceTemplateId,
   });
 }
 
+/** Reads the static template seed, so deleting a demo template never breaks a seeded game. */
 function seededGame(seed: QuizshowDemoGameSeed): DemoGame {
-  const packCopy = demoPackCopy(seed.packKey);
-  const rounds = packCopy.body.rounds.map((round, roundIndex) =>
+  const templateSeed = templateSeedById(seed.templateId);
+  const rounds = templateSeed.quiz.rounds.map((round, roundIndex) =>
     roundIndex === seed.adultsRoundIndex
       ? { ...round, contentLabel: "adults" as const }
       : round,
   );
   const quiz = buildQuiz(
     seed.gameId,
-    { ...packCopy.body, title: seed.title, rounds },
-    packCopy.starterPackKey,
+    { ...templateSeed.quiz, title: seed.title, rounds },
+    templateSeed.id,
     seed.updatedAt,
   );
   const liveSession: QuizshowLiveSessionRef | null = seed.isLobbyOpen
@@ -181,6 +180,16 @@ function games(): Map<string, DemoGame> {
   }
   return gamesById;
 }
+
+// A deleted template leaves its game copies intact and clears their source id, as the live foreign key does.
+// Seeding first means a seeded game copied from that template is cleared too.
+onDemoTemplateDeleted((templateId) => {
+  for (const game of games().values()) {
+    if (game.quiz.sourceTemplateId === templateId) {
+      game.quiz = { ...game.quiz, sourceTemplateId: null };
+    }
+  }
+});
 
 /** Newest updatedAt first; among equal times the game added last comes first. */
 function gamesNewestFirst(): DemoGame[] {
@@ -253,7 +262,7 @@ export function demoGameSourceCopy(
   if (!game) throw demoRefusal(404, "quizshow_import_source_not_found");
   return {
     body: demoBodyOf(game.quiz),
-    starterPackKey: game.quiz.starterPackKey,
+    sourceTemplateId: game.quiz.sourceTemplateId,
   };
 }
 
@@ -261,7 +270,7 @@ function sourceCopyOf(
   source: QuizshowImportInput,
   excludedGameId: string | null,
 ): DemoQuizCopy {
-  if (source.from === "pack") return demoPackCopy(source.packKey);
+  if (source.from === "template") return demoTemplateCopy(source.templateId);
   if (source.from === "event") return demoEventSourceCopy(source.eventSlug);
   return demoGameSourceCopy(source.gameId, excludedGameId);
 }
@@ -278,21 +287,21 @@ function trimmedTitleOf(title: string): string {
     trimmedTitle.length === 0 ||
     trimmedTitle.length > QUIZSHOW_LIMITS.quizTitleMax
   ) {
-    throw badRequest("title must be 1 to 120 characters");
+    throw demoBadRequest("title must be 1 to 120 characters");
   }
   return trimmedTitle;
 }
 
 function addGame(
   body: DemoQuizBody,
-  starterPackKey: QuizshowStarterPackKey | null,
+  sourceTemplateId: string | null,
   isAdultsOnly: boolean,
 ): DemoGame {
   gameCounter += 1;
   const gameId = `demo-game-new-${gameCounter}`;
   const game: DemoGame = {
     gameId,
-    quiz: buildQuiz(gameId, body, starterPackKey, new Date().toISOString()),
+    quiz: buildQuiz(gameId, body, sourceTemplateId, new Date().toISOString()),
     isAdultsOnly,
     liveSession: null,
     hasResults: false,
@@ -325,7 +334,7 @@ export function demoCreateGame(
   const copy = sourceCopyOf(body.source, null);
   const copiedBody = { ...copy.body, title };
   return responseFor(
-    addGame(copiedBody, copy.starterPackKey, hasAdultsRound(copiedBody)),
+    addGame(copiedBody, copy.sourceTemplateId, hasAdultsRound(copiedBody)),
   );
 }
 
@@ -353,7 +362,7 @@ export function demoPutGame(
   game.quiz = buildQuiz(
     gameId,
     { ...quizBody, title },
-    game.quiz.starterPackKey,
+    game.quiz.sourceTemplateId,
     new Date().toISOString(),
   );
   game.isAdultsOnly = isAdultsOnly;
@@ -371,7 +380,11 @@ export function demoDuplicateGame(gameId: string): QuizshowGameResponse {
   const game = requireGame(gameId);
   assertBelowGameLimit();
   return responseFor(
-    addGame(demoBodyOf(game.quiz), game.quiz.starterPackKey, game.isAdultsOnly),
+    addGame(
+      demoBodyOf(game.quiz),
+      game.quiz.sourceTemplateId,
+      game.isAdultsOnly,
+    ),
   );
 }
 
@@ -389,7 +402,7 @@ export function demoImportGame(
   game.quiz = buildQuiz(
     gameId,
     { ...copy.body, title: game.quiz.title },
-    copy.starterPackKey,
+    copy.sourceTemplateId,
     new Date().toISOString(),
   );
   return responseFor(game);
@@ -420,7 +433,7 @@ export function demoOpenGameSession(
   body: QuizshowOpenSessionInput,
 ): QuizshowOpenSessionResponse {
   if (body.notifyGuests) {
-    throw badRequest("notifyGuests must be equal to false");
+    throw demoBadRequest("notifyGuests must be equal to false");
   }
   const game = requireGame(gameId);
   const problems = demoCompletenessProblems(game.quiz);
@@ -466,15 +479,14 @@ export function demoDeleteGameResults(gameId: string): void {
   game.hasResults = false;
 }
 
-/** The quiz a demo engine plays for this game: the one saved in this tab, else the default pack. */
+/** The quiz a demo engine plays for this game: the one saved in this tab, else the Pride seed's quiz. */
 export function demoGameQuizFor(gameId: string): QuizshowQuiz {
   const game = games().get(gameId);
   if (game) return structuredClone(game.quiz);
-  const pack = demoDefaultPack();
-  return quizFromInput(pack.quiz, {
-    idPrefix: `demo-${pack.key}`,
+  return quizFromInput(demoDefaultQuizShape(), {
+    idPrefix: `demo-${QUIZSHOW_DEMO_TEMPLATE_IDS.prideHistory}`,
     updatedAt: new Date(0).toISOString(),
-    starterPackKey: pack.key,
+    sourceTemplateId: QUIZSHOW_DEMO_TEMPLATE_IDS.prideHistory,
   });
 }
 

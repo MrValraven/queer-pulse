@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import { FiList } from "react-icons/fi";
 import { Button, Collapse, Tooltip } from "../../../../shared/components/ui";
 import { IconButton } from "../../../../shared/components/ui/IconButton";
 import { useTranslation } from "../../../../shared/i18n/useTranslation";
@@ -33,9 +32,8 @@ import {
 import { StudioSleepTimerChip } from "./StudioSleepTimer";
 import { StudioVolumeControl } from "./StudioVolumeControl";
 import { StudioWarningGate } from "./StudioWarningGate";
-import { STUDIO_QUEUE_BUTTON_ID } from "./studioQueueMoves";
+import { StudioSidePanelToggles } from "./StudioSidePanelToggles";
 import styles from "../../StudioPlayer.module.css";
-import { useStudioShortcutHint } from "./useStudioShortcutHint";
 
 /** The current track as the heart likes it. */
 function studioLikeSubjectFor(item: StudioQueueItem): StudioLikeSubject {
@@ -121,32 +119,15 @@ function StudioPlayerNow({ item }: { item: StudioQueueItem }) {
   );
 }
 
-/** Sleep chip, Cast, Go to track, the queue toggle, volume, the More panel
+/** Sleep chip, Cast, Go to track, the Now playing and queue toggles, volume, the More panel
  *  and Close player. */
 function StudioPlayerTools({ item }: { item: StudioQueueItem }) {
-  const { t } = useTranslation();
-  const surface = useStudioPlayerSurface();
-  const hintFor = useStudioShortcutHint();
-  const queueLabel = surface.isQueuePanelOpen
-    ? t("studio:player.queueHide")
-    : t("studio:player.queueShow");
-  const queueHint = hintFor(queueLabel, "queue");
   return (
     <div className={styles.tools}>
       <StudioSleepTimerChip />
       <StudioCastButton />
       <StudioGoToTrackButton item={item} />
-      <IconButton
-        id={STUDIO_QUEUE_BUTTON_ID}
-        className={styles.toolButton}
-        aria-expanded={surface.isQueuePanelOpen}
-        aria-label={queueLabel}
-        aria-keyshortcuts={queueHint.ariaKeyShortcuts}
-        tooltip={queueHint.tooltip}
-        onClick={surface.toggleQueuePanel}
-      >
-        <FiList aria-hidden />
-      </IconButton>
+      <StudioSidePanelToggles />
       <StudioVolumeControl />
       <StudioPlayerMorePanel placement="up" />
       <StudioPlayerCloseButton className={styles.toolButton} />

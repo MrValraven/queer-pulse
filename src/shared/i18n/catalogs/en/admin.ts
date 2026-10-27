@@ -9232,11 +9232,126 @@ export const admin: Catalog = {
   "moderation.quizshowGame.error": "That didn't work. Try again",
   "moderation.action.quizshowGameEnded": "Ended a Pulse Live game",
   "moderation.action.quizshowGameDeleted": "Deleted a Pulse Live game",
+  "moderation.action.quizshowTemplatePublished": "Published a quiz template",
+  "moderation.action.quizshowTemplateUnpublished":
+    "Unpublished a quiz template",
+  "moderation.action.quizshowTemplateDeleted": "Deleted a quiz template",
   "governance.audit.actionType.quizshow_game_ended": "Pulse Live game ended",
   "governance.audit.actionType.quizshow_game_deleted":
     "Pulse Live game deleted",
+  "governance.audit.actionType.quizshow_template_published":
+    "Quiz template published",
+  "governance.audit.actionType.quizshow_template_unpublished":
+    "Quiz template unpublished",
+  "governance.audit.actionType.quizshow_template_deleted":
+    "Quiz template deleted",
   "moderation.quizshowGame.reasonLabel": "Reason",
   "moderation.quizshowGame.reasonHint":
     "Saved in the moderation log with this report",
   "moderation.quizshowGame.reasonRequired": "Add a reason first",
+
+  // Staff utilities hub and PDF toolkit (/admin/utilities)
+  "utilities.breadcrumb": "Utilities",
+  "utilities.hub.title": "<em>Utilities</em>",
+  "utilities.hub.eyebrow": "Utilities",
+  "utilities.hub.header.title": "Small file jobs, <em>done here</em>",
+  "utilities.hub.sub":
+    "Tools for everyday file chores. They run in your browser, so your files stay on your device",
+  "utilities.hub.listLabel": "Staff tools",
+  "utilities.tools.pdf.name": "PDF pages",
+  "utilities.tools.pdf.description":
+    "Remove, rotate, reorder, merge and split the pages of a PDF",
+  "utilities.pdf.title": "PDF <em>pages</em>",
+  "utilities.pdf.header.title": "Edit the pages of a <em>PDF</em>",
+  "utilities.pdf.sub":
+    "Open one PDF or several, then remove, rotate, reorder or split pages and download the result",
+  "utilities.pdf.drop.title": "Drop PDFs here or choose files",
+  "utilities.pdf.drop.titleTouch": "Choose PDFs to edit",
+  "utilities.pdf.drop.choose": "Choose PDFs",
+  "utilities.pdf.drop.add": "Add PDFs",
+  "utilities.pdf.drop.active": "Drop to open",
+  "utilities.pdf.drop.privacy":
+    "Files stay on this device and are never uploaded",
+  "utilities.pdf.drop.inputLabel": "PDF files",
+  "utilities.pdf.drop.opening_one": "Opening {count} file…",
+  "utilities.pdf.drop.opening_other": "Opening {count} files…",
+  "utilities.pdf.files.heading": "Open files",
+  "utilities.pdf.files.pageCount_one": "{count} page",
+  "utilities.pdf.files.pageCount_other": "{count} pages",
+  "utilities.pdf.files.signedWarning":
+    "This PDF is digitally signed. Once you edit it, the signature is no longer valid",
+  "utilities.pdf.files.largeWarning":
+    "This file is large, so pages can take a moment to appear and saving can be slow",
+  "utilities.pdf.errors.notPdf": "{fileName} isn't a PDF file",
+  "utilities.pdf.errors.passwordRequired":
+    "{fileName} needs a password to open, so it can't be opened here",
+  "utilities.pdf.errors.damaged": "{fileName} is damaged and couldn't be read",
+  "utilities.pdf.errors.tooLarge":
+    "{fileName} is over {limit} MB, too large for your browser to handle",
+  "utilities.pdf.errors.unreadable":
+    "{fileName} couldn't be read from your device. Check the file is still there and try again",
+  "utilities.pdf.errors.decrypterUnavailable":
+    "{fileName} has print or copy restrictions, and the part of this tool that opens those couldn't load. Check your connection and try again",
+  "utilities.pdf.errors.rendererUnavailable":
+    "The page preview part of this tool couldn't load, so {fileName} wasn't opened. Check your connection and try again",
+  "utilities.pdf.errors.buildPdf":
+    "Building the PDF failed, so nothing was downloaded. Try again",
+  "utilities.pdf.errors.buildZip":
+    "Building the zip file failed, so nothing was downloaded. Try again",
+  "utilities.pdf.errors.dismiss": "Dismiss message",
+  "utilities.pdf.grid.label": "Pages",
+  "utilities.pdf.grid.keyboardHint":
+    "Arrow keys move between pages and Space selects one",
+  "utilities.pdf.page.label": "Page {number}",
+  "utilities.pdf.page.labelWithFile": "Page {number}, from {fileName}",
+  "utilities.pdf.page.thumbnailFailed":
+    "Preview unavailable. This page still saves normally",
+  "utilities.pdf.page.partLabel": "Part {number}",
+  "utilities.pdf.cut.add": "Split after page {number}",
+  "utilities.pdf.cut.remove": "Remove the split after page {number}",
+  "utilities.pdf.selection.count_one": "{count} page selected",
+  "utilities.pdf.selection.count_other": "{count} pages selected",
+  "utilities.pdf.selection.hint": "Select pages to rotate, move or remove them",
+  "utilities.pdf.selection.selectAll": "Select all pages",
+  "utilities.pdf.selection.clear": "Clear selection",
+  "utilities.pdf.actions.remove": "Remove pages",
+  "utilities.pdf.actions.removeBlocked":
+    "Keep at least one page. Unselect a page to remove the rest",
+  "utilities.pdf.actions.rotateLeft": "Rotate left",
+  "utilities.pdf.actions.rotateRight": "Rotate right",
+  "utilities.pdf.actions.moveEarlier": "Move pages earlier",
+  "utilities.pdf.actions.moveLater": "Move pages later",
+  "utilities.pdf.actions.undo": "Undo edit",
+  "utilities.pdf.actions.redo": "Redo edit",
+  "utilities.pdf.output.download": "Download PDF",
+  "utilities.pdf.output.split": "Split into files",
+  "utilities.pdf.output.splitCount_one": "Split into {count} file",
+  "utilities.pdf.output.splitCount_other": "Split into {count} files",
+  "utilities.pdf.output.splitHint":
+    "Add a split between two pages to turn this on",
+  "utilities.pdf.output.everyPage": "Download each page as a file",
+  "utilities.pdf.output.building": "Building your file…",
+  "utilities.pdf.output.startOver": "Start over",
+  "utilities.pdf.startOver.title": "Start over?",
+  "utilities.pdf.startOver.body":
+    "This closes every file and clears your edits. Anything you haven't downloaded is lost",
+  "utilities.pdf.startOver.confirm": "Close files and start over",
+  "utilities.pdf.startOver.cancel": "Keep editing",
+  "utilities.pdf.drag.instructions":
+    "Drag a page with a mouse or finger to move it. With a keyboard, select pages and use Move pages earlier or Move pages later",
+  "utilities.pdf.drag.start": "Picked up page {number}",
+  "utilities.pdf.drag.over": "Page {number} is over position {position}",
+  "utilities.pdf.drag.cancel": "Page {number} went back to position {position}",
+  "utilities.pdf.announce.removed_one": "{count} page removed",
+  "utilities.pdf.announce.removed_other": "{count} pages removed",
+  "utilities.pdf.announce.rotated_one": "{count} page rotated",
+  "utilities.pdf.announce.rotated_other": "{count} pages rotated",
+  "utilities.pdf.announce.moved_one": "{count} page moved",
+  "utilities.pdf.announce.moved_other": "{count} pages moved",
+  "utilities.pdf.announce.added_one": "{count} page added",
+  "utilities.pdf.announce.added_other": "{count} pages added",
+  "utilities.pdf.announce.cutAdded": "Split added",
+  "utilities.pdf.announce.cutRemoved": "Split removed",
+  "utilities.pdf.announce.undone": "Edit undone",
+  "utilities.pdf.announce.redone": "Edit redone",
 };

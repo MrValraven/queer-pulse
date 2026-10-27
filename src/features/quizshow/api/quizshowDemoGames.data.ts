@@ -1,7 +1,5 @@
-import type {
-  QuizshowJoinHost,
-  QuizshowStarterPackKey,
-} from "../../../shared/contracts/quizshow";
+import type { QuizshowJoinHost } from "../../../shared/contracts/quizshow";
+import { QUIZSHOW_DEMO_TEMPLATE_IDS } from "../demo/quizshowTemplates.data";
 
 export const QUIZSHOW_DEMO_GAME_IDS = {
   flatQuiz: "demo-game-flat-quiz",
@@ -20,7 +18,8 @@ export const QUIZSHOW_DEMO_GAME_HOST: QuizshowJoinHost = {
 export interface QuizshowDemoGameSeed {
   gameId: string;
   title: string;
-  packKey: QuizshowStarterPackKey;
+  /** The seeded template the game's quiz is copied from, read from the static seeds. */
+  templateId: string;
   /** The round that carries the `adults` label, or null for none. */
   adultsRoundIndex: number | null;
   isAdultsOnly: boolean;
@@ -33,7 +32,7 @@ export const QUIZSHOW_DEMO_GAME_SEEDS: readonly QuizshowDemoGameSeed[] = [
   {
     gameId: QUIZSHOW_DEMO_GAME_IDS.flatQuiz,
     title: "Friday flat quiz",
-    packKey: "eurovision",
+    templateId: QUIZSHOW_DEMO_TEMPLATE_IDS.eurovision,
     adultsRoundIndex: null,
     isAdultsOnly: false,
     hasResults: true,
@@ -43,7 +42,7 @@ export const QUIZSHOW_DEMO_GAME_SEEDS: readonly QuizshowDemoGameSeed[] = [
   {
     gameId: QUIZSHOW_DEMO_GAME_IDS.afterDark,
     title: "After dark trivia",
-    packKey: "drag_herstory",
+    templateId: QUIZSHOW_DEMO_TEMPLATE_IDS.dragHerstory,
     adultsRoundIndex: 1,
     isAdultsOnly: true,
     hasResults: false,

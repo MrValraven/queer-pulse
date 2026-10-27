@@ -128,8 +128,14 @@ export function createSurfaceValue(
   overrides: Partial<StudioPlayerSurfaceValue> = {},
 ): StudioPlayerSurfaceValue {
   return {
+    hasQueue: true,
     isNowPlayingOpen: false,
     nowPlayingTab: "lyrics",
+    sidePanel: null,
+    sidePanelPlacement: "floating",
+    openSidePanel: vi.fn(),
+    toggleSidePanel: vi.fn(),
+    closeSidePanel: vi.fn(),
     isQueuePanelOpen: false,
     isShortcutsOpen: false,
     get openPopoverId() {

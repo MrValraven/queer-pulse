@@ -1,6 +1,9 @@
 import {
+  createContext,
   useCallback,
+  useContext,
   useEffect,
+  useLayoutEffect,
   useSyncExternalStore,
   type RefObject,
 } from "react";
@@ -19,8 +22,18 @@ function readStoredCollapsed(): boolean {
   }
 }
 
+/** The member's saved choice. Only the member's own toggle writes it. */
 let isCollapsedNow =
   typeof window === "undefined" ? false : readStoredCollapsed();
+
+/** How many mounted requesters (the docked panel) want the rail folded. */
+let panelFoldRequestCount = 0;
+/** The member unfolded the rail by hand during this panel opening. */
+let isUnfoldedByHand = false;
+
+function notifyListeners(): void {
+  for (const listener of listeners) listener();
+}
 
 function subscribe(listener: () => void): () => void {
   listeners.add(listener);
@@ -37,8 +50,9 @@ function subscribe(listener: () => void): () => void {
   };
 }
 
+/** Saved choice, or the temporary fold the panel asks for. */
 function readCollapsed(): boolean {
-  return isCollapsedNow;
+  return isCollapsedNow || (panelFoldRequestCount > 0 && !isUnfoldedByHand);
 }
 
 function readCollapsedOnServer(): boolean {
@@ -55,24 +69,77 @@ function writeCollapsed(isCollapsed: boolean): void {
   } catch {
     // Storage refused: the choice still holds for this visit.
   }
-  for (const listener of listeners) listener();
+  notifyListeners();
 }
+
+function toggleCollapsed(): void {
+  if (!readCollapsed()) {
+    writeCollapsed(true);
+    return;
+  }
+  if (panelFoldRequestCount > 0) isUnfoldedByHand = true;
+  if (isCollapsedNow) {
+    writeCollapsed(false);
+    return;
+  }
+  notifyListeners();
+}
+
+/**
+ * While `isRequested` is true the rail folds temporarily, without touching
+ * the member's saved choice. When the last request ends, the hand unfold
+ * resets for the next opening. The reset waits one microtask so a shell
+ * remount inside the same commit keeps the member's unfold.
+ */
+export function useStudioRailPanelFold(isRequested: boolean): void {
+  useLayoutEffect(() => {
+    if (!isRequested) return;
+    panelFoldRequestCount += 1;
+    notifyListeners();
+    return () => {
+      panelFoldRequestCount -= 1;
+      notifyListeners();
+      if (panelFoldRequestCount > 0) return;
+      queueMicrotask(() => {
+        if (panelFoldRequestCount > 0) return;
+        isUnfoldedByHand = false;
+        notifyListeners();
+      });
+    };
+  }, [isRequested]);
+}
+
+/**
+ * The listener shell's own fold for its grid, provided around the rail. It
+ * also counts a docked panel's fold the store hears only after the first
+ * paint, so the rail's labels start folded with the grid and never fade on
+ * entry. Null outside the shell, where the store answers alone.
+ */
+export const StudioShellRailCollapsedContext = createContext<boolean | null>(
+  null,
+);
 
 /**
  * The Studio rail's folded state, shared by the shell (grid column) and the
  * rail (labels, tooltips, toggle). Kept in localStorage on this device only.
+ * Inside the shell the shell's fold answers first; the toggle always writes
+ * the store.
  */
 export function useStudioRailCollapsed(): {
   isRailCollapsed: boolean;
   toggleRail: () => void;
 } {
-  const isRailCollapsed = useSyncExternalStore(
+  const isShellRailCollapsed = useContext(StudioShellRailCollapsedContext);
+  const isStoreRailCollapsed = useSyncExternalStore(
     subscribe,
     readCollapsed,
     readCollapsedOnServer,
   );
-  const toggleRail = useCallback(() => writeCollapsed(!readCollapsed()), []);
-  return { isRailCollapsed, toggleRail };
+  const toggleRail = useCallback(() => toggleCollapsed(), []);
+  return {
+    isRailCollapsed: isShellRailCollapsed ?? isStoreRailCollapsed,
+    toggleRail,
+  };
 }
 
 /**

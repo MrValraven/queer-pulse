@@ -1,0 +1,29 @@
+/* Six file tones, in the order files are opened. Consumers read var(--file-tone). */
+.tone[data-file-tone="0"] {
+  --file-tone: var(--accent);
+}
+
+.tone[data-file-tone="1"] {
+  --file-tone: var(--jade);
+}
+
+.tone[data-file-tone="2"] {
+  --file-tone: var(--violet);
+}
+
+.tone[data-file-tone="3"] {
+  --file-tone: var(--amber);
+}
+
+.tone[data-file-tone="4"] {
+  --file-tone: var(--rose);
+}
+
+.tone[data-file-tone="5"] {
+  --file-tone: var(--cat-tech);
+}
+
+/* The slate blue is too dark against the dark paper, so it lifts toward white there. */
+:global([data-theme="dark"]) .tone[data-file-tone="5"] {
+  --file-tone: color-mix(in srgb, var(--cat-tech) 60%, white);
+}

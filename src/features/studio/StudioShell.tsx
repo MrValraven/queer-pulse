@@ -12,6 +12,7 @@ import {
 } from "../../shared/components/layout/SkipToContentLink";
 import { useAccountIdentity } from "../../shared/components/layout/useAccountIdentity";
 import { StudioRail } from "./StudioRail";
+import { StudioSidePanelColumn } from "./StudioSidePanelColumn";
 import { StudioAccountMenu } from "./StudioAccountMenu";
 import { StudioDemoLibrarySeed } from "./StudioDemoLibrarySeed";
 import { StudioNotificationsBell } from "./StudioNotificationsBell";
@@ -21,12 +22,13 @@ import { StudioTabBar } from "./StudioTabBar";
 import { SUSTAIN_PRICE } from "./studioShell.data";
 import { useStudioDocumentTitle } from "./useStudioDocumentTitle";
 import {
-  useStudioRailCollapsed,
+  StudioShellRailCollapsedContext,
   useStudioRailTransitionFlag,
 } from "./useStudioRailCollapsed";
 import { useStudioSearchShortcut } from "./useStudioSearchShortcut";
 import { useStudioSearchShortcutFallback } from "./useStudioSearchShortcutFallback";
 import { useStudioShowcase } from "./useStudioShowcase";
+import { useStudioShellSidePanel } from "./useStudioShellSidePanel";
 import { useStudioShellSignal } from "./useStudioShellSignal";
 import styles from "./studio.module.css";
 
@@ -44,7 +46,8 @@ export function StudioShell({ children }: { children: ReactNode }) {
   const isShowcase = useStudioShowcase();
   const identity = useAccountIdentity();
   const isCompact = useMediaQuery(mediaMax(880));
-  const { isRailCollapsed } = useStudioRailCollapsed();
+  const { isDockedPlacement, dockedView, isRailCollapsed } =
+    useStudioShellSidePanel(isCompact);
   const appRef = useRef<HTMLDivElement>(null);
   useStudioRailTransitionFlag(appRef);
   useStudioShellSignal();
@@ -81,10 +84,16 @@ export function StudioShell({ children }: { children: ReactNode }) {
         ref={appRef}
         className={styles.app}
         data-rail-collapsed={(!isCompact && isRailCollapsed) || undefined}
+        data-side-panel-open={dockedView !== null || undefined}
       >
         {/* The rail is hidden at this width anyway; leaving it unmounted
-            spares phones its playlist queries. */}
-        {!isCompact && <StudioRail />}
+            spares phones its playlist queries. Its readers take the grid's
+            fold, so its labels start folded with the grid. */}
+        {!isCompact && (
+          <StudioShellRailCollapsedContext.Provider value={isRailCollapsed}>
+            <StudioRail />
+          </StudioShellRailCollapsedContext.Provider>
+        )}
 
         <div className={styles.main}>
           <header className={styles.topbar}>
@@ -129,6 +138,9 @@ export function StudioShell({ children }: { children: ReactNode }) {
           </main>
           <StudioTabBar />
         </div>
+        {/* Phones keep one grid track, so the column mounts from 1280px
+            only. The floating card covers the widths in between. */}
+        {isDockedPlacement && <StudioSidePanelColumn view={dockedView} />}
       </div>
     </div>
   );

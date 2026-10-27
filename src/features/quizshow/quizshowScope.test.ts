@@ -5,13 +5,25 @@ import { quizshowRemotePath, quizshowScreenPath } from "./quizshowPaths";
 import {
   eventScope,
   gameScope,
+  isQuizshowSessionScope,
   QuizshowScopeContext,
   quizshowScopeKey,
   quizshowScopeRemotePath,
   quizshowScopeRemoteUrl,
   quizshowScopeScreenPath,
+  templateScope,
   useQuizshowScopeKind,
 } from "./quizshowScope";
+
+/** Never called: it only holds the compile checks below. */
+function templateScopeHasNoScreenOrRemote(): string[] {
+  return [
+    // @ts-expect-error a template has no screen
+    quizshowScopeScreenPath(templateScope("t1")),
+    // @ts-expect-error a template has no screen
+    quizshowScopeRemotePath(templateScope("t1")),
+  ];
+}
 
 describe("quizshow scope", () => {
   it("routes an event scope to the event's screen and remote", () => {
@@ -36,6 +48,26 @@ describe("quizshow scope", () => {
     expect(quizshowScopeKey(gameScope("x"))).toBe("game:x");
     expect(quizshowScopeKey(eventScope("x"))).not.toBe(
       quizshowScopeKey(gameScope("x")),
+    );
+  });
+  it("keys a template apart from an event and a game", () => {
+    const templateKey = quizshowScopeKey(templateScope("x"));
+    expect(templateKey).toBe("template:x");
+    expect(templateKey).not.toBe(quizshowScopeKey(eventScope("x")));
+    expect(templateKey).not.toBe(quizshowScopeKey(gameScope("x")));
+  });
+  it("tells session scopes from a template", () => {
+    expect(isQuizshowSessionScope(eventScope("e1"))).toBe(true);
+    expect(isQuizshowSessionScope(gameScope("g1"))).toBe(true);
+    expect(isQuizshowSessionScope(templateScope("t1"))).toBe(false);
+  });
+  it("keeps a template away from the screen and remote paths", () => {
+    expect(typeof templateScopeHasNoScreenOrRemote).toBe("function");
+    expect(quizshowScopeScreenPath(eventScope("e1"))).toBe(
+      quizshowScreenPath("e1"),
+    );
+    expect(quizshowScopeRemotePath(eventScope("e1"))).toBe(
+      quizshowRemotePath("e1"),
     );
   });
   it("reads event when no scope provider is mounted", () => {

@@ -1,5 +1,7 @@
 import { createElement, useState, type ReactNode } from "react";
 import { AnimatePresence } from "motion/react";
+import { useQueryClient } from "@tanstack/react-query";
+import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import { ConfirmDialog } from "../../../shared/components/ui";
 import { useToast } from "../../../shared/components/feedback/useToast";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
@@ -9,8 +11,9 @@ import type {
   QuizshowQuizResponse,
 } from "../../../shared/contracts/quizshow";
 import { quizshowErrorCodeOf, quizshowErrorKeyOf } from "../api/quizshowErrors";
+import { quizshowKeys } from "../api/quizshowKeys";
 import { useImportQuizshowQuiz } from "../api/useQuizshowMutations";
-import type { QuizshowScope } from "../quizshowScope";
+import type { QuizshowSessionScope } from "../quizshowScope";
 
 interface QuizshowImportApi {
   /** Confirms first when a quiz exists, then imports. */
@@ -34,7 +37,7 @@ export function importInputOf(
 }
 
 export function useQuizshowImport(
-  scope: QuizshowScope,
+  scope: QuizshowSessionScope,
   options: {
     hasQuiz: boolean;
     /** Called with the server response after a successful import. */
@@ -43,6 +46,8 @@ export function useQuizshowImport(
 ): QuizshowImportApi {
   const { t } = useTranslation();
   const { showToast } = useToast();
+  const queryClient = useQueryClient();
+  const { demoMode } = useDemoMode();
   const importMutation = useImportQuizshowQuiz(scope);
   const [pendingInput, setPendingInput] = useState<QuizshowImportInput | null>(
     null,
@@ -57,8 +62,14 @@ export function useQuizshowImport(
       options.onImported?.(response);
       showToast(t("quizshow:import.done"), "success");
     } catch (error) {
-      const errorKey = quizshowErrorKeyOf(quizshowErrorCodeOf(error));
-      showToast(t(errorKey), "error");
+      const errorCode = quizshowErrorCodeOf(error);
+      if (errorCode === "quizshow_template_not_found") {
+        // Unpublished or deleted since the picker loaded, so its card leaves the picker.
+        void queryClient.invalidateQueries({
+          queryKey: quizshowKeys.templateCards(demoMode),
+        });
+      }
+      showToast(t(quizshowErrorKeyOf(errorCode)), "error");
     }
   }
 

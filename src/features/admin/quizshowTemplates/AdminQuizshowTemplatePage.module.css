@@ -1,0 +1,69 @@
+/* The admin shell sets the measure. The builder clears its own save bar, so
+   the page adds no bottom space of its own. */
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+  min-width: 0;
+}
+
+/* The heading's line until the template loads: a shimmer bar one line of the
+   title tall, so the real title lands without moving the builder. */
+.titlePending {
+  display: inline-block;
+  vertical-align: middle;
+  inline-size: min(14ch, 70%);
+  block-size: 0.8em;
+  border-radius: var(--radius-10);
+  background: linear-gradient(
+    90deg,
+    rgba(var(--line-rgb), 0.06) 25%,
+    rgba(var(--line-rgb), 0.11) 50%,
+    rgba(var(--line-rgb), 0.06) 75%
+  );
+  background-size: 200% 100%;
+  animation: templateTitleShimmer 1.5s ease infinite;
+  transition: opacity var(--dur-base) var(--ease);
+}
+.titlePending[data-failed] {
+  opacity: 0;
+  animation: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .titlePending {
+    animation: none;
+  }
+}
+/* A CSS module scopes keyframe names, so the shared qpShimmer is copied here. */
+@keyframes templateTitleShimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.back {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--icon-gap-inline);
+  min-height: var(--tap-min);
+  font-size: var(--text-body-sm);
+  font-weight: 600;
+  color: var(--ink-60);
+  text-decoration: none;
+  border-radius: var(--radius-tag);
+  transition: color var(--dur-fast) var(--ease);
+}
+@media (hover: hover) and (pointer: fine) {
+  .back:hover {
+    color: var(--ink);
+  }
+}
+.back:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}

@@ -21,7 +21,11 @@ const MAX_BY_CODE: Partial<Record<QuizshowQuizProblemCode, number>> = {
   too_many_questions_in_round: QUIZSHOW_LIMITS.questionsPerRoundMax,
 };
 
-/** A game names its own switch and its own title; every other code reads the same for both kinds. */
+/**
+ * A game names its own switch and its own title. An event and a template read
+ * every code as written: a template always allows the adults label, so the
+ * event's adults check never reaches it, and its title problem names the quiz.
+ */
 const GAME_PROBLEM_KEYS: Partial<Record<string, string>> = {
   adults_round_needs_adults_event: "adults_round_needs_switch",
   title_missing: "title_missing_game",

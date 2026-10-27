@@ -1,10 +1,7 @@
-import { useMemo, useRef, useState, type ReactNode } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useRef, type ReactNode } from "react";
+import { Link } from "react-router-dom";
 import { FiArrowLeft, FiChevronsLeft, FiChevronsRight } from "react-icons/fi";
 import { routes } from "../../../app/routeMap";
-import { useAuth } from "../../../app/providers/authContext";
-import { useDemoMode } from "../../../app/providers/DemoModeProvider";
-import { useMyStaffRoles } from "../../../features/auth/api/useMyStaffRoles";
 import { useTranslation } from "../../i18n/useTranslation";
 import { Translation } from "../../i18n/Translation";
 import { Tooltip } from "../ui";
@@ -12,15 +9,11 @@ import { AdminAccountMenu } from "./AdminAccountMenu";
 import { AdminRoleSwitcher } from "./AdminRoleSwitcher";
 import { AdminNavGroup, AdminNavLink } from "./AdminNavGroup";
 import { AdminNavSearch, AdminNavSearchResults } from "./AdminNavSearch";
-import {
-  firstAdminNavMatch,
-  normalizeSearchText,
-  searchAdminNav,
-} from "./adminNavMatching";
 import { useAdminNavBadges } from "./useAdminNavBadges";
 import { useAdminNavSections } from "./useAdminNavSections";
 import { rememberNavScroll, useAdminNavScroll } from "./useAdminNavScroll";
-import { ADMIN_NAV_OVERVIEW, visibleAdminNavSections } from "./adminNav.data";
+import { useAdminSidebarNav } from "./useAdminSidebarNav";
+import { ADMIN_NAV_OVERVIEW } from "./adminNav.data";
 import styles from "./AdminShell.module.css";
 
 export function AdminSidebar({
@@ -39,60 +32,16 @@ export function AdminSidebar({
   onNavigate?: () => void;
 } = {}) {
   const { t } = useTranslation();
-
-  const { role } = useAuth();
-  const { demoMode } = useDemoMode();
-  const staffRoles = useMyStaffRoles();
-  // A grant holder who is neither admin nor moderator sees only the sections
-  // their grants open (OPS-03); every tier keeps the rail it had.
-  const isFullConsole = demoMode || role === "admin" || role === "moderator";
-  // A moderator sees the full rail minus the entries whose backend is
-  // `@Roles(Admin)` alone (PRD-32's legal register), so the rail never offers a
-  // link the route gate then bounces.
-  const isAdmin = demoMode || role === "admin";
-  const sections = useMemo(
-    () => visibleAdminNavSections({ isFullConsole, isAdmin, staffRoles }),
-    [isFullConsole, isAdmin, staffRoles],
-  );
-
-  // Which page am I after? The rail is 57 destinations deep across nine
-  // sections, so finding one by name beats remembering where it was filed.
-  // Local state on purpose: a query is about this moment, never a preference to
-  // carry into the next visit.
-  const [searchQuery, setSearchQuery] = useState("");
-  const navigate = useNavigate();
-  // The collapsed rail has no field to type in, so it always shows its
-  // sections: narrowing a 68px icon column to matches nobody can read would
-  // strand the query somewhere the admin cannot see or clear it. Widening the
-  // rail again brings the results straight back.
-  const isSearching =
-    !isCollapsed && normalizeSearchText(searchQuery).length > 0;
-  const searchGroups = useMemo(
-    () =>
-      searchAdminNav({
-        sections,
-        // Matched against the same rail the viewer is offered: the Overview
-        // link only joins the results for someone who is shown it at all.
-        overview: isFullConsole ? ADMIN_NAV_OVERVIEW : undefined,
-        query: searchQuery,
-        translate: t,
-      }),
-    [sections, isFullConsole, searchQuery, t],
-  );
-
-  // Both ways out of a result: clicking one, and Enter on the field taking the
-  // first. Either way the query goes, so coming back to the rail shows sections
-  // rather than a stale narrowing.
-  const leaveSearch = () => {
-    setSearchQuery("");
-    onNavigate?.();
-  };
-  const openFirstMatch = () => {
-    const first = firstAdminNavMatch(searchGroups);
-    if (!first) return;
-    leaveSearch();
-    void navigate(first.to);
-  };
+  const {
+    sections,
+    isFullConsole,
+    searchQuery,
+    setSearchQuery,
+    isSearching,
+    searchGroups,
+    leaveSearch,
+    openFirstMatch,
+  } = useAdminSidebarNav({ isCollapsed, onNavigate });
 
   const navRef = useRef<HTMLElement>(null);
   const badgeCounts = useAdminNavBadges();

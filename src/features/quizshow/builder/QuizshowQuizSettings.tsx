@@ -23,14 +23,15 @@ export function QuizshowQuizSettings({
   controller: QuizshowDraftController;
   /** A game labels the field "Game title". */
   titleLabelKey?: string;
-  /** A game cannot save a blank title, so the field says so. */
+  /** A game or a template cannot save a blank title, so the field says so. */
   isTitleRequired?: boolean;
 }) {
   const { t } = useTranslation();
   const languagesLabelId = useId();
   const screenLabelId = useId();
   const screenHintId = useId();
-  const isGame = useQuizshowScopeKind() === "game";
+  const scopeKind = useQuizshowScopeKind();
+  const isGame = scopeKind === "game";
   const { draft, setQuizField } = controller;
   const isTitleMissing = isTitleRequired && draft.title.trim() === "";
 
@@ -46,7 +47,13 @@ export function QuizshowQuizSettings({
         <FormField
           label={t(titleLabelKey)}
           error={
-            isTitleMissing ? t("quizshow:games.new.titleRequired") : undefined
+            isTitleMissing
+              ? t(
+                  scopeKind === "template"
+                    ? "quizshow:templates.titleRequired"
+                    : "quizshow:games.new.titleRequired",
+                )
+              : undefined
           }
         >
           <input

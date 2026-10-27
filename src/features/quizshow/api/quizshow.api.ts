@@ -13,7 +13,6 @@ import type {
   QuizshowQuizInput,
   QuizshowQuizResponse,
   QuizshowResultsResponse,
-  QuizshowStarterPackCard,
 } from "../../../shared/contracts/quizshow";
 
 const eventPath = (slug: string): string =>
@@ -40,10 +39,6 @@ export const getQuizshowImportSources = (
   apiGet<{ items: QuizshowImportSource[] }>(
     `${eventPath(slug)}/import-sources`,
   );
-
-export const getQuizshowPacks = (): Promise<{
-  items: QuizshowStarterPackCard[];
-}> => apiGet<{ items: QuizshowStarterPackCard[] }>("/quizshow/packs");
 
 export const openQuizshowSession = (
   slug: string,

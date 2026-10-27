@@ -7,7 +7,6 @@ import { useTranslation } from "../../../../shared/i18n/useTranslation";
 import { useStudioTrack } from "../../api/useStudioTrack";
 import { StudioAddToPlaylistButton } from "../../StudioAddToPlaylistButton";
 import { StudioLikeButton } from "../../StudioLikeButton";
-import { studioReleasePath } from "../../studioPaths";
 import type { StudioLikeSubject } from "../../useStudioLike";
 import type { StudioQueueItem } from "../studioPlayerContext";
 import { useStudioEpisodeMemory } from "../useStudioEpisodeMemory";
@@ -15,25 +14,9 @@ import { StudioIconSwap } from "./StudioIconSwap";
 import { StudioTrackMenu } from "./StudioTrackMenu";
 import {
   studioTrackMenuTrackOf,
-  type StudioTrackMenuTrack,
+  studioTrackMenuTrackOfQueueItem,
 } from "./studioTrackMenuTrack";
 import styles from "./StudioNowPlaying.module.css";
-
-/** The menu's track from the queue item, until the track's detail answers.
- *  Report waits for the detail, which knows whether the release is out. */
-function menuTrackOf(item: StudioQueueItem): StudioTrackMenuTrack {
-  return {
-    id: item.trackId,
-    title: item.title,
-    href: item.trackHref,
-    hasAudio: true,
-    isExplicit: item.isExplicit,
-    artistId: item.artistId,
-    artistHref: item.artistHref,
-    artistName: item.artistName,
-    releaseHref: studioReleasePath(item.releaseId),
-  };
-}
 
 /** Mark as played or unplayed, for an episode, kept on this device. The
  *  name starts with the words the tooltip shows; the change reaches a status
@@ -110,7 +93,7 @@ export function StudioNowPlayingActions({
   const menuTrack =
     track && track.id === item.trackId
       ? studioTrackMenuTrackOf(track)
-      : menuTrackOf(item);
+      : studioTrackMenuTrackOfQueueItem(item);
   return (
     <div className={styles.actions}>
       <StudioLikeButton

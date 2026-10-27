@@ -11,14 +11,14 @@ import {
   useQuizshowImportSources,
   type QuizshowEventImportSource,
 } from "../api/useQuizshowQuiz";
-import type { QuizshowScope } from "../quizshowScope";
+import type { QuizshowSessionScope } from "../quizshowScope";
 import { QuizshowImportSourcePicker } from "./QuizshowImportSourcePicker";
-import { QuizshowPackPicker } from "./QuizshowPackPicker";
+import { QuizshowTemplatePicker } from "./QuizshowTemplatePicker";
 import { useQuizshowImport } from "./useQuizshowImport";
 import styles from "./QuizshowImport.module.css";
 
 interface QuizshowImportButtonsProps {
-  scope: QuizshowScope;
+  scope: QuizshowSessionScope;
   hasQuiz: boolean;
   eventStartAt: Date | null;
   isAdultsEvent: boolean;
@@ -28,7 +28,7 @@ interface QuizshowImportButtonsProps {
   initialOpenPicker?: QuizshowImportPicker | null;
 }
 
-export type QuizshowImportPicker = "pack" | "sources";
+export type QuizshowImportPicker = "template" | "sources";
 
 /** The first source from this event's series that ran before this event. */
 function findSeriesSource(
@@ -121,9 +121,9 @@ export function QuizshowImportButtons({
       <Button
         variant={secondaryVariant}
         aria-disabled={isPending}
-        onClick={() => setOpenPicker("pack")}
+        onClick={() => setOpenPicker("template")}
       >
-        {t("quizshow:builder.empty.fromPack")}
+        {t("quizshow:builder.empty.fromTemplate")}
       </Button>
       <Button
         variant="ghost"
@@ -136,12 +136,13 @@ export function QuizshowImportButtons({
             : "quizshow:builder.empty.fromEvent",
         )}
       </Button>
-      <QuizshowPackPicker
-        isOpen={openPicker === "pack"}
+      <QuizshowTemplatePicker
+        isOpen={openPicker === "template"}
+        isAdultsAllowed={isAdultsEvent}
         onClose={() => setOpenPicker(null)}
-        onPick={(packKey) => {
+        onPick={(card) => {
           setOpenPicker(null);
-          requestImport({ from: "pack", packKey });
+          requestImport({ from: "template", templateId: card.id });
         }}
       />
       <QuizshowImportSourcePicker

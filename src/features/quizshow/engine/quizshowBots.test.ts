@@ -76,7 +76,7 @@ function quizOf(rounds: QuizshowRound[]): QuizshowQuiz {
     title: "Fixture",
     languages: "en",
     screenLanguage: "en",
-    starterPackKey: null,
+    sourceTemplateId: null,
     updatedAt: "2026-10-19T00:00:00.000Z",
     rounds,
   };

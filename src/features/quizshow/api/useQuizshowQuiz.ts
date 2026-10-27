@@ -4,19 +4,20 @@ import { ApiError } from "../../../shared/api/client";
 import type {
   QuizshowImportSource,
   QuizshowQuizResponse,
-  QuizshowStarterPackCard,
 } from "../../../shared/contracts/quizshow";
-import type { QuizshowScope } from "../quizshowScope";
+import type { QuizshowScope, QuizshowSessionScope } from "../quizshowScope";
+import { quizResponseOfTemplate } from "../templates/quizshowTemplateResponse";
 import {
   getQuizshowGame,
   getQuizshowGameImportSources,
   getQuizshowImportSources,
-  getQuizshowPacks,
   getQuizshowQuiz,
 } from "./quizshow.api";
+import { getQuizshowTemplate } from "./quizshowTemplates.api";
 import { quizshowKeys } from "./quizshowKeys";
-import { demoGetQuiz, demoImportSources, demoPacks } from "./quizshowDemoStore";
+import { demoGetQuiz, demoImportSources } from "./quizshowDemoStore";
 import { demoGameImportSources, demoGetGame } from "./quizshowDemoGames";
+import { demoGetTemplate } from "./quizshowDemoTemplates";
 
 const LIVE_PANEL_REFETCH_MS = 15_000;
 const MAX_RETRIES = 2;
@@ -37,7 +38,29 @@ export function shouldRetryQuizshowRead(
 
 /** A scope whose slug or id has not resolved yet holds its reads back. */
 export function hasQuizshowScopeId(scope: QuizshowScope): boolean {
-  return scope.kind === "event" ? scope.eventSlug !== "" : scope.gameId !== "";
+  switch (scope.kind) {
+    case "event":
+      return scope.eventSlug !== "";
+    case "game":
+      return scope.gameId !== "";
+    case "template":
+      return scope.templateId !== "";
+    default: {
+      const unknownScope: never = scope;
+      throw new Error(`Unknown quizshow scope: ${String(unknownScope)}`);
+    }
+  }
+}
+
+/** A template reads through the staff detail, adapted into the builder's response. */
+async function fetchTemplateQuiz(
+  templateId: string,
+  demoMode: boolean,
+): Promise<QuizshowQuizResponse> {
+  const detail = demoMode
+    ? demoGetTemplate(templateId)
+    : await getQuizshowTemplate(templateId);
+  return quizResponseOfTemplate(detail);
 }
 
 async function fetchQuizFor(
@@ -49,11 +72,14 @@ async function fetchQuizFor(
       ? demoGetQuiz(scope.eventSlug)
       : getQuizshowQuiz(scope.eventSlug);
   }
+  if (scope.kind === "template") {
+    return fetchTemplateQuiz(scope.templateId, demoMode);
+  }
   return demoMode ? demoGetGame(scope.gameId) : getQuizshowGame(scope.gameId);
 }
 
 async function fetchImportSourcesFor(
-  scope: QuizshowScope,
+  scope: QuizshowSessionScope,
   demoMode: boolean,
 ): Promise<{ items: QuizshowImportSource[] }> {
   if (scope.kind === "event") {
@@ -90,17 +116,6 @@ export function useQuizshowQuiz(
   });
 }
 
-export function useQuizshowPacks(options: {
-  isEnabled: boolean;
-}): UseQueryResult<{ items: QuizshowStarterPackCard[] }> {
-  const { demoMode } = useDemoMode();
-  return useQuery<{ items: QuizshowStarterPackCard[] }>({
-    queryKey: quizshowKeys.packs(demoMode),
-    enabled: options.isEnabled,
-    queryFn: async () => (demoMode ? demoPacks() : getQuizshowPacks()),
-  });
-}
-
 /** An event row of the import list, with the fields an event row reads. */
 export type QuizshowEventImportSource = QuizshowImportSource & {
   kind: "event";
@@ -120,7 +135,7 @@ export function isEventImportSource(
 }
 
 export function useQuizshowImportSources(
-  scope: QuizshowScope,
+  scope: QuizshowSessionScope,
   options: { isEnabled: boolean },
 ): UseQueryResult<{ items: QuizshowImportSource[] }> {
   const { demoMode } = useDemoMode();

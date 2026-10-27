@@ -12,14 +12,12 @@ import {
   type QuizshowQuizInput,
   type QuizshowQuizResponse,
   type QuizshowResultsResponse,
-  type QuizshowStarterPackCard,
-  type QuizshowStarterPackKey,
 } from "../../../shared/contracts/quizshow";
 import {
   QUIZSHOW_DEMO_JOIN_CODE,
   QUIZSHOW_DEMO_SESSION_ID,
 } from "../quizshow.constants";
-import { QUIZSHOW_STARTER_PACKS } from "../demo/quizshowStarterPacks.data";
+import { QUIZSHOW_DEMO_TEMPLATE_IDS } from "../demo/quizshowTemplates.data";
 import {
   demoGameIdForSession,
   demoGameLiveSession,
@@ -31,10 +29,9 @@ import {
 import {
   demoAssertShape,
   demoCompletenessProblems,
-  demoDefaultPack,
+  demoDefaultQuizShape,
   demoEventQuizzesBySlug,
   demoEventSourceCopy,
-  demoPackCopy,
   demoRefusal,
   hasAdultsRound,
   quizFromInput,
@@ -47,6 +44,11 @@ import {
   QUIZSHOW_DEMO_RESULTS,
   QUIZSHOW_DEMO_RESULTS_SLUG,
 } from "./quizshowDemoStore.data";
+import {
+  demoTemplateCopy,
+  onDemoTemplateDeleted,
+  resetQuizshowDemoTemplates,
+} from "./quizshowDemoTemplates";
 
 // Moved to quizshowDemoQuizzes.ts; re-exported so QuizshowDryRun keeps its import.
 export { quizFromInput };
@@ -62,12 +64,22 @@ const liveSessionsBySlug = new Map<string, QuizshowLiveSessionRef>();
 const deletedResultsSlugs = new Set<string>();
 let saveCounter = 0;
 
+// A deleted template leaves its event copies intact and clears their source id, as the live foreign key does.
+onDemoTemplateDeleted((templateId) => {
+  for (const [slug, quiz] of quizzesBySlug) {
+    if (quiz.sourceTemplateId === templateId) {
+      quizzesBySlug.set(slug, { ...quiz, sourceTemplateId: null });
+    }
+  }
+});
+
 export function resetQuizshowDemoStore(): void {
   quizzesBySlug.clear();
   liveSessionsBySlug.clear();
   deletedResultsSlugs.clear();
   saveCounter = 0;
   resetQuizshowDemoGames();
+  resetQuizshowDemoTemplates();
 }
 
 function hasKeptResults(slug: string): boolean {
@@ -93,14 +105,14 @@ function nextIdPrefix(slug: string): string {
 function storeQuiz(
   slug: string,
   body: DemoQuizBody,
-  starterPackKey: QuizshowStarterPackKey | null,
+  sourceTemplateId: string | null,
 ): void {
   quizzesBySlug.set(
     slug,
     quizFromInput(body, {
       idPrefix: nextIdPrefix(slug),
       updatedAt: new Date().toISOString(),
-      starterPackKey,
+      sourceTemplateId,
     }),
   );
 }
@@ -129,7 +141,7 @@ export function demoPutQuiz(
   const { expectedUpdatedAt: unusedExpectedUpdatedAt, ...quizBody } = body;
   void unusedExpectedUpdatedAt;
   assertNoStructuralProblems(quizBody);
-  storeQuiz(slug, quizBody, stored?.starterPackKey ?? null);
+  storeQuiz(slug, quizBody, stored?.sourceTemplateId ?? null);
   return responseFor(slug);
 }
 
@@ -139,7 +151,7 @@ export function demoImportQuiz(
 ): QuizshowQuizResponse {
   const copy = eventImportCopyOf(slug, body);
   assertNoStructuralProblems(copy.body);
-  storeQuiz(slug, copy.body, copy.starterPackKey);
+  storeQuiz(slug, copy.body, copy.sourceTemplateId);
   return responseFor(slug);
 }
 
@@ -147,7 +159,7 @@ function eventImportCopyOf(
   slug: string,
   body: QuizshowImportInput,
 ): DemoQuizCopy {
-  if (body.from === "pack") return demoPackCopy(body.packKey);
+  if (body.from === "template") return demoTemplateCopy(body.templateId);
   if (body.from === "game") return demoGameSourceCopy(body.gameId);
   if (body.eventSlug === slug) {
     throw demoRefusal(422, "quizshow_import_same_event");
@@ -166,25 +178,6 @@ export function demoImportSources(slug: string): {
       ),
       ...demoGameSourcesForEvent(),
     ],
-  };
-}
-
-export function demoPacks(): { items: QuizshowStarterPackCard[] } {
-  return {
-    items: QUIZSHOW_STARTER_PACKS.map((pack) => ({
-      key: pack.key,
-      title: pack.title,
-      description: pack.description,
-      languages: pack.quiz.languages,
-      roundCount: pack.quiz.rounds.length,
-      questionCount: pack.quiz.rounds.reduce(
-        (total, round) => total + round.questions.length,
-        0,
-      ),
-      hasAdultsRounds: pack.quiz.rounds.some(
-        (round) => round.contentLabel === "adults",
-      ),
-    })),
   };
 }
 
@@ -264,14 +257,13 @@ export function demoDeleteResults(slug: string): void {
   deletedResultsSlugs.add(slug);
 }
 
-/** The quiz a demo engine plays for this event: the one saved in this tab, else the Pride history pack. */
+/** The quiz a demo engine plays for this event: the one saved in this tab, else the Pride seed's quiz. */
 export function demoQuizFor(slug: string): QuizshowQuiz {
   const stored = quizzesBySlug.get(slug);
   if (stored) return structuredClone(stored);
-  const pack = demoDefaultPack();
-  return quizFromInput(pack.quiz, {
-    idPrefix: `demo-${pack.key}`,
+  return quizFromInput(demoDefaultQuizShape(), {
+    idPrefix: `demo-${QUIZSHOW_DEMO_TEMPLATE_IDS.prideHistory}`,
     updatedAt: DEFAULT_QUIZ_UPDATED_AT,
-    starterPackKey: pack.key,
+    sourceTemplateId: QUIZSHOW_DEMO_TEMPLATE_IDS.prideHistory,
   });
 }

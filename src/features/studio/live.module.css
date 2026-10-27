@@ -63,9 +63,9 @@
   gap: 26px;
   padding: 26px;
 }
-/* Beside the chat column (961 to about 1150px wide) the card is too narrow
-   for the art and the info side by side: the info shrank to 76px and the
-   action row spilled. Stack them, as the single-column layout does. */
+/* Beside the chat column (a page column of 780 to about 900px) the card is
+   too narrow for the art and the info side by side: the info shrank to 76px
+   and the action row spilled. Stack them, as the single-column layout does. */
 @container now-card (max-width: 520px) {
   .nowInner {
     grid-template-columns: minmax(0, 1fr);
@@ -513,7 +513,21 @@
   }
 }
 
-@media (max-width: 960px) {
+/* One column on phones, and on desktop when the page column narrows beside
+   the docked side panel: the chat follows the now card. */
+@media (--compact) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+  .chat {
+    position: static;
+    max-height: 520px;
+  }
+  .nowInner {
+    grid-template-columns: 1fr;
+  }
+}
+@container studio-page (max-width: 779px) {
   .grid {
     grid-template-columns: 1fr;
   }

@@ -661,6 +661,7 @@ export const shared: Catalog = {
   "mediaRef.persona-post": "Novidade de persona",
   "mediaRef.quizshow-question": "Pergunta do jogo ao vivo",
   "mediaRef.quizshow-game-question": "Pergunta de um jogo do Pulse Live",
+  "mediaRef.quizshow-template-question": "Pergunta de um modelo de quiz",
   "mediaRef.landlord": "Senhorio",
   "mediaRef.company-work": "Empresa",
   "mediaRef.housing": "Habitação",
@@ -742,7 +743,9 @@ export const shared: Catalog = {
   "adminNav.items.housingGroupListings": "Anúncios de grupo",
   "adminNav.items.landlords": "Senhorios",
   "adminNav.items.volunteerHours": "Horas de voluntariado",
+  "adminNav.items.utilities": "Utilitários",
   "adminNav.items.stickerPacks": "Packs de stickers",
+  "adminNav.items.quizTemplates": "Modelos de quiz",
 
   // Deep-scan section 13 (the vertical surfaces), built 2026-08-31.
   // PRD-49 — PRD-49 - the quiet marker on a meganav / mobile drawer / sidebar link whose destination is not launched yet (Cinema, Studio in live mode). Rendered by NavBuildBadge INSIDE the link, so it also becomes the tail of the link's accessible name: 'Cinema Being built'. Keep it short, uppercase-safe and free of any timing promise: it says the thing is under construction, never that it arrives soon or on a date.

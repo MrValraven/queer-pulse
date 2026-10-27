@@ -48,16 +48,36 @@ export function useAdminNavScroll(
     );
     if (!nav || !activeLink) return;
 
-    const navBox = nav.getBoundingClientRect();
-    const linkBox = activeLink.getBoundingClientRect();
-    // Zero height means the link is inside a collapsed section: there is nothing
-    // to scroll to, and its empty box would compute a nonsense offset.
-    if (linkBox.height === 0) return;
-    if (linkBox.top >= navBox.top && linkBox.bottom <= navBox.bottom) return;
+    bringLinkIntoView(nav, activeLink);
 
-    // Centre it in the visible box; the browser clamps at both ends.
-    nav.scrollTop +=
-      linkBox.top - navBox.top - (nav.clientHeight - linkBox.height) / 2;
-    lastNavScrollTop = nav.scrollTop;
+    // A section that has just opened grows over its transition, so the rail is
+    // still short when this effect measures and the browser clamps the scroll
+    // above the link. Once the panel holding the link reaches full height,
+    // measure again. Scoped to that panel, so an unrelated section opening
+    // later leaves the admin's scroll alone.
+    const handleTransitionEnd = (event: TransitionEvent) => {
+      if (event.propertyName !== "grid-template-rows") return;
+      const panel = event.target;
+      if (!(panel instanceof Node) || !panel.contains(activeLink)) return;
+      nav.removeEventListener("transitionend", handleTransitionEnd);
+      bringLinkIntoView(nav, activeLink);
+    };
+    nav.addEventListener("transitionend", handleTransitionEnd);
+    return () => nav.removeEventListener("transitionend", handleTransitionEnd);
   }, [navRef, pathname, isActiveSectionOpen]);
+}
+
+/** Centres `link` in the rail's visible box when it sits outside it. */
+function bringLinkIntoView(nav: HTMLElement, link: HTMLElement) {
+  const navBox = nav.getBoundingClientRect();
+  const linkBox = link.getBoundingClientRect();
+  // Zero height means the link is inside a collapsed section: there is nothing
+  // to scroll to, and its empty box would compute a nonsense offset.
+  if (linkBox.height === 0) return;
+  if (linkBox.top >= navBox.top && linkBox.bottom <= navBox.bottom) return;
+
+  // Centre it in the visible box; the browser clamps at both ends.
+  nav.scrollTop +=
+    linkBox.top - navBox.top - (nav.clientHeight - linkBox.height) / 2;
+  lastNavScrollTop = nav.scrollTop;
 }

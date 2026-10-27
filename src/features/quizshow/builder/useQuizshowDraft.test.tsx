@@ -34,7 +34,7 @@ function storedQuiz(title: string, updatedAt: string): QuizshowQuiz {
     title,
     languages: "both",
     screenLanguage: "en",
-    starterPackKey: null,
+    sourceTemplateId: null,
     updatedAt,
     rounds: [storedRound("round-1", "First"), storedRound("round-2", "Second")],
   };

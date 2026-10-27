@@ -54,21 +54,15 @@ export const quizshow: Catalog = {
   "builder.loadError": "We couldn't load the quiz",
   "builder.empty.title": "No quiz yet",
   "builder.empty.body":
-    "Start from one of our team's packs, copy a quiz from another event you run, or write your own",
-  "builder.empty.fromPack": "Start from a pack",
+    "Start from one of our team's templates, copy a quiz from another event you run, or write your own",
   "builder.empty.fromEvent": "Copy from a past event",
   "builder.empty.blank": "Start blank",
   "builder.empty.fromSeries": "Copy from the last event in this series",
   "builder.empty.fromSeriesHint": "{event}, {date}",
-  "packs.title": "Starter packs",
-  "packs.sub":
-    "Made by our team. Everything copies into your quiz, so you can change any question",
   "packs.rounds_one": "{count} round",
   "packs.rounds_other": "{count} rounds",
   "packs.questions_one": "{count} question",
   "packs.questions_other": "{count} questions",
-  "packs.use": "Use this pack",
-  "packs.loadError": "We couldn't load the packs",
   "importSources.title": "Copy from a past event",
   "importSources.sub": "Events you run that hold a quiz",
   "importSources.empty": "None of your other events has a quiz yet",
@@ -299,7 +293,6 @@ export const quizshow: Catalog = {
   "errors.quiz_invalid": "A few questions need fixing before the quiz saves",
   "errors.adults_round_needs_adults_event": "Adults rounds need an 18+ event",
   "errors.quiz_has_adults_rounds": "This event's quiz has adults rounds",
-  "errors.pack_not_found": "We couldn't find that pack",
   "errors.import_source_not_found": "That quiz is no longer there to copy",
   "errors.import_same_event": "Pick a different event to copy from",
   "errors.quiz_not_found": "Save a quiz before opening the lobby",
@@ -551,7 +544,7 @@ export const quizshow: Catalog = {
   "home.myGames.loadError": "We couldn't load your games",
   "home.myGames.emptyTitle": "No games yet",
   "home.myGames.emptyBody":
-    "Start from one of our team's packs, copy a game or an event quiz, or write your own",
+    "Start from one of our team's templates, copy a game or an event quiz, or write your own",
   "import.fromCopy": "Copy a game or event quiz",
   "games.row.adultsTag": "18+",
   "games.row.liveTag": "Live now, code {code}",
@@ -631,4 +624,91 @@ export const quizshow: Catalog = {
   "save.conflictOverwriteGame": "Save this one over it",
   "problems.title_missing_game": "Give the game a title",
   "home.back": "Back to QueerPulse",
+
+  // ── Quiz templates ──
+  "builder.empty.fromTemplate": "Start from a template",
+  "templates.title": "Templates",
+  "templates.sub":
+    "Made by our team. Everything copies into your quiz, so you can change any question",
+  "templates.use": "Use this template",
+  "templates.loadError": "We couldn't load the templates",
+  "templates.empty": "Our team hasn't published any templates yet",
+  "errors.template_not_found": "We couldn't find that template",
+  "errors.template_card_incomplete":
+    "Add the card title and description in each language the quiz uses, then publish",
+  "templates.errors.noFeatureAccess":
+    "Quiz templates need Pulse Live access, and this account doesn't have it yet",
+  "templates.errors.noStaffRole":
+    "Only moderators and admins manage quiz templates",
+  "templates.errors.offline":
+    "We couldn't reach QueerPulse. Check your connection, then try again",
+  "templates.errors.server": "Our server hit a problem. Try again in a moment",
+  "templates.errors.invalidInput":
+    "Something in this template is missing or too long. Check that every title is filled in and within its limit, then save again",
+  "templates.errors.signedOut":
+    "Your session ended. Sign in again to keep working on templates",
+  "templates.errors.membershipInactive":
+    "Your membership isn't active right now, so quiz templates are closed to this account",
+  "templates.errors.foreignUpload":
+    "One of the pictures belongs to another account and isn't in this template yet. Upload your own copy, then save",
+  "templates.errors.staleSession":
+    "This page's session went stale. Reload the page, then try again",
+  "templates.errors.quizInvalid":
+    "The quiz has problems to fix before you publish",
+  "templates.builder.heading": "Template quiz",
+  "templates.builder.lead":
+    "Hosts copy these rounds and questions into their own quiz and can change any of them",
+  "templates.problemsTitle": "Before you publish",
+  "templates.titleRequired": "Give the quiz a title",
+  "templates.saveCta": "Save template",
+  "templates.saved": "Template saved",
+  "save.conflictTitleTemplate": "Someone else saved this template",
+  "save.conflictBodyTemplate":
+    "Someone on our team saved a newer version while you were editing. Load theirs, or keep yours and save it over theirs",
+  "templates.details.heading": "Template card",
+  "templates.details.sub": "Hosts see this card when they pick a template",
+  "templates.details.cardTitle": "Card title",
+  "templates.details.cardDescription": "Card description",
+  "templates.details.cardTitleMissing": "Add a title in this language",
+  "templates.details.cardDescriptionMissing":
+    "Add a description in this language",
+  "templates.details.staffNotes": "Staff notes",
+  "templates.details.staffNotesHint":
+    "Sources and fact-check notes. Only our team sees them, and hosts' copies leave them out",
+  "templates.details.statusDraft": "Draft. Only our team sees it",
+  "templates.details.statusPublished": "Published {date} by {name}",
+  "templates.details.statusPublishedNameless": "Published {date}",
+  "templates.details.saveFirst": "Save your changes first, then publish",
+  "templates.details.fixFirst": "Fix the problems listed below, then publish",
+  "templates.status.draft": "Draft",
+  "templates.status.published": "Published",
+  "templates.publish": "Publish template",
+  "templates.unpublish": "Unpublish template",
+  "templates.published": "Template published. Hosts can pick it now",
+  "templates.unpublished":
+    "Template unpublished. Hosts' copies stay as they are",
+  "templates.list.title": "Quiz <em>templates</em>",
+  "templates.list.eyebrow": "Pulse Live",
+  "templates.list.sub":
+    "Hosts start event quizzes and games from the templates you publish here. Drafts stay with our team until you publish them",
+  "templates.list.breadcrumb": "Quiz templates",
+  "templates.list.new": "New template",
+  "templates.list.created": "Template created",
+  "templates.list.count_one": "{count} template",
+  "templates.list.count_other": "{count} templates",
+  "templates.list.emptyTitle": "No templates yet",
+  "templates.list.emptyBody": "Start one now. Hosts see it once you publish it",
+  "templates.row.untitled": "Untitled template",
+  "templates.row.editedBy": "Edited by {name}, {time}",
+  "templates.row.edited": "Edited {time}",
+  "templates.row.open": "Open template",
+  "templates.row.duplicate": "Duplicate template",
+  "templates.row.duplicated": "Template duplicated",
+  "templates.row.delete": "Delete template",
+  "templates.row.deleteTitle": "Delete this template?",
+  "templates.row.deleteTitleNamed": "Delete {title}?",
+  "templates.row.deleteBody":
+    "Hosts stop seeing it. Quizzes hosts already copied from it stay exactly as they are",
+  "templates.row.deleted": "Template deleted",
+  "templates.page.back": "Back to quiz templates",
 };

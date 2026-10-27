@@ -64,6 +64,11 @@ const SMOKE_PATHS: ReadonlyArray<readonly [string, string]> = [
   ["pulse live 18+ join", "/play/QG4MW8"],
   ["pulse live player", "/play/QZ7KP4"],
   ["pulse live screen", `${gatheringPath("pride-brunch-jun")}/quizshow/screen`],
+  ["quiz templates", "/admin/quizshow/templates"],
+  [
+    "quiz template builder",
+    "/admin/quizshow/templates/a7e3b1c0-5eed-4000-8000-000000000001",
+  ],
   ["for businesses", routes.forBusinesses],
   ["for communities", routes.forCommunities],
   ["for performers", routes.forPerformers],

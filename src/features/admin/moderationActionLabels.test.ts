@@ -21,6 +21,18 @@ describe("auditActionLabel", () => {
     );
   });
 
+  it("labels the quiz template staff actions", () => {
+    expect(
+      auditActionLabel(actionOf("quizshow_template_published"), echoKey),
+    ).toBe("admin:moderation.action.quizshowTemplatePublished");
+    expect(
+      auditActionLabel(actionOf("quizshow_template_unpublished"), echoKey),
+    ).toBe("admin:moderation.action.quizshowTemplateUnpublished");
+    expect(
+      auditActionLabel(actionOf("quizshow_template_deleted"), echoKey),
+    ).toBe("admin:moderation.action.quizshowTemplateDeleted");
+  });
+
   it("falls back to the raw code for an unmapped action", () => {
     expect(auditActionLabel(actionOf("some_new_action"), echoKey)).toBe(
       "some_new_action",

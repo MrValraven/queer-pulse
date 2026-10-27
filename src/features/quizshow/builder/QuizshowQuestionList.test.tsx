@@ -84,7 +84,7 @@ function storedQuiz(): QuizshowQuiz {
     title: "Pride night",
     languages: "en",
     screenLanguage: "en",
-    starterPackKey: null,
+    sourceTemplateId: null,
     updatedAt: "2026-10-20T10:00:00.000Z",
     rounds: [
       {

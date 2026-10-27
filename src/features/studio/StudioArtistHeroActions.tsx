@@ -1,58 +1,21 @@
 import { Link } from "react-router-dom";
-import {
-  FiCheck,
-  FiEdit2,
-  FiExternalLink,
-  FiHeart,
-  FiPlus,
-} from "react-icons/fi";
+import { FiEdit2, FiExternalLink, FiHeart } from "react-icons/fi";
 import { Button, IconButton, Tooltip } from "../../shared/components/ui";
-import { useSocial } from "../../app/providers/useSocial";
-import { useToast } from "../../shared/components/feedback/useToast";
 import { useTranslation } from "../../shared/i18n/useTranslation";
 import { ShareMenu } from "../messages/share/ShareMenu";
-import { SubprofileFollow } from "../subprofiles/SubprofileFollow";
 import type { StudioArtistView } from "./api/studio.adapters";
 import { StudioPlayButton } from "./kit/StudioPlayButton";
+import { StudioArtistFollowControl } from "./StudioArtistFollowControl";
 import { StudioArtistOverflow } from "./StudioArtistOverflow";
 import { studioShareTrigger } from "./share/StudioShareMenu";
 import { studioIdentityNote } from "./share/studioShareContent";
 import { useStudioEditPageOpener } from "./studioEditPageOpener";
 import { studioArtistPath } from "./studioPaths";
+import { useIsOwnStudioPersona } from "./useIsOwnStudioPersona";
 import { useStudioArtistPlay } from "./useStudioArtistPlay";
 import { useStudioShowcase } from "./useStudioShowcase";
 import styles from "./studio.module.css";
 import kit from "./studioKit.module.css";
-
-/** Showcase Follow: the demo's local follow, with a toast. */
-function ShowcaseFollow({ artist }: { artist: StudioArtistView }) {
-  const { t } = useTranslation();
-  const { isFollowing, toggleFollow } = useSocial();
-  const { showToast } = useToast();
-  const person = artist.artist;
-  const isFollowed = isFollowing(person.id);
-  return (
-    <Button
-      variant="quiet"
-      aria-pressed={isFollowed}
-      onClick={() => {
-        const isNowFollowing = toggleFollow(person.id);
-        showToast(
-          t(
-            isNowFollowing
-              ? "studio:artist.hero.followedToast"
-              : "studio:artist.hero.unfollowedToast",
-            { artist: person.name },
-          ),
-          isNowFollowing ? "success" : "info",
-        );
-      }}
-    >
-      {isFollowed ? <FiCheck aria-hidden /> : <FiPlus aria-hidden />}
-      {t("studio:artist.hero.followCta")}
-    </Button>
-  );
-}
 
 /** The artist hero's row: Play all (a toggle once one of these releases is
  *  playing), Follow, View profile, Tip (showcase), Share, and the More menu.
@@ -73,6 +36,9 @@ export function StudioArtistHeroActions({
   const isShowcase = useStudioShowcase();
   const play = useStudioArtistPlay(artist);
   const person = artist.artist;
+  // The same rule StudioArtistFollowControl applies, so no empty slot is
+  // left in the row when there is no Follow.
+  const isOwnPersona = useIsOwnStudioPersona(person.id);
   const profileLabel = t("studio:artistPage.viewProfile");
   const tipLabel = t("studio:detail.tipArtistCta", { artist: person.name });
   const editPageLabel = t("studio:artistPage.editPage.button");
@@ -87,20 +53,9 @@ export function StudioArtistHeroActions({
         blockedReason={play.blockedReason}
       />
       {/* Follow keeps its words on a phone: it is the artist's main ask. */}
-      {!artist.isOwner && (
+      {!artist.isOwner && !isOwnPersona && (
         <span className={styles.heroLabelled}>
-          {isShowcase ? (
-            <ShowcaseFollow artist={artist} />
-          ) : (
-            // useFollow patches the artist view and refreshes the library's
-            // Artists tab itself.
-            <SubprofileFollow
-              subprofileId={person.id}
-              followerCount={artist.followerCount}
-              viewerFollowing={artist.isFollowing}
-              isOwnerViewing={artist.isOwner}
-            />
-          )}
+          <StudioArtistFollowControl artist={artist} />
         </span>
       )}
       {person.personaHref &&

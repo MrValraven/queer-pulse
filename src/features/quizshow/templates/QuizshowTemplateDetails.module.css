@@ -1,0 +1,124 @@
+/* The template card panel above the quiz: a paper card on the builder's cream. */
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-grid);
+  min-width: 0;
+  padding: var(--card-pad);
+  background: var(--paper);
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-e1);
+}
+
+/* A card field focused after a blocked Publish stops below the sticky admin
+   header, about 168px tall on a phone at most, plus the notch inset an
+   installed iPhone adds above it. */
+.panel :is(input, textarea) {
+  scroll-margin-block-start: calc(
+    var(--section-y-180) + env(safe-area-inset-top, 0px)
+  );
+}
+
+/* Staff notes grow with what is written, from five lines up to the cap, then
+   scroll. 29px is FormField's 13px padding and 1.5px border, top and
+   bottom. The doubled class outranks FormField's `.field textarea`. */
+textarea.staffNotes.staffNotes {
+  --staff-notes-min-height: calc(5lh + 29px);
+  --staff-notes-max-height: min(18lh, 60svh);
+  min-height: var(--staff-notes-min-height);
+  max-height: var(--staff-notes-max-height);
+  overflow-y: auto;
+}
+@supports (field-sizing: content) {
+  textarea.staffNotes.staffNotes {
+    field-sizing: content;
+  }
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+}
+
+.heading {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: var(--text-20);
+  line-height: 1.2;
+  color: var(--ink);
+}
+
+.sub {
+  margin: 0;
+  max-width: 65ch;
+  font-size: var(--text-body-sm);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+/* Status on the start, the action on the end; they stack on a narrow card. */
+.statusRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--gap-sm);
+  padding-block-start: var(--gap-sm);
+  border-block-start: 1px solid rgba(var(--line-rgb), 0.09);
+}
+
+.statusLine {
+  flex: 1 1 18rem;
+  margin: 0;
+  min-width: 0;
+  font-size: var(--text-body-sm);
+  line-height: 1.5;
+  color: var(--ink-60);
+}
+
+.statusLine[data-status="published"] {
+  color: var(--ink);
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--gap-xs);
+  min-width: 0;
+  max-width: 100%;
+}
+
+.reason {
+  margin: 0;
+  max-width: 36ch;
+  font-size: var(--text-caption);
+  line-height: 1.45;
+  color: var(--ink-60);
+  text-align: end;
+}
+
+.alert {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--gap-xs);
+  margin: 0;
+  max-width: 44ch;
+  padding: var(--gap-xs) var(--gap-sm);
+  font-size: var(--text-body-sm);
+  line-height: 1.45;
+  color: var(--ink);
+  background: rgba(var(--accent-rgb), 0.1);
+  border-radius: var(--radius-16);
+}
+
+.alertIcon {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin-block-start: 1px;
+  color: var(--accent-text);
+}

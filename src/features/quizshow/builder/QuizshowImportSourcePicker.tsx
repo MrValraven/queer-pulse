@@ -13,16 +13,16 @@ import type {
   QuizshowImportSource,
 } from "../../../shared/contracts/quizshow";
 import { useQuizshowImportSources } from "../api/useQuizshowQuiz";
-import { quizshowScopeKey, type QuizshowScope } from "../quizshowScope";
+import { quizshowScopeKey, type QuizshowSessionScope } from "../quizshowScope";
 import { importInputOf } from "./useQuizshowImport";
 import {
   QuizshowPickerFade,
   QuizshowPickerSkeleton,
-} from "./QuizshowPackPicker";
+} from "./QuizshowTemplatePicker";
 import styles from "./QuizshowImport.module.css";
 
 interface QuizshowImportSourcePickerProps {
-  scope: QuizshowScope;
+  scope: QuizshowSessionScope;
   isOpen: boolean;
   isAdultsEvent: boolean;
   onClose: () => void;
@@ -30,7 +30,9 @@ interface QuizshowImportSourcePickerProps {
 }
 
 /** The scope a listed source stands for, so the row key never collides across kinds. */
-function scopeOfSource(source: QuizshowImportSource): QuizshowScope | null {
+function scopeOfSource(
+  source: QuizshowImportSource,
+): QuizshowSessionScope | null {
   if (source.kind === "game") {
     return source.gameId === null
       ? null

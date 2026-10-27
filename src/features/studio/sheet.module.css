@@ -441,3 +441,13 @@
     position: static;
   }
 }
+/* A narrow page column on desktop (the docked side panel beside it): the
+   checkout follows the sheet, as on phones. */
+@container studio-page (max-width: 799px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+  .checkout {
+    position: static;
+  }
+}

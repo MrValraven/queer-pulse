@@ -9,7 +9,10 @@ import {
   type QuizshowPlayMode,
 } from "../../../shared/contracts/quizshow";
 import { useTranslation } from "../../../shared/i18n/useTranslation";
-import { quizshowScopeScreenPath, type QuizshowScope } from "../quizshowScope";
+import {
+  quizshowScopeScreenPath,
+  type QuizshowSessionScope,
+} from "../quizshowScope";
 import { QuizshowProblemList } from "./QuizshowProblemList";
 import { useQuizshowOpenLobby } from "./useQuizshowOpenLobby";
 import styles from "./QuizshowLobby.module.css";
@@ -21,7 +24,7 @@ const PLAY_MODES: readonly QuizshowPlayMode[] = ["solo", "teams"];
 const PLAY_MODE_ICONS = { solo: FiUser, teams: FiUsers } as const;
 
 interface QuizshowOpenLobbyDialogProps {
-  scope: QuizshowScope;
+  scope: QuizshowSessionScope;
   isOpen: boolean;
   onClose: () => void;
 }

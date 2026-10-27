@@ -68,6 +68,12 @@ export const AUDIT_ACTION_LABEL_KEY: Partial<Record<string, string>> = {
   // Pulse Live: staff ended or deleted a reported game, with a reason.
   quizshow_game_ended: "admin:moderation.action.quizshowGameEnded",
   quizshow_game_deleted: "admin:moderation.action.quizshowGameDeleted",
+  // Pulse Live: staff published, unpublished or deleted a quiz template.
+  quizshow_template_published:
+    "admin:moderation.action.quizshowTemplatePublished",
+  quizshow_template_unpublished:
+    "admin:moderation.action.quizshowTemplateUnpublished",
+  quizshow_template_deleted: "admin:moderation.action.quizshowTemplateDeleted",
 };
 
 /** The moderator-facing label for one audit entry. An unmapped code falls

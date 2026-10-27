@@ -1,5 +1,6 @@
-import { readFileSync } from "node:fs";
-import { resolve } from "node:path";
+import { readdirSync, readFileSync } from "node:fs";
+import { createRequire } from "node:module";
+import { dirname, join, resolve } from "node:path";
 import { defineConfig, type Plugin } from "vite";
 import react from "@vitejs/plugin-react";
 import { VitePWA } from "vite-plugin-pwa";
@@ -57,6 +58,115 @@ function emitVersionJson(): Plugin {
         fileName: "version.json",
         source: versionJson,
       });
+    },
+  };
+}
+
+/**
+ * The URL folder pdfjs's runtime data is published under. pdfjsLoader.ts
+ * builds the same `pdfjs/<version>/<folder>/` URLs, and the precache config
+ * below lists this folder in `globIgnores`.
+ */
+const PDFJS_DATA_URL_FOLDER = "pdfjs";
+
+/** The pdfjs-dist folders pdfjs fetches from at render time, by API option. */
+const PDFJS_DATA_FOLDERS = ["wasm", "cmaps", "standard_fonts", "iccs"];
+
+/** Backs pdfjs scripting (pdf.sandbox), which the PDF toolkit leaves off. */
+const PDFJS_SCRIPTING_FILE = /^quickjs-eval\./;
+
+const PDFJS_DATA_CONTENT_TYPES: Record<string, string> = {
+  ".wasm": "application/wasm",
+  ".js": "text/javascript",
+  ".ttf": "font/ttf",
+};
+
+/**
+ * Publish pdfjs's runtime data for the staff PDF toolkit
+ * (src/features/admin/utilities/pdf).
+ *
+ * WHY. pdfjs decodes CCITT fax and JBIG2 images (the usual black-and-white
+ * office scan), JPEG 2000 images and ICC colour with wasm modules it fetches
+ * while rendering, from the `wasmUrl` it was given. It reads CJK cmaps, the
+ * standard fonts and its CMYK profile the same way, from `cMapUrl`,
+ * `standardFontDataUrl` and `iccUrl`. Without those URLs the fetch fails, pdfjs
+ * skips the image and the page render still resolves, so a scanned page shows
+ * as a blank white thumbnail that nothing marks as failed.
+ *
+ * WHAT. Every file in the four pdfjs-dist data folders, served at
+ * `/pdfjs/<version>/<folder>/<file name as shipped>`. pdfjs joins
+ * `${url}${fileName}`, so the names stay exactly as pdfjs-dist ships them. The
+ * version comes from the installed pdfjs-dist here and from the loaded pdfjs
+ * module in pdfjsLoader.ts, so both sides follow the installed package, and an
+ * upgrade moves to a new path that a stale browser or service worker cache
+ * cannot answer. The quickjs-eval files stay out (see PDFJS_SCRIPTING_FILE).
+ *
+ * HOW. Under `vite` a middleware answers these paths straight from
+ * node_modules. In a build, `generateBundle` emits each file as an asset with a
+ * fixed name. Nothing imports them, so they enter no chunk and no
+ * modulepreload, and pdfjs fetches only the ones a document needs.
+ */
+function publishPdfjsRuntimeData(): Plugin {
+  const pdfjsDistRoot = dirname(
+    createRequire(import.meta.url).resolve("pdfjs-dist/package.json"),
+  );
+  const { version } = JSON.parse(
+    readFileSync(join(pdfjsDistRoot, "package.json"), "utf8"),
+  ) as { version: string };
+  // Published path (relative to the site root) to its file in node_modules.
+  const sourcePathByPublishedPath = new Map<string, string>();
+  for (const folder of PDFJS_DATA_FOLDERS) {
+    const folderPath = join(pdfjsDistRoot, folder);
+    for (const entry of readdirSync(folderPath, { withFileTypes: true })) {
+      if (!entry.isFile() || PDFJS_SCRIPTING_FILE.test(entry.name)) continue;
+      sourcePathByPublishedPath.set(
+        `${PDFJS_DATA_URL_FOLDER}/${version}/${folder}/${entry.name}`,
+        join(folderPath, entry.name),
+      );
+    }
+  }
+  const requiredFile = `${PDFJS_DATA_URL_FOLDER}/${version}/wasm/jbig2.wasm`;
+  if (!sourcePathByPublishedPath.has(requiredFile)) {
+    // Loud on purpose. If a pdfjs-dist upgrade moved its data folders, scanned
+    // pages would go back to rendering blank with nothing reported.
+    throw new Error(
+      `qp:pdfjs-runtime-data: pdfjs-dist ${version} has no wasm/jbig2.wasm, ` +
+        "so the PDF toolkit could not decode scanned pages.",
+    );
+  }
+
+  let basePath = "/";
+  return {
+    name: "qp:pdfjs-runtime-data",
+    configResolved(config) {
+      basePath = config.base;
+    },
+    configureServer(server) {
+      server.middlewares.use((request, response, next) => {
+        const pathname = (request.url ?? "").split("?")[0] ?? "";
+        const sourcePath = pathname.startsWith(basePath)
+          ? sourcePathByPublishedPath.get(pathname.slice(basePath.length))
+          : undefined;
+        if (!sourcePath) {
+          next();
+          return;
+        }
+        const extension = /\.[a-z0-9]+$/i.exec(pathname)?.[0] ?? "";
+        response.setHeader(
+          "Content-Type",
+          PDFJS_DATA_CONTENT_TYPES[extension] ?? "application/octet-stream",
+        );
+        response.end(readFileSync(sourcePath));
+      });
+    },
+    generateBundle() {
+      for (const [publishedPath, sourcePath] of sourcePathByPublishedPath) {
+        this.emitFile({
+          type: "asset",
+          fileName: publishedPath,
+          source: readFileSync(sourcePath),
+        });
+      }
     },
   };
 }
@@ -291,6 +401,7 @@ export default defineConfig({
     // injectManifest below) reads the built index.html from.
     shellStylesheetPrecache.plugin,
     emitVersionJson(),
+    publishPdfjsRuntimeData(),
     VitePWA({
       strategies: "injectManifest",
       srcDir: "src",
@@ -436,6 +547,10 @@ export default defineConfig({
         // ENG-190: of the globbed CSS, keep only the app shell's stylesheets.
         // See createShellStylesheetPrecacheFilter above.
         manifestTransforms: [shellStylesheetPrecache.manifestTransform],
+        // No glob above matches pdfjs's runtime data today; this keeps a
+        // broader glob from ever pulling its ~3.5 MB into the first visit. The
+        // first entry restates workbox's default, which this list replaces.
+        globIgnores: ["**/node_modules/**/*", `${PDFJS_DATA_URL_FOLDER}/**`],
       },
     }),
   ],

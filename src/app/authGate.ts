@@ -277,6 +277,24 @@ export function isQuizshowHostingPath(pathname: string): boolean {
   return matchesAny(pathname, QUIZSHOW_HOSTING_PATTERNS);
 }
 
+// The Pulse Live staff console: the quiz templates list and one template.
+// Also listed in MOD_ACCESSIBLE_ADMIN_PATTERNS below.
+const QUIZSHOW_STAFF_PATTERNS: string[] = [
+  routes.adminQuizshowTemplates,
+  `${routes.adminQuizshowTemplates}/*`,
+];
+
+/**
+ * True for the Pulse Live staff pages: the quiz templates list and a single
+ * template. The role gate admits moderators and admins there first; then
+ * `AppRoutes` sends staff for whom `useIsQuizshowVisible` is false to their
+ * landing page (admins to the admin home, moderators to the queues console),
+ * as the backend `@Feature('quizshow')` guard would refuse every read.
+ */
+export function isQuizshowStaffPath(pathname: string): boolean {
+  return matchesAny(pathname, QUIZSHOW_STAFF_PATTERNS);
+}
+
 /**
  * Demo-only surfaces whose nav/footer entries must disappear in live mode.
  *
@@ -355,6 +373,12 @@ const MOD_PATTERNS: string[] = ["/mod/*"];
  * as `/mod/*`, while the rest of the admin console stays admin-only.
  */
 const MOD_ACCESSIBLE_ADMIN_PATTERNS: string[] = [
+  // The Utilities hub and its tools. There is no backend controller: every
+  // tool runs in the browser on files that never leave the device. Moderators
+  // and admins only, and absent from CAPABILITY_ELEVATED_PATTERNS so no staff
+  // grant opens it.
+  routes.adminUtilities,
+  `${routes.adminUtilities}/*`,
   routes.adminModeration,
   `${routes.adminModeration}/*`,
   // PRD-282. The triage console over every staff queue.
@@ -447,6 +471,12 @@ const MOD_ACCESSIBLE_ADMIN_PATTERNS: string[] = [
   // CAPABILITY_ELEVATED_PATTERNS.
   routes.adminStudio,
   `${routes.adminStudio}/*`,
+  // Pulse Live quiz templates. `AdminQuizshowTemplatesController` is
+  // `@Roles(Moderator, Admin)` plus `@Feature('quizshow')`, so moderators keep
+  // the templates with admins. No grant opens it, so it stays out of
+  // CAPABILITY_ELEVATED_PATTERNS. Pulse Live access is checked after this
+  // role gate, in `app/routes.tsx` (`isQuizshowStaffPath`).
+  ...QUIZSHOW_STAFF_PATTERNS,
   // The early-access roster. `AdminEarlyAccessController` is
   // `@Roles(Moderator, Admin)`, so moderators can see who holds each
   // unlaunched feature and revoke a grant; granting happens in the admin-only

@@ -3415,7 +3415,7 @@ export const marketing: Catalog = {
     "{count} infrastructure changes",
   // Release headlines, one per shipping day (see changelogReleases.ts).
   "changelog.releases.2026-10-27.headline":
-    "Your listening, play counts and supporters in Studio, plus milestones and audience pages.",
+    "A Now playing panel and your listening page in Studio, plus pages for each audience.",
   "changelog.releases.2026-10-26.headline":
     "Bulk invite refresh and revoke, Studio resume and landing page, a crisp iPhone bar.",
   "changelog.releases.2026-10-21.headline":
@@ -3713,6 +3713,13 @@ export const marketing: Catalog = {
     "Pick up Studio where you left off",
   "changelog.entries.studio-resume-where-you-left-off.body":
     "Switch on Resume and your queue comes back after you close the tab, with Recently played on this device.",
+  "changelog.entries.staff-pdf-page-tool.title": "A PDF page tool for staff",
+  "changelog.entries.staff-pdf-page-tool.body":
+    "Staff can remove, rotate, reorder, merge and split PDF pages in the browser, and files stay on the device.",
+  "changelog.entries.studio-now-playing-panel.title":
+    "A Now playing panel in Studio",
+  "changelog.entries.studio-now-playing-panel.body":
+    "The artist behind each track sits beside any Studio page, with their bio, Follow, events and support links.",
   "changelog.entries.studio-your-listening.title":
     "Your listening page, play counts and supporters in Studio",
   "changelog.entries.studio-your-listening.body":

@@ -16,7 +16,12 @@ import type {
   QuizshowQuizInput,
   QuizshowQuizResponse,
 } from "../../../shared/contracts/quizshow";
-import type { QuizshowScope } from "../quizshowScope";
+import type { QuizshowScope, QuizshowSessionScope } from "../quizshowScope";
+import {
+  quizResponseOfTemplate,
+  type QuizshowTemplateFields,
+  type QuizshowTemplateQuizResponse,
+} from "../templates/quizshowTemplateResponse";
 import {
   deleteQuizshowGameResults,
   deleteQuizshowResults,
@@ -28,8 +33,10 @@ import {
   putQuizshowGame,
   putQuizshowQuiz,
 } from "./quizshow.api";
+import { putQuizshowTemplate } from "./quizshowTemplates.api";
 import { quizshowKeys } from "./quizshowKeys";
 import { refreshImportSourceLists } from "./useQuizshowGames";
+import { refreshTemplateLists } from "./useQuizshowTemplates";
 import {
   demoDeleteResults,
   demoImportQuiz,
@@ -43,18 +50,44 @@ import {
   demoOpenGameSession,
   demoPutGame,
 } from "./quizshowDemoGames";
+import { demoPutTemplate } from "./quizshowDemoTemplates";
 
 // Every write below owns its error copy in the component that calls it.
 const SILENT_ERROR_META = { silentError: true } as const;
 
-/** The builder's save body; only a game reads the 18+ switch. */
-export type QuizshowSaveInput = QuizshowQuizInput & { isAdultsOnly?: boolean };
+/** The builder's save body; only a game reads the 18+ switch, and only a template its card and notes. */
+export type QuizshowSaveInput = QuizshowQuizInput & {
+  isAdultsOnly?: boolean;
+  templateFields?: QuizshowTemplateFields;
+};
 
-/** The event PUT never carries the 18+ switch: an event takes it from its own details. */
-function eventBodyOf(body: QuizshowSaveInput): QuizshowQuizInput {
-  const eventBody: QuizshowSaveInput = { ...body };
-  delete eventBody.isAdultsOnly;
-  return eventBody;
+/** The quiz alone. An event takes its 18+ switch from its own details, and only a template has a card. */
+function quizBodyOf(body: QuizshowSaveInput): QuizshowQuizInput {
+  const quizBody: QuizshowSaveInput = { ...body };
+  delete quizBody.isAdultsOnly;
+  delete quizBody.templateFields;
+  return quizBody;
+}
+
+/** A template saves its card, staff notes and quiz in one PUT. */
+async function saveTemplate(
+  templateId: string,
+  demoMode: boolean,
+  body: QuizshowSaveInput,
+): Promise<QuizshowTemplateQuizResponse> {
+  const { templateFields } = body;
+  if (!templateFields) {
+    throw new Error("A template save needs its card and staff notes");
+  }
+  const templateBody = {
+    card: templateFields.card,
+    staffNotes: templateFields.staffNotes,
+    quiz: quizBodyOf(body),
+  };
+  const detail = demoMode
+    ? demoPutTemplate(templateId, templateBody)
+    : await putQuizshowTemplate(templateId, templateBody);
+  return quizResponseOfTemplate(detail);
 }
 
 async function saveFor(
@@ -63,13 +96,16 @@ async function saveFor(
   body: QuizshowSaveInput,
 ): Promise<QuizshowQuizResponse> {
   if (scope.kind === "event") {
-    const eventBody = eventBodyOf(body);
+    const eventBody = quizBodyOf(body);
     return demoMode
       ? demoPutQuiz(scope.eventSlug, eventBody)
       : putQuizshowQuiz(scope.eventSlug, eventBody);
   }
+  if (scope.kind === "template") {
+    return saveTemplate(scope.templateId, demoMode, body);
+  }
   const gameBody: QuizshowGameInput = {
-    ...body,
+    ...quizBodyOf(body),
     isAdultsOnly: body.isAdultsOnly === true,
   };
   return demoMode
@@ -78,7 +114,7 @@ async function saveFor(
 }
 
 async function importFor(
-  scope: QuizshowScope,
+  scope: QuizshowSessionScope,
   demoMode: boolean,
   body: QuizshowImportInput,
 ): Promise<QuizshowQuizResponse> {
@@ -93,7 +129,7 @@ async function importFor(
 }
 
 async function openSessionFor(
-  scope: QuizshowScope,
+  scope: QuizshowSessionScope,
   demoMode: boolean,
   body: QuizshowOpenSessionInput,
 ): Promise<QuizshowOpenSessionResponse> {
@@ -108,7 +144,7 @@ async function openSessionFor(
 }
 
 async function deleteResultsFor(
-  scope: QuizshowScope,
+  scope: QuizshowSessionScope,
   demoMode: boolean,
 ): Promise<void> {
   if (scope.kind === "event") {
@@ -135,10 +171,23 @@ async function refreshMyGamesAfter(
   });
 }
 
+/** A saved template moves its staff row and, once published, its host card. */
+async function refreshAfterSave(
+  queryClient: QueryClient,
+  scope: QuizshowScope,
+  demoMode: boolean,
+): Promise<void> {
+  if (scope.kind === "template") {
+    await refreshTemplateLists(queryClient, demoMode);
+    return;
+  }
+  await refreshMyGamesAfter(queryClient, scope, demoMode);
+}
+
 /** Opening a lobby or deleting results moves the quiz and the page that lists it. */
 async function refreshAfterSessionWrite(
   queryClient: QueryClient,
-  scope: QuizshowScope,
+  scope: QuizshowSessionScope,
   demoMode: boolean,
 ): Promise<void> {
   await Promise.all([
@@ -161,13 +210,13 @@ export function useSaveQuizshowQuiz(
     mutationFn: async (body) => saveFor(scope, demoMode, body),
     onSuccess: async (response) => {
       queryClient.setQueryData(quizshowKeys.quizFor(scope, demoMode), response);
-      await refreshMyGamesAfter(queryClient, scope, demoMode);
+      await refreshAfterSave(queryClient, scope, demoMode);
     },
   });
 }
 
 export function useImportQuizshowQuiz(
-  scope: QuizshowScope,
+  scope: QuizshowSessionScope,
 ): UseMutationResult<QuizshowQuizResponse, unknown, QuizshowImportInput> {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();
@@ -182,7 +231,7 @@ export function useImportQuizshowQuiz(
 }
 
 export function useOpenQuizshowSession(
-  scope: QuizshowScope,
+  scope: QuizshowSessionScope,
 ): UseMutationResult<
   QuizshowOpenSessionResponse,
   unknown,
@@ -217,7 +266,7 @@ export function useJoinQuizshow(): UseMutationResult<
 }
 
 export function useDeleteQuizshowResults(
-  scope: QuizshowScope,
+  scope: QuizshowSessionScope,
 ): UseMutationResult<void, unknown, void> {
   const { demoMode } = useDemoMode();
   const queryClient = useQueryClient();

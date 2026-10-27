@@ -1,5 +1,6 @@
 import type { StudioTrackView } from "../../api/studio.adapters";
-import { studioTrackPath } from "../../studioPaths";
+import { studioReleasePath, studioTrackPath } from "../../studioPaths";
+import type { StudioQueueItem } from "../studioPlayerContext";
 
 export interface StudioTrackMenuTrack {
   id: string;
@@ -41,6 +42,24 @@ export function studioTrackMenuTrackOf(
     artistHref: track.release.artist.href,
     artistName: track.release.artist.name,
     releaseHref: track.release.href,
+  };
+}
+
+/** The menu's track from a queue item, until the track's detail answers.
+ *  Report waits for the detail, which knows whether the release is out. */
+export function studioTrackMenuTrackOfQueueItem(
+  item: StudioQueueItem,
+): StudioTrackMenuTrack {
+  return {
+    id: item.trackId,
+    title: item.title,
+    href: item.trackHref,
+    hasAudio: true,
+    isExplicit: item.isExplicit,
+    artistId: item.artistId,
+    artistHref: item.artistHref,
+    artistName: item.artistName,
+    releaseHref: studioReleasePath(item.releaseId),
   };
 }
 

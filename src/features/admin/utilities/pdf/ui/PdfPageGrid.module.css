@@ -1,0 +1,267 @@
+/* The PDF page grid: paper tiles on the cream workspace, each one a
+   selectable toggle and a drag handle, with a split toggle in the gap after
+   every page but the last. */
+
+/* The grid lines up with the panels around it. The split toggle sits
+   centred in the column gap, so after the last column it reaches past the
+   grid's end: the half-gap end padding keeps that column's split line inside
+   the grid, and the toggle overhangs into the page gutter by at most 22px on
+   a mouse and 11px on a touch screen, where its ink shrinks to the gap. The
+   document root clips sideways overflow, so nothing scrolls. */
+.grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(132px, 1fr));
+  gap: var(--gap-grid);
+  margin: 0;
+  padding: 0;
+  padding-inline-end: calc(var(--gap-grid) / 2);
+  list-style: none;
+}
+
+@media (max-width: 480px) {
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(112px, 1fr));
+  }
+}
+
+/* Positioned so the lifted tile and the split toggle layer above their
+   neighbours while transforms glide them. */
+.tile {
+  position: relative;
+  min-width: 0;
+}
+
+.tileDragging {
+  z-index: calc(var(--z-raised) + 1);
+}
+
+.card {
+  position: relative;
+  height: 100%;
+}
+
+.tileButton {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  height: 100%;
+  padding: 8px 8px 10px;
+  border: 1px solid rgba(var(--line-rgb), 0.09);
+  border-radius: var(--radius-14);
+  background: var(--paper);
+  box-shadow: var(--shadow-e1);
+  color: var(--ink-60);
+  font: inherit;
+  text-align: start;
+  cursor: grab;
+  /* Taps and page scrolling stay native on phones; a long press starts a
+     drag. No text selection or iOS callout on that long press. */
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  transition-property: border-color, box-shadow;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .tileButton:hover {
+    border-color: var(--line-2);
+  }
+}
+
+.tileButton[aria-pressed="true"] {
+  border-color: var(--accent);
+  box-shadow: var(--ring-accent-strong);
+}
+
+.tileDragging .tileButton {
+  cursor: grabbing;
+  box-shadow: var(--shadow-e3);
+}
+
+.tileDragging .tileButton[aria-pressed="true"] {
+  box-shadow: var(--ring-accent-strong), var(--shadow-e3);
+}
+
+/* Restates the global ring: the selection ring above out-specifies it. */
+.tileButton:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.tileButton[aria-pressed="true"]:focus-visible {
+  box-shadow: var(--ring-cream), var(--ring-accent-strong);
+}
+
+/* The sized 3:4 box the thumbnail fills edge to edge. The thumbnail paints
+   its own tinted ground, so the box adds none. */
+.thumb {
+  display: grid;
+  place-items: stretch;
+  inline-size: 100%;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  border-radius: var(--radius-10);
+}
+
+.thumb > * {
+  inline-size: 100%;
+  block-size: 100%;
+  min-inline-size: 0;
+  min-block-size: 0;
+}
+
+/* The selection box sits on a paper plate so it reads over any page. */
+.check {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  display: grid;
+  border-radius: var(--radius-7);
+  background: var(--paper);
+  box-shadow: var(--shadow-e1);
+  pointer-events: none;
+}
+
+.caption {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  font-size: var(--text-caption);
+  line-height: 1.3;
+}
+
+.number {
+  flex: none;
+  color: var(--text-strong);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.toneDot {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-pill);
+  background: var(--file-tone);
+}
+
+.fileName {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* "Part 2" on the first page of each part, at the end of the caption row so
+   the page and its checkbox stay clear. */
+.part {
+  flex: none;
+  margin-inline-start: auto;
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  background: var(--accent-fill);
+  color: rgb(var(--cream-rgb));
+  font-size: var(--text-label);
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+/* The split toggle, centred in the gap after the tile. It shows on hover and
+   keyboard focus, always on touch screens, and whenever a split is set. */
+.cut {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: calc(var(--gap-grid) / -2);
+  z-index: var(--z-raised);
+  /* Flex centring lets the toggle overflow its zero-width box evenly. */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 0;
+  opacity: 0;
+  transition-property: opacity;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+.tile:not(.tileDragging):hover .cut,
+.cut:hover,
+.cut:focus-within,
+.cutActive {
+  opacity: 1;
+}
+
+/* The dragged page carries no split toggle while it moves. Two classes and
+   a later place in the file keep it ahead of every rule above, and of the
+   touch rule below, so the pointer resting on the lifted tile leaves its
+   toggle hidden. */
+.tile.tileDragging .cut {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.cutLine {
+  position: absolute;
+  top: 6px;
+  bottom: 6px;
+  left: -1px;
+  width: 2px;
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+  transform-origin: center;
+}
+
+.cut .cutButton {
+  position: relative;
+  border-color: rgba(var(--line-rgb), 0.09);
+  background: var(--paper);
+  box-shadow: var(--shadow-e2);
+  --button-icon-hover: var(--paper);
+}
+
+.cutActive .cutButton.cutButton {
+  border-color: var(--accent);
+  color: var(--accent-text);
+}
+
+@media (hover: hover) {
+  .cut.cutActive .cutButton.cutButton:hover {
+    color: var(--accent-text);
+  }
+}
+
+/* Touch screens show every toggle, so each one stays quiet: a bare scissors
+   no wider than the gap, keeping the 44px hit area through data-tap-target.
+   A set split gets a disc in the page colour that breaks the accent line. */
+@media (pointer: coarse) {
+  .tile:not(.tileDragging) .cut {
+    opacity: 1;
+  }
+
+  .cut .cutButton.cutButton {
+    inline-size: var(--gap-grid);
+    min-inline-size: var(--gap-grid);
+    block-size: var(--gap-grid);
+    min-block-size: var(--gap-grid);
+    border-color: transparent;
+    background: transparent;
+    box-shadow: none;
+    color: var(--ink-40);
+    font-size: var(--text-14);
+  }
+
+  .cutActive .cutButton.cutButton {
+    border-color: var(--accent);
+    background: var(--cream);
+    color: var(--accent-text);
+  }
+}

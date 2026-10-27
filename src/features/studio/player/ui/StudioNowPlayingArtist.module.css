@@ -1,0 +1,205 @@
+/* Now playing artist sections (About card, events, support, more releases),
+   shared by the side panel and the phone Artist tab. */
+
+.pane {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* About card: a wash card on the rail surface. */
+.card {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--studio-line);
+  border-radius: var(--radius-12);
+  background: var(--studio-wash-1);
+  color: var(--studio-text);
+}
+
+.card .cover {
+  aspect-ratio: 16 / 9;
+  border: 0;
+}
+
+.coverSkeleton {
+  composes: shimmer from "../../studioSkeleton.module.css";
+  aspect-ratio: 16 / 9;
+  border-radius: 0;
+}
+
+.cardBody {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px 16px 16px;
+}
+
+/* "About the artist" or "About the show": the card's eyebrow. */
+.eyebrow {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: var(--text-12);
+  font-weight: 700;
+  line-height: 1.4;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--studio-text-muted);
+}
+
+.name {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--text-20);
+  line-height: 1.2;
+  color: var(--studio-text);
+  overflow-wrap: anywhere;
+}
+
+.meta {
+  margin: 0;
+  font-size: var(--text-13);
+  line-height: 1.4;
+  color: var(--studio-text-muted);
+}
+
+.bio {
+  margin: 4px 0 0;
+  font-size: var(--text-14);
+  line-height: 1.5;
+  color: var(--studio-text);
+  white-space: pre-line;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+/* The skeleton's rows take the line box of the type they stand in for
+   (each also carries .eyebrow, .name, .meta or .bio), so the card keeps
+   its height when it fades in. */
+.skeletonRow {
+  display: flex;
+  align-items: center;
+  min-height: 1lh;
+}
+
+/* Three bio lines spread over the clamped bio's three line boxes. */
+.skeletonBio {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  height: 3lh;
+}
+
+/* Read more: the toggle's 13px line under the bio, with its 6px top
+   margin. */
+.skeletonReadMore {
+  display: flex;
+  align-items: center;
+  min-height: 1lh;
+  margin-top: 6px;
+  font-size: var(--text-13);
+}
+
+/* Doubled so the pill shape wins over the shimmer's own radius. */
+.skeletonActions.skeletonActions > * {
+  border-radius: var(--radius-pill);
+}
+
+/* Extras: events, support and more releases. */
+.extras {
+  display: flex;
+  flex-direction: column;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 20px;
+}
+
+.eventList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* The event cards take the About card's wash surface, so the panel shows
+   one card surface. Doubled to win over the card's page surface; the
+   border yields on hover to the card's own accent. */
+.eventList.eventList > * {
+  background: var(--studio-wash-1);
+}
+
+.eventList.eventList > :not(:hover) {
+  border-color: var(--studio-line);
+}
+
+.releaseList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.releaseRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: var(--tap-min);
+  padding: 6px;
+  border-radius: var(--radius-8);
+  color: var(--studio-text);
+  text-decoration: none;
+  transition-property: background-color;
+  transition-duration: var(--dur-fast);
+  transition-timing-function: var(--ease);
+}
+
+@media (hover: hover) {
+  .releaseRow:hover {
+    background: var(--studio-wash-2);
+  }
+}
+
+.releaseRow:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  box-shadow: var(--ring-cream);
+}
+
+.releaseCover {
+  position: relative;
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  overflow: hidden;
+  border-radius: var(--radius-6);
+}
+
+.releaseText {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.releaseTitle {
+  overflow: hidden;
+  font-size: var(--text-14);
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.releaseMeta {
+  font-size: var(--text-12);
+  color: var(--studio-text-muted);
+}

@@ -23,7 +23,7 @@ function createClient(): QueryClient {
 
 function renderGameButtons(
   queryClient: QueryClient,
-  initialOpenPicker: "pack" | "sources" | null = null,
+  initialOpenPicker: "template" | "sources" | null = null,
 ) {
   return render(
     <TestProviders queryClient={queryClient}>

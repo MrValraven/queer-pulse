@@ -1,7 +1,7 @@
 import { useQuery, type UseQueryResult } from "@tanstack/react-query";
 import { useDemoMode } from "../../../app/providers/DemoModeProvider";
 import type { QuizshowResultsResponse } from "../../../shared/contracts/quizshow";
-import type { QuizshowScope } from "../quizshowScope";
+import type { QuizshowSessionScope } from "../quizshowScope";
 import { getQuizshowGameResults, getQuizshowResults } from "./quizshow.api";
 import { quizshowKeys } from "./quizshowKeys";
 import { demoResults } from "./quizshowDemoStore";
@@ -9,7 +9,7 @@ import { demoGameResults } from "./quizshowDemoGames";
 import { hasQuizshowScopeId, shouldRetryQuizshowRead } from "./useQuizshowQuiz";
 
 async function fetchResultsFor(
-  scope: QuizshowScope,
+  scope: QuizshowSessionScope,
   demoMode: boolean,
 ): Promise<QuizshowResultsResponse> {
   if (scope.kind === "event") {
@@ -23,7 +23,7 @@ async function fetchResultsFor(
 }
 
 export function useQuizshowResults(
-  scope: QuizshowScope,
+  scope: QuizshowSessionScope,
   options: { isEnabled: boolean },
 ): UseQueryResult<QuizshowResultsResponse> {
   const { demoMode } = useDemoMode();

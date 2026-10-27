@@ -66,7 +66,7 @@ function dryRunQuizOf(
   const quiz = quizFromInput(draftToInput(draft, null), {
     idPrefix: DRY_RUN_ID,
     updatedAt: new Date().toISOString(),
-    starterPackKey: null,
+    sourceTemplateId: null,
   });
   return {
     ...quiz,

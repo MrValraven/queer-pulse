@@ -8,6 +8,7 @@ import {
   QUIZSHOW_GAMES_PER_MEMBER_MAX,
   type QuizshowGameListResponse,
   type QuizshowGameResponse,
+  type QuizshowTemplateCard,
 } from "../../../shared/contracts/quizshow";
 import {
   demoCreateGame,
@@ -16,11 +17,16 @@ import {
   resetQuizshowDemoGames,
 } from "../api/quizshowDemoGames";
 import { QUIZSHOW_DEMO_GAME_IDS } from "../api/quizshowDemoGames.data";
-import { demoPacks, resetQuizshowDemoStore } from "../api/quizshowDemoStore";
+import { resetQuizshowDemoStore } from "../api/quizshowDemoStore";
+import { demoTemplateCards } from "../api/quizshowDemoTemplates";
 import { quizshowKeys } from "../api/quizshowKeys";
 import { QuizshowPlayHome } from "./QuizshowPlayHome";
 
-const mocks = vi.hoisted(() => ({ isVisible: true }));
+const mocks = vi.hoisted(() => ({
+  isVisible: true,
+  /** When set, the host template cards read these items once loaded. */
+  templateCardItems: null as QuizshowTemplateCard[] | null,
+}));
 
 vi.mock("../quizshowLaunch", async (importOriginal) => ({
   ...(await importOriginal<typeof import("../quizshowLaunch")>()),
@@ -34,6 +40,21 @@ vi.mock("../api/quizshowDemoGames", async (importOriginal) => {
     ...actual,
     demoCreateGame: vi.fn(actual.demoCreateGame),
     demoListGames: vi.fn(actual.demoListGames),
+  };
+});
+
+vi.mock("../api/useQuizshowTemplates", async (importOriginal) => {
+  const actual =
+    await importOriginal<typeof import("../api/useQuizshowTemplates")>();
+  return {
+    ...actual,
+    useQuizshowTemplateCards: (
+      options: Parameters<typeof actual.useQuizshowTemplateCards>[0],
+    ) => {
+      const result = actual.useQuizshowTemplateCards(options);
+      if (mocks.templateCardItems === null || !result.data) return result;
+      return { ...result, data: { items: mocks.templateCardItems } };
+    },
   };
 });
 
@@ -82,6 +103,7 @@ function seededSummary(gameId: string) {
 
 function resetDemoGames() {
   mocks.isVisible = true;
+  mocks.templateCardItems = null;
   resetQuizshowDemoStore();
   resetQuizshowDemoGames();
   vi.mocked(demoCreateGame).mockClear();
@@ -219,33 +241,61 @@ describe("QuizshowMyGames ways to start a game", () => {
     expect(currentLocation()).toBe("/play");
   });
 
-  it("starts a game from a pack with the pack's title", async () => {
+  it("starts a game from a template with the template's title", async () => {
     window.localStorage.setItem("qp.lang", "pt");
     deleteEverySeededGame();
-    const firstPack = demoPacks().items[0];
-    if (!firstPack) throw new Error("no demo pack");
+    const firstCard = demoTemplateCards().items[0];
+    if (!firstCard) throw new Error("no demo template");
     renderHome();
 
     await userEvent.click(
-      await screen.findByRole("button", { name: "Começar com um pack" }),
+      await screen.findByRole("button", { name: "Começar com um modelo" }),
     );
     const useButtons = await screen.findAllByRole("button", {
-      name: "Usar este pack",
+      name: "Usar este modelo",
     });
     const firstUseButton = useButtons[0];
-    if (!firstUseButton) throw new Error("no pack row");
+    if (!firstUseButton) throw new Error("no template row");
     await userEvent.click(firstUseButton);
 
     await waitFor(() => {
       expect(vi.mocked(demoCreateGame)).toHaveBeenCalledWith({
-        title: firstPack.title.pt,
-        source: { from: "pack", packKey: firstPack.key },
+        title: firstCard.title.pt,
+        source: { from: "template", templateId: firstCard.id },
       });
     });
     const created = lastCreatedGame();
     await waitFor(() => {
       expect(currentLocation()).toBe(`/play/games/${created.gameId}`);
     });
+  });
+
+  it("titles a game from an English-only template in English for a Portuguese viewer", async () => {
+    window.localStorage.setItem("qp.lang", "pt");
+    deleteEverySeededGame();
+    const firstCard = demoTemplateCards().items[0];
+    if (!firstCard) throw new Error("no demo template");
+    const englishOnlyCard: QuizshowTemplateCard = {
+      ...firstCard,
+      title: { en: firstCard.title.en, pt: "" },
+    };
+    mocks.templateCardItems = [englishOnlyCard];
+    renderHome();
+
+    await userEvent.click(
+      await screen.findByRole("button", { name: "Começar com um modelo" }),
+    );
+    await userEvent.click(
+      await screen.findByRole("button", { name: "Usar este modelo" }),
+    );
+
+    await waitFor(() => {
+      expect(vi.mocked(demoCreateGame)).toHaveBeenCalledWith({
+        title: firstCard.title.en,
+        source: { from: "template", templateId: firstCard.id },
+      });
+    });
+    expect(firstCard.title.en).not.toBe("");
   });
 
   it("shows the three ways to start when there are no games", async () => {
@@ -256,7 +306,7 @@ describe("QuizshowMyGames ways to start a game", () => {
       await screen.findByRole("heading", { name: "No games yet" }),
     ).toBeTruthy();
     expect(
-      screen.getByRole("button", { name: "Start from a pack" }),
+      screen.getByRole("button", { name: "Start from a template" }),
     ).toBeTruthy();
     expect(
       screen.getByRole("button", { name: "Copy a game or event quiz" }),

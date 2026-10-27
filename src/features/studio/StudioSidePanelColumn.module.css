@@ -1,0 +1,47 @@
+/* The docked side panel column: the listener shell's third grid track
+   (studio.module.css widens it while .app carries data-side-panel-open).
+   The track animates its width and clips the panel, so the panel slides
+   in and out at the inline end. */
+.column {
+  grid-column: 3;
+  min-width: 0;
+  overflow: clip;
+}
+
+/* Runs the full height like the rail and holds still while the page
+   scrolls. It ends above the player bar, which itself sits above the tab
+   bar or the consent banner (whichever is taller). Its body scrolls on its
+   own inside the card. */
+.aside {
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  inline-size: var(--studio-side-panel-w);
+  block-size: calc(
+    100dvh - var(--studio-player-inset, 0px) -
+      max(var(--bottom-inset, 0px), var(--consent-inset, 0px))
+  );
+}
+
+/* A flex column with a bounded height, so StudioSidePanelBody's own body
+   takes the height left under its head and scrolls. */
+.card {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+  margin: max(8px, env(safe-area-inset-top, 0px)) 8px 8px 0;
+  border-radius: var(--radius-14);
+  background: var(--studio-surface-rail);
+  color: var(--studio-text);
+  border: 1px solid var(--studio-line);
+  overflow: hidden;
+}
+
+/* Dark: the same lighter wash as the floating card (StudioQueue.module.css). */
+:global([data-theme="dark"]) .card {
+  background:
+    linear-gradient(var(--studio-wash-2), var(--studio-wash-2)),
+    var(--studio-surface-rail);
+}

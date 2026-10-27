@@ -24,13 +24,16 @@ import {
   resetQuizshowDemoGames,
 } from "../api/quizshowDemoGames";
 import { QUIZSHOW_DEMO_GAME_IDS } from "../api/quizshowDemoGames.data";
-import { QUIZSHOW_STARTER_PACKS } from "../demo/quizshowStarterPacks.data";
+import {
+  QUIZSHOW_DEMO_TEMPLATE_IDS,
+  templateSeedById,
+} from "../demo/quizshowTemplates.data";
 import { ApiError } from "../../../shared/api/client";
 import {
   eventScope,
   gameScope,
   quizshowScopeScreenPath,
-  type QuizshowScope,
+  type QuizshowSessionScope,
 } from "../quizshowScope";
 import { QuizshowLiveSessionPanel } from "./QuizshowLiveSessionPanel";
 import { QuizshowOpenLobbyButton } from "./QuizshowOpenLobbyButton";
@@ -67,15 +70,14 @@ function LocationProbe() {
   return <output data-testid="location">{location.pathname}</output>;
 }
 
-function packQuiz(
+function templateQuiz(
   overrides: Partial<QuizshowQuizInput> = {},
 ): QuizshowQuizInput {
-  const pack = QUIZSHOW_STARTER_PACKS[0];
-  if (!pack) throw new Error("no starter pack");
-  return { ...pack.quiz, expectedUpdatedAt: null, ...overrides };
+  const { quiz } = templateSeedById(QUIZSHOW_DEMO_TEMPLATE_IDS.prideHistory);
+  return { ...quiz, expectedUpdatedAt: null, ...overrides };
 }
 
-function renderDialog(scope: QuizshowScope) {
+function renderDialog(scope: QuizshowSessionScope) {
   return render(
     <TestProviders>
       <QuizshowOpenLobbyDialog scope={scope} isOpen onClose={() => {}} />
@@ -101,7 +103,7 @@ describe("QuizshowOpenLobbyDialog", () => {
 
   it("opens a solo lobby with review and the guest push on by default", async () => {
     const user = userEvent.setup();
-    demoPutQuiz(QUIZSHOW_DEMO_LIVE_SLUG, packQuiz());
+    demoPutQuiz(QUIZSHOW_DEMO_LIVE_SLUG, templateQuiz());
     renderDialog(eventScope(QUIZSHOW_DEMO_LIVE_SLUG));
 
     await user.click(await screen.findByRole("button", { name: "Open lobby" }));
@@ -127,7 +129,7 @@ describe("QuizshowOpenLobbyDialog", () => {
   });
 
   it("keeps Let guests know on an event lobby", async () => {
-    demoPutQuiz(QUIZSHOW_DEMO_LIVE_SLUG, packQuiz());
+    demoPutQuiz(QUIZSHOW_DEMO_LIVE_SLUG, templateQuiz());
     renderDialog(eventScope(QUIZSHOW_DEMO_LIVE_SLUG));
 
     expect(await screen.findByText("Let guests know")).toBeTruthy();
@@ -135,7 +137,7 @@ describe("QuizshowOpenLobbyDialog", () => {
 
   it("asks for a team size only in teams mode", async () => {
     const user = userEvent.setup();
-    demoPutQuiz(QUIZSHOW_DEMO_LIVE_SLUG, packQuiz());
+    demoPutQuiz(QUIZSHOW_DEMO_LIVE_SLUG, templateQuiz());
     renderDialog(eventScope(QUIZSHOW_DEMO_LIVE_SLUG));
 
     expect(await screen.findByText("How people play")).toBeTruthy();
@@ -156,7 +158,7 @@ describe("QuizshowOpenLobbyDialog", () => {
 
   it("asks before deleting kept results, then resends with the flag", async () => {
     const user = userEvent.setup();
-    demoPutQuiz(QUIZSHOW_DEMO_RESULTS_SLUG, packQuiz());
+    demoPutQuiz(QUIZSHOW_DEMO_RESULTS_SLUG, templateQuiz());
     renderDialog(eventScope(QUIZSHOW_DEMO_RESULTS_SLUG));
 
     await user.click(await screen.findByRole("button", { name: "Open lobby" }));
@@ -173,7 +175,7 @@ describe("QuizshowOpenLobbyDialog", () => {
 
   it("points to the open game when one is already running", async () => {
     const user = userEvent.setup();
-    demoPutQuiz(QUIZSHOW_DEMO_LIVE_SLUG, packQuiz());
+    demoPutQuiz(QUIZSHOW_DEMO_LIVE_SLUG, templateQuiz());
     demoOpenSession(QUIZSHOW_DEMO_LIVE_SLUG, {
       playMode: "solo",
       maxTeamSize: null,
@@ -196,7 +198,7 @@ describe("QuizshowOpenLobbyDialog", () => {
 
   it("lists what to finish when the quiz is incomplete", async () => {
     const user = userEvent.setup();
-    demoPutQuiz(QUIZSHOW_DEMO_LIVE_SLUG, packQuiz({ title: "" }));
+    demoPutQuiz(QUIZSHOW_DEMO_LIVE_SLUG, templateQuiz({ title: "" }));
     renderDialog(eventScope(QUIZSHOW_DEMO_LIVE_SLUG));
 
     await user.click(await screen.findByRole("button", { name: "Open lobby" }));

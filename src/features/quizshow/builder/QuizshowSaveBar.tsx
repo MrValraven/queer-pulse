@@ -18,6 +18,7 @@ export function QuizshowSaveBar({
   isSaving,
   isSaveBlocked,
   statusId,
+  saveLabelKey = "quizshow:save.save",
   onSave,
   onDiscard,
 }: {
@@ -26,6 +27,8 @@ export function QuizshowSaveBar({
   isSaveBlocked: boolean;
   /** The status line's id, so Open lobby can name it as its blocked reason. */
   statusId?: string;
+  /** The save button's label key; a template reads "Save template". */
+  saveLabelKey?: string;
   onSave: () => void;
   onDiscard: () => void;
 }) {
@@ -66,7 +69,7 @@ export function QuizshowSaveBar({
                 aria-disabled={!isSaveIdle}
                 onClick={isSaveIdle ? onSave : undefined}
               >
-                {isSaving ? t("quizshow:save.saving") : t("quizshow:save.save")}
+                {isSaving ? t("quizshow:save.saving") : t(saveLabelKey)}
               </Button>
             </div>
           </div>
